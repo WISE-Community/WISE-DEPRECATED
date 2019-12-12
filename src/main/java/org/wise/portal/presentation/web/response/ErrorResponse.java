@@ -20,8 +20,8 @@ public class ErrorResponse {
     return response.toString();
   }
 
-  public HashMap<String, String> toMap() {
-    HashMap<String, String> map = new HashMap<String, String>();
+  public HashMap<String, Object> toMap() {
+    HashMap<String, Object> map = new HashMap<String, Object>();
     map.put("status", "error");
     map.put("messageCode", errorCode);
     return map;

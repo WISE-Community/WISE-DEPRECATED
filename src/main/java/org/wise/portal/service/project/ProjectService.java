@@ -42,6 +42,7 @@ import org.wise.portal.presentation.web.response.SharedOwner;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -66,7 +67,7 @@ public interface ProjectService {
   @Transactional
   @Secured( { "ROLE_USER", "AFTER_ACL_COLLECTION_READ" })
   List<Project> getSharedProjectList(User user);
-  
+
   @Transactional
   @Secured( { "ROLE_USER", "AFTER_ACL_COLLECTION_READ" })
   List<Project> getSharedProjectsWithoutRun(User user);
@@ -321,6 +322,12 @@ public interface ProjectService {
   List<Project> getAllSharedProjects();
 
   String getProjectURI(Project project);
+
+  String getProjectPath(Project project);
+
+  String getLicensePath(Project project);
+
+  List<HashMap<String, Object>> getProjectSharedOwnersList(Project project);
 
   void writeProjectLicenseFile(String projectFolderPath, Project project) throws JSONException;
 

@@ -45,7 +45,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.orm.hibernate5.HibernateOptimisticLockingFailureException;
 import org.springframework.security.core.Authentication;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -65,10 +64,8 @@ import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.impl.Projectcode;
 import org.wise.portal.domain.run.Run;
-import org.wise.portal.domain.run.StudentRunInfo;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
-import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.presentation.web.response.ErrorResponse;
 import org.wise.portal.presentation.web.response.LaunchRunErrorResponse;
 import org.wise.portal.presentation.web.response.SimpleResponse;
@@ -81,7 +78,7 @@ import org.wise.portal.service.user.UserService;
 import org.wise.portal.service.workgroup.WorkgroupService;
 
 /**
- * Controller for Student REST API
+ * Student REST API endpoint
  *
  * @author Hiroki Terashima
  * @author Geoffrey Kwan
@@ -121,24 +118,17 @@ public class StudentAPIController {
   private static final String PROJECT_THUMB_PATH = "/assets/project_thumb.png";
 
   @GetMapping("/runs")
-  protected String getRuns(Authentication authentication) throws JSONException {
+  List<HashMap<String, Object>> getRuns(Authentication authentication) {
     User user = userService.retrieveUserByUsername(authentication.getName());
-    JSONArray runListJSONArray = new JSONArray();
+    List<HashMap<String, Object>> runList = new ArrayList<HashMap<String, Object>>();
     for (Run run : runService.getRunList(user)) {
-      runListJSONArray.put(getRunJSON(user, run));
+      runList.add(getRunMap(user, run));
     }
-    return runListJSONArray.toString();
+    return runList;
   }
 
-  /**
-   * @param user The signed in User.
-   * @param run The run object.
-   * @return A JSON object that contains information about the run and workgroup
-   * information if applicable.
-   * @throws JSONException
-   */
-  private JSONObject getRunJSON(User user, Run run) throws JSONException {
-    JSONObject runJSON = new JSONObject();
+  private HashMap<String, Object> getRunMap(User user, Run run) {
+    HashMap<String, Object> runMap = new HashMap<String, Object>();
     Project project = run.getProject();
     String curriculumBaseWWW = appProperties.getProperty("curriculum_base_www");
     String projectThumb = "";
@@ -152,67 +142,74 @@ public class StudentAPIController {
        */
       projectThumb = curriculumBaseWWW + modulePath.substring(0, lastIndexOfSlash) + PROJECT_THUMB_PATH;
     }
-    StudentRunInfo studentRunInfo = studentService.getStudentRunInfo(user, run);
-    Workgroup workgroup = studentRunInfo.getWorkgroup();
-    JSONArray workgroupMembers = new JSONArray();
-    StringBuilder workgroupNames = new StringBuilder();
 
-    runJSON.put("id", run.getId());
-    runJSON.put("name", run.getName());
-    runJSON.put("periodName", run.getPeriodOfStudent(user).getName());
-    runJSON.put("maxStudentsPerTeam", run.getMaxWorkgroupSize());
-    runJSON.put("projectThumb", projectThumb);
-    runJSON.put("runCode", run.getRuncode());
-    runJSON.put("startTime", run.getStartTimeMilliseconds());
-    runJSON.put("endTime", run.getEndTimeMilliseconds());
-    runJSON.put("project", ControllerUtil.getProjectJSON(project));
-    runJSON.put("owner", getOwnerJSON(run.getOwner()));
+    runMap.put("id", run.getId());
+    runMap.put("name", run.getName());
+    runMap.put("periodName", run.getPeriodOfStudent(user).getName());
+    runMap.put("maxStudentsPerTeam", run.getMaxWorkgroupSize());
+    runMap.put("projectThumb", projectThumb);
+    runMap.put("runCode", run.getRuncode());
+    runMap.put("startTime", run.getStartTimeMilliseconds());
+    runMap.put("endTime", run.getEndTimeMilliseconds());
+    runMap.put("project", getProjectMap(project));
+    runMap.put("owner", getOwnerMap(run.getOwner()));
 
-    /*
-     * The workgroup can be null if the student registered for a run but
-     * hasn't launched the project yet.
-     */
-    if (workgroup != null) {
+    List<Workgroup> workgroups = workgroupService.getWorkgroupListByRunAndUser(run, user);
+    if (workgroups.size() > 0) {
+      Workgroup workgroup = workgroups.get(0);
+      List<HashMap<String, Object>> workgroupMembers = new ArrayList<HashMap<String, Object>>();
+      StringBuilder workgroupNames = new StringBuilder();
       for (User member : workgroup.getMembers()) {
         MutableUserDetails userDetails = (MutableUserDetails) member.getUserDetails();
-        JSONObject memberJSON = new JSONObject();
-        memberJSON.put("id", member.getId());
+        HashMap<String, Object> memberMap = new HashMap<String, Object>();
+        memberMap.put("id", member.getId());
         String firstName = userDetails.getFirstname();
-        memberJSON.put("firstName", firstName);
+        memberMap.put("firstName", firstName);
         String lastName = userDetails.getLastname();
-        memberJSON.put("lastName", lastName);
-        memberJSON.put("username", userDetails.getUsername());
-        memberJSON.put("isGoogleUser", userDetails.isGoogleUser());
-        workgroupMembers.put(memberJSON);
+        memberMap.put("lastName", lastName);
+        memberMap.put("username", userDetails.getUsername());
+        memberMap.put("isGoogleUser", userDetails.isGoogleUser());
+        workgroupMembers.add(memberMap);
         if (workgroupNames.length() > 0) {
           workgroupNames.append(", ");
         }
         workgroupNames.append(firstName + " " + lastName);
+        runMap.put("workgroupId", workgroup.getId());
+        runMap.put("workgroupNames", workgroupNames.toString());
+        runMap.put("workgroupMembers", workgroupMembers);
       }
-      runJSON.put("workgroupId", studentRunInfo.getWorkgroup().getId());
-      runJSON.put("workgroupNames", workgroupNames.toString());
-      runJSON.put("workgroupMembers", workgroupMembers);
     }
-    return runJSON;
+    return runMap;
   }
 
-  private JSONObject getOwnerJSON(User owner) throws JSONException {
-    JSONObject ownerJSON = new JSONObject();
-    ownerJSON.put("id", owner.getId());
+  private HashMap<String, Object> getProjectMap(Project project) {
+    HashMap<String, Object> projectMap = new HashMap<String, Object>();
+    projectMap.put("id", project.getId());
+    projectMap.put("name", project.getName());
+    projectMap.put("metadata", project.getMetadata());
+    projectMap.put("dateCreated", project.getDateCreated());
+    projectMap.put("dateArchived", project.getDateDeleted());
+    projectMap.put("projectThumb", projectService.getProjectPath(project) + PROJECT_THUMB_PATH);
+    projectMap.put("owner", getOwnerMap(project.getOwner()));
+    projectMap.put("sharedOwners", projectService.getProjectSharedOwnersList(project));
+    projectMap.put("parentId", project.getParentProjectId());
+    projectMap.put("wiseVersion", project.getWiseVersion());
+    projectMap.put("uri", projectService.getProjectURI(project));
+    projectMap.put("license", projectService.getLicensePath(project));
+    return projectMap;
+  }
+
+  private HashMap<String, Object> getOwnerMap(User owner) {
+    HashMap<String, Object> ownerMap = new HashMap<String, Object>();
+    ownerMap.put("id", owner.getId());
     TeacherUserDetails tud = (TeacherUserDetails) owner.getUserDetails();
-    ownerJSON.put("displayName", tud.getDisplayname());
-    ownerJSON.put("username", tud.getUsername());
-    ownerJSON.put("firstName", tud.getFirstname());
-    ownerJSON.put("lastName", tud.getLastname());
-    return ownerJSON;
+    ownerMap.put("displayName", tud.getDisplayname());
+    ownerMap.put("username", tud.getUsername());
+    ownerMap.put("firstName", tud.getFirstname());
+    ownerMap.put("lastName", tud.getLastname());
+    return ownerMap;
   }
 
-  /**
-   * Get the run information to display to the student when they want to register for a run.
-   * @param runCode The run code string.
-   * @return HashMap object string containing information about the run such as the id, run code, title,
-   * teacher name, and periods.
-   */
   @GetMapping("/run/info")
   HashMap<String, Object> getRunInfoByRunCode(@RequestParam("runCode") String runCode) {
     try {
@@ -252,15 +249,16 @@ public class StudentAPIController {
   }
 
   @PostMapping("/run/launch")
-  HashMap<String, String> launchRun(Authentication auth,
+  HashMap<String, Object> launchRun(Authentication auth,
       @RequestParam("runId") Long runId,
       @RequestParam(value = "workgroupId", required = false) Long workgroupId,
       @RequestParam("presentUserIds") String presentUserIds,
       @RequestParam("absentUserIds") String absentUserIds,
       HttpServletRequest request) throws Exception {
     Run run = runService.retrieveById(runId);
-    JSONArray presentUserIdsJSONArray = new JSONArray(presentUserIds);
-    Set<User> presentMembers = getUsers(presentUserIdsJSONArray);
+    presentUserIds = presentUserIds.substring(1, presentUserIds.length() - 1);
+    String[] presentUserIdsArray = presentUserIds.split(",", 0);
+    Set<User> presentMembers = getUsers(presentUserIdsArray);
     Workgroup workgroup = null;
     User user = userService.retrieveUserByUsername(auth.getName());
     for (User member: presentMembers) {
@@ -301,7 +299,7 @@ public class StudentAPIController {
     return membersNotInWorkgroup;
   }
 
-  private HashMap<String, String> getLaunchRunMap(Long runId, Long workgroupId, String presentUserIds,
+  private HashMap<String, Object> getLaunchRunMap(Long runId, Long workgroupId, String presentUserIds,
       String absentUserIds, HttpServletRequest request, Run run, Set<User> presentMembers,
       Workgroup workgroup) throws ObjectNotFoundException, PeriodNotFoundException,
       StudentUserAlreadyAssociatedWithRunException, RunHasEndedException {
@@ -330,19 +328,18 @@ public class StudentAPIController {
         presentUserIds, absentUserIds);
   }
 
-  private HashMap<String, String> generateStartProjectUrlMap(
-        HttpServletRequest request, Workgroup workgroup) {
-    HashMap<String, String> map = new HashMap<String, String>();
+  private HashMap<String, Object> generateStartProjectUrlMap(
+      HttpServletRequest request, Workgroup workgroup) {
+    HashMap<String, Object> map = new HashMap<String, Object>();
     map.put("startProjectUrl", projectService.generateStudentStartProjectUrlString(
         workgroup, request.getContextPath()));
     return map;
   }
 
-  private Set<User> getUsers(JSONArray userIds) throws JSONException,
-      ObjectNotFoundException {
+  private Set<User> getUsers(String[] userIds) throws ObjectNotFoundException {
     Set<User> users = new HashSet<User>();
-    for (int i = 0; i < userIds.length(); i++) {
-      Long userId = userIds.getLong(i);
+    for (int i = 0; i < userIds.length; i++) {
+      Long userId = Long.parseLong(userIds[i]);
       users.add(userService.retrieveById(userId));
     }
     return users;
@@ -360,9 +357,9 @@ public class StudentAPIController {
    * @throws JSONException
    */
   @PostMapping("/run/register")
-  protected String addStudentToRun(Authentication auth,
+  HashMap<String, Object> addStudentToRun(Authentication auth,
       @RequestParam("runCode") String runCode,
-      @RequestParam("period") String period) throws JSONException {
+      @RequestParam("period") String period) {
     User user = userService.retrieveUserByUsername(auth.getName());
     Projectcode projectCode = new Projectcode(runCode, period);
     int maxLoop = 100; // To ensure that the following while loop gets run at most this many times.
@@ -371,20 +368,20 @@ public class StudentAPIController {
       try {
         studentService.addStudentToRun(user, projectCode);
         Run run = runService.retrieveRunByRuncode(runCode);
-        JSONObject responseJSONObject = getRunJSON(user, run);
-        return responseJSONObject.toString();
+        HashMap<String, Object> runMap = getRunMap(user, run);
+        return runMap;
       } catch (ObjectNotFoundException e) {
         ErrorResponse response = new ErrorResponse("runCodeNotFound");
-        return response.toJSONString();
+        return response.toMap();
       } catch (PeriodNotFoundException e) {
         ErrorResponse response = new ErrorResponse("periodNotFound");
-        return response.toJSONString();
+        return response.toMap();
       } catch (StudentUserAlreadyAssociatedWithRunException se) {
         ErrorResponse response = new ErrorResponse("alreadyAddedRun");
-        return response.toJSONString();
+        return response.toMap();
       } catch (RunHasEndedException e) {
         ErrorResponse response = new ErrorResponse("runHasEnded");
-        return response.toJSONString();
+        return response.toMap();
       } catch (HibernateOptimisticLockingFailureException holfe) {
         /*
          * Multiple students tried to create an account at the same time, resulting in this exception.
@@ -407,7 +404,7 @@ public class StudentAPIController {
      * run for some reason so we will just return a generic error message
      */
     ErrorResponse response = new ErrorResponse("failedToAddStudentToRun");
-    return response.toJSONString();
+    return response.toMap();
   }
 
   private List<String> getPeriodNames(Run run) {
@@ -430,7 +427,7 @@ public class StudentAPIController {
   }
 
   @PostMapping("/register")
-  protected String createStudentAccount(
+  String createStudentAccount(
       @RequestBody Map<String, String> studentFields, HttpServletRequest request)
       throws DuplicateUsernameException {
     StudentUserDetails studentUserDetails = new StudentUserDetails();
@@ -449,7 +446,7 @@ public class StudentAPIController {
     }
     Locale locale = request.getLocale();
     studentUserDetails.setLanguage(locale.getLanguage());
-    User createdUser = this.userService.createUser(studentUserDetails);
+    User createdUser = userService.createUser(studentUserDetails);
     return createdUser.getUserDetails().getUsername();
   }
 
@@ -510,7 +507,7 @@ public class StudentAPIController {
   }
 
   @GetMapping("/can-be-added-to-workgroup")
-  protected String canBeAddedToWorkgroup(Authentication auth,
+  String canBeAddedToWorkgroup(Authentication auth,
       @RequestParam("runId") Long runId,
       @RequestParam(value = "workgroupId", required = false) Long workgroupId,
       @RequestParam("userId") Long userId) throws JSONException, ObjectNotFoundException {

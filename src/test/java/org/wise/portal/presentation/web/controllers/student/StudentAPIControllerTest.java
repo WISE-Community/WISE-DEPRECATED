@@ -28,11 +28,17 @@ import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.domain.PeriodNotFoundException;
+import org.wise.portal.domain.RunHasEndedException;
+import org.wise.portal.domain.StudentUserAlreadyAssociatedWithRunException;
 import org.wise.portal.domain.authentication.impl.PersistentGrantedAuthority;
 import org.wise.portal.domain.authentication.impl.StudentUserDetails;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.group.impl.PersistentGroup;
+import org.wise.portal.domain.project.Project;
+import org.wise.portal.domain.project.impl.ProjectImpl;
+import org.wise.portal.domain.project.impl.Projectcode;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.run.impl.RunImpl;
 import org.wise.portal.domain.user.User;
@@ -44,6 +50,7 @@ import org.wise.portal.service.attendance.StudentAttendanceService;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.run.RunService;
+import org.wise.portal.service.student.StudentService;
 import org.wise.portal.service.user.UserService;
 import org.wise.portal.service.workgroup.WorkgroupService;
 
@@ -55,6 +62,9 @@ public class StudentAPIControllerTest {
 
   @Mock
   private UserService userService;
+
+  @Mock
+  private StudentService studentService;
 
   @Mock
   private RunService runService;
@@ -71,7 +81,10 @@ public class StudentAPIControllerTest {
   @Mock
   private HttpServletRequest request;
 
-  @Mock
+  @Mock(fieldName = "appProperties")
+  private Properties appProperties;
+
+  @Mock(fieldName = "i18nProperties")
   private Properties i18nProperties;
 
   private Authentication studentAuthentication;
@@ -86,7 +99,11 @@ public class StudentAPIControllerTest {
 
   private String RUN1_RUNCODE = "orca123";
 
+  private String RUN1_PERIOD1_NAME = "1";
+
   private Workgroup workgroup1;
+
+  private Project project1, project2, project3;
 
   private Run run1, run2, run3;
 
@@ -121,17 +138,43 @@ public class StudentAPIControllerTest {
     run1.setRuncode(RUN1_RUNCODE);
     HashSet<Group> run1Periods = new HashSet<Group>();
     Group run1Period1 = new PersistentGroup();
-    run1Period1.setName("1");
+    run1Period1.setName(RUN1_PERIOD1_NAME);
     run1Period1.addMember(student1);
     run1Periods.add(run1Period1);
     run1.setPeriods(run1Periods);
+    project1 = new ProjectImpl();
+    project1.setModulePath("/1/project.json");
+    project1.setOwner(teacher1);
+    run1.setProject(project1);
     workgroup1 = new WorkgroupImpl();
     workgroup1.addMember(student1);
     workgroup1.setPeriod(run1Period1);
     run2 = new RunImpl();
     run2.setOwner(teacher1);
+    run2.setStarttime(new Date());
+    HashSet<Group> run2Periods = new HashSet<Group>();
+    Group run2Period2 = new PersistentGroup();
+    run2Period2.setName("2");
+    run2Period2.addMember(student1);
+    run2Periods.add(run2Period2);
+    run2.setPeriods(run2Periods);
+    project2 = new ProjectImpl();
+    project2.setModulePath("/2/project.json");
+    project2.setOwner(teacher2);
+    run2.setProject(project2);
     run3 = new RunImpl();
     run3.setOwner(teacher2);
+    run3.setStarttime(new Date());
+    HashSet<Group> run3Periods = new HashSet<Group>();
+    Group run3Period4 = new PersistentGroup();
+    run3Period4.setName("4");
+    run3Period4.addMember(student1);
+    run3Periods.add(run3Period4);
+    run3.setPeriods(run3Periods);
+    project3 = new ProjectImpl();
+    project3.setModulePath("/3/project.json");
+    project3.setOwner(teacher2);
+    run3.setProject(project3);
     runs.add(run1);
     runs.add(run2);
     runs.add(run3);
@@ -203,7 +246,7 @@ public class StudentAPIControllerTest {
         isA(Long.class), isA(Date.class), isA(String.class), isA(String.class));
     expect(request.getContextPath()).andReturn("wise");
     replay(request);
-    HashMap<String, String> launchRunMap = studentAPIController
+    HashMap<String, Object> launchRunMap = studentAPIController
         .launchRun(studentAuthentication, runId1, null, "[1]", "[]", request);
     assertEquals("/wise/run/1", launchRunMap.get("startProjectUrl"));
     verify(runService);
@@ -224,29 +267,34 @@ public class StudentAPIControllerTest {
   }
 
   @Test
-  public void getRunInfoByRunCode_RunExistsInDB_ShouldReturnRunInfo() throws ObjectNotFoundException {
+  public void getRunInfoByRunCode_RunExistsInDB_ShouldReturnRunInfo()
+      throws ObjectNotFoundException {
     expect(runService.retrieveRunByRuncode(RUN1_RUNCODE)).andReturn(run1);
     replay(runService);
-    HashMap<String, Object> info = studentAPIController.getRunInfoByRunCode(RUN1_RUNCODE);
+    HashMap<String, Object> info = studentAPIController
+        .getRunInfoByRunCode(RUN1_RUNCODE);
     assertEquals("1", info.get("id"));
     assertEquals(RUN1_RUNCODE, info.get("runCode"));
     verify(runService);
   }
 
   @Test
-  public void getRunInfoByRunCode_RunNotInDB_ShouldReturnRunInfo() throws ObjectNotFoundException {
+  public void getRunInfoByRunCode_RunNotInDB_ShouldReturnRunInfo()
+      throws ObjectNotFoundException {
     String runCodeNotInDB = "runCodeNotInDB";
-    expect(runService.retrieveRunByRuncode(runCodeNotInDB)).andThrow(
-        new ObjectNotFoundException(runCodeNotInDB, Run.class));
+    expect(runService.retrieveRunByRuncode(runCodeNotInDB))
+        .andThrow(new ObjectNotFoundException(runCodeNotInDB, Run.class));
     replay(runService);
-    HashMap<String, Object> info = studentAPIController.getRunInfoByRunCode(runCodeNotInDB);
+    HashMap<String, Object> info = studentAPIController
+        .getRunInfoByRunCode(runCodeNotInDB);
     assertEquals(1, info.size());
     assertEquals("runNotFound", info.get("error"));
     verify(runService);
   }
 
   @Test
-  public void getRunInfoById_RunExistsInDB_ShouldReturnRunInfo() throws ObjectNotFoundException {
+  public void getRunInfoById_RunExistsInDB_ShouldReturnRunInfo()
+      throws ObjectNotFoundException {
     expect(runService.retrieveById(runId1)).andReturn(run1);
     replay(runService);
     HashMap<String, Object> info = studentAPIController.getRunInfoById(runId1);
@@ -256,12 +304,14 @@ public class StudentAPIControllerTest {
   }
 
   @Test
-  public void getRunInfoById_RunNotInDB_ShouldReturnRunInfo() throws ObjectNotFoundException {
+  public void getRunInfoById_RunNotInDB_ShouldReturnRunInfo()
+      throws ObjectNotFoundException {
     Long runIdNotInDB = -1L;
-    expect(runService.retrieveById(runIdNotInDB)).andThrow(
-        new ObjectNotFoundException(runIdNotInDB, Run.class));
+    expect(runService.retrieveById(runIdNotInDB))
+        .andThrow(new ObjectNotFoundException(runIdNotInDB, Run.class));
     replay(runService);
-    HashMap<String, Object> info = studentAPIController.getRunInfoById(runIdNotInDB);
+    HashMap<String, Object> info = studentAPIController
+        .getRunInfoById(runIdNotInDB);
     assertEquals(1, info.size());
     assertEquals("runNotFound", info.get("error"));
     verify(runService);
@@ -282,7 +332,8 @@ public class StudentAPIControllerTest {
     expect(i18nProperties.getProperty("accountquestions.QUESTION_SIX"))
         .andReturn("account question 6");
     replay(i18nProperties);
-    List<HashMap<String, String>> questions = studentAPIController.getSecurityQuestions();
+    List<HashMap<String, String>> questions = studentAPIController
+        .getSecurityQuestions();
     assertEquals(6, questions.size());
     assertEquals("QUESTION_ONE", questions.get(0).get("key"));
     assertEquals("account question 1", questions.get(0).get("value"));
@@ -291,7 +342,102 @@ public class StudentAPIControllerTest {
     verify(i18nProperties);
   }
 
-  // test getRuns
+  @Test
+  public void getRuns_StudentInThreeRuns_ShouldReturnThreeRuns() {
+    expect(userService.retrieveUserByUsername(STUDENT_USERNAME))
+        .andReturn(student1);
+    replay(userService);
+    expect(runService.getRunList(student1)).andReturn(runs);
+    replay(runService);
+    expect(projectService.getProjectPath(isA(Project.class)))
+        .andReturn("/1/project.json").times(3);
+    expect(projectService.getProjectSharedOwnersList(isA(Project.class)))
+        .andReturn(new ArrayList<HashMap<String, Object>>()).times(3);
+    expect(projectService.getProjectURI(isA(Project.class)))
+        .andReturn("http://localhost:8080/curriculum/1/project.json").times(3);
+    expect(projectService.getLicensePath(isA(Project.class)))
+        .andReturn("http://localhost:8080/curriculum/1/license.txt").times(3);
+    replay(projectService);
+    List<Workgroup> workgroups = new ArrayList<Workgroup>();
+    workgroups.add(workgroup1);
+    expect(workgroupService.getWorkgroupListByRunAndUser(isA(Run.class),
+        isA(User.class))).andReturn(workgroups).times(3);
+    replay(workgroupService);
+    expect(appProperties.getProperty("curriculum_base_www"))
+        .andReturn("http://localhost:8080/curriculum").times(3);
+    replay(appProperties);
+    List<HashMap<String, Object>> runs = studentAPIController
+        .getRuns(studentAuthentication);
+    assertEquals(3, runs.size());
+    verify(userService);
+    verify(runService);
+    verify(projectService);
+    verify(workgroupService);
+    verify(appProperties);
+  }
 
-  // test addStudentToRun
+  @Test
+  public void addStudentToRun_InValidRunCode_ShouldReturnRunNotFoundResponse()
+      throws ObjectNotFoundException, PeriodNotFoundException,
+      StudentUserAlreadyAssociatedWithRunException, RunHasEndedException {
+    String runCodeNotInDB = "runCodeNotInDB";
+    expect(userService.retrieveUserByUsername(STUDENT_USERNAME))
+        .andReturn(student1);
+    replay(userService);
+    Projectcode projectCode = new Projectcode(runCodeNotInDB, RUN1_PERIOD1_NAME);
+    studentService.addStudentToRun(student1, projectCode);
+    expectLastCall();
+    replay(studentService);
+    expect(runService.retrieveRunByRuncode(runCodeNotInDB))
+        .andThrow(new ObjectNotFoundException(runCodeNotInDB, Run.class));
+    replay(runService);
+    HashMap<String, Object> response = studentAPIController
+        .addStudentToRun(studentAuthentication, runCodeNotInDB, RUN1_PERIOD1_NAME);
+    assertEquals("error", response.get("status"));
+    assertEquals("runCodeNotFound", response.get("messageCode"));
+    verify(userService);
+    verify(studentService);
+    verify(runService);
+  }
+
+  @Test
+  public void addStudentToRun_ValidRunCodeAndPeriod_ShouldAddStudentToRun()
+      throws ObjectNotFoundException, PeriodNotFoundException,
+      StudentUserAlreadyAssociatedWithRunException, RunHasEndedException {
+    expect(userService.retrieveUserByUsername(STUDENT_USERNAME))
+        .andReturn(student1);
+    replay(userService);
+    Projectcode projectCode = new Projectcode(RUN1_RUNCODE, RUN1_PERIOD1_NAME);
+    studentService.addStudentToRun(student1, projectCode);
+    expectLastCall();
+    replay(studentService);
+    expect(runService.retrieveRunByRuncode(RUN1_RUNCODE)).andReturn(run1);
+    replay(runService);
+    expect(projectService.getProjectPath(isA(Project.class)))
+        .andReturn("/1/project.json");
+    expect(projectService.getProjectSharedOwnersList(isA(Project.class)))
+        .andReturn(new ArrayList<HashMap<String, Object>>());
+    expect(projectService.getProjectURI(isA(Project.class)))
+        .andReturn("http://localhost:8080/curriculum/1/project.json");
+    expect(projectService.getLicensePath(isA(Project.class)))
+        .andReturn("http://localhost:8080/curriculum/1/license.txt");
+    replay(projectService);
+    List<Workgroup> workgroups = new ArrayList<Workgroup>();
+    workgroups.add(workgroup1);
+    expect(workgroupService.getWorkgroupListByRunAndUser(isA(Run.class),
+        isA(User.class))).andReturn(workgroups);
+    replay(workgroupService);
+    HashMap<String, Object> runMap = studentAPIController
+        .addStudentToRun(studentAuthentication, RUN1_RUNCODE, RUN1_PERIOD1_NAME);
+    assertEquals(RUN1_PERIOD1_NAME, runMap.get("periodName"));
+    verify(userService);
+    verify(studentService);
+    verify(runService);
+    verify(projectService);
+    verify(workgroupService);
+  }
+
+  // test createStudentAccount
+
+  // test canBeAddedToWorkgroup, remove convertUserToJSON and replace with non-JSON
 }
