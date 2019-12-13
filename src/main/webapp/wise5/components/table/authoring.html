@@ -66,6 +66,55 @@
                    ng-change='tableController.authoringViewComponentChanged()'/>
           </md-input-container>
         </div>
+        <div style='border: 1px solid black'>
+          <p>Data Explorer</p>
+          <div>
+            <md-checkbox class='md-primary'
+                ng-model='tableController.authoringComponentContent.isDataExplorerEnabled'
+                ng-change='tableController.authoringToggleDataExplorer()'>
+              Enable Data Explorer
+            </md-checkbox>
+          </div>
+          <div ng-if='tableController.authoringComponentContent.isDataExplorerEnabled'>
+            <div>
+              <p>Allowed Graph Types</p>
+              <md-checkbox class='md-primary'
+                  style='margin-right: 40px;'
+                  ng-model='tableController.isDataExplorerScatterPlotEnabled'
+                  ng-change='tableController.dataExplorerToggleScatterPlot()'>
+                Scatter Plot
+              </md-checkbox>
+              <md-checkbox class='md-primary'
+                  style='margin-right: 40px;'
+                  ng-model='tableController.isDataExplorerLineGraphEnabled'
+                  ng-change='tableController.dataExplorerToggleLineGraph()'>
+                Line Graph
+              </md-checkbox>
+              <md-checkbox class='md-primary'
+                  ng-model='tableController.isDataExplorerBarGraphEnabled'
+                  ng-change='tableController.dataExplorerToggleBarGraph()'>
+                Bar Graph
+              </md-checkbox>
+            </div>
+            <div>
+              <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
+                <label>Number of Series</label>
+                <input type='number'
+                      ng-model='tableController.authoringComponentContent.numDataExplorerSeries'
+                      ng-model-options='{ debounce: 1000 }'
+                      ng-change='tableController.authoringViewComponentChanged()'/>
+              </md-input-container>
+            </div>
+            <div>
+              <md-checkbox class='md-primary'
+                  style='margin-right: 40px;'
+                  ng-model='tableController.authoringComponentContent.isDataExplorerAxisLabelsEditable'
+                  ng-change='tableController.dataExplorerToggleLineGraph()'>
+                Can Student Edit Axis Labels
+              </md-checkbox>
+            </div>
+          </div>
+        </div>
         <div>
           <label class='node__label--vertical-alignment'>
             {{ ::'RUBRIC' | translate }}

@@ -43,13 +43,13 @@ class TableController extends ComponentController {
 
     this.tableId = 'table_' + this.nodeId + '_' + this.componentId;
     this.isDataExplorerEnabled = this.componentContent.isDataExplorerEnabled;
-    this.numDataExplorerSeries = this.componentContent.numDataExplorerSeries;
-    this.dataExplorerGraphType = 'scatter';
-    this.dataExplorerGraphTypes = [
-      { name: 'Scatter Plot', value: 'scatter' },
-      { name: 'Line Plot', value: 'line' },
-      { name: 'Column Plot', value: 'column' }
-    ];
+    if (this.isDataExplorerEnabled) {
+      this.numDataExplorerSeries = this.componentContent.numDataExplorerSeries;
+      this.dataExplorerGraphTypes = this.componentContent.dataExplorerGraphTypes;
+      if (this.dataExplorerGraphTypes.length > 0) {
+        this.dataExplorerGraphType = this.dataExplorerGraphTypes[0].value;
+      }
+    }
 
     if (this.mode === 'student') {
       this.isPromptVisible = true;

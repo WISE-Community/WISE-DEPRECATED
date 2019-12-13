@@ -108,7 +108,8 @@
           </table>
           <div ng-if='tableController.isDataExplorerEnabled'>
             <br/>
-            <md-input-container style='width: 300px;'>
+            <md-input-container ng-if='tableController.componentContent.dataExplorerGraphTypes.length > 1'
+                style='width: 300px;'>
               <label>Graph Type</label>
               <md-select ng-model='tableController.dataExplorerGraphType'
                   ng-change='tableController.studentDataChanged()'>
@@ -119,7 +120,7 @@
               </md-select>
             </md-input-container>
             <br/>
-            <div ng-if='tableController.numDataExplorerSeries > 1'>
+            <div ng-if='tableController.componentContent.isDataExplorerAxisLabelsEditable'>
               <md-input-container style='width: 300px;'>
                   <label>X Axis Label</label>
                   <input ng-model='tableController.dataExplorerXAxisLabel'
@@ -135,7 +136,7 @@
               <label>X Column</label>
               <md-select ng-model='tableController.dataExplorerXColumn'
                   ng-change='tableController.dataExplorerXColumnChanged(xColumn)'>
-                <md-option ng-repeat='columnName in tableController.columnNames'
+                <md-option ng-repeat='columnName in tableController.columnNames track by $index'
                     ng-value='$index'>
                   <span>{{columnName}}</span>
                 </md-option>
@@ -143,10 +144,10 @@
             </md-input-container>
             <md-input-container ng-repeat='singleDataExplorerSeries in tableController.dataExplorerSeries'
                 style='width: 300px;'>
-              <label>Y Column {{$index + 1}}</label>
+              <label>Y Column</label>
               <md-select ng-model='singleDataExplorerSeries.yColumn'
                   ng-change='tableController.dataExplorerYColumnChanged($index)'>
-                <md-option ng-repeat='columnName in tableController.columnNames'
+                <md-option ng-repeat='columnName in tableController.columnNames track by $index'
                     ng-value='$index'>
                   <span>{{columnName}}</span>
                 </md-option>

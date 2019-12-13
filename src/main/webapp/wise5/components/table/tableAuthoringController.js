@@ -50,6 +50,10 @@ class TableAuthoringController extends TableController {
       }
     ];
 
+    if (this.authoringAddConnectedComponent.isDataExplorerEnabled) {
+      this.repopulateDataExplorerGraphTypes();
+    }
+
     /*
      * for the authoring view, get the cell sizes for each column if they
      * have been customized
@@ -704,6 +708,73 @@ class TableAuthoringController extends TableController {
     // the authoring component content has changed so we will save the project
     this.authoringViewComponentChanged();
   }
+
+  authoringToggleDataExplorer() {
+    if (this.authoringComponentContent.isDataExplorerEnabled) {
+      if (this.authoringComponentContent.dataExplorerGraphTypes == null) {
+        this.initializeDataExplorerGraphTypes();
+        this.repopulateDataExplorerGraphTypes();
+      }
+      if (this.authoringComponentContent.numDataExplorerSeries == null) {
+        this.authoringComponentContent.numDataExplorerSeries = 1;
+      }
+      if (this.authoringComponentContent.isDataExplorerAxisLabelsEditable == null) {
+        this.authoringComponentContent.isDataExplorerAxisLabelsEditable = false;
+      }
+    }
+    this.authoringViewComponentChanged();
+  }
+
+  dataExplorerToggleScatterPlot() {
+    this.dataExplorerToggleGraphType('Scatter Plot', 'scatter');
+  }
+
+  dataExplorerToggleLineGraph() {
+    this.dataExplorerToggleGraphType('Line Graph', 'line');
+  }
+
+  dataExplorerToggleBarGraph() {
+    this.dataExplorerToggleGraphType('Bar Graph', 'column');
+  }
+
+  dataExplorerToggleGraphType(name, value) {
+    const graphTypes = this.authoringComponentContent.dataExplorerGraphTypes;
+    for (let index = 0; index < graphTypes.length; index++) {
+      if (graphTypes[index].value === value) {
+        graphTypes.splice(index, 1);
+        this.authoringViewComponentChanged();
+        return;
+      }
+    }
+    graphTypes.push(this.createGraphTypeObject(name, value));
+    this.authoringViewComponentChanged();
+  }
+
+  createGraphTypeObject(name, value) {
+    return { name: name, value: value };
+  }
+
+  initializeDataExplorerGraphTypes() {
+    this.authoringComponentContent.dataExplorerGraphTypes = [];
+    this.authoringComponentContent.dataExplorerGraphTypes.push(
+        this.createGraphTypeObject('Scatter Plot', 'scatter'));
+  }
+
+  repopulateDataExplorerGraphTypes() {
+    this.isDataExplorerScatterPlotEnabled = false;
+    this.isDataExplorerLineGraphEnabled = false;
+    this.isDataExplorerColumnEnabled = false;
+    for (const graphType of this.authoringComponentContent.dataExplorerGraphTypes) {
+      if (graphType.value === 'scatter') {
+        this.isDataExplorerScatterPlotEnabled = true;
+      } else if (graphType.value === 'line') {
+        this.isDataExplorerLineGraphEnabled = true;
+      } else if (graphType.value === 'column') {
+        this.isDataExplorerColumnEnabled = true;
+      }
+    }
+  }
+
 }
 
 TableAuthoringController.$inject = [
