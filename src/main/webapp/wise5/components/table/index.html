@@ -88,7 +88,26 @@
             <md-icon>note_add</md-icon>
             {{ ::'ADD_TO_NOTEBOOK' | translate:{label:tableController.notebookConfig.label} }}
           </md-button>
+          <table id='{{tableController.tableId}}'
+              class='table table--student'>
+            <tr ng-repeat='row in tableController.getTableDataRows()'>
+              <td ng-repeat='cell in row'
+                  ng-class='{ "inactive" : !cell.editable }'>
+                <span ng-if='!cell.editable || tableController.isDisabled'>
+                  {{ cell.text }}
+                </span>
+                <md-input-container ng-if='cell.editable && !tableController.isDisabled'>
+                  <input type='text'
+                      ng-model='cell.text'
+                      ng-change='tableController.studentDataChanged()'
+                      aria-label='Text'
+                      size='{{cell.size || tableController.componentContent.globalCellSize}}'/>
+                </md-input-container>
+              </td>
+            </tr>
+          </table>
           <div ng-if='tableController.isDataExplorerEnabled'>
+            <br/>
             <md-input-container style='width: 300px;'>
               <label>Graph Type</label>
               <md-select ng-model='tableController.dataExplorerGraphType'
@@ -114,7 +133,7 @@
             </div>
             <md-input-container style='width: 300px;'>
               <label>X Column</label>
-              <md-select ng-model='xColumn'
+              <md-select ng-model='tableController.dataExplorerXColumn'
                   ng-change='tableController.dataExplorerXColumnChanged(xColumn)'>
                 <md-option ng-repeat='columnName in tableController.columnNames'
                     ng-value='$index'>
@@ -125,8 +144,8 @@
             <md-input-container ng-repeat='singleDataExplorerSeries in tableController.dataExplorerSeries'
                 style='width: 300px;'>
               <label>Y Column {{$index + 1}}</label>
-              <md-select ng-model='yColumn'
-                  ng-change='tableController.dataExplorerYColumnChanged($index, yColumn)'>
+              <md-select ng-model='singleDataExplorerSeries.yColumn'
+                  ng-change='tableController.dataExplorerYColumnChanged($index)'>
                 <md-option ng-repeat='columnName in tableController.columnNames'
                     ng-value='$index'>
                   <span>{{columnName}}</span>
@@ -134,24 +153,6 @@
                 </md-select>
             </md-input-container>
           </div>
-          <table id='{{tableController.tableId}}'
-              class='table table--student'>
-            <tr ng-repeat='row in tableController.getTableDataRows()'>
-              <td ng-repeat='cell in row'
-                  ng-class='{ "inactive" : !cell.editable }'>
-                <span ng-if='!cell.editable || tableController.isDisabled'>
-                  {{ cell.text }}
-                </span>
-                <md-input-container ng-if='cell.editable && !tableController.isDisabled'>
-                  <input type='text'
-                      ng-model='cell.text'
-                      ng-change='tableController.studentDataChanged()'
-                      aria-label='Text'
-                      size='{{cell.size || tableController.componentContent.globalCellSize}}'/>
-                </md-input-container>
-              </td>
-            </tr>
-          </table>
           <div ng-if='::tableController.isSaveOrSubmitButtonVisible()'
               class='component__actions'
               layout='row'

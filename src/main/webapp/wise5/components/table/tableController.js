@@ -113,6 +113,15 @@ class TableController extends ComponentController {
     // set up the table
     this.setupTable();
 
+    if (this.isDataExplorerEnabled) {
+      this.updateColumnNames();
+      if (componentState == null) {
+        this.createDataExplorerSeries();
+      } else {
+        this.repopulateDataExplorerData(componentState);
+      }
+    }
+
     // check if the student has used up all of their submits
     if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
       /*
@@ -231,11 +240,6 @@ class TableController extends ComponentController {
       }
 
       return array;
-    }
-
-    if (this.isDataExplorerEnabled) {
-      this.updateColumnNames();
-      this.createDataExplorerSeries();
     }
 
     this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
@@ -1103,18 +1107,18 @@ class TableController extends ComponentController {
     return this.columnNames[index];
   }
 
-  dataExplorerXColumnChanged(xColumn) {
+  dataExplorerXColumnChanged() {
     for (const singleDataExplorerSeries of this.dataExplorerSeries) {
-      singleDataExplorerSeries.xColumn = xColumn;
+      singleDataExplorerSeries.xColumn = this.dataExplorerXColumn;
     }
     if (this.numDataExplorerSeries === 1) {
-      this.dataExplorerXAxisLabel = this.getColumnName(xColumn);
+      this.dataExplorerXAxisLabel = this.getColumnName(this.dataExplorerXColumn);
     }
     this.studentDataChanged();
   }
 
-  dataExplorerYColumnChanged(index, yColumn) {
-    this.dataExplorerSeries[index].yColumn = yColumn;
+  dataExplorerYColumnChanged(index) {
+    const yColumn = this.dataExplorerSeries[index].yColumn;
     this.dataExplorerSeries[index].name = this.columnNames[yColumn];
     if (this.numDataExplorerSeries === 1) {
       this.dataExplorerYAxisLabel = this.getColumnName(yColumn);
@@ -1131,6 +1135,15 @@ class TableController extends ComponentController {
       };
       this.dataExplorerSeries.push(dataExplorerSeries);
     }
+  }
+
+  repopulateDataExplorerData(componentState) {
+    this.dataExplorerGraphType = componentState.studentData.dataExplorerGraphType;
+    this.dataExplorerXAxisLabel = componentState.studentData.dataExplorerXAxisLabel;
+    this.dataExplorerYAxisLabel = componentState.studentData.dataExplorerYAxisLabel;
+    this.dataExplorerSeries =
+        this.UtilService.makeCopyOfJSONObject(componentState.studentData.dataExplorerSeries);
+    this.dataExplorerXColumn = this.dataExplorerSeries[0].xColumn;
   }
 }
 
