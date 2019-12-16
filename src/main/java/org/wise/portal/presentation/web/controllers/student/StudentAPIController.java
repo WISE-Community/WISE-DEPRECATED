@@ -75,14 +75,14 @@ import org.wise.portal.service.user.UserService;
 import org.wise.portal.service.workgroup.WorkgroupService;
 
 /**
- * Student REST API endpoint
+ * Student REST API
  *
  * @author Hiroki Terashima
  * @author Geoffrey Kwan
  * @author Jonathan Lim-Breitbart
  */
 @RestController
-@RequestMapping(value = "/api/student")
+@RequestMapping("/api/student")
 public class StudentAPIController {
 
   @Autowired

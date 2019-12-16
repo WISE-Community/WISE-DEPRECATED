@@ -1,11 +1,6 @@
 package org.wise.portal.presentation.web.controllers.student;
 
-import static org.easymock.EasyMock.createNiceMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.easymock.EasyMock.isA;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
+import static org.easymock.EasyMock.*;
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
@@ -17,8 +12,6 @@ import java.util.Locale;
 import java.util.Properties;
 import java.util.Set;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.easymock.EasyMockRunner;
 import org.easymock.Mock;
 import org.easymock.TestSubject;
@@ -26,14 +19,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.security.authentication.TestingAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.PeriodNotFoundException;
 import org.wise.portal.domain.RunHasEndedException;
 import org.wise.portal.domain.StudentUserAlreadyAssociatedWithRunException;
-import org.wise.portal.domain.authentication.impl.PersistentGrantedAuthority;
 import org.wise.portal.domain.authentication.impl.StudentUserDetails;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.group.Group;
@@ -47,10 +36,10 @@ import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.user.impl.UserImpl;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.domain.workgroup.impl.WorkgroupImpl;
+import org.wise.portal.presentation.web.controllers.APIControllerTest;
 import org.wise.portal.presentation.web.response.SimpleResponse;
 import org.wise.portal.service.attendance.StudentAttendanceService;
 import org.wise.portal.service.authentication.DuplicateUsernameException;
-import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.student.StudentService;
@@ -58,7 +47,7 @@ import org.wise.portal.service.user.UserService;
 import org.wise.portal.service.workgroup.WorkgroupService;
 
 @RunWith(EasyMockRunner.class)
-public class StudentAPIControllerTest {
+public class StudentAPIControllerTest extends APIControllerTest {
 
   @TestSubject
   private StudentAPIController studentAPIController = new StudentAPIController();
@@ -81,32 +70,15 @@ public class StudentAPIControllerTest {
   @Mock
   private StudentAttendanceService studentAttendanceService;
 
-  @Mock
-  private HttpServletRequest request;
-
   @Mock(fieldName = "appProperties")
   private Properties appProperties;
 
   @Mock(fieldName = "i18nProperties")
   private Properties i18nProperties;
 
-  private Authentication studentAuthentication;
-
-  private final String STUDENT_FIRSTNAME = "SpongeBob";
-
-  private final String STUDENT_LASTNAME = "Squarepants";
-
-  private final String STUDENT_USERNAME = "SpongeBobS0101";
-
-  private User student1, teacher1, teacher2;
-
-  private StudentUserDetails student1UserDetails;
-
   private List<Run> runs;
 
   private Long runId1;
-
-  private Long student1Id = 94678L;
 
   private String RUN1_RUNCODE = "orca123";
 
@@ -118,27 +90,10 @@ public class StudentAPIControllerTest {
 
   private Run run1, run2, run3;
 
+  @Override
   @Before
   public void setUp() {
-    student1 = new UserImpl();
-    student1.setId(student1Id);
-    PersistentGrantedAuthority studentAuthority = new PersistentGrantedAuthority();
-    studentAuthority.setAuthority(UserDetailsService.STUDENT_ROLE);
-    student1UserDetails = new StudentUserDetails();
-    student1UserDetails.setFirstname(STUDENT_FIRSTNAME);
-    student1UserDetails.setLastname(STUDENT_LASTNAME);
-    student1UserDetails.setUsername(STUDENT_USERNAME);
-    student1UserDetails
-        .setAuthorities(new GrantedAuthority[] { studentAuthority });
-        student1UserDetails.setGoogleUserId("google-user-12345");
-    student1.setUserDetails(student1UserDetails);
-    Object credentials = null;
-    studentAuthentication = new TestingAuthenticationToken(student1UserDetails,
-        credentials);
-    teacher1 = new UserImpl();
-    TeacherUserDetails tud1 = new TeacherUserDetails();
-    tud1.setUsername("teacher1");
-    teacher1.setUserDetails(tud1);
+    super.setUp();
     teacher2 = new UserImpl();
     TeacherUserDetails tud2 = new TeacherUserDetails();
     tud2.setUsername("teacher2");
@@ -215,7 +170,7 @@ public class StudentAPIControllerTest {
     expectLastCall();
     replay(userService);
     SimpleResponse response = studentAPIController
-        .updateProfile(studentAuthentication, language);
+        .updateProfile(studentAuth, language);
     assertEquals("success", response.getStatus());
     verify(userService);
   }
@@ -228,9 +183,7 @@ public class StudentAPIControllerTest {
     expect(runService.getRunList(student1)).andReturn(runs);
     replay(runService);
     Set<HashMap<String, String>> associatedTeacher = studentAPIController
-        .getAssociatedTeachers(studentAuthentication);
-    verify(userService);
-    verify(runService);
+        .getAssociatedTeachers(studentAuth);
     assertEquals(2, associatedTeacher.size());
   }
 
@@ -262,7 +215,7 @@ public class StudentAPIControllerTest {
     expect(request.getContextPath()).andReturn("wise");
     replay(request);
     HashMap<String, Object> launchRunMap = studentAPIController
-        .launchRun(studentAuthentication, runId1, null, "[1]", "[]", request);
+        .launchRun(studentAuth, runId1, null, "[1]", "[]", request);
     assertEquals("/wise/run/1", launchRunMap.get("startProjectUrl"));
     verify(runService);
     verify(userService);
@@ -382,7 +335,7 @@ public class StudentAPIControllerTest {
         .andReturn("http://localhost:8080/curriculum").times(3);
     replay(appProperties);
     List<HashMap<String, Object>> runs = studentAPIController
-        .getRuns(studentAuthentication);
+        .getRuns(studentAuth);
     assertEquals(3, runs.size());
     verify(userService);
     verify(runService);
@@ -408,7 +361,7 @@ public class StudentAPIControllerTest {
         .andThrow(new ObjectNotFoundException(runCodeNotInDB, Run.class));
     replay(runService);
     HashMap<String, Object> response = studentAPIController.addStudentToRun(
-        studentAuthentication, runCodeNotInDB, RUN1_PERIOD1_NAME);
+        studentAuth, runCodeNotInDB, RUN1_PERIOD1_NAME);
     assertEquals("error", response.get("status"));
     assertEquals("runCodeNotFound", response.get("messageCode"));
     verify(userService);
@@ -444,7 +397,7 @@ public class StudentAPIControllerTest {
         isA(User.class))).andReturn(workgroups);
     replay(workgroupService);
     HashMap<String, Object> runMap = studentAPIController.addStudentToRun(
-        studentAuthentication, RUN1_RUNCODE, RUN1_PERIOD1_NAME);
+        studentAuth, RUN1_RUNCODE, RUN1_PERIOD1_NAME);
     assertEquals(RUN1_PERIOD1_NAME, runMap.get("periodName"));
     verify(userService);
     verify(studentService);
@@ -499,7 +452,7 @@ public class StudentAPIControllerTest {
         .andReturn(false);
     replay(workgroupService);
     HashMap<String, Object> response = studentAPIController
-        .canBeAddedToWorkgroup(studentAuthentication, runId1,
+        .canBeAddedToWorkgroup(studentAuth, runId1,
         workgroupId, studentIdNotInWorkgroup);
     assertEquals(true, response.get("status"));
     assertEquals(2,
