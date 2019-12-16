@@ -47,6 +47,7 @@ import * as hopscotch from 'hopscotch';
 import * as EventEmitter2 from 'eventemitter2';
 import * as draggablePoints from '../../lib/draggable-points/draggable-points';
 import * as HighchartsExporting from '../../lib/highcharts-exporting@4.2.1';
+import * as covariance from 'compute-covariance';
 
 window['$'] = jQuery;
 window['jQuery'] = jQuery;
@@ -60,3 +61,4 @@ import * as summernote from 'summernote';
 window['summernote'] = summernote;
 window['draggablePoints'] = draggablePoints;
 window['HighchartsExporting'] = HighchartsExporting;
+window['covariance'] = covariance;

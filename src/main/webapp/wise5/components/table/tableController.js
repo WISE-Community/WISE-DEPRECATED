@@ -49,6 +49,8 @@ class TableController extends ComponentController {
       if (this.dataExplorerGraphTypes.length > 0) {
         this.dataExplorerGraphType = this.dataExplorerGraphTypes[0].value;
       }
+      this.isDataExplorerScatterPlotRegressionLineEnabled =
+          this.componentContent.isDataExplorerScatterPlotRegressionLineEnabled;
     }
 
     if (this.mode === 'student') {
@@ -456,6 +458,8 @@ class TableController extends ComponentController {
     studentData.dataExplorerGraphType = this.dataExplorerGraphType;
     studentData.dataExplorerXAxisLabel = this.dataExplorerXAxisLabel;
     studentData.dataExplorerYAxisLabel = this.dataExplorerYAxisLabel;
+    studentData.isDataExplorerScatterPlotRegressionLineEnabled =
+        this.isDataExplorerScatterPlotRegressionLineEnabled;
     studentData.dataExplorerSeries = this.UtilService.makeCopyOfJSONObject(this.dataExplorerSeries);
 
     // set the submit counter
@@ -489,7 +493,7 @@ class TableController extends ComponentController {
     this.createComponentStateAdditionalProcessing(deferred, componentState, action);
 
     return deferred.promise;
-  };
+  }
 
   /**
    * Create a new component state with no student data
@@ -1111,19 +1115,30 @@ class TableController extends ComponentController {
     for (const singleDataExplorerSeries of this.dataExplorerSeries) {
       singleDataExplorerSeries.xColumn = this.dataExplorerXColumn;
     }
-    if (this.numDataExplorerSeries === 1) {
-      this.dataExplorerXAxisLabel = this.getColumnName(this.dataExplorerXColumn);
-    }
+    this.dataExplorerXAxisLabel = this.getColumnName(this.dataExplorerXColumn);
     this.studentDataChanged();
   }
 
   dataExplorerYColumnChanged(index) {
     const yColumn = this.dataExplorerSeries[index].yColumn;
     this.dataExplorerSeries[index].name = this.columnNames[yColumn];
-    if (this.numDataExplorerSeries === 1) {
-      this.dataExplorerYAxisLabel = this.getColumnName(yColumn);
-    }
+    this.dataExplorerYAxisLabel = this.getDataExplorerYAxisLabel();
     this.studentDataChanged();
+  }
+
+  getDataExplorerYAxisLabel() {
+    let yAxisLabel = '';
+    for (let index = 0; index < this.dataExplorerSeries.length; index++) { 
+      const yColumn = this.dataExplorerSeries[index].yColumn;
+      if (yColumn != null) {
+        const columnName = this.getColumnName(yColumn);
+        if (yAxisLabel != '') {
+          yAxisLabel += ' <br/> ';
+        }
+        yAxisLabel += columnName;
+      }
+    }
+    return yAxisLabel;
   }
 
   createDataExplorerSeries() {

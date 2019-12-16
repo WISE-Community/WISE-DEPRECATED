@@ -96,6 +96,13 @@
                 Bar Graph
               </md-checkbox>
             </div>
+            <div ng-if='tableController.isDataExplorerScatterPlotEnabled'>
+              <md-checkbox class='md-primary'
+                  ng-model='tableController.authoringComponentContent.isDataExplorerScatterPlotRegressionLineEnabled'
+                  ng-change='tableController.authoringViewComponentChanged()'>
+                Show Scatter Plot Regression Line
+              </md-checkbox>
+            </div>
             <div>
               <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
                 <label>Number of Series</label>

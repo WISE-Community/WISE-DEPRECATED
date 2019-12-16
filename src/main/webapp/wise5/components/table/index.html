@@ -147,6 +147,7 @@
               <label>Y Column</label>
               <md-select ng-model='singleDataExplorerSeries.yColumn'
                   ng-change='tableController.dataExplorerYColumnChanged($index)'>
+                <md-option ng-value=''></md-option>
                 <md-option ng-repeat='columnName in tableController.columnNames track by $index'
                     ng-value='$index'>
                   <span>{{columnName}}</span>

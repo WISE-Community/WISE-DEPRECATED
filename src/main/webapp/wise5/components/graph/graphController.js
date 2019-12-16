@@ -67,6 +67,13 @@ class GraphController extends ComponentController {
     this.addNextComponentStateToUndoStack = false;
     this.chartId = 'chart_' + this.componentId;
     this.hiddenCanvasId = 'hiddenCanvas_' + this.componentId;
+    this.dataExplorerColors = [
+      'blue',
+      'orange',
+      'purple',
+      'black',
+      'green'
+    ];
     this.applyHighchartsPlotLinesLabelFix();
     this.initializeComponentContentParams();
     const componentState = this.$scope.componentState;
@@ -266,22 +273,116 @@ class GraphController extends ComponentController {
     const graphType = studentData.dataExplorerGraphType;
     this.xAxis.title.text = studentData.dataExplorerXAxisLabel;
     this.yAxis.title.text = studentData.dataExplorerYAxisLabel;
+    trial.series = [];
     for (let seriesIndex = 0; seriesIndex < dataExplorerSeries.length; seriesIndex++) {
       const xColumn = dataExplorerSeries[seriesIndex].xColumn;
       const yColumn = dataExplorerSeries[seriesIndex].yColumn;
-      let series = trial.series[seriesIndex];
-      if (series == null) {
-        series = {};
-        this.series[seriesIndex] = series;
-      }
-      series.type = graphType;
-      series.name = dataExplorerSeries[seriesIndex].name;
-      series.data =
-          this.convertDataExplorerDataToSeriesData(studentData.tableData, xColumn, yColumn);
-      if (series.type === 'line') {
-        series.data.sort(this.sortLineData);
+      if (yColumn != null) {
+        const color = this.dataExplorerColors[seriesIndex];
+        const name = dataExplorerSeries[seriesIndex].name;
+        const series = this.generateDataExplorerSeries(studentData, xColumn, yColumn, graphType,
+            name, color);
+        trial.series.push(series);
+        if (graphType === 'scatter' && studentData.isDataExplorerScatterPlotRegressionLineEnabled) {
+          const regressionSeries = this.generateDataExplorerRegressionSeries(studentData, xColumn,
+              yColumn, color);
+          trial.series.push(regressionSeries);
+        }
       }
     }
+  }
+
+  generateDataExplorerSeries(studentData, xColumn, yColumn, graphType, name, color) {
+    const series = {
+      type: graphType,
+      name: name,
+      color: color,
+      data: this.convertDataExplorerDataToSeriesData(studentData.tableData, xColumn, yColumn)
+    };
+    if (graphType === 'line') {
+      series.data.sort(this.sortLineData);
+    }
+    return series;
+  }
+
+  generateDataExplorerRegressionSeries(studentData, xColumn, yColumn, color) {
+    const regressionLineData =
+        this.calculateRegressionLineData(studentData, xColumn, yColumn);
+    return {
+      type: 'line',
+      name: 'Regression Line',
+      color: color,
+      data: regressionLineData
+    };
+  }
+
+  calculateRegressionLineData(studentData, xColumn, yColumn) {
+    const xValues = this.getValuesInColumn(studentData.tableData, xColumn);
+    const yValues = this.getValuesInColumn(studentData.tableData, yColumn);
+    const covarianceMatrix = covariance(xValues, yValues);
+    const covarianceXY = covarianceMatrix[0][1];
+    const varianceX = covarianceMatrix[0][0];
+    const meanY = this.calculateMean(yValues);
+    const meanX = this.calculateMean(xValues);
+    const slope = covarianceXY / varianceX;
+    const intercept = meanY - (slope * meanX);
+    let firstX = this.calculateMin(xValues);
+    let firstY = (slope * firstX) + intercept;
+    if (firstY < 0) {
+      firstY = 0;
+      firstX = (firstY - intercept) / slope;
+    }
+    let secondX = this.calculateMax(xValues);
+    let secondY = (slope * secondX) + intercept;
+    if (secondY < 0) {
+      secondY = 0;
+      secondX = (secondY - intercept) / slope;
+    }
+    return [[firstX, firstY], [secondX, secondY]];
+  }
+
+  calculateMean(values) {
+    let sum = 0;
+    let count = 0;
+    for (const value of values) {
+      sum += value;
+      count++;
+    }
+    return sum / count;
+  }
+
+  calculateMin(values) {
+    let min = null;
+    for (const value of values) {
+      if (min == null) {
+        min = value;
+      } else if (value < min) {
+        min = value;
+      }
+    }
+    return min;
+  }
+
+  calculateMax(values) {
+    let max = null;
+    for (const value of values) {
+      if (max == null) {
+        max = value;
+      } else if (value > max) {
+        max = value;
+      }
+    }
+    return max;
+  }
+
+  getValuesInColumn(tableData, columnIndex) {
+    const values = [];
+    for (let r = 1; r < tableData.length; r++) {
+      const row = tableData[r];
+      const value = Number(row[columnIndex].text);
+      values.push(value);
+    }
+    return values;
   }
 
   sortLineData(a, b) {

@@ -50,7 +50,7 @@ class TableAuthoringController extends TableController {
       }
     ];
 
-    if (this.authoringAddConnectedComponent.isDataExplorerEnabled) {
+    if (this.authoringComponentContent.isDataExplorerEnabled) {
       this.repopulateDataExplorerGraphTypes();
     }
 
@@ -770,7 +770,7 @@ class TableAuthoringController extends TableController {
       } else if (graphType.value === 'line') {
         this.isDataExplorerLineGraphEnabled = true;
       } else if (graphType.value === 'column') {
-        this.isDataExplorerColumnEnabled = true;
+        this.isDataExplorerBarGraphEnabled = true;
       }
     }
   }
