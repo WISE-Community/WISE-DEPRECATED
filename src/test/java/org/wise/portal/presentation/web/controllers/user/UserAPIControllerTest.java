@@ -1,41 +1,29 @@
 package org.wise.portal.presentation.web.controllers.user;
 
-import static org.easymock.EasyMock.*;
-import static org.junit.Assert.*;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.Properties;
 
 import org.easymock.EasyMockRunner;
-import org.easymock.Mock;
 import org.easymock.TestSubject;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.security.core.Authentication;
 import org.wise.portal.presentation.web.controllers.APIControllerTest;
 import org.wise.portal.presentation.web.exception.IncorrectPasswordException;
 import org.wise.portal.presentation.web.response.SimpleResponse;
-import org.wise.portal.service.user.UserService;
 
 @RunWith(EasyMockRunner.class)
 public class UserAPIControllerTest extends APIControllerTest {
 
   @TestSubject
   private UserAPIController userAPIController = new UserAPIController();
-
-  @Mock
-  private UserService userService;
-
-  @Mock
-  private Properties appProperties;
-
-  @Override
-  @Before
-  public void setUp() {
-    super.setUp();
-  }
 
   @Test
   public void getUserInfo_UnAuthenticatedUser_ReturnPassedInUsername() {
@@ -151,9 +139,9 @@ public class UserAPIControllerTest extends APIControllerTest {
 
   @Test
   public void isGoogleIdExist_GoogleUserExists_ReturnTrue() {
-    expect(userService.retrieveUserByGoogleUserId(STUEDENT1_GOOGLE_ID)).andReturn(student1);
+    expect(userService.retrieveUserByGoogleUserId(STUDENT1_GOOGLE_ID)).andReturn(student1);
     replay(userService);
-    assertTrue(userAPIController.isGoogleIdExist(STUEDENT1_GOOGLE_ID));
+    assertTrue(userAPIController.isGoogleIdExist(STUDENT1_GOOGLE_ID));
     verify(userService);
   }
 
@@ -168,9 +156,9 @@ public class UserAPIControllerTest extends APIControllerTest {
 
   @Test
   public void isGoogleIdMatches_GoogleUserIdAndUserIdMatch_ReturnTrue() {
-    expect(userService.retrieveUserByGoogleUserId(STUEDENT1_GOOGLE_ID)).andReturn(student1);
+    expect(userService.retrieveUserByGoogleUserId(STUDENT1_GOOGLE_ID)).andReturn(student1);
     replay(userService);
-    assertTrue(userAPIController.isGoogleIdMatches(STUEDENT1_GOOGLE_ID, student1Id.toString()));
+    assertTrue(userAPIController.isGoogleIdMatches(STUDENT1_GOOGLE_ID, student1Id.toString()));
     verify(userService);
   }
 
@@ -185,17 +173,17 @@ public class UserAPIControllerTest extends APIControllerTest {
 
   @Test
   public void isGoogleIdMatches_GoogleUserIdAndUserIdDoNotMatch_ReturnFalse() {
-    expect(userService.retrieveUserByGoogleUserId(STUEDENT1_GOOGLE_ID)).andReturn(teacher1);
+    expect(userService.retrieveUserByGoogleUserId(STUDENT1_GOOGLE_ID)).andReturn(teacher1);
     replay(userService);
-    assertFalse(userAPIController.isGoogleIdMatches(STUEDENT1_GOOGLE_ID, teacher1.toString()));
+    assertFalse(userAPIController.isGoogleIdMatches(STUDENT1_GOOGLE_ID, teacher1.toString()));
     verify(userService);
   }
 
   @Test
   public void getUserByGoogleId_GoogleUserExists_ReturnSuccessResponse() {
-    expect(userService.retrieveUserByGoogleUserId(STUEDENT1_GOOGLE_ID)).andReturn(student1);
+    expect(userService.retrieveUserByGoogleUserId(STUDENT1_GOOGLE_ID)).andReturn(student1);
     replay(userService);
-    HashMap<String, Object> response = userAPIController.getUserByGoogleId(STUEDENT1_GOOGLE_ID);
+    HashMap<String, Object> response = userAPIController.getUserByGoogleId(STUDENT1_GOOGLE_ID);
     assertEquals("success", response.get("status"));
     assertEquals(student1.getId(), response.get("userId"));
     verify(userService);

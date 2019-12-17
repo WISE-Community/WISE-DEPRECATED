@@ -20,11 +20,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
+import org.wise.portal.domain.project.Project;
+import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
+import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.exception.IncorrectPasswordException;
 import org.wise.portal.presentation.web.response.SimpleResponse;
 import org.wise.portal.service.mail.IMailFacade;
+import org.wise.portal.service.project.ProjectService;
+import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.user.UserService;
+import org.wise.portal.service.workgroup.WorkgroupService;
 
 /**
  * User REST API
@@ -38,61 +44,71 @@ import org.wise.portal.service.user.UserService;
 public class UserAPIController {
 
   @Autowired
-  private Properties appProperties;
+  protected Properties appProperties;
+
+  @Autowired
+  protected RunService runService;
 
   @Autowired
   protected UserService userService;
 
   @Autowired
+  protected WorkgroupService workgroupService;
+
+  @Autowired
+  protected ProjectService projectService;
+
+  @Autowired
   protected IMailFacade mailService;
 
   @Value("${google.clientId:}")
-  private String googleClientId = "";
+  protected String googleClientId = "";
 
   @Value("${google.clientSecret:}")
   private String googleClientSecret = "";
 
+  protected static final String PROJECT_THUMB_PATH = "/assets/project_thumb.png";
+
   @GetMapping("/info")
   HashMap<String, Object> getUserInfo(Authentication auth,
       @RequestParam(value = "username", required = false) String username) {
+    HashMap<String, Object> info = new HashMap<String, Object>();
     if (auth != null) {
       User user = userService.retrieveUserByUsername(auth.getName());
-      HashMap<String, Object> userMap = new HashMap<String, Object>();
-      userMap.put("id", user.getId());
+      info.put("id", user.getId());
       MutableUserDetails ud = user.getUserDetails();
-      userMap.put("firstName", ud.getFirstname());
-      userMap.put("lastName", ud.getLastname());
-      userMap.put("username", ud.getUsername());
-      userMap.put("isGoogleUser", ud.isGoogleUser());
-      userMap.put("isPreviousAdmin", isPreviousAdmin(auth));
-      userMap.put("language", ud.getLanguage());
-      userMap.put("isGoogleUser", ud.isGoogleUser());
+      info.put("firstName", ud.getFirstname());
+      info.put("lastName", ud.getLastname());
+      info.put("username", ud.getUsername());
+      info.put("isGoogleUser", ud.isGoogleUser());
+      info.put("isPreviousAdmin", isPreviousAdmin(auth));
+      info.put("language", ud.getLanguage());
+      info.put("isGoogleUser", ud.isGoogleUser());
 
       if (user.isStudent()) {
-        userMap.put("role", "student");
+        info.put("role", "student");
       } else {
         if (user.isAdmin()) {
-          userMap.put("role", "admin");
+          info.put("role", "admin");
         } else if (user.isResearcher()) {
-          userMap.put("role", "researcher");
+          info.put("role", "researcher");
         } else if (user.isTeacher()) {
-          userMap.put("role", "teacher");
+          info.put("role", "teacher");
         }
         TeacherUserDetails tud = (TeacherUserDetails) ud;
-        userMap.put("displayName", tud.getDisplayname());
-        userMap.put("email", tud.getEmailAddress());
-        userMap.put("city", tud.getCity());
-        userMap.put("state", tud.getState());
-        userMap.put("country", tud.getCountry());
-        userMap.put("schoolName", tud.getSchoolname());
-        userMap.put("schoolLevel", tud.getSchoollevel());
+        info.put("displayName", tud.getDisplayname());
+        info.put("email", tud.getEmailAddress());
+        info.put("city", tud.getCity());
+        info.put("state", tud.getState());
+        info.put("country", tud.getCountry());
+        info.put("schoolName", tud.getSchoolname());
+        info.put("schoolLevel", tud.getSchoollevel());
       }
-      return userMap;
+      return info;
     } else {
-      HashMap<String, Object> userMap = new HashMap<String, Object>();
-      userMap.put("username", username);
-      return userMap;
+      info.put("username", username);
     }
+    return info;
   }
 
   boolean isPreviousAdmin(Authentication authentication) {
@@ -105,10 +121,11 @@ public class UserAPIController {
   }
 
   @GetMapping("/config")
-  HashMap<String, Object> getConfig(HttpServletRequest request) {
+  protected HashMap<String, Object> getConfig(HttpServletRequest request) {
     HashMap<String, Object> config = new HashMap<String, Object>();
     String contextPath = request.getContextPath();
     config.put("contextPath", contextPath);
+    config.put("currentTime", System.currentTimeMillis());
     config.put("googleClientId", googleClientId);
     config.put("isGoogleClassroomEnabled", isGoogleClassroomEnabled());
     config.put("logOutURL", contextPath + "/logout");
@@ -181,19 +198,17 @@ public class UserAPIController {
   @GetMapping("/google-user")
   HashMap<String, Object> getUserByGoogleId(@RequestParam String googleUserId) {
     User user = userService.retrieveUserByGoogleUserId(googleUserId);
+    HashMap<String, Object> response = new HashMap<String, Object>();
     if (user == null) {
-      HashMap<String, Object> response = new HashMap<String, Object>();
       response.put("status", "error");
-      return response;
     } else {
-      HashMap<String, Object> response = new HashMap<String, Object>();
       response.put("status", "success");
       response.put("userId", user.getId());
       response.put("username", user.getUserDetails().getUsername());
       response.put("firstName", user.getUserDetails().getFirstname());
       response.put("lastName", user.getUserDetails().getLastname());
-      return response;
     }
+    return response;
   }
 
   private String getLanguageName(String localeString) {
@@ -205,5 +220,94 @@ public class UserAPIController {
       Locale locale = new Locale(localeString);
       return locale.getDisplayLanguage();
     }
+  }
+
+  protected HashMap<String, Object> getProjectMap(Project project) {
+    HashMap<String, Object> map = new HashMap<String, Object>();
+    map.put("id", project.getId());
+    map.put("name", project.getName());
+    map.put("metadata", project.getMetadata());
+    map.put("dateCreated", project.getDateCreated());
+    map.put("dateArchived", project.getDateDeleted());
+    map.put("projectThumb", projectService.getProjectPath(project) + PROJECT_THUMB_PATH);
+    map.put("owner", convertUserToMap(project.getOwner()));
+    map.put("sharedOwners", projectService.getProjectSharedOwnersList(project));
+    map.put("parentId", project.getParentProjectId());
+    map.put("wiseVersion", project.getWiseVersion());
+    map.put("uri", projectService.getProjectURI(project));
+    map.put("license", projectService.getLicensePath(project));
+    return map;
+  }
+
+  protected HashMap<String, Object> getRunMap(User user, Run run) {
+    HashMap<String, Object> map = new HashMap<String, Object>();
+    Project project = run.getProject();
+    String curriculumBaseWWW = appProperties.getProperty("curriculum_base_www");
+    String projectThumb = "";
+    String modulePath = project.getModulePath();
+    int lastIndexOfSlash = modulePath.lastIndexOf("/");
+    if (lastIndexOfSlash != -1) {
+      /*
+       * The project thumb url by default is the same (/assets/project_thumb.png)
+       * for all projects, but this could be overwritten in the future
+       * e.g. /253/assets/projectThumb.png
+       */
+      projectThumb = curriculumBaseWWW + modulePath.substring(0, lastIndexOfSlash) + PROJECT_THUMB_PATH;
+    }
+
+    map.put("id", run.getId());
+    map.put("name", run.getName());
+    map.put("maxStudentsPerTeam", run.getMaxWorkgroupSize());
+    map.put("projectThumb", projectThumb);
+    map.put("runCode", run.getRuncode());
+    map.put("startTime", run.getStartTimeMilliseconds());
+    map.put("endTime", run.getEndTimeMilliseconds());
+    map.put("project", getProjectMap(project));
+    map.put("owner", convertUserToMap(run.getOwner()));
+    map.put("numStudents", run.getNumStudents());
+
+    if (user.isStudent()) {
+      map.put("periodName", run.getPeriodOfStudent(user).getName());
+      List<Workgroup> workgroups = workgroupService.getWorkgroupListByRunAndUser(run, user);
+      if (workgroups.size() > 0) {
+        Workgroup workgroup = workgroups.get(0);
+        List<HashMap<String, Object>> workgroupMembers = new ArrayList<HashMap<String, Object>>();
+        StringBuilder workgroupNames = new StringBuilder();
+        for (User member : workgroup.getMembers()) {
+          MutableUserDetails userDetails = (MutableUserDetails) member.getUserDetails();
+          HashMap<String, Object> memberMap = new HashMap<String, Object>();
+          memberMap.put("id", member.getId());
+          String firstName = userDetails.getFirstname();
+          memberMap.put("firstName", firstName);
+          String lastName = userDetails.getLastname();
+          memberMap.put("lastName", lastName);
+          memberMap.put("username", userDetails.getUsername());
+          memberMap.put("isGoogleUser", userDetails.isGoogleUser());
+          workgroupMembers.add(memberMap);
+          if (workgroupNames.length() > 0) {
+            workgroupNames.append(", ");
+          }
+          workgroupNames.append(firstName + " " + lastName);
+          map.put("workgroupId", workgroup.getId());
+          map.put("workgroupNames", workgroupNames.toString());
+          map.put("workgroupMembers", workgroupMembers);
+        }
+      }
+    }
+    return map;
+  }
+
+  protected HashMap<String, Object> convertUserToMap(User user) {
+    HashMap<String, Object> map = new HashMap<String, Object>();
+    MutableUserDetails userDetails = user.getUserDetails();
+    map.put("id", user.getId());
+    map.put("username", userDetails.getUsername());
+    map.put("firstName", userDetails.getFirstname());
+    map.put("lastName", userDetails.getLastname());
+    map.put("isGoogleUser", userDetails.isGoogleUser());
+    if (userDetails instanceof TeacherUserDetails) {
+      map.put("displayName", ((TeacherUserDetails) userDetails).getDisplayname());
+    }
+    return map;
   }
 }

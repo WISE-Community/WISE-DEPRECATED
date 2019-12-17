@@ -388,4 +388,6 @@ public interface Run extends Persistable {
   Boolean isActive();
 
   boolean isSharedTeacher(User user);
+
+  int getNumStudents();
 }

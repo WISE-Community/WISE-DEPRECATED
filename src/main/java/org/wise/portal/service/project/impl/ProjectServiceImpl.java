@@ -693,27 +693,27 @@ public class ProjectServiceImpl implements ProjectService {
   public List<HashMap<String, Object>> getProjectSharedOwnersList(Project project) {
     List<HashMap<String, Object>> sharedOwners = new ArrayList<HashMap<String, Object>>();
     for (User sharedOwner : project.getSharedowners()) {
-      sharedOwners.add(getSharedOwnerJSON(sharedOwner, project));
+      sharedOwners.add(getSharedOwnerMap(sharedOwner, project));
     }
     return sharedOwners;
   }
 
-  private HashMap<String, Object> getSharedOwnerJSON(User sharedOwner, Project project) {
-    HashMap<String, Object> sharedOwnerMap = new HashMap<String, Object>();
-    sharedOwnerMap.put("id", sharedOwner.getId());
-    sharedOwnerMap.put("username", sharedOwner.getUserDetails().getUsername());
-    sharedOwnerMap.put("firstName", sharedOwner.getUserDetails().getFirstname());
-    sharedOwnerMap.put("lastName", sharedOwner.getUserDetails().getLastname());
-    sharedOwnerMap.put("permissions", getSharedOwnerPermissions(project, sharedOwner));
-    return sharedOwnerMap;
+  private HashMap<String, Object> getSharedOwnerMap(User sharedOwner, Project project) {
+    HashMap<String, Object> map = new HashMap<String, Object>();
+    map.put("id", sharedOwner.getId());
+    map.put("username", sharedOwner.getUserDetails().getUsername());
+    map.put("firstName", sharedOwner.getUserDetails().getFirstname());
+    map.put("lastName", sharedOwner.getUserDetails().getLastname());
+    map.put("permissions", getSharedOwnerPermissions(project, sharedOwner));
+    return map;
   }
 
   private List<Integer> getSharedOwnerPermissions(Project project, User sharedOwner) {
-    List<Integer> sharedOwnerPermissions = new ArrayList<Integer>();
+    List<Integer> permissions = new ArrayList<Integer>();
     for (Permission permission : getSharedTeacherPermissions(project, sharedOwner)) {
-      sharedOwnerPermissions.add(permission.getMask());
+      permissions.add(permission.getMask());
     }
-    return sharedOwnerPermissions;
+    return permissions;
   }
 
   public String getProjectPath(Project project) {

@@ -451,6 +451,15 @@ public class RunImpl implements Run {
     }
   }
 
+  public int getNumStudents() {
+    int numStudents = 0;
+    for (Group period : periods) {
+      Set<User> members = period.getMembers();
+      numStudents += members.size();
+    }
+    return numStudents;
+  }
+
   public static class UserAlphabeticalComparator implements Comparator<User> {
 
     /**
