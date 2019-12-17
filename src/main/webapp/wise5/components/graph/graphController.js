@@ -236,7 +236,7 @@ class GraphController extends ComponentController {
       connectedComponent, connectedComponentParams, componentState) {
     const studentData = componentState.studentData;
     if (studentData.isDataExplorerEnabled) {
-        this.handleDataExplorer(studentData);
+      this.handleDataExplorer(studentData);
     } else {
       const rows = studentData.tableData;
       const data = this.convertRowDataToSeriesData(rows, connectedComponentParams);
