@@ -763,7 +763,7 @@ class TableAuthoringController extends TableController {
   repopulateDataExplorerGraphTypes() {
     this.isDataExplorerScatterPlotEnabled = false;
     this.isDataExplorerLineGraphEnabled = false;
-    this.isDataExplorerColumnEnabled = false;
+    this.isDataExplorerBarGraphEnabled = false;
     for (const graphType of this.authoringComponentContent.dataExplorerGraphTypes) {
       if (graphType.value === 'scatter') {
         this.isDataExplorerScatterPlotEnabled = true;
