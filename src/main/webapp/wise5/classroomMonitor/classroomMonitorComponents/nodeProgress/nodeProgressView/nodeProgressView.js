@@ -119,8 +119,8 @@ class NodeProgressViewController {
          * Listen for state change event
          */
         this.$transitions.onSuccess({}, ($transition) => {
-            let toNodeId = $transition.params('to').nodeId;
-            let fromNodeId = $transition.params('from').nodeId;
+            const toNodeId = $transition.params('to').nodeId;
+            const fromNodeId = $transition.params('from').nodeId;
             if (toNodeId && fromNodeId && toNodeId !== fromNodeId) {
                 this.TeacherDataService.endCurrentNodeAndSetCurrentNodeByNodeId(toNodeId);
             }

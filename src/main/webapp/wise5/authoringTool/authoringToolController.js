@@ -7,9 +7,9 @@ class AuthoringToolController {
       $filter,
       $location,
       $mdDialog,
-      $rootScope,
       $scope,
       $state,
+      $transitions,
       $timeout,
       ConfigService,
       ProjectService,
@@ -19,9 +19,9 @@ class AuthoringToolController {
     this.$filter = $filter;
     this.$location = $location;
     this.$mdDialog = $mdDialog;
-    this.$rootScope = $rootScope;
     this.$scope = $scope;
     this.$state = $state;
+    this.$transitions = $transitions;
     this.$timeout = $timeout;
     this.$translate = this.$filter('translate');
     this.ConfigService = ConfigService;
@@ -109,10 +109,12 @@ class AuthoringToolController {
     this.processUI();
 
     // listen for state change events and close the menu
-    this.$scope.$on('$stateChangeSuccess',
-        (event, toState, toParams, fromState, fromParams) => {
+    $transitions.onSuccess({}, ($transition) => {
       this.isMenuOpen = false;
       this.processUI();
+      if ($transition.name === 'root.main') {
+        this.saveEvent('projectListViewed', 'Navigation');
+      }
     });
 
     $scope.$on('showSessionWarning', () => {
@@ -224,13 +226,6 @@ class AuthoringToolController {
       });
     });
 
-    this.$rootScope.$on('$stateChangeSuccess',
-        (event, toState, toParams, fromState, fromParams) => {
-      if (toState != null && toState.name == 'root.main') {
-        this.saveEvent('projectListViewed', 'Navigation');
-      }
-    });
-
     if (this.$state.current.name == 'root.main') {
       this.saveEvent('projectListViewed', 'Navigation');
     }
@@ -337,9 +332,9 @@ AuthoringToolController.$inject = [
   '$filter',
   '$location',
   '$mdDialog',
-  '$rootScope',
   '$scope',
   '$state',
+  '$transitions',
   '$timeout',
   'ConfigService',
   'ProjectService',

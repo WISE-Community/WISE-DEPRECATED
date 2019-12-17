@@ -14,6 +14,7 @@ class ProjectController {
       $stateParams,
       $stomp,
       $timeout,
+      $transitions,
       $window,
       ConfigService,
       ProjectAssetService,
@@ -31,6 +32,7 @@ class ProjectController {
     this.$stateParams = $stateParams;
     this.$stomp = $stomp;
     this.$timeout = $timeout;
+    this.$transitions = $transitions;
     this.$translate = this.$filter('translate');
     this.$window = $window;
     this.ConfigService = ConfigService;
@@ -160,20 +162,17 @@ class ProjectController {
       this.$mdDialog.hide();
     });
 
-    this.$rootScope.$on('$stateChangeSuccess',
-        (event, toState, toParams, fromState, fromParams) => {
-      if (toState != null) {
-        let stateName = toState.name;
-        if (stateName == 'root.project') {
-          this.saveEvent('projectHomeViewOpened', 'Navigation');
-        } else if (stateName == 'root.project.node') {
-        } else if (stateName == 'root.project.asset') {
-          this.saveEvent('assetsViewOpened', 'Navigation');
-        } else if (stateName == 'root.project.info') {
-          this.saveEvent('projectInfoViewOpened', 'Navigation');
-        } else if (stateName == 'root.project.notebook') {
-          this.saveEvent('notebookViewOpened', 'Navigation');
-        }
+    this.$transitions.onSuccess({}, ($transition) => {
+      let stateName = $transition.name;
+      if (stateName == 'root.project') {
+        this.saveEvent('projectHomeViewOpened', 'Navigation');
+      } else if (stateName == 'root.project.node') {
+      } else if (stateName == 'root.project.asset') {
+        this.saveEvent('assetsViewOpened', 'Navigation');
+      } else if (stateName == 'root.project.info') {
+        this.saveEvent('projectInfoViewOpened', 'Navigation');
+      } else if (stateName == 'root.project.notebook') {
+        this.saveEvent('notebookViewOpened', 'Navigation');
       }
     });
 
@@ -1712,6 +1711,7 @@ ProjectController.$inject = [
     '$stateParams',
     '$stomp',
     '$timeout',
+    '$transitions',
     '$window',
     'ConfigService',
     'ProjectAssetService',

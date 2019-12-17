@@ -9,6 +9,7 @@ class VLEController {
       $mdDialog,
       $mdMenu,
       $state,
+      $transitions,
       AnnotationService,
       ConfigService,
       NotebookService,
@@ -24,6 +25,7 @@ class VLEController {
     this.$mdDialog = $mdDialog;
     this.$mdMenu = $mdMenu;
     this.$state = $state;
+    this.$transitions = $transitions;
     this.AnnotationService = AnnotationService;
     this.ConfigService = ConfigService;
     this.NotebookService = NotebookService;
@@ -110,8 +112,7 @@ class VLEController {
       }
     });
 
-    this.$scope.$on('$stateChangeSuccess',
-        (event, toState, toParams, fromState, fromParams) => {
+    this.$transitions.onSuccess({}, ($transition) => {
       this.$anchorScroll('node');
     });
 
@@ -626,6 +627,7 @@ VLEController.$inject = [
   '$mdDialog',
   '$mdMenu',
   '$state',
+  '$transitions',
   'AnnotationService',
   'ConfigService',
   'NotebookService',
