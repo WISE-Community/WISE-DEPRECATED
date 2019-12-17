@@ -1,11 +1,10 @@
 'use strict';
 
-class NodeGradingController {
+class NodeGradingViewController {
 
     constructor($filter,
                 $mdDialog,
                 $scope,
-                $stateParams,
                 AnnotationService,
                 ConfigService,
                 NodeService,
@@ -17,7 +16,6 @@ class NodeGradingController {
         this.$filter = $filter;
         this.$mdDialog = $mdDialog;
         this.$scope = $scope;
-        this.$stateParams = $stateParams;
         this.AnnotationService = AnnotationService;
         this.ConfigService = ConfigService;
         this.NodeService = NodeService,
@@ -25,18 +23,15 @@ class NodeGradingController {
         this.ProjectService = ProjectService;
         this.StudentStatusService = StudentStatusService;
         this.TeacherDataService = TeacherDataService;
-
         this.$translate = this.$filter('translate');
+    }
 
-        this.nodeId = this.$stateParams.nodeId;
-
+    $onInit() {
         // the max score for the node
         this.maxScore = this.ProjectService.getMaxScoreForNode(this.nodeId);
         this.nodeHasWork = this.ProjectService.nodeHasWork(this.nodeId);
 
         this.sort = this.TeacherDataService.nodeGradingSort;
-
-        this.hiddenComponents = [];
 
         // TODO: add loading indicator
         this.TeacherDataService.retrieveStudentDataByNodeId(this.nodeId).then(result => {
@@ -525,11 +520,10 @@ class NodeGradingController {
     }
 }
 
-NodeGradingController.$inject = [
+NodeGradingViewController.$inject = [
     '$filter',
     '$mdDialog',
     '$scope',
-    '$stateParams',
     'AnnotationService',
     'ConfigService',
     'NodeService',
@@ -539,4 +533,14 @@ NodeGradingController.$inject = [
     'TeacherDataService'
 ];
 
-export default NodeGradingController;
+const NodeGradingView = {
+  bindings: {
+      nodeId: '<',
+      hiddenComponents: '<',
+      showHeader: '<'
+  },
+  controller: NodeGradingViewController,
+  templateUrl: 'wise5/classroomMonitor/classroomMonitorComponents/nodeGrading/nodeGradingView/nodeGradingView.html'
+};
+
+export default NodeGradingView;

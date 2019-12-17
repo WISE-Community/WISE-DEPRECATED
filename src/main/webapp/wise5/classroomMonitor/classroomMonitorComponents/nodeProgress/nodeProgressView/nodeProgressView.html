@@ -1,9 +1,9 @@
-<div class="view-content--with-sidemenu" ng-if="nodeProgressController.isGroupNode(nodeProgressController.nodeId)">
+<div class="view-content--with-sidemenu" ng-if="$ctrl.isGroupNode($ctrl.nodeId)">
     <div class="l-constrained l-constrained-md md-padding nav">
         <div class="flex md-subhead" layout="row" layout-align="start center" layout-wrap layout-margin>
             <span flex></span>
-            <md-button ng-if="nodeProgressController.showRubricButton"
-                       ng-click="nodeProgressController.showRubric($event)"
+            <md-button ng-if="$ctrl.showRubricButton"
+                       ng-click="$ctrl.showRubric($event)"
                        class="info md-raised">
                 <md-icon class="info"> info_outline </md-icon>
                 {{ ::'projectInfo' | translate }}
@@ -12,7 +12,7 @@
 
         <div class="nav-contents nav-contents--root">
             <div layout="row" layout-wrap layout-align="center start">
-                <nav-item ng-repeat="id in nodeProgressController.rootNode.ids"
+                <nav-item ng-repeat="id in $ctrl.rootNode.ids"
                           class="nav-item nav-item--root"
                           ng-class="{'expanded': itemExpanded}"
                           node-id="::id"
@@ -24,6 +24,7 @@
     </div>
 </div>
 
-<div class="view-content--with-sidemenu" ng-if="nodeProgressController.isApplicationNode(nodeProgressController.nodeId)">
-    <div class="md-padding" ng-cloak ui-view="nodeView"></div>
+<div class="view-content--with-sidemenu" ng-if="$ctrl.isApplicationNode($ctrl.nodeId)">
+    <node-grading-view node-id="$ctrl.nodeId"></node-grading-view>
+    <!-- <div class="md-padding" ng-cloak ui-view="nodeView"></div> -->
 </div>
