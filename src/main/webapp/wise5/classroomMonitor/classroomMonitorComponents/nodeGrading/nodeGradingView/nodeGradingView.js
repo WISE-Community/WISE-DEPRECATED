@@ -24,41 +24,28 @@ class NodeGradingViewController {
         this.StudentStatusService = StudentStatusService;
         this.TeacherDataService = TeacherDataService;
         this.$translate = this.$filter('translate');
+        this.nodeContent = null;
     }
 
     $onInit() {
-        // the max score for the node
-        this.maxScore = this.ProjectService.getMaxScoreForNode(this.nodeId);
+        this.maxScore = this.getMaxScore();
         this.nodeHasWork = this.ProjectService.nodeHasWork(this.nodeId);
-
         this.sort = this.TeacherDataService.nodeGradingSort;
+        this.nodeContent = this.ProjectService.getNodeById(this.nodeId);
+        if (this.componentId) {
+            this.hiddenComponents = this.getHiddenComponents();
+        }
 
         // TODO: add loading indicator
         this.TeacherDataService.retrieveStudentDataByNodeId(this.nodeId).then(result => {
-
-            // field that will hold the node content
-            this.nodeContent = null;
-
             this.teacherWorkgroupId = this.ConfigService.getWorkgroupId();
-
-            var node = this.ProjectService.getNodeById(this.nodeId);
-
-            if (node != null) {
-
-                // field that will hold the node content
-                this.nodeContent = node;
-            }
-
             this.workgroups = this.ConfigService.getClassmateUserInfos();
             this.workgroupsById = {}; // object that will hold workgroup names, statuses, scores, notifications, etc.
             this.workVisibilityById = {}; // object that specifies whether student work is visible for each workgroup
             this.workgroupInViewById = {}; // object that holds whether the workgroup is in view or not
-
-            let permissions = this.ConfigService.getPermissions();
+            const permissions = this.ConfigService.getPermissions();
             this.canViewStudentNames = permissions.canViewStudentNames;
-
             this.setWorkgroupsById();
-
             this.nRubrics = this.ProjectService.getNumberOfRubricsByNodeId(this.nodeId);
 
             // scroll to the top of the page when the page loads
@@ -66,14 +53,13 @@ class NodeGradingViewController {
         });
 
         this.$scope.$on('projectSaved', (event, args) => {
-            this.maxScore = this.ProjectService.getMaxScoreForNode(this.nodeId);
+            this.maxScore = this.getMaxScore();
         });
 
         this.$scope.$on('notificationChanged', (event, notification) => {
             if (notification.type === 'CRaterResult') {
-                // a CRaterResult notification has changed
                 // TODO: expand to encompass other notification types that should be shown to teacher
-                let workgroupId = notification.toWorkgroupId;
+                const workgroupId = notification.toWorkgroupId;
                 if (this.workgroupsById[workgroupId]) {
                     this.updateWorkgroup(workgroupId);
                 }
@@ -81,35 +67,56 @@ class NodeGradingViewController {
         });
 
         this.$scope.$on('annotationReceived', (event, args) => {
-            let annotation = args.annotation;
-
+            const annotation = args.annotation;
             if (annotation) {
-                let workgroupId = annotation.toWorkgroupId;
-                let nodeId = annotation.nodeId;
+                const workgroupId = annotation.toWorkgroupId;
+                const nodeId = annotation.nodeId;
                 if (nodeId === this.nodeId && this.workgroupsById[workgroupId]) {
-                    // a workgroup has a new annotation for this node
                     this.updateWorkgroup(workgroupId);
                 }
             }
         });
 
         this.$scope.$on('studentWorkReceived', (event, args) => {
-            let studentWork = args.studentWork;
-
+            const studentWork = args.studentWork;
             if (studentWork != null) {
-                let workgroupId = studentWork.workgroupId;
-                let nodeId = studentWork.nodeId;
+                const workgroupId = studentWork.workgroupId;
+                const nodeId = studentWork.nodeId;
                 if (nodeId === this.nodeId && this.workgroupsById[workgroupId]) {
-                    // a workgroup has a new componentState for this node
                     this.updateWorkgroup(workgroupId);
                 }
             }
         });
 
         // save event when node grading view is displayed and save the nodeId that is displayed
-        let context = "ClassroomMonitor", nodeId = this.nodeId, componentId = null, componentType = null,
+        const context = "ClassroomMonitor", nodeId = this.nodeId, componentId = null, componentType = null,
             category = "Navigation", event = "nodeGradingViewDisplayed", data = { nodeId: this.nodeId };
         this.TeacherDataService.saveEvent(context, nodeId, componentId, componentType, category, event, data);
+    }
+
+    getMaxScore() {
+        if (this.componentId) {
+            const component = this.ProjectService.getComponentByNodeIdAndComponentId(this.nodeId, this.componentId);
+            if (component && component.maxScore) {
+                return component.maxScore;
+            } else {
+                return 0;
+            }
+        } else {
+            return this.ProjectService.getMaxScoreForNode(this.nodeId);
+        }
+    }
+
+    getHiddenComponents() {
+        let hiddenComponents = [];
+        if (this.nodeContent) {
+            for (const component of this.nodeContent.components) {
+                if (component.id !== this.componentId) {
+                    hiddenComponents.push(component.id);
+                }
+            }
+        }
+        return hiddenComponents;
     }
 
     /**
@@ -121,7 +128,6 @@ class NodeGradingViewController {
             let id = this.workgroups[i].workgroupId;
             this.workgroupsById[id] = this.workgroups[i];
             this.workVisibilityById[id] = false;
-
             this.updateWorkgroup(id, true);
         }
     }
@@ -133,18 +139,16 @@ class NodeGradingViewController {
      * @param init Boolean whether we're in controller initialization or not
      */
     updateWorkgroup(workgroupId, init) {
-        let workgroup = this.workgroupsById[workgroupId];
-
+        const workgroup = this.workgroupsById[workgroupId];
         if (workgroup) {
-            let alertNotifications = this.getAlertNotificationsByWorkgroupId(workgroupId);
+            const alertNotifications = this.getAlertNotificationsByWorkgroupId(workgroupId);
             workgroup.hasAlert = alertNotifications.length;
             workgroup.hasNewAlert = this.workgroupHasNewAlert(alertNotifications);
-            let completionStatus = this.getNodeCompletionStatusByWorkgroupId(workgroupId);
+            const completionStatus = this.getCompletionStatusByWorkgroupId(workgroupId);
             workgroup.hasNewWork = completionStatus.hasNewWork;
             workgroup.isVisible = completionStatus.isVisible ? 1 : 0;
             workgroup.completionStatus = this.getWorkgroupCompletionStatus(completionStatus);
-            workgroup.score = this.getNodeScoreByWorkgroupId(workgroupId);
-
+            workgroup.score = this.getScoreByWorkgroupId(workgroupId);
             if (!init) {
                 this.workgroupsById[workgroupId] = angular.copy(workgroup);
             }
@@ -160,7 +164,6 @@ class NodeGradingViewController {
 
     workgroupHasNewAlert(alertNotifications) {
         let newAlert = false;
-
         let l = alertNotifications.length;
         for (let i = 0; i < l; i++) {
             let alert = alertNotifications[i];
@@ -173,37 +176,23 @@ class NodeGradingViewController {
         return newAlert;
     }
 
-    /**
-     * Returns an object with node completion status, latest work time, and latest annotation time
-     * for a workgroup for the current node
-     * @param workgroupId a workgroup ID number
-     * @returns Object with completion, latest work time, latest annotation time
-     */
-    getNodeCompletionStatusByWorkgroupId(workgroupId) {
+    getCompletionStatusByWorkgroupId(workgroupId) {
         let isCompleted = false;
         let isVisible = false;
-
-        // TODO: store this info in the nodeStatus so we don't have to calculate every time?
-        let latestWorkTime = this.getLatestWorkTimeByWorkgroupId(workgroupId);
-
-        let latestAnnotationTime = this.getLatestAnnotationTimeByWorkgroupId(workgroupId);
-        let studentStatus = this.StudentStatusService.getStudentStatusForWorkgroupId(workgroupId);
+        const latestWorkTime = this.getLatestWorkTimeByWorkgroupId(workgroupId); // TODO: store this info in the nodeStatus so we don't have to calculate every time?
+        const latestAnnotationTime = this.getLatestAnnotationTimeByWorkgroupId(workgroupId);
+        const studentStatus = this.StudentStatusService.getStudentStatusForWorkgroupId(workgroupId);
         if (studentStatus != null) {
             let nodeStatus = studentStatus.nodeStatuses[this.nodeId];
             if (nodeStatus) {
                 isVisible = nodeStatus.isVisible;
-                if (latestWorkTime) {
-                    // workgroup has at least one componentState for this node, so check if node is completed
-                    isCompleted = nodeStatus.isCompleted;
-                }
-
                 if (!this.ProjectService.nodeHasWork(this.nodeId)) {
-                    // the step does not generate any work so completion = visited
                     isCompleted = nodeStatus.isVisited;
+                } else if (latestWorkTime) {
+                    isCompleted = nodeStatus.isCompleted;
                 }
             }
         }
-
         return {
             isCompleted: isCompleted,
             isVisible: isVisible,
@@ -214,19 +203,15 @@ class NodeGradingViewController {
 
     getLatestWorkTimeByWorkgroupId(workgroupId) {
         let time = null;
-        let componentStates = this.TeacherDataService.getComponentStatesByNodeId(this.nodeId);
-        let n = componentStates.length-1;
-
-        // loop through component states for this node, starting with most recent
+        const componentStates = this.TeacherDataService.getComponentStatesByNodeId(this.nodeId);
+        const n = componentStates.length-1;
         for (let i = n; i > -1; i--) {
             let componentState = componentStates[i];
             if (componentState.workgroupId === workgroupId) {
-                // componentState is for given workgroupId
                 time = componentState.serverSaveTime;
                 break;
             }
         }
-
         return time;
     }
 
@@ -253,8 +238,16 @@ class NodeGradingViewController {
      * @param workgroupId a workgroup ID number
      * @returns Number score value (defaults to -1 if workgroup has no score)
      */
-    getNodeScoreByWorkgroupId(workgroupId) {
-        let score = this.AnnotationService.getScore(workgroupId, this.nodeId);
+    getScoreByWorkgroupId(workgroupId) {
+        let score = null;
+        if (this.componentId) {
+            const latestScoreAnnotation = this.AnnotationService.getLatestScoreAnnotation(this.nodeId, this.componentId, workgroupId);
+            if (latestScoreAnnotation) {
+                score = this.AnnotationService.getScoreValueFromScoreAnnotation(latestScoreAnnotation);
+            }
+        } else {
+            score = this.AnnotationService.getScore(workgroupId, this.nodeId);
+        }
         return (typeof score === 'number' ? score : -1);
     }
 
@@ -276,7 +269,7 @@ class NodeGradingViewController {
             status = -1;
         } else if (isCompleted) {
             status = 2;
-        } else if (hasWork) {
+        } else if (!this.componentId && hasWork) {
             status = 1;
         }
 
@@ -536,8 +529,7 @@ NodeGradingViewController.$inject = [
 const NodeGradingView = {
   bindings: {
       nodeId: '<',
-      hiddenComponents: '<',
-      showHeader: '<'
+      componentId: '<'
   },
   controller: NodeGradingViewController,
   templateUrl: 'wise5/classroomMonitor/classroomMonitorComponents/nodeGrading/nodeGradingView/nodeGradingView.html'

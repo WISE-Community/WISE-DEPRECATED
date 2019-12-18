@@ -58,8 +58,9 @@ class WorkgroupItemController {
                 break;
             default:
                 this.statusClass = 'text-secondary';
-
-                if (this.nodeHasWork) {
+                if (this.componentId) {
+                    this.statusText = this.$translate('notCompleted');
+                } else if (this.nodeHasWork) {
                     this.statusText = this.$translate('noWork');
                 } else {
                     this.statusText = this.$translate('notVisited');
@@ -92,6 +93,7 @@ const WorkgroupItem = {
         expand: '<',
         maxScore: '<',
         nodeId: '<',
+        componentId: '<',
         showScore: '<',
         workgroupId: '<',
         workgroupData: '<',
