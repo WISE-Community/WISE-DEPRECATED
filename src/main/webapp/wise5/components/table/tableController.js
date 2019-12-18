@@ -1088,7 +1088,7 @@ class TableController extends ComponentController {
     this.authoringViewComponentChanged();
   }
 
-  studentDataChanged(isCompleted = false) {
+  studentDataChanged() {
     if (this.isDataExplorerEnabled) {
       this.updateColumnNames();
     }

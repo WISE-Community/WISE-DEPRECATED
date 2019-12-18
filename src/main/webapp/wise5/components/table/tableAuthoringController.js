@@ -774,7 +774,6 @@ class TableAuthoringController extends TableController {
       }
     }
   }
-
 }
 
 TableAuthoringController.$inject = [

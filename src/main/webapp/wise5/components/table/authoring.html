@@ -107,16 +107,16 @@
               <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
                 <label>Number of Series</label>
                 <input type='number'
-                      ng-model='tableController.authoringComponentContent.numDataExplorerSeries'
-                      ng-model-options='{ debounce: 1000 }'
-                      ng-change='tableController.authoringViewComponentChanged()'/>
+                    ng-model='tableController.authoringComponentContent.numDataExplorerSeries'
+                    ng-model-options='{ debounce: 1000 }'
+                    ng-change='tableController.authoringViewComponentChanged()'/>
               </md-input-container>
             </div>
             <div>
               <md-checkbox class='md-primary'
                   style='margin-right: 40px;'
                   ng-model='tableController.authoringComponentContent.isDataExplorerAxisLabelsEditable'
-                  ng-change='tableController.dataExplorerToggleLineGraph()'>
+                  ng-change='tableController.authoringViewComponentChanged()'>
                 Can Student Edit Axis Labels
               </md-checkbox>
             </div>
