@@ -548,6 +548,7 @@ public class ProjectServiceImpl implements ProjectService {
     return nextId;
   }
 
+  @Transactional
   public Project copyProject(Integer projectId, User user) throws Exception {
     Project parentProject = getById(projectId);
     long newProjectId = getNextAvailableProjectId();

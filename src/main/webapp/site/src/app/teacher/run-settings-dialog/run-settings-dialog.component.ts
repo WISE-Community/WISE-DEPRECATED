@@ -49,14 +49,13 @@ export class RunSettingsDialogComponent implements OnInit {
     this.run = data.run;
     this.maxStudentsPerTeam = this.run.maxStudentsPerTeam + '';
     this.startDate = new Date(this.run.startTime);
-    this.endDate = new Date(this.run.endTime);
+    this.endDate = this.run.endTime ? new Date(this.run.endTime) : new Date('');
     this.rememberPreviousStartDate();
     this.rememberPreviousEndDate();
     this.setDateRange();
   }
 
   ngOnInit() {
-
   }
 
   newPeriodNameKeyUp(event) {
@@ -66,17 +65,17 @@ export class RunSettingsDialogComponent implements OnInit {
   }
 
   isEnterKeyWithNewPeriodName(event) {
-    return event.keyCode == 13 && this.newPeriodName != '';
+    return event.keyCode === 13 && this.newPeriodName != '';
   }
 
   addPeriod() {
     this.clearErrorMessages();
     const periodName = this.newPeriodName;
-    if (periodName == null || periodName == '') {
+    if (periodName == null || periodName === '') {
       this.addPeriodMessage = this.i18n('Please enter a new period name.');
     } else {
       this.teacherService.addPeriodToRun(this.run.id, periodName).subscribe((response: any) => {
-        if (response.status == 'success') {
+        if (response.status === 'success') {
           this.run = response.run;
           this.updateDataRun(this.run);
           this.clearNewPeriodInput();
@@ -93,7 +92,7 @@ export class RunSettingsDialogComponent implements OnInit {
     this.clearErrorMessages();
     if (confirm(`Are you sure you want to delete this period: ${periodName}?`)) {
       this.teacherService.deletePeriodFromRun(this.run.id, periodName).subscribe((response: any) => {
-        if (response.status == 'success') {
+        if (response.status === 'success') {
           this.run = response.run;
           this.updateDataRun(this.run);
           this.clearErrorMessages();
@@ -109,13 +108,13 @@ export class RunSettingsDialogComponent implements OnInit {
   changeMaxStudentsPerTeam(maxStudentsPerTeam) {
     this.clearErrorMessages();
     let maxStudentsPerTeamText = maxStudentsPerTeam;
-    if (maxStudentsPerTeam == 3) {
+    if (maxStudentsPerTeam === 3) {
       maxStudentsPerTeamText = this.i18n('1-3');
     }
     if (confirm(this.i18n('Are you sure you want to change the students per team to {{value}}?', {value: maxStudentsPerTeamText}))) {
       this.teacherService.updateRunStudentsPerTeam(
           this.run.id, maxStudentsPerTeam).subscribe((response: any) => {
-        if (response.status == 'success') {
+        if (response.status === 'success') {
           this.run = response.run;
           this.updateDataRun(this.run);
           this.clearErrorMessages();
@@ -140,7 +139,7 @@ export class RunSettingsDialogComponent implements OnInit {
       const formattedStartDate = moment(startDate).format('ddd MMM DD YYYY');
       if (confirm(this.i18n('Are you sure you want to change the start date to {{date}}?', {date: formattedStartDate}))) {
         this.teacherService.updateRunStartTime(this.run.id, startDate.getTime()).subscribe((response: any) => {
-          if (response.status == 'success') {
+          if (response.status === 'success') {
             this.run = response.run;
             this.updateDataRun(this.run);
             this.rememberPreviousStartDate();
@@ -167,7 +166,7 @@ export class RunSettingsDialogComponent implements OnInit {
       const formattedEndDate = moment(endDate).format('ddd MMM DD YYYY');
       if (confirm(this.i18n('Are you sure you want to change the end date to {{date}}?', {date: formattedEndDate}))) {
         this.teacherService.updateRunEndTime(this.run.id, endDate.getTime()).subscribe((response: any) => {
-          if (response.status == 'success') {
+          if (response.status === 'success') {
             this.run = response.run;
             this.updateDataRun(this.run);
             this.rememberPreviousEndDate();
@@ -231,23 +230,23 @@ export class RunSettingsDialogComponent implements OnInit {
   }
 
   translateMessageCode(messageCode: string): string {
-    if (messageCode == 'periodNameAlreadyExists') {
+    if (messageCode === 'periodNameAlreadyExists') {
       return this.periodNameAlreadyExists;
-    } else if (messageCode == 'noPermissionToAddPeriod') {
+    } else if (messageCode === 'noPermissionToAddPeriod') {
       return this.noPermissionToAddPeriod;
-    } else if (messageCode == 'notAllowedToDeletePeriodWithStudents') {
+    } else if (messageCode === 'notAllowedToDeletePeriodWithStudents') {
       return this.notAllowedToDeletePeriodWithStudents;
-    } else if (messageCode == 'noPermissionToDeletePeriod') {
+    } else if (messageCode === 'noPermissionToDeletePeriod') {
       return this.noPermissionToDeletePeriod;
-    } else if (messageCode == 'noPermissionToChangeMaxStudentsPerTeam') {
+    } else if (messageCode === 'noPermissionToChangeMaxStudentsPerTeam') {
       return this.noPermissionToChangeMaxStudentsPerTeam;
-    } else if (messageCode == 'notAllowedToDecreaseMaxStudentsPerTeam') {
+    } else if (messageCode === 'notAllowedToDecreaseMaxStudentsPerTeam') {
       return this.notAllowedToDecreaseMaxStudentsPerTeam;
-    } else if (messageCode == 'noPermissionToChangeDate') {
+    } else if (messageCode === 'noPermissionToChangeDate') {
       return this.noPermissionToChangeDate;
-    } else if (messageCode == 'endDateBeforeStartDate') {
+    } else if (messageCode === 'endDateBeforeStartDate') {
       return this.endDateBeforeStartDate;
-    } else if (messageCode == 'startDateAfterEndDate') {
+    } else if (messageCode === 'startDateAfterEndDate') {
       return this.startDateAfterEndDate;
     }
   }

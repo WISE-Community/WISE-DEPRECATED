@@ -267,34 +267,38 @@ public class UserAPIController {
     map.put("numStudents", run.getNumStudents());
 
     if (user.isStudent()) {
-      map.put("periodName", run.getPeriodOfStudent(user).getName());
-      List<Workgroup> workgroups = workgroupService.getWorkgroupListByRunAndUser(run, user);
-      if (workgroups.size() > 0) {
-        Workgroup workgroup = workgroups.get(0);
-        List<HashMap<String, Object>> workgroupMembers = new ArrayList<HashMap<String, Object>>();
-        StringBuilder workgroupNames = new StringBuilder();
-        for (User member : workgroup.getMembers()) {
-          MutableUserDetails userDetails = (MutableUserDetails) member.getUserDetails();
-          HashMap<String, Object> memberMap = new HashMap<String, Object>();
-          memberMap.put("id", member.getId());
-          String firstName = userDetails.getFirstname();
-          memberMap.put("firstName", firstName);
-          String lastName = userDetails.getLastname();
-          memberMap.put("lastName", lastName);
-          memberMap.put("username", userDetails.getUsername());
-          memberMap.put("isGoogleUser", userDetails.isGoogleUser());
-          workgroupMembers.add(memberMap);
-          if (workgroupNames.length() > 0) {
-            workgroupNames.append(", ");
-          }
-          workgroupNames.append(firstName + " " + lastName);
-          map.put("workgroupId", workgroup.getId());
-          map.put("workgroupNames", workgroupNames.toString());
-          map.put("workgroupMembers", workgroupMembers);
-        }
-      }
+      addStudentInfoToRunMap(user, run, map);
     }
     return map;
+  }
+
+  private void addStudentInfoToRunMap(User user, Run run, HashMap<String, Object> map) {
+    map.put("periodName", run.getPeriodOfStudent(user).getName());
+    List<Workgroup> workgroups = workgroupService.getWorkgroupListByRunAndUser(run, user);
+    if (workgroups.size() > 0) {
+      Workgroup workgroup = workgroups.get(0);
+      List<HashMap<String, Object>> workgroupMembers = new ArrayList<HashMap<String, Object>>();
+      StringBuilder workgroupNames = new StringBuilder();
+      for (User member : workgroup.getMembers()) {
+        MutableUserDetails userDetails = (MutableUserDetails) member.getUserDetails();
+        HashMap<String, Object> memberMap = new HashMap<String, Object>();
+        memberMap.put("id", member.getId());
+        String firstName = userDetails.getFirstname();
+        memberMap.put("firstName", firstName);
+        String lastName = userDetails.getLastname();
+        memberMap.put("lastName", lastName);
+        memberMap.put("username", userDetails.getUsername());
+        memberMap.put("isGoogleUser", userDetails.isGoogleUser());
+        workgroupMembers.add(memberMap);
+        if (workgroupNames.length() > 0) {
+          workgroupNames.append(", ");
+        }
+        workgroupNames.append(firstName + " " + lastName);
+        map.put("workgroupId", workgroup.getId());
+        map.put("workgroupNames", workgroupNames.toString());
+        map.put("workgroupMembers", workgroupMembers);
+      }
+    }
   }
 
   protected HashMap<String, Object> convertUserToMap(User user) {

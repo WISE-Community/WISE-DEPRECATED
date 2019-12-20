@@ -198,8 +198,6 @@ public class TeacherAPIController extends UserAPIController {
   private List<HashMap<String, Object>> getRunSharedOwnersList(Run run) {
     List<HashMap<String, Object>> sharedOwners = new ArrayList<HashMap<String, Object>>();
     for (User sharedOwner : run.getSharedowners()) {
-      System.out.println(run.getId());
-      System.out.println(sharedOwner.getId());
       TeacherUserDetails ud = (TeacherUserDetails) sharedOwner.getUserDetails();
       HashMap<String, Object> map = new HashMap<String, Object>();
       map.put("id", sharedOwner.getId());
@@ -278,7 +276,6 @@ public class TeacherAPIController extends UserAPIController {
     Run run = runService.retrieveById(runId);
     HashMap<String, Object> response = new HashMap<String, Object>();
     if (run.isTeacherAssociatedToThisRun(user)) {
-      response.put("run", getRunMap(user, run));
       try {
         if (run.getPeriodByName(periodName) != null) {
           response.put("status", "error");
@@ -288,6 +285,7 @@ public class TeacherAPIController extends UserAPIController {
         runService.addPeriodToRun(runId, periodName);
         response.put("status", "success");
       }
+      response.put("run", getRunMap(user, run));
     } else {
       response.put("status", "error");
       response.put("messageCode", "noPermissionToAddPeriod");
@@ -304,7 +302,6 @@ public class TeacherAPIController extends UserAPIController {
     Run run = runService.retrieveById(runId);
     HashMap<String, Object> response = new HashMap<String, Object>();
     if (run.isTeacherAssociatedToThisRun(user)) {
-      response.put("run", getRunMap(user, run));
       Group period = run.getPeriodByName(periodName);
       if (period.getMembers().size() == 0) {
         runService.deletePeriodFromRun(runId, periodName);
@@ -313,6 +310,7 @@ public class TeacherAPIController extends UserAPIController {
         response.put("status", "error");
         response.put("messageCode", "notAllowedToDeletePeriodWithStudents");
       }
+      response.put("run", getRunMap(user, run));
     } else {
       response.put("status", "error");
       response.put("messageCode", "noPermissionToDeletePeriod");
@@ -329,7 +327,6 @@ public class TeacherAPIController extends UserAPIController {
     Run run = runService.retrieveById(runId);
     HashMap<String, Object> response = new HashMap<String, Object>();
     if (run.isTeacherAssociatedToThisRun(user)) {
-      response.put("run", getRunMap(user, run));
       if (newMax != 1 || runService.canDecreaseMaxStudentsPerTeam(run.getId())) {
         runService.setMaxWorkgroupSize(runId, newMax);
         response.put("status", "success");
@@ -337,6 +334,7 @@ public class TeacherAPIController extends UserAPIController {
         response.put("status", "error");
         response.put("messageCode", "notAllowedToDecreaseMaxStudentsPerTeam");
       }
+      response.put("run", getRunMap(user, run));
     } else {
       response.put("status", "error");
       response.put("messageCode", "noPermissionToChangeMaxStudentsPerTeam");
@@ -352,7 +350,6 @@ public class TeacherAPIController extends UserAPIController {
     Run run = runService.retrieveById(runId);
     HashMap<String, Object> response = new HashMap<String, Object>();
     if (run.isTeacherAssociatedToThisRun(user)) {
-      response.put("run", getRunMap(user, run));
       Long endTime = run.getEndTimeMilliseconds();
       if (endTime == null || startTime < endTime) {
         runService.setStartTime(runId, startTime);
@@ -361,6 +358,7 @@ public class TeacherAPIController extends UserAPIController {
         response.put("status", "error");
         response.put("messageCode", "startDateAfterEndDate");
       }
+      response.put("run", getRunMap(user, run));
     } else {
       response.put("status", "error");
       response.put("messageCode", "noPermissionToChangeDate");
@@ -376,7 +374,6 @@ public class TeacherAPIController extends UserAPIController {
     Run run = runService.retrieveById(runId);
     HashMap<String, Object> response = new HashMap<String, Object>();
     if (run.isTeacherAssociatedToThisRun(user)) {
-      response.put("run", getRunMap(user, run));
       if (run.getStartTimeMilliseconds() < endTime) {
         runService.setEndTime(runId, endTime);
         response.put("status", "success");
@@ -384,6 +381,7 @@ public class TeacherAPIController extends UserAPIController {
         response.put("status", "error");
         response.put("messageCode", "endDateBeforeStartDate");
       }
+      response.put("run", getRunMap(user, run));
     } else {
       response.put("status", "error");
       response.put("messageCode", "noPermissionToChangeDate");
