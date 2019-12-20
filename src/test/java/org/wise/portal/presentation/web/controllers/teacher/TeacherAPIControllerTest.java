@@ -202,8 +202,6 @@ public class TeacherAPIControllerTest extends APIControllerTest {
     replay(userService);
     expect(runService.retrieveById(runId1)).andReturn(run1);
     replay(runService);
-    expectGetRunMapToBeCalled();
-    replay(projectService);
     try {
       teacherAPIController.deletePeriodFromRun(teacherAuth, runId1, periodNameNotInRun);
       fail("PeriodNotFoundException expected to be thrown, but was not.");
@@ -212,7 +210,6 @@ public class TeacherAPIControllerTest extends APIControllerTest {
     }
     verify(userService);
     verify(runService);
-    verify(projectService);
   }
 
   @Test
