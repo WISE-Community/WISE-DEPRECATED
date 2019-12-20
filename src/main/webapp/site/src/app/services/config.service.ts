@@ -2,15 +2,12 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { BehaviorSubject, Observable } from "rxjs";
 import { Config } from "../domain/config";
-import { User } from "../domain/user";
 import { Announcement } from '../domain/announcement';
 
 @Injectable()
 export class ConfigService {
 
   private userConfigUrl = 'api/user/config';
-  private studentConfigUrl = 'api/student/config';
-  private teacherConfigUrl = 'api/teacher/config';
   private announcementUrl = 'announcement';
   private config$: BehaviorSubject<Config> = new BehaviorSubject<Config>(null);
   private timeDiff: number = 0;
@@ -22,15 +19,9 @@ export class ConfigService {
     return this.config$;
   }
 
-  retrieveConfig(user?: User) {
-    let configUrl = this.userConfigUrl;
-    if (user.role == 'student') {
-      configUrl = this.studentConfigUrl;
-    } else if (user.role == 'teacher' || user.role == 'researcher' || user.role == 'admin') {
-      configUrl = this.teacherConfigUrl;
-    }
+  retrieveConfig() {
     const headers = new HttpHeaders({ 'Cache-Control': 'no-cache' });
-    this.http.get<Config>(configUrl, { headers: headers })
+    this.http.get<Config>(this.userConfigUrl, { headers: headers })
       .subscribe(config => {
         this.config$.next(config);
         this.timeDiff = Date.now() - config.currentTime;

@@ -71,6 +71,7 @@ import java.util.*;
 
 /**
  * @author Patrick Lawler
+ * @author Hiroki Terashima
  */
 @Service
 public class ProjectServiceImpl implements ProjectService {
@@ -98,6 +99,8 @@ public class ProjectServiceImpl implements ProjectService {
 
   @Autowired
   private PremadeCommentService premadeCommentService;
+
+  private static final String LICENSE_PATH = "/license.txt";
 
   public void addBookmarkerToProject(Project project, User bookmarker) {
     project.getBookmarkers().add(bookmarker);
@@ -545,6 +548,7 @@ public class ProjectServiceImpl implements ProjectService {
     return nextId;
   }
 
+  @Transactional
   public Project copyProject(Integer projectId, User user) throws Exception {
     Project parentProject = getById(projectId);
     long newProjectId = getNextAvailableProjectId();
@@ -687,6 +691,43 @@ public class ProjectServiceImpl implements ProjectService {
     return parentProjects;
   }
 
+  public List<HashMap<String, Object>> getProjectSharedOwnersList(Project project) {
+    List<HashMap<String, Object>> sharedOwners = new ArrayList<HashMap<String, Object>>();
+    for (User sharedOwner : project.getSharedowners()) {
+      sharedOwners.add(getSharedOwnerMap(sharedOwner, project));
+    }
+    return sharedOwners;
+  }
+
+  private HashMap<String, Object> getSharedOwnerMap(User sharedOwner, Project project) {
+    HashMap<String, Object> map = new HashMap<String, Object>();
+    map.put("id", sharedOwner.getId());
+    map.put("username", sharedOwner.getUserDetails().getUsername());
+    map.put("firstName", sharedOwner.getUserDetails().getFirstname());
+    map.put("lastName", sharedOwner.getUserDetails().getLastname());
+    map.put("permissions", getSharedOwnerPermissions(project, sharedOwner));
+    return map;
+  }
+
+  private List<Integer> getSharedOwnerPermissions(Project project, User sharedOwner) {
+    List<Integer> permissions = new ArrayList<Integer>();
+    for (Permission permission : getSharedTeacherPermissions(project, sharedOwner)) {
+      permissions.add(permission.getMask());
+    }
+    return permissions;
+  }
+
+  public String getProjectPath(Project project) {
+    String modulePath = project.getModulePath();
+    int lastIndexOfSlash = modulePath.lastIndexOf("/");
+    if (lastIndexOfSlash != -1) {
+      String hostname = appProperties.getProperty("wise.hostname");
+      String curriculumBaseWWW = appProperties.getProperty("curriculum_base_www");
+      return hostname + curriculumBaseWWW + modulePath.substring(0, lastIndexOfSlash);
+    }
+    return "";
+  }
+
   public String getProjectURI(Project project) {
     String previewPath;
     if (project.getWiseVersion().equals(4)) {
@@ -715,6 +756,26 @@ public class ProjectServiceImpl implements ProjectService {
       }
     }
     return authorsString.toString();
+  }
+
+  public String getLicensePath(Project project) {
+    String licensePath = getProjectLocalPath(project) + LICENSE_PATH;
+    File licenseFile = new File(licensePath);
+    if (licenseFile.isFile()) {
+      return getProjectPath(project) + LICENSE_PATH;
+    } else {
+      return "";
+    }
+  }
+
+  private String getProjectLocalPath(Project project) {
+    String modulePath = project.getModulePath();
+    int lastIndexOfSlash = modulePath.lastIndexOf("/");
+    if (lastIndexOfSlash != -1) {
+      String curriculumBaseWWW = appProperties.getProperty("curriculum_base_dir");
+      return curriculumBaseWWW + modulePath.substring(0, lastIndexOfSlash);
+    }
+    return "";
   }
 
   public void writeProjectLicenseFile(String projectFolderPath, Project project) throws JSONException {

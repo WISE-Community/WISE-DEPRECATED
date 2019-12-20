@@ -11,7 +11,7 @@ import { Student } from "../domain/student";
 @Injectable()
 export class UserService {
 
-  private userUrl = 'api/user/user';
+  private userUrl = 'api/user/info';
   private user$: BehaviorSubject<User> = new BehaviorSubject<User>(null);
   private checkGoogleUserExistsUrl = 'api/user/check-google-user-exists';
   private checkGoogleUserMatchesUrl = 'api/user/check-google-user-matches';
@@ -59,8 +59,7 @@ export class UserService {
   }
 
   retrieveUser(username?: string): Observable<User> {
-    //const headers = new HttpHeaders({ 'Cache-Control': 'no-cache' });
-    let params = new HttpParams().set("username", username);
+    const params = new HttpParams().set('username', username);
     return this.http.get<User>(this.userUrl, { params: params })
         .pipe(
           tap((user) => {
@@ -135,10 +134,9 @@ export class UserService {
     return this.http.get<any>(this.googleUserUrl, { params: params });
   }
 
-  changePassword(username, oldPassword, newPassword) {
+  changePassword(oldPassword, newPassword) {
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
     let body = new HttpParams();
-    body = body.set('username', username);
     body = body.set('oldPassword', oldPassword);
     body = body.set('newPassword', newPassword);
     return this.http.post<any>(this.changePasswordUrl, body, { headers: headers });

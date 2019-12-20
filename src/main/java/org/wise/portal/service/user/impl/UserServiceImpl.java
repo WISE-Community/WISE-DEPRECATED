@@ -83,7 +83,7 @@ public class UserServiceImpl implements UserService {
 
   @Transactional(readOnly = true)
   public User retrieveUserByGoogleUserId(String googleUserId) {
-    return this.userDao.retrieveByGoogleUserId(googleUserId);
+    return userDao.retrieveByGoogleUserId(googleUserId);
   }
 
   @Override
@@ -160,16 +160,17 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public User updateUserPassword(User user, String currentPassword, String newPassword) throws IncorrectPasswordException {
-    if (this.isPasswordCorrect(user, currentPassword)) {
-      return this.updateUserPassword(user, newPassword);
+  public User updateUserPassword(User user, String currentPassword, String newPassword)
+      throws IncorrectPasswordException {
+    if (isPasswordCorrect(user, currentPassword)) {
+      return updateUserPassword(user, newPassword);
     } else {
       throw new IncorrectPasswordException();
     }
   }
 
   public boolean isPasswordCorrect(User user, String password) {
-    return this.passwordEncoder.matches(password, user.getUserDetails().getPassword());
+    return passwordEncoder.matches(password, user.getUserDetails().getPassword());
   }
 
   public List<User> retrieveAllUsers() {
