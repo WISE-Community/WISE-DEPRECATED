@@ -120,18 +120,7 @@
               </md-select>
             </md-input-container>
             <br/>
-            <div ng-if='tableController.componentContent.isDataExplorerAxisLabelsEditable'>
-              <md-input-container style='width: 300px;'>
-                  <label>X Axis Label</label>
-                  <input ng-model='tableController.dataExplorerXAxisLabel'
-                      ng-change='tableController.studentDataChanged()'/>
-                </md-input-container>
-                <md-input-container style='width: 300px;'>
-                  <label>Y Axis Label</label>
-                  <input ng-model='tableController.dataExplorerYAxisLabel'
-                      ng-change='tableController.studentDataChanged()'/>
-                </md-input-container>
-            </div>
+            <p>{{ ::'table.chooseDataToGraph' | translate }}</p>
             <md-input-container style='width: 300px;'>
               <label>X Column</label>
               <md-select ng-model='tableController.dataExplorerXColumn'
@@ -154,6 +143,18 @@
                 </md-option>
                 </md-select>
             </md-input-container>
+            <div ng-if='tableController.componentContent.isDataExplorerAxisLabelsEditable'>
+              <md-input-container style='width: 300px;'>
+                  <label>X Axis Label</label>
+                  <input ng-model='tableController.dataExplorerXAxisLabel'
+                      ng-change='tableController.studentDataChanged()'/>
+                </md-input-container>
+                <md-input-container style='width: 300px;'>
+                  <label>Y Axis Label</label>
+                  <input ng-model='tableController.dataExplorerYAxisLabel'
+                      ng-change='tableController.studentDataChanged()'/>
+                </md-input-container>
+            </div>
           </div>
           <div ng-if='::tableController.isSaveOrSubmitButtonVisible()'
               class='component__actions'
