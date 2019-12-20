@@ -455,7 +455,7 @@ class ComponentController {
     return this.componentContent.lockAfterSubmit;
   }
 
-  studentDataChanged(isCompleted = false) {
+  studentDataChanged() {
     this.setIsDirtyAndBroadcast();
     this.setIsSubmitDirtyAndBroadcast();
     this.clearSaveText();

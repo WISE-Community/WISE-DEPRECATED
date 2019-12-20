@@ -1106,4 +1106,127 @@ describe('GraphController', () => {
     expect(graphController.activeTrial).toEqual(trial1);
     expect(graphController.activeSeries).toEqual(trial1.series[0]);
   });
+
+  it('should handle data explorer', () => {
+    const studentData = {
+      dataExplorerGraphType: 'scatter',
+      tableData: [
+        [{ text: 'ID' }, { text: 'Age' }, { text: 'Score' }],
+        [{ text: '1' }, { text: '10' }, { text: '100' }],
+        [{ text: '2' }, { text: '20' }, { text: '200' }],
+        [{ text: '3' }, { text: '30' }, { text: '300' }]
+      ],
+      dataExplorerSeries: [
+        { xColumn: 0, yColumn: 1, name: 'The series name' }
+      ],
+      dataExplorerXAxisLabel: 'Hello',
+      dataExplorerYAxisLabel: 'World'
+    };
+    graphController.activeTrial = {};
+    graphController.handleDataExplorer(studentData);
+    expect(graphController.xAxis.title.text).toEqual('Hello');
+    expect(graphController.yAxis.title.text).toEqual('World');
+    expect(graphController.activeTrial.series.length).toEqual(1);
+    const series = graphController.activeTrial.series[0];
+    expect(series.type).toEqual('scatter');
+    expect(series.name).toEqual('The series name');
+    expect(series.color).toEqual('blue');
+    expect(series.data[0][0]).toEqual(1);
+    expect(series.data[0][1]).toEqual(10);
+  });
+
+  it('should generate data explorer series', () => {
+    const tableData = [
+      [{ text: 'ID' }, { text: 'Age' }, { text: 'Score' }],
+      [{ text: '1' }, { text: '10' }, { text: '100' }],
+      [{ text: '2' }, { text: '20' }, { text: '200' }],
+      [{ text: '3' }, { text: '30' }, { text: '300' }]
+    ];
+    const xColumn = 0;
+    const yColumn = 1;
+    const graphType = 'scatter';
+    const name = 'Age';
+    const color = 'blue';
+    const series = graphController.generateDataExplorerSeries(tableData, xColumn, yColumn,
+        graphType, name, color);
+    expect(series.name).toEqual('Age');
+    expect(series.type).toEqual('scatter');
+    expect(series.color).toEqual('blue');
+    expect(series.data.length).toEqual(3);
+    expect(series.data[0][0]).toEqual(1);
+    expect(series.data[0][1]).toEqual(10);
+    expect(series.data[1][0]).toEqual(2);
+    expect(series.data[1][1]).toEqual(20);
+    expect(series.data[2][0]).toEqual(3);
+    expect(series.data[2][1]).toEqual(30);
+  });
+
+  it('should calculate regression line', () => {
+    const tableData = [
+      [{ text: "ID" }, { text: "Age" }, { text: "Score" }],
+      [{ text: "1" }, { text: "10" }, { text: "100" }],
+      [{ text: "2" }, { text: "20" }, { text: "200" }],
+      [{ text: "3" }, { text: "30" }, { text: "300" }]
+    ];
+    window.covariance = () => {};
+    spyOn(window, 'covariance').and.returnValue([[1, 10], [10, 100]]);
+    const regressionLineData = graphController.calculateRegressionLineData(tableData, 0, 1);
+    expect(regressionLineData[0][0]).toEqual(1);
+    expect(regressionLineData[0][1]).toEqual(10);
+    expect(regressionLineData[1][0]).toEqual(3);
+    expect(regressionLineData[1][1]).toEqual(30);
+  });
+  
+  it('should get values in column', () => {
+    const tableData = [
+      [{ text: 'ID' }, { text: 'Age' }, { text: 'Score' }],
+      [{ text: '1' }, { text: '10' }, { text: '100' }],
+      [{ text: '2' }, { text: '20' }, { text: '200' }],
+      [{ text: '3' }, { text: '30' }, { text: '300' }]
+    ];
+    const column0 = graphController.getValuesInColumn(tableData, 0);
+    const column1 = graphController.getValuesInColumn(tableData, 1);
+    const column2 = graphController.getValuesInColumn(tableData, 2);
+    expect(column0[0]).toEqual(1);
+    expect(column0[1]).toEqual(2);
+    expect(column0[2]).toEqual(3);
+    expect(column1[0]).toEqual(10);
+    expect(column1[1]).toEqual(20);
+    expect(column1[2]).toEqual(30);
+    expect(column2[0]).toEqual(100);
+    expect(column2[1]).toEqual(200);
+    expect(column2[2]).toEqual(300);
+  }); 
+
+  it('should sort line data', () => {
+    const line = [
+      [1, 10],
+      [2, 20],
+      [3, 30],
+      [3, 40]
+    ];
+    expect(graphController.sortLineData(line[0], line[1])).toEqual(-1);
+    expect(graphController.sortLineData(line[1], line[0])).toEqual(1);
+    expect(graphController.sortLineData(line[0], line[0])).toEqual(0);
+    expect(graphController.sortLineData(line[2], line[3])).toEqual(-1);
+  });
+
+  it('should convert data explorer data to series data', () => {
+    const rows = [
+      [{ text: 'ID' }, { text: 'Age' }, { text: 'Score' }],
+      [{ text: '1' }, { text: '10' }, { text: '100' }],
+      [{ text: '2' }, { text: '20' }, { text: '200' }],
+      [{ text: '3' }, { text: '30' }, { text: '300' }]
+    ];
+    const xColumn = 0;
+    const yColumn = 1;
+    const data = graphController.convertDataExplorerDataToSeriesData(rows, xColumn, yColumn);
+    expect(data.length).toEqual(3);
+    expect(data[0][0]).toEqual(1);
+    expect(data[0][1]).toEqual(10);
+    expect(data[1][0]).toEqual(2);
+    expect(data[1][1]).toEqual(20);
+    expect(data[2][0]).toEqual(3);
+    expect(data[2][1]).toEqual(30);
+  });
 });
