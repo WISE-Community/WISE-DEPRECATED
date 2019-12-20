@@ -49,7 +49,7 @@ export class RunSettingsDialogComponent implements OnInit {
     this.run = data.run;
     this.maxStudentsPerTeam = this.run.maxStudentsPerTeam + '';
     this.startDate = new Date(this.run.startTime);
-    this.endDate = this.run.endTime ? new Date(this.run.endTime) : new Date('');
+    this.endDate = this.run.endTime ? new Date(this.run.endTime) : null;
     this.rememberPreviousStartDate();
     this.rememberPreviousEndDate();
     this.setDateRange();
