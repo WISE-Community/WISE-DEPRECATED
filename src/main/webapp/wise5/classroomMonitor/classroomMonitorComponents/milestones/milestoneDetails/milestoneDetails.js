@@ -140,8 +140,8 @@ const MilestoneDetails = {
                 </md-tab>
                 <md-tab label="{{ ::'studentWork' | translate }}">
                     <div class="milestone-details">
-                        <node-grading-view node-id="$ctrl.milestone.nodeId" 
-                                           component-id="$ctrl.milestone.componentId"></node-grading-view>
+                        <node-grading-view node-id="$ctrl.milestone.nodeId"
+                                           milestone="$ctrl.milestone"></node-grading-view>
                     </div>
                 </md-tab>
             </md-tabs>

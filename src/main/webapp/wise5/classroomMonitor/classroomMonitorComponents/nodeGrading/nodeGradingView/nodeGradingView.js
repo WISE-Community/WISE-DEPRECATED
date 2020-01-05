@@ -25,6 +25,7 @@ class NodeGradingViewController {
         this.TeacherDataService = TeacherDataService;
         this.$translate = this.$filter('translate');
         this.nodeContent = null;
+        this.componentId = null;
     }
 
     $onInit() {
@@ -32,7 +33,8 @@ class NodeGradingViewController {
         this.nodeHasWork = this.ProjectService.nodeHasWork(this.nodeId);
         this.sort = this.TeacherDataService.nodeGradingSort;
         this.nodeContent = this.ProjectService.getNodeById(this.nodeId);
-        if (this.componentId) {
+        if (this.milestone && this.milestone.componentId) {
+            this.componentId = this.milestone.componentId;
             this.hiddenComponents = this.getHiddenComponents();
         }
 
@@ -179,15 +181,25 @@ class NodeGradingViewController {
     getCompletionStatusByWorkgroupId(workgroupId) {
         let isCompleted = false;
         let isVisible = false;
-        const latestWorkTime = this.getLatestWorkTimeByWorkgroupId(workgroupId); // TODO: store this info in the nodeStatus so we don't have to calculate every time?
-        const latestAnnotationTime = this.getLatestAnnotationTimeByWorkgroupId(workgroupId);
+        let latestWorkTime = null;
+        let latestAnnotationTime = null;
         const studentStatus = this.StudentStatusService.getStudentStatusForWorkgroupId(workgroupId);
         if (studentStatus != null) {
             let nodeStatus = studentStatus.nodeStatuses[this.nodeId];
             if (nodeStatus) {
                 isVisible = nodeStatus.isVisible;
+                latestWorkTime = this.getLatestWorkTimeByWorkgroupId(workgroupId); // TODO: store this info in the nodeStatus so we don't have to calculate every time?
+                latestAnnotationTime = this.getLatestAnnotationTimeByWorkgroupId(workgroupId);
                 if (!this.ProjectService.nodeHasWork(this.nodeId)) {
                     isCompleted = nodeStatus.isVisited;
+                }
+                if (this.componentId) {
+                    for (const workgroup of this.milestone.workgroups) {
+                        if (workgroup.workgroupId === workgroupId) {
+                            isCompleted = workgroup.completed;
+                            break;
+                        }
+                    }
                 } else if (latestWorkTime) {
                     isCompleted = nodeStatus.isCompleted;
                 }
@@ -529,7 +541,7 @@ NodeGradingViewController.$inject = [
 const NodeGradingView = {
   bindings: {
       nodeId: '<',
-      componentId: '<'
+      milestone: '<'
   },
   controller: NodeGradingViewController,
   templateUrl: 'wise5/classroomMonitor/classroomMonitorComponents/nodeGrading/nodeGradingView/nodeGradingView.html'
