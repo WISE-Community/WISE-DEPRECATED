@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Public
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- */
+ */  
 package org.wise.portal.service.user;
 
 import java.util.List;
@@ -143,10 +143,10 @@ public interface UserService {
   List<User> retrieveStudentsByNameAndBirthday(String firstName, String lastName,
       Integer birthMonth, Integer birthDay);
   List<User> retrieveTeachersByName(String firstName, String lastName);
-  List<User> retrieveTeachersById(Long id);
+  User retrieveTeacherById(Long id);
   List<User> retrieveTeachersByFirstName(String firstName);
   List<User> retrieveTeachersByLastName(String lastName);
-  List<User> retrieveTeachersByUsername(String username);
+  User retrieveTeacherByUsername(String username);
   List<User> retrieveTeachersByDisplayName(String displayName);
   List<User> retrieveTeachersByCity(String city);
   List<User> retrieveTeachersByState(String state);
@@ -154,10 +154,10 @@ public interface UserService {
   List<User> retrieveTeachersBySchoolName(String schoolName);
   List<User> retrieveTeachersBySchoolLevel(String schoolLevel);
   List<User> retrieveTeachersByEmail(String email);
-  List<User> retrieveStudentsById(Long id);
+  User retrieveStudentById(Long id);
   List<User> retrieveStudentsByFirstName(String firstName);
   List<User> retrieveStudentsByLastName(String lastName);
-  List<User> retrieveStudentsByUsername(String username);
+  User retrieveStudentByUsername(String username);
   List<User> retrieveStudentsByGender(String gender);
   List<User> retrieveTeacherUsersJoinedSinceYesterday();
   List<User> retrieveStudentUsersJoinedSinceYesterday();

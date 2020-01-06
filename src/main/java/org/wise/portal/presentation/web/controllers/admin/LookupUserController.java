@@ -73,13 +73,13 @@ public class LookupUserController {
     List<User> users = new ArrayList<User>();
     if ("teacher".equals(userType)) {
       if ("id".equals(lookupField)) {
-        users = userService.retrieveTeachersById(Long.parseLong(lookupData));
+        users.add(userService.retrieveTeacherById(Long.parseLong(lookupData)));
       } else if ("firstname".equals(lookupField)) {
         users = userService.retrieveTeachersByFirstName(lookupData);
       } else if ("lastname".equals(lookupField)) {
         users = userService.retrieveTeachersByLastName(lookupData);
       } else if ("username".equals(lookupField)) {
-        users = userService.retrieveTeachersByUsername(lookupData);
+        users.add(userService.retrieveTeacherByUsername(lookupData));
       } else if ("displayname".equals(lookupField)) {
         users = userService.retrieveTeachersByDisplayName(lookupData);
       } else if ("city".equals(lookupField)) {
@@ -97,13 +97,13 @@ public class LookupUserController {
       }
     } else if ("student".equals(userType)) {
       if ("id".equals(lookupField)) {
-        users = userService.retrieveStudentsById(Long.parseLong(lookupData));
+        users.add(userService.retrieveStudentById(Long.parseLong(lookupData)));
       } else if ("firstname".equals(lookupField)) {
         users = userService.retrieveStudentsByFirstName(lookupData);
       } else if ("lastname".equals(lookupField)) {
         users = userService.retrieveStudentsByLastName(lookupData);
       } else if ("username".equals(lookupField)) {
-        users = userService.retrieveStudentsByUsername(lookupData);
+        users.add(userService.retrieveStudentByUsername(lookupData));
       } else if ("gender".equals(lookupField)) {
         users = userService.retrieveStudentsByGender(lookupData);
       }

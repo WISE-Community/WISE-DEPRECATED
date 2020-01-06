@@ -26,6 +26,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -144,7 +145,7 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements User
   }
 
   @SuppressWarnings("unchecked")
-  public List<User> retrieveTeacherById(Long id) {
+  public User retrieveTeacherById(Long id) {
     CriteriaBuilder cb = getCriteriaBuilder();
     CriteriaQuery<UserImpl> cq = cb.createQuery(UserImpl.class);
     Root<UserImpl> userRoot = cq.from(UserImpl.class);
@@ -155,7 +156,7 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements User
         userRoot.get("userDetails").get("id"), teacherUserDetailsRoot.get("id")));
     cq.select(userRoot).where(predicates.toArray(new Predicate[predicates.size()]));
     TypedQuery<UserImpl> query = entityManager.createQuery(cq);
-    return (List<User>)(Object)query.getResultList();
+    return query.getResultStream().findFirst().orElse(null);
   }
 
   public List<User> retrieveTeachersByFirstName(String firstName) {
@@ -166,8 +167,9 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements User
     return retrieveTeachersByFieldValue("lastname", lastName);
   }
 
-  public List<User> retrieveTeachersByUsername(String username) {
-    return retrieveTeachersByFieldValue("username", username);
+  public User retrieveTeacherByUsername(String username) {
+    List<User> resultList = retrieveTeachersByFieldValue("username", username);
+    return resultList.isEmpty() ? null : resultList.get(0);
   }
 
   public List<User> retrieveTeachersByDisplayName(String displayName) {
@@ -248,7 +250,7 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements User
   }
 
   @SuppressWarnings("unchecked")
-  public List<User> retrieveStudentsById(Long id) {
+  public User retrieveStudentById(Long id) {
     CriteriaBuilder cb = getCriteriaBuilder();
     CriteriaQuery<UserImpl> cq = cb.createQuery(UserImpl.class);
     Root<UserImpl> userRoot = cq.from(UserImpl.class);
@@ -259,7 +261,7 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements User
         userRoot.get("userDetails").get("id"), studentUserDetailsRoot.get("id")));
     cq.select(userRoot).where(predicates.toArray(new Predicate[predicates.size()]));
     TypedQuery<UserImpl> query = entityManager.createQuery(cq);
-    return (List<User>)(Object)query.getResultList();
+    return query.getResultStream().findFirst().orElse(null);
   }
 
   public List<User> retrieveStudentsByFirstName(String firstName) {
@@ -270,8 +272,9 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements User
     return retrieveStudentsByFieldValue("lastname", lastName);
   }
 
-  public List<User> retrieveStudentsByUsername(String username) {
-    return retrieveStudentsByFieldValue("username", username);
+  public User retrieveStudentByUsername(String username) {
+    List<User> resultList = retrieveStudentsByFieldValue("username", username);
+    return resultList.isEmpty() ? null : resultList.get(0);
   }
 
   @SuppressWarnings("unchecked")
