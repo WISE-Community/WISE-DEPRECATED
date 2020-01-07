@@ -24,16 +24,13 @@
 package org.wise.portal.presentation.web.controllers.admin;
 
 import java.util.HashMap;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.domain.authentication.MutableUserDetails;
-import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.authentication.UserDetailsService;
@@ -60,7 +57,7 @@ public class UserInfoController {
 
   protected final static String USER_INFO_MAP = "userInfoMap";
 
-  @RequestMapping(value = {"/student/account/info", "/teacher/account/info"})
+  @GetMapping(value = {"/student/account/info", "/teacher/account/info"})
   protected String getUserAccountInfo(
       @RequestParam("username") String username,
       ModelMap modelMap) throws Exception {
