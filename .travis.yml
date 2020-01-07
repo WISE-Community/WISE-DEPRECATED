@@ -9,7 +9,7 @@ before_script:
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
 script:
-  - mvn test
+  - mvn test jacoco:report
   - npm install
   - npm test
   - npm run test-site
