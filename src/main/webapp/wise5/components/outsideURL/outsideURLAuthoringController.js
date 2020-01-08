@@ -33,15 +33,21 @@ class OutsideURLAuthoringController extends OutsideURLController {
       StudentAssetService,
       StudentDataService,
       UtilService);
+    this.isShowOERs = this.componentContent.url === '';
 
     $scope.$watch(() => {
       return this.authoringComponentContent;
     }, (newValue, oldValue) => {
       this.componentContent = this.ProjectService.injectAssetPaths(newValue);
       this.setURL(this.authoringComponentContent.url);
+      this.setInfo(this.authoringComponentContent.info);
       this.setWidthAndHeight(
           this.authoringComponentContent.width, this.authoringComponentContent.height);
     }, true);
+
+    this.OutsideURLService.getOpenEducationalResources().then((openEducationalResources) => {
+      this.openEducationalResources = openEducationalResources;
+    });
 
     /*
      * Listen for the assetSelected event which occurs when the user
@@ -105,10 +111,29 @@ class OutsideURLAuthoringController extends OutsideURLController {
           }
         }
       }
-
-      // close the popup
       this.$mdDialog.hide();
     });
+  }
+
+  urlInputChanged() {
+    this.authoringComponentContent.info = null;
+    this.authoringViewComponentChanged();
+  }
+
+  populateOpenEducationalResourceURL(openEducationalResource) {
+    this.authoringComponentContent.url = openEducationalResource.url;
+    this.authoringComponentContent.info = openEducationalResource.info;
+    this.authoringViewComponentChanged();
+  }
+
+  isResourceSelected(resourceUrl) {
+    return resourceUrl === this.authoringComponentContent.url;
+  }
+
+  reloadResource() {
+    const iframe = document.getElementById(this.outsideURLIFrameId);
+    iframe.src = '';
+    iframe.src = this.authoringComponentContent.url;
   }
 }
 

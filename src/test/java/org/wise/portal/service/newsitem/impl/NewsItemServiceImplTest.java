@@ -22,219 +22,205 @@
  */
 package org.wise.portal.service.newsitem.impl;
 
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.isA;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
-import junit.framework.TestCase;
-
-import org.easymock.EasyMock;
+import org.easymock.EasyMockRunner;
+import org.easymock.Mock;
+import org.easymock.TestSubject;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.newsitem.NewsItemDao;
 import org.wise.portal.domain.newsitem.NewsItem;
 import org.wise.portal.domain.newsitem.impl.NewsItemImpl;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.user.impl.UserImpl;
+import org.wise.portal.service.newsitem.NewsItemService;
 
 /**
- * Test class for NewsItemServiceImpl class
- * 
- * @author patrick lawler
+ * @author Patrick Lawler
  */
-public class NewsItemServiceImplTest extends TestCase {
+@RunWith(EasyMockRunner.class)
+public class NewsItemServiceImplTest {
 
-	private NewsItemDao<NewsItem> mockNewsItemDao;
-	
-	private NewsItemServiceImpl newsItemServiceImpl;
-	
+  @TestSubject
+	private NewsItemService newsItemServiceImpl = new NewsItemServiceImpl();
+
+  @Mock
+	private NewsItemDao<NewsItem> newsItemDao;
+
 	private NewsItem newsItem1;
-	
+
 	private NewsItem newsItem2;
-	
+
 	private Date date1 = Calendar.getInstance().getTime();
-	
-	private Date date2 = Calendar.getInstance().getTime();
-	
-	private static final String NEWS_1 = "Hot off the presses!";
-	
-	private static final String NEWS_2 = "<html><body>Web News Here</body></html>";
-	
-	private static final User OWNER_1 = new UserImpl();
-	
-	private static final User OWNER_2 = new UserImpl();
-	
-	private static final String TITLE_1 = "yesterday";
-	
-	private static final String TITLE_2 = "today";
-	
-    /**
-     * @see net.sf.sail.webapp.junit.AbstractTransactionalDbTests#onSetUpInTransaction()
-     */
-    @SuppressWarnings("unchecked")
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
 
-        this.newsItemServiceImpl = new NewsItemServiceImpl();
-        this.mockNewsItemDao = EasyMock.createMock(NewsItemDao.class);
-        this.newsItemServiceImpl.setNewsItemDao(mockNewsItemDao);
-        
-        newsItem1 = new NewsItemImpl();
-        newsItem1.setDate(date1);
-        newsItem1.setNews(NEWS_1);
-        newsItem1.setOwner(OWNER_1);
-        newsItem1.setTitle(TITLE_1);
-        
-        newsItem2 = new NewsItemImpl();
-        newsItem2.setDate(date2);
-        newsItem2.setNews(NEWS_2);
-        newsItem2.setOwner(OWNER_2);
-        newsItem2.setTitle(TITLE_2);
-    }
-    
-    @Override
-    protected void tearDown() throws Exception{
-    	newsItem1 = null;
-    	newsItem2 = null;
-    	newsItemServiceImpl.setNewsItemDao(null);
-    	mockNewsItemDao = null;
-    	newsItemServiceImpl = null;
-    }
-    
-    
-    /**
-     * Tests the creation of a NewsItem given the
-     * NewsItemParameters
-     */
-    public void testCreateNewsItem(){
-    	
-    	// test creation of NewsItem with simple string
-    	this.mockNewsItemDao.save(EasyMock.isA(NewsItem.class));
-    	EasyMock.expectLastCall();
-    	EasyMock.replay(mockNewsItemDao);
-    	
-    	NewsItem newsItem = newsItemServiceImpl.createNewsItem(date1, OWNER_1, TITLE_1, NEWS_1);
-    	assertNotNull(newsItem.getNews());
-    	assertNotNull(newsItem.getDate());
-    	assertNotNull(newsItem.getOwner());
-    	assertNotNull(newsItem.getTitle());
-    	assertEquals(newsItem.getDate(), date1);
-    	assertEquals(newsItem.getNews(), NEWS_1);
-    	assertEquals(newsItem.getOwner(), OWNER_1);
-    	assertEquals(newsItem.getTitle(), TITLE_1);
-    	
-    	EasyMock.verify(mockNewsItemDao);
-    }
-    
-    public void testCreateNewsItemFormatted(){
-    	
-    	//test creation of NewsItem with html formatted string
-    	this.mockNewsItemDao.save(EasyMock.isA(NewsItem.class));
-    	EasyMock.expectLastCall();
-    	EasyMock.replay(mockNewsItemDao);
-    	
-    	NewsItem newsItem = newsItemServiceImpl.createNewsItem(date2, OWNER_2, TITLE_2, NEWS_2);
-    	assertEquals(newsItem.getDate(), date2);
-    	assertEquals(newsItem.getNews(), NEWS_2);
-    	assertEquals(newsItem.getOwner(), OWNER_2);
-    	assertEquals(newsItem.getTitle(), TITLE_2);
-    	EasyMock.verify(mockNewsItemDao);
-    }
-    
-    /**
-     * test the deletion of a NewsItem
-     */
-    public void testDeleteNewsItem() throws Exception{
-    	Long id = new Long(3);
-    	this.newsItem1.setId(id);
-    	
-    	EasyMock.expect(this.mockNewsItemDao.getById(id)).andReturn(this.newsItem1);
-    	this.mockNewsItemDao.delete(this.newsItem1);
-    	EasyMock.expectLastCall();
-    	EasyMock.replay(this.mockNewsItemDao);
-    	
-    	this.newsItemServiceImpl.deleteNewsItem(id);
+  private Date date2 = Calendar.getInstance().getTime();
 
-    	assertTrue(true);
-    	EasyMock.verify(this.mockNewsItemDao);
-    }
-    
-    /**
-     * Test the retrieval of all News Items from the data store
-     */
-    public void testRetrieveAllNewsItem(){
-    	List<NewsItem> returnedList = new ArrayList<NewsItem>();
-    	returnedList.add(newsItem1);
-    	returnedList.add(newsItem2);
-    	EasyMock.expect(this.mockNewsItemDao.getList()).andReturn(returnedList);
-    	EasyMock.replay(this.mockNewsItemDao);
+  private Integer itemIdNotInDB = new Integer(-1);
 
-    	List<NewsItem> newsItemSet = this.newsItemServiceImpl.retrieveAllNewsItem();
-    	assertNotNull(newsItemSet);
-    	assertEquals(newsItemSet.size(), 2);
-    	assertTrue(newsItemSet.contains(newsItem2));
-    	assertTrue(newsItemSet.contains(newsItem1));
-    	EasyMock.verify();
+  private String news1 = "Hot off the presses!";
+
+  private String news2 = "<html><body>Web News Here</body></html>";
+
+  private String type1 = "public";
+
+  private String type2 = "teacherOnly";
+
+	private User owner1 = new UserImpl();
+
+	private User owner2 = new UserImpl();
+
+	private String title1 = "yesterday";
+
+	private String title2 = "today";
+
+  @Before
+  public void setUp() throws Exception {
+    newsItem1 = new NewsItemImpl();
+    newsItem1.setDate(date1);
+    newsItem1.setNews(news1);
+    newsItem1.setOwner(owner1);
+    newsItem1.setTitle(title1);
+
+    newsItem2 = new NewsItemImpl();
+    newsItem2.setDate(date2);
+    newsItem2.setNews(news2);
+    newsItem2.setOwner(owner2);
+    newsItem2.setTitle(title2);
+  }
+
+  @After
+  public void tearDown() throws Exception {
+    newsItem1 = null;
+    newsItem2 = null;
+    newsItemDao = null;
+    newsItemServiceImpl = null;
+  }
+
+  @Test
+  public void createNewsItem_NewNewsItem_ShouldSucceed() {
+    newsItemDao.save(isA(NewsItem.class));
+    expectLastCall();
+    replay(newsItemDao);
+
+    NewsItem newsItem = newsItemServiceImpl.createNewsItem(date1, owner1, title1, news1, type1);
+    assertEquals(newsItem.getDate(), date1);
+    assertEquals(newsItem.getNews(), news1);
+    assertEquals(newsItem.getOwner(), owner1);
+    assertEquals(newsItem.getTitle(), title1);
+    assertEquals(newsItem.getType(), type1);
+    verify(newsItemDao);
+  }
+
+  @Test
+  public void deleteNewsItem_ExistingNewsItemID_ShouldSucceed() throws Exception {
+    Integer id = new Integer(3);
+    newsItem1.setId(id);
+    expect(newsItemDao.getById(id)).andReturn(newsItem1);
+    newsItemDao.delete(newsItem1);
+    expectLastCall();
+    replay(newsItemDao);
+
+    newsItemServiceImpl.deleteNewsItem(id);
+    verify(newsItemDao);
+  }
+
+  @Test
+  public void deleteNewsItem_InvalidNewsItemID_ShouldThrowException()
+      throws ObjectNotFoundException {
+    newsItem1.setId(itemIdNotInDB);
+    expect(newsItemDao.getById(itemIdNotInDB)).andThrow(
+        new ObjectNotFoundException(itemIdNotInDB, NewsItemImpl.class));
+    replay(newsItemDao);
+
+    try {
+      newsItemServiceImpl.deleteNewsItem(itemIdNotInDB);
+      fail("ObjectNotFoundException not thrown but should have been thrown");
+    } catch (ObjectNotFoundException e) {
     }
-    
-    /**
-     * Tests the retrieval of a single News Item given an id
-     * @throws Exception
-     */
-    public void testRetrieveById()throws Exception{
-    	NewsItem newsItem = new NewsItemImpl();
-    	NewsItem retrievedNewsItem = null;
-    	Long id = new Long(3);
-    	
-    	// test retrieve by id
-    	EasyMock.expect(this.mockNewsItemDao.getById(id)).andReturn(newsItem);
-    	EasyMock.replay(this.mockNewsItemDao);
-    	retrievedNewsItem = this.newsItemServiceImpl.retrieveById(id);
-    	assertNotNull(retrievedNewsItem);
-    	assertEquals(newsItem, retrievedNewsItem);
-    	EasyMock.verify(this.mockNewsItemDao);
-    	
-    	EasyMock.reset(this.mockNewsItemDao);
-    	retrievedNewsItem = null;
-    	
-    	
-    	// test objectnotfound, should throw exception
-    	EasyMock.expect(this.mockNewsItemDao.getById(id)).andThrow(new ObjectNotFoundException(id, NewsItem.class));
-    	EasyMock.replay(this.mockNewsItemDao);
-    	
-    	try{
-    		retrievedNewsItem = this.newsItemServiceImpl.retrieveById(id);
-    		fail("ObjectNotFoundException not thrown but should have been thrown");
-    	} catch (ObjectNotFoundException e){}
-    	
-    	assertNull(retrievedNewsItem);
-    	EasyMock.verify(this.mockNewsItemDao);
+    verify(newsItemDao);
+  }
+
+  @Test
+  public void retrieveAllNewsItem_TwoNewsItemsInDB_ShouldSucceed() {
+    List<NewsItem> newsItemsInDB = new ArrayList<NewsItem>();
+    newsItemsInDB.add(newsItem1);
+    newsItemsInDB.add(newsItem2);
+    expect(newsItemDao.getList()).andReturn(newsItemsInDB);
+    replay(newsItemDao);
+
+    List<NewsItem> newsItemsFromDB = newsItemServiceImpl.retrieveAllNewsItem();
+    assertEquals(newsItemsFromDB.size(), 2);
+    assertTrue(newsItemsFromDB.get(0).equals(newsItem1));
+    assertTrue(newsItemsFromDB.get(1).equals(newsItem2));
+    verify(newsItemDao);
+  }
+
+  @Test
+  public void retrieveById_ValidItemId_ShouldSucceed() throws ObjectNotFoundException {
+    Integer id = new Integer(3);
+    expect(newsItemDao.getById(id)).andReturn(newsItem1);
+    replay(newsItemDao);
+
+    NewsItem retrievedNewsItem = newsItemServiceImpl.retrieveById(id);
+    assertNotNull(retrievedNewsItem);
+    assertEquals(newsItem1, retrievedNewsItem);
+    verify(newsItemDao);
+  }
+
+  @Test
+  public void retrieveById_InvalidItemID_ShouldThrowException() throws ObjectNotFoundException {
+    expect(newsItemDao.getById(itemIdNotInDB)).andThrow(
+        new ObjectNotFoundException(itemIdNotInDB, NewsItem.class));
+    replay(newsItemDao);
+
+    try {
+      this.newsItemServiceImpl.retrieveById(itemIdNotInDB);
+      fail("ObjectNotFoundException not thrown but should have been thrown");
+    } catch (ObjectNotFoundException e) {
     }
-    
-    /**
-     * Tests the updating of a news item given the id and the
-     * new News Item Parameters
-     * @throws Exception
-     */
-    public void testUpdateNewsItem() throws Exception {
-    	Long id = new Long(3);
-    	NewsItem updatedNewsItem = null;
-    	
-    	EasyMock.expect(this.mockNewsItemDao.getById(id)).andReturn(this.newsItem1);
-    	this.mockNewsItemDao.save(EasyMock.isA(NewsItem.class));
-    	EasyMock.expectLastCall();
-    	EasyMock.replay(this.mockNewsItemDao);
-    	this.newsItemServiceImpl.updateNewsItem(id, date2, OWNER_2, TITLE_2, NEWS_2);    	
-    	updatedNewsItem = this.newsItemServiceImpl.retrieveById(id);
-    	assertNotNull(updatedNewsItem);
-    	assertEquals(this.newsItem2.getDate(), updatedNewsItem.getDate());
-    	assertEquals(this.newsItem2.getNews(), updatedNewsItem.getNews());
-    	assertEquals(this.newsItem2.getOwner(), updatedNewsItem.getOwner());
-    	assertEquals(this.newsItem2.getTitle(), updatedNewsItem.getTitle());
-    	
-    	EasyMock.verify(this.mockNewsItemDao);
+    verify(newsItemDao);
+  }
+
+  @Test
+  public void updateNewsItem_ExistingNewsItem_ShouldSucceed() throws Exception {
+    Integer id = new Integer(3);
+    expect(newsItemDao.getById(id)).andReturn(newsItem1);
+    newsItemDao.save(isA(NewsItem.class));
+    expectLastCall();
+    replay(newsItemDao);
+
+    newsItemServiceImpl.updateNewsItem(id, date2, owner2, title2, news2, type2);
+    verify(newsItemDao);
+  }
+
+  @Test
+  public void updateNewsItem_InvalidItemID_ShouldThrowException() throws Exception {
+    expect(newsItemDao.getById(itemIdNotInDB)).andThrow(
+        new ObjectNotFoundException(itemIdNotInDB, NewsItem.class));
+    replay(newsItemDao);
+
+    try {
+      newsItemServiceImpl.updateNewsItem(itemIdNotInDB, date2, owner2, title2, news2, type2);
+      fail("ObjectNotFoundException not thrown but should have been thrown");
+    } catch (ObjectNotFoundException e) {
     }
-    
+    verify(newsItemDao);
+  }
 }

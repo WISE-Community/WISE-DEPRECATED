@@ -102,6 +102,6 @@ public class HibernateCRaterRequestDao extends AbstractHibernateDao<CRaterReques
     Root<CRaterRequest> cRaterRequestRoot = cq.from(CRaterRequest.class);
     cq.select(cRaterRequestRoot).where(cb.isNull(cRaterRequestRoot.get("timeCompleted")));
     TypedQuery<CRaterRequest> query = entityManager.createQuery(cq);
-    return (List<CRaterRequest>)(Object)query.getResultList();
+    return (List<CRaterRequest>) (Object) query.getResultList();
   }
 }

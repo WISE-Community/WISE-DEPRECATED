@@ -136,6 +136,7 @@
     "projectId": "Project ID: {{id}}",
     "projectInfo": "Project Info",
     "rawData": "Raw Data",
+    "recommendations": "Recommendations",
     "revisionsForTeam": "Revisions for {{teamNames}}",
     "reportAvailable": "Report Available",
     "seeRevisions": "See revisions",

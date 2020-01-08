@@ -93,6 +93,13 @@ class EmbeddedAuthoringController extends EmbeddedController {
     };
     this.$rootScope.$broadcast('openAssetChooser', params);
   }
+
+  reloadModel() {
+    const iframe = document.getElementById(this.embeddedApplicationIFrameId);
+    const src = iframe.src;
+    iframe.src = '';
+    iframe.src = src;
+  }
 }
 
 EmbeddedAuthoringController.$inject = [

@@ -3,8 +3,10 @@
 class MilestoneReportGraphController {
     constructor($filter) {
         this.$translate = $filter('translate');
-        let teamLabel = this.$translate('teams');
+    }
 
+    $onInit() {
+        const teamLabel = this.$translate('teams');
         if (this.name == null) {
             this.name = this.id;
         }

@@ -30,6 +30,7 @@ import java.util.Set;
 import org.json.JSONObject;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.acls.model.Permission;
+import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.announcement.Announcement;
@@ -349,6 +350,24 @@ public interface RunService {
    * @throws Exception
    */
   void setExtras(Run run, String extras) throws Exception;
+
+  /**
+   * Returns <code>boolean</code> true iff the given <code>User</code> user has the
+   * read permission for the given <code>Run</code> run.
+   * @param authentication
+   * @param run
+   * @return boolean
+   */
+  public boolean hasReadPermission(Authentication authentication, Run run);
+
+  /**
+   * Returns <code>boolean</code> true iff the given <code>User</code> user has the
+   * write permission for the given <code>Run</code> run.
+   * @param authentication
+   * @param run
+   * @return boolean
+   */
+  public boolean hasWritePermission(Authentication authentication, Run run);
 
   /**
    * Returns <code>boolean</code> true if the given <code>User</code> user has the

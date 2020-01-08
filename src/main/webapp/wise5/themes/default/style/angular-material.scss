@@ -3,7 +3,7 @@
 
 // Default Angular Material styles
 // TODO: figure out how to reference latest jspm package without needing full path/version number
-@import "../../../jspm_packages/github/angular/bower-material@1.1.4/angular-material.scss";
+@import "../../../../../../../node_modules/angular-material/angular-material.scss";
 
 // Angular Material customizations
 @import "material/custom";

@@ -729,7 +729,7 @@ class NodeAuthoringController {
     const data = { 'constraints': true };
     this.saveEvent('stepPreviewed', 'Navigation', data);
     window.open(`${this.ConfigService.getConfigParam('previewProjectURL')}` +
-        `#/project/${this.projectId}/${this.nodeId}`);
+        `#!/project/${this.projectId}/${this.nodeId}`);
   };
 
   /**
@@ -739,7 +739,7 @@ class NodeAuthoringController {
     const data = { 'constraints': false };
     this.saveEvent('stepPreviewed', 'Navigation', data);
     window.open(`${this.ConfigService.getConfigParam('previewProjectURL')}` +
-        `?constraints=false#/project/${this.projectId}/${this.nodeId}`);
+        `?constraints=false#!/project/${this.projectId}/${this.nodeId}`);
   };
 
   /**
@@ -2841,22 +2841,14 @@ class NodeAuthoringController {
           this.clearComponentsToChecked();
         }
 
-        /*
-         * Wait a small amount of time before returning the UI back to the
-         * normal view. This allows the author to see the component number
-         * and type view a little longer so that they can see the change
-         * they just made before we switch back to the normal view.
-         */
-        this.$timeout(() => {
-          // turn off the insert component mode
-          this.turnOffInsertComponentMode();
+        // turn off the insert component mode
+        this.turnOffInsertComponentMode();
 
-          // uncheck the component check boxes
-          this.clearComponentsToChecked();
+        // uncheck the component check boxes
+        this.clearComponentsToChecked();
 
-          // show the component authoring
-          this.showComponentAuthoring();
-        }, 2000);
+        // show the component authoring
+        this.showComponentAuthoring();
       });
     }
   }
@@ -3159,11 +3151,11 @@ class NodeAuthoringController {
   }
 
   previewImportNode(node) {
-    window.open(`${this.importProject.previewProjectURL}#/project/${this.importProjectId}/${node.id}`);
+    window.open(`${this.importProject.previewProjectURL}#!/project/${this.importProjectId}/${node.id}`);
   }
 
   previewImportProject() {
-    window.open(`${this.importProject.previewProjectURL}#/project/${this.importProjectId}`);
+    window.open(`${this.importProject.previewProjectURL}#!/project/${this.importProjectId}`);
   }
 
   previewImportComponent(node, componentId) {

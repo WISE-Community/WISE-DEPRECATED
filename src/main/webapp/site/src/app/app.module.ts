@@ -40,7 +40,7 @@ export function initialize(configService: ConfigService, userService: UserServic
   return (): Promise<any> => {
     return userService.retrieveUserPromise().then((user) => {
       userService.getUser().subscribe((user) => {
-        configService.retrieveConfig(user);
+        configService.retrieveConfig();
       });
     });
   }

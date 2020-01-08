@@ -269,8 +269,7 @@ public class RunImpl implements Run {
   }
 
   public Group getPeriodOfStudent(User studentUser) {
-    Set<Group> periods = getPeriods();
-    for (Group period : periods) {
+    for (Group period : getPeriods()) {
       if (period.getMembers().contains(studentUser)) {
         return period;
       }
@@ -283,35 +282,17 @@ public class RunImpl implements Run {
     return user.getId() == owner.getId();
   }
 
-  /**
-   * @param teacherUser A User object.
-   * @return Whether the user is an owner or shared owner of the run.
-   */
   public boolean isTeacherAssociatedToThisRun(User teacherUser) {
-    Set<User> sharedOwners = getSharedowners();
     User owner = getOwner();
-    if (owner.equals(teacherUser) || sharedOwners.contains(teacherUser)) {
-      return true;
-    }
-    return false;
+    Set<User> sharedOwners = getSharedowners();
+    return owner.equals(teacherUser) || sharedOwners.contains(teacherUser);
   }
 
-  /**
-   * Get the shared owners in alphabetical order
-   * @return the shared owners list in alphabetical order
-   */
   public List<User> getSharedOwnersOrderedAlphabetically() {
     List<User> sharedOwnersList = new ArrayList<User>();
-
-    //get the shared owners in a list
     sharedOwnersList.addAll(sharedowners);
-
-    //get the comparator that will order the list alphabetically
     UserAlphabeticalComparator userAlphabeticalComparator = new UserAlphabeticalComparator();
-
-    //sort the list alphabetically
     Collections.sort(sharedOwnersList, userAlphabeticalComparator);
-
     return sharedOwnersList;
   }
 
@@ -470,9 +451,15 @@ public class RunImpl implements Run {
     }
   }
 
-  /**
-   * Comparator used to order user names alphabetically
-   */
+  public int getNumStudents() {
+    int numStudents = 0;
+    for (Group period : periods) {
+      Set<User> members = period.getMembers();
+      numStudents += members.size();
+    }
+    return numStudents;
+  }
+
   public static class UserAlphabeticalComparator implements Comparator<User> {
 
     /**
@@ -488,22 +475,15 @@ public class RunImpl implements Run {
     public int compare(User user1, User user2) {
       int result = 0;
 
-      if(user1 != null && user2 != null) {
-        //get the user details
+      if (user1 != null && user2 != null) {
         MutableUserDetails userDetails1 = user1.getUserDetails();
         MutableUserDetails userDetails2 = user2.getUserDetails();
-
-        if(userDetails1 != null && userDetails2 != null) {
-          //get the user names
+        if (userDetails1 != null && userDetails2 != null) {
           String username1 = userDetails1.getUsername();
           String username2 = userDetails2.getUsername();
-
-          if(username1 != null && username2 != null) {
-            //get the user names in lower case
+          if (username1 != null && username2 != null) {
             String username1LowerCase = username1.toLowerCase();
             String username2LowerCase = username2.toLowerCase();
-
-            //compare the user names
             result = username1LowerCase.compareTo(username2LowerCase);
           }
         }

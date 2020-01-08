@@ -28,7 +28,7 @@ describe('OutsideURLController', () => {
   });
 
   it('should set the width and height', () => {
-    expect(outsideURLController.width).toEqual('none');
+    expect(outsideURLController.width).toEqual('100%');
     expect(outsideURLController.height).toEqual('600px');
     outsideURLController.setWidthAndHeight(400, 300);
     expect(outsideURLController.width).toEqual('400px');

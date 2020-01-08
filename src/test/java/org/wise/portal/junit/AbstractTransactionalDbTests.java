@@ -19,6 +19,7 @@ package org.wise.portal.junit;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Set;
 
 import org.hibernate.SessionFactory;
 import org.junit.runner.RunWith;
@@ -26,14 +27,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
+import org.wise.portal.dao.group.impl.HibernateGroupDao;
+import org.wise.portal.dao.project.impl.HibernateProjectDao;
+import org.wise.portal.dao.run.impl.HibernateRunDao;
 import org.wise.portal.dao.user.impl.HibernateUserDao;
+import org.wise.portal.dao.workgroup.impl.HibernateWorkgroupDao;
 import org.wise.portal.domain.authentication.Gender;
 import org.wise.portal.domain.authentication.Schoollevel;
 import org.wise.portal.domain.authentication.impl.PersistentUserDetails;
 import org.wise.portal.domain.authentication.impl.StudentUserDetails;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
+import org.wise.portal.domain.group.Group;
+import org.wise.portal.domain.group.impl.PersistentGroup;
+import org.wise.portal.domain.project.Project;
+import org.wise.portal.domain.project.impl.ProjectImpl;
+import org.wise.portal.domain.run.Run;
+import org.wise.portal.domain.run.impl.RunImpl;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.user.impl.UserImpl;
+import org.wise.portal.domain.workgroup.Workgroup;
+import org.wise.portal.domain.workgroup.impl.WorkgroupImpl;
 import org.wise.portal.service.authentication.DuplicateUsernameException;
 import org.wise.portal.service.user.UserService;
 
@@ -55,10 +68,24 @@ public abstract class AbstractTransactionalDbTests extends
   protected HibernateFlusher toilet;
 
   @Autowired
+  private HibernateProjectDao projectDao;
+
+  @Autowired
+  private HibernateRunDao runDao;
+  
+  @Autowired
   private HibernateUserDao userDao;
+
+  @Autowired
+  private HibernateGroupDao groupDao;
+
+  @Autowired
+  private HibernateWorkgroupDao workgroupDao;
   
   @Autowired
   private UserService userService;
+  
+  private Long nextAvailableProjectId = 1L;
 
   public void setUp() throws Exception {
     toilet = new HibernateFlusher();
@@ -112,5 +139,66 @@ public abstract class AbstractTransactionalDbTests extends
     User user = userService.createUser(userDetails);
     userDao.save(user);
     return user;
+  }
+
+  public Project createProject(Long id, String name, User owner) {
+    Project project = new ProjectImpl();
+    project.setId(id);
+    project.setName(name);
+    project.setDateCreated(new Date());
+    project.setOwner(owner);
+    return project;
+  }
+
+  public Run createRun(Long id, String name, Date startTime, String runCode, User owner,
+      Project project) {
+    Run run = new RunImpl();
+    run.setId(id);
+    run.setName(name);
+    run.setStarttime(startTime);
+    run.setRuncode(runCode);
+    run.setArchiveReminderTime(new Date());
+    run.setPostLevel(5);
+    run.setOwner(owner);
+    run.setProject(project);
+    return run;
+  }
+
+  public Run createProjectAndRun(Long id, String name, User owner, Date startTime,
+      String runCode) {
+    Project project = createProject(id, name, owner);
+    projectDao.save(project);
+    Run run = createRun(id, name, startTime, runCode, owner, project);
+    runDao.save(run);
+    return run;
+  }
+
+  public Long getNextAvailableProjectId() {
+    return nextAvailableProjectId++;
+  }
+
+  public Group createPeriod(String name) {
+    Group period = new PersistentGroup();
+    period.setName(name);
+    groupDao.save(period);
+    return period;
+  }
+
+  public Workgroup createWorkgroup(Set<User> members, Run run, Group period) {
+    Workgroup workgroup = new WorkgroupImpl();
+    for (User member : members) {
+      workgroup.addMember(member);
+    }
+    workgroup.setRun(run);
+    workgroup.setPeriod(period);
+    groupDao.save(workgroup.getGroup());
+    workgroupDao.save(workgroup);
+    return workgroup;
+  }
+
+  public Date getDateXDaysFromNow(int x) {
+    Calendar calendar = Calendar.getInstance();
+    calendar.add(Calendar.DATE, x); 
+    return new Date(calendar.getTimeInMillis());
   }
 }

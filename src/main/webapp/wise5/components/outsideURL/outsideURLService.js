@@ -1,8 +1,9 @@
 import ComponentService from '../componentService';
 
 class OutsideURLService extends ComponentService {
-  constructor($filter, StudentDataService, UtilService) {
+  constructor($filter, $http, StudentDataService, UtilService) {
     super($filter, StudentDataService, UtilService);
+    this.$http = $http;
   }
 
   getComponentTypeLabel() {
@@ -18,20 +19,15 @@ class OutsideURLService extends ComponentService {
   }
 
   isCompleted(component, componentStates, componentEvents, nodeEvents) {
-    var result = false;
     if (nodeEvents != null) {
-      // loop through all the events
-      for (var e = 0; e < nodeEvents.length; e++) {
-        // get an event
-        var event = nodeEvents[e];
-        if (event != null && event.event === 'nodeEntered') {
-          result = true;
-          break;
+      for (const event of nodeEvents) {
+        if (event.event === 'nodeEntered') {
+          return true;
         }
       }
     }
-    return result;
-  };
+    return false;
+  }
 
   componentHasWork(component) {
     return false;
@@ -44,10 +40,17 @@ class OutsideURLService extends ComponentService {
   componentUsesSubmitButton() {
     return false;
   }
+
+  getOpenEducationalResources() {
+    return this.$http.get(`wise5/components/outsideURL/resources.json`).then((result) => {
+      return result.data;
+    });
+  }
 }
 
 OutsideURLService.$inject = [
   '$filter',
+  '$http',
   'StudentDataService',
   'UtilService'
 ];

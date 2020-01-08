@@ -460,10 +460,4 @@ public class HibernateUserDaoTest extends AbstractTransactionalDbTests {
     List<User> users = userDao.retrieveStudentUsersWhoLoggedInThisYear();
     assertEquals(1, users.size());
   }
-
-  private Date getDateXDaysFromNow(int x) {
-    Calendar calendar = Calendar.getInstance();
-    calendar.add(Calendar.DATE, x); 
-    return new Date(calendar.getTimeInMillis());
-  }
 }

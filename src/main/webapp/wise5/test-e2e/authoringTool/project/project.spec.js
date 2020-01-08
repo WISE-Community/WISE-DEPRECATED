@@ -21,7 +21,7 @@ describe('WISE Authoring Tool Project View', () => {
   beforeEach(() => {
     const page = new ProjectPage();
     isAngularSite(true);
-    browser.get('http://localhost:8080/wise/author#/project/' + projectId);
+    browser.get('http://localhost:8080/wise/author#!/project/' + projectId);
     browser.refresh();  // needed for this issue https://github.com/angular/protractor/issues/2643
     browser.wait(() => {
       return page.projectTitleSpan.isPresent()
@@ -123,7 +123,7 @@ describe('WISE Authoring Tool Project View', () => {
     browser.getAllWindowHandles().then((handles) => {
       browser.switchTo().window(handles[1]).then(() => {
         browser.refresh();  // needed for this issue https://github.com/angular/protractor/issues/2643
-        expect(browser.getCurrentUrl()).toContain('http://localhost:8080/wise/project/' + projectId + '#/vle/');
+        expect(browser.getCurrentUrl()).toContain('http://localhost:8080/wise/project/' + projectId + '#!/vle/');
         // close the current window
         browser.driver.close().then(() => {
           // switch to the main authoring window

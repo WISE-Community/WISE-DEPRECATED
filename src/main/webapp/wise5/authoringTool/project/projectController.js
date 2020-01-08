@@ -223,7 +223,7 @@ class ProjectController {
   previewProject() {
     let previewProjectEventData = { constraints: true };
     this.saveEvent('projectPreviewed', 'Navigation', previewProjectEventData);
-    window.open(`${this.ConfigService.getConfigParam('previewProjectURL')}#/project/${this.projectId}`);
+    window.open(`${this.ConfigService.getConfigParam('previewProjectURL')}#!/project/${this.projectId}`);
   }
 
   /**
@@ -233,7 +233,7 @@ class ProjectController {
     let previewProjectEventData = { constraints: false };
     this.saveEvent('projectPreviewed', 'Navigation', previewProjectEventData);
     window.open(`${this.ConfigService.getConfigParam('previewProjectURL')}` +
-        `?constraints=false#/project/${this.projectId}`);
+        `?constraints=false#!/project/${this.projectId}`);
   }
 
   viewProjectAssets() {
@@ -1083,11 +1083,11 @@ class ProjectController {
   }
 
   previewImportNode(node) {
-    window.open(`${this.importProject.previewProjectURL}#/project/${this.importProjectId}/${node.id}`);
+    window.open(`${this.importProject.previewProjectURL}#!/project/${this.importProjectId}/${node.id}`);
   }
 
   previewImportProject() {
-    window.open(`${this.importProject.previewProjectURL}#/project/${this.importProjectId}`);
+    window.open(`${this.importProject.previewProjectURL}#!/project/${this.importProjectId}`);
   }
 
   /**

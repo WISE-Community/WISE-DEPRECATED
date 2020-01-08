@@ -114,8 +114,8 @@ const MilestoneDetails = {
             </p>
         </div>
         <div ng-if="$ctrl.milestone.type === 'milestoneReport'"
-             class="milestone-details md-whiteframe-1dp">
-            <div class="milestone-details__header accent-2 md-body-2 gray-lightest-bg">{{ ::'classReport' | translate }}</div>
+                class="milestone-details md-whiteframe-1dp">
+            <div class="milestone-details__header primary md-body-2 gray-lightest-bg">{{ ::'classReport' | translate }}</div>
             <div ng-if="!$ctrl.milestone.isReportAvailable"
                 class="center">
                 <p>{{ ::'milestoneReportExplanation' | translate }} {{ ::'milestoneReportAvailability' | translate }}</p>
@@ -130,8 +130,25 @@ const MilestoneDetails = {
                 <compile data="$ctrl.milestone.generatedReport"></compile>
             </div>
         </div>
-        <div class="milestone-details md-whiteframe-1dp">
-            <div class="milestone-details__header accent-2 md-body-2 gray-lightest-bg">{{ ::'studentCompletion' | translate }}</div>
+        <div ng-if="$ctrl.milestone.recommendations" class="md-whiteframe-1dp gray-lightest-bg">
+            <md-tabs md-dynamic-height>
+                <md-tab label="{{ ::'recommendations' | translate }}">
+                    <div class="milestone-details">
+                        <compile data="$ctrl.milestone.recommendations"></compile>
+                    </div>
+                </md-tab>
+                <md-tab label="{{ ::'studentCompletion' | translate }}">
+                    <div class="milestone-details">
+                        <ng-include src="'completion'"></ng-include>
+                    </div>
+                </md-tab>
+            </md-tabs>
+        </div>
+        <div ng-if="!$ctrl.milestone.recommendations" class="milestone-details md-whiteframe-1dp">
+            <div class="milestone-details__header primary md-body-2 gray-lightest-bg">{{ ::'studentCompletion' | translate }}</div>
+            <ng-include src="'completion'"></ng-include>
+        </div>
+        <script type='text/ng-template' id="completion">
             <md-list class="user-list md-whiteframe-1dp">
                 <md-list-item class="thead md-with-secondary gray-lightest-bg md-body-1">
                     <p>{{ ::'team' | translate }}</p>
@@ -153,7 +170,7 @@ const MilestoneDetails = {
                     </div>
                 </md-list-item>
             </md-list>
-        </div>`,
+        </script>`,
     controller: MilestoneDetailsController
 };
 

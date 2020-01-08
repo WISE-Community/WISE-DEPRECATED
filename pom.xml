@@ -28,8 +28,7 @@
   * ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
   * REGENTS HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.wise</groupId>
   <artifactId>wise</artifactId>
@@ -37,14 +36,12 @@
   <name>Web-based Inquiry Science Environment</name>
   <version>5.8.1</version>
   <url>http://wise5.org</url>
-
   <licenses>
     <license>
       <name>GNU General Public License (GPL)</name>
       <url>http://www.gnu.org/licenses/gpl.html</url>
     </license>
   </licenses>
-
   <developers>
     <developer>
       <id>hiroki</id>
@@ -80,18 +77,15 @@
       <timezone>-8</timezone>
     </developer>
   </developers>
-
   <scm>
     <url>https://github.com/WISE-Community/WISE/</url>
     <connection>scm:git:git://github.com/WISE-Community/WISE.git</connection>
     <developerConnection>scm:git:git://github.com/WISE-Community/WISE.git</developerConnection>
   </scm>
-
   <issueManagement>
     <system>GitHub Issues</system>
     <url>https://github.com/WISE-Community/WISE/issues</url>
   </issueManagement>
-
   <build>
     <testResources>
       <testResource>
@@ -108,6 +102,25 @@
           <execution>
             <goals>
               <goal>repackage</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <version>0.8.5</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>prepare-agent</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>report</id>
+            <phase>prepare-package</phase>
+            <goals>
+              <goal>report</goal>
             </goals>
           </execution>
         </executions>
@@ -133,20 +146,15 @@
             </goals>
             <configuration>
               <testExcludes>
-                <exclude>**/org/wise/portal/service/*.java</exclude>
-                <exclude>**/org/wise/portal/service/impl/*.java</exclude>
-                <exclude>**/org/wise/portal/service/newsitem/**/*.java</exclude>
-                <exclude>**/org/wise/portal/service/premadecomment/**/*.java</exclude>
-                <exclude>**/org/wise/portal/service/group/**/*.java</exclude>
-                <exclude>**/org/wise/portal/service/authentication/**/*.java</exclude>
-                <exclude>**/org/wise/portal/service/run/**/*.java</exclude>
-                <exclude>**/org/wise/portal/service/module/**/*.java</exclude>
-                <exclude>**/org/wise/portal/service/project/**/*.java</exclude>
-                <exclude>**/org/wise/portal/service/workgroup/**/*.java</exclude>
                 <exclude>**/org/wise/portal/domain/**/*.java</exclude>
                 <exclude>**/org/wise/portal/presentation/web/controllers/general/contactwise/*.java</exclude>
-                <exclude>**/org/wise/portal/presentation/web/controllers/teacher/**/*.java</exclude>
-                <exclude>**/org/wise/portal/presentation/web/controllers/*.java</exclude>
+                <exclude>**/org/wise/portal/presentation/web/controllers/teacher/management/**/*.java</exclude>
+                <exclude>**/org/wise/portal/presentation/web/controllers/teacher/project/**/*.java</exclude>
+                <exclude>**/org/wise/portal/presentation/web/controllers/teacher/run/**/*.java</exclude>
+                <exclude>**/org/wise/portal/presentation/web/controllers/teacher/RegisterTeacherControllerTest.java</exclude>
+                <exclude>**/org/wise/portal/presentation/web/controllers/IndexControllerTest.java</exclude>
+                <exclude>**/org/wise/portal/presentation/web/controllers/LoginControllerTest.java</exclude>
+                <exclude>**/org/wise/portal/presentation/web/controllers/RegisterStudentControllerTest.java</exclude>
                 <exclude>**/org/wise/portal/presentation/validators/teacher/*.java</exclude>
                 <exclude>**/org/wise/portal/dao/*.java</exclude>
                 <exclude>**/org/wise/portal/dao/authentication/impl/AllTests.java</exclude>
@@ -158,9 +166,7 @@
                 <exclude>**/org/wise/portal/dao/authentication/impl/HibernateStudentUserDetailsDaoTest.java</exclude>
                 <exclude>**/org/wise/portal/dao/authentication/impl/HibernateTeacherUserDetailsDaoTest.java</exclude>
                 <exclude>**/org/wise/portal/dao/group/**/*.java</exclude>
-                <exclude>**/org/wise/portal/dao/newsitem/**/*.java</exclude>
                 <exclude>**/org/wise/portal/dao/premadecomment/**/*.java</exclude>
-                <exclude>**/org/wise/portal/dao/workgroup/**/*.java</exclude>
               </testExcludes>
             </configuration>
           </execution>
@@ -177,20 +183,15 @@
         <configuration>
           <forkMode>once</forkMode>
           <excludes>
-            <exclude>**/org/wise/portal/service/*.java</exclude>
-            <exclude>**/org/wise/portal/service/impl/*.java</exclude>
-            <exclude>**/org/wise/portal/service/newsitem/**/*.java</exclude>
-            <exclude>**/org/wise/portal/service/premadecomment/**/*.java</exclude>
-            <exclude>**/org/wise/portal/service/group/**/*.java</exclude>
-            <exclude>**/org/wise/portal/service/authentication/**/*.java</exclude>
-            <exclude>**/org/wise/portal/service/run/**/*.java</exclude>
-            <exclude>**/org/wise/portal/service/module/**/*.java</exclude>
-            <exclude>**/org/wise/portal/service/project/**/*.java</exclude>
-            <exclude>**/org/wise/portal/service/workgroup/**/*.java</exclude>
             <exclude>**/org/wise/portal/domain/**/*.java</exclude>
             <exclude>**/org/wise/portal/presentation/web/controllers/general/contactwise/*.java</exclude>
-            <exclude>**/org/wise/portal/presentation/web/controllers/teacher/**/*.java</exclude>
-            <exclude>**/org/wise/portal/presentation/web/controllers/*.java</exclude>
+            <exclude>**/org/wise/portal/presentation/web/controllers/teacher/management/**/*.java</exclude>
+            <exclude>**/org/wise/portal/presentation/web/controllers/teacher/project/**/*.java</exclude>
+            <exclude>**/org/wise/portal/presentation/web/controllers/teacher/run/**/*.java</exclude>
+            <exclude>**/org/wise/portal/presentation/web/controllers/teacher/RegisterTeacherControllerTest.java</exclude>
+            <exclude>**/org/wise/portal/presentation/web/controllers/IndexControllerTest.java</exclude>
+            <exclude>**/org/wise/portal/presentation/web/controllers/LoginControllerTest.java</exclude>
+            <exclude>**/org/wise/portal/presentation/web/controllers/RegisterStudentControllerTest.java</exclude>
             <exclude>**/org/wise/portal/presentation/validators/teacher/*.java</exclude>
             <exclude>**/org/wise/portal/dao/*.java</exclude>
             <exclude>**/org/wise/portal/dao/authentication/impl/AllTests.java</exclude>
@@ -202,9 +203,7 @@
             <exclude>**/org/wise/portal/dao/authentication/impl/HibernateStudentUserDetailsDaoTest.java</exclude>
             <exclude>**/org/wise/portal/dao/authentication/impl/HibernateTeacherUserDetailsDaoTest.java</exclude>
             <exclude>**/org/wise/portal/dao/group/**/*.java</exclude>
-            <exclude>**/org/wise/portal/dao/newsitem/**/*.java</exclude>
             <exclude>**/org/wise/portal/dao/premadecomment/**/*.java</exclude>
-            <exclude>**/org/wise/portal/dao/workgroup/**/*.java</exclude>
           </excludes>
         </configuration>
       </plugin>
@@ -264,7 +263,21 @@
       </plugin>
     </plugins>
   </build>
-
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.jacoco</groupId>
+        <artifactId>jacoco-maven-plugin</artifactId>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>report</report>
+            </reports>
+          </reportSet>
+        </reportSets>
+      </plugin>
+    </plugins>
+  </reporting>
   <repositories>
     <repository>
       <id>repo1.maven.org</id>
@@ -292,7 +305,6 @@
       <url>http://download.eclipse.org/jgit/maven</url>
     </repository>
   </repositories>
-
   <pluginRepositories>
     <pluginRepository>
       <releases>
@@ -303,13 +315,11 @@
       <url>https://nexus.codehaus.org/content/repositories/codehaus-snapshots</url>
     </pluginRepository>
   </pluginRepositories>
-
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
     <version>2.2.0.RELEASE</version>
   </parent>
-
   <dependencies>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -510,7 +520,6 @@
       <version>v1-rev274-1.22.0</version>
     </dependency>
   </dependencies>
-
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <spring-security-oauth2.version>2.2.4.RELEASE</spring-security-oauth2.version>
@@ -521,5 +530,4 @@
     </startup.listeners>
     <m2e.apt.activation>disabled</m2e.apt.activation>
   </properties>
-
 </project>

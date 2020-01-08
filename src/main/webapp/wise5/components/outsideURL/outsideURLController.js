@@ -25,13 +25,13 @@ class OutsideURLController extends ComponentController {
     this.$q = $q;
     this.$sce = $sce;
     this.OutsideURLService = OutsideURLService;
-
-    // the url to the web page to display
     this.url = null;
+    this.info = null;
+    this.outsideURLIFrameId = 'outsideResource_' + this.componentId;
 
     if (this.componentContent != null) {
-      // set the url
       this.setURL(this.componentContent.url);
+      this.setInfo(this.componentContent.info);
     }
 
     this.setWidthAndHeight(this.componentContent.width, this.componentContent.height);
@@ -43,7 +43,7 @@ class OutsideURLController extends ComponentController {
      * @return a promise of a component state containing the student data
      */
     this.$scope.getComponentState = function() {
-      var deferred = this.$q.defer();
+      const deferred = this.$q.defer();
 
       /*
        * the student does not have any unsaved changes in this component
@@ -51,7 +51,6 @@ class OutsideURLController extends ComponentController {
        * we will immediately resolve the promise here.
        */
       deferred.resolve();
-
       return deferred.promise;
     }.bind(this);
 
@@ -59,7 +58,7 @@ class OutsideURLController extends ComponentController {
   }
 
   setWidthAndHeight(width, height) {
-    this.width = width ? width + 'px' : 'none';
+    this.width = width ? width + 'px' : '100%';
     this.height = height ? height + 'px' : '600px';
   }
 
@@ -69,7 +68,15 @@ class OutsideURLController extends ComponentController {
     } else {
       this.url = this.$sce.trustAsResourceUrl(url);
     }
-  };
+  }
+
+  setInfo(info) {
+    if (info == null || info === '') {
+      this.info = this.url;
+    } else {
+      this.info = this.$sce.trustAsResourceUrl(info);
+    }
+  }
 }
 
 OutsideURLController.$inject = [

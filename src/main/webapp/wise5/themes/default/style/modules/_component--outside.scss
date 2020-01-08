@@ -1,0 +1,18 @@
+.outside-content {
+  iframe {
+    border: 1px solid color('gray-lighter');
+  }
+}
+
+.outside-content__source {
+  margin-top: 4px;
+  text-align: end;
+
+  a {
+    max-width: 240px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: inline-block;
+  }
+}

@@ -83,7 +83,7 @@ public class UserServiceImpl implements UserService {
 
   @Transactional(readOnly = true)
   public User retrieveUserByGoogleUserId(String googleUserId) {
-    return this.userDao.retrieveByGoogleUserId(googleUserId);
+    return userDao.retrieveByGoogleUserId(googleUserId);
   }
 
   @Override
@@ -132,7 +132,7 @@ public class UserServiceImpl implements UserService {
   }
 
   public void assignRole(MutableUserDetails userDetails, final String role) {
-    GrantedAuthority authority = this.grantedAuthorityDao.retrieveByName(role);
+    GrantedAuthority authority = grantedAuthorityDao.retrieveByName(role);
     userDetails.addAuthority(authority);
   }
 
@@ -144,8 +144,7 @@ public class UserServiceImpl implements UserService {
    * @throws DuplicateUsernameException if the username is the same as a username already in data
    * store.
    */
-  private void checkUserErrors(final String username)
-    throws DuplicateUsernameException {
+  private void checkUserErrors(final String username) throws DuplicateUsernameException {
     if (userDetailsDao.hasUsername(username)) {
       throw new DuplicateUsernameException(username);
     }
@@ -161,16 +160,17 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public User updateUserPassword(User user, String currentPassword, String newPassword) throws IncorrectPasswordException {
-    if (this.isPasswordCorrect(user, currentPassword)) {
-      return this.updateUserPassword(user, newPassword);
+  public User updateUserPassword(User user, String currentPassword, String newPassword)
+      throws IncorrectPasswordException {
+    if (isPasswordCorrect(user, currentPassword)) {
+      return updateUserPassword(user, newPassword);
     } else {
       throw new IncorrectPasswordException();
     }
   }
 
   public boolean isPasswordCorrect(User user, String password) {
-    return this.passwordEncoder.matches(password, user.getUserDetails().getPassword());
+    return passwordEncoder.matches(password, user.getUserDetails().getPassword());
   }
 
   public List<User> retrieveAllUsers() {
@@ -214,7 +214,7 @@ public class UserServiceImpl implements UserService {
   public List<User> retrieveTeachersByCity(String city) {
     return userDao.retrieveTeachersByCity(city);
   }
-  
+
   public List<User> retrieveTeachersByState(String state) {
     return userDao.retrieveTeachersByState(state);
   }

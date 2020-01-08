@@ -75,6 +75,6 @@ public class HibernateNewsItemDao extends AbstractHibernateDao<NewsItem>
     cq.select(newsItemRoot).where(cb.equal(newsItemRoot.get("type"), type))
         .orderBy(cb.desc(newsItemRoot.get("id")));
     TypedQuery<NewsItemImpl> query = entityManager.createQuery(cq);
-    return (List<NewsItem>)(Object)query.getResultList();
+    return (List<NewsItem>) (Object) query.getResultList();
   }
 }

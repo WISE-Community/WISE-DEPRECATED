@@ -79,7 +79,7 @@ public class HibernateAchievementDao extends AbstractHibernateDao<Achievement>
     cq.select(achievementRoot).where(predicates.toArray(new Predicate[predicates.size()]))
         .orderBy(cb.asc(achievementRoot.get("achievementTime")));
     TypedQuery<Achievement> query = entityManager.createQuery(cq);
-    return (List<Achievement>)(Object)query.getResultList();
+    return (List<Achievement>) (Object) query.getResultList();
   }
 
   @Override

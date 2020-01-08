@@ -136,4 +136,16 @@ describe('UtilService', () => {
       expect(myArray[2].name).toEqual('c');
     });
   });
+
+  describe('calculateMean()', () => {
+    it('should calculate the mean when there is one value', () => {
+      const values = [1];
+      expect(UtilService.calculateMean(values)).toEqual(1);
+    });
+
+    it('should calculate the mean when there are multiple values', () => {
+      const values = [1, 2, 3, 4, 10];
+      expect(UtilService.calculateMean(values)).toEqual(4);
+    });
+  });
 });
