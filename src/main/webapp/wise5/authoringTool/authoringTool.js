@@ -48,7 +48,6 @@ import '../components/outsideURL/outsideURLAuthoringComponentModule';
 import ProjectAssetController from './asset/projectAssetController';
 import ProjectAssetService from '../services/projectAssetService';
 import ProjectController from './project/projectController';
-import ProjectHistoryController from './history/projectHistoryController';
 import ProjectInfoController from './info/projectInfoController';
 import PlanningService from '../services/planningService';
 import ProjectService from '../services/projectService';
@@ -128,7 +127,6 @@ const authoringModule = angular.module('authoring', [
     .controller('NodeAuthoringController', NodeAuthoringController)
     .controller('ProjectAssetController', ProjectAssetController)
     .controller('ProjectController', ProjectController)
-    .controller('ProjectHistoryController', ProjectHistoryController)
     .controller('ProjectInfoController', ProjectInfoController)
     .controller('WISELinkAuthoringController', WISELinkAuthoringController)
     .config([
@@ -165,7 +163,7 @@ const authoringModule = angular.module('authoring', [
             if (window.configURL != null) {
               return ConfigService.retrieveConfig(window.configURL);
             } else {
-              return ConfigService.retrieveConfig(`/authorConfig`);
+              return ConfigService.retrieveConfig(`/author/config`);
             }
           }],
           language: ['$translate', 'ConfigService', 'config', ($translate, ConfigService, config) => {
@@ -182,7 +180,7 @@ const authoringModule = angular.module('authoring', [
           config: ['ConfigService', (ConfigService) => {
             let configURL = window.configURL;
             if (configURL == null) {
-              configURL = prompt('Please enter configURL', '/authorConfig/24678');
+              configURL = prompt('Please enter configURL', '/author/config/24678');
             }
             return ConfigService.retrieveConfig(configURL);
           }],
@@ -198,7 +196,7 @@ const authoringModule = angular.module('authoring', [
         controllerAs: 'projectController',
         resolve: {
           projectConfig: ['ConfigService', '$stateParams', (ConfigService, $stateParams) => {
-            return ConfigService.retrieveConfig(`/authorConfig/${$stateParams.projectId}`);
+            return ConfigService.retrieveConfig(`/author/config/${$stateParams.projectId}`);
           }],
           project: ['ProjectService', 'projectConfig', (ProjectService, projectConfig) => {
             return ProjectService.retrieveProject();
@@ -246,13 +244,6 @@ const authoringModule = angular.module('authoring', [
         templateUrl: 'wise5/authoringTool/info/info.html',
         controller: 'ProjectInfoController',
         controllerAs: 'projectInfoController',
-        resolve: {}
-      })
-      .state('root.project.history', {
-        url: '/history',
-        templateUrl: 'wise5/authoringTool/history/history.html',
-        controller: 'ProjectHistoryController',
-        controllerAs: 'projectHistoryController',
         resolve: {}
       })
       .state('root.project.notebook', {

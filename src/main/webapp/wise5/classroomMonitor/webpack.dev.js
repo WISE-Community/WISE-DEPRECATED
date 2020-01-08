@@ -8,7 +8,7 @@ module.exports = merge(common, {
     port: 8082,
     proxy: {
       '/achievement': 'http://localhost:8080',
-      '/authorConfig': 'http://localhost:8080',
+      '/author/config': 'http://localhost:8080',
       '/config': 'http://localhost:8080',
       '/curriculum': 'http://localhost:8080',
       '/notification': 'http://localhost:8080',

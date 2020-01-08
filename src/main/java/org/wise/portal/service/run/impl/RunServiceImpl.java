@@ -231,7 +231,7 @@ public class RunServiceImpl implements RunService {
     return run;
   }
 
-  public Run createRun(Integer projectId, User user, Set<String> periodNames,
+  public Run createRun(Long projectId, User user, Set<String> periodNames,
         Integer maxStudentsPerTeam, Long startDate, Long endDate, Locale locale) throws Exception {
     Project project = projectService.copyProject(projectId, user);
     RunParameters runParameters = createRunParameters(project, user, periodNames,

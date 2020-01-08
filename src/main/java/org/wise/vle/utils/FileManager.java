@@ -300,7 +300,7 @@ public class FileManager {
    * @throws JSONException
    * @throws ServletException
    */
-  public static String createProject(String curriculumBaseDir, String folderName, 
+  public static String createProject(String curriculumBaseDir, String folderName,
       String projectName) throws IOException {
     String result = "";
     File parent = new File(curriculumBaseDir);
@@ -2114,12 +2114,8 @@ public class FileManager {
    * e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/667
    */
   public static String getProjectFolderPath(Project project) {
-    String projectFolderPath = null;
-    if (project != null) {
-      String projectFilePath = getProjectFilePath(project);
-      projectFolderPath = projectFilePath.substring(0, projectFilePath.lastIndexOf("/"));
-    }
-    return projectFolderPath;
+    String projectFilePath = getProjectFilePath(project);
+    return projectFilePath.substring(0, projectFilePath.lastIndexOf("/"));
   }
 
   public static String getProjectAssetsFolderPath(Project project) {

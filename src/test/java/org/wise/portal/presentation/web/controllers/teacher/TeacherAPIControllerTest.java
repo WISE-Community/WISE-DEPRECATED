@@ -292,7 +292,7 @@ public class TeacherAPIControllerTest extends APIControllerTest {
     replay(request);
     expectGetRunMapToBeCalled();
     replay(projectService);
-    Integer projectId = 1;
+    Long projectId = 1L;
     String periods = "1,2,free";
     Integer maxStudentsPerTeam = 3;
     Long startDate = Calendar.getInstance().getTimeInMillis();

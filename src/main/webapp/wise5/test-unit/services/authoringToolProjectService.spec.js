@@ -19,14 +19,13 @@ describe('AuthoringToolProjectService Unit Test', () => {
 
   describe('AuthoringToolProjectService', () => {
     const scootersProjectJSONString = JSON.stringify(scootersProjectJSONOriginal);
+    const scootersProjectName = "scooters";
     const invalidProjectJSONString = "{'a':1";
     const projectIdDefault = 1;
     const projectBaseURL = "http://localhost:8080/curriculum/12345/";
     const projectURL = projectBaseURL + "project.json";
     const registerNewProjectURL = "http://localhost:8080/wise/project/new";
     const saveProjectURL = "http://localhost:8080/wise/project/save/" + projectIdDefault;
-    const commitMessageDefault = "Made simple changes";
-    const defaultCommitHistory = [{"id":"abc","message":"first commit"}, {"id":"def", "message":"second commit"}];
     const wiseBaseURL = "/wise";
     const i18nURL_common_en = "wise5/i18n/i18n_en.json";
     const i18nURL_vle_en = "wise5/vle/i18n/i18n_en.json";
@@ -55,23 +54,16 @@ describe('AuthoringToolProjectService Unit Test', () => {
       $httpBackend.when('POST', registerNewProjectURL).respond(newProjectIdExpected);
       $httpBackend.when('GET', i18nURL_common_en).respond(sampleI18N_common_en);
       $httpBackend.when('GET', i18nURL_vle_en).respond(sampleI18N_vle_en);
-      const newProjectIdActualPromise = ProjectService.registerNewProject(scootersProjectJSONString, commitMessageDefault);
+      const newProjectActualPromise = ProjectService.registerNewProject(scootersProjectName,
+            scootersProjectJSONString);
       $httpBackend.expectPOST(registerNewProjectURL);
-    });
-
-    it('should not register new project when Config.registerNewProjectURL is undefined', () => {
-      spyOn(ConfigService, "getConfigParam").and.returnValue(null);
-      $httpBackend.when('GET', i18nURL_common_en).respond(sampleI18N_common_en);
-      $httpBackend.when('GET', i18nURL_vle_en).respond(sampleI18N_vle_en);
-      const newProjectIdActualPromise = ProjectService.registerNewProject(scootersProjectJSONString, commitMessageDefault);
-      expect(ConfigService.getConfigParam).toHaveBeenCalledWith("registerNewProjectURL");
-      expect(newProjectIdActualPromise).toBeNull();
+      expect(newProjectActualPromise.id).toEqual(newProjectIdExpected);
     });
 
     it('should not register new project when projectJSON is invalid JSON', () => {
       spyOn(ConfigService, "getConfigParam").and.returnValue(registerNewProjectURL);
       try {
-        const newProjectIdActualPromise = ProjectService.registerNewProject(invalidProjectJSONString, commitMessageDefault);
+        const newProjectIdActualPromise = ProjectService.registerNewProject(invalidProjectJSONString);
         expect(1).toEqual(2);   // This line should not get called because the above line will throw an error
       } catch (e) {
         expect(ConfigService.getConfigParam).toHaveBeenCalledWith("registerNewProjectURL");

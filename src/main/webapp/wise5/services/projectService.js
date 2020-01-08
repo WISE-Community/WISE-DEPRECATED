@@ -1129,7 +1129,7 @@ class ProjectService {
    * @return a promise to return the project JSON
    */
   retrieveProjectById(projectId) {
-    return this.$http.get(`/authorConfig/${projectId}`).then((result) => {
+    return this.$http.get(`/author/config/${projectId}`).then((result) => {
       const configJSON = result.data;
       const projectURL = configJSON.projectURL;
       const previewProjectURL = configJSON.previewProjectURL;
@@ -1145,7 +1145,7 @@ class ProjectService {
    * Saves the project to Config.saveProjectURL and returns commit history promise.
    * if Config.saveProjectURL or Config.projectId are undefined, does not save and returns null
    */
-  saveProject(commitMessage = "") {
+  saveProject() {
     this.$rootScope.$broadcast('savingProject');
     this.cleanupBeforeSave();
 
@@ -1176,15 +1176,13 @@ class ProjectService {
       headers: {'Content-Type': 'application/x-www-form-urlencoded'},
       data: $.param({
         projectId: projectId,
-        commitMessage: commitMessage,
         projectJSONString: angular.toJson(this.project, false)
       })
     };
 
     return this.$http(httpParams).then((result) => {
-      const commitHistory = result.data;
       this.$rootScope.$broadcast('projectSaved');
-      return commitHistory;
+      return result.data;
     });
   };
 

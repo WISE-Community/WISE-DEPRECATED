@@ -67,6 +67,10 @@ import org.wise.portal.service.user.UserService;
 import org.wise.vle.utils.FileManager;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
 
 /**
@@ -361,7 +365,6 @@ public class ProjectServiceImpl implements ProjectService {
   }
 
   public void updateProject(Project project, User user) throws NotAuthorizedException {
-    // check to see if user can author project or the run that it's in
     List<Run> runList = runService.getProjectRuns((Long) project.getId());
     Run run = null;
     if (!runList.isEmpty()) {
@@ -369,9 +372,8 @@ public class ProjectServiceImpl implements ProjectService {
       run = runList.get(0);
     }
 
-    if (user.isAdmin() || aclService.hasPermission(project, BasePermission.ADMINISTRATION, user) ||
-        aclService.hasPermission(project, BasePermission.WRITE, user) ||
-      (run != null && runService.hasRunPermission(run, user, BasePermission.WRITE))) {
+    if (canAuthorProject(project, user) ||
+        (run != null && runService.hasRunPermission(run, user, BasePermission.WRITE))) {
       projectDao.save(project);
     } else {
       throw new NotAuthorizedException("You are not authorized to update this project");
@@ -415,7 +417,9 @@ public class ProjectServiceImpl implements ProjectService {
     return user.isAdmin() ||
         aclService.hasPermission(project, BasePermission.ADMINISTRATION, user) ||
         aclService.hasPermission(project, BasePermission.WRITE, user) ||
-        aclService.hasPermission(project, BasePermission.READ, user);
+        aclService.hasPermission(project, BasePermission.READ, user) ||
+        project.isOfficialProject() ||
+        project.isCommunityProject();
   }
 
   public Integer addTagToProject(String tagString, Long projectId) {
@@ -549,7 +553,7 @@ public class ProjectServiceImpl implements ProjectService {
   }
 
   @Transactional
-  public Project copyProject(Integer projectId, User user) throws Exception {
+  public Project copyProject(Long projectId, User user) throws Exception {
     Project parentProject = getById(projectId);
     long newProjectId = getNextAvailableProjectId();
     File parentProjectDir = new File(FileManager.getProjectFolderPath(parentProject));
@@ -854,5 +858,42 @@ public class ProjectServiceImpl implements ProjectService {
     Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(newProjectJSONFile), "UTF-8"));
     writer.write(projectJSONObj.toString());
     writer.close();
+  }
+
+  public void saveProjectContentToDisk(String projectJSONString, Project project)
+      throws FileNotFoundException, IOException {
+    String projectJSONPath = appProperties.getProperty("curriculum_base_dir") +
+        project.getModulePath();
+    Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(
+        new File(projectJSONPath)), "UTF-8"));
+    writer.write(projectJSONString);
+    writer.close();
+  }
+
+  public Map<String, Object> getDirectoryInfo(File directory) {
+    HashMap<String, Object> directoryMap = new HashMap<String, Object>();
+    List<HashMap<String, Object>> files = new ArrayList<HashMap<String, Object>>();
+    long totalDirectorySize = 0l;
+    File[] filesInProjectAssetsDir = getFilesInDirectory(directory);
+    if (filesInProjectAssetsDir != null) {
+      for (File file : filesInProjectAssetsDir) {
+        HashMap<String, Object> fileObject = new HashMap<String, Object>();
+        fileObject.put("fileName", file.getName());
+        long fileSize = file.length();
+        fileObject.put("fileSize", fileSize);
+        totalDirectorySize += fileSize;
+        files.add(fileObject);
+      }
+    }
+    directoryMap.put("totalFileSize", totalDirectorySize);
+    directoryMap.put("files", files);
+    return directoryMap;
+  }
+
+  private File[] getFilesInDirectory(File directory) {
+    if (directory.exists() && directory.isDirectory()) {
+      return directory.listFiles();
+    }
+    return new File[0];
   }
 }

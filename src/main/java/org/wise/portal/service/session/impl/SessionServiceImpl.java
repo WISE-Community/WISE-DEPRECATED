@@ -10,7 +10,6 @@ import org.springframework.session.Session;
 import org.springframework.stereotype.Service;
 import org.wise.portal.domain.authentication.impl.StudentUserDetails;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
-import org.wise.portal.domain.project.Project;
 import org.wise.portal.service.session.SessionService;
 
 @Service
@@ -57,21 +56,21 @@ public class SessionServiceImpl<S extends Session> implements SessionService {
     return stringRedisTemplate.opsForSet().members("signedInUsers").size();
   }
 
-  public void addCurrentAuthor(Project project, UserDetails author) {
-    stringRedisTemplate.opsForSet().add("currentlyAuthoredProjects", project.getId().toString());
-    stringRedisTemplate.opsForSet().add("currentAuthors:" + project.getId(), author.getUsername());
+  public void addCurrentAuthor(Serializable projectId, String authorUsername) {
+    stringRedisTemplate.opsForSet().add("currentlyAuthoredProjects", projectId.toString());
+    stringRedisTemplate.opsForSet().add("currentAuthors:" + projectId, authorUsername);
   }
 
   @Override
   public void removeCurrentAuthor(UserDetails author) {
     Set<String> currentlyAuthoredProjects = stringRedisTemplate.opsForSet().members("currentlyAuthoredProjects");
     for (String projectId : currentlyAuthoredProjects) {
-      removeCurrentAuthor(projectId, author);
+      removeCurrentAuthor(projectId, author.getUsername());
     }
   }
 
-  public void removeCurrentAuthor(Serializable projectId, UserDetails author) {
-    stringRedisTemplate.opsForSet().remove("currentAuthors:" + projectId, author.getUsername());
+  public void removeCurrentAuthor(Serializable projectId, String authorUsername) {
+    stringRedisTemplate.opsForSet().remove("currentAuthors:" + projectId, authorUsername);
     Long numCurrentAuthorsForProject = stringRedisTemplate.opsForSet().size("currentAuthors:" + projectId);
     if (numCurrentAuthorsForProject == 0) {
       stringRedisTemplate.opsForSet().remove("currentlyAuthoredProjects", projectId.toString());
@@ -86,7 +85,7 @@ public class SessionServiceImpl<S extends Session> implements SessionService {
     }
   }
 
-  public Set<String> getCurrentAuthors(String projectId) {
+  public Set<String> getCurrentAuthors(Serializable projectId) {
     return stringRedisTemplate.opsForSet().members("currentAuthors:" + projectId);
   }
 }

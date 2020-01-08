@@ -15,36 +15,28 @@ class ProjectAssetService {
     this.Upload = Upload;
     this.UtilService = UtilService;
     this.projectAssets = {};
-    this.projectAssetTotalSizeMax =
-        this.ConfigService.getConfigParam('projectAssetTotalSizeMax');
+    this.projectAssetTotalSizeMax = this.ConfigService.getConfigParam('projectAssetTotalSizeMax');
     this.projectAssetUsagePercentage = 0;
   }
 
   deleteAssetItem(assetItem) {
-    let params = {
-      assetFileName: assetItem.fileName
-    };
-
-    let httpParams = {
+    const httpParams = {
       method: 'POST',
-      url: this.ConfigService.getConfigParam('projectAssetURL'),
+      url: `${this.ConfigService.getConfigParam('projectAssetURL')}/delete`,
       headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-      data: $.param(params)
+      data: $.param({
+        assetFileName: assetItem.fileName
+      })
     };
 
     return this.$http(httpParams).then((result) => {
-      let projectAssetsJSON = result.data;
-      this.projectAssets = projectAssetsJSON;
-      return projectAssetsJSON;
+      this.projectAssets = result.data;
+      return this.projectAssets;
     });
   }
 
   downloadAssetItem(assetItem) {
-    let assetFileName = assetItem.fileName;
-
-    // ask the browser to download this asset by setting the location
-    window.location = this.ConfigService.getConfigParam('projectAssetURL') +
-        "/download?assetFileName=" + assetFileName;
+    window.location = `${this.ConfigService.getConfigParam('projectAssetURL')}/download?assetFileName=${assetItem.fileName}`;
   }
 
   getFullAssetItemURL(assetItem) {
@@ -52,9 +44,7 @@ class ProjectAssetService {
   }
 
   retrieveProjectAssets() {
-    const projectAssetURL = this.ConfigService.getConfigParam('projectAssetURL');
-
-    return this.$http.get(projectAssetURL).then((result) => {
+    return this.$http.get(this.ConfigService.getConfigParam('projectAssetURL')).then((result) => {
       const projectAssetsJSON = result.data;
       this.projectAssets = projectAssetsJSON;
       this.calculateAssetUsage();

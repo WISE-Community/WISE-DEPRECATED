@@ -144,13 +144,12 @@ public class ProjectAPIController {
   }
 
   @PostMapping("/copy")
-  protected String copyProject(@RequestParam("projectId") String projectId) throws Exception {
+  protected String copyProject(@RequestParam("projectId") Long projectId) throws Exception {
     User user = ControllerUtil.getSignedInUser();
     if (SecurityUtils.isTeacher(user)) {
-      Project project = projectService.getById(Long.parseLong(projectId));
-      if (this.projectService.canReadProject(project, user) ||
-          project.isOfficialProject() || project.isCommunityProject()) {
-        Project newProject = projectService.copyProject(Integer.parseInt(projectId), user);
+      Project project = projectService.getById(projectId);
+      if (this.projectService.canReadProject(project, user)) {
+        Project newProject = projectService.copyProject(projectId, user);
         return ControllerUtil.getProjectJSON(newProject).toString();
       }
     }

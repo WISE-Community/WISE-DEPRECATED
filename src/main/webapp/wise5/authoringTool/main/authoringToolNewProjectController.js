@@ -16,7 +16,6 @@ class AuthoringToolNewProjectController {
     this.$translate = this.$filter('translate');
     this.project = this.ProjectService.getNewProjectTemplate();
 
-    // focus on the newProjectTitle input element
     this.$timeout(() => {
       let newProjectTitleInput = document.getElementById('newProjectTitle');
       if (newProjectTitleInput != null) {
@@ -25,15 +24,10 @@ class AuthoringToolNewProjectController {
     });
   }
 
-  /**
-   * Register a new project with WISE
-   */
   registerNewProject() {
-    let projectJSONString = angular.toJson(this.project, 4);
-    let commitMessage =
-        this.$translate('projectCreatedOn') + new Date().getTime();
-    this.ProjectService.registerNewProject(projectJSONString, commitMessage)
-        .then((projectId) => {
+    const projectName = this.project.metadata.title;
+    const projectJSONString = angular.toJson(this.project, 4);
+    this.ProjectService.registerNewProject(projectName, projectJSONString).then((projectId) => {
       this.$state.go('root.project', {projectId: projectId});
     });
   }

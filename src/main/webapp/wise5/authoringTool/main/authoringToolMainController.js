@@ -65,39 +65,32 @@ class AuthoringToolMainController {
   }
 
   /**
-   * Copy a project after confirming and highlight it to draw attention to it
+   * Copy a project after confirming and highlight to draw attention to it
    * @param projectId the project to copy
    */
   copyProject(projectId) {
-    let project = this.getProjectByProjectId(projectId);
-    let projectName = project.name;
-
-    // get the project info that we will display in the confirm message
-    let projectInfo = projectId + ' ' + projectName;
-    let projectRunId = project.runId;
+    const project = this.getProjectByProjectId(projectId);
+    let projectInfo = projectId + ' ' + project.name;
+    const projectRunId = project.runId;
     if (projectRunId != null) {
       projectInfo += ' (Run ID: ' + projectRunId + ')';
     }
 
-    /*
-     * the message that we will use to confirm that the author wants to copy
-     * the project
-     */
-    let doCopyConfirmMessage =
-        this.$translate('areYouSureYouWantToCopyThisProject') +
-        '\n\n' + projectInfo;
-    if (confirm(doCopyConfirmMessage)) {
-      this.ProjectService.copyProject(projectId).then((projectId) => {
+    const confirmCopyMessage =
+        `${this.$translate('areYouSureYouWantToCopyThisProject')}\n\n${projectInfo}`;
+    if (confirm(confirmCopyMessage)) {
+      this.ProjectService.copyProject(projectId).then((project) => {
+        const projectId = project.id;
         this.showCopyingProjectMessage();
         this.saveEvent('projectCopied', 'Authoring', null, projectId);
 
         // refresh the project list and highlight the newly copied project
-        this.ConfigService.retrieveConfig(`/authorConfig`).then(() => {
+        this.ConfigService.retrieveConfig(`/author/config`).then(() => {
           this.projects = this.ConfigService.getConfigParam('projects');
           this.scrollToTopOfPage();
           // the timeout is necessary for new element to appear on the page
           this.$timeout(() => {
-            let highlightDuration = 3000;
+            const highlightDuration = 3000;
             this.UtilService.temporarilyHighlightElement(projectId, highlightDuration);
           });
           this.$mdDialog.hide();
@@ -147,8 +140,8 @@ class AuthoringToolMainController {
    * Create a new project and open it
    */
   registerNewProject() {
-    let projectTitle = this.project.metadata.title;
-    if (projectTitle == null || projectTitle == '') {
+    const projectName = this.project.metadata.title;
+    if (projectName == null || projectTitle == '') {
       alert(this.$translate('pleaseEnterAProjectTitleForYourNewProject'));
     } else {
       /*
@@ -161,10 +154,8 @@ class AuthoringToolMainController {
         this.turnOnInProcessOfCreatingProject();
         this.turnOnCreatingProjectMessage();
         this.startErrorCreatingProjectTimeout();
-        let projectJSONString = angular.toJson(this.project, 4);
-        let commitMessage =
-            this.$translate('projectCreatedOn') + new Date().getTime();
-        this.ProjectService.registerNewProject(projectJSONString, commitMessage)
+        const projectJSONString = angular.toJson(this.project, 4);
+        this.ProjectService.registerNewProject(projectName, projectJSONString)
             .then((projectId) => {
               this.cancelErrorCreatingProjectTimeout();
               this.saveEvent('projectCreated', 'Authoring', null, projectId);

@@ -193,18 +193,12 @@ class AuthoringToolProjectService extends ProjectService {
    * a new project id if the project is successfully copied
    */
   copyProject(projectId) {
-    const copyProjectURL = this.ConfigService.getConfigParam('copyProjectURL');
-    if (copyProjectURL == null) {
-      return null;
-    }
-
     const httpParams = {
       method: 'POST',
-      url: copyProjectURL + "/" + projectId,
+      url: `${this.ConfigService.getConfigParam('copyProjectURL')}/${projectId}`,
       headers:  {'Content-Type': 'application/x-www-form-urlencoded'},
       data: $.param({})
     };
-
     return this.$http(httpParams).then((result) => {
       return result.data;  // project Id
     });
@@ -216,12 +210,7 @@ class AuthoringToolProjectService extends ProjectService {
    * Returns null if Config.registerNewProjectURL is undefined.
    * Throws an error if projectJSONString is invalid JSON string
    */
-  registerNewProject(projectJSONString, commitMessage = "") {
-    const registerNewProjectURL = this.ConfigService.getConfigParam('registerNewProjectURL');
-    if (registerNewProjectURL == null) {
-      return null;
-    }
-
+  registerNewProject(projectName, projectJSONString) {
     try {
       JSON.parse(projectJSONString);
     } catch (e) {
@@ -230,30 +219,16 @@ class AuthoringToolProjectService extends ProjectService {
 
     const httpParams = {
       method: 'POST',
-      url: registerNewProjectURL,
+      url: this.ConfigService.getConfigParam('registerNewProjectURL'),
       headers: {'Content-Type': 'application/x-www-form-urlencoded'},
       data: $.param({
-        commitMessage: commitMessage,
+        projectName: projectName,
         projectJSONString: projectJSONString
       })
     };
 
     return this.$http(httpParams).then((result) => {
-      const projectId = result.data;
-      return projectId;
-    });
-  };
-
-  /**
-   * Retrieves and returns the project's commit history.
-   */
-  getCommitHistory() {
-    const commitProjectURL = this.ConfigService.getConfigParam('commitProjectURL');
-    return this.$http({
-      url: commitProjectURL,
-      method: 'GET'
-    }).then((result) => {
-      return result.data;
+      return result.data.projectId;
     });
   };
 

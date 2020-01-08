@@ -22,8 +22,6 @@ describe('ProjectService Unit Test', () => {
     const projectBaseURL = "http://localhost:8080/curriculum/12345/";
     const projectURL = projectBaseURL + "project.json";
     const saveProjectURL = "http://localhost:8080/wise/project/save/" + projectIdDefault;
-    const commitMessageDefault = "Made simple changes";
-    const defaultCommitHistory = [{"id":"abc","message":"first commit"}, {"id":"def", "message":"second commit"}];
     const wiseBaseURL = "/wise";
     const i18nURL_common_en = "wise5/i18n/i18n_en.json";
     const i18nURL_vle_en = "wise5/vle/i18n/i18n_en.json";
@@ -102,10 +100,10 @@ describe('ProjectService Unit Test', () => {
       $httpBackend.when('GET', /^wise5\/components\/.*/).respond(200, '');
       //$httpBackend.when('GET', 'wise5/components/animation/i18n/i18n_en.json').respond(200, '');
       //$httpBackend.when('GET', 'wise5/components/audioOscillator/i18n/i18n_en.json').respond(200, '');
-      $httpBackend.when('POST', saveProjectURL).respond({data: defaultCommitHistory});
+      $httpBackend.when('POST', saveProjectURL).respond({data: {}});
       $httpBackend.when('GET', i18nURL_common_en).respond(sampleI18N_common_en);
       $httpBackend.when('GET', i18nURL_vle_en).respond(sampleI18N_vle_en);
-      const newProjectIdActualPromise = ProjectService.saveProject(commitMessageDefault);
+      const newProjectIdActualPromise = ProjectService.saveProject();
       expect(ConfigService.getConfigParam).toHaveBeenCalledWith("saveProjectURL");
       expect(ConfigService.getProjectId).toHaveBeenCalled();
       $httpBackend.expectPOST(saveProjectURL);
@@ -117,7 +115,7 @@ describe('ProjectService Unit Test', () => {
       spyOn(ConfigService, "getProjectId").and.returnValue(projectIdDefault);
       spyOn(ConfigService, "getConfigParam").and.returnValue(null);
       ProjectService.setProject(scootersProjectJSON);
-      const newProjectIdActualPromise = ProjectService.saveProject(commitMessageDefault);
+      const newProjectIdActualPromise = ProjectService.saveProject();
       expect(ConfigService.getConfigParam).toHaveBeenCalledWith("saveProjectURL");
       expect(ConfigService.getProjectId).toHaveBeenCalled();
       expect(newProjectIdActualPromise).toBeNull();
@@ -127,7 +125,7 @@ describe('ProjectService Unit Test', () => {
       spyOn(ConfigService, "getProjectId").and.returnValue(null);
       spyOn(ConfigService, "getConfigParam").and.returnValue(saveProjectURL);
       ProjectService.setProject(scootersProjectJSON);
-      const newProjectIdActualPromise = ProjectService.saveProject(commitMessageDefault);
+      const newProjectIdActualPromise = ProjectService.saveProject();
       expect(ConfigService.getConfigParam).toHaveBeenCalledWith("saveProjectURL");
       expect(ConfigService.getProjectId).toHaveBeenCalled();
       expect(newProjectIdActualPromise).toBeNull();

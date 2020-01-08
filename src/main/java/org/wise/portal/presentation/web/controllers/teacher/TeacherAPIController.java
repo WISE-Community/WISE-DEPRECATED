@@ -221,7 +221,7 @@ public class TeacherAPIController extends UserAPIController {
   @PostMapping("/run/create")
   HashMap<String, Object> createRun(Authentication auth,
       HttpServletRequest request,
-      @RequestParam("projectId") Integer projectId,
+      @RequestParam("projectId") Long projectId,
       @RequestParam("periods") String periods,
       @RequestParam("maxStudentsPerTeam") Integer maxStudentsPerTeam,
       @RequestParam("startDate") Long startDate,

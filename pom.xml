@@ -300,10 +300,6 @@
       <id>app-fuse</id>
       <url>http://static.appfuse.org/repository/</url>
     </repository>
-    <repository>
-      <id>jgit-repository</id>
-      <url>http://download.eclipse.org/jgit/maven</url>
-    </repository>
   </repositories>
   <pluginRepositories>
     <pluginRepository>
@@ -319,6 +315,7 @@
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
     <version>2.2.0.RELEASE</version>
+    <relativePath/>
   </parent>
   <dependencies>
     <dependency>
@@ -458,11 +455,6 @@
       <groupId>com.opencsv</groupId>
       <artifactId>opencsv</artifactId>
       <version>4.6</version>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.jgit</groupId>
-      <artifactId>org.eclipse.jgit</artifactId>
-      <version>4.9.10.201904181027-r</version>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>

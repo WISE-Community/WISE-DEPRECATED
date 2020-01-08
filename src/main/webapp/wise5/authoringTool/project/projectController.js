@@ -217,18 +217,12 @@ class ProjectController {
     });
   }
 
-  /**
-   * Launch the project in preview mode in a new tab
-   */
   previewProject() {
     let previewProjectEventData = { constraints: true };
     this.saveEvent('projectPreviewed', 'Navigation', previewProjectEventData);
     window.open(`${this.ConfigService.getConfigParam('previewProjectURL')}#!/project/${this.projectId}`);
   }
 
-  /**
-   * Launch the project in preview mode without constraints in a new tab
-   */
   previewProjectWithoutConstraints() {
     let previewProjectEventData = { constraints: false };
     this.saveEvent('projectPreviewed', 'Navigation', previewProjectEventData);
@@ -238,10 +232,6 @@ class ProjectController {
 
   viewProjectAssets() {
     this.$state.go('root.project.asset', {projectId: this.projectId});
-  }
-
-  viewProjectHistory() {
-    this.$state.go('root.project.history', {projectId: this.projectId});
   }
 
   viewNotebookSettings() {
@@ -260,15 +250,10 @@ class ProjectController {
   }
 
   saveProject() {
-    let commitMessage = 'Made changes to the project.';
     try {
       // if projectJSONString is bad json,
       // an exception will be thrown and it will not save.
-      this.ProjectService.saveProject(commitMessage)
-          .then((commitHistoryArray) => {
-        this.commitHistory = commitHistoryArray;
-        $('#commitMessageInput').val('');
-      });
+      this.ProjectService.saveProject();
     } catch (error) {
       // TODO: i18n
       alert('Invalid JSON. Please check syntax. Aborting save.');

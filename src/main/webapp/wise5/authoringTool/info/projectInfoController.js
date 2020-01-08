@@ -26,7 +26,7 @@ class ProjectInfoController {
     this.$translate = this.$filter('translate');
 
     this.metadata = this.ProjectService.getProjectMetadata();
-    this.metadataAuthoring = this.ConfigService.getConfigParam('projectMetadataSettings');
+    this.metadataAuthoring = JSON.parse(this.ConfigService.getConfigParam('projectMetadataSettings'));
     this.projectIcons = [];
     this.projectIcon = '';
     this.isEditingProjectIcon = false;
