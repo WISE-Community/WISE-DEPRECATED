@@ -32,13 +32,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.domain.admin.StudentFields;
 import org.wise.portal.domain.admin.TeacherFields;
-import org.wise.portal.domain.authentication.Schoollevel;
 import org.wise.portal.domain.impl.LookupUserParameters;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.validators.LookupUserParametersValidator;
@@ -59,8 +60,8 @@ public class LookupUserController {
   @Autowired
   private LookupUserParametersValidator lookupUserParametersValidator;
 
-  @RequestMapping(method = RequestMethod.POST)
-  protected ModelAndView onSubmit(
+  @PostMapping
+  protected ModelAndView lookupUser(
       @ModelAttribute("lookupUserParameters") LookupUserParameters param,
       BindingResult result, HttpServletRequest request) {
     lookupUserParametersValidator.validate(param, result);
@@ -73,13 +74,19 @@ public class LookupUserController {
     List<User> users = new ArrayList<User>();
     if ("teacher".equals(userType)) {
       if ("id".equals(lookupField)) {
-        users = userService.retrieveTeachersById(Long.parseLong(lookupData));
+        User user = userService.retrieveTeacherById(Long.parseLong(lookupData));
+        if (user != null) {
+          users.add(user);
+        }
       } else if ("firstname".equals(lookupField)) {
         users = userService.retrieveTeachersByFirstName(lookupData);
       } else if ("lastname".equals(lookupField)) {
         users = userService.retrieveTeachersByLastName(lookupData);
       } else if ("username".equals(lookupField)) {
-        users = userService.retrieveTeachersByUsername(lookupData);
+        User user = userService.retrieveTeacherByUsername(lookupData);
+        if (user != null) {
+          users.add(user);
+        }
       } else if ("displayname".equals(lookupField)) {
         users = userService.retrieveTeachersByDisplayName(lookupData);
       } else if ("city".equals(lookupField)) {
@@ -97,13 +104,19 @@ public class LookupUserController {
       }
     } else if ("student".equals(userType)) {
       if ("id".equals(lookupField)) {
-        users = userService.retrieveStudentsById(Long.parseLong(lookupData));
+        User user = userService.retrieveStudentById(Long.parseLong(lookupData));
+        if (user != null) {
+          users.add(user);
+        }
       } else if ("firstname".equals(lookupField)) {
         users = userService.retrieveStudentsByFirstName(lookupData);
       } else if ("lastname".equals(lookupField)) {
         users = userService.retrieveStudentsByLastName(lookupData);
       } else if ("username".equals(lookupField)) {
-        users = userService.retrieveStudentsByUsername(lookupData);
+        User user = userService.retrieveStudentByUsername(lookupData);
+        if (user != null) {
+          users.add(user);
+        }
       } else if ("gender".equals(lookupField)) {
         users = userService.retrieveStudentsByGender(lookupData);
       }
@@ -125,11 +138,10 @@ public class LookupUserController {
     return modelAndView;
   }
 
-  @RequestMapping(method = RequestMethod.GET)
-  public ModelAndView initializeForm(ModelMap model, HttpServletRequest request) {
+  @GetMapping
+  public ModelAndView showSearchForm(ModelMap model, @RequestParam String userType) {
     ModelAndView mav = new ModelAndView();
     mav.addObject("lookupUserParameters", new LookupUserParameters());
-    String userType = request.getParameter("userType");
     model.put("userType", userType);
     if ("teacher".equals(userType)) {
       model.put("fields", TeacherFields.values());
@@ -137,14 +149,5 @@ public class LookupUserController {
       model.put("fields", StudentFields.values());
     }
     return mav;
-  }
-
-  private Schoollevel getLevel(String level) {
-    for (Schoollevel schoolLevel : Schoollevel.values()) {
-      if (schoolLevel.toString().toUpperCase().contains(level.toUpperCase())) {
-        return schoolLevel;
-      }
-    }
-    return Schoollevel.OTHER;
   }
 }

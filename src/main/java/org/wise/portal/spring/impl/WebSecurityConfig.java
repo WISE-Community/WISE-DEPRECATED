@@ -89,6 +89,7 @@ public class WebSecurityConfig<S extends Session> extends WebSecurityConfigurerA
         .authorizeRequests()
         .antMatchers("/admin/**").hasAnyRole("ADMINISTRATOR,RESEARCHER")
         .antMatchers("/project/notifyAuthor*/**").hasAnyRole("TEACHER")
+        .antMatchers("/student/account/info").hasAnyRole("TEACHER")
         .antMatchers("/student/**").hasAnyRole("STUDENT")
         .antMatchers("/studentStatus").hasAnyRole("TEACHER,STUDENT")
         .antMatchers("/teacher/**").hasAnyRole("TEACHER")

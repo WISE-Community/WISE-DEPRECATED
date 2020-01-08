@@ -19,6 +19,7 @@ package org.wise.portal.dao.user.impl;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -128,15 +129,15 @@ public class HibernateUserDaoTest extends AbstractTransactionalDbTests {
 
   @Test
   public void retrieveTeacherById_WithTeacherId_ShouldReturnTheTeacher() {
-    List<User> users = userDao.retrieveTeacherById(teacher1.getId());
+    User user = userDao.retrieveTeacherById(teacher1.getId());
     assertEquals(teacher1.getUserDetails().getUsername(),
-        users.get(0).getUserDetails().getUsername());
+        user.getUserDetails().getUsername());
   }
 
   @Test
   public void retrieveTeacherById_WithStudentId_ShouldNotReturnAnyUser() {
-    List<User> users = userDao.retrieveTeacherById(student1.getId());
-    assertEquals(0, users.size());
+    User user = userDao.retrieveTeacherById(student1.getId());
+    assertNull(user);
   }
 
   @Test
@@ -165,14 +166,14 @@ public class HibernateUserDaoTest extends AbstractTransactionalDbTests {
 
   @Test
   public void retrieveTeachersByUsername_WithNonExistingTeacherUsername_ShouldNotReturnAnyUser() {
-    List<User> users = userDao.retrieveTeachersByUsername("AnnDoe");
-    assertEquals(0, users.size());
+    User user = userDao.retrieveTeacherByUsername("AnnDoe");
+    assertNull(user);
   }
 
   @Test
-  public void retrieveTeachersByUsername_WithExistingTeacherUsername_ShouldSucceed() {
-    List<User> users = userDao.retrieveTeachersByUsername("MrsPuff");
-    assertEquals(1, users.size());
+  public void retrieveTeacherByUsername_WithExistingTeacherUsername_ShouldSucceed() {
+    User user = userDao.retrieveTeacherByUsername("MrsPuff");
+    assertEquals(teacher1.getId(), user.getId());
   }
 
   @Test
@@ -267,16 +268,16 @@ public class HibernateUserDaoTest extends AbstractTransactionalDbTests {
   }
 
   @Test
-  public void retrieveStudentsById_WithTeacherId_ShouldNotReturnAnyUser() {
-    List<User> users = userDao.retrieveStudentsById(4L);
-    assertEquals(0, users.size());
+  public void retrieveStudentById_WithTeacherId_ShouldNotReturnAnyUser() {
+    User user = userDao.retrieveStudentById(4L);
+    assertNull(user);
   }
 
   @Test
   public void retrieveStudentsById_WithStudentId_ShouldReturnUser() {
-    List<User> users = userDao.retrieveStudentsById(student1.getId());
-    assertEquals(1, users.size());
-    assertEquals(student1.getId(), users.get(0).getId());
+    User user = userDao.retrieveStudentById(student1.getId());
+    assertEquals(student1.getUserDetails().getUsername(),
+        user.getUserDetails().getUsername());
   }
 
   @Test
@@ -304,15 +305,15 @@ public class HibernateUserDaoTest extends AbstractTransactionalDbTests {
   }
 
   @Test
-  public void retrieveStudentsByUsername_WithNonExistingUsername_ShouldNotReturnAnyUser() {
-    List<User> users = userDao.retrieveStudentsByUsername("BillD0101");
-    assertEquals(0, users.size());
+  public void retrieveStudentByUsername_WithNonExistingUsername_ShouldNotReturnAnyUser() {
+    User user = userDao.retrieveStudentByUsername("BillD0101");
+    assertNull(user);
   }
 
   @Test
   public void retrieveStudentsByUsername_WithExistingUsername_ShouldReturnUser() {
-    List<User> users = userDao.retrieveStudentsByUsername("SpongebobS0101");
-    assertEquals(1, users.size());
+    User user = userDao.retrieveStudentByUsername("SpongebobS0101");
+    assertEquals(student1.getId(), user.getId());
   }
 
   @Test

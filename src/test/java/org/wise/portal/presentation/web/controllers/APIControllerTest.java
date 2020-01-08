@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.wise.portal.domain.authentication.Gender;
 import org.wise.portal.domain.authentication.Schoollevel;
 import org.wise.portal.domain.authentication.impl.PersistentGrantedAuthority;
 import org.wise.portal.domain.authentication.impl.StudentUserDetails;
@@ -51,19 +52,21 @@ public class APIControllerTest {
 
   protected final String TEACHER_USERNAME = "SquidwardTentacles";
 
+  protected final String ADMIN_USERNAME = "MrKrabb";
+
   protected final String USERNAME_NOT_IN_DB = "usernameNotInDB";
 
   protected Long student1Id = 94678L;
 
   protected Long teacher1Id = 94210L;
 
-  protected User student1, teacher1, teacher2;
+  protected User student1, teacher1, teacher2, admin1;
 
-  protected Authentication studentAuth, teacherAuth;
+  protected Authentication studentAuth, teacherAuth, adminAuth;
 
   protected StudentUserDetails student1UserDetails;
 
-  protected TeacherUserDetails teacher1UserDetails;
+  protected TeacherUserDetails teacher1UserDetails, admin1UserDetails;
 
   protected Long runId1 = 1L;
 
@@ -108,6 +111,8 @@ public class APIControllerTest {
     student1UserDetails.setFirstname(STUDENT_FIRSTNAME);
     student1UserDetails.setLastname(STUDENT_LASTNAME);
     student1UserDetails.setUsername(STUDENT_USERNAME);
+    student1UserDetails.setGender(Gender.FEMALE);
+    student1UserDetails.setNumberOfLogins(5);
     student1UserDetails.setAuthorities(new GrantedAuthority[] { studentAuthority });
     student1UserDetails.setGoogleUserId(STUDENT1_GOOGLE_ID);
     student1.setUserDetails(student1UserDetails);
@@ -122,10 +127,18 @@ public class APIControllerTest {
     teacher1UserDetails.setLastname(TEACHER_LASTNAME);
     teacher1UserDetails.setUsername(TEACHER_USERNAME);
     teacher1UserDetails.setSchoollevel(Schoollevel.COLLEGE);
+    teacher1UserDetails.setNumberOfLogins(5);
     teacher1UserDetails.setAuthorities(new GrantedAuthority[] { teacherAuthority });
     teacher1.setUserDetails(teacher1UserDetails);
     teacherAuth = new TestingAuthenticationToken(teacher1UserDetails, credentials);
-
+    admin1 = new UserImpl();
+    admin1UserDetails = new TeacherUserDetails();
+    PersistentGrantedAuthority adminAuthority = new PersistentGrantedAuthority();
+    adminAuthority.setAuthority(UserDetailsService.ADMIN_ROLE);
+    admin1UserDetails.setAuthorities(new GrantedAuthority[] { adminAuthority });
+    admin1UserDetails.setUsername(ADMIN_USERNAME);
+    admin1.setUserDetails(admin1UserDetails);
+    adminAuth = new TestingAuthenticationToken(admin1UserDetails, credentials);
     run1 = new RunImpl();
     run1.setId(runId1);
     run1.setOwner(teacher1);
