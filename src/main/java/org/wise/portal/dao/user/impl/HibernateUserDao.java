@@ -26,7 +26,6 @@ import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
@@ -54,7 +53,7 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements User
 
   @PersistenceContext
   private EntityManager entityManager;
-  
+
   private static final String FIND_ALL_QUERY = "from UserImpl";
 
   @Override
@@ -69,7 +68,7 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements User
 
   private CriteriaBuilder getCriteriaBuilder() {
     Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-    return session.getCriteriaBuilder(); 
+    return session.getCriteriaBuilder();
   }
 
   public User retrieveByUserDetails(UserDetails userDetails) {
@@ -144,7 +143,6 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements User
     return (List<User>) (Object) query.getResultList();
   }
 
-  @SuppressWarnings("unchecked")
   public User retrieveTeacherById(Long id) {
     CriteriaBuilder cb = getCriteriaBuilder();
     CriteriaQuery<UserImpl> cq = cb.createQuery(UserImpl.class);
@@ -249,7 +247,6 @@ public class HibernateUserDao extends AbstractHibernateDao<User> implements User
     return (List<User>) (Object) query.getResultList();
   }
 
-  @SuppressWarnings("unchecked")
   public User retrieveStudentById(Long id) {
     CriteriaBuilder cb = getCriteriaBuilder();
     CriteriaQuery<UserImpl> cq = cb.createQuery(UserImpl.class);

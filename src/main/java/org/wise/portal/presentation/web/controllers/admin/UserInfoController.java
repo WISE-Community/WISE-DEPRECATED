@@ -26,13 +26,13 @@ package org.wise.portal.presentation.web.controllers.admin;
 import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.user.User;
-import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.student.StudentService;
@@ -55,21 +55,17 @@ public class UserInfoController {
   @Autowired
   private RunService runService;
 
-  protected final static String USER_INFO_MAP = "userInfoMap";
-
   @GetMapping(value = {"/student/account/info", "/teacher/account/info"})
-  protected String getUserAccountInfo(
-      @RequestParam("username") String username,
+  protected String getUserAccountInfo(Authentication auth, @RequestParam String username,
       ModelMap modelMap) throws Exception {
-    User signedInUser = ControllerUtil.getSignedInUser();
-    User user = this.userService.retrieveUserByUsername(username);
-
+    User signedInUser = userService.retrieveUserByUsername(auth.getName());
+    User user = userService.retrieveUserByUsername(username);
     if (signedInUser.isAdmin() ||
-        this.studentService.isStudentAssociatedWithTeacher(user, signedInUser)) {
+        studentService.isStudentAssociatedWithTeacher(user, signedInUser)) {
       MutableUserDetails userDetails = (MutableUserDetails) user.getUserDetails();
       HashMap<String, Object> userInfoMap = userDetails.getInfo();
       userInfoMap.put("ID", user.getId());
-      modelMap.put(USER_INFO_MAP, userInfoMap);
+      modelMap.put("userInfoMap", userInfoMap);
       if (user.getUserDetails().hasGrantedAuthority(UserDetailsService.STUDENT_ROLE)) {
         modelMap.put("isStudent", true);
         modelMap.put("runList", runService.getRunList(user));
