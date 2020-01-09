@@ -7,6 +7,7 @@ class AuthoringToolController {
       $filter,
       $location,
       $mdDialog,
+      $rootScope,
       $scope,
       $state,
       $transitions,
@@ -19,6 +20,7 @@ class AuthoringToolController {
     this.$filter = $filter;
     this.$location = $location;
     this.$mdDialog = $mdDialog;
+    this.$rootScope = $rootScope;
     this.$scope = $scope;
     this.$state = $state;
     this.$transitions = $transitions;
@@ -332,6 +334,7 @@ AuthoringToolController.$inject = [
   '$filter',
   '$location',
   '$mdDialog',
+  '$rootScope',
   '$scope',
   '$state',
   '$transitions',
