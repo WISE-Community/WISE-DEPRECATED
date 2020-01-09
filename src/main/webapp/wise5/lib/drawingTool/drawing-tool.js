@@ -1838,8 +1838,11 @@ function DeleteTool(name, drawTool) {
   // Delete the selected object(s) with the backspace key.
   this.master.$element.on('keydown', function(e) {
     if (e.keyCode === 8) {
-      this.use();
-      e.preventDefault();
+      var activeObj = this.canvas.getActiveObject();
+      if (activeObj != null && activeObj.hoverCursor != 'text') {
+        this.use();
+        e.preventDefault();
+      }
     }
   }.bind(this));
 }
