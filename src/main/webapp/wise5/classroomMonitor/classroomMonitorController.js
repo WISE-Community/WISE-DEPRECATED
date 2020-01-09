@@ -145,11 +145,8 @@ class ClassroomMonitorController {
             });
         });
 
-        // listen for state change events
         $transitions.onSuccess({}, ($transition) => {
-            // close the menu when the state changes
             this.menuOpen = false;
-
             this.processUI();
         });
 

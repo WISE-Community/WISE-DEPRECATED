@@ -163,15 +163,14 @@ class ProjectController {
     });
 
     this.$transitions.onSuccess({}, ($transition) => {
-      let stateName = $transition.name;
-      if (stateName == 'root.project') {
+      const stateName = $transition.name;
+      if (stateName === 'root.project') {
         this.saveEvent('projectHomeViewOpened', 'Navigation');
-      } else if (stateName == 'root.project.node') {
-      } else if (stateName == 'root.project.asset') {
+      } else if (stateName === 'root.project.asset') {
         this.saveEvent('assetsViewOpened', 'Navigation');
-      } else if (stateName == 'root.project.info') {
+      } else if (stateName === 'root.project.info') {
         this.saveEvent('projectInfoViewOpened', 'Navigation');
-      } else if (stateName == 'root.project.notebook') {
+      } else if (stateName === 'root.project.notebook') {
         this.saveEvent('notebookViewOpened', 'Navigation');
       }
     });

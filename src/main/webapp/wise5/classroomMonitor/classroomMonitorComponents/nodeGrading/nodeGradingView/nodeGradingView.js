@@ -90,9 +90,8 @@ class NodeGradingViewController {
             }
         });
 
-        // save event when node grading view is displayed and save the nodeId that is displayed
-        const context = "ClassroomMonitor", nodeId = this.nodeId, componentId = null, componentType = null,
-            category = "Navigation", event = "nodeGradingViewDisplayed", data = { nodeId: this.nodeId };
+        const context = 'ClassroomMonitor', nodeId = this.nodeId, componentId = null, componentType = null,
+            category = 'Navigation', event = 'nodeGradingViewDisplayed', data = { nodeId: this.nodeId };
         this.TeacherDataService.saveEvent(context, nodeId, componentId, componentType, category, event, data);
     }
 
@@ -110,12 +109,10 @@ class NodeGradingViewController {
     }
 
     getHiddenComponents() {
-        let hiddenComponents = [];
-        if (this.nodeContent) {
-            for (const component of this.nodeContent.components) {
-                if (component.id !== this.componentId) {
-                    hiddenComponents.push(component.id);
-                }
+        const hiddenComponents = [];
+        for (const component of this.nodeContent.components) {
+            if (component.id !== this.componentId) {
+                hiddenComponents.push(component.id);
             }
         }
         return hiddenComponents;
