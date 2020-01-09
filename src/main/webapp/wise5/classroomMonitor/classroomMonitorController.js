@@ -97,6 +97,17 @@ class ClassroomMonitorController {
                 icon: 'file_download',
                 type: 'secondary',
                 active: true
+            },
+            'root': {
+                name: 'Authoring Tool',
+                icon: 'edit',
+                action: () => {
+                    if (confirm(this.$translate('warningWillBeEditingContentOfAClassroomUnit'))) {
+                        this.authoringToolPath = '/author#!/project/' + this.runId;
+                        window.open(this.authoringToolPath, '_blank');
+                    }
+                },
+                active: true
             }
         };
 

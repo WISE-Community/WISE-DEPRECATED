@@ -192,6 +192,7 @@
     "unpauseStudentScreens": "Unlock Student Screens",
     "viewTeam": "View team",
     "visited": "Visited",
+    "warningWillBeEditingContentOfAClassroomUnit": "Warning! You will be editing the content of a classroom unit. If students have already started working, this may result in undesirable effects and lost data.\nAre you sure you wish to proceed?",
     "workgroups": "Workgroups",
     "yes": "Yes"
 }
