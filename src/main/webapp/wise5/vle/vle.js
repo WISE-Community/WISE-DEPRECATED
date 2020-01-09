@@ -5,7 +5,7 @@ import AchievementService from '../services/achievementService';
 import angular from 'angular';
 import angularDragula from 'angular-dragula';
 import 'ng-file-upload';
-import 'highcharts-ng';
+import '../lib/highcharts/highcharts-ng';
 import 'angular-material';
 import 'angular-moment';
 import 'ng-onload';
