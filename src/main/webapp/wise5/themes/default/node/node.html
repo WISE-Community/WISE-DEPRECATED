@@ -19,12 +19,19 @@
                            icon="'info'"
                            icon-class="'info'"></help-icon>
             </div>
-            <component node-id='{{::nodeController.nodeId}}'
-                       component-id='{{::component.id}}'
-                       component-state='{{::nodeController.getComponentStateByComponentId(component.id)}}'
-                       workgroup-id='{{::nodeController.workgroupId}}'
-                       teacher-workgroup-id='{{::nodeController.teacherWorkgroupId}}'
-                       mode='student'></component>
+            <div ng-switch='component.type'>
+                <div ng-switch-when='HTML'>
+                    <html-activity [component]='component' (activity)='nodeController.activityEvent($event)'></html-activity>
+                </div>
+                <div ng-switch-default>
+                    <component node-id='{{::nodeController.nodeId}}'
+                            component-id='{{::component.id}}'
+                            component-state='{{::nodeController.getComponentStateByComponentId(component.id)}}'
+                            workgroup-id='{{::nodeController.workgroupId}}'
+                            teacher-workgroup-id='{{::nodeController.teacherWorkgroupId}}'
+                            mode='student'></component>
+                </div>
+            </div>
         </div>
         <div class="node-content__actions" layout="row" layout-align="start center" flex="100">
             <md-button class="md-raised md-primary"

@@ -68,6 +68,8 @@ class NodeController {
       }
 
       this.nodeContent = this.ProjectService.getNodeById(this.nodeId);
+      this.nodeContent =
+          JSON.parse(this.ProjectService.replaceAssetPaths(JSON.stringify(this.nodeContent)));
       this.nodeTitle = this.ProjectService.getNodeTitleByNodeId(this.nodeId);
       this.nodeStatus = this.StudentDataService.nodeStatuses[this.nodeId];
       this.startAutoSaveInterval();
@@ -1073,6 +1075,11 @@ class NodeController {
       this.$rootScope.$broadcast('doneExiting');
     });
   };
+
+  activityEvent(event) {
+    const imageObject = this.UtilService.getImageObjectFromImageElement(event.target);
+    this.NotebookService.addNote(event, imageObject);
+  }
 }
 
 NodeController.$inject = [

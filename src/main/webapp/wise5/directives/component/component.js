@@ -93,15 +93,12 @@ class ComponentController {
         this.$scope.type = componentContent.type;
         this.$scope.nodeController = this.$scope.$parent.nodeController;
 
-        var componentHTML =
+        const componentHTML =
             `<div class="component__wrapper">
                 <div ng-include="::componentTemplatePath" class="component__content component__content--{{::type}}"></div>
             </div>`;
-
-        if (componentHTML != null) {
-            this.$element.html(componentHTML);
-            this.$compile(this.$element.contents())(this.$scope);
-        }
+        this.$element.html(componentHTML);
+        this.$compile(this.$element.contents())(this.$scope);
     }
 }
 
