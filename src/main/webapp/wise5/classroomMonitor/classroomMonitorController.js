@@ -99,7 +99,7 @@ class ClassroomMonitorController {
                 active: true
             },
             'root': {
-                name: 'Authoring Tool',
+                name: this.$translate('authoringTool'),
                 icon: 'edit',
                 action: () => {
                     if (confirm(this.$translate('warningWillBeEditingContentOfAClassroomUnit'))) {
