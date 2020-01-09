@@ -42,10 +42,10 @@ public interface UserDao<T extends User> extends SimpleDao<T> {
       Integer birthMonth, Integer birthDay);
   List<User> retrieveTeachersByName(String firstName, String lastName);
   List<User> retrieveAllTeachers();
-  List<User> retrieveTeacherById(Long id);
+  User retrieveTeacherById(Long id);
   List<User> retrieveTeachersByFirstName(String firstName);
   List<User> retrieveTeachersByLastName(String lastName);
-  List<User> retrieveTeachersByUsername(String username);
+  User retrieveTeacherByUsername(String username);
   List<User> retrieveTeachersByDisplayName(String displayName);
   List<User> retrieveTeachersByCity(String city);
   List<User> retrieveTeachersByState(String state);
@@ -54,10 +54,10 @@ public interface UserDao<T extends User> extends SimpleDao<T> {
   List<User> retrieveTeachersBySchoolLevel(String schoolLevel);
   List<User> retrieveTeachersByEmail(String email);
   List<User> retrieveAllStudents();
-  List<User> retrieveStudentsById(Long id);
+  User retrieveStudentById(Long id);
   List<User> retrieveStudentsByFirstName(String firstName);
   List<User> retrieveStudentsByLastName(String lastName);
-  List<User> retrieveStudentsByUsername(String username);
+  User retrieveStudentByUsername(String username);
   List<User> retrieveStudentsByGender(String gender);
   List<User> retrieveTeacherUsersJoinedSinceYesterday();
   List<User> retrieveStudentUsersJoinedSinceYesterday();

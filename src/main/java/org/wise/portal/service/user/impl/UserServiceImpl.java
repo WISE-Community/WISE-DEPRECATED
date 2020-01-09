@@ -191,7 +191,7 @@ public class UserServiceImpl implements UserService {
     userDao.save(user);
   }
 
-  public List<User> retrieveTeachersById(Long id) {
+  public User retrieveTeacherById(Long id) {
     return userDao.retrieveTeacherById(id);
   }
 
@@ -203,8 +203,8 @@ public class UserServiceImpl implements UserService {
     return userDao.retrieveTeachersByLastName(lastName);
   }
 
-  public List<User> retrieveTeachersByUsername(String username) {
-    return userDao.retrieveTeachersByUsername(username);
+  public User retrieveTeacherByUsername(String username) {
+    return userDao.retrieveTeacherByUsername(username);
   }
 
   public List<User> retrieveTeachersByDisplayName(String displayName) {
@@ -235,8 +235,8 @@ public class UserServiceImpl implements UserService {
     return userDao.retrieveTeachersByEmail(email);
   }
 
-  public List<User> retrieveStudentsById(Long id) {
-    return userDao.retrieveStudentsById(id);
+  public User retrieveStudentById(Long id) {
+    return userDao.retrieveStudentById(id);
   }
 
   public List<User> retrieveStudentsByFirstName(String firstName) {
@@ -247,8 +247,8 @@ public class UserServiceImpl implements UserService {
     return userDao.retrieveStudentsByLastName(lastName);
   }
 
-  public List<User> retrieveStudentsByUsername(String username) {
-    return userDao.retrieveStudentsByUsername(username);
+  public User retrieveStudentByUsername(String username) {
+    return userDao.retrieveStudentByUsername(username);
   }
 
   public List<User> retrieveStudentsByGender(String gender) {
