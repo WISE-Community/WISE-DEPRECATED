@@ -611,7 +611,7 @@ class NodeAuthoringController {
            * set the mapping of all the ids to order for use when choosing which items are
            * in the branch path
            */
-          branch.items = this.UtilService.makeCopyOfJSONObject(this.ProjectService.idToOrder);
+          branch.items = this.authoringViewGetBranchItems();
 
           // an array that will hold all the checked items in the branch path
           branch.checkedItemsInBranchPath = [];
@@ -1732,7 +1732,7 @@ class NodeAuthoringController {
            * set the mapping of all the ids to order for use when choosing which items are
            * in the branch path
            */
-          branch.items = this.UtilService.makeCopyOfJSONObject(this.ProjectService.idToOrder);
+          branch.items = this.authoringViewGetBranchItems();
 
           // add the branch to the array of branches
           this.createBranchBranches.push(branch);
@@ -2442,7 +2442,7 @@ class NodeAuthoringController {
      * set the mapping of all the ids to order for use when choosing which items are
      * in the branch path
      */
-    branch.items = this.UtilService.makeCopyOfJSONObject(this.ProjectService.idToOrder);
+    branch.items = this.authoringViewGetBranchItems();
 
     // an array that will hold all the checked items in the branch path
     branch.checkedItemsInBranchPath = [];
@@ -3438,6 +3438,14 @@ class NodeAuthoringController {
    */
   authoringViewConstraintRemovalCriteriaComponentIdChanged(criteria) {
     this.authoringViewNodeChanged();
+  }
+
+  authoringViewGetBranchItems() {
+    const items = this.UtilService.makeCopyOfJSONObject(this.ProjectService.idToOrder);
+    for (const nodeId of Object.keys(items)) {
+      items[nodeId]['$key'] = nodeId;
+    }
+    return items;
   }
 }
 
