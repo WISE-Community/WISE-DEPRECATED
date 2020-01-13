@@ -40,7 +40,10 @@
           <context context-type="sourcefile">app/modules/header/header-links/header-links.component.html</context>
           <context context-type="linenumber">7</context>
         </context-group>
-        <target state="translated">功能</target>
+        <target state="translated">特色</target>
+        <alt-trans>
+          <target>功能</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="847171f94c5e932a67df0c3b4d57e4e10d844b52" datatype="html">
         <source>About Us</source>
@@ -120,7 +123,10 @@
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
           <context context-type="linenumber">16</context>
         </context-group>
-        <target state="translated">传统的BIOS</target>
+        <target state="translated">旧版</target>
+        <alt-trans>
+          <target>传统的BIOS</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="e1a07fb742a7b025b2a594d867a5805c37697f86" datatype="html">
         <source>WISE on Facebook</source>
@@ -132,7 +138,10 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">91</context>
         </context-group>
-        <target state="translated">分享到Facebook</target>
+        <target state="translated">将WISE分享到Facebook</target>
+        <alt-trans>
+          <target>分享到Facebook</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="0000062f4a98235fac57d3b130730592402b9e05" datatype="html">
         <source>WISE on Twitter</source>
@@ -144,7 +153,10 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">96</context>
         </context-group>
-        <target state="translated">分享到Twitter</target>
+        <target state="translated">将WISE分享到Twitter</target>
+        <alt-trans>
+          <target>分享到Twitter</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="540452d4091ec883af6967b28abf89f2ac0c853d" datatype="html">
         <source>WISE on Github</source>
@@ -156,7 +168,13 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">101</context>
         </context-group>
-        <target state="translated">上传到Github</target>
+        <target state="translated">将WISE分享到Github</target>
+        <alt-trans>
+          <target>在Github上的WISE</target>
+        </alt-trans>
+        <alt-trans>
+          <target>上传到Github</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="c0cf90a4d22206da43e0ca71eab7a5e5998589a8" datatype="html">
         <source>Powered by the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>TELS Research Community<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> and <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>WISE Open Source Technology<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>. Help us <x id="START_LINK_2" ctype="x-a" equiv-text="&lt;a&gt;"/>translate<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> WISE!</source>
