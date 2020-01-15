@@ -8,16 +8,14 @@ import org.wise.portal.domain.workgroup.Workgroup;
 
 public class LaunchRunErrorResponse extends ErrorResponse {
   Workgroup workgroup;
-  public LaunchRunErrorResponse(String errorCode, Workgroup workgroup) {
-    super(errorCode);
+  public LaunchRunErrorResponse(String messageCode, Workgroup workgroup) {
+    super(messageCode);
     this.workgroup = workgroup;
   }
 
   @Override
   public String toJSONString() throws JSONException {
-    JSONObject response = new JSONObject();
-    response.put("status", "error");
-    response.put("messageCode", errorCode);
+    JSONObject response = toJSONObject();
     JSONArray workgroupMembers = new JSONArray();
     for (User member : workgroup.getMembers()) {
       JSONObject memberInfo = new JSONObject();

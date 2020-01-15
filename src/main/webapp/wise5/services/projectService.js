@@ -1149,12 +1149,10 @@ class ProjectService {
     this.$rootScope.$broadcast('savingProject');
     this.cleanupBeforeSave();
 
-    const projectId = this.ConfigService.getProjectId();
-    const saveProjectURL = this.ConfigService.getConfigParam('saveProjectURL');
-    if (projectId == null || saveProjectURL == null) {
+    if (!this.ConfigService.getConfigParam('canEditProject')) {
+      this.$rootScope.$broadcast('notAllowedToEditThisProject');
       return null;
     }
-
     const authors = this.project.metadata.authors ? this.project.metadata.authors : [];
     const userInfo = this.ConfigService.getMyUserInfo();
     let exists = false;
@@ -1169,7 +1167,8 @@ class ProjectService {
       authors.push(userInfo);
     }
     this.project.metadata.authors = authors;
-
+    const projectId = this.ConfigService.getProjectId();
+    const saveProjectURL = this.ConfigService.getConfigParam('saveProjectURL');
     const httpParams = {
       method: 'POST',
       url: saveProjectURL,
@@ -1180,11 +1179,20 @@ class ProjectService {
         projectJSONString: angular.toJson(this.project, false)
       })
     };
-
     return this.$http(httpParams).then((result) => {
-      const commitHistory = result.data;
-      this.$rootScope.$broadcast('projectSaved');
-      return commitHistory;
+      const response = result.data;
+      if (response.status === 'error') {
+        if (response.messageCode === 'notSignedIn') {
+          this.$rootScope.$broadcast('notLoggedInProjectNotSaved');
+          this.$rootScope.$broadcast('logOut');
+        } else if (response.messageCode === 'notAllowedToEditThisProject') {
+          this.$rootScope.$broadcast('notAllowedToEditThisProject');
+        } else if (response.messageCode === 'errorSavingProject') {
+          this.$rootScope.$broadcast('errorSavingProject');
+        }
+      } else {
+        this.$rootScope.$broadcast('projectSaved');
+      }
     });
   };
 

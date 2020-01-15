@@ -77,10 +77,10 @@ export class EditPasswordComponent implements OnInit {
   }
 
   handleChangePasswordResponse(response) {
-    if (response.message == 'success') {
+    if (response.status == 'success') {
       this.resetForm();
       this.snackBar.open(this.i18n(`Password changed.`));
-    } else if (response.message == 'incorrect password') {
+    } else if (response.status == 'error' && response.messageCode == 'incorrectPassword') {
       const error = { 'incorrectPassword': true };
       const oldPasswordControl = this.changePasswordFormGroup.get('oldPassword');
       oldPasswordControl.setErrors(error);
