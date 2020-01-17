@@ -470,6 +470,11 @@ class DiscussionController extends ComponentController {
       this.topLevelResponses =
           this.topLevelResponses.filter(this.threadHasPostFromThisComponentAndWorkgroupId());
     }
+    this.orderResponses();
+  }
+
+  orderResponses() {
+    this.topLevelResponses = this.topLevelResponses.slice().reverse();
   }
 
   threadHasPostFromThisComponentAndWorkgroupId() {
@@ -511,6 +516,7 @@ class DiscussionController extends ComponentController {
         }
       }
       this.topLevelResponses = this.getLevel1Responses();
+      this.orderResponses();
     }
   }
 

@@ -15,33 +15,19 @@ class ComponentAnnotationsController {
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
-
         this.$translate = this.$filter('translate');
-
         this.maxScoreDisplay = (parseInt(this.maxScore) > 0) ? '/' + this.maxScore : '';
-
         this.themeSettings = this.ProjectService.getThemeSettings();
         this.hideComponentScores = this.themeSettings.hideComponentScores;
-
         this.nodeId = null;
         this.componentId = null;
-
-        // the latest annoation time
         this.latestAnnotationTime = null;
-
-        // whether the annotation is new or not
         this.isNew = false;
-
-        // the annotation label
         this.label = '';
-
-        // the avatar icon (default to person/teacher)
-        this.icon = 'person';
-
+        this.icon = 'person'; // (default to person/teacher)
         this.showScore = true;
         this.showComment = true;
 
-        // watch for new component states
         this.$scope.$on('studentWorkSavedToServer', (event, args) => {
             let nodeId = args.studentWork.nodeId;
             let componentId = args.studentWork.componentId;
@@ -179,15 +165,14 @@ class ComponentAnnotationsController {
      * Set the label based on whether this is an automated or teacher annotation
      **/
     setLabelAndIcon() {
-        let latest = this.getLatestAnnotation();
-
+        const latest = this.getLatestAnnotation();
         if (latest) {
             if (latest.type === 'autoComment' || latest.type === 'autoScore') {
                 this.label = this.$translate('automatedFeedbackLabel');
                 this.icon = 'keyboard';
             } else {
                 this.label = this.$translate('teacherFeedbackLabel');
-                this.icon = "person";
+                this.icon = 'person';
             }
         }
     }

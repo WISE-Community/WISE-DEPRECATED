@@ -17,7 +17,7 @@
                   <class-response ng-repeat='componentState in discussionController.topLevelResponses.slice().reverse()'
                       response='componentState'
                       submitbuttonclicked='submitbuttonclicked(r)'
-                      mode='discussionController.mode'
+                      mode='::discussionController.mode'
                       deletebuttonclicked='discussionController.deletebuttonclicked(componentState)'
                       undodeletebuttonclicked='discussionController.undodeletebuttonclicked(componentState)'
                       studentdatachanged='studentdatachanged()'
@@ -32,7 +32,7 @@
               component-id='discussionController.componentId'
               to-workgroup-id='workgroupId'
               component-state='componentState'
-              active='discussionController.mode === "grading"'>
+              active='::discussionController.mode === "grading"'>
           </component-revisions-info>
         </div>
         <div flex='100'
@@ -44,25 +44,25 @@
               from-workgroup-id='teacherWorkgroupId'
               to-workgroup-id='workgroupId'
               component-state-id='componentState.id'
-              show-all-annotations='discussionController.mode !== "grading"'
-              is-disabled='discussionController.mode !== "grading"'>
+              show-all-annotations='::discussionController.mode !== "grading"'
+              is-disabled='::discussionController.mode !== "grading"'>
           </component-grading>
         </div>
       </div>
       <div ng-switch-default>
         <div class='component__prompt'>
           <div class='component__prompt__content'>
-            <compile data='discussionController.getPrompt()'></compile>
+            <compile data='::discussionController.getPrompt()'></compile>
           </div>
-          <possible-score max-score='discussionController.componentContent.maxScore'
-              ng-if='discussionController.mode === "student" && !discussionController.latestAnnotations.score'>
+          <possible-score max-score='::discussionController.componentContent.maxScore'
+              ng-if='::discussionController.mode === "student" && !discussionController.latestAnnotations.score'>
           </possible-score>
         </div>
         <div class='md-padding discussion-content'>
-          <component-annotations ng-if='discussionController.mode === "student"'
+          <component-annotations ng-if='::discussionController.mode === "student"'
               class='annotations--inside'
               annotations='discussionController.latestAnnotations'
-              max-score='discussionController.componentContent.maxScore'>
+              max-score='::discussionController.componentContent.maxScore'>
           </component-annotations>
           <div layout='row'>
             <div class='discussion-posts' flex>
@@ -91,7 +91,7 @@
                     ng-if='!discussionController.isDisabled && discussionController.isStudentAttachmentEnabled && discussionController.attachments.length'>
                   <div class='component__attachment discussion-new__attachment'
                       ng-repeat='attachment in discussionController.attachments'>
-                    <img ng-src='{{attachment.iconURL}}'
+                    <img ng-src='{{::attachment.iconURL}}'
                         alt='Image'
                         class='discussion-post__attachment discussion-new__attachment__content' />
                     <md-button class='component__attachment__delete'
@@ -107,7 +107,7 @@
                     layout-align='end center'>
                   <md-button class='md-accent md-icon-button'
                       ng-click='nodeController.showStudentAssets($event, discussionController.componentId, discussionController.isDisabled)'
-                      ng-if='discussionController.isStudentAttachmentEnabled'
+                      ng-if='::discussionController.isStudentAttachmentEnabled'
                       title='Add picture'
                       ng-disabled='discussionController.isDisabled'>
                     <md-icon>image</md-icon>
@@ -124,11 +124,11 @@
                   </md-button>
                 </div>
               </md-card>
-              <class-response ng-repeat='componentState in discussionController.topLevelResponses.slice().reverse()'
+              <class-response ng-repeat='componentState in discussionController.topLevelResponses'
                   ng-if='mdScreen ? $odd : true'
                   response='componentState'
                   submitbuttonclicked='submitbuttonclicked(r)'
-                  mode='discussionController.mode'
+                  mode='::discussionController.mode'
                   deletebuttonclicked='discussionController.deletebuttonclicked(componentState)'
                   undodeletebuttonclicked='discussionController.undodeletebuttonclicked(componentState)'
                   studentdatachanged='studentdatachanged()'
@@ -137,13 +137,13 @@
               </class-response>
             </div>
             <div class='discussion-posts'
-                ng-if='mdScreen && discussionController.topLevelResponses.length'
+                ng-if='mdScreen'
                 flex>
-              <class-response ng-repeat='componentState in discussionController.topLevelResponses.slice().reverse()'
+              <class-response ng-repeat='componentState in discussionController.topLevelResponses'
                   ng-if='$even'
                   response='componentState'
                   submitbuttonclicked='submitbuttonclicked(r)'
-                  mode='discussionController.mode'
+                  mode='::discussionController.mode'
                   deletebuttonclicked='discussionController.deletebuttonclicked(componentState)'
                   undodeletebuttonclicked='discussionController.undodeletebuttonclicked(componentState)'
                   studentdatachanged='studentdatachanged()'
