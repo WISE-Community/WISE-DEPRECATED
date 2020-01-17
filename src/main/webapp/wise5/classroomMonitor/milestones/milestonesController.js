@@ -505,8 +505,15 @@ class MilestonesController {
   mergeAutoScoreAndTeacherScore(autoScoreAnnotation, teacherScoreAnnotation) {
     if (autoScoreAnnotation.data.scores) {
       for (let subScore of autoScoreAnnotation.data.scores) {
+        const teacherScore = Math.round(teacherScoreAnnotation.data.value);
         if (subScore.id === 'ki') {
-          subScore.score = teacherScoreAnnotation.data.value;
+          if (teacherScore > 5) {
+            subScore.score = 5;
+          } else if (teacherScore < 1) {
+            subScore.score = 1;
+          } else {
+            subScore.score = teacherScore;
+          }
         }
       }
     }
