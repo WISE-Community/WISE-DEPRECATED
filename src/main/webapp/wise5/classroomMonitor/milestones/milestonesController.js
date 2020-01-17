@@ -68,6 +68,21 @@ class MilestonesController {
         this.updateMilestoneCompletion(projectAchievement.id);
       }
     });
+
+    this.$scope.$on('annotationReceived', (event, args) => {
+      const annotation = args.annotation;
+      if (annotation) {
+          const nodeId = annotation.nodeId;
+          const componentId = annotation.componentId;
+          for (const projectAchievement of this.projectAchievements) {
+            if (projectAchievement.nodeId && projectAchievement.componentId &&
+                projectAchievement.nodeId === nodeId && 
+                projectAchievement.componentId === componentId) {
+              this.updateMilestoneCompletion(projectAchievement.id);
+            }
+          }
+      }
+  });
   }
 
   /**
@@ -472,12 +487,30 @@ class MilestonesController {
   calculateAggregateAutoScores(nodeId, componentId, periodId) {
     const aggregate = {};
     const scoreAnnotations = this.AnnotationService.getAllLatestScoreAnnotations(nodeId, componentId, periodId);
-    for (let scoreAnnotation of scoreAnnotations) {
+    for (const scoreAnnotation of scoreAnnotations) {
       if (scoreAnnotation.type === 'autoScore') {
         this.addDataToAggregate(aggregate, scoreAnnotation);
+      } else {
+        const autoScoreAnnotation = this.AnnotationService.getLatestScoreAnnotation(
+            nodeId, componentId, scoreAnnotation.toWorkgroupId, 'autoScore');
+        if (autoScoreAnnotation) {
+          const mergedAnnotation = this.mergeAutoScoreAndTeacherScore(autoScoreAnnotation, scoreAnnotation);
+          this.addDataToAggregate(aggregate, mergedAnnotation);
+        }
       }
     }
     return aggregate;
+  }
+
+  mergeAutoScoreAndTeacherScore(autoScoreAnnotation, teacherScoreAnnotation) {
+    if (autoScoreAnnotation.data.scores) {
+      for (let subScore of autoScoreAnnotation.data.scores) {
+        if (subScore.id === 'ki') {
+          subScore.score = teacherScoreAnnotation.data.value;
+        }
+      }
+    }
+    return autoScoreAnnotation;
   }
 
   addDataToAggregate(aggregate, annotation) {
