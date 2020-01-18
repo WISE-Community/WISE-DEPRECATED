@@ -353,9 +353,9 @@
           <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
           <context context-type="linenumber">42</context>
         </context-group>
-        <target state="translated">密码格式不相符</target>
+        <target state="translated">密码不正确</target>
         <alt-trans>
-          <target>密码不正确</target>
+          <target>密码格式不相符</target>
         </alt-trans>
       </trans-unit>
       <trans-unit id="5edf054f14aa57bc25a28cb7db01956fee53dac8" datatype="html">
