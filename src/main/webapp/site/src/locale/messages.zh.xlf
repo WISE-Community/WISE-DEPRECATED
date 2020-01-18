@@ -917,7 +917,13 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">128</context>
         </context-group>
-        <target state="translated">WISE提供了一套广泛的集成工具，帮助教师规划、监控进度、获取洞察力、提供反馈以及更高效地评分。 这些工具在与了解管理现代教室的真正挑战的实践教师之间的合作来不断完善。</target>
+        <target state="translated">WISE提供一套大量的集成工具，帮助教师规划教学、监控学生学习进度、获取学习进程、提供学习反馈以及高效地评估学习效果。 这些工具是与熟悉现代教室管理中存在真实挑战的教师进行合作的过程中得以不断优化的。</target>
+        <alt-trans>
+          <target>WISE提供一套大量的集成工具，帮助教师规划教学、监控学生学习进度、获取学习进程、提供学习反馈以及高效地评估学习效果。 这些工具是与熟悉现代教室管理中存在真实挑战的教师之间进行合作的过程中得以不断优化的。</target>
+        </alt-trans>
+        <alt-trans>
+          <target>WISE提供了一套广泛的集成工具，帮助教师规划、监控进度、获取洞察力、提供反馈以及更高效地评分。 这些工具在与了解管理现代教室的真正挑战的实践教师之间的合作来不断完善。</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="4f7d6b85797f6cd6114c235b464ad7910657c631" datatype="html">
         <source>By facilitating these necessary but time-consuming tasks, teachers are free to focus on what makes them indispensable: providing quality instruction to individual students.</source>
@@ -925,7 +931,10 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">129</context>
         </context-group>
-        <target state="translated">WISE平台帮助教师更高效地处理一些必要但耗时的任务，这样教师可以自由地专注于他们不可或缺的工作：为个别学生提供高质量的教学。</target>
+        <target state="translated">WISE平台帮助教师更高效地处理一些必要但耗时的任务，这样教师可以自由地专注于必须由他们完成的教学任务，即为学生提供高质量的教学。</target>
+        <alt-trans>
+          <target>WISE平台帮助教师更高效地处理一些必要但耗时的任务，这样教师可以自由地专注于他们不可或缺的工作：为个别学生提供高质量的教学。</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="794ce33c32874cf59374bff4939512bbc71585d2" datatype="html">
         <source>WISE teacher progress</source>
@@ -965,7 +974,10 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">146</context>
         </context-group>
-        <target state="translated">评分和提供反馈+案例评分标准</target>
+        <target state="translated">评分和提供反馈+评分量规示例</target>
+        <alt-trans>
+          <target>评分和提供反馈+案例评分标准</target>
+        </alt-trans>
         <alt-trans>
           <target>评分并提供反馈+案例评分标准</target>
         </alt-trans>
@@ -1000,7 +1012,10 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">162</context>
         </context-group>
-        <target state="translated">支持自定义和创建新学习单元的创作环境</target>
+        <target state="translated">支持自定义和创建新学习单元的编辑环境</target>
+        <alt-trans>
+          <target>支持自定义和创建新学习单元的创作环境</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="9e46c9aca377fd39515f72e323c4c1e3e13fb3cb" datatype="html">
         <source>In development: Automated insights into student NGSS understanding + suggested classroom interventions!</source>
@@ -1032,7 +1047,10 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">20</context>
         </context-group>
-        <target state="translated">WISE是25年以上的教学与教育技术研究的产物</target>
+        <target state="translated">WISE是具有25年以上教学与教育技术研究的产物</target>
+        <alt-trans>
+          <target>WISE是25年以上的教学与教育技术研究的产物</target>
+        </alt-trans>
         <alt-trans>
           <target>WISE是超过25年的教学与教育技术研究的产物</target>
         </alt-trans>
@@ -1051,7 +1069,10 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">39</context>
         </context-group>
-        <target state="translated">WISE老师工作室设计</target>
+        <target state="translated">WISE老师工作坊设计</target>
+        <alt-trans>
+          <target>WISE老师工作室设计</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="cf46260d6f44d44d379d124ec8df098441107eb5" datatype="html">
         <source>Marcia at WISE workshop</source>
@@ -1059,7 +1080,10 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">40</context>
         </context-group>
-        <target state="translated">Marcia 在WISE工作室</target>
+        <target state="translated">Marcia 在WISE中的工作坊</target>
+        <alt-trans>
+          <target>Marcia 在WISE工作室</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="c0025974cf98becba943b54047f136ecdf25e5c1" datatype="html">
         <source>Based on Research, Refined Through Practice</source>
@@ -1067,7 +1091,10 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">44</context>
         </context-group>
-        <target state="translated">基于研究，通过实践完善</target>
+        <target state="translated">基于研究，在实践中完善</target>
+        <alt-trans>
+          <target>基于研究，通过实践完善</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="fd1c49d6e3e02db68fe37f6c2d12cf7d1658f200" datatype="html">
         <source>Through our collaborations with teachers, administrators, technology designers, and education researchers, we have refined a set of principles which guide the design of all WISE curriculum materials and tools.</source>
@@ -1075,7 +1102,10 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">45</context>
         </context-group>
-        <target state="translated">我们通过与教师，管理人员，技术设计师和教育研究人员的合作，完善了一套指导所有WISE课程材料和工具设计的原则。</target>
+        <target state="translated">通过与教师，管理人员，技术设计师和教育研究人员的合作，我们形成了一套完善的设计原则，用以指导基于WISE的课程材料和工具的设计。</target>
+        <alt-trans>
+          <target>我们通过与教师，管理人员，技术设计师和教育研究人员的合作，完善了一套指导所有WISE课程材料和工具设计的原则。</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="93d7310ae0cdb74d49573a47634d9a7b1c771462" datatype="html">
         <source>This means that when implementing WISE units, you can be assured that what you&apos;re using is grown from a solid foundation, advised by real teachers&apos; experiences, and tested in classrooms with real students.</source>
