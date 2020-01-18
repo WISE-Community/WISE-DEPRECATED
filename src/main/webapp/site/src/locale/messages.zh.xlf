@@ -380,7 +380,10 @@
           <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
           <context context-type="linenumber">60</context>
         </context-group>
-        <target state="translated">此帐户使用谷歌创建，并且不使用 WISE 密码。如果您想取消您的Google账户链接，请 <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>联系我们<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>。</target>
+        <target state="translated">在WISE平台中使用谷歌账户，并不使用 WISE 密码登陆。如果您想取消您的Google账户链接，请 <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>联系我们<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>。</target>
+        <alt-trans>
+          <target>此帐户使用谷歌创建，并且不使用 WISE 密码。如果您想取消您的Google账户链接，请 <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>联系我们<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>。</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="9df7621dfbe30a790903d461e721c9029627ff34" datatype="html">
         <source>Elicit Ideas</source>
@@ -440,7 +443,10 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">84</context>
         </context-group>
-        <target state="translated">联通想法</target>
+        <target state="translated">连接想法</target>
+        <alt-trans>
+          <target>联通想法</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="6ce56d323684d1af10f44ca44809177cef1412eb" datatype="html">
         <source>Integrated science learning and teaching with technology</source>
@@ -456,7 +462,10 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">26</context>
         </context-group>
-        <target state="translated">WISE优势</target>
+        <target state="translated">WISE的优势</target>
+        <alt-trans>
+          <target>WISE优势</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="8127b5c0780e941a1948d8ac7b49af813bd7df98" datatype="html">
         <source>
@@ -467,8 +476,13 @@
           <context context-type="linenumber">38</context>
         </context-group>
         <target state="translated">
+              针对<x id =“START_LINK”ctype =“xa”equiv-text =“＆lt; a＆gt;”/> NGSS(新一代科学教育标准)<x id =“CLOSE_LINK”ctype = “xa”equiv-text =“＆lt; / a＆gt;”/>提供免费的、标准一致的且基于研究的探究学习课程
+            </target>
+        <alt-trans>
+          <target>
               免费，标准一致且基于研究的探究学习课程，课程地址是<x id =“START_LINK”ctype =“xa”equiv-text =“＆lt; a＆gt;”/> NGSS 3D熟练程度<x id =“CLOSE_LINK”ctype = “xa”equiv-text =“＆lt; / a＆gt;”/>
             </target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="ea65faeacfcd369b74fd184e411eeb5d36b59c12" datatype="html">
         <source>WISE project on laptop</source>
@@ -540,7 +554,10 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">118</context>
         </context-group>
-        <target state="translated">了解WISE社区的新内容</target>
+        <target state="translated">了解WISE社区的新内容。</target>
+        <alt-trans>
+          <target>了解WISE社区的新内容</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="ba44ee280d91539e6c5892dccbb8556bcce235be" datatype="html">
         <source>View tutorials and common questions.</source>
@@ -548,7 +565,10 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">127</context>
         </context-group>
-        <target state="translated">查看教程和常见问题</target>
+        <target state="translated">查看教程和常见问题。</target>
+        <alt-trans>
+          <target>查看教程和常见问题</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="c2e1e231feb67c7dd4f5e748cce6c1c46fbdf9cf" datatype="html">
         <source>Want to get in touch? Send us a message.</source>
@@ -623,7 +643,10 @@
           <context context-type="sourcefile">app/register/register.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-        <target state="translated">WISE图标</target>
+        <target state="translated">WISE标识</target>
+        <alt-trans>
+          <target>WISE图标</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="abc0c762d328168e523abf84749240e43593f8df" datatype="html">
         <source>WISE Features</source>
@@ -631,7 +654,10 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">10</context>
         </context-group>
-        <target state="translated">WISE功能</target>
+        <target state="translated">WISE的特色</target>
+        <alt-trans>
+          <target>WISE功能</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="ddf8132cf62ce6ac16351585c35e306e6971af4b" datatype="html">
         <source>A powerful online platform for designing, developing, and implementing science inquiry units</source>
@@ -690,7 +716,10 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">51</context>
         </context-group>
-        <target state="translated">计算模型实验</target>
+        <target state="translated">运用计算模型做实验</target>
+        <alt-trans>
+          <target>计算模型实验</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="b07d8ea0af45cef781e5d604f6e9c2a7b2f701f0" datatype="html">
         <source>Evaluate and distinguish discrepant information</source>
@@ -730,7 +759,10 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">70</context>
         </context-group>
-        <target state="translated">WISE让学生学习真正的科学家和工程师的方法。 我们采用多学科方法，让学生通过强调阅读，写作和多媒体素养的基本技能的活动来学习探究。 我们的很多学习单元也都是基于项目的，同时提供实践动手操作的设计挑战。</target>
+        <target state="translated">WISE让学生体验现实世界中科学家和工程师运用的科学方法。 我们采用多学科方法，让学生在侧重阅读，写作和多媒体素养等基本技能培养的活动中学会探究。 我们很多学习单元是基于项目的，具有面向动手操作的设计挑战的特点。</target>
+        <alt-trans>
+          <target>WISE让学生学习真正的科学家和工程师的方法。 我们采用多学科方法，让学生通过强调阅读，写作和多媒体素养的基本技能的活动来学习探究。 我们的很多学习单元也都是基于项目的，同时提供实践动手操作的设计挑战。</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="7681bdf7430711347073032e83e99c10be4f4e7b" datatype="html">
         <source>With WISE inquiry units, students not only learn skills that prepare them to be successful in STEM. They also learn skills necessary to be responsible, critical thinking citizens.</source>
@@ -738,7 +770,13 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">71</context>
         </context-group>
-        <target state="translated">通过WISE探究学习单元，学生不仅能够掌握使他们在STEM中取得成功的技能，还能够学习成为一名负责、具备批判性思维公民的所必需的技能。</target>
+        <target state="translated">通过WISE探究学习单元，学生不仅能够掌握使他们在STEM中取得成功的技能，还能掌握成为一名负责的、具备批判性思维公民所需的技能。</target>
+        <alt-trans>
+          <target>通过WISE探究学习单元，学生不仅能够掌握使他们在STEM中取得成功的技能，还能掌握成为一名负责的、具备批判性思维公民所必需的技能。</target>
+        </alt-trans>
+        <alt-trans>
+          <target>通过WISE探究学习单元，学生不仅能够掌握使他们在STEM中取得成功的技能，还能够学习成为一名负责、具备批判性思维公民的所必需的技能。</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="811c99b1c960d5acedf84179c8c29e177ae0bf27" datatype="html">
         <source>Standards-Aligned Curricula</source>
@@ -754,7 +792,10 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">83</context>
         </context-group>
-        <target state="translated">WISE提供越来越多的课程单元，解决学生在科学学习中遇到的关键性概念难题。课程单元经过精心设计，以补充教师的核心课程范围和顺序，并通过基于课堂的研究进行迭代完善。</target>
+        <target state="translated">WISE提供一个不断丰富的课程单元库，帮助解决学生在科学学习中遇到的关键性概念难题。课程单元经过精心设计，以补充教师的核心课程范围和顺序，并通过基于课堂的研究进行迭代完善。</target>
+        <alt-trans>
+          <target>WISE提供越来越多的课程单元，解决学生在科学学习中遇到的关键性概念难题。课程单元经过精心设计，以补充教师的核心课程范围和顺序，并通过基于课堂的研究进行迭代完善。</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="09ce791db454a957cfc6658b0c198962ea7cac6c" datatype="html">
         <source>WISE units support the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Next Generation Science Standards (NGSS)<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>, encourage <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>3-dimensional learning<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>, and can be adapted to address local standards.</source>
@@ -762,7 +803,10 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">85</context>
         </context-group>
-        <target state="translated">WISE学习单元支持 <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>下一代科学标准（NGSS）<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>, encourage <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>三维学习<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>, 并且可以适用于解决本地标准。</target>
+        <target state="translated">WISE学习单元支持 <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>下一代科学标准（NGSS）<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>, 鼓励 <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>3D学习<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>, 并且能适用于地方的课程标准。</target>
+        <alt-trans>
+          <target>WISE学习单元支持 <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>下一代科学标准（NGSS）<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>, encourage <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>三维学习<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>, 并且可以适用于解决本地标准。</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="6e15a0555bed4b010ba36febb47e87ff32616dd8" datatype="html">
         <source>Design Process &amp; Goals</source>
@@ -794,7 +838,10 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">107</context>
         </context-group>
-        <target state="translated">指导性的我的模型图</target>
+        <target state="translated">具有指导的MyModel图示</target>
+        <alt-trans>
+          <target>指导性的我的模型图</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="e7c4c4ab5b72934b5a6783e1e6084202e8610c4c" datatype="html">
         <source>WISE cellular respiration model</source>
@@ -834,7 +881,10 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">115</context>
         </context-group>
-        <target state="translated">WISE提供简单的用户界面、认知提示、嵌入式评估和在线讨论，以及绘图、注释、概念映射、图表和图形等工具。</target>
+        <target state="translated">WISE提供简单的用户界面、认知提示、嵌入式评估和在线讨论，以及描绘、注释、概念图、图示和绘制等工具。</target>
+        <alt-trans>
+          <target>WISE提供简单的用户界面、认知提示、嵌入式评估和在线讨论，以及绘图、注释、概念映射、图表和图形等工具。</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="e8c9262fe52f9282929800e851aee426dfd6ae48" datatype="html">
         <source>Students conduct investigations using interactive simulations and models. A notebook tool helps students collect ideas and organize evidence into research and design reports. WISE units promote self-monitoring through collaborative reflection activities as well as automated, personalized guidance and adaptive instruction.</source>
@@ -842,7 +892,10 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">116</context>
         </context-group>
-        <target state="translated">学生可使用交互式模拟和模型开展调查。 笔记本工具可帮助学生收集想法并将证据整合到研究和设计报告中。 WISE学习单元通过协作反思活动，以及自动化、个性化指导和自适应指导来促进学生的自我监控。</target>
+        <target state="translated">学生可使用交互式模拟和模型开展探究。 笔记本工具可帮助学生收集想法并将证据整合到研究和设计报告中。 WISE学习单元通过协作反思活动，以及自动化、个性化指导和自适应教学促进学生的自我监控。</target>
+        <alt-trans>
+          <target>学生可使用交互式模拟和模型开展调查。 笔记本工具可帮助学生收集想法并将证据整合到研究和设计报告中。 WISE学习单元通过协作反思活动，以及自动化、个性化指导和自适应指导来促进学生的自我监控。</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="7b049ab7ccd15afcbe53f4b4dae5b4292919fbb7" datatype="html">
         <source>Comprehensive Instructional Supports</source>
@@ -850,7 +903,10 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">127</context>
         </context-group>
-        <target state="translated">综合教学支持</target>
+        <target state="translated">综合性的教学支持</target>
+        <alt-trans>
+          <target>综合教学支持</target>
+        </alt-trans>
         <alt-trans>
           <target>全面教学支持</target>
         </alt-trans>
