@@ -1203,7 +1203,10 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">115</context>
         </context-group>
-        <target state="translated">不同的学生个体在经验、兴趣和能力上各不相同。 WISE提供各种工具、活动模式和教学支架，以支持多种表达和评估理解的方式。 这样，所有学生的能力都能够得到认可，所有人都有机会获得成功。</target>
+        <target state="translated">学生者具有不同的经验、兴趣和能力。 WISE提供各种工具、活动模式和教学支架，帮助学习者以不同的方式表达和评估他们的理解。 这样，所有学生的能力都能得到认可，所有人都有获得成功的机会。</target>
+        <alt-trans>
+          <target>不同的学生个体在经验、兴趣和能力上各不相同。 WISE提供各种工具、活动模式和教学支架，以支持多种表达和评估理解的方式。 这样，所有学生的能力都能够得到认可，所有人都有机会获得成功。</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="92bb340c07c783bf551cd704462f3d7efa15f8a4" datatype="html">
         <source>Increase Participation in Science</source>
