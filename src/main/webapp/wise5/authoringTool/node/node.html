@@ -734,7 +734,7 @@
                  ng-model="nodeAuthoringController.createBranchComponentId"
                  ng-change="nodeAuthoringController.createBranchComponentIdChanged()"
                  style="margin-left:30px; width:600px">
-            <md-option ng-repeat="component in ::projectController.getComponentsByNodeId(nodeAuthoringController.createBranchNodeId)"
+            <md-option ng-repeat="component in projectController.getComponentsByNodeId(nodeAuthoringController.createBranchNodeId)"
                    value="{{ ::component.id }}">
               <span layout="row" layout-align="start center">
                 <span class="node-select__text">ID: {{::component.id}} | Type: {{::component.type}} | Prompt: {{::component.prompt}}</span>
@@ -785,7 +785,7 @@
               <input type='checkbox'
                    ng-model='item.checked'
                    ng-if='item.order!==0 && !(projectController.showCreateGroup || projectController.showCreateNode || projectController.insertNodeMode || projectController.insertGroupMode)'
-                   ng-click='nodeAuthoringController.createBranchStepClicked(branch, item)' />
+                   ng-change='nodeAuthoringController.createBranchStepClicked(branch, item)' />
               <h6 ng-click='item.checked = !item.checked; nodeAuthoringController.createBranchStepClicked(branch, item)'
                 style='display:inline; cursor:pointer'
                 ng-class='{"groupHeader": projectController.isGroupNode(item.$key), "stepHeader": !projectController.isGroupNode(item.$key)}'

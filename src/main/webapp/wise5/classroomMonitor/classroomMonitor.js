@@ -35,7 +35,7 @@ import '../components/draw/drawComponentModule';
 import '../components/embedded/embeddedComponentModule';
 import '../components/graph/graphComponentModule';
 import Highcharts from '../lib/highcharts@4.2.1';
-import 'highcharts-ng';
+import '../lib/highcharts/highcharts-ng';
 import '../components/html/htmlComponentModule';
 import HttpInterceptor from '../services/httpInterceptor';
 import '../components/label/labelComponentModule';

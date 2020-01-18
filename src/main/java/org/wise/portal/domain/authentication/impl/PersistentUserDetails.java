@@ -174,7 +174,7 @@ public class PersistentUserDetails implements MutableUserDetails {
   private Date resetPasswordRequestTime = null;
 
   @Column(name = PersistentUserDetails.COLUMN_NAME_LANGUAGE, nullable = true)
-  private String language = null;
+  private String language = "en";
 
   @Column(name = "googleUserId")
   @Getter

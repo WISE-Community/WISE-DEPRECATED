@@ -1066,6 +1066,10 @@ class UtilService {
   isAllPeriods(periodId) {
     return periodId == null || periodId === -1;
   }
+
+  calculateMean(values) {
+    return values.reduce((a , b) => a + b) / values.length;
+  }
 }
 
 // Get the last element of the array

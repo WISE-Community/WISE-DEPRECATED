@@ -67,6 +67,13 @@ class GraphController extends ComponentController {
     this.addNextComponentStateToUndoStack = false;
     this.chartId = 'chart_' + this.componentId;
     this.hiddenCanvasId = 'hiddenCanvas_' + this.componentId;
+    this.dataExplorerColors = [
+      'blue',
+      'orange',
+      'purple',
+      'black',
+      'green'
+    ];
     this.applyHighchartsPlotLinesLabelFix();
     this.initializeComponentContentParams();
     const componentState = this.$scope.componentState;
@@ -228,7 +235,9 @@ class GraphController extends ComponentController {
   handleTableConnectedComponentStudentDataChanged(
       connectedComponent, connectedComponentParams, componentState) {
     const studentData = componentState.studentData;
-    if (studentData != null && studentData.tableData != null) {
+    if (studentData.isDataExplorerEnabled) {
+      this.handleDataExplorer(studentData);
+    } else {
       const rows = studentData.tableData;
       const data = this.convertRowDataToSeriesData(rows, connectedComponentParams);
       let seriesIndex = connectedComponentParams.seriesIndex;
@@ -253,9 +262,121 @@ class GraphController extends ComponentController {
           series.data = data;
         }
       }
-      this.drawGraph();
-      this.isDirty = true;
     }
+    this.drawGraph();
+    this.isDirty = true;
+  }
+
+  handleDataExplorer(studentData) {
+    const dataExplorerSeries = studentData.dataExplorerSeries;
+    const graphType = studentData.dataExplorerGraphType;
+    this.xAxis.title.text = studentData.dataExplorerXAxisLabel;
+    this.yAxis.title.text = studentData.dataExplorerYAxisLabel;
+    this.activeTrial.series = [];
+    for (let seriesIndex = 0; seriesIndex < dataExplorerSeries.length; seriesIndex++) {
+      const xColumn = dataExplorerSeries[seriesIndex].xColumn;
+      const yColumn = dataExplorerSeries[seriesIndex].yColumn;
+      if (yColumn != null) {
+        const color = this.dataExplorerColors[seriesIndex];
+        const name = dataExplorerSeries[seriesIndex].name;
+        const series = this.generateDataExplorerSeries(studentData.tableData, xColumn, yColumn,
+            graphType, name, color);
+          this.activeTrial.series.push(series);
+        if (graphType === 'scatter' && studentData.isDataExplorerScatterPlotRegressionLineEnabled) {
+          const regressionSeries = this.generateDataExplorerRegressionSeries(studentData.tableData,
+              xColumn, yColumn, color);
+          this.activeTrial.series.push(regressionSeries);
+        }
+      }
+    }
+  }
+
+  generateDataExplorerSeries(tableData, xColumn, yColumn, graphType, name, color) {
+    const series = {
+      type: graphType,
+      name: name,
+      color: color,
+      data: this.convertDataExplorerDataToSeriesData(tableData, xColumn, yColumn)
+    };
+    if (graphType === 'line') {
+      series.data.sort(this.sortLineData);
+    }
+    return series;
+  }
+
+  generateDataExplorerRegressionSeries(tableData, xColumn, yColumn, color) {
+    const regressionLineData =
+        this.calculateRegressionLineData(tableData, xColumn, yColumn);
+    return {
+      type: 'line',
+      name: 'Regression Line',
+      color: color,
+      data: regressionLineData
+    };
+  }
+
+  calculateRegressionLineData(tableData, xColumn, yColumn) {
+    const xValues = this.getValuesInColumn(tableData, xColumn);
+    const yValues = this.getValuesInColumn(tableData, yColumn);
+    const covarianceMatrix = covariance(xValues, yValues);
+    const covarianceXY = covarianceMatrix[0][1];
+    const varianceX = covarianceMatrix[0][0];
+    const meanY = this.UtilService.calculateMean(yValues);
+    const meanX = this.UtilService.calculateMean(xValues);
+    const slope = covarianceXY / varianceX;
+    const intercept = meanY - (slope * meanX);
+    let firstX = Math.min(...xValues);
+    let firstY = (slope * firstX) + intercept;
+    if (firstY < 0) {
+      firstY = 0;
+      firstX = (firstY - intercept) / slope;
+    }
+    let secondX = Math.max(...xValues);
+    let secondY = (slope * secondX) + intercept;
+    if (secondY < 0) {
+      secondY = 0;
+      secondX = (secondY - intercept) / slope;
+    }
+    return [[firstX, firstY], [secondX, secondY]];
+  }
+
+  getValuesInColumn(tableData, columnIndex) {
+    const values = [];
+    for (let r = 1; r < tableData.length; r++) {
+      const row = tableData[r];
+      const value = Number(row[columnIndex].text);
+      values.push(value);
+    }
+    return values;
+  }
+
+  sortLineData(a, b) {
+    if (a[0] > b[0]) {
+      return 1;
+    } else if (a[0] < b[0]) {
+      return -1;
+    } else {
+      if (a[1] > b[1]) {
+        return 1;
+      } else if (a[1] < b[1]) {
+        return -1;
+      } else {
+        return 0;
+      }
+    }
+  }
+
+  convertDataExplorerDataToSeriesData(rows, xColumn, yColumn) {
+    const data = [];
+    for (let r = 1; r < rows.length; r++) {
+      const row = rows[r];
+      const xCell = row[xColumn];
+      const yCell = row[yColumn];
+      if (xCell != null && yCell != null) {
+        this.addPointFromTableIntoData(xCell, yCell, data);
+      }
+    }
+    return data;
   }
 
   handleEmbeddedConnectedComponentStudentDataChanged(

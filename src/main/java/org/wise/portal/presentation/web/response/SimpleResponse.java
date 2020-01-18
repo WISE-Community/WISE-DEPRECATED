@@ -1,10 +1,13 @@
 package org.wise.portal.presentation.web.response;
 
+import lombok.Getter;
+
+@Getter
 public class SimpleResponse {
 
-  public String status;
+  private String status;
 
-  public String message;
+  private String message;
 
   public SimpleResponse(String status, String message) {
     this.status = status;

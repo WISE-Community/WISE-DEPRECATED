@@ -66,11 +66,11 @@ export class LibraryProjectMenuComponent implements OnInit {
   }
 
   editProject() {
-    this.teacherService.getProjectLastRun(this.project.id).subscribe(lastRun => {
-      if (lastRun !== null) {
-        lastRun.project = this.project;
+    this.teacherService.getProjectLastRun(this.project.id).subscribe(projectRun => {
+      if (projectRun != null) {
+        projectRun.project = this.project;
         this.dialog.open(EditRunWarningDialogComponent, {
-          data: { run: lastRun },
+          data: { run: projectRun },
           panelClass: 'mat-dialog--sm'
         });
       } else {

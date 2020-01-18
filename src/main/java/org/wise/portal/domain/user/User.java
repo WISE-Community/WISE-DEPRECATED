@@ -34,6 +34,8 @@ public interface User extends Persistable, Comparable<User> {
 
   Long getId();
 
+  void setId(Long id);
+
   MutableUserDetails getUserDetails();
 
   void setUserDetails(MutableUserDetails userDetails);

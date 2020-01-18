@@ -53,8 +53,7 @@ export class EditPasswordComponent implements OnInit {
     this.isSaving = true;
     const oldPassword: string = this.getControlFieldValue('oldPassword');
     const newPassword: string = this.getControlFieldValue('newPassword');
-    const username = this.getUsername();
-    this.userService.changePassword(username, oldPassword, newPassword)
+    this.userService.changePassword(oldPassword, newPassword)
         .pipe(
           finalize(() => {
             this.isSaving = false;
