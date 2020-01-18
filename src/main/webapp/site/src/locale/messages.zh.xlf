@@ -1113,7 +1113,10 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">47</context>
         </context-group>
-        <target state="translated">这意味着，在实施WISE学习单元时，您可以确保您所使用内容的是从坚实的基础发展而来，由真正的教师提供经验建议，并在教室中与真正的学生一起进行测试过的。</target>
+        <target state="translated">这意味着在实施WISE学习单元时，可以确保您使用的内容具有坚实的理论基础，符现实教师提供的经验建议，并且是教室中现实学生测试使用过的。</target>
+        <alt-trans>
+          <target>这意味着，在实施WISE学习单元时，您可以确保您所使用内容的是从坚实的基础发展而来，由真正的教师提供经验建议，并在教室中与真正的学生一起进行测试过的。</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="ba47fad2e84864c65ead1cd83f593ddb919c274f" datatype="html">
         <source>Our Research + Team</source>
@@ -1121,7 +1124,10 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">49</context>
         </context-group>
-        <target state="translated">我们的研究和团队</target>
+        <target state="translated">我们的研究+团队</target>
+        <alt-trans>
+          <target>我们的研究和团队</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="2430d9c22ccaf6b5daf94c0135b02f753ca6b185" datatype="html">
         <source>Knowledge Integration</source>
@@ -1137,7 +1143,10 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">62</context>
         </context-group>
-        <target state="translated">研究表明，当学生努力克服多种冲突和混乱的想法时，这时将学生观点作为科学研究的起点，教学是最有效的。</target>
+        <target state="translated">研究表明，当学生努力克服多种冲突和混乱的想法时，最有效的教学是将学生观点作为科学研究的起点。</target>
+        <alt-trans>
+          <target>研究表明，当学生努力克服多种冲突和混乱的想法时，这时将学生观点作为科学研究的起点，教学是最有效的。</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="e40dc97986107e694a5c5860f0fbf5bd0ddadeae" datatype="html">
         <source>The KI Processes:</source>
@@ -1153,7 +1162,10 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">94</context>
         </context-group>
-        <target state="translated">WISE目标</target>
+        <target state="translated">~WISE的目标~</target>
+        <alt-trans>
+          <target>WISE目标</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="a8c4f4b7ff2dc03b066549737367901b95c1f556" datatype="html">
         <source>Make Science Meaningful</source>
@@ -1169,7 +1181,10 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">109</context>
         </context-group>
-        <target state="translated">WISE学习单元通过个人和社会相关主题向学生介绍复杂的科学概念。 每个单元都运用经过课堂测试的教学模式，这种模式重视学生产生的想法，帮助他们将新信息与其个人经历联系起来，并将他们的想法融合为对科学的连贯理解。</target>
+        <target state="translated">WISE学习单元通过个人和社会相关主题向学生介绍复杂的科学概念。 每个单元都运用经过课堂测试的教学模式。这种模式重视学生现有的想法，帮助他们联系新信息与个人经历，并将他们的想法融合到对科学连贯性的理解中。</target>
+        <alt-trans>
+          <target>WISE学习单元通过个人和社会相关主题向学生介绍复杂的科学概念。 每个单元都运用经过课堂测试的教学模式，这种模式重视学生产生的想法，帮助他们将新信息与其个人经历联系起来，并将他们的想法融合为对科学的连贯理解。</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="ae2bc001ed6c6fb5416b490b7c6dbe2260697024" datatype="html">
         <source>Support Diverse Learners</source>
@@ -1177,7 +1192,10 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">114</context>
         </context-group>
-        <target state="translated">支持多种不同的学习者</target>
+        <target state="translated">支持不同的学习者</target>
+        <alt-trans>
+          <target>支持多种不同的学习者</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="e582a65e12f2b176d3eef63cd4caa67d68cfb5b9" datatype="html">
         <source>Individual students differ in their experiences, interests, and abilities. WISE provides a variety of tools, activity patterns, and instructional scaffolds that afford multiple ways for expressing and assessing understanding. That way, no students&apos; abilities go unrecognized, and all have the chance to succeed.</source>
