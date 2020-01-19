@@ -4420,7 +4420,10 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">40</context>
         </context-group>
-        <target state="translated">WISE使学生注册变得简单直观 - 让学生进入WISE主页并点击右上角的“注册”链接可直接进入注册页面。 他们应该能够在10分钟或更短的时间内注册。 但是，您也可以选择预先注册所有学生，并在项目运行的第一天向他们提供用户名/密码的副本。</target>
+        <target state="translated">WISE使学生注册变得简单直观 - 让学生进入WISE主页并点击右上角的“注册”链接可直接进入注册页面。 他们应该在10分钟或更短的时间内注册。 但是，您也可以选择预先注册所有学生，并在项目运行的第一天向他们提供用户名/密码的副本。</target>
+        <alt-trans>
+          <target>WISE使学生注册变得简单直观 - 让学生进入WISE主页并点击右上角的“注册”链接可直接进入注册页面。 他们应该能够在10分钟或更短的时间内注册。 但是，您也可以选择预先注册所有学生，并在项目运行的第一天向他们提供用户名/密码的副本。</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="90a07f702eb512ee62bff7940263f760a401a538" datatype="html">
         <source>Once a student has created a WISE account they should never need to create another one.</source>
@@ -7692,7 +7695,13 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="translated">您无权从学习单元删除课时。</target>
+        <target state="translated">您没有权限从学习单元中删除课时。</target>
+        <alt-trans>
+          <target>您不能从学习单元中删除课时。</target>
+        </alt-trans>
+        <alt-trans>
+          <target>您无权从学习单元删除课时。</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="fa0351289ae6073e666ece8b95c8d14958d50d98" datatype="html">
         <source>You do not have permission to change the number of students per team for this unit.</source>
@@ -7700,7 +7709,10 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="translated">您无权更改此单元的每个团队的学生人数。</target>
+        <target state="translated">您没有权限更改此学习单元中每个团队的学生人数。</target>
+        <alt-trans>
+          <target>您无权更改此单元的每个团队的学生人数。</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="35a78a3d889db709b79f95e046051f10077c54de" datatype="html">
         <source>You are not allowed to decrease the number of students per team because this unit already has teams with more than 1 student.</source>
@@ -7708,7 +7720,10 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="translated">您不能减少每个团队的学生人数因为该单元已经拥有超过1名学生的团队。</target>
+        <target state="translated">您不能减少每个团队的学生人数，因为该学习单元已经拥有超过1名学生的团队。</target>
+        <alt-trans>
+          <target>您不能减少每个团队的学生人数因为该单元已经拥有超过1名学生的团队。</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="fd540958a00446d8a204a5a9a0db472b73d7aaab" datatype="html">
         <source>You do not have permission to change the dates for this unit.</source>
@@ -7716,7 +7731,10 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="translated">您无权更改此单元的日期。</target>
+        <target state="translated">您没有权限更改此学习单元的日期。</target>
+        <alt-trans>
+          <target>您无权更改此单元的日期。</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="c39dc7dcb6dece34e9d5718449337e76cf892c91" datatype="html">
         <source>End date can&apos;t be before start date.</source>
@@ -7780,7 +7798,10 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="translated">单元设置已更新。</target>
+        <target state="translated">学习单元设置已更新。</target>
+        <alt-trans>
+          <target>单元设置已更新。</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="13a4ce63135573625f668e8ccf5fda16933a846e" datatype="html">
         <source>Transferred classroom unit ownership to <x id="INTERPOLATION" equiv-text="{{firstName}}"/> <x id="INTERPOLATION_1" equiv-text="{{lastName}}"/>.</source>
@@ -7804,7 +7825,10 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/teacher-home/teacher-home.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="translated">浏览WISE单元</target>
+        <target state="translated">浏览WISE学习单元</target>
+        <alt-trans>
+          <target>浏览WISE单元</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="db4ff4b19bb2e0fe93c88a3dc04372503caa1135" datatype="html">
         <source>Class Periods:</source>
@@ -7812,7 +7836,10 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/teacher-run-list-item/teacher-run-list-item.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="translated">课程时间：</target>
+        <target state="translated">课程课时：</target>
+        <alt-trans>
+          <target>课程时间：</target>
+        </alt-trans>
       </trans-unit>
     </body>
   </file>
