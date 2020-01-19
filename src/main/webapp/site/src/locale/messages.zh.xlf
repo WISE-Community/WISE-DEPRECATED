@@ -4406,7 +4406,13 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">39</context>
         </context-group>
-        <target state="translated">我需要为WISE注册学生账户还是让学生自己注册？</target>
+        <target state="translated">需要我为学生注册WISE账户还是让学生自己注册WISE账户？</target>
+        <alt-trans>
+          <target>我需要为学生注册WISE账户还是让学生自己注册WISE账户？</target>
+        </alt-trans>
+        <alt-trans>
+          <target>我需要为WISE注册学生账户还是让学生自己注册？</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="2c8b400fdc35436d28c9cccdaeb20ce10a03c8d7" datatype="html">
         <source>WISE makes student registration simple and intuitive -- direct your students to the register page by having them go to the WISE home page and clicking the &quot;Register&quot; link at the upper right. They should be able to register in 10 minutes or less. However, you can also opt to pre-register all of your students and provide them with a copy of their username/password on their first day in the project run.</source>
@@ -5895,7 +5901,10 @@
           <context context-type="sourcefile">app/register/register-student-complete/register-student-complete.component.html</context>
           <context context-type="linenumber">7</context>
         </context-group>
-        <target state="translated">请记录下来，以将来登录WISE时需要它。</target>
+        <target state="translated">请将它记录下来。当您后续登陆WISE平台时，您需要用到它。</target>
+        <alt-trans>
+          <target>请记录下来，以将来登录WISE时需要它。</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="558a4e3546333e209423ef98d8e846c143ba0804" datatype="html">
         <source>Hi! There is already a WISE user with this Google account.</source>
@@ -5903,7 +5912,10 @@
           <context context-type="sourcefile">app/register/register-google-user-already-exists/register-google-user-already-exists.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-        <target state="translated">您好！此Google帐户已有WISE用户。</target>
+        <target state="translated">您好！此Google帐户已在WISE上进行了注册。</target>
+        <alt-trans>
+          <target>您好！此Google帐户已有WISE用户。</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="263e1717422fe3b5810e9a2e55b87e477b35d1ed" datatype="html">
         <source>Sign in to WISE</source>
@@ -5947,7 +5959,10 @@
           <context context-type="sourcefile">app/login/login-google-user-not-found/login-google-user-not-found.component.html</context>
           <context context-type="linenumber">5</context>
         </context-group>
-        <target state="translated">WISE使用新手? <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>免费加入!<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/></target>
+        <target state="translated">您是WISE新用户吗? <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>请免费加入!<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/></target>
+        <alt-trans>
+          <target>WISE使用新手? <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>免费加入!<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/></target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="050473ed2d269f07090850ebf8f56f635436869e" datatype="html">
         <source>Your Google User ID was not found in WISE.</source>
@@ -5963,7 +5978,10 @@
           <context context-type="sourcefile">app/news/news.component.html</context>
           <context context-type="linenumber">9</context>
         </context-group>
-        <target state="translated">有什么新功能？</target>
+        <target state="translated">有什么新的内容？</target>
+        <alt-trans>
+          <target>有什么新功能？</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="ca98710638193518e4fe1302f8977d2db4f2b842" datatype="html">
         <source>Show More</source>
@@ -5989,8 +6007,13 @@
           <context context-type="linenumber">1</context>
         </context-group>
         <target state="translated">
+  <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>注册<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> 或者 <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>登录<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>
+</target>
+        <alt-trans>
+          <target>
   <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>注册<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> or <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>登录<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>
 </target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="17f37e96c7b8059b23c07791dca1bdb3f3f6853f" datatype="html">
         <source>Welcome <x id="INTERPOLATION" equiv-text="{{ user.firstName }}"/>!</source>
@@ -6094,7 +6117,13 @@
           <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
           <context context-type="linenumber">65</context>
         </context-group>
-        <target state="translated">管理工具</target>
+        <target state="translated">管理员工具</target>
+        <alt-trans>
+          <target>管理人员工具</target>
+        </alt-trans>
+        <alt-trans>
+          <target>管理工具</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="85b79c9064aed1ead31ace985f31aa1363f6bdaf" datatype="html">
         <source>Help</source>
@@ -6126,7 +6155,10 @@
           <context context-type="sourcefile">app/student/student-home/student-home.component.html</context>
           <context context-type="linenumber">19</context>
         </context-group>
-        <target state="translated">添加单元</target>
+        <target state="translated">添加学习单元</target>
+        <alt-trans>
+          <target>添加单元</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="190a0caf6ddac8b5347008c55791abc9e26655d8" datatype="html">
         <source>Access Code</source>
@@ -6134,7 +6166,10 @@
           <context context-type="sourcefile">app/student/add-project-dialog/add-project-dialog.component.html</context>
           <context context-type="linenumber">6</context>
         </context-group>
-        <target state="translated">访问代码</target>
+        <target state="translated">访问码</target>
+        <alt-trans>
+          <target>访问代码</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="7064e250d464079d38eeeb1f35293ff374673d7f" datatype="html">
         <source>Invalid Access Code</source>
@@ -6142,7 +6177,10 @@
           <context context-type="sourcefile">app/student/add-project-dialog/add-project-dialog.component.html</context>
           <context context-type="linenumber">8</context>
         </context-group>
-        <target state="translated">无效访问代码</target>
+        <target state="translated">无效访问码</target>
+        <alt-trans>
+          <target>无效访问代码</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="708f75da14455350322691fa2ad7543355b7f372" datatype="html">
         <source>You have already added this unit.</source>
@@ -6150,7 +6188,10 @@
           <context context-type="sourcefile">app/student/add-project-dialog/add-project-dialog.component.html</context>
           <context context-type="linenumber">9</context>
         </context-group>
-        <target state="translated">您已添加此单元。</target>
+        <target state="translated">您已添加此学习单元。</target>
+        <alt-trans>
+          <target>您已添加此单元。</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="2ac78802200564a04e42b0c60d0283d32e04060e" datatype="html">
         <source>This run has ended. Please talk to your teacher.</source>
@@ -6177,7 +6218,10 @@
           <context context-type="sourcefile">app/student/student-home/student-home.component.html</context>
           <context context-type="linenumber">16</context>
         </context-group>
-        <target state="translated">添加单元</target>
+        <target state="translated">添加学习单元</target>
+        <alt-trans>
+          <target>添加单元</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="2278f83021a218f6d93e2cea52ba171c864b7b9d" datatype="html">
         <source>Hey there! Looks like you don&apos;t have any WISE units yet.</source>
@@ -6185,7 +6229,10 @@
           <context context-type="sourcefile">app/student/student-run-list/student-run-list.component.html</context>
           <context context-type="linenumber">3</context>
         </context-group>
-        <target state="translated">您好！您还为加入任何有效的WISE单元。</target>
+        <target state="translated">您好！您目前还没有任何WISE学习单元。</target>
+        <alt-trans>
+          <target>您好！您还为加入任何有效的WISE单元。</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="aba3e9a4c258ce63221b9496a392384d00b6e471" datatype="html">
         <source>Ask your teacher for an <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>Access Code<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/> and then tap the <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>Add Unit<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/> button to get started.</source>
@@ -6193,7 +6240,10 @@
           <context context-type="sourcefile">app/student/student-run-list/student-run-list.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-        <target state="translated">请向您的教师询问 <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>访问代码<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/> ，然后点击此处 <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>添加单元<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/> ，点击按钮开始</target>
+        <target state="translated">请向您的教师询问 <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>访问码<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/> ，然后点击 <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>添加学习单元<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/> 按钮以开始新的学习。</target>
+        <alt-trans>
+          <target>请向您的教师询问 <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>访问代码<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/> ，然后点击此处 <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>添加单元<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/> ，点击按钮开始</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="5b6d466cdfc67986fb402712d003dd3a455a3507" datatype="html">
         <source>Units found: <x id="INTERPOLATION" equiv-text="{{ filteredRuns.length }}"/></source>
@@ -6205,7 +6255,10 @@
           <context context-type="sourcefile">app/teacher/teacher-run-list/teacher-run-list.component.html</context>
           <context context-type="linenumber">29</context>
         </context-group>
-        <target state="translated">查找到的单元： <x id="INTERPOLATION" equiv-text="{{ filteredRuns.length }}"/></target>
+        <target state="translated">查找到的学习单元： <x id="INTERPOLATION" equiv-text="{{ filteredRuns.length }}"/></target>
+        <alt-trans>
+          <target>查找到的单元： <x id="INTERPOLATION" equiv-text="{{ filteredRuns.length }}"/></target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="cba86a51e8ee210e24b4d9b47ceffed1e70b61d1" datatype="html">
         <source>My WISE units: <x id="INTERPOLATION" equiv-text="{{ filteredRuns.length }}"/></source>
@@ -6213,7 +6266,10 @@
           <context context-type="sourcefile">app/student/student-run-list/student-run-list.component.html</context>
           <context context-type="linenumber">20</context>
         </context-group>
-        <target state="translated">我的WISE单元：<x id="INTERPOLATION" equiv-text="{{ filteredRuns.length }}"/></target>
+        <target state="translated">我的WISE学习单元：<x id="INTERPOLATION" equiv-text="{{ filteredRuns.length }}"/></target>
+        <alt-trans>
+          <target>我的WISE单元：<x id="INTERPOLATION" equiv-text="{{ filteredRuns.length }}"/></target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="c6a2c19b6bd10c35aca82f19ffebdc75a2fc164c" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ scheduledTotal() }}"/> scheduled</source>
@@ -6285,7 +6341,10 @@
           <context context-type="sourcefile">app/student/team-sign-in-dialog/team-sign-in-dialog.component.html</context>
           <context context-type="linenumber">69</context>
         </context-group>
-        <target state="translated">启动单元</target>
+        <target state="translated">启动学习单元</target>
+        <alt-trans>
+          <target>启动单元</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="dbe6d72ccb1cef61c338292357b793077b7ed08a" datatype="html">
         <source>Teacher:</source>
@@ -6321,7 +6380,10 @@
           <context context-type="sourcefile">app/student/student-run-list-item/student-run-list-item.component.html</context>
           <context context-type="linenumber">10</context>
         </context-group>
-        <target state="translated">代码：</target>
+        <target state="translated">访问码：</target>
+        <alt-trans>
+          <target>代码：</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="09c081794fa93437e95b43ad2d190955917673d0" datatype="html">
         <source>Team:</source>
@@ -6337,7 +6399,10 @@
           <context context-type="sourcefile">app/student/student-run-list-item/student-run-list-item.component.html</context>
           <context context-type="linenumber">27</context>
         </context-group>
-        <target state="translated">Run ID: <x id="INTERPOLATION" equiv-text="{{run.id}}"/></target>
+        <target state="translated">执行学习单元 ID: <x id="INTERPOLATION" equiv-text="{{run.id}}"/></target>
+        <alt-trans>
+          <target>Run ID: <x id="INTERPOLATION" equiv-text="{{run.id}}"/></target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="5bbe77fbbc93c3a34cea3b4b7c99aac62e670e08" datatype="html">
         <source>Report Problem</source>
@@ -6377,7 +6442,10 @@
           <context context-type="sourcefile">app/student/student-run-list-item/student-run-list-item.component.html</context>
           <context context-type="linenumber">79</context>
         </context-group>
-        <target state="translated">审查作业</target>
+        <target state="translated">查看进展情况</target>
+        <alt-trans>
+          <target>审查作业</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="a41a1ea741ebed7a4ff655f233fc2d275b9bfa42" datatype="html">
         <source>Account Info</source>
@@ -6441,7 +6509,10 @@
           <context context-type="sourcefile">app/teacher/teacher-home/teacher-home.component.html</context>
           <context context-type="linenumber">20</context>
         </context-group>
-        <target state="translated">创作工具</target>
+        <target state="translated">编辑工具</target>
+        <alt-trans>
+          <target>创作工具</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="48ae429835665b58a2711db68e68b9a4dfa1f0ff" datatype="html">
         <source>Teacher home navigation</source>
@@ -6457,7 +6528,10 @@
           <context context-type="sourcefile">app/teacher/teacher-run-list/teacher-run-list.component.html</context>
           <context context-type="linenumber">2</context>
         </context-group>
-        <target state="translated">你好! 你还没有在你的课程中运行任何WISE单元。</target>
+        <target state="translated">您好! 您的课程中还没有运行任何WISE学习单元。</target>
+        <alt-trans>
+          <target>你好! 你还没有在你的课程中运行任何WISE单元。</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="0f1eeb1121b8585f39941f1c4de7c9ef98ff42bf" datatype="html">
         <source>Select &quot;Browse Units&quot; to find titles to use with your students.</source>
@@ -6465,7 +6539,10 @@
           <context context-type="sourcefile">app/teacher/teacher-run-list/teacher-run-list.component.html</context>
           <context context-type="linenumber">3</context>
         </context-group>
-        <target state="translated">选择“浏览单元”以查找要与学生一起使用的标题。</target>
+        <target state="translated">选择“浏览学习单元”以查找与学生一起使用的标题。</target>
+        <alt-trans>
+          <target>选择“浏览单元”以查找要与学生一起使用的标题。</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="54d96f2f53d37cf8c3260171012afedef7ba7f95" datatype="html">
         <source>Total classroom units: <x id="INTERPOLATION" equiv-text="{{ filteredRuns.length }}"/></source>
@@ -6473,7 +6550,10 @@
           <context context-type="sourcefile">app/teacher/teacher-run-list/teacher-run-list.component.html</context>
           <context context-type="linenumber">30</context>
         </context-group>
-        <target state="translated">全部课堂单元：<x id="INTERPOLATION" equiv-text="{{ filteredRuns.length }}"/></target>
+        <target state="translated">全部课堂学习单元：<x id="INTERPOLATION" equiv-text="{{ filteredRuns.length }}"/></target>
+        <alt-trans>
+          <target>全部课堂单元：<x id="INTERPOLATION" equiv-text="{{ filteredRuns.length }}"/></target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="9a208893f13987ce5a706b3b5e4fed09e486cb5d" datatype="html">
         <source>periods</source>
@@ -6485,7 +6565,10 @@
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
           <context context-type="linenumber">10</context>
         </context-group>
-        <target state="translated">课程时间</target>
+        <target state="translated">课时</target>
+        <alt-trans>
+          <target>课程时间</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="97d146f3502e6472ae9aca1b2bdacfb3ae9c40a4" datatype="html">
         <source>period</source>
@@ -6560,7 +6643,10 @@
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="translated">分享课堂单元</target>
+        <target state="translated">分享课堂学习单元</target>
+        <alt-trans>
+          <target>分享课堂单元</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="f1b3a4c04de059a8a400c8eace966d618373afe0" datatype="html">
         <source>Transfer Classroom Unit</source>
@@ -6576,7 +6662,10 @@
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
           <context context-type="linenumber">64</context>
         </context-group>
-        <target state="translated">查看学生作业</target>
+        <target state="translated">查看学生进展情况</target>
+        <alt-trans>
+          <target>查看学生作业</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="93315f528b07c5cc6aa5eba3c97ac7815711d320" datatype="html">
         <source>View Student Names</source>
@@ -6592,7 +6681,10 @@
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
           <context context-type="linenumber">72</context>
         </context-group>
-        <target state="translated">评级和管理</target>
+        <target state="translated">评分和管理</target>
+        <alt-trans>
+          <target>评级和管理</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="b26220770d5f6b450e9df4fbcadd454f492b7872" datatype="html">
         <source>Are you sure you want to make <x id="INTERPOLATION" equiv-text="{{teacherSearchControl.value}}"/> the new owner of this unit?</source>
@@ -6632,7 +6724,10 @@
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
           <context context-type="linenumber">6</context>
         </context-group>
-        <target state="translated">课程时间</target>
+        <target state="translated">课程课时</target>
+        <alt-trans>
+          <target>课程时间</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="200beac9fb92373dc2bb97201d34e1346d1c08a0" datatype="html">
         <source>Delete period</source>
@@ -6688,7 +6783,10 @@
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
           <context context-type="linenumber">52</context>
         </context-group>
-        <target state="translated">开始日期是必填的</target>
+        <target state="translated">开始日期是必填的。</target>
+        <alt-trans>
+          <target>开始日期是必填的</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="9c83559c416a8e596b51a342566efdb2868f2404" datatype="html">
         <source>Run Menu</source>
@@ -6704,7 +6802,10 @@
           <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
           <context context-type="linenumber">6</context>
         </context-group>
-        <target state="translated">运行ID：<x id="INTERPOLATION" equiv-text="{{ run.id }}"/></target>
+        <target state="translated">运行学习单元ID：<x id="INTERPOLATION" equiv-text="{{ run.id }}"/></target>
+        <alt-trans>
+          <target>运行ID：<x id="INTERPOLATION" equiv-text="{{ run.id }}"/></target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="3ee54b66b7f53827035c3055f228bc2bf2550dab" datatype="html">
         <source>Unit Info</source>
@@ -6712,7 +6813,10 @@
           <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
           <context context-type="linenumber">18</context>
         </context-group>
-        <target state="translated">单元信息</target>
+        <target state="translated">学习单元信息</target>
+        <alt-trans>
+          <target>单元信息</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="6a7bd392c66daf784d909ea00e8530e93c232dd6" datatype="html">
         <source>Edit Content</source>
@@ -6744,7 +6848,10 @@
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
           <context context-type="linenumber">35</context>
         </context-group>
-        <target state="translated">显示名字是必需的!</target>
+        <target state="translated">显示名字是必需的</target>
+        <alt-trans>
+          <target>显示名字是必需的!</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="5012e0b6a631d92c50ea27984998bdad9cdcbbbf" datatype="html">
         <source>Help us translate WISE! Visit <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>https://crowdin.com/project/wise<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
@@ -6776,7 +6883,10 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/contact/contact-form/contact-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="translated">在使用WISE需要帮助</target>
+        <target state="translated">在使用WISE时请求帮助</target>
+        <alt-trans>
+          <target>在使用WISE需要帮助</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="6a6f97816b45d44504a072d73938c951bbd01810" datatype="html">
         <source>Problems with a WISE Unit</source>
@@ -6788,7 +6898,10 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/contact/contact-form/contact-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="translated">WISE单元的问题</target>
+        <target state="translated">WISE学习单元的问题</target>
+        <alt-trans>
+          <target>WISE单元的问题</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="f1807ecd6fbc3fe83f80ac9aa16bc7070b8b8710" datatype="html">
         <source>Feedback to WISE</source>
@@ -6828,7 +6941,10 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/contact/contact-form/contact-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="translated">需要创作帮助</target>
+        <target state="translated">在编辑时请求帮助</target>
+        <alt-trans>
+          <target>需要创作帮助</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="5b010f83da62819ebc8fe9ef4617d06655d9956d" datatype="html">
         <source>Password cannot be blank. Please try again.</source>
@@ -6900,7 +7016,10 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="translated">一月</target>
+        <target state="translated">01（一月）</target>
+        <alt-trans>
+          <target>一月</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="0931fb286156dee1394c7e61710a4f1ee029bec1" datatype="html">
         <source>02 (Feb)</source>
@@ -6912,7 +7031,10 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="translated">二月</target>
+        <target state="translated">02（二月）</target>
+        <alt-trans>
+          <target>二月</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="fb954f4c2bd25a40575cbbfd7dabf8c21413ff09" datatype="html">
         <source>03 (Mar)</source>
@@ -6924,7 +7046,10 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="translated">三月</target>
+        <target state="translated">03（三月）</target>
+        <alt-trans>
+          <target>三月</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="059ffe65f2882d4fa6aec1f22cd8bff61c648016" datatype="html">
         <source>04 (Apr)</source>
@@ -6936,7 +7061,10 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="translated">四月</target>
+        <target state="translated">04（四月）</target>
+        <alt-trans>
+          <target>四月</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="788337d5af8315eb94f8eeb875152947d81ed970" datatype="html">
         <source>05 (May)</source>
@@ -6948,7 +7076,10 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="translated">五月</target>
+        <target state="translated">05（五月）</target>
+        <alt-trans>
+          <target>五月</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="e78cea38fcaa585fd19d98676e1812b5d5837d34" datatype="html">
         <source>06 (Jun)</source>
@@ -6960,7 +7091,10 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="translated">六月</target>
+        <target state="translated">06（六月）</target>
+        <alt-trans>
+          <target>六月</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="ab1bb567d433c94269b4f2875fdd898d7276d5a6" datatype="html">
         <source>07 (Jul)</source>
@@ -6972,7 +7106,10 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="translated">七月</target>
+        <target state="translated">07（七月）</target>
+        <alt-trans>
+          <target>七月</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="490b1aa4b4768e1596c6c19e8dca77c401247588" datatype="html">
         <source>08 (Aug)</source>
@@ -6984,7 +7121,10 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="translated">八月</target>
+        <target state="translated">08（八月）</target>
+        <alt-trans>
+          <target>八月</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="06c5170eda5041ce09d9381ca2e5f739c7b6df6e" datatype="html">
         <source>09 (Sep)</source>
@@ -6996,7 +7136,10 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="translated">九月</target>
+        <target state="translated">09（九月）</target>
+        <alt-trans>
+          <target>九月</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="3245dcf86cb2ee2fba808cce33907d7f67b57f70" datatype="html">
         <source>10 (Oct)</source>
@@ -7008,7 +7151,10 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="translated">十月</target>
+        <target state="translated">10（十月）</target>
+        <alt-trans>
+          <target>十月</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="bc64ec063b9c3a1adfa2f4134e0b1cbcb0c6e02e" datatype="html">
         <source>11 (Nov)</source>
@@ -7020,7 +7166,10 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="translated">十一月</target>
+        <target state="translated">11（十一月）</target>
+        <alt-trans>
+          <target>十一月</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="fac808901a559404cc61fb3322fd0c351f1aa923" datatype="html">
         <source>12 (Dec)</source>
@@ -7032,7 +7181,10 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="translated">十二月</target>
+        <target state="translated">12（十二月）</target>
+        <alt-trans>
+          <target>十二月</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="7d2b424cec500d06336a5c74c64b0c93e126cbff" datatype="html">
         <source>We did not find any usernames that match the information you provided. Please make sure you entered your information correctly. If you can&apos;t find your account, ask a teacher for help or contact us for assistance.</source>
@@ -7040,7 +7192,10 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/student/forgot-student-username/forgot-student-username.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="translated">我们未找到与您提供的信息相匹配的任何用户名。 请确保您输入的信息正确无误。 如果您找不到自己的帐户，请向老师寻求帮助或与我们联系以获取帮助。</target>
+        <target state="translated">我们未找到与您提供的信息相匹配的任何用户名。 请确保您输入的信息正确无误。 如果您找不到自己的帐户，请向老师寻求帮助或与我们联系。</target>
+        <alt-trans>
+          <target>我们未找到与您提供的信息相匹配的任何用户名。 请确保您输入的信息正确无误。 如果您找不到自己的帐户，请向老师寻求帮助或与我们联系以获取帮助。</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="93256df87c3e35873c0b60f3c2478c9651291881" datatype="html">
         <source>We found a username that matches. Select it to log in. If this username is not yours, ask a teacher for help or contact us for assistance.</source>
@@ -7048,7 +7203,10 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/student/forgot-student-username/forgot-student-username.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="translated">我们找到了匹配的用户名。 请选择它以登录。如果此用户名不是您的用户名，请向老师寻求帮助或与我们联系以获取帮助。</target>
+        <target state="translated">我们找到了匹配的用户名。 请选择它以登录。如果此用户名不是您的用户名，请向老师寻求帮助或与我们联系。</target>
+        <alt-trans>
+          <target>我们找到了匹配的用户名。 请选择它以登录。如果此用户名不是您的用户名，请向老师寻求帮助或与我们联系以获取帮助。</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="6b6d7c8be10b5e98805335844750cd1035e23f8d" datatype="html">
         <source>We found multiple usernames that match. If one of these is yours, select it to log in. If you can&apos;t find your account, ask a teacher for help or contact us for assistance.</source>
@@ -7056,7 +7214,10 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/student/forgot-student-username/forgot-student-username.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="translated">我们发现了多个匹配的用户名。 如果其中一个是您的，请选择它以登录。如果您找不到您的帐户，请向老师寻求帮助或联系我们寻求帮助。</target>
+        <target state="translated">我们发现了多个匹配的用户名。 如果其中一个是您的，请选择它以登录。如果您找不到您的帐户，请向老师寻求帮助或与我们联系。</target>
+        <alt-trans>
+          <target>我们发现了多个匹配的用户名。 如果其中一个是您的，请选择它以登录。如果您找不到您的帐户，请向老师寻求帮助或联系我们寻求帮助。</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="bc97abab83efdcc1facad857f5ca74f8e420000d" datatype="html">
         <source>The verification code has expired. Verification codes are valid for 10 minutes. Please go back to the Teacher Forgot Password page to generate a new one.</source>
@@ -7095,7 +7256,10 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/teacher/forgot-teacher-password-verify/forgot-teacher-password-verify.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="translated">您提交的无效验证码太多次了。 出于安全原因，我们将锁定更改密码功能10分钟。 10分钟后，请返回教师忘记密码页面以生成新的验证码。</target>
+        <target state="translated">您重复多次提交无效的验证码。 出于安全原因，我们将锁定更改密码功能10分钟。 10分钟后，请返回教师忘记密码页面以生成新的验证码。</target>
+        <alt-trans>
+          <target>您提交的无效验证码太多次了。 出于安全原因，我们将锁定更改密码功能10分钟。 10分钟后，请返回教师忘记密码页面以生成新的验证码。</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="55cf53e519557dc8c87c01afd630ab40c7546172" datatype="html">
         <source>Password cannot be blank, please enter a password.</source>
@@ -7127,7 +7291,10 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/teacher/forgot-teacher-password/forgot-teacher-password.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="translated">您提交的无效验证码太多次了。 出于安全原因，我们将更改密码的功能锁定10分钟。 10分钟后，您可以再试一次。</target>
+        <target state="translated">您重复多次提交无效的验证码。 出于安全原因，我们将锁定更改密码功能10分钟。 10分钟后，您可以再试一次。</target>
+        <alt-trans>
+          <target>您提交的无效验证码太多次了。 出于安全原因，我们将更改密码的功能锁定10分钟。 10分钟后，您可以再试一次。</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="5e14de974094b2e38989db1da25c34badbcb0888" datatype="html">
         <source>The server has encountered an error and was unable to send you an email. Please try again. If the error continues to occur, please contact us.</source>
@@ -7143,7 +7310,10 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/teacher/forgot-teacher-username/forgot-teacher-username.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="translated">我们未找到与该电子邮件关联的WISE帐户。 请确保您已正确输入您的电子邮件地址。</target>
+        <target state="translated">我们未找到与该电子邮件关联的WISE帐户。 请确保您正确输入您的电子邮件地址。</target>
+        <alt-trans>
+          <target>我们未找到与该电子邮件关联的WISE帐户。 请确保您已正确输入您的电子邮件地址。</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="0acdb2c552977a58eb0966e2f4a82f443ad2916e" datatype="html">
         <source>The server has encountered an error and was unable to send an email to you. Please try again. If the error continues to occur, please contact us.</source>
@@ -7167,7 +7337,10 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/http-error.interceptor.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="translated">后端返回代码 <x id="INTERPOLATION" equiv-text="{{status}}"/>, body was: <x id="INTERPOLATION_1" equiv-text="{{error}}"/></target>
+        <target state="translated">后端返回代码 <x id="INTERPOLATION" equiv-text="{{status}}"/>, 代码主题是: <x id="INTERPOLATION_1" equiv-text="{{error}}"/></target>
+        <alt-trans>
+          <target>后端返回代码 <x id="INTERPOLATION" equiv-text="{{status}}"/>, body was: <x id="INTERPOLATION_1" equiv-text="{{error}}"/></target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="7ddad2424cc5ebd2be4f9908c07b9b84c40d983b" datatype="html">
         <source>An error occurred. Please refresh this page and try again.</source>
@@ -7191,7 +7364,10 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/modules/library/library-project-details/library-project-details.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="translated">许可证适用于作者创建的原始内容。 作者负责链接或包含在本作品中的任何第三方内容的使用权和所有权。</target>
+        <target state="translated">许可证适用于作者创建的原始内容。 作者对链接或包含在项目中的任何第三方内容的使用权和归属权负责。</target>
+        <alt-trans>
+          <target>许可证适用于作者创建的原始内容。 作者负责链接或包含在本作品中的任何第三方内容的使用权和所有权。</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="dbe9ffa58b07d48dc33f34c86b15c3ce33bbd2c2" datatype="html">
         <source>Unit Details</source>
@@ -7199,7 +7375,10 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/modules/library/library-project/library-project.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="translated">单元详情</target>
+        <target state="translated">学习单元详情</target>
+        <alt-trans>
+          <target>单元详情</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="615b3b60d98013117fa5ced450b1345d5ba5262d" datatype="html">
         <source>Show:</source>
@@ -7271,7 +7450,10 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/modules/shared/edit-password/edit-password.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="translated">密码已更改</target>
+        <target state="translated">密码已更改。</target>
+        <alt-trans>
+          <target>密码已更改</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="c8f0dbda0d557e58e54598c7d29d719d6c764413" datatype="html">
         <source>Select an option</source>
@@ -7327,7 +7509,10 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/account/edit-profile/edit-profile.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="translated">中学</target>
+        <target state="translated">初中</target>
+        <alt-trans>
+          <target>中学</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="883888e9073880687bd969a402dff0b136f09023" datatype="html">
         <source>High School</source>
@@ -7363,7 +7548,10 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/account/edit-profile/edit-profile.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="translated">配置文件已更新。</target>
+        <target state="translated">信息已更新。</target>
+        <alt-trans>
+          <target>配置文件已更新。</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="96e3d7cc1051fa738cbb4f3ee6038c1751d85df6" datatype="html">
         <source>A teacher cannot be added as a team member.</source>
@@ -7375,7 +7563,10 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/student/team-sign-in-dialog/team-sign-in-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="translated">教师不能被添加为团队成员。</target>
+        <target state="translated">教师不能添加到团队成员中。</target>
+        <alt-trans>
+          <target>教师不能被添加为团队成员。</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="1a0ca479e7388aea7b2d26e84673bc88081cee7f" datatype="html">
         <source>Invalid username. Please try again.</source>
@@ -7383,7 +7574,10 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/student/team-sign-in-dialog/team-sign-in-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="translated">无效的用户名，请再试一次。</target>
+        <target state="translated">无效的用户名。请再试一次。</target>
+        <alt-trans>
+          <target>无效的用户名，请再试一次。</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="b02351365c2a5c4456bd54c342cfe09b3c065a95" datatype="html">
         <source>Invalid password. Please try again.</source>
@@ -7391,7 +7585,10 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/student/team-sign-in-dialog/team-sign-in-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="translated">无效的密码，请再试一次。</target>
+        <target state="translated">无效的密码。请再试一次。</target>
+        <alt-trans>
+          <target>无效的密码，请再试一次。</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="66c9d5817cd540aa177f656419784731d3bfae26" datatype="html">
         <source>Incorrect Google user. Please try again.</source>
@@ -7399,7 +7596,10 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/student/team-sign-in-dialog/team-sign-in-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="translated">Google用户不正确，请再试一次。</target>
+        <target state="translated">Google用户不正确。请再试一次。</target>
+        <alt-trans>
+          <target>Google用户不正确，请再试一次。</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="39ab535140dcc8123b6f3dc6a502ad4ab30924a1" datatype="html">
         <source>No WISE user with this Google ID found.</source>
@@ -7407,7 +7607,10 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/student/team-sign-in-dialog/team-sign-in-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="translated">没有找到此Google ID的WISE用户。</target>
+        <target state="translated">没有找到此Google ID关联的WISE用户。</target>
+        <alt-trans>
+          <target>没有找到此Google ID的WISE用户。</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="c18040a22a5dee82cf46a72d15dfec734dc172bb" datatype="html">
         <source>Hi class! Please complete the &quot;<x id="INTERPOLATION" equiv-text="{{unitTitle}}"/>&quot; WISE unit. (Access Code: <x id="INTERPOLATION_1" equiv-text="{{accessCode}}"/>)</source>
@@ -7415,7 +7618,10 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="translated">你好，请完成 "<x id="INTERPOLATION" equiv-text="{{unitTitle}}"/>" WISE单元. (Access Code: <x id="INTERPOLATION_1" equiv-text="{{accessCode}}"/>)</target>
+        <target state="translated">您好，同学们，请完成 "<x id="INTERPOLATION" equiv-text="{{unitTitle}}"/>" WISE单元。 (访问码： <x id="INTERPOLATION_1" equiv-text="{{accessCode}}"/>)</target>
+        <alt-trans>
+          <target>你好，请完成 "<x id="INTERPOLATION" equiv-text="{{unitTitle}}"/>" WISE单元. (Access Code: <x id="INTERPOLATION_1" equiv-text="{{accessCode}}"/>)</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="8447ecc2ee7816373dfb3a113b6e390d89b658b7" datatype="html">
         <source> (Section <x id="INTERPOLATION" equiv-text="{{section}}"/>)</source>
@@ -7423,7 +7629,10 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="translated"> (部分 <x id="INTERPOLATION" equiv-text="{{section}}"/>)</target>
+        <target state="translated"> (节 <x id="INTERPOLATION" equiv-text="{{section}}"/>)</target>
+        <alt-trans>
+          <target> (部分 <x id="INTERPOLATION" equiv-text="{{section}}"/>)</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="7a73a1a02bcf341a627892f0d02e113981f96ee3" datatype="html">
         <source>Run Settings</source>
@@ -7431,7 +7640,10 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-menu/run-menu.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="translated">项目运行设置</target>
+        <target state="translated">学习单元执行设置</target>
+        <alt-trans>
+          <target>项目运行设置</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="a4a01cfa1a6dfa138c0876ec8bfec1092317137c" datatype="html">
         <source>Edit Classroom Unit Warning</source>
@@ -7439,7 +7651,10 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-menu/run-menu.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="translated">编辑课堂单元提醒</target>
+        <target state="translated">编辑课堂学习单元提醒</target>
+        <alt-trans>
+          <target>编辑课堂单元提醒</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="e7d36246d5a33f55e55b2eb62510276f8f0aa387" datatype="html">
         <source>There is already a period with that name.</source>
@@ -7447,7 +7662,10 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="translated">该组名称已存在</target>
+        <target state="translated">以该名称命名的课时已存在。</target>
+        <alt-trans>
+          <target>该组名称已存在</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="e80540a5d520797610af6a2b765156063cadb46f" datatype="html">
         <source>You do not have permission to add periods to this unit.</source>
@@ -7463,7 +7681,10 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="translated">您不能删除包含学生的课程时间。</target>
+        <target state="translated">您不能删除包含学生的课时。</target>
+        <alt-trans>
+          <target>您不能删除包含学生的课程时间。</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="f8f08ff0913736a1048d0f70a2b2390d5ec590ca" datatype="html">
         <source>You do not have permission to delete periods from this unit.</source>
