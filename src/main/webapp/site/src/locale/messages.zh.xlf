@@ -1222,7 +1222,10 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">128</context>
         </context-group>
-        <target state="translated">WISE为更多的教师和学生提供了进行探究式科学学习的机会。我们学习单元使得对于教师教学和学生学习中难以理解的概念变得易于理解和掌握。WISE课程帮助学生认识到自己有能力从事科学，并意识到，无论他们的背景如何，科学都可以成为一种潜在的职业。</target>
+        <target state="translated">WISE为更多的教师和学生提供了进行探究式科学学习的机会。我们学习单元使对教师教学和学生学习中难以理解的概念变得易于理解和掌握。WISE课程帮助学生认识到自己有能力从事科学事业，并意识到，无论他们的背景如何，科学都可以成为一种潜在的职业。</target>
+        <alt-trans>
+          <target>WISE为更多的教师和学生提供了进行探究式科学学习的机会。我们学习单元使得对于教师教学和学生学习中难以理解的概念变得易于理解和掌握。WISE课程帮助学生认识到自己有能力从事科学，并意识到，无论他们的背景如何，科学都可以成为一种潜在的职业。</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="d528a21d07675cb0c41c688a22371f4cc925a969" datatype="html">
         <source>Accessible to All</source>
