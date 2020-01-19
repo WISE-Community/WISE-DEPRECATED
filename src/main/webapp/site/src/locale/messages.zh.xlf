@@ -1748,7 +1748,13 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">73</context>
         </context-group>
-        <target state="translated">您不得使用WISE来促进对任何个人或团体的偏见、歧视、仇恨或暴力。 未经本人许可，您不得泄露任何其他人的身份或联系信息。 不允许威胁、骚扰或恐吓任何其他人，我们保留删除任何由我们自行决定的用户生成内容的权利。 请WISE团队注意，若项目、讨论帖和用户个人资料页面一旦包含冒犯性或露骨色情内容，将不会被容忍，并立即从网站上删除。</target>
+        <target state="translated">您不得使用WISE来促进对任何个人或团体的偏见、歧视、仇恨或暴力。 未经本人许可，您不得泄露任何其他人的身份或联系信息。 如果用户生成的内容威胁、骚扰或恐吓到任何其他人，我们有权对其进行删除。 WSIE项目、讨论帖和用户个人资料页面不允许包含冒犯性或露骨色情内容。一旦被WISE团队发现，会立即从网站上删除。</target>
+        <alt-trans>
+          <target>您不得使用WISE来促进对任何个人或团体的偏见、歧视、仇恨或暴力。 未经本人许可，您不得泄露任何其他人的身份或联系信息。 不允许威胁、骚扰或恐吓任何其他人。如果用户生成的内容威胁、骚扰或恐吓到任何其他人，我们有权对其进行删除。 WSIE项目、讨论帖和用户个人资料页面不允许包含冒犯性或露骨色情内容。一旦被WISE团队发现，会立即从网站上删除。</target>
+        </alt-trans>
+        <alt-trans>
+          <target>您不得使用WISE来促进对任何个人或团体的偏见、歧视、仇恨或暴力。 未经本人许可，您不得泄露任何其他人的身份或联系信息。 不允许威胁、骚扰或恐吓任何其他人，我们保留删除任何由我们自行决定的用户生成内容的权利。 请WISE团队注意，若项目、讨论帖和用户个人资料页面一旦包含冒犯性或露骨色情内容，将不会被容忍，并立即从网站上删除。</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="f1330e63665b0b21c183e95f2531534fa397e652" datatype="html">
         <source>You may not deliberately perform actions that are intended to negatively affect the WISE website or its users. You may not post links to harmful sites to download viruses or malware.</source>
@@ -1764,7 +1770,10 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">75</context>
         </context-group>
-        <target state="translated">所有用户生成的内容均按原样提供。 WISE团队不对通过WISE提供的任何用户生成内容的准确性或可靠性负责。 WISE团队不对用户生成的内容中表达的任何观点，意见或建议负责。 您同意免除WISE团队因用户生成的内容而产生的所有责任。</target>
+        <target state="translated">所有用户生成的内容均按原样提供。 WISE团队对用户基于WISE平台生成内容的准确性或可靠性不负责。 WISE团队对用户生成内容中表达的任何观点、意见或建议不负责。 您同意免除WISE团队因用户生成的内容而产生的所有责任。</target>
+        <alt-trans>
+          <target>所有用户生成的内容均按原样提供。 WISE团队不对通过WISE提供的任何用户生成内容的准确性或可靠性负责。 WISE团队不对用户生成的内容中表达的任何观点，意见或建议负责。 您同意免除WISE团队因用户生成的内容而产生的所有责任。</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="58bf2f522bfb669f040c49d745a07badf14f8157" datatype="html">
         <source>If you notice any offensive material or user-generated content that are in violation with the rules above, please report them to the WISE Team using our <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Contact Form<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
@@ -1772,7 +1781,10 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">76</context>
         </context-group>
-        <target state="translated">如果您发现任何违反上述规则的冒犯性内容或用户生成的内容，请及时向我们的WISE团队报告。<x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Contact Form<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</target>
+        <target state="translated">如果您发现任何违反上述规则的冒犯性内容或用户生成的内容，请及时运用<x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>联系表单<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>向WISE团队报告。</target>
+        <alt-trans>
+          <target>如果您发现任何违反上述规则的冒犯性内容或用户生成的内容，请及时向我们的WISE团队报告。<x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Contact Form<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="83e835d7ae5255ef507a1ed474c87044d226fde0" datatype="html">
         <source>5. Information Security</source>
@@ -1780,7 +1792,10 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">80</context>
         </context-group>
-        <target state="translated">信息安全</target>
+        <target state="translated">5.信息安全</target>
+        <alt-trans>
+          <target>信息安全</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="9e8e34ba63c3678ef43b9bef38ad48245621d346" datatype="html">
         <source>The security of your information is important to us and we try to maintain a high standard for security by using technical safeguards. We will try our best to keep your data safe. However, no system can ever be 100% secure so we can not guarantee your personal information will be 100% safe from unauthorized access, either while stored on our site or our databases or while being transmitted to WISE over the internet.</source>
@@ -1788,7 +1803,10 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">81</context>
         </context-group>
-        <target state="translated">我们很重视您的信息安全。我们会尝试使用技术保护措施来保持高标准的安全性。 我们会尽力保证您的数据安全。 但是，没有任何系统可以100％安全，因此无论是存储在我们的网站还是我们的数据库中，还是通过互联网传输到WISE，我们无法保证您的个人信息在未经授权的情况下100％安全。</target>
+        <target state="translated">我们很重视您的信息的安全性。我们会尝试使用技术保护措施确保它们具有高标准的安全性。 我们会尽力保证您的数据安全。 但是，没有任何系统可以确保它们百分之百的安全，因此，无论是存储在我们的WISE网站或数据库中，还是通过互联网传播到WISE中，我们无法保证您的个人信息在未经授权的情况下能百分之百的安全。</target>
+        <alt-trans>
+          <target>我们很重视您的信息安全。我们会尝试使用技术保护措施来保持高标准的安全性。 我们会尽力保证您的数据安全。 但是，没有任何系统可以100％安全，因此无论是存储在我们的网站还是我们的数据库中，还是通过互联网传输到WISE，我们无法保证您的个人信息在未经授权的情况下100％安全。</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="c21bc1664b1acd6740b428fa2ce9e99439a9d3b6" datatype="html">
         <source>You can help us protect against unauthorized access to your account by choosing a strong password and keeping your password secret at all times.</source>
@@ -1796,7 +1814,10 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">82</context>
         </context-group>
-        <target state="translated">您可以通过选设置强密码，并始终保密密码帮助我们防止未经授权访问您的帐户。</target>
+        <target state="translated">您可以通过选设置强密码并始终保密密码，帮助我们防止未经授权的用户访问您的帐户。</target>
+        <alt-trans>
+          <target>您可以通过选设置强密码，并始终保密密码帮助我们防止未经授权访问您的帐户。</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="5af2549b2c02c290b49d68890ec5308298eea08a" datatype="html">
         <source>6. State &amp; Federal Laws</source>
@@ -1812,7 +1833,10 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">88</context>
         </context-group>
-        <target state="translated">加州未成年人隐私权</target>
+        <target state="translated">加利福尼亚未成年人隐私权</target>
+        <alt-trans>
+          <target>加州未成年人隐私权</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="07bee5a94bc5a2dd9e6ae5a3718009e22c1e2308" datatype="html">
         <source>If you live in California and are under the age of 18 or the parent or legal guardian of a student under the age of 18, you may request the removal of your information from our site. When you request removal of your information, we will remove all your personal information to the best of our ability. Please note that we may not be able to remove all de-identified information or pieces of content stored in our databases and we may not remove content that we are required to retain under applicable federal and state laws. If you would like to request removal of your or your child&apos;s content or information, please contact us at https://wise.berkeley.edu/contact for assistance or you can delete specific information from you or your child&apos;s account.</source>
@@ -1820,7 +1844,10 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">89</context>
         </context-group>
-        <target state="translated">如果您居住在加利福尼亚州且未满18岁，或者是未满18岁学生的父母或法定监护人，您可以要求从我们的网站上删除您的信息。 当您要求删除您的信息时，我们会尽最大努力删除您的所有个人信息。 请注意，我们可能无法删除存储在我们数据库中的所有去识别信息或内容，我们可能无法删除根据适用的联邦和州法律要求保留的内容。 如果您要求删除您或您孩子的内容或信息，请通过https://wise.berkeley.edu/contact与我们联系以获取帮助，或者您可以从您或您孩子的帐户中删除特定信息。</target>
+        <target state="translated">如果您居住在加利福尼亚州且未满18岁，或是未满18岁学生的父母或法定监护人，您可以要求从我们的网站上删除您的信息。 当您要求删除您的信息时，我们会尽最大努力删除您的所有个人信息。 但是，我们可能无法删除存储在我们数据库中的所有去识别信息或内容，我们也可能无法删除根据适用的联邦和州法律要求保留的内容。 如果您要求删除您或您孩子的内容或信息，请通过https://wise.berkeley.edu/contact与我们联系以获取帮助，或者您可以从您或您孩子的帐户中删除特定信息。</target>
+        <alt-trans>
+          <target>如果您居住在加利福尼亚州且未满18岁，或者是未满18岁学生的父母或法定监护人，您可以要求从我们的网站上删除您的信息。 当您要求删除您的信息时，我们会尽最大努力删除您的所有个人信息。 请注意，我们可能无法删除存储在我们数据库中的所有去识别信息或内容，我们可能无法删除根据适用的联邦和州法律要求保留的内容。 如果您要求删除您或您孩子的内容或信息，请通过https://wise.berkeley.edu/contact与我们联系以获取帮助，或者您可以从您或您孩子的帐户中删除特定信息。</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="a696cb5c99995dd1420b2dd62b2c6409888b9605" datatype="html">
         <source>Family Educational Rights and Privacy Act (FERPA)</source>
@@ -1836,7 +1863,10 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">92</context>
         </context-group>
-        <target state="translated">我们会注重熟悉《家庭教育权和隐私权法案》，并且采取一切可能的措施来确保您在使用WISE时符合《家庭教育权和隐私权法案》的要求。 我们认为，本文档中概述的数据保护符合其要求。</target>
+        <target state="translated">我们会注重熟悉《家庭教育权和隐私权法案》，并且采取一切可能的措施确保您在使用WISE时符合《家庭教育权和隐私权法案》的要求。 我们认为本文档中概述的数据保护条例符合其要求。</target>
+        <alt-trans>
+          <target>我们会注重熟悉《家庭教育权和隐私权法案》，并且采取一切可能的措施来确保您在使用WISE时符合《家庭教育权和隐私权法案》的要求。 我们认为，本文档中概述的数据保护符合其要求。</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="41443d0531f4cbd040cbd27d732a1ab7b361b751" datatype="html">
         <source>7. Changes and Updates to the Terms of Use &amp; Privacy Policy</source>
@@ -1844,7 +1874,10 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">96</context>
         </context-group>
-        <target state="translated">使用条款和隐私策略的变更和更新</target>
+        <target state="translated">7.使用条款和隐私策略的变更和更新</target>
+        <alt-trans>
+          <target>使用条款和隐私策略的变更和更新</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="c48aa34c21d6e247f54757d5fb617b1faa59f064" datatype="html">
         <source>We may occasionally update or modify our Terms of Use and Privacy Policy. We will always display the date this document was last updated. If we make significant changes to these terms, we will display a prominent notice on the WISE home page and may notify users via registered email.  We encourage you to review this document periodically. By continuing to use WISE after any changes to this document, you acknowledge that you agree to the current version of these terms.</source>
@@ -1852,7 +1885,10 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">97</context>
         </context-group>
-        <target state="translated">我们可能偶尔会更新或修改我们的使用条款和隐私政策。 我们将始终显示此文档上次更新的日期。 如果我们对这些条款进行重大更改，我们将在WISE主页上显示醒目的通知，并可能通过注册的电子邮件通知用户。 我们建议您定期查看本文档。 在对本文档进行任何更改后继续使用WISE，即表示您同意这些条款的当前版本。</target>
+        <target state="translated">我们可能偶尔会更新或修改我们的使用条款和隐私政策。 我们将始终在此文档上显示更新的日期。 如果我们对这些条款进行重大更改，我们将在WISE主页上显示醒目的通知，并可能通过注册的电子邮件通知用户。 我们建议您定期查看此文档。 在更改此文档后继续使用WISE时，请确保您认同当前版本条款的内容。</target>
+        <alt-trans>
+          <target>我们可能偶尔会更新或修改我们的使用条款和隐私政策。 我们将始终显示此文档上次更新的日期。 如果我们对这些条款进行重大更改，我们将在WISE主页上显示醒目的通知，并可能通过注册的电子邮件通知用户。 我们建议您定期查看本文档。 在对本文档进行任何更改后继续使用WISE，即表示您同意这些条款的当前版本。</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="88698050f16ebf91474ddae66b687f795af7e57b" datatype="html">
         <source>If you have any questions or concerns about this document or the WISE site, please contact us using our <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Contact Form<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>. We can also be reached by mail at:</source>
@@ -1860,7 +1896,10 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">98</context>
         </context-group>
-        <target state="translated">如果您对本文档或WISE网站有任何问题或疑虑，请通过 <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Contact Form<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>与我们联系。您也可以通过邮件联系我们：</target>
+        <target state="translated">如果您对本文档或WISE网站有任何问题或疑虑，请使用 <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>联系表单<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>与我们联系。您也可以通过邮件联系我们：</target>
+        <alt-trans>
+          <target>如果您对本文档或WISE网站有任何问题或疑虑，请通过 <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Contact Form<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>与我们联系。您也可以通过邮件联系我们：</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="a53ebef13aa69d9f02d5e74bad14f75519260813" datatype="html">
         <source>UC Berkeley Graduate School of Education</source>
@@ -1892,7 +1931,10 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">103</context>
         </context-group>
-        <target state="translated">2121 Berkeley Way，4203室</target>
+        <target state="translated">伯克利路2121号，4203室</target>
+        <alt-trans>
+          <target>2121 Berkeley Way，4203室</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="1d7e5910925c9f4101d153ff63e6d89e23f9ea82" datatype="html">
         <source>Berkeley, CA 94720-1670</source>
@@ -1900,7 +1942,10 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">104</context>
         </context-group>
-        <target state="translated">Berkeley, CA 94720-1670</target>
+        <target state="translated">伯克利, 加利福尼亚 94720-1670</target>
+        <alt-trans>
+          <target>Berkeley, CA 94720-1670</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="891537ceca296c8821e5edf088b3e9cc5c6f17c9" datatype="html">
         <source>Explore suggested WISE curricula for the given grade levels or search for specific units that address your needs.</source>
@@ -1908,7 +1953,10 @@
           <context context-type="sourcefile">app/modules/library/home-page-project-library/home-page-project-library.component.html</context>
           <context context-type="linenumber">8</context>
         </context-group>
-        <target state="translated">探索为特定年级水平建议的WISE课程，或者搜索满足您需求的特定学习单元。</target>
+        <target state="translated">为特定年级水平的学生检索推荐的WISE课程，或搜索满足您需求的特定学习单元。</target>
+        <alt-trans>
+          <target>探索为特定年级水平建议的WISE课程，或者搜索满足您需求的特定学习单元。</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="32994fe5ec4e53b681a661dd565256e91a9eb515" datatype="html">
         <source>unit(s)</source>
