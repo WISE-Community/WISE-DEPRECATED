@@ -75,8 +75,7 @@ class MilestonesController {
           const nodeId = annotation.nodeId;
           const componentId = annotation.componentId;
           for (const projectAchievement of this.projectAchievements) {
-            if (projectAchievement.nodeId && projectAchievement.componentId &&
-                projectAchievement.nodeId === nodeId && 
+            if (projectAchievement.nodeId === nodeId && 
                 projectAchievement.componentId === componentId) {
               this.updateMilestoneCompletion(projectAchievement.id);
             }
@@ -504,7 +503,7 @@ class MilestonesController {
 
   mergeAutoScoreAndTeacherScore(autoScoreAnnotation, teacherScoreAnnotation) {
     if (autoScoreAnnotation.data.scores) {
-      for (let subScore of autoScoreAnnotation.data.scores) {
+      for (const subScore of autoScoreAnnotation.data.scores) {
         const teacherScore = Math.round(teacherScoreAnnotation.data.value);
         if (subScore.id === 'ki') {
           if (teacherScore > 5) {
