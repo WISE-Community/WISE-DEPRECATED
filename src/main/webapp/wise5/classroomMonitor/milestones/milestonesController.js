@@ -70,18 +70,13 @@ class MilestonesController {
     });
 
     this.$scope.$on('annotationReceived', (event, args) => {
-      const annotation = args.annotation;
-      if (annotation) {
-          const nodeId = annotation.nodeId;
-          const componentId = annotation.componentId;
-          for (const projectAchievement of this.projectAchievements) {
-            if (projectAchievement.nodeId === nodeId && 
-                projectAchievement.componentId === componentId) {
-              this.updateMilestoneCompletion(projectAchievement.id);
-            }
-          }
+      for (const projectAchievement of this.projectAchievements) {
+        if (projectAchievement.nodeId === args.annotation.nodeId && 
+            projectAchievement.componentId === args.annotation.componentId) {
+          this.updateMilestoneCompletion(projectAchievement.id);
+        }
       }
-  });
+    });
   }
 
   /**
