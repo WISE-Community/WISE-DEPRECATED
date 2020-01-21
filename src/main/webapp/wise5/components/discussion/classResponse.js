@@ -7,7 +7,6 @@ class ClassResponseController {
     this.$filter = $filter;
     this.StudentStatusService = StudentStatusService;
     this.ConfigService = ConfigService;
-
     this.$translate = this.$filter('translate');
     this.urlMatcher = /((http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?)/g;
   }
@@ -58,15 +57,12 @@ class ClassResponseController {
   }
 
   replyEntered($event, response) {
-    if ($event.keyCode === 13) {
-      if (response.replyText) {
-        this.submitButtonClicked(response);
-      }
+    if ($event.keyCode === 13 && response.replyText) {
+      this.submitButtonClicked(response);
     }
   }
 
   submitButtonClicked(response) {
-    // call the callback function in discussionController
     this.submitbuttonclicked({r: response});
   }
 
@@ -75,13 +71,7 @@ class ClassResponseController {
    * @param componentState the student component state
    */
   deleteButtonClicked(componentState) {
-
-    var answer = confirm(this.$translate("discussion.areYouSureYouWantToDeleteThisPost"));
-
-    if (answer) {
-      // the teacher has answered yes to delete
-
-      // tell the discussionController to delete the post
+    if (confirm(this.$translate("discussion.areYouSureYouWantToDeleteThisPost"))) {
       this.deletebuttonclicked({componentState: componentState});
     }
   }
@@ -91,13 +81,7 @@ class ClassResponseController {
    * @param componentState the student component state
    */
   undoDeleteButtonClicked(componentState) {
-
-    var answer = confirm(this.$translate("discussion.areYouSureYouWantToShowThisPost"));
-
-    if (answer) {
-      // the teacher has answered yes to undo the delete
-
-      // tell the discussionController to undo the delete of the post
+    if (confirm(this.$translate("discussion.areYouSureYouWantToShowThisPost"))) {
       this.undodeletebuttonclicked({componentState: componentState});
     }
   }
@@ -126,13 +110,13 @@ ClassResponseController.$inject = ['$scope','$element','$filter','StudentStatusS
 
 const ClassResponseComponentOptions = {
   bindings: {
-    response: '=',
-    mode: '=',
+    response: '<',
+    mode: '<',
     deletebuttonclicked: '&',
     undodeletebuttonclicked: '&',
     submitbuttonclicked: '&',
     studentdatachanged: '&',
-    isdisabled: '='
+    isdisabled: '<'
   },
   templateUrl: 'wise5/components/discussion/classResponse.html',
   controller: 'ClassResponseController as classResponseCtrl'

@@ -67,20 +67,20 @@
           <div layout='row'>
             <div class='discussion-posts' flex>
               <md-card class='discussion-new discussion-post'
-                  ng-if='!discussionController.isDisabled'
+                  ng-if='::!discussionController.isDisabled'
                   ng-class='{"discussion-new--focused md-whiteframe-z3": discussionController.focus || discussionController.newResponse || discussionController.attachments.length}'>
                 <md-input-container class='input--placeholder-only discussion-new__input-container input-container'
                     md-no-float>
-                  <div ng-if='discussionController.isDisabled'
+                  <div ng-if='::discussionController.isDisabled'
                       class='discussion-new__input--textarea input--textarea--disabled'
                       ng-model='discussionController.newResponse'>
                   </div>
-                  <textarea ng-if='!discussionController.isDisabled'
+                  <textarea ng-if='::!discussionController.isDisabled'
                       class='discussion-new__input--textarea'
                       placeholder='{{ ::"discussion.shareDiscussionPostWithClass" | translate }}'
                       ng-model='discussionController.newResponse'
                       ng-model-options='{ debounce: 100 }'
-                      ng-disabled='discussionController.isDisabled'
+                      ng-disabled='::discussionController.isDisabled'
                       ng-change='discussionController.studentDataChanged()'
                       ng-init='discussionController.focus = false'
                       ng-focus='discussionController.focus = true'
@@ -97,7 +97,7 @@
                     <md-button class='component__attachment__delete'
                         ng-click='discussionController.removeAttachment(attachment)'
                         title='Remove file'
-                        ng-disabled='discussionController.isDisabled'>
+                        ng-disabled='::discussionController.isDisabled'>
                       <md-icon>cancel</md-icon>
                     </md-button>
                   </div>
@@ -109,14 +109,9 @@
                       ng-click='nodeController.showStudentAssets($event, discussionController.componentId, discussionController.isDisabled)'
                       ng-if='::discussionController.isStudentAttachmentEnabled'
                       title='Add picture'
-                      ng-disabled='discussionController.isDisabled'>
+                      ng-disabled='::discussionController.isDisabled'>
                     <md-icon>image</md-icon>
                   </md-button>
-                  <!--<md-button class='md-primary'
-                         ng-class='{"md-raised": !discussionController.showSubmitButton()}'
-                         ng-click='discussionController.saveButtonClicked()'
-                         ng-disabled='discussionController.isDisabled || !discussionController.newResponse'
-                         ng-if='discussionController.showSaveButton()'>Save Draft</md-button>-->
                   <md-button class='md-raised md-primary'
                       ng-click='discussionController.submitButtonClicked()'
                       ng-disabled='discussionController.isDisabled || (!discussionController.newResponse && discussionController.attachments.length == 0)'>
@@ -126,13 +121,13 @@
               </md-card>
               <class-response ng-repeat='componentState in discussionController.topLevelResponses'
                   ng-if='mdScreen ? $odd : true'
-                  response='componentState'
+                  response='::componentState'
                   submitbuttonclicked='submitbuttonclicked(r)'
                   mode='::discussionController.mode'
                   deletebuttonclicked='discussionController.deletebuttonclicked(componentState)'
                   undodeletebuttonclicked='discussionController.undodeletebuttonclicked(componentState)'
                   studentdatachanged='studentdatachanged()'
-                  isdisabled='discussionController.isDisabled'
+                  isdisabled='::discussionController.isDisabled'
                   class='post animate-repeat'>
               </class-response>
             </div>
@@ -141,13 +136,13 @@
                 flex>
               <class-response ng-repeat='componentState in discussionController.topLevelResponses'
                   ng-if='$even'
-                  response='componentState'
+                  response='::componentState'
                   submitbuttonclicked='submitbuttonclicked(r)'
                   mode='::discussionController.mode'
                   deletebuttonclicked='discussionController.deletebuttonclicked(componentState)'
                   undodeletebuttonclicked='discussionController.undodeletebuttonclicked(componentState)'
                   studentdatachanged='studentdatachanged()'
-                  isdisabled='discussionController.isDisabled'
+                  isdisabled='::discussionController.isDisabled'
                   class='animate-repeat'
                   style='display: block;'>
               </class-response>

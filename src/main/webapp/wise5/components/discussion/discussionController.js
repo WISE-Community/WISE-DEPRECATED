@@ -383,7 +383,7 @@ class DiscussionController extends ComponentController {
   setClassResponses(componentStates, annotations) {
     this.classResponses = [];
     componentStates = componentStates.sort(this.sortByServerSaveTime);
-    for (let componentState of componentStates) {
+    for (const componentState of componentStates) {
       if (componentState.studentData.isSubmit) {
         const workgroupId = componentState.workgroupId;
         const latestInappropriateFlagAnnotation =
@@ -454,14 +454,11 @@ class DiscussionController extends ComponentController {
       this.responsesMap[componentState.id] = componentState;
     }
     for (const componentState of componentStates) {
-      if (componentState && componentState.studentData) {
-        const studentData = componentState.studentData;
-        const componentStateIdReplyingTo = studentData.componentStateIdReplyingTo;
-        if (componentStateIdReplyingTo) {
-          if (this.responsesMap[componentStateIdReplyingTo] &&
+      const componentStateIdReplyingTo = componentState.studentData.componentStateIdReplyingTo;
+      if (componentStateIdReplyingTo) {
+        if (this.responsesMap[componentStateIdReplyingTo] &&
             this.responsesMap[componentStateIdReplyingTo].replies) {
-            this.responsesMap[componentStateIdReplyingTo].replies.push(componentState);
-          }
+          this.responsesMap[componentStateIdReplyingTo].replies.push(componentState);
         }
       }
     }
@@ -520,20 +517,14 @@ class DiscussionController extends ComponentController {
     }
   }
 
-  getClassResponses() {
-    return this.classResponses;
-  }
-
   /**
-   * Get the level 1 responses which are posts that are not a reply to
-   * another response.
+   * Get the level 1 responses which are posts that are not a reply to another response.
    * @return an array of responses that are not a reply to another response
    */
   getLevel1Responses() {
     const level1Responses = [];
     for (const classResponse of this.classResponses) {
-      const componentStateIdReplyingTo = classResponse.studentData.componentStateIdReplyingTo;
-      if (componentStateIdReplyingTo == null) {
+      if (classResponse.studentData.componentStateIdReplyingTo == null) {
         level1Responses.push(classResponse);
       }
     }
