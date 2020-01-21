@@ -1,5 +1,6 @@
 'use strict';
 
+import NodeProgressView from './nodeProgressView/nodeProgressView';
 import NavItem from './navItem/navItem';
 import NavItemProgress from './navItemProgress/navItemProgress';
 import NavItemScore from './navItemScore/navItemScore';
@@ -8,6 +9,7 @@ import WorkgroupProgress from './workgroupProgress/workgroupProgress';
 
 let NodeProgress = angular.module('nodeProgress', []);
 
+NodeProgress.component('nodeProgressView', NodeProgressView);
 NodeProgress.component('navItem', NavItem);
 NodeProgress.component('navItemProgress', NavItemProgress);
 NodeProgress.component('navItemScore', NavItemScore);
