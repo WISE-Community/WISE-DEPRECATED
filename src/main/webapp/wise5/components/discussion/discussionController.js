@@ -360,7 +360,7 @@ class DiscussionController extends ComponentController {
   disableComponentIfNecessary() {
     super.disableComponentIfNecessary();
     if (this.UtilService.hasConnectedComponent(this.componentContent)) {
-      for (let connectedComponent of this.componentContent.connectedComponents) {
+      for (const connectedComponent of this.componentContent.connectedComponents) {
         if (connectedComponent.type === 'showWork') {
           this.isDisabled = true;
         }
@@ -380,7 +380,7 @@ class DiscussionController extends ComponentController {
     return this.componentContent.gateClassmateResponses;
   }
 
-  setClassResponses(componentStates, annotations) {
+  setClassResponses(componentStates, annotations = []) {
     this.classResponses = [];
     componentStates = componentStates.sort(this.sortByServerSaveTime);
     for (const componentState of componentStates) {
@@ -432,11 +432,9 @@ class DiscussionController extends ComponentController {
   }
 
   getLatestInappropriateFlagAnnotationByStudentWorkId(annotations, studentWorkId) {
-    if (annotations != null) {
-      for (const annotation of annotations) {
-        if (studentWorkId === annotation.studentWorkId && annotation.type === 'inappropriateFlag') {
-          return annotation;
-        }
+    for (const annotation of annotations) {
+      if (studentWorkId === annotation.studentWorkId && annotation.type === 'inappropriateFlag') {
+        return annotation;
       }
     }
     return null;
@@ -589,16 +587,14 @@ class DiscussionController extends ComponentController {
    * @return an array of inappropriate flag annotations that are associated
    * with the component states
    */
-  getInappropriateFlagAnnotationsByComponentStates(componentStates) {
+  getInappropriateFlagAnnotationsByComponentStates(componentStates = []) {
     const annotations = [];
-    if (componentStates != null) {
-      for (let componentState of componentStates) {
-        const latestInappropriateFlagAnnotation =
-            this.AnnotationService.getLatestAnnotationByStudentWorkIdAndType(
-                componentState.id, 'inappropriateFlag');
-        if (latestInappropriateFlagAnnotation != null) {
-          annotations.push(latestInappropriateFlagAnnotation);
-        }
+    for (const componentState of componentStates) {
+      const latestInappropriateFlagAnnotation =
+          this.AnnotationService.getLatestAnnotationByStudentWorkIdAndType(
+          componentState.id, 'inappropriateFlag');
+      if (latestInappropriateFlagAnnotation != null) {
+        annotations.push(latestInappropriateFlagAnnotation);
       }
     }
     return annotations;
