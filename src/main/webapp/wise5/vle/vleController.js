@@ -468,7 +468,7 @@ class VLEController {
    */
   dismissNotificationAggregateAndVisitNode(event, notificationAggregate) {
     if (notificationAggregate != null && notificationAggregate.notifications != null) {
-      for (let notification of notificationAggregate.notifications) {
+      for (const notification of notificationAggregate.notifications) {
         if (notification.data == null || notification.data.dismissCode == null) {
           // only dismiss notifications that don't require a dismiss code,
           // but still allow them to move to the node

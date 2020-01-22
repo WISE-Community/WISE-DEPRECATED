@@ -385,15 +385,9 @@ class DiscussionController extends ComponentController {
     componentStates = componentStates.sort(this.sortByServerSaveTime);
     for (const componentState of componentStates) {
       if (componentState.studentData.isSubmit) {
-        const workgroupId = componentState.workgroupId;
         const latestInappropriateFlagAnnotation =
             this.getLatestInappropriateFlagAnnotationByStudentWorkId(annotations, componentState.id);
-        const usernames = this.ConfigService.getUsernamesByWorkgroupId(workgroupId);
-        if (usernames.length === 0) {
-          componentState.usernames = this.getUserIdsDisplay(workgroupId);
-        } else {
-          componentState.usernames = usernames.map(function(obj) { return obj.name; }).join(', ');
-        }
+        this.setUsernames(componentState);
         componentState.replies = [];
         if (this.isGradingMode() || this.isGradingRevisionMode()) {
           if (latestInappropriateFlagAnnotation != null) {
@@ -427,12 +421,11 @@ class DiscussionController extends ComponentController {
       return 1;
     }
     return 0;
-  }
+  }t
 
   getUserIdsDisplay(workgroupId) {
-    const userIds = this.ConfigService.getUserIdsByWorkgroupId(workgroupId);
     const userIdsDisplay = [];
-    for (let userId of userIds) {
+    for (const userId of this.ConfigService.getUserIdsByWorkgroupId(workgroupId)) {
       userIdsDisplay.push(`Student ${userId}`);
     }
     return userIdsDisplay.join(', ');
@@ -471,7 +464,7 @@ class DiscussionController extends ComponentController {
   }
 
   orderResponses() {
-    this.topLevelResponses = this.topLevelResponses.slice().reverse();
+    this.topLevelResponses = this.topLevelResponses.reverse();
   }
 
   threadHasPostFromThisComponentAndWorkgroupId() {
@@ -492,28 +485,25 @@ class DiscussionController extends ComponentController {
     };
   }
 
+  setUsernames(componentState) {
+    const workgroupId = componentState.workgroupId;
+    const usernames = this.ConfigService.getUsernamesByWorkgroupId(workgroupId);
+    if (usernames.length > 0) {
+      componentState.usernames = usernames.map(function(obj) { return obj.name; }).join(', ');
+    } else if (componentState.usernamesArray != null) {
+      componentState.usernames = componentState.usernamesArray
+          .map(function(obj) { return obj.name; }).join(', ');
+    } else {
+      componentState.usernames = this.getUserIdsDisplay(workgroupId);
+    }
+  }
+
   addClassResponse(componentState) {
     if (componentState.studentData.isSubmit) {
-      const workgroupId = componentState.workgroupId;
-      const usernames = this.ConfigService.getUsernamesByWorkgroupId(workgroupId);
-      if (usernames.length > 0) {
-        componentState.usernames = usernames.map(function(obj) { return obj.name; }).join(', ');
-      } else if (componentState.usernamesArray != null) {
-        componentState.usernames = componentState.usernamesArray
-            .map(function(obj) { return obj.name; }).join(', ');
-      }
+      this.setUsernames(componentState);
       componentState.replies = [];
       this.classResponses.push(componentState);
-      this.responsesMap[componentState.id] = componentState;
-      const componentStateIdReplyingTo = componentState.studentData.componentStateIdReplyingTo;
-      if (componentStateIdReplyingTo != null) {
-        if (this.responsesMap[componentStateIdReplyingTo] != null &&
-            this.responsesMap[componentStateIdReplyingTo].replies != null) {
-          this.responsesMap[componentStateIdReplyingTo].replies.push(componentState);
-        }
-      }
-      this.topLevelResponses = this.getLevel1Responses();
-      this.orderResponses();
+      this.processResponses([componentState]);
     }
   }
 

@@ -1,9 +1,8 @@
 'use strict';
 
 class ClassResponseController {
-  constructor($scope, $element, $filter, StudentStatusService, ConfigService) {
+  constructor($scope, $filter, StudentStatusService, ConfigService) {
     this.$scope = $scope;
-    this.$element = $element;
     this.$filter = $filter;
     this.StudentStatusService = StudentStatusService;
     this.ConfigService = ConfigService;
@@ -12,29 +11,11 @@ class ClassResponseController {
   }
 
   $onInit() {
-    this.$scope.$watch(
-      () => { return this.response.replies.length; },
-      (newValue, oldValue) => {
-        if (newValue !== oldValue) {
-          this.injectLinksIntoReplies();
-          this.toggleExpanded(true);
-        }
-      }
-    );
     this.injectLinksIntoResponse();
-    this.injectLinksIntoReplies();
   }
 
   injectLinksIntoResponse() {
     this.response.studentData.responseText = this.injectLinks(this.response.studentData.response);
-  }
-
-  injectLinksIntoReplies() {
-    for (const reply of this.response.replies) {
-      if (reply.studentData.responseText == null) {
-        reply.studentData.responseText = this.injectLinks(reply.studentData.response);
-      }
-    }
   }
 
   injectLinks(response) {
@@ -56,9 +37,9 @@ class ClassResponseController {
     return this.ConfigService.getAvatarColorForWorkgroupId(workgroupId);
   }
 
-  replyEntered($event, response) {
-    if ($event.keyCode === 13 && response.replyText) {
-      this.submitButtonClicked(response);
+  replyEntered($event) {
+    if ($event.keyCode === 13 && this.response.replyText) {
+      this.submitButtonClicked(this.response);
     }
   }
 
@@ -66,39 +47,20 @@ class ClassResponseController {
     this.submitbuttonclicked({r: response});
   }
 
-  /**
-   * The delete button was clicked on a student post
-   * @param componentState the student component state
-   */
   deleteButtonClicked(componentState) {
-    if (confirm(this.$translate("discussion.areYouSureYouWantToDeleteThisPost"))) {
+    if (confirm(this.$translate('discussion.areYouSureYouWantToDeleteThisPost'))) {
       this.deletebuttonclicked({componentState: componentState});
     }
   }
 
-  /**
-   * The undo delete button was clicked on a student post
-   * @param componentState the student component state
-   */
   undoDeleteButtonClicked(componentState) {
-    if (confirm(this.$translate("discussion.areYouSureYouWantToShowThisPost"))) {
+    if (confirm(this.$translate('discussion.areYouSureYouWantToShowThisPost'))) {
       this.undodeletebuttonclicked({componentState: componentState});
     }
   }
 
-  toggleExpanded(open) {
-    if (open) {
-      this.expanded = true;
-    } else {
-      this.expanded = !this.expanded;
-    }
-
-    if (this.expanded) {
-      var $clist = $(this.element).find('.discussion-comments__list');
-      setTimeout(function () {
-        $clist.animate({scrollTop: $clist.height()}, 250);
-      }, 250);
-    }
+  toggleExpanded() {
+    this.expanded = !this.expanded;
   }
 
   adjustClientSaveTime(time) {
@@ -106,12 +68,12 @@ class ClassResponseController {
   }
 }
 
-ClassResponseController.$inject = ['$scope','$element','$filter','StudentStatusService','ConfigService'];
+ClassResponseController.$inject = ['$scope','$filter','StudentStatusService','ConfigService'];
 
 const ClassResponseComponentOptions = {
   bindings: {
     response: '<',
-    mode: '<',
+    mode: '@',
     deletebuttonclicked: '&',
     undodeletebuttonclicked: '&',
     submitbuttonclicked: '&',
