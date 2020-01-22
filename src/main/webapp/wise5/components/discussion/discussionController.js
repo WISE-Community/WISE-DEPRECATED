@@ -421,7 +421,7 @@ class DiscussionController extends ComponentController {
       return 1;
     }
     return 0;
-  }t
+  }
 
   getUserIdsDisplay(workgroupId) {
     const userIdsDisplay = [];
