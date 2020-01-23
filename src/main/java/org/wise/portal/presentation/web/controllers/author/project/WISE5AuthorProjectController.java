@@ -82,7 +82,6 @@ import org.wise.portal.domain.project.impl.ProjectType;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
-import org.wise.portal.presentation.web.exception.NotAuthorizedException;
 import org.wise.portal.presentation.web.response.ErrorResponse;
 import org.wise.portal.presentation.web.response.SimpleResponse;
 import org.wise.portal.presentation.web.response.SuccessResponse;
@@ -91,6 +90,7 @@ import org.wise.portal.service.portal.PortalService;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.session.SessionService;
+import org.wise.portal.service.user.UserService;
 import org.wise.portal.spring.data.redis.MessagePublisher;
 import org.wise.vle.utils.FileManager;
 
@@ -119,6 +119,9 @@ public class WISE5AuthorProjectController {
 
   @Autowired
   ServletContext servletContext;
+
+  @Autowired
+  protected UserService userService;
 
   @Autowired
   private MessagePublisher redisPublisher;
@@ -309,73 +312,28 @@ public class WISE5AuthorProjectController {
    */
   @PostMapping("/project/save/{projectId}")
   @ResponseBody
-  protected HashMap<String, Object> saveProject(@PathVariable Long projectId,
+  protected HashMap<String, Object> saveProject(Authentication auth, @PathVariable Long projectId,
       @RequestParam("commitMessage") String commitMessage,
       @RequestParam("projectJSONString") String projectJSONString)
       throws JSONException, ObjectNotFoundException {
     SimpleResponse response = new SimpleResponse();
     Project project = projectService.getById(projectId); 
-    User user = ControllerUtil.getSignedInUser();
+    User user = userService.retrieveUserByUsername(auth.getName());
     if (user == null) {
       response = new ErrorResponse("notSignedIn");
     } else if (!projectService.canAuthorProject(project, user)) {
       response = new ErrorResponse("notAllowedToEditThisProject");
     } else {
-      if (saveProjectFile(project, projectJSONString) &&
-          saveProjectToDatabase(project, user, projectJSONString)) {
+      try {
+        projectService.saveProjectFile(project, projectJSONString);
+        projectService.updateMetadataAndLicenseIfNecessary(project, projectJSONString);
+        projectService.saveProjectToDatabase(project, user, projectJSONString);
         response = new SuccessResponse("projectSaved");
-      } else {
+      } catch (Exception e) {
         response = new ErrorResponse("errorSavingProject");
       }
     }
     return response.toMap();
-  }
-
-  private boolean saveProjectFile(Project project, String projectJSONString)
-      throws ObjectNotFoundException {
-    String curriculumBaseDir = appProperties.getProperty("curriculum_base_dir");
-    String projectModulePath = project.getModulePath();
-    String projectJSONPath = curriculumBaseDir + projectModulePath;
-    File projectFile = new File(projectJSONPath);
-    try {
-      if (!projectFile.exists()) {
-        projectFile.createNewFile();
-      }
-      Writer writer = 
-          new BufferedWriter(new OutputStreamWriter(new FileOutputStream(projectFile), "UTF-8"));
-      writer.write(projectJSONString.toString());
-      writer.close();
-    } catch (IOException e) {
-      e.printStackTrace();
-      return false;
-    }
-    return true;
-  }
-
-  private boolean saveProjectToDatabase(Project project, User user, String projectJSONString) {
-    try {
-      JSONObject projectJSONObject = new JSONObject(projectJSONString);
-      JSONObject projectMetadataJSON = projectJSONObject.getJSONObject("metadata");
-      if (projectMetadataJSON != null) {
-        ProjectMetadata oldProjectMetadata = project.getMetadata();
-        ProjectMetadata projectMetadata = new ProjectMetadataImpl(projectMetadataJSON);
-        project.setMetadata(projectMetadataJSON.toString());
-        if (!oldProjectMetadata.getTitle().equals(projectMetadata.getTitle()) ||
-            !oldProjectMetadata.getAuthors().equals(projectMetadata.getAuthors())) {
-          String projectFolderPath = FileManager.getProjectFolderPath(project);
-          projectService.writeProjectLicenseFile(projectFolderPath, project);
-        }
-        String projectTitle = projectMetadataJSON.getString("title");
-        if (projectTitle != null && !projectTitle.equals(project.getName())) {
-          project.setName(projectTitle);
-        }
-        projectService.updateProject(project, user);
-      }
-    } catch (JSONException | NotAuthorizedException e) {
-      e.printStackTrace();
-      return false;
-    }
-    return true;
   }
 
   @SuppressWarnings("unused")

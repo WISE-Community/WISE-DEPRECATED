@@ -192,7 +192,7 @@ public class ProjectServiceImpl implements ProjectService {
         project = setupImportedProject(project, originalAuthorsString);
       }
       replaceMetadataInProjectJSONFile(FileManager.getProjectFilePath(project), project.getMetadata());
-      writeProjectLicenseFile(FileManager.getProjectFolderPath(project), project);
+      writeProjectLicenseFile(project);
     } catch (JSONException | IOException e) {
       e.printStackTrace();
     }
@@ -778,7 +778,8 @@ public class ProjectServiceImpl implements ProjectService {
     return "";
   }
 
-  public void writeProjectLicenseFile(String projectFolderPath, Project project) throws JSONException {
+  public void writeProjectLicenseFile(Project project) throws JSONException {
+    String projectFolderPath = FileManager.getProjectFolderPath(project);
     ProjectMetadata metadata = project.getMetadata();
     String title = metadata.getTitle();
     JSONArray authorsArray = new JSONArray(metadata.getAuthors());
@@ -854,5 +855,75 @@ public class ProjectServiceImpl implements ProjectService {
     Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(newProjectJSONFile), "UTF-8"));
     writer.write(projectJSONObj.toString());
     writer.close();
+  }
+
+  public void saveProjectFile(Project project, String projectJSONString)
+      throws ObjectNotFoundException, IOException {
+    String curriculumBaseDir = appProperties.getProperty("curriculum_base_dir");
+    String projectModulePath = project.getModulePath();
+    String projectJSONPath = curriculumBaseDir + projectModulePath;
+    File projectFile = new File(projectJSONPath);
+    if (!projectFile.exists()) {
+      projectFile.createNewFile();
+    }
+    Writer writer = 
+        new BufferedWriter(new OutputStreamWriter(new FileOutputStream(projectFile), "UTF-8"));
+    writer.write(projectJSONString.toString());
+    writer.close();
+  }
+
+  public void saveProjectToDatabase(Project project, User user, String projectJSONString)
+      throws JSONException, NotAuthorizedException {
+    JSONObject projectJSONObject = new JSONObject(projectJSONString);
+    JSONObject projectMetadataJSON = projectJSONObject.getJSONObject("metadata");
+    if (projectMetadataJSON != null) {
+      updateProjectNameIfNecessary(project, projectMetadataJSON);
+    }
+    updateProject(project, user);
+  }
+
+  public void updateMetadataAndLicenseIfNecessary(Project project, String projectJSONString)
+      throws JSONException {
+    ProjectMetadata oldProjectMetadata = project.getMetadata();
+    ProjectMetadata newProjectMetadata =
+        new ProjectMetadataImpl(getMetadataFromProjectJSONString(projectJSONString));
+    project.setMetadata(newProjectMetadata);
+    if (isLicenseUpdateRequired(oldProjectMetadata, newProjectMetadata)) {
+      writeProjectLicenseFile(project);
+    }
+  }
+
+  private JSONObject getMetadataFromProjectJSONString(String projectJSONString) {
+    try {
+      JSONObject projectJSONObject = new JSONObject(projectJSONString);
+      return projectJSONObject.getJSONObject("metadata");
+    } catch(JSONException e) {
+      e.printStackTrace();
+      return null;
+    }
+  }
+
+  public boolean isLicenseUpdateRequired(ProjectMetadata oldProjectMetadata,
+      ProjectMetadata newProjectMetadata) {
+    return titleHasChanged(oldProjectMetadata, newProjectMetadata) ||
+        authorsHasChanged(oldProjectMetadata, newProjectMetadata);
+  }
+
+  private boolean titleHasChanged(ProjectMetadata oldProjectMetadata,
+      ProjectMetadata newProjectMetadata) {
+    return !oldProjectMetadata.getTitle().equals(newProjectMetadata.getTitle());
+  }
+
+  private boolean authorsHasChanged(ProjectMetadata oldProjectMetadata,
+      ProjectMetadata newProjectMetadata) {
+    return !oldProjectMetadata.getAuthors().equals(newProjectMetadata.getAuthors());
+  }
+
+  public void updateProjectNameIfNecessary(Project project, JSONObject projectMetadataJSON)
+      throws JSONException {
+    String projectTitle = projectMetadataJSON.getString("title");
+    if (projectTitle != null && !projectTitle.equals(project.getName())) {
+      project.setName(projectTitle);
+    }
   }
 }

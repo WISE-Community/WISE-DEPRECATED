@@ -24,6 +24,7 @@
 package org.wise.portal.service.project;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.acls.model.Permission;
 import org.springframework.transaction.annotation.Transactional;
@@ -329,8 +330,20 @@ public interface ProjectService {
 
   List<HashMap<String, Object>> getProjectSharedOwnersList(Project project);
 
-  void writeProjectLicenseFile(String projectFolderPath, Project project) throws JSONException;
+  void writeProjectLicenseFile(Project project) throws JSONException;
 
   void replaceMetadataInProjectJSONFile(String projectFilePath, ProjectMetadata metadata)
       throws IOException, JSONException;
+  
+  public void saveProjectFile(Project project, String projectJSONString)
+      throws ObjectNotFoundException, IOException;
+
+  public void saveProjectToDatabase(Project project, User user, String projectJSONString)
+      throws JSONException, NotAuthorizedException;
+
+  public void updateMetadataAndLicenseIfNecessary(Project project, String projectJSONString)
+      throws JSONException;
+
+  public void updateProjectNameIfNecessary(Project project, JSONObject projectMetadataJSON)
+      throws JSONException;
 }
