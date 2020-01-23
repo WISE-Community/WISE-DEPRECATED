@@ -40,7 +40,7 @@ export class EditPasswordComponent implements OnInit {
   passwordMatchValidator(passwordsFormGroup: FormGroup) {
     const newPassword = passwordsFormGroup.get('newPassword').value;
     const confirmNewPassword = passwordsFormGroup.get('confirmNewPassword').value;
-    if (newPassword == confirmNewPassword) {
+    if (newPassword === confirmNewPassword) {
       return null;
     } else {
       const error = { 'passwordDoesNotMatch': true };
@@ -65,7 +65,7 @@ export class EditPasswordComponent implements OnInit {
   }
 
   getControlFieldValue(fieldName) {
-    if (fieldName == 'newPassword' || fieldName == 'confirmNewPassword') {
+    if (fieldName === 'newPassword' || fieldName === 'confirmNewPassword') {
       return this.newPasswordFormGroup.get(fieldName).value;
     } else {
       return this.changePasswordFormGroup.get(fieldName).value;
@@ -77,10 +77,10 @@ export class EditPasswordComponent implements OnInit {
   }
 
   handleChangePasswordResponse(response) {
-    if (response.status == 'success') {
+    if (response.status === 'success') {
       this.resetForm();
       this.snackBar.open(this.i18n(`Password changed.`));
-    } else if (response.status == 'error' && response.messageCode == 'incorrectPassword') {
+    } else if (response.status === 'error' && response.messageCode === 'incorrectPassword') {
       const error = { 'incorrectPassword': true };
       const oldPasswordControl = this.changePasswordFormGroup.get('oldPassword');
       oldPasswordControl.setErrors(error);

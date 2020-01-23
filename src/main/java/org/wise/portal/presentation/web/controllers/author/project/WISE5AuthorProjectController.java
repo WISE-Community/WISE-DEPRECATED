@@ -58,6 +58,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -310,6 +311,7 @@ public class WISE5AuthorProjectController {
    * @param projectJSONString a valid-JSON string of the project
    * @throws ObjectNotFoundException
    */
+  @Secured({"ROLE_TEACHER"})
   @PostMapping("/project/save/{projectId}")
   @ResponseBody
   protected HashMap<String, Object> saveProject(Authentication auth, @PathVariable Long projectId,
@@ -317,11 +319,9 @@ public class WISE5AuthorProjectController {
       @RequestParam("projectJSONString") String projectJSONString)
       throws JSONException, ObjectNotFoundException {
     SimpleResponse response = new SimpleResponse();
-    Project project = projectService.getById(projectId); 
+    Project project = projectService.getById(projectId);
     User user = userService.retrieveUserByUsername(auth.getName());
-    if (user == null) {
-      response = new ErrorResponse("notSignedIn");
-    } else if (!projectService.canAuthorProject(project, user)) {
+    if (!projectService.canAuthorProject(project, user)) {
       response = new ErrorResponse("notAllowedToEditThisProject");
     } else {
       try {
@@ -383,7 +383,7 @@ public class WISE5AuthorProjectController {
     config.put("customProjectIcon", contextPath + "/project/custom/icon");
     config.put("mode", "author");
 
-    boolean canEditProject = 
+    boolean canEditProject =
         projectService.canAuthorProject(project, ControllerUtil.getSignedInUser());
     config.put("canEditProject", canEditProject);
     if (canEditProject) {
@@ -797,7 +797,7 @@ public class WISE5AuthorProjectController {
 
   @PostMapping("/project/notifyAuthorBegin/{projectId}")
   @ResponseBody
-  private HashMap<String, Object> authorProjectBegin(@PathVariable String projectId) throws Exception {
+  protected HashMap<String, Object> authorProjectBegin(@PathVariable String projectId) throws Exception {
     HashMap<String, Object> map = new HashMap<String, Object>();
     User user = ControllerUtil.getSignedInUser();
     Project project = projectService.getById(projectId);
@@ -809,7 +809,7 @@ public class WISE5AuthorProjectController {
   }
 
   @PostMapping("/project/notifyAuthorEnd/{projectId}")
-  private ModelAndView authorProjectEnd(@PathVariable String projectId) throws Exception {
+  protected ModelAndView authorProjectEnd(@PathVariable String projectId) throws Exception {
     User user = ControllerUtil.getSignedInUser();
     Project project = projectService.getById(projectId);
     if (projectService.canAuthorProject(project, user)) {

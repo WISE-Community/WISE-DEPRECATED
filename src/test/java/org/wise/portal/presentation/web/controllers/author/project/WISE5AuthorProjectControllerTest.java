@@ -9,46 +9,22 @@ import java.io.IOException;
 import java.util.HashMap;
 
 import org.easymock.EasyMock;
+import org.easymock.EasyMockRunner;
 import org.easymock.TestSubject;
 import org.json.JSONException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.powermock.api.easymock.PowerMock;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.impl.ProjectImpl;
 import org.wise.portal.presentation.web.controllers.APIControllerTest;
-import org.wise.portal.presentation.web.controllers.ControllerUtil;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({ ControllerUtil.class })
+@RunWith(EasyMockRunner.class)
 public class WISE5AuthorProjectControllerTest extends APIControllerTest {
 
   @TestSubject
   private WISE5AuthorProjectController wise5AuthorProjectController =
       new WISE5AuthorProjectController();
-  
-  @Test
-  public void saveProject_whenNotSignedIn_shouldReturnNotSignedInError() {
-    try {
-      Long projectId = 1L;
-      expect(projectService.getById(projectId)).andReturn(new ProjectImpl());
-      replay(projectService);
-      PowerMock.mockStatic(ControllerUtil.class);
-      expect(ControllerUtil.getSignedInUser()).andReturn(null);
-      PowerMock.replay(ControllerUtil.class);
-      String commitMessage = "";
-      String projectJSONString = "{}";
-      HashMap<String, Object> map = wise5AuthorProjectController.saveProject(teacherAuth, projectId,
-          commitMessage, projectJSONString);
-      assertEquals("error", map.get("status"));
-      assertEquals("notSignedIn", map.get("messageCode"));
-    } catch(Exception e) {
-      fail();
-    }
-  }
-  
+
   @Test
   public void saveProject_whenNotAllowedToEdit_shouldReturnNotAllowedToEditError() {
     try {
