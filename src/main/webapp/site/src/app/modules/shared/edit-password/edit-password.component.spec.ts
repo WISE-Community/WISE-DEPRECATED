@@ -26,12 +26,12 @@ export class MockUserService {
   changePassword(username, oldPassword, newPassword) {
     if (oldPassword === 'a') {
       return Observable.create(observer => {
-        observer.next({ message: 'success' });
+        observer.next({ status: 'success', messageCode: 'passwordChanged' });
         observer.complete();
       });
     } else {
       return Observable.create(observer => {
-        observer.next({ message: 'incorrect password' });
+        observer.next({ status: 'error', messageCode: 'incorrectPassword' });
         observer.complete();
       });
     }
@@ -127,5 +127,27 @@ describe('EditPasswordComponent', () => {
     fixture.detectChanges();
     const submitButton = getSubmitButton();
     expect(submitButton.disabled).toBe(true);
+  });
+  
+  it('should handle the change password response when the password was successfully changed', () => {
+    const resetFormSpy = spyOn(component, 'resetForm');
+    const snackBarSpy = spyOn(component.snackBar, 'open');
+    const response = {
+      status: 'success',
+      messageCode: 'passwordChanged'
+    };
+    component.handleChangePasswordResponse(response);
+    expect(resetFormSpy).toHaveBeenCalled();
+    expect(snackBarSpy).toHaveBeenCalled();
+  });
+  
+  it('should handle the change password response when the password was incorrect', () => {
+    const response = {
+      status: 'error',
+      messageCode: 'incorrectPassword'
+    };
+    component.handleChangePasswordResponse(response);
+    expect(component.changePasswordFormGroup.get('oldPassword').getError('incorrectPassword'))
+        .toBe(true);
   });
 });
