@@ -163,30 +163,13 @@ public class AuthorAPIController {
     return featuredProjectIconPaths;
   }
 
-  @PostMapping("/project/featured/icon")
+  @PostMapping("/project/icon")
   @ResponseBody
-  protected HashMap<String, String> setFeaturedProjectIcon(Authentication auth,
-      @RequestParam Long projectId, @RequestParam String projectIcon)
-      throws ObjectNotFoundException, IOException {
+  protected HashMap<String, String> setProjectIcon(Authentication auth,
+      @RequestParam Long projectId, @RequestParam String projectIcon,
+      @RequestParam boolean isCustom) throws ObjectNotFoundException, IOException {
     User user = userService.retrieveUserByUsername(auth.getName());
     Project project = projectService.getById(projectId);
-    boolean isCustom = false;
-    return setProjectIcon(user, project, projectIcon, isCustom);
-  }
-
-  @PostMapping("/project/custom/icon")
-  @ResponseBody
-  protected HashMap<String, String> setCustomProjectIcon(Authentication auth,
-      @RequestParam Long projectId, @RequestParam String projectIcon)
-      throws ObjectNotFoundException, IOException {
-    User user = userService.retrieveUserByUsername(auth.getName());
-    Project project = projectService.getById(projectId);
-    boolean isCustom = true;
-    return setProjectIcon(user, project, projectIcon, isCustom);
-  }
-
-  private HashMap<String, String> setProjectIcon(User user, Project project, String projectIcon,
-      boolean isCustom) throws IOException {
     HashMap<String, String> response = new HashMap<String, String>();
     if (projectService.canAuthorProject(project, user)) {
       String projectAssetsFolderPathString = FileManager.getProjectAssetsFolderPath(project);
@@ -250,8 +233,7 @@ public class AuthorAPIController {
     config.put("sessionLogOutURL", contextPath + "/logout");
     config.put("registerNewProjectURL", contextPath + "/author/project/new");
     config.put("wiseBaseURL", contextPath);
-    config.put("notifyProjectBeginURL", contextPath + "/author/project/begin/");
-    config.put("notifyProjectEndURL", contextPath + "/author/project/end/");
+    config.put("notifyAuthoringBeginEndURL", contextPath + "/author/project/notify");
     config.put("getLibraryProjectsURL", contextPath +
         "/author/authorproject.html?command=projectList&projectPaths=&projectTag=library&wiseVersion=5");
     config.put("teacherDataURL", contextPath + "/teacher/data");
@@ -364,9 +346,8 @@ public class AuthorAPIController {
     config.put("previewProjectURL", contextPath + "/project/" + projectId);
     config.put("cRaterRequestURL", contextPath + "/c-rater");
     config.put("importStepsURL", contextPath + "/author/project/importSteps/" + projectId);
-    config.put("featuredProjectIcons", contextPath + "/author/project/featured/icons");
-    config.put("featuredProjectIcon", contextPath + "/author/project/featured/icon");
-    config.put("customProjectIcon", contextPath + "/author/project/custom/icon");
+    config.put("featuredProjectIconsURL", contextPath + "/author/project/featured/icons");
+    config.put("projectIconURL", contextPath + "/author/project/icon");
     config.put("mode", "author");
 
     User user = userService.retrieveUserByUsername(auth.getName());
@@ -421,51 +402,43 @@ public class AuthorAPIController {
   @PostMapping("/project/asset/{projectId}")
   @ResponseBody
   protected Map<String, Object> saveProjectAsset(Authentication auth, @PathVariable Long projectId,
-      HttpServletRequest request, HttpServletResponse response) throws ObjectNotFoundException,
-      IOException {
+      HttpServletRequest request) throws ObjectNotFoundException, IOException {
     Project project = projectService.getById(projectId);
     User user = userService.retrieveUserByUsername(auth.getName());
     if (projectService.canAuthorProject(project, user)) {
       Map<String, MultipartFile> fileMap =
           ((StandardMultipartHttpServletRequest) request).getFileMap();
-      Long projectMaxTotalAssetsSize = project.getMaxTotalAssetsSize();
-      if (projectMaxTotalAssetsSize == null) {
-        projectMaxTotalAssetsSize = new Long(appProperties.getProperty("project_max_total_assets_size", "15728640"));
-      }
-      return addNewAsset(fileMap, response, getProjectAssetsDirectoryPath(project), projectMaxTotalAssetsSize, user);
+      return addAsset(project, fileMap, user);
     }
     return null;
   }
 
-  private Map<String, Object> addNewAsset(Map<String, MultipartFile> fileMap,
-      HttpServletResponse response, String projectAssetsDirPath, Long projectMaxTotalAssetsSize,
+  private Map<String, Object> addAsset(Project project, Map<String, MultipartFile> fileMap,
       User user) throws IOException {
+    String projectAssetsDirPath = getProjectAssetsDirectoryPath(project);
     File projectAssetsDir = new File(projectAssetsDirPath);
     long sizeOfAssetsDirectory = FileUtils.sizeOfDirectory(projectAssetsDir);
-    if (fileMap != null && fileMap.size() > 0) {
-      for (String key : fileMap.keySet()) {
-        MultipartFile file = fileMap.get(key);
-        if (sizeOfAssetsDirectory + file.getSize() > projectMaxTotalAssetsSize) {
-          PrintWriter writer = response.getWriter();
-          writer.write("Error: Exceeded project max asset size.\nPlease delete unused assets.\n\nContact WISE if your project needs more disk space.");
-          writer.close();
-          return null;
-        } else if (!isUserAllowedToUpload(user, file)) {
-          PrintWriter writer = response.getWriter();
-          writer.write("Error: Upload file \"" + file.getOriginalFilename() + "\" not allowed.\n");
-          writer.close();
-          return null;
-        } else {
-          File asset = new File(projectAssetsDir, file.getOriginalFilename());
-          if (!asset.exists()) {
-            asset.createNewFile();
-          }
-          byte[] fileContent = file.getBytes();
-          FileOutputStream fos = new FileOutputStream(asset);
-          fos.write(fileContent);
-          fos.flush();
-          fos.close();
+    Long projectMaxTotalAssetsSize = project.getMaxTotalAssetsSize();
+    if (projectMaxTotalAssetsSize == null) {
+      projectMaxTotalAssetsSize = new Long(appProperties.getProperty("project_max_total_assets_size", "15728640"));
+    }
+    for (String key : fileMap.keySet()) {
+      MultipartFile file = fileMap.get(key);
+      if (sizeOfAssetsDirectory + file.getSize() > projectMaxTotalAssetsSize) {
+        ErrorResponse response = new ErrorResponse("Error: Exceeded project max asset size.\nPlease delete unused assets.\n\nContact WISE if your project needs more disk space.");
+        return response.toMap();
+      } else if (!isUserAllowedToUpload(user, file)) {
+        ErrorResponse response = new ErrorResponse("Error: Upload file \"" + file.getOriginalFilename() + "\" not allowed.\n");
+        return response.toMap();
+      } else {
+        File asset = new File(projectAssetsDir, file.getOriginalFilename());
+        if (!asset.exists()) {
+          asset.createNewFile();
         }
+        FileOutputStream fos = new FileOutputStream(asset);
+        fos.write(file.getBytes());
+        fos.flush();
+        fos.close();
       }
     }
     return projectService.getDirectoryInfo(new File(projectAssetsDirPath));
@@ -511,24 +484,18 @@ public class AuthorAPIController {
     return null;
   }
 
-  @PostMapping("/project/begin/{projectId}")
+  @PostMapping("/project/notify/{projectId}")
   @ResponseBody
-  protected void authorProjectBegin(Authentication auth, @PathVariable Long projectId) throws Exception {
+  protected void notifyAuthorBeginEnd(Authentication auth, @PathVariable Long projectId,
+      @RequestParam boolean isBegin) throws Exception {
     User user = userService.retrieveUserByUsername(auth.getName());
     Project project = projectService.getById(projectId);
     if (projectService.canAuthorProject(project, user)) {
-      sessionService.addCurrentAuthor(projectId, auth.getName());
-      notifyCurrentAuthors(projectId);
-    }
-  }
-
-  @PostMapping("/project/end/{projectId}")
-  @ResponseBody
-  protected void authorProjectEnd(Authentication auth, @PathVariable Long projectId) throws Exception {
-    User user = userService.retrieveUserByUsername(auth.getName());
-    Project project = projectService.getById(projectId);
-    if (projectService.canAuthorProject(project, user)) {
-      sessionService.removeCurrentAuthor(projectId, auth.getName());
+      if (isBegin) {
+        sessionService.addCurrentAuthor(projectId, auth.getName());
+      } else {
+        sessionService.removeCurrentAuthor(projectId, auth.getName());
+      }
       notifyCurrentAuthors(projectId);
     }
   }

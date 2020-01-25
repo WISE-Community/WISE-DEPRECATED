@@ -27,12 +27,8 @@ class ProjectAssetController {
 
     this.projectId = this.$stateParams.projectId;
     this.projectAssets = ProjectAssetService.projectAssets;
-    this.projectAssetTotalSizeMax =
-        ProjectAssetService.projectAssetTotalSizeMax;
-    this.projectAssetUsagePercentage =
-        ProjectAssetService.projectAssetUsagePercentage;
-
-    // the amount of space the unused files use
+    this.projectAssetTotalSizeMax = ProjectAssetService.projectAssetTotalSizeMax;
+    this.projectAssetUsagePercentage = ProjectAssetService.projectAssetUsagePercentage;
     this.totalUnusedFilesSize = 0;
 
     /*
@@ -60,7 +56,7 @@ class ProjectAssetController {
     this.targetObject = null;
 
     if (this.$stateParams != null) {
-      let stateParams = this.$stateParams;
+      const stateParams = this.$stateParams;
       if (stateParams.isPopup != null) {
         this.isPopup = true;
       }
@@ -86,20 +82,18 @@ class ProjectAssetController {
       }
     }
 
-    // sort assets alphabetically at the beginning
     this.assetSortBy = 'aToZ';
     this.assetMessage = '';
 
     this.$scope.$watch(() => {
-          return this.projectAssets;
-        }, () => {
-          this.projectAssetUsagePercentage =
-              this.projectAssets.totalFileSize / this.projectAssetTotalSizeMax * 100;
-          this.sortAssets(this.assetSortBy);
-        }
+        return this.projectAssets;
+      }, () => {
+        this.projectAssetUsagePercentage =
+            this.projectAssets.totalFileSize / this.projectAssetTotalSizeMax * 100;
+        this.sortAssets(this.assetSortBy);
+      }
     );
 
-    // when the user changes the sort assets by field, also nperform the sort
     this.$scope.$watch(() => {
         return this.assetSortBy;
       }, () => {
@@ -107,9 +101,7 @@ class ProjectAssetController {
       }
     );
 
-    // calculate whether the assets are used in the project
-    this.ProjectAssetService.calculateAssetUsage()
-        .then((totalUnusedFilesSize) => {
+    this.ProjectAssetService.calculateAssetUsage().then((totalUnusedFilesSize) => {
       this.setTotalUnusedFilesSize(totalUnusedFilesSize);
     });
   }
@@ -118,12 +110,12 @@ class ProjectAssetController {
     if (sortBy === 'aToZ') {
       this.projectAssets.files.sort(this.sortAssetsAToZ);
     } else if (sortBy === 'zToA') {
-      let files = this.projectAssets.files;
+      const files = this.projectAssets.files;
       this.projectAssets.files = files.sort(this.sortAssetsAToZ).reverse();
     } else if (sortBy === 'smallToLarge') {
       this.projectAssets.files.sort(this.sortAssetsSmallToLarge);
     } else if (sortBy === 'largeToSmall') {
-      let files = this.projectAssets.files;
+      const files = this.projectAssets.files;
       this.projectAssets.files =
           files.sort(this.sortAssetsSmallToLarge).reverse();
     }
@@ -203,9 +195,9 @@ class ProjectAssetController {
    */
   uploadAssetItems(files) {
     let performUploadOfAllFiles = true;
-    let largeAndSmallFiles = this.separateLargeAndSmallFiles(files);
-    let largeFiles = largeAndSmallFiles.largeFiles;
-    let smallFiles = largeAndSmallFiles.smallFiles;
+    const largeAndSmallFiles = this.separateLargeAndSmallFiles(files);
+    const largeFiles = largeAndSmallFiles.largeFiles;
+    const smallFiles = largeAndSmallFiles.smallFiles;
     if (largeFiles.length > 0) {
       performUploadOfAllFiles = confirm(this.getLargeFileMessage(files, largeFiles));
     }
@@ -270,8 +262,8 @@ class ProjectAssetController {
   uploadAssets(files) {
     this.ProjectAssetService.uploadAssets(files).then((uploadAssetsResults) => {
       if (uploadAssetsResults && uploadAssetsResults.length > 0) {
-        let uploadedAssetsFilenames = [];
-        for (let uploadAssetsResult of uploadAssetsResults) {
+        const uploadedAssetsFilenames = [];
+        for (const uploadAssetsResult of uploadAssetsResults) {
           if (typeof uploadAssetsResult.data === 'string') {
             // there was an error uploading this file, so don't add
           } else {
@@ -289,8 +281,7 @@ class ProjectAssetController {
       }
       this.projectAssets = this.ProjectAssetService.projectAssets;
       // calculate whether the assets are used in the project
-      this.ProjectAssetService.calculateAssetUsage()
-          .then((totalUnusedFilesSize) => {
+      this.ProjectAssetService.calculateAssetUsage().then((totalUnusedFilesSize) => {
         this.setTotalUnusedFilesSize(totalUnusedFilesSize);
       });
       if (this.hasTarget()) {
@@ -350,17 +341,10 @@ class ProjectAssetController {
 
   /**
    * Set the total amount of space the unused files use
-   * @param totalUnusedFilesSize the total amount of space the unused files
-   * use
+   * @param totalUnusedFilesSize the total amount of space the unused files use
    */
   setTotalUnusedFilesSize(totalUnusedFilesSize) {
-    // set the total amount of space the unused files use
     this.totalUnusedFilesSize = totalUnusedFilesSize;
-
-    /*
-     * calculate the amount of space the unused files use as a
-     * percentage of the total amount of allowed space for the project
-     */
     this.unusedFilesPercentage =
         this.totalUnusedFilesSize / this.projectAssetTotalSizeMax * 100;
   }

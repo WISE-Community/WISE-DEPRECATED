@@ -137,19 +137,14 @@ class AuthoringToolProjectService extends ProjectService {
   }
 
   notifyAuthorProjectBegin(projectId) {
-    const httpParams = {
+    return this.$http({
       method: 'POST',
-      url: this.ConfigService.getConfigParam('notifyProjectBeginURL') + projectId
-    };
-    return this.$http(httpParams).then((result) => {
-
+      url: `${this.ConfigService.getConfigParam('notifyAuthoringBeginEndURL')}/${projectId}`,
+      headers:  {'Content-Type': 'application/x-www-form-urlencoded'},
+      data: $.param({ isBegin: true })
     });
   }
 
-  /**
-   * Notifies others that the specified project is no longer being authored
-   * @param projectId id of the project
-   */
   notifyAuthorProjectEnd(projectId = null) {
     return this.$q((resolve, reject) => {
       if (projectId == null) {
@@ -159,11 +154,12 @@ class AuthoringToolProjectService extends ProjectService {
           resolve();
         }
       }
-      const httpParams = {
+      this.$http({
         method: 'POST',
-        url: this.ConfigService.getConfigParam('notifyProjectEndURL') + projectId
-      };
-      this.$http(httpParams).then(() => {
+        url: `${this.ConfigService.getConfigParam('notifyAuthoringBeginEndURL')}/${projectId}`,
+        headers:  {'Content-Type': 'application/x-www-form-urlencoded'},
+        data: $.param({ isBegin: false })
+      }).then(() => {
         resolve();
       })
     });

@@ -46,7 +46,7 @@ public class AuthorAPIControllerTest extends APIControllerTest {
     expect(projectService.getById(projectId1)).andReturn(project1);
     expect(projectService.canAuthorProject(project1, teacher1)).andReturn(false);
     replay(projectService);
-    authorAPIController.authorProjectBegin(teacherAuth, projectId1);
+    authorAPIController.notifyAuthorBeginEnd(teacherAuth, projectId1, true);
     verify(userService);
     verify(projectService);
   }
@@ -66,7 +66,7 @@ public class AuthorAPIControllerTest extends APIControllerTest {
     redisPublisher.publish(isA(String.class));
     expectLastCall();
     replay(redisPublisher);
-    authorAPIController.authorProjectBegin(teacherAuth, projectId1);
+    authorAPIController.notifyAuthorBeginEnd(teacherAuth, projectId1, true);
     verify(userService);
     verify(projectService);
     verify(sessionService);
@@ -80,7 +80,7 @@ public class AuthorAPIControllerTest extends APIControllerTest {
     expect(projectService.getById(projectId1)).andReturn(project1);
     expect(projectService.canAuthorProject(project1, teacher1)).andReturn(false);
     replay(projectService);
-    authorAPIController.authorProjectBegin(teacherAuth, projectId1);
+    authorAPIController.notifyAuthorBeginEnd(teacherAuth, projectId1, false);
     verify(userService);
     verify(projectService);
   }
@@ -100,7 +100,7 @@ public class AuthorAPIControllerTest extends APIControllerTest {
     redisPublisher.publish(isA(String.class));
     expectLastCall();
     replay(redisPublisher);
-    authorAPIController.authorProjectEnd(teacherAuth, projectId1);
+    authorAPIController.notifyAuthorBeginEnd(teacherAuth, projectId1, false);
     verify(userService);
     verify(projectService);
     verify(sessionService);
