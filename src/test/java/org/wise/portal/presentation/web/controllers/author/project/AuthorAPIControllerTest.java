@@ -5,18 +5,23 @@ import static org.easymock.EasyMock.expectLastCall;
 import static org.easymock.EasyMock.isA;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
+import static org.easymock.EasyMock.anyObject;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.io.IOException;
 import java.util.HashSet;
 
 import org.easymock.EasyMockRunner;
 import org.easymock.Mock;
 import org.easymock.TestSubject;
+import org.json.JSONException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.impl.ProjectImpl;
 import org.wise.portal.presentation.web.controllers.APIControllerTest;
+import org.wise.portal.presentation.web.response.SimpleResponse;
 import org.wise.portal.service.session.SessionService;
 import org.wise.portal.spring.data.redis.MessagePublisher;
 
@@ -139,5 +144,86 @@ public class AuthorAPIControllerTest extends APIControllerTest {
     verify(userService);
     verify(projectService);
   }
-}
 
+  @Test
+  public void saveProject_whenNotAllowedToEdit_shouldReturnNotAllowedToEditError()
+      throws Exception  {
+    expect(userService.retrieveUserByUsername(TEACHER_USERNAME)).andReturn(teacher1);
+    replay(userService);
+    Project project = new ProjectImpl();
+    Long projectId = 1L;
+    expect(projectService.getById(projectId)).andReturn(project);
+    expect(projectService.canAuthorProject(project, teacher1)).andReturn(false);
+    replay(projectService);
+    String projectJSONString = "{}";
+    SimpleResponse response = authorAPIController.saveProject(teacherAuth, projectId,
+        projectJSONString);
+    assertEquals("error", response.getStatus());
+    assertEquals("notAllowedToEditThisProject", response.getMessageCode());
+  }
+
+  @Test
+  public void saveProject_whenErrorSavingProjectFile_shouldReturnErrorSavingProject()
+      throws Exception {
+    expect(userService.retrieveUserByUsername(TEACHER_USERNAME)).andReturn(teacher1);
+    replay(userService);
+    Project project = new ProjectImpl();
+    Long projectId = 1L;
+    expect(projectService.getById(projectId)).andReturn(project);
+    expect(projectService.canAuthorProject(project, teacher1)).andReturn(true);
+    String projectJSONString = "{}";
+    projectService.saveProjectContentToDisk(projectJSONString, project);
+    expectLastCall().andThrow(new IOException());
+    replay(projectService);
+    SimpleResponse response = authorAPIController.saveProject(teacherAuth, projectId,
+        projectJSONString);
+    assertEquals("error", response.getStatus());
+    assertEquals("errorSavingProject", response.getMessageCode());
+  }
+
+  @Test
+  public void saveProject_whenErrorSavingProjectToDatabase_shouldReturnErrorSavingProject()
+      throws Exception {
+    expect(userService.retrieveUserByUsername(TEACHER_USERNAME)).andReturn(teacher1);
+    replay(userService);
+    Project project = new ProjectImpl();
+    Long projectId = 1L;
+    expect(projectService.getById(projectId)).andReturn(project);
+    expect(projectService.canAuthorProject(project, teacher1)).andReturn(true);
+    String projectJSONString = "{\"metadata\":{\"title\":\"New Title\"}}";
+    projectService.saveProjectContentToDisk(projectJSONString, project);
+    expectLastCall();
+    projectService.updateMetadataAndLicenseIfNecessary(anyObject(), anyObject());
+    expectLastCall();
+    projectService.saveProjectToDatabase(project, teacher1, projectJSONString);
+    expectLastCall().andThrow(new JSONException(""));
+    replay(projectService);
+    SimpleResponse response = authorAPIController.saveProject(teacherAuth, projectId,
+        projectJSONString);
+    assertEquals("error", response.getStatus());
+    assertEquals("errorSavingProject", response.getMessageCode());
+  }
+
+  @Test
+  public void saveProject_NoErrors_shouldReturnProjectSaved() throws Exception {
+    expect(userService.retrieveUserByUsername(TEACHER_USERNAME)).andReturn(teacher1);
+    replay(userService);
+    Project project = new ProjectImpl();
+    Long projectId = 1L;
+    project.setMetadata("{\"title\":\"Old Title\"}");
+    expect(projectService.getById(projectId)).andReturn(project);
+    expect(projectService.canAuthorProject(project, teacher1)).andReturn(true);
+    String projectJSONString = "{\"metadata\":{\"title\":\"New Title\"}}";
+    projectService.saveProjectContentToDisk(projectJSONString, project);
+    expectLastCall();
+    projectService.updateMetadataAndLicenseIfNecessary(anyObject(), anyObject());
+    expectLastCall();
+    projectService.saveProjectToDatabase(project, teacher1, projectJSONString);
+    expectLastCall();
+    replay(projectService);
+    SimpleResponse response = authorAPIController.saveProject(teacherAuth, projectId,
+        projectJSONString);
+    assertEquals("success", response.getStatus());
+    assertEquals("projectSaved", response.getMessageCode());
+  }
+}

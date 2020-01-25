@@ -142,8 +142,7 @@ class AuthoringToolProjectService extends ProjectService {
       url: this.ConfigService.getConfigParam('notifyProjectBeginURL') + projectId
     };
     return this.$http(httpParams).then((result) => {
-      const otherAuthors = result.data;
-      return otherAuthors;
+
     });
   }
 
@@ -206,17 +205,10 @@ class AuthoringToolProjectService extends ProjectService {
 
   /**
    * Registers a new project having the projectJSON content with the server.
-   * Returns a new project Id if the project is successfully registered.
-   * Returns null if Config.registerNewProjectURL is undefined.
-   * Throws an error if projectJSONString is invalid JSON string
+   * Returns a new project id if the project is successfully registered.
+   * @param projectJSONString a valid JSON string
    */
   registerNewProject(projectName, projectJSONString) {
-    try {
-      JSON.parse(projectJSONString);
-    } catch (e) {
-      throw new Error("Invalid projectJSONString.");
-    }
-
     const httpParams = {
       method: 'POST',
       url: this.ConfigService.getConfigParam('registerNewProjectURL'),
@@ -228,7 +220,7 @@ class AuthoringToolProjectService extends ProjectService {
     };
 
     return this.$http(httpParams).then((result) => {
-      return result.data.projectId;
+      return result.data;
     });
   };
 

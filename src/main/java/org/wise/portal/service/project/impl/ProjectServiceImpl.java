@@ -23,6 +23,25 @@
  */
 package org.wise.portal.service.project.impl;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.io.Serializable;
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+import java.util.TreeSet;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.text.WordUtils;
@@ -49,7 +68,11 @@ import org.wise.portal.domain.project.FamilyTag;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.ProjectMetadata;
 import org.wise.portal.domain.project.Tag;
-import org.wise.portal.domain.project.impl.*;
+import org.wise.portal.domain.project.impl.PreviewProjectParameters;
+import org.wise.portal.domain.project.impl.ProjectMetadataImpl;
+import org.wise.portal.domain.project.impl.ProjectParameters;
+import org.wise.portal.domain.project.impl.ProjectPermission;
+import org.wise.portal.domain.project.impl.ProjectType;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
@@ -65,13 +88,6 @@ import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.tag.TagService;
 import org.wise.portal.service.user.UserService;
 import org.wise.vle.utils.FileManager;
-
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.*;
 
 /**
  * @author Patrick Lawler
@@ -179,9 +195,8 @@ public class ProjectServiceImpl implements ProjectService {
   public Project createProject(ProjectParameters projectParameters) throws ObjectNotFoundException {
     Project project = projectDao.createEmptyProject();
     User owner = projectParameters.getOwner();
-    String modulePath = projectParameters.getModulePath();
     project.setId(projectParameters.getProjectId());
-    project.setModulePath(modulePath);
+    project.setModulePath(projectParameters.getModulePath());
     project.setName(projectParameters.getProjectname());
     project.setOwner(owner);
     project.setProjectType(projectParameters.getProjectType());
@@ -195,9 +210,7 @@ public class ProjectServiceImpl implements ProjectService {
       if (isImport != null && isImport) {
         project = setupImportedProject(project, originalAuthorsString);
       }
-      replaceMetadataInProjectJSONFile(FileManager.getProjectFilePath(project), project.getMetadata());
-      writeProjectLicenseFile(FileManager.getProjectFolderPath(project), project);
-    } catch (JSONException | IOException e) {
+    } catch (JSONException e) {
       e.printStackTrace();
     }
     Long newProjectId = (Long) project.getId();
@@ -782,7 +795,8 @@ public class ProjectServiceImpl implements ProjectService {
     return "";
   }
 
-  public void writeProjectLicenseFile(String projectFolderPath, Project project) throws JSONException {
+  public void writeProjectLicenseFile(Project project) throws JSONException {
+    String projectFolderPath = FileManager.getProjectFolderPath(project);
     ProjectMetadata metadata = project.getMetadata();
     String title = metadata.getTitle();
     JSONArray authorsArray = new JSONArray(metadata.getAuthors());
@@ -895,5 +909,60 @@ public class ProjectServiceImpl implements ProjectService {
       return directory.listFiles();
     }
     return new File[0];
+  }
+
+  public void saveProjectToDatabase(Project project, User user, String projectJSONString)
+      throws JSONException, NotAuthorizedException {
+    JSONObject projectJSONObject = new JSONObject(projectJSONString);
+    JSONObject projectMetadataJSON = projectJSONObject.getJSONObject("metadata");
+    if (projectMetadataJSON != null) {
+      updateProjectNameIfNecessary(project, projectMetadataJSON);
+    }
+    updateProject(project, user);
+  }
+
+  public void updateMetadataAndLicenseIfNecessary(Project project, String projectJSONString)
+      throws JSONException {
+    ProjectMetadata oldProjectMetadata = project.getMetadata();
+    ProjectMetadata newProjectMetadata =
+        new ProjectMetadataImpl(getMetadataFromProjectJSONString(projectJSONString));
+    project.setMetadata(newProjectMetadata);
+    if (isLicenseUpdateRequired(oldProjectMetadata, newProjectMetadata)) {
+      writeProjectLicenseFile(project);
+    }
+  }
+
+  private JSONObject getMetadataFromProjectJSONString(String projectJSONString) {
+    try {
+      JSONObject projectJSONObject = new JSONObject(projectJSONString);
+      return projectJSONObject.getJSONObject("metadata");
+    } catch(JSONException e) {
+      e.printStackTrace();
+      return null;
+    }
+  }
+
+  public boolean isLicenseUpdateRequired(ProjectMetadata oldProjectMetadata,
+      ProjectMetadata newProjectMetadata) {
+    return titleHasChanged(oldProjectMetadata, newProjectMetadata) ||
+        authorsHasChanged(oldProjectMetadata, newProjectMetadata);
+  }
+
+  private boolean titleHasChanged(ProjectMetadata oldProjectMetadata,
+      ProjectMetadata newProjectMetadata) {
+    return !oldProjectMetadata.getTitle().equals(newProjectMetadata.getTitle());
+  }
+
+  private boolean authorsHasChanged(ProjectMetadata oldProjectMetadata,
+      ProjectMetadata newProjectMetadata) {
+    return !oldProjectMetadata.getAuthors().equals(newProjectMetadata.getAuthors());
+  }
+
+  public void updateProjectNameIfNecessary(Project project, JSONObject projectMetadataJSON)
+      throws JSONException {
+    String projectTitle = projectMetadataJSON.getString("title");
+    if (projectTitle != null && !projectTitle.equals(project.getName())) {
+      project.setName(projectTitle);
+    }
   }
 }

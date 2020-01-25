@@ -55,7 +55,6 @@ import org.springframework.http.MediaType;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -75,7 +74,9 @@ import org.wise.portal.domain.project.impl.ProjectType;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
-import org.wise.portal.presentation.web.exception.NotAuthorizedException;
+import org.wise.portal.presentation.web.response.ErrorResponse;
+import org.wise.portal.presentation.web.response.SimpleResponse;
+import org.wise.portal.presentation.web.response.SuccessResponse;
 import org.wise.portal.service.portal.PortalService;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.run.RunService;
@@ -127,10 +128,9 @@ public class AuthorAPIController {
   }
 
   @PostMapping("/project/new")
-  protected String createProject(Authentication auth,
-      @RequestParam("projectName") String projectName,
-      @RequestParam("projectJSONString") String projectJSONString)
-      throws ObjectNotFoundException, IOException {
+  @ResponseBody
+  protected String createProject(Authentication auth, @RequestParam String projectName,
+      @RequestParam String projectJSONString) throws ObjectNotFoundException, IOException, JSONException {
     User user = userService.retrieveUserByUsername(auth.getName());
     long newProjectId = projectService.getNextAvailableProjectId();
 
@@ -148,6 +148,7 @@ public class AuthorAPIController {
     Project project = projectService.createProject(pParams);
     createNewProjectDirectory(String.valueOf(newProjectId));
     projectService.saveProjectContentToDisk(projectJSONString, project);
+    projectService.writeProjectLicenseFile(project);
     return String.valueOf(newProjectId);
   }
 
@@ -165,7 +166,7 @@ public class AuthorAPIController {
   @PostMapping("/project/featured/icon")
   @ResponseBody
   protected HashMap<String, String> setFeaturedProjectIcon(Authentication auth,
-      @RequestParam("projectId") Long projectId, @RequestParam("projectIcon") String projectIcon)
+      @RequestParam Long projectId, @RequestParam String projectIcon)
       throws ObjectNotFoundException, IOException {
     User user = userService.retrieveUserByUsername(auth.getName());
     Project project = projectService.getById(projectId);
@@ -176,7 +177,7 @@ public class AuthorAPIController {
   @PostMapping("/project/custom/icon")
   @ResponseBody
   protected HashMap<String, String> setCustomProjectIcon(Authentication auth,
-      @RequestParam("projectId") Long projectId, @RequestParam("projectIcon") String projectIcon)
+      @RequestParam Long projectId, @RequestParam String projectIcon)
       throws ObjectNotFoundException, IOException {
     User user = userService.retrieveUserByUsername(auth.getName());
     Project project = projectService.getById(projectId);
@@ -216,35 +217,27 @@ public class AuthorAPIController {
 
   @PostMapping("/project/save/{projectId}")
   @ResponseBody
-  protected void saveProject(Authentication auth, @PathVariable Long projectId,
-      @RequestParam String projectJSONString) throws JSONException, ObjectNotFoundException,
-      IOException, NotAuthorizedException {
+  protected SimpleResponse saveProject(Authentication auth, @PathVariable Long projectId,
+      @RequestParam String projectJSONString) throws JSONException, ObjectNotFoundException {
     Project project = projectService.getById(projectId);
     User user = userService.retrieveUserByUsername(auth.getName());
     if (projectService.canAuthorProject(project, user)) {
-      projectService.saveProjectContentToDisk(projectJSONString, project);
-      JSONObject projectJSONObject = new JSONObject(projectJSONString);
-      JSONObject projectMetadataJSON = projectJSONObject.getJSONObject("metadata");
-      if (projectMetadataJSON != null) {
-        ProjectMetadata oldProjectMetadata = project.getMetadata();
-        ProjectMetadata projectMetadata = new ProjectMetadataImpl(projectMetadataJSON);
-        project.setMetadata(projectMetadataJSON.toString());
-        if (!oldProjectMetadata.getTitle().equals(projectMetadata.getTitle()) ||
-            !oldProjectMetadata.getAuthors().equals(projectMetadata.getAuthors())) {
-          projectService.writeProjectLicenseFile(FileManager.getProjectFolderPath(project), project);
-        }
-        String projectTitle = projectMetadataJSON.getString("title");
-        if (projectTitle != null && !projectTitle.equals(project.getName())) {
-          project.setName(projectTitle);
-        }
-        projectService.updateProject(project, user);
+      try {
+        projectService.saveProjectContentToDisk(projectJSONString, project);
+        projectService.updateMetadataAndLicenseIfNecessary(project, projectJSONString);
+        projectService.saveProjectToDatabase(project, user, projectJSONString);
+        return new SuccessResponse("projectSaved");
+      } catch (Exception e) {
+        return new ErrorResponse("errorSavingProject");
       }
+    } else {
+      return new ErrorResponse("notAllowedToEditThisProject");
     }
   }
 
   @GetMapping("/config")
   @ResponseBody
-  HashMap<String, Object> getDefaultAuthorProjectConfig(Authentication auth,
+  protected HashMap<String, Object> getDefaultAuthorProjectConfig(Authentication auth,
       HttpServletRequest request) throws ObjectNotFoundException {
     HashMap<String, Object> config = new HashMap<String, Object>();
     User user = userService.retrieveUserByUsername(auth.getName());
@@ -262,6 +255,7 @@ public class AuthorAPIController {
     config.put("getLibraryProjectsURL", contextPath +
         "/author/authorproject.html?command=projectList&projectPaths=&projectTag=library&wiseVersion=5");
     config.put("teacherDataURL", contextPath + "/teacher/data");
+    config.put("sessionTimeout", request.getSession().getMaxInactiveInterval());
 
     Portal portal = portalService.getById(new Integer(1));
     String projectMetadataSettings = portal.getProjectMetadataSettings();
@@ -332,17 +326,13 @@ public class AuthorAPIController {
     config.put("sharedProjects", wise5SharedProjects);
 
     Locale locale = request.getLocale();
-    if (user != null) {
-      String userLanguage = user.getUserDetails().getLanguage();
-      if (userLanguage != null) {
-        if (userLanguage.contains("_")) {
-          String language = userLanguage.substring(0, userLanguage.indexOf("_"));
-          String country = userLanguage.substring(userLanguage.indexOf("_") + 1);
-          locale = new Locale(language, country);
-        } else {
-          locale = new Locale(userLanguage);
-        }
-      }
+    String userLanguage = user.getUserDetails().getLanguage();
+    if (userLanguage.contains("_")) {
+      String language = userLanguage.substring(0, userLanguage.indexOf("_"));
+      String country = userLanguage.substring(userLanguage.indexOf("_") + 1);
+      locale = new Locale(language, country);
+    } else {
+      locale = new Locale(userLanguage);
     }
     config.put("locale", locale);
     config.put("webSocketURL", ControllerUtil.getWebSocketURL(request, contextPath));
@@ -351,7 +341,7 @@ public class AuthorAPIController {
 
   @GetMapping("/config/{projectId}")
   @ResponseBody
-  HashMap<String, Object> getAuthorProjectConfig(Authentication auth, HttpServletRequest request,
+  protected HashMap<String, Object> getAuthorProjectConfig(Authentication auth, HttpServletRequest request,
       @PathVariable Long projectId) throws IOException, ObjectNotFoundException {
     Project project = projectService.getById(projectId);
     HashMap<String, Object> config = getDefaultAuthorProjectConfig(auth, request);
@@ -373,14 +363,19 @@ public class AuthorAPIController {
     config.put("projectBaseURL", projectBaseURL);
     config.put("previewProjectURL", contextPath + "/project/" + projectId);
     config.put("cRaterRequestURL", contextPath + "/c-rater");
-    config.put("importStepsURL", contextPath + "/project/importSteps/" + projectId);
+    config.put("importStepsURL", contextPath + "/author/project/importSteps/" + projectId);
     config.put("featuredProjectIcons", contextPath + "/author/project/featured/icons");
     config.put("featuredProjectIcon", contextPath + "/author/project/featured/icon");
     config.put("customProjectIcon", contextPath + "/author/project/custom/icon");
     config.put("mode", "author");
 
     User user = userService.retrieveUserByUsername(auth.getName());
-    config.put("saveProjectURL", contextPath + "/author/project/save/" + projectId);
+    boolean canEditProject = projectService.canAuthorProject(project, user);
+    config.put("canEditProject", canEditProject);
+    if (canEditProject) {
+      config.put("saveProjectURL", contextPath + "/author/project/save/" + projectId);
+      config.put("commitProjectURL", contextPath + "/project/commit/" + projectId);
+    }
     List<Run> runsOwnedByUser = runService.getRunListByOwner(user);
     Long runId = getRunId(projectId, runsOwnedByUser);
     if (runId != null) {
@@ -518,7 +513,7 @@ public class AuthorAPIController {
 
   @PostMapping("/project/begin/{projectId}")
   @ResponseBody
-  void authorProjectBegin(Authentication auth, @PathVariable Long projectId) throws Exception {
+  protected void authorProjectBegin(Authentication auth, @PathVariable Long projectId) throws Exception {
     User user = userService.retrieveUserByUsername(auth.getName());
     Project project = projectService.getById(projectId);
     if (projectService.canAuthorProject(project, user)) {
@@ -529,7 +524,7 @@ public class AuthorAPIController {
 
   @PostMapping("/project/end/{projectId}")
   @ResponseBody
-  void authorProjectEnd(Authentication auth, @PathVariable Long projectId) throws Exception {
+  protected void authorProjectEnd(Authentication auth, @PathVariable Long projectId) throws Exception {
     User user = userService.retrieveUserByUsername(auth.getName());
     Project project = projectService.getById(projectId);
     if (projectService.canAuthorProject(project, user)) {
@@ -554,11 +549,8 @@ public class AuthorAPIController {
    */
   @PostMapping("/project/importSteps/{projectId}")
   @ResponseBody
-  private String importSteps(
-      Authentication auth,
-      @RequestParam("steps") String steps,
-      @RequestParam("toProjectId") Integer toProjectId,
-      @RequestParam("fromProjectId") Integer fromProjectId) throws Exception {
+  protected String importSteps(Authentication auth, @RequestParam String steps,
+      @RequestParam Integer toProjectId, @RequestParam Integer fromProjectId) throws Exception {
     User user = userService.retrieveUserByUsername(auth.getName());
     Project project = projectService.getById(toProjectId);
     if (!projectService.canAuthorProject(project, user)) {

@@ -68,6 +68,15 @@ class MilestonesController {
         this.updateMilestoneCompletion(projectAchievement.id);
       }
     });
+
+    this.$scope.$on('annotationReceived', (event, args) => {
+      for (const projectAchievement of this.projectAchievements) {
+        if (projectAchievement.nodeId === args.annotation.nodeId && 
+            projectAchievement.componentId === args.annotation.componentId) {
+          this.updateMilestoneCompletion(projectAchievement.id);
+        }
+      }
+    });
   }
 
   /**
@@ -362,6 +371,8 @@ class MilestonesController {
         this.setReportAvailable(projectAchievement, true);
         projectAchievement.generatedReport = report.content ? report.content : null;
         projectAchievement.recommendations = report.recommendations ? report.recommendations : null;
+        projectAchievement.nodeId = report.nodeId;
+        projectAchievement.componentId = report.componentId;
       } else {
         this.setReportAvailable(projectAchievement, false);
       }
@@ -380,9 +391,11 @@ class MilestonesController {
   generateReport(projectAchievement) {
     const referencedComponents = this.getSatisfyCriteriaReferencedComponents(projectAchievement);
     const aggregateAutoScores = {};
+    let nodeId = null;
+    let componentId = null;
     for (const referencedComponent of Object.values(referencedComponents)) {
-      const nodeId = referencedComponent.nodeId;
-      const componentId = referencedComponent.componentId;
+      nodeId = referencedComponent.nodeId;
+      componentId = referencedComponent.componentId;
       aggregateAutoScores[componentId] = this.calculateAggregateAutoScores(nodeId, componentId, this.periodId);
     }
     const template = this.chooseTemplate(projectAchievement.report.templates, aggregateAutoScores);
@@ -410,7 +423,9 @@ class MilestonesController {
     const recommendations = template.recommendations ? template.recommendations : '';
     return {
       content: content,
-      recommendations: recommendations
+      recommendations: recommendations,
+      nodeId: nodeId,
+      componentId: componentId
     };
   }
 
@@ -466,12 +481,37 @@ class MilestonesController {
   calculateAggregateAutoScores(nodeId, componentId, periodId) {
     const aggregate = {};
     const scoreAnnotations = this.AnnotationService.getAllLatestScoreAnnotations(nodeId, componentId, periodId);
-    for (let scoreAnnotation of scoreAnnotations) {
+    for (const scoreAnnotation of scoreAnnotations) {
       if (scoreAnnotation.type === 'autoScore') {
         this.addDataToAggregate(aggregate, scoreAnnotation);
+      } else {
+        const autoScoreAnnotation = this.AnnotationService.getLatestScoreAnnotation(
+            nodeId, componentId, scoreAnnotation.toWorkgroupId, 'autoScore');
+        if (autoScoreAnnotation) {
+          const mergedAnnotation = this.mergeAutoScoreAndTeacherScore(autoScoreAnnotation, scoreAnnotation);
+          this.addDataToAggregate(aggregate, mergedAnnotation);
+        }
       }
     }
     return aggregate;
+  }
+
+  mergeAutoScoreAndTeacherScore(autoScoreAnnotation, teacherScoreAnnotation) {
+    if (autoScoreAnnotation.data.scores) {
+      for (const subScore of autoScoreAnnotation.data.scores) {
+        const teacherScore = Math.round(teacherScoreAnnotation.data.value);
+        if (subScore.id === 'ki') {
+          if (teacherScore > 5) {
+            subScore.score = 5;
+          } else if (teacherScore < 1) {
+            subScore.score = 1;
+          } else {
+            subScore.score = teacherScore;
+          }
+        }
+      }
+    }
+    return autoScoreAnnotation;
   }
 
   addDataToAggregate(aggregate, annotation) {

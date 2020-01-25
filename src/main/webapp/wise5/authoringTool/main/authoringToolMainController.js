@@ -39,7 +39,7 @@ class AuthoringToolMainController {
     }
 
     this.$rootScope.$on('logOut', () => {
-      this.saveEvent('logOut', 'Navigation', null, null);
+      this.saveEvent('logOut', 'Navigation', {}, null);
     });
   }
 
@@ -50,14 +50,14 @@ class AuthoringToolMainController {
    * if it is associated with a run. If none were found, return null.
    */
   getProjectByProjectId(projectId) {
-    for (let project of this.projects) {
-      if (project != null && project.id == projectId) {
+    for (const project of this.projects) {
+      if (project.id == projectId) {
         return project;
       }
     }
 
-    for (let sharedProject of this.sharedProjects) {
-      if (sharedProject != null && sharedProject.id == projectId) {
+    for (const sharedProject of this.sharedProjects) {
+      if (sharedProject.id == projectId) {
         return sharedProject;
       }
     }
@@ -70,10 +70,10 @@ class AuthoringToolMainController {
    */
   copyProject(projectId) {
     const project = this.getProjectByProjectId(projectId);
-    let projectInfo = projectId + ' ' + project.name;
+    let projectInfo = `${projectId} ${project.name}`;
     const projectRunId = project.runId;
     if (projectRunId != null) {
-      projectInfo += ' (Run ID: ' + projectRunId + ')';
+      projectInfo += ` (Run ID: ${projectRunId})`;
     }
 
     const confirmCopyMessage =
@@ -82,7 +82,7 @@ class AuthoringToolMainController {
       this.ProjectService.copyProject(projectId).then((project) => {
         const projectId = project.id;
         this.showCopyingProjectMessage();
-        this.saveEvent('projectCopied', 'Authoring', null, projectId);
+        this.saveEvent('projectCopied', 'Authoring', {}, projectId);
 
         // refresh the project list and highlight the newly copied project
         this.ConfigService.retrieveConfig(`/author/config`).then(() => {
@@ -126,8 +126,6 @@ class AuthoringToolMainController {
   createNewProjectButtonClicked() {
     this.project = this.ProjectService.getNewProjectTemplate();
     this.showCreateProjectView = true;
-
-    // focus on the newProjectTitle input element
     this.$timeout(() => {
       let createGroupTitleInput = document.getElementById('newProjectTitle');
       if (createGroupTitleInput != null) {
@@ -136,12 +134,9 @@ class AuthoringToolMainController {
     });
   }
 
-  /**
-   * Create a new project and open it
-   */
   registerNewProject() {
     const projectName = this.project.metadata.title;
-    if (projectName == null || projectTitle == '') {
+    if (projectName == null || projectName === '') {
       alert(this.$translate('pleaseEnterAProjectTitleForYourNewProject'));
     } else {
       /*
@@ -158,7 +153,7 @@ class AuthoringToolMainController {
         this.ProjectService.registerNewProject(projectName, projectJSONString)
             .then((projectId) => {
               this.cancelErrorCreatingProjectTimeout();
-              this.saveEvent('projectCreated', 'Authoring', null, projectId);
+              this.saveEvent('projectCreated', 'Authoring', {}, projectId);
               this.$state.go('root.project', {projectId: projectId});
             }).catch(() => {
               this.turnOffInProcessOfCreatingProject();
@@ -258,7 +253,7 @@ class AuthoringToolMainController {
    * Send the user to the teacher home page
    */
   goHome() {
-    this.saveEvent('goToTeacherHome', 'Navigation', null, null);
+    this.saveEvent('goToTeacherHome', 'Navigation', {}, null);
     window.location = this.ConfigService.getWISEBaseURL() + '/teacher';
   }
 
@@ -268,14 +263,11 @@ class AuthoringToolMainController {
    * @param category the category of the event
    * example 'Navigation' or 'Authoring'
    */
-  saveEvent(eventName, category, data, projectId) {
-    let context = 'AuthoringTool';
-    let nodeId = null;
-    let componentId = null;
-    let componentType = null;
-    if (data == null) {
-      data = {};
-    }
+  saveEvent(eventName, category, data = {}, projectId) {
+    const context = 'AuthoringTool';
+    const nodeId = null;
+    const componentId = null;
+    const componentType = null;
     this.TeacherDataService.saveEvent(context, nodeId, componentId,
         componentType, category, eventName, data, projectId);
   }

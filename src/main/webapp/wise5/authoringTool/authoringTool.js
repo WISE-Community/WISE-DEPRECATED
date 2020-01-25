@@ -5,7 +5,7 @@ import 'jquery';
 import angular from 'angular';
 import angularDragula from 'angular-dragula';
 import 'ng-file-upload';
-import 'highcharts-ng';
+import '../lib/highcharts/highcharts-ng';
 import 'angular-ui-router';
 import 'angular-material';
 import 'angular-moment';

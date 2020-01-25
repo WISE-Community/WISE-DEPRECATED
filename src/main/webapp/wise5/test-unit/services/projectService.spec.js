@@ -111,24 +111,10 @@ describe('ProjectService Unit Test', () => {
       $httpBackend.verifyNoOutstandingExpectation(false); // <-- no unnecessary $digest
     });
 
-    it('should not save project when Config.saveProjectURL is undefined', () => {
-      spyOn(ConfigService, "getProjectId").and.returnValue(projectIdDefault);
-      spyOn(ConfigService, "getConfigParam").and.returnValue(null);
+    it('should not save project when the user does not have permission to edit the project', () => {
       ProjectService.setProject(scootersProjectJSON);
-      const newProjectIdActualPromise = ProjectService.saveProject();
-      expect(ConfigService.getConfigParam).toHaveBeenCalledWith("saveProjectURL");
-      expect(ConfigService.getProjectId).toHaveBeenCalled();
-      expect(newProjectIdActualPromise).toBeNull();
-    });
-
-    it('should not save project when Config.projectId is undefined', () => {
-      spyOn(ConfigService, "getProjectId").and.returnValue(null);
-      spyOn(ConfigService, "getConfigParam").and.returnValue(saveProjectURL);
-      ProjectService.setProject(scootersProjectJSON);
-      const newProjectIdActualPromise = ProjectService.saveProject();
-      expect(ConfigService.getConfigParam).toHaveBeenCalledWith("saveProjectURL");
-      expect(ConfigService.getProjectId).toHaveBeenCalled();
-      expect(newProjectIdActualPromise).toBeNull();
+      spyOn(ConfigService, 'getConfigParam').withArgs('canEditProject').and.returnValue(false);
+      expect(ProjectService.saveProject()).toEqual(null);
     });
 
     // MARK: ThemePath

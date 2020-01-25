@@ -35,7 +35,7 @@ import '../components/draw/drawComponentModule';
 import '../components/embedded/embeddedComponentModule';
 import '../components/graph/graphComponentModule';
 import Highcharts from '../lib/highcharts@4.2.1';
-import 'highcharts-ng';
+import '../lib/highcharts/highcharts-ng';
 import '../components/html/htmlComponentModule';
 import HttpInterceptor from '../services/httpInterceptor';
 import '../components/label/labelComponentModule';
@@ -43,8 +43,6 @@ import '../components/match/matchComponentModule';
 import ManageStudentsController from './manageStudents/manageStudentsController';
 import MilestonesController from './milestones/milestonesController';
 import '../components/multipleChoice/multipleChoiceComponentModule';
-import NodeGradingController from './nodeGrading/nodeGradingController';
-import NodeProgressController from './nodeProgress/nodeProgressController';
 import NodeService from '../services/nodeService';
 import '../themes/default/notebook/notebookComponents';
 import NotebookGradingController from './notebook/notebookGradingController';
@@ -133,8 +131,6 @@ const classroomMonitorModule = angular.module('classroomMonitor', [
     .controller('DataExportController', DataExportController)
     .controller('ManageStudentsController', ManageStudentsController)
     .controller('MilestonesController', MilestonesController)
-    .controller('NodeGradingController', NodeGradingController)
-    .controller('NodeProgressController', NodeProgressController)
     .controller('NotebookGradingController', NotebookGradingController)
     .controller('StudentGradingController', StudentGradingController)
     .controller('StudentProgressController', StudentProgressController)
@@ -226,13 +222,8 @@ const classroomMonitorModule = angular.module('classroomMonitor', [
                 })
                 .state('root.project', {
                     url: '/project/:nodeId?periodId&workgroupId',
-                    views: {
-                        'nodeView': {
-                            templateUrl: 'wise5/classroomMonitor/nodeGrading/nodeGrading.html',
-                            controller: 'NodeGradingController',
-                            controllerAs: 'nodeGradingController'
-                        }
-                    }
+                    component: 'nodeProgressView',
+                    params: {nodeId: null}
                 })
                 .state('root.manageStudents', {
                     url: '/manageStudents',

@@ -51,24 +51,19 @@ describe('AuthoringToolProjectService Unit Test', () => {
     it('should register new project', () => {
       spyOn(ConfigService, "getConfigParam").and.returnValue(registerNewProjectURL);
       const newProjectIdExpected = projectIdDefault;
-      $httpBackend.when('POST', registerNewProjectURL).respond(newProjectIdExpected);
+      $httpBackend.when('GET', /^wise5\/.*/).respond(200, '');
+      $httpBackend.when('GET', /author\/.*/).respond(200, '');
+      $httpBackend.when('POST', registerNewProjectURL).respond({data: newProjectIdExpected});
       $httpBackend.when('GET', i18nURL_common_en).respond(sampleI18N_common_en);
       $httpBackend.when('GET', i18nURL_vle_en).respond(sampleI18N_vle_en);
-      const newProjectActualPromise = ProjectService.registerNewProject(scootersProjectName,
-            scootersProjectJSONString);
+      const newProjectIdActual = ProjectService.registerNewProject(scootersProjectName,
+          scootersProjectJSONString);
       $httpBackend.expectPOST(registerNewProjectURL);
-      expect(newProjectActualPromise.id).toEqual(newProjectIdExpected);
-    });
-
-    it('should not register new project when projectJSON is invalid JSON', () => {
-      spyOn(ConfigService, "getConfigParam").and.returnValue(registerNewProjectURL);
-      try {
-        const newProjectIdActualPromise = ProjectService.registerNewProject(invalidProjectJSONString);
-        expect(1).toEqual(2);   // This line should not get called because the above line will throw an error
-      } catch (e) {
-        expect(ConfigService.getConfigParam).toHaveBeenCalledWith("registerNewProjectURL");
-        expect(e.message).toEqual("Invalid projectJSONString.")
-      }
+      $httpBackend.flush();
+      newProjectIdActual.then((result) => {
+        expect(result.data).toEqual(newProjectIdExpected);
+        done();
+      });
     });
 
     it('should find used node id in active nodes', () => {

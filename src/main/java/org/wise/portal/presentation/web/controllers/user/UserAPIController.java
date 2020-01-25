@@ -163,9 +163,9 @@ public class UserAPIController {
     User user = userService.retrieveUserByUsername(auth.getName());
     try {
       userService.updateUserPassword(user, oldPassword, newPassword);
-      return new SimpleResponse("message", "success");
+      return new SimpleResponse("success", "passwordUpdated");
     } catch (IncorrectPasswordException e) {
-      return new SimpleResponse("message", "incorrect password");
+      return new SimpleResponse("error", "incorrectPassword");
     }
   }
 
