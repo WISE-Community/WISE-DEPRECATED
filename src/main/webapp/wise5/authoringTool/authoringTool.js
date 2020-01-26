@@ -20,7 +20,6 @@ import '../components/audioOscillator/audioOscillatorAuthoringComponentModule';
 import './components/authoringToolComponents';
 import AuthoringToolController from './authoringToolController';
 import AuthoringToolMainController from './main/authoringToolMainController';
-import AuthoringToolNewProjectController from './main/authoringToolNewProjectController';
 import AuthoringToolProjectService from './authoringToolProjectService';
 import AuthorNotebookController from './notebook/authorNotebookController';
 import bootstrap from 'bootstrap';
@@ -122,7 +121,6 @@ const authoringModule = angular.module('authoring', [
     .service('UtilService', UtilService)
     .controller('AuthoringToolController', AuthoringToolController)
     .controller('AuthoringToolMainController', AuthoringToolMainController)
-    .controller('AuthoringToolNewProjectController', AuthoringToolNewProjectController)
     .controller('AuthorNotebookController', AuthorNotebookController)
     .controller('NodeAuthoringController', NodeAuthoringController)
     .controller('ProjectAssetController', ProjectAssetController)
@@ -165,24 +163,6 @@ const authoringModule = angular.module('authoring', [
             } else {
               return ConfigService.retrieveConfig(`/author/config`);
             }
-          }],
-          language: ['$translate', 'ConfigService', 'config', ($translate, ConfigService, config) => {
-            $translate.use(ConfigService.getLocale());
-          }]
-        }
-      })
-      .state('root.new', {
-        url: '/new',
-        templateUrl: 'wise5/authoringTool/main/new.html',
-        controller: 'AuthoringToolNewProjectController',
-        controllerAs: 'authoringToolNewProjectController',
-        resolve: {
-          config: ['ConfigService', (ConfigService) => {
-            let configURL = window.configURL;
-            if (configURL == null) {
-              configURL = prompt('Please enter configURL', '/author/config/24678');
-            }
-            return ConfigService.retrieveConfig(configURL);
           }],
           language: ['$translate', 'ConfigService', 'config', ($translate, ConfigService, config) => {
             $translate.use(ConfigService.getLocale());

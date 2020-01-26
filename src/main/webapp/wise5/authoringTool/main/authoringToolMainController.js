@@ -123,14 +123,11 @@ class AuthoringToolMainController {
     });
   }
 
-  createNewProjectButtonClicked() {
+  showRegisterNewProjectView() {
     this.project = this.ProjectService.getNewProjectTemplate();
     this.showCreateProjectView = true;
     this.$timeout(() => {
-      let createGroupTitleInput = document.getElementById('newProjectTitle');
-      if (createGroupTitleInput != null) {
-        createGroupTitleInput.focus();
-      }
+      document.getElementById('newProjectTitle').focus();
     });
   }
 
@@ -225,7 +222,6 @@ class AuthoringToolMainController {
   }
 
   cancelRegisterNewProject() {
-    // clear the project template
     this.project = null;
     this.showCreateProjectView = false;
     this.clearAllCreatingProjectMessages();
