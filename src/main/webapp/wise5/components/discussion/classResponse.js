@@ -38,13 +38,10 @@ class ClassResponseController {
   }
 
   replyEntered($event) {
-    if ($event.keyCode === 13 && this.response.replyText) {
-      this.submitButtonClicked(this.response);
+    if($event.keyCode == 13 && !$event.shiftKey && this.response.replyText) {        
+      $event.preventDefault();
+      this.submitbuttonclicked({r: this.response});
     }
-  }
-
-  submitButtonClicked(response) {
-    this.submitbuttonclicked({r: response});
   }
 
   deleteButtonClicked(componentState) {

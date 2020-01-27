@@ -97,19 +97,14 @@
     </div>
     <div class='discussion-new-reply' flex layout='row'
       ng-if='::(classResponseCtrl.mode === "student" && !classResponseCtrl.isdisabled)'>
-      <div class='input-container discussion-new-reply__input-container md-block' md-no-float flex>
-        <textarea class='input--textarea discussion-reply__input' ng-model='::classResponseCtrl.response.replyText'
-          ng-model-options='{ debounce: 100 }' placeholder='{{ ::"addComment" | translate }}'
-          aria-label='{{ ::"addComment" | translate }}'
-          ng-keyup='classResponseCtrl.replyEntered($event)'>
+      <md-input-container class='input-container discussion-new-reply__input-container md-block' md-no-float flex>
+        <textarea class='input--textarea discussion-reply__input' 
+          ng-model='::classResponseCtrl.response.replyText'
+          ng-keyup="classResponseCtrl.replyEntered($event)"
+          placeholder='{{ ::"addComment" | translate }}'
+          aria-label='{{ ::"addComment" | translate }}'>
         </textarea>
-      </div>
-      <div class='discussion-new__actions discussion-new-reply__actions'>
-        <md-button class='md-primary discussion-new-reply__submit' ng-disabled='!classResponseCtrl.response.replyText'
-          ng-click='classResponseCtrl.submitButtonClicked(classResponseCtrl.response)'>
-          {{ ::'discussion.reply' | translate }}
-        </md-button>
-      </div>
+      </md-input-container>
     </div>
   </div>
 </md-card>
