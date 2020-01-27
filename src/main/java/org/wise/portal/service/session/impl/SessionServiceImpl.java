@@ -63,7 +63,8 @@ public class SessionServiceImpl<S extends Session> implements SessionService {
 
   @Override
   public void removeCurrentAuthor(UserDetails author) {
-    Set<String> currentlyAuthoredProjects = stringRedisTemplate.opsForSet().members("currentlyAuthoredProjects");
+    Set<String> currentlyAuthoredProjects =
+        stringRedisTemplate.opsForSet().members("currentlyAuthoredProjects");
     for (String projectId : currentlyAuthoredProjects) {
       removeCurrentAuthor(projectId, author.getUsername());
     }
@@ -71,7 +72,8 @@ public class SessionServiceImpl<S extends Session> implements SessionService {
 
   public void removeCurrentAuthor(Serializable projectId, String authorUsername) {
     stringRedisTemplate.opsForSet().remove("currentAuthors:" + projectId, authorUsername);
-    Long numCurrentAuthorsForProject = stringRedisTemplate.opsForSet().size("currentAuthors:" + projectId);
+    Long numCurrentAuthorsForProject =
+        stringRedisTemplate.opsForSet().size("currentAuthors:" + projectId);
     if (numCurrentAuthorsForProject == 0) {
       stringRedisTemplate.opsForSet().remove("currentlyAuthoredProjects", projectId.toString());
     }

@@ -26,7 +26,8 @@ class ProjectInfoController {
     this.$translate = this.$filter('translate');
 
     this.metadata = this.ProjectService.getProjectMetadata();
-    this.metadataAuthoring = JSON.parse(this.ConfigService.getConfigParam('projectMetadataSettings'));
+    this.metadataAuthoring =
+        JSON.parse(this.ConfigService.getConfigParam('projectMetadataSettings'));
     this.projectIcons = [];
     this.projectIcon = '';
     this.isEditingProjectIcon = false;
@@ -163,8 +164,9 @@ class ProjectInfoController {
   }
 
   /*
-   * Load the project_thumb.png after a timeout to allow time for the image to be updated on the server
-   * and browser. This is to prevent the browser from displaying the previous project_thumb.png.
+   * Load the project_thumb.png after a timeout to allow time for the image to be updated on the
+   * server and browser. This is to prevent the browser from displaying the previous
+   * project_thumb.png.
    */
   loadProjectIconAfterTimeout() {
     this.$timeout(() => {
@@ -174,7 +176,8 @@ class ProjectInfoController {
   }
 
   loadProjectIcon() {
-    this.projectIcon = this.ConfigService.getConfigParam('projectBaseURL') + 'assets/project_thumb.png?timestamp=' + new Date().getTime();
+    this.projectIcon = this.ConfigService.getConfigParam('projectBaseURL') +
+        'assets/project_thumb.png?timestamp=' + new Date().getTime();
     const image = new Image();
     image.onerror = () => {
       this.showProjectIconError();

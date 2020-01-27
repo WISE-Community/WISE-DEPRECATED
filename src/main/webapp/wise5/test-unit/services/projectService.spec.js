@@ -4,8 +4,10 @@ describe('ProjectService Unit Test', () => {
 
   beforeEach(angular.mock.module(vleModule.name));
 
-  const demoProjectJSONOriginal = window.mocks['test-unit/sampleData/curriculum/DemoProject/project'];
-  const scootersProjectJSONOriginal = window.mocks['test-unit/sampleData/curriculum/SelfPropelledVehiclesChallenge/project'];
+  const demoProjectJSONOriginal =
+      window.mocks['test-unit/sampleData/curriculum/DemoProject/project'];
+  const scootersProjectJSONOriginal =
+      window.mocks['test-unit/sampleData/curriculum/SelfPropelledVehiclesChallenge/project'];
 
   let ConfigService, ProjectService, $rootScope, $httpBackend, demoProjectJSON, scootersProjectJSON;
   beforeEach(inject(function(_ConfigService_, _ProjectService_, _$rootScope_, _$httpBackend_) {
@@ -44,8 +46,11 @@ describe('ProjectService Unit Test', () => {
 
     it('should replace asset paths in non-html component content', () => {
       createNormalSpy();
-      const contentString = "<img src=\'hello.png\' /><style>{background-url:\'background.jpg\'}</style>";
-      const contentStringReplacedAssetPathExpected = "<img src=\'" + projectBaseURL + "assets/hello.png\' /><style>{background-url:\'" + projectBaseURL + "assets/background.jpg\'}</style>";
+      const contentString =
+          "<img src=\'hello.png\' /><style>{background-url:\'background.jpg\'}</style>";
+      const contentStringReplacedAssetPathExpected = "<img src=\'" + projectBaseURL +
+          "assets/hello.png\' /><style>{background-url:\'" + projectBaseURL +
+          "assets/background.jpg\'}</style>";
       const contentStringReplacedAssetPathActual = ProjectService.replaceAssetPaths(contentString);
       expect(ConfigService.getConfigParam).toHaveBeenCalledWith("projectBaseURL");
       expect(contentStringReplacedAssetPathActual).toEqual(contentStringReplacedAssetPathExpected);
@@ -54,7 +59,8 @@ describe('ProjectService Unit Test', () => {
     it('should replace asset paths in html component content', () => {
       createNormalSpy();
       const contentString = "style=\\\"background-image: url(\\\"background.jpg\\\")\\\"";
-      const contentStringReplacedAssetPathExpected = "style=\\\"background-image: url(\\\"" + projectBaseURL + "assets/background.jpg\\\")\\\"";
+      const contentStringReplacedAssetPathExpected = "style=\\\"background-image: url(\\\"" +
+          projectBaseURL + "assets/background.jpg\\\")\\\"";
       const contentStringReplacedAssetPathActual = ProjectService.replaceAssetPaths(contentString);
       expect(ConfigService.getConfigParam).toHaveBeenCalledWith("projectBaseURL");
       expect(contentStringReplacedAssetPathActual).toEqual(contentStringReplacedAssetPathExpected);
@@ -98,8 +104,6 @@ describe('ProjectService Unit Test', () => {
       spyOn(ConfigService, "getConfigParam").and.returnValue(saveProjectURL);
       ProjectService.setProject(scootersProjectJSON);
       $httpBackend.when('GET', /^wise5\/components\/.*/).respond(200, '');
-      //$httpBackend.when('GET', 'wise5/components/animation/i18n/i18n_en.json').respond(200, '');
-      //$httpBackend.when('GET', 'wise5/components/audioOscillator/i18n/i18n_en.json').respond(200, '');
       $httpBackend.when('POST', saveProjectURL).respond({data: {}});
       $httpBackend.when('GET', i18nURL_common_en).respond(sampleI18N_common_en);
       $httpBackend.when('GET', i18nURL_vle_en).respond(sampleI18N_vle_en);
@@ -235,7 +239,7 @@ describe('ProjectService Unit Test', () => {
     it('should return the group ids in the project', () => {
       createNormalSpy();
       ProjectService.setProject(scootersProjectJSON);
-      const groupIdsExpected = ["group0","group1","group2","group3","group4","group5","group6"];      // This should be the group ids in the project
+      const groupIdsExpected = ["group0","group1","group2","group3","group4","group5","group6"];
       const groupIdsActual = ProjectService.getGroupIds();
       expect(groupIdsActual).toEqual(groupIdsExpected);
     });
@@ -247,7 +251,7 @@ describe('ProjectService Unit Test', () => {
         'node9', 'node12', 'node13', 'node14', 'node18', 'node19', 'node21', 'node22',
         'node23', 'node24', 'node25', 'node26', 'node27', 'node28', 'node29', 'node30',
         'node31', 'node40', 'node32', 'node33', 'node34', 'node35', 'node36', 'node37',
-        'node38', 'node39', 'nodeWithNoComponents'];      // This should be the node ids in the project
+        'node38', 'node39', 'nodeWithNoComponents'];
       const nodeIdsActual = ProjectService.getNodeIds();
       expect(nodeIdsActual).toEqual(nodeIdsExpected);
     });
@@ -255,27 +259,33 @@ describe('ProjectService Unit Test', () => {
     it('should get the component by node id and component id', () => {
       ProjectService.setProject(scootersProjectJSON);
       // nodeId is null
-      const nullNodeIdResult = ProjectService.getComponentByNodeIdAndComponentId(null, "57lxhwfp5r");
+      const nullNodeIdResult =
+          ProjectService.getComponentByNodeIdAndComponentId(null, "57lxhwfp5r");
       expect(nullNodeIdResult).toBeNull();
 
       // componentId is null
-      const nullComponentIdResult = ProjectService.getComponentByNodeIdAndComponentId("node13", null);
+      const nullComponentIdResult =
+          ProjectService.getComponentByNodeIdAndComponentId("node13", null);
       expect(nullComponentIdResult).toBeNull();
 
       // nodeId doesn't exist
-      const nodeIdDNEResult = ProjectService.getComponentByNodeIdAndComponentId("badNodeId", "57lxhwfp5r");
+      const nodeIdDNEResult =
+          ProjectService.getComponentByNodeIdAndComponentId("badNodeId", "57lxhwfp5r");
       expect(nodeIdDNEResult).toBeNull();
 
       // componentId doesn't exist
-      const componentIdDNEResult = ProjectService.getComponentByNodeIdAndComponentId("node13", "badComponentId");
+      const componentIdDNEResult =
+          ProjectService.getComponentByNodeIdAndComponentId("node13", "badComponentId");
       expect(componentIdDNEResult).toBeNull();
 
       // nodeId and componentId are valid and the component exists in the project
-      const componentExists = ProjectService.getComponentByNodeIdAndComponentId("node13", "57lxhwfp5r");
+      const componentExists =
+          ProjectService.getComponentByNodeIdAndComponentId("node13", "57lxhwfp5r");
       expect(componentExists).not.toBe(null);
       expect(componentExists.type).toEqual("HTML");
 
-      const componentExists2 = ProjectService.getComponentByNodeIdAndComponentId("node9", "mnzx68ix8h");
+      const componentExists2 =
+          ProjectService.getComponentByNodeIdAndComponentId("node9", "mnzx68ix8h");
       expect(componentExists2).not.toBe(null);
       expect(componentExists2.type).toEqual("embedded");
       expect(componentExists2.url).toEqual("NewtonScooters-potential-kinetic.html");
@@ -284,26 +294,32 @@ describe('ProjectService Unit Test', () => {
     it('should get the component position by node id and comonent id', () => {
       ProjectService.setProject(scootersProjectJSON);
       // nodeId is null
-      const nullNodeIdResult = ProjectService.getComponentPositionByNodeIdAndComponentId(null, "57lxhwfp5r");
+      const nullNodeIdResult =
+          ProjectService.getComponentPositionByNodeIdAndComponentId(null, "57lxhwfp5r");
       expect(nullNodeIdResult).toEqual(-1);
 
       // componentId is null
-      const nullComponentIdResult = ProjectService.getComponentPositionByNodeIdAndComponentId("node13", null);
+      const nullComponentIdResult =
+          ProjectService.getComponentPositionByNodeIdAndComponentId("node13", null);
       expect(nullComponentIdResult).toEqual(-1);
 
       // nodeId doesn't exist
-      const nodeIdDNEResult = ProjectService.getComponentPositionByNodeIdAndComponentId("badNodeId", "57lxhwfp5r");
+      const nodeIdDNEResult =
+          ProjectService.getComponentPositionByNodeIdAndComponentId("badNodeId", "57lxhwfp5r");
       expect(nodeIdDNEResult).toEqual(-1);
 
       // componentId doesn't exist
-      const componentIdDNEResult = ProjectService.getComponentPositionByNodeIdAndComponentId("node13", "badComponentId");
+      const componentIdDNEResult =
+          ProjectService.getComponentPositionByNodeIdAndComponentId("node13", "badComponentId");
       expect(componentIdDNEResult).toEqual(-1);
 
       // nodeId and componentId are valid and the component exists in the project
-      const componentExists = ProjectService.getComponentPositionByNodeIdAndComponentId("node13", "57lxhwfp5r");
+      const componentExists =
+          ProjectService.getComponentPositionByNodeIdAndComponentId("node13", "57lxhwfp5r");
       expect(componentExists).toEqual(0);
 
-      const componentExists2 = ProjectService.getComponentPositionByNodeIdAndComponentId("node9", "mnzx68ix8h");
+      const componentExists2 =
+          ProjectService.getComponentPositionByNodeIdAndComponentId("node9", "mnzx68ix8h");
       expect(componentExists2).toEqual(1);
     });
 
@@ -318,7 +334,8 @@ describe('ProjectService Unit Test', () => {
       expect(nodeIdDNEResult).toEqual([]);
 
       // nodeId exists but the node.components is null
-      const nodeWithNullComponentResult = ProjectService.getComponentsByNodeId("nodeWithNoComponents");
+      const nodeWithNullComponentResult =
+          ProjectService.getComponentsByNodeId("nodeWithNoComponents");
       expect(nodeWithNullComponentResult).toEqual([]);
 
       // nodeId is are valid and the node exists in the project
@@ -350,7 +367,8 @@ describe('ProjectService Unit Test', () => {
       // Demo Project doesn't have any max scores, so we expect getMaxScore to return null
       ProjectService.setProject(demoProjectJSON);
       const demoProjectMaxScoreActual = ProjectService.getMaxScore();
-      expect(demoProjectMaxScoreActual).toBeNull(); // When the project doesn't have any max scores defined, max score should be null
+      // When the project doesn't have any max scores defined, max score should be null
+      expect(demoProjectMaxScoreActual).toBeNull();
 
       // Sample Scooter Project's max score is 18.
       ProjectService.setProject(scootersProjectJSON);
@@ -524,21 +542,28 @@ describe('ProjectService Unit Test', () => {
 
     it('should be able to insert a step node after another step node', () => {
       ProjectService.setProject(demoProjectJSON);
-      expect(ProjectService.nodeHasTransitionToNodeId(ProjectService.getNodeById('node1'), 'node2')).toBeTruthy();
+      expect(ProjectService.nodeHasTransitionToNodeId(ProjectService.getNodeById('node1'), 'node2'))
+          .toBeTruthy();
       ProjectService.insertNodeAfterInTransitions(ProjectService.getNodeById('node1'), 'node2');
-      expect(ProjectService.nodeHasTransitionToNodeId(ProjectService.getNodeById('node1'), 'node2')).toBeFalsy();
-      expect(ProjectService.nodeHasTransitionToNodeId(ProjectService.getNodeById('node2'), 'node1')).toBeTruthy();
+      expect(ProjectService.nodeHasTransitionToNodeId(ProjectService.getNodeById('node1'), 'node2'))
+          .toBeFalsy();
+      expect(ProjectService.nodeHasTransitionToNodeId(ProjectService.getNodeById('node2'), 'node1'))
+          .toBeTruthy();
     });
 
     it('should be able to insert an activity node after another activity node', () => {
       ProjectService.setProject(demoProjectJSON);
-      expect(ProjectService.nodeHasTransitionToNodeId(ProjectService.getNodeById('group1'), 'group2')).toBeTruthy();
+      expect(ProjectService.nodeHasTransitionToNodeId(
+          ProjectService.getNodeById('group1'), 'group2')).toBeTruthy();
       ProjectService.insertNodeAfterInTransitions(ProjectService.getNodeById('group1'), 'group2');
-      expect(ProjectService.nodeHasTransitionToNodeId(ProjectService.getNodeById('group1'), 'group2')).toBeFalsy();
-      expect(ProjectService.nodeHasTransitionToNodeId(ProjectService.getNodeById('group2'), 'group1')).toBeTruthy();
+      expect(ProjectService.nodeHasTransitionToNodeId(
+          ProjectService.getNodeById('group1'), 'group2')).toBeFalsy();
+      expect(ProjectService.nodeHasTransitionToNodeId(
+          ProjectService.getNodeById('group2'), 'group1')).toBeTruthy();
     });
 
-    it('should not be able to insert a node after another node when they are different types', () => {
+    it('should not be able to insert a node after another node when they are different types',
+        () => {
       ProjectService.setProject(demoProjectJSON);
       expect(() => {
         ProjectService.insertNodeAfterInTransitions(ProjectService.getNodeById('node1'), 'group2');
@@ -586,13 +611,16 @@ describe('ProjectService Unit Test', () => {
       ProjectService.setProject(demoProjectJSON);
       expect(ProjectService.getNodes().length).toEqual(37);
       expect(ProjectService.getNodeById("node5") != null).toBeTruthy();
-      expect(ProjectService.nodeHasTransitionToNodeId(ProjectService.getNodeById("node4"), 'node5')).toBeTruthy();
-      expect(ProjectService.nodeHasTransitionToNodeId(ProjectService.getNodeById("node5"), 'node6')).toBeTruthy();
+      expect(ProjectService.nodeHasTransitionToNodeId(ProjectService.getNodeById("node4"), 'node5'))
+          .toBeTruthy();
+      expect(ProjectService.nodeHasTransitionToNodeId(ProjectService.getNodeById("node5"), 'node6'))
+          .toBeTruthy();
       expect(ProjectService.getNodesWithTransitionToNodeId('node6').length).toEqual(1);
       ProjectService.deleteNode("node5");
       expect(ProjectService.getNodes().length).toEqual(36);
       expect(ProjectService.getNodeById("node5")).toBeNull();
-      expect(ProjectService.nodeHasTransitionToNodeId(ProjectService.getNodeById("node4"), 'node6')).toBeTruthy();
+      expect(ProjectService.nodeHasTransitionToNodeId(ProjectService.getNodeById("node4"), 'node6'))
+          .toBeTruthy();
       expect(ProjectService.getNodesWithTransitionToNodeId('node6').length).toEqual(1);
     });
 
@@ -606,14 +634,18 @@ describe('ProjectService Unit Test', () => {
       expect(ProjectService.getNodesWithTransitionToNodeId('node2').length).toEqual(0);
     });
 
-    it('should delete a step that is the start id of an activity that is not the first activity', () => {
+    it('should delete a step that is the start id of an activity that is not the first activity',
+        () => {
       ProjectService.setProject(demoProjectJSON);
       expect(ProjectService.getGroupStartId("group2")).toEqual("node20");
-      expect(ProjectService.nodeHasTransitionToNodeId(ProjectService.getNodeById("node19"), 'node20')).toBeTruthy();
-      expect(ProjectService.nodeHasTransitionToNodeId(ProjectService.getNodeById("node20"), 'node21')).toBeTruthy();
+      expect(ProjectService.nodeHasTransitionToNodeId(
+          ProjectService.getNodeById("node19"), 'node20')).toBeTruthy();
+      expect(ProjectService.nodeHasTransitionToNodeId(
+          ProjectService.getNodeById("node20"), 'node21')).toBeTruthy();
       ProjectService.deleteNode("node20");
       expect(ProjectService.getGroupStartId("group2")).toEqual("node21");
-      expect(ProjectService.nodeHasTransitionToNodeId(ProjectService.getNodeById("node19"), 'node21')).toBeTruthy();
+      expect(ProjectService.nodeHasTransitionToNodeId(
+          ProjectService.getNodeById("node19"), 'node21')).toBeTruthy();
     });
 
     it('should delete the first activity from the project', () => {
@@ -632,11 +664,13 @@ describe('ProjectService Unit Test', () => {
 
     it('should delete an activity that is not the first from the project', () => {
       ProjectService.setProject(demoProjectJSON);
-      expect(ProjectService.nodeHasTransitionToNodeId(ProjectService.getNodeById("group1"), 'group2')).toBeTruthy();
+      expect(ProjectService.nodeHasTransitionToNodeId(
+          ProjectService.getNodeById("group1"), 'group2')).toBeTruthy();
       expect(ProjectService.getTransitionsByFromNodeId("group1").length).toEqual(1);
       expect(ProjectService.getNodes().length).toEqual(37);
       ProjectService.deleteNode("group2");
-      expect(ProjectService.nodeHasTransitionToNodeId(ProjectService.getNodeById("group1"), 'group2')).toBeFalsy();
+      expect(ProjectService.nodeHasTransitionToNodeId(
+          ProjectService.getNodeById("group1"), 'group2')).toBeFalsy();
       expect(ProjectService.getTransitionsByFromNodeId("group1").length).toEqual(0);
       expect(ProjectService.getNodes().length).toEqual(21);
     });

@@ -162,7 +162,8 @@ const authoringModule = angular.module('authoring', [
               return ConfigService.retrieveConfig(`/author/config`);
             }
           }],
-          language: ['$translate', 'ConfigService', 'config', ($translate, ConfigService, config) => {
+          language: ['$translate', 'ConfigService', 'config',
+              ($translate, ConfigService, config) => {
             $translate.use(ConfigService.getLocale());
           }]
         }

@@ -127,7 +127,8 @@ public class AuthorAPIController {
   @PostMapping("/project/new")
   @ResponseBody
   protected String createProject(Authentication auth, @RequestParam String projectName,
-      @RequestParam String projectJSONString) throws ObjectNotFoundException, IOException, JSONException {
+      @RequestParam String projectJSONString) throws ObjectNotFoundException, IOException,
+      JSONException {
     User user = userService.retrieveUserByUsername(auth.getName());
     long newProjectId = projectService.getNextAvailableProjectId();
 
@@ -231,8 +232,8 @@ public class AuthorAPIController {
     config.put("registerNewProjectURL", contextPath + "/author/project/new");
     config.put("wiseBaseURL", contextPath);
     config.put("notifyAuthoringBeginEndURL", contextPath + "/author/project/notify");
-    config.put("getLibraryProjectsURL", contextPath +
-        "/author/authorproject.html?command=projectList&projectPaths=&projectTag=library&wiseVersion=5");
+    config.put("getLibraryProjectsURL", contextPath + "/author/authorproject.html" +
+        "?command=projectList&projectPaths=&projectTag=library&wiseVersion=5");
     config.put("teacherDataURL", contextPath + "/teacher/data");
     config.put("sessionTimeout", request.getSession().getMaxInactiveInterval());
 
@@ -320,8 +321,9 @@ public class AuthorAPIController {
 
   @GetMapping("/config/{projectId}")
   @ResponseBody
-  protected HashMap<String, Object> getAuthorProjectConfig(Authentication auth, HttpServletRequest request,
-      @PathVariable Long projectId) throws IOException, ObjectNotFoundException {
+  protected HashMap<String, Object> getAuthorProjectConfig(Authentication auth, 
+      HttpServletRequest request, @PathVariable Long projectId) throws IOException,
+      ObjectNotFoundException {
     Project project = projectService.getById(projectId);
     HashMap<String, Object> config = getDefaultAuthorProjectConfig(auth, request);
     String contextPath = request.getContextPath();
@@ -382,7 +384,8 @@ public class AuthorAPIController {
     return null;
   }
 
-  @GetMapping(value = "/project/asset/{projectId}/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+  @GetMapping(value = "/project/asset/{projectId}/download",
+      produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
   @ResponseBody
   protected FileSystemResource downloadProjectAsset(Authentication auth,
       HttpServletResponse response, @PathVariable Long projectId,
@@ -415,14 +418,17 @@ public class AuthorAPIController {
     long sizeOfAssetsDirectory = FileUtils.sizeOfDirectory(projectAssetsDir);
     Long projectMaxTotalAssetsSize = project.getMaxTotalAssetsSize();
     if (projectMaxTotalAssetsSize == null) {
-      projectMaxTotalAssetsSize = new Long(appProperties.getProperty("project_max_total_assets_size", "15728640"));
+      projectMaxTotalAssetsSize = 
+          new Long(appProperties.getProperty("project_max_total_assets_size", "15728640"));
     }
     for (MultipartFile file : files) {
       if (sizeOfAssetsDirectory + file.getSize() > projectMaxTotalAssetsSize) {
-        ErrorResponse response = new ErrorResponse("Error: Exceeded project max asset size.\nPlease delete unused assets.\n\nContact WISE if your project needs more disk space.");
+        ErrorResponse response = new ErrorResponse("Error: Exceeded project max asset size.\n" +
+            "Please delete unused assets.\n\nContact WISE if your project needs more disk space.");
         return response.toMap();
       } else if (!isUserAllowedToUpload(user, file)) {
-        ErrorResponse response = new ErrorResponse("Error: Upload file \"" + file.getOriginalFilename() + "\" not allowed.\n");
+        ErrorResponse response = new ErrorResponse("Error: Upload file \"" + 
+            file.getOriginalFilename() + "\" not allowed.\n");
         return response.toMap();
       } else {
         Path path = Paths.get(projectAssetsDirPath, file.getOriginalFilename());
@@ -435,7 +441,8 @@ public class AuthorAPIController {
   private boolean isUserAllowedToUpload(User user, MultipartFile file) {
     String allowedTypes = appProperties.getProperty("normalAuthorAllowedProjectAssetContentTypes");
     if (user.isTrustedAuthor()) {
-      allowedTypes += "," + appProperties.getProperty("trustedAuthorAllowedProjectAssetContentTypes");
+      allowedTypes += "," + 
+          appProperties.getProperty("trustedAuthorAllowedProjectAssetContentTypes");
     }
     return allowedTypes.contains(file.getContentType());
   }
@@ -517,7 +524,9 @@ public class AuthorAPIController {
      * content.
      * e.g. carbon.png
      */
-    String patternString = "(\'|\"|\\\\\'|\\\\\")([^:][^/]?[^/]?[a-zA-Z0-9@\\._\\/\\s\\-]*[.](png|PNG|jpe?g|JPE?G|pdf|PDF|gif|GIF|mov|MOV|mp4|MP4|mp3|MP3|wav|WAV|swf|SWF|css|CSS|txt|TXT|json|JSON|xlsx?|XLSX?|doc|DOC|html.*?|HTML.*?|js|JS)).*?(\'|\"|\\\\\'|\\\\\")";
+    String patternString = "(\'|\"|\\\\\'|\\\\\")([^:][^/]?[^/]?[a-zA-Z0-9@\\._\\/\\s\\-]*[.]" +
+        "(png|PNG|jpe?g|JPE?G|pdf|PDF|gif|GIF|mov|MOV|mp4|MP4|mp3|MP3|wav|WAV|swf|SWF|css|CSS" +
+        "|txt|TXT|json|JSON|xlsx?|XLSX?|doc|DOC|html.*?|HTML.*?|js|JS)).*?(\'|\"|\\\\\'|\\\\\")";
     Pattern pattern = Pattern.compile(patternString);
     Matcher matcher = pattern.matcher(steps);
 
@@ -544,8 +553,8 @@ public class AuthorAPIController {
       fromProjectUrlLastIndexOfSlash = fromProjectUrl.lastIndexOf("\\");
     }
 
-    // get the project folder e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/171
-    String fullFromProjectFolderUrl = curriculumBaseDir + fromProjectUrl.substring(0, fromProjectUrlLastIndexOfSlash);
+    String fullFromProjectFolderUrl = curriculumBaseDir + fromProjectUrl.substring(0,
+        fromProjectUrlLastIndexOfSlash);
 
     // get the index of the last separator from the toProjectUrl
     int toProjectUrlLastIndexOfSlash = toProjectUrl.lastIndexOf("/");
@@ -553,14 +562,12 @@ public class AuthorAPIController {
       toProjectUrlLastIndexOfSlash = toProjectUrl.lastIndexOf("\\");
     }
 
-    // get the project folder e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/172
-    String fullToProjectFolderUrl = curriculumBaseDir + toProjectUrl.substring(0, toProjectUrlLastIndexOfSlash);
+    String fullToProjectFolderUrl = curriculumBaseDir +
+        toProjectUrl.substring(0, toProjectUrlLastIndexOfSlash);
 
-    // get the project assets folder e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/171/assets
     String fromProjectAssetsUrl = fullFromProjectFolderUrl + "/assets";
     File fromProjectAssetsFolder = new File(fromProjectAssetsUrl);
 
-    // get the project assets folder e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/172/assets
     String toProjectAssetsUrl = fullToProjectFolderUrl + "/assets";
     File toProjectAssetsFolder = new File(toProjectAssetsUrl);
 

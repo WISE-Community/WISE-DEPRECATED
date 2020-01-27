@@ -35,7 +35,8 @@ class ProjectAssetService {
   }
 
   downloadAssetItem(assetItem) {
-    window.location = `${this.ConfigService.getConfigParam('projectAssetURL')}/download?assetFileName=${assetItem.fileName}`;
+    window.location = `${this.ConfigService.getConfigParam('projectAssetURL')}` +
+        `/download?assetFileName=${assetItem.fileName}`;
   }
 
   getFullAssetItemURL(assetItem) {

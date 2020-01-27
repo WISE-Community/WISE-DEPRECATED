@@ -221,7 +221,8 @@ class ProjectService {
           }
 
           if (constraints != null) {
-            if (this.ConfigService.isPreview() == true && this.ConfigService.getConfigParam('constraints') === false) {
+            if (this.ConfigService.isPreview() ==
+                true && this.ConfigService.getConfigParam('constraints') === false) {
               /*
                * if we are in preview mode and constraints are set
                * to false, we will not add the constraints
@@ -347,7 +348,8 @@ class ProjectService {
     };
     const stepNumber = '';
     const nodes = [];
-    const importProjectIdToOrder = this.getNodeOrderOfProjectHelper(project, rootNode, idToOrder, stepNumber, nodes);
+    const importProjectIdToOrder =
+        this.getNodeOrderOfProjectHelper(project, rootNode, idToOrder, stepNumber, nodes);
     delete importProjectIdToOrder.nodeCount;
     return {
       idToOrder: importProjectIdToOrder,
@@ -399,7 +401,8 @@ class ProjectService {
   }
 
   /**
-   * Returns the position in the project for the node with the given id. Returns null if no node with id exists.
+   * Returns the position in the project for the node with the given id. Returns null if no node 
+   * with id exists.
    * @param id a node id
    * @return string position of the given node id in the project
    */
@@ -427,7 +430,8 @@ class ProjectService {
   };
 
   /**
-   * Returns the id of the node with the given order in the project. Returns null if no order with node exists.
+   * Returns the id of the node with the given order in the project. Returns null if no order with
+   * node exists.
    * @param order Number
    * @return Number node id of the given order in the project
    */
@@ -447,7 +451,8 @@ class ProjectService {
   };
 
   /**
-   * Recursively searches for the given node id from the point of the given node down and returns the path number (position)
+   * Recursively searches for the given node id from the point of the given node down and returns
+   * the path number (position)
    * @param node a node to start searching down
    * @param path the position of the given node
    * @param id the node id to search for
@@ -540,9 +545,14 @@ class ProjectService {
       // the string we're looking for can't start with '/ and "/.
       // note that this also works for \"abc.png and \'abc.png, where the quotes are escaped
       contentString = contentString.replace(
-        new RegExp('(\'|\"|\\\\\'|\\\\\")[^:][^\/]?[^\/]?[a-zA-Z0-9@%&;\\._\\/\\s\\-\']*[\.](png|jpe?g|pdf|gif|mov|mp4|mp3|wav|swf|css|txt|json|xlsx?|doc|html.*?|js).*?(\'|\"|\\\\\'|\\\\\")', 'gi'),
+        new RegExp('(\'|\"|\\\\\'|\\\\\")[^:][^\/]?[^\/]?[a-zA-Z0-9@%&;\\._\\/\\s\\-\']*[\.]' +
+            '(png|jpe?g|pdf|gif|mov|mp4|mp3|wav|swf|css|txt|json|xlsx?|doc|html.*?|js).*?' +
+            '(\'|\"|\\\\\'|\\\\\")', 'gi'),
         (matchedString) => {
-          // once found, we prepend the contentBaseURL + "assets/" to the string within the quotes and keep everything else the same.
+          /*
+           * once found, we prepend the contentBaseURL + "assets/" to the string within the quotes
+           * and keep everything else the same.
+           */
           let delimiter = '';
           let matchedStringWithoutQuotes = '';
 
@@ -564,7 +574,8 @@ class ProjectService {
             delimiter = matchedString.substr(0,1);
           }
 
-          if (matchedStringWithoutQuotes != null && matchedStringWithoutQuotes.length > 0 && matchedStringWithoutQuotes.charAt(0) == "/") {
+          if (matchedStringWithoutQuotes != null && matchedStringWithoutQuotes.length > 0 &&
+              matchedStringWithoutQuotes.charAt(0) == "/") {
             /*
              * the matched string starts with a "/" which means it's
              * an absolute path and does not require path prepending
@@ -572,7 +583,6 @@ class ProjectService {
              */
             return delimiter + matchedStringWithoutQuotes + delimiter;
           } else {
-            //const matchedStringWithoutFirstAndLastQuote = matchedString.substr(1, matchedString.length - 2);  // everything but the beginning and end quote (' or ")
             // make a new string with the contentBaseURL + assets/ prepended to the path
             return delimiter + contentBaseURL + "assets/" + matchedStringWithoutQuotes + delimiter;
           }
@@ -623,7 +633,8 @@ class ProjectService {
            * Before: <img src="abc.png"/>
            * After: <img ng-click="vleController.snipImage($event)" src="abc.png" />
            */
-          const newString = matchedString.replace('img', 'img ng-click=\\\"$emit(\'snipImage\', $event)\\\"');
+          const newString =
+              matchedString.replace('img', 'img ng-click=\\\"$emit(\'snipImage\', $event)\\\"');
           return newString;
         }
       );
@@ -2145,7 +2156,7 @@ class ProjectService {
    * Get the component by node id and component id
    * @param nodeId the node id
    * @param componentId the component id
-   * @returns the component or null if the nodeId or componentId are null or does not exist in the project.
+   * @returns the component or null if the nodeId or componentId are null or does not exist
    */
   getComponentByNodeIdAndComponentId(nodeId, componentId) {
     if (nodeId != null && componentId != null) {
@@ -2343,7 +2354,8 @@ class ProjectService {
         id: this.getNextAvailableConstraintIdForNodeId(node.id),
         action: branchPathTakenConstraint.action,
         targetId: node.id,
-        removalCriteria: this.UtilService.makeCopyOfJSONObject(branchPathTakenConstraint.removalCriteria)
+        removalCriteria:
+            this.UtilService.makeCopyOfJSONObject(branchPathTakenConstraint.removalCriteria)
       };
       this.addConstraintToNode(newConstraint);
     }
@@ -3113,7 +3125,8 @@ class ProjectService {
                          * change the branch path taken constraint by changing
                          * the toNodeId
                          */
-                        this.updateBranchPathTakenConstraint(nodeInBranch, currentFromNodeId, currentToNodeId, newFromNodeId, newToNodeId);
+                        this.updateBranchPathTakenConstraint(nodeInBranch, currentFromNodeId,
+                            currentToNodeId, newFromNodeId, newToNodeId);
                       }
                     }
                   }
@@ -3142,7 +3155,8 @@ class ProjectService {
                           const newToNodeId = branchPath[0];
                           for (let branchPathNodeId of branchPath) {
                             const branchPathNode = this.getNodeById(branchPathNodeId);
-                            this.updateBranchPathTakenConstraint(branchPathNode, currentFromNodeId, currentToNodeId, newFromNodeId, newToNodeId);
+                            this.updateBranchPathTakenConstraint(branchPathNode, currentFromNodeId,
+                                currentToNodeId, newFromNodeId, newToNodeId);
                           }
                         }
                       }
@@ -3198,7 +3212,8 @@ class ProjectService {
                  */
                 const groupIdWeAreMoving = nodeId;
                 const groupThatTransitionsToGroupWeAreMoving = node;
-                this.updateChildrenTransitionsIntoGroupWeAreMoving(groupThatTransitionsToGroupWeAreMoving, groupIdWeAreMoving);
+                this.updateChildrenTransitionsIntoGroupWeAreMoving(
+                    groupThatTransitionsToGroupWeAreMoving, groupIdWeAreMoving);
               }
             }
           }
@@ -3209,7 +3224,8 @@ class ProjectService {
              * copy the transition logic to the node that comes
              * before it
              */
-            node.transitionLogic = this.UtilService.makeCopyOfJSONObject(nodeToRemoveTransitionLogic);
+            node.transitionLogic =
+                this.UtilService.makeCopyOfJSONObject(nodeToRemoveTransitionLogic);
 
             /*
              * set the transitions for the node that comes before
@@ -3535,7 +3551,8 @@ class ProjectService {
   }
 
   /**
-   * TODO: Deprecated, should be removed; replaced by getMaxScoreForWorkgroupId in StudentStatusService
+   * TODO: Deprecated, should be removed; replaced by getMaxScoreForWorkgroupId in
+   * StudentStatusService
    * Get the max score for the project. If the project contains branches, we
    * will only calculate the max score for a single path from the first node
    * to the last node in the project.
@@ -3738,7 +3755,8 @@ class ProjectService {
    * @param constraint The constraint object.
    * @returns A human readable text string that describes the constraint.
    * example
-   * 'All steps after this one will not be visitable until the student completes "3.7 Revise Your Bowls Explanation"'
+   * 'All steps after this one will not be visitable until the student completes
+   * "3.7 Revise Your Bowls Explanation"'
    */
   getConstraintDescription(constraint) {
     let message = '';
@@ -3830,7 +3848,8 @@ class ProjectService {
         }
 
         // generate the message
-        message += this.$translate('obtainAScoreOfXOnNodeTitle', { score: scoresString, nodeTitle: nodeTitle });
+        message += this.$translate('obtainAScoreOfXOnNodeTitle',
+            { score: scoresString, nodeTitle: nodeTitle });
       } else if (name === 'choiceChosen') {
         const nodeId = params.nodeId;
         const componentId = params.componentId;
@@ -3838,7 +3857,8 @@ class ProjectService {
         let nodeTitle = this.getNodePositionAndTitleByNodeId(nodeId);
         let choices = this.getChoiceTextByNodeIdAndComponentId(nodeId, componentId, choiceIds);
         let choiceText = choices.join(', ');
-        message += this.$translate('chooseChoiceOnNodeTitle', { choiceText: choiceText, nodeTitle: nodeTitle });
+        message += this.$translate('chooseChoiceOnNodeTitle',
+            { choiceText: choiceText, nodeTitle: nodeTitle });
       } else if (name === 'usedXSubmits') {
         const nodeId = params.nodeId;
         let nodeTitle = '';
@@ -3850,16 +3870,19 @@ class ProjectService {
         }
 
         if (requiredSubmitCount == 1) {
-          message += this.$translate('submitXTimeOnNodeTitle', { requiredSubmitCount: requiredSubmitCount, nodeTitle: nodeTitle });
+          message += this.$translate('submitXTimeOnNodeTitle',
+              { requiredSubmitCount: requiredSubmitCount, nodeTitle: nodeTitle });
         } else {
-          message += this.$translate('submitXTimesOnNodeTitle', { requiredSubmitCount: requiredSubmitCount, nodeTitle: nodeTitle });
+          message += this.$translate('submitXTimesOnNodeTitle',
+              { requiredSubmitCount: requiredSubmitCount, nodeTitle: nodeTitle });
         }
       } else if (name === 'branchPathTaken') {
         const fromNodeId = params.fromNodeId;
         const fromNodeTitle = this.getNodePositionAndTitleByNodeId(fromNodeId);
         const toNodeId = params.toNodeId;
         const toNodeTitle = this.getNodePositionAndTitleByNodeId(toNodeId);
-        message += this.$translate('branchPathTakenFromTo', { fromNodeTitle: fromNodeTitle, toNodeTitle: toNodeTitle });
+        message += this.$translate('branchPathTakenFromTo', { fromNodeTitle: fromNodeTitle,
+            toNodeTitle: toNodeTitle });
       } else if (name === 'isPlanningActivityCompleted') {
         const nodeId = params.nodeId;
         if (nodeId != null) {
@@ -4592,7 +4615,8 @@ class ProjectService {
         const nodeToRemoveTransitionLogic = group.transitionLogic;
         let nodeToRemoveTransitions = [];
 
-        if (nodeToRemoveTransitionLogic != null && nodeToRemoveTransitionLogic.transitions != null) {
+        if (nodeToRemoveTransitionLogic != null &&
+            nodeToRemoveTransitionLogic.transitions != null) {
           nodeToRemoveTransitions = nodeToRemoveTransitionLogic.transitions;
         }
 
@@ -5237,7 +5261,8 @@ class ProjectService {
                    * branch path.
                    */
                   const branchPathNodeId = branchPath[bpn];
-                  this.calculateNodeNumbersHelper(branchPathNodeId, currentActivityNumber, branchCurrentStepNumber, branchLetterCode);
+                  this.calculateNodeNumbersHelper(branchPathNodeId, currentActivityNumber,
+                      branchCurrentStepNumber, branchLetterCode);
                 }
 
                 branchCurrentStepNumber++;
@@ -5262,7 +5287,8 @@ class ProjectService {
              * continue calculating node numbers for the nodes that
              * come after it
              */
-            this.calculateNodeNumbersHelper(branchEndPointNodeId, currentActivityNumber, currentStepNumber);
+            this.calculateNodeNumbersHelper(branchEndPointNodeId, currentActivityNumber,
+                currentStepNumber);
           } else {
             // the node is not a branch start point
 
@@ -5328,7 +5354,8 @@ class ProjectService {
                   if (this.isBranchMergePoint(transition.to)) {
 
                   } else {
-                    this.calculateNodeNumbersHelper(transition.to, currentActivityNumber, currentStepNumber, branchLetterCode);
+                    this.calculateNodeNumbersHelper(transition.to, currentActivityNumber,
+                        currentStepNumber, branchLetterCode);
                   }
                 }
               }
@@ -5341,7 +5368,8 @@ class ProjectService {
                   parentGroup.transitionLogic.transitions.length > 0) {
                 for (let transition of parentGroup.transitionLogic.transitions) {
                   if (transition != null) {
-                    this.calculateNodeNumbersHelper(transition.to, currentActivityNumber, currentStepNumber, branchLetterCode);
+                    this.calculateNodeNumbersHelper(transition.to, currentActivityNumber,
+                        currentStepNumber, branchLetterCode);
                   }
                 }
               }
@@ -5389,7 +5417,8 @@ class ProjectService {
              * calculate the node number for the first step in this
              * activity and any steps after it
              */
-            this.calculateNodeNumbersHelper(node.startId, currentActivityNumber, currentStepNumber, branchLetterCode);
+            this.calculateNodeNumbersHelper(node.startId, currentActivityNumber, currentStepNumber,
+                branchLetterCode);
           } else {
             /*
              * this activity doesn't have a start step so we will
@@ -5600,7 +5629,8 @@ class ProjectService {
   }
 
   /**
-   * Returns true iff the specified node and component has any registered additionalProcessingFunctions
+   * Returns true iff the specified node and component has any registered
+   * additionalProcessingFunctions
    * @param nodeId the node id
    * @param componentId the component id
    * @returns true/false
@@ -5610,7 +5640,8 @@ class ProjectService {
   }
 
   /**
-   * Returns an array of registered additionalProcessingFunctions for the specified node and component
+   * Returns an array of registered additionalProcessingFunctions for the specified node and
+   * component
    * @param nodeId the node id
    * @param componentId the component id
    * @returns an array of additionalProcessingFunctions

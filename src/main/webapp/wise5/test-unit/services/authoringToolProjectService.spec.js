@@ -4,10 +4,13 @@ describe('AuthoringToolProjectService Unit Test', () => {
 
   beforeEach(angular.mock.module(authoringToolModule.name));
 
-  const demoProjectJSONOriginal = window.mocks['test-unit/sampleData/curriculum/DemoProject/project'];
-  const scootersProjectJSONOriginal = window.mocks['test-unit/sampleData/curriculum/SelfPropelledVehiclesChallenge/project'];
+  const demoProjectJSONOriginal =
+      window.mocks['test-unit/sampleData/curriculum/DemoProject/project'];
+  const scootersProjectJSONOriginal =
+      window.mocks['test-unit/sampleData/curriculum/SelfPropelledVehiclesChallenge/project'];
 
-  let ConfigService, ProjectService, $rootScope, $httpBackend,  demoProjectJSON, scootersProjectJSON;
+  let ConfigService, ProjectService, $rootScope, $httpBackend,  demoProjectJSON,
+      scootersProjectJSON;
   beforeEach(inject(function(_ConfigService_, _ProjectService_, _$rootScope_, _$httpBackend_) {
     ConfigService = _ConfigService_;
     ProjectService = _ProjectService_;

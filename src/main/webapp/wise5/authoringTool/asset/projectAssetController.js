@@ -102,7 +102,8 @@ class ProjectAssetController {
     } else if (sortBy === 'smallToLarge') {
       this.projectAssets.files.sort(this.sortAssetsSmallToLarge);
     } else if (sortBy === 'largeToSmall') {
-      this.projectAssets.files = this.projectAssets.files.sort(this.sortAssetsSmallToLarge).reverse();
+      this.projectAssets.files =
+          this.projectAssets.files.sort(this.sortAssetsSmallToLarge).reverse();
     }
   };
 
@@ -133,7 +134,9 @@ class ProjectAssetController {
    * @param assetItem the asset to delete
    */
   deleteAsset(assetItem) {
-    if (confirm(`${this.$translate('areYouSureYouWantToDeleteThisFile')}\n\n${assetItem.fileName}`)) {
+    const message = 
+        `${this.$translate('areYouSureYouWantToDeleteThisFile')}\n\n${assetItem.fileName}`;
+    if (confirm(message)) {
       this.ProjectAssetService.deleteAssetItem(assetItem).then((newProjectAssets) => {
         this.projectAssets = this.ProjectAssetService.projectAssets;
         // calculate whether the assets are used in the project
@@ -222,9 +225,12 @@ class ProjectAssetController {
     if (files.length == 1 && largeFiles.length == 1) {
       message = this.$translate('areYouSureYouWantToUploadThisLargeFile') + '\n';
     } else if (largeFiles.length == 1) {
-      message = this.$translate('areYouSureYouWantToUploadThisLargeFileWhileUploadingMultipleFiles') + '\n';
+      message = this.$translate('areYouSureYouWantToUploadThisLargeFileWhileUploadingMultipleFiles')
+          + '\n';
     } else if (largeFiles.length > 1) {
-      message = this.$translate('areYouSureYouWantToUploadTheseLargeFilesWhileUploadingMultipleFiles', { fileCount: largeFiles.length }) + '\n';
+      message = 
+          this.$translate('areYouSureYouWantToUploadTheseLargeFilesWhileUploadingMultipleFiles', 
+          { fileCount: largeFiles.length }) + '\n';
     }
     for (const largeFile of largeFiles) {
       message += '\n' + largeFile.name + ' (' + Math.floor(largeFile.size / 1000) + ' KB)';
@@ -271,7 +277,8 @@ class ProjectAssetController {
   }
 
   hasTarget() {
-    return (this.nodeId != null && this.componentId != null && this.target != null) || this.target === 'projectIcon';
+    return (this.nodeId != null && this.componentId != null && this.target != null) || 
+        this.target === 'projectIcon';
   }
 
   /**

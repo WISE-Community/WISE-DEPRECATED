@@ -305,7 +305,7 @@ class AuthoringToolProjectService extends ProjectService {
 
       // remember the node id so we can put the next node (if any) after this one
       nodeId = newNodeId;
-      this.parseProject();  // refresh project and update references because a new node have been added.
+      this.parseProject();
 
       newNodes.push(newNode);
     }
@@ -537,7 +537,7 @@ class AuthoringToolProjectService extends ProjectService {
 
       // remember the node id so we can put the next node (if any) after this one
       nodeId = newNodeId;
-      this.parseProject();  // refresh project and update references because a new node have been added.
+      this.parseProject();
 
       newNodes.push(newNode);
     }
@@ -848,7 +848,8 @@ class AuthoringToolProjectService extends ProjectService {
         insertPosition = 0;
       } else {
         // place the new components after the specified component id
-        insertPosition = this.getComponentPositionByNodeIdAndComponentId(nodeId, insertAfterComponentId) + 1;
+        insertPosition =
+            this.getComponentPositionByNodeIdAndComponentId(nodeId, insertAfterComponentId) + 1;
       }
 
       for (let newComponent of newComponents) {
@@ -945,7 +946,8 @@ class AuthoringToolProjectService extends ProjectService {
         insertPosition = 0;
       } else {
         // place the new components after the specified component id
-        insertPosition = this.getComponentPositionByNodeIdAndComponentId(nodeId, insertAfterComponentId) + 1;
+        insertPosition =
+            this.getComponentPositionByNodeIdAndComponentId(nodeId, insertAfterComponentId) + 1;
       }
 
       for (let newComponent of newComponents) {

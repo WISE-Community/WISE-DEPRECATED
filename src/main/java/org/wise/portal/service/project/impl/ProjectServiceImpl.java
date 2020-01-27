@@ -216,13 +216,14 @@ public class ProjectServiceImpl implements ProjectService {
     Long newProjectId = (Long) project.getId();
     if (parentProjectId != null) {
       User signedInUser = ControllerUtil.getSignedInUser();
-      premadeCommentService.copyPremadeCommentsFromProject(parentProjectId, newProjectId, signedInUser);
+      premadeCommentService
+          .copyPremadeCommentsFromProject(parentProjectId, newProjectId, signedInUser);
     }
     return project;
   }
 
-  private Project setupNewProject(Project project, ProjectMetadata metadata, Long parentProjectId, User owner)
-      throws ObjectNotFoundException, JSONException {
+  private Project setupNewProject(Project project, ProjectMetadata metadata, Long parentProjectId,
+      User owner) throws ObjectNotFoundException, JSONException {
     JSONArray authors = new JSONArray();
     if (parentProjectId != null) {
       Project parentProject = getById(parentProjectId);
@@ -230,8 +231,10 @@ public class ProjectServiceImpl implements ProjectService {
       ProjectMetadata parentProjectMetadata = parentProject.getMetadata();
       if (parentProjectMetadata != null) {
         try {
-          JSONObject parentProjectJSON = getParentInfo(parentProjectMetadata, parentProjectId, getProjectURI(parentProject));
-          metadata.setParentProjects(addToParentProjects(parentProjectJSON, parentProjectMetadata).toString());
+          JSONObject parentProjectJSON = getParentInfo(parentProjectMetadata, parentProjectId,
+              getProjectURI(parentProject));
+          metadata.setParentProjects(addToParentProjects(parentProjectJSON,
+              parentProjectMetadata).toString());
         } catch (JSONException e) {
           e.printStackTrace();
         }
@@ -256,7 +259,8 @@ public class ProjectServiceImpl implements ProjectService {
     return project;
   }
 
-  private Project setupImportedProject(Project project, String originalAuthorsString) throws JSONException {
+  private Project setupImportedProject(Project project, String originalAuthorsString)
+      throws JSONException {
     ProjectMetadata metadata = project.getMetadata();
     JSONObject parentProjectJSON = getParentInfo(metadata, null, metadata.getUri());
     JSONArray parentAuthors = new JSONArray();
@@ -318,7 +322,8 @@ public class ProjectServiceImpl implements ProjectService {
   }
 
   public ModelAndView launchProject(Workgroup workgroup, String contextPath) throws Exception {
-    return new ModelAndView(new RedirectView(generateStudentStartProjectUrlString(workgroup, contextPath)));
+    return new ModelAndView(new RedirectView(
+        generateStudentStartProjectUrlString(workgroup, contextPath)));
   }
 
   public ModelAndView previewProject(PreviewProjectParameters params) throws Exception {
@@ -574,7 +579,8 @@ public class ProjectServiceImpl implements ProjectService {
     File newProjectDir = new File(curriculumBaseDir, String.valueOf(newProjectId));
     FileManager.copy(parentProjectDir, newProjectDir);
     String projectModulePath = parentProject.getModulePath();
-    String projectJSONFilename = projectModulePath.substring(projectModulePath.lastIndexOf("/") + 1);
+    String projectJSONFilename =
+        projectModulePath.substring(projectModulePath.lastIndexOf("/") + 1);
     Long parentProjectId = (Long) parentProject.getId();
     ProjectParameters pParams = new ProjectParameters();
     pParams.setProjectId(newProjectId);
@@ -586,10 +592,13 @@ public class ProjectServiceImpl implements ProjectService {
     pParams.setParentProjectId(parentProjectId);
     ProjectMetadata parentProjectMetadata = parentProject.getMetadata();
     if (parentProjectMetadata != null) {
-      ProjectMetadata newProjectMetadata = new ProjectMetadataImpl(parentProjectMetadata.toJSONString());
+      ProjectMetadata newProjectMetadata =
+          new ProjectMetadataImpl(parentProjectMetadata.toJSONString());
       newProjectMetadata.setAuthors(new JSONArray().toString());
-      JSONObject parentProjectJSON = getParentInfo(parentProjectMetadata, parentProjectId, getProjectURI(parentProject));
-      newProjectMetadata.setParentProjects(addToParentProjects(parentProjectJSON, parentProjectMetadata).toString());
+      JSONObject parentProjectJSON =
+          getParentInfo(parentProjectMetadata, parentProjectId,getProjectURI(parentProject));
+      newProjectMetadata.setParentProjects(
+          addToParentProjects(parentProjectJSON, parentProjectMetadata).toString());
       pParams.setMetadata(newProjectMetadata);
     }
     return createProject(pParams);
@@ -752,7 +761,8 @@ public class ProjectServiceImpl implements ProjectService {
     } else {
       previewPath = "/project/";
     }
-    return appProperties.getProperty("wise.hostname") + previewPath + project.getId() + "#!/project/" + project.getId();
+    return appProperties.getProperty("wise.hostname") + previewPath + project.getId() +
+        "#!/project/" + project.getId();
   }
 
   private String getAuthorsString(JSONArray authors) {
@@ -856,7 +866,8 @@ public class ProjectServiceImpl implements ProjectService {
     license += "\n\n" + ccLicenseText;
     File licenseFile = new File(projectFolderPath, "license.txt");
     try {
-      Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(licenseFile), "UTF-8"));
+      Writer writer =
+          new BufferedWriter(new OutputStreamWriter(new FileOutputStream(licenseFile), "UTF-8"));
       writer.write(license);
       writer.close();
     } catch (IOException e) {
@@ -864,12 +875,14 @@ public class ProjectServiceImpl implements ProjectService {
     }
   }
 
-  public void replaceMetadataInProjectJSONFile(String projectFilePath, ProjectMetadata metadata) throws IOException, JSONException {
+  public void replaceMetadataInProjectJSONFile(String projectFilePath, ProjectMetadata metadata)
+      throws IOException, JSONException {
     String projectStr = FileUtils.readFileToString(new File(projectFilePath));
     JSONObject projectJSONObj = new JSONObject(projectStr);
     projectJSONObj.put("metadata", metadata.toJSONObject());
     File newProjectJSONFile = new File(projectFilePath);
-    Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(newProjectJSONFile), "UTF-8"));
+    Writer writer = new BufferedWriter(new OutputStreamWriter(
+        new FileOutputStream(newProjectJSONFile), "UTF-8"));
     writer.write(projectJSONObj.toString());
     writer.close();
   }

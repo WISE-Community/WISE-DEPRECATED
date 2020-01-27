@@ -128,7 +128,8 @@ class ProjectController {
           args.assetItem != null && args.assetItem.fileName != null) {
         let assetFileName = args.assetItem.fileName;
         if (args.target === 'rubric') {
-          const summernoteElement = angular.element(document.querySelector(`#summernoteRubric_${this.projectId}`));
+          const summernoteElement =
+              angular.element(document.querySelector(`#summernoteRubric_${this.projectId}`));
           let fullAssetPath =
               this.ConfigService.getProjectAssetsDirectoryPath() +
                   '/' + assetFileName;
@@ -218,7 +219,8 @@ class ProjectController {
   previewProject() {
     let previewProjectEventData = { constraints: true };
     this.saveEvent('projectPreviewed', 'Navigation', previewProjectEventData);
-    window.open(`${this.ConfigService.getConfigParam('previewProjectURL')}#!/project/${this.projectId}`);
+    window.open(
+        `${this.ConfigService.getConfigParam('previewProjectURL')}#!/project/${this.projectId}`);
   }
 
   previewProjectWithoutConstraints() {
@@ -1066,7 +1068,8 @@ class ProjectController {
   }
 
   previewImportNode(node) {
-    window.open(`${this.importProject.previewProjectURL}#!/project/${this.importProjectId}/${node.id}`);
+    window.open(
+        `${this.importProject.previewProjectURL}#!/project/${this.importProjectId}/${node.id}`);
   }
 
   previewImportProject() {

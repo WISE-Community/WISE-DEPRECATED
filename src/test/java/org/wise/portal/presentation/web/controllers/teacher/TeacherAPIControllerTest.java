@@ -157,7 +157,8 @@ public class TeacherAPIControllerTest extends APIControllerTest {
   }
 
   @Test
-  public void editRunStudentsPerTeam_NotAbleToReduceFrom3To1_ReturnErrorStatus() throws ObjectNotFoundException {
+  public void editRunStudentsPerTeam_NotAbleToReduceFrom3To1_ReturnErrorStatus()
+      throws ObjectNotFoundException {
     expect(userService.retrieveUserByUsername(TEACHER_USERNAME)).andReturn(teacher1);
     replay(userService);
     expect(runService.retrieveById(runId1)).andReturn(run1);
@@ -176,7 +177,8 @@ public class TeacherAPIControllerTest extends APIControllerTest {
   }
 
   @Test
-  public void editRunStudentsPerTeam_AbleToReduceFrom3To1_UpdateRun() throws ObjectNotFoundException {
+  public void editRunStudentsPerTeam_AbleToReduceFrom3To1_UpdateRun()
+      throws ObjectNotFoundException {
     expect(userService.retrieveUserByUsername(TEACHER_USERNAME)).andReturn(teacher1);
     replay(userService);
     expect(runService.retrieveById(runId1)).andReturn(run1);
