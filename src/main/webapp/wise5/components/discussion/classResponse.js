@@ -8,6 +8,16 @@ class ClassResponseController {
     this.ConfigService = ConfigService;
     this.$translate = this.$filter('translate');
     this.urlMatcher = /((http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?)/g;
+    this.expanded = false;
+
+    this.$scope.$watch(
+      () => { return this.response.replies.length; },
+      (numNew, numOld) => {
+        if (numNew !== numOld) {
+          this.expanded = true;
+        }
+      }
+    );
   }
 
   $onInit() {
