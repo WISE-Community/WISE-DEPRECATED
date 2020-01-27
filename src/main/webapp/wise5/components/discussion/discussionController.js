@@ -454,18 +454,9 @@ class DiscussionController extends ComponentController {
       }
     }
     this.topLevelResponses = this.getLevel1Responses();
-    if (this.isGradingMode() || this.isGradingRevisionMode()) {
-      this.topLevelResponses =
-          this.topLevelResponses.filter(this.threadHasPostFromThisComponentAndWorkgroupId());
-    }
-    this.orderResponses();
   }
-
-  orderResponses() {
-    this.topLevelResponses = this.topLevelResponses.reverse();
-  }
-
-  threadHasPostFromThisComponentAndWorkgroupId() {
+  
+  threadHasPostFromThisComponentAndWorkgroupId(componentState) {
     const thisComponentId = this.componentId;
     const thisWorkgroupId = this.workgroupId;
     return (componentState) => {
@@ -510,13 +501,28 @@ class DiscussionController extends ComponentController {
    * @return an array of responses that are not a reply to another response
    */
   getLevel1Responses() {
-    const level1Responses = [];
-    for (const classResponse of this.classResponses) {
+    const allResponses = [];
+    const oddResponses = [];
+    const evenResponses = [];
+    for (const [index, classResponse] of this.classResponses.entries()) {
       if (classResponse.studentData.componentStateIdReplyingTo == null) {
-        level1Responses.push(classResponse);
+        if ((this.isGradingMode() || this.isGradingRevisionMode()) &&
+            !this.threadHasPostFromThisComponentAndWorkgroupId(classResponse)) {
+          continue;
+        }
+        if (index % 2 === 0) {
+          evenResponses.push(classResponse);
+        } else {
+          oddResponses.push(classResponse);
+        }
+        allResponses.push(classResponse);
       }
     }
-    return level1Responses;
+    return {
+      all: allResponses.reverse(),
+      col1: oddResponses.reverse(),
+      col2: evenResponses.reverse()
+    };
   }
 
   /**

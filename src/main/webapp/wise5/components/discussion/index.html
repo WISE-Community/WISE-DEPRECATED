@@ -14,7 +14,7 @@
               <div layout='row'>
                 <div class='discussion-posts'
                     flex>
-                  <class-response ng-repeat='componentState in discussionController.topLevelResponses.slice().reverse()'
+                  <class-response ng-repeat='componentState in discussionController.topLevelResponses.all'
                       response='componentState'
                       submitbuttonclicked='submitbuttonclicked(r)'
                       mode='::discussionController.mode'
@@ -119,8 +119,19 @@
                   </md-button>
                 </div>
               </md-card>
-              <class-response ng-repeat='componentState in discussionController.topLevelResponses'
-                  ng-if='mdScreen ? $odd : true'
+              <class-response ng-repeat='componentState in discussionController.topLevelResponses.all'
+                  ng-if='!mdScreen'
+                  response='::componentState'
+                  submitbuttonclicked='submitbuttonclicked(r)'
+                  mode='{{::discussionController.mode}}'
+                  deletebuttonclicked='discussionController.deletebuttonclicked(componentState)'
+                  undodeletebuttonclicked='discussionController.undodeletebuttonclicked(componentState)'
+                  studentdatachanged='studentdatachanged()'
+                  isdisabled='::discussionController.isDisabled'
+                  class='post animate-repeat'>
+              </class-response>
+              <class-response ng-repeat='componentState in discussionController.topLevelResponses.col2'
+                  ng-if='mdScreen'
                   response='::componentState'
                   submitbuttonclicked='submitbuttonclicked(r)'
                   mode='{{::discussionController.mode}}'
@@ -131,11 +142,8 @@
                   class='post animate-repeat'>
               </class-response>
             </div>
-            <div class='discussion-posts'
-                ng-if='mdScreen'
-                flex>
-              <class-response ng-repeat='componentState in discussionController.topLevelResponses'
-                  ng-if='$even'
+            <div class='discussion-posts' ng-if='mdScreen' flex>
+              <class-response ng-repeat='componentState in discussionController.topLevelResponses.col1'
                   response='::componentState'
                   submitbuttonclicked='submitbuttonclicked(r)'
                   mode='{{::discussionController.mode}}'
