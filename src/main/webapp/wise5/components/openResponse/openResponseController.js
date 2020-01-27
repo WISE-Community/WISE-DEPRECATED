@@ -285,28 +285,34 @@ class OpenResponseController extends ComponentController {
     let isPerformSubmit = false;
 
     if (this.hasFeedback()) {
-      if (numberOfSubmitsLeft <= 0) {
-        alert(this.$translate('openResponse.youHaveNoMoreChances'));
-      } else if (numberOfSubmitsLeft == 1) {
-        message = this.$translate('openResponse.youHaveOneChance', {numberOfSubmitsLeft: numberOfSubmitsLeft});
-        isPerformSubmit = confirm(message);
-      } else if (numberOfSubmitsLeft > 1) {
-        message = this.$translate('openResponse.youHaveMultipleChances', {numberOfSubmitsLeft: numberOfSubmitsLeft});
-        isPerformSubmit = confirm(message);
-      }
+      return submitWithFeedback(numberOfSubmitsLeft);
+    } else {
+      return submitWithoutFeedback(numberOfSubmitsLeft);
     }
-    else {
-      if (numberOfSubmitsLeft <= 0) {
-        alert(this.$translate('openResponse.youHaveNoMoreChancesWithoutFeedback'));
-      } else if (numberOfSubmitsLeft == 1) {
-        message = this.$translate('openResponse.youHaveOneChanceWithoutFeedback', {numberOfSubmitsLeft: numberOfSubmitsLeft});
-        isPerformSubmit = confirm(message);
-      } else if (numberOfSubmitsLeft > 1) {
-        message = this.$translate('openResponse.youHaveMultipleChancesWithoutFeedback', {numberOfSubmitsLeft: numberOfSubmitsLeft});
-        isPerformSubmit = confirm(message);
-      }
+  }
+
+  submitWithFeedback(numberOfSubmitsLeft) {
+    if (numberOfSubmitsLeft <= 0) {
+      alert(this.$translate('openResponse.youHaveNoMoreChances'));
+    } else if (numberOfSubmitsLeft == 1) {
+      message = this.$translate('openResponse.youHaveOneChance', {numberOfSubmitsLeft: numberOfSubmitsLeft});
+      isPerformSubmit = confirm(message);
+    } else if (numberOfSubmitsLeft > 1) {
+      message = this.$translate('openResponse.youHaveMultipleChances', {numberOfSubmitsLeft: numberOfSubmitsLeft});
+      isPerformSubmit = confirm(message);
     }
-    return isPerformSubmit;
+  }
+
+  submitWithoutFeedback(numberOfSubmitsLeft) {
+    if (numberOfSubmitsLeft <= 0) {
+      alert(this.$translate('openResponse.youHaveNoMoreChancesWithoutFeedback'));
+    } else if (numberOfSubmitsLeft == 1) {
+      message = this.$translate('openResponse.youHaveOneChanceWithoutFeedback', {numberOfSubmitsLeft: numberOfSubmitsLeft});
+      isPerformSubmit = confirm(message);
+    } else if (numberOfSubmitsLeft > 1) {
+      message = this.$translate('openResponse.youHaveMultipleChancesWithoutFeedback', {numberOfSubmitsLeft: numberOfSubmitsLeft});
+      isPerformSubmit = confirm(message);
+    }
   }
 
   /**
