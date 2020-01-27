@@ -41,8 +41,12 @@ export class AddProjectDialogComponent implements OnInit {
   submit() {
     this.isAdding = true;
     this.studentService.addRun(this.registerRunRunCode, this.selectedPeriod).subscribe((studentRun) => {
-      if (studentRun.error) {
-        this.addProjectForm.controls['runCode'].setErrors({'alreadyAddedRun': true});
+      if (studentRun.status === 'error') {
+        if (studentRun.messageCode === 'alreadyAddedRun') {
+          this.addProjectForm.controls['runCode'].setErrors({'alreadyAddedRun': true});
+        } else if (studentRun.messageCode === 'runHasEnded') {
+          this.addProjectForm.controls['runCode'].setErrors({'runHasEnded': true});
+        }
         this.isAdding = false;
       } else {
         this.studentService.addNewProject(studentRun);

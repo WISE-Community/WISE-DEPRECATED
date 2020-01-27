@@ -9,7 +9,7 @@
     }
   </style>
   <div ng-style='{"border": "5px solid black", "padding": "20px"}'>
-    <div ng-switch='audioOscillatorController.mode'>
+    <div ng-switch='::audioOscillatorController.mode'>
       <div ng-switch-when='grading|gradingRevision'
           ng-switch-when-separator='|'
           layout='row'
@@ -30,7 +30,7 @@
               component-id='audioOscillatorController.componentId'
               to-workgroup-id='workgroupId'
               component-state='componentState'
-              active='audioOscillatorController.mode === "grading"'>
+              active='::audioOscillatorController.mode === "grading"'>
           </component-revisions-info>
         </div>
         <div flex='100'
@@ -42,8 +42,8 @@
               from-workgroup-id='teacherWorkgroupId'
               to-workgroup-id='workgroupId'
               component-state-id='componentState.id'
-              show-all-annotations='audioOscillatorController.mode !== "grading"'
-              is-disabled='audioOscillatorController.mode !== "grading"'>
+              show-all-annotations='::audioOscillatorController.mode !== "grading"'
+              is-disabled='::audioOscillatorController.mode !== "grading"'>
           </component-grading>
         </div>
       </div>
@@ -103,19 +103,19 @@
             height={{audioOscillatorController.oscilloscopeHeight}}
             style='border:1px solid lightgrey'>
         </canvas>
-        <div ng-if='audioOscillatorController.isSaveButtonVisible || audioOscillatorController.isSubmitButtonVisible'
+        <div ng-if='::audioOscillatorController.isSaveOrSubmitButtonVisible()'
            class='component-content__actions'
            layout='row'
            layout-align='start center'>
           <md-button class='md-raised md-primary'
               ng-click='audioOscillatorController.saveButtonClicked()'
-              ng-if='audioOscillatorController.isSaveButtonVisible'
+              ng-if='::audioOscillatorController.isSaveButtonVisible'
               ng-disabled='audioOscillatorController.isDisabled || !audioOscillatorController.isDirty'>
             {{ 'SAVE' | translate }}
           </md-button>
           <md-button class='md-raised md-primary'
               ng-click='audioOscillatorController.submitButtonClicked()'
-              ng-if='audioOscillatorController.isSubmitButtonVisible'
+              ng-if='::audioOscillatorController.isSubmitButtonVisible'
               ng-disabled='audioOscillatorController.isDisabled || !audioOscillatorController.isSubmitDirty || audioOscillatorController.isSubmitButtonDisabled'>
             {{ 'SUBMIT' | translate }}
           </md-button>
@@ -130,7 +130,7 @@
               </span>
           </span>
         </div>
-        <component-annotations ng-if='audioOscillatorController.mode === "student"'
+        <component-annotations ng-if='::audioOscillatorController.mode === "student"'
             annotations='audioOscillatorController.latestAnnotations'
             max-score='audioOscillatorController.componentContent.maxScore'>
         </component-annotations>

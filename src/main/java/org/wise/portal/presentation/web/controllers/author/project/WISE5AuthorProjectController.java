@@ -23,19 +23,51 @@
  */
 package org.wise.portal.presentation.web.controllers.author.project;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.io.FileUtils;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
@@ -51,28 +83,17 @@ import org.wise.portal.domain.project.impl.ProjectType;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
-import org.wise.portal.presentation.web.exception.NotAuthorizedException;
+import org.wise.portal.presentation.web.response.ErrorResponse;
+import org.wise.portal.presentation.web.response.SimpleResponse;
+import org.wise.portal.presentation.web.response.SuccessResponse;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.portal.PortalService;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.session.SessionService;
+import org.wise.portal.service.user.UserService;
 import org.wise.portal.spring.data.redis.MessagePublisher;
 import org.wise.vle.utils.FileManager;
-
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
  * Controller for authoring WISE5 projects
@@ -101,13 +122,16 @@ public class WISE5AuthorProjectController {
   ServletContext servletContext;
 
   @Autowired
+  protected UserService userService;
+
+  @Autowired
   private MessagePublisher redisPublisher;
 
   private String featuredProjectIconsFolderRelativePath = "wise5/authoringTool/projectIcons";
 
   @GetMapping("/author")
-  protected String authorProject(HttpServletRequest request, HttpServletResponse response,
-      ModelMap modelMap) throws ObjectNotFoundException {
+  protected String authorProject(HttpServletRequest request, HttpServletResponse response)
+      throws ObjectNotFoundException {
     Portal portal = portalService.getById(new Integer(1));
     if (!portal.isLoginAllowed()) {
       Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -117,9 +141,7 @@ public class WISE5AuthorProjectController {
       SecurityContextHolder.getContext().setAuthentication(null);
       return "redirect:/index.html";
     }
-    String contextPath = request.getContextPath();
-    modelMap.put("configURL", contextPath + "/authorConfig");
-    return "author";
+    return "forward:/wise5/authoringTool/dist/index.html";
   }
 
   /**
@@ -289,54 +311,29 @@ public class WISE5AuthorProjectController {
    * @param projectJSONString a valid-JSON string of the project
    * @throws ObjectNotFoundException
    */
+  @Secured({"ROLE_TEACHER"})
   @PostMapping("/project/save/{projectId}")
-  @ResponseStatus(HttpStatus.OK)
-  protected void saveProject(@PathVariable Long projectId,
+  @ResponseBody
+  protected HashMap<String, Object> saveProject(Authentication auth, @PathVariable Long projectId,
       @RequestParam("commitMessage") String commitMessage,
       @RequestParam("projectJSONString") String projectJSONString)
       throws JSONException, ObjectNotFoundException {
+    SimpleResponse response = new SimpleResponse();
     Project project = projectService.getById(projectId);
-    User user = ControllerUtil.getSignedInUser();
+    User user = userService.retrieveUserByUsername(auth.getName());
     if (!projectService.canAuthorProject(project, user)) {
-      return;
-    }
-
-    String curriculumBaseDir = appProperties.getProperty("curriculum_base_dir");
-    String projectModulePath = project.getModulePath();
-    String projectJSONPath = curriculumBaseDir + projectModulePath;
-    File projectFile = new File(projectJSONPath);
-    try {
-      if (!projectFile.exists()) {
-        projectFile.createNewFile();
-      }
-      Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(projectFile), "UTF-8"));
-      writer.write(projectJSONString.toString());
-      writer.close();
-
+      response = new ErrorResponse("notAllowedToEditThisProject");
+    } else {
       try {
-        JSONObject projectJSONObject = new JSONObject(projectJSONString);
-        JSONObject projectMetadataJSON = projectJSONObject.getJSONObject("metadata");
-        if (projectMetadataJSON != null) {
-          ProjectMetadata oldProjectMetadata = project.getMetadata();
-          ProjectMetadata projectMetadata = new ProjectMetadataImpl(projectMetadataJSON);
-          project.setMetadata(projectMetadataJSON.toString());
-          if (!oldProjectMetadata.getTitle().equals(projectMetadata.getTitle()) ||
-              !oldProjectMetadata.getAuthors().equals(projectMetadata.getAuthors())) {
-            String projectFolderPath = FileManager.getProjectFolderPath(project);
-            projectService.writeProjectLicenseFile(projectFolderPath, project);
-          }
-          String projectTitle = projectMetadataJSON.getString("title");
-          if (projectTitle != null && !projectTitle.equals(project.getName())) {
-            project.setName(projectTitle);
-          }
-          projectService.updateProject(project, user);
-        }
-      } catch (JSONException | NotAuthorizedException e) {
-        e.printStackTrace();
+        projectService.saveProjectFile(project, projectJSONString);
+        projectService.updateMetadataAndLicenseIfNecessary(project, projectJSONString);
+        projectService.saveProjectToDatabase(project, user, projectJSONString);
+        response = new SuccessResponse("projectSaved");
+      } catch (Exception e) {
+        response = new ErrorResponse("errorSavingProject");
       }
-    } catch (IOException e) {
-      e.printStackTrace();
     }
+    return response.toMap();
   }
 
   @SuppressWarnings("unused")
@@ -350,7 +347,7 @@ public class WISE5AuthorProjectController {
 
   @GetMapping("/authorConfig")
   @ResponseBody
-  protected String getAuthorProjectConfigChooser(HttpServletRequest request)
+  protected String getAuthorProjectConfigChooser(HttpServletRequest request, HttpServletResponse response)
       throws IOException {
     JSONObject config = getDefaultAuthoringConfigJsonObject(request);
     return config.toString();
@@ -386,7 +383,10 @@ public class WISE5AuthorProjectController {
     config.put("customProjectIcon", contextPath + "/project/custom/icon");
     config.put("mode", "author");
 
-    if (projectService.canAuthorProject(project, ControllerUtil.getSignedInUser())) {
+    boolean canEditProject =
+        projectService.canAuthorProject(project, ControllerUtil.getSignedInUser());
+    config.put("canEditProject", canEditProject);
+    if (canEditProject) {
       config.put("saveProjectURL", contextPath + "/project/save/" + projectId);
       config.put("commitProjectURL", contextPath + "/project/commit/" + projectId);
     }
@@ -417,6 +417,7 @@ public class WISE5AuthorProjectController {
       config.put("notifyProjectEndURL", contextPath + "/project/notifyAuthorEnd/");
       config.put("getLibraryProjectsURL", contextPath + "/author/authorproject.html?command=projectList&projectPaths=&projectTag=library&wiseVersion=5");
       config.put("teacherDataURL", contextPath + "/teacher/data");
+      config.put("sessionTimeout", request.getSession().getMaxInactiveInterval());
 
       String projectMetadataSettings = null;
       try {
@@ -795,20 +796,20 @@ public class WISE5AuthorProjectController {
   }
 
   @PostMapping("/project/notifyAuthorBegin/{projectId}")
-  private ModelAndView authorProjectBegin(@PathVariable String projectId) throws Exception {
+  @ResponseBody
+  protected HashMap<String, Object> authorProjectBegin(@PathVariable String projectId) throws Exception {
+    HashMap<String, Object> map = new HashMap<String, Object>();
     User user = ControllerUtil.getSignedInUser();
     Project project = projectService.getById(projectId);
     if (projectService.canAuthorProject(project, user)) {
       sessionService.addCurrentAuthor(project, user.getUserDetails());
       notifyCurrentAuthors(projectId);
-      return null;
-    } else {
-      return new ModelAndView(new RedirectView("accessdenied.html"));
     }
+    return map;
   }
 
   @PostMapping("/project/notifyAuthorEnd/{projectId}")
-  private ModelAndView authorProjectEnd(@PathVariable String projectId) throws Exception {
+  protected ModelAndView authorProjectEnd(@PathVariable String projectId) throws Exception {
     User user = ControllerUtil.getSignedInUser();
     Project project = projectService.getById(projectId);
     if (projectService.canAuthorProject(project, user)) {

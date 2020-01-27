@@ -59,7 +59,8 @@ export class StudentRunListItemComponent implements OnInit {
     } else {
       this.dialog.open(TeamSignInDialogComponent, {
         data: { run: this.run },
-        panelClass: 'mat-dialog--sm'
+        panelClass: 'mat-dialog--sm',
+        disableClose: true
       });
     }
   }

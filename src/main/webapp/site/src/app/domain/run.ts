@@ -1,5 +1,6 @@
 import { Project } from "./project";
 import { User } from "./user";
+import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 
 export class Run {
   id: number;
@@ -15,6 +16,7 @@ export class Run {
   owner: User;
   sharedOwners: User[] = [];
   project: Project;
+  private sharedOwners$: BehaviorSubject<any[]> = new BehaviorSubject<any[]>(this.sharedOwners);
 
   static readonly VIEW_STUDENT_WORK_PERMISSION: number = 1;
   static readonly GRADE_AND_MANAGE_PERMISSION: number = 2;

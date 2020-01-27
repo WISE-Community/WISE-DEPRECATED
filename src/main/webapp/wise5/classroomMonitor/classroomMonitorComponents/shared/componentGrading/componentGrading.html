@@ -2,11 +2,11 @@
     <div class="annotations--grading__score annotations--grading__item" layout="row" layout-align="start-center">
         <md-input-container class="md-no-float" layout="row" layout-align="start-center">
             <label class="input-label md-no-float annotations--grading__score__label">
-                <span ng-if="$ctrl.latestAnnotations.score.type === 'autoScore'">{{ 'AUTO_SCORE' | translate }}
+                <span ng-if="$ctrl.latestAnnotations.score.type === 'autoScore'">{{ ::'AUTO_SCORE' | translate }}
                     <span ng-if="!$ctrl.isDisabled">
-                        (<a ng-click="$ctrl.editScore($event)">{{ 'EDIT' | translate }}</a>)
+                        (<a ng-click="$ctrl.editScore($event)">{{ ::'EDIT' | translate }}</a>)
                     </span>:</span>
-                <span ng-if="$ctrl.latestAnnotations.score.type !== 'autoScore'">{{ 'ITEM_SCORE' | translate }}:</span>
+                <span ng-if="$ctrl.latestAnnotations.score.type !== 'autoScore'">{{ ::'ITEM_SCORE' | translate }}:</span>
             </label>
             <input id="{{ 'scoreInput_' + $ctrl.componentId + '_' + $ctrl.toWorkgroupId }}"
                    type="number"
@@ -19,8 +19,8 @@
         </md-input-container>
         <span> / </span>
         <md-input-container class="md-no-float annotations--grading__score__max" layout="row" layout-align="start-center">
-            <label class="input-label md-no-float annotations--grading__score__label">{{ 'MAX' | translate }}</label>
-            <input aria-label="{{ 'MAX_SCORE' | translate }}"
+            <label class="input-label md-no-float annotations--grading__score__label">{{ ::'MAX' | translate }}</label>
+            <input aria-label="{{ ::'MAX_SCORE' | translate }}"
                    type="number"
                    placeholder="0"
                    min="0"
@@ -32,11 +32,11 @@
     </div>
     <div ng-show="$ctrl.edit || !$ctrl.showAutoComment()" class="annotations--grading__item">
         <md-input-container class="input-container md-block md-no-float" flex>
-            <label class="input-label md-no-float" ng-disabled="$ctrl.isDisabled">{{ 'TEACHER_COMMENT' | translate }}:</label>
+            <label class="input-label md-no-float" ng-disabled="$ctrl.isDisabled">{{ ::'TEACHER_COMMENT' | translate }}:</label>
             <div class="input-wrapper">
                 <textarea id="{{ 'commentInput_' + $ctrl.componentId + '_' + $ctrl.toWorkgroupId }}"
                           md-detect-hidden
-                          placeholder="{{ 'enterCommentHere' | translate }}"
+                          placeholder="{{ ::'enterCommentHere' | translate }}"
                           ng-model="$ctrl.comment"
                           ng-disabled="$ctrl.isDisabled"
                           ng-change="$ctrl.postAnnotation('comment')"
@@ -46,8 +46,8 @@
     </div>
     <div ng-if="$ctrl.showAutoComment()" class="annotations--grading__item annotations--grading__auto-comment">
         <div class="heavy">
-            <span class="md-no-float">{{ 'AUTO_COMMENT' | translate }}
-                <span ng-if="!$ctrl.isDisabled">(<a ng-click="$ctrl.editComment()">{{ 'EDIT' | translate }}</a>)</span>:
+            <span class="md-no-float">{{ ::'AUTO_COMMENT' | translate }}
+                <span ng-if="!$ctrl.isDisabled">(<a ng-click="$ctrl.editComment()">{{ ::'EDIT' | translate }}</a>)</span>:
             </span>
         </div>
         <div class="annotations--grading__auto-comment__content">
@@ -66,7 +66,7 @@
              class="annotations--grading__item annotations--grading__score"
              layout="row" layout-align="start-center">
             <md-input-container class="md-no-float" layout="row" layout-align="start-center">
-                <label class="input-label md-no-float annotations--grading__score__label">{{ 'TEACHER_SCORE' | translate }}:</label>
+                <label class="input-label md-no-float annotations--grading__score__label">{{ ::'TEACHER_SCORE' | translate }}:</label>
                 <input type="number"
                        placeholder="0"
                        min="0"
@@ -75,8 +75,8 @@
             </md-input-container>
             <span> / </span>
             <md-input-container class="md-no-float annotations--grading__score__max" layout="row" layout-align="start-center">
-                <label class="input-label md-no-float annotations--grading__score__label">{{ 'MAX' | translate }}</label>
-                <input aria-label="{{ 'MAX_SCORE' | translate }}"
+                <label class="input-label md-no-float annotations--grading__score__label">{{ ::'MAX' | translate }}</label>
+                <input aria-label="{{ ::'MAX_SCORE' | translate }}"
                        type="number"
                        placeholder="0"
                        ng-model="$ctrl.maxScore"
@@ -86,10 +86,10 @@
         <div ng-if="$ctrl.latestAnnotations.comment" class="annotations--grading__item">
             <md-input-container class="input-container md-block md-no-float"
                                 flex>
-                <label class="input-label md-no-float" ng-disabled="true">{{ 'TEACHER_COMMENT' | translate }}:</label>
+                <label class="input-label md-no-float" ng-disabled="true">{{ ::'TEACHER_COMMENT' | translate }}:</label>
                 <div class="input-wrapper">
                     <textarea md-detect-hidden
-                              placeholder="{{ 'enterCommentHere' | translate }}"
+                              placeholder="{{ ::'enterCommentHere' | translate }}"
                               ng-model="$ctrl.latestAnnotations.comment.data.value"
                               ng-disabled="true"></textarea>
                 </div>
@@ -105,7 +105,7 @@
              class="annotations--grading__item annotations--grading__score"
              layout="row" layout-align="start-center">
             <md-input-container class="md-no-float" layout="row" layout-align="start-center">
-                <label class="input-label md-no-float annotations--grading__score__label">{{ 'AUTO_SCORE' | translate }}:</label>
+                <label class="input-label md-no-float annotations--grading__score__label">{{ ::'AUTO_SCORE' | translate }}:</label>
                 <input type="number"
                        placeholder="0"
                        min="0"
@@ -114,8 +114,8 @@
             </md-input-container>
             <span> / </span>
             <md-input-container class="md-no-float annotations--grading__score__max" layout="row" layout-align="start-center">
-                <label class="input-label md-no-float annotations--grading__score__label">{{ 'MAX' | translate }}</label>
-                <input aria-label="{{ 'MAX_SCORE' | translate }}"
+                <label class="input-label md-no-float annotations--grading__score__label">{{ ::'MAX' | translate }}</label>
+                <input aria-label="{{ ::'MAX_SCORE' | translate }}"
                        type="number"
                        placeholder="0"
                        ng-model="$ctrl.maxScore"
@@ -123,7 +123,7 @@
             </md-input-container>
         </div>
         <div class="annotations--grading__item annotations--grading__auto-comment" ng-if="$ctrl.latestAnnotations.autoComment">
-            <div class="heavy md-no-float">{{ 'AUTO_COMMENT' | translate }}:</div>
+            <div class="heavy md-no-float">{{ ::'AUTO_COMMENT' | translate }}:</div>
             <div class="annotations--grading__auto-comment__content">
                 <compile data="$ctrl.latestAnnotations.autoComment.data.value"></compile>
             </div>

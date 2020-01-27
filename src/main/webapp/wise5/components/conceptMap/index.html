@@ -1,8 +1,8 @@
 <div ng-controller='ConceptMapController as conceptMapController' ng-mouseup='conceptMapController.mouseUp()' flex>
   <style>
-    {{conceptMapController.nodeContent.style}}
+    {{::conceptMapController.nodeContent.style}}
   </style>
-  <div ng-switch='conceptMapController.mode'>
+  <div ng-switch='::conceptMapController.mode'>
     <div ng-switch-when='grading|gradingRevision'
          ng-switch-when-separator='|'
          layout='row'
@@ -33,7 +33,7 @@
                                   component-id='conceptMapController.componentId'
                                   to-workgroup-id='workgroupId'
                                   component-state='componentState'
-                                  active='conceptMapController.mode === "grading"'>
+                                  active='::conceptMapController.mode === "grading"'>
         </component-revisions-info>
       </div>
       <div flex='100'
@@ -45,8 +45,8 @@
                            from-workgroup-id='teacherWorkgroupId'
                            to-workgroup-id='workgroupId'
                            component-state-id='componentState.id'
-                           show-all-annotations='conceptMapController.mode !== "grading"'
-                           is-disabled='conceptMapController.mode !== "grading"'>
+                           show-all-annotations='::conceptMapController.mode !== "grading"'
+                           is-disabled='::conceptMapController.mode !== "grading"'>
         </component-grading>
       </div>
     </div>
@@ -58,18 +58,18 @@
           <compile data='conceptMapController.getPrompt()'></compile>
         </label>
         <possible-score max-score='conceptMapController.componentContent.maxScore'
-                        ng-if='conceptMapController.mode === "student" && !conceptMapController.latestAnnotations.score'></possible-score>
+                        ng-if='::conceptMapController.mode === "student" && !conceptMapController.latestAnnotations.score'></possible-score>
         <div class='input-wrapper'>
           <md-button class='md-raised md-primary'
-                     ng-if='conceptMapController.mode !== "grading"'
+                     ng-if='::conceptMapController.mode !== "grading"'
                      ng-click='conceptMapController.resetConceptMap()'
                      ng-disabled='conceptMapController.isDisabled'>
-            {{ 'RESET' | translate }}
+            {{ ::'RESET' | translate }}
           </md-button>
           <md-button class='md-accent'
                      ng-click='conceptMapController.snip($event)'
-                     ng-if='conceptMapController.isAddToNotebookEnabled()'>
-            <md-icon> note_add </md-icon>  {{ 'ADD_TO_NOTEBOOK' | translate:{label:tableController.notebookConfig.label} }}
+                     ng-if='::conceptMapController.isAddToNotebookEnabled()'>
+            <md-icon> note_add </md-icon>  {{ ::'ADD_TO_NOTEBOOK' | translate:{label:tableController.notebookConfig.label} }}
           </md-button>
           <div id='{{conceptMapController.conceptMapContainerId}}'
                style='display: flex'>
@@ -117,7 +117,8 @@
                               ng-disabled='conceptMapController.isDisabled'>
                 <div ng-repeat='link in conceptMapController.availableLinks'>
                   <md-radio-button class='md-primary'
-                                   ng-value='link.id'
+                                   aria-label='::link.label'
+                                   ng-value='::link.id'
                                    ng-click='conceptMapController.isDisabled || conceptMapController.linkTypeSelected(link)'
                                    ng-disabled='conceptMapController.isDisabled'
                                    style='display: inline-block; margin: 8px;'>
@@ -129,8 +130,8 @@
                 </div>
               </md-radio-group>
               <div style='display: flex'>
-                <div style='margin-right: auto;'><md-button class='md-primary md-button md-raised' ng-click='conceptMapController.cancelLinkTypeChooser()'>{{ 'CANCEL' | translate }}</md-button></div>
-                <div style='margin-right: auto;'><md-button class='md-primary md-button md-raised' ng-click='conceptMapController.linkDeleteButtonClicked($event, conceptMapController.highlightedElement)'>{{ 'DELETE' | translate }}</md-button></div>
+                <div style='margin-right: auto;'><md-button class='md-primary md-button md-raised' ng-click='conceptMapController.cancelLinkTypeChooser()'>{{ ::'CANCEL' | translate }}</md-button></div>
+                <div style='margin-right: auto;'><md-button class='md-primary md-button md-raised' ng-click='conceptMapController.linkDeleteButtonClicked($event, conceptMapController.highlightedElement)'>{{ ::'DELETE' | translate }}</md-button></div>
               </div>
             </div>
           </div>
@@ -156,7 +157,7 @@
                  ng-click='nodeController.showStudentAssets($event, component.id, conceptMapController.isDisabled)'
                  ng-disabled='conceptMapController.isDisabled'>
         <md-icon>image</md-icon>
-        <span>{{ 'conceptMap.addFile' | translate }}</span>
+        <span>{{ ::'conceptMap.addFile' | translate }}</span>
       </md-button>
     </div>
     <div class='component__attachment'
@@ -172,7 +173,7 @@
       </md-button>
     </div>
   </div>
-  <div ng-if='conceptMapController.isSaveButtonVisible || conceptMapController.isSubmitButtonVisible'
+  <div ng-if='::conceptMapController.isSaveOrSubmitButtonVisible()'
        class='component__actions'
        layout='row'
        layout-align='start center'>
@@ -180,14 +181,14 @@
                ng-class='{"md-raised": !conceptMapController.isSubmitButtonVisible}'
                ng-click='conceptMapController.saveButtonClicked()'
                ng-disabled='conceptMapController.isDisabled || !conceptMapController.isDirty'
-               ng-if='conceptMapController.isSaveButtonVisible'
+               ng-if='::conceptMapController.isSaveButtonVisible'
                aria-label='Save'
                translate='SAVE'>
     </md-button>
     <md-button class='md-raised md-primary'
                ng-click='conceptMapController.submitButtonClicked()'
                ng-disabled='conceptMapController.isSubmitButtonDisabled || conceptMapController.isDisabled || !conceptMapController.isSubmitDirty'
-               ng-if='conceptMapController.isSubmitButtonVisible'
+               ng-if='::conceptMapController.isSubmitButtonVisible'
                aria-label='Submit'
                translate='SUBMIT'>
     </md-button>
@@ -202,7 +203,7 @@
         </span>
       </span>
   </div>
-  <component-annotations ng-if='conceptMapController.mode === "student"'
+  <component-annotations ng-if='::conceptMapController.mode === "student"'
                          annotations='conceptMapController.latestAnnotations'
                          max-score='conceptMapController.componentContent.maxScore'>
   </component-annotations>

@@ -42,8 +42,8 @@ export class TeacherRunListItemComponent implements OnInit {
     this.run.project.thumbStyle = this.getThumbStyle();
     this.editLink = `${this.configService.getContextPath()}/author/authorproject.html?projectId=${this.run.project.id}`;
     if (this.run != null) {
-      this.gradeAndManageLink = `${this.configService.getContextPath()}/teacher/run/manage/${this.run.id}`;
-      this.manageStudentsLink = `${this.configService.getContextPath()}/teacher/run/manage/${ this.run.id }/#/manageStudents`;
+      this.gradeAndManageLink = `${this.configService.getContextPath()}/teacher/run/manage/${this.run.id}#!/run/${this.run.id}/project/`;
+      this.manageStudentsLink = `${this.configService.getContextPath()}/teacher/run/manage/${this.run.id}#!/run/${this.run.id}/manageStudents`;
       if (this.run.isHighlighted) {
         this.animateDuration = '2s';
         this.animateDelay = '1s';

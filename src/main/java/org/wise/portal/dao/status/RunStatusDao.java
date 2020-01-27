@@ -28,8 +28,6 @@ import org.wise.vle.domain.status.RunStatus;
 
 public interface RunStatusDao<T extends RunStatus> extends SimpleDao<RunStatus> {
 
-  RunStatus getRunStatusById(Long id);
-
   void saveRunStatus(RunStatus runStatus);
 
   RunStatus getRunStatusByRunId(Long runId);

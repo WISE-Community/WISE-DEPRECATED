@@ -18,7 +18,6 @@ public class FileManagerTest {
     EasyMock.replay(project);
     String projectFilePath = FileManager.getProjectFilePath(project);
     EasyMock.verify(project);
-    assertEquals("src/main/webapp/curriculum/567/project.json",
-        projectFilePath);
+    assertEquals("src/test/webapp/curriculum/567/project.json", projectFilePath);
   }
 }

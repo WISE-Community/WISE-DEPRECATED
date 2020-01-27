@@ -7,6 +7,7 @@
         <input formControlName="runCode" matInput value="{{ accessCode }}" (keyup)="checkRunCode()">
         <mat-error *ngIf="runCodeFormControl.hasError('invalidRunCodeSyntax') || runCodeFormControl.hasError('invalidRunCode')" i18n>Invalid Access Code</mat-error>
         <mat-error *ngIf="runCodeFormControl.hasError('alreadyAddedRun')" i18n>You have already added this unit.</mat-error>
+        <mat-error *ngIf="runCodeFormControl.hasError('runHasEnded')" i18n>This run has ended. Please talk to your teacher.</mat-error>
       </mat-form-field>
     </p>
     <p>

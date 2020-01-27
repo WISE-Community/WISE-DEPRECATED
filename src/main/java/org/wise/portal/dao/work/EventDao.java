@@ -42,9 +42,4 @@ public interface EventDao<T extends Event> extends SimpleDao<T> {
       String nodeId, String componentId, String componentType, String context, String category,
       String event, List<JSONObject> components);
 
-  /**
-   * Returns a list of events for the specified runs in an exportable format
-   */
-  List<Object[]> getStudentEventExport(Integer runId);
-
 }

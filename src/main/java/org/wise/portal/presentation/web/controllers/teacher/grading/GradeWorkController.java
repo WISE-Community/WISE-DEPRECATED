@@ -23,27 +23,25 @@
  */
 package org.wise.portal.presentation.web.controllers.teacher.grading;
 
+import java.io.IOException;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.acls.domain.BasePermission;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.project.impl.ProjectType;
 import org.wise.portal.domain.run.Run;
-import org.wise.portal.domain.user.User;
-import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.run.RunService;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Properties;
 
 /**
  * A Controller for Grading Student Work
@@ -62,18 +60,19 @@ public class GradeWorkController {
    * Invokes WISE4 or WISE5 Classroom Monitor based on the specified run
    * @param runId ID of the run
    */
-  @RequestMapping(value = "/teacher/run/manage/{runId}")
-  protected ModelAndView launchClassroomMonitor(@PathVariable Integer runId,
-      HttpServletRequest request, HttpServletResponse response) throws Exception {
-    Run run = runService.retrieveById(new Long(runId));
+  @GetMapping(value = "/teacher/run/manage/{runId}")
+  protected ModelAndView launchClassroomMonitor(@PathVariable Long runId,
+      HttpServletRequest request, HttpServletResponse response,
+      Authentication authentication) throws Exception {
+    Run run = runService.retrieveById(runId);
     if (5 == run.getProject().getWiseVersion()) {
-      return this.launchClassroomMonitorWISE5(request, runId);
+      return this.launchClassroomMonitorWISE5(runId, authentication);
     } else if (4 == run.getProject().getWiseVersion()) {
       String action = null;
       String gradingType = "monitor";
       String getRevisions = null;
-      return this.launchClassroomMonitorWISE4(runId.toString(), action, gradingType, getRevisions,
-          request, response);
+      return this.launchClassroomMonitorWISE4(runId, action, gradingType, getRevisions,
+          authentication, request, response);
     }
     return null;
   }
@@ -81,31 +80,18 @@ public class GradeWorkController {
   /**
    * Handles launching classroom monitor for WISE5 runs
    * @param runId ID of the run
-   * @return
    * @throws Exception
    */
-  @RequestMapping(value = "/classroomMonitor/{runId}")
-  protected ModelAndView launchClassroomMonitorWISE5(HttpServletRequest request, @PathVariable Integer runId) throws Exception {
-    Run run = null;
-    try {
-      run = runService.retrieveById(new Long(runId));
-    } catch (NumberFormatException e) {
-      e.printStackTrace();
-    } catch (ObjectNotFoundException e) {
-      e.printStackTrace();
+  @GetMapping(value = "/classroomMonitor/{runId}")
+  protected ModelAndView launchClassroomMonitorWISE5(@PathVariable Long runId,
+      Authentication authentication) throws Exception {
+    Run run = runService.retrieveById(runId);
+    if (runService.hasReadPermission(authentication, run)) {
+      return new ModelAndView(
+          "forward:/wise5/classroomMonitor/dist/index.html#!/run/" + runId + "/project/");
+    } else {
+      return new ModelAndView("errors/accessdenied");
     }
-
-    User user = ControllerUtil.getSignedInUser();
-    if (user.isAdmin() ||
-        this.runService.hasRunPermission(run, user, BasePermission.WRITE) ||
-        this.runService.hasRunPermission(run, user, BasePermission.READ)) {
-      String contextPath = request.getContextPath();
-      String getClassroomMonitorConfigUrl = contextPath + "/config/classroomMonitor/" + runId;
-      ModelAndView modelAndView = new ModelAndView("classroomMonitor");
-      modelAndView.addObject("configURL", getClassroomMonitorConfigUrl);
-      return modelAndView;
-    }
-    return null;
   }
 
   /**
@@ -123,33 +109,32 @@ public class GradeWorkController {
     "/teacher/grading/gradework.html",
     "/teacher/classroomMonitor/classroomMonitor"})
   protected ModelAndView launchClassroomMonitorWISE4(
-      @RequestParam("runId") String runId,
+      @RequestParam("runId") Long runId,
       @RequestParam(value = "action", required = false) String action,
       @RequestParam(value = "gradingType", required = false) String gradingType,
       @RequestParam(value = "getRevisions", required = false) String getRevisions,
+      Authentication authentication,
       HttpServletRequest request,
       HttpServletResponse response) throws Exception {
-    Run run = runService.retrieveById(new Long(runId));
-    if (action != null) {
-      if (action.equals("postMaxScore")) {
-        return handlePostMaxScore(request, response, run);
-      }
+    Run run = runService.retrieveById(runId);
+    if ("postMaxScore".equals(action)) {
+      return handlePostMaxScore(request, response, run);
     } else {
       ProjectType projectType = run.getProject().getProjectType();
       if (projectType.equals(ProjectType.LD)) {
-        User user = ControllerUtil.getSignedInUser();
-        if (user.isAdmin() ||
-            runService.hasRunPermission(run, user, BasePermission.WRITE) ||
-            runService.hasRunPermission(run, user, BasePermission.READ)) {
+        if (runService.hasReadPermission(authentication, run)) {
           String contextPath = request.getContextPath();
           String getGradeWorkUrl = contextPath + "/vle/gradework.html";
-          String getGradingConfigUrl = contextPath + "/vleconfig?runId=" + run.getId().toString() + "&gradingType=" + gradingType + "&mode=grading&getRevisions=" + getRevisions;
+          String getGradingConfigUrl = contextPath + "/vleconfig?runId=" + runId.toString() +
+              "&gradingType=" + gradingType + "&mode=grading&getRevisions=" + getRevisions;
           String getClassroomMonitorUrl = contextPath + "/vle/classroomMonitor.html";
-          String getClassroomMonitorConfigUrl = contextPath + "/vleconfig?runId=" + run.getId().toString() + "&gradingType=" + gradingType + "&mode=grading&getRevisions=" + getRevisions;
-          if (runService.hasRunPermission(run, user, BasePermission.WRITE)) {
+          String getClassroomMonitorConfigUrl = contextPath + "/vleconfig?runId=" +
+              run.getId().toString() + "&gradingType=" + gradingType +
+              "&mode=grading&getRevisions=" + getRevisions;
+          if (runService.hasWritePermission(authentication, run)) {
             getGradeWorkUrl += "?loadScriptsIndividually&permission=write";
             getClassroomMonitorUrl += "?loadScriptsIndividually&permission=write";
-          } else if (runService.hasRunPermission(run, user, BasePermission.READ)) {
+          } else {
             getGradeWorkUrl += "?loadScriptsIndividually&permission=read";
             getClassroomMonitorUrl += "?loadScriptsIndividually&permission=read";
           }

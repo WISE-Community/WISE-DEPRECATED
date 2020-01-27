@@ -5,6 +5,7 @@
   "table.areYouSureYouWantToDeleteThisRow": "Are you sure you want to delete this row?",
   "table.cellSize": "Cell Size",
   "table.cellText": "Cell Text",
+  "table.chooseDataToGraph": "Choose the table data you want to graph:",
   "table.columnCellSizes": "Column Cell Sizes",
   "table.columns": "Columns",
   "table.componentTypeLabel": "Table",

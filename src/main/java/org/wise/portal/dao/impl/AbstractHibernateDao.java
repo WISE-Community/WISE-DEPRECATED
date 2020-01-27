@@ -26,6 +26,10 @@ package org.wise.portal.dao.impl;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate5.support.HibernateDaoSupport;
@@ -39,9 +43,16 @@ import org.wise.portal.dao.SimpleDao;
 public abstract class AbstractHibernateDao<T> extends HibernateDaoSupport
     implements SimpleDao<T> {
 
+  @PersistenceContext
+  private EntityManager entityManager;
+
   @Autowired
-  public void init(SessionFactory factory) {
-    setSessionFactory(factory);
+  @Transactional
+  public void init() {
+    entityManager = entityManager.getEntityManagerFactory().createEntityManager();
+    Session session = (Session) entityManager.unwrap(Session.class);
+    SessionFactory sessionFactory = session.getSessionFactory();
+    setSessionFactory(sessionFactory);
   }
 
   @Transactional

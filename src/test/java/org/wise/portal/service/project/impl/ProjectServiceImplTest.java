@@ -22,164 +22,270 @@
  */
 package org.wise.portal.service.project.impl;
 
-import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.mock;
 import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.reset;
 import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Properties;
 
-import junit.framework.TestCase;
-
+import org.apache.commons.io.FileUtils;
+import org.easymock.EasyMockRunner;
+import org.easymock.Mock;
+import org.easymock.TestSubject;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.security.acls.domain.BasePermission;
 import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.dao.authentication.GrantedAuthorityDao;
 import org.wise.portal.dao.project.ProjectDao;
-import org.wise.portal.domain.module.Curnit;
-import org.wise.portal.domain.module.impl.CurnitImpl;
-import org.wise.portal.domain.project.FamilyTag;
+import org.wise.portal.domain.authentication.MutableGrantedAuthority;
+import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.project.Project;
+import org.wise.portal.domain.project.ProjectMetadata;
 import org.wise.portal.domain.project.impl.ProjectImpl;
+import org.wise.portal.domain.project.impl.ProjectMetadataImpl;
 import org.wise.portal.domain.project.impl.ProjectParameters;
-import org.wise.portal.domain.run.Run;
-import org.wise.portal.domain.run.impl.RunImpl;
-import org.wise.portal.domain.run.impl.RunParameters;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.domain.user.impl.UserImpl;
 import org.wise.portal.service.acl.AclService;
-import org.wise.portal.service.module.CurnitService;
+import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.run.RunService;
-
 
 /**
  * @author Hiroki Terashima
- * @version $Id$
  */
-public class ProjectServiceImplTest extends TestCase {
+@RunWith(EasyMockRunner.class)
+public class ProjectServiceImplTest {
 
-	private LdProjectServiceImpl projectServiceImpl;
+  @TestSubject
+  private ProjectService projectServiceImpl = new ProjectServiceImpl();
 
-	private ProjectDao<Project> mockProjectDao;
-	
-	private CurnitService mockCurnitService;
-	
-	private RunService mockRunService;
-	
-	private AclService<Project> mockAclService;
-	
-	private static final Long EXISTING_PROJECT_ID = new Long(10);
+  @Mock
+  private ProjectDao<Project> projectDao;
 
-	private static final Long NONEXISTING_PROJECT_ID = new Long(103);
-	
-	private static final Long EXISTING_CURNIT_ID = new Long(100);
+  @Mock
+  private Properties appProperties;
 
-	private static final Long EXISTING_JNLP_ID = new Long(2);
-	
-	private static final FamilyTag EXISTING_PROJECT_FAMILY_TAG = FamilyTag.TELS;
-	
-	@SuppressWarnings("unchecked")
-	protected void setUp() throws Exception {
-		super.setUp();
-		this.projectServiceImpl = new LdProjectServiceImpl();
-		this.mockProjectDao = createMock(ProjectDao.class);
-		this.projectServiceImpl.setProjectDao(mockProjectDao);
-		this.mockCurnitService = createMock(CurnitService.class);
-		this.projectServiceImpl.setCurnitService(mockCurnitService);
-		this.mockRunService = createMock(RunService.class);
-		this.projectServiceImpl.setRunService(mockRunService);
-		this.mockAclService = createMock(AclService.class);
-		this.projectServiceImpl.setAclService(mockAclService);
-	}
-	
-	public void testGetById() throws Exception {
-		Project expectedProject = new ProjectImpl();
-		expect(mockProjectDao.getById(EXISTING_PROJECT_ID)).andReturn(expectedProject);
-    	replay(mockProjectDao);
-    	assertEquals(expectedProject, projectServiceImpl.getById(EXISTING_PROJECT_ID));
-    	verify(mockProjectDao);
-    	reset(mockProjectDao);
+  @Mock
+  private AclService<Project> mockAclService;
 
-    	// now check when curnit is not found
-    	expect(mockProjectDao.getById(NONEXISTING_PROJECT_ID)).andThrow(new ObjectNotFoundException(NONEXISTING_PROJECT_ID, Project.class));
-    	replay(mockProjectDao);
-    	try {
-    		projectServiceImpl.getById(NONEXISTING_PROJECT_ID);
-    		fail("ObjectNotFoundException expected but was not thrown");
-    	} catch (ObjectNotFoundException e) {
-    	}
-    	verify(mockProjectDao);
-	}
-	
-	public void testGetProjectListByTag() throws Exception {
-		// by familytag
-		List<Project> expectedList = new ArrayList<Project> ();
-		Project expectedProject = new ProjectImpl();
-		expectedProject.getProjectInfo().setFamilyTag(EXISTING_PROJECT_FAMILY_TAG);
-		expectedList.add(expectedProject);
-		expect(mockProjectDao.retrieveListByTag(EXISTING_PROJECT_FAMILY_TAG)).andReturn(expectedList);
-		replay(mockProjectDao);
-		assertEquals(expectedList, projectServiceImpl.getProjectListByTag(EXISTING_PROJECT_FAMILY_TAG));
-		verify(mockProjectDao);
-		reset(mockProjectDao);
-				
-		// by projectinfotag
-		// TODO: after projectinfotag defined in ProjectImpl
-	}
-	
-	public void testGetProjectListByTag_EmptyList() throws Exception {
-		List<Project> expectedList = new ArrayList<Project> ();
-		expect(mockProjectDao.retrieveListByTag(EXISTING_PROJECT_FAMILY_TAG)).andReturn(expectedList);
-		replay(mockProjectDao);
-		assertEquals(expectedList, projectServiceImpl.getProjectListByTag(EXISTING_PROJECT_FAMILY_TAG));
-		verify(mockProjectDao);
-		reset(mockProjectDao);
-	}
-	
-	public void testCreateProject_success() throws Exception {
-		Curnit expectedCurnit = new CurnitImpl();
-		expect(mockCurnitService.getById(EXISTING_CURNIT_ID)).andReturn(expectedCurnit);
-		replay(mockCurnitService);
-		Project projectToCreate = new ProjectImpl();
-		expect(mockProjectDao.createEmptyProject()).andReturn(projectToCreate);
-		projectToCreate.setCurnit(expectedCurnit);
-		
-		mockProjectDao.save(projectToCreate);
-		expectLastCall();
+  @Mock
+  private RunService runService;
 
-		RunParameters expectedRunParameters = new RunParameters();
-		expectedRunParameters.setCurnitId(EXISTING_CURNIT_ID);
-		expectedRunParameters.setJnlpId(EXISTING_JNLP_ID);
-		expectedRunParameters.setName("Preview Run Name");
-		expectedRunParameters.setOwners(null);
-		expectedRunParameters.setPeriodNames(null);
-		expectedRunParameters.setProject(projectToCreate);
-		Run expectedPreviewRun = new RunImpl();
-		expect(this.mockRunService.createRun(expectedRunParameters)).andReturn(expectedPreviewRun );
-		replay(mockRunService);
-		projectToCreate.setPreviewRun(expectedPreviewRun);
+  @Mock
+  private GrantedAuthorityDao<MutableGrantedAuthority> grantedAuthorityDao;
 
-		mockProjectDao.save(projectToCreate);
-		expectLastCall();
+  private static final Long EXISTING_PROJECT_ID = new Long(10);
 
-		replay(mockProjectDao);
-		
-		ProjectParameters projectParameters = new ProjectParameters();
-		Project createdProject = projectServiceImpl.createProject(projectParameters);
+  private static final Long NONEXISTING_PROJECT_ID = new Long(103);
 
-		assertEquals(createdProject.getPreviewRun(), expectedPreviewRun);
-		assertEquals(createdProject.getCurnit(), expectedCurnit);
-		verify(mockProjectDao);
-		verify(mockCurnitService);
-		verify(mockRunService);
-	}
-	
-	public void testCreateProject_nonexistent_curnit() {
-		// TODO: Hiroki implement
-		assertTrue(true);
-	}
-	
-	public void testCreateProject_nonexistent_jnlp() {
-		// TODO: Hiroki implement
-		assertTrue(true);
-	}
+  private static final String tempProjectFolderPath = "src/test/webapp/curriculum/temp";
 
+  private User projectOwner;
+
+  @Before
+  public void setUp() throws Exception {
+    TeacherUserDetails userDetails = new TeacherUserDetails();
+    userDetails.setFirstname("SpongeBob");
+    userDetails.setLastname("SquarePants");
+    projectOwner = new UserImpl();
+    projectOwner.setUserDetails(userDetails);
+    File tempProjectFolder = new File(tempProjectFolderPath);
+    tempProjectFolder.mkdir();
+    tempProjectFolder.deleteOnExit();
+  }
+
+  @After
+  public void tearDown() throws Exception {
+    projectServiceImpl = null;
+    projectOwner = null;
+  }
+
+  @Test
+  public void getById_ExistingProject_ShouldReturnProject() throws Exception {
+    Project expectedProject = new ProjectImpl();
+    expect(projectDao.getById(EXISTING_PROJECT_ID)).andReturn(expectedProject);
+    replay(projectDao);
+    assertEquals(expectedProject, projectServiceImpl.getById(EXISTING_PROJECT_ID));
+    verify(projectDao);
+  }
+
+  @Test
+  public void getById_ProjectNotExist_ShouldThrowException() throws Exception {
+    expect(projectDao.getById(NONEXISTING_PROJECT_ID)).andThrow(
+        new ObjectNotFoundException(NONEXISTING_PROJECT_ID, Project.class));
+    replay(projectDao);
+    try {
+      projectServiceImpl.getById(NONEXISTING_PROJECT_ID);
+      fail("ObjectNotFoundException expected but was not thrown");
+    } catch (ObjectNotFoundException e) {
+    }
+    verify(projectDao);
+  }
+
+  @Test
+  public void createProject_NewProject_ShouldSucceed() throws ObjectNotFoundException {
+    Project projectToCreate = new ProjectImpl();
+    expect(projectDao.createEmptyProject()).andReturn(projectToCreate);
+    projectToCreate.setName("Airbags");
+    projectDao.save(projectToCreate);
+    expectLastCall();
+    replay(projectDao);
+    FileUtils fileUtils = mock(FileUtils.class);
+    replay(fileUtils);
+    expect(appProperties.getProperty("wise.hostname")).andReturn("http://localhost:8080");
+    replay(appProperties);
+
+    ProjectParameters projectParameters = new ProjectParameters();
+    projectParameters.setProjectname("Airbags");
+    projectParameters.setModulePath("/1/project.json");
+    projectParameters.setOwner(projectOwner);
+    projectParameters.setMetadata(new ProjectMetadataImpl());
+    Project createdProject = projectServiceImpl.createProject(projectParameters);
+    assertEquals("Airbags", createdProject.getName());
+    verify(projectDao);
+    verify(fileUtils);
+    verify(appProperties);
+  }
+
+  @Test
+  public void getProjectURI_WISE4Project_ShouldReturnWISE4URI() {
+    Project project = new ProjectImpl();
+    project.setId(12L);
+    project.setWISEVersion(4);
+    expect(appProperties.getProperty("wise.hostname")).andReturn("http://localhost:8080");
+    replay(appProperties);
+    String uri = projectServiceImpl.getProjectURI(project);
+    assertEquals("http://localhost:8080/previewproject.html?projectId=12#!/project/12", uri);
+    verify(appProperties);
+  }
+
+  @Test
+  public void getProjectURI_WISE5Project_ShouldReturnWISE5URI() {
+    Project project = new ProjectImpl();
+    project.setId(155L);
+    project.setWISEVersion(5);
+    expect(appProperties.getProperty("wise.hostname")).andReturn("http://localhost:8080");
+    replay(appProperties);
+    String uri = projectServiceImpl.getProjectURI(project);
+    assertEquals("http://localhost:8080/project/155#!/project/155", uri);
+    verify(appProperties);
+  }
+
+  @Test
+  public void saveProjectFile_shouldWriteTheProjectFile() {
+    Project project = new ProjectImpl();
+    project.setModulePath("/temp/project.json");
+    expect(appProperties.getProperty("curriculum_base_dir"))
+        .andReturn("src/test/webapp/curriculum");
+    replay(appProperties);
+    String projectJSONString = "{\"metadata\":{\"title\":\"New Title\"}}";
+    String projectFilePath = tempProjectFolderPath + "/project.json";
+    File projectFile = new File(projectFilePath);
+    projectFile.delete();
+    try {
+      projectServiceImpl.saveProjectFile(project, projectJSONString);
+      String projectText = FileUtils.readFileToString(new File(projectFilePath), "UTF-8");
+      assertEquals(projectText, projectJSONString);
+    } catch (Exception e) {
+      fail();
+    }
+    projectFile.deleteOnExit();
+  }
+
+  @Test
+  public void saveProjectToDatabase_shouldMakeACallToSaveToDatabase() {
+    Project project = new ProjectImpl();
+    project.setId(1L);
+    project.setModulePath("/temp/project.json");
+    ProjectMetadata oldProjectMetadata = new ProjectMetadataImpl();
+    oldProjectMetadata.setTitle("Old Title");
+    oldProjectMetadata.setAuthors("[\"Old Authors\"]");
+    project.setMetadata(oldProjectMetadata);
+    User user = new UserImpl();
+    TeacherUserDetails userDetails = new TeacherUserDetails();
+    userDetails.addAuthority(null);
+    userDetails.removeAuthority(null);
+    user.setUserDetails(userDetails);
+    String projectJSONString = "{\"metadata\":{\"title\":\"New Title\",\"authors\":[]}}";
+    expect(runService.getProjectRuns(1L)).andReturn(new ArrayList());
+    replay(runService);
+    expect(mockAclService.hasPermission(project, BasePermission.ADMINISTRATION, user))
+        .andReturn(true);
+    replay(mockAclService);
+    projectDao.save(project);
+    expectLastCall();
+    replay(projectDao);
+    try {
+      projectServiceImpl.saveProjectToDatabase(project, user, projectJSONString);
+      verify(projectDao);
+    } catch (Exception e) {
+      fail();
+    }
+  }
+
+  @Test
+  public void updateMetadataAndLicenseIfNecessary_shouldUpdateMetadataAndWriteLicenseFile() {
+    Project project = new ProjectImpl();
+    project.setModulePath("/temp/project.json");
+    ProjectMetadata oldProjectMetadata = new ProjectMetadataImpl();
+    oldProjectMetadata.setTitle("Old Title");
+    oldProjectMetadata.setAuthors("[\"Old Authors\"]");
+    project.setMetadata(oldProjectMetadata);
+    String licenseFilePath = tempProjectFolderPath + "/license.txt";
+    File projectFile = new File(licenseFilePath);
+    projectFile.delete();
+    try {
+      projectFile.createNewFile();
+      JSONObject projectJSON = new JSONObject();
+      JSONObject metadata = new JSONObject();
+      JSONArray newAuthors = new JSONArray();
+      JSONObject newAuthor = new JSONObject();
+      newAuthor.put("firstName", "Spongebob");
+      newAuthor.put("lastName", "Squarepants");
+      newAuthors.put(newAuthor);
+      metadata.put("authors", newAuthors);
+      metadata.put("title", "New Title");
+      projectJSON.put("metadata", metadata);
+      projectServiceImpl.updateMetadataAndLicenseIfNecessary(project, projectJSON.toString());
+      assertEquals(metadata.get("title"), project.getMetadata().getTitle());
+      String licenseText = 
+          FileUtils.readFileToString(new File(licenseFilePath), "UTF-8");
+      assertTrue(licenseText.contains("licensed under CC BY-SA by Spongebob Squarepants"));
+    } catch (JSONException e) {
+      fail();
+    } catch (IOException e) {
+      e.printStackTrace();
+      fail();
+    }
+    projectFile.deleteOnExit();
+  }
+
+  @Test
+  public void updateProjectNameIfNecessary_whenMetadataHasName_shouldUpdateNameInProjectObject() {
+    Project project = new ProjectImpl();
+    project.setName("Old Project Name");
+    String newProjectName = "New Project Name";
+    JSONObject projectMetadataJSON = new JSONObject();
+    try {
+      projectMetadataJSON.put("title", newProjectName);
+      projectServiceImpl.updateProjectNameIfNecessary(project, projectMetadataJSON);
+      assertEquals(newProjectName, project.getName());
+    } catch (JSONException e) {
+      fail();
+    }
+  }
 }

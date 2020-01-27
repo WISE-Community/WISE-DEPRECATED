@@ -32,12 +32,13 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import javax.persistence.Version;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.authentication.impl.PersistentUserDetails;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.service.authentication.UserDetailsService;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * @author Laurel Williams
@@ -70,23 +71,23 @@ public class UserImpl implements User {
   private MutableUserDetails userDetails;
 
   public boolean isStudent() {
-    return this.userDetails.hasGrantedAuthority(UserDetailsService.STUDENT_ROLE);
+    return userDetails.hasGrantedAuthority(UserDetailsService.STUDENT_ROLE);
   }
 
   public boolean isTeacher() {
-    return this.userDetails.hasGrantedAuthority(UserDetailsService.TEACHER_ROLE);
+    return userDetails.hasGrantedAuthority(UserDetailsService.TEACHER_ROLE);
   }
 
   public boolean isAdmin() {
-    return this.userDetails.hasGrantedAuthority(UserDetailsService.ADMIN_ROLE);
+    return userDetails.hasGrantedAuthority(UserDetailsService.ADMIN_ROLE);
   }
 
   public boolean isResearcher() {
-    return this.userDetails.hasGrantedAuthority(UserDetailsService.RESEARCHER_ROLE);
+    return userDetails.hasGrantedAuthority(UserDetailsService.RESEARCHER_ROLE);
   }
 
   public boolean isTrustedAuthor() {
-    return this.userDetails.hasGrantedAuthority(UserDetailsService.TRUSTED_AUTHOR_ROLE);
+    return userDetails.hasGrantedAuthority(UserDetailsService.TRUSTED_AUTHOR_ROLE);
   }
 
   @Override
@@ -95,7 +96,7 @@ public class UserImpl implements User {
     int result = 1;
     result = PRIME
       * result
-      + ((this.userDetails == null) ? 0 : this.userDetails.hashCode());
+      + ((userDetails == null) ? 0 : userDetails.hashCode());
     return result;
   }
 
@@ -108,11 +109,16 @@ public class UserImpl implements User {
     if (getClass() != obj.getClass())
       return false;
     final UserImpl other = (UserImpl) obj;
-    if (this.userDetails == null) {
+    if (userDetails == null) {
       if (other.userDetails != null)
         return false;
-    } else if (!this.userDetails.equals(other.userDetails))
+    } else if (!userDetails.equals(other.userDetails))
       return false;
     return true;
+  }
+
+  @Override
+  public int compareTo(User o) {
+    return getId().compareTo(o.getId());
   }
 }

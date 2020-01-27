@@ -4,57 +4,66 @@
       <div class='advancedAuthoringDiv'
            ng-if='graphController.showAdvancedAuthoring'>
         <div>
-          <h6>{{ 'advancedAuthoringOptions' | translate }}</h6>
+          <h6>{{ ::'advancedAuthoringOptions' | translate }}</h6>
+        </div>
+        <div>
+          <md-input-container style='width: 600px;'>
+            <label>{{ ::'graph.subtitle' | translate }}</label>
+            <input type='text'
+                ng-model='graphController.authoringComponentContent.subtitle'
+                ng-model-options='{ debounce: 1000 }'
+                ng-change='graphController.authoringViewComponentChanged()'/>
+          </md-input-container>
         </div>
         <div>
           <md-checkbox class='md-primary'
                        ng-model='graphController.authoringComponentContent.showMouseXPlotLine'
                        ng-change='graphController.authoringViewComponentChanged()'>
-            {{ 'graph.showMouseXPlotLine' | translate }}
+            {{ ::'graph.showMouseXPlotLine' | translate }}
           </md-checkbox>
         </div>
         <div>
           <md-checkbox class='md-primary'
-                       style='left: 40;'
+                       style='left: 40px;'
                        ng-disabled='!graphController.authoringComponentContent.showMouseXPlotLine'
                        ng-model='graphController.authoringComponentContent.highlightXRangeFromZero'
                        ng-change='graphController.authoringViewComponentChanged()'>
-            {{ 'graph.highlightXRangeFromZero' | translate }}
+            {{ ::'graph.highlightXRangeFromZero' | translate }}
           </md-checkbox>
         </div>
         <div>
           <md-checkbox class='md-primary'
                        ng-model='graphController.authoringComponentContent.showMouseYPlotLine'
                        ng-change='graphController.authoringViewComponentChanged()'>
-            {{ 'graph.showMouseYPlotLine' | translate }}
+            {{ ::'graph.showMouseYPlotLine' | translate }}
           </md-checkbox>
         </div>
         <div>
           <md-checkbox class='md-primary'
                        ng-model='graphController.authoringComponentContent.saveMouseOverPoints'
                        ng-change='graphController.authoringViewComponentChanged()'>
-            {{ 'graph.saveMouseOverPoints' | translate }}
+            {{ ::'graph.saveMouseOverPoints' | translate }}
           </md-checkbox>
         </div>
         <div>
           <md-checkbox class='md-primary'
                        ng-model='graphController.authoringComponentContent.hideTrialSelect'
                        ng-change='graphController.authoringViewComponentChanged()'>
-            {{ 'graph.hideTrialSelect' | translate }}
+            {{ ::'graph.hideTrialSelect' | translate }}
           </md-checkbox>
         </div>
         <div>
           <md-checkbox class='md-primary'
                        ng-model='graphController.authoringComponentContent.showSaveButton'
                        ng-change='graphController.authoringViewComponentChanged()'>
-            {{ 'SHOW_SAVE_BUTTON' | translate }}
+            {{ ::'SHOW_SAVE_BUTTON' | translate }}
           </md-checkbox>
         </div>
         <div>
           <md-checkbox class='md-primary'
                        ng-model='graphController.authoringComponentContent.showSubmitButton'
                        ng-change='graphController.authoringViewComponentChanged()'>
-            {{ 'SHOW_SUBMIT_BUTTON' | translate }}
+            {{ ::'SHOW_SUBMIT_BUTTON' | translate }}
           </md-checkbox>
         </div>
         <div>
@@ -62,13 +71,13 @@
                        ng-if='graphController.isNotebookEnabled()'
                        ng-model='graphController.authoringComponentContent.showAddToNotebookButton'
                        ng-change='graphController.authoringViewComponentChanged()'>
-            {{ 'SHOW_ADD_TO_NOTEBOOK_BUTTON' | translate }}
+            {{ ::'SHOW_ADD_TO_NOTEBOOK_BUTTON' | translate }}
           </md-checkbox>
         </div>
         <div>
           <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'
                               ng-if='graphController.authoringComponentContent.showSubmitButton'>
-            <label>{{ 'MAX_SUBMIT' | translate }}</label>
+            <label>{{ ::'MAX_SUBMIT' | translate }}</label>
             <input type='number'
                    ng-model='graphController.authoringComponentContent.maxSubmitCount'
                    ng-model-options='{ debounce: 1000 }'
@@ -79,13 +88,13 @@
           <md-checkbox class='md-primary'
                        ng-model='graphController.authoringComponentContent.useCustomLegend'
                        ng-change='graphController.authoringViewComponentChanged()'>
-            {{ 'graph.useCustomLegend' | translate }}
+            {{ ::'graph.useCustomLegend' | translate }}
           </md-checkbox>
         </div>
         <div>
           <md-input-container style='width:100%'
                               ng-if='graphController.authoringComponentContent.useCustomLegend'>
-            <label>{{ 'graph.customLegend' | translate }}</label>
+            <label>{{ ::'graph.customLegend' | translate }}</label>
             <textarea rows='1'
                       ng-model='graphController.authoringComponentContent.customLegend'
                       ng-change='graphController.authoringViewComponentChanged()'
@@ -94,8 +103,86 @@
           </md-input-container>
         </div>
         <div>
+          <label class='node__label--vertical-alignment'>{{ 'graph.xAxisPlotLine' | translate }}</label>
+          <md-button class='topButton md-raised md-primary'
+              ng-click='graphController.authoringAddXAxisPlotLine()'>
+            <md-icon>add</md-icon>
+            <md-tooltip>{{ ::'graph.addXAxisPlotLine' | translate }}</md-tooltip>
+          </md-button>
+        </div>
+        <div ng-repeat='plotLine in graphController.authoringComponentContent.xAxis.plotLines track by $index'>
+          <div flex>
+            <md-input-container style='width: 400px;'>
+              <label>{{ ::'graph.text' | translate }}</label>
+              <input type='text'
+                  ng-model='plotLine.label.text'
+                  ng-model-options='{ debounce: 1000 }'
+                  ng-change='graphController.authoringViewComponentChanged()'/>
+            </md-input-container>
+            <md-input-container>
+              <label>{{ ::'graph.xValue' | translate }}</label>
+              <input type='text'
+                  ng-model='plotLine.value'
+                  ng-model-options='{ debounce: 1000 }'
+                  ng-change='graphController.authoringViewComponentChanged()'/>
+            </md-input-container>
+            <md-input-container>
+              <label>{{ ::'graph.color' | translate }}</label>
+              <input type='text'
+                  ng-model='plotLine.color'
+                  ng-model-options='{ debounce: 1000 }'
+                  ng-change='graphController.authoringViewComponentChanged()'/>
+            </md-input-container>
+            <span flex></span>
+            <md-button class='topButton md-raised md-primary'
+                       ng-click='graphController.authoringDeleteXAxisPlotLine($index)'>
+              <md-icon>delete</md-icon>
+              <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'DELETE' | translate }}</md-tooltip>
+            </md-button>
+          </div>
+        </div>
+        <div>
+          <label class='node__label--vertical-alignment'>{{ ::'graph.yAxisPlotLine' | translate }}</label>
+          <md-button class='topButton md-raised md-primary'
+              ng-click='graphController.authoringAddYAxisPlotLine()'>
+            <md-icon>add</md-icon>
+            <md-tooltip>{{ ::'graph.addYAxisPlotLine' | translate }}</md-tooltip>
+          </md-button>
+        </div>
+        <div ng-repeat='plotLine in graphController.authoringComponentContent.yAxis.plotLines track by $index'>
+          <div flex>
+            <md-input-container style='width: 400px;'>
+              <label>{{ ::'graph.text' | translate }}</label>
+              <input type='text'
+                  ng-model='plotLine.label.text'
+                  ng-model-options='{ debounce: 1000 }'
+                  ng-change='graphController.authoringViewComponentChanged()'/>
+            </md-input-container>
+            <md-input-container>
+              <label>{{ ::'graph.yValue' | translate }}</label>
+              <input type='text'
+                  ng-model='plotLine.value'
+                  ng-model-options='{ debounce: 1000 }'
+                  ng-change='graphController.authoringViewComponentChanged()'/>
+            </md-input-container>
+            <md-input-container>
+              <label>{{ ::'graph.color' | translate }}</label>
+              <input type='text'
+                  ng-model='plotLine.color'
+                  ng-model-options='{ debounce: 1000 }'
+                  ng-change='graphController.authoringViewComponentChanged()'/>
+            </md-input-container>
+            <span flex></span>
+            <md-button class='topButton md-raised md-primary'
+                       ng-click='graphController.authoringDeleteYAxisPlotLine($index)'>
+              <md-icon>delete</md-icon>
+              <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'DELETE' | translate }}</md-tooltip>
+            </md-button>
+          </div>
+        </div>
+        <div>
           <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
-            <label>{{ 'MAX_SCORE' | translate }}</label>
+            <label>{{ ::'MAX_SCORE' | translate }}</label>
             <input type='number'
                    ng-model='graphController.authoringComponentContent.maxScore'
                    ng-model-options='{ debounce: 1000 }'
@@ -104,7 +191,7 @@
         </div>
         <div>
           <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
-            <label>{{ 'COMPONENT_WIDTH' | translate }}</label>
+            <label>{{ ::'COMPONENT_WIDTH' | translate }}</label>
             <input type='number'
                    ng-model='graphController.authoringComponentContent.componentWidth'
                    ng-model-options='{ debounce: 1000 }'
@@ -113,11 +200,11 @@
         </div>
         <div>
           <label class='node__label--vertical-alignment'>
-            {{ 'RUBRIC' | translate }}
+            {{ ::'RUBRIC' | translate }}
           </label>
           <md-button class='topButton md-raised md-primary' ng-click='graphController.showRubricAuthoring = !graphController.showRubricAuthoring'>
             <md-icon>message</md-icon>
-            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'EDIT_COMPONENT_RUBRIC' | translate }}</md-tooltip>
+            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'EDIT_COMPONENT_RUBRIC' | translate }}</md-tooltip>
           </md-button>
           <div ng-if='graphController.showRubricAuthoring'>
             <summernote id='{{graphController.summernoteRubricId}}'
@@ -131,24 +218,24 @@
           </div>
         </div>
         <div>
-          <div style='height: 50;'>
+          <div style='height: 50px;'>
             <label class='node__label--vertical-alignment'>
-              {{ 'CONNECTED_COMPONENTS' | translate }}
+              {{ ::'CONNECTED_COMPONENTS' | translate }}
             </label>
             <md-button class='topButton md-raised md-primary'
                        ng-click='graphController.authoringAddConnectedComponent()'>
               <md-icon>add</md-icon>
-              <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'ADD_CONNECTED_COMPONENT' | translate }}</md-tooltip>
+              <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'ADD_CONNECTED_COMPONENT' | translate }}</md-tooltip>
             </md-button>
           </div>
           <div ng-repeat='connectedComponent in graphController.authoringComponentContent.connectedComponents track by $index'
                style='border: 2px solid #dddddd; border-radius: 5px; margin-bottom: 10px; padding: 20px 20px 10px 20px;'>
             <div flex>
-              <md-input-container style='margin-right: 20; width: 300;'>
-                <label>{{ 'step' | translate }}</label>
+              <md-input-container style='margin-right: 20px; width: 300px;'>
+                <label>{{ ::'step' | translate }}</label>
                 <md-select ng-model='connectedComponent.nodeId'
                            ng-change='graphController.authoringConnectedComponentNodeIdChanged(connectedComponent)'
-                           style='width: 300'>
+                           style='width: 300px'>
                   <md-option ng-repeat='item in graphController.idToOrder | toArray | orderBy : "order"'
                              value='{{item.$key}}'
                              ng-if='graphController.isApplicationNode(item.$key)'>
@@ -156,46 +243,46 @@
                   </md-option>
                 </md-select>
               </md-input-container>
-              <md-input-container style='margin-right: 20; width: 300;'>
-                <label>{{ 'component' | translate }}</label>
+              <md-input-container style='margin-right: 20px; width: 300px;'>
+                <label>{{ ::'component' | translate }}</label>
                 <md-select ng-model='connectedComponent.componentId'
                            ng-change='graphController.authoringConnectedComponentComponentIdChanged(connectedComponent)'
-                           style='width: 300'>
+                           style='width: 300px'>
                   <md-option ng-repeat='(componentIndex, component) in graphController.getComponentsByNodeId(connectedComponent.nodeId)'
                              value='{{component.id}}'
                              ng-disabled='!graphController.isConnectedComponentTypeAllowed(component.type) || component.id == graphController.componentId'>
-                    {{ componentIndex + 1 }}. {{component.type}} <span ng-if='component.id == graphController.componentId'>({{ 'thisComponent' | translate }})</span>
+                    {{ componentIndex + 1 }}. {{component.type}} <span ng-if='component.id == graphController.componentId'>({{ ::'thisComponent' | translate }})</span>
                   </md-option>
                 </md-select>
               </md-input-container>
-              <md-input-container style='margin-right: 20; width: 200;'>
-                <label>{{ 'type' | translate }}</label>
+              <md-input-container style='margin-right: 20px; width: 200px;'>
+                <label>{{ ::'type' | translate }}</label>
                 <md-select ng-model='connectedComponent.type'
                            ng-change='graphController.authoringConnectedComponentTypeChanged(connectedComponent)'
-                           style='width: 200'>
+                           style='width: 200px'>
                   <md-option value='importWork'>
-                    {{ 'importWork' | translate }}
+                    {{ ::'importWork' | translate }}
                   </md-option>
                   <md-option value='showWork'>
-                    {{ 'showWork' | translate }}
+                    {{ ::'showWork' | translate }}
                   </md-option>
                   <md-option value='showClassmateWork'
                              ng-if='graphController.authoringGetConnectedComponentType(connectedComponent) == "Graph"'>
-                    {{ 'showClassmateWork' | translate }}
+                    {{ ::'showClassmateWork' | translate }}
                   </md-option>
                 </md-select>
               </md-input-container>
-              <md-input-container style='margin-right: 20; width: 270;'
+              <md-input-container style='margin-right: 20px; width: 270px;'
                                   ng-if='connectedComponent.type == "showClassmateWork" && graphController.authoringGetConnectedComponentType(connectedComponent) == "Graph"'>
-                <label>{{ 'showClassmateWorkSource' | translate }}</label>
+                <label>{{ ::'showClassmateWorkSource' | translate }}</label>
                 <md-select ng-model='connectedComponent.showClassmateWorkSource'
-                           style='margin-right: 20;'
+                           style='margin-right: 20px;'
                            ng-change='graphController.authoringViewComponentChanged()'>
                   <md-option value='period'>
-                    {{ 'period' | translate }}
+                    {{ ::'period' | translate }}
                   </md-option>
                   <md-option value='class'>
-                    {{ 'class' | translate }}
+                    {{ ::'class' | translate }}
                   </md-option>
                 </md-select>
               </md-input-container>
@@ -203,24 +290,24 @@
               <md-button class='topButton md-raised md-primary'
                          ng-click='graphController.authoringDeleteConnectedComponent($index)'>
                 <md-icon>delete</md-icon>
-                <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'DELETE' | translate }}</md-tooltip>
+                <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'DELETE' | translate }}</md-tooltip>
               </md-button>
             </div>
             <div ng-if='graphController.authoringGetConnectedComponentType(connectedComponent) == "Table"' flex>
               <md-checkbox ng-model='connectedComponent.skipFirstRow'
-                           style='margin-right: 20;'
+                           style='margin-right: 20px;'
                            ng-change='graphController.authoringViewComponentChanged()'>
-                {{ 'graph.skipFirstRow' | translate }}
+                {{ ::'graph.skipFirstRow' | translate }}
               </md-checkbox>
-              <md-input-container style='margin-right: 20; width: 100; height: 30;'>
-                <label>{{ 'graph.xColumn' | translate }}</label>
+              <md-input-container style='margin-right: 20px; width: 100px; height: 30px;'>
+                <label>{{ ::'graph.xColumn' | translate }}</label>
                 <input type='number'
                        ng-model='connectedComponent.xColumn'
                        ng-model-options='{ debounce: 1000 }'
                        ng-change='graphController.authoringViewComponentChanged()'/>
               </md-input-container>
-              <md-input-container style='margin-right: 20; width: 100; height: 30;'>
-                <label>{{ 'graph.yColumn' | translate }}</label>
+              <md-input-container style='margin-right: 20px; width: 100px; height: 30px;'>
+                <label>{{ ::'graph.yColumn' | translate }}</label>
                 <input type='number'
                        ng-model='connectedComponent.yColumn'
                        ng-model-options='{ debounce: 1000 }'
@@ -232,26 +319,26 @@
                 <md-checkbox class='md-primary'
                              ng-model='connectedComponent.showXPlotLineOnLatestPoint'
                              ng-change='graphController.authoringViewComponentChanged()'>
-                  {{ 'graph.showXPlotLineOnLatestPoint' | translate }}
+                  {{ ::'graph.showXPlotLineOnLatestPoint' | translate }}
                 </md-checkbox>
                 <br/>
                 <md-checkbox class='md-primary'
                              ng-model='connectedComponent.highlightLatestPoint'
                              ng-change='graphController.authoringViewComponentChanged()'>
-                  {{ 'graph.highlightLatestPoint' | translate }}
+                  {{ ::'graph.highlightLatestPoint' | translate }}
                 </md-checkbox>
               </div>
               <div layout='row'>
-                <h6>{{ 'graph.seriesNumbers' | translate }}</h6>
+                <h6>{{ ::'graph.seriesNumbers' | translate }}</h6>
                 <md-button class='topButton md-raised md-primary'
                            ng-click='graphController.authoringAddConnectedComponentSeriesNumber(connectedComponent)'>
                   <md-icon>add</md-icon>
-                  <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'graph.addSeriesNumber' | translate }}</md-tooltip>
+                  <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'graph.addSeriesNumber' | translate }}</md-tooltip>
                 </md-button>
               </div>
               <div ng-repeat='seriesNumber in connectedComponent.seriesNumbers track by $index'>
-                <md-input-container style='margin-right: 20; width: 120; height: 30;'>
-                  <label>{{ 'graph.seriesNumber' | translate }}</label>
+                <md-input-container style='margin-right: 20px; width: 120px; height: 30px;'>
+                  <label>{{ ::'graph.seriesNumber' | translate }}</label>
                   <input type='number'
                          ng-model='seriesNumber'
                          ng-model-options='{ debounce: 1000 }'
@@ -260,31 +347,31 @@
                 <md-button class='topButton md-raised md-primary'
                            ng-click='graphController.authoringDeleteConnectedComponentSeriesNumber(connectedComponent, $index)'>
                   <md-icon>delete</md-icon>
-                  <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'graph.deleteSeriesNumber' | translate }}</md-tooltip>
+                  <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'graph.deleteSeriesNumber' | translate }}</md-tooltip>
                 </md-button>
               </div>
             </div>
             <div ng-if='graphController.authoringGetConnectedComponentType(connectedComponent) == "ConceptMap" || graphController.authoringGetConnectedComponentType(connectedComponent) == "Draw" || graphController.authoringGetConnectedComponentType(connectedComponent) == "Label"' flex>
-              <md-input-container style='margin-right: 20;'>
+              <md-input-container style='margin-right: 20px;'>
                 <md-checkbox class='md-primary'
                              ng-model='connectedComponent.importWorkAsBackground'
                              ng-change='graphController.authoringImportWorkAsBackgroundClicked(connectedComponent)'
                              ng-disabled='true'>
-                  {{ 'importWorkAsBackground' | translate }}
+                  {{ ::'importWorkAsBackground' | translate }}
                 </md-checkbox>
               </md-input-container>
             </div>
           </div>
         </div>
         <div style='margin-top: 10px; margin-bottom: 10px;'>
-          <div style='height: 50;'>
-            <label class='node__label--vertical-alignment'>{{ 'tags' | translate }}</label>
+          <div style='height: 50px;'>
+            <label class='node__label--vertical-alignment'>{{ ::'tags' | translate }}</label>
             <md-button class='topButton md-raised md-primary'
                        ng-click='graphController.addTag()'>
               <md-icon>add</md-icon>
               <md-tooltip md-direction='top'
                           class='projectButtonTooltip'>
-                {{ 'addTag' | translate }}
+                {{ ::'addTag' | translate }}
               </md-tooltip>
             </md-button>
           </div>
@@ -296,32 +383,32 @@
                        ng-change='graphController.authoringViewComponentChanged()'
                        ng-model-options='{ debounce: 1000 }'
                        size='100'
-                       placeholder='{{ "enterTag" | translate }}'/>
+                       placeholder='{{ ::"enterTag" | translate }}'/>
               </md-input-container>
               <md-button class='moveComponentButton md-raised md-primary' ng-click='graphController.moveTagUp($index)'>
                 <md-icon>arrow_upward</md-icon>
-                <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'moveUp' | translate }}</md-tooltip>
+                <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'moveUp' | translate }}</md-tooltip>
               </md-button>
               <md-button class='moveComponentButton md-raised md-primary' ng-click='graphController.moveTagDown($index)'>
                 <md-icon>arrow_downward</md-icon>
-                <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'moveDown' | translate }}</md-tooltip>
+                <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'moveDown' | translate }}</md-tooltip>
               </md-button>
               <md-button class='moveComponentButton md-raised md-primary' ng-click='graphController.deleteTag($index)'>
                 <md-icon>delete</md-icon>
-                <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'DELETE' | translate }}</md-tooltip>
+                <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'DELETE' | translate }}</md-tooltip>
               </md-button>
             </div>
           </div>
         </div>
         <div>
-          <label class='node__label--vertical-alignment'>{{ 'json' | translate }}</label>
+          <label class='node__label--vertical-alignment'>{{ ::'json' | translate }}</label>
           <md-button class='topButton md-raised md-primary'
                      ng-click='graphController.showJSONButtonClicked()'>
             <md-icon>code</md-icon>
-            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'SHOW_JSON' | translate }}</md-tooltip>
+            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'SHOW_JSON' | translate }}</md-tooltip>
           </md-button>
           <span ng-if='graphController.isJSONStringChanged'>
-            {{ 'closeTheJSONViewToSaveTheChanges' | translate }}
+            {{ ::'closeTheJSONViewToSaveTheChanges' | translate }}
           </span>
           <div ng-if='graphController.showJSONAuthoring'>
             <md-input-container style='width: 100%;'>
@@ -335,25 +422,25 @@
       <br/>
       <div ng-if='!graphController.authoringComponentContent.showPreviousWork'>
         <md-input-container style='width:100%'>
-          <label>{{ 'PROMPT' | translate }}</label>
+          <label>{{ ::'PROMPT' | translate }}</label>
           <textarea rows='1'
                     ng-model='graphController.authoringComponentContent.prompt'
                     ng-change='graphController.authoringViewComponentChanged()'
                     ng-model-options='{ debounce: 1000 }'
-                    placeholder='{{ "enterPromptHere" | translate }}'>
+                    placeholder='{{ ::"enterPromptHere" | translate }}'>
           </textarea>
         </md-input-container>
         <div layout='row' style='height: 80px;'>
           <md-input-container style='margin-right: 20px'>
-            <label>{{ 'graph.graphTitle' | translate }}</label>
+            <label>{{ ::'graph.graphTitle' | translate }}</label>
             <input ng-model='graphController.authoringComponentContent.title'
                    ng-change='graphController.authoringViewComponentChanged()'
                    ng-model-options='{ debounce: 1000 }'
                    size='80'
-                   placeholder='{{ "graph.enterGraphTitleHere" | translate }}'/>
+                   placeholder='{{ ::"graph.enterGraphTitleHere" | translate }}'/>
           </md-input-container>
           <md-input-container style='margin-right: 20px; width: 120px;'>
-            <label>{{ 'graph.plotType' | translate }}</label>
+            <label>{{ ::'graph.plotType' | translate }}</label>
             <md-select ng-model='graphController.authoringComponentContent.graphType'
                        ng-change='graphController.authoringViewComponentChanged()'
                        style='width: 120px'>
@@ -364,14 +451,14 @@
             </md-select>
           </md-input-container>
           <md-input-container style='margin-right: 20px; width: 100px;'>
-            <label>{{ 'graph.graphWidth' | translate }}</label>
+            <label>{{ ::'graph.graphWidth' | translate }}</label>
             <input type='number'
                    ng-model='graphController.authoringComponentContent.width'
                    ng-model-options='{ debounce: 1000 }'
                    ng-change='graphController.authoringViewComponentChanged()'/>
           </md-input-container>
           <md-input-container style='margin-right: 20px; width: 100px;'>
-            <label>{{ 'graph.graphHeight' | translate }}</label>
+            <label>{{ ::'graph.graphHeight' | translate }}</label>
             <input type='number'
                    ng-model='graphController.authoringComponentContent.height'
                    ng-model-options='{ debounce: 1000 }'
@@ -380,16 +467,16 @@
         </div>
         <div layout='row'>
           <md-input-container style='margin-right: 20px; width: 50px;'>
-            <h6>{{ 'graph.xAxis' | translate }}</h6>
+            <h6>{{ ::'graph.xAxis' | translate }}</h6>
           </md-input-container>
           <md-input-container style='margin-right: 20px; width: 200px;'>
-            <label>{{ 'graph.title' | translate }}</label>
+            <label>{{ ::'graph.title' | translate }}</label>
             <input ng-model='graphController.authoringComponentContent.xAxis.title.text'
                    ng-model-options='{ debounce: 1000 }'
                    ng-change='graphController.authoringViewComponentChanged()'/>
           </md-input-container>
           <md-input-container style='margin-right: 20px; width: 120px;'>
-            <label>{{ 'graph.axisType' | translate }}</label>
+            <label>{{ ::'graph.axisType' | translate }}</label>
             <md-select ng-model='graphController.authoringComponentContent.xAxis.type'
                        ng-change='graphController.authoringViewXAxisTypeChanged(graphController.authoringComponentContent.xAxis.type, "{{graphController.authoringComponentContent.xAxis.type}}")'
                        style='width: 120px'>
@@ -401,20 +488,20 @@
           </md-input-container>
           <div ng-if='graphController.authoringComponentContent.xAxis.type === "limits" || graphController.authoringComponentContent.xAxis.type === "" || graphController.authoringComponentContent.xAxis.type == null'>
             <md-input-container style='margin-right: 20px; width: 100px;'>
-              <label>{{ 'graph.units' | translate }}</label>
+              <label>{{ ::'graph.units' | translate }}</label>
               <input ng-model='graphController.authoringComponentContent.xAxis.units'
                      ng-model-options='{ debounce: 1000 }'
                      ng-change='graphController.authoringViewComponentChanged()'/>
             </md-input-container>
             <md-input-container style='margin-right: 20px; width: 100px;'>
-              <label>{{ 'graph.min' | translate }}</label>
+              <label>{{ ::'graph.min' | translate }}</label>
               <input type='number'
                      ng-model='graphController.authoringComponentContent.xAxis.min'
                      ng-model-options='{ debounce: 1000 }'
                      ng-change='graphController.authoringViewComponentChanged()'/>
             </md-input-container>
             <md-input-container style='margin-right: 20px; width: 100px;'>
-              <label>{{ 'graph.max' | translate }}</label>
+              <label>{{ ::'graph.max' | translate }}</label>
               <input type='number'
                      ng-model='graphController.authoringComponentContent.xAxis.max'
                      ng-model-options='{ debounce: 1000 }'
@@ -423,14 +510,14 @@
             <md-input-container>
               <md-checkbox ng-model='graphController.authoringComponentContent.xAxis.locked'
                            ng-change='graphController.authoringViewComponentChanged()'>
-                {{ 'graph.locked' | translate }}
+                {{ ::'graph.locked' | translate }}
               </md-checkbox>
             </md-input-container>
           </div>
           <div ng-if='graphController.authoringComponentContent.xAxis.type == "categories"'
                style='margin-right: 10px'>
             <md-input-container>
-              <span>{{ 'graph.categories' | translate }}</span>
+              <span>{{ ::'graph.categories' | translate }}</span>
             </md-input-container>
             <md-input-container>
               <md-button class='topButton md-raised md-primary'
@@ -441,7 +528,7 @@
             </md-input-container>
             <div ng-repeat='category in graphController.authoringComponentContent.xAxis.categories track by $index'>
               <md-input-container>
-                <label>{{ 'graph.categoryName' | translate }}</label>
+                <label>{{ ::'graph.categoryName' | translate }}</label>
                 <input ng-model='graphController.authoringComponentContent.xAxis.categories[$index]'
                        ng-change='graphController.authoringViewComponentChanged()'
                        size='50'/>
@@ -449,37 +536,37 @@
               <md-button ng-click='graphController.authoringDeleteXAxisCategory($index)'
                          class='topButton md-raised md-primary'>
                 <md-icon>delete</md-icon>
-                <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'graph.deleteCategory' | translate }}</md-tooltip>
+                <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'graph.deleteCategory' | translate }}</md-tooltip>
               </md-button>
             </div>
           </div>
         </div>
         <div layout='row' style='height: 80px;'>
           <md-input-container style='margin-right: 20px; width: 50px;'>
-            <h6>{{ 'graph.yAxis' | translate }}</h6>
+            <h6>{{ ::'graph.yAxis' | translate }}</h6>
           </md-input-container>
           <md-input-container style='margin-right: 20px; width: 200px;'>
-            <label>{{ 'graph.title' | translate }}</label>
+            <label>{{ ::'graph.title' | translate }}</label>
             <input ng-model='graphController.authoringComponentContent.yAxis.title.text'
                    ng-model-options='{ debounce: 1000 }'
                    ng-change='graphController.authoringViewComponentChanged()'/>
           </md-input-container>
           <div>
             <md-input-container style='margin-right: 20px; width: 100px;'>
-              <label>{{ 'graph.units' | translate }}</label>
+              <label>{{ ::'graph.units' | translate }}</label>
               <input ng-model='graphController.authoringComponentContent.yAxis.units'
                      ng-model-options='{ debounce: 1000 }'
                      ng-change='graphController.authoringViewComponentChanged()'/>
             </md-input-container>
             <md-input-container style='margin-right: 20px; width: 100px;'>
-              <label>{{ 'graph.min' | translate }}</label>
+              <label>{{ ::'graph.min' | translate }}</label>
               <input type='number'
                      ng-model='graphController.authoringComponentContent.yAxis.min'
                      ng-model-options='{ debounce: 1000 }'
                      ng-change='graphController.authoringViewComponentChanged()'/>
             </md-input-container>
             <md-input-container style='margin-right: 20px; width: 100px;'>
-              <label>{{ 'graph.max' | translate }}</label>
+              <label>{{ ::'graph.max' | translate }}</label>
               <input type='number'
                      ng-model='graphController.authoringComponentContent.yAxis.max'
                      ng-model-options='{ debounce: 1000 }'
@@ -488,14 +575,14 @@
             <md-input-container>
               <md-checkbox ng-model='graphController.authoringComponentContent.yAxis.locked'
                            ng-change='graphController.authoringViewComponentChanged()'>
-                {{ 'graph.locked' | translate }}
+                {{ ::'graph.locked' | translate }}
               </md-checkbox>
             </md-input-container>
           </div>
         </div>
         <div layout='row' style='height: 80px;'>
           <md-input-container>
-            <label>{{ 'BACKGROUND_IMAGE' | translate }} ({{ 'OPTIONAL' | translate }})</label>
+            <label>{{ ::'BACKGROUND_IMAGE' | translate }} ({{ ::'OPTIONAL' | translate }})</label>
             <input ng-model='graphController.authoringComponentContent.backgroundImage'
                    ng-model-options='{ debounce: 1000 }'
                    ng-change='graphController.authoringViewComponentChanged()'
@@ -505,16 +592,16 @@
             <md-button class='topButton md-raised md-primary'
                        ng-click="graphController.showChooseBackgroundImagePopup()">
               <md-icon>insert_photo</md-icon>
-              <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'chooseAnImage' | translate }}</md-tooltip>
+              <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'chooseAnImage' | translate }}</md-tooltip>
             </md-button>
           </md-input-container>
         </div>
-        <div layout='row' style='height: 80;'>
-          <md-input-container style='width: 250;'>
-            <label>{{ 'graph.roundValuesTo' | translate }}</label>
+        <div layout='row' style='height: 80px;'>
+          <md-input-container style='width: 250px;'>
+            <label>{{ ::'graph.roundValuesTo' | translate }}</label>
             <md-select ng-model='graphController.authoringComponentContent.roundValuesTo'
                        ng-change='graphController.authoringViewComponentChanged()'
-                       style='width: 250'>
+                       style='width: 250px'>
               <md-option ng-repeat='availableRoundingOption in graphController.availableRoundingOptions'
                          value='{{availableRoundingOption.value}}'>
                 {{availableRoundingOption.text}}
@@ -526,119 +613,119 @@
           <md-checkbox class='md-primary'
                        ng-model='graphController.authoringComponentContent.enableTrials'
                        ng-change='graphController.authoringViewEnableTrialsClicked()'>
-            {{ 'graph.enableTrials' | translate }}
+            {{ ::'graph.enableTrials' | translate }}
           </md-checkbox>
           <br/>
           <div ng-if='graphController.authoringComponentContent.enableTrials'>
             <md-checkbox class='md-primary'
                          ng-model='graphController.authoringComponentContent.canCreateNewTrials'
                          ng-change='graphController.authoringViewComponentChanged()'>
-              {{ 'graph.canStudentCreateTrials' | translate }}
+              {{ ::'graph.canStudentCreateTrials' | translate }}
             </md-checkbox>
             <br/>
             <md-checkbox class='md-primary'
                          ng-model='graphController.authoringComponentContent.canDeleteTrials'
                          ng-change='graphController.authoringViewComponentChanged()'>
-              {{ 'graph.canStudentDeleteTrials' | translate }}
+              {{ ::'graph.canStudentDeleteTrials' | translate }}
             </md-checkbox>
             <br/>
             <md-checkbox class='md-primary'
                          ng-model='graphController.authoringComponentContent.hideAllTrialsOnNewTrial'
                          ng-change='graphController.authoringViewComponentChanged()'>
-              {{ 'graph.hideExistingTrialsOnNewTrial' | translate }}
+              {{ ::'graph.hideExistingTrialsOnNewTrial' | translate }}
             </md-checkbox>
           </div>
           <md-checkbox class='md-primary'
                        ng-model='graphController.authoringComponentContent.canStudentHideSeriesOnLegendClick'
                        ng-change='graphController.authoringViewComponentChanged()'>
-            {{ 'graph.canStudentHideSeriesOnLegendClick' | translate }}
+            {{ ::'graph.canStudentHideSeriesOnLegendClick' | translate }}
           </md-checkbox>
           <br/>
           <md-checkbox class='md-primary'
                        ng-model='graphController.authoringComponentContent.enableFileUpload'
                        ng-change='graphController.authoringViewComponentChanged()'>
-            {{ 'graph.enableFileUpload' | translate }}
+            {{ ::'graph.enableFileUpload' | translate }}
           </md-checkbox>
           <br/>
           <md-checkbox class='md-primary'
                        ng-model='graphController.authoringComponentContent.hideLegend'
                        ng-change='graphController.authoringViewComponentChanged()'>
-            {{ 'graph.hideLegend' | translate }}
+            {{ ::'graph.hideLegend' | translate }}
           </md-checkbox>
         </div>
         <br/>
         <div layout='row'>
-          <h6>{{ 'graph.series' | translate }}</h6>
+          <h6>{{ ::'graph.series' | translate }}</h6>
           <md-button class='topButton md-raised md-primary'
                      ng-click='graphController.authoringAddSeriesClicked()'>
             <md-icon>add</md-icon>
-            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'graph.addSeries' | translate }}</md-tooltip>
+            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'graph.addSeries' | translate }}</md-tooltip>
           </md-button>
         </div>
         <div ng-if='graphController.authoringComponentContent.series == null || graphController.authoringComponentContent.series.length == 0'>
-          {{ 'graph.thereAreNoSeriesClickTheAddSeriesButtonToAddASeries' | translate }}
+          {{ ::'graph.thereAreNoSeriesClickTheAddSeriesButtonToAddASeries' | translate }}
         </div>
         <div ng-repeat='series in graphController.authoringComponentContent.series track by $index'
              style='border: 2px solid #dddddd; border-radius: 5px; margin-bottom: 10px; padding: 20px 20px 10px 20px;'>
-          <md-input-container style='margin-right: 20; width: 200; height: 60;'>
+          <md-input-container style='margin-right: 20px; width: 200px; height: 60px;'>
             <label>{{ 'graph.name' | translate }}</label>
             <input ng-model='series.name'
                    ng-change='graphController.authoringViewComponentChanged()'
                    ng-model-options='{ debounce: 1000 }'
                    size='200'/>
           </md-input-container>
-          <md-input-container style='margin-right: 20; width: 120; height: 60;'>
-            <label>{{ 'graph.color' | translate }}</label>
+          <md-input-container style='margin-right: 20px; width: 120px; height: 60px;'>
+            <label>{{ ::'graph.color' | translate }}</label>
             <input ng-model='series.color'
                    ng-model-options='{ debounce: 1000 }'
                    ng-change='graphController.authoringViewComponentChanged()'
                    size='120'/>
           </md-input-container>
-          <md-input-container style='margin-right: 20; width: 140; height: 60;'
+          <md-input-container style='margin-right: 20px; width: 140px; height: 60px;'
                               ng-if='graphController.authoringComponentContent.graphType == "line" || graphController.authoringComponentContent.graphType == "scatter"'>
-            <label>{{ 'graph.symbol' | translate }}</label>
+            <label>{{ ::'graph.symbol' | translate }}</label>
             <md-select ng-model='series.marker.symbol'
                        ng-change='graphController.authoringViewComponentChanged()'
-                       style='width: 140'>
+                       style='width: 140px'>
               <md-option ng-repeat='availableSymbol in graphController.availableSymbols'
                          value='{{availableSymbol.value}}'>
                 {{availableSymbol.text}}
               </md-option>
             </md-select>
           </md-input-container>
-          <md-input-container style='margin-right: 20; width: 120; height: 60;'
+          <md-input-container style='margin-right: 20px; width: 120px; height: 60px;'
                               ng-if='graphController.authoringComponentContent.graphType == "line" || graphController.authoringComponentContent.graphType == "scatter"'>
-            <label>{{ 'graph.type' | translate }}</label>
+            <label>{{ ::'graph.type' | translate }}</label>
             <md-select ng-model='series.type'
                        ng-change='graphController.authoringViewComponentChanged()'
-                       style='width: 120'>
+                       style='width: 120px'>
               <md-option ng-repeat='availableSeriesType in graphController.availableSeriesTypes'
                          value='{{availableSeriesType.value}}'>
                 {{availableSeriesType.text}}
               </md-option>
             </md-select>
           </md-input-container>
-          <md-input-container style='margin-right: 20; width: 120; height: 60;'
+          <md-input-container style='margin-right: 20px; width: 120px; height: 60px;'
                               ng-if='series.type == "line" || (series.type == null && graphController.authoringComponentContent.graphType == "line")'>
-            <label>{{ 'graph.lineType' | translate }}</label>
+            <label>{{ ::'graph.lineType' | translate }}</label>
             <md-select ng-model='series.dashStyle'
                        ng-change='graphController.authoringViewComponentChanged()'
-                       style='width: 120'>
+                       style='width: 120px'>
               <md-option ng-repeat='availableLineType in graphController.availableLineTypes'
                          value='{{availableLineType.value}}'>
                 {{availableLineType.text}}
               </md-option>
             </md-select>
           </md-input-container>
-          <md-input-container style='height: 60;'>
+          <md-input-container style='height: 60px;'>
             <md-checkbox ng-model='series.canEdit'
                          ng-model-options='{ debounce: 1000 }'
                          ng-change='graphController.authoringViewComponentChanged()'>
-              {{ 'graph.canStudentEdit' | translate }}
+              {{ ::'graph.canStudentEdit' | translate }}
             </md-checkbox>
           </md-input-container>
           <br/>
-          <span>{{ 'graph.dataPoints' | translate }}</span>
+          <span>{{ ::'graph.dataPoints' | translate }}</span>
           <md-button class='topButton md-raised md-primary'
                      ng-click='graphController.authoringAddSeriesDataPoint(series)'>
             <md-icon>add</md-icon>
@@ -646,19 +733,19 @@
           </md-button>
           <br/>
           <div ng-if='series.data == null || series.data.length == 0'>
-            {{ 'graph.thisSeriesHasNoStarterDataPoints' | translate }}
+            {{ ::'graph.thisSeriesHasNoStarterDataPoints' | translate }}
           </div>
           <div ng-repeat='dataPoint in series.data track by $index'>
             <span ng-if='graphController.authoringComponentContent.xAxis.type === "limits" || graphController.authoringComponentContent.xAxis.type === "" || graphController.authoringComponentContent.xAxis.type == null'>
               <md-input-container>
-                <label>{{ 'graph.x' | translate }}</label>
+                <label>{{ ::'graph.x' | translate }}</label>
                 <input type='number'
                        ng-model='series.data[$index][0]'
                        style='width:5em'
                        ng-change='graphController.authoringViewComponentChanged()'/>
               </md-input-container>
               <md-input-container>
-                <label>{{ 'graph.y' | translate }}</label>
+                <label>{{ ::'graph.y' | translate }}</label>
                 <input type='number'
                        ng-model='series.data[$index][1]'
                        style='width:5em'
@@ -677,17 +764,17 @@
             <md-button class='topButton md-raised md-primary'
                        ng-click='graphController.authoringMoveSeriesDataPointUp(series, $index)'>
               <md-icon>arrow_upward</md-icon>
-              <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'UP' | translate }}</md-tooltip>
+              <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'UP' | translate }}</md-tooltip>
             </md-button>
             <md-button class='topButton md-raised md-primary'
                        ng-click='graphController.authoringMoveSeriesDataPointDown(series, $index)'>
               <md-icon>arrow_downward</md-icon>
-              <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'DOWN' | translate }}</md-tooltip>
+              <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'DOWN' | translate }}</md-tooltip>
             </md-button>
             <md-button class='topButton md-raised md-primary'
                        ng-click='graphController.authoringDeleteSeriesDataPoint(series, $index)'>
               <md-icon>delete</md-icon>
-              <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'graph.deleteDataPoint' | translate }}</md-tooltip>
+              <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'graph.deleteDataPoint' | translate }}</md-tooltip>
             </md-button>
           </div>
           <br/>
@@ -696,7 +783,7 @@
             <md-button class='topButton md-raised md-primary'
                        ng-click='graphController.authoringDeleteSeriesClicked($index)'>
               <md-icon>delete</md-icon>
-              <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'graph.deleteSeries' | translate }}</md-tooltip>
+              <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'graph.deleteSeries' | translate }}</md-tooltip>
             </md-button>
           </div>
         </div>
@@ -704,9 +791,9 @@
     </div>
     <div ng-style='{"border": "5px solid black", "padding": "20px"}'>
       <div>
-        <h5>{{ 'studentPreview' | translate }}</h5>
+        <h5>{{ ::'studentPreview' | translate }}</h5>
       </div>
-      <div ng-switch='graphController.mode'>
+      <div ng-switch='::graphController.mode'>
         <div ng-switch-when='grading|gradingRevision' ng-switch-when-separator='|' layout='row' layout-wrap>
           <div flex='100' flex-gt-sm='66' layout='column' class='component--grading__response'>
             <div class='component--grading__response__content'>
@@ -742,7 +829,7 @@
                  onchange='angular.element(this).scope().fileUploadChanged(this)'/>
           <div class='component__actions' layout='row' ng-if='graphController.showTrialSelect'>
             <md-input-container ng-if='graphController.componentContent.enableTrials'>
-              <label>{{ 'graph.selectTrialsToShow' | translate }}</label>
+              <label>{{ ::'graph.selectTrialsToShow' | translate }}</label>
               <md-select ng-model='graphController.trialIdsToShow'
                          ng-change='graphController.trialIdsToShowChanged()'
                          md-selected-text='graphController.selectedTrialsText'
@@ -762,7 +849,7 @@
               </md-select>
             </md-input-container>
             <md-input-container ng-if='graphController.componentContent.enableTrials && graphController.showSelectActiveTrials()'>
-              <label>{{ 'graph.selectTrialToEdit' | translate }}</label>
+              <label>{{ ::'graph.selectTrialToEdit' | translate }}</label>
               <md-select ng-model='graphController.activeTrial'
                          ng-change='graphController.activeTrialChanged()'
                          class='graph-select'>
@@ -774,7 +861,7 @@
               </md-select>
             </md-input-container>
             <md-input-container ng-if='graphController.isShowSelectSeriesInput()'>
-              <label>{{ 'graph.selectSeriesToEdit' | translate }}</label>
+              <label>{{ ::'graph.selectSeriesToEdit' | translate }}</label>
               <md-select ng-model='graphController.activeSeries'
                          ng-change='graphController.activeSeriesChanged()'
                          class='graph-select'>
@@ -788,13 +875,13 @@
               <md-button class='md-accent'
                          ng-click='graphController.resetSeries()'
                          ng-if='graphController.showResetSeriesButton() && graphController.activeSeries.canEdit'>
-                <md-icon> restore </md-icon> {{ 'graph.resetSeries' | translate }}
+                <md-icon> restore </md-icon> {{ ::'graph.resetSeries' | translate }}
               </md-button>
             </md-input-container>
             <md-input-container ng-if='graphController.showUndoButton'>
               <md-button class='md-accent'
                          ng-click='graphController.undoClicked()'>
-                <md-icon>undo</md-icon> {{ 'undo' | translate }}
+                <md-icon>undo</md-icon> {{ ::'undo' | translate }}
               </md-button>
             </md-input-container>
           </div>
@@ -802,41 +889,41 @@
             <md-button class='md-accent'
                        ng-click='graphController.newTrialButtonClicked()'
                        ng-if='graphController.componentContent.canCreateNewTrials'>
-              <md-icon> add </md-icon> {{ 'graph.newTrial' | translate }}
+              <md-icon> add </md-icon> {{ ::'graph.newTrial' | translate }}
             </md-button>
             <md-button class='md-accent'
                        ng-click='graphController.resetGraph()'
                        ng-if='graphController.showResetGraphButton()'>
-              <md-icon> restore </md-icon> {{ 'graph.resetGraph' | translate }}
+              <md-icon> restore </md-icon> {{ ::'graph.resetGraph' | translate }}
             </md-button>
             <md-button class='md-accent md-primary'
                        ng-click='graphController.snipDrawing($event)'
                        ng-if='graphController.isAddToNotebookEnabled()'>
-              <md-icon> note_add </md-icon>  {{ 'ADD_TO_NOTEBOOK' | translate:{label:graphController.notebookConfig.label} }}
+              <md-icon> note_add </md-icon>  {{ ::'ADD_TO_NOTEBOOK' | translate:{label:graphController.notebookConfig.label} }}
             </md-button>
             <md-button class='md-accent' ng-if='graphController.isStudentAttachmentEnabled'
                        ng-click='nodeController.showStudentAssets($event, component.id, graphController.isDisabled)'>
-              <md-icon>image</md-icon> {{ 'graph.importData' | translate }}
+              <md-icon>image</md-icon> {{ ::'graph.importData' | translate }}
             </md-button>
           </div>
           <div layout='column'>
             <div layout='row'>
               <div layout='column'
-                   style='width: 80;'
+                   style='width: 80px;'
                    ng-if='!graphController.componentContent.yAxis.locked'>
                 <md-input-container>
-                  <label>{{ 'graph.yMax' | translate }}</label>
+                  <label>{{ ::'graph.yMax' | translate }}</label>
                   <input type='number'
-                         style='width: 60'
+                         style='width: 60px'
                          ng-model='graphController.yAxis.max'
                          ng-model-options='{ debounce: 1000 }'
                          ng-change='graphController.studentDataChanged()'/>
                 </md-input-container>
                 <span flex></span>
                 <md-input-container>
-                  <label>{{ 'graph.yMin' | translate }}</label>
+                  <label>{{ ::'graph.yMin' | translate }}</label>
                   <input type='number'
-                         style='width: 60'
+                         style='width: 60px'
                          ng-model='graphController.yAxis.min'
                          ng-model-options='{ debounce: 1000 }'
                          ng-change='graphController.studentDataChanged()'/>
@@ -848,7 +935,7 @@
             </div>
             <div layout='row'
                  ng-if='!graphController.componentContent.xAxis.locked'>
-              <div style='width: 80;'
+              <div style='width: 80px;'
                    ng-if='!graphController.componentContent.yAxis.locked && !graphController.componentContent.xAxis.locked'>
 
               </div>
@@ -856,18 +943,18 @@
                    style='width: 100%;'
                    ng-if='!graphController.componentContent.xAxis.locked'>
                 <md-input-container>
-                  <label>{{ 'graph.xMin' | translate }}</label>
+                  <label>{{ ::'graph.xMin' | translate }}</label>
                   <input type='number'
-                         style='width: 60'
+                         style='width: 60px'
                          ng-model='graphController.xAxis.min'
                          ng-model-options='{ debounce: 1000 }'
                          ng-change='graphController.studentDataChanged()'/>
                 </md-input-container>
                 <span style='width: {{graphController.xAxisLimitSpacerWidth}};'></span>
                 <md-input-container>
-                  <label>{{ 'graph.xMax' | translate }}</label>
+                  <label>{{ ::'graph.xMax' | translate }}</label>
                   <input type='number'
-                         style='width: 60'
+                         style='width: 60px'
                          ng-model='graphController.xAxis.max'
                          ng-model-options='{ debounce: 1000 }'
                          ng-change='graphController.studentDataChanged()'/>
@@ -880,11 +967,11 @@
             <md-button class='md-raised md-primary'
                        ng-click='graphController.saveButtonClicked()'
                        ng-if='graphController.isSaveButtonVisible'
-                       ng-disabled='graphController.isDisabled || !graphController.isDirty'>{{ 'SAVE' | translate }}</md-button>
+                       ng-disabled='graphController.isDisabled || !graphController.isDirty'>{{ ::'SAVE' | translate }}</md-button>
             <md-button class='md-raised md-primary'
                        ng-click='graphController.submitButtonClicked()'
                        ng-if='graphController.isSubmitButtonVisible'
-                       ng-disabled='graphController.isDisabled || !graphController.isSubmitDirty || graphController.isSubmitButtonDisabled'>{{ 'SUBMIT' | translate }}</md-button>
+                       ng-disabled='graphController.isDisabled || !graphController.isSubmitDirty || graphController.isSubmitButtonDisabled'>{{ ::'SUBMIT' | translate }}</md-button>
             <span ng-if='graphController.saveMessage.text'
                   class='component__actions__info md-caption'>
               {{graphController.saveMessage.text}} <span class='component__actions__more'><md-tooltip md-direction='top'>{{ graphController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago='graphController.saveMessage.time'></span></span>

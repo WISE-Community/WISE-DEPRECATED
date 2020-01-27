@@ -22,23 +22,31 @@
  */
 package org.wise.portal.service.student.impl;
 
-import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.reset;
 import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import junit.framework.TestCase;
-
+import org.easymock.EasyMockRunner;
+import org.easymock.Mock;
+import org.easymock.TestSubject;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.PeriodNotFoundException;
+import org.wise.portal.domain.RunHasEndedException;
 import org.wise.portal.domain.StudentUserAlreadyAssociatedWithRunException;
+import org.wise.portal.domain.authentication.impl.StudentUserDetails;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.group.impl.PersistentGroup;
 import org.wise.portal.domain.project.impl.Projectcode;
@@ -47,215 +55,193 @@ import org.wise.portal.domain.run.impl.RunImpl;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.user.impl.UserImpl;
 import org.wise.portal.domain.workgroup.Workgroup;
-import org.wise.portal.service.acl.AclService;
+import org.wise.portal.domain.workgroup.impl.WorkgroupImpl;
 import org.wise.portal.service.group.GroupService;
 import org.wise.portal.service.run.RunService;
+import org.wise.portal.service.student.StudentService;
 import org.wise.portal.service.workgroup.WorkgroupService;
 
 /**
  * @author Hiroki Terashima
- * @version $Id$
  */
-public class StudentServiceImplTest extends TestCase {
+@RunWith(EasyMockRunner.class)
+public class StudentServiceImplTest {
 
-	private StudentServiceImpl studentService;
-	
-	private RunService mockRunService;
-	
-	private GroupService mockGroupService;
-	
-	private AclService<Run> mockAclService;
-	
-	private WorkgroupService mockWorkgroupService;
-	
-	private User studentUser;
-	
-	private Projectcode projectcode;
-	
-	private final String RUNCODE = "falcon4432";
-	
-	private final String PERIODNAME = "3";
+  @TestSubject
+  private StudentService studentService = new StudentServiceImpl();
 
-	private final String NON_EXISTING_PERIODNAME = "4";
+  @Mock
+  private RunService runService;
 
-	private Run run;
-	
-	private final Long runId = new Long(3);
-	
-	@SuppressWarnings("unchecked")
-	@Override
-	protected void setUp() throws Exception {
-		super.setUp();
-		mockRunService = createMock(RunService.class);
-		mockGroupService = createMock(GroupService.class);
-		mockAclService = createMock(AclService.class);
-		mockWorkgroupService = createMock(WorkgroupService.class);
-		studentUser = new UserImpl();
-		projectcode = new Projectcode(RUNCODE, PERIODNAME);
-		studentService = new StudentServiceImpl();
-		studentService.setAclService(mockAclService);
-		studentService.setRunService(mockRunService);
-		studentService.setGroupService(mockGroupService);
-		studentService.setWorkgroupService(mockWorkgroupService);
-		run = new RunImpl();
-		Set<Group> periods = new TreeSet<Group>();
-		Group period3 = new PersistentGroup();
-		period3.setName(PERIODNAME);
-		periods.add(period3);
-		run.setPeriods(periods);
-	}
-	
-	@Override
-	protected void tearDown() throws Exception {
-		super.tearDown();
-		mockRunService = null;
-		mockGroupService = null;
-		mockAclService = null;
-		studentUser = null;
-		projectcode = null;		
-		studentService = null;
-	}
-	
-	public void testAddStudentToRun_success() 
-	     throws ObjectNotFoundException, PeriodNotFoundException, 
-	     StudentUserAlreadyAssociatedWithRunException {
-  	    expect(mockRunService.retrieveRunByRuncode(RUNCODE)).andReturn(run);
-  	    replay(mockRunService);
-  	    Group period = run.getPeriodByName(PERIODNAME);
-  	    Set<User> membersToAdd = new HashSet<User>();
-  	    membersToAdd.add(studentUser);
-  	    mockGroupService.addMembers(period, membersToAdd);
-  	    expectLastCall();
-  	    replay(mockGroupService);
-  	    
-  	    studentService.addStudentToRun(studentUser, projectcode);
-  	    
-  	    verify(mockRunService);
-  	    verify(mockGroupService);
-	}
-	
-	public void testAddStudentToRun_RunNotFoundException() 
-	    throws PeriodNotFoundException, ObjectNotFoundException {
-  	    expect(mockRunService.retrieveRunByRuncode(RUNCODE))
-  	        .andThrow(new ObjectNotFoundException(runId, Run.class));
-  	    replay(mockRunService);
-  	    replay(mockGroupService);  // not expecting mockGroupService to be called at all
-  	                               // because of the exception
-  	    
-  	    try {
-			studentService.addStudentToRun(studentUser, projectcode);
-			fail("ObjectNotFoundException was expected to be thrown but was not");
-		} catch (ObjectNotFoundException oe) {
-		} catch (PeriodNotFoundException pe) {
-			fail("PeriodNotFoundException was not expected to be thrown");
-		} catch (StudentUserAlreadyAssociatedWithRunException se) {
-			fail("StudentUserAlreadyAssociatedWithRunException was not expected to be thrown");
-		}
-  	    
-  	    verify(mockRunService);
-  	    verify(mockGroupService);
-	}
-	
-	public void testAddStudentsToRun_PeriodNotFoundException() 
-	    throws ObjectNotFoundException, PeriodNotFoundException {
-  	    expect(mockRunService.retrieveRunByRuncode(RUNCODE)).andReturn(run);
-  	    replay(mockRunService);
-  	    try {
-  	        @SuppressWarnings("unused")
-			Group period = run.getPeriodByName(NON_EXISTING_PERIODNAME);
-			fail("PeriodNotFoundException was expected to be thrown but was not");
-  	    } catch (PeriodNotFoundException e) {
-  	    }
-  	    replay(mockGroupService);  // not expecting mockGroupService to be called at all
-                                   // because of the exception
-  	    
-  	    try {
-			studentService.addStudentToRun(studentUser, 
-					new Projectcode(RUNCODE, NON_EXISTING_PERIODNAME));
-			fail("PeriodNotFoundException was expected to be thrown but was not");
-		} catch (ObjectNotFoundException oe) {
-			fail("ObjectNotFoundException was not expected to be thrown");
-		} catch (PeriodNotFoundException pe) {
-		} catch (StudentUserAlreadyAssociatedWithRunException se) {
-			fail("StudentUserAlreadyAssociatedWithRunException was not expected to be thrown");
-		}
-  	    
-  	    verify(mockRunService);
-  	    verify(mockGroupService);	
-	}
-	
-	public void testAddStudentsToRun_StudentAlreadyAssociatedWithRunException() 
-        throws ObjectNotFoundException, PeriodNotFoundException {
-  	    expect(mockRunService.retrieveRunByRuncode(RUNCODE)).andReturn(run);
-  	    replay(mockRunService);
-  	    Group period = run.getPeriodByName(PERIODNAME);
-  	    Set<User> membersToAdd = new HashSet<User>();
-  	    membersToAdd.add(studentUser);
-  	    mockGroupService.addMembers(period, membersToAdd);
-  	    expectLastCall();
-  	    replay(mockGroupService);
-  	    
-  	    try {
-  	        studentService.addStudentToRun(studentUser, projectcode);
-		} catch (ObjectNotFoundException oe) {
-			fail("ObjectNotFoundException was not expected to be thrown");
-		} catch (PeriodNotFoundException pe) {
-			fail("PeriodNotFoundException was not expected to be thrown");
-		} catch (StudentUserAlreadyAssociatedWithRunException se) {
-			fail("StudentUserAlreadyAssociatedWithRunException was not expected to be thrown");
-		}
-  	    verify(mockRunService);
-  	    verify(mockGroupService);
+  @Mock
+  private GroupService groupService;
 
-  	    reset(mockRunService);
-  	    run.getPeriodByName(PERIODNAME).addMember(studentUser);
-  	    expect(mockRunService.retrieveRunByRuncode(RUNCODE)).andReturn(run);
-  	    replay(mockRunService);
+  @Mock
+  private WorkgroupService workgroupService;
 
-  	    // now, if we try to add the studentUser again, we expect 
-  	    // StudentUserAlreadyAssociatedWithRunException to be thrown
-		try {
-  	        studentService.addStudentToRun(studentUser, projectcode);
-		} catch (ObjectNotFoundException oe) {
-			fail("ObjectNotFoundException was not expected to be thrown");
-		} catch (PeriodNotFoundException pe) {
-			fail("PeriodNotFoundException was not expected to be thrown");
-		} catch (StudentUserAlreadyAssociatedWithRunException se) {
-		}
-  	    verify(mockRunService);
-	}
-	
-	public void testRemoveStudentFromRun_student_in_run() throws PeriodNotFoundException {
-		Group period = run.getPeriodByName(PERIODNAME);
-		period.addMember(studentUser);
-		Set<User> membersToRemove = new HashSet<User>();
-		membersToRemove.add(studentUser);
-		mockGroupService.removeMembers(period, membersToRemove);
-		expectLastCall();
-		replay(mockGroupService);
-		
-		expect(mockWorkgroupService.getWorkgroupListByRunAndUser(run, studentUser))
-		    .andReturn(new ArrayList<Workgroup>());
-		replay(mockWorkgroupService);
+  private User studentUser;
 
-		studentService.removeStudentFromRun(studentUser, run);
+  private Projectcode projectcode;
 
-		verify(mockGroupService);
-		verify(mockWorkgroupService);
-	}
-	
-	public void testRemoveStudentFromRun_student_not_in_run() throws PeriodNotFoundException {
-		Group period = run.getPeriodByName(PERIODNAME);
-		Set<User> membersToRemove = new HashSet<User>();
-		membersToRemove.add(studentUser);
-		replay(mockGroupService);  // groupService methods should not
-		// be invoked in this case, as there is no member to remove
+  private final String RUNCODE = "falcon4432";
 
-		studentService.removeStudentFromRun(studentUser, run);
+  private final String PERIODNAME = "3";
 
-		verify(mockGroupService);
-	}
+  private final String NON_EXISTING_PERIODNAME = "4";
 
-	// TODO Hiroki test getStudentRunInfo()
-	
+  private Run run;
+
+  private final Long runId = new Long(3);
+
+  @Before
+  public void setUp() throws Exception {
+    studentUser = new UserImpl();
+    StudentUserDetails userDetails = new StudentUserDetails();
+    userDetails.setUsername("spongebobs0101");
+    studentUser.setUserDetails(userDetails);
+    projectcode = new Projectcode(RUNCODE, PERIODNAME);
+    run = new RunImpl();
+    Set<Group> periods = new TreeSet<Group>();
+    Group period3 = new PersistentGroup();
+    period3.setName(PERIODNAME);
+    periods.add(period3);
+    run.setPeriods(periods);
+    run.setMaxWorkgroupSize(1);
+  }
+
+  @After
+  public void tearDown() throws Exception {
+    runService = null;
+    groupService = null;
+    studentUser = null;
+    projectcode = null;
+    studentService = null;
+  }
+
+  @Test
+  public void addStudentToRun_ExistingUserAndRun_ShouldAddStudentToRun()
+      throws ObjectNotFoundException, PeriodNotFoundException,
+      StudentUserAlreadyAssociatedWithRunException, RunHasEndedException {
+    expect(runService.retrieveRunByRuncode(RUNCODE)).andReturn(run);
+    replay(runService);
+    Group period = run.getPeriodByName(PERIODNAME);
+    groupService.addMember(period.getId(), studentUser);
+    expectLastCall();
+    replay(groupService);
+
+    studentService.addStudentToRun(studentUser, projectcode);
+    verify(runService);
+    verify(groupService);
+  }
+
+  @Test
+  public void addStudentToRun_NonExistingRun_ShouldThrowRunNotFoundException()
+      throws PeriodNotFoundException, ObjectNotFoundException {
+    expect(runService.retrieveRunByRuncode(RUNCODE))
+        .andThrow(new ObjectNotFoundException(runId, Run.class));
+    replay(runService);
+    replay(groupService); // not expecting groupService to be called because of the exception
+    try {
+      studentService.addStudentToRun(studentUser, projectcode);
+      fail("ObjectNotFoundException was expected to be thrown but was not");
+    } catch (ObjectNotFoundException oe) {
+    } catch (Exception e) {
+      fail("Another exception was not expected to be thrown");
+    }
+    verify(runService);
+    verify(groupService);
+  }
+
+  @Test
+  public void addStudentsToRun_NonExistingPeriod_ShouldThrowPeriodNotFoundException()
+      throws ObjectNotFoundException, PeriodNotFoundException {
+    expect(runService.retrieveRunByRuncode(RUNCODE)).andReturn(run);
+    replay(runService);
+    try {
+      run.getPeriodByName(NON_EXISTING_PERIODNAME);
+      fail("PeriodNotFoundException was expected to be thrown but was not");
+    } catch (PeriodNotFoundException e) {
+    }
+    replay(groupService); // not expecting groupService to be called because of the exception
+    try {
+      studentService.addStudentToRun(studentUser,
+          new Projectcode(RUNCODE, NON_EXISTING_PERIODNAME));
+      fail("PeriodNotFoundException was expected to be thrown but was not");
+    } catch (PeriodNotFoundException pe) {
+    } catch (Exception e) {
+      fail("Another exception was not expected to be thrown.");
+    }
+    verify(runService);
+    verify(groupService);
+  }
+
+  @Test
+  public void addStudentsToRun_StudentIsAlreadyInTheRun_ShouldThrowStudentAlreadyAssociatedWithRunException()
+      throws ObjectNotFoundException, PeriodNotFoundException {
+    expect(runService.retrieveRunByRuncode(RUNCODE)).andReturn(run);
+    replay(runService);
+    Group period = run.getPeriodByName(PERIODNAME);
+    groupService.addMember(period.getId(), studentUser);
+    expectLastCall();
+    replay(groupService);
+    try {
+      studentService.addStudentToRun(studentUser, projectcode);
+    } catch (Exception e) {
+      fail("An exception was not expected to be thrown");
+    }
+    verify(runService);
+    verify(groupService);
+    reset(runService);
+    period.addMember(studentUser);
+    expect(runService.retrieveRunByRuncode(RUNCODE)).andReturn(run);
+    replay(runService);
+
+    // now, if we try to add the studentUser again, we expect
+    // StudentUserAlreadyAssociatedWithRunException to be thrown
+    try {
+      studentService.addStudentToRun(studentUser, projectcode);
+      fail("StudentUserAlreadyAssociatedWithRunException was expected to be thrown but was not");
+    } catch (StudentUserAlreadyAssociatedWithRunException se) {
+    } catch (Exception e) {
+      fail("Another exception was not expected to be thrown.");
+    }
+    verify(runService);
+  }
+
+  @Test
+  public void removeStudentFromRun_studentIsInRun_ShouldRemoveStudentFromRunAndWorkgroup()
+      throws PeriodNotFoundException {
+    Group period = run.getPeriodByName(PERIODNAME);
+    period.addMember(studentUser);
+    Set<User> membersToRemove = new HashSet<User>();
+    membersToRemove.add(studentUser);
+    groupService.removeMembers(period, membersToRemove);
+    expectLastCall();
+    replay(groupService);
+    List<Workgroup> workgroupsForRun = new ArrayList<Workgroup>();
+    Workgroup workgroup = new WorkgroupImpl();
+    workgroupsForRun.add(workgroup);
+    expect(workgroupService.getWorkgroupListByRunAndUser(run, studentUser))
+        .andReturn(workgroupsForRun);
+    Set<User> membersToRemoveFromWorkgroup = new HashSet<User>();
+    membersToRemoveFromWorkgroup.add(studentUser);
+    workgroupService.removeMembers(workgroup, membersToRemoveFromWorkgroup);
+    expectLastCall();
+    replay(workgroupService);
+
+    studentService.removeStudentFromRun(studentUser, run);
+    verify(groupService);
+    verify(workgroupService);
+  }
+
+  @Test
+  public void removeStudentFromRun_studentIsNotInRun_ShouldDoNothing() {
+    replay(runService);
+    replay(groupService);
+    replay(workgroupService);
+    studentService.removeStudentFromRun(studentUser, run);
+    verify(runService);
+    verify(groupService);
+    verify(workgroupService);
+  }
 }

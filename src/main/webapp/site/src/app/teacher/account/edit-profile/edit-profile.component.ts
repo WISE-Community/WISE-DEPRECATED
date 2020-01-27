@@ -103,7 +103,7 @@ export class EditProfileComponent implements OnInit {
   }
 
   handleUpdateProfileResponse(response) {
-    if (response.message == 'success') {
+    if (response.status === 'success') {
       this.changed = false;
       this.snackBar.open(this.i18n(`Profile updated.`));
     } else {

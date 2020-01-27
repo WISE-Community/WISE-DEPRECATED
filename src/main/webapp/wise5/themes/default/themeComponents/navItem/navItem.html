@@ -1,23 +1,23 @@
 <div ng-if="navitemCtrl.nodeStatus.isVisible">
-    <ng-switch on="navitemCtrl.type">
+    <ng-switch on="::navitemCtrl.type">
         <md-card ng-switch-when="card"
                  class="nav-item--card"
                  ng-class="{'nav-item--card--group':navitemCtrl.isGroup, 'expanded md-whiteframe-z3':navitemCtrl.expanded}">
             <md-card-content class="nav-item--card__content" ng-click="navitemCtrl.itemClicked($event)" role="button" md-ink-ripple layout="row">
                 <node-icon node-id="navitemCtrl.nodeId" size="36" icon="navitemCtrl.nodeStatus.icon"></node-icon>
                 <div class="md-title nav-item__title" style="color: {{navitemCtrl.nodeStatus.icon.color}};" flex>
-                    <span>{{ navitemCtrl.nodeTitle }}</span>
+                    <span>{{ ::navitemCtrl.nodeTitle }}</span>
                 </div>
-                <md-icon class="nav-item__collapse" ng-show="navitemCtrl.isGroup && navitemCtrl.expanded" aria-label="collapse">remove</md-icon>
+                <md-icon class="nav-item__collapse" ng-if="::navitemCtrl.isGroup && navitemCtrl.expanded" aria-label="collapse">remove</md-icon>
             </md-card-content>
-            <md-card-content ng-if="navitemCtrl.isGroup" ng-show="navitemCtrl.expanded" class="nav-contents nav-contents--group">
+            <md-card-content ng-if="::navitemCtrl.isGroup && navitemCtrl.expanded" class="nav-contents nav-contents--group">
                 <div ng-if="navitemCtrl.isPlanning" class="md-padding" layout="column" layout-align="center center">
                     <md-switch ng-model="navitemCtrl.planningMode"
                                aria-label="Toggle planning mode"
                                class="nav-item__planning-toggle md-primary"
                                ng-change="navitemCtrl.togglePlanningMode()"
                                ng-disabled="navitemCtrl.StudentDataService.planningMode && !navitemCtrl.planningMode">
-                        {{ 'planningMode' | translate }}: {{ navitemCtrl.planningMode ? ('on' | translate) : ('off' | translate) }}
+                        {{ ::'planningMode' | translate }}: {{ navitemCtrl.planningMode ? (::'on' | translate) : (::'off' | translate) }}
                     </md-switch>
                 </div>
                 <md-list class="nav-contents__list">
@@ -33,21 +33,21 @@
                         </nav-item>
                     </div>
                 </md-list>
-                <div ng-if="navitemCtrl.isPlanning" ng-show="navitemCtrl.planningMode"
+                <div ng-if="navitemCtrl.isPlanning && navitemCtrl.planningMode"
                      class="animate-show" layout="column" layout-align="center center">
                     <md-button class="md-accent" aria-label="Add new item to {{ navitemCtrl.nodeTitle }}"
                                ng-click="navitemCtrl.item.ids.length ? navitemCtrl.addPlanningInstance($event, navitemCtrl.item.ids[navitemCtrl.item.ids.length-1]) : navitemCtrl.addPlanningInstance($event, navitemCtrl.nodeId, true)">
                         <md-icon class="md-accent">add_circle</md-icon>
-                        {{ 'addItem' | translate }}
+                        {{ ::'addItem' | translate }}
                     </md-button>
                 </div>
             </md-card-content>
             <md-card-footer class="nav-item__more" layout="row" layout-align="center center" flex>
                 <div class="progress-wrapper">
-                    <md-progress-linear class="nav-item__progress" ng-if="navitemCtrl.isGroup" md-mode="determinate" value="{{navitemCtrl.nodeStatus.progress.completionPct}}"></md-progress-linear>
+                    <md-progress-linear class="nav-item__progress" ng-if="::navitemCtrl.isGroup" md-mode="determinate" value="{{navitemCtrl.nodeStatus.progress.completionPct}}"></md-progress-linear>
                     <md-tooltip>{{navitemCtrl.nodeStatus.progress.completionPct}}% completed</md-tooltip>
                 </div>
-                <span ng-if="navitemCtrl.isGroup" class="nav-item__info md-body-1" translate="accountMenuItems" translate-value-item="{{navitemCtrl.nodeStatus.progress.completedItems}}/{{navitemCtrl.nodeStatus.progress.totalItems}}" />
+                <span ng-if="::navitemCtrl.isGroup" class="nav-item__info md-body-1" translate="accountMenuItems" translate-value-item="{{navitemCtrl.nodeStatus.progress.completedItems}}/{{navitemCtrl.nodeStatus.progress.totalItems}}" />
                 <span flex></span>
                 <node-score node-id="navitemCtrl.nodeId"></node-score>
                 <node-status-icon node-id="navitemCtrl.nodeId"></node-status-icon>
@@ -57,17 +57,17 @@
 
         <md-list-item ng-switch-when="list" ng-click="navitemCtrl.itemClicked($event)"
                       class="md-long-text noright list-item md-whiteframe-z1"
-                      aria-label="{{navitemCtrl.planningMode && navitemCtrl.isPlanningInstance ? 'Move' : 'Go to'}} {{navitemCtrl.nodeTitle}}"
+                      aria-label="{{navitemCtrl.planningMode && navitemCtrl.isPlanningInstance ? 'Move' : 'Go to'}} {{::navitemCtrl.nodeTitle}}"
                       ng-class="{'nav-item--list--group':navitemCtrl.isGroup, 'nav-item--planning-mode': navitemCtrl.planningMode && navitemCtrl.isPlanningInstance}">
             <node-icon node-id="navitemCtrl.nodeId" icon="navitemCtrl.nodeStatus.icon" custom-class="'md-avatar'"></node-icon>
-            <p>{{ navitemCtrl.nodeTitle }} <node-status-icon node-id="navitemCtrl.nodeId" class="status-icon"></node-status-icon><md-icon class="status-icon" ng-if="!navitemCtrl.nodeStatus.isVisitable" aria-label="Item is locked"> lock </md-icon></p>
-            <md-icon class="md-secondary animate-show" ng-if="navitemCtrl.isParentGroupPlanning"
+            <p>{{ ::navitemCtrl.nodeTitle }} <node-status-icon node-id="navitemCtrl.nodeId" class="status-icon"></node-status-icon><md-icon class="status-icon" ng-if="!navitemCtrl.nodeStatus.isVisitable" aria-label="Item is locked"> lock </md-icon></p>
+            <md-icon class="md-secondary animate-show" 
+                     ng-if="navitemCtrl.isParentGroupPlanning && navitemCtrl.planningMode && navitemCtrl.isPlanningInstance"
                      aria-label="Delete Item"
-                     ng-show="navitemCtrl.planningMode && navitemCtrl.isPlanningInstance"
                      ng-click="navitemCtrl.removePlanningNodeInstance(navitemCtrl.nodeId, $event)"> delete </md-icon>
-            <md-icon class="md-secondary nav-item--list__reorder animate-show" ng-if="navitemCtrl.isParentGroupPlanning"
-                     aria-label="Move Item"
-                     ng-show="navitemCtrl.planningMode && navitemCtrl.isPlanningInstance"> reorder </md-icon>
+            <md-icon class="md-secondary nav-item--list__reorder animate-show" 
+                     ng-if="navitemCtrl.isParentGroupPlanning && navitemCtrl.planningMode && navitemCtrl.isPlanningInstance"
+                     aria-label="Move Item"> reorder </md-icon>
         </md-list-item>
     </ng-switch>
 </div>

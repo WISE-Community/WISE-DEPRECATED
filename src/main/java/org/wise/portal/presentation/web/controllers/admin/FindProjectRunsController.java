@@ -102,20 +102,11 @@ public class FindProjectRunsController {
     return runList;
   }
 
-  /**
-   * Returns a <code>List<Run></code> list of runs that are associated
-   * with the given <code>String</code> username using the LIKE operator
-   *
-   * @param username
-   * @return List<Run> - list of runs associated with username using the LIKE operator
-   */
   private List<Run> getRunListByUsername(String username) {
+    User user = userService.retrieveUserByUsername(username);
+    List<Run> runListByOwner = runService.getRunListByOwner(user);
     List<Run> allRuns = new ArrayList<Run>();
-    List<User> users = userService.retrieveUsersByUsername(username);
-    for (User user : users) {
-      List<Run> runListByOwner = runService.getRunListByOwner(user);
-      allRuns.addAll(runListByOwner);
-    }
+    allRuns.addAll(runListByOwner);
     return allRuns;
   }
 

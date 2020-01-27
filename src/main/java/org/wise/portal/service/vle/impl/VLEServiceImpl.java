@@ -494,12 +494,6 @@ public class VLEServiceImpl implements VLEService {
     return vleStatisticsDao.getLatestVLEStatistics();
   }
 
-
-  @Override
-  public StudentStatus getStudentStatusById(Long id) {
-    return studentStatusDao.getStudentStatusById(id);
-  }
-
   @Override
   public void saveStudentStatus(StudentStatus studentStatus) {
     studentStatusDao.saveStudentStatus(studentStatus);
@@ -519,11 +513,6 @@ public class VLEServiceImpl implements VLEService {
   @Override
   public List<StudentStatus> getStudentStatusesByRunId(Long runId) {
     return studentStatusDao.getStudentStatusesByRunId(runId);
-  }
-
-  @Override
-  public RunStatus getRunStatusById(Long id) {
-    return runStatusDao.getRunStatusById(id);
   }
 
   @Override

@@ -1,8 +1,17 @@
 package org.wise.portal.dao.annotation.wise5.impl;
 
-import org.hibernate.Criteria;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 import org.hibernate.Session;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import org.wise.portal.dao.annotation.wise5.AnnotationDao;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
@@ -13,13 +22,15 @@ import org.wise.vle.domain.annotation.wise5.Annotation;
 import org.wise.vle.domain.work.NotebookItem;
 import org.wise.vle.domain.work.StudentWork;
 
-import java.util.List;
-
 /**
  * @author Hiroki Terashima
  */
 @Repository("wise5AnnotationDao")
-public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> implements AnnotationDao<Annotation> {
+public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation>
+    implements AnnotationDao<Annotation> {
+
+  @PersistenceContext
+  private EntityManager entityManager;
 
   @Override
   protected String getFindAllQuery() {
@@ -32,47 +43,51 @@ public class HibernateAnnotationDao extends AbstractHibernateDao<Annotation> imp
   }
 
   @Override
+  @SuppressWarnings("unchecked")
   public List<Annotation> getAnnotationsByParams(
-    Integer id, Run run, Group period, Workgroup fromWorkgroup, Workgroup toWorkgroup,
-    String nodeId, String componentId, StudentWork studentWork, String localNotebookItemId, NotebookItem notebookItem, String type) {
-
+      Integer id, Run run, Group period, Workgroup fromWorkgroup, Workgroup toWorkgroup,
+      String nodeId, String componentId, StudentWork studentWork, String localNotebookItemId,
+      NotebookItem notebookItem, String type) {
     Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-    Criteria sessionCriteria = session.createCriteria(Annotation.class);
-
+    CriteriaBuilder cb = session.getCriteriaBuilder();
+    CriteriaQuery<Annotation> cq = cb.createQuery(Annotation.class);
+    Root<Annotation> annotationRoot = cq.from(Annotation.class);
+    List<Predicate> predicates = new ArrayList<>();
     if (id != null) {
-      sessionCriteria.add(Restrictions.eq("id", id));
+      predicates.add(cb.equal(annotationRoot.get("id"), id));
     }
     if (run != null) {
-      sessionCriteria.add(Restrictions.eq("run", run));
+      predicates.add(cb.equal(annotationRoot.get("run"), run));
     }
     if (period != null) {
-      sessionCriteria.add(Restrictions.eq("period", period));
+      predicates.add(cb.equal(annotationRoot.get("period"), period));
     }
     if (fromWorkgroup != null) {
-      sessionCriteria.add(Restrictions.eq("fromWorkgroup", fromWorkgroup));
+      predicates.add(cb.equal(annotationRoot.get("fromWorkgroup"), fromWorkgroup));
     }
     if (toWorkgroup != null) {
-      sessionCriteria.add(Restrictions.eq("toWorkgroup", toWorkgroup));
+      predicates.add(cb.equal(annotationRoot.get("toWorkgroup"), toWorkgroup));
     }
     if (nodeId != null) {
-      sessionCriteria.add(Restrictions.eq("nodeId", nodeId));
+      predicates.add(cb.equal(annotationRoot.get("nodeId"), nodeId));
     }
     if (componentId != null) {
-      sessionCriteria.add(Restrictions.eq("componentId", componentId));
+      predicates.add(cb.equal(annotationRoot.get("componentId"), componentId));
     }
     if (studentWork != null) {
-      sessionCriteria.add(Restrictions.eq("studentWork", studentWork));
+      predicates.add(cb.equal(annotationRoot.get("studentWork"), studentWork));
     }
     if (notebookItem != null) {
-      sessionCriteria.add(Restrictions.eq("notebookItem", notebookItem));
+      predicates.add(cb.equal(annotationRoot.get("notebookItem"), notebookItem));
     }
     if (localNotebookItemId != null) {
-      sessionCriteria.add(Restrictions.eq("localNotebookItemId", localNotebookItemId));
+      predicates.add(cb.equal(annotationRoot.get("localNotebookItemId"), localNotebookItemId));
     }
     if (type != null) {
-      sessionCriteria.add(Restrictions.eq("type", type));
+      predicates.add(cb.equal(annotationRoot.get("type"), type));
     }
-
-    return sessionCriteria.list();
+    cq.select(annotationRoot).where(predicates.toArray(new Predicate[predicates.size()]));
+    TypedQuery<Annotation> query = entityManager.createQuery(cq);
+    return (List<Annotation>) (Object) query.getResultList();
   }
 }

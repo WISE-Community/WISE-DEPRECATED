@@ -56,23 +56,23 @@
         cursor:pointer;
     }
 </style>
-<div class='studentAssets' ng-show="studentAssetController.studentAssets.length" >
+<div class='studentAssets' ng-if="studentAssetController.studentAssets.length" >
     <img ng-repeat="studentAsset in studentAssetController.studentAssets"
          ng-click='studentAssetController.attachStudentAssetToComponent($event, studentAsset)'
-         ng-show="studentAsset != null"
+         ng-if="studentAsset != null"
          ng-src='{{studentAsset.iconURL}}'
          class='studentAsset'
          title="{{ 'useThisFile' | translate }}">
     </img>
 </div>
 <div>
-    <div ng-show="studentAssetController.mode != 'preview'" ngf-drop ngf-select ngf-change="studentAssetController.uploadStudentAssets($files)" class="drop-box"
+    <div ng-if="::studentAssetController.mode != 'preview'" ngf-drop ngf-select ngf-change="studentAssetController.uploadStudentAssets($files)" class="drop-box"
          drag-over-class="dragover" ngf-multiple="true" allow-dir="false"
          accept="image/*,application/pdf,text/csv" translate="dropAssetMessage"></div>
     <!-- TODO: ask researchers if we should display usage information to students. we'll hide it for now.
     You are using {{studentAssetController.notebook.totalSize | appropriateSizeText }} out of {{studentAssetController.notebook.totalSizeMax | appropriateSizeText}} ({{studentAssetController.notebook.usagePercentage | roundToDecimal:0 }}%)
     -->
 </div>
-<div ng-show="studentAssetController.mode == 'preview'">
+<div ng-if="::studentAssetController.mode == 'preview'">
     {{ 'theStudentAssetsWillAppearHereOnceYouSetUpAClassroomRun' | translate }}
 </div>
