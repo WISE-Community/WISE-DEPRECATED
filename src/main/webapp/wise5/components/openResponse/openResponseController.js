@@ -277,7 +277,7 @@ class OpenResponseController extends ComponentController {
   }
 
   hasFeedback(){
-    return this.isCRaterEnabled();
+    return (this.authoringComponentContent.cRater.showFeedback|| this.authoringComponentContent.cRater.showScore) && this.isCRaterEnabled() ;
   }
 
   confirmSubmit(numberOfSubmitsLeft) {
@@ -742,7 +742,7 @@ class OpenResponseController extends ComponentController {
    * @returns whether CRater is enabled for this component
    */
   isCRaterEnabled() {
-    return (this.CRaterService.isCRaterEnabled(this.componentContent));
+    return this.CRaterService.isCRaterEnabled(this.componentContent);
   }
 
   /**
