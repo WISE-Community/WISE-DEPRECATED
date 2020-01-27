@@ -132,13 +132,11 @@ const authoringModule = angular.module('authoring', [
     '$stateProvider',
     '$translateProvider',
     '$translatePartialLoaderProvider',
-    '$controllerProvider',
     '$mdThemingProvider',
     ($urlRouterProvider,
      $stateProvider,
      $translateProvider,
      $translatePartialLoaderProvider,
-     $controllerProvider,
      $mdThemingProvider) => {
   $urlRouterProvider.otherwise('/');
 

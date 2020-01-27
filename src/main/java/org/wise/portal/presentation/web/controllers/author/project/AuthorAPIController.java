@@ -24,9 +24,7 @@
 package org.wise.portal.presentation.web.controllers.author.project;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -62,7 +60,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.portal.Portal;
@@ -334,8 +331,8 @@ public class AuthorAPIController {
     String projectBaseURL = projectURL.substring(0, projectURL.indexOf("project.json"));
     Long projectAssetTotalSizeMax = project.getMaxTotalAssetsSize();
     if (projectAssetTotalSizeMax == null) {
-      projectAssetTotalSizeMax = new Long(
-          appProperties.getProperty("project_max_total_assets_size", "15728640"));
+      projectAssetTotalSizeMax =
+          new Long(appProperties.getProperty("project_max_total_assets_size", "15728640"));
     }
 
     config.put("projectId", projectId);
@@ -402,19 +399,17 @@ public class AuthorAPIController {
   @PostMapping("/project/asset/{projectId}")
   @ResponseBody
   protected Map<String, Object> saveProjectAsset(Authentication auth, @PathVariable Long projectId,
-      HttpServletRequest request) throws ObjectNotFoundException, IOException {
+      @RequestParam("file") List<MultipartFile> files) throws ObjectNotFoundException, IOException {
     Project project = projectService.getById(projectId);
     User user = userService.retrieveUserByUsername(auth.getName());
     if (projectService.canAuthorProject(project, user)) {
-      Map<String, MultipartFile> fileMap =
-          ((StandardMultipartHttpServletRequest) request).getFileMap();
-      return addAsset(project, fileMap, user);
+      return addAsset(project, files, user);
     }
     return null;
   }
 
-  private Map<String, Object> addAsset(Project project, Map<String, MultipartFile> fileMap,
-      User user) throws IOException {
+  private Map<String, Object> addAsset(Project project, List<MultipartFile> files, User user)
+      throws IOException {
     String projectAssetsDirPath = getProjectAssetsDirectoryPath(project);
     File projectAssetsDir = new File(projectAssetsDirPath);
     long sizeOfAssetsDirectory = FileUtils.sizeOfDirectory(projectAssetsDir);
@@ -422,8 +417,7 @@ public class AuthorAPIController {
     if (projectMaxTotalAssetsSize == null) {
       projectMaxTotalAssetsSize = new Long(appProperties.getProperty("project_max_total_assets_size", "15728640"));
     }
-    for (String key : fileMap.keySet()) {
-      MultipartFile file = fileMap.get(key);
+    for (MultipartFile file : files) {
       if (sizeOfAssetsDirectory + file.getSize() > projectMaxTotalAssetsSize) {
         ErrorResponse response = new ErrorResponse("Error: Exceeded project max asset size.\nPlease delete unused assets.\n\nContact WISE if your project needs more disk space.");
         return response.toMap();
@@ -431,14 +425,8 @@ public class AuthorAPIController {
         ErrorResponse response = new ErrorResponse("Error: Upload file \"" + file.getOriginalFilename() + "\" not allowed.\n");
         return response.toMap();
       } else {
-        File asset = new File(projectAssetsDir, file.getOriginalFilename());
-        if (!asset.exists()) {
-          asset.createNewFile();
-        }
-        FileOutputStream fos = new FileOutputStream(asset);
-        fos.write(file.getBytes());
-        fos.flush();
-        fos.close();
+        Path path = Paths.get(projectAssetsDirPath, file.getOriginalFilename());
+        Files.write(path, file.getBytes());
       }
     }
     return projectService.getDirectoryInfo(new File(projectAssetsDirPath));

@@ -58,14 +58,14 @@
         ng-click='projectAssetController.assetClicked($event, assetItem)'
         ng-mouseover='projectAssetController.previewAsset($event, assetItem)'
         ng-style="projectAssetController.selectedAssetItem === assetItem ? { 'backgroundColor': 'yellow'} : { 'backgroundColor': '' }">
-        <span>{{assetItem.fileName}} ({{assetItem.fileSize | appropriateSizeText}})</span>
+        <span>{{::assetItem.fileName}} ({{::assetItem.fileSize | appropriateSizeText}})</span>
         <button ng-click='projectAssetController.chooseAsset(assetItem)'
             ng-show='projectAssetController.isPopup'>Choose</button>
         <span>
           <md-tooltip md-direction="top"><span translate="download"></span></md-tooltip>
           <md-icon ng-click="projectAssetController.downloadAsset(assetItem)">file_download</md-icon>
         </span>
-        <md-icon ng-click='projectAssetController.deleteAsset(assetItem)'> delete </md-icon>
+        <md-icon ng-click='projectAssetController.deleteAsset(assetItem)'>delete</md-icon>
         <span ng-if="assetItem.used === false">
           <span style="color:red">({{ ::'notUsed' | translate }})</span>
         </span>
