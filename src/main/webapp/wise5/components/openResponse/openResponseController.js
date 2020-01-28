@@ -281,8 +281,6 @@ class OpenResponseController extends ComponentController {
   }
 
   confirmSubmit(numberOfSubmitsLeft) {
-    let message = '';
-    let isPerformSubmit = false;
 
     if (this.hasFeedback()) {
       return submitWithFeedback(numberOfSubmitsLeft);
@@ -292,6 +290,9 @@ class OpenResponseController extends ComponentController {
   }
 
   submitWithFeedback(numberOfSubmitsLeft) {
+    let message = '';
+    let isPerformSubmit = false;
+
     if (numberOfSubmitsLeft <= 0) {
       alert(this.$translate('openResponse.youHaveNoMoreChances'));
     } else if (numberOfSubmitsLeft == 1) {
@@ -301,9 +302,13 @@ class OpenResponseController extends ComponentController {
       message = this.$translate('openResponse.youHaveMultipleChances', {numberOfSubmitsLeft: numberOfSubmitsLeft});
       isPerformSubmit = confirm(message);
     }
+    return isPerformSubmit;
   }
 
   submitWithoutFeedback(numberOfSubmitsLeft) {
+    let message = '';
+    let isPerformSubmit = false;
+    
     if (numberOfSubmitsLeft <= 0) {
       alert(this.$translate('openResponse.youHaveNoMoreChancesWithoutFeedback'));
     } else if (numberOfSubmitsLeft == 1) {
@@ -313,6 +318,7 @@ class OpenResponseController extends ComponentController {
       message = this.$translate('openResponse.youHaveMultipleChancesWithoutFeedback', {numberOfSubmitsLeft: numberOfSubmitsLeft});
       isPerformSubmit = confirm(message);
     }
+    return isPerformSubmit;
   }
 
   /**
