@@ -28,6 +28,9 @@
     cursor: pointer;
   }
   #assetMessage {
+    background-color: lightgreen;
+  }
+  #errorMessage {
     background-color: lightpink;
   }
 </style>
@@ -43,7 +46,12 @@
 <span ng-if="projectAssetController.totalUnusedFilesSize != null && projectAssetController.totalUnusedFilesSize != 0"
     style="color:red">({{ ::'unusedFiles' | translate }} {{projectAssetController.totalUnusedFilesSize | appropriateSizeText}} ({{projectAssetController.unusedFilesPercentage | roundToDecimal:0}}%))
   </span>
-<span id="assetMessage">{{projectAssetController.assetMessage}}</span><br/>
+<div id="assetMessage">{{projectAssetController.assetMessage}}</div>
+<div id="errorMessage" ng-if="projectAssetController.errorFiles != null">
+  <div ng-repeat='errorFile in projectAssetController.errorFiles'>
+    <b>{{::errorFile.filename}}</b> {{::errorFile.message}}
+  </div>
+</div>
 <span translate="sortAssets"></span>: <select ng-model="projectAssetController.assetSortBy">
   <option value="aToZ" translate="fileNameAToZ"></option>
   <option value="zToA" translate="fileNameZToA"></option>

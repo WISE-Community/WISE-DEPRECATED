@@ -54,28 +54,13 @@ class ProjectAssetService {
   }
 
   uploadAssets(files) {
-    const promises = files.map((file) => {
-      return this.Upload.upload({
-        url: this.ConfigService.getConfigParam('projectAssetURL'),
-        fields: {
-        },
-        file: file
-      }).progress((evt) => {
-        const progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
-        //console.log('progress: ' + progressPercentage + '% ' + evt.config.file.name);
-      }).success((result, status, headers, config) => {
-        // Only set the projectAssets if the result is an object.
-        // Sometimes it's an error message string.
-        if (result.status === 'error') {
-          alert(result.messageCode);
-        } else {
-          this.projectAssets = result;
-          return config.file.name;
-        }
-        return result;
-      });
+    return this.Upload.upload({
+      url: this.ConfigService.getConfigParam('projectAssetURL'),
+      data: { files : files },
+      arrayKey: '' // required to merge files array into one 'files' request parameter
+    }).success((result) => {
+      this.projectAssets = result.assetDirectoryInfo;
     });
-    return this.$q.all(promises);
   }
 
   /**

@@ -33,7 +33,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
 import java.util.regex.Matcher;
@@ -42,14 +41,10 @@ import java.util.stream.Collectors;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.io.FileUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.http.MediaType;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -59,7 +54,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.portal.Portal;
@@ -321,7 +315,7 @@ public class AuthorAPIController {
 
   @GetMapping("/config/{projectId}")
   @ResponseBody
-  protected HashMap<String, Object> getAuthorProjectConfig(Authentication auth, 
+  protected HashMap<String, Object> getAuthorProjectConfig(Authentication auth,
       HttpServletRequest request, @PathVariable Long projectId) throws IOException,
       ObjectNotFoundException {
     Project project = projectService.getById(projectId);
@@ -362,106 +356,6 @@ public class AuthorAPIController {
       config.put("runId", runId);
     }
     return config;
-  }
-
-  private String getProjectAssetsDirectoryPath(Project project) {
-    String curriculumBaseDir = appProperties.getProperty("curriculum_base_dir");
-    String rawProjectUrl = project.getModulePath();
-    String projectURL = curriculumBaseDir + rawProjectUrl;
-    String projectBaseDir = projectURL.substring(0, projectURL.indexOf("project.json"));
-    return projectBaseDir + "/assets";
-  }
-
-  @GetMapping("/project/asset/{projectId}")
-  @ResponseBody
-  protected Map<String, Object> getProjectAssets(Authentication auth,
-      @PathVariable Long projectId) throws ObjectNotFoundException, IOException {
-    Project project = projectService.getById(projectId);
-    User user = userService.retrieveUserByUsername(auth.getName());
-    if (projectService.canAuthorProject(project, user)) {
-      return projectService.getDirectoryInfo(new File(getProjectAssetsDirectoryPath(project)));
-    }
-    return null;
-  }
-
-  @GetMapping(value = "/project/asset/{projectId}/download",
-      produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-  @ResponseBody
-  protected FileSystemResource downloadProjectAsset(Authentication auth,
-      HttpServletResponse response, @PathVariable Long projectId,
-      @RequestParam String assetFileName) throws ObjectNotFoundException {
-    Project project = projectService.getById(projectId);
-    User user = userService.retrieveUserByUsername(auth.getName());
-    if (projectService.canAuthorProject(project, user)) {
-      response.setHeader("Content-Disposition", "attachment;filename=\"" + assetFileName + "\"");
-      return new FileSystemResource(getProjectAssetsDirectoryPath(project) + "/" + assetFileName);
-    }
-    return null;
-  }
-
-  @PostMapping("/project/asset/{projectId}")
-  @ResponseBody
-  protected Map<String, Object> saveProjectAsset(Authentication auth, @PathVariable Long projectId,
-      @RequestParam("file") List<MultipartFile> files) throws ObjectNotFoundException, IOException {
-    Project project = projectService.getById(projectId);
-    User user = userService.retrieveUserByUsername(auth.getName());
-    if (projectService.canAuthorProject(project, user)) {
-      return addAsset(project, files, user);
-    }
-    return null;
-  }
-
-  private Map<String, Object> addAsset(Project project, List<MultipartFile> files, User user)
-      throws IOException {
-    String projectAssetsDirPath = getProjectAssetsDirectoryPath(project);
-    File projectAssetsDir = new File(projectAssetsDirPath);
-    long sizeOfAssetsDirectory = FileUtils.sizeOfDirectory(projectAssetsDir);
-    Long projectMaxTotalAssetsSize = project.getMaxTotalAssetsSize();
-    if (projectMaxTotalAssetsSize == null) {
-      projectMaxTotalAssetsSize = 
-          new Long(appProperties.getProperty("project_max_total_assets_size", "15728640"));
-    }
-    for (MultipartFile file : files) {
-      if (sizeOfAssetsDirectory + file.getSize() > projectMaxTotalAssetsSize) {
-        ErrorResponse response = new ErrorResponse("Error: Exceeded project max asset size.\n" +
-            "Please delete unused assets.\n\nContact WISE if your project needs more disk space.");
-        return response.toMap();
-      } else if (!isUserAllowedToUpload(user, file)) {
-        ErrorResponse response = new ErrorResponse("Error: Upload file \"" + 
-            file.getOriginalFilename() + "\" not allowed.\n");
-        return response.toMap();
-      } else {
-        Path path = Paths.get(projectAssetsDirPath, file.getOriginalFilename());
-        Files.write(path, file.getBytes());
-      }
-    }
-    return projectService.getDirectoryInfo(new File(projectAssetsDirPath));
-  }
-
-  private boolean isUserAllowedToUpload(User user, MultipartFile file) {
-    String allowedTypes = appProperties.getProperty("normalAuthorAllowedProjectAssetContentTypes");
-    if (user.isTrustedAuthor()) {
-      allowedTypes += "," + 
-          appProperties.getProperty("trustedAuthorAllowedProjectAssetContentTypes");
-    }
-    return allowedTypes.contains(file.getContentType());
-  }
-
-  @PostMapping("/project/asset/{projectId}/delete")
-  @ResponseBody
-  protected Map<String, Object> deleteProjectAsset(Authentication auth,
-      @PathVariable Long projectId, @RequestParam String assetFileName)
-      throws ObjectNotFoundException {
-    Project project = projectService.getById(projectId);
-    User user = userService.retrieveUserByUsername(auth.getName());
-    if (projectService.canAuthorProject(project, user)) {
-      String projectAssetsDirPath = getProjectAssetsDirectoryPath(project);
-      File asset = new File(projectAssetsDirPath, assetFileName);
-      asset.delete();
-      return projectService.getDirectoryInfo(new File(projectAssetsDirPath));
-    } else {
-      return null;
-    }
   }
 
   /**

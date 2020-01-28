@@ -89,9 +89,7 @@ class ProjectAssetController {
       }
     );
 
-    this.ProjectAssetService.calculateAssetUsage().then((totalUnusedFilesSize) => {
-      this.setTotalUnusedFilesSize(totalUnusedFilesSize);
-    });
+    this.calculateUnusedAssets();
   }
 
   sortAssets(sortBy) {
@@ -134,21 +132,24 @@ class ProjectAssetController {
    * @param assetItem the asset to delete
    */
   deleteAsset(assetItem) {
-    const message = 
+    const message =
         `${this.$translate('areYouSureYouWantToDeleteThisFile')}\n\n${assetItem.fileName}`;
     if (confirm(message)) {
       this.ProjectAssetService.deleteAssetItem(assetItem).then((newProjectAssets) => {
         this.projectAssets = this.ProjectAssetService.projectAssets;
-        // calculate whether the assets are used in the project
-        this.ProjectAssetService.calculateAssetUsage().then((totalUnusedFilesSize) => {
-          this.setTotalUnusedFilesSize(totalUnusedFilesSize);
-        });
+        this.calculateUnusedAssets();
       });
     }
   }
 
   downloadAsset(assetItem) {
     this.ProjectAssetService.downloadAssetItem(assetItem);
+  }
+
+  calculateUnusedAssets() {
+    this.ProjectAssetService.calculateAssetUsage().then((totalUnusedFilesSize) => {
+      this.setTotalUnusedFilesSize(totalUnusedFilesSize);
+    });
   }
 
   /**
@@ -228,8 +229,8 @@ class ProjectAssetController {
       message = this.$translate('areYouSureYouWantToUploadThisLargeFileWhileUploadingMultipleFiles')
           + '\n';
     } else if (largeFiles.length > 1) {
-      message = 
-          this.$translate('areYouSureYouWantToUploadTheseLargeFilesWhileUploadingMultipleFiles', 
+      message =
+          this.$translate('areYouSureYouWantToUploadTheseLargeFilesWhileUploadingMultipleFiles',
           { fileCount: largeFiles.length }) + '\n';
     }
     for (const largeFile of largeFiles) {
@@ -238,46 +239,35 @@ class ProjectAssetController {
     return message;
   }
 
-  /**
-   * @param files An array of file objects.
-   */
   uploadAssets(files) {
-    this.ProjectAssetService.uploadAssets(files).then((uploadAssetsResults) => {
-      if (uploadAssetsResults && uploadAssetsResults.length > 0) {
-        const uploadedAssetsFilenames = [];
-        for (const uploadAssetsResult of uploadAssetsResults) {
-          if (typeof uploadAssetsResult.data === 'string') {
-            // there was an error uploading this file, so don't add
-          } else {
-            uploadedAssetsFilenames.push(uploadAssetsResult.config.file.name);
-          }
-        }
-        if (uploadedAssetsFilenames.length > 0) {
-          // show which files were uploaded for 7 seconds
-          this.assetMessage = this.$translate('assetUploadSuccessful',
-              { assetFilenames: uploadedAssetsFilenames.join(', ') });
-          this.$timeout(() => {
-            this.assetMessage = '';
-          }, 7000);
-        }
+    this.ProjectAssetService.uploadAssets(files).success(({success, error, assetDirectoryInfo}) => {
+      if (success.length > 0) {
+        this.showUploadedFiles(success);
       }
-      this.projectAssets = this.ProjectAssetService.projectAssets;
-      // calculate whether the assets are used in the project
-      this.ProjectAssetService.calculateAssetUsage().then((totalUnusedFilesSize) => {
-        this.setTotalUnusedFilesSize(totalUnusedFilesSize);
-      });
+      if (error.length > 0) {
+        this.showError(error)
+      }
+      this.projectAssets = assetDirectoryInfo;
+      this.calculateUnusedAssets();
       if (this.hasTarget()) {
-        const assetItem = {
-          fileName: files[0].name,
-          fileSize: files[0].size
-        };
-        this.chooseAsset(assetItem);
+        this.chooseAsset({ fileName: files[0].name, fileSize: files[0].size });
       }
     });
   }
 
+  showUploadedFiles(uploadedFiles) {
+    this.assetMessage = this.$translate('assetUploadSuccessful',
+      { assetFilenames: uploadedFiles.map((file) => { return file.filename; }).join(', ') });
+    this.$timeout(() => { this.assetMessage = ''; }, 7000);
+  }
+
+  showError(error) {
+    this.errorFiles = error;
+    this.$timeout(() => { this.errorFiles = null; }, 7000);
+  }
+
   hasTarget() {
-    return (this.nodeId != null && this.componentId != null && this.target != null) || 
+    return (this.nodeId != null && this.componentId != null && this.target != null) ||
         this.target === 'projectIcon';
   }
 
