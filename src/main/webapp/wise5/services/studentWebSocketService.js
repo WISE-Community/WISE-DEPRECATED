@@ -52,10 +52,6 @@ class StudentWebSocketService {
         const annotationData = JSON.parse(message.content);
         this.AnnotationService.addOrUpdateAnnotation(annotationData);
         this.$rootScope.$broadcast('newAnnotationReceived', {annotation: annotationData});
-      } else if (message.type === 'echoAgent') {
-        const echoResponse = JSON.parse(message.content);
-        console.log(echoResponse.echoResponse);
-        this.$rootScope.$broadcast('echoResponseReceived', echoResponse);
       }
     });
   }
