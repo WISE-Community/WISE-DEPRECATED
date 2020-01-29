@@ -23,18 +23,18 @@
  */
 package org.wise.portal.spring.impl;
 
+import java.util.Properties;
+
+import javax.sql.DataSource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-
-import javax.sql.DataSource;
-import java.util.Properties;
 
 @Configuration
 @EnableTransactionManagement
@@ -59,16 +59,13 @@ public class HibernateConfig {
   private String hibernateDDLAuto;
 
   @Bean
-  @Primary
   public LocalSessionFactoryBean sessionFactory() {
     LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
     sessionFactory.setDataSource(dataSource);
-    sessionFactory.setPackagesToScan(new String[]{"org.wise.portal.domain", "org.wise.vle.domain","org.wise.portal.score.domain","org.wise.portal.score.repository"});
+    sessionFactory.setPackagesToScan(new String[]{"org.wise.portal.domain", "org.wise.vle.domain"});
     sessionFactory.setHibernateProperties(hibernateProperties());
     return sessionFactory;
   }
-
-
 
   @Bean
   public PlatformTransactionManager hibernateTransactionManager() {
