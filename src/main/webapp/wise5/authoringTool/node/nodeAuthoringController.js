@@ -671,8 +671,7 @@ class NodeAuthoringController {
           }
 
           // get the node ids in the branch path
-          let nodeIdsInBranch = this.ProjectService
-              .getNodeIdsInBranch(this.nodeId, transition.to);
+          let nodeIdsInBranch = this.ProjectService.getNodeIdsInBranch(this.nodeId, transition.to);
           for (let nodeId of nodeIdsInBranch) {
             let item = branch.items[nodeId];
             if (item != null) {

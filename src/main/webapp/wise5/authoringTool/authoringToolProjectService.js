@@ -220,6 +220,45 @@ class AuthoringToolProjectService extends ProjectService {
   };
 
   /**
+   * Replace a node. This is used when we want to revert a node back to a
+   * previous version in the authoring tool.
+   * @param nodeId the node id
+   * @param node the node object
+   */
+  replaceNode(nodeId, node) {
+    if (nodeId != null && node != null) {
+      this.setIdToNode(nodeId, node);
+      this.setIdToElement(nodeId, node);
+      const nodes = this.getNodes();
+      if (nodes != null) {
+        for (let n = 0; n < nodes.length; n++) {
+          const tempNode = nodes[n];
+          if (tempNode != null) {
+            const tempNodeId = tempNode.id;
+            if (nodeId === tempNodeId) {
+              nodes.splice(n, 1, node);
+              break;
+            }
+          }
+        }
+      }
+
+      const applicationNodes = this.applicationNodes;
+      if (applicationNodes != null) {
+        for (let a = 0; a < applicationNodes.length; a++) {
+          const tempApplicationNode = applicationNodes[a];
+          if (tempApplicationNode != null) {
+            const tempApplicationNodeId = tempApplicationNode.id;
+            if (nodeId === tempApplicationNodeId) {
+              applicationNodes.splice(a, 1, node);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  /**
    * Replace a component
    * @param nodeId the node id
    * @param componentId the component id
