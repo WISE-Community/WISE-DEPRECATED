@@ -278,7 +278,7 @@ class OpenResponseController extends ComponentController {
 
   hasFeedback() {
     return (this.componentContent.cRater.showFeedback || this.componentContent.cRater.showScore) 
-            && this.isCRaterEnabled() ;
+        && this.isCRaterEnabled() ;
   }
 
   confirmSubmit(numberOfSubmitsLeft) {
@@ -292,12 +292,12 @@ class OpenResponseController extends ComponentController {
   submitWithFeedback(numberOfSubmitsLeft) {
     let isPerformSubmit = false;
     if (numberOfSubmitsLeft <= 0) {
-      alert(this.$translatpe('openResponse.youHaveNoMoreChancesWithFeedback'));
+      alert(this.$translate('openResponse.youHaveNoMoreChancesWithFeedback'));
     } else if (numberOfSubmitsLeft === 1) {
-      isPerformSubmit = confirm(this.$translate('openResponse.youHaveOneChanceWithFeedback', 
+      isPerformSubmit = confirm(this.$translate('openResponse.youHaveOneChanceWithFeedback',
           {numberOfSubmitsLeft: numberOfSubmitsLeft}));
     } else if (numberOfSubmitsLeft > 1) {
-      isPerformSubmit = confirm(this.$translate('openResponse.youHaveMultipleChancesWithFeedback', 
+      isPerformSubmit = confirm(this.$translate('openResponse.youHaveMultipleChancesWithFeedback',
           {numberOfSubmitsLeft: numberOfSubmitsLeft}));
     }
     return isPerformSubmit;
@@ -308,12 +308,12 @@ class OpenResponseController extends ComponentController {
     if (numberOfSubmitsLeft <= 0) {
       alert(this.$translate('openResponse.youHaveNoMoreChancesWithoutFeedback'));
     } else if (numberOfSubmitsLeft === 1) {
-      isPerformSubmit = confirm(this.$translate('openResponse.youHaveOneChanceWithoutFeedback', 
+      isPerformSubmit = confirm(this.$translate('openResponse.youHaveOneChanceWithoutFeedback',
           {numberOfSubmitsLeft: numberOfSubmitsLeft}));
     } else if (numberOfSubmitsLeft > 1) {
       isPerformSubmit = confirm(
-          this.$translate('openResponse.youHaveMultipleChancesWithoutFeedback', 
-             {numberOfSubmitsLeft: numberOfSubmitsLeft}));
+          this.$translate('openResponse.youHaveMultipleChancesWithoutFeedback',
+          {numberOfSubmitsLeft: numberOfSubmitsLeft}));
     }
     return isPerformSubmit;
   }
