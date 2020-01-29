@@ -23,11 +23,6 @@
  */
 package org.wise.portal.spring.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.servlet.http.HttpSessionListener;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
@@ -56,13 +51,13 @@ import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.session.FindByIndexNameSessionRepository;
 import org.springframework.session.Session;
 import org.springframework.session.security.SpringSessionBackedSessionRegistry;
-import org.wise.portal.presentation.web.filters.GoogleOpenIdConnectFilter;
-import org.wise.portal.presentation.web.filters.WISEAuthenticationFailureHandler;
-import org.wise.portal.presentation.web.filters.WISEAuthenticationProcessingFilter;
-import org.wise.portal.presentation.web.filters.WISEAuthenticationSuccessHandler;
-import org.wise.portal.presentation.web.filters.WISESwitchUserFilter;
+import org.wise.portal.presentation.web.filters.*;
 import org.wise.portal.presentation.web.listeners.WISESessionListener;
 import org.wise.portal.service.authentication.UserDetailsService;
+
+import javax.servlet.http.HttpSessionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity(debug = false)
@@ -87,12 +82,14 @@ public class WebSecurityConfig<S extends Session> extends WebSecurityConfigurerA
         .addFilterAfter(googleOpenIdConnectFilter(), OAuth2ClientContextFilter.class)
         .addFilterAfter(authenticationProcessingFilter(), GoogleOpenIdConnectFilter.class)
         .authorizeRequests()
+//        .antMatchers("/agent/**").hasAnyRole("ADMINISTRATOR,RESEARCHER,TEACHER")
         .antMatchers("/admin/**").hasAnyRole("ADMINISTRATOR,RESEARCHER")
         .antMatchers("/project/notifyAuthor*/**").hasAnyRole("TEACHER")
         .antMatchers("/student/account/info").hasAnyRole("TEACHER")
         .antMatchers("/student/**").hasAnyRole("STUDENT")
         .antMatchers("/studentStatus").hasAnyRole("TEACHER,STUDENT")
         .antMatchers("/teacher/**").hasAnyRole("TEACHER")
+        .antMatchers("/api/**").permitAll()
         .antMatchers("/").permitAll();
     http.formLogin().loginPage("/login").permitAll();
     http.sessionManagement().maximumSessions(2).sessionRegistry(sessionRegistry());
