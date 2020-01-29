@@ -67,6 +67,7 @@ class ComponentRevisionsInfoController {
         let componentStates = this.componentStates;
 
         this.$mdDialog.show({
+            multiple: true,
             parent: angular.element(document.body),
             targetEvent: $event,
             fullscreen: true,

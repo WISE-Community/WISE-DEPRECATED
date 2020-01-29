@@ -585,9 +585,7 @@ class ConfigService {
    * @param serverTimestamp the client timestamp
    */
   convertToClientTimestamp(serverTimestamp) {
-    const timestampDiff = this.getConfigParam('timestampDiff');
-    const clientTimestamp = serverTimestamp + timestampDiff;
-    return clientTimestamp;
+    return serverTimestamp + this.getConfigParam('timestampDiff');
   }
 
   isStudent(workgroupId) {
@@ -733,8 +731,7 @@ class ConfigService {
 
   getAvatarColorForWorkgroupId(workgroupId) {
     const avatarColors = ['#E91E63', '#9C27B0', '#CDDC39', '#2196F3', '#FDD835', '#43A047', '#795548', '#EF6C00', '#C62828', '#607D8B'];
-    const modulo = workgroupId % 10;
-    return avatarColors[modulo];
+    return avatarColors[workgroupId % 10];
   }
 
   /**

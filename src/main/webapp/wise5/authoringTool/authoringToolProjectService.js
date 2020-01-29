@@ -142,8 +142,7 @@ class AuthoringToolProjectService extends ProjectService {
       url: this.ConfigService.getConfigParam('notifyProjectBeginURL') + projectId
     };
     return this.$http(httpParams).then((result) => {
-      const otherAuthors = result.data;
-      return otherAuthors;
+
     });
   }
 

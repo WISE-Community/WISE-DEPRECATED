@@ -9,6 +9,7 @@ class VLEController {
       $mdDialog,
       $mdMenu,
       $state,
+      $transitions,
       AnnotationService,
       ConfigService,
       NotebookService,
@@ -24,6 +25,7 @@ class VLEController {
     this.$mdDialog = $mdDialog;
     this.$mdMenu = $mdMenu;
     this.$state = $state;
+    this.$transitions = $transitions;
     this.AnnotationService = AnnotationService;
     this.ConfigService = ConfigService;
     this.NotebookService = NotebookService;
@@ -110,8 +112,7 @@ class VLEController {
       }
     });
 
-    this.$scope.$on('$stateChangeSuccess',
-        (event, toState, toParams, fromState, fromParams) => {
+    this.$transitions.onSuccess({}, ($transition) => {
       this.$anchorScroll('node');
     });
 
@@ -468,7 +469,7 @@ class VLEController {
    */
   dismissNotificationAggregateAndVisitNode(event, notificationAggregate) {
     if (notificationAggregate != null && notificationAggregate.notifications != null) {
-      for (let notification of notificationAggregate.notifications) {
+      for (const notification of notificationAggregate.notifications) {
         if (notification.data == null || notification.data.dismissCode == null) {
           // only dismiss notifications that don't require a dismiss code,
           // but still allow them to move to the node
@@ -626,6 +627,7 @@ VLEController.$inject = [
   '$mdDialog',
   '$mdMenu',
   '$state',
+  '$transitions',
   'AnnotationService',
   'ConfigService',
   'NotebookService',

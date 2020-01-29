@@ -1,11 +1,12 @@
 'use strict';
 
-class NodeProgressController {
+class NodeProgressViewController {
 
     constructor($filter,
                 $mdDialog,
                 $scope,
                 $state,
+                $transitions,
                 ConfigService,
                 ProjectService,
                 StudentStatusService,
@@ -16,14 +17,16 @@ class NodeProgressController {
         this.$mdDialog = $mdDialog;
         this.$scope = $scope;
         this.$state = $state;
+        this.$transitions = $transitions;
         this.ConfigService = ConfigService;
         this.ProjectService = ProjectService;
         this.StudentStatusService = StudentStatusService;
         this.TeacherDataService = TeacherDataService;
         this.TeacherWebSocketService = TeacherWebSocketService;
-
         this.$translate = this.$filter('translate');
+    }
 
+    $onInit() {
         this.currentGroup = null;
 
         // clear out the current workgroup
@@ -115,16 +118,15 @@ class NodeProgressController {
         /**
          * Listen for state change event
          */
-        this.$scope.$on('$stateChangeSuccess', (event, toState, toParams, fromState, fromParams) => {
-            let toNodeId = toParams.nodeId;
-            let fromNodeId = fromParams.nodeId;
+        this.$transitions.onSuccess({}, ($transition) => {
+            const toNodeId = $transition.params('to').nodeId;
+            const fromNodeId = $transition.params('from').nodeId;
             if (toNodeId && fromNodeId && toNodeId !== fromNodeId) {
                 this.TeacherDataService.endCurrentNodeAndSetCurrentNodeByNodeId(toNodeId);
             }
 
-            if (toState.name === 'root.project') {
-                let nodeId = toParams.nodeId;
-                if (this.ProjectService.isApplicationNode(nodeId)) {
+            if ($transition.name === 'root.project') {
+                if (this.ProjectService.isApplicationNode(toNodeId)) {
                     // scroll to top when viewing a new step
                     document.getElementById('content').scrollTop = 0;
                 }
@@ -307,11 +309,12 @@ class NodeProgressController {
     }
 }
 
-NodeProgressController.$inject = [
+NodeProgressViewController.$inject = [
     '$filter',
     '$mdDialog',
     '$scope',
     '$state',
+    '$transitions',
     'ConfigService',
     'ProjectService',
     'StudentStatusService',
@@ -319,4 +322,12 @@ NodeProgressController.$inject = [
     'TeacherWebSocketService'
 ];
 
-export default NodeProgressController;
+const NodeProgressView = {
+  bindings: {
+      nodeId: '<'
+  },
+  controller: NodeProgressViewController,
+  templateUrl: 'wise5/classroomMonitor/classroomMonitorComponents/nodeProgress/nodeProgressView/nodeProgressView.html'
+};
+
+export default NodeProgressView;

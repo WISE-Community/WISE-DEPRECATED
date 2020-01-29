@@ -8,6 +8,7 @@ class ClassroomMonitorController {
                 $rootScope,
                 $scope,
                 $state,
+                $transitions,
                 $window,
                 ConfigService,
                 NodeService,
@@ -23,6 +24,7 @@ class ClassroomMonitorController {
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$state = $state;
+        this.$transitions = $transitions;
         this.$window = $window;
         this.ConfigService = ConfigService;
         this.NodeService = NodeService;
@@ -154,11 +156,8 @@ class ClassroomMonitorController {
             });
         });
 
-        // listen for state change events
-        this.$rootScope.$on('$stateChangeSuccess', (event, toState, toParams, fromState, fromParams) => {
-            // close the menu when the state changes
+        $transitions.onSuccess({}, ($transition) => {
             this.menuOpen = false;
-
             this.processUI();
         });
 
@@ -268,6 +267,7 @@ ClassroomMonitorController.$inject = [
     '$rootScope',
     '$scope',
     '$state',
+    '$transitions',
     '$window',
     'ConfigService',
     'NodeService',

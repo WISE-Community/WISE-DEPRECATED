@@ -10,6 +10,7 @@ class AuthoringToolController {
       $rootScope,
       $scope,
       $state,
+      $transitions,
       $timeout,
       ConfigService,
       ProjectService,
@@ -22,6 +23,7 @@ class AuthoringToolController {
     this.$rootScope = $rootScope;
     this.$scope = $scope;
     this.$state = $state;
+    this.$transitions = $transitions;
     this.$timeout = $timeout;
     this.$translate = this.$filter('translate');
     this.ConfigService = ConfigService;
@@ -109,10 +111,12 @@ class AuthoringToolController {
     this.processUI();
 
     // listen for state change events and close the menu
-    this.$scope.$on('$stateChangeSuccess',
-        (event, toState, toParams, fromState, fromParams) => {
+    $transitions.onSuccess({}, ($transition) => {
       this.isMenuOpen = false;
       this.processUI();
+      if ($transition.name === 'root.main') {
+        this.saveEvent('projectListViewed', 'Navigation');
+      }
     });
 
     $scope.$on('showSessionWarning', () => {
@@ -153,7 +157,7 @@ class AuthoringToolController {
      * globally.
      */
     this.$scope.$on('savingProject', () => {
-      this.setGlobalMessage(this.$translate('saving'), null);
+      this.setGlobalMessage(this.$translate('saving'), true, null);
     });
 
     /*
@@ -170,8 +174,20 @@ class AuthoringToolController {
        * project ever gets saved.
        */
       this.$timeout(() => {
-        this.setGlobalMessage(this.$translate('SAVED'), new Date().getTime());
+        this.setGlobalMessage(this.$translate('SAVED'), false, new Date().getTime());
       }, 500);
+    });
+
+    this.$scope.$on('errorSavingProject', () => {
+      this.setGlobalMessage(this.$translate('errorSavingProject'), false, null);
+    });
+
+    this.$scope.$on('notLoggedInProjectNotSaved', () => {
+      this.setGlobalMessage(this.$translate('notLoggedInProjectNotSaved'), false, null);
+    });
+
+    this.$scope.$on('notAllowedToEditThisProject', () => {
+      this.setGlobalMessage(this.$translate('notAllowedToEditThisProject'), false, null);
     });
 
     /*
@@ -224,15 +240,14 @@ class AuthoringToolController {
       });
     });
 
-    this.$rootScope.$on('$stateChangeSuccess',
-        (event, toState, toParams, fromState, fromParams) => {
-      if (toState != null && toState.name == 'root.main') {
-        this.saveEvent('projectListViewed', 'Navigation');
-      }
-    });
-
     if (this.$state.current.name == 'root.main') {
       this.saveEvent('projectListViewed', 'Navigation');
+    }
+
+    if (!this.ConfigService.getConfigParam('canEditProject')) {
+      this.$timeout(() => {
+        this.setGlobalMessage(this.$translate('notAllowedToEditThisProject'), false, null);
+      }, 1000);
     }
   }
 
@@ -301,14 +316,10 @@ class AuthoringToolController {
     });
   }
 
-  /**
-   * Set the global message at the top right
-   * @param message the message to display
-   * @param time the time to display
-   */
-  setGlobalMessage(message, time) {
+  setGlobalMessage(message, isProgressIndicatorVisible, time) {
     const globalMessage = {
       text: message,
+      isProgressIndicatorVisible: isProgressIndicatorVisible,
       time: time
     };
     this.$rootScope.$broadcast('setGlobalMessage', { globalMessage: globalMessage });
@@ -340,6 +351,7 @@ AuthoringToolController.$inject = [
   '$rootScope',
   '$scope',
   '$state',
+  '$transitions',
   '$timeout',
   'ConfigService',
   'ProjectService',

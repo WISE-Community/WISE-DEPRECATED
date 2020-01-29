@@ -51,7 +51,7 @@ describe('DiscussionController', () => {
       createComponentState(4, nodeId, componentId, 3, 'Alice reply in Bob Thread')
     ];
     const level1Responses = discussionController.getLevel1Responses();
-    expect(level1Responses.length).toEqual(2);
+    expect(level1Responses.all.length).toEqual(2);
   });
 
   it('should get grading component ids', () => {

@@ -360,7 +360,7 @@ class DiscussionController extends ComponentController {
   disableComponentIfNecessary() {
     super.disableComponentIfNecessary();
     if (this.UtilService.hasConnectedComponent(this.componentContent)) {
-      for (let connectedComponent of this.componentContent.connectedComponents) {
+      for (const connectedComponent of this.componentContent.connectedComponents) {
         if (connectedComponent.type === 'showWork') {
           this.isDisabled = true;
         }
@@ -380,20 +380,14 @@ class DiscussionController extends ComponentController {
     return this.componentContent.gateClassmateResponses;
   }
 
-  setClassResponses(componentStates, annotations) {
+  setClassResponses(componentStates, annotations = []) {
     this.classResponses = [];
     componentStates = componentStates.sort(this.sortByServerSaveTime);
-    for (let componentState of componentStates) {
+    for (const componentState of componentStates) {
       if (componentState.studentData.isSubmit) {
-        const workgroupId = componentState.workgroupId;
         const latestInappropriateFlagAnnotation =
             this.getLatestInappropriateFlagAnnotationByStudentWorkId(annotations, componentState.id);
-        const usernames = this.ConfigService.getUsernamesByWorkgroupId(workgroupId);
-        if (usernames.length === 0) {
-          componentState.usernames = this.getUserIdsDisplay(workgroupId);
-        } else {
-          componentState.usernames = usernames.map(function(obj) { return obj.name; }).join(', ');
-        }
+        this.setUsernames(componentState);
         componentState.replies = [];
         if (this.isGradingMode() || this.isGradingRevisionMode()) {
           if (latestInappropriateFlagAnnotation != null) {
@@ -430,20 +424,17 @@ class DiscussionController extends ComponentController {
   }
 
   getUserIdsDisplay(workgroupId) {
-    const userIds = this.ConfigService.getUserIdsByWorkgroupId(workgroupId);
     const userIdsDisplay = [];
-    for (let userId of userIds) {
+    for (const userId of this.ConfigService.getUserIdsByWorkgroupId(workgroupId)) {
       userIdsDisplay.push(`Student ${userId}`);
     }
     return userIdsDisplay.join(', ');
   }
 
   getLatestInappropriateFlagAnnotationByStudentWorkId(annotations, studentWorkId) {
-    if (annotations != null) {
-      for (const annotation of annotations) {
-        if (studentWorkId === annotation.studentWorkId && annotation.type === 'inappropriateFlag') {
-          return annotation;
-        }
+    for (const annotation of annotations) {
+      if (studentWorkId === annotation.studentWorkId && annotation.type === 'inappropriateFlag') {
+        return annotation;
       }
     }
     return null;
@@ -454,25 +445,18 @@ class DiscussionController extends ComponentController {
       this.responsesMap[componentState.id] = componentState;
     }
     for (const componentState of componentStates) {
-      if (componentState && componentState.studentData) {
-        const studentData = componentState.studentData;
-        const componentStateIdReplyingTo = studentData.componentStateIdReplyingTo;
-        if (componentStateIdReplyingTo) {
-          if (this.responsesMap[componentStateIdReplyingTo] &&
+      const componentStateIdReplyingTo = componentState.studentData.componentStateIdReplyingTo;
+      if (componentStateIdReplyingTo) {
+        if (this.responsesMap[componentStateIdReplyingTo] &&
             this.responsesMap[componentStateIdReplyingTo].replies) {
-            this.responsesMap[componentStateIdReplyingTo].replies.push(componentState);
-          }
+          this.responsesMap[componentStateIdReplyingTo].replies.push(componentState);
         }
       }
     }
     this.topLevelResponses = this.getLevel1Responses();
-    if (this.isGradingMode() || this.isGradingRevisionMode()) {
-      this.topLevelResponses =
-          this.topLevelResponses.filter(this.threadHasPostFromThisComponentAndWorkgroupId());
-    }
   }
-
-  threadHasPostFromThisComponentAndWorkgroupId() {
+  
+  threadHasPostFromThisComponentAndWorkgroupId(componentState) {
     const thisComponentId = this.componentId;
     const thisWorkgroupId = this.workgroupId;
     return (componentState) => {
@@ -490,48 +474,55 @@ class DiscussionController extends ComponentController {
     };
   }
 
-  addClassResponse(componentState) {
-    if (componentState.studentData.isSubmit) {
-      const workgroupId = componentState.workgroupId;
-      const usernames = this.ConfigService.getUsernamesByWorkgroupId(workgroupId);
-      if (usernames.length > 0) {
-        componentState.usernames = usernames.map(function(obj) { return obj.name; }).join(', ');
-      } else if (componentState.usernamesArray != null) {
-        componentState.usernames = componentState.usernamesArray
-            .map(function(obj) { return obj.name; }).join(', ');
-      }
-      componentState.replies = [];
-      this.classResponses.push(componentState);
-      this.responsesMap[componentState.id] = componentState;
-      const componentStateIdReplyingTo = componentState.studentData.componentStateIdReplyingTo;
-      if (componentStateIdReplyingTo != null) {
-        if (this.responsesMap[componentStateIdReplyingTo] != null &&
-            this.responsesMap[componentStateIdReplyingTo].replies != null) {
-          this.responsesMap[componentStateIdReplyingTo].replies.push(componentState);
-        }
-      }
-      this.topLevelResponses = this.getLevel1Responses();
+  setUsernames(componentState) {
+    const workgroupId = componentState.workgroupId;
+    const usernames = this.ConfigService.getUsernamesByWorkgroupId(workgroupId);
+    if (usernames.length > 0) {
+      componentState.usernames = usernames.map(function(obj) { return obj.name; }).join(', ');
+    } else if (componentState.usernamesArray != null) {
+      componentState.usernames = componentState.usernamesArray
+          .map(function(obj) { return obj.name; }).join(', ');
+    } else {
+      componentState.usernames = this.getUserIdsDisplay(workgroupId);
     }
   }
 
-  getClassResponses() {
-    return this.classResponses;
+  addClassResponse(componentState) {
+    if (componentState.studentData.isSubmit) {
+      this.setUsernames(componentState);
+      componentState.replies = [];
+      this.classResponses.push(componentState);
+      this.processResponses([componentState]);
+    }
   }
 
   /**
-   * Get the level 1 responses which are posts that are not a reply to
-   * another response.
+   * Get the level 1 responses which are posts that are not a reply to another response.
    * @return an array of responses that are not a reply to another response
    */
   getLevel1Responses() {
-    const level1Responses = [];
-    for (const classResponse of this.classResponses) {
-      const componentStateIdReplyingTo = classResponse.studentData.componentStateIdReplyingTo;
-      if (componentStateIdReplyingTo == null) {
-        level1Responses.push(classResponse);
+    const allResponses = [];
+    const oddResponses = [];
+    const evenResponses = [];
+    for (const [index, classResponse] of this.classResponses.entries()) {
+      if (classResponse.studentData.componentStateIdReplyingTo == null) {
+        if ((this.isGradingMode() || this.isGradingRevisionMode()) &&
+            !this.threadHasPostFromThisComponentAndWorkgroupId(classResponse)) {
+          continue;
+        }
+        if (index % 2 === 0) {
+          evenResponses.push(classResponse);
+        } else {
+          oddResponses.push(classResponse);
+        }
+        allResponses.push(classResponse);
       }
     }
-    return level1Responses;
+    return {
+      all: allResponses.reverse(),
+      col1: oddResponses.reverse(),
+      col2: evenResponses.reverse()
+    };
   }
 
   /**
@@ -602,16 +593,14 @@ class DiscussionController extends ComponentController {
    * @return an array of inappropriate flag annotations that are associated
    * with the component states
    */
-  getInappropriateFlagAnnotationsByComponentStates(componentStates) {
+  getInappropriateFlagAnnotationsByComponentStates(componentStates = []) {
     const annotations = [];
-    if (componentStates != null) {
-      for (let componentState of componentStates) {
-        const latestInappropriateFlagAnnotation =
-            this.AnnotationService.getLatestAnnotationByStudentWorkIdAndType(
-                componentState.id, 'inappropriateFlag');
-        if (latestInappropriateFlagAnnotation != null) {
-          annotations.push(latestInappropriateFlagAnnotation);
-        }
+    for (const componentState of componentStates) {
+      const latestInappropriateFlagAnnotation =
+          this.AnnotationService.getLatestAnnotationByStudentWorkIdAndType(
+          componentState.id, 'inappropriateFlag');
+      if (latestInappropriateFlagAnnotation != null) {
+        annotations.push(latestInappropriateFlagAnnotation);
       }
     }
     return annotations;

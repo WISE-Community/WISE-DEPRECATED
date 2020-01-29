@@ -106,7 +106,8 @@ public class UserAPIControllerTest extends APIControllerTest {
     replay(userService);
     SimpleResponse response = userAPIController.changePassword(studentAuth, STUDENT_PASSWORD,
         newPassword);
-    assertEquals("success", response.getMessage());
+    assertEquals("success", response.getStatus());
+    assertEquals("passwordUpdated", response.getMessageCode());
     verify(userService);
   }
 
@@ -121,7 +122,8 @@ public class UserAPIControllerTest extends APIControllerTest {
     replay(userService);
     SimpleResponse response = userAPIController.changePassword(studentAuth, badPassword,
         newPassword);
-    assertEquals("incorrect password", response.getMessage());
+    assertEquals("error", response.getStatus());
+    assertEquals("incorrectPassword", response.getMessageCode());
     verify(userService);
   }
 
