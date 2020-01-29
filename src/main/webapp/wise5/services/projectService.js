@@ -1227,7 +1227,7 @@ class ProjectService {
    */
   getThemePath() {
     const wiseBaseURL = this.ConfigService.getWISEBaseURL();
-    if (this.project.theme) {
+    if (this.project != null && this.project.theme) {
       // TODO: check if this is a valid theme (using ConfigService) rather than just truthy
       return wiseBaseURL + '/wise5/themes/' + this.project.theme;
     } else {

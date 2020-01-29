@@ -71,7 +71,7 @@ class ProjectAssetController {
     }
 
     this.assetSortBy = 'aToZ';
-    this.assetMessage = '';
+    this.uploadSuccessMessage = '';
 
     this.$scope.$watch(() => {
         return this.projectAssets;
@@ -256,14 +256,15 @@ class ProjectAssetController {
   }
 
   showUploadedFiles(uploadedFiles) {
-    this.assetMessage = this.$translate('assetUploadSuccessful',
-      { assetFilenames: uploadedFiles.map((file) => { return file.filename; }).join(', ') });
-    this.$timeout(() => { this.assetMessage = ''; }, 7000);
+    this.successFiles = uploadedFiles;
+    this.uploadSuccessMessage = this.$translate('assetUploadSuccessful');
+    this.$timeout(() => { this.uploadSuccessMessage = ''; this.successFiles = []; }, 7000);
   }
 
   showError(error) {
     this.errorFiles = error;
-    this.$timeout(() => { this.errorFiles = null; }, 7000);
+    this.uploadErrorMessage = this.$translate('assetUploadError');
+    this.$timeout(() => { this.uploadErrorMessage = ''; this.errorFiles = []; }, 7000);
   }
 
   hasTarget() {
