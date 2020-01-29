@@ -24,6 +24,7 @@
 package org.wise.portal.service.project;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.acls.model.Permission;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,6 +43,7 @@ import org.wise.portal.presentation.web.response.SharedOwner;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -66,7 +68,7 @@ public interface ProjectService {
   @Transactional
   @Secured( { "ROLE_USER", "AFTER_ACL_COLLECTION_READ" })
   List<Project> getSharedProjectList(User user);
-  
+
   @Transactional
   @Secured( { "ROLE_USER", "AFTER_ACL_COLLECTION_READ" })
   List<Project> getSharedProjectsWithoutRun(User user);
@@ -322,8 +324,26 @@ public interface ProjectService {
 
   String getProjectURI(Project project);
 
-  void writeProjectLicenseFile(String projectFolderPath, Project project) throws JSONException;
+  String getProjectPath(Project project);
+
+  String getLicensePath(Project project);
+
+  List<HashMap<String, Object>> getProjectSharedOwnersList(Project project);
+
+  void writeProjectLicenseFile(Project project) throws JSONException;
 
   void replaceMetadataInProjectJSONFile(String projectFilePath, ProjectMetadata metadata)
       throws IOException, JSONException;
+  
+  public void saveProjectFile(Project project, String projectJSONString)
+      throws ObjectNotFoundException, IOException;
+
+  public void saveProjectToDatabase(Project project, User user, String projectJSONString)
+      throws JSONException, NotAuthorizedException;
+
+  public void updateMetadataAndLicenseIfNecessary(Project project, String projectJSONString)
+      throws JSONException;
+
+  public void updateProjectNameIfNecessary(Project project, JSONObject projectMetadataJSON)
+      throws JSONException;
 }

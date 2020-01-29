@@ -39,7 +39,6 @@
 .milestone-details {
     background-color: #ffffff;
     padding: 16px;
-    margin-bottom: 16px;
 
     > p {
         margin-top: 16px;
@@ -52,6 +51,10 @@
 
     md-tabs & {
         margin-bottom: 0;
+    }
+
+    .grading {
+        padding: 0;
     }
 }
 

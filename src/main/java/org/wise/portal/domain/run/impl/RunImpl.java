@@ -269,8 +269,7 @@ public class RunImpl implements Run {
   }
 
   public Group getPeriodOfStudent(User studentUser) {
-    Set<Group> periods = getPeriods();
-    for (Group period : periods) {
+    for (Group period : getPeriods()) {
       if (period.getMembers().contains(studentUser)) {
         return period;
       }
@@ -450,6 +449,15 @@ public class RunImpl implements Run {
     } else {
       return this.endtime.getTime();
     }
+  }
+
+  public int getNumStudents() {
+    int numStudents = 0;
+    for (Group period : periods) {
+      Set<User> members = period.getMembers();
+      numStudents += members.size();
+    }
+    return numStudents;
   }
 
   public static class UserAlphabeticalComparator implements Comparator<User> {

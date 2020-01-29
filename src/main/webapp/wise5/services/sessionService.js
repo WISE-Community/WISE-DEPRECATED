@@ -133,7 +133,9 @@ class SessionService {
   renewSession() {
     const renewSessionURL = this.ConfigService.getConfigParam('renewSessionURL');
     this.$http.get(renewSessionURL).then((result) => {
-
+      if (result.data === 'false') {
+        this.logOut();
+      }
     });
   }
 }

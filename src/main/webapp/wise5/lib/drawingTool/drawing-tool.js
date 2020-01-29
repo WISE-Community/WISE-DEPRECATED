@@ -1096,9 +1096,14 @@ var $ = jQuery;
    * @param {Object} object Object to create an instance from
    * @return {fabric.Arrow} instance of fabric.Arrow
    */
-  fabric.Arrow.fromObject = function(object) {
-    var points = [object.x1, object.y1, object.x2, object.y2];
-    return new fabric.Arrow(points, object);
+  fabric.Arrow.fromObject = function(object, callback) {
+    function _callback(instance) {
+      delete instance.points;
+      callback && callback(instance);
+    };
+    var options = fabric.util.object.clone(object, true);
+    options.points = [object.x1, object.y1, object.x2, object.y2];
+    fabric.Object._fromObject('Arrow', options, _callback, 'points');
   };
 
 })(this);
@@ -1833,8 +1838,11 @@ function DeleteTool(name, drawTool) {
   // Delete the selected object(s) with the backspace key.
   this.master.$element.on('keydown', function(e) {
     if (e.keyCode === 8) {
-      this.use();
-      e.preventDefault();
+      var activeObj = this.canvas.getActiveObject();
+      if (activeObj != null && activeObj.hoverCursor != 'text') {
+        this.use();
+        e.preventDefault();
+      }
     }
   }.bind(this));
 }

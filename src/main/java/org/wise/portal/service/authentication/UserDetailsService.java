@@ -90,11 +90,6 @@ public interface UserDetailsService extends
    */
   List<MutableGrantedAuthority> retrieveAllAuthorities();
 
-  /**
-   * Given a MutableUserDetails, updates the data of that object in the database
-   *
-   * @param userDetails
-   */
   void updateUserDetails(final MutableUserDetails userDetails);
 
   UserDetails loadUserByGoogleUserId(String googleUserId);

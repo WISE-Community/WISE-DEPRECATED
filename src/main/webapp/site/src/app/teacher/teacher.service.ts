@@ -55,7 +55,7 @@ export class TeacherService {
   }
 
   getProjectLastRun(projectId: number): Observable<Run> {
-    return this.http.get<Run>(`${ this.lastRunUrl }/${ projectId }`);
+    return this.http.get<Run>(`${this.lastRunUrl}/${projectId}`);
   }
 
   registerTeacherAccount(teacherUser: Teacher, callback: any) {
@@ -78,7 +78,9 @@ export class TeacherService {
     body = body.set('periods', periods);
     body = body.set('maxStudentsPerTeam', maxStudentsPerTeam + "");
     body = body.set('startDate', startDate + "");
-    body = body.set('endDate', endDate ? endDate + "" : "");
+    if (endDate) {
+      body = body.set('endDate', endDate + "");
+    }
     return this.http.post<Run>(this.createRunUrl, body, { headers: headers });
   }
 
@@ -148,7 +150,6 @@ export class TeacherService {
   updateProfile(username, displayName, email, city, state, country, schoolName, schoolLevel, language) {
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
     let body = new HttpParams();
-    body = body.set('username', username);
     body = body.set('displayName', displayName);
     body = body.set('email', email);
     body = body.set('city', city);

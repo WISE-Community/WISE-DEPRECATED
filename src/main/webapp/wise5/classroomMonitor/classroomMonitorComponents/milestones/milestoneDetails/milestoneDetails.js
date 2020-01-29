@@ -130,21 +130,24 @@ const MilestoneDetails = {
                 <compile data="$ctrl.milestone.generatedReport"></compile>
             </div>
         </div>
-        <div ng-if="$ctrl.milestone.recommendations" class="md-whiteframe-1dp gray-lightest-bg">
+        <div ng-if="$ctrl.milestone.recommendations && $ctrl.milestone.isReportAvailable"
+             class="md-whiteframe-1dp gray-lightest-bg">
             <md-tabs md-dynamic-height>
                 <md-tab label="{{ ::'recommendations' | translate }}">
                     <div class="milestone-details">
                         <compile data="$ctrl.milestone.recommendations"></compile>
                     </div>
                 </md-tab>
-                <md-tab label="{{ ::'studentCompletion' | translate }}">
+                <md-tab label="{{ ::'studentWork' | translate }}">
                     <div class="milestone-details">
-                        <ng-include src="'completion'"></ng-include>
+                        <node-grading-view node-id="$ctrl.milestone.nodeId"
+                                           milestone="$ctrl.milestone"></node-grading-view>
                     </div>
                 </md-tab>
             </md-tabs>
         </div>
-        <div ng-if="!$ctrl.milestone.recommendations" class="milestone-details md-whiteframe-1dp">
+        <div ng-if="!$ctrl.milestone.recommendations || !$ctrl.milestone.isReportAvailable"
+             class="milestone-details md-whiteframe-1dp">
             <div class="milestone-details__header primary md-body-2 gray-lightest-bg">{{ ::'studentCompletion' | translate }}</div>
             <ng-include src="'completion'"></ng-include>
         </div>
@@ -155,7 +158,7 @@ const MilestoneDetails = {
                     <div class="md-secondary-container">{{ ::'completed' | translate }}</div>
                 </md-list-item>
                 <md-list-item class="list-item md-with-secondary"
-                            ng-repeat="workgroup in $ctrl.milestone.workgroups | orderBy:'-achievementTime'">
+                              ng-repeat="workgroup in $ctrl.milestone.workgroups | orderBy:'-achievementTime'">
                     <div class="md-avatar" hide-xs>
                         <md-icon class="md-36" style="color: {{ $ctrl.getAvatarColorForWorkgroupId(workgroup.workgroupId) }};"> account_circle </md-icon>
                     </div>

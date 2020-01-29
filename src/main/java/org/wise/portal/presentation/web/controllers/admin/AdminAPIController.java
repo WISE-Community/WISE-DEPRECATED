@@ -4,6 +4,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 import org.wise.portal.domain.authentication.impl.StudentUserDetails;
@@ -23,6 +24,7 @@ import java.util.List;
  * @author Victor Korir
  */
 @RestController
+@Secured({"ROLE_ADMINISTRATOR"})
 @RequestMapping(value = "/api/admin", produces = "application/json;charset=UTF-8")
 public class AdminAPIController {
 
@@ -32,7 +34,7 @@ public class AdminAPIController {
   @Autowired
   private UserDetailsService userDetailsService;
 
-  @RequestMapping(value = "/search-students", method = RequestMethod.GET)
+  @GetMapping("/search-students")
   protected String searchStudents(
     @RequestParam("firstName") String firstName,
     @RequestParam("lastName") String lastName,
@@ -69,7 +71,7 @@ public class AdminAPIController {
     return studentJSON;
   }
 
-  @RequestMapping(value = "/search-teachers", method = RequestMethod.GET)
+  @GetMapping("/search-teachers")
   protected String searchTeachers(
       @RequestParam("firstName") String firstName,
       @RequestParam("lastName") String lastName,
@@ -93,7 +95,7 @@ public class AdminAPIController {
     schoolName = nullIfEmptyString(schoolName);
     schoolLevel = nullIfEmptyString(schoolLevel);
     email = nullIfEmptyString(email);
-    List<TeacherUserDetails> teacherUserDetails = userService.searchTeachers(firstName, lastName, 
+    List<TeacherUserDetails> teacherUserDetails = userService.searchTeachers(firstName, lastName,
       username, userId, displayName, city, state, country, schoolName, schoolLevel, email, runId);
     JSONArray searchResults = new JSONArray();
     for (TeacherUserDetails teacherUserDetail: teacherUserDetails) {
@@ -122,7 +124,7 @@ public class AdminAPIController {
     return searchField;
   }
 
-  @RequestMapping(value = "/change-user-password", method = RequestMethod.POST)
+  @PostMapping("/change-user-password")
   protected SimpleResponse changeUserPassword(
     @RequestParam("username") String username,
     @RequestParam("adminPassword") String adminPassword,
@@ -149,7 +151,7 @@ public class AdminAPIController {
     return password == null || password.equals("");
   }
 
-  @RequestMapping(value = "/update-authorities", method = RequestMethod.POST)
+  @PostMapping("/update-authorities")
   protected SimpleResponse updateUserAuthorities(
       @RequestParam("username") String username,
       @RequestParam("action") String action,

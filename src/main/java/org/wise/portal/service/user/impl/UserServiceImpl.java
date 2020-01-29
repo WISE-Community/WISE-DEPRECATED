@@ -83,7 +83,7 @@ public class UserServiceImpl implements UserService {
 
   @Transactional(readOnly = true)
   public User retrieveUserByGoogleUserId(String googleUserId) {
-    return this.userDao.retrieveByGoogleUserId(googleUserId);
+    return userDao.retrieveByGoogleUserId(googleUserId);
   }
 
   @Override
@@ -160,16 +160,17 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public User updateUserPassword(User user, String currentPassword, String newPassword) throws IncorrectPasswordException {
-    if (this.isPasswordCorrect(user, currentPassword)) {
-      return this.updateUserPassword(user, newPassword);
+  public User updateUserPassword(User user, String currentPassword, String newPassword)
+      throws IncorrectPasswordException {
+    if (isPasswordCorrect(user, currentPassword)) {
+      return updateUserPassword(user, newPassword);
     } else {
       throw new IncorrectPasswordException();
     }
   }
 
   public boolean isPasswordCorrect(User user, String password) {
-    return this.passwordEncoder.matches(password, user.getUserDetails().getPassword());
+    return passwordEncoder.matches(password, user.getUserDetails().getPassword());
   }
 
   public List<User> retrieveAllUsers() {
@@ -190,7 +191,7 @@ public class UserServiceImpl implements UserService {
     userDao.save(user);
   }
 
-  public List<User> retrieveTeachersById(Long id) {
+  public User retrieveTeacherById(Long id) {
     return userDao.retrieveTeacherById(id);
   }
 
@@ -202,8 +203,8 @@ public class UserServiceImpl implements UserService {
     return userDao.retrieveTeachersByLastName(lastName);
   }
 
-  public List<User> retrieveTeachersByUsername(String username) {
-    return userDao.retrieveTeachersByUsername(username);
+  public User retrieveTeacherByUsername(String username) {
+    return userDao.retrieveTeacherByUsername(username);
   }
 
   public List<User> retrieveTeachersByDisplayName(String displayName) {
@@ -234,8 +235,8 @@ public class UserServiceImpl implements UserService {
     return userDao.retrieveTeachersByEmail(email);
   }
 
-  public List<User> retrieveStudentsById(Long id) {
-    return userDao.retrieveStudentsById(id);
+  public User retrieveStudentById(Long id) {
+    return userDao.retrieveStudentById(id);
   }
 
   public List<User> retrieveStudentsByFirstName(String firstName) {
@@ -246,8 +247,8 @@ public class UserServiceImpl implements UserService {
     return userDao.retrieveStudentsByLastName(lastName);
   }
 
-  public List<User> retrieveStudentsByUsername(String username) {
-    return userDao.retrieveStudentsByUsername(username);
+  public User retrieveStudentByUsername(String username) {
+    return userDao.retrieveStudentByUsername(username);
   }
 
   public List<User> retrieveStudentsByGender(String gender) {
