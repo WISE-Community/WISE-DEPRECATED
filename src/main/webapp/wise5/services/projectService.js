@@ -122,7 +122,7 @@ class ProjectService {
   addNode(node) {
     const existingNodes = this.project.nodes;
     let replaced = false;
-    if (node != null && existingNodes != null) {
+    if (existingNodes != null) {
       for (let n = 0; n < existingNodes.length; n++) {
         const existingNode = existingNodes[n];
         if (existingNode.id === node.id) {
@@ -138,7 +138,7 @@ class ProjectService {
 
   addApplicationNode(node) {
     const applicationNodes = this.applicationNodes;
-    if (node != null && applicationNodes != null) {
+    if (applicationNodes != null) {
       applicationNodes.push(node);
     }
   };
@@ -193,67 +193,65 @@ class ProjectService {
   }
 
   loadNodes(nodes) {
-    if (nodes != null) {
-      for (let node of nodes) {
-        if (node != null) {
-          const nodeId = node.id;
-          const nodeType = node.type;
-          const content = node.content;
-          const constraints = node.constraints;
+    for (const node of nodes) {
+      const nodeId = node.id;
+      const nodeType = node.type;
+      const content = node.content;
+      const constraints = node.constraints;
 
-          if (content != null) {
-            //node.content = this.injectAssetPaths(content);
-          }
+      if (content != null) {
+        //node.content = this.injectAssetPaths(content);
+      }
 
-          this.setIdToNode(nodeId, node);
-          this.setIdToElement(nodeId, node);
-          this.addNode(node);
+      this.setIdToNode(nodeId, node);
+      this.setIdToElement(nodeId, node);
+      this.addNode(node);
 
-          if (nodeType === 'group') {
-            this.addGroupNode(node);
-          } else {
-            this.addApplicationNode(node);
-          }
+      if (nodeType === 'group') {
+        this.addGroupNode(node);
+      } else {
+        this.addApplicationNode(node);
+      }
 
-          const groupId = node.groupId;
-          if (groupId != null) {
-            this.addNodeToGroupNode(groupId, nodeId);
-          }
+      const groupId = node.groupId;
+      if (groupId != null) {
+        this.addNodeToGroupNode(groupId, nodeId);
+      }
 
-          if (constraints != null) {
-            if (this.ConfigService.isPreview() ==
-                true && this.ConfigService.getConfigParam('constraints') === false) {
-              /*
-               * if we are in preview mode and constraints are set
-               * to false, we will not add the constraints
-               */
-            } else {
-              // all other cases we will add the constraints
-              for (let constraint of constraints) {
-                this.activeConstraints.push(constraint);
-              }
-            }
+      if (constraints != null) {
+        if (this.ConfigService.isPreview() == true &&
+            this.ConfigService.getConfigParam('constraints') === false) {
+          /*
+            * if we are in preview mode and constraints are set
+            * to false, we will not add the constraints
+            */
+        } else {
+          // all other cases we will add the constraints
+          for (const constraint of constraints) {
+            this.activeConstraints.push(constraint);
           }
         }
       }
     }
   };
 
+  loadNodeIdsInAnyBranch(branches) {
+    for (const branch of branches) {
+      for (const branchPath of branch.branchPaths) {
+        this.nodeIdsInAnyBranch = this.nodeIdsInAnyBranch.concat(branchPath);
+      }
+    }
+  }
+
   /**
    * Load the planning template nodes
    * @param planning template nodes
    */
   loadPlanningNodes(planningNodes) {
-    if (planningNodes != null) {
-      for (let planningNode of planningNodes) {
-        if (planningNode != null) {
-          const nodeId = planningNode.id;
-          this.setIdToNode(nodeId, planningNode);
-          this.setIdToElement(nodeId, planningNode);
-
-          // TODO: may need to add more function calls here to add the planning
-        }
-      }
+    for (const planningNode of planningNodes) {
+      this.setIdToNode(planningNode.id, planningNode);
+      this.setIdToElement(planningNode.id, planningNode);
+      // TODO: may need to add more function calls here to add the planning
     }
   }
 
@@ -261,60 +259,29 @@ class ProjectService {
    * Parse the project to detect the nodes, branches, node numbers, etc.
    */
   parseProject() {
-    const project = this.project;
-    if (project != null) {
-      this.clearProjectFields();
-
-      if (project.metadata) {
-        this.metadata = project.metadata;
-      }
-
-      const nodes = project.nodes;
-      this.loadNodes(nodes);
-
-      const planningNodes = project.planningNodes;
-      this.loadPlanningNodes(planningNodes);
-
-      const inactiveNodes = project.inactiveNodes;
-      this.loadInactiveNodes(inactiveNodes);
-
-      const constraints = project.constraints;
-
-      if (constraints != null) {
-        for (let constraint of constraints) {
-          if (constraint != null) {
-            const constraintId = constraint.id;
-            constraint.active = true;
-            this.setIdToElement(constraintId, constraint);
-          }
-        }
-      }
-
-      this.rootNode = this.getRootNode(nodes[0].id);
-      this.calculateNodeOrderOfProject();
-
-      const branches = this.getBranches();
-      for (const branch of branches) {
-        for (const branchPath of branch.branchPaths) {
-          this.nodeIdsInAnyBranch = this.nodeIdsInAnyBranch.concat(branchPath);
-        }
-      }
-
-      /*
-       * calculate the node numbers
-       * e.g. if the step is called
-       * 1.5 View the Potential Energy
-       * then the node number is 1.5
-       */
-      this.calculateNodeNumbers();
-
-      if (this.project.projectAchievements != null) {
-        this.achievements = this.project.projectAchievements;
-      }
+    this.clearProjectFields();
+    this.instantiateDefaults();
+    this.metadata = this.project.metadata;
+    this.loadNodes(this.project.nodes);
+    this.loadPlanningNodes(this.project.planningNodes);
+    this.loadInactiveNodes(this.project.inactiveNodes);
+    this.loadConstraints(this.project.constraints);
+    this.rootNode = this.getRootNode(this.project.nodes[0].id);
+    this.calculateNodeOrderOfProject();
+    this.loadNodeIdsInAnyBranch(this.getBranches());
+    this.calculateNodeNumbers();
+    if (this.project.projectAchievements != null) {
+      this.achievements = this.project.projectAchievements;
     }
-
     this.$rootScope.$broadcast('projectChanged');
-  };
+  }
+
+  instantiateDefaults() {
+    this.project.nodes = this.project.nodes ? this.project.nodes : [];
+    this.project.planningNodes = this.project.planningNodes ? this.project.planningNodes : [];
+    this.project.inactiveNodes = this.project.inactiveNodes ? this.project.inactiveNodes : [];
+    this.project.constraints = this.project.constraints ? this.project.constraints : [];
+  }
 
   calculateNodeOrderOfProject() {
     this.calculateNodeOrder(this.rootNode);
@@ -328,12 +295,11 @@ class ProjectService {
     this.idToOrder[node.id] = {'order': this.nodeCount};
     this.nodeCount++;
     if (this.isGroupNode(node.id)) {
-      for (let childId of node.ids) {
-        const child = this.getNodeById(childId);
-        this.calculateNodeOrder(child);
+      for (const childId of node.ids) {
+        this.calculateNodeOrder(this.getNodeById(childId));
       }
     }
-  };
+  }
 
   /**
    * Get the node order mappings of the project
@@ -401,7 +367,7 @@ class ProjectService {
   }
 
   /**
-   * Returns the position in the project for the node with the given id. Returns null if no node 
+   * Returns the position in the project for the node with the given id. Returns null if no node
    * with id exists.
    * @param id a node id
    * @return string position of the given node id in the project
@@ -1211,15 +1177,12 @@ class ProjectService {
    * objects.
    */
   cleanupBeforeSave() {
-    let activeNodes = this.getActiveNodes();
-    for (let activeNode of activeNodes) {
+    this.getActiveNodes().forEach(activeNode => {
       this.cleanupNode(activeNode);
-    }
-
-    let inactiveNodes = this.getInactiveNodes();
-    for (let inactiveNode of inactiveNodes) {
+    });
+    this.getInactiveNodes().forEach(inactiveNode => {
       this.cleanupNode(inactiveNode);
-    }
+    });
   }
 
   /**
@@ -1242,12 +1205,10 @@ class ProjectService {
     delete node.order;
     delete node.show;
 
-    let components = node.components;
-    // activity nodes do not have components but step nodes do have components
-    if (components != null) {
-      for (let component of components) {
+    if (node.components != null) { // activity node does not have components but step node does
+      node.components.forEach(component => {
         this.cleanupComponent(component);
-      }
+      });
     }
   }
 
@@ -1266,10 +1227,9 @@ class ProjectService {
    */
   getThemePath() {
     const wiseBaseURL = this.ConfigService.getWISEBaseURL();
-    const project = this.project;
-    if (project && project.theme) {
+    if (this.project.theme) {
       // TODO: check if this is a valid theme (using ConfigService) rather than just truthy
-      return wiseBaseURL + '/wise5/themes/' + project.theme;
+      return wiseBaseURL + '/wise5/themes/' + this.project.theme;
     } else {
       // TODO: get default theme name from ConfigService
       return wiseBaseURL + '/wise5/themes/default';
@@ -1281,14 +1241,13 @@ class ProjectService {
    */
   getThemeSettings() {
     let themeSettings = {};
-    let project = this.project;
-    if (project && project.themeSettings) {
-      if (project.theme) {
+    if (this.project.themeSettings) {
+      if (this.project.theme) {
         // TODO: check if this is a valid theme (using ConfigService) rather than just truthy
-        themeSettings = project.themeSettings[project.theme];
+        themeSettings = this.project.themeSettings[project.theme];
       } else {
         // TODO: get default theme name from ConfigService
-        themeSettings = project.themeSettings["default"];
+        themeSettings = this.project.themeSettings["default"];
       }
     }
     return themeSettings ? themeSettings : {};
@@ -1648,11 +1607,11 @@ class ProjectService {
    * @return an array of node ids that we have consumed
    */
   consumePathsUntilNodeId(paths, nodeId) {
-    let consumedNodes = [];
-    for (let path of paths) {
+    const consumedNodes = [];
+    for (const path of paths) {
       if (path.includes(nodeId)) {
-        let subPath = path.slice(0, path.indexOf(nodeId));
-        for (let nodeIdInPath of subPath) {
+        const subPath = path.slice(0, path.indexOf(nodeId));
+        for (const nodeIdInPath of subPath) {
           if (!consumedNodes.includes(nodeIdInPath)) {
             consumedNodes.push(nodeIdInPath);
           }
@@ -1807,18 +1766,11 @@ class ProjectService {
    * @param paths an array of paths. each path is an array of node ids
    * @return an array of paths that contain the given node id
    */
-  getPathsThatContainNodeId(nodeId, paths) {
+  getPathsThatContainNodeId(nodeId, paths = []) {
     const pathsThatContainNodeId = [];
-    if (nodeId != null && paths != null) {
-      for (let path of paths) {
-        // check if the path contains the node id
-        if (path.indexOf(nodeId) != -1) {
-          /*
-           * add the path to the array of paths that contain
-           * the node id
-           */
-          pathsThatContainNodeId.push(path);
-        }
+    for (const path of paths) {
+      if (path.indexOf(nodeId) !== -1) {
+        pathsThatContainNodeId.push(path);
       }
     }
     return pathsThatContainNodeId;
@@ -1900,7 +1852,7 @@ class ProjectService {
    * end point
    */
   findBranches(paths) {
-    let branches = [];
+    const branches = [];
     let previousNodeId = null;
 
     /*
@@ -2697,7 +2649,7 @@ class ProjectService {
    */
   getNodeIds() {
     const nodeIds = [];
-    for (let node of this.applicationNodes) {
+    for (const node of this.applicationNodes) {
       const nodeId = node.id;
       if (nodeId != null) {
         nodeIds.push(nodeId);
@@ -4490,19 +4442,21 @@ class ProjectService {
    * @param nodes the inactive nodes
    */
   loadInactiveNodes(nodes) {
-    if (nodes != null) {
-      for (let node of nodes) {
-        if (node != null) {
-          const nodeId = node.id;
-          this.setIdToNode(nodeId, node);
-          this.setIdToElement(nodeId, node);
-          if (node.type == 'group') {
-            this.inactiveGroupNodes.push(node);
-          } else {
-            this.inactiveStepNodes.push(node);
-          }
-        }
+    for (const node of nodes) {
+      this.setIdToNode(node.id, node);
+      this.setIdToElement(node.id, node);
+      if (node.type === 'group') {
+        this.inactiveGroupNodes.push(node);
+      } else {
+        this.inactiveStepNodes.push(node);
       }
+    }
+  }
+
+  loadConstraints(constraints) {
+    for (const constraint of constraints) {
+      constraint.active = true;
+      this.setIdToElement(constraint.id, constraint);
     }
   }
 
@@ -5168,6 +5122,8 @@ class ProjectService {
 
   /**
    * Calculate the node numbers and set them into the nodeIdToNumber map
+   * If the step is called "1.5 View the Potential Energy",
+   * then the node number is 1.5
    */
   calculateNodeNumbers() {
     this.nodeIdToNumber = {};
@@ -5175,8 +5131,7 @@ class ProjectService {
     const startNodeId = this.getStartNodeId();
     const currentActivityNumber = 0;
     const currentStepNumber = 0;
-    this.calculateNodeNumbersHelper(
-        startNodeId, currentActivityNumber, currentStepNumber);
+    this.calculateNodeNumbersHelper(startNodeId, currentActivityNumber, currentStepNumber);
   }
 
   /**

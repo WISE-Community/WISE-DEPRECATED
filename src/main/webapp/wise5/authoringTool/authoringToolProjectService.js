@@ -530,7 +530,7 @@ class AuthoringToolProjectService extends ProjectService {
    */
   copyNodesAfter(nodeIds, nodeId) {
     const newNodes = [];
-    for (let nodeIdToCopy of nodeIds) {
+    for (const nodeIdToCopy of nodeIds) {
       const newNode = this.copyNode(nodeIdToCopy);
       const newNodeId = newNode.id;
       this.createNodeAfter(newNode, nodeId);
@@ -550,12 +550,10 @@ class AuthoringToolProjectService extends ProjectService {
    * @param nodeId the node id of the step
    */
   isInactive(nodeId) {
-    if (nodeId != null && this.project.inactiveNodes != null) {
-      for (let inactiveNode of this.project.inactiveNodes) {
-        if (inactiveNode != null) {
-          if (nodeId === inactiveNode.id) {
-            return true;
-          }
+    if (this.project.inactiveNodes != null) {
+      for (const inactiveNode of this.project.inactiveNodes) {
+        if (nodeId === inactiveNode.id) {
+          return true;
         }
       }
     }
