@@ -277,25 +277,28 @@ class OpenResponseController extends ComponentController {
   }
 
   hasFeedback() {
-    return (this.authoringComponentContent.cRater.showFeedback || this.authoringComponentContent.cRater.showScore) && this.isCRaterEnabled() ;
+    return (this.componentContent.cRater.showFeedback || this.componentContent.cRater.showScore) 
+            && this.isCRaterEnabled() ;
   }
 
   confirmSubmit(numberOfSubmitsLeft) {
     if (this.hasFeedback()) {
-      return submitWithFeedback(numberOfSubmitsLeft);
+      return this.submitWithFeedback(numberOfSubmitsLeft);
     } else {
-      return submitWithoutFeedback(numberOfSubmitsLeft);
+      return this.submitWithoutFeedback(numberOfSubmitsLeft);
     }
   }
 
   submitWithFeedback(numberOfSubmitsLeft) {
     let isPerformSubmit = false;
     if (numberOfSubmitsLeft <= 0) {
-      alert(this.$translatpe('openResponse.youHaveNoMoreChances'));
+      alert(this.$translatpe('openResponse.youHaveNoMoreChancesWithFeedback'));
     } else if (numberOfSubmitsLeft === 1) {
-      isPerformSubmit = confirm(this.$translate('openResponse.youHaveOneChance', {numberOfSubmitsLeft: numberOfSubmitsLeft}));
+      isPerformSubmit = confirm(this.$translate('openResponse.youHaveOneChanceWithFeedback', 
+          {numberOfSubmitsLeft: numberOfSubmitsLeft}));
     } else if (numberOfSubmitsLeft > 1) {
-      isPerformSubmit = confirm(this.$translate('openResponse.youHaveMultipleChances', {numberOfSubmitsLeft: numberOfSubmitsLeft}));
+      isPerformSubmit = confirm(this.$translate('openResponse.youHaveMultipleChancesWithFeedback', 
+          {numberOfSubmitsLeft: numberOfSubmitsLeft}));
     }
     return isPerformSubmit;
   }
@@ -305,9 +308,12 @@ class OpenResponseController extends ComponentController {
     if (numberOfSubmitsLeft <= 0) {
       alert(this.$translate('openResponse.youHaveNoMoreChancesWithoutFeedback'));
     } else if (numberOfSubmitsLeft === 1) {
-      isPerformSubmit = confirm(this.$translate('openResponse.youHaveOneChanceWithoutFeedback', {numberOfSubmitsLeft: numberOfSubmitsLeft}));
+      isPerformSubmit = confirm(this.$translate('openResponse.youHaveOneChanceWithoutFeedback', 
+          {numberOfSubmitsLeft: numberOfSubmitsLeft}));
     } else if (numberOfSubmitsLeft > 1) {
-      isPerformSubmit = confirm(this.$translate('openResponse.youHaveMultipleChancesWithoutFeedback', {numberOfSubmitsLeft: numberOfSubmitsLeft}));
+      isPerformSubmit = confirm(
+          this.$translate('openResponse.youHaveMultipleChancesWithoutFeedback', 
+             {numberOfSubmitsLeft: numberOfSubmitsLeft}));
     }
     return isPerformSubmit;
   }
