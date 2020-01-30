@@ -158,12 +158,12 @@ class ProjectAssetController {
    */
   chooseAsset(assetItem) {
     const params = {
-      'assetItem': assetItem,
-      'projectId': this.projectId,
-      'nodeId': this.nodeId,
-      'componentId': this.componentId,
-      'target': this.target,
-      'targetObject': this.targetObject
+      assetItem: assetItem,
+      projectId: this.projectId,
+      nodeId: this.nodeId,
+      componentId: this.componentId,
+      target: this.target,
+      targetObject: this.targetObject
     };
     this.$rootScope.$broadcast('assetSelected', params);
   }
@@ -222,19 +222,19 @@ class ProjectAssetController {
    * @returns {string} The message to show to the author.
    */
   getLargeFileMessage(files, largeFiles) {
-    let message = '';
+    let message = ``;
     if (files.length == 1 && largeFiles.length == 1) {
-      message = this.$translate('areYouSureYouWantToUploadThisLargeFile') + '\n';
+      message = `${this.$translate('areYouSureYouWantToUploadThisLargeFile')}\n`;
     } else if (largeFiles.length == 1) {
-      message = this.$translate('areYouSureYouWantToUploadThisLargeFileWhileUploadingMultipleFiles')
-          + '\n';
+      message =
+          `${this.$translate('areYouSureYouWantToUploadThisLargeFileWhileUploadingMultipleFiles')}\n`;
     } else if (largeFiles.length > 1) {
       message =
-          this.$translate('areYouSureYouWantToUploadTheseLargeFilesWhileUploadingMultipleFiles',
-          { fileCount: largeFiles.length }) + '\n';
+          `${this.$translate('areYouSureYouWantToUploadTheseLargeFilesWhileUploadingMultipleFiles',
+          { fileCount: largeFiles.length })}\n`;
     }
     for (const largeFile of largeFiles) {
-      message += '\n' + largeFile.name + ' (' + Math.floor(largeFile.size / 1000) + ' KB)';
+      message += `\n${largeFile.name} (${Math.floor(largeFile.size / 1000)} KB)`;
     }
     return message;
   }
