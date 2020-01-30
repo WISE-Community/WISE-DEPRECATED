@@ -97,12 +97,12 @@ public class ProjectAssetAPIController {
     }
     HashMap<String, String> fileObject = new HashMap<String, String>();
     fileObject.put("filename", file.getOriginalFilename());
-    if (sizeOfAssetsDirectory + file.getSize() > projectMaxTotalAssetsSize) {
+    if (!isUserAllowedToUpload(user, file)) {
+      fileObject.put("message", "Upload file not allowed.");
+      ((ArrayList<HashMap<String, String>>) result.get("error")).add(fileObject);
+    } else if (sizeOfAssetsDirectory + file.getSize() > projectMaxTotalAssetsSize) {
       fileObject.put("message", "Exceeded project max asset size.\n" +
           "Please delete unused assets.\n\nContact WISE if your project needs more disk space.");
-      ((ArrayList<HashMap<String, String>>) result.get("error")).add(fileObject);
-    } else if (!isUserAllowedToUpload(user, file)) {
-      fileObject.put("message", "Upload file not allowed.");
       ((ArrayList<HashMap<String, String>>) result.get("error")).add(fileObject);
     } else {
       Path path = Paths.get(projectAssetsDir.getPath(), file.getOriginalFilename());
