@@ -35,7 +35,7 @@ describe('AuthoringToolProjectService Unit Test', () => {
     const sampleI18N_common_en = window.mocks['test-unit/sampleData/i18n/common/i18n_en'];
     const sampleI18N_vle_en = window.mocks['test-unit/sampleData/i18n/vle/i18n_en'];
 
-    function createNormalSpy() {
+    function createConfigServiceGetConfigParamSpy() {
       spyOn(ConfigService, "getConfigParam").and.callFake((param) => {
         if (param === "projectBaseURL") {
           return projectBaseURL;
@@ -52,21 +52,20 @@ describe('AuthoringToolProjectService Unit Test', () => {
     }
 
     it('should register new project', () => {
-      spyOn(ConfigService, "getConfigParam").and.returnValue(registerNewProjectURL);
+      createConfigServiceGetConfigParamSpy();
       const newProjectIdExpected = projectIdDefault;
       $httpBackend.when('GET', /^wise5\/.*/).respond(200, '');
-      $httpBackend.when('GET', /author\/.*/).respond(200, '');
+      $httpBackend.when('GET', /author\/.*/).respond(200, '{}');
       $httpBackend.when('POST', registerNewProjectURL).respond({data: newProjectIdExpected});
       $httpBackend.when('GET', i18nURL_common_en).respond(sampleI18N_common_en);
       $httpBackend.when('GET', i18nURL_vle_en).respond(sampleI18N_vle_en);
       const newProjectIdActual = ProjectService.registerNewProject(scootersProjectName,
           scootersProjectJSONString);
-      $httpBackend.expectPOST(registerNewProjectURL);
-      $httpBackend.flush();
+      $httpBackend.expectPOST(registerNewProjectURL).respond({data: newProjectIdExpected});
       newProjectIdActual.then((result) => {
         expect(result.data).toEqual(newProjectIdExpected);
-        done();
       });
+      $httpBackend.flush();
     });
 
     it('should find used node id in active nodes', () => {
