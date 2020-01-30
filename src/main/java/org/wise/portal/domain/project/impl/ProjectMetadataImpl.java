@@ -292,7 +292,6 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
       }
     }
 
-    //check that the features exists and is not null
     if (metadataJSON.has("features") && !metadataJSON.isNull("features")) {
       try {
         String features = metadataJSON.getString("features");
@@ -305,7 +304,6 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
       }
     }
 
-    //check that the grade range exists and is not null
     if (metadataJSON.has("gradeRange") && !metadataJSON.isNull("gradeRange")) {
       try {
         String gradeRange = metadataJSON.getString("gradeRange");
@@ -318,7 +316,6 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
       }
     }
 
-    //check that grades exists and is not null
     if (metadataJSON.has("grades") && !metadataJSON.isNull("grades")) {
       try {
         JSONArray grades = metadataJSON.getJSONArray("grades");
@@ -331,7 +328,6 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
       }
     }
 
-    //check that the total time exists and is not null
     if (metadataJSON.has("totalTime")  && !metadataJSON.isNull("totalTime")) {
       try {
         String totalTime = metadataJSON.getString("totalTime");
@@ -418,7 +414,6 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
       }
     }
 
-    //check that standardsAddressed exists and is not null
     if (metadataJSON.has("standardsAddressed") && !metadataJSON.isNull("standardsAddressed")) {
       try {
         JSONObject standardsAddressed = metadataJSON.getJSONObject("standardsAddressed");
@@ -431,7 +426,6 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
       }
     }
 
-    //check that the keywords exists and is not null
     if (metadataJSON.has("keywords") && !metadataJSON.isNull("keywords")) {
       try {
         String keywords = metadataJSON.getString("keywords");
@@ -559,63 +553,32 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
       String authorsString = metadata.getString("authors");
       if (authorsString != null && authorsString != "null") {
         JSONArray authorsJSON = new JSONArray(authorsString);
-
         metadata.put("authors", authorsJSON);
       } else {
         metadata.put("authors", new JSONArray());
       }
 
-      /*
-       * we will retrieve the grades JSON string and replace it with a JSON array
-       * so that the client does not need to parse the JSON string
-       */
       String gradesString = metadata.getString("grades");
-
-      // check if the field is null or "null"
       if (gradesString != null && gradesString != "null") {
-        // create the JSON object
         JSONArray gradesJSON = new JSONArray(gradesString);
-
-        // override the existing grades string with this JSON array
         metadata.put("grades", gradesJSON);
       } else {
-        // override the existing grades string with this empty JSON array
         metadata.put("grades", new JSONArray());
       }
 
-      /*
-       * we will retrieve the techReqs JSON string and replace it with a JSON Object
-       * so that the client does not need to parse the JSON string
-       */
       String techReqsString = metadata.getString("techReqs");
-
-      // check if the field is null or "null"
       if (techReqsString != null && techReqsString != "null") {
-        // create the JSON object
         JSONObject techReqsJSON = new JSONObject(techReqsString);
-
-        // override the existing techReqs string with this JSON object
         metadata.put("techReqs", techReqsJSON);
       } else {
-        // override the existing techReqs string with this empty JSON object
         metadata.put("techReqs", new JSONObject());
       }
 
-      /*
-       * we will retrieve the tools JSON string and replace it with a JSON Object
-       * so that the client does not need to parse the JSON string
-       */
       String toolsString = metadata.getString("tools");
-
-      // check if the field is null or "null"
       if (toolsString != null && toolsString != "null") {
-        // create the JSON object
         JSONObject toolsJSON = new JSONObject(toolsString);
-
-        // override the existing techReqs string with this JSON object
         metadata.put("tools", toolsJSON);
       } else {
-        // override the existing techReqs string with this empty JSON object
         metadata.put("tools", new JSONObject());
       }
 
