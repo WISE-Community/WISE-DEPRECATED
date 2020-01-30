@@ -214,6 +214,12 @@ class OpenResponseController extends ComponentController {
 
     }.bind(this));
 
+    this.$scope.$on('echoResponseReceived', (event, echoResponse) => {
+      if (echoResponse.nodeId == this.nodeId && echoResponse.componentId == this.componentId) {
+        this.echoResponse = echoResponse;
+      }
+    });
+
     this.$scope.$on('notebookItemChosen', (event, args) => {
       if (args.requester == this.nodeId + '-' + this.componentId) {
         const notebookItem = args.notebookItem;
@@ -858,6 +864,23 @@ class OpenResponseController extends ComponentController {
     this.clearSaveText();
     const action = 'change';
     this.createComponentStateAndBroadcast(action);
+  }
+
+  isHintAgentEnabled() {
+    return true;
+  }
+
+  hintButtonClicked($event) {
+    const nodeId = this.nodeId;
+    const componentId = this.componentId;
+    const componentType = this.componentType;
+    const category = "Agent";
+    const event = "hintRequested";
+    const eventData = {
+      response: this.studentResponse
+    };
+    this.StudentDataService.saveVLEEvent(
+        nodeId, componentId, componentType, category, event, eventData);
   }
 };
 
