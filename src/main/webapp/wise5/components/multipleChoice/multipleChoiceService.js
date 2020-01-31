@@ -19,34 +19,6 @@ class MultipleChoiceService extends ComponentService {
   }
 
   /**
-   * Returns all possible criteria for this component.
-   * @param component a MultipleChoice component
-   */
-  getPossibleTransitionCriteria(nodeId, componentId, component) {
-    let allPossibleTransitionCriteria = [];
-    if (component.choiceType === 'radio') {
-      // Go through all the choices
-      for (var c = 0; c < component.choices.length; c++) {
-        let choice = component.choices[c];
-        let possibleTransitionCriteria = {
-          'name': 'choiceChosen',
-          'id': 'choiceChosen_' + choice.id,
-          'params': {
-            'nodeId': nodeId,
-            'componentId': componentId,
-            'choiceIds': [choice.id]
-          },
-          'userFriendlyDescription': this.$translate('multipleChoice.userChose', {choiceText: choice.text, choiceId: choice.id})
-        };
-        allPossibleTransitionCriteria.push(possibleTransitionCriteria);
-      }
-    } else if (component.choiceType === 'checkbox') {
-      // TODO: implement meeee!
-    }
-    return allPossibleTransitionCriteria;
-  }
-
-  /**
    * Check if the student chose a specific choice
    * @param criteria the criteria object
    * @returns a boolean value whether the student chose the choice specified in the
