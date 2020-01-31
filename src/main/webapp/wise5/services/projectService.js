@@ -4577,9 +4577,12 @@ class ProjectService {
    */
   nodeHasWork(nodeId) {
     const nodeContent = this.getNodeContentByNodeId(nodeId);
-    for (const component of nodeContent.components) {
-      if (this.componentHasWork(component)) {
-        return true;
+    // TODO: remove need for component null check by ensuring that node always has components
+    if (nodeContent.components != null) {
+      for (const component of nodeContent.components) {
+        if (this.componentHasWork(component)) {
+          return true;
+        }
       }
     }
     return false;

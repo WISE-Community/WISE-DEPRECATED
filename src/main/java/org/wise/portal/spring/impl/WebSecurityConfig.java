@@ -88,6 +88,7 @@ public class WebSecurityConfig<S extends Session> extends WebSecurityConfigurerA
         .addFilterAfter(authenticationProcessingFilter(), GoogleOpenIdConnectFilter.class)
         .authorizeRequests()
         .antMatchers("/admin/**").hasAnyRole("ADMINISTRATOR,RESEARCHER")
+        .antMatchers("/author/**").hasAnyRole("TEACHER")
         .antMatchers("/project/notifyAuthor*/**").hasAnyRole("TEACHER")
         .antMatchers("/student/account/info").hasAnyRole("TEACHER")
         .antMatchers("/student/**").hasAnyRole("STUDENT")
