@@ -24,7 +24,7 @@ const SideMenu = {
              id="{{ ::value.id }}"
              ng-if="value.type === 'primary' && value.active"
              aria-label="{{ ::value.label }}"
-             ui-sref="{{ ::key }}"
+             ui-sref="::value.link"
              class="md-icon-button menu-sidebar__link">
         <md-icon ng-class="{'primary': $ctrl.state.$current.name === key}"> {{ ::value.icon }} </md-icon>
         <md-tooltip md-direction="right">{{ ::value.name }}</md-tooltip>

@@ -39,6 +39,7 @@ class ClassroomMonitorController {
 
         this.projectTitle = this.ProjectService.getProjectTitle();
         this.runId = this.ConfigService.getRunId();
+        this.projectId = this.ConfigService.getProjectId();
 
         this.numberProject = true; // TODO: make dynamic or remove
 
@@ -51,22 +52,25 @@ class ClassroomMonitorController {
 
         // ui-views and their corresponding names and icons
         this.views = {
-            'root.dashboard': {
+            'dashboard': {
                 name: this.$translate('dashboard'),
                 icon: 'dashboard',
                 type: 'primary',
+                link: 'root.dashboard',
                 active: false
             },
-            'root.milestones': {
+            'milestones': {
                 name: this.$translate('milestones'),
                 icon: 'flag',
                 type: 'primary',
+                link: 'root.milestones',
                 active: this.enableProjectAchievements
             },
-            'root.project': {
+            'project': {
                 name: this.$translate('gradeByStep'),
                 icon: 'view_list',
                 type: 'primary',
+                link: 'root.project',
                 action: () => {
                     let currentView = this.$state.current.name;
                     if (currentView === 'root.project') {
@@ -76,39 +80,45 @@ class ClassroomMonitorController {
                 },
                 active: true
             },
-            'root.teamLanding': {
+            'teamLanding': {
                 name: this.$translate('gradeByTeam'),
                 icon: 'people',
                 type: 'primary',
+                link: 'root.teamLanding',
                 active: true
             },
-            'root.manageStudents': {
+            'manageStudents': {
                 name: this.$translate('manageStudents'),
                 icon: 'face',
                 type: 'primary',
+                link: 'root.manageStudents',
                 active: true
             },
-            'root.notebooks': {
+            'notebooks': {
                 name: this.$translate('studentNotebooks'),
                 icon: 'chrome_reader_mode',
                 type: 'primary',
+                link: 'root.notebooks',
                 active: this.NotebookService.isNotebookEnabled()
             },
-            'root.export': {
+            'export': {
                 name: this.$translate('dataExport'),
                 icon: 'file_download',
                 type: 'secondary',
+                link: 'root.export',
                 active: true
             },
-            'root': {
-                name: this.$translate('authoringTool'),
+            'edit': {
+                name: this.$translate('editUnitContent'),
                 icon: 'edit',
                 action: () => {
                     if (confirm(this.$translate('warningWillBeEditingContentOfAClassroomUnit'))) {
-                        this.authoringToolPath = '/author#!/project/' + this.runId;
+                        this.authoringToolPath = `${this.ConfigService.getContextPath()}/author/authorproject.html?projectId=${this.projectId}`;
                         window.open(this.authoringToolPath, '_blank');
                     }
                 },
+                type: 'secondary',
+                link: null,
                 active: true
             }
         };
