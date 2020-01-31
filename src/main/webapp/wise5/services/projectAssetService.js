@@ -15,36 +15,28 @@ class ProjectAssetService {
     this.Upload = Upload;
     this.UtilService = UtilService;
     this.projectAssets = {};
-    this.projectAssetTotalSizeMax =
-        this.ConfigService.getConfigParam('projectAssetTotalSizeMax');
     this.projectAssetUsagePercentage = 0;
   }
 
   deleteAssetItem(assetItem) {
-    let params = {
-      assetFileName: assetItem.fileName
-    };
-
-    let httpParams = {
+    const httpParams = {
       method: 'POST',
-      url: this.ConfigService.getConfigParam('projectAssetURL'),
+      url: `${this.ConfigService.getConfigParam('projectAssetURL')}/delete`,
       headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-      data: $.param(params)
+      data: $.param({
+        assetFileName: assetItem.fileName
+      })
     };
 
     return this.$http(httpParams).then((result) => {
-      let projectAssetsJSON = result.data;
-      this.projectAssets = projectAssetsJSON;
-      return projectAssetsJSON;
+      this.projectAssets = result.data;
+      return this.projectAssets;
     });
   }
 
   downloadAssetItem(assetItem) {
-    let assetFileName = assetItem.fileName;
-
-    // ask the browser to download this asset by setting the location
-    window.location = this.ConfigService.getConfigParam('projectAssetURL') +
-        "/download?assetFileName=" + assetFileName;
+    window.location = `${this.ConfigService.getConfigParam('projectAssetURL')}` +
+        `/download?assetFileName=${assetItem.fileName}`;
   }
 
   getFullAssetItemURL(assetItem) {
@@ -52,9 +44,8 @@ class ProjectAssetService {
   }
 
   retrieveProjectAssets() {
-    const projectAssetURL = this.ConfigService.getConfigParam('projectAssetURL');
-
-    return this.$http.get(projectAssetURL).then((result) => {
+    return this.$http.get(this.ConfigService.getConfigParam('projectAssetURL')).then((result) => {
+      this.projectAssetTotalSizeMax = this.ConfigService.getConfigParam('projectAssetTotalSizeMax');
       const projectAssetsJSON = result.data;
       this.projectAssets = projectAssetsJSON;
       this.calculateAssetUsage();
@@ -63,34 +54,13 @@ class ProjectAssetService {
   }
 
   uploadAssets(files) {
-    const projectAssetURL = this.ConfigService.getConfigParam('projectAssetURL');
-
-    const promises = files.map((file) => {
-      return this.Upload.upload({
-        url: projectAssetURL,
-        fields: {
-        },
-        file: file
-      }).progress((evt) => {
-        const progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
-        //console.log('progress: ' + progressPercentage + '% ' + evt.config.file.name);
-      }).success((result, status, headers, config) => {
-        // Only set the projectAssets if the result is an object.
-        // Sometimes it's an error message string.
-        if (typeof result === 'object') {
-          // upload was successful.
-          this.projectAssets = result;
-          let uploadedFilename = config.file.name;
-          return uploadedFilename;
-        } else if (typeof result === 'string') {
-          // This is an error and should be displayed to the user.
-          alert(result);
-        }
-
-        return result;
-      });
+    return this.Upload.upload({
+      url: this.ConfigService.getConfigParam('projectAssetURL'),
+      data: { files : files },
+      arrayKey: '' // required to merge files array into one 'files' request parameter
+    }).success((result) => {
+      this.projectAssets = result.assetDirectoryInfo;
     });
-    return this.$q.all(promises);
   }
 
   /**
@@ -116,10 +86,8 @@ class ProjectAssetService {
        * loop through all the asset files to find the text files that
        * are actually used in the project
        */
-      for (let asset of assets.files) {
-        if (asset != null) {
-          const fileName = asset.fileName;
-
+      for (const asset of assets.files) {
+        const fileName = asset.fileName;
           // check if the file is a text file
           if (this.UtilService.endsWith(fileName, ".html") ||
             this.UtilService.endsWith(fileName, ".htm") ||
@@ -128,7 +96,6 @@ class ProjectAssetService {
             // the file is a text file
             allTextFiles.push(fileName);
           }
-        }
       }
     }
 
@@ -244,19 +211,17 @@ class ProjectAssetService {
       let totalUnusedFilesSize = 0;
 
       if (assets != null && assets.files != null) {
-        for (let asset of assets.files) {
-          if (asset != null) {
-            const fileName = asset.fileName;
-            if (allUsedTextContent.indexOf(fileName) != -1) {
-              // the file is used in the project
-              asset.used = true;
-            } else {
-              // the file is not used in the project
-              asset.used = false;
+        for (const asset of assets.files) {
+          const fileName = asset.fileName;
+          if (allUsedTextContent.indexOf(fileName) != -1) {
+            // the file is used in the project
+            asset.used = true;
+          } else {
+            // the file is not used in the project
+            asset.used = false;
 
-              // add the file size to the total
-              totalUnusedFilesSize += asset.fileSize;
-            }
+            // add the file size to the total
+            totalUnusedFilesSize += asset.fileSize;
           }
         }
       }
@@ -272,16 +237,11 @@ class ProjectAssetService {
    */
   getTextFiles(textFileNames) {
     const promises = [];
-
-    // get the project assets path e.g. /wise/curriculum/3/assets
     const projectAssetsDirectoryPath = this.ConfigService.getProjectAssetsDirectoryPath();
-    for (let textFileName of textFileNames) {
-      // create a promise that will return the contents of the text file
+    for (const textFileName of textFileNames) {
       const promise = this.$http.get(projectAssetsDirectoryPath + '/' + textFileName);
-
       promises.push(promise);
     }
-
     return this.$q.all(promises);
   }
 }

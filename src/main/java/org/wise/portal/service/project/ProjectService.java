@@ -41,10 +41,13 @@ import org.wise.portal.presentation.web.exception.NotAuthorizedException;
 import org.wise.portal.presentation.web.exception.TeacherAlreadySharedWithProjectException;
 import org.wise.portal.presentation.web.response.SharedOwner;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -185,7 +188,7 @@ public interface ProjectService {
 
   /**
    * Given a <code>Project</code> project and a <code>User</code> user, returns true if the user
-   * has read access to that particularproject, returns false otherwise.
+   * has read access to that particular project, returns false otherwise.
    * @param project
    * @param user
    * @return
@@ -301,7 +304,10 @@ public interface ProjectService {
 
   long getNextAvailableProjectId();
 
-  Project copyProject(Integer projectId, User user) throws Exception;
+  Project copyProject(Long projectId, User user) throws Exception;
+
+  void saveProjectContentToDisk(String projectJSONString, Project project)
+      throws FileNotFoundException, IOException;
 
   List<Permission> getSharedTeacherPermissions(Project project, User sharedTeacher);
 
@@ -322,6 +328,8 @@ public interface ProjectService {
 
   List<Project> getAllSharedProjects();
 
+  Map<String, Object> getDirectoryInfo(File directory);
+
   String getProjectURI(Project project);
 
   String getProjectPath(Project project);
@@ -334,9 +342,6 @@ public interface ProjectService {
 
   void replaceMetadataInProjectJSONFile(String projectFilePath, ProjectMetadata metadata)
       throws IOException, JSONException;
-  
-  public void saveProjectFile(Project project, String projectJSONString)
-      throws ObjectNotFoundException, IOException;
 
   public void saveProjectToDatabase(Project project, User user, String projectJSONString)
       throws JSONException, NotAuthorizedException;

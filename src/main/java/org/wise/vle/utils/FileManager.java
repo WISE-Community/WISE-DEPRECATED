@@ -210,7 +210,8 @@ public class FileManager {
       writer.write(data);
       writer.close();
     } else {
-      throw new IOException("File already exists and forced overwrite not set. Could not write file. " + file.getAbsolutePath());
+      throw new IOException("File already exists and forced overwrite not set. " +
+          "Could not write file. " + file.getAbsolutePath());
     }
   }
 
@@ -300,7 +301,7 @@ public class FileManager {
    * @throws JSONException
    * @throws ServletException
    */
-  public static String createProject(String curriculumBaseDir, String folderName, 
+  public static String createProject(String curriculumBaseDir, String folderName,
       String projectName) throws IOException {
     String result = "";
     File parent = new File(curriculumBaseDir);
@@ -688,7 +689,8 @@ public class FileManager {
       copy(srcDir, destDir);
       result = destDir.getName();
     } else {
-      throw new IOException("Provided path is not found or is not a directory. Path: " + projectFolderPath);
+      throw new IOException("Provided path is not found or is not a directory. Path: " +
+          projectFolderPath);
     }
     return result;
   }
@@ -763,14 +765,17 @@ public class FileManager {
 
       File parent = new File(fullProjectFilePath);
       try {
-        if (addNodeToProject(parent, Template.getProjectNodeTemplate(type, file.getName(), title, nodeClass))) {
+        if (addNodeToProject(parent, 
+            Template.getProjectNodeTemplate(type, file.getName(), title, nodeClass))) {
           result = file.getName();
         } else {
-          throw new IOException("New node file created: " + file.getName() + "  but could not update project file.");
+          throw new IOException("New node file created: " + file.getName() +
+              " but could not update project file.");
         }
       } catch (JSONException e) {
         e.printStackTrace();
-        throw new IOException("New node file created: " + file.getName() + "  but could not update project file.");
+        throw new IOException("New node file created: " + file.getName() +
+            " but could not update project file.");
       }
     } else {
       throw new IOException("Cannot find provided path, aborting operation.");
@@ -805,7 +810,6 @@ public class FileManager {
   }
 
   /**
-   * Retrieves all of the scripts in the scripts array and writes them out in the <code>HttpServletResponse</code>
    * @param context the context to retrieve the files from
    * @param data the script file names
    * @return the contents of the scripts
@@ -825,7 +829,8 @@ public class FileManager {
         }
       }
     }
-    scriptsText.append("scriptloader.scriptAvailable(scriptloader.baseUrl + \"vle/filemanager.html?command=getScripts&param1=" + data + "\");");
+    scriptsText.append("scriptloader.scriptAvailable(scriptloader.baseUrl + " +
+        "\"vle/filemanager.html?command=getScripts&param1=" + data + "\");");
     scriptsText.append("\n");
     return scriptsText.toString();
   }
@@ -870,15 +875,20 @@ public class FileManager {
     HashMap<String, String> nodeIdToModified = new HashMap<String, String>();
 
     String fileSeparator = System.getProperty("file.separator");
-    String fullProjectFolderUrl = curriculumBaseDir + projectUrl.substring(0, projectUrl.lastIndexOf(fileSeparator));
+    String fullProjectFolderUrl = curriculumBaseDir + 
+        projectUrl.substring(0, projectUrl.lastIndexOf(fileSeparator));
     String fullProjectFileUrl = curriculumBaseDir + projectUrl;
-    String fullParentProjectFolderUrl = curriculumBaseDir + parentProjectUrl.substring(0, parentProjectUrl.lastIndexOf(fileSeparator));
+    String fullParentProjectFolderUrl = curriculumBaseDir + 
+        parentProjectUrl.substring(0, parentProjectUrl.lastIndexOf(fileSeparator));
     String fullParentProjectFileUrl = curriculumBaseDir + parentProjectUrl;
     JSONObject childProject = getProjectJSONObject(fullProjectFileUrl);
     JSONObject parentProject = getProjectJSONObject(fullParentProjectFileUrl);
-    parseProjectJSONObject(childProject, childNodeIdToNodeOrSequence, childFileNameToId, childNodeIdToStepNumber);
-    parseProjectJSONObject(parentProject, parentNodeIdToNodeOrSequence, parentFileNameToNodeId, parentNodeIdToStepNumber);
-    compareFolder(new File(fullParentProjectFolderUrl), new File(fullProjectFolderUrl), parentFileNameToNodeId, htmlToHt, nodeIdToModified);
+    parseProjectJSONObject(childProject, childNodeIdToNodeOrSequence, childFileNameToId,
+        childNodeIdToStepNumber);
+    parseProjectJSONObject(parentProject, parentNodeIdToNodeOrSequence, parentFileNameToNodeId,
+        parentNodeIdToStepNumber);
+    compareFolder(new File(fullParentProjectFolderUrl), new File(fullProjectFolderUrl),
+        parentFileNameToNodeId, htmlToHt, nodeIdToModified);
 
     /*
      * compare the sequences in the parent and child projects
@@ -1012,8 +1022,10 @@ public class FileManager {
       String childProjectUrl) throws IOException {
     String result = "";
     String fileSeparator = System.getProperty("file.separator");
-    String fullChildProjectFolderUrl = curriculumBaseDir + childProjectUrl.substring(0, childProjectUrl.lastIndexOf(fileSeparator));
-    String fullParentProjectFolderUrl = curriculumBaseDir + parentProjectUrl.substring(0, parentProjectUrl.lastIndexOf(fileSeparator));
+    String fullChildProjectFolderUrl = curriculumBaseDir +
+        childProjectUrl.substring(0, childProjectUrl.lastIndexOf(fileSeparator));
+    String fullParentProjectFolderUrl = curriculumBaseDir +
+        parentProjectUrl.substring(0, parentProjectUrl.lastIndexOf(fileSeparator));
     renameFolder(fullChildProjectFolderUrl);
     copyFile(new File(fullParentProjectFolderUrl), new File(fullChildProjectFolderUrl));
     return result;
@@ -1033,12 +1045,14 @@ public class FileManager {
     String result = "";
     String fileSeparator = System.getProperty("file.separator");
     String fullToProjectFileUrl = curriculumBaseDir + toProjectUrl;
-    String fullToProjectFolderUrl = curriculumBaseDir + toProjectUrl.substring(0, toProjectUrl.lastIndexOf(fileSeparator));
+    String fullToProjectFolderUrl = curriculumBaseDir +
+        toProjectUrl.substring(0, toProjectUrl.lastIndexOf(fileSeparator));
     File toProjectFolder = new File(fullToProjectFolderUrl);
     String toProjectAssetsUrl = fullToProjectFolderUrl + "/assets";
     File toProjectAssetsFolder = new File(toProjectAssetsUrl);
     String fullFromProjectFileUrl = curriculumBaseDir + fromProjectUrl;
-    String fullFromProjectFolderUrl = curriculumBaseDir + fromProjectUrl.substring(0, fromProjectUrl.lastIndexOf(fileSeparator));
+    String fullFromProjectFolderUrl = curriculumBaseDir +
+        fromProjectUrl.substring(0, fromProjectUrl.lastIndexOf(fileSeparator));
     File fromProjectFolder = new File(fullFromProjectFolderUrl);
     String fromProjectAssetsUrl = fullFromProjectFolderUrl + "/assets";
     File fromProjectAssetsFolder = new File(fromProjectAssetsUrl);
@@ -1074,7 +1088,8 @@ public class FileManager {
               File htmlFileToImport = new File(fromProjectFolder, htmlFileName);
               if (htmlFileToImport.exists()) {
                 String htmlString = FileUtils.readFileToString(htmlFileToImport);
-                htmlString = importAssetsInContent(htmlString, fromProjectAssetsFolder, toProjectAssetsFolder);
+                htmlString = importAssetsInContent(htmlString, fromProjectAssetsFolder,
+                    toProjectAssetsFolder);
                 String newHtmlFileName = newFileName + "ml";
                 File newHtmlFile = new File(toProjectFolder, newHtmlFileName);
                 FileUtils.writeStringToFile(newHtmlFile, htmlString, "UTF-8");
@@ -1105,8 +1120,10 @@ public class FileManager {
                     String fromAssetFileName = fileContentJSON.getString("url");
                     File fromAssetFile = new File(fromProjectAssetsFolder, fromAssetFileName);
                     String fromAssetFileContent = FileUtils.readFileToString(fromAssetFile);
-                    String toAssetFileContent = importReferencedFilesInContent(fromAssetFileContent, fromProjectAssetsFolder, toProjectAssetsFolder);
-                    String toAssetFileName = importAssetInContent(fromAssetFileName, toAssetFileContent, fromProjectAssetsFolder, toProjectAssetsFolder);
+                    String toAssetFileContent = importReferencedFilesInContent(fromAssetFileContent,
+                        fromProjectAssetsFolder, toProjectAssetsFolder);
+                    String toAssetFileName = importAssetInContent(fromAssetFileName,
+                        toAssetFileContent, fromProjectAssetsFolder, toProjectAssetsFolder);
                     if (fromAssetFileName != null && toAssetFileName != null &&
                         !fromAssetFileName.equals(toAssetFileName)) {
                       fileContent = fileContent.replaceAll(fromAssetFileName, toAssetFileName);
@@ -1116,10 +1133,12 @@ public class FileManager {
                 }
               }
             }
-            fileContent = importAssetsInContent(fileContent, fromProjectAssetsFolder, toProjectAssetsFolder);
+            fileContent =
+                importAssetsInContent(fileContent, fromProjectAssetsFolder,toProjectAssetsFolder);
             File newFile = new File(toProjectFolder, newFileName);
             FileUtils.writeStringToFile(newFile, fileContent, "UTF-8");
-            JSONObject newNode = Template.getProjectNodeTemplate(type, newFileName, title, nodeClass);
+            JSONObject newNode =
+                Template.getProjectNodeTemplate(type, newFileName, title, nodeClass);
             addNodeToProject(new File(fullToProjectFileUrl), newNode);
           }
         }
@@ -1131,7 +1150,7 @@ public class FileManager {
   }
 
   /**
-   * Search for any references to assets in the step content and copy the assets to our assets folder
+   * Search for any references to assets in the step content and copy the assets to assets folder
    * @param content the step content
    * @param fromProjectAssetsFolder the asset folder in the project we are copying the asset from
    * @param toProjectAssetsFolder the asset folder in the project we are copying the asset to
@@ -1168,7 +1187,8 @@ public class FileManager {
              */
             fromAssetFileName = fromAssetFileName.substring(0, fromAssetFileName.indexOf("?"));
           }
-          String toAssetFileName = importAssetInContent(fromAssetFileName, null, fromProjectAssetsFolder, toProjectAssetsFolder);
+          String toAssetFileName = importAssetInContent(fromAssetFileName, null,
+              fromProjectAssetsFolder, toProjectAssetsFolder);
           if (fromAssetFileName != null && toAssetFileName != null &&
               !fromAssetFileName.equals(toAssetFileName)) {
             content = content.replaceAll(fromAssetFileName, toAssetFileName);
@@ -1214,7 +1234,8 @@ public class FileManager {
       if (m.groupCount() == 2) {
         String fromAssetFileName = m.group(2);
         if (fromAssetFileName != null && !fromAssetFileName.isEmpty()) {
-          String toAssetFileName = importAssetInContent(fromAssetFileName, null, fromProjectAssetsFolder, toProjectAssetsFolder);
+          String toAssetFileName = importAssetInContent(fromAssetFileName, null,
+              fromProjectAssetsFolder, toProjectAssetsFolder);
           if (fromAssetFileName != null && toAssetFileName != null &&
               !fromAssetFileName.equals(toAssetFileName)) {
             content = content.replaceAll(fromAssetFileName, toAssetFileName);
@@ -1253,7 +1274,8 @@ public class FileManager {
       /*
        * this while loop will check if the file already exists.
        *
-       * if the file already exists, we will check if the content in the "from" file is the same as in the "to" file.
+       * if the file already exists, we will check if the content in the "from" file is the same as
+       * in the "to" file.
        *    if the content is the same, we do not need to do anything.
        *    if the content is different, we will look for another file name to use.
        * if the file does not exist, we will make it.
@@ -1420,7 +1442,8 @@ public class FileManager {
      */
     private String parentOrChild;
 
-    public NodeInfo(String stepNumber, String nodeId, String title, String nodeType, String parentOrChild) {
+    public NodeInfo(String stepNumber, String nodeId, String title, String nodeType,
+        String parentOrChild) {
       this.stepNumber = stepNumber;
       this.nodeId = nodeId;
       this.title = title;
@@ -1698,7 +1721,8 @@ public class FileManager {
              * 1.2
              */
             childStepNumber += (x + 1);
-            parseNodeStepNumbers(childStepNumber, childNode, nodeIdToNodeOrSequence, nodeIdToStepNumber);
+            parseNodeStepNumbers(childStepNumber, childNode, nodeIdToNodeOrSequence,
+                nodeIdToStepNumber);
           }
         }
       } else {
@@ -1907,7 +1931,8 @@ public class FileManager {
       HashMap<String, String> nodeIdToModified) throws IOException {
     if (sourceLocation.exists() && targetLocation.exists()) {
       if (sourceLocation.isDirectory() && targetLocation.isDirectory()) {
-        compareFolderHelper(sourceLocation, targetLocation, parentFileNameToNodeId, htmlToHt, nodeIdToModified);
+        compareFolderHelper(sourceLocation, targetLocation, parentFileNameToNodeId, htmlToHt,
+            nodeIdToModified);
       } else if (sourceLocation.isFile() && targetLocation.isFile()) {
         /*
          * file exists in parent and child project so we will now compare the
@@ -1969,7 +1994,8 @@ public class FileManager {
       }
     } else if (sourceLocation.exists() && !targetLocation.exists()) {
       if (sourceLocation.isDirectory()) {
-        compareFolderHelper(sourceLocation, targetLocation, parentFileNameToNodeId, htmlToHt, nodeIdToModified);
+        compareFolderHelper(sourceLocation, targetLocation, parentFileNameToNodeId, htmlToHt,
+            nodeIdToModified);
       } else if (sourceLocation.isFile()) {
         /*
          * file does not exist in the child project so it is new in the
@@ -1980,7 +2006,8 @@ public class FileManager {
       }
     } else if (!sourceLocation.exists() && targetLocation.exists()) {
       if (targetLocation.isDirectory()) {
-        compareFolderHelper(sourceLocation, targetLocation, parentFileNameToNodeId, htmlToHt, nodeIdToModified);
+        compareFolderHelper(sourceLocation, targetLocation, parentFileNameToNodeId, htmlToHt,
+            nodeIdToModified);
       } else if (targetLocation.isFile()) {
         /*
          * file does not exist in the parent project so it was either
@@ -2026,7 +2053,8 @@ public class FileManager {
    * @param fileNameCollection collection that holds all the file names
    * @param fileNames an array of file names
    */
-  public static void addFileNamesToCollection(TreeSet<String> fileNameCollection, String[] fileNames) {
+  public static void addFileNamesToCollection(TreeSet<String> fileNameCollection,
+      String[] fileNames) {
     for (int i = 0; i < fileNames.length; i++) {
       fileNameCollection.add(fileNames[i]);
     }
@@ -2114,12 +2142,8 @@ public class FileManager {
    * e.g. /Users/geoffreykwan/dev/apache-tomcat-5.5.27/webapps/curriculum/667
    */
   public static String getProjectFolderPath(Project project) {
-    String projectFolderPath = null;
-    if (project != null) {
-      String projectFilePath = getProjectFilePath(project);
-      projectFolderPath = projectFilePath.substring(0, projectFilePath.lastIndexOf("/"));
-    }
-    return projectFolderPath;
+    String projectFilePath = getProjectFilePath(project);
+    return projectFilePath.substring(0, projectFilePath.lastIndexOf("/"));
   }
 
   public static String getProjectAssetsFolderPath(Project project) {

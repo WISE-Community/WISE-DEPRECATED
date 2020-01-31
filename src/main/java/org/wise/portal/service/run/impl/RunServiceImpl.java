@@ -165,7 +165,7 @@ public class RunServiceImpl implements RunService {
     while (sb.length() < max_runcode_digit_length) {
       sb.insert(0, "0");
     }
-    String language = locale.getLanguage();  // languages is two-letter ISO639 code, like en, es, he, etc.
+    String language = locale.getLanguage();  // languages is two-letter ISO639 code, like en
     String runcodePrefixesStr =
         appProperties.getProperty("runcode_prefixes_en", DEFAULT_RUNCODE_PREFIXES);
     if (appProperties.containsKey("runcode_prefixes_" + language)) {
@@ -231,7 +231,7 @@ public class RunServiceImpl implements RunService {
     return run;
   }
 
-  public Run createRun(Integer projectId, User user, Set<String> periodNames,
+  public Run createRun(Long projectId, User user, Set<String> periodNames,
         Integer maxStudentsPerTeam, Long startDate, Long endDate, Locale locale) throws Exception {
     Project project = projectService.copyProject(projectId, user);
     RunParameters runParameters = createRunParameters(project, user, periodNames,
@@ -400,7 +400,8 @@ public class RunServiceImpl implements RunService {
     return null;
   }
 
-  private Workgroup createSharedTeacherWorkgroup(Run run, User user) throws ObjectNotFoundException {
+  private Workgroup createSharedTeacherWorkgroup(Run run, User user)
+      throws ObjectNotFoundException {
     if (user.isTeacher()) {
       Set<User> sharedOwners = new HashSet<User>();
       sharedOwners.add(user);
@@ -409,7 +410,8 @@ public class RunServiceImpl implements RunService {
     return null;
   }
 
-  public void addSharedTeacherPermission(Long runId, Long userId, Integer permissionId) throws ObjectNotFoundException {
+  public void addSharedTeacherPermission(Long runId, Long userId, Integer permissionId)
+      throws ObjectNotFoundException {
     User user = userDao.getById(userId);
     Run run = retrieveById(runId);
     if (run.getSharedowners().contains(user)) {

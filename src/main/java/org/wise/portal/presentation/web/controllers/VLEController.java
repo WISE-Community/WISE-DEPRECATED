@@ -23,22 +23,19 @@
  */
 package org.wise.portal.presentation.web.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
-import org.wise.portal.dao.ObjectNotFoundException;
-import org.wise.portal.domain.run.Run;
-import org.wise.portal.service.project.ProjectService;
-import org.wise.portal.service.run.RunService;
+import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Properties;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.servlet.ModelAndView;
+import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.domain.run.Run;
+import org.wise.portal.service.run.RunService;
 
 /**
  * Controller for handling student VLE-portal interactions.
@@ -53,14 +50,11 @@ public class VLEController {
   private RunService runService;
 
   @Autowired
-  private ProjectService projectService;
-
-  @Autowired
   Properties appProperties;
 
-  @RequestMapping(value = "/student/vle/vle.html")
-  protected ModelAndView launchVLEWISE4Run(HttpServletRequest request, HttpServletResponse response)
-      throws Exception {
+  @GetMapping(value = "/student/vle/vle.html")
+  protected ModelAndView launchVLEWISE4Run(HttpServletRequest request)
+      throws NumberFormatException, ObjectNotFoundException {
     String runIdString = request.getParameter("runId");
     Run run = runService.retrieveById(Long.parseLong(runIdString));
     String contextPath = request.getContextPath();

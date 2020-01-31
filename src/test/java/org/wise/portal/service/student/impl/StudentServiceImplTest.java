@@ -30,6 +30,7 @@ import static org.easymock.EasyMock.verify;
 import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -154,7 +155,7 @@ public class StudentServiceImplTest {
 
   @Test
   public void addStudentsToRun_NonExistingPeriod_ShouldThrowPeriodNotFoundException()
-      throws ObjectNotFoundException, PeriodNotFoundException {
+      throws ObjectNotFoundException {
     expect(runService.retrieveRunByRuncode(RUNCODE)).andReturn(run);
     replay(runService);
     try {
@@ -243,5 +244,21 @@ public class StudentServiceImplTest {
     verify(runService);
     verify(groupService);
     verify(workgroupService);
+  }
+
+  @Test
+  public void addStudentsToRun_RunHasEndTimeInThePast_ShouldThrowRunHasEndedException()
+      throws ObjectNotFoundException {
+    run.setEndtime(new Date(System.currentTimeMillis() - 3600 * 1000));
+    expect(runService.retrieveRunByRuncode(RUNCODE)).andReturn(run);
+    replay(runService);
+    try {
+      studentService.addStudentToRun(studentUser, projectcode);
+      fail("RunHasEndedException was expected to be thrown but was not");
+    } catch (RunHasEndedException se) {
+    } catch (Exception e) {
+      fail("Another exception was not expected to be thrown.");
+    }
+    verify(runService);
   }
 }

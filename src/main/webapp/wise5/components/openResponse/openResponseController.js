@@ -276,20 +276,45 @@ class OpenResponseController extends ComponentController {
     return true;
   }
 
+  hasFeedback() {
+    return (this.componentContent.cRater.showFeedback || this.componentContent.cRater.showScore) 
+        && this.isCRaterEnabled() ;
+  }
+
   confirmSubmit(numberOfSubmitsLeft) {
-    let message = '';
-    let isPerformSubmit = false;
-
-    if (numberOfSubmitsLeft <= 0) {
-      alert(this.$translate('openResponse.youHaveNoMoreChances'));
-    } else if (numberOfSubmitsLeft == 1) {
-      message = this.$translate('openResponse.youHaveOneChance', {numberOfSubmitsLeft: numberOfSubmitsLeft});
-      isPerformSubmit = confirm(message);
-    } else if (numberOfSubmitsLeft > 1) {
-      message = this.$translate('openResponse.youHaveMultipleChances', {numberOfSubmitsLeft: numberOfSubmitsLeft});
-      isPerformSubmit = confirm(message);
+    if (this.hasFeedback()) {
+      return this.submitWithFeedback(numberOfSubmitsLeft);
+    } else {
+      return this.submitWithoutFeedback(numberOfSubmitsLeft);
     }
+  }
 
+  submitWithFeedback(numberOfSubmitsLeft) {
+    let isPerformSubmit = false;
+    if (numberOfSubmitsLeft <= 0) {
+      alert(this.$translate('openResponse.youHaveNoMoreChancesWithFeedback'));
+    } else if (numberOfSubmitsLeft === 1) {
+      isPerformSubmit = confirm(this.$translate('openResponse.youHaveOneChanceWithFeedback',
+          {numberOfSubmitsLeft: numberOfSubmitsLeft}));
+    } else if (numberOfSubmitsLeft > 1) {
+      isPerformSubmit = confirm(this.$translate('openResponse.youHaveMultipleChancesWithFeedback',
+          {numberOfSubmitsLeft: numberOfSubmitsLeft}));
+    }
+    return isPerformSubmit;
+  }
+
+  submitWithoutFeedback(numberOfSubmitsLeft) {
+    let isPerformSubmit = false;
+    if (numberOfSubmitsLeft <= 0) {
+      alert(this.$translate('openResponse.youHaveNoMoreChancesWithoutFeedback'));
+    } else if (numberOfSubmitsLeft === 1) {
+      isPerformSubmit = confirm(this.$translate('openResponse.youHaveOneChanceWithoutFeedback',
+          {numberOfSubmitsLeft: numberOfSubmitsLeft}));
+    } else if (numberOfSubmitsLeft > 1) {
+      isPerformSubmit = confirm(
+          this.$translate('openResponse.youHaveMultipleChancesWithoutFeedback',
+          {numberOfSubmitsLeft: numberOfSubmitsLeft}));
+    }
     return isPerformSubmit;
   }
 
@@ -726,13 +751,7 @@ class OpenResponseController extends ComponentController {
    * @returns whether CRater is enabled for this component
    */
   isCRaterEnabled() {
-    var result = false;
-
-    if (this.CRaterService.isCRaterEnabled(this.componentContent)) {
-      result = true;
-    }
-
-    return result;
+    return this.CRaterService.isCRaterEnabled(this.componentContent);
   }
 
   /**
