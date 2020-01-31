@@ -30,11 +30,8 @@ class AuthoringToolController {
     this.ProjectService = ProjectService;
     this.SessionService = SessionService;
     this.TeacherDataService = TeacherDataService;
-
     this.numberProject = true; // TODO: make dynamic or remove
     this.isMenuOpen = false;
-
-    // ui-views and their corresponding names, labels, and icons
     this.views = {
       'root.project': {
         id: 'projectHomeButton',
@@ -110,7 +107,6 @@ class AuthoringToolController {
     this.logoPath = this.ProjectService.getThemePath() + '/images/WISE-logo-ffffff.svg';
     this.processUI();
 
-    // listen for state change events and close the menu
     $transitions.onSuccess({}, ($transition) => {
       this.isMenuOpen = false;
       this.processUI();
@@ -120,7 +116,7 @@ class AuthoringToolController {
     });
 
     $scope.$on('showSessionWarning', () => {
-      let confirm = this.$mdDialog.confirm()
+      const confirm = this.$mdDialog.confirm()
           .parent(angular.element(document.body))
           .title(this.$translate('sessionTimeout'))
           .content(this.$translate('autoLogoutMessage'))
@@ -134,21 +130,15 @@ class AuthoringToolController {
       });
     });
 
-    // alert user when they're inactive for a long time
     this.$scope.$on('showRequestLogout', (ev) => {
-      let alert = this.$mdDialog.confirm()
+      const alert = this.$mdDialog.confirm()
           .parent(angular.element(document.body))
           .title(this.$translate('serverUpdate'))
           .textContent(this.$translate('serverUpdateRequestLogoutMessage'))
           .ariaLabel(this.$translate('serverUpdate'))
           .targetEvent(ev)
           .ok(this.$translate('ok'));
-
-      this.$mdDialog.show(alert).then(() => {
-        // do nothing
-      }, () => {
-        // do nothing
-      });
+      this.$mdDialog.show(alert);
     });
 
     /*
@@ -195,7 +185,6 @@ class AuthoringToolController {
      * specified target
      */
     this.$scope.$on('openAssetChooser', (event, params) => {
-      // create the params for opening the asset chooser
       const stateParams = {
           isPopup: params.isPopup,
           projectId: params.projectId,
@@ -204,8 +193,6 @@ class AuthoringToolController {
           target: params.target,
           targetObject: params.targetObject
       };
-
-      // open the dialog that will display the assets for the user to choose
       this.$mdDialog.show({
           templateUrl: 'wise5/authoringTool/asset/asset.html',
           controller: 'ProjectAssetController',
@@ -221,15 +208,12 @@ class AuthoringToolController {
      * specified target
      */
     this.$scope.$on('openWISELinkChooser', (event, params) => {
-      // create the params for opening the WISE Link authoring popup
       const stateParams = {
           projectId: params.projectId,
           nodeId: params.nodeId,
           componentId: params.componentId,
           target: params.target
       };
-
-      // open the WISE Link authoring popup
       this.$mdDialog.show({
           templateUrl: 'wise5/authoringTool/wiseLink/wiseLinkAuthoring.html',
           controller: 'WISELinkAuthoringController',
@@ -256,14 +240,11 @@ class AuthoringToolController {
    * TODO: remove/rework this and put items in their own ui states?
    */
   processUI() {
-    // scroll to the top of the page
     this.$anchorScroll('top');
-
-    // set current view and whether to show the toolbars and step tools
     this.showStepTools = this.$state.$current.name === 'root.project' ||
         this.$state.$current.name === 'root.project.node' ||
         this.$state.$current.name === 'root.project.nodeConstraints' ||
-      this.$state.$current.name === 'root.project.nodeEditPaths';
+        this.$state.$current.name === 'root.project.nodeEditPaths';
     const view = this.views[this.$state.$current.name];
     if (view) {
       this.currentViewName = view.name;
@@ -288,31 +269,21 @@ class AuthoringToolController {
     this.$rootScope.$broadcast('setIsJSONValid', { isJSONValid: null });
   }
 
-  /**
-   * Navigate the user to the My Projects page in the Authoring Tool
-   */
   goToMyProjects() {
     this.$location.url('/author');
   }
 
-  /**
-   * Toggle the authoring tool main menu
-   */
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;
   }
 
-  /**
-   * Notify Session to renew when user moves the mouse
-   */
   mouseMoved() {
     this.SessionService.mouseMoved();
   }
 
   exit() {
     this.ProjectService.notifyAuthorProjectEnd().then(() => {
-      let wiseBaseURL = this.ConfigService.getWISEBaseURL();
-      window.location = wiseBaseURL + '/teacher';
+      window.location = `${this.ConfigService.getWISEBaseURL()}/teacher`;
     });
   }
 
@@ -332,12 +303,11 @@ class AuthoringToolController {
    * example 'Navigation' or 'Authoring'
    */
   saveEvent(eventName, category) {
-    let context = 'AuthoringTool';
-    let nodeId = null;
-    let componentId = null;
-    let componentType = null;
-    let data = {};
-
+    const context = 'AuthoringTool';
+    const nodeId = null;
+    const componentId = null;
+    const componentType = null;
+    const data = {};
     this.TeacherDataService.saveEvent(context, nodeId, componentId,
         componentType, category, eventName, data);
   }
@@ -356,8 +326,7 @@ AuthoringToolController.$inject = [
   'ConfigService',
   'ProjectService',
   'SessionService',
-  'TeacherDataService',
-  'moment'
+  'TeacherDataService'
 ];
 
 export default AuthoringToolController;

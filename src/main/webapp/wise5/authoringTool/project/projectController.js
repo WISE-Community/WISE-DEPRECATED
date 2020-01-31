@@ -128,7 +128,8 @@ class ProjectController {
           args.assetItem != null && args.assetItem.fileName != null) {
         let assetFileName = args.assetItem.fileName;
         if (args.target === 'rubric') {
-          const summernoteElement = angular.element(document.querySelector(`#summernoteRubric_${this.projectId}`));
+          const summernoteElement =
+              angular.element(document.querySelector(`#summernoteRubric_${this.projectId}`));
           let fullAssetPath =
               this.ConfigService.getProjectAssetsDirectoryPath() +
                   '/' + assetFileName;
@@ -215,18 +216,13 @@ class ProjectController {
     });
   }
 
-  /**
-   * Launch the project in preview mode in a new tab
-   */
   previewProject() {
     let previewProjectEventData = { constraints: true };
     this.saveEvent('projectPreviewed', 'Navigation', previewProjectEventData);
-    window.open(`${this.ConfigService.getConfigParam('previewProjectURL')}#!/project/${this.projectId}`);
+    window.open(
+        `${this.ConfigService.getConfigParam('previewProjectURL')}#!/project/${this.projectId}`);
   }
 
-  /**
-   * Launch the project in preview mode without constraints in a new tab
-   */
   previewProjectWithoutConstraints() {
     let previewProjectEventData = { constraints: false };
     this.saveEvent('projectPreviewed', 'Navigation', previewProjectEventData);
@@ -236,10 +232,6 @@ class ProjectController {
 
   viewProjectAssets() {
     this.$state.go('root.project.asset', {projectId: this.projectId});
-  }
-
-  viewProjectHistory() {
-    this.$state.go('root.project.history', {projectId: this.projectId});
   }
 
   viewNotebookSettings() {
@@ -258,15 +250,10 @@ class ProjectController {
   }
 
   saveProject() {
-    let commitMessage = 'Made changes to the project.';
     try {
       // if projectJSONString is bad json,
       // an exception will be thrown and it will not save.
-      this.ProjectService.saveProject(commitMessage)
-          .then((commitHistoryArray) => {
-        this.commitHistory = commitHistoryArray;
-        $('#commitMessageInput').val('');
-      });
+      this.ProjectService.saveProject();
     } catch (error) {
       // TODO: i18n
       alert('Invalid JSON. Please check syntax. Aborting save.');
@@ -1081,7 +1068,8 @@ class ProjectController {
   }
 
   previewImportNode(node) {
-    window.open(`${this.importProject.previewProjectURL}#!/project/${this.importProjectId}/${node.id}`);
+    window.open(
+        `${this.importProject.previewProjectURL}#!/project/${this.importProjectId}/${node.id}`);
   }
 
   previewImportProject() {

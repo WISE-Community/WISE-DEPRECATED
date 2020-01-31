@@ -39,7 +39,7 @@
         <md-button id="createNewProjectButton"
                class="md-raised md-primary"
                style="font-weight: bold; padding: 10px; display: inline-block;"
-               ng-click="authoringToolMainController.createNewProjectButtonClicked()">
+               ng-click="authoringToolMainController.showRegisterNewProjectView()">
           <md-icon>add</md-icon>
           <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'createNewProject' | translate}}</md-tooltip>
         </md-button>
@@ -47,6 +47,7 @@
           <md-input-container style="width: 500; height: 20;">
             <label translate="projectTitle"></label>
             <input id='newProjectTitle'
+                 style="width: 300px"
                  ng-model='authoringToolMainController.project.metadata.title'
                  ng-disabled="authoringToolMainController.inProcessOfCreatingProject"
                  ng-keyup='$event.keyCode == 13 && authoringToolMainController.registerNewProject()'

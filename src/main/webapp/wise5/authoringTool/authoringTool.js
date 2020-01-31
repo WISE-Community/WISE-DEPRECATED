@@ -20,7 +20,6 @@ import '../components/audioOscillator/audioOscillatorAuthoringComponentModule';
 import './components/authoringToolComponents';
 import AuthoringToolController from './authoringToolController';
 import AuthoringToolMainController from './main/authoringToolMainController';
-import AuthoringToolNewProjectController from './main/authoringToolNewProjectController';
 import AuthoringToolProjectService from './authoringToolProjectService';
 import AuthorNotebookController from './notebook/authorNotebookController';
 import bootstrap from 'bootstrap';
@@ -48,7 +47,6 @@ import '../components/outsideURL/outsideURLAuthoringComponentModule';
 import ProjectAssetController from './asset/projectAssetController';
 import ProjectAssetService from '../services/projectAssetService';
 import ProjectController from './project/projectController';
-import ProjectHistoryController from './history/projectHistoryController';
 import ProjectInfoController from './info/projectInfoController';
 import PlanningService from '../services/planningService';
 import ProjectService from '../services/projectService';
@@ -123,12 +121,10 @@ const authoringModule = angular.module('authoring', [
     .service('UtilService', UtilService)
     .controller('AuthoringToolController', AuthoringToolController)
     .controller('AuthoringToolMainController', AuthoringToolMainController)
-    .controller('AuthoringToolNewProjectController', AuthoringToolNewProjectController)
     .controller('AuthorNotebookController', AuthorNotebookController)
     .controller('NodeAuthoringController', NodeAuthoringController)
     .controller('ProjectAssetController', ProjectAssetController)
     .controller('ProjectController', ProjectController)
-    .controller('ProjectHistoryController', ProjectHistoryController)
     .controller('ProjectInfoController', ProjectInfoController)
     .controller('WISELinkAuthoringController', WISELinkAuthoringController)
     .config([
@@ -136,13 +132,11 @@ const authoringModule = angular.module('authoring', [
     '$stateProvider',
     '$translateProvider',
     '$translatePartialLoaderProvider',
-    '$controllerProvider',
     '$mdThemingProvider',
     ($urlRouterProvider,
      $stateProvider,
      $translateProvider,
      $translatePartialLoaderProvider,
-     $controllerProvider,
      $mdThemingProvider) => {
   $urlRouterProvider.otherwise('/');
 
@@ -165,28 +159,11 @@ const authoringModule = angular.module('authoring', [
             if (window.configURL != null) {
               return ConfigService.retrieveConfig(window.configURL);
             } else {
-              return ConfigService.retrieveConfig(`/authorConfig`);
+              return ConfigService.retrieveConfig(`/author/config`);
             }
           }],
-          language: ['$translate', 'ConfigService', 'config', ($translate, ConfigService, config) => {
-            $translate.use(ConfigService.getLocale());
-          }]
-        }
-      })
-      .state('root.new', {
-        url: '/new',
-        templateUrl: 'wise5/authoringTool/main/new.html',
-        controller: 'AuthoringToolNewProjectController',
-        controllerAs: 'authoringToolNewProjectController',
-        resolve: {
-          config: ['ConfigService', (ConfigService) => {
-            let configURL = window.configURL;
-            if (configURL == null) {
-              configURL = prompt('Please enter configURL', '/authorConfig/24678');
-            }
-            return ConfigService.retrieveConfig(configURL);
-          }],
-          language: ['$translate', 'ConfigService', 'config', ($translate, ConfigService, config) => {
+          language: ['$translate', 'ConfigService', 'config',
+              ($translate, ConfigService, config) => {
             $translate.use(ConfigService.getLocale());
           }]
         }
@@ -198,7 +175,7 @@ const authoringModule = angular.module('authoring', [
         controllerAs: 'projectController',
         resolve: {
           projectConfig: ['ConfigService', '$stateParams', (ConfigService, $stateParams) => {
-            return ConfigService.retrieveConfig(`/authorConfig/${$stateParams.projectId}`);
+            return ConfigService.retrieveConfig(`/author/config/${$stateParams.projectId}`);
           }],
           project: ['ProjectService', 'projectConfig', (ProjectService, projectConfig) => {
             return ProjectService.retrieveProject();
@@ -246,13 +223,6 @@ const authoringModule = angular.module('authoring', [
         templateUrl: 'wise5/authoringTool/info/info.html',
         controller: 'ProjectInfoController',
         controllerAs: 'projectInfoController',
-        resolve: {}
-      })
-      .state('root.project.history', {
-        url: '/history',
-        templateUrl: 'wise5/authoringTool/history/history.html',
-        controller: 'ProjectHistoryController',
-        controllerAs: 'projectHistoryController',
         resolve: {}
       })
       .state('root.project.notebook', {

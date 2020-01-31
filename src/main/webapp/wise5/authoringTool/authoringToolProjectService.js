@@ -136,20 +136,19 @@ class AuthoringToolProjectService extends ProjectService {
     };
   }
 
-  notifyAuthorProjectBegin(projectId) {
-    const httpParams = {
+  notifyAuthorProjectBeginEnd(projectId, isBegin) {
+    return this.$http({
       method: 'POST',
-      url: this.ConfigService.getConfigParam('notifyProjectBeginURL') + projectId
-    };
-    return this.$http(httpParams).then((result) => {
-
+      url: `${this.ConfigService.getConfigParam('notifyAuthoringBeginEndURL')}/${projectId}`,
+      headers:  {'Content-Type': 'application/x-www-form-urlencoded'},
+      data: $.param({ isBegin: isBegin })
     });
   }
 
-  /**
-   * Notifies others that the specified project is no longer being authored
-   * @param projectId id of the project
-   */
+  notifyAuthorProjectBegin(projectId) {
+    return this.notifyAuthorProjectBeginEnd(projectId, true)
+  }
+
   notifyAuthorProjectEnd(projectId = null) {
     return this.$q((resolve, reject) => {
       if (projectId == null) {
@@ -159,13 +158,9 @@ class AuthoringToolProjectService extends ProjectService {
           resolve();
         }
       }
-      const httpParams = {
-        method: 'POST',
-        url: this.ConfigService.getConfigParam('notifyProjectEndURL') + projectId
-      };
-      this.$http(httpParams).then(() => {
+      this.notifyAuthorProjectBeginEnd(projectId, false).then(() => {
         resolve();
-      })
+      });
     });
   }
 
@@ -192,18 +187,12 @@ class AuthoringToolProjectService extends ProjectService {
    * a new project id if the project is successfully copied
    */
   copyProject(projectId) {
-    const copyProjectURL = this.ConfigService.getConfigParam('copyProjectURL');
-    if (copyProjectURL == null) {
-      return null;
-    }
-
     const httpParams = {
       method: 'POST',
-      url: copyProjectURL + "/" + projectId,
+      url: `${this.ConfigService.getConfigParam('copyProjectURL')}/${projectId}`,
       headers:  {'Content-Type': 'application/x-www-form-urlencoded'},
       data: $.param({})
     };
-
     return this.$http(httpParams).then((result) => {
       return result.data;  // project Id
     });
@@ -211,47 +200,21 @@ class AuthoringToolProjectService extends ProjectService {
 
   /**
    * Registers a new project having the projectJSON content with the server.
-   * Returns a new project Id if the project is successfully registered.
-   * Returns null if Config.registerNewProjectURL is undefined.
-   * Throws an error if projectJSONString is invalid JSON string
+   * Returns a new project id if the project is successfully registered.
+   * @param projectJSONString a valid JSON string
    */
-  registerNewProject(projectJSONString, commitMessage = "") {
-    const registerNewProjectURL = this.ConfigService.getConfigParam('registerNewProjectURL');
-    if (registerNewProjectURL == null) {
-      return null;
-    }
-
-    try {
-      JSON.parse(projectJSONString);
-    } catch (e) {
-      throw new Error("Invalid projectJSONString.");
-    }
-
+  registerNewProject(projectName, projectJSONString) {
     const httpParams = {
       method: 'POST',
-      url: registerNewProjectURL,
+      url: this.ConfigService.getConfigParam('registerNewProjectURL'),
       headers: {'Content-Type': 'application/x-www-form-urlencoded'},
       data: $.param({
-        commitMessage: commitMessage,
+        projectName: projectName,
         projectJSONString: projectJSONString
       })
     };
 
     return this.$http(httpParams).then((result) => {
-      const projectId = result.data;
-      return projectId;
-    });
-  };
-
-  /**
-   * Retrieves and returns the project's commit history.
-   */
-  getCommitHistory() {
-    const commitProjectURL = this.ConfigService.getConfigParam('commitProjectURL');
-    return this.$http({
-      url: commitProjectURL,
-      method: 'GET'
-    }).then((result) => {
       return result.data;
     });
   };
@@ -342,7 +305,7 @@ class AuthoringToolProjectService extends ProjectService {
 
       // remember the node id so we can put the next node (if any) after this one
       nodeId = newNodeId;
-      this.parseProject();  // refresh project and update references because a new node have been added.
+      this.parseProject();
 
       newNodes.push(newNode);
     }
@@ -567,14 +530,14 @@ class AuthoringToolProjectService extends ProjectService {
    */
   copyNodesAfter(nodeIds, nodeId) {
     const newNodes = [];
-    for (let nodeIdToCopy of nodeIds) {
+    for (const nodeIdToCopy of nodeIds) {
       const newNode = this.copyNode(nodeIdToCopy);
       const newNodeId = newNode.id;
       this.createNodeAfter(newNode, nodeId);
 
       // remember the node id so we can put the next node (if any) after this one
       nodeId = newNodeId;
-      this.parseProject();  // refresh project and update references because a new node have been added.
+      this.parseProject();
 
       newNodes.push(newNode);
     }
@@ -587,12 +550,10 @@ class AuthoringToolProjectService extends ProjectService {
    * @param nodeId the node id of the step
    */
   isInactive(nodeId) {
-    if (nodeId != null && this.project.inactiveNodes != null) {
-      for (let inactiveNode of this.project.inactiveNodes) {
-        if (inactiveNode != null) {
-          if (nodeId === inactiveNode.id) {
-            return true;
-          }
+    if (this.project.inactiveNodes != null) {
+      for (const inactiveNode of this.project.inactiveNodes) {
+        if (nodeId === inactiveNode.id) {
+          return true;
         }
       }
     }
@@ -885,7 +846,8 @@ class AuthoringToolProjectService extends ProjectService {
         insertPosition = 0;
       } else {
         // place the new components after the specified component id
-        insertPosition = this.getComponentPositionByNodeIdAndComponentId(nodeId, insertAfterComponentId) + 1;
+        insertPosition =
+            this.getComponentPositionByNodeIdAndComponentId(nodeId, insertAfterComponentId) + 1;
       }
 
       for (let newComponent of newComponents) {
@@ -982,7 +944,8 @@ class AuthoringToolProjectService extends ProjectService {
         insertPosition = 0;
       } else {
         // place the new components after the specified component id
-        insertPosition = this.getComponentPositionByNodeIdAndComponentId(nodeId, insertAfterComponentId) + 1;
+        insertPosition =
+            this.getComponentPositionByNodeIdAndComponentId(nodeId, insertAfterComponentId) + 1;
       }
 
       for (let newComponent of newComponents) {

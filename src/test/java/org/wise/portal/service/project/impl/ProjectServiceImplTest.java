@@ -146,7 +146,6 @@ public class ProjectServiceImplTest {
     replay(projectDao);
     FileUtils fileUtils = mock(FileUtils.class);
     replay(fileUtils);
-    expect(appProperties.getProperty("wise.hostname")).andReturn("http://localhost:8080");
     replay(appProperties);
 
     ProjectParameters projectParameters = new ProjectParameters();
@@ -197,7 +196,7 @@ public class ProjectServiceImplTest {
     File projectFile = new File(projectFilePath);
     projectFile.delete();
     try {
-      projectServiceImpl.saveProjectFile(project, projectJSONString);
+      projectServiceImpl.saveProjectContentToDisk(projectJSONString, project);
       String projectText = FileUtils.readFileToString(new File(projectFilePath), "UTF-8");
       assertEquals(projectText, projectJSONString);
     } catch (Exception e) {
@@ -262,7 +261,7 @@ public class ProjectServiceImplTest {
       projectJSON.put("metadata", metadata);
       projectServiceImpl.updateMetadataAndLicenseIfNecessary(project, projectJSON.toString());
       assertEquals(metadata.get("title"), project.getMetadata().getTitle());
-      String licenseText = 
+      String licenseText =
           FileUtils.readFileToString(new File(licenseFilePath), "UTF-8");
       assertTrue(licenseText.contains("licensed under CC BY-SA by Spongebob Squarepants"));
     } catch (JSONException e) {
