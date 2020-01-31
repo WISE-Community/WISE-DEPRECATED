@@ -289,6 +289,7 @@
           </md-input-container>
           <span flex></span>
           <md-button class='moveComponentButton md-raised md-primary'
+                     ng-disabled='$first'
                      ng-click='multipleChoiceController.moveChoiceUp(choice.id)'>
             <md-icon>arrow_upward</md-icon>
             <md-tooltip md-direction='top'
@@ -297,6 +298,7 @@
             </md-tooltip>
           </md-button>
           <md-button class='moveComponentButton md-raised md-primary'
+                     ng-disabled='$last'
                      ng-click='multipleChoiceController.moveChoiceDown(choice.id)'>
             <md-icon>arrow_downward</md-icon>
             <md-tooltip md-direction='top'

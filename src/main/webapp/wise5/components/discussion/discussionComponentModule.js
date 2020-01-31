@@ -4,7 +4,7 @@ import  { ClassResponseController, ClassResponseComponentOptions } from './class
 import DiscussionService from './discussionService';
 import DiscussionController from './discussionController';
 
-let discussionComponentModule = angular.module('discussionComponentModule', [
+const discussionComponentModule = angular.module('discussionComponentModule', [
     'pascalprecht.translate'
   ])
   .service('DiscussionService', DiscussionService)

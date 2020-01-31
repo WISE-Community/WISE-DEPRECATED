@@ -183,9 +183,8 @@ class ConceptMapAuthoringController extends ConceptMapController {
   }
 
   authoringViewAddNode() {
-    const id = this.authoringGetNewConceptMapNodeId();
     const newNode = {
-      id: id,
+      id: this.authoringGetNewConceptMapNodeId(),
       label: '',
       fileName: '',
       width: 100,
@@ -201,7 +200,7 @@ class ConceptMapAuthoringController extends ConceptMapController {
    * @return the concept map node with the given node id
    */
   authoringViewGetNodeById(nodeId) {
-    for (let node of this.authoringComponentContent.nodes) {
+    for (const node of this.authoringComponentContent.nodes) {
       if (nodeId === node.id) {
         return node;
       }
@@ -210,9 +209,8 @@ class ConceptMapAuthoringController extends ConceptMapController {
   }
 
   authoringViewAddLink() {
-    const id = this.authoringGetNewConceptMapLinkId();
     const newLink = {
-      id: id,
+      id: this.authoringGetNewConceptMapLinkId(),
       label: '',
       color: ''
     };
@@ -349,7 +347,7 @@ class ConceptMapAuthoringController extends ConceptMapController {
       isPopup: true,
       nodeId: this.nodeId,
       componentId: this.componentId,
-      target:'background'
+      target: 'background'
     };
     this.$rootScope.$broadcast('openAssetChooser', params);
   }
@@ -374,24 +372,16 @@ class ConceptMapAuthoringController extends ConceptMapController {
    * @param connectedComponent the connected component object we are authoring
    */
   authoringAutomaticallySetConnectedComponentComponentIdIfPossible(connectedComponent) {
-    let components = this.getComponentsByNodeId(connectedComponent.nodeId);
     let numberOfAllowedComponents = 0;
     let allowedComponent = null;
-    for (let component of components) {
-      if (component != null) {
-        if (this.isConnectedComponentTypeAllowed(component.type) &&
-            component.id != this.componentId) {
-          numberOfAllowedComponents += 1;
-          allowedComponent = component;
-        }
+    for (const component of this.getComponentsByNodeId(connectedComponent.nodeId)) {
+      if (this.isConnectedComponentTypeAllowed(component.type) &&
+          component.id != this.componentId) {
+        numberOfAllowedComponents += 1;
+        allowedComponent = component;
       }
     }
-
     if (numberOfAllowedComponents === 1) {
-      /*
-       * there is only one viable component to connect to so we
-       * will use it
-       */
       connectedComponent.componentId = allowedComponent.id;
       connectedComponent.type = 'importWork';
       this.authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent);
@@ -414,12 +404,8 @@ class ConceptMapAuthoringController extends ConceptMapController {
    * @param connectedComponent The connected component object.
    */
   authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent) {
-    let componentType = this.authoringGetConnectedComponentType(connectedComponent);
-    if (componentType === 'Draw' ||
-        componentType === 'Embedded' ||
-        componentType === 'Graph' ||
-        componentType === 'Label' ||
-        componentType === 'Table') {
+    const componentType = this.authoringGetConnectedComponentType(connectedComponent);
+    if (['Draw','Embedded','Graph','Label','Table'].includes(componentType)) {
       connectedComponent.importWorkAsBackground = true;
     } else {
       delete connectedComponent.importWorkAsBackground;
@@ -428,8 +414,7 @@ class ConceptMapAuthoringController extends ConceptMapController {
 
   /**
    * The "Import Work As Background" checkbox was clicked.
-   * @param connectedComponent The connected component associated with the
-   * checkbox.
+   * @param connectedComponent The connected component associated with the checkbox.
    */
   authoringImportWorkAsBackgroundClicked(connectedComponent) {
     if (!connectedComponent.importWorkAsBackground) {
