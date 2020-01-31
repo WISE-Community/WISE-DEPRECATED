@@ -53,13 +53,8 @@ class NodeAuthoringController {
     this.showComponents = true;
     this.showStepButtons = true;
     this.showComponentAuthoringViews = true;
-
-    // mapping from component id to whether the component checkbox is checked
-    this.componentsToChecked = {};
-
+    this.componentsToChecked = {}; // maps component id to whether the component checkbox is checked
     this.TeacherDataService.setCurrentNodeByNodeId(this.nodeId);
-
-    // the available constraint actions
     this.constraintActions = [
       {
         value: "",
@@ -90,8 +85,6 @@ class NodeAuthoringController {
         text: this.$translate('makeThisNodeNotVisible')
       }
     ];
-
-    // the available removal conditionals
     this.removalConditionals = [
       {
         value: "all",
@@ -102,8 +95,6 @@ class NodeAuthoringController {
         text: this.$translate('any')
       }
     ];
-
-    // the available removal criteria
     this.removalCriteria = [
       {
         value: "",
@@ -297,8 +288,6 @@ class NodeAuthoringController {
         ]
       }
     ];
-
-    // available transitionCriterias
     this.transitionCriterias = [
       {
         value: "score",
@@ -337,7 +326,6 @@ class NodeAuthoringController {
         ]
       }
     ];
-
     this.branchCriteria = [
       {
         value: "workgroupId",
@@ -377,14 +365,9 @@ class NodeAuthoringController {
       {componentType: 'Table', componentName: this.UtilService.getComponentTypeLabel('Table')}
     ];
 
-    // select the first component type by default
     this.selectedComponent = this.componentTypes[0].componentType;
     this.node = this.ProjectService.getNodeById(this.nodeId);
-
-    // get the step number e.g. 1.3
     this.nodePosition = this.ProjectService.getNodePositionById(this.nodeId);
-
-    // get the components in the node
     this.components = this.ProjectService.getComponentsByNodeId(this.nodeId);
 
     /*
@@ -400,13 +383,8 @@ class NodeAuthoringController {
      */
     this.currentNodeCopy = this.UtilService.makeCopyOfJSONObject(this.node);
 
-    // populate the branch authoring if any
     this.populateBranchAuthoring();
-
-    // create the summernote rubric element id
     this.summernoteRubricId = 'summernoteRubric_' + this.nodeId;
-
-    // the tooltip text for the insert WISE asset button
     let insertAssetString = this.$translate('INSERT_ASSET');
 
     /*
@@ -444,8 +422,7 @@ class NodeAuthoringController {
      * inject the asset paths into the rubric html and set the summernote
      * rubric html
      */
-    this.summernoteRubricHTML =
-        this.ProjectService.replaceAssetPaths(this.node.rubric);
+    this.summernoteRubricHTML = this.ProjectService.replaceAssetPaths(this.node.rubric);
 
     /*
      * Listen for the assetSelected event which occurs when the user
@@ -453,103 +430,48 @@ class NodeAuthoringController {
      * TODO refactor too many nesting
      */
     this.$scope.$on('assetSelected', (event, args) => {
-      if (args != null) {
-        // make sure the event was fired for this component
-        if (args.nodeId == this.nodeId && args.componentId == null) {
-          // the asset was selected for this component
-          if (args.assetItem != null && args.assetItem.fileName != null) {
-            let fileName = args.assetItem.fileName;
-            /*
-             * get the assets directory path
-             * e.g.
-             * /wise/curriculum/3/
-             */
-            let assetsDirectoryPath =
-                this.ConfigService.getProjectAssetsDirectoryPath();
-            let fullAssetPath = assetsDirectoryPath + '/' + fileName;
-
-            if (args.target == 'rubric') {
-              // the target is the summernote rubric element
-              let summernoteId = 'summernoteRubric_' + this.nodeId;
-
-              if (this.UtilService.isImage(fileName)) {
-                /*
-                 * move the cursor back to its position when the asset chooser
-                 * popup was clicked
-                 */
-                angular.element(document.querySelector(`#${summernoteId}`)).summernote('editor.restoreRange');
-                angular.element(document.querySelector(`#${summernoteId}`)).summernote('editor.focus');
-
-                // add the image html
-                angular.element(document.querySelector(`#${summernoteId}`)).summernote('insertImage', fullAssetPath, fileName);
-              } else if (this.UtilService.isVideo(fileName)) {
-                /*
-                 * move the cursor back to its position when the asset chooser
-                 * popup was clicked
-                 */
-                angular.element(document.querySelector(`#${summernoteId}`)).summernote('editor.restoreRange');
-                angular.element(document.querySelector(`#${summernoteId}`)).summernote('editor.focus');
-
-                // insert the video element
-                let videoElement = document.createElement('video');
-                videoElement.controls = 'true';
-                videoElement.innerHTML =
-                    '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
-                angular.element(document.querySelector(`#${summernoteId}`)).summernote('insertNode', videoElement);
-              }
-            }
+      if (args.assetItem != null && args.assetItem.fileName != null) {
+        const fileName = args.assetItem.fileName;
+        const fullAssetPath = `${this.ConfigService.getProjectAssetsDirectoryPath()}/${fileName}`;
+        if (args.target === 'rubric') {
+          const summernoteId = 'summernoteRubric_' + this.nodeId;
+          if (this.UtilService.isImage(fileName)) {
+            // move the cursor back to its position when the asset chooser popup was clicked
+            angular.element(document.querySelector(`#${summernoteId}`)).summernote('editor.restoreRange');
+            angular.element(document.querySelector(`#${summernoteId}`)).summernote('editor.focus');
+            angular.element(document.querySelector(`#${summernoteId}`)).summernote('insertImage', fullAssetPath, fileName);
+          } else if (this.UtilService.isVideo(fileName)) {
+            // move the cursor back to its position when the asset chooser popup was clicked
+            angular.element(document.querySelector(`#${summernoteId}`)).summernote('editor.restoreRange');
+            angular.element(document.querySelector(`#${summernoteId}`)).summernote('editor.focus');
+            const videoElement = document.createElement('video');
+            videoElement.controls = 'true';
+            videoElement.innerHTML = '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
+            angular.element(document.querySelector(`#${summernoteId}`)).summernote('insertNode', videoElement);
           }
         }
       }
-
-      // close the popup
       this.$mdDialog.hide();
     });
 
-    this.$scope.$on('componentShowSubmitButtonValueChanged', (event, args) => {
-      let showSubmitButton = args.showSubmitButton;
+    this.$scope.$on('componentShowSubmitButtonValueChanged', (event, {showSubmitButton}) => {
       if (showSubmitButton) {
-        /*
-         * a component is showing their submit button so we will hide
-         * the step save button and submit buttons
-         */
         this.node.showSaveButton = false;
         this.node.showSubmitButton = false;
-
-        // turn on the save buttons for all components in this step
         this.ProjectService.turnOnSaveButtonForAllComponents(this.node);
       } else {
-        /*
-         * a component is hiding their submit button so we may need
-         * to show the step save button
-         */
         if (this.ProjectService.doesAnyComponentInNodeShowSubmitButton(this.node.id)) {
-          /*
-           * there is at least one component in the step that is showing
-           * their submit button so we will show the save button on
-           * all the components
-           */
-
-          // turn on the save buttons for all components in this step
           this.ProjectService.turnOnSaveButtonForAllComponents(this.node);
         } else {
-          /*
-           * no components in this step show their submit button so we
-           * will show the step save button
-           */
           this.node.showSaveButton = true;
           this.node.showSubmitButton = false;
-
-          // turn off the save buttons for all the components
           this.ProjectService.turnOffSaveButtonForAllComponents(this.node);
         }
       }
-
-      // save changes
       this.authoringViewNodeChanged();
     });
 
-    if (this.$state.current.name == 'root.project.nodeConstraints') {
+    if (this.$state.current.name === 'root.project.nodeConstraints') {
       this.$timeout(() => {
         this.nodeAuthoringViewButtonClicked('advanced');
         this.$timeout(() => {
@@ -558,7 +480,7 @@ class NodeAuthoringController {
       });
     }
 
-    if (this.$state.current.name == 'root.project.nodeEditPaths') {
+    if (this.$state.current.name === 'root.project.nodeEditPaths') {
       this.$timeout(() => {
         this.nodeAuthoringViewButtonClicked('advanced');
         this.$timeout(() => {
@@ -567,17 +489,15 @@ class NodeAuthoringController {
       });
     }
 
-    this.scrollToTopOfPage();
-
-    let data = {
-      "title": this.ProjectService.getNodePositionAndTitleByNodeId(this.nodeId)
+    const data = {
+      title: this.ProjectService.getNodePositionAndTitleByNodeId(this.nodeId)
     };
-
     if (this.ProjectService.isGroupNode(this.nodeId)) {
       this.saveEvent('activityViewOpened', 'Navigation', data);
     } else {
       this.saveEvent('stepViewOpened', 'Navigation', data);
     }
+    this.scrollToTopOfPage();
   }
 
   /**
@@ -586,10 +506,7 @@ class NodeAuthoringController {
    */
   populateBranchAuthoring() {
     if (this.node.transitionLogic != null) {
-      // clear the create branch branches so we can populate them again
       this.createBranchBranches = [];
-
-      // get the number of branches
       if (this.node.transitionLogic.transitions != null) {
         this.createBranchNumberOfBranches = this.node.transitionLogic.transitions.length;
       } else {
@@ -597,108 +514,69 @@ class NodeAuthoringController {
       }
 
       for (let t = 0; t < this.node.transitionLogic.transitions.length; t++) {
-        let transition = this.node.transitionLogic.transitions[t];
+        const transition = this.node.transitionLogic.transitions[t];
+        const branch = {
+          number: t + 1   // set the branch number for display purposes
+        };
 
-        if (transition != null) {
+        /*
+          * set the mapping of all the ids to order for use when choosing which items are
+          * in the branch path
+          */
+        branch.items = this.authoringViewGetBranchItems();
+        branch.checkedItemsInBranchPath = [];
+        branch.transition = transition;
+        this.createBranchBranches.push(branch);
+        let criteria = transition.criteria;
+        if (criteria != null) {
+          for (let criterion of criteria) {
+            let name = criterion.name;
+            let params = criterion.params;
+            if (params != null) {
+              this.createBranchNodeId = params.nodeId;
+              this.createBranchComponentId = params.componentId;
+            }
+            if (name === 'score') {
+              this.createBranchCriterion = 'score';
+              if (params != null && params.scores != null) {
+                branch.scores = params.scores;
+              }
+            } else if (name === 'choiceChosen') {
+              this.createBranchCriterion = 'choiceChosen';
+              if (params != null && params.choiceIds != null && params.choiceIds.length > 0) {
+                branch.choiceId = params.choiceIds[0];
+              }
 
-          // create a branch object to hold all the related information for that branch
-          let branch = {};
-
-          // set the branch number for display purposes
-          branch.number = t + 1;
-
-          /*
-           * set the mapping of all the ids to order for use when choosing which items are
-           * in the branch path
-           */
-          branch.items = this.authoringViewGetBranchItems();
-
-          // an array that will hold all the checked items in the branch path
-          branch.checkedItemsInBranchPath = [];
-
-          // set the transition into the branch so we can access it easily later
-          branch.transition = transition;
-
-          // add the branch to the array of branches
-          this.createBranchBranches.push(branch);
-
-          // get the transition criteria
-          let criteria = transition.criteria;
-
-          if (criteria != null) {
-            for (let criterion of criteria) {
-              if (criterion != null) {
-                let name = criterion.name;
-                let params = criterion.params;
-
-                if (params != null) {
-                  // get the node id and component id params if any
-                  this.createBranchNodeId = params.nodeId;
-                  this.createBranchComponentId = params.componentId;
-                }
-
-                if (name == 'score') {
-                  // this is a score criteria
-
-                  // set the branch criterion to score
-                  this.createBranchCriterion = 'score';
-
-                  if (params != null && params.scores != null) {
-                    // set the scores into the branch object
-                    branch.scores = params.scores;
-                  }
-                } else if (name == 'choiceChosen') {
-                  // this is a choice chosen criteria
-
-                  // set the branch criterion to choice chosen
-                  this.createBranchCriterion = 'choiceChosen';
-
-                  if (params != null && params.choiceIds != null && params.choiceIds.length > 0) {
-                    // set the choice id into the branch object
-                    branch.choiceId = params.choiceIds[0];
-                  }
-
-                  // get the choices from the component
-                  let choices = this.ProjectService.getChoicesByNodeIdAndComponentId(this.createBranchNodeId, this.createBranchComponentId);
-
-                  if (choices != null) {
-                    // set the choices into the branch object
-                    branch.choices = this.UtilService.makeCopyOfJSONObject(choices);
-                  }
+              if (this.createBranchNodeId && this.createBranchComponentId) {
+                const choices = this.ProjectService.getChoicesByNodeIdAndComponentId(this.createBranchNodeId, this.createBranchComponentId);
+                if (choices != null) {
+                  branch.choices = this.UtilService.makeCopyOfJSONObject(choices);
                 }
               }
             }
           }
+        }
 
-          // get the node ids in the branch path
-          let nodeIdsInBranch = this.ProjectService.getNodeIdsInBranch(this.nodeId, transition.to);
-          for (let nodeId of nodeIdsInBranch) {
-            let item = branch.items[nodeId];
-            if (item != null) {
-              // make the item checked
-              item.checked = true;
-
-              // add the item to the array of checked items in this branch path
-              branch.checkedItemsInBranchPath.push(item);
-            }
+        let nodeIdsInBranch = this.ProjectService.getNodeIdsInBranch(this.nodeId, transition.to);
+        for (let nodeId of nodeIdsInBranch) {
+          let item = branch.items[nodeId];
+          if (item != null) {
+            item.checked = true;
+            branch.checkedItemsInBranchPath.push(item);
           }
+        }
 
-          // set the node ids in branch array into the branch object
-          branch.nodeIdsInBranch = nodeIdsInBranch;
+        branch.nodeIdsInBranch = nodeIdsInBranch;
 
-          if (nodeIdsInBranch.length > 0) {
-            // get the last node id in the branch path
-            let lastNodeIdInBranch = nodeIdsInBranch[nodeIdsInBranch.length - 1];
-
-            if (lastNodeIdInBranch != null) {
-              let transitionsFromLastNode = this.ProjectService
-                  .getTransitionsByFromNodeId(lastNodeIdInBranch);
-              if (transitionsFromLastNode != null &&
-                  transitionsFromLastNode.length > 0) {
-                let transition = transitionsFromLastNode[0];
-                if (transition != null) {
-                  this.createBranchMergePointNodeId = transition.to;
-                }
+        if (nodeIdsInBranch.length > 0) {
+          let lastNodeIdInBranch = nodeIdsInBranch[nodeIdsInBranch.length - 1];
+          if (lastNodeIdInBranch != null) {
+            let transitionsFromLastNode = this.ProjectService
+                .getTransitionsByFromNodeId(lastNodeIdInBranch);
+            if (transitionsFromLastNode != null && transitionsFromLastNode.length > 0) {
+              let transition = transitionsFromLastNode[0];
+              if (transition != null) {
+                this.createBranchMergePointNodeId = transition.to;
               }
             }
           }
@@ -711,19 +589,14 @@ class NodeAuthoringController {
          * so we will look at the howToChooseAmongAvailablePaths field
          */
         if (this.node.transitionLogic.howToChooseAmongAvailablePaths == 'workgroupId') {
-          // set the branch criterion to workgroup id
           this.createBranchCriterion = 'workgroupId';
         } else if (this.node.transitionLogic.howToChooseAmongAvailablePaths == 'random') {
-          // set the branch criterion to random
           this.createBranchCriterion = 'random';
         }
       }
     }
   }
 
-  /**
-   * Launch VLE with this current step as the initial step
-   */
   previewStepInNewWindow() {
     const data = { 'constraints': true };
     this.saveEvent('stepPreviewed', 'Navigation', data);
@@ -731,9 +604,6 @@ class NodeAuthoringController {
         `#!/project/${this.projectId}/${this.nodeId}`);
   };
 
-  /**
-   * Launch VLE with this current step as the initial step without constraints
-   */
   previewStepWithoutConstraintsInNewWindow() {
     const data = { 'constraints': false };
     this.saveEvent('stepPreviewed', 'Navigation', data);
@@ -741,9 +611,6 @@ class NodeAuthoringController {
         `?constraints=false#!/project/${this.projectId}/${this.nodeId}`);
   };
 
-  /**
-   * Close the node authoring view
-   */
   close() {
     this.$scope.$broadcast('exitNode', {nodeToExit: this.node});
     this.TeacherDataService.setCurrentNode(null);
@@ -756,26 +623,6 @@ class NodeAuthoringController {
    */
   showSaveErrorAdvancedAuthoring() {
     alert(this.$translate('saveErrorAdvancedAuthoring'));
-  }
-
-  /**
-   * The author has clicked the cancel button which will revert all
-   * the recent changes since they opened the node.
-   */
-  cancel() {
-    // check if the user has made any changes
-    if (!angular.equals(this.node, this.originalNodeCopy)) {
-      // the user has made changes
-      if (confirm(this.$translate('confirmUndo'))) {
-        // revert the node back to the previous version
-        this.ProjectService.replaceNode(this.nodeId, this.originalNodeCopy);
-        this.ProjectService.saveProject();
-        this.close();
-      }
-    } else {
-      // the user has not made any changes, so close the node authoring view
-      this.close();
-    }
   }
 
   /**
@@ -823,48 +670,30 @@ class NodeAuthoringController {
         this.node.transitionLogic.maxPathsVisitable = 1;
       }
     }
-    // save changes
     this.authoringViewNodeChanged();
   }
 
-  /**
-   * The transition to node id has changed so need to recalculate the step
-   * numbers
-   */
   authoringViewTransitionToNodeIdChanged() {
-    /*
-     * update the node numbers now that a step has been added to a branch path
-     * e.g. if this is a branching step that is called
-     * 1.5 B View the Potential Energy
-     * then the node number is 1.5 B
-    */
     this.ProjectService.calculateNodeNumbers();
-
-    // save changes
     this.authoringViewNodeChanged();
   }
 
-  /**
-   * Add a new transition criteria for the specified transition.
-   */
   addNewTransitionCriteria(transition) {
-    let nodeTransitions = this.node.transitionLogic.transitions;
-    for (let nodeTransition of nodeTransitions) {
+    for (const nodeTransition of this.node.transitionLogic.transitions) {
       if (nodeTransition == transition) {
         if (nodeTransition.criteria == null) {
           nodeTransition.criteria = [];
         }
-        let newTransitionCriteria = {
-          "name":"",
-          "params": {
-            "nodeId": "",
-            "componentId": ""
+        const newTransitionCriteria = {
+          name: '',
+          params: {
+            nodeId: '',
+            componentId: ''
           }
         };
         nodeTransition.criteria.push(newTransitionCriteria);
       }
     }
-    // save changes
     this.authoringViewNodeChanged();
   }
 
@@ -875,19 +704,12 @@ class NodeAuthoringController {
    */
   transitionCriteriaNodeIdChanged(transitionCriteria) {
     if (transitionCriteria!= null && transitionCriteria.params != null) {
-      // remember the node id
       let nodeId = transitionCriteria.params.nodeId;
-
-      // clear the params
       transitionCriteria.params = {};
-
       if (nodeId != null) {
-        // set the node id back into the params
         transitionCriteria.params.nodeId = nodeId;
       }
     }
-
-    // save the node
     this.authoringViewNodeChanged();
   }
 
@@ -898,25 +720,16 @@ class NodeAuthoringController {
    */
   transitionCriteriaComponentIdChanged(transitionCriteria) {
     if (transitionCriteria!= null && transitionCriteria.params != null) {
-      // remember the node id and component id
       let nodeId = transitionCriteria.params.nodeId;
       let componentId = transitionCriteria.params.componentId;
-
-      // clear the params
       transitionCriteria.params = {};
-
       if (nodeId != null) {
-        // set the node id back into the params
         transitionCriteria.params.nodeId = nodeId;
       }
-
       if (componentId != null) {
-        // set the component id back into the params
         transitionCriteria.params.componentId = componentId;
       }
     }
-
-    // save the node
     this.authoringViewNodeChanged();
   }
 
@@ -946,80 +759,37 @@ class NodeAuthoringController {
         this.node.transitionLogic.canChangePath = null;
         this.node.transitionLogic.maxPathsVisitable = null;
       }
-      // save changes
       this.authoringViewNodeChanged();
     }
   }
 
-  /**
-   * Save transitions for this node
-   */
   saveTransitions() {
     this.ProjectService.saveProject();
     this.showEditTransitions = false;
   }
 
-  /**
-   * The add component button was clicked
-   */
   addComponentButtonClicked() {
-    // select the first component type by default
     this.selectedComponent = this.componentTypes[0].componentType;
-
-    // show the add component UI elements
     this.nodeAuthoringViewButtonClicked('addComponent');
-
-    // turn on add component mode
     this.turnOnAddComponentMode();
-
-    // turn on the move component mode
     this.turnOffMoveComponentMode();
-
-    // turn on the insert component mode
     this.turnOnInsertComponentMode();
-
-    // hide the component authoring
     this.hideComponentAuthoring();
   }
 
-  /**
-   * Delete the component from this node
-   * @param componentId the component id
-   */
   deleteComponent(componentId) {
     if (confirm(this.$translate('confirmDeleteComponent'))) {
-      // delete the component from the node
       this.ProjectService.deleteComponent(this.nodeId, componentId);
-
-      // check if we need to show the node save or node submit buttons
       this.checkIfNeedToShowNodeSaveOrNodeSubmitButtons();
       this.ProjectService.saveProject();
     }
   }
 
-  /**
-   * Hide the save button in all the components
-   * TODO refactor too much nesting
-   */
   hideAllComponentSaveButtons() {
-    let components = this.components;
-    if (components != null) {
-      for (let component of components) {
-        if (component != null) {
-          let componentType = component.type;
-
-          // get the service for the component type
-          let service = this.$injector.get(componentType + 'Service');
-          if (service != null) {
-            if (service.componentUsesSaveButton()) {
-              /*
-               * this component uses a save button so we will hide
-               * it
-               */
-              component.showSaveButton = false;
-            }
-          }
-        }
+    for (const component of this.components) {
+      const service = this.$injector.get(component.type + 'Service');
+      if (service.componentUsesSaveButton()) {
+        component.showSaveButton = false;
       }
     }
   }
@@ -1030,46 +800,27 @@ class NodeAuthoringController {
    * significant changes such as branch paths
    */
   authoringViewNodeChanged(parseProject) {
-    // put the previous version of the node on to the undo stack
     this.undoStack.push(this.currentNodeCopy);
-
-    // update the current node copy
     this.currentNodeCopy = this.UtilService.makeCopyOfJSONObject(this.node);
-
     if (parseProject) {
-      // refresh the project
       this.ProjectService.parseProject();
       this.items = this.ProjectService.idToOrder;
     }
-
     return this.ProjectService.saveProject();
   }
 
-  /**
-   * Undo the last change by reverting the node to the previous version
-   */
   undo() {
     if (this.undoStack.length === 0) {
-      // the undo stack is empty so there are no changes to undo
       alert(this.$translate('noUndoAvailable'));
     } else if (this.undoStack.length > 0) {
-      // the undo stack has elements
-
       if (confirm(this.$translate('confirmUndoLastChange'))) {
-        // perform any node cleanup if necessary
         this.$scope.$broadcast('exitNode', {nodeToExit: this.node});
-
-        // get the previous version of the node
-        let nodeCopy = this.undoStack.pop();
-
-        // revert the node back to the previous version
-        this.ProjectService.replaceNode(this.nodeId, nodeCopy);
-
+        const nodePreviousVersion = this.undoStack.pop();
+        this.ProjectService.replaceNode(this.nodeId, nodePreviousVersion);
         this.node = this.ProjectService.getNodeById(this.nodeId);
         this.components = this.ProjectService.getComponentsByNodeId(this.nodeId);
         this.ProjectService.saveProject();
       }
-
     }
   }
 
@@ -1079,22 +830,12 @@ class NodeAuthoringController {
    * @return the params for the given removal criteria name
    */
   getRemovalCriteriaParamsByName(name) {
-    let params = [];
-    if (name != null) {
-      for (let singleRemovalCriteria of this.removalCriteria) {
-        if (singleRemovalCriteria != null) {
-          if (singleRemovalCriteria.value == name) {
-            /*
-             * we have found the removal criteria we are looking for
-             * so we will get its params
-             */
-            params = singleRemovalCriteria.params;
-            break;
-          }
-        }
+    for (const singleRemovalCriteria of this.removalCriteria) {
+      if (singleRemovalCriteria.value === name) {
+        return singleRemovalCriteria.params;
       }
     }
-    return params;
+    return [];
   }
 
   /**
@@ -1103,21 +844,12 @@ class NodeAuthoringController {
    * @return the params for the given transition criteria name
    */
   getTransitionCriteriaParamsByName(name) {
-    let params = [];
-    if (name != null) {
-      for (let singleTransitionCriteria of this.transitionCriterias) {
-        if (singleTransitionCriteria != null &&
-            singleTransitionCriteria.value == name) {
-          /*
-           * we have found the removal criteria we are looking for
-           * so we will get its params
-           */
-          params = singleTransitionCriteria.params;
-          break;
-        }
+    for (const singleTransitionCriteria of this.transitionCriterias) {
+      if (singleTransitionCriteria.value === name) {
+        return singleTransitionCriteria.params;
       }
     }
-    return params;
+    return [];
   }
 
   /**
@@ -1138,8 +870,7 @@ class NodeAuthoringController {
    */
   getChoiceTypeByNodeIdAndComponentId(nodeId, componentId) {
     let choiceType = null;
-    let component = this.ProjectService
-        .getComponentByNodeIdAndComponentId(nodeId, componentId);
+    let component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
     if (component != null && component.choiceType != null) {
       choiceType = component.choiceType;
     }
@@ -1164,24 +895,12 @@ class NodeAuthoringController {
         }
       }
     }
-
-    // counter used for finding a constraint id that hasn't been used yet
     let constraintCounter = 1;
-
-    // loop until we have found an unused constraint id
     while (newNodeConstraintId == null) {
-      // create a potential constraint id
       let potentialNewNodeConstraintId = nodeId + 'Constraint' + constraintCounter;
-
-      // check if the constraint id has been used already
       if (usedConstraintIds.indexOf(potentialNewNodeConstraintId) == -1) {
-        // the constraint id has not been used so we can use it
         newNodeConstraintId = potentialNewNodeConstraintId;
       } else {
-        /*
-         * the constraint id has been used so we will increment the
-         * counter to try another contraint id
-         */
         constraintCounter++;
       }
     }
@@ -1193,84 +912,54 @@ class NodeAuthoringController {
    * @return The id of the DOM element associated with the constraint.
    */
   addConstraint() {
-    // get a new constraint id
-    let newNodeConstraintId = this.getNewNodeConstraintId(this.nodeId);
-
-    // create the constraint object
-    let constraint = {
-      "id": newNodeConstraintId,
-      "action": '',
-      "targetId": this.nodeId,
-      "removalConditional": 'any',
-      "removalCriteria": []
+    const newNodeConstraintId = this.getNewNodeConstraintId(this.nodeId);
+    const constraint = {
+      id: newNodeConstraintId,
+      action: '',
+      targetId: this.nodeId,
+      emovalConditional: 'any',
+      removalCriteria: []
     };
 
-    // create a removal criteria
-    let removalCriteria = {
-      "name": '',
-      "params": {}
+    const removalCriteria = {
+      name: '',
+      params: {}
     };
 
-    // add the removal criteria to the constraint
     constraint.removalCriteria.push(removalCriteria);
-
-    // create the constraints array if it does not exist
     if (this.node.constraints == null) {
       this.node.constraints = [];
     }
     this.node.constraints.push(constraint);
     this.ProjectService.saveProject();
-
     return newNodeConstraintId;
   }
 
-  /**
-   * Add a new constraint and then scroll to the bottom of the screen because
-   * that's where the new constraint will appear.
-   */
   addConstraintAndScrollToBottom() {
-    let newNodeConstraintId = this.addConstraint();
+    const newNodeConstraintId = this.addConstraint();
     this.$timeout(() => {
-      this.$rootScope.$broadcast('scrollToBottom');
+      this.$rootScope.$broadcast('scrollToBottom'); // this is where the new constraint appears
       this.UtilService.temporarilyHighlightElement(newNodeConstraintId);
     });
   }
 
-  /**
-   * Delete a constraint
-   * @param constraintIndex delete the constraint at the index
-   */
   deleteConstraint(constraintIndex) {
-    let answer = confirm(this.$translate('areYouSureYouWantToDeleteThisConstraint'));
-    if (answer) {
-      if (constraintIndex != null) {
-        let node = this.ProjectService.getNodeById(this.nodeId);
-        if (node != null) {
-          let constraints = node.constraints;
-          if (constraints != null) {
-            // remove the constraint at the given index
-            constraints.splice(constraintIndex, 1);
-          }
-        }
+    if (confirm(this.$translate('areYouSureYouWantToDeleteThisConstraint'))) {
+      const node = this.ProjectService.getNodeById(this.nodeId);
+      const constraints = node.constraints;
+      if (constraints != null) {
+        constraints.splice(constraintIndex, 1);
       }
       this.ProjectService.saveProject();
     }
   }
 
-  /**
-   * Add a removal criteria
-   * @param constraint add the removal criteria to this constraint
-   */
   addRemovalCriteria(constraint) {
-    if (constraint != null) {
-      // create the removal criteria
-      let removalCriteria = {
-        "name": '',
-        "params": {}
-      };
-      // add the removal criteria to the constraint
-      constraint.removalCriteria.push(removalCriteria);
-    }
+    const removalCriteria = {
+      name: '',
+      params: {}
+    };
+    constraint.removalCriteria.push(removalCriteria);
     this.ProjectService.saveProject();
   }
 
@@ -1280,15 +969,10 @@ class NodeAuthoringController {
    * @param removalCriteriaIndex the index of the removal criteria to remove
    */
   deleteRemovalCriteria(constraint, removalCriteriaIndex) {
-    let answer = confirm(this.$translate('areYouSureYouWantToDeleteThisRemovalCriteria'));
-    if (answer) {
-      if (constraint != null) {
-        // get all the removal criteria
-        let removalCriteria = constraint.removalCriteria;
-        if (removalCriteria != null) {
-          // remove the single removal criteria
-          removalCriteria.splice(removalCriteriaIndex, 1);
-        }
+    if (confirm(this.$translate('areYouSureYouWantToDeleteThisRemovalCriteria'))) {
+      const removalCriteria = constraint.removalCriteria;
+      if (removalCriteria != null) {
+        removalCriteria.splice(removalCriteriaIndex, 1);
       }
       this.ProjectService.saveProject();
     }
@@ -1300,15 +984,10 @@ class NodeAuthoringController {
    * @param removalCriteriaIndex the index of the removal criteria to remove
    */
   deleteTransitionCriteria(transition, transitionCriteriaIndex) {
-    let answer = confirm(this.$translate('areYouSureYouWantToDeleteThisRequirement'));
-    if (answer) {
-      if (transition != null) {
-        // get all the transition criteria
-        let transitionCriterias = transition.criteria;
-        if (transitionCriterias != null) {
-          // remove the single transition criteria
-          transitionCriterias.splice(transitionCriteriaIndex, 1);
-        }
+    if (confirm(this.$translate('areYouSureYouWantToDeleteThisRequirement'))) {
+      const transitionCriterias = transition.criteria;
+      if (transitionCriterias != null) {
+        transitionCriterias.splice(transitionCriteriaIndex, 1);
       }
       this.ProjectService.saveProject();
     }
@@ -1320,28 +999,18 @@ class NodeAuthoringController {
    * TODO refactor too many nesting
    */
   removalCriteriaNameChanged(criteria) {
-    if (criteria != null) {
-      // clear the params
-      criteria.params = {};
-
-      // get the params for the given criteria name
-      let params = this.getRemovalCriteriaParamsByName(criteria.name);
-      if (params != null) {
-        for (let paramObject of params) {
-          if (paramObject != null) {
-            let value = paramObject.value;
-
-            if (paramObject.hasOwnProperty('defaultValue')) {
-              criteria.params[value] = paramObject.defaultValue;
-            } else {
-              criteria.params[value] = '';
-            }
-
-            if (value == 'nodeId') {
-              // default the node id param to this node
-              criteria.params[value] = this.nodeId;
-            }
-          }
+    criteria.params = {};
+    const params = this.getRemovalCriteriaParamsByName(criteria.name);
+    if (params != null) {
+      for (const paramObject of params) {
+        const value = paramObject.value;
+        if (paramObject.hasOwnProperty('defaultValue')) {
+          criteria.params[value] = paramObject.defaultValue;
+        } else {
+          criteria.params[value] = '';
+        }
+        if (value === 'nodeId') {
+          criteria.params[value] = this.nodeId;
         }
       }
     }
@@ -1354,38 +1023,24 @@ class NodeAuthoringController {
    * @param transitionCriteria the transition criteria object
    */
   transitionCriteriaNameChanged(transitionCriteria) {
-    if (transitionCriteria != null) {
-      let nodeId = null;
-      let componentId = null;
-
-      if (transitionCriteria.params != null) {
-        // remember the node id and component id
-        nodeId = transitionCriteria.params.nodeId;
-        componentId = transitionCriteria.params.componentId;
-      }
-
-      // clear the params
-      transitionCriteria.params = {};
-
-      if (nodeId != null) {
-        // set the node id back into the params
-        transitionCriteria.params.nodeId = nodeId;
-      }
-
-      if (componentId != null) {
-        // set the component id back into the params
-        transitionCriteria.params.componentId = componentId;
-      }
+    let nodeId = null;
+    let componentId = null;
+    if (transitionCriteria.params != null) {
+      nodeId = transitionCriteria.params.nodeId;
+      componentId = transitionCriteria.params.componentId;
+    }
+    transitionCriteria.params = {};
+    if (nodeId != null) {
+      transitionCriteria.params.nodeId = nodeId;
+    }
+    if (componentId != null) {
+      transitionCriteria.params.componentId = componentId;
     }
     this.authoringViewNodeChanged();
   }
 
-  /**
-   * A button to author a specific view of the node was clicked
-   * @param view the view name
-   */
   nodeAuthoringViewButtonClicked(view) {
-    if (view == 'addComponent') {
+    if (view === 'addComponent') {
       // toggle the add component view and hide all the other views
       this.showCreateComponent = !this.showCreateComponent;
       this.showGeneralAdvanced = false;
@@ -1400,7 +1055,7 @@ class NodeAuthoringController {
       this.showComponents = true;
       this.showJSON = false;
       this.UtilService.hideJSONValidMessage();
-    } else if (view == 'generalAdvanced') {
+    } else if (view === 'generalAdvanced') {
       // toggle the edit transitions view and hide all the other views
       this.showCreateComponent = false;
       this.showGeneralAdvanced = !this.showGeneralAdvanced;
@@ -1415,7 +1070,7 @@ class NodeAuthoringController {
       this.showComponents = false;
       this.showJSON = false;
       this.UtilService.hideJSONValidMessage();
-    } else if (view == 'editTransitions') {
+    } else if (view === 'editTransitions') {
       // toggle the edit transitions view and hide all the other views
       this.showCreateComponent = false;
       this.showGeneralAdvanced = false;
@@ -1430,7 +1085,7 @@ class NodeAuthoringController {
       this.showComponents = false;
       this.showJSON = false;
       this.UtilService.hideJSONValidMessage();
-    } else if (view == 'editConstraints') {
+    } else if (view === 'editConstraints') {
       // toggle the edit constraints view and hide all the other views
       this.showCreateComponent = false;
       this.showGeneralAdvanced = false;
@@ -1445,7 +1100,7 @@ class NodeAuthoringController {
       this.showComponents = false;
       this.showJSON = false;
       this.UtilService.hideJSONValidMessage();
-    } else if (view == 'editButtons') {
+    } else if (view === 'editButtons') {
       // toggle the edit buttons view and hide all the other views
       this.showCreateComponent = false;
       this.showGeneralAdvanced = false;
@@ -1459,7 +1114,7 @@ class NodeAuthoringController {
       this.showStepButtons = false;
       this.showJSON = false;
       this.UtilService.hideJSONValidMessage();
-    } else if (view == 'editRubric') {
+    } else if (view === 'editRubric') {
       // toggle the edit buttons view and hide all the other views
       this.showCreateComponent = false;
       this.showGeneralAdvanced = false;
@@ -1474,7 +1129,7 @@ class NodeAuthoringController {
       this.showComponents = false;
       this.showJSON = false;
       this.UtilService.hideJSONValidMessage();
-    } else if (view == 'createBranch') {
+    } else if (view === 'createBranch') {
       // toggle the edit buttons view and hide all the other views
       this.showCreateComponent = false;
       this.showGeneralAdvanced = false;
@@ -1489,7 +1144,7 @@ class NodeAuthoringController {
       this.showComponents = false;
       this.showJSON = false;
       this.UtilService.hideJSONValidMessage();
-    } else if (view == 'previousNode') {
+    } else if (view === 'previousNode') {
       // hide all the other views
       this.showCreateComponent = false;
       this.showGeneralAdvanced = false;
@@ -1511,7 +1166,7 @@ class NodeAuthoringController {
         let thereIsNoPreviousStep = this.$translate('thereIsNoPreviousStep');
         alert(thereIsNoPreviousStep);
       }
-    } else if (view == 'nextNode') {
+    } else if (view === 'nextNode') {
       // hide all the other views
       this.showCreateComponent = false;
       this.showGeneralAdvanced = false;
@@ -1533,7 +1188,7 @@ class NodeAuthoringController {
         let thereIsNoNextStep = this.$translate('thereIsNoNextStep');
         alert(thereIsNoNextStep);
       }
-    } else if (view == 'advanced') {
+    } else if (view === 'advanced') {
       // toggle the advanced view and hide all the other views
       this.showCreateComponent = false;
       this.showGeneralAdvanced = false;
@@ -1548,7 +1203,7 @@ class NodeAuthoringController {
       this.showComponents = false;
       this.showJSON = false;
       this.UtilService.hideJSONValidMessage();
-    } else if (view == 'copy') {
+    } else if (view === 'copy') {
       // toggle the copy view and hide all the other views
       this.showCreateComponent = false;
       this.showGeneralAdvanced = false;
@@ -1563,7 +1218,7 @@ class NodeAuthoringController {
       this.showComponents = true;
       this.showJSON = false;
       this.UtilService.hideJSONValidMessage();
-    } else if (view == 'move') {
+    } else if (view === 'move') {
       // toggle the move view and hide all the other views
       this.showCreateComponent = false;
       this.showGeneralAdvanced = false;
@@ -1578,7 +1233,7 @@ class NodeAuthoringController {
       this.showComponents = true;
       this.showJSON = false;
       this.UtilService.hideJSONValidMessage();
-    } else if (view == 'import') {
+    } else if (view === 'import') {
       // toggle the import view and hide all the other views
       this.showCreateComponent = false;
       this.showGeneralAdvanced = false;
@@ -1593,7 +1248,7 @@ class NodeAuthoringController {
       this.showComponents = true;
       this.showJSON = false;
       this.UtilService.hideJSONValidMessage();
-    } else if (view == 'showJSON') {
+    } else if (view === 'showJSON') {
       // toggle the import view and hide all the other views
       this.showCreateComponent = false;
       this.showGeneralAdvanced = false;
@@ -1645,7 +1300,7 @@ class NodeAuthoringController {
     try {
       angular.fromJson(this.authoringNodeContentJSONString);
       return true;
-    } catch(e) {
+    } catch (e) {
       return false;
     }
   }
@@ -1659,11 +1314,8 @@ class NodeAuthoringController {
    * TODO refactor long function
    */
   createBranchNumberOfBranchesChanged() {
-    if (this.createBranchNumberOfBranches == 0) {
-      // the author has set the number of branch paths to 0 which is not allowed
+    if (this.createBranchNumberOfBranches === 0) {
       alert(this.$translate('errorYouCantHave0BranchPaths'));
-
-      // revert the number of branch paths value
       this.createBranchNumberOfBranches = this.createBranchBranches.length;
     } else if (this.createBranchNumberOfBranches < this.createBranchBranches.length) {
       /*
@@ -1720,11 +1372,7 @@ class NodeAuthoringController {
            * we do not have a branch object for this branch number so
            * we will create it
            */
-
-          // create the branch object
-          let branch = {};
-
-          // set the branch number
+          const branch = {};
           branch.number = b + 1;
 
           /*
@@ -1732,63 +1380,43 @@ class NodeAuthoringController {
            * in the branch path
            */
           branch.items = this.authoringViewGetBranchItems();
-
-          // add the branch to the array of branches
           this.createBranchBranches.push(branch);
-
-          // create a transition to represent the branch
           let transition = {};
-
-          if (this.createBranchCriterion == 'score') {
-            // the branch is based on score
-
-            // create a score criterion
+          if (this.createBranchCriterion === 'score') {
             let criterion = {
               "name": this.createBranchCriterion,
               "params": {
                 "scores": []
               }
             };
-
             if (this.createBranchNodeId != null) {
-              // set the node for which to look for the score
               criterion.params.nodeId = this.createBranchNodeId;
             }
-
             if (this.createBranchComponentId != null) {
-              // set the component for which to look for the score
               criterion.params.componentId = this.createBranchComponentId;
             }
-
             transition.criteria = [criterion];
-          } else if (this.createBranchCriterion == 'choiceChosen') {
-            // the branch is based on choice chosen
+          } else if (this.createBranchCriterion === 'choiceChosen') {
             let criterion = {};
             criterion.name = this.createBranchCriterion;
             criterion.params = {};
             criterion.params.choiceIds = [];
 
             if (this.createBranchNodeId != null) {
-              // set the node for which to look for the score
               criterion.params.nodeId = this.createBranchNodeId;
             }
 
             if (this.createBranchComponentId != null) {
-              // set the component for which to look for the score
               criterion.params.componentId = this.createBranchComponentId;
             }
-
             transition.criteria = [criterion];
-          } else if (this.createBranchCriterion == 'workgroupId') {
+          } else if (this.createBranchCriterion === 'workgroupId') {
             // workgroup id branching does not require a transition criterion
-          } else if (this.createBranchCriterion == 'random') {
+          } else if (this.createBranchCriterion === 'random') {
             // random branching does not require a transition criterion
           }
 
-          // add the transition
           this.node.transitionLogic.transitions.push(transition);
-
-          // save a reference to the transition in the branch
           branch.transition = transition;
         }
       }
@@ -1796,32 +1424,25 @@ class NodeAuthoringController {
     this.authoringViewNodeChanged();
   }
 
-  /**
-   * The branch criterion has changed
-   */
   createBranchCriterionChanged() {
     if (this.createBranchCriterion != null) {
       let nodeId = this.node.id;
-      if (this.createBranchCriterion == 'workgroupId') {
-        // the branch is based on workgroup id
+      if (this.createBranchCriterion === 'workgroupId') {
         this.ProjectService.setTransitionLogicField(nodeId, 'howToChooseAmongAvailablePaths', 'workgroupId');
         this.ProjectService.setTransitionLogicField(nodeId, 'whenToChoosePath', 'enterNode');
         this.ProjectService.setTransitionLogicField(nodeId, 'canChangePath', false);
         this.ProjectService.setTransitionLogicField(nodeId, 'maxPathsVisitable', 1);
-      } else if (this.createBranchCriterion == 'score') {
-        // the branch is based on score
+      } else if (this.createBranchCriterion === 'score') {
         this.ProjectService.setTransitionLogicField(nodeId, 'howToChooseAmongAvailablePaths', 'random');
         this.ProjectService.setTransitionLogicField(nodeId, 'whenToChoosePath', 'studentDataChanged');
         this.ProjectService.setTransitionLogicField(nodeId, 'canChangePath', false);
         this.ProjectService.setTransitionLogicField(nodeId, 'maxPathsVisitable', 1);
-      } else if (this.createBranchCriterion == 'choiceChosen') {
-        // the branch is based on choice chosen
+      } else if (this.createBranchCriterion === 'choiceChosen') {
         this.ProjectService.setTransitionLogicField(nodeId, 'howToChooseAmongAvailablePaths', 'random');
         this.ProjectService.setTransitionLogicField(nodeId, 'whenToChoosePath', 'studentDataChanged');
         this.ProjectService.setTransitionLogicField(nodeId, 'canChangePath', false);
         this.ProjectService.setTransitionLogicField(nodeId, 'maxPathsVisitable', 1);
-      } else if (this.createBranchCriterion == 'random') {
-        // the branch is based on random assignment
+      } else if (this.createBranchCriterion === 'random') {
         this.ProjectService.setTransitionLogicField(nodeId, 'howToChooseAmongAvailablePaths', 'random');
         this.ProjectService.setTransitionLogicField(nodeId, 'whenToChoosePath', 'enterNode');
         this.ProjectService.setTransitionLogicField(nodeId, 'canChangePath', false);
@@ -1837,9 +1458,6 @@ class NodeAuthoringController {
     this.authoringViewNodeChanged();
   }
 
-  /**
-   * The create branch node id has changed
-   */
   createBranchNodeIdChanged() {
     this.createBranchComponentId = null;
     let selectedNode = this.ProjectService.getNodeById(this.createBranchNodeId);
@@ -1862,14 +1480,9 @@ class NodeAuthoringController {
      * fields for the given branch criterion
      */
     this.createBranchUpdateTransitions();
-
-    // save the project
     this.authoringViewNodeChanged();
   }
 
-  /**
-   * The create branch component id has changed
-   */
   createBranchComponentIdChanged() {
 
     /*
@@ -1877,8 +1490,6 @@ class NodeAuthoringController {
      * fields for the given branch criterion
      */
     this.createBranchUpdateTransitions();
-
-    // save the project
     this.authoringViewNodeChanged();
   }
 
@@ -1890,16 +1501,10 @@ class NodeAuthoringController {
     for (let b = 0; b < this.createBranchBranches.length; b++) {
       let branch = this.createBranchBranches[b];
       if (branch != null) {
-        // get the transition corresponding to the branch
         let transition = branch.transition;
         if (transition != null) {
           if (this.createBranchCriterion == 'choiceChosen') {
-            // we are branching based on choice chosen
-
-            // clear the criteria array
             transition.criteria = [];
-
-            // create a new choice chosen criterion
             let criterion = {
               "name": 'choiceChosen',
               "params": {
@@ -1908,8 +1513,6 @@ class NodeAuthoringController {
                 "choiceIds": []
               }
             };
-
-            // add the criterion to the array of criteria
             transition.criteria.push(criterion);
 
             /*
@@ -1924,12 +1527,7 @@ class NodeAuthoringController {
              */
             branch.scores = null;
           } else if (this.createBranchCriterion == 'score') {
-            // we are branching based on score
-
-            // clear the criteria array
             transition.criteria = [];
-
-            // create a new score criterion
             let criterion = {
               "name": 'score',
               "params": {
@@ -1941,27 +1539,17 @@ class NodeAuthoringController {
 
             // re-use scores if available
 
-            // add the criterion to the array of criteria
             transition.criteria.push(criterion);
 
-            /*
-             * clear the choice id since we don't need it in score
-             * branching
-             */
+            // clear the choice id since we don't need it in score branching
             branch.choiceId = null;
-
-            // set the scores into the branch object
             branch.scores = criterion.params.scores;
           } else if (this.createBranchCriterion == 'workgroupId') {
-            // we are branching based on workgroup id
-
             /*
              * remove the criteria array since it is not used for
              * branching based on workgroup id
              */
             delete transition['criteria'];
-
-            // clear the node id and component id
             this.createBranchNodeId = null;
             this.createBranchComponentId = null;
 
@@ -2012,11 +1600,9 @@ class NodeAuthoringController {
   createBranchUpdateChoiceChosenIds() {
     let nodeId = this.createBranchNodeId;
     let componentId = this.createBranchComponentId;
-    let component = this.ProjectService
-        .getComponentByNodeIdAndComponentId(nodeId, componentId);
+    let component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
     if (component != null) {
-      if (component.type == 'MultipleChoice') {
-        // populate the drop down with the choices
+      if (component.type === 'MultipleChoice') {
         this.createBranchUpdateChoiceChosenIdsHelper(component);
       }
     }
@@ -2032,13 +1618,8 @@ class NodeAuthoringController {
   createBranchUpdateChoiceChosenIdsHelper(component) {
     let nodeId = this.createBranchNodeId;
     let componentId = this.createBranchComponentId;
-
-    // get the choices from the component
     let choices = component.choices;
-
     if (choices != null) {
-
-      // loop through all the choices
       for (let c = 0; c < choices.length; c++) {
         let choice = choices[c];
         if (choice != null) {
@@ -2053,15 +1634,9 @@ class NodeAuthoringController {
           let branch = this.createBranchBranches[c];
 
           if (branch != null) {
-            // get the choice for this branch
             branch.choiceId = id;
-
-            // make a copy of the choices from the component
             branch.choices = this.UtilService.makeCopyOfJSONObject(choices);
-
-            // get the transition corresponding to the branch
             let transition = branch.transition;
-
             if (transition != null) {
 
               /*
@@ -2069,20 +1644,13 @@ class NodeAuthoringController {
                * there is only one transition criterion
                */
               let criterion = transition.criteria[0];
-
               if (criterion != null) {
-
-                // get the params
                 let params = criterion.params;
-
                 if (params != null) {
-
-                  // set the node id and component id
                   params.nodeId = nodeId;
                   params.componentId = componentId;
 
                   if (this.createBranchCriterion == 'choiceChosen') {
-                    // set the choice id
                     params.choiceIds = [];
                     params.choiceIds.push(id);
                   }
@@ -2186,29 +1754,18 @@ class NodeAuthoringController {
         let transitionLogic = node.transitionLogic;
         if (transitionLogic != null) {
           if (transitionLogic.transitions != null) {
-            // clear the transitions
             transitionLogic.transitions = [];
-
-            // make a transition to the merge point
             let transition = {};
             transition.to = this.createBranchMergePointNodeId;
-
-            // add the transition
             transitionLogic.transitions.push(transition);
           }
         }
       }
     }
 
-    // get the branch number
     let branchNumber = branch.number;
-
-    // get the node id that was clicked
     let nodeId = item.$key;
-
-    // get the transition that corresponds to the branch
     let transition = this.node.transitionLogic.transitions[branchNumber - 1];
-
     let firstNodeId = null;
 
     /*
@@ -2216,16 +1773,11 @@ class NodeAuthoringController {
      * branch path has changed
      */
     if (transition != null) {
-
-      if (checkedItemsInBranchPath.length == 0) {
-        // there are no steps in the path
+      if (checkedItemsInBranchPath.length === 0) {
         transition.to = null;
       } else {
-        // get the first step in the path
         let firstCheckedItem = checkedItemsInBranchPath[0];
-
         if (firstCheckedItem != null) {
-          // set the branch point transition to the first step in the path
           firstNodeId = firstCheckedItem.$key;
           transition.to = firstNodeId;
         }
@@ -2277,13 +1829,6 @@ class NodeAuthoringController {
       // add the branch path taken constraints
       this.ProjectService.addBranchPathTakenConstraints(itemNodeId, fromNodeId, toNodeId);
     }
-
-    /*
-     * update the node numbers now that a step has been added to a branch path
-     * e.g. if this is a branching step that is called
-     * 1.5 B View the Potential Energy
-     * then the node number is 1.5 B
-     */
     this.ProjectService.calculateNodeNumbers();
     this.authoringViewNodeChanged();
   }
@@ -2294,29 +1839,22 @@ class NodeAuthoringController {
    * TODO refactor too many nesting
    */
   createBranchScoreChanged(branch) {
-    if (branch != null) {
-      let transition = branch.transition;
-      if (transition != null) {
-        let scores = branch.scores;
-        if (scores != null) {
-          let criteria = transition.criteria;
-          if (criteria != null) {
-            // get the first criteria. we will assume there is only one criteria
-            let criterion = criteria[0];
-            if (criterion != null) {
-              // get the params of the criterion
-              let params = criterion.params;
-              if (params != null) {
-                // update the scores into the params
-                params.scores = scores;
-              }
+    let transition = branch.transition;
+    if (transition != null) {
+      let scores = branch.scores;
+      if (scores != null) {
+        let criteria = transition.criteria;
+        if (criteria != null) {
+          let criterion = criteria[0];
+          if (criterion != null) {
+            let params = criterion.params;
+            if (params != null) {
+              params.scores = scores;
             }
           }
         }
       }
     }
-
-    // save the project
     this.authoringViewNodeChanged();
   }
 
@@ -2325,33 +1863,24 @@ class NodeAuthoringController {
    * TODO refactor too many nesting
    */
   createBranchMergePointNodeIdChanged() {
-    // get the merge point node id
     let createBranchMergePointNodeId = this.createBranchMergePointNodeId;
     let branches = this.createBranchBranches;
     for (let branch of branches) {
       if (branch != null) {
-        // get the node ids in the branch path
         let nodeIdsInBranch = branch.nodeIdsInBranch;
         if (nodeIdsInBranch != null && nodeIdsInBranch.length > 0) {
-          // get the last node id in the branch path
           let lastNodeIdInBranchPath = nodeIdsInBranch[nodeIdsInBranch.length - 1];
           if (lastNodeIdInBranchPath != null) {
-            // get the last node in the branch path
             let lastNodeInBranchPath =
                 this.ProjectService.getNodeById(lastNodeIdInBranchPath);
             if (lastNodeInBranchPath != null) {
-              // get the transition logic of the last node
               let transitionLogic = lastNodeInBranchPath.transitionLogic;
               if (transitionLogic != null) {
                 if (transitionLogic.transitions != null) {
-                  // clear the transitions
                   transitionLogic.transitions = [];
-
-                  // make a new transition to the merge point
                   let transition = {
                     "to": createBranchMergePointNodeId
                   };
-                  // add the transition
                   transitionLogic.transitions.push(transition);
                 }
               }
@@ -2360,17 +1889,8 @@ class NodeAuthoringController {
         }
       }
     }
-
-    /*
-     * calculate the node numbers
-     * e.g. if the step is called
-     * 1.5 View the Potential Energy
-     * then the node number is 1.5
-     */
     this.ProjectService.calculateNodeNumbers();
-
-    // save the project
-    let parseProject = true;
+    const parseProject = true;
     this.authoringViewNodeChanged(parseProject);
   }
 
@@ -2388,22 +1908,13 @@ class NodeAuthoringController {
    */
   removeBranch() {
     for (let bp = 0; bp < this.createBranchBranches.length; bp++) {
-      // remove a branch path
-      let branchPath = this.createBranchBranches[bp];
+      const branchPath = this.createBranchBranches[bp];
       this.removeBranchPath(branchPath);
-
-      /*
-       * shift the counter back one because we have just removed a branch
-       * path
-       */
-      bp--;
+      bp--; // shift the counter back one because we have just removed a branch path
     }
 
-    // get the node id of this node (which is the branch point)
-    let nodeId = this.node.id;
-
-    // get the node id that comes after this node
-    let nodeIdAfter = this.ProjectService.getNodeIdAfter(nodeId);
+    const nodeId = this.node.id; // branch point node
+    const nodeIdAfter = this.ProjectService.getNodeIdAfter(nodeId);
 
     /*
      * update the transition of this step to point to the next step
@@ -2412,13 +1923,11 @@ class NodeAuthoringController {
      */
     this.ProjectService.setTransition(nodeId, nodeIdAfter);
 
-    // clear the transition logic fields
     this.ProjectService.setTransitionLogicField(nodeId, 'howToChooseAmongAvailablePaths', null);
     this.ProjectService.setTransitionLogicField(nodeId, 'whenToChoosePath', null);
     this.ProjectService.setTransitionLogicField(nodeId, 'canChangePath', null);
     this.ProjectService.setTransitionLogicField(nodeId, 'maxPathsVisitable', null);
 
-    // clear the branch authoring fields
     this.createBranchNumberOfBranches = 1;
     this.createBranchCriterion = null;
     this.createBranchNodeId = null;
@@ -2443,34 +1952,16 @@ class NodeAuthoringController {
      */
     branch.items = this.authoringViewGetBranchItems();
 
-    // an array that will hold all the checked items in the branch path
     branch.checkedItemsInBranchPath = [];
-
     let transition = null;
-
-    // get the transition from the node
-    let transitions = this.ProjectService.getTransitionsByFromNodeId(nodeId);
-
+    const transitions = this.ProjectService.getTransitionsByFromNodeId(nodeId);
     if (transitions != null && transitions.length > 0) {
       transition = transitions[0];
     }
-
-    // set the transition into the branch so we can access it easily later
     branch.transition = transition;
-
-    // add the branch to the array of branches
     this.createBranchBranches.push(branch);
-
-    /*
-     * calculate the node numbers
-     * e.g. if the step is called
-     * 1.5 View the Potential Energy
-     * then the node number is 1.5
-     */
     this.ProjectService.calculateNodeNumbers();
-
-    // save the project
-    let parseProject = true;
+    const parseProject = true;
     this.authoringViewNodeChanged(parseProject);
   }
 
@@ -2534,17 +2025,10 @@ class NodeAuthoringController {
      * applicable
      */
     html = this.UtilService.insertWISELinks(html);
-
-    // update the step rubric
     this.node.rubric = html;
-
-    // save the project
     this.authoringViewNodeChanged();
   }
 
-  /**
-   * Show the component authoring views
-   */
   showComponentAuthoring() {
     this.showComponentAuthoringViews = true;
   }
@@ -2557,73 +2041,42 @@ class NodeAuthoringController {
     this.showComponentAuthoringViews = false;
   }
 
-  /**
-   * Show the insert buttons. This is used when choosing where to insert a
-   * component.
-   */
   turnOnInsertComponentMode() {
     this.insertComponentMode = true;
   }
 
-  /**
-   * Hide the insert buttons.
-   */
   turnOffInsertComponentMode() {
     this.insertComponentMode = false;
   }
 
-  /**
-   * Turn on the add component mode
-   */
   turnOnAddComponentMode() {
     this.addComponentMode = true;
   }
 
-  /**
-   * Turn off the add component mode
-   */
   turnOffAddComponentMode() {
     this.addComponentMode = false;
   }
 
-  /**
-   * Turn on the move component mode
-   */
   turnOnMoveComponentMode() {
     this.moveComponentMode = true;
   }
 
-  /**
-   * Turn off the move component mode
-   */
   turnOffMoveComponentMode() {
     this.moveComponentMode = false;
   }
 
-  /**
-   * Turn on the copy component mode
-   */
   turnOnCopyComponentMode() {
     this.copyComponentMode = true;
   }
 
-  /**
-   * Turn off the copy component mode
-   */
   turnOffCopyComponentMode() {
     this.copyComponentMode = false;
   }
 
-  /**
-   * Turn on the import component mode
-   */
   turnOnImportComponentMode() {
     this.importComponentMode = true;
   }
 
-  /**
-   * Turn off the import component mode
-   */
   turnOffImportComponentMode() {
     this.importComponentMode = false;
   }
@@ -2637,7 +2090,6 @@ class NodeAuthoringController {
     if (this.components != null) {
       for (let component of this.components) {
         if (component != null && component.id != null) {
-          // see if the component is checked
           let checked = this.componentsToChecked[component.id];
           if (checked) {
             selectedComponents.push(component.id);
@@ -2648,9 +2100,6 @@ class NodeAuthoringController {
     return selectedComponents;
   }
 
-  /**
-   * Uncheck all the components
-   */
   clearComponentsToChecked() {
     /*
      * clear the components to checked mappings so that all the component
@@ -2674,13 +2123,9 @@ class NodeAuthoringController {
       for (let c = 0; c < this.components.length; c++) {
         let component = this.components[c];
         if (component != null && component.id != null) {
-          // see if the component is checked
           let checked = this.componentsToChecked[component.id];
           if (checked) {
-            // get the component number and type example "1. OpenResponse"
             let componentNumberAndType = (c + 1) + '. ' + component.type;
-
-            // the component is checked
             selectedComponents.push(componentNumberAndType);
           }
         }
@@ -2700,21 +2145,14 @@ class NodeAuthoringController {
     this.importLibraryProjectId = null;
     this.importProjectId = null;
     this.importProject = null;
-
-    // hide the other views
     this.nodeAuthoringViewButtonClicked('import');
-
     if (this.showImportView) {
-      // turn on import mode
       this.turnOnImportComponentMode();
-
       if (this.myProjectsList == null) {
-        // populate the authorable projects drop down
         this.myProjectsList = this.ConfigService.getAuthorableProjects();
       }
 
       if (this.libraryProjectsList == null) {
-        // populate the library projects drop down
         this.ConfigService.getLibraryProjects().then((libraryProjectsList) => {
           this.libraryProjectsList = libraryProjectsList;
         });
@@ -2722,57 +2160,31 @@ class NodeAuthoringController {
     }
   }
 
-  /**
-   * The move component button was clicked
-   */
   moveButtonClicked() {
-    if (this.getSelectedComponentIds().length == 0) {
+    if (this.getSelectedComponentIds().length === 0) {
       alert(this.$translate('pleaseSelectAComponentToMoveAndThenClickTheMoveButtonAgain'));
     } else {
-      // hide the other views
       this.nodeAuthoringViewButtonClicked('move');
-
-      // turn off add component mode
       this.turnOffAddComponentMode();
-
-      // turn on the move component mode
       this.turnOnMoveComponentMode();
-
-      // turn on the insert component mode
       this.turnOnInsertComponentMode()
-
-      // hide the component authoring
       this.hideComponentAuthoring();
     }
   }
 
-  /**
-   * The copy component button was clicked
-   */
   copyButtonClicked() {
-    if (this.getSelectedComponentIds().length == 0) {
+    if (this.getSelectedComponentIds().length === 0) {
       alert(this.$translate('pleaseSelectAComponentToCopyAndThenClickTheCopyButtonAgain'));
     } else {
-      // hide the other views
       this.nodeAuthoringViewButtonClicked('copy');
-
-      // turn on the move component mode
       this.turnOnCopyComponentMode();
-
-      // turn on the insert component mode
       this.turnOnInsertComponentMode();
-
-      // hide the component authoring views
       this.hideComponentAuthoring();
     }
   }
 
-  /**
-   * The delete button was clicked
-   * TODO refactor too many nesting
-   */
   deleteButtonClicked() {
-    if (this.getSelectedComponentIds().length == 0) {
+    if (this.getSelectedComponentIds().length === 0) {
       alert(this.$translate('pleaseSelectAComponentToDeleteAndThenClickTheDeleteButtonAgain'));
     } else {
       this.scrollToTopOfPage();
@@ -2790,75 +2202,38 @@ class NodeAuthoringController {
        */
       this.$timeout(() => {
         let confirmMessage = '';
-
-        // get the selected component numbers and types
-        let selectedComponentNumbersAndTypes = this.getSelectedComponentNumbersAndTypes();
-
+        const selectedComponentNumbersAndTypes = this.getSelectedComponentNumbersAndTypes();
         if (selectedComponentNumbersAndTypes.length == 1) {
-          // there is one selected component
           confirmMessage = this.$translate('areYouSureYouWantToDeleteThisComponent');
         } else if (selectedComponentNumbersAndTypes.length > 1) {
-          // there are multiple selected components
           confirmMessage = this.$translate('areYouSureYouWantToDeleteTheseComponents');
         }
-
-        // loop through all the selected components
         for (let c = 0; c < selectedComponentNumbersAndTypes.length; c++) {
-
-          // get a component number and type
-          let selectedComponentNumberAndType = selectedComponentNumbersAndTypes[c];
-
-          // show the component number and type in the message
-          confirmMessage += '\n' + selectedComponentNumberAndType;
+          confirmMessage += '\n' + selectedComponentNumbersAndTypes[c];
         }
-
-        // ask the user if they are sure they want to delete
         if (confirm(confirmMessage)) {
-          let selectedComponents = this.getSelectedComponentIds();
-
-          // data saved in the component deleted event
-          let data = {
-            "componentsDeleted": this.getComponentObjectsForEventData(selectedComponents)
+          const selectedComponents = this.getSelectedComponentIds();
+          const data = {
+            componentsDeleted: this.getComponentObjectsForEventData(selectedComponents)
           };
-
-          /*
-           * loop through all the selected component ids and delete the
-           * components
-           */
-          for (let componentId of selectedComponents) {
+          for (const componentId of selectedComponents) {
             this.ProjectService.deleteComponent(this.nodeId, componentId);
           }
-
           this.saveEvent('componentDeleted', 'Authoring', data);
-
-          // check if we need to show the node save or node submit buttons
           this.checkIfNeedToShowNodeSaveOrNodeSubmitButtons();
-
           this.ProjectService.saveProject();
         } else {
-          // uncheck the component check boxes
           this.clearComponentsToChecked();
         }
-
-        // turn off the insert component mode
         this.turnOffInsertComponentMode();
-
-        // uncheck the component check boxes
         this.clearComponentsToChecked();
-
-        // show the component authoring
         this.showComponentAuthoring();
       });
     }
   }
 
-  /**
-   * The cancel insert button was clicked
-   */
   cancelInsertClicked() {
-    // hide all the authoring views
     this.nodeAuthoringViewButtonClicked();
-
     this.turnOffAddComponentMode();
     this.turnOffMoveComponentMode();
     this.turnOffInsertComponentMode();
@@ -2866,45 +2241,19 @@ class NodeAuthoringController {
     this.showComponentAuthoring();
   }
 
-  /**
-   * Check if we need to show the node save or node submit buttons
-   */
   checkIfNeedToShowNodeSaveOrNodeSubmitButtons() {
-    if (this.ProjectService.doesAnyComponentInNodeShowSubmitButton(this.nodeId)) {
-      /*
-       * there is a component in this step that is showing their
-       * submit button
-       */
-    } else {
-      /*
-       * there is no component in this step that is showing their
-       * submit button
-       */
-
+    if (!this.ProjectService.doesAnyComponentInNodeShowSubmitButton(this.nodeId)) {
       if (this.ProjectService.doesAnyComponentHaveWork(this.nodeId)) {
-        /*
-         * there is a component that generates work so we will show
-         * the step save button
-         */
         this.node.showSaveButton = true;
         this.node.showSubmitButton = false;
-
-        // hide the save button in all the components
         this.hideAllComponentSaveButtons();
       } else {
-        /*
-         * there are no components in the step that generates work
-         * so we will not show the step save button
-         */
         this.node.showSaveButton = false;
         this.node.showSubmitButton = false;
       }
     }
   }
 
-  /**
-   * Insert the component so it becomes the first component in the step
-   */
   insertComponentAsFirst() {
     if (this.addComponentMode) {
       this.handleAddComponent();
@@ -2941,7 +2290,6 @@ class NodeAuthoringController {
    */
   handleAddComponent(componentId) {
     let newComponents = [];
-    // create a component and add it to this node
     let newComponent = this.ProjectService
         .createComponent(this.nodeId, this.selectedComponent, componentId);
 
@@ -2976,12 +2324,10 @@ class NodeAuthoringController {
         alert(this.$translate('youAreNotAllowedToInsertTheSelectedItemsAfterItself'));
       }
     } else {
-      // data saved in the component moved event
       let data = {
         "componentsMoved": this.getComponentObjectsForEventData(selectedComponentIds)
       };
 
-      // move the components to their new location
       newComponents = this.ProjectService
           .moveComponent(this.nodeId, selectedComponentIds, componentId);
 
@@ -3001,19 +2347,12 @@ class NodeAuthoringController {
   handleCopyComponent(componentId) {
     let newComponents = [];
     let selectedComponentIds = this.getSelectedComponentIds();
-
-    // data saved in the component copied event
     let data = {};
     let componentsCopied = this.getComponentObjectsForEventData(selectedComponentIds);
-
-    // copy the components to their new location
     newComponents = this.ProjectService.copyComponentAndInsert(this.nodeId, selectedComponentIds, componentId);
-
-    // get the information for all the components that were copied
     for (let c = 0; c < componentsCopied.length; c++) {
       let componentCopied = componentsCopied[c];
       let newComponent = newComponents[c];
-
       componentCopied.fromComponentId = componentCopied.componentId;
       componentCopied.toComponentId = newComponent.id;
       delete componentCopied.componentId;
@@ -3033,7 +2372,6 @@ class NodeAuthoringController {
    * components at the beginning of the step.
    */
   handleImportComponent(componentId) {
-    // import the selected components and insert them
     this.importComponents(this.nodeId, componentId).then((newComponents) => {
       this.turnOffImportComponentMode();
       this.ProjectService.saveProject();
@@ -3081,11 +2419,8 @@ class NodeAuthoringController {
          */
         this.$timeout(() => {
           if (newComponents != null && newComponents.length > 0) {
-            // get the UI element of the first new component
             let componentElement = $('#' + newComponents[0].id);
-
             if (componentElement != null) {
-              // scroll to the first new component that we've added
               $('#content').animate({
                 scrollTop: componentElement.offset().top - 200
               }, 1000);
@@ -3102,9 +2437,7 @@ class NodeAuthoringController {
    * @param importProjectId the project id to import from
    */
   showMyImportProject(importProjectId) {
-    // clear the select drop down for the library project
     this.importLibraryProjectId = null;
-
     this.showImportProject(importProjectId);
   }
 
@@ -3185,7 +2518,6 @@ class NodeAuthoringController {
   /**
    * Get the selected components to import
    * @return an array of selected components
-   * TODO refactor too many nesting
    */
   getSelectedComponentsToImport() {
     let selectedComponents = [];
@@ -3218,15 +2550,11 @@ class NodeAuthoringController {
       "componentsImported": this.getComponentObjectsForImportEventData()
     };
 
-    let selectedComponents = this.getSelectedComponentsToImport();
-    for (let selectedComponent of selectedComponents) {
-      if (selectedComponent != null) {
-        // remove the checked field
-        delete selectedComponent.checked;
-      }
+    const selectedComponents = this.getSelectedComponentsToImport();
+    for (const selectedComponent of selectedComponents) {
+      delete selectedComponent.checked;
     }
 
-    // insert the components into the project
     return this.ProjectService.importComponents(selectedComponents,
         this.importProjectId, nodeId, insertAfterComponentId)
         .then((newComponents) => {
@@ -3265,9 +2593,7 @@ class NodeAuthoringController {
    * on the cancel button
    */
   cancelCreateComponentClicked() {
-    // hide all the authoring views
     this.nodeAuthoringViewButtonClicked();
-
     this.turnOffAddComponentMode();
     this.turnOffMoveComponentMode();
     this.turnOffInsertComponentMode()
@@ -3285,20 +2611,12 @@ class NodeAuthoringController {
     return this.UtilService.getComponentTypeLabel(componentType);
   }
 
-  /**
-   * The author has clicked the back button
-   */
   backButtonClicked() {
     if (this.showImportView || this.showRubric || this.showAdvanced) {
       this.UtilService.hideJSONValidMessage();
-
-      // we are in the import view so we will go back to the node view
       this.nodeAuthoringViewButtonClicked();
-
-      this.$state
-        .go('root.project.node', {projectId: this.projectId, nodeId: this.nodeId});
+      this.$state.go('root.project.node', {projectId: this.projectId, nodeId: this.nodeId});
     } else {
-      // we are in the node view so we will go back to the project view
       this.close();
     }
   }
@@ -3330,20 +2648,15 @@ class NodeAuthoringController {
    */
   getComponentObjectsForEventData(componentIds) {
     let componentObjects = [];
-    if (componentIds != null) {
-      for (let componentId of componentIds) {
-        if (componentId != null) {
-          let component = this.ProjectService
-              .getComponentByNodeIdAndComponentId(this.nodeId, componentId);
-
-          if (component != null) {
-            let tempComponent = {
-              "componentId": component.id,
-              "type": component.type
-            };
-            componentObjects.push(tempComponent);
-          }
-        }
+    for (let componentId of componentIds) {
+      let component = this.ProjectService
+          .getComponentByNodeIdAndComponentId(this.nodeId, componentId);
+      if (component != null) {
+        let tempComponent = {
+          "componentId": component.id,
+          "type": component.type
+        };
+        componentObjects.push(tempComponent);
       }
     }
     return componentObjects;
@@ -3379,30 +2692,14 @@ class NodeAuthoringController {
     return componentObjects;
   }
 
-  /**
-   * Save the project JSON to the server if the JSON is valid.
-   */
   autoSaveJSON() {
     try {
-      // create the updated node object
       let updatedNode = angular.fromJson(this.authoringNodeContentJSONString);
-
-      // set the updated node into the project
       this.ProjectService.setNode(this.nodeId, updatedNode);
-
-      // set the updated node into this controller
       this.node = updatedNode;
-
-      // set the components into this controller
       this.components = this.ProjectService.getComponentsByNodeId(this.nodeId);
-
-      // set the current node
       this.TeacherDataService.setCurrentNodeByNodeId(this.nodeId);
-
-      // update the branch authoring fields into the controller
       this.populateBranchAuthoring();
-
-      // save the project
       this.authoringViewNodeChanged().then(() => {
         this.$rootScope.$broadcast('parseProject');
       });
@@ -3449,22 +2746,22 @@ class NodeAuthoringController {
 }
 
 NodeAuthoringController.$inject = [
-    '$anchorScroll',
-    '$filter',
-    '$injector',
-    '$location',
-    '$mdDialog',
-    '$rootScope',
-    '$scope',
-    '$state',
-    '$stateParams',
-    '$timeout',
-    'ConfigService',
-    'NodeService',
-    'ProjectAssetService',
-    'ProjectService',
-    'TeacherDataService',
-    'UtilService'
+  '$anchorScroll',
+  '$filter',
+  '$injector',
+  '$location',
+  '$mdDialog',
+  '$rootScope',
+  '$scope',
+  '$state',
+  '$stateParams',
+  '$timeout',
+  'ConfigService',
+  'NodeService',
+  'ProjectAssetService',
+  'ProjectService',
+  'TeacherDataService',
+  'UtilService'
 ];
 
 export default NodeAuthoringController;

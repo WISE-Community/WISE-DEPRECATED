@@ -4672,9 +4672,11 @@ class ProjectService {
    */
   isComponentIdUsed(componentId) {
     for (const node of this.project.nodes.concat(this.project.inactiveNodes)) {
-      for (const component of node.components) {
-        if (componentId === component.id) {
-          return true;
+      if (node.components != null) {
+        for (const component of node.components) {
+          if (componentId === component.id) {
+            return true;
+          }
         }
       }
     }
@@ -4962,8 +4964,10 @@ class ProjectService {
 
   /**
    * Calculate the node numbers and set them into the nodeIdToNumber map
-   * If the step is called "1.5 View the Potential Energy",
-   * then the node number is 1.5
+   * If the step is called "1.5 View the Potential Energy", then the node number is 1.5
+   *
+   * If this is a branching step that is called "1.5 B View the Potential Energy", then the
+   * node number is 1.5 B
    */
   calculateNodeNumbers() {
     this.nodeIdToNumber = {};

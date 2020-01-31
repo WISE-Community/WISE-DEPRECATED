@@ -50,12 +50,12 @@
                  style="width: 300px"
                  ng-model='authoringToolMainController.project.metadata.title'
                  ng-disabled="authoringToolMainController.inProcessOfCreatingProject"
-                 ng-keyup='$event.keyCode == 13 && authoringToolMainController.registerNewProject()'
+                 ng-keyup='$event.keyCode == 13 && authoringToolMainController.project.metadata.title != "" && authoringToolMainController.registerNewProject()'
                  placeholder='{{ ::"enterNewProjectTitleHere" | translate }}'/>
           </md-input-container>
           <md-button id="createProjectButton"
                  class="md-raised md-primary"
-                 ng-disabled="authoringToolMainController.inProcessOfCreatingProject"
+                 ng-disabled="authoringToolMainController.inProcessOfCreatingProject || authoringToolMainController.project.metadata.title == ''"
                  ng-click="authoringToolMainController.registerNewProject()">
             <md-icon>done</md-icon>
             <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'create' | translate }}</md-tooltip>

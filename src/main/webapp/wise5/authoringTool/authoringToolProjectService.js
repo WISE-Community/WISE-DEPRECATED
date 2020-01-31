@@ -6,9 +6,6 @@ class AuthoringToolProjectService extends ProjectService {
     super($filter, $http, $injector, $q, $rootScope, ConfigService, UtilService);
   }
 
-  /**
-   * Returns a project template for new projects
-   */
   getNewProjectTemplate() {
     return {
       "nodes": [
@@ -164,39 +161,16 @@ class AuthoringToolProjectService extends ProjectService {
     });
   }
 
-  /**
-   * Returns all possible transition criteria for the specified node and component.
-   */
-  getPossibleTransitionCriteria(nodeId, componentId) {
-    let component = this.getComponentByNodeIdAndComponentId(nodeId, componentId);
-    if (component != null) {
-      let componentType = component.type;
-      let componentService = this.$injector.get(componentType + 'Service');
-      if (componentService.getPossibleTransitionCriteria) {
-        return componentService.getPossibleTransitionCriteria(nodeId, componentId, component);
-      } else {
-        return [];
-      }
-    } else {
-      return [];
-    }
-  };
-
-  /**
-   * Copies the project with the specified id and returns
-   * a new project id if the project is successfully copied
-   */
   copyProject(projectId) {
-    const httpParams = {
+    return this.$http({
       method: 'POST',
       url: `${this.ConfigService.getConfigParam('copyProjectURL')}/${projectId}`,
       headers:  {'Content-Type': 'application/x-www-form-urlencoded'},
       data: $.param({})
-    };
-    return this.$http(httpParams).then((result) => {
-      return result.data;  // project Id
+    }).then(({data: newProject}) => {
+      return newProject;
     });
-  };
+  }
 
   /**
    * Registers a new project having the projectJSON content with the server.
@@ -204,7 +178,7 @@ class AuthoringToolProjectService extends ProjectService {
    * @param projectJSONString a valid JSON string
    */
   registerNewProject(projectName, projectJSONString) {
-    const httpParams = {
+    return this.$http({
       method: 'POST',
       url: this.ConfigService.getConfigParam('registerNewProjectURL'),
       headers: {'Content-Type': 'application/x-www-form-urlencoded'},
@@ -212,12 +186,10 @@ class AuthoringToolProjectService extends ProjectService {
         projectName: projectName,
         projectJSONString: projectJSONString
       })
-    };
-
-    return this.$http(httpParams).then((result) => {
-      return result.data;
+    }).then(({data: newProjectId}) => {
+      return newProjectId;
     });
-  };
+  }
 
   /**
    * Replace a node. This is used when we want to revert a node back to a
@@ -226,34 +198,18 @@ class AuthoringToolProjectService extends ProjectService {
    * @param node the node object
    */
   replaceNode(nodeId, node) {
-    if (nodeId != null && node != null) {
-      this.setIdToNode(nodeId, node);
-      this.setIdToElement(nodeId, node);
-      const nodes = this.getNodes();
-      if (nodes != null) {
-        for (let n = 0; n < nodes.length; n++) {
-          const tempNode = nodes[n];
-          if (tempNode != null) {
-            const tempNodeId = tempNode.id;
-            if (nodeId === tempNodeId) {
-              nodes.splice(n, 1, node);
-              break;
-            }
-          }
-        }
+    this.setIdToNode(nodeId, node);
+    this.setIdToElement(nodeId, node);
+    const nodes = this.getNodes();
+    for (let n = 0; n < nodes.length; n++) {
+      if (nodeId === nodes[n].id) {
+        nodes.splice(n, 1, node);
+        break;
       }
-
-      const applicationNodes = this.applicationNodes;
-      if (applicationNodes != null) {
-        for (let a = 0; a < applicationNodes.length; a++) {
-          const tempApplicationNode = applicationNodes[a];
-          if (tempApplicationNode != null) {
-            const tempApplicationNodeId = tempApplicationNode.id;
-            if (nodeId === tempApplicationNodeId) {
-              applicationNodes.splice(a, 1, node);
-            }
-          }
-        }
+    }
+    for (let a = 0; a < this.applicationNodes.length; a++) {
+      if (nodeId === this.applicationNodes[a].id) {
+        this.applicationNodes.splice(a, 1, node);
       }
     }
   }
@@ -265,21 +221,14 @@ class AuthoringToolProjectService extends ProjectService {
    * @param component the new component
    */
   replaceComponent(nodeId, componentId, component) {
-    if (nodeId != null && componentId != null && component != null) {
-      const components = this.getComponentsByNodeId(nodeId);
-      if (components != null) {
-        for (let c = 0; c < components.length; c++) {
-          const tempComponent = components[c];
-          if (tempComponent != null) {
-            if (tempComponent.id === componentId) {
-              components[c] = component;
-              break;
-            }
-          }
-        }
+    const components = this.getComponentsByNodeId(nodeId);
+    for (let c = 0; c < components.length; c++) {
+      if (components[c].id === componentId) {
+        components[c] = component;
+        break;
       }
     }
-  };
+  }
 
   /**
    * Create a new group
@@ -298,7 +247,7 @@ class AuthoringToolProjectService extends ProjectService {
       },
       ids: []
     }
-  };
+  }
 
   /**
    * Create a new node
@@ -318,7 +267,7 @@ class AuthoringToolProjectService extends ProjectService {
       showSubmitButton: false,
       components: []
     }
-  };
+  }
 
   /**
    * Copy nodes and put them after a certain node id
@@ -328,24 +277,15 @@ class AuthoringToolProjectService extends ProjectService {
   copyNodesInside(nodeIds, nodeId) {
     const newNodes = [];
     for (let n = 0; n < nodeIds.length; n++) {
-      const nodeIdToCopy = nodeIds[n];
-      const newNode = this.copyNode(nodeIdToCopy);
+      const newNode = this.copyNode(nodeIds[n]);
       const newNodeId = newNode.id;
-
       if (n == 0) {
-        // this is the first node we are copying so we will insert it
-        // into the beginning of the group
         this.createNodeInside(newNode, nodeId);
       } else {
-        // this is not the first node we are copying so we will insert
-        // it after the node we previously inserted
         this.createNodeAfter(newNode, nodeId);
       }
-
-      // remember the node id so we can put the next node (if any) after this one
       nodeId = newNodeId;
       this.parseProject();
-
       newNodes.push(newNode);
     }
     return newNodes;
@@ -381,52 +321,26 @@ class AuthoringToolProjectService extends ProjectService {
      * new name and change all the references in the steps to use the new
      * name.
      */
-    return this.$http(httpParams).then((result) => {
-      selectedNodes = result.data;
-
+    return this.$http(httpParams).then(({data: selectedNodes}) => {
       const inactiveNodes = this.getInactiveNodes();
       const newNodes = [];
       const newNodeIds = [];
-
-      for (let selectedNode of selectedNodes) {
-        if (selectedNode != null) {
-          // make a copy of the node so that we don't modify the source
-          const tempNode = this.UtilService.makeCopyOfJSONObject(selectedNode);
-
-          // check if the node id is already being used in the current project
-          if (this.isNodeIdUsed(tempNode.id)) {
-            // the node id is already being used in the current project
-
-            // get the next available node id
-            const nextAvailableNodeId = this.getNextAvailableNodeId(newNodeIds);
-
-            // change the node id of the node we are importing
-            tempNode.id = nextAvailableNodeId;
-          }
-
-          // get the components in the node
-          const tempComponents = tempNode.components;
-
-          if (tempComponents != null) {
-            for (let tempComponent of tempComponents) {
-              if (tempComponent != null) {
-                if (this.isComponentIdUsed(tempComponent.id)) {
-                  // we are already using the component id so we will need to change it
-
-                  const newComponentId = this.getUnusedComponentId();
-                  tempComponent.id = newComponentId;
-                }
-              }
-            }
-          }
-
-          // clear the constraints
-          tempNode.constraints = [];
-
-          // add the new node and new node id to our arrays
-          newNodes.push(tempNode);
-          newNodeIds.push(tempNode.id);
+      for (const selectedNode of selectedNodes) {
+        const tempNode = this.UtilService.makeCopyOfJSONObject(selectedNode);
+        if (this.isNodeIdUsed(tempNode.id)) {
+          const nextAvailableNodeId = this.getNextAvailableNodeId(newNodeIds);
+          tempNode.id = nextAvailableNodeId;
         }
+        const tempComponents = tempNode.components;
+        for (const tempComponent of tempComponents) {
+          if (this.isComponentIdUsed(tempComponent.id)) {
+            // we are already using the component id so we will need to change it
+            tempComponent.id = this.getUnusedComponentId();
+          }
+        }
+        tempNode.constraints = [];
+        newNodes.push(tempNode);
+        newNodeIds.push(tempNode.id);
       }
 
       if (nodeIdToInsertInsideOrAfter == null) {
@@ -448,12 +362,10 @@ class AuthoringToolProjectService extends ProjectService {
         }
       }
 
-      for (let newNode of newNodes) {
+      for (const newNode of newNodes) {
         if (this.isGroupNode(nodeIdToInsertInsideOrAfter)) {
-          // we want to make the new step the first step in the given activity
           this.createNodeInside(newNode, nodeIdToInsertInsideOrAfter);
         } else {
-          // we want to place the new step after the given step
           this.createNodeAfter(newNode, nodeIdToInsertInsideOrAfter);
         }
 
@@ -486,17 +398,15 @@ class AuthoringToolProjectService extends ProjectService {
    * @param nodeId the node id of the group to create the node in
    */
   createNodeInside(node, nodeId) {
-    if (nodeId == 'inactiveNodes' || nodeId == 'inactiveGroups') {
+    if (nodeId === 'inactiveNodes' || nodeId === 'inactiveGroups') {
       this.addInactiveNodeInsertAfter(node);
       this.setIdToNode(node.id, node);
       this.setIdToElement(node.id, node);
     } else {
       this.setIdToNode(node.id, node);
       if (this.isInactive(nodeId)) {
-        // we are creating an inactive node
         this.addInactiveNodeInsertInside(node, nodeId);
       } else {
-        // we are creating an active node
         this.addNode(node);
         this.insertNodeInsideOnlyUpdateTransitions(node.id, nodeId);
         this.insertNodeInsideInGroups(node.id, nodeId);
@@ -511,14 +421,10 @@ class AuthoringToolProjectService extends ProjectService {
    */
   createNodeAfter(node, nodeId) {
     if (this.isInactive(nodeId)) {
-      // we are adding the node after a node that is inactive
-
       this.addInactiveNodeInsertAfter(node, nodeId);
       this.setIdToNode(node.id, node);
       this.setIdToElement(node.id, node);
     } else {
-      // we are adding the node after a node that is active
-
       this.addNode(node);
       this.setIdToNode(node.id, node);
       this.insertNodeAfterInGroups(node.id, nodeId);
@@ -539,12 +445,10 @@ class AuthoringToolProjectService extends ProjectService {
          * loop through all the transitions that come out of the previous group
          * and get the node ids that the group transitions to
          */
-        for (let transitionFromGroup of transitionsFromGroup) {
-          if (transitionFromGroup != null) {
-            const toNodeId = transitionFromGroup.to;
-            if (toNodeId != null) {
-              oldToGroupIds.push(toNodeId);
-            }
+        for (const transitionFromGroup of transitionsFromGroup) {
+          const toNodeId = transitionFromGroup.to;
+          if (toNodeId != null) {
+            oldToGroupIds.push(toNodeId);
           }
         }
       }
@@ -573,27 +477,17 @@ class AuthoringToolProjectService extends ProjectService {
       const newNode = this.copyNode(nodeIdToCopy);
       const newNodeId = newNode.id;
       this.createNodeAfter(newNode, nodeId);
-
-      // remember the node id so we can put the next node (if any) after this one
-      nodeId = newNodeId;
+      nodeId = newNodeId; // remember the node id so we can put the next node (if any) after this one
       this.parseProject();
-
       newNodes.push(newNode);
     }
     return newNodes;
   }
 
-  /**
-   * Check if a node is inactive. At the moment only step nodes can be
-   * inactive.
-   * @param nodeId the node id of the step
-   */
   isInactive(nodeId) {
-    if (this.project.inactiveNodes != null) {
-      for (const inactiveNode of this.project.inactiveNodes) {
-        if (nodeId === inactiveNode.id) {
-          return true;
-        }
+    for (const inactiveNode of this.getInactiveNodes()) {
+      if (inactiveNode.id === nodeId) {
+        return true;
       }
     }
     return false;
@@ -605,19 +499,9 @@ class AuthoringToolProjectService extends ProjectService {
    * @return whether the node id is already being used in the project
    */
   isNodeIdUsed(nodeId) {
-    for (let node of this.project.nodes) {
-      if (node != null) {
-        if (nodeId === node.id) {
-          return true;
-        }
-      }
-    }
-
-    for (let node of this.project.inactiveNodes) {
-      if (node != null) {
-        if (nodeId === node.id) {
-          return true;
-        }
+    for (const node of this.getNodes().concat(this.getInactiveNodes())) {
+      if (node.id === nodeId) {
+        return true;
       }
     }
     return false;
@@ -627,14 +511,10 @@ class AuthoringToolProjectService extends ProjectService {
    * Set a field in the transition logic of a node
    */
   setTransitionLogicField(nodeId, field, value) {
-    if (nodeId != null && field != null) {
-      const node = this.getNodeById(nodeId);
-      if (node != null) {
-        const transitionLogic = node.transitionLogic;
-        if (transitionLogic != null) {
-          transitionLogic[field] = value;
-        }
-      }
+    const node = this.getNodeById(nodeId);
+    const transitionLogic = node.transitionLogic;
+    if (transitionLogic != null) {
+      transitionLogic[field] = value;
     }
   }
 
@@ -645,23 +525,21 @@ class AuthoringToolProjectService extends ProjectService {
    */
   setTransition(fromNodeId, toNodeId) {
     const node = this.getNodeById(fromNodeId);
-    if (node != null) {
-      const transitionLogic = node.transitionLogic;
-      if (transitionLogic != null) {
-        let transitions = transitionLogic.transitions;
-        if (transitions == null || transitions.length == 0) {
-          transitionLogic.transitions = [];
-          const transition = {};
-          transitionLogic.transitions.push(transition);
-          transitions = transitionLogic.transitions;
-        }
+    const transitionLogic = node.transitionLogic;
+    if (transitionLogic != null) {
+      let transitions = transitionLogic.transitions;
+      if (transitions == null || transitions.length == 0) {
+        transitionLogic.transitions = [];
+        const transition = {};
+        transitionLogic.transitions.push(transition);
+        transitions = transitionLogic.transitions;
+      }
 
-        if (transitions != null && transitions.length > 0) {
-          // get the first transition. we will assume there is only one transition.
-          const transition = transitions[0];
-          if (transition != null) {
-            transition.to = toNodeId;
-          }
+      if (transitions != null && transitions.length > 0) {
+        // get the first transition. we will assume there is only one transition.
+        const transition = transitions[0];
+        if (transition != null) {
+          transition.to = toNodeId;
         }
       }
     }
@@ -674,10 +552,8 @@ class AuthoringToolProjectService extends ProjectService {
    */
   getNodeIdAfter(nodeId) {
     let nodeIdAfter = null;
-
     // get an array of ordered items. each item represents a node
     const orderedItems = this.$filter('orderBy')(this.$filter('toArray')(this.idToOrder), 'order');
-
     if (orderedItems != null) {
       let foundNodeId = false;
       for (let item of orderedItems) {
@@ -711,53 +587,37 @@ class AuthoringToolProjectService extends ProjectService {
    * @param toNodeId the to node id of the branch path taken constraint
    */
   addBranchPathTakenConstraints(targetNodeId, fromNodeId, toNodeId) {
-    if (targetNodeId != null) {
-      const node = this.getNodeById(targetNodeId);
-      if (node != null) {
-        /*
-         * create the constraint that makes the node not visible until
-         * the given branch path is taken
-         */
-        const makeThisNodeNotVisibleConstraint = {
-          id: this.getNextAvailableConstraintIdForNodeId(targetNodeId),
-          action: 'makeThisNodeNotVisible',
-          targetId: targetNodeId,
-          removalConditional: 'all',
-          removalCriteria: [{
-            name: 'branchPathTaken',
-            params: {
-              fromNodeId: fromNodeId,
-              toNodeId: toNodeId
-            }
-          }]
-        };
-        node.constraints.push(makeThisNodeNotVisibleConstraint);
-
-        /*
-         * create the constraint that makes the node not visitable until
-         * the given branch path is taken
-         */
-        const makeThisNodeNotVisitableConstraint = {
-          id: this.getNextAvailableConstraintIdForNodeId(targetNodeId),
-          action: 'makeThisNodeNotVisitable',
-          targetId: targetNodeId,
-          removalConditional: 'all',
-          removalCriteria: [{
-            name: 'branchPathTaken',
-            params: {
-              fromNodeId: fromNodeId,
-              toNodeId: toNodeId
-            }
-          }]
-        };
-        node.constraints.push(makeThisNodeNotVisitableConstraint);
-      }
-    }
+    const node = this.getNodeById(targetNodeId);
+    const makeThisNodeNotVisibleConstraint = {
+      id: this.getNextAvailableConstraintIdForNodeId(targetNodeId),
+      action: 'makeThisNodeNotVisible',
+      targetId: targetNodeId,
+      removalConditional: 'all',
+      removalCriteria: [{
+        name: 'branchPathTaken',
+        params: {
+          fromNodeId: fromNodeId,
+          toNodeId: toNodeId
+        }
+      }]
+    };
+    node.constraints.push(makeThisNodeNotVisibleConstraint);
+    const makeThisNodeNotVisitableConstraint = {
+      id: this.getNextAvailableConstraintIdForNodeId(targetNodeId),
+      action: 'makeThisNodeNotVisitable',
+      targetId: targetNodeId,
+      removalConditional: 'all',
+      removalCriteria: [{
+        name: 'branchPathTaken',
+        params: {
+          fromNodeId: fromNodeId,
+          toNodeId: toNodeId
+        }
+      }]
+    };
+    node.constraints.push(makeThisNodeNotVisitableConstraint);
   }
 
-  /**
-   * Set the project level rubric
-   */
   setProjectRubric(html) {
     this.project.rubric = html;
   }
@@ -768,7 +628,7 @@ class AuthoringToolProjectService extends ProjectService {
    * @return The number of branch paths for this branch point.
    */
   getNumberOfBranchPaths(nodeId) {
-    let transitions = this.getTransitionsByFromNodeId(nodeId);
+    const transitions = this.getTransitionsByFromNodeId(nodeId);
     if (transitions != null) {
       return transitions.length;
     }
@@ -783,16 +643,13 @@ class AuthoringToolProjectService extends ProjectService {
    * are assigned branch paths on this branch point.
    */
   getBranchCriteriaDescription(nodeId) {
-    let transitionLogic = this.getTransitionLogicByFromNodeId(nodeId);
-    let transitions = transitionLogic.transitions;
-
-    // Loop through the transitions to try to find a transition criteria
-    for (let transition of transitions) {
+    const transitionLogic = this.getTransitionLogicByFromNodeId(nodeId);
+    for (const transition of transitionLogic.transitions) {
       if (transition.criteria != null && transition.criteria.length > 0) {
-        for (let singleCriteria of transition.criteria) {
-          if (singleCriteria.name == 'choiceChosen') {
+        for (const singleCriteria of transition.criteria) {
+          if (singleCriteria.name === 'choiceChosen') {
             return 'multiple choice';
-          } else if (singleCriteria.name == 'score') {
+          } else if (singleCriteria.name === 'score') {
             return 'score';
           }
         }
@@ -803,9 +660,9 @@ class AuthoringToolProjectService extends ProjectService {
      * None of the transitions had a specific criteria so the branching is just
      * based on the howToChooseAmongAvailablePaths field.
      */
-    if (transitionLogic.howToChooseAmongAvailablePaths == 'workgroupId') {
+    if (transitionLogic.howToChooseAmongAvailablePaths === 'workgroupId') {
       return 'workgroup ID';
-    } else if (transitionLogic.howToChooseAmongAvailablePaths == 'random') {
+    } else if (transitionLogic.howToChooseAmongAvailablePaths === 'random') {
       return 'random assignment';
     }
   }
@@ -817,27 +674,18 @@ class AuthoringToolProjectService extends ProjectService {
    */
   getPreviousNodeId(nodeId) {
     const flattenedNodeIds = this.getFlattenedProjectAsNodeIds();
-    if (flattenedNodeIds != null) {
-      const indexOfNodeId = flattenedNodeIds.indexOf(nodeId);
-      if (indexOfNodeId != -1) {
-        const indexOfPreviousNodeId = indexOfNodeId - 1;
-        return flattenedNodeIds[indexOfPreviousNodeId];
-      }
+    const indexOfNodeId = flattenedNodeIds.indexOf(nodeId);
+    if (indexOfNodeId !== -1) {
+      const indexOfPreviousNodeId = indexOfNodeId - 1;
+      return flattenedNodeIds[indexOfPreviousNodeId];
     }
     return null;
   }
 
-  /**
-   * Set the project script filename
-   * @param script the script filename
-   */
   setProjectScriptFilename(scriptFilename) {
     this.project.script = scriptFilename;
   }
 
-  /**
-   * Get the project script filename
-   */
   getProjectScriptFilename() {
     if (this.project != null && this.project.script != null) {
       return this.project.script;
@@ -851,11 +699,7 @@ class AuthoringToolProjectService extends ProjectService {
    * @return Whether the node has rubrics authored on it.
    */
   nodeHasRubric(nodeId) {
-    let numberOfRubrics = this.getNumberOfRubricsByNodeId(nodeId);
-    if (numberOfRubrics > 0) {
-      return true;
-    }
-    return false;
+    return this.getNumberOfRubricsByNodeId(nodeId) > 0;
   }
 
   /**
@@ -870,34 +714,23 @@ class AuthoringToolProjectService extends ProjectService {
     const node = this.getNodeById(nodeId);
     const newComponents = [];
     const newComponentIds = [];
-    for (let componentId of componentIds) {
-      const newComponent =
-        this.copyComponent(nodeId, componentId, newComponentIds);
+    for (const componentId of componentIds) {
+      const newComponent = this.copyComponent(nodeId, componentId, newComponentIds);
       newComponents.push(newComponent);
       newComponentIds.push(newComponent.id);
     }
 
-    const components = node.components;
-    if (components != null) {
-      let insertPosition = 0;
-      if (insertAfterComponentId == null) {
-        // place the new components at the beginning
-        insertPosition = 0;
-      } else {
-        // place the new components after the specified component id
-        insertPosition =
-            this.getComponentPositionByNodeIdAndComponentId(nodeId, insertAfterComponentId) + 1;
-      }
+    let insertPosition = 0;
+    if (insertAfterComponentId == null) {
+      insertPosition = 0; // place the new components at the beginning
+    } else {
+      insertPosition =
+          this.getComponentPositionByNodeIdAndComponentId(nodeId, insertAfterComponentId) + 1;
+    }
 
-      for (let newComponent of newComponents) {
-        components.splice(insertPosition, 0, newComponent);
-
-        /*
-         * increment the insert position for cases when we have multiple
-         * new components
-         */
-        insertPosition += 1;
-      }
+    for (const newComponent of newComponents) {
+      node.components.splice(insertPosition, 0, newComponent);
+      insertPosition += 1;
     }
     return newComponents;
   }
@@ -913,8 +746,7 @@ class AuthoringToolProjectService extends ProjectService {
   copyComponent(nodeId, componentId, componentIdsToSkip) {
     const component = this.getComponentByNodeIdAndComponentId(nodeId, componentId);
     const newComponent = this.UtilService.makeCopyOfJSONObject(component);
-    const newComponentId = this.getUnusedComponentId(componentIdsToSkip);
-    newComponent.id = newComponentId;
+    newComponent.id = this.getUnusedComponentId(componentIdsToSkip);
     return newComponent;
   }
 
@@ -924,32 +756,21 @@ class AuthoringToolProjectService extends ProjectService {
    * @param components an array of component objects that we are importing
    * @param importProjectId the id of the project we are importing from
    * @param nodeId the node we are adding the components to
-   * @param insertAfterComponentId insert the components after this component
-   * id
+   * @param insertAfterComponentId insert the components after this component id
    * @return an array of the new components
    */
   importComponents(components, importProjectId, nodeId, insertAfterComponentId) {
-    let newComponents = [];
+    const newComponents = [];
     const newComponentIds = [];
-
-    /*
-     * loop through all the components and make sure their ids are not
-     * already used in the project
-     */
-    for (let component of components) {
-      if (component != null) {
-        const newComponent = this.UtilService.makeCopyOfJSONObject(component);
-        let newComponentId = newComponent.id;
-
-        if (this.isComponentIdUsed(newComponentId)) {
-          // component id is already used so we will find a new component id
-          newComponentId = this.getUnusedComponentId(newComponentIds);
-          newComponent.id = newComponentId;
-        }
-
-        newComponents.push(newComponent);
-        newComponentIds.push(newComponentId);
+    for (const component of components) {
+      const newComponent = this.UtilService.makeCopyOfJSONObject(component);
+      let newComponentId = newComponent.id;
+      if (this.isComponentIdUsed(newComponentId)) {
+        newComponentId = this.getUnusedComponentId(newComponentIds);
+        newComponent.id = newComponentId;
       }
+      newComponents.push(newComponent);
+      newComponentIds.push(newComponentId);
     }
 
     const httpParams = {
@@ -959,7 +780,7 @@ class AuthoringToolProjectService extends ProjectService {
       data: $.param({
         steps: angular.toJson(newComponents),
         fromProjectId: importProjectId,
-        toProjectId:  this.ConfigService.getConfigParam('projectId'),
+        toProjectId: this.ConfigService.getConfigParam('projectId'),
       })
     };
 
@@ -972,29 +793,17 @@ class AuthoringToolProjectService extends ProjectService {
      * new name and change all the references in the steps to use the new
      * name.
      */
-    return this.$http(httpParams).then((result) => {
-      newComponents = result.data;
+    return this.$http(httpParams).then(({data: newComponents}) => {
       const node = this.getNodeById(nodeId);
-      const currentComponents = node.components;
       let insertPosition = 0;
-
       if (insertAfterComponentId == null) {
-        // place the new components at the beginning
         insertPosition = 0;
       } else {
-        // place the new components after the specified component id
         insertPosition =
             this.getComponentPositionByNodeIdAndComponentId(nodeId, insertAfterComponentId) + 1;
       }
-
-      for (let newComponent of newComponents) {
-        // insert the new component
-        currentComponents.splice(insertPosition, 0, newComponent);
-
-        /*
-         * increment the insert position for cases when we have multiple
-         * new components
-         */
+      for (const newComponent of newComponents) {
+        node.components.splice(insertPosition, 0, newComponent);
         insertPosition += 1;
       }
       return newComponents;
@@ -1003,8 +812,7 @@ class AuthoringToolProjectService extends ProjectService {
 
   /**
    * Get the branch path letter
-   * @param nodeId get the branch path letter for this node if it is in a
-   * branch
+   * @param nodeId get the branch path letter for this node if it is in a branch
    * @return the branch path letter for the node if it is in a branch
    */
   getBranchPathLetter(nodeId) {
@@ -1018,38 +826,27 @@ class AuthoringToolProjectService extends ProjectService {
    * @param node the node object
    */
   setNode(nodeId, node) {
-    if (nodeId != null && node != null) {
-      for (let n = 0; n < this.project.nodes.length; n++) {
-        let tempNode = this.project.nodes[n];
-        if (tempNode != null && tempNode.id == nodeId) {
-          this.project.nodes[n] = node;
-        }
+    for (let n = 0; n < this.project.nodes.length; n++) {
+      const tempNode = this.project.nodes[n];
+      if (tempNode.id == nodeId) {
+        this.project.nodes[n] = node;
       }
-
-      for (let i = 0; i < this.project.inactiveNodes.length; i++) {
-        let tempNode = this.project.inactiveNodes[i];
-        if (tempNode != null && tempNode.id == nodeId) {
-          this.project.inactiveNodes[i] = node;
-        }
-      }
-      this.idToNode[nodeId] = node;
     }
+    for (let i = 0; i < this.project.inactiveNodes.length; i++) {
+      const tempNode = this.project.inactiveNodes[i];
+      if (tempNode.id == nodeId) {
+        this.project.inactiveNodes[i] = node;
+      }
+    }
+    this.idToNode[nodeId] = node;
   }
 
-  /**
-   * Get the id to node mappings.
-   * @return An object the keys as node ids and the values as nodes.
-   */
   getIdToNode() {
     return this.idToNode;
   }
 
-  /**
-   * Turn on the save button in all the components in the step
-   * @param node the node
-   */
   turnOnSaveButtonForAllComponents(node) {
-    for (let component of node.components) {
+    for (const component of node.components) {
       const service = this.$injector.get(component.type + 'Service');
       if (service.componentUsesSaveButton()) {
         component.showSaveButton = true;
@@ -1057,12 +854,8 @@ class AuthoringToolProjectService extends ProjectService {
     }
   }
 
-  /**
-   * Turn off the submit button in all the components in the step
-   * @param node the node
-   */
   turnOffSaveButtonForAllComponents(node) {
-    for (let component of node.components) {
+    for (const component of node.components) {
       const service = this.$injector.get(component.type + 'Service');
       if (service.componentUsesSaveButton()) {
         component.showSaveButton = false;
@@ -1084,7 +877,7 @@ class AuthoringToolProjectService extends ProjectService {
       if (activeNode.id === nodeId) {
         activeNodes.splice(a, 1);
         nodeRemoved = activeNode;
-        if (activeNode.type == 'group') {
+        if (activeNode.type === 'group') {
           this.removeChildNodesFromActiveNodes(activeNode);
         }
         break;
@@ -1098,7 +891,7 @@ class AuthoringToolProjectService extends ProjectService {
    * @param node The group node.
    */
   removeChildNodesFromActiveNodes(node) {
-    for (let childId of node.ids) {
+    for (const childId of node.ids) {
       this.removeNodeFromActiveNodes(childId);
     }
   }
@@ -1122,14 +915,12 @@ class AuthoringToolProjectService extends ProjectService {
    */
   addInactiveNodeInsertAfter(node, nodeIdToInsertAfter) {
     this.clearTransitionsFromNode(node);
-
     if (this.isNodeIdToInsertTargetNotSpecified(nodeIdToInsertAfter)) {
       this.insertNodeAtBeginningOfInactiveNodes(node);
     } else {
       this.insertNodeAfterInactiveNode(node, nodeIdToInsertAfter);
     }
-
-    if (node.type == 'group') {
+    if (node.type === 'group') {
       this.inactiveGroupNodes.push(node.id);
       this.addGroupChildNodesToInactive(node);
     } else {
@@ -1151,7 +942,7 @@ class AuthoringToolProjectService extends ProjectService {
     const inactiveNodes = this.getInactiveNodes();
     for (let i = 0; i < inactiveNodes.length; i++) {
       if (inactiveNodes[i].id === nodeIdToInsertAfter) {
-        let parentGroup = this.getParentGroup(nodeIdToInsertAfter);
+        const parentGroup = this.getParentGroup(nodeIdToInsertAfter);
         if (parentGroup != null) {
           this.insertNodeAfterInGroups(node.id, nodeIdToInsertAfter);
           this.insertNodeAfterInTransitions(node, nodeIdToInsertAfter);
@@ -1185,35 +976,26 @@ class AuthoringToolProjectService extends ProjectService {
    */
   moveFromInactiveToInactiveInsertInside(node, nodeIdToInsertInside) {
     this.removeNodeFromInactiveNodes(node.id);
-
     if (this.isGroupNode(node.id)) {
       /*
        * remove the group's child nodes from our data structures so that we can
        * add them back in later
        */
-      let childIds = node.ids;
-      for (let childId of childIds) {
-        let childNode = this.getNodeById(childId);
-        let inactiveNodesIndex = this.project.inactiveNodes.indexOf(childNode);
+      for (const childId of node.ids) {
+        const childNode = this.getNodeById(childId);
+        const inactiveNodesIndex = this.project.inactiveNodes.indexOf(childNode);
         if (inactiveNodesIndex != -1) {
           this.project.inactiveNodes.splice(inactiveNodesIndex, 1);
         }
-        let inactiveStepNodesIndex = this.inactiveStepNodes.indexOf(childNode);
+        const inactiveStepNodesIndex = this.inactiveStepNodes.indexOf(childNode);
         if (inactiveStepNodesIndex != -1) {
           this.inactiveStepNodes.splice(inactiveStepNodesIndex, 1);
         }
       }
     }
-
-    // add the node to the inactive array
     this.addInactiveNodeInsertInside(node, nodeIdToInsertInside);
   }
 
-  /**
-   * Add the node to the inactive nodes array.
-   * @param node the node to move
-   * @param nodeIdToInsertAfter place the node after this
-   */
   addInactiveNodeInsertInside(node, nodeIdToInsertInside) {
     this.clearTransitionsFromNode(node);
     if (this.isNodeIdToInsertTargetNotSpecified(nodeIdToInsertInside)) {
@@ -1221,7 +1003,7 @@ class AuthoringToolProjectService extends ProjectService {
     } else {
       this.insertNodeInsideInactiveNode(node, nodeIdToInsertInside);
     }
-    if (node.type == 'group') {
+    if (node.type === 'group') {
       this.inactiveGroupNodes.push(node.id);
       this.addGroupChildNodesToInactive(node);
     } else {
@@ -1232,12 +1014,12 @@ class AuthoringToolProjectService extends ProjectService {
   insertNodeInsideInactiveNode(node, nodeIdToInsertInside) {
     const inactiveNodes = this.getInactiveNodes();
     const inactiveGroupNodes = this.getInactiveGroupNodes();
-    for (let inactiveGroup of inactiveGroupNodes) {
-      if (nodeIdToInsertInside == inactiveGroup.id) {
+    for (const inactiveGroup of inactiveGroupNodes) {
+      if (nodeIdToInsertInside === inactiveGroup.id) {
         this.insertNodeInsideOnlyUpdateTransitions(node.id, nodeIdToInsertInside);
         this.insertNodeInsideInGroups(node.id, nodeIdToInsertInside);
         for (let i = 0; i < inactiveNodes.length; i++) {
-          if (inactiveNodes[i].id == nodeIdToInsertInside) {
+          if (inactiveNodes[i].id === nodeIdToInsertInside) {
             inactiveNodes.splice(i + 1, 0, node);
           }
         }
@@ -1245,11 +1027,6 @@ class AuthoringToolProjectService extends ProjectService {
     }
   }
 
-  /**
-    * Move an inactive node within the inactive nodes array.
-    * @param node The node to move.
-    * @param nodeIdToInsertAfter Place the node after this.
-    */
   moveInactiveNodeToInactiveSection(node, nodeIdToInsertAfter) {
     this.removeNodeFromInactiveNodes(node.id);
     this.addInactiveNodeInsertAfter(node, nodeIdToInsertAfter);
