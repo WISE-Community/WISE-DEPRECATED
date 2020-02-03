@@ -971,11 +971,7 @@ public class ProjectServiceImpl implements ProjectService {
     return !oldProjectMetadata.getAuthors().equals(newProjectMetadata.getAuthors());
   }
 
-  public void updateProjectNameIfNecessary(Project project, JSONObject projectMetadataJSON)
-      throws JSONException {
-    String projectTitle = projectMetadataJSON.getString("title");
-    if (projectTitle != null && !projectTitle.equals(project.getName())) {
-      project.setName(projectTitle);
-    }
+  public void updateProjectNameIfNecessary(Project project, JSONObject projectMetadataJSON) {
+    project.setName(projectMetadataJSON.optString("title", project.getName()));
   }
 }

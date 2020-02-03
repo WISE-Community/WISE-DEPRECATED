@@ -208,295 +208,149 @@ public class ProjectMetadataImpl implements ProjectMetadata, Serializable {
   }
 
   public void populateFromJSON(JSONObject metadataJSON) {
-    if (metadataJSON.has("title") && !metadataJSON.isNull("title")) {
-      try {
-        String title = metadataJSON.getString("title");
-        if (title.equals("null")) {
-          title = "";
-        }
-        setTitle(title);
-      } catch (JSONException e) {
-        e.printStackTrace();
-      }
+    String title = metadataJSON.optString("title", "");
+    if (title.equals("null")) {
+      title = "";
     }
+    setTitle(title);
 
-    if (metadataJSON.has("uri") && !metadataJSON.isNull("uri")) {
-      try {
-        String uri = metadataJSON.getString("uri");
-        if (uri.equals("null")) {
-          uri = "";
-        }
-        setUri(uri);
-      } catch (JSONException e) {
-        e.printStackTrace();
-      }
+    String uri = metadataJSON.optString("uri");
+    if (uri.equals("null")) {
+      uri = "";
     }
+    setUri(uri);
 
-    if (metadataJSON.has("author") && !metadataJSON.isNull("author")) {
-      try {
-        String author = metadataJSON.getString("author");
-        if (author.equals("null")) {
-          author = "";
-        }
-        setAuthor(author);
-      } catch (JSONException e) {
-        e.printStackTrace();
-      }
+    String author = metadataJSON.optString("author", "");
+    if (author.equals("null")) {
+      author = "";
     }
+    setAuthor(author);
 
-    if (metadataJSON.has("authors") && !metadataJSON.isNull("authors")) {
-      try {
-        JSONArray authors = metadataJSON.getJSONArray("authors");
-        if (authors.equals("null")) {
-          authors = new JSONArray();
-        }
-        setAuthors(authors.toString());
-      } catch (JSONException e) {
-        e.printStackTrace();
-      }
+    JSONArray authors = metadataJSON.optJSONArray("authors");
+    if (authors == null) {
+      authors = new JSONArray();
     }
+    setAuthors(authors.toString());
 
-    if (metadataJSON.has("parentProjects") && !metadataJSON.isNull("parentProjects")) {
-      try {
-        JSONArray parentProjects = metadataJSON.getJSONArray("parentProjects");
-        if (parentProjects.equals("null")) {
-          parentProjects = new JSONArray();
-        }
-        setParentProjects(parentProjects.toString());
-      } catch (JSONException e) {
-        e.printStackTrace();
-      }
+    JSONArray parentProjects = metadataJSON.optJSONArray("parentProjects");
+    if (parentProjects == null) {
+      parentProjects = new JSONArray();
     }
+    setParentProjects(parentProjects.toString());
 
-    if (metadataJSON.has("subject") && !metadataJSON.isNull("subject")) {
-      try {
-        String subject = metadataJSON.getString("subject");
-        if (subject.equals("null")) {
-          subject = "";
-        }
-        setSubject(subject);
-      } catch (JSONException e) {
-        e.printStackTrace();
-      }
+    String subject = metadataJSON.optString("subject", "");
+    if (subject.equals("null")) {
+      subject = "";
     }
+    setSubject(subject);
 
-    if (metadataJSON.has("summary") && !metadataJSON.isNull("summary")) {
-      try {
-        String summary = metadataJSON.getString("summary");
-        if (summary.equals("null")) {
-          summary = "";
-        }
-        setSummary(summary);
-      } catch (JSONException e) {
-        e.printStackTrace();
-      }
+    String summary = metadataJSON.optString("summary", "");
+    if (summary.equals("null")) {
+      summary = "";
     }
+    setSummary(summary);
 
-    if (metadataJSON.has("features") && !metadataJSON.isNull("features")) {
-      try {
-        String features = metadataJSON.getString("features");
-        if (features.equals("null")) {
-          features = "";
-        }
-        setFeatures(features);
-      } catch (JSONException e) {
-        e.printStackTrace();
-      }
+    String features = metadataJSON.optString("features", "");
+    if (features.equals("null")) {
+      features = "";
     }
+    setFeatures(features);
 
-    if (metadataJSON.has("gradeRange") && !metadataJSON.isNull("gradeRange")) {
-      try {
-        String gradeRange = metadataJSON.getString("gradeRange");
-        if (gradeRange.equals("null")) {
-          gradeRange = "";
-        }
-        setGradeRange(gradeRange);
-      } catch (JSONException e) {
-        e.printStackTrace();
-      }
+    String gradeRange = metadataJSON.optString("gradeRange", "");
+    if (gradeRange.equals("null")) {
+      gradeRange = "";
     }
+    setGradeRange(gradeRange);
 
-    if (metadataJSON.has("grades") && !metadataJSON.isNull("grades")) {
-      try {
-        JSONArray grades = metadataJSON.getJSONArray("grades");
-        if (grades.equals("null")) {
-          grades = new JSONArray();
-        }
-        setGrades(grades.toString());
-      } catch (JSONException e) {
-        e.printStackTrace();
-      }
+    JSONArray grades = metadataJSON.optJSONArray("grades");
+    if (grades == null) {
+      grades = new JSONArray();
     }
+    setGrades(grades.toString());
 
-    if (metadataJSON.has("totalTime")  && !metadataJSON.isNull("totalTime")) {
-      try {
-        String totalTime = metadataJSON.getString("totalTime");
-
-        if (totalTime.equals("null")) {
-          totalTime = "";
-        }
-        setTotalTime(totalTime);
-      } catch (JSONException e) {
-        e.printStackTrace();
-      }
+    String totalTime = metadataJSON.optString("totalTime", "");
+    if (totalTime.equals("null")) {
+      totalTime = "";
     }
+    setTotalTime(totalTime);
 
-    if (metadataJSON.has("compTime") && !metadataJSON.isNull("compTime")) {
-      try {
-        String compTime = metadataJSON.getString("compTime");
-
-        if (compTime.equals("null")) {
-          compTime = "";
-        }
-        setCompTime(compTime);
-      } catch (JSONException e) {
-        e.printStackTrace();
-      }
+    String compTime = metadataJSON.optString("compTime", "");
+    if (compTime.equals("null")) {
+      compTime = "";
     }
+    setCompTime(compTime);
 
-    if (metadataJSON.has("contact") && !metadataJSON.isNull("contact")) {
-      try {
-        String contact = metadataJSON.getString("contact");
-        if (contact.equals("null")) {
-          contact = "";
-        }
-        setContact(contact);
-      } catch (JSONException e) {
-        e.printStackTrace();
-      }
+    String contact = metadataJSON.optString("contact", "");
+    if (contact.equals("null")) {
+      contact = "";
     }
+    setContact(contact);
 
-    if (metadataJSON.has("techReqs") && !metadataJSON.isNull("techReqs")) {
-      try {
-        JSONObject techReqs = metadataJSON.getJSONObject("techReqs");
-        if (techReqs.equals("null")) {
-          techReqs = new JSONObject();
-        }
-        setTechReqs(techReqs.toString());
-      } catch (JSONException e) {
-        e.printStackTrace();
-      }
+    JSONObject techReqs = metadataJSON.optJSONObject("techReqs");
+    if (techReqs == null) {
+      techReqs = new JSONObject();
     }
+    setTechReqs(techReqs.toString());
 
-    if (metadataJSON.has("tools") && !metadataJSON.isNull("tools")) {
-      try {
-        JSONObject tools = metadataJSON.getJSONObject("tools");
-        if (tools.equals("null")) {
-          tools = new JSONObject();
-        }
-        setTools(tools.toString());
-      } catch (JSONException e) {
-        e.printStackTrace();
-      }
+    JSONObject tools = metadataJSON.optJSONObject("tools");
+    if (tools == null) {
+      tools = new JSONObject();
     }
+    setTools(tools.toString());
 
-    if (metadataJSON.has("lessonPlan") && !metadataJSON.isNull("lessonPlan")) {
-      try {
-        String lessonPlan = metadataJSON.getString("lessonPlan");
-        if (lessonPlan.equals("null")) {
-          lessonPlan = "";
-        }
-        setLessonPlan(lessonPlan);
-      } catch (JSONException e) {
-        e.printStackTrace();
-      }
+    String lessonPlan = metadataJSON.optString("lessonPlan", "");
+    if (lessonPlan.equals("null")) {
+      lessonPlan = "";
     }
+    setLessonPlan(lessonPlan);
 
-    if (metadataJSON.has("standards") && !metadataJSON.isNull("standards")) {
-      try {
-        String standards = metadataJSON.getString("standards");
-        if (standards.equals("null")) {
-          standards = "";
-        }
-        setStandards(standards);
-      } catch (JSONException e) {
-        e.printStackTrace();
-      }
+    String standards = metadataJSON.optString("standards", "");
+    if (standards.equals("null")) {
+      standards = "";
     }
+    setStandards(standards);
 
-    if (metadataJSON.has("standardsAddressed") && !metadataJSON.isNull("standardsAddressed")) {
-      try {
-        JSONObject standardsAddressed = metadataJSON.getJSONObject("standardsAddressed");
-        if (standardsAddressed.equals("null")) {
-          standardsAddressed = new JSONObject();
-        }
-        setStandardsAddressed(standardsAddressed.toString());
-      } catch (JSONException e) {
-        e.printStackTrace();
-      }
+    JSONObject standardsAddressed = metadataJSON.optJSONObject("standardsAddressed");
+    if (standardsAddressed == null) {
+      standardsAddressed = new JSONObject();
     }
+    setStandardsAddressed(standardsAddressed.toString());
 
-    if (metadataJSON.has("keywords") && !metadataJSON.isNull("keywords")) {
-      try {
-        String keywords = metadataJSON.getString("keywords");
-        if (keywords.equals("null")) {
-          keywords = "";
-        }
-        setKeywords(keywords);
-      } catch (JSONException e) {
-        e.printStackTrace();
-      }
+    String keywords = metadataJSON.optString("keywords", "");
+    if (keywords.equals("null")) {
+      keywords = "";
     }
+    setKeywords(keywords);
 
-    if (metadataJSON.has("language") && !metadataJSON.isNull("language")) {
-      try {
-        String language = metadataJSON.getString("language");
-        if (language.equals("null")) {
-          language = "";
-        }
-        setLanguage(language);
-      } catch (JSONException e) {
-        e.printStackTrace();
-      }
+    String language = metadataJSON.optString("language", "");
+    if (language.equals("null")) {
+      language = "";
     }
+    setLanguage(language);
 
-    if (metadataJSON.has("maxScores") && !metadataJSON.isNull("maxScores")) {
-      try {
-        String maxScores = metadataJSON.getString("maxScores");
-        if (maxScores.equals("null")) {
-          maxScores = "";
-        }
-        setMaxScores(maxScores);
-      } catch (JSONException e) {
-        e.printStackTrace();
-      }
+    String maxScores = metadataJSON.optString("maxScores", "");
+    if (maxScores.equals("null")) {
+      maxScores = "";
     }
+    setMaxScores(maxScores);
 
-    if (metadataJSON.has("theme") && !metadataJSON.isNull("theme")) {
-      try {
-        String theme = metadataJSON.getString("theme");
-        if (theme.equals("null")) {
-          theme = "";
-        }
-        setTheme(theme);
-      } catch (JSONException e) {
-        e.printStackTrace();
-      }
+    String theme = metadataJSON.optString("theme", "");
+    if (theme.equals("null")) {
+      theme = "";
     }
+    setTheme(theme);
 
-    if (metadataJSON.has("navMode") && !metadataJSON.isNull("navMode")) {
-      try {
-        String navMode = metadataJSON.getString("navMode");
-        if (navMode.equals("null")) {
-          navMode = "";
-        }
-        setNavMode(navMode);
-      } catch (JSONException e) {
-        e.printStackTrace();
-      }
+    String navMode = metadataJSON.optString("navMode", "");
+    if (navMode.equals("null")) {
+      navMode = "";
     }
+    setNavMode(navMode);
 
-    if (metadataJSON.has("postLevel") && !metadataJSON.isNull("postLevel")) {
-      try {
-        Long postLevel = metadataJSON.getLong("postLevel");
-        if (postLevel.equals("null")) {
-          postLevel = (long) 5;
-        }
-        setPostLevel(postLevel);
-      } catch (JSONException e) {
-        e.printStackTrace();
-      }
+    Long postLevel = metadataJSON.optLong("postLevel");
+    if (postLevel.equals(0)) {
+      postLevel = (long) 5;
     }
+    setPostLevel(postLevel);
   }
 
   /**
