@@ -100,14 +100,10 @@ class WorkgroupNodeGradingController {
     }
 
     isComponentVisible(componentId) {
-        let result = true;
-
-        let index = this.hiddenComponents.indexOf(componentId);
-        if (index > -1) {
-            result = false;
-        }
-
-        return result;
+      if (this.hiddenComponents != null) {
+        return this.hiddenComponents.indexOf(componentId) !== -1;
+      }
+      return true;
     }
 
     /**
