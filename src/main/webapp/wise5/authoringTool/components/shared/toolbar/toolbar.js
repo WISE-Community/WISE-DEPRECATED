@@ -4,11 +4,6 @@ class ToolbarController {
   constructor($rootScope) {
     this.$rootScope = $rootScope;
     this.$rootScope.$on('setGlobalMessage', (event, params) => {
-      if (params.globalMessage.time === null) {
-        this.isProgressIndicatorVisible = true;
-      } else {
-        this.isProgressIndicatorVisible = false;
-      }
       this.globalMessage = params.globalMessage;
     });
     this.$rootScope.$on('setIsJSONValid', (event, params) => {
@@ -45,7 +40,7 @@ const Toolbar = {
         <span ng-if="$ctrl.isJSONValid === true" style="color: green; font-size: 16px"><md-icon style="color:green; margin-top: -4px;">done</md-icon><span>{{ ::'jsonValid' | translate }}</span></span>
         <span ng-if="$ctrl.isJSONValid === false" style="color: red; font-size: 16px"><md-icon style="color:red; margin-top: -4px;">clear</md-icon><span>{{ ::'jsonInvalid' | translate }}</span></span>
         <div style="width: 40px; height: 40px;">
-          <md-progress-circular ng-if="$ctrl.isProgressIndicatorVisible"
+          <md-progress-circular ng-if="$ctrl.globalMessage.isProgressIndicatorVisible"
               md-mode="indeterminate"
               class="md-accent"
               style="margin: 8px;"

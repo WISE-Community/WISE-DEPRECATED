@@ -17,10 +17,6 @@
           #editMessageLabel {
             display:block;
           }
-          #commitMessageInput {
-            line-height: 30px;
-            width: 75%;
-          }
           #projectStylesDiv {
           }
           .groupHeader {
@@ -191,10 +187,6 @@
                 <md-icon>visibility_off</md-icon>
                 <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'previewProjectWithoutConstraints' | translate }}</md-tooltip>
               </md-button>
-              <!-- commented out history button until we can make good use out of this some day.
-              <button id="viewHistoryButton" ng-click='projectController.viewProjectHistory()' translate="viewHistory"
-                  ng-disabled="projectController.insertGroupMode || projectController.insertNodeMode"></button>
-                  -->
             </div>
             <div ng-if='projectController.showCreateGroup' layout='row' style='height:50'>
               <div layout='row'>

@@ -7,7 +7,7 @@ module.exports = merge(common, {
   devServer: {
     port: 8083,
     proxy: {
-      '/authorConfig': 'http://localhost:8080',
+      '/author/config': 'http://localhost:8080',
       '/config': 'http://localhost:8080',
       '/curriculum': 'http://localhost:8080',
       '/project': 'http://localhost:8080',

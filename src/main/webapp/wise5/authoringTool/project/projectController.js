@@ -14,6 +14,7 @@ class ProjectController {
       $stateParams,
       $stomp,
       $timeout,
+      $transitions,
       $window,
       ConfigService,
       ProjectAssetService,
@@ -31,6 +32,7 @@ class ProjectController {
     this.$stateParams = $stateParams;
     this.$stomp = $stomp;
     this.$timeout = $timeout;
+    this.$transitions = $transitions;
     this.$translate = this.$filter('translate');
     this.$window = $window;
     this.ConfigService = ConfigService;
@@ -126,7 +128,8 @@ class ProjectController {
           args.assetItem != null && args.assetItem.fileName != null) {
         let assetFileName = args.assetItem.fileName;
         if (args.target === 'rubric') {
-          const summernoteElement = angular.element(document.querySelector(`#summernoteRubric_${this.projectId}`));
+          const summernoteElement =
+              angular.element(document.querySelector(`#summernoteRubric_${this.projectId}`));
           let fullAssetPath =
               this.ConfigService.getProjectAssetsDirectoryPath() +
                   '/' + assetFileName;
@@ -160,20 +163,16 @@ class ProjectController {
       this.$mdDialog.hide();
     });
 
-    this.$rootScope.$on('$stateChangeSuccess',
-        (event, toState, toParams, fromState, fromParams) => {
-      if (toState != null) {
-        let stateName = toState.name;
-        if (stateName == 'root.project') {
-          this.saveEvent('projectHomeViewOpened', 'Navigation');
-        } else if (stateName == 'root.project.node') {
-        } else if (stateName == 'root.project.asset') {
-          this.saveEvent('assetsViewOpened', 'Navigation');
-        } else if (stateName == 'root.project.info') {
-          this.saveEvent('projectInfoViewOpened', 'Navigation');
-        } else if (stateName == 'root.project.notebook') {
-          this.saveEvent('notebookViewOpened', 'Navigation');
-        }
+    this.$transitions.onSuccess({}, ($transition) => {
+      const stateName = $transition.name;
+      if (stateName === 'root.project') {
+        this.saveEvent('projectHomeViewOpened', 'Navigation');
+      } else if (stateName === 'root.project.asset') {
+        this.saveEvent('assetsViewOpened', 'Navigation');
+      } else if (stateName === 'root.project.info') {
+        this.saveEvent('projectInfoViewOpened', 'Navigation');
+      } else if (stateName === 'root.project.notebook') {
+        this.saveEvent('notebookViewOpened', 'Navigation');
       }
     });
 
@@ -217,18 +216,13 @@ class ProjectController {
     });
   }
 
-  /**
-   * Launch the project in preview mode in a new tab
-   */
   previewProject() {
     let previewProjectEventData = { constraints: true };
     this.saveEvent('projectPreviewed', 'Navigation', previewProjectEventData);
-    window.open(`${this.ConfigService.getConfigParam('previewProjectURL')}#!/project/${this.projectId}`);
+    window.open(
+        `${this.ConfigService.getConfigParam('previewProjectURL')}#!/project/${this.projectId}`);
   }
 
-  /**
-   * Launch the project in preview mode without constraints in a new tab
-   */
   previewProjectWithoutConstraints() {
     let previewProjectEventData = { constraints: false };
     this.saveEvent('projectPreviewed', 'Navigation', previewProjectEventData);
@@ -238,10 +232,6 @@ class ProjectController {
 
   viewProjectAssets() {
     this.$state.go('root.project.asset', {projectId: this.projectId});
-  }
-
-  viewProjectHistory() {
-    this.$state.go('root.project.history', {projectId: this.projectId});
   }
 
   viewNotebookSettings() {
@@ -260,15 +250,10 @@ class ProjectController {
   }
 
   saveProject() {
-    let commitMessage = 'Made changes to the project.';
     try {
       // if projectJSONString is bad json,
       // an exception will be thrown and it will not save.
-      this.ProjectService.saveProject(commitMessage)
-          .then((commitHistoryArray) => {
-        this.commitHistory = commitHistoryArray;
-        $('#commitMessageInput').val('');
-      });
+      this.ProjectService.saveProject();
     } catch (error) {
       // TODO: i18n
       alert('Invalid JSON. Please check syntax. Aborting save.');
@@ -307,16 +292,6 @@ class ProjectController {
    */
   getComponentsByNodeId(nodeId) {
     return this.ProjectService.getComponentsByNodeId(nodeId);
-  }
-
-  /**
-   * Returns a list of possible criteria for the specified node and component
-   * @param nodeId the node id
-   * @param componentId the component id in the node
-   */
-  getPossibleTransitionCriteria(nodeId, componentId) {
-    return this.ProjectService
-        .getPossibleTransitionCriteria(nodeId, componentId);
   }
 
   /**
@@ -1083,7 +1058,8 @@ class ProjectController {
   }
 
   previewImportNode(node) {
-    window.open(`${this.importProject.previewProjectURL}#!/project/${this.importProjectId}/${node.id}`);
+    window.open(
+        `${this.importProject.previewProjectURL}#!/project/${this.importProjectId}/${node.id}`);
   }
 
   previewImportProject() {
@@ -1712,6 +1688,7 @@ ProjectController.$inject = [
     '$stateParams',
     '$stomp',
     '$timeout',
+    '$transitions',
     '$window',
     'ConfigService',
     'ProjectAssetService',

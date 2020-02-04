@@ -302,14 +302,6 @@ public class StudentDataController {
     redisPublisher.publish(message.toString());
   }
 
-  public void broadcastEventToAgent(Event event) throws JSONException {
-    JSONObject message = new JSONObject();
-    message.put("type", "eventToAgent");
-    message.put("topic", String.format("/topic/agent/%s", event.getRun().getId()));
-    message.put("event", event.toJSON());
-    redisPublisher.publish(message.toString());
-  }
-
   /**
    * Handles batch POSTing student data (StudentWork, Action, Annotation)
    * @param runId Run that the POSTer (student) is in
@@ -406,9 +398,6 @@ public class StudentDataController {
               savedEventJSONObject.put("requestToken", requestToken);
               savedEventJSONObject.put("serverSaveTime", event.getServerSaveTime().getTime());
               eventsResultJSONArray.put(savedEventJSONObject);
-              if (event.getCategory().equals("Agent")) {
-                broadcastEventToAgent(event);
-              }
             } catch (Exception exception) {
               exception.printStackTrace();
             }

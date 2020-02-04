@@ -13,12 +13,9 @@ import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.listener.adapter.MessageListenerAdapter;
 import org.springframework.data.redis.serializer.GenericToStringSerializer;
 import org.springframework.session.data.redis.config.ConfigureRedisAction;
-import org.wise.portal.service.agent.EchoAgentService;
-import org.wise.portal.service.agent.impl.EchoAgentServiceImpl;
 import org.wise.portal.spring.data.redis.MessagePublisher;
 import org.wise.portal.spring.data.redis.RedisMessagePublisher;
 import org.wise.portal.spring.data.redis.RedisMessageSubscriber;
-
 import redis.clients.jedis.JedisPoolConfig;
 
 @Configuration
@@ -30,6 +27,9 @@ public class RedisConfig {
   @Value("${spring.redis.port}")
   private int redisPort;
 
+  @Value("${spring.redis.password:#{null}}")
+  private String redisPassword;
+
   @Value("${spring.redis.pool.max.total}")
   private int redisPoolMaxTotal;
 
@@ -40,6 +40,9 @@ public class RedisConfig {
     poolConfig.setTestOnBorrow(true);
     poolConfig.setTestOnReturn(true);
     RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(redisHostName, redisPort);
+    if (redisPassword != null) {
+      config.setPassword(redisPassword);
+    }
     return new JedisConnectionFactory(config);
   }
 
@@ -70,25 +73,12 @@ public class RedisConfig {
   RedisMessageSubscriber redisMessageSubscriber() {
     return new RedisMessageSubscriber();
   }
-    
-  @Bean
-  MessageListenerAdapter echoAgentListener() {
-    return new MessageListenerAdapter(echoAgentService());
-  }
-
-  @Bean
-  EchoAgentService echoAgentService() {
-    return new EchoAgentServiceImpl();
-  }
-
-
 
   @Bean
   RedisMessageListenerContainer redisContainer() {
     RedisMessageListenerContainer container = new RedisMessageListenerContainer();
     container.setConnectionFactory(redisConnectionFactory());
     container.addMessageListener(messageListener(), topic());
-    container.addMessageListener(echoAgentListener(), topic());
     return container;
   }
 

@@ -11,15 +11,15 @@ class NodeIconController {
         this.sizeClass = `md-${ this.size }`;
       }
     }
-    
+
   }
-      
+
   isFont() {
-    return this.icon.type === 'font';
+    return this.icon != null && this.icon.type === 'font';
   }
 
   isImage() {
-    return this.icon.type === 'img';
+    return this.icon != null && this.icon.type === 'img';
   }
 }
 

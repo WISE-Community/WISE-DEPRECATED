@@ -79,7 +79,7 @@ class CRaterService {
       // get the item type and item id
       const cRaterItemType = this.getCRaterItemType(component);
       const cRaterItemId = this.getCRaterItemId(component);
-      if (cRaterItemType != null && cRaterItemId != null) {
+      if (component.enableCRater && cRaterItemType != null && cRaterItemId != null) {
         return true;
       }
     }

@@ -165,6 +165,7 @@ md-input-container.discussion-new__input-container {
     border: 0 none;
     margin-left: -1px;
     margin-bottom: 0;
+    resize: none;
 }
 
 .discussion-reply, md-list-item.discussion-reply {
@@ -184,7 +185,6 @@ md-input-container.discussion-new__input-container {
 }
 
 .discusstion-reply__content {
-    white-space: pre-wrap;
     margin-top: 2px;
 
     p {

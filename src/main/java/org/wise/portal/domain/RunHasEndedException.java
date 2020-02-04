@@ -48,6 +48,6 @@ public class RunHasEndedException extends Exception {
   }
 
   public RunHasEndedException(Run run) {
-    super("The run" + run + "has ended.");
+    super("The run " + run.getId() + " has ended.");
   }
 }

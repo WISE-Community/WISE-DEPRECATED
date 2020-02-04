@@ -40,13 +40,6 @@
             {{ ::'ADD_TO_NOTEBOOK' | translate:{label:openResponseController.notebookConfig.label} }}
           </md-button>
           <md-button class='md-accent md-primary'
-                     ng-click='openResponseController.hintButtonClicked($event)'
-                     ng-if='::openResponseController.isHintAgentEnabled()'
-                     ng-disabled='openResponseController.isDisabled'>
-            <md-icon>star</md-icon>
-            {{ ::'HINT' | translate }}
-          </md-button>
-          <md-button class='md-accent md-primary'
                      ng-click='openResponseController.copyPublicNotebookItemButtonClicked($event)'
                      ng-if='::openResponseController.showCopyPublicNotebookItemButton()'
                      ng-disabled='openResponseController.isDisabled'>
@@ -99,7 +92,6 @@
         </md-button>
       </div>
     </div>
-    {{openResponseController.echoResponse.echoResponse}}
     <div ng-if='::openResponseController.isSaveOrSubmitButtonVisible()'
        class='component__actions' layout='row' layout-align='start center'>
       <md-button id='saveButton'

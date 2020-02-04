@@ -399,7 +399,7 @@ public class PersistentUserDetails implements MutableUserDetails {
   }
 
   public String getLanguage() {
-    return language;
+    return language != null ? language : "en";
   }
 
   public void setLanguage(String language) {

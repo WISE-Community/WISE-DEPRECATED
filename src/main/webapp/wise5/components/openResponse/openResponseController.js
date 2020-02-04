@@ -214,12 +214,6 @@ class OpenResponseController extends ComponentController {
 
     }.bind(this));
 
-    this.$scope.$on('echoResponseReceived', (event, echoResponse) => {
-      if (echoResponse.nodeId == this.nodeId && echoResponse.componentId == this.componentId) {
-        this.echoResponse = echoResponse;
-      }
-    });
-
     this.$scope.$on('notebookItemChosen', (event, args) => {
       if (args.requester == this.nodeId + '-' + this.componentId) {
         const notebookItem = args.notebookItem;
@@ -282,20 +276,45 @@ class OpenResponseController extends ComponentController {
     return true;
   }
 
+  hasFeedback() {
+    return (this.componentContent.cRater.showFeedback || this.componentContent.cRater.showScore) 
+        && this.isCRaterEnabled() ;
+  }
+
   confirmSubmit(numberOfSubmitsLeft) {
-    let message = '';
-    let isPerformSubmit = false;
-
-    if (numberOfSubmitsLeft <= 0) {
-      alert(this.$translate('openResponse.youHaveNoMoreChances'));
-    } else if (numberOfSubmitsLeft == 1) {
-      message = this.$translate('openResponse.youHaveOneChance', {numberOfSubmitsLeft: numberOfSubmitsLeft});
-      isPerformSubmit = confirm(message);
-    } else if (numberOfSubmitsLeft > 1) {
-      message = this.$translate('openResponse.youHaveMultipleChances', {numberOfSubmitsLeft: numberOfSubmitsLeft});
-      isPerformSubmit = confirm(message);
+    if (this.hasFeedback()) {
+      return this.submitWithFeedback(numberOfSubmitsLeft);
+    } else {
+      return this.submitWithoutFeedback(numberOfSubmitsLeft);
     }
+  }
 
+  submitWithFeedback(numberOfSubmitsLeft) {
+    let isPerformSubmit = false;
+    if (numberOfSubmitsLeft <= 0) {
+      alert(this.$translate('openResponse.youHaveNoMoreChancesWithFeedback'));
+    } else if (numberOfSubmitsLeft === 1) {
+      isPerformSubmit = confirm(this.$translate('openResponse.youHaveOneChanceWithFeedback',
+          {numberOfSubmitsLeft: numberOfSubmitsLeft}));
+    } else if (numberOfSubmitsLeft > 1) {
+      isPerformSubmit = confirm(this.$translate('openResponse.youHaveMultipleChancesWithFeedback',
+          {numberOfSubmitsLeft: numberOfSubmitsLeft}));
+    }
+    return isPerformSubmit;
+  }
+
+  submitWithoutFeedback(numberOfSubmitsLeft) {
+    let isPerformSubmit = false;
+    if (numberOfSubmitsLeft <= 0) {
+      alert(this.$translate('openResponse.youHaveNoMoreChancesWithoutFeedback'));
+    } else if (numberOfSubmitsLeft === 1) {
+      isPerformSubmit = confirm(this.$translate('openResponse.youHaveOneChanceWithoutFeedback',
+          {numberOfSubmitsLeft: numberOfSubmitsLeft}));
+    } else if (numberOfSubmitsLeft > 1) {
+      isPerformSubmit = confirm(
+          this.$translate('openResponse.youHaveMultipleChancesWithoutFeedback',
+          {numberOfSubmitsLeft: numberOfSubmitsLeft}));
+    }
     return isPerformSubmit;
   }
 
@@ -732,13 +751,7 @@ class OpenResponseController extends ComponentController {
    * @returns whether CRater is enabled for this component
    */
   isCRaterEnabled() {
-    var result = false;
-
-    if (this.CRaterService.isCRaterEnabled(this.componentContent)) {
-      result = true;
-    }
-
-    return result;
+    return this.CRaterService.isCRaterEnabled(this.componentContent);
   }
 
   /**
@@ -864,23 +877,6 @@ class OpenResponseController extends ComponentController {
     this.clearSaveText();
     const action = 'change';
     this.createComponentStateAndBroadcast(action);
-  }
-
-  isHintAgentEnabled() {
-    return true;
-  }
-
-  hintButtonClicked($event) {
-    const nodeId = this.nodeId;
-    const componentId = this.componentId;
-    const componentType = this.componentType;
-    const category = "Agent";
-    const event = "hintRequested";
-    const eventData = {
-      response: this.studentResponse
-    };
-    this.StudentDataService.saveVLEEvent(
-        nodeId, componentId, componentType, category, event, eventData);
   }
 };
 
