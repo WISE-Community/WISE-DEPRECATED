@@ -675,5 +675,19 @@ describe('ProjectService Unit Test', () => {
       expect(ProjectService.getNodes().length).toEqual(21);
     });
 
+    it('should calculate the node order', () => {
+      ProjectService.project = demoProjectJSON;
+      ProjectService.loadNodes(demoProjectJSON.nodes);
+      ProjectService.calculateNodeOrder(demoProjectJSON.nodes[0]);
+      expect(ProjectService.idToOrder['group0'].order).toEqual(0);
+      expect(ProjectService.idToOrder['group1'].order).toEqual(1)
+      expect(ProjectService.idToOrder['node1'].order).toEqual(2);
+      expect(ProjectService.idToOrder['node2'].order).toEqual(3);
+      expect(ProjectService.idToOrder['node3'].order).toEqual(4);
+      expect(ProjectService.idToOrder['node4'].order).toEqual(5);
+      expect(ProjectService.idToOrder['node5'].order).toEqual(6);
+      expect(ProjectService.idToOrder['node6'].order).toEqual(7);
+    });
+
   });
 });
