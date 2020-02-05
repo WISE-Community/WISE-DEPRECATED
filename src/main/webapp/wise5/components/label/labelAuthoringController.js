@@ -128,7 +128,8 @@ class LabelAuthoringController extends LabelController {
    * @param index the index of the label in the labels array
    */
   authoringDeleteLabelClicked(index, label) {
-    const answer = confirm(this.$translate('label.areYouSureYouWantToDeleteThisLabel', { selectedLabelText: label.textString }));
+    const answer = confirm(this.$translate('label.areYouSureYouWantToDeleteThisLabel',
+        { selectedLabelText: label.textString }));
     if (answer) {
       this.authoringComponentContent.labels.splice(index, 1);
       this.authoringViewComponentChanged();

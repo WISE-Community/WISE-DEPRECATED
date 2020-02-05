@@ -34,8 +34,10 @@ class HTMLAuthoringController extends HTMLController {
       StudentDataService,
       UtilService);
     this.summernotePromptHTML = '';
-    const InsertWISELinkButton = this.UtilService.createInsertWISELinkButton(this, null, this.nodeId, this.componentId, 'prompt', this.$translate('INSERT_WISE_LINK'));
-    const InsertAssetButton = this.UtilService.createInsertAssetButton(this, null, this.nodeId, this.componentId, 'prompt', this.$translate('INSERT_ASSET'));
+    const InsertWISELinkButton =this.UtilService.createInsertWISELinkButton(
+        this, null, this.nodeId, this.componentId, 'prompt', this.$translate('INSERT_WISE_LINK'));
+    const InsertAssetButton = this.UtilService.createInsertAssetButton(
+        this, null, this.nodeId, this.componentId, 'prompt', this.$translate('INSERT_ASSET'));
     this.summernotePromptOptions = {
       toolbar: [
         ['style', ['style']],
@@ -78,11 +80,11 @@ class HTMLAuthoringController extends HTMLController {
         const fileName = assetItem.fileName;
         const fullFilePath = `${this.ConfigService.getProjectAssetsDirectoryPath()}/${fileName}`;
         if (target === 'prompt') {
-          this.UtilService.insertFileInSummernoteEditor(`summernotePrompt_${this.nodeId}_${this.componentId}`,
-              fullFilePath, fileName);
+          this.UtilService.insertFileInSummernoteEditor(
+              `summernotePrompt_${this.nodeId}_${this.componentId}`, fullFilePath, fileName);
         } else {
-          this.UtilService.insertFileInSummernoteEditor(`summernoteRubric_${this.nodeId}_${this.componentId}`,
-              fullFilePath, fileName);
+          this.UtilService.insertFileInSummernoteEditor(
+              `summernoteRubric_${this.nodeId}_${this.componentId}`, fullFilePath, fileName);
         }
       }
       this.$mdDialog.hide();
@@ -90,12 +92,15 @@ class HTMLAuthoringController extends HTMLController {
   }
 
   registerWISELinkListener() {
-    this.$scope.$on('createWISELink', (event, {nodeId, componentId, wiseLinkNodeId, wiseLinkComponentId, wiseLinkType, wiseLinkText, target}) => {
+    this.$scope.$on('createWISELink', (event, {nodeId, componentId, wiseLinkNodeId,
+          wiseLinkComponentId, wiseLinkType, wiseLinkText, target}) => {
       if (nodeId === this.nodeId && componentId === this.componentId && target === 'prompt') {
         if (wiseLinkType === 'link') {
-          this.injectWISELinkToPrompt(this.createWISELinkLinkElement(wiseLinkNodeId, wiseLinkComponentId, wiseLinkText));
+          this.injectWISELinkToPrompt(
+              this.createWISELinkLinkElement(wiseLinkNodeId,wiseLinkComponentId, wiseLinkText));
         } else {
-          this.injectWISELinkToPrompt(this.createWISELinkButtonElement(wiseLinkNodeId, wiseLinkComponentId, wiseLinkText));
+          this.injectWISELinkToPrompt(
+              this.createWISELinkButtonElement(wiseLinkNodeId, wiseLinkComponentId, wiseLinkText));
         }
       }
       this.$mdDialog.hide();
@@ -132,8 +137,10 @@ class HTMLAuthoringController extends HTMLController {
     const summernoteId = 'summernotePrompt_' + this.nodeId + '_' + this.componentId;
     angular.element(document.querySelector(`#${summernoteId}`)).summernote('editor.restoreRange');
     angular.element(document.querySelector(`#${summernoteId}`)).summernote('editor.focus');
-    angular.element(document.querySelector(`#${summernoteId}`)).summernote('insertNode', wiseLinkElement);
-    angular.element(document.querySelector(`#${summernoteId}`)).summernote('insertNode', document.createElement('br'));
+    angular.element(document.querySelector(`#${summernoteId}`))
+        .summernote('insertNode', wiseLinkElement);
+    angular.element(document.querySelector(`#${summernoteId}`))
+        .summernote('insertNode', document.createElement('br'));
   }
 
   summernotePromptHTMLChanged() {

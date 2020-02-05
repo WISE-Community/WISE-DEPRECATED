@@ -1512,21 +1512,17 @@ class NodeAuthoringController {
     const choices = component.choices;
     if (choices != null) {
       for (let c = 0; c < choices.length; c++) {
-        const choice = choices[c];
-        let id = choice.id;
-        let text = choice.text;
-        let feedback = choice.feedback;
-        let isCorrect = choice.isCorrect;
-        let branch = this.createBranchBranches[c];
+        const branch = this.createBranchBranches[c];
         if (branch != null) {
+          const id = choices[c].id;
           branch.choiceId = id;
           branch.choices = this.UtilService.makeCopyOfJSONObject(choices);
-          let transition = branch.transition;
+          const transition = branch.transition;
           if (transition != null) {
             // get the first transition criterion. Assume there is only one transition criterion
-            let criterion = transition.criteria[0];
+            const criterion = transition.criteria[0];
             if (criterion != null) {
-              let params = criterion.params;
+              const params = criterion.params;
               if (params != null) {
                 params.nodeId = this.createBranchNodeId;
                 params.componentId = this.createBranchComponentId;
