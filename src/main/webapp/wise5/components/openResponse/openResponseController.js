@@ -580,8 +580,11 @@ class OpenResponseController extends ComponentController {
                   this.latestAnnotations.comment = autoCommentAnnotation;
                 }
               }
-              if (this.componentContent.enableNotifications) {
-                const notificationForScore = this.ProjectService.getNotificationByScore(this.componentContent, previousScore, score);
+              if (this.componentContent.enableNotifications &&
+                  this.componentContent.notificationSettings &&
+                  this.componentContent.notificationSettings.notifications) {
+                const notificationForScore = this.ProjectService.getNotificationByScore(
+                    this.componentContent, previousScore, score);
                 if (notificationForScore != null) {
                   notificationForScore.score = score;
                   notificationForScore.nodeId = this.nodeId;
