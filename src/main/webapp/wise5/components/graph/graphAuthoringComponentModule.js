@@ -4,7 +4,7 @@ import GraphService from './graphService';
 import GraphController from './graphController';
 import GraphAuthoringController from './graphAuthoringController';
 
-let graphAuthoringComponentModule = angular.module('graphAuthoringComponentModule', [
+const graphAuthoringComponentModule = angular.module('graphAuthoringComponentModule', [
   'pascalprecht.translate'
 ])
   .service('GraphService', GraphService)

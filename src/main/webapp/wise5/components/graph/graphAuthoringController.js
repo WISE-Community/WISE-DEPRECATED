@@ -365,23 +365,19 @@ class GraphAuthoringController extends GraphController {
   }
 
   authoringAutomaticallySetConnectedComponentComponentIdIfPossible(connectedComponent) {
-    const components = this.getComponentsByNodeId(connectedComponent.nodeId);
-    if (components != null) {
-      let numberOfAllowedComponents = 0;
-      let allowedComponent = null;
-      for (const component of components) {
-        if (this.isConnectedComponentTypeAllowed(component.type) &&
-            component.id !== this.componentId) {
-          numberOfAllowedComponents += 1;
-          allowedComponent = component;
-        }
+    let numberOfAllowedComponents = 0;
+    let allowedComponent = null;
+    for (const component of this.getComponentsByNodeId(connectedComponent.nodeId)) {
+      if (this.isConnectedComponentTypeAllowed(component.type) &&
+          component.id != this.componentId) {
+        numberOfAllowedComponents += 1;
+        allowedComponent = component;
       }
-      if (numberOfAllowedComponents === 1) {
-        // there is only one viable component to connect to so we will use it
-        connectedComponent.componentId = allowedComponent.id;
-        connectedComponent.type = 'importWork';
-        this.authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent);
-      }
+    }
+    if (numberOfAllowedComponents === 1) {
+      connectedComponent.componentId = allowedComponent.id;
+      connectedComponent.type = 'importWork';
+      this.authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent);
     }
   }
 
@@ -414,30 +410,17 @@ class GraphAuthoringController extends GraphController {
   authoringConnectedComponentComponentIdChanged(connectedComponent) {
     const connectedComponentType = this.authoringGetConnectedComponentType(connectedComponent);
     if (connectedComponentType !== 'Embedded') {
-      /*
-       * the component type is not Embedded so we will remove the
-       * seriesNumbers field
-       */
       delete connectedComponent.seriesNumbers;
     }
     if (connectedComponentType !== 'Table') {
-      /*
-       * the component type is not Table so we will remove the
-       * skipFirstRow, xColumn, and yColumn fields
-       */
       delete connectedComponent.skipFirstRow;
       delete connectedComponent.xColumn;
       delete connectedComponent.yColumn;
     }
     if (connectedComponentType !== 'Graph') {
-      /*
-       * the component type is not Graph so we will remove the
-       * show classmate work fields
-       */
       delete connectedComponent.showClassmateWorkSource;
     }
     if (connectedComponentType === 'Table') {
-      // set default values for the connected component params
       connectedComponent.skipFirstRow = true;
       connectedComponent.xColumn = 0;
       connectedComponent.yColumn = 1;
@@ -449,16 +432,8 @@ class GraphAuthoringController extends GraphController {
 
   connectedComponentShowClassmateWorkChanged(connectedComponent) {
     if (connectedComponent.showClassmateWork) {
-      /*
-       * show classmate work was enabled so we will default the
-       * show classmate work source to period
-       */
       connectedComponent.showClassmateWorkSource = 'period';
     } else {
-      /*
-       * the show classmate work was disabled so we will remove
-       * the show classmate work fields
-       */
       delete connectedComponent.showClassmateWork;
       delete connectedComponent.showClassmateWorkSource;
     }
@@ -467,7 +442,7 @@ class GraphAuthoringController extends GraphController {
 
   authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent) {
     const componentType = this.authoringGetConnectedComponentType(connectedComponent);
-    if (componentType === 'ConceptMap' || componentType === 'Draw' || componentType === 'Label') {
+    if (['ConceptMap','Draw','Label'].includes(componentType)) {
       connectedComponent.importWorkAsBackground = true;
     } else {
       delete connectedComponent.importWorkAsBackground;
@@ -549,7 +524,6 @@ class GraphAuthoringController extends GraphController {
     this.authoringViewComponentChanged();
   }
 }
-
 
 GraphAuthoringController.$inject = [
   '$filter',

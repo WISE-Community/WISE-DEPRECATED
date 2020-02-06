@@ -5,7 +5,7 @@ import DiscussionService from './discussionService';
 import DiscussionController from './discussionController';
 import DiscussionAuthoringController from './discussionAuthoringController';
 
-let discussionAuthoringComponentModule = angular.module('discussionAuthoringComponentModule', [
+const discussionAuthoringComponentModule = angular.module('discussionAuthoringComponentModule', [
   'pascalprecht.translate'
 ])
   .service('DiscussionService', DiscussionService)
