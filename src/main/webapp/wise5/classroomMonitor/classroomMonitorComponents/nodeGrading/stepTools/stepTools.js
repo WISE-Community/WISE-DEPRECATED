@@ -97,7 +97,7 @@ const StepTools = {
                 <md-icon> {{ ::$ctrl.icons.prev }} </md-icon>
                 <md-tooltip md-direction="bottom">{{ ::'PREVIOUS_STEP' | translate }}</md-tooltip>
             </md-button>
-            <node-icon node-id="::$ctrl.nodeId" size="18"></node-icon>&nbsp;
+            <node-icon node-id="$ctrl.nodeId" size="18"></node-icon>&nbsp;
             <md-select id="stepSelectMenu" md-theme="default"
                        class="md-button md-no-underline toolbar__select toolbar__select--fixedwidth"
                        md-container-class="stepSelectMenuContainer"
