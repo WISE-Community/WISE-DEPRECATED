@@ -82,5 +82,39 @@ describe('AuthoringToolProjectService Unit Test', () => {
       ProjectService.setProject(demoProjectJSON);
       expect(ProjectService.isNodeIdUsed("nodedoesnotexist")).toEqual(false);
     });
+    testGetNodeIdAfter();
+    testCreateNodeAfter();
   });
+
+  function testGetNodeIdAfter() {
+    describe('getNodeIdAfter', () => {
+      it('should return the next node in the sequence', () => {
+        ProjectService.setProject(demoProjectJSON);
+        expect(ProjectService.getNodeIdAfter('node12')).toEqual('node13');
+        expect(ProjectService.getNodeIdAfter('node19')).toEqual('group2');
+      });
+      it('should return null if the node is last', () => {
+        ProjectService.setProject(demoProjectJSON);
+        expect(ProjectService.getNodeIdAfter('node39')).toBeNull();
+      });
+    });
+  }
+
+  function testCreateNodeAfter() {
+    describe('createNodeAfter', () => {
+      it('should put a new step node after a step node', () => {
+        const newNode = {
+          id: 'node1000',
+          type: 'node'
+        };
+        ProjectService.setProject(demoProjectJSON);
+        ProjectService.createNodeAfter(newNode, 'node19');
+        ProjectService.parseProject();
+        expect(ProjectService.idToNode[newNode.id]).toEqual(newNode);
+        expect(newNode.transitionLogic.transitions[0].to).toEqual('node20');
+        expect(ProjectService.getNodeIdAfter('node19')).toEqual('node1000');
+      });
+    });
+  }
 });
+
