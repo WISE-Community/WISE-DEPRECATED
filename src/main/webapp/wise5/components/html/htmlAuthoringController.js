@@ -34,10 +34,6 @@ class HTMLAuthoringController extends HTMLController {
       StudentDataService,
       UtilService);
     this.summernotePromptHTML = '';
-    const InsertWISELinkButton =this.UtilService.createInsertWISELinkButton(
-        this, null, this.nodeId, this.componentId, 'prompt', this.$translate('INSERT_WISE_LINK'));
-    const InsertAssetButton = this.UtilService.createInsertAssetButton(
-        this, null, this.nodeId, this.componentId, 'prompt', this.$translate('INSERT_ASSET'));
     this.summernotePromptOptions = {
       toolbar: [
         ['style', ['style']],
@@ -55,8 +51,10 @@ class HTMLAuthoringController extends HTMLController {
       minHeight: 300,
       disableDragAndDrop: true,
       buttons: {
-        insertWISELinkButton: InsertWISELinkButton,
-        insertAssetButton: InsertAssetButton
+        insertWISELinkButton: this.UtilService.createInsertWISELinkButton(this, null, this.nodeId,
+            this.componentId, 'prompt', this.$translate('INSERT_WISE_LINK')),
+        insertAssetButton: this.UtilService.createInsertAssetButton(this, null, this.nodeId,
+            this.componentId, 'prompt', this.$translate('INSERT_ASSET'))
       }
     };
 
@@ -93,7 +91,7 @@ class HTMLAuthoringController extends HTMLController {
 
   registerWISELinkListener() {
     this.$scope.$on('createWISELink', (event, {nodeId, componentId, wiseLinkNodeId,
-          wiseLinkComponentId, wiseLinkType, wiseLinkText, target}) => {
+        wiseLinkComponentId, wiseLinkType, wiseLinkText, target}) => {
       if (nodeId === this.nodeId && componentId === this.componentId && target === 'prompt') {
         if (wiseLinkType === 'link') {
           this.injectWISELinkToPrompt(
