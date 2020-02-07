@@ -111,6 +111,19 @@ class ProjectController {
       }
     };
 
+    this.templateOptions = [
+      { id: 'jigsaw', label: 'Jigsaw',
+          description: 'This is a Jigsaw. Students do stuff.' },
+      { id: 'guidanceChoice', label: 'Guidance Choice',
+          description: 'This is a Guidance Choice. Students do stuff.' },
+      { id: 'selfDirectedInvestigation', label: 'Self Directed Investigation',
+          description: 'This is a Self Directed Investigation. Students do stuff.' },
+      { id: 'peerReviewAndRevision', label: 'Peer Review and Revision',
+          description: 'This is a Peer Review and Revision. Students do stuff.' },
+      { id: 'kiCycleUsingOER', label: 'KI Cycle Using OER',
+          description: 'This is a KI Cycle Using OER. Students do stuff.' },
+    ];
+
     this.projectURL = window.location.origin + this.ConfigService.getConfigParam('projectURL');
 
     /*
@@ -877,6 +890,14 @@ class ProjectController {
     }
   }
 
+  addTemplateClicked() {
+    this.toggleView('templateChooser');
+  }
+
+  chooseTemplate(templateOption) {
+
+  }
+
   /**
    * Cancel the move mode
    */
@@ -1258,6 +1279,7 @@ class ProjectController {
       this.advancedMode = false;
       this.showJSONAuthoring = false;
       this.projectMode = true;
+      this.showTemplateChooser = false;
     } else if (view == 'createGroup') {
       // toggle the create activity view
       this.showCreateGroup = !this.showCreateGroup;
@@ -1267,6 +1289,7 @@ class ProjectController {
       this.editProjectRubricMode = false;
       this.advancedMode = false;
       this.showJSONAuthoring = false;
+      this.showTemplateChooser = false;
 
       // also show the project view
       this.projectMode = true;
@@ -1279,6 +1302,7 @@ class ProjectController {
       this.editProjectRubricMode = false;
       this.advancedMode = false;
       this.showJSONAuthoring = false;
+      this.showTemplateChooser = false;
 
       // also show the project view
       this.projectMode = true;
@@ -1291,6 +1315,7 @@ class ProjectController {
       this.editProjectRubricMode = false;
       this.advancedMode = false;
       this.showJSONAuthoring = false;
+      this.showTemplateChooser = false;
 
       // if the import view is shown, do not show the project view
       this.projectMode = !this.importMode;
@@ -1303,6 +1328,7 @@ class ProjectController {
       this.editProjectRubricMode = !this.editProjectRubricMode;
       this.advancedMode = false;
       this.showJSONAuthoring = false;
+      this.showTemplateChooser = false;
 
       // if the rubric view is shown, do not show the project view
       this.projectMode = !this.editProjectRubricMode;
@@ -1315,6 +1341,20 @@ class ProjectController {
       this.editProjectRubricMode = false;
       this.advancedMode = !this.advancedMode;
       this.showJSONAuthoring = false;
+      this.showTemplateChooser = false;
+
+      // if the advanced view is shown, do not show the project view
+      this.projectMode = !this.advancedMode;
+    } else if (view == 'templateChooser') {
+      // toggle the advanced view
+      this.showCreateGroup = false;
+      this.showCreateNode = false;
+      this.importMode = false;
+      this.showImportView = false;
+      this.editProjectRubricMode = false;
+      this.advancedMode = false;
+      this.showJSONAuthoring = false;
+      this.showTemplateChooser = !this.showTemplateChooser;
 
       // if the advanced view is shown, do not show the project view
       this.projectMode = !this.advancedMode;

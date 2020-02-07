@@ -126,6 +126,15 @@
                   {{ ::'createNewStep' | translate }}
                 </md-tooltip>
               </md-button>
+              <md-button id='createNewStepButton'
+                  class='topButton md-raised md-primary'
+                  ng-click='projectController.addTemplateClicked()'
+                  ng-disabled='projectController.insertGroupMode || projectController.insertNodeMode || projectController.stepNodeSelected || projectController.activityNodeSelected'>
+                <md-icon>storage</md-icon>
+                <md-tooltip md-direction='top' class='projectButtonTooltip'>
+                  {{ ::'addTemplate' | translate }}
+                </md-tooltip>
+              </md-button>
               <md-button id='importStepButton'
                   class='topButton md-raised md-primary'
                   ng-click='projectController.importStepClicked()'
@@ -238,6 +247,16 @@
                        aria-label="{{ ::'CANCEL' | translate }}"
                        translate="CANCEL"></md-button>
               </div>
+            </div>
+          </div>
+          <div ng-if='projectController.showTemplateChooser' style='display:flex'>
+            <div ng-repeat='templateOption in projectController.templateOptions' style='width:200px'>
+              <p>{{ ::templateOption.label }}</p>
+              <p>{{ ::templateOption.description }}</p>
+              <md-button class='createButton md-raised md-primary'
+                  ng-click='projectController.chooseTemplate(templateOption)'
+                  aria-label="{{ ::'chooseTemplate' | translate }}"
+                  translate="chooseTemplate"></md-button>
             </div>
           </div>
           <div ng-if='projectController.showImportView'>
