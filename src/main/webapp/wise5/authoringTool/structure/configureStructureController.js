@@ -1,11 +1,7 @@
 'use strict';
 
 class ConfigureStructureController {
-
-  constructor($rootScope,
-      $state,
-      $stateParams,
-      $scope) {
+  constructor($rootScope, $state, $stateParams, $scope) {
     this.$rootScope = $rootScope;
     this.$state = $state;
     this.$stateParams = $stateParams;
@@ -14,7 +10,7 @@ class ConfigureStructureController {
   }
 
   chooseLocation() {
-    this.$state.go('root.project.structure.location');
+    this.$state.go('root.project.structure.location', { structure: this.structure });
   }
 
   cancel() {
@@ -22,11 +18,6 @@ class ConfigureStructureController {
   }
 }
 
-ConfigureStructureController.$inject = [
-  '$rootScope',
-  '$state',
-  '$stateParams',
-  '$scope',
-];
+ConfigureStructureController.$inject = ['$rootScope', '$state', '$stateParams', '$scope'];
 
 export default ConfigureStructureController;

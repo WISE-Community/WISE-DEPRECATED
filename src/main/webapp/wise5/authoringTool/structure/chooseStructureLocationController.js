@@ -17,9 +17,15 @@ class ChooseStructureLocationController {
   }
 
   insertAfter(afterGroupId) {
-    const groupToAdd = this.ProjectService.createGroup(this.createGroupTitle);
+    const groupToAdd = this.ProjectService.createGroup(this.structure.label);
     this.ProjectService.createNodeAfter(groupToAdd, afterGroupId);
+    this.ProjectService.parseProject();
+    const node1 = this.ProjectService.createNodeAndAddToLocalStorage('Instructions');
+    this.ProjectService.addNodeToGroup(node1, groupToAdd);
+    const node2 = this.ProjectService.createNodeAndAddToLocalStorage('Gather Evidence');
+    this.ProjectService.addNodeToGroup(node2, groupToAdd);
     this.ProjectService.checkPotentialStartNodeIdChangeThenSaveProject().then(() => {
+      this.$rootScope.$broadcast('parseProject');
       this.$state.go('root.project');
     });
   }

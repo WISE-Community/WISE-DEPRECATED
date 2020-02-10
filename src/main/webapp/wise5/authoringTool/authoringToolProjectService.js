@@ -1059,6 +1059,42 @@ class AuthoringToolProjectService extends ProjectService {
     this.removeNodeFromInactiveNodes(node.id);
     this.addInactiveNodeInsertAfter(node, nodeIdToInsertAfter);
   }
+
+  addNodeToGroup(node, group) {
+    if (this.isGroupHasNode(group)) {
+      this.insertAfterLastNode(node, group);
+    } else {
+      this.insertAsFirstNode(node, group);
+    }
+  }
+
+  isGroupHasNode(group) {
+    return group.ids.length != 0;
+  }
+
+  getLastNodeInGroup(group) {
+    const lastNodeId = group.ids[group.ids.length - 1];
+    return this.idToNode[lastNodeId];
+  }
+
+  insertAsFirstNode(node, group) {
+    this.insertNodeInsideOnlyUpdateTransitions(node.id, group.id);
+    this.insertNodeInsideInGroups(node.id, group.id);
+  }
+
+  insertAfterLastNode(node, group) {
+    const lastNode = this.getLastNodeInGroup(group);
+    this.insertNodeAfterInTransitions(node, lastNode.id);
+    this.insertNodeAfterInGroups(node.id, lastNode.id);
+  }
+
+  createNodeAndAddToLocalStorage(nodeTitle) {
+    const node = this.createNode(nodeTitle);
+    this.setIdToNode(node.id, node);
+    this.addNode(node);
+    this.applicationNodes.push(node);
+    return node;
+  }
 }
 
 AuthoringToolProjectService.$inject = [
