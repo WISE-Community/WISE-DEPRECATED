@@ -1,0 +1,13 @@
+structure authoring
+
+{{configureStructureController.structure}}
+
+<md-button class='createButton md-raised md-primary'
+                  ng-click='configureStructureController.chooseLocation()'
+                  aria-label='{{ ::"next" | translate }}'
+                  translate='next'></md-button>
+
+<md-button class='createButton md-raised md-primary'
+                  ng-click='configureStructureController.cancel()'
+                  aria-label='{{ ::"cancel" | translate }}'
+                  translate='cancel'></md-button>
