@@ -5,7 +5,7 @@ class ClassroomMonitorProjectService extends ProjectService {
   constructor($filter, $http, $injector, $q, $rootScope, ConfigService, UtilService) {
     super($filter, $http, $injector, $q, $rootScope, ConfigService, UtilService);
   }
-  
+
   /**
    * Get the node ids and component ids in a node
    * @param nodeId get the node ids and component ids in this node
@@ -13,8 +13,8 @@ class ClassroomMonitorProjectService extends ProjectService {
    */
   getNodeIdsAndComponentIds(nodeId) {
     const nodeIdAndComponentIds = [];
-    const nodeContent = this.getNodeContentByNodeId(nodeId);
-    for (const component of nodeContent.components) {
+    const node = this.getNodeById(nodeId);
+    for (const component of node.components) {
       const nodeIdAndComponentId = {
         nodeId: nodeId,
         componentId: component.id

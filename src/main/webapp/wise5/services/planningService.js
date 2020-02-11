@@ -73,7 +73,6 @@ class PlanningService {
   addPlanningNodeInstanceInside(nodeIdToInsertInside, planningNodeInstance) {
     const planningNodeInstanceNodeId = planningNodeInstance.id;
     this.ProjectService.setIdToNode(planningNodeInstanceNodeId, planningNodeInstance);
-    this.ProjectService.setIdToElement(planningNodeInstanceNodeId, planningNodeInstance);
     this.ProjectService.addNode(planningNodeInstance);
     this.ProjectService.insertNodeInsideOnlyUpdateTransitions(planningNodeInstanceNodeId, nodeIdToInsertInside);
     this.ProjectService.insertNodeInsideInGroups(planningNodeInstanceNodeId, nodeIdToInsertInside);
@@ -89,7 +88,6 @@ class PlanningService {
   addPlanningNodeInstanceAfter(nodeIdToInsertAfter, planningNodeInstance) {
     const planningNodeInstanceNodeId = planningNodeInstance.id;
     this.ProjectService.setIdToNode(planningNodeInstanceNodeId, planningNodeInstance);
-    this.ProjectService.setIdToElement(planningNodeInstanceNodeId, planningNodeInstance);
     this.ProjectService.addNode(planningNodeInstance);
     this.ProjectService.insertNodeAfterInTransitions(planningNodeInstance, nodeIdToInsertAfter);
     this.ProjectService.insertNodeAfterInGroups(planningNodeInstanceNodeId, nodeIdToInsertAfter);

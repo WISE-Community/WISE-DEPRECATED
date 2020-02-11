@@ -1787,28 +1787,23 @@ class NodeAuthoringController {
    * @param branch the branch object
    */
   removeBranchPath(branch) {
-    if (branch != null) {
-      let checkedItemsInBranchPath = branch.checkedItemsInBranchPath;
-      if (checkedItemsInBranchPath != null) {
-        for (let checkedItem of checkedItemsInBranchPath) {
-          if (checkedItem != null) {
-            let nodeId = checkedItem.$key;
-            this.ProjectService.removeBranchPathTakenNodeConstraintsIfAny(nodeId);
-
-            /*
-             * update the transition of the step to point to the next step
-             * in the project. this may be different than the next step
-             * if it was still in the branch path.
-             */
-            let nodeIdAfter = this.ProjectService.getNodeIdAfter(nodeId);
-            this.ProjectService.setTransition(nodeId, nodeIdAfter);
-          }
-        }
+    const checkedItemsInBranchPath = branch.checkedItemsInBranchPath;
+    if (checkedItemsInBranchPath != null) {
+      for (const checkedItem of checkedItemsInBranchPath) {
+        const nodeId = checkedItem.$key;
+        this.ProjectService.removeBranchPathTakenNodeConstraintsIfAny(nodeId);
+        /*
+          * update the transition of the step to point to the next step
+          * in the project. this may be different than the next step
+          * if it was still in the branch path.
+          */
+        const nodeIdAfter = this.ProjectService.getNodeIdAfter(nodeId);
+        this.ProjectService.setTransition(nodeId, nodeIdAfter);
       }
-      let branchPathIndex = this.createBranchBranches.indexOf(branch);
-      this.createBranchBranches.splice(branchPathIndex, 1);
-      this.node.transitionLogic.transitions.splice(branchPathIndex, 1);
     }
+    const branchPathIndex = this.createBranchBranches.indexOf(branch);
+    this.createBranchBranches.splice(branchPathIndex, 1);
+    this.node.transitionLogic.transitions.splice(branchPathIndex, 1);
   }
 
   summernoteRubricHTMLChanged() {

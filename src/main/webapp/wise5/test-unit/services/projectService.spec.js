@@ -164,10 +164,6 @@ describe('ProjectService Unit Test', () => {
     // TODO: add test for ProjectService.pathsEqual()
 
     // TODO: add test for ProjectService.getBranchPathsByNodeId()
-
-
-    // TODO: add test for ProjectService.getNodeContentByNodeId()
-
     // TODO: add test for ProjectService.replaceComponent()
     // TODO: add test for ProjectService.createGroup()
     // TODO: add test for ProjectService.createNode()
