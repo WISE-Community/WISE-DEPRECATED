@@ -2583,59 +2583,14 @@ class ProjectService {
    * "node11".
    * @returns the next available node id
    */
-  getNextAvailableNodeId(nodeIdsToSkip) {
-    const nodeIds = this.getNodeIds();
-    let largestNodeIdNumber = null;
-
-    for (let nodeId of nodeIds) {
-      // get the number from the node id e.g. the number of 'node2' would be 2
-      let nodeIdNumber = nodeId.replace('node', '');
-
-      // make sure the number is an actual number
-      if (!isNaN(nodeIdNumber)) {
-        nodeIdNumber = parseInt(nodeIdNumber);
-
-        // update the largest node id number if necessary
-        if (largestNodeIdNumber == null) {
-          largestNodeIdNumber = nodeIdNumber;
-        } else if (nodeIdNumber > largestNodeIdNumber) {
-          largestNodeIdNumber = nodeIdNumber;
-        }
-      }
-    }
-
-    const inactiveNodeIds = this.getInactiveNodeIds();
-    for (let inactiveNodeId of inactiveNodeIds) {
-      // get the number from the node id e.g. the number of 'node2' would be 2
-      let nodeIdNumber = inactiveNodeId.replace('node', '');
-
-      if (!isNaN(nodeIdNumber)) {
-        nodeIdNumber = parseInt(nodeIdNumber);
-
-        // update the largest node id number if necessary
-        if (largestNodeIdNumber == null) {
-          largestNodeIdNumber = nodeIdNumber;
-        } else if (nodeIdNumber > largestNodeIdNumber) {
-          largestNodeIdNumber = nodeIdNumber;
-        }
-      }
-    }
-
-    if (nodeIdsToSkip != null) {
-      for (let nodeIdToSkip of nodeIdsToSkip) {
-        // get the number from the node id e.g. the number of 'node2' would be 2
-        let nodeIdNumber = nodeIdToSkip.replace('node', '');
-
-        if (!isNaN(nodeIdNumber)) {
-          nodeIdNumber = parseInt(nodeIdNumber);
-
-          // update the largest node id number if necessary
-          if (largestNodeIdNumber == null) {
-            largestNodeIdNumber = nodeIdNumber;
-          } else if (nodeIdNumber > largestNodeIdNumber) {
-            largestNodeIdNumber = nodeIdNumber;
-          }
-        }
+  getNextAvailableNodeId(nodeIdsToSkip = []) {
+    let largestNodeIdNumber = -1;
+    for (const nodeId of this.getNodeIds()
+      .concat(this.getInactiveNodeIds())
+      .concat(nodeIdsToSkip)) {
+      const nodeIdNumber = parseInt(nodeId.replace('node', ''));
+      if (nodeIdNumber > largestNodeIdNumber) {
+        largestNodeIdNumber = nodeIdNumber;
       }
     }
     return 'node' + (largestNodeIdNumber + 1);
@@ -2646,14 +2601,9 @@ class ProjectService {
    * @returns an array with all the node ids
    */
   getNodeIds() {
-    const nodeIds = [];
-    for (const node of this.applicationNodes) {
-      const nodeId = node.id;
-      if (nodeId != null) {
-        nodeIds.push(nodeId);
-      }
-    }
-    return nodeIds;
+    return this.applicationNodes.map(node => {
+      return node.id;
+    });
   }
 
   /**
@@ -2661,19 +2611,9 @@ class ProjectService {
    * @returns an array with all the inactive node ids
    */
   getInactiveNodeIds() {
-    const nodeIds = [];
-    const inactiveNodes = this.project.inactiveNodes;
-    if (inactiveNodes != null) {
-      for (let inactiveNode of inactiveNodes) {
-        if (inactiveNode != null) {
-          const nodeId = inactiveNode.id;
-          if (nodeId != null) {
-            nodeIds.push(nodeId);
-          }
-        }
-      }
-    }
-    return nodeIds;
+    return this.project.inactiveNodes.map(node => {
+      return node.id;
+    });
   }
 
   /**
@@ -3311,7 +3251,7 @@ class ProjectService {
    * component id. If this argument is null, we will place the new component
    * in the first position.
    */
-  createComponent(nodeId, componentType, insertAfterComponentId) {
+  createComponent(nodeId, componentType, insertAfterComponentId = null) {
     const node = this.getNodeById(nodeId);
     const service = this.$injector.get(componentType + 'Service');
     const component = service.createComponent();
@@ -3369,10 +3309,6 @@ class ProjectService {
    */
   addComponentToNode(node, component, insertAfterComponentId) {
     if (insertAfterComponentId == null) {
-      /*
-       * insertAfterComponentId is null so we will place the new
-       * component in the first position
-       */
       node.components.splice(0, 0, component);
     } else {
       // place the new component after the insertAfterComponentId

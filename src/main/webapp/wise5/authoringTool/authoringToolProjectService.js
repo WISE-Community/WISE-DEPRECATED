@@ -979,11 +979,8 @@ class AuthoringToolProjectService extends ProjectService {
   }
 
   isNodeIdToInsertTargetNotSpecified(nodeIdToInsertTarget) {
-    return (
-      nodeIdToInsertTarget == null ||
-      nodeIdToInsertTarget === 'inactiveNodes' ||
-      nodeIdToInsertTarget === 'inactiveSteps' ||
-      nodeIdToInsertTarget === 'inactiveGroups'
+    return [null, 'inactiveNodes', 'inactiveSteps', 'inactiveGroups'].includes(
+      nodeIdToInsertTarget
     );
   }
 

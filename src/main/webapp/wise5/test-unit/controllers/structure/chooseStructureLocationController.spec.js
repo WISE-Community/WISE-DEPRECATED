@@ -6,17 +6,28 @@ describe('ChooseStructureLocationController', () => {
   let $state;
   let $scope;
   let controller;
+  let ProjectService;
+  let demoProjectJSON;
+  const structure = { id: 'jigsaw', label: 'A jigsaw activity' };
 
   beforeEach(angular.mock.module(authoringToolModule.name));
 
-  beforeEach(inject((_$controller_, _$rootScope_, _$state_) => {
+  const demoProjectJSONOriginal =
+    window.mocks['test-unit/sampleData/curriculum/DemoProject/project'];
+
+  beforeEach(inject((_$controller_, _$rootScope_, _$state_, _$stateParams_, _ProjectService_) => {
     $controller = _$controller_;
     $rootScope = _$rootScope_;
+    ProjectService = _ProjectService_;
     $state = _$state_;
+    _$stateParams_.structure = structure;
     $scope = $rootScope.$new();
+    demoProjectJSON = JSON.parse(JSON.stringify(demoProjectJSONOriginal));
     controller = $controller('ChooseStructureLocationController', {
       $scope: $scope,
-      $state: $state
+      $state: $state,
+      $stateParams: _$stateParams_,
+      ProjectService: ProjectService
     });
   }));
 
@@ -26,13 +37,25 @@ describe('ChooseStructureLocationController', () => {
 
   function testInsertAsFirstActivity() {
     describe('insertAsFirstActivity', () => {
-      xit('should insert the structure as the first activity', () => {});
+      it('should insert the structure as the first activity', () => {
+        ProjectService.setProject(demoProjectJSON);
+        expect(ProjectService.getGroupNodes().length).toEqual(3);
+        const newGroup = controller.insertAsFirstActivity();
+        expect(ProjectService.getGroupNodes().length).toEqual(4);
+        expect(ProjectService.getPositionById(newGroup.id)).toEqual('1');
+      });
     });
   }
 
   function testInsertAfter() {
     describe('insertAfter', () => {
-      xit('should insert the structure after the specified activity', () => {});
+      it('should insert the structure after the specified activity', () => {
+        ProjectService.setProject(demoProjectJSON);
+        expect(ProjectService.getGroupNodes().length).toEqual(3);
+        const newGroup = controller.insertAfterGroup('group1');
+        expect(ProjectService.getGroupNodes().length).toEqual(4);
+        expect(ProjectService.getPositionById(newGroup.id)).toEqual('2');
+      });
     });
   }
 

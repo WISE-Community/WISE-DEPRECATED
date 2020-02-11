@@ -13,17 +13,29 @@ class ChooseStructureLocationController {
   }
 
   insertAsFirstActivity() {
-    this.$state.go('root.project');
+    const newGroup = this.ProjectService.createGroup(this.structure.label);
+    this.ProjectService.createNodeInside(newGroup, this.ProjectService.getStartGroupId());
+    this.ProjectService.parseProject();
+    this.addStepsToGroup(newGroup);
+    return newGroup;
   }
 
-  insertAfter(afterGroupId) {
-    const groupToAdd = this.ProjectService.createGroup(this.structure.label);
-    this.ProjectService.createNodeAfter(groupToAdd, afterGroupId);
+  insertAfterGroup(groupId) {
+    const newGroup = this.ProjectService.createGroup(this.structure.label);
+    this.ProjectService.createNodeAfter(newGroup, groupId);
     this.ProjectService.parseProject();
+    this.addStepsToGroup(newGroup);
+    return newGroup;
+  }
+
+  addStepsToGroup(group) {
     const node1 = this.ProjectService.createNodeAndAddToLocalStorage('Instructions');
-    this.ProjectService.addNodeToGroup(node1, groupToAdd);
+    this.ProjectService.addNodeToGroup(node1, group);
+    const htmlComponent = this.ProjectService.createComponent(node1.id, 'HTML');
+    htmlComponent.html =
+      'Here are your instructions. Do this activity and discuss with your peers.';
     const node2 = this.ProjectService.createNodeAndAddToLocalStorage('Gather Evidence');
-    this.ProjectService.addNodeToGroup(node2, groupToAdd);
+    this.ProjectService.addNodeToGroup(node2, group);
     this.ProjectService.checkPotentialStartNodeIdChangeThenSaveProject().then(() => {
       this.$rootScope.$broadcast('parseProject');
       this.$state.go('root.project');
