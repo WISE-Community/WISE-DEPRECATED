@@ -7,8 +7,10 @@ class NodeStatusIconCtrl {
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
 
-        this.nodeStatuses = this.StudentDataService.nodeStatuses;
-        this.nodeStatus = this.nodeStatuses[this.nodeId];
+        this.$onInit = () => {
+            this.nodeStatuses = this.StudentDataService.nodeStatuses;
+            this.nodeStatus = this.nodeStatuses[this.nodeId];
+        }
 
         this.$scope.$watch(
             () => { return this.nodeId; },
