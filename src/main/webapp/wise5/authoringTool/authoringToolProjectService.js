@@ -427,7 +427,6 @@ class AuthoringToolProjectService extends ProjectService {
       this.insertNodeAfterInGroups(newNode.id, nodeId);
       this.insertNodeAfterInTransitions(newNode, nodeId);
     }
-
     if (this.isGroupNode(newNode.id)) {
       this.createNodeAfterUpdateGroupTransitions(newNode, nodeId);
     }
@@ -777,6 +776,37 @@ class AuthoringToolProjectService extends ProjectService {
       }
       return newComponents;
     });
+  }
+
+  /**
+   * Delete a component from a node
+   * @param nodeId the node id containing the node
+   * @param componentId the component id
+   */
+  deleteComponent(nodeId, componentId) {
+    const node = this.getNodeById(nodeId);
+    const components = node.components;
+    for (let c = 0; c < components.length; c++) {
+      if (components[c].id === componentId) {
+        components.splice(c, 1);
+        break;
+      }
+    }
+  }
+
+  deleteTransition(node, transition) {
+    const nodeTransitions = node.transitionLogic.transitions;
+    const index = nodeTransitions.indexOf(transition);
+    if (index > -1) {
+      nodeTransitions.splice(index, 1);
+    }
+    if (nodeTransitions.length <= 1) {
+      // these settings only apply when there are multiple transitions
+      node.transitionLogic.howToChooseAmongAvailablePaths = null;
+      node.transitionLogic.whenToChoosePath = null;
+      node.transitionLogic.canChangePath = null;
+      node.transitionLogic.maxPathsVisitable = null;
+    }
   }
 
   /**

@@ -679,27 +679,11 @@ class NodeAuthoringController {
    * @param transition the transition to delete
    */
   deleteTransition(transition) {
-    let stepTitle = '';
-    if (transition != null) {
-      stepTitle = this.ProjectService.getNodePositionAndTitleByNodeId(transition.to);
-    }
-    const answer = confirm(this.$translate('areYouSureYouWantToDeleteThisPath', { stepTitle: stepTitle }));
+    const stepTitle = this.ProjectService.getNodePositionAndTitleByNodeId(transition.to);
+    const answer = confirm(this.$translate('areYouSureYouWantToDeleteThisPath',
+        { stepTitle: stepTitle }));
     if (answer) {
-      let nodeTransitions = this.node.transitionLogic.transitions;
-      let index = nodeTransitions.indexOf(transition);
-      if (index > -1) {
-        nodeTransitions.splice(index, 1);
-      }
-      if (nodeTransitions.length <= 1) {
-        /*
-         * there is zero or one transition so we will clear the parameters
-         * below since they only apply when there are multiple transitions
-         */
-        this.node.transitionLogic.howToChooseAmongAvailablePaths = null;
-        this.node.transitionLogic.whenToChoosePath = null;
-        this.node.transitionLogic.canChangePath = null;
-        this.node.transitionLogic.maxPathsVisitable = null;
-      }
+      this.ProjectService.deleteTransition(this.node, transition);
       this.authoringViewNodeChanged();
     }
   }

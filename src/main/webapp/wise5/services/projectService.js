@@ -3425,24 +3425,6 @@ class ProjectService {
   }
 
   /**
-   * Delete the component
-   * @param nodeId the node id
-   * @param componentId the component id
-   */
-  deleteComponent(nodeId, componentId) {
-    // TODO refactor and move to authoringToolProjectService
-    const node = this.getNodeById(nodeId);
-    const components = node.components;
-    for (let c = 0; c < components.length; c++) {
-      const component = components[c];
-      if (component.id === componentId) {
-        components.splice(c, 1);
-        break;
-      }
-    }
-  }
-
-  /**
    * TODO: Deprecated, should be removed; replaced by getMaxScoreForWorkgroupId in
    * StudentStatusService
    * Get the max score for the project. If the project contains branches, we
@@ -3698,11 +3680,8 @@ class ProjectService {
 
         const scores = params.scores;
         if (scores != null) {
-          // get the required score
           scoresString = scores.join(', ');
         }
-
-        // generate the message
         message += this.$translate('obtainAScoreOfXOnNodeTitle',
             { score: scoresString, nodeTitle: nodeTitle });
       } else if (name === 'choiceChosen') {
@@ -3826,22 +3805,6 @@ class ProjectService {
    */
   getGroupStartId(nodeId) {
     return this.getNodeById(nodeId).startId;
-  }
-
-  /**
-   * Get the start id of the node's parent group
-   * @param nodeId we will get the parent of this node and then look
-   * for the start id of the parent
-   * @returns the start id of the parent
-   */
-  getParentGroupStartId(nodeId) {
-    if (nodeId != null) {
-      const parentGroup = this.getParentGroup(nodeId);
-      if (parentGroup != null) {
-        return parentGroup.startId;
-      }
-    }
-    return null;
   }
 
   /**

@@ -82,9 +82,35 @@ describe('AuthoringToolProjectService Unit Test', () => {
       ProjectService.setProject(demoProjectJSON);
       expect(ProjectService.isNodeIdUsed("nodedoesnotexist")).toEqual(false);
     });
+    testDeleteComponent();
+    testDeleteTransition();
     testGetNodeIdAfter();
     testCreateNodeAfter();
   });
+
+  function testDeleteComponent() {
+    describe('deleteComponent', () => {
+      it('should delete the component from the node', () => {
+        ProjectService.setProject(demoProjectJSON);
+        expect(ProjectService.getComponentByNodeIdAndComponentId('node1', 'zh4h1urdys')).not
+            .toBeNull();
+        ProjectService.deleteComponent('node1', 'zh4h1urdys');
+        expect(ProjectService.getComponentByNodeIdAndComponentId('node1', 'zh4h1urdys')).toBeNull();
+      });
+    });
+  }
+
+  function testDeleteTransition() {
+    describe('deleteTransition', () => {
+      it('should delete existing transition from the node', () => {
+        ProjectService.setProject(demoProjectJSON);
+        const node1 = ProjectService.getNodeById('node1');
+        expect(ProjectService.nodeHasTransitionToNodeId(node1, 'node2')).toBeTruthy();
+        ProjectService.deleteTransition(node1, node1.transitionLogic.transitions[0]);
+        expect(ProjectService.nodeHasTransitionToNodeId(node1, 'node2')).toBeFalsy();
+      });
+    });
+  }
 
   function testGetNodeIdAfter() {
     describe('getNodeIdAfter', () => {
