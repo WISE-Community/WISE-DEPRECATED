@@ -796,7 +796,7 @@ class AuthoringToolProjectService extends ProjectService {
 
   deleteTransition(node, transition) {
     const nodeTransitions = node.transitionLogic.transitions;
-    let index = nodeTransitions.indexOf(transition);
+    const index = nodeTransitions.indexOf(transition);
     if (index > -1) {
       nodeTransitions.splice(index, 1);
     }
