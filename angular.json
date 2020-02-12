@@ -17,13 +17,8 @@
             "tsConfig": "src/main/webapp/site/src/tsconfig.app.json",
             "polyfills": "src/main/webapp/site/src/polyfills.ts",
             "extractCss": true,
-            "assets": [
-              "src/main/webapp/site/src/assets",
-              "src/main/webapp/site/src/favicon.ico"
-            ],
-            "styles": [
-              "src/main/webapp/site/src/style/styles.scss"
-            ],
+            "assets": ["src/main/webapp/site/src/assets", "src/main/webapp/site/src/favicon.ico"],
+            "styles": ["src/main/webapp/site/src/style/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -95,8 +90,8 @@
                   "with": "src/main/webapp/site/src/locale/messages.zh-Hans.xlf"
                 }
               ],
-              "outputPath": "src/main/webapp/site/dist/zh-Hans/",
-              "baseHref": "/zh-Hans/",
+              "outputPath": "src/main/webapp/site/dist/",
+              "baseHref": "/",
               "i18nFile": "src/main/webapp/site/src/locale/messages.zh-Hans.xlf",
               "i18nFormat": "xlf",
               "i18nLocale": "zh-Hans"
@@ -155,25 +150,15 @@
             "polyfills": "src/main/webapp/site/src/polyfills.ts",
             "tsConfig": "src/main/webapp/site/src/tsconfig.spec.json",
             "scripts": [],
-            "styles": [
-              "src/main/webapp/site/src/style/styles.scss"
-            ],
-            "assets": [
-              "src/main/webapp/site/src/assets",
-              "src/main/webapp/site/src/favicon.ico"
-            ]
+            "styles": ["src/main/webapp/site/src/style/styles.scss"],
+            "assets": ["src/main/webapp/site/src/assets", "src/main/webapp/site/src/favicon.ico"]
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": [
-              "src/tsconfig.app.json",
-              "src/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "tsConfig": ["src/tsconfig.app.json", "src/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**"]
           }
         }
       }
@@ -193,12 +178,8 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": [
-              "e2e/tsconfig.e2e.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "tsConfig": ["e2e/tsconfig.e2e.json"],
+            "exclude": ["**/node_modules/**"]
           }
         }
       }
@@ -217,12 +198,9 @@
             "tsConfig": "src/main/webapp/wise5/vle/src/tsconfig.app.json",
             "polyfills": "src/main/webapp/wise5/vle/src/polyfills.ts",
             "extractCss": true,
-            "assets": [
-            ],
-            "styles": [
-            ],
-            "scripts": [
-            ]
+            "assets": [],
+            "styles": [],
+            "scripts": []
           },
           "configurations": {
             "production": {
@@ -272,9 +250,7 @@
             "polyfills": "src/main/webapp/wise5/vle/src/polyfills.ts",
             "tsConfig": "src/main/webapp/wise5/vle/src/tsconfig.spec.json",
             "scripts": [],
-            "styles": [
-              "src/main/webapp/wise5/vle/src/style/styles.scss"
-            ],
+            "styles": ["src/main/webapp/wise5/vle/src/style/styles.scss"],
             "assets": [
               "src/main/webapp/wise5/vle/src/assets",
               "src/main/webapp/wise5/vle/src/favicon.ico"
@@ -284,13 +260,8 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": [
-              "src/tsconfig.app.json",
-              "src/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "tsConfig": ["src/tsconfig.app.json", "src/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**"]
           }
         }
       }
@@ -309,12 +280,9 @@
             "tsConfig": "src/main/webapp/wise5/authoringTool/src/tsconfig.app.json",
             "polyfills": "src/main/webapp/wise5/authoringTool/src/polyfills.ts",
             "extractCss": true,
-            "assets": [
-            ],
-            "styles": [
-            ],
-            "scripts": [
-            ]
+            "assets": [],
+            "styles": [],
+            "scripts": []
           },
           "configurations": {
             "production": {
@@ -364,9 +332,7 @@
             "polyfills": "src/main/webapp/wise5/authoringTool/src/polyfills.ts",
             "tsConfig": "src/main/webapp/wise5/authoringTool/src/tsconfig.spec.json",
             "scripts": [],
-            "styles": [
-              "src/main/webapp/wise5/authoringTool/src/style/styles.scss"
-            ],
+            "styles": ["src/main/webapp/wise5/authoringTool/src/style/styles.scss"],
             "assets": [
               "src/main/webapp/wise5/authoringTool/src/assets",
               "src/main/webapp/wise5/authoringTool/src/favicon.ico"
@@ -376,13 +342,8 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": [
-              "src/tsconfig.app.json",
-              "src/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "tsConfig": ["src/tsconfig.app.json", "src/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**"]
           }
         }
       }
@@ -401,12 +362,9 @@
             "tsConfig": "src/main/webapp/wise5/classroomMonitor/src/tsconfig.app.json",
             "polyfills": "src/main/webapp/wise5/classroomMonitor/src/polyfills.ts",
             "extractCss": true,
-            "assets": [
-            ],
-            "styles": [
-            ],
-            "scripts": [
-            ]
+            "assets": [],
+            "styles": [],
+            "scripts": []
           },
           "configurations": {
             "production": {
@@ -456,9 +414,7 @@
             "polyfills": "src/main/webapp/wise5/classroomMonitor/src/polyfills.ts",
             "tsConfig": "src/main/webapp/wise5/classroomMonitor/src/tsconfig.spec.json",
             "scripts": [],
-            "styles": [
-              "src/main/webapp/wise5/classroomMonitor/src/style/styles.scss"
-            ],
+            "styles": ["src/main/webapp/wise5/classroomMonitor/src/style/styles.scss"],
             "assets": [
               "src/main/webapp/wise5/classroomMonitor/src/assets",
               "src/main/webapp/wise5/classroomMonitor/src/favicon.ico"
@@ -468,13 +424,8 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": [
-              "src/tsconfig.app.json",
-              "src/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "tsConfig": ["src/tsconfig.app.json", "src/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**"]
           }
         }
       }
