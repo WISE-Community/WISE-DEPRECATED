@@ -31,7 +31,7 @@ class ChooseStructureLocationController {
   }
 
   setTitleOfStructure(structure, title) {
-    this.structure.group.title = title;
+    structure.group.title = title;
   }
 
   injectUniqueIds(structure) {
@@ -45,7 +45,7 @@ class ChooseStructureLocationController {
       node.id = newNodeId;
       newNodeIds.push(newNodeId);
     }
-    return JSON.parse(this.replaceOldNodeIds(structure, oldToNewNodeIds));
+    return this.replaceOldNodeIds(structure, oldToNewNodeIds);
   }
 
   replaceOldNodeIds(structure, oldToNewNodeIds) {
@@ -54,7 +54,7 @@ class ChooseStructureLocationController {
       const regex = new RegExp(oldNodeId, 'g');
       structureJSONString = structureJSONString.replace(regex, oldToNewNodeIds[oldNodeId]);
     }
-    return structureJSONString;
+    return JSON.parse(structureJSONString);
   }
 
   addStepsToGroup(group) {

@@ -8,7 +8,19 @@ describe('ChooseStructureLocationController', () => {
   let controller;
   let ProjectService;
   let demoProjectJSON;
-  const structure = { id: 'jigsaw', label: 'A jigsaw activity' };
+  const structure = {
+    id: 'jigsaw',
+    label: 'A jigsaw activity',
+    group: {
+      id: 'group1',
+      ids: ['node1']
+    },
+    nodes: [
+      {
+        id: 'node1'
+      }
+    ]
+  };
 
   beforeEach(angular.mock.module(authoringToolModule.name));
 
@@ -23,6 +35,7 @@ describe('ChooseStructureLocationController', () => {
     _$stateParams_.structure = structure;
     $scope = $rootScope.$new();
     demoProjectJSON = JSON.parse(JSON.stringify(demoProjectJSONOriginal));
+    ProjectService.setProject(demoProjectJSON);
     controller = $controller('ChooseStructureLocationController', {
       $scope: $scope,
       $state: $state,
@@ -34,11 +47,12 @@ describe('ChooseStructureLocationController', () => {
   testInsertAsFirstActivity();
   testInsertAfter();
   testCancel();
+  testInjectUniqueIds();
+  testReplaceOldNodeIds();
 
   function testInsertAsFirstActivity() {
     describe('insertAsFirstActivity', () => {
       it('should insert the structure as the first activity', () => {
-        ProjectService.setProject(demoProjectJSON);
         expect(ProjectService.getGroupNodes().length).toEqual(3);
         const newGroup = controller.insertAsFirstActivity();
         expect(ProjectService.getGroupNodes().length).toEqual(4);
@@ -50,7 +64,6 @@ describe('ChooseStructureLocationController', () => {
   function testInsertAfter() {
     describe('insertAfter', () => {
       it('should insert the structure after the specified activity', () => {
-        ProjectService.setProject(demoProjectJSON);
         expect(ProjectService.getGroupNodes().length).toEqual(3);
         const newGroup = controller.insertAfterGroup('group1');
         expect(ProjectService.getGroupNodes().length).toEqual(4);
@@ -65,6 +78,46 @@ describe('ChooseStructureLocationController', () => {
         spyOn($state, 'go');
         controller.cancel();
         expect($state.go).toHaveBeenCalledWith('root.project');
+      });
+    });
+  }
+
+  function testInjectUniqueIds() {
+    describe('injectUniqueIds', () => {
+      it('should inject unique ids', () => {
+        let structure = {
+          group: {
+            id: 'group1'
+          },
+          nodes: [
+            {
+              id: 'node1'
+            }
+          ]
+        };
+        structure = controller.injectUniqueIds(structure);
+        expect(structure.group.id).toEqual('group3');
+        expect(structure.nodes[0].id).toEqual('node790');
+      });
+    });
+  }
+
+  function testReplaceOldNodeIds() {
+    describe('replaceOldNodeIds', () => {
+      it('should replace old node ids', () => {
+        let structure = {
+          group: {
+            id: 'group1'
+          },
+          nodes: [
+            {
+              id: 'node1'
+            }
+          ]
+        };
+        structure = controller.replaceOldNodeIds(structure, { group1: 'group2', node1: 'node2' });
+        expect(structure.group.id).toEqual('group2');
+        expect(structure.nodes[0].id).toEqual('node2');
       });
     });
   }
