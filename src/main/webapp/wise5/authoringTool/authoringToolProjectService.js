@@ -424,30 +424,6 @@ class AuthoringToolProjectService extends ProjectService {
       this.insertNodeAfterInGroups(newNode.id, nodeId);
       this.insertNodeAfterInTransitions(newNode, nodeId);
     }
-    if (this.isGroupNode(newNode.id)) {
-      this.createNodeAfterUpdateGroupTransitions(newNode, nodeId);
-    }
-  }
-
-  /**
-   * Create/update the transitions that traverse from the previous group to the new group
-   */
-  createNodeAfterUpdateGroupTransitions(newGroupNode, nodeId) {
-     const oldToGroupIds = [];
-     const transitionsFromGroup = this.getTransitionsByFromNodeId(nodeId);
-     if (transitionsFromGroup != null) {
-       for (const transitionFromGroup of transitionsFromGroup) {
-         const toNodeId = transitionFromGroup.to;
-         if (toNodeId != null) {
-           oldToGroupIds.push(toNodeId);
-         }
-       }
-     }
-     const fromGroupId = nodeId;
-     const newToGroupId = newGroupNode.id;
-
-     // make the transitions point to the new group and the new group transition to the old group
-     this.updateTransitionsForInsertingGroup(fromGroupId, oldToGroupIds, newToGroupId);
   }
 
   /**
@@ -864,29 +840,20 @@ class AuthoringToolProjectService extends ProjectService {
   }
 
   checkPotentialStartNodeIdChangeThenSaveProject() {
-    return this.checkPotentialStartNodeIdChange().then(() => {
-      return this.saveProject();
-    });
+    this.checkPotentialStartNodeIdChange();
+    return this.saveProject();
   }
 
   checkPotentialStartNodeIdChange() {
-    return this.$q((resolve, reject) => {
-      const firstLeafNodeId = this.getFirstLeafNodeId();
-      if (firstLeafNodeId == null) {
-        // there are no steps in the project
-        this.setStartNodeId('');
-        resolve();
-      } else {
-        // we have found a leaf node
-        const currentStartNodeId = this.getStartNodeId();
-        if (currentStartNodeId != firstLeafNodeId) {
-          this.setStartNodeId(firstLeafNodeId);
-          resolve();
-        } else {
-          resolve();
-        }
+    const firstLeafNodeId = this.getFirstLeafNodeId();
+    if (firstLeafNodeId == null) {
+      this.setStartNodeId('');
+    } else {
+      const currentStartNodeId = this.getStartNodeId();
+      if (currentStartNodeId != firstLeafNodeId) {
+        this.setStartNodeId(firstLeafNodeId);
       }
-    });
+    }
   }
 
   /**

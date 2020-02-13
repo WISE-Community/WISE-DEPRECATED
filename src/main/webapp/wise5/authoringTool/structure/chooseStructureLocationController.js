@@ -15,19 +15,33 @@ class ChooseStructureLocationController {
   }
 
   insertAsFirstActivity() {
-    const newGroup = this.ProjectService.createGroup(this.structure.label);
-    this.ProjectService.createNodeInside(newGroup, this.ProjectService.getStartGroupId());
-    this.ProjectService.parseProject();
-    this.addStepsToGroup(newGroup);
-    return newGroup;
+    this.addNodesToProject(this.structure.nodes);
+    this.ProjectService.createNodeInside(
+      this.structure.group,
+      this.ProjectService.getStartGroupId()
+    );
+    this.saveAndGoBackToProjectHome();
   }
 
   insertAfterGroup(groupId) {
-    const newGroup = this.ProjectService.createGroup(this.structure.label);
-    this.ProjectService.createNodeAfter(newGroup, groupId);
-    this.ProjectService.parseProject();
-    this.addStepsToGroup(newGroup);
-    return newGroup;
+    this.addNodesToProject(this.structure.nodes);
+    this.ProjectService.createNodeAfter(this.structure.group, groupId);
+    this.saveAndGoBackToProjectHome();
+  }
+
+  addNodesToProject(nodes) {
+    for (const node of nodes) {
+      this.ProjectService.setIdToNode(node.id, node);
+      this.ProjectService.addNode(node);
+      this.ProjectService.applicationNodes.push(node);
+    }
+  }
+
+  saveAndGoBackToProjectHome() {
+    this.ProjectService.checkPotentialStartNodeIdChangeThenSaveProject().then(() => {
+      this.$rootScope.$broadcast('parseProject');
+      this.$state.go('root.project');
+    });
   }
 
   setTitleOfStructure(structure, title) {

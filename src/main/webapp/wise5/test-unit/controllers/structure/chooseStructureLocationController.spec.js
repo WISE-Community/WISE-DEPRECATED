@@ -13,11 +13,19 @@ describe('ChooseStructureLocationController', () => {
     label: 'A jigsaw activity',
     group: {
       id: 'group1',
-      ids: ['node1']
+      type: 'group',
+      ids: ['node1'],
+      transitionLogic: {
+        transitions: []
+      }
     },
     nodes: [
       {
-        id: 'node1'
+        id: 'node1',
+        type: 'node',
+        transitionLogic: {
+          transitions: []
+        }
       }
     ]
   };
@@ -54,9 +62,13 @@ describe('ChooseStructureLocationController', () => {
     describe('insertAsFirstActivity', () => {
       it('should insert the structure as the first activity', () => {
         expect(ProjectService.getGroupNodes().length).toEqual(3);
-        const newGroup = controller.insertAsFirstActivity();
+        spyOn(ProjectService, 'checkPotentialStartNodeIdChangeThenSaveProject').and.returnValue(
+          Promise.resolve()
+        );
+        controller.insertAsFirstActivity();
+        ProjectService.parseProject();
         expect(ProjectService.getGroupNodes().length).toEqual(4);
-        expect(ProjectService.getPositionById(newGroup.id)).toEqual('1');
+        expect(ProjectService.getPositionById('group3')).toEqual('1');
       });
     });
   }
@@ -65,9 +77,13 @@ describe('ChooseStructureLocationController', () => {
     describe('insertAfter', () => {
       it('should insert the structure after the specified activity', () => {
         expect(ProjectService.getGroupNodes().length).toEqual(3);
-        const newGroup = controller.insertAfterGroup('group1');
+        spyOn(ProjectService, 'checkPotentialStartNodeIdChangeThenSaveProject').and.returnValue(
+          Promise.resolve()
+        );
+        controller.insertAfterGroup('group1');
+        ProjectService.parseProject();
         expect(ProjectService.getGroupNodes().length).toEqual(4);
-        expect(ProjectService.getPositionById(newGroup.id)).toEqual('2');
+        expect(ProjectService.getPositionById('group3')).toEqual('2');
       });
     });
   }

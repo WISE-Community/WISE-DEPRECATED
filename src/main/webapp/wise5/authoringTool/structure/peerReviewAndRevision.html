@@ -1,30 +1,5 @@
 <p>Peer Review and Revision</p>
-
-<!-- Activity
-{{ peerReviewAndRevisionController.structure.activity }}
-
-Steps
-{{ peerReviewAndRevisionController.structure.steps }} -->
-<div>{{ peerReviewAndRevisionController.structure.group.title }}</div>
-<div ng-repeat='step in peerReviewAndRevisionController.structure.nodes'>
-  {{ step.title }}
-  <div ng-repeat='component in step.components'>
-    <div ng-if='component.type === "HTML"'>
-      <summernote id='component-{{component.id}}'
-          ng-model='component.html'
-          config='peerReviewAndRevisionController.summernoteOptions'
-          ng-model-options='{debounce: 1000}'></summernote>
-    </div>
-    <div ng-if='component.type === "OpenResponse"'>
-      <summernote id='component-{{component.id}}'
-          ng-model='component.prompt'
-          config='peerReviewAndRevisionController.summernoteOptions'
-          ng-model-options='{debounce: 1000}'
-          ></summernote>
-    </div>
-  </div>
-</div>
-
+<div>Activity Name: {{ peerReviewAndRevisionController.structure.group.title }}</div>
 <md-button class='createButton md-raised md-primary'
                   ng-click='peerReviewAndRevisionController.chooseLocation()'
                   aria-label='{{ ::"next" | translate }}'
