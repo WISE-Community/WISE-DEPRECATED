@@ -4,7 +4,7 @@ import OpenResponseService from './openResponseService';
 import OpenResponseController from './openResponseController';
 import OpenResponseAuthoringController from './openResponseAuthoringController';
 
-let openResponseAuthoringComponentModule = angular.module('openResponseAuthoringComponentModule', [
+const openResponseAuthoringComponentModule = angular.module('openResponseAuthoringComponentModule', [
   'pascalprecht.translate'
 ])
   .service('OpenResponseService', OpenResponseService)

@@ -101,7 +101,7 @@ class WorkgroupNodeGradingController {
 
     isComponentVisible(componentId) {
       if (this.hiddenComponents != null) {
-        return this.hiddenComponents.indexOf(componentId) !== -1;
+        return !this.hiddenComponents.includes(componentId);
       }
       return true;
     }

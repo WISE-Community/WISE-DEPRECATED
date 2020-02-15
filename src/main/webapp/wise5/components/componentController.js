@@ -768,31 +768,18 @@ class ComponentController {
    * @param connectedComponent the connected component object we are authoring
    */
   authoringAutomaticallySetConnectedComponentComponentIdIfPossible(connectedComponent) {
-    if (connectedComponent != null) {
-      let components = this.getComponentsByNodeId(connectedComponent.nodeId);
-      if (components != null) {
-        let numberOfAllowedComponents = 0;
-        let allowedComponent = null;
-        for (let component of components) {
-          if (component != null) {
-            if (this.isConnectedComponentTypeAllowed(component.type) &&
-              component.id != this.componentId) {
-              // we have found a viable component we can connect to
-              numberOfAllowedComponents += 1;
-              allowedComponent = component;
-            }
-          }
-        }
-
-        if (numberOfAllowedComponents == 1) {
-          /*
-           * there is only one viable component to connect to so we
-           * will use it
-           */
-          connectedComponent.componentId = allowedComponent.id;
-          connectedComponent.type = 'importWork';
-        }
+    let numberOfAllowedComponents = 0;
+    let allowedComponent = null;
+    for (const component of this.getComponentsByNodeId(connectedComponent.nodeId)) {
+      if (this.isConnectedComponentTypeAllowed(component.type) &&
+          component.id != this.componentId) {
+        numberOfAllowedComponents += 1;
+        allowedComponent = component;
       }
+    }
+    if (numberOfAllowedComponents === 1) {
+      connectedComponent.componentId = allowedComponent.id;
+      connectedComponent.type = 'importWork';
     }
     this.authoringAutomaticallySetConnectedComponentTypeIfPossible(connectedComponent);
   }

@@ -1,6 +1,6 @@
 'use strict';
 
-import OutsideURLController from "./outsideURLController";
+import OutsideURLController from './outsideURLController';
 
 class OutsideURLAuthoringController extends OutsideURLController {
   constructor($filter,
@@ -44,71 +44,20 @@ class OutsideURLAuthoringController extends OutsideURLController {
       this.setWidthAndHeight(
           this.authoringComponentContent.width, this.authoringComponentContent.height);
     }, true);
-
     this.OutsideURLService.getOpenEducationalResources().then((openEducationalResources) => {
       this.openEducationalResources = openEducationalResources;
     });
+    this.registerAssetListener();
+  }
 
-    /*
-     * Listen for the assetSelected event which occurs when the user
-     * selects an asset from the choose asset popup
-     */
-    this.$scope.$on('assetSelected', (event, args) => {
-
-      if (args != null) {
-
-        // make sure the event was fired for this component
-        if (args.nodeId == this.nodeId && args.componentId == this.componentId) {
-          // the asset was selected for this component
-          var assetItem = args.assetItem;
-
-          if (assetItem != null) {
-            var fileName = assetItem.fileName;
-
-            if (fileName != null) {
-              /*
-               * get the assets directory path
-               * e.g.
-               * /wise/curriculum/3/
-               */
-              var assetsDirectoryPath = this.ConfigService.getProjectAssetsDirectoryPath();
-              var fullAssetPath = assetsDirectoryPath + '/' + fileName;
-
-              var summernoteId = '';
-
-              if (args.target == 'rubric') {
-                // the target is the summernote rubric element
-                summernoteId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
-              }
-
-              if (summernoteId != '') {
-                if (this.UtilService.isImage(fileName)) {
-                  /*
-                   * move the cursor back to its position when the asset chooser
-                   * popup was clicked
-                   */
-                  angular.element(document.querySelector(`#${summernoteId}`)).summernote('editor.restoreRange');
-                  angular.element(document.querySelector(`#${summernoteId}`)).summernote('editor.focus');
-
-                  // add the image html
-                  angular.element(document.querySelector(`#${summernoteId}`)).summernote('insertImage', fullAssetPath, fileName);
-                } else if (this.UtilService.isVideo(fileName)) {
-                  /*
-                   * move the cursor back to its position when the asset chooser
-                   * popup was clicked
-                   */
-                  angular.element(document.querySelector(`#${summernoteId}`)).summernote('editor.restoreRange');
-                  angular.element(document.querySelector(`#${summernoteId}`)).summernote('editor.focus');
-
-                  // insert the video element
-                  var videoElement = document.createElement('video');
-                  videoElement.controls = 'true';
-                  videoElement.innerHTML = '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
-                  angular.element(document.querySelector(`#${summernoteId}`)).summernote('insertNode', videoElement);
-                }
-              }
-            }
-          }
+  registerAssetListener() {
+    this.$scope.$on('assetSelected', (event, {nodeId, componentId, assetItem, target}) => {
+      if (nodeId === this.nodeId && componentId === this.componentId) {
+        const fileName = assetItem.fileName;
+        const fullFilePath = `${this.ConfigService.getProjectAssetsDirectoryPath()}/${fileName}`;
+        if (target === 'rubric') {
+          this.UtilService.insertFileInSummernoteEditor(
+              `summernoteRubric_${this.nodeId}_${this.componentId}`, fullFilePath, fileName);
         }
       }
       this.$mdDialog.hide();
@@ -137,7 +86,7 @@ class OutsideURLAuthoringController extends OutsideURLController {
   }
 }
 
-  OutsideURLAuthoringController.$inject = [
+OutsideURLAuthoringController.$inject = [
   '$filter',
   '$mdDialog',
   '$q',

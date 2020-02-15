@@ -923,7 +923,7 @@
             <md-button class='regularButton md-raised md-primary'
                 style='margin-top: -5px;'
                 ng-if='importItem.node.type != "group"'
-                ng-click='nodeAuthoringController.previewImportComponent(importItem.node, component.id)'
+                ng-click='nodeAuthoringController.previewImportNode(importItem.node)'
                 aria-label='{{ ::"previewComponent" | translate }}'>
               <md-icon>visibility</md-icon>
               <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'previewComponent' | translate }}</md-tooltip>

@@ -90,12 +90,6 @@ class ProjectController {
     this.summernoteRubricId = 'summernoteRubric_' + this.projectId;
     this.summernoteRubricHTML = this.ProjectService
         .replaceAssetPaths(this.ProjectService.getProjectRubric());
-
-    let insertAssetToolTipText = this.$translate('INSERT_ASSET');
-    let insertAssetButton = this.UtilService.createInsertAssetButton(this,
-          this.projectId, null, null, 'rubric', insertAssetToolTipText);
-
-    // options to display in the summernote tool
     this.summernoteRubricOptions = {
       toolbar: [
         ['style', ['style']],
@@ -112,7 +106,8 @@ class ProjectController {
       height: 300,
       disableDragAndDrop: true,
       buttons: {
-        'insertAssetButton': insertAssetButton
+        'insertAssetButton': this.UtilService.createInsertAssetButton(this, this.projectId, null,
+            null, 'rubric', this.$translate('INSERT_ASSET'))
       }
     };
 

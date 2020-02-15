@@ -199,7 +199,6 @@ class AuthoringToolProjectService extends ProjectService {
    */
   replaceNode(nodeId, node) {
     this.setIdToNode(nodeId, node);
-    this.setIdToElement(nodeId, node);
     const nodes = this.getNodes();
     for (let n = 0; n < nodes.length; n++) {
       if (nodeId === nodes[n].id) {
@@ -401,7 +400,6 @@ class AuthoringToolProjectService extends ProjectService {
     if (nodeId === 'inactiveNodes' || nodeId === 'inactiveGroups') {
       this.addInactiveNodeInsertAfter(node);
       this.setIdToNode(node.id, node);
-      this.setIdToElement(node.id, node);
     } else {
       this.setIdToNode(node.id, node);
       if (this.isInactive(nodeId)) {
@@ -419,51 +417,40 @@ class AuthoringToolProjectService extends ProjectService {
    * @param node the new node
    * @param nodeId the node to add after
    */
-  createNodeAfter(node, nodeId) {
+  createNodeAfter(newNode, nodeId) {
     if (this.isInactive(nodeId)) {
-      this.addInactiveNodeInsertAfter(node, nodeId);
-      this.setIdToNode(node.id, node);
-      this.setIdToElement(node.id, node);
+      this.addInactiveNodeInsertAfter(newNode, nodeId);
+      this.setIdToNode(newNode.id, newNode);
     } else {
-      this.addNode(node);
-      this.setIdToNode(node.id, node);
-      this.insertNodeAfterInGroups(node.id, nodeId);
-      this.insertNodeAfterInTransitions(node, nodeId);
+      this.addNode(newNode);
+      this.setIdToNode(newNode.id, newNode);
+      this.insertNodeAfterInGroups(newNode.id, nodeId);
+      this.insertNodeAfterInTransitions(newNode, nodeId);
     }
-
-    if (this.isGroupNode(node.id)) {
-      /*
-       * we are creating a group node so we will update/create the
-       * transitions that traverse from the previous group to this group
-       */
-      // TODO geoffreykwan oldToGroupIds is declared here and below. Refactor
-      var oldToGroupIds = [];
-
-      const transitionsFromGroup = this.getTransitionsByFromNodeId(nodeId);
-      if (transitionsFromGroup != null) {
-        /*
-         * loop through all the transitions that come out of the previous group
-         * and get the node ids that the group transitions to
-         */
-        for (const transitionFromGroup of transitionsFromGroup) {
-          const toNodeId = transitionFromGroup.to;
-          if (toNodeId != null) {
-            oldToGroupIds.push(toNodeId);
-          }
-        }
-      }
-
-      const fromGroupId = nodeId;
-      // TODO geoffreykwan oldToGroupIds is declared here and above. Refactor
-      var oldToGroupIds = oldToGroupIds;
-      const newToGroupId = node.id;
-
-      /*
-       * make the transitions point to the new group and make the new
-       * group transition to the old group
-       */
-      this.updateTransitionsForInsertingGroup(fromGroupId, oldToGroupIds, newToGroupId);
+    if (this.isGroupNode(newNode.id)) {
+      this.createNodeAfterUpdateGroupTransitions(newNode, nodeId);
     }
+  }
+
+  /**
+   * Create/update the transitions that traverse from the previous group to the new group
+   */
+  createNodeAfterUpdateGroupTransitions(newGroupNode, nodeId) {
+     const oldToGroupIds = [];
+     const transitionsFromGroup = this.getTransitionsByFromNodeId(nodeId);
+     if (transitionsFromGroup != null) {
+       for (const transitionFromGroup of transitionsFromGroup) {
+         const toNodeId = transitionFromGroup.to;
+         if (toNodeId != null) {
+           oldToGroupIds.push(toNodeId);
+         }
+       }
+     }
+     const fromGroupId = nodeId;
+     const newToGroupId = newGroupNode.id;
+
+     // make the transitions point to the new group and the new group transition to the old group
+     this.updateTransitionsForInsertingGroup(fromGroupId, oldToGroupIds, newToGroupId);
   }
 
   /**
@@ -548,36 +535,17 @@ class AuthoringToolProjectService extends ProjectService {
   /**
    * Get the node id that comes after a given node id
    * @param nodeId get the node id that comes after this node id
-   * @param the node id that comes after the one that is passed in as a parameter
+   * @return the node id that comes after the one that is passed in as a parameter, or null
+   * if this is the last node in the sequence
    */
   getNodeIdAfter(nodeId) {
-    let nodeIdAfter = null;
-    // get an array of ordered items. each item represents a node
     const orderedItems = this.$filter('orderBy')(this.$filter('toArray')(this.idToOrder), 'order');
-    if (orderedItems != null) {
-      let foundNodeId = false;
-      for (let item of orderedItems) {
-        if (item != null) {
-          const tempNodeId = item.$key;
-
-          // check if we have found the node id that was passed in as a parameter
-          if (foundNodeId) {
-            /*
-             * we have previously found the node id that was passed in which means
-             * the current temp node id is the one that comes after it
-             */
-            nodeIdAfter = tempNodeId;
-            break;
-          } else {
-            if (nodeId == tempNodeId) {
-              // we have found the node id that was passed in as a parameter
-              foundNodeId = true;
-            }
-          }
-        }
+    for (let i = 0; i < orderedItems.length - 1; i++) {
+      if (orderedItems[i].$key === nodeId) {
+        return orderedItems[i + 1].$key;
       }
     }
-    return nodeIdAfter;
+    return null;
   }
 
   /**
@@ -808,6 +776,37 @@ class AuthoringToolProjectService extends ProjectService {
       }
       return newComponents;
     });
+  }
+
+  /**
+   * Delete a component from a node
+   * @param nodeId the node id containing the node
+   * @param componentId the component id
+   */
+  deleteComponent(nodeId, componentId) {
+    const node = this.getNodeById(nodeId);
+    const components = node.components;
+    for (let c = 0; c < components.length; c++) {
+      if (components[c].id === componentId) {
+        components.splice(c, 1);
+        break;
+      }
+    }
+  }
+
+  deleteTransition(node, transition) {
+    const nodeTransitions = node.transitionLogic.transitions;
+    const index = nodeTransitions.indexOf(transition);
+    if (index > -1) {
+      nodeTransitions.splice(index, 1);
+    }
+    if (nodeTransitions.length <= 1) {
+      // these settings only apply when there are multiple transitions
+      node.transitionLogic.howToChooseAmongAvailablePaths = null;
+      node.transitionLogic.whenToChoosePath = null;
+      node.transitionLogic.canChangePath = null;
+      node.transitionLogic.maxPathsVisitable = null;
+    }
   }
 
   /**

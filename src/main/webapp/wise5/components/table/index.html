@@ -164,17 +164,15 @@
                 ng-click='tableController.saveButtonClicked()'
                 ng-disabled='tableController.isDisabled || !tableController.isDirty'
                 ng-if='::tableController.isSaveButtonVisible'
-                aria-label='Save'
-                translate='SAVE'>
-              {{ ::'save' | translate }}
+                aria-label='Save'>
+              {{ ::'SAVE' | translate }}
             </md-button>
             <md-button class='md-raised md-primary'
                 ng-click='tableController.submitButtonClicked()'
                 ng-disabled='tableController.isDisabled || !tableController.isSubmitDirty || tableController.isSubmitButtonDisabled'
                 ng-if='::tableController.isSubmitButtonVisible'
-                aria-label='Submit'
-                translate='SUBMIT'>
-              {{ ::'submit' | translate }}
+                aria-label='Submit'>
+              {{ ::'SUBMIT' | translate }}
             </md-button>
             <span ng-if='tableController.saveMessage.text'
                 class='component__actions__info md-caption'>

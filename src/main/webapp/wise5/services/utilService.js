@@ -135,39 +135,21 @@ class UtilService {
   /**
    * Check if the asset is an image
    * @param fileName the file name of the asset
-   * @return whether the asset is an image or not
+   * @return true iff the asset is an image
    */
   isImage(fileName) {
-    if (fileName != null) {
-      const imageExtensionsRegEx =
-          new RegExp('.*\.(png|jpg|jpeg|bmp|gif|tiff|svg)');
-      const lowerCaseFileName = fileName.toLowerCase();
-      const matchResult = lowerCaseFileName.match(imageExtensionsRegEx);
-
-      if (matchResult != null) {
-        return true;
-      }
-    }
-    return false;
+    const imageExtensionsRegEx = new RegExp('.*\.(png|jpg|jpeg|bmp|gif|tiff|svg)');
+    return fileName.toLowerCase().match(imageExtensionsRegEx) != null;
   }
 
   /**
    * Check if the asset is a video
    * @param fileName the file name of the asset
-   * @return whether the asset is a video or not
+   * @return true iff the asset is a video
    */
   isVideo(fileName) {
-    if (fileName != null) {
-      const videoExtensionsRegEx =
-          new RegExp('.*\.(mp4|mpg|mpeg|m4v|m2v|avi|gifv|mov|qt)');
-      const lowerCaseFileName = fileName.toLowerCase();
-      const matchResult = lowerCaseFileName.match(videoExtensionsRegEx);
-
-      if (matchResult != null) {
-        return true;
-      }
-    }
-    return false;
+    const videoExtensionsRegEx = new RegExp('.*\.(mp4|mpg|mpeg|m4v|m2v|avi|gifv|mov|qt)');
+    return fileName.toLowerCase().match(videoExtensionsRegEx) != null;
   }
 
   /**
@@ -1027,19 +1009,28 @@ class UtilService {
     }
   }
 
+  insertFileInSummernoteEditor(summernoteId, fullFilePath, fileName) {
+    this.restoreSummernoteCursorPosition(summernoteId);
+    if (this.isImage(fileName)) {
+      this.insertImageIntoSummernote(summernoteId, fullFilePath, fileName);
+    } else if (this.isVideo(fileName)) {
+      this.insertVideoIntoSummernote(summernoteId, fullFilePath);
+    }
+  }
+
   restoreSummernoteCursorPosition(summernoteId) {
     angular.element(document.querySelector(`#${summernoteId}`)).summernote('editor.restoreRange');
     angular.element(document.querySelector(`#${summernoteId}`)).summernote('editor.focus');
   }
 
-  insertImageIntoSummernote(summernoteId, fullAssetPath, fileName) {
-    angular.element(document.querySelector(`#${summernoteId}`)).summernote('insertImage', fullAssetPath, fileName);
+  insertImageIntoSummernote(summernoteId, fullFilePath, fileName) {
+    angular.element(document.querySelector(`#${summernoteId}`)).summernote('insertImage', fullFilePath, fileName);
   }
 
-  insertVideoIntoSummernote(summernoteId, fullAssetPath) {
+  insertVideoIntoSummernote(summernoteId, fullFilePath) {
     const videoElement = document.createElement('video');
     videoElement.controls = 'true';
-    videoElement.innerHTML = '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
+    videoElement.innerHTML = '<source ng-src="' + fullFilePath + '" type="video/mp4">';
     angular.element(document.querySelector(`#${summernoteId}`)).summernote('insertNode', videoElement);
   }
 

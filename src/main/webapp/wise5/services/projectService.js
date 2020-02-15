@@ -16,7 +16,6 @@ class ProjectService {
     this.inactiveGroupNodes = [];
     this.groupNodes = [];
     this.idToNode = {};
-    this.idToElement = {};
     this.metadata = {};
     this.activeConstraints = [];
     this.rootNode = null;
@@ -59,7 +58,6 @@ class ProjectService {
     this.inactiveGroupNodes = [];
     this.groupNodes = [];
     this.idToNode = {};
-    this.idToElement = {};
     this.metadata = {};
     this.activeConstraints = [];
     this.rootNode = null;
@@ -203,7 +201,6 @@ class ProjectService {
       }
 
       this.setIdToNode(nodeId, node);
-      this.setIdToElement(nodeId, node);
       this.addNode(node);
 
       if (nodeType === 'group') {
@@ -249,7 +246,6 @@ class ProjectService {
   loadPlanningNodes(planningNodes) {
     for (const planningNode of planningNodes) {
       this.setIdToNode(planningNode.id, planningNode);
-      this.setIdToElement(planningNode.id, planningNode);
       // TODO: may need to add more function calls here to add the planning
     }
   }
@@ -462,10 +458,6 @@ class ProjectService {
 
   setIdToNode(id, element) {
     this.idToNode[id] = element;
-  }
-
-  setIdToElement(id, element) {
-    this.idToElement[id] = element;
   }
 
   /**
@@ -2167,39 +2159,22 @@ class ProjectService {
     return [];
   };
 
-
-  // TODO: how is this different from straight-up calling getNodeById?
-  getNodeContentByNodeId(nodeId) {
-    if (nodeId != null) {
-      const node = this.getNodeById(nodeId);
-      if (node != null) {
-        return node;
-      }
-    }
-    return null;
-  };
-
   /**
-   * Insert the node after the given node id in the group's
-   * array of children ids
+   * Insert the node after the given node id in the group's array of children ids
    * @param nodeIdToInsert the node id we want to insert
    * @param nodeIdToInsertAfter the node id we want to insert after
    */
   insertNodeAfterInGroups(nodeIdToInsert, nodeIdToInsertAfter) {
     const groupNodes = this.getGroupNodes();
     if (groupNodes != null) {
-      for (let group of groupNodes) {
-        if (group != null) {
-          this.insertNodeAfterInGroup(group, nodeIdToInsert, nodeIdToInsertAfter);
-        }
+      for (const group of groupNodes) {
+        this.insertNodeAfterInGroup(group, nodeIdToInsert, nodeIdToInsertAfter);
       }
     }
     const inactiveGroupNodes = this.getInactiveGroupNodes();
     if (inactiveGroupNodes != null) {
-      for (let inactiveGroup of inactiveGroupNodes) {
-        if (inactiveGroup != null) {
-          this.insertNodeAfterInGroup(inactiveGroup, nodeIdToInsert, nodeIdToInsertAfter);
-        }
+      for (const inactiveGroup of inactiveGroupNodes) {
+        this.insertNodeAfterInGroup(inactiveGroup, nodeIdToInsert, nodeIdToInsertAfter);
       }
     }
   }
@@ -3450,24 +3425,6 @@ class ProjectService {
   }
 
   /**
-   * Delete the component
-   * @param nodeId the node id
-   * @param componentId the component id
-   */
-  deleteComponent(nodeId, componentId) {
-    // TODO refactor and move to authoringToolProjectService
-    const node = this.getNodeById(nodeId);
-    const components = node.components;
-    for (let c = 0; c < components.length; c++) {
-      const component = components[c];
-      if (component.id === componentId) {
-        components.splice(c, 1);
-        break;
-      }
-    }
-  }
-
-  /**
    * TODO: Deprecated, should be removed; replaced by getMaxScoreForWorkgroupId in
    * StudentStatusService
    * Get the max score for the project. If the project contains branches, we
@@ -3723,11 +3680,8 @@ class ProjectService {
 
         const scores = params.scores;
         if (scores != null) {
-          // get the required score
           scoresString = scores.join(', ');
         }
-
-        // generate the message
         message += this.$translate('obtainAScoreOfXOnNodeTitle',
             { score: scoresString, nodeTitle: nodeTitle });
       } else if (name === 'choiceChosen') {
@@ -3851,22 +3805,6 @@ class ProjectService {
    */
   getGroupStartId(nodeId) {
     return this.getNodeById(nodeId).startId;
-  }
-
-  /**
-   * Get the start id of the node's parent group
-   * @param nodeId we will get the parent of this node and then look
-   * for the start id of the parent
-   * @returns the start id of the parent
-   */
-  getParentGroupStartId(nodeId) {
-    if (nodeId != null) {
-      const parentGroup = this.getParentGroup(nodeId);
-      if (parentGroup != null) {
-        return parentGroup.startId;
-      }
-    }
-    return null;
   }
 
   /**
@@ -4364,7 +4302,6 @@ class ProjectService {
   loadInactiveNodes(nodes) {
     for (const node of nodes) {
       this.setIdToNode(node.id, node);
-      this.setIdToElement(node.id, node);
       if (node.type === 'group') {
         this.inactiveGroupNodes.push(node);
       } else {
@@ -4376,7 +4313,6 @@ class ProjectService {
   loadConstraints(constraints) {
     for (const constraint of constraints) {
       constraint.active = true;
-      this.setIdToElement(constraint.id, constraint);
     }
   }
 
@@ -4576,10 +4512,10 @@ class ProjectService {
    * @return whether the node generates work
    */
   nodeHasWork(nodeId) {
-    const nodeContent = this.getNodeContentByNodeId(nodeId);
+    const node = this.getNodeById(nodeId);
     // TODO: remove need for component null check by ensuring that node always has components
-    if (nodeContent.components != null) {
-      for (const component of nodeContent.components) {
+    if (node.components != null) {
+      for (const component of node.components) {
         if (this.componentHasWork(component)) {
           return true;
         }
@@ -5326,14 +5262,13 @@ class ProjectService {
    */
   getNumberOfRubricsByNodeId(nodeId) {
     let numRubrics = 0;
-    let nodeContent = this.getNodeContentByNodeId(nodeId);
-    if (nodeContent) {
-      let nodeRubric = nodeContent.rubric;
+    const node = this.getNodeById(nodeId);
+    if (node) {
+      const nodeRubric = node.rubric;
       if (nodeRubric != null && nodeRubric != '') {
         numRubrics++;
       }
-
-      let components = nodeContent.components;
+      const components = node.components;
       if (components && components.length) {
         for (let component of components) {
           if (component) {

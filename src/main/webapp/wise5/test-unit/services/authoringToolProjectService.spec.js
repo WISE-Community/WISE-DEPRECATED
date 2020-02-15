@@ -82,5 +82,65 @@ describe('AuthoringToolProjectService Unit Test', () => {
       ProjectService.setProject(demoProjectJSON);
       expect(ProjectService.isNodeIdUsed("nodedoesnotexist")).toEqual(false);
     });
+    testDeleteComponent();
+    testDeleteTransition();
+    testGetNodeIdAfter();
+    testCreateNodeAfter();
   });
+
+  function testDeleteComponent() {
+    describe('deleteComponent', () => {
+      it('should delete the component from the node', () => {
+        ProjectService.setProject(demoProjectJSON);
+        expect(ProjectService.getComponentByNodeIdAndComponentId('node1', 'zh4h1urdys')).not
+            .toBeNull();
+        ProjectService.deleteComponent('node1', 'zh4h1urdys');
+        expect(ProjectService.getComponentByNodeIdAndComponentId('node1', 'zh4h1urdys')).toBeNull();
+      });
+    });
+  }
+
+  function testDeleteTransition() {
+    describe('deleteTransition', () => {
+      it('should delete existing transition from the node', () => {
+        ProjectService.setProject(demoProjectJSON);
+        const node1 = ProjectService.getNodeById('node1');
+        expect(ProjectService.nodeHasTransitionToNodeId(node1, 'node2')).toBeTruthy();
+        ProjectService.deleteTransition(node1, node1.transitionLogic.transitions[0]);
+        expect(ProjectService.nodeHasTransitionToNodeId(node1, 'node2')).toBeFalsy();
+      });
+    });
+  }
+
+  function testGetNodeIdAfter() {
+    describe('getNodeIdAfter', () => {
+      it('should return the next node in the sequence', () => {
+        ProjectService.setProject(demoProjectJSON);
+        expect(ProjectService.getNodeIdAfter('node12')).toEqual('node13');
+        expect(ProjectService.getNodeIdAfter('node19')).toEqual('group2');
+      });
+      it('should return null if the node is last', () => {
+        ProjectService.setProject(demoProjectJSON);
+        expect(ProjectService.getNodeIdAfter('node39')).toBeNull();
+      });
+    });
+  }
+
+  function testCreateNodeAfter() {
+    describe('createNodeAfter', () => {
+      it('should put a new step node after a step node', () => {
+        const newNode = {
+          id: 'node1000',
+          type: 'node'
+        };
+        ProjectService.setProject(demoProjectJSON);
+        ProjectService.createNodeAfter(newNode, 'node19');
+        ProjectService.parseProject();
+        expect(ProjectService.idToNode[newNode.id]).toEqual(newNode);
+        expect(newNode.transitionLogic.transitions[0].to).toEqual('node20');
+        expect(ProjectService.getNodeIdAfter('node19')).toEqual('node1000');
+      });
+    });
+  }
 });
+

@@ -4,7 +4,7 @@ import LabelService from './labelService';
 import LabelController from './labelController';
 import LabelAuthoringController from './labelAuthoringController';
 
-let labelAuthoringComponentModule = angular.module('labelAuthoringComponentModule', [
+const labelAuthoringComponentModule = angular.module('labelAuthoringComponentModule', [
   'pascalprecht.translate'
 ])
   .service('LabelService', LabelService)

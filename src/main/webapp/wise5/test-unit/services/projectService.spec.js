@@ -164,10 +164,6 @@ describe('ProjectService Unit Test', () => {
     // TODO: add test for ProjectService.pathsEqual()
 
     // TODO: add test for ProjectService.getBranchPathsByNodeId()
-
-
-    // TODO: add test for ProjectService.getNodeContentByNodeId()
-
     // TODO: add test for ProjectService.replaceComponent()
     // TODO: add test for ProjectService.createGroup()
     // TODO: add test for ProjectService.createNode()
@@ -673,6 +669,20 @@ describe('ProjectService Unit Test', () => {
           ProjectService.getNodeById("group1"), 'group2')).toBeFalsy();
       expect(ProjectService.getTransitionsByFromNodeId("group1").length).toEqual(0);
       expect(ProjectService.getNodes().length).toEqual(21);
+    });
+
+    it('should calculate the node order', () => {
+      ProjectService.project = demoProjectJSON;
+      ProjectService.loadNodes(demoProjectJSON.nodes);
+      ProjectService.calculateNodeOrder(demoProjectJSON.nodes[0]);
+      expect(ProjectService.idToOrder['group0'].order).toEqual(0);
+      expect(ProjectService.idToOrder['group1'].order).toEqual(1)
+      expect(ProjectService.idToOrder['node1'].order).toEqual(2);
+      expect(ProjectService.idToOrder['node2'].order).toEqual(3);
+      expect(ProjectService.idToOrder['node3'].order).toEqual(4);
+      expect(ProjectService.idToOrder['node4'].order).toEqual(5);
+      expect(ProjectService.idToOrder['node5'].order).toEqual(6);
+      expect(ProjectService.idToOrder['node6'].order).toEqual(7);
     });
 
   });
