@@ -769,14 +769,6 @@ create table workgroups
 ) ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
-CREATE TABLE tasks
-(
-    id   int(11) NOT NULL AUTO_INCREMENT,
-    name varchar(255) DEFAULT NULL,
-    PRIMARY KEY (id)
-) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8;
-
 -- initial data for wise below
 
 INSERT INTO granted_authorities
