@@ -5,7 +5,7 @@
       "thumbnail": "https://learn-resources.concord.org/images/stem-resources/icons/air.png",
       "metadata": {
         "title": "Air Pollution Model",
-        "subject": "Earth Science",
+        "subject": "Earth and Space Sciences",
         "source": "Concord Consortium"
       }
     },
@@ -15,7 +15,7 @@
       "thumbnail": "https://learn-resources.concord.org/images/stem-resources/icons/molecular-view-gas.jpg",
       "metadata": {
         "title": "Molecular View of a Gas",
-        "subject": "Chemistry",
+        "subject": "Physical Sciences",
         "source": "Concord Consortium"
       }
     },
@@ -25,7 +25,7 @@
       "thumbnail": "https://learn-resources.concord.org/images/stem-resources/icons/ceramic-forces.png",
       "metadata": {
         "title": "Ceramic Forces",
-        "subject": "Chemistry",
+        "subject": "Physical Sciences",
         "source": "Concord Consortium"
       }
     },
@@ -35,7 +35,7 @@
       "thumbnail": "https://learn-resources.concord.org/images/stem-resources/icons/volumepressurerelationship.gif",
       "metadata": {
         "title": "The Volume-Pressure Relationship",
-        "subject": "Chemistry",
+        "subject": "Physical Sciences",
         "source": "Concord Consortium"
       }
     },
@@ -45,7 +45,7 @@
       "thumbnail": "https://phet.colorado.edu/sims/html/energy-forms-and-changes/latest/energy-forms-and-changes-600.png",
       "metadata": {
         "title": "Energy Forms and Changes",
-        "subject": "Physics",
+        "subject": "Physical Sciences",
         "source": "PhET"
       }
     },
@@ -55,7 +55,7 @@
       "thumbnail": "https://phet-downloads.colorado.edu/sims/html/projectile-motion/latest/projectile-motion-600.png",
       "metadata": {
         "title": "Projectile Motion",
-        "subject": "Physics",
+        "subject": "Physical Sciences",
         "source": "PhET"
       }
     },
@@ -65,7 +65,7 @@
       "thumbnail": "https://phet-downloads.colorado.edu/sims/html/balancing-act/latest/balancing-act-600.png",
       "metadata": {
         "title": "Balancing Act",
-        "subject": "Physics",
+        "subject": "Physical Sciences",
         "source": "PhET"
       }
     },
@@ -75,7 +75,7 @@
       "thumbnail": "https://phet-downloads.colorado.edu/sims/html/wave-on-a-string/latest/wave-on-a-string-600.png",
       "metadata": {
         "title": "Wave on a String",
-        "subject": "Physics",
+        "subject": "Physical Sciences",
         "source": "PhET"
       }
     },
@@ -85,7 +85,7 @@
       "thumbnail": "https://phet-downloads.colorado.edu/sims/html/energy-skate-park-basics/latest/energy-skate-park-basics-600.png",
       "metadata": {
         "title": "Energy Skate Park: Basics",
-        "subject": "Physics",
+        "subject": "Physical Sciences",
         "source": "PhET"
       }
     },
@@ -95,7 +95,7 @@
       "thumbnail": "https://phet-downloads.colorado.edu/sims/html/forces-and-motion-basics/latest/forces-and-motion-basics-600.png",
       "metadata": {
         "title": "Forces and Motion: Basics",
-        "subject": "Physics",
+        "subject": "Physical Sciences",
         "source": "PhET"
       }
     },
@@ -105,7 +105,7 @@
       "thumbnail": "https://phet-downloads.colorado.edu/sims/html/acid-base-solutions/latest/acid-base-solutions-600.png",
       "metadata": {
         "title": "Acid Base Solutions",
-        "subject": "Chemistry",
+        "subject": "Physical Sciences",
         "source": "PhET"
       }
     },
@@ -115,8 +115,118 @@
       "thumbnail": "https://www.golabz.eu/sites/repository/files/styles/thumbnail_320x320/public/images/lab/d7b2785835b38b20965813c2ed4a4842.png",
       "metadata": {
         "title": "Acceleration",
-        "subject": "Physics",
+        "subject": "Physical Sciences",
         "source": "Go-Lab"
+      }
+    },
+    {
+      "url": "https://www.sciencebysimulation.com/climatesim/Simulator.aspx",
+      "info": "https://www.sciencebysimulation.com/climatesim/Userguide.aspx",
+      "thumbnail": "https://www.sciencebysimulation.com/Images/header1.PNG",
+      "metadata": {
+        "title": "ClimateSim",
+        "subject": "Physical Sciences, Earth and Space Sciences",
+        "source": "Science by Simulation"
+      }
+    },
+    {
+      "url": "https://croadsworldclimate.climateinteractive.org/",
+      "info": "https://www.climateinteractive.org/tools/c-roads/",
+      "thumbnail": "https://www.climateinteractive.org/wp-content/uploads/2019/07/ci-logo.jpg",
+      "metadata": {
+        "title": "C-ROADS World Climate Simulator",
+        "subject": "Earth and Space Sciences",
+        "source": "Climate Interactive"
+      }
+    },
+    {
+      "url": "https://scied.ucar.edu/ruler-world",
+      "info": "https://scied.ucar.edu/ruler-world",
+      "thumbnail": "https://scied.ucar.edu/sites/default/files/interactives/rotw/images/ruler_of_world_intro_pie_chart.png",
+      "metadata": {
+        "title": "Ruler of the World",
+        "subject": "Earth and Space Sciences",
+        "source": "UCAR Center for Science Education"
+      }
+    },
+    {
+      "url": "https://seismic-explorer.concord.org/",
+      "info": "https://learn.concord.org/resources/853/seismic-explorer",
+      "thumbnail": "https://learn-resources.concord.org/images/stem-resources/icons/seismic-explorer-2019.jpg",
+      "metadata": {
+        "title": "Seismic Explorer",
+        "subject": "Earth and Space Sciences",
+        "source": "Concord Consortium"
+      }
+    },
+    {
+      "url": "https://pbslm-contrib.s3.amazonaws.com/WGBH/conv16/conv16-int-mmes/index.html",
+      "info": "https://ca.pbslearningmedia.org/resource/ess05.sci.ess.earthsys.shake/mountain-maker-earth-shaker/",
+      "thumbnail": "https://image.pbs.org/poster_images/assets/conv16-int-mmes.png",
+      "metadata": {
+        "title": "Mountain Maker, Earth Shaker",
+        "subject": "Earth and Space Sciences",
+        "source": "PBS LearningMedia"
+      }
+    },
+    {
+      "url": "https://www.iris.edu/hq/inclass/uploads/videos/A_3_faulttransform_sanandreas.mp4",
+      "info": "https://www.iris.edu/hq/inclass/animation/fault_transform",
+      "thumbnail": "https://www.iris.edu/hq/inclass/uploads/xA_3_faulttransform_sanandreas_thumbnail.jpg.pagespeed.ic.QhS3b4ro-Y.webp",
+      "metadata": {
+        "title": "Fault: Transform",
+        "subject": "Earth and Space Sciences",
+        "source": "Incorporated Research Institutions for Seismology (IRIS)"
+      }
+    },
+    {
+      "url": "http://emvc.geol.ucsb.edu/3_downloads/M1GTect/cSubductionMovie/Subduction.mp4",
+      "info": "http://emvc.geol.ucsb.edu/2_infopgs/IP1GTect/cSubduction.html",
+      "thumbnail": "http://emvc.geol.ucsb.edu/2_infopgs/IP1GTect/cSubduction.gif",
+      "metadata": {
+        "title": "Ocean-Continent Subduction",
+        "subject": "Earth and Space Sciences",
+        "source": "Tanya Atwater and John Iwerks"
+      }
+    },
+    {
+      "url": "https://ngsir.netfirms.com/j/Eng/incline/incline_js.html",
+      "info": "https://ngsir.netfirms.com/j/Eng/incline/incline_js.html",
+      "thumbnail": "https://ngsir.netfirms.com/j/image/incline.png",
+      "metadata": {
+        "title": "Inclined Plane",
+        "subject": "Physical Sciences",
+        "source": "Chiu-king Ng"
+      }
+    },
+    {
+      "url": "https://www.physicsclassroom.com/mmedia/energy/pe.gif",
+      "info": "https://www.physicsclassroom.com/mmedia/energy/pe.gif",
+      "thumbnail": "https://www.physicsclassroom.com/mmedia/energy/pe.gif",
+      "metadata": {
+        "title": "Energy Transformation for a Pendulum",
+        "subject": "Physical Sciences",
+        "source": "the Physics Classroom"
+      }
+    },
+    {
+      "url": "https://concord.org/hioh/build-dam/",
+      "info": "https://learn.concord.org/resources/1274/building-a-dam-how-do-changes-in-the-environment-affect-populations",
+      "thumbnail": "https://learn-resources.concord.org/images/stem-resources/icons/build-dam.jpg",
+      "metadata": {
+        "title": "Building a Dam: How do changes in the environment affect populations?",
+        "subject": "Life Sciences",
+        "source": "Concord Consortium"
+      }
+    },
+    {
+      "url": "https://www.learner.org/wp-content/interactive/envsci/ecology/ecology.html",
+      "info": "https://www.learner.org/series/the-habitable-planet-a-systems-approach-to-environmental-science/ecology-lab/",
+      "thumbnail": "https://www.learner.org/wp-content/interactive/envsci/images/ecology_thm.png",
+      "metadata": {
+        "title": "Ecology Lab",
+        "subject": "Life Sciences",
+        "source": "Annenberg Learner"
       }
     }
   ]
