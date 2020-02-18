@@ -125,12 +125,18 @@ class ChooseStructureController {
   }
 
   chooseStructure(structure) {
-    if (structure.id === 'peerReviewAndRevision') {
-      this.$state.go('root.project.structure.peer-review-and-revision', {
+    if (structure.id === 'jigsaw') {
+      this.$state.go('root.project.structure.jigsaw', { structure: structure });
+    } else if (structure.id === 'guidanceChoice') {
+      this.$state.go('root.project.structure.guidance-choice', { structure: structure });
+    } else if (structure.id === 'selfDirectedInvestigation') {
+      this.$state.go('root.project.structure.self-directed-investigation', {
         structure: structure
       });
-    } else {
-      this.$state.go('root.project.structure.configure', { structure: structure });
+    } else if (structure.id === 'peerReviewAndRevision') {
+      this.$state.go('root.project.structure.peer-review-and-revision', { structure: structure });
+    } else if (structure.id === 'kiCycleUsingOER') {
+      this.$state.go('root.project.structure.ki-cycle-using-oer', { structure: structure });
     }
   }
 

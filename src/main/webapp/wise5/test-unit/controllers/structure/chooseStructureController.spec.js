@@ -30,8 +30,9 @@ describe('ChooseStructureController', () => {
           description: 'This is a Jigsaw. Students do stuff.'
         };
         controller.chooseStructure(structure);
-        expect($state.go).toHaveBeenCalledWith('root.project.structure.configure',
-            { structure: structure });
+        expect($state.go).toHaveBeenCalledWith('root.project.structure.jigsaw', {
+          structure: structure
+        });
       });
     });
   }
@@ -43,8 +44,6 @@ describe('ChooseStructureController', () => {
         controller.cancel();
         expect($state.go).toHaveBeenCalledWith('root.project');
       });
-    })
+    });
   }
 });
-
-

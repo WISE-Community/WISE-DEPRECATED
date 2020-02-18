@@ -128,12 +128,16 @@ describe('ChooseStructureLocationController', () => {
           nodes: [
             {
               id: 'node1'
+            },
+            {
+              id: 'node10'
             }
           ]
         };
         structure = controller.replaceOldNodeIds(structure, { group1: 'group2', node1: 'node2' });
         expect(structure.group.id).toEqual('group2');
         expect(structure.nodes[0].id).toEqual('node2');
+        expect(structure.nodes[1].id).toEqual('node10');
       });
     });
   }

@@ -1,0 +1,10 @@
+<p>Jigsaw</p>
+<div>Activity Name: {{ jigsawController.structure.group.title }}</div>
+<md-button class='createButton md-raised md-primary'
+                  ng-click='jigsawController.chooseLocation()'
+                  aria-label='{{ ::"next" | translate }}'
+                  translate='next'></md-button>
+<md-button class='createButton md-raised md-primary'
+                  ng-click='jigsawController.cancel()'
+                  aria-label='{{ ::"cancel" | translate }}'
+                  translate='cancel'></md-button>

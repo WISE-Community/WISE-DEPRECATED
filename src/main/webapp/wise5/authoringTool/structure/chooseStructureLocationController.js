@@ -65,8 +65,8 @@ class ChooseStructureLocationController {
   replaceOldNodeIds(structure, oldToNewNodeIds) {
     let structureJSONString = JSON.stringify(structure);
     for (const oldNodeId of Object.keys(oldToNewNodeIds)) {
-      const regex = new RegExp(oldNodeId, 'g');
-      structureJSONString = structureJSONString.replace(regex, oldToNewNodeIds[oldNodeId]);
+      const regex = new RegExp(`\"${oldNodeId}\"`, 'g');
+      structureJSONString = structureJSONString.replace(regex, `"${oldToNewNodeIds[oldNodeId]}"`);
     }
     return JSON.parse(structureJSONString);
   }
