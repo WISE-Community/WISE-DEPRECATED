@@ -58,21 +58,34 @@
       </div>
     </div>
   </div>
-  <md-switch ng-model="outsideURLController.isShowOERs" class="md-primary">
+  <md-input-container>
+    <md-switch ng-model="outsideURLController.isShowOERs" class="md-primary">
       {{ ::'outsideURL.showOERs' | translate }}
-  </md-switch>
+    </md-switch>
+  </md-input-container>
   <div style="width: 100%" ng-if="outsideURLController.isShowOERs">
     <p class="md-body-2">{{ ::'outsideURL.OERInfo' | translate }}</p>
-    <div class="layout-row">
-      <md-input-container style="width: 250px;">
-        <input ng-model="searchText" type="text" placeholder="{{ ::'outsideURL.search' | translate }}"></input>
-      </md-input-container>
-      <md-button class="regularButton md-raised md-primary" ng-click="searchText = ''">
-        <md-icon>clear</md-icon>
-        <md-tooltip md-direction="top" class="projectButtonTooltip">
-          {{ ::'CLEAR' | translate }}
-        </md-tooltip>
-      </md-button>
+    <div layout="row" layout-wrap>
+      <div layout="row">
+        <md-input-container style="max-width: 250px;">
+          <label>{{ ::'outsideURL.filterBySubject' | translate }}</label>
+          <md-select ng-model="outsideURLController.selectedSubjects" multiple>
+            <md-optgroup label="{{ ::'outsideURL.filterBySubject' | translate }}">
+              <md-option ng-value="subject.value" ng-repeat="subject in outsideURLController.subjects">
+                {{subject.label}}
+              </md-option>
+            </md-optgroup>
+          </md-select>
+        </md-input-container>
+      </div>
+      <div layout="row" style="margin: 0 8px;">
+        <md-input-container style="width: 250px;" layout="row">
+          <input ng-model="searchText" type="text" placeholder="{{ ::'outsideURL.search' | translate }}"></input>
+          <md-icon aria-label="{{ ::'CLEAR' | translate }}"
+                   ng-click="searchText = ''"
+                   ng-show="searchText">clear</md-icon>
+        </md-input-container>
+      </div>
     </div>
     <div class="gray-lighter-bg" layout="row" layout-wrap
         style="height: 400px; overflow-y: auto; padding: 8px; margin-bottom: 16px;">
@@ -80,7 +93,9 @@
            flex-sm="50" 
            flex-md="33" 
            flex-gt-md="25"
-           ng-repeat="openEducationalResource in outsideURLController.openEducationalResources | filter: searchText as filtered">
+           ng-repeat="openEducationalResource in outsideURLController.openEducationalResources | filter: searchText as filtered"
+           ng-if="outsideURLController.selectedSubjects.length === 0 || 
+              outsideURLController.isSubjectMatch(openEducationalResource)">
         <md-card ng-style="outsideURLController.isResourceSelected(openEducationalResource.url) && {'border': '4px solid #00C853'}">
           <md-card-header style="padding: 12px;">
             <md-card-header-text>
