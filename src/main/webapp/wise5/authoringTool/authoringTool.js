@@ -22,6 +22,7 @@ import AuthoringToolController from './authoringToolController';
 import AuthoringToolMainController from './main/authoringToolMainController';
 import AuthoringToolProjectService from './authoringToolProjectService';
 import AuthorNotebookController from './notebook/authorNotebookController';
+import bootstrap from 'bootstrap';
 import '../components/conceptMap/conceptMapAuthoringComponentModule';
 import ConfigService from '../services/configService';
 import CRaterService from '../services/cRaterService';
