@@ -53,6 +53,7 @@ class OutsideURLAuthoringController extends OutsideURLController {
         label: this.$translate('outsideURL.ETS')
       }
     ];
+    this.searchText = '';
     this.selectedSubjects = [];
 
     $scope.$watch(() => {
@@ -113,6 +114,11 @@ class OutsideURLAuthoringController extends OutsideURLController {
       }
     }
     return false;
+  }
+
+  clearFilters() {
+    this.searchText = '';
+    this.selectedSubjects = [];
   }
 }
 
