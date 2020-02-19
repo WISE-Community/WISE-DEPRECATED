@@ -33,7 +33,28 @@ class OutsideURLAuthoringController extends OutsideURLController {
       StudentAssetService,
       StudentDataService,
       UtilService);
+    this.$translate = this.$filter('translate');
     this.isShowOERs = this.componentContent.url === '';
+    this.subjects = [
+      {
+        value: 'Earth and Space Sciences', 
+        label: this.$translate('outsideURL.ESS')
+      },
+      {
+        value: 'Life Sciences', 
+        label: this.$translate('outsideURL.LS')
+      },
+      {
+        value: 'Physical Sciences', 
+        label: this.$translate('outsideURL.PS')
+      },
+      {
+        value: 'Engineering, Technology, and Applications of Science', 
+        label: this.$translate('outsideURL.ETS')
+      }
+    ];
+    this.searchText = '';
+    this.selectedSubjects = [];
 
     $scope.$watch(() => {
       return this.authoringComponentContent;
@@ -45,7 +66,8 @@ class OutsideURLAuthoringController extends OutsideURLController {
           this.authoringComponentContent.width, this.authoringComponentContent.height);
     }, true);
     this.OutsideURLService.getOpenEducationalResources().then((openEducationalResources) => {
-      this.openEducationalResources = openEducationalResources;
+      this.openEducationalResources = 
+          openEducationalResources.sort((a, b) => (a.metadata.title > b.metadata.title) ? 1 : -1);
     });
     this.registerAssetListener();
   }
@@ -83,6 +105,20 @@ class OutsideURLAuthoringController extends OutsideURLController {
     const iframe = document.getElementById(this.outsideURLIFrameId);
     iframe.src = '';
     iframe.src = this.authoringComponentContent.url;
+  }
+
+  isSubjectMatch(resource) {
+    for (const subject of this.selectedSubjects) {
+      if (resource.metadata.subjects.includes(subject)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  clearFilters() {
+    this.searchText = '';
+    this.selectedSubjects = [];
   }
 }
 
