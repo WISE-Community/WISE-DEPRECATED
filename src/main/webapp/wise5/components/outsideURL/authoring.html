@@ -85,10 +85,11 @@
                  placeholder="{{ ::'outsideURL.search' | translate }}"></input>
         </md-input-container>
         <md-button class="md-primary md-icon-button"
-                   aria-label="{{ ::'CLEAR' | translate }}"
+                   aria-label="{{ ::'outsideURL.clearAll' | translate }}"
                    ng-click="outsideURLController.clearFilters()"
                    ng-show="outsideURLController.searchText || outsideURLController.selectedSubjects.length">
           <md-icon>clear</md-icon>
+          <md-tooltip md-direction="top">{{ ::'outsideURL.clearAll' | translate }}</md-tooltip>
         </md-button>
       </div>
     </div>
