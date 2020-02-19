@@ -108,7 +108,7 @@ class OutsideURLAuthoringController extends OutsideURLController {
 
   isSubjectMatch(resource) {
     for (const subject of this.selectedSubjects) {
-      if (resource.metadata.subject.includes(subject)) {
+      if (resource.metadata.subjects.includes(subject)) {
         return true;
       }
     }
