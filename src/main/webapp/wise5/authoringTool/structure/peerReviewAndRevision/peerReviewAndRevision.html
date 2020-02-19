@@ -1,5 +1,8 @@
-<p>Peer Review and Revision</p>
-<div>Activity Name: {{ peerReviewAndRevisionController.structure.group.title }}</div>
+<h3>Peer Review and Revision</h3>
+<md-button class='createButton md-raised md-primary'
+                  ng-click='peerReviewAndRevisionController.goToChooseStructure()'
+                  aria-label='{{ ::"back" | translate }}'
+                  translate='back'></md-button>
 <md-button class='createButton md-raised md-primary'
                   ng-click='peerReviewAndRevisionController.chooseLocation()'
                   aria-label='{{ ::"next" | translate }}'

@@ -64,6 +64,10 @@ class ConfigureStructureController {
     this.$state.go('root.project.structure.location', { structure: this.structure });
   }
 
+  goToChooseStructure() {
+    this.$state.go('root.project.structure.choose');
+  }
+
   cancel() {
     this.$state.go('root.project');
   }

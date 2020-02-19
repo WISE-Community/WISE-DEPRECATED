@@ -1,5 +1,8 @@
-<p>Guidance Choice</p>
-<div>Activity Name: {{ guidanceChoiceController.structure.group.title }}</div>
+<h3>Guidance Choice</h3>
+<md-button class='createButton md-raised md-primary'
+                  ng-click='guidanceChoiceController.goToChooseStructure()'
+                  aria-label='{{ ::"back" | translate }}'
+                  translate='back'></md-button>
 <md-button class='createButton md-raised md-primary'
                   ng-click='guidanceChoiceController.chooseLocation()'
                   aria-label='{{ ::"next" | translate }}'

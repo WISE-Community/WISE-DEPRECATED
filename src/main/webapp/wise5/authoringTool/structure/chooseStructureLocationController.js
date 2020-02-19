@@ -56,7 +56,6 @@ class ChooseStructureLocationController {
       const oldNodeId = node.id;
       const newNodeId = this.ProjectService.getNextAvailableNodeId(newNodeIds);
       oldToNewNodeIds[oldNodeId] = newNodeId;
-      node.id = newNodeId;
       newNodeIds.push(newNodeId);
     }
     return this.replaceOldNodeIds(structure, oldToNewNodeIds);
@@ -64,7 +63,7 @@ class ChooseStructureLocationController {
 
   replaceOldNodeIds(structure, oldToNewNodeIds) {
     let structureJSONString = JSON.stringify(structure);
-    for (const oldNodeId of Object.keys(oldToNewNodeIds)) {
+    for (const oldNodeId of Object.keys(oldToNewNodeIds).reverse()) {
       const regex = new RegExp(`\"${oldNodeId}\"`, 'g');
       structureJSONString = structureJSONString.replace(regex, `"${oldToNewNodeIds[oldNodeId]}"`);
     }

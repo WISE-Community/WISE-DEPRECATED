@@ -1,5 +1,23 @@
-<p>Jigsaw</p>
-<div>Activity Name: {{ jigsawController.structure.group.title }}</div>
+<h3>Jigsaw</h3>
+<p>{{ 'jigsaw.chooseNumberOfGroups' | translate }}:</p>
+<md-radio-group ng-model='jigsawController.numGroups'>
+  <md-radio-button class='md-primary'
+                   value='2'>
+    {{ 'jigsaw.twoGroups' | translate }}
+  </md-radio-button>
+  <md-radio-button class='md-primary'
+                   value='3'>
+    {{ 'jigsaw.threeGroups' | translate }}
+  </md-radio-button>
+  <md-radio-button class='md-primary'
+                   value='4'>
+    {{ 'jigsaw.fourGroups' | translate }}
+  </md-radio-button>
+</md-radio-group>
+<md-button class='createButton md-raised md-primary'
+                  ng-click='jigsawController.goToChooseStructure()'
+                  aria-label='{{ ::"back" | translate }}'
+                  translate='back'></md-button>
 <md-button class='createButton md-raised md-primary'
                   ng-click='jigsawController.chooseLocation()'
                   aria-label='{{ ::"next" | translate }}'

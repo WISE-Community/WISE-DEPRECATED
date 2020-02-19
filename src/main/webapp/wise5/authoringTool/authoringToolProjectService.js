@@ -20,8 +20,8 @@ class AuthoringToolProjectService extends ProjectService {
           id: 'group1',
           type: 'group',
           title: this.$translate('FIRST_ACTIVITY'),
-          startId: '',
-          ids: [],
+          startId: 'node1',
+          ids: ['node1'],
           icons: {
             default: {
               color: '#2196F3',
@@ -30,11 +30,23 @@ class AuthoringToolProjectService extends ProjectService {
               fontName: 'info'
             }
           }
+        },
+        {
+          id: 'node1',
+          type: 'node',
+          title: this.$translate('FIRST_STEP'),
+          components: [],
+          constraints: [],
+          showSaveButton: false,
+          showSubmitButton: false,
+          transitionLogic: {
+            transitions: []
+          }
         }
       ],
       constraints: [],
       startGroupId: 'group0',
-      startNodeId: 'group0',
+      startNodeId: 'node1',
       navigationMode: 'guided',
       layout: {
         template: 'starmap|leftNav|rightNav'
