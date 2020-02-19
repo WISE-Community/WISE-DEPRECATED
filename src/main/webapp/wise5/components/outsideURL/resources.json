@@ -130,26 +130,6 @@
       }
     },
     {
-      "url": "https://croadsworldclimate.climateinteractive.org/",
-      "info": "https://www.climateinteractive.org/tools/c-roads/",
-      "thumbnail": "https://www.climateinteractive.org/wp-content/uploads/2019/07/ci-logo.jpg",
-      "metadata": {
-        "title": "C-ROADS World Climate Simulator",
-        "subject": "Earth and Space Sciences",
-        "source": "Climate Interactive"
-      }
-    },
-    {
-      "url": "https://scied.ucar.edu/ruler-world",
-      "info": "https://scied.ucar.edu/ruler-world",
-      "thumbnail": "https://scied.ucar.edu/sites/default/files/interactives/rotw/images/ruler_of_world_intro_pie_chart.png",
-      "metadata": {
-        "title": "Ruler of the World",
-        "subject": "Earth and Space Sciences",
-        "source": "UCAR Center for Science Education"
-      }
-    },
-    {
       "url": "https://seismic-explorer.concord.org/",
       "info": "https://learn.concord.org/resources/853/seismic-explorer",
       "thumbnail": "https://learn-resources.concord.org/images/stem-resources/icons/seismic-explorer-2019.jpg",
@@ -197,16 +177,6 @@
         "title": "Inclined Plane",
         "subject": "Physical Sciences",
         "source": "Chiu-king Ng"
-      }
-    },
-    {
-      "url": "https://www.physicsclassroom.com/mmedia/energy/pe.gif",
-      "info": "https://www.physicsclassroom.com/mmedia/energy/pe.gif",
-      "thumbnail": "https://www.physicsclassroom.com/mmedia/energy/pe.gif",
-      "metadata": {
-        "title": "Energy Transformation for a Pendulum",
-        "subject": "Physical Sciences",
-        "source": "the Physics Classroom"
       }
     },
     {
