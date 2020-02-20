@@ -405,7 +405,7 @@
             <div ng-repeat='item in projectController.items | toArray | orderBy : "order"'
                class='projectItem'
                ng-class='::{"node-select--group": projectController.isGroupNode(item.$key), "node-select--node": !projectController.isGroupNode(item.$key)}'
-               ng-if='projectController.projectMode && (!projectController.insertGroupMode || (projectController.insertGroupMode && projectController.isGroupNode(item.$key)))'>
+               ng-if='::item.order!==0 && (projectController.projectMode && (!projectController.insertGroupMode || (projectController.insertGroupMode && projectController.isGroupNode(item.$key))))'>
               <div id='{{::item.$key}}' layout='row'
                  ng-class='::{"groupHeader": projectController.isGroupNode(item.$key), "stepHeader": !projectController.isGroupNode(item.$key), "branchPathStepHeader": projectController.isNodeInAnyBranchPath(item.$key) && !projectController.isGroupNode(item.$key)}'
                  ng-style='::{"background-color": projectController.getStepBackgroundColor(item.$key)}'>
@@ -415,18 +415,18 @@
                        ng-change='projectController.projectItemClicked(item.$key)'
                        class='check'
                        ng-disabled='projectController.showCreateGroup || projectController.showCreateNode || projectController.insertNodeMode || projectController.insertGroupMode || (projectController.isGroupNode(item.$key) && projectController.stepNodeSelected) || (!projectController.isGroupNode(item.$key) && projectController.activityNodeSelected)'
-                       aria-label='{{::projectController.getNodePositionById(item.$key)}} {{::projectController.getNodeTitleByNodeId(item.$key)}}'
-                       ng-if='::item.order!==0'>
+                       aria-label='{{::projectController.getNodePositionById(item.$key)}} {{::projectController.getNodeTitleByNodeId(item.$key)}}'>
                   </md-checkbox>
                 </div>
                 <div layout='row' class='projectItemTitleDiv' ng-click='projectController.insertGroupMode == true || projectController.insertNodeMode == true || projectController.nodeClicked(item.$key)'>
-                  <div layout='row'>
+                  <div layout='row' layout-align="start center">
+                    <node-icon node-id="::item.$key" size="18"></node-icon>&nbsp
                     <h6 style='display:inline; cursor:pointer;'
-                      ng-if='::item.order!==0 && projectController.isGroupNode(item.$key)'>
+                      ng-if='projectController.isGroupNode(item.$key)'>
                       {{::projectController.getNodePositionById(item.$key)}}: {{::projectController.getNodeTitleByNodeId(item.$key)}}
                     </h6>
                     <p style='display:inline; cursor:pointer;'
-                      ng-if='::item.order!==0 && !projectController.isGroupNode(item.$key)'>
+                      ng-if='!projectController.isGroupNode(item.$key)'>
                       <span>{{::projectController.getNodePositionById(item.$key)}}: {{::projectController.getNodeTitleByNodeId(item.$key)}}</span>
                       <span><md-icon ng-if='::projectController.isBranchPoint(item.$key)' ng-click='projectController.branchIconClicked(item.$key); $event.stopPropagation();' style='transform: rotate(180deg);'>call_split</md-icon><md-tooltip md-direction='right'>{{ ::'branchPointTooltip' | translate : '{ numberOfBranchPaths: ' + projectController.getNumberOfBranchPaths(item.$key) + ', branchCriteria: "' + projectController.getBranchCriteriaDescription(item.$key) + '"}'}}</md-tooltip></span>
                       <span><md-icon ng-if='::projectController.nodeHasConstraint(item.$key) && projectController.getNumberOfConstraintsOnNode(item.$key) == 1' ng-click='projectController.constraintIconClicked(item.$key); $event.stopPropagation();'>block</md-icon><md-tooltip class='multiLineTooltip' md-direction='right'>{{ ::projectController.getNumberOfConstraintsOnNode(item.$key) }} {{ ::'constraint' | translate }}<br/>{{ ::projectController.getConstraintDescriptions(item.$key) }}</md-tooltip></span>
@@ -481,7 +481,8 @@
                   <div layout='row'
                        class='projectItemTitleDiv'
                        ng-click='projectController.insertGroupMode == true || projectController.insertNodeMode == true || projectController.nodeClicked(inactiveNode.id)'>
-                    <div layout='row'>
+                    <div layout='row' layout-align="start center">
+                      <node-icon node-id="::inactiveNode.id" size="18"></node-icon>&nbsp;
                       <h6
                         style='display:inline; cursor:pointer;'>
                         {{::projectController.getNodeTitleByNodeId(inactiveNode.id)}}
@@ -520,9 +521,9 @@
                     <div layout='row'
                          class='projectItemTitleDiv'
                          ng-click='projectController.insertGroupMode == true || projectController.insertNodeMode == true || projectController.nodeClicked(inactiveChildId)'>
-                      <div layout='row'>
-                        <p
-                          style='display:inline; cursor:pointer;'>
+                      <div layout='row' layout-align="start center">
+                        <node-icon node-id="::inactiveChildId" size="18"></node-icon>&nbsp;
+                        <p style='display:inline; cursor:pointer;'>
                           {{::projectController.getNodeTitleByNodeId(inactiveChildId)}}
                         </p>
                       </div>
@@ -569,7 +570,8 @@
                     </md-checkbox>
                   </div>
                   <div layout='row' class='projectItemTitleDiv' ng-click='projectController.insertGroupMode == true || projectController.insertNodeMode == true || projectController.nodeClicked(inactiveNode.id)'>
-                    <div layout='row'>
+                    <div layout='row' layout-align="start center">
+                      <node-icon node-id="::inactiveNode.id" size="18"></node-icon>&nbsp;
                       <p style='display:inline; cursor:pointer;'>
                         {{::projectController.getNodeTitleByNodeId(inactiveNode.id)}}
                       </p>
