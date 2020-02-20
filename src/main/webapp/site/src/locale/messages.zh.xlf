@@ -86,7 +86,10 @@
           <context context-type="sourcefile">app/modules/header/header-links/header-links.component.html</context>
           <context context-type="linenumber">9</context>
         </context-group>
-        <target state="translated">消息</target>
+        <target state="translated">最新消息</target>
+        <alt-trans>
+          <target>消息</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="53c1019d0a23e95290e125bf93e34257eaadb8b6" datatype="html">
         <source>Help + FAQs</source>
@@ -208,7 +211,10 @@
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
           <context context-type="linenumber">54</context>
         </context-group>
-        <target state="translated">这些资源是在美国国家自然科学基金会支持开展的项目基础上建设地。资源中所表达的任何观点、发现、结论或建议均为作者观点，并不一定反映美国国家自然科学基金会的意见。</target>
+        <target state="translated">这些资源是在美国国家自然科学基金会支持开展的项目基础上建设的。资源中所表达的任何观点、发现、结论或建议均为作者观点，并不一定反映美国国家自然科学基金会的意见。</target>
+        <alt-trans>
+          <target>这些资源是在美国国家自然科学基金会支持开展的项目基础上建设地。资源中所表达的任何观点、发现、结论或建议均为作者观点，并不一定反映美国国家自然科学基金会的意见。</target>
+        </alt-trans>
         <alt-trans>
           <target>本材料建立在由美国国家科学基金会支持开展的项目的基础上。本材料中所表达的任何观点、发现、结论或建议均为作者的观点，并不一定反映国家科学基金会的意见。</target>
         </alt-trans>
@@ -230,7 +236,10 @@
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
           <context context-type="linenumber">65</context>
         </context-group>
-        <target state="translated">加州大学伯克利分校</target>
+        <target state="translated">加利福尼亚大学伯克利分校</target>
+        <alt-trans>
+          <target>加州大学伯克利分校</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="8f885baf51f23ab4c81a547cd984d9355bea0239" datatype="html">
         <source>Concord Consortium</source>
@@ -246,7 +255,10 @@
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
           <context context-type="linenumber">70</context>
         </context-group>
-        <target state="translated">SAIL(基于交互式学习的可扩展架构)</target>
+        <target state="translated">SAIL(用于交互式学习的可扩展架构)</target>
+        <alt-trans>
+          <target>SAIL(基于交互式学习的可扩展架构)</target>
+        </alt-trans>
         <alt-trans>
           <target>基于交互式学习的可扩展架构</target>
         </alt-trans>
@@ -260,7 +272,10 @@
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
           <context context-type="linenumber">75</context>
         </context-group>
-        <target state="translated">1996-<x id="INTERPOLATION" equiv-text="{{time | amDateFormat:'YYYY'}}"/>, <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>加州大学伯克利分校<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> | 基于网络的科学探究学习环境</target>
+        <target state="translated">1996-<x id="INTERPOLATION" equiv-text="{{time | amDateFormat:'YYYY'}}"/>, <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>加利福尼亚大学伯克利分校<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> | 基于网络的科学探究学习环境</target>
+        <alt-trans>
+          <target>1996-<x id="INTERPOLATION" equiv-text="{{time | amDateFormat:'YYYY'}}"/>, <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>加州大学伯克利分校<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> | 基于网络的科学探究学习环境</target>
+        </alt-trans>
         <alt-trans>
           <target>1996-<x id="INTERPOLATION" equiv-text="{{time | amDateFormat:'YYYY'}}"/>, <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>UC Berkeley<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> | 基于网络的科学探究学习环境</target>
         </alt-trans>
@@ -490,7 +505,10 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">20</context>
         </context-group>
-        <target state="translated">整合科学教学和技术</target>
+        <target state="translated">用技术整合科学教学</target>
+        <alt-trans>
+          <target>整合科学教学和技术</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="d0339bceaff58f22bba77d0231838a8df686c98e" datatype="html">
         <source>The WISE Advantage</source>
@@ -550,7 +568,10 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">55</context>
         </context-group>
-        <target state="translated">强大的支持个性化和定制化学习的教师评分和管理工具</target>
+        <target state="translated">强大的用于支持个性化和定制化学习的教师评分和管理工具</target>
+        <alt-trans>
+          <target>强大的支持个性化和定制化学习的教师评分和管理工具</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="23bd67ab9c1e8b08481bd99aa471c2a29b587143" datatype="html">
         <source>Curriculum Offerings</source>
@@ -633,7 +654,7 @@
           <target>WISE首页</target>
         </alt-trans>
       </trans-unit>
-      <trans-unit id="ab8be185fd77636da821443e6071c033ebc47a59" datatype="html">
+      <trans-unit id="ab8be185fd77636da821443e6071c033ebc47a59" datatype="html" approved="yes">
         <source>Research <x id="START_TAG_MAT-ICON" ctype="x-mat-icon" equiv-text="&lt;mat-icon&gt;"/>call_made<x id="CLOSE_TAG_MAT-ICON" ctype="x-mat-icon" equiv-text="&lt;/mat-icon&gt;"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/mobile-menu/mobile-menu.component.html</context>
@@ -643,7 +664,7 @@
           <context context-type="sourcefile">app/modules/header/header-links/header-links.component.html</context>
           <context context-type="linenumber">10</context>
         </context-group>
-        <target state="translated">研究 <x id="START_TAG_MAT-ICON" ctype="x-mat-icon" equiv-text="&lt;mat-icon&gt;"/>call_made<x id="CLOSE_TAG_MAT-ICON" ctype="x-mat-icon" equiv-text="&lt;/mat-icon&gt;"/></target>
+        <target state="final">研究 <x id="START_TAG_MAT-ICON" ctype="x-mat-icon" equiv-text="&lt;mat-icon&gt;"/>call_made<x id="CLOSE_TAG_MAT-ICON" ctype="x-mat-icon" equiv-text="&lt;/mat-icon&gt;"/></target>
         <alt-trans>
           <target>研究 <x id="START_TAG_MAT-ICON" ctype="x-mat-icon" equiv-text="&lt;mat-icon&gt;"/>呼叫_<x id="CLOSE_TAG_MAT-ICON" ctype="x-mat-icon" equiv-text="&lt;/mat-icon&gt;"/></target>
         </alt-trans>
@@ -682,7 +703,10 @@
           <context context-type="sourcefile">app/register/register.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-        <target state="translated">WISE标识</target>
+        <target state="translated">WISE标志</target>
+        <alt-trans>
+          <target>WISE标识</target>
+        </alt-trans>
         <alt-trans>
           <target>WISE图标</target>
         </alt-trans>
@@ -798,7 +822,10 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">70</context>
         </context-group>
-        <target state="translated">WISE让学生体验现实世界中科学家和工程师运用的科学方法。 我们采用多学科方法，让学生在侧重阅读，写作和多媒体素养等基本技能培养的活动中学会探究。 我们很多学习单元是基于项目的，具有面向动手操作的设计挑战的特点。</target>
+        <target state="translated">WISE让学生体验现实世界中科学家和工程师运用的科学方法。 我们采用多学科方法，让学生在着重阅读，写作和多媒体素养等基本技能培养的活动中学会探究。 我们很多学习单元是基于项目的，具有面向动手操作的设计挑战的特点。</target>
+        <alt-trans>
+          <target>WISE让学生体验现实世界中科学家和工程师运用的科学方法。 我们采用多学科方法，让学生在侧重阅读，写作和多媒体素养等基本技能培养的活动中学会探究。 我们很多学习单元是基于项目的，具有面向动手操作的设计挑战的特点。</target>
+        </alt-trans>
         <alt-trans>
           <target>WISE让学生学习真正的科学家和工程师的方法。 我们采用多学科方法，让学生通过强调阅读，写作和多媒体素养的基本技能的活动来学习探究。 我们的很多学习单元也都是基于项目的，同时提供实践动手操作的设计挑战。</target>
         </alt-trans>
@@ -842,7 +869,10 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">85</context>
         </context-group>
-        <target state="translated">WISE学习单元支持 <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>下一代科学标准（NGSS）<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>, 鼓励 <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>3D学习<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>, 并且能适用于地方的课程标准。</target>
+        <target state="translated">WISE学习单元支持 <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>下一代科学标准（NGSS）<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>, 鼓励 <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>3D学习<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>，并且能适用于当地的课程标准。</target>
+        <alt-trans>
+          <target>WISE学习单元支持 <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>下一代科学标准（NGSS）<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>, 鼓励 <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>3D学习<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>, 并且能适用于地方的课程标准。</target>
+        </alt-trans>
         <alt-trans>
           <target>WISE学习单元支持 <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>下一代科学标准（NGSS）<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>, encourage <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>三维学习<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>, 并且可以适用于解决本地标准。</target>
         </alt-trans>
@@ -853,7 +883,10 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">87</context>
         </context-group>
-        <target state="translated">设计流程＆amp; 目标</target>
+        <target state="translated">设计流程和目标</target>
+        <alt-trans>
+          <target>设计流程＆amp; 目标</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="5ba7433a2233cdf924ae0948dc017372200293e3" datatype="html">
         <source>WISE solar ovens unit</source>
@@ -877,7 +910,10 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">107</context>
         </context-group>
-        <target state="translated">具有指导的MyModel图示</target>
+        <target state="translated">带有指南的MyModel图示</target>
+        <alt-trans>
+          <target>具有指导的MyModel图示</target>
+        </alt-trans>
         <alt-trans>
           <target>指导性的我的模型图</target>
         </alt-trans>
@@ -970,7 +1006,10 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">129</context>
         </context-group>
-        <target state="translated">WISE平台帮助教师更高效地处理一些必要但耗时的任务，这样教师可以自由地专注于必须由他们完成的教学任务，即为学生提供高质量的教学。</target>
+        <target state="translated">WISE平台帮助教师更高效地处理一些必要但耗时的任务，可以让教师有时间专注于必须由他们完成的教学任务：为学生提供高质量的教学。</target>
+        <alt-trans>
+          <target>WISE平台帮助教师更高效地处理一些必要但耗时的任务，这样教师可以自由地专注于必须由他们完成的教学任务，即为学生提供高质量的教学。</target>
+        </alt-trans>
         <alt-trans>
           <target>WISE平台帮助教师更高效地处理一些必要但耗时的任务，这样教师可以自由地专注于他们不可或缺的工作：为个别学生提供高质量的教学。</target>
         </alt-trans>
@@ -1062,7 +1101,10 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">166</context>
         </context-group>
-        <target state="translated">在发展中：对学生NGSS理解的自动洞察+建议的课堂干预！</target>
+        <target state="translated">正在开发中的功能：对学生NGSS理解的自动洞察+建议的课堂干预！</target>
+        <alt-trans>
+          <target>在发展中：对学生NGSS理解的自动洞察+建议的课堂干预！</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="337a4aa817a8f5f73548041105128b973b9fb6d2" datatype="html">
         <source>Explore what WISE has to offer!</source>
@@ -1086,7 +1128,10 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">20</context>
         </context-group>
-        <target state="translated">WISE是具有25年以上教学与教育技术研究的产物</target>
+        <target state="translated">WISE是具有25年以上教育技术教学应用研究的产物</target>
+        <alt-trans>
+          <target>WISE是具有25年以上教学与教育技术研究的产物</target>
+        </alt-trans>
         <alt-trans>
           <target>WISE是25年以上的教学与教育技术研究的产物</target>
         </alt-trans>
@@ -1119,7 +1164,10 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">40</context>
         </context-group>
-        <target state="translated">Marcia 在WISE中的工作坊</target>
+        <target state="translated">Marcia 在WISE工作坊中</target>
+        <alt-trans>
+          <target>Marcia 在WISE中的工作坊</target>
+        </alt-trans>
         <alt-trans>
           <target>Marcia 在WISE工作室</target>
         </alt-trans>
@@ -1141,7 +1189,10 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">45</context>
         </context-group>
-        <target state="translated">通过与教师，管理人员，技术设计师和教育研究人员的合作，我们形成了一套完善的设计原则，用以指导基于WISE的课程材料和工具的设计。</target>
+        <target state="translated">通过与教师、管理人员、技术设计师和教育研究人员的合作，我们形成了一套完善的设计原则，用以指导基于WISE的课程材料和工具的设计。</target>
+        <alt-trans>
+          <target>通过与教师，管理人员，技术设计师和教育研究人员的合作，我们形成了一套完善的设计原则，用以指导基于WISE的课程材料和工具的设计。</target>
+        </alt-trans>
         <alt-trans>
           <target>我们通过与教师，管理人员，技术设计师和教育研究人员的合作，完善了一套指导所有WISE课程材料和工具设计的原则。</target>
         </alt-trans>
@@ -1163,9 +1214,9 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">49</context>
         </context-group>
-        <target state="translated">我们的研究+团队</target>
+        <target state="translated">我们的研究和团队</target>
         <alt-trans>
-          <target>我们的研究和团队</target>
+          <target>我们的研究+团队</target>
         </alt-trans>
       </trans-unit>
       <trans-unit id="2430d9c22ccaf6b5daf94c0135b02f753ca6b185" datatype="html">
@@ -1220,9 +1271,9 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">109</context>
         </context-group>
-        <target state="translated">WISE学习单元通过个人和社会相关主题向学生介绍复杂的科学概念。 每个单元都运用经过课堂测试的教学模式。这种模式重视学生现有的想法，帮助他们联系新信息与个人经历，并将他们的想法融合到对科学连贯性的理解中。</target>
+        <target state="translated">WISE学习单元通过个人和社会相关主题向学生介绍复杂的科学概念。 每个单元都运用经过课堂测试的教学模式，这种模式重视学生产生的想法，帮助他们将新信息与其个人经历联系起来，并将他们的想法融合为对科学的连贯理解。</target>
         <alt-trans>
-          <target>WISE学习单元通过个人和社会相关主题向学生介绍复杂的科学概念。 每个单元都运用经过课堂测试的教学模式，这种模式重视学生产生的想法，帮助他们将新信息与其个人经历联系起来，并将他们的想法融合为对科学的连贯理解。</target>
+          <target>WISE学习单元通过个人和社会相关主题向学生介绍复杂的科学概念。 每个单元都运用经过课堂测试的教学模式。这种模式重视学生现有的想法，帮助他们联系新信息与个人经历，并将他们的想法融合到对科学连贯性的理解中。</target>
         </alt-trans>
       </trans-unit>
       <trans-unit id="ae2bc001ed6c6fb5416b490b7c6dbe2260697024" datatype="html">
@@ -1242,9 +1293,9 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">115</context>
         </context-group>
-        <target state="translated">学生者具有不同的经验、兴趣和能力。 WISE提供各种工具、活动模式和教学支架，帮助学习者以不同的方式表达和评估他们的理解。 这样，所有学生的能力都能得到认可，所有人都有获得成功的机会。</target>
+        <target state="translated">不同的学生个体在经验、兴趣和能力上各不相同。 WISE提供各种工具、活动模式和教学支架，以支持多种表达和评估理解的方式。 这样，所有学生的能力都能够得到认可，所有人都有机会获得成功。</target>
         <alt-trans>
-          <target>不同的学生个体在经验、兴趣和能力上各不相同。 WISE提供各种工具、活动模式和教学支架，以支持多种表达和评估理解的方式。 这样，所有学生的能力都能够得到认可，所有人都有机会获得成功。</target>
+          <target>学生者具有不同的经验、兴趣和能力。 WISE提供各种工具、活动模式和教学支架，帮助学习者以不同的方式表达和评估他们的理解。 这样，所有学生的能力都能得到认可，所有人都有获得成功的机会。</target>
         </alt-trans>
       </trans-unit>
       <trans-unit id="92bb340c07c783bf551cd704462f3d7efa15f8a4" datatype="html">
@@ -1261,7 +1312,10 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">128</context>
         </context-group>
-        <target state="translated">WISE为更多的教师和学生提供了进行探究式科学学习的机会。我们学习单元使对教师教学和学生学习中难以理解的概念变得易于理解和掌握。WISE课程帮助学生认识到自己有能力从事科学事业，并意识到，无论他们的背景如何，科学都可以成为一种潜在的职业。</target>
+        <target state="translated">WISE为更多的教师和学生提供了进行探究式科学学习的机会。我们的学习单元使得教师教学和学生学习过程中难以理解的概念变得易于理解和掌握。WISE课程帮助学生认识到自己有能力从事科学事业，并意识到无论他们的背景如何，科学都可以成为一种潜在的职业。</target>
+        <alt-trans>
+          <target>WISE为更多的教师和学生提供了进行探究式科学学习的机会。我们学习单元使对教师教学和学生学习中难以理解的概念变得易于理解和掌握。WISE课程帮助学生认识到自己有能力从事科学事业，并意识到，无论他们的背景如何，科学都可以成为一种潜在的职业。</target>
+        </alt-trans>
         <alt-trans>
           <target>WISE为更多的教师和学生提供了进行探究式科学学习的机会。我们学习单元使得对于教师教学和学生学习中难以理解的概念变得易于理解和掌握。WISE课程帮助学生认识到自己有能力从事科学，并意识到，无论他们的背景如何，科学都可以成为一种潜在的职业。</target>
         </alt-trans>
@@ -1272,7 +1326,10 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">134</context>
         </context-group>
-        <target state="translated">所有人都可以访问</target>
+        <target state="translated">所有人都可以使用</target>
+        <alt-trans>
+          <target>所有人都可以访问</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="416ce0bcfd9bbe81b9ccc34d764504df4c8088d1" datatype="html">
         <source>WISE is <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>free<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> and <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>open source<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>! WISE subsists on generous support from the National Science Foundation, which means it&apos;s available to anyone with an internet connection. Driven by an active community of developers, WISE is continually being expanded and improved. Bring science inquiry into the classroom, the museum, the after-school, or the home-school environment!</source>
@@ -1280,7 +1337,10 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">135</context>
         </context-group>
-        <target state="translated">WISSE 是 <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>免费的<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> 和 <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>开放源码平台<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>！ WISE依靠国家自然科学基金会的慷慨支持，这意味着任何人都可以依靠互联网使用它。在活跃的开发者社群驱动下，WISE正在不断扩大和改进。它致力于将科学探究引入课堂、博物馆、课后或家庭环境中！</target>
+        <target state="translated">WISSE 是 <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>免费<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> 和 <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>开放源码的平台<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>！ WISE依靠国家自然科学基金会的慷慨支持，因此任何人都可以通过互联网使用。在活跃的开发者社群的驱动下，WISE正在不断扩大和改进。它致力于将科学探究引入课堂、博物馆、课后或家庭环境中！</target>
+        <alt-trans>
+          <target>WISSE 是 <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>免费的<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> 和 <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>开放源码平台<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>！ WISE依靠国家自然科学基金会的慷慨支持，这意味着任何人都可以依靠互联网使用它。在活跃的开发者社群驱动下，WISE正在不断扩大和改进。它致力于将科学探究引入课堂、博物馆、课后或家庭环境中！</target>
+        </alt-trans>
         <alt-trans>
           <target>WISSE 是 <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>免费<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> 和 <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>开放源码<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>！ WISE依靠国家科学基金会的慷慨支持，这意味着任何有互联网连接的人都可以使用它。在活跃的开发者社群驱动下，WISE正在不断扩大和改进。致力于将科学调查引入课堂、博物馆、课后或家庭环境！</target>
         </alt-trans>
@@ -1395,9 +1455,9 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">12</context>
         </context-group>
-        <target state="translated">我们收集到的信息</target>
+        <target state="translated">信息收集</target>
         <alt-trans>
-          <target>信息收集</target>
+          <target>我们收集到的信息</target>
         </alt-trans>
       </trans-unit>
       <trans-unit id="3b2c25aac9bb263b63bc9310da65eb68324d83da" datatype="html">
@@ -1430,7 +1490,10 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">16</context>
         </context-group>
-        <target state="translated">国家和联邦法律</target>
+        <target state="translated">州和联邦法律</target>
+        <alt-trans>
+          <target>国家和联邦法律</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="75d5b0f2bf76429bfac084e2e1e1002c01c320ad" datatype="html">
         <source>Changes &amp; Updates</source>
@@ -1465,7 +1528,10 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">24</context>
         </context-group>
-        <target state="translated">这些使用条款和隐私政策是您与基于网络的探究科学环境团队之间的协议，该团队规范您使用wise.berkeley.edu及所有相关服务和网站（统称为“WISE”）的行为。 WISE团队是一个联邦政府资助的研究小组，总部设在加州大学伯克利分校，是一个非盈利组织。</target>
+        <target state="translated">这些使用条款和隐私政策是您与基于网络的探究科学环境团队之间的协议，该团队规范您使用wise.berkeley.edu及所有相关服务和网站（统称为“WISE”）的行为。 WISE团队是一个联邦政府资助的研究小组，总部设在加利福尼亚大学伯克利分校，是一个非盈利组织。</target>
+        <alt-trans>
+          <target>这些使用条款和隐私政策是您与基于网络的探究科学环境团队之间的协议，该团队规范您使用wise.berkeley.edu及所有相关服务和网站（统称为“WISE”）的行为。 WISE团队是一个联邦政府资助的研究小组，总部设在加州大学伯克利分校，是一个非盈利组织。</target>
+        </alt-trans>
         <alt-trans>
           <target>这些使用条款和隐私政策是您与基于网络的探究科学环境团队之间的协议，该团队规范您使用wise.berkeley.edu及所有相关服务和网站（统称为“WISE”）地行为。 WISE团队是一个联邦政府资助的研究小组，总部设在加州大学伯克利分校，是一个非盈利组织。</target>
         </alt-trans>
@@ -1946,7 +2012,10 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">100</context>
         </context-group>
-        <target state="translated">加州大学伯克利分校教育研究生院</target>
+        <target state="translated">加利福尼亚大学伯克利分校教育研究生院</target>
+        <alt-trans>
+          <target>加州大学伯克利分校教育研究生院</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="60d92c21ade5f819b7a1482c77f1cd0199d44440" datatype="html">
         <source>Web-based Inquiry Science Environment (WISE)</source>
@@ -1954,7 +2023,10 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">101</context>
         </context-group>
-        <target state="translated">基于网络的探究科学环境（WISE）</target>
+        <target state="translated">基于网络的科学探究环境（WISE）</target>
+        <alt-trans>
+          <target>基于网络的探究科学环境（WISE）</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="25fdbce3537fcb574f51e927a84a17b5eef828c1" datatype="html">
         <source>Attn: David Crowell</source>
@@ -1962,7 +2034,10 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">102</context>
         </context-group>
-        <target state="translated">Attn: David Crowell</target>
+        <target state="translated">联系人：David Crowell</target>
+        <alt-trans>
+          <target>Attn: David Crowell</target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="f39e4e0e398d7d2caf4f0330f322059d52593c09" datatype="html">
         <source>2121 Berkeley Way, Room 4203</source>
