@@ -5,6 +5,7 @@ import ConfigureStructureController from '../configureStructureController';
 class JigsawController extends ConfigureStructureController {
   constructor($filter, $rootScope, $state, $stateParams, $scope, UtilService) {
     super($filter, $rootScope, $state, $stateParams, $scope, UtilService);
+    this.numGroups = '2';
   }
 
   injectGroup(structure, numGroups) {
@@ -55,6 +56,27 @@ class JigsawController extends ConfigureStructureController {
       title: 'Jigsaw Activity',
       startId: 'node1',
       ids: ['node1', 'node2', 'node3', 'node4', 'node5'],
+      icons: {
+        default: {
+          color: '#2196F3',
+          type: 'font',
+          fontSet: 'material-icons',
+          fontName: 'info'
+        }
+      },
+      transitionLogic: {
+        transitions: []
+      }
+    };
+  }
+
+  injectGroupsWithFourGroups(structure) {
+    structure.group = {
+      id: 'group1',
+      type: 'group',
+      title: 'Jigsaw',
+      startId: 'node1',
+      ids: ['node1', 'node2', 'node3', 'node4', 'node5', 'node6'],
       icons: {
         default: {
           color: '#2196F3',
@@ -374,6 +396,240 @@ class JigsawController extends ConfigureStructureController {
       },
       {
         id: 'node5',
+        title: 'Synthesis Step (everyone)',
+        type: 'node',
+        constraints: [],
+        transitionLogic: {
+          transitions: []
+        },
+        showSaveButton: false,
+        showSubmitButton: false,
+        components: []
+      }
+    ];
+  }
+
+  injectNodesWithFourGroups(structure) {
+    structure.nodes = [
+      {
+        id: 'node1',
+        type: 'node',
+        title: 'First Step (everyone)',
+        components: [],
+        constraints: [],
+        showSaveButton: false,
+        showSubmitButton: false,
+        transitionLogic: {
+          transitions: [
+            {
+              to: 'node2'
+            },
+            {
+              to: 'node3'
+            },
+            {
+              to: 'node4'
+            },
+            {
+              to: 'node5'
+            }
+          ],
+          howToChooseAmongAvailablePaths: 'workgroupId',
+          whenToChoosePath: 'enterNode',
+          canChangePath: false,
+          maxPathsVisitable: 1
+        }
+      },
+      {
+        id: 'node2',
+        title: 'Group 1 Step 1',
+        type: 'node',
+        constraints: [
+          {
+            id: 'node2Constraint1',
+            action: 'makeThisNodeNotVisible',
+            targetId: 'node2',
+            removalConditional: 'all',
+            removalCriteria: [
+              {
+                name: 'branchPathTaken',
+                params: {
+                  fromNodeId: 'node1',
+                  toNodeId: 'node2'
+                }
+              }
+            ]
+          },
+          {
+            id: 'node2Constraint2',
+            action: 'makeThisNodeNotVisitable',
+            targetId: 'node2',
+            removalConditional: 'all',
+            removalCriteria: [
+              {
+                name: 'branchPathTaken',
+                params: {
+                  fromNodeId: 'node1',
+                  toNodeId: 'node2'
+                }
+              }
+            ]
+          }
+        ],
+        transitionLogic: {
+          transitions: [
+            {
+              to: 'node6'
+            }
+          ]
+        },
+        showSaveButton: false,
+        showSubmitButton: false,
+        components: []
+      },
+      {
+        id: 'node3',
+        title: 'Group 2 Step 1',
+        type: 'node',
+        constraints: [
+          {
+            id: 'node3Constraint1',
+            action: 'makeThisNodeNotVisible',
+            targetId: 'node3',
+            removalConditional: 'all',
+            removalCriteria: [
+              {
+                name: 'branchPathTaken',
+                params: {
+                  fromNodeId: 'node1',
+                  toNodeId: 'node3'
+                }
+              }
+            ]
+          },
+          {
+            id: 'node3Constraint2',
+            action: 'makeThisNodeNotVisitable',
+            targetId: 'node3',
+            removalConditional: 'all',
+            removalCriteria: [
+              {
+                name: 'branchPathTaken',
+                params: {
+                  fromNodeId: 'node1',
+                  toNodeId: 'node3'
+                }
+              }
+            ]
+          }
+        ],
+        transitionLogic: {
+          transitions: [
+            {
+              to: 'node6'
+            }
+          ]
+        },
+        showSaveButton: false,
+        showSubmitButton: false,
+        components: []
+      },
+      {
+        id: 'node4',
+        title: 'Group 3 Step 1',
+        type: 'node',
+        constraints: [
+          {
+            id: 'node4Constraint1',
+            action: 'makeThisNodeNotVisible',
+            targetId: 'node4',
+            removalConditional: 'all',
+            removalCriteria: [
+              {
+                name: 'branchPathTaken',
+                params: {
+                  fromNodeId: 'node1',
+                  toNodeId: 'node4'
+                }
+              }
+            ]
+          },
+          {
+            id: 'node4Constraint2',
+            action: 'makeThisNodeNotVisitable',
+            targetId: 'node4',
+            removalConditional: 'all',
+            removalCriteria: [
+              {
+                name: 'branchPathTaken',
+                params: {
+                  fromNodeId: 'node1',
+                  toNodeId: 'node4'
+                }
+              }
+            ]
+          }
+        ],
+        transitionLogic: {
+          transitions: [
+            {
+              to: 'node6'
+            }
+          ]
+        },
+        showSaveButton: false,
+        showSubmitButton: false,
+        components: []
+      },
+      {
+        id: 'node5',
+        title: 'Group 4 Step 1',
+        type: 'node',
+        constraints: [
+          {
+            id: 'node5Constraint1',
+            action: 'makeThisNodeNotVisible',
+            targetId: 'node5',
+            removalConditional: 'all',
+            removalCriteria: [
+              {
+                name: 'branchPathTaken',
+                params: {
+                  fromNodeId: 'node1',
+                  toNodeId: 'node5'
+                }
+              }
+            ]
+          },
+          {
+            id: 'node5Constraint2',
+            action: 'makeThisNodeNotVisitable',
+            targetId: 'node5',
+            removalConditional: 'all',
+            removalCriteria: [
+              {
+                name: 'branchPathTaken',
+                params: {
+                  fromNodeId: 'node1',
+                  toNodeId: 'node5'
+                }
+              }
+            ]
+          }
+        ],
+        transitionLogic: {
+          transitions: [
+            {
+              to: 'node6'
+            }
+          ]
+        },
+        showSaveButton: false,
+        showSubmitButton: false,
+        components: []
+      },
+      {
+        id: 'node6',
         title: 'Synthesis Step (everyone)',
         type: 'node',
         constraints: [],
