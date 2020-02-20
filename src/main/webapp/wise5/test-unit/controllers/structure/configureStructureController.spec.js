@@ -34,7 +34,7 @@ describe('ConfigureStructureController', () => {
         spyOn($state, 'go');
         controller.chooseLocation();
         expect($state.go).toHaveBeenCalledWith('root.project.structure.location', {
-          structure: structure
+          structure: {}
         });
       });
     });

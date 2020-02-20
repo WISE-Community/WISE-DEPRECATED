@@ -24,15 +24,8 @@ describe('ChooseStructureController', () => {
     describe('chooseStructure', () => {
       it('should go to the configure state with the chosen structure', () => {
         spyOn($state, 'go');
-        const structure = {
-          id: 'jigsaw',
-          label: 'Jigsaw',
-          description: 'This is a Jigsaw. Students do stuff.'
-        };
-        controller.chooseStructure(structure);
-        expect($state.go).toHaveBeenCalledWith('root.project.structure.jigsaw', {
-          structure: structure
-        });
+        controller.chooseStructure('root.project.structure.jigsaw');
+        expect($state.go).toHaveBeenCalledWith('root.project.structure.jigsaw');
       });
     });
   }

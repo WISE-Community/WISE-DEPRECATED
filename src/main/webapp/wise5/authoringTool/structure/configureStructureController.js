@@ -9,11 +9,11 @@ class ConfigureStructureController {
     this.$scope = $scope;
     this.$translate = this.$filter('translate');
     this.UtilService = UtilService;
+    this.structure = {};
     this.setSummernoteOptions();
   }
 
   $onInit() {
-    this.structure = {};
     this.injectGroupAndNodes();
   }
 
