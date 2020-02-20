@@ -295,7 +295,7 @@
     "tags": "Tags",
     "thereAreNotPathsOutOfThisStep": "There are no paths out of this step",
     "thereAreNoRequirementsForThisTransition": "There are no requirements for this transition",
-    "thereAreNoUnusedActivities": "There are no Unused Activites",
+    "thereAreNoUnusedActivities": "There are no Unused Lessons",
     "thereAreNoUnusedSteps": "There are no Unused Steps",
     "thereIsNoNextStep": "There is no next step",
     "thereIsNoPreviousStep": "There is no previous step",
@@ -314,7 +314,7 @@
     "transitions": "Paths",
     "type": "Type",
     "undo": "Undo",
-    "unusedActivities": "Unused Activities",
+    "unusedActivities": "Unused Lessons",
     "unusedFiles": "Unused Files",
     "unusedSteps": "Unused Steps",
     "updateOn": "Update On",
@@ -329,5 +329,5 @@
     "yes": "Yes",
     "youAreNotAllowedToInsertTheSelectedItemAfterItself": "You are not allowed to insert the selected item after itself.",
     "youAreNotAllowedToInsertTheSelectedItemsAfterItself": "You are not allowed to insert the selected items after itself.",
-    "youCannotCopyActivitiesAtThisTime": "You cannot copy activities at this time."
+    "youCannotCopyActivitiesAtThisTime": "You cannot copy lessons at this time."
 }
