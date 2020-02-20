@@ -473,11 +473,7 @@ class SelfDirectedInvestigationController extends ConfigureStructureController {
         type: 'node',
         constraints: [],
         transitionLogic: {
-          transitions: [
-            {
-              to: 'node165'
-            }
-          ]
+          transitions: []
         },
         showSaveButton: true,
         showSubmitButton: false,

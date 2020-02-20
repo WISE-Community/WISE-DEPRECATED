@@ -2121,18 +2121,21 @@ class ProjectService {
    * @returns the component or null if the nodeId or componentId are null or does not exist
    */
   getComponentByNodeIdAndComponentId(nodeId, componentId) {
-    if (nodeId != null && componentId != null) {
-      const components = this.getComponentsByNodeId(nodeId);
-      for (let tempComponent of components) {
-        if (tempComponent != null) {
-          const tempComponentId = tempComponent.id;
-          if (componentId === tempComponentId) {
-            return tempComponent;
-          }
-        }
+    const components = this.getComponentsByNodeId(nodeId);
+    for (const component of components) {
+      if (component.id === componentId) {
+        return component;
       }
     }
     return null;
+  }
+
+  getConnectedComponentsByNodeIdAndComponentId(nodeId, componentId) {
+    const component = this.getComponentByNodeIdAndComponentId(nodeId, componentId);
+    if (component != null && component.connectedComponents != null) {
+      return component.connectedComponents;
+    }
+    return [];
   }
 
   /**
