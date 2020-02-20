@@ -1,12 +1,11 @@
 import vleModule from '../../vle/vle';
 
 describe('UtilService', () => {
-
   beforeEach(angular.mock.module(vleModule.name));
 
   let UtilService;
 
-  beforeEach(inject((_UtilService_) => {
+  beforeEach(inject(_UtilService_ => {
     UtilService = _UtilService_;
   }));
 
@@ -36,8 +35,8 @@ describe('UtilService', () => {
 
   describe('convertStringToNumber()', () => {
     it('should convert a number string to a number', () => {
-      expect(UtilService.convertStringToNumber("5")).toEqual(5);
-      expect(UtilService.convertStringToNumber("-100")).toEqual(-100);
+      expect(UtilService.convertStringToNumber('5')).toEqual(5);
+      expect(UtilService.convertStringToNumber('-100')).toEqual(-100);
     });
 
     it('should return null for null argument', () => {
@@ -45,10 +44,10 @@ describe('UtilService', () => {
     });
 
     it('should return non-null number string as is', () => {
-      expect(UtilService.convertStringToNumber("abc")).toEqual("abc");
-      expect(UtilService.convertStringToNumber("")).toEqual("");
+      expect(UtilService.convertStringToNumber('abc')).toEqual('abc');
+      expect(UtilService.convertStringToNumber('')).toEqual('');
     });
-  })
+  });
 
   describe('makeCopyOfJSONObject()', () => {
     it('should copy an array object', () => {
@@ -58,7 +57,7 @@ describe('UtilService', () => {
     });
 
     it('should copy an object', () => {
-      const obj = {"name":"WISE", "address":"Berkeley"};
+      const obj = { name: 'WISE', address: 'Berkeley' };
       const copiedObj = UtilService.makeCopyOfJSONObject(obj);
       expect(copiedObj).toEqual(obj);
     });
@@ -83,11 +82,7 @@ describe('UtilService', () => {
 
   describe('moveObjectUp()', () => {
     it('should move an object up when the object is not the top element', () => {
-      const myArray = [
-        { name: 'a' },
-        { name: 'b' },
-        { name: 'c' }
-      ];
+      const myArray = [{ name: 'a' }, { name: 'b' }, { name: 'c' }];
       const elementToMove = 1;
       UtilService.moveObjectUp(myArray, elementToMove);
       expect(myArray[0].name).toEqual('b');
@@ -96,11 +91,7 @@ describe('UtilService', () => {
     });
 
     it('should not move an object up when the object is the top element', () => {
-      const myArray = [
-        { name: 'a' },
-        { name: 'b' },
-        { name: 'c' }
-      ];
+      const myArray = [{ name: 'a' }, { name: 'b' }, { name: 'c' }];
       const elementToMove = 0;
       UtilService.moveObjectUp(myArray, elementToMove);
       expect(myArray[0].name).toEqual('a');
@@ -111,11 +102,7 @@ describe('UtilService', () => {
 
   describe('moveObjectDown()', () => {
     it('should move an object down when the object is not the bottom element', () => {
-      const myArray = [
-        { name: 'a' },
-        { name: 'b' },
-        { name: 'c' }
-      ];
+      const myArray = [{ name: 'a' }, { name: 'b' }, { name: 'c' }];
       const elementToMove = 1;
       UtilService.moveObjectDown(myArray, elementToMove);
       expect(myArray[0].name).toEqual('a');
@@ -124,11 +111,7 @@ describe('UtilService', () => {
     });
 
     it('should not move an object down when the object is the bottom element', () => {
-      const myArray = [
-        { name: 'a' },
-        { name: 'b' },
-        { name: 'c' }
-      ];
+      const myArray = [{ name: 'a' }, { name: 'b' }, { name: 'c' }];
       const elementToMove = 2;
       UtilService.moveObjectDown(myArray, elementToMove);
       expect(myArray[0].name).toEqual('a');
@@ -146,6 +129,20 @@ describe('UtilService', () => {
     it('should calculate the mean when there are multiple values', () => {
       const values = [1, 2, 3, 4, 10];
       expect(UtilService.calculateMean(values)).toEqual(4);
+    });
+  });
+
+  describe('isValidJSONString()', () => {
+    it('should return true if json string is valid', () => {
+      const validJSON = '{"a":1,"b":2}';
+      expect(UtilService.isValidJSONString(validJSON)).toBeTruthy();
+      const validJSON2 = '[{"a":1},{"b":2}]';
+      expect(UtilService.isValidJSONString(validJSON2)).toBeTruthy();
+    });
+
+    it('should return false for invalid json strings', () => {
+      const invalidJSON = '{"a":1,"b":2';
+      expect(UtilService.isValidJSONString(invalidJSON)).toBeFalsy();
     });
   });
 });

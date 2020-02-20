@@ -1,0 +1,68 @@
+<div>
+  <md-button id='backToProjectButton' class='topButton md-raised md-primary'
+      ng-click='advancedAuthoringController.goBack()'>
+    <md-icon>arrow_back</md-icon>
+    <md-tooltip md-direction='top'
+        class='projectButtonTooltip'>
+      {{ ::'backToProjectView' | translate }}
+    </md-tooltip>
+  </md-button>
+</div><br/>
+<div>
+  <md-input-container>
+    <label>{{ ::'scriptFilename' | translate }}</label>
+    <input size='100'
+          ng-model='advancedAuthoringController.projectScriptFilename'
+          ng-change='advancedAuthoringController.projectScriptFilenameChanged()'/>
+  </md-input-container>
+  <md-button class='topButton md-raised md-primary'
+          style='margin-top: -10;'
+          ng-click='advancedAuthoringController.chooseProjectScriptFile()'>
+    <md-icon>attach_file</md-icon>
+    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'CHOOSE' | translate }}</md-tooltip>
+  </md-button>
+</div>
+<div>
+  <md-input-container>
+    <label>{{ ::'projectURL' | translate }}</label>
+    <input size='100'
+          value='{{::advancedAuthoringController.getProjectURL()}}'
+          disabled='true'/>
+  </md-input-container>
+  <md-button class='topButton md-raised md-primary'
+          style='margin-top: -10;'
+          ng-click='advancedAuthoringController.copyProjectURL()'>
+    <md-icon>content_paste</md-icon>
+    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'copyProjectURLToClipboard' | translate }}</md-tooltip>
+  </md-button>
+  <md-button class='topButton md-raised md-primary'
+          style='margin-top: -10;'
+          ng-click='advancedAuthoringController.openProjectURLInNewTab()'>
+    <md-icon>open_in_new</md-icon>
+    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'openProjectURLInNewTab' | translate }}</md-tooltip>
+  </md-button>
+</div>
+<div>
+  <md-input-container style='margin-right: 20px; width: 150px; height: 50px;'>
+    <md-button id='showProjectJSONButton' class='topButton md-raised md-primary' ng-click='advancedAuthoringController.showJSONClicked()'>
+      <md-icon>code</md-icon>
+      <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'SHOW_JSON' | translate }}</md-tooltip>
+    </md-button>
+  </md-input-container>
+  <md-input-container>
+    <md-button class='topButton md-raised md-primary'
+            ng-click='advancedAuthoringController.downloadProject()'>
+      <md-icon>file_download</md-icon>
+      <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'downloadProject' | translate }}</md-tooltip>
+    </md-button>
+  </md-input-container>
+</div>
+<div ng-if='advancedAuthoringController.isJSONDisplayed'>
+  <h5 translate="editProjectJSON"></h5>
+  <md-input-container style='width: 100%;'>
+    <textarea ng-model='advancedAuthoringController.projectJSONString'
+          style='width: 90%; border: 1px solid black;'
+          ng-change='advancedAuthoringController.autoSaveProjectJSONString()'
+          ng-model-options='{ debounce: 1000 }'></textarea>
+  </md-input-container>
+</div>

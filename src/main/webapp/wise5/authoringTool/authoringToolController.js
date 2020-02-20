@@ -101,6 +101,14 @@ class AuthoringToolController {
         type: 'secondary',
         showToolbar: true,
         active: false
+      },
+      'root.project.advanced': {
+        name: '',
+        label: '',
+        icon: '',
+        type: 'secondary',
+        showToolbar: true,
+        active: false
       }
     };
 
