@@ -9,12 +9,17 @@ class ConfigureStructureController {
     this.$scope = $scope;
     this.$translate = this.$filter('translate');
     this.UtilService = UtilService;
-    this.structure = $stateParams.structure;
     this.setSummernoteOptions();
   }
 
   $onInit() {
-    this.injectGroupAndNodes(this.structure);
+    this.structure = {};
+    this.injectGroupAndNodes();
+  }
+
+  injectGroupAndNodes() {
+    this.injectGroup();
+    this.injectNodes();
   }
 
   setSummernoteOptions() {
@@ -53,11 +58,6 @@ class ConfigureStructureController {
         )
       }
     };
-  }
-
-  injectGroupAndNodes(structure) {
-    this.injectGroup(structure);
-    this.injectNodes(structure);
   }
 
   chooseLocation() {

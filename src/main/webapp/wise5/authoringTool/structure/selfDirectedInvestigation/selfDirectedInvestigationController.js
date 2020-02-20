@@ -7,11 +7,11 @@ class SelfDirectedInvestigationController extends ConfigureStructureController {
     super($filter, $rootScope, $state, $stateParams, $scope, UtilService);
   }
 
-  injectGroup(structure) {
-    structure.group = {
+  injectGroup() {
+    this.structure.group = {
       id: 'group1',
       type: 'group',
-      title: 'SELF DIRECTED INVESTIGATION TEMPLATE',
+      title: 'Self Directed Investigation',
       startId: 'node1',
       ids: ['node1'],
       icons: {
@@ -28,8 +28,8 @@ class SelfDirectedInvestigationController extends ConfigureStructureController {
     };
   }
 
-  injectNodes(structure) {
-    structure.nodes = [
+  injectNodes() {
+    this.structure.nodes = [
       {
         components: [
           {

@@ -8,28 +8,28 @@ class JigsawController extends ConfigureStructureController {
     this.numGroups = '2';
   }
 
-  injectGroup(structure, numGroups) {
+  injectGroup(numGroups) {
     if (numGroups === 2) {
-      this.injectGroupsWithTwoGroups(structure);
+      this.injectGroupsWithTwoGroups();
     } else if (numGroups === 3) {
-      this.injectGroupsWithThreeGroups(structure);
+      this.injectGroupsWithThreeGroups();
     } else if (numGroups === 4) {
-      this.injectGroupsWithFourGroups(structure);
+      this.injectGroupsWithFourGroups();
     }
   }
 
-  injectNodes(structure, numGroups) {
+  injectNodes(numGroups) {
     if (numGroups === 2) {
-      this.injectNodesWithTwoGroups(structure);
+      this.injectNodesWithTwoGroups();
     } else if (numGroups === 3) {
-      this.injectNodesWithThreeGroups(structure);
+      this.injectNodesWithThreeGroups();
     } else if (numGroups === 4) {
-      this.injectNodesWithFourGroups(structure);
+      this.injectNodesWithFourGroups();
     }
   }
 
-  injectGroupsWithTwoGroups(structure) {
-    structure.group = {
+  injectGroupsWithTwoGroups() {
+    this.structure.group = {
       id: 'group1',
       type: 'group',
       title: 'Jigsaw Activity',
@@ -49,8 +49,8 @@ class JigsawController extends ConfigureStructureController {
     };
   }
 
-  injectGroupsWithThreeGroups(structure) {
-    structure.group = {
+  injectGroupsWithThreeGroups() {
+    this.structure.group = {
       id: 'group1',
       type: 'group',
       title: 'Jigsaw Activity',
@@ -70,8 +70,8 @@ class JigsawController extends ConfigureStructureController {
     };
   }
 
-  injectGroupsWithFourGroups(structure) {
-    structure.group = {
+  injectGroupsWithFourGroups() {
+    this.structure.group = {
       id: 'group1',
       type: 'group',
       title: 'Jigsaw',
@@ -91,8 +91,8 @@ class JigsawController extends ConfigureStructureController {
     };
   }
 
-  injectNodesWithTwoGroups(structure) {
-    structure.nodes = [
+  injectNodesWithTwoGroups() {
+    this.structure.nodes = [
       {
         id: 'node1',
         type: 'node',
@@ -225,8 +225,8 @@ class JigsawController extends ConfigureStructureController {
     ];
   }
 
-  injectNodesWithThreeGroups(structure) {
-    structure.nodes = [
+  injectNodesWithThreeGroups() {
+    this.structure.nodes = [
       {
         id: 'node1',
         type: 'node',
@@ -409,8 +409,8 @@ class JigsawController extends ConfigureStructureController {
     ];
   }
 
-  injectNodesWithFourGroups(structure) {
-    structure.nodes = [
+  injectNodesWithFourGroups() {
+    this.structure.nodes = [
       {
         id: 'node1',
         type: 'node',
@@ -643,13 +643,13 @@ class JigsawController extends ConfigureStructureController {
     ];
   }
 
-  injectGroupAndNodes(structure, numGroups = 2) {
-    this.injectGroup(structure, numGroups);
-    this.injectNodes(structure, numGroups);
+  injectGroupAndNodes(numGroups = 2) {
+    this.injectGroup(numGroups);
+    this.injectNodes(numGroups);
   }
 
   chooseLocation() {
-    this.injectGroupAndNodes(this.structure, parseInt(this.numGroups));
+    this.injectGroupAndNodes(parseInt(this.numGroups));
     this.$state.go('root.project.structure.location', { structure: this.structure });
   }
 }

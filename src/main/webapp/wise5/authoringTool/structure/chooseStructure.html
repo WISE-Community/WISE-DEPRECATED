@@ -1,9 +1,11 @@
 <div style='display:flex'>
   <div ng-repeat='structure in chooseStructureController.structures' style='width:200px'>
-    <p>{{ ::structure.label }}</p>
-    <p>{{ ::structure.description }}</p>
+    <div style='height:100px'>
+      <p><b>{{ ::structure.label }}</b></p>
+      <p>{{ ::structure.description }}</p>
+    </div>
     <md-button class='createButton md-raised md-primary'
-        ng-click='chooseStructureController.chooseStructure(structure)'
+        ng-click='chooseStructureController.chooseStructure(structure.route)'
         aria-label="{{ ::'chooseStructure' | translate }}"
         translate="chooseStructure"></md-button>
   </div>

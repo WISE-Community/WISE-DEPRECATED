@@ -7,11 +7,11 @@ class PeerReviewAndRevisionController extends ConfigureStructureController {
     super($filter, $rootScope, $state, $stateParams, $scope, UtilService);
   }
 
-  injectGroup(structure) {
-    structure.group = {
+  injectGroup() {
+    this.structure.group = {
       id: 'group1',
       type: 'group',
-      title: 'PEER REVIEW TEMPLATE',
+      title: 'Peer Review and Revision',
       startId: 'node1',
       ids: ['node1'],
       icons: {
@@ -28,8 +28,8 @@ class PeerReviewAndRevisionController extends ConfigureStructureController {
     };
   }
 
-  injectNodes(structure) {
-    structure.nodes = [
+  injectNodes() {
+    this.structure.nodes = [
       {
         components: [
           {
@@ -99,7 +99,7 @@ class PeerReviewAndRevisionController extends ConfigureStructureController {
         showSubmitButton: false,
         showSaveButton: false,
         id: 'node1',
-        title: 'PEER REVIEW STEP, EXPLANATIONS IN ORANGE',
+        title: 'Peer Review Step, Explanations in orange',
         type: 'node',
         constraints: []
       }

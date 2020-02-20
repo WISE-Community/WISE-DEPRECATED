@@ -11,7 +11,6 @@ class ChooseStructureLocationController {
     this.projectId = $stateParams.projectId;
     this.structure = $stateParams.structure;
     this.structure = this.injectUniqueIds(this.structure);
-    this.setTitleOfStructure(this.structure, this.structure.label);
   }
 
   insertAsFirstActivity() {
@@ -42,10 +41,6 @@ class ChooseStructureLocationController {
       this.$rootScope.$broadcast('parseProject');
       this.$state.go('root.project');
     });
-  }
-
-  setTitleOfStructure(structure, title) {
-    structure.group.title = title;
   }
 
   injectUniqueIds(structure) {
