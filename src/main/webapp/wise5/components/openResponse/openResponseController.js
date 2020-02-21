@@ -214,13 +214,7 @@ class OpenResponseController extends ComponentController {
 
     }.bind(this));
 
-    this.$scope.$on('notebookItemChosen', (event, args) => {
-      if (args.requester == this.nodeId + '-' + this.componentId) {
-        const notebookItem = args.notebookItem;
-        const studentWorkId = notebookItem.content.studentWorkIds[0];
-        this.importWorkByStudentWorkId(studentWorkId);
-      }
-    });
+    this.registerNotebookItemChosenListener();
 
     // load script for this component, if any
     let script = this.componentContent.script;
@@ -277,7 +271,7 @@ class OpenResponseController extends ComponentController {
   }
 
   hasFeedback() {
-    return (this.componentContent.cRater.showFeedback || this.componentContent.cRater.showScore) 
+    return (this.componentContent.cRater.showFeedback || this.componentContent.cRater.showScore)
         && this.isCRaterEnabled() ;
   }
 

@@ -1207,6 +1207,15 @@ class ComponentController {
   updateLatestCommentAnnotation(annotation) {
     this.latestAnnotations.comment = annotation;
   }
+
+  registerNotebookItemChosenListener() {
+    this.$scope.$on('notebookItemChosen', (event, {requester, notebookItem}) => {
+      if (requester === `${this.nodeId}-${this.componentId}`) {
+        const studentWorkId = notebookItem.content.studentWorkIds[0];
+        this.importWorkByStudentWorkId(studentWorkId);
+      }
+    });
+  }
 }
 
 ComponentController.$inject = [];
