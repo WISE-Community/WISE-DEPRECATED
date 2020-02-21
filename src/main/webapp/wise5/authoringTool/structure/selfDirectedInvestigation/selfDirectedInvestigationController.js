@@ -14,7 +14,9 @@ class SelfDirectedInvestigationController extends ConfigureStructureController {
       title: 'Self-Directed Investigation',
       startId: 'node241',
       ids: ['node241', 'node242', 'node244', 'node247', 'node248'],
-      transitionLogic: {}
+      transitionLogic: {
+        transitions: []
+      }
     };
   }
 
