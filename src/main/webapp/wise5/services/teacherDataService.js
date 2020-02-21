@@ -251,9 +251,8 @@ class TeacherDataService {
   }
 
   getAllRelatedComponents(nodeId) {
-    let components = this.ProjectService.getNodeIdsAndComponentIds(nodeId);
-    components = components.concat(this.getConnectedComponentsIfNecessary(components));
-    return components;
+    const components = this.ProjectService.getNodeIdsAndComponentIds(nodeId);
+    return components.concat(this.getConnectedComponentsIfNecessary(components));
   }
 
   getConnectedComponentsIfNecessary(components) {
@@ -328,7 +327,7 @@ class TeacherDataService {
       params: params
     };
     return this.$http(httpParams).then(result => {
-      return this.handleStudentDataResponse(result);
+      return this.handleStudentDataResponse(result.data);
     });
   }
 
@@ -345,22 +344,21 @@ class TeacherDataService {
     }
   }
 
-  handleStudentDataResponse(result) {
-    const resultData = result.data;
-    if (resultData.studentWorkList != null) {
-      this.handleStudentWorkList(resultData.studentWorkList);
+  handleStudentDataResponse(resultData) {
+    const { studentWorkList: componentStates, events, annotations } = resultData;
+    if (componentStates != null) {
+      this.processComponentStates(componentStates);
     }
-    if (resultData.events != null) {
-      this.processEvents(resultData.events);
+    if (events != null) {
+      this.processEvents(events);
     }
-    if (resultData.annotations != null) {
-      this.processAnnotations(resultData.annotations);
+    if (annotations != null) {
+      this.processAnnotations(annotations);
     }
     return resultData;
   }
 
-  handleStudentWorkList(studentWorkList) {
-    const componentStates = studentWorkList;
+  processComponentStates(componentStates) {
     for (const componentState of componentStates) {
       this.addOrUpdateComponentState(componentState);
     }
@@ -788,7 +786,7 @@ class TeacherDataService {
   }
 
   getRunStatusPeriodById(runStatusPeriods, periodId) {
-    for (let runStatusPeriod of runStatusPeriods) {
+    for (const runStatusPeriod of runStatusPeriods) {
       if (runStatusPeriod.periodId == periodId) {
         return runStatusPeriod;
       }
@@ -862,13 +860,12 @@ class TeacherDataService {
 
   setCurrentNodeByNodeId(nodeId) {
     if (nodeId != null) {
-      let node = this.ProjectService.getNodeById(nodeId);
-      this.setCurrentNode(node);
+      this.setCurrentNode(this.ProjectService.getNodeById(nodeId));
     }
   }
 
   setCurrentNode(node) {
-    let previousCurrentNode = this.currentNode;
+    const previousCurrentNode = this.currentNode;
     if (previousCurrentNode !== node) {
       if (previousCurrentNode && !this.ProjectService.isGroupNode(previousCurrentNode.id)) {
         this.previousStep = previousCurrentNode;
