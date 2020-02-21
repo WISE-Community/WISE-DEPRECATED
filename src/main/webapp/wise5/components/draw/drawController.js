@@ -89,14 +89,7 @@ class DrawController extends ComponentController {
       }
     });
 
-    this.$scope.$on('notebookItemChosen', (event, args) => {
-      if (args.requester == this.nodeId + '-' + this.componentId) {
-        const notebookItem = args.notebookItem;
-        const studentWorkId = notebookItem.content.studentWorkIds[0];
-        this.importWorkByStudentWorkId(studentWorkId);
-      }
-    });
-
+    this.registerNotebookItemChosenListener();
     this.broadcastDoneRenderingComponent();
   }
 

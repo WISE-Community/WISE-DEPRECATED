@@ -94,7 +94,7 @@ class NotebookController {
     });
 
     this.notebook = this.NotebookService.getNotebookByWorkgroup(this.workgroupId);
-    this.publicNotebookItems = this.NotebookService.publicNotebookItemspublicNotebookItems;
+    this.publicNotebookItems = this.NotebookService.publicNotebookItems;
 
     // assume only 1 report for now
     this.reportId = this.config.itemTypes.report.notes[0].reportId;
@@ -230,7 +230,7 @@ const Notebook = {
                visible="$ctrl.reportVisible"
                workgroup-id="::$ctrl.workgroupId"
                on-collapse="$ctrl.insertMode=false"
-               on-set-insert-mode="$ctrl.setInsertMode(value, requester)"></notebook-report>               
+               on-set-insert-mode="$ctrl.setInsertMode(value, requester)"></notebook-report>
     </div>
     <notebook-notes ng-if="::$ctrl.config.enabled"
             notebook="$ctrl.notebook"
