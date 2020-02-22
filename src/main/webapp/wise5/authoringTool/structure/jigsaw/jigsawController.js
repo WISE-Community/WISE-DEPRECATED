@@ -33,12 +33,12 @@ class JigsawController extends ConfigureStructureController {
       id: 'group2',
       type: 'group',
       title: 'Jigsaw',
-      startId: 'node165',
+      startId: 'node1',
       constraints: [],
       transitionLogic: {
         transitions: []
       },
-      ids: ['node165', 'node114', 'node166', 'node249', 'node250', 'node251', 'node163']
+      ids: ['node1', 'node2', 'node3', 'node4', 'node5', 'node6', 'node7']
     };
   }
 
@@ -130,12 +130,12 @@ class JigsawController extends ConfigureStructureController {
           canChangePath: false,
           transitions: [
             {
-              to: 'node114',
+              to: 'node2',
               criteria: [
                 {
                   name: 'choiceChosen',
                   params: {
-                    nodeId: 'node165',
+                    nodeId: 'node1',
                     componentId: '0w3e2kgerw',
                     choiceIds: ['4z4f8xiqsj']
                   }
@@ -147,19 +147,19 @@ class JigsawController extends ConfigureStructureController {
                 {
                   name: 'choiceChosen',
                   params: {
-                    nodeId: 'node165',
+                    nodeId: 'node1',
                     componentId: '0w3e2kgerw',
                     choiceIds: ['2824d0tdlr']
                   }
                 }
               ],
-              to: 'node249'
+              to: 'node4'
             }
           ]
         },
         showSubmitButton: false,
         showSaveButton: false,
-        id: 'node165',
+        id: 'node1',
         title: 'Pick your topic',
         type: 'node',
         constraints: [],
@@ -208,42 +208,42 @@ class JigsawController extends ConfigureStructureController {
         transitionLogic: {
           transitions: [
             {
-              to: 'node166'
+              to: 'node3'
             }
           ]
         },
         showSubmitButton: false,
         showSaveButton: true,
-        id: 'node114',
+        id: 'node2',
         title: 'Team [Enter topic #1 here]',
         type: 'node',
         constraints: [
           {
-            id: 'node114Constraint1',
+            id: 'node2Constraint1',
             action: 'makeThisNodeNotVisible',
-            targetId: 'node114',
+            targetId: 'node2',
             removalConditional: 'all',
             removalCriteria: [
               {
                 name: 'branchPathTaken',
                 params: {
-                  fromNodeId: 'node165',
-                  toNodeId: 'node114'
+                  fromNodeId: 'node1',
+                  toNodeId: 'node2'
                 }
               }
             ]
           },
           {
-            id: 'node114Constraint2',
+            id: 'node2Constraint2',
             action: 'makeThisNodeNotVisitable',
-            targetId: 'node114',
+            targetId: 'node2',
             removalConditional: 'all',
             removalCriteria: [
               {
                 name: 'branchPathTaken',
                 params: {
-                  fromNodeId: 'node165',
-                  toNodeId: 'node114'
+                  fromNodeId: 'node1',
+                  toNodeId: 'node2'
                 }
               }
             ]
@@ -280,7 +280,7 @@ class JigsawController extends ConfigureStructureController {
             showAddToNotebookButton: true,
             connectedComponents: [
               {
-                nodeId: 'node114',
+                nodeId: 'node2',
                 componentId: '4t2qx4mwi6',
                 type: 'showWork'
               }
@@ -312,42 +312,42 @@ class JigsawController extends ConfigureStructureController {
         transitionLogic: {
           transitions: [
             {
-              to: 'node251'
+              to: 'node6'
             }
           ]
         },
         showSubmitButton: false,
         showSaveButton: true,
-        id: 'node166',
+        id: 'node3',
         title: 'Discuss what you learned: [Enter topic #1 here]',
         type: 'node',
         constraints: [
           {
-            id: 'node166Constraint1',
+            id: 'node3Constraint1',
             action: 'makeThisNodeNotVisible',
-            targetId: 'node166',
+            targetId: 'node3',
             removalConditional: 'all',
             removalCriteria: [
               {
                 name: 'branchPathTaken',
                 params: {
-                  fromNodeId: 'node165',
-                  toNodeId: 'node114'
+                  fromNodeId: 'node1',
+                  toNodeId: 'node2'
                 }
               }
             ]
           },
           {
-            id: 'node166Constraint2',
+            id: 'node3Constraint2',
             action: 'makeThisNodeNotVisitable',
-            targetId: 'node166',
+            targetId: 'node3',
             removalConditional: 'all',
             removalCriteria: [
               {
                 name: 'branchPathTaken',
                 params: {
-                  fromNodeId: 'node165',
-                  toNodeId: 'node114'
+                  fromNodeId: 'node1',
+                  toNodeId: 'node2'
                 }
               }
             ]
@@ -398,42 +398,42 @@ class JigsawController extends ConfigureStructureController {
         transitionLogic: {
           transitions: [
             {
-              to: 'node250'
+              to: 'node5'
             }
           ]
         },
         showSubmitButton: false,
         showSaveButton: true,
-        id: 'node249',
+        id: 'node4',
         title: 'Team [Enter topic #2 here]',
         type: 'node',
         constraints: [
           {
-            id: 'node249Constraint1',
+            id: 'node4Constraint1',
             action: 'makeThisNodeNotVisible',
-            targetId: 'node249',
+            targetId: 'node4',
             removalConditional: 'all',
             removalCriteria: [
               {
                 name: 'branchPathTaken',
                 params: {
-                  fromNodeId: 'node165',
-                  toNodeId: 'node249'
+                  fromNodeId: 'node1',
+                  toNodeId: 'node4'
                 }
               }
             ]
           },
           {
-            id: 'node249Constraint2',
+            id: 'node4Constraint2',
             action: 'makeThisNodeNotVisitable',
-            targetId: 'node249',
+            targetId: 'node4',
             removalConditional: 'all',
             removalCriteria: [
               {
                 name: 'branchPathTaken',
                 params: {
-                  fromNodeId: 'node165',
-                  toNodeId: 'node249'
+                  fromNodeId: 'node1',
+                  toNodeId: 'node4'
                 }
               }
             ]
@@ -470,7 +470,7 @@ class JigsawController extends ConfigureStructureController {
             showAddToNotebookButton: true,
             connectedComponents: [
               {
-                nodeId: 'node114',
+                nodeId: 'node2',
                 componentId: '4t2qx4mwi6',
                 type: 'showWork'
               }
@@ -502,42 +502,42 @@ class JigsawController extends ConfigureStructureController {
         transitionLogic: {
           transitions: [
             {
-              to: 'node251'
+              to: 'node6'
             }
           ]
         },
         showSubmitButton: false,
         showSaveButton: true,
-        id: 'node250',
+        id: 'node5',
         title: 'Discuss what you learned: [Enter topic #2 here]',
         type: 'node',
         constraints: [
           {
-            id: 'node250Constraint1',
+            id: 'node5Constraint1',
             action: 'makeThisNodeNotVisible',
-            targetId: 'node250',
+            targetId: 'node5',
             removalConditional: 'all',
             removalCriteria: [
               {
                 name: 'branchPathTaken',
                 params: {
-                  fromNodeId: 'node165',
-                  toNodeId: 'node249'
+                  fromNodeId: 'node1',
+                  toNodeId: 'node4'
                 }
               }
             ]
           },
           {
-            id: 'node250Constraint2',
+            id: 'node5Constraint2',
             action: 'makeThisNodeNotVisitable',
-            targetId: 'node250',
+            targetId: 'node5',
             removalConditional: 'all',
             removalCriteria: [
               {
                 name: 'branchPathTaken',
                 params: {
-                  fromNodeId: 'node165',
-                  toNodeId: 'node249'
+                  fromNodeId: 'node1',
+                  toNodeId: 'node4'
                 }
               }
             ]
@@ -552,14 +552,14 @@ class JigsawController extends ConfigureStructureController {
         }
       },
       {
-        id: 'node251',
+        id: 'node6',
         title: 'Share what you learned',
         type: 'node',
         constraints: [],
         transitionLogic: {
           transitions: [
             {
-              to: 'node163'
+              to: 'node7'
             }
           ]
         },
@@ -615,7 +615,7 @@ class JigsawController extends ConfigureStructureController {
         },
         showSubmitButton: false,
         showSaveButton: true,
-        id: 'node163',
+        id: 'node7',
         title: 'What did you learn from your classmates?',
         type: 'node',
         constraints: [],

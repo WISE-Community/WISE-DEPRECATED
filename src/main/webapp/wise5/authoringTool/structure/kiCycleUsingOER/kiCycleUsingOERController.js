@@ -12,23 +12,23 @@ class KICycleUSINGOERController extends ConfigureStructureController {
       id: 'group3',
       type: 'group',
       title: 'KI Lesson with OER',
-      startId: 'node28',
+      startId: 'node1',
       constraints: [],
       transitionLogic: {
         transitions: []
       },
       ids: [
-        'node28',
-        'node12',
-        'node13',
-        'node14',
-        'node17',
-        'node20',
-        'node21',
-        'node22',
-        'node23',
-        'node24',
-        'node27'
+        'node1',
+        'node2',
+        'node3',
+        'node4',
+        'node5',
+        'node6',
+        'node7',
+        'node8',
+        'node9',
+        'node10',
+        'node11'
       ]
     };
   }
@@ -36,14 +36,14 @@ class KICycleUSINGOERController extends ConfigureStructureController {
   injectNodes() {
     this.structure.nodes = [
       {
-        id: 'node28',
+        id: 'node1',
         title: 'Instructions for Authors [DELETE ME]',
         type: 'node',
         constraints: [],
         transitionLogic: {
           transitions: [
             {
-              to: 'node12'
+              to: 'node2'
             }
           ]
         },
@@ -71,14 +71,14 @@ class KICycleUSINGOERController extends ConfigureStructureController {
         }
       },
       {
-        id: 'node12',
+        id: 'node2',
         title: "What's your prediction?",
         type: 'node',
         constraints: [],
         transitionLogic: {
           transitions: [
             {
-              to: 'node13'
+              to: 'node3'
             }
           ]
         },
@@ -199,14 +199,14 @@ class KICycleUSINGOERController extends ConfigureStructureController {
         }
       },
       {
-        id: 'node13',
+        id: 'node3',
         title: "Let's brainstorm!",
         type: 'node',
         constraints: [],
         transitionLogic: {
           transitions: [
             {
-              to: 'node14'
+              to: 'node4'
             }
           ]
         },
@@ -244,14 +244,14 @@ class KICycleUSINGOERController extends ConfigureStructureController {
         }
       },
       {
-        id: 'node14',
+        id: 'node4',
         title: 'A list of my ideas',
         type: 'node',
         constraints: [],
         transitionLogic: {
           transitions: [
             {
-              to: 'node17'
+              to: 'node5'
             }
           ]
         },
@@ -319,14 +319,14 @@ class KICycleUSINGOERController extends ConfigureStructureController {
         }
       },
       {
-        id: 'node17',
+        id: 'node5',
         title: 'Explore [a resource]!',
         type: 'node',
         constraints: [],
         transitionLogic: {
           transitions: [
             {
-              to: 'node20'
+              to: 'node6'
             }
           ]
         },
@@ -378,14 +378,14 @@ class KICycleUSINGOERController extends ConfigureStructureController {
         }
       },
       {
-        id: 'node20',
+        id: 'node6',
         title: 'Critique this, please!',
         type: 'node',
         constraints: [],
         transitionLogic: {
           transitions: [
             {
-              to: 'node21'
+              to: 'node7'
             }
           ]
         },
@@ -433,14 +433,14 @@ class KICycleUSINGOERController extends ConfigureStructureController {
         }
       },
       {
-        id: 'node21',
+        id: 'node7',
         title: 'Sort these ideas!',
         type: 'node',
         constraints: [],
         transitionLogic: {
           transitions: [
             {
-              to: 'node22'
+              to: 'node8'
             }
           ]
         },
@@ -548,14 +548,14 @@ class KICycleUSINGOERController extends ConfigureStructureController {
         }
       },
       {
-        id: 'node22',
+        id: 'node8',
         title: 'What did you find out?',
         type: 'node',
         constraints: [],
         transitionLogic: {
           transitions: [
             {
-              to: 'node23'
+              to: 'node9'
             }
           ]
         },
@@ -618,7 +618,7 @@ class KICycleUSINGOERController extends ConfigureStructureController {
             showAddToNotebookButton: true,
             connectedComponents: [
               {
-                nodeId: 'node12',
+                nodeId: 'node2',
                 componentId: 'jv2bn772yp',
                 type: 'importWork'
               }
@@ -634,14 +634,14 @@ class KICycleUSINGOERController extends ConfigureStructureController {
         }
       },
       {
-        id: 'node23',
+        id: 'node9',
         title: 'Revise your explanation!',
         type: 'node',
         constraints: [],
         transitionLogic: {
           transitions: [
             {
-              to: 'node24'
+              to: 'node10'
             }
           ]
         },
@@ -670,7 +670,7 @@ class KICycleUSINGOERController extends ConfigureStructureController {
             showAddToNotebookButton: true,
             connectedComponents: [
               {
-                nodeId: 'node22',
+                nodeId: 'node8',
                 componentId: 'l0pjx61xe3',
                 type: 'importWork'
               }
@@ -686,14 +686,14 @@ class KICycleUSINGOERController extends ConfigureStructureController {
         }
       },
       {
-        id: 'node24',
+        id: 'node10',
         title: 'Explain to Mia!',
         type: 'node',
         constraints: [],
         transitionLogic: {
           transitions: [
             {
-              to: 'node27'
+              to: 'node11'
             }
           ]
         },
@@ -731,7 +731,7 @@ class KICycleUSINGOERController extends ConfigureStructureController {
         }
       },
       {
-        id: 'node27',
+        id: 'node11',
         title: 'Convince me!',
         type: 'node',
         constraints: [],
