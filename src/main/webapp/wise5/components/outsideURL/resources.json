@@ -1,6 +1,6 @@
 [
     {
-      "url": "http://has.concord.org/air-pollution.html",
+      "url": "https://lab.concord.org/embeddable.html#interactives/air-pollution/air-pollution-master.json",
       "info": "https://learn.concord.org/resources/855/air-pollution-model-cross-section",
       "thumbnail": "https://learn-resources.concord.org/images/stem-resources/icons/air.png",
       "metadata": {
@@ -10,7 +10,7 @@
       }
     },
     {
-      "url": "http://lab.concord.org/embeddable.html#interactives/sam/phase-change/2-two-types-of-gases.json",
+      "url": "https://lab.concord.org/embeddable.html#interactives/sam/phase-change/2-two-types-of-gases.json",
       "info": "https://learn.concord.org/resources/776/molecular-view-of-a-gas",
       "thumbnail": "https://learn-resources.concord.org/images/stem-resources/icons/molecular-view-gas.jpg",
       "metadata": {
@@ -30,7 +30,7 @@
       }
     },
     {
-      "url": "http://lab.concord.org/embeddable.html#interactives/sam/gas-laws/3-volume-pressure-relationship.json",
+      "url": "https://lab.concord.org/embeddable.html#interactives/sam/gas-laws/3-volume-pressure-relationship.json",
       "info": "https://learn.concord.org/resources/793/the-volume-pressure-relationship",
       "thumbnail": "https://learn-resources.concord.org/images/stem-resources/icons/volumepressurerelationship.gif",
       "metadata": {
@@ -160,16 +160,6 @@
       }
     },
     {
-      "url": "http://emvc.geol.ucsb.edu/3_downloads/M1GTect/cSubductionMovie/Subduction.mp4",
-      "info": "http://emvc.geol.ucsb.edu/2_infopgs/IP1GTect/cSubduction.html",
-      "thumbnail": "http://emvc.geol.ucsb.edu/2_infopgs/IP1GTect/cSubduction.gif",
-      "metadata": {
-        "title": "Ocean-Continent Subduction",
-        "subjects": ["Earth and Space Sciences"],
-        "source": "Tanya Atwater and John Iwerks"
-      }
-    },
-    {
       "url": "https://ngsir.netfirms.com/j/Eng/incline/incline_js.html",
       "info": "https://ngsir.netfirms.com/j/Eng/incline/incline_js.html",
       "thumbnail": "https://ngsir.netfirms.com/j/image/incline.png",
@@ -197,6 +187,76 @@
         "title": "Ecology Lab",
         "subjects": ["Life Sciences"],
         "source": "Annenberg Learner"
+      }
+    },
+    {
+      "url": "https://phet.colorado.edu/sims/html/gravity-and-orbits/latest/gravity-and-orbits_en.html",
+      "info": "https://phet.colorado.edu/en/simulation/gravity-and-orbits",
+      "thumbnail": "https://phet.colorado.edu/sims/html/gravity-and-orbits/latest/gravity-and-orbits-600.png",
+      "metadata": {
+        "title": "Gravity and Orbits",
+        "subjects": ["Earth and Space Sciences, Physical Sciences"],
+        "source": "PhET"
+      }
+    },
+    {
+      "url": "https://phet.colorado.edu/sims/html/under-pressure/latest/under-pressure_en.html",
+      "info": "https://phet.colorado.edu/en/simulation/under-pressure",
+      "thumbnail": "https://phet.colorado.edu/sims/html/under-pressure/latest/under-pressure-600.png",
+      "metadata": {
+        "title": "Under Pressure",
+        "subjects": ["Physical Sciences"],
+        "source": "PhET"
+      }
+    },
+    {
+      "url": "https://phet.colorado.edu/sims/html/waves-intro/latest/waves-intro_en.html",
+      "info": "https://phet.colorado.edu/en/simulation/waves-intro",
+      "thumbnail": "https://phet.colorado.edu/sims/html/waves-intro/latest/waves-intro-600.png",
+      "metadata": {
+        "title": "Waves Intro",
+        "subjects": ["Physical Sciences"],
+        "source": "PhET"
+      }
+    },
+    {
+      "url": "https://phet.colorado.edu/sims/html/wave-interference/latest/wave-interference_en.html",
+      "info": "https://phet.colorado.edu/en/simulation/wave-interference",
+      "thumbnail": "https://phet.colorado.edu/sims/html/wave-interference/latest/wave-interference-600.png",
+      "metadata": {
+        "title": "Wave Interference",
+        "subjects": ["Physical Sciences"],
+        "source": "PhET"
+      }
+    },
+    {
+      "url": "https://phet.colorado.edu/sims/html/balloons-and-static-electricity/latest/balloons-and-static-electricity_en.html",
+      "info": "https://phet.colorado.edu/en/simulation/balloons-and-static-electricity",
+      "thumbnail": "https://phet.colorado.edu/sims/html/balloons-and-static-electricity/latest/balloons-and-static-electricity-600.png",
+      "metadata": {
+        "title": "Balloons and Static Electricity",
+        "subjects": ["Physical Sciences"],
+        "source": "PhET"
+      }
+    },
+    {
+      "url": "https://climate.nasa.gov/interactives/climate_time_machine",
+      "info": "https://climate.nasa.gov/climate_resources/25/interactive-climate-time-machine/",
+      "thumbnail": "https://climate.nasa.gov/system/resources/detail_files/25_ctm-768-549.jpg",
+      "metadata": {
+        "title": "Climate Time Machine",
+        "subjects": ["Earth and Space Sciences"],
+        "source": "NASA"
+      }
+    },
+    {
+      "url": "https://climate.nasa.gov/interactives/global-ice-viewer/",
+      "info": "https://climate.nasa.gov/interactives/global-ice-viewer/",
+      "thumbnail": "https://climate.nasa.gov/system/internal_resources/details/original/156_globaliceviewer_320x240.jpg",
+      "metadata": {
+        "title": "Global Ice Viewer",
+        "subjects": ["Earth and Space Sciences"],
+        "source": "NASA"
       }
     }
   ]
