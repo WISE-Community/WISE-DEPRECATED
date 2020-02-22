@@ -13,7 +13,6 @@ class NotebookNotesController {
     this.groups = [];
     this.selectedTabIndex = 0;
     this.$scope = $scope;
-    this.publicNotebookItems = this.NotebookService.publicNotebookItems;
     this.groupNameToGroup = {};
   }
 
@@ -64,7 +63,7 @@ class NotebookNotesController {
     this.$rootScope.$on('publicNotebookItemsRetrieved', (event, args) => {
       for (let group of this.groups) {
         if (group.name !== 'private') {
-          group.items = this.publicNotebookItems[group.name];
+          group.items = this.NotebookService.publicNotebookItems[group.name];
         }
       }
     });
@@ -169,7 +168,6 @@ const NotebookNotes = {
     config: '<',
     insertMode: '<',
     notebook: '<',
-    publicNotebookItems: '<',
     notesVisible: '<',
     workgroupId: '<',
     onClose: '&',

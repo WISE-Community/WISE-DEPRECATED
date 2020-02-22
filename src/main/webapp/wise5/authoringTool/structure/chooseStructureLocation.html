@@ -1,10 +1,4 @@
-<h3>Choose where to put the structure</h3>
-<md-button
-  class="createButton md-raised md-primary"
-  ng-click="chooseStructureLocationController.cancel()"
-  aria-label='{{ ::"cancel" | translate }}'
-  translate="cancel"></md-button>
-
+<h5>{{ ::'chooseStructureLocation' | translate }}</h5>
 <div ng-repeat='group in chooseStructureLocationController.groupNodes | toArray | orderBy : "order"'
   class="projectItem"
   ng-class="node-select--group">
@@ -24,14 +18,14 @@
         <md-button
           class="insertButton md-raised md-primary"
           ng-if="group.order === 0"
-          ng-click="chooseStructureLocationController.insertAsFirstActivity(); $event.stopPropagation();">
+          ng-click="chooseStructureLocationController.insertAsFirstActivity()">
           <md-icon>call_received</md-icon>
-          <md-tooltip ng-if="group.order === 0" md-direction="top" class="projectButtonTooltip">{{ ::'insertAsFirstActivity' | translate }}</md-tooltip>
+          <md-tooltip md-direction="top" class="projectButtonTooltip">{{ ::'insertAsFirstActivity' | translate }}</md-tooltip>
         </md-button>
         <md-button
           class="insertButton md-raised md-primary"
           ng-if="group.order !== 0"
-          ng-click="chooseStructureLocationController.insertAfterGroup(group.$key); $event.stopPropagation();">
+          ng-click="chooseStructureLocationController.insertAfterGroup(group.$key)">
           <md-icon>subdirectory_arrow_left</md-icon>
           <md-tooltip md-direction="top" class="projectButtonTooltip">{{ ::'insertAfter' | translate }}</md-tooltip>
         </md-button>
@@ -39,3 +33,9 @@
     </div>
   </div>
 </div>
+<hr>
+<md-button
+  class="createButton md-primary"
+  ng-click="chooseStructureLocationController.cancel()"
+  aria-label='{{ ::"cancel" | translate }}'
+  translate="cancel"></md-button>

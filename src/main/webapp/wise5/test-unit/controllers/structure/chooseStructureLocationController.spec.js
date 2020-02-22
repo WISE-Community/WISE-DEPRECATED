@@ -57,6 +57,8 @@ describe('ChooseStructureLocationController', () => {
   testCancel();
   testInjectUniqueIds();
   testReplaceOldNodeIds();
+  testReplaceNodeIds();
+  testReplaceConstraintIds();
 
   function testInsertAsFirstActivity() {
     describe('insertAsFirstActivity', () => {
@@ -138,6 +140,42 @@ describe('ChooseStructureLocationController', () => {
         expect(structure.group.id).toEqual('group2');
         expect(structure.nodes[0].id).toEqual('node2');
         expect(structure.nodes[1].id).toEqual('node10');
+      });
+    });
+  }
+
+  function testReplaceNodeIds() {
+    describe('replaceNodeIds', () => {
+      it('should replace all instances of a node id', () => {
+        let structureJSONString = '["node1", "node2", "node10", "node1"]';
+        const oldNodeId = 'node1';
+        const newNodeId = 'node3';
+        structureJSONString = controller.replaceNodeIds(structureJSONString, oldNodeId, newNodeId);
+        const structureJSONArray = JSON.parse(structureJSONString);
+        expect(structureJSONArray[0]).toEqual('node3');
+        expect(structureJSONArray[1]).toEqual('node2');
+        expect(structureJSONArray[2]).toEqual('node10');
+        expect(structureJSONArray[3]).toEqual('node3');
+      });
+    });
+  }
+
+  function testReplaceConstraintIds() {
+    describe('replaceConstraintIds', () => {
+      it('should replace all instances of a node id in the constraint ids', () => {
+        let structureJSONString = '["node1Constraint1", "node1Constraint2", "node2Constraint2"]';
+        const oldNodeId = 'node1';
+        const newNodeId = 'node3';
+        structureJSONString = controller.replaceConstraintIds(
+          structureJSONString,
+          oldNodeId,
+          newNodeId
+        );
+        console.log(structureJSONString);
+        const structureJSONArray = JSON.parse(structureJSONString);
+        expect(structureJSONArray[0]).toEqual('node3Constraint1');
+        expect(structureJSONArray[1]).toEqual('node3Constraint2');
+        expect(structureJSONArray[2]).toEqual('node2Constraint2');
       });
     });
   }

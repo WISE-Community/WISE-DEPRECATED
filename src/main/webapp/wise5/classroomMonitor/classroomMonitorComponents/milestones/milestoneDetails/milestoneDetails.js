@@ -1,96 +1,145 @@
 "use strict";
 
 class MilestoneDetailsController {
-    constructor($filter,
-                $scope,
-                $state,
-                ConfigService,
-                ProjectService,
-                TeacherDataService) {
-        this.$filter = $filter;
-        this.$scope = $scope;
-        this.$state = $state;
-        this.ConfigService = ConfigService;
-        this.ProjectService = ProjectService;
-        this.TeacherDataService = TeacherDataService;
-
-        this.$translate = this.$filter('translate');
-        this.periodId = this.TeacherDataService.getCurrentPeriod().periodId;
-
-        this.$onInit = () => {
-            this.requirements = this.getRequirements();
-        }
-
-        this.$scope.$on('currentPeriodChanged', (event, args) => {
-            this.periodId = args.currentPeriod.periodId;
-        });
+  constructor(
+    $filter,
+    $scope,
+    $state,
+    ConfigService,
+    ProjectService,
+    TeacherDataService
+  ) {
+    this.$filter = $filter;
+    this.$scope = $scope;
+    this.$state = $state;
+    this.ConfigService = ConfigService;
+    this.ProjectService = ProjectService;
+    this.TeacherDataService = TeacherDataService;
+    this.$translate = this.$filter("translate");
+    this.periodId = this.TeacherDataService.getCurrentPeriod().periodId;
+    this.$onInit = () => {
+      this.requirements = this.getRequirements();
+      this.saveMilestoneCurrentPeriodSelectedEvent(
+        this.TeacherDataService.getCurrentPeriod()
+      );
     };
+    this.$scope.$on("currentPeriodChanged", (event, { currentPeriod }) => {
+      this.periodId = currentPeriod.periodId;
+      this.saveMilestoneCurrentPeriodSelectedEvent(currentPeriod);
+    });
+  }
 
-    getRequirements() {
-        let requirements = [];
-        let items = this.milestone.items;
+  saveMilestoneCurrentPeriodSelectedEvent(currentPeriod) {
+    const context = "ClassroomMonitor",
+      nodeId = null,
+      componentId = null,
+      componentType = null,
+      category = "Navigation",
+      data = {
+        milestoneId: this.milestone.id,
+        periodId: currentPeriod.periodId,
+        periodName: currentPeriod.periodName
+      },
+      event = "MilestonePeriodSelected",
+      projectId = null;
+    this.TeacherDataService.saveEvent(
+      context,
+      nodeId,
+      componentId,
+      componentType,
+      category,
+      event,
+      data,
+      projectId
+    );
+  }
 
-        angular.forEach(items, (value, key) => {
-            if (value.checked) {
-                requirements.push(key);
-            }
-        });
+  getRequirements() {
+    let requirements = [];
+    let items = this.milestone.items;
 
-        return requirements;
-    }
+    angular.forEach(items, (value, key) => {
+      if (value.checked) {
+        requirements.push(key);
+      }
+    });
 
-    getNodeNumberByNodeId(nodeId) {
-        return this.ProjectService.nodeIdToNumber[nodeId];
-    }
+    return requirements;
+  }
 
-    getNodeTitleByNodeId(nodeId) {
-        return this.ProjectService.getNodeTitleByNodeId(nodeId);
-    }
+  getNodeNumberByNodeId(nodeId) {
+    return this.ProjectService.nodeIdToNumber[nodeId];
+  }
 
-    /**
-     * Get the user names for a workgroup id
-     * @param workgroupId the workgroup id
-     * @return the user names in the workgroup
-     */
-    getDisplayUsernamesByWorkgroupId(workgroupId) {
-        return this.ConfigService.getDisplayUsernamesByWorkgroupId(workgroupId);
-    }
+  getNodeTitleByNodeId(nodeId) {
+    return this.ProjectService.getNodeTitleByNodeId(nodeId);
+  }
 
-    /**
-     * Get the avatar coloer for a workgroup id
-     * @param workgroupId the workgroup id
-     * @return the avatar color for the workgroup
-     */
-    getAvatarColorForWorkgroupId(workgroupId) {
-        return this.ConfigService.getAvatarColorForWorkgroupId(workgroupId);
-    }
+  /**
+   * Get the user names for a workgroup id
+   * @param workgroupId the workgroup id
+   * @return the user names in the workgroup
+   */
+  getDisplayUsernamesByWorkgroupId(workgroupId) {
+    return this.ConfigService.getDisplayUsernamesByWorkgroupId(workgroupId);
+  }
 
-    showWorkgroup(workgroup) {
-        this.onShowWorkgroup({ value: workgroup });
-    }
+  /**
+   * Get the avatar coloer for a workgroup id
+   * @param workgroupId the workgroup id
+   * @return the avatar color for the workgroup
+   */
+  getAvatarColorForWorkgroupId(workgroupId) {
+    return this.ConfigService.getAvatarColorForWorkgroupId(workgroupId);
+  }
 
-    visitNodeGrading() {
-        this.onVisitNodeGrading();
-    }
+  showWorkgroup(workgroup) {
+    this.onShowWorkgroup({ value: workgroup });
+  }
+
+  visitNodeGrading() {
+    this.onVisitNodeGrading();
+  }
+
+  saveTabSelectedEvent(event) {
+    const context = "ClassroomMonitor",
+      nodeId = null,
+      componentId = null,
+      componentType = null,
+      category = "Navigation",
+      data = { milestoneId: this.milestone.id },
+      projectId = null;
+    this.TeacherDataService.saveEvent(
+      context,
+      nodeId,
+      componentId,
+      componentType,
+      category,
+      event,
+      data,
+      projectId
+    );
+  }
+
+  studentWorkTabSelected() {}
 }
 
 MilestoneDetailsController.$inject = [
-    '$filter',
-    '$scope',
-    '$state',
-    'ConfigService',
-    'ProjectService',
-    'TeacherDataService'
+  "$filter",
+  "$scope",
+  "$state",
+  "ConfigService",
+  "ProjectService",
+  "TeacherDataService"
 ];
 
 const MilestoneDetails = {
-    bindings: {
-        milestone: '<',
-        onShowWorkgroup: '&',
-        onVisitNodeGrading: '&'
-    },
-    template:
-        `<div class="milestone-details md-whiteframe-1dp">
+  bindings: {
+    milestone: "<",
+    onShowWorkgroup: "&",
+    onVisitNodeGrading: "&"
+  },
+  template: `<div class="milestone-details md-whiteframe-1dp">
             <span layout="row" layout-align="start center">
                 <period-select custom-class="'md-no-underline md-button toolbar__select'"></period-select>
                 <span flex></span>
@@ -133,12 +182,12 @@ const MilestoneDetails = {
         <div ng-if="$ctrl.milestone.recommendations && $ctrl.milestone.isReportAvailable"
              class="md-whiteframe-1dp gray-lightest-bg">
             <md-tabs md-dynamic-height>
-                <md-tab label="{{ ::'recommendations' | translate }}">
+                <md-tab label="{{ ::'recommendations' | translate }}" md-on-select="$ctrl.saveTabSelectedEvent('MilestoneRecommendationTabSelected')">
                     <div class="milestone-details">
                         <compile data="$ctrl.milestone.recommendations"></compile>
                     </div>
                 </md-tab>
-                <md-tab label="{{ ::'studentWork' | translate }}">
+                <md-tab label="{{ ::'studentWork' | translate }}" md-on-select="$ctrl.saveTabSelectedEvent('MilestoneStudentWorkTabSelected')">
                     <div class="milestone-details">
                         <node-grading-view node-id="$ctrl.milestone.nodeId"
                                            milestone="$ctrl.milestone"></node-grading-view>
@@ -174,7 +223,7 @@ const MilestoneDetails = {
                 </md-list-item>
             </md-list>
         </script>`,
-    controller: MilestoneDetailsController
+  controller: MilestoneDetailsController
 };
 
 export default MilestoneDetails;

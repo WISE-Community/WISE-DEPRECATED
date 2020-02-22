@@ -11,7 +11,6 @@ class ChooseStructureLocationController {
     this.projectId = $stateParams.projectId;
     this.structure = $stateParams.structure;
     this.structure = this.injectUniqueIds(this.structure);
-    this.setTitleOfStructure(this.structure, this.structure.label);
   }
 
   insertAsFirstActivity() {
@@ -44,10 +43,6 @@ class ChooseStructureLocationController {
     });
   }
 
-  setTitleOfStructure(structure, title) {
-    structure.group.title = title;
-  }
-
   injectUniqueIds(structure) {
     structure.group.id = this.ProjectService.getNextAvailableGroupId();
     const newNodeIds = [];
@@ -64,10 +59,21 @@ class ChooseStructureLocationController {
   replaceOldNodeIds(structure, oldToNewNodeIds) {
     let structureJSONString = JSON.stringify(structure);
     for (const oldNodeId of Object.keys(oldToNewNodeIds).reverse()) {
-      const regex = new RegExp(`\"${oldNodeId}\"`, 'g');
-      structureJSONString = structureJSONString.replace(regex, `"${oldToNewNodeIds[oldNodeId]}"`);
+      const newNodeId = oldToNewNodeIds[oldNodeId];
+      structureJSONString = this.replaceNodeIds(structureJSONString, oldNodeId, newNodeId);
+      structureJSONString = this.replaceConstraintIds(structureJSONString, oldNodeId, newNodeId);
     }
     return JSON.parse(structureJSONString);
+  }
+
+  replaceNodeIds(structureJSONString, oldNodeId, newNodeId) {
+    const regex = new RegExp(`\"${oldNodeId}\"`, 'g');
+    return structureJSONString.replace(regex, `"${newNodeId}"`);
+  }
+
+  replaceConstraintIds(structureJSONString, oldNodeId, newNodeId) {
+    const regex = new RegExp(`\"${oldNodeId}Constraint`, 'g');
+    return structureJSONString.replace(regex, `"${newNodeId}Constraint`);
   }
 
   addStepsToGroup(group) {

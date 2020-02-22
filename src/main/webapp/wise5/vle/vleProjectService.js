@@ -13,8 +13,11 @@ class VLEProjectService extends ProjectService {
    * @returns whether the componentId is connected to the connectedComponentId
    */
   isConnectedComponent(nodeId, componentId, connectedComponentId) {
-    const component = this.getComponentByNodeIdAndComponentId(nodeId, componentId);
-    for (const connectedComponent of component.connectedComponents) {
+    const connectedComponents = this.getConnectedComponentsByNodeIdAndComponentId(
+      nodeId,
+      componentId
+    );
+    for (const connectedComponent of connectedComponents) {
       if (this.isMatchingConnectedComponent(connectedComponent, connectedComponentId)) {
         return true;
       }
@@ -45,8 +48,10 @@ class VLEProjectService extends ProjectService {
    * @returns {boolean} whether we need to display the annotation to the student
    */
   displayAnnotation(annotation) {
-    const component =
-        this.getComponentByNodeIdAndComponentId(annotation.nodeId, annotation.componentId);
+    const component = this.getComponentByNodeIdAndComponentId(
+      annotation.nodeId,
+      annotation.componentId
+    );
     const componentService = this.$injector.get(component.type + 'Service');
     return componentService.displayAnnotation(component, annotation);
   }
@@ -76,8 +81,10 @@ class VLEProjectService extends ProjectService {
       if (previousScoreMatch === '' && this.isScoreMatch(currentScore, currentScoreMatch)) {
         return true;
       }
-    } else if (this.isScoreMatch(previousScore, previousScoreMatch) &&
-        this.isScoreMatch(currentScore, currentScoreMatch)) {
+    } else if (
+      this.isScoreMatch(previousScore, previousScoreMatch) &&
+      this.isScoreMatch(currentScore, currentScoreMatch)
+    ) {
       return true;
     }
     return false;
@@ -97,7 +104,7 @@ class VLEProjectService extends ProjectService {
 
   /**
    * @param component the component content
-   * @param previousScore the previousScore we want notification for, can be null, which means we 
+   * @param previousScore the previousScore we want notification for, can be null, which means we
    * just want to look at the currentScore
    * @param currentScore the currentScore we want notification for
    * @returns the notification for the given score
@@ -114,8 +121,8 @@ class VLEProjectService extends ProjectService {
 
   retrieveScript(scriptFilename) {
     const assetDirectoryPath = this.ConfigService.getProjectAssetsDirectoryPath();
-    const scriptPath = assetDirectoryPath + "/" + scriptFilename;
-    return this.$http.get(scriptPath).then((result) => {
+    const scriptPath = assetDirectoryPath + '/' + scriptFilename;
+    return this.$http.get(scriptPath).then(result => {
       return result.data;
     });
   }
@@ -126,7 +133,7 @@ class VLEProjectService extends ProjectService {
    * @param additionalProcessingFunction the function to register for the node and component.
    */
   addAdditionalProcessingFunction(nodeId, componentId, additionalProcessingFunction) {
-    const key = nodeId + "_" + componentId;
+    const key = nodeId + '_' + componentId;
     if (this.additionalProcessingFunctionsMap[key] == null) {
       this.additionalProcessingFunctionsMap[key] = [];
     }
