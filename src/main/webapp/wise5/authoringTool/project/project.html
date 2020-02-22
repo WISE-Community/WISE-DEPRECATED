@@ -126,6 +126,15 @@
                   {{ ::'createNewStep' | translate }}
                 </md-tooltip>
               </md-button>
+              <md-button id='addStructureButton'
+                  class='topButton md-raised md-primary'
+                  ng-click='projectController.addStructure()'
+                  ng-disabled='projectController.insertGroupMode || projectController.insertNodeMode || projectController.stepNodeSelected || projectController.activityNodeSelected'>
+                <md-icon>widgets</md-icon>
+                <md-tooltip md-direction='top' class='projectButtonTooltip'>
+                  {{ ::'addStructure' | translate }}
+                </md-tooltip>
+              </md-button>
               <md-button id='importStepButton'
                   class='topButton md-raised md-primary'
                   ng-click='projectController.importStepClicked()'
@@ -240,6 +249,8 @@
               </div>
             </div>
           </div>
+          <div ng-if='projectController.structure.chooseStructureLocation'>choose structure</div>
+
           <div ng-if='projectController.showImportView'>
             <h4>{{ ::'importStepsParens' | translate }}</h4>
             <br/>

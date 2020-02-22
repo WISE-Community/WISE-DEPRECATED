@@ -8,128 +8,137 @@ class AuthoringToolProjectService extends ProjectService {
 
   getNewProjectTemplate() {
     return {
-      "nodes": [
+      nodes: [
         {
-          "id": "group0",
-          "type": "group",
-          "title": "Master",
-          "startId": "group1",
-          "ids": [
-            "group1"
-          ]
+          id: 'group0',
+          type: 'group',
+          title: 'Master',
+          startId: 'group1',
+          ids: ['group1']
         },
         {
-          "id": "group1",
-          "type": "group",
-          "title": this.$translate('FIRST_ACTIVITY'),
-          "startId": "",
-          "ids": [
-          ],
-          "icons": {
-            "default": {
-              "color": "#2196F3",
-              "type": "font",
-              "fontSet": "material-icons",
-              "fontName": "info"
+          id: 'group1',
+          type: 'group',
+          title: this.$translate('FIRST_ACTIVITY'),
+          startId: 'node1',
+          ids: ['node1'],
+          icons: {
+            default: {
+              color: '#2196F3',
+              type: 'font',
+              fontSet: 'material-icons',
+              fontName: 'info'
             }
+          }
+        },
+        {
+          id: 'node1',
+          type: 'node',
+          title: this.$translate('FIRST_STEP'),
+          components: [],
+          constraints: [],
+          showSaveButton: false,
+          showSubmitButton: false,
+          transitionLogic: {
+            transitions: []
           }
         }
       ],
-      "constraints": [],
-      "startGroupId": "group0",
-      "startNodeId": "group0",
-      "navigationMode": "guided",
-      "layout": {
-        "template": "starmap|leftNav|rightNav"
+      constraints: [],
+      startGroupId: 'group0',
+      startNodeId: 'node1',
+      navigationMode: 'guided',
+      layout: {
+        template: 'starmap|leftNav|rightNav'
       },
-      "metadata": {
-        "title": ""
+      metadata: {
+        title: ''
       },
-      "notebook": {
-        "enabled": false,
-        "label": this.$translate('NOTEBOOK'),
-        "enableAddNew": true,
-        "itemTypes": {
-          "note": {
-            "type": "note",
-            "enabled": true,
-            "enableLink": true,
-            "enableAddNote": true,
-            "enableClipping": true,
-            "enableStudentUploads": true,
-            "requireTextOnEveryNote": false,
-            "label": {
-              "singular": this.$translate('NOTE_LOWERCASE'),
-              "plural": this.$translate('NOTES_LOWERCASE'),
-              "link": this.$translate('NOTES'),
-              "icon": "note",
-              "color": "#1565C0"
+      notebook: {
+        enabled: false,
+        label: this.$translate('NOTEBOOK'),
+        enableAddNew: true,
+        itemTypes: {
+          note: {
+            type: 'note',
+            enabled: true,
+            enableLink: true,
+            enableAddNote: true,
+            enableClipping: true,
+            enableStudentUploads: true,
+            requireTextOnEveryNote: false,
+            label: {
+              singular: this.$translate('NOTE_LOWERCASE'),
+              plural: this.$translate('NOTES_LOWERCASE'),
+              link: this.$translate('NOTES'),
+              icon: 'note',
+              color: '#1565C0'
             }
           },
-          "report": {
-            "enabled": false,
-            "label": {
-              "singular": this.$translate('REPORT_LOWERCASE'),
-              "plural": this.$translate('REPORTS_LOWERCASE'),
-              "link": this.$translate('REPORT'),
-              "icon": "assignment",
-              "color": "#AD1457"
+          report: {
+            enabled: false,
+            label: {
+              singular: this.$translate('REPORT_LOWERCASE'),
+              plural: this.$translate('REPORTS_LOWERCASE'),
+              link: this.$translate('REPORT'),
+              icon: 'assignment',
+              color: '#AD1457'
             },
-            "notes": [
+            notes: [
               {
-                "reportId": "finalReport",
-                "title": this.$translate('FINAL_REPORT'),
-                "description": this.$translate('REPORT_DESCRIPTION'),
-                "prompt": this.$translate('REPORT_PROMPT'),
-                "content": this.$translate('REPORT_CONTENT')
+                reportId: 'finalReport',
+                title: this.$translate('FINAL_REPORT'),
+                description: this.$translate('REPORT_DESCRIPTION'),
+                prompt: this.$translate('REPORT_PROMPT'),
+                content: this.$translate('REPORT_CONTENT')
               }
             ]
           }
         }
       },
-      "teacherNotebook": {
-        "enabled": true,
-        "label": this.$translate('TEACHER_NOTEBOOK'),
-        "enableAddNew": true,
-        "itemTypes": {
-          "note": {
-            "type": "note",
-            "enabled": false,
-            "enableLink": true,
-            "enableAddNote": true,
-            "enableClipping": true,
-            "enableStudentUploads": true,
-            "requireTextOnEveryNote": false,
-            "label": {
-              "singular": this.$translate('NOTE_LOWERCASE'),
-              "plural": this.$translate('NOTES_LOWERCASE'),
-              "link": this.$translate('NOTES'),
-              "icon": "note",
-              "color": "#1565C0"
+      teacherNotebook: {
+        enabled: true,
+        label: this.$translate('TEACHER_NOTEBOOK'),
+        enableAddNew: true,
+        itemTypes: {
+          note: {
+            type: 'note',
+            enabled: false,
+            enableLink: true,
+            enableAddNote: true,
+            enableClipping: true,
+            enableStudentUploads: true,
+            requireTextOnEveryNote: false,
+            label: {
+              singular: this.$translate('NOTE_LOWERCASE'),
+              plural: this.$translate('NOTES_LOWERCASE'),
+              link: this.$translate('NOTES'),
+              icon: 'note',
+              color: '#1565C0'
             }
           },
-          "report": {
-            "enabled": true,
-            "label": {
-              "singular": this.$translate('TEACHER_REPORT_LOWERCASE'),
-              "plural": this.$translate('TEACHER_REPORTS_LOWERCASE'),
-              "link": this.$translate('TEACHER_REPORT'),
-              "icon": "assignment",
-              "color": "#AD1457"
+          report: {
+            enabled: true,
+            label: {
+              singular: this.$translate('TEACHER_REPORT_LOWERCASE'),
+              plural: this.$translate('TEACHER_REPORTS_LOWERCASE'),
+              link: this.$translate('TEACHER_REPORT'),
+              icon: 'assignment',
+              color: '#AD1457'
             },
-            "notes": [
+            notes: [
               {
-                "reportId": "teacherReport",
-                "title": this.$translate('TEACHER_REPORT'),
-                "description": this.$translate('TEACHER_REPORT_DESCRIPTION'),
-                "prompt": this.$translate('TEACHER_REPORT_PROMPT'),
-                "content": this.$translate('TEACHER_REPORT_CONTENT')
+                reportId: 'teacherReport',
+                title: this.$translate('TEACHER_REPORT'),
+                description: this.$translate('TEACHER_REPORT_DESCRIPTION'),
+                prompt: this.$translate('TEACHER_REPORT_PROMPT'),
+                content: this.$translate('TEACHER_REPORT_CONTENT')
               }
             ]
           }
         }
       },
-      "inactiveNodes": []
+      inactiveNodes: []
     };
   }
 
@@ -137,13 +146,13 @@ class AuthoringToolProjectService extends ProjectService {
     return this.$http({
       method: 'POST',
       url: `${this.ConfigService.getConfigParam('notifyAuthoringBeginEndURL')}/${projectId}`,
-      headers:  {'Content-Type': 'application/x-www-form-urlencoded'},
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       data: $.param({ isBegin: isBegin })
     });
   }
 
   notifyAuthorProjectBegin(projectId) {
-    return this.notifyAuthorProjectBeginEnd(projectId, true)
+    return this.notifyAuthorProjectBeginEnd(projectId, true);
   }
 
   notifyAuthorProjectEnd(projectId = null) {
@@ -165,9 +174,9 @@ class AuthoringToolProjectService extends ProjectService {
     return this.$http({
       method: 'POST',
       url: `${this.ConfigService.getConfigParam('copyProjectURL')}/${projectId}`,
-      headers:  {'Content-Type': 'application/x-www-form-urlencoded'},
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       data: $.param({})
-    }).then(({data: newProject}) => {
+    }).then(({ data: newProject }) => {
       return newProject;
     });
   }
@@ -181,12 +190,12 @@ class AuthoringToolProjectService extends ProjectService {
     return this.$http({
       method: 'POST',
       url: this.ConfigService.getConfigParam('registerNewProjectURL'),
-      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       data: $.param({
         projectName: projectName,
         projectJSONString: projectJSONString
       })
-    }).then(({data: newProjectId}) => {
+    }).then(({ data: newProjectId }) => {
       return newProjectId;
     });
   }
@@ -245,7 +254,7 @@ class AuthoringToolProjectService extends ProjectService {
         transitions: []
       },
       ids: []
-    }
+    };
   }
 
   /**
@@ -265,7 +274,7 @@ class AuthoringToolProjectService extends ProjectService {
       showSaveButton: false,
       showSubmitButton: false,
       components: []
-    }
+    };
   }
 
   /**
@@ -303,7 +312,7 @@ class AuthoringToolProjectService extends ProjectService {
     const httpParams = {
       method: 'POST',
       url: this.ConfigService.getConfigParam('importStepsURL'),
-      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       data: $.param({
         steps: angular.toJson(selectedNodes),
         fromProjectId: fromProjectId,
@@ -320,7 +329,7 @@ class AuthoringToolProjectService extends ProjectService {
      * new name and change all the references in the steps to use the new
      * name.
      */
-    return this.$http(httpParams).then(({data: selectedNodes}) => {
+    return this.$http(httpParams).then(({ data: selectedNodes }) => {
       const inactiveNodes = this.getInactiveNodes();
       const newNodes = [];
       const newNodeIds = [];
@@ -427,30 +436,6 @@ class AuthoringToolProjectService extends ProjectService {
       this.insertNodeAfterInGroups(newNode.id, nodeId);
       this.insertNodeAfterInTransitions(newNode, nodeId);
     }
-    if (this.isGroupNode(newNode.id)) {
-      this.createNodeAfterUpdateGroupTransitions(newNode, nodeId);
-    }
-  }
-
-  /**
-   * Create/update the transitions that traverse from the previous group to the new group
-   */
-  createNodeAfterUpdateGroupTransitions(newGroupNode, nodeId) {
-     const oldToGroupIds = [];
-     const transitionsFromGroup = this.getTransitionsByFromNodeId(nodeId);
-     if (transitionsFromGroup != null) {
-       for (const transitionFromGroup of transitionsFromGroup) {
-         const toNodeId = transitionFromGroup.to;
-         if (toNodeId != null) {
-           oldToGroupIds.push(toNodeId);
-         }
-       }
-     }
-     const fromGroupId = nodeId;
-     const newToGroupId = newGroupNode.id;
-
-     // make the transitions point to the new group and the new group transition to the old group
-     this.updateTransitionsForInsertingGroup(fromGroupId, oldToGroupIds, newToGroupId);
   }
 
   /**
@@ -561,13 +546,15 @@ class AuthoringToolProjectService extends ProjectService {
       action: 'makeThisNodeNotVisible',
       targetId: targetNodeId,
       removalConditional: 'all',
-      removalCriteria: [{
-        name: 'branchPathTaken',
-        params: {
-          fromNodeId: fromNodeId,
-          toNodeId: toNodeId
+      removalCriteria: [
+        {
+          name: 'branchPathTaken',
+          params: {
+            fromNodeId: fromNodeId,
+            toNodeId: toNodeId
+          }
         }
-      }]
+      ]
     };
     node.constraints.push(makeThisNodeNotVisibleConstraint);
     const makeThisNodeNotVisitableConstraint = {
@@ -575,13 +562,15 @@ class AuthoringToolProjectService extends ProjectService {
       action: 'makeThisNodeNotVisitable',
       targetId: targetNodeId,
       removalConditional: 'all',
-      removalCriteria: [{
-        name: 'branchPathTaken',
-        params: {
-          fromNodeId: fromNodeId,
-          toNodeId: toNodeId
+      removalCriteria: [
+        {
+          name: 'branchPathTaken',
+          params: {
+            fromNodeId: fromNodeId,
+            toNodeId: toNodeId
+          }
         }
-      }]
+      ]
     };
     node.constraints.push(makeThisNodeNotVisitableConstraint);
   }
@@ -693,7 +682,7 @@ class AuthoringToolProjectService extends ProjectService {
       insertPosition = 0; // place the new components at the beginning
     } else {
       insertPosition =
-          this.getComponentPositionByNodeIdAndComponentId(nodeId, insertAfterComponentId) + 1;
+        this.getComponentPositionByNodeIdAndComponentId(nodeId, insertAfterComponentId) + 1;
     }
 
     for (const newComponent of newComponents) {
@@ -744,11 +733,11 @@ class AuthoringToolProjectService extends ProjectService {
     const httpParams = {
       method: 'POST',
       url: this.ConfigService.getConfigParam('importStepsURL'),
-      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       data: $.param({
         steps: angular.toJson(newComponents),
         fromProjectId: importProjectId,
-        toProjectId: this.ConfigService.getConfigParam('projectId'),
+        toProjectId: this.ConfigService.getConfigParam('projectId')
       })
     };
 
@@ -761,14 +750,14 @@ class AuthoringToolProjectService extends ProjectService {
      * new name and change all the references in the steps to use the new
      * name.
      */
-    return this.$http(httpParams).then(({data: newComponents}) => {
+    return this.$http(httpParams).then(({ data: newComponents }) => {
       const node = this.getNodeById(nodeId);
       let insertPosition = 0;
       if (insertAfterComponentId == null) {
         insertPosition = 0;
       } else {
         insertPosition =
-            this.getComponentPositionByNodeIdAndComponentId(nodeId, insertAfterComponentId) + 1;
+          this.getComponentPositionByNodeIdAndComponentId(nodeId, insertAfterComponentId) + 1;
       }
       for (const newComponent of newComponents) {
         node.components.splice(insertPosition, 0, newComponent);
@@ -858,6 +847,23 @@ class AuthoringToolProjectService extends ProjectService {
       const service = this.$injector.get(component.type + 'Service');
       if (service.componentUsesSaveButton()) {
         component.showSaveButton = false;
+      }
+    }
+  }
+
+  checkPotentialStartNodeIdChangeThenSaveProject() {
+    this.checkPotentialStartNodeIdChange();
+    return this.saveProject();
+  }
+
+  checkPotentialStartNodeIdChange() {
+    const firstLeafNodeId = this.getFirstLeafNodeId();
+    if (firstLeafNodeId == null) {
+      this.setStartNodeId('');
+    } else {
+      const currentStartNodeId = this.getStartNodeId();
+      if (currentStartNodeId != firstLeafNodeId) {
+        this.setStartNodeId(firstLeafNodeId);
       }
     }
   }
@@ -952,10 +958,9 @@ class AuthoringToolProjectService extends ProjectService {
   }
 
   isNodeIdToInsertTargetNotSpecified(nodeIdToInsertTarget) {
-    return nodeIdToInsertTarget == null ||
-        nodeIdToInsertTarget === 'inactiveNodes' ||
-        nodeIdToInsertTarget === 'inactiveSteps' ||
-        nodeIdToInsertTarget === 'inactiveGroups';
+    return [null, 'inactiveNodes', 'inactiveSteps', 'inactiveGroups'].includes(
+      nodeIdToInsertTarget
+    );
   }
 
   /**
@@ -1029,6 +1034,42 @@ class AuthoringToolProjectService extends ProjectService {
   moveInactiveNodeToInactiveSection(node, nodeIdToInsertAfter) {
     this.removeNodeFromInactiveNodes(node.id);
     this.addInactiveNodeInsertAfter(node, nodeIdToInsertAfter);
+  }
+
+  addNodeToGroup(node, group) {
+    if (this.isGroupHasNode(group)) {
+      this.insertAfterLastNode(node, group);
+    } else {
+      this.insertAsFirstNode(node, group);
+    }
+  }
+
+  isGroupHasNode(group) {
+    return group.ids.length != 0;
+  }
+
+  getLastNodeInGroup(group) {
+    const lastNodeId = group.ids[group.ids.length - 1];
+    return this.idToNode[lastNodeId];
+  }
+
+  insertAsFirstNode(node, group) {
+    this.insertNodeInsideOnlyUpdateTransitions(node.id, group.id);
+    this.insertNodeInsideInGroups(node.id, group.id);
+  }
+
+  insertAfterLastNode(node, group) {
+    const lastNode = this.getLastNodeInGroup(group);
+    this.insertNodeAfterInTransitions(node, lastNode.id);
+    this.insertNodeAfterInGroups(node.id, lastNode.id);
+  }
+
+  createNodeAndAddToLocalStorage(nodeTitle) {
+    const node = this.createNode(nodeTitle);
+    this.setIdToNode(node.id, node);
+    this.addNode(node);
+    this.applicationNodes.push(node);
+    return node;
   }
 }
 

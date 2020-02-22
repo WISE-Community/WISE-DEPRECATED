@@ -1,26 +1,26 @@
 'use strict';
 
 class ProjectController {
-
   constructor(
-      $anchorScroll,
-      $filter,
-      $interval,
-      $mdDialog,
-      $q,
-      $rootScope,
-      $scope,
-      $state,
-      $stateParams,
-      $stomp,
-      $timeout,
-      $transitions,
-      $window,
-      ConfigService,
-      ProjectAssetService,
-      ProjectService,
-      TeacherDataService,
-      UtilService) {
+    $anchorScroll,
+    $filter,
+    $interval,
+    $mdDialog,
+    $q,
+    $rootScope,
+    $scope,
+    $state,
+    $stateParams,
+    $stomp,
+    $timeout,
+    $transitions,
+    $window,
+    ConfigService,
+    ProjectAssetService,
+    ProjectService,
+    TeacherDataService,
+    UtilService
+  ) {
     this.$anchorScroll = $anchorScroll;
     this.$filter = $filter;
     this.$interval = $interval;
@@ -75,8 +75,16 @@ class ProjectController {
      * http://colorbrewer2.org/export/colorbrewer.js
      * The colors chosen are from the 'qualitative', 'Set2'.
      */
-    this.stepBackgroundColors = ['#66c2a5','#fc8d62','#8da0cb','#e78ac3',
-        '#a6d854','#ffd92f','#e5c494','#b3b3b3'];
+    this.stepBackgroundColors = [
+      '#66c2a5',
+      '#fc8d62',
+      '#8da0cb',
+      '#e78ac3',
+      '#a6d854',
+      '#ffd92f',
+      '#e5c494',
+      '#b3b3b3'
+    ];
 
     // start by opening the project, with no node being authored
     this.TeacherDataService.setCurrentNode(null);
@@ -88,8 +96,9 @@ class ProjectController {
     });
 
     this.summernoteRubricId = 'summernoteRubric_' + this.projectId;
-    this.summernoteRubricHTML = this.ProjectService
-        .replaceAssetPaths(this.ProjectService.getProjectRubric());
+    this.summernoteRubricHTML = this.ProjectService.replaceAssetPaths(
+      this.ProjectService.getProjectRubric()
+    );
     this.summernoteRubricOptions = {
       toolbar: [
         ['style', ['style']],
@@ -106,8 +115,14 @@ class ProjectController {
       height: 300,
       disableDragAndDrop: true,
       buttons: {
-        'insertAssetButton': this.UtilService.createInsertAssetButton(this, this.projectId, null,
-            null, 'rubric', this.$translate('INSERT_ASSET'))
+        insertAssetButton: this.UtilService.createInsertAssetButton(
+          this,
+          this.projectId,
+          null,
+          null,
+          'rubric',
+          this.$translate('INSERT_ASSET')
+        )
       }
     };
 
@@ -119,15 +134,19 @@ class ProjectController {
      * or choosing the script file.
      */
     this.$scope.$on('assetSelected', (event, args) => {
-      if (args != null && args.projectId == this.projectId &&
-          args.assetItem != null && args.assetItem.fileName != null) {
+      if (
+        args != null &&
+        args.projectId == this.projectId &&
+        args.assetItem != null &&
+        args.assetItem.fileName != null
+      ) {
         let assetFileName = args.assetItem.fileName;
         if (args.target === 'rubric') {
-          const summernoteElement =
-              angular.element(document.querySelector(`#summernoteRubric_${this.projectId}`));
+          const summernoteElement = angular.element(
+            document.querySelector(`#summernoteRubric_${this.projectId}`)
+          );
           let fullAssetPath =
-              this.ConfigService.getProjectAssetsDirectoryPath() +
-                  '/' + assetFileName;
+            this.ConfigService.getProjectAssetsDirectoryPath() + '/' + assetFileName;
           if (this.UtilService.isImage(assetFileName)) {
             /*
              * move the cursor back to its position when the asset chooser
@@ -135,8 +154,7 @@ class ProjectController {
              */
             summernoteElement.summernote('editor.restoreRange');
             summernoteElement.summernote('editor.focus');
-            summernoteElement.summernote(
-                'insertImage', fullAssetPath, assetFileName);
+            summernoteElement.summernote('insertImage', fullAssetPath, assetFileName);
           } else if (this.UtilService.isVideo(assetFileName)) {
             /*
              * move the cursor back to its position when the asset chooser
@@ -146,8 +164,7 @@ class ProjectController {
             summernoteElement.summernote('editor.focus');
             let videoElement = document.createElement('video');
             videoElement.controls = 'true';
-            videoElement.innerHTML =
-                '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
+            videoElement.innerHTML = '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
             summernoteElement.summernote('insertNode', videoElement);
           }
         } else if (args.target === 'scriptFilename') {
@@ -158,8 +175,14 @@ class ProjectController {
       this.$mdDialog.hide();
     });
 
-    this.$transitions.onSuccess({}, ($transition) => {
-      const stateName = $transition.name;
+    this.$transitions.onSuccess({}, $transition => {
+      /*
+      const from = $transition.$from();
+      if (from.name === 'root.project.structure' && from.params.structure != null) {
+        this.insertStructure(from.params.structure);
+      }
+      */
+      const stateName = $transition.$to().name;
       if (stateName === 'root.project') {
         this.saveEvent('projectHomeViewOpened', 'Navigation');
       } else if (stateName === 'root.project.asset') {
@@ -187,6 +210,10 @@ class ProjectController {
       this.scrollToBottomOfPage();
     });
 
+    this.$rootScope.$on('$stateChangeSuccess', (event, transition) => {
+      this.scrollToBottomOfPage();
+    });
+
     this.saveEvent('projectOpened', 'Navigation');
 
     /*
@@ -200,7 +227,7 @@ class ProjectController {
       this.endProjectAuthoringSession();
     });
 
-    this.$window.onbeforeunload = (event) => {
+    this.$window.onbeforeunload = event => {
       this.endProjectAuthoringSession();
     };
   }
@@ -215,30 +242,34 @@ class ProjectController {
     let previewProjectEventData = { constraints: true };
     this.saveEvent('projectPreviewed', 'Navigation', previewProjectEventData);
     window.open(
-        `${this.ConfigService.getConfigParam('previewProjectURL')}#!/project/${this.projectId}`);
+      `${this.ConfigService.getConfigParam('previewProjectURL')}#!/project/${this.projectId}`
+    );
   }
 
   previewProjectWithoutConstraints() {
     let previewProjectEventData = { constraints: false };
     this.saveEvent('projectPreviewed', 'Navigation', previewProjectEventData);
-    window.open(`${this.ConfigService.getConfigParam('previewProjectURL')}` +
-        `?constraints=false#!/project/${this.projectId}`);
+    window.open(
+      `${this.ConfigService.getConfigParam('previewProjectURL')}` +
+        `?constraints=false#!/project/${this.projectId}`
+    );
   }
 
   viewProjectAssets() {
-    this.$state.go('root.project.asset', {projectId: this.projectId});
+    this.$state.go('root.project.asset', { projectId: this.projectId });
   }
 
   viewNotebookSettings() {
-    this.$state.go('root.project.notebook', {projectId: this.projectId});
+    this.$state.go('root.project.notebook', { projectId: this.projectId });
   }
 
   showOtherConcurrentAuthors(authors) {
     const myUsername = this.ConfigService.getMyUsername();
     authors.splice(authors.indexOf(myUsername), 1);
     if (authors.length > 0) {
-      this.currentAuthorsMessage = this.$translate('concurrentAuthorsWarning',
-        { currentAuthors: authors.join(', ') });
+      this.currentAuthorsMessage = this.$translate('concurrentAuthorsWarning', {
+        currentAuthors: authors.join(', ')
+      });
     } else {
       this.currentAuthorsMessage = '';
     }
@@ -260,8 +291,8 @@ class ProjectController {
    * Make a request to download this project as a zip file
    */
   downloadProject() {
-    window.location.href = this.ConfigService.getWISEBaseURL()
-        + '/project/export/' + this.projectId;
+    window.location.href =
+      this.ConfigService.getWISEBaseURL() + '/project/export/' + this.projectId;
   }
 
   /**
@@ -313,10 +344,8 @@ class ProjectController {
    */
   nodeClicked(nodeId) {
     this.unselectAllItems();
-    this.TeacherDataService
-        .endCurrentNodeAndSetCurrentNodeByNodeId(this.nodeId);
-    this.$state
-        .go('root.project.node', {projectId: this.projectId, nodeId: nodeId});
+    this.TeacherDataService.endCurrentNodeAndSetCurrentNodeByNodeId(this.nodeId);
+    this.$state.go('root.project.node', { projectId: this.projectId, nodeId: nodeId });
   }
 
   /**
@@ -325,10 +354,8 @@ class ProjectController {
    * @param nodeId The node id of the step.
    */
   constraintIconClicked(nodeId) {
-    this.TeacherDataService
-      .endCurrentNodeAndSetCurrentNodeByNodeId(nodeId);
-    this.$state
-      .go('root.project.nodeConstraints', {projectId: this.projectId, nodeId: nodeId});
+    this.TeacherDataService.endCurrentNodeAndSetCurrentNodeByNodeId(nodeId);
+    this.$state.go('root.project.nodeConstraints', { projectId: this.projectId, nodeId: nodeId });
   }
 
   /**
@@ -337,10 +364,8 @@ class ProjectController {
    * @param nodeId The node id of the step.
    */
   branchIconClicked(nodeId) {
-    this.TeacherDataService
-      .endCurrentNodeAndSetCurrentNodeByNodeId(nodeId);
-    this.$state
-      .go('root.project.nodeEditPaths', {projectId: this.projectId, nodeId: nodeId});
+    this.TeacherDataService.endCurrentNodeAndSetCurrentNodeByNodeId(nodeId);
+    this.$state.go('root.project.nodeEditPaths', { projectId: this.projectId, nodeId: nodeId });
   }
 
   /**
@@ -438,12 +463,12 @@ class ProjectController {
     this.insertNodeMode = false;
     this.temporarilyHighlightNewNodes(newNodes);
 
-    this.checkPotentialStartNodeIdChangeThenSaveProject().then(() => {
+    this.ProjectService.checkPotentialStartNodeIdChangeThenSaveProject().then(() => {
+      this.refreshProject();
       if (newNode != null) {
         let nodeCreatedEventData = {
-          'nodeId': newNode.id,
-          'title': this.ProjectService
-              .getNodePositionAndTitleByNodeId(newNode.id)
+          nodeId: newNode.id,
+          title: this.ProjectService.getNodePositionAndTitleByNodeId(newNode.id)
         };
 
         if (this.ProjectService.isGroupNode(newNode.id)) {
@@ -468,19 +493,16 @@ class ProjectController {
        * itself so we will not allow that
        */
       if (selectedNodeIds.length == 1) {
-        alert(this
-            .$translate('youAreNotAllowedToInsertTheSelectedItemAfterItself'));
+        alert(this.$translate('youAreNotAllowedToInsertTheSelectedItemAfterItself'));
       } else if (selectedNodeIds.length > 1) {
-        alert(this
-            .$translate('youAreNotAllowedToInsertTheSelectedItemsAfterItself'));
+        alert(this.$translate('youAreNotAllowedToInsertTheSelectedItemsAfterItself'));
       }
     } else {
       let movedNodes = [];
       for (let selectedNodeId of selectedNodeIds) {
         let node = {
-          'nodeId': selectedNodeId,
-          'fromTitle': this.ProjectService
-              .getNodePositionAndTitleByNodeId(selectedNodeId)
+          nodeId: selectedNodeId,
+          fromTitle: this.ProjectService.getNodePositionAndTitleByNodeId(selectedNodeId)
         };
         movedNodes.push(node);
       }
@@ -499,7 +521,8 @@ class ProjectController {
       this.insertGroupMode = false;
       this.insertNodeMode = false;
       this.temporarilyHighlightNewNodes(newNodes);
-      this.checkPotentialStartNodeIdChangeThenSaveProject().then(() => {
+      this.ProjectService.checkPotentialStartNodeIdChangeThenSaveProject().then(() => {
+        this.refreshProject();
         if (newNodes != null && newNodes.length > 0) {
           let firstNewNode = newNodes[0];
           if (firstNewNode != null && firstNewNode.id != null) {
@@ -507,8 +530,7 @@ class ProjectController {
               let node = movedNodes[n];
               let newNode = newNodes[n];
               if (node != null && newNode != null) {
-                node.toTitle = this.ProjectService
-                    .getNodePositionAndTitleByNodeId(newNode.id);
+                node.toTitle = this.ProjectService.getNodePositionAndTitleByNodeId(newNode.id);
               }
             }
 
@@ -535,9 +557,8 @@ class ProjectController {
     let selectedNodeIds = this.getSelectedNodeIds();
     for (let selectedNodeId of selectedNodeIds) {
       let node = {
-        'fromNodeId': selectedNodeId,
-        'fromTitle': this.ProjectService
-            .getNodePositionAndTitleByNodeId(selectedNodeId)
+        fromNodeId: selectedNodeId,
+        fromTitle: this.ProjectService.getNodePositionAndTitleByNodeId(selectedNodeId)
       };
       copiedNodes.push(node);
     }
@@ -556,7 +577,8 @@ class ProjectController {
     this.insertGroupMode = false;
     this.insertNodeMode = false;
     this.temporarilyHighlightNewNodes(newNodes);
-    this.checkPotentialStartNodeIdChangeThenSaveProject().then(() => {
+    this.ProjectService.checkPotentialStartNodeIdChangeThenSaveProject().then(() => {
+      this.refreshProject();
       if (newNodes != null && newNodes.length > 0) {
         let firstNewNode = newNodes[0];
         if (firstNewNode != null && firstNewNode.id != null) {
@@ -565,8 +587,7 @@ class ProjectController {
             let newNode = newNodes[n];
             if (node != null && newNode != null) {
               node.toNodeId = newNode.id;
-              node.toTitle = this.ProjectService
-                  .getNodePositionAndTitleByNodeId(newNode.id);
+              node.toTitle = this.ProjectService.getNodePositionAndTitleByNodeId(newNode.id);
             }
           }
 
@@ -595,8 +616,9 @@ class ProjectController {
     let toProjectId = this.ConfigService.getConfigParam('projectId');
     let fromProjectId = this.importProjectId;
 
-    this.performImport(nodeIdToInsertInsideOrAfter).then((newNodes) => {
-      this.checkPotentialStartNodeIdChangeThenSaveProject().then(() => {
+    this.performImport(nodeIdToInsertInsideOrAfter).then(newNodes => {
+      this.ProjectService.checkPotentialStartNodeIdChangeThenSaveProject().then(() => {
+        this.refreshProject();
         let doScrollToNewNodes = true;
         this.temporarilyHighlightNewNodes(newNodes, doScrollToNewNodes);
 
@@ -611,13 +633,12 @@ class ProjectController {
             fromNodeId: selectedNode.id,
             fromTitle: selectedNodeTitle,
             toNodeId: newNode.id,
-            toTitle: this.ProjectService
-              .getNodePositionAndTitleByNodeId(newNode.id)
+            toTitle: this.ProjectService.getNodePositionAndTitleByNodeId(newNode.id)
           };
           stepsImported.push(stepImported);
         }
 
-        let stepsImportedEventData = { 'stepsImported': stepsImported };
+        let stepsImportedEventData = { stepsImported: stepsImported };
         this.saveEvent('stepImported', 'Authoring', stepsImportedEventData);
       });
     });
@@ -634,8 +655,12 @@ class ProjectController {
     let toProjectId = this.ConfigService.getConfigParam('projectId');
     let fromProjectId = this.importProjectId;
 
-    return this.ProjectService.copyNodes(selectedNodes, fromProjectId,
-        toProjectId, nodeIdToInsertInsideOrAfter).then((newNodes) => {
+    return this.ProjectService.copyNodes(
+      selectedNodes,
+      fromProjectId,
+      toProjectId,
+      nodeIdToInsertInsideOrAfter
+    ).then(newNodes => {
       this.refreshProject();
       this.insertNodeMode = false;
       this.toggleView('project');
@@ -711,8 +736,9 @@ class ProjectController {
       if (selectedNodeIds.length == 1) {
         confirmMessage = this.$translate('areYouSureYouWantToDeleteTheSelectedItem');
       } else if (selectedNodeIds.length > 1) {
-        confirmMessage = this.$translate('areYouSureYouWantToDeleteTheXSelectedItems',
-            { numItems: selectedNodeIds.length });
+        confirmMessage = this.$translate('areYouSureYouWantToDeleteTheXSelectedItems', {
+          numItems: selectedNodeIds.length
+        });
       }
       if (confirm(confirmMessage)) {
         let deletedStartNodeId = false;
@@ -726,8 +752,7 @@ class ProjectController {
 
           if (node != null) {
             tempNode.nodeId = node.id;
-            tempNode.title =
-                this.ProjectService.getNodePositionAndTitleByNodeId(node.id);
+            tempNode.title = this.ProjectService.getNodePositionAndTitleByNodeId(node.id);
           }
 
           if (this.ProjectService.isStartNodeId(nodeId)) {
@@ -738,13 +763,12 @@ class ProjectController {
             activityDeleted = true;
             let stepsInActivityDeleted = [];
             for (let stepNodeId of node.ids) {
-              let stepTitle = this.ProjectService
-                  .getNodePositionAndTitleByNodeId(stepNodeId);
+              let stepTitle = this.ProjectService.getNodePositionAndTitleByNodeId(stepNodeId);
 
               // create an object with the step id and title
               let stepObject = {
-                'nodeId': stepNodeId,
-                'title': stepTitle
+                nodeId: stepNodeId,
+                title: stepTitle
               };
               stepsInActivityDeleted.push(stepObject);
             }
@@ -763,15 +787,14 @@ class ProjectController {
 
         if (activityDeleted) {
           let activitiesDeletedEventData = {
-            'activitiesDeleted': activitiesDeleted
+            activitiesDeleted: activitiesDeleted
           };
-          this.saveEvent('activityDeleted', 'Authoring',
-              activitiesDeletedEventData);
+          this.saveEvent('activityDeleted', 'Authoring', activitiesDeletedEventData);
         }
 
         if (stepDeleted) {
           let stepDeletedEventData = {
-            'stepsDeleted': stepsDeleted
+            stepsDeleted: stepsDeleted
           };
           this.saveEvent('stepDeleted', 'Authoring', stepDeletedEventData);
         }
@@ -788,11 +811,15 @@ class ProjectController {
    */
   getSelectedNodeIds() {
     let selectedNodeIds = [];
-    angular.forEach(this.items, function(value, key) {
-      if (value.checked) {
-        selectedNodeIds.push(key);
-      }
-    }, selectedNodeIds);
+    angular.forEach(
+      this.items,
+      function(value, key) {
+        if (value.checked) {
+          selectedNodeIds.push(key);
+        }
+      },
+      selectedNodeIds
+    );
 
     if (this.inactiveNodes != null) {
       for (let inactiveNode of this.inactiveNodes) {
@@ -811,17 +838,21 @@ class ProjectController {
   getSelectedItemTypes() {
     let selectedItemTypes = [];
 
-    angular.forEach(this.items, function(value, key) {
-      if (value.checked) {
-        let node = this.ProjectService.getNodeById(key);
-        if (node != null) {
-          let nodeType = node.type;
-          if (selectedItemTypes.indexOf(nodeType) == -1) {
-            selectedItemTypes.push(nodeType);
+    angular.forEach(
+      this.items,
+      function(value, key) {
+        if (value.checked) {
+          let node = this.ProjectService.getNodeById(key);
+          if (node != null) {
+            let nodeType = node.type;
+            if (selectedItemTypes.indexOf(nodeType) == -1) {
+              selectedItemTypes.push(nodeType);
+            }
           }
         }
-      }
-    }, this);
+      },
+      this
+    );
 
     if (this.inactiveNodes != null) {
       for (let inactiveNode of this.inactiveNodes) {
@@ -877,6 +908,10 @@ class ProjectController {
     }
   }
 
+  addStructure() {
+    this.$state.go('root.project.structure.choose');
+  }
+
   /**
    * Cancel the move mode
    */
@@ -925,42 +960,6 @@ class ProjectController {
   }
 
   /**
-   * Check if the start node id for the project could potentially
-   * change.
-   */
-  checkPotentialStartNodeIdChange() {
-    return this.$q((resolve, reject) => {
-      let firstLeafNodeId = this.ProjectService.getFirstLeafNodeId();
-      if (firstLeafNodeId == null) {
-        // there are no steps in the project
-        // set the start node id to empty string
-        this.ProjectService.setStartNodeId('');
-        resolve();
-      } else {
-        // we have found a leaf node
-        let currentStartNodeId = this.ProjectService.getStartNodeId();
-        if (currentStartNodeId != firstLeafNodeId) {
-          // update the start node id
-          this.ProjectService.setStartNodeId(firstLeafNodeId);
-          resolve();
-        } else {
-          resolve();
-        }
-      }
-    });
-  }
-
-  /**
-   * Check if the start node id has changed and then save the project
-   */
-  checkPotentialStartNodeIdChangeThenSaveProject() {
-    return this.checkPotentialStartNodeIdChange().then(() => {
-      this.ProjectService.saveProject();
-      this.refreshProject();
-    });
-  }
-
-  /**
    * Recalculates step numbering
    */
   refreshProject() {
@@ -1001,7 +1000,7 @@ class ProjectController {
       }
 
       if (this.libraryProjectsList == null) {
-        this.ConfigService.getLibraryProjects().then((libraryProjectsList) => {
+        this.ConfigService.getLibraryProjects().then(libraryProjectsList => {
           this.libraryProjectsList = libraryProjectsList;
         });
       }
@@ -1041,11 +1040,9 @@ class ProjectController {
       this.importProjectId = null;
       this.importProject = null;
     } else {
-      this.ProjectService.retrieveProjectById(this.importProjectId)
-          .then((projectJSON) => {
+      this.ProjectService.retrieveProjectById(this.importProjectId).then(projectJSON => {
         this.importProject = projectJSON;
-        const nodeOrderOfProject = this.ProjectService
-            .getNodeOrderOfProject(this.importProject);
+        const nodeOrderOfProject = this.ProjectService.getNodeOrderOfProject(this.importProject);
         this.importProjectIdToOrder = nodeOrderOfProject.idToOrder;
         this.importProjectItems = nodeOrderOfProject.nodes;
       });
@@ -1054,7 +1051,8 @@ class ProjectController {
 
   previewImportNode(node) {
     window.open(
-        `${this.importProject.previewProjectURL}#!/project/${this.importProjectId}/${node.id}`);
+      `${this.importProject.previewProjectURL}#!/project/${this.importProjectId}/${node.id}`
+    );
   }
 
   previewImportProject() {
@@ -1138,7 +1136,7 @@ class ProjectController {
     try {
       angular.fromJson(this.projectJSONString);
       return true;
-    } catch(e) {
+    } catch (e) {
       return false;
     }
   }
@@ -1154,7 +1152,7 @@ class ProjectController {
     try {
       this.saveProjectJSON(this.projectJSONString);
       this.UtilService.showJSONValidMessage();
-    } catch(e) {
+    } catch (e) {
       this.UtilService.showJSONInvalidMessage();
     }
   }
@@ -1170,7 +1168,9 @@ class ProjectController {
     if (scriptFilename != null) {
       this.projectScriptFilename = scriptFilename;
     }
-    this.checkPotentialStartNodeIdChangeThenSaveProject();
+    this.ProjectService.checkPotentialStartNodeIdChangeThenSaveProject().then(() => {
+      this.refreshProject();
+    });
   }
 
   /**
@@ -1279,6 +1279,7 @@ class ProjectController {
       this.editProjectRubricMode = false;
       this.advancedMode = false;
       this.showJSONAuthoring = false;
+      this.showTemplateChooser = false;
 
       // also show the project view
       this.projectMode = true;
@@ -1365,9 +1366,12 @@ class ProjectController {
   }
 
   scrollToBottomOfPage() {
-    $('#content').animate({
-      scrollTop: $('#bottom').prop('offsetTop')
-    }, 1000);
+    $('#content').animate(
+      {
+        scrollTop: $('#bottom').prop('offsetTop')
+      },
+      1000
+    );
   }
 
   /**
@@ -1401,9 +1405,12 @@ class ProjectController {
         if (doScrollToNewNodes) {
           let firstNodeElementAdded = $('#' + newNodes[0].id);
           if (firstNodeElementAdded != null) {
-            $('#content').animate({
-              scrollTop: firstNodeElementAdded.prop('offsetTop') - 60
-            }, 1000);
+            $('#content').animate(
+              {
+                scrollTop: firstNodeElementAdded.prop('offsetTop') - 60
+              },
+              1000
+            );
           }
         }
       }
@@ -1427,8 +1434,15 @@ class ProjectController {
     if (data == null) {
       data = {};
     }
-    this.TeacherDataService.saveEvent(context, nodeId, componentId,
-      componentType, category, eventName, data);
+    this.TeacherDataService.saveEvent(
+      context,
+      nodeId,
+      componentId,
+      componentType,
+      category,
+      eventName,
+      data
+    );
   }
 
   /**
@@ -1479,7 +1493,7 @@ class ProjectController {
       color = this.stepBackgroundColors[branchPathNumber];
     }
     return color;
-}
+  }
 
   /**
    * Copy the project URL to the clipboard
@@ -1528,8 +1542,10 @@ class ProjectController {
     for (let n = 0; n < this.inactiveNodes.length; n++) {
       let inactiveNode = this.inactiveNodes[n];
       if (inactiveNode != null) {
-        if (inactiveNode.type == 'node' &&
-              this.ProjectService.getParentGroup(inactiveNode.id) == null) {
+        if (
+          inactiveNode.type == 'node' &&
+          this.ProjectService.getParentGroup(inactiveNode.id) == null
+        ) {
           count++;
         }
       }
@@ -1643,7 +1659,7 @@ class ProjectController {
     for (let c = 0; c < constraints.length; c++) {
       let constraint = constraints[c];
       let description = this.ProjectService.getConstraintDescription(constraint);
-      constraintDescriptions += (c + 1) + ' - ' + description + '\n';
+      constraintDescriptions += c + 1 + ' - ' + description + '\n';
     }
     return constraintDescriptions;
   }
@@ -1659,10 +1675,14 @@ class ProjectController {
   }
 
   subscribeToCurrentAuthors(projectId) {
-    return this.$stomp.connect(this.ConfigService.getWebSocketURL()).then((frame) => {
-      this.$stomp.subscribe(`/topic/current-authors/${projectId}`, (authors, headers, res) => {
-        this.showOtherConcurrentAuthors(authors);
-      }, {});
+    return this.$stomp.connect(this.ConfigService.getWebSocketURL()).then(frame => {
+      this.$stomp.subscribe(
+        `/topic/current-authors/${projectId}`,
+        (authors, headers, res) => {
+          this.showOtherConcurrentAuthors(authors);
+        },
+        {}
+      );
     });
   }
 
@@ -1672,24 +1692,24 @@ class ProjectController {
 }
 
 ProjectController.$inject = [
-    '$anchorScroll',
-    '$filter',
-    '$interval',
-    '$mdDialog',
-    '$q',
-    '$rootScope',
-    '$scope',
-    '$state',
-    '$stateParams',
-    '$stomp',
-    '$timeout',
-    '$transitions',
-    '$window',
-    'ConfigService',
-    'ProjectAssetService',
-    'ProjectService',
-    'TeacherDataService',
-    'UtilService'
+  '$anchorScroll',
+  '$filter',
+  '$interval',
+  '$mdDialog',
+  '$q',
+  '$rootScope',
+  '$scope',
+  '$state',
+  '$stateParams',
+  '$stomp',
+  '$timeout',
+  '$transitions',
+  '$window',
+  'ConfigService',
+  'ProjectAssetService',
+  'ProjectService',
+  'TeacherDataService',
+  'UtilService'
 ];
 
 export default ProjectController;

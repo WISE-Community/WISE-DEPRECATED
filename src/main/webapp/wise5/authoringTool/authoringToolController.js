@@ -1,21 +1,21 @@
 'use strict';
 
 class AuthoringToolController {
-
   constructor(
-      $anchorScroll,
-      $filter,
-      $location,
-      $mdDialog,
-      $rootScope,
-      $scope,
-      $state,
-      $transitions,
-      $timeout,
-      ConfigService,
-      ProjectService,
-      SessionService,
-      TeacherDataService) {
+    $anchorScroll,
+    $filter,
+    $location,
+    $mdDialog,
+    $rootScope,
+    $scope,
+    $state,
+    $transitions,
+    $timeout,
+    ConfigService,
+    ProjectService,
+    SessionService,
+    TeacherDataService
+  ) {
     this.$anchorScroll = $anchorScroll;
     this.$filter = $filter;
     this.$location = $location;
@@ -101,13 +101,13 @@ class AuthoringToolController {
         type: 'secondary',
         showToolbar: true,
         active: false
-      },
+      }
     };
 
     this.logoPath = this.ProjectService.getThemePath() + '/images/WISE-logo-ffffff.svg';
     this.processUI();
 
-    $transitions.onSuccess({}, ($transition) => {
+    $transitions.onSuccess({}, $transition => {
       this.isMenuOpen = false;
       this.processUI();
       if ($transition.name === 'root.main') {
@@ -116,28 +116,33 @@ class AuthoringToolController {
     });
 
     $scope.$on('showSessionWarning', () => {
-      const confirm = this.$mdDialog.confirm()
-          .parent(angular.element(document.body))
-          .title(this.$translate('sessionTimeout'))
-          .content(this.$translate('autoLogoutMessage'))
-          .ariaLabel(this.$translate('sessionTimeout'))
-          .ok(this.$translate('yes'))
-          .cancel(this.$translate('no'));
-      this.$mdDialog.show(confirm).then(() => {
-        this.SessionService.closeWarningAndRenewSession();
-      }, () => {
-        this.SessionService.forceLogOut();
-      });
+      const confirm = this.$mdDialog
+        .confirm()
+        .parent(angular.element(document.body))
+        .title(this.$translate('sessionTimeout'))
+        .content(this.$translate('autoLogoutMessage'))
+        .ariaLabel(this.$translate('sessionTimeout'))
+        .ok(this.$translate('yes'))
+        .cancel(this.$translate('no'));
+      this.$mdDialog.show(confirm).then(
+        () => {
+          this.SessionService.closeWarningAndRenewSession();
+        },
+        () => {
+          this.SessionService.forceLogOut();
+        }
+      );
     });
 
-    this.$scope.$on('showRequestLogout', (ev) => {
-      const alert = this.$mdDialog.confirm()
-          .parent(angular.element(document.body))
-          .title(this.$translate('serverUpdate'))
-          .textContent(this.$translate('serverUpdateRequestLogoutMessage'))
-          .ariaLabel(this.$translate('serverUpdate'))
-          .targetEvent(ev)
-          .ok(this.$translate('ok'));
+    this.$scope.$on('showRequestLogout', ev => {
+      const alert = this.$mdDialog
+        .confirm()
+        .parent(angular.element(document.body))
+        .title(this.$translate('serverUpdate'))
+        .textContent(this.$translate('serverUpdateRequestLogoutMessage'))
+        .ariaLabel(this.$translate('serverUpdate'))
+        .targetEvent(ev)
+        .ok(this.$translate('ok'));
       this.$mdDialog.show(alert);
     });
 
@@ -155,7 +160,6 @@ class AuthoringToolController {
      * been saved to the server
      */
     this.$scope.$on('projectSaved', () => {
-
       /*
        * Wait half a second before changing the message to 'Saved' so that
        * the 'Saving...' message stays up long enough for the author to
@@ -180,51 +184,43 @@ class AuthoringToolController {
       this.setGlobalMessage(this.$translate('notAllowedToEditThisProject'), false, null);
     });
 
-    /*
-     * Open the asset chooser to let the author insert an asset into the
-     * specified target
-     */
     this.$scope.$on('openAssetChooser', (event, params) => {
       const stateParams = {
-          isPopup: params.isPopup,
-          projectId: params.projectId,
-          nodeId: params.nodeId,
-          componentId: params.componentId,
-          target: params.target,
-          targetObject: params.targetObject
+        isPopup: params.isPopup,
+        projectId: params.projectId,
+        nodeId: params.nodeId,
+        componentId: params.componentId,
+        target: params.target,
+        targetObject: params.targetObject
       };
       this.$mdDialog.show({
-          templateUrl: 'wise5/authoringTool/asset/asset.html',
-          controller: 'ProjectAssetController',
-          controllerAs: 'projectAssetController',
-          $stateParams: stateParams,
-          clickOutsideToClose: true,
-          escapeToClose: true
+        templateUrl: 'wise5/authoringTool/asset/asset.html',
+        controller: 'ProjectAssetController',
+        controllerAs: 'projectAssetController',
+        $stateParams: stateParams,
+        clickOutsideToClose: true,
+        escapeToClose: true
       });
     });
 
-    /*
-     * Open the asset chooser to let the author insert an WISE Link into the
-     * specified target
-     */
     this.$scope.$on('openWISELinkChooser', (event, params) => {
       const stateParams = {
-          projectId: params.projectId,
-          nodeId: params.nodeId,
-          componentId: params.componentId,
-          target: params.target
+        projectId: params.projectId,
+        nodeId: params.nodeId,
+        componentId: params.componentId,
+        target: params.target
       };
       this.$mdDialog.show({
-          templateUrl: 'wise5/authoringTool/wiseLink/wiseLinkAuthoring.html',
-          controller: 'WISELinkAuthoringController',
-          controllerAs: 'wiseLinkAuthoringController',
-          $stateParams: stateParams,
-          clickOutsideToClose: true,
-          escapeToClose: true
+        templateUrl: 'wise5/authoringTool/wiseLink/wiseLinkAuthoring.html',
+        controller: 'WISELinkAuthoringController',
+        controllerAs: 'wiseLinkAuthoringController',
+        $stateParams: stateParams,
+        clickOutsideToClose: true,
+        escapeToClose: true
       });
     });
 
-    if (this.$state.current.name == 'root.main') {
+    if (this.$state.current.name === 'root.main') {
       this.saveEvent('projectListViewed', 'Navigation');
     }
 
@@ -241,10 +237,12 @@ class AuthoringToolController {
    */
   processUI() {
     this.$anchorScroll('top');
-    this.showStepTools = this.$state.$current.name === 'root.project' ||
-        this.$state.$current.name === 'root.project.node' ||
-        this.$state.$current.name === 'root.project.nodeConstraints' ||
-        this.$state.$current.name === 'root.project.nodeEditPaths';
+    this.showStepTools = [
+      'root.project',
+      'root.project.node',
+      'root.project.nodeConstraints',
+      'root.project.nodeEditPaths'
+    ].includes(this.$state.$current.name);
     const view = this.views[this.$state.$current.name];
     if (view) {
       this.currentViewName = view.name;
@@ -253,10 +251,8 @@ class AuthoringToolController {
       this.currentViewName = '';
       this.showToolbar = false;
     }
-
     this.projectId = this.ConfigService.getProjectId();
     this.runId = this.ConfigService.getRunId();
-
     if (this.projectId) {
       this.projectTitle = this.ProjectService.getProjectTitle();
     } else {
@@ -294,7 +290,7 @@ class AuthoringToolController {
       time: time
     };
     this.$rootScope.$broadcast('setGlobalMessage', { globalMessage: globalMessage });
-  };
+  }
 
   /**
    * Save an Authoring Tool event
@@ -308,8 +304,15 @@ class AuthoringToolController {
     const componentId = null;
     const componentType = null;
     const data = {};
-    this.TeacherDataService.saveEvent(context, nodeId, componentId,
-        componentType, category, eventName, data);
+    this.TeacherDataService.saveEvent(
+      context,
+      nodeId,
+      componentId,
+      componentType,
+      category,
+      eventName,
+      data
+    );
   }
 }
 
