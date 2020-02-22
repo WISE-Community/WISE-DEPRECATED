@@ -11,7 +11,7 @@ class PeerReviewAndRevisionController extends ConfigureStructureController {
     this.structure.group = {
       id: 'group4',
       type: 'group',
-      title: 'Peer Review',
+      title: 'Peer Review & Revision',
       startId: 'node1',
       constraints: [],
       transitionLogic: {

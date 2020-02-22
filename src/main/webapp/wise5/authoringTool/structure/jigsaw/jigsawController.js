@@ -119,7 +119,7 @@ class JigsawController extends ConfigureStructureController {
                 isCorrect: false
               }
             ],
-            prompt: 'What topic do you want to explore next?',
+            prompt: '[Customize prompt] What topic do you want to explore?',
             showFeedback: false
           }
         ],

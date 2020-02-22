@@ -1,4 +1,4 @@
-<h3>Choose the location of the new structure</h3>
+<h5>{{ ::'chooseStructureLocation' | translate }}</h5>
 <div ng-repeat='group in chooseStructureLocationController.groupNodes | toArray | orderBy : "order"'
   class="projectItem"
   ng-class="node-select--group">
@@ -33,8 +33,9 @@
     </div>
   </div>
 </div>
+<hr>
 <md-button
-  class="createButton md-raised md-primary"
+  class="createButton md-primary"
   ng-click="chooseStructureLocationController.cancel()"
   aria-label='{{ ::"cancel" | translate }}'
   translate="cancel"></md-button>

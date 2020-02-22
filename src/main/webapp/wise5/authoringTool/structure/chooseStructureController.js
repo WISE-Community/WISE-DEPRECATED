@@ -1,35 +1,36 @@
 'use strict';
 
 class ChooseStructureController {
-  constructor($rootScope, $state, $stateParams, $scope) {
+  constructor($filter, $rootScope, $state, $stateParams, $scope) {
+    this.$filter = $filter;
     this.$rootScope = $rootScope;
     this.$state = $state;
     this.$stateParams = $stateParams;
     this.$scope = $scope;
+    this.$translate = this.$filter('translate');
     this.structures = [
       {
-        label: 'Jigsaw',
-        description: 'This is a Jigsaw. Students do stuff.',
+        label: this.$translate('jigsaw.label'),
+        description: this.$translate('jigsaw.description'),
+        icon: 'extension',
         route: 'root.project.structure.jigsaw'
       },
       {
-        label: 'Guidance Choice',
-        description: 'This is a Guidance Choice. Students do stuff.',
-        route: 'root.project.structure.guidance-choice'
-      },
-      {
-        label: 'Self Directed Investigation',
-        description: 'This is a Self Directed Investigation. Students do stuff.',
+        label: this.$translate('selfDirectedInvestigation.label'),
+        description: this.$translate('selfDirectedInvestigation.description'),
+        icon: 'contact_support',
         route: 'root.project.structure.self-directed-investigation'
       },
       {
-        label: 'Peer Review and Revision',
-        description: 'This is a Peer Review and Revision. Students do stuff.',
+        label: this.$translate('peerReview.label'),
+        description: this.$translate('peerReview.description'),
+        icon: 'question_answer',
         route: 'root.project.structure.peer-review-and-revision'
       },
       {
-        label: 'KI Cycle Using OER',
-        description: 'This is a KI Cycle Using OER. Students do stuff.',
+        label: this.$translate('kiOER.label'),
+        description: this.$translate('kiOER.description'),
+        icon: 'autorenew',
         route: 'root.project.structure.ki-cycle-using-oer'
       }
     ];
@@ -44,6 +45,6 @@ class ChooseStructureController {
   }
 }
 
-ChooseStructureController.$inject = ['$rootScope', '$state', '$stateParams', '$scope'];
+ChooseStructureController.$inject = ['$filter', '$rootScope', '$state', '$stateParams', '$scope'];
 
 export default ChooseStructureController;
