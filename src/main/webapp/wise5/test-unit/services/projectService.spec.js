@@ -590,7 +590,7 @@ describe('ProjectService', () => {
   it('should delete a step from the project', () => {
     ProjectService.setProject(demoProjectJSON);
     expect(ProjectService.getNodes().length).toEqual(37);
-    expect(ProjectService.getNodeById('node5') != null).toBeTruthy();
+    expect(ProjectService.getNodeById('node5')).not.toBeNull();
     expect(
       ProjectService.nodeHasTransitionToNodeId(ProjectService.getNodeById('node4'), 'node5')
     ).toBeTruthy();
@@ -605,6 +605,15 @@ describe('ProjectService', () => {
       ProjectService.nodeHasTransitionToNodeId(ProjectService.getNodeById('node4'), 'node6')
     ).toBeTruthy();
     expect(ProjectService.getNodesWithTransitionToNodeId('node6').length).toEqual(1);
+  });
+
+  it('should delete an inactive step from the project', () => {
+    ProjectService.setProject(demoProjectJSON);
+    expect(ProjectService.getInactiveNodes().length).toEqual(1);
+    expect(ProjectService.getNodeById('node789')).not.toBeNull();
+    ProjectService.deleteNode('node789');
+    expect(ProjectService.getInactiveNodes().length).toEqual(0);
+    expect(ProjectService.getNodeById('node789')).toBeNull();
   });
 
   it('should delete a step that is the start id of the project', () => {
