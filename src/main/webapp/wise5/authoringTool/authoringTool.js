@@ -50,6 +50,7 @@ import ProjectAssetService from '../services/projectAssetService';
 import ProjectController from './project/projectController';
 import ProjectInfoController from './info/projectInfoController';
 import PlanningService from '../services/planningService';
+import RubricAuthoringController from './rubric/rubricAuthoringController';
 import SessionService from '../services/sessionService';
 import SockJS from 'sockjs-client';
 import Stomp from '@stomp/stompjs';
@@ -130,6 +131,7 @@ const authoringModule = angular
   .controller('ProjectAssetController', ProjectAssetController)
   .controller('ProjectController', ProjectController)
   .controller('ProjectInfoController', ProjectInfoController)
+  .controller('RubricAuthoringController', RubricAuthoringController)
   .controller('WISELinkAuthoringController', WISELinkAuthoringController)
   .config([
     '$urlRouterProvider',
@@ -258,6 +260,12 @@ const authoringModule = angular
           templateUrl: 'wise5/authoringTool/advanced/advancedAuthoring.html',
           controller: 'AdvancedAuthoringController',
           controllerAs: 'advancedAuthoringController'
+        })
+        .state('root.project.rubric', {
+          url: '/rubric',
+          templateUrl: 'wise5/authoringTool/rubric/rubricAuthoring.html',
+          controller: 'RubricAuthoringController',
+          controllerAs: 'rubricAuthoringController'
         })
         .state('root.project.notebook', {
           url: '/notebook',

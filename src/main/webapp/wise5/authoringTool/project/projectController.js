@@ -59,7 +59,6 @@ class ProjectController {
     this.showCreateNode = false;
     this.showImportView = false;
     this.importMode = false;
-    this.editProjectRubricMode = false;
 
     // whether there are any step nodes checked
     this.stepNodeSelected = false;
@@ -86,90 +85,11 @@ class ProjectController {
 
     // start by opening the project, with no node being authored
     this.TeacherDataService.setCurrentNode(null);
-
     this.metadata = this.ProjectService.getProjectMetadata();
-
     this.subscribeToCurrentAuthors(this.projectId).then(() => {
       this.ProjectService.notifyAuthorProjectBegin(this.projectId);
     });
-
-    this.summernoteRubricId = 'summernoteRubric_' + this.projectId;
-    this.summernoteRubricHTML = this.ProjectService.replaceAssetPaths(
-      this.ProjectService.getProjectRubric()
-    );
-    this.summernoteRubricOptions = {
-      toolbar: [
-        ['style', ['style']],
-        ['font', ['bold', 'underline', 'clear']],
-        ['fontname', ['fontname']],
-        ['fontsize', ['fontsize']],
-        ['color', ['color']],
-        ['para', ['ul', 'ol', 'paragraph']],
-        ['table', ['table']],
-        ['insert', ['link', 'video']],
-        ['view', ['fullscreen', 'codeview', 'help']],
-        ['customButton', ['insertAssetButton']]
-      ],
-      height: 300,
-      disableDragAndDrop: true,
-      buttons: {
-        insertAssetButton: this.UtilService.createInsertAssetButton(
-          this,
-          this.projectId,
-          null,
-          null,
-          'rubric',
-          this.$translate('INSERT_ASSET')
-        )
-      }
-    };
-
     this.projectURL = window.location.origin + this.ConfigService.getConfigParam('projectURL');
-
-    /*
-     * Listen for the assetSelected event which occurs when the author
-     * selects an asset from the choose asset popup to add to project rubric
-     * or choosing the script file.
-     */
-    this.$scope.$on('assetSelected', (event, args) => {
-      if (
-        args != null &&
-        args.projectId == this.projectId &&
-        args.assetItem != null &&
-        args.assetItem.fileName != null
-      ) {
-        let assetFileName = args.assetItem.fileName;
-        if (args.target === 'rubric') {
-          const summernoteElement = angular.element(
-            document.querySelector(`#summernoteRubric_${this.projectId}`)
-          );
-          let fullAssetPath =
-            this.ConfigService.getProjectAssetsDirectoryPath() + '/' + assetFileName;
-          if (this.UtilService.isImage(assetFileName)) {
-            /*
-             * move the cursor back to its position when the asset chooser
-             * popup was clicked
-             */
-            summernoteElement.summernote('editor.restoreRange');
-            summernoteElement.summernote('editor.focus');
-            summernoteElement.summernote('insertImage', fullAssetPath, assetFileName);
-          } else if (this.UtilService.isVideo(assetFileName)) {
-            /*
-             * move the cursor back to its position when the asset chooser
-             * popup was clicked
-             */
-            summernoteElement.summernote('editor.restoreRange');
-            summernoteElement.summernote('editor.focus');
-            let videoElement = document.createElement('video');
-            videoElement.controls = 'true';
-            videoElement.innerHTML = '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
-            summernoteElement.summernote('insertNode', videoElement);
-          }
-        }
-      }
-      this.$mdDialog.hide();
-    });
-
     this.$transitions.onSuccess({}, $transition => {
       /*
       const from = $transition.$from();
@@ -651,7 +571,6 @@ class ProjectController {
       this.refreshProject();
       this.insertNodeMode = false;
       this.toggleView('project');
-
       this.importProjectIdToOrder = {};
       this.importProjectItems = [];
       this.importMyProjectId = null;
@@ -869,9 +788,6 @@ class ProjectController {
     this.activityNodeSelected = false;
   }
 
-  /**
-   * Toggle the create group input
-   */
   creatNewActivityClicked() {
     this.createGroupTitle = '';
     this.toggleView('createGroup');
@@ -882,9 +798,6 @@ class ProjectController {
     }
   }
 
-  /**
-   * Toggle the create node input
-   */
   createNewStepClicked() {
     this.createNodeTitle = '';
     this.toggleView('createNode');
@@ -899,9 +812,6 @@ class ProjectController {
     this.$state.go('root.project.structure.choose');
   }
 
-  /**
-   * Cancel the move mode
-   */
   cancelMove() {
     this.insertGroupMode = false;
     this.insertNodeMode = false;
@@ -1080,42 +990,16 @@ class ProjectController {
     return selectedNodes;
   }
 
-  /**
-   * Show the view to edit the project rubric
-   */
-  editProjectRubricClicked() {
-    this.toggleView('rubric');
+  editProjectRubric() {
+    this.$state.go('root.project.rubric', {
+      projectId: this.projectId
+    });
   }
 
   goToAdvancedAuthoring() {
     this.$state.go('root.project.advanced', {
       projectId: this.projectId
     });
-  }
-
-  /**
-   * The author has changed the rubric, so save the changes
-   */
-  summernoteRubricHTMLChanged() {
-    let html = this.summernoteRubricHTML;
-
-    /*
-     * remove the absolute asset paths
-     * e.g.
-     * <img src='https://wise.berkeley.edu/curriculum/3/assets/sun.png'/>
-     * will be changed to
-     * <img src='sun.png'/>
-     */
-    html = this.ConfigService.removeAbsoluteAssetPaths(html);
-
-    /*
-     * replace <a> and <button> elements with <wiselink> elements when
-     * applicable
-     */
-    html = this.UtilService.insertWISELinks(html);
-
-    this.ProjectService.setProjectRubric(html);
-    this.ProjectService.saveProject();
   }
 
   /**
@@ -1132,61 +1016,33 @@ class ProjectController {
    * @param view the view to show
    */
   toggleView(view) {
-    // clear the input element for creating a new activity
     this.createGroupTitle = '';
-
-    // clear the input element for creating a new step
     this.createNodeTitle = '';
-
-    if (view == 'project') {
-      // we are showing the regular project view
+    if (view === 'project') {
       this.showCreateGroup = false;
       this.showCreateNode = false;
       this.importMode = false;
       this.showImportView = false;
-      this.editProjectRubricMode = false;
       this.projectMode = true;
-    } else if (view == 'createGroup') {
-      // toggle the create activity view
+    } else if (view === 'createGroup') {
       this.showCreateGroup = !this.showCreateGroup;
       this.showCreateNode = false;
       this.importMode = false;
       this.showImportView = false;
-      this.editProjectRubricMode = false;
-
-      // also show the project view
       this.projectMode = true;
-    } else if (view == 'createNode') {
-      // toggle the create step view
+    } else if (view === 'createNode') {
       this.showCreateGroup = false;
       this.showCreateNode = !this.showCreateNode;
       this.importMode = false;
       this.showImportView = false;
-      this.editProjectRubricMode = false;
       this.showTemplateChooser = false;
-
-      // also show the project view
       this.projectMode = true;
-    } else if (view == 'importStep') {
-      // toggle the import step view
+    } else if (view === 'importStep') {
       this.showCreateGroup = false;
       this.showCreateNode = false;
       this.importMode = !this.importMode;
       this.showImportView = !this.showImportView;
-      this.editProjectRubricMode = false;
-
-      // if the import view is shown, do not show the project view
       this.projectMode = !this.importMode;
-    } else if (view == 'rubric') {
-      // toggle the rubric view
-      this.showCreateGroup = false;
-      this.showCreateNode = false;
-      this.importMode = false;
-      this.showImportView = false;
-      this.editProjectRubricMode = !this.editProjectRubricMode;
-
-      // if the rubric view is shown, do not show the project view
-      this.projectMode = !this.editProjectRubricMode;
     }
   }
 
@@ -1197,18 +1053,12 @@ class ProjectController {
   backButtonClicked() {
     if (this.showImportView) {
       this.toggleView('project');
-    } else if (this.editProjectRubricMode) {
-      this.toggleView('project');
     } else {
       this.$state.go('root.main');
     }
   }
 
-  /**
-   * Show the regular project view
-   */
   projectHomeClicked() {
-    // show the regular project view
     this.showProjectHome();
   }
 

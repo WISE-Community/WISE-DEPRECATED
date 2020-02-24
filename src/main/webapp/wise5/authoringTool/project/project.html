@@ -170,7 +170,7 @@
               </md-button>
               <md-button id='editProjectRubricButton'
                   class='topButton md-raised md-primary'
-                  ng-click='projectController.editProjectRubricClicked()'
+                  ng-click='projectController.editProjectRubric()'
                   ng-disabled='projectController.insertGroupMode || projectController.insertNodeMode || projectController.stepNodeSelected || projectController.activityNodeSelected'>
                 <md-icon>message</md-icon>
                 <md-tooltip md-direction='top' class='projectButtonTooltip'>
@@ -327,17 +327,6 @@
               <md-icon>vertical_align_bottom</md-icon>
               <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'importStepsParens' | translate }}</md-tooltip>
             </md-button>
-          </div>
-          <div ng-if='projectController.editProjectRubricMode'>
-            <h5 translate="editProjectRubric"></h5>
-            <summernote id='{{::projectController.summernoteRubricId}}'
-                  ng-model='projectController.summernoteRubricHTML'
-                  ng-change='projectController.summernoteRubricHTMLChanged()'
-                  config='projectController.summernoteRubricOptions'
-                  ng-model-options='{ debounce: 1000 }'
-                  rows='10'
-                  cols='100'>
-            </summernote>
           </div>
           <div style='margin-top: 20px; margin-left: 20px'>
             <div ng-repeat='item in projectController.items | toArray | orderBy : "order"'
