@@ -37,9 +37,6 @@ public class PortalStatisticsServiceImpl implements PortalStatisticsService {
   @Autowired
   private PortalStatisticsDao<PortalStatistics> portalStatisticsDao;
 
-  /**
-   * Get all the portal statistics ordered by timestamp from oldest to newest
-   */
   public List<PortalStatistics> getPortalStatistics() {
     return portalStatisticsDao.getAllPortalStatistics();
   }

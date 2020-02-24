@@ -1,78 +1,76 @@
 'use strict';
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var MilestoneReportGraphController = function MilestoneReportGraphController($filter) {
-    _classCallCheck(this, MilestoneReportGraphController);
-
-    this.$translate = $filter('translate');
-    var teamLabel = this.$translate('teams');
-
-    if (this.name == null) {
-        this.name = this.id;
+class MilestoneReportGraphController {
+    constructor($filter) {
+        this.$translate = $filter('translate');
     }
-    this.config = {
-        options: {
-            chart: {
-                type: 'column',
-                height: 200,
-                style: {
-                    fontFamily: 'Roboto,Helvetica Neue,sans-serif'
-                }
-            },
-            title: {
-                text: this.name,
-                style: {
-                    fontSize: '14px',
-                    fontWeight: '500'
-                }
-            },
-            plotOptions: {
-                series: {
-                    dataLabels: {
-                        enabled: true,
-                        format: '{y}%'
+
+    $onInit() {
+        const teamLabel = this.$translate('teams');
+        if (this.name == null) {
+            this.name = this.id;
+        }
+        this.config = {
+            options: {
+                chart: {
+                    type: 'column',
+                    height: 200,
+                    style: {
+                        fontFamily: 'Roboto,Helvetica Neue,sans-serif'
+                    }
+                },
+                title: {
+                    text: this.name,
+                    style: {
+                        fontSize: '14px',
+                        fontWeight: '500'
+                    }
+                },
+                plotOptions: {
+                    series: {
+                        dataLabels: {
+                            enabled: true,
+                            format: '{y}%'
+                        }
+                    }
+                },
+                legend: { symbolHeight: '0px' },
+                tooltip: {
+                    formatter: function() {
+                        return `<b>${teamLabel}: ${this.point.count}</b>`;
                     }
                 }
             },
-            legend: { symbolHeight: '0px' },
-            tooltip: {
-                formatter: function formatter() {
-                    return '<b>' + teamLabel + ': ' + this.point.count + '</b>';
-                }
-            }
-        },
-        xAxis: {
-            categories: this.categories
-        },
-        yAxis: {
-            title: {
-                text: ''
+            xAxis: {
+                categories: this.categories
             },
-            labels: {
-                enabled: false
+            yAxis: {
+                title: {
+                    text: ''
+                },
+                labels: {
+                    enabled: false
+                }
+            },
+            series: [
+                {
+                    showInLegend: false,
+                    data: this.data
+                }
+            ],
+            func: function(chart) {
+                // temporary fix to ensure graphs are correctly resized to fit their container width
+                setTimeout(function() {
+                    chart.reflow();
+                }, 250);
             }
-        },
-        series: [{
-            showInLegend: false,
-            data: this.data
-        }],
-        func: function func(chart) {
-            // temporary fix to ensure graphs are correctly resized to fit their container width
-            setTimeout(function () {
-                chart.reflow();
-            }, 250);
-        }
-    };
-};
+        };
+    }
+}
 
 MilestoneReportGraphController.$inject = ['$filter'];
 
-var MilestoneReportGraph = {
+const MilestoneReportGraph = {
     bindings: {
         id: '@',
         name: '@',
@@ -84,5 +82,5 @@ var MilestoneReportGraph = {
     controllerAs: 'milestoneReportGraphCtrl'
 };
 
-exports.default = MilestoneReportGraph;
-//# sourceMappingURL=milestoneReportGraph.js.map
+export default MilestoneReportGraph;
+

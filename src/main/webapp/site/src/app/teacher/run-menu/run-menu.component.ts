@@ -84,6 +84,10 @@ export class RunMenuComponent implements OnInit {
     return this.run.canGradeAndManage(this.userService.getUserId());
   }
 
+  isOwner() {
+    return this.run.isOwner(this.userService.getUserId());
+  }
+
   isGoogleUser() {
     return this.userService.isGoogleUser();
   }

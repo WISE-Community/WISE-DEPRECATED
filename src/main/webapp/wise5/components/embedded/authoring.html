@@ -7,11 +7,11 @@
       <div class='advancedAuthoringDiv'
            ng-if='embeddedController.showAdvancedAuthoring'>
         <div>
-          <h6>{{ 'advancedAuthoringOptions' | translate }}</h6>
+          <h6>{{ ::'advancedAuthoringOptions' | translate }}</h6>
         </div>
         <div>
           <md-input-container style='width: 100%; margin-bottom: -10'>
-            <label>{{ 'embedded.modelParameters' | translate }}</label>
+            <label>{{ ::'embedded.modelParameters' | translate }}</label>
             <textarea rows='1'
                       ng-model='embeddedController.authoringComponentContent.parameters'
                       ng-change='embeddedController.authoringViewComponentChanged()'
@@ -23,14 +23,14 @@
           <md-checkbox class='md-primary'
                        ng-model='embeddedController.authoringComponentContent.showSaveButton'
                        ng-change='embeddedController.authoringViewComponentChanged()'>
-            {{ 'SHOW_SAVE_BUTTON' | translate }}
+            {{ ::'SHOW_SAVE_BUTTON' | translate }}
           </md-checkbox>
         </div>
         <div>
           <md-checkbox class='md-primary'
                        ng-model='embeddedController.authoringComponentContent.showSubmitButton'
                        ng-change='embeddedController.authoringViewComponentChanged()'>
-            {{ 'SHOW_SUBMIT_BUTTON' | translate }}
+            {{ ::'SHOW_SUBMIT_BUTTON' | translate }}
           </md-checkbox>
         </div>
         <div>
@@ -38,13 +38,13 @@
                        ng-if='embeddedController.isNotebookEnabled()'
                        ng-model='embeddedController.authoringComponentContent.showAddToNotebookButton'
                        ng-change='embeddedController.authoringViewComponentChanged()'>
-            {{ 'SHOW_ADD_TO_NOTEBOOK_BUTTON' | translate }}
+            {{ ::'SHOW_ADD_TO_NOTEBOOK_BUTTON' | translate }}
           </md-checkbox>
         </div>
         <div>
           <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'
                               ng-if='embeddedController.authoringComponentContent.showSubmitButton'>
-            <label>{{ 'MAX_SUBMIT' | translate }}</label>
+            <label>{{ ::'MAX_SUBMIT' | translate }}</label>
             <input type='number'
                    ng-model='embeddedController.authoringComponentContent.maxSubmitCount'
                    ng-model-options='{ debounce: 1000 }'
@@ -53,7 +53,7 @@
         </div>
         <div>
           <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
-            <label>{{ 'MAX_SCORE' | translate }}</label>
+            <label>{{ ::'MAX_SCORE' | translate }}</label>
             <input type='number'
                    ng-model='embeddedController.authoringComponentContent.maxScore'
                    ng-model-options='{ debounce: 1000 }'
@@ -62,7 +62,7 @@
         </div>
         <div>
           <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
-            <label>{{ 'COMPONENT_WIDTH' | translate }}</label>
+            <label>{{ ::'COMPONENT_WIDTH' | translate }}</label>
             <input type='number'
                    ng-model='embeddedController.authoringComponentContent.componentWidth'
                    ng-model-options='{ debounce: 1000 }'
@@ -71,11 +71,11 @@
         </div>
         <div>
           <label class='node__label--vertical-alignment'>
-            {{ 'RUBRIC' | translate }}
+            {{ ::'RUBRIC' | translate }}
           </label>
           <md-button class='topButton md-raised md-primary' ng-click='embeddedController.showRubricAuthoring = !embeddedController.showRubricAuthoring'>
             <md-icon>message</md-icon>
-            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'EDIT_COMPONENT_RUBRIC' | translate }}</md-tooltip>
+            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'EDIT_COMPONENT_RUBRIC' | translate }}</md-tooltip>
           </md-button>
           <div ng-if='embeddedController.showRubricAuthoring'>
             <summernote id='{{embeddedController.summernoteRubricId}}'
@@ -89,14 +89,14 @@
           </div>
         </div>
         <div>
-          <div style='height: 50;'>
+          <div style='height: 50px;'>
             <label class='node__label--vertical-alignment'>
-              {{ 'CONNECTED_COMPONENTS' | translate }}
+              {{ ::'CONNECTED_COMPONENTS' | translate }}
             </label>
             <md-button class='topButton md-raised md-primary'
                        ng-click='embeddedController.authoringAddConnectedComponent()'>
               <md-icon>add</md-icon>
-              <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'ADD_CONNECTED_COMPONENT' | translate }}</md-tooltip>
+              <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'ADD_CONNECTED_COMPONENT' | translate }}</md-tooltip>
             </md-button>
           </div>
           <div ng-repeat='connectedComponent in embeddedController.authoringComponentContent.connectedComponents track by $index'
@@ -104,7 +104,7 @@
                layout='row'>
             <div flex>
               <md-input-container style='margin-right: 20; width: 300;'>
-                <label>{{ 'step' | translate }}</label>
+                <label>{{ ::'step' | translate }}</label>
                 <md-select ng-model='connectedComponent.nodeId'
                            ng-change='embeddedController.authoringConnectedComponentNodeIdChanged(connectedComponent)'
                            style='width: 300'>
@@ -116,27 +116,27 @@
                 </md-select>
               </md-input-container>
               <md-input-container style='margin-right: 20; width: 300;'>
-                <label>{{ 'component' | translate }}</label>
+                <label>{{ ::'component' | translate }}</label>
                 <md-select ng-model='connectedComponent.componentId'
                            ng-change='embeddedController.authoringConnectedComponentComponentIdChanged(connectedComponent)'
                            style='width: 300'>
                   <md-option ng-repeat='(componentIndex, component) in embeddedController.getComponentsByNodeId(connectedComponent.nodeId)'
                              value='{{component.id}}'
                              ng-disabled='!embeddedController.isConnectedComponentTypeAllowed(component.type) || component.id == embeddedController.componentId'>
-                    {{ componentIndex + 1 }}. {{ component.type }} <span ng-if='component.id == embeddedController.componentId'>({{ 'thisComponent' | translate }})</span>
+                    {{ componentIndex + 1 }}. {{ ::component.type }} <span ng-if='component.id == embeddedController.componentId'>({{ 'thisComponent' | translate }})</span>
                   </md-option>
                 </md-select>
               </md-input-container>
               <md-input-container style='margin-right: 20; width: 200;'>
-                <label>{{ 'type' | translate }}</label>
+                <label>{{ ::'type' | translate }}</label>
                 <md-select ng-model='connectedComponent.type'
                            ng-change='embeddedController.authoringConnectedComponentTypeChanged(connectedComponent)'
                            style='width: 200'>
                   <md-option value='importWork'>
-                    {{ 'importWork' | translate }}
+                    {{ ::'importWork' | translate }}
                   </md-option>
                   <md-option value='showWork'>
-                    {{ 'showWork' | translate }}
+                    {{ ::'showWork' | translate }}
                   </md-option>
                 </md-select>
               </md-input-container>
@@ -145,21 +145,21 @@
                 <md-button class='topButton md-raised md-primary'
                            ng-click='embeddedController.authoringDeleteConnectedComponent($index)'>
                   <md-icon>delete</md-icon>
-                  <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'DELETE' | translate }}</md-tooltip>
+                  <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'DELETE' | translate }}</md-tooltip>
                 </md-button>
               </md-input-container>
             </div>
           </div>
         </div>
         <div style='margin-top: 10px; margin-bottom: 10px;'>
-          <div style='height: 50;'>
-            <label class='node__label--vertical-alignment'>{{ 'tags' | translate }}</label>
+          <div style='height: 50px;'>
+            <label class='node__label--vertical-alignment'>{{ ::'tags' | translate }}</label>
             <md-button class='topButton md-raised md-primary'
                        ng-click='embeddedController.addTag()'>
               <md-icon>add</md-icon>
               <md-tooltip md-direction='top'
                           class='projectButtonTooltip'>
-                {{ 'addTag' | translate }}
+                {{ ::'addTag' | translate }}
               </md-tooltip>
             </md-button>
           </div>
@@ -171,32 +171,32 @@
                        ng-change='embeddedController.authoringViewComponentChanged()'
                        ng-model-options='{ debounce: 1000 }'
                        size='100'
-                       placeholder='{{ "enterTag" | translate }}'/>
+                       placeholder='{{ ::"enterTag" | translate }}'/>
               </md-input-container>
               <md-button class='moveComponentButton md-raised md-primary' ng-click='embeddedController.moveTagUp($index)'>
                 <md-icon>arrow_upward</md-icon>
-                <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'moveUp' | translate }}</md-tooltip>
+                <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'moveUp' | translate }}</md-tooltip>
               </md-button>
               <md-button class='moveComponentButton md-raised md-primary' ng-click='embeddedController.moveTagDown($index)'>
                 <md-icon>arrow_downward</md-icon>
-                <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'moveDown' | translate }}</md-tooltip>
+                <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'moveDown' | translate }}</md-tooltip>
               </md-button>
               <md-button class='moveComponentButton md-raised md-primary' ng-click='embeddedController.deleteTag($index)'>
                 <md-icon>delete</md-icon>
-                <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'DELETE' | translate }}</md-tooltip>
+                <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'DELETE' | translate }}</md-tooltip>
               </md-button>
             </div>
           </div>
         </div>
         <div>
-          <label class='node__label--vertical-alignment'>{{ 'json' | translate }}</label>
+          <label class='node__label--vertical-alignment'>{{ ::'json' | translate }}</label>
           <md-button class='topButton md-raised md-primary'
                      ng-click='embeddedController.showJSONButtonClicked()'>
             <md-icon>code</md-icon>
-            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'SHOW_JSON' | translate }}</md-tooltip>
+            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'SHOW_JSON' | translate }}</md-tooltip>
           </md-button>
           <span ng-if='embeddedController.isJSONStringChanged'>
-            {{ 'closeTheJSONViewToSaveTheChanges' | translate }}
+            {{ ::'closeTheJSONViewToSaveTheChanges' | translate }}
           </span>
           <div ng-if='embeddedController.showJSONAuthoring'>
             <md-input-container style='width: 100%;'>
@@ -209,49 +209,61 @@
       </div>
       <br/>
       <div ng-if='!embeddedController.authoringComponentContent.showPreviousWork'>
-        <md-input-container style='height: 40px'>
-          <label>{{ 'embedded.modelFileName' | translate }}</label>
-          <input size='100'
-                 ng-model='embeddedController.authoringComponentContent.url'
-                 ng-change='embeddedController.authoringViewComponentChanged()'
-                 ng-model-options='{ debounce: 1000 }'/>
-        </md-input-container>
-        <md-button class='topButton md-raised md-primary' ng-click="embeddedController.showModelFileChooserPopup()">
-          <md-icon>insert_photo</md-icon>
-          <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ 'embedded.chooseTheModelFile' | translate }}</md-tooltip>
-        </md-button>
-        <br/>
-        <md-input-container style='height: 40px'>
-          <label>{{ 'WIDTH' | translate }} ({{ 'OPTIONAL' | translate }})</label>
-          <input size='20'
-                 type='number'
-                 ng-model='embeddedController.authoringComponentContent.width'
-                 ng-change='embeddedController.authoringViewComponentChanged()'
-                 ng-model-options='{ debounce: 1000 }'/>
-        </md-input-container>
-        <md-input-container style='height: 40px'>
-          <label>{{ 'HEIGHT' | translate }} ({{ 'OPTIONAL' | translate }})</label>
-          <input size='20'
-                 type='number'
-                 ng-model='embeddedController.authoringComponentContent.height'
-                 ng-change='embeddedController.authoringViewComponentChanged()'
-                 ng-model-options='{ debounce: 1000 }'/>
-        </md-input-container>
+        <div>
+          <md-input-container style='height: 40px'>
+            <label>{{ ::'embedded.modelFileName' | translate }}</label>
+            <input size='100'
+                  ng-model='embeddedController.authoringComponentContent.url'
+                  ng-change='embeddedController.authoringViewComponentChanged()'
+                  ng-model-options='{ debounce: 1000 }'/>
+          </md-input-container>
+          <md-button class='topButton md-raised md-primary' ng-click="embeddedController.showModelFileChooserPopup()">
+            <md-icon>insert_photo</md-icon>
+            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'embedded.chooseTheModelFile' | translate }}</md-tooltip>
+          </md-button>
+        </div>
+        <div layout="row" layout-align="center center" layout-row>
+          <md-input-container style='height: 40px'>
+            <label>{{ ::'embedded.widthPlaceholder' | translate }}</label>
+            <input size='20'
+                  type='number'
+                  ng-model='embeddedController.authoringComponentContent.width'
+                  ng-change='embeddedController.authoringViewComponentChanged()'
+                  ng-model-options='{ debounce: 1000 }'/>
+          </md-input-container>
+          <md-input-container style='height: 40px'>
+            <label>{{ ::'embedded.heightPlaceholder' | translate }}</label>
+            <input size='20'
+                  type='number'
+                  ng-model='embeddedController.authoringComponentContent.height'
+                  ng-change='embeddedController.authoringViewComponentChanged()'
+                  ng-model-options='{ debounce: 1000 }'/>
+          </md-input-container>
+          <span flex></span>
+          <md-button class="md-icon-button md-primary"
+                    aria-label="{{ ::'embedded.reloadModel' | translate }}"
+                    ng-click="embeddedController.reloadModel()">
+            <md-tooltip md-direction="top">{{ ::'embedded.reloadModel' | translate }}</md-tooltip>
+            <md-icon>refresh</md-icon>
+          </md-button>
+        </div>
       </div>
     </div>
     <div ng-style='{"border": "5px solid black", "padding": "20px"}'>
       <div>
-        <h5>{{ 'studentPreview' | translate }}</h5>
+        <h5>{{ ::'studentPreview' | translate }}</h5>
       </div>
       <div ng-switch='embeddedController.mode'>
         <div ng-switch-when='grading|gradingRevision' ng-switch-when-separator='|' layout='row' layout-wrap>
           <div flex='100' flex-gt-sm='66' layout='column' class='component--grading__response'>
-            <div class='component--grading__response__content'>
+            <div class='component--grading__response__content'
+                style='width: {{embeddedController.width}}; height: {{embeddedController.height}};'>
               <iframe ng-if='embeddedController.$scope.componentState'
                       ng-attr-id='{{embeddedController.embeddedApplicationIFrameId}}'
                       ng-src='{{embeddedController.url}}'
                       class='embedded-content__iframe'
-                      style='width: {{embeddedController.width}}; height: {{embeddedController.height}};'></iframe>
+                      style='width: 100%; height: 100%'>
+              </iframe>
             </div>
             <span flex></span>
             <component-revisions-info node-id='embeddedController.nodeId'
@@ -276,13 +288,17 @@
             <md-button class='md-accent md-primary'
                        ng-click='embeddedController.snipModel($event)'
                        ng-if='embeddedController.isAddToNotebookEnabled()'>
-              <md-icon> note_add </md-icon>  {{ 'ADD_TO_NOTEBOOK' | translate:{label:embeddedController.notebookConfig.label} }}
+              <md-icon> note_add </md-icon>  {{ ::'ADD_TO_NOTEBOOK' | translate:{label:embeddedController.notebookConfig.label} }}
             </md-button>
             <br/>
-            <iframe ng-attr-id='{{"componentApp_" + embeddedController.componentId}}' ng-src='{{embeddedController.url}}'
-                    ng-onload='embeddedController.iframeLoaded(contentLocation)'
-                    class='embedded-content__iframe'
-                    style='width: {{embeddedController.width}}; height: {{embeddedController.height}};'></iframe>
+            <div style='width: {{embeddedController.width}}; height: {{embeddedController.height}};'>
+              <iframe ng-attr-id='{{"componentApp_" + embeddedController.componentId}}'
+                      ng-src='{{embeddedController.url}}'
+                      ng-onload='embeddedController.iframeLoaded(contentLocation)'
+                      class='embedded-content__iframe'
+                      style='width: 100%; height: 100%;'>
+              </iframe>
+            </div>
           </div>
           <div ng-if='embeddedController.isSaveButtonVisible || embeddedController.isSubmitButtonVisible'
                class='component__actions' layout='row' layout-align='start center'>

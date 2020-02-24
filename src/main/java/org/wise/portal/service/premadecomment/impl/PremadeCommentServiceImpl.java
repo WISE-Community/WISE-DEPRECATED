@@ -66,7 +66,7 @@ public class PremadeCommentServiceImpl implements PremadeCommentService {
   private RunService runService;
 
   @Transactional()
-  public PremadeComment createPremadeComment (PremadeCommentParameters param) {
+  public PremadeComment createPremadeComment(PremadeCommentParameters param) {
     PremadeComment premadeComment = new PremadeCommentImpl();
     premadeComment.setComment(param.getComment());
     premadeComment.setOwner(param.getOwner());
@@ -86,8 +86,8 @@ public class PremadeCommentServiceImpl implements PremadeCommentService {
   }
 
   @Transactional()
-  public PremadeComment updatePremadeCommentMessage (Long premadeCommentId, String newComment)
-    throws ObjectNotFoundException {
+  public PremadeComment updatePremadeCommentMessage(Long premadeCommentId, String newComment)
+      throws ObjectNotFoundException {
     try {
       PremadeComment premadeComment = premadeCommentDao.getById(premadeCommentId);
       premadeComment.setComment(newComment);
@@ -99,8 +99,8 @@ public class PremadeCommentServiceImpl implements PremadeCommentService {
   }
 
   @Transactional()
-  public PremadeComment updatePremadeCommentListPosition (Long premadeCommentId, Long listPosition)
-    throws ObjectNotFoundException {
+  public PremadeComment updatePremadeCommentListPosition(Long premadeCommentId, Long listPosition)
+      throws ObjectNotFoundException {
     try {
       PremadeComment premadeComment = premadeCommentDao.getById(premadeCommentId);
       premadeComment.setListPosition(listPosition);
@@ -113,7 +113,7 @@ public class PremadeCommentServiceImpl implements PremadeCommentService {
 
   @Transactional()
   public PremadeComment updatePremadeCommentLabels (Long premadeCommentId, String labels)
-    throws ObjectNotFoundException {
+      throws ObjectNotFoundException {
     try {
       PremadeComment premadeComment = premadeCommentDao.getById(premadeCommentId);
       premadeComment.setLabels(labels);
@@ -152,7 +152,7 @@ public class PremadeCommentServiceImpl implements PremadeCommentService {
   }
 
   @Transactional()
-  public void deletePremadeCommentList (Long commentListId) throws ObjectNotFoundException {
+  public void deletePremadeCommentList(Long commentListId) throws ObjectNotFoundException {
     try {
       PremadeCommentList premadeCommentList = premadeCommentListDao.getById(commentListId);
       premadeCommentListDao.delete(premadeCommentList);
@@ -162,7 +162,7 @@ public class PremadeCommentServiceImpl implements PremadeCommentService {
 
   @Transactional()
   public PremadeCommentList updatePremadeCommentListLabel(Long commentListId, String newLabel)
-    throws ObjectNotFoundException {
+      throws ObjectNotFoundException {
     try {
       PremadeCommentList premadeCommentList = premadeCommentListDao.getById(commentListId);
       premadeCommentList.setLabel(newLabel);
@@ -174,7 +174,7 @@ public class PremadeCommentServiceImpl implements PremadeCommentService {
   }
 
   @Transactional()
-  public PremadeCommentList addPremadeCommentToList (Long commentListId, PremadeComment comment)
+  public PremadeCommentList addPremadeCommentToList(Long commentListId, PremadeComment comment)
       throws ObjectNotFoundException {
     try {
       PremadeCommentList premadeCommentList = premadeCommentListDao.getById(commentListId);
@@ -188,7 +188,7 @@ public class PremadeCommentServiceImpl implements PremadeCommentService {
   }
 
   @Transactional()
-  public PremadeCommentList removePremadeCommentFromList (Long commentListId, PremadeComment comment)
+  public PremadeCommentList removePremadeCommentFromList(Long commentListId, PremadeComment comment)
       throws ObjectNotFoundException {
     try {
       PremadeCommentList premadeCommentList = premadeCommentListDao.getById(commentListId);

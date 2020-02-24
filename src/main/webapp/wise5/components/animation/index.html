@@ -1,6 +1,6 @@
 <div class='animation' ng-controller='AnimationController as animationController' flex>
   <style>
-    {{animationController.nodeContent.style}}
+    {{::animationController.nodeContent.style}}
     .regularButton {
       min-height: 36px !important;
       max-height: 36px !important;
@@ -13,7 +13,7 @@
     }
   </style>
   <div>
-    <div ng-switch='animationController.mode'>
+    <div ng-switch='::animationController.mode'>
       <div ng-switch-when='grading'
           layout='row'
           layout-wrap>
@@ -57,46 +57,47 @@
               ng-show='animationController.animationState == "stopped"'
               ng-disabled='animationController.isDisabled'>
             <md-icon>play_arrow</md-icon>
-            <md-tooltip>{{ 'animation.play' | translate }}</md-tooltip>
+            <md-tooltip>{{ ::'animation.play' | translate }}</md-tooltip>
           </md-button>
           <md-button class='regularButton md-raised md-primary'
               ng-click='animationController.pauseButtonClicked()'
               ng-show='animationController.animationState == "playing"'
               ng-disabled='animationController.isDisabled'>
             <md-icon>pause</md-icon>
-            <md-tooltip>{{ 'animation.pause' | translate }}</md-tooltip>
+            <md-tooltip>{{ ::'animation.pause' | translate }}</md-tooltip>
           </md-button>
           <md-button class='regularButton md-raised md-primary'
               ng-click='animationController.resumeButtonClicked()'
               ng-show='animationController.animationState == "paused"'
               ng-disabled='animationController.isDisabled'>
             <md-icon>play_arrow</md-icon>
-            <md-tooltip>{{ 'animation.resume' | translate }}</md-tooltip>
+            <md-tooltip>{{ ::'animation.resume' | translate }}</md-tooltip>
           </md-button>
           <md-button class='regularButton md-raised md-primary'
               ng-click='animationController.resetButtonClicked()'
               ng-disabled='animationController.isDisabled'>
             <md-icon>replay</md-icon>
-            <md-tooltip>{{ 'animation.reset' | translate }}</md-tooltip>
+            <md-tooltip>{{ ::'animation.reset' | translate }}</md-tooltip>
           </md-button>
           <span style='display: inline-block;'>
             <md-slider-container style='width: 100px;'
                                  ng-disabled='animationController.isDisabled'>
-              <div style='margin-right: 35'>
-                {{ 'animation.slower' | translate }}
+              <div style='margin-right: 35px'>
+                {{ ::'animation.slower' | translate }}
               </div>
               <md-slider ng-model='animationController.speedSliderValue'
+                  aria-label='slider'
                   ng-change='animationController.speedSliderChanged()'
                   min='1'
                   max='5'>
               </md-slider>
               <div>
-                {{ 'animation.faster' | translate }}
+                {{ ::'animation.faster' | translate }}
               </div>
             </md-slider-container>
           </span>
           <br/>
-          <svg id='{{animationController.svgId}}'
+          <svg id='{{::animationController.svgId}}'
               width='{{animationController.width}}'
               height='{{animationController.height}}'
               ng-style='{"background-image": animationController.componentContent.background != null ? "url(" + animationController.componentContent.background + ")" : "",
@@ -116,7 +117,7 @@
         layout='row'
         layout-align='center end'>
       <a ng-click='nodeController.showRevisions($event, component.id, animationController.isDisabled)'>
-         + {{ 'animation.previousVersions' | translate }}: {{nodeController.getRevisions().length - 1}}
+         + {{ ::'animation.previousVersions' | translate }}: {{nodeController.getRevisions().length - 1}}
        </a>
     </div>
     <div class='component__actions'
@@ -127,7 +128,7 @@
         <md-button class='md-accent'
             ng-click='nodeController.showStudentAssets($event, component.id)'
             ng-disabled='animationController.isDisabled'>
-          <md-icon>image</md-icon> <span>{{ 'animation.addFile' | translate }}</span>
+          <md-icon>image</md-icon> <span>{{ ::'animation.addFile' | translate }}</span>
         </md-button>
       </div>
       <div class='component__attachment'
@@ -143,7 +144,7 @@
         </md-button>
       </div>
     </div>
-    <div ng-if='animationController.isSaveButtonVisible || animationController.isSubmitButtonVisible'
+    <div ng-if='animationController.isSaveOrSubmitButtonVisible()'
         class='component__actions'
         layout='row'
         layout-align='start center'>
@@ -151,14 +152,14 @@
           ng-class='{"md-raised": !animationController.isSubmitButtonVisible}'
           ng-click='animationController.saveButtonClicked()'
           ng-disabled='animationController.isDisabled || !animationController.isDirty'
-          ng-if='animationController.isSaveButtonVisible'
-          aria-label='{{ "SAVE" | translate }}'
+          ng-if='::animationController.isSaveButtonVisible'
+          aria-label='{{ ::"SAVE" | translate }}'
           translate='SAVE'>
       </md-button>
       <md-button class='md-raised md-primary'
           ng-click='animationController.submitButtonClicked()'
           ng-disabled='animationController.isDisabled || !animationController.isSubmitDirty || animationController.isSubmitButtonDisabled'
-          ng-if='animationController.isSubmitButtonVisible'
+          ng-if='::animationController.isSubmitButtonVisible'
           aria-label='{{ "SUBMIT" | translate}}'
           translate='SUBMIT'>
       </md-button>
@@ -174,7 +175,7 @@
         </span>
       </span>
     </div>
-    <component-annotations ng-if='animationController.mode === "student"'
+    <component-annotations ng-if='::animationController.mode === "student"'
         annotations='animationController.latestAnnotations'
         max-score='animationController.componentContent.maxScore'>
     </component-annotations>

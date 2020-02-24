@@ -34,9 +34,12 @@ import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.security.acls.model.Permission;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
@@ -47,6 +50,7 @@ import org.wise.portal.dao.user.UserDao;
 import org.wise.portal.domain.PeriodNotFoundException;
 import org.wise.portal.domain.Persistable;
 import org.wise.portal.domain.announcement.Announcement;
+import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.group.impl.PersistentGroup;
 import org.wise.portal.domain.impl.AddSharedTeacherParameters;
@@ -58,6 +62,7 @@ import org.wise.portal.domain.run.impl.RunParameters;
 import org.wise.portal.domain.run.impl.RunPermission;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
+import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.presentation.web.exception.TeacherAlreadySharedWithRunException;
 import org.wise.portal.presentation.web.response.SharedOwner;
 import org.wise.portal.service.acl.AclService;
@@ -114,34 +119,35 @@ public class RunServiceImpl implements RunService {
   @Autowired
   private ProjectService projectService;
 
-  @Transactional()
+  @Transactional(readOnly = true)
   public List<Run> getRunList() {
     // for some reason, runDao.getList returns all runs, when it should
     // only return runs with the right privileges according to Acegi.
     return runDao.getList();
   }
 
-  @Transactional()
+  @Transactional(readOnly = true)
+  public List<Run> getRunList(User user) {
+    return runDao.getRunListByUser(user);
+  }
+
+  @Transactional(readOnly = true)
   public List<Run> getRunListByOwner(User owner) {
     // for some reason, runDao.getList returns all runs, when it should
     // only return runs with the right privileges according to Acegi.
     return runDao.getRunListByOwner(owner);
   }
 
-  @Transactional()
+  @Transactional(readOnly = true)
   public List<Run> getRunListBySharedOwner(User owner) {
     // for some reason, runDao.getList returns all runs, when it should
     // only return runs with the right privileges according to Acegi.
     return runDao.getRunListBySharedOwner(owner);
   }
 
-  @Transactional()
+  @Transactional(readOnly = true)
   public List<Run> getAllRunList() {
     return runDao.getList();
-  }
-
-  public List<Run> getRunList(User user) {
-    return runDao.getRunListByUserInPeriod(user);
   }
 
   /**
@@ -159,10 +165,10 @@ public class RunServiceImpl implements RunService {
     while (sb.length() < max_runcode_digit_length) {
       sb.insert(0, "0");
     }
-    String language = locale.getLanguage();  // languages is two-letter ISO639 code, like en, es, he, etc.
+    String language = locale.getLanguage();  // languages is two-letter ISO639 code, like en
     String runcodePrefixesStr =
         appProperties.getProperty("runcode_prefixes_en", DEFAULT_RUNCODE_PREFIXES);
-    if (appProperties.containsKey("runcode_prefixes_"+language)) {
+    if (appProperties.containsKey("runcode_prefixes_" + language)) {
       runcodePrefixesStr = appProperties.getProperty("runcode_prefixes_" + language);
     }
     String[] runcodePrefixes = runcodePrefixesStr.split(",");
@@ -225,7 +231,7 @@ public class RunServiceImpl implements RunService {
     return run;
   }
 
-  public Run createRun(Integer projectId, User user, Set<String> periodNames,
+  public Run createRun(Long projectId, User user, Set<String> periodNames,
         Integer maxStudentsPerTeam, Long startDate, Long endDate, Locale locale) throws Exception {
     Project project = projectService.copyProject(projectId, user);
     RunParameters runParameters = createRunParameters(project, user, periodNames,
@@ -306,37 +312,96 @@ public class RunServiceImpl implements RunService {
     }
   }
 
-  public SharedOwner addSharedTeacher(Long runId, String teacherUsername)
+  @Transactional
+  public JSONObject transferRunOwnership(Long runId, String teacherUsername)
+      throws ObjectNotFoundException {
+    Run run = retrieveById(runId);
+    Project project = run.getProject();
+    User oldOwner = run.getOwner();
+    User newOwner = userDao.retrieveByUsername(teacherUsername);
+    projectService.transferProjectOwnership(project, newOwner);
+    if (run.isSharedTeacher(newOwner)) {
+      removeSharedTeacherAndPermissions(run, newOwner);
+    }
+    setOwner(run, newOwner);
+    addSharedTeacherWithViewAndGradePermissions(run, oldOwner);
+    removeAministrationPermission(run, oldOwner);
+    createSharedTeacherWorkgroupIfNecessary(run, newOwner);
+    runDao.save(run);
+    try {
+      return ControllerUtil.getRunJSON(run);
+    }  catch (JSONException e) {
+      return null;
+    }
+  }
+
+  private void removeSharedTeacherAndPermissions(Run run, User user) {
+    removeSharedTeacher(run, user);
+    removePermissions(run, user);
+  }
+
+  private void removeSharedTeacher(Run run, User user) {
+    run.getSharedowners().remove(user);
+  }
+
+  private void removePermissions(Run run, User user) {
+    List<Permission> permissions = aclService.getPermissions(run, user.getUserDetails());
+    for (Permission permission : permissions) {
+      aclService.removePermission(run, permission, user);
+    }
+  }
+
+  private void setOwner(Run run, User user) {
+    run.setOwner(user);
+    aclService.addPermission(run, BasePermission.ADMINISTRATION, user);
+  }
+
+  private void addSharedTeacherWithViewAndGradePermissions(Run run, User user) {
+    if (!run.isSharedTeacher(user)) {
+      run.getSharedowners().add(user);
+    }
+    aclService.addPermission(run, RunPermission.VIEW_STUDENT_NAMES, user);
+    aclService.addPermission(run, RunPermission.GRADE_AND_MANAGE, user);
+  }
+
+  private void removeAministrationPermission(Run run, User user) {
+    aclService.removePermission(run, BasePermission.ADMINISTRATION, user);
+  }
+
+  public SharedOwner addSharedTeacher(Long runId, String username)
       throws ObjectNotFoundException, TeacherAlreadySharedWithRunException {
-    User user = userDao.retrieveByUsername(teacherUsername);
-    Run run = this.retrieveById(runId);
+    User user = userDao.retrieveByUsername(username);
+    Run run = retrieveById(runId);
     if (!run.getSharedowners().contains(user)) {
       run.getSharedowners().add(user);
-      this.runDao.save(run);
+      runDao.save(run);
 
       Project project = run.getProject();
       project.getSharedowners().add(user);
-      this.projectDao.save(project);
+      projectDao.save(project);
 
-      this.aclService.addPermission(run, RunPermission.VIEW_STUDENT_WORK, user);
+      aclService.addPermission(run, RunPermission.VIEW_STUDENT_WORK, user);
       List<Integer> newPermissions = new ArrayList<>();
       newPermissions.add(RunPermission.VIEW_STUDENT_WORK.getMask());
       createSharedTeacherWorkgroupIfNecessary(run, user);
       return new SharedOwner(user.getId(), user.getUserDetails().getUsername(),
         user.getUserDetails().getFirstname(), user.getUserDetails().getLastname(), newPermissions);
     } else {
-      throw new TeacherAlreadySharedWithRunException(teacherUsername + " is already shared with this run");
+      throw new TeacherAlreadySharedWithRunException(user.getUserDetails().getUsername()
+          + " is already shared with this run");
     }
   }
 
-  private Workgroup createSharedTeacherWorkgroupIfNecessary(Run run, User user) throws ObjectNotFoundException {
+  private Workgroup createSharedTeacherWorkgroupIfNecessary(Run run, User user)
+      throws ObjectNotFoundException {
     if (workgroupService.getWorkgroupListByRunAndUser(run, user).size() == 0) {
       return createSharedTeacherWorkgroup(run, user);
     }
     return null;
   }
 
-  private Workgroup createSharedTeacherWorkgroup(Run run, User user) throws ObjectNotFoundException {
+  private Workgroup createSharedTeacherWorkgroup(Run run, User user)
+      throws ObjectNotFoundException {
     if (user.isTeacher()) {
       Set<User> sharedOwners = new HashSet<User>();
       sharedOwners.add(user);
@@ -345,20 +410,21 @@ public class RunServiceImpl implements RunService {
     return null;
   }
 
-  public void addSharedTeacherPermission(Long runId, Long userId, Integer permissionId) throws ObjectNotFoundException {
+  public void addSharedTeacherPermission(Long runId, Long userId, Integer permissionId)
+      throws ObjectNotFoundException {
     User user = userDao.getById(userId);
-    Run run = this.retrieveById(runId);
+    Run run = retrieveById(runId);
     if (run.getSharedowners().contains(user)) {
-      this.aclService.addPermission(run, new RunPermission(permissionId), user);
+      aclService.addPermission(run, new RunPermission(permissionId), user);
     }
   }
 
   public void removeSharedTeacherPermission(Long runId, Long userId, Integer permissionId)
       throws ObjectNotFoundException {
     User user = userDao.getById(userId);
-    Run run = this.retrieveById(runId);
+    Run run = retrieveById(runId);
     if (run.getSharedowners().contains(user)) {
-      this.aclService.removePermission(run, new RunPermission(permissionId), user);
+      aclService.removePermission(run, new RunPermission(permissionId), user);
     }
   }
 
@@ -378,13 +444,14 @@ public class RunServiceImpl implements RunService {
 
       try {
         List<Permission> runPermissions =
-          aclService.getPermissions(run, user);
+          aclService.getPermissions(run, user.getUserDetails());
         for (Permission runPermission : runPermissions) {
           aclService.removePermission(run, runPermission, user);
         }
-        List<Permission> projectPermissions = aclService.getPermissions(runProject, user);
+        List<Permission> projectPermissions = aclService.getPermissions(runProject,
+            user.getUserDetails());
         for (Permission projectPermission : projectPermissions) {
-          this.aclService.removePermission(runProject, projectPermission, user);
+          aclService.removePermission(runProject, projectPermission, user);
         }
       } catch (Exception e) {
         // do nothing. permissions might get be deleted if
@@ -394,7 +461,7 @@ public class RunServiceImpl implements RunService {
   }
 
   public String getSharedTeacherRole(Run run, User user) {
-    List<Permission> permissions = aclService.getPermissions(run, user);
+    List<Permission> permissions = aclService.getPermissions(run, user.getUserDetails());
     // for runs, a user can have at most one permission per run
     if (!permissions.isEmpty()) {
       Permission permission = permissions.get(0);
@@ -408,7 +475,7 @@ public class RunServiceImpl implements RunService {
   }
 
   public List<Permission> getSharedTeacherPermissions(Run run, User sharedTeacher) {
-    return this.aclService.getPermissions(run, sharedTeacher);
+    return aclService.getPermissions(run, sharedTeacher.getUserDetails());
   }
 
   private String generateUniqueRunCode(Locale locale) {
@@ -448,10 +515,6 @@ public class RunServiceImpl implements RunService {
     return runDao.getById(runId);
   }
 
-  public Run retrieveById(Long runId, boolean doEagerFetch) {
-    return runDao.getById(runId, doEagerFetch);
-  }
-
   @Transactional()
   public void endRun(Run run) {
     if (run.getEndtime() == null) {
@@ -477,11 +540,11 @@ public class RunServiceImpl implements RunService {
     }
   }
 
-  public Set<Workgroup> getWorkgroups(Long runId) {
+  public List<Workgroup> getWorkgroups(Long runId) {
     return runDao.getWorkgroupsForRun(runId);
   }
 
-  public Set<Workgroup> getWorkgroups(Long runId, Long periodId) {
+  public List<Workgroup> getWorkgroups(Long runId, Long periodId) {
     return runDao.getWorkgroupsForRunAndPeriod(runId, periodId);
   }
 
@@ -546,12 +609,23 @@ public class RunServiceImpl implements RunService {
     runDao.save(run);
   }
 
+  public boolean hasReadPermission(Authentication authentication, Run run) {
+    return ((MutableUserDetails) authentication.getPrincipal()).isAdminUser() ||
+        aclService.hasPermission(authentication, run, BasePermission.READ) ||
+        aclService.hasPermission(authentication, run, BasePermission.WRITE);
+  }
+
+  public boolean hasWritePermission(Authentication authentication, Run run) {
+    return ((MutableUserDetails) authentication.getPrincipal()).isAdminUser() ||
+        aclService.hasPermission(authentication, run, BasePermission.WRITE);
+  }
+
   public boolean hasRunPermission(Run run, User user, Permission permission) {
-    return aclService.hasPermission(run, permission, user);
+    return aclService.hasPermission(run, permission, user.getUserDetails());
   }
 
   public boolean canDecreaseMaxStudentsPerTeam(Long runId) {
-    Set<Workgroup> workgroups = this.getWorkgroups(runId);
+    List<Workgroup> workgroups = getWorkgroups(runId);
     if (workgroups != null) {
       for (Workgroup workgroup : workgroups) {
         if (workgroup.isStudentWorkgroup() && workgroup.getMembers().size() > 1) {
@@ -562,8 +636,8 @@ public class RunServiceImpl implements RunService {
     return true;
   }
 
-  public List<Run> getRunsRunWithinPeriod(String period) {
-    return runDao.getRunsRunWithinPeriod(period);
+  public List<Run> getRunsRunWithinTimePeriod(String period) {
+    return runDao.getRunsRunWithinTimePeriod(period);
   }
 
   public List<Run> getRunsByActivity() {
@@ -619,11 +693,11 @@ public class RunServiceImpl implements RunService {
   @Transactional()
   public void deletePeriodFromRun(Long runId, String name) {
     try {
-      Run run = this.retrieveById(runId);
+      Run run = retrieveById(runId);
       Group period = run.getPeriodByName(name);
       Set<Group> periods = run.getPeriods();
       periods.remove(period);
-      this.runDao.save(run);
+      runDao.save(run);
     } catch(ObjectNotFoundException e) {
       e.printStackTrace();
     } catch(PeriodNotFoundException e) {
@@ -634,9 +708,9 @@ public class RunServiceImpl implements RunService {
   @Transactional()
   public void setMaxWorkgroupSize(Long runId, Integer maxStudentsPerTeam) {
     try {
-      Run run = this.retrieveById(runId);
+      Run run = retrieveById(runId);
       run.setMaxWorkgroupSize(maxStudentsPerTeam);
-      this.runDao.save(run);
+      runDao.save(run);
     } catch(ObjectNotFoundException e) {
       e.printStackTrace();
     }
@@ -645,9 +719,9 @@ public class RunServiceImpl implements RunService {
   @Transactional()
   public void setStartTime(Long runId, Long startTime) {
     try {
-      Run run = this.retrieveById(runId);
+      Run run = retrieveById(runId);
       run.setStarttime(new Date(startTime));
-      this.runDao.save(run);
+      runDao.save(run);
     } catch(ObjectNotFoundException e) {
       e.printStackTrace();
     }
@@ -656,9 +730,9 @@ public class RunServiceImpl implements RunService {
   @Transactional()
   public void setEndTime(Long runId, Long endTime) {
     try {
-      Run run = this.retrieveById(runId);
+      Run run = retrieveById(runId);
       run.setEndtime(new Date(endTime));
-      this.runDao.save(run);
+      runDao.save(run);
     } catch(ObjectNotFoundException e) {
       e.printStackTrace();
     }
@@ -708,14 +782,15 @@ public class RunServiceImpl implements RunService {
   }
 
   public boolean isAllowedToViewStudentWork(Run run, User user) {
-    return this.hasRunPermission(run, user, RunPermission.VIEW_STUDENT_WORK);
+    return hasRunPermission(run, user, RunPermission.VIEW_STUDENT_WORK);
   }
 
   public boolean isAllowedToGradeStudentWork(Run run, User user) {
-    return this.hasRunPermission(run, user, RunPermission.GRADE_AND_MANAGE);
+    return hasRunPermission(run, user, RunPermission.GRADE_AND_MANAGE);
   }
 
   public boolean isAllowedToViewStudentNames(Run run, User user) {
-    return this.hasRunPermission(run, user, RunPermission.VIEW_STUDENT_NAMES);
+    return hasRunPermission(run, user, RunPermission.VIEW_STUDENT_NAMES);
   }
+
 }

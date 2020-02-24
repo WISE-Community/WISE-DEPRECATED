@@ -17,8 +17,18 @@
  */
 package org.wise.portal.service.impl;
 
-import junit.framework.TestCase;
-import org.easymock.EasyMock;
+import static org.easymock.EasyMock.createNiceMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.fail;
+
+import java.util.Collections;
+
+import org.easymock.EasyMockRunner;
+import org.easymock.Mock;
+import org.easymock.TestSubject;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,30 +44,35 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.context.SecurityContextImpl;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.service.acl.impl.AclServiceImpl;
 
-import java.util.Collections;
-
 /**
  * @author Laurel Williams
+ * @author Hiroki Terashima
  */
-@RunWith(SpringRunner.class)
-public class AclServiceImplTest extends TestCase {
+@RunWith(EasyMockRunner.class)
+public class AclServiceImplTest {
 
+  @Mock
   private MutableAclService mutableAclService;
-  private AclServiceImpl<Group> groupAclService;
-  private TestingAuthenticationToken authority;
-  private SecurityContext securityContext;
+
+  @Mock
   private Group group;
+
+  @TestSubject
+  private AclServiceImpl<Group> groupAclService = new AclServiceImpl<Group>();
+
+  private TestingAuthenticationToken authority;
+
+  private SecurityContext securityContext;
+
   private ObjectIdentity objectIdentity;
+
   private MutableAcl mockMutableAcl;
 
   @Before
-  public void setUp() throws Exception {
-    super.setUp();
-
+  public void setUp() {
     authority = new TestingAuthenticationToken("admin",
         new GrantedAuthority[] { new SimpleGrantedAuthority("ROLE_ADMINISTRATOR") });
     authority.setAuthenticated(true);
@@ -65,21 +80,14 @@ public class AclServiceImplTest extends TestCase {
     securityContext.setAuthentication(authority);
     SecurityContextHolder.setContext(securityContext);
 
-    groupAclService = new AclServiceImpl<Group>();
-    mutableAclService = EasyMock.createMock(MutableAclService.class);
-    groupAclService.setMutableAclService(mutableAclService);
-
-    group = EasyMock.createMock(Group.class);
-    EasyMock.expect(group.getId()).andReturn(new Long(1)).anyTimes();
-    EasyMock.replay(group);
-
+    expect(group.getId()).andReturn(new Long(1)).anyTimes();
+    replay(group);
+    mockMutableAcl = createNiceMock(MutableAcl.class);
     objectIdentity = new ObjectIdentityImpl(group.getClass(), group.getId());
-
-    mockMutableAcl = EasyMock.createNiceMock(MutableAcl.class);
   }
 
-  protected void tearDown() throws Exception {
-    super.tearDown();
+  @After
+  public void tearDown() {
     groupAclService = null;
     mutableAclService = null;
     authority = null;
@@ -90,42 +98,39 @@ public class AclServiceImplTest extends TestCase {
   }
 
   @Test
-  public void addPermission() {
-    // here, test that acl doesn't exist yet, so a new acl will be created and a new ace will
-    // be added to that
-    EasyMock.expect(mutableAclService.readAclById(objectIdentity))
+  public void addPermission_AclDoesNotExist_ShouldCreateNewAclWithAce() {
+    expect(mutableAclService.readAclById(objectIdentity))
         .andThrow(new NotFoundException("acl not found"));
-    EasyMock.expect(mutableAclService.createAcl(objectIdentity)).andStubReturn(mockMutableAcl);
-    EasyMock.expect(mockMutableAcl.getEntries()).andStubReturn(Collections.emptyList());
-    EasyMock.expect(mutableAclService.updateAcl(mockMutableAcl)).andReturn(mockMutableAcl);
-    EasyMock.replay(mutableAclService);
-    EasyMock.replay(mockMutableAcl);
+    expect(mutableAclService.createAcl(objectIdentity)).andStubReturn(mockMutableAcl);
+    expect(mockMutableAcl.getEntries()).andStubReturn(Collections.emptyList());
+    expect(mutableAclService.updateAcl(mockMutableAcl)).andReturn(mockMutableAcl);
+    replay(mutableAclService);
+    replay(mockMutableAcl);
 
     groupAclService.addPermission(group, BasePermission.ADMINISTRATION);
 
-    EasyMock.verify(group);
-    EasyMock.verify(mockMutableAcl);
-    EasyMock.verify(mutableAclService);
+    verify(group);
+    verify(mockMutableAcl);
+    verify(mutableAclService);
   }
 
   @Test
-  public void addPermission_acl_exists() {
-    // test the case in which the acl already exists in the db.
-    // in this case, a new ace is added to the acl.
-    EasyMock.expect(mutableAclService.readAclById(objectIdentity)).andStubReturn(mockMutableAcl);
-    EasyMock.expect(mockMutableAcl.getEntries()).andStubReturn(Collections.emptyList());
-    EasyMock.expect(mutableAclService.updateAcl(mockMutableAcl)).andReturn(mockMutableAcl);
-    EasyMock.replay(mutableAclService);
-    EasyMock.replay(mockMutableAcl);
+  public void addPermission_AclExists_ShouldAddAceInAcl() {
+    expect(mutableAclService.readAclById(objectIdentity)).andStubReturn(mockMutableAcl);
+    expect(mockMutableAcl.getEntries()).andStubReturn(Collections.emptyList());
+    expect(mutableAclService.updateAcl(mockMutableAcl)).andReturn(mockMutableAcl);
+    replay(mutableAclService);
+    replay(mockMutableAcl);
 
     groupAclService.addPermission(group, BasePermission.ADMINISTRATION);
 
-    EasyMock.verify(group);
-    EasyMock.verify(mockMutableAcl);
-    EasyMock.verify(mutableAclService);
+    verify(group);
+    verify(mockMutableAcl);
+    verify(mutableAclService);
   }
 
-  public void testAddPermission_null_object() {
+  @Test
+  public void addPermission_NullObject_ShouldThrowException() {
     try {
       groupAclService.addPermission(null, BasePermission.ADMINISTRATION);
       fail("Exception expected but was not thrown");

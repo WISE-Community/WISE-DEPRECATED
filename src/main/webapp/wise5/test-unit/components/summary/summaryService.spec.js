@@ -1,22 +1,17 @@
-"use strict";
+import vleModule from '../../../vle/vle';
 
-var _angular = _interopRequireDefault(require("angular"));
+describe('SummaryService', () => {
+  beforeEach(angular.mock.module(vleModule.name));
 
-var _main = _interopRequireDefault(require("vle/main"));
-
-require("angular-mocks");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-
-describe('SummaryService', function () {
-  beforeEach(_angular["default"].mock.module(_main["default"].name));
-  var SummaryService;
-  beforeEach(inject(function (_SummaryService_) {
+  let SummaryService;
+  beforeEach(inject((_SummaryService_) => {
     SummaryService = _SummaryService_;
   }));
-  describe('SummaryService', function () {
-    it('should create a component', function () {
-      var component = SummaryService.createComponent();
+
+  describe('SummaryService', () => {
+
+    it('should create a component', () => {
+      const component = SummaryService.createComponent();
       expect(component.type).toEqual('Summary');
       expect(component.summaryNodeId).toEqual(null);
       expect(component.summaryComponentId).toEqual(null);
@@ -26,14 +21,16 @@ describe('SummaryService', function () {
       expect(component.requirementToSeeSummary).toEqual('submitWork');
       expect(component.highlightCorrectAnswer).toBeFalsy();
     });
-    it('should check if the a summary component has work', function () {
-      var component = {
+
+    it('should check if the a summary component has work', () => {
+      const component = {
         id: '2t09q248tg',
         type: 'Summary'
-      };
+      }
       expect(SummaryService.componentHasWork(component)).toBeFalsy();
     });
-    it('should check if a component type is allowed', function () {
+
+    it('should check if a component type is allowed', () => {
       expect(SummaryService.isComponentTypeAllowed('Animation')).toBeTruthy();
       expect(SummaryService.isComponentTypeAllowed('AudioOscillator')).toBeTruthy();
       expect(SummaryService.isComponentTypeAllowed('ConceptMap')).toBeTruthy();
@@ -50,9 +47,11 @@ describe('SummaryService', function () {
       expect(SummaryService.isComponentTypeAllowed('Summary')).toBeFalsy();
       expect(SummaryService.isComponentTypeAllowed('Table')).toBeTruthy();
     });
-    it('should check if a scores summary is allowed for a component type', function () {
+
+    it('should check if a scores summary is allowed for a component type', () => {
       expect(SummaryService.isScoresSummaryAvailableForComponentType('Animation')).toBeTruthy();
-      expect(SummaryService.isScoresSummaryAvailableForComponentType('AudioOscillator')).toBeTruthy();
+      expect(SummaryService.isScoresSummaryAvailableForComponentType('AudioOscillator'))
+          .toBeTruthy();
       expect(SummaryService.isScoresSummaryAvailableForComponentType('ConceptMap')).toBeTruthy();
       expect(SummaryService.isScoresSummaryAvailableForComponentType('Discussion')).toBeTruthy();
       expect(SummaryService.isScoresSummaryAvailableForComponentType('Draw')).toBeTruthy();
@@ -61,15 +60,18 @@ describe('SummaryService', function () {
       expect(SummaryService.isScoresSummaryAvailableForComponentType('HTML')).toBeFalsy();
       expect(SummaryService.isScoresSummaryAvailableForComponentType('Label')).toBeTruthy();
       expect(SummaryService.isScoresSummaryAvailableForComponentType('Match')).toBeTruthy();
-      expect(SummaryService.isScoresSummaryAvailableForComponentType('MultipleChoice')).toBeTruthy();
+      expect(SummaryService.isScoresSummaryAvailableForComponentType('MultipleChoice'))
+          .toBeTruthy();
       expect(SummaryService.isScoresSummaryAvailableForComponentType('OpenResponse')).toBeTruthy();
       expect(SummaryService.isScoresSummaryAvailableForComponentType('OutsideURL')).toBeFalsy();
       expect(SummaryService.isScoresSummaryAvailableForComponentType('Summary')).toBeFalsy();
       expect(SummaryService.isScoresSummaryAvailableForComponentType('Table')).toBeTruthy();
     });
-    it('should check if a responses summary is allowed for a component type', function () {
+
+    it('should check if a responses summary is allowed for a component type', () => {
       expect(SummaryService.isResponsesSummaryAvailableForComponentType('Animation')).toBeFalsy();
-      expect(SummaryService.isResponsesSummaryAvailableForComponentType('AudioOscillator')).toBeFalsy();
+      expect(SummaryService.isResponsesSummaryAvailableForComponentType('AudioOscillator'))
+          .toBeFalsy();
       expect(SummaryService.isResponsesSummaryAvailableForComponentType('ConceptMap')).toBeFalsy();
       expect(SummaryService.isResponsesSummaryAvailableForComponentType('Discussion')).toBeFalsy();
       expect(SummaryService.isResponsesSummaryAvailableForComponentType('Draw')).toBeFalsy();
@@ -78,12 +80,14 @@ describe('SummaryService', function () {
       expect(SummaryService.isResponsesSummaryAvailableForComponentType('HTML')).toBeFalsy();
       expect(SummaryService.isResponsesSummaryAvailableForComponentType('Label')).toBeFalsy();
       expect(SummaryService.isResponsesSummaryAvailableForComponentType('Match')).toBeFalsy();
-      expect(SummaryService.isResponsesSummaryAvailableForComponentType('MultipleChoice')).toBeTruthy();
-      expect(SummaryService.isResponsesSummaryAvailableForComponentType('OpenResponse')).toBeFalsy();
+      expect(SummaryService.isResponsesSummaryAvailableForComponentType('MultipleChoice'))
+          .toBeTruthy();
+      expect(SummaryService.isResponsesSummaryAvailableForComponentType('OpenResponse'))
+          .toBeFalsy();
       expect(SummaryService.isResponsesSummaryAvailableForComponentType('OutsideURL')).toBeFalsy();
       expect(SummaryService.isResponsesSummaryAvailableForComponentType('Summary')).toBeFalsy();
       expect(SummaryService.isResponsesSummaryAvailableForComponentType('Table')).toBeFalsy();
     });
+
   });
 });
-//# sourceMappingURL=summaryService.spec.js.map

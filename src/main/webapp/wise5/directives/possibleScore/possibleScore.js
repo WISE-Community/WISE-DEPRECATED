@@ -1,22 +1,22 @@
 'use strict';
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
+class PossibleScoreController {
+    constructor($scope,
+                $element,
+                ProjectService) {
+        this.ProjectService = ProjectService;
+        this.themeSettings = this.ProjectService.getThemeSettings();
+        this.hidePossibleScores = this.themeSettings.hidePossibleScores;
+    }
+}
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+PossibleScoreController.$inject = [
+    '$scope',
+    '$element',
+    'ProjectService'
+];
 
-var PossibleScoreController = function PossibleScoreController($scope, $element, ProjectService) {
-    _classCallCheck(this, PossibleScoreController);
-
-    this.ProjectService = ProjectService;
-    this.themeSettings = this.ProjectService.getThemeSettings();
-    this.hidePossibleScores = this.themeSettings.hidePossibleScores;
-};
-
-PossibleScoreController.$inject = ['$scope', '$element', 'ProjectService'];
-
-var PossibleScore = {
+const PossibleScore = {
     bindings: {
         maxScore: '<'
     },
@@ -25,5 +25,4 @@ var PossibleScore = {
     controllerAs: 'possibleScoreCtrl'
 };
 
-exports.default = PossibleScore;
-//# sourceMappingURL=possibleScore.js.map
+export default PossibleScore;

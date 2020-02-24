@@ -33,20 +33,8 @@ public class StudentForgotAccountAPIController {
         @RequestParam("lastName") String lastName,
         @RequestParam("birthMonth") Integer birthMonth,
         @RequestParam("birthDay") Integer birthDay) {
-    String[] fields = new String[4];
-    fields[0] = "firstname";
-    fields[1] = "lastname";
-    fields[2] = "birthmonth";
-    fields[3] = "birthday";
-
-    String[] values = new String[4];
-    values[0] = firstName;
-    values[1] = lastName;
-    values[2] = birthMonth.toString();
-    values[3] = birthDay.toString();
-
-    String classVar = "studentUserDetails";
-    List<User> accountsThatMatch = userService.retrieveByFields(fields, values, classVar);
+    List<User> accountsThatMatch = 
+        userService.retrieveStudentsByNameAndBirthday(firstName, lastName, birthMonth, birthDay);
     return getUsernamesJSON(accountsThatMatch).toString();
   }
 

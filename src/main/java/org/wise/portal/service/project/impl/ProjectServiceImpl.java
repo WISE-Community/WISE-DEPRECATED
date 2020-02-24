@@ -23,6 +23,25 @@
  */
 package org.wise.portal.service.project.impl;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.io.Serializable;
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+import java.util.TreeSet;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.text.WordUtils;
@@ -43,14 +62,17 @@ import org.springframework.web.servlet.view.RedirectView;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.project.ProjectDao;
 import org.wise.portal.dao.run.RunDao;
-import org.wise.portal.dao.user.UserDao;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.impl.AddSharedTeacherParameters;
 import org.wise.portal.domain.project.FamilyTag;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.ProjectMetadata;
 import org.wise.portal.domain.project.Tag;
-import org.wise.portal.domain.project.impl.*;
+import org.wise.portal.domain.project.impl.PreviewProjectParameters;
+import org.wise.portal.domain.project.impl.ProjectMetadataImpl;
+import org.wise.portal.domain.project.impl.ProjectParameters;
+import org.wise.portal.domain.project.impl.ProjectPermission;
+import org.wise.portal.domain.project.impl.ProjectType;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
@@ -67,11 +89,9 @@ import org.wise.portal.service.tag.TagService;
 import org.wise.portal.service.user.UserService;
 import org.wise.vle.utils.FileManager;
 
-import java.io.*;
-import java.util.*;
-
 /**
  * @author Patrick Lawler
+ * @author Hiroki Terashima
  */
 @Service
 public class ProjectServiceImpl implements ProjectService {
@@ -100,8 +120,7 @@ public class ProjectServiceImpl implements ProjectService {
   @Autowired
   private PremadeCommentService premadeCommentService;
 
-  @Autowired
-  private UserDao<User> userDao;
+  private static final String LICENSE_PATH = "/license.txt";
 
   public void addBookmarkerToProject(Project project, User bookmarker) {
     project.getBookmarkers().add(bookmarker);
@@ -131,40 +150,42 @@ public class ProjectServiceImpl implements ProjectService {
     }
   }
 
-  public SharedOwner addSharedTeacher(Long projectId, String teacherUsername)
+  public SharedOwner addSharedTeacher(Long projectId, String username)
       throws ObjectNotFoundException, TeacherAlreadySharedWithProjectException {
-    User user = userDao.retrieveByUsername(teacherUsername);
-    Project project = this.getById(projectId);
-    if (!project.getSharedowners().contains(user)) {
+    Project project = getById(projectId);
+    User user = userService.retrieveUserByUsername(username);
+    if (!project.isSharedTeacher(user)) {
       project.getSharedowners().add(user);
-      this.projectDao.save(project);
-      this.aclService.addPermission(project, ProjectPermission.VIEW_PROJECT, user);
+      projectDao.save(project);
+      aclService.addPermission(project, ProjectPermission.VIEW_PROJECT, user);
       List<Integer> newPermissions = new ArrayList<>();
       newPermissions.add(ProjectPermission.VIEW_PROJECT.getMask());
       return new SharedOwner(user.getId(), user.getUserDetails().getUsername(),
         user.getUserDetails().getFirstname(), user.getUserDetails().getLastname(), newPermissions);
     } else {
-      throw new TeacherAlreadySharedWithProjectException(teacherUsername + " is already shared with this project");
+      throw new TeacherAlreadySharedWithProjectException(user.getUserDetails().getUsername()
+          + " is already shared with this project");
     }
   }
 
-  public void removeSharedTeacherFromProject(String username, Project project) {
-    User user = userService.retrieveUserByUsername(username);
-    if (project == null || user == null) {
-      return;
-    }
+  public void removeSharedTeacherFromProject(Project project, User user) {
+    removeSharedTeacherAndPermissions(project, user);
+    projectDao.save(project);
+  }
 
-    if (project.getSharedowners().contains(user)) {
-      project.getSharedowners().remove(user);
-      projectDao.save(project);
-      try {
-        List<Permission> permissions = aclService.getPermissions(project, user);
-        for (Permission permission : permissions) {
-          aclService.removePermission(project, permission, user);
-        }
-      } catch (Exception e) {
-        // do nothing. permissions might get be deleted if user requesting the deletion is not the owner of the project.
-      }
+  private void removeSharedTeacherAndPermissions(Project project, User user) {
+    removeSharedTeacher(project, user);
+    removePermissions(project, user);
+  }
+
+  private void removeSharedTeacher(Project project, User user) {
+    project.getSharedowners().remove(user);
+  }
+
+  private void removePermissions(Project project, User user) {
+    List<Permission> permissions = aclService.getPermissions(project, user.getUserDetails());
+    for (Permission permission : permissions) {
+      aclService.removePermission(project, permission, user);
     }
   }
 
@@ -174,9 +195,8 @@ public class ProjectServiceImpl implements ProjectService {
   public Project createProject(ProjectParameters projectParameters) throws ObjectNotFoundException {
     Project project = projectDao.createEmptyProject();
     User owner = projectParameters.getOwner();
-    String modulePath = projectParameters.getModulePath();
     project.setId(projectParameters.getProjectId());
-    project.setModulePath(modulePath);
+    project.setModulePath(projectParameters.getModulePath());
     project.setName(projectParameters.getProjectname());
     project.setOwner(owner);
     project.setProjectType(projectParameters.getProjectType());
@@ -190,21 +210,20 @@ public class ProjectServiceImpl implements ProjectService {
       if (isImport != null && isImport) {
         project = setupImportedProject(project, originalAuthorsString);
       }
-      replaceMetadataInProjectJSONFile(FileManager.getProjectFilePath(project), project.getMetadata());
-      writeProjectLicenseFile(FileManager.getProjectFolderPath(project), project);
-    } catch (JSONException | IOException e) {
+    } catch (JSONException e) {
       e.printStackTrace();
     }
     Long newProjectId = (Long) project.getId();
     if (parentProjectId != null) {
       User signedInUser = ControllerUtil.getSignedInUser();
-      premadeCommentService.copyPremadeCommentsFromProject(parentProjectId, newProjectId, signedInUser);
+      premadeCommentService
+          .copyPremadeCommentsFromProject(parentProjectId, newProjectId, signedInUser);
     }
     return project;
   }
 
-  private Project setupNewProject(Project project, ProjectMetadata metadata, Long parentProjectId, User owner)
-      throws ObjectNotFoundException, JSONException {
+  private Project setupNewProject(Project project, ProjectMetadata metadata, Long parentProjectId,
+      User owner) throws ObjectNotFoundException, JSONException {
     JSONArray authors = new JSONArray();
     if (parentProjectId != null) {
       Project parentProject = getById(parentProjectId);
@@ -212,8 +231,10 @@ public class ProjectServiceImpl implements ProjectService {
       ProjectMetadata parentProjectMetadata = parentProject.getMetadata();
       if (parentProjectMetadata != null) {
         try {
-          JSONObject parentProjectJSON = getParentInfo(parentProjectMetadata, parentProjectId, getProjectURI(parentProject));
-          metadata.setParentProjects(addToParentProjects(parentProjectJSON, parentProjectMetadata).toString());
+          JSONObject parentProjectJSON = getParentInfo(parentProjectMetadata, parentProjectId,
+              getProjectURI(parentProject));
+          metadata.setParentProjects(addToParentProjects(parentProjectJSON,
+              parentProjectMetadata).toString());
         } catch (JSONException e) {
           e.printStackTrace();
         }
@@ -238,7 +259,8 @@ public class ProjectServiceImpl implements ProjectService {
     return project;
   }
 
-  private Project setupImportedProject(Project project, String originalAuthorsString) throws JSONException {
+  private Project setupImportedProject(Project project, String originalAuthorsString)
+      throws JSONException {
     ProjectMetadata metadata = project.getMetadata();
     JSONObject parentProjectJSON = getParentInfo(metadata, null, metadata.getUri());
     JSONArray parentAuthors = new JSONArray();
@@ -255,7 +277,7 @@ public class ProjectServiceImpl implements ProjectService {
   }
 
   public List<Project> getBookmarkerProjectList(User bookmarker) {
-    return projectDao.getProjectListByUAR(bookmarker, "bookmarker");
+    return projectDao.getProjectListByUAR(bookmarker, "bookmarkers");
   }
 
   @Transactional(readOnly = true)
@@ -271,11 +293,15 @@ public class ProjectServiceImpl implements ProjectService {
   }
 
   public List<Project> getSharedProjectList(User user) {
-    return projectDao.getProjectListByUAR(user, "sharedowner");
+    return projectDao.getProjectListByUAR(user, "sharedowners");
+  }
+
+  public List<Project> getSharedProjectsWithoutRun(User user) {
+    return projectDao.getSharedProjectsWithoutRun(user);
   }
 
   public String getSharedTeacherRole(Project project, User user) {
-    List<Permission> permissions = aclService.getPermissions(project, user);
+    List<Permission> permissions = aclService.getPermissions(project, user.getUserDetails());
     // for projects, a user can have at most one permission per project
     if (!permissions.isEmpty()) {
       if (permissions.contains(BasePermission.ADMINISTRATION)) {
@@ -296,7 +322,8 @@ public class ProjectServiceImpl implements ProjectService {
   }
 
   public ModelAndView launchProject(Workgroup workgroup, String contextPath) throws Exception {
-    return new ModelAndView(new RedirectView(generateStudentStartProjectUrlString(workgroup, contextPath)));
+    return new ModelAndView(new RedirectView(
+        generateStudentStartProjectUrlString(workgroup, contextPath)));
   }
 
   public ModelAndView previewProject(PreviewProjectParameters params) throws Exception {
@@ -356,7 +383,6 @@ public class ProjectServiceImpl implements ProjectService {
   }
 
   public void updateProject(Project project, User user) throws NotAuthorizedException {
-    // check to see if user can author project or the run that it's in
     List<Run> runList = runService.getProjectRuns((Long) project.getId());
     Run run = null;
     if (!runList.isEmpty()) {
@@ -364,9 +390,8 @@ public class ProjectServiceImpl implements ProjectService {
       run = runList.get(0);
     }
 
-    if (user.isAdmin() || aclService.hasPermission(project, BasePermission.ADMINISTRATION, user) ||
-        aclService.hasPermission(project, BasePermission.WRITE, user) ||
-      (run != null && runService.hasRunPermission(run, user, BasePermission.WRITE))) {
+    if (canAuthorProject(project, user) ||
+        (run != null && runService.hasRunPermission(run, user, BasePermission.WRITE))) {
       projectDao.save(project);
     } else {
       throw new NotAuthorizedException("You are not authorized to update this project");
@@ -386,7 +411,7 @@ public class ProjectServiceImpl implements ProjectService {
       return contextPath + "/student/vle/vle.html?runId=" +
           run.getId() + "&workgroupId=" + workgroup.getId();
     } else if (wiseVersion.equals(5)) {
-      return contextPath + "/student/run/" + run.getId();
+      return contextPath + "/student/run/" + run.getId() + "#!/run/" + run.getId();
     }
     return null;
   }
@@ -410,7 +435,9 @@ public class ProjectServiceImpl implements ProjectService {
     return user.isAdmin() ||
         aclService.hasPermission(project, BasePermission.ADMINISTRATION, user) ||
         aclService.hasPermission(project, BasePermission.WRITE, user) ||
-        aclService.hasPermission(project, BasePermission.READ, user);
+        aclService.hasPermission(project, BasePermission.READ, user) ||
+        project.isOfficialProject() ||
+        project.isCommunityProject();
   }
 
   public Integer addTagToProject(String tagString, Long projectId) {
@@ -543,7 +570,8 @@ public class ProjectServiceImpl implements ProjectService {
     return nextId;
   }
 
-  public Project copyProject(Integer projectId, User user) throws Exception {
+  @Transactional
+  public Project copyProject(Long projectId, User user) throws Exception {
     Project parentProject = getById(projectId);
     long newProjectId = getNextAvailableProjectId();
     File parentProjectDir = new File(FileManager.getProjectFolderPath(parentProject));
@@ -551,7 +579,8 @@ public class ProjectServiceImpl implements ProjectService {
     File newProjectDir = new File(curriculumBaseDir, String.valueOf(newProjectId));
     FileManager.copy(parentProjectDir, newProjectDir);
     String projectModulePath = parentProject.getModulePath();
-    String projectJSONFilename = projectModulePath.substring(projectModulePath.lastIndexOf("/") + 1);
+    String projectJSONFilename =
+        projectModulePath.substring(projectModulePath.lastIndexOf("/") + 1);
     Long parentProjectId = (Long) parentProject.getId();
     ProjectParameters pParams = new ProjectParameters();
     pParams.setProjectId(newProjectId);
@@ -563,17 +592,20 @@ public class ProjectServiceImpl implements ProjectService {
     pParams.setParentProjectId(parentProjectId);
     ProjectMetadata parentProjectMetadata = parentProject.getMetadata();
     if (parentProjectMetadata != null) {
-      ProjectMetadata newProjectMetadata = new ProjectMetadataImpl(parentProjectMetadata.toJSONString());
+      ProjectMetadata newProjectMetadata =
+          new ProjectMetadataImpl(parentProjectMetadata.toJSONString());
       newProjectMetadata.setAuthors(new JSONArray().toString());
-      JSONObject parentProjectJSON = getParentInfo(parentProjectMetadata, parentProjectId, getProjectURI(parentProject));
-      newProjectMetadata.setParentProjects(addToParentProjects(parentProjectJSON, parentProjectMetadata).toString());
+      JSONObject parentProjectJSON =
+          getParentInfo(parentProjectMetadata, parentProjectId,getProjectURI(parentProject));
+      newProjectMetadata.setParentProjects(
+          addToParentProjects(parentProjectJSON, parentProjectMetadata).toString());
       pParams.setMetadata(newProjectMetadata);
     }
     return createProject(pParams);
   }
 
   public List<Permission> getSharedTeacherPermissions(Project project, User sharedTeacher) {
-    return this.aclService.getPermissions(project, sharedTeacher);
+    return aclService.getPermissions(project, sharedTeacher.getUserDetails());
   }
 
   SharedOwner createNewSharedOwner(String username) {
@@ -589,7 +621,8 @@ public class ProjectServiceImpl implements ProjectService {
 
   public void removeSharedTeacher(Long projectId, String username)
       throws ObjectNotFoundException {
-    removeSharedTeacherFromProject(username, getById(projectId));
+    removeSharedTeacherFromProject(getById(projectId),
+        userService.retrieveUserByUsername(username));
   }
 
   public void addSharedTeacherPermission(Long projectId, Long userId, Integer permissionId)
@@ -597,7 +630,7 @@ public class ProjectServiceImpl implements ProjectService {
     User user = userService.retrieveById(userId);
     Project project = getById(projectId);
     if (project.getSharedowners().contains(user)) {
-      this.aclService.addPermission(project, new ProjectPermission(permissionId), user);
+      aclService.addPermission(project, new ProjectPermission(permissionId), user);
     }
   }
 
@@ -606,8 +639,38 @@ public class ProjectServiceImpl implements ProjectService {
     User user = userService.retrieveById(userId);
     Project project = getById(projectId);
     if (project.getSharedowners().contains(user)) {
-      this.aclService.removePermission(project, new ProjectPermission(permissionId), user);
+      aclService.removePermission(project, new ProjectPermission(permissionId), user);
     }
+  }
+
+  @Transactional
+  public void transferProjectOwnership(Project project, User newOwner)
+      throws ObjectNotFoundException {
+    User oldOwner = project.getOwner();
+    if (project.isSharedTeacher(newOwner)) {
+      removeSharedTeacherAndPermissions(project, newOwner);
+    }
+    setOwner(project, newOwner);
+    addSharedTeacherWithViewAndEditPermissions(project, oldOwner);
+    removeAdministrationPermission(project, oldOwner);
+    projectDao.save(project);
+  }
+
+  private void setOwner(Project project, User user) {
+    project.setOwner(user);
+    aclService.addPermission(project, BasePermission.ADMINISTRATION, user);
+  }
+
+  private void addSharedTeacherWithViewAndEditPermissions(Project project, User user) {
+    if (!project.isSharedTeacher(user)) {
+      project.getSharedowners().add(user);
+    }
+    aclService.addPermission(project, ProjectPermission.VIEW_PROJECT, user);
+    aclService.addPermission(project, ProjectPermission.EDIT_PROJECT, user);
+  }
+
+  private void removeAdministrationPermission(Project project, User user) {
+    aclService.removePermission(project, BasePermission.ADMINISTRATION, user);
   }
 
   public List<Project> getProjectsWithoutRuns(User user) {
@@ -654,12 +717,52 @@ public class ProjectServiceImpl implements ProjectService {
     return parentProjects;
   }
 
+  public List<HashMap<String, Object>> getProjectSharedOwnersList(Project project) {
+    List<HashMap<String, Object>> sharedOwners = new ArrayList<HashMap<String, Object>>();
+    for (User sharedOwner : project.getSharedowners()) {
+      sharedOwners.add(getSharedOwnerMap(sharedOwner, project));
+    }
+    return sharedOwners;
+  }
+
+  private HashMap<String, Object> getSharedOwnerMap(User sharedOwner, Project project) {
+    HashMap<String, Object> map = new HashMap<String, Object>();
+    map.put("id", sharedOwner.getId());
+    map.put("username", sharedOwner.getUserDetails().getUsername());
+    map.put("firstName", sharedOwner.getUserDetails().getFirstname());
+    map.put("lastName", sharedOwner.getUserDetails().getLastname());
+    map.put("permissions", getSharedOwnerPermissions(project, sharedOwner));
+    return map;
+  }
+
+  private List<Integer> getSharedOwnerPermissions(Project project, User sharedOwner) {
+    List<Integer> permissions = new ArrayList<Integer>();
+    for (Permission permission : getSharedTeacherPermissions(project, sharedOwner)) {
+      permissions.add(permission.getMask());
+    }
+    return permissions;
+  }
+
+  public String getProjectPath(Project project) {
+    String modulePath = project.getModulePath();
+    int lastIndexOfSlash = modulePath.lastIndexOf("/");
+    if (lastIndexOfSlash != -1) {
+      String hostname = appProperties.getProperty("wise.hostname");
+      String curriculumBaseWWW = appProperties.getProperty("curriculum_base_www");
+      return hostname + curriculumBaseWWW + modulePath.substring(0, lastIndexOfSlash);
+    }
+    return "";
+  }
+
   public String getProjectURI(Project project) {
-    String previewPath = "/project/";
+    String previewPath;
     if (project.getWiseVersion().equals(4)) {
       previewPath = "/previewproject.html?projectId=";
+    } else {
+      previewPath = "/project/";
     }
-    return appProperties.getProperty("wise.hostname") + previewPath + project.getId();
+    return appProperties.getProperty("wise.hostname") + previewPath + project.getId() +
+        "#!/project/" + project.getId();
   }
 
   private String getAuthorsString(JSONArray authors) {
@@ -682,7 +785,28 @@ public class ProjectServiceImpl implements ProjectService {
     return authorsString.toString();
   }
 
-  public void writeProjectLicenseFile(String projectFolderPath, Project project) throws JSONException {
+  public String getLicensePath(Project project) {
+    String licensePath = getProjectLocalPath(project) + LICENSE_PATH;
+    File licenseFile = new File(licensePath);
+    if (licenseFile.isFile()) {
+      return getProjectPath(project) + LICENSE_PATH;
+    } else {
+      return "";
+    }
+  }
+
+  private String getProjectLocalPath(Project project) {
+    String modulePath = project.getModulePath();
+    int lastIndexOfSlash = modulePath.lastIndexOf("/");
+    if (lastIndexOfSlash != -1) {
+      String curriculumBaseWWW = appProperties.getProperty("curriculum_base_dir");
+      return curriculumBaseWWW + modulePath.substring(0, lastIndexOfSlash);
+    }
+    return "";
+  }
+
+  public void writeProjectLicenseFile(Project project) throws JSONException {
+    String projectFolderPath = FileManager.getProjectFolderPath(project);
     ProjectMetadata metadata = project.getMetadata();
     String title = metadata.getTitle();
     JSONArray authorsArray = new JSONArray(metadata.getAuthors());
@@ -742,7 +866,8 @@ public class ProjectServiceImpl implements ProjectService {
     license += "\n\n" + ccLicenseText;
     File licenseFile = new File(projectFolderPath, "license.txt");
     try {
-      Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(licenseFile), "UTF-8"));
+      Writer writer =
+          new BufferedWriter(new OutputStreamWriter(new FileOutputStream(licenseFile), "UTF-8"));
       writer.write(license);
       writer.close();
     } catch (IOException e) {
@@ -750,13 +875,103 @@ public class ProjectServiceImpl implements ProjectService {
     }
   }
 
-  public void replaceMetadataInProjectJSONFile(String projectFilePath, ProjectMetadata metadata) throws IOException, JSONException {
+  public void replaceMetadataInProjectJSONFile(String projectFilePath, ProjectMetadata metadata)
+      throws IOException, JSONException {
     String projectStr = FileUtils.readFileToString(new File(projectFilePath));
     JSONObject projectJSONObj = new JSONObject(projectStr);
     projectJSONObj.put("metadata", metadata.toJSONObject());
     File newProjectJSONFile = new File(projectFilePath);
-    Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(newProjectJSONFile), "UTF-8"));
+    Writer writer = new BufferedWriter(new OutputStreamWriter(
+        new FileOutputStream(newProjectJSONFile), "UTF-8"));
     writer.write(projectJSONObj.toString());
     writer.close();
+  }
+
+  public void saveProjectContentToDisk(String projectJSONString, Project project)
+      throws FileNotFoundException, IOException {
+    String projectJSONPath = appProperties.getProperty("curriculum_base_dir") +
+        project.getModulePath();
+    Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(
+        new File(projectJSONPath)), "UTF-8"));
+    writer.write(projectJSONString);
+    writer.close();
+  }
+
+  public Map<String, Object> getDirectoryInfo(File directory) {
+    HashMap<String, Object> directoryMap = new HashMap<String, Object>();
+    List<HashMap<String, Object>> files = new ArrayList<HashMap<String, Object>>();
+    long totalDirectorySize = 0l;
+    File[] filesInProjectAssetsDir = getFilesInDirectory(directory);
+    if (filesInProjectAssetsDir != null) {
+      for (File file : filesInProjectAssetsDir) {
+        HashMap<String, Object> fileObject = new HashMap<String, Object>();
+        fileObject.put("fileName", file.getName());
+        long fileSize = file.length();
+        fileObject.put("fileSize", fileSize);
+        totalDirectorySize += fileSize;
+        files.add(fileObject);
+      }
+    }
+    directoryMap.put("totalFileSize", totalDirectorySize);
+    directoryMap.put("files", files);
+    return directoryMap;
+  }
+
+  private File[] getFilesInDirectory(File directory) {
+    if (directory.exists() && directory.isDirectory()) {
+      return directory.listFiles();
+    }
+    return new File[0];
+  }
+
+  public void saveProjectToDatabase(Project project, User user, String projectJSONString)
+      throws JSONException, NotAuthorizedException {
+    JSONObject projectJSONObject = new JSONObject(projectJSONString);
+    JSONObject projectMetadataJSON = projectJSONObject.getJSONObject("metadata");
+    if (projectMetadataJSON != null) {
+      updateProjectNameIfNecessary(project, projectMetadataJSON);
+    }
+    updateProject(project, user);
+  }
+
+  public void updateMetadataAndLicenseIfNecessary(Project project, String projectJSONString)
+      throws JSONException {
+    ProjectMetadata oldProjectMetadata = project.getMetadata();
+    ProjectMetadata newProjectMetadata =
+        new ProjectMetadataImpl(getMetadataFromProjectJSONString(projectJSONString));
+    project.setMetadata(newProjectMetadata);
+    if (isLicenseUpdateRequired(oldProjectMetadata, newProjectMetadata)) {
+      writeProjectLicenseFile(project);
+    }
+  }
+
+  private JSONObject getMetadataFromProjectJSONString(String projectJSONString) {
+    try {
+      JSONObject projectJSONObject = new JSONObject(projectJSONString);
+      return projectJSONObject.getJSONObject("metadata");
+    } catch(JSONException e) {
+      e.printStackTrace();
+      return null;
+    }
+  }
+
+  public boolean isLicenseUpdateRequired(ProjectMetadata oldProjectMetadata,
+      ProjectMetadata newProjectMetadata) {
+    return titleHasChanged(oldProjectMetadata, newProjectMetadata) ||
+        authorsHasChanged(oldProjectMetadata, newProjectMetadata);
+  }
+
+  private boolean titleHasChanged(ProjectMetadata oldProjectMetadata,
+      ProjectMetadata newProjectMetadata) {
+    return !oldProjectMetadata.getTitle().equals(newProjectMetadata.getTitle());
+  }
+
+  private boolean authorsHasChanged(ProjectMetadata oldProjectMetadata,
+      ProjectMetadata newProjectMetadata) {
+    return !oldProjectMetadata.getAuthors().equals(newProjectMetadata.getAuthors());
+  }
+
+  public void updateProjectNameIfNecessary(Project project, JSONObject projectMetadataJSON) {
+    project.setName(projectMetadataJSON.optString("title", project.getName()));
   }
 }

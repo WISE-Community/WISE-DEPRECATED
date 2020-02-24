@@ -56,7 +56,7 @@ public class RunStatisticsController {
   protected String showRunStatistics(
       @RequestParam(value = "period", required = false) String period,
       ModelMap modelMap) throws Exception {
-    List<Run> runs = runService.getRunsRunWithinPeriod(period);
+    List<Run> runs = runService.getRunsRunWithinTimePeriod(period);
     int lookBackPeriod = 0;
     if (period.equals("today")) {
       lookBackPeriod = 0;

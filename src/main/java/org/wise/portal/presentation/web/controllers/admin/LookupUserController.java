@@ -32,14 +32,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.domain.admin.StudentFields;
 import org.wise.portal.domain.admin.TeacherFields;
-import org.wise.portal.domain.authentication.Gender;
-import org.wise.portal.domain.authentication.Schoollevel;
 import org.wise.portal.domain.impl.LookupUserParameters;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.validators.LookupUserParametersValidator;
@@ -60,47 +60,72 @@ public class LookupUserController {
   @Autowired
   private LookupUserParametersValidator lookupUserParametersValidator;
 
-  @RequestMapping(method = RequestMethod.POST)
-  protected ModelAndView onSubmit(
+  @PostMapping
+  protected ModelAndView lookupUser(
       @ModelAttribute("lookupUserParameters") LookupUserParameters param,
       BindingResult result, HttpServletRequest request) {
     lookupUserParametersValidator.validate(param, result);
     if (result.hasErrors()) {
       return null;
     }
-
-    Object term;
     String lookupField = param.getLookupField();
-    String lookupCriteria = param.getLookupCriteria();
     String lookupData = param.getLookupData();
-
-    if ("id".equals(lookupField)) {
-      term = Long.parseLong(lookupData);
-    } else if ("gender".equals(lookupField)) {
-      term = Gender.valueOf(lookupData.toUpperCase());
-    } else if ("like".equals(lookupCriteria)) {
-      term = "%" + lookupData + "%";
-    } else if ("schoollevel".equals(lookupField)) {
-      term = getLevel(lookupData);
-    } else if ("like".equals(lookupCriteria)) {
-      term = "%" + lookupData + "%";
-    } else {
-      term = lookupData;
+    String userType = request.getParameter("userType");
+    List<User> users = new ArrayList<User>();
+    if ("teacher".equals(userType)) {
+      if ("id".equals(lookupField)) {
+        User user = userService.retrieveTeacherById(Long.parseLong(lookupData));
+        if (user != null) {
+          users.add(user);
+        }
+      } else if ("firstname".equals(lookupField)) {
+        users = userService.retrieveTeachersByFirstName(lookupData);
+      } else if ("lastname".equals(lookupField)) {
+        users = userService.retrieveTeachersByLastName(lookupData);
+      } else if ("username".equals(lookupField)) {
+        User user = userService.retrieveTeacherByUsername(lookupData);
+        if (user != null) {
+          users.add(user);
+        }
+      } else if ("displayname".equals(lookupField)) {
+        users = userService.retrieveTeachersByDisplayName(lookupData);
+      } else if ("city".equals(lookupField)) {
+        users = userService.retrieveTeachersByCity(lookupData);
+      } else if ("state".equals(lookupField)) {
+        users = userService.retrieveTeachersByState(lookupData);
+      } else if ("country".equals(lookupField)) {
+        users = userService.retrieveTeachersByCountry(lookupData);
+      } else if ("schoolname".equals(lookupField)) {
+        users = userService.retrieveTeachersBySchoolName(lookupData);
+      } else if ("schoollevel".equals(lookupField)) {
+        users = userService.retrieveTeachersBySchoolLevel(lookupData);
+      } else if ("emailAddress".equals(lookupField)) {
+        users = userService.retrieveTeachersByEmail(lookupData);
+      }
+    } else if ("student".equals(userType)) {
+      if ("id".equals(lookupField)) {
+        User user = userService.retrieveStudentById(Long.parseLong(lookupData));
+        if (user != null) {
+          users.add(user);
+        }
+      } else if ("firstname".equals(lookupField)) {
+        users = userService.retrieveStudentsByFirstName(lookupData);
+      } else if ("lastname".equals(lookupField)) {
+        users = userService.retrieveStudentsByLastName(lookupData);
+      } else if ("username".equals(lookupField)) {
+        User user = userService.retrieveStudentByUsername(lookupData);
+        if (user != null) {
+          users.add(user);
+        }
+      } else if ("gender".equals(lookupField)) {
+        users = userService.retrieveStudentsByGender(lookupData);
+      }
     }
-
-    String userDetailsType = "teacherUserDetails";
-    if ("student".equals(request.getParameter("userType"))) {
-      userDetailsType = "studentUserDetails";
-    }
-
-    List<User> users =
-        userService.retrieveByField(lookupField, lookupCriteria, term, userDetailsType);
     ModelAndView modelAndView = new ModelAndView("admin/account/manageusers");
     List<String> usernames = new ArrayList<String>();
     for (User user : users) {
       usernames.add(user.getUserDetails().getUsername());
     }
-
     if (users.size() < 1) {
       modelAndView.addObject("message", "No users given search criteria found.");
     } else {
@@ -113,11 +138,10 @@ public class LookupUserController {
     return modelAndView;
   }
 
-  @RequestMapping(method = RequestMethod.GET)
-  public ModelAndView initializeForm(ModelMap model, HttpServletRequest request) {
+  @GetMapping
+  public ModelAndView showSearchForm(ModelMap model, @RequestParam String userType) {
     ModelAndView mav = new ModelAndView();
     mav.addObject("lookupUserParameters", new LookupUserParameters());
-    String userType = request.getParameter("userType");
     model.put("userType", userType);
     if ("teacher".equals(userType)) {
       model.put("fields", TeacherFields.values());
@@ -125,14 +149,5 @@ public class LookupUserController {
       model.put("fields", StudentFields.values());
     }
     return mav;
-  }
-
-  private Schoollevel getLevel(String level) {
-    for (Schoollevel schoolLevel : Schoollevel.values()) {
-      if (schoolLevel.toString().toUpperCase().contains(level.toUpperCase())) {
-        return schoolLevel;
-      }
-    }
-    return Schoollevel.OTHER;
   }
 }

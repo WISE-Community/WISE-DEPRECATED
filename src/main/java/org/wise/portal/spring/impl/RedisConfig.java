@@ -27,6 +27,9 @@ public class RedisConfig {
   @Value("${spring.redis.port}")
   private int redisPort;
 
+  @Value("${spring.redis.password:#{null}}")
+  private String redisPassword;
+
   @Value("${spring.redis.pool.max.total}")
   private int redisPoolMaxTotal;
 
@@ -37,6 +40,9 @@ public class RedisConfig {
     poolConfig.setTestOnBorrow(true);
     poolConfig.setTestOnReturn(true);
     RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(redisHostName, redisPort);
+    if (redisPassword != null) {
+      config.setPassword(redisPassword);
+    }
     return new JedisConnectionFactory(config);
   }
 

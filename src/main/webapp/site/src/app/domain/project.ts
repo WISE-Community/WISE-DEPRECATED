@@ -1,5 +1,5 @@
-import { Run } from "./run";
-import { User } from "../domain/user";
+import { Run } from './run';
+import { User } from '../domain/user';
 
 export class Project {
   id: number;
@@ -23,16 +23,18 @@ export class Project {
   static readonly EDIT_PERMISSION: number = 2;
 
   constructor(jsonObject: any = {}) {
-    for (let key of Object.keys(jsonObject)) {
+    for (const key of Object.keys(jsonObject)) {
       const value = jsonObject[key];
-      if (key == "owner") {
+      if (key === 'owner') {
         this[key] = new User(value);
-      } else if (key == "sharedOwners") {
+      } else if (key === 'sharedOwners') {
         const sharedOwners: User[] = [];
-        for (let sharedOwner of value) {
+        for (const sharedOwner of value) {
           sharedOwners.push(new User(sharedOwner));
         }
         this[key] = sharedOwners;
+      } else if (key === 'metadata') {
+        this[key] = this.parseMetadata(value);
       } else {
         this[key] = value;
       }
@@ -54,12 +56,12 @@ export class Project {
   }
 
   isOwner(userId) {
-    return this.owner.id == userId;
+    return this.owner.id === userId;
   }
 
   isSharedOwnerWithPermission(userId, permissionId) {
-    for (let sharedOwner of this.sharedOwners) {
-      if (sharedOwner.id == userId) {
+    for (const sharedOwner of this.sharedOwners) {
+      if (sharedOwner.id === userId) {
         return this.userHasPermission(sharedOwner, permissionId);
       }
     }
@@ -68,5 +70,21 @@ export class Project {
 
   userHasPermission(user: User, permission: number) {
     return user.permissions.includes(permission);
+  }
+
+  parseMetadata(metadata) {
+    if (typeof metadata.authors === 'string') {
+      metadata.authors = JSON.parse(metadata.authors);
+    }
+    if (typeof metadata.grades === 'string') {
+      metadata.grades = JSON.parse(metadata.grades);
+    }
+    if (typeof metadata.parentProjects === 'string') {
+      metadata.parentProjects = JSON.parse(metadata.parentProjects);
+    }
+    if (typeof metadata.standardsAddressed === 'string') {
+      metadata.standardsAddressed = JSON.parse(metadata.standardsAddressed);
+    }
+    return metadata;
   }
 }

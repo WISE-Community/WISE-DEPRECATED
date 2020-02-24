@@ -1,19 +1,15 @@
 'use strict';
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
+class StudentProgressController {
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var StudentProgressController = function () {
-    function StudentProgressController($rootScope, $scope, $state, ConfigService, ProjectService, StudentStatusService, TeacherDataService, TeacherWebSocketService) {
-        var _this = this;
-
-        _classCallCheck(this, StudentProgressController);
-
+    constructor($rootScope,
+                $scope,
+                $state,
+                ConfigService,
+                ProjectService,
+                StudentStatusService,
+                TeacherDataService,
+                TeacherWebSocketService) {
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$state = $state;
@@ -39,32 +35,32 @@ var StudentProgressController = function () {
         this.initializeStudents();
 
         // listen for the studentsOnlineReceived event
-        this.$rootScope.$on('studentsOnlineReceived', function (event, args) {
-            _this.studentsOnline = args.studentsOnline;
+        this.$rootScope.$on('studentsOnlineReceived', (event, args) => {
+            this.studentsOnline = args.studentsOnline;
 
             // update the students
-            _this.initializeStudents();
+            this.initializeStudents();
         });
 
         // listen for the studentStatusReceived event
-        this.$rootScope.$on('studentStatusReceived', function (event, args) {
+        this.$rootScope.$on('studentStatusReceived', (event, args) => {
             // get the workgroup id
-            var studentStatus = args.studentStatus;
-            var workgroupId = studentStatus.workgroupId;
+            let studentStatus = args.studentStatus;
+            let workgroupId = studentStatus.workgroupId;
 
             // update the time spent for the workgroup
-            _this.updateTimeSpentForWorkgroupId(workgroupId);
+            this.updateTimeSpentForWorkgroupId(workgroupId);
 
             // update team data
-            _this.updateTeam(workgroupId);
+            this.updateTeam(workgroupId);
         });
 
         // listen for the studentDisconnected event
-        this.$rootScope.$on('studentDisconnected', function (event, args) {
+        this.$rootScope.$on('studentDisconnected', (event, args) => {
             var data = args.data;
             var workgroupId = data.workgroupId;
 
-            var studentsOnline = _this.studentsOnline;
+            var studentsOnline = this.studentsOnline;
 
             var indexOfWorkgroupId = studentsOnline.indexOf(workgroupId);
 
@@ -73,13 +69,13 @@ var StudentProgressController = function () {
                 studentsOnline.splice(indexOfWorkgroupId, 1);
 
                 // update team data
-                _this.updateTeam(workgroupId);
+                this.updateTeam(workgroupId);
             }
         });
 
         // listen for the currentWorkgroupChanged event
-        this.$scope.$on('currentWorkgroupChanged', function (event, args) {
-            _this.currentWorkgroup = args.currentWorkgroup;
+        this.$scope.$on('currentWorkgroupChanged', (event, args) => {
+            this.currentWorkgroup = args.currentWorkgroup;
         });
 
         // how often to update the time spent values in the view
@@ -92,351 +88,325 @@ var StudentProgressController = function () {
         this.updateTimeSpent();
 
         // update the time spent values every x seconds
-        this.updateTimeSpentIntervalId = setInterval(function () {
+        this.updateTimeSpentIntervalId = setInterval(() => {
             // update the time spent values in the view
-            _this.updateTimeSpent();
+            this.updateTimeSpent();
 
             // refresh the view
-            _this.$scope.$apply();
+            this.$scope.$apply();
         }, this.updateTimeSpentInterval);
 
         // save event when student progress view is displayed
-        var context = "ClassroomMonitor",
-            nodeId = null,
-            componentId = null,
-            componentType = null,
-            category = "Navigation",
-            event = "studentProgressViewDisplayed",
-            data = {};
+        let context = "ClassroomMonitor", nodeId = null, componentId = null, componentType = null,
+            category = "Navigation", event = "studentProgressViewDisplayed", data = {};
         this.TeacherDataService.saveEvent(context, nodeId, componentId, componentType, category, event, data);
     }
 
-    _createClass(StudentProgressController, [{
-        key: 'getCurrentNodeForWorkgroupId',
-        value: function getCurrentNodeForWorkgroupId(workgroupId) {
-            return this.StudentStatusService.getCurrentNodePositionAndNodeTitleForWorkgroupId(workgroupId);
-        }
-    }, {
-        key: 'getStudentProjectCompletion',
+    getCurrentNodeForWorkgroupId(workgroupId) {
+        return this.StudentStatusService.getCurrentNodePositionAndNodeTitleForWorkgroupId(workgroupId);
+    };
 
+    /**
+     * Get project completion data for the given workgroup (only include nodes
+     * with student work)
+     * @param workgroupId the workgroup id
+     * @return object with completed, total, and percent completed (integer
+     * between 0 and 100)
+     */
+    getStudentProjectCompletion(workgroupId) {
+        return this.StudentStatusService.getStudentProjectCompletion(workgroupId, true);
+    };
 
-        /**
-         * Get project completion data for the given workgroup (only include nodes
-         * with student work)
-         * @param workgroupId the workgroup id
-         * @return object with completed, total, and percent completed (integer
-         * between 0 and 100)
-         */
-        value: function getStudentProjectCompletion(workgroupId) {
-            return this.StudentStatusService.getStudentProjectCompletion(workgroupId, true);
-        }
-    }, {
-        key: 'isWorkgroupOnline',
-        value: function isWorkgroupOnline(workgroupId) {
-            return this.studentsOnline.indexOf(workgroupId) != -1;
-        }
-    }, {
-        key: 'isWorkgroupShown',
-        value: function isWorkgroupShown(workgroup) {
-            var show = false;
+    isWorkgroupOnline(workgroupId) {
+        return this.studentsOnline.indexOf(workgroupId) != -1;
+    };
 
-            var currentPeriod = this.TeacherDataService.getCurrentPeriod().periodId;
+    isWorkgroupShown(workgroup) {
+        let show = false;
 
-            if (currentPeriod === -1 || workgroup.periodId === currentPeriod) {
-                if (this.currentWorkgroup) {
-                    if (workgroup.workgroupId === this.currentWorkgroup.workgroupId) {
-                        show = true;
-                    }
-                } else {
+        let currentPeriod = this.TeacherDataService.getCurrentPeriod().periodId;
+
+        if (currentPeriod === -1 || workgroup.periodId === currentPeriod) {
+            if (this.currentWorkgroup) {
+                if (workgroup.workgroupId === this.currentWorkgroup.workgroupId) {
                     show = true;
                 }
+            } else {
+                show = true;
             }
-
-            return show;
-        }
-    }, {
-        key: 'getStudentTotalScore',
-        value: function getStudentTotalScore(workgroupId) {
-            return this.TeacherDataService.getTotalScoreByWorkgroupId(workgroupId);
         }
 
-        /**
-         * Get the time spent for a workgroup
-         */
+        return show;
+    }
 
-    }, {
-        key: 'getStudentTimeSpent',
-        value: function getStudentTimeSpent(workgroupId) {
-            var timeSpent = null;
+    getStudentTotalScore(workgroupId) {
+        return this.TeacherDataService.getTotalScoreByWorkgroupId(workgroupId);
+    }
 
-            if (this.studentTimeSpent) {
-                timeSpent = this.studentTimeSpent[workgroupId];
-            }
+    /**
+     * Get the time spent for a workgroup
+     */
+    getStudentTimeSpent(workgroupId) {
+        let timeSpent = null;
 
-            return timeSpent;
+        if (this.studentTimeSpent) {
+            timeSpent = this.studentTimeSpent[workgroupId];
         }
 
-        /**
-         * Update the time spent values in the view
-         */
+        return timeSpent;
+    }
 
-    }, {
-        key: 'updateTimeSpent',
-        value: function updateTimeSpent() {
-            var studentsOnline = this.studentsOnline;
+    /**
+     * Update the time spent values in the view
+     */
+    updateTimeSpent() {
+        var studentsOnline = this.studentsOnline;
 
-            if (studentsOnline != null) {
+        if (studentsOnline != null) {
 
-                // loop through all the workgroups that are online
-                for (var s = 0; s < studentsOnline.length; s++) {
-                    var workgroupId = studentsOnline[s];
+            // loop through all the workgroups that are online
+            for (var s = 0; s < studentsOnline.length; s++) {
+                var workgroupId = studentsOnline[s];
 
-                    if (workgroupId != null) {
-                        // update the time spent for the workgroup
-                        this.updateTimeSpentForWorkgroupId(workgroupId);
-                    }
+                if (workgroupId != null) {
+                    // update the time spent for the workgroup
+                    this.updateTimeSpentForWorkgroupId(workgroupId);
                 }
             }
         }
+    }
 
-        /**
-         * Update the time spent for the workgroup
-         * @workgroupId the workgroup id
-         */
+    /**
+     * Update the time spent for the workgroup
+     * @workgroupId the workgroup id
+     */
+    updateTimeSpentForWorkgroupId(workgroupId) {
 
-    }, {
-        key: 'updateTimeSpentForWorkgroupId',
-        value: function updateTimeSpentForWorkgroupId(workgroupId) {
+        if (workgroupId != null) {
+            // get the current client timestamp
+            var currentClientTimestamp = new Date().getTime();
 
-            if (workgroupId != null) {
-                // get the current client timestamp
-                var currentClientTimestamp = new Date().getTime();
+            // get the student status
+            var studentStatus = this.StudentStatusService.getStudentStatusForWorkgroupId(workgroupId);
 
-                // get the student status
-                var studentStatus = this.StudentStatusService.getStudentStatusForWorkgroupId(workgroupId);
+            if (studentStatus != null) {
 
-                if (studentStatus != null) {
+                // get the time the student status was posted to the server
+                var postTimestamp = studentStatus.postTimestamp;
 
-                    // get the time the student status was posted to the server
-                    var postTimestamp = studentStatus.postTimestamp;
+                /*
+                 * convert the current client timestamp to a server timestamp
+                 * this is requied in cases where the client and server clocks
+                 * are not synchronized
+                 */
+                var currentServerTimestamp = this.ConfigService.convertToServerTimestamp(currentClientTimestamp);
 
-                    /*
-                     * convert the current client timestamp to a server timestamp
-                     * this is requied in cases where the client and server clocks
-                     * are not synchronized
-                     */
-                    var currentServerTimestamp = this.ConfigService.convertToServerTimestamp(currentClientTimestamp);
+                // get the amount of time the student has been on the step
+                var timeSpent = currentServerTimestamp - postTimestamp;
 
-                    // get the amount of time the student has been on the step
-                    var timeSpent = currentServerTimestamp - postTimestamp;
+                // get the total amount of seconds the student has been on the step
+                var totalSeconds = Math.floor(timeSpent / 1000);
 
-                    // get the total amount of seconds the student has been on the step
-                    var totalSeconds = Math.floor(timeSpent / 1000);
+                // get the hours, minutes, and seconds
+                var hours = Math.floor((totalSeconds % 86400) / 3600);
+                var minutes = Math.floor(((totalSeconds % 86400) % 3600) / 60);
+                var seconds = totalSeconds % 60;
 
-                    // get the hours, minutes, and seconds
-                    var hours = Math.floor(totalSeconds % 86400 / 3600);
-                    var minutes = Math.floor(totalSeconds % 86400 % 3600 / 60);
-                    var seconds = totalSeconds % 60;
+                if (hours < 0) {
+                    hours = 0;
+                }
 
-                    if (hours < 0) {
-                        hours = 0;
-                    }
+                if (minutes < 0) {
+                    minutes = 0;
+                }
 
-                    if (minutes < 0) {
-                        minutes = 0;
-                    }
+                if (seconds < 0) {
+                    seconds = 0;
+                }
 
-                    if (seconds < 0) {
-                        seconds = 0;
-                    }
+                var timeSpentText = '';
 
-                    var timeSpentText = '';
+                if (hours > 0) {
+                    timeSpentText += (hours + ':');
+                }
 
-                    if (hours > 0) {
-                        timeSpentText += hours + ':';
-                    }
+                if (hours > 0) {
+                    // there are hours
 
-                    if (hours > 0) {
-                        // there are hours
-
-                        if (minutes == 0) {
-                            // fill with zeroes
-                            timeSpentText += '00:';
-                        } else if (minutes > 0 && minutes < 10) {
-                            // add a leading zero
-                            timeSpentText += '0' + minutes + ':';
-                        } else {
-                            timeSpentText += minutes + ':';
-                        }
+                    if (minutes == 0) {
+                        // fill with zeroes
+                        timeSpentText += '00:';
+                    } else if (minutes > 0 && minutes < 10) {
+                        // add a leading zero
+                        timeSpentText += '0' + minutes + ':';
                     } else {
-                        // there are no hours
-
                         timeSpentText += minutes + ':';
                     }
+                } else {
+                    // there are no hours
 
-                    if (seconds == 0) {
-                        // fill with zeroes
-                        timeSpentText += '00';
-                    } else if (seconds > 0 && seconds < 10) {
-                        // add a leading zero
-                        timeSpentText += '0' + seconds;
-                    } else {
-                        timeSpentText += seconds;
+                    timeSpentText += minutes + ':';
+                }
+
+                if (seconds == 0) {
+                    // fill with zeroes
+                    timeSpentText += '00';
+                } else if (seconds > 0 && seconds < 10) {
+                    // add a leading zero
+                    timeSpentText += ('0' + seconds);
+                } else {
+                    timeSpentText += seconds;
+                }
+
+                // update the mapping of workgroup id to time spent
+                //this.studentTimeSpent[workgroupId] = timeSpentText;
+
+                // update the timeSpent for the team with the matching workgroupID
+                for (let i = 0; i < this.teams.length; i++) {
+                    let team = this.teams[i];
+                    let id = team.workgroupId;
+
+                    if (workgroupId === id) {
+                        team.timeSpent = timeSpentText;
                     }
-
-                    // update the mapping of workgroup id to time spent
-                    //this.studentTimeSpent[workgroupId] = timeSpentText;
-
-                    // update the timeSpent for the team with the matching workgroupID
-                    for (var i = 0; i < this.teams.length; i++) {
-                        var team = this.teams[i];
-                        var id = team.workgroupId;
-
-                        if (workgroupId === id) {
-                            team.timeSpent = timeSpentText;
-                        }
-                    }
                 }
             }
         }
+    }
 
-        /**
-         * Set up the array of workgroups in the run
-         */
+    /**
+     * Set up the array of workgroups in the run
+     */
+    initializeStudents() {
+        this.teams = [];
 
-    }, {
-        key: 'initializeStudents',
-        value: function initializeStudents() {
-            this.teams = [];
+        // get the workgroups
+        let workgroups = this.ConfigService.getClassmateUserInfos();
 
-            // get the workgroups
-            var workgroups = this.ConfigService.getClassmateUserInfos();
+        // loop through all the workgroups
+        for (let x = 0; x < workgroups.length; x++) {
+            let workgroup = workgroups[x];
 
-            // loop through all the workgroups
-            for (var x = 0; x < workgroups.length; x++) {
-                var workgroup = workgroups[x];
-
-                if (workgroup != null) {
-                    var workgroupId = workgroup.workgroupId;
-                    var username = workgroup.username;
-                    var displayNames = this.ConfigService.getDisplayUsernamesByWorkgroupId(workgroupId);
-                    var team = {
-                        periodId: workgroup.periodId,
-                        periodName: workgroup.periodName,
-                        workgroupId: workgroupId,
-                        username: displayNames
-                    };
-                    this.teams.push(team);
-                    this.updateTeam(workgroupId);
-                }
+            if (workgroup != null) {
+                let workgroupId = workgroup.workgroupId;
+                let username = workgroup.username;
+                let displayNames = this.ConfigService.getDisplayUsernamesByWorkgroupId(workgroupId);
+                let team = {
+                    periodId: workgroup.periodId,
+                    periodName: workgroup.periodName,
+                    workgroupId: workgroupId,
+                    username: displayNames
+                };
+                this.teams.push(team);
+                this.updateTeam(workgroupId);
             }
         }
+    }
 
-        /**
-         * Update data for team with the given workgroup id
-         * @param workgroupId
-         */
+    /**
+     * Update data for team with the given workgroup id
+     * @param workgroupId
+     */
+    updateTeam(workgroupId) {
+        let isOnline = this.isWorkgroupOnline(workgroupId);
+        let location = this.getCurrentNodeForWorkgroupId(workgroupId);
+        let timeSpent = this.getStudentTimeSpent(workgroupId);
+        let completion = this.getStudentProjectCompletion(workgroupId);
+        let score = this.getStudentTotalScore(workgroupId);
+        let maxScore = this.StudentStatusService.getMaxScoreForWorkgroupId(workgroupId);
+        maxScore = maxScore ? maxScore : 0;
 
-    }, {
-        key: 'updateTeam',
-        value: function updateTeam(workgroupId) {
-            var isOnline = this.isWorkgroupOnline(workgroupId);
-            var location = this.getCurrentNodeForWorkgroupId(workgroupId);
-            var timeSpent = this.getStudentTimeSpent(workgroupId);
-            var completion = this.getStudentProjectCompletion(workgroupId);
-            var score = this.getStudentTotalScore(workgroupId);
-            var maxScore = this.StudentStatusService.getMaxScoreForWorkgroupId(workgroupId);
-            maxScore = maxScore ? maxScore : 0;
+        for (let i = 0; i < this.teams.length; i++) {
+            let team = this.teams[i];
 
-            for (var i = 0; i < this.teams.length; i++) {
-                var team = this.teams[i];
-
-                if (team.workgroupId === workgroupId) {
-                    team.isOnline = isOnline;
-                    team.location = location;
-                    team.timeSpent = timeSpent;
-                    team.completion = completion;
-                    team.score = score;
-                    team.maxScore = maxScore;
-                    team.scorePct = maxScore ? score / maxScore : score;
-                }
+            if (team.workgroupId === workgroupId) {
+                team.isOnline = isOnline;
+                team.location = location;
+                team.timeSpent = timeSpent;
+                team.completion = completion;
+                team.score = score;
+                team.maxScore = maxScore;
+                team.scorePct = maxScore ? (score/maxScore) : score;
             }
         }
-    }, {
-        key: 'showStudentGradingView',
-        value: function showStudentGradingView(workgroup) {
-            this.$state.go('root.team', { workgroupId: workgroup.workgroupId });
+    }
+
+    showStudentGradingView(workgroup) {
+        this.$state.go('root.team', {workgroupId: workgroup.workgroupId});
+    }
+
+    setSort(value) {
+        if (this.sort === value) {
+            this.sort = '-' + value;
+        } else {
+            this.sort = value;
         }
-    }, {
-        key: 'setSort',
-        value: function setSort(value) {
-            if (this.sort === value) {
-                this.sort = '-' + value;
-            } else {
-                this.sort = value;
-            }
 
-            // update value in the teacher data service so we can persist across views
-            this.TeacherDataService.studentProgressSort = this.sort;
+        // update value in the teacher data service so we can persist across views
+        this.TeacherDataService.studentProgressSort = this.sort;
+    }
+
+    getOrderBy() {
+        let orderBy = [];
+
+        switch (this.sort) {
+            case 'team':
+                orderBy = ['workgroupId', 'username'];
+                break;
+            case '-team':
+                orderBy = ['-workgroupId', 'username'];
+                break;
+            case 'student':
+                orderBy = ['username', 'workgroupId'];
+                break;
+            case '-student':
+                orderBy = ['-username', 'workgroupId'];
+                break;
+            case 'score':
+                orderBy = ['scorePct', 'username'];
+                break;
+            case '-score':
+                orderBy = ['-scorePct', 'username'];
+                break;
+            case 'completion':
+                orderBy = ['completion.completionPct', 'username'];
+                break;
+            case '-completion':
+                orderBy = ['-completion.completionPct', 'username'];
+                break;
+            case 'location':
+                orderBy = ['location', 'username'];
+                break;
+            case '-location':
+                orderBy = ['-location', 'username'];
+                break;
+            case 'time':
+                orderBy = ['-online', '-timeSpent', 'username'];
+                break;
+            case '-time':
+                orderBy = ['-online', 'timeSpent', 'username'];
+                break;
+            case 'online':
+                orderBy = ['online', 'username'];
+                break;
+            case '-online':
+                orderBy = ['-online', 'username'];
+                break;
         }
-    }, {
-        key: 'getOrderBy',
-        value: function getOrderBy() {
-            var orderBy = [];
 
-            switch (this.sort) {
-                case 'team':
-                    orderBy = ['workgroupId', 'username'];
-                    break;
-                case '-team':
-                    orderBy = ['-workgroupId', 'username'];
-                    break;
-                case 'student':
-                    orderBy = ['username', 'workgroupId'];
-                    break;
-                case '-student':
-                    orderBy = ['-username', 'workgroupId'];
-                    break;
-                case 'score':
-                    orderBy = ['scorePct', 'username'];
-                    break;
-                case '-score':
-                    orderBy = ['-scorePct', 'username'];
-                    break;
-                case 'completion':
-                    orderBy = ['completion.completionPct', 'username'];
-                    break;
-                case '-completion':
-                    orderBy = ['-completion.completionPct', 'username'];
-                    break;
-                case 'location':
-                    orderBy = ['location', 'username'];
-                    break;
-                case '-location':
-                    orderBy = ['-location', 'username'];
-                    break;
-                case 'time':
-                    orderBy = ['-online', '-timeSpent', 'username'];
-                    break;
-                case '-time':
-                    orderBy = ['-online', 'timeSpent', 'username'];
-                    break;
-                case 'online':
-                    orderBy = ['online', 'username'];
-                    break;
-                case '-online':
-                    orderBy = ['-online', 'username'];
-                    break;
-            }
+        return orderBy;
+    }
+}
 
-            return orderBy;
-        }
-    }]);
+StudentProgressController.$inject = [
+    '$rootScope',
+    '$scope',
+    '$state',
+    'ConfigService',
+    'ProjectService',
+    'StudentStatusService',
+    'TeacherDataService',
+    'TeacherWebSocketService'
+];
 
-    return StudentProgressController;
-}();
-
-StudentProgressController.$inject = ['$rootScope', '$scope', '$state', 'ConfigService', 'ProjectService', 'StudentStatusService', 'TeacherDataService', 'TeacherWebSocketService'];
-
-exports.default = StudentProgressController;
-//# sourceMappingURL=studentProgressController.js.map
+export default StudentProgressController;

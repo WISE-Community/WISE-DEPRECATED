@@ -1,0 +1,18 @@
+<h5 translate="selfDirectedInvestigation.label"></h5>
+<p translate="selfDirectedInvestigation.description"></p>
+<hr>
+<div layout="row">
+  <md-button class='createButton md-primary'
+             ng-click='selfDirectedInvestigationController.goToChooseStructure()'
+             aria-label='{{ ::"back" | translate }}'
+             translate='back'></md-button>
+  <span flex></span>
+  <md-button class='createButton md-primary'
+             ng-click='selfDirectedInvestigationController.cancel()'
+             aria-label='{{ ::"cancel" | translate }}'
+             translate='cancel'></md-button>
+  <md-button class='createButton md-raised md-primary'
+             ng-click='selfDirectedInvestigationController.chooseLocation()'
+             aria-label='{{ ::"next" | translate }}'
+             translate='next'></md-button>
+</div>

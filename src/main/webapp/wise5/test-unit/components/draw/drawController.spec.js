@@ -1,28 +1,16 @@
-'use strict';
+import vleModule from '../../../vle/vle';
 
-var _angular = require('angular');
+describe('DrawController', () => {
 
-var _angular2 = _interopRequireDefault(_angular);
+  let $controller;
+  let $rootScope;
+  let $scope;
+  let drawController;
+  let component;
 
-var _main = require('vle/main');
+  beforeEach(angular.mock.module(vleModule.name));
 
-var _main2 = _interopRequireDefault(_main);
-
-require('angular-mocks');
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-describe('DrawController', function () {
-
-  var $controller = void 0;
-  var $rootScope = void 0;
-  var $scope = void 0;
-  var drawController = void 0;
-  var component = void 0;
-
-  beforeEach(_angular2.default.mock.module(_main2.default.name));
-
-  beforeEach(inject(function (_$controller_, _$rootScope_) {
+  beforeEach(inject((_$controller_, _$rootScope_) => {
     $controller = _$controller_;
     $rootScope = _$rootScope_;
     component = {
@@ -32,7 +20,10 @@ describe('DrawController', function () {
       'showSaveButton': false,
       'showSubmitButton': false,
       'stamps': {
-        'Stamps': ['carbon.png', 'oxygen.png']
+        'Stamps': [
+          'carbon.png',
+          'oxygen.png'
+        ]
       },
       'tools': {
         'select': true,
@@ -60,12 +51,12 @@ describe('DrawController', function () {
     drawController.nodeId = 'node1';
   }));
 
-  it('should set the draw data', function () {
+  it('should set the draw data', () => {
     drawController.drawingTool = {
       load: {}
     };
-    spyOn(drawController.drawingTool, 'load').and.callFake(function () {});
-    var componentState = {
+    spyOn(drawController.drawingTool, 'load').and.callFake(() => {});
+    const componentState = {
       studentData: {
         drawData: '{"version":1,"dt":{"width":800,"height":600},"canvas":{"objects":[{"type":"rect","originX":"center","originY":"center","left":365,"top":162,"width":304,"height":162,"fill":"","stroke":"#333","strokeWidth":8,"strokeDashArray":null,"strokeLineCap":"butt","strokeLineJoin":"miter","strokeMiterLimit":10,"scaleX":1,"scaleY":1,"angle":0,"flipX":false,"flipY":false,"opacity":1,"shadow":null,"visible":true,"clipTo":null,"backgroundColor":"","fillRule":"nonzero","globalCompositeOperation":"source-over","transformMatrix":null,"skewX":0,"skewY":0,"rx":0,"ry":0}],"background":"#fff","backgroundImage":{"type":"image","originX":"center","originY":"center","left":400,"top":300,"width":1200,"height":800,"fill":"rgb(0,0,0)","stroke":null,"strokeWidth":0,"strokeDashArray":null,"strokeLineCap":"butt","strokeLineJoin":"miter","strokeMiterLimit":10,"scaleX":1,"scaleY":1,"angle":0,"flipX":false,"flipY":false,"opacity":1,"shadow":null,"visible":true,"clipTo":null,"backgroundColor":"","fillRule":"nonzero","globalCompositeOperation":"source-over","transformMatrix":null,"skewX":0,"skewY":0,"crossOrigin":"anonymous","alignX":"none","alignY":"none","meetOrSlice":"meet","lockUniScaling":false,"src":"http://localhost:8080/curriculum/10/assets/background.jpg","filters":[],"resizeFilters":[]}}}',
         submitCounter: 2
@@ -77,32 +68,32 @@ describe('DrawController', function () {
     expect(drawController.submitCounter).toEqual(2);
   });
 
-  it('should check that the canvas is empty', function () {
+  it('should check that the canvas is empty', () => {
     drawController.drawingTool = {
       canvas: {
         getObjects: {}
       }
     };
-    spyOn(drawController.drawingTool.canvas, 'getObjects').and.callFake(function () {
+    spyOn(drawController.drawingTool.canvas, 'getObjects').and.callFake(() => {
       return [];
     });
-    var isEmpty = drawController.isCanvasEmpty();
+    const isEmpty = drawController.isCanvasEmpty();
     expect(drawController.drawingTool.canvas.getObjects).toHaveBeenCalled();
     expect(isEmpty).toEqual(true);
   });
 
-  it('should check that the canvas is not empty', function () {
+  it('should check that the canvas is not empty', () => {
     drawController.drawingTool = {
       canvas: {
         getObjects: {}
       }
     };
-    spyOn(drawController.drawingTool.canvas, 'getObjects').and.callFake(function () {
+    spyOn(drawController.drawingTool.canvas, 'getObjects').and.callFake(() => {
       return [{ id: 1 }, { id: 2 }];
     });
-    var isEmpty = drawController.isCanvasEmpty();
+    const isEmpty = drawController.isCanvasEmpty();
     expect(drawController.drawingTool.canvas.getObjects).toHaveBeenCalled();
     expect(isEmpty).toEqual(false);
   });
+
 });
-//# sourceMappingURL=drawController.spec.js.map

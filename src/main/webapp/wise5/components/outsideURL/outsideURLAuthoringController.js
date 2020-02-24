@@ -1,111 +1,143 @@
 'use strict';
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
+import OutsideURLController from './outsideURLController';
 
-var _outsideURLController = require('./outsideURLController');
-
-var _outsideURLController2 = _interopRequireDefault(_outsideURLController);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var OutsideURLAuthoringController = function (_OutsideURLController) {
-  _inherits(OutsideURLAuthoringController, _OutsideURLController);
-
-  function OutsideURLAuthoringController($filter, $mdDialog, $q, $rootScope, $sce, $scope, AnnotationService, ConfigService, NodeService, NotebookService, OutsideURLService, ProjectService, StudentAssetService, StudentDataService, UtilService) {
-    _classCallCheck(this, OutsideURLAuthoringController);
-
-    var _this = _possibleConstructorReturn(this, (OutsideURLAuthoringController.__proto__ || Object.getPrototypeOf(OutsideURLAuthoringController)).call(this, $filter, $mdDialog, $q, $rootScope, $sce, $scope, AnnotationService, ConfigService, NodeService, NotebookService, OutsideURLService, ProjectService, StudentAssetService, StudentDataService, UtilService));
-
-    $scope.$watch(function () {
-      return _this.authoringComponentContent;
-    }, function (newValue, oldValue) {
-      _this.componentContent = _this.ProjectService.injectAssetPaths(newValue);
-
-      // set the url
-      _this.setURL(_this.authoringComponentContent.url);
-    }, true);
-
-    /*
-     * Listen for the assetSelected event which occurs when the user
-     * selects an asset from the choose asset popup
-     */
-    _this.$scope.$on('assetSelected', function (event, args) {
-
-      if (args != null) {
-
-        // make sure the event was fired for this component
-        if (args.nodeId == _this.nodeId && args.componentId == _this.componentId) {
-          // the asset was selected for this component
-          var assetItem = args.assetItem;
-
-          if (assetItem != null) {
-            var fileName = assetItem.fileName;
-
-            if (fileName != null) {
-              /*
-               * get the assets directory path
-               * e.g.
-               * /wise/curriculum/3/
-               */
-              var assetsDirectoryPath = _this.ConfigService.getProjectAssetsDirectoryPath();
-              var fullAssetPath = assetsDirectoryPath + '/' + fileName;
-
-              var summernoteId = '';
-
-              if (args.target == 'rubric') {
-                // the target is the summernote rubric element
-                summernoteId = 'summernoteRubric_' + _this.nodeId + '_' + _this.componentId;
-              }
-
-              if (summernoteId != '') {
-                if (_this.UtilService.isImage(fileName)) {
-                  /*
-                   * move the cursor back to its position when the asset chooser
-                   * popup was clicked
-                   */
-                  $('#' + summernoteId).summernote('editor.restoreRange');
-                  $('#' + summernoteId).summernote('editor.focus');
-
-                  // add the image html
-                  $('#' + summernoteId).summernote('insertImage', fullAssetPath, fileName);
-                } else if (_this.UtilService.isVideo(fileName)) {
-                  /*
-                   * move the cursor back to its position when the asset chooser
-                   * popup was clicked
-                   */
-                  $('#' + summernoteId).summernote('editor.restoreRange');
-                  $('#' + summernoteId).summernote('editor.focus');
-
-                  // insert the video element
-                  var videoElement = document.createElement('video');
-                  videoElement.controls = 'true';
-                  videoElement.innerHTML = '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
-                  $('#' + summernoteId).summernote('insertNode', videoElement);
-                }
-              }
-            }
-          }
-        }
+class OutsideURLAuthoringController extends OutsideURLController {
+  constructor($filter,
+              $mdDialog,
+              $q,
+              $rootScope,
+              $sce,
+              $scope,
+              AnnotationService,
+              ConfigService,
+              NodeService,
+              NotebookService,
+              OutsideURLService,
+              ProjectService,
+              StudentAssetService,
+              StudentDataService,
+              UtilService) {
+    super($filter,
+      $mdDialog,
+      $q,
+      $rootScope,
+      $sce,
+      $scope,
+      AnnotationService,
+      ConfigService,
+      NodeService,
+      NotebookService,
+      OutsideURLService,
+      ProjectService,
+      StudentAssetService,
+      StudentDataService,
+      UtilService);
+    this.$translate = this.$filter('translate');
+    this.isShowOERs = this.componentContent.url === '';
+    this.subjects = [
+      {
+        value: 'Earth and Space Sciences', 
+        label: this.$translate('outsideURL.ESS')
+      },
+      {
+        value: 'Life Sciences', 
+        label: this.$translate('outsideURL.LS')
+      },
+      {
+        value: 'Physical Sciences', 
+        label: this.$translate('outsideURL.PS')
+      },
+      {
+        value: 'Engineering, Technology, and Applications of Science', 
+        label: this.$translate('outsideURL.ETS')
       }
+    ];
+    this.searchText = '';
+    this.selectedSubjects = [];
 
-      // close the popup
-      _this.$mdDialog.hide();
+    $scope.$watch(() => {
+      return this.authoringComponentContent;
+    }, (newValue, oldValue) => {
+      this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+      this.setURL(this.authoringComponentContent.url);
+      this.setInfo(this.authoringComponentContent.info);
+      this.setWidthAndHeight(
+          this.authoringComponentContent.width, this.authoringComponentContent.height);
+    }, true);
+    this.OutsideURLService.getOpenEducationalResources().then((openEducationalResources) => {
+      this.openEducationalResources = 
+          openEducationalResources.sort((a, b) => (a.metadata.title > b.metadata.title) ? 1 : -1);
     });
-    return _this;
+    this.registerAssetListener();
   }
 
-  return OutsideURLAuthoringController;
-}(_outsideURLController2.default);
+  registerAssetListener() {
+    this.$scope.$on('assetSelected', (event, {nodeId, componentId, assetItem, target}) => {
+      if (nodeId === this.nodeId && componentId === this.componentId) {
+        const fileName = assetItem.fileName;
+        const fullFilePath = `${this.ConfigService.getProjectAssetsDirectoryPath()}/${fileName}`;
+        if (target === 'rubric') {
+          this.UtilService.insertFileInSummernoteEditor(
+              `summernoteRubric_${this.nodeId}_${this.componentId}`, fullFilePath, fileName);
+        }
+      }
+      this.$mdDialog.hide();
+    });
+  }
 
-OutsideURLAuthoringController.$inject = ['$filter', '$mdDialog', '$q', '$rootScope', '$sce', '$scope', 'AnnotationService', 'ConfigService', 'NodeService', 'NotebookService', 'OutsideURLService', 'ProjectService', 'StudentAssetService', 'StudentDataService', 'UtilService'];
+  urlInputChanged() {
+    this.authoringComponentContent.info = null;
+    this.authoringViewComponentChanged();
+  }
 
-exports.default = OutsideURLAuthoringController;
-//# sourceMappingURL=outsideURLAuthoringController.js.map
+  populateOpenEducationalResourceURL(openEducationalResource) {
+    this.authoringComponentContent.url = openEducationalResource.url;
+    this.authoringComponentContent.info = openEducationalResource.info;
+    this.authoringViewComponentChanged();
+  }
+
+  isResourceSelected(resourceUrl) {
+    return resourceUrl === this.authoringComponentContent.url;
+  }
+
+  reloadResource() {
+    const iframe = document.getElementById(this.outsideURLIFrameId);
+    iframe.src = '';
+    iframe.src = this.authoringComponentContent.url;
+  }
+
+  isSubjectMatch(resource) {
+    for (const subject of this.selectedSubjects) {
+      if (resource.metadata.subjects.includes(subject)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  clearFilters() {
+    this.searchText = '';
+    this.selectedSubjects = [];
+  }
+}
+
+OutsideURLAuthoringController.$inject = [
+  '$filter',
+  '$mdDialog',
+  '$q',
+  '$rootScope',
+  '$sce',
+  '$scope',
+  'AnnotationService',
+  'ConfigService',
+  'NodeService',
+  'NotebookService',
+  'OutsideURLService',
+  'ProjectService',
+  'StudentAssetService',
+  'StudentDataService',
+  'UtilService'
+];
+
+export default OutsideURLAuthoringController;

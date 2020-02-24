@@ -1,19 +1,15 @@
 'use strict';
 
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var ComponentGradingController = function () {
-    function ComponentGradingController($filter, $mdDialog, $scope, $timeout, AnnotationService, ConfigService, ProjectService, TeacherDataService, UtilService) {
-        var _this = this;
-
-        _classCallCheck(this, ComponentGradingController);
-
+class ComponentGradingController {
+    constructor($filter,
+                $mdDialog,
+                $scope,
+                $timeout,
+                AnnotationService,
+                ConfigService,
+                ProjectService,
+                TeacherDataService,
+                UtilService,) {
         this.$filter = $filter;
         this.$mdDialog = $mdDialog;
         this.$scope = $scope;
@@ -26,296 +22,297 @@ var ComponentGradingController = function () {
 
         this.$translate = this.$filter('translate');
 
-        this.$onInit = function () {
-            _this.runId = _this.ConfigService.getRunId();
+        this.$onInit = () => {
+            this.runId = this.ConfigService.getRunId();
 
-            var toUserInfo = _this.ConfigService.getUserInfoByWorkgroupId(_this.toWorkgroupId);
+            let toUserInfo = this.ConfigService.getUserInfoByWorkgroupId(this.toWorkgroupId);
             if (toUserInfo) {
                 // set the period id
-                _this.periodId = toUserInfo.periodId;
+                this.periodId = toUserInfo.periodId;
             }
         };
 
-        this.$onChanges = function (changes) {
+        this.$onChanges = (changes) => {
 
             if (changes.maxScore) {
-                _this.maxScore = typeof changes.maxScore.currentValue === 'number' ? changes.maxScore.currentValue : 0;
+                this.maxScore = typeof changes.maxScore.currentValue === 'number' ? changes.maxScore.currentValue : 0;
             }
 
-            _this.componentStates = _this.TeacherDataService.getComponentStatesByWorkgroupIdAndComponentId(_this.toWorkgroupId, _this.componentId);
+            this.componentStates = this.TeacherDataService.getComponentStatesByWorkgroupIdAndComponentId(this.toWorkgroupId, this.componentId);
 
-            _this.processAnnotations();
+            this.processAnnotations();
         };
 
-        this.$scope.$on('annotationSavedToServer', function (event, args) {
+        this.$scope.$on('annotationSavedToServer', (event, args) => {
             // TODO: we're watching this here and in the parent component's controller; probably want to optimize!
-            if (args != null) {
+            if (args != null ) {
 
                 // get the annotation that was saved to the server
-                var annotation = args.annotation;
+                let annotation = args.annotation;
 
                 if (annotation != null) {
 
                     // get the node id and component id of the annotation
-                    var annotationNodeId = annotation.nodeId;
-                    var annotationComponentId = annotation.componentId;
+                    let annotationNodeId = annotation.nodeId;
+                    let annotationComponentId = annotation.componentId;
 
                     // make sure the annotation was for this component
-                    if (_this.nodeId === annotationNodeId && _this.componentId === annotationComponentId) {
+                    if (this.nodeId === annotationNodeId &&
+                        this.componentId === annotationComponentId) {
 
                         // get latest score and comment annotations for this component
-                        _this.processAnnotations();
+                        this.processAnnotations();
                     }
                 }
             }
         });
 
-        this.$scope.$on('projectSaved', function (event, args) {
+        this.$scope.$on('projectSaved', (event, args) => {
             // update maxScore
-            _this.maxScore = _this.ProjectService.getMaxScoreForComponent(_this.nodeId, _this.componentId);
+            this.maxScore = this.ProjectService.getMaxScoreForComponent(this.nodeId, this.componentId);
         });
+
     }
 
-    _createClass(ComponentGradingController, [{
-        key: 'processAnnotations',
-        value: function processAnnotations() {
-            if (this.showAllAnnotations) {
-                // we want to show all the latest annotation types (both teacher- and auto-generated)
-                this.latestAnnotations = {};
-                this.latestAnnotations.score = this.AnnotationService.getLatestTeacherScoreAnnotationByStudentWorkId(this.componentStateId);
-                this.latestAnnotations.autoScore = this.AnnotationService.getLatestAutoScoreAnnotationByStudentWorkId(this.componentStateId);
-                this.latestAnnotations.comment = this.AnnotationService.getLatestTeacherCommentAnnotationByStudentWorkId(this.componentStateId);
-                this.latestAnnotations.autoComment = this.AnnotationService.getLatestAutoCommentAnnotationByStudentWorkId(this.componentStateId);
-            } else {
-                // we only want to show the latest score and comment annotations (either teacher- or auto-generated)
-                this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.toWorkgroupId);
+    processAnnotations() {
+        if (this.showAllAnnotations) {
+            // we want to show all the latest annotation types (both teacher- and auto-generated)
+            this.latestAnnotations = {};
+            this.latestAnnotations.score = this.AnnotationService.getLatestTeacherScoreAnnotationByStudentWorkId(this.componentStateId);
+            this.latestAnnotations.autoScore = this.AnnotationService.getLatestAutoScoreAnnotationByStudentWorkId(this.componentStateId);
+            this.latestAnnotations.comment = this.AnnotationService.getLatestTeacherCommentAnnotationByStudentWorkId(this.componentStateId);
+            this.latestAnnotations.autoComment = this.AnnotationService.getLatestAutoCommentAnnotationByStudentWorkId(this.componentStateId);
+        } else {
+            // we only want to show the latest score and comment annotations (either teacher- or auto-generated)
+            this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.toWorkgroupId);
 
-                if (this.latestAnnotations && this.latestAnnotations.comment) {
-                    var latestComment = this.latestAnnotations.comment;
-                    if (latestComment.type === 'comment') {
-                        this.comment = latestComment.data.value;
-                    }
+            if (this.latestAnnotations && this.latestAnnotations.comment) {
+                let latestComment = this.latestAnnotations.comment;
+                if (latestComment.type === 'comment') {
+                    this.comment = latestComment.data.value;
                 }
-
-                if (this.latestAnnotations && this.latestAnnotations.score) {
-                    this.score = this.latestAnnotations.score.data.value;
-                }
-
-                this.latestAnnotationTime = this.getLatestAnnotationTime();
             }
+
+            if (this.latestAnnotations && this.latestAnnotations.score) {
+                this.score = this.latestAnnotations.score.data.value;
+            }
+
+            this.latestAnnotationTime = this.getLatestAnnotationTime();
         }
+    }
 
-        /**
-         * Returns true if the latest comment is an auto comment and it's
-         * studentWorkId matches the latest component state's id
-         */
-
-    }, {
-        key: 'showAutoComment',
-        value: function showAutoComment() {
-            var result = false;
-            if (this.latestAnnotations) {
-                var latestComment = this.latestAnnotations.comment;
-                if (latestComment && latestComment.type === 'autoComment') {
-                    var n = this.componentStates.length;
-                    if (n > 0) {
-                        var latestComponentState = this.componentStates[n - 1];
-                        if (latestComponentState.id === latestComment.studentWorkId) {
-                            result = true;
-                        }
+    /**
+     * Returns true if the latest comment is an auto comment and it's
+     * studentWorkId matches the latest component state's id
+     */
+    showAutoComment() {
+        let result = false;
+        if (this.latestAnnotations) {
+            let latestComment = this.latestAnnotations.comment;
+            if (latestComment && latestComment.type === 'autoComment') {
+                let n = this.componentStates.length;
+                if (n > 0) {
+                    let latestComponentState = this.componentStates[n-1]
+                    if (latestComponentState.id === latestComment.studentWorkId) {
+                        result = true;
                     }
                 }
             }
-
-            return result;
         }
 
-        /**
-         * Returns true if there are both teacher and auto annotations for this component state
-         */
+        return result;
+    }
 
-    }, {
-        key: 'hasTeacherAndAutoAnnotations',
-        value: function hasTeacherAndAutoAnnotations() {
-            return (this.latestAnnotations.score || this.latestAnnotations.comment) && (this.latestAnnotations.autoScore || this.latestAnnotations.autoComment);
-        }
+    /**
+     * Returns true if there are both teacher and auto annotations for this component state
+     */
+    hasTeacherAndAutoAnnotations() {
+        return (this.latestAnnotations.score || this.latestAnnotations.comment) &&
+               (this.latestAnnotations.autoScore || this.latestAnnotations.autoComment);
+    }
 
-        /**
-         * Returns true if there are any teacher annotations for this component state
-         */
+    /**
+     * Returns true if there are any teacher annotations for this component state
+     */
+    hasTeacherAnnotations() {
+        return this.latestAnnotations.score || this.latestAnnotations.comment;
+    }
 
-    }, {
-        key: 'hasTeacherAnnotations',
-        value: function hasTeacherAnnotations() {
-            return this.latestAnnotations.score || this.latestAnnotations.comment;
-        }
+    /**
+     * Returns true if there are any auto annotations for this component state
+     */
+    hasAutoAnnotations() {
+        return this.latestAnnotations.autoScore || this.latestAnnotations.autoComment;
+    }
 
-        /**
-         * Returns true if there are any auto annotations for this component state
-         */
+    /**
+     * Returns true if there are no annotations for this component state
+     */
+    hasNoAnnotations() {
+        return !this.latestAnnotations.score && !this.latestAnnotations.comment && !this.latestAnnotations.autoScore && !this.latestAnnotations.autoComment;
+    }
 
-    }, {
-        key: 'hasAutoAnnotations',
-        value: function hasAutoAnnotations() {
-            return this.latestAnnotations.autoScore || this.latestAnnotations.autoComment;
-        }
+    /**
+     * Get the most recent annotation (from the current score and comment annotations)
+     * @return Object (latest annotation)
+     */
+    getLatestAnnotation() {
+        let latest = null;
+        let latestComment = this.latestAnnotations.comment;
+        let latestScore = this.latestAnnotations.score;
 
-        /**
-         * Returns true if there are no annotations for this component state
-         */
+        if (latestComment || latestScore) {
+            let commentSaveTime = latestComment ? latestComment.serverSaveTime : 0;
+            let scoreSaveTime = latestScore ? latestScore.serverSaveTime : 0;
 
-    }, {
-        key: 'hasNoAnnotations',
-        value: function hasNoAnnotations() {
-            return !this.latestAnnotations.score && !this.latestAnnotations.comment && !this.latestAnnotations.autoScore && !this.latestAnnotations.autoComment;
-        }
-
-        /**
-         * Get the most recent annotation (from the current score and comment annotations)
-         * @return Object (latest annotation)
-         */
-
-    }, {
-        key: 'getLatestAnnotation',
-        value: function getLatestAnnotation() {
-            var latest = null;
-            var latestComment = this.latestAnnotations.comment;
-            var latestScore = this.latestAnnotations.score;
-
-            if (latestComment || latestScore) {
-                var commentSaveTime = latestComment ? latestComment.serverSaveTime : 0;
-                var scoreSaveTime = latestScore ? latestScore.serverSaveTime : 0;
-
-                if (commentSaveTime >= scoreSaveTime) {
-                    latest = latestComment;
-                } else if (scoreSaveTime > commentSaveTime) {
-                    latest = latestScore;
-                }
-            }
-
-            return latest;
-        }
-
-        /**
-         * Calculate the save time of the latest annotation
-         * @return Number (latest annotation post time)
-         */
-
-    }, {
-        key: 'getLatestAnnotationTime',
-        value: function getLatestAnnotationTime() {
-            var latest = this.getLatestAnnotation();
-            var time = 0;
-
-            if (latest) {
-                var serverSaveTime = latest.serverSaveTime;
-                time = this.ConfigService.convertToClientTimestamp(serverSaveTime);
-            }
-
-            return time;
-        }
-
-        /**
-         * Save the annotation to the server
-         * @param type String to indicate which type of annotation to post
-         */
-
-    }, {
-        key: 'postAnnotation',
-        value: function postAnnotation(type) {
-
-            if (this.runId != null && this.periodId != null && this.nodeId != null && this.componentId != null && this.toWorkgroupId != null && type) {
-
-                // get the current time
-                var clientSaveTime = new Date().getTime();
-
-                // get the logged in teacher's id
-                var fromWorkgroupId = this.ConfigService.getWorkgroupId();
-
-                // get the value
-                var value = null;
-                if (type === 'score') {
-                    value = this.score;
-                    // convert the value to a number if possible
-                    value = this.UtilService.convertStringToNumber(value);
-                } else if (type === 'comment') {
-                    value = this.comment;
-                }
-
-                if (type === 'comment' && value || type === 'score' && typeof value === 'number' && value >= 0) {
-                    var data = {};
-                    data.value = value;
-                    var localNotebookItemId = null; // we're not grading notebook item in this view.
-                    var notebookItemId = null; // we're not grading notebook item in this view.
-
-                    // create the annotation object
-                    var annotation = this.AnnotationService.createAnnotation(this.annotationId, this.runId, this.periodId, this.fromWorkgroupId, this.toWorkgroupId, this.nodeId, this.componentId, this.componentStateId, localNotebookItemId, notebookItemId, type, data, clientSaveTime);
-
-                    // save the annotation to the server
-                    this.AnnotationService.saveAnnotation(annotation).then(function (result) {});
-                }
+            if (commentSaveTime >= scoreSaveTime) {
+                latest = latestComment;
+            } else if (scoreSaveTime > commentSaveTime) {
+                latest = latestScore;
             }
         }
 
-        /**
-         * Save the maxScore of this component to the server
-         */
+        return latest;
+    }
 
-    }, {
-        key: 'updateMaxScore',
-        value: function updateMaxScore() {
+    /**
+     * Calculate the save time of the latest annotation
+     * @return Number (latest annotation post time)
+     */
+    getLatestAnnotationTime() {
+        let latest = this.getLatestAnnotation();
+        let time = 0;
 
-            if (this.runId != null && this.periodId != null && this.nodeId != null && this.componentId != null) {
-
-                // get the new maxScore
-                var maxScore = this.maxScore;
-                // convert to number if possible
-                maxScore = this.UtilService.convertStringToNumber(maxScore);
-
-                if (typeof maxScore === 'number' && maxScore >= 0) {
-                    this.ProjectService.setMaxScoreForComponent(this.nodeId, this.componentId, maxScore);
-                    this.ProjectService.saveProject();
-                }
-            }
+        if (latest) {
+            let serverSaveTime = latest.serverSaveTime;
+            time = this.ConfigService.convertToClientTimestamp(serverSaveTime)
         }
 
-        /**
-         * Shows (or hides) the teacher comment field when user wants to override an automated comment
-         */
+        return time;
+    }
 
-    }, {
-        key: 'editComment',
-        value: function editComment() {
-            this.edit = !this.edit;
 
-            if (this.edit) {
-                var componentId = this.componentId;
-                var toWorkgroupId = this.toWorkgroupId;
-                // if we're showing the comment field, focus it
-                this.$timeout(function () {
+
+    /**
+     * Save the annotation to the server
+     * @param type String to indicate which type of annotation to post
+     */
+    postAnnotation(type) {
+
+        if (this.runId != null &&
+            this.periodId != null &&
+            this.nodeId != null &&
+            this.componentId != null &&
+            this.toWorkgroupId != null &&
+            type) {
+
+            // get the current time
+            let clientSaveTime = new Date().getTime();
+
+            // get the logged in teacher's id
+            let fromWorkgroupId = this.ConfigService.getWorkgroupId();
+
+            // get the value
+            let value = null;
+            if (type === 'score') {
+                value = this.score;
+                // convert the value to a number if possible
+                value = this.UtilService.convertStringToNumber(value);
+            } else if (type === 'comment') {
+                value = this.comment;
+            }
+
+            if ((type === 'comment' && value) || (type === 'score' && typeof value === 'number' && value >= 0)) {
+                let data = {};
+                data.value = value;
+                let localNotebookItemId = null;  // we're not grading notebook item in this view.
+                let notebookItemId = null;  // we're not grading notebook item in this view.
+
+                // create the annotation object
+                let annotation = this.AnnotationService.createAnnotation(
+                    this.annotationId,
+                    this.runId,
+                    this.periodId,
+                    this.fromWorkgroupId,
+                    this.toWorkgroupId,
+                    this.nodeId,
+                    this.componentId,
+                    this.componentStateId,
+                    localNotebookItemId,
+                    notebookItemId,
+                    type,
+                    data,
+                    clientSaveTime);
+
+                // save the annotation to the server
+                this.AnnotationService.saveAnnotation(annotation).then(result => {
+
+                });
+            }
+        }
+    }
+
+    /**
+     * Save the maxScore of this component to the server
+     */
+    updateMaxScore() {
+
+        if (this.runId != null &&
+            this.periodId != null &&
+            this.nodeId != null &&
+            this.componentId != null) {
+
+            // get the new maxScore
+            let maxScore = this.maxScore;
+            // convert to number if possible
+            maxScore = this.UtilService.convertStringToNumber(maxScore);
+
+            if (typeof maxScore === 'number' && maxScore >= 0) {
+                this.ProjectService.setMaxScoreForComponent(this.nodeId, this.componentId, maxScore);
+                this.ProjectService.saveProject();
+            }
+        }
+    }
+
+    /**
+     * Shows (or hides) the teacher comment field when user wants to override an automated comment
+     */
+    editComment() {
+        this.edit = !this.edit;
+
+        if (this.edit) {
+            let componentId = this.componentId;
+            let toWorkgroupId = this.toWorkgroupId;
+            // if we're showing the comment field, focus it
+            this.$timeout(
+                () => {
                     angular.element(document.querySelector('#commentInput_' + componentId + '_' + toWorkgroupId)).focus();
                 }, 100);
-            }
         }
+    }
 
-        /**
-         * Focuses the score input when user wants to override an automated score
-         * @param an angular trigger event
-         */
+    /**
+     * Focuses the score input when user wants to override an automated score
+     * @param an angular trigger event
+     */
+    editScore($event) {
+        angular.element(document.querySelector('#scoreInput_' + this.componentId + '_' + this.toWorkgroupId)).focus();
+    }
+}
 
-    }, {
-        key: 'editScore',
-        value: function editScore($event) {
-            angular.element(document.querySelector('#scoreInput_' + this.componentId + '_' + this.toWorkgroupId)).focus();
-        }
-    }]);
+ComponentGradingController.$inject = [
+    '$filter',
+    '$mdDialog',
+    '$scope',
+    '$timeout',
+    'AnnotationService',
+    'ConfigService',
+    'ProjectService',
+    'TeacherDataService',
+    'UtilService'
+];
 
-    return ComponentGradingController;
-}();
-
-ComponentGradingController.$inject = ['$filter', '$mdDialog', '$scope', '$timeout', 'AnnotationService', 'ConfigService', 'ProjectService', 'TeacherDataService', 'UtilService'];
-
-var ComponentGrading = {
+const ComponentGrading = {
     bindings: {
         componentId: '<',
         componentStateId: '<',
@@ -330,5 +327,4 @@ var ComponentGrading = {
     controller: ComponentGradingController
 };
 
-exports.default = ComponentGrading;
-//# sourceMappingURL=componentGrading.js.map
+export default ComponentGrading;

@@ -1,142 +1,147 @@
 package org.wise.portal.presentation.web.controllers.user;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.*;
-import org.wise.portal.domain.authentication.MutableUserDetails;
-import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
-import org.wise.portal.domain.user.User;
-import org.wise.portal.presentation.web.controllers.ControllerUtil;
-import org.wise.portal.presentation.web.exception.IncorrectPasswordException;
-import org.wise.portal.presentation.web.exception.NotAuthorizedException;
-import org.wise.portal.presentation.web.response.SimpleResponse;
-import org.wise.portal.service.mail.IMailFacade;
-import org.wise.portal.service.user.UserService;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.web.authentication.switchuser.SwitchUserFilter;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.wise.portal.domain.authentication.MutableUserDetails;
+import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
+import org.wise.portal.domain.project.Project;
+import org.wise.portal.domain.run.Run;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.domain.workgroup.Workgroup;
+import org.wise.portal.presentation.web.exception.IncorrectPasswordException;
+import org.wise.portal.presentation.web.response.SimpleResponse;
+import org.wise.portal.service.mail.IMailFacade;
+import org.wise.portal.service.project.ProjectService;
+import org.wise.portal.service.run.RunService;
+import org.wise.portal.service.user.UserService;
+import org.wise.portal.service.workgroup.WorkgroupService;
 
 /**
- * Controller for User REST API
+ * User REST API
  *
  * @author Hiroki Terashima
  * @author Geoffrey Kwan
  * @author Jonathan Lim-Breitbart
  */
 @RestController
-@RequestMapping(value = "/api/user", produces = "application/json;charset=UTF-8")
+@RequestMapping("/api/user")
 public class UserAPIController {
 
   @Autowired
-  private Properties appProperties;
+  protected Properties appProperties;
+
+  @Autowired
+  protected RunService runService;
 
   @Autowired
   protected UserService userService;
 
   @Autowired
+  protected WorkgroupService workgroupService;
+
+  @Autowired
+  protected ProjectService projectService;
+
+  @Autowired
   protected IMailFacade mailService;
 
   @Value("${google.clientId:}")
-  private String googleClientId;
+  protected String googleClientId = "";
 
   @Value("${google.clientSecret:}")
-  private String googleClientSecret;
+  private String googleClientSecret = "";
 
-  @RequestMapping(value = "/user", method = RequestMethod.GET)
-  protected String getUserInfo(ModelMap modelMap,
-      HttpServletRequest request,
-      @RequestParam(value = "username", required = false) String username,
-      @RequestParam(value = "pLT", required = false) String previousLoginTime) throws Exception {
-    User user = ControllerUtil.getSignedInUser();
-    if (user != null) {
-      MutableUserDetails userDetails = user.getUserDetails();
+  protected static final String PROJECT_THUMB_PATH = "/assets/project_thumb.png";
 
-      Boolean isStudent = false;
-      Boolean isAdmin = false;
-      Boolean isResearcher = false;
-      Boolean isTeacher = false;
-      for (GrantedAuthority authority : userDetails.getAuthorities()) {
-        if (authority.getAuthority().equals("ROLE_STUDENT")) {
-          isStudent = true;
-          break;
-        } else if (authority.getAuthority().equals("ROLE_ADMINISTRATOR")) {
-          isAdmin = true;
-          break;
-        } else if (authority.getAuthority().equals("ROLE_RESEARCHER")) {
-          isResearcher = true;
-        } else if (authority.getAuthority().equals("ROLE_TEACHER")) {
-          isTeacher = true;
+  @GetMapping("/info")
+  HashMap<String, Object> getUserInfo(Authentication auth,
+      @RequestParam(value = "username", required = false) String username) {
+    HashMap<String, Object> info = new HashMap<String, Object>();
+    if (auth != null) {
+      User user = userService.retrieveUserByUsername(auth.getName());
+      info.put("id", user.getId());
+      MutableUserDetails ud = user.getUserDetails();
+      info.put("firstName", ud.getFirstname());
+      info.put("lastName", ud.getLastname());
+      info.put("username", ud.getUsername());
+      info.put("isGoogleUser", ud.isGoogleUser());
+      info.put("isPreviousAdmin", isPreviousAdmin(auth));
+      info.put("language", ud.getLanguage());
+      info.put("isGoogleUser", ud.isGoogleUser());
+
+      if (user.isStudent()) {
+        info.put("role", "student");
+      } else {
+        if (user.isAdmin()) {
+          info.put("role", "admin");
+        } else if (user.isResearcher()) {
+          info.put("role", "researcher");
+        } else if (user.isTeacher()) {
+          info.put("role", "teacher");
         }
+        TeacherUserDetails tud = (TeacherUserDetails) ud;
+        info.put("displayName", tud.getDisplayname());
+        info.put("email", tud.getEmailAddress());
+        info.put("city", tud.getCity());
+        info.put("state", tud.getState());
+        info.put("country", tud.getCountry());
+        info.put("schoolName", tud.getSchoolname());
+        info.put("schoolLevel", tud.getSchoollevel());
       }
-
-      JSONObject userJSON = new JSONObject();
-      userJSON.put("id", user.getId());
-      userJSON.put("firstName", userDetails.getFirstname());
-      userJSON.put("lastName", userDetails.getLastname());
-      userJSON.put("username", userDetails.getUsername());
-      userJSON.put("isGoogleUser", userDetails.isGoogleUser());
-
-      if (isStudent) {
-        userJSON.put("role", "student");
-      } else if (isAdmin) {
-        userJSON.put("role", "admin");
-      } else if (isResearcher) {
-        userJSON.put("role", "researcher");
-      } else if (isTeacher) {
-        userJSON.put("role", "teacher");
-      }
-
-      if (!isStudent) {
-        TeacherUserDetails teacherUserDetails = (TeacherUserDetails) userDetails;
-        userJSON.put("displayName", teacherUserDetails.getDisplayname());
-        userJSON.put("email", teacherUserDetails.getEmailAddress());
-        userJSON.put("city", teacherUserDetails.getCity());
-        userJSON.put("state", teacherUserDetails.getState());
-        userJSON.put("country", teacherUserDetails.getCountry());
-        userJSON.put("schoolName", teacherUserDetails.getSchoolname());
-        userJSON.put("schoolLevel", teacherUserDetails.getSchoollevel());
-      }
-      String language = userDetails.getLanguage();
-      if (language == null) {
-        language = "en";
-      }
-      userJSON.put("language", language);
-      userJSON.put("isGoogleUser", userDetails.isGoogleUser());
-
-      return userJSON.toString();
+      return info;
     } else {
-      JSONObject userJSON = new JSONObject();
-      userJSON.put("username", username);
-      return userJSON.toString();
+      info.put("username", username);
     }
+    return info;
   }
 
-  @RequestMapping(value = "/config", method = RequestMethod.GET)
-  protected String getConfig(ModelMap modelMap, HttpServletRequest request) throws JSONException {
-    JSONObject configJSON = new JSONObject();
+  boolean isPreviousAdmin(Authentication authentication) {
+    for (GrantedAuthority authority : authentication.getAuthorities()) {
+      if (SwitchUserFilter.ROLE_PREVIOUS_ADMINISTRATOR.equals(authority.getAuthority())) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  @GetMapping("/config")
+  protected HashMap<String, Object> getConfig(HttpServletRequest request) {
+    HashMap<String, Object> config = new HashMap<String, Object>();
     String contextPath = request.getContextPath();
-    configJSON.put("contextPath", contextPath);
-    configJSON.put("googleClientId", googleClientId);
-    configJSON.put("isGoogleClassroomEnabled", isGoogleClassroomEnabled());
-    configJSON.put("recaptchaPublicKey", appProperties.get("recaptcha_public_key"));
-    configJSON.put("logOutURL", contextPath + "/logout");
-    return configJSON.toString();
+    config.put("contextPath", contextPath);
+    config.put("currentTime", System.currentTimeMillis());
+    config.put("googleClientId", googleClientId);
+    config.put("isGoogleClassroomEnabled", isGoogleClassroomEnabled());
+    config.put("logOutURL", contextPath + "/logout");
+    config.put("recaptchaPublicKey", appProperties.get("recaptcha_public_key"));
+    return config;
   }
 
   private boolean isGoogleClassroomEnabled() {
-    return !googleClientId.equals("") && !googleClientSecret.equals("");
+    return !googleClientId.isEmpty() && !googleClientSecret.isEmpty();
   }
 
-  @RequestMapping(value = "/check-authentication", method = RequestMethod.POST)
-  protected String checkAuthentication(@RequestParam("username") String username,
-                                       @RequestParam("password") String password) throws JSONException {
+  @PostMapping("/check-authentication")
+  HashMap<String, Object> checkAuthentication(@RequestParam("username") String username,
+      @RequestParam("password") String password) {
     User user = userService.retrieveUserByUsername(username);
-    JSONObject response = new JSONObject();
+    HashMap<String, Object> response = new HashMap<String, Object> ();
     if (user == null) {
       response.put("isUsernameValid", false);
       response.put("isPasswordValid", false);
@@ -148,57 +153,52 @@ public class UserAPIController {
       response.put("firstName", user.getUserDetails().getFirstname());
       response.put("lastName", user.getUserDetails().getLastname());
     }
-    return response.toString();
+    return response;
   }
 
-  @RequestMapping(value = "/password", method = RequestMethod.POST)
-  protected SimpleResponse changePassword(@RequestParam("username") String username,
+  @PostMapping("/password")
+  SimpleResponse changePassword(Authentication auth,
       @RequestParam("oldPassword") String oldPassword,
-      @RequestParam("newPassword") String newPassword) throws NotAuthorizedException, JSONException {
-    User user = ControllerUtil.getSignedInUser();
-    if (user.getUserDetails().getUsername().equals(username)) {
-      try {
-        User result = userService.updateUserPassword(user, oldPassword, newPassword);
-        return new SimpleResponse("message", "success");
-      } catch(IncorrectPasswordException e) {
-        return new SimpleResponse("message", "incorrect password");
-      }
-    } else {
-      throw new NotAuthorizedException("username is not the same as signed in user");
+      @RequestParam("newPassword") String newPassword) {
+    User user = userService.retrieveUserByUsername(auth.getName());
+    try {
+      userService.updateUserPassword(user, oldPassword, newPassword);
+      return new SimpleResponse("success", "passwordUpdated");
+    } catch (IncorrectPasswordException e) {
+      return new SimpleResponse("error", "incorrectPassword");
     }
   }
 
-  @RequestMapping(value = "/languages", method = RequestMethod.GET)
-  protected String getSupportedLanguages() throws JSONException {
-    String supportedLocales = appProperties.getProperty("supportedLocales");
-    String[] supportedLocalesArray = supportedLocales.split(",");
-    JSONArray supportedLocalesJSONArray = new JSONArray();
-    for (String localeString: supportedLocalesArray) {
-      String language = getLanguageName(localeString);
-      JSONObject localeAndLanguage = new JSONObject();
-      localeAndLanguage.put("locale", localeString);
-      localeAndLanguage.put("language", language);
-      supportedLocalesJSONArray.put(localeAndLanguage);
+  @GetMapping("/languages")
+  List<HashMap<String, String>> getSupportedLanguages() {
+    String supportedLocalesStr = appProperties.getProperty("supportedLocales", "");
+    List<HashMap<String, String>> langs = new ArrayList<HashMap<String, String>>();
+    for (String localeString : supportedLocalesStr.split(",")) {
+      String langName = getLanguageName(localeString);
+      HashMap<String, String> localeAndLang = new HashMap<String, String>();
+      localeAndLang.put("locale", localeString);
+      localeAndLang.put("language", langName);
+      langs.add(localeAndLang);
     }
-    return supportedLocalesJSONArray.toString();
+    return langs;
   }
 
-  @RequestMapping(value = "/check-google-user-exists", method = RequestMethod.GET)
-  protected boolean isGoogleIdExist(@RequestParam String googleUserId) {
-    return this.userService.retrieveUserByGoogleUserId(googleUserId) != null;
+  @GetMapping("/check-google-user-exists")
+  boolean isGoogleIdExist(@RequestParam String googleUserId) {
+    return userService.retrieveUserByGoogleUserId(googleUserId) != null;
   }
 
-  @RequestMapping(value = "/check-google-user-matches", method = RequestMethod.GET)
-  protected boolean isGoogleIdMatches(@RequestParam String googleUserId,
-                                    @RequestParam String userId) {
-    User user = this.userService.retrieveUserByGoogleUserId(googleUserId);
+  @GetMapping("/check-google-user-matches")
+  boolean isGoogleIdMatches(@RequestParam String googleUserId,
+      @RequestParam String userId) {
+    User user = userService.retrieveUserByGoogleUserId(googleUserId);
     return user != null && user.getId().toString().equals(userId);
   }
 
-  @RequestMapping(value = "/google-user", method = RequestMethod.GET)
-  protected String getUserByGoogleId(@RequestParam String googleUserId) throws JSONException {
-    JSONObject response = new JSONObject();
-    User user = this.userService.retrieveUserByGoogleUserId(googleUserId);
+  @GetMapping("/google-user")
+  HashMap<String, Object> getUserByGoogleId(@RequestParam String googleUserId) {
+    User user = userService.retrieveUserByGoogleUserId(googleUserId);
+    HashMap<String, Object> response = new HashMap<String, Object>();
     if (user == null) {
       response.put("status", "error");
     } else {
@@ -208,10 +208,10 @@ public class UserAPIController {
       response.put("firstName", user.getUserDetails().getFirstname());
       response.put("lastName", user.getUserDetails().getLastname());
     }
-    return response.toString();
+    return response;
   }
 
-  protected String getLanguageName(String localeString) {
+  private String getLanguageName(String localeString) {
     if (localeString.toLowerCase().equals("zh_tw")) {
       return "Chinese (Traditional)";
     } else if (localeString.toLowerCase().equals("zh_cn")) {
@@ -220,5 +220,98 @@ public class UserAPIController {
       Locale locale = new Locale(localeString);
       return locale.getDisplayLanguage();
     }
+  }
+
+  protected HashMap<String, Object> getProjectMap(Project project) {
+    HashMap<String, Object> map = new HashMap<String, Object>();
+    map.put("id", project.getId());
+    map.put("name", project.getName());
+    map.put("metadata", project.getMetadata());
+    map.put("dateCreated", project.getDateCreated());
+    map.put("dateArchived", project.getDateDeleted());
+    map.put("projectThumb", projectService.getProjectPath(project) + PROJECT_THUMB_PATH);
+    map.put("owner", convertUserToMap(project.getOwner()));
+    map.put("sharedOwners", projectService.getProjectSharedOwnersList(project));
+    map.put("parentId", project.getParentProjectId());
+    map.put("wiseVersion", project.getWiseVersion());
+    map.put("uri", projectService.getProjectURI(project));
+    map.put("license", projectService.getLicensePath(project));
+    return map;
+  }
+
+  protected HashMap<String, Object> getRunMap(User user, Run run) {
+    HashMap<String, Object> map = new HashMap<String, Object>();
+    Project project = run.getProject();
+    String curriculumBaseWWW = appProperties.getProperty("curriculum_base_www");
+    String projectThumb = "";
+    String modulePath = project.getModulePath();
+    int lastIndexOfSlash = modulePath.lastIndexOf("/");
+    if (lastIndexOfSlash != -1) {
+      /*
+       * The project thumb url by default is the same (/assets/project_thumb.png)
+       * for all projects, but this could be overwritten in the future
+       * e.g. /253/assets/projectThumb.png
+       */
+      projectThumb = curriculumBaseWWW + modulePath.substring(0, lastIndexOfSlash) + PROJECT_THUMB_PATH;
+    }
+
+    map.put("id", run.getId());
+    map.put("name", run.getName());
+    map.put("maxStudentsPerTeam", run.getMaxWorkgroupSize());
+    map.put("projectThumb", projectThumb);
+    map.put("runCode", run.getRuncode());
+    map.put("startTime", run.getStartTimeMilliseconds());
+    map.put("endTime", run.getEndTimeMilliseconds());
+    map.put("project", getProjectMap(project));
+    map.put("owner", convertUserToMap(run.getOwner()));
+    map.put("numStudents", run.getNumStudents());
+
+    if (user.isStudent()) {
+      addStudentInfoToRunMap(user, run, map);
+    }
+    return map;
+  }
+
+  private void addStudentInfoToRunMap(User user, Run run, HashMap<String, Object> map) {
+    map.put("periodName", run.getPeriodOfStudent(user).getName());
+    List<Workgroup> workgroups = workgroupService.getWorkgroupListByRunAndUser(run, user);
+    if (workgroups.size() > 0) {
+      Workgroup workgroup = workgroups.get(0);
+      List<HashMap<String, Object>> workgroupMembers = new ArrayList<HashMap<String, Object>>();
+      StringBuilder workgroupNames = new StringBuilder();
+      for (User member : workgroup.getMembers()) {
+        MutableUserDetails userDetails = (MutableUserDetails) member.getUserDetails();
+        HashMap<String, Object> memberMap = new HashMap<String, Object>();
+        memberMap.put("id", member.getId());
+        String firstName = userDetails.getFirstname();
+        memberMap.put("firstName", firstName);
+        String lastName = userDetails.getLastname();
+        memberMap.put("lastName", lastName);
+        memberMap.put("username", userDetails.getUsername());
+        memberMap.put("isGoogleUser", userDetails.isGoogleUser());
+        workgroupMembers.add(memberMap);
+        if (workgroupNames.length() > 0) {
+          workgroupNames.append(", ");
+        }
+        workgroupNames.append(firstName + " " + lastName);
+        map.put("workgroupId", workgroup.getId());
+        map.put("workgroupNames", workgroupNames.toString());
+        map.put("workgroupMembers", workgroupMembers);
+      }
+    }
+  }
+
+  protected HashMap<String, Object> convertUserToMap(User user) {
+    HashMap<String, Object> map = new HashMap<String, Object>();
+    MutableUserDetails userDetails = user.getUserDetails();
+    map.put("id", user.getId());
+    map.put("username", userDetails.getUsername());
+    map.put("firstName", userDetails.getFirstname());
+    map.put("lastName", userDetails.getLastname());
+    map.put("isGoogleUser", userDetails.isGoogleUser());
+    if (userDetails instanceof TeacherUserDetails) {
+      map.put("displayName", ((TeacherUserDetails) userDetails).getDisplayname());
+    }
+    return map;
   }
 }

@@ -84,7 +84,7 @@ public class GoogleOpenIdConnectFilter extends AbstractAuthenticationProcessingF
   }
 
   @Override
-  public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
+  public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException {
     OAuth2AccessToken accessToken;
     try {
       String accessCodeFromParameter = request.getParameter("accessCode");

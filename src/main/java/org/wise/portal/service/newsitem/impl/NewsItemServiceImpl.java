@@ -76,25 +76,18 @@ public class NewsItemServiceImpl implements NewsItemService {
   @Transactional
   public void updateNewsItem(Integer id, Date date, User owner, String title,
       String news, String type) throws ObjectNotFoundException {
-    try {
-      NewsItem newsItem = newsItemDao.getById(id);
-      newsItem.setDate(date);
-      newsItem.setOwner(owner);
-      newsItem.setTitle(title);
-      newsItem.setNews(news);
-      newsItem.setType(type);
-      newsItemDao.save(newsItem);
-    } catch(ObjectNotFoundException e) {
-      throw e;
-    }
+    NewsItem newsItem = newsItemDao.getById(id);
+    newsItem.setDate(date);
+    newsItem.setOwner(owner);
+    newsItem.setTitle(title);
+    newsItem.setNews(news);
+    newsItem.setType(type);
+    newsItemDao.save(newsItem);
   }
 
   @Transactional
-  public void deleteNewsItem(Integer newsItemId) {
-    try {
-      NewsItem newsItem = newsItemDao.getById(newsItemId);
-      newsItemDao.delete(newsItem);
-    } catch(ObjectNotFoundException e) {
-    }
+  public void deleteNewsItem(Integer id) throws ObjectNotFoundException {
+    NewsItem newsItem = newsItemDao.getById(id);
+    newsItemDao.delete(newsItem);
   }
 }

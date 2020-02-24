@@ -1,7 +1,7 @@
-<md-dialog aria-label="{{title}}" class="view-notebook-item" ng-cloak>
+<md-dialog aria-label="{{::title}}" class="view-notebook-item" ng-cloak>
     <md-toolbar md-theme="light" class="md-whiteframe-1dp">
         <div class="md-toolbar-tools">
-            <h2>{{title}}</h2>
+            <h2>{{::title}}</h2>
         </div>
     </md-toolbar>
     <md-dialog-content>
@@ -11,6 +11,6 @@
     </md-dialog-content>
     <md-dialog-actions layout="row" layout-align="end center">
         <md-button aria-label="Close" ng-click="cancel()">
-            {{ 'close' | translate }}
+            {{ ::'close' | translate }}
         </md-button>
 </md-dialog>

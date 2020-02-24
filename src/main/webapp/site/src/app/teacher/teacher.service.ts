@@ -14,6 +14,7 @@ export class TeacherService {
   private registerUrl = 'api/teacher/register';
   private runPermissionUrl = 'api/teacher/run/permission';
   private projectPermissionUrl = 'api/teacher/project/permission';
+  private transferRunOwnershipUrl = '/api/teacher/run/permission/transfer';
   private usernamesUrl = 'api/teacher/usernames';
   private createRunUrl = 'api/teacher/run/create';
   private runUrl = 'api/teacher/run';
@@ -54,7 +55,7 @@ export class TeacherService {
   }
 
   getProjectLastRun(projectId: number): Observable<Run> {
-    return this.http.get<Run>(`${ this.lastRunUrl }/${ projectId }`);
+    return this.http.get<Run>(`${this.lastRunUrl}/${projectId}`);
   }
 
   registerTeacherAccount(teacherUser: Teacher, callback: any) {
@@ -77,7 +78,9 @@ export class TeacherService {
     body = body.set('periods', periods);
     body = body.set('maxStudentsPerTeam', maxStudentsPerTeam + "");
     body = body.set('startDate', startDate + "");
-    body = body.set('endDate', endDate ? endDate + "" : "");
+    if (endDate) {
+      body = body.set('endDate', endDate + "");
+    }
     return this.http.post<Run>(this.createRunUrl, body, { headers: headers });
   }
 
@@ -89,7 +92,13 @@ export class TeacherService {
   addSharedOwner(runId: number, teacherUsername: string) {
     const url = `${this.runPermissionUrl}/${runId}/${teacherUsername}`;
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
-    return this.http.put<Object>(url, null, {headers: headers});
+    return this.http.put<Object>(url, null, { headers: headers });
+  }
+
+  transferRunOwnership(runId: number, teacherUsername: string) {
+    const url = `${this.transferRunOwnershipUrl}/${runId}/${teacherUsername}`;
+    const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    return this.http.put(url, null, { headers: headers });
   }
 
   removeSharedOwner(runId: number, username: string) {
@@ -141,7 +150,6 @@ export class TeacherService {
   updateProfile(username, displayName, email, city, state, country, schoolName, schoolLevel, language) {
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
     let body = new HttpParams();
-    body = body.set('username', username);
     body = body.set('displayName', displayName);
     body = body.set('email', email);
     body = body.set('city', city);

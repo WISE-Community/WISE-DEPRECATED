@@ -20,6 +20,9 @@
  */
 package org.wise.portal.service.user.impl;
 
+import java.util.Calendar;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.security.core.GrantedAuthority;
@@ -41,9 +44,6 @@ import org.wise.portal.presentation.web.exception.IncorrectPasswordException;
 import org.wise.portal.service.authentication.DuplicateUsernameException;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.user.UserService;
-
-import java.util.Calendar;
-import java.util.List;
 
 /**
  * Implementation class that uses daos to interact with the data store.
@@ -71,11 +71,6 @@ public class UserServiceImpl implements UserService {
     return userDao.retrieveByUserDetails(userDetails);
   }
 
-  @Transactional(readOnly = true)
-  public List<User> retrieveUsersByUsername(String username) {
-    return retrieveByField("username", "like", "%" + username + "%", "teacherUserDetails");
-  }
-
   @Override
   public List<User> retrieveDisabledUsers() {
     return userDao.retrieveDisabledUsers();
@@ -88,7 +83,7 @@ public class UserServiceImpl implements UserService {
 
   @Transactional(readOnly = true)
   public User retrieveUserByGoogleUserId(String googleUserId) {
-    return this.userDao.retrieveByGoogleUserId(googleUserId);
+    return userDao.retrieveByGoogleUserId(googleUserId);
   }
 
   @Override
@@ -137,7 +132,7 @@ public class UserServiceImpl implements UserService {
   }
 
   public void assignRole(MutableUserDetails userDetails, final String role) {
-    GrantedAuthority authority = this.grantedAuthorityDao.retrieveByName(role);
+    GrantedAuthority authority = grantedAuthorityDao.retrieveByName(role);
     userDetails.addAuthority(authority);
   }
 
@@ -149,8 +144,7 @@ public class UserServiceImpl implements UserService {
    * @throws DuplicateUsernameException if the username is the same as a username already in data
    * store.
    */
-  private void checkUserErrors(final String username)
-    throws DuplicateUsernameException {
+  private void checkUserErrors(final String username) throws DuplicateUsernameException {
     if (userDetailsDao.hasUsername(username)) {
       throw new DuplicateUsernameException(username);
     }
@@ -166,16 +160,17 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public User updateUserPassword(User user, String currentPassword, String newPassword) throws IncorrectPasswordException {
-    if (this.isPasswordCorrect(user, currentPassword)) {
-      return this.updateUserPassword(user, newPassword);
+  public User updateUserPassword(User user, String currentPassword, String newPassword)
+      throws IncorrectPasswordException {
+    if (isPasswordCorrect(user, currentPassword)) {
+      return updateUserPassword(user, newPassword);
     } else {
       throw new IncorrectPasswordException();
     }
   }
 
   public boolean isPasswordCorrect(User user, String password) {
-    return this.passwordEncoder.matches(password, user.getUserDetails().getPassword());
+    return passwordEncoder.matches(password, user.getUserDetails().getPassword());
   }
 
   public List<User> retrieveAllUsers() {
@@ -183,7 +178,7 @@ public class UserServiceImpl implements UserService {
   }
 
   public List<String> retrieveAllUsernames() {
-    return userDao.retrieveAll("userDetails.username");
+    return userDao.retrieveAllUsernames();
   }
 
   @Transactional(readOnly = true)
@@ -196,29 +191,68 @@ public class UserServiceImpl implements UserService {
     userDao.save(user);
   }
 
-  @Transactional()
-  public List<User> retrieveByField(String field, String type, Object term, String classVar) {
-    return userDao.retrieveByField(field, type, term, classVar);
+  public User retrieveTeacherById(Long id) {
+    return userDao.retrieveTeacherById(id);
   }
 
-  /**
-   * Given an array of fields and an array of values and classVar, retrieves a list of Users
-   * @param fields an array of field names
-   * @param types an array of values, the index of a value must line up with
-   * the index in the field array
-   *
-   * e.g.
-   * fields[0] = "firstname"
-   * fields[1] = "lastname"
-   *
-   * values[0] = "Spongebob"
-   * values[1] = "Squarepants"
-   *
-   * @param classVar 'studentUserDetails' or 'teacherUserDetails'
-   * @return a list of Users that have matching values for the given fields
-   */
-  public List<User> retrieveByFields(String[] fields, String[] types, String classVar) {
-    return userDao.retrieveByFields(fields, types, classVar);
+  public List<User> retrieveTeachersByFirstName(String firstName) {
+    return userDao.retrieveTeachersByFirstName(firstName);
+  }
+
+  public List<User> retrieveTeachersByLastName(String lastName) {
+    return userDao.retrieveTeachersByLastName(lastName);
+  }
+
+  public User retrieveTeacherByUsername(String username) {
+    return userDao.retrieveTeacherByUsername(username);
+  }
+
+  public List<User> retrieveTeachersByDisplayName(String displayName) {
+    return userDao.retrieveTeachersByDisplayName(displayName);
+  }
+
+  public List<User> retrieveTeachersByCity(String city) {
+    return userDao.retrieveTeachersByCity(city);
+  }
+
+  public List<User> retrieveTeachersByState(String state) {
+    return userDao.retrieveTeachersByState(state);
+  }
+
+  public List<User> retrieveTeachersByCountry(String country) {
+    return userDao.retrieveTeachersByCountry(country);
+  }
+
+  public List<User> retrieveTeachersBySchoolName(String schoolName) {
+    return userDao.retrieveTeachersBySchoolName(schoolName);
+  }
+
+  public List<User> retrieveTeachersBySchoolLevel(String schoolLevel) {
+    return userDao.retrieveTeachersBySchoolLevel(schoolLevel);
+  }
+
+  public List<User> retrieveTeachersByEmail(String email) {
+    return userDao.retrieveTeachersByEmail(email);
+  }
+
+  public User retrieveStudentById(Long id) {
+    return userDao.retrieveStudentById(id);
+  }
+
+  public List<User> retrieveStudentsByFirstName(String firstName) {
+    return userDao.retrieveStudentsByFirstName(firstName);
+  }
+
+  public List<User> retrieveStudentsByLastName(String lastName) {
+    return userDao.retrieveStudentsByLastName(lastName);
+  }
+
+  public User retrieveStudentByUsername(String username) {
+    return userDao.retrieveStudentByUsername(username);
+  }
+
+  public List<User> retrieveStudentsByGender(String gender) {
+    return userDao.retrieveStudentsByGender(gender);
   }
 
   @Override
@@ -233,13 +267,65 @@ public class UserServiceImpl implements UserService {
     }
   }
 
-  /**
-   * Get the User object given the reset password key
-   * @param resetPasswordKey an alphanumeric string
-   * @return a User object or null if there is no user with the given reset password key
-   */
   @Transactional()
   public User retrieveByResetPasswordKey(String resetPasswordKey) {
     return userDao.retrieveByResetPasswordKey(resetPasswordKey);
+  }
+
+  public List<User> retrieveStudentsByNameAndBirthday(String firstName, String lastName,
+      Integer birthMonth, Integer birthDay) {
+    return userDao.retrieveStudentsByNameAndBirthday(firstName, lastName, birthMonth, birthDay);
+  }
+
+  public List<User> retrieveTeachersByName(String firstName, String lastName) {
+    return userDao.retrieveTeachersByName(firstName, lastName);
+  }
+
+  public List<User> retrieveTeacherUsersJoinedSinceYesterday() {
+    return userDao.retrieveTeacherUsersJoinedSinceYesterday();
+  }
+
+  public List<User> retrieveStudentUsersJoinedSinceYesterday() {
+    return userDao.retrieveStudentUsersJoinedSinceYesterday();
+  }
+
+  public List<User> retrieveTeacherUsersWhoLoggedInSinceYesterday() {
+    return userDao.retrieveTeacherUsersWhoLoggedInSinceYesterday();
+  }
+
+  public List<User> retrieveTeacherUsersWhoLoggedInToday() {
+    return userDao.retrieveTeacherUsersWhoLoggedInToday();
+  }
+
+  public List<User> retrieveTeacherUsersWhoLoggedInThisWeek() {
+    return userDao.retrieveTeacherUsersWhoLoggedInThisWeek();
+  }
+
+  public List<User> retrieveTeacherUsersWhoLoggedInThisMonth() {
+    return userDao.retrieveTeacherUsersWhoLoggedInThisMonth();
+  }
+
+  public List<User> retrieveTeacherUsersWhoLoggedInThisYear() {
+    return userDao.retrieveTeacherUsersWhoLoggedInThisYear();
+  }
+
+  public List<User> retrieveStudentUsersWhoLoggedInSinceYesterday() {
+    return userDao.retrieveStudentUsersWhoLoggedInSinceYesterday();
+  }
+
+  public List<User> retrieveStudentUsersWhoLoggedInToday() {
+    return userDao.retrieveStudentUsersWhoLoggedInToday();
+  }
+
+  public List<User> retrieveStudentUsersWhoLoggedInThisWeek() {
+    return userDao.retrieveStudentUsersWhoLoggedInThisWeek();
+  }
+
+  public List<User> retrieveStudentUsersWhoLoggedInThisMonth() {
+    return userDao.retrieveStudentUsersWhoLoggedInThisMonth();
+  }
+
+  public List<User> retrieveStudentUsersWhoLoggedInThisYear() {
+    return userDao.retrieveStudentUsersWhoLoggedInThisYear();
   }
 }

@@ -50,6 +50,7 @@ import org.wise.portal.service.group.GroupService;
  * A class to provide services for Group objects.
  *
  * @author Hiroki Terashima
+ * @author Patrick Lawler
  */
 @Service
 public class GroupServiceImpl implements GroupService {
@@ -70,13 +71,10 @@ public class GroupServiceImpl implements GroupService {
   }
 
   @Transactional(rollbackFor = { AlreadyExistsException.class,
-    NotFoundException.class, DataIntegrityViolationException.class })
+      NotFoundException.class, DataIntegrityViolationException.class })
   public Group createGroup(GroupParameters groupParameters) {
     Group group = new PersistentGroup();
     group.setName(groupParameters.getName());
-
-    // TODO LAW I think the logic here may be off in that there could be a
-    // group with id = 0 which is the parent group
     Long parentId = groupParameters.getParentId();
     if (parentId != 0) {
       try {
@@ -119,10 +117,6 @@ public class GroupServiceImpl implements GroupService {
     group.setMembers(members);
     groupDao.save(group);
   }
-
-
-  // TODO LAW - if we put in delete group remember to put in deletes for ACL
-  // entries
 
   @Transactional()
   public void moveGroup(Group newParent, Group groupToBeMoved) throws CyclicalGroupException {

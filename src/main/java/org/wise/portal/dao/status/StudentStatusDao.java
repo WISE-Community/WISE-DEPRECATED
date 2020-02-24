@@ -30,8 +30,6 @@ import org.wise.vle.domain.status.StudentStatus;
 
 public interface StudentStatusDao<T extends StudentStatus> extends SimpleDao<StudentStatus> {
 
-  StudentStatus getStudentStatusById(Long id);
-
   void saveStudentStatus(StudentStatus studentStatus);
 
   StudentStatus getStudentStatusByWorkgroupId(Long workgroupId);
