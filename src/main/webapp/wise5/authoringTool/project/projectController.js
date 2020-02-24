@@ -60,8 +60,6 @@ class ProjectController {
     this.showImportView = false;
     this.importMode = false;
     this.editProjectRubricMode = false;
-    this.advancedMode = false;
-    this.showJSONAuthoring = false;
 
     // whether there are any step nodes checked
     this.stepNodeSelected = false;
@@ -167,9 +165,6 @@ class ProjectController {
             videoElement.innerHTML = '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
             summernoteElement.summernote('insertNode', videoElement);
           }
-        } else if (args.target === 'scriptFilename') {
-          this.projectScriptFilename = assetFileName;
-          this.projectScriptFilenameChanged();
         }
       }
       this.$mdDialog.hide();
@@ -285,14 +280,6 @@ class ProjectController {
       alert('Invalid JSON. Please check syntax. Aborting save.');
       return;
     }
-  }
-
-  /**
-   * Make a request to download this project as a zip file
-   */
-  downloadProject() {
-    window.location.href =
-      this.ConfigService.getWISEBaseURL() + '/project/export/' + this.projectId;
   }
 
   /**
@@ -1100,76 +1087,9 @@ class ProjectController {
     this.toggleView('rubric');
   }
 
-  /**
-   * Show the advanced authoring view
-   */
-  advancedClicked() {
-    this.toggleView('advanced');
-  }
-
-  /**
-   * The show JSON button was clicked
-   */
-  showJSONClicked() {
-    if (this.showJSONAuthoring) {
-      // we were showing the JSON view and the author now wants to hide it
-      if (this.isJSONValid()) {
-        this.toggleJSONAuthoringView();
-        this.UtilService.hideJSONValidMessage();
-      } else {
-        let answer = confirm(this.$translate('jsonInvalidErrorMessage'));
-        if (answer) {
-          // the author wants to revert back to the last valid JSON
-          this.toggleJSONAuthoringView();
-          this.UtilService.hideJSONValidMessage();
-        }
-      }
-    } else {
-      // we were not showing the JSON view and now the author wants to show it
-      this.toggleJSONAuthoringView();
-      this.projectJSONString = angular.toJson(this.ProjectService.project, 4);
-      this.UtilService.showJSONValidMessage();
-    }
-  }
-
-  isJSONValid() {
-    try {
-      angular.fromJson(this.projectJSONString);
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  toggleJSONAuthoringView() {
-    this.showJSONAuthoring = !this.showJSONAuthoring;
-  }
-
-  /**
-   * Save the project JSON to the server if the JSON is valid.
-   */
-  autoSaveProjectJSONString() {
-    try {
-      this.saveProjectJSON(this.projectJSONString);
-      this.UtilService.showJSONValidMessage();
-    } catch (e) {
-      this.UtilService.showJSONInvalidMessage();
-    }
-  }
-
-  /**
-   * Save the project JSON string to the server
-   * @param projectJSONString
-   */
-  saveProjectJSON(projectJSONString) {
-    let project = angular.fromJson(projectJSONString);
-    this.ProjectService.setProject(project);
-    let scriptFilename = this.ProjectService.getProjectScriptFilename();
-    if (scriptFilename != null) {
-      this.projectScriptFilename = scriptFilename;
-    }
-    this.ProjectService.checkPotentialStartNodeIdChangeThenSaveProject().then(() => {
-      this.refreshProject();
+  goToAdvancedAuthoring() {
+    this.$state.go('root.project.advanced', {
+      projectId: this.projectId
     });
   }
 
@@ -1208,36 +1128,6 @@ class ProjectController {
   }
 
   /**
-   * The project script file name changed
-   */
-  projectScriptFilenameChanged() {
-    // update the project script file name in the project service
-    this.ProjectService.setProjectScriptFilename(this.projectScriptFilename);
-
-    if (this.showJSONAuthoring) {
-      /*
-       * we are showing the project JSON authoring so we need to update
-       * the JSON string that we are showing in the textarea
-       */
-      this.projectJSONString = angular.toJson(this.ProjectService.project, 4);
-    }
-    this.ProjectService.saveProject();
-  }
-
-  /**
-   * Show the asset popup to allow the author to choose an image for the
-   * project script filename
-   */
-  chooseProjectScriptFilename() {
-    let openAssetChooserParams = {
-      popup: true,
-      projectId: this.projectId,
-      target: 'scriptFilename'
-    };
-    this.$rootScope.$broadcast('openAssetChooser', openAssetChooserParams);
-  }
-
-  /**
    * Show the appropriate authoring view
    * @param view the view to show
    */
@@ -1255,8 +1145,6 @@ class ProjectController {
       this.importMode = false;
       this.showImportView = false;
       this.editProjectRubricMode = false;
-      this.advancedMode = false;
-      this.showJSONAuthoring = false;
       this.projectMode = true;
     } else if (view == 'createGroup') {
       // toggle the create activity view
@@ -1265,8 +1153,6 @@ class ProjectController {
       this.importMode = false;
       this.showImportView = false;
       this.editProjectRubricMode = false;
-      this.advancedMode = false;
-      this.showJSONAuthoring = false;
 
       // also show the project view
       this.projectMode = true;
@@ -1277,8 +1163,6 @@ class ProjectController {
       this.importMode = false;
       this.showImportView = false;
       this.editProjectRubricMode = false;
-      this.advancedMode = false;
-      this.showJSONAuthoring = false;
       this.showTemplateChooser = false;
 
       // also show the project view
@@ -1290,8 +1174,6 @@ class ProjectController {
       this.importMode = !this.importMode;
       this.showImportView = !this.showImportView;
       this.editProjectRubricMode = false;
-      this.advancedMode = false;
-      this.showJSONAuthoring = false;
 
       // if the import view is shown, do not show the project view
       this.projectMode = !this.importMode;
@@ -1302,26 +1184,9 @@ class ProjectController {
       this.importMode = false;
       this.showImportView = false;
       this.editProjectRubricMode = !this.editProjectRubricMode;
-      this.advancedMode = false;
-      this.showJSONAuthoring = false;
 
       // if the rubric view is shown, do not show the project view
       this.projectMode = !this.editProjectRubricMode;
-    } else if (view == 'advanced') {
-      // toggle the advanced view
-      this.showCreateGroup = false;
-      this.showCreateNode = false;
-      this.importMode = false;
-      this.showImportView = false;
-      this.editProjectRubricMode = false;
-      this.advancedMode = !this.advancedMode;
-      this.showJSONAuthoring = false;
-
-      // if the advanced view is shown, do not show the project view
-      this.projectMode = !this.advancedMode;
-    }
-    if (!this.showJSONAuthoring) {
-      this.UtilService.hideJSONValidMessage();
     }
   }
 
@@ -1333,8 +1198,6 @@ class ProjectController {
     if (this.showImportView) {
       this.toggleView('project');
     } else if (this.editProjectRubricMode) {
-      this.toggleView('project');
-    } else if (this.advancedMode) {
       this.toggleView('project');
     } else {
       this.$state.go('root.main');
@@ -1493,25 +1356,6 @@ class ProjectController {
       color = this.stepBackgroundColors[branchPathNumber];
     }
     return color;
-  }
-
-  /**
-   * Copy the project URL to the clipboard
-   */
-  copyProjectURL() {
-    let textArea = document.createElement('textarea');
-    textArea.value = this.projectURL;
-    document.body.appendChild(textArea);
-    textArea.select();
-    document.execCommand('copy');
-    document.body.removeChild(textArea);
-  }
-
-  /**
-   * Open the project.json file in a new tab
-   */
-  openProjectURLInNewTab() {
-    window.open(this.projectURL, '_blank');
   }
 
   /**

@@ -18,6 +18,7 @@ import '../components/animation/animationAuthoringComponentModule';
 import AnnotationService from '../services/annotationService';
 import '../components/audioOscillator/audioOscillatorAuthoringComponentModule';
 import './components/authoringToolComponents';
+import AdvancedAuthoringController from './advanced/advancedAuthoringController';
 import AuthoringToolController from './authoringToolController';
 import AuthoringToolMainController from './main/authoringToolMainController';
 import AuthoringToolProjectService from './authoringToolProjectService';
@@ -123,6 +124,7 @@ const authoringModule = angular
   .service('UtilService', UtilService)
   .controller('AuthoringToolController', AuthoringToolController)
   .controller('AuthoringToolMainController', AuthoringToolMainController)
+  .controller('AdvancedAuthoringController', AdvancedAuthoringController)
   .controller('AuthorNotebookController', AuthorNotebookController)
   .controller('NodeAuthoringController', NodeAuthoringController)
   .controller('ProjectAssetController', ProjectAssetController)
@@ -250,6 +252,12 @@ const authoringModule = angular
           controller: 'ProjectInfoController',
           controllerAs: 'projectInfoController',
           resolve: {}
+        })
+        .state('root.project.advanced', {
+          url: '/advanced',
+          templateUrl: 'wise5/authoringTool/advanced/advancedAuthoring.html',
+          controller: 'AdvancedAuthoringController',
+          controllerAs: 'advancedAuthoringController'
         })
         .state('root.project.notebook', {
           url: '/notebook',
