@@ -1143,7 +1143,9 @@ class DataExportController {
   }
 
   setTeacherUsername(row, columnNameToNumber, username) {
-    row[columnNameToNumber['Teacher Username']] = username;
+    if (this.includeNames) {
+      row[columnNameToNumber['Teacher Username']] = username;
+    }
   }
 
   /**
