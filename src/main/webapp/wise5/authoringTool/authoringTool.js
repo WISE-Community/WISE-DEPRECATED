@@ -36,6 +36,7 @@ import '../filters/filters';
 import '../lib/highcharts@4.2.1';
 import '../components/graph/graphAuthoringComponentModule';
 import '../components/html/htmlAuthoringComponentModule';
+import './importStep/importStepModule';
 import '../components/label/labelAuthoringComponentModule';
 import '../components/match/matchAuthoringComponentModule';
 import '../components/multipleChoice/multipleChoiceAuthoringComponentModule';
@@ -87,6 +88,7 @@ const authoringModule = angular
     'graphAuthoringComponentModule',
     'highcharts-ng',
     'htmlComponentModule',
+    'importStepModule',
     'labelAuthoringComponentModule',
     'matchAuthoringComponentModule',
     'multipleChoiceAuthoringComponentModule',
