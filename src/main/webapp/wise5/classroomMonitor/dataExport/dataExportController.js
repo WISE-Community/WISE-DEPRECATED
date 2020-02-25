@@ -756,130 +756,142 @@ class DataExportController {
 
   exportEvents() {
     this.showDownloadingExportMessage();
-    var selectedNodes = null;
-    var selectedNodesMap = null;
-    if (this.exportStepSelectionType === 'exportSelectSteps') {
-      selectedNodes = this.getSelectedNodesToExport();
-      if (selectedNodes == null || selectedNodes.length == 0) {
-        alert('Please select a step to export.');
-        return;
-      } else {
-        selectedNodesMap = this.getSelectedNodesMap(selectedNodes);
+    this.TeacherDataService.retrieveEventsExport(
+      this.includeStudentEvents,
+      this.includeTeacherEvents,
+      this.includeNames
+    ).then(() => {
+      this.handleExportEventsCallback();
+    });
+  }
+
+  handleExportEventsCallback() {
+    const rows = [];
+    const columnNames = this.getEventsColumnNames();
+    const columnNameToNumber = this.getColumnNameToNumber(columnNames);
+    rows.push(this.createHeaderRow(columnNames));
+    let rowCounter = 1;
+    if (this.includeStudentEvents) {
+      rowCounter = this.addStudentEvents(rows, rowCounter, columnNames, columnNameToNumber);
+    }
+    if (this.includeTeacherEvents) {
+      rowCounter = this.addTeacherEvents(rows, rowCounter, columnNames, columnNameToNumber);
+    }
+    const fileName = this.ConfigService.getRunId() + '_events.csv';
+    this.generateCSVFile(rows, fileName);
+    this.hideDownloadingExportMessage();
+  }
+
+  getEventsColumnNames() {
+    return [
+      '#',
+      'Workgroup ID',
+      'User Type',
+      'Student WISE ID 1',
+      'Student Name 1',
+      'Student WISE ID 2',
+      'Student Name 2',
+      'Student WISE ID 3',
+      'Student Name 3',
+      'Teacher WISE ID',
+      'Teacher Username',
+      'Class Period',
+      'Project ID',
+      'Project Name',
+      'Run ID',
+      'Start Date',
+      'End Date',
+      'Event ID',
+      'Server Timestamp',
+      'Client Timestamp',
+      'Node ID',
+      'Component ID',
+      'Component Part Number',
+      'Step Title',
+      'Component Type',
+      'Component Prompt',
+      'JSON',
+      'Context',
+      'Category',
+      'Event',
+      'Data',
+      'Response'
+    ];
+  }
+
+  getColumnNameToNumber(columnNames) {
+    const columnNameToNumber = {};
+    for (let c = 0; c < columnNames.length; c++) {
+      columnNameToNumber[columnNames[c]] = c;
+    }
+    return columnNameToNumber;
+  }
+
+  createHeaderRow(columnNames) {
+    const headerRow = [];
+    for (const columnName of columnNames) {
+      headerRow.push(columnName);
+    }
+    return headerRow;
+  }
+
+  addStudentEvents(rows, rowCounter, columnNames, columnNameToNumber) {
+    const workgroups = this.ConfigService.getClassmateUserInfosSortedByWorkgroupId();
+    for (const workgroup of workgroups) {
+      const workgroupId = workgroup.workgroupId;
+      const periodName = workgroup.periodName;
+      const userInfo = this.ConfigService.getUserInfoByWorkgroupId(workgroupId);
+      const extractedWISEIDsAndStudentNames = this.extractWISEIDsAndStudentNames(userInfo.users);
+      const events = this.TeacherDataService.getEventsByWorkgroupId(workgroupId);
+      for (const event of events) {
+        const row = this.createStudentEventExportRow(
+          columnNames,
+          columnNameToNumber,
+          rowCounter,
+          workgroupId,
+          extractedWISEIDsAndStudentNames['wiseId1'],
+          extractedWISEIDsAndStudentNames['wiseId2'],
+          extractedWISEIDsAndStudentNames['wiseId3'],
+          extractedWISEIDsAndStudentNames['studentName1'],
+          extractedWISEIDsAndStudentNames['studentName2'],
+          extractedWISEIDsAndStudentNames['studentName3'],
+          periodName,
+          event
+        );
+        rows.push(row);
+        rowCounter++;
       }
     }
-    this.TeacherDataService.getExport('events', selectedNodes).then(result => {
-      var workgroups = this.ConfigService.getClassmateUserInfosSortedByWorkgroupId();
-      var runId = this.ConfigService.getRunId();
-      var rows = [];
-      var rowCounter = 1;
-      var columnNameToNumber = {};
-      var columnNames = [
-        '#',
-        'Workgroup ID',
-        'WISE ID 1',
-        'Student Name 1',
-        'WISE ID 2',
-        'Student Name 2',
-        'WISE ID 3',
-        'Student Name 3',
-        'Class Period',
-        'Project ID',
-        'Project Name',
-        'Run ID',
-        'Start Date',
-        'End Date',
-        'Event ID',
-        'Server Timestamp',
-        'Client Timestamp',
-        'Node ID',
-        'Component ID',
-        'Component Part Number',
-        'Step Title',
-        'Component Type',
-        'Component Prompt',
-        'Group Event Counter',
-        'Context',
-        'Category',
-        'Event',
-        'Event Data',
-        'Response'
-      ];
-      var headerRow = [];
-      for (var c = 0; c < columnNames.length; c++) {
-        var columnName = columnNames[c];
-        if (columnName != null) {
-          columnNameToNumber[columnName] = c;
-        }
-        headerRow.push(columnName);
-      }
-      rows.push(headerRow);
-      if (workgroups != null) {
-        for (var w = 0; w < workgroups.length; w++) {
-          var workgroup = workgroups[w];
-          if (workgroup != null) {
-            var workgroupId = workgroup.workgroupId;
-            var periodName = workgroup.periodName;
-            var userInfo = this.ConfigService.getUserInfoByWorkgroupId(workgroupId);
-            var extractedWISEIDsAndStudentNames = this.extractWISEIDsAndStudentNames(
-              userInfo.users
-            );
+    return rowCounter;
+  }
 
-            /*
-             * a mapping from component to component event count.
-             * the key will be {{nodeId}}_{{componentId}} and the
-             * value will be a number.
-             */
-            var componentEventCount = {};
-            var events = this.TeacherDataService.getEventsByWorkgroupId(workgroupId);
-            if (events != null) {
-              for (var e = 0; e < events.length; e++) {
-                var event = events[e];
-                if (event != null) {
-                  var exportRow = true;
-                  if (this.exportStepSelectionType === 'exportSelectSteps') {
-                    if (event.nodeId != null && event.componentId != null) {
-                      if (
-                        !this.isComponentSelected(selectedNodesMap, event.nodeId, event.componentId)
-                      ) {
-                        exportRow = false;
-                      }
-                    } else if (event.nodeId != null) {
-                      if (!this.isNodeSelected(selectedNodesMap, event.nodeId)) {
-                        exportRow = false;
-                      }
-                    } else {
-                      exportRow = false;
-                    }
-                  }
-                  if (exportRow) {
-                    var row = this.createEventExportRow(
-                      columnNames,
-                      columnNameToNumber,
-                      rowCounter,
-                      workgroupId,
-                      extractedWISEIDsAndStudentNames['wiseId1'],
-                      extractedWISEIDsAndStudentNames['wiseId2'],
-                      extractedWISEIDsAndStudentNames['wiseId3'],
-                      extractedWISEIDsAndStudentNames['studentName1'],
-                      extractedWISEIDsAndStudentNames['studentName2'],
-                      extractedWISEIDsAndStudentNames['studentName3'],
-                      periodName,
-                      componentEventCount,
-                      event
-                    );
-                    rows.push(row);
-                    rowCounter++;
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-      var fileName = runId + '_events.csv';
-      this.generateCSVFile(rows, fileName);
-      this.hideDownloadingExportMessage();
-    });
+  addTeacherEvents(rows, rowCounter, columnNames, columnNameToNumber) {
+    const userInfo = this.ConfigService.getTeacherUserInfo();
+    const username = this.getTeacherUsername(userInfo);
+    const workgroupId = userInfo.workgroupId;
+    const events = this.TeacherDataService.getEventsByWorkgroupId(workgroupId);
+    for (const event of events) {
+      const row = this.createTeacherEventExportRow(
+        columnNames,
+        columnNameToNumber,
+        rowCounter,
+        userInfo.workgroupId,
+        userInfo.wiseId,
+        username,
+        event
+      );
+      rows.push(row);
+      rowCounter++;
+    }
+    return rowCounter;
+  }
+
+  getTeacherUsername(userInfo) {
+    let username = '';
+    if (this.includeNames) {
+      username = userInfo.username;
+    }
+    return username;
   }
 
   /**
@@ -896,7 +908,7 @@ class DataExportController {
    * @param event the event
    * @return an array containing the cells in the row
    */
-  createEventExportRow(
+  createStudentEventExportRow(
     columnNames,
     columnNameToNumber,
     rowCounter,
@@ -908,99 +920,228 @@ class DataExportController {
     studentName2,
     studentName3,
     periodName,
-    componentEventCount,
     event
   ) {
-    var row = new Array(columnNames.length);
+    const row = this.createRow(columnNames.length);
+    this.setRowCounter(row, columnNameToNumber, rowCounter);
+    this.setWorkgroupId(row, columnNameToNumber, workgroupId);
+    this.setUserType(row, columnNameToNumber, 'student');
+    this.setStudentIDs(row, columnNameToNumber, wiseId1, wiseId2, wiseId3);
+    this.setStudentNames(row, columnNameToNumber, studentName1, studentName2, studentName3);
+    this.setPeriodName(row, columnNameToNumber, periodName);
+    this.setProjectId(row, columnNameToNumber);
+    this.setProjectName(row, columnNameToNumber);
+    this.setRunId(row, columnNameToNumber);
+    this.setEventId(row, columnNameToNumber, event);
+    this.setServerSaveTime(row, columnNameToNumber, event);
+    this.setClientSaveTime(row, columnNameToNumber, event);
+    this.setNodeId(row, columnNameToNumber, event);
+    this.setRowComponentId(row, columnNameToNumber, event);
+    this.setTitle(row, columnNameToNumber, event);
+    this.setComponentPartNumber(row, columnNameToNumber, event);
+    this.setComponentTypeAndPrompt(row, columnNameToNumber, event);
+    this.setEventJSON(row, columnNameToNumber, event);
+    this.setContext(row, columnNameToNumber, event);
+    this.setCategory(row, columnNameToNumber, event);
+    this.setEvent(row, columnNameToNumber, event);
+    this.setEventData(row, columnNameToNumber, event);
+    this.setResponse(row, columnNameToNumber, event);
+    return row;
+  }
+
+  createRow(length) {
+    const row = new Array(length);
     row.fill('');
+    return row;
+  }
+
+  setRowCounter(row, columnNameToNumber, rowCounter) {
     row[columnNameToNumber['#']] = rowCounter;
+  }
+
+  setWorkgroupId(row, columnNameToNumber, workgroupId) {
     row[columnNameToNumber['Workgroup ID']] = workgroupId;
+  }
+
+  setUserType(row, columnNameToNumber, userType) {
+    row[columnNameToNumber['User Type']] = userType;
+  }
+
+  setPeriodName(row, columnNameToNumber, periodName) {
+    row[columnNameToNumber['Class Period']] = periodName;
+  }
+
+  setProjectId(row, columnNameToNumber) {
+    row[columnNameToNumber['Project ID']] = this.ConfigService.getProjectId();
+  }
+
+  setProjectName(row, columnNameToNumber) {
+    row[columnNameToNumber['Project Name']] = this.ProjectService.getProjectTitle();
+  }
+
+  setRunId(row, columnNameToNumber) {
+    row[columnNameToNumber['Run ID']] = this.ConfigService.getRunId();
+  }
+
+  setEventId(row, columnNameToNumber, data) {
+    row[columnNameToNumber['Event ID']] = data.id;
+  }
+
+  setStudentIDs(row, columnNameToNumber, wiseId1, wiseId2, wiseId3) {
     if (wiseId1 != null) {
-      row[columnNameToNumber['WISE ID 1']] = wiseId1;
-    }
-    if (studentName1 != null && this.includeStudentNames) {
-      row[columnNameToNumber['Student Name 1']] = studentName1;
+      row[columnNameToNumber['Student WISE ID 1']] = wiseId1;
     }
     if (wiseId2 != null) {
-      row[columnNameToNumber['WISE ID 2']] = wiseId2;
-    }
-    if (studentName2 != null && this.includeStudentNames) {
-      row[columnNameToNumber['Student Name 2']] = studentName2;
+      row[columnNameToNumber['Student WISE ID 2']] = wiseId2;
     }
     if (wiseId3 != null) {
-      row[columnNameToNumber['WISE ID 3']] = wiseId3;
+      row[columnNameToNumber['Student WISE ID 3']] = wiseId3;
     }
-    if (studentName3 != null && this.includeStudentNames) {
+  }
+
+  setStudentNames(row, columnNameToNumber, studentName1, studentName2, studentName3) {
+    if (studentName1 != null && this.includeNames) {
+      row[columnNameToNumber['Student Name 1']] = studentName1;
+    }
+    if (studentName2 != null && this.includeNames) {
+      row[columnNameToNumber['Student Name 2']] = studentName2;
+    }
+    if (studentName3 != null && this.includeNames) {
       row[columnNameToNumber['Student Name 3']] = studentName3;
     }
-    row[columnNameToNumber['Class Period']] = periodName;
-    row[columnNameToNumber['Project ID']] = this.ConfigService.getProjectId();
-    row[columnNameToNumber['Project Name']] = this.ProjectService.getProjectTitle();
-    row[columnNameToNumber['Run ID']] = this.ConfigService.getRunId();
-    row[columnNameToNumber['Event ID']] = event.id;
-    if (event.serverSaveTime != null) {
-      var serverSaveTime = new Date(event.serverSaveTime);
-      if (serverSaveTime != null) {
-        var serverSaveTimeString =
-          serverSaveTime.toDateString() + ' ' + serverSaveTime.toLocaleTimeString();
-        row[columnNameToNumber['Server Timestamp']] = serverSaveTimeString;
-      }
+  }
+
+  setServerSaveTime(row, columnNameToNumber, data) {
+    row[
+      columnNameToNumber['Server Timestamp']
+    ] = this.UtilService.convertMillisecondsToFormattedDateTime(data.serverSaveTime);
+  }
+
+  setClientSaveTime(row, columnNameToNumber, data) {
+    row[
+      columnNameToNumber['Client Timestamp']
+    ] = this.UtilService.convertMillisecondsToFormattedDateTime(data.clientSaveTime);
+  }
+
+  setNodeId(row, columnNameToNumber, data) {
+    if (data.nodeId != null) {
+      row[columnNameToNumber['Node ID']] = data.nodeId;
     }
-    if (event.clientSaveTime != null) {
-      var clientSaveTime = new Date(event.clientSaveTime);
-      if (clientSaveTime != null) {
-        var clientSaveTimeString =
-          clientSaveTime.toDateString() + ' ' + clientSaveTime.toLocaleTimeString();
-        row[columnNameToNumber['Client Timestamp']] = clientSaveTimeString;
-      }
+  }
+
+  setRowComponentId(row, columnNameToNumber, data) {
+    if (data.componentId != null) {
+      row[columnNameToNumber['Component ID']] = data.componentId;
     }
-    if (event.nodeId != null) {
-      row[columnNameToNumber['Node ID']] = event.nodeId;
-    }
-    if (event.componentId != null) {
-      row[columnNameToNumber['Component ID']] = event.componentId;
-    }
-    var stepTitle = this.ProjectService.getNodePositionAndTitleByNodeId(event.nodeId);
+  }
+
+  setTitle(row, columnNameToNumber, data) {
+    const stepTitle = this.ProjectService.getNodePositionAndTitleByNodeId(data.nodeId);
     if (stepTitle != null) {
       row[columnNameToNumber['Step Title']] = stepTitle;
     }
-    var componentPartNumber = this.ProjectService.getComponentPositionByNodeIdAndComponentId(
-      event.nodeId,
-      event.componentId
+  }
+
+  setComponentPartNumber(row, columnNameToNumber, data) {
+    const componentPartNumber = this.ProjectService.getComponentPositionByNodeIdAndComponentId(
+      data.nodeId,
+      data.componentId
     );
     if (componentPartNumber != -1) {
       row[columnNameToNumber['Component Part Number']] = componentPartNumber + 1;
     }
-    var component = this.ProjectService.getComponentByNodeIdAndComponentId(
+  }
+
+  setComponentTypeAndPrompt(row, columnNameToNumber, data) {
+    const component = this.ProjectService.getComponentByNodeIdAndComponentId(
       event.nodeId,
       event.componentId
     );
+    this.setComponentType(row, columnNameToNumber, component);
+    this.setComponentPrompt(row, columnNameToNumber, component);
+  }
+
+  setComponentType(row, columnNameToNumber, component) {
     if (component != null) {
       row[columnNameToNumber['Component Type']] = component.type;
-      var prompt = this.UtilService.removeHTMLTags(component.prompt);
+    }
+  }
+
+  setComponentPrompt(row, columnNameToNumber, component) {
+    if (component != null) {
+      let prompt = this.UtilService.removeHTMLTags(component.prompt);
       prompt = prompt.replace(/"/g, '""');
       row[columnNameToNumber['Component Prompt']] = prompt;
     }
-    var nodeIdAndComponentId = event.nodeId + '_' + event.componentId;
-    if (componentEventCount[nodeIdAndComponentId] == null) {
-      componentEventCount[nodeIdAndComponentId] = 1;
+  }
+
+  setEventJSON(row, columnNameToNumber, data) {
+    row[columnNameToNumber['JSON']] = data;
+  }
+
+  setContext(row, columnNameToNumber, data) {
+    if (data.context != null) {
+      row[columnNameToNumber['Context']] = data.context;
     }
-    var revisionCounter = componentEventCount[nodeIdAndComponentId];
-    row[columnNameToNumber['Group Event Counter']] = revisionCounter;
-    componentEventCount[nodeIdAndComponentId] = revisionCounter + 1;
-    if (event.context != null) {
-      row[columnNameToNumber['Context']] = event.context;
+  }
+
+  setCategory(row, columnNameToNumber, data) {
+    if (data.category != null) {
+      row[columnNameToNumber['Category']] = data.category;
     }
-    if (event.category != null) {
-      row[columnNameToNumber['Category']] = event.category;
+  }
+
+  setEvent(row, columnNameToNumber, data) {
+    if (data.event != null) {
+      row[columnNameToNumber['Event']] = data.event;
     }
-    if (event.event != null) {
-      row[columnNameToNumber['Event']] = event.event;
-    }
-    row[columnNameToNumber['Event Data']] = event;
-    var response = this.getEventResponse(event);
+  }
+
+  setEventData(row, columnNameToNumber, data) {
+    row[columnNameToNumber['Data']] = data.data;
+  }
+
+  setResponse(row, columnNameToNumber, data) {
+    const response = this.getEventResponse(event);
     row[columnNameToNumber['Response']] = response;
+  }
+
+  createTeacherEventExportRow(
+    columnNames,
+    columnNameToNumber,
+    rowCounter,
+    workgroupId,
+    wiseId,
+    username,
+    event
+  ) {
+    const row = this.createRow(columnNames.length);
+    this.setRowCounter(row, columnNameToNumber, rowCounter);
+    this.setWorkgroupId(row, columnNameToNumber, workgroupId);
+    this.setUserType(row, columnNameToNumber, 'teacher');
+    this.setTeacherWISEId(row, columnNameToNumber, wiseId);
+    this.setTeacherUsername(row, columnNameToNumber, username);
+    this.setProjectId(row, columnNameToNumber);
+    this.setProjectName(row, columnNameToNumber);
+    this.setRunId(row, columnNameToNumber);
+    this.setEventId(row, columnNameToNumber, event);
+    this.setServerSaveTime(row, columnNameToNumber, event);
+    this.setClientSaveTime(row, columnNameToNumber, event);
+    this.setEventJSON(row, columnNameToNumber, event);
+    this.setContext(row, columnNameToNumber, event);
+    this.setCategory(row, columnNameToNumber, event);
+    this.setEvent(row, columnNameToNumber, event);
+    this.setEventData(row, columnNameToNumber, event);
+    this.setResponse(row, columnNameToNumber, event);
     return row;
+  }
+
+  setTeacherWISEId(row, columnNameToNumber, wiseId) {
+    row[columnNameToNumber['Teacher WISE ID']] = wiseId;
+  }
+
+  setTeacherUsername(row, columnNameToNumber, username) {
+    row[columnNameToNumber['Teacher Username']] = username;
   }
 
   /**
@@ -2095,7 +2236,8 @@ class DataExportController {
    */
   exportComponent(selectedNodesMap, nodeId, componentId) {
     if (
-      selectedNodesMap == null || this.isComponentSelected(selectedNodesMap, nodeId, componentId)
+      selectedNodesMap == null ||
+      this.isComponentSelected(selectedNodesMap, nodeId, componentId)
     ) {
       return true;
     } else {
@@ -2184,6 +2326,9 @@ class DataExportController {
     this.includeScoreTimestamps = false;
     this.includeComments = false;
     this.includeCommentTimestamps = false;
+    this.includeStudentEvents = true;
+    this.includeTeacherEvents = true;
+    this.includeNames = false;
     this.exportStepSelectionType = 'exportAllSteps';
     this.includeAnnotations = false;
     this.includeEvents = false;

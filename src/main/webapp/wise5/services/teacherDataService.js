@@ -80,8 +80,6 @@ class TeacherDataService {
   getExport(exportType, selectedNodes) {
     if (this.isStudentWorkExport(exportType)) {
       return this.retrieveStudentDataExport(selectedNodes);
-    } else if (this.isEventExport(exportType)) {
-      return this.retrieveEventsExport(selectedNodes);
     } else if (this.isNotebookExport(exportType)) {
       return this.retrieveNotebookExport(exportType);
     } else if (this.isNotificationsExport(exportType)) {
@@ -138,13 +136,15 @@ class TeacherDataService {
     return this.retrieveStudentData(params);
   }
 
-  retrieveEventsExport(selectedNodes) {
+  retrieveEventsExport(includeStudentEvents, includeTeacherEvents, includeNames) {
     const params = {
       runId: this.ConfigService.getRunId(),
       getStudentWork: false,
       getAnnotations: false,
       getEvents: true,
-      components: selectedNodes
+      includeStudentEvents,
+      includeTeacherEvents,
+      includeNames
     };
     return this.retrieveStudentData(params);
   }
