@@ -289,6 +289,18 @@ public class VLEServiceImpl implements VLEService {
         context, category, event, components);
   }
 
+  public List<Event> getAllEvents(Run run) {
+    return eventDao.getEvents(run);
+  }
+
+  public List<Event> getStudentEvents(Run run) {
+    return eventDao.getStudentEvents(run);
+  }
+
+  public List<Event> getTeacherEvents(Run run) {
+    return eventDao.getTeacherEvents(run);
+  }
+
   @Override
   public Event saveEvent(Integer id, Integer runId, Integer periodId, Integer workgroupId,
       String nodeId, String componentId, String componentType,  String context, String category,

@@ -146,7 +146,14 @@ class TeacherDataService {
       includeTeacherEvents,
       includeNames
     };
-    return this.retrieveStudentData(params);
+    const httpParams = {
+      method: 'GET',
+      url: this.ConfigService.getConfigParam('runDataExportURL') + '/events',
+      params: params
+    };
+    return this.$http(httpParams).then(result => {
+      return this.handleStudentDataResponse(result.data);
+    });
   }
 
   retrieveNotebookExport(exportType) {

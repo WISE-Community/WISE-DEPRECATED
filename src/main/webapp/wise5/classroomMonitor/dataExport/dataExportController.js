@@ -758,8 +758,7 @@ class DataExportController {
     this.showDownloadingExportMessage();
     this.TeacherDataService.retrieveEventsExport(
       this.includeStudentEvents,
-      this.includeTeacherEvents,
-      this.includeNames
+      this.includeTeacherEvents
     ).then(() => {
       this.handleExportEventsCallback();
     });
@@ -814,8 +813,7 @@ class DataExportController {
       'Context',
       'Category',
       'Event',
-      'Data',
-      'Response'
+      'Data'
     ];
   }
 
@@ -925,7 +923,7 @@ class DataExportController {
     const row = this.createRow(columnNames.length);
     this.setRowCounter(row, columnNameToNumber, rowCounter);
     this.setWorkgroupId(row, columnNameToNumber, workgroupId);
-    this.setUserType(row, columnNameToNumber, 'student');
+    this.setUserType(row, columnNameToNumber, 'Student');
     this.setStudentIDs(row, columnNameToNumber, wiseId1, wiseId2, wiseId3);
     this.setStudentNames(row, columnNameToNumber, studentName1, studentName2, studentName3);
     this.setPeriodName(row, columnNameToNumber, periodName);
@@ -1053,12 +1051,16 @@ class DataExportController {
   }
 
   setComponentTypeAndPrompt(row, columnNameToNumber, data) {
-    const component = this.ProjectService.getComponentByNodeIdAndComponentId(
-      event.nodeId,
-      event.componentId
-    );
-    this.setComponentType(row, columnNameToNumber, component);
-    this.setComponentPrompt(row, columnNameToNumber, component);
+    const nodeId = data.nodeId;
+    const componentId = data.componentId;
+    if (nodeId != null && componentId != null) {
+      const component = this.ProjectService.getComponentByNodeIdAndComponentId(
+        data.nodeId,
+        data.componentId
+      );
+      this.setComponentType(row, columnNameToNumber, component);
+      this.setComponentPrompt(row, columnNameToNumber, component);
+    }
   }
 
   setComponentType(row, columnNameToNumber, component) {
@@ -1118,7 +1120,7 @@ class DataExportController {
     const row = this.createRow(columnNames.length);
     this.setRowCounter(row, columnNameToNumber, rowCounter);
     this.setWorkgroupId(row, columnNameToNumber, workgroupId);
-    this.setUserType(row, columnNameToNumber, 'teacher');
+    this.setUserType(row, columnNameToNumber, 'Teacher');
     this.setTeacherWISEId(row, columnNameToNumber, wiseId);
     this.setTeacherUsername(row, columnNameToNumber, username);
     this.setProjectId(row, columnNameToNumber);
