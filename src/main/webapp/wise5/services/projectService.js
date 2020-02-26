@@ -3349,62 +3349,6 @@ class ProjectService {
   }
 
   /**
-   * Move the component(s) within the node
-   * @param nodeId we are moving component(s) in this node
-   * @param componentIds the component(s) we are moving
-   * @param insertAfterComponentId Insert the component(s) after this given
-   * component id. If this argument is null, we will place the new
-   * component(s) in the first position.
-   */
-  moveComponent(nodeId, componentIds, insertAfterComponentId) {
-    const node = this.getNodeById(nodeId);
-    const components = node.components;
-    const componentsToMove = [];
-
-    // remove the component(s)
-    for (let a = components.length - 1; a >= 0; a--) {
-      const tempComponent = components[a];
-      if (tempComponent != null) {
-        if (componentIds.indexOf(tempComponent.id) != -1) {
-          // we have found a component we want to move
-
-          // add the component to our array of components we are moving
-          componentsToMove.splice(0, 0, tempComponent);
-
-          // remove the component from the components array in the node
-          components.splice(a, 1);
-        }
-      }
-    }
-
-    // insert the component(s)
-    if (insertAfterComponentId == null) {
-      // insert the components at the beginning of the components list
-
-      for (let c = 0; c < componentsToMove.length; c++) {
-        // insert a component
-        components.splice(c, 0, componentsToMove[c]);
-      }
-    } else {
-      // insert the component(s) after the given insertAfterComponentId
-
-      for (let b = 0; b < components.length; b++) {
-        const tempComponent = components[b];
-        if (tempComponent != null && tempComponent.id == insertAfterComponentId) {
-          // we have found the component we want to add after
-
-          for (let c = 0; c < componentsToMove.length; c++) {
-            // insert a component
-            components.splice(b + 1 + c, 0, componentsToMove[c]);
-          }
-          break;
-        }
-      }
-    }
-    return componentsToMove;
-  }
-
-  /**
    * TODO: Deprecated, should be removed; replaced by getMaxScoreForWorkgroupId in
    * StudentStatusService
    * Get the max score for the project. If the project contains branches, we

@@ -2075,14 +2075,14 @@ class NodeAuthoringController {
         alert(this.$translate('youAreNotAllowedToInsertTheSelectedItemsAfterItself'));
       }
     } else {
-      const data = {
+      const newComponents = this.NodeService.moveComponent(this.nodeId, selectedComponentIds,
+          componentId);
+      this.ProjectService.saveProject();
+      const eventData = {
         componentsMoved: this.getComponentObjectsForEventData(selectedComponentIds)
       };
-      this.saveEvent('componentMoved', 'Authoring', data);
+      this.saveEvent('componentMoved', 'Authoring', eventData);
       this.turnOffMoveComponentMode();
-      this.ProjectService.saveProject();
-      const newComponents = this.ProjectService.moveComponent(this.nodeId, selectedComponentIds,
-          componentId);
       this.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
     }
   }

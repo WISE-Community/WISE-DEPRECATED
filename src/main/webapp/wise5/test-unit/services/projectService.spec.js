@@ -344,8 +344,6 @@ describe('ProjectService', () => {
   // TODO: add test for ProjectService.removeNodeIdFromNodes()
   // TODO: add test for ProjectService.createComponent()
   // TODO: add test for ProjectService.addComponentToNode()
-  // TODO: add test for ProjectService.moveComponentUp()
-  // TODO: add test for ProjectService.moveComponentDown()
   // TODO: add test for ProjectService.deconsteComponent()
 
   it('should return the max score of the project', () => {
