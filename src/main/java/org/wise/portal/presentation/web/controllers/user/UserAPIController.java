@@ -1,10 +1,13 @@
 package org.wise.portal.presentation.web.controllers.user;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -23,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.wise.portal.domain.authentication.MutableGrantedAuthority;
 import org.wise.portal.domain.authentication.MutableUserDetails;
+import org.wise.portal.domain.authentication.impl.StudentUserDetails;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.run.Run;
@@ -224,20 +228,63 @@ public class UserAPIController {
     JSONObject response = new JSONObject();
     JSONArray runsArray = new JSONArray();
     User user = userService.retrieveUserByUsername(username);
-    response.put("userId", user.getId());
-    response.put("username", user.getUserDetails().getUsername());
-    response.put("firstName", user.getUserDetails().getFirstname());
-    response.put("lastName", user.getUserDetails().getLastname());
-    response.put("numberOfLogins", user.getUserDetails().getNumberOfLogins());
-    response.put("isGoogleUser", user.getUserDetails().isGoogleUser());
-    if (user.isStudent()) {
+    if(user.isStudent()){
+      StudentUserDetails sud = (StudentUserDetails)user.getUserDetails();
+      response.put("userId", user.getId());
+      response.put("username", sud.getUsername());
+      response.put("firstName", sud.getFirstname());
+      response.put("lastName", sud.getLastname());
+      response.put("gender", sud.getGender());
+      if(sud.isGoogleUser()){
+        response.put("email", sud.getEmailAddress());
+      }
+      LocalDate localDate = sud.getBirthday().
+          toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+      int month = localDate.getMonthValue();
+      int day = localDate.getDayOfMonth();
+      response.put("birthDay", day);
+      response.put("birthMonth", month);
+      response.put("language", sud.getLanguage());
+      response.put("signUpDate", sud.getSignupdate().toString());
+      response.put("numberOfLogins", sud.getNumberOfLogins());
+      response.put("isGoogleUser", sud.isGoogleUser());
+      if(sud.isGoogleUser()){
+        response.put("email", sud.getEmailAddress());
+      }
+      if (sud.getLastLoginTime() != null) {
+        response.put("lastLogIn", sud.getLastLoginTime().toString());
+      }      
       List<Run> runs = runService.getRunList(user);
       for (Run run: runs) {
-        runsArray.put(runToJSON(run));
+        runsArray.put(runToJSON(run, user));
       }
       response.put("runs", runsArray);
     }
     if (user.isTeacher()) {
+      TeacherUserDetails tud = (TeacherUserDetails)user.getUserDetails();
+      response.put("userId", user.getId());
+      response.put("username", tud.getUsername());
+      response.put("firstName", tud.getFirstname());
+      response.put("lastName", tud.getLastname());
+      response.put("displayName", tud.getDisplayname());
+      response.put("email", tud.getEmailAddress());
+      response.put("city", tud.getCity());
+      response.put("state", tud.getState());
+      response.put("country", tud.getCountry());
+      response.put("schoolName", tud.getSchoolname());
+      response.put("schoolLevel", tud.getSchoollevel());
+      response.put("language", tud.getLanguage());
+      response.put("howDidYouHearAboutUs", tud.getHowDidYouHearAboutUs());
+      response.put("signUpDate", tud.getSignupdate().toString());
+      response.put("numberOfLogins", tud.getNumberOfLogins());
+      if (tud.getLastLoginTime() != null) {
+        response.put("lastLogIn", tud.getLastLoginTime().toString());
+      }
+      List<Run> runs = runService.getRunListByOwner(user);
+      for (Run run: runs) {
+        runsArray.put(runToJSON(run, user));
+      }
+      response.put("runs", runsArray);
       JSONArray allAuthorities = new JSONArray();
       JSONArray userAuthorities = new JSONArray();
       for (MutableGrantedAuthority authority: userDetailsService.retrieveAllAuthorities()) {
@@ -252,14 +299,39 @@ public class UserAPIController {
     return response.toString();
   }
 
-  private JSONObject runToJSON(Run run) {
+  private JSONObject runToJSON(Run run, User user) {
     JSONObject runJSON = new JSONObject();
     try {
       runJSON.put("runId", run.getId());
-      runJSON.put("name", run.getName());
-      runJSON.put("startTime", run.getStarttime());
-      runJSON.put("teacherUsername", run.getOwner().getUserDetails().getUsername());
-      runJSON.put("teacherEmail", run.getOwner().getUserDetails().getEmailAddress());
+
+      if (user.isStudent()) {
+        runJSON.put("id", run.getId());
+        runJSON.put("name", run.getName());
+        runJSON.put("runCode", run.getRuncode());
+        runJSON.put("numberOfPeriods", run.getPeriods().size());
+        runJSON.put("numberOfStudents", run.getNumStudents());
+        runJSON.put("previewProjectLink",  projectService.getProjectURI(run.getProject()));
+        runJSON.put("editProjectLink", "/author#!/project/" + run.getProject().getId());
+        runJSON.put("startTime", run.getStartTimeMilliseconds());
+        runJSON.put("workGroupId", run.getPeriodOfStudent(user).getId());
+        Set<User> students = run.getPeriodOfStudent(user).getMembers();
+        String studentsNames = "";
+        for(User u: students) {
+          studentsNames += u.getUserDetails().getLastname();
+        }
+        runJSON.put("studentsInWorkGroup", studentsNames);
+      }
+      if (user.isTeacher()) {
+        runJSON.put("id", run.getId());
+        runJSON.put("name", run.getName());
+        runJSON.put("runCode", run.getRuncode());
+        runJSON.put("numberOfPeriods", run.getPeriods().size());
+        runJSON.put("numberOfStudents", run.getNumStudents());
+        runJSON.put("previewProjectLink", projectService.getProjectURI(run.getProject()));
+        runJSON.put("editProjectLink", "/author#!/project/" + run.getId());
+        runJSON.put("startTime", run.getStartTimeMilliseconds());
+      }
+
     } catch (JSONException je) {
       return null;
     }

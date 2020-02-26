@@ -1,0 +1,22 @@
+table {
+    width: 100%;
+    table-layout: fixed;
+  }
+
+.example-container {
+  height: 300px;
+  width: 520px;
+  overflow: auto;
+  margin: auto;
+}
+
+th, td {
+    overflow: hidden;
+    width: 160px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+.mat-dialog-container {
+    min-width: 80vw !important;
+}

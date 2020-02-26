@@ -23,10 +23,13 @@ export class AdminActionsComponent implements OnInit {
   isViewUserInfo: boolean;
   isManageRoles: boolean;
   isSaving: boolean = false;
+  hasRun: boolean;
   userInfoDataSource: any[] = [];
   userInfoDisplayedColumns = ['label', 'value'];
-  runColumns = ['runId', 'name', 'startTime', 'teacherUsername', 'teacherEmail'];
-  runLabels = ['Run ID', 'Run Name', 'Run Start Time', 'Teacher Username', 'Teacher Email'];
+  runColumnsStudents = ['runId', 'name', 'runCode', 'numberOfPeriods', 'numberOfStudents', 
+      'previewProjectLink', 'editProjectLink', 'startTime', 'workGroupId', 'studentsInWorkGroup'];
+  runColumnsTeachers = ['runId', 'name', 'runCode', 'numberOfPeriods', 'numberOfStudents', 
+      'previewProjectLink', 'editProjectLink', 'startTime'];
   runsDataSource: MatTableDataSource<any>;
   runDisplayedColumns = [];
   runs = [];
@@ -61,6 +64,7 @@ export class AdminActionsComponent implements OnInit {
     if (this.user.runs) {
       this.runs = this.user.runs;
     }
+    this.hasRun = this.runs.length != 0;
     this.userAuthorities = new Set();
     if (this.user.userAuthorities) {
       this.allAuthorities = this.user.allAuthorities;
@@ -71,8 +75,6 @@ export class AdminActionsComponent implements OnInit {
   ngOnInit() {
 
     this.updateDataSource();
-    this.transposeRunsData();
-    this.fillRunLabels();
   }
 
   passwordMatchValidator(passwordsFormGroup: FormGroup) {
@@ -112,10 +114,10 @@ export class AdminActionsComponent implements OnInit {
   }
 
   handleChangePasswordResponse(response) {
-    if (response.message == 'success') {
+    if (response.messageCode == 'success') {
       this.resetForm();
       this.snackBar.open(this.i18n(`Password changed.`));
-    } else if (response.message == 'incorrect admin password') {
+    } else if (response.messageCode == 'incorrect admin password') {
       const error = { 'incorrectPassword': true };
       const adminPasswordControl = this.adminChangePasswordFormGroup.get('adminPassword');
       adminPasswordControl.setErrors(error);
@@ -133,27 +135,41 @@ export class AdminActionsComponent implements OnInit {
   }
 
   updateDataSource() {
-    this.userInfoDataSource.push({ label: 'ID', value: this.user.userId });
-    this.userInfoDataSource.push({ label: 'Full Name', value: `${this.user.firstName} ${this.user.lastName}` });
-    this.userInfoDataSource.push({ label: 'WISE Username', value: this.user.username });
-    this.userInfoDataSource.push({ label: 'Number of Logins', value: this.user.numberOfLogins });
-  }
-
-  transposeRunsData() {
-    let transposedData = [];
-    for (let column = 0; column < this.runColumns.length; column++) {
-      transposedData[column] = { label: this.runLabels[column] };
-      for (let row = 0; row < this.runs.length; row++) {
-        transposedData[column][`column${row}`] = this.runs[row][this.runColumns[column]];
+    if(this.isStudent) {
+      this.userInfoDataSource.push({ label: this.i18n('ID'), value: this.user.userId });
+      this.userInfoDataSource.push({ label: this.i18n('Full Name'), value: `${this.user.firstName} ${this.user.lastName}` });
+      this.userInfoDataSource.push({ label: this.i18n('WISE Username'), value: this.user.username });
+      if(this.user.email != "") {
+        this.userInfoDataSource.push({ label: this.i18n('Email'), value: this.user.email});
       }
+      this.userInfoDataSource.push({ label: this.i18n('Gender'), value: this.user.gender });
+      this.userInfoDataSource.push({ label: this.i18n('Birth Day'), value: this.user.birthDay });
+      this.userInfoDataSource.push({ label: this.i18n('Birth Month'), value: this.user.birthMonth });
+      this.userInfoDataSource.push({ label: this.i18n('Language'), value: this.user.language });
+      this.userInfoDataSource.push({ label: this.i18n('Sign Up Date'), value: this.user.signUpDate });
+      this.userInfoDataSource.push({ label: this.i18n('Number of Logins'), value: this.user.numberOfLogins });
+      this.userInfoDataSource.push({ label: this.i18n('Last Login'), value: this.user.LastLogIn });
     }
-    this.runsDataSource = new MatTableDataSource(transposedData);
-  }
-
-  fillRunLabels() {
-    this.runDisplayedColumns = ['label'];
-    for (let i = 0; i < this.runs.length; i++) {
-      this.runDisplayedColumns.push(`column${i}`);
+    if(this.isTeacher) {
+      this.userInfoDataSource.push({ label: this.i18n('ID'), value: this.user.userId });
+      this.userInfoDataSource.push({ label: this.i18n('Full Name'), value: `${this.user.firstName} ${this.user.lastName}` });
+      this.userInfoDataSource.push({ label: this.i18n('WISE Username'), value: this.user.username });
+      this.userInfoDataSource.push({ label: this.i18n('Display Name'), value: this.user.displayName });
+      if(this.user.email != '') {
+        this.userInfoDataSource.push({ label: this.i18n('Email'), value: this.user.email});
+      }
+      this.userInfoDataSource.push({ label: this.i18n('City'), value: this.user.city });
+      this.userInfoDataSource.push({ label: this.i18n('State'), value: this.user.state });
+      this.userInfoDataSource.push({ label: this.i18n('Country'), value: this.user.country });
+      this.userInfoDataSource.push({ label: this.i18n('School Name'), value: this.user.schoolName });
+      this.userInfoDataSource.push({ label: this.i18n('School Level'), value: this.user.schoolLevel });
+      this.userInfoDataSource.push({ label: this.i18n('Language'), value: this.user.language });
+      if(this.user.howDidYouHearAboutUs != '') { 
+        this.userInfoDataSource.push({ label: this.i18n('How did you hear about us?'), value: this.user.howDidYouHearAboutUs });
+      }
+      this.userInfoDataSource.push({ label: this.i18n('Sign Up Date'), value: this.user.signUpDate });
+      this.userInfoDataSource.push({ label: this.i18n('Number Of Logins'), value: this.user.numberOfLogins });
+      this.userInfoDataSource.push({ label: this.i18n('Last Login'), value: this.user.lastLogIn });
     }
   }
 

@@ -89,7 +89,7 @@ export class FindStudentComponent implements OnInit {
       this.dialog.open(AdminActionsComponent, {
         data: { user: user, action: action, isStudent: true },
         panelClass: 'mat-dialog--sm',
-        disableClose: true
+        autoFocus: false
       });
     });
   }

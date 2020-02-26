@@ -69,7 +69,8 @@
   </form>
 </ng-container>
 <ng-container *ngIf="isViewUserInfo">
-  <h2 class="mat-dialog-title" i18n>User Information</h2>
+  <div mat-dialog-content>
+  <h1 mat-dialog-title i18n>User Information</h1>
   <table mat-table [dataSource]="userInfoDataSource" class="standalone__content">
     <ng-container matColumnDef="label">
       <th mat-header-cell *matHeaderCellDef i18n>Label</th>
@@ -82,20 +83,67 @@
     <tr mat-header-row *matHeaderRowDef="userInfoDisplayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: userInfoDisplayedColumns;"></tr>
   </table>
-  <p fxLayoutAlign="center" *ngIf="isStudent">User Runs</p>
-  <table mat-table [dataSource]="runsDataSource" class="standalone__content" *ngIf="isStudent">
-    <ng-container matColumnDef="label">
-      <td mat-cell *matCellDef="let row">{{row.label}}</td>
-    </ng-container>
-    <ng-container [matColumnDef]="'column' + i" *ngFor="let column of runs; let i = index">
-      <td mat-cell *matCellDef="let row">{{row['column' + i]}}</td>
-    </ng-container>
-    <tr mat-row *matRowDef="let row; columns: runDisplayedColumns;"></tr>
-  </table>
-  <div fxLayoutAlign="end">
-    <button mat-flat-button color="primary" mat-dialog-close i18n>Close</button>
-  </div>
+  <ng-container *ngIf="hasRun">
+    <p fxLayoutAlign="center">User Runs</p>
+    <div class="example-container">
+      <table mat-table [dataSource]="runs" class="standalone__content">
+        <ng-container matColumnDef="runId">
+          <th mat-header-cell *matHeaderCellDef i18n> Run Id </th>
+          <td mat-cell *matCellDef="let element"> {{element.runId}} </td>
+        </ng-container>
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef i18n> Name </th>
+          <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+        </ng-container>
+        <ng-container matColumnDef="runCode">
+          <th mat-header-cell *matHeaderCellDef i18n> Run Code </th>
+          <td mat-cell *matCellDef="let element"> {{element.runCode}} </td>
+        </ng-container>
+        <ng-container matColumnDef="numberOfPeriods">
+          <th mat-header-cell *matHeaderCellDef i18n> Number Of Periods </th>
+          <td mat-cell *matCellDef="let element"> {{element.numberOfPeriods}} </td>
+        </ng-container>
+        <ng-container matColumnDef="numberOfStudents">
+          <th mat-header-cell *matHeaderCellDef i18n> Number Of Students </th>
+          <td mat-cell *matCellDef="let element"> {{element.numberOfStudents}} </td>
+        </ng-container>
+        <ng-container matColumnDef="previewProjectLink">
+          <th mat-header-cell *matHeaderCellDef i18n> Preview Project Link </th>
+          <td mat-cell *matCellDef="let element"> <a href="{{element.previewProjectLink}}" target="_blank">{{element.previewProjectLink}}</a> </td>
+        </ng-container>
+        <ng-container matColumnDef="editProjectLink" i18n>
+          <th mat-header-cell *matHeaderCellDef> Edit Project Link </th>
+          <td mat-cell *matCellDef="let element"> <a href="{{element.editProjectLink}}" target="_blank">{{element.editProjectLink}}</a> </td>
+        </ng-container>
+        <ng-container matColumnDef="startTime" i18n>
+          <th mat-header-cell *matHeaderCellDef> Start Time </th>
+          <td mat-cell *matCellDef="let element"> {{element.startTime}} </td>
+        </ng-container>
+        <ng-container matColumnDef="workGroupId" *ngIf="isStudent" i18n>
+          <th mat-header-cell *matHeaderCellDef> Work Group Id </th>
+          <td mat-cell *matCellDef="let element"> {{element.workGroupId}} </td>
+        </ng-container>
+        <ng-container matColumnDef="studentsInWorkGroup" *ngIf="isStudent" i18n>
+          <th mat-header-cell *matHeaderCellDef> Students In WorkGroup </th>
+          <td mat-cell *matCellDef="let element"> {{element.studentsInWorkGroup}} </td>
+        </ng-container>
+        <ng-container *ngIf="isStudent">
+          <tr mat-header-row *matHeaderRowDef="runColumnsStudents"></tr>
+          <tr mat-row *matRowDef="let row; columns: runColumnsStudents;"></tr>
+        </ng-container>
+        <ng-container *ngIf="isTeacher">
+          <tr mat-header-row *matHeaderRowDef="runColumnsTeachers"></tr>
+          <tr mat-row *matRowDef="let row; columns: runColumnsTeachers"></tr>  
+        </ng-container>
+      </table>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="!hasRun">
+    This User has no runs.
+  </ng-container>
+</div>
 </ng-container>
+
 <ng-container *ngIf="isManageRoles">
   <h2 class="mat-dialog-title" i18n>Manage Teacher Roles</h2>
   <div fxLayout="column wrap">
