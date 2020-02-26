@@ -48,7 +48,7 @@ export class FindStudentComponent implements OnInit {
     const runId = this.getControlFieldValue('runId');
     const workgroupId = this.getControlFieldValue('workgroupId');
     const teacherUsername = this.getControlFieldValue('teacherUsername');
-    if (!firstName && !lastName && !username && !userId && !runId && !workgroupId && !teacherUsername) {
+    if (!(firstName || lastName || username || userId || runId || workgroupId || teacherUsername)) {
       alert('You must enter at least one field.');
     } else {
       this.adminService.searchStudents(firstName, lastName, username, userId, runId, workgroupId, teacherUsername).subscribe(students => {

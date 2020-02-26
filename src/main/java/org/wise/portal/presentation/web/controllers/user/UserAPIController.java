@@ -303,16 +303,15 @@ public class UserAPIController {
     JSONObject runJSON = new JSONObject();
     try {
       runJSON.put("runId", run.getId());
-
+      runJSON.put("id", run.getId());
+      runJSON.put("name", run.getName());
+      runJSON.put("runCode", run.getRuncode());
+      runJSON.put("numberOfPeriods", run.getPeriods().size());
+      runJSON.put("numberOfStudents", run.getNumStudents());
+      runJSON.put("previewProjectLink",  projectService.getProjectURI(run.getProject()));
+      runJSON.put("editProjectLink", "/author#!/project/" + run.getProject().getId());
+      runJSON.put("startTime", run.getStartTimeMilliseconds());
       if (user.isStudent()) {
-        runJSON.put("id", run.getId());
-        runJSON.put("name", run.getName());
-        runJSON.put("runCode", run.getRuncode());
-        runJSON.put("numberOfPeriods", run.getPeriods().size());
-        runJSON.put("numberOfStudents", run.getNumStudents());
-        runJSON.put("previewProjectLink",  projectService.getProjectURI(run.getProject()));
-        runJSON.put("editProjectLink", "/author#!/project/" + run.getProject().getId());
-        runJSON.put("startTime", run.getStartTimeMilliseconds());
         runJSON.put("workGroupId", run.getPeriodOfStudent(user).getId());
         Set<User> students = run.getPeriodOfStudent(user).getMembers();
         String studentsNames = "";
@@ -321,17 +320,6 @@ public class UserAPIController {
         }
         runJSON.put("studentsInWorkGroup", studentsNames);
       }
-      if (user.isTeacher()) {
-        runJSON.put("id", run.getId());
-        runJSON.put("name", run.getName());
-        runJSON.put("runCode", run.getRuncode());
-        runJSON.put("numberOfPeriods", run.getPeriods().size());
-        runJSON.put("numberOfStudents", run.getNumStudents());
-        runJSON.put("previewProjectLink", projectService.getProjectURI(run.getProject()));
-        runJSON.put("editProjectLink", "/author#!/project/" + run.getId());
-        runJSON.put("startTime", run.getStartTimeMilliseconds());
-      }
-
     } catch (JSONException je) {
       return null;
     }

@@ -70,8 +70,8 @@ export class FindTeacherComponent implements OnInit {
     const schoolLevel = this.getControlFieldValue('schoolLevel');
     const email = this.getControlFieldValue('email');
     const runId = this.getControlFieldValue('runId');
-    if (!firstName && !lastName && !username && !userId && !displayName && !city && !state &&
-        !country && !schoolName && !schoolLevel && !email && !runId) {
+    if (!(firstName || lastName || username || userId || displayName || city || state ||
+        country || schoolName || schoolLevel || email || runId)) {
       alert('You must enter at least one field.');
     } else {
       this.adminService.searchTeachers(firstName, lastName, username, userId, displayName, city,

@@ -5330,17 +5330,9 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/admin/admin-actions/admin-actions.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/admin/admin-actions/admin-actions.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
       </trans-unit>
       <trans-unit id="3a16ff6500619f9eca09398f465c41872a3f6eab" datatype="html">
         <source>WISE Username</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/admin/admin-actions/admin-actions.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/admin/admin-actions/admin-actions.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -5366,13 +5358,9 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/admin/admin-actions/admin-actions.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/admin/admin-actions/admin-actions.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
       </trans-unit>
-      <trans-unit id="bb25f34009677c4c2254d0743979b7da782fdc92" datatype="html">
-        <source>Number of Logins</source>
+      <trans-unit id="f87bf9075201ac7908abeb8d248f080ce9f4b2bb" datatype="html">
+        <source>Number Of Logins</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/admin/admin-actions/admin-actions.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -5380,17 +5368,6 @@
       </trans-unit>
       <trans-unit id="6d7e2367c01ebe9ded9f210439d4b61a94894673" datatype="html">
         <source>Last Login</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/admin/admin-actions/admin-actions.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/admin/admin-actions/admin-actions.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="f87bf9075201ac7908abeb8d248f080ce9f4b2bb" datatype="html">
-        <source>Number Of Logins</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/admin/admin-actions/admin-actions.component.ts</context>
           <context context-type="linenumber">1</context>

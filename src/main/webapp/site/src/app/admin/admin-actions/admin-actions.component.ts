@@ -135,42 +135,28 @@ export class AdminActionsComponent implements OnInit {
   }
 
   updateDataSource() {
+    this.userInfoDataSource.push({ label: this.i18n('ID'), value: this.user.userId });
+    this.userInfoDataSource.push({ label: this.i18n('Full Name'), value: `${this.user.firstName} ${this.user.lastName}` });
+    this.userInfoDataSource.push({ label: this.i18n('WISE Username'), value: this.user.username });
+    this.userInfoDataSource.push({ label: this.i18n('Email'), value: this.user.email});
     if(this.isStudent) {
-      this.userInfoDataSource.push({ label: this.i18n('ID'), value: this.user.userId });
-      this.userInfoDataSource.push({ label: this.i18n('Full Name'), value: `${this.user.firstName} ${this.user.lastName}` });
-      this.userInfoDataSource.push({ label: this.i18n('WISE Username'), value: this.user.username });
-      if(this.user.email != "") {
-        this.userInfoDataSource.push({ label: this.i18n('Email'), value: this.user.email});
-      }
       this.userInfoDataSource.push({ label: this.i18n('Gender'), value: this.user.gender });
       this.userInfoDataSource.push({ label: this.i18n('Birth Day'), value: this.user.birthDay });
       this.userInfoDataSource.push({ label: this.i18n('Birth Month'), value: this.user.birthMonth });
-      this.userInfoDataSource.push({ label: this.i18n('Language'), value: this.user.language });
-      this.userInfoDataSource.push({ label: this.i18n('Sign Up Date'), value: this.user.signUpDate });
-      this.userInfoDataSource.push({ label: this.i18n('Number of Logins'), value: this.user.numberOfLogins });
-      this.userInfoDataSource.push({ label: this.i18n('Last Login'), value: this.user.LastLogIn });
     }
     if(this.isTeacher) {
-      this.userInfoDataSource.push({ label: this.i18n('ID'), value: this.user.userId });
-      this.userInfoDataSource.push({ label: this.i18n('Full Name'), value: `${this.user.firstName} ${this.user.lastName}` });
-      this.userInfoDataSource.push({ label: this.i18n('WISE Username'), value: this.user.username });
       this.userInfoDataSource.push({ label: this.i18n('Display Name'), value: this.user.displayName });
-      if(this.user.email != '') {
-        this.userInfoDataSource.push({ label: this.i18n('Email'), value: this.user.email});
-      }
       this.userInfoDataSource.push({ label: this.i18n('City'), value: this.user.city });
       this.userInfoDataSource.push({ label: this.i18n('State'), value: this.user.state });
       this.userInfoDataSource.push({ label: this.i18n('Country'), value: this.user.country });
       this.userInfoDataSource.push({ label: this.i18n('School Name'), value: this.user.schoolName });
       this.userInfoDataSource.push({ label: this.i18n('School Level'), value: this.user.schoolLevel });
-      this.userInfoDataSource.push({ label: this.i18n('Language'), value: this.user.language });
-      if(this.user.howDidYouHearAboutUs != '') { 
-        this.userInfoDataSource.push({ label: this.i18n('How did you hear about us?'), value: this.user.howDidYouHearAboutUs });
-      }
-      this.userInfoDataSource.push({ label: this.i18n('Sign Up Date'), value: this.user.signUpDate });
-      this.userInfoDataSource.push({ label: this.i18n('Number Of Logins'), value: this.user.numberOfLogins });
-      this.userInfoDataSource.push({ label: this.i18n('Last Login'), value: this.user.lastLogIn });
+      this.userInfoDataSource.push({ label: this.i18n('How did you hear about us?'), value: this.user.howDidYouHearAboutUs });
     }
+    this.userInfoDataSource.push({ label: this.i18n('Language'), value: this.user.language });
+    this.userInfoDataSource.push({ label: this.i18n('Sign Up Date'), value: this.user.signUpDate });
+    this.userInfoDataSource.push({ label: this.i18n('Number Of Logins'), value: this.user.numberOfLogins });
+    this.userInfoDataSource.push({ label: this.i18n('Last Login'), value: this.user.lastLogIn });
   }
 
   userAuthorityChanged(authorityName: string) {
