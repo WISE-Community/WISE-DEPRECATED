@@ -1916,7 +1916,7 @@ class NodeAuthoringController {
       }
 
       if (this.libraryProjectsList == null) {
-        this.ConfigService.getLibraryProjects().then((libraryProjectsList) => {
+        this.ProjectService.getFlattenedUniqueLibraryProjects().then((libraryProjectsList) => {
           this.libraryProjectsList = libraryProjectsList;
         });
       }

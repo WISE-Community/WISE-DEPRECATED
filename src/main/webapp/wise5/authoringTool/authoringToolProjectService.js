@@ -1071,6 +1071,24 @@ class AuthoringToolProjectService extends ProjectService {
     this.applicationNodes.push(node);
     return node;
   }
+
+  getFlattenedUniqueLibraryProjects() {
+    return this.$http.get(this.ConfigService.getConfigParam('getLibraryProjectsURL'))
+        .then(({data : projects}) => {
+      const flatProjectList = projects.map(grade => {return grade.children;}).flat();
+      return this.filterUniqueProjects(flatProjectList);
+    });
+  }
+
+  filterUniqueProjects(projects) {
+    const filteredProjects = [];
+    for (const project of projects) {
+      if (!filteredProjects.map(project => {return project.id;}).includes(project.id)) {
+        filteredProjects.push(project);
+      }
+    }
+    return filteredProjects;
+  }
 }
 
 AuthoringToolProjectService.$inject = [

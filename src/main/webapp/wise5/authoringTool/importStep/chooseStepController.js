@@ -25,7 +25,7 @@ class ChooseStepController {
 
   $onInit() {
     this.myProjectsList = this.ConfigService.getAuthorableProjects();
-    this.ConfigService.getLibraryProjects().then(libraryProjectsList => {
+    this.ProjectService.getFlattenedUniqueLibraryProjects().then(libraryProjectsList => {
       this.libraryProjectsList = libraryProjectsList;
     });
   }
