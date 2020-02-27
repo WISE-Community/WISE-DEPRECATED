@@ -19,7 +19,7 @@
           style='width: 100%;'>
     <md-option ng-repeat="project in chooseStepController.myProjectsList"
             value='{{::project.id}}'>
-      {{::project.id + ' ' + project.name + (project.runId ? ' (' + ('RUN_ID' | translate) + ': ' + project.runId + ')': '')}}
+      {{::project.id + ' - ' + project.name + (project.runId ? ' (' + ('RUN_ID' | translate) + ': ' + project.runId + ')': '')}}
     </md-option>
   </md-select>
 </md-input-container>
@@ -31,7 +31,7 @@
           style='width: 100%;'>
     <md-option ng-repeat="project in chooseStepController.libraryProjectsList"
             value='{{::project.id}}'>
-      {{project.id + ' ' + project.name}}
+      {{project.id + ' - ' + project.name}}
     </md-option>
   </md-select>
 </md-input-container>

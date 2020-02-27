@@ -1072,22 +1072,35 @@ class AuthoringToolProjectService extends ProjectService {
     return node;
   }
 
-  getFlattenedUniqueLibraryProjects() {
+  getLibraryProjects() {
     return this.$http.get(this.ConfigService.getConfigParam('getLibraryProjectsURL'))
-        .then(({data : projects}) => {
-      const flatProjectList = projects.map(grade => {return grade.children;}).flat();
-      return this.filterUniqueProjects(flatProjectList);
-    });
+      .then(({data: projects}) => { return projects; });
+  }
+
+  sortAndFilterUniqueLibraryProjects(libraryProjects) {
+    const flatProjectList = libraryProjects.map(grade => {return grade.children;}).flat()
+      .sort(this.sortByProjectIdDescending);
+    return this.filterUniqueProjects(flatProjectList);
+  }
+
+  sortByProjectIdDescending(project1, project2) {
+    if (project1.id > project2.id) {
+      return -1;
+    } else {
+      return 1;
+    }
   }
 
   filterUniqueProjects(projects) {
-    const filteredProjects = [];
+    const uniqueProjects = [];
+    const filteredProjects = {};
     for (const project of projects) {
-      if (!filteredProjects.map(project => {return project.id;}).includes(project.id)) {
-        filteredProjects.push(project);
+      if (filteredProjects[project.id] == null) {
+        filteredProjects[project.id] = project;
+        uniqueProjects.push(project);
       }
     }
-    return filteredProjects;
+    return uniqueProjects;
   }
 }
 
