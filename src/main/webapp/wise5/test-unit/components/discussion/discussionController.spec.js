@@ -1,46 +1,62 @@
 import vleModule from '../../../vle/vle';
 
+let $controller;
+let $rootScope;
+let $scope;
+let discussionController;
+let component;
+
 describe('DiscussionController', () => {
-
-  let $controller;
-  let $rootScope;
-  let $scope;
-  let discussionController;
-  let component;
-  const createComponentState = (componentStateId, nodeId, componentId, componentStateIdReplyingTo,
-        response) => {
-    return {
-      id: componentStateId,
-      nodeId: nodeId,
-      componentId: componentId,
-      studentData: {
-        response: response,
-        componentStateIdReplyingTo: componentStateIdReplyingTo
-      }
-    };
-  };
-
   beforeEach(angular.mock.module(vleModule.name));
 
   beforeEach(inject((_$controller_, _$rootScope_) => {
     $controller = _$controller_;
     $rootScope = _$rootScope_;
-    component = {
-      'id': '1sc05cn75f',
-      'type': 'Discussion',
-      'prompt': 'What is your favorite ice cream flavor?',
-      'showSaveButton': false,
-      'showSubmitButton': false,
-      'isStudentAttachmentEnabled': true,
-      'gateClassmateResponses': true,
-      'showAddToNotebookButton': true
-    };
+    component = createComponent();
     $scope = $rootScope.$new();
     $scope.componentContent = JSON.parse(JSON.stringify(component));
     discussionController = $controller('DiscussionController', { $scope: $scope });
     discussionController.nodeId = 'node1';
   }));
 
+  shouldGetTheLevel1Responses();
+  shouldGetGradingComponentIds();
+  shouldSortComponentStatesByServerSaveTime();
+  shouldCheckIfAThreadHasAPostFromThisComponentAndWorkgroupId();
+});
+
+function createComponent() {
+  return {
+    id: '1sc05cn75f',
+    type: 'Discussion',
+    prompt: 'What is your favorite ice cream flavor?',
+    showSaveButton: false,
+    showSubmitButton: false,
+    isStudentAttachmentEnabled: true,
+    gateClassmateResponses: true,
+    showAddToNotebookButton: true
+  };
+}
+
+function createComponentState(
+  componentStateId,
+  nodeId,
+  componentId,
+  componentStateIdReplyingTo,
+  response
+) {
+  return {
+    id: componentStateId,
+    nodeId: nodeId,
+    componentId: componentId,
+    studentData: {
+      response: response,
+      componentStateIdReplyingTo: componentStateIdReplyingTo
+    }
+  };
+}
+
+function shouldGetTheLevel1Responses() {
   it('should get the level 1 responses', () => {
     const nodeId = 'node1';
     const componentId = 'component1';
@@ -53,7 +69,9 @@ describe('DiscussionController', () => {
     const level1Responses = discussionController.getLevel1Responses();
     expect(level1Responses.all.length).toEqual(2);
   });
+}
 
+function shouldGetGradingComponentIds() {
   it('should get grading component ids', () => {
     const componentId1 = 'component1';
     discussionController.componentId = componentId1;
@@ -67,7 +85,8 @@ describe('DiscussionController', () => {
       id: componentId2,
       connectedComponents: [
         {
-          nodeId: 'node1', componentId: 'component1'
+          nodeId: 'node1',
+          componentId: 'component1'
         }
       ]
     };
@@ -78,17 +97,21 @@ describe('DiscussionController', () => {
       id: componentId3,
       connectedComponents: [
         {
-          nodeId: 'node1', componentId: 'component1'
+          nodeId: 'node1',
+          componentId: 'component1'
         },
         {
-          nodeId: 'node2', componentId: 'component2'
+          nodeId: 'node2',
+          componentId: 'component2'
         }
       ]
     };
     const gradingComponentIds3 = discussionController.getGradingComponentIds();
     expect(gradingComponentIds3.length).toEqual(3);
   });
+}
 
+function shouldSortComponentStatesByServerSaveTime() {
   it('should sort component states by server save time', () => {
     const componentState1 = {
       id: 1,
@@ -108,7 +131,9 @@ describe('DiscussionController', () => {
     expect(sortedComponentStates[1]).toEqual(componentState2);
     expect(sortedComponentStates[2]).toEqual(componentState3);
   });
+}
 
+function shouldCheckIfAThreadHasAPostFromThisComponentAndWorkgroupId() {
   it('should check if a thread has a post from this component and workgroup id', () => {
     const componentId1 = 'component1';
     const componentId2 = 'component2';
@@ -134,18 +159,21 @@ describe('DiscussionController', () => {
     };
     discussionController.componentId = componentId1;
     discussionController.workgroupId = workgroupId2;
-    expect(discussionController.threadHasPostFromThisComponentAndWorkgroupId()(componentState1))
-        .toEqual(false);
+    expect(
+      discussionController.threadHasPostFromThisComponentAndWorkgroupId()(componentState1)
+    ).toEqual(false);
     discussionController.workgroupId = workgroupId1;
-    expect(discussionController.threadHasPostFromThisComponentAndWorkgroupId()(componentState1))
-        .toEqual(true);
+    expect(
+      discussionController.threadHasPostFromThisComponentAndWorkgroupId()(componentState1)
+    ).toEqual(true);
     discussionController.componentId = componentId2;
     discussionController.workgroupId = workgroupId2;
-    expect(discussionController.threadHasPostFromThisComponentAndWorkgroupId()(componentState2))
-        .toEqual(true);
+    expect(
+      discussionController.threadHasPostFromThisComponentAndWorkgroupId()(componentState2)
+    ).toEqual(true);
     discussionController.workgroupId = workgroupId1;
-    expect(discussionController.threadHasPostFromThisComponentAndWorkgroupId()(componentState2))
-        .toEqual(true);
+    expect(
+      discussionController.threadHasPostFromThisComponentAndWorkgroupId()(componentState2)
+    ).toEqual(true);
   });
-
-});
+}
