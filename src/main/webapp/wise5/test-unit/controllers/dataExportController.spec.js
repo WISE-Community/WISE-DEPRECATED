@@ -12,7 +12,6 @@ const demoProjectJSONOriginal = window.mocks['test-unit/sampleData/curriculum/De
 
 describe('DataExportController', () => {
   beforeEach(angular.mock.module(classroomMonitorModule.name));
-
   beforeEach(inject((
     _ConfigService_,
     _ProjectService_,
@@ -32,7 +31,6 @@ describe('DataExportController', () => {
     ProjectService.setProject(demoProjectJSON);
     dataExportController = $controller('DataExportController', { $scope: $scope });
   }));
-
   shouldCreateColumnNameToNumberMapping();
   shouldCreateRow();
   shouldSetRowCounter();
@@ -79,32 +77,7 @@ function shouldSetRowCounter() {
 
 function shouldCreateAStudentEventRow() {
   it('should create a student event row', () => {
-    const columnNames = dataExportController.getEventsColumnNames();
-    const columnNameToNumber = dataExportController.getColumnNameToNumber(columnNames);
-    const rowCounter = 10;
-    const workgroupId = 100;
-    const wiseId1 = 1000;
-    const wiseId2 = null;
-    const wiseId3 = null;
-    const studentName1 = 'Spongebob Squarepants';
-    const studentName2 = null;
-    const studentName3 = null;
-    const periodName = '5';
-    const event = { event: 'nodeEntered', data: { nodeId: 'node1' } };
-    const row = dataExportController.createStudentEventExportRow(
-      columnNames,
-      columnNameToNumber,
-      rowCounter,
-      workgroupId,
-      wiseId1,
-      wiseId2,
-      wiseId3,
-      studentName1,
-      studentName2,
-      studentName3,
-      periodName,
-      event
-    );
+    const { row, columnNameToNumber } = createStudentEventExportRow();
     expect(row[columnNameToNumber['#']]).toEqual(10);
     expect(row[columnNameToNumber['Workgroup ID']]).toEqual(100);
     expect(row[columnNameToNumber['User Type']]).toEqual('Student');
@@ -117,32 +90,7 @@ function shouldCreateAStudentEventRow() {
 function shouldCreateAStudentRowWithShowingNames() {
   it('should create a student event row with showing names', () => {
     dataExportController.includeNames = true;
-    const columnNames = dataExportController.getEventsColumnNames();
-    const columnNameToNumber = dataExportController.getColumnNameToNumber(columnNames);
-    const rowCounter = 10;
-    const workgroupId = 100;
-    const wiseId1 = 1000;
-    const wiseId2 = null;
-    const wiseId3 = null;
-    const studentName1 = 'Spongebob Squarepants';
-    const studentName2 = null;
-    const studentName3 = null;
-    const periodName = '5';
-    const event = { event: 'nodeEntered', data: { nodeId: 'node1' } };
-    const row = dataExportController.createStudentEventExportRow(
-      columnNames,
-      columnNameToNumber,
-      rowCounter,
-      workgroupId,
-      wiseId1,
-      wiseId2,
-      wiseId3,
-      studentName1,
-      studentName2,
-      studentName3,
-      periodName,
-      event
-    );
+    const { row, columnNameToNumber } = createStudentEventExportRow();
     expect(row[columnNameToNumber['Student Name 1']]).toEqual('Spongebob Squarepants');
   });
 }
@@ -150,54 +98,14 @@ function shouldCreateAStudentRowWithShowingNames() {
 function shouldCreateAStudentEventRowWithoutShowingNames() {
   it('should create a student event row without showing names', () => {
     dataExportController.includeNames = false;
-    const columnNames = dataExportController.getEventsColumnNames();
-    const columnNameToNumber = dataExportController.getColumnNameToNumber(columnNames);
-    const rowCounter = 10;
-    const workgroupId = 100;
-    const wiseId1 = 1000;
-    const wiseId2 = null;
-    const wiseId3 = null;
-    const studentName1 = 'Spongebob Squarepants';
-    const studentName2 = null;
-    const studentName3 = null;
-    const periodName = '5';
-    const event = { event: 'nodeEntered', data: { nodeId: 'node1' } };
-    const row = dataExportController.createStudentEventExportRow(
-      columnNames,
-      columnNameToNumber,
-      rowCounter,
-      workgroupId,
-      wiseId1,
-      wiseId2,
-      wiseId3,
-      studentName1,
-      studentName2,
-      studentName3,
-      periodName,
-      event
-    );
+    const { row, columnNameToNumber } = createStudentEventExportRow();
     expect(row[columnNameToNumber['Student Name 1']]).toEqual('');
   });
 }
 
 function shouldCreateATeacherEventRow() {
   it('should create a teacher event row', () => {
-    const columnNames = dataExportController.getEventsColumnNames();
-    const columnNameToNumber = dataExportController.getColumnNameToNumber(columnNames);
-    const rowCounter = 10;
-    const workgroupId = 100;
-    const wiseId = 1000;
-    const username = 'Mrs. Puff';
-    const event = { event: 'nodeGradingViewDisplayed', data: { nodeId: 'node1' } };
-    const row = dataExportController.createTeacherEventExportRow(
-      columnNames,
-      columnNameToNumber,
-      rowCounter,
-      workgroupId,
-      wiseId,
-      username,
-      event
-    );
+    const { row, columnNameToNumber } = createTeacherEventExportRow();
     expect(row[columnNameToNumber['#']]).toEqual(10);
     expect(row[columnNameToNumber['Workgroup ID']]).toEqual(100);
     expect(row[columnNameToNumber['User Type']]).toEqual('Teacher');
@@ -210,22 +118,7 @@ function shouldCreateATeacherEventRow() {
 function shouldCreateATeacherEventRowWithShowingNames() {
   it('should create a teacher event row with showing names', () => {
     dataExportController.includeNames = true;
-    const columnNames = dataExportController.getEventsColumnNames();
-    const columnNameToNumber = dataExportController.getColumnNameToNumber(columnNames);
-    const rowCounter = 10;
-    const workgroupId = 100;
-    const wiseId = 1000;
-    const username = 'Mrs. Puff';
-    const event = { event: 'nodeGradingViewDisplayed', data: { nodeId: 'node1' } };
-    const row = dataExportController.createTeacherEventExportRow(
-      columnNames,
-      columnNameToNumber,
-      rowCounter,
-      workgroupId,
-      wiseId,
-      username,
-      event
-    );
+    const { row, columnNameToNumber } = createTeacherEventExportRow();
     expect(row[columnNameToNumber['Teacher Username']]).toEqual('Mrs. Puff');
   });
 }
@@ -233,22 +126,36 @@ function shouldCreateATeacherEventRowWithShowingNames() {
 function shouldCreateATeacherEventRowWithoutShowingNames() {
   it('should create a teacher event row without showing names', () => {
     dataExportController.includeNames = false;
-    const columnNames = dataExportController.getEventsColumnNames();
-    const columnNameToNumber = dataExportController.getColumnNameToNumber(columnNames);
-    const rowCounter = 10;
-    const workgroupId = 100;
-    const wiseId = 1000;
-    const username = 'Mrs. Puff';
-    const event = { event: 'nodeGradingViewDisplayed', data: { nodeId: 'node1' } };
-    const row = dataExportController.createTeacherEventExportRow(
-      columnNames,
-      columnNameToNumber,
-      rowCounter,
-      workgroupId,
-      wiseId,
-      username,
-      event
-    );
+    const { row, columnNameToNumber } = createTeacherEventExportRow();
     expect(row[columnNameToNumber['Teacher Username']]).toEqual('');
   });
+}
+
+function createStudentEventExportRow() {
+  const columnNames = dataExportController.getEventsColumnNames();
+  const columnNameToNumber = dataExportController.getColumnNameToNumber(columnNames);
+  const rowCounter = 10;
+  const workgroupId = 100;
+  const wiseId1 = 1000;
+  const wiseId2 = null;
+  const wiseId3 = null;
+  const studentName1 = 'Spongebob Squarepants';
+  const studentName2 = null;
+  const studentName3 = null;
+  const periodName = '5';
+  const event = { event: 'nodeEntered', data: { nodeId: 'node1' } };
+  const row = dataExportController.createStudentEventExportRow(columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, studentName1, studentName2, studentName3, periodName, event);
+  return { row, columnNameToNumber };
+}
+
+function createTeacherEventExportRow() {
+  const columnNames = dataExportController.getEventsColumnNames();
+  const columnNameToNumber = dataExportController.getColumnNameToNumber(columnNames);
+  const rowCounter = 10;
+  const workgroupId = 100;
+  const wiseId = 1000;
+  const username = 'Mrs. Puff';
+  const event = { event: 'nodeGradingViewDisplayed', data: { nodeId: 'node1' } };
+  const row = dataExportController.createTeacherEventExportRow(columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId, username, event);
+  return { row, columnNameToNumber };
 }
