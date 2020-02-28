@@ -137,7 +137,7 @@
               </md-button>
               <md-button id='moveButton' class='topButton md-raised md-primary'
                   ng-click='projectController.move()'
-                  ng-disabled='projectController.insertGroupMode || projectController.insertNodeMode'>
+                  ng-disabled='!projectController.hasSelectedNodes() || projectController.insertGroupMode || projectController.insertNodeMode'>
                 <md-icon>redo</md-icon>
                 <md-tooltip md-direction='top' class='projectButtonTooltip'>
                   {{ ::'move' | translate }}
@@ -145,15 +145,15 @@
               </md-button>
               <md-button id='copyButton' class='topButton md-raised md-primary'
                   ng-click='projectController.copy()'
-                  ng-disabled='projectController.insertGroupMode || projectController.insertNodeMode'>
+                  ng-disabled='!projectController.hasSelectedNodes() || projectController.insertGroupMode || projectController.insertNodeMode'>
                 <md-icon>content_copy</md-icon>
                 <md-tooltip md-direction='top' class='projectButtonTooltip'>
                   {{ ::'copy' | translate }}
                 </md-tooltip>
               </md-button>
               <md-button id='deleteButton' class='topButton md-raised md-primary'
-                  ng-click='projectController.delete()'
-                  ng-disabled='projectController.insertGroupMode || projectController.insertNodeMode'>
+                  ng-click='projectController.deleteSelectedNodes()'
+                  ng-disabled='!projectController.hasSelectedNodes() || projectController.insertGroupMode || projectController.insertNodeMode'>
                 <md-icon>delete</md-icon>
                 <md-tooltip md-direction='top' class='projectButtonTooltip'>
                   {{ ::'DELETE' | translate }}

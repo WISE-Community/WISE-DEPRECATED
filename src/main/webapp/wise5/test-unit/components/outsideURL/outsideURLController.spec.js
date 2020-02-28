@@ -1,13 +1,12 @@
 import vleModule from '../../../vle/vle';
 
+let $controller;
+let $rootScope;
+let $scope;
+let outsideURLController;
+let component;
+
 describe('OutsideURLController', () => {
-
-  let $controller;
-  let $rootScope;
-  let $scope;
-  let outsideURLController;
-  let component;
-
   beforeEach(angular.mock.module(vleModule.name));
 
   beforeEach(inject((_$controller_, _$rootScope_) => {
@@ -23,10 +22,18 @@ describe('OutsideURLController', () => {
     outsideURLController.nodeId = 'node1';
   }));
 
+  shouldHaveADefaultHeight();
+  shouldSetTheWidthAndHeight();
+  shouldSetTheUrl();
+});
+
+function shouldHaveADefaultHeight() {
   it('should have a default height', () => {
     expect(outsideURLController.height).toEqual('600px');
   });
+}
 
+function shouldSetTheWidthAndHeight() {
   it('should set the width and height', () => {
     expect(outsideURLController.width).toEqual('100%');
     expect(outsideURLController.height).toEqual('600px');
@@ -34,11 +41,13 @@ describe('OutsideURLController', () => {
     expect(outsideURLController.width).toEqual('400px');
     expect(outsideURLController.height).toEqual('300px');
   });
+}
 
+function shouldSetTheUrl() {
   it('should set the url', () => {
     expect(outsideURLController.url).toEqual(' ');
     const url = 'https://www.berkeley.edu';
     outsideURLController.setURL(url);
     expect(outsideURLController.url.toString()).toEqual(url);
   });
-});
+}

@@ -2781,27 +2781,22 @@ class ProjectService {
   /**
    * Delete a node from the project and update transitions.
    *
-   * If we are deleting the project start node id, we will need
-   * to change it to the next logical node id that will be used
-   * as the project start.
+   * If we are deleting the project start node id, we will need to change it to the
+   * next logical node id that will be used as the project start.
    *
-   * @param nodeId the node id to delete from the project. It can be a step
-   * or an activity.
+   * @param nodeId the node id to delete from the project. It can be a step or an activity.
    */
   deleteNode(nodeId) {
     const parentGroup = this.getParentGroup(nodeId);
-    if (parentGroup.startId === nodeId) {
+    if (parentGroup != null && parentGroup.startId === nodeId) {
       this.setGroupStartIdToNextChildId(parentGroup);
     }
-
     if (this.isProjectStartNodeIdOrContainsProjectStartNodeId(nodeId)) {
       this.updateProjectStartNodeIdToNextLogicalNode(nodeId);
     }
-
     if (this.isGroupNode(nodeId)) {
       this.removeChildNodes(nodeId);
     }
-
     this.removeNodeIdFromTransitions(nodeId);
     this.removeNodeIdFromGroups(nodeId);
     this.removeNodeIdFromNodes(nodeId);
@@ -3159,10 +3154,10 @@ class ProjectService {
    * @param nodeId the node id to remove
    */
   removeNodeIdFromGroups(nodeId) {
-    for (let group of this.getGroupNodes()) {
+    for (const group of this.getGroupNodes()) {
       this.removeNodeIdFromGroup(group, nodeId);
     }
-    for (let inactiveGroup of this.getInactiveGroupNodes()) {
+    for (const inactiveGroup of this.getInactiveGroupNodes()) {
       this.removeNodeIdFromGroup(inactiveGroup, nodeId);
     }
   }
@@ -4185,14 +4180,7 @@ class ProjectService {
   }
 
   getInactiveNodes() {
-    let inactiveNodes = [];
-    if (this.project != null) {
-      if (this.project.inactiveNodes == null) {
-        this.project.inactiveNodes = [];
-      }
-      inactiveNodes = this.project.inactiveNodes;
-    }
-    return inactiveNodes;
+    return this.project.inactiveNodes;
   }
 
   /**

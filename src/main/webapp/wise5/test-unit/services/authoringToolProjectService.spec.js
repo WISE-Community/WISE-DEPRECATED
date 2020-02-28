@@ -1,9 +1,8 @@
 import authoringToolModule from '../../authoringTool/authoringTool';
 
-const demoProjectJSONOriginal =
-window.mocks['test-unit/sampleData/curriculum/DemoProject/project'];
+const demoProjectJSONOriginal = window.mocks['test-unit/sampleData/curriculum/DemoProject/project'];
 const scootersProjectJSONOriginal =
-window.mocks['test-unit/sampleData/curriculum/SelfPropelledVehiclesChallenge/project'];
+  window.mocks['test-unit/sampleData/curriculum/SelfPropelledVehiclesChallenge/project'];
 const scootersProjectJSONString = JSON.stringify(scootersProjectJSONOriginal);
 const scootersProjectName = 'scooters';
 const projectIdDefault = 1;
@@ -21,9 +20,12 @@ const libraryProjects = [
   {children:[{id: 3, name: 'three'},{id: 1, name: 'one'}]},{children:[{id: 2, name: 'two'},
   {id: 1, name: 'one'}]}
 ];
+
 let ConfigService, ProjectService, $httpBackend, demoProjectJSON, scootersProjectJSON;
+
 describe('AuthoringToolProjectService', () => {
   beforeEach(angular.mock.module(authoringToolModule.name));
+
   beforeEach(inject(function(_ConfigService_, _ProjectService_, _$httpBackend_) {
     ConfigService = _ConfigService_;
     ProjectService = _ProjectService_;
@@ -34,10 +36,10 @@ describe('AuthoringToolProjectService', () => {
   registerNewProject();
   isNodeIdUsed();
   isNodeIdToInsertTargetNotSpecified();
-  deleteComponent();
-  deleteTransition();
-  getNodeIdAfter();
-  createNodeAfter();
+  testDeleteComponent();
+  testDeleteTransition();
+  testGetNodeIdAfter();
+  testCreateNodeAfter();
   getLibraryProjects();
   sortAndFilterUniqueLibraryProjects();
   filterUniqueProjects();
@@ -119,7 +121,7 @@ function isNodeIdToInsertTargetNotSpecified() {
   });
 }
 
-function deleteComponent() {
+function testDeleteComponent() {
   describe('deleteComponent', () => {
     it('should delete the component from the node', () => {
       ProjectService.setProject(demoProjectJSON);
@@ -132,7 +134,7 @@ function deleteComponent() {
   });
 }
 
-function deleteTransition() {
+function testDeleteTransition() {
   describe('deleteTransition', () => {
     it('should delete existing transition from the node', () => {
       ProjectService.setProject(demoProjectJSON);
@@ -144,7 +146,7 @@ function deleteTransition() {
   });
 }
 
-function getNodeIdAfter() {
+function testGetNodeIdAfter() {
   describe('getNodeIdAfter', () => {
     it('should return the next node in the sequence', () => {
       ProjectService.setProject(demoProjectJSON);
@@ -158,7 +160,7 @@ function getNodeIdAfter() {
   });
 }
 
-function createNodeAfter() {
+function testCreateNodeAfter() {
   describe('createNodeAfter', () => {
     it('should put a new step node after a step node', () => {
       const newNode = {

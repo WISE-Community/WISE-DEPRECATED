@@ -537,86 +537,61 @@ class ProjectController {
     }
   }
 
-  /**
-   * Delete the selected nodes after asking user for confirmation
-   * TODO refactor too many nesting
-   */
-  delete() {
-    let selectedNodeIds = this.getSelectedNodeIds();
-    if (selectedNodeIds == null || selectedNodeIds.length == 0) {
-      alert(this.$translate('pleaseSelectAnItemToDeleteAndThenClickTheDeleteButtonAgain'));
+  deleteSelectedNodes() {
+    const selectedNodeIds = this.getSelectedNodeIds();
+    let confirmMessage = '';
+    if (selectedNodeIds.length === 1) {
+      confirmMessage = this.$translate('areYouSureYouWantToDeleteTheSelectedItem');
     } else {
-      let confirmMessage = '';
-      if (selectedNodeIds.length == 1) {
-        confirmMessage = this.$translate('areYouSureYouWantToDeleteTheSelectedItem');
-      } else if (selectedNodeIds.length > 1) {
-        confirmMessage = this.$translate('areYouSureYouWantToDeleteTheXSelectedItems', {
-          numItems: selectedNodeIds.length
-        });
-      }
-      if (confirm(confirmMessage)) {
-        let deletedStartNodeId = false;
-        let activityDeleted = false;
-        let stepDeleted = false;
-        let stepsDeleted = [];
-        let activitiesDeleted = [];
-        for (let nodeId of selectedNodeIds) {
-          let node = this.ProjectService.getNodeById(nodeId);
-          let tempNode = {};
-
-          if (node != null) {
-            tempNode.nodeId = node.id;
-            tempNode.title = this.ProjectService.getNodePositionAndTitleByNodeId(node.id);
-          }
-
-          if (this.ProjectService.isStartNodeId(nodeId)) {
-            deletedStartNodeId = true;
-          }
-
-          if (this.ProjectService.isGroupNode(nodeId)) {
-            activityDeleted = true;
-            let stepsInActivityDeleted = [];
-            for (let stepNodeId of node.ids) {
-              let stepTitle = this.ProjectService.getNodePositionAndTitleByNodeId(stepNodeId);
-
-              // create an object with the step id and title
-              let stepObject = {
-                nodeId: stepNodeId,
-                title: stepTitle
-              };
-              stepsInActivityDeleted.push(stepObject);
-            }
-            tempNode.stepsInActivityDeleted = stepsInActivityDeleted;
-            activitiesDeleted.push(tempNode);
-          } else {
-            stepDeleted = true;
-            stepsDeleted.push(tempNode);
-          }
-          this.ProjectService.deleteNode(nodeId);
-        }
-
-        if (deletedStartNodeId) {
-          this.updateStartNodeId();
-        }
-
-        if (activityDeleted) {
-          let activitiesDeletedEventData = {
-            activitiesDeleted: activitiesDeleted
-          };
-          this.saveEvent('activityDeleted', 'Authoring', activitiesDeletedEventData);
-        }
-
-        if (stepDeleted) {
-          let stepDeletedEventData = {
-            stepsDeleted: stepsDeleted
-          };
-          this.saveEvent('stepDeleted', 'Authoring', stepDeletedEventData);
-        }
-
-        this.ProjectService.saveProject();
-        this.refreshProject();
-      }
+      confirmMessage = this.$translate('areYouSureYouWantToDeleteTheXSelectedItems', {
+        numItems: selectedNodeIds.length
+      });
     }
+    if (confirm(confirmMessage)) {
+      this.deleteNodesById(selectedNodeIds);
+    }
+  }
+
+  deleteNodesById(nodeIds) {
+    let deletedStartNodeId = false;
+    const stepsDeleted = [];
+    const activitiesDeleted = [];
+    for (const nodeId of nodeIds) {
+      const node = this.ProjectService.getNodeById(nodeId);
+      const tempNode = {
+        nodeId: node.id,
+        title: this.ProjectService.getNodePositionAndTitleByNodeId(node.id)
+      };
+      if (this.ProjectService.isStartNodeId(nodeId)) {
+        deletedStartNodeId = true;
+      }
+      if (this.ProjectService.isGroupNode(nodeId)) {
+        const stepsInActivityDeleted = [];
+        for (const stepNodeId of node.ids) {
+          const stepObject = {
+            nodeId: stepNodeId,
+            title: this.ProjectService.getNodePositionAndTitleByNodeId(stepNodeId)
+          };
+          stepsInActivityDeleted.push(stepObject);
+        }
+        tempNode.stepsInActivityDeleted = stepsInActivityDeleted;
+        activitiesDeleted.push(tempNode);
+      } else {
+        stepsDeleted.push(tempNode);
+      }
+      this.ProjectService.deleteNode(nodeId);
+    }
+    if (deletedStartNodeId) {
+      this.updateStartNodeId();
+    }
+    if (activitiesDeleted.length > 0) {
+      this.saveEvent('activityDeleted', 'Authoring', { activitiesDeleted: activitiesDeleted });
+    }
+    if (stepsDeleted.length > 0) {
+      this.saveEvent('stepDeleted', 'Authoring', { stepsDeleted: stepsDeleted });
+    }
+    this.ProjectService.saveProject();
+    this.refreshProject();
   }
 
   /**
@@ -624,7 +599,7 @@ class ProjectController {
    * @returns an array of node ids that are selected
    */
   getSelectedNodeIds() {
-    let selectedNodeIds = [];
+    const selectedNodeIds = [];
     angular.forEach(
       this.items,
       function(value, key) {
@@ -636,8 +611,8 @@ class ProjectController {
     );
 
     if (this.inactiveNodes != null) {
-      for (let inactiveNode of this.inactiveNodes) {
-        if (inactiveNode != null && inactiveNode.checked) {
+      for (const inactiveNode of this.inactiveNodes) {
+        if (inactiveNode.checked) {
           selectedNodeIds.push(inactiveNode.id);
         }
       }
@@ -1121,6 +1096,10 @@ class ProjectController {
    */
   nodeHasRubric(nodeId) {
     return this.ProjectService.nodeHasRubric(nodeId);
+  }
+
+  hasSelectedNodes() {
+    return this.getSelectedNodeIds().length > 0;
   }
 
   subscribeToCurrentAuthors(projectId) {

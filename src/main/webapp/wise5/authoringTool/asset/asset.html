@@ -38,7 +38,7 @@
 <div ngf-drop ngf-select
     ngf-change="projectAssetController.uploadAssetItems($files)" class="drop-box"
     drag-over-class="dragover" ngf-multiple="true" allow-dir="false"
-    accept="image/*,application/pdf,text/csv" translate="dropAssetMessage"></div>
+    accept="image/*,application/pdf,text/csv,text/javascript" translate="dropAssetMessage"></div>
 <span translate="assetUsageMessage"
     translate-value-usage="{{projectAssetController.projectAssets.totalFileSize | appropriateSizeText }}"
     translate-value-max="{{projectAssetController.projectAssetTotalSizeMax | appropriateSizeText }}"
@@ -50,7 +50,7 @@
   {{projectAssetController.uploadSuccessMessage}}
   <div ng-repeat='successFile in projectAssetController.successFiles'>
     <b>{{::successFile.filename}}</b>
-  </div> 
+  </div>
 </div>
 <div id="errorMessage">
   {{projectAssetController.uploadErrorMessage}}

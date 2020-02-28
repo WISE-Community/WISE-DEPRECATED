@@ -1,12 +1,22 @@
 import vleModule from '../../vle/vle';
 
+const demoProjectJSONOriginal = window.mocks['test-unit/sampleData/curriculum/DemoProject/project'];
+const scootersProjectJSONOriginal =
+  window.mocks['test-unit/sampleData/curriculum/SelfPropelledVehiclesChallenge/project'];
+let ConfigService, ProjectService, $rootScope, $httpBackend, demoProjectJSON, scootersProjectJSON;
+const projectIdDefault = 1;
+const projectBaseURL = 'http://localhost:8080/curriculum/12345/';
+const projectURL = projectBaseURL + 'project.json';
+const saveProjectURL = 'http://localhost:8080/wise/project/save/' + projectIdDefault;
+const wiseBaseURL = '/wise';
+const i18nURL_common_en = 'wise5/i18n/i18n_en.json';
+const i18nURL_vle_en = 'wise5/vle/i18n/i18n_en.json';
+const sampleI18N_common_en = window.mocks['test-unit/sampleData/i18n/common/i18n_en'];
+const sampleI18N_vle_en = window.mocks['test-unit/sampleData/i18n/vle/i18n_en'];
+
 describe('ProjectService', () => {
   beforeEach(angular.mock.module(vleModule.name));
-  const demoProjectJSONOriginal =
-    window.mocks['test-unit/sampleData/curriculum/DemoProject/project'];
-  const scootersProjectJSONOriginal =
-    window.mocks['test-unit/sampleData/curriculum/SelfPropelledVehiclesChallenge/project'];
-  let ConfigService, ProjectService, $rootScope, $httpBackend, demoProjectJSON, scootersProjectJSON;
+
   beforeEach(inject(function(_ConfigService_, _ProjectService_, _$rootScope_, _$httpBackend_) {
     ConfigService = _ConfigService_;
     ProjectService = _ProjectService_;
@@ -16,30 +26,118 @@ describe('ProjectService', () => {
     scootersProjectJSON = JSON.parse(JSON.stringify(scootersProjectJSONOriginal));
   }));
 
-  const projectIdDefault = 1;
-  const projectBaseURL = 'http://localhost:8080/curriculum/12345/';
-  const projectURL = projectBaseURL + 'project.json';
-  const saveProjectURL = 'http://localhost:8080/wise/project/save/' + projectIdDefault;
-  const wiseBaseURL = '/wise';
-  const i18nURL_common_en = 'wise5/i18n/i18n_en.json';
-  const i18nURL_vle_en = 'wise5/vle/i18n/i18n_en.json';
-  const sampleI18N_common_en = window.mocks['test-unit/sampleData/i18n/common/i18n_en'];
-  const sampleI18N_vle_en = window.mocks['test-unit/sampleData/i18n/vle/i18n_en'];
+  shouldReplaceAssetPathsInNonHtmlComponentContent();
+  shouldReplaceAssetPathsInHtmlComponentContent();
+  shouldNotReplaceAssetPathsInHtmlComponentContent();
+  //shouldRetrieveProjectWhenConfigProjectURLIsValid();
+  shouldNotRetrieveProjectWhenConfigProjectURLIsUndefined();
+  //shouldSaveProject();
+  shouldNotSaveProjectWhenTheUserDoesNotHavePermissionToEditTheProject();
+  shouldGetDefaultThemePathWhenThemeIsNotDefinedInTheProject();
+  shouldGetProjectThemePathWhenThemeIsDefinedInTheProject();
+  shouldReturnTheStartNodeOfTheProject();
+  shouldReturnTheNodeByNodeId();
+  shouldReturnTheNodeTitleByNodeId();
+  getNextAvailableNodeId();
+  shouldReturnTheNextAvailableGroupId();
+  shouldReturnTheGroupIdsInTheProject();
+  getNodeIds();
+  getInactiveNodeIds();
+  shouldGetTheComponentByNodeIdAndComponentId();
+  shouldGetTheComponentPositionByNodeIdAndComonentId();
+  shouldGetTheComponentsByNodeId();
+  shouldReturnTheMaxScoreOfTheProject();
+  shouldNotAddSpaceIfItDoesExist();
+  shouldAddSpaceIfItDoesntExist();
+  shouldNotRemoveASpaceThatDoesNotExist();
+  shouldRemoveASpaceThatDoesExist();
+  shouldCheckOrderBetweenStepAndStepGroup();
+  shouldCheckOrderBetweenStepAndStepGroup();
+  shouldCheckOrderBetweenGroupAndStepGroup();
+  shouldRemoveTransitionsGoingOutOfGroupInChildNodesOfGroup();
+  shouldRemoveNodeFromGroup();
+  shouldRemoveStartNodeFromGroup();
+  shouldIdentifyBranchStartPoint();
+  shouldIdentifyBranchMergePoint();
+  shouldGetPathWhenNodeIdIsFound();
+  shouldGetPathWhenNodeIdIsFoundAsFirst();
+  shouldGetPathWhenNodeIdIsNotFound();
+  shouldBeAbleToInsertAStepNodeAfterAnotherStepNode();
+  shouldBeAbleToInsertAnActivityNodeAfterAnotherActivityNode();
+  shouldNotBeAbleToInsertANodeAfterAnotherNodeWhenTheyAreDifferentTypes();
+  shouldBeAbleToInsertAStepNodeInsideAnGroupNode();
+  shouldBeAbleToInsertAGroupNodeInsideAGroupNode();
+  shouldNotBeAbleToInsertAStepNodeInsideAStepNode();
+  shouldDeleteAStepFromTheProject();
+  shouldDeleteAnInactiveStepFromTheProject();
+  shouldDeleteAStepThatIsTheStartIdOfTheProject();
+  shouldDeleteAStepThatIsTheStartIdOfAnAactivityThatIsNotTheFirstActivity();
+  shouldDeleteTheFirstActivityFromTheProject();
+  shouldDeleteAnActivityThatIsNotTheFirstFromTheProject();
+  calculateNodeOrder();
+  getGroupNodesIdToOrder();
+  // TODO: add test for ProjectService.getFlattenedProjectAsNodeIds()
+  // TODO: add test for ProjectService.getAllPaths()
+  // TODO: add test for ProjectService.consolidatePaths()
+  // TODO: add test for ProjectService.consumePathsUntilNodeId()
+  // TODO: add test for ProjectService.getFirstNodeIdInPathAtIndex()
+  // TODO: add test for ProjectService.removeNodeIdFromPaths()
+  // TODO: add test for ProjectService.removeNodeIdFromPath()
+  // TODO: add test for ProjectService.areFirstNodeIdsInPathsTheSame()
+  // TODO: add test for ProjectService.arePathsEmpty()
+  // TODO: add test for ProjectService.getPathsThatContainNodeId()
+  // TODO: add test for ProjectService.getNonEmptyPathIndex()
+  // TODO: add test for ProjectService.getBranches()
+  // TODO: add test for ProjectService.findBranches()
+  // TODO: add test for ProjectService.createBranchMetaObject()
+  // TODO: add test for ProjectService.findNextCommonNodeId()
+  // TODO: add test for ProjectService.allPathsContainNodeId()
+  // TODO: add test for ProjectService.trimPathsUpToNodeId()
+  // TODO: add test for ProjectService.extractPathsUpToNodeId()
+  // TODO: add test for ProjectService.removeDuplicatePaths()
+  // TODO: add test for ProjectService.pathsEqual()
+  // TODO: add test for ProjectService.getBranchPathsByNodeId()
+  // TODO: add test for ProjectService.getNodeContentByNodeId()
+  // TODO: add test for ProjectService.replaceComponent()
+  // TODO: add test for ProjectService.createGroup()
+  // TODO: add test for ProjectService.createNode()
+  // TODO: add test for ProjectService.createNodeInside()
+  // TODO: add test for ProjectService.createNodeAfter()
+  // TODO: add test for ProjectService.insertNodeAfterInGroups()
+  // TODO: add test for ProjectService.insertNodeAfterInTransitions()
+  // TODO: add test for ProjectService.insertNodeInsideInGroups()
+  // TODO: add test for ProjectService.insertNodeInsideOnlyUpdateTransitions()
+  // MARK: Tests for Node and Group Id functions
+  // TODO: add test for ProjectService.getNodePositionAndTitleByNodeId()
+  // TODO: add test for ProjectService.getNodeIconByNodeId()
+  // TODO: add test for ProjectService.moveNodesInside()
+  // TODO: add test for ProjectService.moveNodesAfter()
+  // TODO: add test for ProjectService.deconsteNode()
+  // TODO: add test for ProjectService.removeNodeIdFromTransitions()
+  // TODO: add test for ProjectService.removeNodeIdFromGroups()
+  // TODO: add test for ProjectService.removeNodeIdFromNodes()
+  // TODO: add test for ProjectService.createComponent()
+  // TODO: add test for ProjectService.addComponentToNode()
+  // TODO: add test for ProjectService.moveComponentUp()
+  // TODO: add test for ProjectService.moveComponentDown()
+  // TODO: add test for ProjectService.deconsteComponent()
+});
 
-  function createNormalSpy() {
-    spyOn(ConfigService, 'getConfigParam').and.callFake(param => {
-      if (param === 'projectBaseURL') {
-        return projectBaseURL;
-      } else if (param === 'projectURL') {
-        return projectURL;
-      } else if (param === 'saveProjectURL') {
-        return saveProjectURL;
-      } else if (param === 'wiseBaseURL') {
-        return wiseBaseURL;
-      }
-    });
-  }
+function createNormalSpy() {
+  spyOn(ConfigService, 'getConfigParam').and.callFake(param => {
+    if (param === 'projectBaseURL') {
+      return projectBaseURL;
+    } else if (param === 'projectURL') {
+      return projectURL;
+    } else if (param === 'saveProjectURL') {
+      return saveProjectURL;
+    } else if (param === 'wiseBaseURL') {
+      return wiseBaseURL;
+    }
+  });
+}
 
+function shouldReplaceAssetPathsInNonHtmlComponentContent() {
   it('should replace asset paths in non-html component content', () => {
     createNormalSpy();
     const contentString = "<img src='hello.png' /><style>{background-url:'background.jpg'}</style>";
@@ -53,7 +151,9 @@ describe('ProjectService', () => {
     expect(ConfigService.getConfigParam).toHaveBeenCalledWith('projectBaseURL');
     expect(contentStringReplacedAssetPathActual).toEqual(contentStringReplacedAssetPathExpected);
   });
+}
 
+function shouldReplaceAssetPathsInHtmlComponentContent() {
   it('should replace asset paths in html component content', () => {
     createNormalSpy();
     const contentString = 'style=\\"background-image: url(\\"background.jpg\\")\\"';
@@ -63,7 +163,9 @@ describe('ProjectService', () => {
     expect(ConfigService.getConfigParam).toHaveBeenCalledWith('projectBaseURL');
     expect(contentStringReplacedAssetPathActual).toEqual(contentStringReplacedAssetPathExpected);
   });
+}
 
+function shouldNotReplaceAssetPathsInHtmlComponentContent() {
   it('should not replace asset paths in html component content', () => {
     createNormalSpy();
     const contentString = '<source type="video/mp4">';
@@ -72,8 +174,10 @@ describe('ProjectService', () => {
     expect(ConfigService.getConfigParam).toHaveBeenCalledWith('projectBaseURL');
     expect(contentStringReplacedAssetPathActual).toEqual(contentStringReplacedAssetPathExpected);
   });
+}
 
-  xit('should retrieve project when Config.projectURL is valid', () => {
+function shouldRetrieveProjectWhenConfigProjectURLIsValid() {
+  it('should retrieve project when Config.projectURL is valid', () => {
     createNormalSpy();
     spyOn(ProjectService, 'setProject').and.callThrough(); // actually call through the function
     spyOn(ProjectService, 'parseProject');
@@ -88,16 +192,19 @@ describe('ProjectService', () => {
     expect(ProjectService.parseProject).toHaveBeenCalled();
     expect(ProjectService.project).toEqual(scootersProjectJSON);
   });
+}
 
+function shouldNotRetrieveProjectWhenConfigProjectURLIsUndefined() {
   it('should not retrieve project when Config.projectURL is undefined', () => {
     spyOn(ConfigService, 'getConfigParam').and.returnValue(null);
     const project = ProjectService.retrieveProject();
     expect(ConfigService.getConfigParam).toHaveBeenCalledWith('projectURL');
     expect(project).toBeNull();
   });
+}
 
-  // MARK: Save Project
-  xit('should save project', () => {
+function shouldSaveProject() {
+  it('should save project', () => {
     spyOn(ConfigService, 'getProjectId').and.returnValue(projectIdDefault);
     spyOn(ConfigService, 'getConfigParam').and.returnValue(saveProjectURL);
     ProjectService.setProject(scootersProjectJSON);
@@ -112,7 +219,9 @@ describe('ProjectService', () => {
     $httpBackend.flush();
     $httpBackend.verifyNoOutstandingExpectation(false); // <-- no unnecessary $digest
   });
+}
 
+function shouldNotSaveProjectWhenTheUserDoesNotHavePermissionToEditTheProject() {
   it('should not save project when the user does not have permission to edit the project', () => {
     ProjectService.setProject(scootersProjectJSON);
     spyOn(ConfigService, 'getConfigParam')
@@ -120,8 +229,9 @@ describe('ProjectService', () => {
       .and.returnValue(false);
     expect(ProjectService.saveProject()).toEqual(null);
   });
+}
 
-  // MARK: ThemePath
+function shouldGetDefaultThemePathWhenThemeIsNotDefinedInTheProject() {
   it('should get default theme path when theme is not defined in the project', () => {
     spyOn(ConfigService, 'getConfigParam').and.returnValue(wiseBaseURL);
     ProjectService.setProject(scootersProjectJSON);
@@ -130,7 +240,9 @@ describe('ProjectService', () => {
     expect(ConfigService.getConfigParam).toHaveBeenCalledWith('wiseBaseURL');
     expect(actualThemePath).toEqual(expectedThemePath);
   });
+}
 
+function shouldGetProjectThemePathWhenThemeIsDefinedInTheProject() {
   it('should get project theme path when theme is defined in the project', () => {
     spyOn(ConfigService, 'getConfigParam').and.returnValue(wiseBaseURL);
     ProjectService.setProject(demoProjectJSON);
@@ -140,52 +252,18 @@ describe('ProjectService', () => {
     expect(ConfigService.getConfigParam).toHaveBeenCalledWith('wiseBaseURL');
     expect(actualThemePath).toEqual(expectedThemePath);
   });
-  // TODO: add test for ProjectService.getFlattenedProjectAsNodeIds()
-  // TODO: add test for ProjectService.getAllPaths()
-  // TODO: add test for ProjectService.consolidatePaths()
-  // TODO: add test for ProjectService.consumePathsUntilNodeId()
-  // TODO: add test for ProjectService.getFirstNodeIdInPathAtIndex()
-  // TODO: add test for ProjectService.removeNodeIdFromPaths()
-  // TODO: add test for ProjectService.removeNodeIdFromPath()
+}
 
-  // TODO: add test for ProjectService.areFirstNodeIdsInPathsTheSame()
-  // TODO: add test for ProjectService.arePathsEmpty()
-  // TODO: add test for ProjectService.getPathsThatContainNodeId()
-  // TODO: add test for ProjectService.getNonEmptyPathIndex()
-  // TODO: add test for ProjectService.getBranches()
-  // TODO: add test for ProjectService.findBranches()
-
-  // TODO: add test for ProjectService.createBranchMetaObject()
-  // TODO: add test for ProjectService.findNextCommonNodeId()
-  // TODO: add test for ProjectService.allPathsContainNodeId()
-  // TODO: add test for ProjectService.trimPathsUpToNodeId()
-  // TODO: add test for ProjectService.extractPathsUpToNodeId()
-  // TODO: add test for ProjectService.removeDuplicatePaths()
-  // TODO: add test for ProjectService.pathsEqual()
-
-  // TODO: add test for ProjectService.getBranchPathsByNodeId()
-
-  // TODO: add test for ProjectService.getNodeContentByNodeId()
-
-  // TODO: add test for ProjectService.replaceComponent()
-  // TODO: add test for ProjectService.createGroup()
-  // TODO: add test for ProjectService.createNode()
-  // TODO: add test for ProjectService.createNodeInside()
-  // TODO: add test for ProjectService.createNodeAfter()
-  // TODO: add test for ProjectService.insertNodeAfterInGroups()
-  // TODO: add test for ProjectService.insertNodeAfterInTransitions()
-
-  // TODO: add test for ProjectService.insertNodeInsideInGroups()
-  // TODO: add test for ProjectService.insertNodeInsideOnlyUpdateTransitions()
-
-  // MARK: Tests for Node and Group Id functions
+function shouldReturnTheStartNodeOfTheProject() {
   it('should return the start node of the project', () => {
     ProjectService.setProject(demoProjectJSON);
     const expectedStartNodeId = 'node1'; // Demo project's start node id
     const actualStartNodeId = ProjectService.getStartNodeId();
     expect(actualStartNodeId).toEqual(expectedStartNodeId);
   });
+}
 
+function shouldReturnTheNodeByNodeId() {
   it('should return the node by nodeId', () => {
     ProjectService.setProject(scootersProjectJSON);
     const node1 = ProjectService.getNodeById('node1');
@@ -201,7 +279,9 @@ describe('ProjectService', () => {
     const nodeNE = ProjectService.getNodeById('node999');
     expect(nodeNE).toBeNull();
   });
+}
 
+function shouldReturnTheNodeTitleByNodeId() {
   it('should return the node title by nodeId', () => {
     ProjectService.setProject(scootersProjectJSON);
     const node1Title = ProjectService.getNodeTitleByNodeId('node1');
@@ -215,11 +295,21 @@ describe('ProjectService', () => {
     const nodeTitleNE = ProjectService.getNodeTitleByNodeId('node999');
     expect(nodeTitleNE).toBeNull();
   });
+}
 
-  // TODO: add test for ProjectService.getNodePositionAndTitleByNodeId()
-  // TODO: add test for ProjectService.getNodeIconByNodeId()
-  getNextAvailableNodeId();
+function getNextAvailableNodeId() {
+  describe('getNextAvailableNodeId', () => {
+    it('should return the next available node id', () => {
+      createNormalSpy();
+      ProjectService.setProject(scootersProjectJSON);
+      expect(ProjectService.getNextAvailableNodeId()).toEqual('node43');
+      expect(ProjectService.getNextAvailableNodeId(['node43'])).toEqual('node44');
+      expect(ProjectService.getNextAvailableNodeId(['node43', 'node44'])).toEqual('node45');
+    });
+  });
+}
 
+function shouldReturnTheNextAvailableGroupId() {
   it('should return the next available group id', () => {
     createNormalSpy();
     ProjectService.setProject(scootersProjectJSON);
@@ -227,7 +317,9 @@ describe('ProjectService', () => {
     const nextGroupIdActual = ProjectService.getNextAvailableGroupId();
     expect(nextGroupIdActual).toEqual(nextGroupIdExpected);
   });
+}
 
+function shouldReturnTheGroupIdsInTheProject() {
   it('should return the group ids in the project', () => {
     createNormalSpy();
     ProjectService.setProject(scootersProjectJSON);
@@ -235,10 +327,64 @@ describe('ProjectService', () => {
     const groupIdsActual = ProjectService.getGroupIds();
     expect(groupIdsActual).toEqual(groupIdsExpected);
   });
+}
 
-  getNodeIds();
-  getInactiveNodeIds();
+function getNodeIds() {
+  describe('getNodeIds', () => {
+    it('should return the node ids in the project', () => {
+      ProjectService.setProject(scootersProjectJSON);
+      const nodeIdsExpected = [
+        'node1',
+        'node2',
+        'node3',
+        'node4',
+        'node5',
+        'node6',
+        'node7',
+        'node9',
+        'node12',
+        'node13',
+        'node14',
+        'node18',
+        'node19',
+        'node21',
+        'node22',
+        'node23',
+        'node24',
+        'node25',
+        'node26',
+        'node27',
+        'node28',
+        'node29',
+        'node30',
+        'node31',
+        'node40',
+        'node32',
+        'node33',
+        'node34',
+        'node35',
+        'node36',
+        'node37',
+        'node38',
+        'node39',
+        'nodeWithNoComponents'
+      ];
+      const nodeIdsActual = ProjectService.getNodeIds();
+      expect(nodeIdsActual).toEqual(nodeIdsExpected);
+    });
+  });
+}
 
+function getInactiveNodeIds() {
+  describe('getInactiveNodeIds', () => {
+    it('should return the inactive nodes in the project', () => {
+      ProjectService.setProject(scootersProjectJSON);
+      expect(ProjectService.getInactiveNodeIds()).toEqual(['node41', 'node42']);
+    });
+  });
+}
+
+function shouldGetTheComponentByNodeIdAndComponentId() {
   it('should get the component by node id and component id', () => {
     ProjectService.setProject(scootersProjectJSON);
     const nullNodeIdResult = ProjectService.getComponentByNodeIdAndComponentId(null, '57lxhwfp5r');
@@ -274,7 +420,9 @@ describe('ProjectService', () => {
     expect(componentExists2.type).toEqual('embedded');
     expect(componentExists2.url).toEqual('NewtonScooters-potential-kinetic.html');
   });
+}
 
+function shouldGetTheComponentPositionByNodeIdAndComonentId() {
   it('should get the component position by node id and comonent id', () => {
     ProjectService.setProject(scootersProjectJSON);
     const nullNodeIdResult = ProjectService.getComponentPositionByNodeIdAndComponentId(
@@ -313,7 +461,9 @@ describe('ProjectService', () => {
     );
     expect(componentExists2).toEqual(1);
   });
+}
 
+function shouldGetTheComponentsByNodeId() {
   it('should get the components by node id', () => {
     ProjectService.setProject(scootersProjectJSON);
     const nullNodeIdResult = ProjectService.getComponentsByNodeId(null);
@@ -335,19 +485,9 @@ describe('ProjectService', () => {
     expect(nodeExistsResult2[2].id).toEqual('nm080ntk8e');
     expect(nodeExistsResult2[2].type).toEqual('Table');
   });
+}
 
-  // TODO: add test for ProjectService.moveNodesInside()
-  // TODO: add test for ProjectService.moveNodesAfter()
-  // TODO: add test for ProjectService.deconsteNode()
-  // TODO: add test for ProjectService.removeNodeIdFromTransitions()
-  // TODO: add test for ProjectService.removeNodeIdFromGroups()
-  // TODO: add test for ProjectService.removeNodeIdFromNodes()
-  // TODO: add test for ProjectService.createComponent()
-  // TODO: add test for ProjectService.addComponentToNode()
-  // TODO: add test for ProjectService.moveComponentUp()
-  // TODO: add test for ProjectService.moveComponentDown()
-  // TODO: add test for ProjectService.deconsteComponent()
-
+function shouldReturnTheMaxScoreOfTheProject() {
   it('should return the max score of the project', () => {
     ProjectService.setProject(demoProjectJSON);
     const demoProjectMaxScoreActual = ProjectService.getMaxScore();
@@ -357,7 +497,9 @@ describe('ProjectService', () => {
     const scootersProjectMaxScoreActual = ProjectService.getMaxScore();
     expect(scootersProjectMaxScoreActual).toEqual(scootersProjectMaxScoreExpected);
   });
+}
 
+function shouldNotAddSpaceIfItDoesExist() {
   it('should not add space if it does exist', () => {
     ProjectService.setProject(scootersProjectJSON);
     const spaces = ProjectService.getSpaces();
@@ -373,7 +515,9 @@ describe('ProjectService', () => {
     expect(spaces[0].id).toEqual('public');
     expect(spaces[1].id).toEqual('ideasAboutGlobalClimateChange');
   });
+}
 
+function shouldAddSpaceIfItDoesntExist() {
   it("should add space if it doesn't exist", () => {
     ProjectService.setProject(scootersProjectJSON);
     const spaces = ProjectService.getSpaces();
@@ -390,7 +534,9 @@ describe('ProjectService', () => {
     expect(spaces[1].id).toEqual('ideasAboutGlobalClimateChange');
     expect(spaces[2].id).toEqual('newSpace');
   });
+}
 
+function shouldNotRemoveASpaceThatDoesNotExist() {
   it('should not remove a space that does not exist', () => {
     ProjectService.setProject(demoProjectJSON);
     const spaces = ProjectService.getSpaces();
@@ -398,7 +544,9 @@ describe('ProjectService', () => {
     ProjectService.removeSpace('public');
     expect(spaces.length).toEqual(1);
   });
+}
 
+function shouldRemoveASpaceThatDoesExist() {
   it('should remove a space that does exist', () => {
     ProjectService.setProject(demoProjectJSON);
     const spaces = ProjectService.getSpaces();
@@ -406,7 +554,9 @@ describe('ProjectService', () => {
     ProjectService.removeSpace('sharePictures');
     expect(spaces.length).toEqual(0);
   });
+}
 
+function shouldCheckOrderBetweenStepAndStepGroup() {
   it('should check order between step and step/group', () => {
     ProjectService.setProject(demoProjectJSON);
     expect(ProjectService.isNodeIdAfter('node1', 'node2')).toBeTruthy();
@@ -414,7 +564,9 @@ describe('ProjectService', () => {
     expect(ProjectService.isNodeIdAfter('node1', 'group2')).toBeTruthy();
     expect(ProjectService.isNodeIdAfter('node20', 'group1')).toBeFalsy();
   });
+}
 
+function shouldCheckOrderBetweenGroupAndStepGroup() {
   it('should check order between group and step/group', () => {
     ProjectService.setProject(demoProjectJSON);
     expect(ProjectService.isNodeIdAfter('group1', 'group2')).toBeTruthy();
@@ -422,7 +574,9 @@ describe('ProjectService', () => {
     expect(ProjectService.isNodeIdAfter('group1', 'node20')).toBeTruthy();
     expect(ProjectService.isNodeIdAfter('group2', 'node1')).toBeFalsy();
   });
+}
 
+function shouldRemoveTransitionsGoingOutOfGroupInChildNodesOfGroup() {
   it('should remove transitions going out of group in child nodes of group', () => {
     ProjectService.setProject(demoProjectJSON);
     expect(ProjectService.getTransitionsByFromNodeId('node18').length).toEqual(1);
@@ -431,7 +585,9 @@ describe('ProjectService', () => {
     expect(ProjectService.getTransitionsByFromNodeId('node18').length).toEqual(1);
     expect(ProjectService.getTransitionsByFromNodeId('node19').length).toEqual(0);
   });
+}
 
+function shouldRemoveNodeFromGroup() {
   it('should remove node from group', () => {
     ProjectService.setProject(demoProjectJSON);
     expect(ProjectService.getChildNodeIdsById('group1').length).toEqual(19);
@@ -442,7 +598,9 @@ describe('ProjectService', () => {
     expect(ProjectService.getChildNodeIdsById('group1').length).toEqual(17);
     expect(ProjectService.getGroupStartId('group1')).toEqual('node1');
   });
+}
 
+function shouldRemoveStartNodeFromGroup() {
   it('should remove start node from group', () => {
     ProjectService.setProject(demoProjectJSON);
     expect(ProjectService.getChildNodeIdsById('group1').length).toEqual(19);
@@ -453,7 +611,9 @@ describe('ProjectService', () => {
     expect(ProjectService.getChildNodeIdsById('group1').length).toEqual(17);
     expect(ProjectService.getGroupStartId('group1')).toEqual('node3');
   });
+}
 
+function shouldIdentifyBranchStartPoint() {
   it('should identify branch start point', () => {
     ProjectService.setProject(demoProjectJSON);
     expect(ProjectService.isBranchStartPoint('group1')).toBeFalsy();
@@ -461,7 +621,9 @@ describe('ProjectService', () => {
     expect(ProjectService.isBranchStartPoint('node32')).toBeFalsy();
     expect(ProjectService.isBranchStartPoint('node30')).toBeTruthy();
   });
+}
 
+function shouldIdentifyBranchMergePoint() {
   it('should identify branch merge point', () => {
     ProjectService.setProject(demoProjectJSON);
     expect(ProjectService.isBranchMergePoint('group1')).toBeFalsy();
@@ -469,7 +631,9 @@ describe('ProjectService', () => {
     expect(ProjectService.isBranchMergePoint('node32')).toBeFalsy();
     expect(ProjectService.isBranchMergePoint('node34')).toBeTruthy();
   });
+}
 
+function shouldGetPathWhenNodeIdIsFound() {
   it('should get path when nodeId is found', () => {
     const paths = [['node1', 'node2', 'node3', 'node4', 'node5']];
     const subPath = ProjectService.consumePathsUntilNodeId(paths, 'node3');
@@ -484,7 +648,9 @@ describe('ProjectService', () => {
     const expectedPath2 = ['node1', 'node2', 'node4'];
     expect(JSON.stringify(subPath2)).toEqual(JSON.stringify(expectedPath2));
   });
+}
 
+function shouldGetPathWhenNodeIdIsFoundAsFirst() {
   it('should get path when nodeId is found as first', () => {
     const paths = [['node1', 'node2', 'node3', 'node4', 'node5']];
     const subPath = ProjectService.consumePathsUntilNodeId(paths, 'node1');
@@ -499,7 +665,9 @@ describe('ProjectService', () => {
     const expectedPath2 = [];
     expect(JSON.stringify(subPath2)).toEqual(JSON.stringify(expectedPath2));
   });
+}
 
+function shouldGetPathWhenNodeIdIsNotFound() {
   it('should get path when nodeId is not found', () => {
     const paths = [['node1', 'node2', 'node3', 'node4', 'node5']];
     const subPath = ProjectService.consumePathsUntilNodeId(paths, 'node6');
@@ -514,7 +682,9 @@ describe('ProjectService', () => {
     const expectedPath2 = [];
     expect(JSON.stringify(subPath2)).toEqual(JSON.stringify(expectedPath2));
   });
+}
 
+function shouldBeAbleToInsertAStepNodeAfterAnotherStepNode() {
   it('should be able to insert a step node after another step node', () => {
     ProjectService.setProject(demoProjectJSON);
     expect(
@@ -528,7 +698,9 @@ describe('ProjectService', () => {
       ProjectService.nodeHasTransitionToNodeId(ProjectService.getNodeById('node2'), 'node1')
     ).toBeTruthy();
   });
+}
 
+function shouldBeAbleToInsertAnActivityNodeAfterAnotherActivityNode() {
   it('should be able to insert an activity node after another activity node', () => {
     ProjectService.setProject(demoProjectJSON);
     expect(
@@ -542,14 +714,18 @@ describe('ProjectService', () => {
       ProjectService.nodeHasTransitionToNodeId(ProjectService.getNodeById('group2'), 'group1')
     ).toBeTruthy();
   });
+}
 
+function shouldNotBeAbleToInsertANodeAfterAnotherNodeWhenTheyAreDifferentTypes() {
   it('should not be able to insert a node after another node when they are different types', () => {
     ProjectService.setProject(demoProjectJSON);
     expect(() => {
       ProjectService.insertNodeAfterInTransitions(ProjectService.getNodeById('node1'), 'group2');
     }).toThrow('Error: insertNodeAfterInTransitions() nodes are not the same type');
   });
+}
 
+function shouldBeAbleToInsertAStepNodeInsideAnGroupNode() {
   it('should be able to insert a step node inside an group node', () => {
     ProjectService.setProject(demoProjectJSON);
     const node1 = ProjectService.getNodeById('node1');
@@ -564,7 +740,9 @@ describe('ProjectService', () => {
     expect(ProjectService.nodeHasTransitionToNodeId(node19, 'node1')).toBeTruthy();
     expect(ProjectService.nodeHasTransitionToNodeId(node19, 'node20')).toBeFalsy();
   });
+}
 
+function shouldBeAbleToInsertAGroupNodeInsideAGroupNode() {
   it('should be able to insert a group node inside a group node', () => {
     ProjectService.setProject(demoProjectJSON);
     const group1 = ProjectService.getNodeById('group1');
@@ -579,18 +757,22 @@ describe('ProjectService', () => {
      */
     expect(ProjectService.nodeHasTransitionToNodeId(group1, 'group2')).toBeTruthy();
   });
+}
 
+function shouldNotBeAbleToInsertAStepNodeInsideAStepNode() {
   it('should not be able to insert a step node inside a step node', () => {
     ProjectService.setProject(demoProjectJSON);
     expect(() => {
       ProjectService.insertNodeInsideOnlyUpdateTransitions('node1', 'node2');
     }).toThrow('Error: insertNodeInsideOnlyUpdateTransitions() second parameter must be a group');
   });
+}
 
+function shouldDeleteAStepFromTheProject() {
   it('should delete a step from the project', () => {
     ProjectService.setProject(demoProjectJSON);
     expect(ProjectService.getNodes().length).toEqual(37);
-    expect(ProjectService.getNodeById('node5') != null).toBeTruthy();
+    expect(ProjectService.getNodeById('node5')).not.toBeNull();
     expect(
       ProjectService.nodeHasTransitionToNodeId(ProjectService.getNodeById('node4'), 'node5')
     ).toBeTruthy();
@@ -606,7 +788,20 @@ describe('ProjectService', () => {
     ).toBeTruthy();
     expect(ProjectService.getNodesWithTransitionToNodeId('node6').length).toEqual(1);
   });
+}
 
+function shouldDeleteAnInactiveStepFromTheProject() {
+  it('should delete an inactive step from the project', () => {
+    ProjectService.setProject(demoProjectJSON);
+    expect(ProjectService.getInactiveNodes().length).toEqual(1);
+    expect(ProjectService.getNodeById('node789')).not.toBeNull();
+    ProjectService.deleteNode('node789');
+    expect(ProjectService.getInactiveNodes().length).toEqual(0);
+    expect(ProjectService.getNodeById('node789')).toBeNull();
+  });
+}
+
+function shouldDeleteAStepThatIsTheStartIdOfTheProject() {
   it('should delete a step that is the start id of the project', () => {
     ProjectService.setProject(demoProjectJSON);
     expect(ProjectService.getStartNodeId()).toEqual('node1');
@@ -615,7 +810,9 @@ describe('ProjectService', () => {
     expect(ProjectService.getStartNodeId()).toEqual('node2');
     expect(ProjectService.getNodesWithTransitionToNodeId('node2').length).toEqual(0);
   });
+}
 
+function shouldDeleteAStepThatIsTheStartIdOfAnAactivityThatIsNotTheFirstActivity() {
   it('should delete a step that is the start id of an activity that is not the first activity', () => {
     ProjectService.setProject(demoProjectJSON);
     expect(ProjectService.getGroupStartId('group2')).toEqual('node20');
@@ -631,7 +828,9 @@ describe('ProjectService', () => {
       ProjectService.nodeHasTransitionToNodeId(ProjectService.getNodeById('node19'), 'node21')
     ).toBeTruthy();
   });
+}
 
+function shouldDeleteTheFirstActivityFromTheProject() {
   it('should delete the first activity from the project', () => {
     ProjectService.setProject(demoProjectJSON);
     expect(ProjectService.getGroupStartId('group0')).toEqual('group1');
@@ -645,7 +844,9 @@ describe('ProjectService', () => {
     expect(ProjectService.getNodes().length).toEqual(17);
     expect(ProjectService.getNodesWithTransitionToNodeId('node20').length).toEqual(0);
   });
+}
 
+function shouldDeleteAnActivityThatIsNotTheFirstFromTheProject() {
   it('should delete an activity that is not the first from the project', () => {
     ProjectService.setProject(demoProjectJSON);
     expect(
@@ -660,107 +861,37 @@ describe('ProjectService', () => {
     expect(ProjectService.getTransitionsByFromNodeId('group1').length).toEqual(0);
     expect(ProjectService.getNodes().length).toEqual(21);
   });
+}
 
-  calculateNodeOrder();
-  getGroupNodesIdToOrder();
+function calculateNodeOrder() {
+  describe('calculateNodeOrder', () => {
+    it('should calculate the node order', () => {
+      ProjectService.project = demoProjectJSON;
+      ProjectService.loadNodes(demoProjectJSON.nodes);
+      ProjectService.calculateNodeOrder(demoProjectJSON.nodes[0]);
+      expect(ProjectService.idToOrder['group0'].order).toEqual(0);
+      expect(ProjectService.idToOrder['group1'].order).toEqual(1);
+      expect(ProjectService.idToOrder['node1'].order).toEqual(2);
+      expect(ProjectService.idToOrder['node2'].order).toEqual(3);
+      expect(ProjectService.idToOrder['node3'].order).toEqual(4);
+      expect(ProjectService.idToOrder['node4'].order).toEqual(5);
+      expect(ProjectService.idToOrder['node5'].order).toEqual(6);
+      expect(ProjectService.idToOrder['node6'].order).toEqual(7);
+    });
+  });
+}
 
-  function getNodeIds() {
-    describe('getNodeIds', () => {
-      it('should return the node ids in the project', () => {
-        ProjectService.setProject(scootersProjectJSON);
-        const nodeIdsExpected = [
-          'node1',
-          'node2',
-          'node3',
-          'node4',
-          'node5',
-          'node6',
-          'node7',
-          'node9',
-          'node12',
-          'node13',
-          'node14',
-          'node18',
-          'node19',
-          'node21',
-          'node22',
-          'node23',
-          'node24',
-          'node25',
-          'node26',
-          'node27',
-          'node28',
-          'node29',
-          'node30',
-          'node31',
-          'node40',
-          'node32',
-          'node33',
-          'node34',
-          'node35',
-          'node36',
-          'node37',
-          'node38',
-          'node39',
-          'nodeWithNoComponents'
-        ];
-        const nodeIdsActual = ProjectService.getNodeIds();
-        expect(nodeIdsActual).toEqual(nodeIdsExpected);
+function getGroupNodesIdToOrder() {
+  describe('getGroupNodesIdToOrder', () => {
+    it('should return only group nodes in idToOrder', () => {
+      ProjectService.project = demoProjectJSON;
+      ProjectService.loadNodes(demoProjectJSON.nodes);
+      ProjectService.calculateNodeOrder(demoProjectJSON.nodes[0]);
+      expect(ProjectService.getGroupNodesIdToOrder()).toEqual({
+        group0: { order: 0 },
+        group1: { order: 1 },
+        group2: { order: 21 }
       });
     });
-  }
-
-  function getInactiveNodeIds() {
-    describe('getInactiveNodeIds', () => {
-      it('should return the inactive nodes in the project', () => {
-        ProjectService.setProject(scootersProjectJSON);
-        expect(ProjectService.getInactiveNodeIds()).toEqual(['node41', 'node42']);
-      });
-    });
-  }
-
-  function calculateNodeOrder() {
-    describe('calculateNodeOrder', () => {
-      it('should calculate the node order', () => {
-        ProjectService.project = demoProjectJSON;
-        ProjectService.loadNodes(demoProjectJSON.nodes);
-        ProjectService.calculateNodeOrder(demoProjectJSON.nodes[0]);
-        expect(ProjectService.idToOrder['group0'].order).toEqual(0);
-        expect(ProjectService.idToOrder['group1'].order).toEqual(1);
-        expect(ProjectService.idToOrder['node1'].order).toEqual(2);
-        expect(ProjectService.idToOrder['node2'].order).toEqual(3);
-        expect(ProjectService.idToOrder['node3'].order).toEqual(4);
-        expect(ProjectService.idToOrder['node4'].order).toEqual(5);
-        expect(ProjectService.idToOrder['node5'].order).toEqual(6);
-        expect(ProjectService.idToOrder['node6'].order).toEqual(7);
-      });
-    });
-  }
-
-  function getGroupNodesIdToOrder() {
-    describe('getGroupNodesIdToOrder', () => {
-      it('should return only group nodes in idToOrder', () => {
-        ProjectService.project = demoProjectJSON;
-        ProjectService.loadNodes(demoProjectJSON.nodes);
-        ProjectService.calculateNodeOrder(demoProjectJSON.nodes[0]);
-        expect(ProjectService.getGroupNodesIdToOrder()).toEqual({
-          group0: { order: 0 },
-          group1: { order: 1 },
-          group2: { order: 21 }
-        });
-      });
-    });
-  }
-
-  function getNextAvailableNodeId() {
-    describe('getNextAvailableNodeId', () => {
-      it('should return the next available node id', () => {
-        createNormalSpy();
-        ProjectService.setProject(scootersProjectJSON);
-        expect(ProjectService.getNextAvailableNodeId()).toEqual('node43');
-        expect(ProjectService.getNextAvailableNodeId(['node43'])).toEqual('node44');
-        expect(ProjectService.getNextAvailableNodeId(['node43', 'node44'])).toEqual('node45');
-      });
-    });
-  }
-});
+  });
+}
