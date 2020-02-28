@@ -817,29 +817,31 @@ class NodeService {
   moveComponent(nodeId, componentIds, insertAfterComponentId) {
     const node = this.ProjectService.getNodeById(nodeId);
     const components = node.components;
-    const componentsToMove = [];
-    for (let a = components.length - 1; a >= 0; a--) {
-      const component = components[a];
-      if (componentIds.includes(component.id)) {
-        componentsToMove.splice(0, 0, component);
-        components.splice(a, 1);
-      }
-    }
+    const extractedComponents = this.extractComponents(components, componentIds);
     if (insertAfterComponentId == null) {
-      for (let c = 0; c < componentsToMove.length; c++) {
-        components.splice(c, 0, componentsToMove[c]);
-      }
+      components.unshift(...extractedComponents);
     } else {
-      for (let b = 0; b < components.length; b++) {
-        if (components[b].id === insertAfterComponentId) {
-          for (let c = 0; c < componentsToMove.length; c++) {
-            components.splice(b + 1 + c, 0, componentsToMove[c]);
-          }
-          break;
-        }
+      this.insertComponentsAfter(extractedComponents, components, insertAfterComponentId);
+    }
+  }
+
+  extractComponents(components, componentIds) {
+    const extractedComponents = [];
+    for (let i = 0; i < components.length; i++) {
+      if (componentIds.includes(components[i].id)) {
+        extractedComponents.push(components.splice(i--, 1)[0]);
       }
     }
-    return componentsToMove;
+    return extractedComponents;
+  }
+
+  insertComponentsAfter(componentsToInsert, components, insertAfterComponentId) {
+    for (let i = 0; i < components.length; i++) {
+      if (components[i].id === insertAfterComponentId) {
+        components.splice(i + 1, 0, ...componentsToInsert);
+        return;
+      }
+    }
   }
 
   /**

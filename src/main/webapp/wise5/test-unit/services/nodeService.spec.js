@@ -22,6 +22,8 @@ describe('NodeService', () => {
     ProjectService.setProject(demoProjectJSON);
   }));
   getNextNodeId();
+  extractComponents();
+  insertComponentsAfter();
   moveComponent();
 });
 
@@ -38,6 +40,42 @@ function getNextNodeNodeId_ReturnNextNodeInProject() {
       expect(NodeService.chooseTransition).toHaveBeenCalled();
       expect(nextNodeId).toEqual('node2');
     });
+  });
+}
+
+function extractComponents() {
+  describe('extractComponents', () => {
+    extractComponents_MultipleComponents();
+  });
+}
+
+function insertComponentsAfter() {
+  describe('insertComponentsAfter', () => {
+    insertComponentsAfter_MultipleComponents();
+  });
+}
+
+function insertComponentsAfter_MultipleComponents() {
+  it('should move multiple components after specified component', () => {
+    const componentsToInsert = [{id:1},{id:10}];
+    const components = [{id:2}];
+    const insertAfterComponentId = 2;
+    NodeService.insertComponentsAfter(componentsToInsert, components, insertAfterComponentId);
+    expect(components.length).toEqual(3);
+    expect(components.map(c => c.id)).toEqual([2,1,10]);
+  });
+}
+
+function extractComponents_MultipleComponents() {
+  it('should extract multiple components and change original component array', () => {
+    const components = [{id:1},{id:2},{id:10}];
+    const componentIdsToExtract = [1, 10];
+    const extractedComponents = NodeService.extractComponents(components, componentIdsToExtract);
+    expect(extractedComponents.length).toEqual(2);
+    expect(extractedComponents[0].id).toEqual(1);
+    expect(extractedComponents[1].id).toEqual(10);
+    expect(components.length).toEqual(1);
+    expect(components[0].id).toEqual(2);
   });
 }
 
