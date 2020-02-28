@@ -1,14 +1,14 @@
 import authoringToolModule from '../../../authoringTool/authoringTool';
 
-describe('ConfigureStructureController', () => {
-  let $controller;
-  let $rootScope;
-  let $state;
-  let $stateParams;
-  let $scope;
-  let controller;
-  const structure = { id: 'jigsaw' };
+let $controller;
+let $rootScope;
+let $state;
+let $stateParams;
+let $scope;
+let controller;
+const structure = { id: 'jigsaw' };
 
+describe('ConfigureStructureController', () => {
   beforeEach(angular.mock.module(authoringToolModule.name));
 
   beforeEach(inject((_$controller_, _$rootScope_, _$state_, _$stateParams_) => {
@@ -27,26 +27,26 @@ describe('ConfigureStructureController', () => {
 
   testChooseLocation();
   testCancel();
-
-  function testChooseLocation() {
-    describe('chooseLocation', () => {
-      it('should go to the choose location state', () => {
-        spyOn($state, 'go');
-        controller.chooseLocation();
-        expect($state.go).toHaveBeenCalledWith('root.project.structure.location', {
-          structure: {}
-        });
-      });
-    });
-  }
-
-  function testCancel() {
-    describe('cancel', () => {
-      it('should go to the project state', () => {
-        spyOn($state, 'go');
-        controller.cancel();
-        expect($state.go).toHaveBeenCalledWith('root.project');
-      });
-    });
-  }
 });
+
+function testChooseLocation() {
+  describe('chooseLocation', () => {
+    it('should go to the choose location state', () => {
+      spyOn($state, 'go');
+      controller.chooseLocation();
+      expect($state.go).toHaveBeenCalledWith('root.project.structure.location', {
+        structure: {}
+      });
+    });
+  });
+}
+
+function testCancel() {
+  describe('cancel', () => {
+    it('should go to the project state', () => {
+      spyOn($state, 'go');
+      controller.cancel();
+      expect($state.go).toHaveBeenCalledWith('root.project');
+    });
+  });
+}
