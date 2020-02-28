@@ -54,12 +54,8 @@ class ProjectController {
     this.idToNode = this.ProjectService.getIdToNode();
     this.projectScriptFilename = this.ProjectService.getProjectScriptFilename();
     this.currentAuthorsMessage = '';
-    this.projectMode = true;
     this.showCreateGroup = false;
     this.showCreateNode = false;
-    this.showImportView = false;
-    this.importMode = false;
-    this.editProjectRubricMode = false;
 
     // whether there are any step nodes checked
     this.stepNodeSelected = false;
@@ -86,97 +82,12 @@ class ProjectController {
 
     // start by opening the project, with no node being authored
     this.TeacherDataService.setCurrentNode(null);
-
     this.metadata = this.ProjectService.getProjectMetadata();
-
     this.subscribeToCurrentAuthors(this.projectId).then(() => {
       this.ProjectService.notifyAuthorProjectBegin(this.projectId);
     });
-
-    this.summernoteRubricId = 'summernoteRubric_' + this.projectId;
-    this.summernoteRubricHTML = this.ProjectService.replaceAssetPaths(
-      this.ProjectService.getProjectRubric()
-    );
-    this.summernoteRubricOptions = {
-      toolbar: [
-        ['style', ['style']],
-        ['font', ['bold', 'underline', 'clear']],
-        ['fontname', ['fontname']],
-        ['fontsize', ['fontsize']],
-        ['color', ['color']],
-        ['para', ['ul', 'ol', 'paragraph']],
-        ['table', ['table']],
-        ['insert', ['link', 'video']],
-        ['view', ['fullscreen', 'codeview', 'help']],
-        ['customButton', ['insertAssetButton']]
-      ],
-      height: 300,
-      disableDragAndDrop: true,
-      buttons: {
-        insertAssetButton: this.UtilService.createInsertAssetButton(
-          this,
-          this.projectId,
-          null,
-          null,
-          'rubric',
-          this.$translate('INSERT_ASSET')
-        )
-      }
-    };
-
     this.projectURL = window.location.origin + this.ConfigService.getConfigParam('projectURL');
-
-    /*
-     * Listen for the assetSelected event which occurs when the author
-     * selects an asset from the choose asset popup to add to project rubric
-     * or choosing the script file.
-     */
-    this.$scope.$on('assetSelected', (event, args) => {
-      if (
-        args != null &&
-        args.projectId == this.projectId &&
-        args.assetItem != null &&
-        args.assetItem.fileName != null
-      ) {
-        let assetFileName = args.assetItem.fileName;
-        if (args.target === 'rubric') {
-          const summernoteElement = angular.element(
-            document.querySelector(`#summernoteRubric_${this.projectId}`)
-          );
-          let fullAssetPath =
-            this.ConfigService.getProjectAssetsDirectoryPath() + '/' + assetFileName;
-          if (this.UtilService.isImage(assetFileName)) {
-            /*
-             * move the cursor back to its position when the asset chooser
-             * popup was clicked
-             */
-            summernoteElement.summernote('editor.restoreRange');
-            summernoteElement.summernote('editor.focus');
-            summernoteElement.summernote('insertImage', fullAssetPath, assetFileName);
-          } else if (this.UtilService.isVideo(assetFileName)) {
-            /*
-             * move the cursor back to its position when the asset chooser
-             * popup was clicked
-             */
-            summernoteElement.summernote('editor.restoreRange');
-            summernoteElement.summernote('editor.focus');
-            let videoElement = document.createElement('video');
-            videoElement.controls = 'true';
-            videoElement.innerHTML = '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
-            summernoteElement.summernote('insertNode', videoElement);
-          }
-        }
-      }
-      this.$mdDialog.hide();
-    });
-
     this.$transitions.onSuccess({}, $transition => {
-      /*
-      const from = $transition.$from();
-      if (from.name === 'root.project.structure' && from.params.structure != null) {
-        this.insertStructure(from.params.structure);
-      }
-      */
       const stateName = $transition.$to().name;
       if (stateName === 'root.project') {
         this.saveEvent('projectHomeViewOpened', 'Navigation');
@@ -399,8 +310,6 @@ class ProjectController {
       this.handleMoveModeInsert(nodeId, 'inside');
     } else if (this.copyMode) {
       this.handleCopyModeInsert(nodeId, 'inside');
-    } else if (this.importMode) {
-      this.importSelectedNodes(nodeId);
     }
   }
 
@@ -415,8 +324,6 @@ class ProjectController {
       this.handleMoveModeInsert(nodeId, 'after');
     } else if (this.copyMode) {
       this.handleCopyModeInsert(nodeId, 'after');
-    } else if (this.importMode) {
-      this.importSelectedNodes(nodeId);
     }
   }
 
@@ -587,86 +494,6 @@ class ProjectController {
           }
         }
       }
-    });
-  }
-
-  /**
-   * Import the selected steps and draw attention to them by highlighting them
-   * and scrolling to them.
-   * @param nodeIdToInsertInsideOrAfter If this is a group, we will make the
-   * new step the first step in the group. If this is a step, we will place
-   * the new step after it.
-   */
-  importSelectedNodes(nodeIdToInsertInsideOrAfter) {
-    let selectedNodes = this.getSelectedNodesToImport();
-    let selectedNodeTitles = this.getSelectedNodeTitlesToImport();
-    let toProjectId = this.ConfigService.getConfigParam('projectId');
-    let fromProjectId = this.importProjectId;
-
-    this.performImport(nodeIdToInsertInsideOrAfter).then(newNodes => {
-      this.ProjectService.checkPotentialStartNodeIdChangeThenSaveProject().then(() => {
-        this.refreshProject();
-        let doScrollToNewNodes = true;
-        this.temporarilyHighlightNewNodes(newNodes, doScrollToNewNodes);
-
-        let stepsImported = [];
-        for (let n = 0; n < selectedNodes.length; n++) {
-          let selectedNode = selectedNodes[n];
-          let selectedNodeTitle = selectedNodeTitles[n];
-          let newNode = newNodes[n];
-
-          let stepImported = {
-            fromProjectId: parseInt(fromProjectId),
-            fromNodeId: selectedNode.id,
-            fromTitle: selectedNodeTitle,
-            toNodeId: newNode.id,
-            toTitle: this.ProjectService.getNodePositionAndTitleByNodeId(newNode.id)
-          };
-          stepsImported.push(stepImported);
-        }
-
-        let stepsImportedEventData = { stepsImported: stepsImported };
-        this.saveEvent('stepImported', 'Authoring', stepsImportedEventData);
-      });
-    });
-  }
-
-  /**
-   * Import the step and place it in the chosen location
-   * @param nodeIdToInsertInsideOrAfter If this is a group, we will make the
-   * new step the first step in the group. If this is a step, we will place
-   * the new step after it.
-   */
-  performImport(nodeIdToInsertInsideOrAfter) {
-    let selectedNodes = this.getSelectedNodesToImport();
-    let toProjectId = this.ConfigService.getConfigParam('projectId');
-    let fromProjectId = this.importProjectId;
-
-    return this.ProjectService.copyNodes(
-      selectedNodes,
-      fromProjectId,
-      toProjectId,
-      nodeIdToInsertInsideOrAfter
-    ).then(newNodes => {
-      this.refreshProject();
-      this.insertNodeMode = false;
-      this.toggleView('project');
-
-      this.importProjectIdToOrder = {};
-      this.importProjectItems = [];
-      this.importMyProjectId = null;
-      this.importLibraryProjectId = null;
-      this.importProjectId = null;
-      this.importProject = null;
-
-      /*
-       * go back to the project view and
-       * refresh the project assets in case any of the imported
-       * steps also imported assets
-       */
-      this.showProjectHome();
-      this.ProjectAssetService.retrieveProjectAssets();
-      return newNodes;
     });
   }
 
@@ -844,9 +671,6 @@ class ProjectController {
     this.activityNodeSelected = false;
   }
 
-  /**
-   * Toggle the create group input
-   */
   creatNewActivityClicked() {
     this.createGroupTitle = '';
     this.toggleView('createGroup');
@@ -857,9 +681,6 @@ class ProjectController {
     }
   }
 
-  /**
-   * Toggle the create node input
-   */
   createNewStepClicked() {
     this.createNodeTitle = '';
     this.toggleView('createNode');
@@ -874,9 +695,6 @@ class ProjectController {
     this.$state.go('root.project.structure.choose');
   }
 
-  /**
-   * Cancel the move mode
-   */
   cancelMove() {
     this.insertGroupMode = false;
     this.insertNodeMode = false;
@@ -884,7 +702,6 @@ class ProjectController {
     this.createMode = false;
     this.moveMode = false;
     this.copyMode = false;
-    this.importMode = false;
     this.unselectAllItems();
   }
 
@@ -950,147 +767,20 @@ class ProjectController {
     this.ProjectService.saveProject();
   }
 
-  /**
-   * Toggle the import view and populate the project drop downs if necessary
-   */
-  importStepClicked() {
-    this.toggleView('importStep');
-
-    if (this.importMode) {
-      if (this.myProjectsList == null) {
-        this.myProjectsList = this.ConfigService.getAuthorableProjects();
-      }
-
-      if (this.libraryProjectsList == null) {
-        this.ConfigService.getLibraryProjects().then(libraryProjectsList => {
-          this.libraryProjectsList = libraryProjectsList;
-        });
-      }
-    }
+  importStep() {
+    this.$state.go('root.project.import-step.choose-step', { projectId: this.projectId });
   }
 
-  /**
-   * The author has chosen an authorable project to import from
-   * @param importProjectId the project id to import from
-   */
-  showMyImportProject(importProjectId) {
-    this.importLibraryProjectId = null;
-    this.showImportProject(importProjectId);
-  }
-
-  /**
-   * The author has chosen a library project to import from
-   * @param importProjectId the project id to import from
-   */
-  showLibraryImportProject(importProjectId) {
-    this.importMyProjectId = null;
-    this.showImportProject(importProjectId);
-  }
-
-  /**
-   * Show the project we want to import steps from
-   * @param importProjectId the import project id
-   */
-  showImportProject(importProjectId) {
-    this.importProjectId = importProjectId;
-    if (this.importProjectId == null) {
-      // clear all the import project values
-      this.importProjectIdToOrder = {};
-      this.importProjectItems = [];
-      this.importMyProjectId = null;
-      this.importLibraryProjectId = null;
-      this.importProjectId = null;
-      this.importProject = null;
-    } else {
-      this.ProjectService.retrieveProjectById(this.importProjectId).then(projectJSON => {
-        this.importProject = projectJSON;
-        const nodeOrderOfProject = this.ProjectService.getNodeOrderOfProject(this.importProject);
-        this.importProjectIdToOrder = nodeOrderOfProject.idToOrder;
-        this.importProjectItems = nodeOrderOfProject.nodes;
-      });
-    }
-  }
-
-  previewImportNode(node) {
-    window.open(
-      `${this.importProject.previewProjectURL}#!/project/${this.importProjectId}/${node.id}`
-    );
-  }
-
-  previewImportProject() {
-    window.open(`${this.importProject.previewProjectURL}#!/project/${this.importProjectId}`);
-  }
-
-  /**
-   * Import the selected steps
-   */
-  importSteps() {
-    let selectedNodes = this.getSelectedNodesToImport();
-    if (selectedNodes == null || selectedNodes.length == 0) {
-      // TODO i18n
-      alert('Please select a step to import.');
-    } else {
-      /*
-       * hide the import view because we want to go back to the
-       * project view so that the author can choose where to place
-       * the new steps
-       */
-      this.showImportView = false;
-      this.insertNodeMode = true;
-      this.projectMode = true;
-    }
-  }
-
-  /**
-   * Get the selected nodes to import
-   * @return an array of selected nodes
-   */
-  getSelectedNodesToImport() {
-    let selectedNodes = [];
-    for (let item of this.importProjectItems) {
-      if (item.checked) {
-        selectedNodes.push(item.node);
-      }
-    }
-    return selectedNodes;
-  }
-
-  /**
-   * Show the view to edit the project rubric
-   */
-  editProjectRubricClicked() {
-    this.toggleView('rubric');
+  editProjectRubric() {
+    this.$state.go('root.project.rubric', {
+      projectId: this.projectId
+    });
   }
 
   goToAdvancedAuthoring() {
     this.$state.go('root.project.advanced', {
       projectId: this.projectId
     });
-  }
-
-  /**
-   * The author has changed the rubric, so save the changes
-   */
-  summernoteRubricHTMLChanged() {
-    let html = this.summernoteRubricHTML;
-
-    /*
-     * remove the absolute asset paths
-     * e.g.
-     * <img src='https://wise.berkeley.edu/curriculum/3/assets/sun.png'/>
-     * will be changed to
-     * <img src='sun.png'/>
-     */
-    html = this.ConfigService.removeAbsoluteAssetPaths(html);
-
-    /*
-     * replace <a> and <button> elements with <wiselink> elements when
-     * applicable
-     */
-    html = this.UtilService.insertWISELinks(html);
-
-    this.ProjectService.setProjectRubric(html);
-    this.ProjectService.saveProject();
   }
 
   /**
@@ -1107,83 +797,26 @@ class ProjectController {
    * @param view the view to show
    */
   toggleView(view) {
-    // clear the input element for creating a new activity
     this.createGroupTitle = '';
-
-    // clear the input element for creating a new step
     this.createNodeTitle = '';
-
-    if (view == 'project') {
-      // we are showing the regular project view
+    if (view === 'project') {
       this.showCreateGroup = false;
       this.showCreateNode = false;
-      this.importMode = false;
-      this.showImportView = false;
-      this.editProjectRubricMode = false;
-      this.projectMode = true;
-    } else if (view == 'createGroup') {
-      // toggle the create activity view
+    } else if (view === 'createGroup') {
       this.showCreateGroup = !this.showCreateGroup;
       this.showCreateNode = false;
-      this.importMode = false;
-      this.showImportView = false;
-      this.editProjectRubricMode = false;
-
-      // also show the project view
-      this.projectMode = true;
-    } else if (view == 'createNode') {
-      // toggle the create step view
+    } else if (view === 'createNode') {
       this.showCreateGroup = false;
       this.showCreateNode = !this.showCreateNode;
-      this.importMode = false;
-      this.showImportView = false;
-      this.editProjectRubricMode = false;
       this.showTemplateChooser = false;
-
-      // also show the project view
-      this.projectMode = true;
-    } else if (view == 'importStep') {
-      // toggle the import step view
-      this.showCreateGroup = false;
-      this.showCreateNode = false;
-      this.importMode = !this.importMode;
-      this.showImportView = !this.showImportView;
-      this.editProjectRubricMode = false;
-
-      // if the import view is shown, do not show the project view
-      this.projectMode = !this.importMode;
-    } else if (view == 'rubric') {
-      // toggle the rubric view
-      this.showCreateGroup = false;
-      this.showCreateNode = false;
-      this.importMode = false;
-      this.showImportView = false;
-      this.editProjectRubricMode = !this.editProjectRubricMode;
-
-      // if the rubric view is shown, do not show the project view
-      this.projectMode = !this.editProjectRubricMode;
     }
   }
 
-  /**
-   * Go back to a previous page, which is different based on which page
-   * the author is currently on.
-   */
-  backButtonClicked() {
-    if (this.showImportView) {
-      this.toggleView('project');
-    } else if (this.editProjectRubricMode) {
-      this.toggleView('project');
-    } else {
-      this.$state.go('root.main');
-    }
+  goBackToProjectList() {
+    this.$state.go('root.main');
   }
 
-  /**
-   * Show the regular project view
-   */
   projectHomeClicked() {
-    // show the regular project view
     this.showProjectHome();
   }
 
@@ -1193,8 +826,6 @@ class ProjectController {
   showProjectHome() {
     // we are going to the project view so we will set the current node to null
     this.TeacherDataService.setCurrentNode(null);
-
-    // show the regular project view
     this.toggleView('project');
     this.scrollToTopOfPage();
   }
@@ -1281,32 +912,6 @@ class ProjectController {
       eventName,
       data
     );
-  }
-
-  /**
-   * Get the selected node titles that we are importing
-   * @return an array of node titles that may include the step numbers
-   */
-  getSelectedNodeTitlesToImport() {
-    let selectedNodeTitles = [];
-    let selectedNodes = this.getSelectedNodesToImport();
-    for (let n = 0; n < selectedNodes.length; n++) {
-      let selectedNode = selectedNodes[n];
-      if (selectedNode != null) {
-        // get the step number and title from the import project
-        let tempNode = this.importProjectIdToOrder[selectedNode.id];
-        let stepNumber = tempNode.stepNumber;
-        let title = '';
-
-        if (stepNumber == null) {
-          title = selectedNode.title;
-        } else {
-          title = stepNumber + ': ' + selectedNode.title;
-        }
-        selectedNodeTitles[n] = title;
-      }
-    }
-    return selectedNodeTitles;
   }
 
   /**

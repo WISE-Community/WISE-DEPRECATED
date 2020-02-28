@@ -11,25 +11,28 @@ const projectURL = projectBaseURL + 'project.json';
 const registerNewProjectURL = 'http://localhost:8080/wise/project/new';
 const saveProjectURL = 'http://localhost:8080/wise/project/save/' + projectIdDefault;
 const wiseBaseURL = '/wise';
+const getLibraryProjectsURL = '/api/project/library';
 const i18nURL_common_en = 'wise5/i18n/i18n_en.json';
 const i18nURL_vle_en = 'wise5/vle/i18n/i18n_en.json';
 const sampleI18N_common_en = window.mocks['test-unit/sampleData/i18n/common/i18n_en'];
 const sampleI18N_vle_en = window.mocks['test-unit/sampleData/i18n/vle/i18n_en'];
+const libraryProjects = [
+  {children:[{id: 3, name: 'three'},{id: 1, name: 'one'}]},{children:[{id: 2, name: 'two'},
+  {id: 1, name: 'one'}]}
+];
 
-let ConfigService, ProjectService, $rootScope, $httpBackend, demoProjectJSON, scootersProjectJSON;
+let ConfigService, ProjectService, $httpBackend, demoProjectJSON, scootersProjectJSON;
 
 describe('AuthoringToolProjectService', () => {
   beforeEach(angular.mock.module(authoringToolModule.name));
 
-  beforeEach(inject(function(_ConfigService_, _ProjectService_, _$rootScope_, _$httpBackend_) {
+  beforeEach(inject(function(_ConfigService_, _ProjectService_, _$httpBackend_) {
     ConfigService = _ConfigService_;
     ProjectService = _ProjectService_;
-    $rootScope = _$rootScope_;
     $httpBackend = _$httpBackend_;
     demoProjectJSON = JSON.parse(JSON.stringify(demoProjectJSONOriginal));
     scootersProjectJSON = JSON.parse(JSON.stringify(scootersProjectJSONOriginal));
   }));
-
   registerNewProject();
   isNodeIdUsed();
   isNodeIdToInsertTargetNotSpecified();
@@ -37,6 +40,9 @@ describe('AuthoringToolProjectService', () => {
   testDeleteTransition();
   testGetNodeIdAfter();
   testCreateNodeAfter();
+  getLibraryProjects();
+  sortAndFilterUniqueLibraryProjects();
+  filterUniqueProjects();
 });
 
 function createConfigServiceGetConfigParamSpy() {
@@ -51,6 +57,8 @@ function createConfigServiceGetConfigParamSpy() {
       return saveProjectURL;
     } else if (param === 'wiseBaseURL') {
       return wiseBaseURL;
+    } else if (param === 'getLibraryProjectsURL') {
+      return getLibraryProjectsURL;
     }
   });
 }
@@ -165,6 +173,48 @@ function testCreateNodeAfter() {
       expect(ProjectService.idToNode[newNode.id]).toEqual(newNode);
       expect(newNode.transitionLogic.transitions[0].to).toEqual('node20');
       expect(ProjectService.getNodeIdAfter('node19')).toEqual('node1000');
+    });
+  });
+}
+
+function getLibraryProjects() {
+  describe('getLibraryProjects', () => {
+    it('should get the library projects', () => {
+      createConfigServiceGetConfigParamSpy();
+      $httpBackend.when('GET', /^wise5\/.*/).respond(200, '');
+      $httpBackend.when('GET', /author\/.*/).respond(200, '{}');
+      $httpBackend.when('GET', getLibraryProjectsURL).respond(libraryProjects);
+      $httpBackend.when('GET', i18nURL_common_en).respond(sampleI18N_common_en);
+      $httpBackend.when('GET', i18nURL_vle_en).respond(sampleI18N_vle_en);
+      const result = ProjectService.getLibraryProjects();
+      $httpBackend.expectGET(getLibraryProjectsURL).respond(libraryProjects);
+      result.then(projects => {
+        expect(projects).toEqual(libraryProjects);
+      });
+      $httpBackend.flush();
+    })
+  });
+}
+
+function sortAndFilterUniqueLibraryProjects() {
+  describe('sortAndFilterUniqueLibraryProjects', () => {
+    it('should filter and sort library projects', () => {
+      const result = ProjectService.sortAndFilterUniqueLibraryProjects(libraryProjects);
+      expect(result).toEqual([{id: 3, name: 'three'},{id: 2, name: 'two'},{id: 1, name: 'one'}]);
+    });
+  });
+}
+
+function filterUniqueProjects() {
+  describe('filterUniqueProjects', () => {
+    it('should filter unique projects based on id', () => {
+      const nonUniqueProjects = [{id: 3, name: 'three'},{id: 1, name: 'one'},{id: 2, name: 'two'},
+        {id: 1, name: 'one'}];
+      const uniqueProjects = ProjectService.filterUniqueProjects(nonUniqueProjects);
+      expect(uniqueProjects.length).toEqual(3);
+      expect(uniqueProjects[0].id).toEqual(3);
+      expect(uniqueProjects[1].id).toEqual(1);
+      expect(uniqueProjects[2].id).toEqual(2);
     });
   });
 }

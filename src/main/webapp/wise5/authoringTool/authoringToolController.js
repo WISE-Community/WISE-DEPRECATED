@@ -109,6 +109,14 @@ class AuthoringToolController {
         type: 'secondary',
         showToolbar: true,
         active: false
+      },
+      'root.project.rubric': {
+        name: '',
+        label: '',
+        icon: '',
+        type: 'secondary',
+        showToolbar: true,
+        active: false
       }
     };
 

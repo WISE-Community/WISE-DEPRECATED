@@ -90,18 +90,9 @@
         <div ng-if="projectController.$state.current.name != 'root.project'" ui-view></div>  <!-- this ui-view shows the node authoring view -->
         <div ng-if="projectController.$state.current.name == 'root.project'">  <!-- show this only when we're in the project view -->
           <div style='background-color: white; margin-bottom: 15px; position: sticky; top: 17px; z-index: 2;'>
-            <md-button id='projectBackButton' class='topButton md-raised md-primary'
-                ng-click='projectController.backButtonClicked()'
-                ng-disabled='projectController.insertGroupMode || projectController.insertNodeMode'
-                ng-if='!projectController.projectMode'>
-              <md-icon>arrow_back</md-icon>
-              <md-tooltip md-direction='top' class='projectButtonTooltip'>
-                {{ ::'backToProjectView' | translate }}
-              </md-tooltip>
-            </md-button>
-            <span ng-if='projectController.projectMode'>
+            <span>
               <md-button id='projectBackButton' class='topButton md-raised md-primary'
-                  ng-click='projectController.backButtonClicked()'
+                  ng-click='projectController.goBackToProjectList()'
                   ng-disabled='projectController.insertGroupMode || projectController.insertNodeMode'>
                 <md-icon>arrow_back</md-icon>
                 <md-tooltip md-direction='top' class='projectButtonTooltip'>
@@ -137,7 +128,7 @@
               </md-button>
               <md-button id='importStepButton'
                   class='topButton md-raised md-primary'
-                  ng-click='projectController.importStepClicked()'
+                  ng-click='projectController.importStep()'
                   ng-disabled='projectController.insertGroupMode || projectController.insertNodeMode || projectController.stepNodeSelected || projectController.activityNodeSelected'>
                 <md-icon>system_update_alt</md-icon>
                 <md-tooltip md-direction='top' class='projectButtonTooltip'>
@@ -170,7 +161,7 @@
               </md-button>
               <md-button id='editProjectRubricButton'
                   class='topButton md-raised md-primary'
-                  ng-click='projectController.editProjectRubricClicked()'
+                  ng-click='projectController.editProjectRubric()'
                   ng-disabled='projectController.insertGroupMode || projectController.insertNodeMode || projectController.stepNodeSelected || projectController.activityNodeSelected'>
                 <md-icon>message</md-icon>
                 <md-tooltip md-direction='top' class='projectButtonTooltip'>
@@ -249,101 +240,11 @@
               </div>
             </div>
           </div>
-          <div ng-if='projectController.structure.chooseStructureLocation'>choose structure</div>
-
-          <div ng-if='projectController.showImportView'>
-            <h4>{{ ::'importStepsParens' | translate }}</h4>
-            <br/>
-            <span>{{ ::'chooseAProjectToImportAndThenChooseAStep' | translate }}</span>
-            <br/>
-            <md-input-container style='margin-right: 20px; width: 100%;'>
-              <label>{{ ::'myProjects' | translate }}</label>
-              <md-select ng-model='projectController.importMyProjectId'
-                     ng-change='projectController.showMyImportProject(projectController.importMyProjectId)'
-                     style='width: 100%;'>
-                <md-option ng-repeat="project in projectController.myProjectsList"
-                       value='{{::project.id}}'>
-                  {{::project.id + ' ' + project.name + (project.runId ? ' (' + ('RUN_ID' | translate) + ': ' + project.runId + ')': '')}}
-                </md-option>
-              </md-select>
-            </md-input-container>
-            <br/>
-            <md-input-container style='margin-right: 20px; width: 100%;'>
-              <label>{{ 'libraryProjects' | translate }}</label>
-              <md-select ng-model='projectController.importLibraryProjectId'
-                     ng-change='projectController.showLibraryImportProject(projectController.importLibraryProjectId)'
-                     style='width: 100%;'>
-                <md-option ng-repeat="project in projectController.libraryProjectsList"
-                       value='{{::project.id}}'>
-                  {{project.id + ' ' + project.title + (project.runId ? ' (' + ('RUN_ID' | translate) + ': ' + project.runId + ')': '')}}
-                </md-option>
-              </md-select>
-            </md-input-container>
-            <br/>
-            <div style='background-color: white; position: sticky; top: 65px; z-index: 3;'
-               ng-if='projectController.importProject != null'>
-              <span>{{ ::'afterYouHaveChosenTheStepToImportClickThisButtonToImport' | translate }}</span>
-              <md-button class='topButton md-raised md-primary'
-                  ng-if='projectController.importProject != null'
-                  ng-click='projectController.importSteps()'>
-                <md-icon>vertical_align_bottom</md-icon>
-                <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'importStepsParens' | translate }}</md-tooltip>
-              </md-button>
-            </div>
-            <br/>
-            <h4 style='display:inline'>{{::projectController.importProject.metadata.title}}</h4>
-            <md-button class='topButton md-raised md-primary'
-                ng-if='projectController.importProject != null'
-                ng-click='projectController.previewImportProject()'>
-              <md-icon>visibility</md-icon>
-              <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'previewProject' | translate }}</md-tooltip>
-            </md-button>
-            <br/>
-            <div ng-repeat='importItem in projectController.importProjectIdToOrder'
-               ng-class='::{"groupHeader": importItem.node.type == "group", "stepHeader": importItem.node.type != "group"}'>
-              <h6 ng-if='importItem.order != 0 && importItem.node.type == "group"'>
-                {{::importItem.stepNumber}}: {{::importItem.node.title}}
-              </h6>
-              <div layout='row' ng-if='importItem.order != 0 && importItem.node.type != "group"'>
-                <div layout='row'>
-                  <md-checkbox ng-model='importItem.checked'>
-                    <h6 style='display: inline;'>{{::importItem.stepNumber}}: {{::importItem.node.title}}</h6>
-                  </md-checkbox>
-                </div>
-                <div layout='row' style='height: 40px;'>
-                  <md-button class='regularButton md-raised md-primary'
-                      style='margin-top: -5;'
-                      ng-click='projectController.previewImportNode(importItem.node)'
-                      aria-label='{{ ::"previewStep" | translate }}'>
-                    <md-icon>visibility</md-icon>
-                    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'previewStep' | translate }}</md-tooltip>
-                  </md-button>
-                </div>
-              </div>
-            </div>
-            <md-button class='topButton md-raised md-primary'
-                ng-if='projectController.importProject != null'
-                ng-click='projectController.importSteps()'>
-              <md-icon>vertical_align_bottom</md-icon>
-              <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'importStepsParens' | translate }}</md-tooltip>
-            </md-button>
-          </div>
-          <div ng-if='projectController.editProjectRubricMode'>
-            <h5 translate="editProjectRubric"></h5>
-            <summernote id='{{::projectController.summernoteRubricId}}'
-                  ng-model='projectController.summernoteRubricHTML'
-                  ng-change='projectController.summernoteRubricHTMLChanged()'
-                  config='projectController.summernoteRubricOptions'
-                  ng-model-options='{ debounce: 1000 }'
-                  rows='10'
-                  cols='100'>
-            </summernote>
-          </div>
           <div style='margin-top: 20px; margin-left: 20px'>
             <div ng-repeat='item in projectController.items | toArray | orderBy : "order"'
                class='projectItem'
                ng-class='::{"node-select--group": projectController.isGroupNode(item.$key), "node-select--node": !projectController.isGroupNode(item.$key)}'
-               ng-if='::item.order!==0 && (projectController.projectMode && (!projectController.insertGroupMode || (projectController.insertGroupMode && projectController.isGroupNode(item.$key))))'>
+               ng-if='::item.order!==0 && (!projectController.insertGroupMode || (projectController.insertGroupMode && projectController.isGroupNode(item.$key)))'>
               <div id='{{::item.$key}}' layout='row'
                  ng-class='::{"groupHeader": projectController.isGroupNode(item.$key), "stepHeader": !projectController.isGroupNode(item.$key), "branchPathStepHeader": projectController.isNodeInAnyBranchPath(item.$key) && !projectController.isGroupNode(item.$key)}'
                  ng-style='::{"background-color": projectController.getStepBackgroundColor(item.$key)}'>
@@ -389,7 +290,7 @@
                 </div>
               </div>
             </div>
-            <div ng-if='projectController.projectMode'>
+            <div>
               <div layout='row'>
                 <h6 style='text-decoration: underline;' translate='unusedActivities'></h6>
                 <md-button class='insertButton md-raised md-primary'

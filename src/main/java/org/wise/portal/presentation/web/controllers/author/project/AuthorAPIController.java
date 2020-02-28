@@ -226,8 +226,7 @@ public class AuthorAPIController {
     config.put("registerNewProjectURL", contextPath + "/author/project/new");
     config.put("wiseBaseURL", contextPath);
     config.put("notifyAuthoringBeginEndURL", contextPath + "/author/project/notify");
-    config.put("getLibraryProjectsURL", contextPath + "/author/authorproject.html" +
-        "?command=projectList&projectPaths=&projectTag=library&wiseVersion=5");
+    config.put("getLibraryProjectsURL", contextPath + "/api/project/library");
     config.put("teacherDataURL", contextPath + "/teacher/data");
     config.put("sessionTimeout", request.getSession().getMaxInactiveInterval());
 

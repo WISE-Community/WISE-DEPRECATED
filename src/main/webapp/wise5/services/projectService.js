@@ -4771,10 +4771,6 @@ class ProjectService {
     return branchPathTakenConstraints;
   }
 
-  /**
-   * Get the project level rubric
-   * @return the project level rubric
-   */
   getProjectRubric() {
     return this.project.rubric;
   }

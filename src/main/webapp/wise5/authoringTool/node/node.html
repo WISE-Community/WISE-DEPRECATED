@@ -780,8 +780,7 @@
             {{ ::'chooseStepsInPath' | translate }}
             <br/>
             <div ng-repeat='item in branch.items | toArray | orderBy : "order"'
-               ng-class='{"node-select--group": projectController.isGroupNode(item.$key), "node-select--node": !projectController.isGroupNode(item.$key)}'
-               ng-if='!projectController.importMode'>
+               ng-class='{"node-select--group": projectController.isGroupNode(item.$key), "node-select--node": !projectController.isGroupNode(item.$key)}'>
               <input type='checkbox'
                    ng-model='item.checked'
                    ng-if='item.order!==0 && !(projectController.showCreateGroup || projectController.showCreateNode || projectController.insertNodeMode || projectController.insertGroupMode)'
@@ -864,7 +863,7 @@
            style='width: 100%;'>
       <md-option ng-repeat="project in nodeAuthoringController.myProjectsList"
              value='{{project.id}}'>
-        {{project.id + ' ' + project.name + (project.runId ? ' (' + ('RUN_ID' | translate) + ': ' + project.runId + ')': '')}}
+        {{project.id + ' - ' + project.name + (project.runId ? ' (' + ('RUN_ID' | translate) + ': ' + project.runId + ')': '')}}
       </md-option>
     </md-select>
   </md-input-container>
@@ -876,7 +875,7 @@
            style='width: 100%;'>
       <md-option ng-repeat="project in nodeAuthoringController.libraryProjectsList"
              value='{{project.id}}'>
-        {{project.id + ' ' + project.title + (project.runId ? ' (' + ('RUN_ID' | translate) + ': ' + project.runId + ')': '')}}
+        {{project.id + ' - ' + project.name + (project.runId ? ' (' + ('RUN_ID' | translate) + ': ' + project.runId + ')': '')}}
       </md-option>
     </md-select>
   </md-input-container>
