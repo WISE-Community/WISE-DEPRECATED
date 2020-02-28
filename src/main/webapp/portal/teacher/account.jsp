@@ -40,7 +40,7 @@
           </div>
 
           <div>
-            <form:form method="post" action="${contextPath}/legacy/teacher/account" modelAttribute="teacherAccountForm" id="teacherRegForm" autocomplete='off'>
+            <form:form method="post" action="${contextPath}/teacher/account" modelAttribute="teacherAccountForm" id="teacherRegForm" autocomplete='off'>
               <table class="regTable">
                 <tr>
                   <td><label for="firstname" id="firstname1"><spring:message code="teacher.registerteacher.firstName" /></label></td>
@@ -168,7 +168,7 @@
           <hr/>
           <c:if test="${!teacherAccountForm.userDetails.isGoogleUser()}">
             <div class="panelHeader"><spring:message code="teacher.management.updatemyaccount.changePassword" /></div>
-            <form:form method="post" action="${contextPath}/legacy/teacher/account/password"
+            <form:form method="post" action="${contextPath}/teacher/account/password"
                        modelAttribute="changePasswordParameters" id="changepassword"
                        autocomplete='off'>
               <table style="margin:0 auto;">

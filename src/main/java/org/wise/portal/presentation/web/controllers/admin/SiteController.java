@@ -39,7 +39,7 @@ import org.wise.portal.service.portal.PortalService;
  * @author Jonathan Lim-Breitbart
  */
 @Controller
-@RequestMapping("/")
+@RequestMapping("/new-site")
 public class SiteController {
 
   @Autowired

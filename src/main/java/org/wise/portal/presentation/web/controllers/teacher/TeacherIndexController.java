@@ -43,7 +43,7 @@ import java.util.*;
  * @author Hiroki Terashima
  */
 @Controller
-@RequestMapping("/legacy/teacher")
+@RequestMapping("/teacher")
 public class TeacherIndexController {
 
   @Autowired
@@ -76,7 +76,7 @@ public class TeacherIndexController {
     for (Run run : runList) {
       List<Workgroup> workgroupList = this.workgroupService.getWorkgroupListByRunAndUser(run, user);
       workgroupMap.put(run, workgroupList);
-      if (!run.isEnded()) {
+      if (!run.isEnded() && run.getProject().getWiseVersion().equals(4)) {
         allCurrentRuns.add(run);
       }
     }

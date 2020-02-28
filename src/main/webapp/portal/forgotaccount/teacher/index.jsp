@@ -21,14 +21,14 @@
 
 		<div id="pageContent" style="min-height:400px;">
 			<div id="headerSmall">
-				<a id="name" href="${contextPath}/legacy" title="<spring:message code="wiseHomepage" />"><spring:message code="wise" /></a>
+				<a id="name" href="${contextPath}/" title="<spring:message code="wiseHomepage" />"><spring:message code="wise" /></a>
 			</div>
 
 			<div class="infoContent">
 				<div class="panelHeader"><spring:message code="forgotaccount.teacher.index.lostUsernameOrPassword"/></div>
 				<div class="infoContentBox">
 
-					<form id="forgotAccountForm" method="post" action="${contextPath}/legacy/forgotaccount/teacher" modelAttribute="userDetails" autocomplete='off'>
+					<form id="forgotAccountForm" method="post" action="${contextPath}/forgotaccount/teacher" modelAttribute="userDetails" autocomplete='off'>
 						<div>
 						 <h4><spring:message code="forgotaccount.teacher.index.rememberUsernameButForgotPassword"/></h4>
 						 <div><spring:message code="forgotaccount.teacher.index.enterYourUsername"/><br/><spring:message code="forgotaccount.teacher.index.aLinkToChangePasswordWillBeSentToEmail"/></div>
@@ -49,11 +49,11 @@
 							<input type="submit" name="sendemailAndPwd" id="sendEmailAndPwd" value="<spring:message code="forgotaccount.teacher.index.sendUsername"/>" />
 						</div>
 
-						<div><spring:message code="forgotaccount.teacher.index.ifYoureStillStuck"/> <a href="${contextPath}/legacy/contact/contactwise.html"><spring:message code="forgotaccount.teacher.index.contactWISE"/></a></div>
+						<div><spring:message code="forgotaccount.teacher.index.ifYoureStillStuck"/> <a href="${contextPath}/contact/contactwise.html"><spring:message code="forgotaccount.teacher.index.contactWISE"/></a></div>
 
 					 </form>
 				</div>
-				<a href="${contextPath}/legacy" title="<spring:message code="wiseHome" />"><spring:message code="returnHome"/></a>
+				<a href="${contextPath}/" title="<spring:message code="wiseHome" />"><spring:message code="returnHome"/></a>
 			</div>
 		</div>
 	</div>

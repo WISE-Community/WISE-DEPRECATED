@@ -59,7 +59,7 @@ import org.wise.portal.service.user.UserService;
  * @author Anthony Perritano
  */
 @Controller
-@RequestMapping("/legacy/forgotaccount/student/passwordreminder")
+@RequestMapping("/forgotaccount/student/passwordreminder")
 @SessionAttributes("passwordReminderParameters")
 public class PasswordReminderWizardController {
 

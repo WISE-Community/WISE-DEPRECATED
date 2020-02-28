@@ -66,7 +66,7 @@ public class ClassroomRunListController {
     }
   };
 
-  @RequestMapping("/legacy/teacher/management/classroomruns.html")
+  @RequestMapping("/teacher/management/classroomruns.html")
   protected String handleRequestInternal(
       ModelMap modelMap,
       @RequestParam(value = "gradingParam", defaultValue = "false") boolean gradingParam)

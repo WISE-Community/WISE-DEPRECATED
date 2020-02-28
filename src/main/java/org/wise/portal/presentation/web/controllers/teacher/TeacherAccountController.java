@@ -61,7 +61,7 @@ import java.util.Properties;
  */
 @Controller
 @SessionAttributes({"teacherAccountForm", "changePasswordParameters"})
-@RequestMapping(value = "/legacy/teacher")
+@RequestMapping(value = "/teacher")
 public class TeacherAccountController {
 
   @Autowired

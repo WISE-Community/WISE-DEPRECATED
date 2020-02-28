@@ -44,7 +44,7 @@ import java.util.*;
  * @author Hiroki Terashima
  */
 @Controller
-@RequestMapping("/legacy")
+@RequestMapping("/")
 public class IndexController {
 
   @Autowired

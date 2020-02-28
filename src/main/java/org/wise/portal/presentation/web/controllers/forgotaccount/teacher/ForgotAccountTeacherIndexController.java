@@ -55,7 +55,7 @@ import java.util.regex.Pattern;
  * @version
  */
 @Controller
-@RequestMapping("/legacy/forgotaccount/teacher")
+@RequestMapping("/forgotaccount/teacher")
 public class ForgotAccountTeacherIndexController {
 
   @Autowired
@@ -158,7 +158,7 @@ public class ForgotAccountTeacherIndexController {
       } else {
         portalContextURL = ControllerUtil.getPortalUrlString(request);
       }
-      String passwordResetLink = portalContextURL + "/legacy/forgotaccount/resetpassword.html?k=" + randomAlphanumeric;
+      String passwordResetLink = portalContextURL + "/forgotaccount/resetpassword.html?k=" + randomAlphanumeric;
       String portalName = appProperties.getProperty("wise.name");
       String userEmail = user.getUserDetails().getEmailAddress();
       String[] recipients = new String[]{userEmail};

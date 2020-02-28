@@ -67,7 +67,7 @@ public class LibraryController {
    * Handles request for teacher's project library, which includes both public projects
    * and projects that the teacher owns, is shared with, and has bookmarked.
    */
-  @RequestMapping(value = "/legacy/teacher/management/library.html", method = RequestMethod.GET)
+  @RequestMapping(value = "/teacher/management/library.html", method = RequestMethod.GET)
   protected String handleGetTeacherProjectLibrary(ModelMap modelMap) throws Exception {
     User user = ControllerUtil.getSignedInUser();
     List<Project> libraryProjectsList = projectService.getLibraryProjectList();
@@ -197,7 +197,7 @@ public class LibraryController {
   /**
    * Handles request for public project library
    */
-  @RequestMapping(value = "/legacy/projectlibrary", method = RequestMethod.GET)
+  @RequestMapping(value = "/projectlibrary", method = RequestMethod.GET)
   protected String handleGETPublicProjectLibrary(ModelMap modelMap) throws Exception {
     List<Project> projectList = projectService.getLibraryProjectList();
     Map<Long, String> projectThumbMap = new TreeMap<Long, String>();

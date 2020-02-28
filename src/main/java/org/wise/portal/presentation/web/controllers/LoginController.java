@@ -51,7 +51,7 @@ public class LoginController {
   @Autowired
   PortalService portalService;
 
-  @GetMapping("/legacy/login")
+  @GetMapping("/login")
   public String handleLogIn(HttpServletRequest request, ModelMap modelMap) throws Exception {
     String failed = request.getParameter("failed");
     String redirectUrl = request.getParameter("redirect");

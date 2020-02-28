@@ -48,7 +48,7 @@ import java.util.List;
  * @author Hiroki Terashima
  */
 @Controller
-@RequestMapping("/legacy/student")
+@RequestMapping("/student")
 public class StudentIndexController {
 
   @Autowired

@@ -44,7 +44,7 @@ import org.wise.portal.service.user.UserService;
  * @author Anthony Perritano
  */
 @Controller
-@RequestMapping("/legacy/forgotaccount/student/searchforstudentusername")
+@RequestMapping("/forgotaccount/student/searchforstudentusername")
 public class SearchForStudentUsernameController {
 
   @Autowired

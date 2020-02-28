@@ -182,7 +182,7 @@ public class WebSecurityConfig<S extends Session> extends WebSecurityConfigurerA
   @Bean
   public AuthenticationFailureHandler authFailureHandler() {
     WISEAuthenticationFailureHandler handler = new WISEAuthenticationFailureHandler();
-    handler.setAuthenticationFailureUrl("/legacy/login?failed=true");
+    handler.setAuthenticationFailureUrl("/login?failed=true");
     return handler;
   }
 

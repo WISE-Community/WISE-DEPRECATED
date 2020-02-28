@@ -73,7 +73,7 @@ import org.wise.portal.service.user.UserService;
  */
 @Controller
 @SessionAttributes("studentAccountForm")
-@RequestMapping(value = "/legacy/student")
+@RequestMapping(value = "/student")
 public class StudentAccountController {
 
   @Autowired
@@ -232,8 +232,8 @@ public class StudentAccountController {
     String domainWithPort = domain + ":" + request.getLocalPort();
     String referrer = request.getHeader("referer");
     String contextPath = request.getContextPath();
-    String registerUrl = contextPath + "/legacy/student/join";
-    String updateAccountInfoUrl = contextPath + "/legacy/student/updatestudentaccount.html";
+    String registerUrl = contextPath + "/student/join";
+    String updateAccountInfoUrl = contextPath + "/student/updatestudentaccount.html";
 
     if (referrer != null &&
         (referrer.contains(domain + registerUrl) ||
