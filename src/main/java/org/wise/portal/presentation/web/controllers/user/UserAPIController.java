@@ -113,7 +113,8 @@ public class UserAPIController {
 
   boolean isPreviousAdmin(Authentication authentication) {
     for (GrantedAuthority authority : authentication.getAuthorities()) {
-      if (SwitchUserFilter.ROLE_PREVIOUS_ADMINISTRATOR.equals(authority.getAuthority())) {
+      if (SwitchUserFilter.ROLE_PREVIOUS_ADMINISTRATOR
+          .equals(authority.getAuthority())) {
         return true;
       }
     }
@@ -138,16 +139,18 @@ public class UserAPIController {
   }
 
   @PostMapping("/check-authentication")
-  HashMap<String, Object> checkAuthentication(@RequestParam("username") String username,
+  HashMap<String, Object> checkAuthentication(
+      @RequestParam("username") String username,
       @RequestParam("password") String password) {
     User user = userService.retrieveUserByUsername(username);
-    HashMap<String, Object> response = new HashMap<String, Object> ();
+    HashMap<String, Object> response = new HashMap<String, Object>();
     if (user == null) {
       response.put("isUsernameValid", false);
       response.put("isPasswordValid", false);
     } else {
       response.put("isUsernameValid", true);
-      response.put("isPasswordValid", userService.isPasswordCorrect(user, password));
+      response.put("isPasswordValid",
+          userService.isPasswordCorrect(user, password));
       response.put("userId", user.getId());
       response.put("username", user.getUserDetails().getUsername());
       response.put("firstName", user.getUserDetails().getFirstname());
@@ -171,7 +174,8 @@ public class UserAPIController {
 
   @GetMapping("/languages")
   List<HashMap<String, String>> getSupportedLanguages() {
-    String supportedLocalesStr = appProperties.getProperty("supportedLocales", "");
+    String supportedLocalesStr = appProperties.getProperty("supportedLocales",
+        "");
     List<HashMap<String, String>> langs = new ArrayList<HashMap<String, String>>();
     for (String localeString : supportedLocalesStr.split(",")) {
       String langName = getLanguageName(localeString);
@@ -229,7 +233,8 @@ public class UserAPIController {
     map.put("metadata", project.getMetadata());
     map.put("dateCreated", project.getDateCreated());
     map.put("dateArchived", project.getDateDeleted());
-    map.put("projectThumb", projectService.getProjectPath(project) + PROJECT_THUMB_PATH);
+    map.put("projectThumb",
+        projectService.getProjectPath(project) + PROJECT_THUMB_PATH);
     map.put("owner", convertUserToMap(project.getOwner()));
     map.put("sharedOwners", projectService.getProjectSharedOwnersList(project));
     map.put("parentId", project.getParentProjectId());
@@ -248,11 +253,12 @@ public class UserAPIController {
     int lastIndexOfSlash = modulePath.lastIndexOf("/");
     if (lastIndexOfSlash != -1) {
       /*
-       * The project thumb url by default is the same (/assets/project_thumb.png)
-       * for all projects, but this could be overwritten in the future
-       * e.g. /253/assets/projectThumb.png
+       * The project thumb url by default is the same
+       * (/assets/project_thumb.png) for all projects, but this could be
+       * overwritten in the future e.g. /253/assets/projectThumb.png
        */
-      projectThumb = curriculumBaseWWW + modulePath.substring(0, lastIndexOfSlash) + PROJECT_THUMB_PATH;
+      projectThumb = curriculumBaseWWW
+          + modulePath.substring(0, lastIndexOfSlash) + PROJECT_THUMB_PATH;
     }
 
     map.put("id", run.getId());
@@ -265,6 +271,7 @@ public class UserAPIController {
     map.put("project", getProjectMap(project));
     map.put("owner", convertUserToMap(run.getOwner()));
     map.put("numStudents", run.getNumStudents());
+    map.put("wiseVersion", run.getProject().getWiseVersion());
 
     if (user.isStudent()) {
       addStudentInfoToRunMap(user, run, map);
@@ -272,15 +279,18 @@ public class UserAPIController {
     return map;
   }
 
-  private void addStudentInfoToRunMap(User user, Run run, HashMap<String, Object> map) {
+  private void addStudentInfoToRunMap(User user, Run run,
+      HashMap<String, Object> map) {
     map.put("periodName", run.getPeriodOfStudent(user).getName());
-    List<Workgroup> workgroups = workgroupService.getWorkgroupListByRunAndUser(run, user);
+    List<Workgroup> workgroups = workgroupService
+        .getWorkgroupListByRunAndUser(run, user);
     if (workgroups.size() > 0) {
       Workgroup workgroup = workgroups.get(0);
       List<HashMap<String, Object>> workgroupMembers = new ArrayList<HashMap<String, Object>>();
       StringBuilder workgroupNames = new StringBuilder();
       for (User member : workgroup.getMembers()) {
-        MutableUserDetails userDetails = (MutableUserDetails) member.getUserDetails();
+        MutableUserDetails userDetails = (MutableUserDetails) member
+            .getUserDetails();
         HashMap<String, Object> memberMap = new HashMap<String, Object>();
         memberMap.put("id", member.getId());
         String firstName = userDetails.getFirstname();
@@ -310,7 +320,8 @@ public class UserAPIController {
     map.put("lastName", userDetails.getLastname());
     map.put("isGoogleUser", userDetails.isGoogleUser());
     if (userDetails instanceof TeacherUserDetails) {
-      map.put("displayName", ((TeacherUserDetails) userDetails).getDisplayname());
+      map.put("displayName",
+          ((TeacherUserDetails) userDetails).getDisplayname());
     }
     return map;
   }

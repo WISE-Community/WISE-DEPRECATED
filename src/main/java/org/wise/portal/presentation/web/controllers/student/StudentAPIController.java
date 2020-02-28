@@ -270,6 +270,12 @@ public class StudentAPIController extends UserAPIController {
       @RequestParam("runCode") String runCode,
       @RequestParam("period") String period) {
     User user = userService.retrieveUserByUsername(auth.getName());
+    Run run = getRun(runCode);
+    if (run == null || run.getProject().getWiseVersion() == 4) {
+      ErrorResponse response = new ErrorResponse("runCodeNotFound");
+      return response.toMap(); 
+    }
+    
     Projectcode projectCode = new Projectcode(runCode, period);
     int maxLoop = 100; // To ensure that the following while loop gets run at
                        // most this many times.
@@ -277,7 +283,6 @@ public class StudentAPIController extends UserAPIController {
     while (currentLoopIndex < maxLoop) {
       try {
         studentService.addStudentToRun(user, projectCode);
-        Run run = runService.retrieveRunByRuncode(runCode);
         HashMap<String, Object> runMap = getRunMap(user, run);
         return runMap;
       } catch (ObjectNotFoundException e) {
@@ -315,6 +320,14 @@ public class StudentAPIController extends UserAPIController {
      */
     ErrorResponse response = new ErrorResponse("failedToAddStudentToRun");
     return response.toMap();
+  }
+
+  private Run getRun(String runCode) {
+    try {
+      return runService.retrieveRunByRuncode(runCode);
+    } catch (ObjectNotFoundException e) {
+      return null;
+    }
   }
 
   private List<String> getPeriodNames(Run run) {

@@ -48,6 +48,8 @@ export class AddProjectDialogComponent implements OnInit {
             this.addProjectForm.controls['runCode'].setErrors({ alreadyAddedRun: true });
           } else if (studentRun.messageCode === 'runHasEnded') {
             this.addProjectForm.controls['runCode'].setErrors({ runHasEnded: true });
+          } else if (studentRun.messageCode === 'runCodeNotFound') {
+            this.addProjectForm.controls['runCode'].setErrors({ invalidRunCode: true });
           }
           this.isAdding = false;
         } else {
