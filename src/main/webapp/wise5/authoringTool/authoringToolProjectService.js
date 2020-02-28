@@ -1078,17 +1078,8 @@ class AuthoringToolProjectService extends ProjectService {
   }
 
   sortAndFilterUniqueLibraryProjects(libraryProjects) {
-    const flatProjectList = libraryProjects.map(grade => {return grade.children;}).flat()
-      .sort(this.sortByProjectIdDescending);
-    return this.filterUniqueProjects(flatProjectList);
-  }
-
-  sortByProjectIdDescending(project1, project2) {
-    if (project1.id > project2.id) {
-      return -1;
-    } else {
-      return 1;
-    }
+    const flatProjectList = libraryProjects.map(grade => {return grade.children;}).flat();
+    return this.filterUniqueProjects(flatProjectList).sort(this.sortByProjectIdDescending);
   }
 
   filterUniqueProjects(projects) {
@@ -1101,6 +1092,14 @@ class AuthoringToolProjectService extends ProjectService {
       }
     }
     return uniqueProjects;
+  }
+
+  sortByProjectIdDescending(project1, project2) {
+    if (project1.id > project2.id) {
+      return -1;
+    } else {
+      return 1;
+    }
   }
 }
 
