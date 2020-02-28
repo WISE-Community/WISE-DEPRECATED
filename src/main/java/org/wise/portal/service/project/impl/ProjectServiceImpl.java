@@ -41,6 +41,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -289,15 +290,22 @@ public class ProjectServiceImpl implements ProjectService {
 
   @Secured( { "ROLE_USER", "AFTER_ACL_COLLECTION_READ" })
   public List<Project> getProjectList(User user) {
-    return projectDao.getProjectListByOwner(user);
+    return filterWISE4Project(projectDao.getProjectListByOwner(user));
   }
 
   public List<Project> getSharedProjectList(User user) {
-    return projectDao.getProjectListByUAR(user, "sharedowners");
+    return filterWISE4Project(projectDao.getProjectListByUAR(user, "sharedowners"));
   }
 
   public List<Project> getSharedProjectsWithoutRun(User user) {
-    return projectDao.getSharedProjectsWithoutRun(user);
+    return filterWISE4Project(projectDao.getSharedProjectsWithoutRun(user));
+  }
+
+  private List<Project> filterWISE4Project(List<Project> projects) {
+    return projects
+      .stream()
+      .filter(project -> project.getWiseVersion().equals(4))
+      .collect(Collectors.toList());
   }
 
   public String getSharedTeacherRole(Project project, User user) {
@@ -507,7 +515,7 @@ public class ProjectServiceImpl implements ProjectService {
   public List<Project> getLibraryProjectList() {
     Set<String> tagNames = new TreeSet<String>();
     tagNames.add("library");
-    return getProjectListByTagNames(tagNames);
+    return filterWISE4Project(getProjectListByTagNames(tagNames));
   }
 
   @Transactional
