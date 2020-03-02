@@ -807,6 +807,44 @@ class NodeService {
   }
 
   /**
+   * Move the component(s) within the node
+   * @param nodeId we are moving component(s) in this node
+   * @param componentIds the component(s) we are moving
+   * @param insertAfterComponentId Insert the component(s) after this given
+   * component id. If this argument is null, we will place the new
+   * component(s) in the first position.
+   */
+  moveComponent(nodeId, componentIds, insertAfterComponentId) {
+    const node = this.ProjectService.getNodeById(nodeId);
+    const components = node.components;
+    const extractedComponents = this.extractComponents(components, componentIds);
+    if (insertAfterComponentId == null) {
+      components.unshift(...extractedComponents);
+    } else {
+      this.insertComponentsAfter(extractedComponents, components, insertAfterComponentId);
+    }
+  }
+
+  extractComponents(components, componentIds) {
+    const extractedComponents = [];
+    for (let i = 0; i < components.length; i++) {
+      if (componentIds.includes(components[i].id)) {
+        extractedComponents.push(components.splice(i--, 1)[0]);
+      }
+    }
+    return extractedComponents;
+  }
+
+  insertComponentsAfter(componentsToInsert, components, insertAfterComponentId) {
+    for (let i = 0; i < components.length; i++) {
+      if (components[i].id === insertAfterComponentId) {
+        components.splice(i + 1, 0, ...componentsToInsert);
+        return;
+      }
+    }
+  }
+
+  /**
    * Show the node content in a dialog. We will show the step content
    * plus the node rubric and all component rubrics.
    */
