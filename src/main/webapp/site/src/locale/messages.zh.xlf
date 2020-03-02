@@ -1117,7 +1117,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">20</context>
         </context-group>
-        <target state="translated">WISE是具有25年以上教育技术教学应用研究的产物</target>
+        <target state="translated">WISE是具有25年以上教育技术教学应用研究的结果</target>
         <alt-trans>
           <target>WISE是具有25年以上教学与教育技术研究的产物</target>
         </alt-trans>
@@ -1192,7 +1192,10 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">47</context>
         </context-group>
-        <target state="translated">这意味着在实施WISE学习单元时，可以确保您使用的内容具有坚实的理论基础，符现实教师提供的经验建议，并且是教室中现实学生测试使用过的。</target>
+        <target state="translated">这意味着在实施WISE学习单元时，可以确保您使用的内容具有坚实的理论基础，是由真正有经验的教师提供建议的，并且是在教室中经过真实的学生测试的。</target>
+        <alt-trans>
+          <target>这意味着在实施WISE学习单元时，可以确保您使用的内容具有坚实的理论基础，符现实教师提供的经验建议，并且是教室中现实学生测试使用过的。</target>
+        </alt-trans>
         <alt-trans>
           <target>这意味着，在实施WISE学习单元时，您可以确保您所使用内容的是从坚实的基础发展而来，由真正的教师提供经验建议，并在教室中与真正的学生一起进行测试过的。</target>
         </alt-trans>
