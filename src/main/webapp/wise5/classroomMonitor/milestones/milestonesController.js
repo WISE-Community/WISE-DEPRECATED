@@ -450,37 +450,7 @@ class MilestonesController {
     );
     let content = template.content ? template.content : "";
     if (content) {
-      for (let componentId of Object.keys(aggregateAutoScores)) {
-        const componentAggregate = aggregateAutoScores[componentId];
-        let subScoreIndex = 0;
-        for (let subScoreId of Object.keys(componentAggregate)) {
-          const regex = new RegExp(
-            `milestone-report-graph.*id="(${subScoreId})"`,
-            "g"
-          );
-          let index = 0;
-          if (subScoreId !== "ki") {
-            subScoreIndex++;
-            index = subScoreIndex;
-          }
-          const milestoneData = this.calculateMilestoneData(
-            componentAggregate[subScoreId],
-            index
-          );
-          const milestoneCategories = this.calculateMilestoneCategories(
-            subScoreId
-          );
-          const categories = JSON.stringify(milestoneCategories).replace(
-            /\"/g,
-            "'"
-          );
-          const data = JSON.stringify(milestoneData).replace(/\"/g, "'");
-          content = content.replace(
-            regex,
-            `$& categories=\"${categories}\" data=\"${data}\"`
-          );
-        }
-      }
+      content = this.processMilestoneGraphsAndData(content, aggregateAutoScores);
     }
     const recommendations = template.recommendations
       ? template.recommendations
@@ -491,6 +461,51 @@ class MilestonesController {
       nodeId: nodeId,
       componentId: componentId
     };
+  }
+
+  processMilestoneGraphsAndData(content, aggregateAutoScores) {
+    for (let componentId of Object.keys(aggregateAutoScores)) {
+      const componentAggregate = aggregateAutoScores[componentId];
+      let subScoreIndex = 0;
+      for (let subScoreId of Object.keys(componentAggregate)) {
+        let index = 0;
+        if (subScoreId !== "ki") {
+          subScoreIndex++;
+          index = subScoreIndex;
+        }
+        const aggregateData = componentAggregate[subScoreId];
+        const milestoneData = this.calculateMilestoneData(
+          aggregateData,
+          index
+        );
+        const milestoneCategories = this.calculateMilestoneCategories(
+          subScoreId
+        );
+        const categories = JSON.stringify(milestoneCategories).replace(
+          /\"/g,
+          "'"
+        );
+        const graphData = JSON.stringify(milestoneData).replace(/\"/g, "'");
+        const graphRegex = new RegExp(
+          `milestone-report-graph.*id="(${subScoreId})"`,
+          "g"
+        );
+        content = content.replace(
+          graphRegex,
+          `$& categories=\"${categories}\" data=\"${graphData}\"`
+        );
+        const data = JSON.stringify(aggregateData).replace(/\"/g, "'");
+        const dataRegex = new RegExp(
+          `milestone-report-data.*score-id="(${subScoreId})"`,
+          "g"
+        );
+        content = content.replace(
+          dataRegex,
+          `$& data=\"${data}\"`
+        );
+      }
+    }
+    return content;
   }
 
   getSatisfyCriteriaReferencedComponents(projectAchievement) {
