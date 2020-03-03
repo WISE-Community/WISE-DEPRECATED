@@ -105,8 +105,7 @@ public class StudentAPIController extends UserAPIController {
   }
 
   @GetMapping("/run/info")
-  HashMap<String, Object> getRunInfoByRunCode(
-      @RequestParam("runCode") String runCode) {
+  HashMap<String, Object> getRunInfoByRunCode(@RequestParam("runCode") String runCode) {
     try {
       return getRunInfo(runService.retrieveRunByRuncode(runCode));
     } catch (ObjectNotFoundException e) {
@@ -145,12 +144,11 @@ public class StudentAPIController extends UserAPIController {
   }
 
   @PostMapping("/run/launch")
-  HashMap<String, Object> launchRun(Authentication auth,
-      @RequestParam("runId") Long runId,
+  HashMap<String, Object> launchRun(Authentication auth, @RequestParam("runId") Long runId,
       @RequestParam(value = "workgroupId", required = false) Long workgroupId,
       @RequestParam("presentUserIds") String presentUserIds,
-      @RequestParam("absentUserIds") String absentUserIds,
-      HttpServletRequest request) throws Exception {
+      @RequestParam("absentUserIds") String absentUserIds, HttpServletRequest request)
+      throws Exception {
     Run run = runService.retrieveById(runId);
     presentUserIds = presentUserIds.substring(1, presentUserIds.length() - 1);
     String[] presentUserIdsArray = presentUserIds.split(",", 0);
@@ -159,40 +157,34 @@ public class StudentAPIController extends UserAPIController {
     User user = userService.retrieveUserByUsername(auth.getName());
     for (User member : presentMembers) {
       if (workgroupService.isUserInAnyWorkgroupForRun(member, run)) {
-        workgroup = workgroupService.getWorkgroupListByRunAndUser(run, member)
-            .get(0);
+        workgroup = workgroupService.getWorkgroupListByRunAndUser(run, member).get(0);
       }
     }
     if (workgroup == null) {
       if (run.isStudentAssociatedToThisRun(user)) {
         Group period = run.getPeriodOfStudent(user);
-        String name = "Workgroup for user: "
-            + user.getUserDetails().getUsername();
-        workgroup = workgroupService.createWorkgroup(name, presentMembers, run,
-            period);
-        return getLaunchRunMap(runId, workgroupId, presentUserIds,
-            absentUserIds, request, run, presentMembers, workgroup);
+        String name = "Workgroup for user: " + user.getUserDetails().getUsername();
+        workgroup = workgroupService.createWorkgroup(name, presentMembers, run, period);
+        return getLaunchRunMap(runId, workgroupId, presentUserIds, absentUserIds, request, run,
+            presentMembers, workgroup);
       } else {
-        ErrorResponse errorResponse = new ErrorResponse(
-            "signedInUserNotAssociatedWithRun");
+        ErrorResponse errorResponse = new ErrorResponse("signedInUserNotAssociatedWithRun");
         return errorResponse.toMap();
       }
     } else {
       Set<User> newMembers = membersNotInWorkgroup(workgroup, presentMembers);
-      if (newMembers.size() + workgroup.getMembers().size() > run
-          .getMaxWorkgroupSize()) {
-        ErrorResponse errorResponse = new LaunchRunErrorResponse(
-            "tooManyMembersInWorkgroup", workgroup);
+      if (newMembers.size() + workgroup.getMembers().size() > run.getMaxWorkgroupSize()) {
+        ErrorResponse errorResponse = new LaunchRunErrorResponse("tooManyMembersInWorkgroup",
+            workgroup);
         return errorResponse.toMap();
       }
       workgroupService.addMembers(workgroup, newMembers);
-      return getLaunchRunMap(runId, workgroupId, presentUserIds, absentUserIds,
-          request, run, presentMembers, workgroup);
+      return getLaunchRunMap(runId, workgroupId, presentUserIds, absentUserIds, request, run,
+          presentMembers, workgroup);
     }
   }
 
-  private Set<User> membersNotInWorkgroup(Workgroup workgroup,
-      Set<User> presentMembers) {
+  private Set<User> membersNotInWorkgroup(Workgroup workgroup, Set<User> presentMembers) {
     Set<User> membersNotInWorkgroup = new HashSet<>();
     for (User member : presentMembers) {
       if (!workgroup.getMembers().contains(member)) {
@@ -203,10 +195,9 @@ public class StudentAPIController extends UserAPIController {
   }
 
   private HashMap<String, Object> getLaunchRunMap(Long runId, Long workgroupId,
-      String presentUserIds, String absentUserIds, HttpServletRequest request,
-      Run run, Set<User> presentMembers, Workgroup workgroup)
-      throws ObjectNotFoundException, PeriodNotFoundException,
-      StudentUserAlreadyAssociatedWithRunException, RunHasEndedException {
+      String presentUserIds, String absentUserIds, HttpServletRequest request, Run run,
+      Set<User> presentMembers, Workgroup workgroup) throws ObjectNotFoundException,
+      PeriodNotFoundException, StudentUserAlreadyAssociatedWithRunException, RunHasEndedException {
     addStudentsToRunIfNecessary(run, presentMembers, workgroup);
     if (!run.isEnded()) {
       saveStudentAttendance(runId, workgroupId, presentUserIds, absentUserIds);
@@ -215,12 +206,10 @@ public class StudentAPIController extends UserAPIController {
     return generateStartProjectUrlMap(request, workgroup);
   }
 
-  private void addStudentsToRunIfNecessary(Run run, Set<User> presentMembers,
-      Workgroup workgroup)
-      throws ObjectNotFoundException, PeriodNotFoundException,
-      RunHasEndedException, StudentUserAlreadyAssociatedWithRunException {
-    Projectcode projectcode = new Projectcode(run.getRuncode(),
-        workgroup.getPeriod().getName());
+  private void addStudentsToRunIfNecessary(Run run, Set<User> presentMembers, Workgroup workgroup)
+      throws ObjectNotFoundException, PeriodNotFoundException, RunHasEndedException,
+      StudentUserAlreadyAssociatedWithRunException {
+    Projectcode projectcode = new Projectcode(run.getRuncode(), workgroup.getPeriod().getName());
     for (User presentMember : presentMembers) {
       if (!run.isStudentAssociatedToThisRun(presentMember)) {
         studentService.addStudentToRun(presentMember, projectcode);
@@ -228,19 +217,18 @@ public class StudentAPIController extends UserAPIController {
     }
   }
 
-  private void saveStudentAttendance(Long runId, Long workgroupId,
-      String presentUserIds, String absentUserIds) {
+  private void saveStudentAttendance(Long runId, Long workgroupId, String presentUserIds,
+      String absentUserIds) {
     Date loginTimestamp = new Date();
-    studentAttendanceService.addStudentAttendanceEntry(workgroupId, runId,
-        loginTimestamp, presentUserIds, absentUserIds);
+    studentAttendanceService.addStudentAttendanceEntry(workgroupId, runId, loginTimestamp,
+        presentUserIds, absentUserIds);
   }
 
-  private HashMap<String, Object> generateStartProjectUrlMap(
-      HttpServletRequest request, Workgroup workgroup) {
+  private HashMap<String, Object> generateStartProjectUrlMap(HttpServletRequest request,
+      Workgroup workgroup) {
     HashMap<String, Object> map = new HashMap<String, Object>();
     map.put("startProjectUrl",
-        projectService.generateStudentStartProjectUrlString(workgroup,
-            request.getContextPath()));
+        projectService.generateStudentStartProjectUrlString(workgroup, request.getContextPath()));
     return map;
   }
 
@@ -260,25 +248,22 @@ public class StudentAPIController extends UserAPIController {
    *                  The run code string.
    * @param period
    *                  The period string.
-   * @return If the student is successfully added to the run, we will return a
-   *         map that contains the information about the run. If the student is
-   *         not successfully added to the run, we will return a map containing
-   *         an error field with an error string.
+   * @return If the student is successfully added to the run, we will return a map that contains the
+   *         information about the run. If the student is not successfully added to the run, we will
+   *         return a map containing an error field with an error string.
    */
   @PostMapping("/run/register")
   HashMap<String, Object> addStudentToRun(Authentication auth,
-      @RequestParam("runCode") String runCode,
-      @RequestParam("period") String period) {
+      @RequestParam("runCode") String runCode, @RequestParam("period") String period) {
     User user = userService.retrieveUserByUsername(auth.getName());
     Run run = getRun(runCode);
     if (run == null || run.getProject().getWiseVersion() == 4) {
       ErrorResponse response = new ErrorResponse("runCodeNotFound");
-      return response.toMap(); 
+      return response.toMap();
     }
-    
+
     Projectcode projectCode = new Projectcode(runCode, period);
-    int maxLoop = 100; // To ensure that the following while loop gets run at
-                       // most this many times.
+    int maxLoop = 100; // To ensure that the following while loop gets run at most this many times.
     int currentLoopIndex = 0;
     while (currentLoopIndex < maxLoop) {
       try {
@@ -299,15 +284,15 @@ public class StudentAPIController extends UserAPIController {
         return response.toMap();
       } catch (HibernateOptimisticLockingFailureException holfe) {
         /*
-         * Multiple students tried to create an account at the same time,
-         * resulting in this exception. We will try saving again.
+         * Multiple students tried to create an account at the same time, resulting in this
+         * exception. We will try saving again.
          */
         currentLoopIndex++;
         continue;
       } catch (StaleObjectStateException sose) {
         /*
-         * Multiple students tried to create an account at the same time,
-         * resulting in this exception. We will try saving again.
+         * Multiple students tried to create an account at the same time, resulting in this
+         * exception. We will try saving again.
          */
         currentLoopIndex++;
         continue;
@@ -315,8 +300,8 @@ public class StudentAPIController extends UserAPIController {
     }
 
     /*
-     * there were no errors but we were unable to add the student to the run for
-     * some reason so we will just return a generic error message
+     * there were no errors but we were unable to add the student to the run for some reason so we
+     * will just return a generic error message
      */
     ErrorResponse response = new ErrorResponse("failedToAddStudentToRun");
     return response.toMap();
@@ -348,8 +333,7 @@ public class StudentAPIController extends UserAPIController {
     sud.setGender(getGender(studentFields.get("gender")));
     sud.setAccountQuestion(studentFields.get("securityQuestion"));
     sud.setAccountAnswer(studentFields.get("securityQuestionAnswer"));
-    sud.setBirthday(getBirthDate(studentFields.get("birthMonth"),
-        studentFields.get("birthDay")));
+    sud.setBirthday(getBirthDate(studentFields.get("birthMonth"), studentFields.get("birthDay")));
     sud.setSignupdate(Calendar.getInstance().getTime());
     if (studentFields.containsKey("googleUserId")) {
       sud.setGoogleUserId(studentFields.get("googleUserId"));
@@ -386,23 +370,19 @@ public class StudentAPIController extends UserAPIController {
   @Secured({ "ROLE_ANONYMOUS" })
   List<HashMap<String, String>> getSecurityQuestions() {
     List<HashMap<String, String>> questions = new ArrayList<HashMap<String, String>>();
-    for (AccountQuestion accountQuestionKey : AccountQuestion.class
-        .getEnumConstants()) {
+    for (AccountQuestion accountQuestionKey : AccountQuestion.class.getEnumConstants()) {
       HashMap<String, String> question = new HashMap<String, String>();
       question.put("key", accountQuestionKey.toString());
-      question.put("value",
-          i18nProperties.getProperty("accountquestions." + accountQuestionKey));
+      question.put("value", i18nProperties.getProperty("accountquestions." + accountQuestionKey));
       questions.add(question);
     }
     return questions;
   }
 
   @PostMapping("/profile/update")
-  SimpleResponse updateProfile(Authentication auth,
-      @RequestParam("language") String language) {
+  SimpleResponse updateProfile(Authentication auth, @RequestParam("language") String language) {
     User user = userService.retrieveUserByUsername(auth.getName());
-    StudentUserDetails studentUserDetails = (StudentUserDetails) user
-        .getUserDetails();
+    StudentUserDetails studentUserDetails = (StudentUserDetails) user.getUserDetails();
     studentUserDetails.setLanguage(language);
     userService.updateUser(user);
     return new SimpleResponse("success", "profileUpdated");
@@ -438,12 +418,10 @@ public class StudentAPIController extends UserAPIController {
     if (workgroupId != null) {
       workgroup = workgroupService.retrieveById(workgroupId);
     } else if (workgroupService.isUserInAnyWorkgroupForRun(user, run)) {
-      workgroup = workgroupService.getWorkgroupListByRunAndUser(run, user)
-          .get(0);
+      workgroup = workgroupService.getWorkgroupListByRunAndUser(run, user).get(0);
     }
     if (!workgroupService.isUserInAnyWorkgroupForRun(user, run)
-        || (workgroup != null && workgroupService.isUserInWorkgroupForRun(user,
-            run, workgroup))) {
+        || (workgroup != null && workgroupService.isUserInWorkgroupForRun(user, run, workgroup))) {
       members.add(convertUserToMap(user));
       response.put("status", true);
     }

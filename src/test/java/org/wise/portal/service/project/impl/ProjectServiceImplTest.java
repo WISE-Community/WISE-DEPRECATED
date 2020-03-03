@@ -125,8 +125,8 @@ public class ProjectServiceImplTest {
 
   @Test
   public void getById_ProjectNotExist_ShouldThrowException() throws Exception {
-    expect(projectDao.getById(NONEXISTING_PROJECT_ID)).andThrow(
-        new ObjectNotFoundException(NONEXISTING_PROJECT_ID, Project.class));
+    expect(projectDao.getById(NONEXISTING_PROJECT_ID))
+        .andThrow(new ObjectNotFoundException(NONEXISTING_PROJECT_ID, Project.class));
     replay(projectDao);
     try {
       projectServiceImpl.getById(NONEXISTING_PROJECT_ID);
@@ -262,8 +262,7 @@ public class ProjectServiceImplTest {
       projectJSON.put("metadata", metadata);
       projectServiceImpl.updateMetadataAndLicenseIfNecessary(project, projectJSON.toString());
       assertEquals(metadata.get("title"), project.getMetadata().getTitle());
-      String licenseText =
-          FileUtils.readFileToString(new File(licenseFilePath), "UTF-8");
+      String licenseText = FileUtils.readFileToString(new File(licenseFilePath), "UTF-8");
       assertTrue(licenseText.contains("licensed under CC\nBY-SA by Spongebob Squarepants"));
     } catch (JSONException e) {
       fail();
