@@ -487,7 +487,7 @@ class MilestonesController {
         );
         const graphData = JSON.stringify(milestoneData).replace(/\"/g, "'");
         const graphRegex = new RegExp(
-          `milestone-report-graph.*id="(${subScoreId})"`,
+          `milestone-report-graph{1,} id="(${subScoreId})"`,
           "g"
         );
         content = content.replace(
@@ -496,7 +496,7 @@ class MilestonesController {
         );
         const data = JSON.stringify(aggregateData).replace(/\"/g, "'");
         const dataRegex = new RegExp(
-          `milestone-report-data.*score-id="(${subScoreId})"`,
+          `milestone-report-data{1,} score-id="(${subScoreId})"`,
           "g"
         );
         content = content.replace(
