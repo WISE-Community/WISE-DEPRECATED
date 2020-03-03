@@ -227,10 +227,6 @@ public class StudentAPIControllerTest extends APIControllerTest {
     String runCodeNotInDB = "runCodeNotInDB";
     expect(userService.retrieveUserByUsername(STUDENT_USERNAME)).andReturn(student1);
     replay(userService);
-    Projectcode projectCode = new Projectcode(runCodeNotInDB, RUN1_PERIOD1_NAME);
-    studentService.addStudentToRun(student1, projectCode);
-    expectLastCall();
-    replay(studentService);
     expect(runService.retrieveRunByRuncode(runCodeNotInDB)).andThrow(new ObjectNotFoundException(
         runCodeNotInDB, Run.class));
     replay(runService);
@@ -239,7 +235,6 @@ public class StudentAPIControllerTest extends APIControllerTest {
     assertEquals("error", response.get("status"));
     assertEquals("runCodeNotFound", response.get("messageCode"));
     verify(userService);
-    verify(studentService);
     verify(runService);
   }
 

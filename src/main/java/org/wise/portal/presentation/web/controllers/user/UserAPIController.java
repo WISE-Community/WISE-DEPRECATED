@@ -131,6 +131,7 @@ public class UserAPIController {
     config.put("isGoogleClassroomEnabled", isGoogleClassroomEnabled());
     config.put("logOutURL", contextPath + "/logout");
     config.put("recaptchaPublicKey", appProperties.get("recaptcha_public_key"));
+    config.put("wise4Hostname", appProperties.get("wise4.hostname"));
     return config;
   }
 

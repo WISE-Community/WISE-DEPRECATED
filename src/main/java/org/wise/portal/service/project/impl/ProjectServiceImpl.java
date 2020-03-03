@@ -408,7 +408,7 @@ public class ProjectServiceImpl implements ProjectService {
     Project project = run.getProject();
     Integer wiseVersion = project.getWiseVersion();
     if (wiseVersion.equals(4)) {
-      return contextPath + "/student/vle/vle.html?runId=" +
+      return appProperties.getProperty("wise4.hostname") + "/student/vle/vle.html?runId=" +
           run.getId() + "&workgroupId=" + workgroup.getId();
     } else if (wiseVersion.equals(5)) {
       return contextPath + "/student/run/" + run.getId() + "#!/run/" + run.getId();
@@ -755,14 +755,13 @@ public class ProjectServiceImpl implements ProjectService {
   }
 
   public String getProjectURI(Project project) {
-    String previewPath;
     if (project.getWiseVersion().equals(4)) {
-      previewPath = "/previewproject.html?projectId=";
+      return appProperties.getProperty("wise4.hostname") + "/previewproject.html?projectId=" +
+          project.getId();
     } else {
-      previewPath = "/project/";
+      return appProperties.getProperty("wise.hostname") + "/project/" + project.getId() +
+          "#!/project/" + project.getId();
     }
-    return appProperties.getProperty("wise.hostname") + previewPath + project.getId() +
-        "#!/project/" + project.getId();
   }
 
   private String getAuthorsString(JSONArray authors) {
