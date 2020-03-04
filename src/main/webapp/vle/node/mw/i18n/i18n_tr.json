@@ -1,6 +1,0 @@
-{
-    "applet_failed_to_load": {
-        "value": "Uygulama yüklenemedi",
-        "description": "Alert message that gets displayed when the applet fails to load"
-    }
-}

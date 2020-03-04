@@ -29,9 +29,6 @@ import org.junit.runners.Suite;
  * @author Hiroki Terashima
  */
 @RunWith(Suite.class)
-@Suite.SuiteClasses({
-  AddProjectParametersValidatorTest.class,
-  TeamSignInFormValidatorTest.class
-})
+@Suite.SuiteClasses({ AddProjectParametersValidatorTest.class })
 public class AllTests {
 }
