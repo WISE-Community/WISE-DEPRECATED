@@ -32,8 +32,6 @@ import org.wise.portal.dao.annotation.AnnotationDao;
 import org.wise.portal.dao.crater.CRaterRequestDao;
 import org.wise.portal.dao.ideabasket.IdeaBasketDao;
 import org.wise.portal.dao.node.NodeDao;
-import org.wise.portal.dao.peerreview.PeerReviewGateDao;
-import org.wise.portal.dao.peerreview.PeerReviewWorkDao;
 import org.wise.portal.dao.portfolio.PortfolioDao;
 import org.wise.portal.dao.statistics.VLEStatisticsDao;
 import org.wise.portal.dao.status.RunStatusDao;
@@ -45,8 +43,6 @@ import org.wise.vle.domain.annotation.Annotation;
 import org.wise.vle.domain.cRater.CRaterRequest;
 import org.wise.vle.domain.ideabasket.IdeaBasket;
 import org.wise.vle.domain.node.Node;
-import org.wise.vle.domain.peerreview.PeerReviewGate;
-import org.wise.vle.domain.peerreview.PeerReviewWork;
 import org.wise.vle.domain.portfolio.Portfolio;
 import org.wise.vle.domain.statistics.VLEStatistics;
 import org.wise.vle.domain.status.RunStatus;
@@ -56,6 +52,7 @@ import org.wise.vle.domain.work.StepWork;
 
 /**
  * Services for the WISE Virtual Learning Environment (WISE VLE v4)
+ * 
  * @author Geoffrey Kwan
  * @author Hiroki Terashima
  */
@@ -67,12 +64,6 @@ public class VLEServiceImpl implements VLEService {
 
   @Autowired
   private AnnotationDao<Annotation> annotationDao;
-
-  @Autowired
-  private PeerReviewWorkDao<PeerReviewWork> peerReviewWorkDao;
-
-  @Autowired
-  private PeerReviewGateDao<PeerReviewGate> peerReviewGateDao;
 
   @Autowired
   private NodeDao<Node> nodeDao;
@@ -144,13 +135,17 @@ public class VLEServiceImpl implements VLEService {
   }
 
   @Override
-  public List<Annotation> getAnnotationByFromWorkgroupAndWorkByToWorkgroup(UserInfo fromWorkgroup, List<StepWork> workByToWorkgroup, Class<?> clazz) {
-    return annotationDao.getAnnotationByFromWorkgroupAndWorkByToWorkgroup(fromWorkgroup, workByToWorkgroup, clazz);
+  public List<Annotation> getAnnotationByFromWorkgroupAndWorkByToWorkgroup(UserInfo fromWorkgroup,
+      List<StepWork> workByToWorkgroup, Class<?> clazz) {
+    return annotationDao.getAnnotationByFromWorkgroupAndWorkByToWorkgroup(fromWorkgroup,
+        workByToWorkgroup, clazz);
   }
 
   @Override
-  public List<Annotation> getAnnotationByFromWorkgroupsAndWorkByToWorkgroup(List<UserInfo> fromWorkgroups, List<StepWork> workByToWorkgroup, Class<?> clazz) {
-    return annotationDao.getAnnotationByFromWorkgroupsAndWorkByToWorkgroup(fromWorkgroups, workByToWorkgroup, clazz);
+  public List<Annotation> getAnnotationByFromWorkgroupsAndWorkByToWorkgroup(
+      List<UserInfo> fromWorkgroups, List<StepWork> workByToWorkgroup, Class<?> clazz) {
+    return annotationDao.getAnnotationByFromWorkgroupsAndWorkByToWorkgroup(fromWorkgroups,
+        workByToWorkgroup, clazz);
   }
 
   @Override
@@ -159,27 +154,34 @@ public class VLEServiceImpl implements VLEService {
   }
 
   @Override
-  public List<? extends Annotation> getAnnotationByRunIdAndType(Long runId, String type, Class<?> clazz) {
+  public List<? extends Annotation> getAnnotationByRunIdAndType(Long runId, String type,
+      Class<?> clazz) {
     return annotationDao.getAnnotationByRunIdAndType(runId, type, clazz);
   }
 
   @Override
-  public Annotation getAnnotationByUserInfoAndStepWork(UserInfo userInfo, StepWork stepWork, String type) {
+  public Annotation getAnnotationByUserInfoAndStepWork(UserInfo userInfo, StepWork stepWork,
+      String type) {
     return annotationDao.getAnnotationByUserInfoAndStepWork(userInfo, stepWork, type);
   }
 
   @Override
-  public Annotation getAnnotationByFromUserInfoToUserInfoStepWorkType(UserInfo fromUserInfo, UserInfo toUserInfo, StepWork stepWork, String type) {
-    return annotationDao.getAnnotationByFromUserInfoToUserInfoStepWorkType(fromUserInfo, toUserInfo, stepWork, type);
+  public Annotation getAnnotationByFromUserInfoToUserInfoStepWorkType(UserInfo fromUserInfo,
+      UserInfo toUserInfo, StepWork stepWork, String type) {
+    return annotationDao.getAnnotationByFromUserInfoToUserInfoStepWorkType(fromUserInfo, toUserInfo,
+        stepWork, type);
   }
 
   @Override
-  public Annotation getAnnotationByFromUserInfoToUserInfoNodeIdType(UserInfo fromUserInfo, UserInfo toUserInfo, String nodeId, String type) {
-    return annotationDao.getAnnotationByFromUserInfoToUserInfoNodeIdType(fromUserInfo, toUserInfo, nodeId, type);
+  public Annotation getAnnotationByFromUserInfoToUserInfoNodeIdType(UserInfo fromUserInfo,
+      UserInfo toUserInfo, String nodeId, String type) {
+    return annotationDao.getAnnotationByFromUserInfoToUserInfoNodeIdType(fromUserInfo, toUserInfo,
+        nodeId, type);
   }
 
   @Override
-  public List<Annotation> getAnnotationByFromWorkgroupsAndStepWork(List<UserInfo> fromWorkgroups, StepWork stepWork, String type) {
+  public List<Annotation> getAnnotationByFromWorkgroupsAndStepWork(List<UserInfo> fromWorkgroups,
+      StepWork stepWork, String type) {
     return annotationDao.getAnnotationByFromWorkgroupsAndStepWork(fromWorkgroups, stepWork, type);
   }
 
@@ -189,7 +191,8 @@ public class VLEServiceImpl implements VLEService {
   }
 
   @Override
-  public List<Annotation> getAnnotationByFromUserToUserType(List<UserInfo> fromUsers, UserInfo toUser, String annotationType) {
+  public List<Annotation> getAnnotationByFromUserToUserType(List<UserInfo> fromUsers,
+      UserInfo toUser, String annotationType) {
     return annotationDao.getAnnotationByFromUserToUserType(fromUsers, toUser, annotationType);
   }
 
@@ -199,12 +202,14 @@ public class VLEServiceImpl implements VLEService {
   }
 
   @Override
-  public Annotation getAnnotationByStepWorkAndAnnotationType(StepWork stepWork, String annotationType) {
+  public Annotation getAnnotationByStepWorkAndAnnotationType(StepWork stepWork,
+      String annotationType) {
     return annotationDao.getAnnotationByStepWorkAndAnnotationType(stepWork, annotationType);
   }
 
   @Override
-  public Annotation getLatestAnnotationByStepWork(List<StepWork> stepWorks, List<String> workgroupIds, String type) {
+  public Annotation getLatestAnnotationByStepWork(List<StepWork> stepWorks,
+      List<String> workgroupIds, String type) {
     return annotationDao.getLatestAnnotationByStepWork(stepWorks, workgroupIds, type);
   }
 
@@ -219,12 +224,14 @@ public class VLEServiceImpl implements VLEService {
   }
 
   @Override
-  public Annotation getLatestAnnotationScoreByStepWork(List<StepWork> stepWorks, List<String> workgroupIds) {
+  public Annotation getLatestAnnotationScoreByStepWork(List<StepWork> stepWorks,
+      List<String> workgroupIds) {
     return annotationDao.getLatestAnnotationScoreByStepWork(stepWorks, workgroupIds);
   }
 
   @Override
-  public Annotation getLatestAnnotationCommentByStepWork(List<StepWork> stepWorks, List<String> workgroupIds) {
+  public Annotation getLatestAnnotationCommentByStepWork(List<StepWork> stepWorks,
+      List<String> workgroupIds) {
     return annotationDao.getLatestAnnotationCommentByStepWork(stepWorks, workgroupIds);
   }
 
@@ -239,11 +246,14 @@ public class VLEServiceImpl implements VLEService {
   }
 
   @Override
-  public List<Annotation> getAnnotationByFromWorkgroupsToWorkgroupWithoutWork(List<UserInfo> fromUsers, UserInfo toUser, List<String> annotationTypes) {
-    return annotationDao.getAnnotationByFromWorkgroupsToWorkgroupWithoutWork(fromUsers, toUser, annotationTypes);
+  public List<Annotation> getAnnotationByFromWorkgroupsToWorkgroupWithoutWork(
+      List<UserInfo> fromUsers, UserInfo toUser, List<String> annotationTypes) {
+    return annotationDao.getAnnotationByFromWorkgroupsToWorkgroupWithoutWork(fromUsers, toUser,
+        annotationTypes);
   }
 
-  public Annotation getAnnotationByFromUserInfoToUserInfoType(UserInfo fromUserInfo, UserInfo toUserInfo, String type) {
+  public Annotation getAnnotationByFromUserInfoToUserInfoType(UserInfo fromUserInfo,
+      UserInfo toUserInfo, String type) {
     return annotationDao.getAnnotationByFromUserInfoToUserInfoType(fromUserInfo, toUserInfo, type);
   }
 
@@ -255,128 +265,6 @@ public class VLEServiceImpl implements VLEService {
   @Override
   public List<Annotation> getAnnotationList() {
     return annotationDao.getList();
-  }
-
-  @Override
-  public PeerReviewWork getPeerReviewWorkById(Long id) {
-    return peerReviewWorkDao.getPeerReviewWorkById(id);
-  }
-
-  @Override
-  public void savePeerReviewWork(PeerReviewWork peerReviewWork) {
-    peerReviewWorkDao.savePeerReviewWork(peerReviewWork);
-  }
-
-  @Override
-  public List<PeerReviewWork> getPeerReviewWorkByRun(Long runId) {
-    return peerReviewWorkDao.getPeerReviewWorkByRun(runId);
-  }
-
-  @Override
-  public List<PeerReviewWork> getPeerReviewWorkByRunPeriodNode(Long runId, Long periodId, Node node) {
-    return peerReviewWorkDao.getPeerReviewWorkByRunPeriodNode(runId, periodId, node);
-  }
-
-  @Override
-  public List<PeerReviewWork> getUnassignedPeerReviewWorkList(Long runId, Long periodId, Node node) {
-    return peerReviewWorkDao.getUnassignedPeerReviewWorkList(runId, periodId, node);
-  }
-
-  @Override
-  public PeerReviewWork getPeerReviewWorkByRunPeriodNodeStepWorkReviewer(Long runId, Long periodId, Node node, StepWork stepWork, UserInfo reviewer) {
-    return peerReviewWorkDao.getPeerReviewWorkByRunPeriodNodeStepWorkReviewer(runId, periodId, node, stepWork, reviewer);
-  }
-
-  @Override
-  public PeerReviewWork setPeerReviewAnnotation(Long runId, Long periodId, Node node, StepWork stepWork, UserInfo reviewer, Annotation annotation) {
-    return peerReviewWorkDao.setPeerReviewAnnotation(runId, periodId, node, stepWork, reviewer, annotation);
-  }
-
-  @Override
-  public PeerReviewWork getPeerReviewWorkByRunPeriodNodeReviewerUserInfo(Long runId, Long periodId, Node node, UserInfo reviewerUserInfo) {
-    return peerReviewWorkDao.getPeerReviewWorkByRunPeriodNodeReviewerUserInfo(runId, periodId, node, reviewerUserInfo);
-  }
-
-  @Override
-  public PeerReviewWork getPeerReviewWorkByRunPeriodNodeWorkerUserInfo(Long runId, Long periodId, Node node, UserInfo worker) {
-    return peerReviewWorkDao.getPeerReviewWorkByRunPeriodNodeWorkerUserInfo(runId, periodId, node, worker);
-  }
-
-  @Override
-  public PeerReviewWork getPeerReviewWorkByRunPeriodNodeWorkerUserInfoReviewerUserInfo(Long runId, Long periodId, Node node, UserInfo workerUserInfo, UserInfo reviewerUserInfo) {
-    return peerReviewWorkDao.getPeerReviewWorkByRunPeriodNodeWorkerUserInfoReviewerUserInfo(runId, periodId, node, workerUserInfo, reviewerUserInfo);
-  }
-
-  @Override
-  public void setAuthorAsReviewer(PeerReviewWork peerReviewWork) {
-    peerReviewWorkDao.setAuthorAsReviewer(peerReviewWork);
-  }
-
-  @Override
-  public boolean isAuthorSetAsReviewer(PeerReviewWork peerReviewWork) {
-    return peerReviewWorkDao.isAuthorSetAsReviewer(peerReviewWork);
-  }
-
-  @Override
-  public UserInfo getAuthorUserInfo() {
-    return peerReviewWorkDao.getAuthorUserInfo();
-  }
-
-  @Override
-  public PeerReviewWork getOrCreateAuthorReviewWork(Long runId, Long periodId, Node node, UserInfo reviewerUserInfo) {
-    return peerReviewWorkDao.getOrCreateAuthorReviewWork(runId, periodId, node, reviewerUserInfo);
-  }
-
-  @Override
-  public PeerReviewWork setUserAsAuthorReviewer(Long runId, Long periodId, Node node, UserInfo userInfo) {
-    return peerReviewWorkDao.setUserAsAuthorReviewer(runId, periodId, node, userInfo);
-  }
-
-  @Override
-  public void matchUserToAuthor(Long runId, Long periodId, Node node, UserInfo userInfo, PeerReviewWork userWork) {
-    peerReviewWorkDao.matchUserToAuthor(runId, periodId, node, userInfo, userWork);
-  }
-
-  @Override
-  public boolean isUserReviewingAuthor(Long runId, Long periodId, Node node, UserInfo userInfo) {
-    return peerReviewWorkDao.isUserReviewingAuthor(runId, periodId, node, userInfo);
-  }
-
-  @Override
-  public PeerReviewGate getPeerReviewGateById(Long id) {
-    return peerReviewGateDao.getPeerReviewGateById(id);
-  }
-
-  @Override
-  public void savePeerReviewGate(PeerReviewGate peerReviewGate) {
-    peerReviewGateDao.savePeerReviewGate(peerReviewGate);
-  }
-
-  @Override
-  public PeerReviewGate getPeerReviewGateByRunIdPeriodIdNodeId(Long runId, Long periodId, Node node) {
-    return peerReviewGateDao.getPeerReviewGateByRunIdPeriodIdNodeId(runId, periodId, node);
-  }
-
-  @Override
-  @Transactional
-  public PeerReviewGate getOrCreatePeerReviewGateByRunIdPeriodIdNodeId(Long runId, Long periodId, Node node) {
-    return peerReviewGateDao.getOrCreatePeerReviewGateByRunIdPeriodIdNodeId(runId, periodId, node);
-  }
-
-  @Override
-  @Transactional
-  public boolean calculatePeerReviewOpen(Long runId, Long periodId, Node node, int numWorkgroups, int openPercentageTrigger, int openNumberTrigger) {
-    return peerReviewGateDao.calculatePeerReviewOpen(runId, periodId, node, numWorkgroups, openPercentageTrigger, openNumberTrigger);
-  }
-
-  @Override
-  public boolean peerReviewGateOpenPercentageTriggerSatisfied(int numWorkgroupsSubmitted, int numWorkgroups, int openPercentageTrigger) {
-    return peerReviewGateDao.peerReviewGateOpenPercentageTriggerSatisfied(numWorkgroupsSubmitted, numWorkgroups, openPercentageTrigger);
-  }
-
-  @Override
-  public boolean peerReviewGateOpenNumberTriggerSatisfied(int numWorkgroupsSubmitted, int openNumberTrigger) {
-    return peerReviewGateDao.peerReviewGateOpenNumberTriggerSatisfied(numWorkgroupsSubmitted, openNumberTrigger);
   }
 
   @Override
@@ -546,7 +434,8 @@ public class VLEServiceImpl implements VLEService {
   }
 
   @Override
-  public List<IdeaBasket> getLatestIdeaBasketsForRunIdWorkgroupIds(long runId, List<Long> workgroupIds) {
+  public List<IdeaBasket> getLatestIdeaBasketsForRunIdWorkgroupIds(long runId,
+      List<Long> workgroupIds) {
     return ideaBasketDao.getLatestIdeaBasketsForRunIdWorkgroupIds(runId, workgroupIds);
   }
 
@@ -570,7 +459,6 @@ public class VLEServiceImpl implements VLEService {
     portfolioDao.savePortfolio(portfolio);
   }
 
-
   @Override
   public CRaterRequest getCRaterRequestById(Long id) {
     return cRaterRequestDao.getCRaterRequestById(id);
@@ -582,7 +470,8 @@ public class VLEServiceImpl implements VLEService {
   }
 
   @Override
-  public CRaterRequest getCRaterRequestByStepWorkIdNodeStateId(StepWork stepWork, Long nodeStateId) {
+  public CRaterRequest getCRaterRequestByStepWorkIdNodeStateId(StepWork stepWork,
+      Long nodeStateId) {
     return cRaterRequestDao.getCRaterRequestByStepWorkIdNodeStateId(stepWork, nodeStateId);
   }
 

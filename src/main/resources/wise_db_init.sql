@@ -275,33 +275,6 @@ create table notification (
     primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-create table peerreviewgate (
-    id bigint not null auto_increment,
-    open bit,
-    periodId bigint,
-    runId bigint,
-    node_id bigint,
-    constraint peerreviewgateNodeIdFK foreign key (node_id) references node (id),
-    primary key (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-create table peerreviewwork (
-    id bigint not null auto_increment,
-    periodId bigint,
-    runId bigint,
-    annotation_id bigint,
-    node_id bigint,
-    reviewerUserInfo_id bigint,
-    stepWork_id bigint,
-    userInfo_id bigint,
-    constraint peerreviewworkAnnotationIdFK foreign key (annotation_id) references annotation (id),
-    constraint peerreviewworkNodeIdFK foreign key (node_id) references node (id),
-    constraint peerreviewworkReviewerUserInfoIdFK foreign key (reviewerUserInfo_id) references userinfo (id),
-    constraint peerreviewworkStepWorkIdFK foreign key (stepWork_id) references stepwork (id),
-    constraint peerreviewworkUserInfoIdFK foreign key (userInfo_id) references userinfo (id),
-    primary key (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 create table portal (
     id tinyint not null auto_increment,
     address varchar(255),

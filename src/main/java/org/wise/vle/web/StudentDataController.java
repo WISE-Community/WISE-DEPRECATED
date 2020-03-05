@@ -55,7 +55,6 @@ import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.vle.VLEService;
 import org.wise.vle.domain.annotation.Annotation;
 import org.wise.vle.domain.node.Node;
-import org.wise.vle.domain.peerreview.PeerReviewWork;
 import org.wise.vle.domain.project.Project;
 import org.wise.vle.domain.user.UserInfo;
 import org.wise.vle.domain.work.StepWork;
@@ -63,6 +62,7 @@ import org.wise.vle.utils.VLEDataUtils;
 
 /**
  * Controller for handling WISE4 student data
+ * 
  * @author Geoffrey Kwan
  * @author Hiroki Terashima
  */
@@ -81,7 +81,7 @@ public class StudentDataController {
 
   private static boolean DEBUG = false;
 
-  // max size for all student work size, in bytes. Default:  500K = 512000 bytes
+  // max size for all student work size, in bytes. Default: 500K = 512000 bytes
   private int studentMaxWorkSize = 512000;
 
   @RequestMapping(method = RequestMethod.GET)
@@ -90,12 +90,12 @@ public class StudentDataController {
     User signedInUser = ControllerUtil.getSignedInUser();
 
     /*
-     * obtain the get parameters. there are two use cases at the moment.
-     * 1. only userId is provided (multiple userIds can be delimited by :)
-     *     e.g. 139:143:155
-     * 2. only runId and nodeId are provided
+     * obtain the get parameters. there are two use cases at the moment. 1. only userId is provided
+     * (multiple userIds can be delimited by :) e.g. 139:143:155 2. only runId and nodeId are
+     * provided
      */
-    String userIdStr = request.getParameter("userId");  // these are actually workgroupId's in the portal,
+    String userIdStr = request.getParameter("userId"); // these are actually workgroupId's in the
+                                                       // portal,
     // NOT the userId in the vle_database.
     // to convert to userId, see the mapping in userInfo table.
     String nodeId = request.getParameter("nodeId");
@@ -109,14 +109,14 @@ public class StudentDataController {
 
     if (userIdStr == null) {
       /*
-       * this request was most likely caused by a session timeout and the user logging
-       * back in which makes a request to studentData.html without any parameters.
-       * in this case we will just redirect the user back to the WISE home page.
+       * this request was most likely caused by a session timeout and the user logging back in which
+       * makes a request to studentData.html without any parameters. in this case we will just
+       * redirect the user back to the WISE home page.
        */
       return new ModelAndView("redirect:/");
     }
 
-    //the get request can be for multiple ids that are delimited by ':'
+    // the get request can be for multiple ids that are delimited by ':'
     String[] userIdArray = userIdStr.split(":");
 
     Long runId = null;
@@ -154,15 +154,17 @@ public class StudentDataController {
     boolean allowedAccess = false;
 
     /*
-     * teachers that are owners of the run can make a request
-     * students that are accessing their own work can make a request
-     * students that are accessing aggregate data for a step can make a request
+     * teachers that are owners of the run can make a request students that are accessing their own
+     * work can make a request students that are accessing aggregate data for a step can make a
+     * request
      */
     if (SecurityUtils.isAdmin(signedInUser)) {
       allowedAccess = true;
-    } else if (SecurityUtils.isTeacher(signedInUser) && SecurityUtils.isUserOwnerOfRun(signedInUser, runId)) {
+    } else if (SecurityUtils.isTeacher(signedInUser)
+        && SecurityUtils.isUserOwnerOfRun(signedInUser, runId)) {
       allowedAccess = true;
-    } else if (SecurityUtils.isStudent(signedInUser) && SecurityUtils.isUserInRun(signedInUser, runId)) {
+    } else if (SecurityUtils.isStudent(signedInUser)
+        && SecurityUtils.isUserInRun(signedInUser, runId)) {
       if (type == null) {
         Long workgroupId = null;
         try {
@@ -176,10 +178,9 @@ public class StudentDataController {
         }
       } else if (type.equals("brainstorm") || type.equals("aggregate")) {
         /*
-         * boolean value to keep track of whether all the workgroup ids
-         * that the user is trying to access work for is in the run.
-         * this will be set to false if we find a single workgroup id that
-         * is not in the run.
+         * boolean value to keep track of whether all the workgroup ids that the user is trying to
+         * access work for is in the run. this will be set to false if we find a single workgroup id
+         * that is not in the run.
          */
         boolean allWorkgroupIdsInRun = true;
 
@@ -270,7 +271,8 @@ public class StudentDataController {
 
     if ("aggregate".equals(type)) {
       if (nodeList.isEmpty()) {
-        response.sendError(HttpServletResponse.SC_BAD_REQUEST, "get data node list is empty for aggregrate type");
+        response.sendError(HttpServletResponse.SC_BAD_REQUEST,
+            "get data node list is empty for aggregrate type");
         return null;
       }
       String curriculumBaseDir = appProperties.getProperty("curriculum_base_dir");
@@ -283,13 +285,14 @@ public class StudentDataController {
         nodeWorkAccessibleForAggregate &= project.isNodeAggregatable(nodeToCheck);
       }
       if (!nodeWorkAccessibleForAggregate) {
-        response.sendError(HttpServletResponse.SC_BAD_REQUEST, "specified node is allowed for aggregation");
+        response.sendError(HttpServletResponse.SC_BAD_REQUEST,
+            "specified node is allowed for aggregation");
         return null;
       }
     }
 
     try {
-      //this case is when userId is passed in as a GET argument
+      // this case is when userId is passed in as a GET argument
       // this is currently only being used for brainstorm steps and aggregate steps
       if (nodeId != null && !nodeId.equals("")) {
         Node node = vleService.getNodeByNodeIdAndRunId(nodeId, runIdStr);
@@ -331,20 +334,21 @@ public class StudentDataController {
               if (nodeList.size() == 0) {
                 nodeList = vleService.getNodesByRunId(runIdStr);
               }
-              nodeVisitsJSON = getNodeVisitsForStudent(nodeList, nodeTypesList, userInfo, run, getAllWork, getRevisions);
+              nodeVisitsJSON = getNodeVisitsForStudent(nodeList, nodeTypesList, userInfo, run,
+                  getAllWork, getRevisions);
             } else {
               /*
-               * the user does not have any work so we will just set the username and
-               * userId and an empty visitedNodes array in the JSON for the user
+               * the user does not have any work so we will just set the username and userId and an
+               * empty visitedNodes array in the JSON for the user
                */
               nodeVisitsJSON.put("username", new Long(userId));
               nodeVisitsJSON.put("userId", new Long(userId));
-              String nodeVisitKeyName = "visitedNodes";  // used in WISE4
+              String nodeVisitKeyName = "visitedNodes"; // used in WISE4
               if (run != null) {
                 org.wise.portal.domain.project.Project project = run.getProject();
                 if (project != null) {
                   if (project.getWiseVersion().equals(5)) {
-                    nodeVisitKeyName = "nodeVisits";  // used in WISE5
+                    nodeVisitKeyName = "nodeVisits"; // used in WISE5
                   }
                 }
               }
@@ -367,14 +371,17 @@ public class StudentDataController {
 
   /**
    * Returns nodeVisits for the specified student user as a JSON object.
+   * 
    * @param nodeList
    * @param nodeTypesList
    * @param userInfo
-   * @param getAllWork whether to get all the work for the steps even if the step
-   * has empty states
+   * @param getAllWork
+   *                        whether to get all the work for the steps even if the step has empty
+   *                        states
    *
-   * if there is a nodeTypesList and getAllWork is true, we will get all the work
-   * (including work with empty states) only for the node types in the nodeTypesList
+   *                        if there is a nodeTypesList and getAllWork is true, we will get all the
+   *                        work (including work with empty states) only for the node types in the
+   *                        nodeTypesList
    *
    * @return node visits json object containing node visits for student
    * @throws JSONException
@@ -399,9 +406,8 @@ public class StudentDataController {
         String nodeType = stepWork.getNode().getNodeType();
 
         /*
-         * check that the node type is one that we want if a list of
-         * desired node types was provided. if there is no list of
-         * node types, we will accept all node types
+         * check that the node type is one that we want if a list of desired node types was
+         * provided. if there is no list of node types, we will accept all node types
          */
         if (nodeTypesList == null || (nodeTypesList != null && nodeTypesList.contains(nodeType))) {
           try {
@@ -409,26 +415,26 @@ public class StudentDataController {
             JSONArray nodeStates = (JSONArray) nodeVisitJSON.get("nodeStates");
 
             /*
-             * if there are no states for the visit, we will ignore it or if it
-             * is the last/latest visit we will add it so that the vle can
-             * load the last step the student was on.
+             * if there are no states for the visit, we will ignore it or if it is the last/latest
+             * visit we will add it so that the vle can load the last step the student was on.
              *
-             * if the node visit is for HtmlNode or OutsideUrlNode,
-             * we will add the node visit since those step types never have
-             * node states.
+             * if the node visit is for HtmlNode or OutsideUrlNode, we will add the node visit since
+             * those step types never have node states.
              */
-            if (getAllWork || (nodeStates != null && nodeStates.length() > 0 || x == (stepWorkList.size() - 1)) ||
-                ("HtmlNode".equals(nodeType) || "OutsideUrlNode".equals(nodeType) || "IdeaBasketNode".equals(nodeType))
+            if (getAllWork
+                || (nodeStates != null && nodeStates.length() > 0 || x == (stepWorkList.size() - 1))
+                || ("HtmlNode".equals(nodeType) || "OutsideUrlNode".equals(nodeType)
+                    || "IdeaBasketNode".equals(nodeType))
                 || "FlashNode".equals(nodeType)) {
               nodeVisitJSON.put("stepWorkId", stepWorkId);
               nodeVisitJSON.put("id", Long.valueOf(stepWorkId));
               nodeVisitJSON.put("visitPostTime", stepWork.getPostTime().getTime());
-              String nodeVisitKeyName = "visitedNodes";  // used in WISE4
+              String nodeVisitKeyName = "visitedNodes"; // used in WISE4
               if (run != null) {
                 org.wise.portal.domain.project.Project project = run.getProject();
                 if (project != null) {
                   if (project.getWiseVersion().equals(5)) {
-                    nodeVisitKeyName = "nodeVisits";  // used in WISE5
+                    nodeVisitKeyName = "nodeVisits"; // used in WISE5
                   }
                 }
               }
@@ -443,9 +449,8 @@ public class StudentDataController {
       Vector<String> stepsRetrieved = new Vector<String>();
 
       /*
-       * loop through the step work objects from latest to earliest
-       * because we are only looking for the latest revision for each
-       * step
+       * loop through the step work objects from latest to earliest because we are only looking for
+       * the latest revision for each step
        */
       for (int x = stepWorkList.size() - 1; x >= 0; x--) {
         StepWork stepWork = stepWorkList.get(x);
@@ -461,31 +466,30 @@ public class StudentDataController {
         if (!stepsRetrieved.contains(nodeId)) {
 
           /*
-           * check that the node type is one that we want if a list of
-           * desired node types was provided. if there is no list of
-           * node types, we will accept all node types
+           * check that the node type is one that we want if a list of desired node types was
+           * provided. if there is no list of node types, we will accept all node types
            */
-          if (nodeTypesList == null || (nodeTypesList != null && nodeTypesList.contains(nodeType))) {
+          if (nodeTypesList == null
+              || (nodeTypesList != null && nodeTypesList.contains(nodeType))) {
             JSONObject nodeVisitJSON = new JSONObject(data);
             JSONArray nodeStates = (JSONArray) nodeVisitJSON.get("nodeStates");
 
             /*
-             * check if there were any node states and only add the nodevisit if
-             * there were node states. if the node visit is for HtmlNode or OutsideUrlNode,
-             * we will add the node visit since those step types never have
-             * node states.
+             * check if there were any node states and only add the nodevisit if there were node
+             * states. if the node visit is for HtmlNode or OutsideUrlNode, we will add the node
+             * visit since those step types never have node states.
              */
-            if (nodeStates != null && nodeStates.length() > 0 ||
-                ("HtmlNode".equals(nodeType) || "OutsideUrlNode".equals(nodeType) || "IdeaBasketNode".equals(nodeType))) {
+            if (nodeStates != null && nodeStates.length() > 0 || ("HtmlNode".equals(nodeType)
+                || "OutsideUrlNode".equals(nodeType) || "IdeaBasketNode".equals(nodeType))) {
               nodeVisitJSON.put("stepWorkId", stepWorkId);
               nodeVisitJSON.put("id", Long.valueOf(stepWorkId));
               nodeVisitJSON.put("visitPostTime", stepWork.getPostTime().getTime());
-              String nodeVisitKeyName = "visitedNodes";  // used in WISE4
+              String nodeVisitKeyName = "visitedNodes"; // used in WISE4
               if (run != null) {
                 org.wise.portal.domain.project.Project project = run.getProject();
                 if (project != null) {
                   if (project.getWiseVersion().equals(5)) {
-                    nodeVisitKeyName = "nodeVisits";  // used in WISE5
+                    nodeVisitKeyName = "nodeVisits"; // used in WISE5
                   }
                 }
               }
@@ -502,7 +506,8 @@ public class StudentDataController {
   @RequestMapping(method = RequestMethod.POST)
   public ModelAndView doPost(HttpServletRequest request, HttpServletResponse response)
       throws IOException {
-    studentMaxWorkSize = Integer.valueOf(appProperties.getProperty("student_max_work_size", "512000"));
+    studentMaxWorkSize = Integer
+        .valueOf(appProperties.getProperty("student_max_work_size", "512000"));
     User signedInUser = ControllerUtil.getSignedInUser();
     String runId = request.getParameter("runId");
     String userId = request.getParameter("userId");
@@ -539,11 +544,11 @@ public class StudentDataController {
     boolean allowedAccess = false;
 
     /*
-     * teachers can not make a request
-     * students can make a request if they are in the run and in the workgroup
+     * teachers can not make a request students can make a request if they are in the run and in the
+     * workgroup
      */
-    if (SecurityUtils.isStudent(signedInUser) && SecurityUtils.isUserInRun(signedInUser, runIdLong) &&
-        SecurityUtils.isUserInWorkgroup(signedInUser, workgroupId)) {
+    if (SecurityUtils.isStudent(signedInUser) && SecurityUtils.isUserInRun(signedInUser, runIdLong)
+        && SecurityUtils.isUserInWorkgroup(signedInUser, workgroupId)) {
       allowedAccess = true;
     }
 
@@ -573,23 +578,28 @@ public class StudentDataController {
       for (int x = 0; x < nodeStates.length(); x++) {
         Object nodeStateObject = nodeStates.get(x);
         if (!(nodeStateObject instanceof JSONObject)) {
-          response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Element in nodeStates array is not an object");
+          response.sendError(HttpServletResponse.SC_BAD_REQUEST,
+              "Element in nodeStates array is not an object");
           return null;
         }
       }
 
-      if (request.getContentLength() > studentMaxWorkSize) {  // posted data must not exceed STUDENT_MAX_WORK_SIZE
-        System.err.println("Post data too large (>"+studentMaxWorkSize+" bytes). NodeType: "+nodeType+" RunId: "+ runId+ " userId:"+ userId + " nodeId: "+nodeId + " contentLength: "+request.getContentLength());
-        response.sendError(HttpServletResponse.SC_BAD_REQUEST, "post data: too large (>"+studentMaxWorkSize+" bytes)");
+      if (request.getContentLength() > studentMaxWorkSize) { // posted data must not exceed
+                                                             // STUDENT_MAX_WORK_SIZE
+        System.err.println("Post data too large (>" + studentMaxWorkSize + " bytes). NodeType: "
+            + nodeType + " RunId: " + runId + " userId:" + userId + " nodeId: " + nodeId
+            + " contentLength: " + request.getContentLength());
+        response.sendError(HttpServletResponse.SC_BAD_REQUEST,
+            "post data: too large (>" + studentMaxWorkSize + " bytes)");
         return null;
       }
 
       StepWork stepWork = null;
 
-      stepWork = vleService.getStepWorkByUserIdAndData(userInfo,nodeVisitJSON.toString());
+      stepWork = vleService.getStepWorkByUserIdAndData(userInfo, nodeVisitJSON.toString());
       if (stepWork != null) {
         // this node visit has already been saved. return id and postTime and exit.
-        //create a JSONObject to contain the step work id and post time
+        // create a JSONObject to contain the step work id and post time
         JSONObject jsonResponse = new JSONObject();
         jsonResponse.put("id", stepWork.getId());
         if (endTime != null) {
@@ -624,12 +634,11 @@ public class StudentDataController {
         jsonResponse.put("id", newStepWorkId);
 
         /*
-         * if the endtime is null it means this post was an intermediate
-         * post such as the ones brainstorm performs so we do not want
-         * to send back a post time in that case. when we send back a
-         * post time, it means the node visit is completed but if this
-         * is just an intermediate post we do not want to complete
-         * the visit because the user has not exited the step.
+         * if the endtime is null it means this post was an intermediate post such as the ones
+         * brainstorm performs so we do not want to send back a post time in that case. when we send
+         * back a post time, it means the node visit is completed but if this is just an
+         * intermediate post we do not want to complete the visit because the user has not exited
+         * the step.
          */
         if (endTime != null) {
           jsonResponse.put("visitPostTime", newPostTime);
@@ -643,7 +652,7 @@ public class StudentDataController {
             JSONArray nodeStateArray = nodeVisitJSON.getJSONArray("nodeStates");
             if (nodeStateArray != null) {
               if (nodeStateArray.length() > 0) {
-                JSONObject nodeStateObj = nodeStateArray.getJSONObject(nodeStateArray.length()-1);
+                JSONObject nodeStateObj = nodeStateArray.getJSONObject(nodeStateArray.length() - 1);
 
                 if (nodeStateObj.has("cRaterItemId")) {
                   cRaterItemId = nodeStateObj.getString("cRaterItemId");
@@ -661,29 +670,6 @@ public class StudentDataController {
           e.printStackTrace();
         }
 
-        try {
-          if (VLEDataUtils.isSubmitForPeerReview(nodeVisitJSON)) {
-            PeerReviewWork peerReviewWork = null;
-            peerReviewWork = vleService.getPeerReviewWorkByRunPeriodNodeWorkerUserInfo(runIdLong, periodIdLong, node, userInfo);
-            if (peerReviewWork == null) {
-              /*
-               * the user has not submitted peer review work for this step yet
-               * so we will create it
-               */
-              peerReviewWork = new PeerReviewWork();
-              peerReviewWork.setNode(node);
-              peerReviewWork.setRunId(new Long(runId));
-              peerReviewWork.setUserInfo(userInfo);
-              peerReviewWork.setStepWork(stepWork);
-              peerReviewWork.setPeriodId(periodIdLong);
-              vleService.savePeerReviewWork(peerReviewWork);
-            }
-            vleService.getOrCreatePeerReviewGateByRunIdPeriodIdNodeId(runIdLong, periodIdLong, node);
-          }
-        } catch (JSONException e) {
-          e.printStackTrace();
-        }
-
         if (annotationJSONString != null && !annotationJSONString.equals("null")) {
           try {
             JSONObject annotationJSONObject = new JSONObject(annotationJSONString);
@@ -693,7 +679,8 @@ public class StudentDataController {
             String type = annotationJSONObject.optString("type");
             annotationJSONObject.put("stepWorkId", stepWork.getId());
             annotationJSONObject.put("postTime", postTime.getTime());
-            saveAnnotationObject(annotationRunId, toWorkgroup, fromWorkgroup, type, annotationJSONObject, stepWork, postTime);
+            saveAnnotationObject(annotationRunId, toWorkgroup, fromWorkgroup, type,
+                annotationJSONObject, stepWork, postTime);
             jsonResponse.put("annotationPostTime", postTime.getTime());
           } catch (JSONException e) {
             e.printStackTrace();
@@ -711,7 +698,8 @@ public class StudentDataController {
               String type = annotationJSONObject.optString("type");
               annotationJSONObject.put("stepWorkId", stepWork.getId());
               annotationJSONObject.put("postTime", postTime.getTime());
-              saveAnnotationObject(annotationRunId, toWorkgroup, fromWorkgroup, type, annotationJSONObject, stepWork, postTime);
+              saveAnnotationObject(annotationRunId, toWorkgroup, fromWorkgroup, type,
+                  annotationJSONObject, stepWork, postTime);
               jsonResponse.put("annotationPostTime", postTime.getTime());
             }
           } catch (JSONException e) {
@@ -724,7 +712,8 @@ public class StudentDataController {
           nodeVisitJSON.put("id", newStepWorkId);
         }
       } else {
-        response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Error saving: " + nodeVisitJSON.toString());
+        response.sendError(HttpServletResponse.SC_BAD_REQUEST,
+            "Error saving: " + nodeVisitJSON.toString());
       }
     } catch (JSONException e) {
       response.sendError(HttpServletResponse.SC_BAD_REQUEST, "malformed data");
@@ -736,7 +725,9 @@ public class StudentDataController {
 
   /**
    * Check if the node visit should be sent to websockets
-   * @param nodeVisit the node visit JSON object
+   * 
+   * @param nodeVisit
+   *                    the node visit JSON object
    * @return whether we should send the node visit to websockets
    */
   private boolean isSendToWebSockets(JSONObject nodeVisit) {
@@ -744,7 +735,8 @@ public class StudentDataController {
     if (nodeVisit != null) {
       String messageType = nodeVisit.optString("messageType");
       String messageParticipants = nodeVisit.optString("messageParticipants");
-      if (messageType != null && !messageType.equals("") && messageParticipants != null && !messageParticipants.equals("")) {
+      if (messageType != null && !messageType.equals("") && messageParticipants != null
+          && !messageParticipants.equals("")) {
         result = true;
       }
     }
@@ -753,6 +745,7 @@ public class StudentDataController {
 
   /**
    * Synchronized node creation/retrieval
+   * 
    * @param runId
    * @param nodeId
    * @param nodeType
@@ -771,16 +764,23 @@ public class StudentDataController {
   }
 
   /**
-   * Save the annotation. If the annotation does not exist we will create a new annotation.
-   * If the annotation already exists we will overwrite the data field in the existing
-   * annotation.
-   * @param runId the run id
-   * @param toWorkgroup the to workgroup id
-   * @param fromWorkgroup the from workgroup id
-   * @param type the annotation type
-   * @param annotationValue the JSONObject we will save into the data field
-   * @param stepWork the step work object this annotation is related to
-   * @param postTime the time this annotation was posted
+   * Save the annotation. If the annotation does not exist we will create a new annotation. If the
+   * annotation already exists we will overwrite the data field in the existing annotation.
+   * 
+   * @param runId
+   *                          the run id
+   * @param toWorkgroup
+   *                          the to workgroup id
+   * @param fromWorkgroup
+   *                          the from workgroup id
+   * @param type
+   *                          the annotation type
+   * @param annotationValue
+   *                          the JSONObject we will save into the data field
+   * @param stepWork
+   *                          the step work object this annotation is related to
+   * @param postTime
+   *                          the time this annotation was posted
    * @return the annotation
    */
   private Annotation saveAnnotationObject(Long runId, Long toWorkgroup, Long fromWorkgroup,
@@ -791,7 +791,8 @@ public class StudentDataController {
     if (fromWorkgroup != null && fromWorkgroup != -1) {
       fromUserInfo = vleService.getUserInfoOrCreateByWorkgroupId(toWorkgroup);
     }
-    annotation = vleService.getAnnotationByFromUserInfoToUserInfoStepWorkType(fromUserInfo, toUserInfo, stepWork, type);
+    annotation = vleService.getAnnotationByFromUserInfoToUserInfoStepWorkType(fromUserInfo,
+        toUserInfo, stepWork, type);
     if (annotation == null) {
       annotation = new Annotation(type);
       annotation.setRunId(runId);
@@ -811,7 +812,9 @@ public class StudentDataController {
 
   /*
    * Get all the StepWorks for the workgroup ids
+   * 
    * @param userIdArray a list of workgroup ids
+   * 
    * @return a list of StepWork objects
    */
   private List<StepWork> getAllStepWorks(String[] userIdArray) {

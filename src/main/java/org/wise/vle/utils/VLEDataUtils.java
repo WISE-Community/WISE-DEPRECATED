@@ -29,12 +29,14 @@ import org.json.JSONObject;
 
 /**
  * Utitlity class for working with VLEData
+ * 
  * @author Hiroki Terashima
  */
 public class VLEDataUtils {
 
   /**
    * Returns the specified nodeVisit's node type
+   * 
    * @param nodeVisitJSON
    * @return
    * @throws JSONException
@@ -45,6 +47,7 @@ public class VLEDataUtils {
 
   /**
    * Returns the id of the nodeVisit given the nodeVisit JSON object
+   * 
    * @param nodeVisitJSON
    * @return
    * @throws JSONException
@@ -55,6 +58,7 @@ public class VLEDataUtils {
 
   /**
    * Returns the node visit's start time given a JSON object
+   * 
    * @param nodeVisitJSON
    * @return
    * @throws JSONException
@@ -65,6 +69,7 @@ public class VLEDataUtils {
 
   /**
    * Returns the node visit's end time given the nodeVisit JSON object
+   * 
    * @param nodeVisitJSON
    * @return
    * @throws JSONException
@@ -75,9 +80,11 @@ public class VLEDataUtils {
 
   /**
    * Obtain the value in the nodeStates field
-   * @param nodeVisit the node visit JSONObject
-   * @return the nodeStates JSONArray or null if the field does not exist or the
-   * field is not a JSONArray
+   * 
+   * @param nodeVisit
+   *                    the node visit JSONObject
+   * @return the nodeStates JSONArray or null if the field does not exist or the field is not a
+   *         JSONArray
    */
   public static JSONArray getNodeStates(JSONObject nodeVisit) {
     JSONArray nodeStates = null;
@@ -85,25 +92,5 @@ public class VLEDataUtils {
       nodeStates = nodeVisit.optJSONArray("nodeStates");
     }
     return nodeStates;
-  }
-
-  /**
-   * Check if this node visit is a peer review submit
-   * @param nodeVisitJSON
-   * @return
-   * @throws JSONException
-   */
-  public static boolean isSubmitForPeerReview(JSONObject nodeVisitJSON) throws JSONException {
-    JSONArray jsonArray = nodeVisitJSON.getJSONArray("nodeStates");
-    for (int x = 0; x < jsonArray.length(); x++) {
-      Object jsonArrayElement = jsonArray.get(x);
-      if (jsonArrayElement instanceof JSONObject) {
-        JSONObject nodeState = (JSONObject) jsonArrayElement;
-        if (nodeState.optBoolean("submitForPeerReview")) {
-          return true;
-        }
-      }
-    }
-    return false;
   }
 }

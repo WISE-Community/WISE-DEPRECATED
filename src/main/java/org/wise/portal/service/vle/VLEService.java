@@ -29,8 +29,6 @@ import org.wise.vle.domain.annotation.Annotation;
 import org.wise.vle.domain.cRater.CRaterRequest;
 import org.wise.vle.domain.ideabasket.IdeaBasket;
 import org.wise.vle.domain.node.Node;
-import org.wise.vle.domain.peerreview.PeerReviewGate;
-import org.wise.vle.domain.peerreview.PeerReviewWork;
 import org.wise.vle.domain.portfolio.Portfolio;
 import org.wise.vle.domain.statistics.VLEStatistics;
 import org.wise.vle.domain.status.RunStatus;
@@ -40,11 +38,12 @@ import org.wise.vle.domain.work.StepWork;
 
 /**
  * Services for the WISE Virtual Learning Environment (WISE VLE v4)
+ * 
  * @author Hiroki Terashima
  */
 public interface VLEService {
 
-  //UserInfo functions
+  // UserInfo functions
 
   UserInfo getUserInfoById(Long id);
 
@@ -60,15 +59,17 @@ public interface VLEService {
 
   List<UserInfo> getUserInfosThatHaveWorkedToday(List<UserInfo> userInfos);
 
-  //Annotation functions
+  // Annotation functions
 
   Annotation getAnnotationById(Long id);
 
   void saveAnnotation(Annotation annotation);
 
-  List<Annotation> getAnnotationByFromWorkgroupAndWorkByToWorkgroup(UserInfo fromWorkgroup, List<StepWork> workByToWorkgroup, Class<?> clazz);
+  List<Annotation> getAnnotationByFromWorkgroupAndWorkByToWorkgroup(UserInfo fromWorkgroup,
+      List<StepWork> workByToWorkgroup, Class<?> clazz);
 
-  List<Annotation> getAnnotationByFromWorkgroupsAndWorkByToWorkgroup(List<UserInfo> fromWorkgroups, List<StepWork> workByToWorkgroup, Class<?> clazz);
+  List<Annotation> getAnnotationByFromWorkgroupsAndWorkByToWorkgroup(List<UserInfo> fromWorkgroups,
+      List<StepWork> workByToWorkgroup, Class<?> clazz);
 
   List<? extends Annotation> getAnnotationByRunId(Long runId, Class<?> clazz);
 
@@ -76,95 +77,52 @@ public interface VLEService {
 
   Annotation getAnnotationByUserInfoAndStepWork(UserInfo userInfo, StepWork stepWork, String type);
 
-  Annotation getAnnotationByFromUserInfoToUserInfoStepWorkType(UserInfo fromUserInfo, UserInfo toUserInfo, StepWork stepWork, String type);
+  Annotation getAnnotationByFromUserInfoToUserInfoStepWorkType(UserInfo fromUserInfo,
+      UserInfo toUserInfo, StepWork stepWork, String type);
 
-  Annotation getAnnotationByFromUserInfoToUserInfoNodeIdType(UserInfo fromUserInfo, UserInfo toUserInfo, String nodeId, String type);
+  Annotation getAnnotationByFromUserInfoToUserInfoNodeIdType(UserInfo fromUserInfo,
+      UserInfo toUserInfo, String nodeId, String type);
 
-  Annotation getAnnotationByFromUserInfoToUserInfoType(UserInfo fromUserInfo, UserInfo toUserInfo, String type);
+  Annotation getAnnotationByFromUserInfoToUserInfoType(UserInfo fromUserInfo, UserInfo toUserInfo,
+      String type);
 
-  List<Annotation> getAnnotationByFromWorkgroupsAndStepWork(List<UserInfo> fromWorkgroups, StepWork stepWork, String type);
+  List<Annotation> getAnnotationByFromWorkgroupsAndStepWork(List<UserInfo> fromWorkgroups,
+      StepWork stepWork, String type);
 
   List<Annotation> getAnnotationByStepWork(StepWork stepWork, Class<?> clazz);
 
-  List<Annotation> getAnnotationByFromUserToUserType(List<UserInfo> fromUsers, UserInfo toUser, String annotationType);
+  List<Annotation> getAnnotationByFromUserToUserType(List<UserInfo> fromUsers, UserInfo toUser,
+      String annotationType);
 
   List<Annotation> getAnnotationByToUserType(UserInfo toUser, String annotationType);
 
   Annotation getAnnotationByStepWorkAndAnnotationType(StepWork stepWork, String annotationType);
 
-  Annotation getLatestAnnotationByStepWork(List<StepWork> stepWorks, List<String> workgroupIds, String type);
+  Annotation getLatestAnnotationByStepWork(List<StepWork> stepWorks, List<String> workgroupIds,
+      String type);
 
   Annotation getLatestAnnotationByStepWork(List<StepWork> stepWorks, String type);
 
   Annotation getLatestCRaterScoreByStepWork(List<StepWork> stepWorks);
 
-  Annotation getLatestAnnotationScoreByStepWork(List<StepWork> stepWorks, List<String> workgroupIds);
+  Annotation getLatestAnnotationScoreByStepWork(List<StepWork> stepWorks,
+      List<String> workgroupIds);
 
-  Annotation getLatestAnnotationCommentByStepWork(List<StepWork> stepWorks, List<String> workgroupIds);
+  Annotation getLatestAnnotationCommentByStepWork(List<StepWork> stepWorks,
+      List<String> workgroupIds);
 
   Annotation getCRaterAnnotationByStepWork(StepWork stepWork);
 
   List<Annotation> getAnnotationByStepWorkList(List<StepWork> stepWorkList);
 
-  List<Annotation> getAnnotationByFromWorkgroupsToWorkgroupWithoutWork(List<UserInfo> fromUsers, UserInfo toUser, List<String> annotationTypes);
+  List<Annotation> getAnnotationByFromWorkgroupsToWorkgroupWithoutWork(List<UserInfo> fromUsers,
+      UserInfo toUser, List<String> annotationTypes);
 
   List<Annotation> getAnnotationsByRunIdAndNodeId(Long runId, String nodeId);
 
   List<Annotation> getAnnotationList();
 
-  //PeerRevieWork functions
-
-  PeerReviewWork getPeerReviewWorkById(Long id);
-
-  void savePeerReviewWork(PeerReviewWork peerReviewWork);
-
-  List<PeerReviewWork> getPeerReviewWorkByRun(Long runId);
-
-  List<PeerReviewWork> getPeerReviewWorkByRunPeriodNode(Long runId, Long periodId, Node node);
-
-  List<PeerReviewWork> getUnassignedPeerReviewWorkList(Long runId, Long periodId, Node node);
-
-  PeerReviewWork getPeerReviewWorkByRunPeriodNodeStepWorkReviewer(Long runId, Long periodId, Node node, StepWork stepWork, UserInfo reviewer);
-
-  PeerReviewWork setPeerReviewAnnotation(Long runId, Long periodId, Node node, StepWork stepWork, UserInfo reviewer, Annotation annotation);
-
-  PeerReviewWork getPeerReviewWorkByRunPeriodNodeReviewerUserInfo(Long runId, Long periodId, Node node, UserInfo reviewerUserInfo);
-
-  PeerReviewWork getPeerReviewWorkByRunPeriodNodeWorkerUserInfo(Long runId, Long periodId, Node node, UserInfo worker);
-
-  PeerReviewWork getPeerReviewWorkByRunPeriodNodeWorkerUserInfoReviewerUserInfo(Long runId, Long periodId, Node node, UserInfo workerUserInfo, UserInfo reviewerUserInfo);
-
-  void setAuthorAsReviewer(PeerReviewWork peerReviewWork);
-
-  boolean isAuthorSetAsReviewer(PeerReviewWork peerReviewWork);
-
-  UserInfo getAuthorUserInfo();
-
-  PeerReviewWork getOrCreateAuthorReviewWork(Long runId, Long periodId, Node node, UserInfo reviewerUserInfo);
-
-  PeerReviewWork setUserAsAuthorReviewer(Long runId, Long periodId, Node node, UserInfo userInfo);
-
-  void matchUserToAuthor(Long runId, Long periodId, Node node, UserInfo userInfo, PeerReviewWork userWork);
-
-  boolean isUserReviewingAuthor(Long runId, Long periodId, Node node, UserInfo userInfo);
-
-  //PeerReviewGate functions
-
-  PeerReviewGate getPeerReviewGateById(Long id);
-
-  void savePeerReviewGate(PeerReviewGate peerReviewGate);
-
-  PeerReviewGate getPeerReviewGateByRunIdPeriodIdNodeId(Long runId, Long periodId, Node node);
-
-  PeerReviewGate getOrCreatePeerReviewGateByRunIdPeriodIdNodeId(Long runId, Long periodId, Node node);
-
-  boolean calculatePeerReviewOpen(Long runId, Long periodId, Node node, int numWorkgroups, int openPercentageTrigger, int openNumberTrigger);
-
-  boolean peerReviewGateOpenPercentageTriggerSatisfied(int numWorkgroupsSubmitted, int numWorkgroups, int openPercentageTrigger);
-
-  boolean peerReviewGateOpenNumberTriggerSatisfied(int numWorkgroupsSubmitted, int openNumberTrigger);
-
-  //Node functions
+  // Node functions
 
   Node getNodeById(Long id);
 
@@ -178,7 +136,7 @@ public interface VLEService {
 
   List<Node> getNodesByRunId(String runId);
 
-  //StepWork functions
+  // StepWork functions
 
   StepWork getStepWorkById(Long id);
 
@@ -188,9 +146,9 @@ public interface VLEService {
 
   StepWork getLatestStepWorkByUserInfo(UserInfo userInfo);
 
-  StepWork getLatestStepWorkByUserInfoAndNode(UserInfo userInfo,Node node);
+  StepWork getLatestStepWorkByUserInfoAndNode(UserInfo userInfo, Node node);
 
-  List<StepWork> getStepWorksByUserInfoAndNode(UserInfo userInfo,Node node);
+  List<StepWork> getStepWorksByUserInfoAndNode(UserInfo userInfo, Node node);
 
   List<StepWork> getStepWorksByUserInfoAndNodeList(UserInfo userInfo, List<Node> nodeList);
 
@@ -204,9 +162,9 @@ public interface VLEService {
 
   StepWork getStepWorkByStepWorkId(Long id);
 
-  StepWork getStepWorkByUserIdAndData(UserInfo userInfo,String data);
+  StepWork getStepWorkByUserIdAndData(UserInfo userInfo, String data);
 
-  //VLEStatistics functions
+  // VLEStatistics functions
 
   VLEStatistics getVLEStatisticsById(Long id);
 
@@ -216,7 +174,7 @@ public interface VLEService {
 
   VLEStatistics getLatestVLEStatistics();
 
-  //StudentStatus functions
+  // StudentStatus functions
 
   void saveStudentStatus(StudentStatus studentStatus);
 
@@ -226,12 +184,12 @@ public interface VLEService {
 
   List<StudentStatus> getStudentStatusesByRunId(Long runId);
 
-  //RunStatus functions
+  // RunStatus functions
   void saveRunStatus(RunStatus runStatus);
 
   RunStatus getRunStatusByRunId(Long runId);
 
-  //IdeaBasket functions
+  // IdeaBasket functions
 
   IdeaBasket getIdeaBasketById(Long id);
 
@@ -247,13 +205,12 @@ public interface VLEService {
 
   IdeaBasket getPublicIdeaBasketForRunIdPeriodId(long runId, long periodId);
 
-  //Portfolio functions
+  // Portfolio functions
   Portfolio getPortfolioByRunIdWorkgroupId(long runId, long workgroupId);
 
   void savePortfolio(Portfolio portfolio);
 
-
-  //CRaterRequest functions
+  // CRaterRequest functions
   CRaterRequest getCRaterRequestById(Long id);
 
   void saveCRaterRequest(CRaterRequest cRaterRequest);

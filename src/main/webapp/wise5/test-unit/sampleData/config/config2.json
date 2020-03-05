@@ -4,27 +4,33 @@
       "periodId": 2,
       "workgroupId": 2,
       "myClassInfo": {
-        "classmateUserInfos": [{
-          "periodId": 1,
-          "workgroupId": 3,
-          "userIds": [6],
-          "periodName": "1",
-          "username": "t t (tt0101)"
-        }, {
-          "periodId": 1,
-          "workgroupId": 8,
-          "userIds": [8],
-          "periodName": "1",
-          "username": "k t (kt0101)"
-        }],
+        "classmateUserInfos": [
+          {
+            "periodId": 1,
+            "workgroupId": 3,
+            "userIds": [6],
+            "periodName": "1",
+            "username": "t t (tt0101)"
+          },
+          {
+            "periodId": 1,
+            "workgroupId": 8,
+            "userIds": [8],
+            "periodName": "1",
+            "username": "k t (kt0101)"
+          }
+        ],
         "sharedTeacherUserInfos": [],
-        "periods": [{
-          "periodId": 1,
-          "periodName": "one"
-        }, {
-          "periodId": 2,
-          "periodName": "two"
-        }]
+        "periods": [
+          {
+            "periodId": 1,
+            "periodName": "one"
+          },
+          {
+            "periodId": 2,
+            "periodName": "two"
+          }
+        ]
       },
       "userIds": [4],
       "periodName": "1",
@@ -48,7 +54,6 @@
   "runName": "Self-Propelled Vehicles Challenge!",
   "flagsURL": "/wise/annotation?type=flag&runId=1",
   "studentAssetManagerURL": "/wise/assetManager?type=studentAssetManager&runId=1",
-  "peerReviewURL": "/wise/peerReview.html?type=peerreview",
   "theme": "WISE",
   "sessionLogOutURL": "/wise/logout",
   "userInfoURL": "/wise/userInfo?runId=1",
