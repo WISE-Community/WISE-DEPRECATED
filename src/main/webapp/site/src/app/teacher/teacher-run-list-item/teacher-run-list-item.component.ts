@@ -40,17 +40,20 @@ export class TeacherRunListItemComponent implements OnInit {
 
   ngOnInit() {
     this.run.project.thumbStyle = this.getThumbStyle();
-    this.editLink = `${this.configService.getContextPath()}/author/authorproject.html?projectId=${this.run.project.id}`;
-    if (this.run != null) {
-      this.gradeAndManageLink = `${this.configService.getContextPath()}/teacher/run/manage/${this.run.id}#!/run/${this.run.id}/project/`;
-      this.manageStudentsLink = `${this.configService.getContextPath()}/teacher/run/manage/${this.run.id}#!/run/${this.run.id}/manageStudents`;
-      if (this.run.isHighlighted) {
-        this.animateDuration = '2s';
-        this.animateDelay = '1s';
-        setTimeout(() => {
-          this.run.isHighlighted = false;
-        }, 7000)
-      }
+    const contextPath = this.configService.getContextPath();
+    this.editLink = `${contextPath}/author/authorproject.html?projectId=${this.run.project.id}`;
+    if (this.run.project.wiseVersion === 4) {
+      this.gradeAndManageLink = `${this.configService.getWISE4Hostname()}/teacher/run/manage/${this.run.id}#!/run/${this.run.id}/project/`;
+    } else {
+      this.gradeAndManageLink = `${contextPath}/teacher/run/manage/${this.run.id}#!/run/${this.run.id}/project/`; 
+    }
+    this.manageStudentsLink = `${contextPath}/teacher/run/manage/${this.run.id}#!/run/${this.run.id}/manageStudents`;
+    if (this.run.isHighlighted) {
+      this.animateDuration = '2s';
+      this.animateDelay = '1s';
+      setTimeout(() => {
+        this.run.isHighlighted = false;
+      }, 7000)
     }
   }
 
