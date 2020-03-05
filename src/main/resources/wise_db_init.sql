@@ -107,14 +107,6 @@ create table annotations (
     primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-create table announcements (
-    id mediumint not null auto_increment,
-    announcement mediumtext not null,
-    timestamp datetime not null,
-    title varchar(255) not null,
-    primary key (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 create table craterrequest (
     id bigint not null auto_increment,
     cRaterItemId varchar(255) not null,
@@ -357,15 +349,6 @@ create table runs (
     constraint runsProjectFK foreign key (project_fk) references projects (id),
     constraint runsRunCodeUnique unique (run_code),
     primary key (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-create table runs_related_to_announcements (
-    runs_fk bigint not null,
-    announcements_fk mediumint not null,
-    constraint runs_related_to_announcementsAnnouncementsFK foreign key (announcements_fk) references announcements (id),
-    constraint runs_related_to_announcementsRunsFK foreign key (runs_fk) references runs (id),
-    constraint runs_related_to_announcementsAnnouncementsUnique unique (announcements_fk),
-    primary key (runs_fk, announcements_fk)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 create table runs_related_to_groups (

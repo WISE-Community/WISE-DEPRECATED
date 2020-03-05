@@ -25,7 +25,6 @@ package org.wise.portal.domain.run;
 
 import org.wise.portal.domain.PeriodNotFoundException;
 import org.wise.portal.domain.Persistable;
-import org.wise.portal.domain.announcement.Announcement;
 import org.wise.portal.domain.attendance.StudentAttendance;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.project.Project;
@@ -194,19 +193,6 @@ public interface Run extends Persistable {
    *               of the run to save
    */
   void setName(String name);
-
-  /**
-   * @return <code>Set<Announcement></code> all announcements for this run.
-   */
-  Set<Announcement> getAnnouncements();
-
-  /**
-   * Sets all announcements for this run
-   *
-   * @param announcements
-   *                        to set
-   */
-  void setAnnouncements(Set<Announcement> announcements);
 
   /**
    * @return the isPaused

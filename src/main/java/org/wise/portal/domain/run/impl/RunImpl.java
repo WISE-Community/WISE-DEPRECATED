@@ -29,8 +29,6 @@ import org.hibernate.annotations.SortNatural;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wise.portal.domain.PeriodNotFoundException;
-import org.wise.portal.domain.announcement.Announcement;
-import org.wise.portal.domain.announcement.impl.AnnouncementImpl;
 import org.wise.portal.domain.attendance.StudentAttendance;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.group.Group;
@@ -89,12 +87,6 @@ public class RunImpl implements Run {
 
   @Transient
   public static final String SHARED_OWNERS_JOIN_COLUMN_NAME = "shared_owners_fk";
-
-  @Transient
-  public static final String ANNOUNCEMENTS_JOIN_TABLE_NAME = "runs_related_to_announcements";
-
-  @Transient
-  public static final String ANNOUNCEMENTS_JOIN_COLUMN_NAME = "announcements_fk";
 
   @Transient
   public static final long serialVersionUID = 1L;
@@ -193,14 +185,6 @@ public class RunImpl implements Run {
   @Getter
   @Setter
   private Set<User> sharedowners = new TreeSet<User>();
-
-  @OneToMany(targetEntity = AnnouncementImpl.class, fetch = FetchType.LAZY)
-  @JoinTable(name = ANNOUNCEMENTS_JOIN_TABLE_NAME, joinColumns = {
-      @JoinColumn(name = RUNS_JOIN_COLUMN_NAME, nullable = false) }, inverseJoinColumns = @JoinColumn(name = ANNOUNCEMENTS_JOIN_COLUMN_NAME, nullable = false))
-  @SortNatural
-  @Getter
-  @Setter
-  private Set<Announcement> announcements = new TreeSet<Announcement>();
 
   @Column(name = COLUMN_NAME_RUNNAME)
   @Getter

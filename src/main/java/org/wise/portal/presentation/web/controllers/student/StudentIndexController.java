@@ -29,7 +29,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.wise.portal.domain.announcement.Announcement;
 import org.wise.portal.domain.authentication.impl.StudentUserDetails;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.run.StudentRunInfo;
@@ -45,6 +44,7 @@ import java.util.List;
 
 /**
  * Controller for Student's index page
+ * 
  * @author Hiroki Terashima
  */
 @Controller
@@ -66,7 +66,6 @@ public class StudentIndexController {
     List<StudentRunInfo> ended_run_list = new ArrayList<StudentRunInfo>();
     Date lastLoginTime = getLastLoginTime(previousLoginTime, user);
 
-    boolean hasNewAnnouncements = false;
     for (Run run : runlist) {
       StudentRunInfo studentRunInfo = studentService.getStudentRunInfo(user, run);
       if (run.isEnded()) {
@@ -74,17 +73,11 @@ public class StudentIndexController {
       } else {
         current_run_list.add(studentRunInfo);
       }
-      for (Announcement announcement : run.getAnnouncements()) {
-        if (lastLoginTime.before(announcement.getTimestamp())) {
-          hasNewAnnouncements = true;
-        }
-      }
     }
 
     modelMap.put("user", user);
     modelMap.put("pLT", previousLoginTime);
     modelMap.put("lastLoginTime", lastLoginTime);
-    modelMap.put("hasNewAnnouncements", hasNewAnnouncements);
     modelMap.put("current_run_list", current_run_list);
     modelMap.put("ended_run_list", ended_run_list);
     return "student/index";

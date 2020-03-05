@@ -49,7 +49,6 @@ import org.wise.portal.dao.run.RunDao;
 import org.wise.portal.dao.user.UserDao;
 import org.wise.portal.domain.PeriodNotFoundException;
 import org.wise.portal.domain.Persistable;
-import org.wise.portal.domain.announcement.Announcement;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.group.impl.PersistentGroup;
@@ -550,20 +549,6 @@ public class RunServiceImpl implements RunService {
 
   public List<Workgroup> getWorkgroups(Long runId, Long periodId) {
     return runDao.getWorkgroupsForRunAndPeriod(runId, periodId);
-  }
-
-  @Transactional()
-  public void addAnnouncementToRun(Long runId, Announcement announcement) throws Exception {
-    Run run = retrieveById(runId);
-    run.getAnnouncements().add(announcement);
-    runDao.save(run);
-  }
-
-  @Transactional()
-  public void removeAnnouncementFromRun(Long runId, Announcement announcement) throws Exception {
-    Run run = retrieveById(runId);
-    run.getAnnouncements().remove(announcement);
-    runDao.save(run);
   }
 
   @Transactional()

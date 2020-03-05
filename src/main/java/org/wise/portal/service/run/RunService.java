@@ -33,7 +33,6 @@ import org.springframework.security.acls.model.Permission;
 import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
-import org.wise.portal.domain.announcement.Announcement;
 import org.wise.portal.domain.impl.AddSharedTeacherParameters;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.run.impl.RunParameters;
@@ -269,24 +268,6 @@ public interface RunService {
    *                   periodId to which all returned workgroups belong
    */
   List<Workgroup> getWorkgroups(Long runId, Long periodId) throws ObjectNotFoundException;
-
-  /**
-   * Adds an Announcement to this run
-   * 
-   * @param runId
-   * @param announcement
-   * @throws <code>Exception</code>
-   */
-  void addAnnouncementToRun(Long runId, Announcement announcement) throws Exception;
-
-  /**
-   * Removes an Announcement from this run
-   * 
-   * @param runId
-   * @param announcement
-   * @throws <code>Exception</code>
-   */
-  void removeAnnouncementFromRun(Long runId, Announcement announcement) throws Exception;
 
   /**
    * Sets whether the run is paused
