@@ -423,8 +423,7 @@ public class StudentDataController {
              */
             if (getAllWork
                 || (nodeStates != null && nodeStates.length() > 0 || x == (stepWorkList.size() - 1))
-                || ("HtmlNode".equals(nodeType) || "OutsideUrlNode".equals(nodeType)
-                    || "IdeaBasketNode".equals(nodeType))
+                || ("HtmlNode".equals(nodeType) || "OutsideUrlNode".equals(nodeType))
                 || "FlashNode".equals(nodeType)) {
               nodeVisitJSON.put("stepWorkId", stepWorkId);
               nodeVisitJSON.put("id", Long.valueOf(stepWorkId));
@@ -479,8 +478,8 @@ public class StudentDataController {
              * states. if the node visit is for HtmlNode or OutsideUrlNode, we will add the node
              * visit since those step types never have node states.
              */
-            if (nodeStates != null && nodeStates.length() > 0 || ("HtmlNode".equals(nodeType)
-                || "OutsideUrlNode".equals(nodeType) || "IdeaBasketNode".equals(nodeType))) {
+            if (nodeStates != null && nodeStates.length() > 0
+                || ("HtmlNode".equals(nodeType) || "OutsideUrlNode".equals(nodeType))) {
               nodeVisitJSON.put("stepWorkId", stepWorkId);
               nodeVisitJSON.put("id", Long.valueOf(stepWorkId));
               nodeVisitJSON.put("visitPostTime", stepWork.getPostTime().getTime());

@@ -183,23 +183,6 @@ create table groups_related_to_users (
     primary key (group_fk, user_fk)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-create table ideabasket (
-    id bigint not null auto_increment,
-    action varchar(255),
-    actionPerformer bigint,
-    data mediumtext,
-    ideaId bigint,
-    ideaWorkgroupId bigint,
-    isPublic bit,
-    periodId bigint,
-    postTime datetime,
-    projectId bigint,
-    runId bigint,
-    workgroupId bigint,
-    index ideabasketRunIdAndWorkgroupIdIndex (runId, workgroupId),
-    primary key (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 create table newsitem (
     id integer not null auto_increment,
     date datetime not null,
@@ -302,21 +285,6 @@ create table portal_statistics (
     totalNumberStudents bigint,
     totalNumberTeacherLogins bigint,
     totalNumberTeachers bigint,
-    primary key (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-create table portfolio (
-    id bigint not null auto_increment,
-    deletedItems mediumtext,
-    isPublic bit,
-    isSubmitted bit,
-    items mediumtext,
-    metadata mediumtext,
-    postTime datetime,
-    runId bigint,
-    tags varchar(255),
-    workgroupId bigint,
-    index portfolioRunIdAndWorkgroupIdIndex (runId, workgroupId),
     primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

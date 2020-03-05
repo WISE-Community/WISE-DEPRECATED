@@ -509,8 +509,6 @@ public class InformationController {
       config.put("studentDataURL", contextPath + "/studentData.html");
       config.put("gradingType", request.getParameter("gradingType"));
       config.put("getRevisions", request.getParameter("getRevisions"));
-      config.put("ideaBasketURL", getIdeaBasketURL(runId, contextPath, run, periodId, workgroupId));
-      config.put("portfolioURL", getPortfolioURL(runId, contextPath, periodId, workgroupId));
       config.put("studentAssetManagerURL",
           contextPath + "/assetManager?type=studentAssetManager&runId=" + runId);
       config.put("runInfo", run.getInfo());
@@ -574,31 +572,6 @@ public class InformationController {
       // this is set if the request is to preview the project and load a specific step such as 1.2
       config.put("step", step);
     }
-  }
-
-  private String getPortfolioURL(String runId, String contextPath, Long periodId,
-      Long workgroupId) {
-    String portfolioURL = contextPath + "/portfolio?runId=" + runId;
-    if (periodId != null) {
-      portfolioURL += "&periodId=" + periodId;
-    }
-    if (workgroupId != null) {
-      portfolioURL += "&workgroupId=" + workgroupId;
-    }
-    return portfolioURL;
-  }
-
-  private String getIdeaBasketURL(String runId, String contextPath, Run run, Long periodId,
-      Long workgroupId) {
-    String ideaBasketURL = contextPath + "/ideaBasket?runId=" + runId + "&projectId="
-        + run.getProject().getId().toString();
-    if (periodId != null) {
-      ideaBasketURL += "&periodId=" + periodId;
-    }
-    if (workgroupId != null) {
-      ideaBasketURL += "&workgroupId=" + workgroupId;
-    }
-    return ideaBasketURL;
   }
 
   private void addRetrievalTimestamp(JSONObject config) throws JSONException {

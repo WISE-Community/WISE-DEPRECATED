@@ -27,9 +27,7 @@ import java.util.List;
 
 import org.wise.vle.domain.annotation.Annotation;
 import org.wise.vle.domain.cRater.CRaterRequest;
-import org.wise.vle.domain.ideabasket.IdeaBasket;
 import org.wise.vle.domain.node.Node;
-import org.wise.vle.domain.portfolio.Portfolio;
 import org.wise.vle.domain.statistics.VLEStatistics;
 import org.wise.vle.domain.status.RunStatus;
 import org.wise.vle.domain.status.StudentStatus;
@@ -188,27 +186,6 @@ public interface VLEService {
   void saveRunStatus(RunStatus runStatus);
 
   RunStatus getRunStatusByRunId(Long runId);
-
-  // IdeaBasket functions
-
-  IdeaBasket getIdeaBasketById(Long id);
-
-  void saveIdeaBasket(IdeaBasket ideaBasket);
-
-  IdeaBasket getIdeaBasketByRunIdWorkgroupId(long runId, long workgroupId);
-
-  List<IdeaBasket> getLatestIdeaBasketsForRunId(long runId);
-
-  List<IdeaBasket> getLatestIdeaBasketsForRunIdWorkgroupIds(long runId, List<Long> workgroupIds);
-
-  List<IdeaBasket> getIdeaBasketsForRunId(long runId);
-
-  IdeaBasket getPublicIdeaBasketForRunIdPeriodId(long runId, long periodId);
-
-  // Portfolio functions
-  Portfolio getPortfolioByRunIdWorkgroupId(long runId, long workgroupId);
-
-  void savePortfolio(Portfolio portfolio);
 
   // CRaterRequest functions
   CRaterRequest getCRaterRequestById(Long id);

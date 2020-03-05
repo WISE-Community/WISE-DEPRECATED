@@ -30,9 +30,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.annotation.AnnotationDao;
 import org.wise.portal.dao.crater.CRaterRequestDao;
-import org.wise.portal.dao.ideabasket.IdeaBasketDao;
 import org.wise.portal.dao.node.NodeDao;
-import org.wise.portal.dao.portfolio.PortfolioDao;
 import org.wise.portal.dao.statistics.VLEStatisticsDao;
 import org.wise.portal.dao.status.RunStatusDao;
 import org.wise.portal.dao.status.StudentStatusDao;
@@ -41,9 +39,7 @@ import org.wise.portal.dao.work.StepWorkDao;
 import org.wise.portal.service.vle.VLEService;
 import org.wise.vle.domain.annotation.Annotation;
 import org.wise.vle.domain.cRater.CRaterRequest;
-import org.wise.vle.domain.ideabasket.IdeaBasket;
 import org.wise.vle.domain.node.Node;
-import org.wise.vle.domain.portfolio.Portfolio;
 import org.wise.vle.domain.statistics.VLEStatistics;
 import org.wise.vle.domain.status.RunStatus;
 import org.wise.vle.domain.status.StudentStatus;
@@ -79,12 +75,6 @@ public class VLEServiceImpl implements VLEService {
 
   @Autowired
   private RunStatusDao<RunStatus> runStatusDao;
-
-  @Autowired
-  private IdeaBasketDao<IdeaBasket> ideaBasketDao;
-
-  @Autowired
-  private PortfolioDao<Portfolio> portfolioDao;
 
   @Autowired
   private CRaterRequestDao<CRaterRequest> cRaterRequestDao;
@@ -411,52 +401,6 @@ public class VLEServiceImpl implements VLEService {
   @Override
   public RunStatus getRunStatusByRunId(Long runId) {
     return runStatusDao.getRunStatusByRunId(runId);
-  }
-
-  @Override
-  public IdeaBasket getIdeaBasketById(Long id) {
-    return ideaBasketDao.getIdeaBasketById(id);
-  }
-
-  @Override
-  public void saveIdeaBasket(IdeaBasket ideaBasket) {
-    ideaBasketDao.saveIdeaBasket(ideaBasket);
-  }
-
-  @Override
-  public IdeaBasket getIdeaBasketByRunIdWorkgroupId(long runId, long workgroupId) {
-    return ideaBasketDao.getIdeaBasketByRunIdWorkgroupId(runId, workgroupId);
-  }
-
-  @Override
-  public List<IdeaBasket> getLatestIdeaBasketsForRunId(long runId) {
-    return ideaBasketDao.getLatestIdeaBasketsForRunId(runId);
-  }
-
-  @Override
-  public List<IdeaBasket> getLatestIdeaBasketsForRunIdWorkgroupIds(long runId,
-      List<Long> workgroupIds) {
-    return ideaBasketDao.getLatestIdeaBasketsForRunIdWorkgroupIds(runId, workgroupIds);
-  }
-
-  @Override
-  public List<IdeaBasket> getIdeaBasketsForRunId(long runId) {
-    return ideaBasketDao.getIdeaBasketsForRunId(runId);
-  }
-
-  @Override
-  public IdeaBasket getPublicIdeaBasketForRunIdPeriodId(long runId, long periodId) {
-    return ideaBasketDao.getPublicIdeaBasketForRunIdPeriodId(runId, periodId);
-  }
-
-  @Override
-  public Portfolio getPortfolioByRunIdWorkgroupId(long runId, long workgroupId) {
-    return portfolioDao.getPortfolioByRunIdWorkgroupId(runId, workgroupId);
-  }
-
-  @Override
-  public void savePortfolio(Portfolio portfolio) {
-    portfolioDao.savePortfolio(portfolio);
   }
 
   @Override

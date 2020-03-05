@@ -68,7 +68,6 @@
   "renewSessionURL": "/wise/session/renew",
   "contextPath": "/wise",
   "webSocketURL": "ws://localhost:8080/wise/websocket",
-  "portfolioURL": "/wise/portfolio?runId=1&periodId=1&workgroupId=2",
   "runStatusURL": "/wise/runStatus",
   "projectBaseURL": "/wise/curriculum/1/",
   "wiseBaseURL": "/wise",
@@ -79,7 +78,6 @@
   "studentMaxTotalAssetsSize": 2097152,
   "runId": 1,
   "userType": "student",
-  "ideaBasketURL": "/wise/ideaBasket?runId=1&projectId=2&periodId=1&workgroupId=2",
   "projectId": 2,
   "studentNotebookURL": "/wise/student/notebook/1",
   "projectMetadataURL": "/wise/metadata.html"

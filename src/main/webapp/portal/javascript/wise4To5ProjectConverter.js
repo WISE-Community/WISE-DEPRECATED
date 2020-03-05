@@ -1,4 +1,3 @@
-
 // the global WISE5 project
 var wise5Project = {};
 
@@ -39,40 +38,38 @@ var wise4IdsToWise5Ids = {};
  * Convert the WISE4 project into a WISE5 project
  */
 function convert() {
+  // create the WISE5 project object
+  wise5Project = {};
+  wise4Project = null;
 
-    // create the WISE5 project object
-    wise5Project = {};
-    wise4Project = null;
+  // initialize counters
+  nodeCounter = 1;
+  groupCounter = 0;
+  constraintCounter = 0;
 
-    // initialize counters
-    nodeCounter = 1;
-    groupCounter = 0;
-    constraintCounter = 0;
+  // get the project path
+  projectFilePath = $('#projectFilePathInput').val();
 
-    // get the project path
-    projectFilePath = $('#projectFilePathInput').val();
+  // get the project folder path
+  projectFolderPath = projectFilePath.substring(0, projectFilePath.lastIndexOf('/') + 1);
 
-    // get the project folder path
-    projectFolderPath = projectFilePath.substring(0, projectFilePath.lastIndexOf('/') + 1);
+  // make a request for the WISE4 project file
+  $.ajax({
+    method: 'GET',
+    url: projectFilePath
+  }).done(function(response) {
+    // get the WISE4 project
+    wise4Project = response;
 
-    // make a request for the WISE4 project file
-    $.ajax({
-        method: 'GET',
-        url: projectFilePath
-    }).done(function(response) {
+    // get the string representation of the WISE4 project
+    var wise4ProjectString = JSON.stringify(wise4Project, null, 4);
 
-        // get the WISE4 project
-        wise4Project = response;
+    // display the WISE4 project string in the textarea
+    $('#wise4ProjectFile').html(wise4ProjectString);
 
-        // get the string representation of the WISE4 project
-        var wise4ProjectString = JSON.stringify(wise4Project, null, 4);
-
-        // display the WISE4 project string in the textarea
-        $('#wise4ProjectFile').html(wise4ProjectString);
-
-        // parse the WISE4 project to create the WISE5 project
-        parseWISE4Project(wise4Project);
-    });
+    // parse the WISE4 project to create the WISE5 project
+    parseWISE4Project(wise4Project);
+  });
 }
 
 /**
@@ -80,30 +77,28 @@ function convert() {
  * @param wise4Project the WISE4 project
  */
 function parseWISE4Project(wise4Project) {
+  // initialize the WISE5 project
+  createWISE5Project();
 
-    // initialize the WISE5 project
-    createWISE5Project();
+  if (wise4Project != null) {
+    // get the start point for the WISE4 project
+    var startPoint = wise4Project.startPoint;
 
-    if (wise4Project != null) {
+    // parse the WISE4 project
+    parseWISE4ProjectHelper(wise4Project, startPoint);
 
-        // get the start point for the WISE4 project
-        var startPoint = wise4Project.startPoint;
+    // set the title of the WISE5 project
+    wise5Project.metadata.title = wise4Project.title;
+  }
 
-        // parse the WISE4 project
-        parseWISE4ProjectHelper(wise4Project, startPoint);
+  // get the string representation of the WISE5 project
+  var wise5ProjectString = JSON.stringify(wise5Project, null, 4);
 
-        // set the title of the WISE5 project
-        wise5Project.metadata.title = wise4Project.title;
-    }
+  // display the WISE5 project string in the textarea
+  $('#wise5ProjectFile').html(wise5ProjectString);
 
-    // get the string representation of the WISE5 project
-    var wise5ProjectString = JSON.stringify(wise5Project, null, 4);
-
-    // display the WISE5 project string in the textarea
-    $('#wise5ProjectFile').html(wise5ProjectString);
-
-    // generate the project.json file that will be downloaded onto the user's computer
-    generateProjectJSONFile('project.json', wise5ProjectString);
+  // generate the project.json file that will be downloaded onto the user's computer
+  generateProjectJSONFile('project.json', wise5ProjectString);
 }
 
 /**
@@ -112,11 +107,11 @@ function parseWISE4Project(wise4Project) {
  * @param stringContent the string content that will be placed in the file
  */
 function generateProjectJSONFile(fileName, stringContent) {
-    var a = document.createElement("a");
-    var file = new Blob([stringContent], {type: 'text/plain'});
-    a.href = URL.createObjectURL(file);
-    a.download = fileName;
-    a.click();
+  var a = document.createElement('a');
+  var file = new Blob([stringContent], { type: 'text/plain' });
+  a.href = URL.createObjectURL(file);
+  a.download = fileName;
+  a.click();
 }
 
 /**
@@ -126,115 +121,109 @@ function generateProjectJSONFile(fileName, stringContent) {
  * @returns the WISE5 element (aka node or group) that has been created from the WISE4 element (aka node or group)
  */
 function parseWISE4ProjectHelper(project, elementId) {
+  var element = null;
 
-    var element = null;
+  if (elementId != null) {
+    // try to get the sequence with the given element id
+    var sequence = getSequence(project, elementId);
 
-    if (elementId != null) {
+    // try to get the node with the given element id
+    var node = getNode(project, elementId);
 
-        // try to get the sequence with the given element id
-        var sequence = getSequence(project, elementId);
+    if (sequence != null) {
+      // the element is a sequence
 
-        // try to get the node with the given element id
-        var node = getNode(project, elementId);
+      if (isBranchingActivity(sequence)) {
+        // the sequence is a branching activity
 
-        if (sequence != null) {
-            // the element is a sequence
+        // get the branch node id
+        branchNodeId = previousNodeIds[0];
 
-            if (isBranchingActivity(sequence)) {
-                // the sequence is a branching activity
+        // generate the branch in the WISE5 project
+        handleBranchActivity(sequence);
+      } else {
+        // this is a regular sequence
 
-                // get the branch node id
-                branchNodeId = previousNodeIds[0];
+        // create a WISE5 group
+        var wise5Group = createWISE5Group(sequence);
 
-                // generate the branch in the WISE5 project
-                handleBranchActivity(sequence);
-            } else {
-                // this is a regular sequence
+        currentGroup = wise5Group;
 
-                // create a WISE5 group
-                var wise5Group = createWISE5Group(sequence);
+        // add the group to the array of nodes
+        addWISE5Node(wise5Group);
 
-                currentGroup = wise5Group;
+        // loop through all the children of the sequence
+        for (var x = 0; x < sequence.refs.length; x++) {
+          // get a child id
+          var sequenceRefId = sequence.refs[x];
 
-                // add the group to the array of nodes
-                addWISE5Node(wise5Group);
+          // get the child node
+          var childNode = parseWISE4ProjectHelper(project, sequenceRefId);
 
-                // loop through all the children of the sequence
-                for (var x = 0; x < sequence.refs.length; x++) {
+          if (childNode != null) {
+            // add the child to the group
+            wise5Group.ids.push(childNode.id);
 
-                    // get a child id
-                    var sequenceRefId = sequence.refs[x];
-
-                    // get the child node
-                    var childNode = parseWISE4ProjectHelper(project, sequenceRefId);
-
-                    if (childNode != null) {
-                        // add the child to the group
-                        wise5Group.ids.push(childNode.id);
-
-                        if (wise5Group.startId === '') {
-
-                            // set the start id of the group if there currently is none
-                            wise5Group.startId = childNode.id;
-                        }
-                    }
-                }
-
-                element = wise5Group;
+            if (wise5Group.startId === '') {
+              // set the start id of the group if there currently is none
+              wise5Group.startId = childNode.id;
             }
-        } else if (node != null) {
-            // the element is a node
-
-            // create the WISE5 node
-            element = createWISE5NodeFromNodeContent(node.identifier);
-
-            if (element == null) {
-                // could not create WISE5 node. possible reasons: converter for step type not implemented yet
-                // console.log("could not convert: " + node.identifier);
-            } else {
-
-                // get the element id
-                var elementId = element.id;
-
-                // add a mapping from the WISE4 id to WISE5 id
-                wise4IdsToWise5Ids[node.identifier] = element.id;
-
-                if (previousNodeIds.length > 0) {
-
-                    /*
-                     * loop through all the immediate previous node ids
-                     *
-                     * example 1
-                     * (node1)--(node2)--(node3)
-                     * if the current element is node3, the previousNodeIds would be [node2]
-                     *
-                     * example 2
-                     * (node1)--(node2)--(node3)--(node5)
-                     *                 \         /
-                     *                  \       /
-                     *                   (node4)
-                     * if the current element is node5, the previousNodeIds would be [node3, node4]
-                     */
-                    for (var p = 0; p < previousNodeIds.length; p++) {
-                        var previousNodeId = previousNodeIds[p];
-
-                        // add a transition from the previous node id to the new node
-                        addTransition(previousNodeId, elementId);
-                    }
-
-                    // set the previous node id
-                    previousNodeIds = [elementId];
-                } else {
-                    // there are no previous node ids
-
-                    // set the previous node id
-                    previousNodeIds = [elementId];
-                }
-            }
+          }
         }
-    }
 
-    return element;
+        element = wise5Group;
+      }
+    } else if (node != null) {
+      // the element is a node
+
+      // create the WISE5 node
+      element = createWISE5NodeFromNodeContent(node.identifier);
+
+      if (element == null) {
+        // could not create WISE5 node. possible reasons: converter for step type not implemented yet
+        // console.log("could not convert: " + node.identifier);
+      } else {
+        // get the element id
+        var elementId = element.id;
+
+        // add a mapping from the WISE4 id to WISE5 id
+        wise4IdsToWise5Ids[node.identifier] = element.id;
+
+        if (previousNodeIds.length > 0) {
+          /*
+           * loop through all the immediate previous node ids
+           *
+           * example 1
+           * (node1)--(node2)--(node3)
+           * if the current element is node3, the previousNodeIds would be [node2]
+           *
+           * example 2
+           * (node1)--(node2)--(node3)--(node5)
+           *                 \         /
+           *                  \       /
+           *                   (node4)
+           * if the current element is node5, the previousNodeIds would be [node3, node4]
+           */
+          for (var p = 0; p < previousNodeIds.length; p++) {
+            var previousNodeId = previousNodeIds[p];
+
+            // add a transition from the previous node id to the new node
+            addTransition(previousNodeId, elementId);
+          }
+
+          // set the previous node id
+          previousNodeIds = [elementId];
+        } else {
+          // there are no previous node ids
+
+          // set the previous node id
+          previousNodeIds = [elementId];
+        }
+      }
+    }
+  }
+
+  return element;
 }
 
 /**
@@ -242,24 +231,57 @@ function parseWISE4ProjectHelper(project, elementId) {
  * @returns a random alphanumeric string
  */
 function createRandomId() {
-    var chars = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
-        'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x',
-        'y', 'z'];
+  var chars = [
+    '0',
+    '1',
+    '2',
+    '3',
+    '4',
+    '5',
+    '6',
+    '7',
+    '8',
+    '9',
+    'a',
+    'b',
+    'c',
+    'd',
+    'e',
+    'f',
+    'g',
+    'h',
+    'i',
+    'j',
+    'k',
+    'l',
+    'm',
+    'n',
+    'o',
+    'p',
+    'q',
+    'r',
+    's',
+    't',
+    'u',
+    'v',
+    'w',
+    'x',
+    'y',
+    'z'
+  ];
 
-    var result = '';
+  var result = '';
 
-    var charCount = 10;
+  var charCount = 10;
 
-    for (var x = 0; x < charCount; x++) {
+  for (var x = 0; x < charCount; x++) {
+    // choose a random alphanumeric character
+    var randomChar = chars[Math.floor(Math.random() * chars.length)];
 
-        // choose a random alphanumeric character
-        var randomChar = chars[Math.floor(Math.random() * chars.length)];
+    result += randomChar;
+  }
 
-        result += randomChar;
-    }
-
-    return result;
+  return result;
 }
 
 /**
@@ -269,28 +291,28 @@ function createRandomId() {
  * @returns the sequence object
  */
 function getSequence(project, sequenceId) {
-    var sequence = null;
+  var sequence = null;
 
-    if (project != null && sequenceId != null) {
-        var sequences = project.sequences;
+  if (project != null && sequenceId != null) {
+    var sequences = project.sequences;
 
-        // loop through all the sequences
-        for (var s = 0; s < sequences.length; s++) {
-            var tempSequence = sequences[s];
+    // loop through all the sequences
+    for (var s = 0; s < sequences.length; s++) {
+      var tempSequence = sequences[s];
 
-            if (tempSequence != null) {
-                var identifier = tempSequence.identifier;
+      if (tempSequence != null) {
+        var identifier = tempSequence.identifier;
 
-                if (sequenceId === identifier) {
-                    // we have found the sequence we are looking for
-                    sequence = tempSequence;
-                    break;
-                }
-            }
+        if (sequenceId === identifier) {
+          // we have found the sequence we are looking for
+          sequence = tempSequence;
+          break;
         }
+      }
     }
+  }
 
-    return sequence;
+  return sequence;
 }
 
 /**
@@ -300,28 +322,28 @@ function getSequence(project, sequenceId) {
  * @returns the node object
  */
 function getNode(project, nodeId) {
-    var node = null;
+  var node = null;
 
-    if (project != null && nodeId != null) {
-        var nodes = project.nodes;
+  if (project != null && nodeId != null) {
+    var nodes = project.nodes;
 
-        // loop through all the nodes
-        for (var n = 0; n < nodes.length; n++) {
-            var tempNode = nodes[n];
+    // loop through all the nodes
+    for (var n = 0; n < nodes.length; n++) {
+      var tempNode = nodes[n];
 
-            if (tempNode != null) {
-                var identifier = tempNode.identifier;
+      if (tempNode != null) {
+        var identifier = tempNode.identifier;
 
-                if (nodeId === identifier) {
-                    // we have found the node we are looking for
-                    node = tempNode;
-                    break;
-                }
-            }
+        if (nodeId === identifier) {
+          // we have found the node we are looking for
+          node = tempNode;
+          break;
         }
+      }
     }
+  }
 
-    return node;
+  return node;
 }
 
 /**
@@ -330,39 +352,36 @@ function getNode(project, nodeId) {
  * @returns a WISE5 node
  */
 function createWISE5NodeFromNodeContent(identifier) {
+  var wise5Node = null;
 
-    var wise5Node = null;
+  // get the path to the WISE4 node content file
+  var nodeFilePath = projectFolderPath + identifier;
 
-    // get the path to the WISE4 node content file
-    var nodeFilePath = projectFolderPath + identifier;
+  $.ajax({
+    method: 'GET',
+    url: nodeFilePath,
+    async: false,
+    dataType: 'text'
+  }).done(function(response) {
+    if (response != null) {
+      // get the WISE4 node
+      var node = getNode(wise4Project, identifier);
 
-    $.ajax({
-        method: 'GET',
-        url: nodeFilePath,
-        async: false,
-        dataType: 'text'
-    }).done(function(response) {
+      // replace linkTos with wiselinks
+      var responseUpdated = replaceLinkToWithWISELink(node, response);
 
-        if (response != null) {
+      // remove any usage of ./assets/ or assets/
+      responseUpdated = removeAssetsFromPaths(responseUpdated);
 
-            // get the WISE4 node
-            var node = getNode(wise4Project, identifier);
+      // create the node content object
+      var nodeContent = JSON.parse(responseUpdated);
 
-            // replace linkTos with wiselinks
-            var responseUpdated = replaceLinkToWithWISELink(node, response);
+      // create the WISE5 node
+      wise5Node = convertNode(node, nodeContent);
+    }
+  });
 
-            // remove any usage of ./assets/ or assets/
-            responseUpdated = removeAssetsFromPaths(responseUpdated);
-
-            // create the node content object
-            var nodeContent = JSON.parse(responseUpdated);
-
-            // create the WISE5 node
-            wise5Node = convertNode(node, nodeContent);
-        }
-    });
-
-    return wise5Node;
+  return wise5Node;
 }
 
 /**
@@ -374,28 +393,27 @@ function createWISE5NodeFromNodeContent(identifier) {
  * @returns the WISE4 node content string with assets paths removed
  */
 function removeAssetsFromPaths(wise4NodeJSONString) {
+  var updated = wise4NodeJSONString;
 
-    var updated = wise4NodeJSONString;
+  // remove "./assets/ and replace with "
+  updated = updated.replace(/"\.\/assets\//g, '"');
 
-    // remove "./assets/ and replace with "
-    updated = updated.replace(/"\.\/assets\//g, '"');
+  // remove "/assets/ and replace with "
+  updated = updated.replace(/"\/assets\//g, '"');
 
-    // remove "/assets/ and replace with "
-    updated = updated.replace(/"\/assets\//g, '"');
+  // remove "assets/ and replace with "
+  updated = updated.replace(/"assets\//g, '"');
 
-    // remove "assets/ and replace with "
-    updated = updated.replace(/"assets\//g, '"');
+  // remove './assets/ and replace with '
+  updated = updated.replace(/'\.\/assets\//g, "'");
 
-    // remove './assets/ and replace with '
-    updated = updated.replace(/'\.\/assets\//g, "'");
+  // remove '/assets/ and replace with '
+  updated = updated.replace(/'\/assets\//g, "'");
 
-    // remove '/assets/ and replace with '
-    updated = updated.replace(/'\/assets\//g, "'");
+  // remove 'assets/ and replace with '
+  updated = updated.replace(/'assets\//g, "'");
 
-    // remove 'assets/ and replace with '
-    updated = updated.replace(/'assets\//g, "'");
-
-    return updated;
+  return updated;
 }
 
 /**
@@ -405,80 +423,77 @@ function removeAssetsFromPaths(wise4NodeJSONString) {
  * @returns the WISE5 node
  */
 function convertNode(node, nodeContent) {
+  var wise5Node = null;
 
-    var wise5Node = null;
+  if (nodeContent != null) {
+    var nodeType = nodeContent.type;
 
-    if (nodeContent != null) {
-        var nodeType = nodeContent.type;
-
-        if (nodeType === 'Html') {
-            wise5Node = convertHTML(node, nodeContent);
-        } else if (nodeType === 'AssessmentList') {
-            wise5Node = convertAssessmentList(node, nodeContent);
-        } else if (nodeType === 'OpenResponse') {
-            wise5Node = convertOpenResponse(node, nodeContent);
-        } else if (nodeType === 'Note') {
-            wise5Node = convertOpenResponse(node, nodeContent);
-        } else if (nodeType === 'MultipleChoice' || nodeType === 'Challenge') {
-            wise5Node = convertMultipleChoice(node, nodeContent);
-        } else if (nodeType === 'MatchSequence') {
-            wise5Node = convertMatchSequence(node, nodeContent);
-        } else if (nodeType === 'SVGDraw') {
-            wise5Node = convertDraw(node, nodeContent);
-        } else if (nodeType === 'Brainstorm') {
-            wise5Node = convertBrainstorm(node, nodeContent);
-        } else if (nodeType === 'Fillin') {
-            // TODO
-        } else if (nodeType === 'Sensor') {
-            // TODO
-        } else if (nodeType === 'Table') {
-            wise5Node = convertTable(node, nodeContent);
-        } else if (nodeType === 'IdeaBasket') {
-            // TODO
-        } else if (nodeType === 'ExplanationBuilder') {
-            // TODO
-        } else if (nodeType === 'OutsideUrl') {
-            wise5Node = convertOutsideURL(node, nodeContent);
-        } else if (nodeType === 'Mysystem2') {
-            // TODO
-        } else if (nodeType === 'Annotator') {
-            wise5Node = convertAnnotator(node, nodeContent);
-        } else if (nodeType === 'Branching') {
-            // TODO
-        } else if (nodeType === 'PhET') {
-            wise5Node = convertPhet(node, nodeContent);
-        } else if (nodeType === 'Grapher') {
-            wise5Node = convertGrapher(node, nodeContent);
-        }
+    if (nodeType === 'Html') {
+      wise5Node = convertHTML(node, nodeContent);
+    } else if (nodeType === 'AssessmentList') {
+      wise5Node = convertAssessmentList(node, nodeContent);
+    } else if (nodeType === 'OpenResponse') {
+      wise5Node = convertOpenResponse(node, nodeContent);
+    } else if (nodeType === 'Note') {
+      wise5Node = convertOpenResponse(node, nodeContent);
+    } else if (nodeType === 'MultipleChoice' || nodeType === 'Challenge') {
+      wise5Node = convertMultipleChoice(node, nodeContent);
+    } else if (nodeType === 'MatchSequence') {
+      wise5Node = convertMatchSequence(node, nodeContent);
+    } else if (nodeType === 'SVGDraw') {
+      wise5Node = convertDraw(node, nodeContent);
+    } else if (nodeType === 'Brainstorm') {
+      wise5Node = convertBrainstorm(node, nodeContent);
+    } else if (nodeType === 'Fillin') {
+      // TODO
+    } else if (nodeType === 'Sensor') {
+      // TODO
+    } else if (nodeType === 'Table') {
+      wise5Node = convertTable(node, nodeContent);
+    } else if (nodeType === 'ExplanationBuilder') {
+      // TODO
+    } else if (nodeType === 'OutsideUrl') {
+      wise5Node = convertOutsideURL(node, nodeContent);
+    } else if (nodeType === 'Mysystem2') {
+      // TODO
+    } else if (nodeType === 'Annotator') {
+      wise5Node = convertAnnotator(node, nodeContent);
+    } else if (nodeType === 'Branching') {
+      // TODO
+    } else if (nodeType === 'PhET') {
+      wise5Node = convertPhet(node, nodeContent);
+    } else if (nodeType === 'Grapher') {
+      wise5Node = convertGrapher(node, nodeContent);
     }
+  }
 
-    if (wise5Node != null) {
-        //console.log(nodeType + '[x]');
-    }
+  if (wise5Node != null) {
+    //console.log(nodeType + '[x]');
+  }
 
-    return wise5Node;
+  return wise5Node;
 }
 
 /**
  * Create and initialize the WISE5 project object
  */
 function createWISE5Project() {
-    wise5Project.nodes = [];
-    wise5Project.constraints = [];
-    wise5Project.startGroupId = 'group0';
-    wise5Project.startNodeId = 'node1';
+  wise5Project.nodes = [];
+  wise5Project.constraints = [];
+  wise5Project.startGroupId = 'group0';
+  wise5Project.startNodeId = 'node1';
 
-    wise5Project.navigationMode = 'guided';
+  wise5Project.navigationMode = 'guided';
 
-    wise5Project.layout = {
-        'template': 'starmap|leftNav|rightNav',
-        'studentIsOnGroupNode': 'layout3',
-        'studentIsOnApplicationNode': 'layout4'
-    }
+  wise5Project.layout = {
+    template: 'starmap|leftNav|rightNav',
+    studentIsOnGroupNode: 'layout3',
+    studentIsOnApplicationNode: 'layout4'
+  };
 
-    var metadata = {};
-    metadata.title = '';
-    wise5Project.metadata = metadata;
+  var metadata = {};
+  metadata.title = '';
+  wise5Project.metadata = metadata;
 }
 
 /**
@@ -487,14 +502,14 @@ function createWISE5Project() {
  * @returns a WISE5 group object
  */
 function createWISE5Group(sequence) {
-    var wise5Group = {};
-    wise5Group.id = getNextGroupId();
-    wise5Group.type = 'group';
-    wise5Group.title = sequence.title;
-    wise5Group.startId = '';
-    wise5Group.ids = [];
+  var wise5Group = {};
+  wise5Group.id = getNextGroupId();
+  wise5Group.type = 'group';
+  wise5Group.title = sequence.title;
+  wise5Group.startId = '';
+  wise5Group.ids = [];
 
-    return wise5Group;
+  return wise5Group;
 }
 
 /**
@@ -502,24 +517,24 @@ function createWISE5Group(sequence) {
  * @returns a WISE5 node object
  */
 function createWISE5Node() {
-    var wise5Node = {};
+  var wise5Node = {};
 
-    wise5Node.id = getNextNodeId();
-    wise5Node.type = 'node';
-    wise5Node.showSaveButton = true;
-    wise5Node.showSubmitButton = true;
-    wise5Node.constraints = [];
+  wise5Node.id = getNextNodeId();
+  wise5Node.type = 'node';
+  wise5Node.showSaveButton = true;
+  wise5Node.showSubmitButton = true;
+  wise5Node.constraints = [];
 
-    var transitionLogic = {};
-    transitionLogic.transitions = [];
-    transitionLogic.howToChooseAmongAvailablePaths = null;
-    transitionLogic.whenToChoosePath = null;
-    transitionLogic.canChangePath = null;
-    transitionLogic.maxPathsVisitable = null;
+  var transitionLogic = {};
+  transitionLogic.transitions = [];
+  transitionLogic.howToChooseAmongAvailablePaths = null;
+  transitionLogic.whenToChoosePath = null;
+  transitionLogic.canChangePath = null;
+  transitionLogic.maxPathsVisitable = null;
 
-    wise5Node.transitionLogic = transitionLogic;
+  wise5Node.transitionLogic = transitionLogic;
 
-    return wise5Node;
+  return wise5Node;
 }
 
 /**
@@ -528,18 +543,19 @@ function createWISE5Node() {
  * @returns the prompt
  */
 function getPromptFromAssessmentItem(nodeContent) {
-    var prompt = null;
+  var prompt = null;
 
-    if (nodeContent != null &&
-        nodeContent.assessmentItem != null &&
-        nodeContent.assessmentItem.interaction != null &&
-        nodeContent.assessmentItem.interaction.prompt != null) {
+  if (
+    nodeContent != null &&
+    nodeContent.assessmentItem != null &&
+    nodeContent.assessmentItem.interaction != null &&
+    nodeContent.assessmentItem.interaction.prompt != null
+  ) {
+    prompt = nodeContent.assessmentItem.interaction.prompt;
+  }
 
-        prompt = nodeContent.assessmentItem.interaction.prompt;
-    }
-
-    return prompt;
-};
+  return prompt;
+}
 
 /**
  * Convert a WISE4 html node into a WISE5 node with an html component
@@ -548,57 +564,53 @@ function getPromptFromAssessmentItem(nodeContent) {
  * @returns a WISE5 node
  */
 function convertHTML(node, nodeContent) {
+  var wise5Node = null;
 
-    var wise5Node = null;
+  if (nodeContent != null) {
+    // get the path to the WISE4 html file
+    var src = projectFolderPath + nodeContent.src;
 
-    if (nodeContent != null) {
+    $.ajax({
+      method: 'GET',
+      url: src,
+      async: false,
+      dataType: 'html'
+    }).done(function(response) {
+      // get the html
+      var html = response;
 
-        // get the path to the WISE4 html file
-        var src = projectFolderPath + nodeContent.src;
+      if (html != null) {
+        html = removeAssetsFromPaths(html);
 
-        $.ajax({
-            method: 'GET',
-            url: src,
-            async: false,
-            dataType: 'html'
-        }).done(function(response) {
+        // create a WISE5 node
+        wise5Node = createWISE5Node();
 
-            // get the html
-            var html = response;
+        // set the title
+        wise5Node.title = node.title;
 
-            if (html != null) {
+        wise5Node.showSaveButton = false;
+        wise5Node.showSubmitButton = false;
+        wise5Node.components = [];
 
-                html = removeAssetsFromPaths(html);
+        var component = {};
 
-                // create a WISE5 node
-                wise5Node = createWISE5Node();
+        // set the component id
+        component.id = createRandomId();
+        component.type = 'HTML';
 
-                // set the title
-                wise5Node.title = node.title;
+        // set the html
+        component.html = html;
 
-                wise5Node.showSaveButton = false;
-                wise5Node.showSubmitButton = false;
-                wise5Node.components = [];
+        // add the component
+        wise5Node.components.push(component);
 
-                var component = {};
+        // add the WISE5 node to the project
+        addWISE5Node(wise5Node);
+      }
+    });
+  }
 
-                // set the component id
-                component.id = createRandomId();
-                component.type = 'HTML';
-
-                // set the html
-                component.html = html;
-
-                // add the component
-                wise5Node.components.push(component);
-
-                // add the WISE5 node to the project
-                addWISE5Node(wise5Node);
-            }
-        });
-    }
-
-    return wise5Node;
+  return wise5Node;
 }
 
 /**
@@ -609,122 +621,120 @@ function convertHTML(node, nodeContent) {
  * @returns a WISE5 node
  */
 function convertAssessmentList(node, nodeContent) {
+  // create a WISE5 node
+  var wise5Node = createWISE5Node();
 
-    // create a WISE5 node
-    var wise5Node = createWISE5Node();
+  // set the title
+  wise5Node.title = node.title;
 
-    // set the title
-    wise5Node.title = node.title;
+  if (test) {
+    console.log('before');
+    console.log(prompt);
 
-    if (test) {
-        console.log('before');
-        console.log(prompt);
+    prompt = fixAssetReferences(prompt);
 
-        prompt = fixAssetReferences(prompt);
+    console.log('after');
+    console.log(prompt);
 
-        console.log('after');
-        console.log(prompt);
+    //test = true;
+  }
 
-        //test = true;
-    }
+  wise5Node.showSaveButton = true;
+  wise5Node.showSubmitButton = false;
+  wise5Node.components = [];
 
-    wise5Node.showSaveButton = true;
-    wise5Node.showSubmitButton = false;
-    wise5Node.components = [];
+  var prompt = nodeContent.prompt;
 
-    var prompt = nodeContent.prompt;
+  if (prompt != null && prompt !== '') {
+    // create an html component for the prompt
+    var htmlPromptComponent = {};
+    htmlPromptComponent.id = createRandomId();
+    htmlPromptComponent.type = 'HTML';
+    htmlPromptComponent.html = prompt;
 
-    if (prompt != null && prompt !== '') {
-        // create an html component for the prompt
-        var htmlPromptComponent = {};
-        htmlPromptComponent.id = createRandomId();
-        htmlPromptComponent.type = 'HTML';
-        htmlPromptComponent.html = prompt;
+    wise5Node.components.push(htmlPromptComponent);
+  }
 
-        wise5Node.components.push(htmlPromptComponent);
-    }
+  // get all the assessment parts
+  var assessments = nodeContent.assessments;
 
-    // get all the assessment parts
-    var assessments = nodeContent.assessments;
+  if (assessments != null) {
+    // loop through all the assessment parts
+    for (var a = 0; a < assessments.length; a++) {
+      // get an assessment part
+      var assessment = assessments[a];
 
-    if (assessments != null) {
+      if (assessment != null) {
+        var component = {};
 
-        // loop through all the assessment parts
-        for (var a = 0; a < assessments.length; a++) {
+        // set the component id
+        component.id = createRandomId();
 
-            // get an assessment part
-            var assessment = assessments[a];
+        // set the prompt
+        component.prompt = assessment.prompt;
 
-            if (assessment != null) {
-                var component = {};
+        if (assessment.type === 'text') {
+          // create an open response component
+          component.type = 'OpenResponse';
 
-                // set the component id
-                component.id = createRandomId();
-
-                // set the prompt
-                component.prompt = assessment.prompt;
-
-                if (assessment.type === 'text') {
-                    // create an open response component
-                    component.type = 'OpenResponse';
-
-                    if (assessment.starter != null) {
-                        if (assessment.starter.display == 2 &&
-                            assessment.starter.text != null &&
-                            assessment.starter.text != '') {
-
-                            // this component has a starter sentence
-                            component.starterSentence = assessment.starter.text;
-                        }
-                    }
-                } else if (assessment.type === 'radio' || assessment.type === 'checkbox') {
-                    // create an multiple choice component
-                    component.type = 'MultipleChoice';
-
-                    if (assessment.type === 'radio') {
-                        component.choiceType = 'radio';
-                    } else if(assessment.type === 'checkbox') {
-                        component.choiceType = 'checkbox';
-                    }
-
-                    // get all the choices
-                    var choices = assessment.choices;
-
-                    component.choices = [];
-
-                    // loop through all the choices
-                    for (var c = 0; c < choices.length; c++) {
-                        var tempChoice = choices[c];
-
-                        if (tempChoice != null) {
-                            var tempText = tempChoice.text;
-                            var choiceId = createRandomId();
-
-                            // create the choice object
-                            var choice = {};
-                            choice.id = choiceId;
-                            choice.text = tempText;
-                            choice.feedback = '';
-
-                            component.choices.push(choice);
-
-                            if (tempChoice.isCorrect) {
-                                // this choice is the correct choice
-                                component.correctChoice = choiceId;
-                            }
-                        }
-                    }
-                }
-
-                wise5Node.components.push(component);
+          if (assessment.starter != null) {
+            if (
+              assessment.starter.display == 2 &&
+              assessment.starter.text != null &&
+              assessment.starter.text != ''
+            ) {
+              // this component has a starter sentence
+              component.starterSentence = assessment.starter.text;
             }
+          }
+        } else if (assessment.type === 'radio' || assessment.type === 'checkbox') {
+          // create an multiple choice component
+          component.type = 'MultipleChoice';
+
+          if (assessment.type === 'radio') {
+            component.choiceType = 'radio';
+          } else if (assessment.type === 'checkbox') {
+            component.choiceType = 'checkbox';
+          }
+
+          // get all the choices
+          var choices = assessment.choices;
+
+          component.choices = [];
+
+          // loop through all the choices
+          for (var c = 0; c < choices.length; c++) {
+            var tempChoice = choices[c];
+
+            if (tempChoice != null) {
+              var tempText = tempChoice.text;
+              var choiceId = createRandomId();
+
+              // create the choice object
+              var choice = {};
+              choice.id = choiceId;
+              choice.text = tempText;
+              choice.feedback = '';
+
+              component.choices.push(choice);
+
+              if (tempChoice.isCorrect) {
+                // this choice is the correct choice
+                component.correctChoice = choiceId;
+              }
+            }
+          }
         }
+
+        wise5Node.components.push(component);
+      }
     }
+  }
 
-    // add the WISE5 node to the project
-    addWISE5Node(wise5Node);
+  // add the WISE5 node to the project
+  addWISE5Node(wise5Node);
 
-    return wise5Node;
+  return wise5Node;
 }
 
 /**
@@ -734,43 +744,43 @@ function convertAssessmentList(node, nodeContent) {
  * @returns a WISE5 node
  */
 function convertOpenResponse(node, nodeContent) {
+  // create a WISE5 node
+  var wise5Node = createWISE5Node();
 
-    // create a WISE5 node
-    var wise5Node = createWISE5Node();
+  // set the title
+  wise5Node.title = node.title;
 
-    // set the title
-    wise5Node.title = node.title;
+  var prompt = getPromptFromAssessmentItem(nodeContent);
 
-    var prompt = getPromptFromAssessmentItem(nodeContent);
+  wise5Node.showSaveButton = true;
+  wise5Node.showSubmitButton = false;
+  wise5Node.components = [];
 
-    wise5Node.showSaveButton = true;
-    wise5Node.showSubmitButton = false;
-    wise5Node.components = [];
+  var component = {};
 
-    var component = {};
+  // set the component id
+  component.id = createRandomId();
 
-    // set the component id
-    component.id = createRandomId();
+  component.type = 'OpenResponse';
+  component.prompt = prompt;
 
-    component.type = 'OpenResponse';
-    component.prompt = prompt;
-
-    if (nodeContent.starterSentence != null) {
-        if (nodeContent.starterSentence.display == 2 &&
-            nodeContent.starterSentence.sentence != null &&
-            nodeContent.starterSentence.sentence != '') {
-
-            // this component has a starter sentence
-            component.starterSentence = nodeContent.starterSentence.sentence;
-        }
+  if (nodeContent.starterSentence != null) {
+    if (
+      nodeContent.starterSentence.display == 2 &&
+      nodeContent.starterSentence.sentence != null &&
+      nodeContent.starterSentence.sentence != ''
+    ) {
+      // this component has a starter sentence
+      component.starterSentence = nodeContent.starterSentence.sentence;
     }
+  }
 
-    wise5Node.components.push(component);
+  wise5Node.components.push(component);
 
-    // add the WISE5 node to the project
-    addWISE5Node(wise5Node);
+  // add the WISE5 node to the project
+  addWISE5Node(wise5Node);
 
-    return wise5Node;
+  return wise5Node;
 }
 
 /**
@@ -780,111 +790,107 @@ function convertOpenResponse(node, nodeContent) {
  * @returns a WISE5 node
  */
 function convertMultipleChoice(node, nodeContent) {
+  // create a WISE5 node
+  var wise5Node = createWISE5Node();
 
-    // create a WISE5 node
-    var wise5Node = createWISE5Node();
+  // set the title
+  wise5Node.title = node.title;
 
-    // set the title
-    wise5Node.title = node.title;
+  // get the prompt
+  var prompt = getPromptFromAssessmentItem(nodeContent);
 
-    // get the prompt
-    var prompt = getPromptFromAssessmentItem(nodeContent);
+  wise5Node.showSaveButton = true;
+  wise5Node.showSubmitButton = false;
+  wise5Node.components = [];
 
-    wise5Node.showSaveButton = true;
-    wise5Node.showSubmitButton = false;
-    wise5Node.components = [];
+  var component = {};
 
-    var component = {};
+  // set the component id
+  component.id = createRandomId();
 
-    // set the component id
-    component.id = createRandomId();
+  component.type = 'MultipleChoice';
+  component.prompt = prompt;
+  component.choices = [];
+  component.showSaveButton = false;
+  component.showSubmitButton = false;
 
-    component.type = 'MultipleChoice';
-    component.prompt = prompt;
-    component.choices = [];
-    component.showSaveButton = false;
-    component.showSubmitButton = false;
+  var assessmentItem = nodeContent.assessmentItem;
 
-    var assessmentItem = nodeContent.assessmentItem;
+  if (assessmentItem != null) {
+    // choice type will default to radio
+    var choiceType = 'radio';
 
-    if (assessmentItem != null) {
+    var interaction = assessmentItem.interaction;
 
-        // choice type will default to radio
-        var choiceType = 'radio';
+    var wise4ChoiceIdToWISE5ChoiceId = {};
 
-        var interaction = assessmentItem.interaction;
+    var responseDeclaration = assessmentItem.responseDeclaration;
 
-        var wise4ChoiceIdToWISE5ChoiceId = {};
+    var correctResponse = null;
 
-        var responseDeclaration = assessmentItem.responseDeclaration;
-
-        var correctResponse = null;
-
-        if (responseDeclaration != null) {
-
-            // get the array of correct choice ids
-            correctResponse = responseDeclaration.correctResponse;
-        }
-
-        if (interaction != null) {
-            // handle the choices
-
-            // get the WISE4 choices
-            var choices = interaction.choices;
-
-            // get the max number of choices the student can choose
-            var maxChoices = interaction.maxChoices;
-
-            if (maxChoices != 1) {
-                // the student can choose more than one choice so the choice type will be checkbox
-                choiceType = 'checkbox';
-            }
-
-            if (choices != null) {
-
-                // loop through all the WISE4 choices
-                for (var c = 0; c < choices.length; c++) {
-                    var choice = choices[c];
-
-                    if (choice != null) {
-                        var wise5Choice = {};
-
-                        // create an id for the choice
-                        wise5Choice.id = createRandomId();
-
-                        // check if this choice is correct
-                        var isCorrect = isChoiceCorrect(choice.identifier, correctResponse);
-
-                        // set the text and feedback
-                        wise5Choice.text = choice.text;
-                        wise5Choice.feedback = choice.feedback;
-                        wise5Choice.isCorrect = isCorrect;
-
-                        if (isCorrect) {
-                            // there is a correct choice so we will show the submit button
-                            component.showSubmitButton = true;
-                        }
-
-                        // add an entry to map WISE4 choice id to WISE5 choice id
-                        wise4ChoiceIdToWISE5ChoiceId[choice.identifier] = wise5Choice.id;
-
-                        // add the WISE5 choice
-                        component.choices.push(wise5Choice);
-                    }
-                }
-            }
-        }
+    if (responseDeclaration != null) {
+      // get the array of correct choice ids
+      correctResponse = responseDeclaration.correctResponse;
     }
 
-    // set the choice type
-    component.choiceType = choiceType;
+    if (interaction != null) {
+      // handle the choices
 
-    wise5Node.components.push(component);
+      // get the WISE4 choices
+      var choices = interaction.choices;
 
-    // add the WISE5 node to the project
-    addWISE5Node(wise5Node);
+      // get the max number of choices the student can choose
+      var maxChoices = interaction.maxChoices;
 
-    return wise5Node;
+      if (maxChoices != 1) {
+        // the student can choose more than one choice so the choice type will be checkbox
+        choiceType = 'checkbox';
+      }
+
+      if (choices != null) {
+        // loop through all the WISE4 choices
+        for (var c = 0; c < choices.length; c++) {
+          var choice = choices[c];
+
+          if (choice != null) {
+            var wise5Choice = {};
+
+            // create an id for the choice
+            wise5Choice.id = createRandomId();
+
+            // check if this choice is correct
+            var isCorrect = isChoiceCorrect(choice.identifier, correctResponse);
+
+            // set the text and feedback
+            wise5Choice.text = choice.text;
+            wise5Choice.feedback = choice.feedback;
+            wise5Choice.isCorrect = isCorrect;
+
+            if (isCorrect) {
+              // there is a correct choice so we will show the submit button
+              component.showSubmitButton = true;
+            }
+
+            // add an entry to map WISE4 choice id to WISE5 choice id
+            wise4ChoiceIdToWISE5ChoiceId[choice.identifier] = wise5Choice.id;
+
+            // add the WISE5 choice
+            component.choices.push(wise5Choice);
+          }
+        }
+      }
+    }
+  }
+
+  // set the choice type
+  component.choiceType = choiceType;
+
+  wise5Node.components.push(component);
+
+  // add the WISE5 node to the project
+  addWISE5Node(wise5Node);
+
+  return wise5Node;
 }
 
 /**
@@ -894,17 +900,16 @@ function convertMultipleChoice(node, nodeContent) {
  * @returns whether the choice is correct
  */
 function isChoiceCorrect(wise4ChoiceId, wise4CorrectResponse) {
+  var result = false;
 
-    var result = false;
-
-    if (wise4CorrectResponse != null) {
-        // check if the id is in the array of correct responses
-        if (wise4CorrectResponse.indexOf(wise4ChoiceId) != -1) {
-            result = true;
-        }
+  if (wise4CorrectResponse != null) {
+    // check if the id is in the array of correct responses
+    if (wise4CorrectResponse.indexOf(wise4ChoiceId) != -1) {
+      result = true;
     }
+  }
 
-    return result;
+  return result;
 }
 
 /**
@@ -914,221 +919,218 @@ function isChoiceCorrect(wise4ChoiceId, wise4CorrectResponse) {
  * @returns a WISE5 node
  */
 function convertMatchSequence(node, nodeContent) {
+  // create a WISE5 node
+  var wise5Node = createWISE5Node();
 
-    // create a WISE5 node
-    var wise5Node = createWISE5Node();
+  // set the title
+  wise5Node.title = node.title;
 
-    // set the title
-    wise5Node.title = node.title;
+  // get the prompt
+  var prompt = getPromptFromAssessmentItem(nodeContent);
 
-    // get the prompt
-    var prompt = getPromptFromAssessmentItem(nodeContent);
+  wise5Node.showSaveButton = true;
+  wise5Node.showSubmitButton = false;
+  wise5Node.components = [];
 
-    wise5Node.showSaveButton = true;
-    wise5Node.showSubmitButton = false;
-    wise5Node.components = [];
+  var component = {};
 
-    var component = {};
+  // set the component id
+  component.id = createRandomId();
 
-    // set the component id
-    component.id = createRandomId();
+  component.type = 'Match';
+  component.prompt = prompt;
+  component.choices = [];
+  component.buckets = [];
+  component.feedback = [];
+  component.showSaveButton = false;
+  component.showSubmitButton = true;
+  component.ordered = false;
 
-    component.type = 'Match';
-    component.prompt = prompt;
-    component.choices = [];
-    component.buckets = [];
-    component.feedback = [];
-    component.showSaveButton = false;
+  var hasCorrectAnswer = false;
+
+  var assessmentItem = nodeContent.assessmentItem;
+
+  if (assessmentItem != null) {
+    var interaction = assessmentItem.interaction;
+
+    var wise4ChoiceIdToWISE5ChoiceId = {};
+    var wise4BucketIdToWISE5BucketId = {};
+
+    var ordered = false;
+
+    if (interaction != null) {
+      var choices = interaction.choices;
+      var fields = interaction.fields;
+
+      ordered = assessmentItem.interaction.ordered;
+
+      if (ordered) {
+        // the choices are ordered
+        component.ordered = true;
+      }
+
+      if (choices != null) {
+        // handle the choices
+
+        // loop through all the WISE4 choices
+        for (var c = 0; c < choices.length; c++) {
+          var choice = choices[c];
+
+          if (choice != null) {
+            var wise5Choice = {};
+
+            // create an id for the choice
+            wise5Choice.id = createRandomId();
+
+            // set the value
+            wise5Choice.value = choice.value;
+
+            // set the type
+            wise5Choice.type = 'choice';
+
+            // add an entry to map WISE4 choice id to WISE5 choice id
+            wise4ChoiceIdToWISE5ChoiceId[choice.identifier] = wise5Choice.id;
+
+            // add the WISE5 choice
+            component.choices.push(wise5Choice);
+          }
+        }
+      }
+
+      if (fields != null) {
+        // handle the buckets
+
+        // loop through all the buckets
+        for (var f = 0; f < fields.length; f++) {
+          var field = fields[f];
+
+          if (field != null) {
+            var wise5Bucket = {};
+
+            // create an id for the bucket
+            wise5Bucket.id = createRandomId();
+
+            // set the value
+            wise5Bucket.value = field.name;
+
+            // set the type
+            wise5Bucket.type = 'bucket';
+
+            // add an entry to map WISE4 choice id to WISE5 choice id
+            wise4BucketIdToWISE5BucketId[field.identifier] = wise5Bucket.id;
+
+            // add the WISE5 choice
+            component.buckets.push(wise5Bucket);
+          }
+        }
+      }
+
+      var wise5Choices = component.choices;
+      var wise5Buckets = component.buckets;
+
+      /*
+       * create the feedback by creating all the feedback objects with default values
+       * that will be populated later.
+       */
+
+      // loop through all the buckets
+      for (var b = 0; b < wise5Buckets.length; b++) {
+        var wise5Bucket = wise5Buckets[b];
+
+        // create a bucket feedback
+        var bucketFeedback = {};
+        bucketFeedback.bucketId = wise5Bucket.id;
+        bucketFeedback.choices = [];
+
+        // loop through all the choices
+        for (var c = 0; c < wise5Choices.length; c++) {
+          var wise5Choice = wise5Choices[c];
+
+          // create a choice feedback
+          var choiceFeedback = {};
+          choiceFeedback.choiceId = wise5Choice.id;
+          choiceFeedback.feedback = '';
+          choiceFeedback.isCorrect = false;
+          choiceFeedback.position = null;
+          choiceFeedback.incorrectPositionFeedback;
+
+          bucketFeedback.choices.push(choiceFeedback);
+        }
+
+        component.feedback.push(bucketFeedback);
+      }
+    }
+
+    var responseDeclaration = assessmentItem.responseDeclaration;
+
+    if (responseDeclaration != null) {
+      // handle the feedback
+
+      // get the array of feedback objects
+      var correctResponses = responseDeclaration.correctResponses;
+
+      if (correctResponses != null) {
+        var feedback = component.feedback;
+
+        // loop through all the feedback
+        for (var c = 0; c < correctResponses.length; c++) {
+          // get a feedback object
+          var correctResponse = correctResponses[c];
+
+          if (correctResponse != null) {
+            // get the WISE5 choice id
+            var choiceId = wise4ChoiceIdToWISE5ChoiceId[correctResponse.choiceIdentifier];
+
+            // get the WISE5 bucket id
+            var bucketId = wise4BucketIdToWISE5BucketId[correctResponse.fieldIdentifier];
+
+            if (choiceId != null && bucketId != null) {
+              // get the feedback object for the given choice id and bucket id combination
+              var feedbackObject = getFeedbackObject(feedback, choiceId, bucketId);
+
+              if (feedbackObject != null) {
+                // populate the feedback object
+                feedbackObject.feedback = correctResponse.feedback;
+                feedbackObject.isCorrect = correctResponse.isCorrect;
+                feedbackObject.position = null;
+                feedbackObject.incorrectPositionFeedback = null;
+
+                if (
+                  ordered &&
+                  correctResponse.isCorrect &&
+                  !isNaN(parseInt(correctResponse.order))
+                ) {
+                  /*
+                   * the choices are ordered so we will set the position. we will
+                   * add 1 because WISE4 started counting positions at 0 where as
+                   * WISE5 starts counting positions at 1.
+                   */
+                  feedbackObject.position = parseInt(correctResponse.order) + 1;
+                }
+              }
+
+              if (correctResponse.isCorrect) {
+                // there is a correct answer
+                hasCorrectAnswer = true;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // show the submit button if there is a correct answer
+  if (hasCorrectAnswer) {
     component.showSubmitButton = true;
-    component.ordered = false;
+  }
 
-    var hasCorrectAnswer = false;
+  wise5Node.components.push(component);
 
-    var assessmentItem = nodeContent.assessmentItem;
+  // add the WISE5 node to the project
+  addWISE5Node(wise5Node);
 
-    if (assessmentItem != null) {
-
-        var interaction = assessmentItem.interaction;
-
-        var wise4ChoiceIdToWISE5ChoiceId = {};
-        var wise4BucketIdToWISE5BucketId = {};
-
-        var ordered = false;
-
-        if (interaction != null) {
-            var choices = interaction.choices;
-            var fields = interaction.fields;
-
-            ordered = assessmentItem.interaction.ordered;
-
-            if (ordered) {
-                // the choices are ordered
-                component.ordered = true;
-            }
-
-            if (choices != null) {
-                // handle the choices
-
-                // loop through all the WISE4 choices
-                for (var c = 0; c < choices.length; c++) {
-                    var choice = choices[c];
-
-                    if (choice != null) {
-                        var wise5Choice = {};
-
-                        // create an id for the choice
-                        wise5Choice.id = createRandomId();
-
-                        // set the value
-                        wise5Choice.value = choice.value;
-
-                        // set the type
-                        wise5Choice.type = 'choice';
-
-                        // add an entry to map WISE4 choice id to WISE5 choice id
-                        wise4ChoiceIdToWISE5ChoiceId[choice.identifier] = wise5Choice.id;
-
-                        // add the WISE5 choice
-                        component.choices.push(wise5Choice);
-                    }
-                }
-            }
-
-            if (fields != null) {
-                // handle the buckets
-
-                // loop through all the buckets
-                for (var f = 0; f < fields.length; f++) {
-                    var field = fields[f];
-
-                    if (field != null) {
-                        var wise5Bucket = {};
-
-                        // create an id for the bucket
-                        wise5Bucket.id = createRandomId();
-
-                        // set the value
-                        wise5Bucket.value = field.name;
-
-                        // set the type
-                        wise5Bucket.type = 'bucket';
-
-                        // add an entry to map WISE4 choice id to WISE5 choice id
-                        wise4BucketIdToWISE5BucketId[field.identifier] = wise5Bucket.id;
-
-                        // add the WISE5 choice
-                        component.buckets.push(wise5Bucket);
-                    }
-                }
-            }
-
-            var wise5Choices = component.choices;
-            var wise5Buckets = component.buckets;
-
-            /*
-             * create the feedback by creating all the feedback objects with default values
-             * that will be populated later.
-             */
-
-            // loop through all the buckets
-            for (var b = 0; b < wise5Buckets.length; b++) {
-                var wise5Bucket = wise5Buckets[b];
-
-                // create a bucket feedback
-                var bucketFeedback = {};
-                bucketFeedback.bucketId = wise5Bucket.id;
-                bucketFeedback.choices = [];
-
-                // loop through all the choices
-                for (var c = 0; c < wise5Choices.length; c++) {
-                    var wise5Choice = wise5Choices[c];
-
-                    // create a choice feedback
-                    var choiceFeedback = {};
-                    choiceFeedback.choiceId = wise5Choice.id;
-                    choiceFeedback.feedback = '';
-                    choiceFeedback.isCorrect = false;
-                    choiceFeedback.position = null;
-                    choiceFeedback.incorrectPositionFeedback;
-
-                    bucketFeedback.choices.push(choiceFeedback);
-                }
-
-                component.feedback.push(bucketFeedback);
-            }
-        }
-
-        var responseDeclaration = assessmentItem.responseDeclaration;
-
-        if (responseDeclaration != null) {
-            // handle the feedback
-
-            // get the array of feedback objects
-            var correctResponses = responseDeclaration.correctResponses;
-
-            if (correctResponses != null) {
-
-                var feedback = component.feedback;
-
-                // loop through all the feedback
-                for (var c = 0; c < correctResponses.length; c++) {
-
-                    // get a feedback object
-                    var correctResponse = correctResponses[c];
-
-                    if (correctResponse != null) {
-
-                        // get the WISE5 choice id
-                        var choiceId = wise4ChoiceIdToWISE5ChoiceId[correctResponse.choiceIdentifier];
-
-                        // get the WISE5 bucket id
-                        var bucketId = wise4BucketIdToWISE5BucketId[correctResponse.fieldIdentifier];
-
-                        if (choiceId != null && bucketId != null) {
-
-                            // get the feedback object for the given choice id and bucket id combination
-                            var feedbackObject = getFeedbackObject(feedback, choiceId, bucketId);
-
-                            if (feedbackObject != null) {
-
-                                // populate the feedback object
-                                feedbackObject.feedback = correctResponse.feedback;
-                                feedbackObject.isCorrect = correctResponse.isCorrect;
-                                feedbackObject.position = null;
-                                feedbackObject.incorrectPositionFeedback = null;
-
-                                if (ordered && correctResponse.isCorrect && !isNaN(parseInt(correctResponse.order))) {
-                                    /*
-                                     * the choices are ordered so we will set the position. we will
-                                     * add 1 because WISE4 started counting positions at 0 where as
-                                     * WISE5 starts counting positions at 1.
-                                     */
-                                    feedbackObject.position = parseInt(correctResponse.order) + 1;
-                                }
-                            }
-
-                            if (correctResponse.isCorrect) {
-                                // there is a correct answer
-                                hasCorrectAnswer = true;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    // show the submit button if there is a correct answer
-    if (hasCorrectAnswer) {
-        component.showSubmitButton = true;
-    }
-
-    wise5Node.components.push(component);
-
-    // add the WISE5 node to the project
-    addWISE5Node(wise5Node);
-
-    return wise5Node;
+  return wise5Node;
 }
 
 /**
@@ -1139,38 +1141,34 @@ function convertMatchSequence(node, nodeContent) {
  * @returns the choice feedback object
  */
 function getFeedbackObject(feedback, choiceId, bucketId) {
+  if (feedback != null && choiceId != null && bucketId != null) {
+    // loop throgha all the buckets
+    for (var f = 0; f < feedback.length; f++) {
+      var bucketFeedback = feedback[f];
 
-    if (feedback != null && choiceId != null && bucketId != null) {
+      if (bucketFeedback != null) {
+        if (bucketId === bucketFeedback.bucketId) {
+          // we have found the bucket we are looking for
 
-        // loop throgha all the buckets
-        for (var f = 0; f < feedback.length; f++) {
-            var bucketFeedback = feedback[f];
+          var choices = bucketFeedback.choices;
 
-            if (bucketFeedback != null) {
+          // loop througha all the choices
+          for (var c = 0; c < choices.length; c++) {
+            var choiceFeedback = choices[c];
 
-                if (bucketId === bucketFeedback.bucketId) {
-                    // we have found the bucket we are looking for
-
-                    var choices = bucketFeedback.choices;
-
-                    // loop througha all the choices
-                    for (var c = 0; c < choices.length; c++) {
-
-                        var choiceFeedback = choices[c];
-
-                        if (choiceFeedback != null) {
-                            if (choiceId === choiceFeedback.choiceId) {
-                                // we have found the choice we are looking for
-                                return choiceFeedback;
-                            }
-                        }
-                    }
-                }
+            if (choiceFeedback != null) {
+              if (choiceId === choiceFeedback.choiceId) {
+                // we have found the choice we are looking for
+                return choiceFeedback;
+              }
             }
+          }
         }
+      }
     }
+  }
 
-    return null;
+  return null;
 }
 
 /**
@@ -1180,50 +1178,53 @@ function getFeedbackObject(feedback, choiceId, bucketId) {
  * @returns a WISE5 node
  */
 function convertTable(node, nodeContent) {
+  // create a WISE5 node
+  var wise5Node = createWISE5Node();
 
-    // create a WISE5 node
-    var wise5Node = createWISE5Node();
+  // set the title
+  wise5Node.title = node.title;
 
-    // set the title
-    wise5Node.title = node.title;
+  wise5Node.showSaveButton = true;
+  wise5Node.showSubmitButton = false;
+  wise5Node.components = [];
 
-    wise5Node.showSaveButton = true;
-    wise5Node.showSubmitButton = false;
-    wise5Node.components = [];
+  var tableComponent = {};
 
-    var tableComponent = {};
+  // set the component id
+  tableComponent.id = createRandomId();
+  tableComponent.type = 'Table';
+  tableComponent.prompt = nodeContent.prompt;
+  tableComponent.globalCellSize = nodeContent.globalCellSize;
 
-    // set the component id
-    tableComponent.id = createRandomId();
-    tableComponent.type = 'Table';
-    tableComponent.prompt = nodeContent.prompt;
-    tableComponent.globalCellSize = nodeContent.globalCellSize;
+  // convert the WISE4 table to a WISE5 table
+  var newTableData = convertTableData(
+    nodeContent.numColumns,
+    nodeContent.numRows,
+    nodeContent.tableData
+  );
+  tableComponent.tableData = newTableData;
 
-    // convert the WISE4 table to a WISE5 table
-    var newTableData = convertTableData(nodeContent.numColumns, nodeContent.numRows, nodeContent.tableData);
-    tableComponent.tableData = newTableData;
+  wise5Node.components.push(tableComponent);
 
-    wise5Node.components.push(tableComponent);
+  if (!nodeContent.hideEverythingBelowTable) {
+    /*
+     * if the WISE4 node has a textarea below the table we will
+     * create an open response component
+     */
 
-    if (!nodeContent.hideEverythingBelowTable) {
-        /*
-         * if the WISE4 node has a textarea below the table we will
-         * create an open response component
-         */
+    var openResponseComponent = {};
 
-        var openResponseComponent = {};
+    openResponseComponent.id = createRandomId();
+    openResponseComponent.type = 'OpenResponse';
+    openResponseComponent.prompt = nodeContent.prompt2;
 
-        openResponseComponent.id = createRandomId();
-        openResponseComponent.type = 'OpenResponse';
-        openResponseComponent.prompt = nodeContent.prompt2;
+    wise5Node.components.push(openResponseComponent);
+  }
 
-        wise5Node.components.push(openResponseComponent);
-    }
+  // add the WISE5 node to the project
+  addWISE5Node(wise5Node);
 
-    // add the WISE5 node to the project
-    addWISE5Node(wise5Node);
-
-    return wise5Node;
+  return wise5Node;
 }
 
 /**
@@ -1234,40 +1235,36 @@ function convertTable(node, nodeContent) {
  * @returns the table data for a WISE5 table component
  */
 function convertTableData(numColumns, numRows, tableData) {
-    var newTableData = [];
+  var newTableData = [];
 
-    if (tableData != null) {
+  if (tableData != null) {
+    // loop through the rows
+    for (var y = 0; y < numRows; y++) {
+      var newRow = [];
 
-        // loop through the rows
-        for (var y = 0; y < numRows; y++) {
+      // loop through the columns
+      for (var x = 0; x < numColumns; x++) {
+        if (tableData[x] != null && tableData[x][y] != null) {
+          // get a cell
+          var cell = tableData[x][y];
 
-            var newRow = [];
+          if (cell != null) {
+            var newCell = {};
 
-            // loop through the columns
-            for (var x = 0; x < numColumns; x++) {
+            newCell.text = cell.text;
+            newCell.editable = !cell.uneditable;
+            newCell.size = parseInt(cell.cellSize);
 
-                if (tableData[x] != null && tableData[x][y] != null) {
-
-                    // get a cell
-                    var cell = tableData[x][y];
-
-                    if (cell != null) {
-                        var newCell = {};
-
-                        newCell.text = cell.text;
-                        newCell.editable = !cell.uneditable;
-                        newCell.size = parseInt(cell.cellSize);
-
-                        newRow.push(newCell);
-                    }
-                }
-            }
-
-            newTableData.push(newRow);
+            newRow.push(newCell);
+          }
         }
-    }
+      }
 
-    return newTableData;
+      newTableData.push(newRow);
+    }
+  }
+
+  return newTableData;
 }
 
 /**
@@ -1277,28 +1274,28 @@ function convertTableData(numColumns, numRows, tableData) {
  * @returns a WISE5 node
  */
 function convertPhet(node, nodeContent) {
-    var wise5Node = createWISE5Node();
+  var wise5Node = createWISE5Node();
 
-    wise5Node.title = node.title;
+  wise5Node.title = node.title;
 
-    wise5Node.showSaveButton = true;
-    wise5Node.showSubmitButton = false;
-    wise5Node.components = [];
+  wise5Node.showSaveButton = true;
+  wise5Node.showSubmitButton = false;
+  wise5Node.components = [];
 
-    var component = {};
+  var component = {};
 
-    component.id = createRandomId();
-    component.type = 'OutsideURL';
+  component.id = createRandomId();
+  component.type = 'OutsideURL';
 
-    // set the url for the Phet model
-    component.url = nodeContent.url;
+  // set the url for the Phet model
+  component.url = nodeContent.url;
 
-    wise5Node.components.push(component);
+  wise5Node.components.push(component);
 
-    // add the WISE5 node to the project
-    addWISE5Node(wise5Node);
+  // add the WISE5 node to the project
+  addWISE5Node(wise5Node);
 
-    return wise5Node;
+  return wise5Node;
 }
 
 /**
@@ -1308,49 +1305,48 @@ function convertPhet(node, nodeContent) {
  * @returns a WISE5 node
  */
 function convertDraw(node, nodeContent) {
-    var wise5Node = createWISE5Node();
-    wise5Node.title = node.title;
+  var wise5Node = createWISE5Node();
+  wise5Node.title = node.title;
 
-    wise5Node.showSaveButton = true;
-    wise5Node.showSubmitButton = false;
-    wise5Node.components = [];
+  wise5Node.showSaveButton = true;
+  wise5Node.showSubmitButton = false;
+  wise5Node.components = [];
 
-    var component = {};
-    component.id = createRandomId();
-    component.type = 'Draw';
-    component.prompt = nodeContent.prompt;
+  var component = {};
+  component.id = createRandomId();
+  component.type = 'Draw';
+  component.prompt = nodeContent.prompt;
 
-    if (nodeContent.stamps != null) {
+  if (nodeContent.stamps != null) {
+    var wise5Stamps = {};
+    wise5Stamps.Stamps = [];
 
-        var wise5Stamps = {};
-        wise5Stamps.Stamps = [];
+    // get the WISE4 stamps
+    var wise4Stamps = nodeContent.stamps;
 
-        // get the WISE4 stamps
-        var wise4Stamps = nodeContent.stamps;
+    // loop through all the WISE4 stamps
+    for (var x = 0; x < wise4Stamps.length; x++) {
+      var tempStamp = wise4Stamps[x];
 
-        // loop through all the WISE4 stamps
-        for (var x = 0; x < wise4Stamps.length; x++) {
-            var tempStamp = wise4Stamps[x];
+      if (tempStamp != null) {
+        var tempStampUri = tempStamp.uri;
 
-            if (tempStamp != null) {
-                var tempStampUri = tempStamp.uri;
-
-                if (tempStampUri != null) {
-                    // add the stamp to WISE5
-                    wise5Stamps.Stamps.push(tempStampUri);
-                }
-            }
+        if (tempStampUri != null) {
+          // add the stamp to WISE5
+          wise5Stamps.Stamps.push(tempStampUri);
         }
-
-        component.stamps = wise5Stamps;
+      }
     }
 
-    wise5Node.components.push(component);
+    component.stamps = wise5Stamps;
+  }
 
-    // add the WISE5 node to the project
-    addWISE5Node(wise5Node);
+  wise5Node.components.push(component);
 
-    return wise5Node;
+  // add the WISE5 node to the project
+  addWISE5Node(wise5Node);
+
+  return wise5Node;
 }
 
 /**
@@ -1360,38 +1356,39 @@ function convertDraw(node, nodeContent) {
  * @returns a WISE5 node
  */
 function convertBrainstorm(node, nodeContent) {
-    var wise5Node = createWISE5Node();
-    wise5Node.title = node.title;
+  var wise5Node = createWISE5Node();
+  wise5Node.title = node.title;
 
-    wise5Node.showSaveButton = true;
-    wise5Node.showSubmitButton = false;
-    wise5Node.components = [];
+  wise5Node.showSaveButton = true;
+  wise5Node.showSubmitButton = false;
+  wise5Node.components = [];
 
-    var component = {};
-    component.id = createRandomId();
-    component.type = 'Discussion';
+  var component = {};
+  component.id = createRandomId();
+  component.type = 'Discussion';
 
-    var prompt = '';
+  var prompt = '';
 
-    if (nodeContent.assessmentItem != null &&
-        nodeContent.assessmentItem.interaction != null &&
-        nodeContent.assessmentItem.interaction.prompt != null) {
+  if (
+    nodeContent.assessmentItem != null &&
+    nodeContent.assessmentItem.interaction != null &&
+    nodeContent.assessmentItem.interaction.prompt != null
+  ) {
+    // get the prompt
+    prompt = nodeContent.assessmentItem.interaction.prompt;
+  }
 
-        // get the prompt
-        prompt = nodeContent.assessmentItem.interaction.prompt
-    }
+  component.prompt = prompt;
+  component.showSaveButton = false;
+  component.showSubmitButton = true;
+  component.gateClassmateResponses = false;
 
-    component.prompt = prompt;
-    component.showSaveButton = false;
-    component.showSubmitButton = true;
-    component.gateClassmateResponses = false;
+  wise5Node.components.push(component);
 
-    wise5Node.components.push(component);
+  // add the WISE5 node to the project
+  addWISE5Node(wise5Node);
 
-    // add the WISE5 node to the project
-    addWISE5Node(wise5Node);
-
-    return wise5Node;
+  return wise5Node;
 }
 
 /**
@@ -1401,84 +1398,79 @@ function convertBrainstorm(node, nodeContent) {
  * @returns a WISE5 node
  */
 function convertAnnotator(node, nodeContent) {
-    var wise5Node = createWISE5Node();
-    wise5Node.title = node.title;
+  var wise5Node = createWISE5Node();
+  wise5Node.title = node.title;
 
-    wise5Node.showSaveButton = true;
-    wise5Node.showSubmitButton = false;
-    wise5Node.components = [];
+  wise5Node.showSaveButton = true;
+  wise5Node.showSubmitButton = false;
+  wise5Node.components = [];
 
-    var component = {};
-    component.id = createRandomId();
-    component.type = 'Label';
-    component.prompt = nodeContent.prompt;
-    component.showSaveButton = false;
-    component.showSubmitButton = false;
-    component.backgroundImage = nodeContent.backgroundImg;
-    component.width = 800;
-    component.height = 600;
-    component.labels = [];
+  var component = {};
+  component.id = createRandomId();
+  component.type = 'Label';
+  component.prompt = nodeContent.prompt;
+  component.showSaveButton = false;
+  component.showSubmitButton = false;
+  component.backgroundImage = nodeContent.backgroundImg;
+  component.width = 800;
+  component.height = 600;
+  component.labels = [];
 
-    // get the pre-defined labels
-    var defaultLabels = nodeContent.labels_default;
+  // get the pre-defined labels
+  var defaultLabels = nodeContent.labels_default;
 
-    if (defaultLabels != null) {
+  if (defaultLabels != null) {
+    // loop through all the pre-defined labels
+    for (var d = 0; d < defaultLabels.length; d++) {
+      // get a pre-defined label
+      var defaultLabel = defaultLabels[d];
 
-        // loop through all the pre-defined labels
-        for (var d = 0; d < defaultLabels.length; d++) {
+      if (defaultLabel != null) {
+        var label = {};
 
-            // get a pre-defined label
-            var defaultLabel = defaultLabels[d];
+        // get the text
+        label.text = defaultLabel.text;
 
-            if (defaultLabel != null) {
+        // get the color
+        var color = defaultLabel.color;
 
-                var label = {};
+        // regex to match 6 character hex strings
+        var hexRegex = /[0-9A-Fa-f]{6}/g;
 
-                // get the text
-                label.text = defaultLabel.text;
-
-                // get the color
-                var color = defaultLabel.color;
-
-                // regex to match 6 character hex strings
-                var hexRegex = /[0-9A-Fa-f]{6}/g;
-
-                if (color != null) {
-                    if (hexRegex.test(color)) {
-                        // preprend a # if the color is a hex string and doesn't start with #
-                        label.color = '#' + color;
-                    } else {
-                        label.color = color
-                    }
-                }
-
-                var location = defaultLabel.location;
-                if (location != null) {
-
-                    // get the position of the point
-                    label.pointX = location.x;
-                    label.pointY = location.y;
-                }
-
-                var textLocation = defaultLabel.textLocation;
-                if (textLocation != null) {
-
-                    // get the relative position of the text relative to the point
-                    label.textX = textLocation.x - location.x;
-                    label.textY = textLocation.y - location.y;
-                }
-
-                component.labels.push(label);
-            }
+        if (color != null) {
+          if (hexRegex.test(color)) {
+            // preprend a # if the color is a hex string and doesn't start with #
+            label.color = '#' + color;
+          } else {
+            label.color = color;
+          }
         }
+
+        var location = defaultLabel.location;
+        if (location != null) {
+          // get the position of the point
+          label.pointX = location.x;
+          label.pointY = location.y;
+        }
+
+        var textLocation = defaultLabel.textLocation;
+        if (textLocation != null) {
+          // get the relative position of the text relative to the point
+          label.textX = textLocation.x - location.x;
+          label.textY = textLocation.y - location.y;
+        }
+
+        component.labels.push(label);
+      }
     }
+  }
 
-    wise5Node.components.push(component);
+  wise5Node.components.push(component);
 
-    // add the WISE5 node to the project
-    addWISE5Node(wise5Node);
+  // add the WISE5 node to the project
+  addWISE5Node(wise5Node);
 
-    return wise5Node;
+  return wise5Node;
 }
 
 /**
@@ -1488,67 +1480,65 @@ function convertAnnotator(node, nodeContent) {
  * @returns a WISE5 node
  */
 function convertGrapher(node, nodeContent) {
-    var wise5Node = createWISE5Node();
-    wise5Node.title = node.title;
+  var wise5Node = createWISE5Node();
+  wise5Node.title = node.title;
 
-    wise5Node.showSaveButton = true;
-    wise5Node.showSubmitButton = false;
-    wise5Node.components = [];
+  wise5Node.showSaveButton = true;
+  wise5Node.showSubmitButton = false;
+  wise5Node.components = [];
 
-    var component = {};
-    component.id = createRandomId();
-    component.type = 'Graph';
+  var component = {};
+  component.id = createRandomId();
+  component.type = 'Graph';
 
-    component.prompt = nodeContent.prompt;
-    component.showSaveButton = false;
-    component.showSubmitButton = false;
-    component.title = nodeContent.graphTitle;
-    component.xAxis = {};
-    component.xAxis.title = {};
-    component.xAxis.title.text = nodeContent.graphParams.xLabel;
+  component.prompt = nodeContent.prompt;
+  component.showSaveButton = false;
+  component.showSubmitButton = false;
+  component.title = nodeContent.graphTitle;
+  component.xAxis = {};
+  component.xAxis.title = {};
+  component.xAxis.title.text = nodeContent.graphParams.xLabel;
 
-    if (nodeContent.graphParams.xmin != null) {
-        component.xAxis.min = parseFloat(nodeContent.graphParams.xmin);
+  if (nodeContent.graphParams.xmin != null) {
+    component.xAxis.min = parseFloat(nodeContent.graphParams.xmin);
+  }
+
+  if (nodeContent.graphParams.xmax != null) {
+    component.xAxis.max = parseFloat(nodeContent.graphParams.xmax);
+  }
+
+  component.yAxis = {};
+  component.yAxis.title = {};
+  component.yAxis.title.text = nodeContent.graphParams.yLabel;
+
+  if (nodeContent.graphParams.ymin != null) {
+    component.yAxis.min = parseFloat(nodeContent.graphParams.ymin);
+  }
+
+  if (nodeContent.graphParams.ymax != null) {
+    component.yAxis.max = parseFloat(nodeContent.graphParams.ymax);
+  }
+
+  component.series = [
+    {
+      name: 'Data',
+      data: [],
+      color: 'blue',
+      marker: {
+        symbol: 'square'
+      },
+      regression: false,
+      regressionSettings: {},
+      canEdit: true
     }
+  ];
 
-    if (nodeContent.graphParams.xmax != null) {
-        component.xAxis.max = parseFloat(nodeContent.graphParams.xmax);
-    }
+  wise5Node.components.push(component);
 
-    component.yAxis = {};
-    component.yAxis.title = {};
-    component.yAxis.title.text = nodeContent.graphParams.yLabel;
+  // add the WISE5 node to the project
+  addWISE5Node(wise5Node);
 
-    if (nodeContent.graphParams.ymin != null) {
-        component.yAxis.min = parseFloat(nodeContent.graphParams.ymin);
-    }
-
-    if (nodeContent.graphParams.ymax != null) {
-        component.yAxis.max = parseFloat(nodeContent.graphParams.ymax);
-    }
-
-    component.series = [
-        {
-            "name": "Data",
-            "data": [
-            ],
-            "color": "blue",
-            "marker": {
-                "symbol": "square"
-            },
-            "regression": false,
-            "regressionSettings": {
-            },
-            "canEdit": true
-        }
-    ];
-
-    wise5Node.components.push(component);
-
-    // add the WISE5 node to the project
-    addWISE5Node(wise5Node);
-
-    return wise5Node;
+  return wise5Node;
 }
 
 /**
@@ -1558,29 +1548,28 @@ function convertGrapher(node, nodeContent) {
  * @returns a WISE5 node
  */
 function convertOutsideURL(node, nodeContent) {
+  // create a WISE5 node
+  var wise5Node = createWISE5Node();
 
-    // create a WISE5 node
-    var wise5Node = createWISE5Node();
+  // set the title
+  wise5Node.title = node.title;
 
-    // set the title
-    wise5Node.title = node.title;
+  wise5Node.components = [];
 
-    wise5Node.components = [];
+  var component = {};
 
-    var component = {};
+  // set the component id
+  component.id = createRandomId();
 
-    // set the component id
-    component.id = createRandomId();
+  component.type = 'OutsideURL';
+  component.url = nodeContent.url;
 
-    component.type = 'OutsideURL';
-    component.url = nodeContent.url;
+  wise5Node.components.push(component);
 
-    wise5Node.components.push(component);
+  // add the WISE5 node to the project
+  addWISE5Node(wise5Node);
 
-    // add the WISE5 node to the project
-    addWISE5Node(wise5Node);
-
-    return wise5Node;
+  return wise5Node;
 }
 
 /**
@@ -1588,11 +1577,11 @@ function convertOutsideURL(node, nodeContent) {
  * @returns a node id string
  */
 function getNextNodeId() {
-    var nodeId = 'node' + nodeCounter;
+  var nodeId = 'node' + nodeCounter;
 
-    nodeCounter++;
+  nodeCounter++;
 
-    return nodeId;
+  return nodeId;
 }
 
 /**
@@ -1600,11 +1589,11 @@ function getNextNodeId() {
  * @returns a group id string
  */
 function getNextGroupId() {
-    var groupId = 'group' + groupCounter;
+  var groupId = 'group' + groupCounter;
 
-    groupCounter++;
+  groupCounter++;
 
-    return groupId;
+  return groupId;
 }
 
 /**
@@ -1612,7 +1601,7 @@ function getNextGroupId() {
  * @param wise5Node the WISE5 node
  */
 function addWISE5Node(wise5Node) {
-    wise5Project.nodes.push(wise5Node);
+  wise5Project.nodes.push(wise5Node);
 }
 
 /**
@@ -1623,32 +1612,29 @@ function addWISE5Node(wise5Node) {
  * in order for the student to be able to traverse this transition
  */
 function addTransition(fromNodeId, toNodeId, criteriaArray) {
+  // get the from node
+  var node = getWISE5NodeById(fromNodeId);
 
-    // get the from node
-    var node = getWISE5NodeById(fromNodeId);
+  if (node != null) {
+    var transitionLogic = node.transitionLogic;
 
-    if (node != null) {
-        var transitionLogic = node.transitionLogic;
+    if (transitionLogic != null) {
+      var transitions = transitionLogic.transitions;
 
-        if (transitionLogic != null) {
-            var transitions = transitionLogic.transitions;
+      if (transitions != null) {
+        // create the transition object
+        var transitionObject = {};
+        transitionObject.to = toNodeId;
 
-            if (transitions != null) {
-
-                // create the transition object
-                var transitionObject = {};
-                transitionObject.to = toNodeId;
-
-                if (criteriaArray != null) {
-                    transitionObject.criteria = criteriaArray;
-                }
-
-                // add the transition
-                transitions.push(transitionObject);
-            }
+        if (criteriaArray != null) {
+          transitionObject.criteria = criteriaArray;
         }
-    }
 
+        // add the transition
+        transitions.push(transitionObject);
+      }
+    }
+  }
 }
 
 /**
@@ -1657,28 +1643,28 @@ function addTransition(fromNodeId, toNodeId, criteriaArray) {
  * @returns the WISE5 node
  */
 function getWISE5NodeById(nodeId) {
-    var node = null;
+  var node = null;
 
-    if (nodeId != null) {
-        var nodes = wise5Project.nodes;
+  if (nodeId != null) {
+    var nodes = wise5Project.nodes;
 
-        // loop through all the WISE5 nodes currently in the WISE5 project
-        for (var n = 0; n < nodes.length; n++) {
-            var tempNode = nodes[n];
+    // loop through all the WISE5 nodes currently in the WISE5 project
+    for (var n = 0; n < nodes.length; n++) {
+      var tempNode = nodes[n];
 
-            if (tempNode != null) {
-                var tempNodeId = tempNode.id;
+      if (tempNode != null) {
+        var tempNodeId = tempNode.id;
 
-                if (nodeId === tempNodeId) {
-                    // we have found the node id that we want
-                    node = tempNode;
-                    break;
-                }
-            }
+        if (nodeId === tempNodeId) {
+          // we have found the node id that we want
+          node = tempNode;
+          break;
         }
+      }
     }
+  }
 
-    return node;
+  return node;
 }
 
 /**
@@ -1687,28 +1673,28 @@ function getWISE5NodeById(nodeId) {
  * @returns whether the sequence is a branching activity
  */
 function isBranchingActivity(sequence) {
-    var result = false;
+  var result = false;
 
-    if (sequence != null) {
-        var refs = sequence.refs;
+  if (sequence != null) {
+    var refs = sequence.refs;
 
-        // regex to that matches strings that end with br
-        var regex = /.*br$/;
+    // regex to that matches strings that end with br
+    var regex = /.*br$/;
 
-        if (refs != null && refs.length > 0) {
-            var firstRef = refs[0];
+    if (refs != null && refs.length > 0) {
+      var firstRef = refs[0];
 
-            /*
-             * check if the first node in the branch is a branching node
-             * by checking if the node id ends with br
-             */
-            if (firstRef.match(regex)) {
-                result = true;
-            }
-        }
+      /*
+       * check if the first node in the branch is a branching node
+       * by checking if the node id ends with br
+       */
+      if (firstRef.match(regex)) {
+        result = true;
+      }
     }
+  }
 
-    return result;
+  return result;
 }
 
 /**
@@ -1716,133 +1702,138 @@ function isBranchingActivity(sequence) {
  * @param sequence the WISE4 branch sequence
  */
 function handleBranchActivity(sequence) {
+  if (sequence != null) {
+    // get all the children of the sequence
+    var refs = sequence.refs;
 
-    if (sequence != null) {
+    var branchNode = null;
 
-        // get all the children of the sequence
-        var refs = sequence.refs;
+    var lastNodeIds = [];
 
-        var branchNode = null;
+    // loop through all the children
+    for (var r = 0; r < refs.length; r++) {
+      var ref = refs[r];
 
-        var lastNodeIds = [];
+      if (r === 0) {
+        // the first child should be a branch node
+        branchNode = getBranchNode(ref);
+      } else {
+        /*
+         * all the children that are not the first child should be
+         * branch sequences
+         */
 
-        // loop through all the children
-        for (var r = 0; r < refs.length; r++) {
-            var ref = refs[r];
+        // create the WISE5 nodes in this branch path
+        var branchNodes = getWISE5NodesInBranchPath(ref);
 
-            if (r === 0) {
-                // the first child should be a branch node
-                branchNode = getBranchNode(ref);
-            } else {
+        // remember the previous node ids so that we can create transitions later
+        var tempPreviousNodeIds = previousNodeIds;
 
-                /*
-                 * all the children that are not the first child should be
-                 * branch sequences
-                 */
+        var firstNodeIdInBranch = null;
 
-                // create the WISE5 nodes in this branch path
-                var branchNodes = getWISE5NodesInBranchPath(ref);
+        // loop through all the nodes in the branch path
+        for (var b = 0; b < branchNodes.length; b++) {
+          // get a WISE5 node
+          var wise5Node = branchNodes[b];
 
-                // remember the previous node ids so that we can create transitions later
-                var tempPreviousNodeIds = previousNodeIds;
+          var to = wise5Node.id;
 
-                var firstNodeIdInBranch = null;
+          // add the WISE5 node to the current group
+          currentGroup.ids.push(wise5Node.id);
 
-                // loop through all the nodes in the branch path
-                for (var b = 0; b < branchNodes.length; b++) {
+          if (b === 0) {
+            /*
+             * this is the first node in the branch path so we will remember it so we can
+             * create a transition later
+             */
+            firstNodeIdInBranch = wise5Node.id;
+          }
 
-                    // get a WISE5 node
-                    var wise5Node = branchNodes[b];
+          // loop through all the previous node ids
+          for (var p = 0; p < tempPreviousNodeIds.length; p++) {
+            // get a previous node id
+            var tempPreviousNodeId = tempPreviousNodeIds[p];
 
-                    var to = wise5Node.id;
+            // get the previous node
+            var previousWISE5Node = getWISE5NodeById(tempPreviousNodeId);
 
-                    // add the WISE5 node to the current group
-                    currentGroup.ids.push(wise5Node.id);
+            // create a transition
+            addTransition(tempPreviousNodeId, to);
 
-                    if (b === 0) {
-                        /*
-                         * this is the first node in the branch path so we will remember it so we can
-                         * create a transition later
-                         */
-                        firstNodeIdInBranch = wise5Node.id;
-                    }
+            if (b === 0) {
+              // this is the first node in the branch path
 
-                    // loop through all the previous node ids
-                    for (var p = 0; p < tempPreviousNodeIds.length; p++) {
+              /*
+               * get the transition logic from the previous node.
+               * the previous node is the branch point.
+               */
+              var transitionLogic = previousWISE5Node.transitionLogic;
 
-                        // get a previous node id
-                        var tempPreviousNodeId = tempPreviousNodeIds[p];
+              // get the branching function
+              var branchingFunction = branchNode.branchingFunction;
+              var maxPathVisitable = branchNode.maxPathVisitable;
 
-                        // get the previous node
-                        var previousWISE5Node = getWISE5NodeById(tempPreviousNodeId);
+              // set how to choose the path
+              transitionLogic.howToChooseAmongAvailablePaths = branchingFunction;
+              transitionLogic.whenToChoosePath = 'enterNode';
 
-                        // create a transition
-                        addTransition(tempPreviousNodeId, to);
+              // set whether the student can change path
+              if (maxPathVisitable > 1) {
+                transitionLogic.canChangePath = true;
+              } else {
+                transitionLogic.canChangePath = false;
+              }
 
-                        if (b === 0) {
-                            // this is the first node in the branch path
-
-                            /*
-                             * get the transition logic from the previous node.
-                             * the previous node is the branch point.
-                             */
-                            var transitionLogic = previousWISE5Node.transitionLogic;
-
-                            // get the branching function
-                            var branchingFunction = branchNode.branchingFunction;
-                            var maxPathVisitable = branchNode.maxPathVisitable;
-
-                            // set how to choose the path
-                            transitionLogic.howToChooseAmongAvailablePaths = branchingFunction;
-                            transitionLogic.whenToChoosePath = 'enterNode';
-
-                            // set whether the student can change path
-                            if (maxPathVisitable > 1) {
-                                transitionLogic.canChangePath = true;
-                            } else {
-                                transitionLogic.canChangePath = false;
-                            }
-
-                            // set the max visitable paths
-                            transitionLogic.maxPathsVisitable = maxPathVisitable;
-                        }
-
-                        /*
-                         * loop through all the previous node ids. usually there will only be
-                         * one previous node id and it will be the branch point.
-                         *
-                         * create constraints that make the nodes in the branch path not visible
-                         * and not visitable until the student takes the path.
-                         */
-                        for (var x = 0; x < previousNodeIds.length; x++) {
-                            // get the branch point node id
-                            var branchPointNodeId = previousNodeIds[x];
-
-                            // create a constraint that makes the node not visible
-                            var notVisibleBranchConstraint = this.createBranchConstraint('makeThisNodeNotVisible', branchPointNodeId, firstNodeIdInBranch, to);
-
-                            // create a constraint that makes the node not visitable
-                            var notVisitableBranchConstraint = this.createBranchConstraint('makeThisNodeNotVisitable', branchPointNodeId, firstNodeIdInBranch, to);
-
-                            // add the constraints
-                            this.addWISE5Constraint(to, notVisibleBranchConstraint);
-                            this.addWISE5Constraint(to, notVisitableBranchConstraint);
-                        }
-                    }
-
-                    // update the previous node ids
-                    tempPreviousNodeIds = [to];
-
-                    if (b === (branchNodes.length - 1)) {
-                        // remember the last node in the branch path so we can set it into the previousNodeIds later
-                        lastNodeIds.push(wise5Node.id);
-                    }
-                }
+              // set the max visitable paths
+              transitionLogic.maxPathsVisitable = maxPathVisitable;
             }
-        }
 
-        previousNodeIds = lastNodeIds;
+            /*
+             * loop through all the previous node ids. usually there will only be
+             * one previous node id and it will be the branch point.
+             *
+             * create constraints that make the nodes in the branch path not visible
+             * and not visitable until the student takes the path.
+             */
+            for (var x = 0; x < previousNodeIds.length; x++) {
+              // get the branch point node id
+              var branchPointNodeId = previousNodeIds[x];
+
+              // create a constraint that makes the node not visible
+              var notVisibleBranchConstraint = this.createBranchConstraint(
+                'makeThisNodeNotVisible',
+                branchPointNodeId,
+                firstNodeIdInBranch,
+                to
+              );
+
+              // create a constraint that makes the node not visitable
+              var notVisitableBranchConstraint = this.createBranchConstraint(
+                'makeThisNodeNotVisitable',
+                branchPointNodeId,
+                firstNodeIdInBranch,
+                to
+              );
+
+              // add the constraints
+              this.addWISE5Constraint(to, notVisibleBranchConstraint);
+              this.addWISE5Constraint(to, notVisitableBranchConstraint);
+            }
+          }
+
+          // update the previous node ids
+          tempPreviousNodeIds = [to];
+
+          if (b === branchNodes.length - 1) {
+            // remember the last node in the branch path so we can set it into the previousNodeIds later
+            lastNodeIds.push(wise5Node.id);
+          }
+        }
+      }
     }
+
+    previousNodeIds = lastNodeIds;
+  }
 }
 
 /**
@@ -1854,28 +1845,27 @@ function handleBranchActivity(sequence) {
  * @returns the constraint object
  */
 function createBranchConstraint(constraintAction, fromNodeId, toNodeId, targetNodeId) {
-    var branchConstraint = null;
+  var branchConstraint = null;
 
-    if (fromNodeId != null && toNodeId != null && targetNodeId != null) {
+  if (fromNodeId != null && toNodeId != null && targetNodeId != null) {
+    // create the constraint action
+    branchConstraint = {};
+    branchConstraint.id = 'constraint' + constraintCounter;
+    branchConstraint.action = constraintAction;
+    branchConstraint.targetId = targetNodeId;
+    branchConstraint.removalCriteria = [];
 
-        // create the constraint action
-        branchConstraint = {};
-        branchConstraint.id = 'constraint' + constraintCounter;
-        branchConstraint.action = constraintAction;
-        branchConstraint.targetId = targetNodeId;
-        branchConstraint.removalCriteria = [];
+    constraintCounter++;
 
-        constraintCounter++;
+    // create the critera that needs to be satisfied in order to remove the constraint
+    var criteria = {};
+    criteria.functionName = 'branchPathTaken';
+    criteria.fromNodeId = fromNodeId;
+    criteria.toNodeId = toNodeId;
+    branchConstraint.removalCriteria.push(criteria);
+  }
 
-        // create the critera that needs to be satisfied in order to remove the constraint
-        var criteria = {};
-        criteria.functionName = 'branchPathTaken';
-        criteria.fromNodeId = fromNodeId;
-        criteria.toNodeId = toNodeId;
-        branchConstraint.removalCriteria.push(criteria);
-    }
-
-    return branchConstraint;
+  return branchConstraint;
 }
 
 /**
@@ -1884,12 +1874,11 @@ function createBranchConstraint(constraintAction, fromNodeId, toNodeId, targetNo
  * @param constraint the constraint object
  */
 function addWISE5Constraint(nodeId, constraint) {
+  var node = getWISE5NodeById(nodeId);
 
-    var node = getWISE5NodeById(nodeId);
-
-    if (node != null) {
-        node.constraints.push(constraint);
-    }
+  if (node != null) {
+    node.constraints.push(constraint);
+  }
 }
 
 /**
@@ -1898,20 +1887,20 @@ function addWISE5Constraint(nodeId, constraint) {
  * @returns the WISE4 branch node content
  */
 function getBranchNode(nodeId) {
-    var nodeFilePath = projectFolderPath + nodeId;
+  var nodeFilePath = projectFolderPath + nodeId;
 
-    var nodeContent = '';
+  var nodeContent = '';
 
-    $.ajax({
-        method: 'GET',
-        url: nodeFilePath,
-        async: false,
-        dataType: 'json'
-    }).done(function(response) {
-        nodeContent = response;
-    });
+  $.ajax({
+    method: 'GET',
+    url: nodeFilePath,
+    async: false,
+    dataType: 'json'
+  }).done(function(response) {
+    nodeContent = response;
+  });
 
-    return nodeContent;
+  return nodeContent;
 }
 
 /**
@@ -1920,42 +1909,38 @@ function getBranchNode(nodeId) {
  * @returns an array of WISE5 nodes that are in the branch path
  */
 function getWISE5NodesInBranchPath(sequenceId) {
+  var branchNodes = [];
 
-    var branchNodes = [];
+  if (wise4Project != null && sequenceId != null) {
+    // get the WISE4 sequence
+    var sequence = getSequence(wise4Project, sequenceId);
 
-    if (wise4Project != null && sequenceId != null) {
+    if (sequence != null) {
+      var refs = sequence.refs;
 
-        // get the WISE4 sequence
-        var sequence = getSequence(wise4Project, sequenceId);
+      if (refs != null) {
+        // loop through all the nodes in the sequence
+        for (var r = 0; r < refs.length; r++) {
+          var ref = refs[r];
 
-        if (sequence != null) {
-            var refs = sequence.refs;
+          // create a WISE5 node
+          var wise5Node = createWISE5NodeFromNodeContent(ref);
 
-            if (refs != null) {
-
-                // loop through all the nodes in the sequence
-                for (var r = 0; r < refs.length; r++) {
-                    var ref = refs[r];
-
-                    // create a WISE5 node
-                    var wise5Node = createWISE5NodeFromNodeContent(ref);
-
-                    branchNodes.push(wise5Node);
-                }
-            }
+          branchNodes.push(wise5Node);
         }
+      }
     }
+  }
 
-    return branchNodes;
+  return branchNodes;
 }
 
 function fixAssetReferences(html) {
+  var fixedHTML = '';
 
-    var fixedHTML = '';
+  var regex = /['"]\.jpg['"]]/g;
 
-    var regex = /['"]\.jpg['"]]/g;
-
-    return fixedHTML;
+  return fixedHTML;
 }
 
 /**
@@ -1965,54 +1950,51 @@ function fixAssetReferences(html) {
  * @returns the text with linkTo occurrences replaced with wiselinks
  */
 function replaceLinkToWithWISELink(node, text) {
+  if (text != null && text.indexOf('linkTo') != -1) {
+    // the text contains a linkTo
 
-    if (text != null && text.indexOf('linkTo') != -1) {
-        // the text contains a linkTo
+    // pattern that matches the <a></a> that contains the linkTo
+    var anchorPattern = /(<a.*?linkTo.*?<\/a>)/g;
 
-        // pattern that matches the <a></a> that contains the linkTo
-        var anchorPattern = /(<a.*?linkTo.*?<\/a>)/g;
+    // find the matches in the text
+    var anchorResult = text.match(anchorPattern);
 
-        // find the matches in the text
-        var anchorResult = text.match(anchorPattern);
+    if (anchorResult != null) {
+      // pattern to capture the linkTo key and link text
+      var linkToPattern = /node.linkTo\(['"](.*?)['"]\).*?>(.*?)<\/a>/;
 
-        if (anchorResult != null) {
+      // loop through all the linkTo occurrences
+      for (var r = 0; r < anchorResult.length; r++) {
+        // get an occurrence of linkTo
+        var tempResult = anchorResult[r];
 
-            // pattern to capture the linkTo key and link text
-            var linkToPattern = /node.linkTo\(['"](.*?)['"]\).*?>(.*?)<\/a>/;
+        // find the linkTo key and link text
+        var linkToResult = tempResult.match(linkToPattern);
 
-            // loop through all the linkTo occurrences
-            for (var r = 0; r < anchorResult.length; r++) {
+        if (linkToResult != null) {
+          // get the linkTo key
+          var linkToKey = linkToResult[1];
 
-                // get an occurrence of linkTo
-                var tempResult = anchorResult[r];
+          // get the link text
+          var linkText = linkToResult[2];
 
-                // find the linkTo key and link text
-                var linkToResult = tempResult.match(linkToPattern);
+          // get the WISE4 node id
+          var wise4NodeId = this.getWISE4NodeIdByLinkToKey(node, linkToKey);
 
-                if (linkToResult != null) {
-                    // get the linkTo key
-                    var linkToKey = linkToResult[1];
+          // get the WISE5 node id
+          var wise5NodeId = this.getWISE5NodeIdByWISE4NodeId(wise4NodeId);
 
-                    // get the link text
-                    var linkText = linkToResult[2];
+          // create the WISE5 wiselink
+          var wise5Link = "<wiselink nodeid='" + wise5NodeId + "' linkText='" + linkText + "'/>";
 
-                    // get the WISE4 node id
-                    var wise4NodeId = this.getWISE4NodeIdByLinkToKey(node, linkToKey);
-
-                    // get the WISE5 node id
-                    var wise5NodeId = this.getWISE5NodeIdByWISE4NodeId(wise4NodeId);
-
-                    // create the WISE5 wiselink
-                    var wise5Link = "<wiselink nodeid='" + wise5NodeId + "' linkText='" + linkText + "'/>";
-
-                    // replace the WISE4 linkTo with the WISE5 wiselink
-                    text = text.replace(tempResult, wise5Link);
-                }
-            }
+          // replace the WISE4 linkTo with the WISE5 wiselink
+          text = text.replace(tempResult, wise5Link);
         }
+      }
     }
+  }
 
-    return text;
+  return text;
 }
 
 /**
@@ -2022,30 +2004,28 @@ function replaceLinkToWithWISELink(node, text) {
  * @returns the WISE4 node id
  */
 function getWISE4NodeIdByLinkToKey(node, linkToKey) {
-    var nodeId = null;
+  var nodeId = null;
 
-    if (node != null && linkToKey != null) {
+  if (node != null && linkToKey != null) {
+    // get the links from the node
+    var links = node.links;
 
-        // get the links from the node
-        var links = node.links;
+    if (links != null) {
+      // loop through all the links
+      for (var l = 0; l < links.length; l++) {
+        var link = links[l];
 
-        if (links != null) {
-
-            // loop through all the links
-            for (var l = 0; l < links.length; l++) {
-                var link = links[l];
-
-                if (link != null) {
-                    if (linkToKey === link.key) {
-                        // the key matches the one we are looking for
-                        nodeId = link.nodeIdentifier;
-                    }
-                }
-            }
+        if (link != null) {
+          if (linkToKey === link.key) {
+            // the key matches the one we are looking for
+            nodeId = link.nodeIdentifier;
+          }
         }
+      }
     }
+  }
 
-    return nodeId;
+  return nodeId;
 }
 
 /**
@@ -2054,11 +2034,11 @@ function getWISE4NodeIdByLinkToKey(node, linkToKey) {
  * @returns the WISE5 node id
  */
 function getWISE5NodeIdByWISE4NodeId(wise4NodeId) {
-    var wise5NodeId = null;
+  var wise5NodeId = null;
 
-    if (wise4NodeId != null) {
-        wise5NodeId = wise4IdsToWise5Ids[wise4NodeId];
-    }
+  if (wise4NodeId != null) {
+    wise5NodeId = wise4IdsToWise5Ids[wise4NodeId];
+  }
 
-    return wise5NodeId;
+  return wise5NodeId;
 }
