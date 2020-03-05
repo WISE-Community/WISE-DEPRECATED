@@ -36,9 +36,11 @@ public interface AnnotationDao<T extends Annotation> extends SimpleDao<T> {
 
   void saveAnnotation(Annotation annotation);
 
-  List<Annotation> getAnnotationByFromWorkgroupAndWorkByToWorkgroup(UserInfo fromWorkgroup, List<StepWork> workByToWorkgroup, Class<?> clazz);
+  List<Annotation> getAnnotationByFromWorkgroupAndWorkByToWorkgroup(UserInfo fromWorkgroup,
+      List<StepWork> workByToWorkgroup, Class<?> clazz);
 
-  List<Annotation> getAnnotationByFromWorkgroupsAndWorkByToWorkgroup(List<UserInfo> fromWorkgroups, List<StepWork> workByToWorkgroup, Class<?> clazz);
+  List<Annotation> getAnnotationByFromWorkgroupsAndWorkByToWorkgroup(List<UserInfo> fromWorkgroups,
+      List<StepWork> workByToWorkgroup, Class<?> clazz);
 
   List<? extends Annotation> getAnnotationByRunId(Long runId, Class<?> clazz);
 
@@ -46,37 +48,42 @@ public interface AnnotationDao<T extends Annotation> extends SimpleDao<T> {
 
   Annotation getAnnotationByUserInfoAndStepWork(UserInfo userInfo, StepWork stepWork, String type);
 
-  Annotation getAnnotationByFromUserInfoToUserInfoStepWorkType(UserInfo fromUserInfo, UserInfo toUserInfo, StepWork stepWork, String type);
+  Annotation getAnnotationByFromUserInfoToUserInfoStepWorkType(UserInfo fromUserInfo,
+      UserInfo toUserInfo, StepWork stepWork, String type);
 
-  Annotation getAnnotationByFromUserInfoToUserInfoNodeIdType(UserInfo fromUserInfo, UserInfo toUserInfo, String nodeId, String type);
+  Annotation getAnnotationByFromUserInfoToUserInfoNodeIdType(UserInfo fromUserInfo,
+      UserInfo toUserInfo, String nodeId, String type);
 
-  Annotation getAnnotationByFromUserInfoToUserInfoType(UserInfo fromUserInfo, UserInfo toUserInfo, String type);
+  Annotation getAnnotationByFromUserInfoToUserInfoType(UserInfo fromUserInfo, UserInfo toUserInfo,
+      String type);
 
-  List<Annotation> getAnnotationByFromWorkgroupsAndStepWork(List<UserInfo> fromWorkgroups, StepWork stepWork, String type);
+  List<Annotation> getAnnotationByFromWorkgroupsAndStepWork(List<UserInfo> fromWorkgroups,
+      StepWork stepWork, String type);
 
   List<Annotation> getAnnotationByStepWork(StepWork stepWork, Class<?> clazz);
 
-  List<Annotation> getAnnotationByFromUserToUserType(List<UserInfo> fromUsers, UserInfo toUser, String annotationType);
+  List<Annotation> getAnnotationByFromUserToUserType(List<UserInfo> fromUsers, UserInfo toUser,
+      String annotationType);
 
   List<Annotation> getAnnotationByToUserType(UserInfo toUser, String annotationType);
 
   Annotation getAnnotationByStepWorkAndAnnotationType(StepWork stepWork, String annotationType);
 
-  Annotation getLatestAnnotationByStepWork(List<StepWork> stepWorks, List<String> workgroupIds, String type);
+  Annotation getLatestAnnotationByStepWork(List<StepWork> stepWorks, List<String> workgroupIds,
+      String type);
 
   Annotation getLatestAnnotationByStepWork(List<StepWork> stepWorks, String type);
 
-  Annotation getLatestCRaterScoreByStepWork(List<StepWork> stepWorks);
+  Annotation getLatestAnnotationScoreByStepWork(List<StepWork> stepWorks,
+      List<String> workgroupIds);
 
-  Annotation getLatestAnnotationScoreByStepWork(List<StepWork> stepWorks, List<String> workgroupIds);
-
-  Annotation getLatestAnnotationCommentByStepWork(List<StepWork> stepWorks, List<String> workgroupIds);
-
-  Annotation getCRaterAnnotationByStepWork(StepWork stepWork);
+  Annotation getLatestAnnotationCommentByStepWork(List<StepWork> stepWorks,
+      List<String> workgroupIds);
 
   List<Annotation> getAnnotationByStepWorkList(List<StepWork> stepWorkList);
 
-  List<Annotation> getAnnotationByFromWorkgroupsToWorkgroupWithoutWork(List<UserInfo> fromUsers, UserInfo toUser, List<String> annotationTypes);
+  List<Annotation> getAnnotationByFromWorkgroupsToWorkgroupWithoutWork(List<UserInfo> fromUsers,
+      UserInfo toUser, List<String> annotationTypes);
 
   List<Annotation> getAnnotationsByRunIdAndNodeId(Long runId, String nodeId);
 

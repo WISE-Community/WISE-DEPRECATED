@@ -55,10 +55,8 @@ import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.vle.VLEService;
 import org.wise.portal.service.workgroup.WorkgroupService;
 import org.wise.vle.domain.annotation.Annotation;
-import org.wise.vle.domain.cRater.CRaterRequest;
 import org.wise.vle.domain.node.Node;
 import org.wise.vle.domain.user.UserInfo;
-import org.wise.vle.domain.webservice.crater.CRaterHttpClient;
 import org.wise.vle.domain.work.StepWork;
 
 /**
@@ -84,8 +82,7 @@ public class VLEAnnotationController {
   private WorkgroupService workgroupService;
 
   /**
-   * Handle GETing of Annotations. This includes GETing CRater Annotations, which involves POSTing
-   * to the CRater server (if needed).
+   * Handle GETing of Annotations.
    * 
    * @param request
    * @param response
@@ -108,9 +105,6 @@ public class VLEAnnotationController {
     String nodeStateIdStr = request.getParameter("nodeStateId");
     String periodIdStr = request.getParameter("periodId");
     String nodeId = request.getParameter("nodeId");
-    String cRaterScoringUrl = appProperties.getProperty("cRater_scoring_url");
-    String cRaterClientId = appProperties.getProperty("cRater_client_id");
-    String cRaterPassword = appProperties.getProperty("cRater_password");
     Vector<JSONObject> flaggedAnnotationsList = new Vector<JSONObject>();
     HashMap<Long, Long> classmateWorkgroupIdToPeriodIdMap = new HashMap<Long, Long>();
 
@@ -174,7 +168,7 @@ public class VLEAnnotationController {
 
     /*
      * teachers can get all annotations if they own the run students can get annotations that are
-     * from them and to them, or are for CRater or flags
+     * from them and to them
      */
 
     if (SecurityUtils.isAdmin(signedInUser)) {
@@ -187,13 +181,6 @@ public class VLEAnnotationController {
       if (SecurityUtils.isUserInWorkgroup(signedInUser, fromWorkgroupId)
           || SecurityUtils.isUserInWorkgroup(signedInUser, toWorkgroupId)) {
         allowedAccess = true;
-      } else if ("cRater".equals(annotationType)) {
-        StepWork stepWork = vleService.getStepWorkById(stepWorkId);
-        UserInfo stepWorkUserInfo = stepWork.getUserInfo();
-        Long stepWorkWorkgroupId = stepWorkUserInfo.getWorkgroupId();
-        if (SecurityUtils.isUserInWorkgroup(signedInUser, stepWorkWorkgroupId)) {
-          allowedAccess = true;
-        }
       } else if ("flag".equals(requestedType) || "inappropriateFlag".equals(requestedType)) {
         if (SecurityUtils.isUserInPeriod(signedInUser, runIdLong, periodId)) {
           allowedAccess = true;
@@ -233,8 +220,8 @@ public class VLEAnnotationController {
 
     List<Annotation> annotationList = null;
     Annotation annotation = null;
-    if (requestedType == null || (requestedType.equals("annotation")
-        && !"cRater".equals(annotationType) && !"run".equals(annotationType))) {
+    if (requestedType == null
+        || (requestedType.equals("annotation") && !"run".equals(annotationType))) {
       if (fromWorkgroupIdStr != null && stepWorkId != null) {
         UserInfo fromWorkgroup = vleService.getUserInfoByWorkgroupId(new Long(fromWorkgroupIdStr));
         StepWork stepWork = (StepWork) vleService.getStepWorkById(stepWorkId);
@@ -252,7 +239,6 @@ public class VLEAnnotationController {
         List<StepWork> workByToWorkgroup = vleService.getStepWorksByUserInfo(toWorkgroup);
         annotationList = vleService.getAnnotationByFromWorkgroupsAndWorkByToWorkgroup(
             fromWorkgroups, workByToWorkgroup, Annotation.class);
-        annotationList.addAll(vleService.getAnnotationByToUserType(toWorkgroup, "cRater"));
         List<String> annotationTypes = new ArrayList<String>();
         annotationTypes.add("score");
         annotationTypes.add("comment");
@@ -325,11 +311,6 @@ public class VLEAnnotationController {
       }
       annotationList = vleService.getAnnotationByFromUserToUserType(fromWorkgroups, toWorkgroup,
           annotationType);
-    }
-
-    if ("annotation".equals(requestedType) && "cRater".equals(annotationType)) {
-      annotation = getCRaterAnnotation(vleService, nodeStateId, runId, stepWorkId, annotationType,
-          cRaterScoringUrl, cRaterPassword, cRaterClientId);
     }
 
     JSONObject annotationsJSONObj = null;
@@ -461,161 +442,6 @@ public class VLEAnnotationController {
       response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
           "error retrieving annotations");
     }
-  }
-
-  /**
-   * Returns a CRater Annotation based on parameters, if exists. If not, makes a request to the
-   * CRater server to get automated feedback and saves it as an Annotation.
-   *
-   * Also updates/appends to an already-existing CRater Annotation if needed.
-   * 
-   * @param request
-   * @param runId
-   * @param stepWorkIdStr
-   * @param annotationType
-   * @param cRaterScoringUrl
-   * @param cRaterClientId
-   * @param stepWorkId
-   * @return CRater annotation for the specified stepwork, or null if there was an error getting the
-   *         CRater response
-   */
-  public static Annotation getCRaterAnnotation(VLEService vleService, Long nodeStateId,
-      String runId, Long stepWorkId, String annotationType, String cRaterScoringUrl,
-      String cRaterPassword, String cRaterClientId) {
-    String cRaterResponseId = stepWorkId.toString();
-    Annotation annotation = null;
-    StepWork stepWork = vleService.getStepWorkByStepWorkId(stepWorkId);
-    annotation = vleService.getCRaterAnnotationByStepWork(stepWork);
-
-    if (annotation != null) {
-      // cRater annotation already exists, we are either getting it if it also exists for the
-      // specified nodestate or appending to the annotation array if it doesn't exist
-      JSONObject nodeStateCRaterAnnotation = annotation.getAnnotationForNodeStateId(nodeStateId);
-      if (nodeStateCRaterAnnotation != null) {
-        // do nothing...this stepwork has already been scored and saved in the annotation
-        // this will be returned to user later in this function
-      } else {
-        // this node state does not have a crater annotation yet so we will make it and add it to
-        // the array of annotations
-        try {
-          JSONObject nodeStateByTimestamp = stepWork.getNodeStateByTimestamp(nodeStateId);
-          String studentResponse = "";
-          Object object = nodeStateByTimestamp.get("response");
-          if (object instanceof JSONArray) {
-            studentResponse = ((JSONArray) object).getString(0);
-          } else if (object instanceof String) {
-            studentResponse = (String) object;
-          }
-
-          String cRaterItemId = stepWork.getCRaterItemId();
-          String cRaterResponseXML = CRaterHttpClient.getCRaterScoringResponse(cRaterScoringUrl,
-              cRaterPassword, cRaterClientId, cRaterItemId, cRaterResponseId, studentResponse);
-          if (cRaterResponseXML != null) {
-            JSONObject cRaterResponseJSONObj = new JSONObject();
-            JSONObject studentNodeStateResponse = stepWork.getNodeStateByTimestamp(nodeStateId);
-            cRaterResponseJSONObj = Annotation.createCRaterNodeStateAnnotation(nodeStateId,
-                CRaterHttpClient.getScore(cRaterResponseXML),
-                CRaterHttpClient.getConcepts(cRaterResponseXML), studentNodeStateResponse,
-                cRaterResponseXML);
-
-            annotation.appendNodeStateAnnotation(cRaterResponseJSONObj);
-            vleService.saveAnnotation(annotation);
-            CRaterRequest cRaterRequest = vleService
-                .getCRaterRequestByStepWorkIdNodeStateId(stepWork, nodeStateId);
-            if (cRaterRequest != null) {
-              Calendar cRaterRequestCompletedTime = Calendar.getInstance();
-              cRaterRequest
-                  .setTimeCompleted(new Timestamp(cRaterRequestCompletedTime.getTimeInMillis()));
-              cRaterRequest.setCRaterResponse(cRaterResponseXML);
-              vleService.saveCRaterRequest(cRaterRequest);
-            }
-          }
-        } catch (JSONException e) {
-          e.printStackTrace();
-        }
-
-      }
-    } else {
-      try {
-        JSONObject nodeStateByTimestamp = stepWork.getNodeStateByTimestamp(nodeStateId);
-        String studentResponse = "";
-        Object object = nodeStateByTimestamp.get("response");
-        if (object instanceof JSONArray) {
-          studentResponse = ((JSONArray) object).getString(0);
-        } else if (object instanceof String) {
-          studentResponse = (String) object;
-        }
-
-        String cRaterItemId = stepWork.getCRaterItemId();
-        String cRaterResponseXML = CRaterHttpClient.getCRaterScoringResponse(cRaterScoringUrl,
-            cRaterPassword, cRaterClientId, cRaterItemId, cRaterResponseId, studentResponse);
-        if (cRaterResponseXML != null) {
-          if (cRaterResponseXML.contains("<error code=")) {
-          } else {
-            Calendar now = Calendar.getInstance();
-            Timestamp postTime = new Timestamp(now.getTimeInMillis());
-            Node node = stepWork.getNode();
-            String nodeId = node.getNodeId();
-            String type = annotationType;
-
-            Long workgroupId = stepWork.getUserInfo().getWorkgroupId();
-            String toWorkgroup = workgroupId.toString();
-            UserInfo toUser = vleService.getUserInfoByWorkgroupId(workgroupId);
-            UserInfo fromUser = null;
-            String fromWorkgroup = "-1"; // default for auto-scored items.
-
-            int score = CRaterHttpClient.getScore(cRaterResponseXML);
-            String concepts = CRaterHttpClient.getConcepts(cRaterResponseXML);
-            JSONObject studentResponseNodeState = stepWork.getNodeStateByTimestamp(nodeStateId);
-            String cRaterResponse = cRaterResponseXML;
-
-            JSONObject cRaterNodeStateAnnotation = Annotation.createCRaterNodeStateAnnotation(
-                nodeStateId, score, concepts, studentResponseNodeState, cRaterResponse);
-
-            JSONArray nodeStateAnnotationArray = new JSONArray();
-            nodeStateAnnotationArray.put(cRaterNodeStateAnnotation);
-            JSONObject dataJSONObj = new JSONObject();
-            try {
-              dataJSONObj.put("runId", runId);
-              dataJSONObj.put("nodeId", nodeId);
-              dataJSONObj.put("toWorkgroup", toWorkgroup);
-              dataJSONObj.put("fromWorkgroup", fromWorkgroup);
-              dataJSONObj.put("stepWorkId", stepWorkId);
-              dataJSONObj.put("type", type);
-              dataJSONObj.put("value", nodeStateAnnotationArray);
-            } catch (JSONException e) {
-              e.printStackTrace();
-            }
-
-            annotation = new Annotation(stepWork, fromUser, toUser, new Long(runId), postTime, type,
-                dataJSONObj.toString(), nodeId);
-            vleService.saveAnnotation(annotation);
-            CRaterRequest cRaterRequest = vleService
-                .getCRaterRequestByStepWorkIdNodeStateId(stepWork, nodeStateId);
-            if (cRaterRequest != null) {
-              Calendar cRaterRequestCompletedTime = Calendar.getInstance();
-              cRaterRequest
-                  .setTimeCompleted(new Timestamp(cRaterRequestCompletedTime.getTimeInMillis()));
-              cRaterRequest.setCRaterResponse(cRaterResponse);
-              vleService.saveCRaterRequest(cRaterRequest);
-            }
-          }
-        } else {
-          // there was an error connecting to the CRater servlet
-          // do nothing so this method will return null
-          // increment fail count
-          CRaterRequest cRaterRequest = vleService.getCRaterRequestByStepWorkIdNodeStateId(stepWork,
-              nodeStateId);
-          if (cRaterRequest != null) {
-            cRaterRequest.setFailCount(cRaterRequest.getFailCount() + 1);
-            vleService.saveCRaterRequest(cRaterRequest);
-          }
-        }
-      } catch (JSONException e1) {
-        e1.printStackTrace();
-      }
-    }
-    return annotation;
   }
 
   /**

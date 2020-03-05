@@ -26,7 +26,6 @@ package org.wise.portal.service.vle;
 import java.util.List;
 
 import org.wise.vle.domain.annotation.Annotation;
-import org.wise.vle.domain.cRater.CRaterRequest;
 import org.wise.vle.domain.node.Node;
 import org.wise.vle.domain.statistics.VLEStatistics;
 import org.wise.vle.domain.status.RunStatus;
@@ -101,15 +100,11 @@ public interface VLEService {
 
   Annotation getLatestAnnotationByStepWork(List<StepWork> stepWorks, String type);
 
-  Annotation getLatestCRaterScoreByStepWork(List<StepWork> stepWorks);
-
   Annotation getLatestAnnotationScoreByStepWork(List<StepWork> stepWorks,
       List<String> workgroupIds);
 
   Annotation getLatestAnnotationCommentByStepWork(List<StepWork> stepWorks,
       List<String> workgroupIds);
-
-  Annotation getCRaterAnnotationByStepWork(StepWork stepWork);
 
   List<Annotation> getAnnotationByStepWorkList(List<StepWork> stepWorkList);
 
@@ -186,14 +181,5 @@ public interface VLEService {
   void saveRunStatus(RunStatus runStatus);
 
   RunStatus getRunStatusByRunId(Long runId);
-
-  // CRaterRequest functions
-  CRaterRequest getCRaterRequestById(Long id);
-
-  void saveCRaterRequest(CRaterRequest cRaterRequest);
-
-  CRaterRequest getCRaterRequestByStepWorkIdNodeStateId(StepWork stepWork, Long nodeStateId);
-
-  List<CRaterRequest> getIncompleteCRaterRequests();
 
 }

@@ -29,7 +29,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.annotation.AnnotationDao;
-import org.wise.portal.dao.crater.CRaterRequestDao;
 import org.wise.portal.dao.node.NodeDao;
 import org.wise.portal.dao.statistics.VLEStatisticsDao;
 import org.wise.portal.dao.status.RunStatusDao;
@@ -38,7 +37,6 @@ import org.wise.portal.dao.userinfo.UserInfoDao;
 import org.wise.portal.dao.work.StepWorkDao;
 import org.wise.portal.service.vle.VLEService;
 import org.wise.vle.domain.annotation.Annotation;
-import org.wise.vle.domain.cRater.CRaterRequest;
 import org.wise.vle.domain.node.Node;
 import org.wise.vle.domain.statistics.VLEStatistics;
 import org.wise.vle.domain.status.RunStatus;
@@ -75,9 +73,6 @@ public class VLEServiceImpl implements VLEService {
 
   @Autowired
   private RunStatusDao<RunStatus> runStatusDao;
-
-  @Autowired
-  private CRaterRequestDao<CRaterRequest> cRaterRequestDao;
 
   @Override
   public UserInfo getUserInfoById(Long id) {
@@ -209,11 +204,6 @@ public class VLEServiceImpl implements VLEService {
   }
 
   @Override
-  public Annotation getLatestCRaterScoreByStepWork(List<StepWork> stepWorks) {
-    return annotationDao.getLatestCRaterScoreByStepWork(stepWorks);
-  }
-
-  @Override
   public Annotation getLatestAnnotationScoreByStepWork(List<StepWork> stepWorks,
       List<String> workgroupIds) {
     return annotationDao.getLatestAnnotationScoreByStepWork(stepWorks, workgroupIds);
@@ -223,11 +213,6 @@ public class VLEServiceImpl implements VLEService {
   public Annotation getLatestAnnotationCommentByStepWork(List<StepWork> stepWorks,
       List<String> workgroupIds) {
     return annotationDao.getLatestAnnotationCommentByStepWork(stepWorks, workgroupIds);
-  }
-
-  @Override
-  public Annotation getCRaterAnnotationByStepWork(StepWork stepWork) {
-    return annotationDao.getCRaterAnnotationByStepWork(stepWork);
   }
 
   @Override
@@ -401,27 +386,6 @@ public class VLEServiceImpl implements VLEService {
   @Override
   public RunStatus getRunStatusByRunId(Long runId) {
     return runStatusDao.getRunStatusByRunId(runId);
-  }
-
-  @Override
-  public CRaterRequest getCRaterRequestById(Long id) {
-    return cRaterRequestDao.getCRaterRequestById(id);
-  }
-
-  @Override
-  public void saveCRaterRequest(CRaterRequest cRaterRequest) {
-    cRaterRequestDao.saveCRaterRequest(cRaterRequest);
-  }
-
-  @Override
-  public CRaterRequest getCRaterRequestByStepWorkIdNodeStateId(StepWork stepWork,
-      Long nodeStateId) {
-    return cRaterRequestDao.getCRaterRequestByStepWorkIdNodeStateId(stepWork, nodeStateId);
-  }
-
-  @Override
-  public List<CRaterRequest> getIncompleteCRaterRequests() {
-    return cRaterRequestDao.getIncompleteCRaterRequests();
   }
 
 }

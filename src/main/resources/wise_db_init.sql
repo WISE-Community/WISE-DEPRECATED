@@ -107,21 +107,6 @@ create table annotations (
     primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-create table craterrequest (
-    id bigint not null auto_increment,
-    cRaterItemId varchar(255) not null,
-    cRaterItemType varchar(255),
-    cRaterResponse text,
-    failCount integer,
-    nodeStateId bigint not null,
-    runId bigint not null,
-    timeCompleted datetime,
-    timeCreated datetime,
-    stepWorkId bigint,
-    constraint craterrequestStepWorkIdFK foreign key (stepWorkId) references stepwork (id),
-    primary key (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 create table events (
     id integer not null auto_increment,
     category varchar(255) not null,
