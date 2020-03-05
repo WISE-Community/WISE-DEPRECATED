@@ -520,7 +520,6 @@ public class InformationController {
       config.put("userInfoURL", contextPath + "/userInfo?runId=" + runId);
 
       if ("grading".equals(mode)) {
-        config.put("premadeCommentsURL", contextPath + "/teacher/grading/premadeComments.html");
         config.put("getXLSExportURL", contextPath + "/export?type=xlsexport&runId=" + runId);
         config.put("getSpecialExportURL",
             contextPath + "/specialExport?type=specialExport&runId=" + runId);

@@ -82,7 +82,6 @@ import org.wise.portal.presentation.web.exception.TeacherAlreadySharedWithProjec
 import org.wise.portal.presentation.web.response.SharedOwner;
 import org.wise.portal.service.acl.AclService;
 import org.wise.portal.service.authentication.UserDetailsService;
-import org.wise.portal.service.premadecomment.PremadeCommentService;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.tag.TagService;
@@ -116,9 +115,6 @@ public class ProjectServiceImpl implements ProjectService {
 
   @Autowired
   private RunService runService;
-
-  @Autowired
-  private PremadeCommentService premadeCommentService;
 
   private static final String LICENSE_PATH = "/license.txt";
 
@@ -212,12 +208,6 @@ public class ProjectServiceImpl implements ProjectService {
       }
     } catch (JSONException e) {
       e.printStackTrace();
-    }
-    Long newProjectId = (Long) project.getId();
-    if (parentProjectId != null) {
-      User signedInUser = ControllerUtil.getSignedInUser();
-      premadeCommentService.copyPremadeCommentsFromProject(parentProjectId, newProjectId,
-          signedInUser);
     }
     return project;
   }

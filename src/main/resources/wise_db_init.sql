@@ -288,34 +288,6 @@ create table portal_statistics (
     primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-create table premadecommentlists (
-    id bigint not null auto_increment,
-    global bit,
-    label varchar(255) not null,
-    projectId bigint,
-    owner bigint,
-    constraint premadecommentlistsOwnerFK foreign key (owner) references users (id),
-    primary key (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-create table premadecomments (
-    id bigint not null auto_increment,
-    comment varchar(255) not null,
-    labels varchar(255),
-    listposition bigint,
-    owner bigint,
-    constraint premadecommentsOwnerFK foreign key (owner) references users (id),
-    primary key (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-create table premadecomments_related_to_premadecommentlists (
-    premadecommentslist_fk bigint not null,
-    premadecomments_fk bigint not null,
-    constraint premadecommentlistsPremadeCommentsFK foreign key (premadecomments_fk) references premadecomments (id),
-    constraint premadecommentlistsPremadeCommentsListFK foreign key (premadecommentslist_fk) references premadecommentlists (id),
-    primary key (premadecommentslist_fk, premadecomments_fk)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 create table projects (
     id bigint not null auto_increment,
     datecreated datetime not null,
