@@ -39,9 +39,11 @@ export class LibraryProjectDetailsComponent implements OnInit {
     this.isRunProject = data.isRunProject;
     if (this.data.project) {
       this.project = new Project(this.data.project);
-      const numParents = this.data.project.metadata.parentProjects.length;
+      const numParents = this.data.project.metadata.parentProjects ? 
+          this.data.project.metadata.parentProjects.length : null;
       if (numParents) {
-        this.parentProject = new ParentProject(this.data.project.metadata.parentProjects[numParents-1]);
+        this.parentProject = 
+            new ParentProject(this.data.project.metadata.parentProjects[numParents-1]);
       }
       this.setNGSS();
       this.setLicenseInfo();
