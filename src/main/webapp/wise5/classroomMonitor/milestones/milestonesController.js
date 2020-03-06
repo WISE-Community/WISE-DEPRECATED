@@ -440,16 +440,9 @@ class MilestonesController {
           subScoreIndex++;
           index = subScoreIndex;
         }
-        const milestoneData = this.calculateMilestoneData(aggregateData, index);
-        const milestoneCategories = this.calculateMilestoneCategories(subScoreId);
-        const categories = JSON.stringify(milestoneCategories).replace(/\"/g, "'");
-        const graphData = JSON.stringify(milestoneData).replace(/\"/g, "'");
-        const graphRegex = new RegExp(`milestone-report-graph{1,} id="(${subScoreId})"`, 'g');
-        content = content.replace(
-          graphRegex,
-          `$& categories=\"${categories}\" data=\"${graphData}\"`
-        );
         const data = JSON.stringify(aggregateData).replace(/\"/g, "'");
+        const graphRegex = new RegExp(`milestone-report-graph{1,} id="(${subScoreId})"`, 'g');
+        content = content.replace(graphRegex, `$& data=\"${data}\"`);
         const dataRegex = new RegExp(`milestone-report-data{1,} score-id="(${subScoreId})"`, 'g');
         content = content.replace(dataRegex, `$& data=\"${data}\"`);
       }
@@ -472,44 +465,6 @@ class MilestonesController {
       }
     }
     return components;
-  }
-
-  calculateMilestoneCategories(subScoreId) {
-    if (subScoreId === 'ki') {
-      return ['1', '2', '3', '4', '5'];
-    } else {
-      return ['1', '2', '3'];
-    }
-  }
-
-  calculateMilestoneData(subScoreAggregate, subScoreIndex) {
-    const mainColor = 'rgb(255,143,0)';
-    const subColor1 = 'rgb(0,105,92)';
-    const subColor2 = 'rgb(106,27,154)';
-    const scoreKeys = Object.keys(subScoreAggregate.counts);
-    const scoreKeysSorted = scoreKeys.sort((a, b) => {
-      return parseInt(a) - parseInt(b);
-    });
-    const data = [];
-    let color = mainColor;
-    if (subScoreIndex > 0) {
-      color = subScoreIndex % 2 === 0 ? subColor1 : subColor2;
-    }
-    let step = 100 / scoreKeysSorted.length / 100;
-    let opacity = 0;
-    for (let scoreKey of scoreKeysSorted) {
-      opacity = opacity + step;
-      const scoreKeyCount = subScoreAggregate.counts[scoreKey];
-      const scoreKeyPercentage = Math.floor((100 * scoreKeyCount) / subScoreAggregate.scoreCount);
-      const scoreKeyColor = this.UtilService.rgbToHex(color, opacity);
-      const scoreData = {
-        y: scoreKeyPercentage,
-        color: scoreKeyColor,
-        count: scoreKeyCount
-      };
-      data.push(scoreData);
-    }
-    return data;
   }
 
   calculateAggregateAutoScores(nodeId, componentId, periodId) {
@@ -808,36 +763,37 @@ class MilestonesController {
     const title = this.$translate('MILESTONE_DETAILS_TITLE', {
       name: milestone.name
     });
-    const template = `<md-dialog class="dialog--wider">
-                <md-toolbar>
-                    <div class="md-toolbar-tools">
-                        <h2>${title}</h2>
-                    </div>
-                </md-toolbar>
-                <md-dialog-content class="gray-lighter-bg md-dialog-content">
-                    <milestone-details milestone="milestone" on-show-workgroup="onShowWorkgroup(value)" on-visit-node-grading="onVisitNodeGrading()"></milestone-details>
-                </md-dialog-content>
-                <md-dialog-actions layout="row" layout-align="start center">
-                    <md-button class="warn"
-                               ng-click="delete()"
-                               ng-if="!milestone.type === 'milestoneReport'"
-                               aria-label="{{ ::'DELETE' | translate }}">
-                        {{ ::'DELETE' | translate }}
-                    </md-button>
-                    <span flex></span>
-                    <md-button class="md-primary"
-                               ng-click="edit()"
-                               ng-if="!milestone.type === 'milestoneReport'"
-                               aria-label="{{ ::'EDIT' | translate }}">
-                        {{ ::'EDIT' | translate }}
-                    </md-button>
-                    <md-button class="md-primary"
-                               ng-click="close()"
-                               aria-label="{{ ::'CLOSE' | translate }}">
-                            {{ ::'CLOSE' | translate }}
-                        </md-button>
-                    </md-dialog-actions>
-            </md-dialog>`;
+    const template = 
+        `<md-dialog class="dialog--wider">
+          <md-toolbar>
+            <div class="md-toolbar-tools">
+              <h2>${title}</h2>
+            </div>
+          </md-toolbar>
+          <md-dialog-content class="gray-lighter-bg md-dialog-content">
+            <milestone-details milestone="milestone" on-show-workgroup="onShowWorkgroup(value)" on-visit-node-grading="onVisitNodeGrading()"></milestone-details>
+          </md-dialog-content>
+          <md-dialog-actions layout="row" layout-align="start center">
+            <md-button class="warn"
+                       ng-click="delete()"
+                       ng-if="!milestone.type === 'milestoneReport'"
+                       aria-label="{{ ::'DELETE' | translate }}">
+              {{ ::'DELETE' | translate }}
+            </md-button>
+            <span flex></span>
+            <md-button class="md-primary"
+                       ng-click="edit()"
+                       ng-if="!milestone.type === 'milestoneReport'"
+                       aria-label="{{ ::'EDIT' | translate }}">
+              {{ ::'EDIT' | translate }}
+            </md-button>
+            <md-button class="md-primary"
+                       ng-click="close()"
+                       aria-label="{{ ::'CLOSE' | translate }}">
+              {{ ::'CLOSE' | translate }}
+            </md-button>
+          </md-dialog-actions>
+        </md-dialog>`;
     this.$mdDialog
       .show({
         parent: angular.element(document.body),
@@ -948,27 +904,28 @@ class MilestonesController {
       milestone = this.createMilestone();
     }
 
-    let template = `<md-dialog class="dialog--wide">
-                <md-toolbar>
-                    <div class="md-toolbar-tools">
-                        <h2>${title}</h2>
-                    </div>
-                </md-toolbar>
-                <md-dialog-content class="gray-lighter-bg md-dialog-content">
-                    <milestone-edit milestone="milestone" on-change="onChange(milestone, valid)"></milestone-edit>
-                </md-dialog-content>
-                <md-dialog-actions layout="row" layout-align="end center">
-                    <md-button ng-click="close()"
-                               aria-label="{{ ::'CANCEL' | translate }}">
-                        {{ ::'CANCEL' | translate }}
-                    </md-button>
-                    <md-button class="md-primary"
-                               ng-click="save()"
-                               aria-label="{{ ::'SAVE' | translate }}">
-                            {{ ::'SAVE' | translate }}
-                        </md-button>
-                    </md-dialog-actions>
-            </md-dialog>`;
+    let template = 
+        `<md-dialog class="dialog--wide">
+          <md-toolbar>
+            <div class="md-toolbar-tools">
+              <h2>${title}</h2>
+            </div>
+          </md-toolbar>
+          <md-dialog-content class="gray-lighter-bg md-dialog-content">
+            <milestone-edit milestone="milestone" on-change="onChange(milestone, valid)"></milestone-edit>
+          </md-dialog-content>
+          <md-dialog-actions layout="row" layout-align="end center">
+            <md-button ng-click="close()"
+                       aria-label="{{ ::'CANCEL' | translate }}">
+              {{ ::'CANCEL' | translate }}
+            </md-button>
+            <md-button class="md-primary"
+                       ng-click="save()"
+                       aria-label="{{ ::'SAVE' | translate }}">
+              {{ ::'SAVE' | translate }}
+            </md-button>
+          </md-dialog-actions>
+        </md-dialog>`;
 
     // display the milestone edit form in a dialog
     this.$mdDialog
