@@ -69,7 +69,6 @@ import org.wise.portal.service.mail.IMailFacade;
 import org.wise.portal.service.portal.PortalService;
 import org.wise.portal.service.portal.PortalStatisticsService;
 import org.wise.portal.service.user.UserService;
-import org.wise.portal.service.vle.VLEService;
 import org.wise.vle.domain.statistics.VLEStatistics;
 
 /**
@@ -97,9 +96,6 @@ public class DailyAdminJob {
 
   @Autowired
   private PortalStatisticsDao<PortalStatistics> portalStatisticsDao;
-
-  @Autowired
-  private VLEService vleService;
 
   @Autowired
   private Properties appProperties;
@@ -149,9 +145,6 @@ public class DailyAdminJob {
           PortalStatistics latestPortalStatistics = portalStatisticsService
               .getLatestPortalStatistics();
           wiseStatisticsJSONObject.put("portal", latestPortalStatistics.getJSONObject());
-
-          VLEStatistics latestVLEStatistics = vleService.getLatestVLEStatistics();
-          wiseStatisticsJSONObject.put("vle", latestVLEStatistics.getJSONObject());
           postStatistics(wiseStatisticsJSONObject.toString());
         } catch (JSONException e) {
           e.printStackTrace();
@@ -244,7 +237,6 @@ public class DailyAdminJob {
       VLEStatistics vleStatisticsObject = new VLEStatistics();
       vleStatisticsObject.setTimestamp(timestamp);
       vleStatisticsObject.setData(vleStatistics.toString());
-      this.vleService.saveVLEStatistics(vleStatisticsObject);
       conn.close();
     } catch (Exception ex) {
       LoggerFactory.getLogger(getClass()).error(ex.getMessage());

@@ -25,7 +25,6 @@ package org.wise.portal.service.vle.wise5;
 
 import java.util.List;
 
-import org.aspectj.internal.lang.annotation.ajcDeclareAnnotation;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wise.portal.dao.ObjectNotFoundException;
@@ -33,6 +32,8 @@ import org.wise.portal.domain.run.Run;
 import org.wise.vle.domain.achievement.Achievement;
 import org.wise.vle.domain.annotation.wise5.Annotation;
 import org.wise.vle.domain.notification.Notification;
+import org.wise.vle.domain.status.RunStatus;
+import org.wise.vle.domain.status.StudentStatus;
 import org.wise.vle.domain.work.Event;
 import org.wise.vle.domain.work.NotebookItem;
 import org.wise.vle.domain.work.NotebookItemAlreadyInGroupException;
@@ -47,40 +48,35 @@ import org.wise.vle.domain.work.StudentWork;
 public interface VLEService {
 
   /**
-   * @return List of StudentWork objects with the specified fields. If none
-   *         matches, return an empty list.
+   * @return List of StudentWork objects with the specified fields. If none matches, return an empty
+   *         list.
    */
-  List<StudentWork> getStudentWorkList(Integer id, Integer runId,
-      Integer periodId, Integer workgroupId, Boolean isAutoSave,
-      Boolean isSubmit, String nodeId, String componentId, String componentType,
-      List<JSONObject> components, Boolean onlyGetLatest);
+  List<StudentWork> getStudentWorkList(Integer id, Integer runId, Integer periodId,
+      Integer workgroupId, Boolean isAutoSave, Boolean isSubmit, String nodeId, String componentId,
+      String componentType, List<JSONObject> components, Boolean onlyGetLatest);
 
   JSONArray getNotebookItemsExport(Integer runId);
 
   JSONArray getLatestNotebookItemsExport(Integer runId);
 
   /**
-   * @return JSONArray of notification for researcher export for the given run
-   *         id.
+   * @return JSONArray of notification for researcher export for the given run id.
    */
   JSONArray getNotificationsExport(Integer runId);
 
   /**
    * Saves StudentWork in the data store
    */
-  StudentWork saveStudentWork(Integer id, Integer runId, Integer periodId,
-      Integer workgroupId, Boolean isAutoSave, Boolean isSubmit, String nodeId,
-      String componentId, String componentType, String studentData,
-      String clientSaveTime) throws ObjectNotFoundException;
+  StudentWork saveStudentWork(Integer id, Integer runId, Integer periodId, Integer workgroupId,
+      Boolean isAutoSave, Boolean isSubmit, String nodeId, String componentId, String componentType,
+      String studentData, String clientSaveTime) throws ObjectNotFoundException;
 
   /**
-   * @return List of Event objects with the specified fields. If none matches,
-   *         return an empty list.
+   * @return List of Event objects with the specified fields. If none matches, return an empty list.
    */
-  List<Event> getEvents(Integer id, Integer runId, Integer periodId,
-      Integer workgroupId, String nodeId, String componentId,
-      String componentType, String context, String category, String event,
-      List<JSONObject> components);
+  List<Event> getEvents(Integer id, Integer runId, Integer periodId, Integer workgroupId,
+      String nodeId, String componentId, String componentType, String context, String category,
+      String event, List<JSONObject> components);
 
   public List<Event> getAllEvents(Run run);
 
@@ -91,72 +87,63 @@ public interface VLEService {
   /**
    * Saves Event in the data store
    */
-  Event saveEvent(Integer id, Integer runId, Integer periodId,
-      Integer workgroupId, String nodeId, String componentId,
-      String componentType, String context, String category, String event,
+  Event saveEvent(Integer id, Integer runId, Integer periodId, Integer workgroupId, String nodeId,
+      String componentId, String componentType, String context, String category, String event,
       String data, String clientSaveTime, Integer projectId, Integer userId)
       throws ObjectNotFoundException;
 
   /**
-   * @return List of Achievements with specified fields. If none matches, return
-   *         an empty list
+   * @return List of Achievements with specified fields. If none matches, return an empty list
    */
-  List<Achievement> getAchievements(Integer id, Integer runId,
-      Integer workgroupId, String achievementId, String type);
+  List<Achievement> getAchievements(Integer id, Integer runId, Integer workgroupId,
+      String achievementId, String type);
 
   /**
-   * Saves the specified achievements with specified fields and returns the
-   * saved result
+   * Saves the specified achievements with specified fields and returns the saved result
    */
-  Achievement saveAchievement(Integer id, Integer runId, Integer workgroupId,
-      String achievementId, String type, String data);
+  Achievement saveAchievement(Integer id, Integer runId, Integer workgroupId, String achievementId,
+      String type, String data);
 
   /**
-   * @return List of Annotation objects with the specified fields. If none
-   *         matches, return an empty list.
+   * @return List of Annotation objects with the specified fields. If none matches, return an empty
+   *         list.
    */
   List<Annotation> getAnnotations(Integer id, Integer runId, Integer periodId,
-      Integer fromWorkgroupId, Integer toWorkgroupId, String nodeId,
-      String componentId, Integer studentWorkId, String localNotebookItemId,
-      Integer notebookItemId, String type);
+      Integer fromWorkgroupId, Integer toWorkgroupId, String nodeId, String componentId,
+      Integer studentWorkId, String localNotebookItemId, Integer notebookItemId, String type);
 
   /**
    * Saves Annotation in the data store
    */
-  Annotation saveAnnotation(Integer id, Integer runId, Integer periodId,
-      Integer fromWorkgroupId, Integer toWorkgroupId, String nodeId,
-      String componentId, Integer studentWorkId, String localNotebookItemId,
-      Integer notebookItemId, String type, String data, String clientSaveTime)
-      throws ObjectNotFoundException;
+  Annotation saveAnnotation(Integer id, Integer runId, Integer periodId, Integer fromWorkgroupId,
+      Integer toWorkgroupId, String nodeId, String componentId, Integer studentWorkId,
+      String localNotebookItemId, Integer notebookItemId, String type, String data,
+      String clientSaveTime) throws ObjectNotFoundException;
 
   /**
    * @return StudentsAssets from data store
    */
-  List<StudentAsset> getStudentAssets(Integer id, Integer runId,
-      Integer periodId, Integer workgroupId, String nodeId, String componentId,
-      String componentType, Boolean isReferenced)
-      throws ObjectNotFoundException;
+  List<StudentAsset> getStudentAssets(Integer id, Integer runId, Integer periodId,
+      Integer workgroupId, String nodeId, String componentId, String componentType,
+      Boolean isReferenced) throws ObjectNotFoundException;
 
   /**
    * Saves StudentAssets in the data store
    */
-  StudentAsset saveStudentAsset(Integer id, Integer runId, Integer periodId,
-      Integer workgroupId, String nodeId, String componentId,
-      String componentType, Boolean isReferenced, String fileName,
-      String filePath, Long fileSize, String clientSaveTime,
+  StudentAsset saveStudentAsset(Integer id, Integer runId, Integer periodId, Integer workgroupId,
+      String nodeId, String componentId, String componentType, Boolean isReferenced,
+      String fileName, String filePath, Long fileSize, String clientSaveTime,
       String clientDeleteTime) throws ObjectNotFoundException;
 
-  StudentAsset getStudentAssetById(Integer studentAssetId)
-      throws ObjectNotFoundException;
+  StudentAsset getStudentAssetById(Integer studentAssetId) throws ObjectNotFoundException;
 
-  StudentAsset deleteStudentAsset(Integer studentAssetId,
-      Long clientDeleteTime);
+  StudentAsset deleteStudentAsset(Integer studentAssetId, Long clientDeleteTime);
 
   /**
    * @return NotebookItems from data store that match specified params
    */
-  List<NotebookItem> getNotebookItems(Integer id, Integer runId,
-      Integer periodId, Integer workgroupId, String nodeId, String componentId);
+  List<NotebookItem> getNotebookItems(Integer id, Integer runId, Integer periodId,
+      Integer workgroupId, String nodeId, String componentId);
 
   /**
    * Returns a list of notebook items that belong in a specified group.
@@ -172,10 +159,9 @@ public interface VLEService {
   /**
    * Saves NotebookItem in the data store
    */
-  NotebookItem saveNotebookItem(Integer id, Integer runId, Integer periodId,
-      Integer workgroupId, String nodeId, String componentId,
-      Integer studentWorkId, Integer studentAssetId, String localNotebookItemId,
-      String type, String title, String content, String groups,
+  NotebookItem saveNotebookItem(Integer id, Integer runId, Integer periodId, Integer workgroupId,
+      String nodeId, String componentId, Integer studentWorkId, Integer studentAssetId,
+      String localNotebookItemId, String type, String title, String content, String groups,
       String clientSaveTime, String clientDeleteTime);
 
   /**
@@ -186,8 +172,8 @@ public interface VLEService {
    * @param clientSaveTime
    * @return
    */
-  NotebookItem addNotebookItemToGroup(Integer notebookItemId, String group,
-      String clientSaveTime) throws NotebookItemAlreadyInGroupException;
+  NotebookItem addNotebookItemToGroup(Integer notebookItemId, String group, String clientSaveTime)
+      throws NotebookItemAlreadyInGroupException;
 
   /**
    * Remove a NotebookItem from the specified group
@@ -208,8 +194,8 @@ public interface VLEService {
    * @param clientSaveTime
    * @return
    */
-  NotebookItem copyNotebookItem(Integer workgroupId,
-      Integer parentNotebookItemId, String clientSaveTime);
+  NotebookItem copyNotebookItem(Integer workgroupId, Integer parentNotebookItemId,
+      String clientSaveTime);
 
   /**
    * @param notificationId
@@ -217,8 +203,7 @@ public interface VLEService {
    * @return the Notification with the specified id
    * @throws ObjectNotFoundException
    */
-  Notification getNotificationById(Integer notificationId)
-      throws ObjectNotFoundException;
+  Notification getNotificationById(Integer notificationId) throws ObjectNotFoundException;
 
   /**
    * @param groupId
@@ -226,15 +211,13 @@ public interface VLEService {
    * @return the Notifications that are in the specified group
    * @throws ObjectNotFoundException
    */
-  List<Notification> getNotificationsByGroupId(String groupId)
-      throws ObjectNotFoundException;
+  List<Notification> getNotificationsByGroupId(String groupId) throws ObjectNotFoundException;
 
   /**
    * @return NotebookItems from data store that match specified params
    */
-  List<Notification> getNotifications(Integer id, Integer runId,
-      Integer periodId, Integer toWorkgroupId, String groupId, String nodeId,
-      String componentId);
+  List<Notification> getNotifications(Integer id, Integer runId, Integer periodId,
+      Integer toWorkgroupId, String groupId, String nodeId, String componentId);
 
   /**
    * Save Notification in the data store
@@ -257,9 +240,9 @@ public interface VLEService {
    * @return saved notification object
    */
   Notification saveNotification(Integer id, Integer runId, Integer periodId,
-      Integer fromWorkgroupId, Integer toWorkgroupId, String groupId,
-      String nodeId, String componentId, String componentType, String type,
-      String message, String data, String timeGenerated, String timeDismissed);
+      Integer fromWorkgroupId, Integer toWorkgroupId, String groupId, String nodeId,
+      String componentId, String componentType, String type, String message, String data,
+      String timeGenerated, String timeDismissed);
 
   /**
    * Dismiss the given notification
@@ -268,6 +251,18 @@ public interface VLEService {
    * @param timeDismissed
    * @return Notification dismissed notification
    */
-  Notification dismissNotification(Notification notification,
-      String timeDismissed);
+  Notification dismissNotification(Notification notification, String timeDismissed);
+
+  void saveStudentStatus(StudentStatus studentStatus);
+
+  StudentStatus getStudentStatusByWorkgroupId(Long workgroupId);
+
+  List<StudentStatus> getStudentStatusesByPeriodId(Long periodId);
+
+  List<StudentStatus> getStudentStatusesByRunId(Long runId);
+
+  void saveRunStatus(RunStatus runStatus);
+
+  RunStatus getRunStatusByRunId(Long runId);
+
 }

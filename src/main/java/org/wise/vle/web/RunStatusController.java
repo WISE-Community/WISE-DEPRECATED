@@ -39,7 +39,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
-import org.wise.portal.service.vle.VLEService;
+import org.wise.portal.service.vle.wise5.VLEService;
 import org.wise.vle.domain.status.RunStatus;
 
 @Controller
@@ -50,23 +50,22 @@ public class RunStatusController {
   private VLEService vleService;
 
   @RequestMapping(method = RequestMethod.GET)
-  public ModelAndView doGet(
-      @RequestParam(value = "runId") String runIdString,
+  public ModelAndView doGet(@RequestParam(value = "runId") String runIdString,
       HttpServletResponse response) throws IOException {
     User signedInUser = ControllerUtil.getSignedInUser();
     Long runId = null;
     String statusString = null;
     try {
       runId = new Long(runIdString);
-    } catch(NumberFormatException e) {
+    } catch (NumberFormatException e) {
       e.printStackTrace();
     }
 
     if (runId == null) {
       /*
-       * this request was most likely caused by a session timeout and the user logging
-       * back in which makes a request to /runStatus without any parameters.
-       * in this case we will just redirect the user back to the WISE home page.
+       * this request was most likely caused by a session timeout and the user logging back in which
+       * makes a request to /runStatus without any parameters. in this case we will just redirect
+       * the user back to the WISE home page.
        */
       return new ModelAndView("redirect:/");
     }
@@ -74,16 +73,16 @@ public class RunStatusController {
     boolean allowedAccess = false;
 
     /*
-     * teachers that are owners of the run can make a request
-     * students that are in the run can make a request
+     * teachers that are owners of the run can make a request students that are in the run can make
+     * a request
      */
     if (SecurityUtils.isAdmin(signedInUser)) {
       allowedAccess = true;
-    } else if (SecurityUtils.isTeacher(signedInUser) &&
-        SecurityUtils.isUserOwnerOfRun(signedInUser, runId)) {
+    } else if (SecurityUtils.isTeacher(signedInUser)
+        && SecurityUtils.isUserOwnerOfRun(signedInUser, runId)) {
       allowedAccess = true;
-    } else if (SecurityUtils.isStudent(signedInUser) &&
-        SecurityUtils.isUserInRun(signedInUser, runId)) {
+    } else if (SecurityUtils.isStudent(signedInUser)
+        && SecurityUtils.isUserInRun(signedInUser, runId)) {
       allowedAccess = true;
     }
 
@@ -116,26 +115,24 @@ public class RunStatusController {
   }
 
   @RequestMapping(method = RequestMethod.POST)
-  public ModelAndView doPost(
-      @RequestParam(value = "runId") String runIdString,
-      @RequestParam(value = "status") String status,
-      HttpServletResponse response) throws IOException {
+  public ModelAndView doPost(@RequestParam(value = "runId") String runIdString,
+      @RequestParam(value = "status") String status, HttpServletResponse response)
+      throws IOException {
     User signedInUser = ControllerUtil.getSignedInUser();
     Long runId = null;
     try {
       runId = new Long(runIdString);
-    } catch(NumberFormatException e) {
+    } catch (NumberFormatException e) {
       e.printStackTrace();
     }
 
     boolean allowedAccess = false;
 
     /*
-     * teachers that are owners of the run can make a request
-     * students can not make a request
+     * teachers that are owners of the run can make a request students can not make a request
      */
-    if (SecurityUtils.isTeacher(signedInUser) &&
-        SecurityUtils.isUserOwnerOfRun(signedInUser, runId)) {
+    if (SecurityUtils.isTeacher(signedInUser)
+        && SecurityUtils.isUserOwnerOfRun(signedInUser, runId)) {
       allowedAccess = true;
     }
 
