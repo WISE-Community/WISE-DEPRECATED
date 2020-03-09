@@ -78,6 +78,7 @@ import org.wise.vle.web.VLEAnnotationController;
 
 /**
  * Jobs to be run daily such as creating and sending usage reports
+ * 
  * @author Geoffrey Kwan
  */
 @Component
@@ -85,7 +86,7 @@ public class DailyAdminJob {
 
   @Autowired
   private UserService userService;
-  
+
   @Autowired
   private IMailFacade mailService;
 
@@ -131,35 +132,39 @@ public class DailyAdminJob {
     yesterday = new java.sql.Date(todayCal.getTimeInMillis());
   }
 
-  @Transactional
-  @Scheduled(cron = "0 0 0 * * ?")
   public void doJob() {
-    //query for the portal statistics and save a new row in the portalStatistics table
+    // query for the portal statistics and save a new row in the
+    // portalStatistics table
     gatherPortalStatistics();
 
-    //query the vle tables and save a new row in the vleStatistics table
+    // query the vle tables and save a new row in the vleStatistics table
     gatherVLEStatistics();
 
-    //try to score the CRater student work that previously failed to be scored
+    // try to score the CRater student work that previously failed to be scored
     handleIncompleteCRaterRequests();
 
-    //create and send a message to uber_admin
+    // create and send a message to uber_admin
     String messageBody = getSummaryMessage();
     sendEmail(messageBody);
 
-    //post statistics to hub if allowed
+    // post statistics to hub if allowed
     try {
       Portal portal = portalService.getById(1);
       if (portal.isSendStatisticsToHub()) {
         try {
           JSONObject wiseStatisticsJSONObject = new JSONObject();
-          wiseStatisticsJSONObject.put("wiseName", appProperties.getProperty("wise.name"));
+          wiseStatisticsJSONObject.put("wiseName",
+              appProperties.getProperty("wise.name"));
 
-          PortalStatistics latestPortalStatistics = portalStatisticsService.getLatestPortalStatistics();
-          wiseStatisticsJSONObject.put("portal", latestPortalStatistics.getJSONObject());
+          PortalStatistics latestPortalStatistics = portalStatisticsService
+              .getLatestPortalStatistics();
+          wiseStatisticsJSONObject.put("portal",
+              latestPortalStatistics.getJSONObject());
 
-          VLEStatistics latestVLEStatistics = vleService.getLatestVLEStatistics();
-          wiseStatisticsJSONObject.put("vle", latestVLEStatistics.getJSONObject());
+          VLEStatistics latestVLEStatistics = vleService
+              .getLatestVLEStatistics();
+          wiseStatisticsJSONObject.put("vle",
+              latestVLEStatistics.getJSONObject());
           postStatistics(wiseStatisticsJSONObject.toString());
         } catch (JSONException e) {
           e.printStackTrace();
@@ -172,7 +177,8 @@ public class DailyAdminJob {
   }
 
   /**
-   * query for the portal statistics and save a new row in the portalStatistics table
+   * query for the portal statistics and save a new row in the portalStatistics
+   * table
    */
   private void gatherPortalStatistics() {
     debugOutput("gatherPortalStatistics start");
@@ -189,7 +195,8 @@ public class DailyAdminJob {
     for (int x = 0; x < allStudents.size(); x++) {
       User user = allStudents.get(x);
       MutableUserDetails userDetails = user.getUserDetails();
-      totalNumberStudentLogins += ((StudentUserDetails) userDetails).getNumberOfLogins();
+      totalNumberStudentLogins += ((StudentUserDetails) userDetails)
+          .getNumberOfLogins();
     }
     debugOutput("Number of student logins: " + totalNumberStudentLogins);
 
@@ -197,7 +204,8 @@ public class DailyAdminJob {
     for (int x = 0; x < allTeachers.size(); x++) {
       User user = allTeachers.get(x);
       MutableUserDetails userDetails = user.getUserDetails();
-      totalNumberTeacherLogins += ((TeacherUserDetails) userDetails).getNumberOfLogins();
+      totalNumberTeacherLogins += ((TeacherUserDetails) userDetails)
+          .getNumberOfLogins();
     }
     debugOutput("Number of teacher logins: " + totalNumberTeacherLogins);
 
@@ -262,27 +270,27 @@ public class DailyAdminJob {
   /**
    * Gather the StepWork statistics. This includes the total number of StepWork
    * rows as well as how many StepWork rows for each step type.
-   * @param statement the object to execute queries
-   * @param vleStatistics the JSONObject to store the statistics in
+   * 
+   * @param statement
+   *                        the object to execute queries
+   * @param vleStatistics
+   *                        the JSONObject to store the statistics in
    */
-  private void gatherStepWorkStatistics(Statement statement, JSONObject vleStatistics) {
+  private void gatherStepWorkStatistics(Statement statement,
+      JSONObject vleStatistics) {
     try {
       long stepWorkCount = 0;
       JSONArray stepWorkNodeTypeCounts = new JSONArray();
 
       /*
-       * the query to get the total step work rows for each node type
-       * e.g.
+       * the query to get the total step work rows for each node type e.g.
        *
-       * nodeType           | count(*)
-       * ------------------------------
-       * AssessmentListNode | 331053
-       * BrainstormNode     | 10936
-       * CarGraphNode       | 9
-       * etc.
+       * nodeType | count(*) ------------------------------ AssessmentListNode |
+       * 331053 BrainstormNode | 10936 CarGraphNode | 9 etc.
        *
        */
-      ResultSet stepWorkNodeTypeCountQuery = statement.executeQuery("select node.nodeType, count(*) from stepwork, node where stepwork.node_id=node.id group by nodeType");
+      ResultSet stepWorkNodeTypeCountQuery = statement.executeQuery(
+          "select node.nodeType, count(*) from stepwork, node where stepwork.node_id=node.id group by nodeType");
 
       while (stepWorkNodeTypeCountQuery.next()) {
         String nodeType = stepWorkNodeTypeCountQuery.getString(1);
@@ -295,42 +303,51 @@ public class DailyAdminJob {
             stepWorkNodeTypeCounts.put(stepWorkNodeTypeObject);
             stepWorkCount += nodeTypeCount;
           }
-        } catch(JSONException e) {
+        } catch (JSONException e) {
           e.printStackTrace();
         }
       }
 
-      vleStatistics.put("individualStepWorkNodeTypeCounts", stepWorkNodeTypeCounts);
+      vleStatistics.put("individualStepWorkNodeTypeCounts",
+          stepWorkNodeTypeCounts);
       vleStatistics.put("totalStepWorkCount", stepWorkCount);
-    } catch(SQLException e) {
+    } catch (SQLException e) {
       e.printStackTrace();
-    } catch(JSONException e) {
+    } catch (JSONException e) {
       e.printStackTrace();
     }
   }
 
   /**
-   * Gather the Annotation statistics. This includes the total number of Annotation
-   * rows as well as how many Annotation nodes for each annotation type.
-   * @param statement the object to execute queries
-   * @param vleStatistics the JSONObject to store the statistics in
+   * Gather the Annotation statistics. This includes the total number of
+   * Annotation rows as well as how many Annotation nodes for each annotation
+   * type.
+   * 
+   * @param statement
+   *                        the object to execute queries
+   * @param vleStatistics
+   *                        the JSONObject to store the statistics in
    */
-  private void gatherAnnotationStatistics(Statement statement, JSONObject vleStatistics) {
+  private void gatherAnnotationStatistics(Statement statement,
+      JSONObject vleStatistics) {
     try {
-      ResultSet annotationCountQuery = statement.executeQuery("select count(*) from annotation");
+      ResultSet annotationCountQuery = statement
+          .executeQuery("select count(*) from annotation");
       if (annotationCountQuery.first()) {
         long annotationCount = annotationCountQuery.getLong(1);
         try {
           vleStatistics.put("totalAnnotationCount", annotationCount);
-        } catch(JSONException e) {
+        } catch (JSONException e) {
           e.printStackTrace();
         }
       }
 
-      //this will hold all the annotation types e.g. "comment", "score", "flag", "cRater"
+      // this will hold all the annotation types e.g. "comment", "score",
+      // "flag", "cRater"
       Vector<String> annotationTypes = new Vector<String>();
 
-      ResultSet annotationTypeQuery = statement.executeQuery("select distinct type from annotation");
+      ResultSet annotationTypeQuery = statement
+          .executeQuery("select distinct type from annotation");
 
       while (annotationTypeQuery.next()) {
         String annotationType = annotationTypeQuery.getString(1);
@@ -340,8 +357,11 @@ public class DailyAdminJob {
       JSONArray annotationCounts = new JSONArray();
       for (String annotationType : annotationTypes) {
         if (annotationType != null && !annotationType.equals("")
-            && !annotationType.equals("null") && !annotationType.equals("NULL")) {
-          ResultSet annotationTypeCountQuery = statement.executeQuery("select count(*) from annotation where type='" + annotationType + "'");
+            && !annotationType.equals("null")
+            && !annotationType.equals("NULL")) {
+          ResultSet annotationTypeCountQuery = statement
+              .executeQuery("select count(*) from annotation where type='"
+                  + annotationType + "'");
 
           if (annotationTypeCountQuery.first()) {
             long annotationTypeCount = annotationTypeCountQuery.getLong(1);
@@ -352,44 +372,44 @@ public class DailyAdminJob {
               annotationObject.put("count", annotationTypeCount);
 
               annotationCounts.put(annotationObject);
-            } catch(JSONException e) {
+            } catch (JSONException e) {
               e.printStackTrace();
             }
           }
         }
       }
       vleStatistics.put("individualAnnotationCounts", annotationCounts);
-    } catch(SQLException e) {
+    } catch (SQLException e) {
       e.printStackTrace();
-    } catch(JSONException e) {
+    } catch (JSONException e) {
       e.printStackTrace();
     }
   }
 
   /**
-   * Get the node statistics. This includes the total number of step nodes as well
-   * as how many step nodes for each node type.
-   * @param statement the object to execute queries
-   * @param vleStatistics the JSONObject to store the statistics in
+   * Get the node statistics. This includes the total number of step nodes as
+   * well as how many step nodes for each node type.
+   * 
+   * @param statement
+   *                        the object to execute queries
+   * @param vleStatistics
+   *                        the JSONObject to store the statistics in
    */
-  private void gatherNodeStatistics(Statement statement, JSONObject vleStatistics) {
+  private void gatherNodeStatistics(Statement statement,
+      JSONObject vleStatistics) {
     try {
       long nodeCount = 0;
       JSONArray nodeTypeCounts = new JSONArray();
 
       /*
-       * the query to get the total number of nodes for each node type
-       * e.g.
+       * the query to get the total number of nodes for each node type e.g.
        *
-       * nodeType           | count(*)
-       * ------------------------------
-       * AssessmentListNode | 3408
-       * BrainstormNode     | 98
-       * CarGraphNode       | 9
-       * etc.
+       * nodeType | count(*) ------------------------------ AssessmentListNode |
+       * 3408 BrainstormNode | 98 CarGraphNode | 9 etc.
        *
        */
-      ResultSet nodeTypeCountQuery = statement.executeQuery("select nodeType, count(*) from node group by nodeType");
+      ResultSet nodeTypeCountQuery = statement.executeQuery(
+          "select nodeType, count(*) from node group by nodeType");
 
       while (nodeTypeCountQuery.next()) {
         String nodeType = nodeTypeCountQuery.getString(1);
@@ -402,7 +422,7 @@ public class DailyAdminJob {
             nodeTypeObject.put("count", nodeTypeCount);
             nodeTypeCounts.put(nodeTypeObject);
             nodeCount += nodeTypeCount;
-          } catch(JSONException e) {
+          } catch (JSONException e) {
             e.printStackTrace();
           }
         }
@@ -410,29 +430,34 @@ public class DailyAdminJob {
 
       vleStatistics.put("individualNodeTypeCounts", nodeTypeCounts);
       vleStatistics.put("totalNodeCount", nodeCount);
-    } catch(SQLException e) {
+    } catch (SQLException e) {
       e.printStackTrace();
-    } catch(JSONException e) {
+    } catch (JSONException e) {
       e.printStackTrace();
     }
   }
 
   /**
    * Get the number of times hints were viewed by a student
-   * @param statement the object to execute queries
-   * @param vleStatistics the JSONObject to store the statistics in
+   * 
+   * @param statement
+   *                        the object to execute queries
+   * @param vleStatistics
+   *                        the JSONObject to store the statistics in
    */
-  private void gatherHintStatistics(Statement statement, JSONObject vleStatistics) {
+  private void gatherHintStatistics(Statement statement,
+      JSONObject vleStatistics) {
     try {
-      ResultSet hintCountQuery = statement.executeQuery("select count(*) from stepwork where data like '%hintStates\":[{%]%'");
+      ResultSet hintCountQuery = statement.executeQuery(
+          "select count(*) from stepwork where data like '%hintStates\":[{%]%'");
 
       if (hintCountQuery.first()) {
         long hintCount = hintCountQuery.getLong(1);
         vleStatistics.put("totalHintViewCount", hintCount);
       }
-    } catch(SQLException e) {
+    } catch (SQLException e) {
       e.printStackTrace();
-    } catch(JSONException e) {
+    } catch (JSONException e) {
       e.printStackTrace();
     }
   }
@@ -448,7 +473,8 @@ public class DailyAdminJob {
     String henryClientId = appProperties.getProperty("henry_client_id");
 
     if (cRaterScoringUrl != null || henryScoringUrl != null) {
-      List<CRaterRequest> incompleteCRaterRequests = this.cRaterRequestDao.getIncompleteCRaterRequests();
+      List<CRaterRequest> incompleteCRaterRequests = this.cRaterRequestDao
+          .getIncompleteCRaterRequests();
 
       for (int x = 0; x < incompleteCRaterRequests.size(); x++) {
         CRaterRequest cRaterRequest = incompleteCRaterRequests.get(x);
@@ -473,10 +499,12 @@ public class DailyAdminJob {
         String runId = cRaterRequest.getRunId().toString();
         String annotationType = "cRater";
 
-        //make the request to score the student CRater work
-        VLEAnnotationController.getCRaterAnnotation(this.vleService, nodeStateId, runId, stepWorkId, annotationType, scoringUrl, cRaterPassword, clientId);
+        // make the request to score the student CRater work
+        VLEAnnotationController.getCRaterAnnotation(this.vleService,
+            nodeStateId, runId, stepWorkId, annotationType, scoringUrl,
+            cRaterPassword, clientId);
 
-        //sleep for 10 seconds between each request
+        // sleep for 10 seconds between each request
         try {
           Thread.sleep(10000);
         } catch (InterruptedException e) {
@@ -491,43 +519,47 @@ public class DailyAdminJob {
     DateFormat df = DateFormat.getDateInstance(DateFormat.LONG);
 
     List<Run> runsCreatedSinceYesterday = findRunsCreatedSinceYesterday();
-    messageBody += "Number of Runs started between "
-        + df.format(yesterday) + " and " + df.format(today) + ": "
-        + runsCreatedSinceYesterday.size() + "\n";
+    messageBody += "Number of Runs started between " + df.format(yesterday)
+        + " and " + df.format(today) + ": " + runsCreatedSinceYesterday.size()
+        + "\n";
 
     // show info about the run
     for (Run run : runsCreatedSinceYesterday) {
       messageBody += "\tProject:" + run.getProject().getName();
       User owner = run.getOwner();
-      TeacherUserDetails teacherUserDetails = (TeacherUserDetails) owner.getUserDetails();
+      TeacherUserDetails teacherUserDetails = (TeacherUserDetails) owner
+          .getUserDetails();
       String schoolName = teacherUserDetails.getSchoolname();
       String schoolCity = teacherUserDetails.getCity();
       String schoolState = teacherUserDetails.getState();
 
       messageBody += "\n\tTeacher Username:" + teacherUserDetails.getUsername();
-      messageBody += "\n\tTeacher School Info: " + schoolName + ", " + schoolCity + ", " + schoolState;
+      messageBody += "\n\tTeacher School Info: " + schoolName + ", "
+          + schoolCity + ", " + schoolState;
       messageBody += "\n\n";
     }
 
-    List<User> teachersJoinedSinceYesterday = findUsersJoinedSinceYesterday("teacherUserDetails");
+    List<User> teachersJoinedSinceYesterday = findUsersJoinedSinceYesterday(
+        "teacherUserDetails");
     messageBody += "\n\n";
-    messageBody += "Number of Teachers joined between "
-        + df.format(yesterday) + " and " + df.format(today) + ": "
+    messageBody += "Number of Teachers joined between " + df.format(yesterday)
+        + " and " + df.format(today) + ": "
         + teachersJoinedSinceYesterday.size();
 
-    List<User> studentsJoinedSinceYesterday = findUsersJoinedSinceYesterday("studentUserDetails");
+    List<User> studentsJoinedSinceYesterday = findUsersJoinedSinceYesterday(
+        "studentUserDetails");
     messageBody += "\n\n";
-    messageBody += "Number of Students joined between "
-        + df.format(yesterday) + " and " + df.format(today) + ": "
+    messageBody += "Number of Students joined between " + df.format(yesterday)
+        + " and " + df.format(today) + ": "
         + studentsJoinedSinceYesterday.size();
 
     // Number of Users that logged in at least once in the last day
-    List<User> studentsWhoLoggedInSinceYesterday = 
-        findUsersWhoLoggedInSinceYesterday("studentUserDetails");
-    List<User> teachersWhoLoggedInSinceYesterday = 
-        findUsersWhoLoggedInSinceYesterday("teacherUserDetails");
-    int totalNumUsersLoggedInSinceYesterday = 
-        studentsWhoLoggedInSinceYesterday.size() + teachersWhoLoggedInSinceYesterday.size();
+    List<User> studentsWhoLoggedInSinceYesterday = findUsersWhoLoggedInSinceYesterday(
+        "studentUserDetails");
+    List<User> teachersWhoLoggedInSinceYesterday = findUsersWhoLoggedInSinceYesterday(
+        "teacherUserDetails");
+    int totalNumUsersLoggedInSinceYesterday = studentsWhoLoggedInSinceYesterday
+        .size() + teachersWhoLoggedInSinceYesterday.size();
     messageBody += "\n\n";
     messageBody += "Number of users who logged in at least once between "
         + df.format(yesterday) + " and " + df.format(today) + ": "
@@ -545,7 +577,6 @@ public class DailyAdminJob {
     return users;
   }
 
-
   /**
    * Finds number of runs that were created since yesterday
    */
@@ -553,7 +584,8 @@ public class DailyAdminJob {
     String field = "starttime";
     String type = ">";
     Object term = yesterday;
-    List<Run> runsStartedSinceYesterday = runDao.retrieveByField(field, type, term);
+    List<Run> runsStartedSinceYesterday = runDao.retrieveByField(field, type,
+        term);
     return runsStartedSinceYesterday;
   }
 
@@ -569,8 +601,8 @@ public class DailyAdminJob {
 
   public void sendEmail(String message) {
     String[] recipients = appProperties.getProperty("uber_admin").split(",");
-    String subject = "Daily Admin Report on Portal: "
-        + " (" + appProperties.getProperty("wise.name") + ")";
+    String subject = "Daily Admin Report on Portal: " + " ("
+        + appProperties.getProperty("wise.name") + ")";
 
     String msg = message;
     String fromEmail = "wise_gateway@berkeley.edu";
@@ -589,12 +621,13 @@ public class DailyAdminJob {
       HttpClient client = HttpClientBuilder.create().build();
       HttpPost post = new HttpPost(WISE_HUB_URL);
       List<NameValuePair> urlParameters = new ArrayList<NameValuePair>();
-      urlParameters.add(new BasicNameValuePair("name", appProperties.getProperty("wise.name")));
+      urlParameters.add(new BasicNameValuePair("name",
+          appProperties.getProperty("wise.name")));
       urlParameters.add(new BasicNameValuePair("stats", wiseStatisticsString));
 
       try {
         post.setEntity(new UrlEncodedFormEntity(urlParameters));
-        HttpResponse response =  client.execute(post);
+        HttpResponse response = client.execute(post);
         if (response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
           System.err.println("Method failed: " + response.getStatusLine());
         }
@@ -610,7 +643,9 @@ public class DailyAdminJob {
 
   /**
    * Outputs the string to System.out if DEBUG is true
-   * @param output a String to output to System.out
+   * 
+   * @param output
+   *                 a String to output to System.out
    */
   private void debugOutput(String output) {
     if (DEBUG) {
