@@ -42,6 +42,8 @@ import java.util.stream.Collectors;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +53,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -84,7 +87,7 @@ import org.wise.vle.utils.FileManager;
  */
 @Controller
 @RequestMapping("/author")
-@Secured({"ROLE_AUTHOR"})
+@Secured({ "ROLE_AUTHOR" })
 public class AuthorAPIController {
 
   @Autowired
@@ -120,11 +123,12 @@ public class AuthorAPIController {
 
   @PostMapping("/project/new")
   @ResponseBody
-  protected String createProject(Authentication auth, @RequestParam String projectName,
-      @RequestParam String projectJSONString) throws ObjectNotFoundException, IOException,
-      JSONException {
+  protected String createProject(Authentication auth, @RequestBody ObjectNode objectNode)
+      throws ObjectNotFoundException, IOException, JSONException {
     User user = userService.retrieveUserByUsername(auth.getName());
     long newProjectId = projectService.getNextAvailableProjectId();
+    String projectName = objectNode.get("projectName").asText();
+    String projectJSONString = objectNode.get("projectJSONString").asText();
 
     ProjectParameters pParams = new ProjectParameters();
     pParams.setProjectId(newProjectId);
@@ -193,7 +197,7 @@ public class AuthorAPIController {
   @PostMapping("/project/save/{projectId}")
   @ResponseBody
   protected SimpleResponse saveProject(Authentication auth, @PathVariable Long projectId,
-      @RequestParam String projectJSONString) throws JSONException, ObjectNotFoundException {
+      @RequestBody String projectJSONString) throws JSONException, ObjectNotFoundException {
     Project project = projectService.getById(projectId);
     User user = userService.retrieveUserByUsername(auth.getName());
     if (projectService.canAuthorProject(project, user)) {
@@ -315,8 +319,8 @@ public class AuthorAPIController {
   @GetMapping("/config/{projectId}")
   @ResponseBody
   protected HashMap<String, Object> getAuthorProjectConfig(Authentication auth,
-      HttpServletRequest request, @PathVariable Long projectId) throws IOException,
-      ObjectNotFoundException {
+      HttpServletRequest request, @PathVariable Long projectId)
+      throws IOException, ObjectNotFoundException {
     Project project = projectService.getById(projectId);
     HashMap<String, Object> config = getDefaultAuthorProjectConfig(auth, request);
     String contextPath = request.getContextPath();
@@ -326,8 +330,8 @@ public class AuthorAPIController {
     String projectBaseURL = projectURL.substring(0, projectURL.indexOf("project.json"));
     Long projectAssetTotalSizeMax = project.getMaxTotalAssetsSize();
     if (projectAssetTotalSizeMax == null) {
-      projectAssetTotalSizeMax =
-          new Long(appProperties.getProperty("project_max_total_assets_size", "15728640"));
+      projectAssetTotalSizeMax = new Long(
+          appProperties.getProperty("project_max_total_assets_size", "15728640"));
     }
 
     config.put("projectId", projectId);
@@ -359,8 +363,11 @@ public class AuthorAPIController {
 
   /**
    * Get the run id that uses the project id
-   * @param projectId the project id
-   * @param runs list of runs to look in
+   *
+   * @param projectId
+   *                    the project id
+   * @param runs
+   *                    list of runs to look in
    * @returns the run id that uses the project if the project is used in a run
    */
   private Long getRunId(Long projectId, List<Run> runs) {
@@ -398,9 +405,13 @@ public class AuthorAPIController {
 
   /**
    * Import steps and copy assets if necessary
-   * @param steps a string containing a JSONArray of steps
-   * @param toProjectId the project id we are importing into
-   * @param fromProjectId the project id we are importing from
+   *
+   * @param steps
+   *                        a string containing a JSONArray of steps
+   * @param toProjectId
+   *                        the project id we are importing into
+   * @param fromProjectId
+   *                        the project id we are importing from
    */
   @PostMapping("/project/importSteps/{projectId}")
   @ResponseBody
@@ -413,19 +424,16 @@ public class AuthorAPIController {
     }
 
     /*
-     * Regex string to match asset file references in the step/component
-     * content.
-     * e.g. carbon.png
+     * Regex string to match asset file references in the step/component content. e.g. carbon.png
      */
-    String patternString = "(\'|\"|\\\\\'|\\\\\")([^:][^/]?[^/]?[a-zA-Z0-9@\\._\\/\\s\\-]*[.]" +
-        "(png|PNG|jpe?g|JPE?G|pdf|PDF|gif|GIF|mov|MOV|mp4|MP4|mp3|MP3|wav|WAV|swf|SWF|css|CSS" +
-        "|txt|TXT|json|JSON|xlsx?|XLSX?|doc|DOC|html.*?|HTML.*?|js|JS)).*?(\'|\"|\\\\\'|\\\\\")";
+    String patternString = "(\'|\"|\\\\\'|\\\\\")([^:][^/]?[^/]?[a-zA-Z0-9@\\._\\/\\s\\-]*[.]"
+        + "(png|PNG|jpe?g|JPE?G|pdf|PDF|gif|GIF|mov|MOV|mp4|MP4|mp3|MP3|wav|WAV|swf|SWF|css|CSS"
+        + "|txt|TXT|json|JSON|xlsx?|XLSX?|doc|DOC|html.*?|HTML.*?|js|JS)).*?(\'|\"|\\\\\'|\\\\\")";
     Pattern pattern = Pattern.compile(patternString);
     Matcher matcher = pattern.matcher(steps);
 
     /*
-     * this list will hold all the file names that are referenced by the
-     * steps that we are importing
+     * this list will hold all the file names that are referenced by the steps that we are importing
      */
     List<String> fileNames = new ArrayList<String>();
     while (matcher.find()) {
@@ -446,8 +454,8 @@ public class AuthorAPIController {
       fromProjectUrlLastIndexOfSlash = fromProjectUrl.lastIndexOf("\\");
     }
 
-    String fullFromProjectFolderUrl = curriculumBaseDir + fromProjectUrl.substring(0,
-        fromProjectUrlLastIndexOfSlash);
+    String fullFromProjectFolderUrl = curriculumBaseDir
+        + fromProjectUrl.substring(0, fromProjectUrlLastIndexOfSlash);
 
     // get the index of the last separator from the toProjectUrl
     int toProjectUrlLastIndexOfSlash = toProjectUrl.lastIndexOf("/");
@@ -455,8 +463,8 @@ public class AuthorAPIController {
       toProjectUrlLastIndexOfSlash = toProjectUrl.lastIndexOf("\\");
     }
 
-    String fullToProjectFolderUrl = curriculumBaseDir +
-        toProjectUrl.substring(0, toProjectUrlLastIndexOfSlash);
+    String fullToProjectFolderUrl = curriculumBaseDir
+        + toProjectUrl.substring(0, toProjectUrlLastIndexOfSlash);
 
     String fromProjectAssetsUrl = fullFromProjectFolderUrl + "/assets";
     File fromProjectAssetsFolder = new File(fromProjectAssetsUrl);
@@ -466,14 +474,12 @@ public class AuthorAPIController {
 
     for (String fileName : fileNames) {
       /*
-       * Import the asset to the project we are importing to. If the
-       * project already contains a file with the same file name and does
-       * not have the same file content, it will be given a new file name.
-       * The file name that is used will be returned by
-       * importAssetInContent().
+       * Import the asset to the project we are importing to. If the project already contains a file
+       * with the same file name and does not have the same file content, it will be given a new
+       * file name. The file name that is used will be returned by importAssetInContent().
        */
-      String newFileName = FileManager.importAssetInContent(
-          fileName, null, fromProjectAssetsFolder, toProjectAssetsFolder);
+      String newFileName = FileManager.importAssetInContent(fileName, null, fromProjectAssetsFolder,
+          toProjectAssetsFolder);
 
       if (newFileName != null && !fileName.equals(newFileName)) {
         // the file name was changed so we need to update the step content by replacing

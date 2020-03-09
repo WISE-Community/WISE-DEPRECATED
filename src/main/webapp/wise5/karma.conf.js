@@ -9,11 +9,11 @@ module.exports = function(config) {
 
     // frameworks to use
     // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['jasmine'],
+    frameworks: ['jasmine', 'karma-typescript'],
 
     // start these browsers
     // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: ['Chrome','ChromeHeadlessNoSandbox'],
+    browsers: ['Chrome', 'ChromeHeadlessNoSandbox'],
 
     customLaunchers: {
       ChromeHeadlessNoSandbox: {
@@ -40,7 +40,7 @@ module.exports = function(config) {
       'test-unit/sampleData/curriculum/DemoProject/project.json',
       'test-unit/sampleData/config/config1.json',
       'test-unit/sampleData/config/config2.json',
-      'vle/index.tests.js',
+      'vle/index.tests.js'
     ],
 
     proxies: {
@@ -48,10 +48,7 @@ module.exports = function(config) {
     },
 
     // list of files to exclude
-    exclude: [
-      '**/*.es6',
-      '**/*.js.map'
-    ],
+    exclude: ['**/*.es6', '**/*.js.map'],
 
     // level of logging
     // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
@@ -61,7 +58,8 @@ module.exports = function(config) {
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
       'vle/index.tests.js': ['webpack'],
-      '**/*.json': ['json_fixtures']
+      '**/*.json': ['json_fixtures'],
+      '**/*.ts': ['karma-typescript']
     },
 
     webpack,
@@ -70,7 +68,7 @@ module.exports = function(config) {
       stats: 'errors-only'
     },
 
-    'babelPreprocessor': {
+    babelPreprocessor: {
       options: {
         presets: ['@babel/preset-env'],
         sourceMap: 'inline'

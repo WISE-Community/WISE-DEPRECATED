@@ -7,8 +7,11 @@ const nodeExternals = require('webpack-node-externals');
 module.exports = {
   mode: 'development',
   devtool: 'inline-source-map',
-  entry: {
-    app: './main.js'
+  // entry: {
+  //   app: './main.js'
+  // },
+  resolve: {
+    extensions: ['.ts', '.js']
   },
   plugins: [
     //new CleanWebpackPlugin(),
@@ -44,9 +47,12 @@ module.exports = {
       {
         test: /\.scss$/,
         loader: 'style!css!sass',
-        exclude: [
-          '/node_modules/'
-        ]
+        exclude: ['/node_modules/']
+      },
+      {
+        test: /\.tsx?$/,
+        use: 'ts-loader',
+        exclude: /node_modules/
       }
     ]
   },
@@ -60,7 +66,7 @@ module.exports = {
     fs: 'empty',
     tls: 'empty',
     'aws-sdk': 'empty',
-    'child_process': 'empty',
-    'net': 'empty'
+    child_process: 'empty',
+    net: 'empty'
   }
 };
