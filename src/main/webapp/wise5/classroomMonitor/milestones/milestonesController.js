@@ -414,7 +414,8 @@ class MilestonesController {
       aggregateAutoScores[componentId] = this.calculateAggregateAutoScores(
         nodeId,
         componentId,
-        this.periodId
+        this.periodId,
+        projectAchievement.report
       );
     }
     const template = this.chooseTemplate(projectAchievement.report.templates, aggregateAutoScores);
@@ -467,7 +468,7 @@ class MilestonesController {
     return components;
   }
 
-  calculateAggregateAutoScores(nodeId, componentId, periodId) {
+  calculateAggregateAutoScores(nodeId, componentId, periodId, reportSettings) {
     const aggregate = {};
     const scoreAnnotations = this.AnnotationService.getAllLatestScoreAnnotations(
       nodeId,
@@ -476,7 +477,7 @@ class MilestonesController {
     );
     for (const scoreAnnotation of scoreAnnotations) {
       if (scoreAnnotation.type === 'autoScore') {
-        this.addDataToAggregate(aggregate, scoreAnnotation);
+        this.addDataToAggregate(aggregate, scoreAnnotation, reportSettings);
       } else {
         const autoScoreAnnotation = this.AnnotationService.getLatestScoreAnnotation(
           nodeId,
@@ -487,64 +488,53 @@ class MilestonesController {
         if (autoScoreAnnotation) {
           const mergedAnnotation = this.mergeAutoScoreAndTeacherScore(
             autoScoreAnnotation,
-            scoreAnnotation
+            scoreAnnotation,
+            reportSettings
           );
-          this.addDataToAggregate(aggregate, mergedAnnotation);
+          this.addDataToAggregate(aggregate, mergedAnnotation, reportSettings);
         }
       }
     }
     return aggregate;
   }
 
-  mergeAutoScoreAndTeacherScore(autoScoreAnnotation, teacherScoreAnnotation) {
+  mergeAutoScoreAndTeacherScore(autoScoreAnnotation, teacherScoreAnnotation, reportSettings) {
     if (autoScoreAnnotation.data.scores) {
       for (const subScore of autoScoreAnnotation.data.scores) {
-        const teacherScore = Math.round(teacherScoreAnnotation.data.value);
         if (subScore.id === 'ki') {
-          if (teacherScore > 5) {
-            subScore.score = 5;
-          } else if (teacherScore < 1) {
-            subScore.score = 1;
-          } else {
-            subScore.score = teacherScore;
-          }
+          subScore.score = 
+            this.adjustKIScore(teacherScoreAnnotation.data.value, reportSettings);
         }
       }
     }
     return autoScoreAnnotation;
   }
 
-  addDataToAggregate(aggregate, annotation) {
-    if (annotation.data.scores != null) {
-      for (let subScore of annotation.data.scores) {
-        if (aggregate[subScore.id] == null) {
-          if (subScore.id === 'ki') {
-            aggregate[subScore.id] = {
-              scoreSum: 0,
-              scoreCount: 0,
-              counts: {
-                1: 0,
-                2: 0,
-                3: 0,
-                4: 0,
-                5: 0
-              },
-              average: 0
-            };
-          } else {
-            aggregate[subScore.id] = {
-              scoreSum: 0,
-              scoreCount: 0,
-              counts: {
-                1: 0,
-                2: 0,
-                3: 0
-              },
-              average: 0
-            };
-          }
-        }
-        const subScoreVal = subScore.score;
+  adjustKIScore(scoreValue, reportSettings) {
+    const teacherScore = Math.round(scoreValue);
+    let min = 1;
+    let max = 5;
+    if (reportSettings.customScoreValues['ki']) {
+      min = Math.min(...reportSettings.customScoreValues['ki']);
+      max = Math.max(...reportSettings.customScoreValues['ki']);
+    }
+    let score = teacherScore;
+    if (teacherScore > max) {
+      score = max;
+    }
+    if (teacherScore < min) {
+      score = min;
+    }
+    return score;
+  }
+
+  addDataToAggregate(aggregate, annotation, reportSettings) {
+    for (const subScore of annotation.data.scores) {
+      if (aggregate[subScore.id] == null) {
+        aggregate[subScore.id] = this.setupAggregateSubScore(subScore.id, reportSettings);
+      }
+      const subScoreVal = subScore.score;
+      if (aggregate[subScore.id].counts[subScoreVal] > -1) {
         aggregate[subScore.id].counts[subScoreVal]++;
         aggregate[subScore.id].scoreSum += subScoreVal;
         aggregate[subScore.id].scoreCount++;
@@ -553,6 +543,42 @@ class MilestonesController {
       }
     }
     return aggregate;
+  }
+
+  setupAggregateSubScore(subScoreId, reportSettings) {
+    let counts = {};
+    if (subScoreId === 'ki') {
+      counts = {    
+        1: 0,
+        2: 0,
+        3: 0,
+        4: 0,
+        5: 0
+      };
+    } else {
+      counts = {    
+        1: 0,
+        2: 0,
+        3: 0
+      };
+    }
+    if (reportSettings.customScoreValues[subScoreId]) {
+      counts = this.getPossibleScoreValueCounts(reportSettings.customScoreValues[subScoreId]);
+    }
+    return {
+      scoreSum: 0,
+      scoreCount: 0,
+      counts: counts,
+      average: 0
+    };
+  }
+
+  getPossibleScoreValueCounts(scoreValues) {
+    let counts = {};
+    for (const value of scoreValues) {
+      counts[value] = 0;
+    }
+    return counts;
   }
 
   chooseTemplate(templates, aggregateAutoScores) {
