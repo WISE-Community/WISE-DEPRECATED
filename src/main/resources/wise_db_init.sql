@@ -64,23 +64,6 @@ create table acl_sid (
     primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-create table annotation (
-    id bigint not null auto_increment,
-    annotateTime datetime,
-    data mediumtext,
-    nodeId varchar(255),
-    postTime datetime,
-    runId bigint,
-    type varchar(255),
-    fromUser_id bigint,
-    stepWork_id bigint,
-    toUser_id bigint,
-    constraint annotationFromUserIdFK foreign key (fromUser_id) references userinfo (id),
-    constraint annotationStepWorkIdFK foreign key (stepWork_id) references stepwork (id),
-    constraint annotationToUserIdFK foreign key (toUser_id) references userinfo (id),
-    primary key (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 create table annotations (
     id integer not null auto_increment,
     clientSaveTime datetime not null,
@@ -168,15 +151,6 @@ create table newsitem (
     type varchar(255) not null,
     owner bigint not null,
     constraint newsitemOwnerFK foreign key (owner) references users (id),
-    primary key (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-create table node (
-    id bigint not null auto_increment,
-    nodeId varchar(255),
-    nodeType varchar(255),
-    runId varchar(255),
-    index nodeRunIdIndex (runId),
     primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -362,19 +336,6 @@ create table runstatus (
     primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-create table stepwork (
-    id bigint not null auto_increment,
-    data mediumtext not null,
-    endTime datetime,
-    postTime datetime not null,
-    startTime datetime,
-    node_id bigint not null,
-    userInfo_id bigint not null,
-    constraint stepworkNodeIdFK foreign key (node_id) references node (id),
-    constraint stepworkUserInfoIdFK foreign key (userInfo_id) references userinfo (id),
-    primary key (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 create table studentAssets (
     id integer not null auto_increment,
     clientDeleteTime datetime,
@@ -515,27 +476,12 @@ create table user_details_related_to_roles (
     primary key (user_details_fk, granted_authorities_fk)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-create table userinfo (
-    id bigint not null auto_increment,
-    workgroupId bigint,
-    index userinfoWorkgroupIdIndex (workgroupId),
-    constraint userinfoWorkgroupIdUnique unique (workgroupId),
-    primary key (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 create table users (
     id bigint not null auto_increment,
     OPTLOCK integer,
     user_details_fk bigint not null,
     constraint usersUserDetailsFK foreign key (user_details_fk) references user_details (id),
     constraint usersUserDetailsUnique unique (user_details_fk),
-    primary key (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-create table vle_statistics (
-    id bigint not null auto_increment,
-    data text,
-    timestamp datetime,
     primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

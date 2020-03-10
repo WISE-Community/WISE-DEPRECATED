@@ -327,7 +327,7 @@ public class ProjectServiceImpl implements ProjectService {
 
   private ModelAndView previewProjectWISE5(PreviewProjectParameters params, Project project) {
     String contextPath = params.getHttpServletRequest().getContextPath();
-    String wise5URL = contextPath + "/project/" + project.getId();
+    String wise5URL = contextPath + "/project/" + project.getId() + "#!/project/" + project.getId();
     return new ModelAndView(new RedirectView(wise5URL));
   }
 
