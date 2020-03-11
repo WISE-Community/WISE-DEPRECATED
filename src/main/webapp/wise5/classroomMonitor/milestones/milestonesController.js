@@ -512,20 +512,27 @@ class MilestonesController {
 
   adjustKIScore(scoreValue, reportSettings) {
     const teacherScore = Math.round(scoreValue);
-    let min = 1;
-    let max = 5;
-    if (reportSettings.customScoreValues['ki']) {
-      min = Math.min(...reportSettings.customScoreValues['ki']);
-      max = Math.max(...reportSettings.customScoreValues['ki']);
-    }
+    const kiScoreBounds = this.getKIScoreBounds(reportSettings);
     let score = teacherScore;
-    if (teacherScore > max) {
-      score = max;
+    if (teacherScore > kiScoreBounds.max) {
+      score = kiScoreBounds.max;
     }
-    if (teacherScore < min) {
-      score = min;
+    if (teacherScore < kiScoreBounds.min) {
+      score = kiScoreBounds.min;
     }
     return score;
+  }
+
+  getKIScoreBounds(reportSettings) {
+    const bounds = {
+      min: 1,
+      max: 5
+    }
+    if (reportSettings.customScoreValues && reportSettings.customScoreValues['ki']) {
+      bounds.min = Math.min(...reportSettings.customScoreValues['ki']);
+      bounds.max = Math.max(...reportSettings.customScoreValues['ki']);
+    }
+    return bounds;
   }
 
   addDataToAggregate(aggregate, annotation, reportSettings) {
@@ -547,23 +554,10 @@ class MilestonesController {
 
   setupAggregateSubScore(subScoreId, reportSettings) {
     let counts = {};
-    if (subScoreId === 'ki') {
-      counts = {    
-        1: 0,
-        2: 0,
-        3: 0,
-        4: 0,
-        5: 0
-      };
+    if (reportSettings.customScoreValues && reportSettings.customScoreValues[subScoreId]) {
+      counts = this.getCustomScoreValueCounts(reportSettings.customScoreValues[subScoreId]);
     } else {
-      counts = {    
-        1: 0,
-        2: 0,
-        3: 0
-      };
-    }
-    if (reportSettings.customScoreValues[subScoreId]) {
-      counts = this.getPossibleScoreValueCounts(reportSettings.customScoreValues[subScoreId]);
+      counts = this.getPossibleScoreValueCounts(subScoreId);
     }
     return {
       scoreSum: 0,
@@ -573,12 +567,30 @@ class MilestonesController {
     };
   }
 
-  getPossibleScoreValueCounts(scoreValues) {
+  getCustomScoreValueCounts(scoreValues) {
     let counts = {};
     for (const value of scoreValues) {
       counts[value] = 0;
     }
     return counts;
+  }
+
+  getPossibleScoreValueCounts(subScoreId) {
+    if (subScoreId === 'ki') {
+      return {    
+        1: 0,
+        2: 0,
+        3: 0,
+        4: 0,
+        5: 0
+      };
+    } else {
+      return {    
+        1: 0,
+        2: 0,
+        3: 0
+      };
+    }
   }
 
   chooseTemplate(templates, aggregateAutoScores) {
