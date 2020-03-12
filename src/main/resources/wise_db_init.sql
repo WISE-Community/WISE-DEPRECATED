@@ -99,7 +99,7 @@ create table annotations (
     index annotationsRunIdIndex (runId),
     index annotationsToWorkgroupIdIndex (toWorkgroupId),
     constraint annotationsFromWorkgroupIdFK foreign key (fromWorkgroupId) references workgroups (id),
-    constraint annotationsPeriodIdFK foreign key (periodId) references groups (id),
+    constraint annotationsPeriodIdFK foreign key (periodId) references `groups` (id),
     constraint annotationsRunIdFK foreign key (runId) references runs (id),
     constraint annotationsStudentWorkIdFK foreign key (studentWorkId) references studentWork (id),
     constraint annotationsToWorkgroupIdFK foreign key (toWorkgroupId) references workgroups (id),
@@ -150,7 +150,7 @@ create table events (
     index eventsWorkgroupIdIndex (workgroupId),
     index eventsProjectIdIndex (projectId),
     index eventsUserIdIndex (userId),
-    constraint eventsPeriodIdFK foreign key (periodId) references groups (id),
+    constraint eventsPeriodIdFK foreign key (periodId) references `groups` (id),
     constraint eventsRunIdFK foreign key (runId) references runs (id),
     constraint eventsWorkgroupIdFK foreign key (workgroupId) references workgroups (id),
     constraint eventsProjectIdFK foreign key (projectId) references projects (id),
@@ -166,12 +166,12 @@ create table granted_authorities (
     primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-create table groups (
+create table `groups` (
     id bigint not null auto_increment,
     name varchar(255) not null,
     OPTLOCK integer,
     parent_fk bigint,
-    constraint groupsParentFK foreign key (parent_fk) references groups (id),
+    constraint groupsParentFK foreign key (parent_fk) references `groups` (id),
     primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -179,7 +179,7 @@ create table groups_related_to_users (
     group_fk bigint not null,
     user_fk bigint not null,
     constraint groups_related_to_usersUserFK foreign key (user_fk) references users (id),
-    constraint groups_related_to_usersGroupFK foreign key (group_fk) references groups (id),
+    constraint groups_related_to_usersGroupFK foreign key (group_fk) references `groups` (id),
     primary key (group_fk, user_fk)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -238,10 +238,10 @@ create table notebookItems (
     studentAssetId integer,
     studentWorkId integer,
     workgroupId bigint not null,
-    groups text,
+    `groups` text,
     index notebookItemsRunIdIndex (runId),
     index notebookItemsWorkgroupIdIndex (workgroupId),
-    constraint notebookItemsPeriodIdFK foreign key (periodId) references groups (id),
+    constraint notebookItemsPeriodIdFK foreign key (periodId) references `groups` (id),
     constraint notebookItemsRunIdFK foreign key (runId) references runs (id),
     constraint notebookItemsStudentIdFK foreign key (studentAssetId) references studentAssets (id),
     constraint notebookItemsStudentWorkIdFK foreign key (studentWorkId) references studentWork (id),
@@ -269,7 +269,7 @@ create table notification (
     index notificationToWorkgroupIdIndex (toWorkgroupId),
     index notificationFromWorkgroupIdIndex (fromWorkgroupId),
     constraint notificationFromWorkgroupIdFK foreign key (fromWorkgroupId) references workgroups (id),
-    constraint notificationPeriodIdFK foreign key (periodId) references groups (id),
+    constraint notificationPeriodIdFK foreign key (periodId) references `groups` (id),
     constraint notificationRunIdFK foreign key (runId) references runs (id),
     constraint notificationToWorkgroupIdFK foreign key (toWorkgroupId) references workgroups (id),
     primary key (id)
@@ -458,7 +458,7 @@ create table runs_related_to_announcements (
 create table runs_related_to_groups (
     runs_fk bigint not null,
     groups_fk bigint not null,
-    constraint runs_related_to_groupsGroupsFK foreign key (groups_fk) references groups (id),
+    constraint runs_related_to_groupsGroupsFK foreign key (groups_fk) references `groups` (id),
     constraint runs_related_to_groupsRunsFK foreign key (runs_fk) references runs (id),
     constraint runs_related_to_groupsGroupsUnique unique (groups_fk),
     primary key (runs_fk, groups_fk)
@@ -512,7 +512,7 @@ create table studentAssets (
     workgroupId bigint not null,
     index studentAssetsRunIdIndex (runId),
     index studentAssetsWorkgroupIdIndex (workgroupId),
-    constraint studentAssetsPeriodIdFK foreign key (periodId) references groups (id),
+    constraint studentAssetsPeriodIdFK foreign key (periodId) references `groups` (id),
     constraint studentAssetsRunIdFK foreign key (runId) references runs (id),
     constraint studentAssetsWorkgroupIdFK foreign key (workgroupId) references workgroups (id),
     primary key (id)
@@ -533,7 +533,7 @@ create table studentWork (
     workgroupId bigint not null,
     index studentWorkRunIdIndex (runId),
     index studentWorkWorkgroupIdIndex (workgroupId),
-    constraint studentWorkPeriodIdFK foreign key (periodId) references groups (id),
+    constraint studentWorkPeriodIdFK foreign key (periodId) references `groups` (id),
     constraint studentWorkRunIdFK foreign key (runId) references runs (id),
     constraint studentWorkWorkgroupIdFK foreign key (workgroupId) references workgroups (id),
     primary key (id)
@@ -665,9 +665,9 @@ create table workgroups (
     period bigint,
     isTeacherWorkgroup bit,
     run_fk bigint not null,
-    constraint workgroupsGroupFK foreign key (group_fk) references groups (id),
+    constraint workgroupsGroupFK foreign key (group_fk) references `groups` (id),
     constraint workgroupsRunFK foreign key (run_fk) references runs (id),
-    constraint workgroupsPeriodFK foreign key (period) references groups (id),
+    constraint workgroupsPeriodFK foreign key (period) references `groups` (id),
     primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
