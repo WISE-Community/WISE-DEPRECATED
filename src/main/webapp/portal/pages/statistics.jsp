@@ -33,15 +33,15 @@ graphIds.push('totalNumberTeacherLoginsPerMonth');
 graphIds.push('totalNumberProjectsPerMonth');
 graphIds.push('totalNumberRunsPerMonth');
 graphIds.push('totalNumberTimesRunProjectClickedPerMonth');
-graphIds.push('break');
-graphIds.push('totalNumberStepWorksOverTime');
-graphIds.push('totalNumberStepsOverTime');
-graphIds.push('totalNumberAnnotationsOverTime');
-graphIds.push('totalNumberHintViewsOverTime');
-graphIds.push('break');
-graphIds.push('totalNumberStepTypesComparison');
-graphIds.push('totalNumberStepWorkStepTypesComparison');
-graphIds.push('totalNumberAnnotationTypesComparison');
+// graphIds.push('break');
+// graphIds.push('totalNumberStepWorksOverTime');
+// graphIds.push('totalNumberStepsOverTime');
+// graphIds.push('totalNumberAnnotationsOverTime');
+// graphIds.push('totalNumberHintViewsOverTime');
+// graphIds.push('break');
+// graphIds.push('totalNumberStepTypesComparison');
+// graphIds.push('totalNumberStepWorkStepTypesComparison');
+// graphIds.push('totalNumberAnnotationTypesComparison');
 
 //the labels of the graphs for the radio buttons
 var graphLabels = [];
@@ -258,7 +258,7 @@ var vleStatisticsPage = "/pages/statistics.html?type=vle";
 
 //boolean for checking if we are done
 var doneParsingPortalStatistics = false;
-var doneParsingVLEStatistics = false;
+var doneParsingVLEStatistics = true;
 
 //portal arrays for storing counts for all time
 var totalNumberStudentsArray = [];
@@ -1091,7 +1091,7 @@ function generateGraphs() {
 $(document).ready(function() {
 	//get the portal and vle statistics
 	getPortalStatistics();
-	getVLEStatistics();
+	// getVLEStatistics();
 });
 
 </script>

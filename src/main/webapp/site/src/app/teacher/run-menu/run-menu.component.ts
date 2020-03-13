@@ -1,12 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material';
-import { TeacherService } from "../teacher.service";
-import { ShareRunDialogComponent } from "../share-run-dialog/share-run-dialog.component";
-import { LibraryProjectDetailsComponent } from "../../modules/library/library-project-details/library-project-details.component";
-import { UserService } from "../../services/user.service";
-import { TeacherRun } from "../teacher-run";
-import { ConfigService } from "../../services/config.service";
-import { RunSettingsDialogComponent } from "../run-settings-dialog/run-settings-dialog.component";
+import { TeacherService } from '../teacher.service';
+import { ShareRunDialogComponent } from '../share-run-dialog/share-run-dialog.component';
+import { LibraryProjectDetailsComponent } from '../../modules/library/library-project-details/library-project-details.component';
+import { UserService } from '../../services/user.service';
+import { TeacherRun } from '../teacher-run';
+import { ConfigService } from '../../services/config.service';
+import { RunSettingsDialogComponent } from '../run-settings-dialog/run-settings-dialog.component';
 import { I18n } from '@ngx-translate/i18n-polyfill';
 import { EditRunWarningDialogComponent } from '../edit-run-warning-dialog/edit-run-warning-dialog.component';
 import { ListClassroomCoursesDialogComponent } from '../list-classroom-courses-dialog/list-classroom-courses-dialog.component';
@@ -17,21 +17,24 @@ import { ListClassroomCoursesDialogComponent } from '../list-classroom-courses-d
   styleUrls: ['./run-menu.component.scss']
 })
 export class RunMenuComponent implements OnInit {
-
   @Input()
   run: TeacherRun;
 
   editLink: string = '';
   reportProblemLink: string = '';
 
-  constructor(private dialog: MatDialog,
-              private teacherService: TeacherService,
-              private userService: UserService,
-              private configService: ConfigService,
-              private i18n: I18n) { }
+  constructor(
+    private dialog: MatDialog,
+    private teacherService: TeacherService,
+    private userService: UserService,
+    private configService: ConfigService,
+    private i18n: I18n
+  ) {}
 
   ngOnInit() {
-    this.editLink = `${this.configService.getContextPath()}/author/authorproject.html?projectId=${this.run.project.id}`;
+    this.editLink = `${this.configService.getContextPath()}/author/#!/project/${
+      this.run.project.id
+    }`;
     this.reportProblemLink = `${this.configService.getContextPath()}/contact?runId=${this.run.id}`;
   }
 
@@ -43,29 +46,33 @@ export class RunMenuComponent implements OnInit {
   }
 
   checkClassroomAuthorization() {
-    this.teacherService.getClassroomAuthorizationUrl(this.userService.getUser().getValue().username).subscribe(({ authorizationUrl }) => {
-      if (authorizationUrl == null) {
-        this.getClassroomCourses();
-      } else {
-        const authWindow = window.open(authorizationUrl, "authorize", "width=600,height=800");
-        const timer = setInterval(() => {
-          if (authWindow.closed) {
-            clearInterval(timer);
-            this.checkClassroomAuthorization();
-          }
-        }, 1000);
-      }
-    });
+    this.teacherService
+      .getClassroomAuthorizationUrl(this.userService.getUser().getValue().username)
+      .subscribe(({ authorizationUrl }) => {
+        if (authorizationUrl == null) {
+          this.getClassroomCourses();
+        } else {
+          const authWindow = window.open(authorizationUrl, 'authorize', 'width=600,height=800');
+          const timer = setInterval(() => {
+            if (authWindow.closed) {
+              clearInterval(timer);
+              this.checkClassroomAuthorization();
+            }
+          }, 1000);
+        }
+      });
   }
 
   getClassroomCourses() {
-    this.teacherService.getClassroomCourses(this.userService.getUser().getValue().username).subscribe(courses => {
-      const panelClass = courses.length ? 'mat-dialog--md' : '';
-      this.dialog.open(ListClassroomCoursesDialogComponent, {
-        data: { run: this.run, courses },
-        panelClass: panelClass
+    this.teacherService
+      .getClassroomCourses(this.userService.getUser().getValue().username)
+      .subscribe(courses => {
+        const panelClass = courses.length ? 'mat-dialog--md' : '';
+        this.dialog.open(ListClassroomCoursesDialogComponent, {
+          data: { run: this.run, courses },
+          panelClass: panelClass
+        });
       });
-    });
   }
 
   showUnitDetails() {

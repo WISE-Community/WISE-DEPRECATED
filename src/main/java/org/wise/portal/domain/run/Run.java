@@ -25,7 +25,6 @@ package org.wise.portal.domain.run;
 
 import org.wise.portal.domain.PeriodNotFoundException;
 import org.wise.portal.domain.Persistable;
-import org.wise.portal.domain.announcement.Announcement;
 import org.wise.portal.domain.attendance.StudentAttendance;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.project.Project;
@@ -36,8 +35,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * WISE representation for a length of time in which the
- * project becomes available for the students
+ * WISE representation for a length of time in which the project becomes available for the students
  *
  * @author Hiroki Terashima
  */
@@ -57,7 +55,7 @@ public interface Run extends Persistable {
 
   /**
    * @param endtime
-   *            the endtime to set
+   *                  the endtime to set
    */
   void setEndtime(Date endtime);
 
@@ -68,7 +66,7 @@ public interface Run extends Persistable {
 
   /**
    * @param starttime
-   *            the starttime to set
+   *                    the starttime to set
    */
   void setStarttime(Date starttime);
 
@@ -79,7 +77,7 @@ public interface Run extends Persistable {
 
   /**
    * @param runcode
-   *            the runcode to set
+   *                  the runcode to set
    */
   void setRuncode(String runcode);
 
@@ -89,7 +87,8 @@ public interface Run extends Persistable {
   Set<Group> getPeriods();
 
   /**
-   * @param periods the periods to set
+   * @param periods
+   *                  the periods to set
    */
   void setPeriods(Set<Group> periods);
 
@@ -99,7 +98,8 @@ public interface Run extends Persistable {
   User getOwner();
 
   /**
-   * @param owner User who owns this run
+   * @param owner
+   *                User who owns this run
    */
   void setOwner(User owner);
 
@@ -113,18 +113,18 @@ public interface Run extends Persistable {
   /**
    * Set the project that this run uses
    *
-   * @param project <code>Project</code> to use for this run
+   * @param project
+   *                  <code>Project</code> to use for this run
    */
   void setProject(Project project);
 
   /**
-   * Returns the period with periodName that is associated
-   * with this run
+   * Returns the period with periodName that is associated with this run
+   * 
    * @param periodName
-   * @return Group the period with the periodName that is
-   *           associated with this run
-   * @throws <code>PeriodNotFoundException</code> if the provided
-   *           period does not exist in the database for this run
+   * @return Group the period with the periodName that is associated with this run
+   * @throws <code>PeriodNotFoundException</code>
+   * if the provided period does not exist in the database for this run
    */
   Group getPeriodByName(String periodName) throws PeriodNotFoundException;
 
@@ -136,32 +136,33 @@ public interface Run extends Persistable {
   boolean isEnded();
 
   /**
-   * Returns whether the given student is already associated
-   * with this run, in any of the periods that the run is available for
+   * Returns whether the given student is already associated with this run, in any of the periods
+   * that the run is available for
    *
-   * @param studentUser <code>User</code> to check
-   * @return true iff the given student is associated in this
-   *     <code>Run</code> in any of the periods.
+   * @param studentUser
+   *                      <code>User</code> to check
+   * @return true iff the given student is associated in this <code>Run</code> in any of the
+   *         periods.
    */
   boolean isStudentAssociatedToThisRun(User studentUser);
 
   boolean isOwner(User user);
 
   /**
-   * @param teacherUser A user object.
+   * @param teacherUser
+   *                      A user object.
    * @return Whether the user is the owner or shared owner of the run.
    */
   boolean isTeacherAssociatedToThisRun(User teacherUser);
 
   /**
-   * Returns the Period (<code>Group</code>) that this student is in
-   * for this run.
+   * Returns the Period (<code>Group</code>) that this student is in for this run.
    *
-   * @param studentUser <code>User</code> to check
+   * @param studentUser
+   *                      <code>User</code> to check
    * @return the period that the student is in for this run
    */
   Group getPeriodOfStudent(User studentUser);
-
 
   /**
    * Returns the shared owners for this run
@@ -173,7 +174,8 @@ public interface Run extends Persistable {
   /**
    * Sets the shared owners for this run
    *
-   * @param sharedOwners <code>Set<User></code>
+   * @param sharedOwners
+   *                       <code>Set<User></code>
    */
   void setSharedowners(Set<User> sharedOwners);
 
@@ -187,21 +189,10 @@ public interface Run extends Persistable {
   /**
    * Sets name of the run.
    *
-   * @param name of the run to save
+   * @param name
+   *               of the run to save
    */
   void setName(String name);
-
-  /**
-   * @return <code>Set<Announcement></code> all announcements for this run.
-   */
-  Set<Announcement> getAnnouncements();
-
-  /**
-   * Sets all announcements for this run
-   *
-   * @param announcements to set
-   */
-  void setAnnouncements(Set<Announcement> announcements);
 
   /**
    * @return the isPaused
@@ -214,42 +205,35 @@ public interface Run extends Persistable {
   String getInfo();
 
   /**
-   * @param info the isPaused to set
+   * @param info
+   *               the isPaused to set
    */
   void setInfo(String info);
 
   /**
-   * Sets whether or not portfolio is enabled for this run.
-   * @return
-   */
-  void setPortfolioEnabled(boolean isPortfolioEnabled);
-
-  /**
-   * Returns whether or not portfolio is enabled for this run.
-   * @return
-   */
-  boolean isPortfolioEnabled();
-
-  /**
    * Sets whether or not student asset uploading is enabled for this run.
+   * 
    * @return
    */
   void setStudentAssetUploaderEnabled(boolean isStudentAssetUploaderEnabled);
 
   /**
    * Returns whether or not student asset uploading is enabled for this run.
+   * 
    * @return
    */
   boolean isStudentAssetUploaderEnabled();
 
   /**
    * Sets whether or not idea manager is enabled for this run.
+   * 
    * @return
    */
   void setIdeaManagerEnabled(boolean isIdeaManagerEnabled);
 
   /**
    * Returns whether or not idea manager is enabled for this run.
+   * 
    * @return
    */
   boolean isIdeaManagerEnabled();
@@ -270,7 +254,8 @@ public interface Run extends Persistable {
   Date getArchiveReminderTime();
 
   /**
-   * @param archiveReminderTime to set
+   * @param archiveReminderTime
+   *                              to set
    */
   void setArchiveReminderTime(Date archiveReminderTime);
 
@@ -280,7 +265,8 @@ public interface Run extends Persistable {
   String getExtras();
 
   /**
-   * @param extras the extras to set
+   * @param extras
+   *                 the extras to set
    */
   void setExtras(String extras);
 
@@ -290,7 +276,8 @@ public interface Run extends Persistable {
   Integer getLoggingLevel();
 
   /**
-   * @param loggingLevel the loggingLevel to set
+   * @param loggingLevel
+   *                       the loggingLevel to set
    */
   void setLoggingLevel(Integer loggingLevel);
 
@@ -300,7 +287,8 @@ public interface Run extends Persistable {
   Integer getPostLevel();
 
   /**
-   * @param postLevel the postLevel to set
+   * @param postLevel
+   *                    the postLevel to set
    */
   void setPostLevel(Integer postLevel);
 
@@ -310,7 +298,8 @@ public interface Run extends Persistable {
   Date getLastRun();
 
   /**
-   * @param lastRun - when this run was last run
+   * @param lastRun
+   *                  - when this run was last run
    */
   void setLastRun(Date lastRun);
 
@@ -320,7 +309,8 @@ public interface Run extends Persistable {
   Integer getTimesRun();
 
   /**
-   * @param timesRun - number of times this run was run
+   * @param timesRun
+   *                   - number of times this run was run
    */
   void setTimesRun(Integer timesRun);
 
@@ -330,7 +320,8 @@ public interface Run extends Persistable {
   String getVersionId();
 
   /**
-   * @param versionId the versionId to set
+   * @param versionId
+   *                    the versionId to set
    */
   void setVersionId(String versionId);
 
@@ -348,6 +339,7 @@ public interface Run extends Persistable {
 
   /**
    * sets student attendance for this run
+   * 
    * @param studentAttendance
    */
   void setStudentAttendance(List<StudentAttendance> studentAttendance);
@@ -359,24 +351,29 @@ public interface Run extends Persistable {
 
   /**
    * Gets private notes for this run
+   * 
    * @return String private notes for this run
    */
   String getPrivateNotes();
 
   /**
    * Sets private notes for this run
-   * @param privateNotes private notes for this run
+   * 
+   * @param privateNotes
+   *                       private notes for this run
    */
   void setPrivateNotes(String privateNotes);
 
   /**
    * Gets survey for this run
+   * 
    * @return String survey for this run
    */
   String getSurvey();
 
   /**
    * Sets survey for this run
+   * 
    * @return String survey for this run
    */
   void setSurvey(String survey);

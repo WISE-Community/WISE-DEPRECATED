@@ -41,6 +41,7 @@ import java.util.stream.Collectors;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -49,6 +50,8 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -57,6 +60,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.portal.Portal;
@@ -119,6 +124,37 @@ public class AuthorAPIController {
   @GetMapping
   String authorProject() {
     return "forward:/wise5/authoringTool/dist/index.html";
+  }
+
+  @RequestMapping("/authorproject.html")
+  protected ModelAndView handleRequestInternal(HttpServletRequest request,
+      HttpServletResponse response) throws Exception {
+    try {
+      Portal portal = portalService.getById(new Integer(1));
+      if (!portal.isLoginAllowed()) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth != null) {
+          new SecurityContextLogoutHandler().logout(request, response, auth);
+        }
+        SecurityContextHolder.getContext().setAuthentication(null);
+        return new ModelAndView("redirect:/index.html");
+      }
+    } catch (ObjectNotFoundException e) {
+      // do nothing
+    }
+
+    User user = ControllerUtil.getSignedInUser();
+    String projectIdStr = request.getParameter("projectId");
+    Project project;
+    if (projectIdStr != null && !projectIdStr.equals("") && !projectIdStr.equals("none")) {
+      project = projectService.getById(Long.parseLong(projectIdStr));
+      if (project.getWiseVersion().equals(5)) {
+        ModelAndView wise5AuthoringView = new ModelAndView(
+            new RedirectView("../author#!/project/" + projectIdStr));
+        return wise5AuthoringView;
+      }
+    }
+    return null;
   }
 
   @PostMapping("/project/new")
@@ -405,7 +441,7 @@ public class AuthorAPIController {
 
   /**
    * Import steps and copy assets if necessary
-   *
+   * 
    * @param steps
    *                        a string containing a JSONArray of steps
    * @param toProjectId
