@@ -16,6 +16,7 @@ export class UserService {
   private checkGoogleUserExistsUrl = 'api/user/check-google-user-exists';
   private checkGoogleUserMatchesUrl = 'api/user/check-google-user-matches';
   private googleUserUrl = 'api/user/google-user';
+  private userByUsernameUrl = 'api/user/by-username';
   private checkAuthenticationUrl = 'api/user/check-authentication';
   private changePasswordUrl = 'api/user/password';
   private languagesUrl = 'api/user/languages';
@@ -46,8 +47,13 @@ export class UserService {
 
   isTeacher(): boolean {
     const role = this.user$.getValue().role;
-    return this.isAuthenticated &&
+    return this.isSignedIn() &&
       (role === 'teacher' || role === 'admin' || role === 'researcher');
+  }
+
+  isAdmin(): boolean {
+    return this.isSignedIn() &&
+      this.user$.getValue().role === 'admin';
   }
 
   isGoogleUser(): boolean {
@@ -132,6 +138,12 @@ export class UserService {
     let params = new HttpParams();
     params = params.set("googleUserId", googleUserId);
     return this.http.get<any>(this.googleUserUrl, { params: params });
+  }
+
+  getUserByUsername(username: string) {
+    let params = new HttpParams();
+    params = params.set('username', username);
+    return this.http.get<any>(this.userByUsernameUrl, { params: params });
   }
 
   changePassword(oldPassword, newPassword) {

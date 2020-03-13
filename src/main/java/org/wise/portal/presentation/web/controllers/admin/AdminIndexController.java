@@ -75,7 +75,7 @@ public class AdminIndexController {
   @Autowired
   protected SessionService sessionService;
 
-  @GetMapping("/admin")
+  @GetMapping("/legacy/admin")
   protected ModelAndView showAdminHome(HttpServletRequest request) throws Exception {
     ModelAndView modelAndView = new ModelAndView("admin/index");
 
@@ -124,7 +124,7 @@ public class AdminIndexController {
    * Gets the latest global WISE version from master location and writes it in the response.
    * If there was an error retrieving the latest version, write the error message in the response.
    */
-  @GetMapping("/admin/latestWISEVersion")
+  @GetMapping("/legacy/admin/latestWISEVersion")
   public void getLatestGlobalWISEVersion(HttpServletResponse response) throws IOException {
     String latestWISEVersion = null;
     String wiseInstanceName = "";
@@ -163,7 +163,7 @@ public class AdminIndexController {
    * @param response
    * @throws IOException
    */
-  @GetMapping("/admin/recentCommitHistory")
+  @GetMapping("/legacy/admin/recentCommitHistory")
   public void getRecentCommitHistory(HttpServletResponse response) throws IOException {
     String recentCommitHistoryJSONString = retrieveString(WISE_COMMIT_HISTORY_URL);
     try {

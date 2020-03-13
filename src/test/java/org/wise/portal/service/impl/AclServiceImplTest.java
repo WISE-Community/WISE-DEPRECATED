@@ -74,7 +74,7 @@ public class AclServiceImplTest {
   @Before
   public void setUp() {
     authority = new TestingAuthenticationToken("admin",
-        new GrantedAuthority[] { new SimpleGrantedAuthority("ROLE_ADMINISTRATOR") });
+      new GrantedAuthority[] { new SimpleGrantedAuthority("ROLE_ADMINISTRATOR") });
     authority.setAuthenticated(true);
     securityContext = new SecurityContextImpl();
     securityContext.setAuthentication(authority);

@@ -24,6 +24,8 @@ import java.util.List;
 
 import org.springframework.security.core.userdetails.UserDetails;
 import org.wise.portal.dao.SimpleDao;
+import org.wise.portal.domain.authentication.impl.StudentUserDetails;
+import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.user.User;
 
 /**
@@ -36,6 +38,11 @@ public interface UserDao<T extends User> extends SimpleDao<T> {
   List<T> retrieveDisabledUsers();
   List<T> retrieveByEmailAddress(String emailAddress);
   T retrieveByGoogleUserId(String googleUserId);
+  List<StudentUserDetails> searchStudents(String firstName, String lastName, String username, 
+      Long userId, Long runId, Long workgroupId, String teacherUsername);
+  List<TeacherUserDetails> searchTeachers(String firstName, String lastName, String username,
+      Long userId, String displayName, String city, String state, String country, String schoolName,
+      String schoolLevel, String email, Long runId);
   List<String> retrieveAllUsernames();
   T retrieveByResetPasswordKey(String resetPasswordKey);
   List<User> retrieveStudentsByNameAndBirthday(String firstName, String lastName,

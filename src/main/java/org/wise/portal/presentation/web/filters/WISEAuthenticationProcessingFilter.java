@@ -61,7 +61,7 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
 
   public static final String STUDENT_DEFAULT_TARGET_PATH = "/legacy/student";
   public static final String TEACHER_DEFAULT_TARGET_PATH = "/legacy/teacher";
-  public static final String ADMIN_DEFAULT_TARGET_PATH = "/admin";
+  public static final String ADMIN_DEFAULT_TARGET_PATH = "/legacy/admin";
   public static final String RESEARCHER_DEFAULT_TARGET_PATH = "/legacy/teacher";  // TODO eventually researcher will have their own page...
   public static final String LOGIN_DISABLED_MESSGE_PAGE = "/pages/maintenance.html";
 

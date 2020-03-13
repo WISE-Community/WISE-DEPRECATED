@@ -28,7 +28,7 @@
       <mat-icon>home</mat-icon>
       <span i18n>Student Home</span>
     </a>
-    <a *ngIf="role !== 'student'"
+    <a *ngIf="role != 'student'"
        mat-menu-item
        routerLink="/teacher"
        routerLinkActive="active"
@@ -60,7 +60,9 @@
     </a>
     <a *ngIf="role === 'admin'"
        mat-menu-item
-       href="admin">
+       routerLink="/admin"
+       routerLinkActive="active"
+       [routerLinkActiveOptions]="{exact: true}">
       <mat-icon>settings</mat-icon>
       <span i18n>Admin Tools</span>
     </a>

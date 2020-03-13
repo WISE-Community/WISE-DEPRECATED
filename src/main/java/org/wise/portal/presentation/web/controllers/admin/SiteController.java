@@ -45,9 +45,9 @@ public class SiteController {
   @Autowired
   PortalService portalService;
 
-  @GetMapping(value = {"", "/student", "/student/**", "/teacher", "/teacher/**", "/login",
-      "/login/**", "/join", "/join/**", "/news", "/about", "/features", "/privacy", "/news",
-      "/contact", "/contact/**", "/help", "/help/**", "/forgot", "/forgot/**"})
+  @GetMapping(value = {"", "/student", "/student/**", "/teacher", "/teacher/**", "/admin",
+      "/admin/**", "/login", "/login/**", "/join", "/join/**", "/news", "/about", "/features",
+      "/privacy", "/news", "/contact", "/contact/**", "/help", "/help/**", "/forgot", "/forgot/**"})
   protected String showSite() {
     return "forward:/site/dist/index.html";
   }

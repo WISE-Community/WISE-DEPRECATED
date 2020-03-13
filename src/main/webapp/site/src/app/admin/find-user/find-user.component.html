@@ -1,0 +1,19 @@
+<header fxLayout="row" class="content__header">
+  <h1 class="accent"
+      fxLayoutAlign="center center"
+      fxLayoutGap="8px"
+      ngClass="mat-display-1"
+      [ngClass.xs]="{ 'mat-display-1': false }">
+    <mat-icon>settings</mat-icon><span i18n>Administrator Tools > Find User</span>
+  </h1>
+</header>
+<section>
+  <mat-tab-group>
+    <mat-tab i18n-label label="Student">
+      <app-find-student></app-find-student>
+    </mat-tab>
+    <mat-tab i18n-label label="Teacher">
+      <app-find-teacher></app-find-teacher>
+    </mat-tab>
+  </mat-tab-group>
+</section>

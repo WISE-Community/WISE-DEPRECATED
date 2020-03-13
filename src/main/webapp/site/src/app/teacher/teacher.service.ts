@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject } from "rxjs";
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Project } from '../domain/project';
-import { Teacher } from '../domain/teacher';
-import { Run } from '../domain/run';
+import { Project } from "../domain/project";
+import { Teacher } from "../domain/teacher";
+import { Run } from "../domain/run";
 import { Course } from '../domain/course';
 
 @Injectable()

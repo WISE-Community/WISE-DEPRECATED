@@ -1,0 +1,161 @@
+<ng-container *ngIf="isChangePassword">
+  <h2 class="mat-dialog-title" i18n>Change User Password</h2>
+  <form #adminChangePasswordForm="ngForm"
+        role="form"
+        (submit)="saveChanges()"
+        [formGroup]="adminChangePasswordFormGroup">
+    <div fxLayout="column">
+      <p *ngIf="!isGoogleUser">
+        <mat-form-field fxFlex appearance="fill">
+          <mat-label i18n>Current Admin Password</mat-label>
+          <input matInput
+                 id="adminPassword"
+                 type="password"
+                 name="adminPassword"
+                 formControlName="adminPassword"
+                 required />
+          <mat-error *ngIf="adminChangePasswordFormGroup.controls['adminPassword'].hasError('required')" i18n>Current Admin Password required</mat-error>
+          <mat-error *ngIf="adminChangePasswordFormGroup.controls['adminPassword'].hasError('incorrectPassword')" i18n>Current Admin Password is incorrect</mat-error>
+        </mat-form-field>
+      </p>
+      <div formGroupName="newPasswordFormGroup" *ngIf="!isGoogleUser">
+        <p>
+          <mat-form-field fxFlex appearance="fill">
+            <mat-label i18n>New Password for {{user.username}}</mat-label>
+            <input matInput
+                   id="newPassword"
+                   type="password"
+                   name="newPassword"
+                   formControlName="newPassword"
+                   required />
+            <mat-error *ngIf="newPasswordFormGroup.controls['newPassword'].hasError('required')" i18n>New Password for {{user.username}} required</mat-error>
+          </mat-form-field>
+        </p>
+        <p>
+          <mat-form-field fxFlex appearance="fill">
+            <mat-label i18n>Confirm New Password for {{user.username}}</mat-label>
+            <input matInput
+                   id="confirmNewPassword"
+                   type="password"
+                   name="confirmNewPassword"
+                   formControlName="confirmNewPassword"
+                   required />
+            <mat-error *ngIf="newPasswordFormGroup.controls['confirmNewPassword'].hasError('required')" i18n>Confirm Password for {{user.username}} required</mat-error>
+            <mat-error *ngIf="newPasswordFormGroup.hasError('passwordDoesNotMatch')" i18n>Passwords do not match</mat-error>
+          </mat-form-field>
+        </p>
+      </div>
+      <p class="notice" *ngIf="isGoogleUser" i18n>
+        This account was created using Google and doesn't use a WISE password.
+      </p>
+      <div mat-dialog-actions
+           fxLayout="row"
+           fxLayout.xs="column"
+           fxLayoutAlign="end"
+           fxLayoutGap="8px">
+        <button mat-raised-button
+                color="primary"
+                type="submit"
+                [disabled]="!adminChangePasswordFormGroup.valid || isSaving"
+                fxFlex
+                fxFlex.gt-xs="0 0 auto"
+                *ngIf="!isGoogleUser">
+          <ng-container i18n>Change Password</ng-container>
+          <mat-progress-bar mode="indeterminate" *ngIf="isSaving"></mat-progress-bar>
+        </button>
+        <button mat-flat-button color="primary" mat-dialog-close i18n>Done</button>
+      </div>
+    </div>
+  </form>
+</ng-container>
+<ng-container *ngIf="isViewUserInfo">
+  <div mat-dialog-content>
+  <h1 mat-dialog-title i18n>User Information</h1>
+  <table mat-table [dataSource]="userInfoDataSource" class="standalone__content">
+    <ng-container matColumnDef="label">
+      <th mat-header-cell *matHeaderCellDef i18n>Label</th>
+      <td mat-cell *matCellDef="let row">{{row.label}}</td>
+    </ng-container>
+    <ng-container matColumnDef="value">
+      <th mat-header-cell *matHeaderCellDef i18n>Value</th>
+      <td mat-cell *matCellDef="let row">{{row.value}}</td>
+    </ng-container>
+    <tr mat-header-row *matHeaderRowDef="userInfoDisplayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: userInfoDisplayedColumns;"></tr>
+  </table>
+  <ng-container *ngIf="hasRun">
+    <p fxLayoutAlign="center">User Runs</p>
+    <div class="example-container">
+      <table mat-table [dataSource]="runs" class="standalone__content">
+        <ng-container matColumnDef="runId">
+          <th mat-header-cell *matHeaderCellDef i18n> Run Id </th>
+          <td mat-cell *matCellDef="let element"> {{element.runId}} </td>
+        </ng-container>
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef i18n> Name </th>
+          <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+        </ng-container>
+        <ng-container matColumnDef="runCode">
+          <th mat-header-cell *matHeaderCellDef i18n> Run Code </th>
+          <td mat-cell *matCellDef="let element"> {{element.runCode}} </td>
+        </ng-container>
+        <ng-container matColumnDef="numberOfPeriods">
+          <th mat-header-cell *matHeaderCellDef i18n> Number Of Periods </th>
+          <td mat-cell *matCellDef="let element"> {{element.numberOfPeriods}} </td>
+        </ng-container>
+        <ng-container matColumnDef="numberOfStudents">
+          <th mat-header-cell *matHeaderCellDef i18n> Number Of Students </th>
+          <td mat-cell *matCellDef="let element"> {{element.numberOfStudents}} </td>
+        </ng-container>
+        <ng-container matColumnDef="previewProjectLink">
+          <th mat-header-cell *matHeaderCellDef i18n> Preview Project Link </th>
+          <td mat-cell *matCellDef="let element"> <a href="{{element.previewProjectLink}}" target="_blank">{{element.previewProjectLink}}</a> </td>
+        </ng-container>
+        <ng-container matColumnDef="editProjectLink" i18n>
+          <th mat-header-cell *matHeaderCellDef> Edit Project Link </th>
+          <td mat-cell *matCellDef="let element"> <a href="{{element.editProjectLink}}" target="_blank">{{element.editProjectLink}}</a> </td>
+        </ng-container>
+        <ng-container matColumnDef="startTime" i18n>
+          <th mat-header-cell *matHeaderCellDef> Start Time </th>
+          <td mat-cell *matCellDef="let element"> {{element.startTime}} </td>
+        </ng-container>
+        <ng-container matColumnDef="workGroupId" *ngIf="isStudent" i18n>
+          <th mat-header-cell *matHeaderCellDef> Work Group Id </th>
+          <td mat-cell *matCellDef="let element"> {{element.workGroupId}} </td>
+        </ng-container>
+        <ng-container matColumnDef="studentsInWorkGroup" *ngIf="isStudent" i18n>
+          <th mat-header-cell *matHeaderCellDef> Students In WorkGroup </th>
+          <td mat-cell *matCellDef="let element"> {{element.studentsInWorkGroup}} </td>
+        </ng-container>
+        <ng-container *ngIf="isStudent">
+          <tr mat-header-row *matHeaderRowDef="runColumnsStudents"></tr>
+          <tr mat-row *matRowDef="let row; columns: runColumnsStudents;"></tr>
+        </ng-container>
+        <ng-container *ngIf="isTeacher">
+          <tr mat-header-row *matHeaderRowDef="runColumnsTeachers"></tr>
+          <tr mat-row *matRowDef="let row; columns: runColumnsTeachers"></tr>  
+        </ng-container>
+      </table>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="!hasRun">
+    This User has no runs.
+  </ng-container>
+</div>
+</ng-container>
+
+<ng-container *ngIf="isManageRoles">
+  <h2 class="mat-dialog-title" i18n>Manage Teacher Roles</h2>
+  <div fxLayout="column wrap">
+    <ng-container *ngFor="let authorityName of allAuthorities">
+      <mat-checkbox [checked]="userAuthorities.has(authorityName)"
+                    (change)="userAuthorityChanged(authorityName)">
+        <ng-container i18n>{{authorityName}}</ng-container>
+      </mat-checkbox>
+    </ng-container>
+  </div>
+  <div fxLayoutAlign="end">
+    <button mat-flat-button color="primary" mat-dialog-close i18n>Done</button>
+  </div>
+</ng-container>
+

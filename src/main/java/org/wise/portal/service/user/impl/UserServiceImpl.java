@@ -255,6 +255,19 @@ public class UserServiceImpl implements UserService {
     return userDao.retrieveStudentsByGender(gender);
   }
 
+  public List<StudentUserDetails> searchStudents(String firstName, String lastName, String username,
+      Long userId, Long runId, Long workgroupId, String teacherUsername) {
+    return userDao.searchStudents(firstName, lastName, username, userId, runId, workgroupId,
+      teacherUsername);
+  }
+
+  public List<TeacherUserDetails> searchTeachers(String firstName, String lastName, String username,
+      Long userId, String displayName, String city, String state, String country, String schoolName,
+      String schoolLevel, String email, Long runId) {
+    return userDao.searchTeachers(firstName, lastName, username, userId, displayName, city, state,
+        country, schoolName, schoolLevel, email, runId);
+  }
+
   @Override
   public User retrieveUserByUsername(String username) {
     if (username == null || username.isEmpty()) {

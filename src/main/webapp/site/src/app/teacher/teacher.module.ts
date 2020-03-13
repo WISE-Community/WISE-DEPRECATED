@@ -74,7 +74,8 @@ const materialModules = [
   ],
   exports: [
     TeacherComponent,
-    materialModules
+    materialModules,
+    TeacherRunListComponent
   ]
 })
 export class TeacherModule { }
