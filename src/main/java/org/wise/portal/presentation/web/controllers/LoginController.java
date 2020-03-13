@@ -46,50 +46,11 @@ import org.wise.portal.service.portal.PortalService;
 public class LoginController {
 
   @Autowired
-  private Properties appProperties;
-
-  @Autowired
   PortalService portalService;
 
-  @GetMapping("/legacy/login")
-  public String handleLogIn(HttpServletRequest request, ModelMap modelMap) throws Exception {
-    String failed = request.getParameter("failed");
-    String redirectUrl = request.getParameter("redirect");
-    String requireCaptcha = request.getParameter("requireCaptcha");
-    String reCaptchaFailed = request.getParameter("reCaptchaFailed");
-    String username = request.getParameter("username");
-    String reCaptchaPublicKey = appProperties.getProperty("recaptcha_public_key");
-    String reCaptchaPrivateKey = appProperties.getProperty("recaptcha_private_key");
-
-    if (StringUtils.hasText(failed)) {
-      modelMap.put("failed", Boolean.TRUE);
-    }
-
-    if (StringUtils.hasText(redirectUrl)) {
-      modelMap.put("redirect",redirectUrl);
-    }
-
-    if (username != null) {
-      modelMap.put("username", username);
-    }
-
-    if (requireCaptcha != null && reCaptchaPublicKey != null && reCaptchaPrivateKey != null) {
-      if (StringUtils.hasText(requireCaptcha)) {
-        modelMap.put("requireCaptcha", Boolean.TRUE);
-        modelMap.put("reCaptchaPublicKey", reCaptchaPublicKey);
-        modelMap.put("reCaptchaPrivateKey", reCaptchaPrivateKey);
-
-        if (StringUtils.hasText(reCaptchaFailed)) {
-          modelMap.put("reCaptchaFailed", Boolean.TRUE);
-        }
-      }
-    }
-    return "login";
-  }
-
   /**
-   * Handles renew session requests. By virtue of making this request,
-   * a logged-in user has already renewed the session.
+   * Handles renew session requests. By virtue of making this request, a logged-in user has already
+   * renewed the session.
    *
    * @param response
    * @throws IOException

@@ -76,13 +76,11 @@ import org.wise.portal.domain.project.impl.ProjectType;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
-import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.presentation.web.exception.NotAuthorizedException;
 import org.wise.portal.presentation.web.exception.TeacherAlreadySharedWithProjectException;
 import org.wise.portal.presentation.web.response.SharedOwner;
 import org.wise.portal.service.acl.AclService;
 import org.wise.portal.service.authentication.UserDetailsService;
-import org.wise.portal.service.premadecomment.PremadeCommentService;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.tag.TagService;
@@ -116,9 +114,6 @@ public class ProjectServiceImpl implements ProjectService {
 
   @Autowired
   private RunService runService;
-
-  @Autowired
-  private PremadeCommentService premadeCommentService;
 
   private static final String LICENSE_PATH = "/license.txt";
 
@@ -212,12 +207,6 @@ public class ProjectServiceImpl implements ProjectService {
       }
     } catch (JSONException e) {
       e.printStackTrace();
-    }
-    Long newProjectId = (Long) project.getId();
-    if (parentProjectId != null) {
-      User signedInUser = ControllerUtil.getSignedInUser();
-      premadeCommentService.copyPremadeCommentsFromProject(parentProjectId, newProjectId,
-          signedInUser);
     }
     return project;
   }
@@ -328,52 +317,13 @@ public class ProjectServiceImpl implements ProjectService {
 
   public ModelAndView previewProject(PreviewProjectParameters params) throws Exception {
     Project project = params.getProject();
-    if (project.getWiseVersion().equals(4)) {
-      return previewProjectWISE4(params, project);
-    } else {
-      return previewProjectWISE5(params, project);
-    }
+    return previewProjectWISE5(params, project);
   }
 
   private ModelAndView previewProjectWISE5(PreviewProjectParameters params, Project project) {
     String contextPath = params.getHttpServletRequest().getContextPath();
-    String wise5URL = contextPath + "/project/" + project.getId();
+    String wise5URL = contextPath + "/project/" + project.getId() + "#!/project/" + project.getId();
     return new ModelAndView(new RedirectView(wise5URL));
-  }
-
-  private ModelAndView previewProjectWISE4(PreviewProjectParameters params, Project project) {
-    String contextPath = params.getHttpServletRequest().getContextPath();
-    String vleConfigUrl = contextPath + "/vleconfig" + "?projectId=" + project.getId()
-        + "&mode=preview";
-
-    String step = params.getStep();
-    if (step != null) {
-      vleConfigUrl += "&step=" + step;
-    }
-
-    String userSpecifiedLang = params.getLang();
-    if (userSpecifiedLang != null) {
-      vleConfigUrl += "&lang=" + userSpecifiedLang;
-    }
-
-    if (params.isConstraintsDisabled()) {
-      vleConfigUrl += "&isConstraintsDisabled=true";
-    }
-
-    String workgroupId = params.getWorkgroupId();
-    if (workgroupId != null) {
-      vleConfigUrl += "&workgroupId=" + workgroupId;
-    }
-
-    ModelAndView modelAndView = new ModelAndView("vle");
-    String vleurl = contextPath + "/vle/vle.html";
-    modelAndView.addObject("vleurl", vleurl);
-    modelAndView.addObject("vleConfigUrl", vleConfigUrl);
-    String curriculumBaseWWW = appProperties.getProperty("curriculum_base_www");
-    String rawProjectUrl = project.getModulePath();
-    String contentUrl = curriculumBaseWWW + rawProjectUrl;
-    modelAndView.addObject("contentUrl", contentUrl);
-    return modelAndView;
   }
 
   @Transactional()
@@ -407,15 +357,7 @@ public class ProjectServiceImpl implements ProjectService {
    */
   public String generateStudentStartProjectUrlString(Workgroup workgroup, String contextPath) {
     Run run = workgroup.getRun();
-    Project project = run.getProject();
-    Integer wiseVersion = project.getWiseVersion();
-    if (wiseVersion.equals(4)) {
-      return appProperties.getProperty("wise4.hostname") + "/student/vle/vle.html?runId="
-          + run.getId() + "&workgroupId=" + workgroup.getId();
-    } else if (wiseVersion.equals(5)) {
-      return contextPath + "/student/run/" + run.getId() + "#!/run/" + run.getId();
-    }
-    return null;
+    return contextPath + "/student/run/" + run.getId() + "#!/run/" + run.getId();
   }
 
   public boolean canCreateRun(Project project, User user) {
