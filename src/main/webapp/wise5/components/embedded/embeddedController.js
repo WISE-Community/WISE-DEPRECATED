@@ -3,29 +3,42 @@
 import ComponentController from '../componentController';
 import html2canvas from 'html2canvas';
 import iframeResizer from 'iframe-resizer';
+import convert from 'xml-js';
 
 class EmbeddedController extends ComponentController {
-  constructor($filter,
+  constructor(
+    $filter,
+    $mdDialog,
+    $q,
+    $rootScope,
+    $scope,
+    $sce,
+    $timeout,
+    $window,
+    AnnotationService,
+    ConfigService,
+    EmbeddedService,
+    NodeService,
+    NotebookService,
+    ProjectService,
+    StudentAssetService,
+    StudentDataService,
+    UtilService
+  ) {
+    super(
+      $filter,
       $mdDialog,
-      $q,
       $rootScope,
       $scope,
-      $sce,
-      $timeout,
-      $window,
       AnnotationService,
       ConfigService,
-      EmbeddedService,
       NodeService,
       NotebookService,
       ProjectService,
       StudentAssetService,
       StudentDataService,
-      UtilService) {
-    super($filter, $mdDialog, $rootScope, $scope,
-        AnnotationService, ConfigService, NodeService,
-        NotebookService, ProjectService, StudentAssetService,
-        StudentDataService, UtilService);
+      UtilService
+    );
     this.$q = $q;
     this.$sce = $sce;
     this.$timeout = $timeout;
@@ -62,12 +75,18 @@ class EmbeddedController extends ComponentController {
      * @param connectedComponentParams the connected component params
      * @param componentState the student data from the connected component that has changed
      */
-    this.$scope.handleConnectedComponentStudentDataChanged =
-        (connectedComponent, connectedComponentParams, componentState) => {
+    this.$scope.handleConnectedComponentStudentDataChanged = (
+      connectedComponent,
+      connectedComponentParams,
+      componentState
+    ) => {
       const message = {
         messageType: 'handleConnectedComponentStudentDataChanged',
         componentState: componentState
       };
+      if (this.isSNAPComponentState(componentState)) {
+        componentState.studentData.trials = this.getTrialsFromSNAP(componentState);
+      }
       this.sendMessageToApplication(message);
     };
 
@@ -91,6 +110,37 @@ class EmbeddedController extends ComponentController {
     this.broadcastDoneRenderingComponent();
   }
 
+  isSNAPComponentState(componentState) {
+    return componentState.studentData.type === 'snap';
+  }
+
+  getTrialsFromSNAP(componentState) {
+    return this.getBlocksFromSNAP(convert.xml2js(componentState.studentData.xml));
+  }
+
+  getBlocksFromSNAP(json) {
+    const trials = this.convertElementsToTrials(
+      json.elements[0].elements[2].elements[6].elements[0].elements[4].elements[0].elements[1]
+        .elements[0].elements[0].elements
+    );
+    return trials;
+  }
+
+  convertElementsToTrials(elements) {
+    const trials = [];
+    for (const element of elements) {
+      trials.push(this.convertElementToTrial(element));
+    }
+    return trials;
+  }
+
+  convertElementToTrial(element) {
+    const material = element.elements[0].elements[0].text;
+    const liquidTemp = element.elements[1].elements[0].text;
+    const airTemp = element.elements[2].elements[0].text;
+    return { material: material, liquidTemp: liquidTemp, airTemp: airTemp };
+  }
+
   setWidthAndHeight(width, height) {
     this.width = width ? width + 'px' : '100%';
     this.height = height ? height + 'px' : '600px';
@@ -101,7 +151,7 @@ class EmbeddedController extends ComponentController {
   }
 
   initializeMessageEventListener() {
-    this.messageEventListener = (messageEvent) => {
+    this.messageEventListener = messageEvent => {
       const messageEventData = messageEvent.data;
       if (messageEventData.messageType === 'event') {
         this.handleEventMessage(messageEventData);
@@ -137,7 +187,13 @@ class EmbeddedController extends ComponentController {
     const event = messageEventData.event;
     const eventData = messageEventData.eventData;
     this.StudentDataService.saveVLEEvent(
-        nodeId, componentId, componentType, category, event, eventData);
+      nodeId,
+      componentId,
+      componentType,
+      category,
+      event,
+      eventData
+    );
   }
 
   handleStudentWorkMessage(messageEventData) {
@@ -161,23 +217,26 @@ class EmbeddedController extends ComponentController {
     this.studentDataChanged();
 
     // tell the parent node that this component wants to save
-    this.$scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
+    this.$scope.$emit('componentSaveTriggered', {
+      nodeId: this.nodeId,
+      componentId: this.componentId
+    });
   }
 
   handleApplicationInitializedMessage(messageEventData) {
     this.sendLatestWorkToApplication();
     this.processLatestStudentWork();
-    $('#' + this.embeddedApplicationIFrameId).iFrameResize({scrolling: true});
+    $('#' + this.embeddedApplicationIFrameId).iFrameResize({ scrolling: true });
   }
 
   handleComponentDirtyMessage(messageEventData) {
     this.isDirty = messageEventData.isDirty;
-    this.$scope.$emit('componentDirty', {componentId: this.componentId, isDirty: isDirty});
+    this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: isDirty });
   }
 
   handleComponentSubmitDirtyMessage(messageEventData) {
     this.isSubmitDirty = messageEventData.isDirty;
-    this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: isDirty});
+    this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: isDirty });
   }
 
   handleStudentDataChangedMessage(messageEventData) {
@@ -231,9 +290,17 @@ class EmbeddedController extends ComponentController {
 
   handleGetLatestAnnotationsMessage(messageEventData) {
     const latestScoreAnnotation = this.AnnotationService.getLatestScoreAnnotation(
-      this.nodeId, this.componentId, this.ConfigService.getWorkgroupId(), 'any');
+      this.nodeId,
+      this.componentId,
+      this.ConfigService.getWorkgroupId(),
+      'any'
+    );
     const latestCommentAnnotation = this.AnnotationService.getLatestCommentAnnotation(
-      this.nodeId, this.componentId, this.ConfigService.getWorkgroupId(), 'any');
+      this.nodeId,
+      this.componentId,
+      this.ConfigService.getWorkgroupId(),
+      'any'
+    );
     const message = {
       messageType: 'latestAnnotations',
       latestScoreAnnotation: latestScoreAnnotation,
@@ -248,7 +315,7 @@ class EmbeddedController extends ComponentController {
       if (componentState != null) {
         if (componentState.componentId === this.componentId) {
           this.isDirty = false;
-          this.$scope.$emit('componentDirty', {componentId: this.componentId, isDirty: false});
+          this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: false });
           this.$scope.embeddedController.componentState = null;
           const isAutoSave = componentState.isAutoSave;
           const isSubmit = componentState.isSubmit;
@@ -258,7 +325,10 @@ class EmbeddedController extends ComponentController {
             this.setSubmittedMessage(clientSaveTime);
             this.submit();
             this.isSubmitDirty = false;
-            this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
+            this.$scope.$emit('componentSubmitDirty', {
+              componentId: this.componentId,
+              isDirty: false
+            });
           } else if (isAutoSave) {
             this.setAutoSavedMessage(clientSaveTime);
           } else {
@@ -275,7 +345,9 @@ class EmbeddedController extends ComponentController {
   }
 
   iframeLoaded(contentLocation) {
-    window.document.getElementById(this.embeddedApplicationIFrameId).contentWindow.addEventListener('message', this.messageEventListener);
+    window.document
+      .getElementById(this.embeddedApplicationIFrameId)
+      .contentWindow.addEventListener('message', this.messageEventListener);
   }
 
   setURL(url) {
@@ -327,7 +399,9 @@ class EmbeddedController extends ComponentController {
   }
 
   sendMessageToApplication(message) {
-    window.document.getElementById(this.embeddedApplicationIFrameId).contentWindow.postMessage(message, '*');
+    window.document
+      .getElementById(this.embeddedApplicationIFrameId)
+      .contentWindow.postMessage(message, '*');
   }
 
   /**
@@ -340,7 +414,7 @@ class EmbeddedController extends ComponentController {
       let modelElement = iframe.contents().find('html');
       if (modelElement != null && modelElement.length > 0) {
         modelElement = modelElement[0];
-        html2canvas(modelElement).then((canvas) => {
+        html2canvas(modelElement).then(canvas => {
           const base64Image = canvas.toDataURL('image/png');
           const imageObject = this.UtilService.getImageObjectFromBase64String(base64Image);
           this.NotebookService.addNote($event, imageObject);
@@ -350,7 +424,10 @@ class EmbeddedController extends ComponentController {
   }
 
   getLatestStudentWork() {
-    return this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
+    return this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(
+      this.nodeId,
+      this.componentId
+    );
   }
 
   /**
@@ -374,30 +451,36 @@ class EmbeddedController extends ComponentController {
     const studentWork = {};
     if (params != null) {
       if (params.getLatestStudentWorkFromThisComponent) {
-        studentWork.latestStudentWorkFromThisComponent =
-            this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(
-                this.nodeId, this.componentId);
+        studentWork.latestStudentWorkFromThisComponent = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(
+          this.nodeId,
+          this.componentId
+        );
       }
       if (params.getAllStudentWorkFromThisComponent) {
-        studentWork.allStudentWorkFromThisComponent =
-            this.StudentDataService.getComponentStatesByNodeIdAndComponentId(
-                this.nodeId, this.componentId);
+        studentWork.allStudentWorkFromThisComponent = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(
+          this.nodeId,
+          this.componentId
+        );
       }
       if (params.getLatestStudentWorkFromThisNode) {
-        studentWork.latestStudentWorkFromThisNode =
-            this.StudentDataService.getLatestComponentStatesByNodeId(this.nodeId);
+        studentWork.latestStudentWorkFromThisNode = this.StudentDataService.getLatestComponentStatesByNodeId(
+          this.nodeId
+        );
       }
       if (params.getAllStudentWorkFromThisNode) {
-        studentWork.allStudentWorkFromThisNode =
-            this.StudentDataService.getComponentStatesByNodeId(this.nodeId);
+        studentWork.allStudentWorkFromThisNode = this.StudentDataService.getComponentStatesByNodeId(
+          this.nodeId
+        );
       }
       if (params.getLatestStudentWorkFromOtherComponents) {
-        studentWork.latestStudentWorkFromOtherComponents =
-            this.getLatestStudentWorkFromOtherComponents(params.otherComponents);
+        studentWork.latestStudentWorkFromOtherComponents = this.getLatestStudentWorkFromOtherComponents(
+          params.otherComponents
+        );
       }
       if (params.getAllStudentWorkFromOtherComponents) {
-        studentWork.allStudentWorkFromOtherComponents =
-            this.getAllStudentWorkFromOtherComponents(params.otherComponents);
+        studentWork.allStudentWorkFromOtherComponents = this.getAllStudentWorkFromOtherComponents(
+          params.otherComponents
+        );
       }
     }
     return studentWork;
@@ -410,9 +493,10 @@ class EmbeddedController extends ComponentController {
         const tempNodeId = otherComponent.nodeId;
         const tempComponentId = otherComponent.componentId;
         if (tempNodeId != null && tempComponentId != null) {
-          const tempComponentState =
-            this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(
-              tempNodeId, tempComponentId);
+          const tempComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(
+            tempNodeId,
+            tempComponentId
+          );
           if (tempComponentState != null) {
             latestStudentWorkFromOtherComponents.push(tempComponentState);
           }
@@ -430,12 +514,14 @@ class EmbeddedController extends ComponentController {
           const tempNodeId = otherComponent.nodeId;
           const tempComponentId = otherComponent.componentId;
           if (tempNodeId != null && tempComponentId != null) {
-            let tempComponentStates =
-              this.StudentDataService.getComponentStatesByNodeIdAndComponentId(
-                tempNodeId, tempComponentId);
+            let tempComponentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(
+              tempNodeId,
+              tempComponentId
+            );
             if (tempComponentStates != null && tempComponentStates.length > 0) {
-              allStudentWorkFromOtherComponents =
-                  allStudentWorkFromOtherComponents.concat(tempComponentStates);
+              allStudentWorkFromOtherComponents = allStudentWorkFromOtherComponents.concat(
+                tempComponentStates
+              );
             }
           }
         }
@@ -464,9 +550,11 @@ class EmbeddedController extends ComponentController {
         if (type === 'showWork') {
           this.handleShowWorkConnectedComponent(connectedComponent, componentStates);
         } else if (type === 'importWork' || type == null) {
-          mergedComponentState =
-              this.handleImportWorkConnectedComponent(
-                  connectedComponent, mergedComponentState, firstTime)
+          mergedComponentState = this.handleImportWorkConnectedComponent(
+            connectedComponent,
+            mergedComponentState,
+            firstTime
+          );
         }
       }
       if (mergedComponentState != null) {
@@ -480,8 +568,10 @@ class EmbeddedController extends ComponentController {
   handleShowWorkConnectedComponent(connectedComponent, componentStates) {
     const nodeId = connectedComponent.nodeId;
     const componentId = connectedComponent.componentId;
-    const componentState =
-      this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+    const componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(
+      nodeId,
+      componentId
+    );
     if (componentState != null) {
       componentStates.push(this.UtilService.makeCopyOfJSONObject(componentState));
     }
@@ -491,14 +581,20 @@ class EmbeddedController extends ComponentController {
   handleImportWorkConnectedComponent(connectedComponent, mergedComponentState, firstTime) {
     const nodeId = connectedComponent.nodeId;
     const componentId = connectedComponent.componentId;
-    const connectedComponentState =
-      this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+    const connectedComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(
+      nodeId,
+      componentId
+    );
     if (connectedComponentState != null) {
       const fields = connectedComponent.fields;
       const when = connectedComponent.when;
       if (when == null || (when === 'firstTime' && firstTime)) {
         mergedComponentState = this.mergeComponentState(
-          mergedComponentState, connectedComponentState, fields, firstTime);
+          mergedComponentState,
+          connectedComponentState,
+          fields,
+          firstTime
+        );
       }
     }
     return mergedComponentState;
@@ -516,8 +612,9 @@ class EmbeddedController extends ComponentController {
     if (mergeFields == null) {
       // there are no merge fields specified so we will get all of the fields
       if (fromComponentState.componentType === 'Embedded') {
-        toComponentState.studentData =
-            this.UtilService.makeCopyOfJSONObject(fromComponentState.studentData);
+        toComponentState.studentData = this.UtilService.makeCopyOfJSONObject(
+          fromComponentState.studentData
+        );
       }
     } else {
       for (let mergeField of mergeFields) {
