@@ -455,7 +455,7 @@ class DiscussionController extends ComponentController {
     }
     this.topLevelResponses = this.getLevel1Responses();
   }
-  
+
   threadHasPostFromThisComponentAndWorkgroupId(componentState) {
     const thisComponentId = this.componentId;
     const thisWorkgroupId = this.workgroupId;
