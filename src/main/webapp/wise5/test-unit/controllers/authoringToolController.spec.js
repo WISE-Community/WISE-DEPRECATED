@@ -1,11 +1,11 @@
 import authoringToolModule from '../../authoringTool/authoringTool';
 
-describe('AuthoringToolController', () => {
-  let $controller;
-  let $rootScope;
-  let $scope;
-  let authoringToolController;
+let $controller;
+let $rootScope;
+let $scope;
+let authoringToolController;
 
+describe('AuthoringToolController', () => {
   beforeEach(angular.mock.module(authoringToolModule.name));
 
   beforeEach(inject((_$controller_, _$rootScope_) => {
@@ -15,6 +15,10 @@ describe('AuthoringToolController', () => {
     authoringToolController = $controller('AuthoringToolController', { $scope: $scope });
   }));
 
+  shouldSetTheGlobalMessage();
+});
+
+function shouldSetTheGlobalMessage() {
   it('should set the global message', () => {
     spyOn($rootScope, '$broadcast');
     const message = '';
@@ -28,4 +32,4 @@ describe('AuthoringToolController', () => {
     };
     expect($rootScope.$broadcast).toHaveBeenCalledWith('setGlobalMessage', { globalMessage });
   });
-});
+}

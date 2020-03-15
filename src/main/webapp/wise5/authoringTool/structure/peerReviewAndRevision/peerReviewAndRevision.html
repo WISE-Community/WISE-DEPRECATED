@@ -1,0 +1,18 @@
+<h5 translate="peerReview.label"></h5>
+<p translate="peerReview.description"></p>
+<hr>
+<div layout="row">
+  <md-button class='createButton md-primary'
+             ng-click='peerReviewAndRevisionController.goToChooseStructure()'
+             aria-label='{{ ::"back" | translate }}'
+             translate='back'></md-button>
+  <span flex></span>
+  <md-button class='createButton md-primary'
+             ng-click='peerReviewAndRevisionController.cancel()'
+             aria-label='{{ ::"cancel" | translate }}'
+             translate='cancel'></md-button>
+  <md-button class='createButton md-raised md-primary'
+             ng-click='peerReviewAndRevisionController.chooseLocation()'
+             aria-label='{{ ::"next" | translate }}'
+             translate='next'></md-button>
+</div>

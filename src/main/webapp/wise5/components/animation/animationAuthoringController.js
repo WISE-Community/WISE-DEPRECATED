@@ -33,7 +33,6 @@ class AnimationAuthoringController extends AnimationController {
       StudentAssetService,
       StudentDataService,
       UtilService);
-
     this.allowedConnectedComponentTypes = [
       { type: 'Animation' },
       { type: 'Graph' }
@@ -229,7 +228,6 @@ class AnimationAuthoringController extends AnimationController {
 
   dataSourceNodeChanged(authoredObject) {
     const nodeId = authoredObject.dataSource.nodeId;
-    // clear the dataSource object except for the node id
     authoredObject.dataSource = {
       nodeId: nodeId
     }
@@ -244,7 +242,6 @@ class AnimationAuthoringController extends AnimationController {
       nodeId: nodeId,
       componentId: componentId
     };
-
     if (component.type == 'Graph') {
       this.setDefaultParamsForGraphDataSource(authoredObject);
     }
@@ -292,9 +289,9 @@ class AnimationAuthoringController extends AnimationController {
   }
 
   authoringAuthoredObjectTypeChanged(authoredObject) {
-    if (authoredObject.type == 'image') {
+    if (authoredObject.type === 'image') {
       this.removeTextFromAuthoredObject(authoredObject);
-    } else if (authoredObject.type == 'text') {
+    } else if (authoredObject.type === 'text') {
       this.removeImageFromAuthoredObject(authoredObject);
     }
     this.authoringViewComponentChanged();

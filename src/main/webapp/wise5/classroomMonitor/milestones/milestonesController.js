@@ -1,23 +1,23 @@
 'use strict';
 
 class MilestonesController {
-
-  constructor($injector,
-              $filter,
-              $mdDialog,
-              $rootScope,
-              $scope,
-              $state,
-              AchievementService,
-              AnnotationService,
-              ConfigService,
-              ProjectService,
-              StudentStatusService,
-              TeacherDataService,
-              TeacherWebSocketService,
-              UtilService,
-              moment) {
-
+  constructor(
+    $injector,
+    $filter,
+    $mdDialog,
+    $rootScope,
+    $scope,
+    $state,
+    AchievementService,
+    AnnotationService,
+    ConfigService,
+    ProjectService,
+    StudentStatusService,
+    TeacherDataService,
+    TeacherWebSocketService,
+    UtilService,
+    moment
+  ) {
     this.$injector = $injector;
     this.$filter = $filter;
     this.$mdDialog = $mdDialog;
@@ -71,8 +71,10 @@ class MilestonesController {
 
     this.$scope.$on('annotationReceived', (event, args) => {
       for (const projectAchievement of this.projectAchievements) {
-        if (projectAchievement.nodeId === args.annotation.nodeId && 
-            projectAchievement.componentId === args.annotation.componentId) {
+        if (
+          projectAchievement.nodeId === args.annotation.nodeId &&
+          projectAchievement.componentId === args.annotation.componentId
+        ) {
           this.updateMilestoneCompletion(projectAchievement.id);
         }
       }
@@ -90,7 +92,9 @@ class MilestonesController {
         this.updateMilestoneCompletion(projectAchievement.id);
 
         // get all the activities and steps in the project
-        projectAchievement.items = this.UtilService.makeCopyOfJSONObject(this.ProjectService.idToOrder);
+        projectAchievement.items = this.UtilService.makeCopyOfJSONObject(
+          this.ProjectService.idToOrder
+        );
         if (projectAchievement.params != null && projectAchievement.params.nodeIds != null) {
           /*
            * loop through all the node ids that are required
@@ -144,18 +148,22 @@ class MilestonesController {
     let projectAchievements = this.ProjectService.getAchievementItems();
     if (projectAchievements != null) {
       // get the time of tomorrow at 3pm
-      const tomorrow = this.moment().add('days', 1).hours(23).minutes(11).seconds(59);
+      const tomorrow = this.moment()
+        .add('days', 1)
+        .hours(23)
+        .minutes(11)
+        .seconds(59);
       return {
         id: this.AchievementService.getAvailableAchievementId(),
         name: '',
         description: '',
-        type: "milestone",
+        type: 'milestone',
         params: {
           nodeIds: [],
           targetDate: tomorrow.valueOf()
         },
         icon: {
-          image: ""
+          image: ''
         },
         items: this.UtilService.makeCopyOfJSONObject(this.ProjectService.idToOrder),
         isVisible: true
@@ -172,11 +180,14 @@ class MilestonesController {
     if (milestone) {
       const title = milestone.name;
       const label = this.$translate('DELETE_MILESTONE');
-      const msg = this.$translate('DELETE_MILESTONE_CONFIRM', { name: milestone.name });
+      const msg = this.$translate('DELETE_MILESTONE_CONFIRM', {
+        name: milestone.name
+      });
       const yes = this.$translate('YES');
-      const cancel = this.$translate('CANCEL')
+      const cancel = this.$translate('CANCEL');
 
-      const confirm = this.$mdDialog.confirm()
+      const confirm = this.$mdDialog
+        .confirm()
         .title(title)
         .textContent(msg)
         .ariaLabel(label)
@@ -184,23 +195,24 @@ class MilestonesController {
         .ok(yes)
         .cancel(cancel);
 
-      this.$mdDialog.show(confirm).then(() => {
-        let projectAchievements = this.projectAchievements;
-        let index = -1;
-        for (let i = 0; i < projectAchievements.length; i++) {
-          if (projectAchievements[i].id === milestone.id) {
-            index = i;
-            break;
+      this.$mdDialog.show(confirm).then(
+        () => {
+          let projectAchievements = this.projectAchievements;
+          let index = -1;
+          for (let i = 0; i < projectAchievements.length; i++) {
+            if (projectAchievements[i].id === milestone.id) {
+              index = i;
+              break;
+            }
           }
-        }
 
-        if (index > -1) {
-          this.projectAchievements.splice(index, 1);
-          this.saveProject();
-        }
-      }, () => {
-
-      });
+          if (index > -1) {
+            this.projectAchievements.splice(index, 1);
+            this.saveProject();
+          }
+        },
+        () => {}
+      );
     }
   }
 
@@ -363,8 +375,9 @@ class MilestonesController {
     }
 
     projectAchievement.numberOfStudentsCompleted = workgroupIdsCompleted.length;
-    projectAchievement.percentageCompleted =
-      parseInt(100 * projectAchievement.numberOfStudentsCompleted / this.numberOfStudentsInRun);
+    projectAchievement.percentageCompleted = parseInt(
+      (100 * projectAchievement.numberOfStudentsCompleted) / this.numberOfStudentsInRun
+    );
     if (projectAchievement.type === 'milestoneReport') {
       if (this.isCompletionReached(projectAchievement)) {
         const report = this.generateReport(projectAchievement);
@@ -380,8 +393,10 @@ class MilestonesController {
   }
 
   isCompletionReached(projectAchievement) {
-    return projectAchievement.percentageCompleted >= projectAchievement.satisfyMinPercentage &&
-      projectAchievement.numberOfStudentsCompleted >= projectAchievement.satisfyMinNumWorkgroups;
+    return (
+      projectAchievement.percentageCompleted >= projectAchievement.satisfyMinPercentage &&
+      projectAchievement.numberOfStudentsCompleted >= projectAchievement.satisfyMinNumWorkgroups
+    );
   }
 
   setReportAvailable(projectAchievement, reportAvailable) {
@@ -396,29 +411,17 @@ class MilestonesController {
     for (const referencedComponent of Object.values(referencedComponents)) {
       nodeId = referencedComponent.nodeId;
       componentId = referencedComponent.componentId;
-      aggregateAutoScores[componentId] = this.calculateAggregateAutoScores(nodeId, componentId, this.periodId);
+      aggregateAutoScores[componentId] = this.calculateAggregateAutoScores(
+        nodeId,
+        componentId,
+        this.periodId,
+        projectAchievement.report
+      );
     }
     const template = this.chooseTemplate(projectAchievement.report.templates, aggregateAutoScores);
     let content = template.content ? template.content : '';
     if (content) {
-      for (let componentId of Object.keys(aggregateAutoScores)) {
-        const componentAggregate = aggregateAutoScores[componentId];
-        let subScoreIndex = 0;
-        for (let subScoreId of Object.keys(componentAggregate)) {
-          const regex = new RegExp(`milestone-report-graph.*id="(${subScoreId})"`, 'g');
-          let index = 0;
-          if (subScoreId !== 'ki') {
-            subScoreIndex++;
-            index = subScoreIndex;
-          }
-          const milestoneData = this.calculateMilestoneData(componentAggregate[subScoreId], index);
-          const milestoneCategories = this.calculateMilestoneCategories(subScoreId);
-          const categories = JSON.stringify(milestoneCategories).replace(/\"/g, '\'');
-          const data = JSON.stringify(milestoneData).replace(/\"/g, '\'');
-          content = content.replace(regex,
-            `$& categories=\"${categories}\" data=\"${data}\"`);
-        }
-      }
+      content = this.processMilestoneGraphsAndData(content, aggregateAutoScores);
     }
     const recommendations = template.recommendations ? template.recommendations : '';
     return {
@@ -427,6 +430,25 @@ class MilestonesController {
       nodeId: nodeId,
       componentId: componentId
     };
+  }
+
+  processMilestoneGraphsAndData(content, aggregateAutoScores) {
+    for (const componentAggregate of Object.values(aggregateAutoScores)) {
+      let subScoreIndex = 0;
+      for (let [subScoreId, aggregateData] of Object.entries(componentAggregate)) {
+        let index = 0;
+        if (subScoreId !== 'ki') {
+          subScoreIndex++;
+          index = subScoreIndex;
+        }
+        const data = JSON.stringify(aggregateData).replace(/\"/g, "'");
+        const graphRegex = new RegExp(`milestone-report-graph{1,} id="(${subScoreId})"`, 'g');
+        content = content.replace(graphRegex, `$& data=\"${data}\"`);
+        const dataRegex = new RegExp(`milestone-report-data{1,} score-id="(${subScoreId})"`, 'g');
+        content = content.replace(dataRegex, `$& data=\"${data}\"`);
+      }
+    }
+    return content;
   }
 
   getSatisfyCriteriaReferencedComponents(projectAchievement) {
@@ -446,112 +468,129 @@ class MilestonesController {
     return components;
   }
 
-  calculateMilestoneCategories(subScoreId) {
-    if (subScoreId === 'ki') {
-      return ['1','2','3','4','5'];
-    } else {
-      return ['1','2','3'];
-    }
-  }
-
-  calculateMilestoneData(subScoreAggregate, subScoreIndex) {
-    const mainColor = 'rgb(255,143,0)';
-    const subColor1 = 'rgb(0,105,92)';
-    const subColor2 = 'rgb(106,27,154)';
-    const scoreKeys = Object.keys(subScoreAggregate.counts);
-    const scoreKeysSorted = scoreKeys.sort((a, b) => { return parseInt(a) - parseInt(b);});
-    const data = [];
-    let color = mainColor;
-    if (subScoreIndex > 0) {
-      color = subScoreIndex % 2 === 0 ? subColor1 : subColor2;
-    }
-    let step = (100/scoreKeysSorted.length)/100;
-    let opacity = 0;
-    for (let scoreKey of scoreKeysSorted) {
-      opacity = opacity + step;
-      const scoreKeyCount = subScoreAggregate.counts[scoreKey];
-      const scoreKeyPercentage = Math.floor(100 * scoreKeyCount / subScoreAggregate.scoreCount);
-      const scoreKeyColor = this.UtilService.rgbToHex(color, opacity);
-      const scoreData = {'y': scoreKeyPercentage, 'color': scoreKeyColor, 'count': scoreKeyCount };
-      data.push(scoreData);
-    }
-    return data;
-  }
-
-  calculateAggregateAutoScores(nodeId, componentId, periodId) {
+  calculateAggregateAutoScores(nodeId, componentId, periodId, reportSettings) {
     const aggregate = {};
-    const scoreAnnotations = this.AnnotationService.getAllLatestScoreAnnotations(nodeId, componentId, periodId);
+    const scoreAnnotations = this.AnnotationService.getAllLatestScoreAnnotations(
+      nodeId,
+      componentId,
+      periodId
+    );
     for (const scoreAnnotation of scoreAnnotations) {
       if (scoreAnnotation.type === 'autoScore') {
-        this.addDataToAggregate(aggregate, scoreAnnotation);
+        this.addDataToAggregate(aggregate, scoreAnnotation, reportSettings);
       } else {
         const autoScoreAnnotation = this.AnnotationService.getLatestScoreAnnotation(
-            nodeId, componentId, scoreAnnotation.toWorkgroupId, 'autoScore');
+          nodeId,
+          componentId,
+          scoreAnnotation.toWorkgroupId,
+          'autoScore'
+        );
         if (autoScoreAnnotation) {
-          const mergedAnnotation = this.mergeAutoScoreAndTeacherScore(autoScoreAnnotation, scoreAnnotation);
-          this.addDataToAggregate(aggregate, mergedAnnotation);
+          const mergedAnnotation = this.mergeAutoScoreAndTeacherScore(
+            autoScoreAnnotation,
+            scoreAnnotation,
+            reportSettings
+          );
+          this.addDataToAggregate(aggregate, mergedAnnotation, reportSettings);
         }
       }
     }
     return aggregate;
   }
 
-  mergeAutoScoreAndTeacherScore(autoScoreAnnotation, teacherScoreAnnotation) {
+  mergeAutoScoreAndTeacherScore(autoScoreAnnotation, teacherScoreAnnotation, reportSettings) {
     if (autoScoreAnnotation.data.scores) {
       for (const subScore of autoScoreAnnotation.data.scores) {
-        const teacherScore = Math.round(teacherScoreAnnotation.data.value);
         if (subScore.id === 'ki') {
-          if (teacherScore > 5) {
-            subScore.score = 5;
-          } else if (teacherScore < 1) {
-            subScore.score = 1;
-          } else {
-            subScore.score = teacherScore;
-          }
+          subScore.score = 
+            this.adjustKIScore(teacherScoreAnnotation.data.value, reportSettings);
         }
       }
     }
     return autoScoreAnnotation;
   }
 
-  addDataToAggregate(aggregate, annotation) {
-    if (annotation.data.scores != null) {
-      for (let subScore of annotation.data.scores) {
-        if (aggregate[subScore.id] == null) {
-          if (subScore.id === 'ki') {
-            aggregate[subScore.id] = {
-              scoreSum: 0,
-              scoreCount: 0,
-              counts: {
-                1: 0,
-                2: 0,
-                3: 0,
-                4: 0,
-                5: 0
-              },
-              average: 0
-            };
-          } else {
-            aggregate[subScore.id] = {
-              scoreSum: 0,
-              scoreCount: 0,
-              counts: {
-                1: 0,
-                2: 0,
-                3: 0
-              },
-              average: 0
-            };
-          }
-        }
-        const subScoreVal = subScore.score;
+  adjustKIScore(scoreValue, reportSettings) {
+    const teacherScore = Math.round(scoreValue);
+    const kiScoreBounds = this.getKIScoreBounds(reportSettings);
+    let score = teacherScore;
+    if (teacherScore > kiScoreBounds.max) {
+      score = kiScoreBounds.max;
+    }
+    if (teacherScore < kiScoreBounds.min) {
+      score = kiScoreBounds.min;
+    }
+    return score;
+  }
+
+  getKIScoreBounds(reportSettings) {
+    const bounds = {
+      min: 1,
+      max: 5
+    }
+    if (reportSettings.customScoreValues && reportSettings.customScoreValues['ki']) {
+      bounds.min = Math.min(...reportSettings.customScoreValues['ki']);
+      bounds.max = Math.max(...reportSettings.customScoreValues['ki']);
+    }
+    return bounds;
+  }
+
+  addDataToAggregate(aggregate, annotation, reportSettings) {
+    for (const subScore of annotation.data.scores) {
+      if (aggregate[subScore.id] == null) {
+        aggregate[subScore.id] = this.setupAggregateSubScore(subScore.id, reportSettings);
+      }
+      const subScoreVal = subScore.score;
+      if (aggregate[subScore.id].counts[subScoreVal] > -1) {
         aggregate[subScore.id].counts[subScoreVal]++;
         aggregate[subScore.id].scoreSum += subScoreVal;
         aggregate[subScore.id].scoreCount++;
-        aggregate[subScore.id].average = aggregate[subScore.id].scoreSum / aggregate[subScore.id].scoreCount;
+        aggregate[subScore.id].average =
+          aggregate[subScore.id].scoreSum / aggregate[subScore.id].scoreCount;
       }
     }
     return aggregate;
+  }
+
+  setupAggregateSubScore(subScoreId, reportSettings) {
+    let counts = {};
+    if (reportSettings.customScoreValues && reportSettings.customScoreValues[subScoreId]) {
+      counts = this.getCustomScoreValueCounts(reportSettings.customScoreValues[subScoreId]);
+    } else {
+      counts = this.getPossibleScoreValueCounts(subScoreId);
+    }
+    return {
+      scoreSum: 0,
+      scoreCount: 0,
+      counts: counts,
+      average: 0
+    };
+  }
+
+  getCustomScoreValueCounts(scoreValues) {
+    let counts = {};
+    for (const value of scoreValues) {
+      counts[value] = 0;
+    }
+    return counts;
+  }
+
+  getPossibleScoreValueCounts(subScoreId) {
+    if (subScoreId === 'ki') {
+      return {    
+        1: 0,
+        2: 0,
+        3: 0,
+        4: 0,
+        5: 0
+      };
+    } else {
+      return {    
+        1: 0,
+        2: 0,
+        3: 0
+      };
+    }
   }
 
   chooseTemplate(templates, aggregateAutoScores) {
@@ -705,11 +744,13 @@ class MilestonesController {
   }
 
   getPossibleScores(aggregateData) {
-    return Object.keys(aggregateData.counts).map(Number).sort();
+    return Object.keys(aggregateData.counts)
+      .map(Number)
+      .sort();
   }
 
   isPercentThresholdSatisfied(satisfyCriterion, aggregateData, sum) {
-    const percentOfScores = 100 * sum / aggregateData.scoreCount;
+    const percentOfScores = (100 * sum) / aggregateData.scoreCount;
     return percentOfScores >= satisfyCriterion.percentThreshold;
   }
 
@@ -757,90 +798,135 @@ class MilestonesController {
    * @param $event the event that triggered the function call
    */
   showMilestoneDetails(milestone, $event) {
-    let title = this.$translate('MILESTONE_DETAILS_TITLE', { name: milestone.name });
-    let template =
-      `<md-dialog class="dialog--wider">
-                <md-toolbar>
-                    <div class="md-toolbar-tools">
-                        <h2>${ title }</h2>
-                    </div>
-                </md-toolbar>
-                <md-dialog-content class="gray-lighter-bg md-dialog-content">
-                    <milestone-details milestone="milestone" on-show-workgroup="onShowWorkgroup(value)" on-visit-node-grading="onVisitNodeGrading()"></milestone-details>
-                </md-dialog-content>
-                <md-dialog-actions layout="row" layout-align="start center">
-                    <md-button class="warn"
-                               ng-click="delete()"
-                               ng-if="!milestone.type === 'milestoneReport'"
-                               aria-label="{{ ::'DELETE' | translate }}">
-                        {{ ::'DELETE' | translate }}
-                    </md-button>
-                    <span flex></span>
-                    <md-button class="md-primary"
-                               ng-click="edit()"
-                               ng-if="!milestone.type === 'milestoneReport'"
-                               aria-label="{{ ::'EDIT' | translate }}">
-                        {{ ::'EDIT' | translate }}
-                    </md-button>
-                    <md-button class="md-primary"
-                               ng-click="close()"
-                               aria-label="{{ ::'CLOSE' | translate }}">
-                            {{ ::'CLOSE' | translate }}
-                        </md-button>
-                    </md-dialog-actions>
-            </md-dialog>`;
-
-    // display the milestone details in a dialog
-    this.$mdDialog.show({
-      parent: angular.element(document.body),
-      template: template,
-      ariaLabel: title,
-      fullscreen: true,
-      targetEvent: $event,
-      clickOutsideToClose: true,
-      escapeToClose: true,
-      locals: {
-        $event, $event,
-        milestone: milestone
-      },
-      controller: ['$scope', '$state', '$mdDialog', 'milestone', '$event', 'TeacherDataService',
-        function DialogController($scope, $state, $mdDialog, milestone, $event, TeacherDataService) {
-          $scope.milestone = milestone;
-          $scope.event = $event;
-
-          $scope.close = function() {
-            $mdDialog.hide();
-          };
-
-          $scope.edit = function() {
-            $mdDialog.hide({ milestone: $scope.milestone, action: 'edit', $event: $event });
-          };
-
-          $scope.delete = function() {
-            $mdDialog.hide({ milestone: $scope.milestone, action: 'delete' });
-          };
-
-          $scope.onShowWorkgroup = function(workgroup) {
-            $mdDialog.hide();
-            TeacherDataService.setCurrentWorkgroup(workgroup);
-            $state.go('root.nodeProgress');
-          };
-
-          $scope.onVisitNodeGrading = function() {
-            $mdDialog.hide();
+    const title = this.$translate('MILESTONE_DETAILS_TITLE', {
+      name: milestone.name
+    });
+    const template = 
+        `<md-dialog class="dialog--wider">
+          <md-toolbar>
+            <div class="md-toolbar-tools">
+              <h2>${title}</h2>
+            </div>
+          </md-toolbar>
+          <md-dialog-content class="gray-lighter-bg md-dialog-content">
+            <milestone-details milestone="milestone" on-show-workgroup="onShowWorkgroup(value)" on-visit-node-grading="onVisitNodeGrading()"></milestone-details>
+          </md-dialog-content>
+          <md-dialog-actions layout="row" layout-align="start center">
+            <md-button class="warn"
+                       ng-click="delete()"
+                       ng-if="!milestone.type === 'milestoneReport'"
+                       aria-label="{{ ::'DELETE' | translate }}">
+              {{ ::'DELETE' | translate }}
+            </md-button>
+            <span flex></span>
+            <md-button class="md-primary"
+                       ng-click="edit()"
+                       ng-if="!milestone.type === 'milestoneReport'"
+                       aria-label="{{ ::'EDIT' | translate }}">
+              {{ ::'EDIT' | translate }}
+            </md-button>
+            <md-button class="md-primary"
+                       ng-click="close()"
+                       aria-label="{{ ::'CLOSE' | translate }}">
+              {{ ::'CLOSE' | translate }}
+            </md-button>
+          </md-dialog-actions>
+        </md-dialog>`;
+    this.$mdDialog
+      .show({
+        parent: angular.element(document.body),
+        template: template,
+        ariaLabel: title,
+        fullscreen: true,
+        targetEvent: $event,
+        clickOutsideToClose: true,
+        escapeToClose: true,
+        locals: {
+          $event,
+          $event,
+          milestone: milestone
+        },
+        controller: [
+          '$scope',
+          '$state',
+          '$mdDialog',
+          'milestone',
+          '$event',
+          'TeacherDataService',
+          function DialogController(
+            $scope,
+            $state,
+            $mdDialog,
+            milestone,
+            $event,
+            TeacherDataService
+          ) {
+            $scope.milestone = milestone;
+            $scope.event = $event;
+            $scope.close = function() {
+              $scope.saveMilestoneClosedEvent();
+              $mdDialog.hide();
+            };
+            $scope.edit = function() {
+              $mdDialog.hide({
+                milestone: $scope.milestone,
+                action: 'edit',
+                $event: $event
+              });
+            };
+            $scope.delete = function() {
+              $mdDialog.hide({ milestone: $scope.milestone, action: 'delete' });
+            };
+            $scope.onShowWorkgroup = function(workgroup) {
+              $mdDialog.hide();
+              TeacherDataService.setCurrentWorkgroup(workgroup);
+              $state.go('root.nodeProgress');
+            };
+            $scope.onVisitNodeGrading = function() {
+              $mdDialog.hide();
+            };
+            $scope.saveMilestoneOpenedEvent = function() {
+              $scope.saveMilestoneEvent('MilestoneOpened');
+            };
+            $scope.saveMilestoneClosedEvent = function() {
+              $scope.saveMilestoneEvent('MilestoneClosed');
+            };
+            $scope.saveMilestoneEvent = function(event) {
+              const context = 'ClassroomMonitor',
+                nodeId = null,
+                componentId = null,
+                componentType = null,
+                category = 'Navigation',
+                data = { milestoneId: $scope.milestone.id },
+                projectId = null;
+              TeacherDataService.saveEvent(
+                context,
+                nodeId,
+                componentId,
+                componentType,
+                category,
+                event,
+                data,
+                projectId
+              );
+            };
+            $scope.saveMilestoneOpenedEvent();
           }
-        }
-      ]
-    }).then((data) => {
-      if (data && data.action && data.milestone) {
-        if (data.action === 'edit') {
-          let milestone = angular.copy(data.milestone);
-          this.editMilestone(milestone, data.$event);
-        } else if (data.action === 'delete') {
-          this.deleteMilestone(data.milestone);
-        }
-      }
-    }, () => {});;
+        ]
+      })
+      .then(
+        data => {
+          if (data && data.action && data.milestone) {
+            if (data.action === 'edit') {
+              let milestone = angular.copy(data.milestone);
+              this.editMilestone(milestone, data.$event);
+            } else if (data.action === 'delete') {
+              this.deleteMilestone(data.milestone);
+            }
+          }
+        },
+        () => {}
+      );
   }
 
   /**
@@ -856,77 +942,96 @@ class MilestonesController {
       milestone = this.createMilestone();
     }
 
-    let template =
-      `<md-dialog class="dialog--wide">
-                <md-toolbar>
-                    <div class="md-toolbar-tools">
-                        <h2>${ title }</h2>
-                    </div>
-                </md-toolbar>
-                <md-dialog-content class="gray-lighter-bg md-dialog-content">
-                    <milestone-edit milestone="milestone" on-change="onChange(milestone, valid)"></milestone-edit>
-                </md-dialog-content>
-                <md-dialog-actions layout="row" layout-align="end center">
-                    <md-button ng-click="close()"
-                               aria-label="{{ ::'CANCEL' | translate }}">
-                        {{ ::'CANCEL' | translate }}
-                    </md-button>
-                    <md-button class="md-primary"
-                               ng-click="save()"
-                               aria-label="{{ ::'SAVE' | translate }}">
-                            {{ ::'SAVE' | translate }}
-                        </md-button>
-                    </md-dialog-actions>
-            </md-dialog>`;
+    let template = 
+        `<md-dialog class="dialog--wide">
+          <md-toolbar>
+            <div class="md-toolbar-tools">
+              <h2>${title}</h2>
+            </div>
+          </md-toolbar>
+          <md-dialog-content class="gray-lighter-bg md-dialog-content">
+            <milestone-edit milestone="milestone" on-change="onChange(milestone, valid)"></milestone-edit>
+          </md-dialog-content>
+          <md-dialog-actions layout="row" layout-align="end center">
+            <md-button ng-click="close()"
+                       aria-label="{{ ::'CANCEL' | translate }}">
+              {{ ::'CANCEL' | translate }}
+            </md-button>
+            <md-button class="md-primary"
+                       ng-click="save()"
+                       aria-label="{{ ::'SAVE' | translate }}">
+              {{ ::'SAVE' | translate }}
+            </md-button>
+          </md-dialog-actions>
+        </md-dialog>`;
 
     // display the milestone edit form in a dialog
-    this.$mdDialog.show({
-      parent: angular.element(document.body),
-      template: template,
-      ariaLabel: title,
-      fullscreen: true,
-      targetEvent: $event,
-      clickOutsideToClose: true,
-      escapeToClose: true,
-      locals: {
-        editMode: editMode,
-        $event, $event,
-        milestone: milestone
-      },
-      controller: ['$scope', '$mdDialog', '$filter', 'milestone', 'editMode', '$event',
-        function DialogController($scope, $mdDialog, $filter, milestone, editMode, $event) {
-          $scope.editMode = editMode;
-          $scope.milestone = milestone;
-          $scope.$event = $event;
-          $scope.valid = editMode;
-
-          $scope.$translate = $filter('translate');
-
-          $scope.close = function() {
-            $mdDialog.hide({ milestone: $scope.milestone, $event: $scope.$event });
-          };
-
-          $scope.save = function() {
-            if ($scope.valid) {
-              $mdDialog.hide({ milestone: $scope.milestone, save: true, $event: $scope.$event });
-            } else {
-              alert($scope.$translate('MILESTONE_EDIT_INVALID_ALERT'));
-            }
-          };
-
-          $scope.onChange = function(milestone, valid) {
+    this.$mdDialog
+      .show({
+        parent: angular.element(document.body),
+        template: template,
+        ariaLabel: title,
+        fullscreen: true,
+        targetEvent: $event,
+        clickOutsideToClose: true,
+        escapeToClose: true,
+        locals: {
+          editMode: editMode,
+          $event,
+          $event,
+          milestone: milestone
+        },
+        controller: [
+          '$scope',
+          '$mdDialog',
+          '$filter',
+          'milestone',
+          'editMode',
+          '$event',
+          function DialogController($scope, $mdDialog, $filter, milestone, editMode, $event) {
+            $scope.editMode = editMode;
             $scope.milestone = milestone;
-            $scope.valid = valid;
-          };
-        }
-      ]
-    }).then((data) => {
-      if (data) {
-        if (data.milestone && data.save) {
-          this.saveMilestone(data.milestone);
-        }
-      }
-    }, () => {});
+            $scope.$event = $event;
+            $scope.valid = editMode;
+
+            $scope.$translate = $filter('translate');
+
+            $scope.close = function() {
+              $mdDialog.hide({
+                milestone: $scope.milestone,
+                $event: $scope.$event
+              });
+            };
+
+            $scope.save = function() {
+              if ($scope.valid) {
+                $mdDialog.hide({
+                  milestone: $scope.milestone,
+                  save: true,
+                  $event: $scope.$event
+                });
+              } else {
+                alert($scope.$translate('MILESTONE_EDIT_INVALID_ALERT'));
+              }
+            };
+
+            $scope.onChange = function(milestone, valid) {
+              $scope.milestone = milestone;
+              $scope.valid = valid;
+            };
+          }
+        ]
+      })
+      .then(
+        data => {
+          if (data) {
+            if (data.milestone && data.save) {
+              this.saveMilestone(data.milestone);
+            }
+          }
+        },
+        () => {}
+      );
   }
 }
 

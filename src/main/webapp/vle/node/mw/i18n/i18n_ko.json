@@ -1,6 +1,0 @@
-{
-    "applet_failed_to_load": {
-        "value": "애플릿 구동에 실패",
-        "description": "Alert message that gets displayed when the applet fails to load"
-    }
-}

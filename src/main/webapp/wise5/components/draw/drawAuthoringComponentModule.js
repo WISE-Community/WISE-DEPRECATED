@@ -4,7 +4,7 @@ import DrawService from './drawService';
 import DrawController from './drawController';
 import DrawAuthoringController from './drawAuthoringController';
 
-let drawAuthoringComponentModule = angular.module('drawAuthoringComponentModule', [
+const drawAuthoringComponentModule = angular.module('drawAuthoringComponentModule', [
   'pascalprecht.translate'
 ])
   .service('DrawService', DrawService)

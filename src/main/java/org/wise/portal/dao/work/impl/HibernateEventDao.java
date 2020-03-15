@@ -42,6 +42,7 @@ import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.work.EventDao;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.run.Run;
+import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.vle.domain.work.Event;
 
@@ -49,14 +50,16 @@ import org.wise.vle.domain.work.Event;
  * @author Hiroki Terashima
  */
 @Repository
-public class HibernateEventDao extends AbstractHibernateDao<Event> implements EventDao<Event> {
+public class HibernateEventDao extends AbstractHibernateDao<Event>
+    implements EventDao<Event> {
 
   @PersistenceContext
   private EntityManager entityManager;
 
   private CriteriaBuilder getCriteriaBuilder() {
-    Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-    return session.getCriteriaBuilder(); 
+    Session session = this.getHibernateTemplate().getSessionFactory()
+        .getCurrentSession();
+    return session.getCriteriaBuilder();
   }
 
   @Override
@@ -71,22 +74,79 @@ public class HibernateEventDao extends AbstractHibernateDao<Event> implements Ev
 
   @Override
   @SuppressWarnings("unchecked")
-  public List<Event> getEventsByParams(Integer id, Run run, Group period, Workgroup workgroup,
-      String nodeId, String componentId, String componentType, String context, String category,
-      String event, List<JSONObject> components) {
+  public List<Event> getEventsByParams(Integer id, Run run, Group period,
+      Workgroup workgroup, String nodeId, String componentId,
+      String componentType, String context, String category, String event,
+      List<JSONObject> components) {
     CriteriaBuilder cb = getCriteriaBuilder();
     CriteriaQuery<Event> cq = cb.createQuery(Event.class);
     Root<Event> eventRoot = cq.from(Event.class);
-    List<Predicate> predicates = getEventsByParamsPredicates(cb, eventRoot, id, run, period,
-        workgroup, nodeId, componentId, componentType, context, category, event, components);
-    cq.select(eventRoot).where(predicates.toArray(new Predicate[predicates.size()]))
+    List<Predicate> predicates = getEventsByParamsPredicates(cb, eventRoot, id,
+        run, period, workgroup, nodeId, componentId, componentType, context,
+        category, event, components);
+    cq.select(eventRoot)
+        .where(predicates.toArray(new Predicate[predicates.size()]))
         .orderBy(cb.asc(eventRoot.get("serverSaveTime")));
     TypedQuery<Event> query = entityManager.createQuery(cq);
     return (List<Event>) (Object) query.getResultList();
   }
 
-  private List<Predicate> getEventsByParamsPredicates(CriteriaBuilder cb, Root<Event> eventRoot,
-      Integer id, Run run, Group period, Workgroup workgroup, String nodeId, String componentId,
+  @SuppressWarnings("unchecked")
+  public List<Event> getEvents(Run run) {
+    CriteriaBuilder cb = getCriteriaBuilder();
+    CriteriaQuery<Event> cq = cb.createQuery(Event.class);
+    Root<Event> eventRoot = cq.from(Event.class);
+    cq.select(eventRoot).where(cb.equal(eventRoot.get("run"), run));
+    TypedQuery<Event> query = entityManager.createQuery(cq);
+    return (List<Event>) (Object) query.getResultList();
+  }
+
+  @Override
+  public List<Event> getStudentEvents(Run run) {
+    List<Event> studentEvents = new ArrayList<Event>();
+    List<Event> events = getEvents(run);
+    for (Event event : events) {
+      if (isStudentEvent(event)) {
+        studentEvents.add(event);
+      }
+    }
+    return studentEvents;
+  }
+
+  @Override
+  public List<Event> getTeacherEvents(Run run) {
+    List<Event> teacherEvents = new ArrayList<Event>();
+    List<Event> events = getEvents(run);
+    for (Event event : events) {
+      if (isTeacherEvent(event)) {
+        teacherEvents.add(event);
+      }
+    }
+    return teacherEvents;
+  }
+
+  boolean isStudentEvent(Event event) {
+    return isStudentUser(event) || isStudentWorkgroup(event);
+  }
+
+  boolean isStudentUser(Event event) {
+    User user = event.getUser();
+    return user != null && user.isStudent();
+  }
+
+  boolean isStudentWorkgroup(Event event) {
+    Workgroup workgroup = event.getWorkgroup();
+    return workgroup != null && workgroup.isStudentWorkgroup();
+  }
+
+  boolean isTeacherEvent(Event event) {
+    User user = event.getUser();
+    return user != null && user.isTeacher();
+  }
+
+  private List<Predicate> getEventsByParamsPredicates(CriteriaBuilder cb,
+      Root<Event> eventRoot, Integer id, Run run, Group period,
+      Workgroup workgroup, String nodeId, String componentId,
       String componentType, String context, String category, String event,
       List<JSONObject> components) {
     List<Predicate> predicates = new ArrayList<>();
@@ -128,7 +188,8 @@ public class HibernateEventDao extends AbstractHibernateDao<Event> implements Ev
           Predicate nodeIdPredicate = null;
           Predicate componentIdPredicate = null;
           if (component.has("nodeId")) {
-            nodeIdPredicate = cb.equal(eventRoot.get("nodeId"), component.getString("nodeId"));
+            nodeIdPredicate = cb.equal(eventRoot.get("nodeId"),
+                component.getString("nodeId"));
           } else {
             nodeIdPredicate = cb.isNull(eventRoot.get("nodeId"));
           }
@@ -138,13 +199,14 @@ public class HibernateEventDao extends AbstractHibernateDao<Event> implements Ev
           } else {
             componentIdPredicate = cb.isNull(eventRoot.get("componentId"));
           }
-          componentsPredicates.add(cb.and(nodeIdPredicate, componentIdPredicate));
+          componentsPredicates
+              .add(cb.and(nodeIdPredicate, componentIdPredicate));
         } catch (JSONException e) {
           e.printStackTrace();
         }
       }
-      predicates.add(cb.or(
-          componentsPredicates.toArray(new Predicate[componentsPredicates.size()])));
+      predicates.add(cb.or(componentsPredicates
+          .toArray(new Predicate[componentsPredicates.size()])));
     }
     return predicates;
   }

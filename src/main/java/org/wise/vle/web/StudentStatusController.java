@@ -35,7 +35,7 @@ import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.run.RunService;
-import org.wise.portal.service.vle.VLEService;
+import org.wise.portal.service.vle.wise5.VLEService;
 import org.wise.portal.spring.data.redis.MessagePublisher;
 import org.wise.vle.domain.status.StudentStatus;
 
@@ -62,8 +62,9 @@ public class StudentStatusController {
   private MessagePublisher redisPublisher;
 
   /**
-   * Handles GET requests from the teacher when a teacher requests for all the student
-   * statuses for a given run id
+   * Handles GET requests from the teacher when a teacher requests for all the student statuses for
+   * a given run id
+   * 
    * @param response
    * @throws IOException
    */
@@ -76,19 +77,19 @@ public class StudentStatusController {
 
     try {
       runId = new Long(runIdString);
-    } catch(NumberFormatException e) {
+    } catch (NumberFormatException e) {
       e.printStackTrace();
     }
 
     boolean allowedAccess = false;
 
     /*
-     * teachers that are owners of the run can make a request
-     * students can not make a request
+     * teachers that are owners of the run can make a request students can not make a request
      */
     if (SecurityUtils.isAdmin(signedInUser)) {
       allowedAccess = true;
-    } else if (SecurityUtils.isTeacher(signedInUser) && SecurityUtils.isUserOwnerOfRun(signedInUser, runId)) {
+    } else if (SecurityUtils.isTeacher(signedInUser)
+        && SecurityUtils.isUserOwnerOfRun(signedInUser, runId)) {
       allowedAccess = true;
     }
 
@@ -132,8 +133,8 @@ public class StudentStatusController {
   }
 
   /**
-   * Handles POST requests from students when they send their status to the server
-   * so we can keep track of their latest status
+   * Handles POST requests from students when they send their status to the server so we can keep
+   * track of their latest status
    *
    * If the student status is for a WISE5 run, also notify the teachers over websocket.
    *
@@ -156,27 +157,26 @@ public class StudentStatusController {
 
     try {
       runId = new Long(runIdString);
-    } catch(NumberFormatException e) {
+    } catch (NumberFormatException e) {
       e.printStackTrace();
     }
 
     try {
       periodId = new Long(periodIdString);
-    } catch(NumberFormatException e) {
+    } catch (NumberFormatException e) {
       e.printStackTrace();
     }
 
     try {
       workgroupId = new Long(workgroupIdString);
-    } catch(NumberFormatException e) {
+    } catch (NumberFormatException e) {
       e.printStackTrace();
     }
 
     boolean allowedAccess = false;
 
-    if (SecurityUtils.isStudent(signedInUser) &&
-        SecurityUtils.isUserInRun(signedInUser, runId) &&
-        SecurityUtils.isUserInWorkgroup(signedInUser, workgroupId)) {
+    if (SecurityUtils.isStudent(signedInUser) && SecurityUtils.isUserInRun(signedInUser, runId)
+        && SecurityUtils.isUserInWorkgroup(signedInUser, workgroupId)) {
       allowedAccess = true;
     }
 

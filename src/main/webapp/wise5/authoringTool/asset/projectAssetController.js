@@ -24,15 +24,10 @@ class ProjectAssetController {
     this.ProjectAssetService = ProjectAssetService;
     this.UtilService = UtilService;
     this.$translate = this.$filter('translate');
-
     this.projectId = this.$stateParams.projectId;
     this.projectAssets = ProjectAssetService.projectAssets;
-    this.projectAssetTotalSizeMax =
-        ProjectAssetService.projectAssetTotalSizeMax;
-    this.projectAssetUsagePercentage =
-        ProjectAssetService.projectAssetUsagePercentage;
-
-    // the amount of space the unused files use
+    this.projectAssetTotalSizeMax = ProjectAssetService.projectAssetTotalSizeMax;
+    this.projectAssetUsagePercentage = ProjectAssetService.projectAssetUsagePercentage;
     this.totalUnusedFilesSize = 0;
 
     /*
@@ -41,26 +36,15 @@ class ProjectAssetController {
      */
     this.unusedFilesPercentage = 0;
 
-    // whether the asset page is being displayed in a popup
     this.isPopup = false;
-
-    // the project id that opened this popup
     this.projectId = null;
-
-    // the node id that opened this popup
     this.nodeId = null;
-
-    // the component id that opened this popup
     this.componentId = null;
-
-    // the target to put the asset in
     this.target = null;
-
-    // the target object to put the asset in
     this.targetObject = null;
 
     if (this.$stateParams != null) {
-      let stateParams = this.$stateParams;
+      const stateParams = this.$stateParams;
       if (stateParams.isPopup != null) {
         this.isPopup = true;
       }
@@ -86,20 +70,18 @@ class ProjectAssetController {
       }
     }
 
-    // sort assets alphabetically at the beginning
     this.assetSortBy = 'aToZ';
-    this.assetMessage = '';
+    this.uploadSuccessMessage = '';
 
     this.$scope.$watch(() => {
-          return this.projectAssets;
-        }, () => {
-          this.projectAssetUsagePercentage =
-              this.projectAssets.totalFileSize / this.projectAssetTotalSizeMax * 100;
-          this.sortAssets(this.assetSortBy);
-        }
+        return this.projectAssets;
+      }, () => {
+        this.projectAssetUsagePercentage =
+            this.projectAssets.totalFileSize / this.projectAssetTotalSizeMax * 100;
+        this.sortAssets(this.assetSortBy);
+      }
     );
 
-    // when the user changes the sort assets by field, also nperform the sort
     this.$scope.$watch(() => {
         return this.assetSortBy;
       }, () => {
@@ -107,52 +89,42 @@ class ProjectAssetController {
       }
     );
 
-    // calculate whether the assets are used in the project
-    this.ProjectAssetService.calculateAssetUsage()
-        .then((totalUnusedFilesSize) => {
-      this.setTotalUnusedFilesSize(totalUnusedFilesSize);
-    });
+    this.calculateUnusedAssets();
   }
 
   sortAssets(sortBy) {
     if (sortBy === 'aToZ') {
       this.projectAssets.files.sort(this.sortAssetsAToZ);
     } else if (sortBy === 'zToA') {
-      let files = this.projectAssets.files;
-      this.projectAssets.files = files.sort(this.sortAssetsAToZ).reverse();
+      this.projectAssets.files = this.projectAssets.files.sort(this.sortAssetsAToZ).reverse();
     } else if (sortBy === 'smallToLarge') {
       this.projectAssets.files.sort(this.sortAssetsSmallToLarge);
     } else if (sortBy === 'largeToSmall') {
-      let files = this.projectAssets.files;
       this.projectAssets.files =
-          files.sort(this.sortAssetsSmallToLarge).reverse();
+          this.projectAssets.files.sort(this.sortAssetsSmallToLarge).reverse();
     }
   };
 
   sortAssetsAToZ(a, b) {
-    let aFileName = a.fileName.toLowerCase();
-    let bFileName = b.fileName.toLowerCase();
-    let result = 0;
-
+    const aFileName = a.fileName.toLowerCase();
+    const bFileName = b.fileName.toLowerCase();
     if (aFileName < bFileName) {
-      result = -1;
+      return -1;
     } else if (aFileName > bFileName) {
-      result = 1;
+      return 1;
     }
-    return result;
+    return 0;
   };
 
   sortAssetsSmallToLarge(a, b) {
-    let aFileSize = a.fileSize;
-    let bFileSize = b.fileSize;
-    let result = 0;
-
+    const aFileSize = a.fileSize;
+    const bFileSize = b.fileSize;
     if (aFileSize < bFileSize) {
-      result = -1;
+      return -1;
     } else if (aFileSize > bFileSize) {
-      result = 1;
+      return 1;
     }
-    return result;
+    return 0;
   }
 
   /**
@@ -160,18 +132,12 @@ class ProjectAssetController {
    * @param assetItem the asset to delete
    */
   deleteAsset(assetItem) {
-    let deleteConfirmMessage =
-      this.$translate('areYouSureYouWantToDeleteThisFile')
-      + '\n\n' + assetItem.fileName;
-    if (confirm(deleteConfirmMessage)) {
-      this.ProjectAssetService.deleteAssetItem(assetItem)
-        .then((newProjectAssets) => {
+    const message =
+        `${this.$translate('areYouSureYouWantToDeleteThisFile')}\n\n${assetItem.fileName}`;
+    if (confirm(message)) {
+      this.ProjectAssetService.deleteAssetItem(assetItem).then((newProjectAssets) => {
         this.projectAssets = this.ProjectAssetService.projectAssets;
-        // calculate whether the assets are used in the project
-        this.ProjectAssetService.calculateAssetUsage()
-          .then((totalUnusedFilesSize) => {
-        this.setTotalUnusedFilesSize(totalUnusedFilesSize);
-        });
+        this.calculateUnusedAssets();
       });
     }
   }
@@ -180,18 +146,24 @@ class ProjectAssetController {
     this.ProjectAssetService.downloadAssetItem(assetItem);
   }
 
+  calculateUnusedAssets() {
+    this.ProjectAssetService.calculateAssetUsage().then((totalUnusedFilesSize) => {
+      this.setTotalUnusedFilesSize(totalUnusedFilesSize);
+    });
+  }
+
   /**
    * The user has chosen an asset to use, so notify listeners
    * @param assetItem the asset the user chose
    */
   chooseAsset(assetItem) {
-    let params = {
-      "assetItem": assetItem,
-      "projectId": this.projectId,
-      "nodeId": this.nodeId,
-      "componentId": this.componentId,
-      "target": this.target,
-      "targetObject": this.targetObject
+    const params = {
+      assetItem: assetItem,
+      projectId: this.projectId,
+      nodeId: this.nodeId,
+      componentId: this.componentId,
+      target: this.target,
+      targetObject: this.targetObject
     };
     this.$rootScope.$broadcast('assetSelected', params);
   }
@@ -203,9 +175,9 @@ class ProjectAssetController {
    */
   uploadAssetItems(files) {
     let performUploadOfAllFiles = true;
-    let largeAndSmallFiles = this.separateLargeAndSmallFiles(files);
-    let largeFiles = largeAndSmallFiles.largeFiles;
-    let smallFiles = largeAndSmallFiles.smallFiles;
+    const largeAndSmallFiles = this.separateLargeAndSmallFiles(files);
+    const largeFiles = largeAndSmallFiles.largeFiles;
+    const smallFiles = largeAndSmallFiles.smallFiles;
     if (largeFiles.length > 0) {
       performUploadOfAllFiles = confirm(this.getLargeFileMessage(files, largeFiles));
     }
@@ -222,9 +194,9 @@ class ProjectAssetController {
    * of small files.
    */
   separateLargeAndSmallFiles(files) {
-    let largeFiles = [];
-    let smallFiles = [];
-    for (let file of files) {
+    const largeFiles = [];
+    const smallFiles = [];
+    for (const file of files) {
       if (this.isFileLarge(file)) {
         largeFiles.push(file);
       } else {
@@ -250,61 +222,54 @@ class ProjectAssetController {
    * @returns {string} The message to show to the author.
    */
   getLargeFileMessage(files, largeFiles) {
-    let message = '';
+    let message = ``;
     if (files.length == 1 && largeFiles.length == 1) {
-      message = this.$translate('areYouSureYouWantToUploadThisLargeFile') + '\n';
+      message = `${this.$translate('areYouSureYouWantToUploadThisLargeFile')}\n`;
     } else if (largeFiles.length == 1) {
-      message = this.$translate('areYouSureYouWantToUploadThisLargeFileWhileUploadingMultipleFiles') + '\n';
+      message =
+          `${this.$translate('areYouSureYouWantToUploadThisLargeFileWhileUploadingMultipleFiles')}\n`;
     } else if (largeFiles.length > 1) {
-      message = this.$translate('areYouSureYouWantToUploadTheseLargeFilesWhileUploadingMultipleFiles', { fileCount: largeFiles.length }) + '\n';
+      message =
+          `${this.$translate('areYouSureYouWantToUploadTheseLargeFilesWhileUploadingMultipleFiles',
+          { fileCount: largeFiles.length })}\n`;
     }
-    for (let largeFile of largeFiles) {
-      message += '\n' + largeFile.name + ' (' + Math.floor(largeFile.size / 1000) + ' KB)';
+    for (const largeFile of largeFiles) {
+      message += `\n${largeFile.name} (${Math.floor(largeFile.size / 1000)} KB)`;
     }
     return message;
   }
 
-  /**
-   * @param files An array of file objects.
-   */
   uploadAssets(files) {
-    this.ProjectAssetService.uploadAssets(files).then((uploadAssetsResults) => {
-      if (uploadAssetsResults && uploadAssetsResults.length > 0) {
-        let uploadedAssetsFilenames = [];
-        for (let uploadAssetsResult of uploadAssetsResults) {
-          if (typeof uploadAssetsResult.data === 'string') {
-            // there was an error uploading this file, so don't add
-          } else {
-            uploadedAssetsFilenames.push(uploadAssetsResult.config.file.name);
-          }
-        }
-        if (uploadedAssetsFilenames.length > 0) {
-          // show which files were uploaded for 7 seconds
-          this.assetMessage = this.$translate('assetUploadSuccessful',
-              { assetFilenames: uploadedAssetsFilenames.join(', ') });
-          this.$timeout(() => {
-            this.assetMessage = '';
-          }, 7000);
-        }
+    this.ProjectAssetService.uploadAssets(files).success(({success, error, assetDirectoryInfo}) => {
+      if (success.length > 0) {
+        this.showUploadedFiles(success);
       }
-      this.projectAssets = this.ProjectAssetService.projectAssets;
-      // calculate whether the assets are used in the project
-      this.ProjectAssetService.calculateAssetUsage()
-          .then((totalUnusedFilesSize) => {
-        this.setTotalUnusedFilesSize(totalUnusedFilesSize);
-      });
+      if (error.length > 0) {
+        this.showError(error)
+      }
+      this.projectAssets = assetDirectoryInfo;
+      this.calculateUnusedAssets();
       if (this.hasTarget()) {
-        const assetItem = {
-          fileName: files[0].name,
-          fileSize: files[0].size
-        };
-        this.chooseAsset(assetItem);
+        this.chooseAsset({ fileName: files[0].name, fileSize: files[0].size });
       }
     });
   }
 
+  showUploadedFiles(uploadedFiles) {
+    this.successFiles = uploadedFiles;
+    this.uploadSuccessMessage = this.$translate('assetUploadSuccessful');
+    this.$timeout(() => { this.uploadSuccessMessage = ''; this.successFiles = []; }, 7000);
+  }
+
+  showError(error) {
+    this.errorFiles = error;
+    this.uploadErrorMessage = this.$translate('assetUploadError');
+    this.$timeout(() => { this.uploadErrorMessage = ''; this.errorFiles = []; }, 7000);
+  }
+
   hasTarget() {
-    return (this.nodeId != null && this.componentId != null && this.target != null) || this.target === 'projectIcon';
+    return (this.nodeId != null && this.componentId != null && this.target != null) ||
+        this.target === 'projectIcon';
   }
 
   /**
@@ -314,25 +279,17 @@ class ProjectAssetController {
    * @param assetItem the asset item to preview
    */
   previewAsset($event, assetItem) {
-    if (assetItem != null) {
-      this.selectedAssetItem = assetItem;
-      let assetFileName = assetItem.fileName;
-      let assetsDirectoryPath =
-          this.ConfigService.getProjectAssetsDirectoryPath();
-
-      // set the url of the asset so we can preview it
-      this.previewAssetURL = assetsDirectoryPath + '/' + assetFileName;
-
-      // clear these flags
-      this.assetIsImage = false;
-      this.assetIsVideo = false;
-
-      if (this.UtilService.isImage(assetFileName)) {
-        this.assetIsImage = true;
-      } else if(this.UtilService.isVideo(assetFileName)) {
-        this.assetIsVideo = true;
-        $('video').load();
-      }
+    this.selectedAssetItem = assetItem;
+    const assetFileName = assetItem.fileName;
+    const assetsDirectoryPath = this.ConfigService.getProjectAssetsDirectoryPath();
+    this.previewAssetURL = `${assetsDirectoryPath}/${assetFileName}`;
+    this.assetIsImage = false;
+    this.assetIsVideo = false;
+    if (this.UtilService.isImage(assetFileName)) {
+      this.assetIsImage = true;
+    } else if (this.UtilService.isVideo(assetFileName)) {
+      this.assetIsVideo = true;
+      $('video').load();
     }
   }
 
@@ -350,33 +307,25 @@ class ProjectAssetController {
 
   /**
    * Set the total amount of space the unused files use
-   * @param totalUnusedFilesSize the total amount of space the unused files
-   * use
+   * @param totalUnusedFilesSize the total amount of space the unused files use
    */
   setTotalUnusedFilesSize(totalUnusedFilesSize) {
-    // set the total amount of space the unused files use
     this.totalUnusedFilesSize = totalUnusedFilesSize;
-
-    /*
-     * calculate the amount of space the unused files use as a
-     * percentage of the total amount of allowed space for the project
-     */
-    this.unusedFilesPercentage =
-        this.totalUnusedFilesSize / this.projectAssetTotalSizeMax * 100;
+    this.unusedFilesPercentage = this.totalUnusedFilesSize / this.projectAssetTotalSizeMax * 100;
   }
 }
 
 ProjectAssetController.$inject = [
-    '$filter',
-    '$mdDialog',
-    '$rootScope',
-    '$state',
-    '$stateParams',
-    '$scope',
-    '$timeout',
-    'ConfigService',
-    'ProjectAssetService',
-    'UtilService'
+  '$filter',
+  '$mdDialog',
+  '$rootScope',
+  '$state',
+  '$stateParams',
+  '$scope',
+  '$timeout',
+  'ConfigService',
+  'ProjectAssetService',
+  'UtilService'
 ];
 
 export default ProjectAssetController;

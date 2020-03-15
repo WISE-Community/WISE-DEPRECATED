@@ -37,11 +37,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.domain.portal.PortalStatistics;
 import org.wise.portal.service.portal.PortalStatisticsService;
-import org.wise.portal.service.vle.VLEService;
 import org.wise.vle.domain.statistics.VLEStatistics;
 
 /**
  * Controller for handling WISE statistics page
+ * 
  * @author Geoffrey Kwan
  */
 @Controller
@@ -50,9 +50,6 @@ public class StatisticsController {
 
   @Autowired
   private PortalStatisticsService portalStatisticsService;
-
-  @Autowired
-  private VLEService vleService;
 
   @GetMapping
   protected ModelAndView getStatisticsPage(HttpServletRequest request, HttpServletResponse response)
@@ -66,19 +63,6 @@ public class StatisticsController {
         portalStatisticsArray.put(portalStatisticsJSONObject);
       }
       response.getWriter().write(portalStatisticsArray.toString());
-      return null;
-    } else if ("vle".equals(typeParam)) {
-      List<VLEStatistics> vleStatisticsList = vleService.getVLEStatistics();
-      JSONArray vleStatisticsJSONArray = new JSONArray();
-      for (VLEStatistics vleStatistics : vleStatisticsList) {
-        if (vleStatistics != null) {
-          JSONObject vleStatisticsJSONObject = vleStatistics.getJSONObject();
-          if (vleStatisticsJSONObject != null) {
-            vleStatisticsJSONArray.put(vleStatisticsJSONObject);
-          }
-        }
-      }
-      response.getWriter().write(vleStatisticsJSONArray.toString());
       return null;
     } else {
       ModelAndView modelAndView = new ModelAndView();

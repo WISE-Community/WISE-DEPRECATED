@@ -1,6 +1,6 @@
 'use strict';
 
-import AudioOscillatorController from "./audioOscillatorController";
+import AudioOscillatorController from './audioOscillatorController';
 
 class AudioOscillatorAuthoringController extends AudioOscillatorController {
   constructor($filter,
@@ -33,11 +33,9 @@ class AudioOscillatorAuthoringController extends AudioOscillatorController {
       StudentAssetService,
       StudentDataService,
       UtilService);
-
     this.allowedConnectedComponentTypes = [
       { type: 'AudioOscillator' }
     ];
-
     this.populateCheckedOscillatorTypes();
   }
 
@@ -45,15 +43,12 @@ class AudioOscillatorAuthoringController extends AudioOscillatorController {
     if (this.authoringComponentContent.oscillatorTypes.indexOf('sine') != -1) {
       this.authoringSineChecked = true;
     }
-
     if (this.authoringComponentContent.oscillatorTypes.indexOf('square') != -1) {
       this.authoringSquareChecked = true;
     }
-
     if (this.authoringComponentContent.oscillatorTypes.indexOf('triangle') != -1) {
       this.authoringTriangleChecked = true;
     }
-
     if (this.authoringComponentContent.oscillatorTypes.indexOf('sawtooth') != -1) {
       this.authoringSawtoothChecked = true;
     }
@@ -72,23 +67,18 @@ class AudioOscillatorAuthoringController extends AudioOscillatorController {
 
   authoringViewOscillatorTypeClicked() {
     this.authoringComponentContent.oscillatorTypes = [];
-
     if (this.authoringSineChecked) {
       this.authoringComponentContent.oscillatorTypes.push('sine');
     }
-
     if (this.authoringSquareChecked) {
       this.authoringComponentContent.oscillatorTypes.push('square');
     }
-
     if (this.authoringTriangleChecked) {
       this.authoringComponentContent.oscillatorTypes.push('triangle');
     }
-
     if (this.authoringSawtoothChecked) {
       this.authoringComponentContent.oscillatorTypes.push('sawtooth');
     }
-
     this.authoringViewComponentChanged();
   }
 }

@@ -1,47 +1,44 @@
 import vleModule from '../../../vle/vle';
 
+let $controller;
+let $rootScope;
+let $scope;
+let $httpBackend;
+let embeddedController;
+let component;
+
 describe('EmbeddedController', () => {
-
-  let $controller;
-  let $rootScope;
-  let $scope;
-  let $httpBackend;
-  let embeddedController;
-  let component;
-  const createComponentState = (componentStateId, nodeId, componentId, componentStateIdReplyingTo, response) => {
-    return {
-      id: componentStateId,
-      nodeId: nodeId,
-      componentId: componentId,
-      studentData: {
-        response: response,
-        componentStateIdReplyingTo: componentStateIdReplyingTo
-      }
-    };
-  };
-
   beforeEach(angular.mock.module(vleModule.name));
 
   beforeEach(inject((_$controller_, _$rootScope_, _$httpBackend_) => {
     $controller = _$controller_;
     $rootScope = _$rootScope_;
     $httpBackend = _$httpBackend_;
-    component = {
-      'id': '1sc05cn75f',
-      'type': 'Embedded',
-      'prompt': 'Use the model and learn stuff.',
-      'showSaveButton': false,
-      'showSubmitButton': false,
-      'isStudentAttachmentEnabled': true,
-      'gateClassmateResponses': true,
-      'showAddToNotebookButton': true
-    };
+    component = createComponent();
     $scope = $rootScope.$new();
     $scope.componentContent = JSON.parse(JSON.stringify(component));
     embeddedController = $controller('EmbeddedController', { $scope: $scope });
     embeddedController.nodeId = 'node1';
   }));
 
+  shouldMergeAComponentState();
+  shouldMergeASpecificFieldInAComponentState();
+});
+
+function createComponent() {
+  return {
+    id: '1sc05cn75f',
+    type: 'Embedded',
+    prompt: 'Use the model and learn stuff.',
+    showSaveButton: false,
+    showSubmitButton: false,
+    isStudentAttachmentEnabled: true,
+    gateClassmateResponses: true,
+    showAddToNotebookButton: true
+  };
+}
+
+function shouldMergeAComponentState() {
   it('should merge a component state', () => {
     const toComponentState = {
       componentType: 'Embedded',
@@ -55,11 +52,15 @@ describe('EmbeddedController', () => {
         modelScore: 2
       }
     };
-    const mergedComponentState =
-      embeddedController.mergeComponentState(toComponentState, fromComponentState);
+    const mergedComponentState = embeddedController.mergeComponentState(
+      toComponentState,
+      fromComponentState
+    );
     expect(mergedComponentState.studentData.modelScore).toEqual(2);
   });
+}
 
+function shouldMergeASpecificFieldInAComponentState() {
   it('should merge a specific field in a component state', () => {
     const toComponentState = {
       componentType: 'Embedded',
@@ -82,10 +83,12 @@ describe('EmbeddedController', () => {
         action: 'write'
       }
     ];
-    const mergedComponentState =
-      embeddedController.mergeComponentState(toComponentState, fromComponentState, mergeFields);
+    const mergedComponentState = embeddedController.mergeComponentState(
+      toComponentState,
+      fromComponentState,
+      mergeFields
+    );
     expect(mergedComponentState.studentData.modelScore).toEqual(1);
     expect(mergedComponentState.studentData.modelText).toEqual('Good Job');
   });
-
-});
+}

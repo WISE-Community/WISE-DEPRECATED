@@ -86,11 +86,18 @@
                     <md-checkbox ng-model="dataExportController.includeEvents">{{ ::'includeEvents' | translate }}</md-checkbox>
                     <br/>
                 </div>
-                <div ng-if="dataExportController.exportType == 'latestStudentWork' || dataExportController.exportType == 'allStudentWork' || dataExportController.exportType == 'events'">
+                <div ng-if="dataExportController.exportType == 'latestStudentWork' || dataExportController.exportType == 'allStudentWork'">
                   <br ng-if="dataExportController.canViewStudentNames"/>
                   <md-checkbox ng-model="dataExportController.includeStudentNames" ng-if="dataExportController.canViewStudentNames">{{ ::'includeStudentNames' | translate }}</md-checkbox>
                 </div>
-                <md-radio-group ng-if="dataExportController.exportType == 'latestStudentWork' || dataExportController.exportType == 'allStudentWork' || dataExportController.exportType == 'events' || dataExportController.exportType == 'oneWorkgroupPerRow' || dataExportController.exportType == 'rawData'"
+                <div ng-if="dataExportController.exportType === 'events'">
+                    <md-checkbox ng-model="dataExportController.includeStudentEvents">Include Student Events</md-checkbox>
+                    <br/>
+                    <md-checkbox ng-model="dataExportController.includeTeacherEvents">Include Teacher Events</md-checkbox>
+                    <br/>
+                    <md-checkbox ng-model="dataExportController.includeNames">Include Names</md-checkbox>
+                </div>
+                <md-radio-group ng-if="dataExportController.exportType == 'latestStudentWork' || dataExportController.exportType == 'allStudentWork' || dataExportController.exportType == 'oneWorkgroupPerRow' || dataExportController.exportType == 'rawData'"
                                 ng-model="dataExportController.exportStepSelectionType">
                     <md-radio-button value="exportAllSteps" class="md-primary">{{ ::'exportAllSteps' | translate }}</md-radio-button>
                     <md-radio-button value="exportSelectSteps" class="md-primary">{{ ::'exportSelectSteps' | translate }}</md-radio-button>

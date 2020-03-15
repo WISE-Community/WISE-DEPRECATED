@@ -1,0 +1,18 @@
+<h5 translate="kiOER.label"></h5>
+<p translate="kiOER.description"></p>
+<hr>
+<div layout="row">
+  <md-button class='createButton md-primary'
+             ng-click='kiCycleUsingOERController.goToChooseStructure()'
+             aria-label='{{ ::"back" | translate }}'
+             translate='back'></md-button>
+  <span flex></span>
+  <md-button class='createButton md-primary'
+             ng-click='kiCycleUsingOERController.cancel()'
+             aria-label='{{ ::"cancel" | translate }}'
+             translate='cancel'></md-button>
+  <md-button class='createButton md-raised md-primary'
+             ng-click='kiCycleUsingOERController.chooseLocation()'
+             aria-label='{{ ::"next" | translate }}'
+             translate='next'></md-button>
+</div>

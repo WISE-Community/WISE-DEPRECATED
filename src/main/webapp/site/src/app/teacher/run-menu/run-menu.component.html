@@ -5,7 +5,7 @@
   <div>
     <div class="run-info mat-body-2" i18n>Run ID: {{ run.id }}</div>
     <mat-divider></mat-divider>
-    <a mat-menu-item (click)="showEditRunDetails()">
+    <a *ngIf="run.project.wiseVersion !== 4" mat-menu-item (click)="showEditRunDetails()">
       <mat-icon>settings</mat-icon>
       <span>Edit Settings</span>
     </a>
@@ -17,16 +17,16 @@
       <mat-icon>info</mat-icon>
       <span i18n>Unit Info</span>
     </a>
-    <a mat-menu-item (click)="editContent()" *ngIf="canEdit()">
+    <a mat-menu-item (click)="editContent()" *ngIf="canEdit() && run.project.wiseVersion !== 4">
       <mat-icon>edit</mat-icon>
       <span i18n>Edit Content</span>
     </a>
-    <a mat-menu-item (click)="shareRun()" *ngIf="canShare()">
+    <a mat-menu-item (click)="shareRun()" *ngIf="canShare() && run.project.wiseVersion !== 4">
       <mat-icon>share</mat-icon>
       <span i18n>Share</span>
     </a>
     <a mat-menu-item (click)="checkClassroomAuthorization()"
-       *ngIf="isGoogleUser() && isGoogleClassroomEnabled() && !isRunCompleted()">
+       *ngIf="isGoogleUser() && isGoogleClassroomEnabled() && !isRunCompleted() && run.project.wiseVersion !== 4">
       <mat-icon svgIcon="google-classroom"></mat-icon>
       <span i18n>Add to Google Classroom</span>
     </a>

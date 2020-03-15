@@ -1,15 +1,24 @@
 import vleModule from '../../vle/vle';
+let UtilService;
 
 describe('UtilService', () => {
-
   beforeEach(angular.mock.module(vleModule.name));
-
-  let UtilService;
-
-  beforeEach(inject((_UtilService_) => {
+  beforeEach(inject(_UtilService_ => {
     UtilService = _UtilService_;
   }));
 
+  generateKeyTests();
+  convertStringToNumberTests();
+  makeCopyOfJSONObjectTests();
+  arrayHasNonNullElementTests();
+  moveObjectUpTests();
+  moveObjectDownTests();
+  calculateMeanTests();
+  getIntersectOfArraysTests();
+  isValidJSONStringTests();
+});
+
+function generateKeyTests() {
   describe('generateKey()', () => {
     it('should return random keys of length 10 by default', () => {
       const generatedKey1 = UtilService.generateKey();
@@ -33,11 +42,13 @@ describe('UtilService', () => {
       }
     });
   });
+}
 
+function convertStringToNumberTests() {
   describe('convertStringToNumber()', () => {
     it('should convert a number string to a number', () => {
-      expect(UtilService.convertStringToNumber("5")).toEqual(5);
-      expect(UtilService.convertStringToNumber("-100")).toEqual(-100);
+      expect(UtilService.convertStringToNumber('5')).toEqual(5);
+      expect(UtilService.convertStringToNumber('-100')).toEqual(-100);
     });
 
     it('should return null for null argument', () => {
@@ -45,11 +56,13 @@ describe('UtilService', () => {
     });
 
     it('should return non-null number string as is', () => {
-      expect(UtilService.convertStringToNumber("abc")).toEqual("abc");
-      expect(UtilService.convertStringToNumber("")).toEqual("");
+      expect(UtilService.convertStringToNumber('abc')).toEqual('abc');
+      expect(UtilService.convertStringToNumber('')).toEqual('');
     });
-  })
+  });
+}
 
+function makeCopyOfJSONObjectTests() {
   describe('makeCopyOfJSONObject()', () => {
     it('should copy an array object', () => {
       const array1 = [1, 2, 3];
@@ -58,12 +71,14 @@ describe('UtilService', () => {
     });
 
     it('should copy an object', () => {
-      const obj = {"name":"WISE", "address":"Berkeley"};
+      const obj = { name: 'WISE', address: 'Berkeley' };
       const copiedObj = UtilService.makeCopyOfJSONObject(obj);
       expect(copiedObj).toEqual(obj);
     });
   });
+}
 
+function arrayHasNonNullElementTests() {
   describe('arrayHasNonNullElement()', () => {
     it('should return true if it has at least one non null element', () => {
       const arrayToCheck = [null, {}, null];
@@ -80,14 +95,12 @@ describe('UtilService', () => {
       expect(UtilService.arrayHasNonNullElement(arrayToCheck)).toEqual(true);
     });
   });
+}
 
+function moveObjectUpTests() {
   describe('moveObjectUp()', () => {
     it('should move an object up when the object is not the top element', () => {
-      const myArray = [
-        { name: 'a' },
-        { name: 'b' },
-        { name: 'c' }
-      ];
+      const myArray = [{ name: 'a' }, { name: 'b' }, { name: 'c' }];
       const elementToMove = 1;
       UtilService.moveObjectUp(myArray, elementToMove);
       expect(myArray[0].name).toEqual('b');
@@ -96,11 +109,7 @@ describe('UtilService', () => {
     });
 
     it('should not move an object up when the object is the top element', () => {
-      const myArray = [
-        { name: 'a' },
-        { name: 'b' },
-        { name: 'c' }
-      ];
+      const myArray = [{ name: 'a' }, { name: 'b' }, { name: 'c' }];
       const elementToMove = 0;
       UtilService.moveObjectUp(myArray, elementToMove);
       expect(myArray[0].name).toEqual('a');
@@ -108,14 +117,12 @@ describe('UtilService', () => {
       expect(myArray[2].name).toEqual('c');
     });
   });
+}
 
+function moveObjectDownTests() {
   describe('moveObjectDown()', () => {
     it('should move an object down when the object is not the bottom element', () => {
-      const myArray = [
-        { name: 'a' },
-        { name: 'b' },
-        { name: 'c' }
-      ];
+      const myArray = [{ name: 'a' }, { name: 'b' }, { name: 'c' }];
       const elementToMove = 1;
       UtilService.moveObjectDown(myArray, elementToMove);
       expect(myArray[0].name).toEqual('a');
@@ -124,11 +131,7 @@ describe('UtilService', () => {
     });
 
     it('should not move an object down when the object is the bottom element', () => {
-      const myArray = [
-        { name: 'a' },
-        { name: 'b' },
-        { name: 'c' }
-      ];
+      const myArray = [{ name: 'a' }, { name: 'b' }, { name: 'c' }];
       const elementToMove = 2;
       UtilService.moveObjectDown(myArray, elementToMove);
       expect(myArray[0].name).toEqual('a');
@@ -136,7 +139,9 @@ describe('UtilService', () => {
       expect(myArray[2].name).toEqual('c');
     });
   });
+}
 
+function calculateMeanTests() {
   describe('calculateMean()', () => {
     it('should calculate the mean when there is one value', () => {
       const values = [1];
@@ -148,4 +153,54 @@ describe('UtilService', () => {
       expect(UtilService.calculateMean(values)).toEqual(4);
     });
   });
-});
+}
+
+function getIntersectOfArraysTests() {
+  describe('getIntersectOfArrays()', () => {
+    it('should find the intersect of arrays when there are no common items', () => {
+      const obj1 = {};
+      const obj2 = {};
+      const obj3 = {};
+      const array1 = [obj1, obj2];
+      const array2 = [obj3];
+      const intersect = UtilService.getIntersectOfArrays(array1, array2);
+      expect(intersect.length).toEqual(0);
+    });
+
+    it('should find the intersect of arrays when there are some common items', () => {
+      const obj1 = {};
+      const obj2 = {};
+      const obj3 = {};
+      const array1 = [obj1, obj2];
+      const array2 = [obj2, obj3];
+      const intersect = UtilService.getIntersectOfArrays(array1, array2);
+      expect(intersect.length).toEqual(1);
+    });
+
+    it('should find the intersect of arrays when all are common items', () => {
+      const obj1 = {};
+      const obj2 = {};
+      const obj3 = {};
+      const array1 = [obj1, obj2, obj3];
+      const array2 = [obj1, obj2, obj3];
+      const intersect = UtilService.getIntersectOfArrays(array1, array2);
+      expect(intersect.length).toEqual(3);
+    });
+  });
+}
+
+function isValidJSONStringTests() {
+  describe('isValidJSONString()', () => {
+    it('should return true if json string is valid', () => {
+      const validJSON = '{"a":1,"b":2}';
+      expect(UtilService.isValidJSONString(validJSON)).toBeTruthy();
+      const validJSON2 = '[{"a":1},{"b":2}]';
+      expect(UtilService.isValidJSONString(validJSON2)).toBeTruthy();
+    });
+
+    it('should return false for invalid json strings', () => {
+      const invalidJSON = '{"a":1,"b":2';
+      expect(UtilService.isValidJSONString(invalidJSON)).toBeFalsy();
+    });
+  });
+}

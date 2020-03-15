@@ -8,9 +8,9 @@
                 <div class="md-title nav-item__title" style="color: {{navitemCtrl.nodeStatus.icon.color}};" flex>
                     <span>{{ ::navitemCtrl.nodeTitle }}</span>
                 </div>
-                <md-icon class="nav-item__collapse" ng-if="::navitemCtrl.isGroup && navitemCtrl.expanded" aria-label="collapse">remove</md-icon>
+                <md-icon class="nav-item__collapse" ng-if="navitemCtrl.isGroup && navitemCtrl.expanded" aria-label="collapse">remove</md-icon>
             </md-card-content>
-            <md-card-content ng-if="::navitemCtrl.isGroup && navitemCtrl.expanded" class="nav-contents nav-contents--group">
+            <md-card-content ng-if="navitemCtrl.isGroup && navitemCtrl.expanded" class="nav-contents nav-contents--group">
                 <div ng-if="navitemCtrl.isPlanning" class="md-padding" layout="column" layout-align="center center">
                     <md-switch ng-model="navitemCtrl.planningMode"
                                aria-label="Toggle planning mode"

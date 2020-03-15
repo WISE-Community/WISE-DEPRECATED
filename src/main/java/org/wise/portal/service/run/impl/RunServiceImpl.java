@@ -49,7 +49,6 @@ import org.wise.portal.dao.run.RunDao;
 import org.wise.portal.dao.user.UserDao;
 import org.wise.portal.domain.PeriodNotFoundException;
 import org.wise.portal.domain.Persistable;
-import org.wise.portal.domain.announcement.Announcement;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.group.impl.PersistentGroup;
@@ -75,20 +74,21 @@ import org.wise.portal.service.workgroup.WorkgroupService;
 
 /**
  * Services for WISE Run
+ * 
  * @author Hiroki Terashima
  * @author Geoffrey Kwan
  */
 @Service
 public class RunServiceImpl implements RunService {
 
-  private String DEFAULT_RUNCODE_PREFIXES = "Tiger,Lion,Fox,Owl,Panda,Hawk,Mole,"+
-      "Falcon,Orca,Eagle,Manta,Otter,Cat,Zebra,Flea,Wolf,Dragon,Seal,Cobra,"+
-      "Bug,Gecko,Fish,Koala,Mouse,Wombat,Shark,Whale,Sloth,Slug,Ant,Mantis,"+
-      "Bat,Rhino,Gator,Monkey,Swan,Ray,Crow,Goat,Marmot,Dog,Finch,Puffin,Fly,"+
-      "Camel,Kiwi,Spider,Lizard,Robin,Bear,Boa,Cow,Crab,Mule,Moth,Lynx,Moose,"+
-      "Skunk,Mako,Liger,Llama,Shrimp,Parrot,Pig,Clam,Urchin,Toucan,Frog,Toad,"+
-      "Turtle,Viper,Trout,Hare,Bee,Krill,Dodo,Tuna,Loon,Leech,Python,Wasp,Yak,"+
-      "Snake,Duck,Worm,Yeti";
+  private String DEFAULT_RUNCODE_PREFIXES = "Tiger,Lion,Fox,Owl,Panda,Hawk,Mole,"
+      + "Falcon,Orca,Eagle,Manta,Otter,Cat,Zebra,Flea,Wolf,Dragon,Seal,Cobra,"
+      + "Bug,Gecko,Fish,Koala,Mouse,Wombat,Shark,Whale,Sloth,Slug,Ant,Mantis,"
+      + "Bat,Rhino,Gator,Monkey,Swan,Ray,Crow,Goat,Marmot,Dog,Finch,Puffin,Fly,"
+      + "Camel,Kiwi,Spider,Lizard,Robin,Bear,Boa,Cow,Crab,Mule,Moth,Lynx,Moose,"
+      + "Skunk,Mako,Liger,Llama,Shrimp,Parrot,Pig,Clam,Urchin,Toucan,Frog,Toad,"
+      + "Turtle,Viper,Trout,Hare,Bee,Krill,Dodo,Tuna,Loon,Leech,Python,Wasp,Yak,"
+      + "Snake,Duck,Worm,Yeti";
 
   private static final int MAX_RUNCODE_DIGIT = 1000;
 
@@ -152,6 +152,7 @@ public class RunServiceImpl implements RunService {
 
   /**
    * Generate a random runcode
+   * 
    * @param locale
    * @return the randomly generated runcode.
    */
@@ -160,14 +161,13 @@ public class RunServiceImpl implements RunService {
     Integer digits = rand.nextInt(MAX_RUNCODE_DIGIT);
     StringBuffer sb = new StringBuffer(digits.toString());
 
-    int max_runcode_digit_length = Integer.toString(MAX_RUNCODE_DIGIT)
-      .length() - 1;
+    int max_runcode_digit_length = Integer.toString(MAX_RUNCODE_DIGIT).length() - 1;
     while (sb.length() < max_runcode_digit_length) {
       sb.insert(0, "0");
     }
-    String language = locale.getLanguage();  // languages is two-letter ISO639 code, like en, es, he, etc.
-    String runcodePrefixesStr =
-        appProperties.getProperty("runcode_prefixes_en", DEFAULT_RUNCODE_PREFIXES);
+    String language = locale.getLanguage(); // languages is two-letter ISO639 code, like en
+    String runcodePrefixesStr = appProperties.getProperty("runcode_prefixes_en",
+        DEFAULT_RUNCODE_PREFIXES);
     if (appProperties.containsKey("runcode_prefixes_" + language)) {
       runcodePrefixesStr = appProperties.getProperty("runcode_prefixes_" + language);
     }
@@ -179,6 +179,7 @@ public class RunServiceImpl implements RunService {
 
   /**
    * Creates a run based on input parameters provided.
+   * 
    * @param runParameters
    * @return The run created.
    * @throws ObjectNotFoundException
@@ -231,8 +232,8 @@ public class RunServiceImpl implements RunService {
     return run;
   }
 
-  public Run createRun(Integer projectId, User user, Set<String> periodNames,
-        Integer maxStudentsPerTeam, Long startDate, Long endDate, Locale locale) throws Exception {
+  public Run createRun(Long projectId, User user, Set<String> periodNames,
+      Integer maxStudentsPerTeam, Long startDate, Long endDate, Locale locale) throws Exception {
     Project project = projectService.copyProject(projectId, user);
     RunParameters runParameters = createRunParameters(project, user, periodNames,
         maxStudentsPerTeam, startDate, endDate, locale);
@@ -242,7 +243,7 @@ public class RunServiceImpl implements RunService {
   }
 
   public RunParameters createRunParameters(Project project, User user, Set<String> periodNames,
-        Integer maxStudentsPerTeam, Long startDate, Long endDate, Locale locale) {
+      Integer maxStudentsPerTeam, Long startDate, Long endDate, Locale locale) {
     RunParameters runParameters = new RunParameters();
     runParameters.setOwner(user);
     runParameters.setName(project.getName());
@@ -330,7 +331,7 @@ public class RunServiceImpl implements RunService {
     runDao.save(run);
     try {
       return ControllerUtil.getRunJSON(run);
-    }  catch (JSONException e) {
+    } catch (JSONException e) {
       return null;
     }
   }
@@ -385,10 +386,11 @@ public class RunServiceImpl implements RunService {
       newPermissions.add(RunPermission.VIEW_STUDENT_WORK.getMask());
       createSharedTeacherWorkgroupIfNecessary(run, user);
       return new SharedOwner(user.getId(), user.getUserDetails().getUsername(),
-        user.getUserDetails().getFirstname(), user.getUserDetails().getLastname(), newPermissions);
+          user.getUserDetails().getFirstname(), user.getUserDetails().getLastname(),
+          newPermissions);
     } else {
-      throw new TeacherAlreadySharedWithRunException(user.getUserDetails().getUsername()
-          + " is already shared with this run");
+      throw new TeacherAlreadySharedWithRunException(
+          user.getUserDetails().getUsername() + " is already shared with this run");
     }
   }
 
@@ -400,7 +402,8 @@ public class RunServiceImpl implements RunService {
     return null;
   }
 
-  private Workgroup createSharedTeacherWorkgroup(Run run, User user) throws ObjectNotFoundException {
+  private Workgroup createSharedTeacherWorkgroup(Run run, User user)
+      throws ObjectNotFoundException {
     if (user.isTeacher()) {
       Set<User> sharedOwners = new HashSet<User>();
       sharedOwners.add(user);
@@ -409,7 +412,8 @@ public class RunServiceImpl implements RunService {
     return null;
   }
 
-  public void addSharedTeacherPermission(Long runId, Long userId, Integer permissionId) throws ObjectNotFoundException {
+  public void addSharedTeacherPermission(Long runId, Long userId, Integer permissionId)
+      throws ObjectNotFoundException {
     User user = userDao.getById(userId);
     Run run = retrieveById(runId);
     if (run.getSharedowners().contains(user)) {
@@ -441,8 +445,7 @@ public class RunServiceImpl implements RunService {
       projectDao.save(runProject);
 
       try {
-        List<Permission> runPermissions =
-          aclService.getPermissions(run, user.getUserDetails());
+        List<Permission> runPermissions = aclService.getPermissions(run, user.getUserDetails());
         for (Permission runPermission : runPermissions) {
           aclService.removePermission(run, runPermission, user);
         }
@@ -492,9 +495,11 @@ public class RunServiceImpl implements RunService {
 
   /**
    * Checks if the given runcode is unique.
-   * @param runCode A unique string.
-   * @throws DuplicateRunCodeException if the run's runcde
-   * already exists in the data store
+   * 
+   * @param runCode
+   *                  A unique string.
+   * @throws DuplicateRunCodeException
+   *                                     if the run's runcde already exists in the data store
    */
   private void checkForRunCodeDuplicate(String runCode) throws DuplicateRunCodeException {
     try {
@@ -547,20 +552,6 @@ public class RunServiceImpl implements RunService {
   }
 
   @Transactional()
-  public void addAnnouncementToRun(Long runId, Announcement announcement) throws Exception {
-    Run run = retrieveById(runId);
-    run.getAnnouncements().add(announcement);
-    runDao.save(run);
-  }
-
-  @Transactional()
-  public void removeAnnouncementFromRun(Long runId, Announcement announcement) throws Exception {
-    Run run = retrieveById(runId);
-    run.getAnnouncements().remove(announcement);
-    runDao.save(run);
-  }
-
-  @Transactional()
   public void setInfo(Long runId, String isPaused, String showNodeId) throws Exception {
     Run run = retrieveById(runId);
     String runInfoString = "<isPaused>" + isPaused + "</isPaused>";
@@ -569,9 +560,8 @@ public class RunServiceImpl implements RunService {
     }
 
     /*
-     * when we use the info field for more info than just isPaused this
-     * will need to be changed so it doesn't just completely overwrite
-     * the info field
+     * when we use the info field for more info than just isPaused this will need to be changed so
+     * it doesn't just completely overwrite the info field
      */
     run.setInfo(runInfoString);
     runDao.save(run);
@@ -608,14 +598,14 @@ public class RunServiceImpl implements RunService {
   }
 
   public boolean hasReadPermission(Authentication authentication, Run run) {
-    return ((MutableUserDetails) authentication.getPrincipal()).isAdminUser() ||
-        aclService.hasPermission(authentication, run, BasePermission.READ) ||
-        aclService.hasPermission(authentication, run, BasePermission.WRITE);
+    return ((MutableUserDetails) authentication.getPrincipal()).isAdminUser()
+        || aclService.hasPermission(authentication, run, BasePermission.READ)
+        || aclService.hasPermission(authentication, run, BasePermission.WRITE);
   }
 
   public boolean hasWritePermission(Authentication authentication, Run run) {
-    return ((MutableUserDetails) authentication.getPrincipal()).isAdminUser() ||
-        aclService.hasPermission(authentication, run, BasePermission.WRITE);
+    return ((MutableUserDetails) authentication.getPrincipal()).isAdminUser()
+        || aclService.hasPermission(authentication, run, BasePermission.WRITE);
   }
 
   public boolean hasRunPermission(Run run, User user, Permission permission) {
@@ -668,7 +658,7 @@ public class RunServiceImpl implements RunService {
       Run run = retrieveById(runId);
       run.setName(name);
       runDao.save(run);
-    } catch(ObjectNotFoundException e) {
+    } catch (ObjectNotFoundException e) {
       e.printStackTrace();
     }
   }
@@ -683,7 +673,7 @@ public class RunServiceImpl implements RunService {
       groupDao.save(group);
       periods.add(group);
       runDao.save(run);
-    } catch(ObjectNotFoundException e) {
+    } catch (ObjectNotFoundException e) {
       e.printStackTrace();
     }
   }
@@ -696,9 +686,9 @@ public class RunServiceImpl implements RunService {
       Set<Group> periods = run.getPeriods();
       periods.remove(period);
       runDao.save(run);
-    } catch(ObjectNotFoundException e) {
+    } catch (ObjectNotFoundException e) {
       e.printStackTrace();
-    } catch(PeriodNotFoundException e) {
+    } catch (PeriodNotFoundException e) {
       e.printStackTrace();
     }
   }
@@ -709,7 +699,7 @@ public class RunServiceImpl implements RunService {
       Run run = retrieveById(runId);
       run.setMaxWorkgroupSize(maxStudentsPerTeam);
       runDao.save(run);
-    } catch(ObjectNotFoundException e) {
+    } catch (ObjectNotFoundException e) {
       e.printStackTrace();
     }
   }
@@ -720,7 +710,7 @@ public class RunServiceImpl implements RunService {
       Run run = retrieveById(runId);
       run.setStarttime(new Date(startTime));
       runDao.save(run);
-    } catch(ObjectNotFoundException e) {
+    } catch (ObjectNotFoundException e) {
       e.printStackTrace();
     }
   }
@@ -731,7 +721,7 @@ public class RunServiceImpl implements RunService {
       Run run = retrieveById(runId);
       run.setEndtime(new Date(endTime));
       runDao.save(run);
-    } catch(ObjectNotFoundException e) {
+    } catch (ObjectNotFoundException e) {
       e.printStackTrace();
     }
   }
@@ -740,13 +730,6 @@ public class RunServiceImpl implements RunService {
   public void setIdeaManagerEnabled(Long runId, boolean isEnabled) throws ObjectNotFoundException {
     Run run = retrieveById(runId);
     run.setIdeaManagerEnabled(isEnabled);
-    runDao.save(run);
-  }
-
-  @Transactional
-  public void setPortfolioEnabled(Long runId, boolean isEnabled) throws ObjectNotFoundException {
-    Run run = retrieveById(runId);
-    run.setPortfolioEnabled(isEnabled);
     runDao.save(run);
   }
 
