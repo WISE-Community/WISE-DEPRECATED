@@ -20,6 +20,9 @@ import { FlexLayoutModule } from '@angular/flex-layout';
   ],
   declarations: [
     NewsComponent
+  ],
+  exports: [
+    NewsComponent
   ]
 })
 export class NewsModule { }
