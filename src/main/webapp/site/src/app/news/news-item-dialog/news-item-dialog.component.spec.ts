@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NewsItemDialogComponent } from './news-item-dialog.component';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 
 describe('NewsItemDialogComponent', () => {
   let component: NewsItemDialogComponent;
@@ -8,7 +9,11 @@ describe('NewsItemDialogComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ NewsItemDialogComponent ]
+      declarations: [ NewsItemDialogComponent ],
+      providers: [
+        { provide: MAT_DIALOG_DATA, useValue: { isEditMode: false }},
+        { provide: MatDialogRef, useValue: { close: () => {} }}
+      ]
     })
     .compileComponents();
   }));

@@ -7,6 +7,7 @@ import { NewsRoutingModule } from "./news-routing.module";
 import { MatButtonModule, MatCardModule, MatIconModule } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { SharedModule } from '../modules/shared/shared.module';
+import { NewsItemDialogComponent } from './news-item-dialog/news-item-dialog.component';
 
 @NgModule({
   imports: [
@@ -22,10 +23,14 @@ import { SharedModule } from '../modules/shared/shared.module';
     MatButtonModule
   ],
   declarations: [
-    NewsComponent
+    NewsComponent,
+    NewsItemDialogComponent
   ],
   exports: [
     NewsComponent
+  ],
+  entryComponents: [
+    NewsItemDialogComponent
   ]
 })
 export class NewsModule { }

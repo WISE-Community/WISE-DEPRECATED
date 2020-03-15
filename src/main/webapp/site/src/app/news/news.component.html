@@ -14,12 +14,12 @@
           </ng-container>
       </h1>
       <span fxFlex="1 1 auto"></span>
-      <app-search-bar [value]="searchValue" (update)="searchUpdated($event)"></app-search-bar>
+      <app-search-bar fxFlex="50" [value]="searchValue" (update)="searchUpdated($event)"></app-search-bar>
     </header>
     <section>
       <div fxLayout="row" *ngIf="isAdmin" id="btn-add-news-item">
         <span fxFlex="1 1 auto"></span>
-        <button mat-flat-button color="accent"><mat-icon>add</mat-icon>Add News Item</button>
+        <button mat-flat-button color="accent" (click)="addNewsItem()"><mat-icon>add</mat-icon>Add News Item</button>
       </div>
       <div class="content-block">
         <app-timeline>
@@ -37,6 +37,7 @@
                   <mat-card-actions *ngIf="isAdmin">
                     <button mat-button color="primary"><span i18n>Read More</span></button>
                     <button mat-button><span i18n>Hide</span></button>
+                    <button mat-button color="accent"><span i18n>Edit</span></button>
                     <button mat-button color="accent"><span i18n>Delete</span></button>
                   </mat-card-actions>
                 </mat-card>
