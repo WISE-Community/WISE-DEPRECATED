@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { NewsService } from "../services/news.service";
 import { News } from "../domain/news";
 import { DomSanitizer } from '@angular/platform-browser';
@@ -10,8 +10,11 @@ import { DomSanitizer } from '@angular/platform-browser';
 })
 export class NewsComponent implements OnInit {
 
+  @Input() isAdmin: boolean = false;
+
   allNewsItems: any = [];
   showAll: boolean = false;
+  searchValue: string = '';
 
   constructor(private newsService: NewsService,
               private sanitizer: DomSanitizer) { }
@@ -20,5 +23,22 @@ export class NewsComponent implements OnInit {
     this.newsService.getAllNews().subscribe((allNewsItems: News[]) => {
       this.allNewsItems = allNewsItems;
     });
+  }
+
+  searchUpdated(value: string) {
+    this.searchValue = value.toLowerCase();
+    this.emitFilterValues();
+  }
+
+  emitFilterValues() {
+    console.log(`emitting value: ${this.searchValue}`);
+  }
+
+  hideNewsItem(id: number) {
+
+  }
+
+  deleteNewsItem(id: number) {
+
   }
 }

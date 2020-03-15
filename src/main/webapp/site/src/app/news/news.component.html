@@ -6,10 +6,21 @@
           fxLayoutGap="8px"
           ngClass="mat-display-1"
           [ngClass.xs]="{ 'mat-display-1': false }">
-        <mat-icon>rss_feed</mat-icon><span i18n>What's New?</span>
+          <ng-container *ngIf="!isAdmin">
+            <mat-icon>rss_feed</mat-icon><span i18n>What's New?</span>
+          </ng-container>
+          <ng-container *ngIf="isAdmin">
+            <mat-icon>settings</mat-icon><span i18n>WISE News</span>
+          </ng-container>
       </h1>
+      <span fxFlex="1 1 auto"></span>
+      <app-search-bar [value]="searchValue" (update)="searchUpdated($event)"></app-search-bar>
     </header>
     <section>
+      <div fxLayout="row" *ngIf="isAdmin" id="btn-add-news-item">
+        <span fxFlex="1 1 auto"></span>
+        <button mat-flat-button color="accent"><mat-icon>add</mat-icon>Add News Item</button>
+      </div>
       <div class="content-block">
         <app-timeline>
           <ng-container *ngFor="let newsItem of allNewsItems; let i=index">
@@ -23,6 +34,11 @@
                     <h2 class="accent-1">{{newsItem.title}}</h2>
                     <div class="mat-body-1" [innerHTML]="sanitizer.bypassSecurityTrustHtml(newsItem.news)"></div>
                   </mat-card-content>
+                  <mat-card-actions *ngIf="isAdmin">
+                    <button mat-button color="primary"><span i18n>Read More</span></button>
+                    <button mat-button><span i18n>Hide</span></button>
+                    <button mat-button color="accent"><span i18n>Delete</span></button>
+                  </mat-card-actions>
                 </mat-card>
               </app-timeline-item-content>
             </app-timeline-item>

@@ -18,6 +18,7 @@ import { FindTeacherComponent } from './find-teacher/find-teacher.component';
 import { AdminActionsComponent } from './admin-actions/admin-actions.component';
 import { ManageNewsComponent } from './manage-news/manage-news.component';
 import { NewsModule } from '../news/news.module';
+import { NewsItemDialogComponent } from './news-item-dialog/news-item-dialog.component';
 
 const materialModules = [
   MatButtonModule, MatCheckboxModule, MatDialogModule, MatFormFieldModule, MatIconModule,
@@ -42,7 +43,8 @@ const materialModules = [
     FindStudentComponent,
     FindTeacherComponent,
     AdminActionsComponent,
-    ManageNewsComponent
+    ManageNewsComponent,
+    NewsItemDialogComponent
   ],
   entryComponents: [
     AdminActionsComponent

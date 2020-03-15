@@ -6,6 +6,7 @@ import { MomentModule } from 'ngx-moment';
 import { NewsRoutingModule } from "./news-routing.module";
 import { MatButtonModule, MatCardModule, MatIconModule } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { SharedModule } from '../modules/shared/shared.module';
 
 @NgModule({
   imports: [
@@ -16,7 +17,9 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     MatIconModule,
     MomentModule,
     NewsRoutingModule,
-    TimelineModule
+    TimelineModule,
+    SharedModule,
+    MatButtonModule
   ],
   declarations: [
     NewsComponent

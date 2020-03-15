@@ -29,7 +29,6 @@ import { HeroSectionComponent } from './hero-section/hero-section.component';
 import { SearchBarComponent } from './search-bar/search-bar.component';
 import { SelectMenuComponent } from './select-menu/select-menu.component';
 import { EditPasswordComponent } from './edit-password/edit-password.component';
-import { NewsModule } from '../../news/news.module';
 
 @NgModule({
   imports: [
