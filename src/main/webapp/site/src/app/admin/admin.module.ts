@@ -5,7 +5,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {
   MatButtonModule, MatCheckboxModule, MatDialogModule, MatFormFieldModule, MatIconModule,
-  MatRadioModule, MatSnackBarModule, MatTableModule, MatTabsModule, MatProgressBarModule
+  MatRadioModule, MatSnackBarModule, MatTableModule, MatTabsModule, MatProgressBarModule, MatDividerModule
 } from '@angular/material';
 
 import { AdminRoutingModule } from './admin-routing.module';
@@ -16,16 +16,18 @@ import { FindUserComponent } from './find-user/find-user.component';
 import { FindStudentComponent } from './find-student/find-student.component';
 import { FindTeacherComponent } from './find-teacher/find-teacher.component';
 import { AdminActionsComponent } from './admin-actions/admin-actions.component';
+import { ManageNewsComponent } from './manage-news/manage-news.component';
 
 const materialModules = [
   MatButtonModule, MatCheckboxModule, MatDialogModule, MatFormFieldModule, MatIconModule,
   MatRadioModule, MatSnackBarModule, MatTableModule, MatTabsModule, ReactiveFormsModule,
-  MatProgressBarModule
+  MatProgressBarModule, MatDividerModule
 ];
 
 @NgModule({
   imports: [
     CommonModule,
+    SharedModule,
     SharedModule,
     FlexLayoutModule,
     FormsModule,
@@ -38,7 +40,8 @@ const materialModules = [
     FindUserComponent,
     FindStudentComponent,
     FindTeacherComponent,
-    AdminActionsComponent
+    AdminActionsComponent,
+    ManageNewsComponent
   ],
   entryComponents: [
     AdminActionsComponent

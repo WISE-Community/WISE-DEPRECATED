@@ -7,12 +7,43 @@
     <mat-icon>settings</mat-icon><span i18n>Administrator Tools</span>
   </h1>
 </header>
-<section>
-  <h4>User Management</h4>
-  <a mat-button
-     routerLink="/admin/search"
-     routerLinkActive="active"
-     [routerLinkActiveOptions]="{ exact: true }">
-    <span i18n>Find User</span>
-  </a>
-</section>
+
+<div fxLayout="row wrap" fxLayoutGap="8px">
+  <mat-card fxFlex="25">
+    <mat-card-title>
+      <h4 i18n>User Management</h4>
+    </mat-card-title>
+    <mat-divider></mat-divider>
+    <mat-card-content>
+      <div fxLayoutAlign="center center">
+        <mat-icon color="primary">group</mat-icon>
+      </div>
+      <span i18n>Manage WISE users.</span>
+    </mat-card-content>
+    <mat-divider></mat-divider>
+    <mat-card-actions fxLayoutAlign="center center">
+      <button mat-flat-button color="accent" routerLink="/admin/search">
+        <span i18n>Find User</span>
+      </button>
+    </mat-card-actions>
+  </mat-card>
+
+  <mat-card fxFlex="25">
+    <mat-card-title>
+      <h4 i18n>News Items Management</h4>
+    </mat-card-title>
+    <mat-divider></mat-divider>
+    <mat-card-content>
+      <div fxLayoutAlign="center center">
+        <mat-icon color="primary">vertical_split</mat-icon>
+      </div>
+      <span i18n>Manage WISE news items.</span>
+    </mat-card-content>
+    <mat-divider></mat-divider>
+    <mat-card-actions fxLayoutAlign="center center">
+      <button mat-flat-button color="accent" routerLink="/admin/news">
+        <span i18n>Manage News</span>
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>
