@@ -112,6 +112,7 @@
     "karma-json-fixtures-preprocessor": "0.0.6",
     "karma-parallel": "^0.3.1",
     "karma-spec-reporter": "0.0.32",
+    "karma-typescript": "^4.1.1",
     "karma-webpack": "2.0.4",
     "ng-bullet": "^1.0.3",
     "node-sass": "^4.13.0",

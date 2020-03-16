@@ -744,7 +744,7 @@ class ConfigService {
    * without host
    * /wise/curriculum/3/assets
    */
-  getProjectAssetsDirectoryPath(includeHost) {
+  getProjectAssetsDirectoryPath(includeHost = false) {
     const projectBaseURL = this.getConfigParam('projectBaseURL');
     if (projectBaseURL != null) {
       if (includeHost) {

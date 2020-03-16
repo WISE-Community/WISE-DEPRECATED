@@ -15,10 +15,8 @@
  */
 
 /***************************************************************************************************
-* BROWSER POLYFILLS
-*/
-
-
+ * BROWSER POLYFILLS
+ */
 
 /**
  * Required to support Web Animations `@angular/platform-browser/animations`.
@@ -26,14 +24,10 @@
  **/
 // import 'web-animations-js';  // Run `npm install --save web-animations-js`.
 
-
-
 /***************************************************************************************************
  * Zone JS is required by default for Angular itself.
  */
-import 'zone.js/dist/zone';  // Included with Angular CLI.
-
-
+import 'zone.js/dist/zone'; // Included with Angular CLI.
 
 /***************************************************************************************************
  * APPLICATION IMPORTS
@@ -45,7 +39,7 @@ import * as SockJS from 'sockjs-client';
 import * as Highcharts from '../../lib/highcharts/highcharts.src';
 import * as hopscotch from 'hopscotch';
 import * as EventEmitter2 from 'eventemitter2';
-import * as draggablePoints from '../../lib/draggable-points/draggable-points';
+import '../../lib/draggable-points/draggable-points';
 import * as HighchartsExporting from '../../lib/highcharts-exporting@4.2.1';
 import * as covariance from 'compute-covariance';
 
@@ -59,6 +53,6 @@ window['Highcharts'] = Highcharts;
 window['EventEmitter2'] = EventEmitter2;
 import * as summernote from 'summernote';
 window['summernote'] = summernote;
-window['draggablePoints'] = draggablePoints;
+//window['draggablePoints'] = draggablePoints;
 window['HighchartsExporting'] = HighchartsExporting;
 window['covariance'] = covariance;

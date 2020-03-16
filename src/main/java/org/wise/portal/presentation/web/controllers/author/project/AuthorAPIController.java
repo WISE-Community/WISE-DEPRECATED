@@ -43,6 +43,8 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +56,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -156,11 +159,12 @@ public class AuthorAPIController {
 
   @PostMapping("/project/new")
   @ResponseBody
-  protected String createProject(Authentication auth, @RequestParam String projectName,
-      @RequestParam String projectJSONString)
+  protected String createProject(Authentication auth, @RequestBody ObjectNode objectNode)
       throws ObjectNotFoundException, IOException, JSONException {
     User user = userService.retrieveUserByUsername(auth.getName());
     long newProjectId = projectService.getNextAvailableProjectId();
+    String projectName = objectNode.get("projectName").asText();
+    String projectJSONString = objectNode.get("projectJSONString").asText();
 
     ProjectParameters pParams = new ProjectParameters();
     pParams.setProjectId(newProjectId);
@@ -229,7 +233,7 @@ public class AuthorAPIController {
   @PostMapping("/project/save/{projectId}")
   @ResponseBody
   protected SimpleResponse saveProject(Authentication auth, @PathVariable Long projectId,
-      @RequestParam String projectJSONString) throws JSONException, ObjectNotFoundException {
+      @RequestBody String projectJSONString) throws JSONException, ObjectNotFoundException {
     Project project = projectService.getById(projectId);
     User user = userService.retrieveUserByUsername(auth.getName());
     if (projectService.canAuthorProject(project, user)) {
@@ -395,7 +399,7 @@ public class AuthorAPIController {
 
   /**
    * Get the run id that uses the project id
-   * 
+   *
    * @param projectId
    *                    the project id
    * @param runs

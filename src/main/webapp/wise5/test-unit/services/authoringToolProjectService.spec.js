@@ -17,8 +17,18 @@ const i18nURL_vle_en = 'wise5/vle/i18n/i18n_en.json';
 const sampleI18N_common_en = window.mocks['test-unit/sampleData/i18n/common/i18n_en'];
 const sampleI18N_vle_en = window.mocks['test-unit/sampleData/i18n/vle/i18n_en'];
 const libraryProjects = [
-  {children:[{id: 3, name: 'three'},{id: 1, name: 'one'}]},{children:[{id: 2, name: 'two'},
-  {id: 1, name: 'one'}]}
+  {
+    children: [
+      { id: 3, name: 'three' },
+      { id: 1, name: 'one' }
+    ]
+  },
+  {
+    children: [
+      { id: 2, name: 'two' },
+      { id: 1, name: 'one' }
+    ]
+  }
 ];
 
 let ConfigService, ProjectService, $httpBackend, demoProjectJSON, scootersProjectJSON;
@@ -70,7 +80,12 @@ function registerNewProject() {
       const newProjectIdExpected = projectIdDefault;
       $httpBackend.when('GET', /^wise5\/.*/).respond(200, '');
       $httpBackend.when('GET', /author\/.*/).respond(200, '{}');
-      $httpBackend.when('POST', registerNewProjectURL).respond({ data: newProjectIdExpected });
+      $httpBackend
+        .when('POST', registerNewProjectURL, {
+          projectName: scootersProjectName,
+          projectJSONString: scootersProjectJSONString
+        })
+        .respond({ data: newProjectIdExpected });
       $httpBackend.when('GET', i18nURL_common_en).respond(sampleI18N_common_en);
       $httpBackend.when('GET', i18nURL_vle_en).respond(sampleI18N_vle_en);
       const newProjectIdActual = ProjectService.registerNewProject(
@@ -192,7 +207,7 @@ function getLibraryProjects() {
         expect(projects).toEqual(libraryProjects);
       });
       $httpBackend.flush();
-    })
+    });
   });
 }
 
@@ -200,7 +215,11 @@ function sortAndFilterUniqueLibraryProjects() {
   describe('sortAndFilterUniqueLibraryProjects', () => {
     it('should filter and sort library projects', () => {
       const result = ProjectService.sortAndFilterUniqueLibraryProjects(libraryProjects);
-      expect(result).toEqual([{id: 3, name: 'three'},{id: 2, name: 'two'},{id: 1, name: 'one'}]);
+      expect(result).toEqual([
+        { id: 3, name: 'three' },
+        { id: 2, name: 'two' },
+        { id: 1, name: 'one' }
+      ]);
     });
   });
 }
@@ -208,8 +227,12 @@ function sortAndFilterUniqueLibraryProjects() {
 function filterUniqueProjects() {
   describe('filterUniqueProjects', () => {
     it('should filter unique projects based on id', () => {
-      const nonUniqueProjects = [{id: 3, name: 'three'},{id: 1, name: 'one'},{id: 2, name: 'two'},
-        {id: 1, name: 'one'}];
+      const nonUniqueProjects = [
+        { id: 3, name: 'three' },
+        { id: 1, name: 'one' },
+        { id: 2, name: 'two' },
+        { id: 1, name: 'one' }
+      ];
       const uniqueProjects = ProjectService.filterUniqueProjects(nonUniqueProjects);
       expect(uniqueProjects.length).toEqual(3);
       expect(uniqueProjects[0].id).toEqual(3);

@@ -1,9 +1,9 @@
 'use strict';
 
-import $ from 'jquery';
+import 'jquery';
 import AchievementService from '../services/achievementService';
-import angular from 'angular';
-import angularDragula from 'angular-dragula';
+import 'angular';
+import * as angularDragula from 'angular-dragula';
 import 'ng-file-upload';
 import '../lib/highcharts/highcharts-ng';
 import 'angular-material';
@@ -30,7 +30,7 @@ import '../components/discussion/discussionComponentModule';
 import '../components/draw/drawComponentModule';
 import '../components/embedded/embeddedComponentModule';
 import Fabric from 'fabric';
-import Hopscotch from '../lib/hopscotch/dist/js/hopscotch.min'
+import Hopscotch from '../lib/hopscotch/dist/js/hopscotch.min';
 import Filters from '../filters/filters';
 import Highcharts from '../lib/highcharts@4.2.1';
 import '../components/graph/graphComponentModule';
@@ -60,14 +60,15 @@ import '../components/table/tableComponentModule';
 import UtilService from '../services/utilService';
 import VLEController from './vleController';
 import VLEProjectService from './vleProjectService';
-import moment from 'moment';
+import * as moment from 'moment';
 import SockJS from 'sockjs-client';
-import Stomp from "@stomp/stompjs";
+import Stomp from '@stomp/stompjs';
 import '../lib/summernote/dist/summernote';
 import '../lib/angular-summernote/dist/angular-summernote';
 import '../themes/default/theme';
 
-export default angular.module('vle', [
+export default angular
+  .module('vle', [
     angularDragula(angular),
     'angularMoment',
     'angular-toArrayFilter',
@@ -100,7 +101,8 @@ export default angular.module('vle', [
     'tableComponentModule',
     'theme',
     'ui.router',
-    'ui.scrollpoint'])
+    'ui.scrollpoint'
+  ])
   .service('AchievementService', AchievementService)
   .service('AnnotationService', AnnotationService)
   .service('ConfigService', ConfigService)
@@ -123,16 +125,17 @@ export default angular.module('vle', [
   .controller('VLEController', VLEController)
   .filter('Filters', Filters)
   .config([
-      '$urlRouterProvider',
-      '$stateProvider',
-      '$translateProvider',
-      '$translatePartialLoaderProvider',
-      '$controllerProvider',
-      '$mdThemingProvider',
-      '$httpProvider',
-      '$injector',
-      '$provide',
-      ($urlRouterProvider,
+    '$urlRouterProvider',
+    '$stateProvider',
+    '$translateProvider',
+    '$translatePartialLoaderProvider',
+    '$controllerProvider',
+    '$mdThemingProvider',
+    '$httpProvider',
+    '$injector',
+    '$provide',
+    (
+      $urlRouterProvider,
       $stateProvider,
       $translateProvider,
       $translatePartialLoaderProvider,
@@ -140,174 +143,293 @@ export default angular.module('vle', [
       $mdThemingProvider,
       $httpProvider,
       $injector,
-      $provide) => {
-    angular.module('vle').$controllerProvider = $controllerProvider;
+      $provide
+    ) => {
+      angular.module('vle').$controllerProvider = $controllerProvider;
 
-    $stateProvider
-      .state('root', {
-        url: '',
-        abstract: true,
-        resolve: {
-          config: ['ConfigService', (ConfigService) => {
-            return ConfigService.retrieveConfig(`/config/vle`);
-          }]
-        },
-        templateProvider: ['$http', 'ProjectService', ($http, ProjectService) => {
-          let themePath = ProjectService.getThemePath();
-          return $http.get(themePath + '/vle.html').then(
-            response => {
-              return response.data;
-            });
-        }],
-        controller: 'VLEController',
-        controllerAs: 'vleController',
-      })
-      .state('root.run', {
-        url: '/run/:runId',
-        resolve: {
-          config: ['ConfigService', '$stateParams', (ConfigService, $stateParams) => {
-            return ConfigService.retrieveConfig(`/config/studentRun/${$stateParams.runId}`);
-          }],
-          project: ['ProjectService', 'config', (ProjectService, config) => {
-            return ProjectService.retrieveProject();
-          }],
-          studentData: ['StudentDataService', 'config', 'project', (StudentDataService, config, project) => {
-            return StudentDataService.retrieveStudentData();
-          }],
-          notebook: ['NotebookService', 'ConfigService', 'StudentAssetService', 'studentData', 'config', 'project',
-              (NotebookService, ConfigService, StudentAssetService, studentData, config, project) => {
-            return StudentAssetService.retrieveAssets().then((studentAssets) => {
-              return NotebookService.retrieveNotebookItems(ConfigService.getWorkgroupId()).then((notebook) => {
-                return notebook;
+      $stateProvider
+        .state('root', {
+          url: '',
+          abstract: true,
+          resolve: {
+            config: [
+              'ConfigService',
+              ConfigService => {
+                return ConfigService.retrieveConfig(`/config/vle`);
+              }
+            ]
+          },
+          templateProvider: [
+            '$http',
+            'ProjectService',
+            ($http, ProjectService) => {
+              let themePath = ProjectService.getThemePath();
+              return $http.get(themePath + '/vle.html').then(response => {
+                return response.data;
               });
-            });
-          }],
-          achievements: ['AchievementService', 'studentData', 'config', 'project',
-              (AchievementService, studentData, config, project) => {
-            return AchievementService.retrieveStudentAchievements();
-          }],
-          notifications: ['NotificationService', 'studentData', 'config', 'project',
-              (NotificationService, studentData, config, project) => {
-            return NotificationService.retrieveNotifications();
-          }],
-          runStatus: ['StudentDataService', 'config', (StudentDataService, config) => {
-            return StudentDataService.retrieveRunStatus();
-          }],
-          webSocket: ['StudentWebSocketService', 'ConfigService', 'config', 'project',
-              (StudentWebSocketService, ConfigService, config, project) => {
-            if (!ConfigService.isPreview()) {
-              return StudentWebSocketService.initialize();
             }
-          }],
-          language: ['$translate', 'ConfigService', 'config',
-              ($translate, ConfigService, config) => {
-            let locale = ConfigService.getLocale();  // defaults to "en"
-            $translate.use(locale);
-          }]
-        },
-        views: {
-          'nodeView': {
-            templateProvider: ['$http', 'ConfigService', ($http, ConfigService) => {
-              let wiseBaseURL = ConfigService.getWISEBaseURL();
-              return $http.get(wiseBaseURL + '/wise5/vle/project/index.html').then(
-                response => {
-                  return response.data;
-                }
-              );
-            }]
-          }
-        }
-      })
-      .state('root.run.node', {
-        url: '/:nodeId',
-        views: {
-          'nodeView': {
-            templateProvider: ['$http', 'ConfigService', ($http, ConfigService) => {
-              let wiseBaseURL = ConfigService.getWISEBaseURL();
-              return $http.get(wiseBaseURL + '/wise5/vle/node/index.html').then(
-                response => {
-                  return response.data;
-                }
-              );
-            }],
-            controller: 'NodeController',
-            controllerAs: 'nodeController'
-          }
-        }
-      })
-      .state('root.preview', {
-        url: '/project/:projectId',
-        resolve: {
-          config: ['ConfigService', '$stateParams', (ConfigService, $stateParams) => {
-            return ConfigService.retrieveConfig(`/config/preview/${$stateParams.projectId}`);
-          }],
-          project: ['ProjectService', 'config', (ProjectService, config) => {
-            return ProjectService.retrieveProject();
-          }],
-          studentData: ['StudentDataService', 'config', 'project', (StudentDataService, config, project) => {
-            return StudentDataService.retrieveStudentData();
-          }],
-          notebook: ['NotebookService', 'ConfigService', 'StudentAssetService', 'studentData', 'config', 'project',
-              (NotebookService, ConfigService, StudentAssetService, studentData, config, project) => {
-            return StudentAssetService.retrieveAssets().then((studentAssets) => {
-              return NotebookService.retrieveNotebookItems(ConfigService.getWorkgroupId()).then((notebook) => {
-                return notebook;
-              });
-            });
-          }],
-          achievements: ['AchievementService', 'studentData', 'config', 'project',
+          ],
+          controller: 'VLEController',
+          controllerAs: 'vleController'
+        })
+        .state('root.run', {
+          url: '/run/:runId',
+          resolve: {
+            config: [
+              'ConfigService',
+              '$stateParams',
+              (ConfigService, $stateParams) => {
+                return ConfigService.retrieveConfig(`/config/studentRun/${$stateParams.runId}`);
+              }
+            ],
+            project: [
+              'ProjectService',
+              'config',
+              (ProjectService, config) => {
+                return ProjectService.retrieveProject();
+              }
+            ],
+            studentData: [
+              'StudentDataService',
+              'config',
+              'project',
+              (StudentDataService, config, project) => {
+                return StudentDataService.retrieveStudentData();
+              }
+            ],
+            notebook: [
+              'NotebookService',
+              'ConfigService',
+              'StudentAssetService',
+              'studentData',
+              'config',
+              'project',
+              (
+                NotebookService,
+                ConfigService,
+                StudentAssetService,
+                studentData,
+                config,
+                project
+              ) => {
+                return StudentAssetService.retrieveAssets().then(studentAssets => {
+                  return NotebookService.retrieveNotebookItems(ConfigService.getWorkgroupId()).then(
+                    notebook => {
+                      return notebook;
+                    }
+                  );
+                });
+              }
+            ],
+            achievements: [
+              'AchievementService',
+              'studentData',
+              'config',
+              'project',
               (AchievementService, studentData, config, project) => {
-            return AchievementService.retrieveStudentAchievements();
-          }],
-          notifications: ['NotificationService', 'studentData', 'config', 'project',
+                return AchievementService.retrieveStudentAchievements();
+              }
+            ],
+            notifications: [
+              'NotificationService',
+              'studentData',
+              'config',
+              'project',
               (NotificationService, studentData, config, project) => {
-            return NotificationService.retrieveNotifications();
-          }],
-          runStatus: ['StudentDataService', 'config', (StudentDataService, config) => {
-            return StudentDataService.retrieveRunStatus();
-          }],
-          webSocket: ['StudentWebSocketService', 'ConfigService', 'config', 'project',
+                return NotificationService.retrieveNotifications();
+              }
+            ],
+            runStatus: [
+              'StudentDataService',
+              'config',
+              (StudentDataService, config) => {
+                return StudentDataService.retrieveRunStatus();
+              }
+            ],
+            webSocket: [
+              'StudentWebSocketService',
+              'ConfigService',
+              'config',
+              'project',
               (StudentWebSocketService, ConfigService, config, project) => {
-            if (!ConfigService.isPreview()) {
-              return StudentWebSocketService.initialize();
-            }
-          }],
-          language: ['$translate', 'ConfigService', 'config',
+                if (!ConfigService.isPreview()) {
+                  return StudentWebSocketService.initialize();
+                }
+              }
+            ],
+            language: [
+              '$translate',
+              'ConfigService',
+              'config',
               ($translate, ConfigService, config) => {
-            let locale = ConfigService.getLocale();  // defaults to "en"
-            $translate.use(locale);
-          }]
-        },
-        views: {
-          'nodeView': {
-            templateProvider: ['$http', 'ConfigService', ($http, ConfigService) => {
-              let wiseBaseURL = ConfigService.getWISEBaseURL();
-              return $http.get(wiseBaseURL + '/wise5/vle/project/index.html').then(
-                response => {
-                  return response.data;
+                let locale = ConfigService.getLocale(); // defaults to "en"
+                $translate.use(locale);
+              }
+            ]
+          },
+          views: {
+            nodeView: {
+              templateProvider: [
+                '$http',
+                'ConfigService',
+                ($http, ConfigService) => {
+                  let wiseBaseURL = ConfigService.getWISEBaseURL();
+                  return $http.get(wiseBaseURL + '/wise5/vle/project/index.html').then(response => {
+                    return response.data;
+                  });
                 }
-              );
-            }]
+              ]
+            }
           }
-        }
-      })
-      .state('root.preview.node', {
-        url: '/:nodeId',
-        views: {
-          'nodeView': {
-            templateProvider: ['$http', 'ConfigService', ($http, ConfigService) => {
-              let wiseBaseURL = ConfigService.getWISEBaseURL();
-              return $http.get(wiseBaseURL + '/wise5/vle/node/index.html').then(
-                response => {
-                  return response.data;
+        })
+        .state('root.run.node', {
+          url: '/:nodeId',
+          views: {
+            nodeView: {
+              templateProvider: [
+                '$http',
+                'ConfigService',
+                ($http, ConfigService) => {
+                  let wiseBaseURL = ConfigService.getWISEBaseURL();
+                  return $http.get(wiseBaseURL + '/wise5/vle/node/index.html').then(response => {
+                    return response.data;
+                  });
                 }
-              );
-            }],
-            controller: 'NodeController',
-            controllerAs: 'nodeController'
+              ],
+              controller: 'NodeController',
+              controllerAs: 'nodeController'
+            }
           }
-        }
-      });
+        })
+        .state('root.preview', {
+          url: '/project/:projectId',
+          resolve: {
+            config: [
+              'ConfigService',
+              '$stateParams',
+              (ConfigService, $stateParams) => {
+                return ConfigService.retrieveConfig(`/config/preview/${$stateParams.projectId}`);
+              }
+            ],
+            project: [
+              'ProjectService',
+              'config',
+              (ProjectService, config) => {
+                return ProjectService.retrieveProject();
+              }
+            ],
+            studentData: [
+              'StudentDataService',
+              'config',
+              'project',
+              (StudentDataService, config, project) => {
+                return StudentDataService.retrieveStudentData();
+              }
+            ],
+            notebook: [
+              'NotebookService',
+              'ConfigService',
+              'StudentAssetService',
+              'studentData',
+              'config',
+              'project',
+              (
+                NotebookService,
+                ConfigService,
+                StudentAssetService,
+                studentData,
+                config,
+                project
+              ) => {
+                return StudentAssetService.retrieveAssets().then(studentAssets => {
+                  return NotebookService.retrieveNotebookItems(ConfigService.getWorkgroupId()).then(
+                    notebook => {
+                      return notebook;
+                    }
+                  );
+                });
+              }
+            ],
+            achievements: [
+              'AchievementService',
+              'studentData',
+              'config',
+              'project',
+              (AchievementService, studentData, config, project) => {
+                return AchievementService.retrieveStudentAchievements();
+              }
+            ],
+            notifications: [
+              'NotificationService',
+              'studentData',
+              'config',
+              'project',
+              (NotificationService, studentData, config, project) => {
+                return NotificationService.retrieveNotifications();
+              }
+            ],
+            runStatus: [
+              'StudentDataService',
+              'config',
+              (StudentDataService, config) => {
+                return StudentDataService.retrieveRunStatus();
+              }
+            ],
+            webSocket: [
+              'StudentWebSocketService',
+              'ConfigService',
+              'config',
+              'project',
+              (StudentWebSocketService, ConfigService, config, project) => {
+                if (!ConfigService.isPreview()) {
+                  return StudentWebSocketService.initialize();
+                }
+              }
+            ],
+            language: [
+              '$translate',
+              'ConfigService',
+              'config',
+              ($translate, ConfigService, config) => {
+                let locale = ConfigService.getLocale(); // defaults to "en"
+                $translate.use(locale);
+              }
+            ]
+          },
+          views: {
+            nodeView: {
+              templateProvider: [
+                '$http',
+                'ConfigService',
+                ($http, ConfigService) => {
+                  let wiseBaseURL = ConfigService.getWISEBaseURL();
+                  return $http.get(wiseBaseURL + '/wise5/vle/project/index.html').then(response => {
+                    return response.data;
+                  });
+                }
+              ]
+            }
+          }
+        })
+        .state('root.preview.node', {
+          url: '/:nodeId',
+          views: {
+            nodeView: {
+              templateProvider: [
+                '$http',
+                'ConfigService',
+                ($http, ConfigService) => {
+                  let wiseBaseURL = ConfigService.getWISEBaseURL();
+                  return $http.get(wiseBaseURL + '/wise5/vle/node/index.html').then(response => {
+                    return response.data;
+                  });
+                }
+              ],
+              controller: 'NodeController',
+              controllerAs: 'nodeController'
+            }
+          }
+        });
 
       $urlRouterProvider.otherwise(($injector, $location) => {
         var $state = $injector.get('$state');
@@ -319,14 +441,18 @@ export default angular.module('vle', [
       // Set up Translations
       $translatePartialLoaderProvider.addPart('i18n');
       $translatePartialLoaderProvider.addPart('vle/i18n');
-      $translateProvider.useLoader('$translatePartialLoader', {
-        urlTemplate: '/wise5/{part}/i18n_{lang}.json'
-      })
-        .fallbackLanguage(['en'])
-        .registerAvailableLanguageKeys(['ar','el','en','es','ja','ko','pt','tr','zh_CN','zh_TW'], {
-          'en_US': 'en',
-          'en_UK': 'en'
+      $translateProvider
+        .useLoader('$translatePartialLoader', {
+          urlTemplate: '/wise5/{part}/i18n_{lang}.json'
         })
+        .fallbackLanguage(['en'])
+        .registerAvailableLanguageKeys(
+          ['ar', 'el', 'en', 'es', 'ja', 'ko', 'pt', 'tr', 'zh_CN', 'zh_TW'],
+          {
+            en_US: 'en',
+            en_UK: 'en'
+          }
+        )
         .determinePreferredLanguage()
         .useSanitizeValueStrategy('sanitizeParameters', 'escape');
 
@@ -343,15 +469,20 @@ export default angular.module('vle', [
         '700': '167188',
         '800': '136377',
         '900': '0e4957',
-        'A100': 'abf3ff',
-        'A200': '66e2ff',
-        'A400': '17bee5',
-        'A700': '00A1C6',
-        'contrastDefaultColor': 'light',    // whether, by default, text (contrast)
-                                            // on this palette should be dark or light
-        'contrastDarkColors': ['50', '100', //hues which contrast should be 'dark' by default
-          '200', '300', 'A100'],
-        'contrastLightColors': undefined    // could also specify this if default was 'dark'
+        A100: 'abf3ff',
+        A200: '66e2ff',
+        A400: '17bee5',
+        A700: '00A1C6',
+        contrastDefaultColor: 'light', // whether, by default, text (contrast)
+        // on this palette should be dark or light
+        contrastDarkColors: [
+          '50',
+          '100', //hues which contrast should be 'dark' by default
+          '200',
+          '300',
+          'A100'
+        ],
+        contrastLightColors: undefined // could also specify this if default was 'dark'
       });
 
       $mdThemingProvider.definePalette('accent', {
@@ -365,33 +496,34 @@ export default angular.module('vle', [
         '700': 'c34736',
         '800': 'aa3e2f',
         '900': '7d2e23',
-        'A100': 'ff897d',
-        'A200': 'ff7061',
-        'A400': 'ff3829',
-        'A700': 'cc1705',
-        'contrastDefaultColor': 'light',
-        'contrastDarkColors': ['50', '100',
-          '200', '300', 'A100'],
-        'contrastLightColors': undefined
+        A100: 'ff897d',
+        A200: 'ff7061',
+        A400: 'ff3829',
+        A700: 'cc1705',
+        contrastDefaultColor: 'light',
+        contrastDarkColors: ['50', '100', '200', '300', 'A100'],
+        contrastLightColors: undefined
       });
 
-      $mdThemingProvider.theme('default')
+      $mdThemingProvider
+        .theme('default')
         .primaryPalette('primary')
-        .accentPalette('accent',  {
-          'default': '500'
+        .accentPalette('accent', {
+          default: '500'
         })
         .warnPalette('red', {
-          'default': '800'
+          default: '800'
         });
 
       let lightMap = $mdThemingProvider.extendPalette('grey', {
-        'A100': 'ffffff'
+        A100: 'ffffff'
       });
       $mdThemingProvider.definePalette('light', lightMap);
 
-      $mdThemingProvider.theme('light')
+      $mdThemingProvider
+        .theme('light')
         .primaryPalette('light', {
-          'default': 'A100'
+          default: 'A100'
         })
         .accentPalette('primary');
 
@@ -402,13 +534,13 @@ export default angular.module('vle', [
       // TODO: add i18n support
       moment.updateLocale('en', {
         calendar: {
-          lastDay : '[Yesterday at] LT',
-          sameDay : '[Today at] LT',
-          nextDay : '[Tomorrow at] LT',
-          lastWeek : '[last] dddd [at] LT',
-          nextWeek : 'dddd [at] LT',
-          sameElse : 'll'
+          lastDay: '[Yesterday at] LT',
+          sameDay: '[Today at] LT',
+          nextDay: '[Tomorrow at] LT',
+          lastWeek: '[last] dddd [at] LT',
+          nextWeek: 'dddd [at] LT',
+          sameElse: 'll'
         }
       });
     }
-]);
+  ]);
