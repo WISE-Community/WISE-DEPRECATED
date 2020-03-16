@@ -1,9 +1,14 @@
 <h2 class="mat-dialog-title" i18n>News Item</h2>
 <div mat-dialog-content>
-    <h4 i18n>Title</h4>
-    <input matInput fxFlexFill placeholder="Enter the title" />
+    <form role="form" fxLayout="row wrap">
+        <mat-form-field fxFlex.gt-sm="50" fxFlex.lt-md="70" required>
+            <mat-label><h3 i18n>Title</h3></mat-label>
+            <input matInput fxFlexFill placeholder="News item title..." formControlName="title" required />
+        </mat-form-field>
+        <ckeditor [editor]="Editor" fxFlexFill></ckeditor>
+    </form>
 </div>
-<div mat-dialog-actions fxLayoutGap="8px">
+<div mat-dialog-actions fxLayoutGap="8px" id="news-item-actions">
     <button mat-button (click)="close()" color="accent" i18n>Cancel</button>
     <button mat-button color="primary" i18n>Publish</button>
 </div>

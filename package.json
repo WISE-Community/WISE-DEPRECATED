@@ -22,6 +22,8 @@
     "@angular/platform-browser-dynamic": "8.0.0",
     "@angular/router": "8.0.0",
     "@angular/upgrade": "8.0.0",
+    "@ckeditor/ckeditor5-angular": "^1.2.2",
+    "@ckeditor/ckeditor5-build-classic": "^17.0.0",
     "@ngx-translate/i18n-polyfill": "^1.0.0",
     "@stomp/stompjs": "^5.4.2",
     "angular": "1.7.9",
