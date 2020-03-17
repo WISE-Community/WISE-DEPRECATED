@@ -120,8 +120,8 @@ class EmbeddedController extends ComponentController {
 
   getBlocksFromSNAP(json) {
     const trials = this.convertElementsToTrials(
-      json.elements[0].elements[2].elements[6].elements[0].elements[4].elements[0].elements[1]
-        .elements[0].elements[0].elements
+      json.elements[0].elements[2].elements[6].elements[0].elements[4].elements[1].elements[1]
+          .elements[0].elements[0].elements
     );
     return trials;
   }
