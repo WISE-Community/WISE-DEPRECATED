@@ -1,5 +1,5 @@
 <div class="l-constrained grading">
-    <div ng-if= "!$ctrl.componentId" 
+    <div ng-if= "!$ctrl.componentId"
          class="flex md-subhead content-head"
          layout="row"
          layout-align="center center"
@@ -19,8 +19,8 @@
             <md-button ng-click="$ctrl.showRubric($event)"
                        class="md-raised info">
                 <md-icon class="info"> info_outline </md-icon>
-                <span ng-if="!$ctrl.nRubrics">{{ ::'STEP_INFO' | translate }}</span>
-                <span ng-if="$ctrl.nRubrics">{{ ::'infoTipsLabel' | translate:{numberOfTips: $ctrl.nRubrics} }}</span>
+                <span ng-if="!$ctrl.numRubrics">{{ ::'STEP_INFO' | translate }}</span>
+                <span ng-if="$ctrl.numRubrics">{{ ::'infoTipsLabel' | translate:{numberOfTips: $ctrl.numRubrics} }}</span>
             </md-button>
         </div>
     </div>

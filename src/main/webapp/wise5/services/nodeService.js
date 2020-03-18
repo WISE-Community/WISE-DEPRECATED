@@ -316,7 +316,7 @@ class NodeService {
    * @param currentId (optional)
    * @returns next node id
    */
-  getNextNodeIdWithWork(currentId) {
+  getNextNodeIdWithWork(currentId = null) {
     return this.getNextNodeId(currentId).then(nextNodeId => {
       if (nextNodeId) {
         if (this.ProjectService.nodeHasWork(nextNodeId)) {
@@ -421,7 +421,7 @@ class NodeService {
    * @param currentId (optional)
    * @returns next node id
    */
-  getPrevNodeIdWithWork(currentId) {
+  getPrevNodeIdWithWork(currentId = null) {
     const prevNodeId = this.getPrevNodeId(currentId);
     if (prevNodeId) {
       if (this.ProjectService.nodeHasWork(prevNodeId)) {

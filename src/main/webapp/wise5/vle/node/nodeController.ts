@@ -4,7 +4,7 @@ import NodeService from '../../services/nodeService';
 import VLEProjectService from '../vleProjectService';
 import StudentDataService from '../../services/studentDataService';
 import UtilService from '../../services/utilService';
-import hopscotch from 'hopscotch';
+import * as hopscotch from 'hopscotch';
 import * as $ from 'jquery';
 
 class NodeController {
