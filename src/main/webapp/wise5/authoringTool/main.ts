@@ -1,4 +1,3 @@
-import authoringModule from './authoringTool';
 import * as angular from 'angular';
 
 angular.element(document).ready(() => {

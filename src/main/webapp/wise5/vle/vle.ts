@@ -2,7 +2,7 @@
 
 import 'jquery';
 import AchievementService from '../services/achievementService';
-import 'angular';
+import * as angular from 'angular';
 import * as angularDragula from 'angular-dragula';
 import 'ng-file-upload';
 import '../lib/highcharts/highcharts-ng';
@@ -20,7 +20,7 @@ import '../components/animation/animationComponentModule';
 import AnnotationService from '../services/annotationService';
 import '../components/audioOscillator/audioOscillatorComponentModule';
 import bootstrap from 'bootstrap';
-import canvg from 'canvg';
+import * as canvg from 'canvg';
 import '../components/conceptMap/conceptMapComponentModule';
 import ConfigService from '../services/configService';
 import CRaterService from '../services/cRaterService';
@@ -30,9 +30,9 @@ import '../components/discussion/discussionComponentModule';
 import '../components/draw/drawComponentModule';
 import '../components/embedded/embeddedComponentModule';
 import Fabric from 'fabric';
-import Hopscotch from '../lib/hopscotch/dist/js/hopscotch.min';
+import * as Hopscotch from '../lib/hopscotch/dist/js/hopscotch.min';
 import Filters from '../filters/filters';
-import Highcharts from '../lib/highcharts@4.2.1';
+import * as Highcharts from '../lib/highcharts@4.2.1';
 import '../components/graph/graphComponentModule';
 import hopscotch from 'hopscotch';
 import '../components/html/htmlComponentModule';
@@ -62,7 +62,7 @@ import VLEController from './vleController';
 import VLEProjectService from './vleProjectService';
 import * as moment from 'moment';
 import SockJS from 'sockjs-client';
-import Stomp from '@stomp/stompjs';
+import * as Stomp from '@stomp/stompjs';
 import '../lib/summernote/dist/summernote';
 import '../lib/angular-summernote/dist/angular-summernote';
 import '../themes/default/theme';
@@ -146,7 +146,6 @@ export default angular
       $provide
     ) => {
       angular.module('vle').$controllerProvider = $controllerProvider;
-
       $stateProvider
         .state('root', {
           url: '',

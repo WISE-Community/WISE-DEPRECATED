@@ -1,31 +1,73 @@
 'use strict';
 
+import AnnotationService from '../services/annotationService';
+import ConfigService from '../services/configService';
+import NotificationService from '../services/notificationService';
+import NotebookService from '../services/notebookService';
+import VLEProjectService from './vleProjectService';
+import SessionService from '../services/sessionService';
+import StudentDataService from '../services/studentDataService';
+import * as angular from 'angular';
+import * as $ from 'jquery';
+
 class VLEController {
+  $translate: any;
+  workgroupId: number;
+  constraintsDisabled: boolean = false;
+  currentNode: any;
+  homePath: string;
+  maxScore: any;
+  navFilter: any;
+  navFilters: any;
+  newNotifications: any;
+  noteDialog: any;
+  notebookEnabled: boolean;
+  notebookConfig: any;
+  notebookItemPath: string;
+  notifications: any;
+  pauseDialog: any;
+  projectName: string;
+  projectStyle: string;
+  reportItem: any;
+  snippableItems: any;
+  themePath: string;
+  totalScore: any;
+
+  static $inject = [
+    '$anchorScroll',
+    '$scope',
+    '$rootScope',
+    '$filter',
+    '$mdDialog',
+    '$mdMenu',
+    '$state',
+    '$transitions',
+    'AnnotationService',
+    'ConfigService',
+    'NotebookService',
+    'NotificationService',
+    'ProjectService',
+    'SessionService',
+    'StudentDataService'
+  ];
+
   constructor(
-      $anchorScroll,
-      $scope,
-      $rootScope,
-      $filter,
-      $mdDialog,
-      $mdMenu,
-      $state,
-      $transitions,
-      AnnotationService,
-      ConfigService,
-      NotebookService,
-      NotificationService,
-      ProjectService,
-      SessionService,
-      StudentDataService,
-      UtilService) {
-    this.$anchorScroll = $anchorScroll;
-    this.$scope = $scope;
-    this.$rootScope = $rootScope;
-    this.$filter = $filter;
-    this.$mdDialog = $mdDialog;
-    this.$mdMenu = $mdMenu;
-    this.$state = $state;
-    this.$transitions = $transitions;
+    private $anchorScroll: any,
+    private $scope: any,
+    private $rootScope: any,
+    $filter: any,
+    private $mdDialog: any,
+    private $mdMenu: any,
+    private $state: any,
+    private $transitions: any,
+    private AnnotationService: AnnotationService,
+    private ConfigService: ConfigService,
+    private NotebookService: NotebookService,
+    private NotificationService: NotificationService,
+    private ProjectService: VLEProjectService,
+    private SessionService: SessionService,
+    private StudentDataService: StudentDataService
+  ) {
     this.AnnotationService = AnnotationService;
     this.ConfigService = ConfigService;
     this.NotebookService = NotebookService;
@@ -33,8 +75,7 @@ class VLEController {
     this.ProjectService = ProjectService;
     this.SessionService = SessionService;
     this.StudentDataService = StudentDataService;
-    this.UtilService = UtilService;
-    this.$translate = this.$filter('translate');
+    this.$translate = $filter('translate');
 
     this.workgroupId = this.ConfigService.getWorkgroupId();
     this.currentNode = null;
@@ -54,13 +95,11 @@ class VLEController {
     // Get report, if enabled; assume only one report for now
     this.reportItem = this.notebookConfig.itemTypes.report.notes[0];
 
-    this.constraintsDisabled = false;
-
     let userType = this.ConfigService.getConfigParam('userType');
     let contextPath = this.ConfigService.getConfigParam('contextPath');
     if (userType == 'student') {
       this.homePath = contextPath + '/student';
-    } else  if (userType == 'teacher') {
+    } else if (userType == 'teacher') {
       this.homePath = contextPath + '/teacher';
     } else {
       this.homePath = contextPath;
@@ -72,7 +111,7 @@ class VLEController {
 
     let script = this.ProjectService.getProjectScript();
     if (script != null) {
-      this.ProjectService.retrieveScript(script).then((script) => {
+      this.ProjectService.retrieveScript(script).then(script => {
         new Function(script).call(this);
       });
     }
@@ -90,29 +129,43 @@ class VLEController {
         // going from group to node or group to group
         componentId = null;
         componentType = null;
-        category = "Navigation";
-        eventName = "nodeExited";
+        category = 'Navigation';
+        eventName = 'nodeExited';
         eventData = {
           nodeId: previousNode.id
         };
         eventNodeId = previousNode.id;
-        this.StudentDataService.saveVLEEvent(eventNodeId, componentId, componentType, category, eventName, eventData);
+        this.StudentDataService.saveVLEEvent(
+          eventNodeId,
+          componentId,
+          componentType,
+          category,
+          eventName,
+          eventData
+        );
       }
 
       if (this.ProjectService.isGroupNode(currentNodeId)) {
         componentId = null;
         componentType = null;
-        category = "Navigation";
-        eventName = "nodeEntered";
+        category = 'Navigation';
+        eventName = 'nodeEntered';
         eventData = {
           nodeId: currentNode.id
         };
         eventNodeId = currentNode.id;
-        this.StudentDataService.saveVLEEvent(eventNodeId, componentId, componentType, category, eventName, eventData);
+        this.StudentDataService.saveVLEEvent(
+          eventNodeId,
+          componentId,
+          componentType,
+          category,
+          eventName,
+          eventData
+        );
       }
     });
 
-    this.$transitions.onSuccess({}, ($transition) => {
+    this.$transitions.onSuccess({}, $transition => {
       this.$anchorScroll('node');
     });
 
@@ -125,9 +178,7 @@ class VLEController {
       this.newNotifications = this.getNewNotifications();
     });
 
-    this.$scope.$on('componentStudentDataChanged', () => {
-
-    });
+    this.$scope.$on('componentStudentDataChanged', () => {});
 
     this.$scope.$on('pauseScreen', (event, args) => {
       this.pauseScreen();
@@ -162,7 +213,7 @@ class VLEController {
       return false;
     });
 
-    $(document.body).on('drop', function(e){
+    $(document.body).on('drop', function(e) {
       e.preventDefault();
       return false;
     });
@@ -237,9 +288,10 @@ class VLEController {
     this.snippableItems = [];
 
     for (const currentComponent of currentComponents) {
-      const args = {};
-      args.nodeId = currentNodeId;
-      args.componentId = currentComponent.id;
+      const args = {
+        nodeId: currentNodeId,
+        componentId: currentComponent.id
+      };
       this.$rootScope.$broadcast('requestImage', args);
     }
     this.$mdDialog.show({
@@ -254,7 +306,15 @@ class VLEController {
       controllerAs: 'notebookContentSnippetController',
       bindToController: true
     });
-    function NotebookContentSnippetController($rootScope, $scope, $mdDialog, snippableItems, NotebookService, StudentDataService, ProjectService) {
+    function NotebookContentSnippetController(
+      $rootScope,
+      $scope,
+      $mdDialog,
+      snippableItems,
+      NotebookService,
+      StudentDataService,
+      ProjectService
+    ) {
       $scope.NotebookService = NotebookService;
       $scope.StudentDataService = StudentDataService;
       $scope.ProjectService = ProjectService;
@@ -273,23 +333,38 @@ class VLEController {
       $scope.close = () => {
         $mdDialog.hide();
       };
-      $scope.chooseSnippet = (snippableItem) => {
+      $scope.chooseSnippet = snippableItem => {
         $scope.NotebookService.addNote($event, snippableItem);
         $mdDialog.hide();
       };
     }
 
-    NotebookContentSnippetController.$inject = ["$rootScope", "$scope", "$mdDialog", "snippableItems", "NotebookService", "StudentDataService", "ProjectService"];
+    NotebookContentSnippetController.$inject = [
+      '$rootScope',
+      '$scope',
+      '$mdDialog',
+      'snippableItems',
+      'NotebookService',
+      'StudentDataService',
+      'ProjectService'
+    ];
   }
 
   goHome() {
     const nodeId = null;
     const componentId = null;
     const componentType = null;
-    const category = "Navigation";
-    const event = "goHomeButtonClicked";
+    const category = 'Navigation';
+    const event = 'goHomeButtonClicked';
     const eventData = {};
-    this.StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
+    this.StudentDataService.saveVLEEvent(
+      nodeId,
+      componentId,
+      componentType,
+      category,
+      event,
+      eventData
+    );
 
     this.$rootScope.$broadcast('goHome');
   }
@@ -298,37 +373,35 @@ class VLEController {
     const nodeId = null;
     const componentId = null;
     const componentType = null;
-    const category = "Navigation";
-    const event = "logOutButtonClicked";
+    const category = 'Navigation';
+    const event = 'logOutButtonClicked';
     const eventData = {};
-    this.StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
+    this.StudentDataService.saveVLEEvent(
+      nodeId,
+      componentId,
+      componentType,
+      category,
+      event,
+      eventData
+    );
 
     this.$rootScope.$broadcast('logOut');
   }
 
   loadRoot() {
-    this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(this.ProjectService.rootNode.id);
+    this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(
+      this.ProjectService.rootNode.id
+    );
   }
 
-  /**
-   * The user moved the mouse on the page
-   */
   mouseMoved() {
-    // tell the session service a mouse event occurred
-    // so it can reset the session timeout timers
-    this.SessionService.mouseEventOccurred();
+    this.SessionService.mouseMoved();
   }
 
-  /**
-   * Returns true iff there are new notifications
-   */
   hasNewNotifications() {
     return this.newNotifications.length > 0;
   }
 
-  /**
-   * Returns true iff there are new notifications of type 'ambient'
-   */
   hasNewAmbientNotifications() {
     return this.getNewAmbientNotifications().length > 0;
   }
@@ -338,10 +411,10 @@ class VLEController {
    * The newNotifications is an array of notification aggregate objects that looks like this:
    * [
    *  {
-     *    "nodeId": "node2",
-     *    "type": "DiscussionReply",   // ["DiscussionReply", "teacherToStudent"]
-     *    "notifications": [{ id: 1117} , { id: 1120 }]      // array of actual undismissed notifications with this nodeId and type
-     *  },
+   *    "nodeId": "node2",
+   *    "type": "DiscussionReply",   // ["DiscussionReply", "teacherToStudent"]
+   *    "notifications": [{ id: 1117} , { id: 1120 }]      // array of actual undismissed notifications with this nodeId and type
+   *  },
    *  ...
    * ]
    * The annotation aggregates will be sorted by latest first -> oldest last
@@ -354,7 +427,10 @@ class VLEController {
         let notificationType = notification.type;
         let newNotificationForNodeIdAndTypeExists = false;
         for (let newNotificationAggregate of newNotificationAggregates) {
-          if (newNotificationAggregate.nodeId == notificationNodeId && newNotificationAggregate.type == notificationType) {
+          if (
+            newNotificationAggregate.nodeId == notificationNodeId &&
+            newNotificationAggregate.type == notificationType
+          ) {
             newNotificationForNodeIdAndTypeExists = true;
             newNotificationAggregate.notifications.push(notification);
             if (notification.timeGenerated > newNotificationAggregate.latestNotificationTimestamp) {
@@ -362,12 +438,12 @@ class VLEController {
             }
           }
         }
-        let notebookItemId = null;  // if this notification was created because teacher commented on a notebook report.
+        let notebookItemId = null; // if this notification was created because teacher commented on a notebook report.
         if (!newNotificationForNodeIdAndTypeExists) {
-          let message = "";
-          if (notificationType === "DiscussionReply") {
+          let message = '';
+          if (notificationType === 'DiscussionReply') {
             message = this.$translate('newRepliesOnDiscussionPost');
-          } else if (notificationType === "teacherToStudent") {
+          } else if (notificationType === 'teacherToStudent') {
             message = this.$translate('newFeedbackFromTeacher');
             if (notification.data != null) {
               if (typeof notification.data === 'string') {
@@ -375,13 +451,15 @@ class VLEController {
               }
 
               if (notification.data.annotationId != null) {
-                let annotation = this.AnnotationService.getAnnotationById(notification.data.annotationId);
+                let annotation = this.AnnotationService.getAnnotationById(
+                  notification.data.annotationId
+                );
                 if (annotation != null && annotation.notebookItemId != null) {
                   notebookItemId = annotation.notebookItemId;
                 }
               }
             }
-          } else if (notificationType === "CRaterResult") {
+          } else if (notificationType === 'CRaterResult') {
             message = this.$translate('newFeedback');
           }
           let newNotificationAggregate = {
@@ -408,12 +486,10 @@ class VLEController {
    * Returns all ambient notifications that have not been dismissed yet
    */
   getNewAmbientNotifications() {
-    return this.notifications.filter(
-      function(notification) {
-        let isAmbient = notification.data ? notification.data.isAmbient : false;
-        return (notification.timeDismissed == null && isAmbient);
-      }
-    );
+    return this.notifications.filter(function(notification) {
+      let isAmbient = notification.data ? notification.data.isAmbient : false;
+      return notification.timeDismissed == null && isAmbient;
+    });
   }
 
   /**
@@ -441,10 +517,10 @@ class VLEController {
   viewCurrentAmbientNotification(event) {
     let ambientNotifications = this.getNewAmbientNotifications();
     if (ambientNotifications.length) {
-      let currentNotification = ambientNotifications[0];
-      let args = {};
-      args.event = event;
-      args.notification = currentNotification;
+      const args = {
+        event: event,
+        notification: ambientNotifications[0]
+      };
       this.$rootScope.$broadcast('viewCurrentAmbientNotification', args);
     }
   }
@@ -485,14 +561,17 @@ class VLEController {
     } else if (notebookItemId != null) {
       // assume notification with notebookItemId is for the report for now,
       // as we don't currently support annotations on notes
-      this.$rootScope.$broadcast('showReportAnnotations', {ev: event});
+      this.$rootScope.$broadcast('showReportAnnotations', { ev: event });
     }
   }
 
   pauseScreen() {
     // TODO: i18n
     this.pauseDialog = this.$mdDialog.show({
-      template: '<md-dialog aria-label="Screen Paused"><md-dialog-content><div class="md-dialog-content">' + this.$translate('yourTeacherHasPausedAllTheScreensInTheClass') + '</div></md-dialog-content></md-dialog>',
+      template:
+        '<md-dialog aria-label="Screen Paused"><md-dialog-content><div class="md-dialog-content">' +
+        this.$translate('yourTeacherHasPausedAllTheScreensInTheClass') +
+        '</div></md-dialog-content></md-dialog>',
       escapeToClose: false
     });
   }
@@ -546,7 +625,11 @@ class VLEController {
        * @param additionalProcessingFunction the function to register for the specified node and component
        */
       registerAdditionalProcessingFunction: (nodeId, componentId, additionalProcessingFunction) => {
-        this.ProjectService.addAdditionalProcessingFunction(nodeId, componentId, additionalProcessingFunction);
+        this.ProjectService.addAdditionalProcessingFunction(
+          nodeId,
+          componentId,
+          additionalProcessingFunction
+        );
       },
       /**
        * Create an auto score annotation
@@ -564,7 +647,13 @@ class VLEController {
         let toWorkgroupId = this.ConfigService.getWorkgroupId();
 
         return this.AnnotationService.createAutoScoreAnnotation(
-            runId, periodId, nodeId, componentId, toWorkgroupId, data);
+          runId,
+          periodId,
+          nodeId,
+          componentId,
+          toWorkgroupId,
+          data
+        );
       },
       /**
        * Create an auto comment annotation
@@ -582,7 +671,13 @@ class VLEController {
         let toWorkgroupId = this.ConfigService.getWorkgroupId();
 
         return this.AnnotationService.createAutoCommentAnnotation(
-            runId, periodId, nodeId, componentId, toWorkgroupId, data);
+          runId,
+          periodId,
+          nodeId,
+          componentId,
+          toWorkgroupId,
+          data
+        );
       },
       /**
        * Gets the latest annotation for the specified node, component, and type
@@ -593,9 +688,9 @@ class VLEController {
        */
       getLatestAnnotationForComponent: (nodeId, componentId, annotationType) => {
         let params = {
-          "nodeId": nodeId,
-          "componentId": componentId,
-          "type": annotationType
+          nodeId: nodeId,
+          componentId: componentId,
+          type: annotationType
         };
         return this.AnnotationService.getLatestAnnotation(params);
       },
@@ -603,7 +698,7 @@ class VLEController {
        * Updates the annotation locally and on the server
        * @param annotation
        */
-      updateAnnotation: (annotation) => {
+      updateAnnotation: annotation => {
         this.AnnotationService.saveAnnotation(annotation);
       },
       /**
@@ -618,24 +713,5 @@ class VLEController {
     };
   }
 }
-
-VLEController.$inject = [
-  '$anchorScroll',
-  '$scope',
-  '$rootScope',
-  '$filter',
-  '$mdDialog',
-  '$mdMenu',
-  '$state',
-  '$transitions',
-  'AnnotationService',
-  'ConfigService',
-  'NotebookService',
-  'NotificationService',
-  'ProjectService',
-  'SessionService',
-  'StudentDataService',
-  'UtilService'
-];
 
 export default VLEController;

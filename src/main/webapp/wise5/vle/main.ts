@@ -1,4 +1,4 @@
-import vleModule from './vle';
+import * as angular from 'angular';
 
 angular.element(document).ready(() => {
   angular.bootstrap(document.body, ['vle'], { strictDi: true });
