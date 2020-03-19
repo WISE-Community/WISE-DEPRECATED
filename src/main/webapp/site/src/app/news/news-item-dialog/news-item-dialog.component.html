@@ -1,14 +1,24 @@
 <h2 class="mat-dialog-title" i18n>News Item</h2>
 <div mat-dialog-content>
-    <form role="form" fxLayout="row wrap">
-        <mat-form-field fxFlex.gt-sm="50" fxFlex.lt-md="70" required>
-            <mat-label><h3 i18n>Title</h3></mat-label>
-            <input matInput fxFlexFill placeholder="News item title..." formControlName="title" required />
+    <form role="form" fxLayout="row wrap" fxLayoutGap="8px">
+        <mat-form-field fxFlex=50 required>
+            <mat-label i18n>Title</mat-label>
+            <input class="accent-1" id="news-item-title" matInput fxFlexFill placeholder="News title" [formControl]="title" required />
         </mat-form-field>
-        <ckeditor [editor]="Editor" fxFlexFill></ckeditor>
+        <span fxFlex="1 1 auto"></span>
+        <mat-form-field>
+            <mat-label i18n>Select type</mat-label>
+            <mat-select [formControl]="type" required>
+                <mat-option value="public" i18n>Public</mat-option>
+                <mat-option value="teacherOnly" i18n>Teacher Only</mat-option>
+                <mat-option value="hidden" i18n>Hidden</mat-option>
+            </mat-select>
+        </mat-form-field>
     </form>
+    <ckeditor [config]="{ placeholder: 'Content..' }" [editor]="Editor" [data]="content.value" (change)="onChange($event)"></ckeditor>
 </div>
 <div mat-dialog-actions fxLayoutGap="8px" id="news-item-actions">
     <button mat-button (click)="close()" color="accent" i18n>Cancel</button>
-    <button mat-button color="primary" i18n>Publish</button>
+    <button *ngIf="!isEditMode" mat-button color="primary" (click)="publish()" i18n>Publish</button>
+    <button *ngIf="isEditMode" mat-button color="primary" (click)="save()" i18n>Save</button>
 </div>

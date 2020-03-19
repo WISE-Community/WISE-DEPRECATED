@@ -49,8 +49,12 @@ export class NewsComponent implements OnInit {
 
   }
 
-  editNewsItem(id: number) {
-
+  editNewsItem(index: number) {
+    this.dialog.open(NewsItemDialogComponent, {
+      data: { newsItem: this.allNewsItems[index], isEditMode: true },
+      panelClass: 'mat-dialog--md',
+      disableClose: true
+    })
   }
 
   deleteNewsItem(id: number) {
