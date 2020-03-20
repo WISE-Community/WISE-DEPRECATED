@@ -59,8 +59,7 @@ else
 fi
 
 if [ $1 = "dev" ]; then
-  npm run watch-all-wise5&
-  npm run watch-all-site&
+  npm run build-dev-all&
 fi
 
 ./mvnw spring-boot:run
