@@ -283,7 +283,7 @@ class GraphController extends ComponentController {
     const dataExplorerSeries = studentData.dataExplorerSeries;
     const graphType = studentData.dataExplorerGraphType;
     this.xAxis.title.text = studentData.dataExplorerXAxisLabel;
-    if (this.isSingleYAxisTitleEmpty()) {
+    if (this.isSingleYAxis(this.yAxis)) {
       this.yAxis.title.text = studentData.dataExplorerYAxisLabel;
     }
     this.activeTrial.series = [];
@@ -296,7 +296,7 @@ class GraphController extends ComponentController {
         const series = this.generateDataExplorerSeries(studentData.tableData, xColumn, yColumn,
             graphType, name, color);
         this.setSeriesYAxisIndex(series, seriesIndex);
-        this.setYAxisLabel(series, seriesIndex);
+        this.setYAxisLabelIfMultipleYAxis(series, seriesIndex);
         this.activeTrial.series.push(series);
         if (graphType === 'scatter' && studentData.isDataExplorerScatterPlotRegressionLineEnabled) {
           const regressionSeries = this.generateDataExplorerRegressionSeries(studentData.tableData,
@@ -307,12 +307,16 @@ class GraphController extends ComponentController {
     }
   }
 
-  isSingleYAxisTitleEmpty() {
-    return !Array.isArray(this.yAxis) && this.yAxis.title.text === '';
+  isSingleYAxis(yAxis) {
+    return !Array.isArray(yAxis);
+  }
+
+  isMultipleYAxis(yAxis) {
+    return Array.isArray(yAxis); 
   }
 
   setSeriesYAxisIndex(series, seriesIndex) {
-    if (Array.isArray(this.yAxis) && this.yAxis.length == 2) {
+    if (this.isMultipleYAxis(this.yAxis) && this.yAxis.length == 2) {
       if (seriesIndex === 0 || seriesIndex === 1) {
         series.yAxis = seriesIndex;
       } else {
@@ -321,18 +325,18 @@ class GraphController extends ComponentController {
     }
   }
 
-  setYAxisLabel(series, seriesIndex) {
-    if (Array.isArray(this.yAxis) && (seriesIndex === 0 || seriesIndex === 1) &&
+  setYAxisLabelIfMultipleYAxis(series, seriesIndex) {
+    if (this.isMultipleYAxis(this.yAxis) && (seriesIndex === 0 || seriesIndex === 1) &&
         this.isYAxisLabelBlank(this.yAxis, seriesIndex)) {
       this.yAxis[seriesIndex].title.text = series.name;
     }
   }
 
   isYAxisLabelBlank(yAxis, index) {
-    if (Array.isArray(this.yAxis)) {
+    if (this.isMultipleYAxis(yAxis)) {
       return yAxis[index].title.text === '';
     } else {
-      return this.yAxis.title.text === '';
+      return yAxis.title.text === '';
     }
   }
 
