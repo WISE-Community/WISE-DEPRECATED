@@ -466,7 +466,7 @@
           </md-input-container>
         </div>
         <div layout='row'>
-          <md-input-container style='margin-right: 20px; width: 50px;'>
+          <md-input-container style='margin-right: 20px; width: 80px;'>
             <h6>{{ ::'graph.xAxis' | translate }}</h6>
           </md-input-container>
           <md-input-container style='margin-right: 20px; width: 200px;'>
@@ -541,8 +541,15 @@
             </div>
           </div>
         </div>
-        <div layout='row' style='height: 80px;'>
-          <md-input-container style='margin-right: 20px; width: 50px;'>
+        <div>
+          <md-switch ng-model='graphController.enableMultipleYAxis'
+            class='md-primary'
+            ng-change='graphController.enableMultipleYAxisChanged()'>
+          {{ ::'graph.enableMultipleYAxis' | translate }}
+          </md-switch>
+        </div>
+        <div ng-show='!graphController.enableMultipleYAxis' layout='row' style='height: 80px;'>
+          <md-input-container style='margin-right: 20px; width: 80px;'>
             <h6>{{ ::'graph.yAxis' | translate }}</h6>
           </md-input-container>
           <md-input-container style='margin-right: 20px; width: 200px;'>
@@ -574,6 +581,84 @@
             </md-input-container>
             <md-input-container>
               <md-checkbox ng-model='graphController.authoringComponentContent.yAxis.locked'
+                           ng-change='graphController.authoringViewComponentChanged()'>
+                {{ ::'graph.locked' | translate }}
+              </md-checkbox>
+            </md-input-container>
+          </div>
+        </div>
+        <div ng-show='graphController.enableMultipleYAxis' layout='row' style='height: 80px;'>
+          <md-input-container style='margin-right: 20px; width: 80px;'>
+            <h6>{{ ::'graph.yAxis' | translate }}</h6>
+          </md-input-container>
+          <md-input-container style='margin-right: 20px; width: 200px;'>
+            <label>{{ ::'graph.title' | translate }}</label>
+            <input ng-model='graphController.authoringComponentContent.yAxis[0].title.text'
+                   ng-model-options='{ debounce: 1000 }'
+                   ng-change='graphController.authoringViewComponentChanged()'/>
+          </md-input-container>
+          <div>
+            <md-input-container style='margin-right: 20px; width: 100px;'>
+              <label>{{ ::'graph.units' | translate }}</label>
+              <input ng-model='graphController.authoringComponentContent.yAxis[0].units'
+                     ng-model-options='{ debounce: 1000 }'
+                     ng-change='graphController.authoringViewComponentChanged()'/>
+            </md-input-container>
+            <md-input-container style='margin-right: 20px; width: 100px;'>
+              <label>{{ ::'graph.min' | translate }}</label>
+              <input type='number'
+                     ng-model='graphController.authoringComponentContent.yAxis[0].min'
+                     ng-model-options='{ debounce: 1000 }'
+                     ng-change='graphController.authoringViewComponentChanged()'/>
+            </md-input-container>
+            <md-input-container style='margin-right: 20px; width: 100px;'>
+              <label>{{ ::'graph.max' | translate }}</label>
+              <input type='number'
+                     ng-model='graphController.authoringComponentContent.yAxis[0].max'
+                     ng-model-options='{ debounce: 1000 }'
+                     ng-change='graphController.authoringViewComponentChanged()'/>
+            </md-input-container>
+            <md-input-container>
+              <md-checkbox ng-model='graphController.authoringComponentContent.yAxis[0].locked'
+                           ng-change='graphController.authoringViewComponentChanged()'>
+                {{ ::'graph.locked' | translate }}
+              </md-checkbox>
+            </md-input-container>
+          </div>
+        </div>
+        <div ng-show='graphController.enableMultipleYAxis' layout='row' style='height: 80px;'>
+          <md-input-container style='margin-right: 20px; width: 80px;'>
+            <h6>{{ ::'graph.yAxis2' | translate }}</h6>
+          </md-input-container>
+          <md-input-container style='margin-right: 20px; width: 200px;'>
+            <label>{{ ::'graph.title' | translate }}</label>
+            <input ng-model='graphController.authoringComponentContent.yAxis[1].title.text'
+                   ng-model-options='{ debounce: 1000 }'
+                   ng-change='graphController.authoringViewComponentChanged()'/>
+          </md-input-container>
+          <div>
+            <md-input-container style='margin-right: 20px; width: 100px;'>
+              <label>{{ ::'graph.units' | translate }}</label>
+              <input ng-model='graphController.authoringComponentContent.yAxis[1].units'
+                     ng-model-options='{ debounce: 1000 }'
+                     ng-change='graphController.authoringViewComponentChanged()'/>
+            </md-input-container>
+            <md-input-container style='margin-right: 20px; width: 100px;'>
+              <label>{{ ::'graph.min' | translate }}</label>
+              <input type='number'
+                     ng-model='graphController.authoringComponentContent.yAxis[1].min'
+                     ng-model-options='{ debounce: 1000 }'
+                     ng-change='graphController.authoringViewComponentChanged()'/>
+            </md-input-container>
+            <md-input-container style='margin-right: 20px; width: 100px;'>
+              <label>{{ ::'graph.max' | translate }}</label>
+              <input type='number'
+                     ng-model='graphController.authoringComponentContent.yAxis[1].max'
+                     ng-model-options='{ debounce: 1000 }'
+                     ng-change='graphController.authoringViewComponentChanged()'/>
+            </md-input-container>
+            <md-input-container>
+              <md-checkbox ng-model='graphController.authoringComponentContent.yAxis[1].locked'
                            ng-change='graphController.authoringViewComponentChanged()'>
                 {{ ::'graph.locked' | translate }}
               </md-checkbox>

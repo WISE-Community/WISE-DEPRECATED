@@ -133,6 +133,18 @@ class GraphController extends ComponentController {
     if (this.componentContent.hideTrialSelect) {
       this.showTrialSelect = false;
     }
+    this.yAxisLocked = this.isYAxisLocked();
+  }
+
+  isYAxisLocked() {
+    if (Array.isArray(this.componentContent.yAxis)) {
+      return this.componentContent.yAxis.map(yAxis => yAxis.locked)
+          .reduce((accumulator, currentValue) => {
+        return accumulator && currentValue;
+      });
+    } else {
+      return this.componentContent.yAxis.locked;
+    }
   }
 
   initializeStudentMode(componentState) {
@@ -271,7 +283,9 @@ class GraphController extends ComponentController {
     const dataExplorerSeries = studentData.dataExplorerSeries;
     const graphType = studentData.dataExplorerGraphType;
     this.xAxis.title.text = studentData.dataExplorerXAxisLabel;
-    this.yAxis.title.text = studentData.dataExplorerYAxisLabel;
+    if (this.isSingleYAxisTitleEmpty()) {
+      this.yAxis.title.text = studentData.dataExplorerYAxisLabel;
+    }
     this.activeTrial.series = [];
     for (let seriesIndex = 0; seriesIndex < dataExplorerSeries.length; seriesIndex++) {
       const xColumn = dataExplorerSeries[seriesIndex].xColumn;
@@ -281,13 +295,44 @@ class GraphController extends ComponentController {
         const name = dataExplorerSeries[seriesIndex].name;
         const series = this.generateDataExplorerSeries(studentData.tableData, xColumn, yColumn,
             graphType, name, color);
-          this.activeTrial.series.push(series);
+        this.setSeriesYAxisIndex(series, seriesIndex);
+        this.setYAxisLabel(series, seriesIndex);
+        this.activeTrial.series.push(series);
         if (graphType === 'scatter' && studentData.isDataExplorerScatterPlotRegressionLineEnabled) {
           const regressionSeries = this.generateDataExplorerRegressionSeries(studentData.tableData,
               xColumn, yColumn, color);
           this.activeTrial.series.push(regressionSeries);
         }
       }
+    }
+  }
+
+  isSingleYAxisTitleEmpty() {
+    return !Array.isArray(this.yAxis) && this.yAxis.title.text === '';
+  }
+
+  setSeriesYAxisIndex(series, seriesIndex) {
+    if (Array.isArray(this.yAxis) && this.yAxis.length == 2) {
+      if (seriesIndex === 0 || seriesIndex === 1) {
+        series.yAxis = seriesIndex;
+      } else {
+        series.yAxis = 0;
+      }
+    }
+  }
+
+  setYAxisLabel(series, seriesIndex) {
+    if (Array.isArray(this.yAxis) && (seriesIndex === 0 || seriesIndex === 1) &&
+        this.isYAxisLabelBlank(this.yAxis, seriesIndex)) {
+      this.yAxis[seriesIndex].title.text = series.name;
+    }
+  }
+
+  isYAxisLabelBlank(yAxis, index) {
+    if (Array.isArray(this.yAxis)) {
+      return yAxis[index].title.text === '';
+    } else {
+      return this.yAxis.title.text === '';
     }
   }
 
