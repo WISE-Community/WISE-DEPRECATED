@@ -105,6 +105,7 @@ public class TeacherAPIController extends UserAPIController {
       periods.add(period.getName());
     }
     map.put("periods", periods);
+    map.put("lastRun", run.getLastRun());
     return map;
   }
 
