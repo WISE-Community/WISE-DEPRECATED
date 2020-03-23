@@ -15,10 +15,10 @@
             </mat-select>
         </mat-form-field>
     </form>
-    <ckeditor [config]="{ placeholder: 'Content..' }" [editor]="Editor" [data]="content.value" (change)="onChange($event)"></ckeditor>
+    <ckeditor [config]="{ placeholder: 'Content..' }" [editor]="Editor" [data]="news.value" (change)="onChange($event)"></ckeditor>
 </div>
 <div mat-dialog-actions fxLayoutGap="8px" id="news-item-actions">
     <button mat-button (click)="close()" color="accent" i18n>Cancel</button>
-    <button *ngIf="!isEditMode" mat-button color="primary" (click)="publish()" i18n>Publish</button>
+    <button *ngIf="isAddMode" mat-button color="primary" (click)="publish()" i18n>Publish</button>
     <button *ngIf="isEditMode" mat-button color="primary" (click)="save()" i18n>Save</button>
 </div>

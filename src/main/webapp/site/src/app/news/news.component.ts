@@ -4,6 +4,7 @@ import { News } from "../domain/news";
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatDialog } from '@angular/material';
 import { NewsItemDialogComponent } from './news-item-dialog/news-item-dialog.component';
+import { NewsItemMode } from './news-item-mode';
 
 @Component({
   selector: 'app-news',
@@ -39,25 +40,25 @@ export class NewsComponent implements OnInit {
 
   addNewsItem() {
     this.dialog.open(NewsItemDialogComponent, {
-      data: { isEditMode: true },
+      data: { mode: NewsItemMode.ADD },
       panelClass: 'mat-dialog--md',
       disableClose: true
     })
   }
 
   hideNewsItem(id: number) {
-
+    // hide news item, update list
   }
 
   editNewsItem(index: number) {
     this.dialog.open(NewsItemDialogComponent, {
-      data: { newsItem: this.allNewsItems[index], isEditMode: true },
+      data: { newsItem: this.allNewsItems[index], mode: NewsItemMode.EDIT },
       panelClass: 'mat-dialog--md',
       disableClose: true
     })
   }
 
   deleteNewsItem(id: number) {
-
+    // delete news item, update list
   }
 }
