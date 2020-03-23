@@ -83,7 +83,7 @@
     "includeStudentWorkIDs": "Include Student Work IDs",
     "includeStudentWorkTimestamps": "Include Student Work Timestamps",
     "infoTipsLabel": "Info + Tips ({{ numberOfTips }})",
-    "itemInfo": "Item Info",
+    "itemLocation": "Item Location",
     "latestWork": "Latest Work:",
     "latestStudentWork": "Latest Student Work",
     "lockPeriodLabel": "Lock student screens (Period: {{ periodName }})",
