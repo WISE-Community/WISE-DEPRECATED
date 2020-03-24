@@ -302,6 +302,9 @@ class GraphController extends ComponentController {
         }
       }
     }
+    if (this.isMultipleYAxis(this.yAxis)) {
+      this.setYAxisColorsToMatchSeries(this.activeTrial.series);
+    }
   }
 
   isSingleYAxis(yAxis) {
@@ -330,6 +333,31 @@ class GraphController extends ComponentController {
         series.yAxis = 0;
       }
     }
+  }
+
+  setYAxisColorsToMatchSeries(series) {
+    for (let [index, yAxis] of Object.entries(this.yAxis)) {
+      if (series[index] != null) {
+        this.setYAxisColor(yAxis, series[index].color);
+      }
+    }
+  }
+
+  setYAxisColor(yAxis, color) {
+    if (yAxis.labels == null) {
+      yAxis.labels = {};
+    }
+    if (yAxis.labels.style == null) {
+      yAxis.labels.style = {};
+    }
+    if (yAxis.title == null) {
+      yAxis.title = {};
+    }
+    if (yAxis.title.style == null) {
+      yAxis.title.style = {};
+    }
+    yAxis.labels.style.color = color;
+    yAxis.title.style.color = color;
   }
 
   isYAxisLabelBlank(yAxis, index) {
