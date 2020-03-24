@@ -445,6 +445,9 @@ class TableAuthoringController extends TableController {
       if (this.authoringComponentContent.numDataExplorerSeries == null) {
         this.authoringComponentContent.numDataExplorerSeries = 1;
       }
+      if (this.authoringComponentContent.numDataExplorerYAxis == null) {
+        this.authoringComponentContent.numDataExplorerYAxis = 1;
+      }
       if (this.authoringComponentContent.isDataExplorerAxisLabelsEditable == null) {
         this.authoringComponentContent.isDataExplorerAxisLabelsEditable = false;
       }

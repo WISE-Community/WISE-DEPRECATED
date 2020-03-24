@@ -90,8 +90,9 @@ describe('GraphController', () => {
   shouldCheckIfYAxisIsLockedWithOneYAxisFalse();
   shouldCheckIfYAxisIsLockedWithMultipleYAxisTrue();
   shouldCheckIfYAxisIsLockedWithMultipleYAxisFalse();
+  shouldSetYAxisLabelsWhenSingleYAxis();
+  shouldSetYAxisLabelsWhenMultipleYAxis();
   shouldSetSeriesYIndex();
-  shouldSetYAxisLabel();
   shouldCheckIfYAxisLabelIsBlankWithSingleYAxisFalse();
   shouldCheckIfYAxisLabelIsBlankWithSingleYAxisTrue();
   shouldCheckIfYAxisLabelIsBlankWithMultipleYAxisFalse();
@@ -1481,6 +1482,41 @@ function shouldCheckIfYAxisIsLockedWithMultipleYAxisFalse() {
   });
 }
 
+function shouldSetYAxisLabelsWhenSingleYAxis() {
+  it('should set y axis labels when there is one y axis', () => {
+    graphController.yAxis = {
+      title: {
+        text: ''
+      }
+    };
+    const studentData = {
+      dataExplorerYAxisLabel: 'Count'
+    };
+    graphController.setYAxisLabels(studentData);
+    expect(graphController.yAxis.title.text).toEqual('Count');
+  });
+}
+
+function shouldSetYAxisLabelsWhenMultipleYAxis() {
+  it('should set y axis labels when there are multiple y axis', () => {
+    graphController.yAxis = [{
+      title: {
+        text: ''
+      }
+    },{
+      title: {
+        text: ''
+      }
+    }];
+    const studentData = {
+      dataExplorerYAxisLabels: ['Count', 'Price']
+    };
+    graphController.setYAxisLabels(studentData);
+    expect(graphController.yAxis[0].title.text).toEqual('Count');
+    expect(graphController.yAxis[1].title.text).toEqual('Price');
+  });
+}
+
 function shouldSetSeriesYIndex() {
   it('should set series Y index', () => {
     const firstYAxis = {
@@ -1509,41 +1545,6 @@ function shouldSetSeriesYIndex() {
     graphController.setSeriesYAxisIndex(seriesTwo, 1);
     expect(seriesOne.yAxis).toEqual(0);
     expect(seriesTwo.yAxis).toEqual(1);
-  });
-}
-
-function shouldSetYAxisLabel() {
-  it('should set y axis label', () => {
-    const firstYAxis = {
-      title: {
-        text: ''
-      },
-      min: 0,
-      max: 100,
-      units: '',
-      locked: false
-    };
-    const secondYAxis = {
-      title: {
-        text: ''
-      },
-      min: 0,
-      max: 1000,
-      units: '',
-      locked: false,
-      opposite: true
-    }
-    graphController.yAxis = [firstYAxis, secondYAxis];
-    const seriesOne = {
-      name: 'Series 1'
-    };
-    const seriesTwo = {
-      name: 'Series 2'
-    };
-    graphController.setYAxisLabelIfMultipleYAxis(seriesOne, 0);
-    graphController.setYAxisLabelIfMultipleYAxis(seriesTwo, 1);
-    expect(graphController.yAxis[0].title.text).toEqual('Series 1');
-    expect(graphController.yAxis[1].title.text).toEqual('Series 2');
   });
 }
 

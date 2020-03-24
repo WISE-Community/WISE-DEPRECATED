@@ -283,9 +283,7 @@ class GraphController extends ComponentController {
     const dataExplorerSeries = studentData.dataExplorerSeries;
     const graphType = studentData.dataExplorerGraphType;
     this.xAxis.title.text = studentData.dataExplorerXAxisLabel;
-    if (this.isSingleYAxis(this.yAxis)) {
-      this.yAxis.title.text = studentData.dataExplorerYAxisLabel;
-    }
+    this.setYAxisLabels(studentData);
     this.activeTrial.series = [];
     for (let seriesIndex = 0; seriesIndex < dataExplorerSeries.length; seriesIndex++) {
       const xColumn = dataExplorerSeries[seriesIndex].xColumn;
@@ -296,7 +294,6 @@ class GraphController extends ComponentController {
         const series = this.generateDataExplorerSeries(studentData.tableData, xColumn, yColumn,
             graphType, name, color);
         this.setSeriesYAxisIndex(series, seriesIndex);
-        this.setYAxisLabelIfMultipleYAxis(series, seriesIndex);
         this.activeTrial.series.push(series);
         if (graphType === 'scatter' && studentData.isDataExplorerScatterPlotRegressionLineEnabled) {
           const regressionSeries = this.generateDataExplorerRegressionSeries(studentData.tableData,
@@ -315,6 +312,16 @@ class GraphController extends ComponentController {
     return Array.isArray(yAxis); 
   }
 
+  setYAxisLabels(studentData) {
+    if (this.isSingleYAxis(this.yAxis)) {
+      this.yAxis.title.text = studentData.dataExplorerYAxisLabel;
+    } else {
+      for (let [index, yAxis] of Object.entries(this.yAxis)) {
+        yAxis.title.text = studentData.dataExplorerYAxisLabels[index];
+      }
+    }
+  }
+
   setSeriesYAxisIndex(series, seriesIndex) {
     if (this.isMultipleYAxis(this.yAxis) && this.yAxis.length == 2) {
       if (seriesIndex === 0 || seriesIndex === 1) {
@@ -322,13 +329,6 @@ class GraphController extends ComponentController {
       } else {
         series.yAxis = 0;
       }
-    }
-  }
-
-  setYAxisLabelIfMultipleYAxis(series, seriesIndex) {
-    if (this.isMultipleYAxis(this.yAxis) && (seriesIndex === 0 || seriesIndex === 1) &&
-        this.isYAxisLabelBlank(this.yAxis, seriesIndex)) {
-      this.yAxis[seriesIndex].title.text = series.name;
     }
   }
 
@@ -777,7 +777,11 @@ class GraphController extends ComponentController {
       this.yAxis = this.UtilService.makeCopyOfJSONObject(this.componentContent.yAxis);
     }
     if (this.yAxis != null) {
-      this.yAxis.allowDecimals = false;
+      if (this.isSingleYAxis(this.yAxis)) {
+        this.yAxis.allowDecimals = false;
+      } else {
+        this.yAxis.forEach(yAxis => yAxis.allowDecimals = false);
+      }
     }
     return this.yAxis;
   }
@@ -3149,6 +3153,10 @@ class GraphController extends ComponentController {
     } else {
       return version === 1;
     }
+  }
+
+  isSingleYAxis(yAxis) {
+    return !Array.isArray(yAxis);
   }
 }
 
