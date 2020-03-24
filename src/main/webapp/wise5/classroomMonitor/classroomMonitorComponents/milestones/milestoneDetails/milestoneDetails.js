@@ -7,7 +7,8 @@ class MilestoneDetailsController {
     $state,
     ConfigService,
     ProjectService,
-    TeacherDataService
+    TeacherDataService,
+    NodeService
   ) {
     this.$filter = $filter;
     this.$scope = $scope;
@@ -15,6 +16,7 @@ class MilestoneDetailsController {
     this.ConfigService = ConfigService;
     this.ProjectService = ProjectService;
     this.TeacherDataService = TeacherDataService;
+    this.NodeService = NodeService;
     this.$translate = this.$filter("translate");
     this.periodId = this.TeacherDataService.getCurrentPeriod().periodId;
     this.$onInit = () => {
@@ -75,6 +77,10 @@ class MilestoneDetailsController {
     return this.ProjectService.getNodeTitleByNodeId(nodeId);
   }
 
+  getNodeNumberAndTitleByNodeId(nodeId) {
+    return `${this.getNodeNumberByNodeId(nodeId)}: ${this.getNodeTitleByNodeId(nodeId)}`;
+  }
+
   /**
    * Get the user names for a workgroup id
    * @param workgroupId the workgroup id
@@ -95,6 +101,10 @@ class MilestoneDetailsController {
 
   showWorkgroup(workgroup) {
     this.onShowWorkgroup({ value: workgroup });
+  }
+
+  showMilestoneStepInfo($event) {
+    this.NodeService.showNodeInfo(this.milestone.nodeId, $event);
   }
 
   visitNodeGrading() {
@@ -130,7 +140,8 @@ MilestoneDetailsController.$inject = [
   "$state",
   "ConfigService",
   "ProjectService",
-  "TeacherDataService"
+  "TeacherDataService",
+  "NodeService"
 ];
 
 const MilestoneDetails = {
@@ -153,7 +164,7 @@ const MilestoneDetails = {
           </div>
         </div>
         <p ng-if="$ctrl.milestone.description">
-          <span class="heavy">{{ ::'description' | translate }}: </span>&nbsp;
+          <span class="heavy">{{ ::'description' | translate }}: </span>
           <compile data="$ctrl.milestone.description"></compile>
         </p>
         <p ng-if="$ctrl.milestone.params.targetDate"><span class="heavy">{{ ::'dueDate' | translate }}: </span> {{ $ctrl.milestone.params.targetDate | date: 'EEE MMM d, yyyy' }}</p>
@@ -162,6 +173,11 @@ const MilestoneDetails = {
           <a ng-repeat="requirement in $ctrl.requirements" ui-sref="root.project({nodeId: \'{{ requirement }}\'})" ng-click="$ctrl.visitNodeGrading(event)">
             {{ ::$ctrl.getNodeNumberByNodeId(requirement) }}: {{ ::$ctrl.getNodeTitleByNodeId(requirement) }}<span ng-if="!$last">, </span>
           </a>
+        </p>
+        <p ng-if="$ctrl.milestone.type === 'milestoneReport'">
+          <span class="heavy">{{ ::'itemLocation' | translate }}: </span>
+          {{ $ctrl.getNodeNumberAndTitleByNodeId($ctrl.milestone.nodeId) }}
+          (<a href ng-click="$ctrl.showMilestoneStepInfo($event)">{{ ::'STEP_INFO' | translate }}</a>)
         </p>
       </section>
       <section ng-if="$ctrl.milestone.type === 'milestoneReport'"
