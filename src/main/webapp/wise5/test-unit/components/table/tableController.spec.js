@@ -23,7 +23,8 @@ describe('TableController', () => {
   shouldGetColumnNames();
   shouldHandleDataExplorerXColumnChanged();
   shouldHandleDataExplorerYColumnChanged();
-  shouldGetDataExplorerYAxisLabel();
+  shouldGetDataExplorerYAxisLabelWhenOneYAxis();
+  shouldSetDataExplorerYAxisLabelWithMultipleYAxis();
   shouldCreateDataExplorerSeries();
   shouldRepopulateDataExplorerData();
 });
@@ -85,6 +86,7 @@ function createComponent() {
       }
     ],
     numDataExplorerSeries: 1,
+    numDataExplorerYAxis: 1,
     isDataExplorerAxisLabelsEditable: false,
     isDataExplorerScatterPlotRegressionLineEnabled: true
   };
@@ -130,11 +132,24 @@ function shouldHandleDataExplorerYColumnChanged() {
   });
 }
 
-function shouldGetDataExplorerYAxisLabel() {
+function shouldGetDataExplorerYAxisLabelWhenOneYAxis() {
   it('should get data explorer y axis label', () => {
-    expect(tableController.getDataExplorerYAxisLabel()).toEqual('');
+    expect(tableController.getDataExplorerYAxisLabelWhenOneYAxis()).toEqual('');
     tableController.dataExplorerSeries[0].yColumn = 1;
-    expect(tableController.getDataExplorerYAxisLabel()).toEqual('Grade');
+    expect(tableController.getDataExplorerYAxisLabelWhenOneYAxis()).toEqual('Grade');
+  });
+}
+
+function shouldSetDataExplorerYAxisLabelWithMultipleYAxis() {
+  it('should set data explorer y axis label with multiple y axis', () => {
+    tableController.dataExplorerYAxisLabels =
+        Array(tableController.componentContent.numDataExplorerYAxis).fill('');
+    const label1 = 'Label 1';
+    const label2 = 'Label 2';
+    tableController.setDataExplorerYAxisLabelWithMultipleYAxis(0, label1);
+    tableController.setDataExplorerYAxisLabelWithMultipleYAxis(1, label2);
+    expect(tableController.dataExplorerYAxisLabels[0]).toEqual(label1);
+    expect(tableController.dataExplorerYAxisLabels[1]).toEqual(label2);
   });
 }
 

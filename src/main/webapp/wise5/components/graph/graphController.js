@@ -133,6 +133,18 @@ class GraphController extends ComponentController {
     if (this.componentContent.hideTrialSelect) {
       this.showTrialSelect = false;
     }
+    this.yAxisLocked = this.isYAxisLocked();
+  }
+
+  isYAxisLocked() {
+    if (Array.isArray(this.componentContent.yAxis)) {
+      return this.componentContent.yAxis.map(yAxis => yAxis.locked)
+          .reduce((accumulator, currentValue) => {
+        return accumulator && currentValue;
+      });
+    } else {
+      return this.componentContent.yAxis.locked;
+    }
   }
 
   initializeStudentMode(componentState) {
@@ -271,7 +283,7 @@ class GraphController extends ComponentController {
     const dataExplorerSeries = studentData.dataExplorerSeries;
     const graphType = studentData.dataExplorerGraphType;
     this.xAxis.title.text = studentData.dataExplorerXAxisLabel;
-    this.yAxis.title.text = studentData.dataExplorerYAxisLabel;
+    this.setYAxisLabels(studentData);
     this.activeTrial.series = [];
     for (let seriesIndex = 0; seriesIndex < dataExplorerSeries.length; seriesIndex++) {
       const xColumn = dataExplorerSeries[seriesIndex].xColumn;
@@ -281,13 +293,78 @@ class GraphController extends ComponentController {
         const name = dataExplorerSeries[seriesIndex].name;
         const series = this.generateDataExplorerSeries(studentData.tableData, xColumn, yColumn,
             graphType, name, color);
-          this.activeTrial.series.push(series);
+        this.setSeriesYAxisIndex(series, seriesIndex);
+        this.activeTrial.series.push(series);
         if (graphType === 'scatter' && studentData.isDataExplorerScatterPlotRegressionLineEnabled) {
           const regressionSeries = this.generateDataExplorerRegressionSeries(studentData.tableData,
               xColumn, yColumn, color);
           this.activeTrial.series.push(regressionSeries);
         }
       }
+    }
+    if (this.isMultipleYAxis(this.yAxis)) {
+      this.setYAxisColorsToMatchSeries(this.activeTrial.series);
+    }
+  }
+
+  isSingleYAxis(yAxis) {
+    return !Array.isArray(yAxis);
+  }
+
+  isMultipleYAxis(yAxis) {
+    return Array.isArray(yAxis); 
+  }
+
+  setYAxisLabels(studentData) {
+    if (this.isSingleYAxis(this.yAxis)) {
+      this.yAxis.title.text = studentData.dataExplorerYAxisLabel;
+    } else {
+      for (let [index, yAxis] of Object.entries(this.yAxis)) {
+        yAxis.title.text = studentData.dataExplorerYAxisLabels[index];
+      }
+    }
+  }
+
+  setSeriesYAxisIndex(series, seriesIndex) {
+    if (this.isMultipleYAxis(this.yAxis) && this.yAxis.length == 2) {
+      if (seriesIndex === 0 || seriesIndex === 1) {
+        series.yAxis = seriesIndex;
+      } else {
+        series.yAxis = 0;
+      }
+    }
+  }
+
+  setYAxisColorsToMatchSeries(series) {
+    for (let [index, yAxis] of Object.entries(this.yAxis)) {
+      if (series[index] != null) {
+        this.setYAxisColor(yAxis, series[index].color);
+      }
+    }
+  }
+
+  setYAxisColor(yAxis, color) {
+    if (yAxis.labels == null) {
+      yAxis.labels = {};
+    }
+    if (yAxis.labels.style == null) {
+      yAxis.labels.style = {};
+    }
+    if (yAxis.title == null) {
+      yAxis.title = {};
+    }
+    if (yAxis.title.style == null) {
+      yAxis.title.style = {};
+    }
+    yAxis.labels.style.color = color;
+    yAxis.title.style.color = color;
+  }
+
+  isYAxisLabelBlank(yAxis, index) {
+    if (this.isMultipleYAxis(yAxis)) {
+      return yAxis[index].title.text === '';
+    } else {
+      return yAxis.title.text === '';
     }
   }
 
@@ -728,7 +805,11 @@ class GraphController extends ComponentController {
       this.yAxis = this.UtilService.makeCopyOfJSONObject(this.componentContent.yAxis);
     }
     if (this.yAxis != null) {
-      this.yAxis.allowDecimals = false;
+      if (this.isSingleYAxis(this.yAxis)) {
+        this.yAxis.allowDecimals = false;
+      } else {
+        this.yAxis.forEach(yAxis => yAxis.allowDecimals = false);
+      }
     }
     return this.yAxis;
   }
@@ -3100,6 +3181,10 @@ class GraphController extends ComponentController {
     } else {
       return version === 1;
     }
+  }
+
+  isSingleYAxis(yAxis) {
+    return !Array.isArray(yAxis);
   }
 }
 
