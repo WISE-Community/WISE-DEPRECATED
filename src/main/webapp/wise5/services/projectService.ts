@@ -1154,7 +1154,9 @@ class ProjectService {
     if (!exists) {
       authors.push(userInfo);
     }
-    this.project.metadata.authors = authors;
+    this.project.metadata.authors = authors.filter((obj, pos, arr) => {
+      return arr.map(mapObj => mapObj['id']).indexOf(obj['id']) === pos;
+    });
     const httpParams = {
       method: 'POST',
       url: this.ConfigService.getConfigParam('saveProjectURL'),
