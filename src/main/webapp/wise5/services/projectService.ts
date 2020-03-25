@@ -1145,7 +1145,7 @@ class ProjectService {
     const authors = this.project.metadata.authors ? this.project.metadata.authors : [];
     const userInfo = this.ConfigService.getMyUserInfo();
     let exists = false;
-    for (let [index, author] of authors.entries()) {
+    for (let author of authors) {
       if (author.id === userInfo.id) {
         author = userInfo;
         exists = true;
