@@ -1147,7 +1147,6 @@ class ProjectService {
     let exists = false;
     for (let author of authors) {
       if (author.id === userInfo.id) {
-        author = userInfo;
         exists = true;
         break;
       }
