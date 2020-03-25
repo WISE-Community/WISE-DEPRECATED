@@ -1145,7 +1145,7 @@ class ProjectService {
     const authors = this.project.metadata.authors ? this.project.metadata.authors : [];
     const userInfo = this.ConfigService.getMyUserInfo();
     let exists = false;
-    for (let author of authors) {
+    for (const author of authors) {
       if (author.id === userInfo.id) {
         exists = true;
         break;
@@ -1154,9 +1154,7 @@ class ProjectService {
     if (!exists) {
       authors.push(userInfo);
     }
-    this.project.metadata.authors = authors.filter((obj, pos, arr) => {
-      return arr.map(mapObj => mapObj['id']).indexOf(obj['id']) === pos;
-    });
+    this.project.metadata.authors = this.getUniqueAuthors(authors);
     const httpParams = {
       method: 'POST',
       url: this.ConfigService.getConfigParam('saveProjectURL'),
@@ -1178,6 +1176,18 @@ class ProjectService {
       }
       return response;
     });
+  }
+
+  getUniqueAuthors(authors) {
+    const idToAuthor = {};
+    const uniqueAuthors = [];
+    for (const author of authors) {
+      if (idToAuthor[author.id] == null) {
+        uniqueAuthors.push(author);
+        idToAuthor[author.id] = author;
+      }
+    }
+    return uniqueAuthors;
   }
 
   /**
