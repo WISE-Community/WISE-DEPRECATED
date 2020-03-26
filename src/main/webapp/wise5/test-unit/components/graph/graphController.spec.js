@@ -97,6 +97,8 @@ describe('GraphController', () => {
   shouldCheckIfYAxisLabelIsBlankWithSingleYAxisTrue();
   shouldCheckIfYAxisLabelIsBlankWithMultipleYAxisFalse();
   shouldCheckIfYAxisLabelIsBlankWithMultipleYAxisTrue();
+  shouldGetEventYValueWhenThereIsOneYAxis();
+  shouldGetEventYValueWhenThereAreMultipleYAxes();
 });
 
 function createComponent() {
@@ -1629,5 +1631,31 @@ function shouldCheckIfYAxisLabelIsBlankWithMultipleYAxisTrue() {
     const yAxis = [firstYAxis, secondYAxis];
     expect(graphController.isYAxisLabelBlank(yAxis, 0)).toEqual(true);
     expect(graphController.isYAxisLabelBlank(yAxis, 1)).toEqual(true);
+  });
+}
+
+function shouldGetEventYValueWhenThereIsOneYAxis() {
+  it('should get event y value when there is one y axis', () => {
+    const event = {
+      yAxis: [{value: 10}]
+    };
+    expect(graphController.getEventYValue(event)).toEqual(10);
+  });
+}
+
+function shouldGetEventYValueWhenThereAreMultipleYAxes() {
+  it('should get event y value when there are multiple y axes', () => {
+    const event = {
+      yAxis: [{value: 10}, {value: 20}]
+    };
+    graphController.yAxis = [{
+      title: { text: 'Y Axis 1' }
+    },{
+      title: { text: 'Y Axis 2' }
+    }];
+    graphController.activeSeries = {
+      yAxis: 1
+    };
+    expect(graphController.getEventYValue(event)).toEqual(20);
   });
 }

@@ -1120,7 +1120,7 @@ class GraphController extends ComponentController {
           }
         }
         const x = this.performRounding(event.xAxis[0].value);
-        const y = this.performRounding(event.yAxis[0].value);
+        const y = this.performRounding(this.getEventYValue(event));
         this.addPointToSeries(activeSeries, x, y);
         this.addNextComponentStateToUndoStack = true;
         this.studentDataChanged();
@@ -1130,6 +1130,14 @@ class GraphController extends ComponentController {
           alert(this.$translate('graph.youCanNotEditThisSeriesPleaseChooseASeriesThatCanBeEdited'));
         }
       }
+    }
+  }
+
+  getEventYValue(event) {
+    if (this.isMultipleYAxis(this.yAxis)) {
+      return event.yAxis[this.activeSeries.yAxis].value;
+    } else {
+      return event.yAxis[0].value;
     }
   }
 

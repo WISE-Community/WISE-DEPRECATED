@@ -150,7 +150,12 @@ class GraphAuthoringController extends GraphController {
     this.isResetSeriesButtonVisible = true;
     this.isSelectSeriesVisible = true;
     this.backgroundImage = this.componentContent.backgroundImage;
+    this.numYAxes = 0;
     this.enableMultipleYAxis = this.isMultipleYAxisEnabled();
+    if (this.enableMultipleYAxis) {
+      this.numYAxes = this.authoringComponentContent.yAxis.length;
+    }
+    this.addAnyMissingYAxisFieldsToAllYAxes(this.authoringComponentContent.yAxis);
 
     $scope.$watch(() => {
       return this.authoringComponentContent;
@@ -212,6 +217,9 @@ class GraphAuthoringController extends GraphController {
       newSeries.dashStyle = 'Solid';
     } else if (this.authoringComponentContent.graphType === 'scatter') {
       newSeries.type = 'scatter';
+    }
+    if (this.enableMultipleYAxis) {
+      newSeries.yAxis = 0;
     }
     this.authoringComponentContent.series.push(newSeries);
     this.authoringViewComponentChanged();
@@ -536,10 +544,14 @@ class GraphAuthoringController extends GraphController {
   enableMultipleYAxisChanged() {
     if (this.enableMultipleYAxis) {
       this.convertSingleYAxisToMultipleYAxis();
+      this.numYAxes = this.authoringComponentContent.yAxis.length;
+      this.addYAxisToAllSeries();
       this.authoringViewComponentChanged();
     } else {
-      if (confirm(this.$translate('graph.areYouSureYouWantToRemoveYAxis2'))) {
+      if (confirm(this.$translate('graph.areYouSureYouWantToRemoveMultipleYAxes'))) {
         this.convertMultipleYAxisToSingleYAxis();
+        this.numYAxes = this.authoringComponentContent.yAxis.length;
+        this.removeYAxisFromAllSeries();
         this.authoringViewComponentChanged();
       } else {
         this.enableMultipleYAxis = true;
@@ -549,22 +561,112 @@ class GraphAuthoringController extends GraphController {
 
   convertSingleYAxisToMultipleYAxis() {
     const firstYAxis = this.authoringComponentContent.yAxis;
-    const secondYAxis = {
+    this.addAnyMissingYAxisFields(firstYAxis);
+    const secondYAxis = this.createYAxisObject();
+    secondYAxis.opposite = true;
+    this.authoringComponentContent.yAxis = [firstYAxis, secondYAxis];
+  }
+
+  createYAxisObject() {
+    return {
       title: {
         text: '',
-        useHTML: true
+        useHTML: true,
+        style: {
+          color: null
+        }
+      },
+      labels: {
+        style: {
+          color: null
+        }
       },
       min: 0,
       max: null,
       units: '',
       locked: true,
-      opposite: true
+      opposite: false
     };
-    this.authoringComponentContent.yAxis = [firstYAxis, secondYAxis];
   }
 
   convertMultipleYAxisToSingleYAxis() {
     this.authoringComponentContent.yAxis = this.authoringComponentContent.yAxis[0];
+  }
+
+  addYAxisToAllSeries() {
+    for (const singleSeries of this.authoringComponentContent.series) {
+      singleSeries.yAxis = 0;
+    }
+  }
+
+  removeYAxisFromAllSeries() {
+    for (const singleSeries of this.authoringComponentContent.series) {
+      delete singleSeries.yAxis;
+    }
+  }
+
+  numYAxesChanged(newValue, oldValue) {
+    if (newValue > oldValue) {
+      this.increaseYAxes(newValue);
+      this.authoringViewComponentChanged();
+    } else if (newValue < oldValue) {
+      if (confirm(this.$translate('graph.areYouSureYouWantToDecreaseTheNumberOfYAxes'))) {
+        this.decreaseYAxes(newValue);
+        this.authoringViewComponentChanged();
+      } else {
+        this.numYAxes = oldValue;
+      }
+    }
+  }
+
+  increaseYAxes(newNumYAxes) {
+    const oldNumYAxes = this.authoringComponentContent.yAxis.length;
+    const numYAxesToAdd = newNumYAxes - oldNumYAxes;
+    for (let n = 0; n < numYAxesToAdd; n++) {
+      this.authoringComponentContent.yAxis.push(this.createYAxisObject());
+    }
+  }
+
+  decreaseYAxes(newNumYAxes) {
+    this.authoringComponentContent.yAxis = this.authoringComponentContent.yAxis.slice(0, newNumYAxes);
+  }
+
+  yAxisColorChanged(yAxis) {
+    const color = yAxis.labels.style.color;
+    yAxis.title.style.color = color;
+    this.authoringViewComponentChanged();
+  }
+
+  addAnyMissingYAxisFieldsToAllYAxes(yAxis) {
+    if (this.isMultipleYAxis(yAxis)) {
+      yAxis.forEach(yAxis => this.addAnyMissingYAxisFields(yAxis));
+    } else {
+      this.addAnyMissingYAxisFields(yAxis);
+    }
+  }
+
+  addAnyMissingYAxisFields(yAxis) {
+    if (yAxis.title == null) {
+      yAxis.title = {};
+    }
+    if (yAxis.title.style == null) {
+      yAxis.title.style = {};
+    }
+    if (yAxis.title.style.color == null) {
+      yAxis.title.style.color = '';
+    }
+    if (yAxis.labels == null) {
+      yAxis.labels = {};
+    }
+    if (yAxis.labels.style == null) {
+      yAxis.labels.style = {};
+    }
+    if (yAxis.labels.style.color == null) {
+      yAxis.labels.style.color = '';
+    }
+    if (yAxis.opposite == null) {
+      yAxis.opposite = false;
+    }
   }
 }
 

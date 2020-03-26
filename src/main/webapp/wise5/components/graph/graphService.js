@@ -47,7 +47,15 @@ class GraphService extends ComponentService {
     component.yAxis = {
       title: {
         text: this.$translate('graph.positionMeters'),
-        useHTML: true
+        useHTML: true,
+        style: {
+          color: null
+        }
+      },
+      labels: {
+        style: {
+          color: null
+        }
       },
       min: 0,
       max: 100,
