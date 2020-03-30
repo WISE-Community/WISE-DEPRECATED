@@ -504,7 +504,7 @@ class DiscussionController extends ComponentController {
     const allResponses = [];
     const oddResponses = [];
     const evenResponses = [];
-    for (const [index, classResponse] of this.classResponses.entries()) {
+    for (const [index, classResponse] of Object.entries(this.classResponses)) {
       if (classResponse.studentData.componentStateIdReplyingTo == null) {
         if ((this.isGradingMode() || this.isGradingRevisionMode()) &&
             !this.threadHasPostFromThisComponentAndWorkgroupId(classResponse)) {
