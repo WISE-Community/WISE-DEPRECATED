@@ -242,6 +242,7 @@ function shouldAddAnyMissingYAxisFieldsToAllYAxesWithOneYAxis() {
     graphAuthoringController.addAnyMissingYAxisFieldsToAllYAxes(yAxis);
     expect(yAxis.title.style).toBeDefined();
     expect(yAxis.labels.style).toBeDefined();
+    expect(yAxis.allowDecimals).toBe(false);
     expect(yAxis.opposite).toBe(false);
   });
 }
@@ -252,9 +253,11 @@ function shouldAddAnyMissingYAxisFieldsToAllYAxesWithMultipleYAxes() {
     graphAuthoringController.addAnyMissingYAxisFieldsToAllYAxes(yAxis);
     expect(yAxis[0].title.style).toBeDefined();
     expect(yAxis[0].labels.style).toBeDefined();
+    expect(yAxis[0].allowDecimals).toBe(false);
     expect(yAxis[0].opposite).toBe(false);
     expect(yAxis[1].title.style).toBeDefined();
     expect(yAxis[1].labels.style).toBeDefined();
+    expect(yAxis[1].allowDecimals).toBe(false);
     expect(yAxis[1].opposite).toBe(false);
   });
 }

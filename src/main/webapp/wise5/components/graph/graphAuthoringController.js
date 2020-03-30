@@ -665,6 +665,9 @@ class GraphAuthoringController extends GraphController {
     if (yAxis.labels.style.color == null) {
       yAxis.labels.style.color = '';
     }
+    if (yAxis.allowDecimals == null) {
+      yAxis.allowDecimals = false;
+    }
     if (yAxis.opposite == null) {
       yAxis.opposite = false;
     }

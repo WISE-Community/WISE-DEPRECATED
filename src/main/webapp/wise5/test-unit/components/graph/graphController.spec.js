@@ -99,6 +99,12 @@ describe('GraphController', () => {
   shouldCheckIfYAxisLabelIsBlankWithMultipleYAxesTrue();
   shouldGetEventYValueWhenThereIsOneYAxis();
   shouldGetEventYValueWhenThereAreMultipleYAxes();
+  shouldTurnOffXAxisDecimals();
+  shouldTurnOffYAxisDecimalsWhenThereIsOneYAxis();
+  shouldTurnOffYAxisDecimalsWhenThereAreMultipleYAxes();
+  shouldGetSeriesYAxisIndexWhenItHasNoneSet();
+  shouldGetSeriesYAxisIndexWhenItHasItSet();
+  shouldImportGraphSettings();
 });
 
 function createComponent() {
@@ -1657,5 +1663,116 @@ function shouldGetEventYValueWhenThereAreMultipleYAxes() {
       yAxis: 1
     };
     expect(graphController.getEventYValue(event)).toEqual(20);
+  });
+}
+
+function shouldTurnOffXAxisDecimals() {
+  it('should turn off x axis decimals', () => { 
+    graphController.xAxis = {
+      title: { text: 'X Axis' }
+    };
+    graphController.turnOffXAxisDecimals();
+    expect(graphController.xAxis.allowDecimals).toEqual(false);
+  });
+}
+
+function shouldTurnOffYAxisDecimalsWhenThereIsOneYAxis() {
+  it('should turn off y axis decimals when there is one y axis', () => { 
+    graphController.yAxis = {
+      title: { text: 'Y Axis' }
+    };
+    graphController.turnOffYAxisDecimals();
+    expect(graphController.yAxis.allowDecimals).toEqual(false);
+  });
+}
+
+function shouldTurnOffYAxisDecimalsWhenThereAreMultipleYAxes() {
+  it('should turn off y axis decimals when there are multiple y axes', () => { 
+    graphController.yAxis = [{
+      title: { text: 'Y Axis 1' }
+    },{
+      title: { text: 'Y Axis 2' }
+    }];
+    graphController.turnOffYAxisDecimals();
+    expect(graphController.yAxis[0].allowDecimals).toEqual(false);
+    expect(graphController.yAxis[1].allowDecimals).toEqual(false);
+  });
+}
+
+function shouldGetSeriesYAxisIndexWhenItHasNoneSet() {
+  it('should get series y axis index when it has none set', () => {
+    graphController.yAxis = [
+      {
+        title: { text: 'Y Axis 1' }
+      },
+      {
+        title: { text: 'Y Axis 2' }
+      }
+    ];
+    const series = {
+      
+    };
+    expect(graphController.getSeriesYAxisIndex(series)).toEqual(0);
+  });
+}
+
+function shouldGetSeriesYAxisIndexWhenItHasItSet() {
+  it('should get series y axis index when it has it set', () => {
+    graphController.yAxis = [
+      {
+        title: { text: 'Y Axis 1' }
+      },
+      {
+        title: { text: 'Y Axis 2' }
+      }
+    ];
+    const series = {
+      yAxis: 1
+    };
+    expect(graphController.getSeriesYAxisIndex(series)).toEqual(1);
+  });
+}
+
+function shouldImportGraphSettings() {
+  it('should import graph settings', () => {
+    graphController.title = 'Graph 1 Title';
+    graphController.subtitle = 'Graph 1 Subtitle';
+    graphController.width = 100;
+    graphController.height = 200;
+    graphController.xAxis = {
+      title: { text: 'X Axis 1' }
+    };
+    graphController.yAxis = {
+      title: { text: 'Y Axis 1' }
+    };
+    const graph2Title = 'Graph 2 Title';
+    const graph2Subtitle = 'Graph 2 Subtitle';
+    const graph2Width = 300;
+    const graph2Height = 400;
+    const xAxis2Title = 'X Axis 2';
+    const yAxis2Title = 'Y Axis 2';
+    const component = {
+      title: graph2Title,
+      subtitle: graph2Subtitle,
+      width: graph2Width,
+      height: graph2Height
+    };
+    const componentState = {
+      studentData: {
+        xAxis: {
+          title: { text: xAxis2Title }
+        },
+        yAxis: {
+          title: { text: yAxis2Title }
+        }
+      }
+    };
+    graphController.importGraphSettings(component, componentState);
+    expect(graphController.title).toEqual(graph2Title);
+    expect(graphController.subtitle).toEqual(graph2Subtitle);
+    expect(graphController.width).toEqual(graph2Width);
+    expect(graphController.height).toEqual(graph2Height);
+    expect(graphController.xAxis.title.text).toEqual(xAxis2Title);
+    expect(graphController.yAxis.title.text).toEqual(yAxis2Title);
   });
 }
