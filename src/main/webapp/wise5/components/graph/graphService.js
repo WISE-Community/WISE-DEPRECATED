@@ -42,7 +42,8 @@ class GraphService extends ComponentService {
       max: 100,
       units: this.$translate('graph.secondsUnit'),
       locked: true,
-      type: 'limits'
+      type: 'limits',
+      allowDecimals: false
     };
     component.yAxis = {
       title: {
@@ -60,7 +61,8 @@ class GraphService extends ComponentService {
       min: 0,
       max: 100,
       units: this.$translate('graph.metersUnit'),
-      locked: true
+      locked: true,
+      allowDecimals: false
     };
     component.series = [
       {

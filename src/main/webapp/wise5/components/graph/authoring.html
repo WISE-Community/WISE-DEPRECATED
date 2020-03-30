@@ -286,6 +286,14 @@
                   </md-option>
                 </md-select>
               </md-input-container>
+              <md-input-container style='margin-right: 20px; width: 270px;'
+                                  ng-if='graphController.authoringGetConnectedComponentType(connectedComponent) === "Graph"'>
+                <md-checkbox ng-model='connectedComponent.importGraphSettings'
+                              style='margin-right: 20px;'
+                              ng-change='graphController.authoringViewComponentChanged()'>
+                  {{ ::'graph.importGraphSettings' | translate }}
+                </md-checkbox>
+              </md-input-container>
               <span flex></span>
               <md-button class='topButton md-raised md-primary'
                          ng-click='graphController.authoringDeleteConnectedComponent($index)'>

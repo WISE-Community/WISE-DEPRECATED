@@ -162,8 +162,8 @@ class GraphAuthoringController extends GraphController {
     }, (newValue, oldValue) => {
       this.componentContent = this.ProjectService.injectAssetPaths(newValue);
       this.series = null;
-      this.xAxis = null;
-      this.yAxis = null;
+      this.xAxis = this.componentContent.xAxis;
+      this.yAxis = this.componentContent.yAxis;
       this.submitCounter = 0;
       this.backgroundImage = this.componentContent.backgroundImage;
       this.enableMultipleYAxis = this.isMultipleYAxisEnabled();
@@ -582,9 +582,10 @@ class GraphAuthoringController extends GraphController {
         }
       },
       min: 0,
-      max: null,
+      max: 100,
       units: '',
       locked: true,
+      useDecimals: false,
       opposite: false
     };
   }
