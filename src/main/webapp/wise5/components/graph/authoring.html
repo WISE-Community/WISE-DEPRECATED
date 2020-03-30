@@ -1008,7 +1008,7 @@
             <div layout='row'>
               <div layout='column'
                    style='width: 80px;'
-                   ng-if='!graphController.componentContent.yAxis.locked'>
+                   ng-if='!graphController.yAxisLocked'>
                 <md-input-container>
                   <label>{{ ::'graph.yMax' | translate }}</label>
                   <input type='number'
@@ -1033,13 +1033,8 @@
             </div>
             <div layout='row'
                  ng-if='!graphController.componentContent.xAxis.locked'>
-              <div style='width: 80px;'
-                   ng-if='!graphController.componentContent.yAxis.locked && !graphController.componentContent.xAxis.locked'>
-
-              </div>
               <div layout='row'
-                   style='width: 100%;'
-                   ng-if='!graphController.componentContent.xAxis.locked'>
+                   style='width: 100%;'>
                 <md-input-container>
                   <label>{{ ::'graph.xMin' | translate }}</label>
                   <input type='number'

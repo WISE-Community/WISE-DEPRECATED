@@ -164,6 +164,7 @@ class GraphAuthoringController extends GraphController {
       this.series = null;
       this.xAxis = this.componentContent.xAxis;
       this.yAxis = this.componentContent.yAxis;
+      this.yAxisLocked = this.isYAxisLocked();
       this.submitCounter = 0;
       this.backgroundImage = this.componentContent.backgroundImage;
       this.enableMultipleYAxes = this.isMultipleYAxesEnabled();
