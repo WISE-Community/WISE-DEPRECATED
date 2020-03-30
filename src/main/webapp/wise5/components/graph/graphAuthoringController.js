@@ -151,8 +151,8 @@ class GraphAuthoringController extends GraphController {
     this.isSelectSeriesVisible = true;
     this.backgroundImage = this.componentContent.backgroundImage;
     this.numYAxes = 0;
-    this.enableMultipleYAxis = this.isMultipleYAxisEnabled();
-    if (this.enableMultipleYAxis) {
+    this.enableMultipleYAxes = this.isMultipleYAxesEnabled();
+    if (this.enableMultipleYAxes) {
       this.numYAxes = this.authoringComponentContent.yAxis.length;
     }
     this.addAnyMissingYAxisFieldsToAllYAxes(this.authoringComponentContent.yAxis);
@@ -166,7 +166,7 @@ class GraphAuthoringController extends GraphController {
       this.yAxis = this.componentContent.yAxis;
       this.submitCounter = 0;
       this.backgroundImage = this.componentContent.backgroundImage;
-      this.enableMultipleYAxis = this.isMultipleYAxisEnabled();
+      this.enableMultipleYAxes = this.isMultipleYAxesEnabled();
       this.isSaveButtonVisible = this.componentContent.showSaveButton;
       this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
       this.graphType = this.componentContent.graphType;
@@ -183,7 +183,7 @@ class GraphAuthoringController extends GraphController {
     }, true);
   }
 
-  isMultipleYAxisEnabled() {
+  isMultipleYAxesEnabled() {
     if (Array.isArray(this.authoringComponentContent.yAxis)) {
       return true;
     }
@@ -218,7 +218,7 @@ class GraphAuthoringController extends GraphController {
     } else if (this.authoringComponentContent.graphType === 'scatter') {
       newSeries.type = 'scatter';
     }
-    if (this.enableMultipleYAxis) {
+    if (this.enableMultipleYAxes) {
       newSeries.yAxis = 0;
     }
     this.authoringComponentContent.series.push(newSeries);
@@ -541,25 +541,25 @@ class GraphAuthoringController extends GraphController {
     this.authoringViewComponentChanged();
   }
 
-  enableMultipleYAxisChanged() {
-    if (this.enableMultipleYAxis) {
-      this.convertSingleYAxisToMultipleYAxis();
+  enableMultipleYAxesChanged() {
+    if (this.enableMultipleYAxes) {
+      this.convertSingleYAxisToMultipleYAxes();
       this.numYAxes = this.authoringComponentContent.yAxis.length;
       this.addYAxisToAllSeries();
       this.authoringViewComponentChanged();
     } else {
       if (confirm(this.$translate('graph.areYouSureYouWantToRemoveMultipleYAxes'))) {
-        this.convertMultipleYAxisToSingleYAxis();
+        this.convertMultipleYAxesToSingleYAxis();
         this.numYAxes = this.authoringComponentContent.yAxis.length;
         this.removeYAxisFromAllSeries();
         this.authoringViewComponentChanged();
       } else {
-        this.enableMultipleYAxis = true;
+        this.enableMultipleYAxes = true;
       }
     }
   }
 
-  convertSingleYAxisToMultipleYAxis() {
+  convertSingleYAxisToMultipleYAxes() {
     const firstYAxis = this.authoringComponentContent.yAxis;
     this.addAnyMissingYAxisFields(firstYAxis);
     const secondYAxis = this.createYAxisObject();
@@ -590,7 +590,7 @@ class GraphAuthoringController extends GraphController {
     };
   }
 
-  convertMultipleYAxisToSingleYAxis() {
+  convertMultipleYAxesToSingleYAxis() {
     this.authoringComponentContent.yAxis = this.authoringComponentContent.yAxis[0];
   }
 
@@ -639,7 +639,7 @@ class GraphAuthoringController extends GraphController {
   }
 
   addAnyMissingYAxisFieldsToAllYAxes(yAxis) {
-    if (this.isMultipleYAxis(yAxis)) {
+    if (this.isMultipleYAxes(yAxis)) {
       yAxis.forEach(yAxis => this.addAnyMissingYAxisFields(yAxis));
     } else {
       this.addAnyMissingYAxisFields(yAxis);

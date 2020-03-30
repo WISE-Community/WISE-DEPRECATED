@@ -88,15 +88,15 @@ describe('GraphController', () => {
   shouldConvertDataExplorerDataToSeriesData();
   shouldCheckIfYAxisIsLockedWithOneYAxisTrue();
   shouldCheckIfYAxisIsLockedWithOneYAxisFalse();
-  shouldCheckIfYAxisIsLockedWithMultipleYAxisTrue();
-  shouldCheckIfYAxisIsLockedWithMultipleYAxisFalse();
+  shouldCheckIfYAxisIsLockedWithMultipleYAxesTrue();
+  shouldCheckIfYAxisIsLockedWithMultipleYAxesFalse();
   shouldSetYAxisLabelsWhenSingleYAxis();
-  shouldSetYAxisLabelsWhenMultipleYAxis();
+  shouldSetYAxisLabelsWhenMultipleYAxes();
   shouldSetSeriesYIndex();
   shouldCheckIfYAxisLabelIsBlankWithSingleYAxisFalse();
   shouldCheckIfYAxisLabelIsBlankWithSingleYAxisTrue();
-  shouldCheckIfYAxisLabelIsBlankWithMultipleYAxisFalse();
-  shouldCheckIfYAxisLabelIsBlankWithMultipleYAxisTrue();
+  shouldCheckIfYAxisLabelIsBlankWithMultipleYAxesFalse();
+  shouldCheckIfYAxisLabelIsBlankWithMultipleYAxesTrue();
   shouldGetEventYValueWhenThereIsOneYAxis();
   shouldGetEventYValueWhenThereAreMultipleYAxes();
 });
@@ -1420,20 +1420,20 @@ function shouldConvertDataExplorerDataToSeriesData() {
 }
 
 function shouldCheckIfYAxisIsLockedWithOneYAxisTrue() {
-  it('should check if Y Axis is locked with one Y Axis true', () => {
+  it('should check if Y axis is locked with one Y axis true', () => {
     expect(graphController.isYAxisLocked()).toEqual(true);
   }); 
 }
 
 function shouldCheckIfYAxisIsLockedWithOneYAxisFalse() {
-  it('should check if Y Axis is locked with one Y Axis false', () => {
+  it('should check if Y axis is locked with one Y axis false', () => {
     graphController.componentContent.yAxis.locked = false;
     expect(graphController.isYAxisLocked()).toEqual(false);
   }); 
 }
 
-function shouldCheckIfYAxisIsLockedWithMultipleYAxisTrue() {
-  it('should check if Y Axis is locked with one Y Axis true', () => {
+function shouldCheckIfYAxisIsLockedWithMultipleYAxesTrue() {
+  it('should check if Y axis is locked with multiple Y axes true', () => {
     const firstYAxis = {
       title: {
         text: 'Count'
@@ -1458,8 +1458,8 @@ function shouldCheckIfYAxisIsLockedWithMultipleYAxisTrue() {
   });
 }
 
-function shouldCheckIfYAxisIsLockedWithMultipleYAxisFalse() {
-  it('should check if Y Axis is locked with one Y Axis false', () => {
+function shouldCheckIfYAxisIsLockedWithMultipleYAxesFalse() {
+  it('should check if Y axis is locked with multiple Y axes false', () => {
     const firstYAxis = {
       title: {
         text: 'Count'
@@ -1499,8 +1499,8 @@ function shouldSetYAxisLabelsWhenSingleYAxis() {
   });
 }
 
-function shouldSetYAxisLabelsWhenMultipleYAxis() {
-  it('should set y axis labels when there are multiple y axis', () => {
+function shouldSetYAxisLabelsWhenMultipleYAxes() {
+  it('should set y axis labels when there are multiple y axes', () => {
     graphController.yAxis = [{
       title: {
         text: ''
@@ -1580,8 +1580,8 @@ function shouldCheckIfYAxisLabelIsBlankWithSingleYAxisTrue() {
   });
 }
 
-function shouldCheckIfYAxisLabelIsBlankWithMultipleYAxisFalse() {
-  it('should check if Y Axis label is blank with multiple y axis false', () => {
+function shouldCheckIfYAxisLabelIsBlankWithMultipleYAxesFalse() {
+  it('should check if Y Axis label is blank with multiple y axes false', () => {
     const firstYAxis = {
       title: {
         text: 'Count'
@@ -1607,8 +1607,8 @@ function shouldCheckIfYAxisLabelIsBlankWithMultipleYAxisFalse() {
   });
 }
 
-function shouldCheckIfYAxisLabelIsBlankWithMultipleYAxisTrue() {
-  it('should check if Y Axis label is blank with multiple y axis true', () => {
+function shouldCheckIfYAxisLabelIsBlankWithMultipleYAxesTrue() {
+  it('should check if Y Axis label is blank with multiple y axes true', () => {
     const firstYAxis = {
       title: {
         text: ''

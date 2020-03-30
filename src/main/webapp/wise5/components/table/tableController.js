@@ -1133,7 +1133,7 @@ class TableController extends ComponentController {
     if (this.isDataExplorerOneYAxis()) {
       this.dataExplorerYAxisLabel = this.getDataExplorerYAxisLabelWhenOneYAxis();
     } else {
-      this.setDataExplorerYAxisLabelWithMultipleYAxis(index, this.getColumnName(yColumn));
+      this.setDataExplorerYAxisLabelWithMultipleYAxes(index, this.getColumnName(yColumn));
     }
     this.studentDataChanged();
   }
@@ -1158,7 +1158,7 @@ class TableController extends ComponentController {
     return yAxisLabel;
   }
 
-  setDataExplorerYAxisLabelWithMultipleYAxis(index, label) {
+  setDataExplorerYAxisLabelWithMultipleYAxes(index, label) {
     this.dataExplorerYAxisLabels[index] = label;
   }
 

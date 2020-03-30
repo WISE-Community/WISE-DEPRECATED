@@ -24,7 +24,7 @@ describe('TableController', () => {
   shouldHandleDataExplorerXColumnChanged();
   shouldHandleDataExplorerYColumnChanged();
   shouldGetDataExplorerYAxisLabelWhenOneYAxis();
-  shouldSetDataExplorerYAxisLabelWithMultipleYAxis();
+  shouldSetDataExplorerYAxisLabelWithMultipleYAxes();
   shouldCreateDataExplorerSeries();
   shouldRepopulateDataExplorerData();
 });
@@ -140,14 +140,14 @@ function shouldGetDataExplorerYAxisLabelWhenOneYAxis() {
   });
 }
 
-function shouldSetDataExplorerYAxisLabelWithMultipleYAxis() {
-  it('should set data explorer y axis label with multiple y axis', () => {
+function shouldSetDataExplorerYAxisLabelWithMultipleYAxes() {
+  it('should set data explorer y axis label with multiple y axes', () => {
     tableController.dataExplorerYAxisLabels =
         Array(tableController.componentContent.numDataExplorerYAxis).fill('');
     const label1 = 'Label 1';
     const label2 = 'Label 2';
-    tableController.setDataExplorerYAxisLabelWithMultipleYAxis(0, label1);
-    tableController.setDataExplorerYAxisLabelWithMultipleYAxis(1, label2);
+    tableController.setDataExplorerYAxisLabelWithMultipleYAxes(0, label1);
+    tableController.setDataExplorerYAxisLabelWithMultipleYAxes(1, label2);
     expect(tableController.dataExplorerYAxisLabels[0]).toEqual(label1);
     expect(tableController.dataExplorerYAxisLabels[1]).toEqual(label2);
   });

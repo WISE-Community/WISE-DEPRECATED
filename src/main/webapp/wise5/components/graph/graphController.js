@@ -308,7 +308,7 @@ class GraphController extends ComponentController {
         }
       }
     }
-    if (this.isMultipleYAxis(this.yAxis)) {
+    if (this.isMultipleYAxes(this.yAxis)) {
       this.setYAxisColorsToMatchSeries(this.activeTrial.series);
     }
   }
@@ -317,7 +317,7 @@ class GraphController extends ComponentController {
     return !Array.isArray(yAxis);
   }
 
-  isMultipleYAxis(yAxis) {
+  isMultipleYAxes(yAxis) {
     return Array.isArray(yAxis); 
   }
 
@@ -332,7 +332,7 @@ class GraphController extends ComponentController {
   }
 
   setSeriesYAxisIndex(series, seriesIndex) {
-    if (this.isMultipleYAxis(this.yAxis) && this.yAxis.length == 2) {
+    if (this.isMultipleYAxes(this.yAxis) && this.yAxis.length == 2) {
       if (seriesIndex === 0 || seriesIndex === 1) {
         series.yAxis = seriesIndex;
       } else {
@@ -367,7 +367,7 @@ class GraphController extends ComponentController {
   }
 
   isYAxisLabelBlank(yAxis, index) {
-    if (this.isMultipleYAxis(yAxis)) {
+    if (this.isMultipleYAxes(yAxis)) {
       return yAxis[index].title.text === '';
     } else {
       return yAxis.title.text === '';
@@ -1128,7 +1128,7 @@ class GraphController extends ComponentController {
   }
 
   getSeriesYAxisIndex(series) {
-    if (this.isMultipleYAxis(this.yAxis) && series.yAxis != null) {
+    if (this.isMultipleYAxes(this.yAxis) && series.yAxis != null) {
       return series.yAxis;
     } else {
       return 0;

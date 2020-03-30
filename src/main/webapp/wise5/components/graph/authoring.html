@@ -552,13 +552,13 @@
         <div>
           <div layout='row'>
             <div>
-              <md-switch ng-model='graphController.enableMultipleYAxis'
+              <md-switch ng-model='graphController.enableMultipleYAxes'
                   class='md-primary'
-                  ng-change='graphController.enableMultipleYAxisChanged()'>
+                  ng-change='graphController.enableMultipleYAxesChanged()'>
                 {{ ::'graph.enableMultipleYAxes' | translate }}
               </md-switch>
             </div>
-            <div ng-if='graphController.enableMultipleYAxis'>
+            <div ng-if='graphController.enableMultipleYAxes'>
               <md-radio-group ng-model='graphController.numYAxes' class='md-primary'
                   ng-change='graphController.numYAxesChanged(graphController.numYAxes, {{graphController.numYAxes}})'>
                 <div layout='row' style='margin-top: 20px;'>
@@ -570,7 +570,7 @@
             </div>
           </div>
         </div>
-        <div ng-show='!graphController.enableMultipleYAxis' layout='row' style='height: 80px;'>
+        <div ng-show='!graphController.enableMultipleYAxes' layout='row' style='height: 80px;'>
           <md-input-container style='margin-right: 20px; width: 80px;'>
             <h6>{{ ::'graph.yAxis' | translate }}</h6>
           </md-input-container>
@@ -613,7 +613,7 @@
             </md-checkbox>
           </md-input-container>
         </div>
-        <div ng-show='graphController.enableMultipleYAxis' 
+        <div ng-show='graphController.enableMultipleYAxes' 
             ng-repeat='y in [].constructor(graphController.authoringComponentContent.yAxis.length) track by $index'
             layout='row' style='height: 80px;'>
           <md-input-container style='margin-right: 20px; width: 70px;'>
@@ -811,7 +811,7 @@
               {{ ::'graph.canStudentEdit' | translate }}
             </md-checkbox>
           </md-input-container>
-          <md-input-container ng-if='graphController.enableMultipleYAxis' style='height: 60px;'>
+          <md-input-container ng-if='graphController.enableMultipleYAxes' style='height: 60px;'>
             <label>{{ ::'graph.yAxis' | translate }}</label>
             <md-select ng-model='series.yAxis'
                        ng-change='graphController.authoringViewComponentChanged()'

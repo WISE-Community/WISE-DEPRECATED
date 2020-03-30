@@ -23,8 +23,8 @@ describe('GraphAuthoringController', () => {
   shouldDeleteAnAAxisPlotLine();
   shouldAddAYAxisPlotLine();
   shouldDeleteAYAxisPlotLine();
-  shouldConvertSingleYAxisToMultipleYAxis();
-  shouldConvertMultipleYAxisToSingleYAxis();
+  shouldConvertSingleYAxisToMultipleYAxes();
+  shouldConvertMultipleYAxesToSingleYAxis();
   shouldAddYAxisToAllSeries();
   shouldRemoveYAxisToAllSeries();
   shouldIncreaseYAxes();
@@ -101,8 +101,8 @@ function shouldDeleteAYAxisPlotLine() {
   });
 }
 
-function shouldConvertSingleYAxisToMultipleYAxis() {
-  it('should convert single Y axis to multiple y axis', () => {
+function shouldConvertSingleYAxisToMultipleYAxes() {
+  it('should convert single Y axis to multiple y axes', () => {
     const firstYAxis = {
       title: {
         text: 'Count'
@@ -113,7 +113,7 @@ function shouldConvertSingleYAxisToMultipleYAxis() {
       locked: true
     };
     graphAuthoringController.authoringComponentContent.yAxis = firstYAxis;
-    graphAuthoringController.convertSingleYAxisToMultipleYAxis();
+    graphAuthoringController.convertSingleYAxisToMultipleYAxes();
     expect(Array.isArray(graphAuthoringController.authoringComponentContent.yAxis)).toBe(true);
     expect(graphAuthoringController.authoringComponentContent.yAxis.length).toEqual(2);
     expect(graphAuthoringController.authoringComponentContent.yAxis[0]).toEqual(firstYAxis);
@@ -122,8 +122,8 @@ function shouldConvertSingleYAxisToMultipleYAxis() {
   });
 }
 
-function shouldConvertMultipleYAxisToSingleYAxis() {
-  it('should convert multiple Y axis to single y axis', () => {
+function shouldConvertMultipleYAxesToSingleYAxis() {
+  it('should convert multiple Y axes to single y axis', () => {
     const firstYAxis = {
       title: {
         text: 'Count'
@@ -144,7 +144,7 @@ function shouldConvertMultipleYAxisToSingleYAxis() {
       opposite: true
     }
     graphAuthoringController.authoringComponentContent.yAxis = [firstYAxis, secondYAxis];
-    graphAuthoringController.convertMultipleYAxisToSingleYAxis();
+    graphAuthoringController.convertMultipleYAxesToSingleYAxis();
     expect(Array.isArray(graphAuthoringController.authoringComponentContent.yAxis)).toBe(false);
     expect(graphAuthoringController.authoringComponentContent.yAxis).toEqual(firstYAxis);
   });
