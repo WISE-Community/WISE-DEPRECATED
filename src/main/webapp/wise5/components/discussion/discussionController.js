@@ -431,8 +431,8 @@ class DiscussionController extends ComponentController {
     return userIdsDisplay.join(', ');
   }
 
-  getLatestInappropriateFlagAnnotationByStudentWorkId(annotations, studentWorkId) {
-    for (const annotation of annotations) {
+  getLatestInappropriateFlagAnnotationByStudentWorkId(annotations = [], studentWorkId) {
+    for (const annotation of annotations.sort(this.sortByServerSaveTime).reverse()) {
       if (studentWorkId === annotation.studentWorkId && annotation.type === 'inappropriateFlag') {
         return annotation;
       }
