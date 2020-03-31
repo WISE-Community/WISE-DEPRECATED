@@ -206,6 +206,7 @@ public class TeacherAPIController extends UserAPIController {
       map.put("firstName", ud.getFirstname());
       map.put("lastName", ud.getLastname());
       map.put("permissions", getSharedOwnerPermissionsList(run, sharedOwner));
+      sharedOwners.add(map);
     }
     return sharedOwners;
   }
