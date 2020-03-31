@@ -150,6 +150,7 @@ class GraphAuthoringController extends GraphController {
     this.isResetSeriesButtonVisible = true;
     this.isSelectSeriesVisible = true;
     this.backgroundImage = this.componentContent.backgroundImage;
+    this.enableMultipleYAxis = this.isMultipleYAxisEnabled();
 
     $scope.$watch(() => {
       return this.authoringComponentContent;
@@ -160,6 +161,7 @@ class GraphAuthoringController extends GraphController {
       this.yAxis = null;
       this.submitCounter = 0;
       this.backgroundImage = this.componentContent.backgroundImage;
+      this.enableMultipleYAxis = this.isMultipleYAxisEnabled();
       this.isSaveButtonVisible = this.componentContent.showSaveButton;
       this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
       this.graphType = this.componentContent.graphType;
@@ -174,6 +176,13 @@ class GraphAuthoringController extends GraphController {
       this.clearPlotLines();
       this.drawGraph();
     }, true);
+  }
+
+  isMultipleYAxisEnabled() {
+    if (Array.isArray(this.authoringComponentContent.yAxis)) {
+      return true;
+    }
+    return false;
   }
 
   assetSelected(event, args) {
@@ -522,6 +531,40 @@ class GraphAuthoringController extends GraphController {
   authoringDeleteYAxisPlotLine(index) {
     this.authoringComponentContent.yAxis.plotLines.splice(index, 1);
     this.authoringViewComponentChanged();
+  }
+
+  enableMultipleYAxisChanged() {
+    if (this.enableMultipleYAxis) {
+      this.convertSingleYAxisToMultipleYAxis();
+      this.authoringViewComponentChanged();
+    } else {
+      if (confirm(this.$translate('graph.areYouSureYouWantToRemoveYAxis2'))) {
+        this.convertMultipleYAxisToSingleYAxis();
+        this.authoringViewComponentChanged();
+      } else {
+        this.enableMultipleYAxis = true;
+      }
+    }
+  }
+
+  convertSingleYAxisToMultipleYAxis() {
+    const firstYAxis = this.authoringComponentContent.yAxis;
+    const secondYAxis = {
+      title: {
+        text: '',
+        useHTML: true
+      },
+      min: 0,
+      max: null,
+      units: '',
+      locked: true,
+      opposite: true
+    };
+    this.authoringComponentContent.yAxis = [firstYAxis, secondYAxis];
+  }
+
+  convertMultipleYAxisToSingleYAxis() {
+    this.authoringComponentContent.yAxis = this.authoringComponentContent.yAxis[0];
   }
 }
 

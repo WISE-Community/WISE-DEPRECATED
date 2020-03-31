@@ -4,6 +4,7 @@ import ConfigService from '../../../../services/configService';
 import ClassroomMonitorProjectService from '../../../classroomMonitorProjectService';
 import TeacherDataService from '../../../../services/teacherDataService';
 import * as angular from 'angular';
+import NodeService from '../../../../services/nodeService';
 
 class MilestoneDetailsController {
   $translate: any;
@@ -13,11 +14,19 @@ class MilestoneDetailsController {
   periodId: number;
   requirements: any;
 
-  static $inject = ['$filter', '$scope', 'ConfigService', 'ProjectService', 'TeacherDataService'];
+  static $inject = [
+    '$filter',
+    '$scope',
+    'ConfigService',
+    'NodeService',
+    'ProjectService',
+    'TeacherDataService'
+  ];
   constructor(
     $filter,
     $scope,
     private ConfigService: ConfigService,
+    private NodeService: NodeService,
     private ProjectService: ClassroomMonitorProjectService,
     private TeacherDataService: TeacherDataService
   ) {
@@ -77,6 +86,10 @@ class MilestoneDetailsController {
     return this.ProjectService.getNodeTitleByNodeId(nodeId);
   }
 
+  getNodeNumberAndTitleByNodeId(nodeId) {
+    return `${this.getNodeNumberByNodeId(nodeId)}: ${this.getNodeTitleByNodeId(nodeId)}`;
+  }
+
   getDisplayUsernamesByWorkgroupId(workgroupId) {
     return this.ConfigService.getDisplayUsernamesByWorkgroupId(workgroupId);
   }
@@ -87,6 +100,10 @@ class MilestoneDetailsController {
 
   showWorkgroup(workgroup) {
     this.onShowWorkgroup({ value: workgroup });
+  }
+
+  showMilestoneStepInfo($event) {
+    this.NodeService.showNodeInfo(this.milestone.nodeId, $event);
   }
 
   visitNodeGrading() {
@@ -135,7 +152,7 @@ const MilestoneDetails = {
           </div>
         </div>
         <p ng-if="$ctrl.milestone.description">
-          <span class="heavy">{{ ::'description' | translate }}: </span>&nbsp;
+          <span class="heavy">{{ ::'description' | translate }}: </span>
           <compile data="$ctrl.milestone.description"></compile>
         </p>
         <p ng-if="$ctrl.milestone.params.targetDate"><span class="heavy">{{ ::'dueDate' | translate }}: </span> {{ $ctrl.milestone.params.targetDate | date: 'EEE MMM d, yyyy' }}</p>
@@ -144,6 +161,11 @@ const MilestoneDetails = {
           <a ng-repeat="requirement in $ctrl.requirements" ui-sref="root.project({nodeId: \'{{ requirement }}\'})" ng-click="$ctrl.visitNodeGrading(event)">
             {{ ::$ctrl.getNodeNumberByNodeId(requirement) }}: {{ ::$ctrl.getNodeTitleByNodeId(requirement) }}<span ng-if="!$last">, </span>
           </a>
+        </p>
+        <p ng-if="$ctrl.milestone.type === 'milestoneReport'">
+          <span class="heavy">{{ ::'itemLocation' | translate }}: </span>
+          {{ $ctrl.getNodeNumberAndTitleByNodeId($ctrl.milestone.nodeId) }}
+          (<a href ng-click="$ctrl.showMilestoneStepInfo($event)">{{ ::'STEP_INFO' | translate }}</a>)
         </p>
       </section>
       <section ng-if="$ctrl.milestone.type === 'milestoneReport'"

@@ -113,6 +113,15 @@
               </md-input-container>
             </div>
             <div>
+              <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
+                <label>Number of Y Axis</label>
+                <input type='number'
+                    ng-model='tableController.authoringComponentContent.numDataExplorerYAxis'
+                    ng-model-options='{ debounce: 1000 }'
+                    ng-change='tableController.authoringViewComponentChanged()'/>
+              </md-input-container>
+            </div>
+            <div>
               <md-checkbox class='md-primary'
                   style='margin-right: 40px;'
                   ng-model='tableController.authoringComponentContent.isDataExplorerAxisLabelsEditable'

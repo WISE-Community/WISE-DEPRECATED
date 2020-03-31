@@ -105,6 +105,7 @@ public class TeacherAPIController extends UserAPIController {
       periods.add(period.getName());
     }
     map.put("periods", periods);
+    map.put("lastRun", run.getLastRun());
     return map;
   }
 
@@ -205,6 +206,7 @@ public class TeacherAPIController extends UserAPIController {
       map.put("firstName", ud.getFirstname());
       map.put("lastName", ud.getLastname());
       map.put("permissions", getSharedOwnerPermissionsList(run, sharedOwner));
+      sharedOwners.add(map);
     }
     return sharedOwners;
   }

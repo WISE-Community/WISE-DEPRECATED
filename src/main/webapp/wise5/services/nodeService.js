@@ -878,6 +878,7 @@ class NodeService {
     this.$mdDialog.show({
       template: dialogString,
       fullscreen: true,
+      multiple: true,
       controller: [
         '$scope',
         '$mdDialog',

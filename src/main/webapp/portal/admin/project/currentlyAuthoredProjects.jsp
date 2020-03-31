@@ -50,7 +50,7 @@ table, tr, td {
                                            varStatus="loopStatus">
                                     <c:out value="${username}" /> |
                                     <a href="../../login/impersonate?username=${username}">Log in as this user</a> |
-                                    <a href="#" onclick="javascript:popup640('../../teacher/account/info?username=${username}');">info</a>
+                                    <a target='_blank' href='../../teacher/account/info?username=${username}'>info</a>
                                     <c:if test="${!loopStatus.isLast()}"><br/></c:if>
                                 </c:forEach>
                             </td>

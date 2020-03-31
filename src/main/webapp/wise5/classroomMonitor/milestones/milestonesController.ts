@@ -842,6 +842,7 @@ class MilestonesController {
         template: template,
         ariaLabel: title,
         fullscreen: true,
+        multiple: true,
         targetEvent: $event,
         clickOutsideToClose: true,
         escapeToClose: true,
