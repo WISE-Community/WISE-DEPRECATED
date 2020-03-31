@@ -2210,6 +2210,8 @@ class GraphController extends ComponentController {
       this.parseLatestTrial(studentData, params);
     } else if (name === 'trialIdsToDelete') {
       this.deleteTrialsByTrialId(studentData.trialIdsToDelete);
+    } else if (name === 'clearGraph' && studentData.clearGraph) {
+      this.clearGraph();
     }
   }
 
@@ -2223,6 +2225,13 @@ class GraphController extends ComponentController {
         this.deleteTrialId(trialIdToDelete);
       }
     }
+  }
+
+  clearGraph() {
+    this.trials = [];
+    this.newTrial();
+    this.resetSeriesHelper();
+    this.drawGraph();
   }
 
   /**
