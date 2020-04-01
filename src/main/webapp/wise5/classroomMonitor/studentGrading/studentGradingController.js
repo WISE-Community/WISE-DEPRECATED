@@ -56,7 +56,7 @@ class StudentGradingController {
         this.$scope.$on('projectSaved', (event, args) => {
             // project info has changed, so update max scores
             this.maxScore = this.StudentStatusService.getMaxScoreForWorkgroupId(this.workgroupId);
-            this.updateNodeMaxScores();
+            this.setNodesById();
         });
 
         this.$scope.$on('notificationChanged', (event, notification) => {
@@ -371,7 +371,7 @@ class StudentGradingController {
         let show = false;
         let node = this.nodesById[nodeId];
 
-        if (node.isVisible && (node.hasWork || this.showNonWorkNodes)) {
+        if (node.isVisible && (this.ProjectService.nodeHasWork(nodeId) || this.showNonWorkNodes)) {
             let currentStep = this.TeacherDataService.getCurrentStep();
             if (currentStep) {
                 // there is a currently selected step, so check if this one matches

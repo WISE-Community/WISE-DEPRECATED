@@ -67,7 +67,7 @@ import org.wise.vle.web.SecurityUtils;
 
 /**
  * Handles requests for User information and VLE config
- * 
+ *
  * @author Patrick Lawler
  * @author Geoffrey Kwan
  * @author Hiroki Terashima
@@ -236,9 +236,9 @@ public class InformationController {
 
     Project project = run.getProject();
     if (hasRunWriteAccess(signedInUser, run)) {
-      String projectId = project.getId().toString();
-      String saveProjectURL = contextPath + "/project/save/" + projectId;
-      config.put("saveProjectURL", saveProjectURL);
+      config.put("canEditProject", true);
+      config.put("saveProjectURL",
+          contextPath + "/author/project/save/" + project.getId().toString());
     }
 
     addCommonConfigParameters(request, config, project);
@@ -271,7 +271,7 @@ public class InformationController {
 
   /**
    * Get an user info object for the logged in user for the specified run
-   * 
+   *
    * @return UserInfo as JSON object
    * @throws ObjectNotFoundException
    * @throws NumberFormatException
@@ -389,7 +389,7 @@ public class InformationController {
 
   /**
    * Get student classmates except yourself
-   * 
+   *
    * @param run
    * @param workgroup
    * @param loggedInUser
@@ -740,7 +740,7 @@ public class InformationController {
 
   /**
    * Adds a dummy user info to the config object, used in previewing WISE5 projects
-   * 
+   *
    * @param config
    */
   private void addDummyUserInfoToConfig(JSONObject config) {
@@ -760,7 +760,7 @@ public class InformationController {
 
   /**
    * Gets the workgroup for the currently-logged in user so that she may view the VLE.
-   * 
+   *
    * @param run
    * @return Workgroup for the currently-logged in user
    * @throws ObjectNotFoundException
@@ -787,7 +787,7 @@ public class InformationController {
 
   /**
    * Obtain the user names for this workgroup
-   * 
+   *
    * @param workgroup
    *                    a Workgroup that we want the names from
    * @return a string of user names delimited by : e.g. "Jennifer Chiu (JenniferC829):helen zhang
@@ -807,7 +807,7 @@ public class InformationController {
 
   /**
    * Obtain the first name, last name, and login for the user
-   * 
+   *
    * @param user
    *               the User we want to obtain the first, last, login for
    * @return the first, last and login in this format below Jennifer Chiu (JenniferC829)
@@ -825,7 +825,7 @@ public class InformationController {
 
   /**
    * Get the student ids from the workgroup
-   * 
+   *
    * @param workgroup
    *                    the workgroup to get student ids from
    * @return a JSONArray containing the student ids
@@ -840,7 +840,7 @@ public class InformationController {
 
   /**
    * Get the classmate user info
-   * 
+   *
    * @param classmateWorkgroup
    *                             the workgroup of the classmate
    * @return a json string containing the info for the classmate
@@ -887,7 +887,7 @@ public class InformationController {
   /**
    * Get an array of user objects. Each user object contains the user id, name, first name, and last
    * name.
-   * 
+   *
    * @param workgroup
    * @return A JSONArray of user JSONObjects.
    */
