@@ -145,7 +145,6 @@ class StudentGradingController {
             if (isApplicationNode) {
               let node = this.ProjectService.getNodeById(id);
               this.nodesById[id] = node;
-              this.nodeVisibilityById[id] = false;
               this.updateNode(id, true);
             }
         }
