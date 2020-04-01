@@ -12,7 +12,9 @@ class WorkgroupNodeGradingController {
 
         this.$onInit = () => {
             this.nodeContent = this.getNodeContent();
-            this.components = this.getComponents();
+            this.components = this.getComponents().filter((component) => {
+              return this.ProjectService.componentHasWork(component);
+            });
             this.teacherWorkgroupId = this.ConfigService.getWorkgroupId();
         };
 
@@ -51,9 +53,6 @@ class WorkgroupNodeGradingController {
                 if (this.isDisabled) {
                     component.isDisabled = true;
                 }
-
-                // set whether component captures student work (for filtering purposes)
-                component.hasWork = this.ProjectService.componentHasWork(component);
             }
         }
 
@@ -131,7 +130,7 @@ const WorkgroupNodeGrading = {
     },
     template:
         `<div class="grading__item">
-            <div id="component_{{::component.id}}_{{::$ctrl.workgroupId}}" class="component component--grading" ng-repeat='component in $ctrl.components | filter:{hasWork: true}'>
+            <div id="component_{{::component.id}}_{{::$ctrl.workgroupId}}" class="component component--grading" ng-repeat='component in $ctrl.components'>
                 <div ng-show="$ctrl.isComponentVisible(component.id)">
                     <h3 class="accent-2 md-body-2 gray-lightest-bg component__header">
                         {{ $index+1 + '. ' + $ctrl.getComponentTypeLabel(component.type) }}&nbsp;

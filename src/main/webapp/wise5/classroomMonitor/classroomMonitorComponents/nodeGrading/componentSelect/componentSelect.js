@@ -11,8 +11,12 @@ class ComponentSelectController {
         this.$translate = this.$filter('translate');
 
         this.$onInit = () => {
-            this.selectedComponents = [];
-            this.components = this.getComponents();
+            this.components = this.getNodeContent().components.filter((component) => {
+              return this.ProjectService.componentHasWork(component);
+            });
+            this.selectedComponents = this.components.map((component) => {
+              return component.id;
+            });
         };
     };
 
@@ -29,35 +33,6 @@ class ComponentSelectController {
     }
 
     /**
-     * Get the components for this node
-     * @return an array that contains the content for the components
-     */
-    getComponents() {
-        let components = null;
-        let nodeContent = this.getNodeContent();
-
-        if (nodeContent) {
-            components = nodeContent.components;
-
-            if (components) {
-                for (let c = 0; c < components.length; c++) {
-                    let component = components[c];
-
-                    // set whether component captures student work (for filtering purposes)
-                    component.hasWork = this.ProjectService.componentHasWork(component);
-
-                    if (component.hasWork) {
-                        // component has work, so add it to the initial selectedComponents array
-                        this.selectedComponents.push(component.id);
-                    }
-                }
-            }
-        }
-
-        return components;
-    }
-
-    /**
      * Get the component type label for the given component type
      * @param componentType string
      * @return string of the component type label
@@ -71,7 +46,7 @@ class ComponentSelectController {
      * @return string selected text
      */
     getSelectedText() {
-        let nComponents = this.$filter('filter')(this.components, {hasWork: true}).length;
+        let nComponents = this.components.length;
         return this.$translate('selectedComponentsLabel', { selected: this.selectedComponents.length, total: nComponents });
     }
 
@@ -108,24 +83,24 @@ const ComponentSelect = {
     },
     template:
         `<md-select class="md-no-underline md-button md-raised"
-                    ng-if="($ctrl.components | filter:{hasWork: true}).length > 1"
+                    ng-if="$ctrl.components.length > 1"
                     ng-model="$ctrl.selectedComponents"
                     ng-change="$ctrl.selectedComponentsChange()"
                     md-selected-html="$ctrl.getSelectedText()"
                     placeholder="{{ ::'assessmentItemsToShow' | translate }"
                     multiple>
             <md-optgroup label="{{ ::'assessmentItemsToShow' | translate }}">
-                <md-option ng-value="component.id" ng-repeat="component in $ctrl.components | filter:{hasWork: true}">
+                <md-option ng-value="component.id" ng-repeat="component in $ctrl.components">
                     {{ $index+1 }}: {{ $ctrl.getComponentTypeLabel(component.type) }}
                 </md-option>
             </md-optgroup>
         </md-select>
         <md-button class="md-body-1 md-raised" aria-label="{{ ::'assessmentItemsToShow' | translate }" disabled
-                   ng-if="($ctrl.components | filter:{hasWork: true}).length === 0">
+                   ng-if="$ctrl.components.length === 0">
             {{ ::'numberOfAssessmentItems_0' | translate }}
         </md-button>
         <md-button class="md-body-1 md-raised" aria-label="{{ ::'assessmentItemsToShow' | translate }" disabled
-                   ng-if="($ctrl.components | filter:{hasWork: true}).length === 1">
+                   ng-if="$ctrl.components.length === 1">
             {{ ::'numberOfAssessmentItems_1' | translate }}
         </md-button>`,
     controller: ComponentSelectController
