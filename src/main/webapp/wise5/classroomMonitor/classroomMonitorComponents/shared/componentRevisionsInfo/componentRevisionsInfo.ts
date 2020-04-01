@@ -18,7 +18,7 @@ class ComponentRevisionsInfoController {
   toWorkgroupId: number;
   usernames: any;
 
-  static $inject = ['$filter', '$mdDialog', '$scope', 'ConfigService', 'TeacherDataService'];
+  static $inject = ['$filter', '$mdDialog', 'ConfigService', 'TeacherDataService'];
 
   constructor(
     $filter: any,
