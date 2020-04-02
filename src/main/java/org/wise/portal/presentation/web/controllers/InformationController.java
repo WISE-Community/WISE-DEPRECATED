@@ -238,6 +238,7 @@ public class InformationController {
     }
     config.put("canViewStudentNames", isAllowedToViewStudentNames(run, signedInUser));
     config.put("canGradeStudentWork", runService.isAllowedToGradeStudentWork(run, signedInUser));
+    config.put("canAuthorProject", projectService.canAuthorProject(project, signedInUser));
     addCommonConfigParameters(request, config, project);
     printConfigToResponse(response, config);
   }

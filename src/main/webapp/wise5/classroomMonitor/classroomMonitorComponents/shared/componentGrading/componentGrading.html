@@ -25,7 +25,7 @@
                    placeholder="0"
                    min="0"
                    ng-model="$ctrl.maxScore"
-                   ng-disabled="$ctrl.isDisabled || !$ctrl.canGradeStudentWork"
+                   ng-disabled="$ctrl.isDisabled || !$ctrl.canAuthorProject"
                    ng-change="$ctrl.updateMaxScore()"
                    ng-model-options="{ debounce: 1000 }">
         </md-input-container>

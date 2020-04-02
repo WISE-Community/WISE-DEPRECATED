@@ -358,7 +358,8 @@ class ConfigService {
     // a switched user (admin/researcher user impersonating a teacher) should not be able to view/grade
     return {
       canViewStudentNames: this.config.canViewStudentNames && !this.isSwitchedUser(),
-      canGradeStudentWork: this.config.canGradeStudentWork && !this.isSwitchedUser()
+      canGradeStudentWork: this.config.canGradeStudentWork && !this.isSwitchedUser(),
+      canAuthorProject: this.config.canAuthorProject && !this.isSwitchedUser()
     };
   }
 
