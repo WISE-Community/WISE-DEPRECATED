@@ -12,7 +12,8 @@
                               placeholder="Enter comment here"
                               ng-model="$ctrl.comment"
                               ng-change="$ctrl.postAnnotation('comment')"
-                              ng-model-options="{ debounce: 10000 }"></textarea>
+                              ng-model-options="{ debounce: 10000 }"
+                              ng-disabled="!$ctrl.canGradeStudentWork"></textarea>
                 </div>
             </md-input-container>
         </div>
@@ -28,7 +29,8 @@
                        placeholder="0"
                        ng-model="$ctrl.score"
                        ng-change="$ctrl.postAnnotation('score')"
-                       ng-model-options="{ debounce: 5000 }">
+                       ng-model-options="{ debounce: 5000 }"
+                       ng-disabled="!$ctrl.canGradeStudentWork">
                 <span class="annotations--grading__score__max md-subhead text-secondary"> /{{$ctrl.maxScore}}</span>
             </md-input-container>
         </div>

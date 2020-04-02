@@ -6,9 +6,6 @@ import ClassroomMonitorProjectService from '../classroomMonitorProjectService';
 import TeacherDataService from '../../services/teacherDataService';
 
 class NotebookGradingController {
-  canGradeStudentWork: boolean = true;
-  canViewStudentNames: boolean = true;
-
   notebookConfig: any;
   showAllNotes: boolean = false;
   showAllReports: boolean = false;
@@ -36,23 +33,6 @@ class NotebookGradingController {
       let workgroup = this.workgroups[i];
       this.showNoteForWorkgroup[workgroup.workgroupId] = false;
       this.showReportForWorkgroup[workgroup.workgroupId] = false;
-    }
-
-    // get the role of the teacher for the run e.g. 'owner', 'write', 'read'
-    let role = this.ConfigService.getTeacherRole(this.teacherWorkgroupId);
-
-    if (role === 'owner') {
-      // the teacher is the owner of the run and has full access
-      this.canViewStudentNames = true;
-      this.canGradeStudentWork = true;
-    } else if (role === 'write') {
-      // the teacher is a shared teacher that can grade the student work
-      this.canViewStudentNames = true;
-      this.canGradeStudentWork = true;
-    } else if (role === 'read') {
-      // the teacher is a shared teacher that can only view the student work
-      this.canViewStudentNames = false;
-      this.canGradeStudentWork = false;
     }
 
     // save event when notebook grading view is displayed

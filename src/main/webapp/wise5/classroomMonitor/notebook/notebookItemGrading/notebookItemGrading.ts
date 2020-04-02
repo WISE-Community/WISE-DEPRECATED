@@ -8,6 +8,7 @@ import UtilService from '../../../services/utilService';
 
 class NotebookItemGradingController {
   annotationId: any;
+  canGradeStudentWork: boolean;
   comment: any;
   componentId: string;
   componentStates: any[];
@@ -87,6 +88,7 @@ class NotebookItemGradingController {
       // set the period id
       this.periodId = toUserInfo.periodId;
     }
+    this.canGradeStudentWork = this.ConfigService.getPermissions().canGradeStudentWork;
 
     // get the workgroup user names
     let usernamesArray = this.ConfigService.getUsernamesByWorkgroupId(this.toWorkgroupId);

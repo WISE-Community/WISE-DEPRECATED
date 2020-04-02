@@ -22,7 +22,6 @@ class StudentGradingController {
   showNonWorkNodes: any;
   sort: any;
   totalScore: number;
-  updateNodeMaxScores: any;
   workgroupId: number;
 
   static $inject = [
@@ -59,7 +58,7 @@ class StudentGradingController {
 
     this.$scope.$on('projectSaved', (event, args) => {
       this.maxScore = this.StudentStatusService.getMaxScoreForWorkgroupId(this.workgroupId);
-      this.updateNodeMaxScores();
+      this.setNodesById();
     });
 
     this.$scope.$on('notificationChanged', (event, notification) => {
@@ -175,7 +174,6 @@ class StudentGradingController {
       if (isApplicationNode) {
         let node = this.ProjectService.getNodeById(id);
         this.nodesById[id] = node;
-        this.nodeVisibilityById[id] = false;
         this.updateNode(id, true);
       }
     }
@@ -408,7 +406,7 @@ class StudentGradingController {
     let show = false;
     let node = this.nodesById[nodeId];
 
-    if (node.isVisible && (node.hasWork || this.showNonWorkNodes)) {
+    if (node.isVisible && (this.ProjectService.nodeHasWork(nodeId) || this.showNonWorkNodes)) {
       let currentStep = this.TeacherDataService.getCurrentStep();
       if (currentStep) {
         // there is a currently selected step, so check if this one matches

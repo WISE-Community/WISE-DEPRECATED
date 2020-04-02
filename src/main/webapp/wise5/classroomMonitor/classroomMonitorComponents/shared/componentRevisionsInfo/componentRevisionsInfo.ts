@@ -35,13 +35,7 @@ class ComponentRevisionsInfoController {
     if (toUserInfo) {
       this.periodId = toUserInfo.periodId;
     }
-
-    let usernamesArray = this.ConfigService.getUsernamesByWorkgroupId(this.toWorkgroupId);
-    this.usernames = usernamesArray
-      .map(obj => {
-        return obj.name;
-      })
-      .join(', ');
+    this.usernames = this.ConfigService.getDisplayNamesByWorkgroupId(this.toWorkgroupId);
   }
 
   $onChanges(changes) {

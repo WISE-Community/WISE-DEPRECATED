@@ -10,6 +10,8 @@ import * as angular from 'angular';
 class ComponentGradingController {
   $translate: any;
   annotationId: number;
+  canAuthorProject: boolean;
+  canGradeStudentWork: boolean;
   comment: string;
   componentId: string;
   componentStateId: number;
@@ -83,6 +85,9 @@ class ComponentGradingController {
   $onInit() {
     this.runId = this.ConfigService.getRunId();
 
+    const permissions = this.ConfigService.getPermissions();
+    this.canGradeStudentWork = permissions.canGradeStudentWork;
+    this.canAuthorProject = permissions.canAuthorProject;
     let toUserInfo = this.ConfigService.getUserInfoByWorkgroupId(this.toWorkgroupId);
     if (toUserInfo) {
       this.periodId = toUserInfo.periodId;

@@ -90,8 +90,8 @@ class MilestoneDetailsController {
     return `${this.getNodeNumberByNodeId(nodeId)}: ${this.getNodeTitleByNodeId(nodeId)}`;
   }
 
-  getDisplayUsernamesByWorkgroupId(workgroupId) {
-    return this.ConfigService.getDisplayUsernamesByWorkgroupId(workgroupId);
+  getDisplayNamesByWorkgroupId(workgroupId) {
+    return this.ConfigService.getDisplayNamesByWorkgroupId(workgroupId);
   }
 
   getAvatarColorForWorkgroupId(workgroupId) {
@@ -217,7 +217,7 @@ const MilestoneDetails = {
             <div class="md-avatar" hide-xs>
               <md-icon class="md-36" style="color: {{ $ctrl.getAvatarColorForWorkgroupId(workgroup.workgroupId) }};"> account_circle </md-icon>
             </div>
-            <p class="heavy">{{ $ctrl.getDisplayUsernamesByWorkgroupId(workgroup.workgroupId) }}</p>
+            <p class="heavy">{{ $ctrl.getDisplayNamesByWorkgroupId(workgroup.workgroupId) }}</p>
             <div class="md-secondary-container heavy">
               <span ng-if="workgroup.achievementTime !== null" class="success">
                 {{ workgroup.achievementTime | amTimeAgo }}
