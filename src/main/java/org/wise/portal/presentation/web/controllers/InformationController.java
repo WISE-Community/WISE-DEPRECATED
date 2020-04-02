@@ -220,27 +220,25 @@ public class InformationController {
       throws ObjectNotFoundException, IOException, JSONException {
     JSONObject config = new JSONObject();
     config.put("mode", "classroomMonitor");
-
     Run run = runService.retrieveById(runId);
     getRunConfigParameters(request, config, run);
-
     User signedInUser = ControllerUtil.getSignedInUser();
     String contextPath = request.getContextPath();
-
     if (hasRunReadAccess(signedInUser, run)) {
       config.put("runCode", run.getRuncode());
       config.put("teacherDataURL", contextPath + "/teacher/data");
       config.put("runDataExportURL", contextPath + "/teacher/export");
       config.put("studentNotebookURL", contextPath + "/teacher/notebook/" + runId);
     }
-
     Project project = run.getProject();
     if (hasRunWriteAccess(signedInUser, run)) {
       config.put("canEditProject", true);
       config.put("saveProjectURL",
           contextPath + "/author/project/save/" + project.getId().toString());
     }
-
+    config.put("canViewStudentNames", isAllowedToViewStudentNames(run, signedInUser));
+    config.put("canGradeStudentWork", runService.isAllowedToGradeStudentWork(run, signedInUser));
+    config.put("canAuthorProject", projectService.canAuthorProject(project, signedInUser));
     addCommonConfigParameters(request, config, project);
     printConfigToResponse(response, config);
   }

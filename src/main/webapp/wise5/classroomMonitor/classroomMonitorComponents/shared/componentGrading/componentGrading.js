@@ -24,7 +24,9 @@ class ComponentGradingController {
 
         this.$onInit = () => {
             this.runId = this.ConfigService.getRunId();
-
+            const permissions = this.ConfigService.getPermissions();
+            this.canGradeStudentWork = permissions.canGradeStudentWork;
+            this.canAuthorProject = permissions.canAuthorProject;
             let toUserInfo = this.ConfigService.getUserInfoByWorkgroupId(this.toWorkgroupId);
             if (toUserInfo) {
                 // set the period id

@@ -13,7 +13,6 @@ class ConfigService {
   setConfig(config) {
     this.config = config;
     this.sortClassmateUserInfosAlphabeticallyByName();
-    this.setPermissions();
     this.setClassmateDisplayNames();
   }
 
@@ -355,32 +354,12 @@ class ConfigService {
     return 0;
   }
 
-  setPermissions() {
-    let role = this.getTeacherRole(this.getWorkgroupId());
-    if (role === 'owner') {
-      // the teacher is the owner of the run and has full access
-      this.config.canViewStudentNames = true;
-      this.config.canGradeStudentWork = true;
-    } else if (role === 'write') {
-      // the teacher is a shared teacher that can grade the student work
-      this.config.canViewStudentNames = true;
-      this.config.canGradeStudentWork = true;
-    } else if (role === 'read') {
-      // the teacher is a shared teacher that can only view the student work
-      this.config.canViewStudentNames = false;
-      this.config.canGradeStudentWork = false;
-    } else {
-      // teacher role is null, so assume we're in student mode
-      this.config.canViewStudentNames = true;
-      this.config.canGradeStudentWork = false;
-    }
-  }
-
   getPermissions() {
     // a switched user (admin/researcher user impersonating a teacher) should not be able to view/grade
     return {
       canViewStudentNames: this.config.canViewStudentNames && !this.isSwitchedUser(),
-      canGradeStudentWork: this.config.canGradeStudentWork && !this.isSwitchedUser()
+      canGradeStudentWork: this.config.canGradeStudentWork && !this.isSwitchedUser(),
+      canAuthorProject: this.config.canAuthorProject && !this.isSwitchedUser()
     };
   }
 

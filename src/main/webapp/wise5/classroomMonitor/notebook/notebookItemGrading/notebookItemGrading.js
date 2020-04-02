@@ -37,6 +37,7 @@ class NotebookItemGradingController {
               // set the period id
               this.periodId = toUserInfo.periodId;
           }
+          this.canGradeStudentWork = this.ConfigService.getPermissions().canGradeStudentWork;
 
           // get the workgroup user names
           let usernamesArray = this.ConfigService.getUsernamesByWorkgroupId(this.toWorkgroupId);

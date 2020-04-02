@@ -34,26 +34,6 @@ class NotebookGradingController {
             this.showReportForWorkgroup[workgroup.workgroupId] = false;
         }
 
-        this.canViewStudentNames = true;
-        this.canGradeStudentWork = true;
-
-        // get the role of the teacher for the run e.g. 'owner', 'write', 'read'
-        let role = this.ConfigService.getTeacherRole(this.teacherWorkgroupId);
-
-        if (role === 'owner') {
-            // the teacher is the owner of the run and has full access
-            this.canViewStudentNames = true;
-            this.canGradeStudentWork = true;
-        } else if (role === 'write') {
-            // the teacher is a shared teacher that can grade the student work
-            this.canViewStudentNames = true;
-            this.canGradeStudentWork = true;
-        } else if (role === 'read') {
-            // the teacher is a shared teacher that can only view the student work
-            this.canViewStudentNames = false;
-            this.canGradeStudentWork = false;
-        }
-
         // save event when notebook grading view is displayed
         let context = "ClassroomMonitor", nodeId = null, componentId = null, componentType = null,
             category = "Navigation", event = "notebookViewDisplayed", data = {};

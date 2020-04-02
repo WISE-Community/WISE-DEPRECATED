@@ -13,7 +13,7 @@
                    placeholder="0"
                    min="0"
                    ng-model="$ctrl.score"
-                   ng-disabled="$ctrl.isDisabled"
+                   ng-disabled="$ctrl.isDisabled || !$ctrl.canGradeStudentWork"
                    ng-change="$ctrl.postAnnotation('score')"
                    ng-model-options="{ debounce: 1000 }">
         </md-input-container>
@@ -25,7 +25,7 @@
                    placeholder="0"
                    min="0"
                    ng-model="$ctrl.maxScore"
-                   ng-disabled="$ctrl.isDisabled"
+                   ng-disabled="$ctrl.isDisabled || !$ctrl.canAuthorProject"
                    ng-change="$ctrl.updateMaxScore()"
                    ng-model-options="{ debounce: 1000 }">
         </md-input-container>
@@ -38,7 +38,7 @@
                           md-detect-hidden
                           placeholder="{{ ::'enterCommentHere' | translate }}"
                           ng-model="$ctrl.comment"
-                          ng-disabled="$ctrl.isDisabled"
+                          ng-disabled="$ctrl.isDisabled || !$ctrl.canGradeStudentWork"
                           ng-change="$ctrl.postAnnotation('comment')"
                           ng-model-options="{ debounce: 5000 }"></textarea>
             </div>

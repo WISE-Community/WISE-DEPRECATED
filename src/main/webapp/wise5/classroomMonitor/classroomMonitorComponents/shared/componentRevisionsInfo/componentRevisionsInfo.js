@@ -16,18 +16,12 @@ class ComponentRevisionsInfoController {
 
         this.$onInit = () => {
             this.runId = this.ConfigService.getRunId();
-
             let toUserInfo = this.ConfigService.getUserInfoByWorkgroupId(this.toWorkgroupId);
             if (toUserInfo) {
                 // set the period id
                 this.periodId = toUserInfo.periodId;
             }
-
-            // get the workgroup user names
-            let usernamesArray = this.ConfigService.getUsernamesByWorkgroupId(this.toWorkgroupId);
-            this.usernames = usernamesArray.map( (obj) => {
-                return obj.name;
-            }).join(', ');
+            this.usernames = this.ConfigService.getDisplayNamesByWorkgroupId(this.toWorkgroupId);
         };
 
         this.$onChanges = (changes) => {
