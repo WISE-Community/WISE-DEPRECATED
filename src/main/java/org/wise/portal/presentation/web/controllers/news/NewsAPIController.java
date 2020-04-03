@@ -4,8 +4,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,6 +21,7 @@ import org.wise.portal.domain.user.User;
 
 import javassist.tools.rmi.ObjectNotFoundException;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
@@ -62,8 +65,8 @@ public class NewsAPIController {
   }
 
   @PostMapping("/create")
-  @Secured({ "ROLE_ADMIN" })
-  public String createNewsItem(Authentication auth, @RequestParam("date") Date date,
+  public String createNewsItem(Authentication auth,
+      @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date date,
       @RequestParam("title") String title, @RequestParam("news") String news,
       @RequestParam("type") String type) {
     JSONObject response = new JSONObject();
@@ -74,7 +77,8 @@ public class NewsAPIController {
         response.put("message", "User not found");
         return response.toString();
       }
-      response = getNewsItemJSON(newsItemService.createNewsItem(date, user, title, news, type));
+      JSONObject newsItem = getNewsItemJSON(newsItemService.createNewsItem(date, user, title, news, type));
+      response.put("newsItem", newsItem);
       response.put("status", "success");
     } catch (JSONException e) {
       e.printStackTrace();
@@ -83,10 +87,10 @@ public class NewsAPIController {
   }
 
   @PostMapping("/update")
-  @Secured({ "ROLE_ADMIN" })
   public String updateNewsItem(Authentication auth, @RequestParam("id") Integer id,
-      @RequestParam("date") Date date, @RequestParam("title") String title,
-      @RequestParam("news") String news, @RequestParam("type") String type) {
+      @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Date date,
+      @RequestParam("title") String title, @RequestParam("news") String news,
+      @RequestParam("type") String type) {
     JSONObject response = new JSONObject();
     User user = userService.retrieveUserByUsername(auth.getName());
     try {
@@ -97,25 +101,20 @@ public class NewsAPIController {
       }
       newsItemService.updateNewsItem(id, date, user, title, news, type);
       response.put("status", "success");
-    } catch (JSONException je) {
-      je.printStackTrace();
-    } catch (ObjectNotFoundException ne) {
-      ne.printStackTrace();
+    } catch (Exception e) {
+      e.printStackTrace();
     }
     return response.toString();
   }
 
-  @DeleteMapping("/delete")
-  @Secured({ "ROLE_ADMIN" })
-  public String deleteNewsItem(@RequestParam("id") Integer id) {
+  @DeleteMapping("/delete/{id}")
+  public String deleteNewsItem(@PathVariable Integer id) {
     JSONObject response = new JSONObject();
     try {
       newsItemService.deleteNewsItem(id);
       response.put("status", "success");
-    } catch (JSONException je) {
-      je.printStackTrace();
-    } catch (ObjectNotFoundException ne) {
-      ne.printStackTrace();
+    } catch (Exception e) {
+      e.printStackTrace();
     }
     return response.toString();
   }
