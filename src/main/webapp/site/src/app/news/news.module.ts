@@ -9,7 +9,7 @@ import { SharedModule } from '../modules/shared/shared.module';
 import { NewsItemDialogComponent } from './news-item-dialog/news-item-dialog.component';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material';
+import { MatFormFieldModule, MatSnackBarModule } from '@angular/material';
 
 @NgModule({
   imports: [
@@ -22,7 +22,8 @@ import { MatFormFieldModule } from '@angular/material';
     CKEditorModule,
     FormsModule,
     ReactiveFormsModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatSnackBarModule
   ],
   declarations: [
     NewsComponent,

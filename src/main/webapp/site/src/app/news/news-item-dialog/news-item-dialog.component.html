@@ -1,5 +1,5 @@
 <h2 class="mat-dialog-title" i18n>News Item</h2>
-<div mat-dialog-content>
+<div mat-dialog-content *ngIf="isAddMode || isEditMode">
     <form role="form" fxLayout="row wrap" fxLayoutGap="8px">
         <mat-form-field fxFlex=50 required>
             <mat-label i18n>Title</mat-label>
@@ -17,8 +17,13 @@
     </form>
     <ckeditor [config]="{ placeholder: 'Content..' }" [editor]="Editor" [data]="news.value" (change)="onChange($event)"></ckeditor>
 </div>
+<div mat-dialog-content *ngIf="isDeleteMode" class="info-block">
+    <p i18n>Are you sure you want to delete this news item? This action is not reversible.</p>
+</div>
 <div mat-dialog-actions fxLayoutGap="8px" id="news-item-actions">
+    <span *ngIf="isDeleteMode" fxFlex="1 1 auto"></span>
     <button mat-button (click)="close()" color="accent" i18n>Cancel</button>
     <button *ngIf="isAddMode" mat-button color="primary" (click)="publish()" i18n>Publish</button>
-    <button *ngIf="isEditMode" mat-button color="primary" (click)="save()" i18n>Save</button>
+    <button *ngIf="isEditMode" mat-button color="primary" (click)="update()" i18n>Save</button>
+    <button *ngIf="isDeleteMode" mat-button color="primary" (click)="delete()" i18n>Proceed</button>
 </div>

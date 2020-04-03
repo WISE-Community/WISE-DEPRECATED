@@ -20,7 +20,7 @@ const materialModules = [
   MatInputModule,
   MatFormFieldModule,
   MatSelectModule,
-  MatProgressBarModule
+  MatProgressBarModule,
 ];
 
 import { BlurbComponent } from './blurb/blurb.component';

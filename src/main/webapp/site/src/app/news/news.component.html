@@ -19,11 +19,11 @@
     <section>
       <div fxLayout="row" *ngIf="isAdmin" id="btn-add-news-item">
         <span fxFlex="1 1 auto"></span>
-        <button mat-flat-button color="accent" (click)="addNewsItem()"><mat-icon>add</mat-icon>Add News Item</button>
+        <button mat-flat-button color="accent" (click)="createNewsItem()"><mat-icon>add</mat-icon>Add News Item</button>
       </div>
       <div class="content-block">
         <app-timeline>
-          <ng-container *ngFor="let newsItem of allNewsItems; let i=index">
+          <ng-container *ngFor="let newsItem of filteredNewsItems; let i=index">
             <app-timeline-item *ngIf="i < 10 || showAll">
               <app-timeline-item-label>
                 <strong>{{ newsItem.date | amDateFormat:'MMM D, Y' }}</strong>
@@ -36,9 +36,9 @@
                   </mat-card-content>
                   <mat-card-actions *ngIf="isAdmin">
                     <button mat-button color="primary"><span i18n>Read More</span></button>
-                    <button mat-button><span i18n>Hide</span></button>
+                    <button mat-button (click)="hideNewsItem(i)"><span i18n>Hide</span></button>
                     <button mat-button color="accent" (click)="editNewsItem(i)"><span i18n>Edit</span></button>
-                    <button mat-button color="accent"><span i18n>Delete</span></button>
+                    <button mat-button color="accent" (click)="deleteNewsItem(i)"><span i18n>Delete</span></button>
                   </mat-card-actions>
                 </mat-card>
               </app-timeline-item-content>
