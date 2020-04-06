@@ -144,7 +144,20 @@ function createStudentEventExportRow() {
   const studentName3 = null;
   const periodName = '5';
   const event = { event: 'nodeEntered', data: { nodeId: 'node1' } };
-  const row = dataExportController.createStudentEventExportRow(columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId1, wiseId2, wiseId3, studentName1, studentName2, studentName3, periodName, event);
+  const row = dataExportController.createStudentEventExportRow(
+    columnNames,
+    columnNameToNumber,
+    rowCounter,
+    workgroupId,
+    wiseId1,
+    wiseId2,
+    wiseId3,
+    studentName1,
+    studentName2,
+    studentName3,
+    periodName,
+    event
+  );
   return { row, columnNameToNumber };
 }
 
@@ -156,6 +169,14 @@ function createTeacherEventExportRow() {
   const wiseId = 1000;
   const username = 'Mrs. Puff';
   const event = { event: 'nodeGradingViewDisplayed', data: { nodeId: 'node1' } };
-  const row = dataExportController.createTeacherEventExportRow(columnNames, columnNameToNumber, rowCounter, workgroupId, wiseId, username, event);
+  const row = dataExportController.createTeacherEventExportRow(
+    columnNames,
+    columnNameToNumber,
+    rowCounter,
+    workgroupId,
+    wiseId,
+    username,
+    event
+  );
   return { row, columnNameToNumber };
 }

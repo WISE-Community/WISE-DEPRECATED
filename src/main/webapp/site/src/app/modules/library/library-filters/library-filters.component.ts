@@ -1,4 +1,12 @@
-import { Component, OnInit, Input, SimpleChanges, Output, EventEmitter, ViewEncapsulation } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  Input,
+  SimpleChanges,
+  Output,
+  EventEmitter,
+  ViewEncapsulation
+} from '@angular/core';
 import { LibraryProject } from '../libraryProject';
 import { LibraryService } from '../../../services/library.service';
 import { NGSSStandards } from '../ngssStandards';
@@ -12,12 +20,10 @@ import { UtilService } from '../../../services/util.service';
   styleUrls: ['./library-filters.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-
 export class LibraryFiltersComponent implements OnInit {
-
   @Input()
   isSplitScreen: boolean = false;
-  
+
   allProjects: LibraryProject[] = [];
   libraryProjects: LibraryProject[] = [];
   communityProjects: LibraryProject[] = [];
@@ -32,24 +38,27 @@ export class LibraryFiltersComponent implements OnInit {
   peValue = [];
   showFilters: boolean = false;
 
-  constructor(private libraryService: LibraryService,
-              private utilService: UtilService) {
+  constructor(private libraryService: LibraryService, private utilService: UtilService) {
     libraryService.officialLibraryProjectsSource$.subscribe((libraryProjects: LibraryProject[]) => {
-        this.libraryProjects = libraryProjects;
-        this.populateFilterOptions();
-      });
-    libraryService.communityLibraryProjectsSource$.subscribe((communityProjects: LibraryProject[]) => {
+      this.libraryProjects = libraryProjects;
+      this.populateFilterOptions();
+    });
+    libraryService.communityLibraryProjectsSource$.subscribe(
+      (communityProjects: LibraryProject[]) => {
         this.communityProjects = communityProjects;
         this.populateFilterOptions();
-      });
+      }
+    );
     libraryService.sharedLibraryProjectsSource$.subscribe((sharedProjects: LibraryProject[]) => {
-        this.sharedProjects = sharedProjects;
-        this.populateFilterOptions();
-      });
-    libraryService.personalLibraryProjectsSource$.subscribe((personalProjects: LibraryProject[]) => {
+      this.sharedProjects = sharedProjects;
+      this.populateFilterOptions();
+    });
+    libraryService.personalLibraryProjectsSource$.subscribe(
+      (personalProjects: LibraryProject[]) => {
         this.personalProjects = personalProjects;
         this.populateFilterOptions();
-      });
+      }
+    );
   }
 
   ngOnInit() {
@@ -122,18 +131,26 @@ export class LibraryFiltersComponent implements OnInit {
   }
 
   removeDuplicatesAndSortAlphabetically() {
-    this.dciArrangementOptions = 
-      this.utilService.removeObjectArrayDuplicatesByProperty(this.dciArrangementOptions, 'id');
+    this.dciArrangementOptions = this.utilService.removeObjectArrayDuplicatesByProperty(
+      this.dciArrangementOptions,
+      'id'
+    );
     this.utilService.sortObjectArrayByProperty(this.dciArrangementOptions, 'id');
-    this.disciplineOptions = 
-      this.utilService.removeObjectArrayDuplicatesByProperty(this.disciplineOptions, 'id');
+    this.disciplineOptions = this.utilService.removeObjectArrayDuplicatesByProperty(
+      this.disciplineOptions,
+      'id'
+    );
     this.utilService.sortObjectArrayByProperty(this.disciplineOptions, 'name');
     this.peOptions = this.utilService.removeObjectArrayDuplicatesByProperty(this.peOptions, 'id');
     this.utilService.sortObjectArrayByProperty(this.peOptions, 'id');
   }
 
   hasFilters(): boolean {
-    return this.dciArrangementValue.length > 0 || this.peValue.length > 0 || this.disciplineValue.length > 0;
+    return (
+      this.dciArrangementValue.length > 0 ||
+      this.peValue.length > 0 ||
+      this.disciplineValue.length > 0
+    );
   }
 
   searchUpdated(value: string): void {
@@ -142,7 +159,7 @@ export class LibraryFiltersComponent implements OnInit {
   }
 
   filterUpdated(value: string[] = [], context: string = ''): void {
-    switch(context) {
+    switch (context) {
       case 'discipline':
         this.disciplineValue = value;
         break;

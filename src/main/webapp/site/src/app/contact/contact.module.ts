@@ -20,7 +20,7 @@ import {
   MatTableModule,
   MatTooltipModule
 } from '@angular/material';
-import { SharedModule } from "../modules/shared/shared.module";
+import { SharedModule } from '../modules/shared/shared.module';
 import { ContactFormComponent } from './contact-form/contact-form.component';
 import { RecaptchaModule } from 'ng-recaptcha';
 import { RecaptchaFormsModule } from 'ng-recaptcha/forms';
@@ -55,12 +55,7 @@ const materialModules = [
     RecaptchaModule.forRoot(),
     RecaptchaFormsModule
   ],
-  declarations: [
-    ContactFormComponent
-  ],
-  exports: [
-    ContactFormComponent,
-    materialModules
-  ]
+  declarations: [ContactFormComponent],
+  exports: [ContactFormComponent, materialModules]
 })
-export class ContactModule { }
+export class ContactModule {}

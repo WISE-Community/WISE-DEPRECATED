@@ -1,175 +1,171 @@
-"use strict";
+'use strict';
 
 class MilestoneDetailsController {
-    constructor($filter,
-                $scope,
-                AchievementService,
-                ProjectService,
-                UtilService,
-                moment) {
-        this.$filter = $filter;
-        this.$scope = $scope;
-        this.AchievementService = AchievementService;
-        this.ProjectService = ProjectService;
-        this.UtilService = UtilService;
-        this.moment = moment;
+  constructor($filter, $scope, AchievementService, ProjectService, UtilService, moment) {
+    this.$filter = $filter;
+    this.$scope = $scope;
+    this.AchievementService = AchievementService;
+    this.ProjectService = ProjectService;
+    this.UtilService = UtilService;
+    this.moment = moment;
 
-        this.$translate = this.$filter('translate');
+    this.$translate = this.$filter('translate');
 
-        this.$onInit = () => {
-            if (!this.milestone) {
-                // no milestone was passed in, so we'll create a new one
-                this.createMilestone();
-            }
+    this.$onInit = () => {
+      if (!this.milestone) {
+        // no milestone was passed in, so we'll create a new one
+        this.createMilestone();
+      }
 
-            // set the date object that we'll use with md-datepicker
-            if (this.milestone) {
-                this.date = new Date(this.milestone.params.targetDate);
-            }
-        }
+      // set the date object that we'll use with md-datepicker
+      if (this.milestone) {
+        this.date = new Date(this.milestone.params.targetDate);
+      }
     };
+  }
 
-    /**
-     * Create a new milestone
-     */
-    createMilestone() {
-        const projectAchievements = this.ProjectService.getAchievementItems();
-        if (projectAchievements != null) {
+  /**
+   * Create a new milestone
+   */
+  createMilestone() {
+    const projectAchievements = this.ProjectService.getAchievementItems();
+    if (projectAchievements != null) {
+      // get the time of tomorrow at 3pm
+      let tomorrow = this.moment()
+        .add('days', 1)
+        .hours(23)
+        .minutes(11)
+        .seconds(59);
 
-            // get the time of tomorrow at 3pm
-            let tomorrow = this.moment().add('days', 1).hours(23).minutes(11).seconds(59);
+      // create a new milestone object
+      this.milestone = {
+        id: this.AchievementService.getAvailableAchievementId(),
+        name: '',
+        description: '',
+        type: 'milestone',
+        params: {
+          nodeIds: [],
+          targetDate: tomorrow.valueOf()
+        },
+        icon: {
+          image: ''
+        },
+        items: this.UtilService.makeCopyOfJSONObject(this.ProjectService.idToOrder),
+        isVisible: true
+      };
+    }
+  }
 
-            // create a new milestone object
-            this.milestone = {
-                id: this.AchievementService.getAvailableAchievementId(),
-                name: '',
-                description: '',
-                type: "milestone",
-                params: {
-                    nodeIds: [],
-                    targetDate: tomorrow.valueOf()
-                },
-                icon: {
-                    image: ""
-                },
-                items: this.UtilService.makeCopyOfJSONObject(this.ProjectService.idToOrder),
-                isVisible: true
-            };
+  /**
+   * The checkbox for an activity or step was clicked
+   * @param milestone the milestone that is being edited
+   * @param item the activity or step that was clicked
+   */
+  itemChanged(item) {
+    if (this.milestone && this.milestone.params && this.milestone.params.nodeIds) {
+      // get the node ids that are currently required for the milestone
+      let nodeIds = this.milestone.params.nodeIds;
+
+      // get the node id of the item that was clicked
+      let nodeId = item.$key;
+
+      if (item.checked) {
+        if (nodeIds.indexOf(nodeId) == -1) {
+          // add the node id
+          this.milestone.params.nodeIds.push(nodeId);
         }
-    }
+      } else {
+        // remove the node id
 
-    /**
-     * The checkbox for an activity or step was clicked
-     * @param milestone the milestone that is being edited
-     * @param item the activity or step that was clicked
-     */
-    itemChanged(item) {
-
-        if (this.milestone && this.milestone.params && this.milestone.params.nodeIds) {
-
-            // get the node ids that are currently required for the milestone
-            let nodeIds = this.milestone.params.nodeIds;
-
-            // get the node id of the item that was clicked
-            let nodeId = item.$key;
-
-            if (item.checked) {
-                if (nodeIds.indexOf(nodeId) == -1) {
-                    // add the node id
-                    this.milestone.params.nodeIds.push(nodeId);
-                }
-            } else {
-                // remove the node id
-
-                // loop through all the node ids and remove the node id
-                for (var n = nodeIds.length - 1; n >= 0; n--) {
-                    if (nodeId == nodeIds[n]) {
-                        nodeIds.splice(n, 1);
-                    }
-                }
-            }
-
-            this.change();
+        // loop through all the node ids and remove the node id
+        for (var n = nodeIds.length - 1; n >= 0; n--) {
+          if (nodeId == nodeIds[n]) {
+            nodeIds.splice(n, 1);
+          }
         }
+      }
+
+      this.change();
     }
+  }
 
-    /**
-     * Show the steps for an activity
-     * @param groupId the node id for the activity
-     */
-    toggleSteps(groupId) {
+  /**
+   * Show the steps for an activity
+   * @param groupId the node id for the activity
+   */
+  toggleSteps(groupId) {
+    if (groupId) {
+      let showSteps = !this.milestone.items[groupId].showSteps;
+      this.milestone.items[groupId].showSteps = showSteps;
 
-        if (groupId) {
-            let showSteps = !this.milestone.items[groupId].showSteps;
-            this.milestone.items[groupId].showSteps = showSteps;
+      // get all the child ids of the group
+      let childIds = this.ProjectService.getChildNodeIdsById(groupId);
 
-            // get all the child ids of the group
-            let childIds = this.ProjectService.getChildNodeIdsById(groupId);
+      // loop through all the child ids
+      for (let c = 0; c < childIds.length; c++) {
+        let childId = childIds[c];
 
-            // loop through all the child ids
-            for (let c = 0; c < childIds.length; c++) {
-                let childId = childIds[c];
-
-                if (this.milestone.items[childId] != null) {
-                    // show the step
-                    this.milestone.items[childId].show = showSteps;
-                }
-            }
+        if (this.milestone.items[childId] != null) {
+          // show the step
+          this.milestone.items[childId].show = showSteps;
         }
+      }
     }
+  }
 
-    /**
-     * Check if a node id is for a group
-     * @param nodeId
-     * @returns whether the node is a group node
-     */
-    isGroupNode(nodeId) {
-        return this.ProjectService.isGroupNode(nodeId);
-    };
+  /**
+   * Check if a node id is for a group
+   * @param nodeId
+   * @returns whether the node is a group node
+   */
+  isGroupNode(nodeId) {
+    return this.ProjectService.isGroupNode(nodeId);
+  }
 
-    /**
-     * Get the node position and title
-     * @param nodeId
-     * @returns whether node position and id display
-     */
-    getNodePositionAndTitleByNodeId(nodeId) {
-        return this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
-    };
+  /**
+   * Get the node position and title
+   * @param nodeId
+   * @returns whether node position and id display
+   */
+  getNodePositionAndTitleByNodeId(nodeId) {
+    return this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
+  }
 
-    /**
-     * The date input for this milestone has changed, update in milestone object
-     */
-    dateChange() {
-        this.milestone.params.targetDate = this.date.getTime();
-        this.change();
-    }
+  /**
+   * The date input for this milestone has changed, update in milestone object
+   */
+  dateChange() {
+    this.milestone.params.targetDate = this.date.getTime();
+    this.change();
+  }
 
-    /**
-     * Data for this milestone has changed, so run the onChange callback
-     */
-    change() {
-        let itemsArray = Object.keys(this.milestone.items).map(it => this.milestone.items[it]);
-        let valid = this.$scope.milestoneEditForm.$valid && this.$filter('filter')(itemsArray, {'checked':true}).length > 0;
-        this.onChange({ milestone: this.milestone, valid: valid });
-    }
+  /**
+   * Data for this milestone has changed, so run the onChange callback
+   */
+  change() {
+    let itemsArray = Object.keys(this.milestone.items).map(it => this.milestone.items[it]);
+    let valid =
+      this.$scope.milestoneEditForm.$valid &&
+      this.$filter('filter')(itemsArray, { checked: true }).length > 0;
+    this.onChange({ milestone: this.milestone, valid: valid });
+  }
 }
 
 MilestoneDetailsController.$inject = [
-    '$filter',
-    '$scope',
-    'AchievementService',
-    'ProjectService',
-    'UtilService',
-    'moment'
+  '$filter',
+  '$scope',
+  'AchievementService',
+  'ProjectService',
+  'UtilService',
+  'moment'
 ];
 
 const MilestoneDetails = {
-    bindings: {
-        milestone: '<',
-        onChange: '&'
-    },
-    template:
-        `<div class="milestone-details md-whiteframe-1dp" layout-padding>
+  bindings: {
+    milestone: '<',
+    onChange: '&'
+  },
+  template: `<div class="milestone-details md-whiteframe-1dp" layout-padding>
             <form name="milestoneEditForm">
                 <h6>{{ ::'DETAILS' | translate }}</h6>
                 <div layout-gt-xs="row">
@@ -212,7 +208,7 @@ const MilestoneDetails = {
                 </div>
             </form>
         </div>`,
-    controller: MilestoneDetailsController
+  controller: MilestoneDetailsController
 };
 
 export default MilestoneDetails;

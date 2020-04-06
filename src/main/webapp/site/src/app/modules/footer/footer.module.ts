@@ -4,21 +4,13 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatButtonModule, MatIconModule, MatToolbarModule } from '@angular/material';
 import { MomentModule } from 'ngx-moment';
 import { FooterComponent } from './footer.component';
-import { AppRoutingModule } from "../../app-routing.module";
+import { AppRoutingModule } from '../../app-routing.module';
 
-const materialModules = [
-  MatButtonModule, MatIconModule, MatToolbarModule
-];
+const materialModules = [MatButtonModule, MatIconModule, MatToolbarModule];
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FlexLayoutModule,
-    AppRoutingModule,
-    materialModules,
-    MomentModule
-  ],
+  imports: [CommonModule, FlexLayoutModule, AppRoutingModule, materialModules, MomentModule],
   declarations: [FooterComponent],
   exports: [FooterComponent]
 })
-export class FooterModule { }
+export class FooterModule {}

@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ConfigService } from "../../../services/config.service";
-import { User } from "../../../domain/user";
+import { ConfigService } from '../../../services/config.service';
+import { User } from '../../../domain/user';
 
 @Component({
   selector: 'app-header-account-menu',
@@ -8,13 +8,12 @@ import { User } from "../../../domain/user";
   styleUrls: ['./header-account-menu.component.scss']
 })
 export class HeaderAccountMenuComponent implements OnInit {
-
   @Input()
   user: User;
 
-  firstName: string = "";
-  lastName: string = "";
-  role: string = "";
+  firstName: string = '';
+  lastName: string = '';
+  role: string = '';
   isPreviousAdmin: boolean = false;
   logOutURL: string;
 

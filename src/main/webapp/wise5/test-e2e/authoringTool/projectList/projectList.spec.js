@@ -21,9 +21,13 @@ describe('WISE Authoring Tool Project List View', () => {
     isAngularSite(true);
     browser.get('http://localhost:8080/wise/author');
     browser.refresh(); // needed for this issue https://github.com/angular/protractor/issues/2643
-    browser.wait(function() {
-      return page.createNewProjectButton.isPresent()
-    }, 5000, 'Authoring Tool didn\'t load properly');
+    browser.wait(
+      function() {
+        return page.createNewProjectButton.isPresent();
+      },
+      5000,
+      "Authoring Tool didn't load properly"
+    );
   });
 
   it('should cancel creating a new project', () => {
@@ -44,8 +48,8 @@ describe('WISE Authoring Tool Project List View', () => {
     common.urlShouldMatch('http://localhost:8080/wise/author#!/project/[0-9]+');
 
     // get the new project id and set it in the global variable
-    browser.getCurrentUrl().then((url) => {
-        browser.params.projectId = url.substring(url.lastIndexOf("/") + 1);
+    browser.getCurrentUrl().then(url => {
+      browser.params.projectId = url.substring(url.lastIndexOf('/') + 1);
     });
   });
 

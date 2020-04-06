@@ -54,10 +54,6 @@ class SummaryService extends ComponentService {
   }
 }
 
-SummaryService.$inject = [
-  '$filter',
-  'ConfigService',
-  'UtilService'
-];
+SummaryService.$inject = ['$filter', 'ConfigService', 'UtilService'];
 
 export default SummaryService;

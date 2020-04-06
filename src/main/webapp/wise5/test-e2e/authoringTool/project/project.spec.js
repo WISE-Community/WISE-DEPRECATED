@@ -5,7 +5,6 @@ import ProjectPage from './project.page.js';
  * E2E tests for the project view in the Authoring Tool
  */
 describe('WISE Authoring Tool Project View', () => {
-
   const projectId = browser.params.authoringProjectId;
 
   beforeAll(() => {
@@ -22,10 +21,14 @@ describe('WISE Authoring Tool Project View', () => {
     const page = new ProjectPage();
     isAngularSite(true);
     browser.get('http://localhost:8080/wise/author#!/project/' + projectId);
-    browser.refresh();  // needed for this issue https://github.com/angular/protractor/issues/2643
-    browser.wait(() => {
-      return page.projectTitleSpan.isPresent()
-    }, 5000, 'Authoring Tool didn\'t load properly');
+    browser.refresh(); // needed for this issue https://github.com/angular/protractor/issues/2643
+    browser.wait(
+      () => {
+        return page.projectTitleSpan.isPresent();
+      },
+      5000,
+      "Authoring Tool didn't load properly"
+    );
   });
 
   it('should have elements on the page in the project view', () => {
@@ -120,16 +123,21 @@ describe('WISE Authoring Tool Project View', () => {
     const page = new ProjectPage();
     page.clickPreviewProjectButton();
     // Clicking on the preview project button should open the preview in a new window
-    browser.getAllWindowHandles().then((handles) => {
-      browser.switchTo().window(handles[1]).then(() => {
-        browser.refresh();  // needed for this issue https://github.com/angular/protractor/issues/2643
-        expect(browser.getCurrentUrl()).toContain('http://localhost:8080/wise/project/' + projectId + '#!/vle/');
-        // close the current window
-        browser.driver.close().then(() => {
-          // switch to the main authoring window
-          browser.switchTo().window(handles[0]);
+    browser.getAllWindowHandles().then(handles => {
+      browser
+        .switchTo()
+        .window(handles[1])
+        .then(() => {
+          browser.refresh(); // needed for this issue https://github.com/angular/protractor/issues/2643
+          expect(browser.getCurrentUrl()).toContain(
+            'http://localhost:8080/wise/project/' + projectId + '#!/vle/'
+          );
+          // close the current window
+          browser.driver.close().then(() => {
+            // switch to the main authoring window
+            browser.switchTo().window(handles[0]);
+          });
         });
-      });
     });
   });
 
@@ -137,16 +145,21 @@ describe('WISE Authoring Tool Project View', () => {
     const page = new ProjectPage();
     page.clickPreviewProjectWithoutConstraintsButton();
     // Clicking on the preview project button should open the preview in a new window
-    browser.getAllWindowHandles().then((handles) => {
-      browser.switchTo().window(handles[1]).then(() => {
-        browser.refresh();  // needed for this issue https://github.com/angular/protractor/issues/2643
-        expect(browser.getCurrentUrl()).toContain('http://localhost:8080/wise/project/' + projectId + '?constraints=false#/vle/');
-        // close the current window
-        browser.driver.close().then(() => {
-          // switch to the main authoring window
-          browser.switchTo().window(handles[0]);
+    browser.getAllWindowHandles().then(handles => {
+      browser
+        .switchTo()
+        .window(handles[1])
+        .then(() => {
+          browser.refresh(); // needed for this issue https://github.com/angular/protractor/issues/2643
+          expect(browser.getCurrentUrl()).toContain(
+            'http://localhost:8080/wise/project/' + projectId + '?constraints=false#/vle/'
+          );
+          // close the current window
+          browser.driver.close().then(() => {
+            // switch to the main authoring window
+            browser.switchTo().window(handles[0]);
+          });
         });
-      });
     });
   });
 
@@ -155,8 +168,7 @@ describe('WISE Authoring Tool Project View', () => {
     page.clickGoHomeButton();
     isAngularSite(false);
     expect(browser.getCurrentUrl()).toMatch(/.*\/wise\//);
-   });
+  });
 
   // TODO: add test for copying a step
-
 });

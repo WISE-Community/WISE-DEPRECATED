@@ -502,8 +502,7 @@ class MilestonesController {
     if (autoScoreAnnotation.data.scores) {
       for (const subScore of autoScoreAnnotation.data.scores) {
         if (subScore.id === 'ki') {
-          subScore.score = 
-            this.adjustKIScore(teacherScoreAnnotation.data.value, reportSettings);
+          subScore.score = this.adjustKIScore(teacherScoreAnnotation.data.value, reportSettings);
         }
       }
     }
@@ -527,7 +526,7 @@ class MilestonesController {
     const bounds = {
       min: 1,
       max: 5
-    }
+    };
     if (reportSettings.customScoreValues && reportSettings.customScoreValues['ki']) {
       bounds.min = Math.min(...reportSettings.customScoreValues['ki']);
       bounds.max = Math.max(...reportSettings.customScoreValues['ki']);
@@ -577,7 +576,7 @@ class MilestonesController {
 
   getPossibleScoreValueCounts(subScoreId) {
     if (subScoreId === 'ki') {
-      return {    
+      return {
         1: 0,
         2: 0,
         3: 0,
@@ -585,7 +584,7 @@ class MilestonesController {
         5: 0
       };
     } else {
-      return {    
+      return {
         1: 0,
         2: 0,
         3: 0
@@ -801,8 +800,7 @@ class MilestonesController {
     const title = this.$translate('MILESTONE_DETAILS_TITLE', {
       name: milestone.name
     });
-    const template = 
-        `<md-dialog class="dialog--wider">
+    const template = `<md-dialog class="dialog--wider">
           <md-toolbar>
             <div class="md-toolbar-tools">
               <h2>${title}</h2>
@@ -943,8 +941,7 @@ class MilestonesController {
       milestone = this.createMilestone();
     }
 
-    let template = 
-        `<md-dialog class="dialog--wide">
+    let template = `<md-dialog class="dialog--wide">
           <md-toolbar>
             <div class="md-toolbar-tools">
               <h2>${title}</h2>

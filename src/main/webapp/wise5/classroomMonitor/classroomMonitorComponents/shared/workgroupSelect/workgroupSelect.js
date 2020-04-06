@@ -1,186 +1,186 @@
-"use strict";
+'use strict';
 
 class WorkgroupSelectController {
-    constructor($filter,
-                $scope,
-                orderBy,
-                ConfigService,
-                TeacherDataService) {
-        this.$filter = $filter;
-        this.$scope = $scope;
-        this.orderBy = orderBy;
-        this.ConfigService = ConfigService;
-        this.TeacherDataService = TeacherDataService;
-        this.$translate = this.$filter('translate');
+  constructor($filter, $scope, orderBy, ConfigService, TeacherDataService) {
+    this.$filter = $filter;
+    this.$scope = $scope;
+    this.orderBy = orderBy;
+    this.ConfigService = ConfigService;
+    this.TeacherDataService = TeacherDataService;
+    this.$translate = this.$filter('translate');
 
-        this.$onInit = () => {
-            this.placeholder = this.customPlaceholder ? this.customPlaceholder : this.$translate('findAStudent');
-            this.canViewStudentNames = this.ConfigService.getPermissions().canViewStudentNames;
-            this.periodId = this.TeacherDataService.getCurrentPeriod().periodId;
-            this.setWorkgroups();
-        };
-
-        /**
-         * Listen for current workgroup changed event
-         */
-        this.$scope.$on('currentWorkgroupChanged', (event, args) => {
-            let workgroup = args.currentWorkgroup;
-            if (workgroup != null) {
-                this.setWorkgroups();
-            }
-        });
-
-        /**
-         * Listen for current period changed event
-         */
-        this.$scope.$on('currentPeriodChanged', (event, args) => {
-            this.periodId = args.currentPeriod.periodId;
-            this.setWorkgroups();
-        });
+    this.$onInit = () => {
+      this.placeholder = this.customPlaceholder
+        ? this.customPlaceholder
+        : this.$translate('findAStudent');
+      this.canViewStudentNames = this.ConfigService.getPermissions().canViewStudentNames;
+      this.periodId = this.TeacherDataService.getCurrentPeriod().periodId;
+      this.setWorkgroups();
     };
 
     /**
-     * Setup the workgroups data model based on whether we're showing
-     * individual students and whether current user can view student names
+     * Listen for current workgroup changed event
      */
-    setWorkgroups() {
-        this.workgroups = angular.copy(this.ConfigService.getClassmateUserInfos());
-        if (this.byStudent) {
-            let students = [];
-            let sortByStudentId = false;
-            for (let workgroup of this.workgroups) {
-                if (this.periodId === -1 || this.periodId === workgroup.periodId) {
-                    let ids = workgroup.userIds;
-                    let names = workgroup.displayNames.split(',');
-                    for (let x = 0; x < ids.length; x++) {
-                        // get the id and name for the current student
-                        let id = ids[x];
-                        let current = angular.copy(workgroup);
-                        current.userId = id;
-                        if (this.canViewStudentNames) {
-                            let name = names[x].trim();
-                            // get the index of the first empty space
-                            let indexOfSpace = name.indexOf(' ');
-
-                            // get the student first name e.g. "Spongebob"
-                            let firstName = name.substring(0, indexOfSpace);
-                            let lastName = name.substring(indexOfSpace+1);
-                            current.displayNames = lastName + ', ' + firstName;
-                        } else {
-                            let sortByStudentId = true;
-                            current.displayNames = this.$translate('studentId', { id: id });
-                        }
-                        students.push(current);
-                    }
-                }
-            }
-            this.workgroups = sortByStudentId ? this.orderBy(students, 'userId') : this.orderBy(students, 'displayNames');
-        } else {
-            let workgroups = [];
-            for (let workgroup of this.workgroups) {
-                if (this.periodId === -1 || this.periodId === workgroup.periodId) {
-                    workgroup.displayNames += ' (' + this.$translate('teamId', { id: workgroup.workgroupId}) + ')';
-                    workgroups.push(workgroup);
-                }
-            }
-            this.workgroups = this.orderBy(workgroups, 'workgroupId');
-        }
-        this.selectedItem = this.getCurrentWorkgroup();
-    }
+    this.$scope.$on('currentWorkgroupChanged', (event, args) => {
+      let workgroup = args.currentWorkgroup;
+      if (workgroup != null) {
+        this.setWorkgroups();
+      }
+    });
 
     /**
-     * Set the currently selected workgroup
-     * @param workgroup the workgroup object
+     * Listen for current period changed event
      */
-    setCurrentWorkgroup(workgroup) {
-        this.TeacherDataService.setCurrentWorkgroup(workgroup);
-    }
+    this.$scope.$on('currentPeriodChanged', (event, args) => {
+      this.periodId = args.currentPeriod.periodId;
+      this.setWorkgroups();
+    });
+  }
 
-    /**
-     * Get the current workgroup
-     * @return workgroup object
-     */
-    getCurrentWorkgroup() {
-        let localGroup = null;
-        let currentWorkgroup = this.TeacherDataService.getCurrentWorkgroup();
-        if (currentWorkgroup) {
-            for (let workgroup of this.workgroups) {
-                if (currentWorkgroup.workgroupId === workgroup.workgroupId) {
-                    if (this.byStudent) {
-                        if (currentWorkgroup.userId === workgroup.userId) {
-                            localGroup = workgroup;
-                            break;
-                        }
-                    } else {
-                        localGroup = workgroup;
-                        break;
-                    }
-                }
-            }
-        }
-        return localGroup;
-    }
+  /**
+   * Setup the workgroups data model based on whether we're showing
+   * individual students and whether current user can view student names
+   */
+  setWorkgroups() {
+    this.workgroups = angular.copy(this.ConfigService.getClassmateUserInfos());
+    if (this.byStudent) {
+      let students = [];
+      let sortByStudentId = false;
+      for (let workgroup of this.workgroups) {
+        if (this.periodId === -1 || this.periodId === workgroup.periodId) {
+          let ids = workgroup.userIds;
+          let names = workgroup.displayNames.split(',');
+          for (let x = 0; x < ids.length; x++) {
+            // get the id and name for the current student
+            let id = ids[x];
+            let current = angular.copy(workgroup);
+            current.userId = id;
+            if (this.canViewStudentNames) {
+              let name = names[x].trim();
+              // get the index of the first empty space
+              let indexOfSpace = name.indexOf(' ');
 
-    /**
-     * Return workgroups with username text that query string matches
-     * @param query String to search for
-     * @return Array of workgroups
-     */
-    querySearch(query) {
-        let items = [];
-        for (let workgroup of this.workgroups) {
-            let periodId = workgroup.periodId;
-            if (this.periodId === -1 || periodId === this.periodId) {
-                let displayNames = workgroup.displayNames;
-                if (displayNames.search(new RegExp(query, 'i')) > -1 || !query) {
-                    items.push(workgroup);
-                }
-            }
-        }
-        return items;
-    }
-
-    selectedItemChange() {
-        let currentWorkgroup = this.getCurrentWorkgroup();
-        if (currentWorkgroup) {
-            if (this.selectedItem) {
-                if (this.byStudent) {
-                    if (currentWorkgroup.userId !== this.selectedItem.userId) {
-                        this.setCurrentWorkgroup(this.selectedItem);
-                    }
-                } else if (currentWorkgroup.workgroupId !== this.selectedItem.workgroupId) {
-                    this.setCurrentWorkgroup(this.selectedItem);
-                }
+              // get the student first name e.g. "Spongebob"
+              let firstName = name.substring(0, indexOfSpace);
+              let lastName = name.substring(indexOfSpace + 1);
+              current.displayNames = lastName + ', ' + firstName;
             } else {
-                this.setCurrentWorkgroup(null);
+              let sortByStudentId = true;
+              current.displayNames = this.$translate('studentId', { id: id });
             }
-        } else {
-            this.setCurrentWorkgroup(this.selectedItem);
+            students.push(current);
+          }
         }
+      }
+      this.workgroups = sortByStudentId
+        ? this.orderBy(students, 'userId')
+        : this.orderBy(students, 'displayNames');
+    } else {
+      let workgroups = [];
+      for (let workgroup of this.workgroups) {
+        if (this.periodId === -1 || this.periodId === workgroup.periodId) {
+          workgroup.displayNames +=
+            ' (' + this.$translate('teamId', { id: workgroup.workgroupId }) + ')';
+          workgroups.push(workgroup);
+        }
+      }
+      this.workgroups = this.orderBy(workgroups, 'workgroupId');
     }
+    this.selectedItem = this.getCurrentWorkgroup();
+  }
 
-    clearSearchTerm() {
-        this.searchTerm = '';
+  /**
+   * Set the currently selected workgroup
+   * @param workgroup the workgroup object
+   */
+  setCurrentWorkgroup(workgroup) {
+    this.TeacherDataService.setCurrentWorkgroup(workgroup);
+  }
+
+  /**
+   * Get the current workgroup
+   * @return workgroup object
+   */
+  getCurrentWorkgroup() {
+    let localGroup = null;
+    let currentWorkgroup = this.TeacherDataService.getCurrentWorkgroup();
+    if (currentWorkgroup) {
+      for (let workgroup of this.workgroups) {
+        if (currentWorkgroup.workgroupId === workgroup.workgroupId) {
+          if (this.byStudent) {
+            if (currentWorkgroup.userId === workgroup.userId) {
+              localGroup = workgroup;
+              break;
+            }
+          } else {
+            localGroup = workgroup;
+            break;
+          }
+        }
+      }
     }
+    return localGroup;
+  }
+
+  /**
+   * Return workgroups with username text that query string matches
+   * @param query String to search for
+   * @return Array of workgroups
+   */
+  querySearch(query) {
+    let items = [];
+    for (let workgroup of this.workgroups) {
+      let periodId = workgroup.periodId;
+      if (this.periodId === -1 || periodId === this.periodId) {
+        let displayNames = workgroup.displayNames;
+        if (displayNames.search(new RegExp(query, 'i')) > -1 || !query) {
+          items.push(workgroup);
+        }
+      }
+    }
+    return items;
+  }
+
+  selectedItemChange() {
+    let currentWorkgroup = this.getCurrentWorkgroup();
+    if (currentWorkgroup) {
+      if (this.selectedItem) {
+        if (this.byStudent) {
+          if (currentWorkgroup.userId !== this.selectedItem.userId) {
+            this.setCurrentWorkgroup(this.selectedItem);
+          }
+        } else if (currentWorkgroup.workgroupId !== this.selectedItem.workgroupId) {
+          this.setCurrentWorkgroup(this.selectedItem);
+        }
+      } else {
+        this.setCurrentWorkgroup(null);
+      }
+    } else {
+      this.setCurrentWorkgroup(this.selectedItem);
+    }
+  }
+
+  clearSearchTerm() {
+    this.searchTerm = '';
+  }
 }
 
 WorkgroupSelectController.$inject = [
-    '$filter',
-    '$scope',
-    'orderByFilter',
-    'ConfigService',
-    'TeacherDataService'
+  '$filter',
+  '$scope',
+  'orderByFilter',
+  'ConfigService',
+  'TeacherDataService'
 ];
 
 const WorkgroupSelect = {
-    bindings: {
-        byStudent: '<',
-        customClass: '<',
-        customPlaceholder: '<',
-        useAutocomplete: '<'
-    },
-    template:
-        `<md-autocomplete ng-if="$ctrl.useAutocomplete"
+  bindings: {
+    byStudent: '<',
+    customClass: '<',
+    customPlaceholder: '<',
+    useAutocomplete: '<'
+  },
+  template: `<md-autocomplete ng-if="$ctrl.useAutocomplete"
                           class="autocomplete"
                           ng-class="$ctrl.customClass"
                           md-no-cache="true"
@@ -226,7 +226,7 @@ const WorkgroupSelect = {
                 </md-option>
             </md-opt-group>
         </md-select>`,
-    controller: WorkgroupSelectController
+  controller: WorkgroupSelectController
 };
 
 export default WorkgroupSelect;

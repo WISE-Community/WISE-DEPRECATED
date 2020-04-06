@@ -1420,14 +1420,14 @@ function shouldConvertDataExplorerDataToSeriesData() {
 function shouldCheckIfYAxisIsLockedWithOneYAxisTrue() {
   it('should check if Y Axis is locked with one Y Axis true', () => {
     expect(graphController.isYAxisLocked()).toEqual(true);
-  }); 
+  });
 }
 
 function shouldCheckIfYAxisIsLockedWithOneYAxisFalse() {
   it('should check if Y Axis is locked with one Y Axis false', () => {
     graphController.componentContent.yAxis.locked = false;
     expect(graphController.isYAxisLocked()).toEqual(false);
-  }); 
+  });
 }
 
 function shouldCheckIfYAxisIsLockedWithMultipleYAxisTrue() {
@@ -1450,7 +1450,7 @@ function shouldCheckIfYAxisIsLockedWithMultipleYAxisTrue() {
       units: '',
       locked: true,
       opposite: true
-    }
+    };
     graphController.componentContent.yAxis = [firstYAxis, secondYAxis];
     expect(graphController.isYAxisLocked()).toEqual(true);
   });
@@ -1476,7 +1476,7 @@ function shouldCheckIfYAxisIsLockedWithMultipleYAxisFalse() {
       units: '',
       locked: false,
       opposite: true
-    }
+    };
     graphController.componentContent.yAxis = [firstYAxis, secondYAxis];
     expect(graphController.isYAxisLocked()).toEqual(false);
   });
@@ -1499,15 +1499,18 @@ function shouldSetYAxisLabelsWhenSingleYAxis() {
 
 function shouldSetYAxisLabelsWhenMultipleYAxis() {
   it('should set y axis labels when there are multiple y axis', () => {
-    graphController.yAxis = [{
-      title: {
-        text: ''
+    graphController.yAxis = [
+      {
+        title: {
+          text: ''
+        }
+      },
+      {
+        title: {
+          text: ''
+        }
       }
-    },{
-      title: {
-        text: ''
-      }
-    }];
+    ];
     const studentData = {
       dataExplorerYAxisLabels: ['Count', 'Price']
     };
@@ -1537,7 +1540,7 @@ function shouldSetSeriesYIndex() {
       units: '',
       locked: false,
       opposite: true
-    }
+    };
     graphController.yAxis = [firstYAxis, secondYAxis];
     const seriesOne = {};
     const seriesTwo = {};
@@ -1598,7 +1601,7 @@ function shouldCheckIfYAxisLabelIsBlankWithMultipleYAxisFalse() {
       units: '',
       locked: false,
       opposite: true
-    }
+    };
     const yAxis = [firstYAxis, secondYAxis];
     expect(graphController.isYAxisLabelBlank(yAxis, 0)).toEqual(false);
     expect(graphController.isYAxisLabelBlank(yAxis, 1)).toEqual(false);
@@ -1625,7 +1628,7 @@ function shouldCheckIfYAxisLabelIsBlankWithMultipleYAxisTrue() {
       units: '',
       locked: false,
       opposite: true
-    }
+    };
     const yAxis = [firstYAxis, secondYAxis];
     expect(graphController.isYAxisLabelBlank(yAxis, 0)).toEqual(true);
     expect(graphController.isYAxisLabelBlank(yAxis, 1)).toEqual(true);

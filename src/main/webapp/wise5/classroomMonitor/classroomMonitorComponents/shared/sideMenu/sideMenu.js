@@ -1,25 +1,23 @@
-"use strict";
+'use strict';
 
 class SideMenuController {
-    constructor() {
-    }
+  constructor() {}
 
-    toggleMenu() {
-        this.onMenuToggle();
-    }
+  toggleMenu() {
+    this.onMenuToggle();
+  }
 }
 
-SideMenuController.inject= [];
+SideMenuController.inject = [];
 
 const SideMenu = {
-    bindings: {
-        state: '<',
-        views: '<',
-        onMenuToggle: '&'
-    },
-    controller: SideMenuController,
-    template:
-        `<div class="menu-sidebar">
+  bindings: {
+    state: '<',
+    views: '<',
+    onMenuToggle: '&'
+  },
+  controller: SideMenuController,
+  template: `<div class="menu-sidebar">
             <md-button ng-repeat="(key, value) in $ctrl.views"
                        ng-if="value.active"
                        aria-label="{{ ::value.name }}"

@@ -53,14 +53,11 @@ describe('ForgotTeacherPasswordVerifyComponent', () => {
 
   configureTestSuite(() => {
     TestBed.configureTestingModule({
-      declarations: [ ForgotTeacherPasswordVerifyComponent ],
-      imports: [
-        RouterTestingModule,
-        ReactiveFormsModule
-      ],
+      declarations: [ForgotTeacherPasswordVerifyComponent],
+      imports: [RouterTestingModule, ReactiveFormsModule],
       providers: [
         { provide: TeacherService, useClass: MockTeacherService },
-        { provide: TRANSLATIONS_FORMAT, useValue: "xlf" },
+        { provide: TRANSLATIONS_FORMAT, useValue: 'xlf' },
         {
           provide: TRANSLATIONS,
           useFactory: translationsFactory,
@@ -68,8 +65,8 @@ describe('ForgotTeacherPasswordVerifyComponent', () => {
         },
         I18n
       ],
-      schemas: [ NO_ERRORS_SCHEMA ]
-    })
+      schemas: [NO_ERRORS_SCHEMA]
+    });
   });
 
   beforeEach(() => {
@@ -94,7 +91,9 @@ describe('ForgotTeacherPasswordVerifyComponent', () => {
 
   it('should show the too many verification code attempts message', () => {
     submitAndReceiveResponse('checkVerificationCode', 'failure', 'tooManyVerificationCodeAttempts');
-    expect(getErrorMessage()).toContain('You have submitted an invalid verification code too many times');
+    expect(getErrorMessage()).toContain(
+      'You have submitted an invalid verification code too many times'
+    );
   });
 
   it('should navigate to the change password page', () => {
@@ -105,8 +104,10 @@ describe('ForgotTeacherPasswordVerifyComponent', () => {
       username: null,
       verificationCode: ''
     };
-    expect(navigateSpy).toHaveBeenCalledWith(['/forgot/teacher/password/change'],
-      {queryParams: params, skipLocationChange: true});
+    expect(navigateSpy).toHaveBeenCalledWith(['/forgot/teacher/password/change'], {
+      queryParams: params,
+      skipLocationChange: true
+    });
   });
 
   it('should navigate to the change password page after successfully submitting the verification code', () => {
@@ -120,7 +121,9 @@ describe('ForgotTeacherPasswordVerifyComponent', () => {
       username: 'SpongebobSquarepants',
       verificationCode: '123456'
     };
-    expect(navigateSpy).toHaveBeenCalledWith(['/forgot/teacher/password/change'],
-      {queryParams: params, skipLocationChange: true});
+    expect(navigateSpy).toHaveBeenCalledWith(['/forgot/teacher/password/change'], {
+      queryParams: params,
+      skipLocationChange: true
+    });
   });
 });

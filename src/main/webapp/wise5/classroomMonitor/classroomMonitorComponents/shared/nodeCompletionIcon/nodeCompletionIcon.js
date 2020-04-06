@@ -1,11 +1,10 @@
-"use strict";
+'use strict';
 
 const NodeCompletionIcon = {
-    bindings: {
-        nodeStatus: '<'
-    },
-    template:
-        `<md-icon ng-if="$ctrl.nodeStatus.isCompleted"
+  bindings: {
+    nodeStatus: '<'
+  },
+  template: `<md-icon ng-if="$ctrl.nodeStatus.isCompleted"
                   ng-class="[$ctrl.customClass, {'success': $ctrl.nodeStatus.isSuccess}]"
                   aria-label="{{'completed' | translate}}">
                   {{'check_circle'}}

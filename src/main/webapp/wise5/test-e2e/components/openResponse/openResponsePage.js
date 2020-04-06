@@ -1,8 +1,7 @@
 export default class OpenResponsePage {
   constructor() {
     this.saveButton = element(by.id('saveButton'));
-    this.saveMessage = element(
-      by.binding('openResponseController.saveMessage.text'));
+    this.saveMessage = element(by.binding('openResponseController.saveMessage.text'));
     this.submitButton = element(by.id('submitButton'));
     this.submitMessage = element(by.binding('openResponseController.saveMessage.text'));
     this.textarea = element(by.model('openResponseController.studentResponse'));

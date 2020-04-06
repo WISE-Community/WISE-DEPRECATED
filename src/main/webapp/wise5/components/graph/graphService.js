@@ -2,11 +2,7 @@ import ComponentService from '../componentService';
 import html2canvas from 'html2canvas';
 
 class GraphService extends ComponentService {
-  constructor($filter,
-      $q,
-      StudentAssetService,
-      StudentDataService,
-      UtilService) {
+  constructor($filter, $q, StudentAssetService, StudentDataService, UtilService) {
     super($filter, StudentDataService, UtilService);
     this.$q = $q;
     this.StudentAssetService = StudentAssetService;
@@ -157,9 +153,9 @@ class GraphService extends ComponentService {
            * this is the old graph student data format where the
            * student data can contain multiple series.
            */
-           if (this.anySeriesHasDataPoint(studentData.series)) {
-             return true;
-           }
+          if (this.anySeriesHasDataPoint(studentData.series)) {
+            return true;
+          }
         } else {
           /*
            * this is the new graph student data format where the
@@ -269,10 +265,10 @@ class GraphService extends ComponentService {
     let highchartsDiv = angular.element('#chart_' + componentId).find('.highcharts-container');
     if (highchartsDiv != null && highchartsDiv.length > 0) {
       highchartsDiv = highchartsDiv[0];
-      html2canvas(highchartsDiv).then((canvas) => {
+      html2canvas(highchartsDiv).then(canvas => {
         const base64Image = canvas.toDataURL('image/png');
         const imageObject = this.UtilService.getImageObjectFromBase64String(base64Image);
-        this.StudentAssetService.uploadAsset(imageObject).then((asset) => {
+        this.StudentAssetService.uploadAsset(imageObject).then(asset => {
           deferred.resolve(asset);
         });
       });

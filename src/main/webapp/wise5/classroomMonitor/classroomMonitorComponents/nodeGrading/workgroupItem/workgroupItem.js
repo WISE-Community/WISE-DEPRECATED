@@ -1,108 +1,102 @@
-"use strict";
+'use strict';
 
 class WorkgroupItemController {
-    constructor($filter,
-                $scope,
-                ProjectService) {
-        this.$filter = $filter;
-        this.$scope = $scope;
-        this.ProjectService = ProjectService;
-        this.$translate = this.$filter('translate');
+  constructor($filter, $scope, ProjectService) {
+    this.$filter = $filter;
+    this.$scope = $scope;
+    this.ProjectService = ProjectService;
+    this.$translate = this.$filter('translate');
+  }
+
+  $onInit() {
+    this.nodeHasWork = this.ProjectService.nodeHasWork(this.nodeId);
+    this.statusText = '';
+    this.update();
+  }
+
+  $onChanges(changesObj) {
+    if (changesObj.hiddenComponents) {
+      this.hiddenComponents = angular.copy(changesObj.hiddenComponents.currentValue);
     }
 
-    $onInit() {
-      this.nodeHasWork = this.ProjectService.nodeHasWork(this.nodeId);
-      this.statusText = '';
-      this.update();
+    if (changesObj.maxScore) {
+      this.maxScore =
+        typeof changesObj.maxScore.currentValue === 'number' ? changesObj.maxScore.currentValue : 0;
     }
 
-    $onChanges(changesObj) {
-      if (changesObj.hiddenComponents) {
-          this.hiddenComponents = angular.copy(changesObj.hiddenComponents.currentValue);
-      }
-
-      if (changesObj.maxScore) {
-          this.maxScore = typeof changesObj.maxScore.currentValue === 'number' ? changesObj.maxScore.currentValue : 0;
-      }
-
-      if (changesObj.workgroupData) {
-          let workgroupData = angular.copy(changesObj.workgroupData.currentValue);
-          this.hasAlert = workgroupData.hasAlert;
-          this.hasNewAlert = workgroupData.hasNewAlert;
-          this.status = workgroupData.completionStatus;
-          this.score = workgroupData.score >= 0 ? workgroupData.score : '-';
-      }
-
-      this.update();
+    if (changesObj.workgroupData) {
+      let workgroupData = angular.copy(changesObj.workgroupData.currentValue);
+      this.hasAlert = workgroupData.hasAlert;
+      this.hasNewAlert = workgroupData.hasNewAlert;
+      this.status = workgroupData.completionStatus;
+      this.score = workgroupData.score >= 0 ? workgroupData.score : '-';
     }
 
-    update() {
-        switch (this.status) {
-            case -1:
-                this.statusClass = ' ';
-                this.statusText = this.$translate('notAssigned');
-                break;
-            case 2:
-                this.statusClass = 'success';
+    this.update();
+  }
 
-                if (this.nodeHasWork) {
-                    this.statusText = this.$translate('completed');
-                } else {
-                    this.statusText = this.$translate('visited');
-                }
-                break;
-            case 1:
-                this.statusClass = 'text';
+  update() {
+    switch (this.status) {
+      case -1:
+        this.statusClass = ' ';
+        this.statusText = this.$translate('notAssigned');
+        break;
+      case 2:
+        this.statusClass = 'success';
 
-                this.statusText = this.$translate('partiallyCompleted');
-                break;
-            default:
-                this.statusClass = 'text-secondary';
-                if (this.componentId) {
-                    this.statusText = this.$translate('notCompleted');
-                } else if (this.nodeHasWork) {
-                    this.statusText = this.$translate('noWork');
-                } else {
-                    this.statusText = this.$translate('notVisited');
-                }
+        if (this.nodeHasWork) {
+          this.statusText = this.$translate('completed');
+        } else {
+          this.statusText = this.$translate('visited');
         }
+        break;
+      case 1:
+        this.statusClass = 'text';
 
-        if (this.hasNewAlert) {
-            this.statusClass = 'warn';
-        }
-
-        this.disabled = (this.status === -1);
-    }
-
-    toggleExpand() {
-        if (this.showScore) {
-            let expand = !this.expand;
-            this.onUpdateExpand({workgroupId: this.workgroupId, value: expand});
+        this.statusText = this.$translate('partiallyCompleted');
+        break;
+      default:
+        this.statusClass = 'text-secondary';
+        if (this.componentId) {
+          this.statusText = this.$translate('notCompleted');
+        } else if (this.nodeHasWork) {
+          this.statusText = this.$translate('noWork');
+        } else {
+          this.statusText = this.$translate('notVisited');
         }
     }
+
+    if (this.hasNewAlert) {
+      this.statusClass = 'warn';
+    }
+
+    this.disabled = this.status === -1;
+  }
+
+  toggleExpand() {
+    if (this.showScore) {
+      let expand = !this.expand;
+      this.onUpdateExpand({ workgroupId: this.workgroupId, value: expand });
+    }
+  }
 }
 
-WorkgroupItemController.$inject = [
-    '$filter',
-    '$scope',
-    'ProjectService'
-];
+WorkgroupItemController.$inject = ['$filter', '$scope', 'ProjectService'];
 
 const WorkgroupItem = {
-    bindings: {
-        expand: '<',
-        maxScore: '<',
-        nodeId: '<',
-        componentId: '<',
-        showScore: '<',
-        workgroupId: '<',
-        workgroupData: '<',
-        hiddenComponents: '<',
-        onUpdateExpand: '&'
-    },
-    controller: WorkgroupItemController,
-    template:
-        `<div class="md-whiteframe-1dp" ng-class="{'list-item--warn': $ctrl.statusClass === 'warn', 'list-item--info': $ctrl.statusClass === 'info'}">
+  bindings: {
+    expand: '<',
+    maxScore: '<',
+    nodeId: '<',
+    componentId: '<',
+    showScore: '<',
+    workgroupId: '<',
+    workgroupData: '<',
+    hiddenComponents: '<',
+    onUpdateExpand: '&'
+  },
+  controller: WorkgroupItemController,
+  template: `<div class="md-whiteframe-1dp" ng-class="{'list-item--warn': $ctrl.statusClass === 'warn', 'list-item--info': $ctrl.statusClass === 'info'}">
             <md-subheader class="list-item md-whiteframe-1dp">
                 <button class="md-button md-ink-ripple list-item__subheader-button"
                                aria-label="{{ ::toggleTeamWorkDisplay | translate }}"

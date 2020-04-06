@@ -13,17 +13,18 @@ import { AddProjectDialogComponent } from '../add-project-dialog/add-project-dia
   styleUrls: ['./student-run-list.component.scss']
 })
 export class StudentRunListComponent implements OnInit {
-
   runs: StudentRun[] = [];
   filteredRuns: StudentRun[] = [];
   search: string = '';
   loaded: boolean = false;
   showAll: boolean = false;
 
-  constructor(private studentService: StudentService,
-              private configService: ConfigService,
-              private route: ActivatedRoute,
-              private dialog: MatDialog) {
+  constructor(
+    private studentService: StudentService,
+    private configService: ConfigService,
+    private route: ActivatedRoute,
+    private dialog: MatDialog
+  ) {
     studentService.newRunSource$.subscribe(run => {
       run.isHighlighted = true;
       this.runs.unshift(new StudentRun(run));
@@ -34,7 +35,7 @@ export class StudentRunListComponent implements OnInit {
         }
       }
       setTimeout(() => {
-        document.getElementById(`run${run.id}`).scrollIntoView()
+        document.getElementById(`run${run.id}`).scrollIntoView();
       }, 1000);
     });
   }
@@ -44,20 +45,19 @@ export class StudentRunListComponent implements OnInit {
   }
 
   getRuns() {
-    this.studentService.getRuns()
-      .subscribe(runs => {
-        for (let run of runs) {
-          this.runs.push(new StudentRun(run));
+    this.studentService.getRuns().subscribe(runs => {
+      for (let run of runs) {
+        this.runs.push(new StudentRun(run));
+      }
+      this.filteredRuns = runs;
+      this.searchUpdated(this.search);
+      this.loaded = true;
+      this.route.queryParams.subscribe(params => {
+        if (params['accessCode'] != null) {
+          this.handleClassroomAccessCode(params['accessCode']);
         }
-        this.filteredRuns = runs;
-        this.searchUpdated(this.search);
-        this.loaded = true;
-        this.route.queryParams.subscribe(params => {
-          if (params['accessCode'] != null) {
-            this.handleClassroomAccessCode(params['accessCode']);
-          }
-        });
       });
+    });
   }
 
   sortByStartTimeDesc(a, b) {
@@ -82,8 +82,8 @@ export class StudentRunListComponent implements OnInit {
   }
 
   runSpansYears(run: StudentRun) {
-    const startYear = (new DateFormatPipe()).transform(run.startTime, 'Y');
-    const endYear = (new DateFormatPipe()).transform(run.endTime, 'Y');
+    const startYear = new DateFormatPipe().transform(run.startTime, 'Y');
+    const endYear = new DateFormatPipe().transform(run.endTime, 'Y');
     return startYear != endYear;
   }
 
@@ -91,8 +91,8 @@ export class StudentRunListComponent implements OnInit {
     if (this.runSpansYears(run)) {
       return true;
     }
-    const startMonth = (new DateFormatPipe()).transform(run.startTime, 'M');
-    const endMonth = (new DateFormatPipe()).transform(run.endTime, 'M');
+    const startMonth = new DateFormatPipe().transform(run.startTime, 'M');
+    const endMonth = new DateFormatPipe().transform(run.endTime, 'M');
     return startMonth != endMonth;
   }
 
@@ -100,8 +100,8 @@ export class StudentRunListComponent implements OnInit {
     if (this.runSpansMonths(run)) {
       return true;
     }
-    const startDay = (new DateFormatPipe()).transform(run.startTime, 'D');
-    const endDay = (new DateFormatPipe()).transform(run.endTime, 'D');
+    const startDay = new DateFormatPipe().transform(run.startTime, 'D');
+    const endDay = new DateFormatPipe().transform(run.endTime, 'D');
     return startDay != endDay;
   }
 
@@ -157,7 +157,12 @@ export class StudentRunListComponent implements OnInit {
         if (typeof value === 'undefined' || value === null) {
           return false;
         } else {
-          return value.toString().toLocaleLowerCase().indexOf(filterValue) !== -1;
+          return (
+            value
+              .toString()
+              .toLocaleLowerCase()
+              .indexOf(filterValue) !== -1
+          );
         }
       })
     );

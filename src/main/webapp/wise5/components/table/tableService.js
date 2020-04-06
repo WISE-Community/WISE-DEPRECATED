@@ -2,12 +2,7 @@ import ComponentService from '../componentService';
 import html2canvas from 'html2canvas';
 
 class TableService extends ComponentService {
-
-  constructor($filter,
-      $q,
-      StudentAssetService,
-      StudentDataService,
-      UtilService) {
+  constructor($filter, $q, StudentAssetService, StudentDataService, UtilService) {
     super($filter, StudentDataService, UtilService);
     this.$q = $q;
     this.StudentAssetService = StudentAssetService;
@@ -26,53 +21,53 @@ class TableService extends ComponentService {
     component.tableData = [
       [
         {
-          'text': '',
-          'editable': true,
-          'size': null
+          text: '',
+          editable: true,
+          size: null
         },
         {
-          'text': '',
-          'editable': true,
-          'size': null
+          text: '',
+          editable: true,
+          size: null
         },
         {
-          'text': '',
-          'editable': true,
-          'size': null
+          text: '',
+          editable: true,
+          size: null
         }
       ],
       [
         {
-          'text': '',
-          'editable': true,
-          'size': null
+          text: '',
+          editable: true,
+          size: null
         },
         {
-          'text': '',
-          'editable': true,
-          'size': null
+          text: '',
+          editable: true,
+          size: null
         },
         {
-          'text': '',
-          'editable': true,
-          'size': null
+          text: '',
+          editable: true,
+          size: null
         }
       ],
       [
         {
-          'text': '',
-          'editable': true,
-          'size': null
+          text: '',
+          editable: true,
+          size: null
         },
         {
-          'text': '',
-          'editable': true,
-          'size': null
+          text: '',
+          editable: true,
+          size: null
         },
         {
-          'text': '',
-          'editable': true,
-          'size': null
+          text: '',
+          editable: true,
+          size: null
         }
       ]
     ];
@@ -89,11 +84,11 @@ class TableService extends ComponentService {
       return true;
     }
     if (componentStates && componentStates.length) {
-      let submitRequired = node.showSubmitButton || (component.showSubmitButton && !node.showSaveButton);
+      let submitRequired =
+        node.showSubmitButton || (component.showSubmitButton && !node.showSaveButton);
 
       // loop through all the component states
       for (let c = 0, l = componentStates.length; c < l; c++) {
-
         // the component state
         let componentState = componentStates[c];
 
@@ -120,7 +115,7 @@ class TableService extends ComponentService {
     }
 
     return false;
-  };
+  }
 
   /**
    * Check if a table component has any editable cells.
@@ -151,13 +146,10 @@ class TableService extends ComponentService {
   }
 
   componentStateHasStudentWork(componentState, componentContent) {
-
     if (componentState != null) {
-
       let studentData = componentState.studentData;
 
       if (studentData != null) {
-
         // get the table from the student data
         let studentTableData = studentData.tableData;
 
@@ -165,7 +157,6 @@ class TableService extends ComponentService {
         let componentContentTableData = componentContent.tableData;
 
         if (studentTableData != null) {
-
           let studentRows = studentTableData;
 
           // loop through the student rows
@@ -173,15 +164,17 @@ class TableService extends ComponentService {
             let studentRow = studentRows[r];
 
             if (studentRow != null) {
-
               // loop through the student columns
               for (let c = 0; c < studentRow.length; c++) {
-
                 // get cell from the student
                 let studentCell = this.getTableDataCellValue(r, c, studentTableData);
 
                 // get a cell from the component content
-                let componentContentCell = this.getTableDataCellValue(r, c, componentContentTableData);
+                let componentContentCell = this.getTableDataCellValue(
+                  r,
+                  c,
+                  componentContentTableData
+                );
 
                 if (studentCell !== componentContentCell) {
                   /*
@@ -209,21 +202,17 @@ class TableService extends ComponentService {
    * @returns the cell value (text or a number)
    */
   getTableDataCellValue(x, y, table) {
-
     var cellValue = null;
 
     if (table != null) {
-
       // get the row we want
       var row = table[y];
 
       if (row != null) {
-
         // get the cell we want
         var cell = row[x];
 
         if (cell != null) {
-
           // set the value into the cell
           cellValue = cell.text;
         }
@@ -241,11 +230,13 @@ class TableService extends ComponentService {
    */
   generateImageFromRenderedComponentState(componentState) {
     let deferred = this.$q.defer();
-    let tableElement = angular.element(document.querySelector('#table_' + componentState.nodeId + '_' + componentState.componentId));
+    let tableElement = angular.element(
+      document.querySelector('#table_' + componentState.nodeId + '_' + componentState.componentId)
+    );
     if (tableElement != null && tableElement.length > 0) {
       tableElement = tableElement[0];
       // convert the table element to a canvas element
-      html2canvas(tableElement).then((canvas) => {
+      html2canvas(tableElement).then(canvas => {
         // get the canvas as a base64 string
         let img_b64 = canvas.toDataURL('image/png');
 
@@ -253,7 +244,7 @@ class TableService extends ComponentService {
         let imageObject = this.UtilService.getImageObjectFromBase64String(img_b64);
 
         // add the image to the student assets
-        this.StudentAssetService.uploadAsset(imageObject).then((asset) => {
+        this.StudentAssetService.uploadAsset(imageObject).then(asset => {
           deferred.resolve(asset);
         });
       });
@@ -261,8 +252,12 @@ class TableService extends ComponentService {
     return deferred.promise;
   }
 
-  hasRequiredNumberOfFilledRows(componentState, requiredNumberOfFilledRows,
-                                tableHasHeaderRow, requireAllCellsInARowToBeFilled) {
+  hasRequiredNumberOfFilledRows(
+    componentState,
+    requiredNumberOfFilledRows,
+    tableHasHeaderRow,
+    requireAllCellsInARowToBeFilled
+  ) {
     const rows = componentState.studentData.tableData;
     let firstStudentRow = 0;
     if (tableHasHeaderRow) {

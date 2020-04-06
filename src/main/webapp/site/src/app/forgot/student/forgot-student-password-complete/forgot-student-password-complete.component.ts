@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-forgot-student-password-complete',
@@ -7,11 +7,9 @@ import {ActivatedRoute, Router} from '@angular/router';
   styleUrls: ['./forgot-student-password-complete.component.scss']
 })
 export class ForgotStudentPasswordCompleteComponent implements OnInit {
-
   username: string = null;
 
-  constructor(private router: Router,
-              private route: ActivatedRoute) { }
+  constructor(private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit() {
     const username = this.route.snapshot.queryParamMap.get('username');
@@ -27,5 +25,4 @@ export class ForgotStudentPasswordCompleteComponent implements OnInit {
     }
     this.router.navigate(['/login', params]);
   }
-
 }

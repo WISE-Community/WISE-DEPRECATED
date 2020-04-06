@@ -3,11 +3,11 @@
 class PlanningService {
   constructor(ProjectService) {
     this.ProjectService = ProjectService;
-  };
+  }
 
   getPlanningNodes() {
     return this.ProjectService.project.planningNodes;
-  };
+  }
 
   /**
    * Check if a node is a planning node
@@ -40,8 +40,9 @@ class PlanningService {
     if (node != null && node.availablePlanningNodes != null) {
       const availablePlanningNodes = node.availablePlanningNodes;
       for (let availablePlanningNode of availablePlanningNodes) {
-        const availablePlanningNodeActual =
-          this.ProjectService.getNodeById(availablePlanningNode.nodeId);
+        const availablePlanningNodeActual = this.ProjectService.getNodeById(
+          availablePlanningNode.nodeId
+        );
         if (availablePlanningNodeActual != null) {
           if (availablePlanningNode.max != null) {
             availablePlanningNodeActual.max = availablePlanningNode.max;
@@ -74,7 +75,10 @@ class PlanningService {
     const planningNodeInstanceNodeId = planningNodeInstance.id;
     this.ProjectService.setIdToNode(planningNodeInstanceNodeId, planningNodeInstance);
     this.ProjectService.addNode(planningNodeInstance);
-    this.ProjectService.insertNodeInsideOnlyUpdateTransitions(planningNodeInstanceNodeId, nodeIdToInsertInside);
+    this.ProjectService.insertNodeInsideOnlyUpdateTransitions(
+      planningNodeInstanceNodeId,
+      nodeIdToInsertInside
+    );
     this.ProjectService.insertNodeInsideInGroups(planningNodeInstanceNodeId, nodeIdToInsertInside);
     this.ProjectService.recalculatePositionsInGroup(nodeIdToInsertInside);
     this.ProjectService.calculateNodeOrderOfProject();
@@ -120,8 +124,6 @@ class PlanningService {
   }
 }
 
-PlanningService.$inject = [
-  'ProjectService'
-];
+PlanningService.$inject = ['ProjectService'];
 
 export default PlanningService;

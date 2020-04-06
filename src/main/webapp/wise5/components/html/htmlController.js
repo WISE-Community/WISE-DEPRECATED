@@ -3,13 +3,28 @@
 import ComponentController from '../componentController';
 
 class HTMLController extends ComponentController {
-  constructor($rootScope,
-      $scope,
-      $state,
-      $stateParams,
-      $sce,
+  constructor(
+    $rootScope,
+    $scope,
+    $state,
+    $stateParams,
+    $sce,
+    $filter,
+    $mdDialog,
+    AnnotationService,
+    ConfigService,
+    NodeService,
+    NotebookService,
+    ProjectService,
+    StudentAssetService,
+    StudentDataService,
+    UtilService
+  ) {
+    super(
       $filter,
       $mdDialog,
+      $rootScope,
+      $scope,
       AnnotationService,
       ConfigService,
       NodeService,
@@ -17,19 +32,14 @@ class HTMLController extends ComponentController {
       ProjectService,
       StudentAssetService,
       StudentDataService,
-      UtilService) {
-    super($filter, $mdDialog, $rootScope, $scope,
-        AnnotationService, ConfigService, NodeService,
-        NotebookService, ProjectService, StudentAssetService,
-        StudentDataService, UtilService);
+      UtilService
+    );
     this.$state = $state;
     this.$stateParams = $stateParams;
     this.$sce = $sce;
 
     if (this.mode === 'authoring') {
-
     } else if (this.mode === 'grading') {
-
     } else if (this.mode === 'student') {
       if (this.componentContent != null) {
         this.html = this.componentContent.html;
@@ -48,7 +58,6 @@ class HTMLController extends ComponentController {
 
       // check if the image is being requested from this component
       if (this.nodeId === nodeId && this.componentId === componentId) {
-
         // obtain the image objects
         let imageObjects = this.getImageObjects();
 
@@ -64,7 +73,10 @@ class HTMLController extends ComponentController {
       }
     });
 
-    this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
+    this.$rootScope.$broadcast('doneRenderingComponent', {
+      nodeId: this.nodeId,
+      componentId: this.componentId
+    });
   }
 
   /**
@@ -79,13 +91,11 @@ class HTMLController extends ComponentController {
     let imageElements = angular.element(document.querySelector('#' + componentId + ' img'));
 
     if (imageElements != null) {
-
       // loop through all the image elements
       for (let i = 0; i < imageElements.length; i++) {
         let imageElement = imageElements[i];
 
         if (imageElement != null) {
-
           // create an image object
           let imageObject = this.UtilService.getImageObjectFromImageElement(imageElement);
           imageObjects.push(imageObject);

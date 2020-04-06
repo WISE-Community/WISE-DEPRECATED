@@ -1,8 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ForgotTeacherPasswordCompleteComponent } from './forgot-teacher-password-complete.component';
-import {NO_ERRORS_SCHEMA} from '@angular/core';
-import {RouterTestingModule} from '@angular/router/testing';
-import {Router} from '@angular/router';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { RouterTestingModule } from '@angular/router/testing';
+import { Router } from '@angular/router';
 import { configureTestSuite } from 'ng-bullet';
 
 describe('ForgotTeacherPasswordCompleteComponent', () => {
@@ -11,9 +11,9 @@ describe('ForgotTeacherPasswordCompleteComponent', () => {
 
   configureTestSuite(() => {
     TestBed.configureTestingModule({
-      declarations: [ ForgotTeacherPasswordCompleteComponent ],
-      imports: [ RouterTestingModule ],
-      schemas: [ NO_ERRORS_SCHEMA ]
+      declarations: [ForgotTeacherPasswordCompleteComponent],
+      imports: [RouterTestingModule],
+      schemas: [NO_ERRORS_SCHEMA]
     });
   });
 

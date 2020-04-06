@@ -1,13 +1,13 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { RunMenuComponent } from "./run-menu.component";
-import { TeacherService } from "../teacher.service";
-import { Project } from "../../domain/project";
+import { RunMenuComponent } from './run-menu.component';
+import { TeacherService } from '../teacher.service';
+import { Project } from '../../domain/project';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { MatDialog, MatMenuModule } from "@angular/material";
-import { ConfigService } from "../../services/config.service";
-import { UserService } from "../../services/user.service";
-import { User } from "../../domain/user";
-import { TeacherRun } from "../teacher-run";
+import { MatDialog, MatMenuModule } from '@angular/material';
+import { ConfigService } from '../../services/config.service';
+import { UserService } from '../../services/user.service';
+import { User } from '../../domain/user';
+import { TeacherRun } from '../teacher-run';
 import { NO_ERRORS_SCHEMA, TRANSLATIONS_FORMAT, TRANSLATIONS, LOCALE_ID } from '@angular/core';
 import { translationsFactory } from '../../app.module';
 import { I18n } from '@ngx-translate/i18n-polyfill';
@@ -15,7 +15,7 @@ import { Course } from '../../domain/course';
 
 export class MockTeacherService {
   checkClassroomAuthorization(): Observable<string> {
-    return Observable.create("");
+    return Observable.create('');
   }
   getClassroomCourses(): Observable<Course[]> {
     const courses: Course[] = [];
@@ -62,14 +62,14 @@ describe('RunMenuComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ MatMenuModule ],
-      declarations: [ RunMenuComponent ],
+      imports: [MatMenuModule],
+      declarations: [RunMenuComponent],
       providers: [
         { provide: TeacherService, useClass: MockTeacherService },
         { provide: UserService, useClass: MockUserService },
         { provide: ConfigService, useClass: MockConfigService },
         { provide: MatDialog, useValue: {} },
-        { provide: TRANSLATIONS_FORMAT, useValue: "xlf" },
+        { provide: TRANSLATIONS_FORMAT, useValue: 'xlf' },
         {
           provide: TRANSLATIONS,
           useFactory: translationsFactory,
@@ -77,9 +77,8 @@ describe('RunMenuComponent', () => {
         },
         I18n
       ],
-      schemas: [ NO_ERRORS_SCHEMA ]
-    })
-    .compileComponents();
+      schemas: [NO_ERRORS_SCHEMA]
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -87,7 +86,7 @@ describe('RunMenuComponent', () => {
     component = fixture.componentInstance;
     const run: TeacherRun = new TeacherRun();
     run.id = 1;
-    run.name = "Photosynthesis";
+    run.name = 'Photosynthesis';
     const owner = new User();
     owner.id = 1;
     run.owner = owner;

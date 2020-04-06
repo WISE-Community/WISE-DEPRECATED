@@ -5,7 +5,6 @@ import NotebookPage from './notebook.page.js';
  * E2E tests for the notebook view in the Authoring Tool
  */
 describe('WISE Authoring Tool Notebook View', () => {
-
   const projectId = browser.params.authoringProjectId;
 
   beforeAll(() => {
@@ -22,15 +21,19 @@ describe('WISE Authoring Tool Notebook View', () => {
     const page = new NotebookPage();
     isAngularSite(true);
     browser.get('http://localhost:8080/wise/author#!/project/' + projectId + '/notebook');
-    browser.refresh();  // needed for this issue https://github.com/angular/protractor/issues/2643
-    browser.wait(function() {
-      return page.projectTitleSpan.isPresent()
-    }, 5000, 'Authoring Tool didn\'t load properly');
+    browser.refresh(); // needed for this issue https://github.com/angular/protractor/issues/2643
+    browser.wait(
+      function() {
+        return page.projectTitleSpan.isPresent();
+      },
+      5000,
+      "Authoring Tool didn't load properly"
+    );
   });
 
   it('should allow the user to enable the notebook', () => {
     const page = new NotebookPage();
-    page.isNotebookEnabled().then((isEnabled) => {
+    page.isNotebookEnabled().then(isEnabled => {
       if (isEnabled) {
         page.clickEnableNotebookCheckbox();
       }
@@ -43,7 +46,7 @@ describe('WISE Authoring Tool Notebook View', () => {
   it('should allow the user to change the notebook label', () => {
     const page = new NotebookPage();
     const ms = new Date().getTime();
-    page.isNotebookEnabled().then((isEnabled) => {
+    page.isNotebookEnabled().then(isEnabled => {
       if (!isEnabled) {
         page.clickEnableNotebookCheckbox();
       }
@@ -54,5 +57,4 @@ describe('WISE Authoring Tool Notebook View', () => {
       expect(page.notebookLabel.getAttribute('value')).toEqual('Notebook ' + ms);
     });
   });
-
 });

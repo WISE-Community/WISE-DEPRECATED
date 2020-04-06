@@ -1,6 +1,14 @@
-import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewEncapsulation } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewEncapsulation
+} from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { debounceTime ,  distinctUntilChanged } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { I18n } from '@ngx-translate/i18n-polyfill';
 
 @Component({
@@ -10,7 +18,6 @@ import { I18n } from '@ngx-translate/i18n-polyfill';
   encapsulation: ViewEncapsulation.None
 })
 export class SearchBarComponent implements OnInit {
-
   @Input()
   placeholderText: string = this.i18n('Search'); // placeholder text
 
@@ -26,10 +33,9 @@ export class SearchBarComponent implements OnInit {
   @Output('update')
   change: EventEmitter<string> = new EventEmitter<string>(); // change event emitter
 
-  searchField = new FormControl(""); // form control for the search input
+  searchField = new FormControl(''); // form control for the search input
 
-  constructor(private i18n: I18n) {
-  }
+  constructor(private i18n: I18n) {}
 
   ngOnInit() {
     this.searchField = new FormControl({

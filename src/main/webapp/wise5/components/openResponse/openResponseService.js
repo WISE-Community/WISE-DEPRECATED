@@ -21,7 +21,8 @@ class OpenResponseService extends ComponentService {
     let result = false;
 
     if (componentStates && componentStates.length) {
-      let submitRequired = node.showSubmitButton || (component.showSubmitButton && !node.showSaveButton);
+      let submitRequired =
+        node.showSubmitButton || (component.showSubmitButton && !node.showSaveButton);
 
       if (submitRequired) {
         // completion requires a submission, so check for isSubmit in any component states
@@ -62,16 +63,14 @@ class OpenResponseService extends ComponentService {
     }
 
     return result;
-  };
+  }
 
   displayAnnotation(componentContent, annotation) {
     if (annotation.displayToStudent === false) {
       return false;
     } else {
       if (annotation.type == 'score') {
-
       } else if (annotation.type == 'comment') {
-
       } else if (annotation.type == 'autoScore') {
         if (componentContent.cRater != null && !componentContent.cRater.showScore) {
           return false;
@@ -114,10 +113,6 @@ class OpenResponseService extends ComponentService {
   }
 }
 
-OpenResponseService.$inject = [
-  '$filter',
-  'StudentDataService',
-  'UtilService'
-];
+OpenResponseService.$inject = ['$filter', 'StudentDataService', 'UtilService'];
 
 export default OpenResponseService;

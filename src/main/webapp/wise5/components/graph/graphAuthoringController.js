@@ -1,25 +1,28 @@
 'use strict';
 
-import GraphController from "./graphController";
+import GraphController from './graphController';
 import html2canvas from 'html2canvas';
 
 class GraphAuthoringController extends GraphController {
-  constructor($filter,
-              $mdDialog,
-              $q,
-              $rootScope,
-              $scope,
-              $timeout,
-              AnnotationService,
-              ConfigService,
-              GraphService,
-              NodeService,
-              NotebookService,
-              ProjectService,
-              StudentAssetService,
-              StudentDataService,
-              UtilService) {
-    super($filter,
+  constructor(
+    $filter,
+    $mdDialog,
+    $q,
+    $rootScope,
+    $scope,
+    $timeout,
+    AnnotationService,
+    ConfigService,
+    GraphService,
+    NodeService,
+    NotebookService,
+    ProjectService,
+    StudentAssetService,
+    StudentDataService,
+    UtilService
+  ) {
+    super(
+      $filter,
       $mdDialog,
       $q,
       $rootScope,
@@ -33,7 +36,8 @@ class GraphAuthoringController extends GraphController {
       ProjectService,
       StudentAssetService,
       StudentDataService,
-      UtilService);
+      UtilService
+    );
 
     this.availableGraphTypes = [
       {
@@ -152,30 +156,34 @@ class GraphAuthoringController extends GraphController {
     this.backgroundImage = this.componentContent.backgroundImage;
     this.enableMultipleYAxis = this.isMultipleYAxisEnabled();
 
-    $scope.$watch(() => {
-      return this.authoringComponentContent;
-    }, (newValue, oldValue) => {
-      this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-      this.series = null;
-      this.xAxis = null;
-      this.yAxis = null;
-      this.submitCounter = 0;
-      this.backgroundImage = this.componentContent.backgroundImage;
-      this.enableMultipleYAxis = this.isMultipleYAxisEnabled();
-      this.isSaveButtonVisible = this.componentContent.showSaveButton;
-      this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-      this.graphType = this.componentContent.graphType;
-      this.isResetSeriesButtonVisible = true;
-      this.isSelectSeriesVisible = true;
-      this.legendEnabled = !this.componentContent.hideLegend;
-      this.showTrialSelect = !this.componentContent.hideTrialSelect;
-      this.setSeries(this.UtilService.makeCopyOfJSONObject(this.componentContent.series));
-      this.setDefaultActiveSeries();
-      this.trials = [];
-      this.newTrial();
-      this.clearPlotLines();
-      this.drawGraph();
-    }, true);
+    $scope.$watch(
+      () => {
+        return this.authoringComponentContent;
+      },
+      (newValue, oldValue) => {
+        this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+        this.series = null;
+        this.xAxis = null;
+        this.yAxis = null;
+        this.submitCounter = 0;
+        this.backgroundImage = this.componentContent.backgroundImage;
+        this.enableMultipleYAxis = this.isMultipleYAxisEnabled();
+        this.isSaveButtonVisible = this.componentContent.showSaveButton;
+        this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+        this.graphType = this.componentContent.graphType;
+        this.isResetSeriesButtonVisible = true;
+        this.isSelectSeriesVisible = true;
+        this.legendEnabled = !this.componentContent.hideLegend;
+        this.showTrialSelect = !this.componentContent.hideTrialSelect;
+        this.setSeries(this.UtilService.makeCopyOfJSONObject(this.componentContent.series));
+        this.setDefaultActiveSeries();
+        this.trials = [];
+        this.newTrial();
+        this.clearPlotLines();
+        this.drawGraph();
+      },
+      true
+    );
   }
 
   isMultipleYAxisEnabled() {
@@ -229,7 +237,9 @@ class GraphAuthoringController extends GraphController {
     if (seriesName == null || seriesName === '') {
       message = this.$translate('graph.areYouSureYouWantToDeleteTheSeries');
     } else {
-      message = this.$translate('graph.areYouSureYouWantToDeleteTheNamedSeries', { seriesName: seriesName });
+      message = this.$translate('graph.areYouSureYouWantToDeleteTheNamedSeries', {
+        seriesName: seriesName
+      });
     }
     if (confirm(message)) {
       this.authoringComponentContent.series.splice(index, 1);
@@ -267,14 +277,18 @@ class GraphAuthoringController extends GraphController {
   authoringDeleteXAxisCategory(index) {
     let confirmMessage = '';
     let categoryName = '';
-    if (this.authoringComponentContent.xAxis != null &&
-      this.authoringComponentContent.xAxis.categories != null) {
+    if (
+      this.authoringComponentContent.xAxis != null &&
+      this.authoringComponentContent.xAxis.categories != null
+    ) {
       categoryName = this.authoringComponentContent.xAxis.categories[index];
     }
     if (categoryName == null || categoryName === '') {
       confirmMessage = this.$translate('graph.areYouSureYouWantToDeleteTheCategory');
     } else {
-      confirmMessage = this.$translate('graph.areYouSureYouWantToDeleteTheNamedCategory', { categoryName: categoryName });
+      confirmMessage = this.$translate('graph.areYouSureYouWantToDeleteTheNamedCategory', {
+        categoryName: categoryName
+      });
     }
     if (confirm(confirmMessage)) {
       this.authoringComponentContent.xAxis.categories.splice(index, 1);
@@ -284,8 +298,10 @@ class GraphAuthoringController extends GraphController {
 
   authoringAddSeriesDataPoint(series) {
     if (series != null && series.data != null) {
-      if (this.authoringComponentContent.xAxis.type == null ||
-        this.authoringComponentContent.xAxis.type === 'limits') {
+      if (
+        this.authoringComponentContent.xAxis.type == null ||
+        this.authoringComponentContent.xAxis.type === 'limits'
+      ) {
         series.data.push([]);
       } else if (this.authoringComponentContent.xAxis.type === 'categories') {
         series.data.push(null);
@@ -328,8 +344,10 @@ class GraphAuthoringController extends GraphController {
         this.authoringComponentContent.xAxis.min = 0;
         this.authoringComponentContent.xAxis.max = 10;
         this.authoringConvertAllSeriesDataPoints(newValue);
-      } else if ((oldValue === 'limits' || oldValue === '' || oldValue == null) &&
-          newValue === 'categories') {
+      } else if (
+        (oldValue === 'limits' || oldValue === '' || oldValue == null) &&
+        newValue === 'categories'
+      ) {
         delete this.authoringComponentContent.xAxis.min;
         delete this.authoringComponentContent.xAxis.max;
         delete this.authoringComponentContent.xAxis.units;
@@ -361,8 +379,10 @@ class GraphAuthoringController extends GraphController {
       this.authoringComponentContent.connectedComponents = [];
     }
     this.authoringComponentContent.connectedComponents.push(newConnectedComponent);
-    if (this.authoringComponentContent.connectedComponents.length > 1 ||
-        this.authoringComponentContent.series.length > 0) {
+    if (
+      this.authoringComponentContent.connectedComponents.length > 1 ||
+      this.authoringComponentContent.series.length > 0
+    ) {
       /*
        * there is more than one connected component so we will enable
        * trials so that each connected component can put work in a
@@ -377,8 +397,10 @@ class GraphAuthoringController extends GraphController {
     let numberOfAllowedComponents = 0;
     let allowedComponent = null;
     for (const component of this.getComponentsByNodeId(connectedComponent.nodeId)) {
-      if (this.isConnectedComponentTypeAllowed(component.type) &&
-          component.id != this.componentId) {
+      if (
+        this.isConnectedComponentTypeAllowed(component.type) &&
+        component.id != this.componentId
+      ) {
         numberOfAllowedComponents += 1;
         allowedComponent = component;
       }
@@ -451,7 +473,7 @@ class GraphAuthoringController extends GraphController {
 
   authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent) {
     const componentType = this.authoringGetConnectedComponentType(connectedComponent);
-    if (['ConceptMap','Draw','Label'].includes(componentType)) {
+    if (['ConceptMap', 'Draw', 'Label'].includes(componentType)) {
       connectedComponent.importWorkAsBackground = true;
     } else {
       delete connectedComponent.importWorkAsBackground;

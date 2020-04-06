@@ -5,25 +5,37 @@ import canvg from 'canvg';
 import html2canvas from 'html2canvas';
 
 class GraphController extends ComponentController {
-  constructor($filter,
+  constructor(
+    $filter,
+    $mdDialog,
+    $q,
+    $rootScope,
+    $scope,
+    $timeout,
+    AnnotationService,
+    ConfigService,
+    GraphService,
+    NodeService,
+    NotebookService,
+    ProjectService,
+    StudentAssetService,
+    StudentDataService,
+    UtilService
+  ) {
+    super(
+      $filter,
       $mdDialog,
-      $q,
       $rootScope,
       $scope,
-      $timeout,
       AnnotationService,
       ConfigService,
-      GraphService,
       NodeService,
       NotebookService,
       ProjectService,
       StudentAssetService,
       StudentDataService,
-      UtilService) {
-    super($filter, $mdDialog, $rootScope, $scope,
-        AnnotationService, ConfigService, NodeService,
-        NotebookService, ProjectService, StudentAssetService,
-        StudentDataService, UtilService);
+      UtilService
+    );
     this.$q = $q;
     this.$timeout = $timeout;
     this.GraphService = GraphService;
@@ -67,13 +79,7 @@ class GraphController extends ComponentController {
     this.addNextComponentStateToUndoStack = false;
     this.chartId = 'chart_' + this.componentId;
     this.hiddenCanvasId = 'hiddenCanvas_' + this.componentId;
-    this.dataExplorerColors = [
-      'blue',
-      'orange',
-      'purple',
-      'black',
-      'green'
-    ];
+    this.dataExplorerColors = ['blue', 'orange', 'purple', 'black', 'green'];
     this.applyHighchartsPlotLinesLabelFix();
     this.initializeComponentContentParams();
     const componentState = this.$scope.componentState;
@@ -84,8 +90,10 @@ class GraphController extends ComponentController {
     } else if (this.mode === 'onlyShowWork') {
       this.initializeOnlyShowWorkMode();
     }
-    if (!this.isStudentMode() &&
-        this.GraphService.componentStateHasStudentWork(componentState, this.componentContent)) {
+    if (
+      !this.isStudentMode() &&
+      this.GraphService.componentStateHasStudentWork(componentState, this.componentContent)
+    ) {
       this.setStudentWork(componentState);
     }
     this.initialComponentState = componentState;
@@ -138,10 +146,11 @@ class GraphController extends ComponentController {
 
   isYAxisLocked() {
     if (Array.isArray(this.componentContent.yAxis)) {
-      return this.componentContent.yAxis.map(yAxis => yAxis.locked)
-          .reduce((accumulator, currentValue) => {
-        return accumulator && currentValue;
-      });
+      return this.componentContent.yAxis
+        .map(yAxis => yAxis.locked)
+        .reduce((accumulator, currentValue) => {
+          return accumulator && currentValue;
+        });
     } else {
       return this.componentContent.yAxis.locked;
     }
@@ -156,7 +165,9 @@ class GraphController extends ComponentController {
     }
     if (this.UtilService.hasConnectedComponentAlwaysField(this.componentContent)) {
       this.handleConnectedComponents();
-    } else if (this.GraphService.componentStateHasStudentWork(componentState, this.componentContent)) {
+    } else if (
+      this.GraphService.componentStateHasStudentWork(componentState, this.componentContent)
+    ) {
       this.setStudentWork(componentState);
     } else if (this.UtilService.hasConnectedComponent(this.componentContent)) {
       this.handleConnectedComponents();
@@ -183,18 +194,30 @@ class GraphController extends ComponentController {
   }
 
   initializeHandleConnectedComponentStudentDataChanged() {
-    this.$scope.handleConnectedComponentStudentDataChanged =
-        (connectedComponent, connectedComponentParams, componentState) => {
+    this.$scope.handleConnectedComponentStudentDataChanged = (
+      connectedComponent,
+      connectedComponentParams,
+      componentState
+    ) => {
       const componentType = connectedComponent.type;
       if (componentType === 'Table') {
         this.handleTableConnectedComponentStudentDataChanged(
-          connectedComponent, connectedComponentParams, componentState);
+          connectedComponent,
+          connectedComponentParams,
+          componentState
+        );
       } else if (componentType === 'Embedded') {
         this.handleEmbeddedConnectedComponentStudentDataChanged(
-          connectedComponent, connectedComponentParams, componentState);
+          connectedComponent,
+          connectedComponentParams,
+          componentState
+        );
       } else if (componentType === 'Animation') {
         this.handleAnimationConnectedComponentStudentDataChanged(
-          connectedComponent, connectedComponentParams, componentState);
+          connectedComponent,
+          connectedComponentParams,
+          componentState
+        );
       }
     };
   }
@@ -206,7 +229,7 @@ class GraphController extends ComponentController {
   }
 
   initializeFileUploadChanged() {
-    this.$scope.fileUploadChanged = (element) => {
+    this.$scope.fileUploadChanged = element => {
       const activeSeriesData = this.activeSeries.data;
       let overwrite = true;
       if (activeSeriesData.length > 0) {
@@ -245,7 +268,10 @@ class GraphController extends ComponentController {
   }
 
   handleTableConnectedComponentStudentDataChanged(
-      connectedComponent, connectedComponentParams, componentState) {
+    connectedComponent,
+    connectedComponentParams,
+    componentState
+  ) {
     const studentData = componentState.studentData;
     if (studentData.isDataExplorerEnabled) {
       this.handleDataExplorer(studentData);
@@ -291,13 +317,23 @@ class GraphController extends ComponentController {
       if (yColumn != null) {
         const color = this.dataExplorerColors[seriesIndex];
         const name = dataExplorerSeries[seriesIndex].name;
-        const series = this.generateDataExplorerSeries(studentData.tableData, xColumn, yColumn,
-            graphType, name, color);
+        const series = this.generateDataExplorerSeries(
+          studentData.tableData,
+          xColumn,
+          yColumn,
+          graphType,
+          name,
+          color
+        );
         this.setSeriesYAxisIndex(series, seriesIndex);
         this.activeTrial.series.push(series);
         if (graphType === 'scatter' && studentData.isDataExplorerScatterPlotRegressionLineEnabled) {
-          const regressionSeries = this.generateDataExplorerRegressionSeries(studentData.tableData,
-              xColumn, yColumn, color);
+          const regressionSeries = this.generateDataExplorerRegressionSeries(
+            studentData.tableData,
+            xColumn,
+            yColumn,
+            color
+          );
           this.activeTrial.series.push(regressionSeries);
         }
       }
@@ -312,7 +348,7 @@ class GraphController extends ComponentController {
   }
 
   isMultipleYAxis(yAxis) {
-    return Array.isArray(yAxis); 
+    return Array.isArray(yAxis);
   }
 
   setYAxisLabels(studentData) {
@@ -382,8 +418,7 @@ class GraphController extends ComponentController {
   }
 
   generateDataExplorerRegressionSeries(tableData, xColumn, yColumn, color) {
-    const regressionLineData =
-        this.calculateRegressionLineData(tableData, xColumn, yColumn);
+    const regressionLineData = this.calculateRegressionLineData(tableData, xColumn, yColumn);
     return {
       type: 'line',
       name: 'Regression Line',
@@ -401,20 +436,23 @@ class GraphController extends ComponentController {
     const meanY = this.UtilService.calculateMean(yValues);
     const meanX = this.UtilService.calculateMean(xValues);
     const slope = covarianceXY / varianceX;
-    const intercept = meanY - (slope * meanX);
+    const intercept = meanY - slope * meanX;
     let firstX = Math.min(...xValues);
-    let firstY = (slope * firstX) + intercept;
+    let firstY = slope * firstX + intercept;
     if (firstY < 0) {
       firstY = 0;
       firstX = (firstY - intercept) / slope;
     }
     let secondX = Math.max(...xValues);
-    let secondY = (slope * secondX) + intercept;
+    let secondY = slope * secondX + intercept;
     if (secondY < 0) {
       secondY = 0;
       secondX = (secondY - intercept) / slope;
     }
-    return [[firstX, firstY], [secondX, secondY]];
+    return [
+      [firstX, firstY],
+      [secondX, secondY]
+    ];
   }
 
   getValuesInColumn(tableData, columnIndex) {
@@ -457,7 +495,10 @@ class GraphController extends ComponentController {
   }
 
   handleEmbeddedConnectedComponentStudentDataChanged(
-      connectedComponent, connectedComponentParams, componentState) {
+    connectedComponent,
+    connectedComponentParams,
+    componentState
+  ) {
     componentState = this.UtilService.makeCopyOfJSONObject(componentState);
     const studentData = componentState.studentData;
     this.processConnectedComponentStudentData(studentData, connectedComponentParams);
@@ -465,7 +506,10 @@ class GraphController extends ComponentController {
   }
 
   handleAnimationConnectedComponentStudentDataChanged(
-      connectedComponent, connectedComponentParams, componentState) {
+    connectedComponent,
+    connectedComponentParams,
+    componentState
+  ) {
     if (componentState.t != null) {
       this.setVerticalPlotLine(componentState.t);
       this.drawGraph();
@@ -483,19 +527,19 @@ class GraphController extends ComponentController {
        * bind a listener multiple times.
        */
       angular.element(document.querySelector(`#${this.chartId}`)).unbind();
-      angular.element(document.querySelector(`#${this.chartId}`)).bind('mousedown', (e) => {
+      angular.element(document.querySelector(`#${this.chartId}`)).bind('mousedown', e => {
         this.mouseDown = true;
         this.mouseDownEventOccurred(e);
       });
-      angular.element(document.querySelector(`#${this.chartId}`)).bind('mouseup', (e) => {
+      angular.element(document.querySelector(`#${this.chartId}`)).bind('mouseup', e => {
         this.mouseDown = false;
       });
-      angular.element(document.querySelector(`#${this.chartId}`)).bind('mousemove', (e) => {
+      angular.element(document.querySelector(`#${this.chartId}`)).bind('mousemove', e => {
         if (this.mouseDown) {
           this.mouseDownEventOccurred(e);
         }
       });
-      angular.element(document.querySelector(`#${this.chartId}`)).bind('mouseleave', (e) => {
+      angular.element(document.querySelector(`#${this.chartId}`)).bind('mouseleave', e => {
         this.mouseDown = false;
       });
       this.setupMouseMoveListenerDone = true;
@@ -531,8 +575,10 @@ class GraphController extends ComponentController {
        * over point.
        */
       const timeBetweenSendingMouseOverPoints = 200;
-      if (this.lastSavedMouseMoveTimestamp == null ||
-          currentTimestamp - this.lastSavedMouseMoveTimestamp > timeBetweenSendingMouseOverPoints) {
+      if (
+        this.lastSavedMouseMoveTimestamp == null ||
+        currentTimestamp - this.lastSavedMouseMoveTimestamp > timeBetweenSendingMouseOverPoints
+      ) {
         this.addMouseOverPoint(x, y);
         this.studentDataChanged();
         this.lastSavedMouseMoveTimestamp = currentTimestamp;
@@ -600,8 +646,16 @@ class GraphController extends ComponentController {
    * @param fillColor The color inside the rectangle.
    * @param fillOpacity The opacity of the color inside the rectangle.
    */
-  drawRangeRectangle(xMin, xMax, yMin, yMax, strokeColor = 'black', strokeWidth = '.5',
-      fillColor = 'black', fillOpacity = '.1') {
+  drawRangeRectangle(
+    xMin,
+    xMax,
+    yMin,
+    yMax,
+    strokeColor = 'black',
+    strokeWidth = '.5',
+    fillColor = 'black',
+    fillOpacity = '.1'
+  ) {
     this.createRectangleIfNecessary(strokeColor, strokeWidth, fillColor, fillOpacity);
     xMin = this.convertToXPixels(xMin);
     xMax = this.convertToXPixels(xMax);
@@ -623,12 +677,15 @@ class GraphController extends ComponentController {
   createRectangleIfNecessary(strokeColor, strokeWidth, fillColor, fillOpacity) {
     if (this.rectangle == null) {
       const chart = this.getChartById(this.chartId);
-      this.rectangle = chart.renderer.rect(0,0,0,0,0).css({
-        stroke: strokeColor,
-        strokeWidth: strokeWidth,
-        fill: fillColor,
-        fillOpacity: fillOpacity
-      }).add();
+      this.rectangle = chart.renderer
+        .rect(0, 0, 0, 0, 0)
+        .css({
+          stroke: strokeColor,
+          strokeWidth: strokeWidth,
+          fill: fillColor,
+          fillOpacity: fillOpacity
+        })
+        .add();
     }
   }
 
@@ -774,8 +831,15 @@ class GraphController extends ComponentController {
       xAxis.plotLines = this.plotLines;
     }
     const zoomType = this.getZoomType();
-    this.chartConfig = this.createChartConfig(deferred, title, subtitle, xAxis, yAxis, series,
-        zoomType);
+    this.chartConfig = this.createChartConfig(
+      deferred,
+      title,
+      subtitle,
+      xAxis,
+      yAxis,
+      series,
+      zoomType
+    );
     if (this.componentContent.useCustomLegend) {
       // use a timeout so the graph has a chance to render before we set the custom legend
       this.$timeout(() => {
@@ -792,8 +856,7 @@ class GraphController extends ComponentController {
     if (this.xAxis != null) {
       this.xAxis.allowDecimals = false;
       this.xAxis.plotBands = null;
-      if (this.componentContent.xAxis != null &&
-        this.componentContent.xAxis.plotBands != null) {
+      if (this.componentContent.xAxis != null && this.componentContent.xAxis.plotBands != null) {
         this.xAxis.plotBands = this.componentContent.xAxis.plotBands;
       }
     }
@@ -808,7 +871,7 @@ class GraphController extends ComponentController {
       if (this.isSingleYAxis(this.yAxis)) {
         this.yAxis.allowDecimals = false;
       } else {
-        this.yAxis.forEach(yAxis => yAxis.allowDecimals = false);
+        this.yAxis.forEach(yAxis => (yAxis.allowDecimals = false));
       }
     }
     return this.yAxis;
@@ -1006,8 +1069,11 @@ class GraphController extends ComponentController {
   }
 
   getXAxisUnits(series) {
-    if (series.xAxis != null && series.xAxis.userOptions != null &&
-        series.xAxis.userOptions.units != null) {
+    if (
+      series.xAxis != null &&
+      series.xAxis.userOptions != null &&
+      series.xAxis.userOptions.units != null
+    ) {
       return series.xAxis.userOptions.units;
     } else {
       return '';
@@ -1015,8 +1081,11 @@ class GraphController extends ComponentController {
   }
 
   getYAxisUnits(series) {
-    if (series.yAxis != null && series.yAxis.userOptions != null &&
-        series.yAxis.userOptions.units != null) {
+    if (
+      series.yAxis != null &&
+      series.yAxis.userOptions != null &&
+      series.yAxis.userOptions.units != null
+    ) {
       return series.yAxis.userOptions.units;
     } else {
       return '';
@@ -1104,7 +1173,7 @@ class GraphController extends ComponentController {
    */
   isIgnoreClickEvent() {
     const currentTime = new Date().getTime();
-    return this.lastDropTime != null && ((currentTime - this.lastDropTime) < 100);
+    return this.lastDropTime != null && currentTime - this.lastDropTime < 100;
   }
 
   handleGraphClickEvent(event, series) {
@@ -1196,12 +1265,14 @@ class GraphController extends ComponentController {
   createGraphCallbackHandler() {
     const thisGraphController = this;
     return function(chart) {
-      thisGraphController.$timeout(function () {
+      thisGraphController.$timeout(function() {
         thisGraphController.showXPlotLineIfOn('Drag Me');
         thisGraphController.showYPlotLineIfOn('Drag Me');
-        if (thisGraphController.isMouseXPlotLineOn() ||
+        if (
+          thisGraphController.isMouseXPlotLineOn() ||
           thisGraphController.isMouseYPlotLineOn() ||
-          thisGraphController.isSaveMouseOverPoints()) {
+          thisGraphController.isSaveMouseOverPoints()
+        ) {
           thisGraphController.setupMouseMoveListener();
         }
         chart.reflow();
@@ -1404,7 +1475,9 @@ class GraphController extends ComponentController {
     if (seriesName === '') {
       confirmMessage = this.$translate('graph.areYouSureYouWantToResetTheSeries');
     } else {
-      confirmMessage = this.$translate('graph.areYouSureYouWantToResetTheNamedSeries', { seriesName: seriesName });
+      confirmMessage = this.$translate('graph.areYouSureYouWantToResetTheNamedSeries', {
+        seriesName: seriesName
+      });
     }
     if (confirm(confirmMessage)) {
       this.resetSeriesHelper();
@@ -1474,8 +1547,7 @@ class GraphController extends ComponentController {
     if (submitCounter != null) {
       this.submitCounter = submitCounter;
     }
-    if (studentData.mouseOverPoints != null &&
-      studentData.mouseOverPoints.length > 0) {
+    if (studentData.mouseOverPoints != null && studentData.mouseOverPoints.length > 0) {
       this.mouseOverPoints = studentData.mouseOverPoints;
     }
     this.processLatestStudentWork();
@@ -1500,7 +1572,7 @@ class GraphController extends ComponentController {
      * data has changed.
      */
     const action = 'change';
-    this.createComponentState(action).then((componentState) => {
+    this.createComponentState(action).then(componentState => {
       if (this.addNextComponentStateToUndoStack) {
         if (this.previousComponentState != null) {
           this.undoStack.push(this.previousComponentState);
@@ -1553,12 +1625,11 @@ class GraphController extends ComponentController {
     }
     studentData.xAxis = this.UtilService.makeCopyOfJSONObject(this.getXAxis());
     delete studentData.xAxis.plotBands;
-    if (this.componentContent.xAxis != null &&
-        this.componentContent.xAxis.plotBands != null) {
+    if (this.componentContent.xAxis != null && this.componentContent.xAxis.plotBands != null) {
       studentData.xAxis.plotBands = this.componentContent.xAxis.plotBands;
     }
     studentData.yAxis = this.getYAxis();
-    const activeSeriesIndex  = this.getSeriesIndex(this.activeSeries);
+    const activeSeriesIndex = this.getSeriesIndex(this.activeSeries);
     if (activeSeriesIndex != null) {
       studentData.activeSeriesIndex = activeSeriesIndex;
     }
@@ -1593,7 +1664,10 @@ class GraphController extends ComponentController {
    */
   createComponentStateAdditionalProcessing(deferred, componentState, action) {
     if (this.ProjectService.hasAdditionalProcessingFunctions(this.nodeId, this.componentId)) {
-      const additionalProcessingFunctions = this.ProjectService.getAdditionalProcessingFunctions(this.nodeId, this.componentId);
+      const additionalProcessingFunctions = this.ProjectService.getAdditionalProcessingFunctions(
+        this.nodeId,
+        this.componentId
+      );
       let allPromises = [];
       for (const additionalProcessingFunction of additionalProcessingFunctions) {
         const defer = this.$q.defer();
@@ -1657,22 +1731,23 @@ class GraphController extends ComponentController {
    */
   getTrialsFromClassmates(nodeId, componentId, periodId) {
     const deferred = this.$q.defer();
-    this.StudentDataService.getClassmateStudentWork(nodeId, componentId, periodId)
-        .then((componentStates) => {
-      const promises = [];
-      for (const componentState of componentStates) {
-        promises.push(this.getTrialsFromComponentState(nodeId, componentId, componentState));
-      }
-      this.$q.all(promises).then((promiseResults) => {
-        const mergedTrials = [];
-        for (const trials of promiseResults) {
-          for (const trial of trials) {
-            mergedTrials.push(trial);
-          }
+    this.StudentDataService.getClassmateStudentWork(nodeId, componentId, periodId).then(
+      componentStates => {
+        const promises = [];
+        for (const componentState of componentStates) {
+          promises.push(this.getTrialsFromComponentState(nodeId, componentId, componentState));
         }
-        deferred.resolve(mergedTrials);
-      });
-    });
+        this.$q.all(promises).then(promiseResults => {
+          const mergedTrials = [];
+          for (const trials of promiseResults) {
+            for (const trial of trials) {
+              mergedTrials.push(trial);
+            }
+          }
+          deferred.resolve(mergedTrials);
+        });
+      }
+    );
     return deferred.promise;
   }
 
@@ -1721,8 +1796,8 @@ class GraphController extends ComponentController {
    * @param studentAsset CSV file student asset
    */
   attachStudentAsset(studentAsset) {
-    this.StudentAssetService.copyAssetForReference(studentAsset).then( (copiedAsset) => {
-      this.StudentAssetService.getAssetContent(copiedAsset).then( (assetContent) => {
+    this.StudentAssetService.copyAssetForReference(studentAsset).then(copiedAsset => {
+      this.StudentAssetService.getAssetContent(copiedAsset).then(assetContent => {
         const rowData = this.StudentDataService.CSVToArray(assetContent);
         const params = {
           skipFirstRow: true,
@@ -1735,7 +1810,7 @@ class GraphController extends ComponentController {
           name: copiedAsset.fileName,
           color: this.seriesColors[newSeriesIndex],
           marker: {
-            'symbol': this.seriesMarkers[newSeriesIndex]
+            symbol: this.seriesMarkers[newSeriesIndex]
           },
           canEdit: false
         };
@@ -1870,7 +1945,7 @@ class GraphController extends ComponentController {
   handleDeleteKeyPressed() {
     const series = this.activeSeries;
     if (this.canEdit(series)) {
-      const chart = this.getChartById(this.chartId)
+      const chart = this.getChartById(this.chartId);
       const selectedPoints = chart.getSelectedPoints();
       let index = null;
       if (selectedPoints.length > 0) {
@@ -1927,8 +2002,12 @@ class GraphController extends ComponentController {
   }
 
   isShowSelectSeriesInput() {
-    return this.trialIdsToShow.length && this.hasEditableSeries() &&
-        this.isSelectSeriesVisible && this.series.length > 1;
+    return (
+      this.trialIdsToShow.length &&
+      this.hasEditableSeries() &&
+      this.isSelectSeriesVisible &&
+      this.series.length > 1
+    );
   }
 
   newTrialButtonClicked() {
@@ -2066,7 +2145,9 @@ class GraphController extends ComponentController {
      * We do this check to minimize the number of times studentDataChanged()
      * is called.
      */
-    if (!this.UtilService.arraysContainSameValues(this.previousTrialIdsToShow, this.trialIdsToShow)) {
+    if (
+      !this.UtilService.arraysContainSameValues(this.previousTrialIdsToShow, this.trialIdsToShow)
+    ) {
       this.trialIdsToShow = this.trialIdsToShow;
       this.studentDataChanged();
     }
@@ -2380,8 +2461,12 @@ class GraphController extends ComponentController {
   }
 
   isAddSeries(params, seriesIndex) {
-    return params == null || params.seriesNumbers == null || params.seriesNumbers.length === 0 ||
-      (params.seriesNumbers != null && params.seriesNumbers.indexOf(seriesIndex) !== -1);
+    return (
+      params == null ||
+      params.seriesNumbers == null ||
+      params.seriesNumbers.length === 0 ||
+      (params.seriesNumbers != null && params.seriesNumbers.indexOf(seriesIndex) !== -1)
+    );
   }
 
   copyTrialNameIntoTrial(oldTrial, newTrial) {
@@ -2521,7 +2606,8 @@ class GraphController extends ComponentController {
     const chart = this.getChartById(this.chartId);
     const svgString = chart.getSVG();
     const hiddenCanvas = document.getElementById(this.hiddenCanvasId);
-    canvg(hiddenCanvas, svgString, { renderCallback: () => {
+    canvg(hiddenCanvas, svgString, {
+      renderCallback: () => {
         const base64Image = hiddenCanvas.toDataURL('image/png');
         const imageObject = this.UtilService.getImageObjectFromBase64String(base64Image);
         this.NotebookService.addNote($event, imageObject);
@@ -2563,7 +2649,7 @@ class GraphController extends ComponentController {
       const oldDataPoint = data[d];
       if (xAxisType == null || xAxisType === '' || xAxisType === 'limits') {
         if (!Array.isArray(oldDataPoint)) {
-          convertedData.push([(d + 1), oldDataPoint]);
+          convertedData.push([d + 1, oldDataPoint]);
         } else {
           convertedData.push(oldDataPoint);
         }
@@ -2641,9 +2727,7 @@ class GraphController extends ComponentController {
       value: x,
       zIndex: 5
     };
-    this.plotLines = [
-      plotLine
-    ];
+    this.plotLines = [plotLine];
     /*
      * Call $apply() so that the red plot line position gets updated. If we
      * don't call this, the line position won't get updated unless the student
@@ -2673,11 +2757,15 @@ class GraphController extends ComponentController {
     for (const connectedComponent of this.componentContent.connectedComponents) {
       const type = connectedComponent.type;
       if (type === 'showClassmateWork') {
-        connectedComponentBackgroundImage =
-            this.handleShowClassmateWorkConnectedComponent(connectedComponent, promises);
+        connectedComponentBackgroundImage = this.handleShowClassmateWorkConnectedComponent(
+          connectedComponent,
+          promises
+        );
       } else if (type === 'showWork' || type === 'importWork' || type == null) {
-        connectedComponentBackgroundImage =
-            this.handleShowOrImportWorkConnectedComponent(connectedComponent, promises);
+        connectedComponentBackgroundImage = this.handleShowOrImportWorkConnectedComponent(
+          connectedComponent,
+          promises
+        );
       }
     }
 
@@ -2685,8 +2773,11 @@ class GraphController extends ComponentController {
      * wait for all the promises to resolve because we may need to request the classmate work from
      * the server
      */
-    this.$q.all(promises).then(
-        this.handleConnectedComponentPromiseResults(connectedComponentBackgroundImage, isReset));
+    this.$q
+      .all(promises)
+      .then(
+        this.handleConnectedComponentPromiseResults(connectedComponentBackgroundImage, isReset)
+      );
   }
 
   handleShowClassmateWorkConnectedComponent(connectedComponent, promises) {
@@ -2695,13 +2786,17 @@ class GraphController extends ComponentController {
     let connectedComponentBackgroundImage = null;
     this.isDisabled = true;
     if (this.ConfigService.isPreview()) {
-      const latestComponentState = this.StudentDataService.
-          getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+      const latestComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(
+        nodeId,
+        componentId
+      );
       if (latestComponentState != null) {
         promises.push(this.getTrialsFromComponentState(nodeId, componentId, latestComponentState));
-        if (latestComponentState != null &&
-            latestComponentState.studentData != null &&
-            latestComponentState.studentData.backgroundImage != null) {
+        if (
+          latestComponentState != null &&
+          latestComponentState.studentData != null &&
+          latestComponentState.studentData.backgroundImage != null
+        ) {
           connectedComponentBackgroundImage = latestComponentState.studentData.backgroundImage;
         }
       }
@@ -2722,14 +2817,20 @@ class GraphController extends ComponentController {
     const nodeId = connectedComponent.nodeId;
     const componentId = connectedComponent.componentId;
     let connectedComponentBackgroundImage = null;
-    let latestComponentState =
-        this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+    let latestComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(
+      nodeId,
+      componentId
+    );
     if (latestComponentState != null) {
-      if (latestComponentState.componentType === 'ConceptMap' ||
-          latestComponentState.componentType === 'Draw' ||
-          latestComponentState.componentType === 'Label') {
-        let connectedComponentOfComponentState = this.UtilService.
-            getConnectedComponentByComponentState(this.componentContent, latestComponentState);
+      if (
+        latestComponentState.componentType === 'ConceptMap' ||
+        latestComponentState.componentType === 'Draw' ||
+        latestComponentState.componentType === 'Label'
+      ) {
+        let connectedComponentOfComponentState = this.UtilService.getConnectedComponentByComponentState(
+          this.componentContent,
+          latestComponentState
+        );
         if (connectedComponentOfComponentState.importWorkAsBackground === true) {
           promises.push(this.setComponentStateAsBackgroundImage(latestComponentState));
         }
@@ -2740,9 +2841,11 @@ class GraphController extends ComponentController {
           this.setCanEditForAllSeriesInComponentState(latestComponentState, canEdit);
         }
         promises.push(this.getTrialsFromComponentState(nodeId, componentId, latestComponentState));
-        if (latestComponentState != null &&
+        if (
+          latestComponentState != null &&
           latestComponentState.studentData != null &&
-          latestComponentState.studentData.backgroundImage != null) {
+          latestComponentState.studentData.backgroundImage != null
+        ) {
           connectedComponentBackgroundImage = latestComponentState.studentData.backgroundImage;
         }
       }
@@ -2751,7 +2854,7 @@ class GraphController extends ComponentController {
   }
 
   handleConnectedComponentPromiseResults(connectedComponentBackgroundImage, isReset) {
-    return (promiseResults) => {
+    return promiseResults => {
       /*
        * First we will accumulate all the trials into one new component state and then we will
        * perform connected component processing.
@@ -2774,12 +2877,15 @@ class GraphController extends ComponentController {
             mergedTrials.push(trial);
             trialCount++;
           }
-        } else if (typeof(promiseResult) === 'string') {
+        } else if (typeof promiseResult === 'string') {
           connectedComponentBackgroundImage = promiseResult;
         }
       }
-      activeTrialIndex =
-          this.addTrialFromThisComponentIfNecessary(mergedTrials, trialCount, activeTrialIndex);
+      activeTrialIndex = this.addTrialFromThisComponentIfNecessary(
+        mergedTrials,
+        trialCount,
+        activeTrialIndex
+      );
       let newComponentState = this.NodeService.createNewComponentState();
       newComponentState.studentData = {
         trials: mergedTrials,
@@ -2787,8 +2893,10 @@ class GraphController extends ComponentController {
         activeSeriesIndex: activeSeriesIndex,
         version: 2
       };
-      if (this.componentContent.backgroundImage != null &&
-          this.componentContent.backgroundImage !== '') {
+      if (
+        this.componentContent.backgroundImage != null &&
+        this.componentContent.backgroundImage !== ''
+      ) {
         newComponentState.studentData.backgroundImage = this.componentContent.backgroundImage;
       } else if (connectedComponentBackgroundImage != null) {
         newComponentState.studentData.backgroundImage = connectedComponentBackgroundImage;
@@ -2818,7 +2926,7 @@ class GraphController extends ComponentController {
    * @return A promise that returns the url of the image that is generated from the component state.
    */
   setComponentStateAsBackgroundImage(componentState) {
-    return this.UtilService.generateImageFromComponentState(componentState).then((image) => {
+    return this.UtilService.generateImageFromComponentState(componentState).then(image => {
       return image.url;
     });
   }
@@ -2831,8 +2939,11 @@ class GraphController extends ComponentController {
   handleConnectedComponentsHelper(newComponentState, isReset) {
     let mergedComponentState = this.$scope.componentState;
     let firstTime = true;
-    if (mergedComponentState == null || isReset ||
-        !this.GraphService.componentStateHasStudentWork(mergedComponentState)) {
+    if (
+      mergedComponentState == null ||
+      isReset ||
+      !this.GraphService.componentStateHasStudentWork(mergedComponentState)
+    ) {
       mergedComponentState = newComponentState;
     } else {
       /*
@@ -2848,16 +2959,26 @@ class GraphController extends ComponentController {
       if (type === 'showClassmateWork') {
         mergedComponentState = newComponentState;
       } else if (type === 'importWork' || type == null) {
-        const connectedComponentState =
-            this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+        const connectedComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(
+          nodeId,
+          componentId
+        );
         const fields = connectedComponent.fields;
         if (connectedComponentState != null) {
           if (connectedComponentState.componentType !== 'Graph') {
             mergedComponentState = this.mergeComponentState(
-                mergedComponentState, connectedComponentState, fields, firstTime);
+              mergedComponentState,
+              connectedComponentState,
+              fields,
+              firstTime
+            );
           }
         } else {
-          mergedComponentState = this.mergeNullComponentState(mergedComponentState, fields, firstTime);
+          mergedComponentState = this.mergeNullComponentState(
+            mergedComponentState,
+            fields,
+            firstTime
+          );
         }
       }
     }
@@ -2865,7 +2986,8 @@ class GraphController extends ComponentController {
       mergedComponentState.studentData.version = this.studentDataVersion;
     }
     if (newComponentState.studentData.backgroundImage != null) {
-      mergedComponentState.studentData.backgroundImage = newComponentState.studentData.backgroundImage;
+      mergedComponentState.studentData.backgroundImage =
+        newComponentState.studentData.backgroundImage;
     }
     return mergedComponentState;
   }
@@ -2896,7 +3018,9 @@ class GraphController extends ComponentController {
     if (mergeFields == null) {
       if (connectedComponentState.componentType === 'Graph' && firstTime) {
         // there are no merge fields specified so we will get all of the fields
-        baseComponentState.studentData = this.UtilService.makeCopyOfJSONObject(connectedComponentState.studentData);
+        baseComponentState.studentData = this.UtilService.makeCopyOfJSONObject(
+          connectedComponentState.studentData
+        );
       }
     } else {
       // we will merge specific fields
@@ -3024,9 +3148,11 @@ class GraphController extends ComponentController {
   }
 
   getCategoryByIndex(index) {
-    if (this.componentContent.xAxis != null &&
-        this.componentContent.xAxis.categories != null &&
-        index < this.componentContent.xAxis.categories.length) {
+    if (
+      this.componentContent.xAxis != null &&
+      this.componentContent.xAxis.categories != null &&
+      index < this.componentContent.xAxis.categories.length
+    ) {
       return this.componentContent.xAxis.categories[index];
     }
     return null;

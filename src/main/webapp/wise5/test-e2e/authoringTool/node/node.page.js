@@ -1,6 +1,5 @@
 export default class StepPage {
   constructor() {
-
     // common Authoring Tool elements
     this.projectTitleSpan = element(by.id('projectTitleSpan'));
     this.stepSelectMenu = element(by.id('stepSelectMenu'));
@@ -55,7 +54,10 @@ export default class StepPage {
    * allowable values are 0 and up.
    */
   clickInsertButton(position) {
-    element.all(by.css('.moveComponentButton')).get(position).click();
+    element
+      .all(by.css('.moveComponentButton'))
+      .get(position)
+      .click();
   }
 
   /**
@@ -78,7 +80,11 @@ export default class StepPage {
    * are 1 and up.
    */
   clickTheComponentCheckbox(componentNumber) {
-    element.all(by.css('.component')).get(componentNumber - 1).element(by.css('md-checkbox')).click();
+    element
+      .all(by.css('.component'))
+      .get(componentNumber - 1)
+      .element(by.css('md-checkbox'))
+      .click();
   }
 
   /**

@@ -1,11 +1,7 @@
 import ComponentService from '../componentService';
 
 class DrawService extends ComponentService {
-  constructor($filter,
-      $q,
-      StudentAssetService,
-      StudentDataService,
-      UtilService) {
+  constructor($filter, $q, StudentAssetService, StudentDataService, UtilService) {
     super($filter, StudentDataService, UtilService);
     this.$q = $q;
     this.StudentAssetService = StudentAssetService;
@@ -50,7 +46,8 @@ class DrawService extends ComponentService {
 
   isCompleted(component, componentStates, componentEvents, nodeEvents, node) {
     if (componentStates && componentStates.length) {
-      const submitRequired = node.showSubmitButton || (component.showSubmitButton && !node.showSaveButton);
+      const submitRequired =
+        node.showSubmitButton || (component.showSubmitButton && !node.showSaveButton);
       if (submitRequired) {
         for (let componentState of componentStates) {
           if (componentState.isSubmit) {
@@ -113,8 +110,11 @@ class DrawService extends ComponentService {
   }
 
   isDrawDataContainsObjects(drawData) {
-    return drawData.canvas != null && drawData.canvas.objects != null &&
-        drawData.canvas.objects.length > 0;
+    return (
+      drawData.canvas != null &&
+      drawData.canvas.objects != null &&
+      drawData.canvas.objects.length > 0
+    );
   }
 
   isStarterDrawDataExists(componentContent) {
@@ -133,12 +133,16 @@ class DrawService extends ComponentService {
    */
   generateImageFromRenderedComponentState(componentState) {
     const deferred = this.$q.defer();
-    let canvas = angular.element(document.querySelector('#drawingtool_' + componentState.nodeId + '_' + componentState.componentId + ' canvas'));
+    let canvas = angular.element(
+      document.querySelector(
+        '#drawingtool_' + componentState.nodeId + '_' + componentState.componentId + ' canvas'
+      )
+    );
     if (canvas != null && canvas.length > 0) {
       canvas = canvas[0];
       const canvasBase64String = canvas.toDataURL('image/png');
       const imageObject = this.UtilService.getImageObjectFromBase64String(canvasBase64String);
-      this.StudentAssetService.uploadAsset(imageObject).then((asset) => {
+      this.StudentAssetService.uploadAsset(imageObject).then(asset => {
         deferred.resolve(asset);
       });
     }
@@ -146,12 +150,6 @@ class DrawService extends ComponentService {
   }
 }
 
-DrawService.$inject = [
-  '$filter',
-  '$q',
-  'StudentAssetService',
-  'StudentDataService',
-  'UtilService'
-];
+DrawService.$inject = ['$filter', '$q', 'StudentAssetService', 'StudentDataService', 'UtilService'];
 
 export default DrawService;

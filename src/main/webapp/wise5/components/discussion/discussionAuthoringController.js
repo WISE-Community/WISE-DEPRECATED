@@ -3,24 +3,27 @@
 import DiscussionController from './discussionController';
 
 class DiscussionAuthoringController extends DiscussionController {
-  constructor($filter,
-              $mdDialog,
-              $q,
-              $rootScope,
-              $scope,
-              AnnotationService,
-              ConfigService,
-              DiscussionService,
-              NodeService,
-              NotebookService,
-              NotificationService,
-              ProjectService,
-              StudentAssetService,
-              StudentDataService,
-              StudentWebSocketService,
-              UtilService,
-              $mdMedia) {
-    super($filter,
+  constructor(
+    $filter,
+    $mdDialog,
+    $q,
+    $rootScope,
+    $scope,
+    AnnotationService,
+    ConfigService,
+    DiscussionService,
+    NodeService,
+    NotebookService,
+    NotificationService,
+    ProjectService,
+    StudentAssetService,
+    StudentDataService,
+    StudentWebSocketService,
+    UtilService,
+    $mdMedia
+  ) {
+    super(
+      $filter,
       $mdDialog,
       $q,
       $rootScope,
@@ -36,10 +39,9 @@ class DiscussionAuthoringController extends DiscussionController {
       StudentDataService,
       StudentWebSocketService,
       UtilService,
-      $mdMedia);
-    this.allowedConnectedComponentTypes = [
-      { type: 'Discussion' }
-    ];
+      $mdMedia
+    );
+    this.allowedConnectedComponentTypes = [{ type: 'Discussion' }];
   }
 
   authoringConnectedComponentTypeChanged(connectedComponent) {

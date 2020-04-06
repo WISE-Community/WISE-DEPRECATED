@@ -1,7 +1,7 @@
-import {browser, element} from 'protractor';
+import { browser, element } from 'protractor';
 import * as common from '../../common.js';
 import VLEPage from '../../vlePage.js';
-import OpenResponsePage from './openResponsePage.js'
+import OpenResponsePage from './openResponsePage.js';
 
 describe('WISE5 Open Response Component', () => {
   function shouldDisplayDefaultElements(vle, or) {
@@ -12,21 +12,20 @@ describe('WISE5 Open Response Component', () => {
 
     const prompt = or.getPrompt();
     common.shouldBePresent(prompt);
-    expect(prompt.getText())
-        .toEqual('This is a step where students enter text.');
+    expect(prompt.getText()).toEqual('This is a step where students enter text.');
   }
 
   function save(or) {
     or.save();
     common.shouldBeDisabled(or.saveButton);
     common.shouldBeEnabled(or.submitButton);
-    expect(or.saveMessage.getText()).toContain("Saved");
+    expect(or.saveMessage.getText()).toContain('Saved');
   }
 
   function submit(or) {
     or.submit();
     common.shouldBeDisabled(or.saveButton, or.saveButton);
-    expect(or.submitMessage.getText()).toContain("Submitted");
+    expect(or.submitMessage.getText()).toContain('Submitted');
   }
 
   function textareaShouldSay(or, expectedTextareaText) {
@@ -36,12 +35,18 @@ describe('WISE5 Open Response Component', () => {
   beforeEach(() => {
     const vle = new VLEPage();
     browser.get('http://localhost:8080/wise/project/demo#/vle/node2');
-    browser.wait(function() {
-      return vle.nodeDropDownMenu.isPresent()
-    }, 5000, 'VLE didn\'t load properly').then(() => {
-      const or = new OpenResponsePage();
-      shouldDisplayDefaultElements(vle, or);
-    });
+    browser
+      .wait(
+        function() {
+          return vle.nodeDropDownMenu.isPresent();
+        },
+        5000,
+        "VLE didn't load properly"
+      )
+      .then(() => {
+        const or = new OpenResponsePage();
+        shouldDisplayDefaultElements(vle, or);
+      });
   });
 
   it('should allow students to type text and edit', () => {
@@ -69,8 +74,7 @@ describe('WISE5 Open Response Component', () => {
     textareaShouldSay(or, firstSentence + secondSentence + thirdSentence);
   });
 
-  it('should auto-save on exit and show previously-entered response on revisit',
-      () => {
+  it('should auto-save on exit and show previously-entered response on revisit', () => {
     const or = new OpenResponsePage();
     const seaShellsSentence = 'She sells seashells by the seashore.';
     or.typeResponse(seaShellsSentence);

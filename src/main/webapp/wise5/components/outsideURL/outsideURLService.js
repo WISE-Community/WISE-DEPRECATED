@@ -42,17 +42,12 @@ class OutsideURLService extends ComponentService {
   }
 
   getOpenEducationalResources() {
-    return this.$http.get(`wise5/components/outsideURL/resources.json`).then((result) => {
+    return this.$http.get(`wise5/components/outsideURL/resources.json`).then(result => {
       return result.data;
     });
   }
 }
 
-OutsideURLService.$inject = [
-  '$filter',
-  '$http',
-  'StudentDataService',
-  'UtilService'
-];
+OutsideURLService.$inject = ['$filter', '$http', 'StudentDataService', 'UtilService'];
 
 export default OutsideURLService;

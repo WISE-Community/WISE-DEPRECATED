@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { I18n } from "@ngx-translate/i18n-polyfill";
+import { I18n } from '@ngx-translate/i18n-polyfill';
 import { StudentService } from '../../../student/student.service';
 import { finalize } from 'rxjs/operators';
 
@@ -11,7 +11,6 @@ import { finalize } from 'rxjs/operators';
   styleUrls: ['./forgot-student-password-change.component.scss']
 })
 export class ForgotStudentPasswordChangeComponent implements OnInit {
-
   username: string;
   questionKey: string;
   answer: string;
@@ -22,11 +21,13 @@ export class ForgotStudentPasswordChangeComponent implements OnInit {
   message: string = '';
   processing: boolean = false;
 
-  constructor(private fb: FormBuilder,
-              private router: Router,
-              private route: ActivatedRoute,
-              private studentService: StudentService,
-              private i18n: I18n) { }
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private route: ActivatedRoute,
+    private studentService: StudentService,
+    private i18n: I18n
+  ) {}
 
   ngOnInit() {
     this.username = this.route.snapshot.queryParamMap.get('username');
@@ -40,13 +41,14 @@ export class ForgotStudentPasswordChangeComponent implements OnInit {
     const confirmPassword = this.getConfirmPassword();
     if (this.isPasswordsMatch(password, confirmPassword)) {
       this.processing = true;
-      this.studentService.changePassword(this.username, this.answer, password, confirmPassword)
+      this.studentService
+        .changePassword(this.username, this.answer, password, confirmPassword)
         .pipe(
           finalize(() => {
             this.processing = false;
           })
         )
-        .subscribe((response) => {
+        .subscribe(response => {
           if (response.status === 'success') {
             this.goToSuccessPage();
           } else {
@@ -114,7 +116,9 @@ export class ForgotStudentPasswordChangeComponent implements OnInit {
     const params = {
       username: this.username
     };
-    this.router.navigate(['/forgot/student/password/complete'],
-      {queryParams: params, skipLocationChange: true});
+    this.router.navigate(['/forgot/student/password/complete'], {
+      queryParams: params,
+      skipLocationChange: true
+    });
   }
 }

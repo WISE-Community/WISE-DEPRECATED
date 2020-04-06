@@ -1,14 +1,30 @@
 'use strict';
 
-import ComponentController from "../componentController";
+import ComponentController from '../componentController';
 import html2canvas from 'html2canvas';
 
 class TableController extends ComponentController {
-  constructor($anchorScroll,
+  constructor(
+    $anchorScroll,
+    $filter,
+    $location,
+    $mdDialog,
+    $q,
+    $rootScope,
+    $scope,
+    AnnotationService,
+    ConfigService,
+    NodeService,
+    NotebookService,
+    ProjectService,
+    StudentAssetService,
+    StudentDataService,
+    TableService,
+    UtilService
+  ) {
+    super(
       $filter,
-      $location,
       $mdDialog,
-      $q,
       $rootScope,
       $scope,
       AnnotationService,
@@ -18,12 +34,8 @@ class TableController extends ComponentController {
       ProjectService,
       StudentAssetService,
       StudentDataService,
-      TableService,
-      UtilService) {
-    super($filter, $mdDialog, $rootScope, $scope,
-        AnnotationService, ConfigService, NodeService,
-        NotebookService, ProjectService, StudentAssetService,
-        StudentDataService, UtilService);
+      UtilService
+    );
     this.$anchorScroll = $anchorScroll;
     this.$location = $location;
     this.$q = $q;
@@ -49,8 +61,7 @@ class TableController extends ComponentController {
       if (this.dataExplorerGraphTypes.length > 0) {
         this.dataExplorerGraphType = this.dataExplorerGraphTypes[0].value;
       }
-      this.isDataExplorerScatterPlotRegressionLineEnabled =
-          this.componentContent.isDataExplorerScatterPlotRegressionLineEnabled;
+      this.isDataExplorerScatterPlotRegressionLineEnabled = this.componentContent.isDataExplorerScatterPlotRegressionLineEnabled;
       if (this.componentContent.numDataExplorerYAxis > 1) {
         this.dataExplorerYAxisLabels = Array(this.componentContent.numDataExplorerYAxis).fill('');
       }
@@ -89,7 +100,9 @@ class TableController extends ComponentController {
       if (this.UtilService.hasShowWorkConnectedComponent(this.componentContent)) {
         // we will show work from another component
         this.handleConnectedComponents();
-      }  else if (this.TableService.componentStateHasStudentWork(componentState, this.componentContent)) {
+      } else if (
+        this.TableService.componentStateHasStudentWork(componentState, this.componentContent)
+      ) {
         /*
          * the student has work so we will populate the work into this
          * component
@@ -128,7 +141,10 @@ class TableController extends ComponentController {
     }
 
     // check if the student has used up all of their submits
-    if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
+    if (
+      this.componentContent.maxSubmitCount != null &&
+      this.submitCounter >= this.componentContent.maxSubmitCount
+    ) {
       /*
        * the student has used up all of their chances to submit so we
        * will disable the submit button
@@ -146,12 +162,17 @@ class TableController extends ComponentController {
      * @param componentState the component state from the connected
      * component that has changed
      */
-    this.$scope.handleConnectedComponentStudentDataChanged = function(connectedComponent, connectedComponentParams, componentState) {
-
-      if (connectedComponent != null && connectedComponentParams != null && componentState != null) {
-
+    this.$scope.handleConnectedComponentStudentDataChanged = function(
+      connectedComponent,
+      connectedComponentParams,
+      componentState
+    ) {
+      if (
+        connectedComponent != null &&
+        connectedComponentParams != null &&
+        componentState != null
+      ) {
         if (connectedComponentParams.updateOn === 'change') {
-
         }
 
         // get the component type that has changed
@@ -164,23 +185,27 @@ class TableController extends ComponentController {
         componentState = this.UtilService.makeCopyOfJSONObject(componentState);
 
         if (componentType === 'Table') {
-
           // set the table data
           this.$scope.tableController.setStudentWork(componentState);
 
           // the table has changed
           this.$scope.tableController.isDirty = true;
         } else if (componentType === 'Graph') {
-
           // set the graph data into the table
-          this.$scope.tableController.setGraphDataIntoTableData(componentState, connectedComponentParams);
+          this.$scope.tableController.setGraphDataIntoTableData(
+            componentState,
+            connectedComponentParams
+          );
 
           // the table has changed
           this.$scope.tableController.isDirty = true;
         } else if (componentType === 'Embedded') {
           this.$scope.tableController.setStudentWork(componentState);
           this.$scope.tableController.isDirty = true;
-          this.$scope.$emit('componentSaveTriggered', {nodeId: this.nodeId, componentId: this.componentId});
+          this.$scope.$emit('componentSaveTriggered', {
+            nodeId: this.nodeId,
+            componentId: this.componentId
+          });
         }
       }
     }.bind(this);
@@ -212,7 +237,7 @@ class TableController extends ComponentController {
 
       if (getState) {
         // create a component state populated with the student data
-        this.$scope.tableController.createComponentState(action).then((componentState) => {
+        this.$scope.tableController.createComponentState(action).then(componentState => {
           deferred.resolve(componentState);
         });
       } else {
@@ -232,9 +257,10 @@ class TableController extends ComponentController {
      * exits the parent node. This will perform any necessary cleanup
      * when the student exits the parent node.
      */
-    this.$scope.$on('exitNode', angular.bind(this, function(event, args) {
-
-    }));
+    this.$scope.$on(
+      'exitNode',
+      angular.bind(this, function(event, args) {})
+    );
 
     this.$scope.getNumber = function(num) {
       var array = new Array();
@@ -245,9 +271,12 @@ class TableController extends ComponentController {
       }
 
       return array;
-    }
+    };
 
-    this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
+    this.$rootScope.$broadcast('doneRenderingComponent', {
+      nodeId: this.nodeId,
+      componentId: this.componentId
+    });
   }
 
   registerStudentWorkSavedToServerListener() {
@@ -255,72 +284,86 @@ class TableController extends ComponentController {
      * Listen for the 'studentWorkSavedToServer' event which is fired when
      * we receive the response from saving a component state to the server
      */
-    this.$scope.$on('studentWorkSavedToServer', angular.bind(this, function(event, args) {
+    this.$scope.$on(
+      'studentWorkSavedToServer',
+      angular.bind(this, function(event, args) {
+        let componentState = args.studentWork;
 
-      let componentState = args.studentWork;
+        // check that the component state is for this component
+        if (
+          componentState &&
+          this.nodeId === componentState.nodeId &&
+          this.componentId === componentState.componentId
+        ) {
+          // set isDirty to false because the component state was just saved and notify node
+          this.isDirty = false;
+          this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: false });
 
-      // check that the component state is for this component
-      if (componentState && this.nodeId === componentState.nodeId
-        && this.componentId === componentState.componentId) {
+          let isAutoSave = componentState.isAutoSave;
+          let isSubmit = componentState.isSubmit;
+          let serverSaveTime = componentState.serverSaveTime;
+          let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
 
-        // set isDirty to false because the component state was just saved and notify node
-        this.isDirty = false;
-        this.$scope.$emit('componentDirty', {componentId: this.componentId, isDirty: false});
+          if (isSubmit) {
+            this.setSubmittedMessage(clientSaveTime);
+            this.lockIfNecessary();
 
-        let isAutoSave = componentState.isAutoSave;
-        let isSubmit = componentState.isSubmit;
-        let serverSaveTime = componentState.serverSaveTime;
-        let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
-
-        if (isSubmit) {
-          this.setSubmittedMessage(clientSaveTime);
-          this.lockIfNecessary();
-
-          // set isSubmitDirty to false because the component state was just submitted and notify node
-          this.isSubmitDirty = false;
-          this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: false});
-        } else if (isAutoSave) {
-          this.setAutoSavedMessage(clientSaveTime);
-        } else {
-          this.setSavedMessage(clientSaveTime);
+            // set isSubmitDirty to false because the component state was just submitted and notify node
+            this.isSubmitDirty = false;
+            this.$scope.$emit('componentSubmitDirty', {
+              componentId: this.componentId,
+              isDirty: false
+            });
+          } else if (isAutoSave) {
+            this.setAutoSavedMessage(clientSaveTime);
+          } else {
+            this.setSavedMessage(clientSaveTime);
+          }
         }
-      }
 
-      // check if the component state is from a connected component
-      if (this.ProjectService.isConnectedComponent(this.nodeId, this.componentId, componentState.componentId)) {
+        // check if the component state is from a connected component
+        if (
+          this.ProjectService.isConnectedComponent(
+            this.nodeId,
+            this.componentId,
+            componentState.componentId
+          )
+        ) {
+          // get the connected component params
+          var connectedComponentParams = this.ProjectService.getConnectedComponentParams(
+            this.componentContent,
+            componentState.componentId
+          );
 
-        // get the connected component params
-        var connectedComponentParams = this.ProjectService.getConnectedComponentParams(this.componentContent, componentState.componentId);
+          if (connectedComponentParams != null) {
+            if (
+              connectedComponentParams.updateOn === 'save' ||
+              (connectedComponentParams.updateOn === 'submit' && componentState.isSubmit)
+            ) {
+              var performUpdate = false;
 
-        if (connectedComponentParams != null) {
-
-          if (connectedComponentParams.updateOn === 'save' ||
-            (connectedComponentParams.updateOn === 'submit' && componentState.isSubmit)) {
-
-            var performUpdate = false;
-
-            /*
-             * make a copy of the component state so we don't accidentally
-             * change any values in the referenced object
-             */
-            componentState = this.UtilService.makeCopyOfJSONObject(componentState);
-
-            /*
-             * make sure the student hasn't entered any values into the
-             * table so that we don't overwrite any of their work.
-             */
-            if (this.isTableEmpty() || this.isTableReset()) {
               /*
-               * the student has not entered any values into the table
-               * so we can update it
+               * make a copy of the component state so we don't accidentally
+               * change any values in the referenced object
                */
-              performUpdate = true;
-            } else {
+              componentState = this.UtilService.makeCopyOfJSONObject(componentState);
+
               /*
-               * the student has entered values into the table so we
-               * will ask them if they want to update it
+               * make sure the student hasn't entered any values into the
+               * table so that we don't overwrite any of their work.
                */
-              /*
+              if (this.isTableEmpty() || this.isTableReset()) {
+                /*
+                 * the student has not entered any values into the table
+                 * so we can update it
+                 */
+                performUpdate = true;
+              } else {
+                /*
+                 * the student has entered values into the table so we
+                 * will ask them if they want to update it
+                 */
+                /*
               var answer = confirm('Do you want to update the connected table?');
 
               if (answer) {
@@ -328,28 +371,29 @@ class TableController extends ComponentController {
                 performUpdate = true;
               }
               */
-              performUpdate = true;
+                performUpdate = true;
+              }
+
+              if (performUpdate) {
+                // set the table data
+                this.$scope.tableController.setStudentWork(componentState);
+
+                // the table has changed
+                this.$scope.tableController.isDirty = true;
+                this.$scope.tableController.isSubmitDirty = true;
+              }
+
+              /*
+               * remember the component state and connected component params
+               * in case we need to use them again later
+               */
+              this.latestConnectedComponentState = componentState;
+              this.latestConnectedComponentParams = connectedComponentParams;
             }
-
-            if (performUpdate) {
-              // set the table data
-              this.$scope.tableController.setStudentWork(componentState);
-
-              // the table has changed
-              this.$scope.tableController.isDirty = true;
-              this.$scope.tableController.isSubmitDirty = true;
-            }
-
-            /*
-             * remember the component state and connected component params
-             * in case we need to use them again later
-             */
-            this.latestConnectedComponentState = componentState;
-            this.latestConnectedComponentParams = connectedComponentParams;
           }
         }
-      }
-    }));
+      })
+    );
   }
 
   handleNodeSubmit() {
@@ -375,13 +419,12 @@ class TableController extends ComponentController {
     }
 
     return tableDataCopy;
-  };
+  }
 
   /**
    * Setup the table
    */
   setupTable() {
-
     if (this.tableData == null) {
       /*
        * the student does not have any table data so we will use
@@ -389,7 +432,7 @@ class TableController extends ComponentController {
        */
       this.tableData = this.getCopyOfTableData(this.componentContent.tableData);
     }
-  };
+  }
 
   /**
    * Reset the table data to its initial state from the component content
@@ -404,23 +447,21 @@ class TableController extends ComponentController {
       this.tableData = this.getCopyOfTableData(this.componentContent.tableData);
       this.studentDataChanged();
     }
-  };
+  }
 
   /**
    * Get the rows of the table data
    */
   getTableDataRows() {
     return this.tableData;
-  };
+  }
 
   /**
    * Populate the student work into the component
    * @param componentState the component state to populate into the component
    */
   setStudentWork(componentState) {
-
     if (componentState != null) {
-
       // get the student data from the component state
       var studentData = componentState.studentData;
 
@@ -447,7 +488,6 @@ class TableController extends ComponentController {
    * @return a promise that will return a component state
    */
   createComponentState(action) {
-
     var deferred = this.$q.defer();
 
     // create a new component state
@@ -466,8 +506,7 @@ class TableController extends ComponentController {
     if (this.dataExplorerYAxisLabels) {
       studentData.dataExplorerYAxisLabels = this.dataExplorerYAxisLabels;
     }
-    studentData.isDataExplorerScatterPlotRegressionLineEnabled =
-        this.isDataExplorerScatterPlotRegressionLineEnabled;
+    studentData.isDataExplorerScatterPlotRegressionLineEnabled = this.isDataExplorerScatterPlotRegressionLineEnabled;
     studentData.dataExplorerSeries = this.UtilService.makeCopyOfJSONObject(this.dataExplorerSeries);
 
     // set the submit counter
@@ -508,7 +547,6 @@ class TableController extends ComponentController {
    * @return a component state with no student data
    */
   createBlankComponentState() {
-
     // create a new component state
     var componentState = this.NodeService.createNewComponentState();
 
@@ -520,7 +558,7 @@ class TableController extends ComponentController {
     }
 
     return componentState;
-  };
+  }
 
   /**
    * Check whether we need to show the reset table button
@@ -528,7 +566,7 @@ class TableController extends ComponentController {
    */
   showResetTableButton() {
     return this.isResetTableButtonVisible;
-  };
+  }
 
   /**
    * Set the graph data into the table data
@@ -537,12 +575,10 @@ class TableController extends ComponentController {
    * and rows to overwrite in the table data
    */
   setGraphDataIntoTableData(componentState, params) {
-
     var trialIndex = 0;
     var seriesIndex = 0;
 
     if (params != null) {
-
       if (params.trialIndex != null) {
         // get the trial index
         trialIndex = params.trialIndex;
@@ -560,7 +596,6 @@ class TableController extends ComponentController {
     }
 
     if (componentState != null && componentState.studentData != null) {
-
       // get the student data
       var studentData = componentState.studentData;
 
@@ -574,7 +609,6 @@ class TableController extends ComponentController {
         var series = studentData.series;
 
         if (series != null && series.length > 0) {
-
           // get the series that we will get data from
           var tempSeries = series[seriesIndex];
 
@@ -588,17 +622,14 @@ class TableController extends ComponentController {
         var trials = studentData.trials;
 
         if (trials != null) {
-
           // get the specific trial we want
           var trial = trials[trialIndex];
 
           if (trial != null) {
-
             // get the series in the trial
             var multipleSeries = trial.series;
 
             if (multipleSeries != null) {
-
               // get the specific series we want
               var series = multipleSeries[seriesIndex];
 
@@ -609,7 +640,7 @@ class TableController extends ComponentController {
         }
       }
     }
-  };
+  }
 
   /**
    * Show the data at x for all the series.
@@ -639,9 +670,13 @@ class TableController extends ComponentController {
           if (singleSeries.show !== false) {
             let closestDataPoint = this.getClosestDataPoint(singleSeries.data, x);
             if (closestDataPoint != null) {
-              this.addTableDataRow(this.createTableRow([singleSeries.name,
+              this.addTableDataRow(
+                this.createTableRow([
+                  singleSeries.name,
                   Math.round(this.getXFromDataPoint(closestDataPoint)) + ' ' + xUnits,
-                  Math.round(this.getYFromDataPoint(closestDataPoint)) + ' ' + yUnits]));
+                  Math.round(this.getYFromDataPoint(closestDataPoint)) + ' ' + yUnits
+                ])
+              );
             }
           }
         }
@@ -757,7 +792,6 @@ class TableController extends ComponentController {
    * @param params the parameters for where to place the points in the table
    */
   setSeriesIntoTable(series, params) {
-
     /*
      * the default is set to not skip the first row and for the
      * x column to be the first column and the y column to be the
@@ -768,7 +802,6 @@ class TableController extends ComponentController {
     var yColumn = 1;
 
     if (params != null) {
-
       if (params.skipFirstRow != null) {
         // determine whether to skip the first row
         skipFirstRow = params.skipFirstRow;
@@ -786,7 +819,6 @@ class TableController extends ComponentController {
     }
 
     if (series != null) {
-
       // get the table data rows
       var tableDataRows = this.getTableDataRows();
 
@@ -794,13 +826,11 @@ class TableController extends ComponentController {
       var data = series.data;
 
       if (data != null) {
-
         // our counter for traversing the data rows
         var dataRowCounter = 0;
 
         // loop through all the table data rows
         for (var r = 0; r < tableDataRows.length; r++) {
-
           if (skipFirstRow && r === 0) {
             // skip the first table data row
             continue;
@@ -836,7 +866,6 @@ class TableController extends ComponentController {
    * @param value the value to set in the cell
    */
   setTableDataCellValue(x, y, table, value) {
-
     var tableDataRows = table;
 
     if (table == null) {
@@ -845,23 +874,20 @@ class TableController extends ComponentController {
     }
 
     if (tableDataRows != null) {
-
       // get the row we want
       var row = tableDataRows[y];
 
       if (row != null) {
-
         // get the cell we want
         var cell = row[x];
 
         if (cell != null) {
-
           // set the value into the cell
           cell.text = value;
         }
       }
     }
-  };
+  }
 
   /**
    * Get the value of a cell in the table
@@ -872,7 +898,6 @@ class TableController extends ComponentController {
    * @returns the cell value (text or a number)
    */
   getTableDataCellValue(x, y, table) {
-
     var cellValue = null;
 
     if (table == null) {
@@ -881,17 +906,14 @@ class TableController extends ComponentController {
     }
 
     if (table != null) {
-
       // get the row we want
       var row = table[y];
 
       if (row != null) {
-
         // get the cell we want
         var cell = row[x];
 
         if (cell != null) {
-
           // set the value into the cell
           cellValue = cell.text;
         }
@@ -930,10 +952,8 @@ class TableController extends ComponentController {
 
     // loop through all the rows
     for (var r = 0; r < numRows; r++) {
-
       // loop through all the cells in the row
       for (var c = 0; c < numColumns; c++) {
-
         // get a cell value
         var cellValue = this.getTableDataCellValue(c, r);
 
@@ -969,10 +989,8 @@ class TableController extends ComponentController {
 
     // loop through all the rows
     for (var r = 0; r < numRows; r++) {
-
       // loop through all the cells in the row
       for (var c = 0; c < numColumns; c++) {
-
         // get the cell value from the student table
         var cellValue = this.getTableDataCellValue(c, r);
 
@@ -1000,14 +1018,16 @@ class TableController extends ComponentController {
    */
   snipTable($event) {
     // get the table element. this will obtain an array.
-    var tableElement = angular.element(document.querySelector('#table_' + this.nodeId + '_' + this.componentId));
+    var tableElement = angular.element(
+      document.querySelector('#table_' + this.nodeId + '_' + this.componentId)
+    );
 
     if (tableElement != null && tableElement.length > 0) {
       // get the table element
       tableElement = tableElement[0];
 
       // convert the table element to a canvas element
-      html2canvas(tableElement).then((canvas) => {
+      html2canvas(tableElement).then(canvas => {
         // get the canvas as a base64 string
         var img_b64 = canvas.toDataURL('image/png');
 
@@ -1022,8 +1042,7 @@ class TableController extends ComponentController {
 
   handleConnectedComponents() {
     let isStudentDataChanged = false;
-    const connectedComponentsAndTheirComponentStates =
-        this.getConnectedComponentsAndTheirComponentStates();
+    const connectedComponentsAndTheirComponentStates = this.getConnectedComponentsAndTheirComponentStates();
     for (const connectedComponentAndComponentState of connectedComponentsAndTheirComponentStates) {
       const connectedComponent = connectedComponentAndComponentState.connectedComponent;
       const componentState = connectedComponentAndComponentState.componentState;
@@ -1139,13 +1158,15 @@ class TableController extends ComponentController {
   }
 
   isDataExplorerOneYAxis() {
-    return this.componentContent.numDataExplorerYAxis == null ||
-        this.componentContent.numDataExplorerYAxis === 1;
+    return (
+      this.componentContent.numDataExplorerYAxis == null ||
+      this.componentContent.numDataExplorerYAxis === 1
+    );
   }
 
   getDataExplorerYAxisLabelWhenOneYAxis() {
     let yAxisLabel = '';
-    for (let index = 0; index < this.dataExplorerSeries.length; index++) { 
+    for (let index = 0; index < this.dataExplorerSeries.length; index++) {
       const yColumn = this.dataExplorerSeries[index].yColumn;
       if (yColumn != null) {
         const columnName = this.getColumnName(yColumn);
@@ -1178,8 +1199,9 @@ class TableController extends ComponentController {
     this.dataExplorerXAxisLabel = componentState.studentData.dataExplorerXAxisLabel;
     this.dataExplorerYAxisLabel = componentState.studentData.dataExplorerYAxisLabel;
     this.dataExplorerYAxisLabels = componentState.studentData.dataExplorerYAxisLabels;
-    this.dataExplorerSeries =
-        this.UtilService.makeCopyOfJSONObject(componentState.studentData.dataExplorerSeries);
+    this.dataExplorerSeries = this.UtilService.makeCopyOfJSONObject(
+      componentState.studentData.dataExplorerSeries
+    );
     this.dataExplorerXColumn = this.dataExplorerSeries[0].xColumn;
   }
 }

@@ -1,28 +1,31 @@
 'use strict';
 
-import DrawController from "./drawController";
+import DrawController from './drawController';
 import drawingTool from '../../lib/drawingTool/drawing-tool';
 import drawingToolVendor from '../../lib/drawingTool/vendor.min';
 import html2canvas from 'html2canvas';
 
 class DrawAuthoringController extends DrawController {
-  constructor($filter,
-              $injector,
-              $mdDialog,
-              $q,
-              $rootScope,
-              $scope,
-              $timeout,
-              AnnotationService,
-              ConfigService,
-              DrawService,
-              NodeService,
-              NotebookService,
-              ProjectService,
-              StudentAssetService,
-              StudentDataService,
-              UtilService) {
-    super($filter,
+  constructor(
+    $filter,
+    $injector,
+    $mdDialog,
+    $q,
+    $rootScope,
+    $scope,
+    $timeout,
+    AnnotationService,
+    ConfigService,
+    DrawService,
+    NodeService,
+    NotebookService,
+    ProjectService,
+    StudentAssetService,
+    StudentDataService,
+    UtilService
+  ) {
+    super(
+      $filter,
       $injector,
       $mdDialog,
       $q,
@@ -37,7 +40,8 @@ class DrawAuthoringController extends DrawController {
       ProjectService,
       StudentAssetService,
       StudentDataService,
-      UtilService);
+      UtilService
+    );
 
     this.allowedConnectedComponentTypes = [
       { type: 'ConceptMap' },
@@ -51,15 +55,19 @@ class DrawAuthoringController extends DrawController {
     this.isResetButtonVisible = true;
     this.drawingToolId = 'drawingtool_' + this.nodeId + '_' + this.componentId;
 
-    $scope.$watch(function() {
-      return this.authoringComponentContent;
-    }.bind(this), function(newValue, oldValue) {
-      this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-      this.submitCounter = 0;
-      this.initializeDrawingTool();
-      this.isSaveButtonVisible = this.componentContent.showSaveButton;
-      this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-    }.bind(this), true);
+    $scope.$watch(
+      function() {
+        return this.authoringComponentContent;
+      }.bind(this),
+      function(newValue, oldValue) {
+        this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+        this.submitCounter = 0;
+        this.initializeDrawingTool();
+        this.isSaveButtonVisible = this.componentContent.showSaveButton;
+        this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+      }.bind(this),
+      true
+    );
   }
 
   assetSelected(event, args) {
@@ -134,7 +142,13 @@ class DrawAuthoringController extends DrawController {
    * @param index the index of the stamp
    */
   authoringDeleteStampClicked(index) {
-    if (confirm(this.$translate('draw.areYouSureYouWantToDeleteThisStamp') + '\n\n' + this.authoringComponentContent.stamps.Stamps[index])) {
+    if (
+      confirm(
+        this.$translate('draw.areYouSureYouWantToDeleteThisStamp') +
+          '\n\n' +
+          this.authoringComponentContent.stamps.Stamps[index]
+      )
+    ) {
       this.authoringComponentContent.stamps.Stamps.splice(index, 1);
       this.authoringViewComponentChanged();
     }
@@ -209,7 +223,9 @@ class DrawAuthoringController extends DrawController {
 
   updateStarterDrawDataWidth() {
     if (this.authoringComponentContent.starterDrawData != null) {
-      const starterDrawDataJSONObject = angular.fromJson(this.authoringComponentContent.starterDrawData);
+      const starterDrawDataJSONObject = angular.fromJson(
+        this.authoringComponentContent.starterDrawData
+      );
       if (starterDrawDataJSONObject != null && starterDrawDataJSONObject.dt != null) {
         starterDrawDataJSONObject.dt.width = this.width;
         this.authoringComponentContent.starterDrawData = angular.toJson(starterDrawDataJSONObject);
@@ -226,7 +242,9 @@ class DrawAuthoringController extends DrawController {
 
   updateStarterDrawDataHeight() {
     if (this.authoringComponentContent.starterDrawData != null) {
-      const starterDrawDataJSONObject = angular.fromJson(this.authoringComponentContent.starterDrawData);
+      const starterDrawDataJSONObject = angular.fromJson(
+        this.authoringComponentContent.starterDrawData
+      );
       if (starterDrawDataJSONObject != null && starterDrawDataJSONObject.dt != null) {
         starterDrawDataJSONObject.dt.height = this.height;
         this.authoringComponentContent.starterDrawData = angular.toJson(starterDrawDataJSONObject);
@@ -258,10 +276,12 @@ class DrawAuthoringController extends DrawController {
     const starterDrawData = this.authoringComponentContent.starterDrawData;
     if (starterDrawData != null) {
       const starterDrawDataJSON = angular.fromJson(starterDrawData);
-      if (starterDrawDataJSON != null &&
+      if (
+        starterDrawDataJSON != null &&
         starterDrawDataJSON.canvas != null &&
         starterDrawDataJSON.canvas.backgroundImage != null &&
-        starterDrawDataJSON.canvas.backgroundImage.src != null) {
+        starterDrawDataJSON.canvas.backgroundImage.src != null
+      ) {
         const projectAssetsDirectoryPath = this.ConfigService.getProjectAssetsDirectoryPath(true);
         const background = this.authoringComponentContent.background;
         const newSrc = projectAssetsDirectoryPath + '/' + background;
@@ -292,8 +312,7 @@ class DrawAuthoringController extends DrawController {
   }
 
   handleConnectedComponentsPostProcess() {
-    if (this.componentContent != null &&
-      this.componentContent.background != null) {
+    if (this.componentContent != null && this.componentContent.background != null) {
       this.drawingTool.setBackgroundImage(this.componentContent.background);
     }
   }
@@ -307,8 +326,10 @@ class DrawAuthoringController extends DrawController {
     let numberOfAllowedComponents = 0;
     let allowedComponent = null;
     for (const component of this.getComponentsByNodeId(connectedComponent.nodeId)) {
-      if (this.isConnectedComponentTypeAllowed(component.type) &&
-          component.id != this.componentId) {
+      if (
+        this.isConnectedComponentTypeAllowed(component.type) &&
+        component.id != this.componentId
+      ) {
         numberOfAllowedComponents += 1;
         allowedComponent = component;
       }
@@ -328,7 +349,7 @@ class DrawAuthoringController extends DrawController {
 
   authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent) {
     const componentType = this.authoringGetConnectedComponentType(connectedComponent);
-    if (['ConceptMap','Embedded','Graph','Label','Table'].includes(componentType)) {
+    if (['ConceptMap', 'Embedded', 'Graph', 'Label', 'Table'].includes(componentType)) {
       connectedComponent.importWorkAsBackground = true;
     } else {
       delete connectedComponent.importWorkAsBackground;

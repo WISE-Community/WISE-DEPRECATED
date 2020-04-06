@@ -14,7 +14,7 @@ const NavItem = {
   },
   template: '<ng-include src="::navitemCtrl.getTemplateUrl()"></ng-include>',
   controller: 'NavItemController as navitemCtrl'
-}
+};
 
 const NodeStatusIcon = {
   bindings: {
@@ -23,7 +23,7 @@ const NodeStatusIcon = {
   },
   template: '<ng-include src="::nodeStatusIconCtrl.getTemplateUrl()"></ng-include>',
   controller: 'NodeStatusIconCtrl as nodeStatusIconCtrl'
-}
+};
 
 const StepTools = {
   bindings: {
@@ -31,17 +31,17 @@ const StepTools = {
   },
   template: '<ng-include src="::stepToolsCtrl.getTemplateUrl()"></ng-include>',
   controller: 'StepToolsCtrl as stepToolsCtrl'
-}
+};
 
 let ThemeComponents = angular.module('theme.components', []);
 
 ThemeComponents.controller('NavItemController', NavItemController)
-    .controller('StepToolsCtrl', StepToolsCtrl)
-    .controller('NodeStatusIconCtrl', NodeStatusIconCtrl)
-    .component('helpIcon', HelpIcon)
-    .component('navItem', NavItem)
-    .component('nodeIcon', NodeIcon)
-    .component('nodeStatusIcon', NodeStatusIcon)
-    .component('stepTools', StepTools);
+  .controller('StepToolsCtrl', StepToolsCtrl)
+  .controller('NodeStatusIconCtrl', NodeStatusIconCtrl)
+  .component('helpIcon', HelpIcon)
+  .component('navItem', NavItem)
+  .component('nodeIcon', NodeIcon)
+  .component('nodeStatusIcon', NodeStatusIcon)
+  .component('stepTools', StepTools);
 
 export default ThemeComponents;

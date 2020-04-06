@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 class MilestoneDetailsController {
   constructor(
@@ -17,32 +17,30 @@ class MilestoneDetailsController {
     this.ProjectService = ProjectService;
     this.TeacherDataService = TeacherDataService;
     this.NodeService = NodeService;
-    this.$translate = this.$filter("translate");
+    this.$translate = this.$filter('translate');
     this.periodId = this.TeacherDataService.getCurrentPeriod().periodId;
     this.$onInit = () => {
       this.requirements = this.getRequirements();
-      this.saveMilestoneCurrentPeriodSelectedEvent(
-        this.TeacherDataService.getCurrentPeriod()
-      );
+      this.saveMilestoneCurrentPeriodSelectedEvent(this.TeacherDataService.getCurrentPeriod());
     };
-    this.$scope.$on("currentPeriodChanged", (event, { currentPeriod }) => {
+    this.$scope.$on('currentPeriodChanged', (event, { currentPeriod }) => {
       this.periodId = currentPeriod.periodId;
       this.saveMilestoneCurrentPeriodSelectedEvent(currentPeriod);
     });
   }
 
   saveMilestoneCurrentPeriodSelectedEvent(currentPeriod) {
-    const context = "ClassroomMonitor",
+    const context = 'ClassroomMonitor',
       nodeId = null,
       componentId = null,
       componentType = null,
-      category = "Navigation",
+      category = 'Navigation',
       data = {
         milestoneId: this.milestone.id,
         periodId: currentPeriod.periodId,
         periodName: currentPeriod.periodName
       },
-      event = "MilestonePeriodSelected",
+      event = 'MilestonePeriodSelected',
       projectId = null;
     this.TeacherDataService.saveEvent(
       context,
@@ -112,11 +110,11 @@ class MilestoneDetailsController {
   }
 
   saveTabSelectedEvent(event) {
-    const context = "ClassroomMonitor",
+    const context = 'ClassroomMonitor',
       nodeId = null,
       componentId = null,
       componentType = null,
-      category = "Navigation",
+      category = 'Navigation',
       data = { milestoneId: this.milestone.id },
       projectId = null;
     this.TeacherDataService.saveEvent(
@@ -135,23 +133,22 @@ class MilestoneDetailsController {
 }
 
 MilestoneDetailsController.$inject = [
-  "$filter",
-  "$scope",
-  "$state",
-  "ConfigService",
-  "ProjectService",
-  "TeacherDataService",
-  "NodeService"
+  '$filter',
+  '$scope',
+  '$state',
+  'ConfigService',
+  'ProjectService',
+  'TeacherDataService',
+  'NodeService'
 ];
 
 const MilestoneDetails = {
   bindings: {
-    milestone: "<",
-    onShowWorkgroup: "&",
-    onVisitNodeGrading: "&"
+    milestone: '<',
+    onShowWorkgroup: '&',
+    onVisitNodeGrading: '&'
   },
-  template: 
-    `<div class="milestone-details">
+  template: `<div class="milestone-details">
       <section class="milestone-details__section md-whiteframe-1dp">
         <div layout="row" layout-align="start center">
           <period-select custom-class="'md-no-underline md-button toolbar__select'"></period-select>

@@ -7,11 +7,8 @@ import { Router } from '@angular/router';
 describe('LibraryService', () => {
   configureTestSuite(() => {
     TestBed.configureTestingModule({
-      providers: [
-        LibraryService,
-        { provide: Router }
-      ],
-      imports: [ HttpClientTestingModule ]
+      providers: [LibraryService, { provide: Router }],
+      imports: [HttpClientTestingModule]
     });
   });
 
@@ -19,23 +16,30 @@ describe('LibraryService', () => {
     expect(service).toBeTruthy();
   }));
 
-  it('should convert LibraryGroup JSON object into LibraryGroup object', inject([LibraryService], (service: LibraryService) => {
-    const libraryGroupsJSON = [{
-      'id': '6thGrade',
-      'name': '6th grade projects',
-      'type': 'group',
-      'children': [{
-        'id': 2,
-        'dateCreated': '2019-02-21',
-        'name': 'sample project',
-        'owner': {},
-        'sharedOwners': [],
-        'projectThumb': '17/assets/projectThumb.png',
-        'type': 'project',
-        'wiseVersion': 5
-      }]
-    }];
-    const convertedLibraryGroups = service.convertLibraryGroups(libraryGroupsJSON);
-    expect(convertedLibraryGroups[0].children[0].constructor.name).toEqual('LibraryProject');
-  }));
+  it('should convert LibraryGroup JSON object into LibraryGroup object', inject(
+    [LibraryService],
+    (service: LibraryService) => {
+      const libraryGroupsJSON = [
+        {
+          id: '6thGrade',
+          name: '6th grade projects',
+          type: 'group',
+          children: [
+            {
+              id: 2,
+              dateCreated: '2019-02-21',
+              name: 'sample project',
+              owner: {},
+              sharedOwners: [],
+              projectThumb: '17/assets/projectThumb.png',
+              type: 'project',
+              wiseVersion: 5
+            }
+          ]
+        }
+      ];
+      const convertedLibraryGroups = service.convertLibraryGroups(libraryGroupsJSON);
+      expect(convertedLibraryGroups[0].children[0].constructor.name).toEqual('LibraryProject');
+    }
+  ));
 });

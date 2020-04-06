@@ -1,31 +1,43 @@
 'use strict';
 
-import ComponentController from "../componentController";
+import ComponentController from '../componentController';
 import Fabric from 'fabric';
 import html2canvas from 'html2canvas';
 
 class LabelController extends ComponentController {
-  constructor($filter,
+  constructor(
+    $filter,
+    $mdDialog,
+    $q,
+    $rootScope,
+    $scope,
+    $timeout,
+    $window,
+    AnnotationService,
+    ConfigService,
+    LabelService,
+    NodeService,
+    NotebookService,
+    OpenResponseService,
+    ProjectService,
+    StudentAssetService,
+    StudentDataService,
+    UtilService
+  ) {
+    super(
+      $filter,
       $mdDialog,
-      $q,
       $rootScope,
       $scope,
-      $timeout,
-      $window,
       AnnotationService,
       ConfigService,
-      LabelService,
       NodeService,
       NotebookService,
-      OpenResponseService,
       ProjectService,
       StudentAssetService,
       StudentDataService,
-      UtilService) {
-    super($filter, $mdDialog, $rootScope, $scope,
-        AnnotationService, ConfigService, NodeService,
-        NotebookService, ProjectService, StudentAssetService,
-        StudentDataService, UtilService);
+      UtilService
+    );
     this.$q = $q;
     this.$timeout = $timeout;
     this.$window = $window;
@@ -78,12 +90,17 @@ class LabelController extends ComponentController {
 
     // modify Fabric so that Text elements can utilize padding
     fabric.Text.prototype.set({
-      _getNonTransformedDimensions() { // Object dimensions
+      _getNonTransformedDimensions() {
+        // Object dimensions
         return new fabric.Point(this.width, this.height).scalarAdd(this.padding);
       },
-      _calculateCurrentDimensions() { // Controls dimensions
-        return fabric.util.transformPoint(this._getTransformedDimensions(),
-            this.getViewportTransform(), true);
+      _calculateCurrentDimensions() {
+        // Controls dimensions
+        return fabric.util.transformPoint(
+          this._getTransformedDimensions(),
+          this.getViewportTransform(),
+          true
+        );
       }
     });
 
@@ -99,7 +116,6 @@ class LabelController extends ComponentController {
      * circle object, line object, and text object.
      */
     this.labels = [];
-
 
     this.canvasId = 'canvas_' + this.nodeId + '_' + this.componentId;
 
@@ -169,11 +185,13 @@ class LabelController extends ComponentController {
       this.isDisabled = true;
     }
 
-    this.$timeout(angular.bind(this, function() {
-      // wait for angular to completely render the html before we initialize the canvas
+    this.$timeout(
+      angular.bind(this, function() {
+        // wait for angular to completely render the html before we initialize the canvas
 
-      this.setupCanvas();
-    }));
+        this.setupCanvas();
+      })
+    );
 
     /**
      * Returns true iff there is student work that hasn't been saved yet
@@ -209,7 +227,7 @@ class LabelController extends ComponentController {
 
       if (getState) {
         // create a component state populated with the student data
-        this.$scope.labelController.createComponentState(action).then((componentState) => {
+        this.$scope.labelController.createComponentState(action).then(componentState => {
           deferred.resolve(componentState);
         });
       } else {
@@ -230,14 +248,12 @@ class LabelController extends ComponentController {
      * component.
      */
     this.$scope.$on('requestImage', (event, args) => {
-
       // get the node id and component id from the args
       var nodeId = args.nodeId;
       var componentId = args.componentId;
 
       // check if the image is being requested from this component
       if (this.nodeId === nodeId && this.componentId === componentId) {
-
         // obtain the image blob
         var imageObject = this.getImageObject();
 
@@ -258,16 +274,16 @@ class LabelController extends ComponentController {
      * exits the parent node. This will perform any necessary cleanup
      * when the student exits the parent node.
      */
-    this.$scope.$on('exitNode', angular.bind(this, function(event, args) {
-
-    }));
+    this.$scope.$on(
+      'exitNode',
+      angular.bind(this, function(event, args) {})
+    );
 
     /**
      * The student has changed the file input
      * @param element the file input element
      */
     this.$scope.fileUploadChanged = function(element) {
-
       // get the current background image if any
       var backgroundImage = this.labelController.getBackgroundImage();
 
@@ -278,7 +294,9 @@ class LabelController extends ComponentController {
          * there is an existing background image so we will ask the
          * student if they want to change it
          */
-        var answer = confirm(this.labelController.$translate('label.areYouSureYouWantToChangeTheBackgroundImage'));
+        var answer = confirm(
+          this.labelController.$translate('label.areYouSureYouWantToChangeTheBackgroundImage')
+        );
 
         if (answer) {
           // the student wants to change the background image
@@ -304,31 +322,32 @@ class LabelController extends ComponentController {
         var files = element.files;
 
         if (files != null && files.length > 0) {
-
           // upload the file to the studentuploads folder
-          this.labelController.StudentAssetService.uploadAsset(files[0]).then((unreferencedAsset) => {
-
+          this.labelController.StudentAssetService.uploadAsset(files[0]).then(unreferencedAsset => {
             // make a referenced copy of the unreferenced asset
-            this.labelController.StudentAssetService.copyAssetForReference(unreferencedAsset).then((referencedAsset) => {
+            this.labelController.StudentAssetService.copyAssetForReference(unreferencedAsset).then(
+              referencedAsset => {
+                if (referencedAsset != null) {
+                  // get the url of the referenced asset
+                  var imageURL = referencedAsset.url;
 
-              if (referencedAsset != null) {
-                // get the url of the referenced asset
-                var imageURL = referencedAsset.url;
-
-                if (imageURL != null && imageURL != '') {
-
-                  // set the referenced asset as the background image
-                  this.labelController.setBackgroundImage(imageURL);
-                  this.labelController.studentDataChanged();
+                  if (imageURL != null && imageURL != '') {
+                    // set the referenced asset as the background image
+                    this.labelController.setBackgroundImage(imageURL);
+                    this.labelController.studentDataChanged();
+                  }
                 }
               }
-            });
+            );
           });
         }
       }
     };
 
-    this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
+    this.$rootScope.$broadcast('doneRenderingComponent', {
+      nodeId: this.nodeId,
+      componentId: this.componentId
+    });
   }
 
   handleNodeSubmit() {
@@ -352,7 +371,9 @@ class LabelController extends ComponentController {
       if (this.UtilService.hasShowWorkConnectedComponent(this.componentContent)) {
         // we will show work from another component
         this.handleConnectedComponents();
-      } else if (this.LabelService.componentStateHasStudentWork(componentState, this.componentContent)) {
+      } else if (
+        this.LabelService.componentStateHasStudentWork(componentState, this.componentContent)
+      ) {
         /*
          * the student has work so we will populate the work into this
          * component
@@ -366,7 +387,9 @@ class LabelController extends ComponentController {
           // populate the canvas with the starter labels
           this.addLabelsToCanvas(this.componentContent.labels);
         }
-      } else if (this.LabelService.componentStateIsSameAsStarter(componentState, this.componentContent)) {
+      } else if (
+        this.LabelService.componentStateIsSameAsStarter(componentState, this.componentContent)
+      ) {
         // the student labels are the same as the starter labels
         this.setStudentWork(componentState);
       } else if (componentState == null) {
@@ -400,7 +423,10 @@ class LabelController extends ComponentController {
     }
 
     // check if the student has used up all of their submits
-    if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
+    if (
+      this.componentContent.maxSubmitCount != null &&
+      this.submitCounter >= this.componentContent.maxSubmitCount
+    ) {
       /*
        * the student has used up all of their chances to submit so we
        * will disable the submit button
@@ -416,13 +442,10 @@ class LabelController extends ComponentController {
    * @param componentState the component state to populate into the component
    */
   setStudentWork(componentState) {
-
     if (componentState != null) {
-
       var studentData = componentState.studentData;
 
       if (studentData != null) {
-
         if (studentData.version == null) {
           this.setStudentDataVersion(1);
         } else {
@@ -452,7 +475,7 @@ class LabelController extends ComponentController {
         this.processLatestStudentWork();
       }
     }
-  };
+  }
 
   /**
    * Add labels ot the canvas
@@ -460,15 +483,12 @@ class LabelController extends ComponentController {
    */
   addLabelsToCanvas(labels) {
     if (labels != null) {
-
       // loop through all the labels
       for (let x = 0; x < labels.length; x++) {
-
         // get a label
         var label = labels[x];
 
         if (label != null) {
-
           // get the values of the label
           let pointX = label.pointX;
           let pointY = label.pointY;
@@ -480,8 +500,16 @@ class LabelController extends ComponentController {
           let canDelete = label.canDelete;
 
           // create the label
-          var label = this.createLabel(pointX, pointY, textX, textY, text,
-              color, canEdit, canDelete);
+          var label = this.createLabel(
+            pointX,
+            pointY,
+            textX,
+            textY,
+            text,
+            color,
+            canEdit,
+            canDelete
+          );
 
           // add the label to the canvas
           this.addLabelToCanvas(this.canvas, label);
@@ -501,7 +529,7 @@ class LabelController extends ComponentController {
   cancelButtonClicked() {
     this.createLabelMode = false;
     this.isCancelButtonVisible = false;
-  };
+  }
 
   /**
    * Get the label data from the canvas.
@@ -517,10 +545,8 @@ class LabelController extends ComponentController {
     var objects = this.canvas.getObjects('i-text');
 
     if (objects != null) {
-
       // loop through all the circle objects
       for (var x = 0; x < objects.length; x++) {
-
         /*
          * the object is a circle which contains all the data
          * for a label
@@ -528,7 +554,6 @@ class LabelController extends ComponentController {
         var object = objects[x];
 
         if (object != null) {
-
           // get the simple JSON object that represents the label
           var labelJSONObject = this.getLabelJSONObjectFromText(object);
 
@@ -541,7 +566,7 @@ class LabelController extends ComponentController {
     }
 
     return labels;
-  };
+  }
 
   /**
    * Get the simple JSON object that represents the label
@@ -597,7 +622,7 @@ class LabelController extends ComponentController {
     labelJSONObject.color = color;
 
     return labelJSONObject;
-  };
+  }
 
   /**
    * Get the simple JSON object that represents the label
@@ -662,7 +687,7 @@ class LabelController extends ComponentController {
     labelJSONObject.canDelete = canDelete;
 
     return labelJSONObject;
-  };
+  }
 
   /**
    * Create a new component state populated with the student data
@@ -716,7 +741,7 @@ class LabelController extends ComponentController {
     this.createComponentStateAdditionalProcessing(deferred, componentState, action);
 
     return deferred.promise;
-  };
+  }
 
   /**
    * Check whether we need to show the new label button
@@ -724,7 +749,7 @@ class LabelController extends ComponentController {
    */
   showNewLabelButton() {
     return this.isNewLabelButtonVisible;
-  };
+  }
 
   /**
    * Check whether we need to show the cancel button
@@ -732,14 +757,13 @@ class LabelController extends ComponentController {
    */
   showCancelButton() {
     return this.isCancelButtonVisible;
-  };
+  }
 
   /**
    * Initialize the canvas
    * @returns the canvas object
    */
   initializeCanvas() {
-
     var canvas = null;
 
     if (this.componentContent.width != null && this.componentContent.width != '') {
@@ -775,120 +799,82 @@ class LabelController extends ComponentController {
     $('#canvasParent_' + this.canvasId).css('height', this.canvasHeight + 2);
 
     // listen for the mouse down event
-    canvas.on('mouse:down', angular.bind(this, function(options) {
+    canvas.on(
+      'mouse:down',
+      angular.bind(this, function(options) {
+        // get the object that was clicked on if any
+        var activeObject = this.canvas.getActiveObject();
 
-      // get the object that was clicked on if any
-      var activeObject = this.canvas.getActiveObject();
-
-      if (activeObject == null) {
-        /*
-         * no objects in the canvas were clicked. the user clicked
-         * on a blank area of the canvas so we will unselect any label
-         * that was selected and turn off edit label mode
-         */
-        this.selectedLabel = null;
-        this.editLabelMode = false;
-      }
-    }));
+        if (activeObject == null) {
+          /*
+           * no objects in the canvas were clicked. the user clicked
+           * on a blank area of the canvas so we will unselect any label
+           * that was selected and turn off edit label mode
+           */
+          this.selectedLabel = null;
+          this.editLabelMode = false;
+        }
+      })
+    );
 
     // listen for the object moving event
-    canvas.on('object:moving', angular.bind(this, function(options) {
-      var target = options.target;
+    canvas.on(
+      'object:moving',
+      angular.bind(this, function(options) {
+        var target = options.target;
 
-      if (target != null) {
+        if (target != null) {
+          // get the type of the object that is moving
+          var type = target.get('type');
 
-        // get the type of the object that is moving
-        var type = target.get('type');
+          // get the position of the element
+          var left = target.get('left');
+          var top = target.get('top');
 
-        // get the position of the element
-        var left = target.get('left');
-        var top = target.get('top');
-
-        // limit the x position to the canvas
-        if (left < 0) {
-          target.set('left', 0);
-          left = 0;
-        } else if (left > this.canvasWidth) {
-          target.set('left', this.canvasWidth);
-          left = this.canvasWidth;
-        }
-
-        // limit the y position to the canvas
-        if (top < 0) {
-          target.set('top', 0);
-          top = 0;
-        } else if (top > this.canvasHeight) {
-          target.set('top', this.canvasHeight);
-          top = this.canvasHeight;
-        }
-
-        if (type === 'circle') {
-          /*
-           * the student is moving the point of the label so we need to update
-           * the endpoint of the line and the position of the text element.
-           * the endpoint of the line and the position of the text element should
-           * maintain the relative position to the point.
-           */
-
-          // get the line associated with the circle
-          var line = target.line;
-
-          var xDiff = 0;
-          var yDiff = 0;
-
-          if (line != null) {
-            // calculate the relative offset of the end of the line
-            xDiff = line.x2 - line.x1;
-            yDiff = line.y2 - line.y1;
-
-            if (this.isStudentDataVersion(1)) {
-              // set the new position of the two endpoints of the line
-              line.set({x1: left, y1: top, x2: left + xDiff, y2: top + yDiff});
-            } else {
-              // set the new position of the circle endpoint of the line
-              line.set({x1: left, y1: top});
-            }
-
-            // remove and add the line to refresh the element in the canvas
-            canvas.remove(line);
-            canvas.add(line);
-
-            // set the z index so it will be below the circle and text elements
-            canvas.moveTo(line, this.lineZIndex);
+          // limit the x position to the canvas
+          if (left < 0) {
+            target.set('left', 0);
+            left = 0;
+          } else if (left > this.canvasWidth) {
+            target.set('left', this.canvasWidth);
+            left = this.canvasWidth;
           }
 
-          // get the text element
-          var text = target.text;
-
-          if (text != null) {
-            if (this.isStudentDataVersion(1)) {
-              /*
-               * In the old student data version the text position is relative
-               * to the circle so we need to move the text along with the circle.
-               */
-
-              // set the new position of the text element
-              text.set({left: left + xDiff, top: top + yDiff});
-
-              // remove and add the line to refresh the element in the canvas
-              canvas.remove(text);
-              canvas.add(text);
-
-              // set the z index so it will be above line elements and below circle elements
-              canvas.moveTo(text, this.textZIndex);
-            }
+          // limit the y position to the canvas
+          if (top < 0) {
+            target.set('top', 0);
+            top = 0;
+          } else if (top > this.canvasHeight) {
+            target.set('top', this.canvasHeight);
+            top = this.canvasHeight;
           }
-        } else if (type === 'i-text') {
-          if (this.enableCircles) {
+
+          if (type === 'circle') {
             /*
-             * the student is moving the text of the label so we need to update
-             * the endpoint of the line. the endpoint of the line should be in
-             * the same position as the text element.
+             * the student is moving the point of the label so we need to update
+             * the endpoint of the line and the position of the text element.
+             * the endpoint of the line and the position of the text element should
+             * maintain the relative position to the point.
              */
+
+            // get the line associated with the circle
             var line = target.line;
+
+            var xDiff = 0;
+            var yDiff = 0;
+
             if (line != null) {
-              // set the new position of the text element
-              line.set({x2: left, y2: top});
+              // calculate the relative offset of the end of the line
+              xDiff = line.x2 - line.x1;
+              yDiff = line.y2 - line.y1;
+
+              if (this.isStudentDataVersion(1)) {
+                // set the new position of the two endpoints of the line
+                line.set({ x1: left, y1: top, x2: left + xDiff, y2: top + yDiff });
+              } else {
+                // set the new position of the circle endpoint of the line
+                line.set({ x1: left, y1: top });
+              }
 
               // remove and add the line to refresh the element in the canvas
               canvas.remove(line);
@@ -897,37 +883,82 @@ class LabelController extends ComponentController {
               // set the z index so it will be below the circle and text elements
               canvas.moveTo(line, this.lineZIndex);
             }
-          } else {
-            /*
-             * Circles are not enabled so we are only showing the text. We will
-             * set the circle position to be the same as the text position.
-             */
-            let circle = target.circle;
-            let line = target.line;
-            circle.set({left: left, top: top});
-            line.set({x1: left, y1: top, x2: left, y2: top});
+
+            // get the text element
+            var text = target.text;
+
+            if (text != null) {
+              if (this.isStudentDataVersion(1)) {
+                /*
+                 * In the old student data version the text position is relative
+                 * to the circle so we need to move the text along with the circle.
+                 */
+
+                // set the new position of the text element
+                text.set({ left: left + xDiff, top: top + yDiff });
+
+                // remove and add the line to refresh the element in the canvas
+                canvas.remove(text);
+                canvas.add(text);
+
+                // set the z index so it will be above line elements and below circle elements
+                canvas.moveTo(text, this.textZIndex);
+              }
+            }
+          } else if (type === 'i-text') {
+            if (this.enableCircles) {
+              /*
+               * the student is moving the text of the label so we need to update
+               * the endpoint of the line. the endpoint of the line should be in
+               * the same position as the text element.
+               */
+              var line = target.line;
+              if (line != null) {
+                // set the new position of the text element
+                line.set({ x2: left, y2: top });
+
+                // remove and add the line to refresh the element in the canvas
+                canvas.remove(line);
+                canvas.add(line);
+
+                // set the z index so it will be below the circle and text elements
+                canvas.moveTo(line, this.lineZIndex);
+              }
+            } else {
+              /*
+               * Circles are not enabled so we are only showing the text. We will
+               * set the circle position to be the same as the text position.
+               */
+              let circle = target.circle;
+              let line = target.line;
+              circle.set({ left: left, top: top });
+              line.set({ x1: left, y1: top, x2: left, y2: top });
+            }
           }
-        }
 
-        // refresh the canvas
-        canvas.renderAll();
-        this.studentDataChanged();
-      }
-    }));
-
-    // listen for the text changed event
-    canvas.on('text:changed', angular.bind(this, function(options) {
-      var target = options.target;
-      if (target != null) {
-        var type = target.get('type');
-        if (type === 'i-text') {
+          // refresh the canvas
+          canvas.renderAll();
           this.studentDataChanged();
         }
-      }
-    }));
+      })
+    );
+
+    // listen for the text changed event
+    canvas.on(
+      'text:changed',
+      angular.bind(this, function(options) {
+        var target = options.target;
+        if (target != null) {
+          var type = target.get('type');
+          if (type === 'i-text') {
+            this.studentDataChanged();
+          }
+        }
+      })
+    );
 
     return canvas;
-  };
+  }
 
   createLabelOnCanvas() {
     this.createLabelMode = false;
@@ -935,9 +966,16 @@ class LabelController extends ComponentController {
     const newLabelLocation = this.getNewLabelLocation();
     const canEdit = true;
     const canDelete = true;
-    const newLabel = this.createLabel(newLabelLocation.pointX, newLabelLocation.pointY,
-        newLabelLocation.textX, newLabelLocation.textY,
-        this.$translate('label.aNewLabel'), 'blue', canEdit, canDelete);
+    const newLabel = this.createLabel(
+      newLabelLocation.pointX,
+      newLabelLocation.pointY,
+      newLabelLocation.textX,
+      newLabelLocation.textY,
+      this.$translate('label.aNewLabel'),
+      'blue',
+      canEdit,
+      canDelete
+    );
     this.addLabelToCanvas(this.canvas, newLabel);
     this.selectLabel(newLabel);
     this.studentDataChanged();
@@ -961,7 +999,7 @@ class LabelController extends ComponentController {
   getNextPointLocation() {
     let unoccupiedPointLocation = this.getUnoccupiedPointLocation();
     if (unoccupiedPointLocation == null) {
-      return {pointX: 50, pointY: 50};
+      return { pointX: 50, pointY: 50 };
     } else {
       return unoccupiedPointLocation;
     }
@@ -986,14 +1024,14 @@ class LabelController extends ComponentController {
       textX = pointX;
       textY = pointY;
     }
-    return {textX: textX, textY: textY};
+    return { textX: textX, textY: textY };
   }
 
   getOccupiedPointLocations() {
     let labels = this.getLabelData();
     const occupiedPointLocations = [];
     for (let label of labels) {
-      occupiedPointLocations.push({pointX: label.pointX, pointY: label.pointY});
+      occupiedPointLocations.push({ pointX: label.pointX, pointY: label.pointY });
     }
     return occupiedPointLocations;
   }
@@ -1012,7 +1050,7 @@ class LabelController extends ComponentController {
     for (let y = 50; y < this.canvasHeight; y += 150) {
       for (let x = 50; x < this.canvasWidth; x += 150) {
         if (!this.isPointOccupied(occupiedPointLocations, x, y)) {
-          return {pointX: x, pointY: y};
+          return { pointX: x, pointY: y };
         }
       }
     }
@@ -1028,7 +1066,7 @@ class LabelController extends ComponentController {
       this.backgroundImage = backgroundImagePath;
       this.canvas.setBackgroundImage(backgroundImagePath, this.canvas.renderAll.bind(this.canvas));
     }
-  };
+  }
 
   /**
    * Get the background image
@@ -1036,21 +1074,20 @@ class LabelController extends ComponentController {
    */
   getBackgroundImage() {
     return this.backgroundImage;
-  };
+  }
 
   /**
    * Create the keydown listener that we will use for deleting labels
    */
   createKeydownListener() {
     window.addEventListener('keydown', angular.bind(this, this.keyPressed), false);
-  };
+  }
 
   /**
    * The callback handler for the keydown event
    * @param e the event
    */
   keyPressed(e) {
-
     // get the key code of the key that was pressed
     var keyCode = e.keyCode;
     if (keyCode === 13) {
@@ -1064,7 +1101,7 @@ class LabelController extends ComponentController {
         this.$scope.$apply();
       }
     }
-  };
+  }
 
   /**
    * Get the label object given the canvas circle object.
@@ -1143,14 +1180,12 @@ class LabelController extends ComponentController {
     }
 
     let radius = 5;
-    if (this.componentContent.pointSize != null &&
-        this.componentContent.pointSize != '') {
+    if (this.componentContent.pointSize != null && this.componentContent.pointSize != '') {
       radius = parseFloat(this.componentContent.pointSize);
     }
 
     let fontSize = 20;
-    if (this.componentContent.fontSize != null &&
-        this.componentContent.fontSize != '') {
+    if (this.componentContent.fontSize != null && this.componentContent.fontSize != '') {
       fontSize = parseFloat(this.componentContent.fontSize);
     }
 
@@ -1228,7 +1263,7 @@ class LabelController extends ComponentController {
     label.canDelete = canDelete;
 
     return label;
-  };
+  }
 
   /**
    * Make sure the x coordinate is within the bounds of the canvas.
@@ -1273,16 +1308,13 @@ class LabelController extends ComponentController {
    * and Fabric itext elements
    */
   addLabelToCanvas(canvas, label) {
-
     if (canvas != null && label != null) {
-
       // get the circle, line and text elements
       var circle = label.circle;
       var line = label.line;
       var text = label.text;
 
       if (circle != null && line != null && text != null) {
-
         if (this.enableCircles) {
           // add the elements to the canvas
           canvas.add(circle, line, text);
@@ -1321,7 +1353,7 @@ class LabelController extends ComponentController {
         this.labels.push(label);
       }
     }
-  };
+  }
 
   /**
    * Make the label selected which means we will show the UI elements to
@@ -1383,14 +1415,12 @@ class LabelController extends ComponentController {
    * @param textString The text string.
    */
   selectedLabelTextChanged(label, textObject, textString) {
-
     // save the text string into the label
     label.textString = textString;
 
     // wrap the text if necessary
     let wrappedText = textString;
-    if (this.componentContent.labelWidth != null &&
-        this.componentContent.labelWidth != '') {
+    if (this.componentContent.labelWidth != null && this.componentContent.labelWidth != '') {
       wrappedText = this.UtilService.wordWrap(textString, this.componentContent.labelWidth);
     }
 
@@ -1409,9 +1439,7 @@ class LabelController extends ComponentController {
    * text object.
    */
   removeLabelFromCanvas(canvas, label) {
-
     if (canvas != null && label != null) {
-
       // get the circle, line, and text elements
       var circle = label.circle;
       var line = label.line;
@@ -1429,7 +1457,7 @@ class LabelController extends ComponentController {
         canvas.renderAll();
       }
     }
-  };
+  }
 
   /**
    * Get the image object representation of the student data
@@ -1439,7 +1467,6 @@ class LabelController extends ComponentController {
     var pngFile = null;
 
     if (this.canvas != null) {
-
       // get the image as a base64 string
       var img_b64 = this.canvas.toDataURL('image/png');
 
@@ -1455,12 +1482,10 @@ class LabelController extends ComponentController {
    * @param $event the click event
    */
   snipImage($event) {
-
     // get the canvas element
     var canvas = angular.element(document.querySelector('#' + this.canvasId));
 
     if (canvas != null && canvas.length > 0) {
-
       // get the top canvas
       canvas = canvas[0];
 
@@ -1503,9 +1528,7 @@ class LabelController extends ComponentController {
    * The student clicked the cancel button in the edit label mode
    */
   cancelLabelButtonClicked() {
-
     if (this.selectedLabel != null) {
-
       // get the label text before the student recently made changes to it
       var selectedLabelText = this.selectedLabelText;
 
@@ -1537,14 +1560,16 @@ class LabelController extends ComponentController {
    * The student clicked the delete button in the edit label mode
    */
   deleteLabelButtonClicked() {
-
     if (this.selectedLabel != null) {
-
       // get the text from the label we are going to delete
       var selectedLabelText = this.selectedLabel.textString;
 
       // confirm with the student that they want to delete the label
-      var answer = confirm(this.$translate('label.areYouSureYouWantToDeleteThisLabel', { selectedLabelText: selectedLabelText }));
+      var answer = confirm(
+        this.$translate('label.areYouSureYouWantToDeleteThisLabel', {
+          selectedLabelText: selectedLabelText
+        })
+      );
 
       if (answer) {
         // the student is sure they want to delete the label
@@ -1576,8 +1601,10 @@ class LabelController extends ComponentController {
   }
 
   handleConnectedComponentsPostProcess() {
-    if (this.componentContent.backgroundImage != null &&
-        this.componentContent.backgroundImage != '') {
+    if (
+      this.componentContent.backgroundImage != null &&
+      this.componentContent.backgroundImage != ''
+    ) {
       this.setBackgroundImage(this.componentContent.backgroundImage);
     }
   }
@@ -1588,7 +1615,6 @@ class LabelController extends ComponentController {
    * @return a component state with the merged student responses
    */
   createMergedComponentState(componentStates) {
-
     let mergedComponentState = this.NodeService.createNewComponentState();
 
     if (componentStates != null) {
@@ -1624,8 +1650,15 @@ class LabelController extends ComponentController {
                 let fontSize = connectedComponent.fontSize;
 
                 // create an image from the concept map data
-                this.LabelService.createImageFromText(response, null, null,
-                    charactersPerLine, null, spaceInbetweenLines, fontSize).then((image) => {
+                this.LabelService.createImageFromText(
+                  response,
+                  null,
+                  null,
+                  charactersPerLine,
+                  null,
+                  spaceInbetweenLines,
+                  fontSize
+                ).then(image => {
                   // set the image as the background
                   this.setBackgroundImage(image);
 
@@ -1634,13 +1667,17 @@ class LabelController extends ComponentController {
                 });
               }
             }
-          } else if (componentState.componentType == 'ConceptMap' ||
-              componentState.componentType == 'Draw' ||
-              componentState.componentType == 'Embedded' ||
-              componentState.componentType == 'Graph' ||
-              componentState.componentType == 'Table') {
-            let connectedComponent =
-              this.UtilService.getConnectedComponentByComponentState(this.componentContent, componentState);
+          } else if (
+            componentState.componentType == 'ConceptMap' ||
+            componentState.componentType == 'Draw' ||
+            componentState.componentType == 'Embedded' ||
+            componentState.componentType == 'Graph' ||
+            componentState.componentType == 'Table'
+          ) {
+            let connectedComponent = this.UtilService.getConnectedComponentByComponentState(
+              this.componentContent,
+              componentState
+            );
             if (connectedComponent.importWorkAsBackground === true) {
               this.setComponentStateAsBackgroundImage(componentState);
             }
@@ -1669,8 +1706,10 @@ class LabelController extends ComponentController {
    */
   getConnectedComponentForComponentState(componentState) {
     for (let connectedComponent of this.componentContent.connectedComponents) {
-      if (componentState.nodeId == connectedComponent.nodeId &&
-          componentState.componentId == connectedComponent.componentId) {
+      if (
+        componentState.nodeId == connectedComponent.nodeId &&
+        componentState.componentId == connectedComponent.componentId
+      ) {
         return connectedComponent;
       }
     }
@@ -1682,7 +1721,7 @@ class LabelController extends ComponentController {
    * @param componentState A component state.
    */
   setComponentStateAsBackgroundImage(componentState) {
-    this.UtilService.generateImageFromComponentState(componentState).then((image) => {
+    this.UtilService.generateImageFromComponentState(componentState).then(image => {
       this.setBackgroundImage(image.url);
     });
   }
@@ -1773,8 +1812,10 @@ class LabelController extends ComponentController {
           showWorkConnectedComponentCount += 1;
         }
       }
-      if (connectedComponents.length > 0 &&
-          connectedComponents.length == showWorkConnectedComponentCount) {
+      if (
+        connectedComponents.length > 0 &&
+        connectedComponents.length == showWorkConnectedComponentCount
+      ) {
         return true;
       }
     }

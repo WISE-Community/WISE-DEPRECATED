@@ -3,9 +3,16 @@ import { TeacherService } from '../teacher.service';
 import { Course } from '../../domain/course';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material';
 import { UserService } from '../../services/user.service';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators, ValidatorFn } from "@angular/forms";
+import {
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+  ValidatorFn
+} from '@angular/forms';
 import { I18n } from '@ngx-translate/i18n-polyfill';
-import { Run } from "../../domain/run";
+import { Run } from '../../domain/run';
 
 @Component({
   selector: 'app-list-classroom-courses-dialog',
@@ -26,13 +33,15 @@ export class ListClassroomCoursesDialogComponent implements OnInit {
   coursesSuccessfullyAdded: any[] = [];
   coursesFailedToAdd: any[] = [];
 
-  constructor(public dialog: MatDialog,
-              public dialogRef: MatDialogRef<ListClassroomCoursesDialogComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: any,
-              private teacherService: TeacherService,
-              private userService: UserService,
-              private fb: FormBuilder,
-              private i18n: I18n) {
+  constructor(
+    public dialog: MatDialog,
+    public dialogRef: MatDialogRef<ListClassroomCoursesDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private teacherService: TeacherService,
+    private userService: UserService,
+    private fb: FormBuilder,
+    private i18n: I18n
+  ) {
     this.run = data.run;
     for (const course of data.courses) {
       this.courses.push(new Course(course));
@@ -40,13 +49,13 @@ export class ListClassroomCoursesDialogComponent implements OnInit {
   }
 
   ngOnInit() {
-    const descriptionText = this.i18n(`Hi class! Please complete the "{{unitTitle}}" WISE unit. (Access Code: {{accessCode}})`,
-      {unitTitle: this.data.run.name, accessCode: this.data.run.runCode});
+    const descriptionText = this.i18n(
+      `Hi class! Please complete the "{{unitTitle}}" WISE unit. (Access Code: {{accessCode}})`,
+      { unitTitle: this.data.run.name, accessCode: this.data.run.runCode }
+    );
     const description = new FormControl(descriptionText, Validators.required);
-    this.coursesControl = new FormArray(this.courses.map(() =>
-      new FormControl(false)
-    ));
-    this.coursesControl.valueChanges.subscribe((controls) => {
+    this.coursesControl = new FormArray(this.courses.map(() => new FormControl(false)));
+    this.coursesControl.valueChanges.subscribe(controls => {
       this.courseIds = [];
       controls.forEach((value, index) => {
         if (value) {
@@ -54,10 +63,13 @@ export class ListClassroomCoursesDialogComponent implements OnInit {
         }
       });
     });
-    this.form = this.fb.group({
-      selectedCourses: this.coursesControl,
-      description: description
-    }, { validator: this.isCourseSelected() });
+    this.form = this.fb.group(
+      {
+        selectedCourses: this.coursesControl,
+        description: description
+      },
+      { validator: this.isCourseSelected() }
+    );
   }
 
   isCourseSelected(): ValidatorFn {
@@ -75,9 +87,16 @@ export class ListClassroomCoursesDialogComponent implements OnInit {
         endTime = date.toString();
       }
     }
-    this.teacherService.addToClassroom(this.data.run.runCode, this.data.run.name, this.courseIds,
-        this.userService.getUser().getValue().username, endTime,
-      this.form.controls['description'].value).subscribe((response) => {
+    this.teacherService
+      .addToClassroom(
+        this.data.run.runCode,
+        this.data.run.name,
+        this.courseIds,
+        this.userService.getUser().getValue().username,
+        endTime,
+        this.form.controls['description'].value
+      )
+      .subscribe(response => {
         this.showAddToClassroomResults(response.courses);
       });
   }
@@ -106,7 +125,7 @@ export class ListClassroomCoursesDialogComponent implements OnInit {
       if (course.id === courseId) {
         let courseNameAndSection = course.name;
         if (course.section) {
-          courseNameAndSection += this.i18n(` (Section {{section}})`, {section: course.section});
+          courseNameAndSection += this.i18n(` (Section {{section}})`, { section: course.section });
         }
         return courseNameAndSection;
       }
@@ -114,7 +133,7 @@ export class ListClassroomCoursesDialogComponent implements OnInit {
   }
 
   get selectedCoursesControl() {
-    return <FormArray>this.form.get("selectedCourses");
+    return <FormArray>this.form.get('selectedCourses');
   }
 
   closeAll() {

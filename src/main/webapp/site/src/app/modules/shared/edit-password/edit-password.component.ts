@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { FormControl, FormGroup, Validators, FormBuilder } from "@angular/forms";
+import { FormControl, FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { finalize } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material';
-import { UserService } from "../../../services/user.service";
+import { UserService } from '../../../services/user.service';
 import { I18n } from '@ngx-translate/i18n-polyfill';
 
 @Component({
@@ -11,25 +11,29 @@ import { I18n } from '@ngx-translate/i18n-polyfill';
   styleUrls: ['./edit-password.component.scss']
 })
 export class EditPasswordComponent implements OnInit {
-
   @ViewChild('changePasswordForm', { static: false }) changePasswordForm;
   isSaving: boolean = false;
   isGoogleUser: boolean = false;
 
-  newPasswordFormGroup: FormGroup = this.fb.group({
-    newPassword: new FormControl('', [Validators.required]),
-    confirmNewPassword: new FormControl('', [Validators.required])
-  }, { validator: this.passwordMatchValidator });
+  newPasswordFormGroup: FormGroup = this.fb.group(
+    {
+      newPassword: new FormControl('', [Validators.required]),
+      confirmNewPassword: new FormControl('', [Validators.required])
+    },
+    { validator: this.passwordMatchValidator }
+  );
 
   changePasswordFormGroup: FormGroup = this.fb.group({
     oldPassword: new FormControl('', [Validators.required]),
     newPasswordFormGroup: this.newPasswordFormGroup
   });
 
-  constructor(private fb: FormBuilder,
-      private userService: UserService,
-      public snackBar: MatSnackBar,
-      private i18n: I18n) { }
+  constructor(
+    private fb: FormBuilder,
+    private userService: UserService,
+    public snackBar: MatSnackBar,
+    private i18n: I18n
+  ) {}
 
   ngOnInit() {
     this.userService.getUser().subscribe(user => {
@@ -43,7 +47,7 @@ export class EditPasswordComponent implements OnInit {
     if (newPassword === confirmNewPassword) {
       return null;
     } else {
-      const error = { 'passwordDoesNotMatch': true };
+      const error = { passwordDoesNotMatch: true };
       passwordsFormGroup.controls['confirmNewPassword'].setErrors(error);
       return error;
     }
@@ -53,15 +57,16 @@ export class EditPasswordComponent implements OnInit {
     this.isSaving = true;
     const oldPassword: string = this.getControlFieldValue('oldPassword');
     const newPassword: string = this.getControlFieldValue('newPassword');
-    this.userService.changePassword(oldPassword, newPassword)
-        .pipe(
-          finalize(() => {
-            this.isSaving = false;
-          })
-        )
-        .subscribe((response) => {
-          this.handleChangePasswordResponse(response);
-        });
+    this.userService
+      .changePassword(oldPassword, newPassword)
+      .pipe(
+        finalize(() => {
+          this.isSaving = false;
+        })
+      )
+      .subscribe(response => {
+        this.handleChangePasswordResponse(response);
+      });
   }
 
   getControlFieldValue(fieldName) {
@@ -81,7 +86,7 @@ export class EditPasswordComponent implements OnInit {
       this.resetForm();
       this.snackBar.open(this.i18n(`Password changed.`));
     } else if (response.status === 'error' && response.messageCode === 'incorrectPassword') {
-      const error = { 'incorrectPassword': true };
+      const error = { incorrectPassword: true };
       const oldPasswordControl = this.changePasswordFormGroup.get('oldPassword');
       oldPasswordControl.setErrors(error);
     }

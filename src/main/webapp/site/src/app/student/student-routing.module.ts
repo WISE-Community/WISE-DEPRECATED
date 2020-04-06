@@ -3,8 +3,8 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { StudentComponent } from './student.component';
 import { StudentHomeComponent } from './student-home/student-home.component';
-import { AuthGuard } from "./auth.guard";
-import { EditComponent } from "./account/edit/edit.component";
+import { AuthGuard } from './auth.guard';
+import { EditComponent } from './account/edit/edit.component';
 
 const studentRoutes: Routes = [
   {
@@ -20,11 +20,7 @@ const studentRoutes: Routes = [
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forChild(studentRoutes)
-  ],
-  exports: [
-    RouterModule
-  ]
+  imports: [RouterModule.forChild(studentRoutes)],
+  exports: [RouterModule]
 })
 export class StudentRoutingModule {}

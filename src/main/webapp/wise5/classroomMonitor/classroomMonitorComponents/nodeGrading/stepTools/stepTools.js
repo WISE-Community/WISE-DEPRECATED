@@ -1,96 +1,94 @@
-"use strict";
+'use strict';
 
 class StepToolsController {
-    constructor($scope,
-                NodeService,
-                ProjectService,
-                TeacherDataService,
-                $mdSidenav) {
+  constructor($scope, NodeService, ProjectService, TeacherDataService, $mdSidenav) {
+    this.$scope = $scope;
+    this.NodeService = NodeService;
+    this.ProjectService = ProjectService;
+    this.TeacherDataService = TeacherDataService;
 
-        this.$scope = $scope;
-        this.NodeService = NodeService;
-        this.ProjectService = ProjectService;
-        this.TeacherDataService = TeacherDataService;
-        
-        this.is_rtl = ($('html').attr('dir') == 'rtl');
-        this.icons = { prev: 'chevron_left', next: 'chevron_right' };
-        if (this.is_rtl) {
-          this.icons = { prev: 'chevron_right', next: 'chevron_left' };
-        }
-
-        // service objects and utility functions
-        this.idToOrder = this.ProjectService.idToOrder;
-
-        this.updateModel();
-
-        this.$scope.$on('currentNodeChanged', (event, args) => {
-            this.updateModel();
-        });
+    this.is_rtl = $('html').attr('dir') == 'rtl';
+    this.icons = { prev: 'chevron_left', next: 'chevron_right' };
+    if (this.is_rtl) {
+      this.icons = { prev: 'chevron_right', next: 'chevron_left' };
     }
 
-    toNodeIdChanged() {
-        // selected node id has changed, so open new node
-        this.TeacherDataService.endCurrentNodeAndSetCurrentNodeByNodeId(this.toNodeId);
-    }
+    // service objects and utility functions
+    this.idToOrder = this.ProjectService.idToOrder;
 
-    updateModel() {
-        var nodeId = this.TeacherDataService.getCurrentNodeId();
-        if (!this.ProjectService.isGroupNode(nodeId)) {
-            this.nodeId = nodeId;
-            this.prevId = this.NodeService.getPrevNodeIdWithWork();
-            this.nextId = null;
-            this.NodeService.getNextNodeIdWithWork().then((nextNodeId) => {
-              this.nextId = nextNodeId;
-            });
+    this.updateModel();
 
-            // model variable for selected node id
-            this.toNodeId = this.nodeId;
-        }
-    }
+    this.$scope.$on('currentNodeChanged', (event, args) => {
+      this.updateModel();
+    });
+  }
 
-    getSelectedText() {
-        return (this.showPosition && this.getNodePositionById(this.nodeId) ? this.getNodePositionById(this.nodeId) + ': ' : '') + this.getNodeTitleByNodeId(this.nodeId);
-    }
+  toNodeIdChanged() {
+    // selected node id has changed, so open new node
+    this.TeacherDataService.endCurrentNodeAndSetCurrentNodeByNodeId(this.toNodeId);
+  }
 
-    getNodeTitleByNodeId(nodeId) {
-        return this.ProjectService.getNodeTitleByNodeId(nodeId);
-    }
+  updateModel() {
+    var nodeId = this.TeacherDataService.getCurrentNodeId();
+    if (!this.ProjectService.isGroupNode(nodeId)) {
+      this.nodeId = nodeId;
+      this.prevId = this.NodeService.getPrevNodeIdWithWork();
+      this.nextId = null;
+      this.NodeService.getNextNodeIdWithWork().then(nextNodeId => {
+        this.nextId = nextNodeId;
+      });
 
-    getNodePositionById(nodeId) {
-        return this.ProjectService.getNodePositionById(nodeId);
+      // model variable for selected node id
+      this.toNodeId = this.nodeId;
     }
+  }
 
-    isGroupNode(nodeId) {
-        return this.ProjectService.isGroupNode(nodeId);
-    }
+  getSelectedText() {
+    return (
+      (this.showPosition && this.getNodePositionById(this.nodeId)
+        ? this.getNodePositionById(this.nodeId) + ': '
+        : '') + this.getNodeTitleByNodeId(this.nodeId)
+    );
+  }
 
-    showNode(nodeId) {
-        return this.isGroupNode(nodeId) || this.ProjectService.nodeHasWork(nodeId);
-    }
+  getNodeTitleByNodeId(nodeId) {
+    return this.ProjectService.getNodeTitleByNodeId(nodeId);
+  }
 
-    goToPrevNode() {
-        this.NodeService.goToPrevNodeWithWork();
-    }
+  getNodePositionById(nodeId) {
+    return this.ProjectService.getNodePositionById(nodeId);
+  }
 
-    goToNextNode() {
-        this.NodeService.goToNextNodeWithWork();
-    }
+  isGroupNode(nodeId) {
+    return this.ProjectService.isGroupNode(nodeId);
+  }
+
+  showNode(nodeId) {
+    return this.isGroupNode(nodeId) || this.ProjectService.nodeHasWork(nodeId);
+  }
+
+  goToPrevNode() {
+    this.NodeService.goToPrevNodeWithWork();
+  }
+
+  goToNextNode() {
+    this.NodeService.goToNextNodeWithWork();
+  }
 }
 
 StepToolsController.$inject = [
-    '$scope',
-    'NodeService',
-    'ProjectService',
-    'TeacherDataService',
-    '$mdSidenav'
+  '$scope',
+  'NodeService',
+  'ProjectService',
+  'TeacherDataService',
+  '$mdSidenav'
 ];
 
 const StepTools = {
-    bindings: {
-        showPosition: '<'
-    },
-    template:
-        `<div layout="row" layout-align="center center">
+  bindings: {
+    showPosition: '<'
+  },
+  template: `<div layout="row" layout-align="center center">
             <md-button aria-label="{{ ::'PREVIOUS_STEP' | translate }}"
                        class="md-icon-button toolbar__nav"
                        ng-disabled="!$ctrl.prevId" ng-click="$ctrl.goToPrevNode()">
@@ -122,7 +120,7 @@ const StepTools = {
                 <md-tooltip md-direction="bottom">{{ ::'NEXT_STEP' | translate }}</md-tooltip>
             </md-button>
         </div>`,
-    controller: StepToolsController
+  controller: StepToolsController
 };
 
 export default StepTools;

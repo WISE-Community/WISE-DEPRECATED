@@ -21,17 +21,16 @@ export class OfficialLibraryComponent extends LibraryComponent {
 
   constructor(libraryService: LibraryService, public dialog: MatDialog) {
     super(libraryService);
-    libraryService.libraryGroupsSource$.subscribe((libraryGroups) => {
+    libraryService.libraryGroupsSource$.subscribe(libraryGroups => {
       this.libraryGroups = libraryGroups;
     });
-    libraryService.officialLibraryProjectsSource$.subscribe((libraryProjects) => {
+    libraryService.officialLibraryProjectsSource$.subscribe(libraryProjects => {
       this.projects = libraryProjects;
       this.filterUpdated();
     });
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   emitNumberOfProjectsVisible(numProjectsVisible: number = null) {
     if (numProjectsVisible) {
@@ -50,12 +49,13 @@ export class OfficialLibraryComponent extends LibraryComponent {
 
 @Component({
   selector: 'official-library-details',
-  templateUrl: 'official-library-details.html',
+  templateUrl: 'official-library-details.html'
 })
 export class OfficialLibraryDetailsComponent {
   constructor(
     public dialogRef: MatDialogRef<OfficialLibraryDetailsComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any) {}
+    @Inject(MAT_DIALOG_DATA) public data: any
+  ) {}
 
   close(): void {
     this.dialogRef.close();

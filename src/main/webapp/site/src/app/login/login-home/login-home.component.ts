@@ -11,24 +11,26 @@ import { ConfigService } from '../../services/config.service';
   styleUrls: ['./login-home.component.scss']
 })
 export class LoginHomeComponent implements OnInit {
-
-  credentials: any = {username: '', password: '', recaptchaResponse: null};
+  credentials: any = { username: '', password: '', recaptchaResponse: null };
   passwordError: boolean = false;
   processing: boolean = false;
   isGoogleAuthenticationEnabled: boolean = false;
   isShowGoogleLogin: boolean = true;
-  recaptchaPublicKey: string = "";
+  recaptchaPublicKey: string = '';
   isRecaptchaRequired: boolean = false;
-  accessCode: string = "";
+  accessCode: string = '';
   @ViewChild('recaptchaRef', { static: false }) recaptchaRef: any;
 
-  constructor(private userService: UserService, private http: HttpClient,
-      private router: Router, private route: ActivatedRoute,
-      private configService: ConfigService) {
-  }
+  constructor(
+    private userService: UserService,
+    private http: HttpClient,
+    private router: Router,
+    private route: ActivatedRoute,
+    private configService: ConfigService
+  ) {}
 
   ngOnInit(): void {
-    this.configService.getConfig().subscribe((config) => {
+    this.configService.getConfig().subscribe(config => {
       if (config != null) {
         this.isGoogleAuthenticationEnabled = config.googleClientId != '';
         this.recaptchaPublicKey = this.configService.getRecaptchaPublicKey();
@@ -55,11 +57,11 @@ export class LoginHomeComponent implements OnInit {
       }
     });
   }
-  
+
   login(): boolean {
     this.processing = true;
     this.passwordError = false;
-    this.userService.authenticate(this.credentials, (response) => {
+    this.userService.authenticate(this.credentials, response => {
       if (this.userService.isAuthenticated) {
         this.router.navigateByUrl(this.getRedirectUrl(''));
       } else {
@@ -82,7 +84,7 @@ export class LoginHomeComponent implements OnInit {
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: {
-        'username': this.credentials.username,
+        username: this.credentials.username,
         'is-recaptcha-required': true
       },
       queryParamsHandling: 'merge'
@@ -95,7 +97,7 @@ export class LoginHomeComponent implements OnInit {
     }
   }
 
-  public socialSignIn(socialPlatform : string) {
+  public socialSignIn(socialPlatform: string) {
     window.location.href = this.getRedirectUrl(socialPlatform);
   }
 

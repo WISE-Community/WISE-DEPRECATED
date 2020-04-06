@@ -26,9 +26,7 @@ module.exports = {
       {
         test: /\.scss$/,
         loader: 'style!css!sass',
-        exclude: [
-          '/node_modules/'
-        ]
+        exclude: ['/node_modules/']
       }
     ]
   },
@@ -37,12 +35,12 @@ module.exports = {
     path: path.resolve(__dirname, 'dist')
   },
   target: 'web',
-  externals : [nodeExternals()],
+  externals: [nodeExternals()],
   node: {
     fs: 'empty',
     tls: 'empty',
     'aws-sdk': 'empty',
-    'child_process': 'empty',
-    'net': 'empty'
+    child_process: 'empty',
+    net: 'empty'
   }
 };

@@ -2,15 +2,16 @@ import ComponentService from '../componentService';
 
 class ConceptMapService extends ComponentService {
   constructor(
-      $anchorScroll,
-      $filter,
-      $location,
-      $q,
-      $timeout,
-      ConfigService,
-      StudentAssetService,
-      StudentDataService,
-      UtilService) {
+    $anchorScroll,
+    $filter,
+    $location,
+    $q,
+    $timeout,
+    ConfigService,
+    StudentAssetService,
+    StudentDataService,
+    UtilService
+  ) {
     super($filter, StudentDataService, UtilService);
     this.$anchorScroll = $anchorScroll;
     this.$location = $location;
@@ -47,7 +48,8 @@ class ConceptMapService extends ComponentService {
     let result = false;
 
     if (componentStates && componentStates.length) {
-      let submitRequired = node.showSubmitButton || (component.showSubmitButton && !node.showSaveButton);
+      let submitRequired =
+        node.showSubmitButton || (component.showSubmitButton && !node.showSaveButton);
 
       if (submitRequired) {
         // completion requires a submission, so check for isSubmit in any component states
@@ -55,7 +57,10 @@ class ConceptMapService extends ComponentService {
           let state = componentStates[i];
           if (state.isSubmit && state.studentData) {
             // component state is a submission
-            if (state.isSubmit == true || (state.studentData.submitCounter != null && state.studentData.submitCounter > 0)) {
+            if (
+              state.isSubmit == true ||
+              (state.studentData.submitCounter != null && state.studentData.submitCounter > 0)
+            ) {
               // there is a response so the component is completed
               result = true;
               break;
@@ -79,7 +84,7 @@ class ConceptMapService extends ComponentService {
     }
 
     return result;
-  };
+  }
 
   /**
    * Create an instance of the ConceptMapNode class
@@ -95,7 +100,19 @@ class ConceptMapService extends ComponentService {
    * @param a ConceptMapNode
    */
   newConceptMapNode(draw, id, originalId, filePath, label, x, y, width, height, showLabel) {
-    return new ConceptMapNode(this, draw, id, originalId, filePath, label, x, y, width, height, showLabel);
+    return new ConceptMapNode(
+      this,
+      draw,
+      id,
+      originalId,
+      filePath,
+      label,
+      x,
+      y,
+      width,
+      height,
+      showLabel
+    );
   }
 
   /**
@@ -107,8 +124,31 @@ class ConceptMapService extends ComponentService {
    * @param y the y position of the tail
    * @returns a ConceptMapLink
    */
-  newConceptMapLink(draw, id, originalId, sourceNode, destinationNode, label, color, curvature, startCurveUp, startCurveDown) {
-    return new ConceptMapLink(this, draw, id, originalId, sourceNode, destinationNode, label, color, curvature, startCurveUp, startCurveDown);
+  newConceptMapLink(
+    draw,
+    id,
+    originalId,
+    sourceNode,
+    destinationNode,
+    label,
+    color,
+    curvature,
+    startCurveUp,
+    startCurveDown
+  ) {
+    return new ConceptMapLink(
+      this,
+      draw,
+      id,
+      originalId,
+      sourceNode,
+      destinationNode,
+      label,
+      color,
+      curvature,
+      startCurveUp,
+      startCurveDown
+    );
   }
 
   /**
@@ -120,10 +160,9 @@ class ConceptMapService extends ComponentService {
    * @returns the slope of the line or null if the slope is infinite
    */
   getSlope(x1, y1, x2, y2) {
-
     var slope = null;
 
-    if ((x2 - x1) == 0) {
+    if (x2 - x1 == 0) {
       // the slope is infinite so we will return null
       slope = null;
     } else {
@@ -143,9 +182,8 @@ class ConceptMapService extends ComponentService {
    * @returns the distance between the two points
    */
   calculateDistance(x1, y1, x2, y2) {
-
     // calculate the distance
-    var distance = Math.sqrt(Math.pow((x2 - x1), 2) + Math.pow((y2 - y1), 2));
+    var distance = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
 
     return distance;
   }
@@ -176,53 +214,64 @@ class ConceptMapService extends ComponentService {
   mysystem_sc/apps/my_system/mixins/arrow_drawing.js
 
   **/
-  arrowPathArrays(startx,starty,endx,endy,startCurveUp,endCurveUp,len,angle,curvature,nodeRadius) {
-
-    if (startx === endx && starty === endy){
-      return [[""],[""]];
+  arrowPathArrays(
+    startx,
+    starty,
+    endx,
+    endy,
+    startCurveUp,
+    endCurveUp,
+    len,
+    angle,
+    curvature,
+    nodeRadius
+  ) {
+    if (startx === endx && starty === endy) {
+      return [[''], ['']];
     }
 
     var start = this.coord(startx, starty),
-    tip = this.coord(endx, endy),
-    pathData   = [],
-    arrowHeadData = [];
+      tip = this.coord(endx, endy),
+      pathData = [],
+      arrowHeadData = [];
 
     // calculate control points c2 and c3
     var curveDistance = (tip.x - start.x) * curvature,
-    startYCurveDistance = (curveDistance === 0 ? 1 : Math.max(Math.min(curveDistance, 100), -100)),
-    endYCurveDistance = startYCurveDistance,
-    startUp = startCurveUp ? 1 : -1,
-    endUp = endCurveUp ? 1 : -1;
-    startYCurveDistance = (startYCurveDistance * startUp > 0) ? startYCurveDistance : startYCurveDistance * -1;
-    endYCurveDistance = (endYCurveDistance * endUp > 0) ? endYCurveDistance : endYCurveDistance * -1;
-    var c2 = this.coord(start.x+(curveDistance/2), start.y-startYCurveDistance),
-    c3 = this.coord(tip.x-(curveDistance/2), tip.y-endYCurveDistance),
-    cDistance = Math.sqrt(Math.pow((curveDistance/2),2) + Math.pow(startYCurveDistance,2)),
-    perimX = nodeRadius*(curveDistance/2)/cDistance,
-    perimYstart = nodeRadius*startYCurveDistance/cDistance,
-    perimYend = nodeRadius*endYCurveDistance/cDistance;
+      startYCurveDistance = curveDistance === 0 ? 1 : Math.max(Math.min(curveDistance, 100), -100),
+      endYCurveDistance = startYCurveDistance,
+      startUp = startCurveUp ? 1 : -1,
+      endUp = endCurveUp ? 1 : -1;
+    startYCurveDistance =
+      startYCurveDistance * startUp > 0 ? startYCurveDistance : startYCurveDistance * -1;
+    endYCurveDistance = endYCurveDistance * endUp > 0 ? endYCurveDistance : endYCurveDistance * -1;
+    var c2 = this.coord(start.x + curveDistance / 2, start.y - startYCurveDistance),
+      c3 = this.coord(tip.x - curveDistance / 2, tip.y - endYCurveDistance),
+      cDistance = Math.sqrt(Math.pow(curveDistance / 2, 2) + Math.pow(startYCurveDistance, 2)),
+      perimX = (nodeRadius * (curveDistance / 2)) / cDistance,
+      perimYstart = (nodeRadius * startYCurveDistance) / cDistance,
+      perimYend = (nodeRadius * endYCurveDistance) / cDistance;
 
     // update tip
     tip = this.coord(tip.x - perimX, tip.y - perimYend);
 
     // draw arrow path
 
-    pathData.push("M", start.x + perimX, start.y - perimYstart);  // move to start of line
-    pathData.push("C", c2.x, c2.y, c3.x, c3.y, tip.x, tip.y); // curve line to the tip
+    pathData.push('M', start.x + perimX, start.y - perimYstart); // move to start of line
+    pathData.push('C', c2.x, c2.y, c3.x, c3.y, tip.x, tip.y); // curve line to the tip
 
     // draw arrow head
     var percLengthOfHead = len / this.getLengthOfCubicBezier(start, c2, c3, tip),
-    centerBaseOfHead = this.getPointOnCubicBezier(percLengthOfHead, start, c2, c3, tip),
-    theta  = Math.atan2((tip.y-centerBaseOfHead.y),(tip.x-centerBaseOfHead.x)),
-    baseAngleA = theta + angle * Math.PI/180,
-    baseAngleB = theta - angle * Math.PI/180,
-    baseA    = this.coord(tip.x - len * Math.cos(baseAngleA), tip.y - len * Math.sin(baseAngleA)),
-    baseB    = this.coord(tip.x - len * Math.cos(baseAngleB), tip.y - len * Math.sin(baseAngleB));
+      centerBaseOfHead = this.getPointOnCubicBezier(percLengthOfHead, start, c2, c3, tip),
+      theta = Math.atan2(tip.y - centerBaseOfHead.y, tip.x - centerBaseOfHead.x),
+      baseAngleA = theta + (angle * Math.PI) / 180,
+      baseAngleB = theta - (angle * Math.PI) / 180,
+      baseA = this.coord(tip.x - len * Math.cos(baseAngleA), tip.y - len * Math.sin(baseAngleA)),
+      baseB = this.coord(tip.x - len * Math.cos(baseAngleB), tip.y - len * Math.sin(baseAngleB));
 
-    arrowHeadData.push("M", tip.x, tip.y);
-    arrowHeadData.push("L", baseA.x, baseA.y);  // line to baseA
-    arrowHeadData.push("L", baseB.x, baseB.y);  // line to baseB
-    arrowHeadData.push("L", tip.x,   tip.y  );  // line back to the tip
+    arrowHeadData.push('M', tip.x, tip.y);
+    arrowHeadData.push('L', baseA.x, baseA.y); // line to baseA
+    arrowHeadData.push('L', baseB.x, baseB.y); // line to baseB
+    arrowHeadData.push('L', tip.x, tip.y); // line back to the tip
 
     return [pathData, arrowHeadData];
   }
@@ -233,18 +282,18 @@ class ConceptMapService extends ComponentService {
    * The code is found in the arrow_drawing.js file.
    * mysystem_sc/apps/my_system/mixins/arrow_drawing.js
    */
-  coord(x,y) {
-    if(!x) x = 0;
-    if(!y) y = 0;
+  coord(x, y) {
+    if (!x) x = 0;
+    if (!y) y = 0;
     /*
-    *   Limit precision of decimals for SVG rendering.
-    *   otherwise we get really long SVG strings,
-    *   and webkit error messsages like of this sort:
-    *   "Error: Problem parsing d='<svg string with long dec>'"
-    */
-    x = Math.round(x * 1000)/1000;
-    y = Math.round(y * 1000)/1000;
-    return {x: x, y: y};
+     *   Limit precision of decimals for SVG rendering.
+     *   otherwise we get really long SVG strings,
+     *   and webkit error messsages like of this sort:
+     *   "Error: Problem parsing d='<svg string with long dec>'"
+     */
+    x = Math.round(x * 1000) / 1000;
+    y = Math.round(y * 1000) / 1000;
+    return { x: x, y: y };
   }
 
   /**
@@ -253,21 +302,20 @@ class ConceptMapService extends ComponentService {
    * The code is found in the arrow_drawing.js file.
    * mysystem_sc/apps/my_system/mixins/arrow_drawing.js
    */
-  getLengthOfCubicBezier(C1,C2,C3,C4)
-  {
+  getLengthOfCubicBezier(C1, C2, C3, C4) {
     var precision = 10,
-    length  = 0,
-    t,
-    currentPoint,
-    previousPoint;
+      length = 0,
+      t,
+      currentPoint,
+      previousPoint;
 
-    for (var i = 0; i<precision; i++){
-      t = i/precision;
-      currentPoint = this.getPointOnCubicBezier(t, C1,C2,C3,C4);
-      if (i > 0){
+    for (var i = 0; i < precision; i++) {
+      t = i / precision;
+      currentPoint = this.getPointOnCubicBezier(t, C1, C2, C3, C4);
+      if (i > 0) {
         var xDif = currentPoint.x - previousPoint.x,
-        yDif = currentPoint.y - previousPoint.y;
-        length += Math.sqrt((xDif*xDif) + (yDif*yDif));
+          yDif = currentPoint.y - previousPoint.y;
+        length += Math.sqrt(xDif * xDif + yDif * yDif);
       }
       previousPoint = currentPoint;
     }
@@ -280,12 +328,20 @@ class ConceptMapService extends ComponentService {
    * The code is found in the arrow_drawing.js file.
    * mysystem_sc/apps/my_system/mixins/arrow_drawing.js
    */
-  getPointOnCubicBezier(percent,C1,C2,C3,C4) {
+  getPointOnCubicBezier(percent, C1, C2, C3, C4) {
     if (percent < 0) percent = 0;
     if (percent > 1) percent = 1;
     var pos = this.coord();
-    pos.x = C1.x*this.B1(percent) + C2.x*this.B2(percent) + C3.x*this.B3(percent) + C4.x*this.B4(percent);
-    pos.y = C1.y*this.B1(percent) + C2.y*this.B2(percent) + C3.y*this.B3(percent) + C4.y*this.B4(percent);
+    pos.x =
+      C1.x * this.B1(percent) +
+      C2.x * this.B2(percent) +
+      C3.x * this.B3(percent) +
+      C4.x * this.B4(percent);
+    pos.y =
+      C1.y * this.B1(percent) +
+      C2.y * this.B2(percent) +
+      C3.y * this.B3(percent) +
+      C4.y * this.B4(percent);
     return pos;
   }
 
@@ -295,10 +351,18 @@ class ConceptMapService extends ComponentService {
    * The code is found in the arrow_drawing.js file.
    * mysystem_sc/apps/my_system/mixins/arrow_drawing.js
    */
-  B1(t) { return t*t*t; }
-  B2(t) { return 3*t*t*(1-t); }
-  B3(t) { return 3*t*(1-t)*(1-t); }
-  B4(t) { return (1-t)*(1-t)*(1-t); }
+  B1(t) {
+    return t * t * t;
+  }
+  B2(t) {
+    return 3 * t * t * (1 - t);
+  }
+  B3(t) {
+    return 3 * t * (1 - t) * (1 - t);
+  }
+  B4(t) {
+    return (1 - t) * (1 - t) * (1 - t);
+  }
 
   /**
    * Evaluate a rule name
@@ -308,7 +372,6 @@ class ConceptMapService extends ComponentService {
    * @returns whether the rule was satisfied
    */
   evaluateRuleByRuleName(componentContent, conceptMapData, ruleName) {
-
     var result = false;
 
     if (ruleName === true) {
@@ -334,7 +397,6 @@ class ConceptMapService extends ComponentService {
       var firstRule = true;
 
       if (rules != null) {
-
         /*
          * loop through all the rules in the category. we will say the
          * category is satisfied if all the rules in the category
@@ -388,11 +450,9 @@ class ConceptMapService extends ComponentService {
    * @returns whether the rule was satisfied
    */
   evaluateRule(conceptMapData, rule) {
-
     var result = false;
 
     if (rule != null) {
-
       if (rule.type == 'node') {
         // this is a node rule
 
@@ -447,7 +507,6 @@ class ConceptMapService extends ComponentService {
            */
           result = !result;
         }
-
       } else if (rule.type == 'link') {
         // this is a link rule
 
@@ -512,24 +571,19 @@ class ConceptMapService extends ComponentService {
    * @returns the rule with the given rule name
    */
   getRuleByRuleName(componentContent, ruleName) {
-
     var rule = null;
 
     if (ruleName != null) {
-
       // get the rules
       var rules = componentContent.rules;
 
       if (rules != null) {
-
         // loop through all the rules
         for (var r = 0; r < rules.length; r++) {
-
           // get a rule
           var tempRule = rules[r];
 
           if (tempRule != null) {
-
             if (ruleName == tempRule.name) {
               // we have found the rule with the name we want
               rule = tempRule;
@@ -549,27 +603,22 @@ class ConceptMapService extends ComponentService {
    * @returns the rules in the category
    */
   getRulesByCategoryName(componentContent, category) {
-
     var rules = [];
 
     if (componentContent != null) {
-
       // get all the rules
       var tempRules = componentContent.rules;
 
       if (tempRules != null) {
-
         // loop through all the rules
         for (var r = 0; r < tempRules.length; r++) {
           var rule = tempRules[r];
 
           if (rule != null) {
-
             // get the categories the rule is in
             var categories = rule.categories;
 
             if (categories != null) {
-
               // loop through categories the rule is in
               for (var c = 0; c < categories.length; c++) {
                 var tempCategory = categories[c];
@@ -599,21 +648,17 @@ class ConceptMapService extends ComponentService {
    * @returns all the nodes with the given label
    */
   getNodesByLabel(conceptMapData, label) {
-
     var nodesByLabel = [];
 
     if (conceptMapData != null) {
-
       var nodes = conceptMapData.nodes;
 
       if (nodes != null) {
-
         // loop through all the nodes
         for (var n = 0; n < nodes.length; n++) {
           var node = nodes[n];
 
           if (node != null) {
-
             if (label == node.label || label == 'any') {
               /*
                * we have found a node with the label we are
@@ -640,30 +685,27 @@ class ConceptMapService extends ComponentService {
    * destination node label
    */
   getLinksByLabels(conceptMapData, nodeLabel, linkLabel, otherNodeLabel) {
-
     var resultLinks = [];
 
     if (conceptMapData != null) {
-
       var links = conceptMapData.links;
 
       if (links != null) {
-
         // loop through all the links
         for (var l = 0; l < links.length; l++) {
           var tempLink = links[l];
 
           if (tempLink != null) {
-
             // get the labels
             var tempLinkLabel = tempLink.label;
             var sourceNodeLabel = tempLink.sourceNodeLabel;
             var destinationNodeLabel = tempLink.destinationNodeLabel;
 
-            if ((nodeLabel == sourceNodeLabel || nodeLabel == 'any') &&
+            if (
+              (nodeLabel == sourceNodeLabel || nodeLabel == 'any') &&
               (linkLabel == tempLinkLabel || linkLabel == 'any') &&
-              (otherNodeLabel == destinationNodeLabel || otherNodeLabel == 'any')) {
-
+              (otherNodeLabel == destinationNodeLabel || otherNodeLabel == 'any')
+            ) {
               // the labels match the ones we are looking for
               resultLinks.push(tempLink);
             }
@@ -684,10 +726,8 @@ class ConceptMapService extends ComponentService {
    * false if none of the rules are satisified
    */
   any(componentContent, conceptMapData, args) {
-
     // loop through all the rule names
     for (var n = 0; n < args.length; n++) {
-
       // get a rule name
       var ruleName = args[n];
 
@@ -715,7 +755,6 @@ class ConceptMapService extends ComponentService {
 
     // loop through all the rule names
     for (var n = 0; n < args.length; n++) {
-
       // get a rule name
       var ruleName = args[n];
 
@@ -735,7 +774,6 @@ class ConceptMapService extends ComponentService {
    */
   populateConceptMapData(draw, conceptMapData) {
     if (conceptMapData != null) {
-
       // get the JSON nodes
       var nodes = conceptMapData.nodes;
 
@@ -743,7 +781,6 @@ class ConceptMapService extends ComponentService {
       var conceptMapNodes = [];
 
       if (nodes != null) {
-
         // loop through all the nodes
         for (var n = 0; n < nodes.length; n++) {
           var node = nodes[n];
@@ -760,7 +797,17 @@ class ConceptMapService extends ComponentService {
 
           // create a ConceptMapNode
           var conceptMapNode = this.newConceptMapNode(
-              draw, instanceId, originalId, filePath, label, x, y, width, height, showLabel);
+            draw,
+            instanceId,
+            originalId,
+            filePath,
+            label,
+            x,
+            y,
+            width,
+            height,
+            showLabel
+          );
 
           conceptMapNodes.push(conceptMapNode);
         }
@@ -773,7 +820,6 @@ class ConceptMapService extends ComponentService {
       var conceptMapLinks = [];
 
       if (links != null) {
-
         // loop through all the links
         for (var l = 0; l < links.length; l++) {
           var link = links[l];
@@ -799,7 +845,18 @@ class ConceptMapService extends ComponentService {
           }
 
           // create a ConceptMapLink
-          var conceptMapLink = this.newConceptMapLink(draw, instanceId, originalId, sourceNode, destinationNode, label, color, curvature, startCurveUp, endCurveUp);
+          var conceptMapLink = this.newConceptMapLink(
+            draw,
+            instanceId,
+            originalId,
+            sourceNode,
+            destinationNode,
+            label,
+            color,
+            curvature,
+            startCurveUp,
+            endCurveUp
+          );
 
           conceptMapLinks.push(conceptMapLink);
         }
@@ -829,7 +886,6 @@ class ConceptMapService extends ComponentService {
    * Move the link text group to the front
    */
   moveLinkTextToFront(links) {
-
     // loop through all the links
     for (var l = 0; l < links.length; l++) {
       var link = links[l];
@@ -845,13 +901,11 @@ class ConceptMapService extends ComponentService {
    * Move the nodes to the front so that they show up above links
    */
   moveNodesToFront(nodes) {
-
     // loop through all the nodes
     for (var n = 0; n < nodes.length; n++) {
       var node = nodes[n];
 
       if (node != null) {
-
         // get a node group
         var group = node.getGroup();
 
@@ -872,9 +926,7 @@ class ConceptMapService extends ComponentService {
    * This is why this function is called in a $timeout.
    */
   refreshLinkLabels(nodes, links) {
-
     if (nodes != null) {
-
       // loop through all the nodes
       for (var n = 0; n < nodes.length; n++) {
         var node = nodes[n];
@@ -893,7 +945,6 @@ class ConceptMapService extends ComponentService {
     }
 
     if (links != null) {
-
       // loop throgh all the links
       for (var l = 0; l < links.length; l++) {
         var link = links[l];
@@ -921,7 +972,6 @@ class ConceptMapService extends ComponentService {
     var node = null;
 
     if (id != null) {
-
       // loop through all the nodes
       for (var n = 0; n < nodes.length; n++) {
         var tempNode = nodes[n];
@@ -945,7 +995,6 @@ class ConceptMapService extends ComponentService {
    * @param height the height of the image we want to create
    */
   createImage(conceptMapData, width, height) {
-
     // create a promise that will return an image of the concept map
     var deferred = this.$q.defer();
 
@@ -967,7 +1016,6 @@ class ConceptMapService extends ComponentService {
     draw.height(height);
 
     if (svgElement != null) {
-
       // populate the concept map data into the svg draw element
       this.populateConceptMapData(draw, conceptMapData);
 
@@ -975,14 +1023,12 @@ class ConceptMapService extends ComponentService {
       var svgString = svgElement.innerHTML;
 
       // find all the images in the svg and replace them with Base64 images
-      this.getHrefToBase64ImageReplacements(svgString, true).then((images) => {
-
+      this.getHrefToBase64ImageReplacements(svgString, true).then(images => {
         /*
          * Loop through all the image objects. Each object contains
          * an image href and a Base64 image.
          */
         for (var i = 0; i < images.length; i++) {
-
           // get an image object
           var imagePair = images[i];
 
@@ -1015,10 +1061,10 @@ class ConceptMapService extends ComponentService {
         var ctx = myCanvas.getContext('2d');
 
         // create an svg blob
-        var svg = new Blob([svgString], {type:'image/svg+xml;charset=utf-8'});
+        var svg = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
         var domURL = self.URL || self.webkitURL || self;
         var url = domURL.createObjectURL(svg);
-        var image = new Image;
+        var image = new Image();
 
         /*
          * set the UtilService in a local variable so we can access it
@@ -1027,8 +1073,7 @@ class ConceptMapService extends ComponentService {
         var thisUtilService = this.UtilService;
 
         // the function that is called after the image is fully loaded
-        image.onload = (event) => {
-
+        image.onload = event => {
           // get the image that was loaded
           var image = event.target;
 
@@ -1044,28 +1089,29 @@ class ConceptMapService extends ComponentService {
           var imageObject = thisUtilService.getImageObjectFromBase64String(base64Image);
 
           // create a student asset image
-          this.StudentAssetService.uploadAsset(imageObject).then((unreferencedAsset) => {
-
+          this.StudentAssetService.uploadAsset(imageObject).then(unreferencedAsset => {
             /*
              * make a copy of the unreferenced asset so that we
              * get a referenced asset
              */
-            this.StudentAssetService.copyAssetForReference(unreferencedAsset).then((referencedAsset) => {
-              if (referencedAsset != null) {
-                /*
-                 * get the asset url
-                 * for example
-                 * /wise/studentuploads/11261/297478/referenced/picture_1494016652542.png
-                 */
-                var referencedAssetUrl = referencedAsset.url;
+            this.StudentAssetService.copyAssetForReference(unreferencedAsset).then(
+              referencedAsset => {
+                if (referencedAsset != null) {
+                  /*
+                   * get the asset url
+                   * for example
+                   * /wise/studentuploads/11261/297478/referenced/picture_1494016652542.png
+                   */
+                  var referencedAssetUrl = referencedAsset.url;
 
-                // remove the unreferenced asset
-                this.StudentAssetService.deleteAsset(unreferencedAsset);
+                  // remove the unreferenced asset
+                  this.StudentAssetService.deleteAsset(unreferencedAsset);
 
-                // resolve the promise with the image url
-                deferred.resolve(referencedAssetUrl);
+                  // resolve the promise with the image url
+                  deferred.resolve(referencedAssetUrl);
+                }
               }
-            });
+            );
           });
         };
 
@@ -1086,7 +1132,6 @@ class ConceptMapService extends ComponentService {
    * contain an image href and a Base64 image.
    */
   getHrefToBase64ImageReplacements(svgString, prependAssetsPath) {
-
     // an array to hold all the promises
     var promises = [];
 
@@ -1095,7 +1140,6 @@ class ConceptMapService extends ComponentService {
 
     // loop through all the images
     for (var i = 0; i < imageHrefs.length; i++) {
-
       // get an image href
       var imageHref = imageHrefs[i];
 
@@ -1124,12 +1168,10 @@ class ConceptMapService extends ComponentService {
    * @return an array of image hrefs
    */
   getImagesInSVG(svgString) {
-
     // used to hold all the images we find
     var images = [];
 
     if (svgString != null) {
-
       /*
        * the regex to match href values in image elements
        * e.g.
@@ -1143,8 +1185,7 @@ class ConceptMapService extends ComponentService {
       // find the first match in the svg string
       var result = regex.exec(svgString);
 
-      while(result != null) {
-
+      while (result != null) {
         /*
          * get the href image from the match
          * e.g.
@@ -1171,11 +1212,10 @@ class ConceptMapService extends ComponentService {
    * and the Base64 image
    */
   getBase64Image(imageHref) {
-
     var deferred = this.$q.defer();
 
     // create the image object that we will load the image into
-    var image = new Image;
+    var image = new Image();
 
     // create a new canvas to render the image in
     var myCanvas = document.createElement('canvas');
@@ -1183,7 +1223,6 @@ class ConceptMapService extends ComponentService {
 
     // the function that is called after the image is fully loaded
     image.onload = function(event) {
-
       // get the image that was loaded
       var image = event.target;
 
@@ -1204,7 +1243,7 @@ class ConceptMapService extends ComponentService {
 
       // resolve the promise with the object
       deferred.resolve(result);
-    }
+    };
 
     // load the image
     image.src = imageHref;
@@ -1223,13 +1262,10 @@ class ConceptMapService extends ComponentService {
    * @return whether the component state has any work
    */
   componentStateHasStudentWork(componentState, componentContent) {
-
     if (componentState != null) {
-
       let studentData = componentState.studentData;
 
       if (studentData != null) {
-
         let nodes = [];
         let links = [];
         let conceptMapData = studentData.conceptMapData;
@@ -1278,7 +1314,12 @@ class ConceptMapService extends ComponentService {
              * there is a starter concept map so we will compare it
              * with the student concept map
              */
-            if (this.isStudentConceptMapDifferentThanStarterConceptMap(conceptMapData, starterConceptMap)) {
+            if (
+              this.isStudentConceptMapDifferentThanStarterConceptMap(
+                conceptMapData,
+                starterConceptMap
+              )
+            ) {
               return true;
             }
           }
@@ -1297,9 +1338,7 @@ class ConceptMapService extends ComponentService {
    * concept map
    */
   isStudentConceptMapDifferentThanStarterConceptMap(studentConceptMap, starterConceptMap) {
-
     if (studentConceptMap != null && starterConceptMap != null) {
-
       let studentNodes = studentConceptMap.nodes;
       let studentLinks = studentConceptMap.links;
 
@@ -1318,13 +1357,13 @@ class ConceptMapService extends ComponentService {
           let starterNode = starterNodes[n];
 
           if (studentNode != null && starterNode != null) {
-
             // check if any of the fields have different values
-            if (studentNode.originalId != starterNode.originalId ||
+            if (
+              studentNode.originalId != starterNode.originalId ||
               studentNode.instanceId != starterNode.instanceId ||
               studentNode.x != starterNode.x ||
-              studentNode.y != starterNode.y) {
-
+              studentNode.y != starterNode.y
+            ) {
               // the student node is different than the starter node
               return true;
             }
@@ -1347,16 +1386,16 @@ class ConceptMapService extends ComponentService {
           let starterLink = starterLinks[l];
 
           if (studentLink != null && starterLink != null) {
-
             // check if any of the fields have different values
-            if (studentLink.label != starterLink.label ||
+            if (
+              studentLink.label != starterLink.label ||
               studentLink.originalId != starterLink.originalId ||
               studentLink.instanceId != starterLink.instanceId ||
               studentLink.sourceNodeOriginalId != starterLink.sourceNodeOriginalId ||
               studentLink.sourceNodeInstanceId != starterLink.sourceNodeInstanceId ||
               studentLink.destinationNodeOriginalId != starterLink.destinationNodeOriginalId ||
-              studentLink.destinationNodeInstanceId != starterLink.destinationNodeInstanceId) {
-
+              studentLink.destinationNodeInstanceId != starterLink.destinationNodeInstanceId
+            ) {
               // the student link is different than the starter link
               return true;
             }
@@ -1381,7 +1420,9 @@ class ConceptMapService extends ComponentService {
     let deferred = this.$q.defer();
 
     // get the svg element. this will obtain an array.
-    let svgElement = angular.element(document.querySelector('#svg_' + componentState.nodeId + '_' + componentState.componentId));
+    let svgElement = angular.element(
+      document.querySelector('#svg_' + componentState.nodeId + '_' + componentState.componentId)
+    );
 
     if (svgElement != null && svgElement.length > 0) {
       // get the svg element
@@ -1392,14 +1433,12 @@ class ConceptMapService extends ComponentService {
       let svgString = serializer.serializeToString(svgElement);
 
       // find all the images in the svg and replace them with Base64 images
-      this.getHrefToBase64ImageReplacements(svgString).then((images) => {
-
+      this.getHrefToBase64ImageReplacements(svgString).then(images => {
         /*
          * Loop through all the image objects. Each object contains
          * an image href and a Base64 image.
          */
         for (let i = 0; i < images.length; i++) {
-
           // get an image object
           let imagePair = images[i];
 
@@ -1424,14 +1463,13 @@ class ConceptMapService extends ComponentService {
         let ctx = myCanvas.getContext('2d');
 
         // create an svg blob
-        let svg = new Blob([svgString], {type:'image/svg+xml;charset=utf-8'});
+        let svg = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
         let domURL = self.URL || self.webkitURL || self;
         let url = domURL.createObjectURL(svg);
         let image = new Image();
 
         // the function that is called after the image is fully loaded
-        image.onload = (event) => {
-
+        image.onload = event => {
           // get the image that was loaded
           let image = event.target;
 
@@ -1447,7 +1485,7 @@ class ConceptMapService extends ComponentService {
           let imageObject = this.UtilService.getImageObjectFromBase64String(base64Image, false);
 
           // add the image to the student assets
-          this.StudentAssetService.uploadAsset(imageObject).then((asset) => {
+          this.StudentAssetService.uploadAsset(imageObject).then(asset => {
             deferred.resolve(asset);
           });
         };
@@ -1489,9 +1527,7 @@ class ConceptMapService extends ComponentService {
       return false;
     } else {
       if (annotation.type == 'score') {
-
       } else if (annotation.type == 'comment') {
-
       } else if (annotation.type == 'autoScore') {
         return componentContent.showAutoScore;
       } else if (annotation.type == 'autoComment') {
@@ -1504,12 +1540,10 @@ class ConceptMapService extends ComponentService {
   // end of ConceptMapService class
 }
 
-
 /**
  * A ConceptMapNode that represents a node in the ConceptMap component
  */
 class ConceptMapNode {
-
   /**
    * The constructor for creating ConceptMapNodes
    * @param ConceptMapService the ConceptMapService
@@ -1522,8 +1556,19 @@ class ConceptMapNode {
    * @param height the height of the node
    * @param showLabel whether to show the label
    */
-  constructor(ConceptMapService, draw, id, originalId, filePath, label, x, y, width, height, showLabel) {
-
+  constructor(
+    ConceptMapService,
+    draw,
+    id,
+    originalId,
+    filePath,
+    label,
+    x,
+    y,
+    width,
+    height,
+    showLabel
+  ) {
     // remember the ConceptMapService
     this.ConceptMapService = ConceptMapService;
 
@@ -1676,7 +1721,6 @@ class ConceptMapNode {
    * @returns the svg rectangle that represents the border
    */
   createBorder() {
-
     // create the rectangle
     this.border = this.draw.rect(this.width, this.height);
     this.border.fill('none');
@@ -1691,7 +1735,6 @@ class ConceptMapNode {
    * @returns the svg circle that represents the connector
    */
   createConnector() {
-
     // create the circle
     var connectorRadius = 10;
     this.connector = this.draw.circle();
@@ -1710,7 +1753,6 @@ class ConceptMapNode {
    * @returns a group that contains a circle and an x
    */
   createDeleteButtonGroup() {
-
     // create a group to contain the circle and x for the delete button
     this.deleteButtonGroup = this.draw.group();
 
@@ -1727,22 +1769,38 @@ class ConceptMapNode {
 
     // get the top location of the +
     var topX = 0;
-    var topY = 0 - (deleteButtonRadius * 0.7);
+    var topY = 0 - deleteButtonRadius * 0.7;
 
     // get the bottom location of the +
     var bottomX = 0;
-    var bottomY = 0 + (deleteButtonRadius * 0.7);
+    var bottomY = 0 + deleteButtonRadius * 0.7;
 
     // get the left position of the +
-    var leftX = 0 - (deleteButtonRadius * 0.7);
+    var leftX = 0 - deleteButtonRadius * 0.7;
     var leftY = 0;
 
     // get the right position of the +
-    var rightX = 0 + (deleteButtonRadius * 0.7);
+    var rightX = 0 + deleteButtonRadius * 0.7;
     var rightY = 0;
 
     // draw the +
-    var deleteButtonXPath = 'M' + topX + ',' + topY + 'L' + bottomX + ',' + bottomY + 'M' + leftX + ',' + leftY + 'L' + rightX + ',' + rightY;
+    var deleteButtonXPath =
+      'M' +
+      topX +
+      ',' +
+      topY +
+      'L' +
+      bottomX +
+      ',' +
+      bottomY +
+      'M' +
+      leftX +
+      ',' +
+      leftY +
+      'L' +
+      rightX +
+      ',' +
+      rightY;
     this.deleteButtonX = this.draw.path(deleteButtonXPath);
     this.deleteButtonX.stroke({ color: '#333333', opacity: 0.2, width: 2 });
 
@@ -1771,7 +1829,6 @@ class ConceptMapNode {
    * @returns the text group
    */
   createTextGroup() {
-
     // create the group
     this.textGroup = this.draw.group();
 
@@ -1818,7 +1875,7 @@ class ConceptMapNode {
       } else {
         width = textBBox.width + 10;
       }
-    } catch(e) {
+    } catch (e) {
       /*
        * we were unable to get the bounding box (likely because
        * Firefox threw an error when trying to call getBBox())
@@ -1882,7 +1939,6 @@ class ConceptMapNode {
    * @param label the label of the node
    */
   setLabel(label) {
-
     // remember the label
     this.label = label;
 
@@ -1900,7 +1956,7 @@ class ConceptMapNode {
       } else {
         width = textBBox.width + 10;
       }
-    } catch(e) {
+    } catch (e) {
       /*
        * we were unable to get the bounding box (likely because
        * Firefox threw an error when trying to call getBBox())
@@ -1925,7 +1981,6 @@ class ConceptMapNode {
     var val = 0;
 
     if (this.group != null && this.image != null) {
-
       // get the group
       var groupX = this.group.x();
 
@@ -1952,7 +2007,6 @@ class ConceptMapNode {
     var val = 0;
 
     if (this.group != null && this.image != null) {
-
       // get the group
       var groupY = this.group.y();
 
@@ -1979,7 +2033,6 @@ class ConceptMapNode {
     var val = 0;
 
     if (this.group != null && this.image != null) {
-
       // get the group
       var groupX = this.group.x();
 
@@ -2006,7 +2059,6 @@ class ConceptMapNode {
     var val = 0;
 
     if (this.group != null && this.image != null) {
-
       // get the group
       var groupY = this.group.y();
 
@@ -2032,7 +2084,6 @@ class ConceptMapNode {
    * @returns whether the node is highlighted
    */
   isHighlighted(value) {
-
     if (value != null) {
       this.highlighted = value;
     }
@@ -2101,7 +2152,6 @@ class ConceptMapNode {
    * @returns the x position of the group
    */
   getGroupX() {
-
     var x = 0;
 
     if (this.group != null) {
@@ -2138,7 +2188,6 @@ class ConceptMapNode {
    * @returns the x position of the image
    */
   getImageX() {
-
     // get the x position of the group
     var groupX = this.getGroupX();
 
@@ -2173,7 +2222,6 @@ class ConceptMapNode {
    * @returns the y position of the image
    */
   getImageY() {
-
     // get the y position of the group
     var groupY = this.getGroupY();
 
@@ -2212,7 +2260,7 @@ class ConceptMapNode {
       width = this.image.width();
     }
 
-    return width
+    return width;
   }
 
   /**
@@ -2235,7 +2283,6 @@ class ConceptMapNode {
    * the group
    */
   setNodeMouseOver(nodeMouseOverFunction) {
-
     if (this.group != null) {
       this.group.mouseover(nodeMouseOverFunction);
     }
@@ -2247,7 +2294,6 @@ class ConceptMapNode {
    * out of the group
    */
   setNodeMouseOut(nodeMouseOutFunction) {
-
     if (this.group != null) {
       this.group.mouseout(nodeMouseOutFunction);
     }
@@ -2259,7 +2305,6 @@ class ConceptMapNode {
    * down on the group
    */
   setNodeMouseDown(nodeMouseDownFunction) {
-
     if (this.group != null) {
       this.group.mousedown(nodeMouseDownFunction);
     }
@@ -2271,7 +2316,6 @@ class ConceptMapNode {
    * released over the group
    */
   setNodeMouseUp(nodeMouseUpFunction) {
-
     if (this.group != null) {
       this.group.mouseup(nodeMouseUpFunction);
     }
@@ -2283,7 +2327,6 @@ class ConceptMapNode {
    * clicked
    */
   setNodeMouseClick(nodeMouseClickFunction) {
-
     if (this.group != null) {
       this.image.click(nodeMouseClickFunction);
     }
@@ -2295,7 +2338,6 @@ class ConceptMapNode {
    * is down on the connector
    */
   setConnectorMouseDown(connectorMouseDownFunction) {
-
     if (this.connector != null) {
       this.connector.mousedown(connectorMouseDownFunction);
     }
@@ -2307,7 +2349,6 @@ class ConceptMapNode {
    * is down on the delete button
    */
   setDeleteButtonMouseDown(deleteButtonMouseDownFunction) {
-
     if (this.deleteButtonCircle != null) {
       this.deleteButtonCircle.mousedown(deleteButtonMouseDownFunction);
     }
@@ -2319,7 +2360,6 @@ class ConceptMapNode {
    * is over the delete button
    */
   setDeleteButtonMouseOver(deleteButtonMouseOverFunction) {
-
     if (this.deleteButtonCircle != null) {
       this.deleteButtonCircle.mouseover(deleteButtonMouseOverFunction);
     }
@@ -2331,7 +2371,6 @@ class ConceptMapNode {
    * moves out of the delete button
    */
   setDeleteButtonMouseOut(deleteButtonMouseOutFunction) {
-
     if (this.deleteButtonCircle != null) {
       this.deleteButtonCircle.mouseout(deleteButtonMouseOutFunction);
     }
@@ -2342,9 +2381,7 @@ class ConceptMapNode {
    * @param dragMoveFunction the function to call when the group is dragged
    */
   setDragMove(dragMoveFunction) {
-
     if (this.group != null) {
-
       // set a listener for when the node is dragged
       this.group.on('dragmove', dragMoveFunction);
     }
@@ -2383,12 +2420,9 @@ class ConceptMapNode {
    * @param outgoingLink a ConceptMapLink object
    */
   removeOutgoingLink(outgoingLink) {
-
     if (outgoingLink != null) {
-
       // loop through all the outgoing links in this node
       for (var ol = 0; ol < this.outgoingLinks.length; ol++) {
-
         // get an outgoing link
         var tempOutgoingLink = this.outgoingLinks[ol];
 
@@ -2424,12 +2458,9 @@ class ConceptMapNode {
    * @param incomingLink a ConceptMapLink object
    */
   removeIncomingLink(incomingLink) {
-
     if (incomingLink != null) {
-
       // loop through the incoming links in the node
       for (var il = 0; il < this.incomingLinks.length; il++) {
-
         // get an incoming link
         var tempIncomingLink = this.incomingLinks[il];
 
@@ -2455,7 +2486,6 @@ class ConceptMapNode {
    * @param event
    */
   dragMove(event) {
-
     // get the group
     var group = this.getGroup();
 
@@ -2472,10 +2502,8 @@ class ConceptMapNode {
     var incomingLinks = this.incomingLinks;
 
     if (outgoingLinks != null) {
-
       // loop through all the outgoing links
       for (var ol = 0; ol < outgoingLinks.length; ol++) {
-
         // get an outgoing link
         var outgoingLink = outgoingLinks[ol];
 
@@ -2494,7 +2522,6 @@ class ConceptMapNode {
 
       // loop through all the incoming links
       for (var il = 0; il < incomingLinks.length; il++) {
-
         // get an incoming link
         var incomingLink = incomingLinks[il];
 
@@ -2525,7 +2552,6 @@ class ConceptMapNode {
    * Remove the node from the svg
    */
   remove() {
-
     // make the group not draggable
     this.group.draggable(false);
 
@@ -2545,7 +2571,6 @@ class ConceptMapNode {
 
     // loop through all the outgoing links
     for (var ol = 0; ol < this.outgoingLinks.length; ol++) {
-
       // get an outgoing link
       var outgoingLink = this.outgoingLinks[ol];
 
@@ -2563,7 +2588,6 @@ class ConceptMapNode {
 
     // loop through all the incoming links
     for (var il = 0; il < this.incomingLinks.length; il++) {
-
       // get an incoming link
       var incomingLink = this.incomingLinks[il];
 
@@ -2585,12 +2609,10 @@ class ConceptMapNode {
    * @param destinationNode the destination node
    */
   getLinksToDestination(destinationNode) {
-
     var linksToDestination = [];
 
     // loop through all the outgoing links
     for (var ol = 0; ol < this.outgoingLinks.length; ol++) {
-
       // get an outgoing link
       var outgoingLink = this.outgoingLinks[ol];
 
@@ -2617,7 +2639,7 @@ class ConceptMapNode {
     var width = 0;
 
     if (labelText != null) {
-      width = (labelText.length * 6) + 10;
+      width = labelText.length * 6 + 10;
     }
 
     return width;
@@ -2630,7 +2652,6 @@ class ConceptMapNode {
  * A ConceptMapLink that represents a link in the ConceptMap component
  */
 class ConceptMapLink {
-
   /**
    * The constructor to create a ConceptMapLink object
    * @param ConceptMapService the ConceptMapService
@@ -2645,8 +2666,19 @@ class ConceptMapLink {
    * @param startCurveUp whether the start of the link curves up
    * @param endCurveUp whether the end of the link curves up
    */
-  constructor(ConceptMapService, draw, id, originalId, sourceNode, destinationNode, label, color, curvature, startCurveUp, endCurveUp) {
-
+  constructor(
+    ConceptMapService,
+    draw,
+    id,
+    originalId,
+    sourceNode,
+    destinationNode,
+    label,
+    color,
+    curvature,
+    startCurveUp,
+    endCurveUp
+  ) {
     // remember the ConceptMapService
     this.ConceptMapService = ConceptMapService;
 
@@ -2682,7 +2714,7 @@ class ConceptMapLink {
     this.group = this.draw.group();
 
     // where to place the text of the link along the line
-    this.textPercentageLocationOnLink = 0.6
+    this.textPercentageLocationOnLink = 0.6;
 
     // remember the source node
     this.sourceNode = sourceNode;
@@ -2734,7 +2766,6 @@ class ConceptMapLink {
     var y2 = y1;
 
     if (this.destinationNode != null) {
-
       /*
        * get the nearest point from the center of the source node to the
        * destination node along the perimeter of the destination node
@@ -2909,7 +2940,6 @@ class ConceptMapLink {
    * @returns whether the link is highlighted
    */
   isHighlighted(value) {
-
     if (value != null) {
       this.highlighted = value;
     }
@@ -3034,7 +3064,9 @@ class ConceptMapLink {
       var totalLength = this.path.node.getTotalLength();
 
       // get the coordinate of a point somewhere in the middel of the line
-      var midPoint = this.path.node.getPointAtLength(totalLength * this.textPercentageLocationOnLink);
+      var midPoint = this.path.node.getPointAtLength(
+        totalLength * this.textPercentageLocationOnLink
+      );
 
       this.textGroup.cx(midPoint.x);
       this.textGroup.cy(midPoint.y);
@@ -3051,7 +3083,6 @@ class ConceptMapLink {
    * @returns an array that contains the svg objects for the arrow head and line
    */
   calculateCurvedLine(x1, y1, x2, y2, isDragging) {
-
     var startx = x1;
     var starty = y1;
     var endx = x2;
@@ -3071,7 +3102,18 @@ class ConceptMapLink {
     endCurveUp = this.endCurveUp;
 
     // calculate the svg objects for the arrow head and line
-    var arrowPathArraysObject = this.ConceptMapService.arrowPathArrays(startx,starty,endx,endy,startCurveUp,endCurveUp,len,angle,curvature,nodeRadius);
+    var arrowPathArraysObject = this.ConceptMapService.arrowPathArrays(
+      startx,
+      starty,
+      endx,
+      endy,
+      startCurveUp,
+      endCurveUp,
+      len,
+      angle,
+      curvature,
+      nodeRadius
+    );
 
     return arrowPathArraysObject;
   }
@@ -3081,9 +3123,7 @@ class ConceptMapLink {
    * @param destinationNode the destination ConceptMapNode object
    */
   setDestination(destinationNode) {
-
     if (destinationNode != null) {
-
       // get x and y of the tail
       var x1 = this.path.attr('x1');
       var y1 = this.path.attr('y1');
@@ -3133,7 +3173,6 @@ class ConceptMapLink {
         var parallelLink = parallelLinks[p];
 
         if (parallelLink != null) {
-
           var curvature = parallelLink.curvature;
           var startCurveUp = parallelLink.startCurveUp;
           var endCurveUp = parallelLink.endCurveUp;
@@ -3148,7 +3187,7 @@ class ConceptMapLink {
             tempDirection = 'up';
           } else if (!startCurveUp && !endCurveUp) {
             // the other link points down
-            tempDirection = 'down'
+            tempDirection = 'down';
           }
 
           if (direction == tempDirection) {
@@ -3225,7 +3264,6 @@ class ConceptMapLink {
    * @returns an object containing an x and y field
    */
   getNearestPointToDestinationNode(x, y) {
-
     // get the coordinates of the upper left corner of the image
     var rectMinX = this.destinationNode.getImageX();
     var rectMinY = this.destinationNode.getImageY();
@@ -3283,7 +3321,7 @@ class ConceptMapLink {
     var r = l + w;
     var b = t + h;
 
-    var x = this.clamp(x, l , r);
+    var x = this.clamp(x, l, r);
     var y = this.clamp(y, t, b);
 
     var dl = Math.abs(x - l);
@@ -3324,7 +3362,6 @@ class ConceptMapLink {
    * @param color the color
    */
   setColor(color) {
-
     if (color != null) {
       // set the color styling
       this.color = color;
@@ -3341,9 +3378,7 @@ class ConceptMapLink {
    * @param label the text label
    */
   setLabel(label) {
-
     if (label != null) {
-
       // remember the label
       this.label = label;
 
@@ -3365,7 +3400,7 @@ class ConceptMapLink {
         } else {
           width = textBBox.width + 10;
         }
-      } catch(e) {
+      } catch (e) {
         /*
          * we were unable to get the bounding box (likely because
          * Firefox threw an error when trying to call getBBox())
@@ -3378,7 +3413,9 @@ class ConceptMapLink {
 
       // recalculate the position of the svg text object
       var totalLength = this.path.node.getTotalLength();
-      var midPoint = this.path.node.getPointAtLength(totalLength * this.textPercentageLocationOnLink);
+      var midPoint = this.path.node.getPointAtLength(
+        totalLength * this.textPercentageLocationOnLink
+      );
       this.textGroup.cx(midPoint.x);
       this.textGroup.cy(midPoint.y);
     }
@@ -3388,9 +3425,7 @@ class ConceptMapLink {
    * Connect a link the its source and destination nodes
    */
   connectLinkToNodes() {
-
     if (this.sourceNode != null && this.destinationNode != null) {
-
       // add the link to the outgoing links of its source node
       this.sourceNode.addOutgoingLink(this);
 
@@ -3415,7 +3450,7 @@ class ConceptMapLink {
     var invisibleCircleRadius = 30;
     this.invisibleCircle = this.draw.circle();
     this.invisibleCircle.radius(invisibleCircleRadius);
-    this.invisibleCircle.fill({ opacity: 0.0});
+    this.invisibleCircle.fill({ opacity: 0.0 });
 
     // create the delete button circle
     var deleteButtonRadius = 10;
@@ -3435,22 +3470,38 @@ class ConceptMapLink {
 
     // get the coordinates of the top of the +
     var topX = deleteButtonMidpointX;
-    var topY = deleteButtonMidpointY - (deleteButtonRadius * 0.7);
+    var topY = deleteButtonMidpointY - deleteButtonRadius * 0.7;
 
     // get the coordinates of the bottom of the +
     var bottomX = deleteButtonMidpointX;
-    var bottomY = deleteButtonMidpointY + (deleteButtonRadius * 0.7);
+    var bottomY = deleteButtonMidpointY + deleteButtonRadius * 0.7;
 
     // get the coordinates of the left of the +
-    var leftX = deleteButtonMidpointX - (deleteButtonRadius * 0.7);
+    var leftX = deleteButtonMidpointX - deleteButtonRadius * 0.7;
     var leftY = deleteButtonMidpointY;
 
     // get the coordinates of the right of the +
-    var rightX = deleteButtonMidpointX + (deleteButtonRadius * 0.7);
+    var rightX = deleteButtonMidpointX + deleteButtonRadius * 0.7;
     var rightY = deleteButtonMidpointY;
 
     // create the path for the +
-    var deleteButtonXPath = 'M' + topX + ',' + topY + 'L' + bottomX + ',' + bottomY + 'M' + leftX + ',' + leftY + 'L' + rightX + ',' + rightY;
+    var deleteButtonXPath =
+      'M' +
+      topX +
+      ',' +
+      topY +
+      'L' +
+      bottomX +
+      ',' +
+      bottomY +
+      'M' +
+      leftX +
+      ',' +
+      leftY +
+      'L' +
+      rightX +
+      ',' +
+      rightY;
 
     // draw the path
     this.deleteButtonX = this.draw.path(deleteButtonXPath);
@@ -3478,12 +3529,12 @@ class ConceptMapLink {
     this.deleteButtonGroup.y(y);
 
     // set the listener for when the mouse is over the group
-    this.deleteButtonGroup.mouseover((event) => {
+    this.deleteButtonGroup.mouseover(event => {
       this.deleteButtonGroupMouseOver(event);
     });
 
     // set the listener for when the mouse moves out of the group
-    this.deleteButtonGroup.mouseout((event) => {
+    this.deleteButtonGroup.mouseout(event => {
       this.deleteButtonGroupMouseOut(event);
     });
 
@@ -3533,7 +3584,6 @@ class ConceptMapLink {
    * clicked down on the group
    */
   setLinkMouseDown(linkMouseDownFunction) {
-
     if (this.group != null) {
       /*
        * listen for the mousedown event on the group to call
@@ -3549,7 +3599,6 @@ class ConceptMapLink {
    * clicked down on the link text group
    */
   setLinkTextMouseDown(linkTextMouseDownFunction) {
-
     if (this.textGroup != null) {
       /*
        * listen for the mousedown event on the link text group to call
@@ -3584,14 +3633,14 @@ class ConceptMapLink {
   }
 
   /**
-  * Calculate the location of the delete button for the link
-  *
-  * Note: This function and the associated functions that are called by this
-  * function are taken from the Concord MySystem github project.
-  * https://github.com/concord-consortium/mysystem_sc
-  * The code is found in the _setRemoveButtonLocation function in the link.js file.
-  * mysystem_sc/apps/my_system/views/link.js
-  */
+   * Calculate the location of the delete button for the link
+   *
+   * Note: This function and the associated functions that are called by this
+   * function are taken from the Concord MySystem github project.
+   * https://github.com/concord-consortium/mysystem_sc
+   * The code is found in the _setRemoveButtonLocation function in the link.js file.
+   * mysystem_sc/apps/my_system/views/link.js
+   */
   getDeleteButtonLocation() {
     //var line = raphaelObject.items[2];
 
@@ -3607,20 +3656,19 @@ class ConceptMapLink {
     */
 
     len = line.getTotalLength();
-    p2  = line.getPointAtLength(len);
+    p2 = line.getPointAtLength(len);
 
     if (len > 50) {
       p1 = line.getPointAtLength(len - distanceAlongLine);
 
       dx = p2.x - p1.x;
       dy = p2.y - p1.y;
-      scale = distanceAlongNormal / distanceAlongLine * (dx > 0 ? 1 : -1);
+      scale = (distanceAlongNormal / distanceAlongLine) * (dx > 0 ? 1 : -1);
 
       x = p1.x + scale * dy;
       y = p1.y - scale * dx;
       //occluded = NO;
-    }
-    else {
+    } else {
       x = 0;
       y = 0;
       //occluded = YES;
@@ -3662,7 +3710,6 @@ class ConceptMapLink {
    * @returns the text group
    */
   createTextGroup() {
-
     // create the group
     this.textGroup = this.draw.group();
 
@@ -3707,7 +3754,7 @@ class ConceptMapLink {
       } else {
         width = textBBox.width + 10;
       }
-    } catch(e) {
+    } catch (e) {
       /*
        * we were unable to get the bounding box (likely because
        * Firefox threw an error when trying to call getBBox())
@@ -3748,7 +3795,6 @@ class ConceptMapLink {
    * Show the text group
    */
   showTextGroup() {
-
     if (this.textGroup != null) {
       this.textGroup.show();
     }
@@ -3758,7 +3804,6 @@ class ConceptMapLink {
    * Hide the text group
    */
   hideTextGroup() {
-
     if (this.textGroup != null) {
       this.textGroup.hide();
     }
@@ -3769,7 +3814,6 @@ class ConceptMapLink {
    * from the svg
    */
   remove() {
-
     if (this.sourceNode != null) {
       // remove the link from the source node's outgoing links
       this.sourceNode.removeOutgoingLink(this);
@@ -3815,7 +3859,7 @@ class ConceptMapLink {
     var width = 0;
 
     if (labelText != null) {
-      width = (labelText.length * 6) + 10;
+      width = labelText.length * 6 + 10;
     }
 
     return width;
@@ -3823,7 +3867,6 @@ class ConceptMapLink {
 
   // end of ConceptMapLink class
 }
-
 
 ConceptMapService.$inject = [
   '$anchorScroll',

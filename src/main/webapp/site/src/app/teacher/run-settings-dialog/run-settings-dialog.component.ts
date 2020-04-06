@@ -1,8 +1,8 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatSnackBar} from '@angular/material';
-import { LibraryProjectDetailsComponent } from "../../modules/library/library-project-details/library-project-details.component";
-import { Run } from "../../domain/run";
-import { TeacherService } from "../teacher.service";
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatSnackBar } from '@angular/material';
+import { LibraryProjectDetailsComponent } from '../../modules/library/library-project-details/library-project-details.component';
+import { Run } from '../../domain/run';
+import { TeacherService } from '../teacher.service';
 import * as moment from 'moment';
 import { I18n } from '@ngx-translate/i18n-polyfill';
 
@@ -11,9 +11,7 @@ import { I18n } from '@ngx-translate/i18n-polyfill';
   templateUrl: './run-settings-dialog.component.html',
   styleUrls: ['./run-settings-dialog.component.scss']
 })
-
 export class RunSettingsDialogComponent implements OnInit {
-
   run: Run;
   newPeriodName: string;
   maxStudentsPerTeam: string;
@@ -32,20 +30,32 @@ export class RunSettingsDialogComponent implements OnInit {
 
   periodNameAlreadyExists = this.i18n('There is already a period with that name.');
   noPermissionToAddPeriod = this.i18n('You do not have permission to add periods to this unit.');
-  notAllowedToDeletePeriodWithStudents = this.i18n('You are not allowed to delete a period that contains students.');
-  noPermissionToDeletePeriod = this.i18n('You do not have permission to delete periods from this unit.');
-  noPermissionToChangeMaxStudentsPerTeam = this.i18n('You do not have permission to change the number of students per team for this unit.');
-  notAllowedToDecreaseMaxStudentsPerTeam = this.i18n('You are not allowed to decrease the number of students per team because this unit already has teams with more than 1 student.');
-  noPermissionToChangeDate = this.i18n('You do not have permission to change the dates for this unit.');
+  notAllowedToDeletePeriodWithStudents = this.i18n(
+    'You are not allowed to delete a period that contains students.'
+  );
+  noPermissionToDeletePeriod = this.i18n(
+    'You do not have permission to delete periods from this unit.'
+  );
+  noPermissionToChangeMaxStudentsPerTeam = this.i18n(
+    'You do not have permission to change the number of students per team for this unit.'
+  );
+  notAllowedToDecreaseMaxStudentsPerTeam = this.i18n(
+    'You are not allowed to decrease the number of students per team because this unit already has teams with more than 1 student.'
+  );
+  noPermissionToChangeDate = this.i18n(
+    'You do not have permission to change the dates for this unit.'
+  );
   endDateBeforeStartDate = this.i18n(`End date can't be before start date.`);
   startDateAfterEndDate = this.i18n(`Start date can't be after end date.`);
 
-  constructor(public dialog: MatDialog,
-              public dialogRef: MatDialogRef<LibraryProjectDetailsComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: any,
-              private teacherService: TeacherService,
-              public snackBar: MatSnackBar,
-              private i18n: I18n) {
+  constructor(
+    public dialog: MatDialog,
+    public dialogRef: MatDialogRef<LibraryProjectDetailsComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private teacherService: TeacherService,
+    public snackBar: MatSnackBar,
+    private i18n: I18n
+  ) {
     this.run = data.run;
     this.maxStudentsPerTeam = this.run.maxStudentsPerTeam + '';
     this.startDate = new Date(this.run.startTime);
@@ -55,8 +65,7 @@ export class RunSettingsDialogComponent implements OnInit {
     this.setDateRange();
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   newPeriodNameKeyUp(event) {
     if (this.isEnterKeyWithNewPeriodName(event)) {
@@ -91,17 +100,19 @@ export class RunSettingsDialogComponent implements OnInit {
   deletePeriod(periodName) {
     this.clearErrorMessages();
     if (confirm(`Are you sure you want to delete this period: ${periodName}?`)) {
-      this.teacherService.deletePeriodFromRun(this.run.id, periodName).subscribe((response: any) => {
-        if (response.status === 'success') {
-          this.run = response.run;
-          this.updateDataRun(this.run);
-          this.clearErrorMessages();
-          this.showConfirmMessage();
-        } else {
-          this.deletePeriodMessage = this.translateMessageCode(response.messageCode);
-          alert(this.deletePeriodMessage);
-        }
-      });
+      this.teacherService
+        .deletePeriodFromRun(this.run.id, periodName)
+        .subscribe((response: any) => {
+          if (response.status === 'success') {
+            this.run = response.run;
+            this.updateDataRun(this.run);
+            this.clearErrorMessages();
+            this.showConfirmMessage();
+          } else {
+            this.deletePeriodMessage = this.translateMessageCode(response.messageCode);
+            alert(this.deletePeriodMessage);
+          }
+        });
     }
   }
 
@@ -111,20 +122,27 @@ export class RunSettingsDialogComponent implements OnInit {
     if (maxStudentsPerTeam === 3) {
       maxStudentsPerTeamText = this.i18n('1-3');
     }
-    if (confirm(this.i18n('Are you sure you want to change the students per team to {{value}}?', {value: maxStudentsPerTeamText}))) {
-      this.teacherService.updateRunStudentsPerTeam(
-          this.run.id, maxStudentsPerTeam).subscribe((response: any) => {
-        if (response.status === 'success') {
-          this.run = response.run;
-          this.updateDataRun(this.run);
-          this.clearErrorMessages();
-          this.showConfirmMessage();
-        } else {
-          this.rollbackMaxStudentsPerTeam();
-          this.maxStudentsPerTeamMessage = this.translateMessageCode(response.messageCode);
-          alert(this.maxStudentsPerTeamMessage);
-        }
-      });
+    if (
+      confirm(
+        this.i18n('Are you sure you want to change the students per team to {{value}}?', {
+          value: maxStudentsPerTeamText
+        })
+      )
+    ) {
+      this.teacherService
+        .updateRunStudentsPerTeam(this.run.id, maxStudentsPerTeam)
+        .subscribe((response: any) => {
+          if (response.status === 'success') {
+            this.run = response.run;
+            this.updateDataRun(this.run);
+            this.clearErrorMessages();
+            this.showConfirmMessage();
+          } else {
+            this.rollbackMaxStudentsPerTeam();
+            this.maxStudentsPerTeamMessage = this.translateMessageCode(response.messageCode);
+            alert(this.maxStudentsPerTeamMessage);
+          }
+        });
       return true;
     } else {
       this.rollbackMaxStudentsPerTeam();
@@ -137,19 +155,27 @@ export class RunSettingsDialogComponent implements OnInit {
     if (this.startDate) {
       const startDate = this.startDate;
       const formattedStartDate = moment(startDate).format('ddd MMM DD YYYY');
-      if (confirm(this.i18n('Are you sure you want to change the start date to {{date}}?', {date: formattedStartDate}))) {
-        this.teacherService.updateRunStartTime(this.run.id, startDate.getTime()).subscribe((response: any) => {
-          if (response.status === 'success') {
-            this.run = response.run;
-            this.updateDataRun(this.run);
-            this.rememberPreviousStartDate();
-            this.clearErrorMessages();
-            this.showConfirmMessage();
-            this.setDateRange();
-          } else {
-            this.startDateMessage = this.translateMessageCode(response.messageCode);
-          }
-        });
+      if (
+        confirm(
+          this.i18n('Are you sure you want to change the start date to {{date}}?', {
+            date: formattedStartDate
+          })
+        )
+      ) {
+        this.teacherService
+          .updateRunStartTime(this.run.id, startDate.getTime())
+          .subscribe((response: any) => {
+            if (response.status === 'success') {
+              this.run = response.run;
+              this.updateDataRun(this.run);
+              this.rememberPreviousStartDate();
+              this.clearErrorMessages();
+              this.showConfirmMessage();
+              this.setDateRange();
+            } else {
+              this.startDateMessage = this.translateMessageCode(response.messageCode);
+            }
+          });
       } else {
         this.rollbackStartDate();
       }
@@ -164,19 +190,27 @@ export class RunSettingsDialogComponent implements OnInit {
       const endDate = this.endDate;
       endDate.setHours(23, 59, 59);
       const formattedEndDate = moment(endDate).format('ddd MMM DD YYYY');
-      if (confirm(this.i18n('Are you sure you want to change the end date to {{date}}?', {date: formattedEndDate}))) {
-        this.teacherService.updateRunEndTime(this.run.id, endDate.getTime()).subscribe((response: any) => {
-          if (response.status === 'success') {
-            this.run = response.run;
-            this.updateDataRun(this.run);
-            this.rememberPreviousEndDate();
-            this.clearErrorMessages();
-            this.showConfirmMessage();
-            this.setDateRange();
-          } else {
-            this.endDateMessage = this.translateMessageCode(response.messageCode);
-          }
-        });
+      if (
+        confirm(
+          this.i18n('Are you sure you want to change the end date to {{date}}?', {
+            date: formattedEndDate
+          })
+        )
+      ) {
+        this.teacherService
+          .updateRunEndTime(this.run.id, endDate.getTime())
+          .subscribe((response: any) => {
+            if (response.status === 'success') {
+              this.run = response.run;
+              this.updateDataRun(this.run);
+              this.rememberPreviousEndDate();
+              this.clearErrorMessages();
+              this.showConfirmMessage();
+              this.setDateRange();
+            } else {
+              this.endDateMessage = this.translateMessageCode(response.messageCode);
+            }
+          });
       } else {
         this.rollbackEndDate();
       }

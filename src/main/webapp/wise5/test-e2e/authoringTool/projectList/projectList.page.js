@@ -4,7 +4,9 @@ export default class ProjectListPage {
     this.goHomeButton = element(by.id('goHomeButton'));
     this.createProjectButton = element(by.id('createProjectButton'));
     this.cancelCreateProjectButton = element(by.id('cancelCreateProjectButton'));
-    this.newProjectTitleInput = element(by.model('authoringToolMainController.project.metadata.title'));
+    this.newProjectTitleInput = element(
+      by.model('authoringToolMainController.project.metadata.title')
+    );
     this.projects = element.all(by.css('.projectItem'));
   }
 

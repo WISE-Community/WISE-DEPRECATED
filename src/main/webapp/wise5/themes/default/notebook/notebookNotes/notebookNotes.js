@@ -1,11 +1,7 @@
 'use strict';
 
 class NotebookNotesController {
-  constructor($filter,
-              $rootScope,
-              $scope,
-              NotebookService,
-              ProjectService) {
+  constructor($filter, $rootScope, $scope, NotebookService, ProjectService) {
     this.$translate = $filter('translate');
     this.$rootScope = $rootScope;
     this.NotebookService = NotebookService;
@@ -49,7 +45,7 @@ class NotebookNotesController {
       this.color = this.config.itemTypes.note.label.color;
     };
 
-    this.$onChanges = (changes) => {
+    this.$onChanges = changes => {
       if (changes.notebook) {
         this.notebook = angular.copy(changes.notebook.currentValue);
         this.hasNotes = Object.keys(this.notebook.items).length ? true : false;
@@ -70,8 +66,10 @@ class NotebookNotesController {
 
     this.$rootScope.$on('notebookUpdated', (event, args) => {
       let notebookItem = args.notebookItem;
-      if ((notebookItem.groups == null || notebookItem.groups.length === 0) &&
-          notebookItem.type === 'note') {
+      if (
+        (notebookItem.groups == null || notebookItem.groups.length === 0) &&
+        notebookItem.type === 'note'
+      ) {
         this.updatePrivateNotebookNote(notebookItem);
       }
       if (notebookItem.groups != null && notebookItem.groups.includes('public')) {
@@ -81,19 +79,33 @@ class NotebookNotesController {
   }
 
   updatePrivateNotebookNote(notebookItem) {
-    this.updateNotebookNote(this.groupNameToGroup['private'],
-        notebookItem.localNotebookItemId, notebookItem.workgroupId, notebookItem);
+    this.updateNotebookNote(
+      this.groupNameToGroup['private'],
+      notebookItem.localNotebookItemId,
+      notebookItem.workgroupId,
+      notebookItem
+    );
     if (this.groupNameToGroup['public'] != null) {
-      this.removeNotebookNote(this.groupNameToGroup['public'],
-        notebookItem.localNotebookItemId, notebookItem.workgroupId);
+      this.removeNotebookNote(
+        this.groupNameToGroup['public'],
+        notebookItem.localNotebookItemId,
+        notebookItem.workgroupId
+      );
     }
   }
 
   updatePublicNotebookNote(notebookItem) {
-    this.updateNotebookNote(this.groupNameToGroup['public'],
-        notebookItem.localNotebookItemId, notebookItem.workgroupId, notebookItem);
-    this.removeNotebookNote(this.groupNameToGroup['private'],
-        notebookItem.localNotebookItemId, notebookItem.workgroupId);
+    this.updateNotebookNote(
+      this.groupNameToGroup['public'],
+      notebookItem.localNotebookItemId,
+      notebookItem.workgroupId,
+      notebookItem
+    );
+    this.removeNotebookNote(
+      this.groupNameToGroup['private'],
+      notebookItem.localNotebookItemId,
+      notebookItem.workgroupId
+    );
   }
 
   updateNotebookNote(group, localNotebookItemId, workgroupId, notebookItem) {
@@ -131,12 +143,12 @@ class NotebookNotesController {
   }
 
   editItem($ev, note) {
-    this.$rootScope.$broadcast('editNote', {note: note, ev: $ev});
+    this.$rootScope.$broadcast('editNote', { note: note, ev: $ev });
   }
 
   select($ev, note) {
     if (this.insertMode) {
-      this.onInsert({note: note, event: $ev});
+      this.onInsert({ note: note, event: $ev });
     } else {
       this.editItem($ev, note);
     }
@@ -151,7 +163,7 @@ class NotebookNotesController {
   }
 
   cancelInsertMode($event) {
-    this.onSetInsertMode({value: false});
+    this.onSetInsertMode({ value: false });
   }
 }
 
@@ -175,8 +187,7 @@ const NotebookNotes = {
     onSetInsertMode: '&',
     mode: '@'
   },
-  template:
-    `<md-sidenav ng-if="::$ctrl.mode !== 'classroomMonitor'" md-component-id="notes"
+  template: `<md-sidenav ng-if="::$ctrl.mode !== 'classroomMonitor'" md-component-id="notes"
         md-is-open="$ctrl.notesVisible"
         md-whiteframe="4"
         md-disable-backdrop

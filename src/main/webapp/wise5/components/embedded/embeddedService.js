@@ -2,12 +2,7 @@ import ComponentService from '../componentService';
 import html2canvas from 'html2canvas';
 
 class EmbeddedService extends ComponentService {
-  constructor(
-      $filter,
-      $q,
-      StudentAssetService,
-      StudentDataService,
-      UtilService) {
+  constructor($filter, $q, StudentAssetService, StudentDataService, UtilService) {
     super($filter, StudentDataService, UtilService);
     this.$q = $q;
     this.StudentAssetService = StudentAssetService;
@@ -76,10 +71,10 @@ class EmbeddedService extends ComponentService {
       let modelElement = iframe.contents().find('html');
       if (modelElement != null && modelElement.length > 0) {
         modelElement = modelElement[0];
-        html2canvas(modelElement).then((canvas) => {
+        html2canvas(modelElement).then(canvas => {
           const base64Image = canvas.toDataURL('image/png');
           const imageObject = this.UtilService.getImageObjectFromBase64String(base64Image);
-          this.StudentAssetService.uploadAsset(imageObject).then((asset) => {
+          this.StudentAssetService.uploadAsset(imageObject).then(asset => {
             deferred.resolve(asset);
           });
         });

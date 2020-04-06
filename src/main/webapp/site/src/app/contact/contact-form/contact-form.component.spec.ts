@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { TRANSLATIONS_FORMAT, TRANSLATIONS, LOCALE_ID } from '@angular/core';
 import { ContactFormComponent } from './contact-form.component';
-import { ReactiveFormsModule } from "@angular/forms";
-import { RouterTestingModule } from "@angular/router/testing";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { MatInputModule, MatSelectModule } from "@angular/material";
-import { I18n } from "@ngx-translate/i18n-polyfill";
-import { UserService } from "../../services/user.service";
-import { NO_ERRORS_SCHEMA } from "@angular/core";
-import { ConfigService } from "../../services/config.service";
-import { StudentService } from "../../student/student.service";
-import { User } from "../../domain/user";
+import { ReactiveFormsModule } from '@angular/forms';
+import { RouterTestingModule } from '@angular/router/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatInputModule, MatSelectModule } from '@angular/material';
+import { I18n } from '@ngx-translate/i18n-polyfill';
+import { UserService } from '../../services/user.service';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { ConfigService } from '../../services/config.service';
+import { StudentService } from '../../student/student.service';
+import { User } from '../../domain/user';
 import { BehaviorSubject } from 'rxjs';
-import { translationsFactory } from "../../app.module";
+import { translationsFactory } from '../../app.module';
 import { configureTestSuite } from 'ng-bullet';
-import {LibraryService} from '../../services/library.service';
+import { LibraryService } from '../../services/library.service';
 
 export class MockUserService {
   getUser(): BehaviorSubject<User> {
@@ -36,16 +36,11 @@ export class MockUserService {
   }
 }
 
-export class MockConfigService {
-}
+export class MockConfigService {}
 
-export class MockStudentService {
+export class MockStudentService {}
 
-}
-
-export class MockLibraryService {
-
-}
+export class MockLibraryService {}
 
 describe('ContactFormComponent', () => {
   let component: ContactFormComponent;
@@ -53,7 +48,7 @@ describe('ContactFormComponent', () => {
 
   configureTestSuite(() => {
     TestBed.configureTestingModule({
-      declarations: [ ContactFormComponent ],
+      declarations: [ContactFormComponent],
       imports: [
         BrowserAnimationsModule,
         RouterTestingModule,
@@ -66,7 +61,7 @@ describe('ContactFormComponent', () => {
         { provide: UserService, useClass: MockUserService },
         { provide: StudentService, useClass: MockStudentService },
         { provide: LibraryService, useClass: MockLibraryService },
-        { provide: TRANSLATIONS_FORMAT, useValue: "xlf" },
+        { provide: TRANSLATIONS_FORMAT, useValue: 'xlf' },
         {
           provide: TRANSLATIONS,
           useFactory: translationsFactory,
@@ -74,7 +69,7 @@ describe('ContactFormComponent', () => {
         },
         I18n
       ],
-      schemas: [ NO_ERRORS_SCHEMA ]
+      schemas: [NO_ERRORS_SCHEMA]
     });
   });
 
@@ -130,10 +125,10 @@ describe('ContactFormComponent', () => {
   it('should auto populate the name field if the user is signed in', () => {
     const nameInput = fixture.debugElement.nativeElement.querySelector('input[name="name"]');
     const name = nameInput.valueOf().value;
-    expect(name).toBe("Demo User");
+    expect(name).toBe('Demo User');
   });
 
-  it('should have its submit button disabled if the form isn\'t filled out', () => {
+  it("should have its submit button disabled if the form isn't filled out", () => {
     const submitButton = fixture.debugElement.nativeElement.querySelector('button');
     expect(submitButton.disabled).toBe(true);
   });

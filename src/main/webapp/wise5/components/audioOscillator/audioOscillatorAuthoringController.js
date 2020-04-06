@@ -3,22 +3,25 @@
 import AudioOscillatorController from './audioOscillatorController';
 
 class AudioOscillatorAuthoringController extends AudioOscillatorController {
-  constructor($filter,
-              $mdDialog,
-              $q,
-              $rootScope,
-              $scope,
-              $timeout,
-              AnnotationService,
-              AudioOscillatorService,
-              ConfigService,
-              NodeService,
-              NotebookService,
-              ProjectService,
-              StudentAssetService,
-              StudentDataService,
-              UtilService) {
-    super($filter,
+  constructor(
+    $filter,
+    $mdDialog,
+    $q,
+    $rootScope,
+    $scope,
+    $timeout,
+    AnnotationService,
+    AudioOscillatorService,
+    ConfigService,
+    NodeService,
+    NotebookService,
+    ProjectService,
+    StudentAssetService,
+    StudentDataService,
+    UtilService
+  ) {
+    super(
+      $filter,
       $mdDialog,
       $q,
       $rootScope,
@@ -32,10 +35,9 @@ class AudioOscillatorAuthoringController extends AudioOscillatorController {
       ProjectService,
       StudentAssetService,
       StudentDataService,
-      UtilService);
-    this.allowedConnectedComponentTypes = [
-      { type: 'AudioOscillator' }
-    ];
+      UtilService
+    );
+    this.allowedConnectedComponentTypes = [{ type: 'AudioOscillator' }];
     this.populateCheckedOscillatorTypes();
   }
 

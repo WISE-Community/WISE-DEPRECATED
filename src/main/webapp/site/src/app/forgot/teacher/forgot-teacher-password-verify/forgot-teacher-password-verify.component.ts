@@ -11,7 +11,6 @@ import { finalize } from 'rxjs/operators';
   styleUrls: ['./forgot-teacher-password-verify.component.scss']
 })
 export class ForgotTeacherPasswordVerifyComponent implements OnInit {
-
   username: string;
   verificationCodeFormGroup: FormGroup = this.fb.group({
     verificationCode: new FormControl('', [Validators.required])
@@ -22,11 +21,13 @@ export class ForgotTeacherPasswordVerifyComponent implements OnInit {
   isSubmitButtonEnabled: boolean = true;
   showForgotPasswordLink: boolean = false;
 
-  constructor(private fb: FormBuilder,
-              private router: Router,
-              private route: ActivatedRoute,
-              private teacherService: TeacherService,
-              private i18n: I18n) { }
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private route: ActivatedRoute,
+    private teacherService: TeacherService,
+    private i18n: I18n
+  ) {}
 
   ngOnInit() {
     this.username = this.route.snapshot.queryParamMap.get('username');
@@ -49,13 +50,14 @@ export class ForgotTeacherPasswordVerifyComponent implements OnInit {
     this.clearMessage();
     this.showForgotPasswordLink = false;
     const verificationCode = this.getControlFieldValue('verificationCode');
-    this.teacherService.checkVerificationCode(this.username, verificationCode)
+    this.teacherService
+      .checkVerificationCode(this.username, verificationCode)
       .pipe(
         finalize(() => {
           this.processing = false;
         })
       )
-      .subscribe((response) => {
+      .subscribe(response => {
         if (response.status === 'success') {
           this.goToChangePasswordPage();
         } else {
@@ -77,7 +79,9 @@ export class ForgotTeacherPasswordVerifyComponent implements OnInit {
   }
 
   setVerificationCodeExpiredMessage() {
-    const message = this.i18n(`The verification code has expired. Verification codes are valid for 10 minutes. Please go back to the Teacher Forgot Password page to generate a new one.`);
+    const message = this.i18n(
+      `The verification code has expired. Verification codes are valid for 10 minutes. Please go back to the Teacher Forgot Password page to generate a new one.`
+    );
     this.setMessage(message);
   }
 
@@ -87,7 +91,9 @@ export class ForgotTeacherPasswordVerifyComponent implements OnInit {
   }
 
   setTooManyVerificationCodeAttemptsMessage() {
-    const message = this.i18n(`You have submitted an invalid verification code too many times. For security reasons, we will lock the ability to change your password for 10 minutes. After 10 minutes, please go back to the Teacher Forgot Password page to generate a new verification code.`);
+    const message = this.i18n(
+      `You have submitted an invalid verification code too many times. For security reasons, we will lock the ability to change your password for 10 minutes. After 10 minutes, please go back to the Teacher Forgot Password page to generate a new verification code.`
+    );
     this.setMessage(message);
   }
 
@@ -112,7 +118,9 @@ export class ForgotTeacherPasswordVerifyComponent implements OnInit {
       username: this.username,
       verificationCode: this.getControlFieldValue('verificationCode')
     };
-    this.router.navigate(['/forgot/teacher/password/change'],
-      {queryParams: params, skipLocationChange: true});
+    this.router.navigate(['/forgot/teacher/password/change'], {
+      queryParams: params,
+      skipLocationChange: true
+    });
   }
 }

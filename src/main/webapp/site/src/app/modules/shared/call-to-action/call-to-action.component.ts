@@ -1,4 +1,11 @@
-import { Component, ContentChild, Input, OnInit, TemplateRef, ViewEncapsulation } from '@angular/core';
+import {
+  Component,
+  ContentChild,
+  Input,
+  OnInit,
+  TemplateRef,
+  ViewEncapsulation
+} from '@angular/core';
 
 @Component({
   selector: 'app-call-to-action',
@@ -7,7 +14,6 @@ import { Component, ContentChild, Input, OnInit, TemplateRef, ViewEncapsulation 
   encapsulation: ViewEncapsulation.None
 })
 export class CallToActionComponent implements OnInit {
-
   @Input()
   destination: string;
 
@@ -29,16 +35,14 @@ export class CallToActionComponent implements OnInit {
   @Input()
   headline: string;
 
-  @ContentChild('headlineTemplate', {static:false}) headlineRef: TemplateRef<any>;
+  @ContentChild('headlineTemplate', { static: false }) headlineRef: TemplateRef<any>;
 
   @Input()
   content: string;
 
-  @ContentChild('contentTemplate', {static:false}) contentRef: TemplateRef<any>;
+  @ContentChild('contentTemplate', { static: false }) contentRef: TemplateRef<any>;
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }

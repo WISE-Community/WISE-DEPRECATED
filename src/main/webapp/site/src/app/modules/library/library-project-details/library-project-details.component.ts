@@ -1,13 +1,13 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
-import { LibraryService } from "../../../services/library.service";
-import { UserService } from "../../../services/user.service";
-import { CreateRunDialogComponent } from "../../../teacher/create-run-dialog/create-run-dialog.component";
-import { UseWithClassWarningDialogComponent } from "../../../teacher/use-with-class-warning-dialog/use-with-class-warning-dialog.component";
-import { NGSSStandards } from "../ngssStandards";
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { LibraryService } from '../../../services/library.service';
+import { UserService } from '../../../services/user.service';
+import { CreateRunDialogComponent } from '../../../teacher/create-run-dialog/create-run-dialog.component';
+import { UseWithClassWarningDialogComponent } from '../../../teacher/use-with-class-warning-dialog/use-with-class-warning-dialog.component';
+import { NGSSStandards } from '../ngssStandards';
 import { I18n } from '@ngx-translate/i18n-polyfill';
-import { Project } from "../../../domain/project";
-import { ParentProject } from "../../../domain/parentProject";
+import { Project } from '../../../domain/project';
+import { ParentProject } from '../../../domain/parentProject';
 
 @Component({
   selector: 'app-library-project-details',
@@ -22,36 +22,41 @@ export class LibraryProjectDetailsComponent implements OnInit {
   project: Project;
   parentProject: ParentProject;
   licenseUrl = 'http://creativecommons.org/licenses/by-sa/4.0/';
-  licenseInfo = this.i18n('License pertains to original content created by the author(s). Authors are responsible for the usage and attribution of any third-party content linked to or included in this work.');
+  licenseInfo = this.i18n(
+    'License pertains to original content created by the author(s). Authors are responsible for the usage and attribution of any third-party content linked to or included in this work.'
+  );
   license: string = '';
   authorsString: string = '';
   parentAuthorsString: string = '';
   more: boolean = false;
   isCopy: boolean = false;
 
-  constructor(public dialog: MatDialog,
-              public dialogRef: MatDialogRef<LibraryProjectDetailsComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: any,
-              private libraryService: LibraryService,
-              private userService: UserService,
-              private i18n: I18n) {
+  constructor(
+    public dialog: MatDialog,
+    public dialogRef: MatDialogRef<LibraryProjectDetailsComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private libraryService: LibraryService,
+    private userService: UserService,
+    private i18n: I18n
+  ) {
     this.isTeacher = userService.isTeacher();
     this.isRunProject = data.isRunProject;
     if (this.data.project) {
       this.project = new Project(this.data.project);
-      const numParents = this.data.project.metadata.parentProjects ? 
-          this.data.project.metadata.parentProjects.length : null;
+      const numParents = this.data.project.metadata.parentProjects
+        ? this.data.project.metadata.parentProjects.length
+        : null;
       if (numParents) {
-        this.parentProject = 
-            new ParentProject(this.data.project.metadata.parentProjects[numParents-1]);
+        this.parentProject = new ParentProject(
+          this.data.project.metadata.parentProjects[numParents - 1]
+        );
       }
       this.setNGSS();
       this.setLicenseInfo();
     }
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   onClose(): void {
     this.dialogRef.close();
@@ -95,9 +100,11 @@ export class LibraryProjectDetailsComponent implements OnInit {
     if (!authors) {
       return '';
     }
-    return authors.map((author) => {
+    return authors
+      .map(author => {
         return `${author.firstName} ${author.lastName}`;
-      }).join(', ');
+      })
+      .join(', ');
   }
 
   runProject() {

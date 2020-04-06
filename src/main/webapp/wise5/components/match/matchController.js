@@ -1,28 +1,40 @@
 'use strict';
 
-import ComponentController from "../componentController";
+import ComponentController from '../componentController';
 
 class MatchController extends ComponentController {
-  constructor($filter,
+  constructor(
+    $filter,
+    $mdDialog,
+    $mdMedia,
+    $q,
+    $rootScope,
+    $scope,
+    AnnotationService,
+    ConfigService,
+    dragulaService,
+    MatchService,
+    NodeService,
+    NotebookService,
+    ProjectService,
+    StudentAssetService,
+    StudentDataService,
+    UtilService
+  ) {
+    super(
+      $filter,
       $mdDialog,
-      $mdMedia,
-      $q,
       $rootScope,
       $scope,
       AnnotationService,
       ConfigService,
-      dragulaService,
-      MatchService,
       NodeService,
       NotebookService,
       ProjectService,
       StudentAssetService,
       StudentDataService,
-      UtilService) {
-    super($filter, $mdDialog, $rootScope, $scope,
-        AnnotationService, ConfigService, NodeService,
-        NotebookService, ProjectService, StudentAssetService,
-        StudentDataService, UtilService);
+      UtilService
+    );
     this.$q = $q;
     this.dragulaService = dragulaService;
     this.MatchService = MatchService;
@@ -83,7 +95,9 @@ class MatchController extends ComponentController {
     if (this.mode == 'student') {
       if (this.UtilService.hasShowWorkConnectedComponent(this.componentContent)) {
         this.handleConnectedComponents();
-      }  else if (this.MatchService.componentStateHasStudentWork(componentState, this.componentContent)) {
+      } else if (
+        this.MatchService.componentStateHasStudentWork(componentState, this.componentContent)
+      ) {
         this.setStudentWork(componentState);
       } else if (this.UtilService.hasConnectedComponent(this.componentContent)) {
         this.handleConnectedComponents();
@@ -113,7 +127,7 @@ class MatchController extends ComponentController {
      * action (optional; default is false)
      * @return {promise} a promise of a component state containing the student data
      */
-    this.$scope.getComponentState = (isSubmit) => {
+    this.$scope.getComponentState = isSubmit => {
       const deferred = this.$q.defer();
       let hasDirtyWork = false;
       let action = 'change';
@@ -131,7 +145,7 @@ class MatchController extends ComponentController {
       }
 
       if (hasDirtyWork) {
-        this.$scope.matchController.createComponentState(action).then((componentState) => {
+        this.$scope.matchController.createComponentState(action).then(componentState => {
           deferred.resolve(componentState);
         });
       } else {
@@ -140,7 +154,10 @@ class MatchController extends ComponentController {
       return deferred.promise;
     };
 
-    this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
+    this.$rootScope.$broadcast('doneRenderingComponent', {
+      nodeId: this.nodeId,
+      componentId: this.componentId
+    });
   }
 
   addNotebookItemToSourceBucket(notebookItem) {
@@ -151,7 +168,10 @@ class MatchController extends ComponentController {
   }
 
   studentHasUsedAllSubmits() {
-    return this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount;
+    return (
+      this.componentContent.maxSubmitCount != null &&
+      this.submitCounter >= this.componentContent.maxSubmitCount
+    );
   }
 
   registerDragListeners() {
@@ -179,28 +199,29 @@ class MatchController extends ComponentController {
   }
 
   showVisualIndicatorWhileDragging(drake) {
-    drake.on('over', (el, container, source) => {
-      if (source !== container) {
-        container.className += ' match-bucket__contents--over';
-      }
-    }).on('out', (el, container, source) => {
-      if (source !== container) {
-        container.className = container.className.replace('match-bucket__contents--over', '');;
-      }
-    });
+    drake
+      .on('over', (el, container, source) => {
+        if (source !== container) {
+          container.className += ' match-bucket__contents--over';
+        }
+      })
+      .on('out', (el, container, source) => {
+        if (source !== container) {
+          container.className = container.className.replace('match-bucket__contents--over', '');
+        }
+      });
   }
 
   supportScrollWhileDragging(drake) {
-    this.autoScroll(
-      [document.querySelector('#content')], {
-        margin: 30,
-        pixels: 50,
-        scrollWhenOutside: true,
-        autoScroll: function() {
-          // Only scroll when the pointer is down, and there is a child being dragged
-          return this.down && drake.dragging;
-        }
-      });
+    this.autoScroll([document.querySelector('#content')], {
+      margin: 30,
+      pixels: 50,
+      scrollWhenOutside: true,
+      autoScroll: function() {
+        // Only scroll when the pointer is down, and there is a child being dragged
+        return this.down && drake.dragging;
+      }
+    });
   }
 
   handleNodeSubmit() {
@@ -248,7 +269,7 @@ class MatchController extends ComponentController {
 
     if (this.submitCounter > 0) {
       if (componentState.isSubmit) {
-        this.checkAnswer()
+        this.checkAnswer();
       } else {
         /*
          * This component state was not a submit, but the student
@@ -272,7 +293,10 @@ class MatchController extends ComponentController {
    * that haven't changed since. This will also determine if submit is dirty.
    */
   processPreviousStudentWork() {
-    const latestComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
+    const latestComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(
+      this.nodeId,
+      this.componentId
+    );
     if (latestComponentState == null) {
       return;
     }
@@ -285,8 +309,10 @@ class MatchController extends ComponentController {
       this.setSubmittedMessage(clientSaveTime);
       this.checkAnswer();
     } else {
-      const latestSubmitComponentState =
-          this.StudentDataService.getLatestSubmitComponentState(this.nodeId, this.componentId);
+      const latestSubmitComponentState = this.StudentDataService.getLatestSubmitComponentState(
+        this.nodeId,
+        this.componentId
+      );
       if (latestSubmitComponentState != null) {
         this.showFeedbackOnUnchangedChoices(latestSubmitComponentState);
       } else {
@@ -295,28 +321,35 @@ class MatchController extends ComponentController {
         this.setSavedMessage(clientSaveTime);
       }
     }
-  };
+  }
 
   /**
    * There is unsaved student work that is not yet saved in a component state
    */
   processDirtyStudentWork() {
-    const latestSubmitComponentState =
-        this.StudentDataService.getLatestSubmitComponentState(this.nodeId, this.componentId);
+    const latestSubmitComponentState = this.StudentDataService.getLatestSubmitComponentState(
+      this.nodeId,
+      this.componentId
+    );
     if (latestSubmitComponentState != null) {
       this.showFeedbackOnUnchangedChoices(latestSubmitComponentState);
     } else {
-      const latestComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
+      const latestComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(
+        this.nodeId,
+        this.componentId
+      );
       if (latestComponentState != null) {
         this.isCorrect = null;
         this.setIsSubmitDirty(true);
         this.setSavedMessage(latestComponentState.clientSaveTime);
       }
     }
-  };
+  }
 
   showFeedbackOnUnchangedChoices(latestSubmitComponentState) {
-    const choicesThatChangedSinceLastSubmit = this.getChoicesThatChangedSinceLastSubmit(latestSubmitComponentState);
+    const choicesThatChangedSinceLastSubmit = this.getChoicesThatChangedSinceLastSubmit(
+      latestSubmitComponentState
+    );
     if (choicesThatChangedSinceLastSubmit.length > 0) {
       this.setIsSubmitDirty(true);
     } else {
@@ -327,37 +360,57 @@ class MatchController extends ComponentController {
 
   setIsSubmitDirty(isSubmitDirty) {
     this.isSubmitDirty = isSubmitDirty;
-    this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: isSubmitDirty});
+    this.$scope.$emit('componentSubmitDirty', {
+      componentId: this.componentId,
+      isDirty: isSubmitDirty
+    });
   }
 
-  isLatestComponentStateASubmit() {
-
-  }
+  isLatestComponentStateASubmit() {}
 
   getBucketIds() {
-    return this.buckets.map(b => { return b.id; });
+    return this.buckets.map(b => {
+      return b.id;
+    });
   }
 
   getChoiceIds() {
-    return this.choices.map(c => { return c.id; });
+    return this.choices.map(c => {
+      return c.id;
+    });
   }
 
   getChoicesThatChangedSinceLastSubmit(latestSubmitComponentState) {
     const latestSubmitComponentStateBuckets = latestSubmitComponentState.studentData.buckets;
     const choicesThatChangedSinceLastSubmit = [];
     for (let currentComponentStateBucket of this.buckets) {
-      const currentComponentStateBucketChoiceIds = currentComponentStateBucket.items.map(choice => { return choice.id; });
-      let bucketFromSubmitComponentState = this.getBucketById(currentComponentStateBucket.id, latestSubmitComponentStateBuckets);
+      const currentComponentStateBucketChoiceIds = currentComponentStateBucket.items.map(choice => {
+        return choice.id;
+      });
+      let bucketFromSubmitComponentState = this.getBucketById(
+        currentComponentStateBucket.id,
+        latestSubmitComponentStateBuckets
+      );
       if (bucketFromSubmitComponentState != null) {
-        const latestSubmitComponentStateChoiceIds =
-            bucketFromSubmitComponentState.items.map(choice => { return choice.id; });
+        const latestSubmitComponentStateChoiceIds = bucketFromSubmitComponentState.items.map(
+          choice => {
+            return choice.id;
+          }
+        );
 
-        for (let choiceIndexInBucket = 0; choiceIndexInBucket < currentComponentStateBucketChoiceIds.length; choiceIndexInBucket++) {
+        for (
+          let choiceIndexInBucket = 0;
+          choiceIndexInBucket < currentComponentStateBucketChoiceIds.length;
+          choiceIndexInBucket++
+        ) {
           const currentBucketChoiceId = currentComponentStateBucketChoiceIds[choiceIndexInBucket];
           if (latestSubmitComponentStateChoiceIds.indexOf(currentBucketChoiceId) == -1) {
             choicesThatChangedSinceLastSubmit.push(currentBucketChoiceId);
-          } else if (this.isAuthorHasSpecifiedACorrectPosition(currentBucketChoiceId) &&
-              choiceIndexInBucket != latestSubmitComponentStateChoiceIds.indexOf(currentBucketChoiceId)) {
+          } else if (
+            this.isAuthorHasSpecifiedACorrectPosition(currentBucketChoiceId) &&
+            choiceIndexInBucket !=
+              latestSubmitComponentStateChoiceIds.indexOf(currentBucketChoiceId)
+          ) {
             choicesThatChangedSinceLastSubmit.push(currentBucketChoiceId);
           }
         }
@@ -394,7 +447,7 @@ class MatchController extends ComponentController {
       id: notebookItem.localNotebookItemId,
       value: value,
       type: 'choice'
-    }
+    };
   }
 
   initializeBuckets() {
@@ -405,7 +458,9 @@ class MatchController extends ComponentController {
     this.setBucketStyle();
     this.sourceBucket = {
       id: this.sourceBucketId,
-      value: this.componentContent.choicesLabel ? this.componentContent.choicesLabel : this.$translate('match.choices'),
+      value: this.componentContent.choicesLabel
+        ? this.componentContent.choicesLabel
+        : this.$translate('match.choices'),
       type: 'bucket',
       items: []
     };
@@ -428,9 +483,9 @@ class MatchController extends ComponentController {
       } else {
         let n = this.componentContent.buckets.length;
         if (n % 3 === 0 || n > 4) {
-          this.bucketWidth = Math.round(100/3);
+          this.bucketWidth = Math.round(100 / 3);
         } else if (n % 2 === 0) {
-          this.bucketWidth = 100/2;
+          this.bucketWidth = 100 / 2;
         }
       }
     }
@@ -441,7 +496,7 @@ class MatchController extends ComponentController {
       this.numChoiceColumns = 1;
     } else {
       if (typeof this.componentContent.bucketWidth === 'number') {
-        this.numChoiceColumns = Math.round(100/this.componentContent.bucketWidth);
+        this.numChoiceColumns = Math.round(100 / this.componentContent.bucketWidth);
       } else {
         let n = this.componentContent.buckets.length;
         if (n % 3 === 0 || n > 4) {
@@ -460,7 +515,7 @@ class MatchController extends ComponentController {
     this.choiceStyle = {
       '-moz-column-count': this.numChoiceColumns,
       '-webkit-column-count': this.numChoiceColumns,
-      'column-count':this.numChoiceColumns
+      'column-count': this.numChoiceColumns
     };
   }
 
@@ -472,7 +527,7 @@ class MatchController extends ComponentController {
 
   getBuckets() {
     return this.buckets;
-  };
+  }
 
   /**
    * Create a copy of the array of buckets with brand new objects.
@@ -879,12 +934,13 @@ class MatchController extends ComponentController {
   }
 
   addChoice() {
-    const confirm = this.$mdDialog.prompt()
-        .title(this.$translate('match.enterChoiceText'))
-        .placeholder(this.$translate('match.typeSomething'))
-        .cancel(this.$translate('CANCEL'))
-        .ok(this.$translate('OK'));
-    this.$mdDialog.show(confirm).then((result) => {
+    const confirm = this.$mdDialog
+      .prompt()
+      .title(this.$translate('match.enterChoiceText'))
+      .placeholder(this.$translate('match.typeSomething'))
+      .cancel(this.$translate('CANCEL'))
+      .ok(this.$translate('OK'));
+    this.$mdDialog.show(confirm).then(result => {
       if (result != null && result != '') {
         const newChoice = {
           id: this.UtilService.generateKey(10),

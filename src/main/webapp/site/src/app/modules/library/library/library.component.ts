@@ -6,7 +6,6 @@ import { LibraryProject } from '../libraryProject';
 import { PageEvent, MatPaginator } from '@angular/material';
 
 export abstract class LibraryComponent implements OnInit {
-
   projects: LibraryProject[] = [];
   filteredProjects: LibraryProject[] = [];
   searchValue: string = '';
@@ -27,18 +26,17 @@ export abstract class LibraryComponent implements OnInit {
   @Output('update')
   update: EventEmitter<number> = new EventEmitter<number>();
 
-  @ViewChildren(MatPaginator) paginators !: QueryList<MatPaginator>;
+  @ViewChildren(MatPaginator) paginators!: QueryList<MatPaginator>;
 
   constructor(protected libraryService: LibraryService) {
-    libraryService.projectFilterValuesSource$.subscribe((projectFilterValues) => {
+    libraryService.projectFilterValuesSource$.subscribe(projectFilterValues => {
       this.filterUpdated(projectFilterValues);
     });
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
-  pageChange(event?:PageEvent, scroll?:boolean): void {
+  pageChange(event?: PageEvent, scroll?: boolean): void {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
     this.setPagination();
@@ -55,7 +53,7 @@ export abstract class LibraryComponent implements OnInit {
 
   setPagination(): void {
     if (this.paginators) {
-      this.paginators.toArray().forEach((paginator) => {
+      this.paginators.toArray().forEach(paginator => {
         paginator.pageIndex = this.pageIndex;
       });
       this.setPageBounds();
@@ -63,7 +61,7 @@ export abstract class LibraryComponent implements OnInit {
   }
 
   isOnPage(index: number): boolean {
-    return (index >= this.lowIndex && index < this.highIndex);
+    return index >= this.lowIndex && index < this.highIndex;
   }
 
   filterUpdated(filterValues: ProjectFilterValues = null): void {
@@ -91,11 +89,14 @@ export abstract class LibraryComponent implements OnInit {
     this.setPagination();
   }
 
-  emitNumberOfProjectsVisible(numProjectsVisible: number = null) {
-  }
+  emitNumberOfProjectsVisible(numProjectsVisible: number = null) {}
 
   hasFilters(): boolean {
-    return this.dciArrangementValue.length > 0 || this.peValue.length > 0 || this.disciplineValue.length > 0;
+    return (
+      this.dciArrangementValue.length > 0 ||
+      this.peValue.length > 0 ||
+      this.disciplineValue.length > 0
+    );
   }
 
   isSearchMatch(project: LibraryProject, searchValue: string): boolean {
@@ -104,8 +105,14 @@ export abstract class LibraryComponent implements OnInit {
       data.id = project.id;
       return Object.keys(data).some(prop => {
         // only check for match in specific metadata fields
-        if (prop != 'title' && prop != 'summary' && prop != 'keywords' &&
-          prop != 'features' &&  prop != 'standardsAddressed' && prop != 'id') {
+        if (
+          prop != 'title' &&
+          prop != 'summary' &&
+          prop != 'keywords' &&
+          prop != 'features' &&
+          prop != 'standardsAddressed' &&
+          prop != 'id'
+        ) {
           return false;
         } else {
           let value = data[prop];
@@ -115,7 +122,12 @@ export abstract class LibraryComponent implements OnInit {
           if (typeof value === 'undefined' || value === null) {
             return false;
           } else {
-            return value.toString().toLocaleLowerCase().indexOf(searchValue) !== -1;
+            return (
+              value
+                .toString()
+                .toLocaleLowerCase()
+                .indexOf(searchValue) !== -1
+            );
           }
         }
       });
@@ -125,7 +137,7 @@ export abstract class LibraryComponent implements OnInit {
   }
 
   isFilterMatch(project: LibraryProject): boolean {
-     if (this.hasFilters()) {
+    if (this.hasFilters()) {
       const standardsAddressed = project.metadata.standardsAddressed;
       if (standardsAddressed.ngss) {
         const ngss = standardsAddressed.ngss;
@@ -169,6 +181,6 @@ export abstract class LibraryComponent implements OnInit {
   }
 
   countVisibleProjects(set: LibraryProject[]): number {
-    return set.filter((project) => 'project' && project.visible).length;
+    return set.filter(project => 'project' && project.visible).length;
   }
 }

@@ -5,8 +5,8 @@ import { TeacherService } from './teacher.service';
 describe('TeacherService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
-      providers: [ TeacherService ]
+      imports: [HttpClientTestingModule],
+      providers: [TeacherService]
     });
   });
 

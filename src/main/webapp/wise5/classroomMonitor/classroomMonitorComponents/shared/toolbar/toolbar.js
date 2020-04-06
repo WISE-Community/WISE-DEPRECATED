@@ -1,32 +1,31 @@
-"use strict";
+'use strict';
 
 class ToolbarController {
-    constructor() {
-        this.$onChanges = () => {
-          this.showTitle = !this.showStepTools && !this.showTeamTools;
-        }
-    }
+  constructor() {
+    this.$onChanges = () => {
+      this.showTitle = !this.showStepTools && !this.showTeamTools;
+    };
+  }
 
-    toggleMenu() {
-        this.onMenuToggle();
-    }
+  toggleMenu() {
+    this.onMenuToggle();
+  }
 }
 
-ToolbarController.inject= [];
+ToolbarController.inject = [];
 
 const Toolbar = {
-    bindings: {
-        numberProject: '<',
-        showPeriodSelect: '<',
-        showStepTools: '<',
-        showTeamTools: '<',
-        viewName: '<',
-        workgroupId: '<',
-        onMenuToggle: '&'
-    },
-    controller: ToolbarController,
-    template:
-        `<md-toolbar class="md-whiteframe-1dp toolbar md-toolbar--wise" md-theme="light">
+  bindings: {
+    numberProject: '<',
+    showPeriodSelect: '<',
+    showStepTools: '<',
+    showTeamTools: '<',
+    viewName: '<',
+    workgroupId: '<',
+    onMenuToggle: '&'
+  },
+  controller: ToolbarController,
+  template: `<md-toolbar class="md-whiteframe-1dp toolbar md-toolbar--wise" md-theme="light">
             <div class="md-toolbar-tools toolbar__tools">
                 <md-button aria-label="{{ ::'mainMenu' | translate }}" class="md-icon-button" ng-click="$ctrl.toggleMenu()">
                     <md-icon> menu </md-icon>

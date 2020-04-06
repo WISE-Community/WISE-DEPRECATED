@@ -1,11 +1,4 @@
-import {
-  Component,
-  EventEmitter,
-  Input,
-  Output,
-  ViewEncapsulation,
-  Inject
-} from '@angular/core';
+import { Component, EventEmitter, Input, Output, ViewEncapsulation, Inject } from '@angular/core';
 import { Announcement } from '../domain/announcement';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
 
@@ -25,7 +18,7 @@ export class AnnouncementComponent {
   @Output('dismiss')
   doDismiss: EventEmitter<any> = new EventEmitter<any>();
 
-  constructor(public dialog: MatDialog) { }
+  constructor(public dialog: MatDialog) {}
 
   dismiss() {
     this.doDismiss.emit();
@@ -41,11 +34,11 @@ export class AnnouncementComponent {
 
 @Component({
   selector: 'announcement-dialog',
-  templateUrl: 'announcement-dialog.component.html',
+  templateUrl: 'announcement-dialog.component.html'
 })
 export class AnnouncementDialogComponent {
-  constructor(public dialogRef: MatDialogRef<AnnouncementDialogComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: Announcement) {
-  }
+  constructor(
+    public dialogRef: MatDialogRef<AnnouncementDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: Announcement
+  ) {}
 }
-

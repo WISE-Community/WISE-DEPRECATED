@@ -3,21 +3,24 @@
 import MultipleChoiceController from './multipleChoiceController';
 
 class MultipleChoiceAuthoringController extends MultipleChoiceController {
-  constructor($filter,
-              $mdDialog,
-              $q,
-              $rootScope,
-              $scope,
-              AnnotationService,
-              ConfigService,
-              MultipleChoiceService,
-              NodeService,
-              NotebookService,
-              ProjectService,
-              StudentAssetService,
-              StudentDataService,
-              UtilService) {
-    super($filter,
+  constructor(
+    $filter,
+    $mdDialog,
+    $q,
+    $rootScope,
+    $scope,
+    AnnotationService,
+    ConfigService,
+    MultipleChoiceService,
+    NodeService,
+    NotebookService,
+    ProjectService,
+    StudentAssetService,
+    StudentDataService,
+    UtilService
+  ) {
+    super(
+      $filter,
       $mdDialog,
       $q,
       $rootScope,
@@ -30,40 +33,54 @@ class MultipleChoiceAuthoringController extends MultipleChoiceController {
       ProjectService,
       StudentAssetService,
       StudentDataService,
-      UtilService);
+      UtilService
+    );
     this.allowedConnectedComponentTypes = [
       {
         type: 'MultipleChoice'
       }
     ];
-    $scope.$watch(function() {
-      return this.authoringComponentContent;
-    }.bind(this), function(newValue, oldValue) {
-      this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-      this.isSaveButtonVisible = this.componentContent.showSaveButton;
-      this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-    }.bind(this), true);
+    $scope.$watch(
+      function() {
+        return this.authoringComponentContent;
+      }.bind(this),
+      function(newValue, oldValue) {
+        this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+        this.isSaveButtonVisible = this.componentContent.showSaveButton;
+        this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+      }.bind(this),
+      true
+    );
     this.registerAssetListener();
   }
 
   registerAssetListener() {
-    this.$scope.$on('assetSelected', (event, {nodeId, componentId, assetItem, target, targetObject}) => {
-      if (nodeId === this.nodeId && componentId === this.componentId) {
-        const fileName = assetItem.fileName;
-        const fullFilePath = `${this.ConfigService.getProjectAssetsDirectoryPath()}/${fileName}`;
-        if (target === 'prompt') {
-          this.UtilService.insertFileInSummernoteEditor(
-              `summernotePrompt_${this.nodeId}_${this.componentId}`, fullFilePath, fileName);
-        } else if (target === 'rubric') {
-          this.UtilService.insertFileInSummernoteEditor(
-              `summernoteRubric_${this.nodeId}_${this.componentId}`, fullFilePath, fileName);
-        } else if (target === 'choice') {
-          targetObject.text = `<img src="${fileName}"/>`;
-          this.authoringViewComponentChanged();
+    this.$scope.$on(
+      'assetSelected',
+      (event, { nodeId, componentId, assetItem, target, targetObject }) => {
+        if (nodeId === this.nodeId && componentId === this.componentId) {
+          const fileName = assetItem.fileName;
+          const fullFilePath = `${this.ConfigService.getProjectAssetsDirectoryPath()}/${fileName}`;
+          if (target === 'prompt') {
+            this.UtilService.insertFileInSummernoteEditor(
+              `summernotePrompt_${this.nodeId}_${this.componentId}`,
+              fullFilePath,
+              fileName
+            );
+          } else if (target === 'rubric') {
+            this.UtilService.insertFileInSummernoteEditor(
+              `summernoteRubric_${this.nodeId}_${this.componentId}`,
+              fullFilePath,
+              fileName
+            );
+          } else if (target === 'choice') {
+            targetObject.text = `<img src="${fileName}"/>`;
+            this.authoringViewComponentChanged();
+          }
         }
+        this.$mdDialog.hide();
       }
-      this.$mdDialog.hide();
-    });
+    );
   }
 
   authoringViewFeedbackChanged() {
@@ -178,8 +195,10 @@ class MultipleChoiceAuthoringController extends MultipleChoiceController {
     let numberOfAllowedComponents = 0;
     let allowedComponent = null;
     for (const component of this.getComponentsByNodeId(connectedComponent.nodeId)) {
-      if (this.isConnectedComponentTypeAllowed(component.type) &&
-          component.id != this.componentId) {
+      if (
+        this.isConnectedComponentTypeAllowed(component.type) &&
+        component.id != this.componentId
+      ) {
         numberOfAllowedComponents += 1;
         allowedComponent = component;
       }
@@ -200,8 +219,10 @@ class MultipleChoiceAuthoringController extends MultipleChoiceController {
   copyChoiceTypeAndChoicesFromConnectedComponent(connectedComponent) {
     const nodeId = connectedComponent.nodeId;
     const componentId = connectedComponent.componentId;
-    if (this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId).type ===
-        'MultipleChoice') {
+    if (
+      this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId).type ===
+      'MultipleChoice'
+    ) {
       this.copyChoiceTypeFromComponent(nodeId, componentId);
       this.copyChoicesFromComponent(nodeId, componentId);
     }
@@ -213,14 +234,17 @@ class MultipleChoiceAuthoringController extends MultipleChoiceController {
   }
 
   copyChoicesFromComponent(nodeId, componentId) {
-    this.authoringComponentContent.choices = this.getCopyOfChoicesFromComponent(nodeId, componentId);
+    this.authoringComponentContent.choices = this.getCopyOfChoicesFromComponent(
+      nodeId,
+      componentId
+    );
   }
 
   getCopyOfChoicesFromComponent(nodeId, componentId) {
     const component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
     return this.UtilService.makeCopyOfJSONObject(component.choices);
   }
-};
+}
 
 MultipleChoiceAuthoringController.$inject = [
   '$filter',

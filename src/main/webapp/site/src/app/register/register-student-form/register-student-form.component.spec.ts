@@ -1,13 +1,13 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RegisterStudentFormComponent } from './register-student-form.component';
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { RouterTestingModule } from "@angular/router/testing";
-import { Observable } from "rxjs";
-import { StudentService } from "../../student/student.service";
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
+import { Observable } from 'rxjs';
+import { StudentService } from '../../student/student.service';
 import { UserService } from '../../services/user.service';
-import { ReactiveFormsModule } from "@angular/forms";
-import { MatInputModule, MatSelectModule } from "@angular/material";
-import { NO_ERRORS_SCHEMA, TRANSLATIONS_FORMAT, TRANSLATIONS, LOCALE_ID } from "@angular/core";
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatInputModule, MatSelectModule } from '@angular/material';
+import { NO_ERRORS_SCHEMA, TRANSLATIONS_FORMAT, TRANSLATIONS, LOCALE_ID } from '@angular/core';
 import { translationsFactory } from '../../app.module';
 import { I18n } from '@ngx-translate/i18n-polyfill';
 
@@ -20,9 +20,7 @@ export class MockStudentService {
   }
 }
 
-export class MockUserService {
-
-}
+export class MockUserService {}
 
 describe('RegisterStudentFormComponent', () => {
   let component: RegisterStudentFormComponent;
@@ -30,7 +28,7 @@ describe('RegisterStudentFormComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RegisterStudentFormComponent ],
+      declarations: [RegisterStudentFormComponent],
       imports: [
         BrowserAnimationsModule,
         RouterTestingModule,
@@ -41,7 +39,7 @@ describe('RegisterStudentFormComponent', () => {
       providers: [
         { provide: StudentService, useClass: MockStudentService },
         { provide: UserService, useClass: MockUserService },
-        { provide: TRANSLATIONS_FORMAT, useValue: "xlf" },
+        { provide: TRANSLATIONS_FORMAT, useValue: 'xlf' },
         {
           provide: TRANSLATIONS,
           useFactory: translationsFactory,
@@ -49,9 +47,8 @@ describe('RegisterStudentFormComponent', () => {
         },
         I18n
       ],
-      schemas: [ NO_ERRORS_SCHEMA ]
-    })
-      .compileComponents();
+      schemas: [NO_ERRORS_SCHEMA]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

@@ -1141,7 +1141,7 @@ class UtilService {
   }
 
   getIntersectOfArrays(array1, array2) {
-    return array1.filter((n) => {
+    return array1.filter(n => {
       return array2.indexOf(n) != -1;
     });
   }

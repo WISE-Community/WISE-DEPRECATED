@@ -1,104 +1,120 @@
 'use strict';
 
 class NotebookGradingController {
-
-    constructor($rootScope,
-                $scope,
-                $state,
-                ConfigService,
-                NotebookService,
-                ProjectService,
-                StudentStatusService,
-                TeacherDataService,
-                TeacherWebSocketService) {
-        this.$rootScope = $rootScope;
-        this.$scope = $scope;
-        this.$state = $state;
-        this.ConfigService = ConfigService;
-        this.NotebookService = NotebookService;
-        this.ProjectService = ProjectService;
-        this.StudentStatusService = StudentStatusService;
-        this.TeacherDataService = TeacherDataService;
-        this.TeacherWebSocketService = TeacherWebSocketService;
-        this.themePath = this.ProjectService.getThemePath();
-        this.teacherWorkgroupId = this.ConfigService.getWorkgroupId();
-        this.workgroups = this.ConfigService.getClassmateUserInfos();
-        this.notebookConfig = this.NotebookService.getStudentNotebookConfig();
-        this.showAllNotes = false;
-        this.showAllReports = false;
-        this.showNoteForWorkgroup = {};
-        this.showReportForWorkgroup = {};
-        for (let i = 0; i < this.workgroups.length; i++) {
-            let workgroup = this.workgroups[i];
-            this.showNoteForWorkgroup[workgroup.workgroupId] = false;
-            this.showReportForWorkgroup[workgroup.workgroupId] = false;
-        }
-
-        // save event when notebook grading view is displayed
-        let context = "ClassroomMonitor", nodeId = null, componentId = null, componentType = null,
-            category = "Navigation", event = "notebookViewDisplayed", data = {};
-        this.TeacherDataService.saveEvent(context, nodeId, componentId, componentType, category, event, data);
+  constructor(
+    $rootScope,
+    $scope,
+    $state,
+    ConfigService,
+    NotebookService,
+    ProjectService,
+    StudentStatusService,
+    TeacherDataService,
+    TeacherWebSocketService
+  ) {
+    this.$rootScope = $rootScope;
+    this.$scope = $scope;
+    this.$state = $state;
+    this.ConfigService = ConfigService;
+    this.NotebookService = NotebookService;
+    this.ProjectService = ProjectService;
+    this.StudentStatusService = StudentStatusService;
+    this.TeacherDataService = TeacherDataService;
+    this.TeacherWebSocketService = TeacherWebSocketService;
+    this.themePath = this.ProjectService.getThemePath();
+    this.teacherWorkgroupId = this.ConfigService.getWorkgroupId();
+    this.workgroups = this.ConfigService.getClassmateUserInfos();
+    this.notebookConfig = this.NotebookService.getStudentNotebookConfig();
+    this.showAllNotes = false;
+    this.showAllReports = false;
+    this.showNoteForWorkgroup = {};
+    this.showReportForWorkgroup = {};
+    for (let i = 0; i < this.workgroups.length; i++) {
+      let workgroup = this.workgroups[i];
+      this.showNoteForWorkgroup[workgroup.workgroupId] = false;
+      this.showReportForWorkgroup[workgroup.workgroupId] = false;
     }
 
-    toggleDisplayNoteForWorkgroup(workgroupId) {
-        this.showNoteForWorkgroup[workgroupId] = !this.showNoteForWorkgroup[workgroupId];
-    }
+    // save event when notebook grading view is displayed
+    let context = 'ClassroomMonitor',
+      nodeId = null,
+      componentId = null,
+      componentType = null,
+      category = 'Navigation',
+      event = 'notebookViewDisplayed',
+      data = {};
+    this.TeacherDataService.saveEvent(
+      context,
+      nodeId,
+      componentId,
+      componentType,
+      category,
+      event,
+      data
+    );
+  }
 
-    toggleDisplayReportForWorkgroup(workgroupId) {
-        this.showReportForWorkgroup[workgroupId] = !this.showReportForWorkgroup[workgroupId];
-    }
+  toggleDisplayNoteForWorkgroup(workgroupId) {
+    this.showNoteForWorkgroup[workgroupId] = !this.showNoteForWorkgroup[workgroupId];
+  }
 
-    toggleDisplayAllNotes() {
-        this.showAllNotes = !this.showAllNotes;
+  toggleDisplayReportForWorkgroup(workgroupId) {
+    this.showReportForWorkgroup[workgroupId] = !this.showReportForWorkgroup[workgroupId];
+  }
 
-        for (let workgroupId in this.showNoteForWorkgroup) {
-            this.showNoteForWorkgroup[workgroupId] = this.showAllNotes;
-        }
-    }
+  toggleDisplayAllNotes() {
+    this.showAllNotes = !this.showAllNotes;
 
-    toggleDisplayAllReports() {
-        this.showAllReports = !this.showAllReports;
-        for (let workgroupId in this.showReportForWorkgroup) {
-            this.showReportForWorkgroup[workgroupId] = this.showAllReports;
-        }
+    for (let workgroupId in this.showNoteForWorkgroup) {
+      this.showNoteForWorkgroup[workgroupId] = this.showAllNotes;
     }
+  }
 
-    viewNotes(workgroupId) {
-        alert(workgroupId);
+  toggleDisplayAllReports() {
+    this.showAllReports = !this.showAllReports;
+    for (let workgroupId in this.showReportForWorkgroup) {
+      this.showReportForWorkgroup[workgroupId] = this.showAllReports;
     }
+  }
 
-    viewReport(workgroupId) {
-        alert(workgroupId);
-    }
+  viewNotes(workgroupId) {
+    alert(workgroupId);
+  }
 
-    getCurrentPeriod() {
-        return this.TeacherDataService.getCurrentPeriod();
-    }
+  viewReport(workgroupId) {
+    alert(workgroupId);
+  }
 
-    getNotebookForWorkgroup(workgroupId) {
-        return this.NotebookService.getNotebookByWorkgroup(workgroupId);
-    }
+  getCurrentPeriod() {
+    return this.TeacherDataService.getCurrentPeriod();
+  }
 
-    getNotebookConfigForWorkgroup(workgroupId) {
-        if (this.ConfigService.isRunOwner(workgroupId) ||
-            this.ConfigService.isRunSharedTeacher(workgroupId)) {
-          return this.NotebookService.getTeacherNotebookConfig();
-        } else {
-          return this.NotebookService.getStudentNotebookConfig();
-        }
+  getNotebookForWorkgroup(workgroupId) {
+    return this.NotebookService.getNotebookByWorkgroup(workgroupId);
+  }
+
+  getNotebookConfigForWorkgroup(workgroupId) {
+    if (
+      this.ConfigService.isRunOwner(workgroupId) ||
+      this.ConfigService.isRunSharedTeacher(workgroupId)
+    ) {
+      return this.NotebookService.getTeacherNotebookConfig();
+    } else {
+      return this.NotebookService.getStudentNotebookConfig();
     }
+  }
 }
 
 NotebookGradingController.$inject = [
-    '$rootScope',
-    '$scope',
-    '$state',
-    'ConfigService',
-    'NotebookService',
-    'ProjectService',
-    'StudentStatusService',
-    'TeacherDataService',
-    'TeacherWebSocketService'
+  '$rootScope',
+  '$scope',
+  '$state',
+  'ConfigService',
+  'NotebookService',
+  'ProjectService',
+  'StudentStatusService',
+  'TeacherDataService',
+  'TeacherWebSocketService'
 ];
 
 export default NotebookGradingController;

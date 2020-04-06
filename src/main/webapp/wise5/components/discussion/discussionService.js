@@ -1,14 +1,16 @@
 import ComponentService from '../componentService';
 
 class DiscussionService extends ComponentService {
-  constructor($filter,
-      $http,
-      $rootScope,
-      $q,
-      $injector,
-      ConfigService,
-      StudentDataService,
-      UtilService) {
+  constructor(
+    $filter,
+    $http,
+    $rootScope,
+    $q,
+    $injector,
+    ConfigService,
+    StudentDataService,
+    UtilService
+  ) {
     super($filter, StudentDataService, UtilService);
     this.$http = $http;
     this.$rootScope = $rootScope;
@@ -51,7 +53,7 @@ class DiscussionService extends ComponentService {
         url: this.ConfigService.getConfigParam('studentDataURL'),
         params: params
       };
-      this.$http(httpParams).then((result) => {
+      this.$http(httpParams).then(result => {
         resolve(result.data);
       });
     });
@@ -77,9 +79,10 @@ class DiscussionService extends ComponentService {
     if (connectedComponents != null) {
       for (let connectedComponent of connectedComponents) {
         if (connectedComponent.type === 'showWork') {
-          const componentStates =
-              this.StudentDataService.getComponentStatesByNodeIdAndComponentId(
-              connectedComponent.nodeId, connectedComponent.componentId);
+          const componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(
+            connectedComponent.nodeId,
+            connectedComponent.componentId
+          );
           if (componentStates.length > 0) {
             return true;
           }
@@ -99,25 +102,42 @@ class DiscussionService extends ComponentService {
   }
 
   workgroupHasWorkForComponent(workgroupId, componentId) {
-    return this.TeacherDataService.getComponentStatesByWorkgroupIdAndComponentId(workgroupId,
-        componentId).length > 0;
+    return (
+      this.TeacherDataService.getComponentStatesByWorkgroupIdAndComponentId(
+        workgroupId,
+        componentId
+      ).length > 0
+    );
   }
 
   getPostsAssociatedWithComponentIdsAndWorkgroupId(componentIds, workgroupId) {
     let allPosts = [];
     const topLevelComponentStateIdsFound = [];
     const componentStates = this.TeacherDataService.getComponentStatesByWorkgroupIdAndComponentIds(
-        workgroupId, componentIds);
+      workgroupId,
+      componentIds
+    );
     for (let componentState of componentStates) {
       const componentStateIdReplyingTo = componentState.studentData.componentStateIdReplyingTo;
       if (this.isTopLevelPost(componentState)) {
-        if (!this.isTopLevelComponentStateIdFound(topLevelComponentStateIdsFound, componentState.id)) {
-          allPosts = allPosts.concat(this.getPostAndAllRepliesByComponentIds(componentIds, componentState.id));
+        if (
+          !this.isTopLevelComponentStateIdFound(topLevelComponentStateIdsFound, componentState.id)
+        ) {
+          allPosts = allPosts.concat(
+            this.getPostAndAllRepliesByComponentIds(componentIds, componentState.id)
+          );
           topLevelComponentStateIdsFound.push(componentState.id);
         }
       } else {
-        if (!this.isTopLevelComponentStateIdFound(topLevelComponentStateIdsFound, componentStateIdReplyingTo)) {
-          allPosts = allPosts.concat(this.getPostAndAllRepliesByComponentIds(componentIds, componentStateIdReplyingTo));
+        if (
+          !this.isTopLevelComponentStateIdFound(
+            topLevelComponentStateIdsFound,
+            componentStateIdReplyingTo
+          )
+        ) {
+          allPosts = allPosts.concat(
+            this.getPostAndAllRepliesByComponentIds(componentIds, componentStateIdReplyingTo)
+          );
           topLevelComponentStateIdsFound.push(componentStateIdReplyingTo);
         }
       }
@@ -135,7 +155,9 @@ class DiscussionService extends ComponentService {
 
   getPostAndAllRepliesByComponentIds(componentIds, componentStateId) {
     const postAndAllReplies = [];
-    const componentStatesForComponentIds = this.TeacherDataService.getComponentStatesByComponentIds(componentIds);
+    const componentStatesForComponentIds = this.TeacherDataService.getComponentStatesByComponentIds(
+      componentIds
+    );
     for (const componentState of componentStatesForComponentIds) {
       if (componentState.id === componentStateId) {
         postAndAllReplies.push(componentState);
@@ -162,8 +184,10 @@ class DiscussionService extends ComponentService {
       return true;
     }
     if (this.isComponentHasStarterSentence(componentContent)) {
-      return this.isStudentWorkHasText(componentState) &&
-          this.isStudentResponseDifferentFromStarterSentence(componentState, componentContent);
+      return (
+        this.isStudentWorkHasText(componentState) &&
+        this.isStudentResponseDifferentFromStarterSentence(componentState, componentContent)
+      );
     } else {
       return this.isStudentWorkHasText(componentState);
     }

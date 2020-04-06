@@ -1,16 +1,15 @@
-"use strict";
+'use strict';
 
-const WorkgroupProgress= {
-    bindings: {
-        color: '@',
-        completion: '<',
-        displayNames: '@',
-        maxScore: '<',
-        numberOfStudents: '<',
-        score:'<'
-    },
-    template:
-        `<div class="accent-2" layout="row" layout-align="center center" layout-wrap>
+const WorkgroupProgress = {
+  bindings: {
+    color: '@',
+    completion: '<',
+    displayNames: '@',
+    maxScore: '<',
+    numberOfStudents: '<',
+    score: '<'
+  },
+  template: `<div class="accent-2" layout="row" layout-align="center center" layout-wrap>
             <div><md-icon class="md-36 hide-xs" style="color: {{ $ctrl.color }};"> account_circle </md-icon></div>
             <div class="content-head__item md-title">
                 {{ $ctrl.numberOfStudents }}

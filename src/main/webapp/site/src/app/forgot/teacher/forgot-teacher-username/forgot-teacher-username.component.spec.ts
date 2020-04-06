@@ -53,14 +53,11 @@ describe('ForgotTeacherUsernameComponent', () => {
 
   configureTestSuite(() => {
     TestBed.configureTestingModule({
-      declarations: [ ForgotTeacherUsernameComponent ],
-      imports: [
-        RouterTestingModule.withRoutes([]),
-        ReactiveFormsModule
-      ],
+      declarations: [ForgotTeacherUsernameComponent],
+      imports: [RouterTestingModule.withRoutes([]), ReactiveFormsModule],
       providers: [
         { provide: TeacherService, useClass: MockTeacherService },
-        { provide: TRANSLATIONS_FORMAT, useValue: "xlf" },
+        { provide: TRANSLATIONS_FORMAT, useValue: 'xlf' },
         {
           provide: TRANSLATIONS,
           useFactory: translationsFactory,
@@ -68,8 +65,8 @@ describe('ForgotTeacherUsernameComponent', () => {
         },
         I18n
       ],
-      schemas: [ NO_ERRORS_SCHEMA ]
-    })
+      schemas: [NO_ERRORS_SCHEMA]
+    });
   });
 
   beforeEach(() => {
@@ -89,7 +86,9 @@ describe('ForgotTeacherUsernameComponent', () => {
 
   it('should show an email not found message', () => {
     submitAndReceiveResponse('sendForgotUsernameEmail', 'failure', 'emailNotFound');
-    expect(getErrorMessage()).toContain('We did not find a WISE account associated with that email');
+    expect(getErrorMessage()).toContain(
+      'We did not find a WISE account associated with that email'
+    );
   });
 
   it('should navigate to the success page', () => {

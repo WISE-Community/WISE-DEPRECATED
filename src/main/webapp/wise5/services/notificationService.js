@@ -1,6 +1,13 @@
 class NotificationService {
-  constructor($http, $q, $rootScope, ConfigService, ProjectService,
-      StudentWebSocketService, UtilService) {
+  constructor(
+    $http,
+    $q,
+    $rootScope,
+    ConfigService,
+    ProjectService,
+    StudentWebSocketService,
+    UtilService
+  ) {
     this.$http = $http;
     this.$q = $q;
     this.$rootScope = $rootScope;
@@ -41,7 +48,16 @@ class NotificationService {
    * @param groupId id that groups multiple notifications together
    * @returns newly created notification object
    */
-  createNewNotification(notificationType, nodeId, componentId, fromWorkgroupId, toWorkgroupId, message, data = null, groupId = null) {
+  createNewNotification(
+    notificationType,
+    nodeId,
+    componentId,
+    fromWorkgroupId,
+    toWorkgroupId,
+    message,
+    data = null,
+    groupId = null
+  ) {
     const nodePosition = this.ProjectService.getNodePositionById(nodeId);
     const nodePositionAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
     const component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
@@ -67,7 +83,6 @@ class NotificationService {
     };
   }
 
-
   retrieveNotifications(toWorkgroupId = null) {
     if (this.ConfigService.isPreview()) {
       return Promise.resolve(this.notifications);
@@ -83,9 +98,9 @@ class NotificationService {
         config.params.toWorkgroupId = this.ConfigService.getWorkgroupId();
         config.params.periodId = this.ConfigService.getPeriodId();
       }
-      return this.$http(config).then((response) => {
+      return this.$http(config).then(response => {
         this.notifications = response.data;
-        this.notifications.map((notification) => {
+        this.notifications.map(notification => {
           this.setNotificationNodePositionAndTitle(notification);
           if (notification.data != null) {
             notification.data = angular.fromJson(notification.data);
@@ -98,7 +113,9 @@ class NotificationService {
 
   setNotificationNodePositionAndTitle(notification) {
     notification.nodePosition = this.ProjectService.getNodePositionById(notification.nodeId);
-    notification.nodePositionAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(notification.nodeId);
+    notification.nodePositionAndTitle = this.ProjectService.getNodePositionAndTitleByNodeId(
+      notification.nodeId
+    );
   }
 
   dismissNotification(notification) {
@@ -109,7 +126,8 @@ class NotificationService {
     const notificationType = notificationForScore.notificationType;
     if (notificationForScore.isNotifyTeacher || notificationForScore.isNotifyStudent) {
       const fromWorkgroupId = this.ConfigService.getWorkgroupId();
-      const notificationGroupId = this.ConfigService.getRunId() + "_" + this.UtilService.generateKey(10);  // links student and teacher notifications together
+      const notificationGroupId =
+        this.ConfigService.getRunId() + '_' + this.UtilService.generateKey(10); // links student and teacher notifications together
       const notificationData = {};
       if (notificationForScore.isAmbient) {
         notificationData.isAmbient = true;
@@ -120,24 +138,58 @@ class NotificationService {
       if (notificationForScore.isNotifyStudent) {
         const toWorkgroupId = this.ConfigService.getWorkgroupId();
         let notificationMessageToStudent = notificationForScore.notificationMessageToStudent;
-        notificationMessageToStudent = notificationMessageToStudent.replace('{{username}}', this.ConfigService.getUsernameByWorkgroupId(fromWorkgroupId));
-        notificationMessageToStudent = notificationMessageToStudent.replace('{{score}}', notificationForScore.score);
-        notificationMessageToStudent = notificationMessageToStudent.replace('{{dismissCode}}', notificationForScore.dismissCode);
+        notificationMessageToStudent = notificationMessageToStudent.replace(
+          '{{username}}',
+          this.ConfigService.getUsernameByWorkgroupId(fromWorkgroupId)
+        );
+        notificationMessageToStudent = notificationMessageToStudent.replace(
+          '{{score}}',
+          notificationForScore.score
+        );
+        notificationMessageToStudent = notificationMessageToStudent.replace(
+          '{{dismissCode}}',
+          notificationForScore.dismissCode
+        );
 
-        const notificationToStudent = this.createNewNotification(notificationType, notificationForScore.nodeId, notificationForScore.componentId,
-            fromWorkgroupId, toWorkgroupId, notificationMessageToStudent, notificationData, notificationGroupId);
+        const notificationToStudent = this.createNewNotification(
+          notificationType,
+          notificationForScore.nodeId,
+          notificationForScore.componentId,
+          fromWorkgroupId,
+          toWorkgroupId,
+          notificationMessageToStudent,
+          notificationData,
+          notificationGroupId
+        );
         this.saveNotificationToServer(notificationToStudent);
       }
 
       if (notificationForScore.isNotifyTeacher) {
         const toWorkgroupId = this.ConfigService.getTeacherWorkgroupId();
         let notificationMessageToTeacher = notificationForScore.notificationMessageToTeacher;
-        notificationMessageToTeacher = notificationMessageToTeacher.replace('{{username}}', this.ConfigService.getUsernameByWorkgroupId(fromWorkgroupId));
-        notificationMessageToTeacher = notificationMessageToTeacher.replace('{{score}}', notificationForScore.score);
-        notificationMessageToTeacher = notificationMessageToTeacher.replace('{{dismissCode}}', notificationForScore.dismissCode);
+        notificationMessageToTeacher = notificationMessageToTeacher.replace(
+          '{{username}}',
+          this.ConfigService.getUsernameByWorkgroupId(fromWorkgroupId)
+        );
+        notificationMessageToTeacher = notificationMessageToTeacher.replace(
+          '{{score}}',
+          notificationForScore.score
+        );
+        notificationMessageToTeacher = notificationMessageToTeacher.replace(
+          '{{dismissCode}}',
+          notificationForScore.dismissCode
+        );
 
-        const notificationToTeacher = this.createNewNotification(notificationType, notificationForScore.nodeId, notificationForScore.componentId,
-            fromWorkgroupId, toWorkgroupId, notificationMessageToTeacher, notificationData, notificationGroupId);
+        const notificationToTeacher = this.createNewNotification(
+          notificationType,
+          notificationForScore.nodeId,
+          notificationForScore.componentId,
+          fromWorkgroupId,
+          toWorkgroupId,
+          notificationMessageToTeacher,
+          notificationData,
+          notificationGroupId
+        );
         this.saveNotificationToServer(notificationToTeacher);
       }
     }
@@ -178,7 +230,7 @@ class NotificationService {
         },
         data: $.param(params)
       };
-      return this.$http(config).then((result) => {
+      return this.$http(config).then(result => {
         const notification = result.data;
         if (notification.data != null) {
           notification.data = angular.fromJson(notification.data);
@@ -217,7 +269,7 @@ class NotificationService {
       },
       data: $.param(params)
     };
-    return this.$http(config).then((result) => {
+    return this.$http(config).then(result => {
       const notification = result.data;
       if (notification.data != null) {
         notification.data = angular.fromJson(notification.data);
@@ -244,11 +296,9 @@ class NotificationService {
     if (args) {
       for (let p in args) {
         if (args.hasOwnProperty(p) && args[p] !== null) {
-          notifications = notifications.filter(
-            notification => {
-              return (notification[p] === args[p]);
-            }
-          );
+          notifications = notifications.filter(notification => {
+            return notification[p] === args[p];
+          });
         }
       }
     }

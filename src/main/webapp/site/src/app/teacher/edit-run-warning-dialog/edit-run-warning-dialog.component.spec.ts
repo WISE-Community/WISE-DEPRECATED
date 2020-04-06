@@ -3,12 +3,12 @@ import { EditRunWarningDialogComponent } from './edit-run-warning-dialog.compone
 import { ConfigService } from '../../services/config.service';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { Run } from "../../domain/run";
+import { Run } from '../../domain/run';
 import { configureTestSuite } from 'ng-bullet';
 
 export class MockConfigService {
   getContextPath(): string {
-    return "";
+    return '';
   }
 }
 
@@ -16,22 +16,22 @@ describe('EditRunWarningDialogComponent', () => {
   let component: EditRunWarningDialogComponent;
   let fixture: ComponentFixture<EditRunWarningDialogComponent>;
 
-  const run = new Run({ id: 1, project: {id: 1, name: "Test"}});
+  const run = new Run({ id: 1, project: { id: 1, name: 'Test' } });
   run.project.metadata = {
-    title: "Test Project"
+    title: 'Test Project'
   };
 
   configureTestSuite(() => {
     TestBed.configureTestingModule({
-      declarations: [ EditRunWarningDialogComponent ],
+      declarations: [EditRunWarningDialogComponent],
       providers: [
         { provide: MatDialog },
         { provide: MatDialogRef },
-        { provide: MAT_DIALOG_DATA, useValue: { data: { run }}},
+        { provide: MAT_DIALOG_DATA, useValue: { data: { run } } },
         { provide: ConfigService, useClass: MockConfigService }
       ],
-      schemas: [ NO_ERRORS_SCHEMA ]
-    })
+      schemas: [NO_ERRORS_SCHEMA]
+    });
   });
 
   beforeEach(() => {
@@ -46,6 +46,6 @@ describe('EditRunWarningDialogComponent', () => {
   });
 
   it('should create editLink', () => {
-    expect(component.editLink !== '').toBeTruthy()
-  })
+    expect(component.editLink !== '').toBeTruthy();
+  });
 });

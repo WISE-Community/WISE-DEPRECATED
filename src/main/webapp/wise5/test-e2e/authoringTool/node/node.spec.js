@@ -5,7 +5,6 @@ import StepPage from './node.page.js';
  * E2E tests for the step view in the Authoring Tool
  */
 describe('WISE Authoring Tool Step View', () => {
-
   const projectId = browser.params.authoringProjectId;
   const nodeId = 'node2';
 
@@ -23,10 +22,14 @@ describe('WISE Authoring Tool Step View', () => {
     const page = new StepPage();
     isAngularSite(true);
     browser.get('http://localhost:8080/wise/author#!/project/' + projectId + '/node/' + nodeId);
-    browser.refresh();  // needed for this issue https://github.com/angular/protractor/issues/2643
-    browser.wait(function() {
-      return page.projectTitleSpan.isPresent()
-    }, 5000, 'Authoring Tool didn\'t load properly');
+    browser.refresh(); // needed for this issue https://github.com/angular/protractor/issues/2643
+    browser.wait(
+      function() {
+        return page.projectTitleSpan.isPresent();
+      },
+      5000,
+      "Authoring Tool didn't load properly"
+    );
   });
 
   it('should have elements on the page in the step view', () => {
@@ -49,7 +52,12 @@ describe('WISE Authoring Tool Step View', () => {
     const page = new StepPage();
     const ms = new Date().getTime();
     page.setStepTitle('Step ' + ms);
-    expect(page.stepSelectMenu.all(by.css('md-select-value span')).first().getText()).toContain(': Step ' + ms);
+    expect(
+      page.stepSelectMenu
+        .all(by.css('md-select-value span'))
+        .first()
+        .getText()
+    ).toContain(': Step ' + ms);
   });
 
   it('should add a component', () => {
@@ -74,13 +82,17 @@ describe('WISE Authoring Tool Step View', () => {
   it('should allow navigating to the next step with the next arrow', () => {
     const page = new StepPage();
     page.clickNextNodeButton();
-    expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/author#!/project/' + projectId + '/node/node3');
+    expect(browser.getCurrentUrl()).toEqual(
+      'http://localhost:8080/wise/author#!/project/' + projectId + '/node/node3'
+    );
   });
 
   it('should allow navigating to the previous step with the previous arrow', () => {
     const page = new StepPage();
     page.clickPreviousNodeButton();
-    expect(browser.getCurrentUrl()).toEqual('http://localhost:8080/wise/author#!/project/' + projectId + '/node/node1');
+    expect(browser.getCurrentUrl()).toEqual(
+      'http://localhost:8080/wise/author#!/project/' + projectId + '/node/node1'
+    );
   });
 
   it('should delete a component', () => {
@@ -102,7 +114,10 @@ describe('WISE Authoring Tool Step View', () => {
      */
     const EC = protractor.ExpectedConditions;
     browser.wait(EC.alertIsPresent(), 3000);
-    browser.switchTo().alert().accept();
+    browser
+      .switchTo()
+      .alert()
+      .accept();
 
     common.shouldBeDisplayed(element(by.cssContainingText('span', '1. Open Response')));
   });

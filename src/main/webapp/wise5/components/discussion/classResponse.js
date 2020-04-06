@@ -11,7 +11,9 @@ class ClassResponseController {
     this.expanded = false;
 
     this.$scope.$watch(
-      () => { return this.response.replies.length; },
+      () => {
+        return this.response.replies.length;
+      },
       (numNew, numOld) => {
         if (numNew !== numOld) {
           this.expanded = true;
@@ -29,7 +31,7 @@ class ClassResponseController {
   }
 
   injectLinks(response) {
-    return response.replace(this.urlMatcher, (match) => {
+    return response.replace(this.urlMatcher, match => {
       let matchUrl = match;
       if (!match.startsWith('http')) {
         /*
@@ -48,21 +50,21 @@ class ClassResponseController {
   }
 
   replyEntered($event) {
-    if($event.keyCode == 13 && !$event.shiftKey && this.response.replyText) {        
+    if ($event.keyCode == 13 && !$event.shiftKey && this.response.replyText) {
       $event.preventDefault();
-      this.submitbuttonclicked({r: this.response});
+      this.submitbuttonclicked({ r: this.response });
     }
   }
 
   deleteButtonClicked(componentState) {
     if (confirm(this.$translate('discussion.areYouSureYouWantToDeleteThisPost'))) {
-      this.deletebuttonclicked({componentState: componentState});
+      this.deletebuttonclicked({ componentState: componentState });
     }
   }
 
   undoDeleteButtonClicked(componentState) {
     if (confirm(this.$translate('discussion.areYouSureYouWantToShowThisPost'))) {
-      this.undodeletebuttonclicked({componentState: componentState});
+      this.undodeletebuttonclicked({ componentState: componentState });
     }
   }
 
@@ -75,7 +77,7 @@ class ClassResponseController {
   }
 }
 
-ClassResponseController.$inject = ['$scope','$filter','StudentStatusService','ConfigService'];
+ClassResponseController.$inject = ['$scope', '$filter', 'StudentStatusService', 'ConfigService'];
 
 const ClassResponseComponentOptions = {
   bindings: {

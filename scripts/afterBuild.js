@@ -1,4 +1,4 @@
-const cheerio = require('cheerio')
+const cheerio = require('cheerio');
 const fs = require('fs');
 
 const args = process.argv.slice(2);
@@ -34,19 +34,23 @@ function updateIndex(appType) {
     appDir = `/site/dist`;
   }
 
-  fs.readFile(indexFilePath, 'utf8', function (err,data) {
+  fs.readFile(indexFilePath, 'utf8', function(err, data) {
     if (err) {
       return;
     }
 
     const $ = cheerio.load(data);
     $('script[src]').each((i, element) => {
-        if ($(element).attr('src').indexOf(appDir) === -1) {
-          $(element).attr('src', `${appDir}/${$(element).attr('src')}`);
-        }
+      if (
+        $(element)
+          .attr('src')
+          .indexOf(appDir) === -1
+      ) {
+        $(element).attr('src', `${appDir}/${$(element).attr('src')}`);
+      }
     });
-    fs.writeFile(indexFilePath, $.html(), function (err) {
-        if (err) return console.log(err);
+    fs.writeFile(indexFilePath, $.html(), function(err) {
+      if (err) return console.log(err);
     });
   });
 }

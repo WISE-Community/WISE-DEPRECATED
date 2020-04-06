@@ -7,13 +7,10 @@ export class TimelineItem {}
   templateUrl: './timeline.component.html',
   styleUrls: ['./timeline.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  host: {'class': 'timeline'}
+  host: { class: 'timeline' }
 })
 export class TimelineComponent implements OnInit {
+  constructor() {}
 
-  constructor() { }
-
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }

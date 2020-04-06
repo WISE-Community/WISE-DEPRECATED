@@ -11,9 +11,7 @@ import { translationsFactory } from '../../../app.module';
 import { I18n } from '@ngx-translate/i18n-polyfill';
 import { configureTestSuite } from 'ng-bullet';
 
-export class MockStudentService {
-
-}
+export class MockStudentService {}
 
 describe('ForgotStudentUsernameComponent', () => {
   let component: ForgotStudentUsernameComponent;
@@ -25,7 +23,7 @@ describe('ForgotStudentUsernameComponent', () => {
 
   configureTestSuite(() => {
     TestBed.configureTestingModule({
-      declarations: [ ForgotStudentUsernameComponent ],
+      declarations: [ForgotStudentUsernameComponent],
       imports: [
         RouterTestingModule,
         BrowserAnimationsModule,
@@ -35,7 +33,7 @@ describe('ForgotStudentUsernameComponent', () => {
       ],
       providers: [
         { provide: StudentService, useClass: MockStudentService },
-        { provide: TRANSLATIONS_FORMAT, useValue: "xlf" },
+        { provide: TRANSLATIONS_FORMAT, useValue: 'xlf' },
         {
           provide: TRANSLATIONS,
           useFactory: translationsFactory,
@@ -43,8 +41,8 @@ describe('ForgotStudentUsernameComponent', () => {
         },
         I18n
       ],
-      schemas: [ NO_ERRORS_SCHEMA ]
-    })
+      schemas: [NO_ERRORS_SCHEMA]
+    });
   });
 
   beforeEach(() => {

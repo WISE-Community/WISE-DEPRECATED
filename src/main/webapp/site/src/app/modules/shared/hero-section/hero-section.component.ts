@@ -1,4 +1,11 @@
-import { Component, ContentChild, Input, OnInit, TemplateRef, ViewEncapsulation } from '@angular/core';
+import {
+  Component,
+  ContentChild,
+  Input,
+  OnInit,
+  TemplateRef,
+  ViewEncapsulation
+} from '@angular/core';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 
 @Component({
@@ -8,19 +15,18 @@ import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
   encapsulation: ViewEncapsulation.None
 })
 export class HeroSectionComponent implements OnInit {
-
   @Input()
   imgSrc: string;
 
   @Input()
   headline: string;
 
-  @ContentChild('headlineTemplate', {static:false}) headlineRef: TemplateRef<any>;
+  @ContentChild('headlineTemplate', { static: false }) headlineRef: TemplateRef<any>;
 
   @Input()
   tagline: string;
 
-  @ContentChild('taglineTemplate', {static:false}) taglineRef: TemplateRef<any>;
+  @ContentChild('taglineTemplate', { static: false }) taglineRef: TemplateRef<any>;
 
   bgStyle: SafeStyle;
 

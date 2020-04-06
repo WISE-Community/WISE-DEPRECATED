@@ -1,26 +1,29 @@
 'use strict';
 
-import EmbeddedController from "./embeddedController";
+import EmbeddedController from './embeddedController';
 
 class EmbeddedAuthoringController extends EmbeddedController {
-  constructor($filter,
-              $mdDialog,
-              $q,
-              $rootScope,
-              $scope,
-              $sce,
-              $timeout,
-              $window,
-              AnnotationService,
-              ConfigService,
-              EmbeddedService,
-              NodeService,
-              NotebookService,
-              ProjectService,
-              StudentAssetService,
-              StudentDataService,
-              UtilService) {
-    super($filter,
+  constructor(
+    $filter,
+    $mdDialog,
+    $q,
+    $rootScope,
+    $scope,
+    $sce,
+    $timeout,
+    $window,
+    AnnotationService,
+    ConfigService,
+    EmbeddedService,
+    NodeService,
+    NotebookService,
+    ProjectService,
+    StudentAssetService,
+    StudentDataService,
+    UtilService
+  ) {
+    super(
+      $filter,
       $mdDialog,
       $q,
       $rootScope,
@@ -36,7 +39,8 @@ class EmbeddedAuthoringController extends EmbeddedController {
       ProjectService,
       StudentAssetService,
       StudentDataService,
-      UtilService);
+      UtilService
+    );
 
     this.allowedConnectedComponentTypes = [
       { type: 'Animation' },
@@ -53,15 +57,19 @@ class EmbeddedAuthoringController extends EmbeddedController {
       { type: 'Table' }
     ];
 
-    $scope.$watch(function() {
-      return this.authoringComponentContent;
-    }.bind(this), function(newValue, oldValue) {
-      this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-      this.isSaveButtonVisible = this.componentContent.showSaveButton;
-      this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-      this.setWidthAndHeight(this.componentContent.width, this.componentContent.height);
-      this.setURL(this.componentContent.url);
-    }.bind(this), true);
+    $scope.$watch(
+      function() {
+        return this.authoringComponentContent;
+      }.bind(this),
+      function(newValue, oldValue) {
+        this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+        this.isSaveButtonVisible = this.componentContent.showSaveButton;
+        this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+        this.setWidthAndHeight(this.componentContent.width, this.componentContent.height);
+        this.setURL(this.componentContent.url);
+      }.bind(this),
+      true
+    );
   }
 
   assetSelected(event, args) {

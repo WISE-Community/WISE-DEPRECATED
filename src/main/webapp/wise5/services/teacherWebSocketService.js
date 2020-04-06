@@ -1,28 +1,23 @@
 class TeacherWebSocketService {
-  constructor(
-      $log,
-      $rootScope,
-      $stomp,
-      ConfigService,
-      StudentStatusService) {
+  constructor($log, $rootScope, $stomp, ConfigService, StudentStatusService) {
     this.$rootScope = $rootScope;
     this.$stomp = $stomp;
     this.ConfigService = ConfigService;
     this.StudentStatusService = StudentStatusService;
     this.studentsOnlineArray = [];
-    this.$stomp.setDebug(function (args) {
-      $log.debug(args)
+    this.$stomp.setDebug(function(args) {
+      $log.debug(args);
     });
   }
 
   initialize() {
     this.runId = this.ConfigService.getRunId();
     try {
-      this.$stomp.connect(this.ConfigService.getWebSocketURL()).then((frame) => {
+      this.$stomp.connect(this.ConfigService.getWebSocketURL()).then(frame => {
         this.subscribeToTeacherTopic();
         this.subscribeToTeacherWorkgroupTopic();
       });
-    } catch(e) {
+    } catch (e) {
       console.log(e);
     }
   }
@@ -31,33 +26,38 @@ class TeacherWebSocketService {
     this.$stomp.subscribe(`/topic/teacher/${this.runId}`, (message, headers, res) => {
       if (message.type === 'studentWork') {
         const studentWork = JSON.parse(message.content);
-        this.$rootScope.$broadcast('newStudentWorkReceived', {studentWork: studentWork});
+        this.$rootScope.$broadcast('newStudentWorkReceived', { studentWork: studentWork });
       } else if (message.type === 'studentStatus') {
         const status = JSON.parse(message.content);
         this.StudentStatusService.setStudentStatus(status);
-        this.$rootScope.$emit('studentStatusReceived', {studentStatus: status});
+        this.$rootScope.$emit('studentStatusReceived', { studentStatus: status });
       } else if (message.type === 'newStudentAchievement') {
         const achievement = JSON.parse(message.content);
-        this.$rootScope.$broadcast('newStudentAchievement', {studentAchievement: achievement});
+        this.$rootScope.$broadcast('newStudentAchievement', { studentAchievement: achievement });
       } else if (message.type === 'annotation') {
         const annotationData = JSON.parse(message.content);
-        this.$rootScope.$broadcast('newAnnotationReceived', {annotation: annotationData});
+        this.$rootScope.$broadcast('newAnnotationReceived', { annotation: annotationData });
       }
     });
   }
 
   subscribeToTeacherWorkgroupTopic() {
-    this.$stomp.subscribe(`/topic/workgroup/${this.ConfigService.getWorkgroupId()}`, (message, headers, res) => {
-      if (message.type === 'notification') {
-        const notification = JSON.parse(message.content);
-        this.$rootScope.$broadcast('newNotificationReceived', notification);
+    this.$stomp.subscribe(
+      `/topic/workgroup/${this.ConfigService.getWorkgroupId()}`,
+      (message, headers, res) => {
+        if (message.type === 'notification') {
+          const notification = JSON.parse(message.content);
+          this.$rootScope.$broadcast('newNotificationReceived', notification);
+        }
       }
-    });
+    );
   }
 
   handleStudentsOnlineReceived(studentsOnlineMessage) {
     this.studentsOnlineArray = studentsOnlineMessage.studentsOnlineList;
-    this.$rootScope.$broadcast('studentsOnlineReceived', {studentsOnline: this.studentsOnlineArray});
+    this.$rootScope.$broadcast('studentsOnlineReceived', {
+      studentsOnline: this.studentsOnlineArray
+    });
   }
 
   getStudentsOnline() {
@@ -69,7 +69,7 @@ class TeacherWebSocketService {
   }
 
   handleStudentDisconnected(studentDisconnectedMessage) {
-    this.$rootScope.$broadcast('studentDisconnected', {data: studentDisconnectedMessage});
+    this.$rootScope.$broadcast('studentDisconnected', { data: studentDisconnectedMessage });
   }
 
   pauseScreens(periodId) {

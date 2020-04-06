@@ -1,4 +1,12 @@
-import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewEncapsulation } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  SimpleChanges,
+  ViewEncapsulation
+} from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { I18n } from '@ngx-translate/i18n-polyfill';
 
@@ -9,7 +17,6 @@ import { I18n } from '@ngx-translate/i18n-polyfill';
   encapsulation: ViewEncapsulation.None
 })
 export class SelectMenuComponent implements OnInit {
-
   @Input()
   disable: boolean = false; // whether select is disabled
 
@@ -34,10 +41,9 @@ export class SelectMenuComponent implements OnInit {
   @Output('update')
   change: EventEmitter<string> = new EventEmitter<string>(); // change event emitter
 
-  selectField = new FormControl(""); // form control for the search input
+  selectField = new FormControl(''); // form control for the search input
 
-  constructor(private i18n: I18n) {
-  }
+  constructor(private i18n: I18n) {}
 
   ngOnInit() {
     this.selectField = new FormControl({
@@ -45,10 +51,9 @@ export class SelectMenuComponent implements OnInit {
       disabled: this.disable
     });
     // this.selectField.setValue(this.value);
-    this.selectField.valueChanges
-      .subscribe(value => {
-        this.change.emit(this.selectField.value);
-      });
+    this.selectField.valueChanges.subscribe(value => {
+      this.change.emit(this.selectField.value);
+    });
   }
 
   ngOnChanges(changes: SimpleChanges) {

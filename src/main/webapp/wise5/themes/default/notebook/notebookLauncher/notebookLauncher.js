@@ -10,7 +10,7 @@ class NotebookLauncherController {
   $onInit() {
     this.translationData = {
       noteLabel: this.config.itemTypes.note.label.singular
-    }
+    };
   }
 
   fabAction($event) {
@@ -23,14 +23,13 @@ class NotebookLauncherController {
 
   open($event, target) {
     $event.stopPropagation();
-    this.onOpen({value: target, event: $event});
+    this.onOpen({ value: target, event: $event });
     this.isOpen = false;
   }
 
   fabLabel() {
     if (this.notesVisible) {
-      return this.$translate('addNote',
-          { noteLabel: this.config.itemTypes.note.label.singular });
+      return this.$translate('addNote', { noteLabel: this.config.itemTypes.note.label.singular });
     } else {
       return this.config.label;
     }
@@ -41,10 +40,7 @@ class NotebookLauncherController {
   }
 }
 
-NotebookLauncherController.$inject = [
-  '$filter',
-  '$timeout'
-];
+NotebookLauncherController.$inject = ['$filter', '$timeout'];
 
 const NotebookLauncher = {
   bindings: {
@@ -53,8 +49,7 @@ const NotebookLauncher = {
     notesVisible: '<',
     onOpen: '&'
   },
-  template:
-    `<md-button ng-if="$ctrl.isShowButton()"
+  template: `<md-button ng-if="$ctrl.isShowButton()"
                     class="md-scale md-fab md-fab-bottom-right notebook-launcher"
                     aria-label="{{ ::$ctrl.fabLabel() }}"
                     ng-click="$ctrl.fabAction($event)">

@@ -15,7 +15,7 @@ export class MockLibraryService {
   public personalLibraryProjectsSource$ = fakeAsyncResponse([]);
   setFilterValues(projectFilterValues: ProjectFilterValues) {}
   getFilterValues(): ProjectFilterValues {
-    return new ProjectFilterValues;
+    return new ProjectFilterValues();
   }
 }
 
@@ -26,11 +26,11 @@ describe('LibraryFiltersComponent', () => {
 
   configureTestSuite(() => {
     TestBed.configureTestingModule({
-      imports: [ ],
-      declarations: [ LibraryFiltersComponent ],
-      providers: [ { provide: LibraryService, useClass: MockLibraryService } ],
-      schemas: [ NO_ERRORS_SCHEMA ]
-    })
+      imports: [],
+      declarations: [LibraryFiltersComponent],
+      providers: [{ provide: LibraryService, useClass: MockLibraryService }],
+      schemas: [NO_ERRORS_SCHEMA]
+    });
   });
 
   beforeEach(() => {
@@ -38,7 +38,7 @@ describe('LibraryFiltersComponent', () => {
     fixture = TestBed.createComponent(LibraryFiltersComponent);
     component = fixture.componentInstance;
     component.libraryProjects = projects;
-    component.ngOnChanges({projects: new SimpleChange(null, projects, true)});
+    component.ngOnChanges({ projects: new SimpleChange(null, projects, true) });
     fixture.detectChanges();
   });
 
@@ -64,5 +64,4 @@ describe('LibraryFiltersComponent', () => {
     component.filterUpdated(['Earth Sciences', 'Physical Sciences'], 'discipline');
     expect(libraryServiceFilterValuesSpy).toHaveBeenCalled();
   }));
-
 });

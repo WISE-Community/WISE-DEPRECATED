@@ -1,13 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { EditPasswordComponent } from './edit-password.component';
-import { UserService } from "../../../services/user.service";
+import { UserService } from '../../../services/user.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
-import { NO_ERRORS_SCHEMA, Provider, TRANSLATIONS_FORMAT, TRANSLATIONS, LOCALE_ID } from '@angular/core';
+import {
+  NO_ERRORS_SCHEMA,
+  Provider,
+  TRANSLATIONS_FORMAT,
+  TRANSLATIONS,
+  LOCALE_ID
+} from '@angular/core';
 import { MatSnackBarModule } from '@angular/material';
 import { By } from '@angular/platform-browser';
-import { User } from "../../../domain/user";
+import { User } from '../../../domain/user';
 import { translationsFactory } from '../../../app.module';
 import { I18n } from '@ngx-translate/i18n-polyfill';
 import { configureTestSuite } from 'ng-bullet';
@@ -52,13 +58,11 @@ describe('EditPasswordComponent', () => {
 
   configureTestSuite(() => {
     TestBed.configureTestingModule({
-      declarations: [ EditPasswordComponent ],
-      imports: [
-        BrowserAnimationsModule, ReactiveFormsModule, MatSnackBarModule
-      ],
+      declarations: [EditPasswordComponent],
+      imports: [BrowserAnimationsModule, ReactiveFormsModule, MatSnackBarModule],
       providers: [
         { provide: UserService, useValue: new MockUserService() },
-        { provide: TRANSLATIONS_FORMAT, useValue: "xlf" },
+        { provide: TRANSLATIONS_FORMAT, useValue: 'xlf' },
         {
           provide: TRANSLATIONS,
           useFactory: translationsFactory,
@@ -66,7 +70,7 @@ describe('EditPasswordComponent', () => {
         },
         I18n
       ],
-      schemas: [ NO_ERRORS_SCHEMA ]
+      schemas: [NO_ERRORS_SCHEMA]
     });
   });
 
@@ -115,7 +119,9 @@ describe('EditPasswordComponent', () => {
     fixture.detectChanges();
     const submitButton = getSubmitButton();
     expect(submitButton.disabled).toBe(true);
-    expect(component.changePasswordFormGroup.get('oldPassword').getError('incorrectPassword')).toBe(true);
+    expect(component.changePasswordFormGroup.get('oldPassword').getError('incorrectPassword')).toBe(
+      true
+    );
   });
 
   it('should disable submit button when form is successfully submitted', async () => {
@@ -128,7 +134,7 @@ describe('EditPasswordComponent', () => {
     const submitButton = getSubmitButton();
     expect(submitButton.disabled).toBe(true);
   });
-  
+
   it('should handle the change password response when the password was successfully changed', () => {
     const resetFormSpy = spyOn(component, 'resetForm');
     const snackBarSpy = spyOn(component.snackBar, 'open');
@@ -140,14 +146,15 @@ describe('EditPasswordComponent', () => {
     expect(resetFormSpy).toHaveBeenCalled();
     expect(snackBarSpy).toHaveBeenCalled();
   });
-  
+
   it('should handle the change password response when the password was incorrect', () => {
     const response = {
       status: 'error',
       messageCode: 'incorrectPassword'
     };
     component.handleChangePasswordResponse(response);
-    expect(component.changePasswordFormGroup.get('oldPassword').getError('incorrectPassword'))
-        .toBe(true);
+    expect(component.changePasswordFormGroup.get('oldPassword').getError('incorrectPassword')).toBe(
+      true
+    );
   });
 });

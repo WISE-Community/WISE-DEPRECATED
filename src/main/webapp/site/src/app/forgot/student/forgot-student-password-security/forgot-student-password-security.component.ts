@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { I18n } from "@ngx-translate/i18n-polyfill";
-import {StudentService} from '../../../student/student.service';
+import { I18n } from '@ngx-translate/i18n-polyfill';
+import { StudentService } from '../../../student/student.service';
 import { finalize } from 'rxjs/operators';
 
 @Component({
@@ -11,7 +11,6 @@ import { finalize } from 'rxjs/operators';
   styleUrls: ['./forgot-student-password-security.component.scss']
 })
 export class ForgotStudentPasswordSecurityComponent implements OnInit {
-
   username: string;
   questionKey: string;
   question: string;
@@ -22,11 +21,13 @@ export class ForgotStudentPasswordSecurityComponent implements OnInit {
   message: string;
   processing: boolean = false;
 
-  constructor(private fb: FormBuilder,
-              private router: Router,
-              private route: ActivatedRoute,
-              private studentService: StudentService,
-              private i18n: I18n) { }
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private route: ActivatedRoute,
+    private studentService: StudentService,
+    private i18n: I18n
+  ) {}
 
   ngOnInit() {
     this.username = this.route.snapshot.queryParamMap.get('username');
@@ -37,13 +38,14 @@ export class ForgotStudentPasswordSecurityComponent implements OnInit {
   submit() {
     this.processing = true;
     this.clearMessage();
-    this.studentService.checkSecurityAnswer(this.username, this.getAnswer())
+    this.studentService
+      .checkSecurityAnswer(this.username, this.getAnswer())
       .pipe(
         finalize(() => {
           this.processing = false;
         })
       )
-      .subscribe((response) => {
+      .subscribe(response => {
         if (response.status === 'success') {
           this.goToChangePasswordPage();
         } else {
@@ -67,7 +69,9 @@ export class ForgotStudentPasswordSecurityComponent implements OnInit {
   }
 
   setIncorrectAnswerMessage() {
-    const message = this.i18n(`Incorrect answer, please try again. If you can't remember the answer to your security question, please ask your teacher to change your password or contact us for assistance.`);
+    const message = this.i18n(
+      `Incorrect answer, please try again. If you can't remember the answer to your security question, please ask your teacher to change your password or contact us for assistance.`
+    );
     this.setMessage(message);
   }
 
@@ -85,7 +89,9 @@ export class ForgotStudentPasswordSecurityComponent implements OnInit {
       questionKey: this.questionKey,
       answer: this.getAnswer()
     };
-    this.router.navigate(['/forgot/student/password/change'],
-      {queryParams: params, skipLocationChange: true});
+    this.router.navigate(['/forgot/student/password/change'], {
+      queryParams: params,
+      skipLocationChange: true
+    });
   }
 }

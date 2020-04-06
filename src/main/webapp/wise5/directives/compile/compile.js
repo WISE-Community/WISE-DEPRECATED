@@ -4,25 +4,27 @@
  * that needs to be compiled before rendering.
  */
 class CompileController {
-    constructor($compile, $element, $scope) {
-
-        $scope.$watch(() => {
-            return this.data;
-        }, (data) => {
-            // update the html
-            $element.html(data);
-            $compile($element.contents())($scope);
-        })
-    }
+  constructor($compile, $element, $scope) {
+    $scope.$watch(
+      () => {
+        return this.data;
+      },
+      data => {
+        // update the html
+        $element.html(data);
+        $compile($element.contents())($scope);
+      }
+    );
+  }
 }
 
 CompileController.$inject = ['$compile', '$element', '$scope'];
 
 const Compile = {
-    bindings: {
-        data: '<'
-    },
-    controller: CompileController
+  bindings: {
+    data: '<'
+  },
+  controller: CompileController
 };
 
 export default Compile;

@@ -3,27 +3,38 @@
 import ComponentController from '../componentController';
 
 class OpenResponseController extends ComponentController {
-
-  constructor($filter,
+  constructor(
+    $filter,
+    $mdDialog,
+    $q,
+    $rootScope,
+    $scope,
+    AnnotationService,
+    ConfigService,
+    CRaterService,
+    NodeService,
+    NotebookService,
+    NotificationService,
+    OpenResponseService,
+    ProjectService,
+    StudentAssetService,
+    StudentDataService,
+    UtilService
+  ) {
+    super(
+      $filter,
       $mdDialog,
-      $q,
       $rootScope,
       $scope,
       AnnotationService,
       ConfigService,
-      CRaterService,
       NodeService,
       NotebookService,
-      NotificationService,
-      OpenResponseService,
       ProjectService,
       StudentAssetService,
       StudentDataService,
-      UtilService) {
-    super($filter, $mdDialog, $rootScope, $scope,
-        AnnotationService, ConfigService, NodeService,
-        NotebookService, ProjectService, StudentAssetService,
-        StudentDataService, UtilService);
+      UtilService
+    );
     this.$q = $q;
     this.CRaterService = CRaterService;
     this.NotificationService = NotificationService;
@@ -61,19 +72,26 @@ class OpenResponseController extends ComponentController {
       //},
       menubar: false,
       plugins: 'link image media autoresize', //imagetools
-      toolbar: 'undo redo | bold italic | superscript subscript | bullist numlist | alignleft aligncenter alignright | link image media',
+      toolbar:
+        'undo redo | bold italic | superscript subscript | bullist numlist | alignleft aligncenter alignright | link image media',
       autoresize_bottom_margin: '0',
       autoresize_min_height: '100',
       image_advtab: true,
       content_css: themePath + '/style/tinymce.css',
-      setup: function (ed) {
-        ed.on('focus', function (e) {
-          $(e.target.editorContainer).addClass('input--focused').parent().addClass('input-wrapper--focused');
+      setup: function(ed) {
+        ed.on('focus', function(e) {
+          $(e.target.editorContainer)
+            .addClass('input--focused')
+            .parent()
+            .addClass('input-wrapper--focused');
           $('label[for="' + e.target.id + '"]').addClass('input-label--focused');
         });
 
-        ed.on('blur', function (e) {
-          $(e.target.editorContainer).removeClass('input--focused').parent().removeClass('input-wrapper--focused');
+        ed.on('blur', function(e) {
+          $(e.target.editorContainer)
+            .removeClass('input--focused')
+            .parent()
+            .removeClass('input-wrapper--focused');
           $('label[for="' + e.target.id + '"]').removeClass('input-label--focused');
         });
       }
@@ -117,8 +135,10 @@ class OpenResponseController extends ComponentController {
       if (this.UtilService.hasShowWorkConnectedComponent(this.componentContent)) {
         // we will show work from another component
         this.handleConnectedComponents();
-      }  else if (componentState != null &&
-        this.OpenResponseService.componentStateHasStudentWork(componentState, this.componentContent)) {
+      } else if (
+        componentState != null &&
+        this.OpenResponseService.componentStateHasStudentWork(componentState, this.componentContent)
+      ) {
         /*
          * the student has work so we will populate the work into this
          * component
@@ -190,7 +210,7 @@ class OpenResponseController extends ComponentController {
 
       if (getState) {
         // create a component state populated with the student data
-        this.$scope.openResponseController.createComponentState(action).then((componentState) => {
+        this.$scope.openResponseController.createComponentState(action).then(componentState => {
           deferred.resolve(componentState);
         });
       } else {
@@ -210,21 +230,22 @@ class OpenResponseController extends ComponentController {
      * exits the parent node. This will perform any necessary cleanup
      * when the student exits the parent node.
      */
-    this.$scope.$on('exitNode', function(event, args) {
-
-    }.bind(this));
+    this.$scope.$on('exitNode', function(event, args) {}.bind(this));
 
     this.registerNotebookItemChosenListener();
 
     // load script for this component, if any
     let script = this.componentContent.script;
     if (script != null) {
-      this.ProjectService.retrieveScript(script).then((script) => {
+      this.ProjectService.retrieveScript(script).then(script => {
         new Function(script).call(this);
       });
     }
 
-    this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
+    this.$rootScope.$broadcast('doneRenderingComponent', {
+      nodeId: this.nodeId,
+      componentId: this.componentId
+    });
   }
 
   handleNodeSubmit() {
@@ -236,7 +257,6 @@ class OpenResponseController extends ComponentController {
    * @param componentState the component state to populate into the component
    */
   setStudentWork(componentState) {
-
     if (componentState != null) {
       var studentData = componentState.studentData;
 
@@ -271,8 +291,10 @@ class OpenResponseController extends ComponentController {
   }
 
   hasFeedback() {
-    return (this.componentContent.cRater.showFeedback || this.componentContent.cRater.showScore)
-        && this.isCRaterEnabled() ;
+    return (
+      (this.componentContent.cRater.showFeedback || this.componentContent.cRater.showScore) &&
+      this.isCRaterEnabled()
+    );
   }
 
   confirmSubmit(numberOfSubmitsLeft) {
@@ -288,11 +310,17 @@ class OpenResponseController extends ComponentController {
     if (numberOfSubmitsLeft <= 0) {
       alert(this.$translate('openResponse.youHaveNoMoreChancesWithFeedback'));
     } else if (numberOfSubmitsLeft === 1) {
-      isPerformSubmit = confirm(this.$translate('openResponse.youHaveOneChanceWithFeedback',
-          {numberOfSubmitsLeft: numberOfSubmitsLeft}));
+      isPerformSubmit = confirm(
+        this.$translate('openResponse.youHaveOneChanceWithFeedback', {
+          numberOfSubmitsLeft: numberOfSubmitsLeft
+        })
+      );
     } else if (numberOfSubmitsLeft > 1) {
-      isPerformSubmit = confirm(this.$translate('openResponse.youHaveMultipleChancesWithFeedback',
-          {numberOfSubmitsLeft: numberOfSubmitsLeft}));
+      isPerformSubmit = confirm(
+        this.$translate('openResponse.youHaveMultipleChancesWithFeedback', {
+          numberOfSubmitsLeft: numberOfSubmitsLeft
+        })
+      );
     }
     return isPerformSubmit;
   }
@@ -302,12 +330,17 @@ class OpenResponseController extends ComponentController {
     if (numberOfSubmitsLeft <= 0) {
       alert(this.$translate('openResponse.youHaveNoMoreChancesWithoutFeedback'));
     } else if (numberOfSubmitsLeft === 1) {
-      isPerformSubmit = confirm(this.$translate('openResponse.youHaveOneChanceWithoutFeedback',
-          {numberOfSubmitsLeft: numberOfSubmitsLeft}));
+      isPerformSubmit = confirm(
+        this.$translate('openResponse.youHaveOneChanceWithoutFeedback', {
+          numberOfSubmitsLeft: numberOfSubmitsLeft
+        })
+      );
     } else if (numberOfSubmitsLeft > 1) {
       isPerformSubmit = confirm(
-          this.$translate('openResponse.youHaveMultipleChancesWithoutFeedback',
-          {numberOfSubmitsLeft: numberOfSubmitsLeft}));
+        this.$translate('openResponse.youHaveMultipleChancesWithoutFeedback', {
+          numberOfSubmitsLeft: numberOfSubmitsLeft
+        })
+      );
     }
     return isPerformSubmit;
   }
@@ -317,7 +350,7 @@ class OpenResponseController extends ComponentController {
    */
   getStudentResponse() {
     return this.studentResponse;
-  };
+  }
 
   /**
    * Create a new component state populated with the student data
@@ -326,7 +359,6 @@ class OpenResponseController extends ComponentController {
    * @return a promise that will return a component state
    */
   createComponentState(action) {
-
     var deferred = this.$q.defer();
 
     // create a new component state
@@ -339,7 +371,7 @@ class OpenResponseController extends ComponentController {
     var response = this.getStudentResponse();
 
     studentData.response = response;
-    studentData.attachments = angular.copy(this.attachments);  // create a copy without reference to original array
+    studentData.attachments = angular.copy(this.attachments); // create a copy without reference to original array
 
     // set the submit counter
     studentData.submitCounter = this.submitCounter;
@@ -364,7 +396,12 @@ class OpenResponseController extends ComponentController {
     componentState.componentId = this.componentId;
 
     componentState.isCompleted = this.OpenResponseService.isCompleted(
-        this.componentContent, [componentState], null, null, this.ProjectService.getNodeById(this.nodeId));
+      this.componentContent,
+      [componentState],
+      null,
+      null,
+      this.ProjectService.getNodeById(this.nodeId)
+    );
 
     /*
      * reset the isSubmit value so that the next component state
@@ -379,7 +416,7 @@ class OpenResponseController extends ComponentController {
     this.createComponentStateAdditionalProcessing(deferred, componentState, action);
 
     return deferred.promise;
-  };
+  }
 
   /**
    * Perform any additional processing that is required before returning the
@@ -392,7 +429,6 @@ class OpenResponseController extends ComponentController {
    * e.g. 'submit', 'save', 'change'
    */
   createComponentStateAdditionalProcessing(deferred, componentState, action) {
-
     var performCRaterScoring = false;
 
     // determine if we need to perform CRater scoring
@@ -421,146 +457,134 @@ class OpenResponseController extends ComponentController {
        * to be scored by CRater
        */
       this.$mdDialog.show({
-        template: '<md-dialog aria-label="' + this.$translate('openResponse.pleaseWait') + '"><md-dialog-content><div class="md-dialog-content">' + this.$translate('openResponse.pleaseWaitWeAreScoringYourWork') + '</div></md-dialog-content></md-dialog>',
+        template:
+          '<md-dialog aria-label="' +
+          this.$translate('openResponse.pleaseWait') +
+          '"><md-dialog-content><div class="md-dialog-content">' +
+          this.$translate('openResponse.pleaseWaitWeAreScoringYourWork') +
+          '</div></md-dialog-content></md-dialog>',
         escapeToClose: false
       });
 
       // make the CRater request to score the student data
-      this.CRaterService.makeCRaterScoringRequest(cRaterItemId, cRaterResponseId, studentData).then((result) => {
+      this.CRaterService.makeCRaterScoringRequest(cRaterItemId, cRaterResponseId, studentData).then(
+        result => {
+          if (result != null) {
+            // get the CRater response
+            var data = result.data;
 
-        if (result != null) {
+            if (data != null) {
+              /*
+               * annotations we put in the component state will be
+               * removed from the component state and saved separately
+               */
+              componentState.annotations = [];
 
-          // get the CRater response
-          var data = result.data;
-
-          if (data != null) {
-
-            /*
-             * annotations we put in the component state will be
-             * removed from the component state and saved separately
-             */
-            componentState.annotations = [];
-
-            // get the CRater score
-            let score = data.score;
-            let concepts = data.concepts;
-            let previousScore = null;
-            if (data.scores != null) {
-              const maxSoFarFunc = (accumulator, currentValue) => { return Math.max(accumulator, currentValue.score); };
-              score = data.scores.reduce(maxSoFarFunc, 0);
-            }
-
-            if (score != null) {
-              const autoScoreAnnotationData = {
-                value: score,
-                maxAutoScore: this.ProjectService.getMaxScoreForComponent(this.nodeId, this.componentId),
-                concepts: concepts,
-                autoGrader: 'cRater'
-              };
+              // get the CRater score
+              let score = data.score;
+              let concepts = data.concepts;
+              let previousScore = null;
               if (data.scores != null) {
-                autoScoreAnnotationData.scores = data.scores;
+                const maxSoFarFunc = (accumulator, currentValue) => {
+                  return Math.max(accumulator, currentValue.score);
+                };
+                score = data.scores.reduce(maxSoFarFunc, 0);
               }
 
-              let autoScoreAnnotation = this.createAutoScoreAnnotation(autoScoreAnnotationData);
-
-              let annotationGroupForScore = null;
-
-              if (this.$scope.$parent.nodeController != null) {
-                // get the previous score and comment annotations
-                let latestAnnotations = this.$scope.$parent.nodeController.getLatestComponentAnnotations(this.componentId);
-
-                if (latestAnnotations != null && latestAnnotations.score != null &&
-                  latestAnnotations.score.data != null) {
-
-                  // get the previous score annotation value
-                  previousScore = latestAnnotations.score.data.value;
+              if (score != null) {
+                const autoScoreAnnotationData = {
+                  value: score,
+                  maxAutoScore: this.ProjectService.getMaxScoreForComponent(
+                    this.nodeId,
+                    this.componentId
+                  ),
+                  concepts: concepts,
+                  autoGrader: 'cRater'
+                };
+                if (data.scores != null) {
+                  autoScoreAnnotationData.scores = data.scores;
                 }
 
-                if (this.componentContent.enableGlobalAnnotations && this.componentContent.globalAnnotationSettings != null) {
+                let autoScoreAnnotation = this.createAutoScoreAnnotation(autoScoreAnnotationData);
 
-                  let globalAnnotationMaxCount = 0;
-                  if (this.componentContent.globalAnnotationSettings.globalAnnotationMaxCount != null) {
-                    globalAnnotationMaxCount = this.componentContent.globalAnnotationSettings.globalAnnotationMaxCount;
+                let annotationGroupForScore = null;
+
+                if (this.$scope.$parent.nodeController != null) {
+                  // get the previous score and comment annotations
+                  let latestAnnotations = this.$scope.$parent.nodeController.getLatestComponentAnnotations(
+                    this.componentId
+                  );
+
+                  if (
+                    latestAnnotations != null &&
+                    latestAnnotations.score != null &&
+                    latestAnnotations.score.data != null
+                  ) {
+                    // get the previous score annotation value
+                    previousScore = latestAnnotations.score.data.value;
                   }
-                  // get the annotation properties for the score that the student got.
-                  annotationGroupForScore = this.ProjectService.getGlobalAnnotationGroupByScore(this.componentContent, previousScore, score);
 
-                  // check if we need to apply this globalAnnotationSetting to this annotation: we don't need to if we've already reached the maxCount
-                  if (annotationGroupForScore != null) {
-                    let globalAnnotationGroupsByNodeIdAndComponentId = this.AnnotationService.getAllGlobalAnnotationGroups(this.nodeId, this.componentId);
-                    annotationGroupForScore.annotationGroupCreatedTime = autoScoreAnnotation.clientSaveTime;  // save annotation creation time
+                  if (
+                    this.componentContent.enableGlobalAnnotations &&
+                    this.componentContent.globalAnnotationSettings != null
+                  ) {
+                    let globalAnnotationMaxCount = 0;
+                    if (
+                      this.componentContent.globalAnnotationSettings.globalAnnotationMaxCount !=
+                      null
+                    ) {
+                      globalAnnotationMaxCount = this.componentContent.globalAnnotationSettings
+                        .globalAnnotationMaxCount;
+                    }
+                    // get the annotation properties for the score that the student got.
+                    annotationGroupForScore = this.ProjectService.getGlobalAnnotationGroupByScore(
+                      this.componentContent,
+                      previousScore,
+                      score
+                    );
 
-                    if (globalAnnotationGroupsByNodeIdAndComponentId.length >= globalAnnotationMaxCount) {
-                      // we've already applied this annotation properties to maxCount annotations, so we don't need to apply it any more.
-                      annotationGroupForScore = null;
+                    // check if we need to apply this globalAnnotationSetting to this annotation: we don't need to if we've already reached the maxCount
+                    if (annotationGroupForScore != null) {
+                      let globalAnnotationGroupsByNodeIdAndComponentId = this.AnnotationService.getAllGlobalAnnotationGroups(
+                        this.nodeId,
+                        this.componentId
+                      );
+                      annotationGroupForScore.annotationGroupCreatedTime =
+                        autoScoreAnnotation.clientSaveTime; // save annotation creation time
+
+                      if (
+                        globalAnnotationGroupsByNodeIdAndComponentId.length >=
+                        globalAnnotationMaxCount
+                      ) {
+                        // we've already applied this annotation properties to maxCount annotations, so we don't need to apply it any more.
+                        annotationGroupForScore = null;
+                      }
+                    }
+
+                    if (
+                      annotationGroupForScore != null &&
+                      annotationGroupForScore.isGlobal &&
+                      annotationGroupForScore.unGlobalizeCriteria != null
+                    ) {
+                      // check if this annotation is global and what criteria needs to be met to un-globalize.
+                      annotationGroupForScore.unGlobalizeCriteria.map(unGlobalizeCriteria => {
+                        // if the un-globalize criteria is time-based (e.g. isVisitedAfter, isRevisedAfter, isVisitedAndRevisedAfter, etc), store the timestamp of this annotation in the criteria
+                        // so we can compare it when we check for criteria satisfaction.
+                        if (unGlobalizeCriteria.params != null) {
+                          unGlobalizeCriteria.params.criteriaCreatedTimestamp =
+                            autoScoreAnnotation.clientSaveTime; // save annotation creation time to criteria
+                        }
+                      });
+                    }
+
+                    if (annotationGroupForScore != null) {
+                      // copy over the annotation properties into the autoScoreAnnotation's data
+                      angular.merge(autoScoreAnnotation.data, annotationGroupForScore);
                     }
                   }
-
-                  if (annotationGroupForScore != null && annotationGroupForScore.isGlobal && annotationGroupForScore.unGlobalizeCriteria != null) {
-                    // check if this annotation is global and what criteria needs to be met to un-globalize.
-                    annotationGroupForScore.unGlobalizeCriteria.map( (unGlobalizeCriteria) => {
-                      // if the un-globalize criteria is time-based (e.g. isVisitedAfter, isRevisedAfter, isVisitedAndRevisedAfter, etc), store the timestamp of this annotation in the criteria
-                      // so we can compare it when we check for criteria satisfaction.
-                      if (unGlobalizeCriteria.params != null) {
-                        unGlobalizeCriteria.params.criteriaCreatedTimestamp = autoScoreAnnotation.clientSaveTime;  // save annotation creation time to criteria
-                      }
-                    });
-                  }
-
-                  if (annotationGroupForScore != null) {
-                    // copy over the annotation properties into the autoScoreAnnotation's data
-                    angular.merge(autoScoreAnnotation.data, annotationGroupForScore);
-                  }
-                }
-              }
-
-              componentState.annotations.push(autoScoreAnnotation);
-
-              if (this.mode === 'authoring') {
-                if (this.latestAnnotations == null) {
-                  this.latestAnnotations = {};
                 }
 
-                /*
-                 * we are in the authoring view so we will set the
-                 * latest score annotation manually
-                 */
-                this.latestAnnotations.score = autoScoreAnnotation;
-              }
-
-              var autoComment = null;
-
-              // get the submit counter
-              var submitCounter = this.submitCounter;
-
-              if (this.componentContent.cRater.enableMultipleAttemptScoringRules && submitCounter > 1) {
-                /*
-                 * this step has multiple attempt scoring rules and this is
-                 * a subsequent submit
-                 */
-                // get the feedback based upon the previous score and current score
-                autoComment = this.CRaterService.getMultipleAttemptCRaterFeedbackTextByScore(this.componentContent, previousScore, score);
-              } else {
-                // get the feedback text
-                autoComment = this.CRaterService.getCRaterFeedbackTextByScore(this.componentContent, score);
-              }
-
-              if (autoComment != null) {
-                // create the auto comment annotation
-                var autoCommentAnnotationData = {};
-                autoCommentAnnotationData.value = autoComment;
-                autoCommentAnnotationData.concepts = concepts;
-                autoCommentAnnotationData.autoGrader = 'cRater';
-
-                var autoCommentAnnotation = this.createAutoCommentAnnotation(autoCommentAnnotationData);
-
-                if (this.componentContent.enableGlobalAnnotations) {
-                  if (annotationGroupForScore != null) {
-                    // copy over the annotation properties into the autoCommentAnnotation's data
-                    angular.merge(autoCommentAnnotation.data, annotationGroupForScore);
-                  }
-                }
-                componentState.annotations.push(autoCommentAnnotation);
+                componentState.annotations.push(autoScoreAnnotation);
 
                 if (this.mode === 'authoring') {
                   if (this.latestAnnotations == null) {
@@ -569,44 +593,118 @@ class OpenResponseController extends ComponentController {
 
                   /*
                    * we are in the authoring view so we will set the
-                   * latest comment annotation manually
+                   * latest score annotation manually
                    */
-                  this.latestAnnotations.comment = autoCommentAnnotation;
+                  this.latestAnnotations.score = autoScoreAnnotation;
                 }
-              }
-              if (this.componentContent.enableNotifications &&
-                  this.componentContent.notificationSettings &&
-                  this.componentContent.notificationSettings.notifications) {
-                const notificationForScore = this.ProjectService.getNotificationByScore(
-                    this.componentContent, previousScore, score);
-                if (notificationForScore != null) {
-                  notificationForScore.score = score;
-                  notificationForScore.nodeId = this.nodeId;
-                  notificationForScore.componentId = this.componentId;
-                  this.NotificationService.sendNotificationForScore(notificationForScore);
-                }
-              }
 
-              // display global annotations dialog if needed
-              if (this.componentContent.enableGlobalAnnotations && annotationGroupForScore != null && annotationGroupForScore.isGlobal && annotationGroupForScore.isPopup) {
-                this.$scope.$emit('displayGlobalAnnotations');
+                var autoComment = null;
+
+                // get the submit counter
+                var submitCounter = this.submitCounter;
+
+                if (
+                  this.componentContent.cRater.enableMultipleAttemptScoringRules &&
+                  submitCounter > 1
+                ) {
+                  /*
+                   * this step has multiple attempt scoring rules and this is
+                   * a subsequent submit
+                   */
+                  // get the feedback based upon the previous score and current score
+                  autoComment = this.CRaterService.getMultipleAttemptCRaterFeedbackTextByScore(
+                    this.componentContent,
+                    previousScore,
+                    score
+                  );
+                } else {
+                  // get the feedback text
+                  autoComment = this.CRaterService.getCRaterFeedbackTextByScore(
+                    this.componentContent,
+                    score
+                  );
+                }
+
+                if (autoComment != null) {
+                  // create the auto comment annotation
+                  var autoCommentAnnotationData = {};
+                  autoCommentAnnotationData.value = autoComment;
+                  autoCommentAnnotationData.concepts = concepts;
+                  autoCommentAnnotationData.autoGrader = 'cRater';
+
+                  var autoCommentAnnotation = this.createAutoCommentAnnotation(
+                    autoCommentAnnotationData
+                  );
+
+                  if (this.componentContent.enableGlobalAnnotations) {
+                    if (annotationGroupForScore != null) {
+                      // copy over the annotation properties into the autoCommentAnnotation's data
+                      angular.merge(autoCommentAnnotation.data, annotationGroupForScore);
+                    }
+                  }
+                  componentState.annotations.push(autoCommentAnnotation);
+
+                  if (this.mode === 'authoring') {
+                    if (this.latestAnnotations == null) {
+                      this.latestAnnotations = {};
+                    }
+
+                    /*
+                     * we are in the authoring view so we will set the
+                     * latest comment annotation manually
+                     */
+                    this.latestAnnotations.comment = autoCommentAnnotation;
+                  }
+                }
+                if (
+                  this.componentContent.enableNotifications &&
+                  this.componentContent.notificationSettings &&
+                  this.componentContent.notificationSettings.notifications
+                ) {
+                  const notificationForScore = this.ProjectService.getNotificationByScore(
+                    this.componentContent,
+                    previousScore,
+                    score
+                  );
+                  if (notificationForScore != null) {
+                    notificationForScore.score = score;
+                    notificationForScore.nodeId = this.nodeId;
+                    notificationForScore.componentId = this.componentId;
+                    this.NotificationService.sendNotificationForScore(notificationForScore);
+                  }
+                }
+
+                // display global annotations dialog if needed
+                if (
+                  this.componentContent.enableGlobalAnnotations &&
+                  annotationGroupForScore != null &&
+                  annotationGroupForScore.isGlobal &&
+                  annotationGroupForScore.isPopup
+                ) {
+                  this.$scope.$emit('displayGlobalAnnotations');
+                }
               }
             }
           }
+
+          /*
+           * hide the dialog that tells the student to wait since
+           * the work has been scored.
+           */
+          this.$mdDialog.hide();
+
+          // resolve the promise now that we are done performing additional processing
+          deferred.resolve(componentState);
         }
-
-        /*
-         * hide the dialog that tells the student to wait since
-         * the work has been scored.
-         */
-        this.$mdDialog.hide();
-
-        // resolve the promise now that we are done performing additional processing
-        deferred.resolve(componentState);
-      });
-    } else if (this.ProjectService.hasAdditionalProcessingFunctions(this.nodeId, this.componentId)) {
+      );
+    } else if (
+      this.ProjectService.hasAdditionalProcessingFunctions(this.nodeId, this.componentId)
+    ) {
       // if there are any additionalProcessingFunctions for this node and component, call all of them
-      let additionalProcessingFunctions = this.ProjectService.getAdditionalProcessingFunctions(this.nodeId, this.componentId);
+      let additionalProcessingFunctions = this.ProjectService.getAdditionalProcessingFunctions(
+        this.nodeId,
+        this.componentId
+      );
       let allPromises = [];
       for (let i = 0; i < additionalProcessingFunctions.length; i++) {
         let additionalProcessingFunction = additionalProcessingFunctions[i];
@@ -638,7 +736,6 @@ class OpenResponseController extends ComponentController {
    * @returns the auto score annotation
    */
   createAutoScoreAnnotation(data) {
-
     var runId = this.ConfigService.getRunId();
     var periodId = this.ConfigService.getPeriodId();
     var nodeId = this.nodeId;
@@ -646,7 +743,14 @@ class OpenResponseController extends ComponentController {
     var toWorkgroupId = this.ConfigService.getWorkgroupId();
 
     // create the auto score annotation
-    var annotation = this.AnnotationService.createAutoScoreAnnotation(runId, periodId, nodeId, componentId, toWorkgroupId, data);
+    var annotation = this.AnnotationService.createAutoScoreAnnotation(
+      runId,
+      periodId,
+      nodeId,
+      componentId,
+      toWorkgroupId,
+      data
+    );
 
     return annotation;
   }
@@ -662,7 +766,6 @@ class OpenResponseController extends ComponentController {
    * @returns the auto comment annotation
    */
   createAutoCommentAnnotation(data) {
-
     var runId = this.ConfigService.getRunId();
     var periodId = this.ConfigService.getPeriodId();
     var nodeId = this.nodeId;
@@ -670,7 +773,14 @@ class OpenResponseController extends ComponentController {
     var toWorkgroupId = this.ConfigService.getWorkgroupId();
 
     // create the auto comment annotation
-    var annotation = this.AnnotationService.createAutoCommentAnnotation(runId, periodId, nodeId, componentId, toWorkgroupId, data);
+    var annotation = this.AnnotationService.createAutoCommentAnnotation(
+      runId,
+      periodId,
+      nodeId,
+      componentId,
+      toWorkgroupId,
+      data
+    );
 
     return annotation;
   }
@@ -686,7 +796,7 @@ class OpenResponseController extends ComponentController {
     }
 
     return numRows;
-  };
+  }
 
   /**
    * Get the number of columns for the textarea
@@ -699,7 +809,7 @@ class OpenResponseController extends ComponentController {
     }
 
     return numColumns;
-  };
+  }
 
   /**
    * Get the text the student typed
@@ -712,34 +822,50 @@ class OpenResponseController extends ComponentController {
     }
 
     return response;
-  };
+  }
 
   snipButtonClicked($event) {
     if (this.isDirty) {
-      const deregisterListener = this.$scope.$on('studentWorkSavedToServer',
-        (event, args) => {
-          let componentState = args.studentWork;
-          if (componentState &&
-              this.nodeId === componentState.nodeId &&
-              this.componentId === componentState.componentId) {
-            const imageObject = null;
-            const noteText = componentState.studentData.response;
-            const isEditTextEnabled = false;
-            const isFileUploadEnabled = false;
-            this.NotebookService.addNote($event, imageObject, noteText, [ componentState.id ], isEditTextEnabled, isFileUploadEnabled);
-            deregisterListener();
-          }
+      const deregisterListener = this.$scope.$on('studentWorkSavedToServer', (event, args) => {
+        let componentState = args.studentWork;
+        if (
+          componentState &&
+          this.nodeId === componentState.nodeId &&
+          this.componentId === componentState.componentId
+        ) {
+          const imageObject = null;
+          const noteText = componentState.studentData.response;
+          const isEditTextEnabled = false;
+          const isFileUploadEnabled = false;
+          this.NotebookService.addNote(
+            $event,
+            imageObject,
+            noteText,
+            [componentState.id],
+            isEditTextEnabled,
+            isFileUploadEnabled
+          );
+          deregisterListener();
         }
-      );
+      });
       this.saveButtonClicked(); // trigger a save
     } else {
-      const studentWork =
-        this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
+      const studentWork = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(
+        this.nodeId,
+        this.componentId
+      );
       const imageObject = null;
       const noteText = studentWork.studentData.response;
       const isEditTextEnabled = false;
       const isFileUploadEnabled = false;
-      this.NotebookService.addNote($event, imageObject, noteText, [ studentWork.id ], isEditTextEnabled, isFileUploadEnabled);
+      this.NotebookService.addNote(
+        $event,
+        imageObject,
+        noteText,
+        [studentWork.id],
+        isEditTextEnabled,
+        isFileUploadEnabled
+      );
     }
   }
 
@@ -812,8 +938,11 @@ class OpenResponseController extends ComponentController {
    */
   getRevisions() {
     // get the component states for this component
-    return this.StudentDataService.getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
-  };
+    return this.StudentDataService.getComponentStatesByNodeIdAndComponentId(
+      this.nodeId,
+      this.componentId
+    );
+  }
 
   /**
    * Create a component state with the merged student responses
@@ -821,12 +950,10 @@ class OpenResponseController extends ComponentController {
    * @return a component state with the merged student responses
    */
   createMergedComponentState(componentStates) {
-
     // create a new component state
     let mergedComponentState = this.NodeService.createNewComponentState();
 
     if (componentStates != null) {
-
       let mergedResponse = '';
 
       // loop through all the component state
@@ -837,7 +964,6 @@ class OpenResponseController extends ComponentController {
           let studentData = componentState.studentData;
 
           if (studentData != null) {
-
             // get the student response
             let response = studentData.response;
 
@@ -875,7 +1001,7 @@ class OpenResponseController extends ComponentController {
     const action = 'change';
     this.createComponentStateAndBroadcast(action);
   }
-};
+}
 
 OpenResponseController.$inject = [
   '$filter',

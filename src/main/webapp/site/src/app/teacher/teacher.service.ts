@@ -8,7 +8,6 @@ import { Course } from '../domain/course';
 
 @Injectable()
 export class TeacherService {
-
   private runsUrl = 'api/teacher/runs';
   private sharedRunsUrl = 'api/teacher/sharedruns';
   private registerUrl = 'api/teacher/register';
@@ -38,7 +37,7 @@ export class TeacherService {
   public newRunSource$ = this.newRunSource.asObservable();
   private updateProfileUrl = 'api/teacher/profile/update';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getRuns(): Observable<Run[]> {
     const headers = new HttpHeaders({ 'Cache-Control': 'no-cache' });
@@ -62,31 +61,36 @@ export class TeacherService {
     const headers = {
       'Content-Type': 'application/json'
     };
-    this.http.post(this.registerUrl,
-      teacherUser,
-      { headers: headers, responseType: 'text' })
+    this.http
+      .post(this.registerUrl, teacherUser, { headers: headers, responseType: 'text' })
       .subscribe(response => {
         const username = response;
         callback(username);
       });
   }
 
-  createRun(projectId: number, periods: string, maxStudentsPerTeam: number, startDate: number, endDate: number): Observable<Run> {
+  createRun(
+    projectId: number,
+    periods: string,
+    maxStudentsPerTeam: number,
+    startDate: number,
+    endDate: number
+  ): Observable<Run> {
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
     let body = new HttpParams();
-    body = body.set('projectId', projectId + "");
+    body = body.set('projectId', projectId + '');
     body = body.set('periods', periods);
-    body = body.set('maxStudentsPerTeam', maxStudentsPerTeam + "");
-    body = body.set('startDate', startDate + "");
+    body = body.set('maxStudentsPerTeam', maxStudentsPerTeam + '');
+    body = body.set('startDate', startDate + '');
     if (endDate) {
-      body = body.set('endDate', endDate + "");
+      body = body.set('endDate', endDate + '');
     }
     return this.http.post<Run>(this.createRunUrl, body, { headers: headers });
   }
 
   retrieveAllTeacherUsernames(): Observable<string[]> {
     const headers = new HttpHeaders({ 'Cache-Control': 'no-cache' });
-    return this.http.get<string[]>(this.usernamesUrl, { headers: headers })
+    return this.http.get<string[]>(this.usernamesUrl, { headers: headers });
   }
 
   addSharedOwner(runId: number, teacherUsername: string) {
@@ -104,19 +108,19 @@ export class TeacherService {
   removeSharedOwner(runId: number, username: string) {
     const url = `${this.runPermissionUrl}/${runId}/${username}`;
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
-    return this.http.delete<Object>(url, {headers: headers});
+    return this.http.delete<Object>(url, { headers: headers });
   }
 
   addSharedOwnerRunPermission(runId: number, userId: string, permissionId: number) {
     const url = `${this.runPermissionUrl}/${runId}/${userId}/${permissionId}`;
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
-    return this.http.put<any>(url, null, {headers: headers});
+    return this.http.put<any>(url, null, { headers: headers });
   }
 
   removeSharedOwnerRunPermission(runId: number, userId: string, permissionId: number) {
     const url = `${this.runPermissionUrl}/${runId}/${userId}/${permissionId}`;
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
-    return this.http.delete<any>(url, {headers: headers});
+    return this.http.delete<any>(url, { headers: headers });
   }
 
   addSharedOwnerProjectPermission(projectId: number, userId: string, permissionId: number) {
@@ -134,20 +138,30 @@ export class TeacherService {
   addSharedProjectOwner(projectId: number, username: string) {
     const url = `${this.projectPermissionUrl}/${projectId}/${username}`;
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
-    return this.http.put<Object>(url, null, {headers: headers});
+    return this.http.put<Object>(url, null, { headers: headers });
   }
 
   removeSharedProjectOwner(projectId: number, username: string) {
     const url = `${this.projectPermissionUrl}/${projectId}/${username}`;
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
-    return this.http.delete<Object>(url, {headers: headers});
+    return this.http.delete<Object>(url, { headers: headers });
   }
 
   addNewRun(run: Run) {
     this.newRunSource.next(run);
   }
 
-  updateProfile(username, displayName, email, city, state, country, schoolName, schoolLevel, language) {
+  updateProfile(
+    username,
+    displayName,
+    email,
+    city,
+    state,
+    country,
+    schoolName,
+    schoolLevel,
+    language
+  ) {
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
     let body = new HttpParams();
     body = body.set('displayName', displayName);
@@ -167,7 +181,7 @@ export class TeacherService {
     let body = new HttpParams();
     body = body.set('runId', runId + '');
     body = body.set('periodName', periodName);
-    return this.http.post<Object>(url, body, {headers: headers});
+    return this.http.post<Object>(url, body, { headers: headers });
   }
 
   deletePeriodFromRun(runId: number, periodName: string) {
@@ -176,7 +190,7 @@ export class TeacherService {
     let body = new HttpParams();
     body = body.set('runId', runId + '');
     body = body.set('periodName', periodName);
-    return this.http.post<Object>(url, body, {headers: headers});
+    return this.http.post<Object>(url, body, { headers: headers });
   }
 
   updateRunStudentsPerTeam(runId: number, maxStudentsPerTeam: number) {
@@ -185,7 +199,7 @@ export class TeacherService {
     let body = new HttpParams();
     body = body.set('runId', runId + '');
     body = body.set('maxStudentsPerTeam', maxStudentsPerTeam + '');
-    return this.http.post<Object>(url, body, {headers: headers});
+    return this.http.post<Object>(url, body, { headers: headers });
   }
 
   updateRunStartTime(runId: number, startTime: number) {
@@ -194,7 +208,7 @@ export class TeacherService {
     let body = new HttpParams();
     body = body.set('runId', runId + '');
     body = body.set('startTime', startTime + '');
-    return this.http.post<Object>(url, body, {headers: headers});
+    return this.http.post<Object>(url, body, { headers: headers });
   }
 
   updateRunEndTime(runId: number, endTime: number) {
@@ -203,7 +217,7 @@ export class TeacherService {
     let body = new HttpParams();
     body = body.set('runId', runId + '');
     body = body.set('endTime', endTime + '');
-    return this.http.post<Object>(url, body, {headers: headers});
+    return this.http.post<Object>(url, body, { headers: headers });
   }
 
   sendForgotUsernameEmail(email) {
@@ -249,14 +263,21 @@ export class TeacherService {
     return this.http.get<any>(this.classroomAuthorizationUrl, { headers, params });
   }
 
-  getClassroomCourses(username: string): Observable<Course []> {
+  getClassroomCourses(username: string): Observable<Course[]> {
     const headers = new HttpHeaders({ 'Cache-Control': 'no-cache' });
     let params = new HttpParams();
     params = params.set('username', username);
-    return this.http.get<Course []>(this.listCoursesUrl, { headers, params });
+    return this.http.get<Course[]>(this.listCoursesUrl, { headers, params });
   }
 
-  addToClassroom(accessCode: string, unitTitle: string, courseIds: string[], username: string, endTime: string, description: string): Observable<any> {
+  addToClassroom(
+    accessCode: string,
+    unitTitle: string,
+    courseIds: string[],
+    username: string,
+    endTime: string,
+    description: string
+  ): Observable<any> {
     const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
     let params = new HttpParams()
       .set('accessCode', accessCode)
@@ -265,6 +286,6 @@ export class TeacherService {
       .set('endTime', endTime)
       .set('description', description)
       .set('courseIds', JSON.stringify(courseIds));
-    return this.http.post<any>(this.addAssignmentUrl, params, {headers});
+    return this.http.post<any>(this.addAssignmentUrl, params, { headers });
   }
 }

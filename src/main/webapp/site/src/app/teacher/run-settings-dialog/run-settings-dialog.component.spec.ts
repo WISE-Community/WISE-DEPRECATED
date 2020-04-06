@@ -1,9 +1,9 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RunSettingsDialogComponent } from './run-settings-dialog.component';
-import { MatDialogRef, MatDialog, MAT_DIALOG_DATA, MatSnackBarModule } from "@angular/material";
+import { MatDialogRef, MatDialog, MAT_DIALOG_DATA, MatSnackBarModule } from '@angular/material';
 import { NO_ERRORS_SCHEMA, TRANSLATIONS_FORMAT, TRANSLATIONS, LOCALE_ID } from '@angular/core';
-import { Run } from "../../domain/run";
-import { TeacherService } from "../teacher.service";
+import { Run } from '../../domain/run';
+import { TeacherService } from '../teacher.service';
 import { Observable } from 'rxjs';
 import { translationsFactory } from '../../app.module';
 import { I18n } from '@ngx-translate/i18n-polyfill';
@@ -73,14 +73,14 @@ describe('RunSettingsDialogComponent', () => {
 
   configureTestSuite(() =>
     TestBed.configureTestingModule({
-      declarations: [ RunSettingsDialogComponent ],
-      imports: [ MatSnackBarModule, MomentModule ],
+      declarations: [RunSettingsDialogComponent],
+      imports: [MatSnackBarModule, MomentModule],
       providers: [
         { provide: MatDialog, useValue: {} },
         { provide: MatDialogRef, useValue: {} },
         { provide: MAT_DIALOG_DATA, useValue: { run: createNewRun() } },
         { provide: TeacherService, useClass: MockTeacherService },
-        { provide: TRANSLATIONS_FORMAT, useValue: "xlf" },
+        { provide: TRANSLATIONS_FORMAT, useValue: 'xlf' },
         {
           provide: TRANSLATIONS,
           useFactory: translationsFactory,
@@ -88,8 +88,9 @@ describe('RunSettingsDialogComponent', () => {
         },
         I18n
       ],
-      schemas: [ NO_ERRORS_SCHEMA ]
-  }));
+      schemas: [NO_ERRORS_SCHEMA]
+    })
+  );
 
   beforeEach(() => {
     fixture = TestBed.createComponent(RunSettingsDialogComponent);
@@ -109,7 +110,7 @@ describe('RunSettingsDialogComponent', () => {
 
   it('should populate the correct number of students per team', () => {
     const radioGroup = fixture.debugElement.nativeElement.querySelector('mat-radio-group');
-    expect(radioGroup.ngModel).toBe("1");
+    expect(radioGroup.ngModel).toBe('1');
   });
 
   it('should populate the correct start date', () => {
@@ -127,7 +128,7 @@ describe('RunSettingsDialogComponent', () => {
   });
 
   it('should add a period', () => {
-    component.run.periods.push("4");
+    component.run.periods.push('4');
     fixture.detectChanges();
     const periodContainers = fixture.debugElement.nativeElement.querySelectorAll('.info-block');
     expect(periodContainers.length).toBe(4);
@@ -141,10 +142,10 @@ describe('RunSettingsDialogComponent', () => {
   });
 
   it('should change the students per team', () => {
-    component.maxStudentsPerTeam = "3";
+    component.maxStudentsPerTeam = '3';
     const radioGroup = fixture.debugElement.nativeElement.querySelector('mat-radio-group');
     fixture.detectChanges();
-    expect(radioGroup.ngModel).toBe("3");
+    expect(radioGroup.ngModel).toBe('3');
   });
 
   it('should change the start date', () => {

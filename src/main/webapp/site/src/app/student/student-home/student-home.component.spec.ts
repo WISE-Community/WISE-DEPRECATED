@@ -1,10 +1,10 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Observable } from "rxjs";
-import { MatDialog } from "@angular/material/dialog";
-import { User } from "../../domain/user";
-import { UserService } from "../../services/user.service";
-import { StudentHomeComponent } from "./student-home.component";
-import { NO_ERRORS_SCHEMA } from "@angular/core";
+import { Observable } from 'rxjs';
+import { MatDialog } from '@angular/material/dialog';
+import { User } from '../../domain/user';
+import { UserService } from '../../services/user.service';
+import { StudentHomeComponent } from './student-home.component';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 export class MockUserService {
   getUser(): Observable<User[]> {
@@ -14,7 +14,7 @@ export class MockUserService {
     user.role = 'student';
     user.username = 'DemoUser0101';
     user.id = 123456;
-    return Observable.create( observer => {
+    return Observable.create(observer => {
       observer.next(user);
       observer.complete();
     });
@@ -27,15 +27,14 @@ describe('StudentHomeComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ StudentHomeComponent ],
+      declarations: [StudentHomeComponent],
       providers: [
         { provide: UserService, useClass: MockUserService },
         { provide: MatDialog, useValue: {} }
       ],
       imports: [],
-      schemas: [ NO_ERRORS_SCHEMA ]
-    })
-    .compileComponents();
+      schemas: [NO_ERRORS_SCHEMA]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

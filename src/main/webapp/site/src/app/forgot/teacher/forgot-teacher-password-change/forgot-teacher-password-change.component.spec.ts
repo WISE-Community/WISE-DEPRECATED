@@ -1,18 +1,22 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ForgotTeacherPasswordChangeComponent } from './forgot-teacher-password-change.component';
-import {NO_ERRORS_SCHEMA, TRANSLATIONS_FORMAT, TRANSLATIONS, LOCALE_ID} from '@angular/core';
-import {RouterTestingModule} from '@angular/router/testing';
-import {ReactiveFormsModule} from '@angular/forms';
-import {TeacherService} from '../../../teacher/teacher.service';
-import {Observable} from 'rxjs/index';
-import {Router} from '@angular/router';
+import { NO_ERRORS_SCHEMA, TRANSLATIONS_FORMAT, TRANSLATIONS, LOCALE_ID } from '@angular/core';
+import { RouterTestingModule } from '@angular/router/testing';
+import { ReactiveFormsModule } from '@angular/forms';
+import { TeacherService } from '../../../teacher/teacher.service';
+import { Observable } from 'rxjs/index';
+import { Router } from '@angular/router';
 import { translationsFactory } from '../../../app.module';
 import { I18n } from '@ngx-translate/i18n-polyfill';
 import { configureTestSuite } from 'ng-bullet';
 
 export class MockTeacherService {
-  changePassword(username: string, verificationCode: string, password: string,
-                 confirmPassword: string): Observable<any> {
+  changePassword(
+    username: string,
+    verificationCode: string,
+    password: string,
+    confirmPassword: string
+  ): Observable<any> {
     return Observable.create(observer => {
       observer.next({
         status: 'success',
@@ -54,14 +58,11 @@ describe('ForgotTeacherPasswordChangeComponent', () => {
 
   configureTestSuite(() => {
     TestBed.configureTestingModule({
-      declarations: [ ForgotTeacherPasswordChangeComponent ],
-      imports: [
-        RouterTestingModule,
-        ReactiveFormsModule
-      ],
+      declarations: [ForgotTeacherPasswordChangeComponent],
+      imports: [RouterTestingModule, ReactiveFormsModule],
       providers: [
         { provide: TeacherService, useClass: MockTeacherService },
-        { provide: TRANSLATIONS_FORMAT, useValue: "xlf" },
+        { provide: TRANSLATIONS_FORMAT, useValue: 'xlf' },
         {
           provide: TRANSLATIONS,
           useFactory: translationsFactory,
@@ -69,8 +70,8 @@ describe('ForgotTeacherPasswordChangeComponent', () => {
         },
         I18n
       ],
-      schemas: [ NO_ERRORS_SCHEMA ]
-    })
+      schemas: [NO_ERRORS_SCHEMA]
+    });
   });
 
   beforeEach(() => {
@@ -85,7 +86,9 @@ describe('ForgotTeacherPasswordChangeComponent', () => {
 
   it('should show the too many verification code attempts message', () => {
     submitAndReceiveResponse('changePassword', 'failure', 'tooManyVerificationCodeAttempts');
-    expect(getErrorMessage()).toContain('You have submitted an invalid verification code too many times');
+    expect(getErrorMessage()).toContain(
+      'You have submitted an invalid verification code too many times'
+    );
   });
 
   it('should show the verification code expired message', () => {
@@ -115,8 +118,10 @@ describe('ForgotTeacherPasswordChangeComponent', () => {
     const params = {
       username: null
     };
-    expect(navigateSpy).toHaveBeenCalledWith(['/forgot/teacher/password/complete'],
-      {queryParams: params, skipLocationChange: true});
+    expect(navigateSpy).toHaveBeenCalledWith(['/forgot/teacher/password/complete'], {
+      queryParams: params,
+      skipLocationChange: true
+    });
   });
 
   it('should navigate to the complete page after successfully submitting the new password', () => {
@@ -131,7 +136,9 @@ describe('ForgotTeacherPasswordChangeComponent', () => {
     const params = {
       username: 'SpongebobSquarepants'
     };
-    expect(navigateSpy).toHaveBeenCalledWith(['/forgot/teacher/password/complete'],
-      {queryParams: params, skipLocationChange: true});
+    expect(navigateSpy).toHaveBeenCalledWith(['/forgot/teacher/password/complete'], {
+      queryParams: params,
+      skipLocationChange: true
+    });
   });
 });

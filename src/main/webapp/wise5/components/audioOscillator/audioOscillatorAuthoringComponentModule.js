@@ -4,15 +4,14 @@ import AudioOscillatorService from './audioOscillatorService';
 import AudioOscillatorController from './audioOscillatorController';
 import AudioOscillatorAuthoringController from './audioOscillatorAuthoringController';
 
-const audioOscillatorAuthoringComponentModule = angular.module('audioOscillatorAuthoringComponentModule', [
-  'pascalprecht.translate'
-])
+const audioOscillatorAuthoringComponentModule = angular
+  .module('audioOscillatorAuthoringComponentModule', ['pascalprecht.translate'])
   .service('AudioOscillatorService', AudioOscillatorService)
   .controller('AudioOscillatorController', AudioOscillatorController)
   .controller('AudioOscillatorAuthoringController', AudioOscillatorAuthoringController)
   .config([
     '$translatePartialLoaderProvider',
-    ($translatePartialLoaderProvider) => {
+    $translatePartialLoaderProvider => {
       $translatePartialLoaderProvider.addPart('components/audioOscillator/i18n');
     }
   ]);

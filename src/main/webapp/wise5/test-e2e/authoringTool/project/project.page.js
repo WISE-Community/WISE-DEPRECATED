@@ -14,7 +14,9 @@ export default class ProjectPage {
     this.createNewStepButton = element(by.id('createNewStepButton'));
     this.advancedProjectAuthoringButton = element(by.id('advancedProjectAuthoringButton'));
     this.previewProjectButton = element(by.id('previewProjectButton'));
-    this.previewProjectWithoutConstraintsButton = element(by.id('previewProjectWithoutConstraintsButton'));
+    this.previewProjectWithoutConstraintsButton = element(
+      by.id('previewProjectWithoutConstraintsButton')
+    );
 
     // create step elements
     this.createNodeTitle = element(by.id('createNodeTitle'));
@@ -119,7 +121,10 @@ export default class ProjectPage {
    * @param activityNumber The activity to insert into.
    */
   clickToInsertStepInside(activityNumber) {
-    element.all(by.css('.groupHeader .insertButton')).get(activityNumber).click();
+    element
+      .all(by.css('.groupHeader .insertButton'))
+      .get(activityNumber)
+      .click();
   }
 
   /**
@@ -137,8 +142,9 @@ export default class ProjectPage {
   clickToInsertStepAfter(activityNumber, stepNumber) {
     if (activityNumber != null && stepNumber != null) {
       // we are inserting a step in an activity after a specific step
-      element(by.cssContainingText('.stepHeader', activityNumber + '.' + stepNumber + ':')).
-      element(by.css('.insertButton')).click();
+      element(by.cssContainingText('.stepHeader', activityNumber + '.' + stepNumber + ':'))
+        .element(by.css('.insertButton'))
+        .click();
     }
   }
 
@@ -151,7 +157,10 @@ export default class ProjectPage {
    * activity so the new activity will become activity 2.
    */
   clickToInsertActivityAfter(activityNumber) {
-    element.all(by.css('.groupHeader .insertButton')).get(activityNumber).click();
+    element
+      .all(by.css('.groupHeader .insertButton'))
+      .get(activityNumber)
+      .click();
   }
 
   /**
@@ -161,7 +170,10 @@ export default class ProjectPage {
    * @return The title of the step.
    */
   getTitleOfStep(activityNumber, stepNumber) {
-    return element.all(by.css('.stepHeader')).get(stepNumber).getText();
+    return element
+      .all(by.css('.stepHeader'))
+      .get(stepNumber)
+      .getText();
   }
 
   /**
@@ -170,7 +182,10 @@ export default class ProjectPage {
    * @return The title of the activity.
    */
   getTitleOfActivity(activityNumber) {
-    return element.all(by.css('.groupHeader')).get(activityNumber).getText();
+    return element
+      .all(by.css('.groupHeader'))
+      .get(activityNumber)
+      .getText();
   }
 
   /**

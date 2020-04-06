@@ -906,9 +906,7 @@ function getUniqueAuthors() {
     });
 
     it('should get unique authors when there is one author', () => {
-      const authors = [
-        { id: 1, firstName: 'a', lastName: 'a' }
-      ];
+      const authors = [{ id: 1, firstName: 'a', lastName: 'a' }];
       const uniqueAuthors = ProjectService.getUniqueAuthors(authors);
       expect(uniqueAuthors.length).toEqual(1);
       expect(uniqueAuthors[0].id).toEqual(1);

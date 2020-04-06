@@ -1,13 +1,12 @@
-"use strict";
+'use strict';
 
 const ProjectProgress = {
-    bindings: {
-        completed: '<',
-        total: '<',
-        percent: '<'
-    },
-    template:
-        `<span layout="row" layout-align="start center">
+  bindings: {
+    completed: '<',
+    total: '<',
+    percent: '<'
+  },
+  template: `<span layout="row" layout-align="start center">
             <span class="progress-wrapper" tabindex="0">
                 <md-progress-linear class="nav-item__progress" md-mode="determinate" value="{{ $ctrl.percent }}"></md-progress-linear>
                 <md-tooltip md-direction="top">

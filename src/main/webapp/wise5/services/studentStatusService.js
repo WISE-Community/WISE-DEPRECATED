@@ -1,9 +1,5 @@
 class StudentStatusService {
-  constructor(
-      $http,
-      AnnotationService,
-      ConfigService,
-      ProjectService) {
+  constructor($http, AnnotationService, ConfigService, ProjectService) {
     this.$http = $http;
     this.AnnotationService = AnnotationService;
     this.ConfigService = ConfigService;
@@ -20,7 +16,7 @@ class StudentStatusService {
       }
     };
 
-    return this.$http.get(studentStatusURL, requestConfig).then((result) => {
+    return this.$http.get(studentStatusURL, requestConfig).then(result => {
       const studentStatuses = result.data;
       this.studentStatuses = studentStatuses;
       return studentStatuses;
@@ -187,7 +183,11 @@ class StudentStatusService {
                         if (!this.ProjectService.isGroupNode(descendantId)) {
                           let descendantStatus = nodeStatuses[descendantId];
 
-                          if (descendantStatus && descendantStatus.isVisible && this.ProjectService.nodeHasWork(descendantId)) {
+                          if (
+                            descendantStatus &&
+                            descendantStatus.isVisible &&
+                            this.ProjectService.nodeHasWork(descendantId)
+                          ) {
                             numTotal++;
 
                             if (descendantStatus.isCompleted) {
@@ -219,7 +219,8 @@ class StudentStatusService {
                      * check whether we should include the node in the calculation
                      * i.e. either includeNonWorkNodes is true or the node has student work
                      */
-                    let includeNode = !excludeNonWorkNodes || this.ProjectService.nodeHasWork(nodeId);
+                    let includeNode =
+                      !excludeNonWorkNodes || this.ProjectService.nodeHasWork(nodeId);
 
                     if (includeNode) {
                       numTotal++;
@@ -239,7 +240,7 @@ class StudentStatusService {
     }
 
     // generate the percentage number rounded down to the nearest integer
-    let completionPercentage = (numTotal > 0 ? Math.floor(100 * numCompleted / numTotal) : 0);
+    let completionPercentage = numTotal > 0 ? Math.floor((100 * numCompleted) / numTotal) : 0;
 
     return {
       completedItems: numCompleted,
@@ -314,7 +315,7 @@ class StudentStatusService {
 
     if (numStudentsWithScore !== 0) {
       // calculate the average score for this node rounded down to the nearest hundredth
-      averageScore = Math.floor(100 * studentScoreSum / numStudentsWithScore) / 100;
+      averageScore = Math.floor((100 * studentScoreSum) / numStudentsWithScore) / 100;
     }
 
     return averageScore;
@@ -352,11 +353,6 @@ class StudentStatusService {
   }
 }
 
-StudentStatusService.$inject = [
-  '$http',
-  'AnnotationService',
-  'ConfigService',
-  'ProjectService'
-];
+StudentStatusService.$inject = ['$http', 'AnnotationService', 'ConfigService', 'ProjectService'];
 
 export default StudentStatusService;

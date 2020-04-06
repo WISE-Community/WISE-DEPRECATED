@@ -1,12 +1,13 @@
 class AchievementService {
   constructor(
-      $http,
-      $q,
-      $rootScope,
-      ConfigService,
-      ProjectService,
-      StudentDataService,
-      UtilService) {
+    $http,
+    $q,
+    $rootScope,
+    ConfigService,
+    ProjectService,
+    StudentDataService,
+    UtilService
+  ) {
     this.$http = $http;
     this.$q = $q;
     this.$rootScope = $rootScope;
@@ -52,14 +53,15 @@ class AchievementService {
         config.params.type = type;
       }
 
-      return this.$http(config).then((response) => {
+      return this.$http(config).then(response => {
         let studentAchievements = response.data;
         for (let studentAchievement of studentAchievements) {
           this.addOrUpdateStudentAchievement(studentAchievement);
 
           if (this.ConfigService.getMode() === 'studentRun') {
-            const projectAchievement = this.ProjectService
-              .getAchievementByAchievementId(studentAchievement.achievementId);
+            const projectAchievement = this.ProjectService.getAchievementByAchievementId(
+              studentAchievement.achievementId
+            );
             if (projectAchievement != null) {
               /*
                * set the completed field to true in case we ever
@@ -94,8 +96,10 @@ class AchievementService {
            */
           const projectAchievements = this.ProjectService.getAchievementItems();
           for (let projectAchievement of projectAchievements) {
-            if (!this.isStudentAchievementExists(projectAchievement.id) &&
-                this.isProjectAchievementSatisfied(projectAchievement)) {
+            if (
+              !this.isStudentAchievementExists(projectAchievement.id) &&
+              this.isProjectAchievementSatisfied(projectAchievement)
+            ) {
               this.createStudentAchievement(projectAchievement);
             }
           }
@@ -121,16 +125,18 @@ class AchievementService {
       for (let achievementIndex = 0; achievementIndex < achievements.length; achievementIndex++) {
         let achievement = achievements[achievementIndex];
 
-        if (achievement.achievementId != null &&
-            achievement.achievementId === studentAchievement.achievementId &&
-            achievement.workgroupId != null &&
-            achievement.workgroupId === studentAchievement.workgroupId) {
+        if (
+          achievement.achievementId != null &&
+          achievement.achievementId === studentAchievement.achievementId &&
+          achievement.workgroupId != null &&
+          achievement.workgroupId === studentAchievement.workgroupId
+        ) {
           /*
            * the achievement 10 character alphanumeric id matches and
            * the workgroup id matches so we will update it
            */
           achievements[achievementIndex] = studentAchievement;
-          found = true;  // remember this so we don't insert later.
+          found = true; // remember this so we don't insert later.
           break;
         }
       }
@@ -153,7 +159,7 @@ class AchievementService {
       return deferred.promise;
     } else {
       const config = {
-        method: "POST",
+        method: 'POST',
         url: this.ConfigService.getAchievementsURL(),
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
@@ -175,7 +181,7 @@ class AchievementService {
 
       config.data = $.param(params);
 
-      return this.$http(config).then((result) => {
+      return this.$http(config).then(result => {
         let achievement = result.data;
         if (achievement.data != null) {
           achievement.data = angular.fromJson(achievement.data);
@@ -220,8 +226,11 @@ class AchievementService {
 
   createListenerFunction(projectAchievement) {
     let deregisterListenerFunction = null;
-    if (projectAchievement.type === 'milestone' || projectAchievement.type === 'milestoneReport' ||
-      projectAchievement.type === 'completion') {
+    if (
+      projectAchievement.type === 'milestone' ||
+      projectAchievement.type === 'milestoneReport' ||
+      projectAchievement.type === 'completion'
+    ) {
       deregisterListenerFunction = this.createStudentWorkSavedListener(projectAchievement);
     } else if (projectAchievement.type === 'aggregate') {
       deregisterListenerFunction = this.createAggregateAchievementListener(projectAchievement);
@@ -272,7 +281,12 @@ class AchievementService {
     }
 
     const workgroupId = this.ConfigService.getWorkgroupId();
-    const newAchievement = this.createNewStudentAchievement(achievement.type, achievement.id, data, workgroupId);
+    const newAchievement = this.createNewStudentAchievement(
+      achievement.type,
+      achievement.id,
+      data,
+      workgroupId
+    );
     const achievements = this.getStudentAchievementsByWorkgroupId(workgroupId);
     achievements.push(newAchievement);
     this.saveAchievementToServer(newAchievement);
@@ -286,14 +300,22 @@ class AchievementService {
    */
   createStudentWorkSavedListener(projectAchievement) {
     this.debugOutput('registering ' + projectAchievement.id);
-    const deregisterListenerFunction = this.$rootScope.$on('studentWorkSavedToServer', (event, args) => {
-      this.debugOutput('createStudentWorkSavedListener checking ' + projectAchievement.id + ' completed ' + args.nodeId);
-      if (!this.isStudentAchievementExists(projectAchievement.id)) {
-        if (this.isAchievementCompletedByStudent(projectAchievement)) {
-          this.createStudentAchievement(projectAchievement);
+    const deregisterListenerFunction = this.$rootScope.$on(
+      'studentWorkSavedToServer',
+      (event, args) => {
+        this.debugOutput(
+          'createStudentWorkSavedListener checking ' +
+            projectAchievement.id +
+            ' completed ' +
+            args.nodeId
+        );
+        if (!this.isStudentAchievementExists(projectAchievement.id)) {
+          if (this.isAchievementCompletedByStudent(projectAchievement)) {
+            this.createStudentAchievement(projectAchievement);
+          }
         }
       }
-    });
+    );
     return deregisterListenerFunction;
   }
 
@@ -305,9 +327,11 @@ class AchievementService {
   isProjectAchievementSatisfied(projectAchievement) {
     let completed = false;
     if (projectAchievement != null) {
-      if (projectAchievement.type === 'milestone' ||
-          projectAchievement.type === 'milestoneReport' ||
-          projectAchievement.type === 'completion') {
+      if (
+        projectAchievement.type === 'milestone' ||
+        projectAchievement.type === 'milestoneReport' ||
+        projectAchievement.type === 'completion'
+      ) {
         completed = this.isAchievementCompletedByStudent(projectAchievement);
       } else if (projectAchievement.type === 'aggregate') {
         completed = this.checkAggregateAchievement(projectAchievement);
@@ -331,7 +355,10 @@ class AchievementService {
 
   isCriterionSatisfied(satisfyCriterion) {
     if (satisfyCriterion.name === 'isCompleted') {
-      return this.StudentDataService.isCompleted(satisfyCriterion.nodeId, satisfyCriterion.componentId);
+      return this.StudentDataService.isCompleted(
+        satisfyCriterion.nodeId,
+        satisfyCriterion.componentId
+      );
     }
     return false;
   }
@@ -345,31 +372,39 @@ class AchievementService {
     const thisAchievementService = this;
     const thisAchievement = projectAchievement;
     this.debugOutput('registering ' + projectAchievement.id);
-    const deregisterListenerFunction = this.$rootScope.$on('achievementCompleted', (event, args) => {
-      /*
-       * the achievementCompleted event was fired so we will check if this
-       * achievement has been completed
-       */
-      const projectAchievement = thisAchievement;
-      if (projectAchievement != null) {
-        this.debugOutput('createAggregateAchievementListener checking ' + projectAchievement.id + ' completed ' + args.achievementId);
+    const deregisterListenerFunction = this.$rootScope.$on(
+      'achievementCompleted',
+      (event, args) => {
+        /*
+         * the achievementCompleted event was fired so we will check if this
+         * achievement has been completed
+         */
+        const projectAchievement = thisAchievement;
+        if (projectAchievement != null) {
+          this.debugOutput(
+            'createAggregateAchievementListener checking ' +
+              projectAchievement.id +
+              ' completed ' +
+              args.achievementId
+          );
 
-        const id = projectAchievement.id;
-        const achievementId = args.achievementId;
+          const id = projectAchievement.id;
+          const achievementId = args.achievementId;
 
-        if (!this.isStudentAchievementExists(id)) {
-          /*
-           * the student has not completed this achievement before
-           * so we will now check if they have completed it
-           */
+          if (!this.isStudentAchievementExists(id)) {
+            /*
+             * the student has not completed this achievement before
+             * so we will now check if they have completed it
+             */
 
-          const completed = this.checkAggregateAchievement(projectAchievement);
-          if (completed) {
-            thisAchievementService.createStudentAchievement(projectAchievement);
+            const completed = this.checkAggregateAchievement(projectAchievement);
+            if (completed) {
+              thisAchievementService.createStudentAchievement(projectAchievement);
+            }
           }
         }
       }
-    });
+    );
     return deregisterListenerFunction;
   }
 
@@ -454,8 +489,9 @@ class AchievementService {
     const projectAchievements = this.ProjectService.getAchievementItems();
     for (let projectAchievement of projectAchievements) {
       if (projectAchievement != null) {
-        const studentAchievements =
-          this.getStudentAchievementsByAchievementId(projectAchievement.id);
+        const studentAchievements = this.getStudentAchievementsByAchievementId(
+          projectAchievement.id
+        );
         achievementIdToAchievements[projectAchievement.id] = studentAchievements;
       }
     }

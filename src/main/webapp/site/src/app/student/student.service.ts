@@ -1,16 +1,15 @@
 import { Injectable } from '@angular/core';
-import { Observable ,  Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { tap } from 'rxjs/operators';
 
 import { RunInfo } from './run-info';
-import { Student } from "../domain/student";
+import { Student } from '../domain/student';
 import { StudentRun } from './student-run';
-import {Run} from '../domain/run';
+import { Run } from '../domain/run';
 
 @Injectable()
 export class StudentService {
-
   private runsUrl = 'api/student/runs';
   private runInfoUrl = 'api/student/run/info';
   private runInfoByIdUrl = 'api/student/run/info-by-id';
@@ -29,23 +28,22 @@ export class StudentService {
   private newRunSource = new Subject<StudentRun>();
   newRunSource$ = this.newRunSource.asObservable();
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getRuns(): Observable<StudentRun[]> {
     const headers = new HttpHeaders({ 'Cache-Control': 'no-cache' });
-    return this.http.get<StudentRun[]>(this.runsUrl, { headers: headers })
-      .pipe(
-        tap(runs => this.log(`fetched runs`))
-      );
+    return this.http
+      .get<StudentRun[]>(this.runsUrl, { headers: headers })
+      .pipe(tap(runs => this.log(`fetched runs`)));
   }
 
   getRunInfo(runCode: string): Observable<RunInfo> {
-    let params = new HttpParams().set("runCode", runCode);
+    let params = new HttpParams().set('runCode', runCode);
     return this.http.get<RunInfo>(this.runInfoUrl, { params: params });
   }
 
   getRunInfoById(runId: number): Observable<RunInfo> {
-    let params = new HttpParams().set("runId", String(runId));
+    let params = new HttpParams().set('runId', String(runId));
     return this.http.get<RunInfo>(this.runInfoByIdUrl, { params });
   }
 
@@ -57,8 +55,7 @@ export class StudentService {
     return this.http.post<StudentRun>(this.addRunUrl, body, { headers: headers });
   }
 
-  launchRun(runId: number, workgroupId: number, presentUserIds: number[],
-      absentUserIds: number[]) {
+  launchRun(runId: number, workgroupId: number, presentUserIds: number[], absentUserIds: number[]) {
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
     let body = new HttpParams();
     body = body.set('runId', String(runId));
@@ -82,9 +79,8 @@ export class StudentService {
     const headers = {
       'Content-Type': 'application/json'
     };
-    this.http.post(this.registerUrl,
-      studentUser,
-      { headers: headers, responseType: "text" })
+    this.http
+      .post(this.registerUrl, studentUser, { headers: headers, responseType: 'text' })
       .subscribe(response => {
         const username = response;
         callback(username);

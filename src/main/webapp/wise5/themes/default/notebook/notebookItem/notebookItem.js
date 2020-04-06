@@ -1,17 +1,19 @@
 'use strict';
 
 class NotebookItemController {
-  constructor($injector,
-              $mdDialog,
-              $rootScope,
-              $scope,
-              $filter,
-              ConfigService,
-              NotebookService,
-              ProjectService,
-              StudentAssetService,
-              StudentDataService,
-              UtilService) {
+  constructor(
+    $injector,
+    $mdDialog,
+    $rootScope,
+    $scope,
+    $filter,
+    ConfigService,
+    NotebookService,
+    ProjectService,
+    StudentAssetService,
+    StudentDataService,
+    UtilService
+  ) {
     this.$injector = $injector;
     this.$mdDialog = $mdDialog;
     this.$rootScope = $rootScope;
@@ -78,60 +80,70 @@ class NotebookItemController {
 
   doDelete(ev) {
     ev.stopPropagation();
-    const confirm = this.$mdDialog.confirm()
+    const confirm = this.$mdDialog
+      .confirm()
       .title(this.$translate('deleteNoteConfirmMessage'))
       .ariaLabel('delete note confirmation')
       .targetEvent(ev)
       .ok(this.$translate('delete'))
       .cancel(this.$translate('cancel'));
-    this.$mdDialog.show(confirm).then(() => {
-      this.NotebookService.deleteNote(this.item);
-    }, () => {
-      // they chose not to delete. Do nothing, the dialog will close.
-    });
+    this.$mdDialog.show(confirm).then(
+      () => {
+        this.NotebookService.deleteNote(this.item);
+      },
+      () => {
+        // they chose not to delete. Do nothing, the dialog will close.
+      }
+    );
   }
 
   doRevive(ev) {
     ev.stopPropagation();
-    const confirm = this.$mdDialog.confirm()
+    const confirm = this.$mdDialog
+      .confirm()
       .title(this.$translate('reviveNoteConfirmMessage'))
       .ariaLabel('revive note confirmation')
       .targetEvent(ev)
       .ok(this.$translate('revive'))
       .cancel(this.$translate('cancel'));
-    this.$mdDialog.show(confirm).then(() => {
-      this.NotebookService.reviveNote(this.item);
-    }, () => {
-      // they chose not to delete. Do nothing, the dialog will close.
-    });
+    this.$mdDialog.show(confirm).then(
+      () => {
+        this.NotebookService.reviveNote(this.item);
+      },
+      () => {
+        // they chose not to delete. Do nothing, the dialog will close.
+      }
+    );
   }
 
   doSelect(ev) {
     if (this.onSelect) {
-      this.onSelect({$ev: ev, note: this.item});
+      this.onSelect({ $ev: ev, note: this.item });
     }
   }
 
   canShareNotebookItem() {
-    return this.ProjectService.isSpaceExists('public') &&
-        this.isMyNotebookItem() &&
-        this.item.serverDeleteTime == null &&
-        !this.isChooseMode &&
-        !this.isItemInGroup('public');
+    return (
+      this.ProjectService.isSpaceExists('public') &&
+      this.isMyNotebookItem() &&
+      this.item.serverDeleteTime == null &&
+      !this.isChooseMode &&
+      !this.isItemInGroup('public')
+    );
   }
 
   canUnshareNotebookItem() {
-    return this.ProjectService.isSpaceExists('public') &&
-        this.isMyNotebookItem() &&
-        this.item.serverDeleteTime == null &&
-        !this.isChooseMode &&
-        this.isItemInGroup('public');
+    return (
+      this.ProjectService.isSpaceExists('public') &&
+      this.isMyNotebookItem() &&
+      this.item.serverDeleteTime == null &&
+      !this.isChooseMode &&
+      this.isItemInGroup('public')
+    );
   }
 
   canDeleteNotebookItem() {
-    return this.isMyNotebookItem() &&
-        this.item.serverDeleteTime == null &&
-        !this.isChooseMode;
+    return this.isMyNotebookItem() && this.item.serverDeleteTime == null && !this.isChooseMode;
   }
 
   canReviveNotebookItem() {
@@ -168,8 +180,7 @@ const NotebookItem = {
     workgroupId: '<',
     onSelect: '&'
   },
-  template:
-    `<md-card class="notebook-item"
+  template: `<md-card class="notebook-item"
                   ng-mouseenter="focus=true;"
                   ng-mouseleave="focus=false;"
                   ng-class="{'md-whiteframe-5dp': focus}"

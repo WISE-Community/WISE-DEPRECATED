@@ -20,10 +20,8 @@ class HTMLService extends ComponentService {
     var result = false;
 
     if (nodeEvents != null) {
-
       // loop through all the events
       for (var e = 0; e < nodeEvents.length; e++) {
-
         // get an event
         var event = nodeEvents[e];
 
@@ -50,10 +48,6 @@ class HTMLService extends ComponentService {
   }
 }
 
-HTMLService.$inject = [
-  '$filter',
-  'StudentDataService',
-  'UtilService'
-];
+HTMLService.$inject = ['$filter', 'StudentDataService', 'UtilService'];
 
 export default HTMLService;

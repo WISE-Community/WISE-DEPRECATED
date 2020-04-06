@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 class NodeIconController {
   constructor(ProjectService) {
@@ -7,9 +7,9 @@ class NodeIconController {
     this.$onInit = () => {
       this.isGroup = this.ProjectService.isGroupNode(this.nodeId);
       if (this.size) {
-        this.sizeClass = `md-${ this.size }`;
+        this.sizeClass = `md-${this.size}`;
       }
-    }
+    };
   }
 
   isFont() {
@@ -21,9 +21,7 @@ class NodeIconController {
   }
 }
 
-NodeIconController.$inject = [
-  'ProjectService'
-];
+NodeIconController.$inject = ['ProjectService'];
 
 const NodeIcon = {
   bindings: {
@@ -33,8 +31,7 @@ const NodeIcon = {
     size: '<'
   },
   controller: NodeIconController,
-  template:
-    `<img ng-if="$ctrl.isImage()" class="{{ $ctrl.isGroup ? 'avatar--square ' : '' }}{{ $ctrl.customClass }} {{ $ctrl.sizeClass }} avatar" ng-src="{{ $ctrl.icon.imgSrc }}" alt="{{ $ctrl.icon.imgAlt }}" />
+  template: `<img ng-if="$ctrl.isImage()" class="{{ $ctrl.isGroup ? 'avatar--square ' : '' }}{{ $ctrl.customClass }} {{ $ctrl.sizeClass }} avatar" ng-src="{{ $ctrl.icon.imgSrc }}" alt="{{ $ctrl.icon.imgAlt }}" />
       <div ng-if="$ctrl.isFont()" style="background-color: {{ $ctrl.icon.color }};" class="{{ $ctrl.isGroup ? 'avatar--square ' : '' }}{{ $ctrl.customClass }} {{ $ctrl.sizeClass }} avatar avatar--icon">
         <md-icon class="{{ $ctrl.sizeClass }} {{ $ctrl.icon.fontSet }} md-light node-icon">{{ $ctrl.icon.fontName }}</md-icon>
       </div>`

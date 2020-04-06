@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { TeacherProjectLibraryComponent } from './teacher-project-library.component';
-import { MatMenuModule, MatDialog } from "@angular/material";
+import { MatMenuModule, MatDialog } from '@angular/material';
 import { NO_ERRORS_SCHEMA, TRANSLATIONS_FORMAT, TRANSLATIONS, LOCALE_ID } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { LibraryService } from '../../../services/library.service';
@@ -13,14 +13,14 @@ export function fakeAsyncResponse<T>(data: T) {
 }
 
 export class MockLibraryService {
-  numberOfOfficialProjectsVisible$ = fakeAsyncResponse(0)
+  numberOfOfficialProjectsVisible$ = fakeAsyncResponse(0);
   numberOfCommunityProjectsVisible$ = fakeAsyncResponse(0);
   numberOfPersonalProjectsVisible$ = fakeAsyncResponse(0);
   newProjectSource$ = fakeAsyncResponse(0);
-  getOfficialLibraryProjects(){}
-  getCommunityLibraryProjects(){}
-  getPersonalLibraryProjects(){}
-  getSharedLibraryProjects(){}
+  getOfficialLibraryProjects() {}
+  getCommunityLibraryProjects() {}
+  getPersonalLibraryProjects() {}
+  getSharedLibraryProjects() {}
 }
 
 describe('TeacherProjectLibraryComponent', () => {
@@ -29,12 +29,12 @@ describe('TeacherProjectLibraryComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ MatMenuModule, RouterTestingModule ],
-      declarations: [ TeacherProjectLibraryComponent ],
+      imports: [MatMenuModule, RouterTestingModule],
+      declarations: [TeacherProjectLibraryComponent],
       providers: [
         { provide: MatDialog },
         { provide: LibraryService, useClass: MockLibraryService },
-        { provide: TRANSLATIONS_FORMAT, useValue: "xlf" },
+        { provide: TRANSLATIONS_FORMAT, useValue: 'xlf' },
         {
           provide: TRANSLATIONS,
           useFactory: translationsFactory,
@@ -42,9 +42,8 @@ describe('TeacherProjectLibraryComponent', () => {
         },
         I18n
       ],
-      schemas: [ NO_ERRORS_SCHEMA ]
-    })
-    .compileComponents();
+      schemas: [NO_ERRORS_SCHEMA]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

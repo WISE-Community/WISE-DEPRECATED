@@ -7,7 +7,7 @@ export default class MultipleChoicePage {
     this.nextButton = element(by.id('nextButton'));
     this.prevButton = element(by.id('prevButton'));
     this.radioGroup = element(by.model('multipleChoiceController.studentChoices'));
-    this.nodeDropDownMenu = element(by.model("stepToolsCtrl.toNodeId"));
+    this.nodeDropDownMenu = element(by.model('stepToolsCtrl.toNodeId'));
   }
 
   getPrompt() {

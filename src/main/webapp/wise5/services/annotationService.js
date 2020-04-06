@@ -1,14 +1,7 @@
 'use strict';
 
 class AnnotationService {
-  constructor(
-      $filter,
-      $http,
-      $q,
-      $rootScope,
-      ConfigService,
-      ProjectService,
-      UtilService) {
+  constructor($filter, $http, $q, $rootScope, ConfigService, ProjectService, UtilService) {
     this.$filter = $filter;
     this.$http = $http;
     this.$q = $q;
@@ -105,7 +98,7 @@ class AnnotationService {
       }
     }
     return annotation;
-  };
+  }
 
   /**
    * Create an annotation object
@@ -122,9 +115,21 @@ class AnnotationService {
    * @param clientSaveTime the client save time
    * @returns an annotation object
    */
-  createAnnotation(annotationId, runId, periodId, fromWorkgroupId,
-      toWorkgroupId, nodeId, componentId, studentWorkId, localNotebookItemId,
-      notebookItemId, annotationType, data, clientSaveTime) {
+  createAnnotation(
+    annotationId,
+    runId,
+    periodId,
+    fromWorkgroupId,
+    toWorkgroupId,
+    nodeId,
+    componentId,
+    studentWorkId,
+    localNotebookItemId,
+    notebookItemId,
+    annotationType,
+    data,
+    clientSaveTime
+  ) {
     const annotation = {};
     annotation.id = annotationId;
     annotation.runId = runId;
@@ -140,7 +145,7 @@ class AnnotationService {
     annotation.data = data;
     annotation.clientSaveTime = clientSaveTime;
     return annotation;
-  };
+  }
 
   /**
    * Save the annotation to the server
@@ -180,26 +185,27 @@ class AnnotationService {
         };
 
         let httpParams = {
-          method: "POST",
+          method: 'POST',
           url: this.ConfigService.getConfigParam('teacherDataURL'),
-          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
           data: $.param(params)
         };
 
-        return this.$http(httpParams).then(angular.bind(this, function(result) {
+        return this.$http(httpParams).then(
+          angular.bind(this, function(result) {
+            let localAnnotation = null;
 
-          let localAnnotation = null;
+            if (result != null && result.data != null) {
+              let savedAnnotationDataResponse = result.data;
+              localAnnotation = this.saveToServerSuccess(savedAnnotationDataResponse);
+            }
 
-          if (result != null && result.data != null) {
-            let savedAnnotationDataResponse = result.data;
-            localAnnotation = this.saveToServerSuccess(savedAnnotationDataResponse);
-          }
-
-          return localAnnotation;
-        }));
+            return localAnnotation;
+          })
+        );
       }
     }
-  };
+  }
 
   saveToServerSuccess(savedAnnotationDataResponse) {
     let localAnnotation = null;
@@ -211,18 +217,19 @@ class AnnotationService {
           for (let y = localAnnotations.length - 1; y >= 0; y--) {
             localAnnotation = localAnnotations[y];
 
-            if (localAnnotation.id != null &&
-              localAnnotation.id === savedAnnotation.id) {
-
+            if (localAnnotation.id != null && localAnnotation.id === savedAnnotation.id) {
               // we have found the matching local annotation so we will update it
               localAnnotation.serverSaveTime = savedAnnotation.serverSaveTime;
               //localAnnotation.requestToken = null; // requestToken is no longer needed.
 
-              this.$rootScope.$broadcast('annotationSavedToServer', {annotation: localAnnotation});
+              this.$rootScope.$broadcast('annotationSavedToServer', {
+                annotation: localAnnotation
+              });
               break;
-            } else if (localAnnotation.requestToken != null &&
-              localAnnotation.requestToken === savedAnnotation.requestToken) {
-
+            } else if (
+              localAnnotation.requestToken != null &&
+              localAnnotation.requestToken === savedAnnotation.requestToken
+            ) {
               // we have found the matching local annotation so we will update it
               localAnnotation.id = savedAnnotation.id;
               localAnnotation.serverSaveTime = savedAnnotation.serverSaveTime;
@@ -241,7 +248,9 @@ class AnnotationService {
                 this.dummyAnnotationId++;
               }
 
-              this.$rootScope.$broadcast('annotationSavedToServer', {annotation: localAnnotation});
+              this.$rootScope.$broadcast('annotationSavedToServer', {
+                annotation: localAnnotation
+              });
               break;
             }
           }
@@ -268,7 +277,8 @@ class AnnotationService {
   }
 
   isAnnotationMatch(annotation1, annotation2) {
-    return annotation1.id === annotation2.id &&
+    return (
+      annotation1.id === annotation2.id &&
       annotation1.nodeId === annotation2.nodeId &&
       annotation1.componentId === annotation2.componentId &&
       annotation1.fromWorkgroupId === annotation2.fromWorkgroupId &&
@@ -276,7 +286,8 @@ class AnnotationService {
       annotation1.type === annotation2.type &&
       annotation1.studentWorkId === annotation2.studentWorkId &&
       annotation1.runId === annotation2.runId &&
-      annotation1.periodId === annotation2.periodId;
+      annotation1.periodId === annotation2.periodId
+    );
   }
 
   /**
@@ -285,7 +296,7 @@ class AnnotationService {
    */
   setAnnotations(annotations) {
     this.annotations = annotations;
-  };
+  }
 
   /**
    * Get the total score for a workgroup
@@ -300,7 +311,7 @@ class AnnotationService {
       for (let a = annotations.length - 1; a >= 0; a--) {
         const annotation = annotations[a];
         if (annotation != null && annotation.toWorkgroupId == workgroupId) {
-          if (annotation.type === 'score' || annotation.type === "autoScore") {
+          if (annotation.type === 'score' || annotation.type === 'autoScore') {
             const nodeId = annotation.nodeId;
             const componentId = annotation.componentId;
             const data = annotation.data;
@@ -404,8 +415,7 @@ class AnnotationService {
    * @param data the annotation data
    * @returns the auto score annotation
    */
-  createAutoScoreAnnotation(runId, periodId, nodeId, componentId,
-      toWorkgroupId, data) {
+  createAutoScoreAnnotation(runId, periodId, nodeId, componentId, toWorkgroupId, data) {
     const annotationId = null;
     const fromWorkgroupId = null;
     const studentWorkId = null;
@@ -414,9 +424,19 @@ class AnnotationService {
     const annotationType = 'autoScore';
     const clientSaveTime = Date.parse(new Date());
     const annotation = this.createAnnotation(
-      annotationId, runId, periodId, fromWorkgroupId, toWorkgroupId,
-      nodeId, componentId, studentWorkId, localNotebookItemId, notebookItemId,
-      annotationType, data, clientSaveTime
+      annotationId,
+      runId,
+      periodId,
+      fromWorkgroupId,
+      toWorkgroupId,
+      nodeId,
+      componentId,
+      studentWorkId,
+      localNotebookItemId,
+      notebookItemId,
+      annotationType,
+      data,
+      clientSaveTime
     );
     return annotation;
   }
@@ -431,8 +451,7 @@ class AnnotationService {
    * @param data the annotation data
    * @returns the auto comment annotation
    */
-  createAutoCommentAnnotation(runId, periodId, nodeId, componentId,
-      toWorkgroupId, data) {
+  createAutoCommentAnnotation(runId, periodId, nodeId, componentId, toWorkgroupId, data) {
     const annotationId = null;
     const fromWorkgroupId = null;
     const studentWorkId = null;
@@ -440,10 +459,21 @@ class AnnotationService {
     const notebookItemId = null;
     const annotationType = 'autoComment';
     const clientSaveTime = Date.parse(new Date());
-    const annotation = this.createAnnotation(annotationId, runId, periodId,
-        fromWorkgroupId, toWorkgroupId, nodeId, componentId, studentWorkId,
-        localNotebookItemId, notebookItemId, annotationType, data,
-        clientSaveTime);
+    const annotation = this.createAnnotation(
+      annotationId,
+      runId,
+      periodId,
+      fromWorkgroupId,
+      toWorkgroupId,
+      nodeId,
+      componentId,
+      studentWorkId,
+      localNotebookItemId,
+      notebookItemId,
+      annotationType,
+      data,
+      clientSaveTime
+    );
     return annotation;
   }
 
@@ -459,17 +489,36 @@ class AnnotationService {
    * @param data the annotation data
    * @returns the inappropriate flag annotation
    */
-  createInappropriateFlagAnnotation(runId, periodId, nodeId, componentId,
-      fromWorkgroupId, toWorkgroupId, studentWorkId, data) {
+  createInappropriateFlagAnnotation(
+    runId,
+    periodId,
+    nodeId,
+    componentId,
+    fromWorkgroupId,
+    toWorkgroupId,
+    studentWorkId,
+    data
+  ) {
     const annotationId = null;
     const localNotebookItemId = null;
     const notebookItemId = null;
     const annotationType = 'inappropriateFlag';
     const clientSaveTime = Date.parse(new Date());
-    const annotation = this.createAnnotation(annotationId, runId, periodId,
-        fromWorkgroupId, toWorkgroupId, nodeId, componentId, studentWorkId,
-        localNotebookItemId, notebookItemId, annotationType, data,
-        clientSaveTime);
+    const annotation = this.createAnnotation(
+      annotationId,
+      runId,
+      periodId,
+      fromWorkgroupId,
+      toWorkgroupId,
+      nodeId,
+      componentId,
+      studentWorkId,
+      localNotebookItemId,
+      notebookItemId,
+      annotationType,
+      data,
+      clientSaveTime
+    );
     return annotation;
   }
 
@@ -490,18 +539,25 @@ class AnnotationService {
    * 'any' for auto graded comment or teacher graded comment
    * @return object containing the component's latest score and comment annotations
    */
-  getLatestComponentAnnotations(nodeId, componentId, workgroupId, scoreType,
-      commentType) {
-    let latestScoreAnnotation = this.getLatestScoreAnnotation(nodeId,
-        componentId, workgroupId, scoreType);
-    let latestCommentAnnotation = this.getLatestCommentAnnotation(nodeId,
-        componentId, workgroupId, commentType);
+  getLatestComponentAnnotations(nodeId, componentId, workgroupId, scoreType, commentType) {
+    let latestScoreAnnotation = this.getLatestScoreAnnotation(
+      nodeId,
+      componentId,
+      workgroupId,
+      scoreType
+    );
+    let latestCommentAnnotation = this.getLatestCommentAnnotation(
+      nodeId,
+      componentId,
+      workgroupId,
+      commentType
+    );
 
     return {
-      'score': latestScoreAnnotation,
-      'comment': latestCommentAnnotation
+      score: latestScoreAnnotation,
+      comment: latestCommentAnnotation
     };
-  };
+  }
 
   /**
    * Get the latest annotations for a given notebook item (as an object)
@@ -511,14 +567,20 @@ class AnnotationService {
   getLatestNotebookItemAnnotations(workgroupId, localNotebookItemId) {
     let latestScoreAnnotation = null;
     let latestCommentAnnotation = null;
-    latestScoreAnnotation = this.getLatestNotebookItemScoreAnnotation(workgroupId, localNotebookItemId);
-    latestCommentAnnotation = this.getLatestNotebookItemCommentAnnotation(workgroupId, localNotebookItemId);
+    latestScoreAnnotation = this.getLatestNotebookItemScoreAnnotation(
+      workgroupId,
+      localNotebookItemId
+    );
+    latestCommentAnnotation = this.getLatestNotebookItemCommentAnnotation(
+      workgroupId,
+      localNotebookItemId
+    );
 
     return {
-      'score': latestScoreAnnotation,
-      'comment': latestCommentAnnotation
+      score: latestScoreAnnotation,
+      comment: latestCommentAnnotation
     };
-  };
+  }
 
   /**
    * Get the latest score annotation for this workgroup and localNotebookItemId, or null if not found
@@ -529,9 +591,12 @@ class AnnotationService {
     let annotations = this.getAnnotations();
     for (let a = annotations.length - 1; a >= 0; a--) {
       let annotation = annotations[a];
-      if (annotation != null && annotation.type === "score" &&
-          annotation.notebookItemId != null &&
-          annotation.localNotebookItemId === localNotebookItemId) {
+      if (
+        annotation != null &&
+        annotation.type === 'score' &&
+        annotation.notebookItemId != null &&
+        annotation.localNotebookItemId === localNotebookItemId
+      ) {
         return annotation;
       }
     }
@@ -547,15 +612,17 @@ class AnnotationService {
     let annotations = this.getAnnotations();
     for (let a = annotations.length - 1; a >= 0; a--) {
       let annotation = annotations[a];
-      if (annotation != null && annotation.type === "comment" &&
-          annotation.notebookItemId != null &&
-          annotation.localNotebookItemId === localNotebookItemId) {
+      if (
+        annotation != null &&
+        annotation.type === 'comment' &&
+        annotation.notebookItemId != null &&
+        annotation.localNotebookItemId === localNotebookItemId
+      ) {
         return annotation;
       }
     }
     return null;
   }
-
 
   /**
    * Get the latest score annotation
@@ -586,9 +653,15 @@ class AnnotationService {
         const tempToWorkgroupId = tempAnnotation.toWorkgroupId;
         const tempAnnotationType = tempAnnotation.type;
 
-        if (nodeId == tempNodeId && componentId == tempComponentId &&
-            workgroupId == tempToWorkgroupId) {
-          if (scoreType === 'any' && (tempAnnotationType === 'autoScore' || tempAnnotationType === 'score')) {
+        if (
+          nodeId == tempNodeId &&
+          componentId == tempComponentId &&
+          workgroupId == tempToWorkgroupId
+        ) {
+          if (
+            scoreType === 'any' &&
+            (tempAnnotationType === 'autoScore' || tempAnnotationType === 'score')
+          ) {
             acceptAnnotation = true;
           } else if (scoreType === 'autoScore' && tempAnnotationType === 'autoScore') {
             acceptAnnotation = true;
@@ -609,9 +682,12 @@ class AnnotationService {
   isThereAnyScoreAnnotation(nodeId, componentId, periodId) {
     const annotations = this.getAnnotations();
     for (const annotation of annotations) {
-      if (annotation.nodeId === nodeId && annotation.componentId === componentId &&
-          (this.UtilService.isMatchingPeriods(annotation.periodId, periodId)) &&
-          (annotation.type === 'score' || annotation.type === 'autoScore')) {
+      if (
+        annotation.nodeId === nodeId &&
+        annotation.componentId === componentId &&
+        this.UtilService.isMatchingPeriods(annotation.periodId, periodId) &&
+        (annotation.type === 'score' || annotation.type === 'autoScore')
+      ) {
         return true;
       }
     }
@@ -647,9 +723,15 @@ class AnnotationService {
         const tempToWorkgroupId = tempAnnotation.toWorkgroupId;
         const tempAnnotationType = tempAnnotation.type;
 
-        if (nodeId == tempNodeId && componentId == tempComponentId &&
-            workgroupId == tempToWorkgroupId) {
-          if (commentType === 'any' && (tempAnnotationType === 'autoComment' || tempAnnotationType === 'comment')) {
+        if (
+          nodeId == tempNodeId &&
+          componentId == tempComponentId &&
+          workgroupId == tempToWorkgroupId
+        ) {
+          if (
+            commentType === 'any' &&
+            (tempAnnotationType === 'autoComment' || tempAnnotationType === 'comment')
+          ) {
             acceptAnnotation = true;
           } else if (commentType === 'autoComment' && tempAnnotationType === 'autoComment') {
             acceptAnnotation = true;
@@ -689,11 +771,11 @@ class AnnotationService {
    */
   getAllGlobalAnnotationsByNodeIdAndComponentId(nodeId, componentId) {
     let allGlobalAnnotations = this.getAllGlobalAnnotations();
-    let globalAnnotationsByNodeIdAndComponentId = allGlobalAnnotations.filter((globalAnnotation) => {
+    let globalAnnotationsByNodeIdAndComponentId = allGlobalAnnotations.filter(globalAnnotation => {
       return globalAnnotation.nodeId === nodeId && globalAnnotation.componentId === componentId;
     });
     return globalAnnotationsByNodeIdAndComponentId;
-  };
+  }
 
   /**
    * Get all global annotations that are active and inactive
@@ -709,7 +791,7 @@ class AnnotationService {
       }
     }
     return globalAnnotations;
-  };
+  }
 
   /**
    * Get all global annotations that are active and inactive and groups them by annotation group name
@@ -721,10 +803,16 @@ class AnnotationService {
       if (annotation != null && annotation.data != null) {
         if (annotation.data.isGlobal) {
           // check if this global annotation can be grouped (has the same annotationGroupName as another that we've seen before)
-          if (annotation.data.annotationGroupName != null && annotation.data.annotationGroupCreatedTime != null) {
+          if (
+            annotation.data.annotationGroupName != null &&
+            annotation.data.annotationGroupCreatedTime != null
+          ) {
             let sameGroupFound = false;
             for (let globalAnnotationGroup of globalAnnotationGroups) {
-              if (globalAnnotationGroup.annotationGroupNameAndTime == (annotation.data.annotationGroupName + annotation.data.annotationGroupCreatedTime)) {
+              if (
+                globalAnnotationGroup.annotationGroupNameAndTime ==
+                annotation.data.annotationGroupName + annotation.data.annotationGroupCreatedTime
+              ) {
                 // push this annotation to the end of the group
                 globalAnnotationGroup.annotations.push(annotation);
                 sameGroupFound = true;
@@ -732,8 +820,9 @@ class AnnotationService {
             }
             if (!sameGroupFound) {
               let annotationGroup = {
-                "annotationGroupNameAndTime": (annotation.data.annotationGroupName + annotation.data.annotationGroupCreatedTime),
-                "annotations": [annotation]
+                annotationGroupNameAndTime:
+                  annotation.data.annotationGroupName + annotation.data.annotationGroupCreatedTime,
+                annotations: [annotation]
               };
               globalAnnotationGroups.push(annotationGroup);
             }
@@ -745,34 +834,34 @@ class AnnotationService {
       }
     }
     return globalAnnotationGroups;
-  };
+  }
 
   /**
    * Get all global annotations that are active
    * @returns all global annotations that are active, in a group
    * [
    * {
-     *   annotationGroupName:"score1",
-     *   annotations:[
-     *   {
-     *     type:autoScore,
-     *     value:1
-     *   },
-     *   {
-     *     type:autoComment,
-     *     value:"you received a score of 1."
-     *   }
-     *   ]
-     * },
+   *   annotationGroupName:"score1",
+   *   annotations:[
+   *   {
+   *     type:autoScore,
+   *     value:1
+   *   },
+   *   {
+   *     type:autoComment,
+   *     value:"you received a score of 1."
+   *   }
+   *   ]
+   * },
    * {
-     *   annotationGroupName:"score2",
-     *   annotations:[...]
-     * }
+   *   annotationGroupName:"score2",
+   *   annotations:[...]
+   * }
    * ]
    */
   getActiveGlobalAnnotationGroups() {
     return this.activeGlobalAnnotationGroups;
-  };
+  }
 
   /**
    * Calculates the active global annotations and groups them by annotation group name
@@ -787,7 +876,12 @@ class AnnotationService {
           if (annotation.data.annotationGroupName != null) {
             let sameGroupFound = false;
             for (let activeGlobalAnnotationGroup of this.activeGlobalAnnotationGroups) {
-              if (activeGlobalAnnotationGroup.annotationGroupName == (annotation.data.annotationGroupName + '_' + annotation.data.annotationGroupCreatedTime)) {
+              if (
+                activeGlobalAnnotationGroup.annotationGroupName ==
+                annotation.data.annotationGroupName +
+                  '_' +
+                  annotation.data.annotationGroupCreatedTime
+              ) {
                 // push this annotation to the end of the group
                 activeGlobalAnnotationGroup.annotations.push(annotation);
                 sameGroupFound = true;
@@ -795,11 +889,14 @@ class AnnotationService {
             }
             if (!sameGroupFound) {
               let annotationGroup = {
-                "annotationGroupName": annotation.data.annotationGroupName + '_' + annotation.data.annotationGroupCreatedTime,
-                "annotations": [annotation],
-                "nodeId": annotation.nodeId,
-                "componentId": annotation.componentId,
-                "serverSaveTime": annotation.serverSaveTime
+                annotationGroupName:
+                  annotation.data.annotationGroupName +
+                  '_' +
+                  annotation.data.annotationGroupCreatedTime,
+                annotations: [annotation],
+                nodeId: annotation.nodeId,
+                componentId: annotation.componentId,
+                serverSaveTime: annotation.serverSaveTime
               };
               this.activeGlobalAnnotationGroups.push(annotationGroup);
             }
@@ -827,7 +924,7 @@ class AnnotationService {
       }
     }
     return inActiveGlobalAnnotations;
-  };
+  }
 
   /**
    * Get the latest teacher score annotation for a student work id
@@ -907,9 +1004,11 @@ class AnnotationService {
     let totalScoreSoFar = 0;
     let annotationsCounted = 0;
     for (let annotation of this.getAllLatestScoreAnnotations(nodeId, componentId, periodId)) {
-      if (annotation.nodeId === nodeId &&
-          annotation.componentId === componentId &&
-          (periodId === -1 || annotation.periodId === periodId)) {
+      if (
+        annotation.nodeId === nodeId &&
+        annotation.componentId === componentId &&
+        (periodId === -1 || annotation.periodId === periodId)
+      ) {
         let score = null;
         if (type != null) {
           score = this.getSubScore(annotation, type);
@@ -931,11 +1030,13 @@ class AnnotationService {
     for (let a = this.annotations.length - 1; a >= 0; a--) {
       const annotation = this.annotations[a];
       const workgroupId = annotation.toWorkgroupId;
-      if (workgroupIdsFound[workgroupId] == null &&
-          nodeId === annotation.nodeId &&
-          componentId === annotation.componentId &&
-          (periodId === -1 || periodId === annotation.periodId) &&
-          ('score' === annotation.type || 'autoScore' === annotation.type)) {
+      if (
+        workgroupIdsFound[workgroupId] == null &&
+        nodeId === annotation.nodeId &&
+        componentId === annotation.componentId &&
+        (periodId === -1 || periodId === annotation.periodId) &&
+        ('score' === annotation.type || 'autoScore' === annotation.type)
+      ) {
         workgroupIdsFound[workgroupId] = annotation;
         latestScoreAnnotations.push(annotation);
       }

@@ -2,16 +2,17 @@
 
 class StudentDataService {
   constructor(
-      $filter,
-      $http,
-      $injector,
-      $q,
-      $rootScope,
-      AnnotationService,
-      ConfigService,
-      PlanningService,
-      ProjectService,
-      UtilService) {
+    $filter,
+    $http,
+    $injector,
+    $q,
+    $rootScope,
+    AnnotationService,
+    ConfigService,
+    PlanningService,
+    ProjectService,
+    UtilService
+  ) {
     this.$filter = $filter;
     this.$http = $http;
     this.$injector = $injector;
@@ -26,7 +27,7 @@ class StudentDataService {
     this.currentNode = null;
     this.previousStep = null;
     this.studentData = null;
-    this.stackHistory = [];  // array of node id's
+    this.stackHistory = []; // array of node id's
     this.visitedNodesHistory = [];
     this.nodeStatuses = {};
     this.runStatus = null;
@@ -55,14 +56,14 @@ class StudentDataService {
 
       // go through the global annotations and see if they can be un-globalized by checking if their criterias have been met.
       let globalAnnotationGroups = this.AnnotationService.getActiveGlobalAnnotationGroups();
-      globalAnnotationGroups.map((globalAnnotationGroup) => {
+      globalAnnotationGroups.map(globalAnnotationGroup => {
         let globalAnnotations = globalAnnotationGroup.annotations;
-        globalAnnotations.map((globalAnnotation) => {
+        globalAnnotations.map(globalAnnotation => {
           if (globalAnnotation.data != null && globalAnnotation.data.isGlobal) {
             let unGlobalizeConditional = globalAnnotation.data.unGlobalizeConditional;
             let unGlobalizeCriteriaArray = globalAnnotation.data.unGlobalizeCriteria;
             if (unGlobalizeCriteriaArray != null) {
-              if (unGlobalizeConditional === "any") {
+              if (unGlobalizeConditional === 'any') {
                 // at least one criteria in unGlobalizeCriteriaArray must be satisfied in any order before un-globalizing this annotation
                 let anySatified = false;
                 for (let unGlobalizeCriteria of unGlobalizeCriteriaArray) {
@@ -70,10 +71,10 @@ class StudentDataService {
                   anySatified = anySatified || unGlobalizeCriteriaResult;
                 }
                 if (anySatified) {
-                  globalAnnotation.data.unGlobalizedTimestamp = Date.parse(new Date());  // save when criteria was satisfied
-                  this.saveAnnotations([globalAnnotation]);  // save changes to server
+                  globalAnnotation.data.unGlobalizedTimestamp = Date.parse(new Date()); // save when criteria was satisfied
+                  this.saveAnnotations([globalAnnotation]); // save changes to server
                 }
-              } else if (unGlobalizeConditional === "all") {
+              } else if (unGlobalizeConditional === 'all') {
                 // all criteria in unGlobalizeCriteriaArray must be satisfied in any order before un-globalizing this annotation
                 let allSatisfied = true;
                 for (let unGlobalizeCriteria of unGlobalizeCriteriaArray) {
@@ -81,14 +82,14 @@ class StudentDataService {
                   allSatisfied = allSatisfied && unGlobalizeCriteriaResult;
                 }
                 if (allSatisfied) {
-                  globalAnnotation.data.unGlobalizedTimestamp = Date.parse(new Date());  // save when criteria was satisfied
-                  this.saveAnnotations([globalAnnotation]);  // save changes to server
+                  globalAnnotation.data.unGlobalizedTimestamp = Date.parse(new Date()); // save when criteria was satisfied
+                  this.saveAnnotations([globalAnnotation]); // save changes to server
                 }
               }
             }
           }
         });
-      })
+      });
     });
 
     /**
@@ -147,7 +148,7 @@ class StudentDataService {
       httpParams.params = params;
 
       // make the request for the student data
-      return this.$http(httpParams).then((result) => {
+      return this.$http(httpParams).then(result => {
         const resultData = result.data;
         if (resultData != null) {
           this.studentData = {};
@@ -165,11 +166,16 @@ class StudentDataService {
           }
 
           // Check to see if this Project contains any Planning activities
-          if (this.ProjectService.project.nodes != null && this.ProjectService.project.nodes.length > 0) {
+          if (
+            this.ProjectService.project.nodes != null &&
+            this.ProjectService.project.nodes.length > 0
+          ) {
             // Overload/add new nodes based on student's work in the NodeState for the planning group.
             for (let planningGroupNode of this.ProjectService.project.nodes) {
               if (planningGroupNode.planning) {
-                let lastestNodeStateForPlanningGroupNode = this.getLatestNodeStateByNodeId(planningGroupNode.id);
+                let lastestNodeStateForPlanningGroupNode = this.getLatestNodeStateByNodeId(
+                  planningGroupNode.id
+                );
                 if (lastestNodeStateForPlanningGroupNode != null) {
                   let studentModifiedNodes = lastestNodeStateForPlanningGroupNode.studentData.nodes;
                   if (studentModifiedNodes != null) {
@@ -206,7 +212,7 @@ class StudentDataService {
         return this.studentData;
       });
     }
-  };
+  }
 
   /**
    * Retrieve the run status
@@ -219,16 +225,16 @@ class StudentDataService {
       const runId = this.ConfigService.getConfigParam('runId');
 
       const params = {
-        runId:runId
+        runId: runId
       };
 
       const httpParams = {};
       httpParams.method = 'GET';
-      httpParams.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
+      httpParams.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
       httpParams.url = runStatusURL;
       httpParams.params = params;
 
-      return this.$http(httpParams).then((result) => {
+      return this.$http(httpParams).then(result => {
         if (result != null) {
           const data = result.data;
           if (data != null) {
@@ -241,7 +247,7 @@ class StudentDataService {
 
   getNodeStatuses() {
     return this.nodeStatuses;
-  };
+  }
 
   setNodeStatusByNodeId(nodeId, nodeStatus) {
     if (nodeId != null && nodeStatus != null) {
@@ -258,7 +264,7 @@ class StudentDataService {
       return nodeStatuses[nodeId];
     }
     return null;
-  };
+  }
 
   updateNodeStatuses() {
     let nodes = this.ProjectService.getNodes();
@@ -295,7 +301,7 @@ class StudentDataService {
     // update max score
     this.maxScore = this.getMaxScore();
     this.$rootScope.$broadcast('nodeStatusesChanged');
-  };
+  }
 
   /**
    * Update the node status for a node
@@ -321,8 +327,10 @@ class StudentDataService {
       }
 
       if (constraintsForNode == null || constraintsForNode.length == 0) {
-        if (this.ProjectService.getFlattenedProjectAsNodeIds().indexOf(nodeId) == -1 &&
-          !this.ProjectService.isGroupNode(nodeId)) {
+        if (
+          this.ProjectService.getFlattenedProjectAsNodeIds().indexOf(nodeId) == -1 &&
+          !this.ProjectService.isGroupNode(nodeId)
+        ) {
           // there are no transitions to this node so it is not visible
           tempNodeStatus.isVisible = false;
           tempNodeStatus.isVisitable = true;
@@ -413,11 +421,13 @@ class StudentDataService {
       const latestComponentStatesForNode = this.getLatestComponentStateByNodeId(nodeId);
       if (latestComponentStatesForNode != null) {
         // set the latest component state timestamp into the node status
-        this.nodeStatuses[nodeId].latestComponentStateClientSaveTime = latestComponentStatesForNode.clientSaveTime;
-        this.nodeStatuses[nodeId].latestComponentStateServerSaveTime = latestComponentStatesForNode.serverSaveTime;
+        this.nodeStatuses[nodeId].latestComponentStateClientSaveTime =
+          latestComponentStatesForNode.clientSaveTime;
+        this.nodeStatuses[nodeId].latestComponentStateServerSaveTime =
+          latestComponentStatesForNode.serverSaveTime;
       }
     }
-  };
+  }
 
   /**
    * Evaluate the constraint
@@ -433,7 +443,7 @@ class StudentDataService {
       }
     }
     return false;
-  };
+  }
 
   /**
    * Evaluate the node constraint
@@ -476,8 +486,7 @@ class StudentDataService {
       }
     }
     return result;
-  };
-
+  }
 
   /**
    * Evaluate the criteria
@@ -489,13 +498,10 @@ class StudentDataService {
     if (criteria != null) {
       const functionName = criteria.name;
       if (functionName == null) {
-
       } else if (functionName === 'branchPathTaken') {
         result = this.evaluateBranchPathTakenCriteria(criteria);
       } else if (functionName === 'isVisible') {
-
       } else if (functionName === 'isVisitable') {
-
       } else if (functionName === 'isVisited') {
         result = this.evaluateIsVisitedCriteria(criteria);
       } else if (functionName === 'isVisitedAfter') {
@@ -523,11 +529,10 @@ class StudentDataService {
       } else if (functionName === 'fillXNumberOfRows') {
         result = this.evaluateFillXNumberOfRowsCriteria(criteria);
       } else if (functionName === '') {
-
       }
     }
     return result;
-  };
+  }
 
   /**
    * Check if the isCompleted criteria was satisfied
@@ -691,7 +696,7 @@ class StudentDataService {
       }
     }
     return false;
-  };
+  }
 
   /**
    * Check if the isVisited criteria was satisfied
@@ -729,9 +734,11 @@ class StudentDataService {
       if (events != null) {
         for (let event of events) {
           if (event != null) {
-            if (isVisitedAfterNodeId == event.nodeId &&
+            if (
+              isVisitedAfterNodeId == event.nodeId &&
               'nodeEntered' === event.event &&
-              event.clientSaveTime > criteriaCreatedTimestamp) {
+              event.clientSaveTime > criteriaCreatedTimestamp
+            ) {
               return true;
             }
           }
@@ -754,7 +761,10 @@ class StudentDataService {
 
       // the student has entered the node after the criteriaCreatedTimestamp.
       // now check if student has revised the work after this event
-      let latestComponentStateForRevisedComponent = this.getLatestComponentStateByNodeIdAndComponentId(isRevisedAfterNodeId, isRevisedAfterComponentId);
+      let latestComponentStateForRevisedComponent = this.getLatestComponentStateByNodeIdAndComponentId(
+        isRevisedAfterNodeId,
+        isRevisedAfterComponentId
+      );
       if (latestComponentStateForRevisedComponent.clientSaveTime > criteriaCreatedTimestamp) {
         return true;
       }
@@ -779,10 +789,17 @@ class StudentDataService {
       if (events != null) {
         for (let event of events) {
           if (event != null) {
-            if (isVisitedAfterNodeId == event.nodeId && 'nodeEntered' === event.event && event.clientSaveTime > criteriaCreatedTimestamp) {
+            if (
+              isVisitedAfterNodeId == event.nodeId &&
+              'nodeEntered' === event.event &&
+              event.clientSaveTime > criteriaCreatedTimestamp
+            ) {
               // the student has entered the node after the criteriaCreatedTimestamp.
               // now check if student has revised the work after this event
-              let latestComponentStateForRevisedComponent = this.getLatestComponentStateByNodeIdAndComponentId(isRevisedAfterNodeId, isRevisedAfterComponentId);
+              let latestComponentStateForRevisedComponent = this.getLatestComponentStateByNodeIdAndComponentId(
+                isRevisedAfterNodeId,
+                isRevisedAfterComponentId
+              );
               if (latestComponentStateForRevisedComponent.clientSaveTime > event.clientSaveTime) {
                 return true;
               }
@@ -821,13 +838,13 @@ class StudentDataService {
    * @returns a boolean value whether the criteria was satisfied or not
    */
   evaluateChoiceChosenCriteria(criteria) {
-    const serviceName = 'MultipleChoiceService';  // Assume MC component.
+    const serviceName = 'MultipleChoiceService'; // Assume MC component.
     if (this.$injector.has(serviceName)) {
       const service = this.$injector.get(serviceName);
       return service.choiceChosen(criteria);
     }
     return false;
-  };
+  }
 
   /**
    * Evaluate the score criteria
@@ -843,12 +860,22 @@ class StudentDataService {
       const workgroupId = this.ConfigService.getWorkgroupId();
       const scoreType = 'any';
       if (nodeId != null && componentId != null && scores != null) {
-        const latestScoreAnnotation = this.AnnotationService.getLatestScoreAnnotation(nodeId, componentId, workgroupId, scoreType);
+        const latestScoreAnnotation = this.AnnotationService.getLatestScoreAnnotation(
+          nodeId,
+          componentId,
+          workgroupId,
+          scoreType
+        );
         if (latestScoreAnnotation != null) {
-          const scoreValue = this.AnnotationService.getScoreValueFromScoreAnnotation(latestScoreAnnotation);
+          const scoreValue = this.AnnotationService.getScoreValueFromScoreAnnotation(
+            latestScoreAnnotation
+          );
 
           // check if the score value matches what the criteria is looking for. works when scores is array of integers or integer strings
-          if (scores.indexOf(scoreValue) != -1 || (scoreValue != null && scores.indexOf(scoreValue.toString()) != -1)) {
+          if (
+            scores.indexOf(scoreValue) != -1 ||
+            (scoreValue != null && scores.indexOf(scoreValue.toString()) != -1)
+          ) {
             /*
              * the student has received a score that matches a score
              * we're looking for
@@ -859,7 +886,7 @@ class StudentDataService {
       }
     }
     return false;
-  };
+  }
 
   /**
    * Evaluate the used x submits criteria which requires the student to submit
@@ -910,7 +937,10 @@ class StudentDataService {
             }
           }
 
-          if (manualSubmitCounter >= requiredSubmitCount || highestSubmitCounter >= requiredSubmitCount) {
+          if (
+            manualSubmitCounter >= requiredSubmitCount ||
+            highestSubmitCounter >= requiredSubmitCount
+          ) {
             // the student submitted the required number of times
             return true;
           }
@@ -934,7 +964,10 @@ class StudentDataService {
       const requiredNumberOfWords = params.requiredNumberOfWords;
 
       if (nodeId != null && componentId != null) {
-        const componentState = this.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+        const componentState = this.getLatestComponentStateByNodeIdAndComponentId(
+          nodeId,
+          componentId
+        );
         if (componentState != null) {
           const studentData = componentState.studentData;
           const response = studentData.response;
@@ -957,9 +990,7 @@ class StudentDataService {
       const notebook = notebookService.getNotebookByWorkgroup();
       const notebookItemsByNodeId = this.getNotebookItemsByNodeId(notebook, nodeId);
       return notebookItemsByNodeId.length >= requiredNumberOfNotes;
-    } catch (e) {
-
-    }
+    } catch (e) {}
     return false;
   }
 
@@ -972,9 +1003,15 @@ class StudentDataService {
     const requireAllCellsInARowToBeFilled = params.requireAllCellsInARowToBeFilled;
     const tableService = this.$injector.get('TableService');
     const componentState = this.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
-    return componentState != null &&
-        tableService.hasRequiredNumberOfFilledRows(componentState, requiredNumberOfFilledRows,
-        tableHasHeaderRow, requireAllCellsInARowToBeFilled);
+    return (
+      componentState != null &&
+      tableService.hasRequiredNumberOfFilledRows(
+        componentState,
+        requiredNumberOfFilledRows,
+        tableHasHeaderRow,
+        requireAllCellsInARowToBeFilled
+      )
+    );
   }
 
   getNotebookItemsByNodeId(notebook, nodeId) {
@@ -1003,7 +1040,7 @@ class StudentDataService {
         }
       }
     }
-  };
+  }
 
   getStackHistoryAtIndex(index) {
     if (index < 0) {
@@ -1013,11 +1050,11 @@ class StudentDataService {
       return this.stackHistory[index];
     }
     return null;
-  };
+  }
 
   getStackHistory() {
     return this.stackHistory;
-  };
+  }
 
   updateStackHistory(nodeId) {
     const indexOfNodeId = this.stackHistory.indexOf(nodeId);
@@ -1026,18 +1063,18 @@ class StudentDataService {
     } else {
       this.stackHistory.splice(indexOfNodeId + 1, this.stackHistory.length);
     }
-  };
+  }
 
   updateVisitedNodesHistory(nodeId) {
     const indexOfNodeId = this.visitedNodesHistory.indexOf(nodeId);
     if (indexOfNodeId === -1) {
       this.visitedNodesHistory.push(nodeId);
     }
-  };
+  }
 
   getVisitedNodesHistory() {
     return this.visitedNodesHistory;
-  };
+  }
 
   isNodeVisited(nodeId) {
     const visitedNodesHistory = this.visitedNodesHistory;
@@ -1048,25 +1085,25 @@ class StudentDataService {
       }
     }
     return false;
-  };
+  }
 
   createComponentState() {
     const componentState = {};
     componentState.timestamp = Date.parse(new Date());
     return componentState;
-  };
+  }
 
   addComponentState(componentState) {
     if (this.studentData != null && this.studentData.componentStates != null) {
       this.studentData.componentStates.push(componentState);
     }
-  };
+  }
 
   addNodeState(nodeState) {
     if (this.studentData != null && this.studentData.nodeStates != null) {
       this.studentData.nodeStates.push(nodeState);
     }
-  };
+  }
 
   /**
    * Returns all NodeStates
@@ -1077,7 +1114,7 @@ class StudentDataService {
       return this.studentData.nodeStates;
     }
     return [];
-  };
+  }
 
   /**
    * Get all NodeStates for a specific node
@@ -1098,53 +1135,59 @@ class StudentDataService {
       }
     }
     return nodeStatesByNodeId;
-  };
+  }
 
   addEvent(event) {
     if (this.studentData != null && this.studentData.events != null) {
       this.studentData.events.push(event);
     }
-  };
+  }
 
   addAnnotation(annotation) {
     if (this.studentData != null && this.studentData.annotations != null) {
       this.studentData.annotations.push(annotation);
     }
-  };
+  }
 
   handleAnnotationReceived(annotation) {
     this.studentData.annotations.push(annotation);
     if (annotation.notebookItemId) {
-      this.$rootScope.$broadcast('notebookItemAnnotationReceived', {annotation: annotation});
+      this.$rootScope.$broadcast('notebookItemAnnotationReceived', { annotation: annotation });
     } else {
-      this.$rootScope.$broadcast('annotationReceived', {annotation: annotation});
+      this.$rootScope.$broadcast('annotationReceived', { annotation: annotation });
     }
   }
 
   saveComponentEvent(component, category, event, data) {
     if (component == null || category == null || event == null) {
-      alert(this.$translate('STUDENT_DATA_SERVICE_SAVE_COMPONENT_EVENT_COMPONENT_CATEGORY_EVENT_ERROR'));
+      alert(
+        this.$translate('STUDENT_DATA_SERVICE_SAVE_COMPONENT_EVENT_COMPONENT_CATEGORY_EVENT_ERROR')
+      );
       return;
     }
-    const context = "Component";
+    const context = 'Component';
     const nodeId = component.nodeId;
     const componentId = component.componentId;
     const componentType = component.componentType;
     if (nodeId == null || componentId == null || componentType == null) {
-      alert(this.$translate('STUDENT_DATA_SERVICE_SAVE_COMPONENT_EVENT_NODE_ID_COMPONENT_ID_COMPONENT_TYPE_ERROR'));
+      alert(
+        this.$translate(
+          'STUDENT_DATA_SERVICE_SAVE_COMPONENT_EVENT_NODE_ID_COMPONENT_ID_COMPONENT_TYPE_ERROR'
+        )
+      );
       return;
     }
     this.saveEvent(context, nodeId, componentId, componentType, category, event, data);
-  };
+  }
 
   saveVLEEvent(nodeId, componentId, componentType, category, event, data) {
     if (category == null || event == null) {
       alert(this.$translate('STUDENT_DATA_SERVICE_SAVE_VLE_EVENT_CATEGORY_EVENT_ERROR'));
       return;
     }
-    const context = "VLE";
+    const context = 'VLE';
     this.saveEvent(context, nodeId, componentId, componentType, category, event, data);
-  };
+  }
 
   saveEvent(context, nodeId, componentId, componentType, category, event, data) {
     const events = [];
@@ -1161,7 +1204,7 @@ class StudentDataService {
     const nodeStates = null;
     const annotations = null;
     this.saveToServer(componentStates, nodeStates, events, annotations);
-  };
+  }
 
   /**
    * Create a new empty event
@@ -1175,22 +1218,21 @@ class StudentDataService {
     event.workgroupId = this.ConfigService.getWorkgroupId();
     event.clientSaveTime = Date.parse(new Date());
     return event;
-  };
+  }
 
   saveNodeStates(nodeStates) {
     const componentStates = null;
     const events = null;
     const annotations = null;
     this.saveToServer(componentStates, nodeStates, events, annotations);
-  };
-
+  }
 
   saveAnnotations(annotations) {
     const componentStates = null;
     const nodeStates = null;
     const events = null;
     this.saveToServer(componentStates, nodeStates, events, annotations);
-  };
+  }
 
   saveToServer(componentStates, nodeStates, events, annotations) {
     /*
@@ -1274,7 +1316,7 @@ class StudentDataService {
       const httpParams = {};
       httpParams.method = 'POST';
       httpParams.url = this.ConfigService.getConfigParam('studentDataURL');
-      httpParams.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
+      httpParams.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
       httpParams.data = $.param(params);
 
       // make the request to post the student data
@@ -1288,7 +1330,8 @@ class StudentDataService {
 
             return savedStudentDataResponse;
           }
-        }, result => {
+        },
+        result => {
           // a server error occured
 
           /*
@@ -1301,7 +1344,7 @@ class StudentDataService {
         }
       );
     }
-  };
+  }
 
   saveToServerSuccess(savedStudentDataResponse) {
     // set dummy serverSaveTime for use if we're in preview mode
@@ -1323,13 +1366,17 @@ class StudentDataService {
          */
         for (let l = localStudentWorkList.length - 1; l >= 0; l--) {
           const localStudentWork = localStudentWorkList[l];
-          if (localStudentWork.requestToken &&
-            localStudentWork.requestToken === savedStudentWork.requestToken) {
+          if (
+            localStudentWork.requestToken &&
+            localStudentWork.requestToken === savedStudentWork.requestToken
+          ) {
             localStudentWork.id = savedStudentWork.id;
-            localStudentWork.serverSaveTime = savedStudentWork.serverSaveTime ? savedStudentWork.serverSaveTime : serverSaveTime;
+            localStudentWork.serverSaveTime = savedStudentWork.serverSaveTime
+              ? savedStudentWork.serverSaveTime
+              : serverSaveTime;
             localStudentWork.requestToken = null; // requestToken is no longer needed.
 
-            if (this.ConfigService.getMode() == "preview" && localStudentWork.id == null) {
+            if (this.ConfigService.getMode() == 'preview' && localStudentWork.id == null) {
               /*
                * we are in preview mode so we will set a dummy
                * student work id into the student work
@@ -1343,7 +1390,9 @@ class StudentDataService {
               this.dummyStudentWorkId++;
             }
 
-            this.$rootScope.$broadcast('studentWorkSavedToServer', {studentWork: localStudentWork});
+            this.$rootScope.$broadcast('studentWorkSavedToServer', {
+              studentWork: localStudentWork
+            });
             break;
           }
         }
@@ -1363,13 +1412,14 @@ class StudentDataService {
          */
         for (let l = localEvents.length - 1; l >= 0; l--) {
           const localEvent = localEvents[l];
-          if (localEvent.requestToken &&
-            localEvent.requestToken === savedEvent.requestToken) {
+          if (localEvent.requestToken && localEvent.requestToken === savedEvent.requestToken) {
             localEvent.id = savedEvent.id;
-            localEvent.serverSaveTime = savedEvent.serverSaveTime ? savedEvent.serverSaveTime : serverSaveTime;
+            localEvent.serverSaveTime = savedEvent.serverSaveTime
+              ? savedEvent.serverSaveTime
+              : serverSaveTime;
             localEvent.requestToken = null; // requestToken is no longer needed.
 
-            this.$rootScope.$broadcast('eventSavedToServer', {event: localEvent});
+            this.$rootScope.$broadcast('eventSavedToServer', { event: localEvent });
             break;
           }
         }
@@ -1389,13 +1439,17 @@ class StudentDataService {
          */
         for (let l = localAnnotations.length - 1; l >= 0; l--) {
           const localAnnotation = localAnnotations[l];
-          if (localAnnotation.requestToken &&
-            localAnnotation.requestToken === savedAnnotation.requestToken) {
+          if (
+            localAnnotation.requestToken &&
+            localAnnotation.requestToken === savedAnnotation.requestToken
+          ) {
             localAnnotation.id = savedAnnotation.id;
-            localAnnotation.serverSaveTime = savedAnnotation.serverSaveTime ? savedAnnotation.serverSaveTime : serverSaveTime;
+            localAnnotation.serverSaveTime = savedAnnotation.serverSaveTime
+              ? savedAnnotation.serverSaveTime
+              : serverSaveTime;
             localAnnotation.requestToken = null; // requestToken is no longer needed.
 
-            this.$rootScope.$broadcast('annotationSavedToServer', {annotation: localAnnotation});
+            this.$rootScope.$broadcast('annotationSavedToServer', { annotation: localAnnotation });
             break;
           }
         }
@@ -1417,7 +1471,7 @@ class StudentDataService {
       this.updateNodeStatuses();
       this.saveStudentStatus();
     }
-  };
+  }
 
   /**
    * POSTs student status to server
@@ -1453,23 +1507,22 @@ class StudentDataService {
         const httpParams = {};
         httpParams.method = 'POST';
         httpParams.url = studentStatusURL;
-        httpParams.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
+        httpParams.headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
         httpParams.data = $.param(studentStatusParams);
 
         return this.$http(httpParams).then(
           result => {
             return true;
-          }, result => {
+          },
+          result => {
             return false;
           }
         );
       }
     }
-  };
+  }
 
-  retrieveComponentStates(runId, periodId, workgroupId) {
-
-  };
+  retrieveComponentStates(runId, periodId, workgroupId) {}
 
   getLatestComponentState() {
     const studentData = this.studentData;
@@ -1480,7 +1533,7 @@ class StudentDataService {
       }
     }
     return null;
-  };
+  }
 
   /**
    * Check whether the component has unsubmitted work
@@ -1492,7 +1545,7 @@ class StudentDataService {
       return true;
     }
     return false;
-  };
+  }
 
   /**
    * Get the latest NodeState for the specified node id
@@ -1505,7 +1558,7 @@ class StudentDataService {
       return allNodeStatesByNodeId[allNodeStatesByNodeId.length - 1];
     }
     return null;
-  };
+  }
 
   /**
    * Get the latest component state for the given node id and component
@@ -1542,7 +1595,7 @@ class StudentDataService {
       }
     }
     return null;
-  };
+  }
 
   /**
    * Get the latest component state that was a submit
@@ -1556,9 +1609,11 @@ class StudentDataService {
     const componentStates = this.studentData.componentStates;
     for (let c = componentStates.length - 1; c >= 0; c--) {
       const componentState = componentStates[c];
-      if (componentState.nodeId === nodeId &&
-          componentState.componentId === componentId &&
-          componentState.isSubmit) {
+      if (
+        componentState.nodeId === nodeId &&
+        componentState.componentId === componentId &&
+        componentState.isSubmit
+      ) {
         return componentState;
       }
     }
@@ -1591,14 +1646,14 @@ class StudentDataService {
       }
     }
     return null;
-  };
+  }
 
   /**
    * Returns all the component states for this workgroup
    */
   getComponentStates() {
     return this.studentData.componentStates;
-  };
+  }
 
   /**
    * Get the component states for the given node id
@@ -1624,7 +1679,7 @@ class StudentDataService {
       }
     }
     return componentStatesByNodeId;
-  };
+  }
 
   /**
    * Get the component states for the given node id and component id
@@ -1644,8 +1699,7 @@ class StudentDataService {
             if (componentState != null) {
               const componentStateNodeId = componentState.nodeId;
               const componentStateComponentId = componentState.componentId;
-              if (nodeId == componentStateNodeId &&
-                  componentId == componentStateComponentId) {
+              if (nodeId == componentStateNodeId && componentId == componentStateComponentId) {
                 componentStatesByNodeIdAndComponentId.push(componentState);
               }
             }
@@ -1655,7 +1709,7 @@ class StudentDataService {
     }
 
     return componentStatesByNodeIdAndComponentId;
-  };
+  }
 
   /**
    * Get all events
@@ -1667,7 +1721,7 @@ class StudentDataService {
     } else {
       return [];
     }
-  };
+  }
 
   /**
    * Get the events for a node id
@@ -1690,7 +1744,7 @@ class StudentDataService {
       }
     }
     return eventsByNodeId;
-  };
+  }
 
   /**
    * Get the events for a component id
@@ -1715,7 +1769,7 @@ class StudentDataService {
       }
     }
     return eventsByNodeId;
-  };
+  }
 
   /**
    * Get the node id of the latest node entered event for an active node that
@@ -1762,7 +1816,7 @@ class StudentDataService {
       }
     }
     return false;
-  };
+  }
 
   /**
    * Get the node status by node id
@@ -1774,7 +1828,7 @@ class StudentDataService {
       return this.nodeStatuses[nodeId];
     }
     return null;
-  };
+  }
 
   /**
    * Get progress information for a given node
@@ -1828,23 +1882,25 @@ class StudentDataService {
         }
       }
 
-      let completionPct = totalItems ? Math.round(completedItems / totalItems * 100) : 0;
-      let completionPctWithWork = totalItemsWithWork ? Math.round(completedItemsWithWork / totalItemsWithWork * 100) : 0;
+      let completionPct = totalItems ? Math.round((completedItems / totalItems) * 100) : 0;
+      let completionPctWithWork = totalItemsWithWork
+        ? Math.round((completedItemsWithWork / totalItemsWithWork) * 100)
+        : 0;
 
       progress = {
-        "completedItems": completedItems,
-        "completedItemsWithWork": completedItemsWithWork,
-        "totalItems": totalItems,
-        "totalItemsWithWork": totalItemsWithWork,
-        "completionPct": completionPct,
-        "completionPctWithWork": completionPctWithWork
+        completedItems: completedItems,
+        completedItemsWithWork: completedItemsWithWork,
+        totalItems: totalItems,
+        totalItemsWithWork: totalItemsWithWork,
+        completionPct: completionPct,
+        completionPctWithWork: completionPctWithWork
       };
     }
 
     // TODO: implement for steps (using components instead of child nodes)?
 
     return progress;
-  };
+  }
 
   /**
    * Check if the given node or component is completed
@@ -1899,7 +1955,11 @@ class StudentDataService {
 
         if (nodeIds.length) {
           for (let id of nodeIds) {
-            if (this.nodeStatuses[id] == null || !this.nodeStatuses[id].isVisible || !this.nodeStatuses[id].isCompleted) {
+            if (
+              this.nodeStatuses[id] == null ||
+              !this.nodeStatuses[id].isVisible ||
+              !this.nodeStatuses[id].isCompleted
+            ) {
               // the child is not visible or not completed so the group is not completed
               tempResult = false;
               break;
@@ -1944,21 +2004,35 @@ class StudentDataService {
                   const service = this.$injector.get(serviceName);
 
                   // get the component states for the component
-                  const componentStates = this.getComponentStatesByNodeIdAndComponentId(tempNodeId, tempComponentId);
+                  const componentStates = this.getComponentStatesByNodeIdAndComponentId(
+                    tempNodeId,
+                    tempComponentId
+                  );
 
                   // get the component events
-                  const componentEvents = this.getEventsByNodeIdAndComponentId(tempNodeId, tempComponentId);
+                  const componentEvents = this.getEventsByNodeIdAndComponentId(
+                    tempNodeId,
+                    tempComponentId
+                  );
 
                   // get the node events
                   const nodeEvents = this.getEventsByNodeId(tempNodeId);
 
                   // check if the component is completed
-                  const isComponentCompleted = service.isCompleted(tempComponent, componentStates, componentEvents, nodeEvents, tempNode);
+                  const isComponentCompleted = service.isCompleted(
+                    tempComponent,
+                    componentStates,
+                    componentEvents,
+                    nodeEvents,
+                    tempNode
+                  );
 
                   tempResult = tempResult && isComponentCompleted;
                 }
               } catch (e) {
-                console.log(this.$translate('ERROR_COULD_NOT_CALCULATE_IS_COMPLETED') + tempComponentId);
+                console.log(
+                  this.$translate('ERROR_COULD_NOT_CALCULATE_IS_COMPLETED') + tempComponentId
+                );
               }
             }
           }
@@ -1967,7 +2041,7 @@ class StudentDataService {
       }
     }
     return result;
-  };
+  }
 
   /**
    * Get the current node
@@ -1975,7 +2049,7 @@ class StudentDataService {
    */
   getCurrentNode() {
     return this.currentNode;
-  };
+  }
 
   /**
    * Get the current node id
@@ -1986,7 +2060,7 @@ class StudentDataService {
       return this.currentNode.id;
     }
     return null;
-  };
+  }
 
   /**
    * Set the current node
@@ -1997,7 +2071,7 @@ class StudentDataService {
       const node = this.ProjectService.getNodeById(nodeId);
       this.setCurrentNode(node);
     }
-  };
+  }
 
   /**
    * Set the current node
@@ -2006,15 +2080,16 @@ class StudentDataService {
   setCurrentNode(node) {
     const previousCurrentNode = this.currentNode;
     if (previousCurrentNode !== node) {
-      if (previousCurrentNode &&
-          !this.ProjectService.isGroupNode(previousCurrentNode.id)) {
+      if (previousCurrentNode && !this.ProjectService.isGroupNode(previousCurrentNode.id)) {
         this.previousStep = previousCurrentNode;
       }
       this.currentNode = node;
-      this.$rootScope.$broadcast('currentNodeChanged',
-          {previousNode: previousCurrentNode, currentNode: this.currentNode});
+      this.$rootScope.$broadcast('currentNodeChanged', {
+        previousNode: previousCurrentNode,
+        currentNode: this.currentNode
+      });
     }
-  };
+  }
 
   /**
    * End the current node
@@ -2022,9 +2097,9 @@ class StudentDataService {
   endCurrentNode() {
     const previousCurrentNode = this.currentNode;
     if (previousCurrentNode != null) {
-      this.$rootScope.$broadcast('exitNode', {nodeToExit: previousCurrentNode});
+      this.$rootScope.$broadcast('exitNode', { nodeToExit: previousCurrentNode });
     }
-  };
+  }
 
   /**
    * End the current node and set the current node
@@ -2037,15 +2112,15 @@ class StudentDataService {
     } else {
       this.nodeClickLocked(nodeId);
     }
-  };
+  }
 
   /**
    * Broadcast a listenable event that a locked node has been clicked (attempted to be opened)
    * @param nodeId
    */
   nodeClickLocked(nodeId) {
-    this.$rootScope.$broadcast('nodeClickLocked', {nodeId: nodeId});
-  };
+    this.$rootScope.$broadcast('nodeClickLocked', { nodeId: nodeId });
+  }
 
   /**
    * This will parse a delimited string into an array of
@@ -2053,24 +2128,24 @@ class StudentDataService {
    * can be overriden in the second argument.
    * Source: http://www.bennadel.com/blog/1504-ask-ben-parsing-csv-strings-with-javascript-exec-regular-expression-command.htm
    */
-  CSVToArray( strData, strDelimiter ) {
+  CSVToArray(strData, strDelimiter) {
     // Check to see if the delimiter is defined. If not,
     // then default to comma.
-    strDelimiter = (strDelimiter || ",");
+    strDelimiter = strDelimiter || ',';
 
     // Create a regular expression to parse the CSV values.
     const objPattern = new RegExp(
-      (
-        // Delimiters.
-        "(\\" + strDelimiter + "|\\r?\\n|\\r|^)" +
-
+      // Delimiters.
+      '(\\' +
+        strDelimiter +
+        '|\\r?\\n|\\r|^)' +
         // Quoted fields.
-        "(?:\"([^\"]*(?:\"\"[^\"]*)*)\"|" +
-
+        '(?:"([^"]*(?:""[^"]*)*)"|' +
         // Standard fields.
-        "([^\"\\" + strDelimiter + "\\r\\n]*))"
-      ),
-      "gi"
+        '([^"\\' +
+        strDelimiter +
+        '\\r\\n]*))',
+      'gi'
     );
 
     // Create an array to hold our data. Give the array
@@ -2081,43 +2156,32 @@ class StudentDataService {
     // matching groups.
     let arrMatches = null;
 
-
     // Keep looping over the regular expression matches
     // until we can no longer find a match.
-    while (arrMatches = objPattern.exec( strData )) {
-
+    while ((arrMatches = objPattern.exec(strData))) {
       // Get the delimiter that was found.
-      const strMatchedDelimiter = arrMatches[ 1 ];
+      const strMatchedDelimiter = arrMatches[1];
 
       // Check to see if the given delimiter has a length
       // (is not the start of string) and if it matches
       // field delimiter. If id does not, then we know
       // that this delimiter is a row delimiter.
-      if (
-        strMatchedDelimiter.length &&
-        (strMatchedDelimiter != strDelimiter)
-      ){
-
+      if (strMatchedDelimiter.length && strMatchedDelimiter != strDelimiter) {
         // Since we have reached a new row of data,
         // add an empty row to our data array.
-        arrData.push( [] );
+        arrData.push([]);
       }
 
       // Now that we have our delimiter out of the way,
       // let's check to see which kind of value we
       // captured (quoted or unquoted).
-      if (arrMatches[ 2 ]){
-
+      if (arrMatches[2]) {
         // We found a quoted value. When we capture
         // this value, unescape any double quotes.
-        const strMatchedValue = arrMatches[ 2 ].replace(
-          new RegExp( "\"\"", "g" ),
-          "\""
-        );
-
+        const strMatchedValue = arrMatches[2].replace(new RegExp('""', 'g'), '"');
       } else {
         // We found a non-quoted value.
-        const strMatchedValue = arrMatches[ 3 ];
+        const strMatchedValue = arrMatches[3];
       }
 
       // Now that we have our value string, let's add
@@ -2127,11 +2191,11 @@ class StudentDataService {
       if (!isNaN(floatVal)) {
         finalValue = floatVal;
       }
-      arrData[ arrData.length - 1 ].push( finalValue );
+      arrData[arrData.length - 1].push(finalValue);
     }
     // Return the parsed data.
-    return( arrData );
-  };
+    return arrData;
+  }
 
   /**
    * Get the total score for the workgroup
@@ -2251,8 +2315,10 @@ class StudentDataService {
             for (let component of components) {
               if (component != null) {
                 const componentId = component.id;
-                let componentState =
-                    this.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+                let componentState = this.getLatestComponentStateByNodeIdAndComponentId(
+                  nodeId,
+                  componentId
+                );
                 if (componentState == null) {
                   /*
                    * there is no component state for the component so we will
@@ -2313,7 +2379,11 @@ class StudentDataService {
               const componentId = completionCriterion.componentId;
 
               // get the first submit component state after the timestamp
-              const tempComponentState = this.getComponentStateSubmittedAfter(nodeId, componentId, tempTimestamp);
+              const tempComponentState = this.getComponentStateSubmittedAfter(
+                nodeId,
+                componentId,
+                tempTimestamp
+              );
 
               if (tempComponentState == null) {
                 // we did not find a component state
@@ -2328,7 +2398,11 @@ class StudentDataService {
               const componentId = completionCriterion.componentId;
 
               // get the first save component state after the timestamp
-              const tempComponentState = this.getComponentStateSavedAfter(nodeId, componentId, tempTimestamp);
+              const tempComponentState = this.getComponentStateSavedAfter(
+                nodeId,
+                componentId,
+                tempTimestamp
+              );
 
               if (tempComponentState == null) {
                 // we did not find a component state
@@ -2370,10 +2444,12 @@ class StudentDataService {
     const componentStates = this.studentData.componentStates;
     if (componentStates != null) {
       for (let tempComponentState of componentStates) {
-        if (tempComponentState != null &&
-            tempComponentState.serverSaveTime > timestamp &&
-            tempComponentState.nodeId === nodeId &&
-            tempComponentState.componentId === componentId) {
+        if (
+          tempComponentState != null &&
+          tempComponentState.serverSaveTime > timestamp &&
+          tempComponentState.nodeId === nodeId &&
+          tempComponentState.componentId === componentId
+        ) {
           return tempComponentState;
         }
       }
@@ -2391,11 +2467,13 @@ class StudentDataService {
     const componentStates = this.studentData.componentStates;
     if (componentStates != null) {
       for (let tempComponentState of componentStates) {
-        if (tempComponentState != null &&
-            tempComponentState.serverSaveTime > timestamp &&
-            tempComponentState.nodeId === nodeId &&
-            tempComponentState.componentId === componentId &&
-            tempComponentState.isSubmit) {
+        if (
+          tempComponentState != null &&
+          tempComponentState.serverSaveTime > timestamp &&
+          tempComponentState.nodeId === nodeId &&
+          tempComponentState.componentId === componentId &&
+          tempComponentState.isSubmit
+        ) {
           return tempComponentState;
         }
       }
@@ -2410,10 +2488,12 @@ class StudentDataService {
     const events = this.studentData.events;
     if (events != null) {
       for (let tempEvent of events) {
-        if (tempEvent != null &&
-            tempEvent.serverSaveTime > timestamp &&
-            tempEvent.nodeId === nodeId &&
-            tempEvent.event === 'nodeEntered') {
+        if (
+          tempEvent != null &&
+          tempEvent.serverSaveTime > timestamp &&
+          tempEvent.nodeId === nodeId &&
+          tempEvent.event === 'nodeEntered'
+        ) {
           return tempEvent;
         }
       }
@@ -2437,7 +2517,7 @@ class StudentDataService {
       url: this.ConfigService.getConfigParam('studentDataURL'),
       params: params
     };
-    return this.$http(httpParams).then((result) => {
+    return this.$http(httpParams).then(result => {
       const resultData = result.data;
       if (resultData != null) {
         return resultData.studentWorkList;
@@ -2462,7 +2542,7 @@ class StudentDataService {
       url: this.ConfigService.getConfigParam('studentDataURL'),
       params: params
     };
-    return this.$http(httpParams).then((result) => {
+    return this.$http(httpParams).then(result => {
       return result.data.annotations;
     });
   }
@@ -2484,7 +2564,7 @@ class StudentDataService {
     params.getAnnotations = false;
     params.onlyGetLatest = true;
     httpParams.params = params;
-    return this.$http(httpParams).then((result) => {
+    return this.$http(httpParams).then(result => {
       const resultData = result.data;
       if (resultData != null && resultData.studentWorkList.length > 0) {
         return resultData.studentWorkList[0];

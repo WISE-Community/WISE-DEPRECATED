@@ -1,18 +1,14 @@
 'use strict';
 
 class NotebookReportAnnotationsController {
-  constructor($scope,
-              $filter,
-              ConfigService,
-              ProjectService,
-              StudentDataService) {
+  constructor($scope, $filter, ConfigService, ProjectService, StudentDataService) {
     this.$scope = $scope;
     this.$filter = $filter;
     this.ConfigService = ConfigService;
     this.ProjectService = ProjectService;
     this.StudentDataService = StudentDataService;
     this.$translate = this.$filter('translate');
-    this.maxScoreDisplay = (parseInt(this.maxScore) > 0) ? '/' + this.maxScore : '';
+    this.maxScoreDisplay = parseInt(this.maxScore) > 0 ? '/' + this.maxScore : '';
     this.latestAnnotationTime = null;
     this.isNew = false;
     this.label = '';
@@ -20,7 +16,7 @@ class NotebookReportAnnotationsController {
     this.showScore = true;
     this.showComment = true;
 
-    this.$onChanges = (changes) => {
+    this.$onChanges = changes => {
       if (changes.annotations) {
         this.annotations = angular.copy(changes.annotations.currentValue);
         this.processAnnotations();
@@ -35,7 +31,9 @@ class NotebookReportAnnotationsController {
   getLatestAnnotation() {
     let latestAnnotation = null;
     if (this.annotations.comment || this.annotations.score) {
-      const commentSaveTime = this.annotations.comment ? this.annotations.comment.serverSaveTime : 0;
+      const commentSaveTime = this.annotations.comment
+        ? this.annotations.comment.serverSaveTime
+        : 0;
       const scoreSaveTime = this.annotations.score ? this.annotations.score.serverSaveTime : 0;
       if (commentSaveTime >= scoreSaveTime) {
         latestAnnotation = this.annotations.comment;
@@ -76,10 +74,12 @@ class NotebookReportAnnotationsController {
 
   processAnnotations() {
     if (this.annotations.comment || this.annotations.score) {
-      this.nodeId = this.annotations.comment ?
-          this.annotations.comment.nodeId : this.annotations.score.nodeId;
-      this.componentId = this.annotations.comment ?
-          this.annotations.comment.componentId : this.annotations.score.nodeId;
+      this.nodeId = this.annotations.comment
+        ? this.annotations.comment.nodeId
+        : this.annotations.score.nodeId;
+      this.componentId = this.annotations.comment
+        ? this.annotations.comment.componentId
+        : this.annotations.score.nodeId;
 
       if (!this.ProjectService.displayAnnotation(this.annotations.score)) {
         this.showScore = false;
@@ -91,7 +91,9 @@ class NotebookReportAnnotationsController {
 
       this.setLabelAndIcon();
       this.latestAnnotationTime = this.getLatestAnnotationTime();
-      this.show = (this.showScore && this.annotations.score) || (this.showComment && this.annotations.comment);
+      this.show =
+        (this.showScore && this.annotations.score) ||
+        (this.showComment && this.annotations.comment);
     }
   }
 }
@@ -110,8 +112,7 @@ const NotebookReportAnnotations = {
     hasNew: '<',
     maxScore: '<'
   },
-  template:
-    `<div class="md-padding gray-lightest-bg annotations-container--student--report" ng-if="$ctrl.show">
+  template: `<div class="md-padding gray-lightest-bg annotations-container--student--report" ng-if="$ctrl.show">
             <md-card class="annotations annotations--report">
                 <md-card-title class="annotations__header">
                     <div class="annotations__avatar avatar--icon avatar--square md-36 avatar md-whiteframe-1dp">

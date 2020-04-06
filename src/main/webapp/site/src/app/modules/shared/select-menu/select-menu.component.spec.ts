@@ -1,8 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { SelectMenuComponent } from './select-menu.component';
-import { NO_ERRORS_SCHEMA, TRANSLATIONS_FORMAT, TRANSLATIONS, LOCALE_ID } from "@angular/core";
+import { NO_ERRORS_SCHEMA, TRANSLATIONS_FORMAT, TRANSLATIONS, LOCALE_ID } from '@angular/core';
 import { I18n } from '@ngx-translate/i18n-polyfill';
-import { translationsFactory } from "../../../app.module";
+import { translationsFactory } from '../../../app.module';
 
 describe('SelectMenuComponent', () => {
   let component: SelectMenuComponent;
@@ -10,10 +10,10 @@ describe('SelectMenuComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SelectMenuComponent ],
-      imports: [ ],
+      declarations: [SelectMenuComponent],
+      imports: [],
       providers: [
-        { provide: TRANSLATIONS_FORMAT, useValue: "xlf" },
+        { provide: TRANSLATIONS_FORMAT, useValue: 'xlf' },
         {
           provide: TRANSLATIONS,
           useFactory: translationsFactory,
@@ -21,9 +21,8 @@ describe('SelectMenuComponent', () => {
         },
         I18n
       ],
-      schemas: [ NO_ERRORS_SCHEMA ]
-    })
-    .compileComponents();
+      schemas: [NO_ERRORS_SCHEMA]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

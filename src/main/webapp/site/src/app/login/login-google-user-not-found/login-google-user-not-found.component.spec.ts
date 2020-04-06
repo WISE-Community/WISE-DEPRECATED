@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { LoginGoogleUserNotFoundComponent } from './login-google-user-not-found.component';
-import { NO_ERRORS_SCHEMA } from "@angular/core";
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('LoginGoogleUserNotFoundComponent', () => {
   let component: LoginGoogleUserNotFoundComponent;
@@ -8,11 +8,10 @@ describe('LoginGoogleUserNotFoundComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ LoginGoogleUserNotFoundComponent ],
+      declarations: [LoginGoogleUserNotFoundComponent],
       imports: [],
-      schemas: [ NO_ERRORS_SCHEMA ]
-    })
-    .compileComponents();
+      schemas: [NO_ERRORS_SCHEMA]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

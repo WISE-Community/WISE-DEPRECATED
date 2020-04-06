@@ -1,17 +1,18 @@
 class ComponentController {
   constructor(
-      $filter,
-      $mdDialog,
-      $rootScope,
-      $scope,
-      AnnotationService,
-      ConfigService,
-      NodeService,
-      NotebookService,
-      ProjectService,
-      StudentAssetService,
-      StudentDataService,
-      UtilService) {
+    $filter,
+    $mdDialog,
+    $rootScope,
+    $scope,
+    AnnotationService,
+    ConfigService,
+    NodeService,
+    NotebookService,
+    ProjectService,
+    StudentAssetService,
+    StudentDataService,
+    UtilService
+  ) {
     this.$filter = $filter;
     this.$mdDialog = $mdDialog;
     this.$rootScope = $rootScope;
@@ -64,7 +65,9 @@ class ComponentController {
     this.teacherWorkgroupId = this.$scope.teacherWorkgroupId;
 
     this.showAddToNotebookButton =
-      this.componentContent.showAddToNotebookButton == null ? true : this.componentContent.showAddToNotebookButton;
+      this.componentContent.showAddToNotebookButton == null
+        ? true
+        : this.componentContent.showAddToNotebookButton;
 
     if (this.isStudentMode()) {
       this.isPromptVisible = true;
@@ -91,7 +94,11 @@ class ComponentController {
     }
 
     if (this.isStudentMode() || this.isGradingMode() || this.isGradingRevisionMode()) {
-      this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
+      this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(
+        this.nodeId,
+        this.componentId,
+        this.workgroupId
+      );
     }
 
     if (this.isGradingMode() || this.isGradingRevisionMode() || this.isOnlyShowWorkMode()) {
@@ -135,8 +142,11 @@ class ComponentController {
     this.$scope.$on('annotationSavedToServer', (event, args) => {
       const annotation = args.annotation;
       if (this.isEventTargetThisComponent(annotation)) {
-        this.latestAnnotations = this.AnnotationService
-          .getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
+        this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(
+          this.nodeId,
+          this.componentId,
+          this.workgroupId
+        );
       }
     });
 
@@ -159,12 +169,12 @@ class ComponentController {
   }
 
   initializeScopeGetComponentState(scope, childControllerName) {
-    scope.getComponentState = (isSubmit) => {
+    scope.getComponentState = isSubmit => {
       const deferred = this.$q.defer();
       const childController = scope[childControllerName];
       if (this.hasDirtyWorkToSendToParent(childController, isSubmit)) {
         const action = this.getDirtyWorkToSendToParentAction(childController, isSubmit);
-        childController.createComponentState(action).then((componentState) => {
+        childController.createComponentState(action).then(componentState => {
           deferred.resolve(componentState);
         });
       } else {
@@ -196,7 +206,14 @@ class ComponentController {
     this.summernoteRubricHTML = this.componentContent.rubric;
 
     const insertAssetString = this.$translate('INSERT_ASSET');
-    const InsertAssetButton = this.UtilService.createInsertAssetButton(this, null, this.nodeId, this.componentId, 'rubric', insertAssetString);
+    const InsertAssetButton = this.UtilService.createInsertAssetButton(
+      this,
+      null,
+      this.nodeId,
+      this.componentId,
+      'rubric',
+      insertAssetString
+    );
     this.summernoteRubricOptions = {
       toolbar: [
         ['style', ['style']],
@@ -223,13 +240,13 @@ class ComponentController {
 
   registerAuthoringListeners() {
     this.$scope.$watch(
-        () => {
-          return this.authoringComponentContent
-        },
-        (newValue, oldValue) => {
-          this.handleAuthoringComponentContentChanged(newValue, oldValue);
-        },
-        true
+      () => {
+        return this.authoringComponentContent;
+      },
+      (newValue, oldValue) => {
+        this.handleAuthoringComponentContentChanged(newValue, oldValue);
+      },
+      true
     );
 
     this.$scope.$on('componentAdvancedButtonClicked', (event, args) => {
@@ -304,16 +321,20 @@ class ComponentController {
 
   registerComponentWithParentNode() {
     if (this.$scope.$parent.nodeController != null) {
-      this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
+      this.$scope.$parent.nodeController.registerComponentController(
+        this.$scope,
+        this.componentContent
+      );
     }
   }
 
-  cleanupBeforeExiting() {
-
-  }
+  cleanupBeforeExiting() {}
 
   broadcastDoneRenderingComponent() {
-    this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
+    this.$rootScope.$broadcast('doneRenderingComponent', {
+      nodeId: this.nodeId,
+      componentId: this.componentId
+    });
   }
 
   registerStudentWorkSavedToServerListener() {
@@ -327,12 +348,17 @@ class ComponentController {
     if (this.isForThisComponent(componentState)) {
       this.setIsDirty(false);
       this.emitComponentDirty(this.getIsDirty());
-      const clientSaveTime = this.ConfigService.convertToClientTimestamp(componentState.serverSaveTime);
+      const clientSaveTime = this.ConfigService.convertToClientTimestamp(
+        componentState.serverSaveTime
+      );
       if (componentState.isSubmit) {
         this.setSubmittedMessage(clientSaveTime);
         this.lockIfNecessary();
         this.setIsSubmitDirty(false);
-        this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: this.isSubmitDirty});
+        this.$scope.$emit('componentSubmitDirty', {
+          componentId: this.componentId,
+          isDirty: this.isSubmitDirty
+        });
       } else if (componentState.isAutoSave) {
         this.setAutoSavedMessage(clientSaveTime);
       } else {
@@ -342,9 +368,7 @@ class ComponentController {
     this.handleStudentWorkSavedToServerAdditionalProcessing(event, args);
   }
 
-  handleStudentWorkSavedToServerAdditionalProcessing(event, args) {
-
-  }
+  handleStudentWorkSavedToServerAdditionalProcessing(event, args) {}
 
   handleNodeSubmit() {
     this.isSubmit = true;
@@ -358,8 +382,10 @@ class ComponentController {
     this.isSubmit = false;
 
     // tell the parent node to save
-    this.$scope.$emit('componentSaveTriggered',
-        {nodeId: this.nodeId, componentId: this.componentId});
+    this.$scope.$emit('componentSaveTriggered', {
+      nodeId: this.nodeId,
+      componentId: this.componentId
+    });
   }
 
   submitButtonClicked() {
@@ -432,13 +458,18 @@ class ComponentController {
   }
 
   emitComponentSubmitTriggered() {
-    this.$scope.$emit('componentSubmitTriggered', {nodeId: this.nodeId, componentId: this.componentId});
+    this.$scope.$emit('componentSubmitTriggered', {
+      nodeId: this.nodeId,
+      componentId: this.componentId
+    });
   }
 
   disableComponentIfNecessary() {
     if (this.isLockAfterSubmit()) {
-      const componentStates = this.StudentDataService
-          .getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
+      const componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(
+        this.nodeId,
+        this.componentId
+      );
       if (this.NodeService.isWorkSubmitted(componentStates)) {
         this.isDisabled = true;
       }
@@ -480,7 +511,7 @@ class ComponentController {
    * data has changed.
    */
   createComponentStateAndBroadcast(action) {
-    this.createComponentState(action).then((componentState) => {
+    this.createComponentState(action).then(componentState => {
       this.emitComponentStudentDataChanged(componentState);
       if (componentState.isCompleted) {
         this.emitComponentCompleted(componentState);
@@ -489,18 +520,26 @@ class ComponentController {
   }
 
   emitComponentStudentDataChanged(componentState) {
-    this.$scope.$emit('componentStudentDataChanged',
-        {nodeId: this.nodeId, componentId: this.componentId, componentState: componentState});
+    this.$scope.$emit('componentStudentDataChanged', {
+      nodeId: this.nodeId,
+      componentId: this.componentId,
+      componentState: componentState
+    });
   }
 
   emitComponentCompleted(componentState) {
-    this.$scope.$emit('componentCompleted',
-        {nodeId: this.nodeId, componentId: this.componentId, componentState: componentState});
+    this.$scope.$emit('componentCompleted', {
+      nodeId: this.nodeId,
+      componentId: this.componentId,
+      componentState: componentState
+    });
   }
 
   processLatestStudentWork() {
-    const latestComponentState =
-        this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
+    const latestComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(
+      this.nodeId,
+      this.componentId
+    );
 
     if (latestComponentState) {
       const serverSaveTime = latestComponentState.serverSaveTime;
@@ -526,11 +565,11 @@ class ComponentController {
   }
 
   emitComponentDirty(isDirty) {
-    this.$scope.$emit('componentDirty', {componentId: this.componentId, isDirty: isDirty});
+    this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: isDirty });
   }
 
   emitComponentSubmitDirty(isDirty) {
-    this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: isDirty});
+    this.$scope.$emit('componentSubmitDirty', { componentId: this.componentId, isDirty: isDirty });
   }
 
   setSavedMessage(time) {
@@ -589,16 +628,13 @@ class ComponentController {
     return this.ProjectService.isApplicationNode(nodeId);
   }
 
-
   /**
    * Create a new component state populated with the student data
    * @param action the action that is triggering creating of this component state
    * e.g. 'submit', 'save', 'change'
    * @return a promise that will return a component state
    */
-  createComponentState(action) {
-
-  }
+  createComponentState(action) {}
 
   /**
    * Perform any additional processing that is required before returning the
@@ -626,8 +662,10 @@ class ComponentController {
     if (connectedComponents != null) {
       const componentStates = [];
       for (let connectedComponent of connectedComponents) {
-        const componentState =
-            this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(connectedComponent.nodeId, connectedComponent.componentId);
+        const componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(
+          connectedComponent.nodeId,
+          connectedComponent.componentId
+        );
         if (componentState != null) {
           componentStates.push(this.UtilService.makeCopyOfJSONObject(componentState));
         }
@@ -655,7 +693,9 @@ class ComponentController {
     const connectedComponentsAndTheirComponentStates = [];
     for (const connectedComponent of this.componentContent.connectedComponents) {
       const componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(
-        connectedComponent.nodeId, connectedComponent.componentId);
+        connectedComponent.nodeId,
+        connectedComponent.componentId
+      );
       const connectedComponentsAndComponentState = {
         connectedComponent: connectedComponent,
         componentState: this.UtilService.makeCopyOfJSONObject(componentState)
@@ -666,16 +706,21 @@ class ComponentController {
   }
 
   showCopyPublicNotebookItemButton() {
-    return this.ProjectService.isSpaceExists("public");
+    return this.ProjectService.isSpaceExists('public');
   }
 
   copyPublicNotebookItemButtonClicked(event) {
-    this.$rootScope.$broadcast('openNotebook',
-      { nodeId: this.nodeId, componentId: this.componentId, insertMode: true, requester: this.nodeId + '-' + this.componentId, visibleSpace: "public" });
+    this.$rootScope.$broadcast('openNotebook', {
+      nodeId: this.nodeId,
+      componentId: this.componentId,
+      insertMode: true,
+      requester: this.nodeId + '-' + this.componentId,
+      visibleSpace: 'public'
+    });
   }
 
   importWorkByStudentWorkId(studentWorkId) {
-    this.StudentDataService.getStudentWorkById(studentWorkId).then((componentState) => {
+    this.StudentDataService.getStudentWorkById(studentWorkId).then(componentState => {
       if (componentState != null) {
         this.setStudentWork(componentState);
         this.setParentStudentWorkIdToCurrentStudentWork(studentWorkId);
@@ -697,8 +742,11 @@ class ComponentController {
   }
 
   isAddToNotebookEnabled() {
-    return this.isNotebookEnabled() && this.isStudentNoteClippingEnabled() &&
-        this.showAddToNotebookButton;
+    return (
+      this.isNotebookEnabled() &&
+      this.isStudentNoteClippingEnabled() &&
+      this.showAddToNotebookButton
+    );
   }
 
   /**
@@ -706,7 +754,6 @@ class ComponentController {
    * @param show whether to show the submit button
    */
   setShowSubmitButtonValue(show) {
-
     if (show == null || show == false) {
       // we are hiding the submit button
       this.authoringComponentContent.showSaveButton = false;
@@ -722,14 +769,17 @@ class ComponentController {
      * showSubmitButton value so that it can show save buttons on the
      * step or sibling components accordingly
      */
-    this.$scope.$emit('componentShowSubmitButtonValueChanged', {nodeId: this.nodeId, componentId: this.componentId, showSubmitButton: show});
+    this.$scope.$emit('componentShowSubmitButtonValueChanged', {
+      nodeId: this.nodeId,
+      componentId: this.componentId,
+      showSubmitButton: show
+    });
   }
 
   /**
    * The showSubmitButton value has changed
    */
   showSubmitButtonValueChanged() {
-
     /*
      * perform additional processing for when we change the showSubmitButton
      * value
@@ -771,8 +821,10 @@ class ComponentController {
     let numberOfAllowedComponents = 0;
     let allowedComponent = null;
     for (const component of this.getComponentsByNodeId(connectedComponent.nodeId)) {
-      if (this.isConnectedComponentTypeAllowed(component.type) &&
-          component.id != this.componentId) {
+      if (
+        this.isConnectedComponentTypeAllowed(component.type) &&
+        component.id != this.componentId
+      ) {
         numberOfAllowedComponents += 1;
         allowedComponent = component;
       }
@@ -791,16 +843,13 @@ class ComponentController {
     this.authoringAutomaticallySetConnectedComponentFieldsIfPossible(connectedComponent);
   }
 
-  authoringAutomaticallySetConnectedComponentFieldsIfPossible(connectedComponent) {
-
-  }
+  authoringAutomaticallySetConnectedComponentFieldsIfPossible(connectedComponent) {}
 
   /**
    * Delete a connected component
    * @param index the index of the component to delete
    */
   authoringDeleteConnectedComponent(index) {
-
     // ask the author if they are sure they want to delete the connected component
     let answer = confirm(this.$translate('areYouSureYouWantToDeleteThisConnectedComponent'));
 
@@ -822,11 +871,9 @@ class ComponentController {
    * @return the connected component type
    */
   authoringGetConnectedComponentType(connectedComponent) {
-
     var connectedComponentType = null;
 
     if (connectedComponent != null) {
-
       // get the node id and component id of the connected component
       var nodeId = connectedComponent.nodeId;
       var componentId = connectedComponent.componentId;
@@ -868,9 +915,7 @@ class ComponentController {
    * @param connectedComponent the connected component that changed
    */
   authoringConnectedComponentTypeChanged(connectedComponent) {
-
     if (connectedComponent != null) {
-
       if (connectedComponent.type === 'importWork') {
         /*
          * the type has changed to import work
@@ -892,9 +937,7 @@ class ComponentController {
    * @return whether we can connect to the component type
    */
   isConnectedComponentTypeAllowed(componentType) {
-
     if (componentType != null) {
-
       let allowedConnectedComponentTypes = this.allowedConnectedComponentTypes;
 
       // loop through the allowed connected component types
@@ -960,7 +1003,6 @@ class ComponentController {
    * The author has changed the rubric
    */
   summernoteRubricHTMLChanged() {
-
     // get the summernote rubric html
     let html = this.summernoteRubricHTML;
 
@@ -990,7 +1032,6 @@ class ComponentController {
    * The component has changed in the regular authoring view so we will save the project
    */
   authoringViewComponentChanged() {
-
     // update the JSON string in the advanced authoring view textarea
     this.updateAdvancedAuthoringView();
 
@@ -1031,7 +1072,7 @@ class ComponentController {
        * the project to the server
        */
       this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
-    } catch(e) {
+    } catch (e) {
       this.$scope.$parent.nodeAuthoringController.showSaveErrorAdvancedAuthoring();
     }
   }
@@ -1104,7 +1145,7 @@ class ComponentController {
       this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
       this.$rootScope.$broadcast('scrollToComponent', { componentId: this.componentId });
       this.isJSONStringChanged = false;
-    } catch(e) {
+    } catch (e) {
       this.$scope.$parent.nodeAuthoringController.showSaveErrorAdvancedAuthoring();
     }
   }
@@ -1161,7 +1202,7 @@ class ComponentController {
   }
 
   attachStudentAsset(studentAsset) {
-    this.StudentAssetService.copyAssetForReference(studentAsset).then((copiedAsset) => {
+    this.StudentAssetService.copyAssetForReference(studentAsset).then(copiedAsset => {
       const attachment = {
         studentAssetId: copiedAsset.id,
         iconURL: copiedAsset.iconURL
@@ -1194,9 +1235,23 @@ class ComponentController {
     const componentId = this.componentId;
     const toWorkgroupId = this.ConfigService.getWorkgroupId();
     if (type === 'autoScore') {
-      return this.AnnotationService.createAutoScoreAnnotation(runId, periodId, nodeId, componentId, toWorkgroupId, data);
+      return this.AnnotationService.createAutoScoreAnnotation(
+        runId,
+        periodId,
+        nodeId,
+        componentId,
+        toWorkgroupId,
+        data
+      );
     } else if (type === 'autoComment') {
-      return this.AnnotationService.createAutoCommentAnnotation(runId, periodId, nodeId, componentId, toWorkgroupId, data);
+      return this.AnnotationService.createAutoCommentAnnotation(
+        runId,
+        periodId,
+        nodeId,
+        componentId,
+        toWorkgroupId,
+        data
+      );
     }
   }
 
@@ -1209,7 +1264,7 @@ class ComponentController {
   }
 
   registerNotebookItemChosenListener() {
-    this.$scope.$on('notebookItemChosen', (event, {requester, notebookItem}) => {
+    this.$scope.$on('notebookItemChosen', (event, { requester, notebookItem }) => {
       if (requester === `${this.nodeId}-${this.componentId}`) {
         const studentWorkId = notebookItem.content.studentWorkIds[0];
         this.importWorkByStudentWorkId(studentWorkId);

@@ -1,10 +1,8 @@
 import { async } from '@angular/core/testing';
-import {Run} from "./run";
+import { Run } from './run';
 
 describe('Run', () => {
-  beforeEach(async(() => {
-
-  }));
+  beforeEach(async(() => {}));
 
   it('should create', () => {
     expect(true).toBeTruthy();
@@ -63,5 +61,4 @@ describe('Run', () => {
     const after = new Date('2019-03-22T08:00:00.0').getTime();
     expect(run.isScheduled(after)).toBeFalsy();
   });
-
 });

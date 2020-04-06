@@ -1,19 +1,18 @@
 'use strict';
 
-import  { ClassResponseController, ClassResponseComponentOptions } from './classResponse';
+import { ClassResponseController, ClassResponseComponentOptions } from './classResponse';
 import DiscussionService from './discussionService';
 import DiscussionController from './discussionController';
 
-const discussionComponentModule = angular.module('discussionComponentModule', [
-    'pascalprecht.translate'
-  ])
+const discussionComponentModule = angular
+  .module('discussionComponentModule', ['pascalprecht.translate'])
   .service('DiscussionService', DiscussionService)
   .controller('DiscussionController', DiscussionController)
   .controller('ClassResponseController', ClassResponseController)
   .component('classResponse', ClassResponseComponentOptions)
   .config([
     '$translatePartialLoaderProvider',
-    ($translatePartialLoaderProvider) => {
+    $translatePartialLoaderProvider => {
       $translatePartialLoaderProvider.addPart('components/discussion/i18n');
     }
   ]);

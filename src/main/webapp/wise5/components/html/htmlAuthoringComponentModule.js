@@ -4,13 +4,14 @@ import HTMLService from './htmlService';
 import HTMLController from './htmlController';
 import HTMLAuthoringController from './htmlAuthoringController';
 
-const htmlComponentModule = angular.module('htmlComponentModule', [])
+const htmlComponentModule = angular
+  .module('htmlComponentModule', [])
   .service('HTMLService', HTMLService)
   .controller('HTMLController', HTMLController)
   .controller('HTMLAuthoringController', HTMLAuthoringController)
   .config([
     '$translatePartialLoaderProvider',
-    ($translatePartialLoaderProvider) => {
+    $translatePartialLoaderProvider => {
       $translatePartialLoaderProvider.addPart('components/html/i18n');
     }
   ]);

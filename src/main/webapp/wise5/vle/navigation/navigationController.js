@@ -1,10 +1,5 @@
 class NavigationController {
-  constructor(
-      $filter,
-      $transitions,
-      ConfigService,
-      ProjectService,
-      StudentDataService) {
+  constructor($filter, $transitions, ConfigService, ProjectService, StudentDataService) {
     this.$filter = $filter;
     this.$transitions = $transitions;
     this.ConfigService = ConfigService;
@@ -12,7 +7,7 @@ class NavigationController {
     this.StudentDataService = StudentDataService;
     this.rootNode = this.ProjectService.rootNode;
 
-    $transitions.onSuccess({}, ($transition) => {
+    $transitions.onSuccess({}, $transition => {
       const toNodeId = $transition.params('to').nodeId;
       const fromNodeId = $transition.params('from').nodeId;
       if (toNodeId && fromNodeId && toNodeId !== fromNodeId) {

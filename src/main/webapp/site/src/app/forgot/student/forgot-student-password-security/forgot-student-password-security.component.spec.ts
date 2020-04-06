@@ -4,11 +4,11 @@ import { NO_ERRORS_SCHEMA, LOCALE_ID, TRANSLATIONS_FORMAT, TRANSLATIONS } from '
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
-import { I18n } from "@ngx-translate/i18n-polyfill";
+import { I18n } from '@ngx-translate/i18n-polyfill';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/index';
 import { StudentService } from '../../../student/student.service';
-import { translationsFactory } from "../../../app.module";
+import { translationsFactory } from '../../../app.module';
 import { configureTestSuite } from 'ng-bullet';
 
 export class MockStudentService {
@@ -58,15 +58,11 @@ describe('ForgotStudentPasswordSecurityComponent', () => {
 
   configureTestSuite(() => {
     TestBed.configureTestingModule({
-      declarations: [ ForgotStudentPasswordSecurityComponent ],
-      imports: [
-        RouterTestingModule,
-        BrowserAnimationsModule,
-        ReactiveFormsModule
-      ],
+      declarations: [ForgotStudentPasswordSecurityComponent],
+      imports: [RouterTestingModule, BrowserAnimationsModule, ReactiveFormsModule],
       providers: [
         { provide: StudentService, useClass: MockStudentService },
-        { provide: TRANSLATIONS_FORMAT, useValue: "xlf" },
+        { provide: TRANSLATIONS_FORMAT, useValue: 'xlf' },
         {
           provide: TRANSLATIONS,
           useFactory: translationsFactory,
@@ -74,8 +70,8 @@ describe('ForgotStudentPasswordSecurityComponent', () => {
         },
         I18n
       ],
-      schemas: [ NO_ERRORS_SCHEMA ]
-    })
+      schemas: [NO_ERRORS_SCHEMA]
+    });
   });
 
   beforeEach(() => {
@@ -121,7 +117,9 @@ describe('ForgotStudentPasswordSecurityComponent', () => {
       questionKey: questionKey,
       answer: answer
     };
-    expect(navigateSpy).toHaveBeenCalledWith(['/forgot/student/password/change'],
-      {queryParams: params, skipLocationChange: true});
+    expect(navigateSpy).toHaveBeenCalledWith(['/forgot/student/password/change'], {
+      queryParams: params,
+      skipLocationChange: true
+    });
   });
 });

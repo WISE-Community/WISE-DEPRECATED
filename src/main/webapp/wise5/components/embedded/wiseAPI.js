@@ -1,5 +1,4 @@
 class WISEAPI {
-
   constructor() {
     window.addEventListener('message', this.createReceiveMessageFromParentFunction(this));
   }
@@ -106,8 +105,12 @@ class WISEAPI {
    * @param isAutoSave
    * @param isSubmit
    */
-  createComponentState(studentData, messageType = 'studentDataChanged',
-      isAutoSave = false, isSubmit = false) {
+  createComponentState(
+    studentData,
+    messageType = 'studentDataChanged',
+    isAutoSave = false,
+    isSubmit = false
+  ) {
     return {
       messageType: messageType,
       isAutoSave: isAutoSave,
@@ -129,7 +132,7 @@ class WISEAPI {
       data: {
         value: value
       }
-    }
+    };
   }
 
   /**
@@ -159,7 +162,7 @@ class WISEAPI {
    * 'getLatestAnnotations'
    */
   sendMessageToParent(message) {
-    window.postMessage(message, "*");
+    window.postMessage(message, '*');
   }
 
   /**
@@ -174,7 +177,7 @@ class WISEAPI {
      * @param message An object. The contents of the object depend on the message type. Look at the
      * handle functions above to see what data you can obtain from each message type.
      */
-    return (message) => {
+    return message => {
       let messageData = message.data;
       if (messageData.messageType === 'parameters') {
         thisWISEAPI.handleParametersMessage(messageData);
@@ -192,8 +195,6 @@ class WISEAPI {
       } else if (messageData.messageType === 'latestAnnotations') {
         thisWISEAPI.handleLatestAnnotationsMessage(messageData);
       }
-    }
+    };
   }
-
 }
-

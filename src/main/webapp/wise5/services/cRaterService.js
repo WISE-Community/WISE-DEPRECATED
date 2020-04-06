@@ -21,7 +21,7 @@ class CRaterService {
         studentData: studentData
       }
     };
-    return this.$http(httpParams).then((response) => {
+    return this.$http(httpParams).then(response => {
       return response;
     });
   }
@@ -60,9 +60,10 @@ class CRaterService {
        * 1. the enableCRater field is true
        * 2. there is no enableCRater field but there is a cRater object (this is for legacy purposes)
        */
-      if ((component.enableCRater && component.cRater != null) ||
-        (!component.hasOwnProperty('enableCRater') && component.cRater != null)) {
-
+      if (
+        (component.enableCRater && component.cRater != null) ||
+        (!component.hasOwnProperty('enableCRater') && component.cRater != null)
+      ) {
         // get the score on value e.g. 'submit', 'save', 'change', or 'exit'
         return component.cRater.scoreOn;
       }
@@ -201,10 +202,12 @@ class CRaterService {
    * @param currentScore the score from the current submit
    * @returns the feedback text for the given previous score and current score
    */
-  getMultipleAttemptCRaterFeedbackTextByScore(component, previousScore,
-      currentScore) {
+  getMultipleAttemptCRaterFeedbackTextByScore(component, previousScore, currentScore) {
     const scoringRule = this.getMultipleAttemptCRaterScoringRuleByScore(
-        component, previousScore, currentScore);
+      component,
+      previousScore,
+      currentScore
+    );
     if (scoringRule != null) {
       return scoringRule.feedbackText;
     }
@@ -219,8 +222,7 @@ class CRaterService {
    * @param currentScore the score from the current submit
    * @returns the scoring rule for the given previous score and current score
    */
-  getMultipleAttemptCRaterScoringRuleByScore(component, previousScore,
-      currentScore) {
+  getMultipleAttemptCRaterScoringRuleByScore(component, previousScore, currentScore) {
     if (component != null && previousScore != null && currentScore != null) {
       const cRater = component.cRater;
       if (cRater != null) {
@@ -237,9 +239,10 @@ class CRaterService {
                 const previousScoreMatch = scoreSequence[0];
                 const currentScoreMatch = scoreSequence[1];
 
-                if (previousScore.toString().match("[" + previousScoreMatch + "]") &&
-                  currentScore.toString().match("[" + currentScoreMatch + "]")) {
-
+                if (
+                  previousScore.toString().match('[' + previousScoreMatch + ']') &&
+                  currentScore.toString().match('[' + currentScoreMatch + ']')
+                ) {
                   /*
                    * the previous score and current score match the
                    * expected scores so we have found the rule we want
@@ -268,15 +271,12 @@ class CRaterService {
         itemId: itemId
       }
     };
-    return this.$http(httpParams).then((response) => {
+    return this.$http(httpParams).then(response => {
       return response.data.isAvailable;
     });
   }
 }
 
-CRaterService.$inject = [
-  '$http',
-  'ConfigService'
-];
+CRaterService.$inject = ['$http', 'ConfigService'];
 
 export default CRaterService;

@@ -134,7 +134,7 @@ function shouldConvertMultipleYAxisToSingleYAxis() {
       units: '',
       locked: true,
       opposite: true
-    }
+    };
     graphAuthoringController.authoringComponentContent.yAxis = [firstYAxis, secondYAxis];
     graphAuthoringController.convertMultipleYAxisToSingleYAxis();
     expect(Array.isArray(graphAuthoringController.authoringComponentContent.yAxis)).toBe(false);

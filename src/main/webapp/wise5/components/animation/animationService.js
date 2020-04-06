@@ -25,7 +25,7 @@ class AnimationService extends ComponentService {
 
   isCompleted(component, componentStates, componentEvents, nodeEvents, node) {
     return componentStates.length > 0;
-  };
+  }
 
   componentStateHasStudentWork(componentState, componentContent) {
     if (componentState != null) {
@@ -35,10 +35,6 @@ class AnimationService extends ComponentService {
   }
 }
 
-AnimationService.$inject = [
-  '$filter',
-  'StudentDataService',
-  'UtilService'
-];
+AnimationService.$inject = ['$filter', 'StudentDataService', 'UtilService'];
 
 export default AnimationService;

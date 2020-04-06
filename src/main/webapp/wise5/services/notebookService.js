@@ -1,6 +1,13 @@
 class NotebookService {
-  constructor($http, $q, $rootScope, ConfigService, ProjectService,
-      StudentAssetService, StudentDataService) {
+  constructor(
+    $http,
+    $q,
+    $rootScope,
+    ConfigService,
+    ProjectService,
+    StudentAssetService,
+    StudentDataService
+  ) {
     this.$http = $http;
     this.$q = $q;
     this.$rootScope = $rootScope;
@@ -78,13 +85,25 @@ class NotebookService {
   }
 
   editItem(ev, itemId) {
-    this.$rootScope.$broadcast('editNote', {itemId: itemId, ev: ev});
+    this.$rootScope.$broadcast('editNote', { itemId: itemId, ev: ev });
   }
 
-  addNote(ev, file, text = null, studentWorkIds = null, isEditTextEnabled = true, isFileUploadEnabled = true) {
-    this.$rootScope.$broadcast('addNote',
-        {ev: ev, file: file, text: text, studentWorkIds: studentWorkIds,
-          isEditTextEnabled: isEditTextEnabled, isFileUploadEnabled: isFileUploadEnabled});
+  addNote(
+    ev,
+    file,
+    text = null,
+    studentWorkIds = null,
+    isEditTextEnabled = true,
+    isFileUploadEnabled = true
+  ) {
+    this.$rootScope.$broadcast('addNote', {
+      ev: ev,
+      file: file,
+      text: text,
+      studentWorkIds: studentWorkIds,
+      isEditTextEnabled: isEditTextEnabled,
+      isFileUploadEnabled: isFileUploadEnabled
+    });
   }
 
   deleteNote(note) {
@@ -92,8 +111,17 @@ class NotebookService {
     noteCopy.id = null; // set to null so we're creating a new notebook item
     noteCopy.content.clientSaveTime = Date.parse(new Date());
     const clientDeleteTime = Date.parse(new Date());
-    return this.saveNotebookItem(noteCopy.id, noteCopy.nodeId, noteCopy.localNotebookItemId, noteCopy.type,
-        noteCopy.title, noteCopy.content, noteCopy.groups, noteCopy.content.clientSaveTime, clientDeleteTime);
+    return this.saveNotebookItem(
+      noteCopy.id,
+      noteCopy.nodeId,
+      noteCopy.localNotebookItemId,
+      noteCopy.type,
+      noteCopy.title,
+      noteCopy.content,
+      noteCopy.groups,
+      noteCopy.content.clientSaveTime,
+      clientDeleteTime
+    );
   }
 
   reviveNote(note) {
@@ -101,12 +129,24 @@ class NotebookService {
     noteCopy.id = null; // set to null so we're creating a new notebook item
     noteCopy.content.clientSaveTime = Date.parse(new Date());
     const clientDeleteTime = null; // if delete timestamp is null, then we are in effect un-deleting this note item
-    return this.saveNotebookItem(noteCopy.id, noteCopy.nodeId, noteCopy.localNotebookItemId, noteCopy.type,
-        noteCopy.title, noteCopy.content, noteCopy.groups, noteCopy.content.clientSaveTime, clientDeleteTime);
+    return this.saveNotebookItem(
+      noteCopy.id,
+      noteCopy.nodeId,
+      noteCopy.localNotebookItemId,
+      noteCopy.type,
+      noteCopy.title,
+      noteCopy.content,
+      noteCopy.groups,
+      noteCopy.content.clientSaveTime,
+      clientDeleteTime
+    );
   }
 
   // looks up notebook item by local notebook item id, including deleted notes
-  getLatestNotebookItemByLocalNotebookItemId(localNotebookItemId, workgroupId = this.ConfigService.getWorkgroupId()) {
+  getLatestNotebookItemByLocalNotebookItemId(
+    localNotebookItemId,
+    workgroupId = this.ConfigService.getWorkgroupId()
+  ) {
     const notebookByWorkgroup = this.getNotebookByWorkgroup(workgroupId);
     if (notebookByWorkgroup != null) {
       const allNotebookItems = notebookByWorkgroup.allItems;
@@ -120,7 +160,10 @@ class NotebookService {
   }
 
   // returns student's report item if they've done work, or the template if they haven't
-  getLatestNotebookReportItemByReportId(reportId, workgroupId = this.ConfigService.getWorkgroupId()) {
+  getLatestNotebookReportItemByReportId(
+    reportId,
+    workgroupId = this.ConfigService.getWorkgroupId()
+  ) {
     return this.getLatestNotebookItemByLocalNotebookItemId(reportId, workgroupId);
   }
 
@@ -166,21 +209,30 @@ class NotebookService {
   }
 
   isNotebookEnabled() {
-    return this.ProjectService.project.notebook != null && this.ProjectService.project.notebook.enabled;
+    return (
+      this.ProjectService.project.notebook != null && this.ProjectService.project.notebook.enabled
+    );
   }
 
   isTeacherNotebookEnabled() {
-    return this.ProjectService.project.teacherNotebook != null && this.ProjectService.project.teacherNotebook.enabled;
+    return (
+      this.ProjectService.project.teacherNotebook != null &&
+      this.ProjectService.project.teacherNotebook.enabled
+    );
   }
 
   isStudentNoteEnabled() {
-    return this.ProjectService.project.notebook != null &&
-        this.ProjectService.project.notebook.itemTypes.note.enabled;
+    return (
+      this.ProjectService.project.notebook != null &&
+      this.ProjectService.project.notebook.itemTypes.note.enabled
+    );
   }
 
   isStudentNoteClippingEnabled() {
-    return this.isStudentNoteEnabled() &&
-      this.ProjectService.project.notebook.itemTypes.note.enableClipping;
+    return (
+      this.isStudentNoteEnabled() &&
+      this.ProjectService.project.notebook.itemTypes.note.enableClipping
+    );
   }
 
   retrieveNotebookItems(workgroupId = null, periodId = null) {
@@ -199,9 +251,9 @@ class NotebookService {
       return deferred.promise;
     } else {
       const config = {
-        method : 'GET',
-        url : this.ConfigService.getStudentNotebookURL(),
-        params : {}
+        method: 'GET',
+        url: this.ConfigService.getStudentNotebookURL(),
+        params: {}
       };
       if (workgroupId != null) {
         config.params.workgroupId = workgroupId;
@@ -209,16 +261,19 @@ class NotebookService {
       if (periodId != null) {
         config.params.periodId = periodId;
       }
-      return this.$http(config).then((response) => {
+      return this.$http(config).then(response => {
         this.notebooksByWorkgroup = {};
         const allNotebookItems = response.data;
         for (let notebookItem of allNotebookItems) {
           try {
             if (notebookItem.studentAssetId != null) {
-              notebookItem.studentAsset = this.StudentAssetService.getAssetById(notebookItem.studentAssetId);
+              notebookItem.studentAsset = this.StudentAssetService.getAssetById(
+                notebookItem.studentAssetId
+              );
             } else if (notebookItem.studentWorkId != null) {
-              notebookItem.studentWork =
-                  this.StudentDataService.getStudentWorkByStudentWorkId(notebookItem.studentWorkId);
+              notebookItem.studentWork = this.StudentDataService.getStudentWorkByStudentWorkId(
+                notebookItem.studentWorkId
+              );
             } else if (notebookItem.type === 'note' || notebookItem.type === 'report') {
               notebookItem.content = angular.fromJson(notebookItem.content);
             }
@@ -228,8 +283,7 @@ class NotebookService {
             } else {
               this.notebooksByWorkgroup[workgroupId] = { allItems: [notebookItem] };
             }
-          } catch (e) {
-          }
+          } catch (e) {}
         }
         this.groupNotebookItems();
         return this.notebooksByWorkgroup;
@@ -249,7 +303,7 @@ class NotebookService {
       if (this.notebooksByWorkgroup.hasOwnProperty(workgroupId)) {
         const notebookByWorkgroup = this.notebooksByWorkgroup[workgroupId];
         notebookByWorkgroup.items = {};
-        notebookByWorkgroup.deletedItems = {};  // reset deleted items
+        notebookByWorkgroup.deletedItems = {}; // reset deleted items
         for (let ni = 0; ni < notebookByWorkgroup.allItems.length; ni++) {
           const notebookItem = notebookByWorkgroup.allItems[ni];
           const notebookItemLocalNotebookItemId = notebookItem.localNotebookItemId;
@@ -263,13 +317,19 @@ class NotebookService {
         // If it's deleted, then move the entire item array to deletedItems
         for (let notebookItemLocalNotebookItemIdKey in notebookByWorkgroup.items) {
           if (notebookByWorkgroup.items.hasOwnProperty(notebookItemLocalNotebookItemIdKey)) {
-            const allRevisionsForThisLocalNotebookItemId = notebookByWorkgroup.items[notebookItemLocalNotebookItemIdKey];
+            const allRevisionsForThisLocalNotebookItemId =
+              notebookByWorkgroup.items[notebookItemLocalNotebookItemIdKey];
             if (allRevisionsForThisLocalNotebookItemId != null) {
-              const lastRevision = allRevisionsForThisLocalNotebookItemId[allRevisionsForThisLocalNotebookItemId.length - 1];
+              const lastRevision =
+                allRevisionsForThisLocalNotebookItemId[
+                  allRevisionsForThisLocalNotebookItemId.length - 1
+                ];
               if (lastRevision != null && lastRevision.serverDeleteTime != null) {
                 // the last revision for this was deleted,
                 // so move the entire note (with all its revisions) to deletedItems
-                notebookByWorkgroup.deletedItems[notebookItemLocalNotebookItemIdKey] = allRevisionsForThisLocalNotebookItemId;
+                notebookByWorkgroup.deletedItems[
+                  notebookItemLocalNotebookItemIdKey
+                ] = allRevisionsForThisLocalNotebookItemId;
                 delete notebookByWorkgroup.items[notebookItemLocalNotebookItemIdKey];
               }
             }
@@ -316,8 +376,10 @@ class NotebookService {
   getPublicNotebookItem(group, localNotebookItemId, workgroupId) {
     const publicNotebookItemsInGroup = this.publicNotebookItems[group];
     for (let publicNotebookItemInGroup of publicNotebookItemsInGroup) {
-      if (publicNotebookItemInGroup.localNotebookItemId === localNotebookItemId &&
-          publicNotebookItemInGroup.workgroupId === workgroupId) {
+      if (
+        publicNotebookItemInGroup.localNotebookItemId === localNotebookItemId &&
+        publicNotebookItemInGroup.workgroupId === workgroupId
+      ) {
         return publicNotebookItemInGroup;
       }
     }
@@ -356,28 +418,38 @@ class NotebookService {
       return deferred.promise;
     } else {
       const config = {
-        method : 'GET',
-        url : this.ConfigService.getStudentNotebookURL() + `/group/${group}`,
-        params : {}
+        method: 'GET',
+        url: this.ConfigService.getStudentNotebookURL() + `/group/${group}`,
+        params: {}
       };
       if (periodId != null) {
         config.params.periodId = periodId;
       }
-      return this.$http(config).then((response) => {
+      return this.$http(config).then(response => {
         const publicNotebookItemsForGroup = response.data;
         for (let publicNotebookItemForGroup of publicNotebookItemsForGroup) {
-          publicNotebookItemForGroup.content =
-              angular.fromJson(publicNotebookItemForGroup.content);
+          publicNotebookItemForGroup.content = angular.fromJson(publicNotebookItemForGroup.content);
         }
         this.publicNotebookItems[group] = publicNotebookItemsForGroup;
-        this.$rootScope.$broadcast('publicNotebookItemsRetrieved', {publicNotebookItems: this.publicNotebookItems});
+        this.$rootScope.$broadcast('publicNotebookItemsRetrieved', {
+          publicNotebookItems: this.publicNotebookItems
+        });
         return this.publicNotebookItems;
       });
     }
   }
 
-  saveNotebookItem(notebookItemId, nodeId, localNotebookItemId, type, title, content, groups = [],
-      clientSaveTime = null, clientDeleteTime = null) {
+  saveNotebookItem(
+    notebookItemId,
+    nodeId,
+    localNotebookItemId,
+    type,
+    title,
+    content,
+    groups = [],
+    clientSaveTime = null,
+    clientDeleteTime = null
+  ) {
     if (this.ConfigService.isPreview()) {
       return this.$q((resolve, reject) => {
         const notebookItem = {
@@ -405,15 +477,17 @@ class NotebookService {
           this.notebooksByWorkgroup[workgroupId] = { allItems: [notebookItem] };
         }
         this.groupNotebookItems();
-        this.$rootScope.$broadcast('notebookUpdated',
-            {notebook: this.notebooksByWorkgroup[workgroupId], notebookItem: notebookItem});
+        this.$rootScope.$broadcast('notebookUpdated', {
+          notebook: this.notebooksByWorkgroup[workgroupId],
+          notebookItem: notebookItem
+        });
         resolve();
       });
     } else {
       const config = {
         method: 'POST',
         url: this.ConfigService.getStudentNotebookURL(),
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
       };
       const params = {
         workgroupId: this.ConfigService.getWorkgroupId(),
@@ -429,10 +503,10 @@ class NotebookService {
         clientDeleteTime: clientDeleteTime
       };
       if (this.ConfigService.getMode() === 'classroomMonitor') {
-        delete(params.periodId);
+        delete params.periodId;
       }
       config.data = $.param(params);
-      return this.$http(config).then((result) => {
+      return this.$http(config).then(result => {
         const notebookItem = result.data;
         if (notebookItem != null) {
           if (notebookItem.type === 'note' || notebookItem.type === 'report') {
@@ -442,9 +516,10 @@ class NotebookService {
           if (this.isNotebookItemPrivate(notebookItem)) {
             this.updatePrivateNotebookItem(notebookItem, workgroupId);
           }
-          this.$rootScope.$broadcast('notebookUpdated',
-              {notebook: this.notebooksByWorkgroup[workgroupId],
-               notebookItem: notebookItem});
+          this.$rootScope.$broadcast('notebookUpdated', {
+            notebook: this.notebooksByWorkgroup[workgroupId],
+            notebookItem: notebookItem
+          });
         }
         return result.data;
       });
@@ -473,14 +548,14 @@ class NotebookService {
       const config = {
         method: 'POST',
         url: this.ConfigService.getStudentNotebookURL() + '/parent/' + notebookItemId,
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
       };
       const params = {
         workgroupId: this.ConfigService.getWorkgroupId(),
         clientSaveTime: Date.parse(new Date())
       };
       config.data = $.param(params);
-      return this.$http(config).then((result) => {
+      return this.$http(config).then(result => {
         const notebookItem = result.data;
         return this.handleNewNotebookItem(notebookItem);
       });
@@ -492,7 +567,7 @@ class NotebookService {
       const config = {
         method: 'POST',
         url: this.ConfigService.getStudentNotebookURL() + '/group/' + group,
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
       };
       const params = {
         workgroupId: this.ConfigService.getWorkgroupId(),
@@ -500,7 +575,7 @@ class NotebookService {
         clientSaveTime: Date.parse(new Date())
       };
       config.data = $.param(params);
-      return this.$http(config).then((result) => {
+      return this.$http(config).then(result => {
         const notebookItem = result.data;
         return this.handleNewNotebookItem(notebookItem);
       });
@@ -512,13 +587,13 @@ class NotebookService {
       const config = {
         method: 'DELETE',
         url: this.ConfigService.getStudentNotebookURL() + '/group/' + group,
-        params : {
+        params: {
           workgroupId: this.ConfigService.getWorkgroupId(),
           notebookItemId: notebookItemId,
           clientSaveTime: Date.parse(new Date())
         }
       };
-      return this.$http(config).then((result) => {
+      return this.$http(config).then(result => {
         const notebookItem = result.data;
         return this.handleNewNotebookItem(notebookItem);
       });
@@ -532,18 +607,30 @@ class NotebookService {
     const workgroupId = notebookItem.workgroupId;
     this.notebooksByWorkgroup[workgroupId].allItems.push(notebookItem);
     this.groupNotebookItems();
-    this.$rootScope.$broadcast('notebookUpdated',
-        {notebook: this.notebooksByWorkgroup[workgroupId], notebookItem: notebookItem});
+    this.$rootScope.$broadcast('notebookUpdated', {
+      notebook: this.notebooksByWorkgroup[workgroupId],
+      notebookItem: notebookItem
+    });
     return notebookItem;
   }
 
   saveNotebookToggleEvent(isOpen, currentNode) {
-    const nodeId = null, componentId = null, componentType = null, category = 'Notebook';
+    const nodeId = null,
+      componentId = null,
+      componentType = null,
+      category = 'Notebook';
     const eventData = {
       curentNodeId: currentNode == null ? null : currentNode.id
     };
     const event = isOpen ? 'notebookOpened' : 'notebookClosed';
-    this.StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
+    this.StudentDataService.saveVLEEvent(
+      nodeId,
+      componentId,
+      componentType,
+      category,
+      event,
+      eventData
+    );
   }
 }
 

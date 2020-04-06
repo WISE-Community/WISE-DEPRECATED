@@ -1,28 +1,26 @@
-"use strict";
+'use strict';
 
 class HelpIconController {
-    constructor() {
-    };
+  constructor() {}
 
-    click() {
-        this.onClick();
-    }
+  click() {
+    this.onClick();
+  }
 }
 
 //HelpIconController.$inject = [];
 
 const HelpIcon = {
-    bindings: {
-        color: '<',
-        customClass: '<',
-        icon: '<',
-        iconClass: '<',
-        pulse: '<',
-        onClick: '&'
-    },
-    controller: HelpIconController,
-    template:
-        `<div class="help-icon {{ $ctrl.customClass }}" ng-class="{ 'pulse': $ctrl.pulse} ">
+  bindings: {
+    color: '<',
+    customClass: '<',
+    icon: '<',
+    iconClass: '<',
+    pulse: '<',
+    onClick: '&'
+  },
+  controller: HelpIconController,
+  template: `<div class="help-icon {{ $ctrl.customClass }}" ng-class="{ 'pulse': $ctrl.pulse} ">
                 <md-button aria-label="{{ $ctrl.label }}"
                            ng-click="$ctrl.click()"
                            class="md-whiteframe-1dp md-icon-button help-icon__button">

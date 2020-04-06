@@ -1,14 +1,13 @@
-"use strict";
+'use strict';
 // TODO: aria-label
 
 const AlertStatusIcon = {
-    bindings: {
-        hasNewAlert: '<',
-        message: '@',
-        onClick: '&'
-    },
-    template:
-        `<div class="md-avatar avatar avatar--icon avatar--icon--alert"
+  bindings: {
+    hasNewAlert: '<',
+    message: '@',
+    onClick: '&'
+  },
+  template: `<div class="md-avatar avatar avatar--icon avatar--icon--alert"
               ng-click="$ctrl.onClick()"
               aria-label="$ctrl.message">
             <md-icon class="node-icon avatar--icon--alert__icon"

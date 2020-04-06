@@ -4,8 +4,8 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { MatIconRegistry } from '@angular/material';
 import { Subscription } from 'rxjs';
 import { MediaChange, MediaObserver } from '@angular/flex-layout';
-import { UtilService } from "./services/util.service";
-import { ConfigService } from "./services/config.service";
+import { UtilService } from './services/util.service';
+import { ConfigService } from './services/config.service';
 import { Announcement } from './domain/announcement';
 
 @Component({
@@ -24,12 +24,14 @@ export class AppComponent {
   scroll: boolean = false;
   announcement: Announcement = new Announcement();
 
-  constructor(private router: Router,
-              iconRegistry: MatIconRegistry,
-              sanitizer: DomSanitizer,
-              utilService: UtilService,
-              media: MediaObserver,
-              private configService: ConfigService) {
+  constructor(
+    private router: Router,
+    iconRegistry: MatIconRegistry,
+    sanitizer: DomSanitizer,
+    utilService: UtilService,
+    media: MediaObserver,
+    private configService: ConfigService
+  ) {
     iconRegistry.addSvgIcon(
       'ki-elicit',
       sanitizer.bypassSecurityTrustResourceUrl('assets/img/icons/ki-elicit.svg')
@@ -74,16 +76,15 @@ export class AppComponent {
       'google-classroom',
       sanitizer.bypassSecurityTrustResourceUrl('assets/img/icons/google-classroom.svg')
     );
-    utilService.getMobileMenuState()
-      .subscribe(state => {
-        this.showMobileMenu = state;
-      });
+    utilService.getMobileMenuState().subscribe(state => {
+      this.showMobileMenu = state;
+    });
     this.mediaWatcher = media.asObservable().subscribe((change: MediaChange[]) => {
       if (media.isActive('gt-sm')) {
         utilService.showMobileMenu(false);
       }
     });
-    router.events.subscribe((event) => {
+    router.events.subscribe(event => {
       utilService.showMobileMenu(false);
     });
   }
@@ -94,7 +95,7 @@ export class AppComponent {
      * TODO: remove when https://github.com/angular/material2/issues/4280 is resolved
      */
     this.router.events.subscribe((ev: any) => {
-      const topElement = document.querySelector('.top-content',);
+      const topElement = document.querySelector('.top-content');
       if (!topElement) {
         return;
       }
@@ -114,17 +115,19 @@ export class AppComponent {
   }
 
   showHeaderAndFooter(): boolean {
-    return !this.router.url.includes('/login') &&
+    return (
+      !this.router.url.includes('/login') &&
       !this.router.url.includes('/join') &&
       !this.router.url.includes('/contact') &&
-      !this.router.url.includes('/forgot');
+      !this.router.url.includes('/forgot')
+    );
   }
 
   dismissAnnouncement() {
     this.hasAnnouncement = false;
   }
 
-  onYPositionChange(el:HTMLElement) {
+  onYPositionChange(el: HTMLElement) {
     this.pageY = el.scrollTop;
     const isAtBottom = this.pageY >= el.scrollHeight - el.offsetHeight - 2;
     this.scroll = isAtBottom || (this.pageY > 360 && this.pageY < this.prevPageY);

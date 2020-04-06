@@ -5,24 +5,27 @@ import 'svg.draggable.js';
 import ConceptMapController from './conceptMapController';
 
 class ConceptMapAuthoringController extends ConceptMapController {
-  constructor($anchorScroll,
-              $filter,
-              $location,
-              $mdDialog,
-              $q,
-              $rootScope,
-              $scope,
-              $timeout,
-              AnnotationService,
-              ConceptMapService,
-              ConfigService,
-              NodeService,
-              NotebookService,
-              ProjectService,
-              StudentAssetService,
-              StudentDataService,
-              UtilService) {
-    super($anchorScroll,
+  constructor(
+    $anchorScroll,
+    $filter,
+    $location,
+    $mdDialog,
+    $q,
+    $rootScope,
+    $scope,
+    $timeout,
+    AnnotationService,
+    ConceptMapService,
+    ConfigService,
+    NodeService,
+    NotebookService,
+    ProjectService,
+    StudentAssetService,
+    StudentDataService,
+    UtilService
+  ) {
+    super(
+      $anchorScroll,
       $filter,
       $location,
       $mdDialog,
@@ -38,7 +41,8 @@ class ConceptMapAuthoringController extends ConceptMapController {
       ProjectService,
       StudentAssetService,
       StudentDataService,
-      UtilService);
+      UtilService
+    );
 
     this.allowedConnectedComponentTypes = [
       { type: 'ConceptMap' },
@@ -51,10 +55,12 @@ class ConceptMapAuthoringController extends ConceptMapController {
 
     this.shouldOptions = [
       {
-        value: false, label: this.$translate('conceptMap.should')
+        value: false,
+        label: this.$translate('conceptMap.should')
       },
       {
-        value: true, label: this.$translate('conceptMap.shouldNot')
+        value: true,
+        label: this.$translate('conceptMap.shouldNot')
       }
     ];
 
@@ -66,30 +72,36 @@ class ConceptMapAuthoringController extends ConceptMapController {
       this.authoringComponentContent.showNodeLabels = true;
     }
 
-    $scope.$watch(function() {
-      return this.authoringComponentContent;
-    }.bind(this), function(newValue, oldValue) {
-      this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-      this.isSaveButtonVisible = this.componentContent.showSaveButton;
-      this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-      this.availableNodes = this.componentContent.nodes;
-      this.availableLinks = this.componentContent.links;
-      this.width = this.componentContent.width;
-      this.height = this.componentContent.height;
-      this.setBackgroundImage(this.componentContent.background,
-        this.componentContent.stretchBackground);
+    $scope.$watch(
+      function() {
+        return this.authoringComponentContent;
+      }.bind(this),
+      function(newValue, oldValue) {
+        this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+        this.isSaveButtonVisible = this.componentContent.showSaveButton;
+        this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+        this.availableNodes = this.componentContent.nodes;
+        this.availableLinks = this.componentContent.links;
+        this.width = this.componentContent.width;
+        this.height = this.componentContent.height;
+        this.setBackgroundImage(
+          this.componentContent.background,
+          this.componentContent.stretchBackground
+        );
 
-      /*
-       * make sure the SVG element can be accessed. we need to
-       * perform this check because this watch is getting fired
-       * before angular sets the svgId on the svg element. if
-       * setupSVG() is called before the svgId is set on the svg
-       * element, we will get an error.
-       */
-      if (document.getElementById(this.svgId) != null) {
-        this.setupSVG();
-      }
-    }.bind(this), true);
+        /*
+         * make sure the SVG element can be accessed. we need to
+         * perform this check because this watch is getting fired
+         * before angular sets the svgId on the svg element. if
+         * setupSVG() is called before the svgId is set on the svg
+         * element, we will get an error.
+         */
+        if (document.getElementById(this.svgId) != null) {
+          this.setupSVG();
+        }
+      }.bind(this),
+      true
+    );
   }
 
   assetSelected(event, args) {
@@ -143,8 +155,14 @@ class ConceptMapAuthoringController extends ConceptMapController {
     const node = nodes[index];
     const nodeFileName = node.fileName;
     const nodeLabel = node.label;
-    if (confirm(this.$translate('conceptMap.areYouSureYouWantToDeleteThisNode',
-        { nodeFileName: nodeFileName, nodeLabel: nodeLabel}))) {
+    if (
+      confirm(
+        this.$translate('conceptMap.areYouSureYouWantToDeleteThisNode', {
+          nodeFileName: nodeFileName,
+          nodeLabel: nodeLabel
+        })
+      )
+    ) {
       nodes.splice(index, 1);
       this.authoringViewComponentChanged();
     }
@@ -176,7 +194,11 @@ class ConceptMapAuthoringController extends ConceptMapController {
     const links = this.authoringComponentContent.links;
     const link = links[index];
     const linkLabel = link.label;
-    if (confirm(this.$translate('conceptMap.areYouSureYouWantToDeleteThisLink', { linkLabel: linkLabel}))) {
+    if (
+      confirm(
+        this.$translate('conceptMap.areYouSureYouWantToDeleteThisLink', { linkLabel: linkLabel })
+      )
+    ) {
       links.splice(index, 1);
       this.authoringViewComponentChanged();
     }
@@ -256,7 +278,7 @@ class ConceptMapAuthoringController extends ConceptMapController {
       name: '',
       type: 'node',
       categories: [],
-      nodeLabel:'',
+      nodeLabel: '',
       comparison: 'exactly',
       number: 1,
       not: false
@@ -297,7 +319,11 @@ class ConceptMapAuthoringController extends ConceptMapController {
   authoringViewRuleDeleteButtonClicked(index) {
     const rule = this.authoringComponentContent.rules[index];
     const ruleName = rule.name;
-    if (confirm(this.$translate('conceptMap.areYouSureYouWantToDeleteThisRule', { ruleName: ruleName }))) {
+    if (
+      confirm(
+        this.$translate('conceptMap.areYouSureYouWantToDeleteThisRule', { ruleName: ruleName })
+      )
+    ) {
       this.authoringComponentContent.rules.splice(index, 1);
       this.authoringViewComponentChanged();
     }
@@ -317,8 +343,14 @@ class ConceptMapAuthoringController extends ConceptMapController {
   authoringViewDeleteCategoryFromRule(rule, index) {
     const ruleName = rule.name;
     const categoryName = rule.categories[index];
-    if (confirm(this.$translate('conceptMap.areYouSureYouWantToDeleteTheCategory',
-        { ruleName: ruleName, categoryName: categoryName }))) {
+    if (
+      confirm(
+        this.$translate('conceptMap.areYouSureYouWantToDeleteTheCategory', {
+          ruleName: ruleName,
+          categoryName: categoryName
+        })
+      )
+    ) {
       rule.categories.splice(index, 1);
       this.authoringViewComponentChanged();
     }
@@ -375,8 +407,10 @@ class ConceptMapAuthoringController extends ConceptMapController {
     let numberOfAllowedComponents = 0;
     let allowedComponent = null;
     for (const component of this.getComponentsByNodeId(connectedComponent.nodeId)) {
-      if (this.isConnectedComponentTypeAllowed(component.type) &&
-          component.id != this.componentId) {
+      if (
+        this.isConnectedComponentTypeAllowed(component.type) &&
+        component.id != this.componentId
+      ) {
         numberOfAllowedComponents += 1;
         allowedComponent = component;
       }
@@ -405,7 +439,7 @@ class ConceptMapAuthoringController extends ConceptMapController {
    */
   authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent) {
     const componentType = this.authoringGetConnectedComponentType(connectedComponent);
-    if (['Draw','Embedded','Graph','Label','Table'].includes(componentType)) {
+    if (['Draw', 'Embedded', 'Graph', 'Label', 'Table'].includes(componentType)) {
       connectedComponent.importWorkAsBackground = true;
     } else {
       delete connectedComponent.importWorkAsBackground;

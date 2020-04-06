@@ -6,26 +6,38 @@ import drawingToolVendor from '../../lib/drawingTool/vendor.min';
 import html2canvas from 'html2canvas';
 
 class DrawController extends ComponentController {
-  constructor($filter,
-      $injector,
+  constructor(
+    $filter,
+    $injector,
+    $mdDialog,
+    $q,
+    $rootScope,
+    $scope,
+    $timeout,
+    AnnotationService,
+    ConfigService,
+    DrawService,
+    NodeService,
+    NotebookService,
+    ProjectService,
+    StudentAssetService,
+    StudentDataService,
+    UtilService
+  ) {
+    super(
+      $filter,
       $mdDialog,
-      $q,
       $rootScope,
       $scope,
-      $timeout,
       AnnotationService,
       ConfigService,
-      DrawService,
       NodeService,
       NotebookService,
       ProjectService,
       StudentAssetService,
       StudentDataService,
-      UtilService) {
-    super($filter, $mdDialog, $rootScope, $scope,
-        AnnotationService, ConfigService, NodeService,
-        NotebookService, ProjectService, StudentAssetService,
-        StudentDataService, UtilService);
+      UtilService
+    );
     this.$injector = $injector;
     this.$q = $q;
     this.$timeout = $timeout;
@@ -95,13 +107,23 @@ class DrawController extends ComponentController {
 
   handleStudentWorkSavedToServerAdditionalProcessing(event, args) {
     let componentState = args.studentWork;
-    if (this.isForThisComponent(componentState) &&
-        this.ProjectService.isConnectedComponent(
-            this.nodeId, this.componentId, componentState.componentId)) {
-      const connectedComponentParams = this.ProjectService.getConnectedComponentParams(this.componentContent, componentState.componentId);
+    if (
+      this.isForThisComponent(componentState) &&
+      this.ProjectService.isConnectedComponent(
+        this.nodeId,
+        this.componentId,
+        componentState.componentId
+      )
+    ) {
+      const connectedComponentParams = this.ProjectService.getConnectedComponentParams(
+        this.componentContent,
+        componentState.componentId
+      );
       if (connectedComponentParams != null) {
-        if (connectedComponentParams.updateOn === 'save' ||
-            (connectedComponentParams.updateOn === 'submit' && componentState.isSubmit)) {
+        if (
+          connectedComponentParams.updateOn === 'save' ||
+          (connectedComponentParams.updateOn === 'submit' && componentState.isSubmit)
+        ) {
           let performUpdate = false;
           /*
            * make a copy of the component state so we don't accidentally
@@ -178,12 +200,16 @@ class DrawController extends ComponentController {
     if (this.isStudentMode()) {
       if (this.UtilService.hasShowWorkConnectedComponent(this.componentContent)) {
         this.handleConnectedComponents();
-      }  else if (this.DrawService.componentStateHasStudentWork(componentState, this.componentContent)) {
+      } else if (
+        this.DrawService.componentStateHasStudentWork(componentState, this.componentContent)
+      ) {
         this.setStudentWork(componentState);
       } else if (this.UtilService.hasConnectedComponent(this.componentContent)) {
         this.handleConnectedComponents();
-      } else if (componentState == null ||
-             !this.DrawService.componentStateHasStudentWork(componentState, this.componentContent)) {
+      } else if (
+        componentState == null ||
+        !this.DrawService.componentStateHasStudentWork(componentState, this.componentContent)
+      ) {
         if (this.componentContent.starterDrawData != null) {
           this.drawingTool.load(this.componentContent.starterDrawData);
         }
@@ -217,12 +243,15 @@ class DrawController extends ComponentController {
      * event occurs in response to the student changing the drawing and this timeout
      * will help make sure of that.
      */
-    this.$timeout(angular.bind(this, () => {
-      this.drawingTool.on('drawing:changed', angular.bind(this, this.studentDataChanged));
-    }), 500);
+    this.$timeout(
+      angular.bind(this, () => {
+        this.drawingTool.on('drawing:changed', angular.bind(this, this.studentDataChanged));
+      }),
+      500
+    );
 
     if (this.isStudentMode()) {
-      this.drawingTool.on('tool:changed', (toolName) => {
+      this.drawingTool.on('tool:changed', toolName => {
         const category = 'Tool';
         const event = 'toolSelected';
         const data = {
@@ -233,7 +262,9 @@ class DrawController extends ComponentController {
     }
 
     if (this.isGradingMode() || this.isGradingRevisionMode() || this.isOnlyShowWorkMode()) {
-      $('#' + this.drawingToolId).find('.dt-tools').hide();
+      $('#' + this.drawingToolId)
+        .find('.dt-tools')
+        .hide();
     } else {
       this.setupTools();
     }
@@ -470,15 +501,15 @@ class DrawController extends ComponentController {
    * @param studentAsset
    */
   attachStudentAsset(studentAsset) {
-    this.StudentAssetService.copyAssetForReference(studentAsset).then((copiedAsset) => {
-      fabric.Image.fromURL(copiedAsset.url, (oImg) => {
-        oImg.scaleToWidth(200);  // set max width and have height scale proportionally
+    this.StudentAssetService.copyAssetForReference(studentAsset).then(copiedAsset => {
+      fabric.Image.fromURL(copiedAsset.url, oImg => {
+        oImg.scaleToWidth(200); // set max width and have height scale proportionally
         // TODO: center image or put them at mouse position? Wasn't straight-forward, tried below but had issues...
         //oImg.setLeft((this.drawingTool.canvas.width / 2) - (oImg.width / 2));  // center image vertically and horizontally
         //oImg.setTop((this.drawingTool.canvas.height / 2) - (oImg.height / 2));
         //oImg.center();
-        oImg.studentAssetId = copiedAsset.id;  // keep track of this asset id
-        this.drawingTool.canvas.add(oImg);   // add copied asset image to canvas
+        oImg.studentAssetId = copiedAsset.id; // keep track of this asset id
+        this.drawingTool.canvas.add(oImg); // add copied asset image to canvas
       });
     });
   }
@@ -531,31 +562,33 @@ class DrawController extends ComponentController {
    * @param $event the click event
    */
   snipDrawing($event, studentWorkId) {
-    let canvas = angular.element(document.querySelector('#drawingtool_' + this.nodeId + '_' + this.componentId + ' canvas'));
+    let canvas = angular.element(
+      document.querySelector('#drawingtool_' + this.nodeId + '_' + this.componentId + ' canvas')
+    );
     if (canvas != null && canvas.length > 0) {
       canvas = canvas[0];
       const canvasBase64Image = canvas.toDataURL('image/png');
       const imageObject = this.UtilService.getImageObjectFromBase64String(canvasBase64Image);
       const noteText = null;
-      this.NotebookService.addNote($event, imageObject, noteText, [ studentWorkId ]);
+      this.NotebookService.addNote($event, imageObject, noteText, [studentWorkId]);
     }
   }
 
   snipButtonClicked($event) {
     if (this.isDirty) {
-      const deregisterListener = this.$scope.$on('studentWorkSavedToServer',
-        (event, args) => {
-          let componentState = args.studentWork;
-          if (this.isForThisComponent(componentState)) {
-            this.snipDrawing($event, componentState.id);
-            deregisterListener();
-          }
+      const deregisterListener = this.$scope.$on('studentWorkSavedToServer', (event, args) => {
+        let componentState = args.studentWork;
+        if (this.isForThisComponent(componentState)) {
+          this.snipDrawing($event, componentState.id);
+          deregisterListener();
         }
-      );
+      });
       this.saveButtonClicked();
     } else {
-      const studentWork =
-          this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId)
+      const studentWork = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(
+        this.nodeId,
+        this.componentId
+      );
       this.snipDrawing($event, studentWork.id);
     }
   }
@@ -576,20 +609,27 @@ class DrawController extends ComponentController {
           const studentData = componentState.studentData;
           const drawData = studentData.drawData;
           const drawDataJSON = angular.fromJson(drawData);
-          if (drawDataJSON != null && drawDataJSON.canvas != null &&
-              drawDataJSON.canvas.objects != null) {
+          if (
+            drawDataJSON != null &&
+            drawDataJSON.canvas != null &&
+            drawDataJSON.canvas.objects != null
+          ) {
             if (c == 0) {
               firstDrawData = drawDataJSON;
             }
             allDrawCanvasObjects = allDrawCanvasObjects.concat(drawDataJSON.canvas.objects);
           }
-        } else if (componentState.componentType == 'Graph' ||
-            componentState.componentType == 'ConceptMap' ||
-            componentState.componentType == 'Embedded' ||
-            componentState.componentType == 'Label' ||
-            componentState.componentType == 'Table') {
-          const connectedComponent = this.UtilService
-              .getConnectedComponentByComponentState(this.componentContent, componentState);
+        } else if (
+          componentState.componentType == 'Graph' ||
+          componentState.componentType == 'ConceptMap' ||
+          componentState.componentType == 'Embedded' ||
+          componentState.componentType == 'Label' ||
+          componentState.componentType == 'Table'
+        ) {
+          const connectedComponent = this.UtilService.getConnectedComponentByComponentState(
+            this.componentContent,
+            componentState
+          );
           if (connectedComponent.importWorkAsBackground === true) {
             this.setComponentStateAsBackgroundImage(componentState);
           }
@@ -612,7 +652,7 @@ class DrawController extends ComponentController {
    * @param componentState A component state.
    */
   setComponentStateAsBackgroundImage(componentState) {
-    this.UtilService.generateImageFromComponentState(componentState).then((image) => {
+    this.UtilService.generateImageFromComponentState(componentState).then(image => {
       this.drawingTool.setBackgroundImage(image.url);
     });
   }
@@ -634,6 +674,7 @@ DrawController.$inject = [
   'ProjectService',
   'StudentAssetService',
   'StudentDataService',
-  'UtilService'];
+  'UtilService'
+];
 
 export default DrawController;

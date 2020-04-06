@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation, OnInit } from '@angular/core';
-import { LibraryProject } from "../libraryProject";
-import { LibraryService } from "../../../services/library.service";
+import { LibraryProject } from '../libraryProject';
+import { LibraryService } from '../../../services/library.service';
 import { MatDialog } from '@angular/material';
 import { OfficialLibraryDetailsComponent } from '../official-library/official-library.component';
 import { I18n } from '@ngx-translate/i18n-polyfill';
@@ -9,14 +9,10 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-teacher-project-library',
   templateUrl: './teacher-project-library.component.html',
-  styleUrls: [
-    './teacher-project-library.component.scss',
-    '../library/library.component.scss'
-  ],
+  styleUrls: ['./teacher-project-library.component.scss', '../library/library.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
 export class TeacherProjectLibraryComponent implements OnInit {
-
   projects: LibraryProject[] = [];
   numberOfOfficialProjectsVisible: number = 0;
   numberOfCommunityProjectsVisible: number = 0;
@@ -28,17 +24,19 @@ export class TeacherProjectLibraryComponent implements OnInit {
     { path: 'library/personal', label: this.i18n(`My Units`), numVisible: 0 }
   ];
 
-  constructor(libraryService: LibraryService,
-              public dialog: MatDialog,
-              private router: Router,
-              private i18n: I18n) {
-    libraryService.numberOfOfficialProjectsVisible$.subscribe((num) => {
+  constructor(
+    libraryService: LibraryService,
+    public dialog: MatDialog,
+    private router: Router,
+    private i18n: I18n
+  ) {
+    libraryService.numberOfOfficialProjectsVisible$.subscribe(num => {
       this.tabs[0].numVisible = num;
     });
-    libraryService.numberOfCommunityProjectsVisible$.subscribe((num) => {
+    libraryService.numberOfCommunityProjectsVisible$.subscribe(num => {
       this.tabs[1].numVisible = num;
     });
-    libraryService.numberOfPersonalProjectsVisible$.subscribe((num) => {
+    libraryService.numberOfPersonalProjectsVisible$.subscribe(num => {
       this.tabs[2].numVisible = num;
     });
     if (!libraryService.hasLoaded) {
@@ -55,8 +53,7 @@ export class TeacherProjectLibraryComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   isOfficialRoute(): boolean {
     return this.router.url === '/teacher/home/library/tested';

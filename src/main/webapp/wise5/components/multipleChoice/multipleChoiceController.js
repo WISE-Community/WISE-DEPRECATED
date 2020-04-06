@@ -1,26 +1,38 @@
 'use strict';
 
-import ComponentController from "../componentController";
+import ComponentController from '../componentController';
 
 class MultipleChoiceController extends ComponentController {
-  constructor($filter,
+  constructor(
+    $filter,
+    $mdDialog,
+    $q,
+    $rootScope,
+    $scope,
+    AnnotationService,
+    ConfigService,
+    MultipleChoiceService,
+    NodeService,
+    NotebookService,
+    ProjectService,
+    StudentAssetService,
+    StudentDataService,
+    UtilService
+  ) {
+    super(
+      $filter,
       $mdDialog,
-      $q,
       $rootScope,
       $scope,
       AnnotationService,
       ConfigService,
-      MultipleChoiceService,
       NodeService,
       NotebookService,
       ProjectService,
       StudentAssetService,
       StudentDataService,
-      UtilService) {
-    super($filter, $mdDialog, $rootScope, $scope,
-        AnnotationService, ConfigService, NodeService,
-        NotebookService, ProjectService, StudentAssetService,
-        StudentDataService, UtilService);
+      UtilService
+    );
     this.$q = $q;
     this.MultipleChoiceService = MultipleChoiceService;
 
@@ -70,7 +82,12 @@ class MultipleChoiceController extends ComponentController {
       if (this.UtilService.hasShowWorkConnectedComponent(this.componentContent)) {
         // we will show work from another component
         this.handleConnectedComponents();
-      }  else if (this.MultipleChoiceService.componentStateHasStudentWork(componentState, this.componentContent)) {
+      } else if (
+        this.MultipleChoiceService.componentStateHasStudentWork(
+          componentState,
+          this.componentContent
+        )
+      ) {
         /*
          * the student has work so we will populate the work into this
          * component
@@ -94,7 +111,10 @@ class MultipleChoiceController extends ComponentController {
     }
 
     // check if the student has used up all of their submits
-    if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
+    if (
+      this.componentContent.maxSubmitCount != null &&
+      this.submitCounter >= this.componentContent.maxSubmitCount
+    ) {
       /*
        * the student has used up all of their chances to submit so we
        * will disable the choices and the submit button
@@ -132,7 +152,7 @@ class MultipleChoiceController extends ComponentController {
 
       if (getState) {
         // create a component state populated with the student data
-        this.$scope.multipleChoiceController.createComponentState(action).then((componentState) => {
+        this.$scope.multipleChoiceController.createComponentState(action).then(componentState => {
           deferred.resolve(componentState);
         });
       } else {
@@ -152,12 +172,16 @@ class MultipleChoiceController extends ComponentController {
      * exits the parent node. This will perform any necessary cleanup
      * when the student exits the parent node.
      */
-    this.$scope.$on('exitNode', angular.bind(this, function(event, args) {
+    this.$scope.$on(
+      'exitNode',
+      angular.bind(this, function(event, args) {})
+    );
 
-    }));
-
-    this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
-  };
+    this.$rootScope.$broadcast('doneRenderingComponent', {
+      nodeId: this.nodeId,
+      componentId: this.componentId
+    });
+  }
 
   handleNodeSubmit() {
     this.submit('nodeSubmitButton');
@@ -168,9 +192,7 @@ class MultipleChoiceController extends ComponentController {
    * @param componentState the component state to populate into the component
    */
   setStudentWork(componentState) {
-
     if (componentState != null) {
-
       // get the student data
       var studentData = componentState.studentData;
 
@@ -204,10 +226,9 @@ class MultipleChoiceController extends ComponentController {
         this.processLatestStudentWork();
       }
     }
-  };
+  }
 
   showFeedbackForChoiceIds(choiceIds) {
-
     if (choiceIds != null) {
       for (var c = 0; c < choiceIds.length; c++) {
         var choiceId = choiceIds[c];
@@ -220,7 +241,7 @@ class MultipleChoiceController extends ComponentController {
         }
       }
     }
-  };
+  }
 
   /**
    * Determine if the choice id has been checked
@@ -240,7 +261,7 @@ class MultipleChoiceController extends ComponentController {
           // the student checked the choice id
           result = true;
         }
-      } else if(this.isCheckbox()) {
+      } else if (this.isCheckbox()) {
         // this is a checkbox step
 
         if (studentChoices.indexOf(choiceId) != -1) {
@@ -251,7 +272,7 @@ class MultipleChoiceController extends ComponentController {
     }
 
     return result;
-  };
+  }
 
   /**
    * Get the choice ids from the student data
@@ -263,7 +284,6 @@ class MultipleChoiceController extends ComponentController {
     var choiceIds = [];
 
     if (studentData != null && studentData.studentChoices != null) {
-
       // get the choices the student chose
       var studentChoices = studentData.studentChoices;
 
@@ -283,7 +303,7 @@ class MultipleChoiceController extends ComponentController {
     }
 
     return choiceIds;
-  };
+  }
 
   /**
    * The student clicked on one of the radio button choices
@@ -303,7 +323,7 @@ class MultipleChoiceController extends ComponentController {
       data.selectedChoiceId = choiceId;
       this.StudentDataService.saveComponentEvent(this, category, event, data);
     }
-  };
+  }
 
   /**
    * The student clicked on one of the check box choices
@@ -353,7 +373,7 @@ class MultipleChoiceController extends ComponentController {
         this.StudentDataService.saveComponentEvent(this, category, event, data);
       }
     }
-  };
+  }
 
   /**
    * Check if this multiple choice component is using radio buttons
@@ -361,7 +381,7 @@ class MultipleChoiceController extends ComponentController {
    */
   isRadio() {
     return this.isChoiceType('radio');
-  };
+  }
 
   /**
    * Check if this multiple choice component is using checkboxes
@@ -369,7 +389,7 @@ class MultipleChoiceController extends ComponentController {
    */
   isCheckbox() {
     return this.isChoiceType('checkbox');
-  };
+  }
 
   /**
    * Check if the component is authored to use the given choice type
@@ -394,13 +414,13 @@ class MultipleChoiceController extends ComponentController {
     }
 
     return result;
-  };
+  }
 
   saveButtonClicked() {
     this.isCorrect = null;
     this.hideAllFeedback();
     super.saveButtonClicked();
-  };
+  }
 
   /**
    * A submit was triggered by the component submit button or node submit button
@@ -408,7 +428,6 @@ class MultipleChoiceController extends ComponentController {
    * e.g. 'componentSubmitButton' or 'nodeSubmitButton'
    */
   submit(submitTriggeredBy) {
-
     if (this.isSubmitDirty) {
       // TODO: add confirmation dialog if lock after submit is enabled on this component
 
@@ -439,7 +458,6 @@ class MultipleChoiceController extends ComponentController {
       }
 
       if (performSubmit) {
-
         /*
          * set isSubmit to true so that when the component state is
          * created, it will know it is a submit component state
@@ -455,7 +473,10 @@ class MultipleChoiceController extends ComponentController {
         this.incrementSubmitCounter();
 
         // check if the student has used up all of their submits
-        if (this.componentContent.maxSubmitCount != null && this.submitCounter >= this.componentContent.maxSubmitCount) {
+        if (
+          this.componentContent.maxSubmitCount != null &&
+          this.submitCounter >= this.componentContent.maxSubmitCount
+        ) {
           /*
            * the student has used up all of their submits so we will
            * disable the choices and buttons
@@ -478,7 +499,10 @@ class MultipleChoiceController extends ComponentController {
 
         if (submitTriggeredBy == null || submitTriggeredBy === 'componentSubmitButton') {
           // tell the parent node that this component wants to submit
-          this.$scope.$emit('componentSubmitTriggered', {nodeId: this.nodeId, componentId: this.componentId});
+          this.$scope.$emit('componentSubmitTriggered', {
+            nodeId: this.nodeId,
+            componentId: this.componentId
+          });
         } else if (submitTriggeredBy === 'nodeSubmitButton') {
           // nothing extra needs to be performed
         }
@@ -496,7 +520,6 @@ class MultipleChoiceController extends ComponentController {
    * Hide all the feedback
    */
   hideAllFeedback() {
-
     // get all the choices
     var choices = this.getChoices();
 
@@ -582,7 +605,7 @@ class MultipleChoiceController extends ComponentController {
     }
 
     return correctChoice;
-  };
+  }
 
   /**
    * Get the correct choices for a checkbox component
@@ -596,13 +619,13 @@ class MultipleChoiceController extends ComponentController {
     }
 
     return correctChoices;
-  };
+  }
 
   studentDataChanged() {
     this.isCorrect = null;
     this.isLatestComponentStateSubmit = false;
     super.studentDataChanged();
-  };
+  }
 
   /**
    * Create a new component state populated with the student data
@@ -615,7 +638,6 @@ class MultipleChoiceController extends ComponentController {
     var componentState = this.NodeService.createNewComponentState();
 
     if (componentState != null) {
-
       var studentData = {};
 
       // set the student choices into the component state
@@ -690,7 +712,7 @@ class MultipleChoiceController extends ComponentController {
     this.createComponentStateAdditionalProcessing(deferred, componentState, action);
 
     return deferred.promise;
-  };
+  }
 
   /**
    * Get the choices the student has chosen as objects. The objects
@@ -708,7 +730,6 @@ class MultipleChoiceController extends ComponentController {
     var studentChoiceObject = null;
 
     if (studentChoices != null) {
-
       if (this.isRadio()) {
         // this is a radio button component
 
@@ -729,7 +750,6 @@ class MultipleChoiceController extends ComponentController {
 
         // loop through all the choices the student chose
         for (var x = 0; x < studentChoices.length; x++) {
-
           // get a choice id that the student chose
           var studentChoiceId = studentChoices[x];
 
@@ -750,7 +770,7 @@ class MultipleChoiceController extends ComponentController {
     }
 
     return studentChoiceObjects;
-  };
+  }
 
   /**
    * Check if the component has been authored with a correct choice
@@ -763,11 +783,9 @@ class MultipleChoiceController extends ComponentController {
     var componentContent = this.componentContent;
 
     if (componentContent != null) {
-
       var choices = componentContent.choices;
 
       if (choices != null) {
-
         // loop through all the authored choices
         for (var c = 0; c < choices.length; c++) {
           var choice = choices[c];
@@ -782,7 +800,7 @@ class MultipleChoiceController extends ComponentController {
     }
 
     return result;
-  };
+  }
 
   /**
    * Check if there is any feedback
@@ -795,11 +813,9 @@ class MultipleChoiceController extends ComponentController {
     var componentContent = this.componentContent;
 
     if (componentContent != null) {
-
       var choices = componentContent.choices;
 
       if (choices != null) {
-
         // loop through all the authored choices
         for (var c = 0; c < choices.length; c++) {
           var choice = choices[c];
@@ -829,7 +845,6 @@ class MultipleChoiceController extends ComponentController {
       var componentContent = this.componentContent;
 
       if (componentContent != null) {
-
         // get the choices
         var choices = componentContent.choices;
 
@@ -857,7 +872,7 @@ class MultipleChoiceController extends ComponentController {
     }
 
     return choice;
-  };
+  }
 
   /**
    * Get a choice by choice text
@@ -865,7 +880,6 @@ class MultipleChoiceController extends ComponentController {
    * @return the choice with the given text
    */
   getChoiceByText(text) {
-
     var choice = null;
 
     if (text != null) {
@@ -873,7 +887,6 @@ class MultipleChoiceController extends ComponentController {
       var componentContent = this.componentContent;
 
       if (componentContent != null) {
-
         // get the choices
         var choices = componentContent.choices;
 
@@ -919,7 +932,7 @@ class MultipleChoiceController extends ComponentController {
     }
 
     return choiceType;
-  };
+  }
 
   /**
    * Get the available choices from component content
@@ -932,13 +945,12 @@ class MultipleChoiceController extends ComponentController {
     var componentContent = this.componentContent;
 
     if (componentContent != null) {
-
       // get the choices
       choices = componentContent.choices;
     }
 
     return choices;
-  };
+  }
 
   /**
    * Create a component state with the merged student responses
@@ -946,7 +958,6 @@ class MultipleChoiceController extends ComponentController {
    * @return a component state with the merged student responses
    */
   createMergedComponentState(componentStates) {
-
     // create a new component state
     let mergedComponentState = this.NodeService.createNewComponentState();
     if (componentStates != null) {
@@ -975,7 +986,7 @@ class MultipleChoiceController extends ComponentController {
 
     return mergedComponentState;
   }
-};
+}
 
 MultipleChoiceController.$inject = [
   '$filter',

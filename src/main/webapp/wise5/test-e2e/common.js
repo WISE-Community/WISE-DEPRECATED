@@ -1,5 +1,5 @@
 export function hasClass(element, cls) {
-  return element.getAttribute('class').then((classes) => {
+  return element.getAttribute('class').then(classes => {
     return classes.split(' ').indexOf(cls) !== -1;
   });
 }
@@ -42,13 +42,13 @@ export function shouldBeEnabled(...elements) {
 
 export function shouldBeSelected(...choices) {
   for (let choice of choices) {
-    expect(choice.getAttribute('aria-checked')).toBe("true");
+    expect(choice.getAttribute('aria-checked')).toBe('true');
   }
 }
 
 export function shouldBeUnselected(...choices) {
   for (let choice of choices) {
-    expect(choice.getAttribute('aria-checked')).toBe("false");
+    expect(choice.getAttribute('aria-checked')).toBe('false');
   }
 }
 

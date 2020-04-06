@@ -5,27 +5,39 @@ import 'svg.draggable.js';
 import ComponentController from '../componentController';
 
 class ConceptMapController extends ComponentController {
-  constructor($anchorScroll,
+  constructor(
+    $anchorScroll,
+    $filter,
+    $location,
+    $mdDialog,
+    $q,
+    $rootScope,
+    $scope,
+    $timeout,
+    AnnotationService,
+    ConceptMapService,
+    ConfigService,
+    NodeService,
+    NotebookService,
+    ProjectService,
+    StudentAssetService,
+    StudentDataService,
+    UtilService
+  ) {
+    super(
       $filter,
-      $location,
       $mdDialog,
-      $q,
       $rootScope,
       $scope,
-      $timeout,
       AnnotationService,
-      ConceptMapService,
       ConfigService,
       NodeService,
       NotebookService,
       ProjectService,
       StudentAssetService,
       StudentDataService,
-      UtilService) {
-    super($filter, $mdDialog, $rootScope, $scope,
-        AnnotationService, ConfigService, NodeService,
-        NotebookService, ProjectService, StudentAssetService,
-        StudentDataService, UtilService);
+      UtilService
+    );
     this.$anchorScroll = $anchorScroll;
     this.$location = $location;
     this.$q = $q;
@@ -61,7 +73,10 @@ class ConceptMapController extends ComponentController {
     this.tempOffsetX = 0;
     this.tempOffsetY = 0;
 
-    this.setBackgroundImage(this.componentContent.background, this.componentContent.stretchBackground);
+    this.setBackgroundImage(
+      this.componentContent.background,
+      this.componentContent.stretchBackground
+    );
     this.setIdsWithNodeIdComponentId();
 
     this.initialize();
@@ -85,7 +100,13 @@ class ConceptMapController extends ComponentController {
       if (componentState == null) {
         this.setSVGId(this.nodeId, this.componentId, this.workgroupId, 'onlyShowWork_');
       } else {
-        this.setSVGId(this.nodeId, this.componentId, this.workgroupId, this.componentStateId, 'onlyShowWork_');
+        this.setSVGId(
+          this.nodeId,
+          this.componentId,
+          this.workgroupId,
+          this.componentStateId,
+          'onlyShowWork_'
+        );
       }
     }
 
@@ -140,21 +161,51 @@ class ConceptMapController extends ComponentController {
 
   setIdsWithNodeIdComponentIdWorkgroupIdComponentStateId(componentState) {
     this.setSVGId(this.nodeId, this.componentId, this.workgroupId, componentState.id);
-    this.setConceptMapContainerId(this.nodeId, this.componentId, this.workgroupId, componentState.id);
+    this.setConceptMapContainerId(
+      this.nodeId,
+      this.componentId,
+      this.workgroupId,
+      componentState.id
+    );
     this.setSelectNodeBarId(this.nodeId, this.componentId, this.workgroupId, componentState.id);
     this.setFeedbackContainerId(this.nodeId, this.componentId, this.workgroupId, componentState.id);
   }
 
   setIdsWithNodeIdComponentIdWorkgroupIdComponentStateIdPrefix(componentState) {
-    this.setSVGId(this.nodeId, this.componentId, this.workgroupId, componentState.id, 'gradingRevision_');
-    this.setConceptMapContainerId(this.nodeId, this.componentId, this.workgroupId, componentState.id, 'gradingRevision_');
-    this.setSelectNodeBarId(this.nodeId, this.componentId, this.workgroupId, componentState.id, 'gradingRevision_');
-    this.setFeedbackContainerId(this.nodeId, this.componentId, this.workgroupId, componentState.id, 'gradingRevision_');
+    this.setSVGId(
+      this.nodeId,
+      this.componentId,
+      this.workgroupId,
+      componentState.id,
+      'gradingRevision_'
+    );
+    this.setConceptMapContainerId(
+      this.nodeId,
+      this.componentId,
+      this.workgroupId,
+      componentState.id,
+      'gradingRevision_'
+    );
+    this.setSelectNodeBarId(
+      this.nodeId,
+      this.componentId,
+      this.workgroupId,
+      componentState.id,
+      'gradingRevision_'
+    );
+    this.setFeedbackContainerId(
+      this.nodeId,
+      this.componentId,
+      this.workgroupId,
+      componentState.id,
+      'gradingRevision_'
+    );
   }
 
   setSVGId(nodeId, componentId, workgroupId, componentStateId, prefix = '') {
     if (nodeId != null && componentId != null && workgroupId != null && componentStateId != null) {
-      this.svgId = 'svg_' + prefix + nodeId + '_' + componentId + '_' + workgroupId + '_' + componentStateId;
+      this.svgId =
+        'svg_' + prefix + nodeId + '_' + componentId + '_' + workgroupId + '_' + componentStateId;
     } else if (nodeId != null && componentId != null && workgroupId != null) {
       this.svgId = 'svg_' + nodeId + '_' + componentId + '_' + workgroupId;
     } else if (nodeId != null && componentId != null) {
@@ -165,9 +216,17 @@ class ConceptMapController extends ComponentController {
   setConceptMapContainerId(nodeId, componentId, workgroupId, componentStateId, prefix = '') {
     if (nodeId != null && componentId != null && workgroupId != null && componentStateId != null) {
       this.conceptMapContainerId =
-          'conceptMapContainer_' + nodeId + '_' + componentId + '_' + workgroupId + '_' + componentStateId;
+        'conceptMapContainer_' +
+        nodeId +
+        '_' +
+        componentId +
+        '_' +
+        workgroupId +
+        '_' +
+        componentStateId;
     } else if (nodeId != null && componentId != null && workgroupId != null) {
-      this.conceptMapContainerId = 'conceptMapContainer_' + nodeId + '_' + componentId + '_' + workgroupId;
+      this.conceptMapContainerId =
+        'conceptMapContainer_' + nodeId + '_' + componentId + '_' + workgroupId;
     } else if (nodeId != null && componentId != null) {
       this.conceptMapContainerId = 'conceptMapContainer_' + nodeId + '_' + componentId;
     }
@@ -187,9 +246,17 @@ class ConceptMapController extends ComponentController {
   setFeedbackContainerId(nodeId, componentId, workgroupId, componentStateId, prefix = '') {
     if (nodeId != null && componentId != null && workgroupId != null && componentStateId != null) {
       this.feedbackContainerId =
-        'feedbackContainer_' + nodeId + '_' + componentId + '_' + workgroupId + '_' + componentStateId;
+        'feedbackContainer_' +
+        nodeId +
+        '_' +
+        componentId +
+        '_' +
+        workgroupId +
+        '_' +
+        componentStateId;
     } else if (nodeId != null && componentId != null && workgroupId != null) {
-      this.feedbackContainerId = 'feedbackContainer_' + nodeId + '_' + componentId + '_' + workgroupId;
+      this.feedbackContainerId =
+        'feedbackContainer_' + nodeId + '_' + componentId + '_' + workgroupId;
     } else if (nodeId != null && componentId != null) {
       this.feedbackContainerId = 'feedbackContainer_' + nodeId + '_' + componentId;
     }
@@ -206,13 +273,20 @@ class ConceptMapController extends ComponentController {
     if (this.isStudentMode()) {
       if (this.UtilService.hasShowWorkConnectedComponent(this.componentContent)) {
         this.handleConnectedComponents();
-      } else if (this.ConceptMapService.componentStateHasStudentWork(componentState, this.componentContent)) {
+      } else if (
+        this.ConceptMapService.componentStateHasStudentWork(componentState, this.componentContent)
+      ) {
         componentState = this.ProjectService.injectAssetPaths(componentState);
         this.setStudentWork(componentState);
       } else if (this.UtilService.hasConnectedComponent(this.componentContent)) {
         this.handleConnectedComponents();
-      } else if (!this.ConceptMapService.componentStateHasStudentWork(componentState, this.componentContent) &&
-          this.componentContentHasStarterConceptMap()) {
+      } else if (
+        !this.ConceptMapService.componentStateHasStudentWork(
+          componentState,
+          this.componentContent
+        ) &&
+        this.componentContentHasStarterConceptMap()
+      ) {
         const conceptMapData = this.componentContent.starterConceptMap;
         this.populateConceptMapData(conceptMapData);
       }
@@ -260,8 +334,7 @@ class ConceptMapController extends ComponentController {
     this.populateLinks(conceptMapData);
 
     if (conceptMapData.backgroundPath != null && conceptMapData.backgroundPath != '') {
-      this.setBackgroundImage(conceptMapData.backgroundPath,
-        conceptMapData.stretchBackground);
+      this.setBackgroundImage(conceptMapData.backgroundPath, conceptMapData.stretchBackground);
     }
 
     this.moveLinkTextToFront();
@@ -288,8 +361,17 @@ class ConceptMapController extends ComponentController {
       const width = node.width;
       const height = node.height;
       const conceptMapNode = this.ConceptMapService.newConceptMapNode(
-        this.draw, instanceId, originalId, filePath, label,
-        x, y, width, height, this.componentContent.showNodeLabels);
+        this.draw,
+        instanceId,
+        originalId,
+        filePath,
+        label,
+        x,
+        y,
+        width,
+        height,
+        this.componentContent.showNodeLabels
+      );
       this.addNode(conceptMapNode);
       if (!this.isDisabled) {
         this.setNodeMouseEvents(conceptMapNode);
@@ -322,8 +404,17 @@ class ConceptMapController extends ComponentController {
       }
 
       const conceptMapLink = this.ConceptMapService.newConceptMapLink(
-        this.draw, instanceId, originalId, sourceNode, destinationNode, label, color, curvature,
-        startCurveUp, endCurveUp);
+        this.draw,
+        instanceId,
+        originalId,
+        sourceNode,
+        destinationNode,
+        label,
+        color,
+        curvature,
+        startCurveUp,
+        endCurveUp
+      );
       this.addLink(conceptMapLink);
       if (!this.isDisabled) {
         this.setLinkMouseEvents(conceptMapLink);
@@ -376,10 +467,14 @@ class ConceptMapController extends ComponentController {
           alert(this.$translate('conceptMap.youHaveNoMoreChances'));
           performSubmit = false;
         } else if (numberOfSubmitsLeft === 1) {
-          message = this.$translate('conceptMap.youHaveOneChance', {numberOfSubmitsLeft: numberOfSubmitsLeft});
+          message = this.$translate('conceptMap.youHaveOneChance', {
+            numberOfSubmitsLeft: numberOfSubmitsLeft
+          });
           performSubmit = confirm(message);
         } else if (numberOfSubmitsLeft > 1) {
-          message = this.$translate('conceptMap.youHaveMultipleChances', {numberOfSubmitsLeft: numberOfSubmitsLeft});
+          message = this.$translate('conceptMap.youHaveMultipleChances', {
+            numberOfSubmitsLeft: numberOfSubmitsLeft
+          });
           performSubmit = confirm(message);
         }
       }
@@ -401,7 +496,10 @@ class ConceptMapController extends ComponentController {
   }
 
   hasAutoGrading() {
-    return this.componentContent.customRuleEvaluator != null && this.componentContent.customRuleEvaluator != '';
+    return (
+      this.componentContent.customRuleEvaluator != null &&
+      this.componentContent.customRuleEvaluator != ''
+    );
   }
 
   performAutoGrading() {
@@ -439,7 +537,7 @@ class ConceptMapController extends ComponentController {
      */
     const all = function() {
       return thisConceptMapService.all(componentContent, conceptMapData, arguments);
-    }
+    };
 
     /*
      * create the setResult function that can be called in the custom rule
@@ -470,7 +568,8 @@ class ConceptMapController extends ComponentController {
 
     if (resultString != '') {
       this.$mdDialog.show(
-        this.$mdDialog.alert()
+        this.$mdDialog
+          .alert()
           .clickOutsideToClose(true)
           .title(this.$translate('FEEDBACK'))
           .htmlContent(resultString)
@@ -517,7 +616,13 @@ class ConceptMapController extends ComponentController {
           }
 
           const scoreAnnotation = this.AnnotationService.createAutoScoreAnnotation(
-              runId, periodId, nodeId, componentId, toWorkgroupId, data);
+            runId,
+            periodId,
+            nodeId,
+            componentId,
+            toWorkgroupId,
+            data
+          );
           componentState.annotations.push(scoreAnnotation);
 
           if (this.isAuthoringMode()) {
@@ -534,7 +639,13 @@ class ConceptMapController extends ComponentController {
             autoGrader: 'conceptMap'
           };
           const commentAnnotation = this.AnnotationService.createAutoCommentAnnotation(
-              runId, periodId, nodeId, componentId, toWorkgroupId, data);
+            runId,
+            periodId,
+            nodeId,
+            componentId,
+            toWorkgroupId,
+            data
+          );
           componentState.annotations.push(commentAnnotation);
 
           if (this.isAuthoringMode()) {
@@ -614,7 +725,13 @@ class ConceptMapController extends ComponentController {
     const componentId = this.componentId;
     const toWorkgroupId = this.ConfigService.getWorkgroupId();
     const annotation = this.AnnotationService.createAutoScoreAnnotation(
-        runId, periodId, nodeId, componentId, toWorkgroupId, data);
+      runId,
+      periodId,
+      nodeId,
+      componentId,
+      toWorkgroupId,
+      data
+    );
     return annotation;
   }
 
@@ -630,13 +747,18 @@ class ConceptMapController extends ComponentController {
     const componentId = this.componentId;
     const toWorkgroupId = this.ConfigService.getWorkgroupId();
     const annotation = this.AnnotationService.createAutoCommentAnnotation(
-      runId, periodId, nodeId, componentId, toWorkgroupId, data);
+      runId,
+      periodId,
+      nodeId,
+      componentId,
+      toWorkgroupId,
+      data
+    );
     return annotation;
   }
 
   linkTypeSelected(selectedLink) {
-    if (this.highlightedElement != null &&
-        this.highlightedElement.type === 'ConceptMapLink') {
+    if (this.highlightedElement != null && this.highlightedElement.type === 'ConceptMapLink') {
       const link = this.highlightedElement;
       const label = selectedLink.label;
       const color = selectedLink.color;
@@ -681,15 +803,15 @@ class ConceptMapController extends ComponentController {
     this.newlyCreatedLink = null;
 
     if (!this.isDisabled) {
-      this.draw.mousedown((event) => {
+      this.draw.mousedown(event => {
         this.svgMouseDown(event);
       });
 
-      this.draw.mouseup((event) => {
+      this.draw.mouseup(event => {
         this.svgMouseUp(event);
       });
 
-      this.draw.mousemove((event) => {
+      this.draw.mousemove(event => {
         this.svgMouseMove(event);
       });
 
@@ -711,7 +833,7 @@ class ConceptMapController extends ComponentController {
        * listen for the dragover event which occurs when the user is
        * dragging a node onto the svg
        */
-      svg[0].addEventListener('dragover', (event) => {
+      svg[0].addEventListener('dragover', event => {
         /*
          * prevent the default because if we don't, the user won't
          * be able to drop a new node instance onto the svg in the
@@ -736,8 +858,7 @@ class ConceptMapController extends ComponentController {
        * listen for the drop event which occurs when the student drops
        * a new node onto the svg
        */
-      svg[0].addEventListener('drop', (event) => {
-
+      svg[0].addEventListener('drop', event => {
         /*
          * the user has dropped a new node onto the svg to create a
          * new instance of a node
@@ -751,35 +872,39 @@ class ConceptMapController extends ComponentController {
 
   setLinkTypeChooserStyle() {
     this.linkTypeChooserStyle = {
-      'width': '300px',
-      'position': 'absolute',
-      'left': '600px',
-      'top': '20px',
-      'border': '1px solid black',
-      'backgroundColor': 'white',
-      'cursor': 'pointer',
+      width: '300px',
+      position: 'absolute',
+      left: '600px',
+      top: '20px',
+      border: '1px solid black',
+      backgroundColor: 'white',
+      cursor: 'pointer',
       'z-index': 10000,
-      'padding': '16px'
+      padding: '16px'
     };
   }
 
   setLinkTypeChooserOverlayStyle() {
     this.modalWidth = this.getModalWidth();
     const overlayWidth = this.modalWidth;
-    const conceptMapContainer = angular.element(document.querySelector('#' + this.conceptMapContainerId));
+    const conceptMapContainer = angular.element(
+      document.querySelector('#' + this.conceptMapContainerId)
+    );
     const height = conceptMapContainer[0].offsetHeight;
     this.linkTypeChooserModalOverlayStyle = {
-      'position': 'absolute',
+      position: 'absolute',
       'z-index': 9999,
-      'width': overlayWidth,
-      'height': height,
+      width: overlayWidth,
+      height: height,
       'background-color': '#000000',
-      'opacity': 0.4
+      opacity: 0.4
     };
   }
 
   getModalWidth() {
-    const selectNodeBarWidthString = angular.element(document.getElementById('#' + this.selectNodeBarId)).css('width');
+    const selectNodeBarWidthString = angular
+      .element(document.getElementById('#' + this.selectNodeBarId))
+      .css('width');
     const svgWidthString = angular.element(document.getElementById(this.svgId)).css('width');
     if (selectNodeBarWidthString != null && svgWidthString != null) {
       const selectNodeBarWidth = parseInt(selectNodeBarWidthString.replace('px', ''));
@@ -792,7 +917,9 @@ class ConceptMapController extends ComponentController {
   }
 
   getModalHeight() {
-    const selectNodeBarHeightString = angular.element(document.getElementById('#' + this.selectNodeBarId)).css('height');
+    const selectNodeBarHeightString = angular
+      .element(document.getElementById('#' + this.selectNodeBarId))
+      .css('height');
     const svgHeightString = angular.element(document.getElementById(this.svgId)).css('height');
     if (selectNodeBarHeightString != null && svgHeightString != null) {
       const selectNodeBarHeight = parseInt(selectNodeBarHeightString.replace('px', ''));
@@ -977,7 +1104,6 @@ class ConceptMapController extends ComponentController {
       }
     } else if (event.target.tagName === 'circle') {
       if (this.isUserAgentChrome(userAgent)) {
-
       } else if (this.isUserAgentFirefox(userAgent)) {
         const matrix = event.target.getCTM();
         const bbox = event.target.getBBox();
@@ -986,7 +1112,6 @@ class ConceptMapController extends ComponentController {
       }
     } else if (event.target.tagName === 'rect') {
       if (this.isUserAgentChrome(userAgent)) {
-
       } else if (this.isUserAgentFirefox(userAgent)) {
         const matrix = event.target.getCTM();
         const bbox = event.target.getBBox();
@@ -997,7 +1122,6 @@ class ConceptMapController extends ComponentController {
       }
     } else if (event.target.tagName === 'image') {
       if (this.isUserAgentChrome(userAgent)) {
-
       } else if (this.isUserAgentFirefox(userAgent)) {
         const matrix = event.target.parentElement.getCTM();
         parentOffsetX = matrix.e;
@@ -1005,7 +1129,6 @@ class ConceptMapController extends ComponentController {
       }
     } else if (event.target.tagName === 'path') {
       if (this.isUserAgentChrome(userAgent)) {
-
       } else if (this.isUserAgentFirefox(userAgent)) {
         const x2 = event.target.attributes['x2'];
         const y2 = event.target.attributes['y2'];
@@ -1016,7 +1139,6 @@ class ConceptMapController extends ComponentController {
       }
     } else {
       if (this.isUserAgentChrome(userAgent)) {
-
       } else if (this.isUserAgentFirefox(userAgent)) {
         const matrix = event.target.getCTM();
         parentOffsetX = matrix.e;
@@ -1076,8 +1198,17 @@ class ConceptMapController extends ComponentController {
     const y = coordinates.y - this.tempOffsetY;
     const newConceptMapNodeId = this.getNewConceptMapNodeId();
     const conceptMapNode = this.ConceptMapService.newConceptMapNode(
-        this.draw, newConceptMapNodeId, originalId, filePath, label,
-        x, y, width, height, this.componentContent.showNodeLabels);
+      this.draw,
+      newConceptMapNodeId,
+      originalId,
+      filePath,
+      label,
+      x,
+      y,
+      width,
+      height,
+      this.componentContent.showNodeLabels
+    );
     this.addNode(conceptMapNode);
     this.setNodeMouseEvents(conceptMapNode);
     this.setHighlightedElement(conceptMapNode);
@@ -1094,40 +1225,40 @@ class ConceptMapController extends ComponentController {
   }
 
   setNodeMouseEvents(conceptMapNode) {
-    conceptMapNode.setNodeMouseOver((event) => {
+    conceptMapNode.setNodeMouseOver(event => {
       this.nodeMouseOver(event);
     });
 
-    conceptMapNode.setNodeMouseOut((event) => {
+    conceptMapNode.setNodeMouseOut(event => {
       this.nodeMouseOut(event);
     });
 
-    conceptMapNode.setConnectorMouseDown((event) => {
+    conceptMapNode.setConnectorMouseDown(event => {
       this.disableNodeDragging();
       this.connectorMouseDown(event);
     });
 
-    conceptMapNode.setNodeMouseDown((event) => {
+    conceptMapNode.setNodeMouseDown(event => {
       this.nodeMouseDown(event);
     });
 
-    conceptMapNode.setNodeMouseUp((event) => {
+    conceptMapNode.setNodeMouseUp(event => {
       this.nodeMouseUp(event);
     });
 
-    conceptMapNode.setDeleteButtonMouseDown((event) => {
+    conceptMapNode.setDeleteButtonMouseDown(event => {
       this.nodeDeleteButtonMouseDown(event);
     });
 
-    conceptMapNode.setDeleteButtonMouseOver((event) => {
+    conceptMapNode.setDeleteButtonMouseOver(event => {
       this.nodeDeleteButtonMouseOver(event);
     });
 
-    conceptMapNode.setDeleteButtonMouseOut((event) => {
+    conceptMapNode.setDeleteButtonMouseOut(event => {
       this.nodeDeleteButtonMouseOut(event);
     });
 
-    conceptMapNode.setDragMove((event) => {
+    conceptMapNode.setDragMove(event => {
       this.nodeDragMove(event);
     });
   }
@@ -1406,7 +1537,12 @@ class ConceptMapController extends ComponentController {
      * selected a link type
      */
     const originalId = null;
-    const link = this.ConceptMapService.newConceptMapLink(this.draw, newConceptMapLinkId, originalId, node);
+    const link = this.ConceptMapService.newConceptMapLink(
+      this.draw,
+      newConceptMapLinkId,
+      originalId,
+      node
+    );
     this.setLinkMouseEvents(link);
     this.activeLink = link;
     this.linkCurvatureSet = false;
@@ -1418,23 +1554,23 @@ class ConceptMapController extends ComponentController {
   }
 
   setLinkMouseEvents(link) {
-    link.setLinkMouseDown((event) => {
+    link.setLinkMouseDown(event => {
       this.linkMouseDown(event);
     });
 
-    link.setLinkTextMouseDown((event) => {
+    link.setLinkTextMouseDown(event => {
       this.linkTextMouseDown(event);
     });
 
-    link.setLinkMouseOver((event) => {
+    link.setLinkMouseOver(event => {
       this.linkMouseOver(event);
     });
 
-    link.setLinkMouseOut((event) => {
+    link.setLinkMouseOut(event => {
       this.linkMouseOut(event);
     });
 
-    link.setDeleteButtonClicked((event) => {
+    link.setDeleteButtonClicked(event => {
       this.linkDeleteButtonClicked(event, link);
     });
   }
@@ -1588,13 +1724,14 @@ class ConceptMapController extends ComponentController {
    */
   showAutoFeedback() {
     this.$mdDialog.show(
-      this.$mdDialog.alert()
-      .parent(angular.element(document.querySelector('#' + this.feedbackContainerId)))
-      .clickOutsideToClose(true)
-      .title(this.$translate('FEEDBACK'))
-      .htmlContent(this.autoFeedbackString)
-      .ariaLabel(this.$translate('FEEDBACK'))
-      .ok(this.$translate('CLOSE'))
+      this.$mdDialog
+        .alert()
+        .parent(angular.element(document.querySelector('#' + this.feedbackContainerId)))
+        .clickOutsideToClose(true)
+        .title(this.$translate('FEEDBACK'))
+        .htmlContent(this.autoFeedbackString)
+        .ariaLabel(this.$translate('FEEDBACK'))
+        .ok(this.$translate('CLOSE'))
     );
   }
 
@@ -1604,7 +1741,9 @@ class ConceptMapController extends ComponentController {
    */
   snip($event) {
     // get the svg element. this will obtain an array.
-    let svgElement = angular.element(document.querySelector('#svg_' + this.nodeId + '_' + this.componentId));
+    let svgElement = angular.element(
+      document.querySelector('#svg_' + this.nodeId + '_' + this.componentId)
+    );
     if (svgElement != null && svgElement.length > 0) {
       svgElement = svgElement[0];
 
@@ -1613,7 +1752,7 @@ class ConceptMapController extends ComponentController {
       let svgString = serializer.serializeToString(svgElement);
 
       // find all the images in the svg and replace them with Base64 images
-      this.ConceptMapService.getHrefToBase64ImageReplacements(svgString).then((images) => {
+      this.ConceptMapService.getHrefToBase64ImageReplacements(svgString).then(images => {
         /*
          * Loop through all the image objects. Each object contains
          * an image href and a Base64 image.
@@ -1633,7 +1772,7 @@ class ConceptMapController extends ComponentController {
 
         const myCanvas = document.createElement('canvas');
         const ctx = myCanvas.getContext('2d');
-        const svg = new Blob([svgString], {type:'image/svg+xml;charset=utf-8'});
+        const svg = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
         const domURL = self.URL || self.webkitURL || self;
         const url = domURL.createObjectURL(svg);
         const image = new Image();
@@ -1643,7 +1782,7 @@ class ConceptMapController extends ComponentController {
          * in the onload callback function
          */
         const thisUtilService = this.UtilService;
-        image.onload = (event) => {
+        image.onload = event => {
           const image = event.target;
 
           // set the dimensions of the canvas
@@ -1683,13 +1822,17 @@ class ConceptMapController extends ComponentController {
           backgroundPath = conceptMapData.backgroundPath;
           stretchBackground = conceptMapData.stretchBackground;
         }
-      } else if (componentState.componentType === 'Draw' ||
-          componentState.componentType === 'Embedded' ||
-          componentState.componentType === 'Graph' ||
-          componentState.componentType === 'Label' ||
-          componentState.componentType === 'Table') {
-        let connectedComponent =
-          this.UtilService.getConnectedComponentByComponentState(this.componentContent, componentState);
+      } else if (
+        componentState.componentType === 'Draw' ||
+        componentState.componentType === 'Embedded' ||
+        componentState.componentType === 'Graph' ||
+        componentState.componentType === 'Label' ||
+        componentState.componentType === 'Table'
+      ) {
+        let connectedComponent = this.UtilService.getConnectedComponentByComponentState(
+          this.componentContent,
+          componentState
+        );
         if (connectedComponent.importWorkAsBackground === true) {
           this.setComponentStateAsBackgroundImage(componentState);
         }
@@ -1725,7 +1868,7 @@ class ConceptMapController extends ComponentController {
    * @param componentState A component state.
    */
   setComponentStateAsBackgroundImage(componentState) {
-    this.UtilService.generateImageFromComponentState(componentState).then((image) => {
+    this.UtilService.generateImageFromComponentState(componentState).then(image => {
       this.setBackgroundImage(image.url);
     });
   }

@@ -3,9 +3,9 @@ import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatDividerModule, MatIconModule } from '@angular/material';
 
-import { FeaturesComponent } from "./features.component";
-import { FeaturesRoutingModule } from "./features-routing.module";
-import { SharedModule } from "../modules/shared/shared.module";
+import { FeaturesComponent } from './features.component';
+import { FeaturesRoutingModule } from './features-routing.module';
+import { SharedModule } from '../modules/shared/shared.module';
 
 @NgModule({
   imports: [
@@ -16,12 +16,7 @@ import { SharedModule } from "../modules/shared/shared.module";
     FeaturesRoutingModule,
     SharedModule
   ],
-  declarations: [
-    FeaturesComponent
-  ],
-  exports: [
-    FeaturesComponent,
-    SharedModule
-  ]
+  declarations: [FeaturesComponent],
+  exports: [FeaturesComponent, SharedModule]
 })
-export class FeaturesModule { }
+export class FeaturesModule {}

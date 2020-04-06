@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-teacher-run-list',
   templateUrl: './teacher-run-list.component.html',
-  styleUrls: ['./teacher-run-list.component.scss'],
+  styleUrls: ['./teacher-run-list.component.scss']
 })
 export class TeacherRunListComponent implements OnInit {
   runs: TeacherRun[] = [];
@@ -24,9 +24,11 @@ export class TeacherRunListComponent implements OnInit {
   isSharedRunsRetrieved: boolean = false;
   showAll: boolean = false;
 
-  constructor(private teacherService: TeacherService,
-              private configService: ConfigService,
-              router: Router) {
+  constructor(
+    private teacherService: TeacherService,
+    private configService: ConfigService,
+    router: Router
+  ) {
     teacherService.newRunSource$.subscribe(run => {
       const teacherRun: TeacherRun = new TeacherRun(run);
       teacherRun.isHighlighted = true;
@@ -190,9 +192,7 @@ export class TeacherRunListComponent implements OnInit {
   }
 
   performSearchAndFilter(): void {
-    this.filteredRuns = this.searchValue
-      ? this.performSearch(this.searchValue)
-      : this.runs;
+    this.filteredRuns = this.searchValue ? this.performSearch(this.searchValue) : this.runs;
     this.performFilter(this.filterValue);
   }
 
@@ -238,7 +238,7 @@ export class TeacherRunListComponent implements OnInit {
               .indexOf(searchValue) !== -1
           );
         }
-      }),
+      })
     );
   }
 

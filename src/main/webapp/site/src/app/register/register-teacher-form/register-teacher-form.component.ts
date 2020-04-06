@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from "@angular/router";
-import { Teacher } from "../../domain/teacher";
-import { TeacherService } from "../../teacher/teacher.service";
-import { FormControl, FormGroup, Validators, FormBuilder } from "@angular/forms";
+import { ActivatedRoute, Router } from '@angular/router';
+import { Teacher } from '../../domain/teacher';
+import { TeacherService } from '../../teacher/teacher.service';
+import { FormControl, FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { UtilService } from '../../services/util.service';
 import { I18n } from '@ngx-translate/i18n-polyfill';
 
@@ -12,39 +12,47 @@ import { I18n } from '@ngx-translate/i18n-polyfill';
   styleUrls: ['./register-teacher-form.component.scss']
 })
 export class RegisterTeacherFormComponent implements OnInit {
-
   teacherUser: Teacher = new Teacher();
   schoolLevels: any[] = [
-    { code: "ELEMENTARY_SCHOOL", label: this.i18n('Elementary School') },
-    { code: "MIDDLE_SCHOOL", label: this.i18n('Middle School') },
-    { code: "HIGH_SCHOOL", label: this.i18n('High School') },
-    { code: "COLLEGE", label: this.i18n('College') },
-    { code: "OTHER", label: this.i18n('Other') }
+    { code: 'ELEMENTARY_SCHOOL', label: this.i18n('Elementary School') },
+    { code: 'MIDDLE_SCHOOL', label: this.i18n('Middle School') },
+    { code: 'HIGH_SCHOOL', label: this.i18n('High School') },
+    { code: 'COLLEGE', label: this.i18n('College') },
+    { code: 'OTHER', label: this.i18n('Other') }
   ];
-  passwordsFormGroup = this.fb.group({
-    password: ['', [Validators.required]],
-    confirmPassword: ['', [Validators.required]]
-  }, { validator: this.passwordMatchValidator });
-  createTeacherAccountFormGroup: FormGroup = this.fb.group({
-    firstName: new FormControl('', [Validators.required]),
-    lastName: new FormControl('', [Validators.required]),
-    email: new FormControl('', [Validators.required, Validators.email]),
-    city: new FormControl('', [Validators.required]),
-    state: new FormControl('', [Validators.required]),
-    country: new FormControl('', [Validators.required]),
-    schoolName: new FormControl('', [Validators.required]),
-    schoolLevel: new FormControl('', [Validators.required]),
-    howDidYouHearAboutUs: new FormControl(''),
-    agree: new FormControl('')
-  }, { validator: this.agreeCheckboxValidator });
+  passwordsFormGroup = this.fb.group(
+    {
+      password: ['', [Validators.required]],
+      confirmPassword: ['', [Validators.required]]
+    },
+    { validator: this.passwordMatchValidator }
+  );
+  createTeacherAccountFormGroup: FormGroup = this.fb.group(
+    {
+      firstName: new FormControl('', [Validators.required]),
+      lastName: new FormControl('', [Validators.required]),
+      email: new FormControl('', [Validators.required, Validators.email]),
+      city: new FormControl('', [Validators.required]),
+      state: new FormControl('', [Validators.required]),
+      country: new FormControl('', [Validators.required]),
+      schoolName: new FormControl('', [Validators.required]),
+      schoolLevel: new FormControl('', [Validators.required]),
+      howDidYouHearAboutUs: new FormControl(''),
+      agree: new FormControl('')
+    },
+    { validator: this.agreeCheckboxValidator }
+  );
   isSubmitted = false;
   processing: boolean = false;
 
-  constructor(private router: Router, private route: ActivatedRoute,
-              private teacherService: TeacherService,
-              private utilService: UtilService,
-              private fb: FormBuilder,
-              private i18n: I18n) { }
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private teacherService: TeacherService,
+    private utilService: UtilService,
+    private fb: FormBuilder,
+    private i18n: I18n
+  ) {}
 
   ngOnInit() {
     this.route.params.subscribe(params => {
@@ -74,8 +82,9 @@ export class RegisterTeacherFormComponent implements OnInit {
     if (this.createTeacherAccountFormGroup.valid) {
       this.processing = true;
       this.populateTeacherUser();
-      this.teacherService.registerTeacherAccount(this.teacherUser, (username) => {
-        this.router.navigate(['join/teacher/complete',
+      this.teacherService.registerTeacherAccount(this.teacherUser, username => {
+        this.router.navigate([
+          'join/teacher/complete',
           { username: username, isUsingGoogleId: this.isUsingGoogleId() }
         ]);
         this.processing = false;
@@ -104,7 +113,7 @@ export class RegisterTeacherFormComponent implements OnInit {
     if (password == confirmPassword) {
       return null;
     } else {
-      const error = { 'passwordDoesNotMatch': true };
+      const error = { passwordDoesNotMatch: true };
       passwordsFormGroup.controls['confirmPassword'].setErrors(error);
       return error;
     }
@@ -113,7 +122,7 @@ export class RegisterTeacherFormComponent implements OnInit {
   agreeCheckboxValidator(createTeacherAccountFormGroup: FormGroup) {
     const agree = createTeacherAccountFormGroup.get('agree').value;
     if (!agree) {
-      const error = { 'agreeNotChecked': true };
+      const error = { agreeNotChecked: true };
       createTeacherAccountFormGroup.setErrors(error);
       return error;
     }

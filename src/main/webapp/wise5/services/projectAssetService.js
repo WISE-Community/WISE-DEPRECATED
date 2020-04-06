@@ -1,12 +1,5 @@
 class ProjectAssetService {
-  constructor(
-      $q,
-      $http,
-      $rootScope,
-      ConfigService,
-      ProjectService,
-      Upload,
-      UtilService) {
+  constructor($q, $http, $rootScope, ConfigService, ProjectService, Upload, UtilService) {
     this.$q = $q;
     this.$http = $http;
     this.$rootScope = $rootScope;
@@ -22,29 +15,30 @@ class ProjectAssetService {
     const httpParams = {
       method: 'POST',
       url: `${this.ConfigService.getConfigParam('projectAssetURL')}/delete`,
-      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       data: $.param({
         assetFileName: assetItem.fileName
       })
     };
 
-    return this.$http(httpParams).then((result) => {
+    return this.$http(httpParams).then(result => {
       this.projectAssets = result.data;
       return this.projectAssets;
     });
   }
 
   downloadAssetItem(assetItem) {
-    window.location = `${this.ConfigService.getConfigParam('projectAssetURL')}` +
-        `/download?assetFileName=${assetItem.fileName}`;
+    window.location =
+      `${this.ConfigService.getConfigParam('projectAssetURL')}` +
+      `/download?assetFileName=${assetItem.fileName}`;
   }
 
   getFullAssetItemURL(assetItem) {
-    return this.ConfigService.getConfigParam('projectBaseURL') + "assets/" + assetItem.fileName;
+    return this.ConfigService.getConfigParam('projectBaseURL') + 'assets/' + assetItem.fileName;
   }
 
   retrieveProjectAssets() {
-    return this.$http.get(this.ConfigService.getConfigParam('projectAssetURL')).then((result) => {
+    return this.$http.get(this.ConfigService.getConfigParam('projectAssetURL')).then(result => {
       this.projectAssetTotalSizeMax = this.ConfigService.getConfigParam('projectAssetTotalSizeMax');
       const projectAssetsJSON = result.data;
       this.projectAssets = projectAssetsJSON;
@@ -56,9 +50,9 @@ class ProjectAssetService {
   uploadAssets(files) {
     return this.Upload.upload({
       url: this.ConfigService.getConfigParam('projectAssetURL'),
-      data: { files : files },
+      data: { files: files },
       arrayKey: '' // required to merge files array into one 'files' request parameter
-    }).success((result) => {
+    }).success(result => {
       this.projectAssets = result.assetDirectoryInfo;
     });
   }
@@ -88,14 +82,15 @@ class ProjectAssetService {
        */
       for (const asset of assets.files) {
         const fileName = asset.fileName;
-          // check if the file is a text file
-          if (this.UtilService.endsWith(fileName, ".html") ||
-            this.UtilService.endsWith(fileName, ".htm") ||
-            this.UtilService.endsWith(fileName, ".js")) {
-
-            // the file is a text file
-            allTextFiles.push(fileName);
-          }
+        // check if the file is a text file
+        if (
+          this.UtilService.endsWith(fileName, '.html') ||
+          this.UtilService.endsWith(fileName, '.htm') ||
+          this.UtilService.endsWith(fileName, '.js')
+        ) {
+          // the file is a text file
+          allTextFiles.push(fileName);
+        }
       }
     }
 
@@ -106,8 +101,7 @@ class ProjectAssetService {
      * are no text files that are used in the project, the then() will
      * still be called.
      */
-    return this.getTextFiles(allTextFiles).then((textFiles) => {
-
+    return this.getTextFiles(allTextFiles).then(textFiles => {
       /*
        * this variable will hold all the text content that is used in
        * the project so we can look for asset references to determine
@@ -138,7 +132,6 @@ class ProjectAssetService {
        * loop, it will find that whale.js is used.
        */
       while (foundNewUsedTextFile) {
-
         /*
          * reset this to false so that we can tell if a new text file
          * is found to be used in this current iteration of the while

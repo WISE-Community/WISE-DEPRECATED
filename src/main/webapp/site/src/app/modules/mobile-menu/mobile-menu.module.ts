@@ -1,12 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import {
-  MatButtonModule,
-  MatDividerModule,
-  MatIconModule } from '@angular/material';
+import { MatButtonModule, MatDividerModule, MatIconModule } from '@angular/material';
 
-import { AppRoutingModule } from "../../app-routing.module";
+import { AppRoutingModule } from '../../app-routing.module';
 import { MobileMenuComponent } from './mobile-menu.component';
 
 @NgModule({
@@ -19,8 +16,6 @@ import { MobileMenuComponent } from './mobile-menu.component';
     MatIconModule
   ],
   declarations: [MobileMenuComponent],
-  exports: [
-    MobileMenuComponent
-  ]
+  exports: [MobileMenuComponent]
 })
-export class MobileMenuModule { }
+export class MobileMenuModule {}

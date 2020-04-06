@@ -3,22 +3,25 @@
 import AnimationController from './animationController';
 
 class AnimationAuthoringController extends AnimationController {
-  constructor($filter,
-              $mdDialog,
-              $q,
-              $rootScope,
-              $scope,
-              $timeout,
-              AnimationService,
-              AnnotationService,
-              ConfigService,
-              NodeService,
-              NotebookService,
-              ProjectService,
-              StudentAssetService,
-              StudentDataService,
-              UtilService) {
-    super($filter,
+  constructor(
+    $filter,
+    $mdDialog,
+    $q,
+    $rootScope,
+    $scope,
+    $timeout,
+    AnimationService,
+    AnnotationService,
+    ConfigService,
+    NodeService,
+    NotebookService,
+    ProjectService,
+    StudentAssetService,
+    StudentDataService,
+    UtilService
+  ) {
+    super(
+      $filter,
       $mdDialog,
       $q,
       $rootScope,
@@ -32,11 +35,9 @@ class AnimationAuthoringController extends AnimationController {
       ProjectService,
       StudentAssetService,
       StudentDataService,
-      UtilService);
-    this.allowedConnectedComponentTypes = [
-      { type: 'Animation' },
-      { type: 'Graph' }
-    ];
+      UtilService
+    );
+    this.allowedConnectedComponentTypes = [{ type: 'Animation' }, { type: 'Graph' }];
   }
 
   handleAuthoringComponentContentChanged(newValue, oldValue) {
@@ -230,7 +231,7 @@ class AnimationAuthoringController extends AnimationController {
     const nodeId = authoredObject.dataSource.nodeId;
     authoredObject.dataSource = {
       nodeId: nodeId
-    }
+    };
     this.authoringViewComponentChanged();
   }
 

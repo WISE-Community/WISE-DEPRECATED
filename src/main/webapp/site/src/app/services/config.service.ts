@@ -1,19 +1,17 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from "@angular/common/http";
-import { BehaviorSubject, Observable } from "rxjs";
-import { Config } from "../domain/config";
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { Config } from '../domain/config';
 import { Announcement } from '../domain/announcement';
 
 @Injectable()
 export class ConfigService {
-
   private userConfigUrl = 'api/user/config';
   private announcementUrl = 'announcement';
   private config$: BehaviorSubject<Config> = new BehaviorSubject<Config>(null);
   private timeDiff: number = 0;
 
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient) {}
 
   getConfig(): Observable<Config> {
     return this.config$;
@@ -21,7 +19,8 @@ export class ConfigService {
 
   retrieveConfig() {
     const headers = new HttpHeaders({ 'Cache-Control': 'no-cache' });
-    this.http.get<Config>(this.userConfigUrl, { headers: headers })
+    this.http
+      .get<Config>(this.userConfigUrl, { headers: headers })
       .subscribe(config => {
         this.config$.next(config);
         this.timeDiff = Date.now() - config.currentTime;

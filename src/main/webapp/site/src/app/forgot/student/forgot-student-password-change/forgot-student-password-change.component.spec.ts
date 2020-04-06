@@ -12,7 +12,12 @@ import { I18n } from '@ngx-translate/i18n-polyfill';
 import { configureTestSuite } from 'ng-bullet';
 
 export class MockStudentService {
-  changePassword(username: string, answer: string, password: string, confirmPassword: string): Observable<any> {
+  changePassword(
+    username: string,
+    answer: string,
+    password: string,
+    confirmPassword: string
+  ): Observable<any> {
     return Observable.create(observer => {
       observer.next({
         status: 'success',
@@ -58,15 +63,11 @@ describe('ForgotStudentPasswordChangeComponent', () => {
 
   configureTestSuite(() => {
     TestBed.configureTestingModule({
-      declarations: [ ForgotStudentPasswordChangeComponent ],
-      imports: [
-        RouterTestingModule,
-        BrowserAnimationsModule,
-        ReactiveFormsModule
-      ],
+      declarations: [ForgotStudentPasswordChangeComponent],
+      imports: [RouterTestingModule, BrowserAnimationsModule, ReactiveFormsModule],
       providers: [
         { provide: StudentService, useClass: MockStudentService },
-        { provide: TRANSLATIONS_FORMAT, useValue: "xlf" },
+        { provide: TRANSLATIONS_FORMAT, useValue: 'xlf' },
         {
           provide: TRANSLATIONS,
           useFactory: translationsFactory,
@@ -74,8 +75,8 @@ describe('ForgotStudentPasswordChangeComponent', () => {
         },
         I18n
       ],
-      schemas: [ NO_ERRORS_SCHEMA ]
-    })
+      schemas: [NO_ERRORS_SCHEMA]
+    });
   });
 
   beforeEach(() => {
@@ -124,7 +125,9 @@ describe('ForgotStudentPasswordChangeComponent', () => {
     const params = {
       username: username
     };
-    expect(navigateSpy).toHaveBeenCalledWith(['/forgot/student/password/complete'],
-      {queryParams: params, skipLocationChange: true});
+    expect(navigateSpy).toHaveBeenCalledWith(['/forgot/student/password/complete'], {
+      queryParams: params,
+      skipLocationChange: true
+    });
   });
 });

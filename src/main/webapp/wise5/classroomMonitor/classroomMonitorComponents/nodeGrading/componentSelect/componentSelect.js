@@ -1,88 +1,84 @@
-"use strict";
+'use strict';
 
 class ComponentSelectController {
-    constructor($filter,
-                ProjectService,
-                UtilService) {
-        this.$filter = $filter;
-        this.ProjectService = ProjectService;
-        this.UtilService = UtilService;
+  constructor($filter, ProjectService, UtilService) {
+    this.$filter = $filter;
+    this.ProjectService = ProjectService;
+    this.UtilService = UtilService;
 
-        this.$translate = this.$filter('translate');
+    this.$translate = this.$filter('translate');
 
-        this.$onInit = () => {
-            this.components = this.getNodeContent().components.filter((component) => {
-              return this.ProjectService.componentHasWork(component);
-            });
-            this.selectedComponents = this.components.map((component) => {
-              return component.id;
-            });
-        };
+    this.$onInit = () => {
+      this.components = this.getNodeContent().components.filter(component => {
+        return this.ProjectService.componentHasWork(component);
+      });
+      this.selectedComponents = this.components.map(component => {
+        return component.id;
+      });
     };
+  }
 
-    getNodeContent() {
-        let result = null;
+  getNodeContent() {
+    let result = null;
 
-        let node = this.ProjectService.getNodeById(this.nodeId);
-        if (node != null) {
-            // field that will hold the node content
-            result = node;
-        }
-
-        return result;
+    let node = this.ProjectService.getNodeById(this.nodeId);
+    if (node != null) {
+      // field that will hold the node content
+      result = node;
     }
 
-    /**
-     * Get the component type label for the given component type
-     * @param componentType string
-     * @return string of the component type label
-     */
-    getComponentTypeLabel(componentType) {
-        return this.UtilService.getComponentTypeLabel(componentType);
+    return result;
+  }
+
+  /**
+   * Get the component type label for the given component type
+   * @param componentType string
+   * @return string of the component type label
+   */
+  getComponentTypeLabel(componentType) {
+    return this.UtilService.getComponentTypeLabel(componentType);
+  }
+
+  /**
+   * Get the text to display for the select dropdown
+   * @return string selected text
+   */
+  getSelectedText() {
+    let nComponents = this.components.length;
+    return this.$translate('selectedComponentsLabel', {
+      selected: this.selectedComponents.length,
+      total: nComponents
+    });
+  }
+
+  /**
+   * Selected components have changed, so run the onChange function
+   */
+  selectedComponentsChange() {
+    let hiddenComponents = [];
+
+    for (let i = 0; i < this.components.length; i++) {
+      let component = this.components[i];
+      let id = component.id;
+
+      if (this.selectedComponents.indexOf(id) < 0) {
+        // component isn't selected for view, so add to hiddenComponents
+        hiddenComponents.push(id);
+      }
     }
 
-    /**
-     * Get the text to display for the select dropdown
-     * @return string selected text
-     */
-    getSelectedText() {
-        let nComponents = this.components.length;
-        return this.$translate('selectedComponentsLabel', { selected: this.selectedComponents.length, total: nComponents });
-    }
-
-    /**
-     * Selected components have changed, so run the onChange function
-     */
-    selectedComponentsChange() {
-        let hiddenComponents = [];
-
-        for (let i = 0; i < this.components.length; i++) {
-            let component = this.components[i];
-            let id = component.id;
-
-            if (this.selectedComponents.indexOf(id) < 0) {
-                // component isn't selected for view, so add to hiddenComponents
-                hiddenComponents.push(id);
-            }
-        }
-
-        this.onChange({value: hiddenComponents});
-    }
+    this.onChange({ value: hiddenComponents });
+  }
 }
 
-ComponentSelectController.$inject = [
-    '$filter',
-    'ProjectService',
-    'UtilService'
-];
+ComponentSelectController.$inject = ['$filter', 'ProjectService', 'UtilService'];
 
 const ComponentSelect = {
-    bindings: {
-        nodeId: '@',
-        onChange: '&'
-    },
-    template:
-        `<md-select class="md-no-underline md-button md-raised"
+  bindings: {
+    nodeId: '@',
+    onChange: '&'
+  },
+  template: `<md-select class="md-no-underline md-button md-raised"
                     ng-if="$ctrl.components.length > 1"
                     ng-model="$ctrl.selectedComponents"
                     ng-change="$ctrl.selectedComponentsChange()"
@@ -103,7 +99,7 @@ const ComponentSelect = {
                    ng-if="$ctrl.components.length === 1">
             {{ ::'numberOfAssessmentItems_1' | translate }}
         </md-button>`,
-    controller: ComponentSelectController
+  controller: ComponentSelectController
 };
 
 export default ComponentSelect;

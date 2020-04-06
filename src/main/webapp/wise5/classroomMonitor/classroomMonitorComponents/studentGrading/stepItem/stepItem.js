@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 class StepItemController {
   constructor($filter) {
@@ -6,10 +6,12 @@ class StepItemController {
     this.$translate = this.$filter('translate');
     this.statusText = '';
 
-    this.$onChanges = (changesObj) => {
+    this.$onChanges = changesObj => {
       if (changesObj.maxScore) {
-        this.maxScore = typeof changesObj.maxScore.currentValue === 'number' ?
-          changesObj.maxScore.currentValue : 0;
+        this.maxScore =
+          typeof changesObj.maxScore.currentValue === 'number'
+            ? changesObj.maxScore.currentValue
+            : 0;
       }
 
       if (changesObj.stepData) {
@@ -23,7 +25,7 @@ class StepItemController {
 
       this.update();
     };
-  };
+  }
 
   update() {
     let completion = 0;
@@ -61,20 +63,18 @@ class StepItemController {
       this.statusClass = 'warn';
     }
 
-    this.disabled = (this.status === -1);
+    this.disabled = this.status === -1;
   }
 
   toggleExpand() {
     if (this.showScore) {
       let expand = !this.expand;
-      this.onUpdateExpand({nodeId: this.nodeId, value: expand});
+      this.onUpdateExpand({ nodeId: this.nodeId, value: expand });
     }
   }
 }
 
-StepItemController.$inject = [
-  '$filter'
-];
+StepItemController.$inject = ['$filter'];
 
 const StepItem = {
   bindings: {
@@ -87,8 +87,7 @@ const StepItem = {
     onUpdateExpand: '&'
   },
   controller: StepItemController,
-  template:
-    `<div class="md-whiteframe-1dp"
+  template: `<div class="md-whiteframe-1dp"
           ng-class="{ 'list-item--warn': $ctrl.statusClass === 'warn',
             'list-item--info': $ctrl.statusClass === 'info' }">
       <md-subheader class="list-item md-whiteframe-1dp">

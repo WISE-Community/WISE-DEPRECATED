@@ -142,8 +142,9 @@ function shouldGetDataExplorerYAxisLabelWhenOneYAxis() {
 
 function shouldSetDataExplorerYAxisLabelWithMultipleYAxis() {
   it('should set data explorer y axis label with multiple y axis', () => {
-    tableController.dataExplorerYAxisLabels =
-        Array(tableController.componentContent.numDataExplorerYAxis).fill('');
+    tableController.dataExplorerYAxisLabels = Array(
+      tableController.componentContent.numDataExplorerYAxis
+    ).fill('');
     const label1 = 'Label 1';
     const label2 = 'Label 2';
     tableController.setDataExplorerYAxisLabelWithMultipleYAxis(0, label1);

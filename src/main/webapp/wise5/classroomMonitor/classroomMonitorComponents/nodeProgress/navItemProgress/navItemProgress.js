@@ -1,14 +1,13 @@
-"use strict";
+'use strict';
 
 const NavItemProgress = {
-    bindings: {
-        nodeCompletion: '<',
-        periodName: '<',
-        periodId: '<',
-        workgroup: '<'
-    },
-    template:
-        `<span layout="row" layout-align="start center">
+  bindings: {
+    nodeCompletion: '<',
+    periodName: '<',
+    periodId: '<',
+    workgroup: '<'
+  },
+  template: `<span layout="row" layout-align="start center">
             <span class="progress-wrapper" tabindex="0">
                 <md-progress-linear class="nav-item__progress" md-mode="determinate" value="{{$ctrl.nodeCompletion}}"></md-progress-linear>
                 <md-tooltip ng-if="!$ctrl.workgroup" ng-switch on="$ctrl.periodId" md-direction="top">

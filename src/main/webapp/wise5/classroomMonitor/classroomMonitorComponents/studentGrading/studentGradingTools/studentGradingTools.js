@@ -1,12 +1,7 @@
-"use strict";
+'use strict';
 
 class StudentGradingToolsController {
-  constructor($filter,
-              $scope,
-              $state,
-              orderBy,
-              ConfigService,
-              TeacherDataService) {
+  constructor($filter, $scope, $state, orderBy, ConfigService, TeacherDataService) {
     this.$filter = $filter;
     this.$scope = $scope;
     this.$state = $state;
@@ -14,8 +9,8 @@ class StudentGradingToolsController {
     this.ConfigService = ConfigService;
     this.TeacherDataService = TeacherDataService;
     this.$translate = this.$filter('translate');
-    
-    this.is_rtl = ($('html').attr('dir') == 'rtl');
+
+    this.is_rtl = $('html').attr('dir') == 'rtl';
     this.icons = { prev: 'chevron_left', next: 'chevron_right' };
     if (this.is_rtl) {
       this.icons = { prev: 'chevron_right', next: 'chevron_left' };
@@ -23,7 +18,7 @@ class StudentGradingToolsController {
 
     this.$onInit = () => {
       this.selectTeamPlaceholder = this.$translate('selectATeam');
-    }
+    };
 
     this.$onChanges = () => {
       this.avatarColor = this.ConfigService.getAvatarColorForWorkgroupId(this.workgroupId);
@@ -37,8 +32,8 @@ class StudentGradingToolsController {
      * Listen for current period changed event
      */
     this.$scope.$on('currentPeriodChanged', (event, args) => {
-        this.periodId = args.currentPeriod.periodId;
-        this.filterForPeriod();
+      this.periodId = args.currentPeriod.periodId;
+      this.filterForPeriod();
     });
   }
 
@@ -70,7 +65,7 @@ class StudentGradingToolsController {
       let workgroupId = this.workgroups[i].workgroupId;
       if (workgroupId === id) {
         if (i > 0) {
-          let prevWorkgroup = this.workgroups[i-1];
+          let prevWorkgroup = this.workgroups[i - 1];
           if (prevWorkgroup.visible) {
             prevId = prevWorkgroup.workgroupId;
           } else {
@@ -89,8 +84,8 @@ class StudentGradingToolsController {
     for (let i = 0; i < n; i++) {
       let workgroupId = this.workgroups[i].workgroupId;
       if (workgroupId === id) {
-        if (i < n-1) {
-          let nextWorkgroup = this.workgroups[i+1];
+        if (i < n - 1) {
+          let nextWorkgroup = this.workgroups[i + 1];
           if (nextWorkgroup.visible) {
             nextId = nextWorkgroup.workgroupId;
           } else {
@@ -104,11 +99,11 @@ class StudentGradingToolsController {
   }
 
   goToPrevTeam() {
-    this.$state.go('root.team', {workgroupId: this.prevId});
+    this.$state.go('root.team', { workgroupId: this.prevId });
   }
 
   goToNextTeam() {
-    this.$state.go('root.team', {workgroupId: this.nextId});
+    this.$state.go('root.team', { workgroupId: this.nextId });
   }
 }
 
@@ -125,8 +120,7 @@ const StudentGradingTools = {
   bindings: {
     workgroupId: '<'
   },
-  template:
-    `<div layout="row" layout-align="center center">
+  template: `<div layout="row" layout-align="center center">
       <md-button aria-label="{{ ::'previousTeam' | translate }}"
                  class="md-icon-button toolbar__nav"
                  ng-disabled="!$ctrl.prevId" ng-click="$ctrl.goToPrevTeam()">

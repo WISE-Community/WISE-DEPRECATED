@@ -2,13 +2,13 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ForgotStudentPasswordComponent } from './forgot-student-password.component';
 import { NO_ERRORS_SCHEMA, LOCALE_ID, TRANSLATIONS_FORMAT, TRANSLATIONS } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { I18n } from "@ngx-translate/i18n-polyfill";
+import { I18n } from '@ngx-translate/i18n-polyfill';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StudentService } from '../../../student/student.service';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/index';
-import { translationsFactory } from "../../../app.module";
+import { translationsFactory } from '../../../app.module';
 import { configureTestSuite } from 'ng-bullet';
 
 export class MockStudentService {
@@ -58,15 +58,11 @@ describe('ForgotStudentPasswordComponent', () => {
 
   configureTestSuite(() => {
     TestBed.configureTestingModule({
-      declarations: [ ForgotStudentPasswordComponent ],
-      imports: [
-        RouterTestingModule,
-        BrowserAnimationsModule,
-        ReactiveFormsModule
-      ],
+      declarations: [ForgotStudentPasswordComponent],
+      imports: [RouterTestingModule, BrowserAnimationsModule, ReactiveFormsModule],
       providers: [
         { provide: StudentService, useClass: MockStudentService },
-        { provide: TRANSLATIONS_FORMAT, useValue: "xlf" },
+        { provide: TRANSLATIONS_FORMAT, useValue: 'xlf' },
         {
           provide: TRANSLATIONS,
           useFactory: translationsFactory,
@@ -74,8 +70,8 @@ describe('ForgotStudentPasswordComponent', () => {
         },
         I18n
       ],
-      schemas: [ NO_ERRORS_SCHEMA ]
-    })
+      schemas: [NO_ERRORS_SCHEMA]
+    });
   });
 
   beforeEach(() => {
@@ -118,7 +114,9 @@ describe('ForgotStudentPasswordComponent', () => {
       questionKey: questionKey,
       question: question
     };
-    expect(navigateSpy).toHaveBeenCalledWith(['/forgot/student/password/security'],
-      {queryParams: params, skipLocationChange: true});
+    expect(navigateSpy).toHaveBeenCalledWith(['/forgot/student/password/security'], {
+      queryParams: params,
+      skipLocationChange: true
+    });
   });
 });

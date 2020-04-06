@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 class NodeGradingViewController {
   constructor(
@@ -18,12 +18,11 @@ class NodeGradingViewController {
     this.$scope = $scope;
     this.AnnotationService = AnnotationService;
     this.ConfigService = ConfigService;
-    (this.NodeService = NodeService),
-      (this.NotificationService = NotificationService);
+    (this.NodeService = NodeService), (this.NotificationService = NotificationService);
     this.ProjectService = ProjectService;
     this.StudentStatusService = StudentStatusService;
     this.TeacherDataService = TeacherDataService;
-    this.$translate = this.$filter("translate");
+    this.$translate = this.$filter('translate');
     this.nodeContent = null;
     this.componentId = null;
   }
@@ -39,31 +38,27 @@ class NodeGradingViewController {
     }
 
     // TODO: add loading indicator
-    this.TeacherDataService.retrieveStudentDataByNodeId(this.nodeId).then(
-      result => {
-        this.teacherWorkgroupId = this.ConfigService.getWorkgroupId();
-        this.workgroups = this.ConfigService.getClassmateUserInfos();
-        this.workgroupsById = {}; // object that will hold workgroup names, statuses, scores, notifications, etc.
-        this.workVisibilityById = {}; // object that specifies whether student work is visible for each workgroup
-        this.workgroupInViewById = {}; // object that holds whether the workgroup is in view or not
-        const permissions = this.ConfigService.getPermissions();
-        this.canViewStudentNames = permissions.canViewStudentNames;
-        this.setWorkgroupsById();
-        this.nRubrics = this.ProjectService.getNumberOfRubricsByNodeId(
-          this.nodeId
-        );
+    this.TeacherDataService.retrieveStudentDataByNodeId(this.nodeId).then(result => {
+      this.teacherWorkgroupId = this.ConfigService.getWorkgroupId();
+      this.workgroups = this.ConfigService.getClassmateUserInfos();
+      this.workgroupsById = {}; // object that will hold workgroup names, statuses, scores, notifications, etc.
+      this.workVisibilityById = {}; // object that specifies whether student work is visible for each workgroup
+      this.workgroupInViewById = {}; // object that holds whether the workgroup is in view or not
+      const permissions = this.ConfigService.getPermissions();
+      this.canViewStudentNames = permissions.canViewStudentNames;
+      this.setWorkgroupsById();
+      this.nRubrics = this.ProjectService.getNumberOfRubricsByNodeId(this.nodeId);
 
-        // scroll to the top of the page when the page loads
-        document.body.scrollTop = document.documentElement.scrollTop = 0;
-      }
-    );
+      // scroll to the top of the page when the page loads
+      document.body.scrollTop = document.documentElement.scrollTop = 0;
+    });
 
-    this.$scope.$on("projectSaved", (event, args) => {
+    this.$scope.$on('projectSaved', (event, args) => {
       this.maxScore = this.getMaxScore();
     });
 
-    this.$scope.$on("notificationChanged", (event, notification) => {
-      if (notification.type === "CRaterResult") {
+    this.$scope.$on('notificationChanged', (event, notification) => {
+      if (notification.type === 'CRaterResult') {
         // TODO: expand to encompass other notification types that should be shown to teacher
         const workgroupId = notification.toWorkgroupId;
         if (this.workgroupsById[workgroupId]) {
@@ -72,7 +67,7 @@ class NodeGradingViewController {
       }
     });
 
-    this.$scope.$on("annotationReceived", (event, args) => {
+    this.$scope.$on('annotationReceived', (event, args) => {
       const annotation = args.annotation;
       if (annotation) {
         const workgroupId = annotation.toWorkgroupId;
@@ -83,7 +78,7 @@ class NodeGradingViewController {
       }
     });
 
-    this.$scope.$on("studentWorkReceived", (event, args) => {
+    this.$scope.$on('studentWorkReceived', (event, args) => {
       const studentWork = args.studentWork;
       if (studentWork != null) {
         const workgroupId = studentWork.workgroupId;
@@ -100,12 +95,12 @@ class NodeGradingViewController {
   }
 
   saveNodeGradingViewDisplayedEvent() {
-    const context = "ClassroomMonitor",
+    const context = 'ClassroomMonitor',
       nodeId = this.nodeId,
       componentId = null,
       componentType = null,
-      category = "Navigation",
-      event = "nodeGradingViewDisplayed",
+      category = 'Navigation',
+      event = 'nodeGradingViewDisplayed',
       data = { nodeId: this.nodeId };
     this.TeacherDataService.saveEvent(
       context,
@@ -170,19 +165,13 @@ class NodeGradingViewController {
   updateWorkgroup(workgroupId, init) {
     const workgroup = this.workgroupsById[workgroupId];
     if (workgroup) {
-      const alertNotifications = this.getAlertNotificationsByWorkgroupId(
-        workgroupId
-      );
+      const alertNotifications = this.getAlertNotificationsByWorkgroupId(workgroupId);
       workgroup.hasAlert = alertNotifications.length;
       workgroup.hasNewAlert = this.workgroupHasNewAlert(alertNotifications);
-      const completionStatus = this.getCompletionStatusByWorkgroupId(
-        workgroupId
-      );
+      const completionStatus = this.getCompletionStatusByWorkgroupId(workgroupId);
       workgroup.hasNewWork = completionStatus.hasNewWork;
       workgroup.isVisible = completionStatus.isVisible ? 1 : 0;
-      workgroup.completionStatus = this.getWorkgroupCompletionStatus(
-        completionStatus
-      );
+      workgroup.completionStatus = this.getWorkgroupCompletionStatus(completionStatus);
       workgroup.score = this.getScoreByWorkgroupId(workgroupId);
       if (!init) {
         this.workgroupsById[workgroupId] = angular.copy(workgroup);
@@ -216,17 +205,13 @@ class NodeGradingViewController {
     let isVisible = false;
     let latestWorkTime = null;
     let latestAnnotationTime = null;
-    const studentStatus = this.StudentStatusService.getStudentStatusForWorkgroupId(
-      workgroupId
-    );
+    const studentStatus = this.StudentStatusService.getStudentStatusForWorkgroupId(workgroupId);
     if (studentStatus != null) {
       let nodeStatus = studentStatus.nodeStatuses[this.nodeId];
       if (nodeStatus) {
         isVisible = nodeStatus.isVisible;
         latestWorkTime = this.getLatestWorkTimeByWorkgroupId(workgroupId); // TODO: store this info in the nodeStatus so we don't have to calculate every time?
-        latestAnnotationTime = this.getLatestAnnotationTimeByWorkgroupId(
-          workgroupId
-        );
+        latestAnnotationTime = this.getLatestAnnotationTimeByWorkgroupId(workgroupId);
         if (!this.ProjectService.nodeHasWork(this.nodeId)) {
           isCompleted = nodeStatus.isVisited;
         }
@@ -252,9 +237,7 @@ class NodeGradingViewController {
 
   getLatestWorkTimeByWorkgroupId(workgroupId) {
     let time = null;
-    const componentStates = this.TeacherDataService.getComponentStatesByNodeId(
-      this.nodeId
-    );
+    const componentStates = this.TeacherDataService.getComponentStatesByNodeId(this.nodeId);
     const n = componentStates.length - 1;
     for (let i = n; i > -1; i--) {
       let componentState = componentStates[i];
@@ -268,9 +251,7 @@ class NodeGradingViewController {
 
   getLatestAnnotationTimeByWorkgroupId(workgroupId) {
     let time = null;
-    let annotations = this.TeacherDataService.getAnnotationsByNodeId(
-      this.nodeId
-    );
+    let annotations = this.TeacherDataService.getAnnotationsByNodeId(this.nodeId);
     let n = annotations.length - 1;
 
     // loop through annotations for this node, starting with most recent
@@ -303,14 +284,12 @@ class NodeGradingViewController {
         workgroupId
       );
       if (latestScoreAnnotation) {
-        score = this.AnnotationService.getScoreValueFromScoreAnnotation(
-          latestScoreAnnotation
-        );
+        score = this.AnnotationService.getScoreValueFromScoreAnnotation(latestScoreAnnotation);
       }
     } else {
       score = this.AnnotationService.getScore(workgroupId, this.nodeId);
     }
-    return typeof score === "number" ? score : -1;
+    return typeof score === 'number' ? score : -1;
   }
 
   /**
@@ -377,10 +356,8 @@ class NodeGradingViewController {
     let periodId = currentPeriod.periodId;
 
     // get the percentage of the class or period that has completed the node
-    let completionPercentage = this.StudentStatusService.getNodeCompletion(
-      nodeId,
-      periodId
-    ).completionPct;
+    let completionPercentage = this.StudentStatusService.getNodeCompletion(nodeId, periodId)
+      .completionPct;
 
     return completionPercentage;
   }
@@ -396,15 +373,12 @@ class NodeGradingViewController {
     let periodId = currentPeriod.periodId;
 
     // get the average score for the node
-    let averageScore = this.StudentStatusService.getNodeAverageScore(
-      this.nodeId,
-      periodId
-    );
+    let averageScore = this.StudentStatusService.getNodeAverageScore(this.nodeId, periodId);
 
     if (averageScore === null) {
-      averageScore = "N/A";
+      averageScore = 'N/A';
     } else {
-      averageScore = this.$filter("number")(averageScore, 1);
+      averageScore = this.$filter('number')(averageScore, 1);
     }
 
     return averageScore;
@@ -457,25 +431,25 @@ class NodeGradingViewController {
 
   setSort(value) {
     switch (value) {
-      case "team":
-        if (this.sort === "team") {
-          this.sort = "-team";
+      case 'team':
+        if (this.sort === 'team') {
+          this.sort = '-team';
         } else {
-          this.sort = "team";
+          this.sort = 'team';
         }
         break;
-      case "status":
-        if (this.sort === "status") {
-          this.sort = "-status";
+      case 'status':
+        if (this.sort === 'status') {
+          this.sort = '-status';
         } else {
-          this.sort = "status";
+          this.sort = 'status';
         }
         break;
-      case "score":
-        if (this.sort === "score") {
-          this.sort = "-score";
+      case 'score':
+        if (this.sort === 'score') {
+          this.sort = '-score';
         } else {
-          this.sort = "score";
+          this.sort = 'score';
         }
         break;
     }
@@ -488,23 +462,23 @@ class NodeGradingViewController {
     let orderBy = [];
 
     switch (this.sort) {
-      case "team":
-        orderBy = ["-isVisible", "workgroupId"];
+      case 'team':
+        orderBy = ['-isVisible', 'workgroupId'];
         break;
-      case "-team":
-        orderBy = ["-isVisible", "-workgroupId"];
+      case '-team':
+        orderBy = ['-isVisible', '-workgroupId'];
         break;
-      case "status":
-        orderBy = ["-isVisible", "completionStatus", "workgroupId"];
+      case 'status':
+        orderBy = ['-isVisible', 'completionStatus', 'workgroupId'];
         break;
-      case "-status":
-        orderBy = ["-isVisible", "-completionStatus", "workgroupId"];
+      case '-status':
+        orderBy = ['-isVisible', '-completionStatus', 'workgroupId'];
         break;
-      case "score":
-        orderBy = ["-isVisible", "score", "workgroupId"];
+      case 'score':
+        orderBy = ['-isVisible', 'score', 'workgroupId'];
         break;
-      case "-score":
-        orderBy = ["-isVisible", "-score", "workgroupId"];
+      case '-score':
+        orderBy = ['-isVisible', '-score', 'workgroupId'];
         break;
     }
 
@@ -520,9 +494,7 @@ class NodeGradingViewController {
     }
     this.isExpandAll = true;
     if (this.isDisplayInMilestone()) {
-      this.saveMilestoneStudentWorkExpandCollapseAllEvent(
-        "MilestoneStudentWorkExpandAllClicked"
-      );
+      this.saveMilestoneStudentWorkExpandCollapseAllEvent('MilestoneStudentWorkExpandAllClicked');
     }
   }
 
@@ -532,18 +504,16 @@ class NodeGradingViewController {
     }
     this.isExpandAll = false;
     if (this.isDisplayInMilestone()) {
-      this.saveMilestoneStudentWorkExpandCollapseAllEvent(
-        "MilestoneStudentWorkCollapseAllClicked"
-      );
+      this.saveMilestoneStudentWorkExpandCollapseAllEvent('MilestoneStudentWorkCollapseAllClicked');
     }
   }
 
   saveMilestoneStudentWorkExpandCollapseAllEvent(event) {
-    const context = "ClassroomMonitor",
+    const context = 'ClassroomMonitor',
       nodeId = null,
       componentId = null,
       componentType = null,
-      category = "Navigation",
+      category = 'Navigation',
       data = { milestoneId: this.milestone.id },
       projectId = null;
     this.TeacherDataService.saveEvent(
@@ -566,17 +536,17 @@ class NodeGradingViewController {
   }
 
   saveMilestoneWorkgroupItemViewedEvent(workgroupId, isExpanded) {
-    let event = "";
+    let event = '';
     if (isExpanded) {
-      event = "MilestoneStudentWorkOpened";
+      event = 'MilestoneStudentWorkOpened';
     } else {
-      event = "MilestoneStudentWorkClosed";
+      event = 'MilestoneStudentWorkClosed';
     }
-    const context = "ClassroomMonitor",
+    const context = 'ClassroomMonitor',
       nodeId = null,
       componentId = null,
       componentType = null,
-      category = "Navigation",
+      category = 'Navigation',
       data = { milestoneId: this.milestone.id, workgroupId: workgroupId },
       projectId = null;
     this.TeacherDataService.saveEvent(
@@ -610,26 +580,26 @@ class NodeGradingViewController {
 }
 
 NodeGradingViewController.$inject = [
-  "$filter",
-  "$mdDialog",
-  "$scope",
-  "AnnotationService",
-  "ConfigService",
-  "NodeService",
-  "NotificationService",
-  "ProjectService",
-  "StudentStatusService",
-  "TeacherDataService"
+  '$filter',
+  '$mdDialog',
+  '$scope',
+  'AnnotationService',
+  'ConfigService',
+  'NodeService',
+  'NotificationService',
+  'ProjectService',
+  'StudentStatusService',
+  'TeacherDataService'
 ];
 
 const NodeGradingView = {
   bindings: {
-    nodeId: "<",
-    milestone: "<"
+    nodeId: '<',
+    milestone: '<'
   },
   controller: NodeGradingViewController,
   templateUrl:
-    "wise5/classroomMonitor/classroomMonitorComponents/nodeGrading/nodeGradingView/nodeGradingView.html"
+    'wise5/classroomMonitor/classroomMonitorComponents/nodeGrading/nodeGradingView/nodeGradingView.html'
 };
 
 export default NodeGradingView;

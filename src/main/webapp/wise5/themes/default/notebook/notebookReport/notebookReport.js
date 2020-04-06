@@ -1,14 +1,16 @@
 'use strict';
 
 class NotebookReportController {
-  constructor($filter,
-              $mdSidenav,
-              $scope,
-              $timeout,
-              AnnotationService,
-              ConfigService,
-              NotebookService,
-              ProjectService) {
+  constructor(
+    $filter,
+    $mdSidenav,
+    $scope,
+    $timeout,
+    AnnotationService,
+    ConfigService,
+    NotebookService,
+    ProjectService
+  ) {
     this.$filter = $filter;
     this.$mdSidenav = $mdSidenav;
     this.$scope = $scope;
@@ -33,7 +35,10 @@ class NotebookReportController {
     if (this.workgroupId == null) {
       this.workgroupId = this.ConfigService.getWorkgroupId();
     }
-    this.reportItem = this.NotebookService.getLatestNotebookReportItemByReportId(this.reportId, this.workgroupId);
+    this.reportItem = this.NotebookService.getLatestNotebookReportItemByReportId(
+      this.reportId,
+      this.workgroupId
+    );
     if (this.reportItem) {
       const serverSaveTime = this.reportItem.serverSaveTime;
       const clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
@@ -52,7 +57,10 @@ class NotebookReportController {
       this.reportItem.id = null; // set the id to null so it can be inserted as initial version, as opposed to updated. this is true for both new and just-loaded reports.
     }
     this.reportItemContent = this.ProjectService.injectAssetPaths(this.reportItem.content.content);
-    this.latestAnnotations = this.AnnotationService.getLatestNotebookItemAnnotations(this.workgroupId, this.reportId);
+    this.latestAnnotations = this.AnnotationService.getLatestNotebookItemAnnotations(
+      this.workgroupId,
+      this.reportId
+    );
     this.startAutoSaveInterval();
 
     this.summernoteOptions = {
@@ -81,8 +89,12 @@ class NotebookReportController {
       this.initializeInsertNoteButton();
     }
 
-    this.$onChanges = (changes) => {
-      if (changes.insertContent && !changes.insertContent.isFirstChange() && changes.insertContent.currentValue) {
+    this.$onChanges = changes => {
+      if (
+        changes.insertContent &&
+        !changes.insertContent.isFirstChange() &&
+        changes.insertContent.currentValue
+      ) {
         const item = angular.copy(changes.insertContent.currentValue);
         const reportElement = angular.element(document.querySelector(`#${this.reportId}`));
         reportElement.summernote('restoreRange');
@@ -97,7 +109,9 @@ class NotebookReportController {
             $item.css('text-align', 'center');
           }
           for (let attachment of item.content.attachments) {
-            const $img = $(`<img src="${attachment.iconURL}" alt="notebook image" style="width: 75%; max-width: 100%; height: auto; border: 1px solid #aaaaaa; padding: 8px; margin-bottom: 4px;" />`);
+            const $img = $(
+              `<img src="${attachment.iconURL}" alt="notebook image" style="width: 75%; max-width: 100%; height: auto; border: 1px solid #aaaaaa; padding: 8px; margin-bottom: 4px;" />`
+            );
             $img.addClass('notebook-item--report__note-img');
             $item.append($img);
           }
@@ -105,7 +119,9 @@ class NotebookReportController {
         if (item.content.text) {
           if (hasAttachments) {
             // treat text content as a caption: center it and make it bold
-            const $caption = $(`<div><b>${item.content.text}</b></div>`).css({'text-align': 'center'});
+            const $caption = $(`<div><b>${item.content.text}</b></div>`).css({
+              'text-align': 'center'
+            });
             $item.append($caption);
             reportElement.summernote('insertNode', $item[0]);
           } else {
@@ -125,8 +141,10 @@ class NotebookReportController {
       const annotation = args.annotation;
       if (annotation.localNotebookItemId === this.reportId) {
         this.hasNewAnnotation = true;
-        this.latestAnnotations =
-            this.AnnotationService.getLatestNotebookItemAnnotations(this.workgroupId, this.reportId);
+        this.latestAnnotations = this.AnnotationService.getLatestNotebookItemAnnotations(
+          this.workgroupId,
+          this.reportId
+        );
       }
     });
 
@@ -134,7 +152,7 @@ class NotebookReportController {
      * Captures the show report annotations event, opens report (if collapsed)
      * and scrolls to the report annotations display
      */
-    this.$scope.$on('showReportAnnotations', (args) => {
+    this.$scope.$on('showReportAnnotations', args => {
       if (this.collapsed) {
         this.collapse();
       }
@@ -142,9 +160,12 @@ class NotebookReportController {
       // scroll to report annotations (bottom)
       const $notebookReportContent = $('.notebook-report__content');
       $timeout(() => {
-        $notebookReportContent.animate({
-          scrollTop: $notebookReportContent.prop('scrollHeight')
-        }, 500);
+        $notebookReportContent.animate(
+          {
+            scrollTop: $notebookReportContent.prop('scrollHeight')
+          },
+          500
+        );
       }, 500);
     });
   }
@@ -166,7 +187,7 @@ class NotebookReportController {
   }
 
   addNotebookItemContent($event) {
-    this.onSetInsertMode({value: true, requester: 'report'});
+    this.onSetInsertMode({ value: true, requester: 'report' });
   }
 
   changed(value) {
@@ -188,17 +209,24 @@ class NotebookReportController {
   }
 
   saveNotebookReportItem() {
-    this.reportItem.content.clientSaveTime = Date.parse(new Date());  // set save timestamp
-    this.NotebookService.saveNotebookItem(this.reportItem.id, this.reportItem.nodeId, this.reportItem.localNotebookItemId,
-      this.reportItem.type, this.reportItem.title, this.reportItem.content, this.reportItem.groups, this.reportItem.content.clientSaveTime)
-      .then((result) => {
-        if (result) {
-          this.dirty = false;
-          this.hasNewAnnotation = false;
-          this.reportItem.id = result.id; // set the reportNotebookItemId to the newly-incremented id so that future saves during this visit will be an update instead of an insert.
-          this.setSavedMessage(this.ConfigService.convertToClientTimestamp(result.serverSaveTime));
-        }
-      });
+    this.reportItem.content.clientSaveTime = Date.parse(new Date()); // set save timestamp
+    this.NotebookService.saveNotebookItem(
+      this.reportItem.id,
+      this.reportItem.nodeId,
+      this.reportItem.localNotebookItemId,
+      this.reportItem.type,
+      this.reportItem.title,
+      this.reportItem.content,
+      this.reportItem.groups,
+      this.reportItem.content.clientSaveTime
+    ).then(result => {
+      if (result) {
+        this.dirty = false;
+        this.hasNewAnnotation = false;
+        this.reportItem.id = result.id; // set the reportNotebookItemId to the newly-incremented id so that future saves during this visit will be an update instead of an insert.
+        this.setSavedMessage(this.ConfigService.convertToClientTimestamp(result.serverSaveTime));
+      }
+    });
   }
 
   setSavedMessage(time) {
@@ -215,14 +243,16 @@ class NotebookReportController {
   }
 
   initializeInsertNoteButton() {
-    this.summernoteOptions.toolbar.splice(this.summernoteOptions.toolbar.length - 1, 0,
-        ['customButton', ['customButton']]);
+    this.summernoteOptions.toolbar.splice(this.summernoteOptions.toolbar.length - 1, 0, [
+      'customButton',
+      ['customButton']
+    ]);
     this.summernoteOptions.customButton = {
       // TODO: i18n
       buttonText: 'Insert ' + this.config.itemTypes.note.label.singular + ' +',
       tooltip: 'Insert from ' + this.config.label,
       buttonClass: 'accent-1 notebook-item--report__add-note',
-      action: ($event) => {
+      action: $event => {
         this.addNotebookItemContent($event);
       }
     };
@@ -252,8 +282,7 @@ const NotebookReport = {
     onSetInsertMode: '&',
     mode: '@'
   },
-  template:
-    `<div ng-if="::$ctrl.mode !== 'classroomMonitor' && ($ctrl.visible && $ctrl.full && !$ctrl.collapsed) || $ctrl.insertMode" class="notebook-report-backdrop"></div>
+  template: `<div ng-if="::$ctrl.mode !== 'classroomMonitor' && ($ctrl.visible && $ctrl.full && !$ctrl.collapsed) || $ctrl.insertMode" class="notebook-report-backdrop"></div>
         <div ng-if="$ctrl.visible" class="notebook-report-container"
               ng-class="{'notebook-report-container__collapsed': $ctrl.collapsed, 'notebook-report-container__full': $ctrl.full && !$ctrl.collapsed}">
             <md-card class="notebook-report md-whiteframe-3dp l-constrained">

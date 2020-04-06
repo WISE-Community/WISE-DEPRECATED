@@ -1,80 +1,75 @@
-"use strict";
+'use strict';
 
 class NotificationsMenuController {
-    constructor($filter,
-                $mdDialog,
-                NotificationService,
-                ProjectService) {
-        this.$filter = $filter;
-        this.$mdDialog = $mdDialog;
-        this.NotificationService = NotificationService;
-        this.ProjectService = ProjectService;
+  constructor($filter, $mdDialog, NotificationService, ProjectService) {
+    this.$filter = $filter;
+    this.$mdDialog = $mdDialog;
+    this.NotificationService = NotificationService;
+    this.ProjectService = ProjectService;
 
-        this.$translate = this.$filter('translate');
-    };
+    this.$translate = this.$filter('translate');
+  }
 
-    getNodePositionAndTitleByNodeId(nodeId) {
-        return this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
-    }
+  getNodePositionAndTitleByNodeId(nodeId) {
+    return this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
+  }
 
-    /**
-     * Show confirmation dialog before dismissing all notifications
-     */
-    confirmDismissAllNotifications(ev) {
-        let confirm = this.$mdDialog.confirm()
-            .parent(angular.element(document.querySelector('._md-open-menu-container._md-active')))// TODO: hack for now (showing md-dialog on top of md-menu)
-            .ariaLabel(this.$translate('dismissNotificationsTitle'))
-            .textContent(this.$translate('dismissNotificationsMessage'))
-            .targetEvent(ev)
-            .ok(this.$translate('yes'))
-            .cancel(this.$translate('CANCEL'));
+  /**
+   * Show confirmation dialog before dismissing all notifications
+   */
+  confirmDismissAllNotifications(ev) {
+    let confirm = this.$mdDialog
+      .confirm()
+      .parent(angular.element(document.querySelector('._md-open-menu-container._md-active'))) // TODO: hack for now (showing md-dialog on top of md-menu)
+      .ariaLabel(this.$translate('dismissNotificationsTitle'))
+      .textContent(this.$translate('dismissNotificationsMessage'))
+      .targetEvent(ev)
+      .ok(this.$translate('yes'))
+      .cancel(this.$translate('CANCEL'));
 
-        this.$mdDialog.show(confirm).then(() => {
-            this.dismissAllNotifications();
-        });
-    }
+    this.$mdDialog.show(confirm).then(() => {
+      this.dismissAllNotifications();
+    });
+  }
 
-    /**
-     * Dismiss all new notifications
-     */
-    dismissAllNotifications() {
-        this.newNotifications.map((newNotification) => {
-            this.dismissNotification(newNotification);
-        });
-    }
+  /**
+   * Dismiss all new notifications
+   */
+  dismissAllNotifications() {
+    this.newNotifications.map(newNotification => {
+      this.dismissNotification(newNotification);
+    });
+  }
 
-    /**
-     * Dismiss the specified notification
-     * @param notification
-     */
-    dismissNotification(notification) {
-        this.NotificationService.dismissNotification(notification);
-    }
+  /**
+   * Dismiss the specified notification
+   * @param notification
+   */
+  dismissNotification(notification) {
+    this.NotificationService.dismissNotification(notification);
+  }
 
-    /**
-     * Dismiss the specified notification and visit the corresponding node
-     * @param notification
-     */
-    dismissNotificationAndVisitNode(notification) {
-
-    }
+  /**
+   * Dismiss the specified notification and visit the corresponding node
+   * @param notification
+   */
+  dismissNotificationAndVisitNode(notification) {}
 }
 
 NotificationsMenuController.$inject = [
-    '$filter',
-    '$mdDialog',
-    'NotificationService',
-    'ProjectService'
+  '$filter',
+  '$mdDialog',
+  'NotificationService',
+  'ProjectService'
 ];
 
 const NotificationsMenu = {
-    bindings: {
-        newNotifications: '<',
-        dismissedNotifications: '<',
-        withPause: '<'
-    },
-    template:
-        `<div class="account-menu__caret account-menu__caret--notification"
+  bindings: {
+    newNotifications: '<',
+    dismissedNotifications: '<',
+    withPause: '<'
+  },
+  template: `<div class="account-menu__caret account-menu__caret--notification"
                      tabindex="0"
                      ng-class="{ 'account-menu__caret--notification--with-pause': $ctrl.withPause }"></div>
         <div layout="column" class="account-menu--fixed-height account-menu--fixed-width">
@@ -108,7 +103,7 @@ const NotificationsMenu = {
                 </md-list>
             </md-content>
         </div>`,
-    controller: NotificationsMenuController
+  controller: NotificationsMenuController
 };
 
 export default NotificationsMenu;

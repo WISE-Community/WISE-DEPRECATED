@@ -1,15 +1,14 @@
 'use strict';
 
 const Select = {
-    bindings: {
-        customClass: '@',
-        options: '<',
-        onChange: '&',
-        placeholder: '@',
-        selected: '<'
-    },
-    template:
-        `<md-select ng-model="$ctrl.selected"
+  bindings: {
+    customClass: '@',
+    options: '<',
+    onChange: '&',
+    placeholder: '@',
+    selected: '<'
+  },
+  template: `<md-select ng-model="$ctrl.selected"
                     ng-model-options="{trackBy: '$value.value'}"
                     class="{{$ctrl.customClass}}"
                     ng-change="$ctrl.onChange($value)"

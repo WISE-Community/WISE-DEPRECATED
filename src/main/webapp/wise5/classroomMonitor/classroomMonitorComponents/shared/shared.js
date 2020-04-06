@@ -11,7 +11,7 @@ import NodeCompletionIcon from './nodeCompletionIcon/nodeCompletionIcon';
 import NodeIcon from './nodeIcon/nodeIcon';
 import NodeInfo from './nodeInfo/nodeInfo';
 import NotificationsMenu from './notificationsMenu/notificationsMenu';
-import PauseScreensMenu from './pauseScreensMenu/pauseScreensMenu'
+import PauseScreensMenu from './pauseScreensMenu/pauseScreensMenu';
 import PeriodSelect from './periodSelect/periodSelect';
 import SideMenu from './sideMenu/sideMenu';
 import StatusIcon from './statusIcon/statusIcon';

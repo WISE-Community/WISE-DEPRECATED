@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ConfigService } from "../../services/config.service";
+import { ConfigService } from '../../services/config.service';
 
 @Component({
   selector: 'app-student-faq',
@@ -7,20 +7,17 @@ import { ConfigService } from "../../services/config.service";
   styleUrls: ['./student-faq.component.scss']
 })
 export class StudentFaqComponent implements OnInit {
-
   contextPath: string;
 
   constructor(private configService: ConfigService) {
-    this.configService.getConfig().subscribe((config) => {
+    this.configService.getConfig().subscribe(config => {
       if (config != null) {
         this.contextPath = config.contextPath;
       }
     });
   }
 
-  ngOnInit() {
-
-  }
+  ngOnInit() {}
 
   ngAfterViewInit() {
     const appHelpElements = document.getElementsByTagName('app-help');
@@ -32,5 +29,4 @@ export class StudentFaqComponent implements OnInit {
   scrollTo(id) {
     document.getElementById(id).scrollIntoView();
   }
-
 }

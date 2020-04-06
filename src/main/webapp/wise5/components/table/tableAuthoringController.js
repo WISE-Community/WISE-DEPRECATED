@@ -1,26 +1,29 @@
 'use strict';
 
-import TableController from "./tableController";
+import TableController from './tableController';
 import html2canvas from 'html2canvas';
 
 class TableAuthoringController extends TableController {
-  constructor($anchorScroll,
-              $filter,
-              $location,
-              $mdDialog,
-              $q,
-              $rootScope,
-              $scope,
-              AnnotationService,
-              ConfigService,
-              NodeService,
-              NotebookService,
-              ProjectService,
-              StudentAssetService,
-              StudentDataService,
-              TableService,
-              UtilService) {
-    super($anchorScroll,
+  constructor(
+    $anchorScroll,
+    $filter,
+    $location,
+    $mdDialog,
+    $q,
+    $rootScope,
+    $scope,
+    AnnotationService,
+    ConfigService,
+    NodeService,
+    NotebookService,
+    ProjectService,
+    StudentAssetService,
+    StudentDataService,
+    TableService,
+    UtilService
+  ) {
+    super(
+      $anchorScroll,
       $filter,
       $location,
       $mdDialog,
@@ -35,7 +38,8 @@ class TableAuthoringController extends TableController {
       StudentAssetService,
       StudentDataService,
       TableService,
-      UtilService);
+      UtilService
+    );
     this.allowedConnectedComponentTypes = [
       {
         type: 'Embedded'
@@ -51,28 +55,34 @@ class TableAuthoringController extends TableController {
       this.repopulateDataExplorerGraphTypes();
     }
     this.columnCellSizes = this.parseColumnCellSizes(this.componentContent);
-    $scope.$watch(function() {
-      return this.authoringComponentContent;
-    }.bind(this), function(newValue, oldValue) {
-      this.submitCounter = 0;
-      this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-      this.columnCellSizes = this.parseColumnCellSizes(this.componentContent);
-      this.isSaveButtonVisible = this.componentContent.showSaveButton;
-      this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-      this.resetTable();
-    }.bind(this), true);
+    $scope.$watch(
+      function() {
+        return this.authoringComponentContent;
+      }.bind(this),
+      function(newValue, oldValue) {
+        this.submitCounter = 0;
+        this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+        this.columnCellSizes = this.parseColumnCellSizes(this.componentContent);
+        this.isSaveButtonVisible = this.componentContent.showSaveButton;
+        this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+        this.resetTable();
+      }.bind(this),
+      true
+    );
     this.registerAssetListener();
   }
 
   registerAssetListener() {
-    this.$scope.$on('assetSelected',
-        (event, {nodeId, componentId, assetItem, target}) => {
+    this.$scope.$on('assetSelected', (event, { nodeId, componentId, assetItem, target }) => {
       if (nodeId === this.nodeId && componentId === this.componentId) {
         const fileName = assetItem.fileName;
         const fullFilePath = `${this.ConfigService.getProjectAssetsDirectoryPath()}/${fileName}`;
         if (target === 'rubric') {
           this.UtilService.insertFileInSummernoteEditor(
-              `summernoteRubric_${this.nodeId}_${this.componentId}`, fullFilePath, fileName);
+            `summernoteRubric_${this.nodeId}_${this.componentId}`,
+            fullFilePath,
+            fileName
+          );
         }
       }
       this.$mdDialog.hide();
@@ -120,7 +130,7 @@ class TableAuthoringController extends TableController {
   isRowEmpty(rowIndex) {
     const tableData = this.authoringComponentContent.tableData;
     for (const cell of tableData[rowIndex]) {
-      if (cell.text != null && cell.text != "") {
+      if (cell.text != null && cell.text != '') {
         return false;
       }
     }
@@ -175,7 +185,7 @@ class TableAuthoringController extends TableController {
   isColumnEmpty(columnIndex) {
     for (const row of this.authoringComponentContent.tableData) {
       const cell = row[columnIndex];
-      if (cell.text != null && cell.text != "") {
+      if (cell.text != null && cell.text != '') {
         return false;
       }
     }
@@ -187,7 +197,9 @@ class TableAuthoringController extends TableController {
    */
   authoringViewTableSizeChanged() {
     this.authoringComponentContent.tableData = this.getUpdatedTableSize(
-        this.authoringComponentContent.numRows, this.authoringComponentContent.numColumns);
+      this.authoringComponentContent.numRows,
+      this.authoringComponentContent.numColumns
+    );
     this.authoringViewComponentChanged();
   }
 
@@ -487,7 +499,8 @@ class TableAuthoringController extends TableController {
   initializeDataExplorerGraphTypes() {
     this.authoringComponentContent.dataExplorerGraphTypes = [];
     this.authoringComponentContent.dataExplorerGraphTypes.push(
-        this.createGraphTypeObject('Scatter Plot', 'scatter'));
+      this.createGraphTypeObject('Scatter Plot', 'scatter')
+    );
   }
 
   repopulateDataExplorerGraphTypes() {
