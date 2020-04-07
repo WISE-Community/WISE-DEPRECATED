@@ -40,6 +40,7 @@ import './importStep/importStepModule';
 import '../components/label/labelAuthoringComponentModule';
 import '../components/match/matchAuthoringComponentModule';
 import '../components/multipleChoice/multipleChoiceAuthoringComponentModule';
+import MilestonesAuthoringController from './milestones/milestonesAuthoringController';
 import NodeAuthoringController from './node/nodeAuthoringController';
 import NodeService from '../services/nodeService';
 import NotebookService from '../services/notebookService';
@@ -129,6 +130,7 @@ const authoringModule = angular
   .controller('AuthoringToolMainController', AuthoringToolMainController)
   .controller('AdvancedAuthoringController', AdvancedAuthoringController)
   .controller('AuthorNotebookController', AuthorNotebookController)
+  .controller('MilestonesAuthoringController', MilestonesAuthoringController)
   .controller('NodeAuthoringController', NodeAuthoringController)
   .controller('ProjectAssetController', ProjectAssetController)
   .controller('ProjectController', ProjectController)
@@ -270,6 +272,13 @@ const authoringModule = angular
           templateUrl: 'wise5/authoringTool/notebook/notebookAuthoring.html',
           controller: 'AuthorNotebookController',
           controllerAs: 'authorNotebookController',
+          resolve: {}
+        })
+        .state('root.project.milestones', {
+          url: '/milestones',
+          templateUrl: 'wise5/authoringTool/milestones/milestonesAuthoring.html',
+          controller: 'MilestonesAuthoringController',
+          controllerAs: 'milestonesAuthoringController',
           resolve: {}
         });
 

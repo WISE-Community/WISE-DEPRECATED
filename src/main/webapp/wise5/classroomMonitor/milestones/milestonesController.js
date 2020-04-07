@@ -814,14 +814,14 @@ class MilestonesController {
           <md-dialog-actions layout="row" layout-align="start center">
             <md-button class="warn"
                        ng-click="delete()"
-                       ng-if="!milestone.type === 'milestoneReport'"
+                       ng-if="milestone.type !== 'milestoneReport'"
                        aria-label="{{ ::'DELETE' | translate }}">
               {{ ::'DELETE' | translate }}
             </md-button>
             <span flex></span>
             <md-button class="md-primary"
                        ng-click="edit()"
-                       ng-if="!milestone.type === 'milestoneReport'"
+                       ng-if="milestone.type !== 'milestoneReport'"
                        aria-label="{{ ::'EDIT' | translate }}">
               {{ ::'EDIT' | translate }}
             </md-button>

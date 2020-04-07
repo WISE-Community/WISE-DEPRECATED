@@ -114,6 +114,15 @@ class AuthoringToolController {
         showToolbar: true,
         active: true
       },
+      'root.project.milestones': {
+        id: 'milestonesButton',
+        name: this.$translate('MILESTONES'),
+        label: this.$translate('MILESTONES'),
+        icon: 'flag',
+        type: 'primary',
+        showToolbar: true,
+        active: true
+      },
       'root.main': {
         id: 'projectListButton',
         name: this.$translate('projectsList'),
