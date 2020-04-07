@@ -6,44 +6,44 @@
 <md-switch ng-model="milestonesAuthoringController.project.achievements.isEnabled"
     class="md-primary"
     ng-change="milestonesAuthoringController.save()">
-  Enable Milestones
+  {{ ::'enableMilestones' | translate }}
 </md-switch>
 <div ng-if="milestonesAuthoringController.project.achievements.isEnabled"
     style="margin-left: 20px;">
   <md-button class="md-raised md-primary" ng-click="milestonesAuthoringController.addMilestone(0)">
     <md-icon>add</md-icon>
-    <span>Add Milestone</span>
+    <span>{{ ::'addMilestone' | translate }}</span>
   </md-button>
   <div ng-repeat="item in milestonesAuthoringController.project.achievements.items track by $index">
     <md-button class="topButton md-raised md-primary"
         ng-if="milestonesAuthoringController.idToExpanded[item.id]"
         ng-click="milestonesAuthoringController.collapse(item.id)">
       <md-icon>keyboard_arrow_down</md-icon>
-      <md-tooltip>Click to Collapse</md-tooltip>
+      <md-tooltip>{{ ::'clickToCollapse' | translate }}</md-tooltip>
     </md-button>
     <md-button class="topButton md-raised md-primary"
         ng-if="!milestonesAuthoringController.idToExpanded[item.id]"
         ng-click="milestonesAuthoringController.expand(item.id)">
       <md-icon>keyboard_arrow_right</md-icon>
-      <md-tooltip>Click to Expand</md-tooltip>
+      <md-tooltip>{{ ::'clickToExpand' | translate }}</md-tooltip>
     </md-button>
-    <h5 style="display: inline;">Milestone {{ $index + 1 }}</h5>
+    <h5 style="display: inline;">{{ ::'milestone' | translate }} {{ $index + 1 }}</h5>
     <md-button class="topButton md-raised md-primary"
         ng-click="milestonesAuthoringController.deleteMilestone($index)">
       <md-icon>delete</md-icon>
-      <md-tooltip>Delete Milestone</md-tooltip>
+      <md-tooltip>{{ ::'deleteMilestone' | translate }}</md-tooltip>
     </md-button>
     <div ng-if="milestonesAuthoringController.idToExpanded[item.id]"
         style="margin-left: 20px;">
       <md-input-container style="width: 240px; margin-right: 40px;">
-        <label>Milestone Name</label>
+        <label>{{ ::'milestoneName' | translate }}</label>
         <input ng-model="item.name"
           ng-model-options="{ debounce: 1000 }"
           ng-change="milestonesAuthoringController.save()">
         </input>
       </md-input-container>
       <md-input-container style="width: 240px; margin-right: 40px;">
-        <label>Milestone Description</label>
+        <label>{{ ::'milestoneDescription' | translate }}</label>
         <input ng-model="item.description"
           ng-model-options="{ debounce: 1000 }"
           ng-change="milestonesAuthoringController.save()">
@@ -53,12 +53,12 @@
           class="md-primary"
           style="width: 200px;"
           ng-change="milestonesAuthoringController.save()">
-        Enable Satisfy Criteria
+          {{ ::'enableSatisfyCriteria' | translate }}
       </md-switch>
       <div ng-if="item.isEnabled">
-        <h5>Satisfy Criteria</h5>
+        <h5>{{ ::'satisfyCriteria' | translate }}</h5>
         <md-input-container style="width: 240px; margin-right: 40px;">
-          <label>Satisfy Minimum Percentage</label>
+          <label>{{ ::'satisfyMinimumPercentage' | translate }}</label>
           <input ng-model="item.satisfyMinPercentage"
             type="number"
             ng-model-options="{ debounce: 1000 }"
@@ -66,7 +66,7 @@
           </input>
         </md-input-container>
         <md-input-container style="width: 300px; margin-right: 40px;">
-          <label>Satisfy Minimum Number of Workgroups</label>
+          <label>{{ ::'satisfyMinimumNumberOfWorkgroups' | translate }}</label>
           <input ng-model="item.satisfyMinNumWorkgroups"
             type="number"
             ng-model-options="{ debounce: 1000 }"
@@ -74,27 +74,27 @@
           </input>
         </md-input-container>
         <md-input-container style="width: 180px; margin-top: -10px;">
-          <label>Satisfy Conditional</label>
+          <label>{{ ::'satisfyConditional' | translate }}</label>
           <md-select ng-model="item.satisfyConditional"
               ng-change="milestonesAuthoringController.save()">
-            <md-option value="any">Any</md-option>
-            <md-option value="all">All</md-option>
+            <md-option value="any">{{ ::'any' | translate }}</md-option>
+            <md-option value="all">{{ ::'all' | translate }}</md-option>
           </md-select>
         </md-input-container>
         <md-button class="md-raised md-primary" ng-click="milestonesAuthoringController.addMilestoneSatisfyCriteria(item, 0)">
           <md-icon>add</md-icon>
-          <span>Add Milestone Satisfy Criteria</span>
+          <span>{{ ::'addMilestoneSatisfyCriteria' | translate }}</span>
         </md-button>
         <div ng-repeat="satisfyCriteria in item.satisfyCriteria">
-          <h5 style="display: inline;">Milestone Satisfy Criteria {{ $index + 1 }}</h5>
+          <h5 style="display: inline;">{{ ::'milestoneSatisfyCriteria' | translate }} {{ $index + 1 }}</h5>
           <md-button class="topButton md-raised md-primary"
               ng-click="milestonesAuthoringController.deleteMilestoneSatisfyCriteria(item, $index)">
             <md-icon>delete</md-icon>
-            <md-tooltip>Delete Milestone Satisfy Criteria</md-tooltip>
+            <md-tooltip>{{ ::'deleteMilestoneSatisfyCriteria' | translate }}</md-tooltip>
           </md-button>
           <div>
             <md-input-container style="width: 300px; margin-right: 40px;">
-              <label>Node ID</label>
+              <label>{{ ::'nodeID' | translate }}</label>
               <md-select ng-model="satisfyCriteria.nodeId"
                   ng-change="milestonesAuthoringController.save()">
                 <md-option ng-repeat="nodeItem in milestonesAuthoringController.idToOrder | toArray | orderBy: 'order'"
@@ -105,7 +105,7 @@
               </md-select>
             </md-input-container>
             <md-input-container style="width: 180px; margin-right: 40px;">
-              <label>Component ID</label>
+              <label>{{ ::'componentID' | translate }}</label>
               <md-select ng-model="satisfyCriteria.componentId"
                   ng-change="milestonesAuthoringController.save()">
                 <md-option ng-repeat='(componentIndex, component) in milestonesAuthoringController.getComponentsByNodeId(satisfyCriteria.nodeId)'
@@ -115,7 +115,7 @@
               </md-select>
             </md-input-container>
             <md-input-container style="width: 180px; margin-right: 40px;">
-              <label>Name</label>
+              <label>{{ ::'name' | translate }}</label>
               <md-select ng-model="satisfyCriteria.name"
                   ng-change="milestonesAuthoringController.save()">
                 <md-option ng-repeat="availableSatisfyCriteria in milestonesAuthoringController.availableSatisfyCriteria"
@@ -125,29 +125,29 @@
             <md-button class="topButton md-raised md-primary"
                 ng-click="milestonesAuthoringController.copySatisfyCriteriaToMilestone(item, satisfyCriteria.nodeId, satisfyCriteria.componentId)">
               <md-icon>content_copy</md-icon>
-              <md-tooltip>Copy Node ID and Component ID to Templates</md-tooltip>
+              <md-tooltip>{{ ::'copyNodeIdAndComponentIdToMilestone' | translate }}</md-tooltip>
             </md-button>
           </div>
           <md-button class="md-raised md-primary" ng-click="milestonesAuthoringController.addMilestoneSatisfyCriteria(item, $index + 1)">
             <md-icon>add</md-icon>
-            <span>Add Milestone Satisfy Criteria</span>
+            <span>{{ ::'addMilestoneSatisfyCriteria' | translate }}</span>
           </md-button>
         </div>
       </div>
       <div>
-        <h5>Report</h5>
+        <h5>{{ ::'report' | translate }}</h5>
         <div style="margin-left: 20px;">
           <div>
             <md-button ng-click="milestonesAuthoringController.addLocation(item.report, 0)"
                 class="md-raised md-primary">
               <md-icon>add</md-icon>
-              <span>Add Report Location</span>
+              <span>{{ ::'addReportLocation' | translate }}</span>
             </md-button>
           </div>
           <div ng-repeat="location in item.report.locations track by $index"> 
-            <h5 style="display: inline;">Location {{ $index + 1 }}</h5>
+            <h5 style="display: inline;">{{ ::'location' | translate }} {{ $index + 1 }}</h5>
             <md-input-container style="width: 300px; margin-right: 40px;">
-              <label>Node ID</label>
+              <label>{{ ::'nodeID' | translate }}</label>
               <md-select ng-model="location.nodeId"
                   ng-change="milestonesAuthoringController.save()">
                 <md-option ng-repeat="nodeItem in milestonesAuthoringController.idToOrder | toArray | orderBy: 'order'"
@@ -158,7 +158,7 @@
               </md-select>
             </md-input-container>
             <md-input-container style="width: 180px; margin-right: 40px;">
-              <label>Component ID</label>
+              <label>{{ ::'componentID' | translate }}</label>
               <md-select ng-model="location.componentId"
                   ng-change="milestonesAuthoringController.save()">
                 <md-option ng-repeat='(componentIndex, component) in milestonesAuthoringController.getComponentsByNodeId(location.nodeId)'
@@ -170,45 +170,45 @@
             <md-button class="topButton md-raised md-primary"
                 ng-click="milestonesAuthoringController.deleteLocation(item.report, $index)">
               <md-icon>delete</md-icon>
-              <md-tooltip>Delete Location</md-tooltip>
+              <md-tooltip>{{ ::'deleteLocation' | translate }}</md-tooltip>
             </md-button>
             <br/>
             <md-button ng-click="milestonesAuthoringController.addLocation(item.report, $index + 1)"
                 class="md-raised md-primary">
               <md-icon>add</md-icon>
-              <span>Add Report Location</span>
+              <span>{{ ::'addReportLocation' | translate }}</span>
             </md-button>
           </div>
           <div>
-            <h5>Custom Score Values</h5>
+            <h5>{{ ::'customScoreValues' | translate }}</h5>
             <div ng-repeat="(key, value) in item.report.customScoreValues"
                 style="margin-left: 20px;">
               {{ key }}: {{ value }}
               <md-button class="topButton md-raised md-primary"
                   ng-click="milestonesAuthoringController.deleteCustomScoreValues(item.report, key)">
                 <md-icon>delete</md-icon>
-                <md-tooltip>Delete Custom Score Values</md-tooltip>
+                <md-tooltip>{{ ::'deleteCustomScoreValues' | translate }}</md-tooltip>
               </md-button>
             </div>
             <md-input-container style="width: 180px; margin-right: 40px;">
-              <label>Custom Score Key</label>
+              <label>{{ ::'customScoreKey' | translate }}</label>
               <input ng-model="milestonesAuthoringController.customScoreKey"/>
             </md-input-container>
             <md-input-container style="width: 180px; margin-right: 40px;">
-              <label>Custom Score Values</label>
+              <label>{{ ::'customScoreValues' | translate }}</label>
               <input ng-model="milestonesAuthoringController.customScoreValues"
                   placeholder="Example 1,2,3"/>
             </md-input-container>
             <md-button ng-click="milestonesAuthoringController.addCustomScoreValues(item.report, milestonesAuthoringController.customScoreKey, milestonesAuthoringController.customScoreValues)"
                 class="md-raised md-primary">
               <md-icon>add</md-icon>
-              <span>Add Custom Score Values</span>
+              <span>{{ ::'addCustomScoreValues' | translate }}</span>
             </md-button>
           </div>
           <md-button ng-click="milestonesAuthoringController.addTemplate(item.report, 0)"
               class="md-raised md-primary">
             <md-icon>add</md-icon>
-            <span>Add Template</span>
+            <span>{{ ::'addTemplate' | translate }}</span>
           </md-button>
           <div ng-repeat="template in item.report.templates track by $index">
             <div style="margin-left: 20px;">
@@ -216,47 +216,47 @@
                   ng-if="milestonesAuthoringController.idToExpanded[template.id]"
                   ng-click="milestonesAuthoringController.collapse(template.id)">
                 <md-icon>keyboard_arrow_down</md-icon>
-                <md-tooltip>Click to Collapse</md-tooltip>
+                <md-tooltip>{{ ::'clickToCollapse' | translate }}</md-tooltip>
               </md-button>
               <md-button class="topButton md-raised md-primary"
                   ng-if="!milestonesAuthoringController.idToExpanded[template.id]"
                   ng-click="milestonesAuthoringController.expand(template.id)">
                 <md-icon>keyboard_arrow_right</md-icon>
-                <md-tooltip>Click to Expand</md-tooltip>
+                <md-tooltip>{{ ::'clickToExpand' | translate }}</md-tooltip>
               </md-button>
-              <h5 style="display: inline;">Template {{ $index + 1 }}</h5>
+              <h5 style="display: inline;">{{ ::'template' | translate }} {{ $index + 1 }}</h5>
               <md-button ng-click="milestonesAuthoringController.deleteTemplate(item.report, $index)"
                   class="topButton md-raised md-primary">
                 <md-icon>delete</md-icon>
-                <md-tooltip>Delete Template</md-tooltip>
+                <md-tooltip>{{ ::'deleteTemplate' | translate }}</md-tooltip>
               </md-button>
               <div ng-if="milestonesAuthoringController.idToExpanded[template.id]"
                   style="margin-left: 20px;">
                 <div>
                   <md-input-container style="width: 180px;">
-                    <label>Satisfy Conditional</label>
+                    <label>{{ ::'satisfyConditional' | translate }}</label>
                     <md-select ng-model="template.satisfyConditional"
                         ng-change="milestonesAuthoringController.save()">
-                      <md-option value="any">Any</md-option>
-                      <md-option value="all">All</md-option>
+                      <md-option value="any">{{ ::'any' | translate }}</md-option>
+                      <md-option value="all">{{ ::'all' | translate }}</md-option>
                     </md-select>
                   </md-input-container>
                 </div>
                 <md-button ng-click="milestonesAuthoringController.addTemplateSatisfyCriteria(template, 0)"
                     class="topButton md-raised md-primary">
                   <md-icon>add</md-icon>
-                  <span>Add Template Satisfy Criteria</span>
+                  <span>{{ ::'addTemplateSatisfyCriteria' | translate }}</span>
                 </md-button>
                 <div ng-repeat="satisfyCriteria in template.satisfyCriteria track by $index">
-                  <h5 style="display: inline; ">Template Satisfy Criteria {{ $index + 1 }}</h5>
+                  <h5 style="display: inline; ">{{ ::'templateSatisfyCriteria' | translate }} {{ $index + 1 }}</h5>
                   <md-button ng-click="milestonesAuthoringController.deleteTemplateSatisfyCriteria(template, $index)"
                       class="topButton md-raised md-primary">
                     <md-icon>delete</md-icon>
-                    <md-tooltip>Delete Template Satisfy Criteria</md-tooltip>
+                    <md-tooltip>{{ ::'deleteTemplateSatisfyCriteria' | translate }}</md-tooltip>
                   </md-button>
                   <br/>
                   <md-input-container style="width: 300px; margin-right: 40px;">
-                    <label>Node ID</label>
+                    <label>{{ ::'nodeID' | translate }}</label>
                     <md-select ng-model="satisfyCriteria.nodeId"
                         ng-change="milestonesAuthoringController.save()">
                       <md-option ng-repeat="nodeItem in milestonesAuthoringController.idToOrder | toArray | orderBy: 'order'"
@@ -267,7 +267,7 @@
                     </md-select>
                   </md-input-container>
                   <md-input-container style="width: 180px; margin-right: 40px;">
-                    <label>Component ID</label>
+                    <label>{{ ::'componentID' | translate }}</label>
                     <md-select ng-model="satisfyCriteria.componentId"
                         ng-change="milestonesAuthoringController.save()">
                       <md-option ng-repeat='(componentIndex, component) in milestonesAuthoringController.getComponentsByNodeId(satisfyCriteria.nodeId)'
@@ -278,7 +278,7 @@
                   </md-input-container>
                   <br/>
                   <md-input-container style="width: 350px; margin-right: 40px;">
-                    <label>Function</label>
+                    <label>{{ ::'function' | translate }}</label>
                     <md-select ng-model="satisfyCriteria.function"
                         ng-change="milestonesAuthoringController.save()">
                       <md-option ng-repeat='availableSatisfyCriteriaFunction in milestonesAuthoringController.availableSatisfyCriteriaFunctions'
@@ -288,7 +288,7 @@
                     </md-select>
                   </md-input-container>
                   <md-input-container style="width: 180px; margin-right: 40px;">
-                    <label>Percent Threshold</label>
+                    <label>{{ ::'percentThreshold' | translate }}</label>
                     <input type="number"
                         ng-model="satisfyCriteria.percentThreshold"
                         ng-model-options="{ debounce: 1000 }"
@@ -296,19 +296,19 @@
                   </md-input-container>
                   <br/>
                   <md-input-container style="width: 180px; margin-right: 40px;">
-                    <label>Type</label>
+                    <label>{{ ::'type' | translate }}</label>
                     <input ng-model="satisfyCriteria.type"
                         ng-model-options="{ debounce: 1000 }"
                         ng-change="milestonesAuthoringController.save()"/>
                   </md-input-container>
                   <md-input-container style="width: 180px; margin-right: 40px;">
-                    <label>Target Variable</label>
+                    <label>{{ ::'targetVariable' | translate }}</label>
                     <input ng-model="satisfyCriteria.targetVariable"
                         ng-model-options="{ debounce: 1000 }"
                         ng-change="milestonesAuthoringController.save()"/>
                   </md-input-container>
                   <md-input-container style="width: 180px; margin-right: 40px;">
-                    <label>Value</label>
+                    <label>{{ ::'value' | translate }}</label>
                     <input type="number"
                         ng-model="satisfyCriteria.value"
                         ng-model-options="{ debounce: 1000 }"
@@ -318,11 +318,11 @@
                   <md-button ng-click="milestonesAuthoringController.addTemplateSatisfyCriteria(template, $index + 1)"
                       class="topButton md-raised md-primary">
                     <md-icon>add</md-icon>
-                    <span>Add Template Satisfy Criteria</span>
+                    <span>{{ ::'addTemplateSatisfyCriteria' | translate }}</span>
                   </md-button>
                 </div>
                 <md-input-container class="input-container md-block md-no-float">
-                  <label>Description</label>
+                  <label>{{ ::'description' | translate }}</label>
                   <textarea ng-model="template.description"
                       ng-model-options="{ debounce: 1000 }"
                       class="ng-pristine ng-untouched ng-valid md-input ng-not-empty"
@@ -331,7 +331,7 @@
                   </textarea>
                 </md-input-container>
                 <md-input-container class="input-container md-block md-no-float">
-                  <label>Content</label>
+                  <label>{{ ::'content' | translate }}</label>
                   <textarea ng-model="template.content"
                       ng-model-options="{ debounce: 1000 }"
                       class="ng-pristine ng-untouched ng-valid md-input ng-not-empty"
@@ -339,7 +339,7 @@
                       ng-change="milestonesAuthoringController.save()">
                   </textarea>
                 </md-input-container>
-                <span>Content Preview</span>
+                <span>{{ ::'contentPreview' | translate }}</span>
                 <section class="milestone-details__section md-whiteframe-1dp">
                   <div>
                     <compile data="template.content"></compile>
@@ -347,7 +347,7 @@
                 </section>
                 <br/>
                 <md-input-container class="input-container md-block md-no-float">
-                  <label>Recommendations</label>
+                  <label>{{ ::'recommendations' | translate }}</label>
                   <textarea ng-model="template.recommendations"
                       ng-model-options="{ debounce: 1000 }"
                       class="ng-pristine ng-untouched ng-valid md-input ng-not-empty"
@@ -355,7 +355,7 @@
                       ng-change="milestonesAuthoringController.save()">
                   </textarea>
                 </md-input-container>
-                <span>Recommendations Preview</span>
+                <span>{{ ::'recommendationsPreview' | translate }}</span>
                 <section class="md-whiteframe-1dp gray-lightest-bg">
                   <div class="milestone-details__section">
                     <compile data="template.recommendations"></compile>
@@ -367,7 +367,7 @@
             <md-button ng-click="milestonesAuthoringController.addTemplate(item.report, $index + 1)"
                 class="md-raised md-primary">
               <md-icon>add</md-icon>
-              <span>Add Template</span>
+              <span>{{ ::'addTemplate' | translate }}</span>
             </md-button>
           </div>
         </div>
@@ -376,7 +376,7 @@
     <div>
       <md-button class="md-raised md-primary" ng-click="milestonesAuthoringController.addMilestone($index + 1)">
         <md-icon>add</md-icon>
-        <span>Add Milestone</span>
+        <span>{{ ::'addMilestone' | translate }}</span>
       </md-button>
     </div>
   </div>
