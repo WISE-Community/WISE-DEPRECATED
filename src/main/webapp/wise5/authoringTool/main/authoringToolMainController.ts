@@ -155,7 +155,7 @@ class AuthoringToolMainController {
         .then(projectId => {
           this.cancelErrorCreatingProjectTimeout();
           this.saveEvent('projectCreated', 'Authoring', {}, projectId);
-          this.$state.go('root.project', { projectId: projectId });
+          this.$state.go('root.at.project', { projectId: projectId });
         })
         .catch(() => {
           this.turnOffInProcessOfCreatingProject();
@@ -211,7 +211,7 @@ class AuthoringToolMainController {
 
   openProject(projectId) {
     this.showLoadingProjectMessage();
-    this.$state.go('root.project', { projectId: projectId });
+    this.$state.go('root.at.project', { projectId: projectId });
   }
 
   previewProject(projectId) {

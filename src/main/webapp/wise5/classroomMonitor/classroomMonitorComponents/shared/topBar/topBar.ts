@@ -10,13 +10,15 @@ class TopBarController {
   dismissedNotifications: any;
   newNotifications: any;
   notifications: any;
+  runId: number;
   themePath: string;
   userInfo: any;
   workgroupId: number;
-  static $inject = ['$rootScope', 'ConfigService', 'ProjectService', 'TeacherDataService'];
+  static $inject = ['$rootScope', '$state', 'ConfigService', 'ProjectService', 'TeacherDataService'];
 
   constructor(
     private $rootScope: any,
+    private $state: any,
     private ConfigService: ConfigService,
     private ProjectService: ClassroomMonitorProjectService,
     private TeacherDataService: TeacherDataService
@@ -66,6 +68,19 @@ class TopBarController {
    */
   isAnyPeriodPaused() {
     return this.TeacherDataService.isAnyPeriodPaused();
+  }
+
+  switchToAuthoringView() {
+    if (this.$state.params.nodeId) {
+      this.$state.go('root.at.project.node', {
+        projectId: this.runId,
+        nodeId: this.$state.params.nodeId
+      });
+    } else {
+      this.$state.go('root.at.project', {
+        projectId: this.runId
+      });
+    }
   }
 
   goHome() {
@@ -125,7 +140,11 @@ const TopBar = {
                         <img ng-src="{{ ::$ctrl.logoPath }}" alt="{{ ::'WISE_LOGO' | translate }}" class="logo" />
                     </a>
                 </span>
-                <h3>{{ ::$ctrl.projectTitle }} <span class="md-caption">({{ ::'RUN_ID_DISPLAY' | translate:{id: $ctrl.runId} }})</span></h3>
+                <h3>{{ ::$ctrl.projectTitle }} <span class="md-caption">({{ ::'RUN_ID_DISPLAY' | translate:{id: $ctrl.runId} }})</span>
+                <md-button style="text-transform: none;" ng-click="$ctrl.switchToAuthoringView()">
+                  {{ ::'switchToAuthoringView' | translate }}
+                </md-button>
+                </h3>
                 <span flex></span>
                 <md-menu md-position-mode="target-right target" md-offset="52 26">
                     <md-button aria-label="{{ ::'ALERTS' | translate }}" class="md-icon-button notification-btn" ng-click="$mdMenu.open($event)">

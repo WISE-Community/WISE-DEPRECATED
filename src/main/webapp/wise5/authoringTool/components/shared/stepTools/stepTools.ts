@@ -58,7 +58,7 @@ class StepToolsController {
 
   nodeIdChanged() {
     this.TeacherDataService.setCurrentNodeByNodeId(this.nodeId);
-    this.$state.go('root.project.node', { projectId: this.projectId, nodeId: this.nodeId });
+    this.$state.go('root.at.project.node', { projectId: this.projectId, nodeId: this.nodeId });
   }
 
   updateModel() {
@@ -95,13 +95,13 @@ class StepToolsController {
   goToPrevNode() {
     this.NodeService.goToPrevNode();
     this.nodeId = this.TeacherDataService.getCurrentNodeId();
-    this.$state.go('root.project.node', { projectId: this.projectId, nodeId: this.nodeId });
+    this.$state.go('root.at.project.node', { projectId: this.projectId, nodeId: this.nodeId });
   }
 
   goToNextNode() {
     this.NodeService.goToNextNode().then(nodeId => {
       this.nodeId = nodeId;
-      this.$state.go('root.project.node', { projectId: this.projectId, nodeId: this.nodeId });
+      this.$state.go('root.at.project.node', { projectId: this.projectId, nodeId: this.nodeId });
     });
   }
 }

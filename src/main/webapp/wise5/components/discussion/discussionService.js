@@ -15,7 +15,7 @@ class DiscussionService extends ComponentService {
     this.$q = $q;
     this.$injector = $injector;
     this.ConfigService = ConfigService;
-    if (this.ConfigService.getMode() === 'classroomMonitor') {
+    if (['classroomMonitor', 'author'].includes(this.ConfigService.getMode())) {
       /*
        * In the Classroom Monitor, we need access to the TeacherDataService so we can retrieve posts
        * for all students.

@@ -32,7 +32,7 @@ export class RunMenuComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.editLink = `${this.configService.getContextPath()}/author/#!/project/${
+    this.editLink = `${this.configService.getContextPath()}/teacher-tool#!/edit/${
       this.run.project.id
     }`;
     this.reportProblemLink = `${this.configService.getContextPath()}/contact?runId=${this.run.id}`;

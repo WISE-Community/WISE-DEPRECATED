@@ -68,50 +68,50 @@ class ClassroomMonitorController {
     this.runId = this.ConfigService.getRunId();
     this.enableProjectAchievements = this.ProjectService.getAchievements().isEnabled;
     this.views = {
-      'root.dashboard': {
+      'root.cm.dashboard': {
         name: this.$translate('dashboard'),
         icon: 'dashboard',
         type: 'primary',
         active: false
       },
-      'root.milestones': {
+      'root.cm.milestones': {
         name: this.$translate('milestones'),
         icon: 'flag',
         type: 'primary',
         active: this.enableProjectAchievements
       },
-      'root.project': {
+      'root.cm.project': {
         name: this.$translate('gradeByStep'),
         icon: 'view_list',
         type: 'primary',
         action: () => {
           let currentView = this.$state.current.name;
-          if (currentView === 'root.project') {
+          if (currentView === 'root.cm.project') {
             // if we're currently grading a step, close the node when a nodeProgress menu button is clicked
             this.NodeService.closeNode();
           }
         },
         active: true
       },
-      'root.teamLanding': {
+      'root.cm.teamLanding': {
         name: this.$translate('gradeByTeam'),
         icon: 'people',
         type: 'primary',
         active: true
       },
-      'root.manageStudents': {
+      'root.cm.manageStudents': {
         name: this.$translate('manageStudents'),
         icon: 'face',
         type: 'primary',
         active: true
       },
-      'root.notebooks': {
+      'root.cm.notebooks': {
         name: this.$translate('studentNotebooks'),
         icon: 'chrome_reader_mode',
         type: 'primary',
         active: this.NotebookService.isNotebookEnabled()
       },
-      'root.export': {
+      'root.cm.export': {
         name: this.$translate('dataExport'),
         icon: 'file_download',
         type: 'secondary',
@@ -221,13 +221,13 @@ class ClassroomMonitorController {
     this.showGradeByTeamTools = false;
     this.showPeriodSelect = true;
     this.workgroupId = null;
-    if (viewName === 'root.project') {
+    if (viewName === 'root.cm.project') {
       let nodeId = this.$state.params.nodeId;
       this.showGradeByStepTools = this.ProjectService.isApplicationNode(nodeId);
-    } else if (viewName === 'root.team') {
+    } else if (viewName === 'root.cm.team') {
       this.workgroupId = parseInt(this.$state.params.workgroupId);
       this.showGradeByTeamTools = true;
-    } else if (viewName === 'root.export') {
+    } else if (viewName === 'root.cm.export') {
       this.showPeriodSelect = false;
     }
   }

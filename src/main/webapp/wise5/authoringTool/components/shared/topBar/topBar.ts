@@ -9,11 +9,13 @@ class TopBarController {
   userInfo: any;
   themePath: string;
   contextPath: string;
+  runId: number;
 
-  static $inject = ['$rootScope', '$window', 'ConfigService', 'ProjectService'];
+  static $inject = ['$rootScope', '$state', '$window', 'ConfigService', 'ProjectService'];
 
   constructor(
     private $rootScope: any,
+    private $state: any,
     private $window: any,
     private ConfigService: ConfigService,
     private ProjectService: AuthoringToolProjectService
@@ -33,6 +35,13 @@ class TopBarController {
       'https://docs.google.com/document/d/1G8lVtiUlGXLRAyFOvkEdadHYhJhJLW4aor9dol2VzeU',
       '_blank'
     );
+  }
+
+  switchToGradingView() {
+    this.$state.go('root.cm.project', {
+      runId: this.runId,
+      nodeId: this.$state.params.nodeId
+    });
   }
 
   goHome() {
@@ -66,7 +75,12 @@ const TopBar = {
           <span ng-if="$ctrl.projectTitle" id="projectTitleSpan">{{ $ctrl.projectTitle }}</span>
           <span ng-if="!$ctrl.projectTitle" id="projectTitleSpan">{{ ::'authoringTool' | translate }}</span>
           <span class="md-caption" ng-if="$ctrl.projectId">
-            ({{ 'PROJECT_ID_DISPLAY' | translate:{id: $ctrl.projectId} }}<span class="md-caption" ng-if="$ctrl.runId"> | {{ 'RUN_ID_DISPLAY' | translate:{id: $ctrl.runId} }}</span>)
+            ({{ 'PROJECT_ID_DISPLAY' | translate:{id: $ctrl.projectId} }}
+            <span class="md-caption" ng-if="$ctrl.runId"> | {{ 'RUN_ID_DISPLAY' | translate:{id: $ctrl.runId} }}
+            </span>)
+            <md-button ng-if="$ctrl.runId" style="text-transform: none;" ng-click="$ctrl.switchToGradingView()">
+                {{ ::'switchToGradingView' | translate }}
+            </md-button>
           </span>
         </h3>
         </span>

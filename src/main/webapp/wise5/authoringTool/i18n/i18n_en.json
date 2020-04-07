@@ -308,6 +308,7 @@
   "studentPreview": "Student Preview",
   "submitXTimeOnNodeTitle": "the student submits {{requiredSubmitCount}} time on \"{{nodeTitle}}\"",
   "submitXTimesOnNodeTitle": "the student submits {{requiredSubmitCount}} times on \"{{nodeTitle}}\"",
+  "switchToGradingView": "Switch to Grading View",
   "tableHasHeaderRow": "Table Has Header Row",
   "tag": "Tag",
   "tags": "Tags",

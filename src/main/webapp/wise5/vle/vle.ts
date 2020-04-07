@@ -430,7 +430,7 @@ export default angular
           }
         });
 
-      $urlRouterProvider.otherwise(($injector, $location) => {
+      $urlRouterProvider.otherwise(($injector) => {
         var $state = $injector.get('$state');
         $state.go('root.run', {});
       });

@@ -33,7 +33,7 @@ export class TeacherHomeComponent implements OnInit {
     this.getUser();
     this.configService.getConfig().subscribe((config) => {
       if (config != null) {
-        this.authoringToolLink = `${this.configService.getContextPath()}/author`;
+        this.authoringToolLink = `${this.configService.getContextPath()}/teacher-tool#!/edit/home`;
       }
     });
   }

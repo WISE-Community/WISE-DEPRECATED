@@ -10,7 +10,7 @@ async function afterBuild(appType, loopIndefinitely) {
   if (loopIndefinitely) {
     while (true) {
       updateIndex(appType);
-      await sleep(5000);
+      await sleep(2000);
     }
   } else {
     updateIndex(appType);
@@ -32,6 +32,9 @@ function updateIndex(appType) {
   } else if (appType === 'site') {
     indexFilePath = 'src/main/webapp/site/dist/index.html';
     appDir = `/site/dist`;
+  } else if (appType === 'teacher') {
+    indexFilePath = 'src/main/webapp/wise5/teacher/dist/index.html';
+    appDir = `/wise5/teacher/dist`;
   }
 
   fs.readFile(indexFilePath, 'utf8', function (err,data) {

@@ -87,7 +87,7 @@ const authoringModule = angular
     'filters',
     'graphAuthoringComponentModule',
     'highcharts-ng',
-    'htmlComponentModule',
+    'htmlAuthoringComponentModule',
     'importStepModule',
     'labelAuthoringComponentModule',
     'matchAuthoringComponentModule',
@@ -150,16 +150,16 @@ const authoringModule = angular
     ) => {
       $urlRouterProvider.otherwise('/');
       $stateProvider
-        .state('root', {
-          url: '',
+        .state('root.at', {
+          url: '/edit',
           abstract: true,
           templateUrl: 'wise5/authoringTool/authoringTool.html',
           controller: 'AuthoringToolController',
           controllerAs: 'authoringToolController',
           resolve: {}
         })
-        .state('root.main', {
-          url: '/',
+        .state('root.at.main', {
+          url: '/home',
           templateUrl: 'wise5/authoringTool/main/main.html',
           controller: 'AuthoringToolMainController',
           controllerAs: 'authoringToolMainController',
@@ -180,8 +180,8 @@ const authoringModule = angular
             ]
           }
         })
-        .state('root.project', {
-          url: '/project/:projectId',
+        .state('root.at.project', {
+          url: '/:projectId',
           templateUrl: 'wise5/authoringTool/project/project.html',
           controller: 'ProjectController',
           controllerAs: 'projectController',
@@ -218,54 +218,54 @@ const authoringModule = angular
             ]
           }
         })
-        .state('root.project.node', {
+        .state('root.at.project.node', {
           url: '/node/:nodeId',
           templateUrl: 'wise5/authoringTool/node/node.html',
           controller: 'NodeAuthoringController',
           controllerAs: 'nodeAuthoringController',
           resolve: {}
         })
-        .state('root.project.nodeConstraints', {
+        .state('root.at.project.nodeConstraints', {
           url: '/node/constraints/:nodeId',
           templateUrl: 'wise5/authoringTool/node/node.html',
           controller: 'NodeAuthoringController',
           controllerAs: 'nodeAuthoringController',
           resolve: {}
         })
-        .state('root.project.nodeEditPaths', {
+        .state('root.at.project.nodeEditPaths', {
           url: '/node/editpaths/:nodeId',
           templateUrl: 'wise5/authoringTool/node/node.html',
           controller: 'NodeAuthoringController',
           controllerAs: 'nodeAuthoringController',
           resolve: {}
         })
-        .state('root.project.asset', {
+        .state('root.at.project.asset', {
           url: '/asset',
           templateUrl: 'wise5/authoringTool/asset/asset.html',
           controller: 'ProjectAssetController',
           controllerAs: 'projectAssetController',
           resolve: {}
         })
-        .state('root.project.info', {
+        .state('root.at.project.info', {
           url: '/info',
           templateUrl: 'wise5/authoringTool/info/info.html',
           controller: 'ProjectInfoController',
           controllerAs: 'projectInfoController',
           resolve: {}
         })
-        .state('root.project.advanced', {
+        .state('root.at.project.advanced', {
           url: '/advanced',
           templateUrl: 'wise5/authoringTool/advanced/advancedAuthoring.html',
           controller: 'AdvancedAuthoringController',
           controllerAs: 'advancedAuthoringController'
         })
-        .state('root.project.rubric', {
+        .state('root.at.project.rubric', {
           url: '/rubric',
           templateUrl: 'wise5/authoringTool/rubric/rubricAuthoring.html',
           controller: 'RubricAuthoringController',
           controllerAs: 'rubricAuthoringController'
         })
-        .state('root.project.notebook', {
+        .state('root.at.project.notebook', {
           url: '/notebook',
           templateUrl: 'wise5/authoringTool/notebook/notebookAuthoring.html',
           controller: 'AuthorNotebookController',

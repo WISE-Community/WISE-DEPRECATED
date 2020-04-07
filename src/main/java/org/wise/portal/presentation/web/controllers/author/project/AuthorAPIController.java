@@ -143,14 +143,13 @@ public class AuthorAPIController {
       // do nothing
     }
 
-    User user = ControllerUtil.getSignedInUser();
     String projectIdStr = request.getParameter("projectId");
     Project project;
     if (projectIdStr != null && !projectIdStr.equals("") && !projectIdStr.equals("none")) {
       project = projectService.getById(Long.parseLong(projectIdStr));
       if (project.getWiseVersion().equals(5)) {
         ModelAndView wise5AuthoringView = new ModelAndView(
-            new RedirectView("../author#!/project/" + projectIdStr));
+            new RedirectView("../teacher-tool#!/edit/" + projectIdStr));
         return wise5AuthoringView;
       }
     }
@@ -441,7 +440,7 @@ public class AuthorAPIController {
 
   /**
    * Import steps and copy assets if necessary
-   * 
+   *
    * @param steps
    *                        a string containing a JSONArray of steps
    * @param toProjectId

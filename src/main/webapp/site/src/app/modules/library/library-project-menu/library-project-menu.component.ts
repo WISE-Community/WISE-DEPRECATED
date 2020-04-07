@@ -36,7 +36,7 @@ export class LibraryProjectMenuComponent implements OnInit {
   ngOnInit() {
     this.isCanEdit = this.isOwner() || this.isSharedOwnerWithEditPermission();
     this.isCanShare = this.isOwner();
-    this.editLink = `${this.configService.getContextPath()}/author#!/project/${this.project.id}`;
+    this.editLink = `${this.configService.getContextPath()}/teacher-tool#!/edit/${this.project.id}`;
     this.isChild = this.project.isChild();
   }
 

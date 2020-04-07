@@ -154,8 +154,8 @@ const classroomMonitorModule = angular
       $httpProvider
     ) => {
       $stateProvider
-        .state('root', {
-          url: '/run/:runId',
+        .state('root.cm', {
+          url: '/manage/:runId',
           templateUrl: 'wise5/classroomMonitor/classroomMonitor.html',
           controller: 'ClassroomMonitorController',
           controllerAs: 'classroomMonitorController',
@@ -252,13 +252,13 @@ const classroomMonitorModule = angular
             ]
           }
         })
-        .state('root.teamLanding', {
+        .state('root.cm.teamLanding', {
           url: '/team',
           templateUrl: 'wise5/classroomMonitor/studentProgress/studentProgress.html',
           controller: 'StudentProgressController',
           controllerAs: 'studentProgressController'
         })
-        .state('root.team', {
+        .state('root.cm.team', {
           url: '/team/:workgroupId',
           templateUrl: 'wise5/classroomMonitor/studentGrading/studentGrading.html',
           controller: 'StudentGradingController',
@@ -276,45 +276,45 @@ const classroomMonitorModule = angular
             ]
           }
         })
-        .state('root.project', {
-          url: '/project/:nodeId?periodId&workgroupId',
+        .state('root.cm.project', {
+          url: '/unit/:nodeId?periodId&workgroupId',
           component: 'nodeProgressView',
           params: { nodeId: null }
         })
-        .state('root.manageStudents', {
+        .state('root.cm.manageStudents', {
           url: '/manageStudents',
           templateUrl: 'wise5/classroomMonitor/manageStudents/manageStudents.html',
           controller: 'ManageStudentsController',
           controllerAs: 'manageStudentsController'
         })
-        .state('root.dashboard', {
+        .state('root.cm.dashboard', {
           url: '/dashboard',
           templateUrl: 'wise5/classroomMonitor/dashboard/dashboard.html',
           controller: 'DashboardController',
           controllerAs: 'dashboardController'
         })
-        .state('root.export', {
+        .state('root.cm.export', {
           url: '/export',
           templateUrl: 'wise5/classroomMonitor/dataExport/dataExport.html',
           controller: 'DataExportController',
           controllerAs: 'dataExportController'
         })
-        .state('root.milestones', {
+        .state('root.cm.milestones', {
           url: '/milestones',
           templateUrl: 'wise5/classroomMonitor/milestones/milestones.html',
           controller: 'MilestonesController',
           controllerAs: 'milestonesController'
         })
-        .state('root.notebooks', {
+        .state('root.cm.notebooks', {
           url: '/notebook',
           templateUrl: 'wise5/classroomMonitor/notebook/notebookGrading.html',
           controller: 'NotebookGradingController',
           controllerAs: 'notebookGradingController'
         });
 
-      $urlRouterProvider.otherwise(($injector, $location) => {
+      $urlRouterProvider.otherwise(($injector) => {
         var $state = $injector.get('$state');
-        $state.go('root.project', {});
+        $state.go('root.cm.project', {});
       });
 
       $httpProvider.interceptors.push('HttpInterceptor');

@@ -158,7 +158,7 @@ const MilestoneDetails = {
         <p ng-if="$ctrl.milestone.params.targetDate"><span class="heavy">{{ ::'dueDate' | translate }}: </span> {{ $ctrl.milestone.params.targetDate | date: 'EEE MMM d, yyyy' }}</p>
         <p ng-if="$ctrl.requirements.length">
           <span class="heavy">{{ ::'REQUIREMENTS' | translate }}: </span>
-          <a ng-repeat="requirement in $ctrl.requirements" ui-sref="root.project({nodeId: \'{{ requirement }}\'})" ng-click="$ctrl.visitNodeGrading(event)">
+          <a ng-repeat="requirement in $ctrl.requirements" ui-sref="root.cm.project({nodeId: \'{{ requirement }}\'})" ng-click="$ctrl.visitNodeGrading(event)">
             {{ ::$ctrl.getNodeNumberByNodeId(requirement) }}: {{ ::$ctrl.getNodeTitleByNodeId(requirement) }}<span ng-if="!$last">, </span>
           </a>
         </p>

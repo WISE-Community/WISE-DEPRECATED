@@ -45,9 +45,9 @@ export class TeacherRunListItemComponent implements OnInit {
     if (this.run.project.wiseVersion === 4) {
       this.gradeAndManageLink = `${this.configService.getWISE4Hostname()}/teacher/run/manage/${this.run.id}#!/run/${this.run.id}/project/`;
     } else {
-      this.gradeAndManageLink = `${contextPath}/teacher/run/manage/${this.run.id}#!/run/${this.run.id}/project/`; 
+      this.gradeAndManageLink = `${contextPath}/teacher-tool#!/manage/${this.run.id}/unit/`;
     }
-    this.manageStudentsLink = `${contextPath}/teacher/run/manage/${this.run.id}#!/run/${this.run.id}/manageStudents`;
+    this.manageStudentsLink = `${contextPath}/teacher-tool#!/manage/${this.run.id}/manageStudents`;
     if (this.run.isHighlighted) {
       this.animateDuration = '2s';
       this.animateDelay = '1s';
@@ -61,6 +61,10 @@ export class TeacherRunListItemComponent implements OnInit {
     if (this.run.isHighlighted) {
       this.elRef.nativeElement.querySelector('mat-card').scrollIntoView();
     }
+  }
+
+  launchGradeAndManageTool() {
+    window.location.href = this.gradeAndManageLink;
   }
 
   periodsString() {

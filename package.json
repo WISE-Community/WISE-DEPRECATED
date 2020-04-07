@@ -128,10 +128,11 @@
     "webpack-node-externals": "^1.7.2"
   },
   "scripts": {
-    "build-dev-all": "node node_modules/concurrently/bin/concurrently.js \"npm run build-dev-site\" \"npm run build-dev-at\" \"npm run build-dev-cm\" \"npm run build-dev-vle\"",
+    "build-dev-all": "node node_modules/concurrently/bin/concurrently.js \"npm run build-dev-site\" \"npm run build-dev-teacher\" \"npm run build-dev-vle\"",
     "build-dev-at": "node node_modules/concurrently/bin/concurrently.js \"node --max_old_space_size=4096 ./node_modules/@angular/cli/bin/ng build at --watch\" \"node scripts/afterBuild.js at true\"",
     "build-dev-cm": "node node_modules/concurrently/bin/concurrently.js \"node --max_old_space_size=4096 ./node_modules/@angular/cli/bin/ng build cm --watch\" \"node scripts/afterBuild.js cm true\"",
     "build-dev-site": "node node_modules/concurrently/bin/concurrently.js \"ng build site --watch\" \"ng test --source-map=false --karma-config src/main/webapp/site/karma.conf.js --browsers ChromeHeadlessNoSandbox\"  \"node scripts/afterBuild.js site true\"",
+    "build-dev-teacher": "node node_modules/concurrently/bin/concurrently.js \"node --max_old_space_size=4096 ./node_modules/@angular/cli/bin/ng build teacher --watch\" \"node scripts/afterBuild.js teacher true\"",
     "build-dev-vle": "node node_modules/concurrently/bin/concurrently.js \"node --max_old_space_size=4096 ./node_modules/@angular/cli/bin/ng build vle --watch\" \"node scripts/afterBuild.js vle true\"",
     "build-prod-all": "npm run build-prod-at && npm run build-prod-cm && npm run build-prod-vle && npm run build-prod-site",
     "build-prod-all-hans": "npm run build-prod-at && npm run build-prod-cm && npm run build-prod-vle && npm run build-prod-site-hans",

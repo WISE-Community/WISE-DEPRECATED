@@ -75,7 +75,7 @@ class ChooseStepController {
     if (selectedNodes.length === 0) {
       alert(this.$translate('selectAStepToImport'));
     } else {
-      this.$state.go('root.project.import-step.choose-location', {
+      this.$state.go('root.at.project.import-step.choose-location', {
         importFromProjectId: this.importProjectId,
         selectedNodes: selectedNodes
       });
@@ -93,7 +93,7 @@ class ChooseStepController {
   }
 
   goBack() {
-    this.$state.go('root.project');
+    this.$state.go('root.at.project');
   }
 }
 

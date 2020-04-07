@@ -89,7 +89,7 @@ class NodeProgressViewController {
           this.$scope.currentgroupid = this.currentGroupId;
         }
       }
-      this.$state.go('root.project', { nodeId: this.nodeId });
+      this.$state.go('root.cm.project', { nodeId: this.nodeId });
     });
 
     this.$scope.$on('currentWorkgroupChanged', (event, args) => {
@@ -103,7 +103,7 @@ class NodeProgressViewController {
         this.TeacherDataService.endCurrentNodeAndSetCurrentNodeByNodeId(toNodeId);
       }
 
-      if ($transition.name === 'root.project') {
+      if ($transition.name === 'root.cm.project') {
         if (this.ProjectService.isApplicationNode(toNodeId)) {
           document.getElementById('content').scrollTop = 0;
         }
