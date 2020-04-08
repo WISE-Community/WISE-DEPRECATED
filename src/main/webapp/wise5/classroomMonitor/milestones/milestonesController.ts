@@ -53,6 +53,7 @@ class MilestonesController {
     private moment: any
   ) {
     this.$translate = this.$filter('translate');
+    this.periodId = this.TeacherDataService.getCurrentPeriod().periodId;
     this.setWorkgroupsInCurrentPeriod();
     this.loadProjectAchievements();
 
