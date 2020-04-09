@@ -1,7 +1,7 @@
 'use strict';
 
 import ComponentController from '../componentController';
-import html2canvas from 'html2canvas';
+import * as html2canvas from 'html2canvas';
 import iframeResizer from 'iframe-resizer';
 
 class EmbeddedController extends ComponentController {

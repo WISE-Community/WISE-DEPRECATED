@@ -1,7 +1,7 @@
 'use strict';
 
 import ComponentController from "../componentController";
-import html2canvas from 'html2canvas';
+import * as html2canvas from 'html2canvas';
 
 class TableController extends ComponentController {
   constructor($anchorScroll,
@@ -1145,7 +1145,7 @@ class TableController extends ComponentController {
 
   getDataExplorerYAxisLabelWhenOneYAxis() {
     let yAxisLabel = '';
-    for (let index = 0; index < this.dataExplorerSeries.length; index++) { 
+    for (let index = 0; index < this.dataExplorerSeries.length; index++) {
       const yColumn = this.dataExplorerSeries[index].yColumn;
       if (yColumn != null) {
         const columnName = this.getColumnName(yColumn);

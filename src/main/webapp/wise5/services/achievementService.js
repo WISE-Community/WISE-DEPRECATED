@@ -445,11 +445,10 @@ class AchievementService {
 
   /**
    * Get a mapping from achievement id to array of student projectAchievements
-   * @param achievementId the achievement id
    * @return a mapping from achievement id to array of student projectAchievements
    * student projectAchievements are created when a workgroup completes an achievement.
    */
-  getAchievementIdToStudentAchievementsMappings(achievementId) {
+  getAchievementIdToStudentAchievementsMappings() {
     const achievementIdToAchievements = {};
     const projectAchievements = this.ProjectService.getAchievementItems();
     for (let projectAchievement of projectAchievements) {
