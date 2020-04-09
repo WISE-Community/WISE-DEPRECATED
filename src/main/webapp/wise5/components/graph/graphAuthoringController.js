@@ -221,6 +221,7 @@ class GraphAuthoringController extends GraphController {
     }
     if (this.enableMultipleYAxes) {
       newSeries.yAxis = 0;
+      this.setSeriesColorToMatchYAxisColor(newSeries);
     }
     this.authoringComponentContent.series.push(newSeries);
     this.authoringViewComponentChanged();
@@ -547,6 +548,8 @@ class GraphAuthoringController extends GraphController {
       this.convertSingleYAxisToMultipleYAxes();
       this.numYAxes = this.authoringComponentContent.yAxis.length;
       this.addYAxisToAllSeries();
+      this.addColorToYAxes();
+      this.addColorToSeries();
       this.authoringViewComponentChanged();
     } else {
       if (confirm(this.$translate('graph.areYouSureYouWantToRemoveMultipleYAxes'))) {
@@ -607,13 +610,41 @@ class GraphAuthoringController extends GraphController {
     }
   }
 
+  addColorToYAxes() {
+    for (const [indexString, yAxis] of Object.entries(this.authoringComponentContent.yAxis)) {
+      const index = parseInt(indexString);
+      if (yAxis.title.style.color == null || yAxis.title.style.color === '') {
+        yAxis.title.style.color = this.seriesColors[index];
+      }
+      if (yAxis.labels.style.color == null || yAxis.labels.style.color === '') {
+        yAxis.labels.style.color = this.seriesColors[index];
+      }
+    }
+  }
+
+  addColorToSeries() {
+    for (const singleSeries of this.authoringComponentContent.series) {
+      this.setSeriesColorToMatchYAxisColor(singleSeries);
+    }
+  }
+
+  setSeriesColorToMatchYAxisColor(series) {
+    series.color = this.getYAxisColor(series.yAxis);
+  }
+
+  getYAxisColor(index) {
+    return this.authoringComponentContent.yAxis[index].labels.style.color;
+  }
+
   numYAxesChanged(newValue, oldValue) {
     if (newValue > oldValue) {
       this.increaseYAxes(newValue);
+      this.addColorToYAxes();
       this.authoringViewComponentChanged();
     } else if (newValue < oldValue) {
       if (confirm(this.$translate('graph.areYouSureYouWantToDecreaseTheNumberOfYAxes'))) {
         this.decreaseYAxes(newValue);
+        this.updateSeriesYAxesIfNecessary();
         this.authoringViewComponentChanged();
       } else {
         this.numYAxes = oldValue;
@@ -630,13 +661,37 @@ class GraphAuthoringController extends GraphController {
   }
 
   decreaseYAxes(newNumYAxes) {
-    this.authoringComponentContent.yAxis = this.authoringComponentContent.yAxis.slice(0, newNumYAxes);
+    this.authoringComponentContent.yAxis =
+        this.authoringComponentContent.yAxis.slice(0, newNumYAxes);
   }
 
-  yAxisColorChanged(yAxis) {
+  updateSeriesYAxesIfNecessary() {
+    for (const singleSeries of this.authoringComponentContent.series) {
+      if (!this.isYAxisIndexExists(singleSeries.yAxis)) {
+        singleSeries.yAxis = 0;
+        this.setSeriesColorToMatchYAxisColor(singleSeries);
+      }
+    }
+  }
+
+  isYAxisIndexExists(yAxisIndex) {
+    return this.authoringComponentContent.yAxis[yAxisIndex] != null;
+  }
+
+  yAxisColorChanged(yAxisIndex) {
+    const yAxis = this.authoringComponentContent.yAxis[yAxisIndex];
     const color = yAxis.labels.style.color;
     yAxis.title.style.color = color;
+    this.updateSeriesColors(yAxisIndex, color);
     this.authoringViewComponentChanged();
+  }
+
+  updateSeriesColors(yAxisIndex, color) {
+    for (const singleSeries of this.authoringComponentContent.series) {
+      if (singleSeries.yAxis === yAxisIndex) {
+        singleSeries.color = color;
+      }
+    } 
   }
 
   addAnyMissingYAxisFieldsToAllYAxes(yAxis) {
@@ -672,6 +727,11 @@ class GraphAuthoringController extends GraphController {
     if (yAxis.opposite == null) {
       yAxis.opposite = false;
     }
+  }
+
+  seriesYAxisChanged(series) {
+    this.setSeriesColorToMatchYAxisColor(series);
+    this.authoringViewComponentChanged();
   }
 }
 

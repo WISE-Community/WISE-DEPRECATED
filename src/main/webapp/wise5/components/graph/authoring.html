@@ -629,7 +629,7 @@
             <label>{{ ::'graph.color' | translate }}</label>
             <input ng-model='graphController.authoringComponentContent.yAxis[$index].labels.style.color'
                    ng-model-options='{ debounce: 1000 }'
-                   ng-change='graphController.yAxisColorChanged(graphController.authoringComponentContent.yAxis[$index])'/>
+                   ng-change='graphController.yAxisColorChanged($index)'/>
           </md-input-container>
           <md-input-container style='margin-right: 20px; width: 70px;'>
             <label>{{ ::'graph.units' | translate }}</label>
@@ -814,7 +814,7 @@
           <md-input-container ng-if='graphController.enableMultipleYAxes' style='height: 60px;'>
             <label>{{ ::'graph.yAxis' | translate }}</label>
             <md-select ng-model='series.yAxis'
-                       ng-change='graphController.authoringViewComponentChanged()'
+                       ng-change='graphController.seriesYAxisChanged(series)'
                        style='width: 200px'>
               <md-option ng-repeat='yAxis in graphController.authoringComponentContent.yAxis track by $index'
                          ng-value='{{$index}}'>
