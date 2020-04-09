@@ -382,7 +382,7 @@ class MilestonesController {
 
     projectAchievement.numberOfStudentsCompleted = workgroupIdsCompleted.length;
     projectAchievement.percentageCompleted =
-      (100 * projectAchievement.numberOfStudentsCompleted) / this.numberOfStudentsInRun;
+      Math.round((100 * projectAchievement.numberOfStudentsCompleted) / this.numberOfStudentsInRun);
 
     if (projectAchievement.type === 'milestoneReport') {
       if (this.isCompletionReached(projectAchievement)) {
