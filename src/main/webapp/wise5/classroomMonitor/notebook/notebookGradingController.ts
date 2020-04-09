@@ -6,6 +6,7 @@ import ClassroomMonitorProjectService from '../classroomMonitorProjectService';
 import TeacherDataService from '../../services/teacherDataService';
 
 class NotebookGradingController {
+  canViewStudentNames: boolean;
   notebookConfig: any;
   showAllNotes: boolean = false;
   showAllReports: boolean = false;
@@ -27,6 +28,8 @@ class NotebookGradingController {
     this.teacherWorkgroupId = this.ConfigService.getWorkgroupId();
     this.workgroups = this.ConfigService.getClassmateUserInfos();
     this.notebookConfig = this.NotebookService.getStudentNotebookConfig();
+    const permissions = this.ConfigService.getPermissions();
+    this.canViewStudentNames = permissions.canViewStudentNames;
     this.showNoteForWorkgroup = {};
     this.showReportForWorkgroup = {};
     for (let i = 0; i < this.workgroups.length; i++) {
