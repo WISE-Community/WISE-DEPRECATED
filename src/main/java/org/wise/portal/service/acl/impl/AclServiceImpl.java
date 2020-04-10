@@ -168,6 +168,16 @@ public class AclServiceImpl<T extends Persistable> implements AclService<T> {
     return false;
   }
 
+  public boolean hasSpecificPermission(T object, Permission permission, UserDetails userDetails) {
+    List<Permission> permissions = getPermissions(object, userDetails);
+    for (Permission p : permissions) {
+      if (p.getMask() == permission.getMask()) {
+        return true;
+      }
+    }
+    return false;
+  }
+
   @SuppressWarnings("unchecked")
   @Override
   public boolean hasPermission(
