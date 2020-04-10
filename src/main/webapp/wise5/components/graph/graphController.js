@@ -294,12 +294,15 @@ class GraphController extends ComponentController {
     for (let seriesIndex = 0; seriesIndex < dataExplorerSeries.length; seriesIndex++) {
       const xColumn = dataExplorerSeries[seriesIndex].xColumn;
       const yColumn = dataExplorerSeries[seriesIndex].yColumn;
+      const yAxis = dataExplorerSeries[seriesIndex].yAxis;
       if (yColumn != null) {
         const color = this.dataExplorerColors[seriesIndex];
         const name = dataExplorerSeries[seriesIndex].name;
         const series = this.generateDataExplorerSeries(studentData.tableData, xColumn, yColumn,
-            graphType, name, color);
-        this.setSeriesYAxisIndex(series, seriesIndex);
+            graphType, name, color, yAxis);
+        if (series.yAxis == null) {
+          this.setSeriesYAxisIndex(series, seriesIndex);
+        }
         this.activeTrial.series.push(series);
         if (graphType === 'scatter' && studentData.isDataExplorerScatterPlotRegressionLineEnabled) {
           const regressionSeries = this.generateDataExplorerRegressionSeries(studentData.tableData,
@@ -309,7 +312,7 @@ class GraphController extends ComponentController {
       }
     }
     if (this.isMultipleYAxes(this.yAxis)) {
-      this.setYAxisColorsToMatchSeries(this.activeTrial.series);
+      this.setAllSeriesColorsToMatchYAxes(this.activeTrial.series);
     }
   }
 
@@ -324,7 +327,7 @@ class GraphController extends ComponentController {
   setYAxisLabels(studentData) {
     if (this.isSingleYAxis(this.yAxis)) {
       this.yAxis.title.text = studentData.dataExplorerYAxisLabel;
-    } else {
+    } else if (studentData.dataExplorerYAxisLabels != null) {
       for (let [index, yAxis] of Object.entries(this.yAxis)) {
         yAxis.title.text = studentData.dataExplorerYAxisLabels[index];
       }
@@ -341,12 +344,22 @@ class GraphController extends ComponentController {
     }
   }
 
-  setYAxisColorsToMatchSeries(series) {
-    for (let [index, yAxis] of Object.entries(this.yAxis)) {
-      if (series[index] != null) {
-        this.setYAxisColor(yAxis, series[index].color);
-      }
+  setAllSeriesColorsToMatchYAxes(series) {
+    for (const singleSeries of series) {
+      this.setSinglSeriesColorsToMatchYAxis(singleSeries);
+    } 
+  }
+
+  setSinglSeriesColorsToMatchYAxis(series) {
+    if (series.yAxis == null) {
+      series.color = this.getYAxisColor(0);
+    } else {
+      series.color = this.getYAxisColor(series.yAxis);
     }
+  }
+
+  getYAxisColor(index) {
+    return this.yAxis[index].labels.style.color;
   }
 
   setYAxisColor(yAxis, color) {
@@ -374,11 +387,12 @@ class GraphController extends ComponentController {
     }
   }
 
-  generateDataExplorerSeries(tableData, xColumn, yColumn, graphType, name, color) {
+  generateDataExplorerSeries(tableData, xColumn, yColumn, graphType, name, color, yAxis) {
     const series = {
       type: graphType,
       name: name,
       color: color,
+      yAxis: yAxis,
       data: this.convertDataExplorerDataToSeriesData(tableData, xColumn, yColumn)
     };
     if (graphType === 'line') {

@@ -3,17 +3,15 @@ import vleModule from '../../../vle/vle';
 let $controller;
 let $rootScope;
 let $scope;
-let $httpBackend;
 let graphController;
 let component;
 
 describe('GraphController', () => {
   beforeEach(angular.mock.module(vleModule.name));
 
-  beforeEach(inject((_$controller_, _$rootScope_, _$httpBackend_) => {
+  beforeEach(inject((_$controller_, _$rootScope_) => {
     $controller = _$controller_;
     $rootScope = _$rootScope_;
-    $httpBackend = _$httpBackend_;
     component = createComponent();
     $scope = $rootScope.$new();
     $scope.componentContent = JSON.parse(JSON.stringify(component));
@@ -105,6 +103,10 @@ describe('GraphController', () => {
   shouldGetSeriesYAxisIndexWhenItHasNoneSet();
   shouldGetSeriesYAxisIndexWhenItHasItSet();
   shouldImportGraphSettings();
+  shouldGetYAxisColor();
+  shouldSetSingleSeriesColorsToMatchYAxisWhenYAxisIsNotSet();
+  shouldSetSingleSeriesColorsToMatchYAxisWhenYAxisIsSet();
+  shouldSetAllSeriesColorsToMatchYAxes();
 });
 
 function createComponent() {
@@ -143,6 +145,21 @@ function createComponent() {
         canEdit: true
       }
     ]
+  };
+}
+
+function createYAxis(color) {
+  return {
+    labels: {
+      style: {
+        color: color
+      }
+    },
+    title: {
+      style: {
+        color: color
+      }
+    }
   };
 }
 
@@ -1774,5 +1791,70 @@ function shouldImportGraphSettings() {
     expect(graphController.height).toEqual(graph2Height);
     expect(graphController.xAxis.title.text).toEqual(xAxis2Title);
     expect(graphController.yAxis.title.text).toEqual(yAxis2Title);
+  });
+}
+
+function shouldGetYAxisColor() {
+  it('should get y axis color', () => {
+    graphController.yAxis = [
+      createYAxis('blue'),
+      createYAxis('red'),
+      createYAxis('green'),
+      createYAxis('orange')
+    ];
+    expect(graphController.getYAxisColor(0)).toEqual('blue');
+    expect(graphController.getYAxisColor(1)).toEqual('red');
+    expect(graphController.getYAxisColor(2)).toEqual('green');
+    expect(graphController.getYAxisColor(3)).toEqual('orange');
+  });
+}
+
+function shouldSetSingleSeriesColorsToMatchYAxisWhenYAxisIsNotSet() {
+  it('should set single series colors to match y axis when y axis is not set', () => {
+    graphController.yAxis = [
+      createYAxis('blue'),
+      createYAxis('red'),
+      createYAxis('green'),
+      createYAxis('orange')
+    ];
+    const series = {};
+    graphController.setSinglSeriesColorsToMatchYAxis(series);
+    expect(series.color).toEqual('blue');
+  });
+}
+
+function shouldSetSingleSeriesColorsToMatchYAxisWhenYAxisIsSet() {
+  it('should set single series colors to match y axis when y axis is set', () => {
+    graphController.yAxis = [
+      createYAxis('blue'),
+      createYAxis('red'),
+      createYAxis('green'),
+      createYAxis('orange')
+    ];
+    const series = { yAxis: 1 };
+    graphController.setSinglSeriesColorsToMatchYAxis(series);
+    expect(series.color).toEqual('red');
+  });
+}
+
+function shouldSetAllSeriesColorsToMatchYAxes() {
+  it('should set all series colors to match y axes', () => {
+    graphController.yAxis = [
+      createYAxis('blue'),
+      createYAxis('red'),
+      createYAxis('green'),
+      createYAxis('orange')
+    ];
+    const series = [
+      { yAxis: 0 },
+      { yAxis: 1 },
+      { yAxis: 2 },
+      { yAxis: 3 }
+    ];
+    graphController.setAllSeriesColorsToMatchYAxes(series);
+    expect(series[0].color).toEqual('blue');
+    expect(series[1].color).toEqual('red');
+    expect(series[2].color).toEqual('green');
+    expect(series[3].color).toEqual('orange');
   });
 }
