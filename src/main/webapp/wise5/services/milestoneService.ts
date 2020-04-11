@@ -150,17 +150,24 @@ class MilestoneService {
   }
 
   insertMilestoneReport(milestone) {
+    const referencedComponent = this.getReferencedComponent(milestone);
+    milestone.nodeId = referencedComponent.nodeId;
+    milestone.componentId = referencedComponent.componentId;
     if (this.isCompletionReached(milestone)) {
       const report = this.generateReport(milestone);
       this.setReportAvailable(milestone, true);
       milestone.generatedReport = report.content ? report.content : null;
       milestone.recommendations = report.recommendations ? report.recommendations : null;
-      milestone.nodeId = report.nodeId;
-      milestone.componentId = report.componentId;
     } else {
       this.setReportAvailable(milestone, false);
     }
     return milestone;
+  }
+
+  getReferencedComponent(milestone) {
+    const referencedComponents = this.getSatisfyCriteriaReferencedComponents(milestone);
+    const referencedComponentValues: any[] = Object.values(referencedComponents);
+    return referencedComponentValues[referencedComponentValues.length - 1];
   }
 
   getDisplayUsernamesByWorkgroupId(workgroupId) {
