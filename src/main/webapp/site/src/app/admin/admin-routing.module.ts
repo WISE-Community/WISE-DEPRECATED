@@ -12,9 +12,9 @@ const adminRoutes: Routes = [
     component: AdminComponent,
     canActivate: [AuthGuard],
     children: [
-      { path: '', component: AdminHomeComponent },
-      { path: 'search', component: FindUserComponent },
-      { path: 'news', component: ManageNewsComponent }
+      { path: '', pathMatch: 'full', component: AdminHomeComponent },
+      { path: 'search', pathMatch: 'full', component: FindUserComponent },
+      { path: 'news', pathMatch: 'full', component: ManageNewsComponent }
     ]
   }
 ];
