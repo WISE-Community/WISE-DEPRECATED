@@ -42,6 +42,7 @@ import '../components/label/labelComponentModule';
 import '../components/match/matchComponentModule';
 import ManageStudentsController from './manageStudents/manageStudentsController';
 import MilestonesController from './milestones/milestonesController';
+import MilestoneService from '../services/milestoneService';
 import '../components/multipleChoice/multipleChoiceComponentModule';
 import NodeService from '../services/nodeService';
 import '../themes/default/notebook/notebookComponents';
@@ -115,6 +116,7 @@ const classroomMonitorModule = angular
   .service('ConfigService', ConfigService)
   .service('CRaterService', CRaterService)
   .service('HttpInterceptor', HttpInterceptor)
+  .service('MilestoneService', MilestoneService)
   .service('NodeService', NodeService)
   .service('NotebookService', NotebookService)
   .service('NotificationService', NotificationService)

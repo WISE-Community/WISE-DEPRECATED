@@ -185,12 +185,12 @@ const MilestoneDetails = {
           <compile data="$ctrl.milestone.generatedReport"></compile>
         </div>
       </section>
-      <section ng-if="$ctrl.milestone.recommendations && $ctrl.milestone.isReportAvailable"
+      <section ng-if="$ctrl.milestone.generatedRecommendations && $ctrl.milestone.isReportAvailable"
           class="md-whiteframe-1dp gray-lightest-bg">
         <md-tabs md-dynamic-height>
           <md-tab label="{{ ::'recommendations' | translate }}" md-on-select="$ctrl.saveTabSelectedEvent('MilestoneRecommendationTabSelected')">
             <div class="milestone-details__section">
-              <compile data="$ctrl.milestone.recommendations"></compile>
+              <compile data="$ctrl.milestone.generatedRecommendations"></compile>
             </div>
           </md-tab>
           <md-tab label="{{ ::'studentWork' | translate }}" md-on-select="$ctrl.saveTabSelectedEvent('MilestoneStudentWorkTabSelected')">
@@ -201,7 +201,7 @@ const MilestoneDetails = {
           </md-tab>
         </md-tabs>
       </section>
-      <section ng-if="!$ctrl.milestone.recommendations || !$ctrl.milestone.isReportAvailable"
+      <section ng-if="!$ctrl.milestone.generatedRecommendations || !$ctrl.milestone.isReportAvailable"
           class="milestone-details__section md-whiteframe-1dp">
         <div class="milestone-details__header primary md-body-2 gray-lightest-bg">{{ ::'studentCompletion' | translate }}</div>
         <ng-include src="'completion'"></ng-include>
