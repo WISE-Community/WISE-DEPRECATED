@@ -196,12 +196,18 @@ const MilestoneDetails = {
           <md-tab label="{{ ::'studentWork' | translate }}" md-on-select="$ctrl.saveTabSelectedEvent('MilestoneStudentWorkTabSelected')">
             <div class="milestone-details__section">
               <node-grading-view node-id="$ctrl.milestone.nodeId"
-                                milestone="$ctrl.milestone"></node-grading-view>
+                                 milestone="$ctrl.milestone"></node-grading-view>
             </div>
           </md-tab>
         </md-tabs>
       </section>
-      <section ng-if="!$ctrl.milestone.generatedRecommendations || !$ctrl.milestone.isReportAvailable"
+      <section ng-if="!$ctrl.milestone.generatedRecommendations && $ctrl.milestone.isReportAvailable"
+          class="milestone-details__section md-whiteframe-1dp">
+        <div class="milestone-details__header primary md-body-2 gray-lightest-bg">{{ ::'studentWork' | translate }}</div>
+        <node-grading-view node-id="$ctrl.milestone.nodeId"
+                           milestone="$ctrl.milestone"></node-grading-view>
+      </section>
+      <section ng-if="!$ctrl.milestone.generatedRecommendations && !$ctrl.milestone.isReportAvailable"
           class="milestone-details__section md-whiteframe-1dp">
         <div class="milestone-details__header primary md-body-2 gray-lightest-bg">{{ ::'studentCompletion' | translate }}</div>
         <ng-include src="'completion'"></ng-include>
