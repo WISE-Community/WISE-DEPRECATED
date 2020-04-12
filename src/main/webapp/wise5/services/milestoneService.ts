@@ -57,6 +57,23 @@ class MilestoneService {
     return milestones;
   }
 
+  getProjectMilestoneReports() {
+    return this.getProjectMilestones().filter((milestone) => {
+      return milestone.type === 'milestoneReport';
+    });
+  }
+
+  getMilestoneReportByNodeId(nodeId) {
+    const milestoneReports = this.getProjectMilestoneReports();
+    for (const milestonReport of milestoneReports) {
+      const referencedComponent = this.getReferencedComponent(milestonReport);
+      if (referencedComponent.nodeId === nodeId) {
+        return this.getProjectMilestoneStatus(milestonReport.id);
+      }
+    }
+    return null;
+  }
+
   getProjectMilestoneStatus(milestoneId) {
     this.periodId = this.TeacherDataService.getCurrentPeriod().periodId;
     this.setWorkgroupsInCurrentPeriod();
@@ -157,7 +174,7 @@ class MilestoneService {
       const report = this.generateReport(milestone);
       this.setReportAvailable(milestone, true);
       milestone.generatedReport = report.content ? report.content : null;
-      milestone.recommendations = report.recommendations ? report.recommendations : null;
+      milestone.generatedRecommendations = report.recommendations ? report.recommendations : null;
     } else {
       this.setReportAvailable(milestone, false);
     }
@@ -552,6 +569,7 @@ class MilestoneService {
       }
     }
     this.saveProject();
+    this.$rootScope.$broadcast('milestoneSaved');
   }
 
   createMilestone() {
@@ -595,6 +613,7 @@ class MilestoneService {
     if (index > -1) {
       projectAchievements.splice(index, 1);
       this.saveProject();
+      this.$rootScope.$broadcast('milestoneDeleted');
     }
   }
 
@@ -620,6 +639,276 @@ class MilestoneService {
       delete projectAchievement.nodeId;
       delete projectAchievement.componentId;
       delete projectAchievement.isReportAvailable;
+    }
+  }
+
+  showMilestoneDetails(milestone, $event, hideStudentWork = false) {
+    const title = this.$translate('MILESTONE_DETAILS_TITLE', {
+      name: milestone.name
+    });
+    const template = `<md-dialog class="dialog--wider">
+          <md-toolbar>
+            <div class="md-toolbar-tools">
+              <h2>${title}</h2>
+            </div>
+          </md-toolbar>
+          <md-dialog-content class="gray-lighter-bg md-dialog-content">
+            <milestone-details milestone="milestone"
+                               hide-student-work="hideStudentWork"
+                               on-show-workgroup="onShowWorkgroup(value)"
+                               on-visit-node-grading="onVisitNodeGrading()"></milestone-details>
+          </md-dialog-content>
+          <md-dialog-actions layout="row" layout-align="start center">
+            <span flex></span>
+            <md-button class="md-primary"
+                       ng-click="edit()"
+                       ng-if="milestone.type != 'milestoneReport'"
+                       aria-label="{{ ::'EDIT' | translate }}">
+              {{ ::'EDIT' | translate }}
+            </md-button>
+            <md-button class="md-primary"
+                       ng-click="close()"
+                       aria-label="{{ ::'CLOSE' | translate }}">
+              {{ ::'CLOSE' | translate }}
+            </md-button>
+          </md-dialog-actions>
+        </md-dialog>`;
+    this.$mdDialog
+      .show({
+        parent: angular.element(document.body),
+        template: template,
+        ariaLabel: title,
+        fullscreen: true,
+        multiple: true,
+        targetEvent: $event,
+        clickOutsideToClose: true,
+        escapeToClose: true,
+        locals: {
+          $event: $event,
+          milestone: milestone,
+          hideStudentWork: hideStudentWork
+        },
+        controller: [
+          '$scope',
+          '$state',
+          '$mdDialog',
+          'milestone',
+          '$event',
+          'TeacherDataService',
+          function DialogController(
+            $scope,
+            $state,
+            $mdDialog,
+            milestone,
+            $event,
+            TeacherDataService
+          ) {
+            $scope.milestone = milestone;
+            $scope.hideStudentWork = hideStudentWork;
+            $scope.event = $event;
+            $scope.close = function() {
+              $scope.saveMilestoneClosedEvent();
+              $mdDialog.hide();
+            };
+            $scope.edit = function() {
+              $mdDialog.hide({
+                milestone: $scope.milestone,
+                action: 'edit',
+                $event: $event
+              });
+            };
+            $scope.onShowWorkgroup = function(workgroup) {
+              $scope.saveMilestoneClosedEvent();
+              $mdDialog.hide();
+              TeacherDataService.setCurrentWorkgroup(workgroup);
+              $state.go('root.nodeProgress');
+            };
+            $scope.onVisitNodeGrading = function() {
+              $mdDialog.hide();
+            };
+            $scope.saveMilestoneOpenedEvent = function() {
+              $scope.saveMilestoneEvent('MilestoneOpened');
+            };
+            $scope.saveMilestoneClosedEvent = function() {
+              $scope.saveMilestoneEvent('MilestoneClosed');
+            };
+            $scope.saveMilestoneEvent = function(event) {
+              const context = 'ClassroomMonitor',
+                nodeId = null,
+                componentId = null,
+                componentType = null,
+                category = 'Navigation',
+                data = { milestoneId: $scope.milestone.id },
+                projectId = null;
+              TeacherDataService.saveEvent(
+                context,
+                nodeId,
+                componentId,
+                componentType,
+                category,
+                event,
+                data,
+                projectId
+              );
+            };
+            $scope.saveMilestoneOpenedEvent();
+          }
+        ]
+      })
+      .then(
+        data => {
+          if (data && data.action && data.milestone) {
+            if (data.action === 'edit') {
+              let milestone = angular.copy(data.milestone);
+              this.editMilestone(milestone, data.$event);
+            }
+          }
+        },
+        () => {}
+      );
+  }
+
+  editMilestone(milestone, $event) {
+    let editMode = milestone ? true : false;
+    let title = editMode ? this.$translate('EDIT_MILESTONE') : this.$translate('ADD_MILESTONE');
+
+    if (!editMode) {
+      milestone = this.createMilestone();
+    }
+
+    let template = `<md-dialog class="dialog--wide">
+          <md-toolbar>
+            <div class="md-toolbar-tools">
+              <h2>${title}</h2>
+            </div>
+          </md-toolbar>
+          <md-dialog-content class="gray-lighter-bg md-dialog-content">
+            <milestone-edit milestone="milestone" on-change="onChange(milestone, valid)"></milestone-edit>
+          </md-dialog-content>
+          <md-dialog-actions layout="row" layout-align="end center">
+            <md-button ng-click="close()"
+                       aria-label="{{ ::'CANCEL' | translate }}">
+              {{ ::'CANCEL' | translate }}
+            </md-button>
+            <md-button class="md-warn"
+                       ng-click="delete()"
+                       aria-label="{{ ::'DELETE' | translate }}">
+              {{ ::'DELETE' | translate }}
+            </md-button>
+            <md-button class="md-primary"
+                       ng-click="save()"
+                       aria-label="{{ ::'SAVE' | translate }}">
+              {{ ::'SAVE' | translate }}
+            </md-button>
+          </md-dialog-actions>
+        </md-dialog>`;
+
+    // display the milestone edit form in a dialog
+    this.$mdDialog
+      .show({
+        parent: angular.element(document.body),
+        template: template,
+        ariaLabel: title,
+        fullscreen: true,
+        targetEvent: $event,
+        clickOutsideToClose: true,
+        escapeToClose: true,
+        locals: {
+          editMode: editMode,
+          $event: $event,
+          milestone: milestone
+        },
+        controller: [
+          '$scope',
+          '$mdDialog',
+          '$filter',
+          'milestone',
+          'editMode',
+          '$event',
+          function DialogController($scope, $mdDialog, $filter, milestone, editMode, $event) {
+            $scope.editMode = editMode;
+            $scope.milestone = milestone;
+            $scope.$event = $event;
+            $scope.valid = editMode;
+
+            $scope.$translate = $filter('translate');
+
+            $scope.close = function() {
+              $mdDialog.hide({
+                milestone: $scope.milestone,
+                $event: $scope.$event
+              });
+            };
+
+            $scope.save = function() {
+              if ($scope.valid) {
+                $mdDialog.hide({
+                  milestone: $scope.milestone,
+                  save: true,
+                  $event: $scope.$event
+                });
+              } else {
+                alert($scope.$translate('MILESTONE_EDIT_INVALID_ALERT'));
+              }
+            };
+
+            $scope.delete = function() {
+              $mdDialog.hide({
+                milestone: $scope.milestone,
+                delete: true,
+                $event: $scope.$event
+              });
+            };
+
+            $scope.onChange = function(milestone, valid) {
+              $scope.milestone = milestone;
+              $scope.valid = valid;
+            };
+          }
+        ]
+      })
+      .then(
+        data => {
+          if (data) {
+            if (data.milestone) {
+              if (data.save) {
+                this.saveMilestone(data.milestone);
+              }
+              if (data.delete) {
+                this.deleteMilestoneConfirm(data.milestone, $event);
+              }
+            }
+          }
+        },
+        () => {}
+      );
+  }
+
+  deleteMilestoneConfirm(milestone, $event) {
+    if (milestone) {
+      const title = milestone.name;
+      const label = this.$translate('DELETE_MILESTONE');
+      const msg = this.$translate('DELETE_MILESTONE_CONFIRM', {
+        name: milestone.name
+      });
+      const yes = this.$translate('YES');
+      const cancel = this.$translate('CANCEL');
+
+      const confirm = this.$mdDialog
+        .confirm()
+        .title(title)
+        .textContent(msg)
+        .ariaLabel(label)
+        .targetEvent($event)
+        .ok(yes)
+        .cancel(cancel);
+
+      this.$mdDialog.show(confirm).then(
+        () => {
+          this.deleteMilestone(milestone);
+        },
+        () => {}
+      );
     }
   }
 }

@@ -2,6 +2,7 @@
 
 import AnnotationService from '../../../../services/annotationService';
 import ConfigService from '../../../../services/configService';
+import MilestoneService from '../../../../services/milestoneService';
 import NodeService from '../../../../services/nodeService';
 import NotificationService from '../../../../services/notificationService';
 import ClassroomMonitorProjectService from '../../../classroomMonitorProjectService';
@@ -17,6 +18,7 @@ class NodeGradingViewController {
   isExpandAll: boolean;
   maxScore: any;
   milestone: any;
+  milestoneReport: any;
   nodeContent: any = null;
   nodeHasWork: boolean;
   nodeId: string;
@@ -33,6 +35,7 @@ class NodeGradingViewController {
     '$scope',
     'AnnotationService',
     'ConfigService',
+    'MilestoneService',
     'NodeService',
     'NotificationService',
     'ProjectService',
@@ -45,6 +48,7 @@ class NodeGradingViewController {
     private $scope: any,
     private AnnotationService: AnnotationService,
     private ConfigService: ConfigService,
+    private MilestoneService: MilestoneService,
     private NodeService: NodeService,
     private NotificationService: NotificationService,
     private ProjectService: ClassroomMonitorProjectService,
@@ -62,6 +66,8 @@ class NodeGradingViewController {
     if (this.milestone && this.milestone.componentId) {
       this.componentId = this.milestone.componentId;
       this.hiddenComponents = this.getHiddenComponents();
+    } else {
+      this.milestoneReport = this.MilestoneService.getMilestoneReportByNodeId(this.nodeId);
     }
 
     // TODO: add loading indicator
@@ -113,6 +119,12 @@ class NodeGradingViewController {
         if (nodeId === this.nodeId && this.workgroupsById[workgroupId]) {
           this.updateWorkgroup(workgroupId);
         }
+      }
+    });
+
+    this.$scope.$on('currentPeriodChanged', () => {
+      if (!this.milestone) {
+        this.milestoneReport = this.MilestoneService.getMilestoneReportByNodeId(this.nodeId);
       }
     });
 
@@ -581,6 +593,10 @@ class NodeGradingViewController {
     if (this.isExpandAll && inview) {
       this.workVisibilityById[workgroupId] = true;
     }
+  }
+
+  showReport($event) {
+    this.MilestoneService.showMilestoneDetails(this.milestoneReport, $event, true);
   }
 }
 
