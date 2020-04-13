@@ -8,6 +8,7 @@ import { NGSSStandards } from "../ngssStandards";
 import { I18n } from '@ngx-translate/i18n-polyfill';
 import { Project } from "../../../domain/project";
 import { ParentProject } from "../../../domain/parentProject";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-library-project-details',
@@ -39,10 +40,10 @@ export class LibraryProjectDetailsComponent implements OnInit {
     this.isRunProject = data.isRunProject;
     if (this.data.project) {
       this.project = new Project(this.data.project);
-      const numParents = this.data.project.metadata.parentProjects ? 
+      const numParents = this.data.project.metadata.parentProjects ?
           this.data.project.metadata.parentProjects.length : null;
       if (numParents) {
-        this.parentProject = 
+        this.parentProject =
             new ParentProject(this.data.project.metadata.parentProjects[numParents-1]);
       }
       this.setNGSS();
@@ -114,5 +115,9 @@ export class LibraryProjectDetailsComponent implements OnInit {
       });
     }
     this.dialogRef.close();
+  }
+
+  previewProject() {
+    window.open(`/preview/unit/${this.project.id}`);
   }
 }

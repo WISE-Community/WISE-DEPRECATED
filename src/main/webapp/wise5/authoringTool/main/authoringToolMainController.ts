@@ -23,6 +23,7 @@ class AuthoringToolMainController {
   static $inject = [
     '$anchorScroll',
     '$filter',
+    '$location',
     '$mdDialog',
     '$rootScope',
     '$state',
@@ -36,6 +37,7 @@ class AuthoringToolMainController {
   constructor(
     private $anchorScroll: any,
     $filter: any,
+    private $location: any,
     private $mdDialog: any,
     private $rootScope: any,
     private $state: any,
@@ -224,7 +226,7 @@ class AuthoringToolMainController {
 
   goHome() {
     this.saveEvent('goToTeacherHome', 'Navigation', {}, null);
-    window.location.href = this.ConfigService.getWISEBaseURL() + '/teacher';
+    this.$location.url('teacher');
   }
 
   saveEvent(eventName, category, data = {}, projectId) {

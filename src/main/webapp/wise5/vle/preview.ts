@@ -68,7 +68,7 @@ import '../lib/angular-summernote/dist/angular-summernote';
 import '../themes/default/theme';
 
 export default angular
-  .module('vle', [
+  .module('preview', [
     angularDragula(angular),
     'angularMoment',
     'angular-toArrayFilter',
@@ -147,11 +147,11 @@ export default angular
       $injector,
       $provide
     ) => {
-      angular.module('vle').$controllerProvider = $controllerProvider;
+      angular.module('preview').$controllerProvider = $controllerProvider;
       $locationProvider.html5Mode(true);
       $stateProvider
         .state('root', {
-          url: '/student',
+          url: '/preview',
           abstract: true,
           resolve: {
             config: [
@@ -174,14 +174,14 @@ export default angular
           controller: 'VLEController',
           controllerAs: 'vleController'
         })
-        .state('root.run', {
-          url: '/unit/:runId',
+        .state('root.preview', {
+          url: '/unit/:projectId',
           resolve: {
             config: [
               'ConfigService',
               '$stateParams',
               (ConfigService, $stateParams) => {
-                return ConfigService.retrieveConfig(`/config/studentRun/${$stateParams.runId}`);
+                return ConfigService.retrieveConfig(`/config/preview/${$stateParams.projectId}`);
               }
             ],
             project: [
@@ -284,7 +284,7 @@ export default angular
             }
           }
         })
-        .state('root.run.node', {
+        .state('root.preview.node', {
           url: '/:nodeId',
           views: {
             nodeView: {
@@ -305,7 +305,15 @@ export default angular
         })
         .state("sink", {
           url: "/*path",
-          template: ""
+          template: "",
+          resolve: {
+            config: [
+              'ConfigService',
+              ConfigService => {
+                return ConfigService.retrieveConfig(`/config/vle`);
+              }
+            ]
+          }
         });
 
       $httpProvider.interceptors.push('HttpInterceptor');

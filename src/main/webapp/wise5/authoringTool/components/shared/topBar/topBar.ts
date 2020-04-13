@@ -38,10 +38,21 @@ class TopBarController {
   }
 
   switchToGradingView() {
-    this.$state.go('root.cm.project', {
-      runId: this.runId,
-      nodeId: this.$state.params.nodeId
-    });
+    if (this.$state.current.name === 'root.at.project.notebook') {
+      this.$state.go('root.cm.notebooks', {
+        runId: this.runId
+      });
+    } else if (this.$state.current.name === 'root.at.project.node') {
+      this.$state.go('root.cm.unit.node', {
+        runId: this.runId,
+        nodeId: this.$state.params.nodeId
+      });
+    } else {
+      this.$state.go('root.cm.unit', {
+        runId: this.runId
+      });
+    }
+
   }
 
   goHome() {

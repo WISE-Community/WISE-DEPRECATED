@@ -80,13 +80,13 @@ class ClassroomMonitorController {
         type: 'primary',
         active: this.enableProjectAchievements
       },
-      'root.cm.project': {
+      'root.cm.unit': {
         name: this.$translate('gradeByStep'),
         icon: 'view_list',
         type: 'primary',
         action: () => {
           let currentView = this.$state.current.name;
-          if (currentView === 'root.cm.project') {
+          if (currentView === 'root.cm.unit') {
             // if we're currently grading a step, close the node when a nodeProgress menu button is clicked
             this.NodeService.closeNode();
           }
@@ -221,7 +221,7 @@ class ClassroomMonitorController {
     this.showGradeByTeamTools = false;
     this.showPeriodSelect = true;
     this.workgroupId = null;
-    if (viewName === 'root.cm.project') {
+    if (viewName === 'root.cm.unit.node') {
       let nodeId = this.$state.params.nodeId;
       this.showGradeByStepTools = this.ProjectService.isApplicationNode(nodeId);
     } else if (viewName === 'root.cm.team') {

@@ -322,7 +322,7 @@ public class ProjectServiceImpl implements ProjectService {
 
   private ModelAndView previewProjectWISE5(PreviewProjectParameters params, Project project) {
     String contextPath = params.getHttpServletRequest().getContextPath();
-    String wise5URL = contextPath + "/project/" + project.getId() + "#!/project/" + project.getId();
+    String wise5URL = contextPath + "/preview/unit/" + project.getId();
     return new ModelAndView(new RedirectView(wise5URL));
   }
 
@@ -350,14 +350,14 @@ public class ProjectServiceImpl implements ProjectService {
 
   /**
    * Returns url string for starting the run
-   * 
+   *
    * @param workgroup
    *                    Workgroup requesting to launch the project
    * @return url string that, when accessed, will launch the project
    */
   public String generateStudentStartProjectUrlString(Workgroup workgroup, String contextPath) {
     Run run = workgroup.getRun();
-    return contextPath + "/student/run/" + run.getId() + "#!/run/" + run.getId();
+    return contextPath + "/student/unit/" + run.getId();
   }
 
   public boolean canCreateRun(Project project, User user) {
@@ -697,8 +697,7 @@ public class ProjectServiceImpl implements ProjectService {
       return appProperties.getProperty("wise4.hostname") + "/previewproject.html?projectId="
           + project.getId();
     } else {
-      return appProperties.getProperty("wise.hostname") + "/project/" + project.getId()
-          + "#!/project/" + project.getId();
+      return appProperties.getProperty("wise.hostname") + "/preview/unit/" + project.getId();
     }
   }
 

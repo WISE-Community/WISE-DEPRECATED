@@ -95,7 +95,7 @@ const PeriodSelect = {
                     ng-change="$ctrl.currentPeriodChanged()"
                     aria-label="{{ ::'selectPeriod' | translate }}"
                     md-selected-text="$ctrl.getSelectedText()">
-            <md-option ng-repeat="period in $ctrl.periods"
+            <md-option ng-repeat="period in $ctrl.periods track by $index"
                        ng-value="period"
                        ng-disabled="!period.numWorkgroupsInPeriod">
                 <span ng-if="period.periodId === -1" translate="allPeriods"></span>

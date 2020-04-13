@@ -71,7 +71,11 @@ class TopBarController {
   }
 
   switchToAuthoringView() {
-    if (this.$state.params.nodeId) {
+    if (this.$state.current.name === 'root.cm.notebooks') {
+      this.$state.go('root.at.project.notebook', {
+        projectId: this.runId
+      });
+    } else if (this.$state.current.name === 'root.cm.unit.node') {
       this.$state.go('root.at.project.node', {
         projectId: this.runId,
         nodeId: this.$state.params.nodeId

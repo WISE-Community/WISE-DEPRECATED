@@ -113,11 +113,23 @@ export class AppComponent {
     });
   }
 
-  showHeaderAndFooter(): boolean {
+  showDefaultMode(): boolean {
     return !this.router.url.includes('/login') &&
       !this.router.url.includes('/join') &&
       !this.router.url.includes('/contact') &&
       !this.router.url.includes('/forgot');
+  }
+
+  showHeaderAndFooter() {
+    return this.showDefaultMode() &&
+      !this.isAngularJSRoute();
+  }
+
+  isAngularJSRoute() {
+    return this.router.url.includes('/teacher/manage') ||
+      this.router.url.includes('/teacher/edit') ||
+      this.router.url.includes('/student/unit') ||
+      this.router.url.includes('/preview/unit');
   }
 
   dismissAnnouncement() {

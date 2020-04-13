@@ -81,7 +81,7 @@
       <span i18n>Help</span>
     </a>
     <mat-divider></mat-divider>
-    <a mat-menu-item href="{{ logOutURL }}">
+    <a mat-menu-item (click)="logOut()">
       <mat-icon color="warn">exit_to_app</mat-icon>
       <span class="warn" i18n>Sign Out</span>
     </a>

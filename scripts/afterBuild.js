@@ -2,40 +2,23 @@ const cheerio = require('cheerio')
 const fs = require('fs');
 
 const args = process.argv.slice(2);
-const appType = args[0];
-const loopIndefinitely = args[1];
-afterBuild(appType, loopIndefinitely);
+const loopIndefinitely = args[0];
+afterBuild(loopIndefinitely);
 
-async function afterBuild(appType, loopIndefinitely) {
+async function afterBuild(loopIndefinitely) {
   if (loopIndefinitely) {
     while (true) {
-      updateIndex(appType);
+      updateIndex();
       await sleep(2000);
     }
   } else {
-    updateIndex(appType);
+    updateIndex();
   }
 }
 
-function updateIndex(appType) {
-  let indexFilePath = '';
-  let appDir = '';
-  if (appType === 'vle') {
-    indexFilePath = 'src/main/webapp/wise5/vle/dist/index.html';
-    appDir = `/wise5/vle/dist`;
-  } else if (appType === 'cm') {
-    indexFilePath = 'src/main/webapp/wise5/classroomMonitor/dist/index.html';
-    appDir = `/wise5/classroomMonitor/dist`;
-  } else if (appType === 'at') {
-    indexFilePath = 'src/main/webapp/wise5/authoringTool/dist/index.html';
-    appDir = `/wise5/authoringTool/dist`;
-  } else if (appType === 'site') {
-    indexFilePath = 'src/main/webapp/site/dist/index.html';
-    appDir = `/site/dist`;
-  } else if (appType === 'teacher') {
-    indexFilePath = 'src/main/webapp/wise5/teacher/dist/index.html';
-    appDir = `/wise5/teacher/dist`;
-  }
+function updateIndex() {
+  const indexFilePath = 'src/main/webapp/site/dist/index.html';
+  const appDir = '/site/dist';
 
   fs.readFile(indexFilePath, 'utf8', function (err,data) {
     if (err) {

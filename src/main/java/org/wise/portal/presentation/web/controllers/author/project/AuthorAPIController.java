@@ -149,7 +149,7 @@ public class AuthorAPIController {
       project = projectService.getById(Long.parseLong(projectIdStr));
       if (project.getWiseVersion().equals(5)) {
         ModelAndView wise5AuthoringView = new ModelAndView(
-            new RedirectView("../teacher-tool#!/edit/" + projectIdStr));
+            new RedirectView("../teacher/edit/unit/" + projectIdStr));
         return wise5AuthoringView;
       }
     }

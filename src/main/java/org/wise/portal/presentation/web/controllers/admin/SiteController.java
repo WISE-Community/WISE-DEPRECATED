@@ -48,16 +48,12 @@ public class SiteController {
   @Autowired
   PortalService portalService;
 
-  @GetMapping(value = { "", "/student", "/student/**", "/teacher", "/teacher/**", "/login",
-      "/login/**", "/join", "/join/**", "/news", "/about", "/features", "/privacy", "/news",
-      "/contact", "/contact/**", "/help", "/help/**", "/forgot", "/forgot/**" })
+  @GetMapping(value = { "", "/student", "/student/**", "/preview", "/preview/**", "/teacher",
+      "/teacher/**", "/login", "/login/**", "/join", "/join/**", "/news", "/about", "/features",
+      "/privacy", "/news", "/contact", "/contact/**", "/help", "/help/**", "/forgot",
+      "/forgot/**" })
   protected String showSite() {
     return "forward:/site/dist/index.html";
-  }
-
-  @GetMapping(value = { "/teacher-tool", "/teacher-tool/**" })
-  protected View showTeacherTool() {
-    return new InternalResourceView("/wise5/teacher/dist/index.html");
   }
 
   @ResponseBody

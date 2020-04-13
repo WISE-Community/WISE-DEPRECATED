@@ -32,7 +32,7 @@ fi
 
 if [ $1 = "package" ]; then
   npm install
-  npm run build-prod-all
+  npm run build-prod
   ./mvnw clean -Dmaven.test.skip=true package
   exit 0
 fi
@@ -59,7 +59,7 @@ else
 fi
 
 if [ $1 = "dev" ]; then
-  npm run build-dev-all&
+  npm run build-dev&
 fi
 
 ./mvnw spring-boot:run

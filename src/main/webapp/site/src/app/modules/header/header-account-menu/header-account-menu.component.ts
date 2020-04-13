@@ -41,4 +41,8 @@ export class HeaderAccountMenuComponent implements OnInit {
       }
     }
   }
+
+  logOut() {
+    window.location.href = this.logOutURL;
+  }
 }

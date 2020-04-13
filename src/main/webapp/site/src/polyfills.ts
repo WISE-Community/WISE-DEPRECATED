@@ -38,3 +38,27 @@ import 'zone.js/dist/zone';  // Included with Angular CLI.
 /***************************************************************************************************
  * APPLICATION IMPORTS
  */
+import * as jQuery from 'jquery';
+import * as fabric from 'fabric';
+import * as StompJS from '@stomp/stompjs';
+import * as SockJS from 'sockjs-client';
+import * as Highcharts from '../../wise5/lib/highcharts/highcharts.src';
+import * as hopscotch from 'hopscotch';
+import * as EventEmitter2 from 'eventemitter2';
+import '../../wise5/lib/draggable-points/draggable-points';
+import * as HighchartsExporting from '../../wise5/lib/highcharts-exporting@4.2.1';
+import * as covariance from 'compute-covariance';
+
+
+window['$'] = jQuery;
+window['jQuery'] = jQuery;
+window['fabric'] = fabric.fabric;
+window['SockJS'] = SockJS;
+window['Stomp'] = StompJS.Stomp;
+window['hopscotch'] = hopscotch;
+window['Highcharts'] = Highcharts;
+window['EventEmitter2'] = EventEmitter2;
+import * as summernote from 'summernote';
+window['summernote'] = summernote;
+window['HighchartsExporting'] = HighchartsExporting;
+window['covariance'] = covariance

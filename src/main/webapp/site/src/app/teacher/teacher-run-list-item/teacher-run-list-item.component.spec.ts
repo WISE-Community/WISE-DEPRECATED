@@ -10,6 +10,7 @@ import { translationsFactory } from "../../app.module";
 import { MomentModule } from "ngx-moment";
 import { configureTestSuite } from 'ng-bullet';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
 
 export class MockTeacherService {
 
@@ -34,7 +35,7 @@ describe('TeacherRunListItemComponent', () => {
   configureTestSuite(() => {
     TestBed.configureTestingModule({
       declarations: [ TeacherRunListItemComponent ],
-      imports: [ MomentModule, BrowserAnimationsModule ],
+      imports: [ MomentModule, BrowserAnimationsModule, RouterTestingModule ],
       providers: [
         { provide: TeacherService, useClass: MockTeacherService },
         { provide: ConfigService, useClass: MockConfigService },
