@@ -25,9 +25,6 @@
           <context context-type="linenumber">3</context>
         </context-group>
         <target state="final">アカウント作成</target>
-        <alt-trans>
-          <target>アカウントを作成します。</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="6cdb1fea93d77c07950c0c76c6e0ad79ebbef084" datatype="html" approved="yes">
         <source>Features</source>
@@ -84,9 +81,6 @@
           <context context-type="linenumber">9</context>
         </context-group>
         <target state="final">お知らせ</target>
-        <alt-trans>
-          <target>ニュース</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="53c1019d0a23e95290e125bf93e34257eaadb8b6" datatype="html" approved="yes">
         <source>Help + FAQs</source>
@@ -99,9 +93,6 @@
           <context context-type="linenumber">125</context>
         </context-group>
         <target state="final">ヘルプ／よくある質問</target>
-        <alt-trans>
-          <target>ヘルプ + FAQ</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="3d469f0ca2f579eedee96edd4ef40883f65e77aa" datatype="html" approved="yes">
         <source>Privacy + Use</source>
@@ -142,9 +133,6 @@
           <context context-type="linenumber">91</context>
         </context-group>
         <target state="final">WISE＠フェイスブック</target>
-        <alt-trans>
-          <target>WISE＠Facebook</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="0000062f4a98235fac57d3b130730592402b9e05" datatype="html" approved="yes">
         <source>WISE on Twitter</source>
