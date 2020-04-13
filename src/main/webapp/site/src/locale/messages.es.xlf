@@ -173,9 +173,6 @@
           <context context-type="linenumber">54</context>
         </context-group>
         <target state="translated">Este material está basado en el trabajo apoyado por la National Science Foundation. Todas las opiniones, hallazgos y conclusiones o recomendaciones expresadas en este material son las del autor (es) y no reflejan necesariamente los puntos de vista de la National Science Foundation.</target>
-        <alt-trans>
-          <target>Este material se basa en el trabajo apoyado por la National Science Foundation. Todas las opiniones, hallazgos y conclusiones o recomendaciones expresadas en este material son las del autor (es) y no reflejan necesariamente los puntos de vista de la National Science Foundation.</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="0dc5b912bfe8d326a1af3975c6a7d049521eae12" datatype="html">
         <source>National Science Foundation</source>
@@ -464,9 +461,6 @@
           <context context-type="linenumber">48</context>
         </context-group>
         <target state="translated">Modelos científicos interactivos más actividades prácticas, orientación personalizada y evaluaciones embebidas</target>
-        <alt-trans>
-          <target>Modelos científicos interactivos más actividades prácticas, orientación personalizada y evaluaciones embebidas ricas</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="82fc5ad6af1a149044ba97ac4d4e567312c6ce9f" datatype="html">
         <source>WISE students and teacher</source>
@@ -475,9 +469,6 @@
           <context context-type="linenumber">53</context>
         </context-group>
         <target state="translated">WISE estudiantes y docente</target>
-        <alt-trans>
-          <target>WISE estudiantes y profesor</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="2acf9aae127d9822ffecf4d7509f05744f09e788" datatype="html">
         <source>Robust teacher grading and management tools supporting individualized and customized learning</source>
@@ -486,9 +477,6 @@
           <context context-type="linenumber">55</context>
         </context-group>
         <target state="translated">Herramientas sólidas de evaluación y gestión docente que apoyan el aprendizaje personalizado</target>
-        <alt-trans>
-          <target>Herramientas de evaluación y gestión de profesores sólidas que apoyan el aprendizaje personalizado y personalizado</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="23bd67ab9c1e8b08481bd99aa471c2a29b587143" datatype="html">
         <source>Curriculum Offerings</source>
@@ -625,9 +613,6 @@
           <context context-type="linenumber">20</context>
         </context-group>
         <target state="translated">Una poderosa plataforma en línea para diseñar, desarrollar e implementar unidades didácticas para el aprendizaje basado en indagación</target>
-        <alt-trans>
-          <target>Una poderosa plataforma en línea para diseñar, desarrollar e implementar unidades de investigación científica</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="49a463f2fe873efdcbedb06a71cfbadc9c83cb14" datatype="html">
         <source>Since 1997, WISE has served a growing community of more than 20,000 teachers, researchers, and curriculum designers, as well as over 200,000 K-12 students around the world.</source>
@@ -636,9 +621,6 @@
           <context context-type="linenumber">21</context>
         </context-group>
         <target state="translated">Desde 1997, WISE ha servido a una comunidad creciente de más de 20.000 docentes, investigadores y especialistas en el diseño curricular, así como a más de 200.000 estudiantes de toda la etapa escolar en todo el mundo.</target>
-        <alt-trans>
-          <target>Desde 1997, WISE ha servido a una comunidad creciente de más de 20.000 profesores, investigadores y diseñadores de planes de estudios, así como más de 200.000 estudiantes de 12 años en todo el mundo.</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="53d2c0a09cfd0d1836aa6306785412e894b571d5" datatype="html">
         <source>WISE students</source>
@@ -687,9 +669,6 @@
           <context context-type="linenumber">55</context>
         </context-group>
         <target state="translated">Evaluar y distinguir información discrepante</target>
-        <alt-trans>
-          <target>Evaluar y distinguir información discreta</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="85031434993fe1bad0400c10fb78687a633a21ac" datatype="html">
         <source>Construct explanations through reflection and discussion</source>
@@ -706,9 +685,6 @@
           <context context-type="linenumber">63</context>
         </context-group>
         <target state="translated">Diseñar y construir soluciones basadas en evidencias</target>
-        <alt-trans>
-          <target>Diseñar y construir soluciones basadas en pruebas</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="120d488ee5852e71a5ff417392534368677d0e1d" datatype="html">
         <source>Inquiry-Based Learning</source>
@@ -725,9 +701,6 @@
           <context context-type="linenumber">70</context>
         </context-group>
         <target state="translated">WISE motiva a los estudiantes a utilizar los métodos que utilizan científicos e ingenieros en la vida real. Tomamos un enfoque multidisciplinario para que los estudiantes aprendan a investigar a través de actividades que enfatizan las habilidades esenciales en la lectura, la escritura y la alfabetización multimedia. Muchas de nuestras unidades también están basadas en proyectos y presentan desafíos de diseño prácticos.</target>
-        <alt-trans>
-          <target>WISE se dedica a estudiantes en los métodos de científicos e ingenieros reales. Tomamos un enfoque multidisciplinario para que los estudiantes aprendan la investigación a través de actividades que enfatizan las habilidades esenciales en la lectura, la escritura y la alfabetización multimedia. Muchas de nuestras unidades también están basadas en proyectos y presentan desafíos de diseño prácticos.</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="7681bdf7430711347073032e83e99c10be4f4e7b" datatype="html">
         <source>With WISE inquiry units, students not only learn skills that prepare them to be successful in STEM. They also learn skills necessary to be responsible, critical thinking citizens.</source>
@@ -736,9 +709,6 @@
           <context context-type="linenumber">71</context>
         </context-group>
         <target state="translated">Con las unidades didácticas basadas en indagación de WISE, los estudiantes no sólo aprenden habilidades que los preparan para tener éxito en proyectos de STEM, sino que también aprenden habilidades necesarias para ser ciudadanos responsables y críticos.</target>
-        <alt-trans>
-          <target>Con unidades de investigación de WISE, los estudiantes no sólo aprenden habilidades que los preparan para tener éxito en STEM, sino que también aprenden habilidades necesarias para ser ciudadanos responsables y críticos.</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="811c99b1c960d5acedf84179c8c29e177ae0bf27" datatype="html">
         <source>Standards-Aligned Curricula</source>
@@ -755,9 +725,6 @@
           <context context-type="linenumber">83</context>
         </context-group>
         <target state="translated">WISE ofrece una creciente colección de unidades didácticas que abordan las dificultades conceptuales clave que los estudiantes encuentran en la ciencia. Las unidades didácticas están cuidadosamente diseñadas para complementar el alcance y la secuencia de los diseños curriculares y se refinan iterativamente a través de la investigación basada en su implementación en el aula.</target>
-        <alt-trans>
-          <target>WISE ofrece una creciente colección de unidades de currículum que abordan las dificultades conceptuales clave que los estudiantes encuentran en la ciencia. Unidades se diseñan cuidadosamente para complementar el alcance y secuencia de los programas de los profesores y se refinan iterativamente a través de la investigación basada en aulas.</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="09ce791db454a957cfc6658b0c198962ea7cac6c" datatype="html">
         <source>WISE units support the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Next Generation Science Standards (NGSS)<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>, encourage <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>3-dimensional learning<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>, and can be adapted to address local standards.</source>
@@ -790,9 +757,6 @@
           <context context-type="linenumber">93</context>
         </context-group>
         <target state="translated">Estudiantes de WISE construyendo un horno solar</target>
-        <alt-trans>
-          <target>WISE estudiantes construyendo horno solar</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="faf67b4eceba9ca62f5db3703ae2d16a7da9dc2c" datatype="html">
         <source>MyModel diagram with guidance</source>
@@ -801,9 +765,6 @@
           <context context-type="linenumber">107</context>
         </context-group>
         <target state="translated">Diagrama de MyModel guiado</target>
-        <alt-trans>
-          <target>Diagrama de MyModel con orientación</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="e7c4c4ab5b72934b5a6783e1e6084202e8610c4c" datatype="html">
         <source>WISE cellular respiration model</source>
@@ -844,9 +805,6 @@
           <context context-type="linenumber">115</context>
         </context-group>
         <target state="translated">WISE ofrece una interfaz de usuario sencilla, ayudas cognitivas, evaluaciones embebidas y discusiones en línea, así como herramientas para dibujar, anotar, para hacer mapas conceptuales, diagramas y gráficos.</target>
-        <alt-trans>
-          <target>WISE proporciona una interfaz de usuario sencilla, pistas cognitivas, evaluaciones incrustadas y discusiones en línea, así como herramientas para dibujar, anotar, mapeo conceptual, diagramming y gráfico.</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="e8c9262fe52f9282929800e851aee426dfd6ae48" datatype="html">
         <source>Students conduct investigations using interactive simulations and models. A notebook tool helps students collect ideas and organize evidence into research and design reports. WISE units promote self-monitoring through collaborative reflection activities as well as automated, personalized guidance and adaptive instruction.</source>
@@ -855,9 +813,6 @@
           <context context-type="linenumber">116</context>
         </context-group>
         <target state="translated">Los estudiantes realizan investigaciones utilizando simulaciones y modelos interactivos. La herramienta "cuaderno" ayuda a los estudiantes a recopilar ideas y organizar las evidencias encontradas en informes de investigación y diseño. Las unidades de WISE promueven el auto-monitoreo a través de actividades de reflexión colaborativas, así como una orientación automatizada y personalizada y una instrucción adaptativa.</target>
-        <alt-trans>
-          <target>Los estudiantes realizan investigaciones utilizando simulaciones y modelos interactivos. Una herramienta de notebook ayuda a los estudiantes a recopilar ideas y organizar pruebas en informes de investigación y diseño. Las unidades de WISE promueven el auto-monitoreo a través de actividades de reflexión colaborativas, así como una orientación automatizada y personalizada y una instrucción adaptativa.</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="7b049ab7ccd15afcbe53f4b4dae5b4292919fbb7" datatype="html">
         <source>Comprehensive Instructional Supports</source>
@@ -874,9 +829,6 @@
           <context context-type="linenumber">128</context>
         </context-group>
         <target state="translated">WISE ofrece un amplio conjunto de herramientas integradas que ayudan a los profesores a planificar, monitorear el progreso, obtener información, proporcionar retroalimentación y calificar de manera más eficiente, las cuales se perfeccionan continuamente mediante colaboraciones con profesores que comprenden los verdaderos desafíos de gestionar las aulas modernas.</target>
-        <alt-trans>
-          <target>WISE ofrece un amplio conjunto de herramientas integradas que ayudan a los profesores a planificar, monitorear el progreso, obtener información, proporcionar retroalimentación y grado de manera más eficiente, y que se perfeccionan continuamente mediante colaboraciones con profesores que entienden los verdaderos desafíos de gestionar las aulas modernas.</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="4f7d6b85797f6cd6114c235b464ad7910657c631" datatype="html">
         <source>By facilitating these necessary but time-consuming tasks, teachers are free to focus on what makes them indispensable: providing quality instruction to individual students.</source>
@@ -885,9 +837,6 @@
           <context context-type="linenumber">129</context>
         </context-group>
         <target state="translated">Al facilitar estas tareas necesarias pero que requieren tiempo, los docentes tienen más tiempo para enfocarse en lo que los hace indispensables: proporcionar una enseñanza de calidad a cada uno de los estudiantes.</target>
-        <alt-trans>
-          <target>Al facilitar estas tareas necesarias pero que requieren tiempo, los profesores son libres de centrarse en lo que los hace indispensables: proporcionar una instrucción de calidad a los estudiantes individuales.</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="794ce33c32874cf59374bff4939512bbc71585d2" datatype="html">
         <source>WISE teacher progress</source>
