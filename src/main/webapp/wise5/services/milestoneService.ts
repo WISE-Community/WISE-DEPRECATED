@@ -575,7 +575,7 @@ class MilestoneService {
     if (projectAchievements != null) {
       // get the time of tomorrow at 3pm
       const tomorrow = this.moment()
-        .add('days', 1)
+        .add(1, 'days')
         .hours(23)
         .minutes(11)
         .seconds(59);

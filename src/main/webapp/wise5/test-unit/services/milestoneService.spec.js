@@ -20,14 +20,14 @@ const satisfyCriterionSample = {
 const aggregateAutoScoresSample = {
   xfns1g7pga: {
     ki: {
-      counts: {1: 2, 2: 0, 3: 1, 4: 0, 5: 0}, 
-      scoreSum: 5, 
-      scoreCount: 3, 
+      counts: { 1: 2, 2: 0, 3: 1, 4: 0, 5: 0 },
+      scoreSum: 5,
+      scoreCount: 3,
       average: 1.67
     }
   }
 };
-const possibleScoresKi = [1,2,3,4,5];
+const possibleScoresKi = [1, 2, 3, 4, 5];
 const reportSettingsCustomScoreValuesSample = {
   customScoreValues: {
     ki: [1, 2, 3, 4]
@@ -85,6 +85,15 @@ describe('UtilService', () => {
   adjustKIScore();
   getKIScoreBounds();
   addDataToAggregate();
+  setupAggregateSubScore();
+  getCustomScoreValueCounts();
+  getPossibleScoreValueCounts();
+  processMilestoneGraphsAndData();
+  setReportAvailable();
+  saveMilestone();
+  createMilestone();
+  deleteMilestone();
+  clearTempFields();
 });
 
 function createScoreCounts(counts) {
@@ -1163,10 +1172,12 @@ function getNotEqualToSum() {
 function getAggregateData() {
   describe('getAggregateData()', () => {
     it('should return the aggregate data', () => {
-      const result = 
-          MilestoneService.getAggregateData(satisfyCriterionSample, aggregateAutoScoresSample);
+      const result = MilestoneService.getAggregateData(
+        satisfyCriterionSample,
+        aggregateAutoScoresSample
+      );
       expect(result).toEqual({
-        counts: {1: 2, 2: 0, 3: 1, 4: 0, 5: 0}, 
+        counts: { 1: 2, 2: 0, 3: 1, 4: 0, 5: 0 },
         scoreCount: 3,
         scoreSum: 5,
         average: 1.67
@@ -1239,10 +1250,7 @@ function getSatisfyCriteriaReferencedComponents() {
         report: {
           templates: [
             {
-              satisfyCriteria: [
-                satisfyCriterionSample,
-                satisfyCriterion
-              ]
+              satisfyCriteria: [satisfyCriterionSample, satisfyCriterion]
             }
           ]
         }
@@ -1264,8 +1272,7 @@ function getSatisfyCriteriaReferencedComponents() {
 // TODO: finish
 function calculateAggregateAutoScores() {
   describe('calculateAggregateAutoScores()', () => {
-    it('should return the aggregate auto scores', () => {
-    });
+    it('should return the aggregate auto scores', () => {});
   });
 }
 
@@ -1273,8 +1280,9 @@ function adjustKIScore() {
   describe('adjustKIScore()', () => {
     it('should return the adjusted KI score', () => {
       const value = 5;
-      expect(MilestoneService.adjustKIScore(value, reportSettingsCustomScoreValuesSample))
-          .toEqual(4);
+      expect(MilestoneService.adjustKIScore(value, reportSettingsCustomScoreValuesSample)).toEqual(
+        4
+      );
     });
   });
 }
@@ -1282,11 +1290,10 @@ function adjustKIScore() {
 function getKIScoreBounds() {
   describe('getKIScoreBounds()', () => {
     it('should return the KI score bounds', () => {
-      expect(MilestoneService.getKIScoreBounds(reportSettingsCustomScoreValuesSample))
-          .toEqual({
-            min: 1,
-            max: 4
-          });
+      expect(MilestoneService.getKIScoreBounds(reportSettingsCustomScoreValuesSample)).toEqual({
+        min: 1,
+        max: 4
+      });
     });
   });
 }
@@ -1296,23 +1303,251 @@ function addDataToAggregate() {
     it('should add annotation to the aggregate scores and return aggregate', () => {
       const annotation = {
         data: {
-          scores: [{
-            id: 'ki',
-            score: 3
-          }]
+          scores: [
+            {
+              id: 'ki',
+              score: 3
+            }
+          ]
         }
       };
       const aggregateAutoScore = angular.copy(aggregateAutoScoresSample).xfns1g7pga;
-      const result = 
-          MilestoneService.addDataToAggregate(aggregateAutoScore, annotation, reportSettingsCustomScoreValuesSample);
+      const result = MilestoneService.addDataToAggregate(
+        aggregateAutoScore,
+        annotation,
+        reportSettingsCustomScoreValuesSample
+      );
       expect(result).toEqual({
-          ki: {
-            counts: {1: 2, 2: 0, 3: 2, 4: 0, 5: 0}, 
-            scoreSum: 8,
-            scoreCount: 4,
-            average: 2
-          }
+        ki: {
+          counts: { 1: 2, 2: 0, 3: 2, 4: 0, 5: 0 },
+          scoreSum: 8,
+          scoreCount: 4,
+          average: 2
+        }
       });
+    });
+  });
+}
+
+function setupAggregateSubScore() {
+  describe('setupAggregateSubScore()', () => {
+    it('should setup aggregate sub score', () => {
+      const subScoreId = 'ki';
+      const reportSettings = {};
+      const counts = MilestoneService.setupAggregateSubScore(subScoreId, reportSettings);
+      expect(counts.scoreSum).toEqual(0);
+      expect(counts.scoreCount).toEqual(0);
+      expect(counts.counts).toEqual(createScoreCounts([0, 0, 0, 0, 0]));
+      expect(counts.average).toEqual(0);
+    });
+    it('should setup aggregate sub score with custom score values', () => {
+      const subScoreId = 'ki';
+      const reportSettings = {
+        customScoreValues: {
+          ki: [0, 1, 2]
+        }
+      };
+      const counts = MilestoneService.setupAggregateSubScore(subScoreId, reportSettings);
+      expect(counts.scoreSum).toEqual(0);
+      expect(counts.scoreCount).toEqual(0);
+      expect(counts.counts).toEqual({ 0: 0, 1: 0, 2: 0 });
+      expect(counts.average).toEqual(0);
+    });
+  });
+}
+
+function getCustomScoreValueCounts() {
+  describe('getCustomScoreValueCounts()', () => {
+    it('should get custom score value counts', () => {
+      const scoreValues = MilestoneService.getCustomScoreValueCounts([0, 1, 2]);
+      expect(Object.entries(scoreValues).length).toEqual(3);
+      expect(scoreValues[0]).toEqual(0);
+      expect(scoreValues[1]).toEqual(0);
+      expect(scoreValues[2]).toEqual(0);
+    });
+  });
+}
+
+function getPossibleScoreValueCounts() {
+  describe('getPossibleScoreValueCounts()', () => {
+    it('should get possible score value counts for ki', () => {
+      const scoreValues = MilestoneService.getPossibleScoreValueCounts('ki');
+      expect(Object.entries(scoreValues).length).toEqual(5);
+      expect(scoreValues[1]).toEqual(0);
+      expect(scoreValues[2]).toEqual(0);
+      expect(scoreValues[3]).toEqual(0);
+      expect(scoreValues[4]).toEqual(0);
+      expect(scoreValues[5]).toEqual(0);
+    });
+    it('should get possible score value counts for not ki', () => {
+      const scoreValues = MilestoneService.getPossibleScoreValueCounts('science');
+      expect(Object.entries(scoreValues).length).toEqual(3);
+      expect(scoreValues[1]).toEqual(0);
+      expect(scoreValues[2]).toEqual(0);
+      expect(scoreValues[3]).toEqual(0);
+    });
+  });
+}
+
+function processMilestoneGraphsAndData() {
+  describe('processMilestoneGraphsAndData()', () => {
+    it('should process milestone report graph', () => {
+      let content = '<milestone-report-graph id="ki"></milestone-report-graph>';
+      const aggregateAutoScores = {
+        component1: {
+          ki: {
+            scoreSum: 4,
+            scoreCount: 2,
+            average: 2,
+            counts: createScoreCounts([1, 0, 1, 0, 0])
+          }
+        }
+      };
+      content = MilestoneService.processMilestoneGraphsAndData(content, aggregateAutoScores);
+      expect(
+        content.includes(
+          `data="{'scoreSum':4,'scoreCount':2,'average':2,'counts':{'1':1,'2':0,'3':1,'4':0,'5':0}}"`
+        )
+      ).toEqual(true);
+    });
+    it('should process milestone report data', () => {
+      let content = '<milestone-report-data score-id="ki"></milestone-report-data>';
+      const aggregateAutoScores = {
+        component1: {
+          ki: {
+            scoreSum: 4,
+            scoreCount: 2,
+            average: 2,
+            counts: createScoreCounts([1, 0, 1, 0, 0])
+          }
+        }
+      };
+      content = MilestoneService.processMilestoneGraphsAndData(content, aggregateAutoScores);
+      expect(
+        content.includes(
+          `data="{'scoreSum':4,'scoreCount':2,'average':2,` +
+            `'counts':{'1':1,'2':0,'3':1,'4':0,'5':0}}"`
+        )
+      ).toEqual(true);
+    });
+  });
+}
+
+function setReportAvailable() {
+  describe('setReportAvailable()', () => {
+    it('should set report available false', () => {
+      const projectAchievement = {};
+      MilestoneService.setReportAvailable(projectAchievement, false);
+      expect(projectAchievement.isReportAvailable).toEqual(false);
+    });
+    it('should set report available true', () => {
+      const projectAchievement = {};
+      MilestoneService.setReportAvailable(projectAchievement, true);
+      expect(projectAchievement.isReportAvailable).toEqual(true);
+    });
+  });
+}
+
+function saveMilestone() {
+  describe('saveMilestone()', () => {
+    it('should save milestone when it is new', () => {
+      const milestone1 = {
+        id: 'milestone1'
+      };
+      const projectAchievements = [milestone1];
+      spyOn(ProjectService, 'getAchievementItems').and.returnValue(projectAchievements);
+      spyOn(ProjectService, 'saveProject').and.callFake(() => {});
+      const milestone2 = {
+        id: 'milestone2'
+      };
+      MilestoneService.saveMilestone(milestone2);
+      expect(projectAchievements.length).toEqual(2);
+      expect(projectAchievements[0].id).toEqual('milestone1');
+      expect(projectAchievements[1].id).toEqual('milestone2');
+    });
+    it('should save milestone when it already exists', () => {
+      const milestone1 = {
+        id: 'milestone1'
+      };
+      const projectAchievements = [milestone1];
+      spyOn(ProjectService, 'getAchievementItems').and.returnValue(projectAchievements);
+      spyOn(ProjectService, 'saveProject').and.callFake(() => {});
+      MilestoneService.saveMilestone(milestone1);
+      expect(projectAchievements.length).toEqual(1);
+      expect(projectAchievements[0].id).toEqual('milestone1');
+    });
+  });
+}
+
+function createMilestone() {
+  describe('createMilestone()', () => {
+    it('should create milestone', () => {
+      const milestone1 = {
+        id: 'milestone1'
+      };
+      const projectAchievements = [milestone1];
+      spyOn(ProjectService, 'getAchievementItems').and.returnValue(projectAchievements);
+      spyOn(AchievementService, 'getAvailableAchievementId').and.returnValue('milestone2');
+      spyOn(UtilService, 'makeCopyOfJSONObject').and.returnValue({});
+      const milestone = MilestoneService.createMilestone();
+      expect(milestone.id).toEqual('milestone2');
+      const dayOfYear = MilestoneService.moment(milestone.params.targetDate).dayOfYear();
+      const todayDayOfYear = MilestoneService.moment().dayOfYear();
+      expect(dayOfYear).toEqual(todayDayOfYear + 1);
+    });
+  });
+}
+
+function deleteMilestone() {
+  describe('deleteMilestone()', () => {
+    it('should delete milestone', () => {
+      const milestone1 = { id: 'milestone1' };
+      const milestone2 = { id: 'milestone2' };
+      const milestone3 = { id: 'milestone3' };
+      const projectAchievements = [milestone1, milestone2, milestone3];
+      spyOn(ProjectService, 'getAchievementItems').and.returnValue(projectAchievements);
+      spyOn(ProjectService, 'saveProject').and.callFake(() => {});
+      MilestoneService.deleteMilestone(milestone2);
+      expect(projectAchievements.length).toEqual(2);
+      expect(projectAchievements[0].id).toEqual('milestone1');
+      expect(projectAchievements[1].id).toEqual('milestone3');
+    });
+  });
+}
+
+function clearTempFields() {
+  describe('clearTempFields()', () => {
+    it('should clear temp fields', () => {
+      const projectAchievements = [
+        {
+          items: [{}],
+          workgroups: [1],
+          numberOfStudentsCompleted: 2,
+          numberOfStudentsInRun: 4,
+          percentageCompleted: 50,
+          generatedReport: 'report',
+          generatedRecommendations: 'recommendations',
+          nodeId: 'node1',
+          componentId: 'component1',
+          isReportAvailable: true
+        }
+      ];
+      spyOn(ProjectService, 'getAchievementItems').and.returnValue(projectAchievements);
+      MilestoneService.clearTempFields();
+      const projectAchievement = projectAchievements[0];
+      expect(projectAchievement.items).toBeUndefined();
+      expect(projectAchievement.workgroups).toBeUndefined();
+      expect(projectAchievement.numberOfStudentsCompleted).toBeUndefined();
+      expect(projectAchievement.numberOfStudentsInRun).toBeUndefined();
+      expect(projectAchievement.percentageCompleted).toBeUndefined();
+      expect(projectAchievement.generatedReport).toBeUndefined();
+      expect(projectAchievement.generatedRecommendations).toBeUndefined();
+      expect(projectAchievement.nodeId).toBeUndefined();
+      expect(projectAchievement.componentId).toBeUndefined();
+      expect(projectAchievement.isReportAvailable).toBeUndefined();
+      expect(MilestoneService.workgroupsStorage[0]).toEqual([1]);
+      expect(MilestoneService.numberOfStudentsCompletedStorage[0]).toEqual(2);
+      expect(MilestoneService.percentageCompletedStorage[0]).toEqual(50);
     });
   });
 }
