@@ -10,7 +10,6 @@ import * as angular from 'angular';
 
 class MilestoneService {
   $translate: any;
-  itemsTemporaryStorage: any[] = [];
   numberOfStudentsCompletedStorage: any[] = [];
   numberOfStudentsInRun: number;
   percentageCompletedStorage: any[] = [];
@@ -50,7 +49,7 @@ class MilestoneService {
     let milestones = [];
     const projectAchievements = this.ProjectService.getAchievements();
     if (projectAchievements.isEnabled) {
-      milestones = projectAchievements.items.filter((achievement) => {
+      milestones = projectAchievements.items.filter(achievement => {
         return achievement.type === 'milestone' || achievement.type === 'milestoneReport';
       });
     }
@@ -58,7 +57,7 @@ class MilestoneService {
   }
 
   getProjectMilestoneReports() {
-    return this.getProjectMilestones().filter((milestone) => {
+    return this.getProjectMilestones().filter(milestone => {
       return milestone.type === 'milestoneReport';
     });
   }
@@ -87,9 +86,7 @@ class MilestoneService {
   }
 
   insertMilestoneItems(milestone) {
-    milestone.items = this.UtilService.makeCopyOfJSONObject(
-      this.ProjectService.idToOrder
-    );
+    milestone.items = this.UtilService.makeCopyOfJSONObject(this.ProjectService.idToOrder);
     if (milestone.params != null && milestone.params.nodeIds != null) {
       for (const nodeId of milestone.params.nodeIds) {
         if (milestone.items[nodeId] != null) {
@@ -147,8 +144,9 @@ class MilestoneService {
 
     milestone.numberOfStudentsCompleted = workgroupIdsCompleted.length;
     milestone.numberOfStudentsInRun = this.numberOfStudentsInRun;
-    milestone.percentageCompleted =
-      Math.round((100 * milestone.numberOfStudentsCompleted) / this.numberOfStudentsInRun);
+    milestone.percentageCompleted = Math.round(
+      (100 * milestone.numberOfStudentsCompleted) / this.numberOfStudentsInRun
+    );
     return milestone;
   }
 
@@ -229,7 +227,7 @@ class MilestoneService {
   }
 
   chooseTemplate(templates, aggregateAutoScores) {
-    for (let template of templates) {
+    for (const template of templates) {
       if (this.isTemplateMatch(template, aggregateAutoScores)) {
         return template;
       }
@@ -624,8 +622,7 @@ class MilestoneService {
 
   clearTempFields() {
     const projectAchievements = this.ProjectService.getAchievementItems();
-    for (let projectAchievement of projectAchievements) {
-      this.itemsTemporaryStorage
+    for (const projectAchievement of projectAchievements) {
       this.workgroupsStorage.push(projectAchievement.workgroups);
       this.numberOfStudentsCompletedStorage.push(projectAchievement.numberOfStudentsCompleted);
       this.percentageCompletedStorage.push(projectAchievement.percentageCompleted);
