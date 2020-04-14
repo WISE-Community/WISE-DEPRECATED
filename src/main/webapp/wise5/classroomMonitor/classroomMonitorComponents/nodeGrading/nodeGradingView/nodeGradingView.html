@@ -1,5 +1,5 @@
 <div class="l-constrained grading">
-    <div ng-if= "!$ctrl.componentId"
+    <div ng-if="!$ctrl.componentId"
          class="flex md-subhead content-head"
          layout="row"
          layout-align="center center"
@@ -16,6 +16,12 @@
             <component-select node-id="{{ ::$ctrl.nodeId }}"
                               custom-class="'md-no-underline md-button'"
                               on-change="$ctrl.onUpdateHiddenComponents(value)"></component-select>
+            <md-button ng-if="$ctrl.milestoneReport"
+                       ng-click="$ctrl.showReport($event)"
+                       class="md-raised info">
+                <md-icon class="info"> flag </md-icon>
+                <span>{{ ::'REPORT' | translate }}</span>
+            </md-button>
             <md-button ng-click="$ctrl.showRubric($event)"
                        class="md-raised info">
                 <md-icon class="info"> info_outline </md-icon>
