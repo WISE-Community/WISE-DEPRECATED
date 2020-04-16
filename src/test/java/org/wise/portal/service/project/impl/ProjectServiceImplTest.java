@@ -180,7 +180,7 @@ public class ProjectServiceImplTest {
     expect(appProperties.getProperty("wise.hostname")).andReturn("http://localhost:8080");
     replay(appProperties);
     String uri = projectServiceImpl.getProjectURI(project);
-    assertEquals("http://localhost:8080/project/155#!/project/155", uri);
+    assertEquals("http://localhost:8080/preview/unit/155", uri);
     verify(appProperties);
   }
 
@@ -263,7 +263,7 @@ public class ProjectServiceImplTest {
       projectServiceImpl.updateMetadataAndLicenseIfNecessary(project, projectJSON.toString());
       assertEquals(metadata.get("title"), project.getMetadata().getTitle());
       String licenseText = FileUtils.readFileToString(new File(licenseFilePath), "UTF-8");
-      assertTrue(licenseText.contains("licensed under CC\nBY-SA by Spongebob Squarepants"));
+      assertTrue(licenseText.contains("licensed under CC BY-SA by\nSpongebob Squarepants"));
     } catch (JSONException e) {
       fail();
     } catch (IOException e) {
