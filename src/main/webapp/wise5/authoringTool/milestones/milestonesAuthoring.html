@@ -43,12 +43,13 @@
             ng-change="milestonesAuthoringController.save()">
           </input>
         </md-input-container>
-        <md-input-container style="width: 240px; margin-right: 40px;">
+        <md-input-container class="md-block">
           <label>{{ ::'milestoneDescription' | translate }}</label>
-          <input ng-model="item.description"
+          <textarea rows="3"
+            ng-model="item.description"
             ng-model-options="{ debounce: 1000 }"
             ng-change="milestonesAuthoringController.save()">
-          </input>
+          </textarea>
         </md-input-container>
         <md-switch ng-model="item.isEnabled"
             class="md-primary"
