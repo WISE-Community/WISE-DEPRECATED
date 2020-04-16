@@ -83,7 +83,7 @@ class MilestonesAuthoringController {
 
   populateIdToExpanded() {
     for (const milestone of this.project.achievements.items) {
-      this.idToExpanded[milestone.id] = true;
+      this.idToExpanded[milestone.id] = false;
       for (const template of milestone.report.templates) {
         this.idToExpanded[template.id] = true;
       }
