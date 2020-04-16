@@ -21,7 +21,7 @@ class MilestoneReportDataController {
   getPercent() {
     const count = this.getCount();
     const total = this.data.scoreCount;
-    return `${(count / total) * 100}%`;
+    return `${Math.round((count / total) * 100)}%`;
   }
 
   getCount() {
