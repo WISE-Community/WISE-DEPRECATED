@@ -1515,7 +1515,7 @@ class StudentDataService {
    * @return the latest component state with the matching node id and
    * component id or null if none are found
    */
-  getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId) {
+  getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId = null) {
     if (nodeId) {
       const studentData = this.studentData;
       if (studentData) {

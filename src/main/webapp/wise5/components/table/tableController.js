@@ -1,7 +1,7 @@
 'use strict';
 
 import ComponentController from "../componentController";
-import html2canvas from 'html2canvas';
+import * as html2canvas from 'html2canvas';
 
 class TableController extends ComponentController {
   constructor($anchorScroll,
@@ -54,6 +54,7 @@ class TableController extends ComponentController {
       if (this.componentContent.numDataExplorerYAxis > 1) {
         this.dataExplorerYAxisLabels = Array(this.componentContent.numDataExplorerYAxis).fill('');
       }
+      this.dataExplorerSeriesParams = this.componentContent.dataExplorerSeriesParams;
     }
 
     if (this.mode === 'student') {
@@ -1133,7 +1134,11 @@ class TableController extends ComponentController {
     if (this.isDataExplorerOneYAxis()) {
       this.dataExplorerYAxisLabel = this.getDataExplorerYAxisLabelWhenOneYAxis();
     } else {
-      this.setDataExplorerYAxisLabelWithMultipleYAxis(index, this.getColumnName(yColumn));
+      this.setDataExplorerSeriesYAxis(index);
+      const yAxisIndex = this.dataExplorerSeries[index].yAxis;
+      if (yAxisIndex != null && yAxisIndex < this.componentContent.numDataExplorerYAxis) {
+        this.setDataExplorerYAxisLabelWithMultipleYAxes(yAxisIndex, this.getColumnName(yColumn));
+      }
     }
     this.studentDataChanged();
   }
@@ -1145,7 +1150,7 @@ class TableController extends ComponentController {
 
   getDataExplorerYAxisLabelWhenOneYAxis() {
     let yAxisLabel = '';
-    for (let index = 0; index < this.dataExplorerSeries.length; index++) { 
+    for (let index = 0; index < this.dataExplorerSeries.length; index++) {
       const yColumn = this.dataExplorerSeries[index].yColumn;
       if (yColumn != null) {
         const columnName = this.getColumnName(yColumn);
@@ -1158,8 +1163,15 @@ class TableController extends ComponentController {
     return yAxisLabel;
   }
 
-  setDataExplorerYAxisLabelWithMultipleYAxis(index, label) {
-    this.dataExplorerYAxisLabels[index] = label;
+  setDataExplorerYAxisLabelWithMultipleYAxes(index, label) {
+    this.dataExplorerYAxisLabels[this.dataExplorerSeries[index].yAxis] = label;
+  }
+
+  setDataExplorerSeriesYAxis(index) {
+    if (this.dataExplorerSeriesParams != null && this.dataExplorerSeriesParams[index] != null &&
+        this.dataExplorerSeriesParams[index].yAxis != null) {
+      this.dataExplorerSeries[index].yAxis = this.dataExplorerSeriesParams[index].yAxis;
+    }
   }
 
   createDataExplorerSeries() {
@@ -1167,10 +1179,18 @@ class TableController extends ComponentController {
     for (let index = 0; index < this.numDataExplorerSeries; index++) {
       const dataExplorerSeries = {
         xColumn: null,
-        yColumn: null
+        yColumn: null,
+        yAxis: this.getYAxisForDataExplorerSeries(index)
       };
       this.dataExplorerSeries.push(dataExplorerSeries);
     }
+  }
+
+  getYAxisForDataExplorerSeries(index) {
+    if (this.dataExplorerSeriesParams != null) {
+      return this.dataExplorerSeriesParams[index].yAxis;
+    }
+    return null;
   }
 
   repopulateDataExplorerData(componentState) {

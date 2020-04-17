@@ -156,13 +156,8 @@
             </div>
             <div layout='row'
                ng-if='!graphController.componentContent.xAxis.locked'>
-              <div style='width: 80;'
-                 ng-if='!graphController.componentContent.yAxis.locked && !graphController.componentContent.xAxis.locked'>
-
-              </div>
               <div layout='row'
-                 style='width: 100%;'
-                 ng-if='!graphController.componentContent.xAxis.locked'>
+                 style='width: 100%;'>
                 <md-input-container>
                   <label>{{ ::'graph.xMin' | translate }}</label>
                   <input type='number'

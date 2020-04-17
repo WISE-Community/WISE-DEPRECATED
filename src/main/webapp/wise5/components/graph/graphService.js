@@ -1,5 +1,5 @@
 import ComponentService from '../componentService';
-import html2canvas from 'html2canvas';
+import * as html2canvas from 'html2canvas';
 
 class GraphService extends ComponentService {
   constructor($filter,
@@ -42,17 +42,27 @@ class GraphService extends ComponentService {
       max: 100,
       units: this.$translate('graph.secondsUnit'),
       locked: true,
-      type: 'limits'
+      type: 'limits',
+      allowDecimals: false
     };
     component.yAxis = {
       title: {
         text: this.$translate('graph.positionMeters'),
-        useHTML: true
+        useHTML: true,
+        style: {
+          color: null
+        }
+      },
+      labels: {
+        style: {
+          color: null
+        }
       },
       min: 0,
       max: 100,
       units: this.$translate('graph.metersUnit'),
-      locked: true
+      locked: true,
+      allowDecimals: false
     };
     component.series = [
       {
