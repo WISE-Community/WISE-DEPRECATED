@@ -63,6 +63,8 @@
   "MAX_SUBMIT": "Max Submit",
   "MILESTONE_DETAILS_TITLE": "Milestone: {{ name }}",
   "MILESTONE_EDIT_INVALID_ALERT": "Milestone invalid: Make sure you fill out the required fields and include at least 1 requirement.",
+  "MILESTONES": "Milestones",
+  "MILESTONES_AUTHORING": "Milestones Authoring",
   "MY_NEW_PROJECT": "My New Unit",
   "NEW": "New",
   "NEXT": "Next",
