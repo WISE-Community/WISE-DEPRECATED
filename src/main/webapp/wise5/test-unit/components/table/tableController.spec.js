@@ -24,9 +24,12 @@ describe('TableController', () => {
   shouldHandleDataExplorerXColumnChanged();
   shouldHandleDataExplorerYColumnChanged();
   shouldGetDataExplorerYAxisLabelWhenOneYAxis();
-  shouldSetDataExplorerYAxisLabelWithMultipleYAxis();
+  shouldSetDataExplorerYAxisLabelWithMultipleYAxes();
   shouldCreateDataExplorerSeries();
   shouldRepopulateDataExplorerData();
+  shouldSetDataExplorerSeriesYAxis();
+  shouldGetYAxisForDataExplorerSeries();
+  shouldGetYAxisForDataExplorerSeriesWhenNoDataExplorerSeriesParams();
 });
 
 function createComponent() {
@@ -140,14 +143,18 @@ function shouldGetDataExplorerYAxisLabelWhenOneYAxis() {
   });
 }
 
-function shouldSetDataExplorerYAxisLabelWithMultipleYAxis() {
-  it('should set data explorer y axis label with multiple y axis', () => {
+function shouldSetDataExplorerYAxisLabelWithMultipleYAxes() {
+  it('should set data explorer y axis label with multiple y axes', () => {
     tableController.dataExplorerYAxisLabels =
         Array(tableController.componentContent.numDataExplorerYAxis).fill('');
+    tableController.dataExplorerSeries = [
+      { yAxis: 0 },
+      { yAxis: 1 }
+    ];
     const label1 = 'Label 1';
     const label2 = 'Label 2';
-    tableController.setDataExplorerYAxisLabelWithMultipleYAxis(0, label1);
-    tableController.setDataExplorerYAxisLabelWithMultipleYAxis(1, label2);
+    tableController.setDataExplorerYAxisLabelWithMultipleYAxes(0, label1);
+    tableController.setDataExplorerYAxisLabelWithMultipleYAxes(1, label2);
     expect(tableController.dataExplorerYAxisLabels[0]).toEqual(label1);
     expect(tableController.dataExplorerYAxisLabels[1]).toEqual(label2);
   });
@@ -158,6 +165,9 @@ function shouldCreateDataExplorerSeries() {
     tableController.dataExplorerSeries = [];
     tableController.createDataExplorerSeries();
     expect(tableController.dataExplorerSeries.length).toEqual(1);
+    expect(tableController.dataExplorerSeries[0].hasOwnProperty('xColumn')).toEqual(true);
+    expect(tableController.dataExplorerSeries[0].hasOwnProperty('yColumn')).toEqual(true);
+    expect(tableController.dataExplorerSeries[0].hasOwnProperty('yAxis')).toEqual(true);
   });
 }
 
@@ -180,5 +190,33 @@ function shouldRepopulateDataExplorerData() {
     expect(tableController.dataExplorerXAxisLabel).toEqual('Student ID');
     expect(tableController.dataExplorerYAxisLabel).toEqual('Grade');
     expect(tableController.dataExplorerXColumn).toEqual(0);
+  });
+}
+
+function shouldSetDataExplorerSeriesYAxis() {
+  it('should set data explorer series y axis', () => {
+    tableController.dataExplorerSeriesParams = [
+      { yAxis: 0 }
+    ];
+    tableController.dataExplorerSeries = [
+      {}
+    ];
+    tableController.setDataExplorerSeriesYAxis(0);
+    expect(tableController.dataExplorerSeries[0].yAxis).toEqual(0);
+  });
+}
+
+function shouldGetYAxisForDataExplorerSeries() {
+  it('should get y axis for data explorer series', () => {
+    tableController.dataExplorerSeriesParams = [
+      { yAxis: 0 }
+    ];
+    expect(tableController.getYAxisForDataExplorerSeries(0)).toEqual(0);
+  });
+}
+
+function shouldGetYAxisForDataExplorerSeriesWhenNoDataExplorerSeriesParams() {
+  it('should get y axis for data explorer series', () => {
+    expect(tableController.getYAxisForDataExplorerSeries(0)).toEqual(null);
   });
 }

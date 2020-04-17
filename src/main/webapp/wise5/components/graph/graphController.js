@@ -114,6 +114,12 @@ class GraphController extends ComponentController {
   }
 
   initializeComponentContentParams() {
+    this.title = this.componentContent.title;
+    this.subtitle = this.componentContent.subtitle;
+    this.width = this.componentContent.width;
+    this.height = this.componentContent.height;
+    this.xAxis = this.UtilService.makeCopyOfJSONObject(this.componentContent.xAxis);
+    this.yAxis = this.UtilService.makeCopyOfJSONObject(this.componentContent.yAxis);
     this.graphType = this.componentContent.graphType;
     if (this.graphType == null) {
       this.graphType = 'line';
@@ -288,12 +294,15 @@ class GraphController extends ComponentController {
     for (let seriesIndex = 0; seriesIndex < dataExplorerSeries.length; seriesIndex++) {
       const xColumn = dataExplorerSeries[seriesIndex].xColumn;
       const yColumn = dataExplorerSeries[seriesIndex].yColumn;
+      const yAxis = dataExplorerSeries[seriesIndex].yAxis;
       if (yColumn != null) {
         const color = this.dataExplorerColors[seriesIndex];
         const name = dataExplorerSeries[seriesIndex].name;
         const series = this.generateDataExplorerSeries(studentData.tableData, xColumn, yColumn,
-            graphType, name, color);
-        this.setSeriesYAxisIndex(series, seriesIndex);
+            graphType, name, color, yAxis);
+        if (series.yAxis == null) {
+          this.setSeriesYAxisIndex(series, seriesIndex);
+        }
         this.activeTrial.series.push(series);
         if (graphType === 'scatter' && studentData.isDataExplorerScatterPlotRegressionLineEnabled) {
           const regressionSeries = this.generateDataExplorerRegressionSeries(studentData.tableData,
@@ -302,8 +311,8 @@ class GraphController extends ComponentController {
         }
       }
     }
-    if (this.isMultipleYAxis(this.yAxis)) {
-      this.setYAxisColorsToMatchSeries(this.activeTrial.series);
+    if (this.isMultipleYAxes(this.yAxis)) {
+      this.setAllSeriesColorsToMatchYAxes(this.activeTrial.series);
     }
   }
 
@@ -311,14 +320,14 @@ class GraphController extends ComponentController {
     return !Array.isArray(yAxis);
   }
 
-  isMultipleYAxis(yAxis) {
+  isMultipleYAxes(yAxis) {
     return Array.isArray(yAxis); 
   }
 
   setYAxisLabels(studentData) {
     if (this.isSingleYAxis(this.yAxis)) {
       this.yAxis.title.text = studentData.dataExplorerYAxisLabel;
-    } else {
+    } else if (studentData.dataExplorerYAxisLabels != null) {
       for (let [index, yAxis] of Object.entries(this.yAxis)) {
         yAxis.title.text = studentData.dataExplorerYAxisLabels[index];
       }
@@ -326,7 +335,7 @@ class GraphController extends ComponentController {
   }
 
   setSeriesYAxisIndex(series, seriesIndex) {
-    if (this.isMultipleYAxis(this.yAxis) && this.yAxis.length == 2) {
+    if (this.isMultipleYAxes(this.yAxis) && this.yAxis.length == 2) {
       if (seriesIndex === 0 || seriesIndex === 1) {
         series.yAxis = seriesIndex;
       } else {
@@ -335,12 +344,22 @@ class GraphController extends ComponentController {
     }
   }
 
-  setYAxisColorsToMatchSeries(series) {
-    for (let [index, yAxis] of Object.entries(this.yAxis)) {
-      if (series[index] != null) {
-        this.setYAxisColor(yAxis, series[index].color);
-      }
+  setAllSeriesColorsToMatchYAxes(series) {
+    for (const singleSeries of series) {
+      this.setSinglSeriesColorsToMatchYAxis(singleSeries);
+    } 
+  }
+
+  setSinglSeriesColorsToMatchYAxis(series) {
+    if (series.yAxis == null) {
+      series.color = this.getYAxisColor(0);
+    } else {
+      series.color = this.getYAxisColor(series.yAxis);
     }
+  }
+
+  getYAxisColor(index) {
+    return this.yAxis[index].labels.style.color;
   }
 
   setYAxisColor(yAxis, color) {
@@ -361,18 +380,19 @@ class GraphController extends ComponentController {
   }
 
   isYAxisLabelBlank(yAxis, index) {
-    if (this.isMultipleYAxis(yAxis)) {
+    if (this.isMultipleYAxes(yAxis)) {
       return yAxis[index].title.text === '';
     } else {
       return yAxis.title.text === '';
     }
   }
 
-  generateDataExplorerSeries(tableData, xColumn, yColumn, graphType, name, color) {
+  generateDataExplorerSeries(tableData, xColumn, yColumn, graphType, name, color, yAxis) {
     const series = {
       type: graphType,
       name: name,
       color: color,
+      yAxis: yAxis,
       data: this.convertDataExplorerDataToSeriesData(tableData, xColumn, yColumn)
     };
     if (graphType === 'line') {
@@ -746,17 +766,14 @@ class GraphController extends ComponentController {
    * @param deferred A promise that should be resolved after the graph is done rendering.
    */
   drawGraphHelper(deferred) {
-    const title = this.componentContent.title;
-    const subtitle = this.componentContent.subtitle;
-    const xAxis = this.setupXAxis();
-    const yAxis = this.setupYAxis();
-    this.setupWidth();
-    this.setupHeight();
+    this.turnOffXAxisDecimals();
+    this.turnOffYAxisDecimals();
+    this.copyXAxisPlotBandsFromComponentContent();
     this.setupXAxisLimitSpacerWidth();
     let series = null;
     if (this.isTrialsEnabled()) {
       series = this.getSeriesFromTrials(this.trials);
-      xAxis.plotBands = this.getPlotBandsFromTrials(this.trials);
+      this.xAxis.plotBands = this.getPlotBandsFromTrials(this.trials);
     } else {
       series = this.getSeries();
     }
@@ -769,13 +786,13 @@ class GraphController extends ComponentController {
     this.showUndoButton = false;
     this.setAllSeriesFields(series);
     this.refreshSeriesIds(series);
-    this.updateMinMaxAxisValues(series, xAxis, yAxis);
+    this.updateMinMaxAxisValues(series, this.xAxis, this.yAxis);
     if (this.plotLines != null) {
-      xAxis.plotLines = this.plotLines;
+      this.xAxis.plotLines = this.plotLines;
     }
     const zoomType = this.getZoomType();
-    this.chartConfig = this.createChartConfig(deferred, title, subtitle, xAxis, yAxis, series,
-        zoomType);
+    this.chartConfig = this.createChartConfig(deferred, this.title, this.subtitle, this.xAxis, 
+        this.yAxis, series, zoomType);
     if (this.componentContent.useCustomLegend) {
       // use a timeout so the graph has a chance to render before we set the custom legend
       this.$timeout(() => {
@@ -785,33 +802,20 @@ class GraphController extends ComponentController {
     return deferred.promise;
   }
 
-  setupXAxis() {
-    if (this.xAxis == null && this.componentContent.xAxis != null) {
-      this.xAxis = this.UtilService.makeCopyOfJSONObject(this.componentContent.xAxis);
-    }
-    if (this.xAxis != null) {
-      this.xAxis.allowDecimals = false;
-      this.xAxis.plotBands = null;
-      if (this.componentContent.xAxis != null &&
-        this.componentContent.xAxis.plotBands != null) {
-        this.xAxis.plotBands = this.componentContent.xAxis.plotBands;
-      }
-    }
-    return this.xAxis;
+  turnOffXAxisDecimals() {
+    this.xAxis.allowDecimals = false;
   }
 
-  setupYAxis() {
-    if (this.yAxis == null && this.componentContent.yAxis != null) {
-      this.yAxis = this.UtilService.makeCopyOfJSONObject(this.componentContent.yAxis);
+  turnOffYAxisDecimals() {
+    if (this.isSingleYAxis(this.yAxis)) {
+      this.yAxis.allowDecimals = false;
+    } else {
+      this.yAxis.forEach(yAxis => yAxis.allowDecimals = false);
     }
-    if (this.yAxis != null) {
-      if (this.isSingleYAxis(this.yAxis)) {
-        this.yAxis.allowDecimals = false;
-      } else {
-        this.yAxis.forEach(yAxis => yAxis.allowDecimals = false);
-      }
-    }
-    return this.yAxis;
+  }
+
+  copyXAxisPlotBandsFromComponentContent() {
+    this.xAxis.plotBands = this.componentContent.xAxis.plotBands;
   }
 
   setupWidth() {
@@ -1120,7 +1124,7 @@ class GraphController extends ComponentController {
           }
         }
         const x = this.performRounding(event.xAxis[0].value);
-        const y = this.performRounding(event.yAxis[0].value);
+        const y = this.performRounding(this.getEventYValue(event));
         this.addPointToSeries(activeSeries, x, y);
         this.addNextComponentStateToUndoStack = true;
         this.studentDataChanged();
@@ -1130,6 +1134,18 @@ class GraphController extends ComponentController {
           alert(this.$translate('graph.youCanNotEditThisSeriesPleaseChooseASeriesThatCanBeEdited'));
         }
       }
+    }
+  }
+
+  getEventYValue(event) {
+    return event.yAxis[this.getSeriesYAxisIndex(this.activeSeries)].value;
+  }
+
+  getSeriesYAxisIndex(series) {
+    if (this.isMultipleYAxes(this.yAxis) && series.yAxis != null) {
+      return series.yAxis;
+    } else {
+      return 0;
     }
   }
 
@@ -2745,9 +2761,23 @@ class GraphController extends ComponentController {
           latestComponentState.studentData.backgroundImage != null) {
           connectedComponentBackgroundImage = latestComponentState.studentData.backgroundImage;
         }
+        if (connectedComponent.importGraphSettings) {
+          const component = this.ProjectService.getComponentByNodeIdAndComponentId(
+              connectedComponent.nodeId, connectedComponent.componentId);
+          this.importGraphSettings(component, latestComponentState);
+        }
       }
     }
     return connectedComponentBackgroundImage;
+  }
+
+  importGraphSettings(component, componentState) {
+    this.title = component.title;
+    this.subtitle = component.subtitle;
+    this.width = component.width;
+    this.height = component.height;
+    this.xAxis = componentState.studentData.xAxis;
+    this.yAxis = componentState.studentData.yAxis;
   }
 
   handleConnectedComponentPromiseResults(connectedComponentBackgroundImage, isReset) {
