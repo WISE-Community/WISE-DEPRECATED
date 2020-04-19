@@ -7,4 +7,5 @@ export class RunInfo {
   teacherName: string;
   error: string;
   name: string;
+  wiseVersion: number;
 }

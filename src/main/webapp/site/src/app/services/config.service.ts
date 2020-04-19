@@ -44,6 +44,10 @@ export class ConfigService {
     return this.config$.getValue().recaptchaPublicKey;
   }
 
+  getWISE4Hostname() {
+    return this.config$.getValue().wise4Hostname;
+  }
+
   getCurrentServerTime() {
     return Date.now() - this.timeDiff;
   }

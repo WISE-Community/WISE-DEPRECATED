@@ -8,7 +8,7 @@
 
 <link href="${contextPath}/<spring:theme code="globalstyles"/>" media="screen" rel="stylesheet"  type="text/css" />
 <link href="${contextPath}/<spring:theme code="stylesheet"/>" media="screen" rel="stylesheet"  type="text/css" />
-<link href="${contextPath}/<spring:theme code="teachergrading.css"/>" media="screen" rel="stylesheet" type="text/css" />
+<link href="${contextPath}/wise5/classroomMonitor/manageStudents/teachergrading.css" media="screen" rel="stylesheet" type="text/css" />
 <link href="${contextPath}/<spring:theme code="jquerystylesheet"/>" media="screen" rel="stylesheet" type="text/css" /> 
 <c:if test="${textDirection == 'rtl' }">
 		<link href="${contextPath}/<spring:theme code="rtlstylesheet"/>" rel="stylesheet" type="text/css" >
@@ -561,7 +561,7 @@ var displayNotification = function(message) {
 	</div>
  	<div id="loading" style="display:none;">
         <div class="hd"><spring:message code="teacher.management.viewmystudents.saveMessage"/></div>
-        <div class="bd"><img src="${contextPath}/vle/images/loading.gif"></div>
+        <div class="bd"><img src="${contextPath}/wise5/classroomMonitor/manageStudents/loading.gif"></div>
         <div class="ft">
         </div>
     </div>

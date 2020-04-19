@@ -1,5 +1,5 @@
 import ComponentService from '../componentService';
-import html2canvas from 'html2canvas';
+import * as html2canvas from 'html2canvas';
 
 class EmbeddedService extends ComponentService {
   constructor(

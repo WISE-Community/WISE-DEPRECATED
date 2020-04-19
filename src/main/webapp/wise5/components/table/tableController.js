@@ -1,7 +1,7 @@
 'use strict';
 
 import ComponentController from "../componentController";
-import html2canvas from 'html2canvas';
+import * as html2canvas from 'html2canvas';
 
 class TableController extends ComponentController {
   constructor($anchorScroll,
@@ -51,6 +51,10 @@ class TableController extends ComponentController {
       }
       this.isDataExplorerScatterPlotRegressionLineEnabled =
           this.componentContent.isDataExplorerScatterPlotRegressionLineEnabled;
+      if (this.componentContent.numDataExplorerYAxis > 1) {
+        this.dataExplorerYAxisLabels = Array(this.componentContent.numDataExplorerYAxis).fill('');
+      }
+      this.dataExplorerSeriesParams = this.componentContent.dataExplorerSeriesParams;
     }
 
     if (this.mode === 'student') {
@@ -457,7 +461,12 @@ class TableController extends ComponentController {
     studentData.isDataExplorerEnabled = this.isDataExplorerEnabled;
     studentData.dataExplorerGraphType = this.dataExplorerGraphType;
     studentData.dataExplorerXAxisLabel = this.dataExplorerXAxisLabel;
-    studentData.dataExplorerYAxisLabel = this.dataExplorerYAxisLabel;
+    if (this.dataExplorerYAxisLabel != null) {
+      studentData.dataExplorerYAxisLabel = this.dataExplorerYAxisLabel;
+    }
+    if (this.dataExplorerYAxisLabels) {
+      studentData.dataExplorerYAxisLabels = this.dataExplorerYAxisLabels;
+    }
     studentData.isDataExplorerScatterPlotRegressionLineEnabled =
         this.isDataExplorerScatterPlotRegressionLineEnabled;
     studentData.dataExplorerSeries = this.UtilService.makeCopyOfJSONObject(this.dataExplorerSeries);
@@ -1122,13 +1131,26 @@ class TableController extends ComponentController {
   dataExplorerYColumnChanged(index) {
     const yColumn = this.dataExplorerSeries[index].yColumn;
     this.dataExplorerSeries[index].name = this.columnNames[yColumn];
-    this.dataExplorerYAxisLabel = this.getDataExplorerYAxisLabel();
+    if (this.isDataExplorerOneYAxis()) {
+      this.dataExplorerYAxisLabel = this.getDataExplorerYAxisLabelWhenOneYAxis();
+    } else {
+      this.setDataExplorerSeriesYAxis(index);
+      const yAxisIndex = this.dataExplorerSeries[index].yAxis;
+      if (yAxisIndex != null && yAxisIndex < this.componentContent.numDataExplorerYAxis) {
+        this.setDataExplorerYAxisLabelWithMultipleYAxes(yAxisIndex, this.getColumnName(yColumn));
+      }
+    }
     this.studentDataChanged();
   }
 
-  getDataExplorerYAxisLabel() {
+  isDataExplorerOneYAxis() {
+    return this.componentContent.numDataExplorerYAxis == null ||
+        this.componentContent.numDataExplorerYAxis === 1;
+  }
+
+  getDataExplorerYAxisLabelWhenOneYAxis() {
     let yAxisLabel = '';
-    for (let index = 0; index < this.dataExplorerSeries.length; index++) { 
+    for (let index = 0; index < this.dataExplorerSeries.length; index++) {
       const yColumn = this.dataExplorerSeries[index].yColumn;
       if (yColumn != null) {
         const columnName = this.getColumnName(yColumn);
@@ -1141,21 +1163,41 @@ class TableController extends ComponentController {
     return yAxisLabel;
   }
 
+  setDataExplorerYAxisLabelWithMultipleYAxes(index, label) {
+    this.dataExplorerYAxisLabels[this.dataExplorerSeries[index].yAxis] = label;
+  }
+
+  setDataExplorerSeriesYAxis(index) {
+    if (this.dataExplorerSeriesParams != null && this.dataExplorerSeriesParams[index] != null &&
+        this.dataExplorerSeriesParams[index].yAxis != null) {
+      this.dataExplorerSeries[index].yAxis = this.dataExplorerSeriesParams[index].yAxis;
+    }
+  }
+
   createDataExplorerSeries() {
     this.dataExplorerSeries = [];
     for (let index = 0; index < this.numDataExplorerSeries; index++) {
       const dataExplorerSeries = {
         xColumn: null,
-        yColumn: null
+        yColumn: null,
+        yAxis: this.getYAxisForDataExplorerSeries(index)
       };
       this.dataExplorerSeries.push(dataExplorerSeries);
     }
+  }
+
+  getYAxisForDataExplorerSeries(index) {
+    if (this.dataExplorerSeriesParams != null) {
+      return this.dataExplorerSeriesParams[index].yAxis;
+    }
+    return null;
   }
 
   repopulateDataExplorerData(componentState) {
     this.dataExplorerGraphType = componentState.studentData.dataExplorerGraphType;
     this.dataExplorerXAxisLabel = componentState.studentData.dataExplorerXAxisLabel;
     this.dataExplorerYAxisLabel = componentState.studentData.dataExplorerYAxisLabel;
+    this.dataExplorerYAxisLabels = componentState.studentData.dataExplorerYAxisLabels;
     this.dataExplorerSeries =
         this.UtilService.makeCopyOfJSONObject(componentState.studentData.dataExplorerSeries);
     this.dataExplorerXColumn = this.dataExplorerSeries[0].xColumn;

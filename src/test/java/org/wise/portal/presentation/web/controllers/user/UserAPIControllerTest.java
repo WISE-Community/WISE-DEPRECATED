@@ -62,6 +62,7 @@ public class UserAPIControllerTest extends APIControllerTest {
     expect(request.getContextPath()).andReturn("wise");
     replay(request);
     expect(appProperties.get("recaptcha_public_key")).andReturn("recaptcha-123-abc");
+    expect(appProperties.get("wise4.hostname")).andReturn("http://localhost:8080/legacy");
     replay(appProperties);
     HashMap<String, Object> config = userAPIController.getConfig(request);
     assertEquals("wise", config.get("contextPath"));

@@ -77,7 +77,7 @@ class TeacherDataService {
    * Get the data for the export and generate the csv file that will be downloaded
    * @param exportType the type of export
    */
-  getExport(exportType, selectedNodes) {
+  getExport(exportType, selectedNodes = []) {
     if (this.isStudentWorkExport(exportType)) {
       return this.retrieveStudentDataExport(selectedNodes);
     } else if (this.isNotebookExport(exportType)) {

@@ -86,28 +86,25 @@ public class StudentAPIControllerTest extends APIControllerTest {
     expectLastCall();
     replay(runService);
     expect(userService.retrieveById(1L)).andReturn(student1);
-    expect(userService.retrieveUserByUsername(STUDENT_USERNAME))
-        .andReturn(student1);
+    expect(userService.retrieveUserByUsername(STUDENT_USERNAME)).andReturn(student1);
     replay(userService);
-    expect(workgroupService.isUserInAnyWorkgroupForRun(student1, run1))
-        .andReturn(true);
+    expect(workgroupService.isUserInAnyWorkgroupForRun(student1, run1)).andReturn(true);
     List<Workgroup> workgroups = new ArrayList<Workgroup>();
     workgroups.add(workgroup1);
     Set<User> newMembers = new HashSet<User>();
-    expect(workgroupService.getWorkgroupListByRunAndUser(run1, student1))
-        .andReturn(workgroups);
+    expect(workgroupService.getWorkgroupListByRunAndUser(run1, student1)).andReturn(workgroups);
     workgroupService.addMembers(workgroup1, newMembers);
     expectLastCall();
     replay(workgroupService);
-    expect(projectService.generateStudentStartProjectUrlString(
-        isA(Workgroup.class), isA(String.class))).andReturn("/wise/run/1");
+    expect(projectService.generateStudentStartProjectUrlString(isA(Workgroup.class),
+        isA(String.class))).andReturn("/wise/run/1");
     replay(projectService);
-    studentAttendanceService.addStudentAttendanceEntry(isA(Long.class),
-        isA(Long.class), isA(Date.class), isA(String.class), isA(String.class));
+    studentAttendanceService.addStudentAttendanceEntry(isA(Long.class), isA(Long.class),
+        isA(Date.class), isA(String.class), isA(String.class));
     expect(request.getContextPath()).andReturn("wise");
     replay(request);
-    HashMap<String, Object> launchRunMap = studentAPIController
-        .launchRun(studentAuth, runId1, null, "[1]", "[]", request);
+    HashMap<String, Object> launchRunMap = studentAPIController.launchRun(studentAuth, runId1, null,
+        "[1]", "[]", request);
     assertEquals("/wise/run/1", launchRunMap.get("startProjectUrl"));
     verify(runService);
     verify(userService);
@@ -117,8 +114,7 @@ public class StudentAPIControllerTest extends APIControllerTest {
   }
 
   @Test
-  public void getRunInfoByRunCode_RunExistsInDB_ReturnRunInfo()
-      throws ObjectNotFoundException {
+  public void getRunInfoByRunCode_RunExistsInDB_ReturnRunInfo() throws ObjectNotFoundException {
     expect(runService.retrieveRunByRuncode(RUN1_RUNCODE)).andReturn(run1);
     replay(runService);
     HashMap<String, Object> info = studentAPIController.getRunInfoByRunCode(RUN1_RUNCODE);
@@ -128,11 +124,10 @@ public class StudentAPIControllerTest extends APIControllerTest {
   }
 
   @Test
-  public void getRunInfoByRunCode_RunNotInDB_ReturnRunInfo()
-      throws ObjectNotFoundException {
+  public void getRunInfoByRunCode_RunNotInDB_ReturnRunInfo() throws ObjectNotFoundException {
     String runCodeNotInDB = "runCodeNotInDB";
-    expect(runService.retrieveRunByRuncode(runCodeNotInDB)).andThrow(new ObjectNotFoundException(
-        runCodeNotInDB, Run.class));
+    expect(runService.retrieveRunByRuncode(runCodeNotInDB))
+        .andThrow(new ObjectNotFoundException(runCodeNotInDB, Run.class));
     replay(runService);
     HashMap<String, Object> info = studentAPIController.getRunInfoByRunCode(runCodeNotInDB);
     assertEquals(1, info.size());
@@ -141,8 +136,7 @@ public class StudentAPIControllerTest extends APIControllerTest {
   }
 
   @Test
-  public void getRunInfoById_RunExistsInDB_ReturnRunInfo()
-      throws ObjectNotFoundException {
+  public void getRunInfoById_RunExistsInDB_ReturnRunInfo() throws ObjectNotFoundException {
     expect(runService.retrieveById(runId1)).andReturn(run1);
     replay(runService);
     HashMap<String, Object> info = studentAPIController.getRunInfoById(runId1);
@@ -152,11 +146,10 @@ public class StudentAPIControllerTest extends APIControllerTest {
   }
 
   @Test
-  public void getRunInfoById_RunNotInDB_ReturnRunInfo()
-      throws ObjectNotFoundException {
+  public void getRunInfoById_RunNotInDB_ReturnRunInfo() throws ObjectNotFoundException {
     Long runIdNotInDB = -1L;
-    expect(runService.retrieveById(runIdNotInDB)).andThrow(new ObjectNotFoundException(
-        runIdNotInDB, Run.class));
+    expect(runService.retrieveById(runIdNotInDB))
+        .andThrow(new ObjectNotFoundException(runIdNotInDB, Run.class));
     replay(runService);
     HashMap<String, Object> info = studentAPIController.getRunInfoById(runIdNotInDB);
     assertEquals(1, info.size());
@@ -194,8 +187,7 @@ public class StudentAPIControllerTest extends APIControllerTest {
     replay(userService);
     expect(runService.getRunList(student1)).andReturn(runs);
     replay(runService);
-    expect(projectService.getProjectPath(isA(Project.class))).andReturn("/1/project.json")
-        .times(3);
+    expect(projectService.getProjectPath(isA(Project.class))).andReturn("/1/project.json").times(3);
     expect(projectService.getProjectSharedOwnersList(isA(Project.class)))
         .andReturn(new ArrayList<HashMap<String, Object>>()).times(3);
     expect(projectService.getProjectURI(isA(Project.class)))
@@ -227,19 +219,14 @@ public class StudentAPIControllerTest extends APIControllerTest {
     String runCodeNotInDB = "runCodeNotInDB";
     expect(userService.retrieveUserByUsername(STUDENT_USERNAME)).andReturn(student1);
     replay(userService);
-    Projectcode projectCode = new Projectcode(runCodeNotInDB, RUN1_PERIOD1_NAME);
-    studentService.addStudentToRun(student1, projectCode);
-    expectLastCall();
-    replay(studentService);
-    expect(runService.retrieveRunByRuncode(runCodeNotInDB)).andThrow(new ObjectNotFoundException(
-        runCodeNotInDB, Run.class));
+    expect(runService.retrieveRunByRuncode(runCodeNotInDB))
+        .andThrow(new ObjectNotFoundException(runCodeNotInDB, Run.class));
     replay(runService);
-    HashMap<String, Object> response = studentAPIController.addStudentToRun(
-        studentAuth, runCodeNotInDB, RUN1_PERIOD1_NAME);
+    HashMap<String, Object> response = studentAPIController.addStudentToRun(studentAuth,
+        runCodeNotInDB, RUN1_PERIOD1_NAME);
     assertEquals("error", response.get("status"));
     assertEquals("runCodeNotFound", response.get("messageCode"));
     verify(userService);
-    verify(studentService);
     verify(runService);
   }
 
@@ -256,20 +243,20 @@ public class StudentAPIControllerTest extends APIControllerTest {
     expect(runService.retrieveRunByRuncode(RUN1_RUNCODE)).andReturn(run1);
     replay(runService);
     expect(projectService.getProjectPath(isA(Project.class))).andReturn("/1/project.json");
-    expect(projectService.getProjectSharedOwnersList(isA(Project.class))).andReturn(
-        new ArrayList<HashMap<String, Object>>());
-    expect(projectService.getProjectURI(isA(Project.class))).andReturn(
-        "http://localhost:8080/curriculum/1/project.json");
-    expect(projectService.getLicensePath(isA(Project.class))).andReturn(
-        "http://localhost:8080/curriculum/1/license.txt");
+    expect(projectService.getProjectSharedOwnersList(isA(Project.class)))
+        .andReturn(new ArrayList<HashMap<String, Object>>());
+    expect(projectService.getProjectURI(isA(Project.class)))
+        .andReturn("http://localhost:8080/curriculum/1/project.json");
+    expect(projectService.getLicensePath(isA(Project.class)))
+        .andReturn("http://localhost:8080/curriculum/1/license.txt");
     replay(projectService);
     List<Workgroup> workgroups = new ArrayList<Workgroup>();
     workgroups.add(workgroup1);
     expect(workgroupService.getWorkgroupListByRunAndUser(isA(Run.class), isA(User.class)))
         .andReturn(workgroups);
     replay(workgroupService);
-    HashMap<String, Object> runMap = studentAPIController.addStudentToRun(
-        studentAuth, RUN1_RUNCODE, RUN1_PERIOD1_NAME);
+    HashMap<String, Object> runMap = studentAPIController.addStudentToRun(studentAuth, RUN1_RUNCODE,
+        RUN1_PERIOD1_NAME);
     assertEquals(RUN1_PERIOD1_NAME, runMap.get("periodName"));
     verify(userService);
     verify(studentService);
@@ -279,8 +266,7 @@ public class StudentAPIControllerTest extends APIControllerTest {
   }
 
   @Test
-  public void createStudentAccount_WithGoogleUserId_CreateUser()
-      throws DuplicateUsernameException {
+  public void createStudentAccount_WithGoogleUserId_CreateUser() throws DuplicateUsernameException {
     HashMap<String, String> studentFields = createDefaultStudentFields();
     studentFields.put("googleUserId", "123456789");
     expect(request.getLocale()).andReturn(Locale.US);
@@ -322,12 +308,10 @@ public class StudentAPIControllerTest extends APIControllerTest {
     expect(workgroupService.isUserInAnyWorkgroupForRun(studentNotInWorkgroup, run1))
         .andReturn(false);
     replay(workgroupService);
-    HashMap<String, Object> response = studentAPIController
-        .canBeAddedToWorkgroup(studentAuth, runId1,
-        workgroupId, studentIdNotInWorkgroup);
+    HashMap<String, Object> response = studentAPIController.canBeAddedToWorkgroup(studentAuth,
+        runId1, workgroupId, studentIdNotInWorkgroup);
     assertEquals(true, response.get("status"));
-    assertEquals(2,
-        ((ArrayList<HashMap<String, Object>>) response.get("workgroupMembers")).size());
+    assertEquals(2, ((ArrayList<HashMap<String, Object>>) response.get("workgroupMembers")).size());
     verify(studentNotInWorkgroup);
     verify(userService);
     verify(runService);

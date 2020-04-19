@@ -153,7 +153,7 @@ class StudentStatusService {
    * @returns object with completed, total, and percent completed (integer
    * between 0 and 100).
    */
-  getNodeCompletion(nodeId, periodId, workgroupId, excludeNonWorkNodes) {
+  getNodeCompletion(nodeId, periodId, workgroupId = null, excludeNonWorkNodes = false) {
     let numCompleted = 0;
     let numTotal = 0;
     let isGroupNode = this.ProjectService.isGroupNode(nodeId);

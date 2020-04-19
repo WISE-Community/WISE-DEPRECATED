@@ -22,6 +22,9 @@ export class MockConfigService {
   getCurrentServerTime(): number {
     return new Date('2018-08-24T00:00:00.0').getTime();
   }
+  getWISE4Hostname(): string {
+    return 'http://localhost:8080/legacy';
+  }
 }
 
 describe('TeacherRunListItemComponent', () => {

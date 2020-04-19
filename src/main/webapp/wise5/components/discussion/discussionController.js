@@ -431,8 +431,8 @@ class DiscussionController extends ComponentController {
     return userIdsDisplay.join(', ');
   }
 
-  getLatestInappropriateFlagAnnotationByStudentWorkId(annotations, studentWorkId) {
-    for (const annotation of annotations) {
+  getLatestInappropriateFlagAnnotationByStudentWorkId(annotations = [], studentWorkId) {
+    for (const annotation of annotations.sort(this.sortByServerSaveTime).reverse()) {
       if (studentWorkId === annotation.studentWorkId && annotation.type === 'inappropriateFlag') {
         return annotation;
       }
@@ -455,7 +455,7 @@ class DiscussionController extends ComponentController {
     }
     this.topLevelResponses = this.getLevel1Responses();
   }
-  
+
   threadHasPostFromThisComponentAndWorkgroupId(componentState) {
     const thisComponentId = this.componentId;
     const thisWorkgroupId = this.workgroupId;
@@ -504,7 +504,7 @@ class DiscussionController extends ComponentController {
     const allResponses = [];
     const oddResponses = [];
     const evenResponses = [];
-    for (const [index, classResponse] of this.classResponses.entries()) {
+    for (const [index, classResponse] of Object.entries(this.classResponses)) {
       if (classResponse.studentData.componentStateIdReplyingTo == null) {
         if ((this.isGradingMode() || this.isGradingRevisionMode()) &&
             !this.threadHasPostFromThisComponentAndWorkgroupId(classResponse)) {
