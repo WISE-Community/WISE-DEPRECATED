@@ -27,6 +27,12 @@ describe('TableAuthoringController', () => {
   shouldCreateGraphTypeObject();
   shouldInitializeDataExplorerGraphTypes();
   shouldRepopulateDataExplorerGraphTypes();
+  shouldInitializeDataExplorerSeriesParams();
+  shouldHandleNumDataExplorerSeriesChangeIncrease();
+  shouldHandleNumDataExplorerSeriesChangeDecrease();
+  shouldIncreaseNumDataExplorerSeries();
+  shouldDecreaseNumDataExplorerSeries();
+  shouldUpdateDataExplorerSeriesParamsYAxis();
 });
 
 function createComponent() {
@@ -99,102 +105,69 @@ function shouldToggleDataExplorer() {
     tableAuthoringController.authoringComponentContent.numDataExplorerSeries = null;
     tableAuthoringController.authoringComponentContent.isDataExplorerAxisLabelsEditable = null;
     tableAuthoringController.authoringToggleDataExplorer();
-    expect(tableAuthoringController.authoringComponentContent.isDataExplorerEnabled).toEqual(true);
-    expect(
-      tableAuthoringController.authoringComponentContent.dataExplorerGraphTypes.length
-    ).toEqual(1);
-    expect(
-      tableAuthoringController.authoringComponentContent.dataExplorerGraphTypes[0].value
-    ).toEqual('scatter');
-    expect(tableAuthoringController.authoringComponentContent.numDataExplorerSeries).toEqual(1);
-    expect(
-      tableAuthoringController.authoringComponentContent.isDataExplorerAxisLabelsEditable
-    ).toEqual(false);
+    const authoringComponentContent = tableAuthoringController.authoringComponentContent;
+    expect(authoringComponentContent.isDataExplorerEnabled).toEqual(true);
+    expect(authoringComponentContent.dataExplorerGraphTypes.length).toEqual(1);
+    expect(authoringComponentContent.dataExplorerGraphTypes[0].value).toEqual('scatter');
+    expect(authoringComponentContent.numDataExplorerSeries).toEqual(1);
+    expect(authoringComponentContent.isDataExplorerAxisLabelsEditable).toEqual(false);
+    expect(authoringComponentContent.isDataExplorerAxisLabelsEditable).toEqual(false);
+    expect(authoringComponentContent.dataExplorerSeriesParams).toEqual([{}]);
   });
 }
 
 function shouldToggleDataExplorerScatterPlot() {
   it('should toggle data explorer scatter plot', () => {
     spyOn(tableAuthoringController, 'authoringViewComponentChanged').and.callFake(() => {});
-    expect(
-      tableAuthoringController.authoringComponentContent.dataExplorerGraphTypes.length
-    ).toEqual(2);
-    expect(
-      tableAuthoringController.authoringComponentContent.dataExplorerGraphTypes[0].value
-    ).toEqual('scatter');
-    expect(
-      tableAuthoringController.authoringComponentContent.dataExplorerGraphTypes[1].value
-    ).toEqual('column');
+    const dataExplorerGraphTypes =
+        tableAuthoringController.authoringComponentContent.dataExplorerGraphTypes;
+    expect(dataExplorerGraphTypes.length).toEqual(2);
+    expect(dataExplorerGraphTypes[0].value).toEqual('scatter');
+    expect(dataExplorerGraphTypes[1].value).toEqual('column');
     tableAuthoringController.dataExplorerToggleScatterPlot();
-    expect(
-      tableAuthoringController.authoringComponentContent.dataExplorerGraphTypes.length
-    ).toEqual(1);
-    expect(
-      tableAuthoringController.authoringComponentContent.dataExplorerGraphTypes[0].value
-    ).toEqual('column');
+    expect(dataExplorerGraphTypes.length).toEqual(1);
+    expect(dataExplorerGraphTypes[0].value).toEqual('column');
   });
 }
 
 function shouldToggleDataExplorerLineGraph() {
   it('should toggle data explorer line graph', () => {
     spyOn(tableAuthoringController, 'authoringViewComponentChanged').and.callFake(() => {});
-    expect(
-      tableAuthoringController.authoringComponentContent.dataExplorerGraphTypes.length
-    ).toEqual(2);
-    expect(
-      tableAuthoringController.authoringComponentContent.dataExplorerGraphTypes[0].value
-    ).toEqual('scatter');
-    expect(
-      tableAuthoringController.authoringComponentContent.dataExplorerGraphTypes[1].value
-    ).toEqual('column');
+    const dataExplorerGraphTypes =
+        tableAuthoringController.authoringComponentContent.dataExplorerGraphTypes;
+    expect(dataExplorerGraphTypes.length).toEqual(2);
+    expect(dataExplorerGraphTypes[0].value).toEqual('scatter');
+    expect(dataExplorerGraphTypes[1].value).toEqual('column');
     tableAuthoringController.dataExplorerToggleLineGraph();
-    expect(
-      tableAuthoringController.authoringComponentContent.dataExplorerGraphTypes.length
-    ).toEqual(3);
-    expect(
-      tableAuthoringController.authoringComponentContent.dataExplorerGraphTypes[2].value
-    ).toEqual('line');
+    expect(dataExplorerGraphTypes.length).toEqual(3);
+    expect(dataExplorerGraphTypes[2].value).toEqual('line');
   });
 }
 
 function shouldToggleDataExplorerBarGraph() {
   it('should toggle data explorer bar graph', () => {
     spyOn(tableAuthoringController, 'authoringViewComponentChanged').and.callFake(() => {});
-    expect(
-      tableAuthoringController.authoringComponentContent.dataExplorerGraphTypes.length
-    ).toEqual(2);
-    expect(
-      tableAuthoringController.authoringComponentContent.dataExplorerGraphTypes[0].value
-    ).toEqual('scatter');
-    expect(
-      tableAuthoringController.authoringComponentContent.dataExplorerGraphTypes[1].value
-    ).toEqual('column');
+    const dataExplorerGraphTypes =
+        tableAuthoringController.authoringComponentContent.dataExplorerGraphTypes;
+    expect(dataExplorerGraphTypes.length).toEqual(2);
+    expect(dataExplorerGraphTypes[0].value).toEqual('scatter');
+    expect(dataExplorerGraphTypes[1].value).toEqual('column');
     tableAuthoringController.dataExplorerToggleBarGraph();
-    expect(
-      tableAuthoringController.authoringComponentContent.dataExplorerGraphTypes.length
-    ).toEqual(1);
-    expect(
-      tableAuthoringController.authoringComponentContent.dataExplorerGraphTypes[0].value
-    ).toEqual('scatter');
+    expect(dataExplorerGraphTypes.length).toEqual(1);
+    expect(dataExplorerGraphTypes[0].value).toEqual('scatter');
   });
 }
 
 function shouldToggleDataExplorerGraphType() {
   it('should toggle data explorer graph type', () => {
     spyOn(tableAuthoringController, 'authoringViewComponentChanged').and.callFake(() => {});
-    expect(
-      tableAuthoringController.authoringComponentContent.dataExplorerGraphTypes.length
-    ).toEqual(2);
+    const dataExplorerGraphTypes =
+        tableAuthoringController.authoringComponentContent.dataExplorerGraphTypes;
+    expect(dataExplorerGraphTypes.length).toEqual(2);
     tableAuthoringController.dataExplorerToggleGraphType('Hello', 'World');
-    expect(
-      tableAuthoringController.authoringComponentContent.dataExplorerGraphTypes.length
-    ).toEqual(3);
-    expect(
-      tableAuthoringController.authoringComponentContent.dataExplorerGraphTypes[2].name
-    ).toEqual('Hello');
-    expect(
-      tableAuthoringController.authoringComponentContent.dataExplorerGraphTypes[2].value
-    ).toEqual('World');
+    expect(dataExplorerGraphTypes.length).toEqual(3);
+    expect(dataExplorerGraphTypes[2].name).toEqual('Hello');
+    expect(dataExplorerGraphTypes[2].value).toEqual('World');
   });
 }
 
@@ -210,15 +183,11 @@ function shouldInitializeDataExplorerGraphTypes() {
   it('should initialize data explorer graph types', () => {
     tableAuthoringController.authoringComponentContent.dataExplorerGraphTypes = [];
     tableAuthoringController.initializeDataExplorerGraphTypes();
-    expect(
-      tableAuthoringController.authoringComponentContent.dataExplorerGraphTypes.length
-    ).toEqual(1);
-    expect(
-      tableAuthoringController.authoringComponentContent.dataExplorerGraphTypes[0].name
-    ).toEqual('Scatter Plot');
-    expect(
-      tableAuthoringController.authoringComponentContent.dataExplorerGraphTypes[0].value
-    ).toEqual('scatter');
+    const dataExplorerGraphTypes =
+        tableAuthoringController.authoringComponentContent.dataExplorerGraphTypes;
+    expect(dataExplorerGraphTypes.length).toEqual(1);
+    expect(dataExplorerGraphTypes[0].name).toEqual('Scatter Plot');
+    expect(dataExplorerGraphTypes[0].value).toEqual('scatter');
   });
 }
 
@@ -231,5 +200,72 @@ function shouldRepopulateDataExplorerGraphTypes() {
     expect(tableAuthoringController.isDataExplorerScatterPlotEnabled).toEqual(true);
     expect(tableAuthoringController.isDataExplorerLineGraphEnabled).toEqual(false);
     expect(tableAuthoringController.isDataExplorerBarGraphEnabled).toEqual(true);
+  });
+}
+
+function shouldInitializeDataExplorerSeriesParams() {
+  it('should initialize data explorer series params', () => {
+    tableAuthoringController.authoringComponentContent.dataExplorerSeriesParams = null;
+    tableAuthoringController.authoringComponentContent.numDataExplorerSeries = 2;
+    tableAuthoringController.initializeDataExplorerSeriesParams();
+    expect(tableAuthoringController.authoringComponentContent.dataExplorerSeriesParams.length)
+        .toEqual(2);
+  });
+}
+
+function shouldHandleNumDataExplorerSeriesChangeIncrease() {
+  it('should handle num data explorer series change increase', () => {
+    tableAuthoringController.authoringComponentContent.dataExplorerSeriesParams = [{}];
+    tableAuthoringController.authoringComponentContent.numDataExplorerSeries = 2;
+    spyOn(tableAuthoringController, 'authoringViewComponentChanged').and.callFake(() => {});
+    tableAuthoringController.numDataExplorerSeriesChanged();
+    expect(tableAuthoringController.authoringComponentContent.dataExplorerSeriesParams.length)
+        .toEqual(2);
+  });
+}
+
+function shouldHandleNumDataExplorerSeriesChangeDecrease() {
+  it('should handle num data explorer series change decrease', () => {
+    tableAuthoringController.authoringComponentContent.dataExplorerSeriesParams = [{}, {}, {}];
+    tableAuthoringController.authoringComponentContent.numDataExplorerSeries = 2;
+    spyOn(tableAuthoringController, 'authoringViewComponentChanged').and.callFake(() => {});
+    tableAuthoringController.numDataExplorerSeriesChanged();
+    expect(tableAuthoringController.authoringComponentContent.dataExplorerSeriesParams.length)
+        .toEqual(2);
+  });
+}
+
+function shouldIncreaseNumDataExplorerSeries() {
+  it('should increase num data explorer series', () => {
+    tableAuthoringController.authoringComponentContent.dataExplorerSeriesParams = [{}];
+    tableAuthoringController.increaseNumDataExplorerSeries(3);
+    expect(tableAuthoringController.authoringComponentContent.dataExplorerSeriesParams.length)
+        .toEqual(3);
+  });
+}
+
+function shouldDecreaseNumDataExplorerSeries() {
+  it('should decrease num data explorer series', () => {
+    tableAuthoringController.authoringComponentContent.dataExplorerSeriesParams = [{}, {}, {}];
+    tableAuthoringController.decreaseNumDataExplorerSeries(1);
+    expect(tableAuthoringController.authoringComponentContent.dataExplorerSeriesParams.length)
+        .toEqual(1);
+  });
+}
+
+function shouldUpdateDataExplorerSeriesParamsYAxis() {
+  it('should update data explorer series params y axis', () => {
+    tableAuthoringController.authoringComponentContent.dataExplorerSeriesParams = [
+      { yAxis: 0 },
+      { yAxis: 1 },
+      { yAxis: 2 }
+    ];
+    tableAuthoringController.authoringComponentContent.numDataExplorerYAxis = 2;
+    tableAuthoringController.updateDataExplorerSeriesParamsYAxis(1);
+    const dataExplorerSeriesParams =
+        tableAuthoringController.authoringComponentContent.dataExplorerSeriesParams;
+    expect(dataExplorerSeriesParams[0].yAxis).toEqual(0);
+    expect(dataExplorerSeriesParams[1].yAxis).toEqual(1);
+    expect(dataExplorerSeriesParams[2].yAxis).toEqual(0);
   });
 }

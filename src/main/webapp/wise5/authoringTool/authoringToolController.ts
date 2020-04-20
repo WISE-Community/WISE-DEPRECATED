@@ -158,6 +158,15 @@ class AuthoringToolController {
         type: 'secondary',
         showToolbar: true,
         active: false
+      },
+      'root.at.project.milestones': {
+        id: 'milestonesButton',
+        name: this.$translate('MILESTONES'),
+        label: this.$translate('MILESTONES'),
+        icon: 'flag',
+        type: 'primary',
+        showToolbar: true,
+        active: true
       }
     };
     this.processUI();

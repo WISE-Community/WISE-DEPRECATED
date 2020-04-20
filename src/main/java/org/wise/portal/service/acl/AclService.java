@@ -87,4 +87,6 @@ public interface AclService<T> extends PermissionEvaluator {
    * fale otherwise.
    */
   boolean hasPermission(T object, Permission permission, UserDetails userDetails);
+
+  boolean hasSpecificPermission(T object, Permission permission, UserDetails userDetails);
 }

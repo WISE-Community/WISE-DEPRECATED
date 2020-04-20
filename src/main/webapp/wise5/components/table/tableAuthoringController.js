@@ -49,6 +49,7 @@ class TableAuthoringController extends TableController {
     ];
     if (this.authoringComponentContent.isDataExplorerEnabled) {
       this.repopulateDataExplorerGraphTypes();
+      this.initializeDataExplorerSeriesParams();
     }
     this.columnCellSizes = this.parseColumnCellSizes(this.componentContent);
     $scope.$watch(function() {
@@ -77,6 +78,15 @@ class TableAuthoringController extends TableController {
       }
       this.$mdDialog.hide();
     });
+  }
+
+  initializeDataExplorerSeriesParams() {
+    if (this.authoringComponentContent.dataExplorerSeriesParams == null) {
+      this.authoringComponentContent.dataExplorerSeriesParams = [];
+      for (let s = 0; s < this.authoringComponentContent.numDataExplorerSeries; s++) {
+        this.authoringComponentContent.dataExplorerSeriesParams.push({});
+      }
+    }
   }
 
   authoringViewTableNumRowsChanged(oldValue) {
@@ -451,6 +461,9 @@ class TableAuthoringController extends TableController {
       if (this.authoringComponentContent.isDataExplorerAxisLabelsEditable == null) {
         this.authoringComponentContent.isDataExplorerAxisLabelsEditable = false;
       }
+      if (this.authoringComponentContent.dataExplorerSeriesParams == null) {
+        this.authoringComponentContent.dataExplorerSeriesParams = [{}];
+      }
     }
     this.authoringViewComponentChanged();
   }
@@ -501,6 +514,41 @@ class TableAuthoringController extends TableController {
         this.isDataExplorerLineGraphEnabled = true;
       } else if (graphType.value === 'column') {
         this.isDataExplorerBarGraphEnabled = true;
+      }
+    }
+  }
+
+  numDataExplorerSeriesChanged() {
+    const count = this.authoringComponentContent.numDataExplorerSeries;
+    if (this.authoringComponentContent.dataExplorerSeriesParams.length < count) {
+      this.increaseNumDataExplorerSeries(count);
+    } else if (this.authoringComponentContent.dataExplorerSeriesParams.length > count) {
+      this.decreaseNumDataExplorerSeries(count);
+    }
+    this.authoringViewComponentChanged();
+  }
+
+  increaseNumDataExplorerSeries(count) {
+    const numToAdd = count - this.authoringComponentContent.dataExplorerSeriesParams.length;
+    for (let s = 0; s < numToAdd; s++) {
+      this.authoringComponentContent.dataExplorerSeriesParams.push({});
+    }
+  }
+
+  decreaseNumDataExplorerSeries(count) {
+    this.authoringComponentContent.dataExplorerSeriesParams =
+        this.authoringComponentContent.dataExplorerSeriesParams.slice(0, count);
+  }
+
+  numDataExplorerYAxisChanged() {
+    this.updateDataExplorerSeriesParamsYAxis();
+    this.authoringViewComponentChanged();
+  }
+
+  updateDataExplorerSeriesParamsYAxis() {
+    for (const params of this.authoringComponentContent.dataExplorerSeriesParams) {
+      if (params.yAxis >= this.authoringComponentContent.numDataExplorerYAxis) {
+        params.yAxis = 0;
       }
     }
   }

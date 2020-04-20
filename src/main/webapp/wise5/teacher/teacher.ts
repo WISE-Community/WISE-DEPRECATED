@@ -137,6 +137,13 @@ const teacherModule = angular
         controllerAs: 'authorNotebookController',
         resolve: {}
       })
+      .state('root.at.project.milestones', {
+        url: '/milestones',
+        templateUrl: 'wise5/authoringTool/milestones/milestonesAuthoring.html',
+        controller: 'MilestonesAuthoringController',
+        controllerAs: 'milestonesAuthoringController',
+        resolve: {}
+      })
       .state('root.cm', {
         url: '/manage/unit/:runId',
         templateUrl: 'wise5/classroomMonitor/classroomMonitor.html',

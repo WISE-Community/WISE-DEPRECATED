@@ -612,6 +612,10 @@ public class RunServiceImpl implements RunService {
     return aclService.hasPermission(run, permission, user.getUserDetails());
   }
 
+  public boolean hasSpecificPermission(Run run, User user, Permission permission) {
+    return aclService.hasSpecificPermission(run, permission, user.getUserDetails()); 
+  }
+
   public boolean canDecreaseMaxStudentsPerTeam(Long runId) {
     List<Workgroup> workgroups = getWorkgroups(runId);
     if (workgroups != null) {
@@ -763,15 +767,15 @@ public class RunServiceImpl implements RunService {
   }
 
   public boolean isAllowedToViewStudentWork(Run run, User user) {
-    return hasRunPermission(run, user, RunPermission.VIEW_STUDENT_WORK);
+    return hasSpecificPermission(run, user, RunPermission.VIEW_STUDENT_WORK);
   }
 
   public boolean isAllowedToGradeStudentWork(Run run, User user) {
-    return hasRunPermission(run, user, RunPermission.GRADE_AND_MANAGE);
+    return hasSpecificPermission(run, user, RunPermission.GRADE_AND_MANAGE);
   }
 
   public boolean isAllowedToViewStudentNames(Run run, User user) {
-    return hasRunPermission(run, user, RunPermission.VIEW_STUDENT_NAMES);
+    return hasSpecificPermission(run, user, RunPermission.VIEW_STUDENT_NAMES);
   }
 
 }

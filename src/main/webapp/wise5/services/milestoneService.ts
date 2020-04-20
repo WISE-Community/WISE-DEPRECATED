@@ -659,7 +659,7 @@ class MilestoneService {
             <span flex></span>
             <md-button class="md-primary"
                        ng-click="edit()"
-                       ng-if="milestone.type != 'milestoneReport'"
+                       ng-if="milestone.type !== 'milestoneReport'"
                        aria-label="{{ ::'EDIT' | translate }}">
               {{ ::'EDIT' | translate }}
             </md-button>
