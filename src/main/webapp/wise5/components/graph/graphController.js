@@ -1739,7 +1739,7 @@ class GraphController extends ComponentController {
   attachStudentAsset(studentAsset) {
     this.StudentAssetService.copyAssetForReference(studentAsset).then( (copiedAsset) => {
       this.StudentAssetService.getAssetContent(copiedAsset).then( (assetContent) => {
-        const rowData = this.StudentDataService.CSVToArray(assetContent);
+        const rowData = this.UtilService.CSVToArray(assetContent);
         const params = {
           skipFirstRow: true,
           xColumn: 0,

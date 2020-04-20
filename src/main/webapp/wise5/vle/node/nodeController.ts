@@ -690,7 +690,6 @@ class NodeController {
         }
         return this.StudentDataService.saveToServer(
           componentStates,
-          nodeStates,
           componentEvents,
           componentAnnotations
         ).then(savedStudentDataResponse => {
