@@ -552,7 +552,7 @@ class StudentDataService {
   }
 
   evaluateChoiceChosenCriteria(criteria) {
-    const serviceName = 'MultipleChoiceService'; // Assume MC component.
+    const serviceName = 'MultipleChoiceService';
     if (this.$injector.has(serviceName)) {
       const service = this.$injector.get(serviceName);
       return service.choiceChosen(criteria);
@@ -1114,8 +1114,7 @@ class StudentDataService {
   }
 
   getStudentWorkByStudentWorkId(studentWorkId) {
-    const componentStates = this.studentData.componentStates;
-    for (const componentState of componentStates) {
+    for (const componentState of this.studentData.componentStates) {
       if (componentState.id === studentWorkId) {
         return componentState;
       }
@@ -1129,8 +1128,7 @@ class StudentDataService {
 
   getComponentStatesByNodeId(nodeId) {
     const componentStatesByNodeId = [];
-    const componentStates = this.studentData.componentStates;
-    for (const componentState of componentStates) {
+    for (const componentState of this.studentData.componentStates) {
       if (componentState.nodeId === nodeId) {
         componentStatesByNodeId.push(componentState);
       }
@@ -1140,8 +1138,7 @@ class StudentDataService {
 
   getComponentStatesByNodeIdAndComponentId(nodeId, componentId) {
     const componentStatesByNodeIdAndComponentId = [];
-    const componentStates = this.studentData.componentStates;
-    for (const componentState of componentStates) {
+    for (const componentState of this.studentData.componentStates) {
       if (componentState.nodeId === nodeId && componentState.componentId === componentId) {
         componentStatesByNodeIdAndComponentId.push(componentState);
       }
@@ -1150,11 +1147,7 @@ class StudentDataService {
   }
 
   getEvents() {
-    if (this.studentData != null && this.studentData.events != null) {
-      return this.studentData.events;
-    } else {
-      return [];
-    }
+    return this.studentData.events;
   }
 
   getEventsByNodeId(nodeId) {
@@ -1449,14 +1442,12 @@ class StudentDataService {
   }
 
   getLatestComponentStateByNodeId(nodeId) {
-    if (nodeId != null) {
-      const studentData = this.studentData;
-      if (studentData) {
-        const componentStates = this.getComponentStatesByNodeId(nodeId);
-        return componentStates[componentStates.length - 1];
-      }
+    const componentStates = this.getComponentStatesByNodeId(nodeId);
+    if (componentStates.length > 0) {
+      return componentStates[componentStates.length - 1];
+    } else {
+      return null;
     }
-    return null;
   }
 
   isCompletionCriteriaSatisfied(completionCriteria) {
