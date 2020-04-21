@@ -15,7 +15,7 @@
     <mat-sidenav-content fxLayout="column"
                          track-scroll
                          (yPositionChange)="onYPositionChange($event)">
-      <app-announcement *ngIf="hasAnnouncement"
+      <app-announcement *ngIf="hasAnnouncement && showHeaderAndFooter()"
                         class="top-content"
                         [announcement]="announcement"
                         (dismiss)="dismissAnnouncement()"></app-announcement>
