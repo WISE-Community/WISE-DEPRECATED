@@ -2,15 +2,15 @@
 
 import AnimationService from './animationService';
 import AnimationController from './animationController';
+import * as angular from 'angular';
 
-const animationComponentModule = angular.module('animationComponentModule', [
-    'pascalprecht.translate'
-  ])
+const animationComponentModule = angular
+  .module('animationComponentModule', ['pascalprecht.translate'])
   .service('AnimationService', AnimationService)
   .controller('AnimationController', AnimationController)
   .config([
     '$translatePartialLoaderProvider',
-    ($translatePartialLoaderProvider) => {
+    $translatePartialLoaderProvider => {
       $translatePartialLoaderProvider.addPart('components/animation/i18n');
     }
   ]);

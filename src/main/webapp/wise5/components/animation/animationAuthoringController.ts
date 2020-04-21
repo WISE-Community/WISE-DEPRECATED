@@ -3,22 +3,45 @@
 import AnimationController from './animationController';
 
 class AnimationAuthoringController extends AnimationController {
-  constructor($filter,
-              $mdDialog,
-              $q,
-              $rootScope,
-              $scope,
-              $timeout,
-              AnimationService,
-              AnnotationService,
-              ConfigService,
-              NodeService,
-              NotebookService,
-              ProjectService,
-              StudentAssetService,
-              StudentDataService,
-              UtilService) {
-    super($filter,
+  allowedConnectedComponentTypes: any[];
+
+  static $inject = [
+    '$filter',
+    '$mdDialog',
+    '$q',
+    '$rootScope',
+    '$scope',
+    '$timeout',
+    'AnimationService',
+    'AnnotationService',
+    'ConfigService',
+    'NodeService',
+    'NotebookService',
+    'ProjectService',
+    'StudentAssetService',
+    'StudentDataService',
+    'UtilService'
+  ];
+
+  constructor(
+    $filter,
+    $mdDialog,
+    $q,
+    $rootScope,
+    $scope,
+    $timeout,
+    AnimationService,
+    AnnotationService,
+    ConfigService,
+    NodeService,
+    NotebookService,
+    ProjectService,
+    StudentAssetService,
+    StudentDataService,
+    UtilService
+  ) {
+    super(
+      $filter,
       $mdDialog,
       $q,
       $rootScope,
@@ -32,11 +55,9 @@ class AnimationAuthoringController extends AnimationController {
       ProjectService,
       StudentAssetService,
       StudentDataService,
-      UtilService);
-    this.allowedConnectedComponentTypes = [
-      { type: 'Animation' },
-      { type: 'Graph' }
-    ];
+      UtilService
+    );
+    this.allowedConnectedComponentTypes = [{ type: 'Animation' }, { type: 'Graph' }];
   }
 
   handleAuthoringComponentContentChanged(newValue, oldValue) {
@@ -155,7 +176,8 @@ class AnimationAuthoringController extends AnimationController {
 
   authoringMoveAuthoredObjectUp(index) {
     if (this.canMoveUp(index)) {
-      const object = this.authoringComponentContent.objects[index];
+      const objects = this.authoringComponentContent.objects;
+      const object = objects[index];
       objects.splice(index, 1);
       objects.splice(index - 1, 0, object);
       this.authoringViewComponentChanged();
@@ -230,7 +252,7 @@ class AnimationAuthoringController extends AnimationController {
     const nodeId = authoredObject.dataSource.nodeId;
     authoredObject.dataSource = {
       nodeId: nodeId
-    }
+    };
     this.authoringViewComponentChanged();
   }
 
@@ -311,23 +333,5 @@ class AnimationAuthoringController extends AnimationController {
     delete authoredObject.imageMovingDown;
   }
 }
-
-AnimationAuthoringController.$inject = [
-  '$filter',
-  '$mdDialog',
-  '$q',
-  '$rootScope',
-  '$scope',
-  '$timeout',
-  'AnimationService',
-  'AnnotationService',
-  'ConfigService',
-  'NodeService',
-  'NotebookService',
-  'ProjectService',
-  'StudentAssetService',
-  'StudentDataService',
-  'UtilService'
-];
 
 export default AnimationAuthoringController;

@@ -1,6 +1,8 @@
 import ComponentService from '../componentService';
 
 class AnimationService extends ComponentService {
+  static $inject = ['$filter', 'StudentDataService', 'UtilService'];
+
   constructor($filter, StudentDataService, UtilService) {
     super($filter, StudentDataService, UtilService);
   }
@@ -25,7 +27,7 @@ class AnimationService extends ComponentService {
 
   isCompleted(component, componentStates, componentEvents, nodeEvents, node) {
     return componentStates.length > 0;
-  };
+  }
 
   componentStateHasStudentWork(componentState, componentContent) {
     if (componentState != null) {
@@ -34,11 +36,5 @@ class AnimationService extends ComponentService {
     return false;
   }
 }
-
-AnimationService.$inject = [
-  '$filter',
-  'StudentDataService',
-  'UtilService'
-];
 
 export default AnimationService;
