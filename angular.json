@@ -28,10 +28,10 @@
               "sourceMap": true,
               "statsJson": true,
               "extractCss": true,
-              "namedChunks": false,
+              "namedChunks": true,
               "aot": true,
               "extractLicenses": true,
-              "vendorChunk": false,
+              "vendorChunk": true,
               "buildOptimizer": true,
               "fileReplacements": [
                 {
@@ -128,18 +128,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "site:build"
+            "browserTarget": "wise:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "site:build:production"
+              "browserTarget": "wise:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "site:build"
+            "browserTarget": "wise:build"
           }
         },
         "test": {
@@ -163,7 +163,7 @@
         }
       }
     },
-    "site-e2e": {
+    "wise-e2e": {
       "root": "src/main/webapp/site/e2e",
       "sourceRoot": "src/main/webapp/site/e2e",
       "projectType": "application",
@@ -172,7 +172,7 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "./protractor.conf.js",
-            "devServerTarget": "site:serve"
+            "devServerTarget": "wise:serve"
           }
         },
         "lint": {
@@ -185,7 +185,7 @@
       }
     }
   },
-  "defaultProject": "site",
+  "defaultProject": "wise",
   "schematics": {
     "@schematics/angular:component": {
       "prefix": "app",

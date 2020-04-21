@@ -57,7 +57,8 @@ import org.springframework.web.servlet.view.UrlBasedViewResolver;
 
 @EnableWebMvc
 @Configuration
-@ComponentScan(basePackages = {"org.wise.portal.presentation", "org.wise.portal.service", "org.wise.portal.dao", "org.wise.vle.web"})
+@ComponentScan(basePackages = { "org.wise.portal.presentation", "org.wise.portal.service",
+    "org.wise.portal.dao", "org.wise.vle.web" })
 public class WebConfig implements WebMvcConfigurer {
 
   @Value("${google_analytics_id:}")
@@ -65,8 +66,10 @@ public class WebConfig implements WebMvcConfigurer {
 
   public void addResourceHandlers(final ResourceHandlerRegistry registry) {
     registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
-    registry.addResourceHandler("/pages/resources/**").addResourceLocations("/portal/pages/resources/");
-    registry.addResourceHandler("/portal/javascript/**").addResourceLocations("/portal/javascript/");
+    registry.addResourceHandler("/pages/resources/**")
+        .addResourceLocations("/portal/pages/resources/");
+    registry.addResourceHandler("/portal/javascript/**")
+        .addResourceLocations("/portal/javascript/");
     registry.addResourceHandler("/portal/themes/**").addResourceLocations("/portal/themes/");
     registry.addResourceHandler("/portal/translate/**").addResourceLocations("/portal/translate/");
     registry.addResourceHandler("/vle/**").addResourceLocations("/vle/");
@@ -78,6 +81,8 @@ public class WebConfig implements WebMvcConfigurer {
     registry.addResourceHandler("/assets/**").addResourceLocations("/site/dist/assets/");
     registry.addResourceHandler("/*.css").addResourceLocations("/site/dist/");
     registry.addResourceHandler("/*.ico").addResourceLocations("/site/dist/");
+    registry.addResourceHandler("/*.html").addResourceLocations("/site/dist/");
+    registry.addResourceHandler("/*.js").addResourceLocations("/site/dist/");
   }
 
   @Bean
@@ -128,7 +133,7 @@ public class WebConfig implements WebMvcConfigurer {
   }
 
   @Bean
-  public RequestToViewNameTranslator viewNameTranslator () {
+  public RequestToViewNameTranslator viewNameTranslator() {
     return new DefaultRequestToViewNameTranslator();
   }
 
@@ -162,7 +167,8 @@ public class WebConfig implements WebMvcConfigurer {
     mappings.setProperty("org.springframework.web.multipart.MaxUploadSizeExceededException",
         "errors/maxUploadSizeExceededError");
     mappings.setProperty("java.lang.Exception", "errors/friendlyError");
-    mappings.setProperty("org.springframework.security.access.AccessDeniedException", "errors/accessdenied");
+    mappings.setProperty("org.springframework.security.access.AccessDeniedException",
+        "errors/accessdenied");
     mappings.setProperty("org.wise.portal.presentation.web.exception.NotAuthorizedException",
         "errors/accessdenied");
     resolver.setExceptionMappings(mappings);

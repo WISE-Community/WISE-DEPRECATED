@@ -18,14 +18,14 @@ const teacherModule = angular
       .state('root.at', {
         url: '/edit',
         abstract: true,
-        templateUrl: 'wise5/authoringTool/authoringTool.html',
+        templateUrl: '/wise5/authoringTool/authoringTool.html',
         controller: 'AuthoringToolController',
         controllerAs: 'authoringToolController',
         resolve: {}
       })
       .state('root.at.main', {
         url: '/home',
-        templateUrl: 'wise5/authoringTool/main/main.html',
+        templateUrl: '/wise5/authoringTool/main/main.html',
         controller: 'AuthoringToolMainController',
         controllerAs: 'authoringToolMainController',
         resolve: {
@@ -47,7 +47,7 @@ const teacherModule = angular
       })
       .state('root.at.project', {
         url: '/unit/:projectId',
-        templateUrl: 'wise5/authoringTool/project/project.html',
+        templateUrl: '/wise5/authoringTool/project/project.html',
         controller: 'ProjectController',
         controllerAs: 'projectController',
         resolve: {
@@ -85,68 +85,68 @@ const teacherModule = angular
       })
       .state('root.at.project.node', {
         url: '/node/:nodeId',
-        templateUrl: 'wise5/authoringTool/node/node.html',
+        templateUrl: '/wise5/authoringTool/node/node.html',
         controller: 'NodeAuthoringController',
         controllerAs: 'nodeAuthoringController',
         resolve: {}
       })
       .state('root.at.project.nodeConstraints', {
         url: '/node/constraints/:nodeId',
-        templateUrl: 'wise5/authoringTool/node/node.html',
+        templateUrl: '/wise5/authoringTool/node/node.html',
         controller: 'NodeAuthoringController',
         controllerAs: 'nodeAuthoringController',
         resolve: {}
       })
       .state('root.at.project.nodeEditPaths', {
         url: '/node/editpaths/:nodeId',
-        templateUrl: 'wise5/authoringTool/node/node.html',
+        templateUrl: '/wise5/authoringTool/node/node.html',
         controller: 'NodeAuthoringController',
         controllerAs: 'nodeAuthoringController',
         resolve: {}
       })
       .state('root.at.project.asset', {
         url: '/asset',
-        templateUrl: 'wise5/authoringTool/asset/asset.html',
+        templateUrl: '/wise5/authoringTool/asset/asset.html',
         controller: 'ProjectAssetController',
         controllerAs: 'projectAssetController',
         resolve: {}
       })
       .state('root.at.project.info', {
         url: '/info',
-        templateUrl: 'wise5/authoringTool/info/info.html',
+        templateUrl: '/wise5/authoringTool/info/info.html',
         controller: 'ProjectInfoController',
         controllerAs: 'projectInfoController',
         resolve: {}
       })
       .state('root.at.project.advanced', {
         url: '/advanced',
-        templateUrl: 'wise5/authoringTool/advanced/advancedAuthoring.html',
+        templateUrl: '/wise5/authoringTool/advanced/advancedAuthoring.html',
         controller: 'AdvancedAuthoringController',
         controllerAs: 'advancedAuthoringController'
       })
       .state('root.at.project.rubric', {
         url: '/rubric',
-        templateUrl: 'wise5/authoringTool/rubric/rubricAuthoring.html',
+        templateUrl: '/wise5/authoringTool/rubric/rubricAuthoring.html',
         controller: 'RubricAuthoringController',
         controllerAs: 'rubricAuthoringController'
       })
       .state('root.at.project.notebook', {
         url: '/notebook',
-        templateUrl: 'wise5/authoringTool/notebook/notebookAuthoring.html',
+        templateUrl: '/wise5/authoringTool/notebook/notebookAuthoring.html',
         controller: 'AuthorNotebookController',
         controllerAs: 'authorNotebookController',
         resolve: {}
       })
       .state('root.at.project.milestones', {
         url: '/milestones',
-        templateUrl: 'wise5/authoringTool/milestones/milestonesAuthoring.html',
+        templateUrl: '/wise5/authoringTool/milestones/milestonesAuthoring.html',
         controller: 'MilestonesAuthoringController',
         controllerAs: 'milestonesAuthoringController',
         resolve: {}
       })
       .state('root.cm', {
         url: '/manage/unit/:runId',
-        templateUrl: 'wise5/classroomMonitor/classroomMonitor.html',
+        templateUrl: '/wise5/classroomMonitor/classroomMonitor.html',
         controller: 'ClassroomMonitorController',
         controllerAs: 'classroomMonitorController',
         abstract: true,
@@ -245,13 +245,13 @@ const teacherModule = angular
       })
       .state('root.cm.teamLanding', {
         url: '/team',
-        templateUrl: 'wise5/classroomMonitor/studentProgress/studentProgress.html',
+        templateUrl: '/wise5/classroomMonitor/studentProgress/studentProgress.html',
         controller: 'StudentProgressController',
         controllerAs: 'studentProgressController'
       })
       .state('root.cm.team', {
         url: '/team/:workgroupId',
-        templateUrl: 'wise5/classroomMonitor/studentGrading/studentGrading.html',
+        templateUrl: '/wise5/classroomMonitor/studentGrading/studentGrading.html',
         controller: 'StudentGradingController',
         controllerAs: 'studentGradingController',
         resolve: {
@@ -279,31 +279,31 @@ const teacherModule = angular
       })
       .state('root.cm.manageStudents', {
         url: '/manageStudents',
-        templateUrl: 'wise5/classroomMonitor/manageStudents/manageStudents.html',
+        templateUrl: '/wise5/classroomMonitor/manageStudents/manageStudents.html',
         controller: 'ManageStudentsController',
         controllerAs: 'manageStudentsController'
       })
       .state('root.cm.dashboard', {
         url: '/dashboard',
-        templateUrl: 'wise5/classroomMonitor/dashboard/dashboard.html',
+        templateUrl: '/wise5/classroomMonitor/dashboard/dashboard.html',
         controller: 'DashboardController',
         controllerAs: 'dashboardController'
       })
       .state('root.cm.export', {
         url: '/export',
-        templateUrl: 'wise5/classroomMonitor/dataExport/dataExport.html',
+        templateUrl: '/wise5/classroomMonitor/dataExport/dataExport.html',
         controller: 'DataExportController',
         controllerAs: 'dataExportController'
       })
       .state('root.cm.milestones', {
         url: '/milestones',
-        templateUrl: 'wise5/classroomMonitor/milestones/milestones.html',
+        templateUrl: '/wise5/classroomMonitor/milestones/milestones.html',
         controller: 'MilestonesController',
         controllerAs: 'milestonesController'
       })
       .state('root.cm.notebooks', {
         url: '/notebook',
-        templateUrl: 'wise5/classroomMonitor/notebook/notebookGrading.html',
+        templateUrl: '/wise5/classroomMonitor/notebook/notebookGrading.html',
         controller: 'NotebookGradingController',
         controllerAs: 'notebookGradingController'
       })

@@ -162,7 +162,7 @@ const classroomMonitorModule = angular
       $translatePartialLoaderProvider.addPart('classroomMonitor/i18n');
       $translateProvider
         .useLoader('$translatePartialLoader', {
-          urlTemplate: 'wise5/{part}/i18n_{lang}.json'
+          urlTemplate: '/wise5/{part}/i18n_{lang}.json'
         })
         .fallbackLanguage(['en'])
         .registerAvailableLanguageKeys(

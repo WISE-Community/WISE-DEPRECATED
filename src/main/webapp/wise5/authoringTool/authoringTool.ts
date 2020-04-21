@@ -154,7 +154,7 @@ const authoringModule = angular
       $translatePartialLoaderProvider.addPart('authoringTool/i18n');
       $translateProvider
         .useLoader('$translatePartialLoader', {
-          urlTemplate: 'wise5/{part}/i18n_{lang}.json'
+          urlTemplate: '/wise5/{part}/i18n_{lang}.json'
         })
         .registerAvailableLanguageKeys(
           ['ar', 'el', 'en', 'es', 'ja', 'ko', 'pt', 'tr', 'zh_CN', 'zh_TW'],

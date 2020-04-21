@@ -446,7 +446,7 @@ const NavItem = {
     isPlanningNode: '<'
   },
   templateUrl:
-    'wise5/classroomMonitor/classroomMonitorComponents/nodeProgress/navItem/navItem.html',
+    '/wise5/classroomMonitor/classroomMonitorComponents/nodeProgress/navItem/navItem.html',
   controller: NavItemController
 };
 

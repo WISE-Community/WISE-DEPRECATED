@@ -39,7 +39,7 @@ const teacherRoutes: Routes = [
           }
         ]
       },
-      { path: '', loadChildren: () => import('./teacher-angular-js-module').then(m => m.TeacherAngularJSModule)}
+      {path: '', loadChildren: './teacher-angular-js-module#TeacherAngularJSModule'}
     ],
   }
 ];

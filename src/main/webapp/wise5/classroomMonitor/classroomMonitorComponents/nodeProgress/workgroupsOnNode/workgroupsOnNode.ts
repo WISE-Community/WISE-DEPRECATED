@@ -25,7 +25,7 @@ class WorkgroupsOnNodeController {
       parent: angular.element(document.body),
       targetEvent: ev,
       templateUrl:
-        'wise5/classroomMonitor/classroomMonitorComponents/nodeProgress/workgroupsOnNode/workgroupsOnNodeDialog.html',
+        '/wise5/classroomMonitor/classroomMonitorComponents/nodeProgress/workgroupsOnNode/workgroupsOnNodeDialog.html',
       locals: {
         data: this.parent
       },
