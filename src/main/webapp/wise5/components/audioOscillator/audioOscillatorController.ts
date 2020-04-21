@@ -1,27 +1,83 @@
 'use strict';
 
-import ComponentController from "../componentController";
+import ComponentController from '../componentController';
+import AudioOscillatorService from './audioOscillatorService';
 
 class AudioOscillatorController extends ComponentController {
-  constructor($filter,
+  $q: any;
+  $timeout: any;
+  AudioOscillatorService: AudioOscillatorService;
+  frequenciesPlayed: number[];
+  frequenciesPlayedSorted: number[];
+  numberOfFrequenciesPlayed: number;
+  minFrequencyPlayed: number;
+  maxFrequencyPlayed: number;
+  oscilloscopeId: string;
+  isPlaying: boolean;
+  oscillatorType: string;
+  frequency: number;
+  oscillatorTypes: string[];
+  oscilloscopeWidth: number;
+  oscilloscopeHeight: number;
+  gridCellSize: number;
+  stopAfterGoodDraw: boolean;
+  audioContext: any;
+  playStopButtonText: string;
+  oscillator: any;
+  gain: any;
+  destination: any;
+  analyser: any;
+  goodDraw: boolean;
+
+  static $inject = [
+    '$filter',
+    '$mdDialog',
+    '$q',
+    '$rootScope',
+    '$scope',
+    '$timeout',
+    'AnnotationService',
+    'AudioOscillatorService',
+    'ConfigService',
+    'NodeService',
+    'NotebookService',
+    'ProjectService',
+    'StudentAssetService',
+    'StudentDataService',
+    'UtilService'
+  ];
+
+  constructor(
+    $filter,
+    $mdDialog,
+    $q,
+    $rootScope,
+    $scope,
+    $timeout,
+    AnnotationService,
+    AudioOscillatorService,
+    ConfigService,
+    NodeService,
+    NotebookService,
+    ProjectService,
+    StudentAssetService,
+    StudentDataService,
+    UtilService
+  ) {
+    super(
+      $filter,
       $mdDialog,
-      $q,
       $rootScope,
       $scope,
-      $timeout,
       AnnotationService,
-      AudioOscillatorService,
       ConfigService,
       NodeService,
       NotebookService,
       ProjectService,
       StudentAssetService,
       StudentDataService,
-      UtilService) {
-    super($filter, $mdDialog, $rootScope, $scope,
-        AnnotationService, ConfigService, NodeService,
-        NotebookService, ProjectService, StudentAssetService,
-        StudentDataService, UtilService);
+      UtilService
+    );
     this.$q = $q;
     this.$timeout = $timeout;
     this.AudioOscillatorService = AudioOscillatorService;
@@ -41,13 +97,23 @@ class AudioOscillatorController extends ComponentController {
     if (this.isStudentMode()) {
       if (this.UtilService.hasShowWorkConnectedComponent(this.componentContent)) {
         this.handleConnectedComponents();
-      }  else if (this.AudioOscillatorService.componentStateHasStudentWork(componentState, this.componentContent)) {
+      } else if (
+        this.AudioOscillatorService.componentStateHasStudentWork(
+          componentState,
+          this.componentContent
+        )
+      ) {
         this.setStudentWork(componentState);
       } else if (this.UtilService.hasConnectedComponent(this.componentContent)) {
         this.handleConnectedComponents();
       }
     } else {
-      if (this.AudioOscillatorService.componentStateHasStudentWork(componentState, this.componentContent)) {
+      if (
+        this.AudioOscillatorService.componentStateHasStudentWork(
+          componentState,
+          this.componentContent
+        )
+      ) {
         this.setStudentWork(componentState);
       }
     }
@@ -89,10 +155,12 @@ class AudioOscillatorController extends ComponentController {
    * dimensions of the canvas will erase the canvas.
    */
   drawOscilloscopeGridAfterTimeout() {
-    this.$timeout(() => {this.drawOscilloscopeGrid()}, 0);
+    this.$timeout(() => {
+      this.drawOscilloscopeGrid();
+    }, 0);
   }
 
-  cleanupBeforeExiting(event, args) {
+  cleanupBeforeExiting() {
     if (!this.isGradingMode()) {
       this.stop();
       this.audioContext.close();
@@ -196,7 +264,7 @@ class AudioOscillatorController extends ComponentController {
   addFrequencyPlayed(frequency) {
     this.frequenciesPlayed.push(frequency);
     this.frequenciesPlayedSorted = this.UtilService.makeCopyOfJSONObject(this.frequenciesPlayed);
-    this.frequenciesPlayedSorted.sort((a, b) => (a - b));
+    this.frequenciesPlayedSorted.sort((a, b) => a - b);
     this.numberOfFrequenciesPlayed = this.frequenciesPlayed.length;
     this.minFrequencyPlayed = Math.min(...this.frequenciesPlayed);
     this.maxFrequencyPlayed = Math.max(...this.frequenciesPlayed);
@@ -243,21 +311,21 @@ class AudioOscillatorController extends ComponentController {
   }
 
   startDrawingAudioSignalLine() {
-    const ctx = document.getElementById(this.oscilloscopeId).getContext('2d');
+    const ctx = (<HTMLCanvasElement>document.getElementById(this.oscilloscopeId)).getContext('2d');
     ctx.lineWidth = 2;
     ctx.strokeStyle = 'rgb(0, 200, 0)';
     ctx.beginPath();
   }
 
   getSliceWidth() {
-    const ctx = document.getElementById(this.oscilloscopeId).getContext('2d');
+    const ctx = (<HTMLCanvasElement>document.getElementById(this.oscilloscopeId)).getContext('2d');
     const bufferLength = this.analyser.frequencyBinCount;
     const width = ctx.canvas.width;
-    return width * 1.0 / bufferLength;
+    return (width * 1.0) / bufferLength;
   }
 
   drawOscilloscopePoints() {
-    const ctx = document.getElementById(this.oscilloscopeId).getContext('2d');
+    const ctx = (<HTMLCanvasElement>document.getElementById(this.oscilloscopeId)).getContext('2d');
     const height = ctx.canvas.height;
     const timeData = this.getTimeData();
     const sliceWidth = this.getSliceWidth();
@@ -298,7 +366,7 @@ class AudioOscillatorController extends ComponentController {
          * positioning is relative to the upper left corner being 0,0.
          */
         v = (128 - (timeData[i] - 128)) / 128.0;
-        y = v * height / 2;
+        y = (v * height) / 2;
         this.drawPoint(ctx, isFirstPointDrawn, x, y);
         if (!isFirstPointDrawn) {
           isFirstPointDrawn = true;
@@ -333,7 +401,7 @@ class AudioOscillatorController extends ComponentController {
   }
 
   drawOscilloscopeGrid() {
-    const ctx = document.getElementById(this.oscilloscopeId).getContext('2d');
+    const ctx = (<HTMLCanvasElement>document.getElementById(this.oscilloscopeId)).getContext('2d');
     const width = ctx.canvas.width;
     const height = ctx.canvas.height;
     const gridCellSize = this.gridCellSize;
@@ -434,13 +502,17 @@ class AudioOscillatorController extends ComponentController {
     if (existingStudentData.frequenciesPlayed == null) {
       existingStudentData.frequenciesPlayed = newStudentData.frequenciesPlayed;
     } else {
-      existingStudentData.frequenciesPlayed = existingStudentData.frequenciesPlayed.concat(newStudentData.frequenciesPlayed);
+      existingStudentData.frequenciesPlayed = existingStudentData.frequenciesPlayed.concat(
+        newStudentData.frequenciesPlayed
+      );
     }
 
     if (existingStudentData.frequenciesPlayedSorted == null) {
       existingStudentData.frequenciesPlayedSorted = newStudentData.frequenciesPlayed;
     } else {
-      let frequenciesPlayedSorted = this.UtilService.makeCopyOfJSONObject(existingStudentData.frequenciesPlayed);
+      let frequenciesPlayedSorted = this.UtilService.makeCopyOfJSONObject(
+        existingStudentData.frequenciesPlayed
+      );
       frequenciesPlayedSorted.sort();
       existingStudentData.frequenciesPlayedSorted = frequenciesPlayedSorted;
     }
@@ -448,40 +520,29 @@ class AudioOscillatorController extends ComponentController {
     if (existingStudentData.numberOfFrequenciesPlayed == null) {
       existingStudentData.numberOfFrequenciesPlayed = newStudentData.numberOfFrequenciesPlayed;
     } else {
-      existingStudentData.numberOfFrequenciesPlayed = existingStudentData.numberOfFrequenciesPlayed + newStudentData.numberOfFrequenciesPlayed;
+      existingStudentData.numberOfFrequenciesPlayed =
+        existingStudentData.numberOfFrequenciesPlayed + newStudentData.numberOfFrequenciesPlayed;
     }
 
     if (existingStudentData.minFrequencyPlayed == null) {
       existingStudentData.minFrequencyPlayed = newStudentData.minFrequencyPlayed;
     } else {
-      existingStudentData.minFrequencyPlayed = Math.min(existingStudentData.minFrequencyPlayed, newStudentData.minFrequencyPlayed);
+      existingStudentData.minFrequencyPlayed = Math.min(
+        existingStudentData.minFrequencyPlayed,
+        newStudentData.minFrequencyPlayed
+      );
     }
 
     if (existingStudentData.maxFrequencyPlayed == null) {
       existingStudentData.maxFrequencyPlayed = newStudentData.maxFrequencyPlayed;
     } else {
-      existingStudentData.maxFrequencyPlayed = Math.max(existingStudentData.maxFrequencyPlayed, newStudentData.maxFrequencyPlayed);
+      existingStudentData.maxFrequencyPlayed = Math.max(
+        existingStudentData.maxFrequencyPlayed,
+        newStudentData.maxFrequencyPlayed
+      );
     }
     return existingStudentData;
   }
-};
-
-AudioOscillatorController.$inject = [
-  '$filter',
-  '$mdDialog',
-  '$q',
-  '$rootScope',
-  '$scope',
-  '$timeout',
-  'AnnotationService',
-  'AudioOscillatorService',
-  'ConfigService',
-  'NodeService',
-  'NotebookService',
-  'ProjectService',
-  'StudentAssetService',
-  'StudentDataService',
-  'UtilService'
-];
+}
 
 export default AudioOscillatorController;

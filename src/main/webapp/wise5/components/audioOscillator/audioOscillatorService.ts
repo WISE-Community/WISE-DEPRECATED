@@ -1,6 +1,8 @@
 import ComponentService from '../componentService';
 
 class AudioOscillatorService extends ComponentService {
+  static $inject = ['$filter', 'StudentDataService', 'UtilService'];
+
   constructor($filter, StudentDataService, UtilService) {
     super($filter, StudentDataService, UtilService);
   }
@@ -12,9 +14,7 @@ class AudioOscillatorService extends ComponentService {
   createComponent() {
     const component = super.createComponent();
     component.type = 'AudioOscillator';
-    component.oscillatorTypes = [
-      'sine'
-    ];
+    component.oscillatorTypes = ['sine'];
     component.startingFrequency = 440;
     component.oscilloscopeWidth = 800;
     component.oscilloscopeHeight = 400;
@@ -26,7 +26,7 @@ class AudioOscillatorService extends ComponentService {
   isCompleted(component, componentStates, componentEvents, nodeEvents, node) {
     if (componentStates && componentStates.length) {
       let componentState = componentStates[componentStates.length - 1];
-      return this.componentStateHasStudentWork(componentState);
+      return this.componentStateHasStudentWork(componentState, component);
     }
     return false;
   }
@@ -35,8 +35,7 @@ class AudioOscillatorService extends ComponentService {
     if (componentState != null) {
       let studentData = componentState.studentData;
       if (studentData != null) {
-        if (studentData.frequenciesPlayed != null &&
-          studentData.frequenciesPlayed.length > 0) {
+        if (studentData.frequenciesPlayed != null && studentData.frequenciesPlayed.length > 0) {
           return true;
         }
       }
@@ -44,11 +43,5 @@ class AudioOscillatorService extends ComponentService {
     return false;
   }
 }
-
-AudioOscillatorService.$inject = [
-  '$filter',
-  'StudentDataService',
-  'UtilService'
-];
 
 export default AudioOscillatorService;

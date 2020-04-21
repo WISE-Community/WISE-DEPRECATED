@@ -3,22 +3,49 @@
 import AudioOscillatorController from './audioOscillatorController';
 
 class AudioOscillatorAuthoringController extends AudioOscillatorController {
-  constructor($filter,
-              $mdDialog,
-              $q,
-              $rootScope,
-              $scope,
-              $timeout,
-              AnnotationService,
-              AudioOscillatorService,
-              ConfigService,
-              NodeService,
-              NotebookService,
-              ProjectService,
-              StudentAssetService,
-              StudentDataService,
-              UtilService) {
-    super($filter,
+  allowedConnectedComponentTypes: any[];
+  authoringSineChecked: boolean;
+  authoringSquareChecked: boolean;
+  authoringTriangleChecked: boolean;
+  authoringSawtoothChecked: boolean;
+
+  static $inject = [
+    '$filter',
+    '$mdDialog',
+    '$q',
+    '$rootScope',
+    '$scope',
+    '$timeout',
+    'AnnotationService',
+    'AudioOscillatorService',
+    'ConfigService',
+    'NodeService',
+    'NotebookService',
+    'ProjectService',
+    'StudentAssetService',
+    'StudentDataService',
+    'UtilService'
+  ];
+
+  constructor(
+    $filter,
+    $mdDialog,
+    $q,
+    $rootScope,
+    $scope,
+    $timeout,
+    AnnotationService,
+    AudioOscillatorService,
+    ConfigService,
+    NodeService,
+    NotebookService,
+    ProjectService,
+    StudentAssetService,
+    StudentDataService,
+    UtilService
+  ) {
+    super(
+      $filter,
       $mdDialog,
       $q,
       $rootScope,
@@ -32,10 +59,9 @@ class AudioOscillatorAuthoringController extends AudioOscillatorController {
       ProjectService,
       StudentAssetService,
       StudentDataService,
-      UtilService);
-    this.allowedConnectedComponentTypes = [
-      { type: 'AudioOscillator' }
-    ];
+      UtilService
+    );
+    this.allowedConnectedComponentTypes = [{ type: 'AudioOscillator' }];
     this.populateCheckedOscillatorTypes();
   }
 
@@ -82,23 +108,5 @@ class AudioOscillatorAuthoringController extends AudioOscillatorController {
     this.authoringViewComponentChanged();
   }
 }
-
-AudioOscillatorAuthoringController.$inject = [
-  '$filter',
-  '$mdDialog',
-  '$q',
-  '$rootScope',
-  '$scope',
-  '$timeout',
-  'AnnotationService',
-  'AudioOscillatorService',
-  'ConfigService',
-  'NodeService',
-  'NotebookService',
-  'ProjectService',
-  'StudentAssetService',
-  'StudentDataService',
-  'UtilService'
-];
 
 export default AudioOscillatorAuthoringController;
