@@ -371,7 +371,7 @@ class ComponentController {
    * @param {string} submitTriggeredBy What triggered the submit.
    * e.g. 'componentSubmitButton' or 'nodeSubmitButton'
    */
-  submit(submitTriggeredBy) {
+  submit(submitTriggeredBy = null) {
     if (this.getIsSubmitDirty()) {
       let isPerformSubmit = true;
 

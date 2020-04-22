@@ -3,6 +3,29 @@
 import EmbeddedController from "./embeddedController";
 
 class EmbeddedAuthoringController extends EmbeddedController {
+  allowedConnectedComponentTypes: any[];
+  embeddedApplicationIFrameId: string;
+
+  static $inject = [
+    '$filter',
+    '$mdDialog',
+    '$q',
+    '$rootScope',
+    '$scope',
+    '$sce',
+    '$timeout',
+    '$window',
+    'AnnotationService',
+    'ConfigService',
+    'EmbeddedService',
+    'NodeService',
+    'NotebookService',
+    'ProjectService',
+    'StudentAssetService',
+    'StudentDataService',
+    'UtilService'
+  ];
+
   constructor($filter,
               $mdDialog,
               $q,
@@ -95,31 +118,11 @@ class EmbeddedAuthoringController extends EmbeddedController {
   }
 
   reloadModel() {
-    const iframe = document.getElementById(this.embeddedApplicationIFrameId);
+    const iframe: any = document.getElementById(this.embeddedApplicationIFrameId);
     const src = iframe.src;
     iframe.src = '';
     iframe.src = src;
   }
 }
-
-EmbeddedAuthoringController.$inject = [
-  '$filter',
-  '$mdDialog',
-  '$q',
-  '$rootScope',
-  '$scope',
-  '$sce',
-  '$timeout',
-  '$window',
-  'AnnotationService',
-  'ConfigService',
-  'EmbeddedService',
-  'NodeService',
-  'NotebookService',
-  'ProjectService',
-  'StudentAssetService',
-  'StudentDataService',
-  'UtilService'
-];
 
 export default EmbeddedAuthoringController;

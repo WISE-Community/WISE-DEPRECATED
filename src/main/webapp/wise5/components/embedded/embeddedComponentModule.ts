@@ -1,5 +1,6 @@
 'use strict';
 
+import * as angular from 'angular';
 import EmbeddedService from './embeddedService';
 import EmbeddedController from './embeddedController';
 
