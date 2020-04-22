@@ -29,7 +29,7 @@ import ComponentService from '../components/componentService';
 import '../components/discussion/discussionComponentModule';
 import '../components/draw/drawComponentModule';
 import '../components/embedded/embeddedComponentModule';
-import Fabric from 'fabric';
+import fabric from 'fabric';
 import * as Hopscotch from '../lib/hopscotch/dist/js/hopscotch.min';
 import Filters from '../filters/filters';
 import * as Highcharts from '../lib/highcharts@4.2.1';
