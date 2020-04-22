@@ -220,7 +220,7 @@ class AuthoringToolMainController {
     const data = { constraints: true };
     this.saveEvent('projectPreviewed', 'Authoring', data, projectId);
     window.open(
-      `${this.ConfigService.getWISEBaseURL()}/project/${projectId}#!/project/${projectId}`
+      `${this.ConfigService.getWISEBaseURL()}/preview/unit/${projectId}`
     );
   }
 

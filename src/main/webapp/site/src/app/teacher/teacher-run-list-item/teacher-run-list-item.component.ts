@@ -45,7 +45,7 @@ export class TeacherRunListItemComponent implements OnInit {
     const contextPath = this.configService.getContextPath();
     this.editLink = `${contextPath}/author/authorproject.html?projectId=${this.run.project.id}`;
     if (this.run.project.wiseVersion === 4) {
-      this.gradeAndManageLink = `${this.configService.getWISE4Hostname()}/teacher/run/manage/${this.run.id}#!/run/${this.run.id}/project/`;
+      this.gradeAndManageLink = `${this.configService.getWISE4Hostname()}/teacher/run/manage/${this.run.id}`;
     } else {
       this.gradeAndManageLink = `${contextPath}/teacher/manage/unit/${this.run.id}`;
     }

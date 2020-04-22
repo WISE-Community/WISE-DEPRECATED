@@ -49,9 +49,9 @@ import '../../wise5/lib/draggable-points/draggable-points';
 import * as HighchartsExporting from '../../wise5/lib/highcharts-exporting@4.2.1';
 import * as covariance from 'compute-covariance';
 
-
 window['$'] = jQuery;
 window['jQuery'] = jQuery;
+import 'bootstrap';
 window['fabric'] = fabric.fabric;
 window['SockJS'] = SockJS;
 window['Stomp'] = StompJS.Stomp;

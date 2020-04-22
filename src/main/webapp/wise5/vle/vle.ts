@@ -65,6 +65,8 @@ import SockJS from 'sockjs-client';
 import * as Stomp from '@stomp/stompjs';
 import '../lib/summernote/dist/summernote';
 import '../lib/angular-summernote/dist/angular-summernote';
+import '../lib/summernoteExtensions/summernote-ext-addNote.js';
+import '../lib/summernoteExtensions/summernote-ext-print.js';
 import '../themes/default/theme';
 
 export default angular

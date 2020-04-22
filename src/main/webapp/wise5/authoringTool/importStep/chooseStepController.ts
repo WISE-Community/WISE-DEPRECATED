@@ -62,12 +62,12 @@ class ChooseStepController {
 
   previewImportNode(node) {
     window.open(
-      `${this.importProject.previewProjectURL}#!/project/${this.importProjectId}/${node.id}`
+      `${this.importProject.previewProjectURL}/${node.id}`
     );
   }
 
   previewImportProject() {
-    window.open(`${this.importProject.previewProjectURL}#!/project/${this.importProjectId}`);
+    window.open(`${this.importProject.previewProjectURL}`);
   }
 
   importSteps() {

@@ -165,7 +165,7 @@ class ProjectController {
     const previewProjectEventData = { constraints: true };
     this.saveEvent('projectPreviewed', 'Navigation', previewProjectEventData);
     window.open(
-      `${this.ConfigService.getConfigParam('previewProjectURL')}#!/project/${this.projectId}`
+      `${this.ConfigService.getConfigParam('previewProjectURL')}`
     );
   }
 
@@ -173,8 +173,7 @@ class ProjectController {
     const previewProjectEventData = { constraints: false };
     this.saveEvent('projectPreviewed', 'Navigation', previewProjectEventData);
     window.open(
-      `${this.ConfigService.getConfigParam('previewProjectURL')}` +
-        `?constraints=false#!/project/${this.projectId}`
+      `${this.ConfigService.getConfigParam('previewProjectURL')}?constraints=false`
     );
   }
 

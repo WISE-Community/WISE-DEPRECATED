@@ -374,7 +374,7 @@ public class AuthorAPIController {
     config.put("projectAssetTotalSizeMax", projectAssetTotalSizeMax);
     config.put("projectAssetURL", contextPath + "/author/project/asset/" + projectId);
     config.put("projectBaseURL", projectBaseURL);
-    config.put("previewProjectURL", contextPath + "/project/" + projectId);
+    config.put("previewProjectURL", contextPath + "/preview/unit/" + projectId);
     config.put("cRaterRequestURL", contextPath + "/c-rater");
     config.put("importStepsURL", contextPath + "/author/project/importSteps/" + projectId);
     config.put("featuredProjectIconsURL", contextPath + "/author/project/featured/icons");

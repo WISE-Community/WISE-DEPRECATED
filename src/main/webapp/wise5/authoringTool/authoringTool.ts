@@ -68,7 +68,10 @@ import TeacherDataService from '../services/teacherDataService';
 import TeacherWebSocketService from '../services/teacherWebSocketService';
 import UtilService from '../services/utilService';
 import WISELinkAuthoringController from './wiseLink/wiseLinkAuthoringController';
+import '../lib/summernote/dist/summernote';
 import '../lib/angular-summernote/dist/angular-summernote';
+import '../lib/summernoteExtensions/summernote-ext-addNote.js';
+import '../lib/summernoteExtensions/summernote-ext-print.js';
 import * as moment from 'moment';
 
 const authoringModule = angular
