@@ -207,7 +207,7 @@
           <md-input-container>
             <label>{{ ::'transitionToStep' | translate }}</label>
             <md-select id='stepSelectMenu'
-                   md-theme='default'
+                   md-theme='at'
                    class='node-select md-subhead'
                    ng-model='transition.to'
                    ng-change='nodeAuthoringController.authoringViewTransitionToNodeIdChanged()'
@@ -348,7 +348,7 @@
           <label>{{ ::'howToChooseAmongAvailablePaths' | translate }}</label>
           <md-select id='howToChooseAmongAvailablePathsSelect'
                  ng-disabled='nodeAuthoringController.node.transitionLogic.transitions.length <= 1'
-                 md-theme='default'
+                 md-theme='at'
                  class='node-select md-subhead'
                  ng-model='nodeAuthoringController.node.transitionLogic.howToChooseAmongAvailablePaths'
                  ng-change='nodeAuthoringController.authoringViewNodeChanged()'
@@ -366,7 +366,7 @@
           <label>{{ ::'whenToChoosePath' | translate }}</label>
           <md-select id='whenToChoosePathSelect'
                  ng-disabled='nodeAuthoringController.node.transitionLogic.transitions.length <= 1'
-                 md-theme='default'
+                 md-theme='at'
                  class='node-select md-subhead'
                  ng-model='nodeAuthoringController.node.transitionLogic.whenToChoosePath'
                  ng-change='nodeAuthoringController.authoringViewNodeChanged()'
@@ -384,7 +384,7 @@
           <label>{{ ::'canChangePath' | translate }}</label>
           <md-select id='canChangePathSelect'
                  ng-disabled='nodeAuthoringController.node.transitionLogic.transitions.length <= 1'
-                 md-theme='default'
+                 md-theme='at'
                  class='node-select md-subhead'
                  ng-model='nodeAuthoringController.node.transitionLogic.canChangePath'
                  ng-change='nodeAuthoringController.authoringViewNodeChanged()'
