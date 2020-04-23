@@ -6,11 +6,9 @@ import { TeacherService } from "../../teacher/teacher.service";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { UserService } from '../../services/user.service';
 import { ReactiveFormsModule } from "@angular/forms";
-import {
-  MatCheckboxModule,
-  MatInputModule,
-  MatSelectModule
-} from "@angular/material";
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { translationsFactory } from '../../app.module';
 import { I18n } from '@ngx-translate/i18n-polyfill';

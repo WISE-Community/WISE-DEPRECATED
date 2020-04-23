@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { LibraryProjectComponent } from './library-project.component';
 import { LibraryProject } from "../libraryProject";
 import { NO_ERRORS_SCHEMA, TRANSLATIONS_FORMAT, TRANSLATIONS, LOCALE_ID } from "@angular/core";
-import { MatDialog } from "@angular/material";
+import { MatDialog } from "@angular/material/dialog";
 import { translationsFactory } from '../../../app.module';
 import { I18n } from '@ngx-translate/i18n-polyfill';
 import { Router } from '@angular/router';

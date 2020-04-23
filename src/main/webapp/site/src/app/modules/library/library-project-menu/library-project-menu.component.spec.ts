@@ -2,7 +2,8 @@ import {async, ComponentFixture, fakeAsync, TestBed} from '@angular/core/testing
 import { LibraryProjectMenuComponent } from "./library-project-menu.component";
 import { TeacherService } from "../../../teacher/teacher.service";
 import { Project } from "../../../domain/project";
-import { MatDialog, MatMenuModule } from "@angular/material";
+import { MatDialog } from "@angular/material/dialog";
+import { MatMenuModule } from '@angular/material/menu';
 import { UserService } from "../../../services/user.service";
 import { User } from "../../../domain/user";
 import { Observable } from 'rxjs';

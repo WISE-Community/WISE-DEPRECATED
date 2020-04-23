@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RunSettingsDialogComponent } from './run-settings-dialog.component';
-import { MatDialogRef, MatDialog, MAT_DIALOG_DATA, MatSnackBarModule } from "@angular/material";
+import { MatDialogRef, MatDialog, MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { NO_ERRORS_SCHEMA, TRANSLATIONS_FORMAT, TRANSLATIONS, LOCALE_ID } from '@angular/core';
 import { Run } from "../../domain/run";
 import { TeacherService } from "../teacher.service";

@@ -3,7 +3,7 @@ import { PersonalLibraryComponent } from './personal-library.component';
 import { fakeAsyncResponse } from "../../../student/student-run-list/student-run-list.component.spec";
 import { LibraryService } from "../../../services/library.service";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { BehaviorSubject } from 'rxjs';
 
 export class MockLibraryService {

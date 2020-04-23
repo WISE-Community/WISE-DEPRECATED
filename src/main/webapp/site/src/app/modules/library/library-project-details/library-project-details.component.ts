@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { LibraryService } from "../../../services/library.service";
 import { UserService } from "../../../services/user.service";
 import { CreateRunDialogComponent } from "../../../teacher/create-run-dialog/create-run-dialog.component";

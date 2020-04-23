@@ -6,17 +6,13 @@ import { LoginHomeComponent } from "./login-home/login-home.component";
 import { LoginRoutingModule } from "./login-routing.module";
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { RecaptchaModule } from "ng-recaptcha";
-import { RecaptchaFormsModule } from "ng-recaptcha/forms";
-
-import {
-  MatButtonModule,
-  MatCardModule,
-  MatDividerModule,
-  MatFormFieldModule,
-  MatInputModule,
-  MatProgressBarModule
- } from '@angular/material';
+//import { RecaptchaModule, RecaptchaFormsModule } from 'ng-recaptcha';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 const materialModules = [
   MatButtonModule,
@@ -35,8 +31,8 @@ const materialModules = [
     LoginRoutingModule,
     ReactiveFormsModule,
     materialModules,
-    RecaptchaModule.forRoot(),
-    RecaptchaFormsModule
+    //RecaptchaModule.forRoot(),
+    //RecaptchaFormsModule
   ],
   declarations: [
     LoginComponent,

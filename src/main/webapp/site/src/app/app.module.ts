@@ -1,13 +1,15 @@
 import { APP_INITIALIZER, NgModule, TRANSLATIONS, LOCALE_ID, TRANSLATIONS_FORMAT,
   MissingTranslationStrategy } from '@angular/core';
-import { I18n, MISSING_TRANSLATION_STRATEGY } from '@ngx-translate/i18n-polyfill';
+//import { I18n, MISSING_TRANSLATION_STRATEGY } from '@ngx-translate/i18n-polyfill';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { HttpErrorInterceptor } from "./http-error.interceptor";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { RouterModule } from '@angular/router';
-import { MatDialogModule, MAT_SNACK_BAR_DEFAULT_OPTIONS, MatSidenavModule } from '@angular/material';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MAT_SNACK_BAR_DEFAULT_OPTIONS } from '@angular/material/snack-bar';
 import {
   SocialLoginModule,
   AuthServiceConfig,
@@ -114,8 +116,8 @@ export function translationsFactory(locale: string) {
       deps: [LOCALE_ID]
     },
     { provide: TRANSLATIONS_FORMAT, useValue: 'xlf' },
-    { provide: MISSING_TRANSLATION_STRATEGY, useValue: MissingTranslationStrategy.Ignore },
-    I18n,
+    //{ provide: MISSING_TRANSLATION_STRATEGY, useValue: MissingTranslationStrategy.Ignore },
+    //I18n,
     {
       provide: APP_INITIALIZER,
       useFactory: initialize,

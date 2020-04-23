@@ -4,7 +4,7 @@ import { fakeAsyncResponse } from "../../../student/student-run-list/student-run
 import { LibraryService } from "../../../services/library.service";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { LibraryGroup } from "../libraryGroup";
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { BehaviorSubject } from 'rxjs';
 
 export class MockLibraryService {

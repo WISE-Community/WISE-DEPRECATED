@@ -1,5 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA, MatSnackBar} from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { LibraryProjectDetailsComponent } from "../../modules/library/library-project-details/library-project-details.component";
 import { Run } from "../../domain/run";
 import { TeacherService } from "../teacher.service";

@@ -2,11 +2,8 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ListClassroomCoursesDialogComponent } from './list-classroom-courses-dialog.component';
 import { TeacherService } from '../teacher.service';
 import { UserService } from '../../services/user.service';
-import {
-  MAT_DIALOG_DATA, MatCheckboxModule,
-  MatDialog,
-  MatDialogRef
-} from '@angular/material';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { User } from '../../domain/user';
 import { Observable } from 'rxjs/internal/Observable';

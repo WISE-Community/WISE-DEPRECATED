@@ -8,7 +8,7 @@ import { MomentModule } from "ngx-moment";
 import { Project } from "../../domain/project";
 import { User } from "../../domain/user";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
-import { MatDialog } from "@angular/material";
+import { MatDialog } from "@angular/material/dialog";
 import { StudentService } from "../student.service";
 import { UserService } from "../../services/user.service";
 import { configureTestSuite } from 'ng-bullet';

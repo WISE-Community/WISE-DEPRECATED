@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { EditRunWarningDialogComponent } from './edit-run-warning-dialog.component';
 import { ConfigService } from '../../services/config.service';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { Run } from "../../domain/run";
 import { configureTestSuite } from 'ng-bullet';
