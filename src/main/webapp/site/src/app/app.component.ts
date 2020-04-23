@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 import { Router, NavigationEnd, NavigationStart } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatIconRegistry } from '@angular/material';
@@ -18,6 +19,7 @@ export class AppComponent {
   showMobileMenu: boolean = false;
   mediaWatcher: Subscription;
   hasAnnouncement: boolean = false;
+  isAngularJSPath: boolean = false;
   popstate: boolean = false;
   pageY: number = 0;
   prevPageY: number = 0;
@@ -29,7 +31,8 @@ export class AppComponent {
               sanitizer: DomSanitizer,
               utilService: UtilService,
               media: MediaObserver,
-              private configService: ConfigService) {
+              private configService: ConfigService,
+              @Inject(DOCUMENT) private document: Document) {
     iconRegistry.addSvgIcon(
       'ki-elicit',
       sanitizer.bypassSecurityTrustResourceUrl('assets/img/icons/ki-elicit.svg')
@@ -89,28 +92,43 @@ export class AppComponent {
   }
 
   ngOnInit() {
-    /** Temporary hack to ensure scroll to top on router navigation (excluding
-     * back/forward browser button presses)
-     * TODO: remove when https://github.com/angular/material2/issues/4280 is resolved
-     */
     this.router.events.subscribe((ev: any) => {
-      const topElement = document.querySelector('.top-content',);
-      if (!topElement) {
-        return;
+      if (ev instanceof NavigationEnd) {
+        this.isAngularJSPath = this.isAngularJSRoute();
+        this.toggleSiteStyles(this.isAngularJSPath);
       }
-      if (ev instanceof NavigationStart) {
-        this.popstate = ev.navigationTrigger === 'popstate';
-      } else if (ev instanceof NavigationEnd) {
-        if (!this.popstate) {
-          topElement.scrollIntoView();
-        }
-      }
+
+      /** Temporary hack to ensure scroll to top on router navigation (excluding
+       * back/forward browser button presses)
+       * TODO: remove when https://github.com/angular/material2/issues/4280 is resolved
+       */
+      this.fixScrollTop(ev);
     });
 
     this.configService.getAnnouncement().subscribe((announcement: Announcement) => {
       this.announcement = announcement;
       this.hasAnnouncement = announcement.visible;
     });
+  }
+
+  toggleSiteStyles(disable: boolean) {
+    const siteStylesheet = this.document.querySelector('[href^="siteStyles"]') as HTMLLinkElement;
+    siteStylesheet.disabled = disable;
+  }
+
+  fixScrollTop(ev: any) {
+    const topElement = document.querySelector('.top-content',);
+    if (!topElement) {
+      return;
+    }
+    if (ev instanceof NavigationStart) {
+      this.popstate = ev.navigationTrigger === 'popstate';
+    }
+    if (ev instanceof NavigationEnd) {
+      if (!this.popstate) {
+        topElement.scrollIntoView();
+      }
+    }
   }
 
   showDefaultMode(): boolean {
@@ -121,8 +139,7 @@ export class AppComponent {
   }
 
   showHeaderAndFooter() {
-    return this.showDefaultMode() &&
-      !this.isAngularJSRoute();
+    return this.showDefaultMode() && !this.isAngularJSRoute();
   }
 
   isAngularJSRoute() {

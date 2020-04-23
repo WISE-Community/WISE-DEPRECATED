@@ -18,7 +18,12 @@
             "polyfills": "src/main/webapp/site/src/polyfills.ts",
             "extractCss": true,
             "assets": ["src/main/webapp/site/src/assets", "src/main/webapp/site/src/favicon.ico"],
-            "styles": ["src/main/webapp/site/src/style/styles.scss"],
+            "styles": [
+              {
+                "input": "src/main/webapp/site/src/style/styles.scss",
+                "bundleName": "siteStyles"
+              }
+            ],
             "scripts": []
           },
           "configurations": {
