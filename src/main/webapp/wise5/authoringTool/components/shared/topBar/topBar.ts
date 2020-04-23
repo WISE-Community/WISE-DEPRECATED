@@ -81,13 +81,12 @@ const TopBar = {
             <img ng-src="{{ ::$ctrl.logoPath }}" alt="{{ ::'WISE_LOGO' | translate }}" class="logo" />
           </a>
         </span>
-        <span flex>
-        <h3>
+        <h3 layout="row" layout-align="start center">
           <span ng-if="$ctrl.projectTitle" id="projectTitleSpan">{{ $ctrl.projectTitle }}</span>
           <span ng-if="!$ctrl.projectTitle" id="projectTitleSpan">{{ ::'authoringTool' | translate }}</span>
-          <span class="md-caption" ng-if="$ctrl.projectId">
-            ({{ 'PROJECT_ID_DISPLAY' | translate:{id: $ctrl.projectId} }}
-            <span class="md-caption" ng-if="$ctrl.runId"> | {{ 'RUN_ID_DISPLAY' | translate:{id: $ctrl.runId} }}
+          <span class="md-caption" ng-if="$ctrl.projectId" layout="row" layout-align="start center">
+            &nbsp;({{ 'PROJECT_ID_DISPLAY' | translate:{id: $ctrl.projectId} }}
+            <span class="md-caption" ng-if="$ctrl.runId">&nbsp;| {{ 'RUN_ID_DISPLAY' | translate:{id: $ctrl.runId} }}
             </span>)
             <md-button aria-label="{{ ::'switchToGradingView' | translate }}" class="md-icon-button" ng-click="$ctrl.switchToGradingView()">
                 <md-icon md-menu-origin> assignment_turned_in </md-icon>
@@ -95,7 +94,7 @@ const TopBar = {
             </md-button>
           </span>
         </h3>
-        </span>
+        <span flex></span>
         <md-button style="text-transform: none;"
             ng-click="$ctrl.helpButtonClicked()">{{ ::'HELP' | translate }}</md-button>
         <md-menu id='accountMenu' md-position-mode="target-right target" md-offset="8 26">

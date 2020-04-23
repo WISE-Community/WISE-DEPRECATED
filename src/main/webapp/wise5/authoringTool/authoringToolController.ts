@@ -83,11 +83,11 @@ class AuthoringToolController {
         showToolbar: true,
         active: true
       },
-      'root.at.project.notebook': {
-        id: 'notebookButton',
-        name: this.$translate('notebookSettings'),
-        label: this.$translate('notebookSettings'),
-        icon: 'book',
+      'root.at.project.info': {
+        id: 'infoButton',
+        name: this.$translate('PROJECT_INFO'),
+        label: this.$translate('PROJECT_INFO'),
+        icon: 'info',
         type: 'primary',
         showToolbar: true,
         active: true
@@ -101,11 +101,20 @@ class AuthoringToolController {
         showToolbar: true,
         active: true
       },
-      'root.at.project.info': {
-        id: 'infoButton',
-        name: this.$translate('PROJECT_INFO'),
-        label: this.$translate('PROJECT_INFO'),
-        icon: 'info',
+      'root.at.project.notebook': {
+        id: 'notebookButton',
+        name: this.$translate('notebookSettings'),
+        label: this.$translate('notebookSettings'),
+        icon: 'book',
+        type: 'primary',
+        showToolbar: true,
+        active: true
+      },
+      'root.at.project.milestones': {
+        id: 'milestonesButton',
+        name: this.$translate('MILESTONES'),
+        label: this.$translate('MILESTONES'),
+        icon: 'flag',
         type: 'primary',
         showToolbar: true,
         active: true
@@ -158,15 +167,6 @@ class AuthoringToolController {
         type: 'secondary',
         showToolbar: true,
         active: false
-      },
-      'root.at.project.milestones': {
-        id: 'milestonesButton',
-        name: this.$translate('MILESTONES'),
-        label: this.$translate('MILESTONES'),
-        icon: 'flag',
-        type: 'primary',
-        showToolbar: true,
-        active: true
       }
     };
     this.processUI();

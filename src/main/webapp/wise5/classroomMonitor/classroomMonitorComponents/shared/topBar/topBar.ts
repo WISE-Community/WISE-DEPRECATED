@@ -155,17 +155,18 @@ const TopBar = {
   },
   controller: TopBarController,
   template: `<md-toolbar class="l-header">
-            <div class="md-toolbar-tools">
+            <div class="md-toolbar-tools" >
                 <span class="md-button logo-link">
                     <a href="{{::$ctrl.contextPath}}/teacher" target="_self">
                         <img ng-src="{{ ::$ctrl.logoPath }}" alt="{{ ::'WISE_LOGO' | translate }}" class="logo" />
                     </a>
                 </span>
-                <h3>{{ ::$ctrl.projectTitle }} <span class="md-caption">({{ ::'RUN_ID_DISPLAY' | translate:{id: $ctrl.runId} }})</span>
-                <md-button aria-label="{{ ::'switchToAuthoringView' | translate }}" class="md-icon-button" ng-click="$ctrl.switchToAuthoringView()">
-                    <md-icon md-menu-origin> edit </md-icon>
-                    <md-tooltip>{{ ::'switchToAuthoringView' | translate }}</md-tooltip>
-                </md-button>
+                <h3 layout="row" layout-align="start center">
+                  {{ ::$ctrl.projectTitle }}&nbsp;<span class="md-caption">({{ ::'RUN_ID_DISPLAY' | translate:{id: $ctrl.runId} }})</span>
+                  <md-button aria-label="{{ ::'switchToAuthoringView' | translate }}" class="md-icon-button" ng-click="$ctrl.switchToAuthoringView()">
+                      <md-icon md-menu-origin> edit </md-icon>
+                      <md-tooltip>{{ ::'switchToAuthoringView' | translate }}</md-tooltip>
+                  </md-button>
                 </h3>
                 <span flex></span>
                 <md-menu md-position-mode="target-right target" md-offset="52 26">
