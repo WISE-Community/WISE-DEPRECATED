@@ -1,12 +1,14 @@
+import * as angular from 'angular';
 import ComponentService from '../componentService';
+import StudentAssetService from '../../services/studentAssetService';
 
 class LabelService extends ComponentService {
+  $q: any;
+  StudentAssetService: StudentAssetService;
 
-  constructor($filter,
-      $q,
-      StudentAssetService,
-      StudentDataService,
-      UtilService) {
+  static $inject = ['$filter', '$q', 'StudentAssetService', 'StudentDataService', 'UtilService'];
+
+  constructor($filter, $q, StudentAssetService, StudentDataService, UtilService) {
     super($filter, StudentDataService, UtilService);
     this.$q = $q;
     this.StudentAssetService = StudentAssetService;
@@ -34,7 +36,7 @@ class LabelService extends ComponentService {
   }
 
   isCompleted(component, componentStates, componentEvents, nodeEvents, node) {
-    var result = false;
+    let result = false;
     if (!this.canEdit(component) && this.UtilService.hasNodeEnteredEvent(nodeEvents)) {
       /*
        * the student can't perform any work on this component and has visited
@@ -43,7 +45,8 @@ class LabelService extends ComponentService {
       return true;
     }
     if (componentStates && componentStates.length) {
-      let submitRequired = node.showSubmitButton || (component.showSubmitButton && !node.showSaveButton);
+      let submitRequired =
+        node.showSubmitButton || (component.showSubmitButton && !node.showSaveButton);
 
       if (submitRequired) {
         // completion requires a submission, so check for isSubmit in any component states
@@ -75,7 +78,7 @@ class LabelService extends ComponentService {
     }
 
     return result;
-  };
+  }
 
   /**
    * Determine if the student can perform any work on this component.
@@ -176,8 +179,7 @@ class LabelService extends ComponentService {
   labelArraysAreTheSame(labels1, labels2) {
     if (labels1 == null && labels2 == null) {
       return true;
-    } else if ((labels1 == null && labels2 != null) ||
-           (labels1 != null && labels2 == null)) {
+    } else if ((labels1 == null && labels2 != null) || (labels1 != null && labels2 == null)) {
       return false;
     } else {
       if (labels1.length != labels2.length) {
@@ -205,18 +207,19 @@ class LabelService extends ComponentService {
   labelsAreTheSame(label1, label2) {
     if (label1 == null && label2 == null) {
       return true;
-    } else if ((label1 == null && label2 != null) ||
-        (label1 != null && label2 == null)) {
+    } else if ((label1 == null && label2 != null) || (label1 != null && label2 == null)) {
       return false;
     } else {
-      if ((label1.text != label2.text) ||
-        (label1.pointX != label2.pointX) ||
-        (label1.pointY != label2.pointY) ||
-        (label1.textX != label2.textX) ||
-        (label1.textY != label2.textY) ||
-        (label1.color != label2.color)) {
+      if (
+        label1.text != label2.text ||
+        label1.pointX != label2.pointX ||
+        label1.pointY != label2.pointY ||
+        label1.textX != label2.textX ||
+        label1.textY != label2.textY ||
+        label1.color != label2.color
+      ) {
         // at least one of the fields are different
-        return false
+        return false;
       }
     }
 
@@ -233,9 +236,15 @@ class LabelService extends ComponentService {
    * @param spaceInbetweenLines The amount of space inbetween each line.
    * @param fontSize The font size.
    */
-  createImageFromText(text, width, height, maxCharactersPerLine,
-      xPositionOfText, spaceInbetweenLines, fontSize) {
-
+  createImageFromText(
+    text,
+    width,
+    height,
+    maxCharactersPerLine,
+    xPositionOfText,
+    spaceInbetweenLines,
+    fontSize
+  ) {
     if (width == null || width == '') {
       width = 800;
     }
@@ -267,12 +276,12 @@ class LabelService extends ComponentService {
     let textWrapped = this.UtilService.wordWrap(text, maxCharactersPerLine);
 
     // create a promise that will return an image of the concept map
-    var deferred = this.$q.defer();
+    const deferred = this.$q.defer();
 
     // create a div to draw the SVG in
-    var svgElement = document.createElement('div');
+    const svgElement = document.createElement('div');
 
-    var draw = SVG(svgElement);
+    const draw = SVG(svgElement);
     draw.width(width);
     draw.height(height);
 
@@ -285,7 +294,14 @@ class LabelService extends ComponentService {
     let tspans = '';
     let textLines = textWrapped.split('\n');
     for (let textLine of textLines) {
-      tspans += '<tspan x="' + xPositionOfText + '" dy="' + spaceInbetweenLines + '">' + textLine + '</tspan>';
+      tspans +=
+        '<tspan x="' +
+        xPositionOfText +
+        '" dy="' +
+        spaceInbetweenLines +
+        '">' +
+        textLine +
+        '</tspan>';
     }
 
     /*
@@ -296,7 +312,12 @@ class LabelService extends ComponentService {
      *   <tspan x="10" dy="40">and ham.</tspan>
      * </text>
      */
-    let svgTextElementString = '<text id="SvgjsText1008" font-family="Helvetica, Arial, sans-serif" font-size="' + fontSize + '">' + tspans + '</text>';
+    let svgTextElementString =
+      '<text id="SvgjsText1008" font-family="Helvetica, Arial, sans-serif" font-size="' +
+      fontSize +
+      '">' +
+      tspans +
+      '</text>';
 
     /*
      * Insert the text element into the svg.
@@ -309,30 +330,29 @@ class LabelService extends ComponentService {
      *   </text>
      * </svg>
      */
-    var svgString = svgElement.innerHTML;
+    let svgString = svgElement.innerHTML;
     svgString = svgString.replace('</svg>', svgTextElementString + '</svg>');
 
     // create a canvas to draw the image on
-    var myCanvas = document.createElement('canvas');
-    var ctx = myCanvas.getContext('2d');
+    const myCanvas = document.createElement('canvas');
+    const ctx = myCanvas.getContext('2d');
 
     // create an svg blob
-    var svg = new Blob([svgString], {type:'image/svg+xml;charset=utf-8'});
-    var domURL = self.URL || self.webkitURL || self;
-    var url = domURL.createObjectURL(svg);
-    var image = new Image;
+    const svg = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
+    const domURL = self.URL || (self as any).webkitURL || self;
+    const url = domURL.createObjectURL(svg);
+    const image = new Image();
 
     /*
      * set the UtilService in a local variable so we can access it
      * in the onload callback function
      */
-    var thisUtilService = this.UtilService;
+    const thisUtilService = this.UtilService;
 
     // the function that is called after the image is fully loaded
-    image.onload = (event) => {
-
+    image.onload = event => {
       // get the image that was loaded
-      var image = event.target;
+      const image: any = event.target;
 
       // set the dimensions of the canvas
       myCanvas.width = image.width;
@@ -340,19 +360,18 @@ class LabelService extends ComponentService {
       ctx.drawImage(image, 0, 0);
 
       // get the canvas as a Base64 string
-      var base64Image = myCanvas.toDataURL('image/png');
+      const base64Image = myCanvas.toDataURL('image/png');
 
       // get the image object
-      var imageObject = thisUtilService.getImageObjectFromBase64String(base64Image);
+      const imageObject = thisUtilService.getImageObjectFromBase64String(base64Image);
 
       // create a student asset image
-      this.StudentAssetService.uploadAsset(imageObject).then((unreferencedAsset) => {
-
+      this.StudentAssetService.uploadAsset(imageObject).then(unreferencedAsset => {
         /*
          * make a copy of the unreferenced asset so that we
          * get a referenced asset
          */
-        this.StudentAssetService.copyAssetForReference(unreferencedAsset).then((referencedAsset) => {
+        this.StudentAssetService.copyAssetForReference(unreferencedAsset).then(referencedAsset => {
           if (referencedAsset != null) {
             /*
              * get the asset url
@@ -360,7 +379,7 @@ class LabelService extends ComponentService {
              * /wise/studentuploads/11261/297478/referenced/picture_1494016652542.png
              * if we are in preview mode this url will be a base64 string instead
              */
-            var referencedAssetUrl = referencedAsset.url;
+            const referencedAssetUrl = referencedAsset.url;
 
             // remove the unreferenced asset
             this.StudentAssetService.deleteAsset(unreferencedAsset);
@@ -386,7 +405,9 @@ class LabelService extends ComponentService {
    */
   generateImageFromRenderedComponentState(componentState) {
     let deferred = this.$q.defer();
-    let canvas = angular.element(document.querySelector('#canvas_' + componentState.nodeId + '_' + componentState.componentId));
+    let canvas = angular.element(
+      document.querySelector('#canvas_' + componentState.nodeId + '_' + componentState.componentId)
+    );
     if (canvas != null && canvas.length > 0) {
       canvas = canvas[0];
 
@@ -397,20 +418,12 @@ class LabelService extends ComponentService {
       let imageObject = this.UtilService.getImageObjectFromBase64String(img_b64);
 
       // add the image to the student assets
-      this.StudentAssetService.uploadAsset(imageObject).then((asset) => {
+      this.StudentAssetService.uploadAsset(imageObject).then(asset => {
         deferred.resolve(asset);
       });
     }
     return deferred.promise;
   }
 }
-
-LabelService.$inject = [
-  '$filter',
-  '$q',
-  'StudentAssetService',
-  'StudentDataService',
-  'UtilService'
-];
 
 export default LabelService;

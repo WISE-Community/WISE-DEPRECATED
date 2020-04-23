@@ -1,18 +1,18 @@
 'use strict';
 
+import * as angular from 'angular';
 import LabelService from './labelService';
 import LabelController from './labelController';
 import LabelAuthoringController from './labelAuthoringController';
 
-const labelAuthoringComponentModule = angular.module('labelAuthoringComponentModule', [
-  'pascalprecht.translate'
-])
+const labelAuthoringComponentModule = angular
+  .module('labelAuthoringComponentModule', ['pascalprecht.translate'])
   .service('LabelService', LabelService)
   .controller('LabelController', LabelController)
   .controller('LabelAuthoringController', LabelAuthoringController)
   .config([
     '$translatePartialLoaderProvider',
-    ($translatePartialLoaderProvider) => {
+    $translatePartialLoaderProvider => {
       $translatePartialLoaderProvider.addPart('components/label/i18n');
     }
   ]);

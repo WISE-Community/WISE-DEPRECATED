@@ -1,28 +1,55 @@
 'use strict';
 
-import LabelController from "./labelController";
+import * as $ from 'jquery';
+import LabelController from './labelController';
 import Fabric from 'fabric';
 import html2canvas from 'html2canvas';
 
 class LabelAuthoringController extends LabelController {
-  constructor($filter,
-              $mdDialog,
-              $q,
-              $rootScope,
-              $scope,
-              $timeout,
-              $window,
-              AnnotationService,
-              ConfigService,
-              LabelService,
-              NodeService,
-              NotebookService,
-              OpenResponseService,
-              ProjectService,
-              StudentAssetService,
-              StudentDataService,
-              UtilService) {
-    super($filter,
+  $window: any;
+  allowedConnectedComponentTypes: any[];
+
+  static $inject = [
+    '$filter',
+    '$mdDialog',
+    '$q',
+    '$rootScope',
+    '$scope',
+    '$timeout',
+    '$window',
+    'AnnotationService',
+    'ConfigService',
+    'LabelService',
+    'NodeService',
+    'NotebookService',
+    'OpenResponseService',
+    'ProjectService',
+    'StudentAssetService',
+    'StudentDataService',
+    'UtilService'
+  ];
+
+  constructor(
+    $filter,
+    $mdDialog,
+    $q,
+    $rootScope,
+    $scope,
+    $timeout,
+    $window,
+    AnnotationService,
+    ConfigService,
+    LabelService,
+    NodeService,
+    NotebookService,
+    OpenResponseService,
+    ProjectService,
+    StudentAssetService,
+    StudentDataService,
+    UtilService
+  ) {
+    super(
+      $filter,
       $mdDialog,
       $q,
       $rootScope,
@@ -38,7 +65,8 @@ class LabelAuthoringController extends LabelController {
       ProjectService,
       StudentAssetService,
       StudentDataService,
-      UtilService);
+      UtilService
+    );
     this.allowedConnectedComponentTypes = [
       { type: 'ConceptMap' },
       { type: 'Draw' },
@@ -58,47 +86,54 @@ class LabelAuthoringController extends LabelController {
       this.authoringComponentContent.enableCircles = true;
     }
 
-    $scope.$watch(function() {
-      return this.authoringComponentContent;
-    }.bind(this), function(newValue, oldValue) {
-      this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-      this.canvasWidth = 800;
-      this.canvasHeight = 600;
-      this.submitCounter = 0;
-      this.isSaveButtonVisible = this.componentContent.showSaveButton;
-      this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-      this.enableCircles = this.componentContent.enableCircles;
+    $scope.$watch(
+      function() {
+        return this.authoringComponentContent;
+      }.bind(this),
+      function(newValue, oldValue) {
+        this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+        this.canvasWidth = 800;
+        this.canvasHeight = 600;
+        this.submitCounter = 0;
+        this.isSaveButtonVisible = this.componentContent.showSaveButton;
+        this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+        this.enableCircles = this.componentContent.enableCircles;
 
-      if (this.canvas != null) {
-        $('#canvasParent_' + this.canvasId).empty();
-        const canvas = $('<canvas/>');
-        canvas.attr('id', this.canvasId);
-        canvas.css('border', '1px solid black');
-        $('#canvasParent_' + this.canvasId).append(canvas);
-        // clear the background so that setupCanvas() can reapply the background
-        this.backgroundImage = null;
-        this.setupCanvas();
-      }
-      if (this.componentContent.canCreateLabels != null) {
-        this.canCreateLabels = this.componentContent.canCreateLabels;
-      }
-      if (this.canCreateLabels) {
-        this.isNewLabelButtonVisible = true;
-      } else {
-        this.isNewLabelButtonVisible = false;
-      }
-    }.bind(this), true);
+        if (this.canvas != null) {
+          $('#canvasParent_' + this.canvasId).empty();
+          const canvas = $('<canvas/>');
+          canvas.attr('id', this.canvasId);
+          canvas.css('border', '1px solid black');
+          $('#canvasParent_' + this.canvasId).append(canvas);
+          // clear the background so that setupCanvas() can reapply the background
+          this.backgroundImage = null;
+          this.setupCanvas();
+        }
+        if (this.componentContent.canCreateLabels != null) {
+          this.canCreateLabels = this.componentContent.canCreateLabels;
+        }
+        if (this.canCreateLabels) {
+          this.isNewLabelButtonVisible = true;
+        } else {
+          this.isNewLabelButtonVisible = false;
+        }
+      }.bind(this),
+      true
+    );
     this.registerAssetListener();
   }
 
   registerAssetListener() {
-    this.$scope.$on('assetSelected', (event, {nodeId, componentId, assetItem, target}) => {
+    this.$scope.$on('assetSelected', (event, { nodeId, componentId, assetItem, target }) => {
       if (nodeId === this.nodeId && componentId === this.componentId) {
         const fileName = assetItem.fileName;
         const fullFilePath = `${this.ConfigService.getProjectAssetsDirectoryPath()}/${fileName}`;
         if (target === 'rubric') {
           this.UtilService.insertFileInSummernoteEditor(
-              `summernoteRubric_${this.nodeId}_${this.componentId}`, fullFilePath, fileName);
+            `summernoteRubric_${this.nodeId}_${this.componentId}`,
+            fullFilePath,
+            fileName
+          );
         } else if (target === 'background') {
           this.authoringComponentContent.backgroundImage = fileName;
           this.authoringViewComponentChanged();
@@ -128,8 +163,11 @@ class LabelAuthoringController extends LabelController {
    * @param index the index of the label in the labels array
    */
   authoringDeleteLabelClicked(index, label) {
-    const answer = confirm(this.$translate('label.areYouSureYouWantToDeleteThisLabel',
-        { selectedLabelText: label.textString }));
+    const answer = confirm(
+      this.$translate('label.areYouSureYouWantToDeleteThisLabel', {
+        selectedLabelText: label.textString
+      })
+    );
     if (answer) {
       this.authoringComponentContent.labels.splice(index, 1);
       this.authoringViewComponentChanged();
@@ -212,8 +250,10 @@ class LabelAuthoringController extends LabelController {
     let numberOfAllowedComponents = 0;
     let allowedComponent = null;
     for (const component of this.getComponentsByNodeId(connectedComponent.nodeId)) {
-      if (this.isConnectedComponentTypeAllowed(component.type) &&
-          component.id != this.componentId) {
+      if (
+        this.isConnectedComponentTypeAllowed(component.type) &&
+        component.id != this.componentId
+      ) {
         numberOfAllowedComponents += 1;
         allowedComponent = component;
       }
@@ -239,7 +279,7 @@ class LabelAuthoringController extends LabelController {
    */
   authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent) {
     const componentType = this.authoringGetConnectedComponentType(connectedComponent);
-    if (['ConceptMap','Draw','Embedded','Graph','Table'].includes(componentType)) {
+    if (['ConceptMap', 'Draw', 'Embedded', 'Graph', 'Table'].includes(componentType)) {
       connectedComponent.importWorkAsBackground = true;
     } else {
       delete connectedComponent.importWorkAsBackground;
@@ -260,25 +300,5 @@ class LabelAuthoringController extends LabelController {
     this.authoringViewComponentChanged();
   }
 }
-
-LabelAuthoringController.$inject = [
-  '$filter',
-  '$mdDialog',
-  '$q',
-  '$rootScope',
-  '$scope',
-  '$timeout',
-  '$window',
-  'AnnotationService',
-  'ConfigService',
-  'LabelService',
-  'NodeService',
-  'NotebookService',
-  'OpenResponseService',
-  'ProjectService',
-  'StudentAssetService',
-  'StudentDataService',
-  'UtilService'
-];
 
 export default LabelAuthoringController;
