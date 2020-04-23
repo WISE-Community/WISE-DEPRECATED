@@ -3,23 +3,48 @@
 import MatchController from './matchController';
 
 class MatchAuthoringController extends MatchController {
-  constructor($filter,
-              $mdDialog,
-              $mdMedia,
-              $q,
-              $rootScope,
-              $scope,
-              AnnotationService,
-              ConfigService,
-              dragulaService,
-              MatchService,
-              NodeService,
-              NotebookService,
-              ProjectService,
-              StudentAssetService,
-              StudentDataService,
-              UtilService) {
-    super($filter,
+  $mdDialog: any;
+  allowedConnectedComponentTypes: any[];
+
+  static $inject = [
+    '$filter',
+    '$mdDialog',
+    '$mdMedia',
+    '$q',
+    '$rootScope',
+    '$scope',
+    'AnnotationService',
+    'ConfigService',
+    'dragulaService',
+    'MatchService',
+    'NodeService',
+    'NotebookService',
+    'ProjectService',
+    'StudentAssetService',
+    'StudentDataService',
+    'UtilService'
+  ];
+
+  constructor(
+    $filter,
+    $mdDialog,
+    $mdMedia,
+    $q,
+    $rootScope,
+    $scope,
+    AnnotationService,
+    ConfigService,
+    dragulaService,
+    MatchService,
+    NodeService,
+    NotebookService,
+    ProjectService,
+    StudentAssetService,
+    StudentDataService,
+    UtilService
+  ) {
+    super(
+      $filter,
       $mdDialog,
       $mdMedia,
       $q,
@@ -34,48 +59,58 @@ class MatchAuthoringController extends MatchController {
       ProjectService,
       StudentAssetService,
       StudentDataService,
-      UtilService);
+      UtilService
+    );
     this.allowedConnectedComponentTypes = [
       {
         type: 'Match'
       }
     ];
-    $scope.$watch(function() {
-      return this.authoringComponentContent;
-    }.bind(this), function(newValue, oldValue) {
-      this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-      this.isHorizontal = this.componentContent.horizontal;
-      this.isSaveButtonVisible = this.componentContent.showSaveButton;
-      this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-      this.isCorrect = null;
-      this.submitCounter = 0;
-      this.isDisabled = false;
-      this.isSubmitButtonDisabled = false;
-      this.initializeChoices();
-      this.initializeBuckets();
-    }.bind(this), true);
+    $scope.$watch(
+      function() {
+        return this.authoringComponentContent;
+      }.bind(this),
+      function(newValue, oldValue) {
+        this.componentContent = this.ProjectService.injectAssetPaths(newValue);
+        this.isHorizontal = this.componentContent.horizontal;
+        this.isSaveButtonVisible = this.componentContent.showSaveButton;
+        this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+        this.isCorrect = null;
+        this.submitCounter = 0;
+        this.isDisabled = false;
+        this.isSubmitButtonDisabled = false;
+        this.initializeChoices();
+        this.initializeBuckets();
+      }.bind(this),
+      true
+    );
     this.registerAssetListener();
   }
 
   registerAssetListener() {
-    this.$scope.$on('assetSelected',
-        (event, {nodeId, componentId, assetItem, target, targetObject}) => {
-      if (nodeId === this.nodeId && componentId === this.componentId) {
-        const fileName = assetItem.fileName;
-        const fullFilePath = `${this.ConfigService.getProjectAssetsDirectoryPath()}/${fileName}`;
-        if (target === 'rubric') {
-          this.UtilService.insertFileInSummernoteEditor(
-              `summernoteRubric_${this.nodeId}_${this.componentId}`, fullFilePath, fileName);
-        } else if (target === 'choice') {
-          targetObject.value = '<img src="' + fileName + '"/>';
-          this.authoringViewComponentChanged();
-        } else if (target === 'bucket') {
-          targetObject.value = '<img src="' + fileName + '"/>';
-          this.authoringViewComponentChanged();
+    this.$scope.$on(
+      'assetSelected',
+      (event, { nodeId, componentId, assetItem, target, targetObject }) => {
+        if (nodeId === this.nodeId && componentId === this.componentId) {
+          const fileName = assetItem.fileName;
+          const fullFilePath = `${this.ConfigService.getProjectAssetsDirectoryPath()}/${fileName}`;
+          if (target === 'rubric') {
+            this.UtilService.insertFileInSummernoteEditor(
+              `summernoteRubric_${this.nodeId}_${this.componentId}`,
+              fullFilePath,
+              fileName
+            );
+          } else if (target === 'choice') {
+            targetObject.value = '<img src="' + fileName + '"/>';
+            this.authoringViewComponentChanged();
+          } else if (target === 'bucket') {
+            targetObject.value = '<img src="' + fileName + '"/>';
+            this.authoringViewComponentChanged();
+          }
         }
+        this.$mdDialog.hide();
       }
-      this.$mdDialog.hide();
-    });
+    );
   }
 
   authoringAddChoice() {
@@ -249,7 +284,13 @@ class MatchAuthoringController extends MatchController {
    * choice is in the correct but wrong position
    * @returns the feedback object
    */
-  createFeedbackObject(choiceId, feedback, isCorrect, position, incorrectPositionFeedback) {
+  createFeedbackObject(
+    choiceId,
+    feedback,
+    isCorrect,
+    position = null,
+    incorrectPositionFeedback = null
+  ) {
     return {
       choiceId: choiceId,
       feedback: feedback,
@@ -375,24 +416,5 @@ class MatchAuthoringController extends MatchController {
     this.$rootScope.$broadcast('openAssetChooser', params);
   }
 }
-
-MatchAuthoringController.$inject = [
-  '$filter',
-  '$mdDialog',
-  '$mdMedia',
-  '$q',
-  '$rootScope',
-  '$scope',
-  'AnnotationService',
-  'ConfigService',
-  'dragulaService',
-  'MatchService',
-  'NodeService',
-  'NotebookService',
-  'ProjectService',
-  'StudentAssetService',
-  'StudentDataService',
-  'UtilService'
-];
 
 export default MatchAuthoringController;

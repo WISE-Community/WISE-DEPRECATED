@@ -1,6 +1,8 @@
 import ComponentService from '../componentService';
 
 class MatchService extends ComponentService {
+  static $inject = ['$filter', 'StudentDataService', 'UtilService'];
+
   constructor($filter, StudentDataService, UtilService) {
     super($filter, StudentDataService, UtilService);
   }
@@ -8,13 +10,13 @@ class MatchService extends ComponentService {
   getComponentTypeLabel() {
     return this.$translate('match.componentTypeLabel');
   }
-  
+
   createComponent() {
     const component = super.createComponent();
     component.type = 'Match';
     component.choices = [];
     component.buckets = [];
-    component.feedback = [{ 'bucketId': '0', 'choices': [] }];
+    component.feedback = [{ bucketId: '0', choices: [] }];
     component.ordered = false;
     return component;
   }
@@ -38,8 +40,7 @@ class MatchService extends ComponentService {
   }
 
   isSubmitRequired(node, component) {
-    return node.showSubmitButton ||
-        (component.showSubmitButton && !node.showSaveButton);
+    return node.showSubmitButton || (component.showSubmitButton && !node.showSaveButton);
   }
 
   componentStateHasStudentWork(componentState, componentContent) {
@@ -66,11 +67,5 @@ class MatchService extends ComponentService {
     return false;
   }
 }
-
-MatchService.$inject = [
-  '$filter',
-  'StudentDataService',
-  'UtilService'
-];
 
 export default MatchService;
