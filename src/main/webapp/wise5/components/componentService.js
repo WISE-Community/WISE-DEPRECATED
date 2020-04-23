@@ -1,7 +1,5 @@
 class ComponentService {
-  constructor($filter,
-              StudentDataService,
-              UtilService) {
+  constructor($filter, StudentDataService, UtilService) {
     this.$filter = $filter;
     this.StudentDataService = StudentDataService;
     this.UtilService = UtilService;
@@ -102,7 +100,7 @@ class ComponentService {
     return true;
   }
 
-  componentHasCorrectAnswer() {
+  componentHasCorrectAnswer(component) {
     return false;
   }
 }

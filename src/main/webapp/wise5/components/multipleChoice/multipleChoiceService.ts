@@ -1,6 +1,8 @@
 import ComponentService from '../componentService';
 
 class MultipleChoiceService extends ComponentService {
+  static $inject = ['$filter', 'StudentDataService', 'UtilService'];
+
   constructor($filter, StudentDataService, UtilService) {
     super($filter, StudentDataService, UtilService);
   }
@@ -28,8 +30,10 @@ class MultipleChoiceService extends ComponentService {
     const nodeId = criteria.params.nodeId;
     const componentId = criteria.params.componentId;
     const constraintChoiceIds = criteria.params.choiceIds;
-    const latestComponentState =
-        this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+    const latestComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(
+      nodeId,
+      componentId
+    );
     if (latestComponentState != null) {
       const studentChoices = latestComponentState.studentData.studentChoices;
       const studentChoiceIds = this.getStudentChoiceIdsFromStudentChoiceObjects(studentChoices);
@@ -64,15 +68,12 @@ class MultipleChoiceService extends ComponentService {
     let choiceIds = [];
 
     if (studentChoices != null) {
-
       // loop through all the student choice objects
       for (let c = 0; c < studentChoices.length; c++) {
-
         // get a student choice object
         let studentChoice = studentChoices[c];
 
         if (studentChoice != null) {
-
           // get the student choice id
           let studentChoiceId = studentChoice.id;
 
@@ -82,17 +83,17 @@ class MultipleChoiceService extends ComponentService {
     }
 
     return choiceIds;
-  };
+  }
 
   isCompleted(component, componentStates, componentEvents, nodeEvents, node) {
     let result = false;
 
     if (componentStates && componentStates.length) {
-      let submitRequired = node.showSubmitButton || (component.showSubmitButton && !node.showSaveButton);
+      let submitRequired =
+        node.showSubmitButton || (component.showSubmitButton && !node.showSaveButton);
 
       // loop through all the component states
       for (let c = 0, l = componentStates.length; c < l; c++) {
-
         // the component state
         let componentState = componentStates[c];
 
@@ -120,7 +121,7 @@ class MultipleChoiceService extends ComponentService {
     }
 
     return result;
-  };
+  }
 
   /**
    * Get the human readable student data string
@@ -128,27 +129,23 @@ class MultipleChoiceService extends ComponentService {
    * @return a human readable student data string
    */
   getStudentDataString(componentState) {
-
-    var studentDataString = '';
+    let studentDataString = '';
 
     if (componentState != null) {
-      var studentData = componentState.studentData;
+      const studentData = componentState.studentData;
 
       if (studentData != null) {
-
         // get the choices the student chose
-        var studentChoices = studentData.studentChoices;
+        const studentChoices = studentData.studentChoices;
 
         if (studentChoices != null) {
-
           // loop through all the choices the student chose
-          for (var c = 0; c < studentChoices.length; c++) {
-            var studentChoice = studentChoices[c];
+          for (let c = 0; c < studentChoices.length; c++) {
+            const studentChoice = studentChoices[c];
 
             if (studentChoice != null) {
-
               // get the choice text
-              var text = studentChoice.text;
+              const text = studentChoice.text;
 
               if (text != null) {
                 if (studentDataString != '') {
@@ -189,11 +186,5 @@ class MultipleChoiceService extends ComponentService {
     return false;
   }
 }
-
-MultipleChoiceService.$inject = [
-  '$filter',
-  'StudentDataService',
-  'UtilService'
-];
 
 export default MultipleChoiceService;
