@@ -7,6 +7,7 @@ import TeacherDataService from '../../../../services/teacherDataService';
 class TopBarController {
   $translate: any;
   avatarColor: any;
+  canAuthorProject: boolean;
   contextPath: string;
   dismissedNotifications: any;
   newNotifications: any;
@@ -16,11 +17,11 @@ class TopBarController {
   userInfo: any;
   workgroupId: number;
   static $inject = [
-    '$filter', 
-    '$rootScope', 
-    '$state', 
-    'ConfigService', 
-    'ProjectService', 
+    '$filter',
+    '$rootScope',
+    '$state',
+    'ConfigService',
+    'ProjectService',
     'TeacherDataService'
   ];
 
@@ -44,6 +45,11 @@ class TopBarController {
     });
     this.themePath = this.ProjectService.getThemePath();
     this.contextPath = this.ConfigService.getContextPath();
+  }
+
+  $onInit() {
+    const permissions = this.ConfigService.getPermissions();
+    this.canAuthorProject = permissions.canAuthorProject;
   }
 
   $onChanges(changesObj) {
@@ -163,7 +169,7 @@ const TopBar = {
                 </span>
                 <h3 layout="row" layout-align="start center">
                   {{ ::$ctrl.projectTitle }}&nbsp;<span class="md-caption">({{ ::'RUN_ID_DISPLAY' | translate:{id: $ctrl.runId} }})</span>
-                  <md-button aria-label="{{ ::'switchToAuthoringView' | translate }}" class="md-icon-button" ng-click="$ctrl.switchToAuthoringView()">
+                  <md-button ng-if="$ctrl.canAuthorProject" aria-label="{{ ::'switchToAuthoringView' | translate }}" class="md-icon-button" ng-click="$ctrl.switchToAuthoringView()">
                       <md-icon md-menu-origin> edit </md-icon>
                       <md-tooltip>{{ ::'switchToAuthoringView' | translate }}</md-tooltip>
                   </md-button>
