@@ -1,6 +1,10 @@
 import ComponentService from '../componentService';
 
 class OutsideURLService extends ComponentService {
+  $http: any;
+
+  static $inject = ['$filter', '$http', 'StudentDataService', 'UtilService'];
+
   constructor($filter, $http, StudentDataService, UtilService) {
     super($filter, StudentDataService, UtilService);
     this.$http = $http;
@@ -42,17 +46,10 @@ class OutsideURLService extends ComponentService {
   }
 
   getOpenEducationalResources() {
-    return this.$http.get(`wise5/components/outsideURL/resources.json`).then((result) => {
+    return this.$http.get(`wise5/components/outsideURL/resources.json`).then(result => {
       return result.data;
     });
   }
 }
-
-OutsideURLService.$inject = [
-  '$filter',
-  '$http',
-  'StudentDataService',
-  'UtilService'
-];
 
 export default OutsideURLService;

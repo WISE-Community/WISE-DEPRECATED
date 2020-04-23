@@ -1,27 +1,67 @@
 'use strict';
 
-import ComponentController from "../componentController";
+import ComponentController from '../componentController';
+import OutsideURLService from './outsideURLService';
 
 class OutsideURLController extends ComponentController {
-  constructor($filter,
+  $q: any;
+  $sce: any;
+  OutsideURLService: OutsideURLService;
+  url: string;
+  info: string;
+  outsideURLIFrameId: string;
+  width: string;
+  height: string;
+
+  static $inject = [
+    '$filter',
+    '$mdDialog',
+    '$q',
+    '$rootScope',
+    '$sce',
+    '$scope',
+    'AnnotationService',
+    'ConfigService',
+    'NodeService',
+    'NotebookService',
+    'OutsideURLService',
+    'ProjectService',
+    'StudentAssetService',
+    'StudentDataService',
+    'UtilService'
+  ];
+
+  constructor(
+    $filter,
+    $mdDialog,
+    $q,
+    $rootScope,
+    $sce,
+    $scope,
+    AnnotationService,
+    ConfigService,
+    NodeService,
+    NotebookService,
+    OutsideURLService,
+    ProjectService,
+    StudentAssetService,
+    StudentDataService,
+    UtilService
+  ) {
+    super(
+      $filter,
       $mdDialog,
-      $q,
       $rootScope,
-      $sce,
       $scope,
       AnnotationService,
       ConfigService,
       NodeService,
       NotebookService,
-      OutsideURLService,
       ProjectService,
       StudentAssetService,
       StudentDataService,
-      UtilService) {
-    super($filter, $mdDialog, $rootScope, $scope,
-        AnnotationService, ConfigService, NodeService,
-        NotebookService, ProjectService, StudentAssetService,
-        StudentDataService, UtilService);
+      UtilService
+    );
     this.$q = $q;
     this.$sce = $sce;
     this.OutsideURLService = OutsideURLService;
@@ -54,7 +94,10 @@ class OutsideURLController extends ComponentController {
       return deferred.promise;
     }.bind(this);
 
-    this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
+    this.$rootScope.$broadcast('doneRenderingComponent', {
+      nodeId: this.nodeId,
+      componentId: this.componentId
+    });
   }
 
   setWidthAndHeight(width, height) {
@@ -78,23 +121,5 @@ class OutsideURLController extends ComponentController {
     }
   }
 }
-
-OutsideURLController.$inject = [
-  '$filter',
-  '$mdDialog',
-  '$q',
-  '$rootScope',
-  '$sce',
-  '$scope',
-  'AnnotationService',
-  'ConfigService',
-  'NodeService',
-  'NotebookService',
-  'OutsideURLService',
-  'ProjectService',
-  'StudentAssetService',
-  'StudentDataService',
-  'UtilService'
-];
 
 export default OutsideURLController;
