@@ -1,6 +1,8 @@
 import ComponentService from '../componentService';
 
 class HTMLService extends ComponentService {
+  static $inject = ['$filter', 'StudentDataService', 'UtilService'];
+
   constructor($filter, StudentDataService, UtilService) {
     super($filter, StudentDataService, UtilService);
   }
@@ -17,15 +19,13 @@ class HTMLService extends ComponentService {
   }
 
   isCompleted(component, componentStates, componentEvents, nodeEvents) {
-    var result = false;
+    let result = false;
 
     if (nodeEvents != null) {
-
       // loop through all the events
-      for (var e = 0; e < nodeEvents.length; e++) {
-
+      for (let e = 0; e < nodeEvents.length; e++) {
         // get an event
-        var event = nodeEvents[e];
+        const event = nodeEvents[e];
 
         if (event != null && event.event === 'nodeEntered') {
           result = true;
@@ -49,11 +49,5 @@ class HTMLService extends ComponentService {
     return false;
   }
 }
-
-HTMLService.$inject = [
-  '$filter',
-  'StudentDataService',
-  'UtilService'
-];
 
 export default HTMLService;

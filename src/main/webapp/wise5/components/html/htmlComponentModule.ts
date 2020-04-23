@@ -1,14 +1,16 @@
 'use strict';
 
+import * as angular from 'angular';
 import HTMLService from './htmlService';
 import HTMLController from './htmlController';
 
-const htmlComponentModule = angular.module('htmlComponentModule', [])
+const htmlComponentModule = angular
+  .module('htmlComponentModule', [])
   .service('HTMLService', HTMLService)
   .controller('HTMLController', HTMLController)
   .config([
     '$translatePartialLoaderProvider',
-    ($translatePartialLoaderProvider) => {
+    $translatePartialLoaderProvider => {
       $translatePartialLoaderProvider.addPart('components/html/i18n');
     }
   ]);
