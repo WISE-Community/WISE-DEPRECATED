@@ -5,6 +5,7 @@ import ClassroomMonitorProjectService from '../../../classroomMonitorProjectServ
 import TeacherDataService from '../../../../services/teacherDataService';
 
 class TopBarController {
+  $translate: any;
   avatarColor: any;
   contextPath: string;
   dismissedNotifications: any;
@@ -14,15 +15,24 @@ class TopBarController {
   themePath: string;
   userInfo: any;
   workgroupId: number;
-  static $inject = ['$rootScope', '$state', 'ConfigService', 'ProjectService', 'TeacherDataService'];
+  static $inject = [
+    '$filter', 
+    '$rootScope', 
+    '$state', 
+    'ConfigService', 
+    'ProjectService', 
+    'TeacherDataService'
+  ];
 
   constructor(
+    $filter: any,
     private $rootScope: any,
     private $state: any,
     private ConfigService: ConfigService,
     private ProjectService: ClassroomMonitorProjectService,
     private TeacherDataService: TeacherDataService
   ) {
+    this.$translate = $filter('translate');
     this.workgroupId = this.ConfigService.getWorkgroupId();
     if (this.workgroupId == null) {
       this.workgroupId = 100 * Math.random();
@@ -71,6 +81,13 @@ class TopBarController {
   }
 
   switchToAuthoringView() {
+    const proceed = confirm(this.$translate('editRunUnitWarning'));
+    if (proceed) {
+      this.doAuthoringViewSwitch();
+    }
+  }
+
+  doAuthoringViewSwitch() {
     if (this.$state.current.name === 'root.cm.notebooks') {
       this.$state.go('root.at.project.notebook', {
         projectId: this.runId
@@ -145,8 +162,9 @@ const TopBar = {
                     </a>
                 </span>
                 <h3>{{ ::$ctrl.projectTitle }} <span class="md-caption">({{ ::'RUN_ID_DISPLAY' | translate:{id: $ctrl.runId} }})</span>
-                <md-button style="text-transform: none;" ng-click="$ctrl.switchToAuthoringView()">
-                  {{ ::'switchToAuthoringView' | translate }}
+                <md-button aria-label="{{ ::'switchToAuthoringView' | translate }}" class="md-icon-button" ng-click="$ctrl.switchToAuthoringView()">
+                    <md-icon md-menu-origin> edit </md-icon>
+                    <md-tooltip>{{ ::'switchToAuthoringView' | translate }}</md-tooltip>
                 </md-button>
                 </h3>
                 <span flex></span>

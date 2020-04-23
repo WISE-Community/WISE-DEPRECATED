@@ -40,6 +40,7 @@
   "downloadStudentWork": "Download All Work",
   "dueDate": "Due Date",
   "edit": "Edit",
+  "editRunUnitWarning": "Warning! You will be editing the content of a classroom unit. If students have already started working, this may result in lost data or other problems.\n\nAre you sure you want to proceed?",
   "enterCommentHere": "Enter comment here",
   "events": "Events",
   "everything": "Everything",
