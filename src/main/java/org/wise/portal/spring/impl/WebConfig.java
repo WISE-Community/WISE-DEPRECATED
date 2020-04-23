@@ -80,8 +80,6 @@ public class WebConfig implements WebMvcConfigurer {
     registry.addResourceHandler("/curriculumWISE5/**").addResourceLocations("/curriculumWISE5/");
     registry.addResourceHandler("/assets/**").addResourceLocations("/site/dist/assets/");
     registry.addResourceHandler("/*.css").addResourceLocations("/site/dist/");
-    registry.addResourceHandler("/*.ico").addResourceLocations("/site/dist/");
-    registry.addResourceHandler("/*.html").addResourceLocations("/site/dist/");
     registry.addResourceHandler("/*.js*").addResourceLocations("/site/dist/");
   }
 
