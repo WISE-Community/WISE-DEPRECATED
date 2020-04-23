@@ -88,7 +88,7 @@ const PeriodSelect = {
   bindings: {
     customClass: '<'
   },
-  template: `<md-select md-theme="default"
+  template: `<md-select md-theme="cm"
                     ng-model="$ctrl.currentPeriod"
                     ng-model-options="{ trackBy: '$value.periodId' }"
                     ng-class="$ctrl.customClass"
