@@ -1,6 +1,6 @@
 <ng-template #standalone>
   <router-outlet></router-outlet>
-  <div ui-view [ngStyle]="{'height':isAngularJSRoute() ? '100%' : '0' }"></div>
+  <div ui-view [ngStyle]="{'height':isAngularJSPath ? '100%' : '0' }"></div>
 </ng-template>
 
 <ng-template #default>
@@ -15,17 +15,17 @@
     <mat-sidenav-content fxLayout="column"
                          track-scroll
                          (yPositionChange)="onYPositionChange($event)">
-      <app-announcement *ngIf="hasAnnouncement && showHeaderAndFooter()"
+      <app-announcement *ngIf="hasAnnouncement && showHeaderAndFooter"
                         class="top-content"
                         [announcement]="announcement"
                         (dismiss)="dismissAnnouncement()"></app-announcement>
-      <app-header *ngIf="showHeaderAndFooter()" class="dark-theme top-content"></app-header>
+      <app-header *ngIf="showHeaderAndFooter" class="dark-theme top-content"></app-header>
       <div fxFlex>
         <router-outlet></router-outlet>
-        <div ui-view [ngStyle]="{'height':isAngularJSRoute() ? '100%' : '0' }"></div>
+        <div ui-view [ngStyle]="{'height':isAngularJSPath ? '100%' : '0' }"></div>
       </div>
-      <app-footer *ngIf="showHeaderAndFooter()"></app-footer>
-      <div *ngIf="showHeaderAndFooter()" class="to-top dark-theme"
+      <app-footer *ngIf="showHeaderAndFooter"></app-footer>
+      <div *ngIf="showHeaderAndFooter" class="to-top dark-theme"
            [ngClass]="{'active': scroll, 'inactive': !scroll}">
         <button mat-fab
                 class="mat-fab--extended"
@@ -39,4 +39,4 @@
   </mat-sidenav-container>
 </ng-template>
 
-<ng-container *ngTemplateOutlet="showDefaultMode() ? default : standalone"></ng-container>
+<ng-container *ngTemplateOutlet="showDefaultMode ? default : standalone"></ng-container>

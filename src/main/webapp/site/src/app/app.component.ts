@@ -20,6 +20,8 @@ export class AppComponent {
   mediaWatcher: Subscription;
   hasAnnouncement: boolean = false;
   isAngularJSPath: boolean = false;
+  showDefaultMode: boolean = true;
+  showHeaderAndFooter: boolean = true;
   popstate: boolean = false;
   pageY: number = 0;
   prevPageY: number = 0;
@@ -94,8 +96,11 @@ export class AppComponent {
   ngOnInit() {
     this.router.events.subscribe((ev: any) => {
       if (ev instanceof NavigationEnd) {
+        this.showDefaultMode = this.isShowDefaultMode();
+        this.showHeaderAndFooter = this.isShowHeaderAndFooter();
         this.isAngularJSPath = this.isAngularJSRoute();
         this.toggleSiteStyles(this.isAngularJSPath);
+        this.scroll = false;
       }
 
       /** Temporary hack to ensure scroll to top on router navigation (excluding
@@ -131,15 +136,15 @@ export class AppComponent {
     }
   }
 
-  showDefaultMode(): boolean {
+  isShowDefaultMode(): boolean {
     return !this.router.url.includes('/login') &&
       !this.router.url.includes('/join') &&
       !this.router.url.includes('/contact') &&
       !this.router.url.includes('/forgot');
   }
 
-  showHeaderAndFooter() {
-    return this.showDefaultMode() && !this.isAngularJSRoute();
+  isShowHeaderAndFooter() {
+    return this.isShowDefaultMode() && !this.isAngularJSRoute();
   }
 
   isAngularJSRoute() {
