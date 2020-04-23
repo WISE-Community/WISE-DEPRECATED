@@ -196,7 +196,7 @@ const classroomMonitorModule = angular
       });
 
       $mdThemingProvider
-        .theme('default')
+        .theme('cm')
         .primaryPalette('blue', {
           default: '800'
         })
@@ -221,7 +221,7 @@ const classroomMonitorModule = angular
           default: '900'
         });
 
-      $mdThemingProvider.setDefaultTheme('default');
+      $mdThemingProvider.setDefaultTheme('cm');
       $mdThemingProvider.enableBrowserColor();
 
       // moment.js default overrides

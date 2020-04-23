@@ -190,7 +190,7 @@ const authoringModule = angular
         contrastLightColors: undefined
       });
       $mdThemingProvider
-        .theme('default')
+        .theme('at')
         .primaryPalette('deep-purple', { default: '400' })
         .accentPalette('accent', { default: '500' })
         .warnPalette('red', { default: '800' });
@@ -202,7 +202,7 @@ const authoringModule = angular
         .theme('light')
         .primaryPalette('light', { default: 'A100' })
         .accentPalette('pink', { default: '900' });
-      $mdThemingProvider.setDefaultTheme('default');
+      $mdThemingProvider.setDefaultTheme('at');
       $mdThemingProvider.enableBrowserColor();
 
       // moment.js default overrides
