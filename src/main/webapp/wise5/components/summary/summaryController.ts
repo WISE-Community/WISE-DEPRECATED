@@ -1,9 +1,56 @@
 'use strict';
 
 import ComponentController from '../componentController';
+import SummaryService from './summaryService';
 
 class SummaryController extends ComponentController {
-  constructor($filter,
+  SummaryService: SummaryService;
+  summaryNodeId: string;
+  summaryComponentId: string;
+  studentDataType: string;
+  chartType: string;
+  prompt: string;
+  highlightCorrectAnswer: boolean;
+  warningMessage: string;
+  otherPrompt: string;
+  isStudent: boolean;
+  otherStepTitle: string;
+  isShowDisplay: boolean;
+  periodId: number;
+
+  static $inject = [
+    '$filter',
+    '$mdDialog',
+    '$rootScope',
+    '$scope',
+    'AnnotationService',
+    'ConfigService',
+    'NodeService',
+    'NotebookService',
+    'ProjectService',
+    'StudentAssetService',
+    'StudentDataService',
+    'SummaryService',
+    'UtilService'
+  ];
+
+  constructor(
+    $filter,
+    $mdDialog,
+    $rootScope,
+    $scope,
+    AnnotationService,
+    ConfigService,
+    NodeService,
+    NotebookService,
+    ProjectService,
+    StudentAssetService,
+    StudentDataService,
+    SummaryService,
+    UtilService
+  ) {
+    super(
+      $filter,
       $mdDialog,
       $rootScope,
       $scope,
@@ -14,20 +61,8 @@ class SummaryController extends ComponentController {
       ProjectService,
       StudentAssetService,
       StudentDataService,
-      SummaryService,
-      UtilService) {
-    super($filter,
-        $mdDialog,
-        $rootScope,
-        $scope,
-        AnnotationService,
-        ConfigService,
-        NodeService,
-        NotebookService,
-        ProjectService,
-        StudentAssetService,
-        StudentDataService,
-        UtilService);
+      UtilService
+    );
     this.SummaryService = SummaryService;
     this.summaryNodeId = this.componentContent.summaryNodeId;
     this.summaryComponentId = this.componentContent.summaryComponentId;
@@ -54,7 +89,9 @@ class SummaryController extends ComponentController {
 
   getOtherPrompt(nodeId, componentId) {
     const otherComponent = this.ProjectService.getComponentByNodeIdAndComponentId(
-        nodeId, componentId);
+      nodeId,
+      componentId
+    );
     if (otherComponent != null) {
       return otherComponent.prompt;
     }
@@ -63,7 +100,9 @@ class SummaryController extends ComponentController {
 
   isStudentHasWork() {
     const componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(
-        this.summaryNodeId, this.summaryComponentId);
+      this.summaryNodeId,
+      this.summaryComponentId
+    );
     return componentStates.length > 0;
   }
 
@@ -89,7 +128,9 @@ class SummaryController extends ComponentController {
 
   studentHasSubmittedWork() {
     const componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(
-        this.summaryNodeId, this.summaryComponentId);
+      this.summaryNodeId,
+      this.summaryComponentId
+    );
     for (const componentState of componentStates) {
       if (componentState.isSubmit) {
         return true;
@@ -100,7 +141,9 @@ class SummaryController extends ComponentController {
 
   studentHasSavedWork() {
     const componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(
-        this.summaryNodeId, this.summaryComponentId);
+      this.summaryNodeId,
+      this.summaryComponentId
+    );
     return componentStates.length > 0;
   }
 
@@ -128,21 +171,5 @@ class SummaryController extends ComponentController {
     }
   }
 }
-
-SummaryController.$inject = [
-    '$filter',
-    '$mdDialog',
-    '$rootScope',
-    '$scope',
-    'AnnotationService',
-    'ConfigService',
-    'NodeService',
-    'NotebookService',
-    'ProjectService',
-    'StudentAssetService',
-    'StudentDataService',
-    'SummaryService',
-    'UtilService'
-];
 
 export default SummaryController;

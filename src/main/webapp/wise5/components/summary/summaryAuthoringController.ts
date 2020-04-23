@@ -3,8 +3,46 @@
 import SummaryController from './summaryController';
 
 class SummaryAuthoringController extends SummaryController {
-  constructor($filter,
-      $injector,
+  $injector: any;
+  isResponsesOptionAvailable: boolean;
+  isHighlightCorrectAnswerAvailable: boolean;
+  isPieChartAllowed: boolean;
+
+  static $inject = [
+    '$filter',
+    '$injector',
+    '$mdDialog',
+    '$rootScope',
+    '$scope',
+    'AnnotationService',
+    'ConfigService',
+    'NodeService',
+    'NotebookService',
+    'ProjectService',
+    'StudentAssetService',
+    'StudentDataService',
+    'SummaryService',
+    'UtilService'
+  ];
+
+  constructor(
+    $filter,
+    $injector,
+    $mdDialog,
+    $rootScope,
+    $scope,
+    AnnotationService,
+    ConfigService,
+    NodeService,
+    NotebookService,
+    ProjectService,
+    StudentAssetService,
+    StudentDataService,
+    SummaryService,
+    UtilService
+  ) {
+    super(
+      $filter,
       $mdDialog,
       $rootScope,
       $scope,
@@ -16,20 +54,8 @@ class SummaryAuthoringController extends SummaryController {
       StudentAssetService,
       StudentDataService,
       SummaryService,
-      UtilService) {
-    super($filter,
-        $mdDialog,
-        $rootScope,
-        $scope,
-        AnnotationService,
-        ConfigService,
-        NodeService,
-        NotebookService,
-        ProjectService,
-        StudentAssetService,
-        StudentDataService,
-        SummaryService,
-        UtilService);
+      UtilService
+    );
     this.$injector = $injector;
     this.isResponsesOptionAvailable = false;
     this.isHighlightCorrectAnswerAvailable = false;
@@ -79,15 +105,20 @@ class SummaryAuthoringController extends SummaryController {
   }
 
   updateOtherPrompt() {
-    this.otherPrompt = this.getOtherPrompt(this.authoringComponentContent.summaryNodeId,
-        this.authoringComponentContent.summaryComponentId);
+    this.otherPrompt = this.getOtherPrompt(
+      this.authoringComponentContent.summaryNodeId,
+      this.authoringComponentContent.summaryComponentId
+    );
   }
 
   updateStudentDataTypeOptionsIfNecessary() {
     const nodeId = this.authoringComponentContent.summaryNodeId;
     const componentId = this.authoringComponentContent.summaryComponentId;
-    this.isResponsesOptionAvailable =
-        this.isStudentDataTypeAvailableForComponent(nodeId, componentId, 'responses');
+    this.isResponsesOptionAvailable = this.isStudentDataTypeAvailableForComponent(
+      nodeId,
+      componentId,
+      'responses'
+    );
   }
 
   updateStudentDataTypeIfNecessary() {
@@ -104,16 +135,18 @@ class SummaryAuthoringController extends SummaryController {
   }
 
   updateHasCorrectAnswerIfNecessary() {
-    this.isHighlightCorrectAnswerAvailable = this.componentHasCorrectAnswer() &&
-        this.authoringComponentContent.studentDataType === 'responses';
+    this.isHighlightCorrectAnswerAvailable =
+      this.componentHasCorrectAnswer() &&
+      this.authoringComponentContent.studentDataType === 'responses';
     if (!this.isHighlightCorrectAnswerAvailable) {
       this.authoringComponentContent.highlightCorrectAnswer = false;
     }
   }
 
   updateChartTypeOptionsIfNecessary() {
-    this.isPieChartAllowed = this.authoringComponentContent.studentDataType === 'scores' ||
-        !this.componentAllowsMultipleResponses();
+    this.isPieChartAllowed =
+      this.authoringComponentContent.studentDataType === 'scores' ||
+      !this.componentAllowsMultipleResponses();
     if (!this.isPieChartAllowed && this.authoringComponentContent.chartType === 'pie') {
       this.authoringComponentContent.chartType = 'column';
     }
@@ -161,22 +194,5 @@ class SummaryAuthoringController extends SummaryController {
     return false;
   }
 }
-
-SummaryAuthoringController.$inject = [
-  '$filter',
-  '$injector',
-  '$mdDialog',
-  '$rootScope',
-  '$scope',
-  'AnnotationService',
-  'ConfigService',
-  'NodeService',
-  'NotebookService',
-  'ProjectService',
-  'StudentAssetService',
-  'StudentDataService',
-  'SummaryService',
-  'UtilService'
-];
 
 export default SummaryAuthoringController;

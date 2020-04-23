@@ -1,6 +1,11 @@
 import ComponentService from '../componentService';
 
 class SummaryService extends ComponentService {
+  componentsWithScoresSummary: string[];
+  componentsWithResponsesSummary: string[];
+
+  static $inject = ['$filter', 'ConfigService', 'UtilService'];
+
   constructor($filter, ConfigService, UtilService) {
     super($filter, ConfigService, UtilService);
     this.componentsWithScoresSummary = [
@@ -53,11 +58,5 @@ class SummaryService extends ComponentService {
     return this.componentsWithResponsesSummary.indexOf(componentType) != -1;
   }
 }
-
-SummaryService.$inject = [
-  '$filter',
-  'ConfigService',
-  'UtilService'
-];
 
 export default SummaryService;
