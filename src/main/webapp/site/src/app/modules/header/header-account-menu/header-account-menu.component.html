@@ -54,13 +54,13 @@
     </a>
     <a *ngIf="role === 'researcher'"
        mat-menu-item
-       href="admin">
+       (click)="switchToAdmin()">
       <mat-icon>settings</mat-icon>
       <span i18n>Researcher Tools</span>
     </a>
     <a *ngIf="role === 'admin'"
        mat-menu-item
-       href="admin">
+       (click)="switchToAdmin()">
       <mat-icon>settings</mat-icon>
       <span i18n>Admin Tools</span>
     </a>

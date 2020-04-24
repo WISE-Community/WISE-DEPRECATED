@@ -42,6 +42,10 @@ export class HeaderAccountMenuComponent implements OnInit {
     }
   }
 
+  switchToAdmin() {
+    window.location.href = '/admin';
+  }
+
   logOut() {
     window.location.href = this.logOutURL;
   }
