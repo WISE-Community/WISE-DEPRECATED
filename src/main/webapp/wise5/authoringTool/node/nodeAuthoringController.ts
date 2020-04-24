@@ -525,7 +525,7 @@ class NodeAuthoringController {
       this.authoringViewNodeChanged();
     });
 
-    if (this.$state.current.name === 'root.project.nodeConstraints') {
+    if (this.$state.current.name === 'root.at.project.nodeConstraints') {
       this.$timeout(() => {
         this.nodeAuthoringViewButtonClicked('advanced');
         this.$timeout(() => {
@@ -534,7 +534,7 @@ class NodeAuthoringController {
       });
     }
 
-    if (this.$state.current.name === 'root.project.nodeEditPaths') {
+    if (this.$state.current.name === 'root.at.project.nodeEditPaths') {
       this.$timeout(() => {
         this.nodeAuthoringViewButtonClicked('advanced');
         this.$timeout(() => {
@@ -649,8 +649,7 @@ class NodeAuthoringController {
     const data = { constraints: true };
     this.saveEvent('stepPreviewed', 'Navigation', data);
     window.open(
-      `${this.ConfigService.getConfigParam('previewProjectURL')}` +
-        `#!/project/${this.projectId}/${this.nodeId}`
+      `${this.ConfigService.getConfigParam('previewProjectURL')}/${this.nodeId}`
     );
   }
 
@@ -658,15 +657,15 @@ class NodeAuthoringController {
     const data = { constraints: false };
     this.saveEvent('stepPreviewed', 'Navigation', data);
     window.open(
-      `${this.ConfigService.getConfigParam('previewProjectURL')}` +
-        `?constraints=false#!/project/${this.projectId}/${this.nodeId}`
+      `${this.ConfigService.getConfigParam('previewProjectURL')}/${this.nodeId}` +
+        `?constraints=false`
     );
   }
 
   close() {
     this.$scope.$broadcast('exitNode', { nodeToExit: this.node });
     this.TeacherDataService.setCurrentNode(null);
-    this.$state.go('root.project', { projectId: this.projectId });
+    this.$state.go('root.at.project', { projectId: this.projectId });
     this.scrollToTopOfPage();
   }
 
@@ -1188,7 +1187,7 @@ class NodeAuthoringController {
       let prevNodeId = this.ProjectService.getPreviousNodeId(this.nodeId);
       if (prevNodeId != null) {
         // there is a previous node id so we will go to it
-        this.$state.go('root.project.node', { projectId: this.projectId, nodeId: prevNodeId });
+        this.$state.go('root.at.project.node', { projectId: this.projectId, nodeId: prevNodeId });
       } else {
         // there is no previous node id so we will display a message
         let thereIsNoPreviousStep = this.$translate('thereIsNoPreviousStep');
@@ -1210,7 +1209,7 @@ class NodeAuthoringController {
       let nextNodeId = this.ProjectService.getNextNodeId(this.nodeId);
       if (nextNodeId != null) {
         // there is a next node id so we will go to it
-        this.$state.go('root.project.node', { projectId: this.projectId, nodeId: nextNodeId });
+        this.$state.go('root.at.project.node', { projectId: this.projectId, nodeId: nextNodeId });
       } else {
         // there is no next node id so we will display a message
         let thereIsNoNextStep = this.$translate('thereIsNoNextStep');
@@ -2371,12 +2370,12 @@ class NodeAuthoringController {
 
   previewImportNode(node) {
     window.open(
-      `${this.importProject.previewProjectURL}#!/project/${this.importProjectId}/${node.id}`
+      `${this.importProject.previewProjectURL}/${node.id}`
     );
   }
 
   previewImportProject() {
-    window.open(`${this.importProject.previewProjectURL}#!/project/${this.importProjectId}`);
+    window.open(`${this.importProject.previewProjectURL}`);
   }
 
   importComponentsButtonClicked() {
@@ -2474,7 +2473,7 @@ class NodeAuthoringController {
     if (this.showImportView || this.showRubric || this.showAdvanced) {
       this.UtilService.hideJSONValidMessage();
       this.nodeAuthoringViewButtonClicked();
-      this.$state.go('root.project.node', { projectId: this.projectId, nodeId: this.nodeId });
+      this.$state.go('root.at.project.node', { projectId: this.projectId, nodeId: this.nodeId });
     } else {
       this.close();
     }

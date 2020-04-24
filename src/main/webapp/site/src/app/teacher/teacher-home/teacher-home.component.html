@@ -16,7 +16,7 @@
        [active]="rla.isActive">
       {{tab.label}}
     </a>
-    <a mat-tab-link [href]="authoringToolLink">
+    <a mat-tab-link (click)="openAuthoringTool()">
       <ng-container i18n>Authoring Tool</ng-container>
       &nbsp;<mat-icon class="text">open_in_browser</mat-icon>
     </a>

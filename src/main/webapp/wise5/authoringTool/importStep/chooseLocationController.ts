@@ -31,13 +31,13 @@ class ChooseLocationController {
     ).then(() => {
       this.ProjectService.checkPotentialStartNodeIdChangeThenSaveProject().then(() => {
         this.$rootScope.$broadcast('parseProject');
-        this.$state.go('root.project');
+        this.$state.go('root.at.project');
       });
     });
   }
 
   cancel() {
-    this.$state.go('root.project');
+    this.$state.go('root.at.project');
   }
 }
 

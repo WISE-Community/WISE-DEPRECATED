@@ -155,170 +155,6 @@ const classroomMonitorModule = angular
       $mdThemingProvider,
       $httpProvider
     ) => {
-      $stateProvider
-        .state('root', {
-          url: '/run/:runId',
-          templateUrl: 'wise5/classroomMonitor/classroomMonitor.html',
-          controller: 'ClassroomMonitorController',
-          controllerAs: 'classroomMonitorController',
-          resolve: {
-            config: [
-              'ConfigService',
-              '$stateParams',
-              (ConfigService, $stateParams) => {
-                return ConfigService.retrieveConfig(
-                  `/config/classroomMonitor/${$stateParams.runId}`
-                );
-              }
-            ],
-            project: [
-              'ProjectService',
-              'config',
-              (ProjectService, config) => {
-                return ProjectService.retrieveProject();
-              }
-            ],
-            runStatus: [
-              'TeacherDataService',
-              'config',
-              (TeacherDataService, config) => {
-                return TeacherDataService.retrieveRunStatus();
-              }
-            ],
-            studentStatuses: [
-              'StudentStatusService',
-              'config',
-              (StudentStatusService, config) => {
-                return StudentStatusService.retrieveStudentStatuses();
-              }
-            ],
-            achievements: [
-              'AchievementService',
-              'studentStatuses',
-              'config',
-              'project',
-              (AchievementService, studentStatuses, config, project) => {
-                return AchievementService.retrieveStudentAchievements();
-              }
-            ],
-            notifications: [
-              'NotificationService',
-              'ConfigService',
-              'studentStatuses',
-              'config',
-              'project',
-              (NotificationService, ConfigService, studentStatuses, config, project) => {
-                return NotificationService.retrieveNotifications();
-              }
-            ],
-            webSocket: [
-              'TeacherWebSocketService',
-              'config',
-              (TeacherWebSocketService, config) => {
-                return TeacherWebSocketService.initialize();
-              }
-            ],
-            language: [
-              '$translate',
-              'ConfigService',
-              'config',
-              ($translate, ConfigService, config) => {
-                let locale = ConfigService.getLocale(); // defaults to "en"
-                $translate.use(locale);
-              }
-            ],
-            annotations: [
-              'TeacherDataService',
-              'config',
-              (TeacherDataService, config) => {
-                return TeacherDataService.retrieveAnnotations();
-              }
-            ],
-            notebook: [
-              'NotebookService',
-              'ConfigService',
-              'config',
-              'project',
-              (NotebookService, ConfigService, config, project) => {
-                if (
-                  NotebookService.isNotebookEnabled() ||
-                  NotebookService.isTeacherNotebookEnabled()
-                ) {
-                  return NotebookService.retrieveNotebookItems().then(notebook => {
-                    return notebook;
-                  });
-                } else {
-                  return NotebookService.notebook;
-                }
-              }
-            ]
-          }
-        })
-        .state('root.teamLanding', {
-          url: '/team',
-          templateUrl: 'wise5/classroomMonitor/studentProgress/studentProgress.html',
-          controller: 'StudentProgressController',
-          controllerAs: 'studentProgressController'
-        })
-        .state('root.team', {
-          url: '/team/:workgroupId',
-          templateUrl: 'wise5/classroomMonitor/studentGrading/studentGrading.html',
-          controller: 'StudentGradingController',
-          controllerAs: 'studentGradingController',
-          resolve: {
-            studentData: [
-              '$stateParams',
-              'TeacherDataService',
-              'config',
-              ($stateParams, TeacherDataService, config) => {
-                return TeacherDataService.retrieveStudentDataByWorkgroupId(
-                  $stateParams.workgroupId
-                );
-              }
-            ]
-          }
-        })
-        .state('root.project', {
-          url: '/project/:nodeId?periodId&workgroupId',
-          component: 'nodeProgressView',
-          params: { nodeId: null }
-        })
-        .state('root.manageStudents', {
-          url: '/manageStudents',
-          templateUrl: 'wise5/classroomMonitor/manageStudents/manageStudents.html',
-          controller: 'ManageStudentsController',
-          controllerAs: 'manageStudentsController'
-        })
-        .state('root.dashboard', {
-          url: '/dashboard',
-          templateUrl: 'wise5/classroomMonitor/dashboard/dashboard.html',
-          controller: 'DashboardController',
-          controllerAs: 'dashboardController'
-        })
-        .state('root.export', {
-          url: '/export',
-          templateUrl: 'wise5/classroomMonitor/dataExport/dataExport.html',
-          controller: 'DataExportController',
-          controllerAs: 'dataExportController'
-        })
-        .state('root.milestones', {
-          url: '/milestones',
-          templateUrl: 'wise5/classroomMonitor/milestones/milestones.html',
-          controller: 'MilestonesController',
-          controllerAs: 'milestonesController'
-        })
-        .state('root.notebooks', {
-          url: '/notebook',
-          templateUrl: 'wise5/classroomMonitor/notebook/notebookGrading.html',
-          controller: 'NotebookGradingController',
-          controllerAs: 'notebookGradingController'
-        });
-
-      $urlRouterProvider.otherwise(($injector, $location) => {
-        var $state = $injector.get('$state');
-        $state.go('root.project', {});
-      });
-
       $httpProvider.interceptors.push('HttpInterceptor');
 
       // Set up Translations
@@ -326,7 +162,7 @@ const classroomMonitorModule = angular
       $translatePartialLoaderProvider.addPart('classroomMonitor/i18n');
       $translateProvider
         .useLoader('$translatePartialLoader', {
-          urlTemplate: 'wise5/{part}/i18n_{lang}.json'
+          urlTemplate: '/wise5/{part}/i18n_{lang}.json'
         })
         .fallbackLanguage(['en'])
         .registerAvailableLanguageKeys(
@@ -360,7 +196,7 @@ const classroomMonitorModule = angular
       });
 
       $mdThemingProvider
-        .theme('default')
+        .theme('cm')
         .primaryPalette('blue', {
           default: '800'
         })
@@ -385,7 +221,7 @@ const classroomMonitorModule = angular
           default: '900'
         });
 
-      $mdThemingProvider.setDefaultTheme('default');
+      $mdThemingProvider.setDefaultTheme('cm');
       $mdThemingProvider.enableBrowserColor();
 
       // moment.js default overrides

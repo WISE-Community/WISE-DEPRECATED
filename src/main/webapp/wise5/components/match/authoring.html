@@ -375,7 +375,8 @@
       </div>
       <div style='border: 2px solid #dddddd; border-radius: 5px; margin-bottom: 10px; padding: 20px 20px 10px 20px;'>
         <h6>{{ ::'FEEDBACK' | translate }}</h6>
-        <md-checkbox ng-model='matchController.authoringComponentContent.ordered'
+        <md-checkbox class='md-primary'
+                     ng-model='matchController.authoringComponentContent.ordered'
                      ng-change='matchController.authoringViewComponentChanged()'>
           {{ ::'match.choicesNeedToBeOrderedWithinBuckets' | translate }}
         </md-checkbox>
@@ -401,7 +402,8 @@
               </md-input-container>
               <md-input-container style='width:110; height: 30;'
                                   layout='row'>
-                <md-checkbox ng-model='choiceFeedback.isCorrect'
+                <md-checkbox class='md-primary'
+                             ng-model='choiceFeedback.isCorrect'
                              ng-change='matchController.authoringViewIsCorrectClicked(choiceFeedback)'
                              layout='row'>
                   {{ ::'IS_CORRECT' | translate }}

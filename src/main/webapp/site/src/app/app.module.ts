@@ -35,6 +35,7 @@ import { AnnouncementComponent } from './announcement/announcement.component';
 import { AnnouncementDialogComponent } from './announcement/announcement.component';
 import { AboutModule } from "./about/about.module";
 import { TrackScrollDirective } from './track-scroll.directive';
+import { PreviewModule } from './preview/preview.module';
 
 export function initialize(configService: ConfigService, userService: UserService): () => Promise<any> {
   return (): Promise<any> => {
@@ -87,6 +88,7 @@ export function translationsFactory(locale: string) {
     LoginModule,
     MobileMenuModule,
     RegisterModule,
+    PreviewModule,
     StudentModule,
     TeacherModule,
     SocialLoginModule,

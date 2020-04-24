@@ -91,10 +91,9 @@ public class GradeWorkControllerTest {
     expect(runService.retrieveById(runId)).andReturn(run);
     expect(runService.hasReadPermission(teacherAuthentication, run)).andReturn(true);
     replay(runService);
-    ModelAndView modelAndView =
-        controller.launchClassroomMonitorWISE5(runId, teacherAuthentication);
-    assertEquals("forward:/wise5/classroomMonitor/dist/index.html#!/run/" + runId + "/project/",
-        modelAndView.getViewName());
+    ModelAndView modelAndView = controller.launchClassroomMonitorWISE5(runId,
+        teacherAuthentication);
+    assertEquals("redirect:/teacher/manage/unit/" + runId, modelAndView.getViewName());
     verify(runService);
   }
 
@@ -107,8 +106,8 @@ public class GradeWorkControllerTest {
     expect(runService.retrieveById(runId)).andReturn(run);
     expect(runService.hasReadPermission(teacherAuthentication, run)).andReturn(false);
     replay(runService);
-    ModelAndView modelAndView =
-        controller.launchClassroomMonitorWISE5(runId, teacherAuthentication);
+    ModelAndView modelAndView = controller.launchClassroomMonitorWISE5(runId,
+        teacherAuthentication);
     assertEquals("errors/accessdenied", modelAndView.getViewName());
     verify(runService);
   }

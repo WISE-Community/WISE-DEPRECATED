@@ -5,22 +5,35 @@ import ClassroomMonitorProjectService from '../../../classroomMonitorProjectServ
 import TeacherDataService from '../../../../services/teacherDataService';
 
 class TopBarController {
+  $translate: any;
   avatarColor: any;
+  canAuthorProject: boolean;
   contextPath: string;
   dismissedNotifications: any;
   newNotifications: any;
   notifications: any;
+  runId: number;
   themePath: string;
   userInfo: any;
   workgroupId: number;
-  static $inject = ['$rootScope', 'ConfigService', 'ProjectService', 'TeacherDataService'];
+  static $inject = [
+    '$filter',
+    '$rootScope',
+    '$state',
+    'ConfigService',
+    'ProjectService',
+    'TeacherDataService'
+  ];
 
   constructor(
+    $filter: any,
     private $rootScope: any,
+    private $state: any,
     private ConfigService: ConfigService,
     private ProjectService: ClassroomMonitorProjectService,
     private TeacherDataService: TeacherDataService
   ) {
+    this.$translate = $filter('translate');
     this.workgroupId = this.ConfigService.getWorkgroupId();
     if (this.workgroupId == null) {
       this.workgroupId = 100 * Math.random();
@@ -32,6 +45,11 @@ class TopBarController {
     });
     this.themePath = this.ProjectService.getThemePath();
     this.contextPath = this.ConfigService.getContextPath();
+  }
+
+  $onInit() {
+    const permissions = this.ConfigService.getPermissions();
+    this.canAuthorProject = permissions.canAuthorProject;
   }
 
   $onChanges(changesObj) {
@@ -66,6 +84,30 @@ class TopBarController {
    */
   isAnyPeriodPaused() {
     return this.TeacherDataService.isAnyPeriodPaused();
+  }
+
+  switchToAuthoringView() {
+    const proceed = confirm(this.$translate('editRunUnitWarning'));
+    if (proceed) {
+      this.doAuthoringViewSwitch();
+    }
+  }
+
+  doAuthoringViewSwitch() {
+    if (this.$state.current.name === 'root.cm.notebooks') {
+      this.$state.go('root.at.project.notebook', {
+        projectId: this.runId
+      });
+    } else if (this.$state.current.name === 'root.cm.unit.node') {
+      this.$state.go('root.at.project.node', {
+        projectId: this.runId,
+        nodeId: this.$state.params.nodeId
+      });
+    } else {
+      this.$state.go('root.at.project', {
+        projectId: this.runId
+      });
+    }
   }
 
   goHome() {
@@ -119,13 +161,19 @@ const TopBar = {
   },
   controller: TopBarController,
   template: `<md-toolbar class="l-header">
-            <div class="md-toolbar-tools">
+            <div class="md-toolbar-tools" >
                 <span class="md-button logo-link">
                     <a href="{{::$ctrl.contextPath}}/teacher" target="_self">
                         <img ng-src="{{ ::$ctrl.logoPath }}" alt="{{ ::'WISE_LOGO' | translate }}" class="logo" />
                     </a>
                 </span>
-                <h3>{{ ::$ctrl.projectTitle }} <span class="md-caption">({{ ::'RUN_ID_DISPLAY' | translate:{id: $ctrl.runId} }})</span></h3>
+                <h3 layout="row" layout-align="start center">
+                  {{ ::$ctrl.projectTitle }}&nbsp;<span class="md-caption">({{ ::'RUN_ID_DISPLAY' | translate:{id: $ctrl.runId} }})</span>
+                  <md-button ng-if="$ctrl.canAuthorProject" aria-label="{{ ::'switchToAuthoringView' | translate }}" class="md-icon-button" ng-click="$ctrl.switchToAuthoringView()">
+                      <md-icon md-menu-origin> edit </md-icon>
+                      <md-tooltip>{{ ::'switchToAuthoringView' | translate }}</md-tooltip>
+                  </md-button>
+                </h3>
                 <span flex></span>
                 <md-menu md-position-mode="target-right target" md-offset="52 26">
                     <md-button aria-label="{{ ::'ALERTS' | translate }}" class="md-icon-button notification-btn" ng-click="$mdMenu.open($event)">

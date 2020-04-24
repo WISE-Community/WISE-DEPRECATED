@@ -1,7 +1,7 @@
 'use strict';
-import ProjectService from '../services/projectService';
+import AuthoringToolProjectService from '../authoringTool/authoringToolProjectService';
 
-class ClassroomMonitorProjectService extends ProjectService {
+class ClassroomMonitorProjectService extends AuthoringToolProjectService {
   static $inject = [
     '$filter',
     '$http',

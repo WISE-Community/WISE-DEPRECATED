@@ -203,7 +203,8 @@
       </textarea>
       </md-input-container>
       <md-input-container style='margin-top: 0; margin-bottom: 0;'>
-        <md-checkbox ng-model='discussionController.authoringComponentContent.isStudentAttachmentEnabled'
+        <md-checkbox class='md-primary'
+                     ng-model='discussionController.authoringComponentContent.isStudentAttachmentEnabled'
                      ng-change='discussionController.authoringViewComponentChanged()'>
           {{ ::'discussion.allowUploadedImagesInPosts' | translate }}
         </md-checkbox>

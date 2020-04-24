@@ -94,7 +94,7 @@ function testCancel() {
     it('should go to the project state', () => {
       spyOn($state, 'go');
       controller.cancel();
-      expect($state.go).toHaveBeenCalledWith('root.project');
+      expect($state.go).toHaveBeenCalledWith('root.at.project');
     });
   });
 }

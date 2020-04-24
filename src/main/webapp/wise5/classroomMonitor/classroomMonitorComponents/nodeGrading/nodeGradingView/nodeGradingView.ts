@@ -607,7 +607,7 @@ const NodeGradingView = {
   },
   controller: NodeGradingViewController,
   templateUrl:
-    'wise5/classroomMonitor/classroomMonitorComponents/nodeGrading/nodeGradingView/nodeGradingView.html'
+    '/wise5/classroomMonitor/classroomMonitorComponents/nodeGrading/nodeGradingView/nodeGradingView.html'
 };
 
 export default NodeGradingView;

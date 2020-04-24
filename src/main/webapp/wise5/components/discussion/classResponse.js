@@ -48,7 +48,7 @@ class ClassResponseController {
   }
 
   replyEntered($event) {
-    if($event.keyCode == 13 && !$event.shiftKey && this.response.replyText) {        
+    if($event.keyCode == 13 && !$event.shiftKey && this.response.replyText) {
       $event.preventDefault();
       this.submitbuttonclicked({r: this.response});
     }
@@ -87,7 +87,7 @@ const ClassResponseComponentOptions = {
     studentdatachanged: '&',
     isdisabled: '<'
   },
-  templateUrl: 'wise5/components/discussion/classResponse.html',
+  templateUrl: '/wise5/components/discussion/classResponse.html',
   controller: 'ClassResponseController as classResponseCtrl'
 };
 

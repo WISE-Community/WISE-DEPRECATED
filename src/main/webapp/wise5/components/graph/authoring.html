@@ -288,9 +288,10 @@
               </md-input-container>
               <md-input-container style='margin-right: 20px; width: 270px;'
                                   ng-if='graphController.authoringGetConnectedComponentType(connectedComponent) === "Graph"'>
-                <md-checkbox ng-model='connectedComponent.importGraphSettings'
-                              style='margin-right: 20px;'
-                              ng-change='graphController.authoringViewComponentChanged()'>
+                <md-checkbox class='md-primary'
+                             ng-model='connectedComponent.importGraphSettings'
+                             style='margin-right: 20px;'
+                             ng-change='graphController.authoringViewComponentChanged()'>
                   {{ ::'graph.importGraphSettings' | translate }}
                 </md-checkbox>
               </md-input-container>
@@ -302,7 +303,8 @@
               </md-button>
             </div>
             <div ng-if='graphController.authoringGetConnectedComponentType(connectedComponent) == "Table"' flex>
-              <md-checkbox ng-model='connectedComponent.skipFirstRow'
+              <md-checkbox class='md-primary'
+                           ng-model='connectedComponent.skipFirstRow'
                            style='margin-right: 20px;'
                            ng-change='graphController.authoringViewComponentChanged()'>
                 {{ ::'graph.skipFirstRow' | translate }}
@@ -516,7 +518,8 @@
                      ng-change='graphController.authoringViewComponentChanged()'/>
             </md-input-container>
             <md-input-container>
-              <md-checkbox ng-model='graphController.authoringComponentContent.xAxis.locked'
+              <md-checkbox class='md-primary'
+                           ng-model='graphController.authoringComponentContent.xAxis.locked'
                            ng-change='graphController.authoringViewComponentChanged()'>
                 {{ ::'graph.locked' | translate }}
               </md-checkbox>
@@ -607,7 +610,8 @@
                    ng-change='graphController.authoringViewComponentChanged()'/>
           </md-input-container>
           <md-input-container>
-            <md-checkbox ng-model='graphController.authoringComponentContent.yAxis.locked'
+            <md-checkbox class='md-primary'
+                         ng-model='graphController.authoringComponentContent.yAxis.locked'
                          ng-change='graphController.authoringViewComponentChanged()'>
               {{ ::'graph.locked' | translate }}
             </md-checkbox>
@@ -652,7 +656,8 @@
                    ng-change='graphController.authoringViewComponentChanged()'/>
           </md-input-container>
           <md-input-container style='margin-right: 20px; width: 70px;'>
-            <md-checkbox ng-model='graphController.authoringComponentContent.yAxis[$index].locked'
+            <md-checkbox class='md-primary'
+                         ng-model='graphController.authoringComponentContent.yAxis[$index].locked'
                          ng-change='graphController.authoringViewComponentChanged()'>
               {{ ::'graph.locked' | translate }}
             </md-checkbox>
@@ -805,7 +810,8 @@
             </md-select>
           </md-input-container>
           <md-input-container style='margin-right: 20px; height: 60px;'>
-            <md-checkbox ng-model='series.canEdit'
+            <md-checkbox class='md-primary'
+                         ng-model='series.canEdit'
                          ng-model-options='{ debounce: 1000 }'
                          ng-change='graphController.authoringViewComponentChanged()'>
               {{ ::'graph.canStudentEdit' | translate }}

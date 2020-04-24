@@ -114,13 +114,13 @@ class ProjectController {
     this.projectURL = window.location.origin + this.ConfigService.getConfigParam('projectURL');
     this.$transitions.onSuccess({}, $transition => {
       const stateName = $transition.$to().name;
-      if (stateName === 'root.project') {
+      if (stateName === 'root.at.project') {
         this.saveEvent('projectHomeViewOpened', 'Navigation');
-      } else if (stateName === 'root.project.asset') {
+      } else if (stateName === 'root.at.project.asset') {
         this.saveEvent('assetsViewOpened', 'Navigation');
-      } else if (stateName === 'root.project.info') {
+      } else if (stateName === 'root.at.project.info') {
         this.saveEvent('projectInfoViewOpened', 'Navigation');
-      } else if (stateName === 'root.project.notebook') {
+      } else if (stateName === 'root.at.project.notebook') {
         this.saveEvent('notebookViewOpened', 'Navigation');
       }
     });
@@ -165,7 +165,7 @@ class ProjectController {
     const previewProjectEventData = { constraints: true };
     this.saveEvent('projectPreviewed', 'Navigation', previewProjectEventData);
     window.open(
-      `${this.ConfigService.getConfigParam('previewProjectURL')}#!/project/${this.projectId}`
+      `${this.ConfigService.getConfigParam('previewProjectURL')}`
     );
   }
 
@@ -173,17 +173,16 @@ class ProjectController {
     const previewProjectEventData = { constraints: false };
     this.saveEvent('projectPreviewed', 'Navigation', previewProjectEventData);
     window.open(
-      `${this.ConfigService.getConfigParam('previewProjectURL')}` +
-        `?constraints=false#!/project/${this.projectId}`
+      `${this.ConfigService.getConfigParam('previewProjectURL')}?constraints=false`
     );
   }
 
   viewProjectAssets() {
-    this.$state.go('root.project.asset', { projectId: this.projectId });
+    this.$state.go('root.at.project.asset', { projectId: this.projectId });
   }
 
   viewNotebookSettings() {
-    this.$state.go('root.project.notebook', { projectId: this.projectId });
+    this.$state.go('root.at.project.notebook', { projectId: this.projectId });
   }
 
   showOtherConcurrentAuthors(authors) {
@@ -211,7 +210,7 @@ class ProjectController {
   }
 
   closeProject() {
-    this.$state.go('root.main');
+    this.$state.go('root.at.main');
   }
 
   getNodePositionById(nodeId) {
@@ -233,7 +232,7 @@ class ProjectController {
   nodeClicked(nodeId) {
     this.unselectAllItems();
     this.TeacherDataService.endCurrentNodeAndSetCurrentNodeByNodeId(this.nodeId);
-    this.$state.go('root.project.node', { projectId: this.projectId, nodeId: nodeId });
+    this.$state.go('root.at.project.node', { projectId: this.projectId, nodeId: nodeId });
   }
 
   /**
@@ -243,7 +242,10 @@ class ProjectController {
    */
   constraintIconClicked(nodeId) {
     this.TeacherDataService.endCurrentNodeAndSetCurrentNodeByNodeId(nodeId);
-    this.$state.go('root.project.nodeConstraints', { projectId: this.projectId, nodeId: nodeId });
+    this.$state.go('root.at.project.nodeConstraints', {
+      projectId: this.projectId,
+      nodeId: nodeId
+    });
   }
 
   /**
@@ -253,7 +255,7 @@ class ProjectController {
    */
   branchIconClicked(nodeId) {
     this.TeacherDataService.endCurrentNodeAndSetCurrentNodeByNodeId(nodeId);
-    this.$state.go('root.project.nodeEditPaths', { projectId: this.projectId, nodeId: nodeId });
+    this.$state.go('root.at.project.nodeEditPaths', { projectId: this.projectId, nodeId: nodeId });
   }
 
   createGroup() {
@@ -640,7 +642,7 @@ class ProjectController {
   }
 
   addStructure() {
-    this.$state.go('root.project.structure.choose');
+    this.$state.go('root.at.project.structure.choose');
   }
 
   cancelMove() {
@@ -705,17 +707,17 @@ class ProjectController {
   }
 
   importStep() {
-    this.$state.go('root.project.import-step.choose-step', { projectId: this.projectId });
+    this.$state.go('root.at.project.import-step.choose-step', { projectId: this.projectId });
   }
 
   editProjectRubric() {
-    this.$state.go('root.project.rubric', {
+    this.$state.go('root.at.project.rubric', {
       projectId: this.projectId
     });
   }
 
   goToAdvancedAuthoring() {
-    this.$state.go('root.project.advanced', {
+    this.$state.go('root.at.project.advanced', {
       projectId: this.projectId
     });
   }
@@ -746,7 +748,7 @@ class ProjectController {
   }
 
   goBackToProjectList() {
-    this.$state.go('root.main');
+    this.$state.go('root.at.main');
   }
 
   projectHomeClicked() {

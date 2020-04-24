@@ -12,12 +12,12 @@ const importStepModule = angular
     '$stateProvider',
     $stateProvider => {
       $stateProvider
-        .state('root.project.import-step', {
+        .state('root.at.project.import-step', {
           url: '/import-step',
           abstract: true,
           resolve: {}
         })
-        .state('root.project.import-step.choose-step', {
+        .state('root.at.project.import-step.choose-step', {
           url: '/choose-step',
           templateUrl: 'wise5/authoringTool/importStep/chooseStep.html',
           controller: 'ChooseStepController',
@@ -27,7 +27,7 @@ const importStepModule = angular
             importFromProjectId: null
           }
         })
-        .state('root.project.import-step.choose-location', {
+        .state('root.at.project.import-step.choose-location', {
           url: '/choose-location',
           templateUrl: 'wise5/authoringTool/importStep/chooseLocation.html',
           controller: 'ChooseLocationController',

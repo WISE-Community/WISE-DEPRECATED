@@ -46,7 +46,7 @@ class ChooseStructureLocationController {
   saveAndGoBackToProjectHome() {
     this.ProjectService.checkPotentialStartNodeIdChangeThenSaveProject().then(() => {
       this.$rootScope.$broadcast('parseProject');
-      this.$state.go('root.project');
+      this.$state.go('root.at.project');
     });
   }
 
@@ -93,12 +93,12 @@ class ChooseStructureLocationController {
     this.ProjectService.addNodeToGroup(node2, group);
     this.ProjectService.checkPotentialStartNodeIdChangeThenSaveProject().then(() => {
       this.$rootScope.$broadcast('parseProject');
-      this.$state.go('root.project');
+      this.$state.go('root.at.project');
     });
   }
 
   cancel() {
-    this.$state.go('root.project');
+    this.$state.go('root.at.project');
   }
 }
 

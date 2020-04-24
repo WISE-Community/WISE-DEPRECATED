@@ -7,11 +7,12 @@ import { ConfigService } from "../../services/config.service";
 import { BehaviorSubject, Observable } from "rxjs";
 import { Config } from "../../domain/config";
 import { AuthService } from "angularx-social-login";
-import { MAT_DIALOG_DATA } from "../../../../../../../../node_modules/@angular/material/dialog";
 import { User } from "../../domain/user";
 import { StudentService } from '../student.service';
 import { translationsFactory } from '../../app.module';
 import { I18n } from '@ngx-translate/i18n-polyfill';
+import { RouterTestingModule } from '@angular/router/testing';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 export class MockUserService {
   getUser(): BehaviorSubject<User> {
@@ -83,10 +84,14 @@ describe('TeamSignInDialogComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ TeamSignInDialogComponent ],
+      imports: [
+        RouterTestingModule
+      ],
       providers: [
         { provide: AuthService, useClass: MockAuthService },
         { provide: ConfigService, useClass: MockConfigService },
         { provide: MAT_DIALOG_DATA, useValue: { run: runObj } },
+        { provide: MatDialogRef, useValue: {} },
         { provide: UserService, useClass: MockUserService },
         { provide: StudentService, useClass: MockStudentService },
         { provide: TRANSLATIONS_FORMAT, useValue: "xlf" },

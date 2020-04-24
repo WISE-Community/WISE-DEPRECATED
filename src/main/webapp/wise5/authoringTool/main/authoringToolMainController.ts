@@ -23,6 +23,7 @@ class AuthoringToolMainController {
   static $inject = [
     '$anchorScroll',
     '$filter',
+    '$location',
     '$mdDialog',
     '$rootScope',
     '$state',
@@ -36,6 +37,7 @@ class AuthoringToolMainController {
   constructor(
     private $anchorScroll: any,
     $filter: any,
+    private $location: any,
     private $mdDialog: any,
     private $rootScope: any,
     private $state: any,
@@ -155,7 +157,7 @@ class AuthoringToolMainController {
         .then(projectId => {
           this.cancelErrorCreatingProjectTimeout();
           this.saveEvent('projectCreated', 'Authoring', {}, projectId);
-          this.$state.go('root.project', { projectId: projectId });
+          this.$state.go('root.at.project', { projectId: projectId });
         })
         .catch(() => {
           this.turnOffInProcessOfCreatingProject();
@@ -211,20 +213,20 @@ class AuthoringToolMainController {
 
   openProject(projectId) {
     this.showLoadingProjectMessage();
-    this.$state.go('root.project', { projectId: projectId });
+    this.$state.go('root.at.project', { projectId: projectId });
   }
 
   previewProject(projectId) {
     const data = { constraints: true };
     this.saveEvent('projectPreviewed', 'Authoring', data, projectId);
     window.open(
-      `${this.ConfigService.getWISEBaseURL()}/project/${projectId}#!/project/${projectId}`
+      `${this.ConfigService.getWISEBaseURL()}/preview/unit/${projectId}`
     );
   }
 
   goHome() {
     this.saveEvent('goToTeacherHome', 'Navigation', {}, null);
-    window.location.href = this.ConfigService.getWISEBaseURL() + '/teacher';
+    this.$location.url('teacher');
   }
 
   saveEvent(eventName, category, data = {}, projectId) {
