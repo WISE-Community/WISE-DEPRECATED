@@ -19,7 +19,7 @@ class LabelService extends ComponentService {
   }
 
   createComponent() {
-    const component = super.createComponent();
+    const component: any = super.createComponent();
     component.type = 'Label';
     component.backgroundImage = '';
     component.canCreateLabels = true;

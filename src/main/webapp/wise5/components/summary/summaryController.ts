@@ -21,6 +21,7 @@ class SummaryController extends ComponentController {
   static $inject = [
     '$filter',
     '$mdDialog',
+    '$q',
     '$rootScope',
     '$scope',
     'AnnotationService',
@@ -37,6 +38,7 @@ class SummaryController extends ComponentController {
   constructor(
     $filter,
     $mdDialog,
+    $q,
     $rootScope,
     $scope,
     AnnotationService,
@@ -52,6 +54,7 @@ class SummaryController extends ComponentController {
     super(
       $filter,
       $mdDialog,
+      $q,
       $rootScope,
       $scope,
       AnnotationService,

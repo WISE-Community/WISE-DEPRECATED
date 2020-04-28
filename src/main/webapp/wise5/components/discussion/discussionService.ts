@@ -51,7 +51,7 @@ class DiscussionService extends ComponentService {
   }
 
   createComponent() {
-    const component = super.createComponent();
+    const component: any = super.createComponent();
     component.type = 'Discussion';
     component.prompt = this.$translate('ENTER_PROMPT_HERE');
     component.isStudentAttachmentEnabled = true;

@@ -63,6 +63,7 @@ class DiscussionController extends ComponentController {
     super(
       $filter,
       $mdDialog,
+      $q,
       $rootScope,
       $scope,
       AnnotationService,

@@ -1,7 +1,69 @@
+import * as angular from 'angular';
+import * as $ from 'jquery';
+import AnnotationService from "../services/annotationService";
+import ConfigService from "../services/configService";
+import NodeService from "../services/nodeService";
+import NotebookService from "../services/notebookService";
+import ProjectService from "../services/projectService";
+import StudentAssetService from "../services/studentAssetService";
+import UtilService from "../services/utilService";
+import StudentDataService from "../services/studentDataService";
+
 class ComponentController {
+  $filter: any;
+  $mdDialog: any;
+  $q: any;
+  $rootScope: any;
+  $scope: any;
+  $translate: any;
+  AnnotationService: AnnotationService;
+  ConfigService: ConfigService;
+  NodeService: NodeService;
+  NotebookService: NotebookService;
+  ProjectService: ProjectService;
+  StudentAssetService: StudentAssetService;
+  UtilService: UtilService;
+  StudentDataService: StudentDataService;
+  nodeId: string;
+  componentId: string;
+  componentContent: any;
+  componentType: string;
+  idToOrder: any;
+  mode: string;
+  authoringComponentContent: any;
+  isShowPreviousWork: boolean;
+  showAdvancedAuthoring: boolean;
+  showJSONAuthoring: boolean;
+  isDisabled: boolean;
+  isDirty: boolean;
+  parentStudentWorkIds: any[];
+  attachments: any[];
+  isSubmitDirty: boolean;
+  isSubmit: boolean;
+  saveMessage: any;
+  isStudentAttachmentEnabled: boolean;
+  isPromptVisible: boolean;
+  isSaveButtonVisible: boolean;
+  isSubmitButtonVisible: boolean;
+  isSubmitButtonDisabled: boolean;
+  submitCounter: number;
+  isSnipButtonVisible: boolean;
+  workgroupId: number;
+  teacherWorkgroupId: number;
+  showAddToNotebookButton: boolean;
+  latestAnnotations: any;
+  summernoteRubricId: string;
+  summernoteRubricHTML: string;
+  summernoteRubricOptions: any;
+  allowedConnectedComponentTypes: any[];
+  authoringComponentContentJSONString: string;
+  isJSONStringChanged: boolean;
+  authoringValidComponentContentJSONString: string;
+
   constructor(
       $filter,
       $mdDialog,
+      $q,
       $rootScope,
       $scope,
       AnnotationService,
@@ -14,6 +76,7 @@ class ComponentController {
       UtilService) {
     this.$filter = $filter;
     this.$mdDialog = $mdDialog;
+    this.$q = $q;
     this.$rootScope = $rootScope;
     this.$scope = $scope;
     this.AnnotationService = AnnotationService;
@@ -152,7 +215,7 @@ class ComponentController {
      * when the student exits the parent node.
      */
     this.$scope.$on('exitNode', (event, args) => {
-      this.cleanupBeforeExiting(event, args);
+      this.cleanupBeforeExiting();
     });
 
     this.registerStudentWorkSavedToServerListener();
@@ -279,7 +342,7 @@ class ComponentController {
   }
 
   insertVideoIntoSummernote(summernoteId, fullAssetPath) {
-    var videoElement = document.createElement('video');
+    const videoElement: any = document.createElement('video');
     videoElement.controls = 'true';
     videoElement.innerHTML = '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
     $('#' + summernoteId).summernote('insertNode', videoElement);
@@ -393,6 +456,10 @@ class ComponentController {
         this.setIsSubmit(false);
       }
     }
+  }
+
+  confirmSubmit(numberOfSubmitsLeft) {
+    return true;
   }
 
   disableSubmitButton() {
@@ -597,7 +664,9 @@ class ComponentController {
    * @return a promise that will return a component state
    */
   createComponentState(action) {
-
+    const deferred = this.$q.defer();
+    deferred.resolve({});
+    return deferred.promise;
   }
 
   /**
@@ -641,6 +710,10 @@ class ComponentController {
         this.studentDataChanged();
       }
     }
+  }
+
+  setStudentWork(componentState) {
+
   }
 
   createMergedComponentState(componentStates) {
@@ -823,16 +896,16 @@ class ComponentController {
    */
   authoringGetConnectedComponentType(connectedComponent) {
 
-    var connectedComponentType = null;
+    let connectedComponentType = null;
 
     if (connectedComponent != null) {
 
       // get the node id and component id of the connected component
-      var nodeId = connectedComponent.nodeId;
-      var componentId = connectedComponent.componentId;
+      const nodeId = connectedComponent.nodeId;
+      const componentId = connectedComponent.componentId;
 
       // get the component
-      var component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
+      const component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
 
       if (component != null) {
         // get the component type
@@ -1018,7 +1091,7 @@ class ComponentController {
        * create a new component by converting the JSON string in the advanced
        * authoring view into a JSON object
        */
-      var editedComponentContent = angular.fromJson(this.authoringComponentContentJSONString);
+      const editedComponentContent = angular.fromJson(this.authoringComponentContentJSONString);
 
       // replace the component in the project
       this.ProjectService.replaceComponent(this.nodeId, this.componentId, editedComponentContent);
@@ -1218,5 +1291,4 @@ class ComponentController {
   }
 }
 
-ComponentController.$inject = [];
 export default ComponentController;

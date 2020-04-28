@@ -12,7 +12,7 @@ class MultipleChoiceService extends ComponentService {
   }
 
   createComponent() {
-    const component = super.createComponent();
+    const component: any = super.createComponent();
     component.type = 'MultipleChoice';
     component.choiceType = 'radio';
     component.choices = [];

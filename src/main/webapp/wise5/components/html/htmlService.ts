@@ -12,7 +12,7 @@ class HTMLService extends ComponentService {
   }
 
   createComponent() {
-    const component = super.createComponent();
+    const component: any = super.createComponent();
     component.type = 'HTML';
     component.html = this.$translate('html.enterHTMLHere');
     return component;

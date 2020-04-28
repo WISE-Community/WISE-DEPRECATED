@@ -1,4 +1,9 @@
 class ComponentService {
+  $filter: any;
+  $translate: any;
+  StudentDataService: any;
+  UtilService: any;
+  
   constructor($filter, StudentDataService, UtilService) {
     this.$filter = $filter;
     this.StudentDataService = StudentDataService;
@@ -104,7 +109,5 @@ class ComponentService {
     return false;
   }
 }
-
-ComponentService.$inject = [];
 
 export default ComponentService;

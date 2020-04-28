@@ -21,7 +21,7 @@ class DrawService extends ComponentService {
   }
 
   createComponent() {
-    const component = super.createComponent();
+    const component: any = super.createComponent();
     component.type = 'Draw';
     component.stamps = {};
     component.stamps.Stamps = [];

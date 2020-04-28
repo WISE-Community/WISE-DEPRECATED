@@ -12,7 +12,7 @@ class AnimationService extends ComponentService {
   }
 
   createComponent() {
-    const component = super.createComponent();
+    const component: any = super.createComponent();
     component.type = 'Animation';
     component.widthInPixels = 600;
     component.widthInUnits = 60;

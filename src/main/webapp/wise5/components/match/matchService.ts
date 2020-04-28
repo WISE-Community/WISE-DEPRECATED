@@ -12,7 +12,7 @@ class MatchService extends ComponentService {
   }
 
   createComponent() {
-    const component = super.createComponent();
+    const component: any = super.createComponent();
     component.type = 'Match';
     component.choices = [];
     component.buckets = [];

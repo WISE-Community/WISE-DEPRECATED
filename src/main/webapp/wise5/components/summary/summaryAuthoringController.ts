@@ -11,6 +11,7 @@ class SummaryAuthoringController extends SummaryController {
   static $inject = [
     '$filter',
     '$injector',
+    '$q',
     '$mdDialog',
     '$rootScope',
     '$scope',
@@ -28,6 +29,7 @@ class SummaryAuthoringController extends SummaryController {
   constructor(
     $filter,
     $injector,
+    $q,
     $mdDialog,
     $rootScope,
     $scope,
@@ -44,6 +46,7 @@ class SummaryAuthoringController extends SummaryController {
     super(
       $filter,
       $mdDialog,
+      $q,
       $rootScope,
       $scope,
       AnnotationService,

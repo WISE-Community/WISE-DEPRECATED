@@ -93,6 +93,7 @@ class ConceptMapController extends ComponentController {
     super(
       $filter,
       $mdDialog,
+      $q,
       $rootScope,
       $scope,
       AnnotationService,
@@ -1874,7 +1875,7 @@ class ConceptMapController extends ComponentController {
           const base64Image = myCanvas.toDataURL('image/png');
 
           // get the image object
-          const imageObject = thisUtilService.getImageObjectFromBase64String(base64Image, false);
+          const imageObject = thisUtilService.getImageObjectFromBase64String(base64Image);
           this.NotebookService.addNote($event, imageObject);
         };
 

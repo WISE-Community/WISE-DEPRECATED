@@ -20,7 +20,7 @@ class TableService extends ComponentService {
   }
 
   createComponent() {
-    const component = super.createComponent();
+    const component: any = super.createComponent();
     component.type = 'Table';
     component.globalCellSize = 10;
     component.numRows = 3;

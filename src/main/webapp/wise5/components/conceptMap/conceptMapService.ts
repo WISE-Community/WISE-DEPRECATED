@@ -50,7 +50,7 @@ class ConceptMapService extends ComponentService {
   }
 
   createComponent() {
-    const component = super.createComponent();
+    const component: any = super.createComponent();
     component.type = 'ConceptMap';
     component.width = 800;
     component.height = 600;
@@ -1325,7 +1325,7 @@ class ConceptMapService extends ComponentService {
           const base64Image = myCanvas.toDataURL('image/png');
 
           // get the image object
-          const imageObject = this.UtilService.getImageObjectFromBase64String(base64Image, false);
+          const imageObject = this.UtilService.getImageObjectFromBase64String(base64Image);
 
           // add the image to the student assets
           this.StudentAssetService.uploadAsset(imageObject).then(asset => {

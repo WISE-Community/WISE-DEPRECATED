@@ -12,7 +12,7 @@ class OpenResponseService extends ComponentService {
   }
 
   createComponent() {
-    const component = super.createComponent();
+    const component: any = super.createComponent();
     component.type = 'OpenResponse';
     component.starterSentence = null;
     component.isStudentAttachmentEnabled = false;

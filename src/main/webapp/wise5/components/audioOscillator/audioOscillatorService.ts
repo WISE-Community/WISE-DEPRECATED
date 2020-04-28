@@ -12,7 +12,7 @@ class AudioOscillatorService extends ComponentService {
   }
 
   createComponent() {
-    const component = super.createComponent();
+    const component: any = super.createComponent();
     component.type = 'AudioOscillator';
     component.oscillatorTypes = ['sine'];
     component.startingFrequency = 440;

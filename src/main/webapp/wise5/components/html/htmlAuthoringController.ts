@@ -9,6 +9,7 @@ class HTMLAuthoringController extends HTMLController {
   summernotePromptId: string;
 
   static $inject = [
+    '$q',
     '$rootScope',
     '$scope',
     '$state',
@@ -27,6 +28,7 @@ class HTMLAuthoringController extends HTMLController {
   ];
 
   constructor(
+    $q,
     $rootScope,
     $scope,
     $state,
@@ -44,6 +46,7 @@ class HTMLAuthoringController extends HTMLController {
     UtilService
   ) {
     super(
+      $q,
       $rootScope,
       $scope,
       $state,

@@ -61,6 +61,7 @@ class DrawController extends ComponentController {
     super(
       $filter,
       $mdDialog,
+      $q,
       $rootScope,
       $scope,
       AnnotationService,
@@ -149,7 +150,7 @@ class DrawController extends ComponentController {
         componentState.componentId
       )
     ) {
-      const connectedComponentParams = this.ProjectService.getConnectedComponentParams(
+      const connectedComponentParams: any = this.ProjectService.getConnectedComponentParams(
         this.componentContent,
         componentState.componentId
       );

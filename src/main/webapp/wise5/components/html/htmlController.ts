@@ -10,6 +10,7 @@ class HTMLController extends ComponentController {
   html: string;
 
   static $inject = [
+    '$q',
     '$rootScope',
     '$scope',
     '$state',
@@ -28,6 +29,7 @@ class HTMLController extends ComponentController {
   ];
 
   constructor(
+    $q,
     $rootScope,
     $scope,
     $state,
@@ -47,6 +49,7 @@ class HTMLController extends ComponentController {
     super(
       $filter,
       $mdDialog,
+      $q,
       $rootScope,
       $scope,
       AnnotationService,

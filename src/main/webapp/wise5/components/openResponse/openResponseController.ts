@@ -61,6 +61,7 @@ class OpenResponseController extends ComponentController {
     super(
       $filter,
       $mdDialog,
+      $q,
       $rootScope,
       $scope,
       AnnotationService,
@@ -581,10 +582,7 @@ class OpenResponseController extends ComponentController {
 
                     // check if we need to apply this globalAnnotationSetting to this annotation: we don't need to if we've already reached the maxCount
                     if (annotationGroupForScore != null) {
-                      let globalAnnotationGroupsByNodeIdAndComponentId = this.AnnotationService.getAllGlobalAnnotationGroups(
-                        this.nodeId,
-                        this.componentId
-                      );
+                      let globalAnnotationGroupsByNodeIdAndComponentId = this.AnnotationService.getAllGlobalAnnotationGroups();
                       annotationGroupForScore.annotationGroupCreatedTime =
                         autoScoreAnnotation.clientSaveTime; // save annotation creation time
 
@@ -697,7 +695,7 @@ class OpenResponseController extends ComponentController {
                   this.componentContent.notificationSettings &&
                   this.componentContent.notificationSettings.notifications
                 ) {
-                  const notificationForScore = this.ProjectService.getNotificationByScore(
+                  const notificationForScore: any = this.ProjectService.getNotificationByScore(
                     this.componentContent,
                     previousScore,
                     score
