@@ -196,7 +196,7 @@ const WorkgroupSelect = {
             </md-not-found>
         </md-autocomplete>
         <md-select ng-if="!$ctrl.useAutocomplete"
-                   md-theme="default"
+                   md-theme="cm"
                    ng-class="$ctrl.customClass"
                    md-container-class="stepSelectMenuContainer"
                    aria-label="{{ $ctrl.placeholder }}"

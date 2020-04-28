@@ -100,7 +100,7 @@ class StudentGradingController {
       if (workgroup != null) {
         let workgroupId = workgroup.workgroupId;
         if (this.workgroupId !== workgroupId) {
-          this.$state.go('root.team', { workgroupId: workgroupId });
+          this.$state.go('root.cm.team', { workgroupId: workgroupId });
         }
       }
     });

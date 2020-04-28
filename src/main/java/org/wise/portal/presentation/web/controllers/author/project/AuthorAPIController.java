@@ -143,14 +143,13 @@ public class AuthorAPIController {
       // do nothing
     }
 
-    User user = ControllerUtil.getSignedInUser();
     String projectIdStr = request.getParameter("projectId");
     Project project;
     if (projectIdStr != null && !projectIdStr.equals("") && !projectIdStr.equals("none")) {
       project = projectService.getById(Long.parseLong(projectIdStr));
       if (project.getWiseVersion().equals(5)) {
         ModelAndView wise5AuthoringView = new ModelAndView(
-            new RedirectView("../author#!/project/" + projectIdStr));
+            new RedirectView("../teacher/edit/unit/" + projectIdStr));
         return wise5AuthoringView;
       }
     }
@@ -375,7 +374,7 @@ public class AuthorAPIController {
     config.put("projectAssetTotalSizeMax", projectAssetTotalSizeMax);
     config.put("projectAssetURL", contextPath + "/author/project/asset/" + projectId);
     config.put("projectBaseURL", projectBaseURL);
-    config.put("previewProjectURL", contextPath + "/project/" + projectId);
+    config.put("previewProjectURL", contextPath + "/preview/unit/" + projectId);
     config.put("cRaterRequestURL", contextPath + "/c-rater");
     config.put("importStepsURL", contextPath + "/author/project/importSteps/" + projectId);
     config.put("featuredProjectIconsURL", contextPath + "/author/project/featured/icons");
@@ -441,7 +440,7 @@ public class AuthorAPIController {
 
   /**
    * Import steps and copy assets if necessary
-   * 
+   *
    * @param steps
    *                        a string containing a JSONArray of steps
    * @param toProjectId

@@ -5,8 +5,7 @@ import HTMLService from './htmlService';
 import HTMLController from './htmlController';
 import HTMLAuthoringController from './htmlAuthoringController';
 
-const htmlComponentModule = angular
-  .module('htmlComponentModule', [])
+const htmlComponentModule = angular.module('htmlAuthoringComponentModule', [])
   .service('HTMLService', HTMLService)
   .controller('HTMLController', HTMLController)
   .controller('HTMLAuthoringController', HTMLAuthoringController)

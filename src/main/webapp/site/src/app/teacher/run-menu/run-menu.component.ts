@@ -10,6 +10,7 @@ import { RunSettingsDialogComponent } from '../run-settings-dialog/run-settings-
 import { I18n } from '@ngx-translate/i18n-polyfill';
 import { EditRunWarningDialogComponent } from '../edit-run-warning-dialog/edit-run-warning-dialog.component';
 import { ListClassroomCoursesDialogComponent } from '../list-classroom-courses-dialog/list-classroom-courses-dialog.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-run-menu',
@@ -28,11 +29,12 @@ export class RunMenuComponent implements OnInit {
     private teacherService: TeacherService,
     private userService: UserService,
     private configService: ConfigService,
+    private router: Router,
     private i18n: I18n
   ) {}
 
   ngOnInit() {
-    this.editLink = `${this.configService.getContextPath()}/author/#!/project/${
+    this.editLink = `${this.configService.getContextPath()}/teacher/edit/unit/${
       this.run.project.id
     }`;
     this.reportProblemLink = `${this.configService.getContextPath()}/contact?runId=${this.run.id}`;
@@ -125,7 +127,7 @@ export class RunMenuComponent implements OnInit {
         panelClass: 'mat-dialog--sm'
       });
     } else {
-      window.location.href = this.editLink;
+      this.router.navigateByUrl(this.editLink);
     }
   }
 }

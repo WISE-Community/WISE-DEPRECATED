@@ -1049,7 +1049,7 @@ class JigsawController extends ConfigureStructureController {
 
   chooseLocation() {
     this.injectGroupAndNodes(parseInt(this.numGroups));
-    this.$state.go('root.project.structure.location', { structure: this.structure });
+    this.$state.go('root.at.project.structure.location', { structure: this.structure });
   }
 }
 

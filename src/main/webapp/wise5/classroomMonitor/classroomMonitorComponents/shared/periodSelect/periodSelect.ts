@@ -88,14 +88,14 @@ const PeriodSelect = {
   bindings: {
     customClass: '<'
   },
-  template: `<md-select md-theme="default"
+  template: `<md-select md-theme="cm"
                     ng-model="$ctrl.currentPeriod"
                     ng-model-options="{ trackBy: '$value.periodId' }"
                     ng-class="$ctrl.customClass"
                     ng-change="$ctrl.currentPeriodChanged()"
                     aria-label="{{ ::'selectPeriod' | translate }}"
                     md-selected-text="$ctrl.getSelectedText()">
-            <md-option ng-repeat="period in $ctrl.periods"
+            <md-option ng-repeat="period in $ctrl.periods track by $index"
                        ng-value="period"
                        ng-disabled="!period.numWorkgroupsInPeriod">
                 <span ng-if="period.periodId === -1" translate="allPeriods"></span>

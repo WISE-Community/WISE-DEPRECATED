@@ -50,7 +50,7 @@ public class GradeWorkController {
 
   /**
    * Invokes WISE4 or WISE5 Classroom Monitor based on the specified run
-   * 
+   *
    * @param runId
    *                ID of the run
    */
@@ -67,7 +67,7 @@ public class GradeWorkController {
 
   /**
    * Handles launching classroom monitor for WISE5 runs
-   * 
+   *
    * @param runId
    *                ID of the run
    * @throws Exception
@@ -77,8 +77,7 @@ public class GradeWorkController {
       Authentication authentication) throws Exception {
     Run run = runService.retrieveById(runId);
     if (runService.hasReadPermission(authentication, run)) {
-      return new ModelAndView(
-          "forward:/wise5/classroomMonitor/dist/index.html#!/run/" + runId + "/project/");
+      return new ModelAndView("redirect:/teacher/manage/unit/" + runId);
     } else {
       return new ModelAndView("errors/accessdenied");
     }

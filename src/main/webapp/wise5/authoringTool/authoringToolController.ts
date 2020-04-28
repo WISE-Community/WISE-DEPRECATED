@@ -8,7 +8,6 @@ import AuthoringToolProjectService from './authoringToolProjectService';
 class AuthoringToolController {
   $anchorScroll: any;
   $filter: any;
-  $location: any;
   $mdDialog: any;
   $rootScope: any;
   $scope: any;
@@ -34,7 +33,6 @@ class AuthoringToolController {
   static $inject = [
     '$anchorScroll',
     '$filter',
-    '$location',
     '$mdDialog',
     '$rootScope',
     '$scope',
@@ -50,7 +48,6 @@ class AuthoringToolController {
   constructor(
     $anchorScroll,
     $filter,
-    $location,
     $mdDialog,
     $rootScope,
     $scope,
@@ -64,7 +61,6 @@ class AuthoringToolController {
   ) {
     this.$anchorScroll = $anchorScroll;
     this.$filter = $filter;
-    this.$location = $location;
     this.$mdDialog = $mdDialog;
     this.$rootScope = $rootScope;
     this.$scope = $scope;
@@ -78,7 +74,7 @@ class AuthoringToolController {
     this.TeacherDataService = TeacherDataService;
     this.logoPath = ProjectService.getThemePath() + '/images/WISE-logo-ffffff.svg';
     this.views = {
-      'root.project': {
+      'root.at.project': {
         id: 'projectHomeButton',
         name: this.$translate('projectHome'),
         label: this.$translate('projectHome'),
@@ -87,25 +83,7 @@ class AuthoringToolController {
         showToolbar: true,
         active: true
       },
-      'root.project.notebook': {
-        id: 'notebookButton',
-        name: this.$translate('notebookSettings'),
-        label: this.$translate('notebookSettings'),
-        icon: 'book',
-        type: 'primary',
-        showToolbar: true,
-        active: true
-      },
-      'root.project.asset': {
-        id: 'assetButton',
-        name: this.$translate('fileManager'),
-        label: this.$translate('fileManager'),
-        icon: 'attach_file',
-        type: 'primary',
-        showToolbar: true,
-        active: true
-      },
-      'root.project.info': {
+      'root.at.project.info': {
         id: 'infoButton',
         name: this.$translate('PROJECT_INFO'),
         label: this.$translate('PROJECT_INFO'),
@@ -114,7 +92,25 @@ class AuthoringToolController {
         showToolbar: true,
         active: true
       },
-      'root.project.milestones': {
+      'root.at.project.asset': {
+        id: 'assetButton',
+        name: this.$translate('fileManager'),
+        label: this.$translate('fileManager'),
+        icon: 'attach_file',
+        type: 'primary',
+        showToolbar: true,
+        active: true
+      },
+      'root.at.project.notebook': {
+        id: 'notebookButton',
+        name: this.$translate('notebookSettings'),
+        label: this.$translate('notebookSettings'),
+        icon: 'book',
+        type: 'primary',
+        showToolbar: true,
+        active: true
+      },
+      'root.at.project.milestones': {
         id: 'milestonesButton',
         name: this.$translate('MILESTONES'),
         label: this.$translate('MILESTONES'),
@@ -123,7 +119,7 @@ class AuthoringToolController {
         showToolbar: true,
         active: true
       },
-      'root.main': {
+      'root.at.main': {
         id: 'projectListButton',
         name: this.$translate('projectsList'),
         label: this.$translate('projectsList'),
@@ -132,7 +128,7 @@ class AuthoringToolController {
         showToolbar: false,
         active: true
       },
-      'root.project.node': {
+      'root.at.project.node': {
         name: '',
         label: '',
         icon: '',
@@ -140,7 +136,7 @@ class AuthoringToolController {
         showToolbar: true,
         active: false
       },
-      'root.project.nodeConstraints': {
+      'root.at.project.nodeConstraints': {
         name: '',
         label: '',
         icon: '',
@@ -148,7 +144,7 @@ class AuthoringToolController {
         showToolbar: true,
         active: false
       },
-      'root.project.nodeEditPaths': {
+      'root.at.project.nodeEditPaths': {
         name: '',
         label: '',
         icon: '',
@@ -156,7 +152,7 @@ class AuthoringToolController {
         showToolbar: true,
         active: false
       },
-      'root.project.advanced': {
+      'root.at.project.advanced': {
         name: '',
         label: '',
         icon: '',
@@ -164,7 +160,7 @@ class AuthoringToolController {
         showToolbar: true,
         active: false
       },
-      'root.project.rubric': {
+      'root.at.project.rubric': {
         name: '',
         label: '',
         icon: '',
@@ -178,7 +174,7 @@ class AuthoringToolController {
     $transitions.onSuccess({}, $transition => {
       this.isMenuOpen = false;
       this.processUI();
-      if ($transition.name === 'root.main') {
+      if ($transition.name === 'root.at.main') {
         this.saveEvent('projectListViewed', 'Navigation');
       }
     });
@@ -279,7 +275,7 @@ class AuthoringToolController {
       });
     });
 
-    if (this.$state.current.name === 'root.main') {
+    if (this.$state.current.name === 'root.at.main') {
       this.saveEvent('projectListViewed', 'Navigation');
     }
 
@@ -297,10 +293,10 @@ class AuthoringToolController {
   processUI() {
     this.$anchorScroll('top');
     this.showStepTools = [
-      'root.project',
-      'root.project.node',
-      'root.project.nodeConstraints',
-      'root.project.nodeEditPaths'
+      'root.at.project',
+      'root.at.project.node',
+      'root.at.project.nodeConstraints',
+      'root.at.project.nodeEditPaths'
     ].includes(this.$state.$current.name);
     const view = this.views[this.$state.$current.name];
     if (view) {
@@ -322,10 +318,6 @@ class AuthoringToolController {
 
   turnOffJSONValidMessage() {
     this.$rootScope.$broadcast('setIsJSONValid', { isJSONValid: null });
-  }
-
-  goToMyProjects() {
-    this.$location.url('/author');
   }
 
   toggleMenu() {

@@ -10,12 +10,12 @@ import { Router } from '@angular/router';
 @Injectable()
 export class LibraryService {
 
-  private libraryGroupsUrl = 'api/project/library';
-  private communityProjectsUrl = 'api/project/community';
-  private personalProjectsUrl = 'api/project/personal';
-  private sharedProjectsUrl = 'api/project/shared';
-  private copyProjectUrl = 'api/project/copy';
-  private projectInfoUrl = 'api/project/info';
+  private libraryGroupsUrl = '/api/project/library';
+  private communityProjectsUrl = '/api/project/community';
+  private personalProjectsUrl = '/api/project/personal';
+  private sharedProjectsUrl = '/api/project/shared';
+  private copyProjectUrl = '/api/project/copy';
+  private projectInfoUrl = '/api/project/info';
   public libraryGroups: LibraryGroup[];
   private libraryGroupsSource = new BehaviorSubject<LibraryGroup[]>([]);
   public libraryGroupsSource$ = this.libraryGroupsSource.asObservable();

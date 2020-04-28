@@ -24,12 +24,12 @@ const structureAuthoringModule = angular
     '$stateProvider',
     $stateProvider => {
       $stateProvider
-        .state('root.project.structure', {
+        .state('root.at.project.structure', {
           url: '/structure',
           abstract: true,
           resolve: {}
         })
-        .state('root.project.structure.choose', {
+        .state('root.at.project.structure.choose', {
           url: '/choose',
           templateUrl: 'wise5/authoringTool/structure/chooseStructure.html',
           controller: 'ChooseStructureController',
@@ -38,7 +38,7 @@ const structureAuthoringModule = angular
             structure: null
           }
         })
-        .state('root.project.structure.configure', {
+        .state('root.at.project.structure.configure', {
           url: '/configure',
           templateUrl: 'wise5/authoringTool/structure/configureStructure.html',
           controller: 'ConfigureStructureController',
@@ -48,7 +48,7 @@ const structureAuthoringModule = angular
             structure: null
           }
         })
-        .state('root.project.structure.jigsaw', {
+        .state('root.at.project.structure.jigsaw', {
           url: '/jigsaw',
           templateUrl: 'wise5/authoringTool/structure/jigsaw/jigsaw.html',
           controller: 'JigsawController',
@@ -57,7 +57,7 @@ const structureAuthoringModule = angular
             structure: null
           }
         })
-        .state('root.project.structure.guidance-choice', {
+        .state('root.at.project.structure.guidance-choice', {
           url: '/guidance-choice',
           templateUrl: 'wise5/authoringTool/structure/guidanceChoice/guidanceChoice.html',
           controller: 'GuidanceChoiceController',
@@ -66,7 +66,7 @@ const structureAuthoringModule = angular
             structure: null
           }
         })
-        .state('root.project.structure.self-directed-investigation', {
+        .state('root.at.project.structure.self-directed-investigation', {
           url: '/self-directed-investigation',
           templateUrl:
             'wise5/authoringTool/structure/selfDirectedInvestigation/selfDirectedInvestigation.html',
@@ -76,7 +76,7 @@ const structureAuthoringModule = angular
             structure: null
           }
         })
-        .state('root.project.structure.peer-review-and-revision', {
+        .state('root.at.project.structure.peer-review-and-revision', {
           url: '/peer-review-and-revision',
           templateUrl:
             'wise5/authoringTool/structure/peerReviewAndRevision/peerReviewAndRevision.html',
@@ -86,7 +86,7 @@ const structureAuthoringModule = angular
             structure: null
           }
         })
-        .state('root.project.structure.ki-cycle-using-oer', {
+        .state('root.at.project.structure.ki-cycle-using-oer', {
           url: '/ki-cycle-using-oer',
           templateUrl: 'wise5/authoringTool/structure/kiCycleUsingOER/kiCycleUsingOER.html',
           controller: 'KICycleUsingOERController',
@@ -95,7 +95,7 @@ const structureAuthoringModule = angular
             structure: null
           }
         })
-        .state('root.project.structure.location', {
+        .state('root.at.project.structure.location', {
           url: '/location',
           templateUrl: 'wise5/authoringTool/structure/chooseStructureLocation.html',
           controller: 'ChooseStructureLocationController',

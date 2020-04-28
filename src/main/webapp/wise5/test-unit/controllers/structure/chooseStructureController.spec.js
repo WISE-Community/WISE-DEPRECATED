@@ -25,8 +25,8 @@ function testChooseStructure() {
   describe('chooseStructure', () => {
     it('should go to the configure state with the chosen structure', () => {
       spyOn($state, 'go');
-      controller.chooseStructure('root.project.structure.jigsaw');
-      expect($state.go).toHaveBeenCalledWith('root.project.structure.jigsaw');
+      controller.chooseStructure('root.at.project.structure.jigsaw');
+      expect($state.go).toHaveBeenCalledWith('root.at.project.structure.jigsaw');
     });
   });
 }
@@ -36,7 +36,7 @@ function testCancel() {
     it('should go to the project state', () => {
       spyOn($state, 'go');
       controller.cancel();
-      expect($state.go).toHaveBeenCalledWith('root.project');
+      expect($state.go).toHaveBeenCalledWith('root.at.project');
     });
   });
 }

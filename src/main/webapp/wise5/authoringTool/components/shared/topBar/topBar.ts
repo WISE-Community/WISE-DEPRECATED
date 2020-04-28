@@ -9,11 +9,13 @@ class TopBarController {
   userInfo: any;
   themePath: string;
   contextPath: string;
+  runId: number;
 
-  static $inject = ['$rootScope', '$window', 'ConfigService', 'ProjectService'];
+  static $inject = ['$rootScope', '$state', '$window', 'ConfigService', 'ProjectService'];
 
   constructor(
     private $rootScope: any,
+    private $state: any,
     private $window: any,
     private ConfigService: ConfigService,
     private ProjectService: AuthoringToolProjectService
@@ -33,6 +35,24 @@ class TopBarController {
       'https://docs.google.com/document/d/1G8lVtiUlGXLRAyFOvkEdadHYhJhJLW4aor9dol2VzeU',
       '_blank'
     );
+  }
+
+  switchToGradingView() {
+    if (this.$state.current.name === 'root.at.project.notebook') {
+      this.$state.go('root.cm.notebooks', {
+        runId: this.runId
+      });
+    } else if (this.$state.current.name === 'root.at.project.node') {
+      this.$state.go('root.cm.unit.node', {
+        runId: this.runId,
+        nodeId: this.$state.params.nodeId
+      });
+    } else {
+      this.$state.go('root.cm.unit', {
+        runId: this.runId
+      });
+    }
+
   }
 
   goHome() {
@@ -61,15 +81,20 @@ const TopBar = {
             <img ng-src="{{ ::$ctrl.logoPath }}" alt="{{ ::'WISE_LOGO' | translate }}" class="logo" />
           </a>
         </span>
-        <span flex>
-        <h3>
+        <h3 layout="row" layout-align="start center">
           <span ng-if="$ctrl.projectTitle" id="projectTitleSpan">{{ $ctrl.projectTitle }}</span>
           <span ng-if="!$ctrl.projectTitle" id="projectTitleSpan">{{ ::'authoringTool' | translate }}</span>
-          <span class="md-caption" ng-if="$ctrl.projectId">
-            ({{ 'PROJECT_ID_DISPLAY' | translate:{id: $ctrl.projectId} }}<span class="md-caption" ng-if="$ctrl.runId"> | {{ 'RUN_ID_DISPLAY' | translate:{id: $ctrl.runId} }}</span>)
+          <span class="md-caption" ng-if="$ctrl.projectId" layout="row" layout-align="start center">
+            &nbsp;({{ 'PROJECT_ID_DISPLAY' | translate:{id: $ctrl.projectId} }}
+            <span class="md-caption" ng-if="$ctrl.runId">&nbsp;| {{ 'RUN_ID_DISPLAY' | translate:{id: $ctrl.runId} }}
+            </span>)
+            <md-button ng-if="$ctrl.runId" aria-label="{{ ::'switchToGradingView' | translate }}" class="md-icon-button" ng-click="$ctrl.switchToGradingView()">
+                <md-icon md-menu-origin> assignment_turned_in </md-icon>
+                <md-tooltip>{{ ::'switchToGradingView' | translate }}</md-tooltip>
+            </md-button>
           </span>
         </h3>
-        </span>
+        <span flex></span>
         <md-button style="text-transform: none;"
             ng-click="$ctrl.helpButtonClicked()">{{ ::'HELP' | translate }}</md-button>
         <md-menu id='accountMenu' md-position-mode="target-right target" md-offset="8 26">

@@ -12,25 +12,25 @@ class ChooseStructureController {
         label: translate('jigsaw.label'),
         description: translate('jigsaw.description'),
         icon: 'extension',
-        route: 'root.project.structure.jigsaw'
+        route: 'root.at.project.structure.jigsaw'
       },
       {
         label: translate('selfDirectedInvestigation.label'),
         description: translate('selfDirectedInvestigation.description'),
         icon: 'contact_support',
-        route: 'root.project.structure.self-directed-investigation'
+        route: 'root.at.project.structure.self-directed-investigation'
       },
       {
         label: translate('peerReview.label'),
         description: translate('peerReview.description'),
         icon: 'question_answer',
-        route: 'root.project.structure.peer-review-and-revision'
+        route: 'root.at.project.structure.peer-review-and-revision'
       },
       {
         label: translate('kiOER.label'),
         description: translate('kiOER.description'),
         icon: 'autorenew',
-        route: 'root.project.structure.ki-cycle-using-oer'
+        route: 'root.at.project.structure.ki-cycle-using-oer'
       }
     ];
   }
@@ -40,7 +40,7 @@ class ChooseStructureController {
   }
 
   cancel() {
-    this.$state.go('root.project');
+    this.$state.go('root.at.project');
   }
 }
 

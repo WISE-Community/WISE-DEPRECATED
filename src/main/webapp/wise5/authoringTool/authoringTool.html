@@ -1,7 +1,7 @@
-<link rel="stylesheet" href="wise5/lib/bootstrap/css/bootstrap.min.css" />
-<link rel="stylesheet" href="wise5/themes/default/style/angular-material.css">
-<link rel="stylesheet" href="wise5/themes/default/style/author.css">
-<link rel="stylesheet" href="wise5/lib/summernote/dist/summernote.css" />
+<link rel="stylesheet" href="/wise5/lib/bootstrap/css/bootstrap.min.css" />
+<link rel="stylesheet" href="/wise5/themes/default/style/angular-material.css">
+<link rel="stylesheet" href="/wise5/themes/default/style/author.css">
+<link rel="stylesheet" href="/wise5/lib/summernote/dist/summernote.css" />
 
 <style>
 .global-message.ng-change {
@@ -12,34 +12,34 @@
 
 <div disable-delete-keypress
     ng-mousemove='authoringToolController.mouseMoved()'
-    role="main" layout="column" layout-fill>
-  <top-bar logo-path="{{::authoringToolController.logoPath}}"
+    role="main" layout="column" layout-fill md-theme="at">
+  <at-top-bar logo-path="{{::authoringToolController.logoPath}}"
        project-id="authoringToolController.projectId"
        project-title="authoringToolController.projectTitle"
-       run-id="authoringToolController.runId"></top-bar>
-  <toolbar ng-if="authoringToolController.showToolbar"
+       run-id="authoringToolController.runId"></at-top-bar>
+  <at-toolbar ng-if="authoringToolController.showToolbar"
        number-project="authoringToolController.numberProject"
        show-step-tools="authoringToolController.showStepTools"
        view-name="authoringToolController.currentViewName"
-       on-menu-toggle="authoringToolController.toggleMenu()"></toolbar>
+       on-menu-toggle="authoringToolController.toggleMenu()"></at-toolbar>
   <md-sidenav md-component-id="monitorSidenav"
         md-is-open="authoringToolController.isMenuOpen"
         md-whiteframe="4">
-    <main-menu state="authoringToolController.$state"
-        views="authoringToolController.views"></main-menu>
+    <at-main-menu state="authoringToolController.$state"
+        views="authoringToolController.views"></at-main-menu>
   </md-sidenav>
   <md-content id="content" flex role="main" layout="column" class="l-main"
       ng-class="{ 'l-main--with-toolbar': authoringToolController.showToolbar }"
       flex role="main">
     <div ui-view></div>
   </md-content>
-  <side-menu ng-if="authoringToolController.showToolbar"
+  <at-side-menu ng-if="authoringToolController.showToolbar"
       state="authoringToolController.$state"
       views="authoringToolController.views"
       on-menu-toggle="authoringToolController.toggleMenu()">
-  </side-menu>
+  </at-side-menu>
 </div>
 
-<script src="wise5/lib/bootstrap/js/bootstrap.min.js"></script>
-<script src="wise5/lib/summernote/dist/summernote.min.js"></script>
-<script src="wise5/lib/summernoteExtensions/summernote-ext-addNote.js"></script>
+<script src="/wise5/lib/bootstrap/js/bootstrap.min.js"></script>
+<script src="/wise5/lib/summernote/dist/summernote.min.js"></script>
+<script src="/wise5/lib/summernoteExtensions/summernote-ext-addNote.js"></script>

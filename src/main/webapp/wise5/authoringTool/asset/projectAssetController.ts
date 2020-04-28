@@ -312,7 +312,7 @@ class ProjectAssetController {
     if (this.isPopup) {
       this.$mdDialog.hide();
     } else {
-      this.$state.go('root.project', { projectId: this.projectId });
+      this.$state.go('root.at.project', { projectId: this.projectId });
     }
   }
 

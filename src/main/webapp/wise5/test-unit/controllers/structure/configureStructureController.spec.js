@@ -34,7 +34,7 @@ function testChooseLocation() {
     it('should go to the choose location state', () => {
       spyOn($state, 'go');
       controller.chooseLocation();
-      expect($state.go).toHaveBeenCalledWith('root.project.structure.location', {
+      expect($state.go).toHaveBeenCalledWith('root.at.project.structure.location', {
         structure: {}
       });
     });
@@ -46,7 +46,7 @@ function testCancel() {
     it('should go to the project state', () => {
       spyOn($state, 'go');
       controller.cancel();
-      expect($state.go).toHaveBeenCalledWith('root.project');
+      expect($state.go).toHaveBeenCalledWith('root.at.project');
     });
   });
 }

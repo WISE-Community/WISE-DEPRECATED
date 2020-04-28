@@ -207,7 +207,7 @@
           <md-input-container>
             <label>{{ ::'transitionToStep' | translate }}</label>
             <md-select id='stepSelectMenu'
-                   md-theme='default'
+                   md-theme='at'
                    class='node-select md-subhead'
                    ng-model='transition.to'
                    ng-change='nodeAuthoringController.authoringViewTransitionToNodeIdChanged()'
@@ -266,7 +266,7 @@
               <md-input-container ng-if='param.value == "nodeId"'>
                 <label>{{ ::param.text }}</label>
                 <md-select id="nodeIdSelectMenu"
-                       md-theme="default"
+                       md-theme="at"
                        class='node-select md-subhead'
                        ng-model="transitionCriteria.params.nodeId"
                        ng-change='nodeAuthoringController.transitionCriteriaNodeIdChanged(transitionCriteria)'
@@ -286,7 +286,7 @@
               <md-input-container ng-if='param.value == "componentId"'>
                 <label>{{ ::param.text }}</label>
                 <md-select id="componentIdSelectMenu"
-                       md-theme="default"
+                       md-theme="at"
                        class='node-select md-subhead'
                        ng-model="transitionCriteria.params.componentId"
                        ng-change='nodeAuthoringController.transitionCriteriaComponentIdChanged(transitionCriteria)'
@@ -312,7 +312,7 @@
               <md-input-container ng-if='param.value == "choiceIds" && nodeAuthoringController.getChoiceTypeByNodeIdAndComponentId(transitionCriteria.params.nodeId, transitionCriteria.params.componentId) == "radio"'>
                 <label>{{ ::'theStudentNeedsToChooseThisChoice' | translate }}</label>
                 <md-select id="radioChoiceIdsSelectMenu"
-                       md-theme="default"
+                       md-theme="at"
                        class='node-select md-subhead'
                        ng-model="transitionCriteria.params.choiceIds"
                        ng-list
@@ -327,7 +327,7 @@
               <md-input-container ng-if='param.value == "choiceIds" && nodeAuthoringController.getChoiceTypeByNodeIdAndComponentId(transitionCriteria.params.nodeId, transitionCriteria.params.componentId) == "checkbox"'>
                 <label>{{ ::'theStudentNeedsToChooseTheseChoices' | translate }}</label>
                 <md-select id="checkboxChoiceIdsSelectMenu"
-                       md-theme="default"
+                       md-theme="at"
                        class='node-select md-subhead'
                        ng-model="transitionCriteria.params.choiceIds"
                        ng-change='nodeAuthoringController.authoringViewNodeChanged()'
@@ -348,7 +348,7 @@
           <label>{{ ::'howToChooseAmongAvailablePaths' | translate }}</label>
           <md-select id='howToChooseAmongAvailablePathsSelect'
                  ng-disabled='nodeAuthoringController.node.transitionLogic.transitions.length <= 1'
-                 md-theme='default'
+                 md-theme='at'
                  class='node-select md-subhead'
                  ng-model='nodeAuthoringController.node.transitionLogic.howToChooseAmongAvailablePaths'
                  ng-change='nodeAuthoringController.authoringViewNodeChanged()'
@@ -366,7 +366,7 @@
           <label>{{ ::'whenToChoosePath' | translate }}</label>
           <md-select id='whenToChoosePathSelect'
                  ng-disabled='nodeAuthoringController.node.transitionLogic.transitions.length <= 1'
-                 md-theme='default'
+                 md-theme='at'
                  class='node-select md-subhead'
                  ng-model='nodeAuthoringController.node.transitionLogic.whenToChoosePath'
                  ng-change='nodeAuthoringController.authoringViewNodeChanged()'
@@ -384,7 +384,7 @@
           <label>{{ ::'canChangePath' | translate }}</label>
           <md-select id='canChangePathSelect'
                  ng-disabled='nodeAuthoringController.node.transitionLogic.transitions.length <= 1'
-                 md-theme='default'
+                 md-theme='at'
                  class='node-select md-subhead'
                  ng-model='nodeAuthoringController.node.transitionLogic.canChangePath'
                  ng-change='nodeAuthoringController.authoringViewNodeChanged()'
@@ -490,7 +490,7 @@
             <label ng-if="param.value != 'requireAllCellsInARowToBeFilled' && param.value != 'tableHasHeaderRow'">{{::param.text}}</label>
             <md-select id="nodeIdSelectMenu"
                        ng-if='param.value == "nodeId"'
-                       md-theme="default"
+                       md-theme="at"
                        class="node-select md-subhead"
                        ng-model="criteria.params.nodeId"
                        ng-change='nodeAuthoringController.authoringViewConstraintRemovalCriteriaNodeIdChanged(criteria)'
@@ -513,7 +513,7 @@
             </md-select>
             <md-select id="componentIdSelectMenu"
                        ng-if='param.value == "componentId"'
-                       md-theme="default"
+                       md-theme="at"
                        class="node-select md-subhead"
                        ng-model="criteria.params.componentId"
                        ng-change='nodeAuthoringController.authoringViewConstraintRemovalCriteriaComponentIdChanged(criteria)'
@@ -533,7 +533,7 @@
             </md-select>
             <md-select id="fromNodeIdSelectMenu"
                        ng-if='param.value == "fromNodeId"'
-                       md-theme="default"
+                       md-theme="at"
                        class="node-select md-subhead"
                        ng-model="criteria.params.fromNodeId"
                        ng-change='nodeAuthoringController.authoringViewNodeChanged()'
@@ -556,7 +556,7 @@
             </md-select>
             <md-select id="toNodeIdSelectMenu"
                        ng-if='param.value == "toNodeId"'
-                       md-theme="default"
+                       md-theme="at"
                        class="node-select md-subhead"
                        ng-model="criteria.params.toNodeId"
                        ng-change='nodeAuthoringController.authoringViewNodeChanged()'
@@ -593,7 +593,7 @@
             <div ng-if='param.value == "requiredSubmitCount" && (criteria.params.requiredSubmitCount == null || criteria.params.requiredSubmitCount == "")'><span style="color: red">{{ ::'pleaseEnterTheRequiredNumberOfSubmits' | translate }}</span></div>
             <md-select id="radioChoiceIdsSelectMenu"
                        ng-if='param.value == "choiceIds" && "radio" == nodeAuthoringController.getChoiceTypeByNodeIdAndComponentId(criteria.params.nodeId, criteria.params.componentId)'
-                       md-theme="default"
+                       md-theme="at"
                        class="node-select md-subhead"
                        ng-model="criteria.params.choiceIds"
                        ng-change='nodeAuthoringController.authoringViewNodeChanged()'
@@ -614,7 +614,7 @@
             </md-select>
             <md-select id="checkboxChoiceIdsSelectMenu"
                        ng-if='param.value == "choiceIds" && "checkbox" == nodeAuthoringController.getChoiceTypeByNodeIdAndComponentId(criteria.params.nodeId, criteria.params.componentId)'
-                       md-theme="default"
+                       md-theme="at"
                        class="node-select md-subhead"
                        ng-model="criteria.params.choiceIds"
                        ng-change='nodeAuthoringController.authoringViewNodeChanged()'
@@ -695,7 +695,7 @@
       <div ng-if='nodeAuthoringController.createBranchNumberOfBranches > 1'>
         <div>
           {{ ::'howToChooseAmongPaths' | translate }}
-          <md-select md-theme="default"
+          <md-select md-theme="at"
                  class="node-select md-subhead"
                  style="margin-left:30px; width:600px"
                  ng-model="nodeAuthoringController.createBranchCriterion"
@@ -711,7 +711,7 @@
 
         <div ng-if='nodeAuthoringController.createBranchCriterion == "score" || nodeAuthoringController.createBranchCriterion == "choiceChosen"'>
           {{ ::'chooseStep' | translate }}
-          <md-select md-theme="default"
+          <md-select md-theme="at"
                  class="node-select md-subhead"
                  ng-model="nodeAuthoringController.createBranchNodeId"
                  ng-change="nodeAuthoringController.createBranchNodeIdChanged()"
@@ -729,7 +729,7 @@
 
         <div ng-if='nodeAuthoringController.createBranchCriterion == "score" || nodeAuthoringController.createBranchCriterion == "choiceChosen"'>
           {{ ::'chooseComponent' | translate }}
-          <md-select md-theme="default"
+          <md-select md-theme="at"
                  class="node-select md-subhead"
                  ng-model="nodeAuthoringController.createBranchComponentId"
                  ng-change="nodeAuthoringController.createBranchComponentIdChanged()"
@@ -797,7 +797,7 @@
         </div>
         <div>
           {{ ::'chooseMergePoint' | translate }}
-          <md-select md-theme="default"
+          <md-select md-theme="at"
                  class="node-select md-subhead"
                  ng-model="nodeAuthoringController.createBranchMergePointNodeId"
                  ng-change="nodeAuthoringController.createBranchMergePointNodeIdChanged()"

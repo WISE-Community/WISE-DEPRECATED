@@ -359,7 +359,7 @@ const ComponentGrading = {
     toWorkgroupId: '<'
   },
   templateUrl:
-    'wise5/classroomMonitor/classroomMonitorComponents/shared/componentGrading/componentGrading.html',
+    '/wise5/classroomMonitor/classroomMonitorComponents/shared/componentGrading/componentGrading.html',
   controller: ComponentGradingController
 };
 

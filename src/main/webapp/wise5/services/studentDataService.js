@@ -112,6 +112,7 @@ class StudentDataService {
   }
 
   retrieveStudentData() {
+    this.nodeStatuses = {};
     if (this.ConfigService.isPreview()) {
       // initialize dummy student data
       this.studentData = {};

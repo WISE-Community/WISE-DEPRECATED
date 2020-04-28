@@ -11,15 +11,15 @@ import { Student } from "../domain/student";
 @Injectable()
 export class UserService {
 
-  private userUrl = 'api/user/info';
+  private userUrl = '/api/user/info';
   private user$: BehaviorSubject<User> = new BehaviorSubject<User>(null);
-  private checkGoogleUserExistsUrl = 'api/user/check-google-user-exists';
-  private checkGoogleUserMatchesUrl = 'api/user/check-google-user-matches';
-  private googleUserUrl = 'api/user/google-user';
-  private checkAuthenticationUrl = 'api/user/check-authentication';
-  private changePasswordUrl = 'api/user/password';
-  private languagesUrl = 'api/user/languages';
-  private contactUrl = 'api/contact';
+  private checkGoogleUserExistsUrl = '/api/user/check-google-user-exists';
+  private checkGoogleUserMatchesUrl = '/api/user/check-google-user-matches';
+  private googleUserUrl = '/api/user/google-user';
+  private checkAuthenticationUrl = '/api/user/check-authentication';
+  private changePasswordUrl = '/api/user/password';
+  private languagesUrl = '/api/user/languages';
+  private contactUrl = '/api/contact';
   isAuthenticated = false;
   isRecaptchaRequired = false;
   redirectUrl: string; // redirect here after logging in

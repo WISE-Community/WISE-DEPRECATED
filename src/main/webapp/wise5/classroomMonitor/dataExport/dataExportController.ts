@@ -1602,7 +1602,7 @@ class DataExportController {
     window.open(
       `${this.ConfigService.getConfigParam(
         'previewProjectURL'
-      )}#!/project/${this.ConfigService.getProjectId()}`
+      )}`
     );
   }
 
@@ -1610,7 +1610,7 @@ class DataExportController {
     window.open(
       `${this.ConfigService.getConfigParam(
         'previewProjectURL'
-      )}#!/project/${this.ConfigService.getProjectId()}/${node.id}`
+      )}/${node.id}`
     );
   }
 

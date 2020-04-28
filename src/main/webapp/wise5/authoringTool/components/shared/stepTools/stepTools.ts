@@ -58,7 +58,7 @@ class StepToolsController {
 
   nodeIdChanged() {
     this.TeacherDataService.setCurrentNodeByNodeId(this.nodeId);
-    this.$state.go('root.project.node', { projectId: this.projectId, nodeId: this.nodeId });
+    this.$state.go('root.at.project.node', { projectId: this.projectId, nodeId: this.nodeId });
   }
 
   updateModel() {
@@ -95,13 +95,13 @@ class StepToolsController {
   goToPrevNode() {
     this.NodeService.goToPrevNode();
     this.nodeId = this.TeacherDataService.getCurrentNodeId();
-    this.$state.go('root.project.node', { projectId: this.projectId, nodeId: this.nodeId });
+    this.$state.go('root.at.project.node', { projectId: this.projectId, nodeId: this.nodeId });
   }
 
   goToNextNode() {
     this.NodeService.goToNextNode().then(nodeId => {
       this.nodeId = nodeId;
-      this.$state.go('root.project.node', { projectId: this.projectId, nodeId: this.nodeId });
+      this.$state.go('root.at.project.node', { projectId: this.projectId, nodeId: this.nodeId });
     });
   }
 }
@@ -119,7 +119,7 @@ const StepTools = {
           <md-tooltip md-direction="bottom">{{ ::'PREVIOUS_STEP' | translate }}</md-tooltip>
       </md-button>
       <node-icon node-id="$ctrl.nodeId" size="18"></node-icon>&nbsp;
-      <md-select id="stepSelectMenu" md-theme="default"
+      <md-select id="stepSelectMenu" md-theme="at"
                  class="md-button md-no-underline toolbar__select toolbar__select--fixedwidth"
                  md-container-class="stepSelectMenuContainer"
                  aria-label="{{ ::'selectAStep' | translate }}"

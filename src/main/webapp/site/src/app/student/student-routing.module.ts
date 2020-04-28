@@ -12,9 +12,11 @@ const studentRoutes: Routes = [
     component: StudentComponent,
     canActivate: [AuthGuard],
     children: [
-      { path: '', component: StudentHomeComponent },
+      { path: '', redirectTo: 'home', pathMatch: 'full' },
+      { path: 'home', component: StudentHomeComponent, pathMatch: 'full' },
       { path: 'profile', redirectTo: '', pathMatch: 'full' },
-      { path: 'profile/edit', component: EditComponent }
+      { path: 'profile/edit', component: EditComponent },
+      {path: '', loadChildren: './student-angular-js-module#StudentAngularJSModule'}
     ]
   }
 ];

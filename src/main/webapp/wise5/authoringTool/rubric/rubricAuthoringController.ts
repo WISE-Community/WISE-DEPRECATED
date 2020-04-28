@@ -88,7 +88,7 @@ class RubricAuthoringController {
   }
 
   goBack() {
-    this.$state.go('root.project');
+    this.$state.go('root.at.project');
   }
 }
 

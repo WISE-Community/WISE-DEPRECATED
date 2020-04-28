@@ -78,7 +78,7 @@ function registerNewProject() {
     it('should register new project', () => {
       createConfigServiceGetConfigParamSpy();
       const newProjectIdExpected = projectIdDefault;
-      $httpBackend.when('GET', /^wise5\/.*/).respond(200, '');
+      $httpBackend.when('GET', /wise5\/.*/).respond(200, '');
       $httpBackend.when('GET', /author\/.*/).respond(200, '{}');
       $httpBackend
         .when('POST', registerNewProjectURL, {
@@ -196,7 +196,7 @@ function getLibraryProjects() {
   describe('getLibraryProjects', () => {
     it('should get the library projects', () => {
       createConfigServiceGetConfigParamSpy();
-      $httpBackend.when('GET', /^wise5\/.*/).respond(200, '');
+      $httpBackend.when('GET', /wise5\/.*/).respond(200, '');
       $httpBackend.when('GET', /author\/.*/).respond(200, '{}');
       $httpBackend.when('GET', getLibraryProjectsURL).respond(libraryProjects);
       $httpBackend.when('GET', i18nURL_common_en).respond(sampleI18N_common_en);
