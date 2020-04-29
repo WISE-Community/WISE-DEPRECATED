@@ -852,10 +852,10 @@ class StudentDataService {
       const httpParams = this.getSaveToServerHTTPParams(studentWorkList, events, annotations);
       return this.$http(httpParams).then(
         result => {
-          this.handleSaveToServerSuccess(result.data);
+          return this.handleSaveToServerSuccess(result.data);
         },
         result => {
-          this.handleSaveToServerError(result);
+          return this.handleSaveToServerError(result);
         }
       );
     }
@@ -937,6 +937,9 @@ class StudentDataService {
       this.updateNodeStatuses();
       this.saveStudentStatus();
     }
+    const deferred = this.$q.defer();
+    deferred.resolve(savedStudentDataResponse);
+    return deferred.promise;
   }
 
   processSavedStudentWorkList(savedStudentWorkList) {
@@ -1019,6 +1022,9 @@ class StudentDataService {
 
   handleSaveToServerError() {
     this.saveToServerRequestCount -= 1;
+    const deferred = this.$q.defer();
+    deferred.resolve();
+    return deferred.promise;
   }
 
   saveStudentStatus() {
