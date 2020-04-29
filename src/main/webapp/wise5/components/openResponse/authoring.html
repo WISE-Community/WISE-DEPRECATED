@@ -507,7 +507,6 @@
           </md-button>
           <div class='input-wrapper' ng-class='{"input-wrapper--richtext": openResponseController.isRichTextEnabled}'>
             <textarea ng-if='openResponseController.isRichTextEnabled && !openResponseController.isDisabled'
-                      ui-tinymce='openResponseController.tinymceOptions'
                       ng-model='openResponseController.studentResponse'
                       ng-model-options='{ debounce: 100 }'
                       ng-change='openResponseController.studentDataChanged()'></textarea>
