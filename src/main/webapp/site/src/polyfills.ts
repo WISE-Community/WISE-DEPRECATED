@@ -51,14 +51,11 @@ import * as covariance from 'compute-covariance';
 
 window['$'] = jQuery;
 window['jQuery'] = jQuery;
-import 'bootstrap';
 window['fabric'] = fabric.fabric;
 window['SockJS'] = SockJS;
 window['Stomp'] = StompJS.Stomp;
 window['hopscotch'] = hopscotch;
 window['Highcharts'] = Highcharts;
 window['EventEmitter2'] = EventEmitter2;
-import * as summernote from 'summernote';
-window['summernote'] = summernote;
 window['HighchartsExporting'] = HighchartsExporting;
 window['covariance'] = covariance
