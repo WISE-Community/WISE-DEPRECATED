@@ -55,6 +55,12 @@
           <mat-datepicker #endDatePicker></mat-datepicker>
         </mat-form-field>
       </div>
+      <div fxLayoutAlign="center center">
+        <mat-checkbox formControlName="isLockedAfterEndDate" style="margin-right: 10px;" i18n>
+          Lock After End Date
+        </mat-checkbox>
+        <mat-icon matTooltip="If the End Date has passed and the unit is locked, students will no longer be able to save new work" i18n-matTooltip>help_outline</mat-icon>
+      </div>
     </div>
     <p class="mat-caption" i18n>Note: These dates can be changed at any time from your Class Schedule. Just select "Edit Settings" from the unit's dropdown menu.</p>
   </mat-dialog-content>

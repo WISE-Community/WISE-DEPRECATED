@@ -60,7 +60,8 @@ export class CreateRunDialogComponent {
       periods: hiddenControl,
       maxStudentsPerTeam: new FormControl('3', Validators.required),
       startDate: new FormControl(new Date(), Validators.required),
-      endDate: new FormControl()
+      endDate: new FormControl(),
+      isLockedAfterEndDate: new FormControl()
     });
     this.setDateRange();
   }
@@ -98,9 +99,10 @@ export class CreateRunDialogComponent {
       endDateValue.setHours(23, 59, 59);
       endDate = endDateValue.getTime();
     }
+    const isLockedAfterEndDate = this.form.controls['isLockedAfterEndDate'].value;
     const maxStudentsPerTeam = this.form.controls['maxStudentsPerTeam'].value;
-    this.teacherService.createRun(
-        this.project.id, combinedPeriods, maxStudentsPerTeam, startDate, endDate)
+    this.teacherService.createRun(this.project.id, combinedPeriods, maxStudentsPerTeam, startDate,
+        endDate, isLockedAfterEndDate)
         .pipe(
           finalize(() => {
             this.isCreating = false;

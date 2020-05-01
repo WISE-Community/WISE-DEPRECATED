@@ -18,6 +18,9 @@
             <md-content id="content" flex role="main" ui-scrollpoint-target
                         ng-class="{'l-nav': themeCtrl.layoutState === 'nav', 'l-node': themeCtrl.layoutState === 'node'}" layout="column">
                 <div id="nav" ng-include="::vleController.themePath + '/navigation/navigation.html'" ng-show="themeCtrl.layoutState === 'nav'"></div>
+                <div ng-if="themeCtrl.isEndedAndLocked" style="color: red; display: flex; justify-content: center; align-items: center; height: 30px;">
+                  {{ themeCtrl.endedAndLockedMessage }}
+                </div>
                 <div id="node" ng-cloak ui-view="nodeView" ng-if="themeCtrl.layoutState === 'node'"></div>
             </md-content>
             <global-annotations></global-annotations>

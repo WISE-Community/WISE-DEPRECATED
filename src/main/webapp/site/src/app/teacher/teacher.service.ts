@@ -24,6 +24,7 @@ export class TeacherService {
   private updateRunStudentsPerTeamUrl = '/api/teacher/run/update/studentsperteam';
   private updateRunStartTimeUrl = '/api/teacher/run/update/starttime';
   private updateRunEndTimeUrl = '/api/teacher/run/update/endtime';
+  private updateRunIsLockedAfterEndDateUrl = '/api/teacher/run/update/islockedafterenddate';
   private forgotUsernameUrl = '/api/teacher/forgot/username';
   private forgotPasswordUrl = '/api/teacher/forgot/password';
   private getVerificationCodeUrl = '/api/teacher/forgot/password/verification-code';
@@ -71,7 +72,8 @@ export class TeacherService {
       });
   }
 
-  createRun(projectId: number, periods: string, maxStudentsPerTeam: number, startDate: number, endDate: number): Observable<Run> {
+  createRun(projectId: number, periods: string, maxStudentsPerTeam: number, startDate: number,
+      endDate: number, isLockedAfterEndDate: boolean): Observable<Run> {
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
     let body = new HttpParams();
     body = body.set('projectId', projectId + "");
@@ -80,6 +82,7 @@ export class TeacherService {
     body = body.set('startDate', startDate + "");
     if (endDate) {
       body = body.set('endDate', endDate + "");
+      body = body.set('isLockedAfterEndDate', isLockedAfterEndDate + "");
     }
     return this.http.post<Run>(this.createRunUrl, body, { headers: headers });
   }
@@ -203,6 +206,15 @@ export class TeacherService {
     let body = new HttpParams();
     body = body.set('runId', runId + '');
     body = body.set('endTime', endTime + '');
+    return this.http.post<Object>(url, body, {headers: headers});
+  }
+
+  updateIsLockedAfterEndDate(runId: number, isLockedAfterEndDate: boolean) {
+    const url = `${this.updateRunIsLockedAfterEndDateUrl}`;
+    const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    const body = new HttpParams()
+        .set('runId', runId + '')
+        .set('isLockedAfterEndDate', isLockedAfterEndDate + '');
     return this.http.post<Object>(url, body, {headers: headers});
   }
 

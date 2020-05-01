@@ -190,6 +190,7 @@ public class RunServiceImpl implements RunService {
     Run run = new RunImpl();
     run.setId((Long) project.getId());
     run.setEndtime(runParameters.getEndTime());
+    run.setLockedAfterEndDate(runParameters.getIsLockedAfterEndDate());
     run.setStarttime(runParameters.getStartTime());
     run.setRuncode(generateUniqueRunCode(runParameters.getLocale()));
     run.setOwner(runParameters.getOwner());
@@ -233,17 +234,19 @@ public class RunServiceImpl implements RunService {
   }
 
   public Run createRun(Long projectId, User user, Set<String> periodNames,
-      Integer maxStudentsPerTeam, Long startDate, Long endDate, Locale locale) throws Exception {
+      Integer maxStudentsPerTeam, Long startDate, Long endDate, Boolean isLockedAfterEndDate,
+      Locale locale) throws Exception {
     Project project = projectService.copyProject(projectId, user);
     RunParameters runParameters = createRunParameters(project, user, periodNames,
-        maxStudentsPerTeam, startDate, endDate, locale);
+        maxStudentsPerTeam, startDate, endDate, isLockedAfterEndDate, locale);
     Run run = createRun(runParameters);
     createTeacherWorkgroup(run, user);
     return run;
   }
 
   public RunParameters createRunParameters(Project project, User user, Set<String> periodNames,
-      Integer maxStudentsPerTeam, Long startDate, Long endDate, Locale locale) {
+      Integer maxStudentsPerTeam, Long startDate, Long endDate, Boolean isLockedAfterEndDate,
+      Locale locale) {
     RunParameters runParameters = new RunParameters();
     runParameters.setOwner(user);
     runParameters.setName(project.getName());
@@ -258,6 +261,7 @@ public class RunServiceImpl implements RunService {
     } else {
       runParameters.setEndTime(new Date(endDate));
     }
+    runParameters.setIsLockedAfterEndDate(isLockedAfterEndDate);
     return runParameters;
   }
 
@@ -724,6 +728,17 @@ public class RunServiceImpl implements RunService {
     try {
       Run run = retrieveById(runId);
       run.setEndtime(new Date(endTime));
+      runDao.save(run);
+    } catch (ObjectNotFoundException e) {
+      e.printStackTrace();
+    }
+  }
+
+  @Transactional()
+  public void setIsLockedAfterEndDate(Long runId, Boolean isLockedAfterEndDate) {
+    try {
+      Run run = retrieveById(runId);
+      run.setLockedAfterEndDate(isLockedAfterEndDate);
       runDao.save(run);
     } catch (ObjectNotFoundException e) {
       e.printStackTrace();

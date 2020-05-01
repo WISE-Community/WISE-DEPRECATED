@@ -262,6 +262,7 @@ public class UserAPIController {
     map.put("runCode", run.getRuncode());
     map.put("startTime", run.getStartTimeMilliseconds());
     map.put("endTime", run.getEndTimeMilliseconds());
+    map.put("isLockedAfterEndDate", run.isLockedAfterEndDate());
     map.put("project", getProjectMap(project));
     map.put("owner", convertUserToMap(run.getOwner()));
     map.put("numStudents", run.getNumStudents());

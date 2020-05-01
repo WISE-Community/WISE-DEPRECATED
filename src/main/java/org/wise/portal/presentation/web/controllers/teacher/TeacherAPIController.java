@@ -48,7 +48,7 @@ import org.wise.portal.service.mail.IMailFacade;
  */
 @RestController
 @RequestMapping("/api/teacher")
-@Secured({"ROLE_TEACHER"})
+@Secured({ "ROLE_TEACHER" })
 public class TeacherAPIController extends UserAPIController {
 
   @Autowired
@@ -81,7 +81,7 @@ public class TeacherAPIController extends UserAPIController {
   }
 
   private List<HashMap<String, Object>> getRunsList(User user, List<Run> runs) {
-    List<HashMap<String, Object>> runsList = new ArrayList<HashMap<String, Object>> ();
+    List<HashMap<String, Object>> runsList = new ArrayList<HashMap<String, Object>>();
     for (Run run : runs) {
       runsList.add(getRunMap(user, run));
     }
@@ -128,7 +128,7 @@ public class TeacherAPIController extends UserAPIController {
   }
 
   @PostMapping("/register")
-  @Secured({"ROLE_ANONYMOUS"})
+  @Secured({ "ROLE_ANONYMOUS" })
   String createTeacherAccount(@RequestBody Map<String, String> teacherFields,
       HttpServletRequest request) throws DuplicateUsernameException {
     TeacherUserDetails tud = new TeacherUserDetails();
@@ -166,20 +166,29 @@ public class TeacherAPIController extends UserAPIController {
     return username;
   }
 
-  private void sendCreateTeacherAccountEmail(String email, String displayName,
-      String username, String googleUserId, Locale locale,
-      HttpServletRequest request) {
+  private void sendCreateTeacherAccountEmail(String email, String displayName, String username,
+      String googleUserId, Locale locale, HttpServletRequest request) {
     String fromEmail = appProperties.getProperty("portalemailaddress");
-    String [] recipients = {email};
-    String defaultSubject = messageSource.getMessage("presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailSubject", null, Locale.US);
-    String subject = messageSource.getMessage("presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailSubject", null, defaultSubject, locale);
-    String defaultBody = messageSource.getMessage("presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailBody", new Object[] {username}, Locale.US);
+    String[] recipients = { email };
+    String defaultSubject = messageSource.getMessage(
+        "presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailSubject",
+        null, Locale.US);
+    String subject = messageSource.getMessage(
+        "presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailSubject",
+        null, defaultSubject, locale);
+    String defaultBody = messageSource.getMessage(
+        "presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailBody",
+        new Object[] { username }, Locale.US);
     String gettingStartedUrl = getGettingStartedUrl(request);
     String message;
     if (isUsingGoogleUserId(googleUserId)) {
-      message = messageSource.getMessage("presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailBodyNoUsername", new Object[] {displayName, gettingStartedUrl}, defaultBody, locale);
+      message = messageSource.getMessage(
+          "presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailBodyNoUsername",
+          new Object[] { displayName, gettingStartedUrl }, defaultBody, locale);
     } else {
-      message = messageSource.getMessage("presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailBody", new Object[] {displayName, username, gettingStartedUrl}, defaultBody, locale);
+      message = messageSource.getMessage(
+          "presentation.web.controllers.teacher.registerTeacherController.welcomeTeacherEmailBody",
+          new Object[] { displayName, username, gettingStartedUrl }, defaultBody, locale);
     }
     try {
       mailService.postMail(recipients, subject, message, fromEmail);
@@ -221,18 +230,19 @@ public class TeacherAPIController extends UserAPIController {
   }
 
   @PostMapping("/run/create")
-  HashMap<String, Object> createRun(Authentication auth,
-      HttpServletRequest request,
-      @RequestParam("projectId") Long projectId,
-      @RequestParam("periods") String periods,
+  HashMap<String, Object> createRun(Authentication auth, HttpServletRequest request,
+      @RequestParam("projectId") Long projectId, @RequestParam("periods") String periods,
       @RequestParam("maxStudentsPerTeam") Integer maxStudentsPerTeam,
       @RequestParam("startDate") Long startDate,
-      @RequestParam(value = "endDate", required = false) Long endDate) throws Exception {
+      @RequestParam(value = "endDate", required = false) Long endDate,
+      @RequestParam(value = "isLockedAfterEndDate", required = false) Boolean isLockedAfterEndDate)
+      throws Exception {
     User user = userService.retrieveUserByUsername(auth.getName());
     Locale locale = request.getLocale();
     Set<String> periodNames = createPeriodNamesSet(periods);
-    Run run = runService.createRun(projectId, user, periodNames, maxStudentsPerTeam,
-        startDate, endDate, locale);
+    System.out.println("isLockedAfterEndDate=" + isLockedAfterEndDate);
+    Run run = runService.createRun(projectId, user, periodNames, maxStudentsPerTeam, startDate,
+        endDate, isLockedAfterEndDate, locale);
     return getRunMap(user, run);
   }
 
@@ -246,16 +256,11 @@ public class TeacherAPIController extends UserAPIController {
   }
 
   @PostMapping("/profile/update")
-  SimpleResponse updateProfile(
-      Authentication auth,
-      @RequestParam("displayName") String displayName,
-      @RequestParam("email") String email,
-      @RequestParam("city") String city,
-      @RequestParam("state") String state,
-      @RequestParam("country") String country,
+  SimpleResponse updateProfile(Authentication auth, @RequestParam("displayName") String displayName,
+      @RequestParam("email") String email, @RequestParam("city") String city,
+      @RequestParam("state") String state, @RequestParam("country") String country,
       @RequestParam("schoolName") String schoolName,
-      @RequestParam("schoolLevel") String schoolLevel,
-      @RequestParam("language") String language) {
+      @RequestParam("schoolLevel") String schoolLevel, @RequestParam("language") String language) {
     User user = userService.retrieveUserByUsername(auth.getName());
     TeacherUserDetails tud = (TeacherUserDetails) user.getUserDetails();
     tud.setEmailAddress(email);
@@ -271,8 +276,7 @@ public class TeacherAPIController extends UserAPIController {
   }
 
   @PostMapping("/run/add/period")
-  HashMap<String, Object> addPeriodToRun(Authentication auth,
-      @RequestParam("runId") Long runId,
+  HashMap<String, Object> addPeriodToRun(Authentication auth, @RequestParam("runId") Long runId,
       @RequestParam("periodName") String periodName) throws ObjectNotFoundException {
     User user = userService.retrieveUserByUsername(auth.getName());
     Run run = runService.retrieveById(runId);
@@ -297,9 +301,8 @@ public class TeacherAPIController extends UserAPIController {
 
   @PostMapping("/run/delete/period")
   HashMap<String, Object> deletePeriodFromRun(Authentication auth,
-      @RequestParam("runId") Long runId,
-      @RequestParam("periodName") String periodName) throws ObjectNotFoundException,
-      PeriodNotFoundException {
+      @RequestParam("runId") Long runId, @RequestParam("periodName") String periodName)
+      throws ObjectNotFoundException, PeriodNotFoundException {
     User user = userService.retrieveUserByUsername(auth.getName());
     Run run = runService.retrieveById(runId);
     HashMap<String, Object> response = new HashMap<String, Object>();
@@ -322,8 +325,7 @@ public class TeacherAPIController extends UserAPIController {
 
   @PostMapping("/run/update/studentsperteam")
   HashMap<String, Object> editRunStudentsPerTeam(Authentication auth,
-      @RequestParam("runId") Long runId,
-      @RequestParam("maxStudentsPerTeam") Integer newMax)
+      @RequestParam("runId") Long runId, @RequestParam("maxStudentsPerTeam") Integer newMax)
       throws ObjectNotFoundException {
     User user = userService.retrieveUserByUsername(auth.getName());
     Run run = runService.retrieveById(runId);
@@ -387,6 +389,25 @@ public class TeacherAPIController extends UserAPIController {
     } else {
       response.put("status", "error");
       response.put("messageCode", "noPermissionToChangeDate");
+    }
+    return response;
+  }
+
+  @PostMapping("/run/update/islockedafterenddate")
+  HashMap<String, Object> editRunIsLockedAfterEndDate(Authentication authentication,
+      @RequestParam("runId") Long runId,
+      @RequestParam("isLockedAfterEndDate") Boolean isLockedAfterEndDate)
+      throws ObjectNotFoundException {
+    User user = userService.retrieveUserByUsername(authentication.getName());
+    Run run = runService.retrieveById(runId);
+    HashMap<String, Object> response = new HashMap<String, Object>();
+    if (run.isTeacherAssociatedToThisRun(user)) {
+      runService.setIsLockedAfterEndDate(runId, isLockedAfterEndDate);
+      response.put("status", "success");
+      response.put("run", getRunMap(user, run));
+    } else {
+      response.put("status", "error");
+      response.put("messageCode", "noPermissionToChangeIsLockedAfterEndDate");
     }
     return response;
   }

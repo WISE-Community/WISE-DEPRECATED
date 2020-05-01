@@ -20,12 +20,14 @@ export class RunSettingsDialogComponent implements OnInit {
   startDate: Date;
   previousStartDate: Date;
   endDate: Date;
+  isLockedAfterEndDate: boolean;
   previousEndDate: Date;
   deletePeriodMessage: string = '';
   addPeriodMessage: string = '';
   maxStudentsPerTeamMessage: string = '';
   startDateMessage: string = '';
   endDateMessage: string = '';
+  isLockedAfterEndDateMessage: string = '';
   maxStartDate: Date;
   minEndDate: Date;
   targetEndDate: Date;
@@ -39,6 +41,7 @@ export class RunSettingsDialogComponent implements OnInit {
   noPermissionToChangeDate = this.i18n('You do not have permission to change the dates for this unit.');
   endDateBeforeStartDate = this.i18n(`End date can't be before start date.`);
   startDateAfterEndDate = this.i18n(`Start date can't be after end date.`);
+  noPermissionToChangeIsLockedAfterEndDate = this.i18n(`You do not have permission to change is locked after end date`);
 
   constructor(public dialog: MatDialog,
               public dialogRef: MatDialogRef<LibraryProjectDetailsComponent>,
@@ -50,6 +53,7 @@ export class RunSettingsDialogComponent implements OnInit {
     this.maxStudentsPerTeam = this.run.maxStudentsPerTeam + '';
     this.startDate = new Date(this.run.startTime);
     this.endDate = this.run.endTime ? new Date(this.run.endTime) : null;
+    this.isLockedAfterEndDate = this.run.isLockedAfterEndDate;
     this.rememberPreviousStartDate();
     this.rememberPreviousEndDate();
     this.setDateRange();
@@ -194,6 +198,17 @@ export class RunSettingsDialogComponent implements OnInit {
     }
   }
 
+  updateIsLockedAfterEndDate() {
+    this.teacherService.updateIsLockedAfterEndDate(this.run.id, this.isLockedAfterEndDate)
+        .subscribe((response: any) => {
+      if (response.status === 'success') {
+        this.clearErrorMessages();
+      } else {
+        this.isLockedAfterEndDateMessage = this.translateMessageCode(response.messageCode);
+      }
+    });
+  }
+
   rollbackMaxStudentsPerTeam() {
     this.maxStudentsPerTeam = this.run.maxStudentsPerTeam + '';
   }
@@ -223,6 +238,8 @@ export class RunSettingsDialogComponent implements OnInit {
     this.addPeriodMessage = '';
     this.maxStudentsPerTeamMessage = '';
     this.startDateMessage = '';
+    this.endDateMessage = '';
+    this.isLockedAfterEndDateMessage = '';
   }
 
   showConfirmMessage() {
@@ -248,6 +265,8 @@ export class RunSettingsDialogComponent implements OnInit {
       return this.endDateBeforeStartDate;
     } else if (messageCode === 'startDateAfterEndDate') {
       return this.startDateAfterEndDate;
+    } else if (messageCode === 'noPermissionToChangeIsLockedAfterEndDate') {
+      return this.noPermissionToChangeIsLockedAfterEndDate;
     }
   }
 
