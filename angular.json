@@ -24,7 +24,7 @@
                 "bundleName": "siteStyles"
               }
             ],
-            "scripts": []
+            "scripts": ["src/main/webapp/wise5/lib/bootstrap/js/bootstrap.min.js"]
           },
           "configurations": {
             "production": {

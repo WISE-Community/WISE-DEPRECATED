@@ -19,7 +19,6 @@ import 'angular-ui-scrollpoint';
 import '../components/animation/animationComponentModule';
 import AnnotationService from '../services/annotationService';
 import '../components/audioOscillator/audioOscillatorComponentModule';
-import bootstrap from 'bootstrap';
 import * as canvg from 'canvg';
 import '../components/conceptMap/conceptMapComponentModule';
 import ConfigService from '../services/configService';

@@ -19,7 +19,6 @@ import 'angular-translate-loader-partial';
 import '../components/animation/animationComponentModule';
 import AnnotationService from '../services/annotationService';
 import '../components/audioOscillator/audioOscillatorComponentModule';
-import bootstrap from 'bootstrap';
 import './classroomMonitorComponents';
 import ClassroomMonitorController from './classroomMonitorController';
 import ClassroomMonitorProjectService from './classroomMonitorProjectService';
