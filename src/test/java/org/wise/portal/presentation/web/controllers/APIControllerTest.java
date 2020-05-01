@@ -30,6 +30,7 @@ import org.wise.portal.domain.user.impl.UserImpl;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.domain.workgroup.impl.WorkgroupImpl;
 import org.wise.portal.service.authentication.UserDetailsService;
+import org.wise.portal.service.portal.PortalService;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.user.UserService;
@@ -99,6 +100,9 @@ public class APIControllerTest {
   protected ProjectService projectService;
 
   @Mock
+  protected PortalService portalService;
+
+  @Mock
   protected Properties appProperties;
 
   @Before
@@ -159,6 +163,7 @@ public class APIControllerTest {
     project1.setModulePath("/1/project.json");
     project1.setOwner(teacher1);
     project1.setWISEVersion(5);
+    project1.setMaxTotalAssetsSize(15728640L);
     run1.setProject(project1);
     run1.setLastRun(new Date());
     workgroup1 = new WorkgroupImpl();
