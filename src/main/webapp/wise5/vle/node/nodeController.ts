@@ -677,7 +677,6 @@ class NodeController {
     return this.createComponentStates(isAutoSave, componentId, isSubmit).then(componentStates => {
       let componentAnnotations = [];
       let componentEvents = [];
-      let nodeStates = [];
       if (this.UtilService.arrayHasNonNullElement(componentStates)) {
         for (const componentState of componentStates) {
           if (componentState != null) {

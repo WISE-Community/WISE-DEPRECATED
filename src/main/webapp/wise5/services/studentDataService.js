@@ -53,6 +53,54 @@ class StudentDataService {
      */
     this.dummyStudentWorkId = 1;
 
+    this.criteriaFunctionNameToFunction = {
+      branchPathTaken: criteria => {
+        return this.evaluateBranchPathTakenCriteria(criteria);
+      },
+      isVisible: criteria => {
+        return this.evaluateIsVisibleCriteria(criteria);
+      },
+      isVisitable: criteria => {
+        return this.evaluateIsVisitableCriteria(criteria);
+      },
+      isVisited: criteria => {
+        return this.evaluateIsVisitedCriteria(criteria);
+      },
+      isVisitedAfter: criteria => {
+        return this.evaluateIsVisitedAfterCriteria(criteria);
+      },
+      isRevisedAfter: criteria => {
+        return this.evaluateIsRevisedAfterCriteria(criteria);
+      },
+      isVisitedAndRevisedAfter: criteria => {
+        return this.evaluateIsVisitedAndRevisedAfterCriteria(criteria);
+      },
+      isCompleted: criteria => {
+        return this.evaluateIsCompletedCriteria(criteria);
+      },
+      isCorrect: criteria => {
+        return this.evaluateIsCorrectCriteria(criteria);
+      },
+      choiceChosen: criteria => {
+        return this.evaluateChoiceChosenCriteria(criteria);
+      },
+      score: criteria => {
+        return this.evaluateScoreCriteria(criteria);
+      },
+      usedXSubmits: criteria => {
+        return this.evaluateUsedXSubmitsCriteria(criteria);
+      },
+      wroteXNumberOfWords: criteria => {
+        return this.evaluateNumberOfWordsWrittenCriteria(criteria);
+      },
+      addXNumberOfNotesOnThisStep: criteria => {
+        return this.evaluateAddXNumberOfNotesOnThisStepCriteria(criteria);
+      },
+      fillXNumberOfRows: criteria => {
+        return this.evaluateFillXNumberOfRowsCriteria(criteria);
+      }
+    };
+
     this.$rootScope.$on('nodeStatusesChanged', (event, args) => {
       this.handleNodeStatusesChanged();
     });
@@ -307,19 +355,19 @@ class StudentDataService {
   }
 
   isVisibleConstraintAction(action) {
-    return (
-      action === 'makeThisNodeNotVisible' ||
-      action === 'makeAllNodesAfterThisNotVisible' ||
-      action === 'makeAllOtherNodesNotVisible'
-    );
+    return [
+      'makeThisNodeNotVisible',
+      'makeAllNodesAfterThisNotVisible',
+      'makeAllOtherNodesNotVisible'
+    ].includes(action);
   }
 
   isVisitableConstraintAction(action) {
-    return (
-      action === 'makeThisNodeNotVisitable' ||
-      action === 'makeAllNodesAfterThisNotVisitable' ||
-      action === 'makeAllOtherNodesNotVisitable'
-    );
+    return [
+      'makeThisNodeNotVisitable',
+      'makeAllNodesAfterThisNotVisitable',
+      'makeAllOtherNodesNotVisitable'
+    ].includes(action);
   }
 
   updateNodeStatus(nodeId, nodeStatus) {
@@ -396,39 +444,7 @@ class StudentDataService {
   }
 
   evaluateCriteria(criteria) {
-    let result = false;
-    const functionName = criteria.name;
-    if (functionName == null) {
-    } else if (functionName === 'branchPathTaken') {
-      result = this.evaluateBranchPathTakenCriteria(criteria);
-    } else if (functionName === 'isVisible') {
-    } else if (functionName === 'isVisitable') {
-    } else if (functionName === 'isVisited') {
-      result = this.evaluateIsVisitedCriteria(criteria);
-    } else if (functionName === 'isVisitedAfter') {
-      result = this.evaluateIsVisitedAfterCriteria(criteria);
-    } else if (functionName === 'isRevisedAfter') {
-      result = this.evaluateIsRevisedAfterCriteria(criteria);
-    } else if (functionName === 'isVisitedAndRevisedAfter') {
-      result = this.evaluateIsVisitedAndRevisedAfterCriteria(criteria);
-    } else if (functionName === 'isCompleted') {
-      result = this.evaluateIsCompletedCriteria(criteria);
-    } else if (functionName === 'isCorrect') {
-      result = this.evaluateIsCorrectCriteria(criteria);
-    } else if (functionName === 'choiceChosen') {
-      result = this.evaluateChoiceChosenCriteria(criteria);
-    } else if (functionName === 'score') {
-      result = this.evaluateScoreCriteria(criteria);
-    } else if (functionName === 'usedXSubmits') {
-      result = this.evaluateUsedXSubmitsCriteria(criteria);
-    } else if (functionName === 'wroteXNumberOfWords') {
-      result = this.evaluateNumberOfWordsWrittenCriteria(criteria);
-    } else if (functionName === 'addXNumberOfNotesOnThisStep') {
-      result = this.evaluateAddXNumberOfNotesOnThisStepCriteria(criteria);
-    } else if (functionName === 'fillXNumberOfRows') {
-      result = this.evaluateFillXNumberOfRowsCriteria(criteria);
-    }
-    return result;
+    return this.criteriaFunctionNameToFunction[criteria.name](criteria);
   }
 
   evaluateIsCompletedCriteria(criteria) {
@@ -459,6 +475,16 @@ class StudentDataService {
       }
     }
     return false;
+  }
+
+  evaluateIsVisibleCriteria(criteria) {
+    const nodeStatus = this.getNodeStatusByNodeId(criteria.params.nodeId);
+    return nodeStatus.isVisible;
+  }
+
+  evaluateIsVisitableCriteria(criteria) {
+    const nodeStatus = this.getNodeStatusByNodeId(criteria.params.nodeId);
+    return nodeStatus.isVisitable;
   }
 
   evaluateIsVisitedCriteria(criteria) {
@@ -802,8 +828,8 @@ class StudentDataService {
       data
     );
     events.push(newEvent);
-    const componentStates = null;
-    const annotations = null;
+    const componentStates = undefined;
+    const annotations = undefined;
     this.saveToServer(componentStates, events, annotations);
   }
 
@@ -825,21 +851,12 @@ class StudentDataService {
   }
 
   saveAnnotations(annotations) {
-    const componentStates = null;
-    const events = null;
+    const componentStates = undefined;
+    const events = undefined;
     this.saveToServer(componentStates, events, annotations);
   }
 
-  saveToServer(componentStates, events, annotations) {
-    if (componentStates == null) {
-      componentStates = [];
-    }
-    if (events == null) {
-      events = [];
-    }
-    if (annotations == null) {
-      annotations = [];
-    }
+  saveToServer(componentStates = [], events = [], annotations = []) {
     this.saveToServerRequestCount += 1;
     const studentWorkList = this.prepareComponentStatesForSave(componentStates);
     this.prepareEventsForSave(events);
