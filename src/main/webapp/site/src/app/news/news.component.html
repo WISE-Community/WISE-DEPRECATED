@@ -35,9 +35,8 @@
                     <div class="mat-body-1" [innerHTML]="sanitizer.bypassSecurityTrustHtml(newsItem.news)"></div>
                   </mat-card-content>
                   <mat-card-actions *ngIf="isAdmin">
-                    <button mat-button color="primary"><span i18n>Read More</span></button>
-                    <button mat-button (click)="hideNewsItem(i)"><span i18n>Hide</span></button>
-                    <button mat-button color="accent" (click)="editNewsItem(i)"><span i18n>Edit</span></button>
+                    <button mat-button (click)="toggleHideNewsItem(i)"><span i18n>{{newsItem.type == 'hidden' ? 'Unhide' : 'Hide'}}</span></button>
+                    <button mat-button color="primary" (click)="editNewsItem(i)"><span i18n>Edit</span></button>
                     <button mat-button color="accent" (click)="deleteNewsItem(i)"><span i18n>Delete</span></button>
                   </mat-card-actions>
                 </mat-card>

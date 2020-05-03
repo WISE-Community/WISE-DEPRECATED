@@ -1,29 +1,28 @@
 <h2 class="mat-dialog-title" i18n>News Item</h2>
 <div mat-dialog-content *ngIf="isAddMode || isEditMode">
-    <form role="form" fxLayout="row wrap" fxLayoutGap="8px">
+    <form role="form" fxLayout="row wrap" fxLayoutGap="8px" [formGroup]="newsItemFormGroup">
         <mat-form-field fxFlex=50 required>
             <mat-label i18n>Title</mat-label>
-            <input class="accent-1" id="news-item-title" matInput fxFlexFill placeholder="News title" [formControl]="title" required />
+            <input class="accent-1" id="news-item-title" matInput fxFlexFill placeholder="News title" formControlName="title" required />
         </mat-form-field>
         <span fxFlex="1 1 auto"></span>
         <mat-form-field>
             <mat-label i18n>Select type</mat-label>
-            <mat-select [formControl]="type" required>
+            <mat-select formControlName="type" required>
                 <mat-option value="public" i18n>Public</mat-option>
-                <mat-option value="teacherOnly" i18n>Teacher Only</mat-option>
                 <mat-option value="hidden" i18n>Hidden</mat-option>
             </mat-select>
         </mat-form-field>
     </form>
-    <ckeditor [config]="{ placeholder: 'Content..' }" [editor]="Editor" [data]="news.value" (change)="onChange($event)"></ckeditor>
 </div>
-<div mat-dialog-content *ngIf="isDeleteMode" class="info-block">
-    <p i18n>Are you sure you want to delete this news item? This action is not reversible.</p>
+<div mat-dialog-content *ngIf="isDeleteMode || isHideMode" class="info-block">
+    <p *ngIf="isHideMode" i18n>{{hideConfirmationMsg}}</p>
+    <p *ngIf="isDeleteMode" i18n>Are you sure you want to delete this news item? This action is not reversible.</p>
 </div>
 <div mat-dialog-actions fxLayoutGap="8px" id="news-item-actions">
-    <span *ngIf="isDeleteMode" fxFlex="1 1 auto"></span>
+    <span *ngIf="isDeleteMode || isHideMode" fxFlex="1 1 auto"></span>
     <button mat-button (click)="close()" color="accent" i18n>Cancel</button>
-    <button *ngIf="isAddMode" mat-button color="primary" (click)="publish()" i18n>Publish</button>
-    <button *ngIf="isEditMode" mat-button color="primary" (click)="update()" i18n>Save</button>
-    <button *ngIf="isDeleteMode" mat-button color="primary" (click)="delete()" i18n>Proceed</button>
+    <button *ngIf="isAddMode" mat-button color="primary" (click)="create()" [disabled]="!newsItemFormGroup.valid || !news.valid" i18n>Publish</button>
+    <button *ngIf="isEditMode" mat-button color="primary" (click)="update()" [disabled]="!newsItemFormGroup.valid || !news.valid" i18n>Save</button>
+    <button *ngIf="isDeleteMode || isHideMode" mat-button color="primary" (click)="proceed()" i18n>Proceed</button>
 </div>
