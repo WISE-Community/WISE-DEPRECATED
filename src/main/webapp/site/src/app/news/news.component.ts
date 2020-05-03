@@ -36,7 +36,8 @@ export class NewsComponent implements OnInit {
     this.filteredNewsItems = this.allNewsItems.filter(newsItem => {
       const filterTitle = !!newsItem.title && newsItem.title.trim().toLowerCase().includes(this.searchValue);
       const filterNews = !!newsItem.news && newsItem.news.trim().toLowerCase().includes(this.searchValue);
-      return (filterTitle || filterNews) && newsItem.type !== 'hidden';
+      const showNewsItem = this.isAdmin || newsItem.type !== 'hidden';
+      return (filterTitle || filterNews) && showNewsItem;
     });
   }
 
@@ -58,19 +59,20 @@ export class NewsComponent implements OnInit {
     dialogRef.afterClosed().subscribe(() => sub.unsubscribe());
   }
 
-  hideNewsItem(index: number) {
-    const newsItem = this.filteredNewsItems[index]
-    this.newsService.updateNewsItem(newsItem.id, newsItem.date, newsItem.title, newsItem.news, 'hidden').subscribe(response => {
-      if (response.status == 'success') {
-        newsItem.type = 'hidden';
-        this.applyFilter();
-        this.snackBar.open('News item changed to hidden');
-      } else if (response.status == 'error') {
-        this.snackBar.open(response.message);
-      } else {
-        this.snackBar.open('Unknown error occurred');
-      }
+  toggleHideNewsItem(index: number) {
+    const dialogRef = this.dialog.open(NewsItemDialogComponent, {
+      data: { mode: NewsItemMode.HIDE, newsItem: this.filteredNewsItems[index] },
+      panelClass: 'mat-dialog--sm'
     });
+    const sub = dialogRef.componentInstance.onHide.subscribe(({ id, type }) => {
+      this.allNewsItems.forEach(newsItem => {
+        if (newsItem.id === id) {
+          newsItem.type = type;
+          this.applyFilter();
+        }
+      });
+    });
+    dialogRef.afterClosed().subscribe(() => sub.unsubscribe());
   }
 
   editNewsItem(index: number) {
