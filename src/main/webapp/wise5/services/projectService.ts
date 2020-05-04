@@ -5252,6 +5252,32 @@ class ProjectService {
       return result.data;
     });
   }
+
+  replaceComponent(nodeId, componentId, component) {
+
+  }
+
+  retrieveScript(scriptFilename) {
+    const deferred = this.$q.defer();
+    deferred.resolve({});
+    return deferred.promise;
+  }
+
+  getGlobalAnnotationGroupByScore(component, previousScore, currentScore) {
+
+  }
+
+  getNotificationByScore(component, previousScore, currentScore) {
+
+  }
+
+  isConnectedComponent(nodeId, componentId, connectedComponentId): boolean {
+    return false;
+  }
+
+  getConnectedComponentParams(componentContent, componentId) {
+    
+  }
 }
 
 export default ProjectService;

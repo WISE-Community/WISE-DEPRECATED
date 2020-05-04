@@ -11,7 +11,7 @@ const NodeGrading = angular
   .module('nodeGrading', [])
   .component('nodeGradingView', NodeGradingView)
   .component('componentSelect', ComponentSelect)
-  .component('stepTools', StepTools)
+  .component('cmStepTools', StepTools)
   .component('workgroupInfo', WorkgroupInfo)
   .component('workgroupItem', WorkgroupItem);
 

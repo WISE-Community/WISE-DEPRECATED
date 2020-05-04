@@ -2,11 +2,12 @@ import { Component, Inject, Input, OnInit } from '@angular/core';
 import { UserService } from "../../services/user.service";
 import { Student } from "../../domain/student";
 import { StudentRun } from "../student-run";
-import { MAT_DIALOG_DATA } from "@angular/material";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
 import { AuthService, GoogleLoginProvider } from "angularx-social-login";
 import { ConfigService } from "../../services/config.service";
 import { StudentService } from "../student.service";
 import { I18n } from '@ngx-translate/i18n-polyfill';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-team-sign-in-dialog',
@@ -27,6 +28,8 @@ export class TeamSignInDialogComponent implements OnInit {
               private socialAuthService: AuthService,
               private userService: UserService,
               private studentService: StudentService,
+              private router: Router,
+              public dialogRef: MatDialogRef<TeamSignInDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any,
               private i18n: I18n) {
     this.run = this.data.run;
@@ -260,7 +263,8 @@ export class TeamSignInDialogComponent implements OnInit {
               alert(this.i18n(`${this.getNameDisplay(targetMember)} is already in a team with ${teamMatesDisplay}`));
             }, 100);
           } else {
-            window.location.href = response.startProjectUrl;
+            this.router.navigateByUrl(response.startProjectUrl);
+            this.dialogRef.close();
           }
         });
   }
@@ -317,7 +321,7 @@ export class TeamSignInDialogComponent implements OnInit {
     this.teamMembers[index].isGoogleUser = workgroupMember.isGoogleUser;
     this.hiddenMembers[index] = false;
   }
-  
+
   getExistingWorkgroupMembersNotSignedIn(workgroupMembers: any[]): any[] {
     const teamMembersUsernames = this.teamMembers.map(member => {
       return member.username;
@@ -344,7 +348,7 @@ export class TeamSignInDialogComponent implements OnInit {
     });
     return removedMember;
   }
-  
+
   clearTeamMember(index: number) {
     this.teamMembers[index] = new Student();
     this.markAsNotSignedIn(this.teamMembers[index]);

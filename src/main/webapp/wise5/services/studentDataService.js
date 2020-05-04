@@ -166,6 +166,7 @@ class StudentDataService {
   }
 
   retrieveStudentData() {
+    this.nodeStatuses = {};
     if (this.ConfigService.isPreview()) {
       this.retrieveStudentDataForPreview();
     } else {

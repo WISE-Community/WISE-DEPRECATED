@@ -903,6 +903,10 @@ var $ = jQuery;
 
   'use strict';
 
+  if (global == null) {
+    global = window;
+  }
+  
   var fabric = global.fabric || (global.fabric = { }),
       extend = fabric.util.object.extend;
 
@@ -3765,3 +3769,4 @@ module.exports = {
 // code snippet that is used by Browserify when 'standalone' option is enabled).
 window.DrawingTool = require2('scripts/drawing-tool');
 
+export default DrawingTool;

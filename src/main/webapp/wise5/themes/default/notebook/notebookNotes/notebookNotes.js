@@ -17,6 +17,7 @@ class NotebookNotesController {
   }
 
   $onInit() {
+    this.color = this.config.itemTypes.note.label.color;
     const personalGroup = {
       title: 'Personal',
       name: 'private',
@@ -44,10 +45,6 @@ class NotebookNotesController {
         this.groups.push(spaceGroup);
       }
     }
-
-    this.$onInit = () => {
-      this.color = this.config.itemTypes.note.label.color;
-    };
 
     this.$onChanges = (changes) => {
       if (changes.notebook) {

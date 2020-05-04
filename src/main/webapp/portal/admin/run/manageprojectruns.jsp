@@ -61,7 +61,7 @@
                 var wiseVersion = $(this).attr('wiseVersion');
                 var path = "${contextPath}/legacy/teacher/classroomMonitor/classroomMonitor?" + settings;
                 if (wiseVersion != null && wiseVersion == 5) {
-                    path = "${contextPath}/teacher/run/manage/" + runId + "#!/run/" + runId + "/project/";
+                    path = "${contextPath}/teacher/manage/unit/" + runId;
                 }
                 window.open(path);
             });

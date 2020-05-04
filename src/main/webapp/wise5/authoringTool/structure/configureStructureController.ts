@@ -34,15 +34,15 @@ abstract class ConfigureStructureController {
   abstract injectNodes();
 
   chooseLocation() {
-    this.$state.go('root.project.structure.location', { structure: this.structure });
+    this.$state.go('root.at.project.structure.location', { structure: this.structure });
   }
 
   goToChooseStructure() {
-    this.$state.go('root.project.structure.choose');
+    this.$state.go('root.at.project.structure.choose');
   }
 
   cancel() {
-    this.$state.go('root.project');
+    this.$state.go('root.at.project');
   }
 }
 

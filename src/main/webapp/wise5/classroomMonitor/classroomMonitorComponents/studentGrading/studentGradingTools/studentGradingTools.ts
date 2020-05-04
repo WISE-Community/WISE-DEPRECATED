@@ -122,11 +122,11 @@ class StudentGradingToolsController {
   }
 
   goToPrevTeam() {
-    this.$state.go('root.team', { workgroupId: this.prevId });
+    this.$state.go('root.cm.team', { workgroupId: this.prevId });
   }
 
   goToNextTeam() {
-    this.$state.go('root.team', { workgroupId: this.nextId });
+    this.$state.go('root.cm.team', { workgroupId: this.nextId });
   }
 }
 

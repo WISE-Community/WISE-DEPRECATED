@@ -39,7 +39,7 @@ const PauseScreensMenu = {
                     {{ ::'allPeriods' | translate }}
                 </md-switch>
                 <md-divider></md-divider>
-                <md-switch ng-repeat="period in $ctrl.periods"
+                <md-switch ng-repeat="period in $ctrl.periods track by $index"
                            ng-if="period.periodId !== -1"
                            class="md-primary account-menu__control"
                            aria-label="{{ ::'lockPeriodLabel' | translate: { periodName: period.periodName } }}"

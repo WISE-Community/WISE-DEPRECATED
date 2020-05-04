@@ -1,16 +1,16 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MomentModule } from 'ngx-moment';
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import {
-  MatButtonModule, MatCardModule, MatCheckboxModule, MatDialogModule, 
-  MatDividerModule, MatIconModule, MatProgressBarModule, 
+  MatButtonModule, MatCardModule, MatCheckboxModule, MatDialogModule,
+  MatDividerModule, MatIconModule, MatProgressBarModule,
   MatTabsModule, MatTooltipModule } from '@angular/material';
 
 const materialModules = [
-  MatButtonModule, MatCardModule, MatCheckboxModule, MatDialogModule, 
-  MatDividerModule, MatIconModule, MatProgressBarModule, 
+  MatButtonModule, MatCardModule, MatCheckboxModule, MatDialogModule,
+  MatDividerModule, MatIconModule, MatProgressBarModule,
   MatTabsModule, MatTooltipModule
 ];
 

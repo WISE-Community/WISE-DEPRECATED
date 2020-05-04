@@ -89,7 +89,7 @@ class NodeProgressViewController {
           this.$scope.currentgroupid = this.currentGroupId;
         }
       }
-      this.$state.go('root.project', { nodeId: this.nodeId });
+      this.$state.go('root.cm.unit.node', { nodeId: this.nodeId });
     });
 
     this.$scope.$on('currentWorkgroupChanged', (event, args) => {
@@ -103,7 +103,7 @@ class NodeProgressViewController {
         this.TeacherDataService.endCurrentNodeAndSetCurrentNodeByNodeId(toNodeId);
       }
 
-      if ($transition.name === 'root.project') {
+      if ($transition.name === 'root.cm.unit.node') {
         if (this.ProjectService.isApplicationNode(toNodeId)) {
           document.getElementById('content').scrollTop = 0;
         }
@@ -201,10 +201,10 @@ class NodeProgressViewController {
                 <div class="md-dialog-content">${rubricContent}</div>
             </md-dialog-content>`;
     let dialogString = `<md-dialog class="dialog--wider" aria-label="${projectTitle} - ${rubricTitle}">${dialogHeader}${dialogContent}${dialogActions}</md-dialog>`;
-    let windowString = `<link rel='stylesheet' href='../wise5/lib/bootstrap/css/bootstrap.min.css' />
-            <link rel='stylesheet' href='../wise5/themes/default/style/monitor.css'>
-            <link rel='stylesheet' href='../wise5/themes/default/style/angular-material.css'>
-            <link rel='stylesheet' href='../wise5/lib/summernote/dist/summernote.css' />
+    let windowString = `<link rel='stylesheet' href='/wise5/lib/bootstrap/css/bootstrap.min.css' />
+            <link rel='stylesheet' href='/wise5/themes/default/style/monitor.css'>
+            <link rel='stylesheet' href='/wise5/themes/default/style/angular-material.css'>
+            <link rel='stylesheet' href='/wise5/lib/summernote/dist/summernote.css' />
             <body class="layout-column">
                 <div class="layout-column">${windowHeader}<md-content class="md-padding">${rubricContent}</div></md-content></div>
             </body>`;
@@ -239,7 +239,7 @@ const NodeProgressView = {
   },
   controller: NodeProgressViewController,
   templateUrl:
-    'wise5/classroomMonitor/classroomMonitorComponents/nodeProgress/nodeProgressView/nodeProgressView.html'
+    '/wise5/classroomMonitor/classroomMonitorComponents/nodeProgress/nodeProgressView/nodeProgressView.html'
 };
 
 export default NodeProgressView;

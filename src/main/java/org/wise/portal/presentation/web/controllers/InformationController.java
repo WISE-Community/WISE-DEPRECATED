@@ -709,7 +709,7 @@ public class InformationController {
     config.put("wiseBaseURL", contextPath);
     config.put("projectId", project.getId());
     config.put("parentProjectId", project.getParentProjectId());
-    config.put("previewProjectURL", contextPath + "/project/" + project.getId());
+    config.put("previewProjectURL", contextPath + "/preview/unit/" + project.getId());
     config.put("theme", "WISE");
     config.put("projectURL", projectURL);
     addProjectBaseURL(config, projectURL);

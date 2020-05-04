@@ -12,6 +12,7 @@ import { NO_ERRORS_SCHEMA, TRANSLATIONS_FORMAT, TRANSLATIONS, LOCALE_ID } from '
 import { translationsFactory } from '../../app.module';
 import { I18n } from '@ngx-translate/i18n-polyfill';
 import { Course } from '../../domain/course';
+import { RouterTestingModule } from '@angular/router/testing';
 
 export class MockTeacherService {
   checkClassroomAuthorization(): Observable<string> {
@@ -62,7 +63,7 @@ describe('RunMenuComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ MatMenuModule ],
+      imports: [ MatMenuModule, RouterTestingModule ],
       declarations: [ RunMenuComponent ],
       providers: [
         { provide: TeacherService, useClass: MockTeacherService },
