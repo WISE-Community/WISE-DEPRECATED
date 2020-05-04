@@ -74,7 +74,8 @@ class NotebookReportController {
         onBlur: (args, args2) => {
           angular.element(document.querySelector(`#${this.reportId}`)).summernote('saveRange');
         }
-      }
+      },
+      dialogsInBody: true
     };
 
     if (this.isNoteEnabled()) {

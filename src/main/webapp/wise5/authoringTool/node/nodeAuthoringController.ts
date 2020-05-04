@@ -493,7 +493,8 @@ class NodeAuthoringController {
       disableDragAndDrop: true,
       buttons: {
         insertAssetButton: insertAssetButton
-      }
+      },
+      dialogsInBody: true
     };
     this.summernoteRubricHTML = this.ProjectService.replaceAssetPaths(this.node.rubric);
 

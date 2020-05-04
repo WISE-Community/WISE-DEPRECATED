@@ -121,7 +121,8 @@ class AuthorNotebookController {
             note.reportId,
             this.$translate('INSERT_ASSET')
           )
-        }
+        },
+        dialogsInBody: true
       }
     };
     this.setReportIdToAuthoringNote(note.reportId, authoringReportNote);

@@ -57,7 +57,8 @@ class RubricAuthoringController {
           'rubric',
           this.translate('INSERT_ASSET')
         )
-      }
+      },
+      dialogsInBody: true
     };
     this.summernoteRubricHTML = this.ProjectService.replaceAssetPaths(
       this.ProjectService.getProjectRubric()
