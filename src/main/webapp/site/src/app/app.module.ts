@@ -65,7 +65,7 @@ export function getAuthServiceConfigs(configService: ConfigService) {
 
 declare const require;
 export function translationsFactory(locale: string) {
-  return require(`raw-loader!../locale/messages.xlf`);
+  return require(`raw-loader!../locale/messages.xlf`).default;
 }
 
 @NgModule({
