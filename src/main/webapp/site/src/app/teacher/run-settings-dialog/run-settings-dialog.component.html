@@ -65,8 +65,8 @@
       </mat-form-field>
     </div>
     <div fxLayoutAlign="center center">
-      <mat-checkbox [(ngModel)]="isLockedAfterEndDate"
-          (change)="updateIsLockedAfterEndDate()" style="margin-right: 10px;" i18n>
+      <mat-checkbox [(ngModel)]="isLockedAfterEndDate" (change)="updateIsLockedAfterEndDate()"
+          [disabled]="!isLockedAfterEndDateCheckboxEnabled" style="margin-right: 10px;" i18n>
         Lock After End Date
       </mat-checkbox>
       <mat-icon matTooltip="If the End Date has passed and the unit is locked, students will no longer be able to save new work" i18n-matTooltip>help_outline</mat-icon>

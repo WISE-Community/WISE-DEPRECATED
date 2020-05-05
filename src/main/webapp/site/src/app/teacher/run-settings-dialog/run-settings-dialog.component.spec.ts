@@ -188,4 +188,22 @@ describe('RunSettingsDialogComponent', () => {
     component.updateIsLockedAfterEndDate();
     expect(teacherService.updateIsLockedAfterEndDate).toHaveBeenCalledWith(1, true);
   });
+
+  it('should enable is locked after end date checkbox', () => {
+    component.endDate = new Date();
+    component.isLockedAfterEndDateCheckboxEnabled = false;
+    const teacherService = TestBed.get(TeacherService);
+    spyOn(teacherService, 'updateIsLockedAfterEndDate').and.returnValue(of({}));
+    component.updateLockedAfterEndDateCheckbox();
+    expect(component.isLockedAfterEndDateCheckboxEnabled).toEqual(true);
+  });
+
+  it('should disable is locked after end date checkbox', () => {
+    component.endDate = null;
+    component.isLockedAfterEndDateCheckboxEnabled = true;
+    const teacherService = TestBed.get(TeacherService);
+    spyOn(teacherService, 'updateIsLockedAfterEndDate').and.returnValue(of({}));
+    component.updateLockedAfterEndDateCheckbox();
+    expect(component.isLockedAfterEndDateCheckboxEnabled).toEqual(false);
+  });
 });

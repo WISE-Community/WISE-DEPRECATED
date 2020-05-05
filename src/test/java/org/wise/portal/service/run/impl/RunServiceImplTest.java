@@ -328,6 +328,19 @@ public class RunServiceImplTest {
     assertTrue(run.isLockedAfterEndDate());
   }
 
+  @Test
+  public void setIsLockedAfterEndDate_ShouldSetToFalse() throws Exception {
+    run.setLockedAfterEndDate(true);
+    assertTrue(run.isLockedAfterEndDate());
+    Long runId = new Long(1);
+    expect(runDao.getById(runId)).andReturn(run);
+    runDao.save(run);
+    expectLastCall();
+    replay(runDao);
+    runService.setIsLockedAfterEndDate(1L, false);
+    assertFalse(run.isLockedAfterEndDate());
+  }
+
   private void expectRunCodeGeneration() throws ObjectNotFoundException {
     expect(appProperties.getProperty(isA(String.class), isA(String.class))).andReturn("lion");
     expect(appProperties.containsKey("runcode_prefixes_de")).andReturn(false);

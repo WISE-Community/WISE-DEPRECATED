@@ -207,4 +207,18 @@ describe('CreateRunDialogComponent', () => {
     expect(teacherService.createRun).toHaveBeenCalledWith(
         1, '1,', '3', jasmine.any(Number), jasmine.any(Number), true);
   });
+
+  it('should enable locked after end date checkbox', async() => {
+    component.form.controls['endDate'].setValue(null);
+    component.updateLockedAfterEndDateCheckbox();
+    expect(component.form.controls['isLockedAfterEndDate'].value).toEqual(false);
+    expect(component.form.controls['isLockedAfterEndDate'].disabled).toEqual(true);
+  });
+
+  it('should disable locked after end date checkbox', async() => {
+    component.form.controls['endDate'].setValue(new Date());
+    component.updateLockedAfterEndDateCheckbox();
+    expect(component.form.controls['isLockedAfterEndDate'].value).toEqual(false);
+    expect(component.form.controls['isLockedAfterEndDate'].disabled).toEqual(false);
+  });
 });

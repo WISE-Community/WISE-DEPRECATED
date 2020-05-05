@@ -205,7 +205,9 @@ export class TeacherService {
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
     let body = new HttpParams();
     body = body.set('runId', runId + '');
-    body = body.set('endTime', endTime + '');
+    if (endTime != null) {
+      body = body.set('endTime', endTime + '');
+    }
     return this.http.post<Object>(url, body, {headers: headers});
   }
 

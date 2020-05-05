@@ -727,7 +727,11 @@ public class RunServiceImpl implements RunService {
   public void setEndTime(Long runId, Long endTime) {
     try {
       Run run = retrieveById(runId);
-      run.setEndtime(new Date(endTime));
+      if (endTime == null) {
+        run.setEndtime(null);
+      } else {
+        run.setEndtime(new Date(endTime));
+      }
       runDao.save(run);
     } catch (ObjectNotFoundException e) {
       e.printStackTrace();

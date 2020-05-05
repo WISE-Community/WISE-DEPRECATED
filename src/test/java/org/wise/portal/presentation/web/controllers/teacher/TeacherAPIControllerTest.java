@@ -329,6 +329,60 @@ public class TeacherAPIControllerTest extends APIControllerTest {
     verify(userService);
   }
 
+  @Test
+  public void editRunEndTime_WithNullEndTime_ChangeEndTime() throws ObjectNotFoundException {
+    expect(userService.retrieveUserByUsername(teacherAuth.getName())).andReturn(teacher1);
+    replay(userService);
+    expect(runService.retrieveById(runId1)).andReturn(run1);
+    runService.setEndTime(runId1, null);
+    expectLastCall();
+    replay(runService);
+    expect(appProperties.getProperty("curriculum_base_www"))
+        .andReturn("http://localhost:8080/curriculum");
+    replay(appProperties);
+    expectGetRunMapToBeCalled();
+    replay(projectService);
+    teacherAPIController.editRunEndTime(teacherAuth, runId1, null);
+    verify(userService);
+    verify(runService);
+  }
+
+  @Test
+  public void editRunIsLockedAfterEndDate_WithTrue_ChangeValue() throws ObjectNotFoundException {
+    expect(userService.retrieveUserByUsername(teacherAuth.getName())).andReturn(teacher1);
+    replay(userService);
+    expect(runService.retrieveById(runId1)).andReturn(run1);
+    runService.setIsLockedAfterEndDate(runId1, true);
+    expectLastCall();
+    replay(runService);
+    expect(appProperties.getProperty("curriculum_base_www"))
+        .andReturn("http://localhost:8080/curriculum");
+    replay(appProperties);
+    expectGetRunMapToBeCalled();
+    replay(projectService);
+    teacherAPIController.editRunIsLockedAfterEndDate(teacherAuth, runId1, true);
+    verify(userService);
+    verify(runService);
+  }
+
+  @Test
+  public void editRunIsLockedAfterEndDate_WithFalse_ChangeValue() throws ObjectNotFoundException {
+    expect(userService.retrieveUserByUsername(teacherAuth.getName())).andReturn(teacher1);
+    replay(userService);
+    expect(runService.retrieveById(runId1)).andReturn(run1);
+    runService.setIsLockedAfterEndDate(runId1, false);
+    expectLastCall();
+    replay(runService);
+    expect(appProperties.getProperty("curriculum_base_www"))
+        .andReturn("http://localhost:8080/curriculum");
+    replay(appProperties);
+    expectGetRunMapToBeCalled();
+    replay(projectService);
+    teacherAPIController.editRunIsLockedAfterEndDate(teacherAuth, runId1, false);
+    verify(userService);
+    verify(runService);
+  }
+
   private HashMap<String, String> createDefaultTeacherFields() {
     HashMap<String, String> fields = new HashMap<String, String>();
     fields.put("firstName", TEACHER_FIRSTNAME);

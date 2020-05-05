@@ -235,12 +235,11 @@ public class TeacherAPIController extends UserAPIController {
       @RequestParam("maxStudentsPerTeam") Integer maxStudentsPerTeam,
       @RequestParam("startDate") Long startDate,
       @RequestParam(value = "endDate", required = false) Long endDate,
-      @RequestParam(value = "isLockedAfterEndDate", required = false) Boolean isLockedAfterEndDate)
+      @RequestParam(value = "isLockedAfterEndDate", defaultValue = "false") Boolean isLockedAfterEndDate)
       throws Exception {
     User user = userService.retrieveUserByUsername(auth.getName());
     Locale locale = request.getLocale();
     Set<String> periodNames = createPeriodNamesSet(periods);
-    System.out.println("isLockedAfterEndDate=" + isLockedAfterEndDate);
     Run run = runService.createRun(projectId, user, periodNames, maxStudentsPerTeam, startDate,
         endDate, isLockedAfterEndDate, locale);
     return getRunMap(user, run);
@@ -372,13 +371,14 @@ public class TeacherAPIController extends UserAPIController {
 
   @PostMapping("/run/update/endtime")
   HashMap<String, Object> editRunEndTime(Authentication authentication,
-      @RequestParam("runId") Long runId, @RequestParam("endTime") Long endTime)
+      @RequestParam("runId") Long runId,
+      @RequestParam(value = "endTime", required = false) Long endTime)
       throws ObjectNotFoundException {
     User user = userService.retrieveUserByUsername(authentication.getName());
     Run run = runService.retrieveById(runId);
     HashMap<String, Object> response = new HashMap<String, Object>();
     if (run.isTeacherAssociatedToThisRun(user)) {
-      if (run.getStartTimeMilliseconds() < endTime) {
+      if (endTime == null || run.getStartTimeMilliseconds() < endTime) {
         runService.setEndTime(runId, endTime);
         response.put("status", "success");
       } else {

@@ -20,6 +20,7 @@ export class RunSettingsDialogComponent implements OnInit {
   startDate: Date;
   previousStartDate: Date;
   endDate: Date;
+  isLockedAfterEndDateCheckboxEnabled: boolean = false;
   isLockedAfterEndDate: boolean;
   previousEndDate: Date;
   deletePeriodMessage: string = '';
@@ -57,6 +58,9 @@ export class RunSettingsDialogComponent implements OnInit {
     this.rememberPreviousStartDate();
     this.rememberPreviousEndDate();
     this.setDateRange();
+    if (this.endDate != null) {
+      this.isLockedAfterEndDateCheckboxEnabled = true;
+    }
   }
 
   ngOnInit() {
@@ -164,29 +168,61 @@ export class RunSettingsDialogComponent implements OnInit {
 
   updateEndTime() {
     this.clearErrorMessages();
+    if (confirm(this.getEndDateChangeConfirmationMessage())) {
+      this.teacherService.updateRunEndTime(this.run.id, this.getEndTime())
+          .subscribe((response: any) => {
+        if (response.status === 'success') {
+          this.run = response.run;
+          this.updateDataRun(this.run);
+          this.rememberPreviousEndDate();
+          this.clearErrorMessages();
+          this.showConfirmMessage();
+          this.setDateRange();
+          this.updateLockedAfterEndDateCheckbox();
+        } else {
+          this.endDateMessage = this.translateMessageCode(response.messageCode);
+        }
+      });
+    } else {
+      this.rollbackEndDate();
+    }
+  }
+
+  getEndDateChangeConfirmationMessage() {
+    let message = '';
     if (this.endDate) {
       const endDate = this.endDate;
       endDate.setHours(23, 59, 59);
       const formattedEndDate = moment(endDate).format('ddd MMM DD YYYY');
-      if (confirm(this.i18n('Are you sure you want to change the end date to {{date}}?', {date: formattedEndDate}))) {
-        this.teacherService.updateRunEndTime(this.run.id, endDate.getTime()).subscribe((response: any) => {
-          if (response.status === 'success') {
-            this.run = response.run;
-            this.updateDataRun(this.run);
-            this.rememberPreviousEndDate();
-            this.clearErrorMessages();
-            this.showConfirmMessage();
-            this.setDateRange();
-          } else {
-            this.endDateMessage = this.translateMessageCode(response.messageCode);
-          }
-        });
-      } else {
-        this.rollbackEndDate();
-      }
+      message = this.i18n('Are you sure you want to change the end date to {{date}}?',
+          {date: formattedEndDate});
     } else {
-      this.rollbackEndDate();
+      message = this.i18n('Are you sure you want to remove the end date?');
     }
+    return message;
+  }
+
+  getEndTime() {
+    if (this.endDate == null) {
+      return null;
+    } else {
+      return this.endDate.getTime();
+    }
+  }
+
+  updateRunEndTime(runId, endTime) {
+    this.teacherService.updateRunEndTime(runId, endTime).subscribe((response: any) => {
+      if (response.status === 'success') {
+        this.run = response.run;
+        this.updateDataRun(this.run);
+        this.rememberPreviousEndDate();
+        this.clearErrorMessages();
+        this.showConfirmMessage();
+        this.setDateRange();
+      } else {
+        this.endDateMessage = this.translateMessageCode(response.messageCode);
+      }
+    });
   }
 
   setDateRange() {
@@ -198,10 +234,25 @@ export class RunSettingsDialogComponent implements OnInit {
     }
   }
 
+  updateLockedAfterEndDateCheckbox() {
+    if (this.endDate == null) {
+      const previousIsLockedAfterEndDateValue = this.isLockedAfterEndDate;
+      this.isLockedAfterEndDateCheckboxEnabled = false;
+      this.isLockedAfterEndDate = false;
+      if (previousIsLockedAfterEndDateValue != this.isLockedAfterEndDate) {
+        this.updateIsLockedAfterEndDate();
+      }
+    } else {
+      this.isLockedAfterEndDateCheckboxEnabled = true;
+    }
+  }
+
   updateIsLockedAfterEndDate() {
     this.teacherService.updateIsLockedAfterEndDate(this.run.id, this.isLockedAfterEndDate)
         .subscribe((response: any) => {
       if (response.status === 'success') {
+        this.run = response.run;
+        this.updateDataRun(this.run);
         this.clearErrorMessages();
       } else {
         this.isLockedAfterEndDateMessage = this.translateMessageCode(response.messageCode);
@@ -275,6 +326,7 @@ export class RunSettingsDialogComponent implements OnInit {
     this.data.run.maxStudentsPerTeam = run.maxStudentsPerTeam;
     this.data.run.startTime = run.startTime;
     this.data.run.endTime = run.endTime;
+    this.data.run.isLockedAfterEndDate = run.isLockedAfterEndDate;
     this.data.run.lastRun = run.lastRun;
   }
 }
