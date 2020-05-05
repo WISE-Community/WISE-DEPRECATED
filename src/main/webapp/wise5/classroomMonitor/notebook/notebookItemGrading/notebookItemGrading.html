@@ -4,15 +4,16 @@
             <md-input-container class="input-container md-block md-no-float animate-fade"
                                 flex>
                 <label class="input-label md-no-float" ng-disabled="!$ctrl.active"><md-icon class="md-accent">account_box</md-icon>
-                    <span ng-if="$ctrl.comment" class="animate-fade">{{ 'TEACHER_COMMENT' | translate }}</span>
-                    <span ng-if="!$ctrl.comment" class="animate-fade">{{ 'SEND_COMMENT' | translate }}</span>
+                    <span ng-if="$ctrl.comment" class="animate-fade">{{ ::'TEACHER_COMMENT' | translate }}</span>
+                    <span ng-if="!$ctrl.comment" class="animate-fade">{{ ::'SEND_COMMENT' | translate }}</span>
                 </label>
                 <div class="input-wrapper">
                     <textarea md-detect-hidden
                               placeholder="Enter comment here"
                               ng-model="$ctrl.comment"
                               ng-change="$ctrl.postAnnotation('comment')"
-                              ng-model-options="{ debounce: 10000 }"></textarea>
+                              ng-model-options="{ debounce: 10000 }"
+                              ng-disabled="!$ctrl.canGradeStudentWork"></textarea>
                 </div>
             </md-input-container>
         </div>
@@ -20,15 +21,16 @@
             <md-input-container class="md-no-float">
                 <label class="input-label annotations--grading__score__label">
                     <span>
-                        <span ng-if="$ctrl.score != null" class="animate-fade">{{ 'SCORE' | translate }}</span>
-                        <span ng-if="$ctrl.score == null" class="animate-fade">{{ 'SET_SCORE' | translate }}</span>
+                        <span ng-if="$ctrl.score != null" class="animate-fade">{{ ::'SCORE' | translate }}</span>
+                        <span ng-if="$ctrl.score == null" class="animate-fade">{{ ::'SET_SCORE' | translate }}</span>
                     </span>
                 </label>
                 <input type="number"
                        placeholder="0"
                        ng-model="$ctrl.score"
                        ng-change="$ctrl.postAnnotation('score')"
-                       ng-model-options="{ debounce: 5000 }">
+                       ng-model-options="{ debounce: 5000 }"
+                       ng-disabled="!$ctrl.canGradeStudentWork">
                 <span class="annotations--grading__score__max md-subhead text-secondary"> /{{$ctrl.maxScore}}</span>
             </md-input-container>
         </div>

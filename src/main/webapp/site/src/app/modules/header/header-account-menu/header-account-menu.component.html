@@ -17,6 +17,9 @@
       </ng-template>
       <span>{{ firstName }} {{ lastName }}</span>
     </div>
+    <div *ngIf="isPreviousAdmin" class="user-switch">
+      <a (click)="switchToOriginalUser()" i18n>Switch back to original user</a>
+    </div>
     <mat-divider></mat-divider>
     <a *ngIf="role === 'student'"
        routerLinkActive="active"
@@ -51,13 +54,13 @@
     </a>
     <a *ngIf="role === 'researcher'"
        mat-menu-item
-       href="admin">
+       (click)="switchToAdmin()">
       <mat-icon>settings</mat-icon>
       <span i18n>Researcher Tools</span>
     </a>
     <a *ngIf="role === 'admin'"
        mat-menu-item
-       href="admin">
+       (click)="switchToAdmin()">
       <mat-icon>settings</mat-icon>
       <span i18n>Admin Tools</span>
     </a>
@@ -78,7 +81,7 @@
       <span i18n>Help</span>
     </a>
     <mat-divider></mat-divider>
-    <a mat-menu-item href="{{ logOutURL }}">
+    <a mat-menu-item (click)="logOut()">
       <mat-icon color="warn">exit_to_app</mat-icon>
       <span class="warn" i18n>Sign Out</span>
     </a>

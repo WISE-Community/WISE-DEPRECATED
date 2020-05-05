@@ -59,9 +59,9 @@
                 var runId = $(this).attr('runId');
                 var title = $(this).attr('title');
                 var wiseVersion = $(this).attr('wiseVersion');
-                var path = "${contextPath}/teacher/classroomMonitor/classroomMonitor?" + settings;
+                var path = "${contextPath}/legacy/teacher/classroomMonitor/classroomMonitor?" + settings;
                 if (wiseVersion != null && wiseVersion == 5) {
-                    path = "${contextPath}/classroomMonitor/" + runId;
+                    path = "${contextPath}/teacher/manage/unit/" + runId;
                 }
                 window.open(path);
             });
@@ -190,31 +190,7 @@
                 $("#manageStudentsDialog > #manageStudentsIfrm").attr('src',path);
             });
 
-            //Set up view project details click action for each project id link
-            $('a.projectDetail').on('click',function(){
-                var title = $(this).attr('title');
-                if($(this).hasClass('projectDetail')){
-                    var projectId = $(this).attr('id').replace('projectDetail_','');
-                } else if($(this).hasClass('projectInfo')){
-                    var projectId = $(this).attr('id').replace('projectInfo_','');
-                }
-                var path = "${contextPath}/projectInfo?projectId=" + projectId;
-                var div = $('#projectDetailDialog').html('<iframe id="projectIfrm" width="100%" height="100%"></iframe>');
-                div.dialog({
-                    modal: true,
-                    width: '800',
-                    height: '400',
-                    title: title,
-                    position: 'center',
-                    close: function(){ $(this).html(''); },
-                    buttons: {
-                        Close: function(){
-                            $(this).dialog('close');
-                        }
-                    }
-                });
-                $("#projectDetailDialog > #projectIfrm").attr('src',path);
-            });
+
 
 
 
@@ -408,18 +384,13 @@
                                             </c:if>
                                             <tr>
                                                 <th><spring:message code="project_id"/></th>
-                                                <td><a id="projectDetail_${run.project.id}" class="projectDetail" title="<spring:message code="project_details"/>">${run.project.id}</a></td>
+                                                <td><span id="projectDetail_${run.project.id}" class="projectDetail" title="<spring:message code="project_details"/>">${run.project.id}</span></td>
                                             </tr>
                                             <tr>
                                                 <c:if test="${run.project.parentProjectId != null}">
                                                     <th><spring:message code="teacher.management.projectruntabs.copyLabel"/></th>
-                                                    <td><a id="projectDetail_${run.project.parentProjectId}" class="projectDetail" title="<spring:message code="project_details"/>">${run.project.parentProjectId}</a></td>
+                                                    <td><span id="projectDetail_${run.project.parentProjectId}" class="projectDetail" title="<spring:message code="project_details"/>">${run.project.parentProjectId}</span></td>
                                                 </c:if>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="2" style="padding-top:.5em;">
-                                                    <a id="editRun_${run.id}" class="editRun" title="<spring:message code="teacher.management.projectruntabs.editSettings"/>: ${run.name} (<spring:message code="run_id"/> ${run.id})"><img class="icon" alt="settings" src="${contextPath}/<spring:theme code="processing"/>" /><span><spring:message code="teacher.management.projectruntabs.editSettings"/></span></a>
-                                                </td>
                                             </tr>
                                         </table>
                                     </td>
@@ -448,18 +419,11 @@
                                         <ul class="actionList">
                                             <li>
                                                 <spring:message code="teacher.management.projectruntabs.projectLabel"/>&nbsp;<a href="${contextPath}/previewproject.html?projectId=${run.project.id}" target="_blank"><img class="icon" alt="preview" src="${contextPath}/<spring:theme code="screen"/>" /><span><spring:message code="preview"/></span></a>
-                                                |&nbsp;<a id="projectInfo_${run.project.id}" class="projectInfo" title="<spring:message code="project_details"/>"><img class="icon" alt="info" src="${contextPath}/<spring:theme code="id"/>" /><span><spring:message code="teacher.management.projectruntabs.projectInfo"/></span></a>
                                                 |&nbsp;<a onclick="if(confirm('<spring:message code="teacher.management.projectruntabs.editWarning"/>')){window.top.location='${contextPath}/author/authorproject.html?projectId=${run.project.id}';} return true;"><img class="icon" alt="edit" src="${contextPath}/<spring:theme code="edit"/>" /><span><spring:message code="teacher.management.projectruntabs.edit"/></span></a>
                                             </li>
                                         </ul>
                                         <ul class="actionList">
                                             <li><a id="shareRun_${run.id}" class="shareRun" title="<spring:message code="teacher.management.projectruntabs.sharingPermissionsTitle"/> ${run.name} (<spring:message code="run_id"/> ${run.id})"><img class="icon" alt="share" src="${contextPath}/<spring:theme code="agent"/>" /><span><spring:message code="teacher.management.projectruntabs.sharingPermissions"/></span></a></li>
-                                            <li><a id="editAnnouncements_${run.id}" class="editAnnouncements" title="<spring:message code="teacher.management.projectruntabs.announcementsTitle"/> ${run.name} (<spring:message code="run_id"/> ${run.id})" ><img class="icon" alt="announcements" src="${contextPath}/<spring:theme code="chat"/>" /><spring:message code="teacher.management.projectruntabs.announcements"/></a></li>
-                                            <c:if test="${run.project.wiseVersion == null || run.project.wiseVersion == 4}">
-                                                <li><a class="researchTools" title="<spring:message code="teacher.management.projectruntabs.researcherTools"/>: ${run.name} (<spring:message code="run_id"/> ${run.id})" id="runId=${run.id}&gradingType=export"><img class="icon" alt="export" src="${contextPath}/<spring:theme code="save"/>" /><span><spring:message code="teacher.management.projectruntabs.researcherTools"/> <spring:message code="teacher.management.projectruntabs.exportStudentData"/></span></a></li>
-                                            </c:if>
-                                            <li><a href="${contextPath}//contact/contactwise.html?projectId=${run.project.id}&runId=${run.id}"><img class="icon" alt="contact" src="${contextPath}/<spring:theme code="email"/>" /><span><spring:message code="teacher.management.projectruntabs.reportProblem"/></span></a></li>
-                                            <li><a class="archiveRun" id="archiveRun_runId=${run.id}&runName=<c:out value="${fn:escapeXml(run.name)}" />" title="<spring:message code="teacher.management.projectruntabs.archive_title"/> ${run.name} (<spring:message code="run_id"/> ${run.id})"><img class="icon" alt="archive" src="${contextPath}/<spring:theme code="lock"/>" /><span><spring:message code="teacher.management.projectruntabs.archive"/></span></a></li>
                                         </ul>
                                     </td>
                                     <td style="display:none;">${run.starttime}</td>
@@ -485,7 +449,6 @@
 <div id="shareDialog" class="dialog"></div>
 <div id="editRunDialog" class="dialog"></div>
 <div id="manageStudentsDialog" style="overflow:hidden;" class="dialog"></div>
-<div id="projectDetailDialog" style="overflow:hidden;" class="dialog"></div>
 <div id="archiveRunDialog" style="overflow:hidden;" class="dialog"></div>
 </body>
 </html>

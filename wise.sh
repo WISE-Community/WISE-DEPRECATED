@@ -32,18 +32,13 @@ fi
 
 if [ $1 = "package" ]; then
   npm install
-  node --max_old_space_size=8192 node_modules/@angular/cli/bin/ng build --configuration=production --stats-json
+  npm run build-prod
   ./mvnw clean -Dmaven.test.skip=true package
   exit 0
 fi
 
 if [ ! -f $PROPERTIES_FILE ]; then
   # properties file does not exist so assume this is a fresh install
-  # install npm dependencies and jspm depedencies (happens in postinstall)
-  if [ $1 = "dev" ]; then
-    # if in dev mode, make sure github token is registered so we don't run into rate limit
-    jspm registry config github
-  fi
   npm install
   # copy sample property file and set paths automatically
   cp $SAMPLE_PROPERTIES_FILE $PROPERTIES_FILE
@@ -64,8 +59,7 @@ else
 fi
 
 if [ $1 = "dev" ]; then
-  npm run watch-all-wise5&
-  npm run watch-all-site&
+  npm run build-dev&
 fi
 
 ./mvnw spring-boot:run

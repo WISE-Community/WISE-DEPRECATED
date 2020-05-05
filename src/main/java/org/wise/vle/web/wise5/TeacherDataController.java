@@ -1,13 +1,33 @@
 package org.wise.vle.web.wise5;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Properties;
+import java.util.Set;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
+
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.io.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.acls.domain.BasePermission;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.run.Run;
@@ -23,19 +43,9 @@ import org.wise.vle.domain.work.Event;
 import org.wise.vle.domain.work.NotebookItem;
 import org.wise.vle.domain.work.StudentWork;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletResponse;
-import java.io.*;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Properties;
-import java.util.Set;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
-
 /**
- * Controller for handling GET and POST of WISE5 Teacher related data
- * like annotations.
+ * Controller for handling GET and POST of WISE5 Teacher related data like
+ * annotations.
  */
 @Controller("wise5TeacherDataController")
 public class TeacherDataController {
@@ -56,12 +66,12 @@ public class TeacherDataController {
   private MessagePublisher redisPublisher;
 
   /**
-   * Handles requests for exporting of data for teachers/researchers like student work, events, notebook items
+   * Handles requests for exporting of data for teachers/researchers like
+   * student work, events, notebook items
    */
   @ResponseBody
   @RequestMapping(method = RequestMethod.GET, value = "/teacher/export/{runId}/{exportType}")
-  public void getWISE5TeacherExport(
-      @PathVariable Integer runId,
+  public void getWISE5TeacherExport(@PathVariable Integer runId,
       @PathVariable String exportType,
       @RequestParam(value = "id", required = false) Integer id,
       @RequestParam(value = "periodId", required = false) Integer periodId,
@@ -79,42 +89,44 @@ public class TeacherDataController {
       User owner = run.getOwner();
       Set<User> sharedOwners = run.getSharedowners();
 
-      if (owner.equals(signedInUser) || sharedOwners.contains(signedInUser) || signedInUser.isAdmin()) {
-        if ("allStudentWork".equals(exportType) || "latestStudentWork".equals(exportType)) {
-          JSONArray resultArray = vleService.getStudentWorkExport(runId);
+      if (owner.equals(signedInUser) || sharedOwners.contains(signedInUser)
+          || signedInUser.isAdmin()) {
+        if ("allNotebookItems".equals(exportType)) {
+          JSONArray resultArray = vleService.getNotebookItemsExport(runId);
           PrintWriter writer = response.getWriter();
           writer.write(resultArray.toString());
           writer.close();
-        } else if ("events".equals(exportType)) {
-          JSONArray resultArray = vleService.getStudentEventExport(runId);
-          PrintWriter writer = response.getWriter();
-          writer.write(resultArray.toString());
-          writer.close();
-        } else if ("allNotebookItems".equals(exportType) || "latestNotebookItems".equals(exportType)) {
-          JSONArray resultArray = vleService.getNotebookExport(runId);
+        } else if ("latestNotebookItems".equals(exportType)) {
+          JSONArray resultArray = vleService
+              .getLatestNotebookItemsExport(runId);
           PrintWriter writer = response.getWriter();
           writer.write(resultArray.toString());
           writer.close();
         } else if ("notifications".equals(exportType)) {
-          JSONArray resultArray = vleService.getNotificationExport(runId);
+          JSONArray resultArray = vleService.getNotificationsExport(runId);
           PrintWriter writer = response.getWriter();
           writer.write(resultArray.toString());
           writer.close();
         } else if ("studentAssets".equals(exportType)) {
-          String studentUploadsBaseDir = appProperties.getProperty("studentuploads_base_dir");
+          String studentUploadsBaseDir = appProperties
+              .getProperty("studentuploads_base_dir");
           String sep = System.getProperty("file.separator");
-          String runStudentAssetsDir = studentUploadsBaseDir + sep + runId.toString() + sep;
+          String runStudentAssetsDir = studentUploadsBaseDir + sep
+              + runId.toString() + sep;
           String zipFileName = runId.toString() + "_student_uploads.zip";
           response.setContentType("application/zip");
-          response.addHeader("Content-Disposition", "attachment;filename=\"" + zipFileName + "\"");
+          response.addHeader("Content-Disposition",
+              "attachment;filename=\"" + zipFileName + "\"");
           ServletOutputStream outputStream = response.getOutputStream();
-          ZipOutputStream out = new ZipOutputStream(new BufferedOutputStream(outputStream));
+          ZipOutputStream out = new ZipOutputStream(
+              new BufferedOutputStream(outputStream));
           File zipFolder = new File(runStudentAssetsDir);
           addFolderToZip(zipFolder, out, runStudentAssetsDir);
           out.close();
         }
       } else {
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "You are not authorized to access this page");
+        response.sendError(HttpServletResponse.SC_UNAUTHORIZED,
+            "You are not authorized to access this page");
       }
     } catch (IOException e) {
       e.printStackTrace();
@@ -123,7 +135,8 @@ public class TeacherDataController {
     }
   }
 
-  private void addFolderToZip(File folder, ZipOutputStream zip, String baseName) throws IOException {
+  private void addFolderToZip(File folder, ZipOutputStream zip, String baseName)
+      throws IOException {
     File[] files = folder.listFiles();
     if (files != null) {
       for (File file : files) {
@@ -144,10 +157,50 @@ public class TeacherDataController {
     }
   }
 
+  @RequestMapping(method = RequestMethod.GET, value = "/teacher/export/events")
+  public void getEvents(HttpServletResponse response,
+      Authentication authentication,
+      @RequestParam(value = "runId", required = false) Integer runId,
+      @RequestParam(value = "includeStudentEvents", required = false) Boolean includeStudentEvents,
+      @RequestParam(value = "includeTeacherEvents", required = false) Boolean includeTeacherEvents)
+      throws JSONException, ObjectNotFoundException, IOException {
+    JSONObject result = new JSONObject();
+    Run run = runService.retrieveById(new Long(runId));
+    if (runService.hasReadPermission(authentication, run)) {
+      List<Event> events = getEvents(run, includeStudentEvents,
+          includeTeacherEvents);
+      JSONArray eventsJSONArray = convertEventsToJSON(events);
+      result.put("events", eventsJSONArray);
+    }
+    PrintWriter writer = response.getWriter();
+    writer.write(result.toString());
+    writer.close();
+  }
+
+  List<Event> getEvents(Run run, Boolean includeStudentEvents,
+      Boolean includeTeacherEvents) {
+    List<Event> events = vleService.getAllEvents(run);
+    if (includeStudentEvents && includeTeacherEvents) {
+      events = vleService.getAllEvents(run);
+    } else if (includeStudentEvents) {
+      events = vleService.getStudentEvents(run);
+    } else if (includeTeacherEvents) {
+      events = vleService.getTeacherEvents(run);
+    }
+    return events;
+  }
+
+  JSONArray convertEventsToJSON(List<Event> events) {
+    JSONArray eventsJSONArray = new JSONArray();
+    for (int e = 0; e < events.size(); e++) {
+      Event eventObject = events.get(e);
+      eventsJSONArray.put(eventObject.toJSON());
+    }
+    return eventsJSONArray;
+  }
 
   @RequestMapping(method = RequestMethod.GET, value = "/teacher/data")
-  public void getWISE5TeacherData(
-      HttpServletResponse response,
+  public void getWISE5TeacherData(HttpServletResponse response,
       @RequestParam(value = "getStudentWork", defaultValue = "false") boolean getStudentWork,
       @RequestParam(value = "getEvents", defaultValue = "false") boolean getEvents,
       @RequestParam(value = "getAnnotations", defaultValue = "false") boolean getAnnotations,
@@ -176,12 +229,13 @@ public class TeacherDataController {
       Run run = runService.retrieveById(new Long(runId));
       User owner = run.getOwner();
       Set<User> sharedOwners = run.getSharedowners();
-      if (owner.equals(signedInUser) || sharedOwners.contains(signedInUser) ||
-          signedInUser.isAdmin()) {
+      if (owner.equals(signedInUser) || sharedOwners.contains(signedInUser)
+          || signedInUser.isAdmin()) {
         JSONObject result = new JSONObject();
         if (getStudentWork) {
-          List<StudentWork> studentWorkList = vleService.getStudentWorkList(id, runId, periodId, workgroupId,
-              isAutoSave, isSubmit, nodeId, componentId, componentType, components, onlyGetLatest);
+          List<StudentWork> studentWorkList = vleService.getStudentWorkList(id,
+              runId, periodId, workgroupId, isAutoSave, isSubmit, nodeId,
+              componentId, componentType, components, onlyGetLatest);
           JSONArray studentWorkJSONArray = new JSONArray();
           for (int c = 0; c < studentWorkList.size(); c++) {
             StudentWork studentWork = studentWorkList.get(c);
@@ -194,8 +248,9 @@ public class TeacherDataController {
           }
         }
         if (getEvents) {
-          List<Event> events = vleService.getEvents(id, runId, periodId, workgroupId,
-              nodeId, componentId, componentType, context, category, event, components);
+          List<Event> events = vleService.getEvents(id, runId, periodId,
+              workgroupId, nodeId, componentId, componentType, context,
+              category, event, components);
           JSONArray eventsJSONArray = new JSONArray();
           for (int e = 0; e < events.size(); e++) {
             Event eventObject = events.get(e);
@@ -208,9 +263,10 @@ public class TeacherDataController {
           }
         }
         if (getAnnotations) {
-          List<Annotation> annotations = vleService.getAnnotations(
-            id, runId, periodId, fromWorkgroupId, toWorkgroupId,
-            nodeId, componentId, studentWorkId, localNotebookItemId, notebookItemId, annotationType);
+          List<Annotation> annotations = vleService.getAnnotations(id, runId,
+              periodId, fromWorkgroupId, toWorkgroupId, nodeId, componentId,
+              studentWorkId, localNotebookItemId, notebookItemId,
+              annotationType);
           JSONArray annotationsJSONArray = new JSONArray();
           for (int a = 0; a < annotations.size(); a++) {
             Annotation annotationObject = annotations.get(a);
@@ -236,8 +292,7 @@ public class TeacherDataController {
   }
 
   @RequestMapping(method = RequestMethod.POST, value = "/teacher/data")
-  public void postWISETeacherData(
-      HttpServletResponse response,
+  public void postWISETeacherData(HttpServletResponse response,
       @RequestParam(value = "workgroupId", required = true) Integer workgroupId,
       @RequestParam(value = "projectId", required = false) Integer projectId,
       @RequestParam(value = "runId", required = true) Integer runId,
@@ -272,42 +327,59 @@ public class TeacherDataController {
         }
       }
       /*
-       * the signed in user is an owner of the project or run
-       * or
-       * we are saving a teacher event that isn't associated with a project or run
+       * the signed in user is an owner of the project or run or we are saving a
+       * teacher event that isn't associated with a project or run
        */
-      if ((owner != null && owner.equals(signedInUser)) ||
-          (sharedOwners != null && sharedOwners.contains(signedInUser)) ||
-          (runId == null && projectId == null && events != null)) {
+      if ((owner != null && owner.equals(signedInUser))
+          || (sharedOwners != null && sharedOwners.contains(signedInUser))
+          || (runId == null && projectId == null && events != null)) {
         if (annotations != null) {
           JSONArray annotationsJSONArray = new JSONArray(annotations);
           if (annotationsJSONArray != null) {
             JSONArray annotationsResultJSONArray = new JSONArray();
             for (int a = 0; a < annotationsJSONArray.length(); a++) {
               try {
-                JSONObject annotationJSONObject = annotationsJSONArray.getJSONObject(a);
-                String requestToken = annotationJSONObject.getString("requestToken");
+                JSONObject annotationJSONObject = annotationsJSONArray
+                    .getJSONObject(a);
+                String requestToken = annotationJSONObject
+                    .getString("requestToken");
 
                 Annotation annotation = vleService.saveAnnotation(
-                  annotationJSONObject.isNull("id") ? null : annotationJSONObject.getInt("id"),
-                  annotationJSONObject.isNull("runId") ? null : annotationJSONObject.getInt("runId"),
-                  annotationJSONObject.isNull("periodId") ? null : annotationJSONObject.getInt("periodId"),
-                  annotationJSONObject.isNull("fromWorkgroupId") ? null : annotationJSONObject.getInt("fromWorkgroupId"),
-                  annotationJSONObject.isNull("toWorkgroupId") ? null : annotationJSONObject.getInt("toWorkgroupId"),
-                  annotationJSONObject.isNull("nodeId") ? null : annotationJSONObject.getString("nodeId"),
-                  annotationJSONObject.isNull("componentId") ? null : annotationJSONObject.getString("componentId"),
-                  annotationJSONObject.isNull("studentWorkId") ? null : annotationJSONObject.getInt("studentWorkId"),
-                  annotationJSONObject.isNull("localNotebookItemId") ? null : annotationJSONObject.getString("localNotebookItemId"),
-                  annotationJSONObject.isNull("notebookItemId") ? null : annotationJSONObject.getInt("notebookItemId"),
-                  annotationJSONObject.isNull("type") ? null : annotationJSONObject.getString("type"),
-                  annotationJSONObject.isNull("data") ? null : annotationJSONObject.getString("data"),
-                  annotationJSONObject.isNull("clientSaveTime") ? null : annotationJSONObject.getString("clientSaveTime"));
+                    annotationJSONObject.isNull("id") ? null
+                        : annotationJSONObject.getInt("id"),
+                    annotationJSONObject.isNull("runId") ? null
+                        : annotationJSONObject.getInt("runId"),
+                    annotationJSONObject.isNull("periodId") ? null
+                        : annotationJSONObject.getInt("periodId"),
+                    annotationJSONObject.isNull("fromWorkgroupId") ? null
+                        : annotationJSONObject.getInt("fromWorkgroupId"),
+                    annotationJSONObject.isNull("toWorkgroupId") ? null
+                        : annotationJSONObject.getInt("toWorkgroupId"),
+                    annotationJSONObject.isNull("nodeId") ? null
+                        : annotationJSONObject.getString("nodeId"),
+                    annotationJSONObject.isNull("componentId") ? null
+                        : annotationJSONObject.getString("componentId"),
+                    annotationJSONObject.isNull("studentWorkId") ? null
+                        : annotationJSONObject.getInt("studentWorkId"),
+                    annotationJSONObject.isNull("localNotebookItemId") ? null
+                        : annotationJSONObject.getString("localNotebookItemId"),
+                    annotationJSONObject.isNull("notebookItemId") ? null
+                        : annotationJSONObject.getInt("notebookItemId"),
+                    annotationJSONObject.isNull("type") ? null
+                        : annotationJSONObject.getString("type"),
+                    annotationJSONObject.isNull("data") ? null
+                        : annotationJSONObject.getString("data"),
+                    annotationJSONObject.isNull("clientSaveTime") ? null
+                        : annotationJSONObject.getString("clientSaveTime"));
 
-                // before returning saved Annotation, strip all fields except id, responseToken, and serverSaveTime to minimize response size
+                // before returning saved Annotation, strip all fields except
+                // id, responseToken, and serverSaveTime to minimize response
+                // size
                 JSONObject savedAnnotationJSONObject = new JSONObject();
                 savedAnnotationJSONObject.put("id", annotation.getId());
                 savedAnnotationJSONObject.put("requestToken", requestToken);
-                savedAnnotationJSONObject.put("serverSaveTime", annotation.getServerSaveTime().getTime());
+                savedAnnotationJSONObject.put("serverSaveTime",
+                    annotation.getServerSaveTime().getTime());
                 annotationsResultJSONArray.put(savedAnnotationJSONObject);
                 this.sendAnnotationNotificationToStudent(annotation);
               } catch (Exception e) {
@@ -325,25 +397,40 @@ public class TeacherDataController {
                 JSONObject eventJSONObject = eventsJSONArray.getJSONObject(e);
 
                 Event event = vleService.saveEvent(
-                  eventJSONObject.isNull("id") ? null : eventJSONObject.getInt("id"),
-                  eventJSONObject.isNull("runId") ? null : eventJSONObject.getInt("runId"),
-                  eventJSONObject.isNull("periodId") ? null : eventJSONObject.getInt("periodId"),
-                  eventJSONObject.isNull("workgroupId") ? null : eventJSONObject.getInt("workgroupId"),
-                  eventJSONObject.isNull("nodeId") ? null : eventJSONObject.getString("nodeId"),
-                  eventJSONObject.isNull("componentId") ? null : eventJSONObject.getString("componentId"),
-                  eventJSONObject.isNull("componentType") ? null : eventJSONObject.getString("componentType"),
-                  eventJSONObject.isNull("context") ? null : eventJSONObject.getString("context"),
-                  eventJSONObject.isNull("category") ? null : eventJSONObject.getString("category"),
-                  eventJSONObject.isNull("event") ? null : eventJSONObject.getString("event"),
-                  eventJSONObject.isNull("data") ? null : eventJSONObject.getString("data"),
-                  eventJSONObject.isNull("clientSaveTime") ? null : eventJSONObject.getString("clientSaveTime"),
-                  eventJSONObject.isNull("projectId") ? null : eventJSONObject.getInt("projectId"),
-                  userId);
+                    eventJSONObject.isNull("id") ? null
+                        : eventJSONObject.getInt("id"),
+                    eventJSONObject.isNull("runId") ? null
+                        : eventJSONObject.getInt("runId"),
+                    eventJSONObject.isNull("periodId") ? null
+                        : eventJSONObject.getInt("periodId"),
+                    eventJSONObject.isNull("workgroupId") ? null
+                        : eventJSONObject.getInt("workgroupId"),
+                    eventJSONObject.isNull("nodeId") ? null
+                        : eventJSONObject.getString("nodeId"),
+                    eventJSONObject.isNull("componentId") ? null
+                        : eventJSONObject.getString("componentId"),
+                    eventJSONObject.isNull("componentType") ? null
+                        : eventJSONObject.getString("componentType"),
+                    eventJSONObject.isNull("context") ? null
+                        : eventJSONObject.getString("context"),
+                    eventJSONObject.isNull("category") ? null
+                        : eventJSONObject.getString("category"),
+                    eventJSONObject.isNull("event") ? null
+                        : eventJSONObject.getString("event"),
+                    eventJSONObject.isNull("data") ? null
+                        : eventJSONObject.getString("data"),
+                    eventJSONObject.isNull("clientSaveTime") ? null
+                        : eventJSONObject.getString("clientSaveTime"),
+                    eventJSONObject.isNull("projectId") ? null
+                        : eventJSONObject.getInt("projectId"),
+                    userId);
 
-                // before returning saved Event, strip all fields except id, responseToken, and serverSaveTime to minimize response size
+                // before returning saved Event, strip all fields except id,
+                // responseToken, and serverSaveTime to minimize response size
                 JSONObject savedEventJSONObject = new JSONObject();
                 savedEventJSONObject.put("id", event.getId());
-                savedEventJSONObject.put("serverSaveTime", event.getServerSaveTime().getTime());
+                savedEventJSONObject.put("serverSaveTime",
+                    event.getServerSaveTime().getTime());
                 eventsResultJSONArray.put(savedEventJSONObject);
               } catch (Exception ex) {
                 ex.printStackTrace();
@@ -370,7 +457,8 @@ public class TeacherDataController {
 
   private void sendAnnotationNotificationToStudent(Annotation annotation) {
     try {
-      Notification notification = this.createNotificationForAnnotation(annotation);
+      Notification notification = this
+          .createNotificationForAnnotation(annotation);
       Long toWorkgroupId = notification.getToWorkgroup().getId();
       broadcastAnnotationToStudent(toWorkgroupId, annotation);
       broadcastNotificationToStudent(toWorkgroupId, notification);
@@ -380,8 +468,7 @@ public class TeacherDataController {
   }
 
   @RequestMapping(method = RequestMethod.GET, value = "/teacher/student-notebooks/{runId}")
-  protected void getNotebookItems(
-      @PathVariable Integer runId,
+  protected void getNotebookItems(@PathVariable Integer runId,
       @RequestParam(value = "id", required = false) Integer id,
       @RequestParam(value = "periodId", required = false) Integer periodId,
       @RequestParam(value = "workgroupId", required = false) Integer workgroupId,
@@ -391,11 +478,13 @@ public class TeacherDataController {
     User signedInUser = ControllerUtil.getSignedInUser();
     try {
       Run run = runService.retrieveById(new Long(runId));
-      if (signedInUser.isAdmin() ||
-        runService.hasRunPermission(run, signedInUser, BasePermission.WRITE) ||
-        runService.hasRunPermission(run, signedInUser, BasePermission.READ)) {
-        List<NotebookItem> notebookItemList = vleService.getNotebookItems(
-            id, runId, periodId, workgroupId, nodeId, componentId);
+      if (signedInUser.isAdmin()
+          || runService.hasRunPermission(run, signedInUser,
+              BasePermission.WRITE)
+          || runService.hasRunPermission(run, signedInUser,
+              BasePermission.READ)) {
+        List<NotebookItem> notebookItemList = vleService.getNotebookItems(id,
+            runId, periodId, workgroupId, nodeId, componentId);
         JSONArray notebookItems = new JSONArray();
         for (NotebookItem notebookItem : notebookItemList) {
           notebookItems.put(notebookItem.toJSON());
@@ -410,7 +499,9 @@ public class TeacherDataController {
 
   /**
    * Saves and returns a notification for the specified annotation
-   * @param annotation Annotation to create the notification for
+   * 
+   * @param annotation
+   *                     Annotation to create the notification for
    * @return Notification notification for the specified annotation
    */
   private Notification createNotificationForAnnotation(Annotation annotation) {
@@ -437,13 +528,15 @@ public class TeacherDataController {
     String timeGenerated = String.valueOf(now.getTimeInMillis());
     String timeDismissed = null;
 
-    Notification notification = vleService.saveNotification(notificationId, runId, periodId,
-        fromWorkgroupId, toWorkgroupId, groupId, nodeId, componentId, componentType, type,
-        message, data, timeGenerated, timeDismissed);
+    Notification notification = vleService.saveNotification(notificationId,
+        runId, periodId, fromWorkgroupId, toWorkgroupId, groupId, nodeId,
+        componentId, componentType, type, message, data, timeGenerated,
+        timeDismissed);
     return notification;
   }
 
-  public void broadcastAnnotationToStudent(Long toWorkgroupId, Annotation annotation) throws JSONException {
+  public void broadcastAnnotationToStudent(Long toWorkgroupId,
+      Annotation annotation) throws JSONException {
     annotation.convertToClientAnnotation();
     JSONObject message = new JSONObject();
     message.put("type", "annotationToStudent");
@@ -452,7 +545,8 @@ public class TeacherDataController {
     redisPublisher.publish(message.toString());
   }
 
-  public void broadcastNotificationToStudent(Long toWorkgroupId, Notification notification) throws JSONException {
+  public void broadcastNotificationToStudent(Long toWorkgroupId,
+      Notification notification) throws JSONException {
     notification.convertToClientNotification();
     JSONObject message = new JSONObject();
     message.put("type", "notification");

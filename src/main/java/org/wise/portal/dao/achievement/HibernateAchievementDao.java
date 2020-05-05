@@ -23,52 +23,63 @@
  */
 package org.wise.portal.dao.achievement;
 
-import org.hibernate.Criteria;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 import org.hibernate.Session;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.vle.domain.achievement.Achievement;
 
-import java.util.List;
-
 /**
  * Domain Access Object hibernate implementation for Achievements
  * @author Hiroki Terashima
  */
 @Repository
-public class HibernateAchievementDao
-  extends AbstractHibernateDao<Achievement>
-  implements AchievementDao<Achievement> {
+public class HibernateAchievementDao extends AbstractHibernateDao<Achievement>
+    implements AchievementDao<Achievement> {
+
+  @PersistenceContext
+  private EntityManager entityManager;
 
   @Override
+  @SuppressWarnings("unchecked")
   public List<Achievement> getAchievementsByParams(Integer id, Run run, Workgroup workgroup,
       String achievementId, String type) {
     Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-    Criteria sessionCriteria = session.createCriteria(Achievement.class);
+    CriteriaBuilder cb = session.getCriteriaBuilder();
+    CriteriaQuery<Achievement> cq = cb.createQuery(Achievement.class);
+    Root<Achievement> achievementRoot = cq.from(Achievement.class);
+    List<Predicate> predicates = new ArrayList<>();
     if (id != null) {
-      sessionCriteria.add(Restrictions.eq("id", id));
+      predicates.add(cb.equal(achievementRoot.get("id"), id));
     }
     if (run != null) {
-      sessionCriteria.add(Restrictions.eq("run", run));
+      predicates.add(cb.equal(achievementRoot.get("run"), run));
     }
     if (workgroup != null) {
-      sessionCriteria.add(Restrictions.eq("workgroup", workgroup));
+      predicates.add(cb.equal(achievementRoot.get("workgroup"), workgroup));
     }
     if (achievementId != null) {
-      sessionCriteria.add(Restrictions.eq("achievementId", achievementId));
+      predicates.add(cb.equal(achievementRoot.get("achievementId"), achievementId));
     }
     if (type != null) {
-      sessionCriteria.add(Restrictions.eq("type", type));
+      predicates.add(cb.equal(achievementRoot.get("type"), type));
     }
-
-    // order the achievements by achievement time from oldest to newest
-    sessionCriteria.addOrder(Order.asc("achievementTime"));
-
-    return sessionCriteria.list();
+    cq.select(achievementRoot).where(predicates.toArray(new Predicate[predicates.size()]))
+        .orderBy(cb.asc(achievementRoot.get("achievementTime")));
+    TypedQuery<Achievement> query = entityManager.createQuery(cq);
+    return (List<Achievement>) (Object) query.getResultList();
   }
 
   @Override

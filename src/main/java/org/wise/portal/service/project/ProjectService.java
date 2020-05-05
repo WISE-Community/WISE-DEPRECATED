@@ -23,12 +23,8 @@
  */
 package org.wise.portal.service.project;
 
-import java.io.IOException;
-import java.io.Serializable;
-import java.util.List;
-import java.util.Set;
-
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.acls.model.Permission;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,6 +40,15 @@ import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.exception.NotAuthorizedException;
 import org.wise.portal.presentation.web.exception.TeacherAlreadySharedWithProjectException;
 import org.wise.portal.presentation.web.response.SharedOwner;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * A Service for Projects
@@ -66,6 +71,10 @@ public interface ProjectService {
   @Transactional
   @Secured( { "ROLE_USER", "AFTER_ACL_COLLECTION_READ" })
   List<Project> getSharedProjectList(User user);
+
+  @Transactional
+  @Secured( { "ROLE_USER", "AFTER_ACL_COLLECTION_READ" })
+  List<Project> getSharedProjectsWithoutRun(User user);
 
   /**
    * Retrieves a <code>List</code> of <code>Project</code> that  has been bookmarked
@@ -112,16 +121,9 @@ public interface ProjectService {
   void addSharedTeacherToProject(AddSharedTeacherParameters addSharedTeacherParameters)
       throws ObjectNotFoundException;
 
-  /**
-   * Removes shared user from project. If user or project does not exist, ignore.
-   * @param username username of teacher to remove from shared status
-   * @param project project to remove shared teacher from
-   * @throws ObjectNotFoundException
-   */
   @Secured( {"ROLE_TEACHER"} )
   @Transactional()
-  void removeSharedTeacherFromProject(String username, Project project)
-      throws ObjectNotFoundException;
+  void removeSharedTeacherFromProject(Project project, User user) throws ObjectNotFoundException;
 
   /**
    * Creates a new <code>Project</code>.
@@ -186,7 +188,7 @@ public interface ProjectService {
 
   /**
    * Given a <code>Project</code> project and a <code>User</code> user, returns true if the user
-   * has read access to that particularproject, returns false otherwise.
+   * has read access to that particular project, returns false otherwise.
    * @param project
    * @param user
    * @return
@@ -302,7 +304,10 @@ public interface ProjectService {
 
   long getNextAvailableProjectId();
 
-  Project copyProject(Integer projectId, User user) throws Exception;
+  Project copyProject(Long projectId, User user) throws Exception;
+
+  void saveProjectContentToDisk(String projectJSONString, Project project)
+      throws FileNotFoundException, IOException;
 
   List<Permission> getSharedTeacherPermissions(Project project, User sharedTeacher);
 
@@ -311,17 +316,39 @@ public interface ProjectService {
 
   void removeSharedTeacher(Long projectId, String username) throws ObjectNotFoundException;
 
-  void addSharedTeacherPermission(Long projectId, Long userId, Integer permissionId) throws ObjectNotFoundException;
+  void addSharedTeacherPermission(Long projectId, Long userId, Integer permissionId)
+      throws ObjectNotFoundException;
 
-  void removeSharedTeacherPermission(Long projectId, Long userId, Integer permissionId) throws ObjectNotFoundException;
+  void removeSharedTeacherPermission(Long projectId, Long userId, Integer permissionId)
+      throws ObjectNotFoundException;
+
+  void transferProjectOwnership(Project project, User newOwner) throws ObjectNotFoundException;
 
   List<Project> getProjectsWithoutRuns(User user);
 
   List<Project> getAllSharedProjects();
 
+  Map<String, Object> getDirectoryInfo(File directory);
+
   String getProjectURI(Project project);
 
-  void writeProjectLicenseFile(String projectFolderPath, Project project) throws JSONException;
+  String getProjectPath(Project project);
 
-  void replaceMetadataInProjectJSONFile(String projectFilePath, ProjectMetadata metadata) throws IOException, JSONException;
+  String getLicensePath(Project project);
+
+  List<HashMap<String, Object>> getProjectSharedOwnersList(Project project);
+
+  void writeProjectLicenseFile(Project project) throws JSONException;
+
+  void replaceMetadataInProjectJSONFile(String projectFilePath, ProjectMetadata metadata)
+      throws IOException, JSONException;
+
+  public void saveProjectToDatabase(Project project, User user, String projectJSONString)
+      throws JSONException, NotAuthorizedException;
+
+  public void updateMetadataAndLicenseIfNecessary(Project project, String projectJSONString)
+      throws JSONException;
+
+  public void updateProjectNameIfNecessary(Project project, JSONObject projectMetadataJSON)
+      throws JSONException;
 }

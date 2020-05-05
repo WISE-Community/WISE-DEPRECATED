@@ -20,7 +20,7 @@ const teacherRoutes: Routes = [
       { path: '', redirectTo: 'home', pathMatch: 'full' },
       { path: 'profile', redirectTo: 'profile/edit', pathMatch: 'full' },
       { path: 'profile/edit', component: EditComponent },
-      { 
+      {
         path: 'home',
         component: TeacherHomeComponent,
         children: [
@@ -39,6 +39,7 @@ const teacherRoutes: Routes = [
           }
         ]
       },
+      {path: '', loadChildren: './teacher-angular-js-module#TeacherAngularJSModule'}
     ],
   }
 ];

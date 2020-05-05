@@ -9,33 +9,34 @@ import { Course } from '../domain/course';
 @Injectable()
 export class TeacherService {
 
-  private runsUrl = 'api/teacher/runs';
-  private sharedRunsUrl = 'api/teacher/sharedruns';
-  private registerUrl = 'api/teacher/register';
-  private runPermissionUrl = 'api/teacher/run/permission';
-  private projectPermissionUrl = 'api/teacher/project/permission';
-  private usernamesUrl = 'api/teacher/usernames';
-  private createRunUrl = 'api/teacher/run/create';
-  private runUrl = 'api/teacher/run';
-  private lastRunUrl = 'api/teacher/projectlastrun';
-  private addPeriodToRunUrl = 'api/teacher/run/add/period';
-  private deletePeriodFromRunUrl = 'api/teacher/run/delete/period';
-  private updateRunStudentsPerTeamUrl = 'api/teacher/run/update/studentsperteam';
-  private updateRunStartTimeUrl = 'api/teacher/run/update/starttime';
-  private updateRunEndTimeUrl = 'api/teacher/run/update/endtime';
-  private forgotUsernameUrl = 'api/teacher/forgot/username';
-  private forgotPasswordUrl = 'api/teacher/forgot/password';
-  private getVerificationCodeUrl = 'api/teacher/forgot/password/verification-code';
-  private checkVerificationCodeUrl = 'api/teacher/forgot/password/verification-code';
-  private changePasswordUrl = 'api/teacher/forgot/password/change';
-  private classroomAuthorizationUrl = 'api/google-classroom/get-authorization-url';
-  private listCoursesUrl = 'api/google-classroom/list-courses';
-  private addAssignmentUrl = 'api/google-classroom/create-assignment';
+  private runsUrl = '/api/teacher/runs';
+  private sharedRunsUrl = '/api/teacher/sharedruns';
+  private registerUrl = '/api/teacher/register';
+  private runPermissionUrl = '/api/teacher/run/permission';
+  private projectPermissionUrl = '/api/teacher/project/permission';
+  private transferRunOwnershipUrl = '//api/teacher/run/permission/transfer';
+  private usernamesUrl = '/api/teacher/usernames';
+  private createRunUrl = '/api/teacher/run/create';
+  private runUrl = '/api/teacher/run';
+  private lastRunUrl = '/api/teacher/projectlastrun';
+  private addPeriodToRunUrl = '/api/teacher/run/add/period';
+  private deletePeriodFromRunUrl = '/api/teacher/run/delete/period';
+  private updateRunStudentsPerTeamUrl = '/api/teacher/run/update/studentsperteam';
+  private updateRunStartTimeUrl = '/api/teacher/run/update/starttime';
+  private updateRunEndTimeUrl = '/api/teacher/run/update/endtime';
+  private forgotUsernameUrl = '/api/teacher/forgot/username';
+  private forgotPasswordUrl = '/api/teacher/forgot/password';
+  private getVerificationCodeUrl = '/api/teacher/forgot/password/verification-code';
+  private checkVerificationCodeUrl = '/api/teacher/forgot/password/verification-code';
+  private changePasswordUrl = '/api/teacher/forgot/password/change';
+  private classroomAuthorizationUrl = '/api/google-classroom/get-authorization-url';
+  private listCoursesUrl = '/api/google-classroom/list-courses';
+  private addAssignmentUrl = '/api/google-classroom/create-assignment';
   private newProjectSource = new Subject<Project>();
   public newProjectSource$ = this.newProjectSource.asObservable();
   private newRunSource = new Subject<Run>();
   public newRunSource$ = this.newRunSource.asObservable();
-  private updateProfileUrl = 'api/teacher/profile/update';
+  private updateProfileUrl = '/api/teacher/profile/update';
 
   constructor(private http: HttpClient) { }
 
@@ -54,7 +55,7 @@ export class TeacherService {
   }
 
   getProjectLastRun(projectId: number): Observable<Run> {
-    return this.http.get<Run>(`${ this.lastRunUrl }/${ projectId }`);
+    return this.http.get<Run>(`${this.lastRunUrl}/${projectId}`);
   }
 
   registerTeacherAccount(teacherUser: Teacher, callback: any) {
@@ -77,7 +78,9 @@ export class TeacherService {
     body = body.set('periods', periods);
     body = body.set('maxStudentsPerTeam', maxStudentsPerTeam + "");
     body = body.set('startDate', startDate + "");
-    body = body.set('endDate', endDate ? endDate + "" : "");
+    if (endDate) {
+      body = body.set('endDate', endDate + "");
+    }
     return this.http.post<Run>(this.createRunUrl, body, { headers: headers });
   }
 
@@ -89,7 +92,13 @@ export class TeacherService {
   addSharedOwner(runId: number, teacherUsername: string) {
     const url = `${this.runPermissionUrl}/${runId}/${teacherUsername}`;
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
-    return this.http.put<Object>(url, null, {headers: headers});
+    return this.http.put<Object>(url, null, { headers: headers });
+  }
+
+  transferRunOwnership(runId: number, teacherUsername: string) {
+    const url = `${this.transferRunOwnershipUrl}/${runId}/${teacherUsername}`;
+    const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
+    return this.http.put(url, null, { headers: headers });
   }
 
   removeSharedOwner(runId: number, username: string) {
@@ -141,7 +150,6 @@ export class TeacherService {
   updateProfile(username, displayName, email, city, state, country, schoolName, schoolLevel, language) {
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
     let body = new HttpParams();
-    body = body.set('username', username);
     body = body.set('displayName', displayName);
     body = body.set('email', email);
     body = body.set('city', city);

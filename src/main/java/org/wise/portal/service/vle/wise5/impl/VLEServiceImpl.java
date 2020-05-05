@@ -23,6 +23,12 @@
  */
 package org.wise.portal.service.vle.wise5.impl;
 
+import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.List;
+
+import javax.transaction.Transactional;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,6 +40,8 @@ import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.achievement.AchievementDao;
 import org.wise.portal.dao.annotation.wise5.AnnotationDao;
 import org.wise.portal.dao.notification.NotificationDao;
+import org.wise.portal.dao.status.RunStatusDao;
+import org.wise.portal.dao.status.StudentStatusDao;
 import org.wise.portal.dao.work.EventDao;
 import org.wise.portal.dao.work.NotebookItemDao;
 import org.wise.portal.dao.work.StudentAssetDao;
@@ -50,15 +58,17 @@ import org.wise.portal.service.workgroup.WorkgroupService;
 import org.wise.vle.domain.achievement.Achievement;
 import org.wise.vle.domain.annotation.wise5.Annotation;
 import org.wise.vle.domain.notification.Notification;
-import org.wise.vle.domain.work.*;
-
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.List;
+import org.wise.vle.domain.status.RunStatus;
+import org.wise.vle.domain.status.StudentStatus;
+import org.wise.vle.domain.work.Event;
+import org.wise.vle.domain.work.NotebookItem;
+import org.wise.vle.domain.work.NotebookItemAlreadyInGroupException;
+import org.wise.vle.domain.work.StudentAsset;
+import org.wise.vle.domain.work.StudentWork;
 
 /**
  * Services for the WISE Virtual Learning Environment (WISE VLE v5)
+ * 
  * @author Hiroki Terashima
  */
 @Service("wise5VLEService")
@@ -73,7 +83,8 @@ public class VLEServiceImpl implements VLEService {
   @Autowired
   private AchievementDao achievementDao;
 
-  @Autowired @Qualifier("wise5AnnotationDao")
+  @Autowired
+  @Qualifier("wise5AnnotationDao")
   private AnnotationDao annotationDao;
 
   @Autowired
@@ -84,6 +95,12 @@ public class VLEServiceImpl implements VLEService {
 
   @Autowired
   private NotificationDao notificationDao;
+
+  @Autowired
+  private RunStatusDao<RunStatus> runStatusDao;
+
+  @Autowired
+  private StudentStatusDao<StudentStatus> studentStatusDao;
 
   @Autowired
   private ProjectService projectService;
@@ -101,15 +118,13 @@ public class VLEServiceImpl implements VLEService {
   private WorkgroupService workgroupService;
 
   @Override
-  public List<StudentWork> getStudentWorkList(
-      Integer id, Integer runId, Integer periodId, Integer workgroupId,
-      Boolean isAutoSave, Boolean isSubmit, String nodeId, String componentId, String componentType,
-      List<JSONObject> components, Boolean onlyGetLatest) {
+  public List<StudentWork> getStudentWorkList(Integer id, Integer runId, Integer periodId,
+      Integer workgroupId, Boolean isAutoSave, Boolean isSubmit, String nodeId, String componentId,
+      String componentType, List<JSONObject> components, Boolean onlyGetLatest) {
     Run run = null;
     if (runId != null) {
       try {
-        boolean doEagerFetch = false;
-        run = runService.retrieveById(new Long(runId), doEagerFetch);
+        run = runService.retrieveById(new Long(runId));
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }
@@ -131,119 +146,60 @@ public class VLEServiceImpl implements VLEService {
       }
     }
 
-    return studentWorkDao.getStudentWorkListByParams(id, run, period, workgroup,
-      isAutoSave, isSubmit, nodeId, componentId, componentType, components, onlyGetLatest);
+    return studentWorkDao.getStudentWorkListByParams(id, run, period, workgroup, isAutoSave,
+        isSubmit, nodeId, componentId, componentType, components, onlyGetLatest);
   }
 
-  public JSONArray getNotebookExport(Integer runId) {
-    SimpleDateFormat df = new SimpleDateFormat("YYYY/MM/dd HH:mm:ss");
-    List<Object[]> notebookItemExport = notebookItemDao.getNotebookItemExport(runId);
-    for (int i = 1; i < notebookItemExport.size(); i++) {  // skip header row
-      Object[] notebookItemExportRow = notebookItemExport.get(i);
-
-      // format the timestamps so they don't have a trailing ".0" at the end and mess up display in excel
-      Timestamp notebookItemExportRowClientSaveTimeTimestamp = (Timestamp) notebookItemExportRow[7];
-      notebookItemExportRow[7] = df.format(notebookItemExportRowClientSaveTimeTimestamp);
-      Timestamp notebookItemExportRowServerSaveTimeTimestamp = (Timestamp) notebookItemExportRow[8];
-      notebookItemExportRow[8] = df.format(notebookItemExportRowServerSaveTimeTimestamp);
-
-      String notebookItemExportRowStudentDataString = (String) notebookItemExportRow[10];
-      try {
-        notebookItemExportRow[10] = new JSONObject(notebookItemExportRowStudentDataString);
-      } catch (JSONException e) {
-        e.printStackTrace();
+  public JSONArray getNotebookItemsExport(Integer runId) {
+    try {
+      Run run = runService.retrieveById(new Long(runId));
+      List<NotebookItem> notebookItems = notebookItemDao.getNotebookItemsExport(run);
+      JSONArray notebookItemsJSONArray = new JSONArray();
+      for (int n = 0; n < notebookItems.size(); n++) {
+        notebookItemsJSONArray.put(notebookItems.get(n).toJSON());
       }
+      return notebookItemsJSONArray;
+    } catch (Exception e) {
+      return new JSONArray();
     }
-    return new JSONArray(notebookItemExport);
   }
 
-  public JSONArray getStudentWorkExport(Integer runId) {
-    SimpleDateFormat df = new SimpleDateFormat("YYYY/MM/dd HH:mm:ss");
-    List<Object[]> studentWorkExport = studentWorkDao.getStudentWorkExport(runId);
-    for (int i = 1; i < studentWorkExport.size(); i++) {  // skip header row
-      Object[] studentWorkExportRow = studentWorkExport.get(i);
-
-      // format the timestamps so they don't have a trailing ".0" at the end and mess up display in excel
-      Timestamp studentWorkExportRowClientSaveTimeTimestamp = (Timestamp) studentWorkExportRow[9];
-      studentWorkExportRow[9] = df.format(studentWorkExportRowClientSaveTimeTimestamp);
-      Timestamp studentWorkExportRowServerSaveTimeTimestamp = (Timestamp) studentWorkExportRow[10];
-      studentWorkExportRow[10] = df.format(studentWorkExportRowServerSaveTimeTimestamp);
-
-      // set TRUE=1, FALSE=0 instead of "TRUE" and "FALSE"
-      boolean studentWorkExportRowIsAutoSave = (boolean) studentWorkExportRow[7];
-      studentWorkExportRow[7] = studentWorkExportRowIsAutoSave ? 1 : 0;
-
-      boolean studentWorkExportRowIsSubmit = (boolean) studentWorkExportRow[8];
-      studentWorkExportRow[8] = studentWorkExportRowIsSubmit ? 1 : 0;
-
-      String studentWorkExportRowStudentDataString = (String) studentWorkExportRow[11];
-      try {
-        studentWorkExportRow[11] = new JSONObject(studentWorkExportRowStudentDataString);
-      } catch (JSONException e) {
-        e.printStackTrace();
+  public JSONArray getLatestNotebookItemsExport(Integer runId) {
+    try {
+      Run run = runService.retrieveById(new Long(runId));
+      List<NotebookItem> notebookItems = notebookItemDao.getLatestNotebookItemsExport(run);
+      JSONArray notebookItemsJSONArray = new JSONArray();
+      for (int n = 0; n < notebookItems.size(); n++) {
+        notebookItemsJSONArray.put(notebookItems.get(n).toJSON());
       }
+      return notebookItemsJSONArray;
+    } catch (Exception e) {
+      return new JSONArray();
     }
-    return new JSONArray(studentWorkExport);
   }
 
-  public JSONArray getStudentEventExport(Integer runId) {
-    SimpleDateFormat df = new SimpleDateFormat("YYYY/MM/dd HH:mm:ss");
-    List<Object[]> studentEventExport = eventDao.getStudentEventExport(runId);
-    for (int i = 1; i < studentEventExport.size(); i++) {  // skip header row
-      Object[] studentEventExportRow = studentEventExport.get(i);
-
-      // format the timestamps so they don't have a trailing ".0" at the end and mess up display in excel
-      Timestamp studentEventExportRowClientSaveTimeTimestamp = (Timestamp) studentEventExportRow[7];
-      studentEventExportRow[7] = df.format(studentEventExportRowClientSaveTimeTimestamp);
-      Timestamp studentEventExportRowServerSaveTimeTimestamp = (Timestamp) studentEventExportRow[8];
-      studentEventExportRow[8] = df.format(studentEventExportRowServerSaveTimeTimestamp);
-
-      String studentEventExportRowDataString = (String) studentEventExportRow[12];
-      try {
-        studentEventExportRow[12] = new JSONObject(studentEventExportRowDataString);
-      } catch (JSONException e) {
-        e.printStackTrace();
+  public JSONArray getNotificationsExport(Integer runId) {
+    try {
+      Run run = runService.retrieveById(new Long(runId));
+      List<Notification> notificationsList = notificationDao.getExport(run);
+      JSONArray notificationsJSONArray = new JSONArray();
+      for (int n = 0; n < notificationsList.size(); n++) {
+        notificationsJSONArray.put(notificationsList.get(n).toJSON());
       }
+      return notificationsJSONArray;
+    } catch (Exception e) {
+      return new JSONArray();
     }
-    return new JSONArray(studentEventExport);
-  }
-
-  public JSONArray getNotificationExport(Integer runId) {
-    SimpleDateFormat df = new SimpleDateFormat("YYYY/MM/dd HH:mm:ss");
-    List<Object[]> notificationExport = notificationDao.getNotificationExport(runId);
-    for (int i = 1; i < notificationExport.size(); i++) {  // skip header row
-      Object[] notificationExportRow = notificationExport.get(i);
-
-      // format the timestamps so they don't have a trailing ".0" at the end and mess up display in excel
-      Timestamp notificationExportRowServerSaveTimeTimestamp = (Timestamp) notificationExportRow[7];
-      notificationExportRow[7] = df.format(notificationExportRowServerSaveTimeTimestamp);
-      Timestamp notificationExportRowTimeGeneratedTimestamp = (Timestamp) notificationExportRow[8];
-      notificationExportRow[8] = df.format(notificationExportRowTimeGeneratedTimestamp);
-      Timestamp notificationExportRowTimeDismissedTimeTimestamp = (Timestamp) notificationExportRow[9];
-      if (notificationExportRowTimeDismissedTimeTimestamp != null) {
-        notificationExportRow[9] = df.format(notificationExportRowTimeDismissedTimeTimestamp);
-      }
-
-      String notificationExportRowStudentDataString = (String) notificationExportRow[13];
-      try {
-        if (notificationExportRowStudentDataString != null) {
-          notificationExportRow[13] = new JSONObject(notificationExportRowStudentDataString);
-        }
-      } catch (JSONException e) {
-        e.printStackTrace();
-      }
-    }
-    return new JSONArray(notificationExport);
   }
 
   @Override
-  public StudentWork saveStudentWork(
-      Integer id, Integer runId, Integer periodId, Integer workgroupId,
-      Boolean isAutoSave, Boolean isSubmit, String nodeId, String componentId, String componentType,
-      String studentData, String clientSaveTime) {
+  public StudentWork saveStudentWork(Integer id, Integer runId, Integer periodId,
+      Integer workgroupId, Boolean isAutoSave, Boolean isSubmit, String nodeId, String componentId,
+      String componentType, String studentData, String clientSaveTime) {
     StudentWork studentWork;
     if (id != null) {
-      // if the id is passed in, the client is requesting an update, so fetch the StudentWork from data store
+      // if the id is passed in, the client is requesting an update, so fetch the StudentWork from
+      // data store
       try {
         studentWork = (StudentWork) studentWorkDao.getById(id);
       } catch (ObjectNotFoundException e) {
@@ -256,8 +212,7 @@ public class VLEServiceImpl implements VLEService {
     }
     if (runId != null) {
       try {
-        boolean doEagerFetch = false;
-        studentWork.setRun(runService.retrieveById(new Long(runId), doEagerFetch));
+        studentWork.setRun(runService.retrieveById(new Long(runId)));
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }
@@ -322,8 +277,7 @@ public class VLEServiceImpl implements VLEService {
     Run run = null;
     if (runId != null) {
       try {
-        boolean doEagerFetch = false;
-        run = runService.retrieveById(new Long(runId), doEagerFetch);
+        run = runService.retrieveById(new Long(runId));
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }
@@ -344,18 +298,32 @@ public class VLEServiceImpl implements VLEService {
         e.printStackTrace();
       }
     }
-    return eventDao.getEventsByParams(id, run, period, workgroup, nodeId, componentId, componentType,
-        context, category, event, components);
+    return eventDao.getEventsByParams(id, run, period, workgroup, nodeId, componentId,
+        componentType, context, category, event, components);
+  }
+
+  public List<Event> getAllEvents(Run run) {
+    return eventDao.getEvents(run);
+  }
+
+  public List<Event> getStudentEvents(Run run) {
+    return eventDao.getStudentEvents(run);
+  }
+
+  public List<Event> getTeacherEvents(Run run) {
+    return eventDao.getTeacherEvents(run);
   }
 
   @Override
   public Event saveEvent(Integer id, Integer runId, Integer periodId, Integer workgroupId,
-      String nodeId, String componentId, String componentType,  String context, String category,
+      String nodeId, String componentId, String componentType, String context, String category,
       String eventString, String data, String clientSaveTime, Integer projectId, Integer userId) {
     Event event;
     if (id != null) {
-      // if the id is passed in, the client is requesting an update, so fetch the Event from data store
-      List<Event> events = getEvents(id, null, null, null, null, null, null, null, null, null, null);
+      // if the id is passed in, the client is requesting an update, so fetch the Event from data
+      // store
+      List<Event> events = getEvents(id, null, null, null, null, null, null, null, null, null,
+          null);
       if (events != null && events.size() > 0) {
         // TODO: maybe we want a getEventById method here?
         event = events.get(0);
@@ -368,8 +336,7 @@ public class VLEServiceImpl implements VLEService {
     }
     if (runId != null) {
       try {
-        boolean doEagerFetch = false;
-        event.setRun(runService.retrieveById(new Long(runId), doEagerFetch));
+        event.setRun(runService.retrieveById(new Long(runId)));
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }
@@ -439,8 +406,7 @@ public class VLEServiceImpl implements VLEService {
     Run run = null;
     if (runId != null) {
       try {
-        boolean doEagerFetch = false;
-        run = runService.retrieveById(new Long(runId), doEagerFetch);
+        run = runService.retrieveById(new Long(runId));
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }
@@ -460,12 +426,14 @@ public class VLEServiceImpl implements VLEService {
       String achievementId, String type, String data) {
     Achievement achievement;
     if (id != null) {
-      // if the id is passed in, the client is requesting an update, so fetch the Achievement from data store
+      // if the id is passed in, the client is requesting an update, so fetch the Achievement from
+      // data store
       try {
         achievement = (Achievement) achievementDao.getById(id);
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
-        achievement = new Achievement();  // couldn't find the achievement with the id, so create one from scratch
+        achievement = new Achievement(); // couldn't find the achievement with the id, so create one
+                                         // from scratch
       }
     } else {
       // the id was not passed in, so we're creating a new Achievement from scratch
@@ -473,8 +441,7 @@ public class VLEServiceImpl implements VLEService {
     }
     if (runId != null) {
       try {
-        boolean doEagerFetch = false;
-        achievement.setRun(runService.retrieveById(new Long(runId), doEagerFetch));
+        achievement.setRun(runService.retrieveById(new Long(runId)));
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }
@@ -503,15 +470,13 @@ public class VLEServiceImpl implements VLEService {
   }
 
   @Override
-  public List<Annotation> getAnnotations(
-      Integer id, Integer runId, Integer periodId, Integer fromWorkgroupId, Integer toWorkgroupId,
-      String nodeId, String componentId, Integer studentWorkId, String localNotebookItemId,
-      Integer notebookItemId, String type) {
+  public List<Annotation> getAnnotations(Integer id, Integer runId, Integer periodId,
+      Integer fromWorkgroupId, Integer toWorkgroupId, String nodeId, String componentId,
+      Integer studentWorkId, String localNotebookItemId, Integer notebookItemId, String type) {
     Run run = null;
     if (runId != null) {
       try {
-        boolean doEagerFetch = false;
-        run = runService.retrieveById(new Long(runId), doEagerFetch);
+        run = runService.retrieveById(new Long(runId));
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }
@@ -557,19 +522,21 @@ public class VLEServiceImpl implements VLEService {
         e.printStackTrace();
       }
     }
-    return annotationDao.getAnnotationsByParams(id, run, period, fromWorkgroup, toWorkgroup,
-      nodeId, componentId, studentWork, localNotebookItemId,  notebookItem, type);
+    return annotationDao.getAnnotationsByParams(id, run, period, fromWorkgroup, toWorkgroup, nodeId,
+        componentId, studentWork, localNotebookItemId, notebookItem, type);
   }
 
   @Override
   public Annotation saveAnnotation(Integer id, Integer runId, Integer periodId,
       Integer fromWorkgroupId, Integer toWorkgroupId, String nodeId, String componentId,
-      Integer studentWorkId, String localNotebookItemId, Integer notebookItemId,
-      String type, String data, String clientSaveTime) {
+      Integer studentWorkId, String localNotebookItemId, Integer notebookItemId, String type,
+      String data, String clientSaveTime) {
     Annotation annotation;
     if (id != null) {
-      // if the id is passed in, the client is requesting an update, so fetch the Event from data store
-      List<Annotation> annotations = getAnnotations(id, null, null, null, null, null, null, null, null, null, null);
+      // if the id is passed in, the client is requesting an update, so fetch the Event from data
+      // store
+      List<Annotation> annotations = getAnnotations(id, null, null, null, null, null, null, null,
+          null, null, null);
       if (annotations != null && annotations.size() > 0) {
         // TODO: maybe we want a getEventById method here?
         annotation = annotations.get(0);
@@ -582,8 +549,7 @@ public class VLEServiceImpl implements VLEService {
     }
     if (runId != null) {
       try {
-        boolean doEagerFetch = false;
-        annotation.setRun(runService.retrieveById(new Long(runId), doEagerFetch));
+        annotation.setRun(runService.retrieveById(new Long(runId)));
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }
@@ -650,15 +616,13 @@ public class VLEServiceImpl implements VLEService {
   }
 
   @Override
-  public List<StudentAsset> getStudentAssets(
-      Integer id, Integer runId, Integer periodId, Integer workgroupId,
-      String nodeId, String componentId, String componentType,
+  public List<StudentAsset> getStudentAssets(Integer id, Integer runId, Integer periodId,
+      Integer workgroupId, String nodeId, String componentId, String componentType,
       Boolean isReferenced) {
     Run run = null;
     if (runId != null) {
       try {
-        boolean doEagerFetch = false;
-        run = runService.retrieveById(new Long(runId), doEagerFetch);
+        run = runService.retrieveById(new Long(runId));
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }
@@ -679,21 +643,19 @@ public class VLEServiceImpl implements VLEService {
         e.printStackTrace();
       }
     }
-    return studentAssetDao.getStudentAssetListByParams(
-      id, run, period, workgroup,
-      nodeId, componentId, componentType,
-      isReferenced);
+    return studentAssetDao.getStudentAssetListByParams(id, run, period, workgroup, nodeId,
+        componentId, componentType, isReferenced);
   }
 
   @Override
-  public StudentAsset saveStudentAsset(
-      Integer id, Integer runId, Integer periodId, Integer workgroupId,
-      String nodeId, String componentId, String componentType,
-      Boolean isReferenced, String fileName, String filePath, Long fileSize,
-      String clientSaveTime, String clientDeleteTime) throws ObjectNotFoundException {
+  public StudentAsset saveStudentAsset(Integer id, Integer runId, Integer periodId,
+      Integer workgroupId, String nodeId, String componentId, String componentType,
+      Boolean isReferenced, String fileName, String filePath, Long fileSize, String clientSaveTime,
+      String clientDeleteTime) throws ObjectNotFoundException {
     StudentAsset studentAsset;
     if (id != null) {
-      // if the id is passed in, the client is requesting an update, so fetch the StudentWork from data store
+      // if the id is passed in, the client is requesting an update, so fetch the StudentWork from
+      // data store
       try {
         studentAsset = (StudentAsset) studentAssetDao.getById(id);
       } catch (ObjectNotFoundException e) {
@@ -706,8 +668,7 @@ public class VLEServiceImpl implements VLEService {
     }
     if (runId != null) {
       try {
-        boolean doEagerFetch = false;
-        studentAsset.setRun(runService.retrieveById(new Long(runId), doEagerFetch));
+        studentAsset.setRun(runService.retrieveById(new Long(runId)));
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }
@@ -774,7 +735,8 @@ public class VLEServiceImpl implements VLEService {
   public StudentAsset deleteStudentAsset(Integer studentAssetId, Long clientDeleteTime) {
     StudentAsset studentAsset = null;
     if (studentAssetId != null) {
-      // if the id is passed in, the client is requesting an update, so fetch the StudentWork from data store
+      // if the id is passed in, the client is requesting an update, so fetch the StudentWork from
+      // data store
       try {
         studentAsset = (StudentAsset) studentAssetDao.getById(studentAssetId);
         studentAsset.setClientDeleteTime(new Timestamp(clientDeleteTime));
@@ -795,8 +757,7 @@ public class VLEServiceImpl implements VLEService {
     Run run = null;
     if (runId != null) {
       try {
-        boolean doEagerFetch = false;
-        run = runService.retrieveById(new Long(runId), doEagerFetch);
+        run = runService.retrieveById(new Long(runId));
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }
@@ -817,9 +778,8 @@ public class VLEServiceImpl implements VLEService {
         e.printStackTrace();
       }
     }
-    return notebookItemDao.getNotebookItemListByParams(
-      id, run, period, workgroup,
-      nodeId, componentId);
+    return notebookItemDao.getNotebookItemListByParams(id, run, period, workgroup, nodeId,
+        componentId);
   }
 
   public List<NotebookItem> getNotebookItemsByGroup(Integer runId, String groupName) {
@@ -830,11 +790,11 @@ public class VLEServiceImpl implements VLEService {
   public NotebookItem saveNotebookItem(Integer id, Integer runId, Integer periodId,
       Integer workgroupId, String nodeId, String componentId, Integer studentWorkId,
       Integer studentAssetId, String localNotebookItemId, String type, String title, String content,
-      String groups,
-      String clientSaveTime, String clientDeleteTime) {
+      String groups, String clientSaveTime, String clientDeleteTime) {
     NotebookItem notebookItem;
     if (id != null) {
-      // if the id is passed in, the client is requesting an update, so fetch the NotebookItem from data store
+      // if the id is passed in, the client is requesting an update, so fetch the NotebookItem from
+      // data store
       try {
         notebookItem = (NotebookItem) notebookItemDao.getById(id);
       } catch (ObjectNotFoundException e) {
@@ -847,8 +807,7 @@ public class VLEServiceImpl implements VLEService {
     }
     if (runId != null) {
       try {
-        boolean doEagerFetch = false;
-        notebookItem.setRun(runService.retrieveById(new Long(runId), doEagerFetch));
+        notebookItem.setRun(runService.retrieveById(new Long(runId)));
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }
@@ -928,8 +887,8 @@ public class VLEServiceImpl implements VLEService {
     return notebookItem;
   }
 
-  public NotebookItem addNotebookItemToGroup(
-      Integer notebookItemId, String group, String clientSaveTime) throws NotebookItemAlreadyInGroupException {
+  public NotebookItem addNotebookItemToGroup(Integer notebookItemId, String group,
+      String clientSaveTime) throws NotebookItemAlreadyInGroupException {
     try {
       NotebookItem notebookItem = (NotebookItem) notebookItemDao.getById(notebookItemId);
       NotebookItem copiedNotebookItem = notebookItem.copy();
@@ -958,8 +917,8 @@ public class VLEServiceImpl implements VLEService {
     }
   }
 
-  public NotebookItem removeNotebookItemFromGroup(
-      Integer notebookItemId, String group, String clientSaveTime) {
+  public NotebookItem removeNotebookItemFromGroup(Integer notebookItemId, String group,
+      String clientSaveTime) {
     try {
       NotebookItem notebookItem = (NotebookItem) notebookItemDao.getById(notebookItemId);
       if (!notebookItem.isInGroup(group)) {
@@ -993,15 +952,16 @@ public class VLEServiceImpl implements VLEService {
     }
   }
 
-  public NotebookItem copyNotebookItem(
-      Integer workgroupId, Integer parentNotebookItemId, String clientSaveTime) {
+  public NotebookItem copyNotebookItem(Integer workgroupId, Integer parentNotebookItemId,
+      String clientSaveTime) {
     try {
       NotebookItem notebookItem = (NotebookItem) notebookItemDao.getById(parentNotebookItemId);
       Workgroup workgroup = workgroupService.retrieveById(new Long(workgroupId));
       NotebookItem copiedNotebookItem = notebookItem.copy();
       copiedNotebookItem.setWorkgroup(workgroup);
       copiedNotebookItem.setClientSaveTime(new Timestamp(new Long(clientSaveTime)));
-      copiedNotebookItem.setLocalNotebookItemId(RandomStringUtils.randomAlphanumeric(10).toLowerCase());
+      copiedNotebookItem
+          .setLocalNotebookItemId(RandomStringUtils.randomAlphanumeric(10).toLowerCase());
       copiedNotebookItem.setGroups(null);
       copiedNotebookItem.setParentNotebookItemId(notebookItem.getId());
       notebookItemDao.save(copiedNotebookItem);
@@ -1011,7 +971,6 @@ public class VLEServiceImpl implements VLEService {
       return null;
     }
   }
-
 
   @Override
   public Notification getNotificationById(Integer notificationId) throws ObjectNotFoundException {
@@ -1029,8 +988,7 @@ public class VLEServiceImpl implements VLEService {
     Run run = null;
     if (runId != null) {
       try {
-        boolean doEagerFetch = false;
-        run = runService.retrieveById(new Long(runId), doEagerFetch);
+        run = runService.retrieveById(new Long(runId));
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }
@@ -1051,20 +1009,19 @@ public class VLEServiceImpl implements VLEService {
         e.printStackTrace();
       }
     }
-    return notificationDao.getNotificationListByParams(
-      id, run, period, workgroup,
-      groupId, nodeId, componentId);
+    return notificationDao.getNotificationListByParams(id, run, period, workgroup, groupId, nodeId,
+        componentId);
   }
 
   @Override
   public Notification saveNotification(Integer id, Integer runId, Integer periodId,
-      Integer fromWorkgroupId, Integer toWorkgroupId,
-      String groupId, String nodeId, String componentId, String componentType,
-      String type, String message, String data,
+      Integer fromWorkgroupId, Integer toWorkgroupId, String groupId, String nodeId,
+      String componentId, String componentType, String type, String message, String data,
       String timeGenerated, String timeDismissed) {
     Notification notification;
     if (id != null) {
-      // if the id is passed in, the client is requesting an update, so fetch the StudentWork from data store
+      // if the id is passed in, the client is requesting an update, so fetch the StudentWork from
+      // data store
       try {
         notification = (Notification) notificationDao.getById(id);
       } catch (ObjectNotFoundException e) {
@@ -1077,8 +1034,7 @@ public class VLEServiceImpl implements VLEService {
     }
     if (runId != null) {
       try {
-        boolean doEagerFetch = false;
-        notification.setRun(runService.retrieveById(new Long(runId), doEagerFetch));
+        notification.setRun(runService.retrieveById(new Long(runId)));
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }
@@ -1149,4 +1105,36 @@ public class VLEServiceImpl implements VLEService {
     notificationDao.save(notification);
     return notification;
   }
+
+  @Override
+  public void saveStudentStatus(StudentStatus studentStatus) {
+    studentStatusDao.saveStudentStatus(studentStatus);
+  }
+
+  @Override
+  @Transactional
+  public StudentStatus getStudentStatusByWorkgroupId(Long workgroupId) {
+    return studentStatusDao.getStudentStatusByWorkgroupId(workgroupId);
+  }
+
+  @Override
+  public List<StudentStatus> getStudentStatusesByPeriodId(Long periodId) {
+    return studentStatusDao.getStudentStatusesByPeriodId(periodId);
+  }
+
+  @Override
+  public List<StudentStatus> getStudentStatusesByRunId(Long runId) {
+    return studentStatusDao.getStudentStatusesByRunId(runId);
+  }
+
+  @Override
+  public void saveRunStatus(RunStatus runStatus) {
+    runStatusDao.saveRunStatus(runStatus);
+  }
+
+  @Override
+  public RunStatus getRunStatusByRunId(Long runId) {
+    return runStatusDao.getRunStatusByRunId(runId);
+  }
+
 }

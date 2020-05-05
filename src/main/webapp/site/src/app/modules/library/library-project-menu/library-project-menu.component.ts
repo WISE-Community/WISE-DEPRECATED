@@ -1,11 +1,11 @@
 import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material';
-import { Project } from "../../../domain/project";
-import { TeacherService } from "../../../teacher/teacher.service";
-import { ShareProjectDialogComponent } from "../share-project-dialog/share-project-dialog.component";
-import { UserService } from "../../../services/user.service";
-import { CopyProjectDialogComponent } from "../copy-project-dialog/copy-project-dialog.component";
-import { ConfigService } from "../../../services/config.service";
+import { Project } from '../../../domain/project';
+import { TeacherService } from '../../../teacher/teacher.service';
+import { ShareProjectDialogComponent } from '../share-project-dialog/share-project-dialog.component';
+import { UserService } from '../../../services/user.service';
+import { CopyProjectDialogComponent } from '../copy-project-dialog/copy-project-dialog.component';
+import { ConfigService } from '../../../services/config.service';
 import { EditRunWarningDialogComponent } from '../../../teacher/edit-run-warning-dialog/edit-run-warning-dialog.component';
 
 @Component({
@@ -14,7 +14,6 @@ import { EditRunWarningDialogComponent } from '../../../teacher/edit-run-warning
   styleUrls: ['./library-project-menu.component.scss']
 })
 export class LibraryProjectMenuComponent implements OnInit {
-
   @Input()
   project: Project;
 
@@ -27,16 +26,17 @@ export class LibraryProjectMenuComponent implements OnInit {
   isCanShare: boolean = false;
   isChild: boolean = false;
 
-  constructor(public dialog: MatDialog,
-              public teacherService: TeacherService,
-              public userService: UserService,
-              public configService: ConfigService) {
-  }
+  constructor(
+    public dialog: MatDialog,
+    public teacherService: TeacherService,
+    public userService: UserService,
+    public configService: ConfigService
+  ) {}
 
   ngOnInit() {
     this.isCanEdit = this.isOwner() || this.isSharedOwnerWithEditPermission();
     this.isCanShare = this.isOwner();
-    this.editLink = `${this.configService.getContextPath()}/author/authorproject.html?projectId=${ this.project.id }`;
+    this.editLink = `${this.configService.getContextPath()}/teacher/edit/unit/${this.project.id}`;
     this.isChild = this.project.isChild();
   }
 
@@ -66,11 +66,11 @@ export class LibraryProjectMenuComponent implements OnInit {
   }
 
   editProject() {
-    this.teacherService.getProjectLastRun(this.project.id).subscribe(lastRun => {
-      if (lastRun !== null) {
-        lastRun.project = this.project;
+    this.teacherService.getProjectLastRun(this.project.id).subscribe(projectRun => {
+      if (projectRun != null) {
+        projectRun.project = this.project;
         this.dialog.open(EditRunWarningDialogComponent, {
-          data: { run: lastRun },
+          data: { run: projectRun },
           panelClass: 'mat-dialog--sm'
         });
       } else {

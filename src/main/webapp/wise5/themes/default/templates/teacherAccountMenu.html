@@ -3,16 +3,16 @@
     <md-list class="account-menu__info__title account-menu__users">
         <md-list-item>
             <div class="md-avatar">
-                <md-icon class="md-48" style="color: {{$ctrl.avatarColor}};"> account_circle </md-icon>
+                <md-icon class="md-48" style="color: {{::$ctrl.avatarColor}};"> account_circle </md-icon>
             </div>
             <div class="md-list-item-text">
-              <span>{{ $ctrl.userInfo.firstName }} {{ $ctrl.userInfo.lastName }} <span class="md-caption">({{ $ctrl.userInfo.username }})</span></span>
+              <span>{{ ::$ctrl.userInfo.firstName }} {{ ::$ctrl.userInfo.lastName }} <span class="md-caption">({{ ::$ctrl.userInfo.username }})</span></span>
             </div>
         </md-list-item>
     </md-list>
 </div>
 <div class="account-menu__actions" layout="row">
-    <md-button class="md-primary" ng-click="$ctrl.goHome()" aria-label="{{'GO_HOME' | translate}}"><span translate="GO_HOME" /></md-button>
+    <md-button class="md-primary" ng-click="$ctrl.goHome()" aria-label="{{::'GO_HOME' | translate}}">{{::'GO_HOME' | translate}}</md-button>
     <span flex></span>
-    <md-button class="md-primary" ng-click="$ctrl.logOut()" aria-label="{{'SIGN_OUT' | translate}}"><span translate="SIGN_OUT" /></md-button>
+    <md-button class="md-primary" ng-click="$ctrl.logOut()" aria-label="{{::'SIGN_OUT' | translate}}">{{::'SIGN_OUT' | translate}}</md-button>
 </div>

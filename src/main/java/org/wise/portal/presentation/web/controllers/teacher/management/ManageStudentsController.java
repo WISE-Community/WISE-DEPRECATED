@@ -107,7 +107,7 @@ public class ManageStudentsController {
     User user = ControllerUtil.getSignedInUser();
     Run run = runService.retrieveById(runId);
     if (userCanViewRun(user, run)) {
-      Set<Workgroup> allworkgroups = runService.getWorkgroups(runId);
+      List<Workgroup> allworkgroups = runService.getWorkgroups(runId);
       String workgroupsWithoutPeriod = "";
       Set<ViewMyStudentsPeriod> viewmystudentsallperiods = new TreeSet<ViewMyStudentsPeriod>();
 

@@ -57,7 +57,8 @@ import org.springframework.web.servlet.view.UrlBasedViewResolver;
 
 @EnableWebMvc
 @Configuration
-@ComponentScan(basePackages = {"org.wise.portal.presentation", "org.wise.portal.service", "org.wise.portal.dao", "org.wise.vle.web"})
+@ComponentScan(basePackages = { "org.wise.portal.presentation", "org.wise.portal.service",
+    "org.wise.portal.dao", "org.wise.vle.web" })
 public class WebConfig implements WebMvcConfigurer {
 
   @Value("${google_analytics_id:}")
@@ -65,21 +66,21 @@ public class WebConfig implements WebMvcConfigurer {
 
   public void addResourceHandlers(final ResourceHandlerRegistry registry) {
     registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
-    registry.addResourceHandler("/pages/resources/**").addResourceLocations("/portal/pages/resources/");
-    registry.addResourceHandler("/portal/javascript/**").addResourceLocations("/portal/javascript/");
+    registry.addResourceHandler("/pages/resources/**")
+        .addResourceLocations("/portal/pages/resources/");
+    registry.addResourceHandler("/portal/javascript/**")
+        .addResourceLocations("/portal/javascript/");
     registry.addResourceHandler("/portal/themes/**").addResourceLocations("/portal/themes/");
     registry.addResourceHandler("/portal/translate/**").addResourceLocations("/portal/translate/");
     registry.addResourceHandler("/vle/**").addResourceLocations("/vle/");
     registry.addResourceHandler("/wise5/**").addResourceLocations("/wise5/");
+    registry.addResourceHandler("/site/**").addResourceLocations("/site/");
     registry.addResourceHandler("/curriculum/**").addResourceLocations("/curriculum/");
     registry.addResourceHandler("/studentuploads/**").addResourceLocations("/studentuploads/");
     registry.addResourceHandler("/curriculumWISE5/**").addResourceLocations("/curriculumWISE5/");
-    registry.addResourceHandler("/index.html").addResourceLocations("/site/dist/");
     registry.addResourceHandler("/assets/**").addResourceLocations("/site/dist/assets/");
-    registry.addResourceHandler("/*.js").addResourceLocations("/site/dist/");
-    registry.addResourceHandler("/*.js.map").addResourceLocations("/site/dist/");
     registry.addResourceHandler("/*.css").addResourceLocations("/site/dist/");
-    registry.addResourceHandler("/*.ico").addResourceLocations("/site/dist/");
+    registry.addResourceHandler("/*.js*").addResourceLocations("/site/dist/");
   }
 
   @Bean
@@ -130,7 +131,7 @@ public class WebConfig implements WebMvcConfigurer {
   }
 
   @Bean
-  public RequestToViewNameTranslator viewNameTranslator () {
+  public RequestToViewNameTranslator viewNameTranslator() {
     return new DefaultRequestToViewNameTranslator();
   }
 
@@ -139,7 +140,7 @@ public class WebConfig implements WebMvcConfigurer {
     return new UrlFilenameViewController();
   }
 
-  @Bean(name = "messageSource")
+  @Bean
   public ReloadableResourceBundleMessageSource messageSource() {
     ReloadableResourceBundleMessageSource messageBundle = new ReloadableResourceBundleMessageSource();
     messageBundle.setBasename("classpath:i18n/i18n");
@@ -157,14 +158,15 @@ public class WebConfig implements WebMvcConfigurer {
     return exporter;
   }
 
-  @Bean(name = "exceptionResolver")
-  public WISESimpleMappingExceptionResolver wiseSimpleMappingExceptionResolver() {
+  @Bean
+  public WISESimpleMappingExceptionResolver exceptionResolver() {
     WISESimpleMappingExceptionResolver resolver = new WISESimpleMappingExceptionResolver();
     Properties mappings = new Properties();
     mappings.setProperty("org.springframework.web.multipart.MaxUploadSizeExceededException",
         "errors/maxUploadSizeExceededError");
     mappings.setProperty("java.lang.Exception", "errors/friendlyError");
-    mappings.setProperty("org.acegisecurity.AccessDeniedException", "errors/securityFriendlyError");
+    mappings.setProperty("org.springframework.security.access.AccessDeniedException",
+        "errors/accessdenied");
     mappings.setProperty("org.wise.portal.presentation.web.exception.NotAuthorizedException",
         "errors/accessdenied");
     resolver.setExceptionMappings(mappings);

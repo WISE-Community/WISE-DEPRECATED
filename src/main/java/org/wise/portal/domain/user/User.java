@@ -28,11 +28,13 @@ import org.wise.portal.domain.authentication.MutableUserDetails;
  * @author Cynick Young
  * @author Laurel Williams
  */
-public interface User extends Persistable {
+public interface User extends Persistable, Comparable<User> {
 
   String CURRENT_USER_SESSION_KEY = "CURRENT_USER";
 
   Long getId();
+
+  void setId(Long id);
 
   MutableUserDetails getUserDetails();
 

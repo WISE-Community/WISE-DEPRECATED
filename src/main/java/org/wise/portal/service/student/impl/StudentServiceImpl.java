@@ -24,6 +24,7 @@
 package org.wise.portal.service.student.impl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -32,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.PeriodNotFoundException;
+import org.wise.portal.domain.RunHasEndedException;
 import org.wise.portal.domain.StudentUserAlreadyAssociatedWithRunException;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.project.impl.Projectcode;
@@ -61,14 +63,15 @@ public class StudentServiceImpl implements StudentService {
 
   public synchronized void addStudentToRun(User studentUser, Projectcode projectcode)
       throws ObjectNotFoundException, PeriodNotFoundException,
-      StudentUserAlreadyAssociatedWithRunException {
-    // TODO HT: figure out if we need a Transactional annotation for this method
-    // possible problem: groupService.addMembers is transactional
-    // we probably need a rollback though
+      StudentUserAlreadyAssociatedWithRunException, RunHasEndedException {
     String runcode = projectcode.getRuncode();
     String periodName = projectcode.getRunPeriod();
 
     Run run = runService.retrieveRunByRuncode(runcode);
+    Date currentTime = new Date();
+    if (run.getEndtime() != null && run.getEndtime().before(currentTime)) {
+      throw new RunHasEndedException(run);
+    }
     if (!run.isStudentAssociatedToThisRun(studentUser)) {
       Group period = run.getPeriodByName(periodName);
       Long groupId = period.getId();

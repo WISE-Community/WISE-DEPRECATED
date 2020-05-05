@@ -1,18 +1,14 @@
 'use strict';
 
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-var Sticky = function Sticky($mdSticky) {
+const Sticky = ($mdSticky) => {
 	return {
-		restrict: 'A',
-		link: function link(scope, element) {
+		restrict : 'A',
+		link : function(scope, element) {
 			$mdSticky(scope, element);
 		}
-	};
-};
+	}
+}
 
-Sticky.$inject = ['$mdSticky'];
+Sticky.$inject = [ '$mdSticky' ];
 
-exports.default = Sticky;
-//# sourceMappingURL=sticky.js.map
+export default Sticky;

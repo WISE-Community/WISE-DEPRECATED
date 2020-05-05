@@ -97,7 +97,7 @@ public class ProjectAPIController {
   @GetMapping("/shared")
   protected String getSharedLibraryProjects(ModelMap modelMap) throws JSONException {
     User signedInUser = ControllerUtil.getSignedInUser();
-    List<Project> sharedProjectList = projectService.getSharedProjectList(signedInUser);
+    List<Project> sharedProjectList = projectService.getSharedProjectsWithoutRun(signedInUser);
     JSONArray projectsJSON = getProjectsJSON(sharedProjectList);
     return projectsJSON.toString();
   }
@@ -144,13 +144,12 @@ public class ProjectAPIController {
   }
 
   @PostMapping("/copy")
-  protected String copyProject(@RequestParam("projectId") String projectId) throws Exception {
+  protected String copyProject(@RequestParam("projectId") Long projectId) throws Exception {
     User user = ControllerUtil.getSignedInUser();
     if (SecurityUtils.isTeacher(user)) {
-      Project project = projectService.getById(Long.parseLong(projectId));
-      if (this.projectService.canReadProject(project, user) ||
-          project.isOfficialProject() || project.isCommunityProject()) {
-        Project newProject = projectService.copyProject(Integer.parseInt(projectId), user);
+      Project project = projectService.getById(projectId);
+      if (this.projectService.canReadProject(project, user)) {
+        Project newProject = projectService.copyProject(projectId, user);
         return ControllerUtil.getProjectJSON(newProject).toString();
       }
     }

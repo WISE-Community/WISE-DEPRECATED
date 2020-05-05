@@ -58,18 +58,17 @@ public class ContactAPIController {
   private static final String userAgentParseURL = "http://api.whatismybrowser.com/api/v1/user_agent_parse";
 
   @RequestMapping(value = "", method = RequestMethod.POST)
-  protected String sendContactMessage(
-    @RequestParam(value = "name") String name,
-    @RequestParam(value = "email", required = false) String email,
-    @RequestParam(value = "teacherUsername", required = false) String teacherUsername,
-    @RequestParam(value = "issueType") String issueType,
-    @RequestParam(value = "summary") String summary,
-    @RequestParam(value = "description") String description,
-    @RequestParam(value = "runId", required = false) Long runId,
-    @RequestParam(value = "projectId", required = false) Integer projectId,
-    @RequestParam(value = "userAgent", required = false) String userAgent,
-    @RequestParam(value = "recaptchaResponse", required = false) String recaptchaResponse)
-        throws JSONException {
+  protected String sendContactMessage(@RequestParam(value = "name") String name,
+      @RequestParam(value = "email", required = false) String email,
+      @RequestParam(value = "teacherUsername", required = false) String teacherUsername,
+      @RequestParam(value = "issueType") String issueType,
+      @RequestParam(value = "summary") String summary,
+      @RequestParam(value = "description") String description,
+      @RequestParam(value = "runId", required = false) Long runId,
+      @RequestParam(value = "projectId", required = false) Integer projectId,
+      @RequestParam(value = "userAgent", required = false) String userAgent,
+      @RequestParam(value = "recaptchaResponse", required = false) String recaptchaResponse)
+      throws JSONException {
     if (this.isAuthorized(recaptchaResponse)) {
       boolean isStudent = isStudent();
       String issueTypeValue = getIssueTypeValue(issueType);
@@ -77,8 +76,8 @@ public class ContactAPIController {
       String[] toEmails = getContactMessageToEmails(isStudent, runId, teacherUsername);
       String[] cc = getContactMessageCCs(email, isStudent);
       String subject = getSubject(issueTypeValue, summary);
-      String body = getContactEmailBody(
-          name, email, teacherUsername, description, runId, projectId, userAgent, isStudent);
+      String body = getContactEmailBody(name, email, teacherUsername, description, runId, projectId,
+          userAgent, isStudent);
       JSONObject response = sendEmail(fromEmail, toEmails, cc, subject, body);
       return response.toString();
     } else {
@@ -87,7 +86,8 @@ public class ContactAPIController {
   }
 
   private boolean isAuthorized(String recaptchaResponse) {
-    return isSignedIn() || !isRecaptchaEnabled() || ControllerUtil.isReCaptchaResponseValid(recaptchaResponse);
+    return isSignedIn() || !isRecaptchaEnabled()
+        || ControllerUtil.isReCaptchaResponseValid(recaptchaResponse);
   }
 
   private boolean isSignedIn() {
@@ -97,8 +97,8 @@ public class ContactAPIController {
   private boolean isRecaptchaEnabled() {
     String recaptchaPublicKey = appProperties.getProperty("recaptcha_public_key");
     String recaptchaPrivateKey = appProperties.getProperty("recaptcha_private_key");
-    return recaptchaPublicKey != null && !recaptchaPublicKey.equals("") &&
-      recaptchaPrivateKey != null && !recaptchaPrivateKey.equals("");
+    return recaptchaPublicKey != null && !recaptchaPublicKey.equals("")
+        && recaptchaPrivateKey != null && !recaptchaPrivateKey.equals("");
   }
 
   private boolean isStudent() {
@@ -120,7 +120,7 @@ public class ContactAPIController {
   }
 
   private JSONObject sendEmail(String fromEmail, String[] toEmails, String[] cc, String subject,
-        String body) throws JSONException {
+      String body) throws JSONException {
     try {
       mailService.postMail(toEmails, subject, body, fromEmail, cc);
       return ControllerUtil.createSuccessResponse();
@@ -135,12 +135,13 @@ public class ContactAPIController {
     return "[" + contactWISEString + "] " + issueType + ": " + summary;
   }
 
-  protected String[] getContactMessageToEmails(boolean isStudent, Long runId, String teacherUsername) {
+  protected String[] getContactMessageToEmails(boolean isStudent, Long runId,
+      String teacherUsername) {
     if (isStudent) {
       if (runId != null) {
-        return new String[] {getTeacherEmail(runId)};
+        return new String[] { getTeacherEmail(runId) };
       } else if (teacherUsername != null) {
-        return new String[] {getTeacherEmail(teacherUsername)};
+        return new String[] { getTeacherEmail(teacherUsername) };
       }
     }
     String contactEmailString = appProperties.getProperty("contact_email");
@@ -152,12 +153,12 @@ public class ContactAPIController {
       String contactEmailString = appProperties.getProperty("contact_email");
       return contactEmailString.split(",");
     } else {
-      return new String[] {email};
+      return new String[] { email };
     }
   }
 
   private String getContactEmailBody(String name, String email, String teacherUsername,
-        String description, Long runId, Integer projectId, String userAgent, Boolean isStudent) {
+      String description, Long runId, Integer projectId, String userAgent, Boolean isStudent) {
     StringBuffer body = new StringBuffer();
     if (isStudent) {
       addStudentGeneratedRequestBody(body, description, name, runId, teacherUsername);
@@ -176,7 +177,7 @@ public class ContactAPIController {
   }
 
   private void addStudentGeneratedRequestBody(StringBuffer body, String description, String name,
-        Long runId, String teacherUsername) {
+      Long runId, String teacherUsername) {
     User teacher = null;
     if (runId != null) {
       teacher = getTeacherForRun(runId);
@@ -220,7 +221,7 @@ public class ContactAPIController {
   }
 
   private void addTeacherGeneratedRequestBody(StringBuffer body, String description, String name,
-        String email) {
+      String email) {
     appendLine(body, getTranslationString("contact.email.teacherGenerated", name));
     appendLine(body, getTranslationString("contact.email.description", description));
     appendLine(body, getTranslationString("contact.email.name", name));
@@ -233,7 +234,8 @@ public class ContactAPIController {
         Run run = runService.retrieveById(runId);
         Project project = run.getProject();
         appendLine(body, getTranslationString("contact.email.projectName", project.getName()));
-        appendLine(body, getTranslationString("contact.email.projectId", project.getId().toString()));
+        appendLine(body,
+            getTranslationString("contact.email.projectId", project.getId().toString()));
         appendLine(body, getTranslationString("contact.email.runId", runId.toString()));
       } catch (ObjectNotFoundException e) {
       }
@@ -241,15 +243,16 @@ public class ContactAPIController {
       try {
         Project project = projectService.getById(projectId);
         appendLine(body, getTranslationString("contact.email.projectName", project.getName()));
-        appendLine(body, getTranslationString("contact.email.projectId", project.getId().toString()));
+        appendLine(body,
+            getTranslationString("contact.email.projectId", project.getId().toString()));
       } catch (ObjectNotFoundException e) {
       }
     }
   }
 
   private void addUserSystemDetailsToBody(StringBuffer body, String userAgent)
-    throws IOException, JSONException {
-    if(appPropertiesHasUserAgentParseKey()) {
+      throws IOException, JSONException {
+    if (appPropertiesHasUserAgentParseKey()) {
       JSONObject userSystemDetails = getUserAgentParseResult(userAgent);
       addOperatingSystemToBody(body, userSystemDetails);
       addBrowserToBody(body, userSystemDetails);
@@ -257,7 +260,8 @@ public class ContactAPIController {
   }
 
   private void addOperatingSystemToBody(StringBuffer body, JSONObject userSystemDetails) {
-    appendLine(body, getTranslationString("contact.email.operatingSystem", getOperatingSystem(userSystemDetails)));
+    appendLine(body, getTranslationString("contact.email.operatingSystem",
+        getOperatingSystem(userSystemDetails)));
   }
 
   private String getOperatingSystem(JSONObject userSystemDetails) {
@@ -265,7 +269,7 @@ public class ContactAPIController {
       String operatingSystemName = userSystemDetails.getString("operating_system");
       String operatingSystemVersion = userSystemDetails.getString("operating_system_version_full");
       return operatingSystemName + " " + operatingSystemVersion;
-    } catch(JSONException e) {
+    } catch (JSONException e) {
     }
     return "";
   }
@@ -279,7 +283,7 @@ public class ContactAPIController {
       String browserName = userSystemDetails.getString("browser_name");
       String browserVersion = userSystemDetails.getString("browser_version_full");
       return browserName + " " + browserVersion;
-    } catch(JSONException e) {
+    } catch (JSONException e) {
     }
     return "";
   }
@@ -316,7 +320,8 @@ public class ContactAPIController {
   private JSONObject makeUserAgentParseRequest(HttpPost post) throws IOException, JSONException {
     HttpClient client = HttpClientBuilder.create().build();
     HttpResponse response = client.execute(post);
-    BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+    BufferedReader rd = new BufferedReader(
+        new InputStreamReader(response.getEntity().getContent()));
     StringBuffer userAgentParseResult = new StringBuffer();
     String line = "";
     while ((line = rd.readLine()) != null) {

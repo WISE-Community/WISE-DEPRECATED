@@ -44,9 +44,8 @@ import org.wise.portal.service.session.SessionService;
 import org.wise.portal.service.user.UserService;
 
 /**
- * Custom AuthenticationProcessingFilter that subclasses Acegi Security. This
- * filter upon successful authentication will retrieve a <code>User</code> and
- * put it into the http session.
+ * Custom AuthenticationProcessingFilter that subclasses Acegi Security. This filter upon successful
+ * authentication will retrieve a <code>User</code> and put it into the http session.
  *
  * @author Hiroki Terashima
  * @author Geoffrey Kwan
@@ -59,20 +58,19 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
   @Autowired
   protected SessionService sessionService;
 
-  public static final String STUDENT_DEFAULT_TARGET_PATH = "/legacy/student";
-  public static final String TEACHER_DEFAULT_TARGET_PATH = "/legacy/teacher";
+  public static final String STUDENT_DEFAULT_TARGET_PATH = "/student";
+  public static final String TEACHER_DEFAULT_TARGET_PATH = "/teacher";
   public static final String ADMIN_DEFAULT_TARGET_PATH = "/admin";
-  public static final String RESEARCHER_DEFAULT_TARGET_PATH = "/legacy/teacher";  // TODO eventually researcher will have their own page...
+  public static final String RESEARCHER_DEFAULT_TARGET_PATH = "/teacher";
   public static final String LOGIN_DISABLED_MESSGE_PAGE = "/pages/maintenance.html";
 
   private static final Log LOGGER = LogFactory.getLog(WISEAuthenticationProcessingFilter.class);
 
   /**
-   * Check if the user is required to enter ReCaptcha text. If the
-   * user is required to enter ReCaptcha text we will check if the
-   * user has entered the correct ReCaptcha text. If ReCaptcha is
-   * not required or if the ReCaptcha has been entered correctly,
-   * continue on with the authentication process.
+   * Check if the user is required to enter ReCaptcha text. If the user is required to enter
+   * ReCaptcha text we will check if the user has entered the correct ReCaptcha text. If ReCaptcha
+   * is not required or if the ReCaptcha has been entered correctly, continue on with the
+   * authentication process.
    */
   @Override
   public Authentication attemptAuthentication(HttpServletRequest request,
@@ -82,7 +80,8 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
       if (!ControllerUtil.isReCaptchaResponseValid(gReCaptchaResponse)) {
         String errorMessage = "Please verify that you are not a robot.";
         try {
-          unsuccessfulAuthentication(request, response, new AuthenticationException(errorMessage) {});
+          unsuccessfulAuthentication(request, response, new AuthenticationException(errorMessage) {
+          });
         } catch (IOException e) {
 
         } catch (ServletException e) {
@@ -112,7 +111,7 @@ public class WISEAuthenticationProcessingFilter extends UsernamePasswordAuthenti
   @Override
   protected void unsuccessfulAuthentication(HttpServletRequest request,
       HttpServletResponse response, AuthenticationException failed)
-    throws IOException, ServletException {
+      throws IOException, ServletException {
     super.unsuccessfulAuthentication(request, response, failed);
   }
 }

@@ -21,7 +21,7 @@
       </div>
     </div>
     <span fxFlex></span>
-    <app-library-project-menu *ngIf="isTeacher && !isRunProject"
+    <app-library-project-menu *ngIf="isTeacher && !isRunProject && project.wiseVersion !== 4"
                               [project]="project"></app-library-project-menu>
   </div>
   <div class="info-block">
@@ -67,11 +67,11 @@
       <span *ngIf="isCopy" [ngSwitch]="parentAuthorsString.length">
         <ng-container *ngSwitchCase="0" i18n><a href="{{project.uri}}" target="_blank">This unit</a> is a copy of <a href="{{parentProject.uri}}" target="_blank">{{parentProject.title}}</a> (used under <a href="{{licenseUrl}}" target="_blank">CC BY-SA</a>).</ng-container>
         <ng-container *ngSwitchDefault i18n><a href="{{project.uri}}" target="_blank">This unit</a> is a copy of <a href="{{parentProject.uri}}" target="_blank">{{parentProject.title}}</a> by {{parentAuthorsString}} (used under <a href="{{licenseUrl}}" target="_blank">CC BY-SA</a>).</ng-container>
-      </span> / 
+      </span> /
       <span *ngIf="!project.license"
-            class="more-info" 
-            [matTooltip]="licenseInfo" 
-            matTooltipPosition="above" 
+            class="more-info"
+            [matTooltip]="licenseInfo"
+            matTooltipPosition="above"
             tabindex="0" i18n>More</span>
       <a *ngIf="project.license"
           href="{{project.license}}"
@@ -85,16 +85,15 @@
      fxLayoutAlign="end"
      fxLayoutGap="8px">
   <button mat-button cdkFocusRegionstart (click)="onClose()" i18n>Close</button>
-  <button *ngIf="isTeacher && !isRunProject"
-          mat-flat-button 
-          color="accent" 
+  <button *ngIf="isTeacher && !isRunProject && project.wiseVersion !== 4"
+          mat-flat-button
+          color="accent"
           (click)="runProject()">
     <mat-icon>supervised_user_circle</mat-icon>&nbsp;<ng-container i18n>Use with Class</ng-container>
   </button>
-  <a mat-flat-button
+  <button mat-flat-button
      color="primary"
-     href="{{project.uri}}"
-     target="_blank">
+     (click)="previewProject()">
     <mat-icon>visibility</mat-icon>&nbsp;<ng-container i18n>Preview</ng-container>
-  </a>
+  </button>
 </div>

@@ -1,89 +1,107 @@
-"use strict";
+import vleModule from '../../../vle/vle';
 
-var _angular = _interopRequireDefault(require("angular"));
+let SummaryService;
 
-var _main = _interopRequireDefault(require("vle/main"));
+describe('SummaryService', () => {
+  beforeEach(angular.mock.module(vleModule.name));
 
-require("angular-mocks");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-
-describe('SummaryService', function () {
-  beforeEach(_angular["default"].mock.module(_main["default"].name));
-  var SummaryService;
-  beforeEach(inject(function (_SummaryService_) {
+  beforeEach(inject(_SummaryService_ => {
     SummaryService = _SummaryService_;
   }));
-  describe('SummaryService', function () {
-    it('should create a component', function () {
-      var component = SummaryService.createComponent();
-      expect(component.type).toEqual('Summary');
-      expect(component.summaryNodeId).toEqual(null);
-      expect(component.summaryComponentId).toEqual(null);
-      expect(component.source).toEqual('period');
-      expect(component.studentDataType).toEqual(null);
-      expect(component.chartType).toEqual('column');
-      expect(component.requirementToSeeSummary).toEqual('submitWork');
-      expect(component.highlightCorrectAnswer).toBeFalsy();
-    });
-    it('should check if the a summary component has work', function () {
-      var component = {
-        id: '2t09q248tg',
-        type: 'Summary'
-      };
-      expect(SummaryService.componentHasWork(component)).toBeFalsy();
-    });
-    it('should check if a component type is allowed', function () {
-      expect(SummaryService.isComponentTypeAllowed('Animation')).toBeTruthy();
-      expect(SummaryService.isComponentTypeAllowed('AudioOscillator')).toBeTruthy();
-      expect(SummaryService.isComponentTypeAllowed('ConceptMap')).toBeTruthy();
-      expect(SummaryService.isComponentTypeAllowed('Discussion')).toBeTruthy();
-      expect(SummaryService.isComponentTypeAllowed('Draw')).toBeTruthy();
-      expect(SummaryService.isComponentTypeAllowed('Embedded')).toBeTruthy();
-      expect(SummaryService.isComponentTypeAllowed('Graph')).toBeTruthy();
-      expect(SummaryService.isComponentTypeAllowed('HTML')).toBeFalsy();
-      expect(SummaryService.isComponentTypeAllowed('Label')).toBeTruthy();
-      expect(SummaryService.isComponentTypeAllowed('Match')).toBeTruthy();
-      expect(SummaryService.isComponentTypeAllowed('MultipleChoice')).toBeTruthy();
-      expect(SummaryService.isComponentTypeAllowed('OpenResponse')).toBeTruthy();
-      expect(SummaryService.isComponentTypeAllowed('OutsideURL')).toBeFalsy();
-      expect(SummaryService.isComponentTypeAllowed('Summary')).toBeFalsy();
-      expect(SummaryService.isComponentTypeAllowed('Table')).toBeTruthy();
-    });
-    it('should check if a scores summary is allowed for a component type', function () {
-      expect(SummaryService.isScoresSummaryAvailableForComponentType('Animation')).toBeTruthy();
-      expect(SummaryService.isScoresSummaryAvailableForComponentType('AudioOscillator')).toBeTruthy();
-      expect(SummaryService.isScoresSummaryAvailableForComponentType('ConceptMap')).toBeTruthy();
-      expect(SummaryService.isScoresSummaryAvailableForComponentType('Discussion')).toBeTruthy();
-      expect(SummaryService.isScoresSummaryAvailableForComponentType('Draw')).toBeTruthy();
-      expect(SummaryService.isScoresSummaryAvailableForComponentType('Embedded')).toBeTruthy();
-      expect(SummaryService.isScoresSummaryAvailableForComponentType('Graph')).toBeTruthy();
-      expect(SummaryService.isScoresSummaryAvailableForComponentType('HTML')).toBeFalsy();
-      expect(SummaryService.isScoresSummaryAvailableForComponentType('Label')).toBeTruthy();
-      expect(SummaryService.isScoresSummaryAvailableForComponentType('Match')).toBeTruthy();
-      expect(SummaryService.isScoresSummaryAvailableForComponentType('MultipleChoice')).toBeTruthy();
-      expect(SummaryService.isScoresSummaryAvailableForComponentType('OpenResponse')).toBeTruthy();
-      expect(SummaryService.isScoresSummaryAvailableForComponentType('OutsideURL')).toBeFalsy();
-      expect(SummaryService.isScoresSummaryAvailableForComponentType('Summary')).toBeFalsy();
-      expect(SummaryService.isScoresSummaryAvailableForComponentType('Table')).toBeTruthy();
-    });
-    it('should check if a responses summary is allowed for a component type', function () {
-      expect(SummaryService.isResponsesSummaryAvailableForComponentType('Animation')).toBeFalsy();
-      expect(SummaryService.isResponsesSummaryAvailableForComponentType('AudioOscillator')).toBeFalsy();
-      expect(SummaryService.isResponsesSummaryAvailableForComponentType('ConceptMap')).toBeFalsy();
-      expect(SummaryService.isResponsesSummaryAvailableForComponentType('Discussion')).toBeFalsy();
-      expect(SummaryService.isResponsesSummaryAvailableForComponentType('Draw')).toBeFalsy();
-      expect(SummaryService.isResponsesSummaryAvailableForComponentType('Embedded')).toBeFalsy();
-      expect(SummaryService.isResponsesSummaryAvailableForComponentType('Graph')).toBeFalsy();
-      expect(SummaryService.isResponsesSummaryAvailableForComponentType('HTML')).toBeFalsy();
-      expect(SummaryService.isResponsesSummaryAvailableForComponentType('Label')).toBeFalsy();
-      expect(SummaryService.isResponsesSummaryAvailableForComponentType('Match')).toBeFalsy();
-      expect(SummaryService.isResponsesSummaryAvailableForComponentType('MultipleChoice')).toBeTruthy();
-      expect(SummaryService.isResponsesSummaryAvailableForComponentType('OpenResponse')).toBeFalsy();
-      expect(SummaryService.isResponsesSummaryAvailableForComponentType('OutsideURL')).toBeFalsy();
-      expect(SummaryService.isResponsesSummaryAvailableForComponentType('Summary')).toBeFalsy();
-      expect(SummaryService.isResponsesSummaryAvailableForComponentType('Table')).toBeFalsy();
-    });
+
+  describe('SummaryService', () => {
+    shouldCreateAComponent();
+    shouldCheckIfTheASummaryComponentHasWork();
+    shouldCheckIfAComponentTypeIsAllowed();
+    shouldCheckIfAScoresSummaryIsAllowedForAComponentType();
+    shouldCheckIfAResponsesSummaryIsAllowedForAComponentType();
   });
 });
-//# sourceMappingURL=summaryService.spec.js.map
+
+function shouldCreateAComponent() {
+  it('should create a component', () => {
+    const component = SummaryService.createComponent();
+    expect(component.type).toEqual('Summary');
+    expect(component.summaryNodeId).toEqual(null);
+    expect(component.summaryComponentId).toEqual(null);
+    expect(component.source).toEqual('period');
+    expect(component.studentDataType).toEqual(null);
+    expect(component.chartType).toEqual('column');
+    expect(component.requirementToSeeSummary).toEqual('submitWork');
+    expect(component.highlightCorrectAnswer).toBeFalsy();
+  });
+}
+
+function shouldCheckIfTheASummaryComponentHasWork() {
+  it('should check if the a summary component has work', () => {
+    const component = {
+      id: '2t09q248tg',
+      type: 'Summary'
+    };
+    expect(SummaryService.componentHasWork(component)).toBeFalsy();
+  });
+}
+
+function shouldCheckIfAComponentTypeIsAllowed() {
+  it('should check if a component type is allowed', () => {
+    expect(SummaryService.isComponentTypeAllowed('Animation')).toBeTruthy();
+    expect(SummaryService.isComponentTypeAllowed('AudioOscillator')).toBeTruthy();
+    expect(SummaryService.isComponentTypeAllowed('ConceptMap')).toBeTruthy();
+    expect(SummaryService.isComponentTypeAllowed('Discussion')).toBeTruthy();
+    expect(SummaryService.isComponentTypeAllowed('Draw')).toBeTruthy();
+    expect(SummaryService.isComponentTypeAllowed('Embedded')).toBeTruthy();
+    expect(SummaryService.isComponentTypeAllowed('Graph')).toBeTruthy();
+    expect(SummaryService.isComponentTypeAllowed('HTML')).toBeFalsy();
+    expect(SummaryService.isComponentTypeAllowed('Label')).toBeTruthy();
+    expect(SummaryService.isComponentTypeAllowed('Match')).toBeTruthy();
+    expect(SummaryService.isComponentTypeAllowed('MultipleChoice')).toBeTruthy();
+    expect(SummaryService.isComponentTypeAllowed('OpenResponse')).toBeTruthy();
+    expect(SummaryService.isComponentTypeAllowed('OutsideURL')).toBeFalsy();
+    expect(SummaryService.isComponentTypeAllowed('Summary')).toBeFalsy();
+    expect(SummaryService.isComponentTypeAllowed('Table')).toBeTruthy();
+  });
+}
+
+function shouldCheckIfAScoresSummaryIsAllowedForAComponentType() {
+  it('should check if a scores summary is allowed for a component type', () => {
+    expect(SummaryService.isScoresSummaryAvailableForComponentType('Animation')).toBeTruthy();
+    expect(SummaryService.isScoresSummaryAvailableForComponentType('AudioOscillator')).toBeTruthy();
+    expect(SummaryService.isScoresSummaryAvailableForComponentType('ConceptMap')).toBeTruthy();
+    expect(SummaryService.isScoresSummaryAvailableForComponentType('Discussion')).toBeTruthy();
+    expect(SummaryService.isScoresSummaryAvailableForComponentType('Draw')).toBeTruthy();
+    expect(SummaryService.isScoresSummaryAvailableForComponentType('Embedded')).toBeTruthy();
+    expect(SummaryService.isScoresSummaryAvailableForComponentType('Graph')).toBeTruthy();
+    expect(SummaryService.isScoresSummaryAvailableForComponentType('HTML')).toBeFalsy();
+    expect(SummaryService.isScoresSummaryAvailableForComponentType('Label')).toBeTruthy();
+    expect(SummaryService.isScoresSummaryAvailableForComponentType('Match')).toBeTruthy();
+    expect(SummaryService.isScoresSummaryAvailableForComponentType('MultipleChoice')).toBeTruthy();
+    expect(SummaryService.isScoresSummaryAvailableForComponentType('OpenResponse')).toBeTruthy();
+    expect(SummaryService.isScoresSummaryAvailableForComponentType('OutsideURL')).toBeFalsy();
+    expect(SummaryService.isScoresSummaryAvailableForComponentType('Summary')).toBeFalsy();
+    expect(SummaryService.isScoresSummaryAvailableForComponentType('Table')).toBeTruthy();
+  });
+}
+
+function shouldCheckIfAResponsesSummaryIsAllowedForAComponentType() {
+  it('should check if a responses summary is allowed for a component type', () => {
+    expect(SummaryService.isResponsesSummaryAvailableForComponentType('Animation')).toBeFalsy();
+    expect(
+      SummaryService.isResponsesSummaryAvailableForComponentType('AudioOscillator')
+    ).toBeFalsy();
+    expect(SummaryService.isResponsesSummaryAvailableForComponentType('ConceptMap')).toBeFalsy();
+    expect(SummaryService.isResponsesSummaryAvailableForComponentType('Discussion')).toBeFalsy();
+    expect(SummaryService.isResponsesSummaryAvailableForComponentType('Draw')).toBeFalsy();
+    expect(SummaryService.isResponsesSummaryAvailableForComponentType('Embedded')).toBeFalsy();
+    expect(SummaryService.isResponsesSummaryAvailableForComponentType('Graph')).toBeFalsy();
+    expect(SummaryService.isResponsesSummaryAvailableForComponentType('HTML')).toBeFalsy();
+    expect(SummaryService.isResponsesSummaryAvailableForComponentType('Label')).toBeFalsy();
+    expect(SummaryService.isResponsesSummaryAvailableForComponentType('Match')).toBeFalsy();
+    expect(
+      SummaryService.isResponsesSummaryAvailableForComponentType('MultipleChoice')
+    ).toBeTruthy();
+    expect(SummaryService.isResponsesSummaryAvailableForComponentType('OpenResponse')).toBeFalsy();
+    expect(SummaryService.isResponsesSummaryAvailableForComponentType('OutsideURL')).toBeFalsy();
+    expect(SummaryService.isResponsesSummaryAvailableForComponentType('Summary')).toBeFalsy();
+    expect(SummaryService.isResponsesSummaryAvailableForComponentType('Table')).toBeFalsy();
+  });
+}

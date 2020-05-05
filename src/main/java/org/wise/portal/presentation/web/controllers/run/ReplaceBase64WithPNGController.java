@@ -100,7 +100,7 @@ public class ReplaceBase64WithPNGController {
     debugOutput(writer, response, "");
 
     // get all the workgroups for the run
-    Set<Workgroup> workgroups = runService.getWorkgroups(new Long(runId));
+    List<Workgroup> workgroups = runService.getWorkgroups(new Long(runId));
 
     debugOutput(writer, response, "Found " + workgroups.size() + " Workgroups");
     debugOutput(writer, response, "");

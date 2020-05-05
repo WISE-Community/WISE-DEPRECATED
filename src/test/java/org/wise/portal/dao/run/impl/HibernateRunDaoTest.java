@@ -22,325 +22,360 @@
  */
 package org.wise.portal.dao.run.impl;
 
-import java.util.ArrayList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.hibernate.Session;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.group.impl.HibernateGroupDao;
-import org.wise.portal.domain.authentication.MutableUserDetails;
-import org.wise.portal.domain.authentication.impl.PersistentUserDetails;
+import org.wise.portal.domain.authentication.Gender;
+import org.wise.portal.domain.authentication.Schoollevel;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.group.impl.PersistentGroup;
 import org.wise.portal.domain.project.Project;
-import org.wise.portal.domain.project.impl.ProjectImpl;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.run.impl.RunImpl;
 import org.wise.portal.domain.user.User;
-import org.wise.portal.domain.user.impl.UserImpl;
+import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.junit.AbstractTransactionalDbTests;
 
 /**
- * Test class for HibernateRunDao
- * 
  * @author Hiroki Terashima
- * @version $Id$
+ * @author Geoffrey Kwan
  */
+@SpringBootTest
+@RunWith(SpringRunner.class)
 public class HibernateRunDaoTest extends AbstractTransactionalDbTests {
 
-    private static final String DEFAULT_NAME = "Airbags";
+  private Project project;
+  private Group period1, period2;
+  private User teacher1, teacher2, student1, student2;
+  private final Date startTime = Calendar.getInstance().getTime();
+  private final String runCode = "diamonds12345";
+  private final String runCodeNotInDB = "diamonds54321";
+  private Run run;
 
-    private static final String DEFAULT_URL = "http://mrpotatoiscoolerthanwoody.com";
+  @Autowired
+  private HibernateRunDao runDao;
 
+  @Autowired
+  private HibernateGroupDao groupDao;
 
-	private static final MutableUserDetails DEFAULT_USER_DETAILS = new PersistentUserDetails();
+  @Before
+  public void setUp() throws Exception {
+    super.setUp();
+    verifyRunAndJoinTablesAreEmpty();
+    period1 = createPeriod("Period 1");
+    period2 = createPeriod("Period 2");
+    teacher1 = createTeacherUser("Mrs", "Puff", "MrsPuff", "Mrs. Puff", "boat", "Bikini Bottom",
+        "Water State", "Pacific Ocean", "mrspuff@bikinibottom.com", "Boating School",
+        Schoollevel.COLLEGE, "1234567890");
+    teacher2 = createTeacherUser("Mr", "Krabs", "MrKrabs", "Mr. Krabs", "restaurant",
+        "Bikini Bottom", "Water State", "Pacific Ocean", "mrkrabs@bikinibottom.com",
+        "Krusty Krab", Schoollevel.HIGH_SCHOOL, "abcdefghij");
+    student1 = createStudentUser("Spongebob", "Squarepants", "SpongebobS0101", "burger", 1, 1,
+        Gender.MALE);
+    student2 = createStudentUser("Patrick", "Star", "PatrickS0101", "rock", 1, 1, Gender.MALE);
+    Long id = getNextAvailableProjectId();
+    String projectName = "Airbags";
+    run = createProjectAndRun(id, projectName, teacher1, startTime, runCode);
+    Set<Group> periods = new TreeSet<Group>();
+    periods.add(period1);
+    periods.add(period2);
+    groupDao.save(period1);
+    groupDao.save(period2);
+    run.setPeriods(periods);
+    project = run.getProject();
+    toilet.flush();
+  }
 
-	private static Set<User> DEFAULT_OWNERS = new HashSet<User>();
-	
-	private static User DEFAULT_OWNER = new UserImpl();
+  private void assertNumRuns(int expected) {
+    assertEquals("Number of rows in the [runs] table.", expected, countRowsInTable("runs"));
+   }
 
-	private static Project DEFAULT_PROJECT = new ProjectImpl();
+   @Test
+   public void getById_ExistingRunId_Success() throws Exception {
+     runDao.save(run);
+     assertNotNull(runDao.getById(run.getId()));
+   }
 
-    private Group DEFAULT_GROUP_1, DEFAULT_GROUP_2, DEFAULT_GROUP_3;
+  @Test
+  public void save_NewRun_Success() {
+    assertNumRuns(1);
+    Long id = getNextAvailableProjectId();
+    String projectName = "How to be a Fry Cook";
+    Date startTime = Calendar.getInstance().getTime();
+    String runCode = "Panda123";
+    run = createProjectAndRun(id, projectName, teacher2, startTime, runCode);
+    runDao.save(run);
+    toilet.flush();
+    assertNumRuns(2);
+  }
 
-    private final Date DEFAULT_STARTTIME = Calendar.getInstance().getTime();
-
-    private Date DEFAULT_ENDTIME = null;
-
-    private final String DEFAULT_RUNCODE = "diamonds12345";
-
-    private final String RUNCODE_NOT_IN_DB = "diamonds54321";
-
-    private RunImpl defaultRun;
-
-    private HibernateRunDao runDao;
-
-    private HibernateGroupDao groupDao;
-    
-    /**
-     * @param defaultRun
-     *                the defaultRun to set
-     */
-    public void setDefaultRun(RunImpl defaultRun) {
-        this.defaultRun = defaultRun;
+  @Test
+  public void save_WithoutProject_ShouldThrowException() {
+    run.setProject(null);
+    try {
+      runDao.save(run);
+      toilet.flush();
+      fail("Exception expected to be thrown but was not");
+    } catch (Exception e) {
     }
+  }
 
-    /**
-     * @param runDao
-     *                the runDao to set
-     */
-    public void setOfferingDao(HibernateRunDao runDao) {
-        this.runDao = runDao;
+  @Test
+  public void retrieveByRunCode_ValidRunCode_Success() throws Exception {
+    Run run = runDao.retrieveByRunCode(runCode);
+    assertTrue(run instanceof RunImpl);
+    assertTrue(run.getClass() == RunImpl.class);
+    assertEquals(runCode, run.getRuncode());
+    assertEquals(startTime, run.getStarttime());
+  }
+
+  @Test
+  public void retrieveByRunCode_NonExistingRunCode_ShouldThrowException() {
+    try {
+      runDao.retrieveByRunCode(runCodeNotInDB);
+      fail ("Expected ObjectNotFoundException");
+    } catch (ObjectNotFoundException e) {
     }
+  }
 
-	/**
-	 * @param groupDao the groupDao to set
-	 */
-	public void setGroupDao(HibernateGroupDao groupDao) {
-		this.groupDao = groupDao;
-	}
-	
-    /**
-     * @see net.sf.sail.webapp.junit.AbstractTransactionalDbTests#onSetUpBeforeTransaction()
-     */
-    @Override
-    protected void onSetUpBeforeTransaction() throws Exception {
-        super.onSetUpBeforeTransaction();
+  @Test
+  public void getWorkgroupsForRun_OnePeriod_Success() throws Exception {
+    Long runId = run.getId();
+    List<Workgroup> workgroups = runDao.getWorkgroupsForRun(runId);
+    assertEquals(0, workgroups.size());
+    Set<User> members1 = new HashSet<User>();
+    members1.add(student1);
+    createWorkgroup(members1, run, period1);
+    workgroups = runDao.getWorkgroupsForRun(runId);
+    assertEquals(1, workgroups.size());
+  }
 
-        DEFAULT_GROUP_1 = new PersistentGroup();
-        DEFAULT_GROUP_1.setName("Period 1");
+  @Test
+  public void getWorkgroupsForRun_TwoPeriods_Success() throws Exception {
+    Long runId = run.getId();
+    List<Workgroup> workgroups = runDao.getWorkgroupsForRun(runId);
+    assertEquals(0, workgroups.size());
+    Set<User> members1 = new HashSet<User>();
+    members1.add(student1);
+    createWorkgroup(members1, run, period1);
+    Set<User> members2 = new HashSet<User>();
+    members2.add(student2);
+    createWorkgroup(members2, run, period2);
+    workgroups = runDao.getWorkgroupsForRun(runId);
+    assertEquals(2, workgroups.size());
+  }
 
-        DEFAULT_GROUP_2 = new PersistentGroup();
-        DEFAULT_GROUP_2.setName("Period 2");
+  @Test
+  public void getWorkgroupsForRunAndPeriod_OnePeriod_Success() throws Exception {
+    Long runId = run.getId();
+    Long period1Id = period1.getId();
+    List<Workgroup> workgroups1 = runDao.getWorkgroupsForRunAndPeriod(runId, period1Id);
+    assertEquals(0, workgroups1.size());
+    Set<User> members1 = new HashSet<User>();
+    members1.add(student1);
+    createWorkgroup(members1, run, period1);
+    workgroups1 = runDao.getWorkgroupsForRunAndPeriod(runId, period1.getId());
+    assertEquals(1, workgroups1.size());
+  }
 
-        DEFAULT_GROUP_3 = new PersistentGroup();
-        DEFAULT_GROUP_3.setName("Period 3");
+  @Test
+  public void getWorkgroupsForRunAndPeriod_TwoPeriods_Success() throws Exception {
+    Long runId = run.getId();
+    Long period1Id = period1.getId();
+    Long period2Id = period2.getId();
+    List<Workgroup> workgroups1 = runDao.getWorkgroupsForRunAndPeriod(runId, period1Id);
+    assertEquals(0, workgroups1.size());
+    Set<User> members1 = new HashSet<User>();
+    members1.add(student1);
+    createWorkgroup(members1, run, period1);
+    List<Workgroup> workgroups2 = runDao.getWorkgroupsForRunAndPeriod(runId, period2Id);
+    assertEquals(0, workgroups2.size());
+    Set<User> members2 = new HashSet<User>();
+    members2.add(student2);
+    createWorkgroup(members2, run, period2);
+    workgroups1 = runDao.getWorkgroupsForRunAndPeriod(runId, period1.getId());
+    assertEquals(1, workgroups1.size());
+    workgroups2 = runDao.getWorkgroupsForRunAndPeriod(runId, period2.getId());
+    assertEquals(1, workgroups2.size());
+  }
 
-        this.defaultRun.setStarttime(DEFAULT_STARTTIME);
-        this.defaultRun.setRuncode(DEFAULT_RUNCODE);
-        
-        DEFAULT_USER_DETAILS.setPassword(DEFAULT_NAME);
-        DEFAULT_USER_DETAILS.setUsername(DEFAULT_NAME);
-        DEFAULT_OWNER.setUserDetails(DEFAULT_USER_DETAILS);
+  @Test
+  public void retrieveByField_Name_Success() {
+    String recyclingRunName = "Recycling";
+    List<Run> recyclingRuns = runDao.retrieveByField("name", "like", recyclingRunName);
+    assertEquals(0, recyclingRuns.size());
+    String airbagsRunName = "Airbags";
+    List<Run> airbagsRuns = runDao.retrieveByField("name", "like", airbagsRunName);
+    assertEquals(1, airbagsRuns.size());
+    assertEquals(airbagsRunName, airbagsRuns.get(0).getName());
+  }
 
-        DEFAULT_OWNERS = new HashSet<User>();
-        DEFAULT_OWNERS.add(DEFAULT_OWNER);
-    }
+  @Test
+  public void retrieveByField_StartTime_Success() {
+    Date yesterday = getDateXDaysFromNow(-1);
+    List<Run> runsStartedAfterYesterday = runDao.retrieveByField("starttime", ">", yesterday);
+    assertEquals(1, runsStartedAfterYesterday.size());
+    Date tomorrow = getDateXDaysFromNow(1);
+    List<Run> runsStartedAfterTomorrow = runDao.retrieveByField("starttime", ">", tomorrow);
+    assertEquals(0, runsStartedAfterTomorrow.size());
+  }
 
-    /**
-     * @see net.sf.sail.webapp.junit.AbstractTransactionalDbTests#onSetUpInTransaction()
-     */
-    @Override
-    protected void onSetUpInTransaction() throws Exception {
-        super.onSetUpInTransaction();
-        Session session = this.sessionFactory.getCurrentSession();
-        session.save(DEFAULT_USER_DETAILS);
-        session.save(DEFAULT_OWNER);  // save owner
-        session.save(DEFAULT_PROJECT);  // save project
+  @Test
+  public void getRunListByUser_StudentNotInRun_ShouldReturnNoRuns() throws Exception {
+    List<Run> runsByUser = runDao.getRunListByUser(student1);
+    assertEquals(0, runsByUser.size());
+  }
 
-        this.defaultRun.setOwners(DEFAULT_OWNERS);
-        this.defaultRun.setProject(DEFAULT_PROJECT);
-    }
+  @Test
+  public void getRunListByUser_StudentInPeriodButNotWorkgroup_ShouldReturnRun() throws Exception {
+    List<Run> runsByUser = runDao.getRunListByUser(student1);
+    assertEquals(0, runsByUser.size());
+    period1.addMember(student1);
+    runsByUser = runDao.getRunListByUser(student1);
+    assertEquals(1, runsByUser.size());
+  }
 
-    /**
-     * @see net.sf.sail.webapp.junit.AbstractTransactionalDbTests#onTearDownAfterTransaction()
-     */
-    @Override
-    protected void onTearDownAfterTransaction() throws Exception {
-        super.onTearDownAfterTransaction();
-        this.defaultRun = null;
-    }
-    
-    public void testSave() {
-        verifyRunAndJoinTablesAreEmpty();
+  @Test
+  public void getRunListByUser_StudentInPeriodAndWorkgroup_ShouldReturnRun() throws Exception {
+    List<Run> runsByUser = runDao.getRunListByUser(student2);
+    assertEquals(0, runsByUser.size());
+    period2.addMember(student2);
+    Set<User> members = new HashSet<User>();
+    members.add(student2);
+    createWorkgroup(members, run, period2);
+    runsByUser = runDao.getRunListByUser(student2);
+    assertEquals(1, runsByUser.size());
+  }
 
-        this.defaultRun.setOwners(DEFAULT_OWNERS);
-        this.runDao.save(this.defaultRun);
-        // flush is required to cascade the join table for some reason
-        this.toilet.flush();
+  @Test
+  public void getRunsOfProject_NoRuns_Success() {
+    List<Run> runs = runDao.getRunsOfProject(0L);
+    assertEquals(0, runs.size());
+  }
 
-        List<?> runsList = retrieveRunListFromDb();
-        assertEquals(1, runsList.size());
-        // TODO HT: figure out why this works when this test class is run individually,
-        // but not when you do mvn test
-//        assertEquals(1, retrieveRunsAndOwnersListFromDb().size());
-//        assertEquals(1, retrieveRunsRelatedToOwnersListFromDb().size());
-        assertEquals(0, retrieveRunsRelatedToGroupsListFromDb().size());
-        assertEquals(0, retrieveRunsAndGroupsListFromDb().size());
+  @Test
+  public void getRunsOfProject_OneRun_Success() {
+    List<Run> runs = runDao.getRunsOfProject(0L);
+    assertEquals(0, runs.size());
+    runs = runDao.getRunsOfProject((Long) project.getId());
+    assertEquals(1, runs.size());
+  }
 
-        Map<?, ?> runMap = (Map<?, ?>) runsList.get(0);
-        assertEquals(this.DEFAULT_STARTTIME, runMap
-                .get(RunImpl.COLUMN_NAME_STARTTIME.toUpperCase()));
-        assertEquals(this.DEFAULT_RUNCODE, runMap.get(RunImpl.COLUMN_NAME_RUN_CODE
-                .toUpperCase()));
-        assertNull(runMap.get(RunImpl.COLUMN_NAME_ENDTIME.toUpperCase()));
+  @Test
+  public void getRunListByOwner_NoRuns_Success() throws Exception {
+    List<Run> runs = runDao.getRunListByOwner(teacher2);
+    assertEquals(0, runs.size());
+  }
 
-        // now add groups to the run
-        Set<Group> periods = new TreeSet<Group>();
-        periods.add(DEFAULT_GROUP_1);
-        periods.add(DEFAULT_GROUP_2);
-        this.defaultRun.setPeriods(periods);
-        this.groupDao.save(DEFAULT_GROUP_1);
-        this.groupDao.save(DEFAULT_GROUP_2);
-        
-        this.runDao.save(this.defaultRun);
-        // flush is required to cascade the join table for some reason
-        this.toilet.flush();
+  @Test
+  public void getRunListByOwner_OneRun_Success() throws Exception {
+    List<Run> runs = runDao.getRunListByOwner(teacher1);
+    assertEquals(1, runs.size());
+  }
 
-        runsList = retrieveRunListFromDb();
-        List<?> allList = retrieveRunsAndGroupsListFromDb();
-        assertEquals(1, runsList.size());
-        assertEquals(2, retrieveRunsRelatedToGroupsListFromDb().size());
-        assertEquals(2, allList.size());
+  @Test
+  public void getRunListBySharedOwner_NoRuns_Success() throws Exception {
+    List<Run> runs = runDao.getRunListBySharedOwner(teacher2);
+    assertEquals(0, runs.size());
+  }
 
-        List<String> periodNames = new ArrayList<String>();
-        periodNames.add(DEFAULT_GROUP_1.getName());
-        periodNames.add(DEFAULT_GROUP_2.getName());
+  @Test
+  public void getRunListBySharedOwner_OneRun_Success() throws Exception {
+    List<Run> runs = runDao.getRunListBySharedOwner(teacher2);
+    assertEquals(0, runs.size());
+    run.getSharedowners().add(teacher2);
+    runDao.save(run);
+    runs = runDao.getRunListBySharedOwner(teacher2);
+    assertEquals(1, runs.size());
+  }
 
-        for (int i = 0; i < allList.size(); i++) {
-            Map<?, ?> allRunMap = (Map<?, ?>) allList.get(i);
-            String periodName = (String) allRunMap
-                    .get(PersistentGroup.COLUMN_NAME_NAME);
-            assertTrue(periodNames.contains(periodName));
-            periodNames.remove(periodName);
-        }
+  @Test
+  public void getRunsRunWithinTimePeriod_Today_Success() {
+    run.setLastRun(getDateXDaysFromNow(-2));
+    List<Run> runs = runDao.getRunsRunWithinTimePeriod("today");
+    assertEquals(0, runs.size());
+    run.setLastRun(getDateXDaysFromNow(0));
+    runs = runDao.getRunsRunWithinTimePeriod("today");
+    assertEquals(1, runs.size());
+  }
 
-        // now "end/archive the run"
-        this.DEFAULT_ENDTIME = Calendar.getInstance().getTime();
-        this.defaultRun.setEndtime(this.DEFAULT_ENDTIME);
+  @Test
+  public void getRunsRunWithinTimePeriod_Week_Success() {
+    run.setLastRun(getDateXDaysFromNow(-8));
+    List<Run> runs = runDao.getRunsRunWithinTimePeriod("week");
+    assertEquals(0, runs.size());
+    run.setLastRun(getDateXDaysFromNow(-6));
+    runs = runDao.getRunsRunWithinTimePeriod("week");
+    assertEquals(1, runs.size());
+  }
 
-        this.runDao.save(this.defaultRun);
-        // flush is required to cascade the join table for some reason
-        this.toilet.flush();
+  @Test
+  public void getRunsRunWithinTimePeriod_Month_Success() {
+    run.setLastRun(getDateXDaysFromNow(-31));
+    List<Run> runs = runDao.getRunsRunWithinTimePeriod("month");
+    assertEquals(0, runs.size());
+    run.setLastRun(getDateXDaysFromNow(-29));
+    runs = runDao.getRunsRunWithinTimePeriod("month");
+    assertEquals(1, runs.size());
+  }
 
-        runsList = retrieveRunListFromDb();
-        runMap = (Map<?, ?>) runsList.get(0);
-        assertEquals(this.DEFAULT_ENDTIME, runMap.get(RunImpl.COLUMN_NAME_ENDTIME
-                .toUpperCase()));
+  @Test
+  public void getRunsByActivity_NoneActive_Success() {
+    List<Run> runs = runDao.getRunsByActivity();
+    assertEquals(0, runs.size());
+  }
 
-    }
+  @Test
+  public void getRunsByActivity_OneActive_Success() {
+    List<Run> runs = runDao.getRunsByActivity();
+    assertEquals(0, runs.size());
+    run.setTimesRun(1);
+    runs = runDao.getRunsByActivity();
+    assertEquals(1, runs.size());
+  }
 
-    public void testSave_withoutProject() {
-    	// test saving the run without setting the project. Should fail
-        verifyRunAndJoinTablesAreEmpty();
+  @Test
+  public void getRunsByActivity_TwoActive_Success() {
+    List<Run> runs = runDao.getRunsByActivity();
+    assertEquals(0, runs.size());
+    run.setTimesRun(1);
+    String projectName = "Photosynthesis";
+    String runCode = "Panda123";
+    Long id = getNextAvailableProjectId();
+    Run run2 = createProjectAndRun(id, projectName, teacher1, startTime, runCode);
+    run2.setTimesRun(1);
+    runs = runDao.getRunsByActivity();
+    assertEquals(2, runs.size());
+  }
 
-        this.defaultRun.setProject(null);
-        try {
-        	this.runDao.save(this.defaultRun);
-        	fail("Exception expected to be thrown but was not");
-        } catch (Exception e) {
-        }
-    }
-    
-    // test the retrieveByRunCode() method of HiberateRunDao
-    public void testRetrieveByRunCode() throws Exception {
-        verifyRunAndJoinTablesAreEmpty();
+  private void verifyRunAndJoinTablesAreEmpty() {
+    assertTrue(retrieveRunListFromDb().isEmpty());
+    assertTrue(retrieveRunsRelatedToGroupsListFromDb().isEmpty());
+  }
 
-        this.runDao.save(this.defaultRun);
-        // flush is required to cascade the join table for some reason
-        this.toilet.flush();
+  private List<?> retrieveRunsRelatedToGroupsListFromDb() {
+    return jdbcTemplate.queryForList("SELECT * FROM " + RunImpl.PERIODS_JOIN_TABLE_NAME);
+  }
 
-        // get Run record from persistent data store and confirm it is
-        // complete
-        Run run = this.runDao.retrieveByRunCode(DEFAULT_RUNCODE);
-        assertTrue(run instanceof RunImpl);
-        assertTrue(RunImpl.class == run.getClass());
-
-        assertEquals(DEFAULT_RUNCODE, run.getRuncode());
-        assertEquals(DEFAULT_STARTTIME, run.getStarttime());
-
-        // user the same runcode but with all uppercase and make sure
-        // it can be retrieved
-        run = this.runDao.retrieveByRunCode(DEFAULT_RUNCODE.toUpperCase());
-        assertTrue(run instanceof RunImpl);
-        assertTrue(RunImpl.class == run.getClass());
-
-        assertEquals(DEFAULT_RUNCODE, run.getRuncode());
-        assertEquals(DEFAULT_STARTTIME, run.getStarttime());
-        
-        // choose random non-existent runcode and try to retrieve
-        try{
-        	this.runDao.retrieveByRunCode(RUNCODE_NOT_IN_DB);
-        	fail ("Expected ObjectNotFoundException");
-        }
-        catch (ObjectNotFoundException e) {}
-    }
-    
-    public void testGetById() throws Exception {
-        verifyRunAndJoinTablesAreEmpty();
-
-        this.runDao.save(this.defaultRun);
-
-        assertNotNull(this.runDao.getById(this.defaultRun.getId()));
-    }
-
-    private void verifyRunAndJoinTablesAreEmpty() {
-        assertTrue(this.retrieveRunListFromDb().isEmpty());
-        assertTrue(this.retrieveRunsRelatedToGroupsListFromDb().isEmpty());
-        assertTrue(this.retrieveRunsAndOwnersListFromDb().isEmpty());
-    }
-
-    /*
-     * SELECT * FROM runs_related_to_groups
-     */
-    private List<?> retrieveRunsRelatedToGroupsListFromDb() {
-        return this.jdbcTemplate.queryForList("SELECT * FROM "
-                + RunImpl.PERIODS_JOIN_TABLE_NAME);
-    }
-    
-    /*
-     * SELECT * FROM runs_related_to_owners
-     */
-    @SuppressWarnings("unused")
-	private List<?> retrieveRunsRelatedToOwnersListFromDb() {
-        return this.jdbcTemplate.queryForList("SELECT * FROM "
-                + RunImpl.OWNERS_JOIN_TABLE_NAME);
-    }
-
-    /*
-     * SELECT * FROM runs
-     */
-    private List<?> retrieveRunListFromDb() {
-        return this.jdbcTemplate.queryForList("SELECT * FROM "
-                + RunImpl.DATA_STORE_NAME, (Object[]) null);
-    }
-
-    /*
-     * SELECT * FROM runs, runs_related_to_groups, groups WHERE runs.id =
-     * runs_related_to_groups.run_fk AND groups.id =
-     * runs_related_to_groups.group_fk
-     */
-    private List<?> retrieveRunsAndGroupsListFromDb() {
-        return this.jdbcTemplate.queryForList("SELECT * FROM "
-                + RunImpl.DATA_STORE_NAME + ", " + RunImpl.PERIODS_JOIN_TABLE_NAME
-                + ", " + PersistentGroup.DATA_STORE_NAME + " WHERE "
-                + RunImpl.DATA_STORE_NAME + ".id = " + RunImpl.PERIODS_JOIN_TABLE_NAME
-                + "." + RunImpl.RUNS_JOIN_COLUMN_NAME + " AND "
-                + PersistentGroup.DATA_STORE_NAME + ".id = "
-                + RunImpl.PERIODS_JOIN_TABLE_NAME + "."
-                + RunImpl.PERIODS_JOIN_COLUMN_NAME, (Object[]) null);
-    }
-    
-    /*
-     * SELECT * FROM runs, runs_related_to_owners, users WHERE runs.id = 
-     * runs_related_to_owners.run_fk AND users.id =
-     * runs_related_to_owners.owner_fk
-     */
-    private List<?> retrieveRunsAndOwnersListFromDb() {
-    	return this.jdbcTemplate.queryForList("SELECT * FROM "
-    			+ RunImpl.DATA_STORE_NAME + ", " + RunImpl.OWNERS_JOIN_TABLE_NAME
-    			+ ", " + UserImpl.DATA_STORE_NAME + " WHERE "
-    			+ RunImpl.DATA_STORE_NAME + ".id = " + RunImpl.OWNERS_JOIN_TABLE_NAME
-    			+ "." + RunImpl.OWNERS_JOIN_COLUMN_NAME + " AND "
-    			+ UserImpl.DATA_STORE_NAME + ".id = " 
-    			+ RunImpl.OWNERS_JOIN_TABLE_NAME + "."
-    			+ RunImpl.OWNERS_JOIN_COLUMN_NAME, (Object[]) null);
-    }
-
+  private List<?> retrieveRunListFromDb() {
+    return jdbcTemplate.queryForList("SELECT * FROM " + RunImpl.DATA_STORE_NAME,
+        (Object[]) null);
+  }
 }

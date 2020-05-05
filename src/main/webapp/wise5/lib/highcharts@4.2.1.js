@@ -1,1 +1,1 @@
-module.exports = require("lib/highcharts/highcharts.src.js");
+module.exports = require('../lib/highcharts/highcharts.src');

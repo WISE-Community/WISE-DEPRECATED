@@ -23,15 +23,8 @@
  */
 package org.wise.portal.presentation.web.listeners;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-
-import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
-
-import org.wise.portal.domain.user.User;
 
 /**
  * @author Hiroki Terashima
@@ -41,7 +34,6 @@ public class WISESessionListener implements HttpSessionListener {
   public void sessionCreated(HttpSessionEvent event) {
   }
 
-  @SuppressWarnings("unchecked")
   public void sessionDestroyed(HttpSessionEvent event) {
   }
 }

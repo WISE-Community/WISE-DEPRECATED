@@ -1,4 +1,4 @@
-<div class="main app-background">
+<div [ngClass]="{'main app-background' : !isShowingAngularJSApp()}">
   <div class="content">
     <router-outlet></router-outlet>
   </div>

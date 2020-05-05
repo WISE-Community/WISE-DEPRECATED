@@ -50,9 +50,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
   @Autowired
   private GrantedAuthorityDao<MutableGrantedAuthority> grantedAuthorityDao;
 
-  /**
-   * @see UserDetailsService#loadUserByUsername(String)
-   */
   @Transactional(readOnly = true)
   public UserDetails loadUserByUsername(String username)
       throws UsernameNotFoundException, DataAccessException {
@@ -75,9 +72,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     this.updateUserDetails((MutableUserDetails) userDetails);
   }
 
-  /**
-   * @see UserDetailsService#createGrantedAuthority(MutableGrantedAuthority)
-   */
   @Transactional(rollbackFor = { DuplicateAuthorityException.class })
   public MutableGrantedAuthority createGrantedAuthority(
       MutableGrantedAuthority mutableGrantedAuthority) throws DuplicateAuthorityException {
@@ -100,9 +94,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
   }
 
-  /**
-   * @see UserDetailsService#loadAuthorityByName(String)
-   */
   @Transactional(readOnly = true)
   public GrantedAuthority loadAuthorityByName(String authority) throws AuthorityNotFoundException {
     GrantedAuthority grantedAuthority = grantedAuthorityDao.retrieveByName(authority);
@@ -122,11 +113,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     userDetailsDao.save(userDetails);
   }
 
-  public List<MutableUserDetails> retrieveAllUserDetails(String userDetailsClassname) {
-    return userDetailsDao.retrieveAll(userDetailsClassname);
+  public List<String> retrieveAllTeacherUsernames() {
+    return userDetailsDao.retrieveAllTeacherUsernames();
   }
 
-  public List<String> retrieveAllUsernames(String userDetailsClassName) {
-    return userDetailsDao.retrieveAll(userDetailsClassName, "username");
+  public List<String> retrieveAllStudentUsernames() {
+    return userDetailsDao.retrieveAllStudentUsernames();
   }
 }

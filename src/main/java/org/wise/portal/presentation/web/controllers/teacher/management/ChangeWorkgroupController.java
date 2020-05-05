@@ -23,6 +23,7 @@
  */
 package org.wise.portal.presentation.web.controllers.teacher.management;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -99,7 +100,7 @@ public class ChangeWorkgroupController {
     }
     model.addAttribute("changeWorkgroupParameters", params);
 
-    Set<Workgroup> workgroups = runService
+    List<Workgroup> workgroups = runService
         .getWorkgroups(Long.parseLong(request.getParameter(RUN_ID)),
         Long.parseLong(request.getParameter(PERIOD_ID)));
     model.addAttribute(WORKGROUPS_TO, workgroups);

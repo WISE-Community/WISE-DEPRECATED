@@ -22,27 +22,42 @@
  */
 package org.wise.portal.service.run.impl;
 
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.isA;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
+import java.util.Properties;
 import java.util.Set;
 
-import junit.framework.TestCase;
-
 import org.easymock.EasyMock;
+import org.easymock.EasyMockRunner;
+import org.easymock.Mock;
+import org.easymock.TestSubject;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.group.GroupDao;
-import org.wise.portal.dao.module.CurnitDao;
 import org.wise.portal.dao.run.RunDao;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.group.impl.PersistentGroup;
-import org.wise.portal.domain.module.Curnit;
-import org.wise.portal.domain.module.impl.CurnitImpl;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.impl.ProjectImpl;
-import org.wise.portal.domain.run.Offering;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.run.impl.RunImpl;
 import org.wise.portal.domain.run.impl.RunParameters;
@@ -51,318 +66,268 @@ import org.wise.portal.domain.user.impl.UserImpl;
 import org.wise.portal.service.acl.AclService;
 
 /**
- * Test class for RunServiceImpl class
- * 
  * @author Hiroki Terashima
- * @version $Id$
  */
-public class RunServiceImplTest extends TestCase {
+@RunWith(EasyMockRunner.class)
+public class RunServiceImplTest {
 
-    private static final String CURNIT_NAME = "name";
+  private static final String PROJECT_NAME = "Airbags!!!";
 
-    private static final String CURNIT_URL = "url";
+  private static Set<String> periodNames = new HashSet<String>();
 
-    private static final String JNLP_NAME = "jname";
+  private User owner = new UserImpl();
 
-    private static final String JNLP_URL = "jurl";
+  static {
+    periodNames.add("Period 1");
+    periodNames.add("Period 2");
+  }
 
-    private static final Long CURNIT_ID = new Long(3);
+  @Mock
+  private RunDao<Run> runDao;
 
-	private static final String PROJECT_NAME = "Airbags!!!";
+  @Mock
+  private GroupDao<Group> groupDao;
 
-    private static Set<String> periodNames = new HashSet<String>();
+  @TestSubject
+  private RunServiceImpl runService = new RunServiceImpl();
 
-    private Set<User> owners = new HashSet<User>();
-    
-    static {
-    	periodNames.add("Period 1");
-    	periodNames.add("Period 2");
+  @Mock
+  private AclService<Run> aclService;
+
+  @Mock
+  private Properties appProperties;
+
+  private Run run;
+
+  private RunParameters runParameters;
+
+  @SuppressWarnings("unchecked")
+  @Before
+  public void setUp() {
+    aclService = EasyMock.createMock(AclService.class);
+    Project project = new ProjectImpl();
+    project.setName(PROJECT_NAME);
+
+    run = new RunImpl();
+    Calendar cal = Calendar.getInstance();
+    cal.set(2000, 6, 19);
+    run.setStarttime(cal.getTime());
+    run.setProject(project);
+
+    runParameters = new RunParameters();
+    runParameters.setLocale(Locale.GERMAN);
+    runParameters.setName(PROJECT_NAME);
+    runParameters.setOwner(owner);
+    runParameters.setProject(project);
+  }
+
+  @After
+  public void tearDown() {
+    runService = null;
+    runDao = null;
+    aclService = null;
+    run = null;
+    runParameters = null;
+  }
+
+  @Test
+  public void getRunList_OneRunInDB_ShouldReturnOneRun() {
+    List<Run> expectedList = new LinkedList<Run>();
+    expectedList.add(new RunImpl());
+    expect(runDao.getList()).andReturn(expectedList);
+    replay(runDao);
+    assertEquals(expectedList, runService.getRunList());
+    verify(runDao);
+  }
+
+  @Test
+  public void getRunList_User_ShouldReturnRunsAccessibleByUser() {
+    User user = new UserImpl();
+    List<Group> expectedGroups = new LinkedList<Group>();
+    Group group = new PersistentGroup();
+    group.addMember(user);
+    expectedGroups.add(group);
+    List<Run> expectedList = new LinkedList<Run>();
+    Run run = new RunImpl();
+    Set<Group> groups = new HashSet<Group>();
+    groups.add(group);
+    run.setPeriods(groups);
+    expectedList.add(run);
+    expect(runDao.getRunListByUser(user)).andReturn(expectedList);
+    replay(runDao);
+    assertEquals(expectedList, runService.getRunList(user));
+    verify(runDao);
+  }
+
+  @Test
+  public void createRun_WithoutPeriods_ShouldCreateRun() throws ObjectNotFoundException {
+    expectRunCodeGeneration();
+    replay(appProperties);
+    expectRunSave();
+    replay(runDao);
+    Run run = runService.createRun(runParameters);
+    assertNull(run.getEndtime());
+    assertNotNull(run.getRuncode());
+    assertTrue(run.getRuncode() instanceof String);
+    assertEquals(0, run.getPeriods().size());
+    verify(runDao);
+    verify(appProperties);
+  }
+
+  @Test
+  public void createRun_WithPeriods_ShouldCreateRun() throws Exception {
+    for (String periodName : periodNames) {
+      Group group = new PersistentGroup();
+      group.setName(periodName);
+      groupDao.save(group);
+      expectLastCall();
     }
-
-    private CurnitDao<Curnit> mockCurnitDao;
-
-    private RunDao<Run> mockRunDao;
-
-    private GroupDao<Group> mockGroupDao;
-    
-    private RunServiceImpl runServiceImpl;
-    
-	private AclService<Offering> mockAclService;
-	
-	private Run run;
-	
-	private Project project;
-
-    /**
-     * @see net.sf.sail.webapp.junit.AbstractTransactionalDbTests#onSetUpInTransaction()
-     */
-    @SuppressWarnings("unchecked")
-    @Override
-    protected void setUp() throws Exception {
-        super.setUp();
-
-        this.runServiceImpl = new RunServiceImpl();
-
-        this.mockCurnitDao = EasyMock.createMock(CurnitDao.class);
-        this.runServiceImpl.setCurnitDao(this.mockCurnitDao);
-
-        this.mockGroupDao = EasyMock.createMock(GroupDao.class);
-        this.runServiceImpl.setGroupDao(mockGroupDao);
-
-        this.mockRunDao = EasyMock.createNiceMock(RunDao.class);
-        this.runServiceImpl.setRunDao(this.mockRunDao);
-        
-		this.mockAclService = EasyMock.createMock(AclService.class);
-		this.runServiceImpl.setAclService(mockAclService);
-        
-        User user = new UserImpl();
-		owners.add(user);
-		
-		this.project = new ProjectImpl();
-		this.project.setName(PROJECT_NAME);
-		
-		this.run = new RunImpl();
-		this.run.setStarttime(Calendar.getInstance().getTime());
-		this.run.setProject(project);
+    replay(groupDao);
+    runParameters.setPeriodNames(periodNames);
+    expectRunCodeGeneration();
+    replay(appProperties);
+    expectRunSave();
+    replay(runDao);
+    Run run = runService.createRun(runParameters);
+    assertNull(run.getEndtime());
+    assertNotNull(run.getRuncode());
+    assertTrue(run.getRuncode() instanceof String);
+    assertEquals(2, run.getPeriods().size());
+    for (Group period : run.getPeriods()) {
+      assertTrue(periodNames.contains(period.getName()));
     }
+    verify(groupDao);
+    verify(runDao);
+    verify(appProperties);
+  }
 
-    /**
-     * @see net.sf.sail.webapp.junit.AbstractTransactionalDbTests#onTearDownAfterTransaction()
-     */
-    @Override
-    protected void tearDown() throws Exception {
-        super.tearDown();
-        this.runServiceImpl = null;
-        this.mockRunDao = null;
-		this.mockAclService = null;
-		this.run = null;
+  @Test
+  public void retrieveById_RunExists_ShouldReturnRun() throws Exception {
+    Run run = new RunImpl();
+    Long runId = new Long(5);
+    expect(runDao.getById(runId)).andReturn(run);
+    replay(runDao);
+    Run retrievedRun = runService.retrieveById(runId);
+    assertEquals(run, retrievedRun);
+    verify(runDao);
+  }
+
+  @Test
+  public void retrieveById_RunDoesNotExist_ShouldThrowException()
+      throws ObjectNotFoundException {
+    Long runIdNotInDB = new Long(-1);
+    expect(runDao.getById(runIdNotInDB))
+        .andThrow(new ObjectNotFoundException(runIdNotInDB, Run.class));
+    replay(runDao);
+    try {
+      runService.retrieveById(runIdNotInDB);
+      fail("ObjectNotFoundException not thrown but should have been thrown");
+    } catch (ObjectNotFoundException e) {
     }
+    verify(runDao);
+  }
 
-    public void testGetRunList() throws Exception {
-        List<Run> expectedList = new LinkedList<Run>();
-        expectedList.add(new RunImpl());
-
-        EasyMock.expect(this.mockRunDao.getList()).andReturn(expectedList);
-        EasyMock.replay(this.mockRunDao);
-        assertEquals(expectedList, runServiceImpl.getRunList());
-        EasyMock.verify(this.mockRunDao);
+  @Test
+  public void retrieveRunByRuncode_RunExists_ShouldReturnRun()
+      throws Exception {
+    Run run = new RunImpl();
+    String runCodeInDB = "falcon8989";
+    expect(runDao.retrieveByRunCode(runCodeInDB)).andReturn(run);
+    replay(runDao);
+    try {
+      Run retrievedRun = runService.retrieveRunByRuncode(runCodeInDB);
+      assertEquals(run, retrievedRun);
+    } catch (ObjectNotFoundException e) {
+      fail("ObjectNotFoundException thrown but should not have been thrown");
     }
-    
-    public void testGetRunListGivenUser() throws Exception {
-    	User user = new UserImpl();
-    	List<Group> expectedGroups = new LinkedList<Group>();
-    	Group group = new PersistentGroup();
-    	group.addMember(user);
-    	expectedGroups.add(group);
-        List<Run> expectedList = new LinkedList<Run>();
-        Run run = new RunImpl();
-        Set<Group> groups = new HashSet<Group>();
-        groups.add(group);
-        run.setPeriods(groups);
-        expectedList.add(run);
+    verify(runDao);
+  }
 
-        EasyMock.expect(this.mockRunDao.getList()).andReturn(expectedList);
-        EasyMock.replay(this.mockRunDao);
-        assertEquals(expectedList, runServiceImpl.getRunList(user));
-        EasyMock.verify(this.mockRunDao);
+  @Test
+  public void retrieveByRunCode_RunNotInDB_ShouldThrowException()
+      throws ObjectNotFoundException {
+    String runcodeNotInDB = "badbadbad3454";
+    expect(runDao.retrieveByRunCode(runcodeNotInDB))
+        .andThrow(new ObjectNotFoundException(runcodeNotInDB, Run.class));
+    replay(runDao);
+    try {
+      runService.retrieveRunByRuncode(runcodeNotInDB);
+      fail("ObjectNotFoundException not thrown but should have been thrown");
+    } catch (ObjectNotFoundException e) {
     }
+    verify(runDao);
+  }
 
-    public void testCreateRunWithoutPeriods() throws Exception {
-        Curnit curnit = new CurnitImpl();
-        EasyMock.expect(this.mockCurnitDao.getById(CURNIT_ID))
-                .andReturn(curnit);
-        EasyMock.replay(this.mockCurnitDao);
+  @Test
+  public void endRun_ActiveRun_ShouldEndRun() {
+    assertNull(run.getEndtime());
+    runDao.save(run);
+    expectLastCall();
+    replay(runDao);
+    runService.endRun(run);
+    assertNotNull(run.getEndtime());
+    assertTrue(run.getStarttime().before(run.getEndtime()));
+    verify(runDao);
+  }
 
-        this.project.setCurnit(curnit);
+  @Test
+  public void endRun_EndedRun_ShouldKeepPreviousEndTime() {
+    Date endtime = Calendar.getInstance().getTime();
+    run.setEndtime(endtime);
+    replay(runDao);
+    runService.endRun(run);
+    assertNotNull(run.getEndtime());
+    assertEquals(endtime, run.getEndtime());
+    assertTrue(run.getStarttime().before(run.getEndtime()));
+    verify(runDao);
+  }
 
-        RunParameters runParameters = new RunParameters();
-        runParameters.setName(CURNIT_NAME);
-        runParameters.setOwners(owners);
-        runParameters.setProject(this.project);
-        
-        this.mockRunDao.retrieveByRunCode(EasyMock.isA(String.class));
-        EasyMock.expectLastCall().andThrow(new ObjectNotFoundException("runcode", Run.class));
-        EasyMock.replay(this.mockRunDao);
+  @Test
+  public void restartRun_EndedRun_ShouldRestartRun() {
+    run.setEndtime(Calendar.getInstance().getTime());
+    runDao.save(run);
+    expectLastCall();
+    replay(runDao);
+    runService.restartRun(run);
+    assertFalse(run.isEnded());
+    assertNull(run.getEndtime());
+    verify(runDao);
+  }
 
-        Run run = runServiceImpl.createRun(runParameters);
-        assertNull(run.getEndtime());
-        assertNotNull(run.getRuncode());
-        assertTrue(run.getRuncode() instanceof String);
+  @Test
+  public void startRun_ActiveRun_ShouldDoNothing() {
+    assertNull(run.getEndtime());
+    assertFalse(run.isEnded());
+    replay(runDao);
+    runService.startRun(run);
+    assertNull(run.getEndtime());
+    assertFalse(run.isEnded());
+    verify(runDao);
+  }
 
-        assertEquals(0, run.getPeriods().size());
-        EasyMock.verify(this.mockRunDao);
-    }
+  @Test
+  public void startRun_EndedRun_ShouldStartRun() {
+    Date endtime = Calendar.getInstance().getTime();
+    run.setEndtime(endtime);
+    assertTrue(run.getStarttime().before(run.getEndtime()));
+    runDao.save(run);
+    expectLastCall();
+    replay(runDao);
+    runService.startRun(run);
+    assertNull(run.getEndtime());
+    assertFalse(run.isEnded());
+    verify(runDao);
+  }
 
-    public void testCreateRunWithPeriods() throws Exception {
-        Curnit curnit = new CurnitImpl();
-        EasyMock.expect(this.mockCurnitDao.getById(CURNIT_ID))
-                .andReturn(curnit);
-        EasyMock.replay(this.mockCurnitDao);
+  private void expectRunCodeGeneration() throws ObjectNotFoundException {
+    expect(appProperties.getProperty(isA(String.class), isA(String.class))).andReturn("lion");
+    expect(appProperties.containsKey("runcode_prefixes_de")).andReturn(false);
+    expect(runDao.retrieveByRunCode(EasyMock.isA(String.class)))
+        .andThrow(new ObjectNotFoundException("runcode", Run.class));
+  }
 
-        Group group = null;
-        for (String periodName : periodNames) {
-        	group = new PersistentGroup();
-        	group.setName(periodName);
-        	this.mockGroupDao.save(group);
-            EasyMock.expectLastCall();
-        }
-        EasyMock.replay(this.mockGroupDao);
-
-        // TODO LAW figure out how to get this from the beans
-        RunParameters runParameters = new RunParameters();
-        project.setCurnit(curnit);
-        runParameters.setName(CURNIT_NAME);
-        runParameters.setPeriodNames(periodNames);
-        runParameters.setOwners(owners);
-        runParameters.setProject(project);
-        
-        this.mockRunDao.retrieveByRunCode(EasyMock.isA(String.class));
-        EasyMock.expectLastCall().andThrow(new ObjectNotFoundException("runcode", Run.class));
-        EasyMock.replay(this.mockRunDao);
-
-        Run run = runServiceImpl.createRun(runParameters);
-        assertNull(run.getEndtime());
-        assertNotNull(run.getRuncode());
-        assertTrue(run.getRuncode() instanceof String);
-
-        assertEquals(2, run.getPeriods().size());
-        for (Group period : run.getPeriods()) {
-        	assertTrue(periodNames.contains(period.getName()));
-        }
-        EasyMock.verify(this.mockRunDao);
-    }
-    
-    public void testRetrieveById() throws Exception {
-    	Run run = new RunImpl();
-    	Long runId = new Long(5);
-        EasyMock.expect(this.mockRunDao.getById(runId)).andReturn(run);
-        EasyMock.replay(this.mockRunDao);
-        Run retrievedRun = null;
-       	retrievedRun = runServiceImpl.retrieveById(runId);
-		
-       	assertEquals(run, retrievedRun);
-        EasyMock.verify(this.mockRunDao);
-
-        EasyMock.reset(this.mockRunDao);
-        EasyMock.expect(this.mockRunDao.getById(runId)).andThrow(new ObjectNotFoundException(runId, Run.class));
-        EasyMock.replay(this.mockRunDao);
-        retrievedRun = null;
-        try {
-			retrievedRun = runServiceImpl.retrieveById(runId);
-			fail("ObjectNotFoundException not thrown but should have been thrown");
-		} catch (ObjectNotFoundException e) {
-		}
-		
-		assertNull(retrievedRun);
-        EasyMock.verify(this.mockRunDao);
-    }
-    
-    public void testRetrieveRunByRuncode() throws Exception {
-    	Run run = new RunImpl();
-
-    	String good_runcode = "falcon8989";
-    	String bad_runcode = "badbadbad3454";
-    	EasyMock.expect(this.mockRunDao.retrieveByRunCode(good_runcode)).andReturn(run);
-        EasyMock.replay(this.mockRunDao);
-
-    	Run retrievedRun = null;
-    	try {
-    		retrievedRun = runServiceImpl.retrieveRunByRuncode(good_runcode);
-    	} catch (ObjectNotFoundException e) {
-    		fail("ObjectNotFoundException thrown but should not have been thrown");
-    	}
-    	assertEquals(run, retrievedRun);
-        EasyMock.verify(this.mockRunDao);
-
-        EasyMock.reset(this.mockRunDao);
-    	EasyMock.expect(this.mockRunDao.retrieveByRunCode(bad_runcode)).andThrow(new ObjectNotFoundException(bad_runcode, Run.class));
-        EasyMock.replay(this.mockRunDao);
-        retrievedRun = null;
-        try {
-			retrievedRun = runServiceImpl.retrieveRunByRuncode(bad_runcode);
-			fail("ObjectNotFoundException not thrown but should have been thrown");
-		} catch (ObjectNotFoundException e) {
-		}
-
-		assertNull(retrievedRun);
-        EasyMock.verify(this.mockRunDao);
-    }
-    
-    public void testEndRun_on_Ongoing_Run() {
-    	// this test also tests the isRestarted() method.
-    	assertNull(run.getEndtime());
-    	assertFalse(run.isEnded());
-    	this.mockRunDao.save(run);
-    	EasyMock.expectLastCall();
-    	EasyMock.replay(this.mockRunDao);
-    	runServiceImpl.endRun(run);
-
-    	assertTrue(run.isEnded());
-    	assertNotNull(run.getEndtime());
-    	assertTrue(!run.getStarttime().after(run.getEndtime()));
-        EasyMock.verify(this.mockRunDao);
-    }
-
-    public void testEndRun_on_Ended_Run() {
-    	// this test also tests the isRestarted() method.
-    	Date endtime = Calendar.getInstance().getTime();
-    	run.setEndtime(endtime);
-    	assertTrue(run.isEnded());
-    	EasyMock.replay(this.mockRunDao);
-    	runServiceImpl.endRun(run);
-
-    	assertNotNull(run.getEndtime());
-    	assertTrue(run.isEnded());
-    	// check that endtime didn't change
-    	assertEquals(endtime, run.getEndtime());
-    	assertTrue(!run.getStarttime().after(run.getEndtime()));
-        EasyMock.verify(this.mockRunDao);
-    }
-
-    public void testRestartRun_on_Ended_Run() {
-      assertNotNull(run.getEndtime());
-      assertTrue(run.isEnded());
-      this.mockRunDao.save(run);
-      EasyMock.replay(this.mockRunDao);
-      runServiceImpl.restartRun(run);
-
-      assertFalse(run.isEnded());
-      assertNull(run.getEndtime());
-        EasyMock.verify(this.mockRunDao);
-    }
-
-    public void testStartRun_on_Ongoing_Run() {
-    	// this test also tests the isEnded() method.
-    	assertNull(run.getEndtime());
-    	assertFalse(run.isEnded());
-    	EasyMock.replay(this.mockRunDao);
-    	runServiceImpl.startRun(run);
-
-    	assertFalse(run.isEnded());
-    	assertNull(run.getEndtime());
-        EasyMock.verify(this.mockRunDao);
-    }
-    
-    public void testStartRun_on_Ended_Run() {
-    	// this test also tests the isEnded() method.
-    	Date endtime = Calendar.getInstance().getTime();
-    	run.setEndtime(endtime);
-    	assertTrue(run.isEnded());
-    	assertTrue(!run.getStarttime().after(run.getEndtime()));
-    	EasyMock.replay(this.mockRunDao);
-    	runServiceImpl.startRun(run);
-
-    	assertNull(run.getEndtime());
-    	assertFalse(run.isEnded());
-        EasyMock.verify(this.mockRunDao);
-    }
-    
-    public void testGetWorkgroups() {
-    	assertTrue(true);
-    	// TODO PatrickLawler test testGetWorkgroups
-    }
-    // TODO HT: test when duplicate runcode is generated by the
-    // runcode generator http://www.telscenter.org/jira//browse/TELSP-202
-    
-    // TODO HT: test creating a run without specifying a project
+  private void expectRunSave() {
+    runDao.save(isA(Run.class));
+    expectLastCall();
+  }
 }

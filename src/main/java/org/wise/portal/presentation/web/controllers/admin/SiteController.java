@@ -34,6 +34,7 @@ import org.wise.portal.service.portal.PortalService;
 
 /**
  * Controller for single-page site app built with Angular
+ *
  * @author Hiroki Terashima
  * @author Geoffrey Kwan
  * @author Jonathan Lim-Breitbart
@@ -45,11 +46,12 @@ public class SiteController {
   @Autowired
   PortalService portalService;
 
-  @GetMapping(value = {"", "/student", "/student/**", "/teacher", "/teacher/**", "/login", 
-      "/login/**", "/join", "/join/**", "/news", "/about", "/features", "/privacy", "/news",
-      "/contact", "/contact/**", "/help", "/help/**", "/forgot", "/forgot/**"})
+  @GetMapping(value = { "", "/student", "/student/**", "/preview", "/preview/**", "/teacher",
+      "/teacher/**", "/login", "/login/**", "/join", "/join/**", "/news", "/about", "/features",
+      "/privacy", "/news", "/contact", "/contact/**", "/help", "/help/**", "/forgot",
+      "/forgot/**" })
   protected String showSite() {
-    return "forward:/index.html";
+    return "forward:/site/dist/index.html";
   }
 
   @ResponseBody

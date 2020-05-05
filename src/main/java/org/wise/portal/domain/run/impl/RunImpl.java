@@ -29,8 +29,6 @@ import org.hibernate.annotations.SortNatural;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wise.portal.domain.PeriodNotFoundException;
-import org.wise.portal.domain.announcement.Announcement;
-import org.wise.portal.domain.announcement.impl.AnnouncementImpl;
 import org.wise.portal.domain.attendance.StudentAttendance;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.group.Group;
@@ -45,8 +43,8 @@ import javax.persistence.*;
 import java.util.*;
 
 /**
- * WISE "run" domain object A WISE run is an run with more information,
- * such as starttime, stoptime, runcode
+ * WISE "run" domain object A WISE run is an run with more information, such as starttime, stoptime,
+ * runcode
  *
  * @author Hiroki Terashima
  */
@@ -89,12 +87,6 @@ public class RunImpl implements Run {
 
   @Transient
   public static final String SHARED_OWNERS_JOIN_COLUMN_NAME = "shared_owners_fk";
-
-  @Transient
-  public static final String ANNOUNCEMENTS_JOIN_TABLE_NAME = "runs_related_to_announcements";
-
-  @Transient
-  public static final String ANNOUNCEMENTS_JOIN_COLUMN_NAME = "announcements_fk";
 
   @Transient
   public static final long serialVersionUID = 1L;
@@ -168,7 +160,8 @@ public class RunImpl implements Run {
   private Date archiveReminderTime;
 
   @OneToMany(targetEntity = PersistentGroup.class, fetch = FetchType.LAZY)
-  @JoinTable(name = PERIODS_JOIN_TABLE_NAME, joinColumns = { @JoinColumn(name = RUNS_JOIN_COLUMN_NAME, nullable = false) }, inverseJoinColumns = @JoinColumn(name = PERIODS_JOIN_COLUMN_NAME, nullable = false))
+  @JoinTable(name = PERIODS_JOIN_TABLE_NAME, joinColumns = {
+      @JoinColumn(name = RUNS_JOIN_COLUMN_NAME, nullable = false) }, inverseJoinColumns = @JoinColumn(name = PERIODS_JOIN_COLUMN_NAME, nullable = false))
   @SortNatural
   @Getter
   @Setter
@@ -187,17 +180,11 @@ public class RunImpl implements Run {
   private Project project;
 
   @ManyToMany(targetEntity = UserImpl.class, fetch = FetchType.LAZY)
-  @JoinTable(name = SHARED_OWNERS_JOIN_TABLE_NAME, joinColumns = { @JoinColumn(name =  RUNS_JOIN_COLUMN_NAME, nullable = false) }, inverseJoinColumns = @JoinColumn(name = SHARED_OWNERS_JOIN_COLUMN_NAME, nullable = false))
+  @JoinTable(name = SHARED_OWNERS_JOIN_TABLE_NAME, joinColumns = {
+      @JoinColumn(name = RUNS_JOIN_COLUMN_NAME, nullable = false) }, inverseJoinColumns = @JoinColumn(name = SHARED_OWNERS_JOIN_COLUMN_NAME, nullable = false))
   @Getter
   @Setter
   private Set<User> sharedowners = new TreeSet<User>();
-
-  @OneToMany(targetEntity = AnnouncementImpl.class, fetch = FetchType.LAZY)
-  @JoinTable(name = ANNOUNCEMENTS_JOIN_TABLE_NAME, joinColumns = { @JoinColumn(name = RUNS_JOIN_COLUMN_NAME, nullable = false) }, inverseJoinColumns = @JoinColumn(name = ANNOUNCEMENTS_JOIN_COLUMN_NAME, nullable = false))
-  @SortNatural
-  @Getter
-  @Setter
-  private Set<Announcement> announcements = new TreeSet<Announcement>();
 
   @Column(name = COLUMN_NAME_RUNNAME)
   @Getter
@@ -207,14 +194,14 @@ public class RunImpl implements Run {
   @Column(name = COLUMN_NAME_INFO)
   @Getter
   @Setter
-  private String info;   // other info pertaining to the run
+  private String info; // other info pertaining to the run
 
   @Column(name = COLUMN_NAME_MAX_WORKGROUP_SIZE, nullable = true)
   @Getter
   @Setter
   private Integer maxWorkgroupSize;
 
-  @Column(name = COLUMN_NAME_EXTRAS, length=5120000, columnDefinition = "mediumtext")
+  @Column(name = COLUMN_NAME_EXTRAS, length = 5120000, columnDefinition = "mediumtext")
   @Getter
   @Setter
   private String extras;
@@ -242,12 +229,12 @@ public class RunImpl implements Run {
   @Column(name = COLUMN_NAME_PRIVATE_NOTES, length = 32768, columnDefinition = "text")
   @Getter
   @Setter
-  private String privateNotes;   // text (blob) 2^15
+  private String privateNotes; // text (blob) 2^15
 
   @Column(name = COLUMN_NAME_SURVEY, length = 32768, columnDefinition = "text")
   @Getter
   @Setter
-  private String survey;   // text (blob) 2^15
+  private String survey; // text (blob) 2^15
 
   public Group getPeriodByName(String periodName) throws PeriodNotFoundException {
     Set<Group> periods = getPeriods();
@@ -256,8 +243,7 @@ public class RunImpl implements Run {
         return period;
       }
     }
-    throw new PeriodNotFoundException("Period " + periodName +
-      " does not exist");
+    throw new PeriodNotFoundException("Period " + periodName + " does not exist");
   }
 
   public boolean isEnded() {
@@ -269,8 +255,7 @@ public class RunImpl implements Run {
   }
 
   public Group getPeriodOfStudent(User studentUser) {
-    Set<Group> periods = getPeriods();
-    for (Group period : periods) {
+    for (Group period : getPeriods()) {
       if (period.getMembers().contains(studentUser)) {
         return period;
       }
@@ -283,44 +268,26 @@ public class RunImpl implements Run {
     return user.getId() == owner.getId();
   }
 
-  /**
-   * @param teacherUser A User object.
-   * @return Whether the user is an owner or shared owner of the run.
-   */
   public boolean isTeacherAssociatedToThisRun(User teacherUser) {
-    Set<User> sharedOwners = getSharedowners();
     User owner = getOwner();
-    if (owner.equals(teacherUser) || sharedOwners.contains(teacherUser)) {
-      return true;
-    }
-    return false;
+    Set<User> sharedOwners = getSharedowners();
+    return owner.equals(teacherUser) || sharedOwners.contains(teacherUser);
   }
 
-  /**
-   * Get the shared owners in alphabetical order
-   * @return the shared owners list in alphabetical order
-   */
   public List<User> getSharedOwnersOrderedAlphabetically() {
     List<User> sharedOwnersList = new ArrayList<User>();
-
-    //get the shared owners in a list
     sharedOwnersList.addAll(sharedowners);
-
-    //get the comparator that will order the list alphabetically
     UserAlphabeticalComparator userAlphabeticalComparator = new UserAlphabeticalComparator();
-
-    //sort the list alphabetically
     Collections.sort(sharedOwnersList, userAlphabeticalComparator);
-
     return sharedOwnersList;
   }
 
   public boolean isPaused() {
     if (this.info != null) {
       int start = this.info.indexOf("<isPaused>");
-      if (start >=0) {
+      if (start >= 0) {
         int end = this.info.indexOf("</isPaused>");
-        String isPausedStr = this.info.substring(start+10, end);
+        String isPausedStr = this.info.substring(start + 10, end);
         System.out.println(isPausedStr);
         return new Boolean(isPausedStr).booleanValue();
       }
@@ -408,41 +375,7 @@ public class RunImpl implements Run {
     }
   }
 
-  public void setPortfolioEnabled(
-    boolean isPortfolioEnabled) {
-    String runInfoStr = this.getInfo();
-    JSONObject runInfo = null;
-    try {
-      if (runInfoStr != null && runInfoStr != null) {
-        runInfo = new JSONObject(runInfoStr);
-      } else {
-        runInfo = new JSONObject();
-      }
-      runInfo.put("isPortfolioEnabled", isPortfolioEnabled);
-      this.setInfo(runInfo.toString());
-    } catch (JSONException e) {
-      e.printStackTrace();
-    }
-  }
-
-  public boolean isPortfolioEnabled() {
-    String runInfoStr = this.getInfo();
-    if (runInfoStr != null && runInfoStr != null) {
-      try {
-        JSONObject runInfo = new JSONObject(runInfoStr);
-        if (runInfo.has("isPortfolioEnabled")) {
-          return runInfo.getBoolean("isPortfolioEnabled");
-        }
-      } catch (JSONException e) {
-        e.printStackTrace();
-        return false;
-      }
-    }
-    return false;
-  }
-
-  public void setStudentAssetUploaderEnabled(
-    boolean isStudentAssetUploaderEnabled) {
+  public void setStudentAssetUploaderEnabled(boolean isStudentAssetUploaderEnabled) {
     String runInfoStr = this.getInfo();
     JSONObject runInfo = null;
     try {
@@ -470,40 +403,41 @@ public class RunImpl implements Run {
     }
   }
 
-  /**
-   * Comparator used to order user names alphabetically
-   */
+  public int getNumStudents() {
+    int numStudents = 0;
+    for (Group period : periods) {
+      Set<User> members = period.getMembers();
+      numStudents += members.size();
+    }
+    return numStudents;
+  }
+
   public static class UserAlphabeticalComparator implements Comparator<User> {
 
     /**
      * Compares the user names of two User objects
-     * @param user1 a user object
-     * @param user2 a user object
-     * @return
-     * -1 if the user1 user names comes before the user2 user name
-     * 0 if the user1 user name is the same as the user2 user name
-     * 1 if the user1 user name comes after the user2 user name
+     * 
+     * @param user1
+     *                a user object
+     * @param user2
+     *                a user object
+     * @return -1 if the user1 user names comes before the user2 user name 0 if the user1 user name
+     *         is the same as the user2 user name 1 if the user1 user name comes after the user2
+     *         user name
      */
     @Override
     public int compare(User user1, User user2) {
       int result = 0;
 
-      if(user1 != null && user2 != null) {
-        //get the user details
+      if (user1 != null && user2 != null) {
         MutableUserDetails userDetails1 = user1.getUserDetails();
         MutableUserDetails userDetails2 = user2.getUserDetails();
-
-        if(userDetails1 != null && userDetails2 != null) {
-          //get the user names
+        if (userDetails1 != null && userDetails2 != null) {
           String username1 = userDetails1.getUsername();
           String username2 = userDetails2.getUsername();
-
-          if(username1 != null && username2 != null) {
-            //get the user names in lower case
+          if (username1 != null && username2 != null) {
             String username1LowerCase = username1.toLowerCase();
             String username2LowerCase = username2.toLowerCase();
-
-            //compare the user names
             result = username1LowerCase.compareTo(username2LowerCase);
           }
         }
@@ -521,5 +455,9 @@ public class RunImpl implements Run {
     } else {
       return true;
     }
+  }
+
+  public boolean isSharedTeacher(User user) {
+    return this.getSharedowners().contains(user);
   }
 }

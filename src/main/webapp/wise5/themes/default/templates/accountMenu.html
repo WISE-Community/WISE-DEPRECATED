@@ -3,11 +3,11 @@
     <md-list class="account-menu__info__title account-menu__users">
         <md-list-item>
             <div class="md-avatar">
-                <md-icon class="md-48" style="color: {{themeCtrl.getAvatarColorForWorkgroupId(themeCtrl.workgroupId)}};"> account_circle </md-icon>
+                <md-icon class="md-48" style="color: {{::themeCtrl.getAvatarColorForWorkgroupId(themeCtrl.workgroupId)}};"> account_circle </md-icon>
             </div>
             <div class="md-list-item-text">
-                <span ng-repeat="username in themeCtrl.workgroupUsernames">{{username.name}}<span ng-if="!$last">,&nbsp;</span></span>&nbsp;
-                <span class="account-menu__info__team" translate="accountMenuTeam" translate-value-id="{{themeCtrl.workgroupId}}"></span>
+                <span ng-repeat="username in ::themeCtrl.workgroupUsernames">{{::username.name}}<span ng-if="!$last">,&nbsp;</span></span>&nbsp;
+                <span class="account-menu__info__team" translate="accountMenuTeam" translate-value-id="{{::themeCtrl.workgroupId}}"></span>
             </div>
         </md-list-item>
     </md-list>
@@ -24,8 +24,9 @@
         <h3 class="accent-2">{{themeCtrl.rootNodeStatus.progress.completionPct}}%</h3>
     </div>
 </div>
-<md-divider ng-if="!themeCtrl.hideTotalScores && vleController.maxScore != null"></md-divider>
-<div class="account-menu__info" ng-if="!themeCtrl.hideTotalScores && vleController.maxScore != null">
+<span>
+<div class="account-menu__info" ng-if="::!themeCtrl.hideTotalScores && vleController.maxScore != null">
+    <md-divider></md-divider>
     <div class="account-menu__score" layout="row" layout-align="start center">
         <div layout="column">
             <span class="md-body-2" translate="accountMenuTotalScore"></span>
@@ -42,7 +43,7 @@
 </div>
 <md-divider></md-divider>
 <div class="account-menu__actions" layout="row">
-    <md-button id="goHomeButton" class="md-primary" ng-click="vleController.goHome()" aria-label="{{'GO_HOME' | translate}}"><span translate="GO_HOME" /></md-button>
+    <md-button id="goHomeButton" class="md-primary" ng-click="vleController.goHome()" aria-label="{{::'GO_HOME' | translate}}">{{::'GO_HOME' | translate}}</md-button>
     <span flex></span>
-    <md-button id="signOutButton" class="md-primary" ng-click="vleController.logOut()" aria-label="{{'SIGN_OUT' | translate}}"><span translate="SIGN_OUT" /></md-button>
+    <md-button id="signOutButton" class="md-primary" ng-click="vleController.logOut()" aria-label="{{::'SIGN_OUT' | translate}}">{{::'SIGN_OUT' | translate}}</md-button>
 </div>

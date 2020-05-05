@@ -23,23 +23,22 @@
  */
 package org.wise.portal.presentation.web.controllers.admin;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.wise.portal.domain.admin.DailyAdminJob;
 import org.wise.portal.domain.authentication.impl.StudentUserDetails;
 import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.service.authentication.UserDetailsService;
 import org.wise.portal.service.session.SessionService;
 import org.wise.portal.service.user.UserService;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 
 /**
  * @author Sally Ahn
@@ -56,9 +55,6 @@ public class ViewAllUsersController{
 
   @Autowired
   private SessionService sessionService;
-
-  @Autowired
-  private DailyAdminJob adminJob;
 
   protected static final String TEACHERS = "teachers";
 
@@ -79,7 +75,6 @@ public class ViewAllUsersController{
   private static final String LOGGED_IN_TEACHER_USERNAMES = "loggedInTeacherUsernames";
 
   @RequestMapping(method = RequestMethod.GET)
-  @SuppressWarnings("unchecked")
   protected String showUsers(HttpServletRequest request, ModelMap modelMap) throws Exception {
     String onlyShowLoggedInUser = request.getParameter("onlyShowLoggedInUser");
     String onlyShowUsersWhoLoggedIn = request.getParameter("onlyShowUsersWhoLoggedIn");
@@ -87,37 +82,35 @@ public class ViewAllUsersController{
       modelMap.put(LOGGED_IN_STUDENT_USERNAMES, sessionService.getLoggedInStudents());
       modelMap.put(LOGGED_IN_TEACHER_USERNAMES, sessionService.getLoggedInTeachers());
     } else if (onlyShowUsersWhoLoggedIn != null) {
-      Date dateMin = null, dateMax = null;
-      Calendar now = Calendar.getInstance();
+      List<User> studentsWhoLoggedInSince = new ArrayList<User>();
+      List<User> teachersWhoLoggedInSince = new ArrayList<User>();
       if ("today".equals(onlyShowUsersWhoLoggedIn)) {
-        Calendar todayZeroHour = Calendar.getInstance();
-        todayZeroHour.set(Calendar.HOUR_OF_DAY, 0);
-        todayZeroHour.set(Calendar.MINUTE, 0);
-        todayZeroHour.set(Calendar.SECOND, 0);
-        todayZeroHour.set(Calendar.MILLISECOND, 0);
-        dateMin = todayZeroHour.getTime();
-        dateMax = new Date(now.getTimeInMillis());
+        studentsWhoLoggedInSince =
+            userService.retrieveStudentUsersWhoLoggedInToday();
+        teachersWhoLoggedInSince = 
+            userService.retrieveTeacherUsersWhoLoggedInToday();
       } else if ("thisWeek".equals(onlyShowUsersWhoLoggedIn)) {
-        dateMax = new Date(now.getTimeInMillis());
-        now.set(Calendar.DAY_OF_WEEK, 1);
-        dateMin = now.getTime();
+        studentsWhoLoggedInSince =
+            userService.retrieveStudentUsersWhoLoggedInThisWeek();
+        teachersWhoLoggedInSince = 
+            userService.retrieveTeacherUsersWhoLoggedInThisWeek();
       } else if ("thisMonth".equals(onlyShowUsersWhoLoggedIn)) {
-        dateMax = new Date(now.getTimeInMillis());
-        now.set(Calendar.DAY_OF_MONTH, 1);
-        dateMin = now.getTime();
+        studentsWhoLoggedInSince =
+            userService.retrieveStudentUsersWhoLoggedInThisMonth();
+        teachersWhoLoggedInSince = 
+            userService.retrieveTeacherUsersWhoLoggedInThisMonth();
       } else if ("thisYear".equals(onlyShowUsersWhoLoggedIn)) {
-        dateMax = new Date(now.getTimeInMillis());
-        now.set(Calendar.DAY_OF_YEAR, 1);
-        dateMin = now.getTime();
+        studentsWhoLoggedInSince =
+            userService.retrieveStudentUsersWhoLoggedInThisYear();
+        teachersWhoLoggedInSince = 
+            userService.retrieveTeacherUsersWhoLoggedInThisYear();
+      } else {
+        studentsWhoLoggedInSince =
+            userService.retrieveStudentUsersWhoLoggedInSinceYesterday();
+        teachersWhoLoggedInSince = 
+            userService.retrieveTeacherUsersWhoLoggedInSinceYesterday();
       }
-
-      adminJob.setYesterday(dateMin);
-      adminJob.setToday(dateMax);
-
-      List<User> studentsWhoLoggedInSince = adminJob.findUsersWhoLoggedInSinceYesterday("studentUserDetails");
       modelMap.put("studentsWhoLoggedInSince", studentsWhoLoggedInSince);
-
-      List<User> teachersWhoLoggedInSince = adminJob.findUsersWhoLoggedInSinceYesterday("teacherUserDetails");
       modelMap.put("teachersWhoLoggedInSince", teachersWhoLoggedInSince);
     } else {
       String userType = request.getParameter(USER_TYPE);
@@ -125,10 +118,10 @@ public class ViewAllUsersController{
         List<String> allUsernames = this.userService.retrieveAllUsernames();
         modelMap.put(USERNAMES, allUsernames);
       } else if (userType.equals(STUDENT)) {
-        List<String> usernames = this.userDetailsService.retrieveAllUsernames(StudentUserDetails.class.getName());
+        List<String> usernames = this.userDetailsService.retrieveAllStudentUsernames();
         modelMap.put(STUDENTS, usernames);
       } else if (userType.equals(TEACHER)) {
-        List<String> usernames = this.userDetailsService.retrieveAllUsernames(TeacherUserDetails.class.getName());
+        List<String> usernames = this.userDetailsService.retrieveAllTeacherUsernames();
         modelMap.put(TEACHERS, usernames);
       }
     }

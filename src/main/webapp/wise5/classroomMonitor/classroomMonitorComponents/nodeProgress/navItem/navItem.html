@@ -1,4 +1,4 @@
-<ng-switch on="$ctrl.type" ng-if="$ctrl.nodeHasWork || $ctrl.isGroup">
+<ng-switch on="::$ctrl.type" ng-if="$ctrl.nodeHasWork || $ctrl.isGroup">
     <md-card ng-switch-when="card"
              class="nav-item--card"
              ng-class="{'nav-item--card--group':$ctrl.isGroup, 'expanded md-whiteframe-3dp':$ctrl.expanded}">
@@ -6,33 +6,33 @@
             <div layout="row">
                 <node-icon node-id="$ctrl.nodeId" size="36"></node-icon>
                 <div class="md-title nav-item__title" style="color: {{$ctrl.icon.color}};" flex>
-                    <span>{{ $ctrl.nodeTitle }}</span>
+                    <span>{{ ::$ctrl.nodeTitle }}</span>
                 </div>
                 <md-icon class="nav-item__collapse" ng-show="$ctrl.isGroup && $ctrl.expanded" aria-label="collapse">remove</md-icon>
             </div>
             <alert-status-corner has-alert="$ctrl.newAlert" has-new-alert="$ctrl.newAlert" message="$ctrl.alertIconLabel"></alert-status-corner>
         </md-card-content>
-        <md-card-content ng-if="$ctrl.isGroup" ng-show="$ctrl.expanded" class="nav-contents nav-contents--group">
+        <md-card-content ng-if="$ctrl.isGroup && $ctrl.expanded" class="nav-contents nav-contents--group">
             <div ng-if="$ctrl.isPlanning" class="md-padding" layout="column" layout-align="center center">
-                {{ 'noteThisActivityIncludesStudentPlanning' | translate }}
+                {{ ::'noteThisActivityIncludesStudentPlanning' | translate }}
             </div>
             <md-list class="nav-contents__list">
                 <nav-item ng-repeat="childId in $ctrl.item.ids"
                           ng-class="{'expanded': itemExpanded, 'prev': isPrevStep}"
                           aria-label="{{ isPrevStep ? $ctrl.$translate('LAST_VIEWED_ITEM') : null }}"
                           show-position="$ctrl.showPosition"
-                          node-id="childId" type="'list'" ng-animate-ref="{{ childId }}"
+                          node-id="::childId" type="'list'" ng-animate-ref="{{ ::childId }}"
                           class="nav-item"
-                          data-nodeid="{{ childId }}">
+                          data-nodeid="{{ ::childId }}">
                 </nav-item>
                 <nav-item ng-if="$ctrl.item.planning"
                           ng-repeat="planningNode in $ctrl.item.availablePlanningNodes"
                           ng-class="{'expanded': itemExpanded, 'prev': isPrevStep}"
                           aria-label="{{ isPrevStep ? 'Last Viewed Item' : null }}"
-                          node-id="planningNode.nodeId" type="'list'" is-planning-node="true"
-                          ng-animate-ref="{{ planningNode.nodeId }}"
+                          node-id="::planningNode.nodeId" type="'list'" is-planning-node="true"
+                          ng-animate-ref="{{ ::planningNode.nodeId }}"
                           class="nav-item"
-                          data-nodeid="{{ planningNode.nodeId }}">
+                          data-nodeid="{{ ::planningNode.nodeId }}">
                 </nav-item>
             </md-list>
         </md-card-content>
@@ -45,15 +45,15 @@
 
     <md-list-item ng-switch-when="list" ng-click="$ctrl.itemClicked($event)"
                   class="md-long-text noright list-item md-whiteframe-1dp"
-                  aria-label="{{$ctrl.nodeTitle}}"
+                  aria-label="{{::$ctrl.nodeTitle}}"
                   ng-class="{'nav-item--list--group': $ctrl.isGroup,
                       'nav-item--planning-mode': $ctrl.planningMode && $ctrl.isPlanningInstance,
                       'list-item--warn': $ctrl.newAlert,
                       'warn': $ctrl.newAlert,
                       'text-secondary': !$ctrl.nodeHasWork}">
-        <node-icon node-id="$ctrl.nodeId" custom-class="'md-avatar'"></node-icon>
+        <node-icon node-id="::$ctrl.nodeId" custom-class="'md-avatar'"></node-icon>
         <p flex layout="row" layout-align="start center">
-            <span>{{ $ctrl.nodeTitle }}</span>&nbsp;
+            <span>{{ ::$ctrl.nodeTitle }}</span>&nbsp;
             <span flex hide-gt-xs></span>
             <status-icon ng-if="$ctrl.newAlert"
                          icon-class="$ctrl.alertIconClass"

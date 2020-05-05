@@ -158,13 +158,13 @@
         </context-group>
         <target state="translated">分享到 Github</target>
       </trans-unit>
-      <trans-unit id="d8f2e89cc8dde7834ae2c3337aff293e23aec97f" datatype="html">
-        <source>Powered by the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>TELS Research Community<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> and <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>WISE Open Source Technology<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
+      <trans-unit id="c0cf90a4d22206da43e0ca71eab7a5e5998589a8" datatype="html">
+        <source>Powered by the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>TELS Research Community<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> and <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>WISE Open Source Technology<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>. Help us <x id="START_LINK_2" ctype="x-a" equiv-text="&lt;a&gt;"/>translate<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> WISE!</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
           <context context-type="linenumber">53</context>
         </context-group>
-        <target state="translated">由 <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>TELS研究社群<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> 及 <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>WISE 開源技術<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>提供支援.</target>
+        <target state="needs-translation">Powered by the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>TELS Research Community<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> and <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>WISE Open Source Technology<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>. Help us <x id="START_LINK_2" ctype="x-a" equiv-text="&lt;a&gt;"/>translate<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> WISE!</target>
       </trans-unit>
       <trans-unit id="3e1904c6c60cfbdcfde26154fe8ed09b5ce0f9f4" datatype="html">
         <source>This material is based upon work supported by the National Science Foundation. Any opinions, findings, and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the National Science Foundation.</source>
@@ -207,7 +207,7 @@
         <target state="translated">SAIL (可擴充的互動式學習架構)</target>
       </trans-unit>
       <trans-unit id="ffac91e3ed3d3f9238f218aaa135735f55daec60" datatype="html">
-        <source>©1996-<x id="INTERPOLATION" equiv-text="{{time | amDateFormat:'YYYY'}}"/>, <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>UC Berkeley<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> | Web-based Inquiry Science Environment</source>
+        <source>©1996-<x id="INTERPOLATION" equiv-text="{{time | amDateFormat:&apos;YYYY&apos;}}"/>, <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>UC Berkeley<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> | Web-based Inquiry Science Environment</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
           <context context-type="linenumber">75</context>
@@ -357,7 +357,7 @@
         <target state="translated">更改密碼</target>
       </trans-unit>
       <trans-unit id="1622b67543d6f79dc5e9730e121f7e21b3d034b1" datatype="html">
-        <source>This account was created using Google and doesn't use a WISE password. If you would like to unlink your Google account, please <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>contact us<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
+        <source>This account was created using Google and doesn&apos;t use a WISE password. If you would like to unlink your Google account, please <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>contact us<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
           <context context-type="linenumber">60</context>
@@ -525,7 +525,7 @@
         <target state="translated">聯繫我們</target>
       </trans-unit>
       <trans-unit id="34dc5c906ca725ffe2bfacaa6983bfdc30561ddb" datatype="html">
-        <source>Learn what's new in the WISE community.</source>
+        <source>Learn what&apos;s new in the WISE community.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">118</context>
@@ -736,7 +736,7 @@
         </alt-trans>
       </trans-unit>
       <trans-unit id="28963fab05c3d72dc5ca696c47dd7d486df8292c" datatype="html">
-        <source>WISE offers a growing collection of curriculum units that address key conceptual difficulties students encounter in science. Units are carefully crafted to supplement teachers' core curricular scope and sequence and are iteratively refined through classroom-based research.</source>
+        <source>WISE offers a growing collection of curriculum units that address key conceptual difficulties students encounter in science. Units are carefully crafted to supplement teachers&apos; core curricular scope and sequence and are iteratively refined through classroom-based research.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">83</context>
@@ -1006,7 +1006,7 @@
         <target state="translated">通過與老師、行政人員、技術設計師和教育研究人員的合作，我們濃縮了一套指導所有WISE課程教材和工具設計的原則。</target>
       </trans-unit>
       <trans-unit id="93d7310ae0cdb74d49573a47634d9a7b1c771462" datatype="html">
-        <source>This means that when implementing WISE units, you can be assured that what you're using is grown from a solid foundation, advised by real teachers' experiences, and tested in classrooms with real students.</source>
+        <source>This means that when implementing WISE units, you can be assured that what you&apos;re using is grown from a solid foundation, advised by real teachers&apos; experiences, and tested in classrooms with real students.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">47</context>
@@ -1078,7 +1078,7 @@
         <target state="translated">支持各色各樣的學習者</target>
       </trans-unit>
       <trans-unit id="e582a65e12f2b176d3eef63cd4caa67d68cfb5b9" datatype="html">
-        <source>Individual students differ in their experiences, interests, and abilities. WISE provides a variety of tools, activity patterns, and instructional scaffolds that afford multiple ways for expressing and assessing understanding. That way, no students' abilities go unrecognized, and all have the chance to succeed.</source>
+        <source>Individual students differ in their experiences, interests, and abilities. WISE provides a variety of tools, activity patterns, and instructional scaffolds that afford multiple ways for expressing and assessing understanding. That way, no students&apos; abilities go unrecognized, and all have the chance to succeed.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">115</context>
@@ -1110,7 +1110,7 @@
         <target state="translated">所有人都可以存取</target>
       </trans-unit>
       <trans-unit id="416ce0bcfd9bbe81b9ccc34d764504df4c8088d1" datatype="html">
-        <source>WISE is <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>free<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> and <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>open source<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>! WISE subsists on generous support from the National Science Foundation, which means it's available to anyone with an internet connection. Driven by an active community of developers, WISE is continually being expanded and improved. Bring science inquiry into the classroom, the museum, the after-school, or the home-school environment!</source>
+        <source>WISE is <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>free<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> and <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>open source<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>! WISE subsists on generous support from the National Science Foundation, which means it&apos;s available to anyone with an internet connection. Driven by an active community of developers, WISE is continually being expanded and improved. Bring science inquiry into the classroom, the museum, the after-school, or the home-school environment!</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">135</context>
@@ -1298,7 +1298,7 @@
         <target state="translated">我們了解隱私對我們的社群，特別是全世界在教育活動中使用WISE資源的老師和學生的重要性。 該政策說明了我們收集的資訊，我們如何使用它以及我們為確保資訊安全所做的工作。</target>
       </trans-unit>
       <trans-unit id="d8cb0bb1a320c0fdf31c9939c9e6f8deb55f3a63" datatype="html">
-        <source>These Terms of Use and Privacy Policy constitute an agreement between you and the Web-based Inquiry Science Environment team that governs your use of wise.berkeley.edu and all associated services and websites (collectively "WISE"). The WISE team is a federally-funded research group headquartered at the University of California, Berkeley and is a non-profit organization.</source>
+        <source>These Terms of Use and Privacy Policy constitute an agreement between you and the Web-based Inquiry Science Environment team that governs your use of wise.berkeley.edu and all associated services and websites (collectively &quot;WISE&quot;). The WISE team is a federally-funded research group headquartered at the University of California, Berkeley and is a non-profit organization.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">24</context>
@@ -1389,7 +1389,7 @@
         <target state="translated">當學生在WISE專題執行中送出答案（同時登錄他們的帳戶）時，我們會將他們對問題的回答以及他們在WISE平台上建立的任何內容保存下來。 教師可以查看學生在自己擁有的WISE執行中建立的回應及答案。 教師還可以對學生的作業進行評分並提供反饋。 教師通過WISE平台產生的分數和評論由WISE儲存，並可以發送給他們的學生來查看。</target>
       </trans-unit>
       <trans-unit id="bb40c3cb308acd01903478a7b892cf7dbf5faeb4" datatype="html">
-        <source>Curriculum projects that teachers author using the WISE platform are also saved and stored on our servers and may be published to a public project library that is accessible to other WISE users or visitors (with the owner's permission). Please note: Every WISE project hosted by the WISE site (whether it is shared in a public project library or not) is viewable by anyone using the internet via the project's unique URL.</source>
+        <source>Curriculum projects that teachers author using the WISE platform are also saved and stored on our servers and may be published to a public project library that is accessible to other WISE users or visitors (with the owner&apos;s permission). Please note: Every WISE project hosted by the WISE site (whether it is shared in a public project library or not) is viewable by anyone using the internet via the project&apos;s unique URL.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">41</context>
@@ -1413,7 +1413,7 @@
         <target state="translated">授權</target>
       </trans-unit>
       <trans-unit id="d3cee34156cc74603c393d78d45916c7f94c8a8f" datatype="html">
-        <source>All projects that you create on or share to the WISE site shall be licensed under the Creative Commons Attribution-ShareAlike 4.0 license. For more information about the terms of this license, visit <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>https://creativecommons.org/licenses/by-sa/4.0/<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>. The WISE team reserves the right to remove any content that, in the WISE team's discretion, is harmful to the community or violates the WISE Terms of Use. Harmful use includes spam or repeated commercial advertisement through projects, comments, or discussion posts, as well as inappropriate or offensive material.</source>
+        <source>All projects that you create on or share to the WISE site shall be licensed under the Creative Commons Attribution-ShareAlike 4.0 license. For more information about the terms of this license, visit <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>https://creativecommons.org/licenses/by-sa/4.0/<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>. The WISE team reserves the right to remove any content that, in the WISE team&apos;s discretion, is harmful to the community or violates the WISE Terms of Use. Harmful use includes spam or repeated commercial advertisement through projects, comments, or discussion posts, as well as inappropriate or offensive material.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">45</context>
@@ -1437,7 +1437,7 @@
         <target state="translated">自動產生數據</target>
       </trans-unit>
       <trans-unit id="b1f5669bb23dc1a815043d912919ee226524739c" datatype="html">
-        <source>When students and teachers use WISE, we save event data such as mouse clicks, time spent viewing pages, and other site interactions. This data is used for research purposes and for automated analyses and tools within WISE project runs. (See ‘How We Use the Data' for more information.)</source>
+        <source>When students and teachers use WISE, we save event data such as mouse clicks, time spent viewing pages, and other site interactions. This data is used for research purposes and for automated analyses and tools within WISE project runs. (See ‘How We Use the Data&apos; for more information.)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">49</context>
@@ -1453,7 +1453,7 @@
         <target state="translated">瀏覽器暫存記錄檔</target>
       </trans-unit>
       <trans-unit id="bd0246d98ce40cc5ad586bd1792e8ca55f1b7269" datatype="html">
-        <source>When you log in, WISE will ask your browser to put a "cookie" on your computer. This allows WISE to remember that you are logged in when you go to a different page. You can delete this cookie at any time through your browser's settings.</source>
+        <source>When you log in, WISE will ask your browser to put a &quot;cookie&quot; on your computer. This allows WISE to remember that you are logged in when you go to a different page. You can delete this cookie at any time through your browser&apos;s settings.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">52</context>
@@ -1493,7 +1493,7 @@
         <target state="translated">在任何情況下，我們都不會將您的資訊販賣給任何人。</target>
       </trans-unit>
       <trans-unit id="ea5d4b60a8833374b7aab8168c828d0b22971ed6" datatype="html">
-        <source>The WISE team uses de-identified user data to perform research. Researchers in the Graduate School of Education at The University of California at Berkeley and partner institutions may use de-identified data to perform data analyses and explore research topics. This data includes both user-generated and auto-generated content (see 'Information We Collect' section). Results of our research may be shared with educators and other researchers through conferences, journals, and other publications.</source>
+        <source>The WISE team uses de-identified user data to perform research. Researchers in the Graduate School of Education at The University of California at Berkeley and partner institutions may use de-identified data to perform data analyses and explore research topics. This data includes both user-generated and auto-generated content (see &apos;Information We Collect&apos; section). Results of our research may be shared with educators and other researchers through conferences, journals, and other publications.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">62</context>
@@ -1517,7 +1517,7 @@
         <target state="translated">教師帳號的電子郵件用於聯繫：（a）支援，（b）WISE團隊偶爾發布的公告。 教師電子郵件地址也用於幫助重啟密碼。</target>
       </trans-unit>
       <trans-unit id="79fd12be51fabc3997ebf91056835b68468377e4" datatype="html">
-        <source>We do not ask students for their email address and do not share any student personal information with outside parties. Only the students' teachers can access student names and usernames within WISE (for purposes of reviewing student work, grading, sending feedback, etc). Each participating teacher will have access to his or her own students' project work and will not be able to see any information from other teachers' students. Teachers are also able to reset passwords for their students.</source>
+        <source>We do not ask students for their email address and do not share any student personal information with outside parties. Only the students&apos; teachers can access student names and usernames within WISE (for purposes of reviewing student work, grading, sending feedback, etc). Each participating teacher will have access to his or her own students&apos; project work and will not be able to see any information from other teachers&apos; students. Teachers are also able to reset passwords for their students.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">65</context>
@@ -1557,7 +1557,7 @@
         <target state="translated">WISE促進並支持言論和表達自由，並努力建立一個受歡迎、能給予幫助及生產性的教育者和學習者社群。</target>
       </trans-unit>
       <trans-unit id="47fff652811daadbc91494bd2dffc16ae02f45fa" datatype="html">
-        <source>You may not use WISE to promote bigotry, discrimination, hatred, or violence against any individual or group. You may not expose any other person's identifying or contact information without that person's permission. Threatening, harassing, or intimidating any other person is not allowed and we reserve the right to remove any user-generated content that, in our discretion, does so. Projects, discussion posts, and user-profile pages containing offensive or sexually explicit material will not be tolerated and removed from the site immediately once brought to the attention of the WISE team.</source>
+        <source>You may not use WISE to promote bigotry, discrimination, hatred, or violence against any individual or group. You may not expose any other person&apos;s identifying or contact information without that person&apos;s permission. Threatening, harassing, or intimidating any other person is not allowed and we reserve the right to remove any user-generated content that, in our discretion, does so. Projects, discussion posts, and user-profile pages containing offensive or sexually explicit material will not be tolerated and removed from the site immediately once brought to the attention of the WISE team.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">73</context>
@@ -1629,7 +1629,7 @@
         <target state="translated">加州未成年隱私權</target>
       </trans-unit>
       <trans-unit id="07bee5a94bc5a2dd9e6ae5a3718009e22c1e2308" datatype="html">
-        <source>If you live in California and are under the age of 18 or the parent or legal guardian of a student under the age of 18, you may request the removal of your information from our site. When you request removal of your information, we will remove all your personal information to the best of our ability. Please note that we may not be able to remove all de-identified information or pieces of content stored in our databases and we may not remove content that we are required to retain under applicable federal and state laws. If you would like to request removal of your or your child's content or information, please contact us at https://wise.berkeley.edu/contact for assistance or you can delete specific information from you or your child's account.</source>
+        <source>If you live in California and are under the age of 18 or the parent or legal guardian of a student under the age of 18, you may request the removal of your information from our site. When you request removal of your information, we will remove all your personal information to the best of our ability. Please note that we may not be able to remove all de-identified information or pieces of content stored in our databases and we may not remove content that we are required to retain under applicable federal and state laws. If you would like to request removal of your or your child&apos;s content or information, please contact us at https://wise.berkeley.edu/contact for assistance or you can delete specific information from you or your child&apos;s account.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">89</context>
@@ -1645,7 +1645,7 @@
         <target state="translated">家庭教育權利和隱私法（FERPA）</target>
       </trans-unit>
       <trans-unit id="d961fdb0f1ecf8986fa129281805855cee5cca75" datatype="html">
-        <source>We take care to be familiar with FERPA legislation and we take all possible measures to ensure your compliance with FERPA's requirements when you use WISE. We are confident that the protection of data outlined in this document satisfies its requirements.</source>
+        <source>We take care to be familiar with FERPA legislation and we take all possible measures to ensure your compliance with FERPA&apos;s requirements when you use WISE. We are confident that the protection of data outlined in this document satisfies its requirements.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">92</context>
@@ -1749,7 +1749,7 @@
         <target state="translated">WISE測試</target>
       </trans-unit>
       <trans-unit id="babd041c8f47bf5bb8dcabfc02d9904a8e363c9c" datatype="html">
-        <source>The "WISE Tested" library contains curricula developed by the WISE team.</source>
+        <source>The &quot;WISE Tested&quot; library contains curricula developed by the WISE team.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/official-library/official-library-details.html</context>
           <context context-type="linenumber">4</context>
@@ -1797,7 +1797,7 @@
         <target state="translated">添加到Google課堂</target>
       </trans-unit>
       <trans-unit id="d559090ad7dfe99c26a7143c93579f3b768f4dd3" datatype="html">
-        <source>Hey there! Looks like you don't have any active Google classes.</source>
+        <source>Hey there! Looks like you don&apos;t have any active Google classes.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
           <context context-type="linenumber">11</context>
@@ -1904,7 +1904,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/add-project-dialog/add-project-dialog.component.html</context>
-          <context context-type="linenumber">22</context>
+          <context context-type="linenumber">23</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/team-sign-in-dialog/team-sign-in-dialog.component.html</context>
@@ -1924,7 +1924,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/add-project-dialog/add-project-dialog.component.html</context>
-          <context context-type="linenumber">29</context>
+          <context context-type="linenumber">30</context>
         </context-group>
         <target state="translated">新增</target>
       </trans-unit>
@@ -2013,7 +2013,7 @@
         <target state="translated">添加自己的期間</target>
       </trans-unit>
       <trans-unit id="b13b5b62a4356cdcd81f358640fb7863fdde1361" datatype="html">
-        <source>For "Period 9", just enter the number 9. Separate periods with commas (e.g. "Section 1, Section 2"). Manually named periods should be no more than 16 characters long.</source>
+        <source>For &quot;Period 9&quot;, just enter the number 9. Separate periods with commas (e.g. &quot;Section 1, Section 2&quot;). Manually named periods should be no more than 16 characters long.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
           <context context-type="linenumber">22</context>
@@ -2096,7 +2096,7 @@
         <target state="translated">結束日期</target>
       </trans-unit>
       <trans-unit id="dfe5fb2242551f7f7aae712b5449e38ec0ca79a8" datatype="html">
-        <source>Note: These dates can be changed at any time from your Class Schedule. Just select "Edit Settings" from the unit's dropdown menu.</source>
+        <source>Note: These dates can be changed at any time from your Class Schedule. Just select &quot;Edit Settings&quot; from the unit&apos;s dropdown menu.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
           <context context-type="linenumber">59</context>
@@ -2132,7 +2132,7 @@
         <target state="translated">課程代碼: <x id="INTERPOLATION" equiv-text="{{ run.runCode }}"/></target>
       </trans-unit>
       <trans-unit id="534ba8ba6d05fed93bd074e67fb6d03d2e466b46" datatype="html">
-        <source>Important: Every classroom unit has a unique Access Code. Students use this code to register for a unit. Give the code to your students when they first sign up for a WISE account. If they already have WISE accounts, have them log in and then select "Add Unit" from the student home page.</source>
+        <source>Important: Every classroom unit has a unique Access Code. Students use this code to register for a unit. Give the code to your students when they first sign up for a WISE account. If they already have WISE accounts, have them log in and then select &quot;Add Unit&quot; from the student home page.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
           <context context-type="linenumber">78</context>
@@ -2164,7 +2164,7 @@
         <target state="translated">警告：這是很多年前舊版WISE的課程。</target>
       </trans-unit>
       <trans-unit id="758b3c58d4c2c41d74d9288c87fa125bbf794b29" datatype="html">
-        <source>We recommend finding a newer version in the library, as support for classroom implementations of legacy units will end on October 1, 2019. If you cannot find a newer version, <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>contact us<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> if you're interested in upgrading the unit. Thanks!</source>
+        <source>We recommend finding a newer version in the library, as support for classroom implementations of legacy units will end on October 1, 2019. If you cannot find a newer version, <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>contact us<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> if you&apos;re interested in upgrading the unit. Thanks!</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/use-with-class-warning-dialog/use-with-class-warning-dialog.component.html</context>
           <context context-type="linenumber">6</context>
@@ -2639,7 +2639,7 @@
         <target state="translated">社群建設</target>
       </trans-unit>
       <trans-unit id="adc984d8f77dc423434e753052fcf8b519a4d69d" datatype="html">
-        <source>The "Community Built" library contains units that were designed and contributed by WISE community members. Want to publicly share your custom unit? <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Contact Us<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>!</source>
+        <source>The &quot;Community Built&quot; library contains units that were designed and contributed by WISE community members. Want to publicly share your custom unit? <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Contact Us<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>!</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/community-library/community-library-details.html</context>
           <context context-type="linenumber">4</context>
@@ -2679,7 +2679,7 @@
         <target state="translated">我的課程</target>
       </trans-unit>
       <trans-unit id="35f92c76101a5f5b5010e09dedea982832cf1e87" datatype="html">
-        <source>The "My Units" library contains curriculum units that you own or that have been shared with you by other WISE users.</source>
+        <source>The &quot;My Units&quot; library contains curriculum units that you own or that have been shared with you by other WISE users.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/personal-library/personal-library-details.html</context>
           <context context-type="linenumber">4</context>
@@ -3610,7 +3610,7 @@
         <target state="translated">使用WISE課程</target>
       </trans-unit>
       <trans-unit id="90ec3aae8236091afd31bd0b64d9ddc6f8cdd59a" datatype="html">
-        <source>To use a WISE unit with your class, you must first choose a unit to use and then set up a "Run" of that unit.</source>
+        <source>To use a WISE unit with your class, you must first choose a unit to use and then set up a &quot;Run&quot; of that unit.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/getting-started/getting-started.component.html</context>
           <context context-type="linenumber">21</context>
@@ -3638,7 +3638,7 @@
         <target state="translated">使用您的教師帳號登入WISE。</target>
       </trans-unit>
       <trans-unit id="9d2a72632d6e73065adbe8ea78a680e16c07619c" datatype="html">
-        <source>Click the "Browse WISE Units" tab.</source>
+        <source>Click the &quot;Browse WISE Units&quot; tab.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/getting-started/getting-started.component.html</context>
           <context context-type="linenumber">25</context>
@@ -3678,7 +3678,7 @@
         <target state="translated">點擊專題以打開該專題的資訊。</target>
       </trans-unit>
       <trans-unit id="f5d3e0352ec003e7072916f913e6340c4e2d3613" datatype="html">
-        <source>Click the "Use With Class" button.</source>
+        <source>Click the &quot;Use With Class&quot; button.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/getting-started/getting-started.component.html</context>
           <context context-type="linenumber">28</context>
@@ -3726,7 +3726,7 @@
         <target state="translated">選擇開始日期。 在此之前，學生將無法使用該專題</target>
       </trans-unit>
       <trans-unit id="de1a012e22926afd24e72b207b9ac213c07f1074" datatype="html">
-        <source>Click "Create Run".</source>
+        <source>Click &quot;Create Run&quot;.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/getting-started/getting-started.component.html</context>
           <context context-type="linenumber">32</context>
@@ -3750,7 +3750,7 @@
         <target state="translated">課程將建立執行並新增到您的教師首頁。</target>
       </trans-unit>
       <trans-unit id="b3e9e121e7fbd0d038b7a1fe83f251019a7889bf" datatype="html">
-        <source>Copy the "Access Code" for the new run and write it down somewhere like on the white board. Students will need to use this access code to work on the run you created.</source>
+        <source>Copy the &quot;Access Code&quot; for the new run and write it down somewhere like on the white board. Students will need to use this access code to work on the run you created.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/getting-started/getting-started.component.html</context>
           <context context-type="linenumber">34</context>
@@ -3946,7 +3946,7 @@
         <target state="translated">前往<x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>註冊<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>頁面。</target>
       </trans-unit>
       <trans-unit id="500e3831ebdee994afba617d0be7ff667d7f6432" datatype="html">
-        <source>Click on "Teacher".</source>
+        <source>Click on &quot;Teacher&quot;.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">18</context>
@@ -3970,7 +3970,7 @@
         <target state="translated">我需要為WISE註冊學生帳號還是讓學生自己註冊？</target>
       </trans-unit>
       <trans-unit id="2c8b400fdc35436d28c9cccdaeb20ce10a03c8d7" datatype="html">
-        <source>WISE makes student registration simple and intuitive -- direct your students to the register page by having them go to the WISE home page and clicking the "Register" link at the upper right. They should be able to register in 10 minutes or less. However, you can also opt to pre-register all of your students and provide them with a copy of their username/password on their first day in the project run.</source>
+        <source>WISE makes student registration simple and intuitive -- direct your students to the register page by having them go to the WISE home page and clicking the &quot;Register&quot; link at the upper right. They should be able to register in 10 minutes or less. However, you can also opt to pre-register all of your students and provide them with a copy of their username/password on their first day in the project run.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">40</context>
@@ -4018,7 +4018,7 @@
         <target state="translated">第二，鼓勵學生自己解決問題。 告訴他們到WISE首頁，點擊“遺失的帳號/密碼”連結，然後點擊“學生”按鈕。 如果學生可以回答他們的安全問題（在註冊時建立），則可以更改密碼。</target>
       </trans-unit>
       <trans-unit id="467c00b97052f8105444837a01e9d2fa9b2bc6cc" datatype="html">
-        <source>Third, if the student can't solve the problem directly, you can change their password for them using the instructions below.</source>
+        <source>Third, if the student can&apos;t solve the problem directly, you can change their password for them using the instructions below.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">49</context>
@@ -4026,7 +4026,7 @@
         <target state="translated">第三，如果學生無法自己解決問題，您可以使用以下說明更改密碼。</target>
       </trans-unit>
       <trans-unit id="289c7c9faaf6520c30e7822ca87e7456179d6c98" datatype="html">
-        <source>How do I change a student's password?</source>
+        <source>How do I change a student&apos;s password?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">51</context>
@@ -4106,7 +4106,7 @@
         <target state="translated">在教師首頁中執行。</target>
       </trans-unit>
       <trans-unit id="f0c1ec314fd1d5147dfff4a0411434d4263193f7" datatype="html">
-        <source>Click the "Teacher Tools" button on the run.</source>
+        <source>Click the &quot;Teacher Tools&quot; button on the run.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">55</context>
@@ -4126,7 +4126,7 @@
         <target state="translated">點擊其中的“教師工具”按鈕。</target>
       </trans-unit>
       <trans-unit id="7104fd0691398e7245d187335be218b7ae1eb417" datatype="html">
-        <source>Click on the "Manage Students" icon on the left side bar.</source>
+        <source>Click on the &quot;Manage Students&quot; icon on the left side bar.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">56</context>
@@ -4158,7 +4158,7 @@
         <target state="translated">找出學生所在的期間。</target>
       </trans-unit>
       <trans-unit id="94caa8f0ed38f74d051cf5bff5256123b00f480c" datatype="html">
-        <source>Find the student and click "Change Password".</source>
+        <source>Find the student and click &quot;Change Password&quot;.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">58</context>
@@ -4174,7 +4174,7 @@
         <target state="translated">或者，您可以更改這個時間上所有學生的密碼（新密碼將應用於該期間的所有學生）。</target>
       </trans-unit>
       <trans-unit id="3444260f02adf2bf6ac230295ebd2beb0cf5780a" datatype="html">
-        <source>How do I change a student team after they've started a project run?</source>
+        <source>How do I change a student team after they&apos;ve started a project run?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">61</context>
@@ -4249,7 +4249,7 @@
         <target state="translated">找到學生</target>
       </trans-unit>
       <trans-unit id="5160d5b8364d4cce587256880224e695f6ed90e1" datatype="html">
-        <source>Click the "Period" link.</source>
+        <source>Click the &quot;Period&quot; link.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">81</context>
@@ -4273,7 +4273,7 @@
         <target state="translated">選擇不同的時段</target>
       </trans-unit>
       <trans-unit id="d7f5dbf0fe2a5617bcb850bda0f3fa07a8d43b9e" datatype="html">
-        <source>Click "Save Changes".</source>
+        <source>Click &quot;Save Changes&quot;.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">84</context>
@@ -4437,7 +4437,7 @@
         <target state="translated">在執行中，點擊省略號以檢視執行選項。</target>
       </trans-unit>
       <trans-unit id="caf98385e768f00b3e1734b93aa31eaed64d7bc1" datatype="html">
-        <source>Click "Edit Settings".</source>
+        <source>Click &quot;Edit Settings&quot;.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">125</context>
@@ -4449,7 +4449,7 @@
         <target state="translated">點擊“編輯設定”。</target>
       </trans-unit>
       <trans-unit id="dd80561bf8a3ed6b8c7dbc171555263c3a993121" datatype="html">
-        <source>Enter a period name in the "Add New Period" field.</source>
+        <source>Enter a period name in the &quot;Add New Period&quot; field.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">126</context>
@@ -4457,7 +4457,7 @@
         <target state="translated">在“新增新時段”欄位中輸入時段名稱。</target>
       </trans-unit>
       <trans-unit id="df671da9712c9c220f2219c80e8eb13d8c591d09" datatype="html">
-        <source>Click "Add Period".</source>
+        <source>Click &quot;Add Period&quot;.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">127</context>
@@ -4473,7 +4473,7 @@
         <target state="translated">建立執行課程後如何刪除時段？</target>
       </trans-unit>
       <trans-unit id="bb7ab3ec40a26c50c521d920bb1d22eec80d5880" datatype="html">
-        <source>Find the period you want to delete and click the "Delete" button next to it.</source>
+        <source>Find the period you want to delete and click the &quot;Delete&quot; button next to it.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">135</context>
@@ -4497,7 +4497,7 @@
         <target state="translated">如果我的電腦教室借得時間不足，但是我的一些學生還沒有完成該專題怎麼辦？</target>
       </trans-unit>
       <trans-unit id="e42c6ee16c0475e7cd0a418736dd8da66fdde98f" datatype="html">
-        <source>WISE is a web-based learning environments, so students can sign in from a computer at school or at home. This means that students can complete the project from any home or community based computer, per the teacher's discretion.</source>
+        <source>WISE is a web-based learning environments, so students can sign in from a computer at school or at home. This means that students can complete the project from any home or community based computer, per the teacher&apos;s discretion.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">140</context>
@@ -4513,7 +4513,7 @@
         <target state="translated">我如何檢視學生的作業並給予評分？</target>
       </trans-unit>
       <trans-unit id="6d1b5c10cbc1d79f81c60e7c39c78579489cbf7c" datatype="html">
-        <source>Here you will be able to look at your students' work.</source>
+        <source>Here you will be able to look at your students&apos; work.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">149</context>
@@ -4521,7 +4521,7 @@
         <target state="translated">在這裡，您將能夠檢視學生的作業。</target>
       </trans-unit>
       <trans-unit id="ee4f7ca95b6b6fab1891ae6d1e2228eed8a81a44" datatype="html">
-        <source>On the left sidebar you can choose to look at the work by step by clicking "Grade By Step" or you can choose to look at the work by team by clicking "Grade By Team".</source>
+        <source>On the left sidebar you can choose to look at the work by step by clicking &quot;Grade By Step&quot; or you can choose to look at the work by team by clicking &quot;Grade By Team&quot;.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">150</context>
@@ -4529,7 +4529,7 @@
         <target state="translated">在左側邊欄上，您可以選擇透過點擊“按步驟評分”來逐步檢視作業，也可以通過點擊“按組別評分”來選擇依照組別檢視作業。</target>
       </trans-unit>
       <trans-unit id="01d297ec79e8da8648c32bea29cc49b500480938" datatype="html">
-        <source>Next to each student's work, you will be able to give them a score and comment.</source>
+        <source>Next to each student&apos;s work, you will be able to give them a score and comment.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">151</context>
@@ -4577,7 +4577,7 @@
         <target state="translated">評論和分數將顯示在已評分的作業下。</target>
       </trans-unit>
       <trans-unit id="f4f0bb05aa6bad172e17cce01cddc091c3abe59c" datatype="html">
-        <source>What should I look for in my student's answers?</source>
+        <source>What should I look for in my student&apos;s answers?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">160</context>
@@ -4590,8 +4590,11 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">162</context>
         </context-group>
-        <target state="translated">下面的連結將為您提供評量指標的範例，用於對有絲分裂和細胞過程專題中的步驟進行分級。該評量指標是在我們TELS中心的一項研究學生如何整合他們對複雜科學概念的知識的研究項目的基礎上進行的。 我們希望它可以讓您開始為計劃評分的筆記和步驟開發自己的評量指標。
+        <target state="translated">下面的連結將為您提供評量指標的範例，用於對有絲分裂和細胞過程專題中的步驟進行分級。該評量指標是在我們TELS中心的一項研究學生如何整合他們對複雜科學概念的知識的研究項目的基礎上進行的。 我們希望它可以讓您開始為計劃評分的筆記和步驟開發自己的評量指標。</target>
+        <alt-trans>
+          <target>下面的連結將為您提供評量指標的範例，用於對有絲分裂和細胞過程專題中的步驟進行分級。該評量指標是在我們TELS中心的一項研究學生如何整合他們對複雜科學概念的知識的研究項目的基礎上進行的。 我們希望它可以讓您開始為計劃評分的筆記和步驟開發自己的評量指標。
 </target>
+        </alt-trans>
       </trans-unit>
       <trans-unit id="4d5c08a9dd67d4172985bfa1e4ba5afaa90c8dd8" datatype="html">
         <source>Sample rubric for assessing student work</source>
@@ -4626,7 +4629,7 @@
         <target state="translated">我如何找到時間為所有學生作業評分？</target>
       </trans-unit>
       <trans-unit id="aa25bf22d74c6350808bdcad5b07d6af280353b6" datatype="html">
-        <source>We recommend that you go through the project and select a few steps that you think best demonstrate the students' understanding of the complex concepts covered in the module and grade those steps. Then tell your students they must complete all questions but should concentrate their efforts on the key steps. We recognize that critically grading each step is very time consuming and unpractical.</source>
+        <source>We recommend that you go through the project and select a few steps that you think best demonstrate the students&apos; understanding of the complex concepts covered in the module and grade those steps. Then tell your students they must complete all questions but should concentrate their efforts on the key steps. We recognize that critically grading each step is very time consuming and unpractical.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">171</context>
@@ -4682,7 +4685,7 @@
         <target state="translated">是得，你可以！ 如果您需要引起他們的注意以進行課堂討論或發佈公告，這將非常有用。</target>
       </trans-unit>
       <trans-unit id="c7a7fe783c37fe2f45e8cdee103e70f13c5c7a7e" datatype="html">
-        <source>The WISE web site won't load on my web browser. What do I do?</source>
+        <source>The WISE web site won&apos;t load on my web browser. What do I do?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">189</context>
@@ -4794,7 +4797,7 @@
         <target state="translated">點擊頁面右上角的帳號圖示。 這將開啟下拉表單選項。</target>
       </trans-unit>
       <trans-unit id="a8484540c88600524e3d99bffc641f5588cc4ecc" datatype="html">
-        <source>Click the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>"Edit Profile"<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> option.</source>
+        <source>Click the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>&quot;Edit Profile&quot;<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> option.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">208</context>
@@ -4806,7 +4809,7 @@
         <target state="translated">點擊<x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>“編輯個人資料”<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>選項。</target>
       </trans-unit>
       <trans-unit id="9d5b98a0d8b80864e5e2382f9c2f056f8b9393e5" datatype="html">
-        <source>Near the bottom there will be a "Language" setting.</source>
+        <source>Near the bottom there will be a &quot;Language&quot; setting.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">209</context>
@@ -4830,7 +4833,7 @@
         <target state="translated">將語言更改為您選擇的語言。</target>
       </trans-unit>
       <trans-unit id="ecbda85dab67998ada82c4efd82ffb9bf4bc39d2" datatype="html">
-        <source>Note 1: If your language is not listed as an option, or you'd like to help us improve the translation, please contact us and we'll help you get started!</source>
+        <source>Note 1: If your language is not listed as an option, or you&apos;d like to help us improve the translation, please contact us and we&apos;ll help you get started!</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">211</context>
@@ -4854,7 +4857,7 @@
         <target state="translated">注意2：更改語言將更改網站的語言，但不會更改專題的語言。 必須對專題進行獨立翻譯，這意味著，如果要使用其他語言的專題，則必須自己翻譯或尋找其他人翻譯過的專題版本。</target>
       </trans-unit>
       <trans-unit id="b2be95339aa5b283ab35ea9703f365133eae1b67" datatype="html">
-        <source>Who do I contact when I have a problem I can't solve?</source>
+        <source>Who do I contact when I have a problem I can&apos;t solve?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">214</context>
@@ -4966,7 +4969,7 @@
         <target state="translated">使用您的學生帳號登錄WISE。</target>
       </trans-unit>
       <trans-unit id="bb5b64fcfcf15dfdc125061775f9a1a5396735c9" datatype="html">
-        <source>Click on the "Add Unit" button at the top right of the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Student Home Page<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
+        <source>Click on the &quot;Add Unit&quot; button at the top right of the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Student Home Page<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">31</context>
@@ -4990,7 +4993,7 @@
         <target state="translated">選擇你的課程時段</target>
       </trans-unit>
       <trans-unit id="a28da34a2ca521ebd61814bb9df8f2c8106efa16" datatype="html">
-        <source>Click "Add".</source>
+        <source>Click &quot;Add&quot;.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">34</context>
@@ -5006,7 +5009,7 @@
         <target state="translated">這個專題將被增加到您的專題列表中。</target>
       </trans-unit>
       <trans-unit id="8bd99290f700002f66521ecaeff19f420c156558" datatype="html">
-        <source>Click "Launch" to open the project.</source>
+        <source>Click &quot;Launch&quot; to open the project.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">36</context>
@@ -5438,7 +5441,7 @@
         <target state="translated">安全問題的答案是必填的</target>
       </trans-unit>
       <trans-unit id="60abd69611e9432d4d506e292e421a9a26bfa454" datatype="html">
-        <source>By clicking "Create Account", you agree to our <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Privacy Policy &amp; Terms of Use<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/></source>
+        <source>By clicking &quot;Create Account&quot;, you agree to our <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Privacy Policy &amp; Terms of Use<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
           <context context-type="linenumber">111</context>
@@ -5514,7 +5517,7 @@
         <target state="translated">我們在WISE中找不到您的Google用戶帳號。</target>
       </trans-unit>
       <trans-unit id="69780389024fe4b31a860424a4ca428609fdde0f" datatype="html">
-        <source>What's New?</source>
+        <source>What&apos;s New?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/news/news.component.html</context>
           <context context-type="linenumber">9</context>
@@ -5584,11 +5587,19 @@
         </context-group>
         <target state="translated">帳號圖像</target>
       </trans-unit>
+      <trans-unit id="c48210e0360714d757f8286144200648dc140e30" datatype="html">
+        <source>Switch back to original user</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
+          <context context-type="linenumber">21</context>
+        </context-group>
+        <target state="needs-translation">Switch back to original user</target>
+      </trans-unit>
       <trans-unit id="c4e3e4170654ee5a353d29a0c34b8008cd25a635" datatype="html">
         <source>Student Home</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">26</context>
+          <context context-type="linenumber">29</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/student-home/student-home.component.html</context>
@@ -5600,7 +5611,7 @@
         <source>Teacher Home</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">34</context>
+          <context context-type="linenumber">37</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-home/teacher-home.component.html</context>
@@ -5612,11 +5623,11 @@
         <source>Edit Profile</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">42</context>
+          <context context-type="linenumber">45</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">50</context>
+          <context context-type="linenumber">53</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/account/edit/edit.component.html</context>
@@ -5632,7 +5643,7 @@
         <source>Researcher Tools</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">56</context>
+          <context context-type="linenumber">59</context>
         </context-group>
         <target state="translated">研究人員工具</target>
       </trans-unit>
@@ -5640,7 +5651,7 @@
         <source>Admin Tools</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">62</context>
+          <context context-type="linenumber">65</context>
         </context-group>
         <target state="translated">管理員工具</target>
       </trans-unit>
@@ -5648,11 +5659,11 @@
         <source>Help</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">70</context>
+          <context context-type="linenumber">73</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">78</context>
+          <context context-type="linenumber">81</context>
         </context-group>
         <target state="translated">幫助</target>
       </trans-unit>
@@ -5660,7 +5671,7 @@
         <source>Sign Out</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">83</context>
+          <context context-type="linenumber">86</context>
         </context-group>
         <target state="translated">登出</target>
       </trans-unit>
@@ -5700,11 +5711,19 @@
         </context-group>
         <target state="translated">您已經加入這個課程</target>
       </trans-unit>
+      <trans-unit id="2ac78802200564a04e42b0c60d0283d32e04060e" datatype="html">
+        <source>This run has ended. Please talk to your teacher.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/student/add-project-dialog/add-project-dialog.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+        <target state="needs-translation">This run has ended. Please talk to your teacher.</target>
+      </trans-unit>
       <trans-unit id="38b627ddc0611e9f2027cb255872829f3c7917fc" datatype="html">
         <source>Choose Period</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/add-project-dialog/add-project-dialog.component.html</context>
-          <context context-type="linenumber">14</context>
+          <context context-type="linenumber">15</context>
         </context-group>
         <target state="translated">選擇課程時段</target>
       </trans-unit>
@@ -5717,7 +5736,7 @@
         <target state="translated">加入課程</target>
       </trans-unit>
       <trans-unit id="2278f83021a218f6d93e2cea52ba171c864b7b9d" datatype="html">
-        <source>Hey there! Looks like you don't have any WISE units yet.</source>
+        <source>Hey there! Looks like you don&apos;t have any WISE units yet.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/student-run-list/student-run-list.component.html</context>
           <context context-type="linenumber">3</context>
@@ -5956,7 +5975,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
-          <context context-type="linenumber">107</context>
+          <context context-type="linenumber">108</context>
         </context-group>
         <target state="translated">語言是必填的</target>
       </trans-unit>
@@ -5968,7 +5987,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
-          <context context-type="linenumber">119</context>
+          <context context-type="linenumber">120</context>
         </context-group>
         <target state="translated">儲存更改</target>
       </trans-unit>
@@ -5989,7 +6008,7 @@
         <target state="translated">教師家庭導航</target>
       </trans-unit>
       <trans-unit id="2353459e710912ab1e887bf5c0adbeaaf7e6b2af" datatype="html">
-        <source>Hey there! Looks like you haven't run any WISE units in your classes yet.</source>
+        <source>Hey there! Looks like you haven&apos;t run any WISE units in your classes yet.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-run-list/teacher-run-list.component.html</context>
           <context context-type="linenumber">2</context>
@@ -5997,7 +6016,7 @@
         <target state="translated">你好! 你還沒有在你的課程中執行任何WISE課程。</target>
       </trans-unit>
       <trans-unit id="0f1eeb1121b8585f39941f1c4de7c9ef98ff42bf" datatype="html">
-        <source>Select "Browse Units" to find titles to use with your students.</source>
+        <source>Select &quot;Browse Units&quot; to find titles to use with your students.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-run-list/teacher-run-list.component.html</context>
           <context context-type="linenumber">3</context>
@@ -6280,6 +6299,14 @@
         </context-group>
         <target state="translated">顯示名稱是必填的</target>
       </trans-unit>
+      <trans-unit id="5012e0b6a631d92c50ea27984998bdad9cdcbbbf" datatype="html">
+        <source>Help us translate WISE! Visit <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>https://crowdin.com/project/wise<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
+          <context context-type="linenumber">107</context>
+        </context-group>
+        <target state="needs-translation">Help us translate WISE! Visit <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>https://crowdin.com/project/wise<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</target>
+      </trans-unit>
       <trans-unit id="de4fdef260a86fc9c409a2d4562e8910d93e2b6d" datatype="html">
         <source>Trouble Signing In</source>
         <context-group purpose="location">
@@ -6397,7 +6424,7 @@
         <target state="translated">發生錯誤。 請再試一次。</target>
       </trans-unit>
       <trans-unit id="2b56c831427defc64625d11924305ed7799352a9" datatype="html">
-        <source>Incorrect answer, please try again. If you can't remember the answer to your security question, please ask your teacher to change your password or contact us for assistance.</source>
+        <source>Incorrect answer, please try again. If you can&apos;t remember the answer to your security question, please ask your teacher to change your password or contact us for assistance.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/student/forgot-student-password-security/forgot-student-password-security.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -6561,7 +6588,7 @@
         <target state="translated">十二月</target>
       </trans-unit>
       <trans-unit id="7d2b424cec500d06336a5c74c64b0c93e126cbff" datatype="html">
-        <source>We did not find any usernames that match the information you provided. Please make sure you entered your information correctly. If you can't find your account, ask a teacher for help or contact us for assistance.</source>
+        <source>We did not find any usernames that match the information you provided. Please make sure you entered your information correctly. If you can&apos;t find your account, ask a teacher for help or contact us for assistance.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/student/forgot-student-username/forgot-student-username.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -6577,7 +6604,7 @@
         <target state="translated">我們找到了一個匹配的帳號。 選擇它以登入。如果該帳號不是您的帳號，請向老師尋求幫助或與我們聯繫以獲取幫助。</target>
       </trans-unit>
       <trans-unit id="6b6d7c8be10b5e98805335844750cd1035e23f8d" datatype="html">
-        <source>We found multiple usernames that match. If one of these is yours, select it to log in. If you can't find your account, ask a teacher for help or contact us for assistance.</source>
+        <source>We found multiple usernames that match. If one of these is yours, select it to log in. If you can&apos;t find your account, ask a teacher for help or contact us for assistance.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/student/forgot-student-username/forgot-student-username.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -6933,7 +6960,7 @@
         <target state="translated">找不到具有此Google ID的WISE用戶。</target>
       </trans-unit>
       <trans-unit id="c18040a22a5dee82cf46a72d15dfec734dc172bb" datatype="html">
-        <source>Hi class! Please complete the "<x id="INTERPOLATION" equiv-text="{{unitTitle}}"/>" WISE unit. (Access Code: <x id="INTERPOLATION_1" equiv-text="{{accessCode}}"/>)</source>
+        <source>Hi class! Please complete the &quot;<x id="INTERPOLATION" equiv-text="{{unitTitle}}"/>&quot; WISE unit. (Access Code: <x id="INTERPOLATION_1" equiv-text="{{accessCode}}"/>)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -7021,7 +7048,7 @@
         <target state="translated">您無權更改此課程的日期。</target>
       </trans-unit>
       <trans-unit id="c39dc7dcb6dece34e9d5718449337e76cf892c91" datatype="html">
-        <source>End date can't be before start date.</source>
+        <source>End date can&apos;t be before start date.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
@@ -7029,7 +7056,7 @@
         <target state="translated">結束日期不能早於開始日期。</target>
       </trans-unit>
       <trans-unit id="f4e8826e636952f345f23611e61a77fec72cbc8b" datatype="html">
-        <source>Start date can't be after end date.</source>
+        <source>Start date can&apos;t be after end date.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
           <context context-type="linenumber">1</context>

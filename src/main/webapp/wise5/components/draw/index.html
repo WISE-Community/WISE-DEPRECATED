@@ -6,7 +6,7 @@
 </style>
 <div ng-controller='DrawController as drawController' flex>
   <div>
-    <div ng-switch='drawController.mode'>
+    <div ng-switch='::drawController.mode'>
       <div ng-switch-when='grading|gradingRevision'
           ng-switch-when-separator='|'
           layout='row'
@@ -25,7 +25,7 @@
               component-id='drawController.componentId'
               to-workgroup-id='workgroupId'
               component-state='componentState'
-              active='drawController.mode === "grading"'>
+              active='::drawController.mode === "grading"'>
           </component-revisions-info>
         </div>
         <div flex='100'
@@ -37,8 +37,8 @@
               from-workgroup-id='teacherWorkgroupId'
               to-workgroup-id='workgroupId'
               component-state-id='componentState.id'
-              show-all-annotations='drawController.mode !== "grading"'
-              is-disabled='drawController.mode !== "grading"'>
+              show-all-annotations='::drawController.mode !== "grading"'
+              is-disabled='::drawController.mode !== "grading"'>
           </component-grading>
         </div>
       </div>
@@ -48,43 +48,43 @@
             <compile data='drawController.getPrompt()'></compile>
           </div>
           <possible-score max-score='drawController.componentContent.maxScore'
-              ng-if='drawController.mode === "student" && !drawController.latestAnnotations.score'>
+              ng-if='::drawController.mode === "student" && !drawController.latestAnnotations.score'>
           </possible-score>
         </div>
         <div class='component__actions'
             layout='row'>
           <md-button class='md-accent'
-              ng-if='drawController.isStudentAttachmentEnabled'
+              ng-if='::drawController.isStudentAttachmentEnabled'
               ng-click='nodeController.showStudentAssets($event, component.id, drawController.isDisabled)'
               ng-disabled='drawController.isDisabled'>
             <md-icon>image</md-icon>
-            {{ 'draw.insertFile' | translate }}
+            {{ ::'draw.insertFile' | translate }}
           </md-button>
         </div>
         <md-button class='md-accent'
             ng-click='drawController.resetButtonClicked()'
-            ng-if='drawController.isResetButtonVisible'
+            ng-if='::drawController.isResetButtonVisible'
             ng-disabled='drawController.isDisabled'>
             <md-icon>restore</md-icon>
-            {{ 'RESET' | translate }}
+            {{ ::'RESET' | translate }}
         </md-button>
         <md-button class='md-accent md-primary'
             ng-click='drawController.snipButtonClicked($event)'
-            ng-if='drawController.isAddToNotebookEnabled()'
+            ng-if='::drawController.isAddToNotebookEnabled()'
             ng-disabled='drawController.isDisabled'>
           <md-icon>note_add</md-icon>
-          {{ 'ADD_TO_NOTEBOOK' | translate:{label:drawController.notebookConfig.label} }}
+          {{ ::'ADD_TO_NOTEBOOK' | translate:{label:drawController.notebookConfig.label} }}
         </md-button>
         <md-button class='md-accent md-primary'
                    ng-click='drawController.copyPublicNotebookItemButtonClicked($event)'
-                   ng-if='drawController.showCopyPublicNotebookItemButton()'
+                   ng-if='::drawController.showCopyPublicNotebookItemButton()'
                    ng-disabled='drawController.isDisabled'>
           <md-icon>file_download</md-icon>
-          {{ 'importClassmateWork' | translate:{label:drawController.notebookConfig.label} }}
+          {{ ::'importClassmateWork' | translate:{label:drawController.notebookConfig.label} }}
         </md-button>
         <div data-drop='true'
             jqyoui-droppable='{onDrop: "drawController.dropCallback(item, $index)"}'>
-          <div id='{{drawController.drawingToolId}}'></div>
+          <div id='{{::drawController.drawingToolId}}'></div>
           <!--
           <h2>API examples:</h2>
           <div>
@@ -107,24 +107,24 @@
             ng-disabled='drawController.isDisabled'>
           <md-icon> history </md-icon>
           <md-tooltip md-direction='top'>
-            {{nodeController.getRevisions(component.id).length}} {{ 'draw.versions' | translate }}
+            {{nodeController.getRevisions(component.id).length}} {{ ::'draw.versions' | translate }}
           </md-tooltip>
         </md-button>
-        <div ng-if='drawController.isSaveButtonVisible || drawController.isSubmitButtonVisible'
+        <div ng-if='::drawController.isSaveOrSubmitButtonVisible()'
             class='component__actions'
             layout='row'
             layout-align='start center'>
           <md-button class='md-raised md-primary'
               ng-click='drawController.saveButtonClicked()'
               ng-disabled='drawController.isDisabled || !drawController.isDirty'
-              ng-if='drawController.isSaveButtonVisible'>
-            {{ 'SAVE' | translate }}
+              ng-if='::drawController.isSaveButtonVisible'>
+            {{ ::'SAVE' | translate }}
           </md-button>
           <md-button class='md-raised md-primary'
               ng-click='drawController.submitButtonClicked()'
               ng-disabled='drawController.isDisabled || !drawController.isSubmitDirty || drawController.isSubmitButtonDisabled'
-              ng-if='drawController.isSubmitButtonVisible'>
-            {{ 'SUBMIT' | translate }}
+              ng-if='::drawController.isSubmitButtonVisible'>
+            {{ ::'SUBMIT' | translate }}
           </md-button>
           <span ng-if='drawController.saveMessage.text'
               class='component__actions__info md-caption'>
@@ -137,7 +137,7 @@
               </span>
           </span>
         </div>
-        <component-annotations ng-if='drawController.mode === "student"'
+        <component-annotations ng-if='::drawController.mode === "student"'
             annotations='drawController.latestAnnotations'
             max-score='drawController.componentContent.maxScore'>
         </component-annotations>
