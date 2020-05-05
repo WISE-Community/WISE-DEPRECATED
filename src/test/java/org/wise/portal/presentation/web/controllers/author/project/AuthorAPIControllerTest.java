@@ -7,10 +7,14 @@ import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 import static org.easymock.EasyMock.anyObject;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Locale;
+import java.util.Map;
 
 import org.easymock.EasyMockRunner;
 import org.easymock.Mock;
@@ -18,8 +22,11 @@ import org.easymock.TestSubject;
 import org.json.JSONException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.mock.web.MockHttpSession;
+import org.wise.portal.domain.portal.impl.PortalImpl;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.impl.ProjectImpl;
+import org.wise.portal.domain.run.Run;
 import org.wise.portal.presentation.web.controllers.APIControllerTest;
 import org.wise.portal.presentation.web.response.SimpleResponse;
 import org.wise.portal.service.session.SessionService;
@@ -38,6 +45,42 @@ public class AuthorAPIControllerTest extends APIControllerTest {
   private MessagePublisher redisPublisher;
 
   private String projectJSONString = "";
+
+  @Test
+  public void getAuthorProjectConfig_HasProjectRun_ReturnCanGradeStudentWork() throws Exception {
+    expect(userService.retrieveUserByUsername(TEACHER_USERNAME)).andReturn(teacher1).times(2);
+    replay(userService);
+    expect(projectService.getById(projectId1)).andReturn(project1);
+    expect(projectService.getProjectList(teacher1)).andReturn(new ArrayList<Project>());
+    expect(projectService.getSharedProjectList(teacher1)).andReturn(new ArrayList<Project>());
+    expect(projectService.canAuthorProject(project1, teacher1)).andReturn(true);
+    replay(projectService);
+    expect(runService.getRunListByOwner(teacher1)).andReturn(new ArrayList<Run>());
+    expect(runService.getRunListBySharedOwner(teacher1)).andReturn(new ArrayList<Run>());
+    ArrayList<Run> projectRunList = new ArrayList<Run>();
+    projectRunList.add(run1);
+    expect(runService.getProjectRuns(projectId1)).andReturn(projectRunList);
+    expect(runService.isAllowedToGradeStudentWork(run1, teacher1)).andReturn(true);
+    replay(runService);
+    expect(portalService.getById(new Integer(1))).andReturn(new PortalImpl());
+    expect(portalService.getDefaultProjectMetadataSettings()).andReturn("");
+    replay(portalService);
+    expect(request.getLocale()).andReturn(Locale.US);
+    expect(request.getContextPath()).andReturn("wise").times(3);
+    expect(request.getSession()).andReturn(new MockHttpSession());
+    expect(request.getHeader("Host")).andReturn("");
+    expect(request.getScheme()).andReturn("http").times(2);
+    expect(request.getServerName()).andReturn("");
+    expect(request.getServerPort()).andReturn(8080);
+    replay(request);
+    Map<String, Object> config = authorAPIController.getAuthorProjectConfig(teacherAuth, request,
+        projectId1);
+    assertTrue((boolean) config.get("canEditProject"));
+    assertTrue((boolean) config.get("canGradeStudentWork"));
+    assertEquals(runId1, config.get("runId"));
+    verify(userService);
+    verify(projectService);
+  }
 
   @Test
   public void authorProjectBegin_CanNotAuthor_NotifyAuthors() throws Exception {
@@ -147,7 +190,7 @@ public class AuthorAPIControllerTest extends APIControllerTest {
 
   @Test
   public void saveProject_whenNotAllowedToEdit_shouldReturnNotAllowedToEditError()
-      throws Exception  {
+      throws Exception {
     expect(userService.retrieveUserByUsername(TEACHER_USERNAME)).andReturn(teacher1);
     replay(userService);
     Project project = new ProjectImpl();

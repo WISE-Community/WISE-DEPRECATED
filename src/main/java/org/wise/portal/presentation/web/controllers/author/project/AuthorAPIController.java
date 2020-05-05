@@ -388,10 +388,11 @@ public class AuthorAPIController {
       config.put("saveProjectURL", contextPath + "/author/project/save/" + projectId);
       config.put("commitProjectURL", contextPath + "/project/commit/" + projectId);
     }
-    List<Run> runsOwnedByUser = runService.getRunListByOwner(user);
-    Long runId = getRunId(projectId, runsOwnedByUser);
-    if (runId != null) {
-      config.put("runId", runId);
+    List<Run> projectRuns = runService.getProjectRuns(projectId);
+    if (projectRuns.size() > 0) {
+      Run projectRun = projectRuns.get(0);
+      config.put("canGradeStudentWork", runService.isAllowedToGradeStudentWork(projectRun, user));
+      config.put("runId", projectRun.getId());
     }
     return config;
   }
