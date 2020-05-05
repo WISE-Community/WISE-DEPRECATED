@@ -277,7 +277,8 @@ class ComponentController {
       disableDragAndDrop: true,
       buttons: {
         insertAssetButton: InsertAssetButton
-      }
+      },
+      dialogsInBody: true
     };
 
     this.registerAuthoringListeners();

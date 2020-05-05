@@ -97,7 +97,8 @@ class HTMLAuthoringController extends HTMLController {
           'prompt',
           this.$translate('INSERT_ASSET')
         )
-      }
+      },
+      dialogsInBody: true
     };
 
     this.summernotePromptId = 'summernotePrompt_' + this.nodeId + '_' + this.componentId;
