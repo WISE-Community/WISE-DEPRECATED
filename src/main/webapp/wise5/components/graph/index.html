@@ -5,24 +5,24 @@
         <div ng-switch-when='grading|gradingRevision' ng-switch-when-separator='|' layout='row' layout-wrap>
           <div flex='100' flex-gt-sm='66' layout='column' class='component--grading__response'>
             <div class='component--grading__response__content'>
-              <highchart id='{{::graphController.chartId}}' config='graphController.chartConfig' ng-if='graphController.$scope.componentState'></highchart>
+              <highchart id='{{::graphController.chartId}}' config='::graphController.chartConfig' ng-if='graphController.$scope.componentState'></highchart>
             </div>
             <span flex></span>
-            <component-revisions-info node-id='graphController.nodeId'
-                          component-id='graphController.componentId'
-                          to-workgroup-id='workgroupId'
+            <component-revisions-info node-id='::graphController.nodeId'
+                          component-id='::graphController.componentId'
+                          to-workgroup-id='::workgroupId'
                           component-state='componentState'
-                          active='graphController.mode === "grading"'></component-revisions-info>
+                          active='::graphController.mode === "grading"'></component-revisions-info>
           </div>
           <div flex='100' flex-gt-sm='33' class='component--grading__annotations'>
-            <component-grading node-id='graphController.nodeId'
-                       component-id='graphController.componentId'
+            <component-grading node-id='::graphController.nodeId'
+                       component-id='::graphController.componentId'
                        max-score='graphController.componentContent.maxScore'
                        from-workgroup-id='teacherWorkgroupId'
                        to-workgroup-id='workgroupId'
                        component-state-id='componentState.id'
-                       show-all-annotations='graphController.mode !== "grading"'
-                       is-disabled='graphController.mode !== "grading"'></component-grading>
+                       show-all-annotations='::graphController.mode !== "grading"'
+                       is-disabled='::graphController.mode !== "grading"'></component-grading>
           </div>
         </div>
         <div ng-switch-default>
@@ -33,7 +33,7 @@
           </div>
           <input type='file'
                accept='.csv'
-               ng-if='graphController.componentContent.enableFileUpload'
+               ng-if='::graphController.componentContent.enableFileUpload'
                onchange='angular.element(this).scope().fileUploadChanged(this)'
                ng-disabled='graphController.isDisabled'/>
           <div class='component__actions' layout='row' ng-if='graphController.showTrialSelect'>
