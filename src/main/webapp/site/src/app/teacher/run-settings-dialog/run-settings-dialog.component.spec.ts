@@ -206,4 +206,9 @@ describe('RunSettingsDialogComponent', () => {
     component.updateLockedAfterEndDateCheckbox();
     expect(component.isLockedAfterEndDateCheckboxEnabled).toEqual(false);
   });
+
+  it('should translate message code', () => {
+    const message = component.translateMessageCode('periodNameAlreadyExists');
+    expect(message).toEqual('There is already a period with that name.');
+  });
 });

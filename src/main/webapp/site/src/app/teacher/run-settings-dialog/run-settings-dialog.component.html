@@ -64,7 +64,7 @@
         <mat-hint *ngIf="endDateMessage" class="warn">{{ endDateMessage }}</mat-hint>
       </mat-form-field>
     </div>
-    <div fxLayoutAlign="center center">
+    <div fxLayoutAlign="center center" style="padding-bottom: 1.34375em;">
       <mat-checkbox [(ngModel)]="isLockedAfterEndDate" (change)="updateIsLockedAfterEndDate()"
           [disabled]="!isLockedAfterEndDateCheckboxEnabled" style="margin-right: 10px;" i18n>
         Lock After End Date

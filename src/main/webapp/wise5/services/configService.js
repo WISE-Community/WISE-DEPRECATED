@@ -901,7 +901,7 @@ class ConfigService {
   }
 
   getPrettyEndDate() {
-    return this.moment(this.getEndDate()).format('MMM DD, YYYY');
+    return this.moment(this.getEndDate()).format('MMM D, YYYY');
   }
 
   getEndDate() {

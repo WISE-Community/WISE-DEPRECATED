@@ -32,17 +32,7 @@ export class RunSettingsDialogComponent implements OnInit {
   maxStartDate: Date;
   minEndDate: Date;
   targetEndDate: Date;
-
-  periodNameAlreadyExists = this.i18n('There is already a period with that name.');
-  noPermissionToAddPeriod = this.i18n('You do not have permission to add periods to this unit.');
-  notAllowedToDeletePeriodWithStudents = this.i18n('You are not allowed to delete a period that contains students.');
-  noPermissionToDeletePeriod = this.i18n('You do not have permission to delete periods from this unit.');
-  noPermissionToChangeMaxStudentsPerTeam = this.i18n('You do not have permission to change the number of students per team for this unit.');
-  notAllowedToDecreaseMaxStudentsPerTeam = this.i18n('You are not allowed to decrease the number of students per team because this unit already has teams with more than 1 student.');
-  noPermissionToChangeDate = this.i18n('You do not have permission to change the dates for this unit.');
-  endDateBeforeStartDate = this.i18n(`End date can't be before start date.`);
-  startDateAfterEndDate = this.i18n(`Start date can't be after end date.`);
-  noPermissionToChangeIsLockedAfterEndDate = this.i18n(`You do not have permission to change is locked after end date`);
+  messageCodeToMessage: any;
 
   constructor(public dialog: MatDialog,
               public dialogRef: MatDialogRef<LibraryProjectDetailsComponent>,
@@ -61,6 +51,22 @@ export class RunSettingsDialogComponent implements OnInit {
     if (this.endDate != null) {
       this.isLockedAfterEndDateCheckboxEnabled = true;
     }
+    this.initializeMessageCodeToMessage();
+  }
+
+  initializeMessageCodeToMessage() {
+    this.messageCodeToMessage = {
+      periodNameAlreadyExists: this.i18n('There is already a period with that name.'),
+      noPermissionToAddPeriod: this.i18n('You do not have permission to add periods to this unit.'),
+      notAllowedToDeletePeriodWithStudents: this.i18n('You are not allowed to delete a period that contains students.'),
+      noPermissionToDeletePeriod: this.i18n('You do not have permission to delete periods from this unit.'),
+      noPermissionToChangeMaxStudentsPerTeam: this.i18n('You do not have permission to change the number of students per team for this unit.'),
+      notAllowedToDecreaseMaxStudentsPerTeam: this.i18n('You are not allowed to decrease the number of students per team because this unit already has teams with more than 1 student.'),
+      noPermissionToChangeDate: this.i18n('You do not have permission to change the dates for this unit.'),
+      endDateBeforeStartDate: this.i18n("End date can't be before start date."),
+      startDateAfterEndDate: this.i18n("Start date can't be after end date."),
+      noPermissionToChangeIsLockedAfterEndDate: this.i18n('You do not have permission to change is locked after end date')
+    };
   }
 
   ngOnInit() {
@@ -169,23 +175,26 @@ export class RunSettingsDialogComponent implements OnInit {
   updateEndTime() {
     this.clearErrorMessages();
     if (confirm(this.getEndDateChangeConfirmationMessage())) {
-      this.teacherService.updateRunEndTime(this.run.id, this.getEndTime())
-          .subscribe((response: any) => {
-        if (response.status === 'success') {
-          this.run = response.run;
-          this.updateDataRun(this.run);
-          this.rememberPreviousEndDate();
-          this.clearErrorMessages();
-          this.showConfirmMessage();
-          this.setDateRange();
-          this.updateLockedAfterEndDateCheckbox();
-        } else {
-          this.endDateMessage = this.translateMessageCode(response.messageCode);
-        }
-      });
+      this.updateRunEndTime(this.run.id, this.getEndTime());
     } else {
       this.rollbackEndDate();
     }
+  }
+
+  updateRunEndTime(runId, endTime) {
+    this.teacherService.updateRunEndTime(runId, endTime).subscribe((response: any) => {
+      if (response.status === 'success') {
+        this.run = response.run;
+        this.updateDataRun(this.run);
+        this.rememberPreviousEndDate();
+        this.clearErrorMessages();
+        this.showConfirmMessage();
+        this.setDateRange();
+        this.updateLockedAfterEndDateCheckbox();
+      } else {
+        this.endDateMessage = this.translateMessageCode(response.messageCode);
+      }
+    });
   }
 
   getEndDateChangeConfirmationMessage() {
@@ -208,21 +217,6 @@ export class RunSettingsDialogComponent implements OnInit {
     } else {
       return this.endDate.getTime();
     }
-  }
-
-  updateRunEndTime(runId, endTime) {
-    this.teacherService.updateRunEndTime(runId, endTime).subscribe((response: any) => {
-      if (response.status === 'success') {
-        this.run = response.run;
-        this.updateDataRun(this.run);
-        this.rememberPreviousEndDate();
-        this.clearErrorMessages();
-        this.showConfirmMessage();
-        this.setDateRange();
-      } else {
-        this.endDateMessage = this.translateMessageCode(response.messageCode);
-      }
-    });
   }
 
   setDateRange() {
@@ -298,27 +292,7 @@ export class RunSettingsDialogComponent implements OnInit {
   }
 
   translateMessageCode(messageCode: string): string {
-    if (messageCode === 'periodNameAlreadyExists') {
-      return this.periodNameAlreadyExists;
-    } else if (messageCode === 'noPermissionToAddPeriod') {
-      return this.noPermissionToAddPeriod;
-    } else if (messageCode === 'notAllowedToDeletePeriodWithStudents') {
-      return this.notAllowedToDeletePeriodWithStudents;
-    } else if (messageCode === 'noPermissionToDeletePeriod') {
-      return this.noPermissionToDeletePeriod;
-    } else if (messageCode === 'noPermissionToChangeMaxStudentsPerTeam') {
-      return this.noPermissionToChangeMaxStudentsPerTeam;
-    } else if (messageCode === 'notAllowedToDecreaseMaxStudentsPerTeam') {
-      return this.notAllowedToDecreaseMaxStudentsPerTeam;
-    } else if (messageCode === 'noPermissionToChangeDate') {
-      return this.noPermissionToChangeDate;
-    } else if (messageCode === 'endDateBeforeStartDate') {
-      return this.endDateBeforeStartDate;
-    } else if (messageCode === 'startDateAfterEndDate') {
-      return this.startDateAfterEndDate;
-    } else if (messageCode === 'noPermissionToChangeIsLockedAfterEndDate') {
-      return this.noPermissionToChangeIsLockedAfterEndDate;
-    }
+    return this.messageCodeToMessage[messageCode];
   }
 
   updateDataRun(run) {
