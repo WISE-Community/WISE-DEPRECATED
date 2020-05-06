@@ -674,19 +674,11 @@ class NodeController {
    * that needs saving
    */
   createAndSaveComponentData(isAutoSave, componentId = null, isSubmit = null) {
-    return this.createComponentStates(isAutoSave, componentId, isSubmit).then(componentStates => {
-      let componentAnnotations = [];
-      let componentEvents = [];
-      if (this.UtilService.arrayHasNonNullElement(componentStates)) {
-        for (const componentState of componentStates) {
-          if (componentState != null) {
-            let annotations = componentState.annotations;
-            if (annotations != null) {
-              componentAnnotations = componentAnnotations.concat(annotations);
-            }
-            delete componentState.annotations;
-          }
-        }
+    return this.createComponentStates(isAutoSave, componentId, isSubmit)
+        .then(componentStatesFromComponents => {
+      if (this.UtilService.arrayHasNonNullElement(componentStatesFromComponents)) {
+        const { componentStates, componentEvents, componentAnnotations } =
+            this.getDataArraysToSaveFromComponentStates(componentStatesFromComponents);
         return this.StudentDataService.saveToServer(
           componentStates,
           componentEvents,
@@ -733,6 +725,27 @@ class NodeController {
         });
       }
     });
+  }
+
+  getDataArraysToSaveFromComponentStates(componentStates) {
+    const nonNullComponentStates = [];
+    const componentAnnotations = [];
+    const componentEvents = [];
+    for (const componentState of componentStates) {
+      if (componentState != null) {
+        nonNullComponentStates.push(componentState);
+        const annotations = componentState.annotations;
+        if (annotations != null) {
+          componentAnnotations.push(...annotations);
+        }
+        delete componentState.annotations;
+      }
+    }
+    return {
+      componentStates: nonNullComponentStates,
+      componentEvents: componentEvents,
+      componentAnnotations: componentAnnotations
+    };
   }
 
   /**
