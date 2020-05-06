@@ -728,24 +728,23 @@ class NodeController {
   }
 
   getDataArraysToSaveFromComponentStates(componentStates) {
-    const nonNullComponentStates = [];
-    const componentAnnotations = [];
-    const componentEvents = [];
-    for (const componentState of componentStates) {
-      if (componentState != null) {
-        nonNullComponentStates.push(componentState);
-        const annotations = componentState.annotations;
-        if (annotations != null) {
-          componentAnnotations.push(...annotations);
-        }
-        delete componentState.annotations;
-      }
-    }
     return {
-      componentStates: nonNullComponentStates,
-      componentEvents: componentEvents,
-      componentAnnotations: componentAnnotations
+      componentStates: componentStates,
+      componentEvents: [],
+      componentAnnotations: this.getAnnotationsFromComponentStates(componentStates)
     };
+  }
+
+  getAnnotationsFromComponentStates(componentStates) {
+    const componentAnnotations = [];
+    for (const componentState of componentStates) {
+      const annotations = componentState.annotations;
+      if (annotations != null) {
+        componentAnnotations.push(...annotations);
+      }
+      delete componentState.annotations;
+    }
+    return componentAnnotations;
   }
 
   /**
@@ -798,7 +797,9 @@ class NodeController {
         }
       }
     }
-    return this.$q.all(componentStatePromises);
+    return this.$q.all(componentStatePromises).then((componentStatesFromComponents) => {
+      return componentStatesFromComponents.filter(componentState => componentState != null);
+    });
   }
 
   /**

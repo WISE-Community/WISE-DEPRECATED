@@ -39,6 +39,7 @@ describe('NodeController', () => {
 
   createAndSaveComponentData();
   getDataArraysToSaveFromComponentStates();
+  getAnnotationsFromComponentStates();
 });
 
 function createAndSaveComponentData() {
@@ -46,7 +47,7 @@ function createAndSaveComponentData() {
       async () => {
     const componentState1 = { id: 1 };
     const componentState2 = { id: 2 };
-    const componentStates = [componentState1, null, componentState2];
+    const componentStates = [componentState1, componentState2];
     spyOn(nodeController, 'createComponentStates').and.callFake(() => {
       return Promise.resolve(componentStates);
     });
@@ -54,8 +55,11 @@ function createAndSaveComponentData() {
       return Promise.resolve({});
     });
     await nodeController.createAndSaveComponentData(false);
-    expect(StudentDataService.saveToServer)
-        .toHaveBeenCalledWith([componentState1, componentState2], [], []);
+    expect(StudentDataService.saveToServer).toHaveBeenCalledWith(
+      [componentState1, componentState2],
+      [],
+      []
+    );
   });
 }
 
@@ -66,7 +70,7 @@ function getDataArraysToSaveFromComponentStates() {
     const annotation3 = { id: 300 };
     const componentState1 = { id: 1, annotations: [annotation1, annotation2] };
     const componentState2 = { id: 2, annotations: [annotation3] };
-    const componentStatesFromComponents = [componentState1, null, componentState2];
+    const componentStatesFromComponents = [componentState1, componentState2];
     const {
       componentStates,
       componentEvents,
@@ -75,9 +79,27 @@ function getDataArraysToSaveFromComponentStates() {
     expect(componentStates.length).toEqual(2);
     expect(componentStates[0]).toEqual(componentState1);
     expect(componentStates[1]).toEqual(componentState2);
-    expect(componentStates[0].annotations).toBeUndefined(null);
-    expect(componentStates[1].annotations).toBeUndefined(null);
+    expect(componentStates[0].annotations).toBeUndefined();
+    expect(componentStates[1].annotations).toBeUndefined();
     expect(componentEvents.length).toEqual(0);
+    expect(componentAnnotations.length).toEqual(3);
+    expect(componentAnnotations[0]).toEqual(annotation1);
+    expect(componentAnnotations[1]).toEqual(annotation2);
+    expect(componentAnnotations[2]).toEqual(annotation3);
+  });
+}
+
+function getAnnotationsFromComponentStates() {
+  it('should get annotations from component states', () => {
+    const annotation1 = { id: 100 };
+    const annotation2 = { id: 200 };
+    const annotation3 = { id: 300 };
+    const componentState1 = { id: 1, annotations: [annotation1, annotation2] };
+    const componentState2 = { id: 2, annotations: [annotation3] };
+    const componentStatesFromComponents = [componentState1, componentState2];
+    const componentAnnotations = nodeController.getAnnotationsFromComponentStates(
+      componentStatesFromComponents
+    );
     expect(componentAnnotations.length).toEqual(3);
     expect(componentAnnotations[0]).toEqual(annotation1);
     expect(componentAnnotations[1]).toEqual(annotation2);
