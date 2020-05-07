@@ -1039,6 +1039,14 @@ class TeacherDataService {
       }
     }
   }
+
+  isWorkgroupShown(workgroup) {
+    let show = false;
+    if (this.currentPeriod.periodId === -1 || workgroup.periodId === this.currentPeriod.periodId) {
+      show = true;
+    }
+    return show;
+  }
 }
 
 TeacherDataService.$inject = [

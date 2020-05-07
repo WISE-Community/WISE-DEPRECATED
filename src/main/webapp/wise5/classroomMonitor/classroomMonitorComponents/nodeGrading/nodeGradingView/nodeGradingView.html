@@ -72,7 +72,7 @@
             </div>
         </md-list-item>
         <workgroup-item ng-repeat="workgroup in $ctrl.workgroupsById | toArray | orderBy:$ctrl.getOrderBy()"
-                        ng-if="$ctrl.isWorkgroupShown(workgroup.$key)"
+                        ng-if="$ctrl.isWorkgroupShown(workgroup)"
                         expand="$ctrl.workVisibilityById[workgroup.$key]"
                         max-score="$ctrl.maxScore"
                         show-score="$ctrl.nodeHasWork"

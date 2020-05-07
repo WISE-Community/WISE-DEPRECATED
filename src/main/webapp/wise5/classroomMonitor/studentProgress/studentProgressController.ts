@@ -111,18 +111,7 @@ class StudentProgressController {
   }
 
   isWorkgroupShown(workgroup) {
-    let show = false;
-    let currentPeriod = this.TeacherDataService.getCurrentPeriod().periodId;
-    if (currentPeriod === -1 || workgroup.periodId === currentPeriod) {
-      if (this.currentWorkgroup) {
-        if (workgroup.workgroupId === this.currentWorkgroup.workgroupId) {
-          show = true;
-        }
-      } else {
-        show = true;
-      }
-    }
-    return show;
+    return this.TeacherDataService.isWorkgroupShown(workgroup);
   }
 
   getStudentTotalScore(workgroupId) {

@@ -412,34 +412,8 @@ class NodeGradingViewController {
     }
   }
 
-  /**
-   * Checks whether a workgroup should be shown
-   * @param workgroupId the workgroupId to look for
-   * @returns boolean whether the workgroup should be shown
-   */
-  isWorkgroupShown(workgroupId) {
-    let show = false;
-
-    let currentPeriodId = this.getCurrentPeriod().periodId;
-    let workgroup = this.workgroupsById[workgroupId];
-    let periodId = workgroup.periodId;
-
-    if (currentPeriodId === -1 || currentPeriodId === periodId) {
-      // workgroup is in current period
-      let currentWorkgroup = this.TeacherDataService.getCurrentWorkgroup();
-      if (currentWorkgroup) {
-        // there is a currently selected workgroup, so check if this one matches
-        if (currentWorkgroup.workgroupId === parseInt(workgroupId)) {
-          // workgroupIds match, so show this one
-          show = true;
-        }
-      } else {
-        // there is no currently selected workgroup, so show this one
-        show = true;
-      }
-    }
-
-    return show;
+  isWorkgroupShown(workgroup) {
+    return this.TeacherDataService.isWorkgroupShown(workgroup);
   }
 
   showRubric($event) {
