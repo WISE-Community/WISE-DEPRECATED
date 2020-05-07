@@ -113,7 +113,7 @@
     "karma-typescript": "^4.1.1",
     "karma-webpack": "^4.0.2",
     "ng-bullet": "^1.0.3",
-    "node-sass": "^4.14.0",
+    "node-sass": "^4.14.1",
     "prettier": "1.19.1",
     "protractor": "^5.4.4",
     "ts-loader": "^6.2.2",
