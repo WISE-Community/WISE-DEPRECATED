@@ -1,0 +1,10 @@
+<md-tabs md-dynamic-height md-border-bottom>
+  <md-tab ng-if="$ctrl.notesEnabled" label="{{ ::notes | translate }}">
+    <md-content class="md-padding">
+    </md-content>
+  </md-tab>
+  <md-tab ng-if="$ctrl.reportEnabled" label="{{ ::$ctrl.reportTitle }}">
+    <md-content class="md-padding">
+    </md-content>
+  </md-tab>
+</md-tabs>

@@ -139,10 +139,6 @@ class NotebookNotesController {
     }
   }
 
-  edit(itemId) {
-    alert(`Edit the item: ${itemId}`);
-  }
-
   close($event) {
     this.onClose($event);
   }
