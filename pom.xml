@@ -146,7 +146,10 @@
             </goals>
             <configuration>
               <testExcludes>
-                <exclude>**/org/wise/portal/domain/**/*.java</exclude>
+                <exclude>**/org/wise/portal/domain/authentication/**/*.java</exclude>
+                <exclude>**/org/wise/portal/domain/newsitem/**/*.java</exclude>
+                <exclude>**/org/wise/portal/domain/run/**/*.java</exclude>
+                <exclude>**/org/wise/portal/domain/webservice/**/*.java</exclude>
                 <exclude>**/org/wise/portal/presentation/web/controllers/general/contactwise/*.java</exclude>
                 <exclude>**/org/wise/portal/presentation/web/controllers/teacher/management/**/*.java</exclude>
                 <exclude>**/org/wise/portal/presentation/web/controllers/teacher/project/**/*.java</exclude>
@@ -183,7 +186,10 @@
         <configuration>
           <forkMode>once</forkMode>
           <excludes>
-            <exclude>**/org/wise/portal/domain/**/*.java</exclude>
+            <exclude>**/org/wise/portal/domain/authentication/**/*.java</exclude>
+            <exclude>**/org/wise/portal/domain/newsitem/**/*.java</exclude>
+            <exclude>**/org/wise/portal/domain/run/**/*.java</exclude>
+            <exclude>**/org/wise/portal/domain/webservice/**/*.java</exclude>
             <exclude>**/org/wise/portal/presentation/web/controllers/general/contactwise/*.java</exclude>
             <exclude>**/org/wise/portal/presentation/web/controllers/teacher/management/**/*.java</exclude>
             <exclude>**/org/wise/portal/presentation/web/controllers/teacher/project/**/*.java</exclude>

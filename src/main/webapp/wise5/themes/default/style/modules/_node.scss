@@ -32,6 +32,17 @@ $input-action-vertical-offset-richtext: -7px;
 
 // TODO: use BEM conventions
 
+.node-notice {
+    @media only screen and (min-width: $layout-breakpoint-xs) {
+        margin-top: -8px;
+        margin-bottom: 16px;
+    }
+
+    @media only screen and (min-width: $layout-breakpoint-sm) {
+        margin-top: -16px;
+    }
+}
+
 .node-content {
     padding: 0 0 48px;
     background-color: #ffffff;

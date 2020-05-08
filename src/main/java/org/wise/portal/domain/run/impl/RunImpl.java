@@ -124,6 +124,9 @@ public class RunImpl implements Run {
   @Transient
   private static final String COLUMN_NAME_SURVEY = "survey";
 
+  @Transient
+  private static final String COLUMN_NAME_IS_LOCKED_AFTER_END_DATE = "isLockedAfterEndDate";
+
   @Id
   @Getter
   @Setter
@@ -235,6 +238,9 @@ public class RunImpl implements Run {
   @Getter
   @Setter
   private String survey; // text (blob) 2^15
+
+  @Column(name = RunImpl.COLUMN_NAME_IS_LOCKED_AFTER_END_DATE, nullable = true)
+  protected boolean isLockedAfterEndDate;
 
   public Group getPeriodByName(String periodName) throws PeriodNotFoundException {
     Set<Group> periods = getPeriods();
@@ -450,7 +456,8 @@ public class RunImpl implements Run {
     Date currentDate = new Date();
     if (currentDate.before(this.starttime)) {
       return false;
-    } else if (this.endtime != null && currentDate.after(this.endtime)) {
+    } else if (this.endtime != null && currentDate.after(this.endtime)
+        && this.isLockedAfterEndDate) {
       return false;
     } else {
       return true;
@@ -459,5 +466,13 @@ public class RunImpl implements Run {
 
   public boolean isSharedTeacher(User user) {
     return this.getSharedowners().contains(user);
+  }
+
+  public boolean isLockedAfterEndDate() {
+    return isLockedAfterEndDate;
+  }
+
+  public void setLockedAfterEndDate(boolean isLockedAfterEndDate) {
+    this.isLockedAfterEndDate = isLockedAfterEndDate;
   }
 }

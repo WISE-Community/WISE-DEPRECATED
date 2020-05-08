@@ -14,7 +14,9 @@ class NodeController {
   componentToScope: any;
   dirtyComponentIds: any;
   dirtySubmitComponentIds: any;
+  endedAndLockedMessage: string;
   isDisabled: boolean;
+  isEndedAndLocked: boolean;
   logOutListener: any;
   mode: any;
   nodeContent: any;
@@ -83,6 +85,12 @@ class NodeController {
     this.workgroupId = this.ConfigService.getWorkgroupId();
     this.teacherWorkgroupId = this.ConfigService.getTeacherWorkgroupId();
     this.isDisabled = !this.ConfigService.isRunActive();
+
+    this.isEndedAndLocked = this.ConfigService.isEndedAndLocked();
+    if (this.isEndedAndLocked) {
+      const endDate = this.ConfigService.getPrettyEndDate();
+      this.endedAndLockedMessage = this.$translate('endedAndLockedMessage', { endDate: endDate });
+    }
 
     /*
      * an object that holds the mappings with the key being the component

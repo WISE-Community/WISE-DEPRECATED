@@ -59,7 +59,7 @@ public interface RunService {
   Run createRun(RunParameters runParameters) throws ObjectNotFoundException;
 
   Run createRun(Long projectId, User user, Set<String> periodNames, Integer maxStudentsPerTeam,
-      Long startDate, Long endDate, Locale locale) throws Exception;
+      Long startDate, Long endDate, Boolean isLockedAfterEndDate, Locale locale) throws Exception;
 
   /**
    * Ends this run. The side effect is that the run's endtime gets set. A Run that has ended is no
@@ -465,6 +465,8 @@ public interface RunService {
   void setStartTime(Long runId, Long startTime);
 
   void setEndTime(Long runId, Long endTime);
+
+  void setIsLockedAfterEndDate(Long runId, Boolean isLockedAfterEndDate);
 
   boolean isAllowedToViewStudentWork(Run run, User user);
 

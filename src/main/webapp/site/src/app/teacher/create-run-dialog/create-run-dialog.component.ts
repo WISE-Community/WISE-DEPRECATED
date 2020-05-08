@@ -24,6 +24,7 @@ export class CreateRunDialogComponent {
   maxStudentsPerTeam: number;
   maxStartDate: Date;
   minEndDate: Date;
+  endDateControl: FormControl;
   periodOptions: string[] = [];
   isCreating: boolean = false;
   isCreated: boolean = false;
@@ -54,13 +55,18 @@ export class CreateRunDialogComponent {
     this.customPeriods.valueChanges.subscribe((v) => {
       hiddenControl.setValue(this.getPeriodsString());
     });
+    this.endDateControl = new FormControl();
+    this.endDateControl.valueChanges.subscribe((v) => {
+      this.updateLockedAfterEndDateCheckbox();
+    });
     this.form = this.fb.group({
       selectedPeriods: this.periodsGroup,
       customPeriods: this.customPeriods,
       periods: hiddenControl,
       maxStudentsPerTeam: new FormControl('3', Validators.required),
       startDate: new FormControl(new Date(), Validators.required),
-      endDate: new FormControl()
+      endDate: this.endDateControl,
+      isLockedAfterEndDate: new FormControl({ value: false, disabled: true })
     });
     this.setDateRange();
   }
@@ -98,9 +104,10 @@ export class CreateRunDialogComponent {
       endDateValue.setHours(23, 59, 59);
       endDate = endDateValue.getTime();
     }
+    const isLockedAfterEndDate = this.form.controls['isLockedAfterEndDate'].value;
     const maxStudentsPerTeam = this.form.controls['maxStudentsPerTeam'].value;
-    this.teacherService.createRun(
-        this.project.id, combinedPeriods, maxStudentsPerTeam, startDate, endDate)
+    this.teacherService.createRun(this.project.id, combinedPeriods, maxStudentsPerTeam, startDate,
+        endDate, isLockedAfterEndDate)
         .pipe(
           finalize(() => {
             this.isCreating = false;
@@ -160,5 +167,14 @@ export class CreateRunDialogComponent {
         panelClass: 'mat-dialog-md'
       });
     });
+  }
+
+  updateLockedAfterEndDateCheckbox() {
+    if (this.endDateControl.value == null) {
+      this.form.controls['isLockedAfterEndDate'].setValue(false);
+      this.form.controls['isLockedAfterEndDate'].disable();
+    } else {
+      this.form.controls['isLockedAfterEndDate'].enable();
+    }
   }
 }
