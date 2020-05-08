@@ -54,12 +54,6 @@ class ThemeController {
     this.currentNode = this.StudentDataService.getCurrentNode();
     this.planningMode = false;
 
-    this.isEndedAndLocked = this.ConfigService.isEndedAndLocked();
-    if (this.isEndedAndLocked) {
-      const endDate = this.ConfigService.getPrettyEndDate();
-      this.endedAndLockedMessage = this.$translate('endedAndLockedMessage', { endDate: endDate });
-    }
-
     // set current notebook type filter to first enabled type
     if (this.notebookConfig.enabled) {
       for (var type in this.notebookConfig.itemTypes) {
