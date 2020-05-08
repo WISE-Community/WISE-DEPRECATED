@@ -4,7 +4,6 @@ import ComponentController from '../componentController';
 import OutsideURLService from './outsideURLService';
 
 class OutsideURLController extends ComponentController {
-  $q: any;
   $sce: any;
   OutsideURLService: OutsideURLService;
   url: string;
@@ -63,7 +62,6 @@ class OutsideURLController extends ComponentController {
       StudentDataService,
       UtilService
     );
-    this.$q = $q;
     this.$sce = $sce;
     this.OutsideURLService = OutsideURLService;
     this.url = null;
@@ -76,24 +74,6 @@ class OutsideURLController extends ComponentController {
     }
 
     this.setWidthAndHeight(this.componentContent.width, this.componentContent.height);
-
-    /**
-     * Get the component state from this component. The parent node will
-     * call this function to obtain the component state when it needs to
-     * save student data.
-     * @return a promise of a component state containing the student data
-     */
-    this.$scope.getComponentState = function() {
-      const deferred = this.$q.defer();
-
-      /*
-       * the student does not have any unsaved changes in this component
-       * so we don't need to save a component state for this component.
-       * we will immediately resolve the promise here.
-       */
-      deferred.resolve();
-      return deferred.promise;
-    }.bind(this);
 
     this.$rootScope.$broadcast('doneRenderingComponent', {
       nodeId: this.nodeId,

@@ -90,7 +90,7 @@ class ThemeController {
       var node = this.ProjectService.getNodeById(nodeId);
       if (node != null) {
         // get the constraints that affect this node
-        var constraints = this.ProjectService.getConstraintsForNode(node);
+        var constraints = this.ProjectService.getConstraintsThatAffectNode(node);
         this.ProjectService.orderConstraints(constraints);
 
         if (constraints != null && constraints.length > 0) {
@@ -104,7 +104,7 @@ class ThemeController {
           var constraint = constraints[c];
 
           // check if the constraint has been satisfied
-          if (constraint != null && !this.StudentDataService.evaluateConstraint(node, constraint)) {
+          if (constraint != null && !this.StudentDataService.evaluateConstraint(constraint)) {
             // the constraint has not been satisfied and is still active
 
             if (message != '') {
