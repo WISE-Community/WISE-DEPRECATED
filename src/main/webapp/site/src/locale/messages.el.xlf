@@ -1749,10 +1749,6 @@
           <context context-type="linenumber">6</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
-          <context context-type="linenumber">83</context>
-        </context-group>
-        <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
           <context context-type="linenumber">31</context>
         </context-group>
@@ -1850,7 +1846,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
-          <context context-type="linenumber">62</context>
+          <context context-type="linenumber">63</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/use-with-class-warning-dialog/use-with-class-warning-dialog.component.html</context>
@@ -1926,7 +1922,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
-          <context context-type="linenumber">70</context>
+          <context context-type="linenumber">76</context>
         </context-group>
         <target state="needs-translation">Done</target>
       </trans-unit>
@@ -1970,23 +1966,25 @@
         <source>Add your own periods</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
-          <context context-type="linenumber">17</context>
+          <context context-type="linenumber">16</context>
         </context-group>
         <target state="needs-translation">Add your own periods</target>
       </trans-unit>
-      <trans-unit id="b13b5b62a4356cdcd81f358640fb7863fdde1361" datatype="html">
-        <source>For &quot;Period 9&quot;, just enter the number 9. Separate periods with commas (e.g. &quot;Section 1, Section 2&quot;). Manually named periods should be no more than 16 characters long.</source>
+      <trans-unit id="085c6f5a5f7c79b5d092d1f6411d1bfdc9eec6d0" datatype="html">
+        <source>For &quot;Period 9&quot;, just enter the number 9. Separate periods with commas (e.g. &quot;Section 1, Section 2&quot;). Manually named periods should be no more than 16 characters long.
+      </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
-          <context context-type="linenumber">22</context>
+          <context context-type="linenumber">18</context>
         </context-group>
-        <target state="needs-translation">For "Period 9", just enter the number 9. Separate periods with commas (e.g. "Section 1, Section 2"). Manually named periods should be no more than 16 characters long.</target>
+        <target state="needs-translation">For "Period 9", just enter the number 9. Separate periods with commas (e.g. "Section 1, Section 2"). Manually named periods should be no more than 16 characters long.
+      </target>
       </trans-unit>
       <trans-unit id="6b0dd0933835c1e0d9e3ed4a19c8eb88a9df417b" datatype="html">
         <source>2. Choose Students Per Team</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
-          <context context-type="linenumber">25</context>
+          <context context-type="linenumber">22</context>
         </context-group>
         <target state="needs-translation">2. Choose Students Per Team</target>
       </trans-unit>
@@ -1994,11 +1992,7 @@
         <source>Only 1 student</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
-          <context context-type="linenumber">29</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
-          <context context-type="linenumber">32</context>
+          <context context-type="linenumber">24</context>
         </context-group>
         <target state="needs-translation">Only 1 student</target>
       </trans-unit>
@@ -2006,11 +2000,7 @@
         <source>1-3 students</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
-          <context context-type="linenumber">30</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
-          <context context-type="linenumber">34</context>
+          <context context-type="linenumber">25</context>
         </context-group>
         <target state="needs-translation">1-3 students</target>
       </trans-unit>
@@ -2018,7 +2008,7 @@
         <source>3. Set Schedule</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
-          <context context-type="linenumber">33</context>
+          <context context-type="linenumber">28</context>
         </context-group>
         <target state="needs-translation">3. Set Schedule</target>
       </trans-unit>
@@ -2026,11 +2016,11 @@
         <source>Start date</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
-          <context context-type="linenumber">38</context>
+          <context context-type="linenumber">33</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
-          <context context-type="linenumber">47</context>
+          <context context-type="linenumber">45</context>
         </context-group>
         <target state="needs-translation">Start date</target>
       </trans-unit>
@@ -2038,7 +2028,7 @@
         <source>Start date is required</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
-          <context context-type="linenumber">44</context>
+          <context context-type="linenumber">38</context>
         </context-group>
         <target state="needs-translation">Start date is required</target>
       </trans-unit>
@@ -2046,19 +2036,43 @@
         <source>End date</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
-          <context context-type="linenumber">50</context>
+          <context context-type="linenumber">44</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
-          <context context-type="linenumber">59</context>
+          <context context-type="linenumber">56</context>
         </context-group>
         <target state="needs-translation">End date</target>
+      </trans-unit>
+      <trans-unit id="4005b12b4826f1ebfe46b5d64ecb84915f61be73" datatype="html">
+        <source>
+          Lock After End Date
+        </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
+          <context context-type="linenumber">52</context>
+        </context-group>
+        <target state="needs-translation">
+          Lock After End Date
+        </target>
+      </trans-unit>
+      <trans-unit id="70b1ab8a9900ee7a2907d90336ecbdb47bd4d018" datatype="html">
+        <source>If the End Date has passed and the unit is locked, students will no longer be able to save new work</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
+          <context context-type="linenumber">70</context>
+        </context-group>
+        <target state="needs-translation">If the End Date has passed and the unit is locked, students will no longer be able to save new work</target>
       </trans-unit>
       <trans-unit id="dfe5fb2242551f7f7aae712b5449e38ec0ca79a8" datatype="html">
         <source>Note: These dates can be changed at any time from your Class Schedule. Just select &quot;Edit Settings&quot; from the unit&apos;s dropdown menu.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
-          <context context-type="linenumber">59</context>
+          <context context-type="linenumber">60</context>
         </context-group>
         <target state="needs-translation">Note: These dates can be changed at any time from your Class Schedule. Just select "Edit Settings" from the unit's dropdown menu.</target>
       </trans-unit>
@@ -2066,7 +2080,7 @@
         <source>Create Run</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
-          <context context-type="linenumber">68</context>
+          <context context-type="linenumber">66</context>
         </context-group>
         <target state="needs-translation">Create Run</target>
       </trans-unit>
@@ -2074,7 +2088,7 @@
         <source>Success! This unit has been added to your Class Schedule.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
-          <context context-type="linenumber">75</context>
+          <context context-type="linenumber">73</context>
         </context-group>
         <target state="needs-translation">Success! This unit has been added to your Class Schedule.</target>
       </trans-unit>
@@ -2082,7 +2096,7 @@
         <source>Access Code: <x id="INTERPOLATION" equiv-text="{{ run.runCode }}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
-          <context context-type="linenumber">77</context>
+          <context context-type="linenumber">75</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
@@ -2094,7 +2108,7 @@
         <source>Important: Every classroom unit has a unique Access Code. Students use this code to register for a unit. Give the code to your students when they first sign up for a WISE account. If they already have WISE accounts, have them log in and then select &quot;Add Unit&quot; from the student home page.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
-          <context context-type="linenumber">78</context>
+          <context context-type="linenumber">76</context>
         </context-group>
         <target state="needs-translation">Important: Every classroom unit has a unique Access Code. Students use this code to register for a unit. Give the code to your students when they first sign up for a WISE account. If they already have WISE accounts, have them log in and then select "Add Unit" from the student home page.</target>
       </trans-unit>
@@ -2102,9 +2116,19 @@
         <source>You can always find the Access Code for each classroom unit in your Class Schedule.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
-          <context context-type="linenumber">79</context>
+          <context context-type="linenumber">77</context>
         </context-group>
         <target state="needs-translation">You can always find the Access Code for each classroom unit in your Class Schedule.</target>
+      </trans-unit>
+      <trans-unit id="6d1b448d6bd57d2a29e2f8e1ea8a35aacd3101f5" datatype="html">
+        <source>Add to Google
+      Classroom</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
+          <context context-type="linenumber">82</context>
+        </context-group>
+        <target state="needs-translation">Add to Google
+      Classroom</target>
       </trans-unit>
       <trans-unit id="d9b2ffb3e1ce1ca42a3db04d00ea072777898eb3" datatype="html">
         <source>Legacy Unit Warning</source>
@@ -6177,6 +6201,26 @@
         </context-group>
         <target state="needs-translation">Students Per Team</target>
       </trans-unit>
+      <trans-unit id="17fa4b58d131328449acdbaad4bbe404bfd31264" datatype="html">
+        <source>Only
+      1 student</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+        <target state="needs-translation">Only
+      1 student</target>
+      </trans-unit>
+      <trans-unit id="975a4029af4b0992dcdcbe682bcba819ea8cf809" datatype="html">
+        <source>1-3
+      students</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+        <target state="needs-translation">1-3
+      students</target>
+      </trans-unit>
       <trans-unit id="4a4f46a2dcec36bd5c8c371ceee55c2226dec27f" datatype="html">
         <source>Schedule</source>
         <context-group purpose="location">
@@ -6185,21 +6229,35 @@
         </context-group>
         <target state="needs-translation">Schedule</target>
       </trans-unit>
-      <trans-unit id="966a68a11a339aa294e2d035b6982039b2448ef4" datatype="html">
-        <source>(Last student login: <x id="INTERPOLATION" equiv-text="{{ run.lastRun | amCalendar }}"/>)</source>
+      <trans-unit id="c1d7798f7e66f0c74760feddb4a5ebe92a5dd49f" datatype="html">
+        <source>(Last student login:
+      <x id="INTERPOLATION" equiv-text="{{ run.lastRun | amCalendar }}"/>)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
-          <context context-type="linenumber">41</context>
+          <context context-type="linenumber">39</context>
         </context-group>
-        <target state="needs-translation">(Last student login: <x id="INTERPOLATION" equiv-text="{{ run.lastRun | amCalendar }}"/>)</target>
+        <target state="needs-translation">(Last student login:
+      <x id="INTERPOLATION" equiv-text="{{ run.lastRun | amCalendar }}"/>)</target>
       </trans-unit>
       <trans-unit id="a1c89f5496e99086127a54d08cecba1d0920397e" datatype="html">
         <source>Start date is required.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
-          <context context-type="linenumber">52</context>
+          <context context-type="linenumber">50</context>
         </context-group>
         <target state="needs-translation">Start date is required.</target>
+      </trans-unit>
+      <trans-unit id="1758732318fe8d8d5820744ec9691104301ced4f" datatype="html">
+        <source>
+        Lock After End Date
+      </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
+          <context context-type="linenumber">66</context>
+        </context-group>
+        <target state="needs-translation">
+        Lock After End Date
+      </target>
       </trans-unit>
       <trans-unit id="9c83559c416a8e596b51a342566efdb2868f2404" datatype="html">
         <source>Run Menu</source>
@@ -7021,6 +7079,14 @@
         </context-group>
         <target state="needs-translation">Start date can't be after end date.</target>
       </trans-unit>
+      <trans-unit id="a5eca87daa8aefe34a19367002e876dbaf684e7a" datatype="html">
+        <source>You do not have permission to change is locked after end date</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target state="needs-translation">You do not have permission to change is locked after end date</target>
+      </trans-unit>
       <trans-unit id="b09df4f849aed6b523f0a26d8e99c4cd13880df3" datatype="html">
         <source>Please enter a new period name.</source>
         <context-group purpose="location">
@@ -7060,6 +7126,14 @@
           <context context-type="linenumber">1</context>
         </context-group>
         <target state="needs-translation">Are you sure you want to change the end date to <x id="INTERPOLATION" equiv-text="{{date}}"/>?</target>
+      </trans-unit>
+      <trans-unit id="b04d376ab46ff56242706f55cba17b1bb14134db" datatype="html">
+        <source>Are you sure you want to remove the end date?</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target state="needs-translation">Are you sure you want to remove the end date?</target>
       </trans-unit>
       <trans-unit id="552cff32fa324f691b5ac17facdde8b9a963659f" datatype="html">
         <source>Unit settings updated.</source>
