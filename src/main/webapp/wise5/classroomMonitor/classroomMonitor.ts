@@ -74,7 +74,7 @@ import '../components/table/tableComponentModule';
 import TeacherDataService from '../services/teacherDataService';
 import TeacherWebSocketService from '../services/teacherWebSocketService';
 import UtilService from '../services/utilService';
-import '../lib/summernote/dist/summernote';
+import '../lib/summernote/dist/summernote.min';
 import '../lib/angular-summernote/dist/angular-summernote.min';
 import '../lib/summernoteExtensions/summernote-ext-addNote.js';
 import '../lib/summernoteExtensions/summernote-ext-print.js';

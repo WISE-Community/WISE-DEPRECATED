@@ -70,8 +70,8 @@ import * as SockJS from 'sockjs-client';
 import * as StompJS from '@stomp/stompjs';
 window['SockJS'] = SockJS;
 window['Stomp'] = StompJS.Stomp;
-import '../lib/summernote/dist/summernote';
-import '../lib/angular-summernote/dist/angular-summernote';
+import '../lib/summernote/dist/summernote.min';
+import '../lib/angular-summernote/dist/angular-summernote.min';
 import '../themes/default/theme';
 
 export default angular
