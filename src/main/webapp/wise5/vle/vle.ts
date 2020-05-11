@@ -1,5 +1,7 @@
 'use strict';
 
+import '../lib/jquery/jquery-global';
+import '../lib/bootstrap/js/bootstrap.min'
 import AchievementService from '../services/achievementService';
 import * as angular from 'angular';
 import * as angularDragula from 'angular-dragula';
