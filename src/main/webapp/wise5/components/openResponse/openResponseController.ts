@@ -329,8 +329,8 @@ class OpenResponseController extends ComponentController {
 
   hasFeedback() {
     return (
-      (this.componentContent.cRater.showFeedback || this.componentContent.cRater.showScore) &&
-      this.isCRaterEnabled()
+      this.isCRaterEnabled() &&
+      (this.componentContent.cRater.showFeedback || this.componentContent.cRater.showScore)
     );
   }
 
