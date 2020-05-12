@@ -82,7 +82,9 @@ class NotebookGradingController {
     let colspan = 4;
     if (this.notesEnabled) {
       if (this.reportEnabled) {
-        colspan = 5;
+        // TODO: set to 5 when notebook grading is fixed
+        // colspan = 5;
+        colspan = 4;
       } else {
         colspan = 3;
       }

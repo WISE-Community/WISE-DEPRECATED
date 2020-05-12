@@ -66,7 +66,7 @@
                      ng-class="{'table--list__thead__sort--reverse': notebookGradingController.sort === '-status'}">
               arrow_drop_up </md-icon>
           </md-button>
-          <md-button class="table--list__thead__link" aria-label="{{ ::'score' | translate }}"
+          <!--<md-button class="table--list__thead__link" aria-label="{{ ::'score' | translate }}"
                      ng-if="notebookGradingController.reportEnabled"
                      ng-click="notebookGradingController.setSort('score')"
                      title="{{::'sortByScore' | translate}}" layout="row"
@@ -76,7 +76,7 @@
                      class="text-light table--list__thead__sort" md-theme="default"
                      ng-class="{'table--list__thead__sort--reverse': notebookGradingController.sort === '-score'}">
               arrow_drop_up </md-icon>
-          </md-button>
+          </md-button>-->
         </div>
       </md-list-item>
       <notebook-workgroup-grading ng-repeat="workgroup in notebookGradingController.workgroups | orderBy:notebookGradingController.getOrderBy()"

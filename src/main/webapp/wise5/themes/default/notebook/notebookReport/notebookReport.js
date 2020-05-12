@@ -318,7 +318,7 @@ const NotebookReport = {
               <compile data="$ctrl.reportItemContent"></compile>
             </article>
             <p ng-if="!$ctrl.hasReport" translate="noReport" translate-value-term="{{$ctrl.config.itemTypes.report.notes[0].title}}"></p>
-            <notebook-item-grading notebook-item="$ctrl.reportItem"></notebook-item-grading>
+            <!--<notebook-item-grading notebook-item="$ctrl.reportItem"></notebook-item-grading>-->
         </div>`,
   controller: NotebookReportController
 };
