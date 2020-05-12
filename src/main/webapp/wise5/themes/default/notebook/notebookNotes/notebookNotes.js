@@ -140,7 +140,7 @@ class NotebookNotesController {
   }
 
   editItem($ev, note) {
-    this.$rootScope.$broadcast('editNote', {note: note, ev: $ev});
+    this.$rootScope.$broadcast('editNote', {note: note, isEditMode: !this.viewOnly, ev: $ev});
   }
 
   select($ev, note) {
@@ -174,6 +174,7 @@ const NotebookNotes = {
     insertMode: '<',
     notebook: '<',
     notesVisible: '<',
+    viewOnly: '<',
     workgroupId: '<',
     onClose: '&',
     onInsert: '&',
