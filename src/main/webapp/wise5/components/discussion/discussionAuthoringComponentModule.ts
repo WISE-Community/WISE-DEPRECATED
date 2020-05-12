@@ -13,7 +13,7 @@ const discussionAuthoringComponentModule = angular
   .controller('DiscussionController', DiscussionController)
   .controller('DiscussionAuthoringController', DiscussionAuthoringController)
   .controller('ClassResponseController', ClassResponseController)
-  .component('classResponse', ClassResponse)
+  .component('atClassResponse', ClassResponse)
   .config([
     '$translatePartialLoaderProvider',
     $translatePartialLoaderProvider => {
