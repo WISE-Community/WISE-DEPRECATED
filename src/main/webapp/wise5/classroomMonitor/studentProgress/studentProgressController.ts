@@ -9,6 +9,22 @@ class StudentProgressController {
   currentWorkgroup: any;
   permissions: any;
   sort: any;
+  sortOrder: object = {
+    'team': ['workgroupId', 'username'],
+    '-team': ['-workgroupId', 'username'],
+    'student': ['username', 'workgroupId'],
+    '-student': ['-username', 'workgroupId'],
+    'score': ['scorePct', 'username'],
+    '-score': ['-scorePct', 'username'],
+    'completion': ['completion.completionPct', 'username'],
+    '-completion': ['-completion.completionPct', 'username'],
+    'location': ['location', 'username'],
+    '-location': ['-location', 'username'],
+    'time': ['-online', '-timeSpent', 'username'],
+    '-time': ['-online', 'timeSpent', 'username'],
+    'online': ['online', 'username'],
+    '-online': ['-online', 'username']
+  };
   students: any;
   studentsOnline: any;
   studentTimeSpent: any;
@@ -263,7 +279,7 @@ class StudentProgressController {
 
   setSort(value) {
     if (this.sort === value) {
-      this.sort = '-' + value;
+      this.sort = `-${value}`;
     } else {
       this.sort = value;
     }
@@ -271,52 +287,7 @@ class StudentProgressController {
   }
 
   getOrderBy() {
-    let orderBy = [];
-    switch (this.sort) {
-      case 'team':
-        orderBy = ['workgroupId', 'username'];
-        break;
-      case '-team':
-        orderBy = ['-workgroupId', 'username'];
-        break;
-      case 'student':
-        orderBy = ['username', 'workgroupId'];
-        break;
-      case '-student':
-        orderBy = ['-username', 'workgroupId'];
-        break;
-      case 'score':
-        orderBy = ['scorePct', 'username'];
-        break;
-      case '-score':
-        orderBy = ['-scorePct', 'username'];
-        break;
-      case 'completion':
-        orderBy = ['completion.completionPct', 'username'];
-        break;
-      case '-completion':
-        orderBy = ['-completion.completionPct', 'username'];
-        break;
-      case 'location':
-        orderBy = ['location', 'username'];
-        break;
-      case '-location':
-        orderBy = ['-location', 'username'];
-        break;
-      case 'time':
-        orderBy = ['-online', '-timeSpent', 'username'];
-        break;
-      case '-time':
-        orderBy = ['-online', 'timeSpent', 'username'];
-        break;
-      case 'online':
-        orderBy = ['online', 'username'];
-        break;
-      case '-online':
-        orderBy = ['-online', 'username'];
-        break;
-    }
-    return orderBy;
+    return this.sortOrder[this.sort];
   }
 }
 

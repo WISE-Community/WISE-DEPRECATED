@@ -30,7 +30,7 @@
                      layout-align="center center" flex="10">
             <span translate="team"></span>
             <md-icon ng-if="notebookGradingController.sort === 'team' || notebookGradingController.sort === '-team'"
-                     class="text-light table--list__thead__sort"
+                     class="text-light table--list__thead__sort" md-theme="default"
                      ng-class="{'table--list__thead__sort--reverse': notebookGradingController.sort === '-team'}">
               arrow_drop_up </md-icon>
           </md-button>
@@ -39,7 +39,7 @@
                      title="{{::'sortByStudent' | translate}}" layout="row">
             <span translate="names"></span>
             <md-icon ng-if="notebookGradingController.sort === 'student' || notebookGradingController.sort === '-student'"
-                     class="text-light table--list__thead__sort"
+                     class="text-light table--list__thead__sort" md-theme="default"
                      ng-class="{'table--list__thead__sort--reverse': notebookGradingController.sort === '-student'}">
               arrow_drop_up </md-icon>
           </md-button>
@@ -50,20 +50,20 @@
                      layout-align="center center" flex="10">
             <span translate="notes"></span>
             <md-icon ng-if="notebookGradingController.sort === 'notes' || notebookGradingController.sort === '-notes'"
-                     class="text-light table--list__thead__sort"
+                     class="text-light table--list__thead__sort" md-theme="default"
                      ng-class="{'table--list__thead__sort--reverse': notebookGradingController.sort === '-notes'}">
               arrow_drop_up </md-icon>
           </md-button>
           <md-button class="table--list__thead__link"
                      aria-label="{{ ::notebookGradingController.reportTitle }}"
                      ng-if="notebookGradingController.reportEnabled"
-                     ng-click="notebookGradingController.setSort('reportStatus')"
+                     ng-click="notebookGradingController.setSort('status')"
                      title="{{::'sortByReportStatus' | translate}}" layout="row"
                      layout-align="center center" flex="25">
             <span>{{ ::notebookGradingController.reportTitle }}</span>
-            <md-icon ng-if="notebookGradingController.sort === 'reportStatus' || notebookGradingController.sort === '-reportStatus'"
-                     class="text-light table--list__thead__sort"
-                     ng-class="{'table--list__thead__sort--reverse': notebookGradingController.sort === '-reportStatus'}">
+            <md-icon ng-if="notebookGradingController.sort === 'status' || notebookGradingController.sort === '-status'"
+                     class="text-light table--list__thead__sort" md-theme="default"
+                     ng-class="{'table--list__thead__sort--reverse': notebookGradingController.sort === '-status'}">
               arrow_drop_up </md-icon>
           </md-button>
           <md-button class="table--list__thead__link" aria-label="{{ ::'score' | translate }}"
@@ -72,9 +72,9 @@
                      title="{{::'sortByScore' | translate}}" layout="row"
                      layout-align="center center" flex="10">
             <span translate="score"></span>
-            <md-icon ng-if="notebookGradingController.sort === 'reportScore' || notebookGradingController.sort === '-reportScore'"
-                     class="text-light table--list__thead__sort"
-                     ng-class="{'table--list__thead__sort--reverse': notebookGradingController.sort === '-reportScore'}">
+            <md-icon ng-if="notebookGradingController.sort === 'score' || notebookGradingController.sort === '-score'"
+                     class="text-light table--list__thead__sort" md-theme="default"
+                     ng-class="{'table--list__thead__sort--reverse': notebookGradingController.sort === '-score'}">
               arrow_drop_up </md-icon>
           </md-button>
         </div>

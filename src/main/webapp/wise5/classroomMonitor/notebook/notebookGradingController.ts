@@ -11,10 +11,23 @@ class NotebookGradingController {
   isExpandAll: boolean = false;
   notebookConfig: any;
   notesEnabled: boolean = false;
+  sortOrder: object = {
+    'team': ['workgroupId'],
+    '-team': ['-workgroupId'],
+    'student': ['displayNames', 'workgroupId'],
+    '-student': ['-displayNames', 'workgroupId'],
+    'notes': ['notes.length', 'workgroupId'],
+    '-notes': ['-notes.length', 'workgroupId'],
+    'status': ['report.serverSaveTime', 'workgroupId'],
+    '-status': ['-report.serverSaveTime', 'workgroupId'],
+    'score': ['score', 'workgroupId'],
+    '-score': ['-score', 'workgroupId']
+  };
   reportEnabled: boolean = false;
   reportTitle: string = '';
   showAllNotes: boolean = false;
   showAllReports: boolean = false;
+  sort: string = 'team';
   teacherWorkgroupId: number;
   workgroups: any[];
   workgroupInViewById: any = {};
@@ -113,9 +126,8 @@ class NotebookGradingController {
   }
 
   getNotebookConfigForWorkgroup(workgroupId) {
-    if (
-      this.ConfigService.isRunOwner(workgroupId) ||
-      this.ConfigService.isRunSharedTeacher(workgroupId)
+    if (this.ConfigService.isRunOwner(workgroupId) ||
+        this.ConfigService.isRunSharedTeacher(workgroupId)
     ) {
       return this.NotebookService.getTeacherNotebookConfig();
     } else {
@@ -132,6 +144,18 @@ class NotebookGradingController {
     if (this.isExpandAll && inview) {
       this.workVisibilityById[workgroupId] = true;
     }
+  }
+
+  setSort(value) {
+    if (this.sort === value) {
+      this.sort = `-${value}`;
+    } else {
+      this.sort = value;
+    }
+  }
+
+  getOrderBy() {
+    return this.sortOrder[this.sort];
   }
 }
 

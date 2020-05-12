@@ -17,6 +17,14 @@ class StudentGradingController {
   nodesById: any;
   nodesInViewById: any;
   nodeVisibilityById: any;
+  sortOrder: object = {
+    'step': ['-isVisible', 'order'],
+    '-step': ['-isVisible', '-order'],
+    'status': ['-isVisible', 'completionStatus', '-hasNewAlert', 'order'],
+    '-status': ['-isVisible', '-completionStatus', '-hasNewAlert', 'order'],
+    'score': ['-isVisible', '-hasScore', '-hasMaxScore', 'scorePct', '-maxScore', 'score', 'order'],
+    '-score': ['-isVisible', '-hasScore', '-hasMaxScore', '-scorePct', '-maxScore', 'score', 'order']
+  };
   permissions: any;
   projectCompletion: any;
   showNonWorkNodes: any;
@@ -431,28 +439,10 @@ class StudentGradingController {
   }
 
   setSort(value) {
-    switch (value) {
-      case 'step':
-        if (this.sort === 'step') {
-          this.sort = '-step';
-        } else {
-          this.sort = 'step';
-        }
-        break;
-      case 'status':
-        if (this.sort === 'status') {
-          this.sort = '-status';
-        } else {
-          this.sort = 'status';
-        }
-        break;
-      case 'score':
-        if (this.sort === 'score') {
-          this.sort = '-score';
-        } else {
-          this.sort = 'score';
-        }
-        break;
+    if (this.sort === value) {
+      this.sort = `-${value}`;
+    } else {
+      this.sort = value;
     }
 
     // update value in the teacher data service so we can persist across view instances and workgroup changes
@@ -460,46 +450,7 @@ class StudentGradingController {
   }
 
   getOrderBy() {
-    let orderBy = [];
-
-    switch (this.sort) {
-      case 'step':
-        orderBy = ['-isVisible', 'order'];
-        break;
-      case '-step':
-        orderBy = ['-isVisible', '-order'];
-        break;
-      case 'status':
-        orderBy = ['-isVisible', 'completionStatus', '-hasNewAlert', 'order'];
-        break;
-      case '-status':
-        orderBy = ['-isVisible', '-completionStatus', '-hasNewAlert', 'order'];
-        break;
-      case 'score':
-        orderBy = [
-          '-isVisible',
-          '-hasScore',
-          '-hasMaxScore',
-          'scorePct',
-          '-maxScore',
-          'score',
-          'order'
-        ];
-        break;
-      case '-score':
-        orderBy = [
-          '-isVisible',
-          '-hasScore',
-          '-hasMaxScore',
-          '-scorePct',
-          '-maxScore',
-          'score',
-          'order'
-        ];
-        break;
-    }
-
-    return orderBy;
+    return this.sortOrder[this.sort];
   }
 
   /**

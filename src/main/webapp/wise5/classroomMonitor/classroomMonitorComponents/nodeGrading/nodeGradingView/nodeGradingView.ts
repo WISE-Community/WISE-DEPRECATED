@@ -23,6 +23,14 @@ class NodeGradingViewController {
   nodeHasWork: boolean;
   nodeId: string;
   numRubrics: number;
+  sortOrder: object = {
+    'team': ['-isVisible', 'workgroupId'],
+    '-team': ['-isVisible', '-workgroupId'],
+    'status': ['-isVisible', 'completionStatus', 'workgroupId'],
+    '-status': ['-isVisible', '-completionStatus', 'workgroupId'],
+    'score': ['-isVisible', 'score', 'workgroupId'],
+    '-score': ['-isVisible', '-score', 'workgroupId']
+  };
   sort: any;
   teacherWorkgroupId: number;
   workgroupInViewById: any;
@@ -421,28 +429,10 @@ class NodeGradingViewController {
   }
 
   setSort(value) {
-    switch (value) {
-      case 'team':
-        if (this.sort === 'team') {
-          this.sort = '-team';
-        } else {
-          this.sort = 'team';
-        }
-        break;
-      case 'status':
-        if (this.sort === 'status') {
-          this.sort = '-status';
-        } else {
-          this.sort = 'status';
-        }
-        break;
-      case 'score':
-        if (this.sort === 'score') {
-          this.sort = '-score';
-        } else {
-          this.sort = 'score';
-        }
-        break;
+    if (this.sort === value) {
+      this.sort = `-${value}`;
+    } else {
+      this.sort = value;
     }
 
     // update value in the teacher data service so we can persist across view instances and current node changes
@@ -450,30 +440,7 @@ class NodeGradingViewController {
   }
 
   getOrderBy() {
-    let orderBy = [];
-
-    switch (this.sort) {
-      case 'team':
-        orderBy = ['-isVisible', 'workgroupId'];
-        break;
-      case '-team':
-        orderBy = ['-isVisible', '-workgroupId'];
-        break;
-      case 'status':
-        orderBy = ['-isVisible', 'completionStatus', 'workgroupId'];
-        break;
-      case '-status':
-        orderBy = ['-isVisible', '-completionStatus', 'workgroupId'];
-        break;
-      case 'score':
-        orderBy = ['-isVisible', 'score', 'workgroupId'];
-        break;
-      case '-score':
-        orderBy = ['-isVisible', '-score', 'workgroupId'];
-        break;
-    }
-
-    return orderBy;
+    return this.sortOrder[this.sort];
   }
 
   expandAll() {
