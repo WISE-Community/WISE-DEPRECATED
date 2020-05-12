@@ -1,5 +1,6 @@
 'use strict';
 
+import * as angular from 'angular';
 import ConfigService from '../../services/configService';
 import NotebookService from '../../services/notebookService';
 import TeacherDataService from '../../services/teacherDataService';
@@ -27,7 +28,7 @@ class NotebookGradingController {
     private TeacherDataService: TeacherDataService
   ) {
     this.teacherWorkgroupId = this.ConfigService.getWorkgroupId();
-    this.workgroups = this.ConfigService.getClassmateUserInfos();
+    this.workgroups = angular.copy(this.ConfigService.getClassmateUserInfos());
     this.notebookConfig = this.NotebookService.getStudentNotebookConfig();
     this.notesEnabled = this.notebookConfig.itemTypes.note.enabled;
     this.reportEnabled = this.notebookConfig.itemTypes.report.enabled;
@@ -35,9 +36,13 @@ class NotebookGradingController {
     this.colspan = this.getColspan();
     for (let i = 0; i < this.workgroups.length; i++) {
       let workgroup = this.workgroups[i];
-      workgroup.notes = this.NotebookService.getPrivateNotebookItems(workgroup.workgroupId);
-      const reportId = this.notebookConfig.itemTypes.report.notes[0].reportId;
-      workgroup.report = this.NotebookService.getLatestNotebookReportItemByReportId(reportId, workgroup.workgroupId);
+      if (this.notesEnabled) {
+        workgroup.notes = this.getWorkgroupNotes(workgroup.workgroupId);
+      }
+      if (this.reportEnabled) {
+        const reportId = this.notebookConfig.itemTypes.report.notes[0].reportId;
+        workgroup.report = this.NotebookService.getLatestNotebookReportItemByReportId(reportId, workgroup.workgroupId);
+      }
     }
     this.setWorkgroupsById();
 
@@ -72,11 +77,17 @@ class NotebookGradingController {
     return colspan;
   }
 
+  getWorkgroupNotes(workgroupId) {
+    const notes = this.NotebookService.getPrivateNotebookItems(workgroupId);
+    return notes.filter(note => {
+      return note.type !== 'report';
+    });
+  }
+
   setWorkgroupsById() {
     for (const workgroup of this.workgroups) {
       this.workVisibilityById[workgroup.workgroupId] = false;
       this.workgroupInViewById[workgroup.workgroupId] = false;
-      // this.updateWorkgroup(id, true);
     }
   }
 
@@ -101,17 +112,6 @@ class NotebookGradingController {
     this.workVisibilityById[workgroupId] = isExpanded;
   }
 
-  viewNotes(workgroupId) {
-    alert(workgroupId);
-  }
-
-  viewReport(workgroupId) {
-    alert(workgroupId);
-  }
-
-  getCurrentPeriod() {
-    return this.TeacherDataService.getCurrentPeriod();
-  }
   getNotebookConfigForWorkgroup(workgroupId) {
     if (
       this.ConfigService.isRunOwner(workgroupId) ||
@@ -121,11 +121,6 @@ class NotebookGradingController {
     } else {
       return this.NotebookService.getStudentNotebookConfig();
     }
-  }
-
-  toggleWorkgroupNotebook(workgroup) {
-    const workgroupId = workgroup.workgroupId;
-    this.workVisibilityById[workgroupId] = !this.workVisibilityById[workgroupId];
   }
 
   isWorkgroupShown(workgroup) {

@@ -1,7 +1,8 @@
 <div class="view-content view-content--with-sidemenu">
-  <div class="l-constrained md-padding" layout="column">
-    <md-list class="user-list student-select md-whiteframe-1dp">
-      <md-list-item class="list-item list-item--actions" layout-wrap>
+  <div class="l-constrained grading" layout="column">
+    <md-list class="user-list">
+      <md-list-item class="md-whiteframe-1dp md-with-secondary list-item list-item--actions"
+                    layout-wrap>
         <div flex-sm="100" flex-xs="100">
           <workgroup-select by-student="true"
                             custom-class="'autocomplete--flat autocomplete--minwidth'"
@@ -21,174 +22,74 @@
           </md-button>
         </div>
       </md-list-item>
-      <div class="table-wrap-sticky">
-        <table class="table--list md-whiteframe-1dp" layout-fill>
-          <thead class="table--list__thead">
-            <tr>
-              <th class="table--list__thead__th" sticky>
-                <md-button class="table--list__thead__link"
-                           aria-label="{{ ::'teamIdTitle' | translate }}"
-                           ng-click="notebookGradingController.setSort('team')"
-                           title="{{::'sortByTeam' | translate}}" layout="row"
-                           layout-align="center center">
-                  <span translate="team"></span>
-                  <md-icon ng-if="notebookGradingController.sort === 'team' || notebookGradingController.sort === '-team'"
-                           class="text-light table--list__thead__sort"
-                           ng-class="{'table--list__thead__sort--reverse': notebookGradingController.sort === '-team'}">
-                    arrow_drop_up </md-icon>
-                </md-button>
-              </th>
-              <th class="table--list__thead__th" sticky>
-                <md-button class="table--list__thead__link" aria-label="{{ ::'names' | translate }}"
-                           ng-click="notebookGradingController.setSort('student')"
-                           title="{{::'sortByStudent' | translate}}" layout="row">
-                  <span translate="names"></span>
-                  <md-icon ng-if="notebookGradingController.sort === 'student' || notebookGradingController.sort === '-student'"
-                           class="text-light table--list__thead__sort"
-                           ng-class="{'table--list__thead__sort--reverse': notebookGradingController.sort === '-student'}">
-                    arrow_drop_up </md-icon>
-                </md-button>
-              </th>
-              <th ng-if="notebookGradingController.notesEnabled" class="table--list__thead__th"
-                  sticky>
-                <md-button class="table--list__thead__link" aria-label="{{ ::'notes' | translate }}"
-                           ng-click="notebookGradingController.setSort('notes')"
-                           title="{{::'sortByNumberOfNotes' | translate}}" layout="row"
-                           layout-align="center center">
-                  <span translate="notes"></span>
-                  <md-icon ng-if="notebookGradingController.sort === 'notes' || notebookGradingController.sort === '-notes'"
-                           class="text-light table--list__thead__sort"
-                           ng-class="{'table--list__thead__sort--reverse': notebookGradingController.sort === '-notes'}">
-                    arrow_drop_up </md-icon>
-                </md-button>
-              </th>
-              <th ng-if="notebookGradingController.reportEnabled" class="table--list__thead__th"
-                  sticky>
-                <md-button class="table--list__thead__link"
-                           aria-label="{{ ::notebookGradingController.reportTitle }}"
-                           ng-click="notebookGradingController.setSort('reportStatus')"
-                           title="{{::'sortByReportStatus' | translate}}" layout="row"
-                           layout-align="center center">
-                  <span>{{ ::notebookGradingController.reportTitle }}</span>
-                  <md-icon ng-if="notebookGradingController.sort === 'reportStatus' || notebookGradingController.sort === '-reportStatus'"
-                           class="text-light table--list__thead__sort"
-                           ng-class="{'table--list__thead__sort--reverse': notebookGradingController.sort === '-reportStatus'}">
-                    arrow_drop_up </md-icon>
-                </md-button>
-              </th>
-              <th ng-if="notebookGradingController.reportEnabled" class="table--list__thead__th"
-                  sticky>
-                <md-button class="table--list__thead__link" aria-label="{{ ::'score' | translate }}"
-                           ng-click="notebookGradingController.setSort('score')"
-                           title="{{::'sortByScore' | translate}}" layout="row"
-                           layout-align="center center">
-                  <span translate="score"></span>
-                  <md-icon ng-if="notebookGradingController.sort === 'reportScore' || notebookGradingController.sort === '-reportScore'"
-                           class="text-light table--list__thead__sort"
-                           ng-class="{'table--list__thead__sort--reverse': notebookGradingController.sort === '-reportScore'}">
-                    arrow_drop_up </md-icon>
-                </md-button>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr ng-if="0"
-                ng-repeat-start="workgroup in notebookGradingController.workgroups | orderBy:notebookGradingController.getOrderBy()">
-            </tr>
-            <tr class="list-item md-button"
-                ng-if="notebookGradingController.isWorkgroupShown(workgroup)"
-                ng-click="notebookGradingController.toggleWorkgroupNotebook(workgroup)"
-                in-view="notebookGradingController.workgroupInView(workgroup.workgroupId, $inview)">
-              <td class="center">{{ ::workgroup.workgroupId }}</td>
-              <td class="md-body-2 td--wrap">
-                <div layout="row" layout-wrap>{{ ::workgroup.username }}</div>
-              </td>
-              <td ng-if="notebookGradingController.notesEnabled" class="center td--wrap">
-                <span ng-if="workgroup.notes.length">{{ workgroup.notes.length }}</span>
-                <span ng-if="!workgroup.notes.length"
-                      class="text-secondary">{{ workgroup.notes.length }}</span>
-              </td>
-              <td ng-if="notebookGradingController.reportEnabled"
-                  class="md-body-2 center td--max-width">
-                <span ng-if="workgroup.report" class="success">
-                  {{ ::'latestWork' | translate }} {{ workgroup.report.serverSaveTime | amTimeAgo }}
-                </span>
-                <span ng-if="!workgroup.report"
-                      class="text-secondary">{{ ::'noWork' | translate }}</span>
-              </td>
-              <td ng-if="notebookGradingController.reportEnabled" class="center">
-                <div layout="row" layout-align="center center"
-                     class="layout-align-center-center layout-row">
-                  <span class="md-display-1">{{ workgroup.report.score }}</span>&nbsp;
-                  <span class="md-title text-secondary normal">
-                    /{{ workgroup.report.maxScore }}
-                  </span>
-                </div>
-              </td>
-            </tr>
-            <tr class="list-item"
-                ng-if="notebookGradingController.isWorkgroupShown(workgroup) && notebookGradingController.workVisibilityById[workgroup.workgroupId]">
-              <td colspan="{{ ::notebookGradingController.colspan }}">
-                <notebook-worgroup-grading workgroup="workgroup"
-                                           notes-enabled="notebookGradingController.notesEnabled"
-                                           report-enabled="notebookGradingController.reportEnabled"
-                                           report-title="notebookGradingController.reportTitle">
-                </notebook-worgroup-grading>
-              </td>
-            </tr>
-            <tr ng-if="0" ng-repeat-end></tr>
-          </tbody>
-        </table>
-      </div>
-    </md-list>
+      <md-list-item class="table--list__thead table--list__thead__th md-whiteframe-1dp">
+        <div class="md-list-item-text table--list__thead__tr" layout="row" flex>
+          <md-button class="table--list__thead__link" aria-label="{{ ::'teamIdTitle' | translate }}"
+                     ng-click="notebookGradingController.setSort('team')"
+                     title="{{::'sortByTeam' | translate}}" layout="row"
+                     layout-align="center center" flex="10">
+            <span translate="team"></span>
+            <md-icon ng-if="notebookGradingController.sort === 'team' || notebookGradingController.sort === '-team'"
+                     class="text-light table--list__thead__sort"
+                     ng-class="{'table--list__thead__sort--reverse': notebookGradingController.sort === '-team'}">
+              arrow_drop_up </md-icon>
+          </md-button>
+          <md-button class="table--list__thead__link" aria-label="{{ ::'names' | translate }}"
+                     ng-click="notebookGradingController.setSort('student')"
+                     title="{{::'sortByStudent' | translate}}" layout="row">
+            <span translate="names"></span>
+            <md-icon ng-if="notebookGradingController.sort === 'student' || notebookGradingController.sort === '-student'"
+                     class="text-light table--list__thead__sort"
+                     ng-class="{'table--list__thead__sort--reverse': notebookGradingController.sort === '-student'}">
+              arrow_drop_up </md-icon>
+          </md-button>
+          <md-button class="table--list__thead__link" aria-label="{{ ::'notes' | translate }}"
+                     ng-if="notebookGradingController.notesEnabled"
+                     ng-click="notebookGradingController.setSort('notes')"
+                     title="{{::'sortByNumberOfNotes' | translate}}" layout="row"
+                     layout-align="center center" flex="10">
+            <span translate="notes"></span>
+            <md-icon ng-if="notebookGradingController.sort === 'notes' || notebookGradingController.sort === '-notes'"
+                     class="text-light table--list__thead__sort"
+                     ng-class="{'table--list__thead__sort--reverse': notebookGradingController.sort === '-notes'}">
+              arrow_drop_up </md-icon>
+          </md-button>
+          <md-button class="table--list__thead__link"
+                     aria-label="{{ ::notebookGradingController.reportTitle }}"
+                     ng-if="notebookGradingController.reportEnabled"
+                     ng-click="notebookGradingController.setSort('reportStatus')"
+                     title="{{::'sortByReportStatus' | translate}}" layout="row"
+                     layout-align="center center" flex="25">
+            <span>{{ ::notebookGradingController.reportTitle }}</span>
+            <md-icon ng-if="notebookGradingController.sort === 'reportStatus' || notebookGradingController.sort === '-reportStatus'"
+                     class="text-light table--list__thead__sort"
+                     ng-class="{'table--list__thead__sort--reverse': notebookGradingController.sort === '-reportStatus'}">
+              arrow_drop_up </md-icon>
+          </md-button>
+          <md-button class="table--list__thead__link" aria-label="{{ ::'score' | translate }}"
+                     ng-if="notebookGradingController.reportEnabled"
+                     ng-click="notebookGradingController.setSort('score')"
+                     title="{{::'sortByScore' | translate}}" layout="row"
+                     layout-align="center center" flex="10">
+            <span translate="score"></span>
+            <md-icon ng-if="notebookGradingController.sort === 'reportScore' || notebookGradingController.sort === '-reportScore'"
+                     class="text-light table--list__thead__sort"
+                     ng-class="{'table--list__thead__sort--reverse': notebookGradingController.sort === '-reportScore'}">
+              arrow_drop_up </md-icon>
+          </md-button>
+        </div>
+      </md-list-item>
+      <notebook-workgroup-grading ng-repeat="workgroup in notebookGradingController.workgroups | orderBy:notebookGradingController.getOrderBy()"
+                                  ng-if="notebookGradingController.isWorkgroupShown(workgroup)"
+                                  workgroup="workgroup"
+                                  expand="notebookGradingController.workVisibilityById[workgroup.workgroupId]"
+                                  notebook-config="notebookGradingController.getNotebookConfigForWorkgroup(workgroup.workgroupId)"
+                                  notes-enabled="notebookGradingController.notesEnabled"
+                                  report-enabled="notebookGradingController.reportEnabled"
+                                  report-title="{{ ::notebookGradingController.reportTitle }}"
+                                  on-update-expand="notebookGradingController.onUpdateExpand(workgroupId, value)"
+                                  in-view="notebookGradingController.workgroupInView(workgroup.workgroupId, $inview)">
+      </notebook-workgroup-grading>
   </div>
 </div>
-
-
-
-
-<!--<style>
-    .active {
-        background-color: yellow;
-    }
-</style>
-
-<div class="view-content view-content--with-sidemenu">
-    <div class="md-padding">
-        <button ng-click="notebookGradingController.toggleDisplayAllNotes()">
-            <span ng-if="notebookGradingController.showAllNotes" translate="hideAllNotes"></span>
-            <span ng-if="!notebookGradingController.showAllNotes" translate="showAllNotes"></span>
-        </button>
-        <button ng-click="notebookGradingController.toggleDisplayAllReports()">
-            <span ng-if="notebookGradingController.showAllReports" translate="hideAllReports"></span>
-            <span ng-if="!notebookGradingController.showAllReports" translate="showAllReports"></span>
-        </button>
-
-        <div class="l-constrained" layout="column">
-            <div ng-repeat="workgroup in notebookGradingController.workgroups"
-                ng-if="notebookGradingController.getCurrentPeriod().periodId == -1 || workgroup.periodId == notebookGradingController.getCurrentPeriod().periodId">
-                <span style="font-weight:bold" ng-if="notebookGradingController.canViewStudentNames">{{::workgroup.username}} ({{::'WORKGROUP_ID' | translate }}: {{workgroup.workgroupId}})</span>
-                <span ng-if="!notebookGradingController.canViewStudentNames">{{::workgroup.workgroupId}}</span>
-                <a ng-click="notebookGradingController.toggleDisplayNoteForWorkgroup(workgroup.workgroupId)" translate="NOTES"></a>
-                <a ng-click="notebookGradingController.toggleDisplayReportForWorkgroup(workgroup.workgroupId)" translate="REPORT"></a>
-                <notebook-notes mode="classroomMonitor"
-                          ng-if="notebookGradingController.showNoteForWorkgroup[workgroup.workgroupId]"
-                          notebook="notebookGradingController.getNotebookForWorkgroup(workgroup.workgroupId)"
-                          config="notebookGradingController.getNotebookConfigForWorkgroup(workgroup.workgroupId)"
-                          notesVisible="true"
-                          workgroup-id="workgroup.workgroupId"
-                          theme-path="notebookGradingController.themePath"
-                          template-url="notebookGradingController.themePath + '/notebook/notebook.html'"
-                          filter="note"></notebook-notes>
-                <notebook-report mode="classroomMonitor"
-                          ng-if="notebookGradingController.showReportForWorkgroup[workgroup.workgroupId]"
-                          config="notebookGradingController.notebookConfig"
-                          workgroup-id="workgroup.workgroupId"
-                          theme-path="notebookGradingController.themePath"
-                          template-url="notebookGradingController.themePath + '/notebook/notebook.html'"
-                          filter="report"></notebook-report>
-            </div>
-
-        </div>
-    </div>
-</div>-->
+</div>

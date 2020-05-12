@@ -18,6 +18,7 @@ class NotebookReportController {
     this.NotebookService = NotebookService;
     this.ProjectService = ProjectService;
     this.$translate = this.$filter('translate');
+    this.hasReport = false;
     this.full = false;
     this.collapsed = true;
     this.dirty = false;
@@ -35,6 +36,7 @@ class NotebookReportController {
     }
     this.reportItem = this.NotebookService.getLatestNotebookReportItemByReportId(this.reportId, this.workgroupId);
     if (this.reportItem) {
+      this.hasReport = true;
       const serverSaveTime = this.reportItem.serverSaveTime;
       const clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
       this.setSavedMessage(clientSaveTime);
@@ -312,11 +314,11 @@ const NotebookReport = {
             </md-card>
         </div>
         <div ng-if="::$ctrl.mode === 'classroomMonitor'">
-            <compile data="$ctrl.reportItemContent"></compile>
-            <notebook-item-grading
-                notebook-item="$ctrl.reportItem">
-            </notebook-item-grading>
-
+            <article ng-if="$ctrl.hasReport" class="md-padding md-whiteframe-1dp">
+              <compile data="$ctrl.reportItemContent"></compile>
+            </article>
+            <p ng-if="!$ctrl.hasReport" translate="noReport" translate-value-term="{{$ctrl.config.itemTypes.report.notes[0].title}}"></p>
+            <notebook-item-grading notebook-item="$ctrl.reportItem"></notebook-item-grading>
         </div>`,
   controller: NotebookReportController
 };

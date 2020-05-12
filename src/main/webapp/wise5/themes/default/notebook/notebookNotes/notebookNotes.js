@@ -24,35 +24,11 @@ class NotebookNotesController {
       isEditAllowed: true,
       items: []
     };
-    this.groupNameToGroup['private'] = personalGroup;
-    for (const [personalItemKey, personalItemValue] of Object.entries(this.notebook.items)) {
-      if (personalItemValue.last().type === 'note') {
-        personalGroup.items.push(personalItemValue.last());
-      }
-    }
-    this.groups.push(personalGroup);
-
+    this.addPersonalGroupToGroups(personalGroup);
     const spaces = this.ProjectService.getSpaces();
-    for (let space of spaces) {
-      if (space.isShowInNotebook) {
-        const spaceGroup = {
-          title: space.name,
-          name: space.id,
-          isEditAllowed: true,
-          items: []
-        };
-        this.groupNameToGroup[space.id] = spaceGroup;
-        this.groups.push(spaceGroup);
-      }
-    }
-
-    this.$onChanges = (changes) => {
-      if (changes.notebook) {
-        this.notebook = angular.copy(changes.notebook.currentValue);
-        this.hasNotes = Object.keys(this.notebook.items).length ? true : false;
-      }
-    };
-
+    this.addSpacesToGroups(spaces);
+    this.hasNotes = this.isHasNotes();
+    
     this.$scope.$on('openNotebook', (event, args) => {
       this.selectedTabIndex = args.visibleSpace === 'public' ? 1 : 0;
     });
@@ -66,7 +42,7 @@ class NotebookNotesController {
     });
 
     this.$rootScope.$on('notebookUpdated', (event, args) => {
-      let notebookItem = args.notebookItem;
+      const notebookItem = args.notebookItem;
       if ((notebookItem.groups == null || notebookItem.groups.length === 0) &&
           notebookItem.type === 'note') {
         this.updatePrivateNotebookNote(notebookItem);
@@ -75,6 +51,42 @@ class NotebookNotesController {
         this.updatePublicNotebookNote(notebookItem);
       }
     });
+  }
+
+  $onChanges(changes) {
+    if (changes.notebook) {
+      this.notebook = angular.copy(changes.notebook.currentValue);
+      this.hasNotes = this.isHasNotes();
+    }
+  }
+
+  isHasNotes() {
+    return Object.keys(this.notebook.items).length ? true : false;
+  }
+
+  addPersonalGroupToGroups(personalGroup) {
+    this.groupNameToGroup['private'] = personalGroup;
+    for (const [personalItemKey, personalItemValue] of Object.entries(this.notebook.items)) {
+      if (personalItemValue.last().type === 'note') {
+        personalGroup.items.push(personalItemValue.last());
+      }
+    }
+    this.groups.push(personalGroup);
+  }
+
+  addSpacesToGroups(spaces) {
+    for (const space of spaces) {
+      if (space.isShowInNotebook) {
+        const spaceGroup = {
+          title: space.name,
+          name: space.id,
+          isEditAllowed: true,
+          items: []
+        };
+        this.groupNameToGroup[space.id] = spaceGroup;
+        this.groups.push(spaceGroup);
+      }
+    }
   }
 
   updatePrivateNotebookNote(notebookItem) {
@@ -189,11 +201,12 @@ const NotebookNotes = {
           </div>
       </md-toolbar>
       <md-content>
-      <md-tabs md-selected="$ctrl.selectedTabIndex" md-dynamic-height md-border-bottom md-autoselect md-swipe-content>
+      <md-tabs md-selected="$ctrl.selectedTabIndex" md-dynamic-height md-border-bottom md-autoselect 
+               md-swipe-content>
         <md-tab ng-repeat="group in $ctrl.groups"
             ng-disabled="::group.disabled"
             label="{{::group.title}}">
-          <div class="demo-tab tab{{$index%4}}" style="padding: 25px; text-align: center;">
+          <div class="center md-padding">
               <div class="notebook-items" ng-class="{'notebook-items--insert': $ctrl.insertMode}" layout="row" layout-wrap>
                 <div class="md-padding" ng-if="!$ctrl.hasNotes" translate="noNotes" translate-value-term="{{::$ctrl.config.itemTypes.note.label.plural}}"></div>
                 <notebook-item ng-repeat="note in group.items"
@@ -219,23 +232,27 @@ const NotebookNotes = {
       <div ng-repeat="group in $ctrl.groups"
           ng-disabled="::group.disabled"
           label="{{group.title}}">
-        <div class="demo-tab tab{{$index%4}}" style="padding: 25px; text-align: center;">
-            <div class="notebook-items" ng-class="{'notebook-items--insert': $ctrl.insertMode}" layout="row" layout-wrap>
-              <div class="md-padding" ng-if="!$ctrl.hasNotes" translate="noNotes" translate-value-term="{{$ctrl.config.itemTypes.note.label.plural}}"></div>
-              <notebook-item ng-repeat="note in group.items"
-                  config="$ctrl.config"
-                  group="{{group.name}}"
-                  item-id="note.localNotebookItemId"
-                  is-edit-allowed="group.isEditAllowed"
-                  is-choose-mode="$ctrl.insertMode"
-                  note="note"
-                  workgroup-id="note.workgroupId"
-                  on-select="$ctrl.select($ev, note)"
-                  style="display: flex;"
-                  flex="100"
-                  flex-gt-xs="50">
-              </notebook-item>
+        <div ng-if="$ctrl.hasNotes" class="center md-padding">
+          <div class="notebook-items notebook-items--grading" ng-class="{'notebook-items--insert': $ctrl.insertMode}" layout="row" layout-wrap>
+            <notebook-item ng-repeat="note in group.items"
+                config="$ctrl.config"
+                group="{{group.name}}"
+                item-id="note.localNotebookItemId"
+                is-edit-allowed="group.isEditAllowed"
+                is-choose-mode="$ctrl.insertMode"
+                note="note"
+                workgroup-id="note.workgroupId"
+                on-select="$ctrl.select($ev, note)"
+                style="display: flex;"
+                flex="100"
+                flex-gt-xs="50"
+                flex-gt-sm="33"
+                flex-gt-md="25">
+            </notebook-item>
           </div>
+        </div>
+        <div ng-if="!$ctrl.hasNotes" class="md-padding">
+          <p translate="noNotes" translate-value-term="{{$ctrl.config.itemTypes.note.label.plural}}"></p>
         </div>
       </div>
     </div>

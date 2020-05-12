@@ -254,7 +254,7 @@ const NotebookItemGrading = {
     maxScore: '<',
     notebookItem: '<'
   },
-  templateUrl: 'wise5/classroomMonitor/notebook/notebookItemGrading/notebookItemGrading.html',
+  templateUrl: 'wise5/classroomMonitor/classroomMonitorComponents/notebook/notebookItemGrading/notebookItemGrading.html',
   controller: NotebookItemGradingController
 };
 

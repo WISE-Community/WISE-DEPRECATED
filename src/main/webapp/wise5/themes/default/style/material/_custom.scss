@@ -200,6 +200,7 @@ md-checkbox {
 
     &.md-raised {
         &:not([disabled]) {
+            background-color: #ffffff;
             @include md-shadow-bottom-z-1();
 
             &.md-focused, &:focus {
