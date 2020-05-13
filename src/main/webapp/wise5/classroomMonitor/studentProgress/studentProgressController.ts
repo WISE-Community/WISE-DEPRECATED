@@ -54,7 +54,6 @@ class StudentProgressController {
   ) {
     this.teacherWorkgroupId = this.ConfigService.getWorkgroupId();
     this.sort = this.TeacherDataService.studentProgressSort;
-    this.TeacherDataService.setCurrentWorkgroup(null);
     this.permissions = this.ConfigService.getPermissions();
     this.studentsOnline = this.TeacherWebSocketService.getStudentsOnline();
     this.students = [];

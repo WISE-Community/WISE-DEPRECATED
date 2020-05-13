@@ -1042,10 +1042,23 @@ class TeacherDataService {
 
   isWorkgroupShown(workgroup) {
     let show = false;
-    if (this.currentPeriod.periodId === -1 || workgroup.periodId === this.currentPeriod.periodId) {
+    if (this.currentPeriod.periodId === -1 || workgroup.periodId === this.currentPeriod.periodId) {	
       show = true;
+      if (!this.isCurrentWorkgroup(workgroup.workgroupId)) {
+        show = false;;	
+      }
     }
     return show;
+  }
+
+  isCurrentWorkgroup(workgroupId) {
+    let isCurrentWorkgroup = true;
+    if (this.currentWorkgroup) {
+      if (this.currentWorkgroup.workgroupId !== parseInt(workgroupId)) {
+        isCurrentWorkgroup = false;
+      }
+    }
+    return isCurrentWorkgroup;
   }
 }
 
