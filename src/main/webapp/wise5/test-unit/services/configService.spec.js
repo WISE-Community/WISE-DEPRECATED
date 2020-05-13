@@ -21,6 +21,7 @@ describe('ConfigService Unit Test', () => {
       sampleConfig1 = window.mocks['test-unit/sampleData/config/config1'];
     });
 
+    jasmine.clock().install();
     //shouldRetrieveConfig();
     shouldSortTheClassmatesAlphabeticallyByNameWhenSettingConfig();
     shouldGetTheLocale();
@@ -31,7 +32,9 @@ describe('ConfigService Unit Test', () => {
     shouldGetTheTeacherWorkgroupId();
     shouldGetThePeriodIdGivenTheWorkgroupId();
     shouldCalculateIfARunIsActiveWhenARunOnlyHasAStartTime();
-    shouldCalculateIfARunIsActiveWhenItHasAStartTimeAndEndTime();
+    shouldCalculateIfARunIsActiveWhenItHasAStartTimeAndEndTimeAndLockedValueFalse();
+    shouldCalculateIfARunIsActiveWhenItHasAStartTimeAndEndTimeAndLockedValueTrue();
+    shouldCalculateIsEndedAndLocked();
   });
 });
 
@@ -207,7 +210,6 @@ function shouldGetThePeriodIdGivenTheWorkgroupId() {
 
 function shouldCalculateIfARunIsActiveWhenARunOnlyHasAStartTime() {
   it('should calculate if a run is active when a run only has a start time', () => {
-    jasmine.clock().install();
     const configJSON = {
       startTime: new Date(2019, 5, 10).getTime(),
       timestampDiff: 0
@@ -218,30 +220,98 @@ function shouldCalculateIfARunIsActiveWhenARunOnlyHasAStartTime() {
     expect(ConfigService.calculateIsRunActive(configJSON)).toBeTruthy();
     jasmine.clock().mockDate(new Date(2019, 5, 11));
     expect(ConfigService.calculateIsRunActive(configJSON)).toBeTruthy();
-    jasmine.clock().uninstall();
   });
 }
 
-function shouldCalculateIfARunIsActiveWhenItHasAStartTimeAndEndTime() {
-  it('should calculate if a run is active when it has a start time and end time', () => {
-    jasmine.clock().install();
+function shouldCalculateIfARunIsActiveWhenItHasAStartTimeAndEndTimeAndLockedValueFalse() {
+  it(`should calculate if a run is active to be true when it has a start time and end time and is
+      locked value false`, () => {
     const configJSON = {
-      startTime: new Date(2019, 5, 10).getTime(),
-      endTime: new Date(2019, 5, 20).getTime(),
-      timestampDiff: 0
+      startTime: new Date(2020, 4, 10).getTime(),
+      endTime: new Date(2020, 4, 20).getTime(),
+      timestampDiff: 0,
+      isLockedAfterEndDate: false
     };
-    jasmine.clock().mockDate(new Date(2019, 5, 9));
+    jasmine.clock().mockDate(new Date(2020, 4, 15));
+    expect(ConfigService.calculateIsRunActive(configJSON)).toBeTruthy();
+  });
+  it(`should calculate if a run is active to be false when it has a start time and end time and is
+      locked value false`, () => {
+    const configJSON = {
+      startTime: new Date(2020, 4, 10).getTime(),
+      endTime: new Date(2020, 4, 20).getTime(),
+      timestampDiff: 0,
+      isLockedAfterEndDate: false
+    };
+    jasmine.clock().mockDate(new Date(2020, 4, 30));
+    expect(ConfigService.calculateIsRunActive(configJSON)).toBeTruthy();
+  });
+}
+
+function shouldCalculateIfARunIsActiveWhenItHasAStartTimeAndEndTimeAndLockedValueTrue() {
+  it(`should calculate if a run is active to be true when it has a start time and end time and is
+      locked value true`, () => {
+    const configJSON = {
+      startTime: new Date(2020, 4, 10).getTime(),
+      endTime: new Date(2020, 4, 20).getTime(),
+      timestampDiff: 0,
+      isLockedAfterEndDate: true
+    };
+    jasmine.clock().mockDate(new Date(2020, 4, 15));
+    expect(ConfigService.calculateIsRunActive(configJSON)).toBeTruthy();
+  });
+  it(`should calculate if a run is active to be false when it has a start time and end time and is
+      locked value true`, () => {
+    const configJSON = {
+      startTime: new Date(2020, 4, 10).getTime(),
+      endTime: new Date(2020, 4, 20).getTime(),
+      timestampDiff: 0,
+      isLockedAfterEndDate: true
+    };
+    jasmine.clock().mockDate(new Date(2020, 4, 30));
     expect(ConfigService.calculateIsRunActive(configJSON)).toBeFalsy();
-    jasmine.clock().mockDate(new Date(2019, 5, 10));
-    expect(ConfigService.calculateIsRunActive(configJSON)).toBeTruthy();
-    jasmine.clock().mockDate(new Date(2019, 5, 11));
-    expect(ConfigService.calculateIsRunActive(configJSON)).toBeTruthy();
-    jasmine.clock().mockDate(new Date(2019, 5, 19));
-    expect(ConfigService.calculateIsRunActive(configJSON)).toBeTruthy();
-    jasmine.clock().mockDate(new Date(2019, 5, 20));
-    expect(ConfigService.calculateIsRunActive(configJSON)).toBeTruthy();
-    jasmine.clock().mockDate(new Date(2019, 5, 21));
-    expect(ConfigService.calculateIsRunActive(configJSON)).toBeFalsy();
-    jasmine.clock().uninstall();
+  });
+}
+
+function shouldCalculateIsEndedAndLocked() {
+  it('should calculate is ended and locked when it has a start time and no end time', () => {
+    const configJSON = {
+      startTime: new Date(2020, 4, 10).getTime(),
+      endTime: null,
+      timestampDiff: 0,
+      isLockedAfterEndDate: false
+    };
+    jasmine.clock().mockDate(new Date(2020, 4, 11));
+    expect(ConfigService.isEndedAndLocked(configJSON)).toBeFalsy();
+  });
+  it('should calculate is ended and locked when end time is in the future', () => {
+    const configJSON = {
+      startTime: new Date(2020, 4, 10).getTime(),
+      endTime: new Date(2020, 4, 20).getTime(),
+      timestampDiff: 0,
+      isLockedAfterEndDate: false
+    };
+    jasmine.clock().mockDate(new Date(2020, 4, 15));
+    expect(ConfigService.isEndedAndLocked(configJSON)).toBeFalsy();
+  });
+  it('should calculate is ended and locked when end time is in the past but not locked', () => {
+    const configJSON = {
+      startTime: new Date(2020, 4, 10).getTime(),
+      endTime: new Date(2020, 4, 20).getTime(),
+      timestampDiff: 0,
+      isLockedAfterEndDate: false
+    };
+    jasmine.clock().mockDate(new Date(2020, 4, 30));
+    expect(ConfigService.isEndedAndLocked(configJSON)).toBeFalsy();
+  });
+  it('should calculate is ended and locked when end time is in the past and locked', () => {
+    const configJSON = {
+      startTime: new Date(2020, 4, 10).getTime(),
+      endTime: new Date(2020, 4, 20).getTime(),
+      timestampDiff: 0,
+      isLockedAfterEndDate: true
+    };
+    jasmine.clock().mockDate(new Date(2020, 4, 30));
+    expect(ConfigService.isEndedAndLocked(configJSON)).toBeTruthy();
   });
 }

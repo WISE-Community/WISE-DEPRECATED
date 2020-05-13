@@ -8,6 +8,7 @@ export class Run {
   runCode: string;
   startTime: number;
   endTime: number;
+  isLockedAfterEndDate: boolean;
   lastRun: string;
   projectThumb: string;
   numStudents: number;

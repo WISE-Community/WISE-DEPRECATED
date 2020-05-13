@@ -472,8 +472,11 @@ class DiscussionController extends ComponentController {
       this.isSubmit = false;
       if (this.mode === 'authoring') {
         if (this.StudentDataService.studentData == null) {
-          this.StudentDataService.studentData = {};
-          this.StudentDataService.studentData.componentStates = [];
+          this.StudentDataService.studentData = {
+            componentStates: [],
+            events: [],
+            annotations: []
+          };
         }
         this.StudentDataService.studentData.componentStates.push(componentState);
         const componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(

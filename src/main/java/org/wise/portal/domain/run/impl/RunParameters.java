@@ -68,10 +68,12 @@ public class RunParameters implements Serializable {
 
   private Date endTime = null;
 
+  private Boolean isLockedAfterEndDate = false;
+
   public String printAllPeriods() {
     String allPeriods = null;
 
-    if(periodNames.isEmpty()) {
+    if (periodNames.isEmpty()) {
       allPeriods = getManuallyEnteredPeriods();
     } else {
       allPeriods = getPeriodNames().toString();
@@ -84,16 +86,12 @@ public class RunParameters implements Serializable {
   public int hashCode() {
     final int prime = 31;
     int result = 1;
-    result = prime
-      * result
-      + ((manuallyEnteredPeriods == null) ? 0
-      : manuallyEnteredPeriods.hashCode());
+    result = prime * result
+        + ((manuallyEnteredPeriods == null) ? 0 : manuallyEnteredPeriods.hashCode());
     result = prime * result + ((owner == null) ? 0 : owner.hashCode());
-    result = prime * result
-      + ((periodNames == null) ? 0 : periodNames.hashCode());
+    result = prime * result + ((periodNames == null) ? 0 : periodNames.hashCode());
     result = prime * result + ((project == null) ? 0 : project.hashCode());
-    result = prime * result
-      + ((runIdsToArchive == null) ? 0 : runIdsToArchive.hashCode());
+    result = prime * result + ((runIdsToArchive == null) ? 0 : runIdsToArchive.hashCode());
     return result;
   }
 

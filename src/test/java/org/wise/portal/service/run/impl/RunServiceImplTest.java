@@ -213,8 +213,7 @@ public class RunServiceImplTest {
   }
 
   @Test
-  public void retrieveById_RunDoesNotExist_ShouldThrowException()
-      throws ObjectNotFoundException {
+  public void retrieveById_RunDoesNotExist_ShouldThrowException() throws ObjectNotFoundException {
     Long runIdNotInDB = new Long(-1);
     expect(runDao.getById(runIdNotInDB))
         .andThrow(new ObjectNotFoundException(runIdNotInDB, Run.class));
@@ -228,8 +227,7 @@ public class RunServiceImplTest {
   }
 
   @Test
-  public void retrieveRunByRuncode_RunExists_ShouldReturnRun()
-      throws Exception {
+  public void retrieveRunByRuncode_RunExists_ShouldReturnRun() throws Exception {
     Run run = new RunImpl();
     String runCodeInDB = "falcon8989";
     expect(runDao.retrieveByRunCode(runCodeInDB)).andReturn(run);
@@ -244,8 +242,7 @@ public class RunServiceImplTest {
   }
 
   @Test
-  public void retrieveByRunCode_RunNotInDB_ShouldThrowException()
-      throws ObjectNotFoundException {
+  public void retrieveByRunCode_RunNotInDB_ShouldThrowException() throws ObjectNotFoundException {
     String runcodeNotInDB = "badbadbad3454";
     expect(runDao.retrieveByRunCode(runcodeNotInDB))
         .andThrow(new ObjectNotFoundException(runcodeNotInDB, Run.class));
@@ -317,6 +314,31 @@ public class RunServiceImplTest {
     assertNull(run.getEndtime());
     assertFalse(run.isEnded());
     verify(runDao);
+  }
+
+  @Test
+  public void setIsLockedAfterEndDate_ShouldSetToTrue() throws Exception {
+    assertFalse(run.isLockedAfterEndDate());
+    Long runId = new Long(1);
+    expect(runDao.getById(runId)).andReturn(run);
+    runDao.save(run);
+    expectLastCall();
+    replay(runDao);
+    runService.setIsLockedAfterEndDate(1L, true);
+    assertTrue(run.isLockedAfterEndDate());
+  }
+
+  @Test
+  public void setIsLockedAfterEndDate_ShouldSetToFalse() throws Exception {
+    run.setLockedAfterEndDate(true);
+    assertTrue(run.isLockedAfterEndDate());
+    Long runId = new Long(1);
+    expect(runDao.getById(runId)).andReturn(run);
+    runDao.save(run);
+    expectLastCall();
+    replay(runDao);
+    runService.setIsLockedAfterEndDate(1L, false);
+    assertFalse(run.isLockedAfterEndDate());
   }
 
   private void expectRunCodeGeneration() throws ObjectNotFoundException {

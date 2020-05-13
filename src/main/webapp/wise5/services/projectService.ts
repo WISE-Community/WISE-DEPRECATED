@@ -836,7 +836,7 @@ class ProjectService {
     return this.project.startNodeId === nodeId;
   }
 
-  getConstraintsForNode(node) {
+  getConstraintsThatAffectNode(node) {
     const constraints = [];
     const allConstraints = this.activeConstraints;
     for (let constraint of allConstraints) {

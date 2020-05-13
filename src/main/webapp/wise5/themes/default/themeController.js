@@ -1,19 +1,21 @@
 'use strict';
 
 class ThemeController {
-  constructor($scope,
-              $state,
-              $filter,
-              ConfigService,
-              ProjectService,
-              StudentDataService,
-              StudentStatusService,
-              NotebookService,
-              SessionService,
-              $mdDialog,
-              $mdMedia,
-              $mdToast,
-              $mdComponentRegistry) {
+  constructor(
+    $scope,
+    $state,
+    $filter,
+    ConfigService,
+    ProjectService,
+    StudentDataService,
+    StudentStatusService,
+    NotebookService,
+    SessionService,
+    $mdDialog,
+    $mdMedia,
+    $mdToast,
+    $mdComponentRegistry
+  ) {
     this.$scope = $scope;
     this.$state = $state;
     this.$filter = $filter;
@@ -65,7 +67,8 @@ class ThemeController {
 
     // build server disconnect display
     this.connectionLostDisplay = $mdToast.build({
-      template: "<md-toast>\
+      template:
+        "<md-toast>\
                       <span>{{ 'ERROR_CHECK_YOUR_INTERNET_CONNECTION' | translate }}</span>\
                       </md-toast>",
       hideDelay: 0
@@ -87,7 +90,7 @@ class ThemeController {
       var node = this.ProjectService.getNodeById(nodeId);
       if (node != null) {
         // get the constraints that affect this node
-        var constraints = this.ProjectService.getConstraintsForNode(node);
+        var constraints = this.ProjectService.getConstraintsThatAffectNode(node);
         this.ProjectService.orderConstraints(constraints);
 
         if (constraints != null && constraints.length > 0) {
@@ -101,7 +104,7 @@ class ThemeController {
           var constraint = constraints[c];
 
           // check if the constraint has been satisfied
-          if (constraint != null && !this.StudentDataService.evaluateConstraint(node, constraint)) {
+          if (constraint != null && !this.StudentDataService.evaluateConstraint(constraint)) {
             // the constraint has not been satisfied and is still active
 
             if (message != '') {
@@ -116,7 +119,8 @@ class ThemeController {
       }
 
       this.$mdDialog.show(
-        this.$mdDialog.alert()
+        this.$mdDialog
+          .alert()
           .parent(angular.element(document.body))
           .title(this.$translate('itemLocked'))
           .htmlContent(message)
@@ -127,8 +131,9 @@ class ThemeController {
     });
 
     // alert user when inactive for a long time
-    this.$scope.$on('showSessionWarning', (ev) => {
-      let alert = this.$mdDialog.confirm()
+    this.$scope.$on('showSessionWarning', ev => {
+      let alert = this.$mdDialog
+        .confirm()
         .parent(angular.element(document.body))
         .title(this.$translate('sessionTimeout'))
         .textContent(this.$translate('autoLogoutMessage'))
@@ -137,17 +142,21 @@ class ThemeController {
         .ok(this.$translate('yes'))
         .cancel(this.$translate('no'));
 
-      this.$mdDialog.show(alert).then(() => {
-        this.SessionService.closeWarningAndRenewSession();
-        alert = undefined;
-      }, () => {
-        this.SessionService.forceLogOut();
-      });
+      this.$mdDialog.show(alert).then(
+        () => {
+          this.SessionService.closeWarningAndRenewSession();
+          alert = undefined;
+        },
+        () => {
+          this.SessionService.forceLogOut();
+        }
+      );
     });
 
     // alert user when inactive for a long time
-    this.$scope.$on('showRequestLogout', (ev) => {
-      let alert = this.$mdDialog.confirm()
+    this.$scope.$on('showRequestLogout', ev => {
+      let alert = this.$mdDialog
+        .confirm()
         .parent(angular.element(document.body))
         .title(this.$translate('serverUpdate'))
         .textContent(this.$translate('serverUpdateRequestLogoutMessage'))
@@ -155,11 +164,14 @@ class ThemeController {
         .targetEvent(ev)
         .ok(this.$translate('ok'));
 
-      this.$mdDialog.show(alert).then(() => {
-        // do nothing
-      }, () => {
-        // do nothing
-      });
+      this.$mdDialog.show(alert).then(
+        () => {
+          // do nothing
+        },
+        () => {
+          // do nothing
+        }
+      );
     });
 
     // alert user when server loses connection
@@ -198,13 +210,19 @@ class ThemeController {
         $scope.close = () => {
           $mdDialog.hide();
         };
-        $scope.revertWork = (componentState) => {
+        $scope.revertWork = componentState => {
           $scope.componentController.setStudentWork(componentState);
           $scope.componentController.studentDataChanged();
           $mdDialog.hide();
         };
       }
-      RevisionsController.$inject = ["$scope", "$mdDialog", "items", "componentController", "allowRevert"];
+      RevisionsController.$inject = [
+        '$scope',
+        '$mdDialog',
+        'items',
+        'componentController',
+        'allowRevert'
+      ];
     });
 
     this.$scope.$on('showStudentAssets', (event, args) => {
@@ -226,11 +244,11 @@ class ThemeController {
       function StudentAssetDialogController($scope, $mdDialog, componentController) {
         $scope.studentAssetTemplateUrl = studentAssetTemplateUrl;
         $scope.componentController = componentController;
-        $scope.closeDialog = function () {
+        $scope.closeDialog = function() {
           $mdDialog.hide();
-        }
+        };
       }
-      StudentAssetDialogController.$inject = ["$scope", "$mdDialog", "componentController"];
+      StudentAssetDialogController.$inject = ['$scope', '$mdDialog', 'componentController'];
     });
 
     // a group node has turned on or off planning mode
@@ -242,7 +260,8 @@ class ThemeController {
     this.$scope.$on('viewCurrentAmbientNotification', (event, args) => {
       let notification = args.notification;
       let ev = args.event;
-      let notificationDismissDialogTemplateUrl = this.themePath + '/templates/notificationDismissDialog.html';
+      let notificationDismissDialogTemplateUrl =
+        this.themePath + '/templates/notificationDismissDialog.html';
 
       let dismissCodePrompt = {
         parent: angular.element(document.body),
@@ -253,16 +272,31 @@ class ThemeController {
         },
         controller: DismissCodeDialogController
       };
-      DismissCodeDialogController.$inject = ['$scope', '$mdDialog', '$filter', 'NotificationService', 'ProjectService', 'StudentDataService', 'notification'];
+      DismissCodeDialogController.$inject = [
+        '$scope',
+        '$mdDialog',
+        '$filter',
+        'NotificationService',
+        'ProjectService',
+        'StudentDataService',
+        'notification'
+      ];
 
-      function DismissCodeDialogController($scope, $mdDialog, $filter, NotificationService, ProjectService, StudentDataService, notification) {
-
+      function DismissCodeDialogController(
+        $scope,
+        $mdDialog,
+        $filter,
+        NotificationService,
+        ProjectService,
+        StudentDataService,
+        notification
+      ) {
         $scope.$translate = $filter('translate');
 
         $scope.input = {
-          dismissCode: ""
+          dismissCode: ''
         };
-        $scope.message = "";
+        $scope.message = '';
         $scope.notification = notification;
         $scope.hasDismissCode = false;
         if (notification.data) {
@@ -270,20 +304,29 @@ class ThemeController {
             $scope.hasDismissCode = true;
           }
         }
-        $scope.nodePositionAndTitle = ProjectService.getNodePositionAndTitleByNodeId(notification.nodeId);
+        $scope.nodePositionAndTitle = ProjectService.getNodePositionAndTitleByNodeId(
+          notification.nodeId
+        );
 
         $scope.checkDismissCode = function() {
-          if (!$scope.hasDismissCode || ($scope.input.dismissCode == notification.data.dismissCode)) {
+          if (!$scope.hasDismissCode || $scope.input.dismissCode == notification.data.dismissCode) {
             NotificationService.dismissNotification(notification);
             $mdDialog.hide();
             // log currentAmbientNotificationDimissed event
             var nodeId = null;
             var componentId = null;
             var componentType = null;
-            var category = "Notification";
-            var event = "currentAmbientNotificationDimissedWithCode";
+            var category = 'Notification';
+            var event = 'currentAmbientNotificationDimissedWithCode';
             var eventData = {};
-            StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
+            StudentDataService.saveVLEEvent(
+              nodeId,
+              componentId,
+              componentType,
+              category,
+              event,
+              eventData
+            );
           } else {
             $scope.errorMessage = $scope.$translate('dismissNotificationInvalidDismissCode');
           }
@@ -307,11 +350,18 @@ class ThemeController {
           var nodeId = null;
           var componentId = null;
           var componentType = null;
-          var category = "Notification";
-          var event = "currentAmbientNotificationWindowClosed";
+          var category = 'Notification';
+          var event = 'currentAmbientNotificationWindowClosed';
           var eventData = {};
-          StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
-        }
+          StudentDataService.saveVLEEvent(
+            nodeId,
+            componentId,
+            componentType,
+            category,
+            event,
+            eventData
+          );
+        };
       }
 
       this.$mdDialog.show(dismissCodePrompt);
@@ -320,10 +370,17 @@ class ThemeController {
       var nodeId = null;
       var componentId = null;
       var componentType = null;
-      var category = "Notification";
-      var event = "currentAmbientNotificationWindowOpened";
+      var category = 'Notification';
+      var event = 'currentAmbientNotificationWindowOpened';
       var eventData = {};
-      this.StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, eventData);
+      this.StudentDataService.saveVLEEvent(
+        nodeId,
+        componentId,
+        componentType,
+        category,
+        event,
+        eventData
+      );
     });
   }
 
@@ -350,17 +407,19 @@ class ThemeController {
     }
 
     if (layoutState === 'notebook') {
-      this.$state.go('root.notebook', {nodeId: this.currentNode.id});
+      this.$state.go('root.notebook', { nodeId: this.currentNode.id });
     } else {
       this.notebookNavOpen = false;
       if (this.ConfigService.isPreview()) {
-        this.$state.go('root.preview.node',
-            {projectId: this.ConfigService.getProjectId(),
-             nodeId: this.currentNode.id});
+        this.$state.go('root.preview.node', {
+          projectId: this.ConfigService.getProjectId(),
+          nodeId: this.currentNode.id
+        });
       } else {
-        this.$state.go('root.run.node',
-            {runId: this.ConfigService.getRunId(),
-             nodeId: this.currentNode.id});
+        this.$state.go('root.run.node', {
+          runId: this.ConfigService.getRunId(),
+          nodeId: this.currentNode.id
+        });
       }
     }
 
