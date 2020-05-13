@@ -153,7 +153,7 @@
                 <exclude>**/org/wise/portal/presentation/web/controllers/general/contactwise/*.java</exclude>
                 <exclude>**/org/wise/portal/presentation/web/controllers/teacher/management/**/*.java</exclude>
                 <exclude>**/org/wise/portal/presentation/web/controllers/teacher/project/**/*.java</exclude>
-                <exclude>**/org/wise/portal/presentation/web/controllers/teacher/run/**/*.java</exclude>
+                <exclude>**/org/wise/portal/presentation/web/controllers/teacher/run/ShareProjectRunControllerTest.java</exclude>
                 <exclude>**/org/wise/portal/presentation/web/controllers/teacher/RegisterTeacherControllerTest.java</exclude>
                 <exclude>**/org/wise/portal/presentation/web/controllers/IndexControllerTest.java</exclude>
                 <exclude>**/org/wise/portal/presentation/web/controllers/LoginControllerTest.java</exclude>
@@ -193,7 +193,7 @@
             <exclude>**/org/wise/portal/presentation/web/controllers/general/contactwise/*.java</exclude>
             <exclude>**/org/wise/portal/presentation/web/controllers/teacher/management/**/*.java</exclude>
             <exclude>**/org/wise/portal/presentation/web/controllers/teacher/project/**/*.java</exclude>
-            <exclude>**/org/wise/portal/presentation/web/controllers/teacher/run/**/*.java</exclude>
+            <exclude>**/org/wise/portal/presentation/web/controllers/teacher/run/ShareProjectRunControllerTest.java</exclude>
             <exclude>**/org/wise/portal/presentation/web/controllers/teacher/RegisterTeacherControllerTest.java</exclude>
             <exclude>**/org/wise/portal/presentation/web/controllers/IndexControllerTest.java</exclude>
             <exclude>**/org/wise/portal/presentation/web/controllers/LoginControllerTest.java</exclude>
