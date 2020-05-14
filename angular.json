@@ -28,7 +28,7 @@
           },
           "configurations": {
             "production": {
-              "optimization": true,
+              "optimization": { "scripts": true, "styles": false },
               "outputHashing": "all",
               "sourceMap": true,
               "statsJson": true,
