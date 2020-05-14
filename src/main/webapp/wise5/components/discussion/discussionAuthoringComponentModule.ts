@@ -1,7 +1,6 @@
 'use strict';
 
 import * as angular from 'angular';
-import ClassResponse from './classResponse';
 import ClassResponseController from './classResponseController';
 import DiscussionService from './discussionService';
 import DiscussionController from './discussionController';
@@ -13,7 +12,6 @@ const discussionAuthoringComponentModule = angular
   .controller('DiscussionController', DiscussionController)
   .controller('DiscussionAuthoringController', DiscussionAuthoringController)
   .controller('ClassResponseController', ClassResponseController)
-  .component('atClassResponse', ClassResponse)
   .config([
     '$translatePartialLoaderProvider',
     $translatePartialLoaderProvider => {

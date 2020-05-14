@@ -277,7 +277,7 @@
                 </md-button>
               </div>
             </md-card>
-            <at-class-response ng-repeat='componentState in discussionController.topLevelResponses.slice().reverse()'
+            <class-response ng-repeat='componentState in discussionController.topLevelResponses.slice().reverse()'
                             ng-if='mdScreen ? $odd : true'
                             response='componentState'
                             submitbuttonclicked='submitbuttonclicked(r)'
@@ -287,12 +287,12 @@
                             studentdatachanged='studentdatachanged()'
                             isdisabled='discussionController.isDisabled'
                             class='post animate-repeat'>
-            </at-class-response>
+            </class-response>
           </div>
           <div class='discussion-posts'
                ng-if='mdScreen && discussionController.topLevelResponses.length'
                flex>
-            <at-class-response ng-repeat='componentState in discussionController.topLevelResponses.slice().reverse()'
+            <class-response ng-repeat='componentState in discussionController.topLevelResponses.slice().reverse()'
                             ng-if='$even'
                             response='componentState'
                             submitbuttonclicked='submitbuttonclicked(r)'
@@ -303,7 +303,7 @@
                             isdisabled='discussionController.isDisabled'
                             class='animate-repeat'
                             style='display: block;'>
-            </at-class-response>
+            </class-response>
           </div>
         </div>
       </div>
