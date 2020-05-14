@@ -2,7 +2,8 @@
 
 import * as $ from 'jquery';
 import LabelController from './labelController';
-import Fabric from 'fabric';
+import * as fabric from 'fabric';
+window['fabric'] = fabric.fabric
 import html2canvas from 'html2canvas';
 
 class LabelAuthoringController extends LabelController {

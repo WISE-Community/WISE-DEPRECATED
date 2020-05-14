@@ -1,6 +1,12 @@
 'use strict';
 
+import '../lib/jquery/jquery-global';
+import '../lib/bootstrap/js/bootstrap.min';
 import * as angular from 'angular';
+import '../lib/summernote/dist/summernote.min';
+import '../lib/angular-summernote/dist/angular-summernote.min';
+import '../lib/summernoteExtensions/summernote-ext-addNote.js';
+import '../lib/summernoteExtensions/summernote-ext-print.js';
 import '../authoringTool/authoringTool';
 import '../classroomMonitor/classroomMonitor';
 

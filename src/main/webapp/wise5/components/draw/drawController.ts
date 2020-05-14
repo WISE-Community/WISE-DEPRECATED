@@ -2,8 +2,11 @@
 
 import * as angular from 'angular';
 import * as $ from 'jquery';
-import fabric from 'fabric';
+import * as fabric from 'fabric';
+window['fabric'] = fabric.fabric;
 import ComponentController from '../componentController';
+import * as EventEmitter2 from 'eventemitter2';
+window['EventEmitter2'] = EventEmitter2;
 import DrawingTool from '../../lib/drawingTool/drawing-tool';
 import DrawService from './drawService';
 
