@@ -232,15 +232,6 @@ export default angular
                 return AchievementService.retrieveStudentAchievements();
               }
             ],
-            notifications: [
-              'NotificationService',
-              'studentData',
-              'config',
-              'project',
-              (NotificationService, studentData, config, project) => {
-                return NotificationService.retrieveNotifications();
-              }
-            ],
             runStatus: [
               'StudentDataService',
               'config',

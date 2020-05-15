@@ -68,32 +68,27 @@ class NotificationService {
   }
 
 
-  retrieveNotifications(toWorkgroupId = null) {
-    if (this.ConfigService.isPreview()) {
-      return Promise.resolve(this.notifications);
-    } else {
-      const config = {
-        method: 'GET',
-        url: this.ConfigService.getNotificationURL(),
-        params: {}
-      };
-      if (toWorkgroupId != null) {
-        config.params.toWorkgroupId = toWorkgroupId;
-      } else if (this.ConfigService.getMode() !== 'classroomMonitor') {
-        config.params.toWorkgroupId = this.ConfigService.getWorkgroupId();
-        config.params.periodId = this.ConfigService.getPeriodId();
+  retrieveNotifications() {
+    const config = {
+      method: 'GET',
+      url: this.ConfigService.getNotificationURL(),
+      params: {
+        toWorkgroupId: this.ConfigService.getWorkgroupId()
       }
-      return this.$http(config).then((response) => {
-        this.notifications = response.data;
-        this.notifications.map((notification) => {
-          this.setNotificationNodePositionAndTitle(notification);
-          if (notification.data != null) {
-            notification.data = angular.fromJson(notification.data);
-          }
-        });
-        return this.notifications;
-      });
+    };
+    if (this.ConfigService.getMode() === 'studentRun') {
+      config.params.periodId = this.ConfigService.getPeriodId();
     }
+    return this.$http(config).then(({data: notifications}) => {
+      this.notifications = notifications;
+      this.notifications.map((notification) => {
+        this.setNotificationNodePositionAndTitle(notification);
+        if (notification.data != null) {
+          notification.data = angular.fromJson(notification.data);
+        }
+      });
+      return this.notifications;
+    });
   }
 
   setNotificationNodePositionAndTitle(notification) {

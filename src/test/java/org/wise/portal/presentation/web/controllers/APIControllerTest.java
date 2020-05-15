@@ -89,7 +89,7 @@ public class APIControllerTest {
 
   protected List<Run> runs;
 
-  protected Workgroup workgroup1;
+  protected Workgroup workgroup1, teacher1Run1Workgroup;
 
   protected Project project1, project2, project3;
 
@@ -175,6 +175,9 @@ public class APIControllerTest {
     workgroup1 = new WorkgroupImpl();
     workgroup1.addMember(student1);
     workgroup1.setPeriod(run1Period1);
+    teacher1Run1Workgroup = new WorkgroupImpl();
+    teacher1Run1Workgroup.addMember(teacher1);
+    teacher1Run1Workgroup.setRun(run1);
     teacher2 = new UserImpl();
     TeacherUserDetails tud2 = new TeacherUserDetails();
     tud2.setUsername(TEACHER2_USERNAME);
