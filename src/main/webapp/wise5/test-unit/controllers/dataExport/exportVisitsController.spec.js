@@ -1,0 +1,814 @@
+import classroomMonitorModule from '../../../classroomMonitor/classroomMonitor';
+
+let $controller;
+let $q;
+let $rootScope;
+let $scope;
+let exportVisitsController;
+let ConfigService;
+let ProjectService;
+let TeacherDataService;
+let demoProjectJSON;
+const demoProjectJSONOriginal = window.mocks['test-unit/sampleData/curriculum/DemoProject/project'];
+
+describe('ExportVisitsController', () => {
+  beforeEach(angular.mock.module(classroomMonitorModule.name));
+  beforeEach(inject((
+    _ConfigService_,
+    _ProjectService_,
+    _TeacherDataService_,
+    _$controller_,
+    _$q_,
+    _$rootScope_
+  ) => {
+    $controller = _$controller_;
+    $q = _$q_;
+    $rootScope = _$rootScope_;
+    $scope = $rootScope.$new();
+    ConfigService = _ConfigService_;
+    ProjectService = _ProjectService_;
+    TeacherDataService = _TeacherDataService_;
+    spyOn(ConfigService, 'getPermissions').and.returnValue({ canViewStudentNames: true });
+    spyOn(ConfigService, 'getClassmateWorkgroupIds').and.returnValue([100, 101]);
+    spyOn(ConfigService, 'getProjectId').and.returnValue(1000);
+    spyOn(ConfigService, 'getRunId').and.returnValue(2000);
+    spyOn(ConfigService, 'getRunName').and.returnValue('Demo Project');
+    spyOn(ConfigService, 'getFormattedStartDate').and.returnValue('Fri Apr 17 2020 6:22:14 PM');
+    spyOn(ConfigService, 'getFormattedEndDate').and.returnValue('Thu May 21 2020 11:59:59 PM');
+    spyOn(ProjectService, 'getNodeOrderOfProject').and.returnValue(createNodeOrderOfProject());
+    demoProjectJSON = JSON.parse(JSON.stringify(demoProjectJSONOriginal));
+    ProjectService.setProject(demoProjectJSON);
+    exportVisitsController = $controller('ExportVisitsController', { $scope: $scope });
+  }));
+  initializeIdToChecked_ShouldSetMappingsToFalse();
+  initializeIdToNode_ShouldSetMappings();
+  initializeIdToVisitCounter_ShouldSetCounters();
+  getHeaderRow_ShouldGetArrayOfColumnNames();
+  initializeColumnNameToColumnNumber_ShouldSetMappings();
+  selectAll_ShouldSetAllCheckedToTrue();
+  selectAll_ShouldSetAllCheckedToFalse();
+  nodeChecked_WhenSettingAGroupToTrue_ShouldSetAllChildrenToTrue();
+  nodeChecked_WhenSettingAGroupToFalse_ShouldSetAllChildrenToFalse();
+  getCheckedItems_ShouldGetAnArrayOfIds();
+  export_ShouldRetrieveEvents();
+  export_WhileIncludingStudentNames_ShouldRetrieveEventsWithStudentNames();
+  handleExportCallback_WithMatchingEnterAndExitEvents_ShouldCreateRows();
+  handleExportCallback_WithMissingExitEventAtBeginning_ShouldCreateRows();
+  handleExportCallback_WithMissingExitEventAtEnd_ShouldCreateRows();
+  filterRows_ShouldTakeOutRowsThatAreNotSelected();
+  sortEvents_ShouldOrderEventsByWorkgroupIdAndClientSaveTime();
+  isStepEnteredEvent_WithNodeExitedEvent_ShouldReturnFalse();
+  isStepEnteredEvent_WithGroupNode_ShouldReturnFalse();
+  isStepEnteredEvent_WithStepNode_ShouldReturnTrue();
+  isStepExitedEvent_WithNodeEnteredEvent_ShouldReturnFalse();
+  isStepExitedEvent_WithAGroupNode_ShouldReturnFalse();
+  isStepExitedEvent_WithAStepNode_ShouldReturnTrue();
+  isMatchingWorkgroupId_WithNonMatchingWorkgroupIds_ShouldReturnFalse();
+  isMatchingWorkgroupId_WithMatchingWorkgroupIds_ShouldReturnTrue();
+  isMatchingNodeId_WithNonMatchingNodeIds_ShouldReturnFalse();
+  isMatchingNodeId_WithMatchingNodeIds_ShouldReturnTrue();
+  createVisit_WithEnterAndExitEvent_ShouldCreateAVisit();
+  createVisit_WithNoPreviousVisits_ShouldCreateAVisit();
+  createVisit_WithOnlyEnterEvent_ShouldCreateAVisit();
+  createRowWithEmptyCells_ShouldReturnArrayWithEmptyValues();
+  getStepsBetweenLastVisit_ShouldReturnAStringOfStepNumbers();
+  addUserCells_WithOneStudentNotIncludingNames_ShouldSetTheWISEID();
+  addUserCells_WithOneStudentIncludingNames_ShouldSetTheWISEIDAndStudentName();
+  addUserCells_WithMultipleStudentsIncludingNames_ShouldSetTheWISEIDAndStudentNames();
+  getVisitDuration_ShouldGetTheTimeDifferenceBetweenEventsInSeconds();
+  getColumnNumber_ShouldReturnTheColumnNumber();
+  incrementRowCounter_ShouldIncrementRowCounterBy1();
+  getStepNumberAndTitle_ShouldGetAStringContainingStepNumberAndTitle();
+  getWorkgroupIdNodeIdKey_ShouldGetAStringContainingWorkgroupIdAndNodeId();
+  getStepNumber_ShouldGetTheStepNumberString();
+  incrementVisitCounter_ShouldIncreaseTheCounterBy1();
+  getVisitCounter_ShouldGetTheVisitCount();
+  getRevisitCounter_ShouldGetTheRevisitCount();
+  setCellInRow_ShouldSetTheValueInTheCell();
+  getCellInRow_ShouldGetTheValueInTheCell();
+});
+
+function createNodeOrderOfProject() {
+  return {
+    nodes: createNodes()
+  };
+}
+
+function createNodes() {
+  return [
+    createNode('group0', 'group', 'Master', ''),
+    createNode('group1', 'group', 'Master', '1', [
+      'node1',
+      'node2',
+      'node3',
+      'node4',
+      'node5',
+      'node6',
+      'node7'
+    ]),
+    createNode('node1', 'node', 'HTML Step', '1.1'),
+    createNode('node2', 'node', 'Open Response Step', '1.2'),
+    createNode('node3', 'node', 'Graph Step', '1.3'),
+    createNode('node4', 'node', 'Table Step', '1.4'),
+    createNode('node5', 'node', 'Match Step', '1.5'),
+    createNode('node6', 'node', 'Multiple Choice Step', '1.6'),
+    createNode('node7', 'node', 'Draw Step', '1.7')
+  ];
+}
+
+function createNode(id, type, title, stepNumber, childIds) {
+  return {
+    node: {
+      id: id,
+      title: title,
+      type: type,
+      ids: childIds
+    },
+    stepNumber: stepNumber
+  };
+}
+
+function createRow(nodeId, stepTitle = '') {
+  const row = exportVisitsController.createRowWithEmptyCells();
+  exportVisitsController.setCellInRow(row, 'Node ID', nodeId);
+  exportVisitsController.setCellInRow(row, 'Step Title', stepTitle);
+  return row;
+}
+
+function createEvent(type, nodeId, workgroupId, clientSaveTime) {
+  return {
+    event: type,
+    nodeId: nodeId,
+    workgroupId: workgroupId,
+    clientSaveTime: clientSaveTime
+  };
+}
+
+function initializeIdToChecked_ShouldSetMappingsToFalse() {
+  it('initializeIdToChecked should set mappings to false', () => {
+    exportVisitsController.initializeIdToChecked(exportVisitsController.nodes);
+    expect(exportVisitsController.idToChecked['group0']).toEqual(true);
+    expect(exportVisitsController.idToChecked['group1']).toEqual(true);
+    expect(exportVisitsController.idToChecked['node1']).toEqual(true);
+    expect(exportVisitsController.idToChecked['node2']).toEqual(true);
+    expect(exportVisitsController.idToChecked['node3']).toEqual(true);
+    expect(exportVisitsController.idToChecked['node4']).toEqual(true);
+    expect(exportVisitsController.idToChecked['node5']).toEqual(true);
+    expect(exportVisitsController.idToChecked['node6']).toEqual(true);
+    expect(exportVisitsController.idToChecked['node7']).toEqual(true);
+  });
+}
+
+function initializeIdToNode_ShouldSetMappings() {
+  it('initializeIdToNode should set mappings', () => {
+    exportVisitsController.initializeIdToNode(exportVisitsController.nodes);
+    expect(exportVisitsController.idToNode['group0']).toEqual(
+      createNode('group0', 'group', 'Master', '')
+    );
+    expect(exportVisitsController.idToNode['group1']).toEqual(
+      createNode('group1', 'group', 'Master', '1', [
+        'node1',
+        'node2',
+        'node3',
+        'node4',
+        'node5',
+        'node6',
+        'node7'
+      ])
+    );
+    expect(exportVisitsController.idToNode['node1']).toEqual(
+      createNode('node1', 'node', 'HTML Step', '1.1')
+    );
+    expect(exportVisitsController.idToNode['node2']).toEqual(
+      createNode('node2', 'node', 'Open Response Step', '1.2')
+    );
+    expect(exportVisitsController.idToNode['node3']).toEqual(
+      createNode('node3', 'node', 'Graph Step', '1.3')
+    );
+    expect(exportVisitsController.idToNode['node4']).toEqual(
+      createNode('node4', 'node', 'Table Step', '1.4')
+    );
+    expect(exportVisitsController.idToNode['node5']).toEqual(
+      createNode('node5', 'node', 'Match Step', '1.5')
+    );
+    expect(exportVisitsController.idToNode['node6']).toEqual(
+      createNode('node6', 'node', 'Multiple Choice Step', '1.6')
+    );
+    expect(exportVisitsController.idToNode['node7']).toEqual(
+      createNode('node7', 'node', 'Draw Step', '1.7')
+    );
+  });
+}
+
+function initializeIdToVisitCounter_ShouldSetCounters() {
+  it('initializeIdToVisitCounter should set counters', () => {
+    exportVisitsController.initializeIdToVisitCounter(exportVisitsController.nodes);
+    expect(exportVisitsController.workgroupIdNodeIdToVisitCounter['100-group0']).toEqual(0);
+    expect(exportVisitsController.workgroupIdNodeIdToVisitCounter['100-group1']).toEqual(0);
+    expect(exportVisitsController.workgroupIdNodeIdToVisitCounter['100-node1']).toEqual(0);
+    expect(exportVisitsController.workgroupIdNodeIdToVisitCounter['100-node2']).toEqual(0);
+    expect(exportVisitsController.workgroupIdNodeIdToVisitCounter['100-node3']).toEqual(0);
+    expect(exportVisitsController.workgroupIdNodeIdToVisitCounter['100-node4']).toEqual(0);
+    expect(exportVisitsController.workgroupIdNodeIdToVisitCounter['100-node5']).toEqual(0);
+    expect(exportVisitsController.workgroupIdNodeIdToVisitCounter['100-node6']).toEqual(0);
+    expect(exportVisitsController.workgroupIdNodeIdToVisitCounter['100-node7']).toEqual(0);
+    expect(exportVisitsController.workgroupIdNodeIdToVisitCounter['101-group0']).toEqual(0);
+    expect(exportVisitsController.workgroupIdNodeIdToVisitCounter['101-group1']).toEqual(0);
+    expect(exportVisitsController.workgroupIdNodeIdToVisitCounter['101-node1']).toEqual(0);
+    expect(exportVisitsController.workgroupIdNodeIdToVisitCounter['101-node2']).toEqual(0);
+    expect(exportVisitsController.workgroupIdNodeIdToVisitCounter['101-node3']).toEqual(0);
+    expect(exportVisitsController.workgroupIdNodeIdToVisitCounter['101-node4']).toEqual(0);
+    expect(exportVisitsController.workgroupIdNodeIdToVisitCounter['101-node5']).toEqual(0);
+    expect(exportVisitsController.workgroupIdNodeIdToVisitCounter['101-node6']).toEqual(0);
+    expect(exportVisitsController.workgroupIdNodeIdToVisitCounter['101-node7']).toEqual(0);
+  });
+}
+
+function getHeaderRow_ShouldGetArrayOfColumnNames() {
+  it('getHeaderRow should get array of column names', () => {
+    const headerRow = exportVisitsController.getHeaderRow();
+    expect(headerRow[0]).toEqual('#');
+    expect(headerRow[1]).toEqual('Workgroup ID');
+    expect(headerRow[2]).toEqual('WISE ID 1');
+    expect(headerRow[3]).toEqual('Student Name 1');
+    expect(headerRow[4]).toEqual('WISE ID 2');
+    expect(headerRow[5]).toEqual('Student Name 2');
+    expect(headerRow[6]).toEqual('WISE ID 3');
+    expect(headerRow[7]).toEqual('Student Name 3');
+    expect(headerRow[8]).toEqual('Run ID');
+    expect(headerRow[9]).toEqual('Project ID');
+    expect(headerRow[10]).toEqual('Project Name');
+    expect(headerRow[11]).toEqual('Period ID');
+    expect(headerRow[12]).toEqual('Period Name');
+    expect(headerRow[13]).toEqual('Start Date');
+    expect(headerRow[14]).toEqual('End Date');
+    expect(headerRow[15]).toEqual('Node ID');
+    expect(headerRow[16]).toEqual('Step Title');
+    expect(headerRow[17]).toEqual('Enter Time');
+    expect(headerRow[18]).toEqual('Exit Time');
+    expect(headerRow[19]).toEqual('Visit Duration (Seconds)');
+    expect(headerRow[20]).toEqual('Visit Counter');
+    expect(headerRow[21]).toEqual('Revisit Counter');
+    expect(headerRow[22]).toEqual('Previous Node ID');
+    expect(headerRow[23]).toEqual('Previous Step Title');
+    expect(headerRow[24]).toEqual('Steps Since Last Visit');
+  });
+}
+
+function initializeColumnNameToColumnNumber_ShouldSetMappings() {
+  it('initializeColumnNameToColumnNumber should set mappings', () => {
+    exportVisitsController.initializeColumnNameToColumnNumber();
+    expect(exportVisitsController.columnNameToColumnNumber['#']).toEqual(0);
+    expect(exportVisitsController.columnNameToColumnNumber['Workgroup ID']).toEqual(1);
+    expect(exportVisitsController.columnNameToColumnNumber['WISE ID 1']).toEqual(2);
+    expect(exportVisitsController.columnNameToColumnNumber['Student Name 1']).toEqual(3);
+    expect(exportVisitsController.columnNameToColumnNumber['WISE ID 2']).toEqual(4);
+    expect(exportVisitsController.columnNameToColumnNumber['Student Name 2']).toEqual(5);
+    expect(exportVisitsController.columnNameToColumnNumber['WISE ID 3']).toEqual(6);
+    expect(exportVisitsController.columnNameToColumnNumber['Student Name 3']).toEqual(7);
+    expect(exportVisitsController.columnNameToColumnNumber['Run ID']).toEqual(8);
+    expect(exportVisitsController.columnNameToColumnNumber['Project ID']).toEqual(9);
+  });
+}
+
+function selectAll_ShouldSetAllCheckedToTrue() {
+  it('selectAll should set all checked to true', () => {
+    exportVisitsController.selectAll();
+    expect(exportVisitsController.idToChecked['group0']).toEqual(true);
+    expect(exportVisitsController.idToChecked['group1']).toEqual(true);
+    expect(exportVisitsController.idToChecked['node1']).toEqual(true);
+    expect(exportVisitsController.idToChecked['node2']).toEqual(true);
+    expect(exportVisitsController.idToChecked['node3']).toEqual(true);
+    expect(exportVisitsController.idToChecked['node4']).toEqual(true);
+    expect(exportVisitsController.idToChecked['node5']).toEqual(true);
+    expect(exportVisitsController.idToChecked['node6']).toEqual(true);
+    expect(exportVisitsController.idToChecked['node7']).toEqual(true);
+  });
+}
+
+function selectAll_ShouldSetAllCheckedToFalse() {
+  it('selectAll should set all checked to false', () => {
+    exportVisitsController.deselectAll();
+    expect(exportVisitsController.idToChecked['group0']).toEqual(false);
+    expect(exportVisitsController.idToChecked['group1']).toEqual(false);
+    expect(exportVisitsController.idToChecked['node1']).toEqual(false);
+    expect(exportVisitsController.idToChecked['node2']).toEqual(false);
+    expect(exportVisitsController.idToChecked['node3']).toEqual(false);
+    expect(exportVisitsController.idToChecked['node4']).toEqual(false);
+    expect(exportVisitsController.idToChecked['node5']).toEqual(false);
+    expect(exportVisitsController.idToChecked['node6']).toEqual(false);
+    expect(exportVisitsController.idToChecked['node7']).toEqual(false);
+  });
+}
+
+function nodeChecked_WhenSettingAGroupToTrue_ShouldSetAllChildrenToTrue() {
+  it('nodeChecked when setting a group to true should set all children to true', () => {
+    exportVisitsController.deselectAll();
+    exportVisitsController.idToChecked['group1'] = true;
+    exportVisitsController.nodeChecked(exportVisitsController.idToNode['group1'].node);
+    expect(exportVisitsController.idToChecked['group0']).toEqual(false);
+    expect(exportVisitsController.idToChecked['group1']).toEqual(true);
+    expect(exportVisitsController.idToChecked['node1']).toEqual(true);
+    expect(exportVisitsController.idToChecked['node2']).toEqual(true);
+    expect(exportVisitsController.idToChecked['node3']).toEqual(true);
+    expect(exportVisitsController.idToChecked['node4']).toEqual(true);
+    expect(exportVisitsController.idToChecked['node5']).toEqual(true);
+    expect(exportVisitsController.idToChecked['node6']).toEqual(true);
+    expect(exportVisitsController.idToChecked['node7']).toEqual(true);
+  });
+}
+
+function nodeChecked_WhenSettingAGroupToFalse_ShouldSetAllChildrenToFalse() {
+  it('nodeChecked when setting a group to false should set all children to false', () => {
+    exportVisitsController.deselectAll();
+    exportVisitsController.idToChecked['node1'] = true;
+    exportVisitsController.idToChecked['node2'] = true;
+    exportVisitsController.idToChecked['node3'] = true;
+    exportVisitsController.idToChecked['group1'] = false;
+    exportVisitsController.nodeChecked(exportVisitsController.idToNode['group1'].node);
+    expect(exportVisitsController.idToChecked['group0']).toEqual(false);
+    expect(exportVisitsController.idToChecked['group1']).toEqual(false);
+    expect(exportVisitsController.idToChecked['node1']).toEqual(false);
+    expect(exportVisitsController.idToChecked['node2']).toEqual(false);
+    expect(exportVisitsController.idToChecked['node3']).toEqual(false);
+    expect(exportVisitsController.idToChecked['node4']).toEqual(false);
+    expect(exportVisitsController.idToChecked['node5']).toEqual(false);
+    expect(exportVisitsController.idToChecked['node6']).toEqual(false);
+    expect(exportVisitsController.idToChecked['node7']).toEqual(false);
+  });
+}
+
+function getCheckedItems_ShouldGetAnArrayOfIds() {
+  it('getCheckedItems should get an array of ids', () => {
+    exportVisitsController.deselectAll();
+    exportVisitsController.idToChecked['node1'] = true;
+    exportVisitsController.idToChecked['node3'] = true;
+    exportVisitsController.idToChecked['node5'] = true;
+    const checkedItems = exportVisitsController.getCheckedItems();
+    expect(checkedItems.length).toEqual(3);
+    expect(checkedItems[0]).toEqual('node1');
+    expect(checkedItems[1]).toEqual('node3');
+    expect(checkedItems[2]).toEqual('node5');
+  });
+}
+
+function export_ShouldRetrieveEvents() {
+  it('export should retrieve events', () => {
+    spyOn(TeacherDataService, 'retrieveEventsExport').and.callFake(() => {
+      const deferred = $q.defer();
+      deferred.resolve({});
+      return deferred.promise;
+    });
+    exportVisitsController.export();
+    const includeStudentEvents = true;
+    const includeTeacherEvents = false;
+    expect(TeacherDataService.retrieveEventsExport).toHaveBeenCalledWith(
+      includeStudentEvents,
+      includeTeacherEvents,
+      exportVisitsController.includeStudentNames
+    );
+  });
+}
+
+function export_WhileIncludingStudentNames_ShouldRetrieveEventsWithStudentNames() {
+  it('export should retrieve events', () => {
+    spyOn(TeacherDataService, 'retrieveEventsExport').and.callFake(() => {
+      const deferred = $q.defer();
+      deferred.resolve({});
+      return deferred.promise;
+    });
+    exportVisitsController.includeStudentNames = true;
+    exportVisitsController.export();
+    const includeStudentEvents = true;
+    const includeTeacherEvents = false;
+    expect(TeacherDataService.retrieveEventsExport).toHaveBeenCalledWith(
+      includeStudentEvents,
+      includeTeacherEvents,
+      exportVisitsController.includeStudentNames
+    );
+  });
+}
+
+function handleExportCallback_WithMatchingEnterAndExitEvents_ShouldCreateRows() {
+  it('handleExportCallback with matching enter and exit events should create rows', () => {
+    spyOn(exportVisitsController, 'generateCSVFile').and.callFake(() => {});
+    const userInfo = { users: [{ id: 100, name: 'Spongebob Squarepants' }] };
+    spyOn(ConfigService, 'getUserInfoByWorkgroupId').and.returnValue(userInfo);
+    const enterEvent = createEvent('nodeEntered', 'node1', 100, 10000);
+    const exitEvent = createEvent('nodeExited', 'node1', 100, 30000);
+    const response = { events: [enterEvent, exitEvent] };
+    exportVisitsController.checkedItems = ['node1'];
+    exportVisitsController.handleExportCallback(response);
+    exportVisitsController.rowCounter = 1;
+    exportVisitsController.initializeIdToVisitCounter(exportVisitsController.nodes);
+    const rows = [
+      exportVisitsController.getHeaderRow(),
+      exportVisitsController.createVisit(enterEvent, exitEvent, [])
+    ];
+    const fileName = '2000_visits.csv';
+    expect(exportVisitsController.generateCSVFile).toHaveBeenCalledWith(rows, fileName);
+  });
+}
+
+function handleExportCallback_WithMissingExitEventAtBeginning_ShouldCreateRows() {
+  it('handleExportCallback with missing exit event at beginning should create rows', () => {
+    spyOn(exportVisitsController, 'generateCSVFile').and.callFake(() => {});
+    const userInfo = { users: [{ id: 100, name: 'Spongebob Squarepants' }] };
+    spyOn(ConfigService, 'getUserInfoByWorkgroupId').and.returnValue(userInfo);
+    const enterEvent1 = createEvent('nodeEntered', 'node1', 100, 10000);
+    const enterEvent2 = createEvent('nodeEntered', 'node1', 100, 20000);
+    const exitEvent = createEvent('nodeExited', 'node1', 100, 30000);
+    const response = { events: [enterEvent1, enterEvent2, exitEvent] };
+    exportVisitsController.checkedItems = ['node1'];
+    exportVisitsController.handleExportCallback(response);
+    exportVisitsController.rowCounter = 1;
+    exportVisitsController.initializeIdToVisitCounter(exportVisitsController.nodes);
+    const visit1 = exportVisitsController.createVisit(enterEvent1, null, []);
+    const visit2 = exportVisitsController.createVisit(enterEvent2, exitEvent, [visit1]);
+    const rows = [exportVisitsController.getHeaderRow(), visit1, visit2];
+    const fileName = '2000_visits.csv';
+    expect(exportVisitsController.generateCSVFile).toHaveBeenCalledWith(rows, fileName);
+  });
+}
+
+function handleExportCallback_WithMissingExitEventAtEnd_ShouldCreateRows() {
+  it('handleExportCallback with missing exit event at end should create rows', () => {
+    spyOn(exportVisitsController, 'generateCSVFile').and.callFake(() => {});
+    const userInfo = { users: [{ id: 100, name: 'Spongebob Squarepants' }] };
+    spyOn(ConfigService, 'getUserInfoByWorkgroupId').and.returnValue(userInfo);
+    const enterEvent1 = createEvent('nodeEntered', 'node1', 100, 10000);
+    const exitEvent = createEvent('nodeExited', 'node1', 100, 20000);
+    const enterEvent2 = createEvent('nodeEntered', 'node1', 100, 30000);
+    const response = { events: [enterEvent1, exitEvent, enterEvent2] };
+    exportVisitsController.checkedItems = ['node1'];
+    exportVisitsController.handleExportCallback(response);
+    exportVisitsController.rowCounter = 1;
+    exportVisitsController.initializeIdToVisitCounter(exportVisitsController.nodes);
+    const visit1 = exportVisitsController.createVisit(enterEvent1, exitEvent, []);
+    const visit2 = exportVisitsController.createVisit(enterEvent2, null, [visit1]);
+    const rows = [exportVisitsController.getHeaderRow(), visit1, visit2];
+    const fileName = '2000_visits.csv';
+    expect(exportVisitsController.generateCSVFile).toHaveBeenCalledWith(rows, fileName);
+  });
+}
+
+function filterRows_ShouldTakeOutRowsThatAreNotSelected() {
+  it('filterRows should take out rows that are not selected', () => {
+    const row1 = createRow('node1');
+    const row2 = createRow('node2');
+    const row3 = createRow('node3');
+    const row4 = createRow('node1');
+    const row5 = createRow('node2');
+    const rows = [row1, row2, row3, row4, row5];
+    exportVisitsController.checkedItems = ['node1', 'node3'];
+    const filteredRows = exportVisitsController.filterRows(rows);
+    expect(filteredRows.length).toEqual(3);
+    expect(filteredRows[0]).toEqual(row1);
+    expect(filteredRows[1]).toEqual(row3);
+    expect(filteredRows[2]).toEqual(row1);
+  });
+}
+
+function sortEvents_ShouldOrderEventsByWorkgroupIdAndClientSaveTime() {
+  it('sortEvents should order events by workgroup id and client save time', () => {
+    const event1 = { workgroupId: 100, clientSaveTime: 1000 };
+    const event2 = { workgroupId: 100, clientSaveTime: 2000 };
+    const event3 = { workgroupId: 101, clientSaveTime: 4000 };
+    const event4 = { workgroupId: 100, clientSaveTime: 3000 };
+    const event5 = { workgroupId: 101, clientSaveTime: 5000 };
+    let events = [event1, event2, event3, event4, event5];
+    events = exportVisitsController.sortEvents(events);
+    expect(events.length).toEqual(5);
+    expect(events[0]).toEqual(event1);
+    expect(events[1]).toEqual(event2);
+    expect(events[2]).toEqual(event4);
+    expect(events[3]).toEqual(event3);
+    expect(events[4]).toEqual(event5);
+  });
+}
+
+function isStepEnteredEvent_WithNodeExitedEvent_ShouldReturnFalse() {
+  it('isStepEnteredEvent with node exited event should return false', () => {
+    const event = { event: 'nodeExited', nodeId: 'node1' };
+    expect(exportVisitsController.isStepEnteredEvent(event)).toEqual(false);
+  });
+}
+
+function isStepEnteredEvent_WithGroupNode_ShouldReturnFalse() {
+  it('isStepEnteredEvent with group node should return false', () => {
+    const event = { event: 'nodeEntered', nodeId: 'group1' };
+    expect(exportVisitsController.isStepEnteredEvent(event)).toEqual(false);
+  });
+}
+
+function isStepEnteredEvent_WithStepNode_ShouldReturnTrue() {
+  it('isStepEnteredEvent with step node should return true', () => {
+    const event = { event: 'nodeEntered', nodeId: 'node' };
+    expect(exportVisitsController.isStepEnteredEvent(event)).toEqual(true);
+  });
+}
+
+function isStepExitedEvent_WithNodeEnteredEvent_ShouldReturnFalse() {
+  it('isStepExitedEvent with node entered event should return false', () => {
+    const event = { event: 'nodeEntered', nodeId: 'node1' };
+    expect(exportVisitsController.isStepExitedEvent(event)).toEqual(false);
+  });
+}
+
+function isStepExitedEvent_WithAGroupNode_ShouldReturnFalse() {
+  it('isStepExitedEvent with a group node should return false', () => {
+    const event = { event: 'nodeExited', nodeId: 'group1' };
+    expect(exportVisitsController.isStepExitedEvent(event)).toEqual(false);
+  });
+}
+
+function isStepExitedEvent_WithAStepNode_ShouldReturnTrue() {
+  it('isStepExitedEvent with a step node should return true', () => {
+    const event = { event: 'nodeExited', nodeId: 'node1' };
+    expect(exportVisitsController.isStepExitedEvent(event)).toEqual(true);
+  });
+}
+
+function isMatchingWorkgroupId_WithNonMatchingWorkgroupIds_ShouldReturnFalse() {
+  it('isMatchingWorkgroupId with non matching workgroup ids should return false', () => {
+    const event1 = { event: 'nodeEntered', workgroupId: 100 };
+    const event2 = { event: 'nodeEntered', workgroupId: 101 };
+    expect(exportVisitsController.isMatchingWorkgroupId(event1, event2)).toEqual(false);
+  });
+}
+
+function isMatchingWorkgroupId_WithMatchingWorkgroupIds_ShouldReturnTrue() {
+  it('isMatchingWorkgroupId with matching workgroup ids should return true', () => {
+    const event1 = { event: 'nodeEntered', workgroupId: 100 };
+    const event2 = { event: 'nodeEntered', workgroupId: 100 };
+    expect(exportVisitsController.isMatchingWorkgroupId(event1, event2)).toEqual(true);
+  });
+}
+
+function isMatchingNodeId_WithNonMatchingNodeIds_ShouldReturnFalse() {
+  it('isMatchingNodeId with non matching node ids should return false', () => {
+    const event1 = { event: 'nodeEntered', nodeId: 'node1' };
+    const event2 = { event: 'nodeEntered', nodeId: 'node2' };
+    expect(exportVisitsController.isMatchingNodeId(event1, event2)).toEqual(false);
+  });
+}
+
+function isMatchingNodeId_WithMatchingNodeIds_ShouldReturnTrue() {
+  it('isMatchingNodeI with matching node ids should return true', () => {
+    const event1 = { event: 'nodeEntered', nodeId: 'node1' };
+    const event2 = { event: 'nodeEntered', nodeId: 'node1' };
+    expect(exportVisitsController.isMatchingNodeId(event1, event2)).toEqual(true);
+  });
+}
+
+function createVisit_WithEnterAndExitEvent_ShouldCreateAVisit() {
+  it('createVisit with enter and exit events should create visit', () => {
+    const userInfo = {
+      users: [{ id: 100, name: 'Spongebob Squarepants' }]
+    };
+    spyOn(ConfigService, 'getUserInfoByWorkgroupId').and.returnValue(userInfo);
+    const enterEvent = createEvent('nodeEntered', 'node1', 100, 10000);
+    const exitEvent = createEvent('nodeExited', 'node1', 100, 30000);
+    const previousVisits = [
+      createRow('node1', '1.1: HTML Step'),
+      createRow('node2', '1.2: Open Response Step'),
+      createRow('node3', '1.3: Graph Step')
+    ];
+    exportVisitsController.incrementVisitCounter(100, 'node1');
+    const visit = exportVisitsController.createVisit(enterEvent, exitEvent, previousVisits);
+    expect(visit[exportVisitsController.getColumnNumber('#')]).toEqual(1);
+    expect(visit[exportVisitsController.getColumnNumber('Node ID')]).toEqual('node1');
+    expect(visit[exportVisitsController.getColumnNumber('Step Title')]).toEqual('1.1: HTML Step');
+    expect(visit[exportVisitsController.getColumnNumber('Visit Duration (Seconds)')]).toEqual(20);
+    expect(visit[exportVisitsController.getColumnNumber('Visit Counter')]).toEqual(2);
+    expect(visit[exportVisitsController.getColumnNumber('Revisit Counter')]).toEqual(1);
+    expect(visit[exportVisitsController.getColumnNumber('Previous Node ID')]).toEqual('node3');
+    expect(visit[exportVisitsController.getColumnNumber('Previous Step Title')]).toEqual(
+      '1.3: Graph Step'
+    );
+    expect(visit[exportVisitsController.getColumnNumber('Steps Since Last Visit')]).toEqual(
+      '1.2, 1.3'
+    );
+  });
+}
+
+function createVisit_WithNoPreviousVisits_ShouldCreateAVisit() {
+  it('createVisit with enter and exit events should create visit', () => {
+    const userInfo = { users: [{ id: 100, name: 'Spongebob Squarepants' }] };
+    spyOn(ConfigService, 'getUserInfoByWorkgroupId').and.returnValue(userInfo);
+    const enterEvent = createEvent('nodeEntered', 'node1', 100, 10000);
+    const exitEvent = createEvent('nodeExited', 'node1', 100, 30000);
+    const previousVisits = [];
+    const visit = exportVisitsController.createVisit(enterEvent, exitEvent, previousVisits);
+    expect(visit[exportVisitsController.getColumnNumber('#')]).toEqual(1);
+    expect(visit[exportVisitsController.getColumnNumber('Node ID')]).toEqual('node1');
+    expect(visit[exportVisitsController.getColumnNumber('Step Title')]).toEqual('1.1: HTML Step');
+    expect(visit[exportVisitsController.getColumnNumber('Visit Duration (Seconds)')]).toEqual(20);
+    expect(visit[exportVisitsController.getColumnNumber('Visit Counter')]).toEqual(1);
+    expect(visit[exportVisitsController.getColumnNumber('Revisit Counter')]).toEqual(0);
+    expect(visit[exportVisitsController.getColumnNumber('Previous Node ID')]).toBeUndefined();
+    expect(visit[exportVisitsController.getColumnNumber('Previous Step Title')]).toBeUndefined();
+    expect(visit[exportVisitsController.getColumnNumber('Steps Since Last Visit')]).toBeUndefined();
+  });
+}
+
+function createVisit_WithOnlyEnterEvent_ShouldCreateAVisit() {
+  it('createVisit with enter and exit events should create visit', () => {
+    const userInfo = {
+      users: [{ id: 100, name: 'Spongebob Squarepants' }]
+    };
+    spyOn(ConfigService, 'getUserInfoByWorkgroupId').and.returnValue(userInfo);
+    const enterEvent = createEvent('nodeEntered', 'node1', 100, 10000);
+    const exitEvent = null;
+    const previousVisits = [
+      createRow('node1', '1.1: HTML Step'),
+      createRow('node2', '1.2: Open Response Step'),
+      createRow('node3', '1.3: Graph Step')
+    ];
+    exportVisitsController.incrementVisitCounter(100, 'node1');
+    const visit = exportVisitsController.createVisit(enterEvent, exitEvent, previousVisits);
+    expect(visit[exportVisitsController.getColumnNumber('#')]).toEqual(1);
+    expect(visit[exportVisitsController.getColumnNumber('Node ID')]).toEqual('node1');
+    expect(visit[exportVisitsController.getColumnNumber('Step Title')]).toEqual('1.1: HTML Step');
+    expect(
+      visit[exportVisitsController.getColumnNumber('Visit Duration (Seconds)')]
+    ).toBeUndefined();
+    expect(visit[exportVisitsController.getColumnNumber('Visit Counter')]).toEqual(2);
+    expect(visit[exportVisitsController.getColumnNumber('Revisit Counter')]).toEqual(1);
+    expect(visit[exportVisitsController.getColumnNumber('Previous Node ID')]).toEqual('node3');
+    expect(visit[exportVisitsController.getColumnNumber('Previous Step Title')]).toEqual(
+      '1.3: Graph Step'
+    );
+    expect(visit[exportVisitsController.getColumnNumber('Steps Since Last Visit')]).toEqual(
+      '1.2, 1.3'
+    );
+  });
+}
+
+function createRowWithEmptyCells_ShouldReturnArrayWithEmptyValues() {
+  it('createRowWithEmptyCells should return array with empty values', () => {
+    const row = exportVisitsController.createRowWithEmptyCells();
+    expect(row.length).toEqual(25);
+    expect(row[0]).toBeUndefined();
+    expect(row[1]).toBeUndefined();
+    expect(row[23]).toBeUndefined();
+    expect(row[24]).toBeUndefined();
+  });
+}
+
+function getStepsBetweenLastVisit_ShouldReturnAStringOfStepNumbers() {
+  it('getStepsBetweenLastVisit should return a string of step numbers', () => {
+    const previousVisits = [
+      createRow('node1'),
+      createRow('node2'),
+      createRow('node3'),
+      createRow('node4'),
+      createRow('node5'),
+      createRow('node1'),
+      createRow('node2'),
+      createRow('node3'),
+      createRow('node6'),
+      createRow('node7')
+    ];
+    expect(exportVisitsController.getStepsBetweenLastVisit('node3', previousVisits)).toEqual(
+      '1.6, 1.7'
+    );
+  });
+}
+
+function addUserCells_WithOneStudentNotIncludingNames_ShouldSetTheWISEID() {
+  it('addUserCells with one student should set the wise id', () => {
+    const userInfo = { users: [{ id: 100, name: 'Spongebob Squarepants' }] };
+    spyOn(ConfigService, 'getUserInfoByWorkgroupId').and.returnValue(userInfo);
+    exportVisitsController.includeStudentNames = false;
+    const row = createRow('node1');
+    exportVisitsController.addUserCells(row, 100);
+    expect(exportVisitsController.getCellInRow(row, 'WISE ID 1')).toEqual(100);
+    expect(exportVisitsController.getCellInRow(row, 'Student Name 1')).toBeUndefined();
+  });
+}
+
+function addUserCells_WithOneStudentIncludingNames_ShouldSetTheWISEIDAndStudentName() {
+  it('addUserCells with one student including names should set the wise id and student name', () => {
+    const userInfo = { users: [{ id: 1000, name: 'Spongebob Squarepants' }] };
+    spyOn(ConfigService, 'getUserInfoByWorkgroupId').and.returnValue(userInfo);
+    exportVisitsController.includeStudentNames = true;
+    const row = createRow('node1');
+    exportVisitsController.addUserCells(row, 100);
+    expect(exportVisitsController.getCellInRow(row, 'WISE ID 1')).toEqual(1000);
+    expect(exportVisitsController.getCellInRow(row, 'Student Name 1')).toEqual(
+      'Spongebob Squarepants'
+    );
+  });
+}
+
+function addUserCells_WithMultipleStudentsIncludingNames_ShouldSetTheWISEIDAndStudentNames() {
+  it('addUserCells with multiple students including names should set the wise id and student names', () => {
+    const userInfo = {
+      users: [
+        { id: 1000, name: 'Spongebob Squarepants' },
+        { id: 1001, name: 'Patrick Star' }
+      ]
+    };
+    spyOn(ConfigService, 'getUserInfoByWorkgroupId').and.returnValue(userInfo);
+    exportVisitsController.includeStudentNames = true;
+    const row = createRow('node1');
+    exportVisitsController.addUserCells(row, 100);
+    expect(exportVisitsController.getCellInRow(row, 'WISE ID 1')).toEqual(1000);
+    expect(exportVisitsController.getCellInRow(row, 'Student Name 1')).toEqual(
+      'Spongebob Squarepants'
+    );
+    expect(exportVisitsController.getCellInRow(row, 'WISE ID 2')).toEqual(1001);
+    expect(exportVisitsController.getCellInRow(row, 'Student Name 2')).toEqual('Patrick Star');
+  });
+}
+
+function getVisitDuration_ShouldGetTheTimeDifferenceBetweenEventsInSeconds() {
+  it('getVisitDuration should get the time difference between events in seconds', () => {
+    const event1 = { clientSaveTime: 1000 };
+    const event2 = { clientSaveTime: 3000 };
+    expect(exportVisitsController.getVisitDuration(event1, event2)).toEqual(2);
+  });
+}
+
+function getColumnNumber_ShouldReturnTheColumnNumber() {
+  it('getColumnNumber should return the column number', () => {
+    expect(exportVisitsController.getColumnNumber('Node ID')).toEqual(15);
+  });
+}
+
+function incrementRowCounter_ShouldIncrementRowCounterBy1() {
+  it('incrementRowCounter should increment row counter by 1', () => {
+    exportVisitsController.rowCounter = 0;
+    exportVisitsController.incrementRowCounter();
+    expect(exportVisitsController.rowCounter).toEqual(1);
+  });
+}
+
+function getStepNumberAndTitle_ShouldGetAStringContainingStepNumberAndTitle() {
+  it('getStepNumberAndTitle should get a string containing step number and title', () => {
+    expect(exportVisitsController.getStepNumberAndTitle('node1')).toEqual('1.1: HTML Step');
+  });
+}
+
+function getWorkgroupIdNodeIdKey_ShouldGetAStringContainingWorkgroupIdAndNodeId() {
+  it('getWorkgroupIdNodeIdKey should get a string containing workgroup id and node id', () => {
+    const workgroupId = 100;
+    const nodeId = 'node1';
+    expect(exportVisitsController.getWorkgroupIdNodeIdKey(workgroupId, nodeId)).toEqual(
+      '100-node1'
+    );
+  });
+}
+
+function getStepNumber_ShouldGetTheStepNumberString() {
+  it('getStepNumber should get the step number string', () => {
+    expect(exportVisitsController.getStepNumber('node1')).toEqual('1.1');
+  });
+}
+
+function incrementVisitCounter_ShouldIncreaseTheCounterBy1() {
+  it('incrementVisitCounter should increase the counter by 1', () => {
+    const workgroupId = 100;
+    const nodeId = 'node1';
+    const key = exportVisitsController.getWorkgroupIdNodeIdKey(workgroupId, nodeId);
+    exportVisitsController.workgroupIdNodeIdToVisitCounter[key] = 0;
+    exportVisitsController.incrementVisitCounter(workgroupId, nodeId);
+    expect(exportVisitsController.workgroupIdNodeIdToVisitCounter[key]).toEqual(1);
+  });
+}
+
+function getVisitCounter_ShouldGetTheVisitCount() {
+  it('getVisitCounter should get the visit count', () => {
+    const workgroupId = 100;
+    const nodeId = 'node1';
+    const key = exportVisitsController.getWorkgroupIdNodeIdKey(workgroupId, nodeId);
+    exportVisitsController.workgroupIdNodeIdToVisitCounter[key] = 2;
+    expect(exportVisitsController.getVisitCounter(workgroupId, nodeId)).toEqual(2);
+  });
+}
+
+function getRevisitCounter_ShouldGetTheRevisitCount() {
+  it('getRevisitCounter should get the revisit count', () => {
+    const workgroupId = 100;
+    const nodeId = 'node1';
+    const key = exportVisitsController.getWorkgroupIdNodeIdKey(workgroupId, nodeId);
+    exportVisitsController.workgroupIdNodeIdToVisitCounter[key] = 2;
+    expect(exportVisitsController.getRevisitCounter(workgroupId, nodeId)).toEqual(1);
+  });
+}
+
+function setCellInRow_ShouldSetTheValueInTheCell() {
+  it('setCellInRow should set the value in the cell', () => {
+    const row = createRow('node1');
+    exportVisitsController.setCellInRow(row, 'Workgroup ID', 100);
+    expect(row[1]).toEqual(100);
+  });
+}
+
+function getCellInRow_ShouldGetTheValueInTheCell() {
+  it('getCellInRow should get the value in the cell', () => {
+    const row = createRow('node1');
+    expect(exportVisitsController.getCellInRow(row, 'Node ID')).toEqual('node1');
+  });
+}

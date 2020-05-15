@@ -44,6 +44,8 @@
                 <md-button class="md-raised" ng-click="dataExportController.showExportComponentDataPage()" translate="exportComponentData" id="downloadComponentDataButton" aria-label="{{ ::'exportComponentData' | translate }}"></md-button>
                 <br/>
                 <md-button class="md-raised" ng-click="dataExportController.rawDataExportClicked()" translate="exportRawData" id="downloadRawDataButton" aria-label="{{ ::'exportRawData' | translate }}"></md-button>
+                <br/>
+                <md-button class="md-raised" ng-click="dataExportController.exportVisitsClicked()" translate="exportStepVisitEvents" id="exportVisitsDataButton" aria-label="{{ ::'exportVisits' | translate }}"></md-button>
             </div>
             <div ng-if="dataExportController.exportType == 'latestStudentWork' || dataExportController.exportType == 'allStudentWork' || dataExportController.exportType == 'events' || dataExportController.exportType == 'oneWorkgroupPerRow' || dataExportController.exportType == 'rawData' ">
                 <h4>{{ dataExportController.exportType | translate }}</h4>
