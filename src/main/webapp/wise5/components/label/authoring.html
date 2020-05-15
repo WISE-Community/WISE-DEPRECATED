@@ -484,55 +484,12 @@
     <div>
       <h5>{{ ::'studentPreview' | translate }}</h5>
     </div>
-    <div ng-switch='::labelController.mode'>
-      <div ng-switch-when='grading|gradingRevision'
-           ng-switch-when-separator='|'
-           layout='row'
-           layout-wrap>
-        <div flex='100'
-             flex-gt-sm='66'
-             layout='column'
-             class='component--grading__response'>
-          <div class='component--grading__response__content'>
-            <div id='canvasParent_{{labelController.canvasId}}'
-                 ng-if='labelController.$scope.componentState'>
-              <canvas id='{{labelController.canvasId}}'
-                      width='800'
-                      height='600'
-                      style='border:1px solid black;'>
-              </canvas>
-            </div>
-          </div>
-          <span flex></span>
-          <component-revisions-info node-id='labelController.nodeId'
-                                    component-id='labelController.componentId'
-                                    to-workgroup-id='workgroupId'
-                                    component-state='componentState'
-                                    active='labelController.mode === "grading"'>
-          </component-revisions-info>
-        </div>
-        <div flex='100'
-             flex-gt-sm='33'
-             class='component--grading__annotations'>
-          <component-grading node-id='labelController.nodeId'
-                             component-id='labelController.componentId'
-                             max-score='labelController.componentContent.maxScore'
-                             from-workgroup-id='teacherWorkgroupId'
-                             to-workgroup-id='workgroupId'
-                             component-state-id='componentState.id'
-                             show-all-annotations='labelController.mode !== "grading"'
-                             is-disabled='labelController.mode !== "grading"'>
-          </component-grading>
-        </div>
-      </div>
-      <div ng-switch-default>
+    <div>
+      <div>
         <div class='component__prompt'>
           <div class='component__prompt__content'>
             <compile data='labelController.getPrompt()'></compile>
           </div>
-          <possible-score max-score='labelController.componentContent.maxScore'
-                          ng-if='labelController.mode === "student" && !labelController.latestAnnotations.score'>
-          </possible-score>
         </div>
         <div class='input-wrapper' style='display: flex; align-items: center; width: 800px;'>
           <md-button class='studentButton md-raised md-primary'
@@ -660,9 +617,6 @@
               </span>
             </span>
         </div>
-        <component-annotations annotations='labelController.latestAnnotations'
-                               max-score='labelController.componentContent.maxScore'>
-        </component-annotations>
       </div>
     </div>
   </div>
