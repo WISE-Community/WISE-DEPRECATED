@@ -36,6 +36,7 @@ class SessionService {
   }
 
   goHome() {
+    this.$rootScope.$broadcast('exit');
     this.$location.url(this.ConfigService.getConfigParam('userType'));
   }
 
