@@ -1,0 +1,231 @@
+[
+    {
+      "id": "node1",
+      "type": "node",
+      "title": "First Step (everyone)",
+      "components": [],
+      "constraints": [],
+      "showSaveButton": false,
+      "showSubmitButton": false,
+      "transitionLogic": {
+        "transitions": [
+          {
+            "to": "node2"
+          },
+          {
+            "to": "node3"
+          },
+          {
+            "to": "node4"
+          },
+          {
+            "to": "node5"
+          }
+        ],
+        "howToChooseAmongAvailablePaths": "workgroupId",
+        "whenToChoosePath": "enterNode",
+        "canChangePath": false,
+        "maxPathsVisitable": 1
+      }
+    },
+    {
+      "id": "node2",
+      "title": "Group 1 Step 1",
+      "type": "node",
+      "constraints": [
+        {
+          "id": "node2Constraint1",
+          "action": "makeThisNodeNotVisible",
+          "targetId": "node2",
+          "removalConditional": "all",
+          "removalCriteria": [
+            {
+              "name": "branchPathTaken",
+              "params": {
+                "fromNodeId": "node1",
+                "toNodeId": "node2"
+              }
+            }
+          ]
+        },
+        {
+          "id": "node2Constraint2",
+          "action": "makeThisNodeNotVisitable",
+          "targetId": "node2",
+          "removalConditional": "all",
+          "removalCriteria": [
+            {
+              "name": "branchPathTaken",
+              "params": {
+                "fromNodeId": "node1",
+                "toNodeId": "node2"
+              }
+            }
+          ]
+        }
+      ],
+      "transitionLogic": {
+        "transitions": [
+          {
+            "to": "node6"
+          }
+        ]
+      },
+      "showSaveButton": false,
+      "showSubmitButton": false,
+      "components": []
+    },
+    {
+      "id": "node3",
+      "title": "Group 2 Step 1",
+      "type": "node",
+      "constraints": [
+        {
+          "id": "node3Constraint1",
+          "action": "makeThisNodeNotVisible",
+          "targetId": "node3",
+          "removalConditional": "all",
+          "removalCriteria": [
+            {
+              "name": "branchPathTaken",
+              "params": {
+                "fromNodeId": "node1",
+                "toNodeId": "node3"
+              }
+            }
+          ]
+        },
+        {
+          "id": "node3Constraint2",
+          "action": "makeThisNodeNotVisitable",
+          "targetId": "node3",
+          "removalConditional": "all",
+          "removalCriteria": [
+            {
+              "name": "branchPathTaken",
+              "params": {
+                "fromNodeId": "node1",
+                "toNodeId": "node3"
+              }
+            }
+          ]
+        }
+      ],
+      "transitionLogic": {
+        "transitions": [
+          {
+            "to": "node6"
+          }
+        ]
+      },
+      "showSaveButton": false,
+      "showSubmitButton": false,
+      "components": []
+    },
+    {
+      "id": "node4",
+      "title": "Group 3 Step 1",
+      "type": "node",
+      "constraints": [
+        {
+          "id": "node4Constraint1",
+          "action": "makeThisNodeNotVisible",
+          "targetId": "node4",
+          "removalConditional": "all",
+          "removalCriteria": [
+            {
+              "name": "branchPathTaken",
+              "params": {
+                "fromNodeId": "node1",
+                "toNodeId": "node4"
+              }
+            }
+          ]
+        },
+        {
+          "id": "node4Constraint2",
+          "action": "makeThisNodeNotVisitable",
+          "targetId": "node4",
+          "removalConditional": "all",
+          "removalCriteria": [
+            {
+              "name": "branchPathTaken",
+              "params": {
+                "fromNodeId": "node1",
+                "toNodeId": "node4"
+              }
+            }
+          ]
+        }
+      ],
+      "transitionLogic": {
+        "transitions": [
+          {
+            "to": "node6"
+          }
+        ]
+      },
+      "showSaveButton": false,
+      "showSubmitButton": false,
+      "components": []
+    },
+    {
+      "id": "node5",
+      "title": "Group 4 Step 1",
+      "type": "node",
+      "constraints": [
+        {
+          "id": "node5Constraint1",
+          "action": "makeThisNodeNotVisible",
+          "targetId": "node5",
+          "removalConditional": "all",
+          "removalCriteria": [
+            {
+              "name": "branchPathTaken",
+              "params": {
+                "fromNodeId": "node1",
+                "toNodeId": "node5"
+              }
+            }
+          ]
+        },
+        {
+          "id": "node5Constraint2",
+          "action": "makeThisNodeNotVisitable",
+          "targetId": "node5",
+          "removalConditional": "all",
+          "removalCriteria": [
+            {
+              "name": "branchPathTaken",
+              "params": {
+                "fromNodeId": "node1",
+                "toNodeId": "node5"
+              }
+            }
+          ]
+        }
+      ],
+      "transitionLogic": {
+        "transitions": [
+          {
+            "to": "node6"
+          }
+        ]
+      },
+      "showSaveButton": false,
+      "showSubmitButton": false,
+      "components": []
+    },
+    {
+      "id": "node6",
+      "title": "Synthesis Step (everyone)",
+      "type": "node",
+      "constraints": [],
+      "transitionLogic": {
+        "transitions": []
+      },
+      "showSaveButton": false,
+      "showSubmitButton": false,
+      "components": []
+    }
+  ]

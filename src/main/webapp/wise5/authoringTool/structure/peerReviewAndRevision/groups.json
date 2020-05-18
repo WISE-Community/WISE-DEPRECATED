@@ -1,0 +1,11 @@
+{
+    "id": "group4",
+    "type": "group",
+    "title": "Peer Review & Revision",
+    "startId": "node1",
+    "constraints": [],
+    "transitionLogic": {
+      "transitions": []
+    },
+    "ids": ["node1", "node2", "node3", "node4"]
+  }
