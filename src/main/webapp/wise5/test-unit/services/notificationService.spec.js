@@ -26,7 +26,7 @@ describe('NotificationService', () => {
   describe('retrieveNotifications', () => {
     retrieveNotifications_Teacher_ShouldReturnAndSetNotificaitons();
     function retrieveNotifications_Teacher_ShouldReturnAndSetNotificaitons() {
-      it('retrieve and set student statuses for current run', () => {
+      it('retrieve and set notifications for current run', () => {
         const currentRunId = 1;
         const retrieveNotificationsURL = `/notifications/${currentRunId}`;
         spyOn(ConfigService, 'getNotificationURL').and.returnValue(retrieveNotificationsURL);
