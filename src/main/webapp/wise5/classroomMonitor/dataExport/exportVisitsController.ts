@@ -317,7 +317,7 @@ class ExportVisitsController extends ExportController {
     for (let v = previousVisits.length - 1; v > 0; v--) {
       const previousVisit = previousVisits[v];
       const previousNodeId = this.getCellInRow(previousVisit, 'Node ID');
-      if (nodeId === previousNodeId) {
+      if (previousNodeId === nodeId) {
         break;
       } else {
         steps.unshift(this.getStepNumber(previousNodeId));
@@ -328,23 +328,15 @@ class ExportVisitsController extends ExportController {
 
   addUserCells(row: any[], workgroupId: number) {
     const userInfo = this.ConfigService.getUserInfoByWorkgroupId(workgroupId);
-    if (userInfo.users[0] != null) {
-      this.setCellInRow(row, 'WISE ID 1', userInfo.users[0].id);
-      if (this.includeStudentNames) {
-        this.setCellInRow(row, 'Student Name 1', userInfo.users[0].name);
-      }
+    for (let u = 0; u < userInfo.users.length; u++) {
+      this.addSingleUserCells(row, u + 1, userInfo.users[u]);
     }
-    if (userInfo.users[1] != null) {
-      this.setCellInRow(row, 'WISE ID 2', userInfo.users[1].id);
-      if (this.includeStudentNames) {
-        this.setCellInRow(row, 'Student Name 2', userInfo.users[1].name);
-      }
-    }
-    if (userInfo.users[2] != null) {
-      this.setCellInRow(row, 'WISE ID 3', userInfo.users[2].id);
-      if (this.includeStudentNames) {
-        this.setCellInRow(row, 'Student Name 3', userInfo.users[2].name);
-      }
+  }
+
+  addSingleUserCells(row: any[], studentNumber: number, user: any) {
+    this.setCellInRow(row, `WISE ID ${studentNumber}`, user.id);
+    if (this.includeStudentNames) {
+      this.setCellInRow(row, `Student Name ${studentNumber}`, user.name);
     }
   }
 

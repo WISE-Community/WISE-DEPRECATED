@@ -2,6 +2,7 @@
 
 class ExportController {
   $translate: any;
+  maxExcelCellSize: number = 32767;
 
   static $inject = ['$filter', 'FileSaver'];
 
@@ -52,10 +53,6 @@ class ExportController {
       csvString = cell;
     }
     if (this.isStringTooLarge(csvString)) {
-      /*
-       * the cell value is larger than the allowable excel cell size so we will display the
-       * string "Data Too Large" instead
-       */
       csvString = 'Data Too Large';
     }
     return csvString;
@@ -78,7 +75,7 @@ class ExportController {
   }
 
   isStringTooLarge(str: string) {
-    return str.length >= 32767;
+    return str.length >= this.maxExcelCellSize;
   }
 }
 

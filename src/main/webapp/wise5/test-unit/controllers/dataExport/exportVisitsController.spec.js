@@ -144,18 +144,35 @@ function createEvent(type, nodeId, workgroupId, clientSaveTime) {
   };
 }
 
+function expectIdsToCheckedToEqualValue(ids, value) {
+  for (const id of ids) {
+    expect(exportVisitsController.idToChecked[id]).toEqual(value);
+  }
+}
+
+function expectVisitCountersToEqualValue(keys, value) {
+  for (const key of keys) {
+    expect(exportVisitsController.workgroupIdNodeIdToVisitCounter[key]).toEqual(value);
+  }
+}
+
+function getColumnNameToNumberValue(columnName) {
+  return exportVisitsController.columnNameToColumnNumber[columnName];
+}
+
+function createResolvedPromise() {
+  const deferred = $q.defer();
+  deferred.resolve({});
+  return deferred.promise;
+}
+
 function initializeIdToChecked_ShouldSetMappingsToFalse() {
   it('initializeIdToChecked should set mappings to false', () => {
     exportVisitsController.initializeIdToChecked(exportVisitsController.nodes);
-    expect(exportVisitsController.idToChecked['group0']).toEqual(true);
-    expect(exportVisitsController.idToChecked['group1']).toEqual(true);
-    expect(exportVisitsController.idToChecked['node1']).toEqual(true);
-    expect(exportVisitsController.idToChecked['node2']).toEqual(true);
-    expect(exportVisitsController.idToChecked['node3']).toEqual(true);
-    expect(exportVisitsController.idToChecked['node4']).toEqual(true);
-    expect(exportVisitsController.idToChecked['node5']).toEqual(true);
-    expect(exportVisitsController.idToChecked['node6']).toEqual(true);
-    expect(exportVisitsController.idToChecked['node7']).toEqual(true);
+    expectIdsToCheckedToEqualValue(
+      ['group0', 'group1', 'node1', 'node2', 'node3', 'node4', 'node5', 'node6', 'node7'],
+      true
+    );
   });
 }
 
@@ -203,24 +220,29 @@ function initializeIdToNode_ShouldSetMappings() {
 function initializeIdToVisitCounter_ShouldSetCounters() {
   it('initializeIdToVisitCounter should set counters', () => {
     exportVisitsController.initializeIdToVisitCounter(exportVisitsController.nodes);
-    expect(exportVisitsController.workgroupIdNodeIdToVisitCounter['100-group0']).toEqual(0);
-    expect(exportVisitsController.workgroupIdNodeIdToVisitCounter['100-group1']).toEqual(0);
-    expect(exportVisitsController.workgroupIdNodeIdToVisitCounter['100-node1']).toEqual(0);
-    expect(exportVisitsController.workgroupIdNodeIdToVisitCounter['100-node2']).toEqual(0);
-    expect(exportVisitsController.workgroupIdNodeIdToVisitCounter['100-node3']).toEqual(0);
-    expect(exportVisitsController.workgroupIdNodeIdToVisitCounter['100-node4']).toEqual(0);
-    expect(exportVisitsController.workgroupIdNodeIdToVisitCounter['100-node5']).toEqual(0);
-    expect(exportVisitsController.workgroupIdNodeIdToVisitCounter['100-node6']).toEqual(0);
-    expect(exportVisitsController.workgroupIdNodeIdToVisitCounter['100-node7']).toEqual(0);
-    expect(exportVisitsController.workgroupIdNodeIdToVisitCounter['101-group0']).toEqual(0);
-    expect(exportVisitsController.workgroupIdNodeIdToVisitCounter['101-group1']).toEqual(0);
-    expect(exportVisitsController.workgroupIdNodeIdToVisitCounter['101-node1']).toEqual(0);
-    expect(exportVisitsController.workgroupIdNodeIdToVisitCounter['101-node2']).toEqual(0);
-    expect(exportVisitsController.workgroupIdNodeIdToVisitCounter['101-node3']).toEqual(0);
-    expect(exportVisitsController.workgroupIdNodeIdToVisitCounter['101-node4']).toEqual(0);
-    expect(exportVisitsController.workgroupIdNodeIdToVisitCounter['101-node5']).toEqual(0);
-    expect(exportVisitsController.workgroupIdNodeIdToVisitCounter['101-node6']).toEqual(0);
-    expect(exportVisitsController.workgroupIdNodeIdToVisitCounter['101-node7']).toEqual(0);
+    expectVisitCountersToEqualValue(
+      [
+        '100-group0',
+        '100-group1',
+        '100-node1',
+        '100-node2',
+        '100-node3',
+        '100-node4',
+        '100-node5',
+        '100-node6',
+        '100-node7',
+        '101-group0',
+        '101-group1',
+        '101-node1',
+        '101-node2',
+        '101-node3',
+        '101-node4',
+        '101-node5',
+        '101-node6',
+        '101-node7'
+      ],
+      0
+    );
   });
 }
 
@@ -258,46 +280,51 @@ function getHeaderRow_ShouldGetArrayOfColumnNames() {
 function initializeColumnNameToColumnNumber_ShouldSetMappings() {
   it('initializeColumnNameToColumnNumber should set mappings', () => {
     exportVisitsController.initializeColumnNameToColumnNumber();
-    expect(exportVisitsController.columnNameToColumnNumber['#']).toEqual(0);
-    expect(exportVisitsController.columnNameToColumnNumber['Workgroup ID']).toEqual(1);
-    expect(exportVisitsController.columnNameToColumnNumber['WISE ID 1']).toEqual(2);
-    expect(exportVisitsController.columnNameToColumnNumber['Student Name 1']).toEqual(3);
-    expect(exportVisitsController.columnNameToColumnNumber['WISE ID 2']).toEqual(4);
-    expect(exportVisitsController.columnNameToColumnNumber['Student Name 2']).toEqual(5);
-    expect(exportVisitsController.columnNameToColumnNumber['WISE ID 3']).toEqual(6);
-    expect(exportVisitsController.columnNameToColumnNumber['Student Name 3']).toEqual(7);
-    expect(exportVisitsController.columnNameToColumnNumber['Run ID']).toEqual(8);
-    expect(exportVisitsController.columnNameToColumnNumber['Project ID']).toEqual(9);
+    expect(getColumnNameToNumberValue('#')).toEqual(0);
+    expect(getColumnNameToNumberValue('Workgroup ID')).toEqual(1);
+    expect(getColumnNameToNumberValue('WISE ID 1')).toEqual(2);
+    expect(getColumnNameToNumberValue('Student Name 1')).toEqual(3);
+    expect(getColumnNameToNumberValue('WISE ID 2')).toEqual(4);
+    expect(getColumnNameToNumberValue('Student Name 2')).toEqual(5);
+    expect(getColumnNameToNumberValue('WISE ID 3')).toEqual(6);
+    expect(getColumnNameToNumberValue('Student Name 3')).toEqual(7);
+    expect(getColumnNameToNumberValue('Run ID')).toEqual(8);
+    expect(getColumnNameToNumberValue('Project ID')).toEqual(9);
+    expect(getColumnNameToNumberValue('Project Name')).toEqual(10);
+    expect(getColumnNameToNumberValue('Period ID')).toEqual(11);
+    expect(getColumnNameToNumberValue('Period Name')).toEqual(12);
+    expect(getColumnNameToNumberValue('Start Date')).toEqual(13);
+    expect(getColumnNameToNumberValue('End Date')).toEqual(14);
+    expect(getColumnNameToNumberValue('Node ID')).toEqual(15);
+    expect(getColumnNameToNumberValue('Step Title')).toEqual(16);
+    expect(getColumnNameToNumberValue('Enter Time')).toEqual(17);
+    expect(getColumnNameToNumberValue('Exit Time')).toEqual(18);
+    expect(getColumnNameToNumberValue('Visit Duration (Seconds)')).toEqual(19);
+    expect(getColumnNameToNumberValue('Visit Counter')).toEqual(20);
+    expect(getColumnNameToNumberValue('Revisit Counter')).toEqual(21);
+    expect(getColumnNameToNumberValue('Previous Node ID')).toEqual(22);
+    expect(getColumnNameToNumberValue('Previous Step Title')).toEqual(23);
+    expect(getColumnNameToNumberValue('Steps Since Last Visit')).toEqual(24);
   });
 }
 
 function selectAll_ShouldSetAllCheckedToTrue() {
   it('selectAll should set all checked to true', () => {
     exportVisitsController.selectAll();
-    expect(exportVisitsController.idToChecked['group0']).toEqual(true);
-    expect(exportVisitsController.idToChecked['group1']).toEqual(true);
-    expect(exportVisitsController.idToChecked['node1']).toEqual(true);
-    expect(exportVisitsController.idToChecked['node2']).toEqual(true);
-    expect(exportVisitsController.idToChecked['node3']).toEqual(true);
-    expect(exportVisitsController.idToChecked['node4']).toEqual(true);
-    expect(exportVisitsController.idToChecked['node5']).toEqual(true);
-    expect(exportVisitsController.idToChecked['node6']).toEqual(true);
-    expect(exportVisitsController.idToChecked['node7']).toEqual(true);
+    expectIdsToCheckedToEqualValue(
+      ['group0', 'group1', 'node1', 'node2', 'node3', 'node4', 'node5', 'node6', 'node7'],
+      true
+    );
   });
 }
 
 function selectAll_ShouldSetAllCheckedToFalse() {
   it('selectAll should set all checked to false', () => {
     exportVisitsController.deselectAll();
-    expect(exportVisitsController.idToChecked['group0']).toEqual(false);
-    expect(exportVisitsController.idToChecked['group1']).toEqual(false);
-    expect(exportVisitsController.idToChecked['node1']).toEqual(false);
-    expect(exportVisitsController.idToChecked['node2']).toEqual(false);
-    expect(exportVisitsController.idToChecked['node3']).toEqual(false);
-    expect(exportVisitsController.idToChecked['node4']).toEqual(false);
-    expect(exportVisitsController.idToChecked['node5']).toEqual(false);
-    expect(exportVisitsController.idToChecked['node6']).toEqual(false);
-    expect(exportVisitsController.idToChecked['node7']).toEqual(false);
+    expectIdsToCheckedToEqualValue(
+      ['group0', 'group1', 'node1', 'node2', 'node3', 'node4', 'node5', 'node6', 'node7'],
+      false
+    );
   });
 }
 
@@ -307,14 +334,10 @@ function nodeChecked_WhenSettingAGroupToTrue_ShouldSetAllChildrenToTrue() {
     exportVisitsController.idToChecked['group1'] = true;
     exportVisitsController.nodeChecked(exportVisitsController.idToNode['group1'].node);
     expect(exportVisitsController.idToChecked['group0']).toEqual(false);
-    expect(exportVisitsController.idToChecked['group1']).toEqual(true);
-    expect(exportVisitsController.idToChecked['node1']).toEqual(true);
-    expect(exportVisitsController.idToChecked['node2']).toEqual(true);
-    expect(exportVisitsController.idToChecked['node3']).toEqual(true);
-    expect(exportVisitsController.idToChecked['node4']).toEqual(true);
-    expect(exportVisitsController.idToChecked['node5']).toEqual(true);
-    expect(exportVisitsController.idToChecked['node6']).toEqual(true);
-    expect(exportVisitsController.idToChecked['node7']).toEqual(true);
+    expectIdsToCheckedToEqualValue(
+      ['group1', 'node1', 'node2', 'node3', 'node4', 'node5', 'node6', 'node7'],
+      true
+    );
   });
 }
 
@@ -326,15 +349,10 @@ function nodeChecked_WhenSettingAGroupToFalse_ShouldSetAllChildrenToFalse() {
     exportVisitsController.idToChecked['node3'] = true;
     exportVisitsController.idToChecked['group1'] = false;
     exportVisitsController.nodeChecked(exportVisitsController.idToNode['group1'].node);
-    expect(exportVisitsController.idToChecked['group0']).toEqual(false);
-    expect(exportVisitsController.idToChecked['group1']).toEqual(false);
-    expect(exportVisitsController.idToChecked['node1']).toEqual(false);
-    expect(exportVisitsController.idToChecked['node2']).toEqual(false);
-    expect(exportVisitsController.idToChecked['node3']).toEqual(false);
-    expect(exportVisitsController.idToChecked['node4']).toEqual(false);
-    expect(exportVisitsController.idToChecked['node5']).toEqual(false);
-    expect(exportVisitsController.idToChecked['node6']).toEqual(false);
-    expect(exportVisitsController.idToChecked['node7']).toEqual(false);
+    expectIdsToCheckedToEqualValue(
+      ['group0', 'group1', 'node1', 'node2', 'node3', 'node4', 'node5', 'node6', 'node7'],
+      false
+    );
   });
 }
 
@@ -355,9 +373,7 @@ function getCheckedItems_ShouldGetAnArrayOfIds() {
 function export_ShouldRetrieveEvents() {
   it('export should retrieve events', () => {
     spyOn(TeacherDataService, 'retrieveEventsExport').and.callFake(() => {
-      const deferred = $q.defer();
-      deferred.resolve({});
-      return deferred.promise;
+      return createResolvedPromise();
     });
     exportVisitsController.export();
     const includeStudentEvents = true;
@@ -373,9 +389,7 @@ function export_ShouldRetrieveEvents() {
 function export_WhileIncludingStudentNames_ShouldRetrieveEventsWithStudentNames() {
   it('export should retrieve events', () => {
     spyOn(TeacherDataService, 'retrieveEventsExport').and.callFake(() => {
-      const deferred = $q.defer();
-      deferred.resolve({});
-      return deferred.promise;
+      return createResolvedPromise();
     });
     exportVisitsController.includeStudentNames = true;
     exportVisitsController.export();
@@ -471,11 +485,11 @@ function filterRows_ShouldTakeOutRowsThatAreNotSelected() {
 
 function sortEvents_ShouldOrderEventsByWorkgroupIdAndClientSaveTime() {
   it('sortEvents should order events by workgroup id and client save time', () => {
-    const event1 = { workgroupId: 100, clientSaveTime: 1000 };
-    const event2 = { workgroupId: 100, clientSaveTime: 2000 };
-    const event3 = { workgroupId: 101, clientSaveTime: 4000 };
-    const event4 = { workgroupId: 100, clientSaveTime: 3000 };
-    const event5 = { workgroupId: 101, clientSaveTime: 5000 };
+    const event1 = createEvent(null, null, 100, 1000);
+    const event2 = createEvent(null, null, 100, 2000);
+    const event3 = createEvent(null, null, 101, 4000);
+    const event4 = createEvent(null, null, 100, 3000);
+    const event5 = createEvent(null, null, 101, 5000);
     let events = [event1, event2, event3, event4, event5];
     events = exportVisitsController.sortEvents(events);
     expect(events.length).toEqual(5);
@@ -489,74 +503,74 @@ function sortEvents_ShouldOrderEventsByWorkgroupIdAndClientSaveTime() {
 
 function isStepEnteredEvent_WithNodeExitedEvent_ShouldReturnFalse() {
   it('isStepEnteredEvent with node exited event should return false', () => {
-    const event = { event: 'nodeExited', nodeId: 'node1' };
+    const event = createEvent('nodeExited', 'node1');
     expect(exportVisitsController.isStepEnteredEvent(event)).toEqual(false);
   });
 }
 
 function isStepEnteredEvent_WithGroupNode_ShouldReturnFalse() {
   it('isStepEnteredEvent with group node should return false', () => {
-    const event = { event: 'nodeEntered', nodeId: 'group1' };
+    const event = createEvent('nodeEntered', 'group1');
     expect(exportVisitsController.isStepEnteredEvent(event)).toEqual(false);
   });
 }
 
 function isStepEnteredEvent_WithStepNode_ShouldReturnTrue() {
   it('isStepEnteredEvent with step node should return true', () => {
-    const event = { event: 'nodeEntered', nodeId: 'node' };
+    const event = createEvent('nodeEntered', 'node1');
     expect(exportVisitsController.isStepEnteredEvent(event)).toEqual(true);
   });
 }
 
 function isStepExitedEvent_WithNodeEnteredEvent_ShouldReturnFalse() {
   it('isStepExitedEvent with node entered event should return false', () => {
-    const event = { event: 'nodeEntered', nodeId: 'node1' };
+    const event = createEvent('nodeEntered', 'node1');
     expect(exportVisitsController.isStepExitedEvent(event)).toEqual(false);
   });
 }
 
 function isStepExitedEvent_WithAGroupNode_ShouldReturnFalse() {
   it('isStepExitedEvent with a group node should return false', () => {
-    const event = { event: 'nodeExited', nodeId: 'group1' };
+    const event = createEvent('nodeExited', 'group1');
     expect(exportVisitsController.isStepExitedEvent(event)).toEqual(false);
   });
 }
 
 function isStepExitedEvent_WithAStepNode_ShouldReturnTrue() {
   it('isStepExitedEvent with a step node should return true', () => {
-    const event = { event: 'nodeExited', nodeId: 'node1' };
+    const event = createEvent('nodeExited', 'node1');
     expect(exportVisitsController.isStepExitedEvent(event)).toEqual(true);
   });
 }
 
 function isMatchingWorkgroupId_WithNonMatchingWorkgroupIds_ShouldReturnFalse() {
   it('isMatchingWorkgroupId with non matching workgroup ids should return false', () => {
-    const event1 = { event: 'nodeEntered', workgroupId: 100 };
-    const event2 = { event: 'nodeEntered', workgroupId: 101 };
+    const event1 = createEvent('nodeEntered', null, 100);
+    const event2 = createEvent('nodeEntered', null, 101);
     expect(exportVisitsController.isMatchingWorkgroupId(event1, event2)).toEqual(false);
   });
 }
 
 function isMatchingWorkgroupId_WithMatchingWorkgroupIds_ShouldReturnTrue() {
   it('isMatchingWorkgroupId with matching workgroup ids should return true', () => {
-    const event1 = { event: 'nodeEntered', workgroupId: 100 };
-    const event2 = { event: 'nodeEntered', workgroupId: 100 };
+    const event1 = createEvent('nodeEntered', null, 100);
+    const event2 = createEvent('nodeEntered', null, 100);
     expect(exportVisitsController.isMatchingWorkgroupId(event1, event2)).toEqual(true);
   });
 }
 
 function isMatchingNodeId_WithNonMatchingNodeIds_ShouldReturnFalse() {
   it('isMatchingNodeId with non matching node ids should return false', () => {
-    const event1 = { event: 'nodeEntered', nodeId: 'node1' };
-    const event2 = { event: 'nodeEntered', nodeId: 'node2' };
+    const event1 = createEvent('nodeEntered', 'node1');
+    const event2 = createEvent('nodeEntered', 'node2');
     expect(exportVisitsController.isMatchingNodeId(event1, event2)).toEqual(false);
   });
 }
 
 function isMatchingNodeId_WithMatchingNodeIds_ShouldReturnTrue() {
   it('isMatchingNodeI with matching node ids should return true', () => {
-    const event1 = { event: 'nodeEntered', nodeId: 'node1' };
-    const event2 = { event: 'nodeEntered', nodeId: 'node1' };
+    const event1 = createEvent('nodeEntered', 'node1');
+    const event2 = createEvent('nodeEntered', 'node1');
     expect(exportVisitsController.isMatchingNodeId(event1, event2)).toEqual(true);
   });
 }
@@ -576,17 +590,17 @@ function createVisit_WithEnterAndExitEvent_ShouldCreateAVisit() {
     ];
     exportVisitsController.incrementVisitCounter(100, 'node1');
     const visit = exportVisitsController.createVisit(enterEvent, exitEvent, previousVisits);
-    expect(visit[exportVisitsController.getColumnNumber('#')]).toEqual(1);
-    expect(visit[exportVisitsController.getColumnNumber('Node ID')]).toEqual('node1');
-    expect(visit[exportVisitsController.getColumnNumber('Step Title')]).toEqual('1.1: HTML Step');
-    expect(visit[exportVisitsController.getColumnNumber('Visit Duration (Seconds)')]).toEqual(20);
-    expect(visit[exportVisitsController.getColumnNumber('Visit Counter')]).toEqual(2);
-    expect(visit[exportVisitsController.getColumnNumber('Revisit Counter')]).toEqual(1);
-    expect(visit[exportVisitsController.getColumnNumber('Previous Node ID')]).toEqual('node3');
-    expect(visit[exportVisitsController.getColumnNumber('Previous Step Title')]).toEqual(
+    expect(exportVisitsController.getCellInRow(visit, '#')).toEqual(1);
+    expect(exportVisitsController.getCellInRow(visit, 'Node ID')).toEqual('node1');
+    expect(exportVisitsController.getCellInRow(visit, 'Step Title')).toEqual('1.1: HTML Step');
+    expect(exportVisitsController.getCellInRow(visit, 'Visit Duration (Seconds)')).toEqual(20);
+    expect(exportVisitsController.getCellInRow(visit, 'Visit Counter')).toEqual(2);
+    expect(exportVisitsController.getCellInRow(visit, 'Revisit Counter')).toEqual(1);
+    expect(exportVisitsController.getCellInRow(visit, 'Previous Node ID')).toEqual('node3');
+    expect(exportVisitsController.getCellInRow(visit, 'Previous Step Title')).toEqual(
       '1.3: Graph Step'
     );
-    expect(visit[exportVisitsController.getColumnNumber('Steps Since Last Visit')]).toEqual(
+    expect(exportVisitsController.getCellInRow(visit, 'Steps Since Last Visit')).toEqual(
       '1.2, 1.3'
     );
   });
@@ -600,15 +614,15 @@ function createVisit_WithNoPreviousVisits_ShouldCreateAVisit() {
     const exitEvent = createEvent('nodeExited', 'node1', 100, 30000);
     const previousVisits = [];
     const visit = exportVisitsController.createVisit(enterEvent, exitEvent, previousVisits);
-    expect(visit[exportVisitsController.getColumnNumber('#')]).toEqual(1);
-    expect(visit[exportVisitsController.getColumnNumber('Node ID')]).toEqual('node1');
-    expect(visit[exportVisitsController.getColumnNumber('Step Title')]).toEqual('1.1: HTML Step');
-    expect(visit[exportVisitsController.getColumnNumber('Visit Duration (Seconds)')]).toEqual(20);
-    expect(visit[exportVisitsController.getColumnNumber('Visit Counter')]).toEqual(1);
-    expect(visit[exportVisitsController.getColumnNumber('Revisit Counter')]).toEqual(0);
-    expect(visit[exportVisitsController.getColumnNumber('Previous Node ID')]).toBeUndefined();
-    expect(visit[exportVisitsController.getColumnNumber('Previous Step Title')]).toBeUndefined();
-    expect(visit[exportVisitsController.getColumnNumber('Steps Since Last Visit')]).toBeUndefined();
+    expect(exportVisitsController.getCellInRow(visit, '#')).toEqual(1);
+    expect(exportVisitsController.getCellInRow(visit, 'Node ID')).toEqual('node1');
+    expect(exportVisitsController.getCellInRow(visit, 'Step Title')).toEqual('1.1: HTML Step');
+    expect(exportVisitsController.getCellInRow(visit, 'Visit Duration (Seconds)')).toEqual(20);
+    expect(exportVisitsController.getCellInRow(visit, 'Visit Counter')).toEqual(1);
+    expect(exportVisitsController.getCellInRow(visit, 'Revisit Counter')).toEqual(0);
+    expect(exportVisitsController.getCellInRow(visit, 'Previous Node ID')).toBeUndefined();
+    expect(exportVisitsController.getCellInRow(visit, 'Previous Step Title')).toBeUndefined();
+    expect(exportVisitsController.getCellInRow(visit, 'Steps Since Last Visit')).toBeUndefined();
   });
 }
 
@@ -627,19 +641,17 @@ function createVisit_WithOnlyEnterEvent_ShouldCreateAVisit() {
     ];
     exportVisitsController.incrementVisitCounter(100, 'node1');
     const visit = exportVisitsController.createVisit(enterEvent, exitEvent, previousVisits);
-    expect(visit[exportVisitsController.getColumnNumber('#')]).toEqual(1);
-    expect(visit[exportVisitsController.getColumnNumber('Node ID')]).toEqual('node1');
-    expect(visit[exportVisitsController.getColumnNumber('Step Title')]).toEqual('1.1: HTML Step');
-    expect(
-      visit[exportVisitsController.getColumnNumber('Visit Duration (Seconds)')]
-    ).toBeUndefined();
-    expect(visit[exportVisitsController.getColumnNumber('Visit Counter')]).toEqual(2);
-    expect(visit[exportVisitsController.getColumnNumber('Revisit Counter')]).toEqual(1);
-    expect(visit[exportVisitsController.getColumnNumber('Previous Node ID')]).toEqual('node3');
-    expect(visit[exportVisitsController.getColumnNumber('Previous Step Title')]).toEqual(
+    expect(exportVisitsController.getCellInRow(visit, '#')).toEqual(1);
+    expect(exportVisitsController.getCellInRow(visit, 'Node ID')).toEqual('node1');
+    expect(exportVisitsController.getCellInRow(visit, 'Step Title')).toEqual('1.1: HTML Step');
+    expect(exportVisitsController.getCellInRow(visit, 'Visit Duration (Seconds)')).toBeUndefined();
+    expect(exportVisitsController.getCellInRow(visit, 'Visit Counter')).toEqual(2);
+    expect(exportVisitsController.getCellInRow(visit, 'Revisit Counter')).toEqual(1);
+    expect(exportVisitsController.getCellInRow(visit, 'Previous Node ID')).toEqual('node3');
+    expect(exportVisitsController.getCellInRow(visit, 'Previous Step Title')).toEqual(
       '1.3: Graph Step'
     );
-    expect(visit[exportVisitsController.getColumnNumber('Steps Since Last Visit')]).toEqual(
+    expect(exportVisitsController.getCellInRow(visit, 'Steps Since Last Visit')).toEqual(
       '1.2, 1.3'
     );
   });
@@ -725,8 +737,8 @@ function addUserCells_WithMultipleStudentsIncludingNames_ShouldSetTheWISEIDAndSt
 
 function getVisitDuration_ShouldGetTheTimeDifferenceBetweenEventsInSeconds() {
   it('getVisitDuration should get the time difference between events in seconds', () => {
-    const event1 = { clientSaveTime: 1000 };
-    const event2 = { clientSaveTime: 3000 };
+    const event1 = createEvent(null, null, null, 1000);
+    const event2 = createEvent(null, null, null, 3000);
     expect(exportVisitsController.getVisitDuration(event1, event2)).toEqual(2);
   });
 }
