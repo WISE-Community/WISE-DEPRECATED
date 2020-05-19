@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<conditions type="com.filament.fge.struct::List" itemType="com.filament.epi.model.analysis::Condition">
-	<condition reqs="planHasLaunch" result="PRF1,PRF5"/>
-	<condition reqs="planHasBoost" result="PRF1,PRF2,PRF3,PRF6"/>
-	<condition reqs="planHasPickup" result="PRF7,PRF9"/>
-	<condition reqs="planHasDrop" result="PRF8"/> 
-</conditions>

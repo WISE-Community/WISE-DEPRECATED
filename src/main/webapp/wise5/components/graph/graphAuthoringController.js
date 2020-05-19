@@ -150,16 +150,24 @@ class GraphAuthoringController extends GraphController {
     this.isResetSeriesButtonVisible = true;
     this.isSelectSeriesVisible = true;
     this.backgroundImage = this.componentContent.backgroundImage;
+    this.numYAxes = 0;
+    this.enableMultipleYAxes = this.isMultipleYAxesEnabled();
+    if (this.enableMultipleYAxes) {
+      this.numYAxes = this.authoringComponentContent.yAxis.length;
+    }
+    this.addAnyMissingYAxisFieldsToAllYAxes(this.authoringComponentContent.yAxis);
 
     $scope.$watch(() => {
       return this.authoringComponentContent;
     }, (newValue, oldValue) => {
       this.componentContent = this.ProjectService.injectAssetPaths(newValue);
       this.series = null;
-      this.xAxis = null;
-      this.yAxis = null;
+      this.xAxis = this.componentContent.xAxis;
+      this.yAxis = this.componentContent.yAxis;
+      this.yAxisLocked = this.isYAxisLocked();
       this.submitCounter = 0;
       this.backgroundImage = this.componentContent.backgroundImage;
+      this.enableMultipleYAxes = this.isMultipleYAxesEnabled();
       this.isSaveButtonVisible = this.componentContent.showSaveButton;
       this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
       this.graphType = this.componentContent.graphType;
@@ -174,6 +182,13 @@ class GraphAuthoringController extends GraphController {
       this.clearPlotLines();
       this.drawGraph();
     }, true);
+  }
+
+  isMultipleYAxesEnabled() {
+    if (Array.isArray(this.authoringComponentContent.yAxis)) {
+      return true;
+    }
+    return false;
   }
 
   assetSelected(event, args) {
@@ -203,6 +218,10 @@ class GraphAuthoringController extends GraphController {
       newSeries.dashStyle = 'Solid';
     } else if (this.authoringComponentContent.graphType === 'scatter') {
       newSeries.type = 'scatter';
+    }
+    if (this.enableMultipleYAxes) {
+      newSeries.yAxis = 0;
+      this.setSeriesColorToMatchYAxisColor(newSeries);
     }
     this.authoringComponentContent.series.push(newSeries);
     this.authoringViewComponentChanged();
@@ -521,6 +540,197 @@ class GraphAuthoringController extends GraphController {
 
   authoringDeleteYAxisPlotLine(index) {
     this.authoringComponentContent.yAxis.plotLines.splice(index, 1);
+    this.authoringViewComponentChanged();
+  }
+
+  enableMultipleYAxesChanged() {
+    if (this.enableMultipleYAxes) {
+      this.convertSingleYAxisToMultipleYAxes();
+      this.numYAxes = this.authoringComponentContent.yAxis.length;
+      this.addYAxisToAllSeries();
+      this.addColorToYAxes();
+      this.addColorToSeries();
+      this.authoringViewComponentChanged();
+    } else {
+      if (confirm(this.$translate('graph.areYouSureYouWantToRemoveMultipleYAxes'))) {
+        this.convertMultipleYAxesToSingleYAxis();
+        this.numYAxes = this.authoringComponentContent.yAxis.length;
+        this.removeYAxisFromAllSeries();
+        this.authoringViewComponentChanged();
+      } else {
+        this.enableMultipleYAxes = true;
+      }
+    }
+  }
+
+  convertSingleYAxisToMultipleYAxes() {
+    const firstYAxis = this.authoringComponentContent.yAxis;
+    this.addAnyMissingYAxisFields(firstYAxis);
+    const secondYAxis = this.createYAxisObject();
+    secondYAxis.opposite = true;
+    this.authoringComponentContent.yAxis = [firstYAxis, secondYAxis];
+  }
+
+  createYAxisObject() {
+    return {
+      title: {
+        text: '',
+        useHTML: true,
+        style: {
+          color: null
+        }
+      },
+      labels: {
+        style: {
+          color: null
+        }
+      },
+      min: 0,
+      max: 100,
+      units: '',
+      locked: true,
+      useDecimals: false,
+      opposite: false
+    };
+  }
+
+  convertMultipleYAxesToSingleYAxis() {
+    this.authoringComponentContent.yAxis = this.authoringComponentContent.yAxis[0];
+  }
+
+  addYAxisToAllSeries() {
+    for (const singleSeries of this.authoringComponentContent.series) {
+      singleSeries.yAxis = 0;
+    }
+  }
+
+  removeYAxisFromAllSeries() {
+    for (const singleSeries of this.authoringComponentContent.series) {
+      delete singleSeries.yAxis;
+    }
+  }
+
+  addColorToYAxes() {
+    for (const [indexString, yAxis] of Object.entries(this.authoringComponentContent.yAxis)) {
+      const index = parseInt(indexString);
+      if (yAxis.title.style.color == null || yAxis.title.style.color === '') {
+        yAxis.title.style.color = this.seriesColors[index];
+      }
+      if (yAxis.labels.style.color == null || yAxis.labels.style.color === '') {
+        yAxis.labels.style.color = this.seriesColors[index];
+      }
+    }
+  }
+
+  addColorToSeries() {
+    for (const singleSeries of this.authoringComponentContent.series) {
+      this.setSeriesColorToMatchYAxisColor(singleSeries);
+    }
+  }
+
+  setSeriesColorToMatchYAxisColor(series) {
+    series.color = this.getYAxisColor(series.yAxis);
+  }
+
+  getYAxisColor(index) {
+    return this.authoringComponentContent.yAxis[index].labels.style.color;
+  }
+
+  numYAxesChanged(newValue, oldValue) {
+    if (newValue > oldValue) {
+      this.increaseYAxes(newValue);
+      this.addColorToYAxes();
+      this.authoringViewComponentChanged();
+    } else if (newValue < oldValue) {
+      if (confirm(this.$translate('graph.areYouSureYouWantToDecreaseTheNumberOfYAxes'))) {
+        this.decreaseYAxes(newValue);
+        this.updateSeriesYAxesIfNecessary();
+        this.authoringViewComponentChanged();
+      } else {
+        this.numYAxes = oldValue;
+      }
+    }
+  }
+
+  increaseYAxes(newNumYAxes) {
+    const oldNumYAxes = this.authoringComponentContent.yAxis.length;
+    const numYAxesToAdd = newNumYAxes - oldNumYAxes;
+    for (let n = 0; n < numYAxesToAdd; n++) {
+      this.authoringComponentContent.yAxis.push(this.createYAxisObject());
+    }
+  }
+
+  decreaseYAxes(newNumYAxes) {
+    this.authoringComponentContent.yAxis =
+        this.authoringComponentContent.yAxis.slice(0, newNumYAxes);
+  }
+
+  updateSeriesYAxesIfNecessary() {
+    for (const singleSeries of this.authoringComponentContent.series) {
+      if (!this.isYAxisIndexExists(singleSeries.yAxis)) {
+        singleSeries.yAxis = 0;
+        this.setSeriesColorToMatchYAxisColor(singleSeries);
+      }
+    }
+  }
+
+  isYAxisIndexExists(yAxisIndex) {
+    return this.authoringComponentContent.yAxis[yAxisIndex] != null;
+  }
+
+  yAxisColorChanged(yAxisIndex) {
+    const yAxis = this.authoringComponentContent.yAxis[yAxisIndex];
+    const color = yAxis.labels.style.color;
+    yAxis.title.style.color = color;
+    this.updateSeriesColors(yAxisIndex, color);
+    this.authoringViewComponentChanged();
+  }
+
+  updateSeriesColors(yAxisIndex, color) {
+    for (const singleSeries of this.authoringComponentContent.series) {
+      if (singleSeries.yAxis === yAxisIndex) {
+        singleSeries.color = color;
+      }
+    } 
+  }
+
+  addAnyMissingYAxisFieldsToAllYAxes(yAxis) {
+    if (this.isMultipleYAxes(yAxis)) {
+      yAxis.forEach(yAxis => this.addAnyMissingYAxisFields(yAxis));
+    } else {
+      this.addAnyMissingYAxisFields(yAxis);
+    }
+  }
+
+  addAnyMissingYAxisFields(yAxis) {
+    if (yAxis.title == null) {
+      yAxis.title = {};
+    }
+    if (yAxis.title.style == null) {
+      yAxis.title.style = {};
+    }
+    if (yAxis.title.style.color == null) {
+      yAxis.title.style.color = '';
+    }
+    if (yAxis.labels == null) {
+      yAxis.labels = {};
+    }
+    if (yAxis.labels.style == null) {
+      yAxis.labels.style = {};
+    }
+    if (yAxis.labels.style.color == null) {
+      yAxis.labels.style.color = '';
+    }
+    if (yAxis.allowDecimals == null) {
+      yAxis.allowDecimals = false;
+    }
+    if (yAxis.opposite == null) {
+      yAxis.opposite = false;
+    }
+  }
+
+  seriesYAxisChanged(series) {
+    this.setSeriesColorToMatchYAxisColor(series);
     this.authoringViewComponentChanged();
   }
 }

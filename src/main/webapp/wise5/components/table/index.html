@@ -145,15 +145,22 @@
             </md-input-container>
             <div ng-if='tableController.componentContent.isDataExplorerAxisLabelsEditable'>
               <md-input-container style='width: 300px;'>
-                  <label>X Axis Label</label>
-                  <input ng-model='tableController.dataExplorerXAxisLabel'
-                      ng-change='tableController.studentDataChanged()'/>
-                </md-input-container>
-                <md-input-container style='width: 300px;'>
-                  <label>Y Axis Label</label>
-                  <input ng-model='tableController.dataExplorerYAxisLabel'
-                      ng-change='tableController.studentDataChanged()'/>
-                </md-input-container>
+                <label>X Axis Label</label>
+                <input ng-model='tableController.dataExplorerXAxisLabel'
+                    ng-change='tableController.studentDataChanged()'/>
+              </md-input-container>
+              <md-input-container ng-if='tableController.componentContent.numDataExplorerYAxis === 1' style='width: 300px;'>
+                <label>Y Axis Label</label>
+                <input ng-model='tableController.dataExplorerYAxisLabel'
+                    ng-change='tableController.studentDataChanged()'/>
+              </md-input-container>
+              <md-input-container ng-if='tableController.componentContent.numDataExplorerYAxis > 1'
+                  ng-repeat='x in [].constructor(tableController.dataExplorerYAxisLabels.length) track by $index'
+                  style='width: 300px;'>
+                <label>Y Axis {{$index + 1}} Label</label>
+                <input ng-model='tableController.dataExplorerYAxisLabels[$index]'
+                    ng-change='tableController.studentDataChanged()'/>
+              </md-input-container>
             </div>
           </div>
           <div ng-if='::tableController.isSaveOrSubmitButtonVisible()'

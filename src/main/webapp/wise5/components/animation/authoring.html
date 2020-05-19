@@ -623,8 +623,8 @@
     <div>
       <h5>{{ ::'studentPreview' | translate }}</h5>
     </div>
-    <div ng-switch='::animationController.mode'>
-      <div ng-switch-default>
+    <div>
+      <div>
         <md-input-container class='input-container input-container--open-response md-block md-no-float'>
           <label class='input-label md-no-float'
                  ng-disabled='animationController.isDisabled'
@@ -747,8 +747,5 @@
         </span>
       </span>
     </div>
-    <component-annotations annotations='animationController.latestAnnotations'
-                           max-score='animationController.componentContent.maxScore'>
-    </component-annotations>
   </div>
 </div>

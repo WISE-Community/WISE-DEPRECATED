@@ -464,34 +464,12 @@
     <div>
       <h5>{{ ::'studentPreview' | translate }}</h5>
     </div>
-    <div ng-switch='::openResponseController.mode'>
-      <div ng-switch-when='grading|gradingRevision' ng-switch-when-separator='|' layout='row' layout-wrap>
-        <div flex='100' flex-gt-sm='66' layout='column' class='component--grading__response'>
-          <div class='component--grading__response__content'><compile data='openResponseController.studentResponse'></compile></div>
-          <span flex></span>
-          <component-revisions-info node-id='openResponseController.nodeId'
-                                    component-id='openResponseController.componentId'
-                                    to-workgroup-id='workgroupId'
-                                    component-state='componentState'
-                                    active='openResponseController.mode === "grading"'></component-revisions-info>
-        </div>
-        <div flex='100' flex-gt-sm='33' class='component--grading__annotations'>
-          <component-grading node-id='openResponseController.nodeId'
-                             component-id='openResponseController.componentId'
-                             max-score='openResponseController.componentContent.maxScore'
-                             from-workgroup-id='teacherWorkgroupId'
-                             to-workgroup-id='workgroupId'
-                             component-state-id='componentState.id'
-                             show-all-annotations='openResponseController.mode !== "grading"'
-                             is-disabled='openResponseController.mode !== "grading"'></component-grading>
-        </div>
-      </div>
-      <div ng-switch-default>
+    <div>
+      <div>
         <md-input-container class='input-container input-container--open-response md-block md-no-float'>
           <label class='input-label md-no-float' ng-disabled='openResponseController.isDisabled'
                  ng-if='openResponseController.isPromptVisible'>
             <compile id='prompt' data='openResponseController.getPrompt()'></compile>
-            <possible-score max-score='openResponseController.componentContent.maxScore'></possible-score>
           </label>
           <md-button class='md-accent md-primary'
                      ng-click='openResponseController.snipButtonClicked($event)'
@@ -507,7 +485,6 @@
           </md-button>
           <div class='input-wrapper' ng-class='{"input-wrapper--richtext": openResponseController.isRichTextEnabled}'>
             <textarea ng-if='openResponseController.isRichTextEnabled && !openResponseController.isDisabled'
-                      ui-tinymce='openResponseController.tinymceOptions'
                       ng-model='openResponseController.studentResponse'
                       ng-model-options='{ debounce: 100 }'
                       ng-change='openResponseController.studentDataChanged()'></textarea>
@@ -567,7 +544,5 @@
           {{openResponseController.saveMessage.text}} <span class='component__actions__more'><md-tooltip md-direction='top'>{{ openResponseController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago='openResponseController.saveMessage.time'></span></span>
       </span>
     </div>
-    <component-annotations annotations='openResponseController.latestAnnotations'
-                           max-score='openResponseController.componentContent.maxScore'></component-annotations>
   </div>
 </div>

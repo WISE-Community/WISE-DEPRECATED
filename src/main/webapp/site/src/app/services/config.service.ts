@@ -7,8 +7,8 @@ import { Announcement } from '../domain/announcement';
 @Injectable()
 export class ConfigService {
 
-  private userConfigUrl = 'api/user/config';
-  private announcementUrl = 'announcement';
+  private userConfigUrl = '/api/user/config';
+  private announcementUrl = '/announcement';
   private config$: BehaviorSubject<Config> = new BehaviorSubject<Config>(null);
   private timeDiff: number = 0;
 
@@ -42,6 +42,10 @@ export class ConfigService {
 
   getRecaptchaPublicKey() {
     return this.config$.getValue().recaptchaPublicKey;
+  }
+
+  getWISE4Hostname() {
+    return this.config$.getValue().wise4Hostname;
   }
 
   getCurrentServerTime() {

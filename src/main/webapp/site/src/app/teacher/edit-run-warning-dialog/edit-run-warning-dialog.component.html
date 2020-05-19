@@ -18,5 +18,5 @@
      fxLayoutAlign="end"
      fxLayoutGap="8px">
   <button mat-flat-button color="primary" mat-dialog-close i18n>Cancel</button>
-  <a mat-button href="{{ editLink }}" color="warn" i18n>Proceed</a>
+  <a mat-button (click)=editContent() color="warn" i18n>Proceed</a>
 </mat-dialog-actions>

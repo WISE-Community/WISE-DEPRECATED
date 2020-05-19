@@ -1,10 +1,11 @@
 'use strict';
 
 class ConfigService {
-  constructor($filter, $http, $location, UtilService) {
+  constructor($filter, $http, $location, moment, UtilService) {
     this.$filter = $filter;
     this.$http = $http;
     this.$location = $location;
+    this.moment = moment;
     this.UtilService = UtilService;
     this.config = null;
     this.$translate = this.$filter('translate');
@@ -13,12 +14,11 @@ class ConfigService {
   setConfig(config) {
     this.config = config;
     this.sortClassmateUserInfosAlphabeticallyByName();
-    this.setPermissions();
     this.setClassmateDisplayNames();
   }
 
   retrieveConfig(configURL) {
-    return this.$http.get(configURL).then((result) => {
+    return this.$http.get(configURL).then(result => {
       const configJSON = result.data;
       this.setTimestampDiff(configJSON);
 
@@ -30,7 +30,7 @@ class ConfigService {
         // constraints can only be disabled using the url in preview mode
 
         // regex to match constraints=false in the url
-        const constraintsRegEx = new RegExp("constraints=false", 'gi');
+        const constraintsRegEx = new RegExp('constraints=false', 'gi');
 
         if (absURL != null && absURL.match(constraintsRegEx)) {
           // the url contains constraints=false
@@ -42,7 +42,7 @@ class ConfigService {
       configJSON.constraints = constraints;
 
       // regex to match showProjectPath=true in the url
-      const showProjectPathRegEx = new RegExp("showProjectPath=true", 'gi');
+      const showProjectPathRegEx = new RegExp('showProjectPath=true', 'gi');
 
       if (absURL != null && absURL.match(showProjectPathRegEx)) {
         // the url contains showProjectPath=true
@@ -140,8 +140,9 @@ class ConfigService {
   }
 
   getWebSocketURL() {
-    return window.location.protocol + "//" + window.location.host +
-        this.getContextPath() + "/websocket";
+    return (
+      window.location.protocol + '//' + window.location.host + this.getContextPath() + '/websocket'
+    );
   }
 
   getWISEBaseURL() {
@@ -355,32 +356,12 @@ class ConfigService {
     return 0;
   }
 
-  setPermissions() {
-    let role = this.getTeacherRole(this.getWorkgroupId());
-    if (role === 'owner') {
-      // the teacher is the owner of the run and has full access
-      this.config.canViewStudentNames = true;
-      this.config.canGradeStudentWork = true;
-    } else if (role === 'write') {
-      // the teacher is a shared teacher that can grade the student work
-      this.config.canViewStudentNames = true;
-      this.config.canGradeStudentWork = true;
-    } else if (role === 'read') {
-      // the teacher is a shared teacher that can only view the student work
-      this.config.canViewStudentNames = false;
-      this.config.canGradeStudentWork = false;
-    } else {
-      // teacher role is null, so assume we're in student mode
-      this.config.canViewStudentNames = true;
-      this.config.canGradeStudentWork = false;
-    }
-  }
-
   getPermissions() {
     // a switched user (admin/researcher user impersonating a teacher) should not be able to view/grade
     return {
       canViewStudentNames: this.config.canViewStudentNames && !this.isSwitchedUser(),
-      canGradeStudentWork: this.config.canGradeStudentWork && !this.isSwitchedUser()
+      canGradeStudentWork: this.config.canGradeStudentWork && !this.isSwitchedUser(),
+      canAuthorProject: this.config.canAuthorProject && !this.isSwitchedUser()
     };
   }
 
@@ -506,7 +487,7 @@ class ConfigService {
       if (userInfo != null && userInfo.username != null) {
         let usernames = userInfo.username.split(':');
         for (let name of usernames) {
-          let id = "";
+          let id = '';
           let regex = /(.+) \((.+)\)/g;
           let matches = regex.exec(name);
           if (matches) {
@@ -533,7 +514,7 @@ class ConfigService {
           let name = names[i].name;
           usernames += name;
 
-          if (i < (l-1)) {
+          if (i < l - 1) {
             usernames += ', ';
           }
         }
@@ -545,7 +526,7 @@ class ConfigService {
           if (i !== 0) {
             usernames += ', ';
           }
-          usernames += this.$translate('studentId', {id: id});
+          usernames += this.$translate('studentId', { id: id });
         }
       }
     }
@@ -690,13 +671,19 @@ class ConfigService {
            * replace the first student first name with the actual
            * name
            */
-          contentString = contentString.replace(new RegExp('{{firstStudentFirstName}}', 'gi'), firstNames[0]);
+          contentString = contentString.replace(
+            new RegExp('{{firstStudentFirstName}}', 'gi'),
+            firstNames[0]
+          );
 
           /*
            * there are 1 or more students in the workgroup so we can
            * replace the student first names with the actual names
            */
-          contentString = contentString.replace(new RegExp('{{studentFirstNames}}', 'gi'), firstNames.join(", "));
+          contentString = contentString.replace(
+            new RegExp('{{studentFirstNames}}', 'gi'),
+            firstNames.join(', ')
+          );
         }
 
         if (firstNames.length >= 2) {
@@ -705,7 +692,10 @@ class ConfigService {
            * replace the second student first name with the actual
            * name
            */
-          contentString = contentString.replace(new RegExp('{{secondStudentFirstName}}', 'gi'), firstNames[1]);
+          contentString = contentString.replace(
+            new RegExp('{{secondStudentFirstName}}', 'gi'),
+            firstNames[1]
+          );
         }
 
         if (firstNames.length >= 3) {
@@ -714,7 +704,10 @@ class ConfigService {
            * replace the third student first name with the actual
            * name
            */
-          contentString = contentString.replace(new RegExp('{{thirdStudentFirstName}}', 'gi'), firstNames[2]);
+          contentString = contentString.replace(
+            new RegExp('{{thirdStudentFirstName}}', 'gi'),
+            firstNames[2]
+          );
         }
       }
 
@@ -730,27 +723,19 @@ class ConfigService {
   }
 
   getAvatarColorForWorkgroupId(workgroupId) {
-    const avatarColors = ['#E91E63', '#9C27B0', '#CDDC39', '#2196F3', '#FDD835', '#43A047', '#795548', '#EF6C00', '#C62828', '#607D8B'];
+    const avatarColors = [
+      '#E91E63',
+      '#9C27B0',
+      '#CDDC39',
+      '#2196F3',
+      '#FDD835',
+      '#43A047',
+      '#795548',
+      '#EF6C00',
+      '#C62828',
+      '#607D8B'
+    ];
     return avatarColors[workgroupId % 10];
-  }
-
-  /**
-   * Get the library projects
-   */
-  getLibraryProjects() {
-    const getLibraryProjectsURL = this.getConfigParam('getLibraryProjectsURL');
-
-    if (getLibraryProjectsURL != null) {
-      // request the list of library projects
-      return this.$http.get(getLibraryProjectsURL).then((result) => {
-        const data = result.data;
-        if (data != null) {
-          // reverse the list so that it is ordered newest to oldest
-          data.reverse();
-        }
-        return data;
-      });
-    }
   }
 
   /**
@@ -763,7 +748,7 @@ class ConfigService {
    * without host
    * /wise/curriculum/3/assets
    */
-  getProjectAssetsDirectoryPath(includeHost) {
+  getProjectAssetsDirectoryPath(includeHost = false) {
     const projectBaseURL = this.getConfigParam('projectBaseURL');
     if (projectBaseURL != null) {
       if (includeHost) {
@@ -810,7 +795,10 @@ class ConfigService {
      * /wise/curriculum/3/assets/
      */
     const assetsDirectoryPathNotIncludingHost = this.getProjectAssetsDirectoryPath() + '/';
-    const assetsDirectoryPathNotIncludingHostRegEx = new RegExp(assetsDirectoryPathNotIncludingHost, 'g');
+    const assetsDirectoryPathNotIncludingHostRegEx = new RegExp(
+      assetsDirectoryPathNotIncludingHost,
+      'g'
+    );
 
     /*
      * remove the directory path from the html so that only the file name
@@ -898,11 +886,26 @@ class ConfigService {
     const currentTime = new Date().getTime();
     if (currentTime < this.convertToClientTimestamp(configJSON.startTime)) {
       return false;
-    } else if (configJSON.endTime != null &&
-        currentTime > this.convertToClientTimestamp(configJSON.endTime)) {
+    } else if (this.isEndedAndLocked(configJSON)) {
       return false;
     }
     return true;
+  }
+
+  isEndedAndLocked(configJSON = this.config) {
+    return (
+      configJSON.endTime != null &&
+      new Date().getTime() > this.convertToClientTimestamp(configJSON.endTime) &&
+      configJSON.isLockedAfterEndDate
+    );
+  }
+
+  getPrettyEndDate() {
+    return this.moment(this.getEndDate()).format('MMM D, YYYY');
+  }
+
+  getEndDate() {
+    return this.config.endTime;
   }
 
   isRunActive() {
@@ -910,11 +913,6 @@ class ConfigService {
   }
 }
 
-ConfigService.$inject = [
-  '$filter',
-  '$http',
-  '$location',
-  'UtilService'
-];
+ConfigService.$inject = ['$filter', '$http', '$location', 'moment', 'UtilService'];
 
 export default ConfigService;

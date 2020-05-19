@@ -67,57 +67,84 @@
           </md-input-container>
         </div>
         <div style='border: 1px solid black'>
-          <p>Data Explorer</p>
+          <p>{{ ::'table.dataExplorer' | translate }}</p>
           <div>
             <md-checkbox class='md-primary'
                 ng-model='tableController.authoringComponentContent.isDataExplorerEnabled'
                 ng-change='tableController.authoringToggleDataExplorer()'>
-              Enable Data Explorer
+              {{ ::'table.enableDataExplorer' | translate }}
             </md-checkbox>
           </div>
           <div ng-if='tableController.authoringComponentContent.isDataExplorerEnabled'>
             <div>
-              <p>Allowed Graph Types</p>
+              <p>{{ ::'table.allowedGraphTypes' | translate }}</p>
               <md-checkbox class='md-primary'
                   style='margin-right: 40px;'
                   ng-model='tableController.isDataExplorerScatterPlotEnabled'
                   ng-change='tableController.dataExplorerToggleScatterPlot()'>
-                Scatter Plot
+                {{ ::'table.scatterPlot' | translate }}
               </md-checkbox>
               <md-checkbox class='md-primary'
                   style='margin-right: 40px;'
                   ng-model='tableController.isDataExplorerLineGraphEnabled'
                   ng-change='tableController.dataExplorerToggleLineGraph()'>
-                Line Graph
+                {{ ::'table.lineGraph' | translate }}
               </md-checkbox>
               <md-checkbox class='md-primary'
                   ng-model='tableController.isDataExplorerBarGraphEnabled'
                   ng-change='tableController.dataExplorerToggleBarGraph()'>
-                Bar Graph
+                {{ ::'table.barGraph' | translate }}
               </md-checkbox>
             </div>
             <div ng-if='tableController.isDataExplorerScatterPlotEnabled'>
               <md-checkbox class='md-primary'
                   ng-model='tableController.authoringComponentContent.isDataExplorerScatterPlotRegressionLineEnabled'
                   ng-change='tableController.authoringViewComponentChanged()'>
-                Show Scatter Plot Regression Line
+                {{ ::'table.showScatterPlotRegressionLine' | translate }}
               </md-checkbox>
             </div>
             <div>
               <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
-                <label>Number of Series</label>
+                <label>{{ ::'table.numberOfSeries' | translate }}</label>
                 <input type='number'
                     ng-model='tableController.authoringComponentContent.numDataExplorerSeries'
                     ng-model-options='{ debounce: 1000 }'
-                    ng-change='tableController.authoringViewComponentChanged()'/>
+                    ng-change='tableController.numDataExplorerSeriesChanged()'/>
               </md-input-container>
+            </div>
+            <div>
+              <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
+                <label>{{ ::'table.numberOfYAxes' | translate }}</label>
+                <input type='number'
+                    ng-model='tableController.authoringComponentContent.numDataExplorerYAxis'
+                    ng-model-options='{ debounce: 1000 }'
+                    ng-change='tableController.numDataExplorerYAxisChanged()'/>
+              </md-input-container>
+            </div>
+            <div ng-if='tableController.authoringComponentContent.numDataExplorerYAxis > 1'>
+              <div ng-repeat='s in [].constructor(tableController.authoringComponentContent.numDataExplorerSeries) track by $index'>
+                <md-input-container style='margin-right: 20px; width: 300px;'>
+                  <label>{{ ::'table.series' | translate }} {{ $index + 1 }}</label>
+                  <md-select ng-model='tableController.authoringComponentContent.dataExplorerSeriesParams[$index].yAxis'
+                      ng-change='tableController.authoringViewComponentChanged()'
+                      style='width: 300px'>
+                    <md-option ng-repeat='y in [].constructor(tableController.authoringComponentContent.numDataExplorerYAxis) track by $index'
+                        ng-value='$index'>
+                      <span>
+                        {{ ::'table.yAxis' | translate }} {{ $index + 1 }}
+                      </span>
+                    </md-option>
+                  </md-select>
+                </md-input-container>
+
+              </div>
             </div>
             <div>
               <md-checkbox class='md-primary'
                   style='margin-right: 40px;'
                   ng-model='tableController.authoringComponentContent.isDataExplorerAxisLabelsEditable'
                   ng-change='tableController.authoringViewComponentChanged()'>
-                Can Student Edit Axis Labels
+                {{ ::'table.canStudentEditAxisLabels' | translate }}
               </md-checkbox>
             </div>
           </div>
@@ -467,57 +494,12 @@
       <div>
         <h5>{{ ::'studentPreview' | translate }}</h5>
       </div>
-      <div ng-switch='::tableController.mode'>
-        <div ng-switch-when='grading|gradingRevision'
-             ng-switch-when-separator='|'
-             layout='row'
-             layout-wrap>
-          <div flex='100'
-               flex-gt-sm='66'
-               layout='column'
-               class='component--grading__response'>
-            <div class='component--grading__response__content'>
-              <table id='{{tableController.tableId}}'
-                     class='table'
-                     ng-if='tableController.$scope.componentState'>
-                <tr ng-repeat='row in tableController.getTableDataRows()'>
-                  <td ng-repeat='cell in row'
-                      ng-class='{ "inactive" : !cell.editable }'>
-                    {{ cell.text }}
-                  </td>
-                </tr>
-              </table>
-            </div>
-            <span flex></span>
-            <component-revisions-info node-id='tableController.nodeId'
-                                      component-id='tableController.componentId'
-                                      to-workgroup-id='workgroupId'
-                                      component-state='componentState'
-                                      active='tableController.mode === "grading"'>
-            </component-revisions-info>
-          </div>
-          <div flex='100'
-               flex-gt-sm='33'
-               class='component--grading__annotations'>
-            <component-grading node-id='tableController.nodeId'
-                               component-id='tableController.componentId'
-                               max-score='tableController.componentContent.maxScore'
-                               from-workgroup-id='teacherWorkgroupId'
-                               to-workgroup-id='workgroupId'
-                               component-state-id='componentState.id'
-                               show-all-annotations='tableController.mode !== "grading"'
-                               is-disabled='tableController.mode !== "grading"'>
-            </component-grading>
-          </div>
-        </div>
-        <div ng-switch-default>
+      <div>
+        <div>
           <div class='component__prompt'>
             <div class='component__prompt__content'>
               <compile data='tableController.getPrompt()'></compile>
             </div>
-            <possible-score max-score='tableController.componentContent.maxScore'
-                            ng-if='tableController.mode === "student" && !tableController.latestAnnotations.score'>
-            </possible-score>
           </div>
           <div class='component__actions'
                layout='row'>
@@ -589,9 +571,6 @@
               </span>
             </span>
           </div>
-          <component-annotations annotations='tableController.latestAnnotations'
-                                 max-score='tableController.componentContent.maxScore'>
-          </component-annotations>
         </div>
       </div>
     </div>

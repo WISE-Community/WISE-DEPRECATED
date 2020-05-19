@@ -30,6 +30,7 @@ import org.wise.portal.domain.user.impl.UserImpl;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.domain.workgroup.impl.WorkgroupImpl;
 import org.wise.portal.service.authentication.UserDetailsService;
+import org.wise.portal.service.portal.PortalService;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.user.UserService;
@@ -52,6 +53,8 @@ public class APIControllerTest {
 
   protected final String TEACHER_USERNAME = "SquidwardTentacles";
 
+  protected final String TEACHER2_USERNAME = "SandyCheeks";
+
   protected final String ADMIN_USERNAME = "MrKrabb";
 
   protected final String USERNAME_NOT_IN_DB = "usernameNotInDB";
@@ -69,6 +72,10 @@ public class APIControllerTest {
   protected TeacherUserDetails teacher1UserDetails, admin1UserDetails;
 
   protected Long runId1 = 1L;
+
+  protected Long runId2 = 2L;
+
+  protected Long runId3 = 3L;
 
   protected Long projectId1 = 1L;
 
@@ -97,6 +104,9 @@ public class APIControllerTest {
 
   @Mock
   protected ProjectService projectService;
+
+  @Mock
+  protected PortalService portalService;
 
   @Mock
   protected Properties appProperties;
@@ -158,6 +168,8 @@ public class APIControllerTest {
     project1.setId(projectId1);
     project1.setModulePath("/1/project.json");
     project1.setOwner(teacher1);
+    project1.setWISEVersion(5);
+    project1.setMaxTotalAssetsSize(15728640L);
     run1.setProject(project1);
     run1.setLastRun(new Date());
     workgroup1 = new WorkgroupImpl();
@@ -165,7 +177,7 @@ public class APIControllerTest {
     workgroup1.setPeriod(run1Period1);
     teacher2 = new UserImpl();
     TeacherUserDetails tud2 = new TeacherUserDetails();
-    tud2.setUsername("teacher2");
+    tud2.setUsername(TEACHER2_USERNAME);
     teacher2.setUserDetails(tud2);
     runs = new ArrayList<Run>();
     run2 = new RunImpl();

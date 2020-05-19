@@ -60,7 +60,6 @@ describe('LibraryProjectDetailsComponent', () => {
   configureTestSuite(() => {
     TestBed.configureTestingModule({
       declarations: [ LibraryProjectDetailsComponent ],
-      imports: [ ],
       providers: [
         { provide: LibraryService, useClass: MockLibraryService },
         { provide: UserService, useClass: MockUserService },

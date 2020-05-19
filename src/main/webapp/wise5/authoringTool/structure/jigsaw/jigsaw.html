@@ -1,0 +1,34 @@
+<h5 translate="jigsaw.label"></h5>
+<p translate="jigsaw.description"></p>
+<hr>
+<p>{{ 'jigsaw.chooseNumberOfGroups' | translate }}:</p>
+<md-radio-group ng-model='jigsawController.numGroups'>
+  <md-radio-button class='md-primary'
+                   value='2'>
+    {{ 'jigsaw.twoGroups' | translate }}
+  </md-radio-button>
+  <md-radio-button class='md-primary'
+                   value='3'>
+    {{ 'jigsaw.threeGroups' | translate }}
+  </md-radio-button>
+  <md-radio-button class='md-primary'
+                   value='4'>
+    {{ 'jigsaw.fourGroups' | translate }}
+  </md-radio-button>
+</md-radio-group>
+<hr>
+<div layout="row">
+  <md-button class='createButton md-primary'
+             ng-click='jigsawController.goToChooseStructure()'
+             aria-label='{{ ::"back" | translate }}'
+             translate='back'></md-button>
+  <span flex></span>
+  <md-button class='createButton md-primary'
+             ng-click='jigsawController.cancel()'
+             aria-label='{{ ::"cancel" | translate }}'
+             translate='cancel'></md-button>
+  <md-button class='createButton md-raised md-primary'
+             ng-click='jigsawController.chooseLocation()'
+             aria-label='{{ ::"next" | translate }}'
+             translate='next'></md-button>
+</div>

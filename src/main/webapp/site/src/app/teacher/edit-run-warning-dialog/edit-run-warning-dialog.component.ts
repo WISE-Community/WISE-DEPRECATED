@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material';
 import { ConfigService } from '../../services/config.service';
 import { Run } from "../../domain/run";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-edit-run-warning-dialog',
@@ -15,11 +16,19 @@ export class EditRunWarningDialogComponent implements OnInit {
   constructor(public dialog: MatDialog,
               public dialogRef: MatDialogRef<EditRunWarningDialogComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any,
+              private router: Router,
               private configService: ConfigService) {
     this.run = data.run;
   }
 
   ngOnInit() {
-    this.editLink = `${ this.configService.getContextPath() }/author/authorproject.html?projectId=${ this.run.project.id }`;
+    this.editLink = `${this.configService.getContextPath()}/teacher/edit/unit/${
+      this.run.project.id
+    }`;
+  }
+
+  editContent() {
+    this.router.navigateByUrl(this.editLink);
+    this.dialogRef.close();
   }
 }

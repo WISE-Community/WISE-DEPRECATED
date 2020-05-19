@@ -130,6 +130,7 @@ public class UserAPIController {
     config.put("isGoogleClassroomEnabled", isGoogleClassroomEnabled());
     config.put("logOutURL", contextPath + "/logout");
     config.put("recaptchaPublicKey", appProperties.get("recaptcha_public_key"));
+    config.put("wise4Hostname", appProperties.get("wise4.hostname"));
     return config;
   }
 
@@ -141,7 +142,7 @@ public class UserAPIController {
   HashMap<String, Object> checkAuthentication(@RequestParam("username") String username,
       @RequestParam("password") String password) {
     User user = userService.retrieveUserByUsername(username);
-    HashMap<String, Object> response = new HashMap<String, Object> ();
+    HashMap<String, Object> response = new HashMap<String, Object>();
     if (user == null) {
       response.put("isUsernameValid", false);
       response.put("isPasswordValid", false);
@@ -189,8 +190,7 @@ public class UserAPIController {
   }
 
   @GetMapping("/check-google-user-matches")
-  boolean isGoogleIdMatches(@RequestParam String googleUserId,
-      @RequestParam String userId) {
+  boolean isGoogleIdMatches(@RequestParam String googleUserId, @RequestParam String userId) {
     User user = userService.retrieveUserByGoogleUserId(googleUserId);
     return user != null && user.getId().toString().equals(userId);
   }
@@ -248,11 +248,11 @@ public class UserAPIController {
     int lastIndexOfSlash = modulePath.lastIndexOf("/");
     if (lastIndexOfSlash != -1) {
       /*
-       * The project thumb url by default is the same (/assets/project_thumb.png)
-       * for all projects, but this could be overwritten in the future
-       * e.g. /253/assets/projectThumb.png
+       * The project thumb url by default is the same (/assets/project_thumb.png) for all projects,
+       * but this could be overwritten in the future e.g. /253/assets/projectThumb.png
        */
-      projectThumb = curriculumBaseWWW + modulePath.substring(0, lastIndexOfSlash) + PROJECT_THUMB_PATH;
+      projectThumb = curriculumBaseWWW + modulePath.substring(0, lastIndexOfSlash)
+          + PROJECT_THUMB_PATH;
     }
 
     map.put("id", run.getId());
@@ -262,9 +262,11 @@ public class UserAPIController {
     map.put("runCode", run.getRuncode());
     map.put("startTime", run.getStartTimeMilliseconds());
     map.put("endTime", run.getEndTimeMilliseconds());
+    map.put("isLockedAfterEndDate", run.isLockedAfterEndDate());
     map.put("project", getProjectMap(project));
     map.put("owner", convertUserToMap(run.getOwner()));
     map.put("numStudents", run.getNumStudents());
+    map.put("wiseVersion", run.getProject().getWiseVersion());
 
     if (user.isStudent()) {
       addStudentInfoToRunMap(user, run, map);

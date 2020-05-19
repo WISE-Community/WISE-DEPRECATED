@@ -15,6 +15,7 @@ target
 src/main/webapp/wise5/authoringTool/dist
 src/main/webapp/wise5/classroomMonitor/dist
 src/main/webapp/wise5/vle/dist
+src/main/webapp/wise5/teacher/dist
 src/main/webapp/site/dist
 src/main/webapp/wise5/jspm_packages
 src/main/webapp/wise5/node_modules

@@ -20,16 +20,24 @@
  * ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
  * REGENTS HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 package org.wise.portal.domain.impl;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import java.util.Date;
 import java.util.Set;
 import java.util.TreeSet;
 
-import junit.framework.TestCase;
-
+import org.easymock.EasyMockRunner;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.group.impl.PersistentGroup;
-import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.run.impl.RunImpl;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.user.impl.UserImpl;
@@ -38,50 +46,101 @@ import org.wise.portal.domain.user.impl.UserImpl;
  * @author Hiroki Terashima
  * @version $Id: $
  */
-public class RunImplTest extends TestCase {
+@RunWith(EasyMockRunner.class)
+public class RunImplTest {
 
-	private Run run;
-	
-	private User studentUser = new UserImpl();
-	
-	private User studentUser_not_associated_with_run;
-	
-	private static final String[] periodnames = {"1", "2", "3", "6", "9", "10", "sunflower"};
-	
-	@Override
-	protected void setUp() {
-		run = new RunImpl();
-		Set<Group> periods = new TreeSet<Group>();
-		for (String periodname : periodnames) {
-			Group period = new PersistentGroup();
-			period.setName(periodname);
-			if (periodname.equals("1")) {
-			    period.addMember(studentUser);
-			}
-			periods.add(period);
-		}
-		run.setPeriods(periods);
-	}
-	
-	@Override
-	protected void tearDown() {
-		run = null;
-	}
-	
-	public void testGetPeriods() {
-		// test that the periods appear in alphabetical order by period's name
-		TreeSet<Group> periods = (TreeSet<Group>) run.getPeriods();
-		int i = 0;
-		for (Group period : periods) {
-			assertEquals(period.getName(), periodnames[i]);
-			i++;
-		}
-	}
-	
-	public void testIsStudentAssociatedToThisRun() {
-		assertTrue(run.isStudentAssociatedToThisRun(studentUser));
-		assertFalse(run.isStudentAssociatedToThisRun(
-				studentUser_not_associated_with_run));
-	}
+  private RunImpl run = new RunImpl();
+
+  private User studentUser = new UserImpl();
+
+  private User studentUser_not_associated_with_run;
+
+  private static final String[] periodnames = { "1", "2", "3", "6", "9", "10", "sunflower" };
+
+  @Before
+  public void setUp() {
+    run = new RunImpl();
+    Set<Group> periods = new TreeSet<Group>();
+    for (String periodname : periodnames) {
+      Group period = new PersistentGroup();
+      period.setName(periodname);
+      if (periodname.equals("1")) {
+        period.addMember(studentUser);
+      }
+      periods.add(period);
+    }
+    run.setPeriods(periods);
+  }
+
+  @After
+  public void tearDown() {
+    run = null;
+  }
+
+  @Test
+  public void testGetPeriods() {
+    // test that the periods appear in alphabetical order by period's name
+    TreeSet<Group> periods = (TreeSet<Group>) run.getPeriods();
+    int i = 0;
+    for (Group period : periods) {
+      assertEquals(period.getName(), periodnames[i]);
+      i++;
+    }
+  }
+
+  @Test
+  public void testIsStudentAssociatedToThisRun() {
+    assertTrue(run.isStudentAssociatedToThisRun(studentUser));
+    assertFalse(run.isStudentAssociatedToThisRun(studentUser_not_associated_with_run));
+  }
+
+  @Test
+  public void isActive_CurrentTimeBeforeStart_ShouldReturnFalse() throws Exception {
+    run.setStarttime(getTomorrow());
+    assertFalse(run.isActive());
+  }
+
+  @Test
+  public void isActive_CurrentTimeBetweenStartAndEnd_ShouldReturnTrue() throws Exception {
+    run.setStarttime(getYesterday());
+    run.setEndtime(getTomorrow());
+    assertTrue(run.isActive());
+  }
+
+  @Test
+  public void isActive_CurrentTimeAfterEndAndNotLocked_ShouldReturnTrue() throws Exception {
+    run.setStarttime(getToday());
+    run.setEndtime(getTomorrow());
+    run.setLockedAfterEndDate(false);
+    assertTrue(run.isActive());
+  }
+
+  @Test
+  public void isActive_CurrentTimeAfterEndAndLocked_ShouldReturnFalse() throws Exception {
+    run.setStarttime(getTwoDaysAgo());
+    run.setEndtime(getYesterday());
+    run.setLockedAfterEndDate(true);
+    assertFalse(run.isActive());
+  }
+
+  Date getToday() {
+    return new Date();
+  }
+
+  Date getTomorrow() {
+    return new Date(new Date().getTime() + getDaysInMilliseconds(1));
+  }
+
+  Date getYesterday() {
+    return new Date(new Date().getTime() - getDaysInMilliseconds(1));
+  }
+
+  Date getTwoDaysAgo() {
+    return new Date(new Date().getTime() - getDaysInMilliseconds(2));
+  }
+
+  private int getDaysInMilliseconds(int days) {
+    return days * 24 * 60 * 60 * 1000;
+  }
 
 }

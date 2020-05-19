@@ -66,23 +66,26 @@
     </md-input-container>
     <br/>
     <md-checkbox ng-model="authorNotebookController.project.notebook.itemTypes.note.enableAddNote"
-                 class="md-primary"
-                 ng-change="authorNotebookController.authoringViewComponentChanged()">
+                 ng-change="authorNotebookController.authoringViewComponentChanged()"
+                 class="md-primary">
       {{ ::'enableAddNoteButton' | translate }}
     </md-checkbox>
     <br/>
     <md-checkbox ng-model="authorNotebookController.project.notebook.itemTypes.note.requireTextOnEveryNote"
-                 ng-change="authorNotebookController.authoringViewComponentChanged()">
+                 ng-change="authorNotebookController.authoringViewComponentChanged()"
+                 class="md-primary">
       {{ ::'requireTextOnEveryNote' | translate }}
     </md-checkbox>
     <br/>
     <md-checkbox ng-model="authorNotebookController.project.notebook.itemTypes.note.enableClipping"
-                 ng-change="authorNotebookController.authoringViewComponentChanged()">
+                 ng-change="authorNotebookController.authoringViewComponentChanged()"
+                 class="md-primary">
       {{ ::'enableClipping' | translate }}
     </md-checkbox>
     <br/>
     <md-checkbox ng-model="authorNotebookController.project.notebook.itemTypes.note.enableStudentUploads"
-                 ng-change="authorNotebookController.authoringViewComponentChanged()">
+                 ng-change="authorNotebookController.authoringViewComponentChanged()"
+                 class="md-primary">
       {{ ::'enableStudentUploads' | translate }}
     </md-checkbox>
   </div>

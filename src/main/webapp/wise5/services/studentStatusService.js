@@ -11,19 +11,16 @@ class StudentStatusService {
     this.studentStatuses = null;
   }
 
-  retrieveStudentStatuses(config) {
-    const studentStatusURL = this.ConfigService.getStudentStatusURL();
-    const runId = this.ConfigService.getRunId();
-    const requestConfig = {
-      params: {
-        runId: runId
+  retrieveStudentStatuses() {
+    this.studentStatuses = [];
+    const studentStatusURL = `/api/teacher/run/${this.ConfigService.getRunId()}/student-status`;
+    return this.$http.get(studentStatusURL).then(({ data: studentStatuses }) => {
+      for (const studentStatus of studentStatuses) {
+        const parsedStatus = JSON.parse(studentStatus.status)
+        parsedStatus.postTimestamp = studentStatus.timestamp;
+        this.studentStatuses.push(parsedStatus);
       }
-    };
-
-    return this.$http.get(studentStatusURL, requestConfig).then((result) => {
-      const studentStatuses = result.data;
-      this.studentStatuses = studentStatuses;
-      return studentStatuses;
+      return this.studentStatuses;
     });
   }
 
@@ -153,7 +150,7 @@ class StudentStatusService {
    * @returns object with completed, total, and percent completed (integer
    * between 0 and 100).
    */
-  getNodeCompletion(nodeId, periodId, workgroupId, excludeNonWorkNodes) {
+  getNodeCompletion(nodeId, periodId, workgroupId = null, excludeNonWorkNodes = false) {
     let numCompleted = 0;
     let numTotal = 0;
     let isGroupNode = this.ProjectService.isGroupNode(nodeId);

@@ -10,7 +10,8 @@
         <ng-template ngPluralCase="other" i18n>periods</ng-template>
       </ng-container>
     </span> |
-    <a href="{{manageStudentsLink}}" [class.secondary-text]="isRunCompleted(run)">
+    <a *ngIf="run.project.wiseVersion !== 4" href="{{manageStudentsLink}}"
+        [class.secondary-text]="isRunCompleted(run)">
       {{run.numStudents}}
       <ng-container [ngPlural]="run.numStudents">
         <ng-template ngPluralCase="=0" i18n>students</ng-template>
@@ -18,6 +19,14 @@
         <ng-template ngPluralCase="other" i18n>students</ng-template>
       </ng-container>
     </a>
+    <span *ngIf="run.project.wiseVersion === 4" [class.secondary-text]="isRunCompleted(run)">
+      {{run.numStudents}}
+      <ng-container [ngPlural]="run.numStudents">
+        <ng-template ngPluralCase="=0" i18n>students</ng-template>
+        <ng-template ngPluralCase="=1" i18n>student</ng-template>
+        <ng-template ngPluralCase="other" i18n>students</ng-template>
+      </ng-container>
+    </span>
   </div>
   <div i18n>Access Code: {{ run.runCode }}</div>
   <div *ngIf="run.shared" class="info" i18n>
@@ -37,7 +46,7 @@
         <mat-card-title [class.secondary-text]="isRunCompleted(run)" class="mat-body-2">
           {{run.project.name}}
           <span *ngIf="run.project.wiseVersion === 4"
-                class="warn mat-caption more-info" 
+                class="warn mat-caption more-info"
                 tabindex="0"
                 i18n-matTooltip
                 matTooltip="This unit is from an old version of WISE that is no longer supported. Please find an alternate unit to use in the future or contact us for upgrade options."
@@ -75,7 +84,7 @@
       </button>
       <a *ngIf="isRunActive(run) || isRunCompleted(run)"
          mat-flat-button
-         href="{{gradeAndManageLink}}"
+         (click)="launchGradeAndManageTool()"
          color="primary"
          fxFlex="0 0 auto"
          fxFlex.xs="100">

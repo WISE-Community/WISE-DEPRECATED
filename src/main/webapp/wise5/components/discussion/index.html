@@ -17,7 +17,7 @@
                   <class-response ng-repeat='componentState in discussionController.topLevelResponses.all'
                       response='componentState'
                       submitbuttonclicked='submitbuttonclicked(r)'
-                      mode='::discussionController.mode'
+                      mode='{{::discussionController.mode}}'
                       deletebuttonclicked='discussionController.deletebuttonclicked(componentState)'
                       undodeletebuttonclicked='discussionController.undodeletebuttonclicked(componentState)'
                       studentdatachanged='studentdatachanged()'

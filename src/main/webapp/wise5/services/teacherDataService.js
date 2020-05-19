@@ -2,16 +2,17 @@
 
 class TeacherDataService {
   constructor(
-      $http,
-      $filter,
-      $q,
-      $rootScope,
-      AnnotationService,
-      ConfigService,
-      NotificationService,
-      ProjectService,
-      TeacherWebSocketService,
-      UtilService) {
+    $http,
+    $filter,
+    $q,
+    $rootScope,
+    AnnotationService,
+    ConfigService,
+    NotificationService,
+    ProjectService,
+    TeacherWebSocketService,
+    UtilService
+  ) {
     this.$http = $http;
     this.$filter = $filter;
     this.$q = $q;
@@ -41,214 +42,233 @@ class TeacherDataService {
     this.studentGradingSort = 'step';
     this.studentProgressSort = 'team';
 
-    /**
-     * Listen for the 'annotationSavedToServer' event which is fired when
-     * we receive the response from saving an annotation to the server
-     */
     this.$rootScope.$on('annotationSavedToServer', (event, args) => {
-      if (args) {
-        let annotation = args.annotation;
-        this.handleAnnotationReceived(annotation);
-      }
+      this.handleAnnotationReceived(args.annotation);
     });
 
-    /**
-     * Listen for the 'newAnnotationReceived' event which is fired when
-     * teacher receives a new annotation (usually on a student work) from the server
-     */
     this.$rootScope.$on('newAnnotationReceived', (event, args) => {
-      if (args) {
-        let annotation = args.annotation;
-        this.handleAnnotationReceived(annotation);
-      }
+      this.handleAnnotationReceived(args.annotation);
     });
 
-    /**
-     * Listen for the 'newStudentWorkReceived' event which is fired when
-     * teacher receives a new student work from the server
-     */
     this.$rootScope.$on('newStudentWorkReceived', (event, args) => {
-      if (args) {
-        let studentWork = args.studentWork;
-        this.addOrUpdateComponentState(studentWork);
-        this.$rootScope.$broadcast('studentWorkReceived', {studentWork: studentWork});
-      }
+      const studentWork = args.studentWork;
+      this.addOrUpdateComponentState(studentWork);
+      this.$rootScope.$broadcast('studentWorkReceived', { studentWork: studentWork });
     });
   }
 
   handleAnnotationReceived(annotation) {
     this.studentData.annotations.push(annotation);
-
-    let toWorkgroupId = annotation.toWorkgroupId;
+    const toWorkgroupId = annotation.toWorkgroupId;
     if (this.studentData.annotationsToWorkgroupId[toWorkgroupId] == null) {
       this.studentData.annotationsToWorkgroupId[toWorkgroupId] = new Array();
     }
     this.studentData.annotationsToWorkgroupId[toWorkgroupId].push(annotation);
-
-    let nodeId = annotation.nodeId;
+    const nodeId = annotation.nodeId;
     if (this.studentData.annotationsByNodeId[nodeId] == null) {
       this.studentData.annotationsByNodeId[nodeId] = new Array();
     }
     this.studentData.annotationsByNodeId[nodeId].push(annotation);
     this.AnnotationService.setAnnotations(this.studentData.annotations);
-    this.$rootScope.$broadcast('annotationReceived', {annotation: annotation});
+    this.$rootScope.$broadcast('annotationReceived', { annotation: annotation });
   }
 
   /**
    * Get the data for the export and generate the csv file that will be downloaded
    * @param exportType the type of export
    */
-  getExport(exportType, selectedNodes) {
-    let exportURL = this.ConfigService.getConfigParam('runDataExportURL');
-    let runId = this.ConfigService.getRunId();
-    exportURL += "/" + runId + "/" + exportType;
-
-    if (exportType === "allStudentWork" || exportType === "latestStudentWork") {
-      let params = {};
-      params.runId = this.ConfigService.getRunId();
-      params.getStudentWork = true;
-      params.getAnnotations = true;
-      params.getEvents = false;
-      params.components = selectedNodes;
-
-      return this.retrieveStudentData(params);
-    } else if (exportType === "events") {
-      let params = {};
-      params.runId = this.ConfigService.getRunId();
-      params.getStudentWork = false;
-      params.getAnnotations = false;
-      params.getEvents = true;
-      params.components = selectedNodes;
-
-      return this.retrieveStudentData(params);
-    } else if (exportType === "latestNotebookItems" || exportType === "allNotebookItems") {
-      let httpParams = {
-        method : 'GET',
-        url : exportURL,
-        params : {}
-      };
-
-      return this.$http(httpParams).then((result) => {
-        return result.data;
-      });
-    } else if (exportType === "notifications") {
-      let httpParams = {
-        method : 'GET',
-        url : exportURL,
-        params : {}
-      };
-
-      return this.$http(httpParams).then((result) => {
-        return result.data;
-      });
-    } else if (exportType === "studentAssets") {
-      window.location.href = exportURL;
-      let deferred = this.$q.defer();
-      let promise = deferred.promise;
-      deferred.resolve([]);
-      return promise;
-    } else if (exportType === "oneWorkgroupPerRow") {
-      let params = {};
-      params.runId = this.ConfigService.getRunId();
-      params.getStudentWork = true;
-      params.getAnnotations = true;
-      params.getEvents = true;
-      params.components = selectedNodes;
-      return this.retrieveStudentData(params);
-    } else if (exportType === "rawData") {
-      let params = {};
-      params.runId = this.ConfigService.getRunId();
-      params.getStudentWork = true;
-      params.getAnnotations = true;
-      params.getEvents = true;
-      params.components = selectedNodes;
-      return this.retrieveStudentData(params);
+  getExport(exportType, selectedNodes = []) {
+    if (this.isStudentWorkExport(exportType)) {
+      return this.retrieveStudentDataExport(selectedNodes);
+    } else if (this.isNotebookExport(exportType)) {
+      return this.retrieveNotebookExport(exportType);
+    } else if (this.isNotificationsExport(exportType)) {
+      return this.retrieveNotificationsExport();
+    } else if (this.isExportStudentAssets(exportType)) {
+      return this.retrieveStudentAssetsExport();
+    } else if (this.isExportOneWorkgroupPerRow(exportType)) {
+      return this.retrieveOneWorkgroupPerRowExport(selectedNodes);
+    } else if (this.isExportRawData(exportType)) {
+      return this.retrieveRawDataExport(selectedNodes);
     }
   }
 
-  /**
-   * Save events that occur in the Classroom Monitor to the server
-   * @param event the event object
-   * @returns a promise
-   */
-  saveEvent(context, nodeId, componentId, componentType, category, event, data, projectId) {
-    let newEvent = {
-      projectId : this.ConfigService.getProjectId(),
-      runId : this.ConfigService.getRunId(),
-      workgroupId : this.ConfigService.getWorkgroupId(),
-      clientSaveTime : Date.parse(new Date()),
-      context : context,
-      nodeId : nodeId,
-      componentId : componentId,
-      type : componentType,
-      category : category,
-      event : event,
-      data : data
-    };
+  getExportURL(runId, exportType) {
+    return this.ConfigService.getConfigParam('runDataExportURL') + `/${runId}/${exportType}`;
+  }
 
+  isStudentWorkExport(exportType) {
+    return exportType === 'allStudentWork' || exportType === 'latestStudentWork';
+  }
+
+  isEventExport(exportType) {
+    return exportType === 'events';
+  }
+
+  isNotebookExport(exportType) {
+    return exportType === 'latestNotebookItems' || exportType === 'allNotebookItems';
+  }
+
+  isNotificationsExport(exportType) {
+    return exportType === 'notifications';
+  }
+
+  isExportStudentAssets(exportType) {
+    return exportType === 'studentAssets';
+  }
+
+  isExportOneWorkgroupPerRow(exportType) {
+    return exportType === 'oneWorkgroupPerRow';
+  }
+
+  isExportRawData(exportType) {
+    return exportType === 'rawData';
+  }
+
+  retrieveStudentDataExport(selectedNodes) {
+    const params = {
+      runId: this.ConfigService.getRunId(),
+      getStudentWork: true,
+      getAnnotations: true,
+      getEvents: false,
+      components: selectedNodes
+    };
+    return this.retrieveStudentData(params);
+  }
+
+  retrieveEventsExport(includeStudentEvents, includeTeacherEvents, includeNames) {
+    const params = {
+      runId: this.ConfigService.getRunId(),
+      getStudentWork: false,
+      getAnnotations: false,
+      getEvents: true,
+      includeStudentEvents,
+      includeTeacherEvents,
+      includeNames
+    };
+    const httpParams = {
+      method: 'GET',
+      url: this.ConfigService.getConfigParam('runDataExportURL') + '/events',
+      params: params
+    };
+    return this.$http(httpParams).then(result => {
+      return this.handleStudentDataResponse(result.data);
+    });
+  }
+
+  retrieveNotebookExport(exportType) {
+    const httpParams = {
+      method: 'GET',
+      url: this.getExportURL(this.ConfigService.getRunId(), exportType),
+      params: {}
+    };
+    return this.$http(httpParams).then(result => {
+      return result.data;
+    });
+  }
+
+  retrieveNotificationsExport() {
+    const httpParams = {
+      method: 'GET',
+      url: this.getExportURL(this.ConfigService.getRunId(), 'notifications'),
+      params: {}
+    };
+    return this.$http(httpParams).then(result => {
+      return result.data;
+    });
+  }
+
+  retrieveOneWorkgroupPerRowExport(selectedNodes) {
+    const params = {
+      runId: this.ConfigService.getRunId(),
+      getStudentWork: true,
+      getAnnotations: true,
+      getEvents: true,
+      components: selectedNodes
+    };
+    return this.retrieveStudentData(params);
+  }
+
+  retrieveStudentAssetsExport() {
+    window.location.href = this.getExportURL(this.ConfigService.getRunId(), 'studentAssets');
+    const deferred = this.$q.defer();
+    const promise = deferred.promise;
+    deferred.resolve([]);
+    return promise;
+  }
+
+  retrieveRawDataExport(selectedNodes) {
+    const params = {
+      runId: this.ConfigService.getRunId(),
+      getStudentWork: true,
+      getAnnotations: true,
+      getEvents: true,
+      components: selectedNodes
+    };
+    return this.retrieveStudentData(params);
+  }
+
+  saveEvent(context, nodeId, componentId, componentType, category, event, data, projectId) {
+    const newEvent = {
+      projectId: this.ConfigService.getProjectId(),
+      runId: this.ConfigService.getRunId(),
+      workgroupId: this.ConfigService.getWorkgroupId(),
+      clientSaveTime: Date.parse(new Date()),
+      context: context,
+      nodeId: nodeId,
+      componentId: componentId,
+      type: componentType,
+      category: category,
+      event: event,
+      data: data
+    };
     if (newEvent.projectId == null) {
       newEvent.projectId = projectId;
     }
-
-    let events = [newEvent];
-
-    let params = {
-      projectId : this.ConfigService.getProjectId(),
-      runId : this.ConfigService.getRunId(),
-      workgroupId : this.ConfigService.getWorkgroupId(),
-      events : angular.toJson(events)
+    const events = [newEvent];
+    const params = {
+      projectId: this.ConfigService.getProjectId(),
+      runId: this.ConfigService.getRunId(),
+      workgroupId: this.ConfigService.getWorkgroupId(),
+      events: angular.toJson(events)
     };
-
     if (params.projectId == null) {
       params.projectId = projectId;
     }
-
-    let httpParams = {};
-    httpParams.method = 'POST';
-    httpParams.url = this.ConfigService.getConfigParam('teacherDataURL');
-    httpParams.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
-    httpParams.data = $.param(params);
-
-    return this.$http(httpParams).then((result) => {
-      let savedEvents = null;
-      if (result != null && result.data != null) {
-        let data = result.data;
-        if (data != null) {
-          // get the saved events
-          savedEvents = data.events;
-        }
-      }
-      return savedEvents;
+    const httpParams = {
+      method: 'POST',
+      url: this.ConfigService.getConfigParam('teacherDataURL'),
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      data: $.param(params)
+    };
+    return this.$http(httpParams).then(result => {
+      return result.data.events;
     });
-  };
+  }
 
-  /**
-   * Retrieve the student data for a node id
-   * @param nodeId the node id
-   * @returns the student data for the node id
-   */
   retrieveStudentDataByNodeId(nodeId) {
-    const params = {};
-    params.periodId = null;
-    params.workgroupId = null;
-    params.components = this.getAllRelatedComponents(nodeId);
-    params.getAnnotations = false;
-    params.getEvents = false;
-
+    const params = {
+      periodId: null,
+      workgroupId: null,
+      components: this.getAllRelatedComponents(nodeId),
+      getAnnotations: false,
+      getEvents: false
+    };
     return this.retrieveStudentData(params);
   }
 
   getAllRelatedComponents(nodeId) {
-    let components = this.ProjectService.getNodeIdsAndComponentIds(nodeId);
-    components = components.concat(this.getConnectedComponentsIfNecessary(components));
-    return components;
+    const components = this.ProjectService.getNodeIdsAndComponentIds(nodeId);
+    return components.concat(this.getConnectedComponentsIfNecessary(components));
   }
 
   getConnectedComponentsIfNecessary(components) {
     const connectedComponents = [];
     for (const component of components) {
       const componentContent = this.ProjectService.getComponentByNodeIdAndComponentId(
-          component.nodeId, component.componentId);
+        component.nodeId,
+        component.componentId
+      );
       if (this.isConnectedComponentStudentDataRequired(componentContent)) {
         for (const connectedComponent of componentContent.connectedComponents) {
           connectedComponents.push(connectedComponent);
@@ -259,41 +279,36 @@ class TeacherDataService {
   }
 
   isConnectedComponentStudentDataRequired(componentContent) {
-    return componentContent.type === 'Discussion' &&
-        componentContent.connectedComponents != null &&
-        componentContent.connectedComponents.length !== 0;
+    return (
+      componentContent.type === 'Discussion' &&
+      componentContent.connectedComponents != null &&
+      componentContent.connectedComponents.length !== 0
+    );
   }
 
-  /**
-   * Retrieve the student data for the workgroup id
-   * @param workgroupId the workgroup id
-   * @returns the student data for the workgroup id
-   */
   retrieveStudentDataByWorkgroupId(workgroupId) {
-    const params = {};
-    params.periodId = null;
-    params.nodeId = null;
-    params.workgroupId = workgroupId;
-    params.toWorkgroupId = workgroupId;
-    params.getAnnotations = false;
+    const params = {
+      periodId: null,
+      nodeId: null,
+      workgroupId: workgroupId,
+      toWorkgroupId: workgroupId,
+      getAnnotations: false
+    };
     return this.retrieveStudentData(params);
-  };
+  }
 
-  /**
-   * Retrieve the annotations for the run
-   * @returns the annotations for the run
-   */
   retrieveAnnotations() {
-    let params = {};
-    params.periodId = null;
-    params.nodeId = null;
-    params.workgroupId = null;
-    params.toWorkgroupId = null;
-    params.getStudentWork = false;
-    params.getEvents = false;
-    params.getAnnotations = true;
+    const params = {
+      periodId: null,
+      nodeId: null,
+      workgroupId: null,
+      toWorkgroupId: null,
+      getStudentWork: false,
+      getEvents: false,
+      getAnnotations: true
+    };
     return this.retrieveStudentData(params);
-  };
+  }
 
   retrieveLatestStudentDataByNodeIdAndComponentIdAndPeriodId(nodeId, componentId, periodId) {
     const params = {
@@ -306,188 +321,229 @@ class TeacherDataService {
       getAnnotations: false,
       onlyGetLatest: true
     };
-    return this.retrieveStudentData(params).then((result) => {
+    return this.retrieveStudentData(params).then(result => {
       return result.studentWorkList;
     });
   }
 
-  /**
-   * Retrieve the student data
-   * @param params the params that specify what student data we want
-   * @returns a promise
-   */
   retrieveStudentData(params) {
-    let studentDataURL = this.ConfigService.getConfigParam('teacherDataURL');
-    params.runId = this.ConfigService.getRunId();
+    this.addDefaultsToRetrieveStudentDataParams(params);
+    const httpParams = {
+      method: 'GET',
+      url: this.ConfigService.getConfigParam('teacherDataURL'),
+      params: params
+    };
+    return this.$http(httpParams).then(result => {
+      return this.handleStudentDataResponse(result.data);
+    });
+  }
 
+  addDefaultsToRetrieveStudentDataParams(params) {
+    params.runId = this.ConfigService.getRunId();
     if (params.getStudentWork == null) {
       params.getStudentWork = true;
     }
-
     if (params.getEvents == null) {
       params.getEvents = false;
     }
-
     if (params.getAnnotations == null) {
       params.getAnnotations = true;
     }
+  }
 
-    let httpParams = {
-      "method": "GET",
-      "url": studentDataURL,
-      "params": params
-    };
+  handleStudentDataResponse(resultData) {
+    const { studentWorkList: componentStates, events, annotations } = resultData;
+    if (componentStates != null) {
+      this.processComponentStates(componentStates);
+    }
+    if (events != null) {
+      this.processEvents(events);
+    }
+    if (annotations != null) {
+      this.processAnnotations(annotations);
+    }
+    return resultData;
+  }
 
-    return this.$http(httpParams).then((result) => {
-      const resultData = result.data;
-      if (resultData != null) {
-        if (resultData.studentWorkList != null) {
-          const componentStates = resultData.studentWorkList;
+  processComponentStates(componentStates) {
+    for (const componentState of componentStates) {
+      this.addOrUpdateComponentState(componentState);
+    }
+  }
 
-          // populate allComponentStates, componentStatesByWorkgroupId and componentStatesByNodeId objects
-          for (let componentState of componentStates) {
-            this.addOrUpdateComponentState(componentState);
-          }
-        }
+  processEvents(events) {
+    events.sort(this.UtilService.sortByServerSaveTime);
+    this.studentData.allEvents = events;
+    this.initializeEventsDataStructures();
+    for (const event of events) {
+      this.addEventToEventsByWorkgroupId(event);
+      this.addEventToEventsByNodeId(event);
+    }
+  }
 
-        if (resultData.events != null) {
-          // populate allEvents, eventsByWorkgroupId, and eventsByNodeId arrays
+  initializeEventsDataStructures() {
+    this.studentData.eventsByWorkgroupId = {};
+    this.studentData.eventsByNodeId = {};
+  }
 
-          // sort the events by server save time
-          resultData.events.sort(this.UtilService.sortByServerSaveTime);
+  addEventToEventsByWorkgroupId(event) {
+    const eventWorkgroupId = event.workgroupId;
+    if (this.studentData.eventsByWorkgroupId[eventWorkgroupId] == null) {
+      this.studentData.eventsByWorkgroupId[eventWorkgroupId] = new Array();
+    }
+    this.studentData.eventsByWorkgroupId[eventWorkgroupId].push(event);
+  }
 
-          this.studentData.allEvents = resultData.events;
-          this.studentData.eventsByWorkgroupId = {};
-          this.studentData.eventsByNodeId = {};
-          for (let event of resultData.events) {
-            const eventWorkgroupId = event.workgroupId;
-            if (this.studentData.eventsByWorkgroupId[eventWorkgroupId] == null) {
-              this.studentData.eventsByWorkgroupId[eventWorkgroupId] = new Array();
-            }
-            this.studentData.eventsByWorkgroupId[eventWorkgroupId].push(event);
-            const eventNodeId = event.nodeId;
-            if (this.studentData.eventsByNodeId[eventNodeId] == null) {
-              this.studentData.eventsByNodeId[eventNodeId] = new Array();
-            }
-            this.studentData.eventsByNodeId[eventNodeId].push(event);
-          }
-        }
+  addEventToEventsByNodeId(event) {
+    const eventNodeId = event.nodeId;
+    if (this.studentData.eventsByNodeId[eventNodeId] == null) {
+      this.studentData.eventsByNodeId[eventNodeId] = new Array();
+    }
+    this.studentData.eventsByNodeId[eventNodeId].push(event);
+  }
 
-        if (resultData.annotations != null) {
-          // populate annotations, annotationsByWorkgroupId, and annotationsByNodeId arrays
-          this.studentData.annotations = resultData.annotations;
-          this.studentData.annotationsToWorkgroupId = {};
-          this.studentData.annotationsByNodeId = {};
-          for (let annotation of resultData.annotations) {
-            const annotationWorkgroupId = annotation.toWorkgroupId;
-            if (!this.studentData.annotationsToWorkgroupId[annotationWorkgroupId]) {
-              this.studentData.annotationsToWorkgroupId[annotationWorkgroupId] = new Array();
-            }
-            this.studentData.annotationsToWorkgroupId[annotationWorkgroupId].push(annotation);
-            const annotationNodeId = annotation.nodeId;
-            if (!this.studentData.annotationsByNodeId[annotationNodeId]) {
-              this.studentData.annotationsByNodeId[annotationNodeId] = new Array();
-            }
-            this.studentData.annotationsByNodeId[annotationNodeId].push(annotation);
-          }
-        }
-        this.AnnotationService.setAnnotations(this.studentData.annotations);
-      }
-      return resultData;
-    });
-  };
+  processAnnotations(annotations) {
+    this.studentData.annotations = annotations;
+    this.initializeAnnotationsDataStructures();
+    for (const annotation of annotations) {
+      this.addAnnotationToAnnotationsToWorkgroupId(annotation);
+      this.addAnnotationToAnnotationsByNodeId(annotation);
+    }
+    this.AnnotationService.setAnnotations(this.studentData.annotations);
+  }
 
-  /**
-   * Add ComponentState to local bookkeeping
-   * @param componentState the ComponentState to add
-   */
+  initializeAnnotationsDataStructures() {
+    this.studentData.annotationsToWorkgroupId = {};
+    this.studentData.annotationsByNodeId = {};
+  }
+
+  addAnnotationToAnnotationsToWorkgroupId(annotation) {
+    const annotationWorkgroupId = annotation.toWorkgroupId;
+    if (!this.studentData.annotationsToWorkgroupId[annotationWorkgroupId]) {
+      this.studentData.annotationsToWorkgroupId[annotationWorkgroupId] = new Array();
+    }
+    this.studentData.annotationsToWorkgroupId[annotationWorkgroupId].push(annotation);
+  }
+
+  addAnnotationToAnnotationsByNodeId(annotation) {
+    const annotationNodeId = annotation.nodeId;
+    if (!this.studentData.annotationsByNodeId[annotationNodeId]) {
+      this.studentData.annotationsByNodeId[annotationNodeId] = new Array();
+    }
+    this.studentData.annotationsByNodeId[annotationNodeId].push(annotation);
+  }
+
   addOrUpdateComponentState(componentState) {
-    const componentStateWorkgroupId = componentState.workgroupId;
-    if (this.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId] == null) {
-      this.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId] = new Array();
+    this.addComponentStateByWorkgroupId(componentState);
+    this.addComponentStateByNodeId(componentState);
+    this.addComponentStateByComponentId(componentState);
+  }
+
+  addComponentStateByWorkgroupId(componentState) {
+    const workgroupId = componentState.workgroupId;
+    this.initializeComponentStatesByWorkgroupIdIfNecessary(workgroupId);
+    const index = this.getComponentStateByWorkgroupIdIndex(componentState);
+    if (index != -1) {
+      this.studentData.componentStatesByWorkgroupId[workgroupId][index] = componentState;
+    } else {
+      this.studentData.componentStatesByWorkgroupId[workgroupId].push(componentState);
     }
-    let found = false;
-    for (let w = 0; w < this.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId].length; w++) {
-      let cs = this.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId][w];
-      if (cs.id != null && cs.id === componentState.id) {
-        // found the same component id, so just update it in place.
-        this.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId][w] = componentState;
-        found = true;  // remember this so we don't insert later.
-        break;
+  }
+
+  initializeComponentStatesByWorkgroupIdIfNecessary(workgroupId) {
+    if (this.studentData.componentStatesByWorkgroupId[workgroupId] == null) {
+      this.studentData.componentStatesByWorkgroupId[workgroupId] = [];
+    }
+  }
+
+  getComponentStateByWorkgroupIdIndex(componentState) {
+    const workgroupId = componentState.workgroupId;
+    const componentStates = this.studentData.componentStatesByWorkgroupId[workgroupId];
+    for (let w = 0; w < componentStates.length; w++) {
+      if (componentStates[w].id === componentState.id) {
+        return w;
       }
     }
-    if (!found) {
-      this.studentData.componentStatesByWorkgroupId[componentStateWorkgroupId].push(componentState);
-    }
+    return -1;
+  }
 
-    const componentStateNodeId = componentState.nodeId;
-    if (this.studentData.componentStatesByNodeId[componentStateNodeId] == null) {
-      this.studentData.componentStatesByNodeId[componentStateNodeId] = new Array();
+  addComponentStateByNodeId(componentState) {
+    const nodeId = componentState.nodeId;
+    this.initializeComponentStatesByNodeIdIfNecessary(nodeId);
+    const index = this.getComponentStateByNodeIdIndex(componentState);
+    if (index != -1) {
+      this.studentData.componentStatesByNodeId[nodeId][index] = componentState;
+    } else {
+      this.studentData.componentStatesByNodeId[nodeId].push(componentState);
     }
-    found = false;  // reset
-    for (let n = 0; n < this.studentData.componentStatesByNodeId[componentStateNodeId].length; n++) {
-      let cs = this.studentData.componentStatesByNodeId[componentStateNodeId][n];
-      if (cs.id != null && cs.id === componentState.id) {
-        // found the same component id, so just update it in place.
-        this.studentData.componentStatesByNodeId[componentStateNodeId][n] = componentState;
-        found = true; // remember this so we don't insert later.
-        break;
+  }
+
+  initializeComponentStatesByNodeIdIfNecessary(nodeId) {
+    if (this.studentData.componentStatesByNodeId[nodeId] == null) {
+      this.studentData.componentStatesByNodeId[nodeId] = [];
+    }
+  }
+
+  getComponentStateByNodeIdIndex(componentState) {
+    const nodeId = componentState.nodeId;
+    const componentStates = this.studentData.componentStatesByNodeId[nodeId];
+    for (let n = 0; n < componentStates.length; n++) {
+      if (componentStates[n].id === componentState.id) {
+        return n;
       }
     }
-    if (!found) {
-      this.studentData.componentStatesByNodeId[componentStateNodeId].push(componentState);
-    }
+    return -1;
+  }
 
+  addComponentStateByComponentId(componentState) {
     const componentId = componentState.componentId;
-    if (this.studentData.componentStatesByComponentId[componentId] == null) {
-      this.studentData.componentStatesByComponentId[componentId] = new Array();
-    }
-    found = false;  // reset
-    for (let c = 0; c < this.studentData.componentStatesByComponentId[componentId].length; c++) {
-      let cs = this.studentData.componentStatesByComponentId[componentId][c];
-      if (cs.id != null && cs.id === componentState.id) {
-        // found the same component id, so just update it in place.
-        this.studentData.componentStatesByComponentId[componentId][c] = componentState;
-        found = true; // remember this so we don't insert later.
-        break;
-      }
-    }
-    if (!found) {
+    this.initializeComponentStatesByComponentIdIfNecessary(componentId);
+    const index = this.getComponentStateByComponentIdIndex(componentState);
+    if (index != -1) {
+      this.studentData.componentStatesByComponentId[componentId][index] = componentState;
+    } else {
       this.studentData.componentStatesByComponentId[componentId].push(componentState);
     }
-  };
+  }
 
-  /**
-   * Retrieve the run status from the server
-   */
+  initializeComponentStatesByComponentIdIfNecessary(componentId) {
+    if (this.studentData.componentStatesByComponentId[componentId] == null) {
+      this.studentData.componentStatesByComponentId[componentId] = [];
+    }
+  }
+
+  getComponentStateByComponentIdIndex(componentState) {
+    const componentId = componentState.componentId;
+    const componentStates = this.studentData.componentStatesByComponentId[componentId];
+    for (let c = 0; c < componentStates.length; c++) {
+      if (componentStates[c].id === componentState.id) {
+        return c;
+      }
+    }
+    return -1;
+  }
+
   retrieveRunStatus() {
     const runStatusURL = this.ConfigService.getConfigParam('runStatusURL');
     const runId = this.ConfigService.getConfigParam('runId');
-
     const params = {
-      runId:runId
+      runId: runId
     };
-
-    const httpParams = {};
-    httpParams.method = 'GET';
-    httpParams.url = runStatusURL;
-    httpParams.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
-    httpParams.params = params;
-
-    return this.$http(httpParams).then((result) => {
-      if (result != null) {
-        const data = result.data;
-        if (data != null) {
-          this.runStatus = data;
-          this.initializePeriods();
-        }
-      }
+    const httpParams = {
+      method: 'GET',
+      url: runStatusURL,
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      params: params
+    };
+    return this.$http(httpParams).then(result => {
+      const data = result.data;
+      this.runStatus = data;
+      this.initializePeriods();
     });
   }
 
   getComponentStatesByWorkgroupId(workgroupId) {
-    const componentStatesByWorkgroupId =
-        this.studentData.componentStatesByWorkgroupId[workgroupId];
+    const componentStatesByWorkgroupId = this.studentData.componentStatesByWorkgroupId[workgroupId];
     if (componentStatesByWorkgroupId != null) {
       return componentStatesByWorkgroupId;
     } else {
@@ -496,8 +552,7 @@ class TeacherDataService {
   }
 
   getComponentStatesByNodeId(nodeId) {
-    const componentStatesByNodeId =
-        this.studentData.componentStatesByNodeId[nodeId];
+    const componentStatesByNodeId = this.studentData.componentStatesByNodeId[nodeId];
     if (componentStatesByNodeId != null) {
       return componentStatesByNodeId;
     } else {
@@ -505,14 +560,8 @@ class TeacherDataService {
     }
   }
 
-  /**
-   * Get the component stats for a component id
-   * @param componentId the component id
-   * @returns an array containing component states for a component id
-   */
   getComponentStatesByComponentId(componentId) {
-    const componentStatesByComponentId =
-        this.studentData.componentStatesByComponentId[componentId];
+    const componentStatesByComponentId = this.studentData.componentStatesByComponentId[componentId];
     if (componentStatesByComponentId != null) {
       return componentStatesByComponentId;
     }
@@ -523,167 +572,110 @@ class TeacherDataService {
     let componentStatesByComponentId = [];
     for (const componentId of componentIds) {
       componentStatesByComponentId = componentStatesByComponentId.concat(
-          this.studentData.componentStatesByComponentId[componentId]);
+        this.studentData.componentStatesByComponentId[componentId]
+      );
     }
     return componentStatesByComponentId;
   }
 
-  getLatestComponentStateByWorkgroupIdNodeIdAndComponentId(
-      workgroupId, nodeId, componentId) {
-    let latestComponentState = null;
-    const componentStates = this
-        .getComponentStatesByWorkgroupIdAndNodeId(workgroupId, nodeId);
-    if (componentStates != null) {
-      for (let c = componentStates.length - 1; c >= 0; c--) {
-        const componentState = componentStates[c];
-        if (componentState != null) {
-          const componentStateNodeId = componentState.nodeId;
-          const componentStateComponentId = componentState.componentId;
-          if (nodeId === componentStateNodeId && componentId === componentStateComponentId) {
-            latestComponentState = componentState;
-            break;
-          }
-        }
-      }
-    }
-    return latestComponentState;
-  }
-
-  getLatestComponentStateByWorkgroupIdNodeId(workgroupId, nodeId) {
-    const componentStates =
-        this.getComponentStatesByWorkgroupIdAndNodeId(workgroupId, nodeId);
-    if (componentStates != null) {
-      for (let c = componentStates.length - 1; c >= 0; c--) {
-        const componentState = componentStates[c];
-        if (componentState != null) {
-          const componentStateNodeId = componentState.nodeId;
-          if (nodeId == componentStateNodeId) {
-            return componentState;
-          }
-        }
+  getLatestComponentStateByWorkgroupIdNodeIdAndComponentId(workgroupId, nodeId, componentId) {
+    const componentStates = this.getComponentStatesByWorkgroupIdAndNodeId(workgroupId, nodeId);
+    for (let c = componentStates.length - 1; c >= 0; c--) {
+      const componentState = componentStates[c];
+      if (this.isComponentStateMatchingNodeIdComponentId(componentState, nodeId, componentId)) {
+        return componentState;
       }
     }
     return null;
   }
 
+  isComponentStateMatchingNodeIdComponentId(componentState, nodeId, componentId) {
+    return componentState.nodeId === nodeId && componentState.componentId === componentId;
+  }
+
+  getLatestComponentStateByWorkgroupIdNodeId(workgroupId, nodeId) {
+    const componentStates = this.getComponentStatesByWorkgroupIdAndNodeId(workgroupId, nodeId);
+    for (let c = componentStates.length - 1; c >= 0; c--) {
+      const componentState = componentStates[c];
+      if (this.isComponentStateMatchingNodeId(componentState, nodeId)) {
+        return componentState;
+      }
+    }
+    return null;
+  }
+
+  isComponentStateMatchingNodeId(componentState, nodeId) {
+    return componentState.nodeId === nodeId;
+  }
+
   /**
-   * Get the latest component states for a workgroup. Each component state
-   * will be the latest component state for a component.
    * @param workgroupId the workgroup id
-   * @return an array of latest component states
+   * @return An array of component states. Each component state will be the latest component state
+   * for a component.
    */
   getLatestComponentStatesByWorkgroupId(workgroupId) {
     const componentStates = [];
-    if (workgroupId != null) {
-      const componentStatesForWorkgroup =
-          this.getComponentStatesByWorkgroupId(workgroupId);
-      if (componentStatesForWorkgroup != null) {
-        // mapping of component to revision counter
-        const componentRevisionCounter = {};
-
-        /*
-         * used to keep track of the components we have found component
-         * states for already
-         */
-        const componentsFound = {};
-        for (let componentState of componentStatesForWorkgroup) {
-          if (componentState != null) {
-            // get the node id and component id of the component state
-            const nodeId = componentState.nodeId;
-            const componentId = componentState.componentId;
-
-            // generate the component key e.g. "node2_bb83hs0sd8"
-            const key = nodeId + "-" + componentId;
-
-            if (componentRevisionCounter[key] == null) {
-              // initialize the component revision counter for this component to 1 if there is no entry
-              componentRevisionCounter[key] = 1;
-            }
-
-            const revisionCounter = componentRevisionCounter[key];
-
-            // set the revision counter into the component state
-            componentState.revisionCounter = revisionCounter;
-
-            // increment the revision counter for the component
-            componentRevisionCounter[key] = revisionCounter + 1;
-          }
-        }
-
-        for (let csb = componentStatesForWorkgroup.length - 1; csb >= 0; csb--) {
-          const componentState = componentStatesForWorkgroup[csb];
-
-          if (componentState != null) {
-            // get the node id and component id of the component state
-            const nodeId = componentState.nodeId;
-            const componentId = componentState.componentId;
-
-            // generate the component key e.g. "node2_bb83hs0sd8"
-            const key = nodeId + "-" + componentId;
-
-            if (componentsFound[key] == null) {
-              /*
-               * we have not found a component state for this
-               * component yet so we will add it to the array
-               * of component states
-               */
-              componentStates.push(componentState);
-
-              /*
-               * add an entry into the components found so that
-               * don't add any more component states from this
-               * component
-               */
-              componentsFound[key] = true;
-            }
-          }
-        }
-
-        /*
-         * reverse the component states array since we have been adding
-         * component states from newest to oldest order but we want them
-         * in oldest to newest order
-         */
-        componentStates.reverse();
+    const componentsFound = {};
+    const componentStatesForWorkgroup = this.getComponentStatesByWorkgroupId(workgroupId);
+    for (let csb = componentStatesForWorkgroup.length - 1; csb >= 0; csb--) {
+      const componentState = componentStatesForWorkgroup[csb];
+      const key = this.getComponentStateNodeIdComponentIdKey(componentState);
+      if (componentsFound[key] == null) {
+        componentStates.push(componentState);
+        componentsFound[key] = true;
       }
     }
+    componentStates.reverse();
     return componentStates;
+  }
+
+  injectRevisionCounterIntoComponentStates(componentStates) {
+    const componentRevisionCounter = {};
+    for (const componentState of componentStates) {
+      const key = this.getComponentStateNodeIdComponentIdKey(componentState);
+      if (componentRevisionCounter[key] == null) {
+        componentRevisionCounter[key] = 1;
+      }
+      const revisionCounter = componentRevisionCounter[key];
+      componentState.revisionCounter = revisionCounter;
+      componentRevisionCounter[key] = revisionCounter + 1;
+    }
+  }
+
+  getComponentStateNodeIdComponentIdKey(componentState) {
+    return componentState.nodeId + '-' + componentState.componentId;
   }
 
   getComponentStatesByWorkgroupIdAndNodeId(workgroupId, nodeId) {
     const componentStatesByWorkgroupId = this.getComponentStatesByWorkgroupId(workgroupId);
     const componentStatesByNodeId = this.getComponentStatesByNodeId(nodeId);
-
-    // find the intersect and return it
-    return componentStatesByWorkgroupId.filter((n) => {
-      return componentStatesByNodeId.indexOf(n) != -1;
-    });
+    return this.UtilService.getIntersectOfArrays(
+      componentStatesByWorkgroupId,
+      componentStatesByNodeId
+    );
   }
 
-  /**
-   * Get component states for a workgroup id and component id
-   * @param workgroupId the workgroup id
-   * @param componentId the component id
-   * @returns an array of component states
-   */
   getComponentStatesByWorkgroupIdAndComponentId(workgroupId, componentId) {
     const componentStatesByWorkgroupId = this.getComponentStatesByWorkgroupId(workgroupId);
     const componentStatesByComponentId = this.getComponentStatesByComponentId(componentId);
-    return componentStatesByWorkgroupId.filter((n) => {
-      return componentStatesByComponentId.indexOf(n) !== -1;
-    });
+    return this.UtilService.getIntersectOfArrays(
+      componentStatesByWorkgroupId,
+      componentStatesByComponentId
+    );
   }
 
   getComponentStatesByWorkgroupIdAndComponentIds(workgroupId, componentIds) {
     const componentStatesByWorkgroupId = this.getComponentStatesByWorkgroupId(workgroupId);
     let componentStatesByComponentId = [];
     for (const componentId of componentIds) {
-      componentStatesByComponentId =
-          componentStatesByComponentId.concat(this.getComponentStatesByComponentId(componentId));
+      componentStatesByComponentId = componentStatesByComponentId.concat(
+        this.getComponentStatesByComponentId(componentId)
+      );
     }
-    return componentStatesByWorkgroupId.filter((n) => {
-      return componentStatesByComponentId.indexOf(n) !== -1;
-    });
+    return this.UtilService.getIntersectOfArrays(
+      componentStatesByWorkgroupId,
+      componentStatesByComponentId
+    );
   }
 
   getEventsByWorkgroupId(workgroupId) {
@@ -693,7 +685,7 @@ class TeacherDataService {
     } else {
       return [];
     }
-  };
+  }
 
   getEventsByNodeId(nodeId) {
     const eventsByNodeId = this.studentData.eventsByNodeId[nodeId];
@@ -702,39 +694,27 @@ class TeacherDataService {
     } else {
       return [];
     }
-  };
+  }
 
   getEventsByWorkgroupIdAndNodeId(workgroupId, nodeId) {
     const eventsByWorkgroupId = this.getEventsByWorkgroupId(workgroupId);
     const eventsByNodeId = this.getEventsByNodeId(nodeId);
+    return this.UtilService.getIntersectOfArrays(eventsByWorkgroupId, eventsByNodeId);
+  }
 
-    // find the intersect and return it
-    return eventsByWorkgroupId.filter((n) => {
-      return eventsByNodeId.indexOf(n) != -1;
-    });
-  };
-
-  /**
-   * Get the latest event by workgroup id, node id, and event type
-   * @param workgroupId the workgroup id
-   * @param nodeId the node id
-   * @param eventType the event type
-   * @return the latest event with the matching parameters or null if
-   * no event is found with the matching parameters
-   */
   getLatestEventByWorkgroupIdAndNodeIdAndType(workgroupId, nodeId, eventType) {
     const eventsByWorkgroupId = this.getEventsByWorkgroupId(workgroupId);
-    if (eventsByWorkgroupId != null) {
-      for (let e = eventsByWorkgroupId.length - 1; e >= 0; e--) {
-        const event = eventsByWorkgroupId[e];
-        if (event != null) {
-          if (event.nodeId == nodeId && event.event == eventType) {
-            return event;
-          }
-        }
+    for (let e = eventsByWorkgroupId.length - 1; e >= 0; e--) {
+      const event = eventsByWorkgroupId[e];
+      if (this.isEventMatchingNodeIdEventType(event, nodeId, eventType)) {
+        return event;
       }
     }
     return null;
+  }
+
+  isEventMatchingNodeIdEventType(event, nodeId, eventType) {
+    return event.nodeId === nodeId && event.event === eventType;
   }
 
   getAnnotationsToWorkgroupId(workgroupId) {
@@ -758,7 +738,7 @@ class TeacherDataService {
   getAnnotationsByNodeIdAndPeriodId(nodeId, periodId) {
     const annotationsByNodeId = this.studentData.annotationsByNodeId[nodeId];
     if (annotationsByNodeId != null) {
-      return annotationsByNodeId.filter((annotation) => {
+      return annotationsByNodeId.filter(annotation => {
         return this.UtilService.isMatchingPeriods(annotation.periodId, periodId);
       });
     } else {
@@ -769,92 +749,77 @@ class TeacherDataService {
   getAnnotationsToWorkgroupIdAndNodeId(workgroupId, nodeId) {
     const annotationsToWorkgroupId = this.getAnnotationsToWorkgroupId(workgroupId);
     const annotationsByNodeId = this.getAnnotationsByNodeId(nodeId);
-
-    // find the intersect and return it
-    return annotationsToWorkgroupId.filter((n) => {
-      return annotationsByNodeId.indexOf(n) != -1;
-    });
+    return this.UtilService.getIntersectOfArrays(annotationsToWorkgroupId, annotationsByNodeId);
   }
 
-  /**
-   * Initialize the periods
-   */
   initializePeriods() {
-    let periods = this.ConfigService.getPeriods();
-    let currentPeriod = null;
-
+    const periods = this.ConfigService.getPeriods();
+    this.setCurrentPeriod(periods[0]);
     if (periods.length > 1) {
-      let allPeriodsOption = {
-        periodId: -1,
-        periodName: this.$translate('allPeriods')
-      };
-
-      periods.unshift(allPeriodsOption);
-      currentPeriod = periods[1];
-    } else if (periods.length == 1) {
-      currentPeriod = periods[0];
+      this.addAllPeriods(periods);
     }
-
-    let mergedPeriods = [];
-
-    /*
-     * Get the periods from the run status. These periods may not be up to
-     * date so we need to compare them with the periods from the config.
-     */
-    let runStatusPeriods = this.runStatus.periods;
-
-    for (let period of periods) {
-      if (period != null) {
-        let runStatusPeriod = null;
-        if (runStatusPeriods != null) {
-          for (let tempRunStatusPeriod of runStatusPeriods) {
-            if (tempRunStatusPeriod != null) {
-              if (period.periodId == tempRunStatusPeriod.periodId) {
-                runStatusPeriod = tempRunStatusPeriod;
-              }
-            }
-          }
-        }
-
-        if (runStatusPeriod == null) {
-          /*
-           * we did not find the period object in the run status so
-           * we will use the period object from the config
-           */
-          mergedPeriods.push(period);
-        } else {
-          mergedPeriods.push(runStatusPeriod);
-        }
-      }
+    let mergedPeriods = periods;
+    if (this.runStatus.periods != null) {
+      mergedPeriods = this.mergeConfigAndRunStatusPeriods(periods, this.runStatus.periods);
     }
-
     this.periods = mergedPeriods;
     this.runStatus.periods = mergedPeriods;
+  }
 
-    if (currentPeriod) {
-      this.setCurrentPeriod(currentPeriod);
+  addAllPeriods(periods) {
+    const allPeriodsOption = {
+      periodId: -1,
+      periodName: this.$translate('allPeriods')
+    };
+    periods.unshift(allPeriodsOption);
+    return periods;
+  }
+
+  mergeConfigAndRunStatusPeriods(configPeriods, runStatusPeriods) {
+    const mergedPeriods = [];
+    for (const configPeriod of configPeriods) {
+      const runStatusPeriod = this.getRunStatusPeriodById(runStatusPeriods, configPeriod.periodId);
+      if (runStatusPeriod == null) {
+        /*
+         * we did not find the period object in the run status so we will use the period object from
+         * the config
+         */
+        mergedPeriods.push(configPeriod);
+      } else {
+        mergedPeriods.push(runStatusPeriod);
+      }
     }
+    return mergedPeriods;
+  }
+
+  getRunStatusPeriodById(runStatusPeriods, periodId) {
+    for (const runStatusPeriod of runStatusPeriods) {
+      if (runStatusPeriod.periodId == periodId) {
+        return runStatusPeriod;
+      }
+    }
+    return null;
   }
 
   setCurrentPeriod(period) {
-    let previousPeriod = this.currentPeriod;
+    const previousPeriod = this.currentPeriod;
     this.currentPeriod = period;
-    let periodId = this.currentPeriod.periodId;
+    this.clearCurrentWorkgroupIfNecessary(this.currentPeriod.periodId);
+    if (previousPeriod == null || previousPeriod.periodId != this.currentPeriod.periodId) {
+      this.$rootScope.$broadcast('currentPeriodChanged', {
+        previousPeriod: previousPeriod,
+        currentPeriod: this.currentPeriod
+      });
+    }
+  }
 
-    /*
-     * if currently selected workgroup is in a different period, clear the
-     * currently selected workgroup
-     */
-    let currentWorkgroup = this.getCurrentWorkgroup();
+  clearCurrentWorkgroupIfNecessary(periodId) {
+    const currentWorkgroup = this.getCurrentWorkgroup();
     if (currentWorkgroup) {
-      let workgroupPeriod = currentWorkgroup.periodId;
-      if (periodId !== -1 && workgroupPeriod !== periodId) {
+      if (periodId !== -1 && currentWorkgroup.periodId !== periodId) {
         this.setCurrentWorkgroup(null);
       }
     }
-
-    this.$rootScope.$broadcast('currentPeriodChanged',
-        {previousPeriod: previousPeriod, currentPeriod: this.currentPeriod});
   }
 
   getCurrentPeriod() {
@@ -871,8 +836,9 @@ class TeacherDataService {
 
   setCurrentWorkgroup(workgroup) {
     this.currentWorkgroup = workgroup;
-    this.$rootScope.$broadcast('currentWorkgroupChanged',
-        {currentWorkgroup: this.currentWorkgroup});
+    this.$rootScope.$broadcast('currentWorkgroupChanged', {
+      currentWorkgroup: this.currentWorkgroup
+    });
   }
 
   getCurrentWorkgroup() {
@@ -881,26 +847,17 @@ class TeacherDataService {
 
   setCurrentStep(step) {
     this.currentStep = step;
-    this.$rootScope.$broadcast('currentStepChanged',
-        {currentStep: this.currentStep});
+    this.$rootScope.$broadcast('currentStepChanged', { currentStep: this.currentStep });
   }
 
   getCurrentStep() {
     return this.currentStep;
   }
 
-  /**
-   * Get the current node
-   * @returns the current node object
-   */
   getCurrentNode() {
     return this.currentNode;
   }
 
-  /**
-   * Get the current node id
-   * @returns the current node id
-   */
   getCurrentNodeId() {
     if (this.currentNode != null) {
       return this.currentNode.id;
@@ -908,47 +865,34 @@ class TeacherDataService {
     return null;
   }
 
-  /**
-   * Set the current node
-   * @param nodeId the node id
-   */
   setCurrentNodeByNodeId(nodeId) {
     if (nodeId != null) {
-      let node = this.ProjectService.getNodeById(nodeId);
-      this.setCurrentNode(node);
+      this.setCurrentNode(this.ProjectService.getNodeById(nodeId));
     }
   }
 
-  /**
-   * Set the current node
-   * @param node the node object
-   */
   setCurrentNode(node) {
-    let previousCurrentNode = this.currentNode;
+    const previousCurrentNode = this.currentNode;
     if (previousCurrentNode !== node) {
-      if (previousCurrentNode &&
-          !this.ProjectService.isGroupNode(previousCurrentNode.id)) {
+      if (previousCurrentNode && !this.ProjectService.isGroupNode(previousCurrentNode.id)) {
         this.previousStep = previousCurrentNode;
       }
-
       this.currentNode = node;
-      this.$rootScope.$broadcast('currentNodeChanged',
-          {previousNode: previousCurrentNode, currentNode: this.currentNode});
+      this.$rootScope.$broadcast('currentNodeChanged', {
+        previousNode: previousCurrentNode,
+        currentNode: this.currentNode
+      });
     }
   }
 
-  /**
-   * End the current node
-   */
   endCurrentNode() {
     const previousCurrentNode = this.currentNode;
     if (previousCurrentNode != null) {
-      this.$rootScope.$broadcast('exitNode', {nodeToExit: previousCurrentNode});
+      this.$rootScope.$broadcast('exitNode', { nodeToExit: previousCurrentNode });
     }
   }
 
   /**
-   * End the current node and set the current node
    * @param nodeId the node id of the new current node
    */
   endCurrentNodeAndSetCurrentNodeByNodeId(nodeId) {
@@ -956,11 +900,6 @@ class TeacherDataService {
     this.setCurrentNodeByNodeId(nodeId);
   }
 
-  /**
-   * Get the total score for a workgroup
-   * @param workgroupId the workgroup id
-   * @returns the total score for the workgroup
-   */
   getTotalScoreByWorkgroupId(workgroupId) {
     if (this.studentData.annotationsToWorkgroupId != null) {
       const annotations = this.studentData.annotationsToWorkgroupId[workgroupId];
@@ -969,71 +908,53 @@ class TeacherDataService {
     return null;
   }
 
-  /**
-   * Get the run status
-   * @returns the run status object
-   */
   getRunStatus() {
     return this.runStatus;
   }
 
-  /**
-   * Check if any period in the run is paused
-   * @returns Boolean whether any periods are paused
-   */
-  isAnyPeriodPaused(periodId) {
-    let runStatus = this.runStatus;
-
-    if (runStatus && runStatus.periods) {
-      let periods = runStatus.periods;
-      let nPeriods = periods.length;
-      let nPeriodsPaused = 0;
-      for (let period of periods) {
-        if (period != null) {
-          if (period.paused) {
-            return true;
-          }
-        }
+  isAnyPeriodPaused() {
+    for (const period of this.getPeriods()) {
+      if (period.paused) {
+        return true;
       }
     }
     return false;
   }
 
-  /**
-   * Check if the given period is paused
-   * @param periodId the id for a period
-   * @returns Boolean whether the period is paused or not
-   */
+  getPeriods() {
+    if (this.runStatus && this.runStatus.periods) {
+      return this.runStatus.periods;
+    } else {
+      return [];
+    }
+  }
+
   isPeriodPaused(periodId) {
-    let isPaused = false;
-    let runStatus = this.runStatus;
+    if (periodId === -1) {
+      return this.isAllPeriodsPaused();
+    } else {
+      return this.isSpecificPeriodPaused(periodId);
+    }
+  }
 
-    if (runStatus && runStatus.periods) {
-      let periods = runStatus.periods;
-      let nPeriods = periods.length;
-      let nPeriodsPaused = 0;
-
-      for (let period of periods) {
-        if (period != null) {
-          isPaused = period.paused;
-          if (periodId == period.periodId) {
-            // we have found the period we are looking for
-            break;
-          } else {
-            if (isPaused) {
-              nPeriodsPaused++;
-            } else {
-              break;
-            }
-          }
-        }
-      }
-
-      if (periodId === -1 && nPeriods === nPeriodsPaused) {
-        isPaused = true;
+  isAllPeriodsPaused() {
+    let numPausedPeriods = 0;
+    const periods = this.getPeriods();
+    for (const period of periods) {
+      if (period.paused) {
+        numPausedPeriods++;
       }
     }
-    return isPaused;
+    return numPausedPeriods === periods.length;
+  }
+
+  isSpecificPeriodPaused(periodId) {
+    for (const period of this.getPeriods()) {
+      if (period.periodId === periodId) {
+        return period.paused;
+      }
+    }
+    return false;
   }
 
   /**
@@ -1043,6 +964,19 @@ class TeacherDataService {
    */
   pauseScreensChanged(periodId, isPaused) {
     this.updatePausedRunStatusValue(periodId, isPaused);
+    this.sendRunStatusThenHandlePauseScreen(periodId, isPaused);
+    const context = 'ClassroomMonitor',
+      nodeId = null,
+      componentId = null,
+      componentType = null,
+      category = 'TeacherAction',
+      data = { periodId: periodId },
+      event = isPaused ? 'pauseScreen' : 'unPauseScreen';
+    this.saveEvent(context, nodeId, componentId, componentType, category, event, data);
+    this.$rootScope.$broadcast('pauseScreensChanged', { periods: this.runStatus.periods });
+  }
+
+  sendRunStatusThenHandlePauseScreen(periodId, isPaused) {
     this.sendRunStatus().then(() => {
       if (isPaused) {
         this.TeacherWebSocketService.pauseScreens(periodId);
@@ -1050,21 +984,13 @@ class TeacherDataService {
         this.TeacherWebSocketService.unPauseScreens(periodId);
       }
     });
-    const context = "ClassroomMonitor", nodeId = null, componentId = null, componentType = null,
-      category = "TeacherAction", data = { periodId: periodId };
-    let event = "pauseScreen";
-    if (!isPaused) {
-      event = "unPauseScreen";
-    }
-    this.saveEvent(context, nodeId, componentId, componentType, category, event, data);
-    this.$rootScope.$broadcast('pauseScreensChanged', {periods: this.runStatus.periods});
   }
 
   sendRunStatus() {
     const httpParams = {
       method: 'POST',
       url: this.ConfigService.getConfigParam('runStatusURL'),
-      headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       data: $.param({
         runId: this.ConfigService.getConfigParam('runId'),
         status: angular.toJson(this.runStatus)
@@ -1073,54 +999,43 @@ class TeacherDataService {
     return this.$http(httpParams);
   }
 
-  /**
-   * Create a local run status object to keep track of the run status
-   * @returns the run status object
-   */
   createRunStatus() {
-    const runStatus = {};
-    runStatus.runId = this.ConfigService.getConfigParam('runId');
     const periods = this.ConfigService.getPeriods();
-    for (let period of periods) {
+    for (const period of periods) {
       period.paused = false;
     }
-    runStatus.periods = periods;
-    this.runStatus = runStatus;
-    return this.runStatus;
+    return {
+      runId: this.ConfigService.getConfigParam('runId'),
+      periods: periods
+    };
   }
 
   /**
    * Update the paused value for a period in our run status
-   * @param periodId the period id
+   * @param periodId the period id or -1 for all periods
    * @param value whether the period is paused or not
    */
   updatePausedRunStatusValue(periodId, value) {
     if (this.runStatus == null) {
-      this.createRunStatus();
+      this.runStatus = this.createRunStatus();
     }
+    if (periodId === -1) {
+      this.updateAllPeriodsPausedValue(value);
+    } else {
+      this.updatePeriodPausedValue(periodId, value);
+    }
+  }
 
-    let runStatus = this.runStatus;
-    let periods = runStatus.periods;
-    let allPeriodsPaused = true;
+  updateAllPeriodsPausedValue(value) {
+    for (const period of this.runStatus.periods) {
+      period.paused = value;
+    }
+  }
 
-    if (periods) {
-      let l = periods.length, x = l - 1;
-      for (; x > -1; x--) {
-        let tempPeriod = periods[x];
-        let tempPeriodId = tempPeriod.periodId;
-
-        //check if the period id matches the one we need to update or if all periods has been selected
-        if (periodId === tempPeriodId || periodId === -1) {
-          tempPeriod.paused = value;
-        }
-
-        if (tempPeriodId !== -1 && !tempPeriod.paused) {
-          allPeriodsPaused = false;
-        }
-
-        if (tempPeriodId === -1) {
-          tempPeriod.paused = allPeriodsPaused;
-        }
+  updatePeriodPausedValue(periodId, value) {
+    for (const period of this.runStatus.periods) {
+      if (period.periodId === periodId) {
+        period.paused = value;
       }
     }
   }

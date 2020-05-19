@@ -13,11 +13,11 @@ class NotebookNotesController {
     this.groups = [];
     this.selectedTabIndex = 0;
     this.$scope = $scope;
-    this.publicNotebookItems = this.NotebookService.publicNotebookItems;
     this.groupNameToGroup = {};
   }
 
   $onInit() {
+    this.color = this.config.itemTypes.note.label.color;
     const personalGroup = {
       title: 'Personal',
       name: 'private',
@@ -46,10 +46,6 @@ class NotebookNotesController {
       }
     }
 
-    this.$onInit = () => {
-      this.color = this.config.itemTypes.note.label.color;
-    };
-
     this.$onChanges = (changes) => {
       if (changes.notebook) {
         this.notebook = angular.copy(changes.notebook.currentValue);
@@ -64,7 +60,7 @@ class NotebookNotesController {
     this.$rootScope.$on('publicNotebookItemsRetrieved', (event, args) => {
       for (let group of this.groups) {
         if (group.name !== 'private') {
-          group.items = this.publicNotebookItems[group.name];
+          group.items = this.NotebookService.publicNotebookItems[group.name];
         }
       }
     });
@@ -169,7 +165,6 @@ const NotebookNotes = {
     config: '<',
     insertMode: '<',
     notebook: '<',
-    publicNotebookItems: '<',
     notesVisible: '<',
     workgroupId: '<',
     onClose: '&',

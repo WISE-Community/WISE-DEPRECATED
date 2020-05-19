@@ -125,8 +125,8 @@ public class ProjectServiceImplTest {
 
   @Test
   public void getById_ProjectNotExist_ShouldThrowException() throws Exception {
-    expect(projectDao.getById(NONEXISTING_PROJECT_ID)).andThrow(
-        new ObjectNotFoundException(NONEXISTING_PROJECT_ID, Project.class));
+    expect(projectDao.getById(NONEXISTING_PROJECT_ID))
+        .andThrow(new ObjectNotFoundException(NONEXISTING_PROJECT_ID, Project.class));
     replay(projectDao);
     try {
       projectServiceImpl.getById(NONEXISTING_PROJECT_ID);
@@ -165,10 +165,10 @@ public class ProjectServiceImplTest {
     Project project = new ProjectImpl();
     project.setId(12L);
     project.setWISEVersion(4);
-    expect(appProperties.getProperty("wise.hostname")).andReturn("http://localhost:8080");
+    expect(appProperties.getProperty("wise4.hostname")).andReturn("http://localhost:8080/legacy");
     replay(appProperties);
     String uri = projectServiceImpl.getProjectURI(project);
-    assertEquals("http://localhost:8080/previewproject.html?projectId=12#!/project/12", uri);
+    assertEquals("http://localhost:8080/legacy/previewproject.html?projectId=12", uri);
     verify(appProperties);
   }
 
@@ -180,7 +180,7 @@ public class ProjectServiceImplTest {
     expect(appProperties.getProperty("wise.hostname")).andReturn("http://localhost:8080");
     replay(appProperties);
     String uri = projectServiceImpl.getProjectURI(project);
-    assertEquals("http://localhost:8080/project/155#!/project/155", uri);
+    assertEquals("http://localhost:8080/preview/unit/155", uri);
     verify(appProperties);
   }
 
@@ -240,6 +240,7 @@ public class ProjectServiceImplTest {
   public void updateMetadataAndLicenseIfNecessary_shouldUpdateMetadataAndWriteLicenseFile() {
     Project project = new ProjectImpl();
     project.setModulePath("/temp/project.json");
+    project.setWISEVersion(5);
     ProjectMetadata oldProjectMetadata = new ProjectMetadataImpl();
     oldProjectMetadata.setTitle("Old Title");
     oldProjectMetadata.setAuthors("[\"Old Authors\"]");
@@ -261,9 +262,8 @@ public class ProjectServiceImplTest {
       projectJSON.put("metadata", metadata);
       projectServiceImpl.updateMetadataAndLicenseIfNecessary(project, projectJSON.toString());
       assertEquals(metadata.get("title"), project.getMetadata().getTitle());
-      String licenseText =
-          FileUtils.readFileToString(new File(licenseFilePath), "UTF-8");
-      assertTrue(licenseText.contains("licensed under CC BY-SA by Spongebob Squarepants"));
+      String licenseText = FileUtils.readFileToString(new File(licenseFilePath), "UTF-8");
+      assertTrue(licenseText.contains("licensed under CC BY-SA by\nSpongebob Squarepants"));
     } catch (JSONException e) {
       fail();
     } catch (IOException e) {

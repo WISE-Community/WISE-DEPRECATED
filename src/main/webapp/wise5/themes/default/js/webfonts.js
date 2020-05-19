@@ -1,13 +1,13 @@
-import webfontloader from 'webfontloader';
+import * as webfontloader from 'webfontloader';
 
 webfontloader.load({
-  fontinactive: function (family, fvd) {
-    switch(family) {
+  fontinactive: function(family, fvd) {
+    switch (family) {
       case 'Roboto':
         webfontloader.load({
           custom: {
             families: ['Roboto:300,400,500,700,400italic'],
-            urls: [ 'wise5/style/fonts/roboto/roboto.css' ]
+            urls: ['wise5/style/fonts/roboto/roboto.css']
           }
         });
         break;
@@ -15,7 +15,7 @@ webfontloader.load({
         webfontloader.load({
           custom: {
             families: ['Material Icons'],
-            urls: [ 'wise5/style/fonts/material-icons/material-icons.css' ]
+            urls: ['wise5/style/fonts/material-icons/material-icons.css']
           }
         });
         break;

@@ -1,6 +1,7 @@
 class SessionService {
-  constructor($http, $rootScope, ConfigService) {
+  constructor($http, $location, $rootScope, ConfigService) {
     this.$http = $http;
+    this.$location = $location;
     this.$rootScope = $rootScope;
     this.ConfigService = ConfigService;
     this.warningVisible = false;
@@ -35,15 +36,8 @@ class SessionService {
   }
 
   goHome() {
-    const wiseBaseURL = this.ConfigService.getWISEBaseURL();
-    const userType = this.ConfigService.getConfigParam('userType');
-    let href = this.ConfigService.getMainHomePageURL();
-    if (userType === 'student') {
-      href = wiseBaseURL + '/student';
-    } else if (userType === 'teacher') {
-      href = wiseBaseURL + '/teacher';
-    }
-    window.location.href = href;
+    this.$rootScope.$broadcast('exit');
+    this.$location.url(this.ConfigService.getConfigParam('userType'));
   }
 
   logOut() {
@@ -142,6 +136,7 @@ class SessionService {
 
 SessionService.$inject = [
   '$http',
+  '$location',
   '$rootScope',
   'ConfigService'
 ];

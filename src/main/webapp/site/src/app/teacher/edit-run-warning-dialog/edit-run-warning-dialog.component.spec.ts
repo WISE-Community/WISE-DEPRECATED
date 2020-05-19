@@ -5,6 +5,7 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { Run } from "../../domain/run";
 import { configureTestSuite } from 'ng-bullet';
+import { RouterTestingModule } from '@angular/router/testing';
 
 export class MockConfigService {
   getContextPath(): string {
@@ -30,6 +31,7 @@ describe('EditRunWarningDialogComponent', () => {
         { provide: MAT_DIALOG_DATA, useValue: { data: { run }}},
         { provide: ConfigService, useClass: MockConfigService }
       ],
+      imports: [ RouterTestingModule ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
   });

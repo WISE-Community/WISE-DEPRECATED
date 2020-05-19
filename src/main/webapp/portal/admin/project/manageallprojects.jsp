@@ -14,7 +14,7 @@
 <c:if test="${textDirection == 'rtl' }">
     <link href="${contextPath}/<spring:theme code="rtlstylesheet"/>" rel="stylesheet" type="text/css" >
 </c:if>
-    
+
 <script src="${contextPath}/<spring:theme code="jquerysource"/>" type="text/javascript"></script>
 <script src="${contextPath}/<spring:theme code="jquerymigrate.js"/>" type="text/javascript"></script>
 <script src="${contextPath}/<spring:theme code="projecttags.js"/>" type="text/javascript"></script>
@@ -56,10 +56,10 @@ $(document).ready(function() {
 	        $(this).find(":selected").each(function() {
 	    	        var isCurrent = $(this).val();
 	    	    	$.ajax(
-	    	    	    	{type:'POST', 
-	    		    	    	url:'manageallprojects.html', 
-	    		    	    	data:'attr=isCurrent&projectId=' + projectId + '&val=' + isCurrent, 
-	    		    	    	error:function(){alert('error: please talk to wise administrator.');}, 
+	    	    	    	{type:'POST',
+	    		    	    	url:'manageallprojects.html',
+	    		    	    	data:'attr=isCurrent&projectId=' + projectId + '&val=' + isCurrent,
+	    		    	    	error:function(){alert('error: please talk to wise administrator.');},
 	    		    	    	success:function(){}
 	    	    	    	});
 	        });
@@ -77,10 +77,10 @@ function updateMaxTotalAssetsSize(projectId, newMaxTotalAssetsSize) {
 					type:'POST',
 					url:'manageallprojects.html',
 					data:{attr:"maxTotalAssetsSize",projectId:projectId,val:newMaxTotalAssetsSize},
-    	    		error:function(){alert('error: please talk to wise administrator.');}, 
-    	    		success:function(){}						
+    	    		error:function(){alert('error: please talk to wise administrator.');},
+    	    		success:function(){}
 				}
-				);		
+				);
 	}
 }
 </script>
@@ -148,10 +148,10 @@ function updateMaxTotalAssetsSize(projectId, newMaxTotalAssetsSize) {
 			</div>
 		</td>
 		<td>
-		<a href="${contextPath}/author/authorproject.html?projectId=${project.id}">Edit Project</a><br/>
+		<a href="${contextPath}/teacher/edit/unit/${project.id}">Edit Project</a><br/>
 		<a href="${contextPath}/teacher/projects/customized/shareproject.html?projectId=${project.id}">Manage Shared Teachers</a><br/>
 		<a href="${contextPath}/project/export/${project.id}">Export project as Zip</a>
-		</td>		
+		</td>
 	</tr>
 	</c:forEach>
 </table>

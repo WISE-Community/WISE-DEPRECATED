@@ -286,6 +286,15 @@
                   </md-option>
                 </md-select>
               </md-input-container>
+              <md-input-container style='margin-right: 20px; width: 270px;'
+                                  ng-if='graphController.authoringGetConnectedComponentType(connectedComponent) === "Graph"'>
+                <md-checkbox class='md-primary'
+                             ng-model='connectedComponent.importGraphSettings'
+                             style='margin-right: 20px;'
+                             ng-change='graphController.authoringViewComponentChanged()'>
+                  {{ ::'graph.importGraphSettings' | translate }}
+                </md-checkbox>
+              </md-input-container>
               <span flex></span>
               <md-button class='topButton md-raised md-primary'
                          ng-click='graphController.authoringDeleteConnectedComponent($index)'>
@@ -294,7 +303,8 @@
               </md-button>
             </div>
             <div ng-if='graphController.authoringGetConnectedComponentType(connectedComponent) == "Table"' flex>
-              <md-checkbox ng-model='connectedComponent.skipFirstRow'
+              <md-checkbox class='md-primary'
+                           ng-model='connectedComponent.skipFirstRow'
                            style='margin-right: 20px;'
                            ng-change='graphController.authoringViewComponentChanged()'>
                 {{ ::'graph.skipFirstRow' | translate }}
@@ -466,7 +476,7 @@
           </md-input-container>
         </div>
         <div layout='row'>
-          <md-input-container style='margin-right: 20px; width: 50px;'>
+          <md-input-container style='margin-right: 20px; width: 80px;'>
             <h6>{{ ::'graph.xAxis' | translate }}</h6>
           </md-input-container>
           <md-input-container style='margin-right: 20px; width: 200px;'>
@@ -508,7 +518,8 @@
                      ng-change='graphController.authoringViewComponentChanged()'/>
             </md-input-container>
             <md-input-container>
-              <md-checkbox ng-model='graphController.authoringComponentContent.xAxis.locked'
+              <md-checkbox class='md-primary'
+                           ng-model='graphController.authoringComponentContent.xAxis.locked'
                            ng-change='graphController.authoringViewComponentChanged()'>
                 {{ ::'graph.locked' | translate }}
               </md-checkbox>
@@ -541,8 +552,29 @@
             </div>
           </div>
         </div>
-        <div layout='row' style='height: 80px;'>
-          <md-input-container style='margin-right: 20px; width: 50px;'>
+        <div>
+          <div layout='row'>
+            <div>
+              <md-switch ng-model='graphController.enableMultipleYAxes'
+                  class='md-primary'
+                  ng-change='graphController.enableMultipleYAxesChanged()'>
+                {{ ::'graph.enableMultipleYAxes' | translate }}
+              </md-switch>
+            </div>
+            <div ng-if='graphController.enableMultipleYAxes'>
+              <md-radio-group ng-model='graphController.numYAxes' class='md-primary'
+                  ng-change='graphController.numYAxesChanged(graphController.numYAxes, {{graphController.numYAxes}})'>
+                <div layout='row' style='margin-top: 20px;'>
+                  <md-radio-button ng-value='{{2}}' style='margin-left: 40px'>2</md-radio-button>
+                  <md-radio-button ng-value='{{3}}' style='margin-left: 40px'>3</md-radio-button>
+                  <md-radio-button ng-value='{{4}}' style='margin-left: 40px'>4</md-radio-button>
+                </div>
+              </md-radio-group>
+            </div>
+          </div>
+        </div>
+        <div ng-show='!graphController.enableMultipleYAxes' layout='row' style='height: 80px;'>
+          <md-input-container style='margin-right: 20px; width: 80px;'>
             <h6>{{ ::'graph.yAxis' | translate }}</h6>
           </md-input-container>
           <md-input-container style='margin-right: 20px; width: 200px;'>
@@ -551,34 +583,94 @@
                    ng-model-options='{ debounce: 1000 }'
                    ng-change='graphController.authoringViewComponentChanged()'/>
           </md-input-container>
-          <div>
-            <md-input-container style='margin-right: 20px; width: 100px;'>
-              <label>{{ ::'graph.units' | translate }}</label>
-              <input ng-model='graphController.authoringComponentContent.yAxis.units'
-                     ng-model-options='{ debounce: 1000 }'
-                     ng-change='graphController.authoringViewComponentChanged()'/>
-            </md-input-container>
-            <md-input-container style='margin-right: 20px; width: 100px;'>
-              <label>{{ ::'graph.min' | translate }}</label>
-              <input type='number'
-                     ng-model='graphController.authoringComponentContent.yAxis.min'
-                     ng-model-options='{ debounce: 1000 }'
-                     ng-change='graphController.authoringViewComponentChanged()'/>
-            </md-input-container>
-            <md-input-container style='margin-right: 20px; width: 100px;'>
-              <label>{{ ::'graph.max' | translate }}</label>
-              <input type='number'
-                     ng-model='graphController.authoringComponentContent.yAxis.max'
-                     ng-model-options='{ debounce: 1000 }'
-                     ng-change='graphController.authoringViewComponentChanged()'/>
-            </md-input-container>
-            <md-input-container>
-              <md-checkbox ng-model='graphController.authoringComponentContent.yAxis.locked'
-                           ng-change='graphController.authoringViewComponentChanged()'>
-                {{ ::'graph.locked' | translate }}
-              </md-checkbox>
-            </md-input-container>
-          </div>
+          <md-input-container style='margin-right: 20px; width: 70px;'>
+            <label>{{ ::'graph.color' | translate }}</label>
+            <input ng-model='graphController.authoringComponentContent.yAxis.labels.style.color'
+                   ng-model-options='{ debounce: 1000 }'
+                   ng-change='graphController.yAxisColorChanged(graphController.authoringComponentContent.yAxis)'/>
+          </md-input-container>
+          <md-input-container style='margin-right: 20px; width: 100px;'>
+            <label>{{ ::'graph.units' | translate }}</label>
+            <input ng-model='graphController.authoringComponentContent.yAxis.units'
+                   ng-model-options='{ debounce: 1000 }'
+                   ng-change='graphController.authoringViewComponentChanged()'/>
+          </md-input-container>
+          <md-input-container style='margin-right: 20px; width: 100px;'>
+            <label>{{ ::'graph.min' | translate }}</label>
+            <input type='number'
+                   ng-model='graphController.authoringComponentContent.yAxis.min'
+                   ng-model-options='{ debounce: 1000 }'
+                   ng-change='graphController.authoringViewComponentChanged()'/>
+          </md-input-container>
+          <md-input-container style='margin-right: 20px; width: 100px;'>
+            <label>{{ ::'graph.max' | translate }}</label>
+            <input type='number'
+                   ng-model='graphController.authoringComponentContent.yAxis.max'
+                   ng-model-options='{ debounce: 1000 }'
+                   ng-change='graphController.authoringViewComponentChanged()'/>
+          </md-input-container>
+          <md-input-container>
+            <md-checkbox class='md-primary'
+                         ng-model='graphController.authoringComponentContent.yAxis.locked'
+                         ng-change='graphController.authoringViewComponentChanged()'>
+              {{ ::'graph.locked' | translate }}
+            </md-checkbox>
+          </md-input-container>
+        </div>
+        <div ng-show='graphController.enableMultipleYAxes'
+            ng-repeat='y in [].constructor(graphController.authoringComponentContent.yAxis.length) track by $index'
+            layout='row' style='height: 80px;'>
+          <md-input-container style='margin-right: 20px; width: 70px;'>
+            <h6>{{ ::'graph.yAxis' | translate }} {{ $index + 1 }}</h6>
+          </md-input-container>
+          <md-input-container style='margin-right: 20px; width: 200px;'>
+            <label>{{ ::'graph.title' | translate }}</label>
+            <input ng-model='graphController.authoringComponentContent.yAxis[$index].title.text'
+                   ng-model-options='{ debounce: 1000 }'
+                   ng-change='graphController.authoringViewComponentChanged()'/>
+          </md-input-container>
+          <md-input-container style='margin-right: 20px; width: 70px;'>
+            <label>{{ ::'graph.color' | translate }}</label>
+            <input ng-model='graphController.authoringComponentContent.yAxis[$index].labels.style.color'
+                   ng-model-options='{ debounce: 1000 }'
+                   ng-change='graphController.yAxisColorChanged($index)'/>
+          </md-input-container>
+          <md-input-container style='margin-right: 20px; width: 70px;'>
+            <label>{{ ::'graph.units' | translate }}</label>
+            <input ng-model='graphController.authoringComponentContent.yAxis[$index].units'
+                   ng-model-options='{ debounce: 1000 }'
+                   ng-change='graphController.authoringViewComponentChanged()'/>
+          </md-input-container>
+          <md-input-container style='margin-right: 20px; width: 70px;'>
+            <label>{{ ::'graph.min' | translate }}</label>
+            <input type='number'
+                   ng-model='graphController.authoringComponentContent.yAxis[$index].min'
+                   ng-model-options='{ debounce: 1000 }'
+                   ng-change='graphController.authoringViewComponentChanged()'/>
+          </md-input-container>
+          <md-input-container style='margin-right: 20px; width: 70px;'>
+            <label>{{ ::'graph.max' | translate }}</label>
+            <input type='number'
+                   ng-model='graphController.authoringComponentContent.yAxis[$index].max'
+                   ng-model-options='{ debounce: 1000 }'
+                   ng-change='graphController.authoringViewComponentChanged()'/>
+          </md-input-container>
+          <md-input-container style='margin-right: 20px; width: 70px;'>
+            <md-checkbox class='md-primary'
+                         ng-model='graphController.authoringComponentContent.yAxis[$index].locked'
+                         ng-change='graphController.authoringViewComponentChanged()'>
+              {{ ::'graph.locked' | translate }}
+            </md-checkbox>
+          </md-input-container>
+          <md-input-container style='margin-top: 0px;'>
+            <md-switch ng-model='graphController.authoringComponentContent.yAxis[$index].opposite'
+                class='md-primary'
+                ng-change='graphController.authoringViewComponentChanged()'>
+              <span ng-if='!graphController.authoringComponentContent.yAxis[$index].opposite'>Left</span>
+              <span ng-if='graphController.authoringComponentContent.yAxis[$index].opposite'>Right</span>
+              Side
+            </md-switch>
+          </md-input-container>
         </div>
         <div layout='row' style='height: 80px;'>
           <md-input-container>
@@ -717,12 +809,24 @@
               </md-option>
             </md-select>
           </md-input-container>
-          <md-input-container style='height: 60px;'>
-            <md-checkbox ng-model='series.canEdit'
+          <md-input-container style='margin-right: 20px; height: 60px;'>
+            <md-checkbox class='md-primary'
+                         ng-model='series.canEdit'
                          ng-model-options='{ debounce: 1000 }'
                          ng-change='graphController.authoringViewComponentChanged()'>
               {{ ::'graph.canStudentEdit' | translate }}
             </md-checkbox>
+          </md-input-container>
+          <md-input-container ng-if='graphController.enableMultipleYAxes' style='height: 60px;'>
+            <label>{{ ::'graph.yAxis' | translate }}</label>
+            <md-select ng-model='series.yAxis'
+                       ng-change='graphController.seriesYAxisChanged(series)'
+                       style='width: 200px'>
+              <md-option ng-repeat='yAxis in graphController.authoringComponentContent.yAxis track by $index'
+                         ng-value='{{$index}}'>
+                Y Axis {{$index + 1}}: {{yAxis.title.text}}
+              </md-option>
+            </md-select>
           </md-input-container>
           <br/>
           <span>{{ ::'graph.dataPoints' | translate }}</span>
@@ -793,35 +897,10 @@
       <div>
         <h5>{{ ::'studentPreview' | translate }}</h5>
       </div>
-      <div ng-switch='::graphController.mode'>
-        <div ng-switch-when='grading|gradingRevision' ng-switch-when-separator='|' layout='row' layout-wrap>
-          <div flex='100' flex-gt-sm='66' layout='column' class='component--grading__response'>
-            <div class='component--grading__response__content'>
-              <highchart id='{{graphController.chartId}}' config='graphController.chartConfig' ng-if='graphController.$scope.componentState'></highchart>
-            </div>
-            <span flex></span>
-            <component-revisions-info node-id='graphController.nodeId'
-                                      component-id='graphController.componentId'
-                                      to-workgroup-id='workgroupId'
-                                      component-state='componentState'
-                                      active='graphController.mode === "grading"'></component-revisions-info>
-          </div>
-          <div flex='100' flex-gt-sm='33' class='component--grading__annotations'>
-            <component-grading node-id='graphController.nodeId'
-                               component-id='graphController.componentId'
-                               max-score='graphController.componentContent.maxScore'
-                               from-workgroup-id='teacherWorkgroupId'
-                               to-workgroup-id='workgroupId'
-                               component-state-id='componentState.id'
-                               show-all-annotations='graphController.mode !== "grading"'
-                               is-disabled='graphController.mode !== "grading"'></component-grading>
-          </div>
-        </div>
-        <div ng-switch-default>
+      <div>
+        <div>
           <div class='component__prompt'>
             <div class='component__prompt__content'><compile data='graphController.getPrompt()'></compile></div>
-            <possible-score max-score='graphController.componentContent.maxScore'
-                            ng-if='graphController.mode === "student" && !graphController.latestAnnotations.score'></possible-score>
           </div>
           <input type='file'
                  accept='.csv'
@@ -910,7 +989,7 @@
             <div layout='row'>
               <div layout='column'
                    style='width: 80px;'
-                   ng-if='!graphController.componentContent.yAxis.locked'>
+                   ng-if='!graphController.yAxisLocked'>
                 <md-input-container>
                   <label>{{ ::'graph.yMax' | translate }}</label>
                   <input type='number'
@@ -935,13 +1014,8 @@
             </div>
             <div layout='row'
                  ng-if='!graphController.componentContent.xAxis.locked'>
-              <div style='width: 80px;'
-                   ng-if='!graphController.componentContent.yAxis.locked && !graphController.componentContent.xAxis.locked'>
-
-              </div>
               <div layout='row'
-                   style='width: 100%;'
-                   ng-if='!graphController.componentContent.xAxis.locked'>
+                   style='width: 100%;'>
                 <md-input-container>
                   <label>{{ ::'graph.xMin' | translate }}</label>
                   <input type='number'
@@ -979,8 +1053,6 @@
           </div>
         </div>
       </div>
-      <component-annotations annotations='graphController.latestAnnotations'
-                             max-score='graphController.componentContent.maxScore'></component-annotations>
     </div>
   </div>
 </div>
