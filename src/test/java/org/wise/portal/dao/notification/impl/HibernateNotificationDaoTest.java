@@ -38,7 +38,7 @@ public class HibernateNotificationDaoTest extends AbstractTransactionalDbTests {
 
   @Autowired
   HibernateNotificationDao notificationDao;
-  
+
   @Before
   public void setUp() throws Exception {
     super.setUp();
@@ -69,15 +69,15 @@ public class HibernateNotificationDaoTest extends AbstractTransactionalDbTests {
 
   @Test
   public void getNotificationListByParams_RunWithNoNotifications_ShouldReturnNone() {
-    List<Notification> notifications = 
+    List<Notification> notifications =
         notificationDao.getNotificationListByParams(null, run, null, null, null, null, null);
     assertEquals(0, notifications.size());
   }
 
   @Test
   public void getNotificationListByParams_RunWithNotifications_ShouldReturnNotifications() {
-    createNotification(run, period1, workgroup1, "notification1");
-    List<Notification> notifications = 
+    createNotification(run, period1, workgroup1, workgroup2, "notification1");
+    List<Notification> notifications =
         notificationDao.getNotificationListByParams(null, run, null, null, null, null, null);
     assertEquals(1, notifications.size());
     assertEquals("notification1", notifications.get(0).getMessage());
@@ -85,10 +85,10 @@ public class HibernateNotificationDaoTest extends AbstractTransactionalDbTests {
 
   @Test
   public void getNotificationListByParams_ByWorkgroup_ShouldReturnNotifications() {
-    createNotification(run, period1, workgroup1, "notification1");
-    createNotification(run, period1, workgroup1, "notification2");
-    createNotification(run, period1, workgroup2, "notification3");
-    List<Notification> notifications = 
+    createNotification(run, period1, workgroup1, workgroup2, "notification1");
+    createNotification(run, period1, workgroup1, workgroup2, "notification2");
+    createNotification(run, period1, workgroup2, workgroup1, "notification3");
+    List<Notification> notifications =
         notificationDao.getNotificationListByParams(null, run, null, workgroup1, null, null, null);
     assertEquals(2, notifications.size());
     assertEquals("notification1", notifications.get(0).getMessage());
@@ -97,12 +97,12 @@ public class HibernateNotificationDaoTest extends AbstractTransactionalDbTests {
 
   @Test
   public void getNotificationListByParams_ByPeriod_ShouldReturnNotifications() {
-    createNotification(run, period1, workgroup1, "notification1");
-    createNotification(run, period1, workgroup1, "notification2");
-    createNotification(run, period2, workgroup2, "notification3");
-    createNotification(run, period2, workgroup2, "notification4");
-    createNotification(run, period2, workgroup2, "notification5");
-    List<Notification> notifications = 
+    createNotification(run, period1, workgroup1, workgroup2, "notification1");
+    createNotification(run, period1, workgroup1, workgroup2, "notification2");
+    createNotification(run, period2, workgroup2, workgroup1, "notification3");
+    createNotification(run, period2, workgroup2, workgroup1, "notification4");
+    createNotification(run, period2, workgroup2, workgroup1, "notification5");
+    List<Notification> notifications =
         notificationDao.getNotificationListByParams(null, run, period1, null, null, null, null);
     assertEquals(2, notifications.size());
     assertEquals("notification1", notifications.get(0).getMessage());
@@ -111,11 +111,11 @@ public class HibernateNotificationDaoTest extends AbstractTransactionalDbTests {
 
   @Test
   public void getExport_WithNotifications_ShouldReturnNotifications() {
-    createNotification(run, period1, workgroup1, "notification1");
-    createNotification(run, period1, workgroup2, "notification2");
-    createNotification(run, period1, workgroup1, "notification3");
-    createNotification(run, period1, workgroup2, "notification4");
-    createNotification(run, period1, workgroup1, "notification5");
+    createNotification(run, period1, workgroup1, workgroup2, "notification1");
+    createNotification(run, period1, workgroup2, workgroup1, "notification2");
+    createNotification(run, period1, workgroup1, workgroup2, "notification3");
+    createNotification(run, period1, workgroup2, workgroup1, "notification4");
+    createNotification(run, period1, workgroup1, workgroup2, "notification5");
     List<Notification> notifications = notificationDao.getExport(run);
     assertEquals(5, notifications.size());
     assertEquals("notification1", notifications.get(0).getMessage());
@@ -126,15 +126,17 @@ public class HibernateNotificationDaoTest extends AbstractTransactionalDbTests {
   }
 
   private Notification createNotification(Run run, Group period, Workgroup toWorkgroup,
-      String message) {
+      Workgroup fromWorkgroup, String message) {
     Notification notification = new Notification();
     Calendar now = Calendar.getInstance();
     Timestamp timestamp = new Timestamp(now.getTimeInMillis());
     notification.setTimeGenerated(timestamp);
     notification.setServerSaveTime(timestamp);
     notification.setRun(run);
+    notification.setType("DiscussionReply");
     notification.setPeriod(period);
     notification.setToWorkgroup(toWorkgroup);
+    notification.setFromWorkgroup(fromWorkgroup);
     notification.setMessage(message);
     notificationDao.save(notification);
     return notification;
