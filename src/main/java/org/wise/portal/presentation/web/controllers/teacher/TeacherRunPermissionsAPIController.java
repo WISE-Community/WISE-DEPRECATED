@@ -1,6 +1,5 @@
 package org.wise.portal.presentation.web.controllers.teacher;
 
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.wise.portal.dao.ObjectNotFoundException;
@@ -24,7 +23,7 @@ public class TeacherRunPermissionsAPIController {
 
   @RequestMapping(value = "/{runId}/{teacherUsername}", method = RequestMethod.PUT)
   protected SharedOwner addSharedOwner(@PathVariable Long runId,
-                                       @PathVariable String teacherUsername) {
+      @PathVariable String teacherUsername) {
     try {
       return runService.addSharedTeacher(runId, teacherUsername);
     } catch (ObjectNotFoundException e) {
@@ -36,7 +35,7 @@ public class TeacherRunPermissionsAPIController {
 
   @PutMapping("/transfer/{runId}/{teacherUsername}")
   protected String transferRunOwnership(@PathVariable Long runId,
-                                        @PathVariable String teacherUsername) {
+      @PathVariable String teacherUsername) {
     try {
       return runService.transferRunOwnership(runId, teacherUsername).toString();
     } catch (ObjectNotFoundException e) {
@@ -46,7 +45,7 @@ public class TeacherRunPermissionsAPIController {
 
   @RequestMapping(value = "/{runId}/{username}", method = RequestMethod.DELETE)
   protected SimpleResponse removeSharedOwner(@PathVariable Long runId,
-                                             @PathVariable String username) {
+      @PathVariable String username) {
     try {
       runService.removeSharedTeacher(username, runId);
       return new SimpleResponse("success", "successfully removed shared owner");
@@ -56,9 +55,8 @@ public class TeacherRunPermissionsAPIController {
   }
 
   @RequestMapping(value = "/{runId}/{userId}/{permissionId}", method = RequestMethod.PUT)
-  protected SimpleResponse addPermission(@PathVariable Long runId,
-                                         @PathVariable Long userId,
-                                         @PathVariable Integer permissionId) {
+  protected SimpleResponse addPermission(@PathVariable Long runId, @PathVariable Long userId,
+      @PathVariable Integer permissionId) {
     try {
       runService.addSharedTeacherPermission(runId, userId, permissionId);
       return new SimpleResponse("success", "successfully added run permission");
@@ -68,9 +66,8 @@ public class TeacherRunPermissionsAPIController {
   }
 
   @RequestMapping(value = "/{runId}/{userId}/{permissionId}", method = RequestMethod.DELETE)
-  protected SimpleResponse deletePermission(@PathVariable Long runId,
-                                            @PathVariable Long userId,
-                                            @PathVariable Integer permissionId) {
+  protected SimpleResponse deletePermission(@PathVariable Long runId, @PathVariable Long userId,
+      @PathVariable Integer permissionId) {
     try {
       runService.removeSharedTeacherPermission(runId, userId, permissionId);
       return new SimpleResponse("success", "successfully removed run permission");
