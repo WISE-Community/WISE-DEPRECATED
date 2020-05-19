@@ -107,6 +107,10 @@ class ConfigService {
     return this.getConfigParam('runId');
   }
 
+  getRunName() {
+    return this.getConfigParam('runName');
+  }
+
   getProjectId() {
     return this.getConfigParam('projectId');
   }
@@ -904,12 +908,27 @@ class ConfigService {
     return this.moment(this.getEndDate()).format('MMM D, YYYY');
   }
 
+  getStartDate() {
+    return this.config.startTime;
+  }
+
   getEndDate() {
     return this.config.endTime;
   }
 
   isRunActive() {
     return this.config.isRunActive;
+  }
+
+  getFormattedStartDate() {
+    return this.UtilService.convertMillisecondsToFormattedDateTime(this.getStartDate());
+  }
+
+  getFormattedEndDate() {
+    if (this.getEndDate() != null) {
+      return this.UtilService.convertMillisecondsToFormattedDateTime(this.getEndDate());
+    }
+    return '';
   }
 }
 
