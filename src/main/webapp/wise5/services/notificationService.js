@@ -72,12 +72,12 @@ class NotificationService {
     const config = {
       method: 'GET',
       url: this.ConfigService.getNotificationURL(),
-      params: {
-        toWorkgroupId: this.ConfigService.getWorkgroupId()
-      }
     };
     if (this.ConfigService.getMode() === 'studentRun') {
-      config.params.periodId = this.ConfigService.getPeriodId();
+      config.params = {
+        periodId: this.ConfigService.getPeriodId(),
+        toWorkgroupId: this.ConfigService.getWorkgroupId()
+      };
     }
     return this.$http(config).then(({data: notifications}) => {
       this.notifications = notifications;
