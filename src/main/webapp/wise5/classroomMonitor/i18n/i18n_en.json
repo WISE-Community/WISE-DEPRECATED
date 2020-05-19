@@ -19,6 +19,7 @@
   "columnExplanationEnterTime": "The timestamp when the student entered the step.",
   "columnExplanationExitTime": "The timestamp when the student exited the step. This value can be empty if WISE did not get the chance to save a step exit event. This can happen if the student closes their laptop without signing out of WISE or if they refresh the WISE page.",
   "columnExplanationNodeID": "The ID of the step. Each step in a unit has a unique Node ID.",
+  "columnExplanationNodeIDsSinceLastVisit": "A list of Node IDs that contain the steps the student visited before revisiting this step. This cell will only contain values if they revisit a step. For example if the student navigated to node1, then node2, then node3, then node1. For the second visit to node1, the 'Node IDs Since Last Visit' will show node2, node3.",
   "columnExplanationPeriodID": "The ID of the period that this student is in.",
   "columnExplanationPeriodName": "The period name that this student is in. This name is chosen by the teacher that created the run.",
   "columnExplanationPreviousNodeID": "The Node ID of the step the student was on before visiting this step.",

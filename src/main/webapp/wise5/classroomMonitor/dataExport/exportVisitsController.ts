@@ -107,6 +107,7 @@ class ExportVisitsController extends ExportController {
       'Revisit Counter',
       'Previous Node ID',
       'Previous Step Title',
+      'Node IDs Since Last Visit',
       'Steps Since Last Visit'
     ];
   }
@@ -139,6 +140,8 @@ class ExportVisitsController extends ExportController {
       { name: 'Previous Node ID', explanation: this.$translate('columnExplanationPreviousNodeID') },
       { name: 'Previous Step Title',
           explanation: this.$translate('columnExplanationPreviousStepTitle') },
+      { name: 'Node IDs Since Last Visit',
+          explanation: this.$translate('columnExplanationNodeIDsSinceLastVisit') },
       { name: 'Steps Since Last Visit',
           explanation: this.$translate('columnExplanationStepsSinceLastVisit') }
     ];
@@ -301,8 +304,10 @@ class ExportVisitsController extends ExportController {
           visit, 'Previous Step Title', this.getCellInRow(previousVisit, 'Step Title'));
     }
     if (revisitCounter > 0) {
+      this.setCellInRow(visit, 'Node IDs Since Last Visit',
+          this.getNodeIdsBetweenLastVisit(nodeId, previousVisits));
       this.setCellInRow(visit, 'Steps Since Last Visit',
-          this.getStepsBetweenLastVisit(nodeId, previousVisits));
+          this.getStepNumbersBetweenLastVisit(nodeId, previousVisits));
     }
     this.incrementRowCounter();
     return visit;
@@ -312,15 +317,27 @@ class ExportVisitsController extends ExportController {
     return new Array(this.columnNames.length);
   }
 
-  getStepsBetweenLastVisit(nodeId: string, previousVisits: any[]) {
+  getNodeIdsBetweenLastVisit(nodeId: string, previousVisits: any[]) {
+    return this.getStepsBetweenLastVisit(nodeId, previousVisits, 'nodeId');
+  }
+
+  getStepNumbersBetweenLastVisit(nodeId: string, previousVisits: any[]) {
+    return this.getStepsBetweenLastVisit(nodeId, previousVisits, 'stepNumber');
+  }
+
+  getStepsBetweenLastVisit(nodeId: string, previousVisits: any[], output: string) {
     const steps = [];
     for (let v = previousVisits.length - 1; v > 0; v--) {
-      const previousVisit = previousVisits[v];
-      const previousNodeId = this.getCellInRow(previousVisit, 'Node ID');
+      const previousNodeId = this.getCellInRow(previousVisits[v], 'Node ID');
       if (previousNodeId === nodeId) {
         break;
       } else {
-        steps.unshift(this.getStepNumber(previousNodeId));
+        if (output === 'nodeId') {
+          steps.unshift(previousNodeId);
+        } else if (output === 'stepNumber') {
+          steps.unshift(this.getStepNumber(previousNodeId));
+        }
+        
       }
     }
     return steps.join(', ');

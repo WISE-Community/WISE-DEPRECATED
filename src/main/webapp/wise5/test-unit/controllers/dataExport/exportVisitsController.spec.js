@@ -71,7 +71,8 @@ describe('ExportVisitsController', () => {
   createVisit_WithNoPreviousVisits_ShouldCreateAVisit();
   createVisit_WithOnlyEnterEvent_ShouldCreateAVisit();
   createRowWithEmptyCells_ShouldReturnArrayWithEmptyValues();
-  getStepsBetweenLastVisit_ShouldReturnAStringOfStepNumbers();
+  getNodeIdsBetweenLastVisit_ShouldReturnAStringOfStepNumbers();
+  getStepNumbersBetweenLastVisit_ShouldReturnAStringOfStepNumbers();
   addUserCells_WithOneStudentNotIncludingNames_ShouldSetTheWISEID();
   addUserCells_WithOneStudentIncludingNames_ShouldSetTheWISEIDAndStudentName();
   addUserCells_WithMultipleStudentsIncludingNames_ShouldSetTheWISEIDAndStudentNames();
@@ -273,7 +274,8 @@ function getHeaderRow_ShouldGetArrayOfColumnNames() {
     expect(headerRow[21]).toEqual('Revisit Counter');
     expect(headerRow[22]).toEqual('Previous Node ID');
     expect(headerRow[23]).toEqual('Previous Step Title');
-    expect(headerRow[24]).toEqual('Steps Since Last Visit');
+    expect(headerRow[24]).toEqual('Node IDs Since Last Visit');
+    expect(headerRow[25]).toEqual('Steps Since Last Visit');
   });
 }
 
@@ -304,7 +306,8 @@ function initializeColumnNameToColumnNumber_ShouldSetMappings() {
     expect(getColumnNameToNumberValue('Revisit Counter')).toEqual(21);
     expect(getColumnNameToNumberValue('Previous Node ID')).toEqual(22);
     expect(getColumnNameToNumberValue('Previous Step Title')).toEqual(23);
-    expect(getColumnNameToNumberValue('Steps Since Last Visit')).toEqual(24);
+    expect(getColumnNameToNumberValue('Node IDs Since Last Visit')).toEqual(24);
+    expect(getColumnNameToNumberValue('Steps Since Last Visit')).toEqual(25);
   });
 }
 
@@ -660,16 +663,16 @@ function createVisit_WithOnlyEnterEvent_ShouldCreateAVisit() {
 function createRowWithEmptyCells_ShouldReturnArrayWithEmptyValues() {
   it('createRowWithEmptyCells should return array with empty values', () => {
     const row = exportVisitsController.createRowWithEmptyCells();
-    expect(row.length).toEqual(25);
+    expect(row.length).toEqual(26);
     expect(row[0]).toBeUndefined();
     expect(row[1]).toBeUndefined();
-    expect(row[23]).toBeUndefined();
     expect(row[24]).toBeUndefined();
+    expect(row[25]).toBeUndefined();
   });
 }
 
-function getStepsBetweenLastVisit_ShouldReturnAStringOfStepNumbers() {
-  it('getStepsBetweenLastVisit should return a string of step numbers', () => {
+function getNodeIdsBetweenLastVisit_ShouldReturnAStringOfStepNumbers() {
+  it('getNodeIdsBetweenLastVisit should return a string of step numbers', () => {
     const previousVisits = [
       createRow('node1'),
       createRow('node2'),
@@ -682,7 +685,27 @@ function getStepsBetweenLastVisit_ShouldReturnAStringOfStepNumbers() {
       createRow('node6'),
       createRow('node7')
     ];
-    expect(exportVisitsController.getStepsBetweenLastVisit('node3', previousVisits)).toEqual(
+    expect(exportVisitsController.getNodeIdsBetweenLastVisit('node3', previousVisits)).toEqual(
+      'node6, node7'
+    );
+  });
+}
+
+function getStepNumbersBetweenLastVisit_ShouldReturnAStringOfStepNumbers() {
+  it('getStepNumbersBetweenLastVisit should return a string of step numbers', () => {
+    const previousVisits = [
+      createRow('node1'),
+      createRow('node2'),
+      createRow('node3'),
+      createRow('node4'),
+      createRow('node5'),
+      createRow('node1'),
+      createRow('node2'),
+      createRow('node3'),
+      createRow('node6'),
+      createRow('node7')
+    ];
+    expect(exportVisitsController.getStepNumbersBetweenLastVisit('node3', previousVisits)).toEqual(
       '1.6, 1.7'
     );
   });
