@@ -14,7 +14,7 @@ export class TeacherService {
   private registerUrl = '/api/teacher/register';
   private runPermissionUrl = '/api/teacher/run/permission';
   private projectPermissionUrl = '/api/teacher/project/permission';
-  private transferRunOwnershipUrl = '//api/teacher/run/permission/transfer';
+  private transferRunOwnershipUrl = '/api/teacher/run/permission/transfer';
   private usernamesUrl = '/api/teacher/usernames';
   private createRunUrl = '/api/teacher/run/create';
   private runUrl = '/api/teacher/run';
@@ -101,7 +101,7 @@ export class TeacherService {
   transferRunOwnership(runId: number, teacherUsername: string) {
     const url = `${this.transferRunOwnershipUrl}/${runId}/${teacherUsername}`;
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
-    return this.http.put(url, null, { headers: headers });
+    return this.http.put<Object>(url, null, { headers: headers });
   }
 
   removeSharedOwner(runId: number, username: string) {

@@ -301,6 +301,12 @@ const teacherModule = angular
         controller: 'DataExportController',
         controllerAs: 'dataExportController'
       })
+      .state('root.cm.exportVisits', {
+        url: '/export/visits',
+        templateUrl: '/wise5/classroomMonitor/dataExport/exportVisits.html',
+        controller: 'ExportVisitsController',
+        controllerAs: 'exportVisitsController'
+      })
       .state('root.cm.milestones', {
         url: '/milestones',
         templateUrl: '/wise5/classroomMonitor/milestones/milestones.html',

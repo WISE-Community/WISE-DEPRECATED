@@ -28,6 +28,8 @@ import '../directives/components';
 import ComponentService from '../components/componentService';
 import './dashboard/dashboardController';
 import DataExportController from './dataExport/dataExportController';
+import ExportController from './dataExport/exportController';
+import ExportVisitsController from './dataExport/exportVisitsController';
 import '../components/discussion/discussionComponentModule';
 import '../components/draw/drawComponentModule';
 import '../components/embedded/embeddedComponentModule';
@@ -134,6 +136,8 @@ const classroomMonitorModule = angular
   .service('UtilService', UtilService)
   .controller('ClassroomMonitorController', ClassroomMonitorController)
   .controller('DataExportController', DataExportController)
+  .controller('ExportController', ExportController)
+  .controller('ExportVisitsController', ExportVisitsController)
   .controller('ManageStudentsController', ManageStudentsController)
   .controller('MilestonesController', MilestonesController)
   .controller('NotebookGradingController', NotebookGradingController)
