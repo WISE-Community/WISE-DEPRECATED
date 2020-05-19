@@ -7,6 +7,19 @@ class WiselinkController {
     this.$scope = $scope;
     this.StudentDataService = StudentDataService;
     this.$timeout = $timeout;
+    this.template;
+  }
+
+  $onInit() {
+    if (this.type === 'button') {
+      this.template = 'button';
+    } else {
+      if (this.disable) {
+        this.template = 'text';
+      } else {
+        this.template = 'link';
+      }
+    }
   }
 
   scrollAndHighlightComponent() {
@@ -34,13 +47,11 @@ class WiselinkController {
   }
 
   follow() {
-    if (!this.disable) {
-      const currentNode = this.StudentDataService.getCurrentNode();
-      if (this.isLinkToComponentInStep(currentNode)) {
-        this.scrollAndHighlightComponent();
-      } else {
-        this.goToNode(currentNode);
-      }
+    const currentNode = this.StudentDataService.getCurrentNode();
+    if (this.isLinkToComponentInStep(currentNode)) {
+      this.scrollAndHighlightComponent();
+    } else {
+      this.goToNode(currentNode);
     }
   }
 
