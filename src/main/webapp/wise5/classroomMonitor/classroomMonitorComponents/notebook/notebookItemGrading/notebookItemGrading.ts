@@ -1,10 +1,10 @@
 'use strict';
 
-import AnnotationService from '../../../services/annotationService';
-import ConfigService from '../../../services/configService';
-import NotebookService from '../../../services/notebookService';
-import TeacherDataService from '../../../services/teacherDataService';
-import UtilService from '../../../services/utilService';
+import AnnotationService from '../../../../services/annotationService';
+import ConfigService from '../../../../services/configService';
+import NotebookService from '../../../../services/notebookService';
+import TeacherDataService from '../../../../services/teacherDataService';
+import UtilService from '../../../../services/utilService';
 
 class NotebookItemGradingController {
   annotationId: any;
@@ -254,7 +254,7 @@ const NotebookItemGrading = {
     maxScore: '<',
     notebookItem: '<'
   },
-  templateUrl: 'wise5/classroomMonitor/notebook/notebookItemGrading/notebookItemGrading.html',
+  templateUrl: 'wise5/classroomMonitor/classroomMonitorComponents/notebook/notebookItemGrading/notebookItemGrading.html',
   controller: NotebookItemGradingController
 };
 
