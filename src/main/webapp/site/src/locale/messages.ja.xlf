@@ -114,19 +114,11 @@
         </context-group>
         <target state="final">お問い合わせ</target>
       </trans-unit>
-      <trans-unit id="d97fd6757dbd8190c0e310c2be8432718b2a417b" datatype="html" approved="yes">
-        <source>Legacy</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
-          <context context-type="linenumber">16</context>
-        </context-group>
-        <target state="final">レガシー</target>
-      </trans-unit>
       <trans-unit id="e1a07fb742a7b025b2a594d867a5805c37697f86" datatype="html" approved="yes">
         <source>WISE on Facebook</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
-          <context context-type="linenumber">26</context>
+          <context context-type="linenumber">25</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/home/home.component.html</context>
@@ -138,7 +130,7 @@
         <source>WISE on Twitter</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
-          <context context-type="linenumber">33</context>
+          <context context-type="linenumber">32</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/home/home.component.html</context>
@@ -150,7 +142,7 @@
         <source>WISE on Github</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
-          <context context-type="linenumber">40</context>
+          <context context-type="linenumber">39</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/home/home.component.html</context>
@@ -162,7 +154,7 @@
         <source>Powered by the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>TELS Research Community<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> and <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>WISE Open Source Technology<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>. Help us <x id="START_LINK_2" ctype="x-a" equiv-text="&lt;a&gt;"/>translate<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> WISE!</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
-          <context context-type="linenumber">53</context>
+          <context context-type="linenumber">52</context>
         </context-group>
         <target state="needs-translation">Powered by the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>TELS Research Community<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> and <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>WISE Open Source Technology<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>. Help us <x id="START_LINK_2" ctype="x-a" equiv-text="&lt;a&gt;"/>translate<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> WISE!</target>
       </trans-unit>
@@ -170,7 +162,7 @@
         <source>This material is based upon work supported by the National Science Foundation. Any opinions, findings, and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the National Science Foundation.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
-          <context context-type="linenumber">54</context>
+          <context context-type="linenumber">53</context>
         </context-group>
         <target state="needs-translation">This material is based upon work supported by the National Science Foundation. Any opinions, findings, and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the National Science Foundation.</target>
       </trans-unit>
@@ -178,7 +170,7 @@
         <source>National Science Foundation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
-          <context context-type="linenumber">62</context>
+          <context context-type="linenumber">61</context>
         </context-group>
         <target state="final">National Science Foundation</target>
       </trans-unit>
@@ -186,7 +178,7 @@
         <source>UC Berkeley</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
-          <context context-type="linenumber">65</context>
+          <context context-type="linenumber">64</context>
         </context-group>
         <target state="final">バークレー大学</target>
       </trans-unit>
@@ -194,7 +186,7 @@
         <source>Concord Consortium</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
-          <context context-type="linenumber">68</context>
+          <context context-type="linenumber">67</context>
         </context-group>
         <target state="final">コンコードコンソーシアム</target>
       </trans-unit>
@@ -202,7 +194,7 @@
         <source>SAIL (Scalable Architecture for Interactive Learning)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
-          <context context-type="linenumber">70</context>
+          <context context-type="linenumber">69</context>
         </context-group>
         <target state="needs-translation">SAIL (Scalable Architecture for Interactive Learning)</target>
       </trans-unit>
@@ -210,7 +202,7 @@
         <source>©1996-<x id="INTERPOLATION" equiv-text="{{time | amDateFormat:&apos;YYYY&apos;}}"/>, <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>UC Berkeley<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> | Web-based Inquiry Science Environment</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
-          <context context-type="linenumber">75</context>
+          <context context-type="linenumber">74</context>
         </context-group>
         <target state="needs-translation">©1996-<x id="INTERPOLATION" equiv-text="{{time | amDateFormat:'YYYY'}}"/>, <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>UC Berkeley<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> | Web-based Inquiry Science Environment</target>
       </trans-unit>
