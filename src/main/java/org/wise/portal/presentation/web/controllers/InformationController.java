@@ -656,6 +656,7 @@ public class InformationController {
     config.put("notificationURL", contextPath + "/notification/" + runId);
     config.put("startTime", run.getStartTimeMilliseconds());
     config.put("endTime", run.getEndTimeMilliseconds());
+    config.put("isLockedAfterEndDate", run.isLockedAfterEndDate());
   }
 
   private void printConfigToResponse(HttpServletResponse response, JSONObject config)

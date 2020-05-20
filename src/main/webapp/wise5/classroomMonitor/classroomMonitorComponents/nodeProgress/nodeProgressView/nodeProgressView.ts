@@ -42,7 +42,6 @@ class NodeProgressViewController {
   $onInit() {
     this.currentGroup = null;
     this.currentWorkgroup = null;
-    this.TeacherDataService.setCurrentWorkgroup(null);
     this.items = this.ProjectService.idToOrder;
     this.maxScore = this.ProjectService.getMaxScore();
     this.nodeId = null;
@@ -108,10 +107,6 @@ class NodeProgressViewController {
           document.getElementById('content').scrollTop = 0;
         }
       }
-    });
-
-    this.$scope.$on('$destroy', () => {
-      this.TeacherDataService.setCurrentWorkgroup(null);
     });
 
     let context = 'ClassroomMonitor',

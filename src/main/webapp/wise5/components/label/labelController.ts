@@ -3,6 +3,7 @@
 import * as angular from 'angular';
 import * as $ from 'jquery';
 import { fabric } from 'fabric';
+window['fabric'] = fabric
 import ComponentController from '../componentController';
 import LabelService from './labelService';
 import OpenResponseService from '../openResponse/openResponseService';

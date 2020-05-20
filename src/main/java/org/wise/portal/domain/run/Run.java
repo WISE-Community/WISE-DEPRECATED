@@ -387,4 +387,8 @@ public interface Run extends Persistable {
   boolean isSharedTeacher(User user);
 
   int getNumStudents();
+
+  boolean isLockedAfterEndDate();
+
+  void setLockedAfterEndDate(boolean isLockedAfterEndDate);
 }

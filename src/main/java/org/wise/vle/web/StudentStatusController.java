@@ -23,8 +23,13 @@
  */
 package org.wise.vle.web;
 
-import org.json.JSONArray;
-import org.json.JSONException;
+import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.Calendar;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -39,15 +44,6 @@ import org.wise.portal.service.vle.wise5.VLEService;
 import org.wise.portal.spring.data.redis.MessagePublisher;
 import org.wise.vle.domain.status.StudentStatus;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.sql.Timestamp;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.List;
-
 @Controller
 @RequestMapping("/studentStatus")
 public class StudentStatusController {
@@ -60,77 +56,6 @@ public class StudentStatusController {
 
   @Autowired
   private MessagePublisher redisPublisher;
-
-  /**
-   * Handles GET requests from the teacher when a teacher requests for all the student statuses for
-   * a given run id
-   * 
-   * @param response
-   * @throws IOException
-   */
-  @RequestMapping(method = RequestMethod.GET)
-  public ModelAndView getStudentStatus(HttpServletRequest request, HttpServletResponse response)
-      throws IOException {
-    User signedInUser = ControllerUtil.getSignedInUser();
-    String runIdString = request.getParameter("runId");
-    Long runId = null;
-
-    try {
-      runId = new Long(runIdString);
-    } catch (NumberFormatException e) {
-      e.printStackTrace();
-    }
-
-    boolean allowedAccess = false;
-
-    /*
-     * teachers that are owners of the run can make a request students can not make a request
-     */
-    if (SecurityUtils.isAdmin(signedInUser)) {
-      allowedAccess = true;
-    } else if (SecurityUtils.isTeacher(signedInUser)
-        && SecurityUtils.isUserOwnerOfRun(signedInUser, runId)) {
-      allowedAccess = true;
-    }
-
-    if (!allowedAccess) {
-      response.sendError(HttpServletResponse.SC_FORBIDDEN);
-      return null;
-    }
-
-    if (SecurityUtils.isPortalMode(request) && !SecurityUtils.isAuthenticated(request)) {
-      response.sendError(HttpServletResponse.SC_FORBIDDEN);
-      return null;
-    }
-
-    List<StudentStatus> studentStatuses = vleService.getStudentStatusesByRunId(runId);
-    JSONArray studentStatusesJSONArray = new JSONArray();
-    Iterator<StudentStatus> studentStatusesIterator = studentStatuses.iterator();
-    while (studentStatusesIterator.hasNext()) {
-      StudentStatus studentStatus = studentStatusesIterator.next();
-      String status = studentStatus.getStatus();
-      try {
-        JSONObject statusJSON = new JSONObject(status);
-        Timestamp postTimestamp = studentStatus.getTimestamp();
-        long postTimestampMilliseconds = postTimestamp.getTime();
-        statusJSON.put("postTimestamp", postTimestampMilliseconds);
-        Date currentTime = new Date();
-        long retrievalTimestampMilliseconds = currentTime.getTime();
-        statusJSON.put("retrievalTimestamp", retrievalTimestampMilliseconds);
-        studentStatusesJSONArray.put(statusJSON);
-      } catch (JSONException e) {
-        e.printStackTrace();
-      }
-    }
-
-    String studentStatusesString = studentStatusesJSONArray.toString();
-    try {
-      response.getWriter().print(studentStatusesString);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    return null;
-  }
 
   /**
    * Handles POST requests from students when they send their status to the server so we can keep

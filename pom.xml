@@ -34,7 +34,7 @@
   <artifactId>wise</artifactId>
   <packaging>war</packaging>
   <name>Web-based Inquiry Science Environment</name>
-  <version>5.9.0</version>
+  <version>5.10.0</version>
   <url>http://wise5.org</url>
   <licenses>
     <license>
@@ -146,11 +146,14 @@
             </goals>
             <configuration>
               <testExcludes>
-                <exclude>**/org/wise/portal/domain/**/*.java</exclude>
+                <exclude>**/org/wise/portal/domain/authentication/**/*.java</exclude>
+                <exclude>**/org/wise/portal/domain/newsitem/**/*.java</exclude>
+                <exclude>**/org/wise/portal/domain/run/**/*.java</exclude>
+                <exclude>**/org/wise/portal/domain/webservice/**/*.java</exclude>
                 <exclude>**/org/wise/portal/presentation/web/controllers/general/contactwise/*.java</exclude>
                 <exclude>**/org/wise/portal/presentation/web/controllers/teacher/management/**/*.java</exclude>
                 <exclude>**/org/wise/portal/presentation/web/controllers/teacher/project/**/*.java</exclude>
-                <exclude>**/org/wise/portal/presentation/web/controllers/teacher/run/**/*.java</exclude>
+                <exclude>**/org/wise/portal/presentation/web/controllers/teacher/run/ShareProjectRunControllerTest.java</exclude>
                 <exclude>**/org/wise/portal/presentation/web/controllers/teacher/RegisterTeacherControllerTest.java</exclude>
                 <exclude>**/org/wise/portal/presentation/web/controllers/IndexControllerTest.java</exclude>
                 <exclude>**/org/wise/portal/presentation/web/controllers/LoginControllerTest.java</exclude>
@@ -183,11 +186,14 @@
         <configuration>
           <forkMode>once</forkMode>
           <excludes>
-            <exclude>**/org/wise/portal/domain/**/*.java</exclude>
+            <exclude>**/org/wise/portal/domain/authentication/**/*.java</exclude>
+            <exclude>**/org/wise/portal/domain/newsitem/**/*.java</exclude>
+            <exclude>**/org/wise/portal/domain/run/**/*.java</exclude>
+            <exclude>**/org/wise/portal/domain/webservice/**/*.java</exclude>
             <exclude>**/org/wise/portal/presentation/web/controllers/general/contactwise/*.java</exclude>
             <exclude>**/org/wise/portal/presentation/web/controllers/teacher/management/**/*.java</exclude>
             <exclude>**/org/wise/portal/presentation/web/controllers/teacher/project/**/*.java</exclude>
-            <exclude>**/org/wise/portal/presentation/web/controllers/teacher/run/**/*.java</exclude>
+            <exclude>**/org/wise/portal/presentation/web/controllers/teacher/run/ShareProjectRunControllerTest.java</exclude>
             <exclude>**/org/wise/portal/presentation/web/controllers/teacher/RegisterTeacherControllerTest.java</exclude>
             <exclude>**/org/wise/portal/presentation/web/controllers/IndexControllerTest.java</exclude>
             <exclude>**/org/wise/portal/presentation/web/controllers/LoginControllerTest.java</exclude>

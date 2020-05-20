@@ -16,8 +16,10 @@ class SessionService {
   }
 
   calculateIntervals(sessionTimeout) {
-    const forceLogoutAfterWarningInterval =
-        Math.min(sessionTimeout * 0.1, this.defaultForceLogoutAfterWarningInterval);
+    const forceLogoutAfterWarningInterval = Math.min(
+      sessionTimeout * 0.1,
+      this.defaultForceLogoutAfterWarningInterval
+    );
     const showWarningInterval = sessionTimeout - forceLogoutAfterWarningInterval;
     return {
       showWarningInterval: showWarningInterval,
@@ -36,11 +38,11 @@ class SessionService {
   }
 
   goHome() {
+    this.$rootScope.$broadcast('exit');
     this.$location.url(this.ConfigService.getConfigParam('userType'));
   }
 
   logOut() {
-    this.$rootScope.$broadcast('exit');
     window.location.href = this.ConfigService.getSessionLogOutURL();
   }
 
@@ -51,7 +53,9 @@ class SessionService {
   }
 
   startCheckMouseEvent() {
-    setInterval(() => { this.checkMouseEvent(); }, this.checkMouseEventInterval);
+    setInterval(() => {
+      this.checkMouseEvent();
+    }, this.checkMouseEventInterval);
   }
 
   convertMinutesToSeconds(minutes) {
@@ -84,12 +88,14 @@ class SessionService {
   }
 
   isActiveWithinLastMinute() {
-    return (new Date() - this.lastActivityTimestamp) < this.convertMinutesToMilliseconds(1);
+    return new Date() - this.lastActivityTimestamp < this.convertMinutesToMilliseconds(1);
   }
 
   isInactiveLongEnoughToForceLogout() {
-    return this.getInactiveTimeInSeconds() >=
-        (this.showWarningInterval + this.forceLogoutAfterWarningInterval);
+    return (
+      this.getInactiveTimeInSeconds() >=
+      this.showWarningInterval + this.forceLogoutAfterWarningInterval
+    );
   }
 
   isInactiveLongEnoughToWarn() {
@@ -125,7 +131,7 @@ class SessionService {
 
   renewSession() {
     const renewSessionURL = this.ConfigService.getConfigParam('renewSessionURL');
-    this.$http.get(renewSessionURL).then((result) => {
+    this.$http.get(renewSessionURL).then(result => {
       if (result.data === 'false') {
         this.logOut();
       }
@@ -133,11 +139,6 @@ class SessionService {
   }
 }
 
-SessionService.$inject = [
-  '$http',
-  '$location',
-  '$rootScope',
-  'ConfigService'
-];
+SessionService.$inject = ['$http', '$location', '$rootScope', 'ConfigService'];
 
 export default SessionService;

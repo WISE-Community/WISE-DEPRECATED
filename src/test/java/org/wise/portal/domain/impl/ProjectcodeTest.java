@@ -1,3 +1,4 @@
+
 /**
  * Copyright (c) 2007 Regents of the University of California (Regents). Created
  * by TELS, Graduate School of Education, University of California at Berkeley.
@@ -22,62 +23,69 @@
  */
 package org.wise.portal.domain.impl;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
+import org.easymock.EasyMockRunner;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.wise.portal.domain.project.impl.Projectcode;
 
 /**
  * @author Hiroki Terashima
  * @version $Id$
  */
-public class ProjectcodeTest extends TestCase {
+@RunWith(EasyMockRunner.class)
+public class ProjectcodeTest {
 
-	private String runcode = "saphire8886";
-	private String period = "6";
-	private String projectcodeString = "saphire8886-6";
-	private String projectcodeWithWhiteSpace = "  Whale7741-4     ";
-	private String projectcodeWithWhiteSpaceRemoved = "Whale7741-4";
-	private Projectcode projectcode, projectcode2;
-	private final String[] ILLEGAL_PROJECTCODES = {"Owl0896", "Owl0896-", "-3", "-", ""};	
-	
-	@Override
-	public void setUp() {
-		// test to make sure that both constructors work
-		projectcode = new Projectcode(runcode, period);
-		projectcode2 = new Projectcode(projectcodeString);
-	}
-	
-	public void testGetRuncode() {
-		String retrievedRuncode = projectcode.getRuncode();
-		assertEquals(runcode, retrievedRuncode);
-		
-		String retrievedRuncode2 = projectcode2.getRuncode();
-		assertEquals(runcode, retrievedRuncode2);
-	}
-	
-	public void testGetRunPeriod() {
-		String retrievedRunPeriod = projectcode.getRunPeriod();
-		assertEquals(period, retrievedRunPeriod);
-		
-		String retrievedRunPeriod2 = projectcode2.getRunPeriod();
-		assertEquals(period, retrievedRunPeriod2);
-	}
-	
-	public void testIsLegalProjectcode() {
-		for (String illegalProjectcode : ILLEGAL_PROJECTCODES) {
-			Projectcode projectcode = new Projectcode(illegalProjectcode);
-			assertFalse(projectcode.isLegalProjectcode());
-		}
-	}
-	
-	public void testRemovedWhiteSpace(){
-		Projectcode projectcode = new Projectcode(projectcodeWithWhiteSpace);
-		assertEquals(projectcodeWithWhiteSpaceRemoved, projectcode.getProjectcode());
-		
-		projectcode = new Projectcode("  Whale7741", "4  ");
-		assertEquals(projectcodeWithWhiteSpaceRemoved, projectcode.getProjectcode());
-		
-		projectcode.setProjectcode(projectcodeWithWhiteSpace);
-		assertEquals(projectcodeWithWhiteSpaceRemoved, projectcode.getProjectcode());
-	}
+  private String runcode = "saphire8886";
+  private String period = "6";
+  private String projectcodeString = "saphire8886-6";
+  private String projectcodeWithWhiteSpace = "  Whale7741-4     ";
+  private String projectcodeWithWhiteSpaceRemoved = "Whale7741-4";
+  private Projectcode projectcode, projectcode2;
+  private final String[] ILLEGAL_PROJECTCODES = { "Owl0896", "Owl0896-", "-3", "-", "" };
+
+  @Before
+  public void setUp() {
+    // test to make sure that both constructors work
+    projectcode = new Projectcode(runcode, period);
+    projectcode2 = new Projectcode(projectcodeString);
+  }
+
+  @Test
+  public void testGetRuncode() {
+    String retrievedRuncode = projectcode.getRuncode();
+    assertEquals(runcode, retrievedRuncode);
+
+    String retrievedRuncode2 = projectcode2.getRuncode();
+    assertEquals(runcode, retrievedRuncode2);
+  }
+
+  @Test
+  public void testGetRunPeriod() {
+    String retrievedRunPeriod = projectcode.getRunPeriod();
+    assertEquals(period, retrievedRunPeriod);
+
+    String retrievedRunPeriod2 = projectcode2.getRunPeriod();
+    assertEquals(period, retrievedRunPeriod2);
+  }
+
+  @Test
+  public void testIsLegalProjectcode() {
+    for (String illegalProjectcode : ILLEGAL_PROJECTCODES) {
+      Projectcode projectcode = new Projectcode(illegalProjectcode);
+      assertFalse(projectcode.isLegalProjectcode());
+    }
+  }
+
+  @Test
+  public void testRemovedWhiteSpace() {
+    Projectcode projectcode = new Projectcode(projectcodeWithWhiteSpace);
+    assertEquals(projectcodeWithWhiteSpaceRemoved, projectcode.getProjectcode());
+
+    projectcode = new Projectcode("  Whale7741", "4  ");
+    assertEquals(projectcodeWithWhiteSpaceRemoved, projectcode.getProjectcode());
+  }
 }

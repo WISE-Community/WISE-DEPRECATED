@@ -1,10 +1,11 @@
 'use strict';
 
 class ConfigService {
-  constructor($filter, $http, $location, UtilService) {
+  constructor($filter, $http, $location, moment, UtilService) {
     this.$filter = $filter;
     this.$http = $http;
     this.$location = $location;
+    this.moment = moment;
     this.UtilService = UtilService;
     this.config = null;
     this.$translate = this.$filter('translate');
@@ -17,7 +18,7 @@ class ConfigService {
   }
 
   retrieveConfig(configURL) {
-    return this.$http.get(configURL).then((result) => {
+    return this.$http.get(configURL).then(result => {
       const configJSON = result.data;
       this.setTimestampDiff(configJSON);
 
@@ -29,7 +30,7 @@ class ConfigService {
         // constraints can only be disabled using the url in preview mode
 
         // regex to match constraints=false in the url
-        const constraintsRegEx = new RegExp("constraints=false", 'gi');
+        const constraintsRegEx = new RegExp('constraints=false', 'gi');
 
         if (absURL != null && absURL.match(constraintsRegEx)) {
           // the url contains constraints=false
@@ -41,7 +42,7 @@ class ConfigService {
       configJSON.constraints = constraints;
 
       // regex to match showProjectPath=true in the url
-      const showProjectPathRegEx = new RegExp("showProjectPath=true", 'gi');
+      const showProjectPathRegEx = new RegExp('showProjectPath=true', 'gi');
 
       if (absURL != null && absURL.match(showProjectPathRegEx)) {
         // the url contains showProjectPath=true
@@ -106,6 +107,10 @@ class ConfigService {
     return this.getConfigParam('runId');
   }
 
+  getRunName() {
+    return this.getConfigParam('runName');
+  }
+
   getProjectId() {
     return this.getConfigParam('projectId');
   }
@@ -139,8 +144,9 @@ class ConfigService {
   }
 
   getWebSocketURL() {
-    return window.location.protocol + "//" + window.location.host +
-        this.getContextPath() + "/websocket";
+    return (
+      window.location.protocol + '//' + window.location.host + this.getContextPath() + '/websocket'
+    );
   }
 
   getWISEBaseURL() {
@@ -485,7 +491,7 @@ class ConfigService {
       if (userInfo != null && userInfo.username != null) {
         let usernames = userInfo.username.split(':');
         for (let name of usernames) {
-          let id = "";
+          let id = '';
           let regex = /(.+) \((.+)\)/g;
           let matches = regex.exec(name);
           if (matches) {
@@ -512,7 +518,7 @@ class ConfigService {
           let name = names[i].name;
           usernames += name;
 
-          if (i < (l-1)) {
+          if (i < l - 1) {
             usernames += ', ';
           }
         }
@@ -524,7 +530,7 @@ class ConfigService {
           if (i !== 0) {
             usernames += ', ';
           }
-          usernames += this.$translate('studentId', {id: id});
+          usernames += this.$translate('studentId', { id: id });
         }
       }
     }
@@ -669,13 +675,19 @@ class ConfigService {
            * replace the first student first name with the actual
            * name
            */
-          contentString = contentString.replace(new RegExp('{{firstStudentFirstName}}', 'gi'), firstNames[0]);
+          contentString = contentString.replace(
+            new RegExp('{{firstStudentFirstName}}', 'gi'),
+            firstNames[0]
+          );
 
           /*
            * there are 1 or more students in the workgroup so we can
            * replace the student first names with the actual names
            */
-          contentString = contentString.replace(new RegExp('{{studentFirstNames}}', 'gi'), firstNames.join(", "));
+          contentString = contentString.replace(
+            new RegExp('{{studentFirstNames}}', 'gi'),
+            firstNames.join(', ')
+          );
         }
 
         if (firstNames.length >= 2) {
@@ -684,7 +696,10 @@ class ConfigService {
            * replace the second student first name with the actual
            * name
            */
-          contentString = contentString.replace(new RegExp('{{secondStudentFirstName}}', 'gi'), firstNames[1]);
+          contentString = contentString.replace(
+            new RegExp('{{secondStudentFirstName}}', 'gi'),
+            firstNames[1]
+          );
         }
 
         if (firstNames.length >= 3) {
@@ -693,7 +708,10 @@ class ConfigService {
            * replace the third student first name with the actual
            * name
            */
-          contentString = contentString.replace(new RegExp('{{thirdStudentFirstName}}', 'gi'), firstNames[2]);
+          contentString = contentString.replace(
+            new RegExp('{{thirdStudentFirstName}}', 'gi'),
+            firstNames[2]
+          );
         }
       }
 
@@ -709,7 +727,18 @@ class ConfigService {
   }
 
   getAvatarColorForWorkgroupId(workgroupId) {
-    const avatarColors = ['#E91E63', '#9C27B0', '#CDDC39', '#2196F3', '#FDD835', '#43A047', '#795548', '#EF6C00', '#C62828', '#607D8B'];
+    const avatarColors = [
+      '#E91E63',
+      '#9C27B0',
+      '#CDDC39',
+      '#2196F3',
+      '#FDD835',
+      '#43A047',
+      '#795548',
+      '#EF6C00',
+      '#C62828',
+      '#607D8B'
+    ];
     return avatarColors[workgroupId % 10];
   }
 
@@ -770,7 +799,10 @@ class ConfigService {
      * /wise/curriculum/3/assets/
      */
     const assetsDirectoryPathNotIncludingHost = this.getProjectAssetsDirectoryPath() + '/';
-    const assetsDirectoryPathNotIncludingHostRegEx = new RegExp(assetsDirectoryPathNotIncludingHost, 'g');
+    const assetsDirectoryPathNotIncludingHostRegEx = new RegExp(
+      assetsDirectoryPathNotIncludingHost,
+      'g'
+    );
 
     /*
      * remove the directory path from the html so that only the file name
@@ -858,23 +890,48 @@ class ConfigService {
     const currentTime = new Date().getTime();
     if (currentTime < this.convertToClientTimestamp(configJSON.startTime)) {
       return false;
-    } else if (configJSON.endTime != null &&
-        currentTime > this.convertToClientTimestamp(configJSON.endTime)) {
+    } else if (this.isEndedAndLocked(configJSON)) {
       return false;
     }
     return true;
   }
 
+  isEndedAndLocked(configJSON = this.config) {
+    return (
+      configJSON.endTime != null &&
+      new Date().getTime() > this.convertToClientTimestamp(configJSON.endTime) &&
+      configJSON.isLockedAfterEndDate
+    );
+  }
+
+  getPrettyEndDate() {
+    return this.moment(this.getEndDate()).format('MMM D, YYYY');
+  }
+
+  getStartDate() {
+    return this.config.startTime;
+  }
+
+  getEndDate() {
+    return this.config.endTime;
+  }
+
   isRunActive() {
     return this.config.isRunActive;
   }
+
+  getFormattedStartDate() {
+    return this.UtilService.convertMillisecondsToFormattedDateTime(this.getStartDate());
+  }
+
+  getFormattedEndDate() {
+    if (this.getEndDate() != null) {
+      return this.UtilService.convertMillisecondsToFormattedDateTime(this.getEndDate());
+    }
+    return '';
+  }
 }
 
-ConfigService.$inject = [
-  '$filter',
-  '$http',
-  '$location',
-  'UtilService'
-];
+ConfigService.$inject = ['$filter', '$http', '$location', 'moment', 'UtilService'];
 
 export default ConfigService;

@@ -168,7 +168,7 @@ gulp.task('update-i18n', gulp.series(function() {
 // Default task
 // -----------------------------------------------------------------------------
 
-gulp.task('default', gulp.series('watch-sass', 'transpile'));
+gulp.task('default', gulp.series('watch-sass'));
 
 
 // http://stackoverflow.com/questions/27859691/gulp-handling-multiple-themes-and-folders

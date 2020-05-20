@@ -53,6 +53,8 @@ public class APIControllerTest {
 
   protected final String TEACHER_USERNAME = "SquidwardTentacles";
 
+  protected final String TEACHER2_USERNAME = "SandyCheeks";
+
   protected final String ADMIN_USERNAME = "MrKrabb";
 
   protected final String USERNAME_NOT_IN_DB = "usernameNotInDB";
@@ -71,6 +73,10 @@ public class APIControllerTest {
 
   protected Long runId1 = 1L;
 
+  protected Long runId2 = 2L;
+
+  protected Long runId3 = 3L;
+
   protected Long projectId1 = 1L;
 
   protected String RUN1_RUNCODE = "orca123";
@@ -83,7 +89,7 @@ public class APIControllerTest {
 
   protected List<Run> runs;
 
-  protected Workgroup workgroup1;
+  protected Workgroup workgroup1, teacher1Run1Workgroup;
 
   protected Project project1, project2, project3;
 
@@ -169,9 +175,12 @@ public class APIControllerTest {
     workgroup1 = new WorkgroupImpl();
     workgroup1.addMember(student1);
     workgroup1.setPeriod(run1Period1);
+    teacher1Run1Workgroup = new WorkgroupImpl();
+    teacher1Run1Workgroup.addMember(teacher1);
+    teacher1Run1Workgroup.setRun(run1);
     teacher2 = new UserImpl();
     TeacherUserDetails tud2 = new TeacherUserDetails();
-    tud2.setUsername("teacher2");
+    tud2.setUsername(TEACHER2_USERNAME);
     teacher2.setUserDetails(tud2);
     runs = new ArrayList<Run>();
     run2 = new RunImpl();

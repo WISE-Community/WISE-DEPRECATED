@@ -209,6 +209,10 @@ md-checkbox {
             &:active {
                 @include md-shadow-bottom-z-2();
             }
+
+            &:not(.md-primary):not(.md-warn):not(.md-accent) {
+                background-color: #ffffff;
+            }
         }
     }
 

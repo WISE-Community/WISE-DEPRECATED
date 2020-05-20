@@ -68,7 +68,7 @@ import org.wise.vle.domain.work.StudentWork;
 
 /**
  * Services for the WISE Virtual Learning Environment (WISE VLE v5)
- * 
+ *
  * @author Hiroki Terashima
  */
 @Service("wise5VLEService")
@@ -983,12 +983,12 @@ public class VLEServiceImpl implements VLEService {
   }
 
   @Override
-  public List<Notification> getNotifications(Integer id, Integer runId, Integer periodId,
-      Integer toWorkgroupId, String groupId, String nodeId, String componentId) {
+  public List<Notification> getNotifications(Integer id, Long runId, Integer periodId,
+      Long toWorkgroupId, String groupId, String nodeId, String componentId) {
     Run run = null;
     if (runId != null) {
       try {
-        run = runService.retrieveById(new Long(runId));
+        run = runService.retrieveById(runId);
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }
@@ -1004,7 +1004,7 @@ public class VLEServiceImpl implements VLEService {
     Workgroup workgroup = null;
     if (toWorkgroupId != null) {
       try {
-        workgroup = workgroupService.retrieveById(new Long(toWorkgroupId));
+        workgroup = workgroupService.retrieveById(toWorkgroupId);
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
       }

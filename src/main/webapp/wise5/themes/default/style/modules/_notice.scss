@@ -1,0 +1,12 @@
+.notice {
+  text-align: center;
+  padding: 8px;
+  background-color: rgba(0,0,0,0.04);
+  width: 100%;
+
+  @media (min-width: $layout-breakpoint-xs) {
+    max-width: 80%;
+    border-radius: $button-border-radius;
+    margin: 24px auto;
+  }
+}

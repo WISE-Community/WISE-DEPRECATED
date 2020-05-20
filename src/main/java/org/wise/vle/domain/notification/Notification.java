@@ -68,12 +68,12 @@ public class Notification extends PersistableDomain {
   private Group period;
 
   @ManyToOne(targetEntity = WorkgroupImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
-  @JoinColumn(name = "toWorkgroupId")
+  @JoinColumn(name = "toWorkgroupId", nullable = false)
   @JsonIgnore
   private Workgroup toWorkgroup;
 
   @ManyToOne(targetEntity = WorkgroupImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
-  @JoinColumn(name = "fromWorkgroupId")
+  @JoinColumn(name = "fromWorkgroupId", nullable = false)
   @JsonIgnore
   private Workgroup fromWorkgroup;
 
@@ -89,7 +89,7 @@ public class Notification extends PersistableDomain {
   @Column(name = "componentType", length = 30)
   private String componentType;  // type of component that created this notification, if any
 
-  @Column(name = "type")
+  @Column(name = "type", nullable = false)
   private String type;  // type of this notification, ex: component, node, vle, teacherToStudent, etc
 
   @Column(name = "message", nullable = false)
@@ -129,6 +129,22 @@ public class Notification extends PersistableDomain {
     this.setPeriodId(this.getPeriod().getId());
     this.setToWorkgroupId(this.getToWorkgroup().getId());
     this.setFromWorkgroupId(this.getFromWorkgroup().getId());
+  }
+
+  public long getRunId() {
+    return run.getId();
+  }
+
+  public long getPeriodId() {
+    return period.getId();
+  }
+
+  public long getToWorkgroupId() {
+    return toWorkgroup.getId();
+  }
+
+  public long getFromWorkgroupId() {
+    return fromWorkgroup.getId();
   }
 
   public JSONObject toJSON() {

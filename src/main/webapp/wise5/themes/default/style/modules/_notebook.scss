@@ -477,10 +477,19 @@ $notebook-sidebar-width: 56px;
     }
 }
 
+.notebook-items--grading {
+    margin-bottom: 0;
+}
+
 @media only screen and (max-width: ($layout-breakpoint-xs - 1)) {
     .notebook-enabled {
         .md-fab-bottom-right, .md-fab-bottom-left {
             bottom: ($wise-toolbar-height + 8) !important;
         }
     }
+}
+
+.notebook-grading {
+    background-color: #ffffff;
+    display: block;
 }

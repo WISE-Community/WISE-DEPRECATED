@@ -1,7 +1,6 @@
 'use strict';
 
 import '../themes/default/js/webfonts';
-import 'jquery';
 import AchievementService from '../services/achievementService';
 import * as angular from 'angular';
 import * as angularDragula from 'angular-dragula';
@@ -29,12 +28,20 @@ import '../directives/components';
 import ComponentService from '../components/componentService';
 import './dashboard/dashboardController';
 import DataExportController from './dataExport/dataExportController';
+import ExportController from './dataExport/exportController';
+import ExportVisitsController from './dataExport/exportVisitsController';
 import '../components/discussion/discussionComponentModule';
 import '../components/draw/drawComponentModule';
 import '../components/embedded/embeddedComponentModule';
 import '../components/graph/graphComponentModule';
-import * as Highcharts from '../lib/highcharts@4.2.1';
 import '../lib/highcharts/highcharts-ng';
+import * as Highcharts from '../../wise5/lib/highcharts/highcharts.src';
+import '../../wise5/lib/draggable-points/draggable-points';
+import * as HighchartsExporting from '../../wise5/lib/highcharts-exporting@4.2.1';
+import * as covariance from 'compute-covariance';
+window['Highcharts'] = Highcharts;
+window['HighchartsExporting'] = HighchartsExporting;
+window['covariance'] = covariance;
 import '../components/html/htmlComponentModule';
 import HttpInterceptor from '../services/httpInterceptor';
 import '../components/label/labelComponentModule';
@@ -46,7 +53,6 @@ import '../components/multipleChoice/multipleChoiceComponentModule';
 import NodeService from '../services/nodeService';
 import '../themes/default/notebook/notebookComponents';
 import NotebookGradingController from './notebook/notebookGradingController';
-import NotebookItemGrading from './notebook/notebookItemGrading/notebookItemGrading';
 import NotebookService from '../services/notebookService';
 import NotificationService from '../services/notificationService';
 import '../components/openResponse/openResponseComponentModule';
@@ -54,8 +60,10 @@ import '../components/outsideURL/outsideURLComponentModule';
 import PlanningService from '../services/planningService';
 import ProjectService from '../services/projectService';
 import SessionService from '../services/sessionService';
-import SockJS from 'sockjs-client';
-import * as Stomp from '@stomp/stompjs';
+import * as SockJS from 'sockjs-client';
+import * as StompJS from '@stomp/stompjs';
+window['SockJS'] = SockJS;
+window['Stomp'] = StompJS.Stomp;
 import StudentAssetService from '../services/studentAssetService';
 import StudentDataService from '../services/studentDataService';
 import StudentGradingController from './studentGrading/studentGradingController';
@@ -67,10 +75,6 @@ import '../components/table/tableComponentModule';
 import TeacherDataService from '../services/teacherDataService';
 import TeacherWebSocketService from '../services/teacherWebSocketService';
 import UtilService from '../services/utilService';
-import '../lib/summernote/dist/summernote';
-import '../lib/angular-summernote/dist/angular-summernote';
-import '../lib/summernoteExtensions/summernote-ext-addNote.js';
-import '../lib/summernoteExtensions/summernote-ext-print.js';
 import * as moment from 'moment';
 
 const classroomMonitorModule = angular
@@ -131,12 +135,13 @@ const classroomMonitorModule = angular
   .service('UtilService', UtilService)
   .controller('ClassroomMonitorController', ClassroomMonitorController)
   .controller('DataExportController', DataExportController)
+  .controller('ExportController', ExportController)
+  .controller('ExportVisitsController', ExportVisitsController)
   .controller('ManageStudentsController', ManageStudentsController)
   .controller('MilestonesController', MilestonesController)
   .controller('NotebookGradingController', NotebookGradingController)
   .controller('StudentGradingController', StudentGradingController)
   .controller('StudentProgressController', StudentProgressController)
-  .component('notebookItemGrading', NotebookItemGrading)
   .config([
     '$urlRouterProvider',
     '$stateProvider',

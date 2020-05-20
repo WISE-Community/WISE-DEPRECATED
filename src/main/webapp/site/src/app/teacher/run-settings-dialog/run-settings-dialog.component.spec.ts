@@ -5,6 +5,7 @@ import { NO_ERRORS_SCHEMA, TRANSLATIONS_FORMAT, TRANSLATIONS, LOCALE_ID } from '
 import { Run } from "../../domain/run";
 import { TeacherService } from "../teacher.service";
 import { Observable } from 'rxjs';
+import { of } from 'rxjs';
 import { translationsFactory } from '../../app.module';
 import { I18n } from '@ngx-translate/i18n-polyfill';
 import { MomentModule } from 'ngx-moment';
@@ -40,6 +41,13 @@ export class MockTeacherService {
     });
   }
   updateEndTime(runId, maxStudentsPerTeam) {
+    return Observable.create(observer => {
+      const response: any = {};
+      observer.next(response);
+      observer.complete();
+    });
+  }
+  updateIsLockedAfterEndDate(runId, isLockedAfterEndDate) {
     return Observable.create(observer => {
       const response: any = {};
       observer.next(response);
@@ -163,5 +171,44 @@ describe('RunSettingsDialogComponent', () => {
     expect(endDateInput.ngModel.getDate()).toBe(20);
     expect(endDateInput.ngModel.getMonth()).toBe(10);
     expect(endDateInput.ngModel.getUTCFullYear()).toBe(2019);
+  });
+
+  it('should update is locked after end date false', () => {
+    component.isLockedAfterEndDate = false;
+    const teacherService = TestBed.get(TeacherService);
+    spyOn(teacherService, 'updateIsLockedAfterEndDate').and.returnValue(of({}));
+    component.updateIsLockedAfterEndDate();
+    expect(teacherService.updateIsLockedAfterEndDate).toHaveBeenCalledWith(1, false);
+  });
+
+  it('should update is locked after end date true', () => {
+    component.isLockedAfterEndDate = true;
+    const teacherService = TestBed.get(TeacherService);
+    spyOn(teacherService, 'updateIsLockedAfterEndDate').and.returnValue(of({}));
+    component.updateIsLockedAfterEndDate();
+    expect(teacherService.updateIsLockedAfterEndDate).toHaveBeenCalledWith(1, true);
+  });
+
+  it('should enable is locked after end date checkbox', () => {
+    component.endDate = new Date();
+    component.isLockedAfterEndDateCheckboxEnabled = false;
+    const teacherService = TestBed.get(TeacherService);
+    spyOn(teacherService, 'updateIsLockedAfterEndDate').and.returnValue(of({}));
+    component.updateLockedAfterEndDateCheckbox();
+    expect(component.isLockedAfterEndDateCheckboxEnabled).toEqual(true);
+  });
+
+  it('should disable is locked after end date checkbox', () => {
+    component.endDate = null;
+    component.isLockedAfterEndDateCheckboxEnabled = true;
+    const teacherService = TestBed.get(TeacherService);
+    spyOn(teacherService, 'updateIsLockedAfterEndDate').and.returnValue(of({}));
+    component.updateLockedAfterEndDateCheckbox();
+    expect(component.isLockedAfterEndDateCheckboxEnabled).toEqual(false);
+  });
+
+  it('should translate message code', () => {
+    const message = component.translateMessageCode('periodNameAlreadyExists');
+    expect(message).toEqual('There is already a period with that name.');
   });
 });

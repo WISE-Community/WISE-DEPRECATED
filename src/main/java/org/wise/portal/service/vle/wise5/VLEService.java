@@ -42,7 +42,7 @@ import org.wise.vle.domain.work.StudentWork;
 
 /**
  * Services for the WISE Virtual Learning Environment (WISE VLE v5)
- * 
+ *
  * @author Hiroki Terashima
  */
 public interface VLEService {
@@ -147,7 +147,7 @@ public interface VLEService {
 
   /**
    * Returns a list of notebook items that belong in a specified group.
-   * 
+   *
    * @param runId
    *                    id of run
    * @param groupName
@@ -166,7 +166,7 @@ public interface VLEService {
 
   /**
    * Add a group to a NotebookItem
-   * 
+   *
    * @param notebookItemId
    * @param group
    * @param clientSaveTime
@@ -177,7 +177,7 @@ public interface VLEService {
 
   /**
    * Remove a NotebookItem from the specified group
-   * 
+   *
    * @param notebookItemId
    * @param group
    * @param clientSaveTime
@@ -188,7 +188,7 @@ public interface VLEService {
 
   /**
    * Copies NotebookItem in the data store
-   * 
+   *
    * @param workgroupId
    * @param parentNotebookItemId
    * @param clientSaveTime
@@ -213,15 +213,12 @@ public interface VLEService {
    */
   List<Notification> getNotificationsByGroupId(String groupId) throws ObjectNotFoundException;
 
-  /**
-   * @return NotebookItems from data store that match specified params
-   */
-  List<Notification> getNotifications(Integer id, Integer runId, Integer periodId,
-      Integer toWorkgroupId, String groupId, String nodeId, String componentId);
+  List<Notification> getNotifications(Integer id, Long runId, Integer periodId,
+      Long toWorkgroupId, String groupId, String nodeId, String componentId);
 
   /**
    * Save Notification in the data store
-   * 
+   *
    * @param id
    *                          unique id of this notification
    * @param runId
@@ -246,7 +243,7 @@ public interface VLEService {
 
   /**
    * Dismiss the given notification
-   * 
+   *
    * @param notification
    * @param timeDismissed
    * @return Notification dismissed notification
