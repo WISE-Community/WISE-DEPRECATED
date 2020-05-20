@@ -34,6 +34,7 @@ import org.wise.portal.service.portal.PortalService;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.user.UserService;
+import org.wise.portal.service.workgroup.WorkgroupService;
 
 public class APIControllerTest {
 
@@ -93,6 +94,8 @@ public class APIControllerTest {
 
   protected Project project1, project2, project3;
 
+  protected Group run1Period1, run1Period2;
+
   @Mock
   protected HttpServletRequest request;
 
@@ -101,6 +104,9 @@ public class APIControllerTest {
 
   @Mock
   protected RunService runService;
+
+  @Mock
+  protected WorkgroupService workgroupService;
 
   @Mock
   protected ProjectService projectService;
@@ -156,11 +162,11 @@ public class APIControllerTest {
     run1.setMaxWorkgroupSize(3);
     run1.setRuncode(RUN1_RUNCODE);
     HashSet<Group> run1Periods = new HashSet<Group>();
-    Group run1Period1 = new PersistentGroup();
+    run1Period1 = new PersistentGroup();
     run1Period1.setName(RUN1_PERIOD1_NAME);
     run1Period1.addMember(student1);
     run1Periods.add(run1Period1);
-    Group run1Period2 = new PersistentGroup();
+    run1Period2 = new PersistentGroup();
     run1Period2.setName(RUN1_PERIOD2_NAME);
     run1Periods.add(run1Period2);
     run1.setPeriods(run1Periods);

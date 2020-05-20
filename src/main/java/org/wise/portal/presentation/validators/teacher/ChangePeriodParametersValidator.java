@@ -50,13 +50,13 @@ public class ChangePeriodParametersValidator implements Validator {
       return;
     }
 
-    ValidationUtils.rejectIfEmptyOrWhitespace(errors, "projectcode",
-        "error.changeperiod.projectcode");
+    ValidationUtils.rejectIfEmptyOrWhitespace(errors, "currentPeriod",
+        "error.changeperiod.currentPeriod");
     if (errors.getErrorCount() != 0) {
       return;
     }
 
-    ValidationUtils.rejectIfEmptyOrWhitespace(errors, "projectcodeTo",
-        "error.changeperiod.projectcode-To");
+    ValidationUtils.rejectIfEmptyOrWhitespace(errors, "newPeriod",
+        "error.changeperiod.newPeriod");
   }
 }

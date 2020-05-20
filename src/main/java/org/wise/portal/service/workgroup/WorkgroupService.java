@@ -129,4 +129,12 @@ public interface WorkgroupService {
    * @return whether the user is in another workgroup for the run
    */
   boolean isUserInAnotherWorkgroupForRun(User user, Run run, Workgroup workgroup);
+
+  /**
+   * Changes the workgroup's period and all of its memebers' periods
+   * to a new period
+   * @param workgroup the workgroup
+   * @param newPeriod period to move the workgroup and its members to
+   */
+  void changePeriod(Workgroup workgroup, Group newPeriod);
 }
