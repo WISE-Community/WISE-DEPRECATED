@@ -1,0 +1,18 @@
+{
+  "id": "group1",
+  "type": "group",
+  "title": "Jigsaw Activity",
+  "startId": "node1",
+  "ids": ["node1", "node2", "node3", "node4", "node5"],
+  "icons": {
+    "default": {
+      "color": "#2196F3",
+      "type": "font",
+      "fontSet": "material-icons",
+      "fontName": "info"
+    }
+  },
+  "transitionLogic": {
+    "transitions": []
+  }
+}
