@@ -8,6 +8,7 @@ import { MediaChange, MediaObserver } from '@angular/flex-layout';
 import { UtilService } from "./services/util.service";
 import { ConfigService } from "./services/config.service";
 import { Announcement } from './domain/announcement';
+declare let gtag: Function;
 
 @Component({
   selector: 'app-root',
@@ -96,6 +97,7 @@ export class AppComponent {
   ngOnInit() {
     this.router.events.subscribe((ev: any) => {
       if (ev instanceof NavigationEnd) {
+        gtag('config', 'UA-789725-1', { 'page_path': ev.urlAfterRedirects });
         this.showDefaultMode = this.isShowDefaultMode();
         this.showHeaderAndFooter = this.isShowHeaderAndFooter();
         this.isAngularJSPath = this.isAngularJSRoute();
