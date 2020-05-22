@@ -7125,7 +7125,7 @@
           <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">Are you sure you want to remove the end date?</target>
+        <target state="translated">你确定要删除结束日期么？</target>
       </trans-unit>
       <trans-unit id="552cff32fa324f691b5ac17facdde8b9a963659f" datatype="html">
         <source>Unit settings updated.</source>
