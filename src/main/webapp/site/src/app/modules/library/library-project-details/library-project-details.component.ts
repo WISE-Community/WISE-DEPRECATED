@@ -121,7 +121,7 @@ export class LibraryProjectDetailsComponent implements OnInit {
 
   previewProject() {
     if (this.project.wiseVersion === 4) {
-      window.open(`${this.configService.getWISE4Hostname()}` + `/previewproject?projectId=${this.project.id}`);
+      window.open(`${this.configService.getWISE4Hostname()}` + `/previewproject.html?projectId=${this.project.id}`);
     } else {
       window.open(`/preview/unit/${this.project.id}`);
     }
