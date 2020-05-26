@@ -10,6 +10,11 @@
     <link href="${contextPath}/<spring:theme code="rtlstylesheet"/>" rel="stylesheet" type="text/css" >
 </c:if>
 <title><spring:message code="teacher.management.changestudentperiod.header"/></title>
+<script>
+    $(document).ready(function() {
+        $("input[type=submit]").focus();
+    });
+</script>
 </head>
 <body style="background:#FFF;">
 <div class="dialogContent">
