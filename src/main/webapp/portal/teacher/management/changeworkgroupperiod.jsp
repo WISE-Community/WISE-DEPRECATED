@@ -1,5 +1,4 @@
 <%@ include file="../../include.jsp"%>
-
 <!DOCTYPE html>
 <html dir="${textDirection}">
 <head>
@@ -18,7 +17,7 @@
 </head>
 <body style="background:#FFF;">
 <div class="dialogContent">
-	<form:form method="post" action="changestudentperiod.html" modelAttribute="changePeriodParameters" id="changestudentperiod" autocomplete='off'>
+	<form:form method="post" action="" modelAttribute="changePeriodParameters" id="changeworkgroupperiod" autocomplete='off'>
 		<div class="sectionContent">
 			<table style="margin:0 auto;">
 				<tr>
