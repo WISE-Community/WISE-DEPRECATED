@@ -49,6 +49,7 @@ import org.wise.portal.domain.user.impl.UserImpl;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.domain.workgroup.impl.WorkgroupImpl;
 import org.wise.portal.service.acl.AclService;
+import org.wise.portal.service.group.GroupService;
 
 /**
  * @author Cynick Young
@@ -66,13 +67,16 @@ public class WorkgroupServiceImplTest {
   @Mock
   private AclService<Workgroup> aclService;
 
+  @Mock
+  private GroupService groupService;
+
   private Workgroup workgroup;
 
   private Run run;
 
   private User user1, user2, user3;
 
-  private Group period;
+  private Group period1, period2;
 
   @TestSubject
   private WorkgroupServiceImpl workgroupService = new WorkgroupServiceImpl();
@@ -89,7 +93,10 @@ public class WorkgroupServiceImplTest {
   public void setUp() {
     workgroup = new WorkgroupImpl();
     run = new RunImpl();
-    period = new PersistentGroup();
+    period1 = new PersistentGroup();
+    period1.setName("period1");
+    period2 = new PersistentGroup();
+    period2.setName("period2");
     user1 = new UserImpl();
     MutableUserDetails userDetails1 = new PersistentUserDetails();
     userDetails1.setUsername(USERNAME_1);
@@ -146,7 +153,7 @@ public class WorkgroupServiceImplTest {
     replay(workgroupDao);
     Set<User> members = new HashSet<User>();
     Workgroup createdWorkgroup = workgroupService.createWorkgroup(
-        WORKGROUP_NAME, members, run, period);
+        WORKGROUP_NAME, members, run, period1);
     verify(workgroupDao);
     verify(groupDao);
     assertEquals(0, createdWorkgroup.getMembers().size());
@@ -157,7 +164,7 @@ public class WorkgroupServiceImplTest {
     Set<User> members = new HashSet<User>();
     members.add(user1);
     Workgroup createdWorkgroup = workgroupService.createWorkgroup(
-        WORKGROUP_NAME, members, run, period);
+        WORKGROUP_NAME, members, run, period1);
     assertEquals(1, createdWorkgroup.getMembers().size());
     assertEquals(" username 1", createdWorkgroup.getGroup().getName());
   }
@@ -193,5 +200,24 @@ public class WorkgroupServiceImplTest {
     membersToRemove.add(user3);
     workgroupService.removeMembers(workgroup, membersToRemove);
     assertEquals(1, workgroup.getMembers().size());
+  }
+
+  @Test
+  public void changePeriod_NewPeriod_ShouldMoveMembersAndChangePeriod() {
+    Workgroup workgroup = new WorkgroupImpl();
+    workgroup.setPeriod(period1);
+    Set<User> members = new HashSet<User>();
+    members.add(user1);
+    members.add(user2);
+    workgroup.setMembers(members);
+    groupService.removeMembers(period1, members);
+    expectLastCall();
+    groupService.addMembers(period2, members);
+    expectLastCall();
+    workgroupDao.save(isA(Workgroup.class));
+    expectLastCall();
+    workgroupService.changePeriod(workgroup, period2);
+    assertEquals(period2, workgroup.getPeriod());
+    assertEquals(2, workgroup.getMembers().size());
   }
 }

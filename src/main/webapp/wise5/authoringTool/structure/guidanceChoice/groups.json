@@ -1,0 +1,18 @@
+{
+  "id": "group1",
+  "type": "group",
+  "title": "Guidance Choice",
+  "startId": "node1",
+  "ids": ["node1"],
+  "icons": {
+    "default": {
+      "color": "#2196F3",
+      "type": "font",
+      "fontSet": "material-icons",
+      "fontName": "info"
+    }
+  },
+  "transitionLogic": {
+    "transitions": []
+  }
+}

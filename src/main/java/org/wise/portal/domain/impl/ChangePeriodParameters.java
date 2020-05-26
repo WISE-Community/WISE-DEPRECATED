@@ -29,6 +29,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
+import org.wise.portal.domain.workgroup.Workgroup;
 
 /**
  * @author Patrick Lawler
@@ -41,9 +42,11 @@ public class ChangePeriodParameters implements Serializable {
 
   private User student;
 
+  private Workgroup workgroup;
+
   private Run run;
 
-  private String projectcode;
+  private String currentPeriod;
 
-  private String projectcodeTo;
+  private String newPeriod;
 }
