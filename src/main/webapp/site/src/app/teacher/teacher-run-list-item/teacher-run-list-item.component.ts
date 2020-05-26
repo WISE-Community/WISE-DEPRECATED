@@ -45,7 +45,8 @@ export class TeacherRunListItemComponent implements OnInit {
     const contextPath = this.configService.getContextPath();
     this.editLink = `${contextPath}/author/authorproject.html?projectId=${this.run.project.id}`;
     if (this.run.project.wiseVersion === 4) {
-      this.gradeAndManageLink = `${this.configService.getWISE4Hostname()}/teacher/run/manage/${this.run.id}`;
+      this.gradeAndManageLink = `${this.configService.getWISE4Hostname()}` +
+          `/teacher/classroomMonitor/classroomMonitor?runId=${this.run.id}&gradingType=monitor`;
     } else {
       this.gradeAndManageLink = `${contextPath}/teacher/manage/unit/${this.run.id}`;
     }
@@ -66,7 +67,11 @@ export class TeacherRunListItemComponent implements OnInit {
   }
 
   launchGradeAndManageTool() {
-    this.router.navigateByUrl(this.gradeAndManageLink);
+    if (this.run.project.wiseVersion === 4) {
+      window.location.href = this.gradeAndManageLink;
+    } else {
+      this.router.navigateByUrl(this.gradeAndManageLink);
+    }
   }
 
   periodsString() {
