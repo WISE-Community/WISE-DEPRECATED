@@ -50,7 +50,6 @@ class RubricAuthoringController {
       disableDragAndDrop: true,
       buttons: {
         insertAssetButton: this.UtilService.createInsertAssetButton(
-          this,
           null,
           this.nodeId,
           null,

@@ -304,7 +304,7 @@ class ProjectAssetController {
       this.assetIsImage = true;
     } else if (this.UtilService.isVideo(assetFileName)) {
       this.assetIsVideo = true;
-      $('video').load();
+      $('video').load(this.previewAssetURL);
     }
   }
 

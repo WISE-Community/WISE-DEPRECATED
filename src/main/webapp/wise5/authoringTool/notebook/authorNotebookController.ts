@@ -114,7 +114,6 @@ class AuthorNotebookController {
         disableDragAndDrop: true,
         buttons: {
           insertAssetButton: this.UtilService.createInsertAssetButton(
-            this,
             this.projectId,
             null,
             null,
