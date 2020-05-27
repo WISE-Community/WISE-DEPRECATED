@@ -33,7 +33,6 @@ import org.wise.portal.presentation.web.response.SimpleResponse;
 import org.wise.portal.service.attendance.StudentAttendanceService;
 import org.wise.portal.service.authentication.DuplicateUsernameException;
 import org.wise.portal.service.student.StudentService;
-import org.wise.portal.service.workgroup.WorkgroupService;
 
 @RunWith(EasyMockRunner.class)
 public class StudentAPIControllerTest extends APIControllerTest {
@@ -43,9 +42,6 @@ public class StudentAPIControllerTest extends APIControllerTest {
 
   @Mock
   private StudentService studentService;
-
-  @Mock
-  private WorkgroupService workgroupService;
 
   @Mock
   private StudentAttendanceService studentAttendanceService;

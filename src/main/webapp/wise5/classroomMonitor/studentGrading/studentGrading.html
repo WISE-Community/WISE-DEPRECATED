@@ -1,29 +1,30 @@
 <div class="view-content view-content--with-sidemenu">
   <div class="l-constrained grading">
-    <div class="md-subhead content-head" layout="row"
-         layout-align="center center" layout-align-gt-sm="start center"
-         layout-wrap>
-      <div layout="row" layout-align="center center"
-           layout-wrap flex-xs="100" flex-sm="100">
+    <div class="md-subhead content-head" layout="row" layout-align="center center"
+         layout-align-gt-sm="start center" layout-wrap>
+      <div layout="row" layout-align="center center" layout-wrap flex-xs="100" flex-sm="100">
         <div class="accent-2" layout="row" layout-align="center center">
           <h2 class="content-head__item">
-            {{ studentGradingController.projectCompletion.completionPct }}%<span class="md-subhead" translate="completion"></span>
+            {{ studentGradingController.projectCompletion.completionPct }}%<span class="md-subhead"
+                  translate="completion"></span>
           </h2>
           <h2 class="content-head__item">
-            {{ studentGradingController.totalScore }}/{{ studentGradingController.maxScore }}<span class="md-subhead" translate="totalScore"></span>
+            {{ studentGradingController.totalScore }}/{{ studentGradingController.maxScore }}<span
+                  class="md-subhead" translate="totalScore"></span>
           </h2>
         </div>
       </div>
     </div>
 
     <md-list class="user-list">
-      <md-list-item class="md-whiteframe-1dp md-with-secondary list-item list-item--actions" layout-wrap>
+      <md-list-item class="md-whiteframe-1dp md-with-secondary list-item list-item--actions"
+                    layout-wrap>
         <div flex-xs="100" flex-sm="100">
           <step-select></step-select>
         </div>
         <span flex hide-xs hide-sm></span>
-        <div class="md-secondary-container"
-           flex-xs="100" flex-sm="100" layout-column layout-align="center center">
+        <div class="md-secondary-container" flex-xs="100" flex-sm="100" layout-column
+             layout-align="center center">
           <md-button aria-label="{{ ::'expandAllLabel' | translate }}"
                      class="button--small md-primary"
                      ng-click="studentGradingController.expandAll()">
@@ -39,9 +40,8 @@
 
       <md-list-item class="table--list__thead table--list__thead__th md-whiteframe-1dp">
         <div class="md-list-item-text table--list__thead__tr" layout="row" flex>
-          <md-button class="table--list__thead__link"
-                     flex layout="row" layout-align="start center"
-                     ng-click="studentGradingController.setSort('step')"
+          <md-button class="table--list__thead__link" md-theme="default" flex layout="row"
+                     layout-align="start center" ng-click="studentGradingController.setSort('step')"
                      aria-label="{{ ::'sortByStep' | translate }}">
             <span translate="step"></span>
             <md-icon ng-if="studentGradingController.sort === 'step' || studentGradingController.sort === '-step'"
@@ -50,8 +50,8 @@
               arrow_drop_up
             </md-icon>
           </md-button>
-          <md-button class="table--list__thead__link"
-                     flex="30" layout="row" layout-align="center center"
+          <md-button class="table--list__thead__link" md-theme="default" flex="30" layout="row"
+                     layout-align="center center"
                      ng-click="studentGradingController.setSort('status')"
                      aria-label="{{::'sortByCompletion' | translate}}">
             <span translate="status"></span>
@@ -62,8 +62,8 @@
             </md-icon>
           </md-button>
           <!--<div flex="20" layout="row" layout-align="center center">Time Spent</div>-->
-          <md-button class="table--list__thead__link"
-                     flex="20" layout="row" layout-align="center center"
+          <md-button class="table--list__thead__link" md-theme="default" flex="20" layout="row"
+                     layout-align="center center"
                      ng-click="studentGradingController.setSort('score')"
                      aria-label="{{ ::'sortByScore' | translate }}">
             <span translate="score"></span>
@@ -76,13 +76,9 @@
         </div>
       </md-list-item>
       <step-item ng-repeat="node in studentGradingController.nodesById | toArray | orderBy:studentGradingController.getOrderBy()"
-                 ng-if="node.show"
-                 expand="studentGradingController.nodeVisibilityById[node.$key]"
-                 max-score="node.maxScore"
-                 show-score="node.hasWork"
-                 node-id="::node.$key"
-                 step-data="node"
-                 workgroup-id="::studentGradingController.workgroupId"
+                 ng-if="node.show" expand="studentGradingController.nodeVisibilityById[node.$key]"
+                 max-score="node.maxScore" show-score="node.hasWork" node-id="::node.$key"
+                 step-data="node" workgroup-id="::studentGradingController.workgroupId"
                  on-update-expand="studentGradingController.onUpdateExpand(nodeId, value)"
                  in-view="studentGradingController.stepInView(node.$key, $inview)"></step-item>
     </md-list>

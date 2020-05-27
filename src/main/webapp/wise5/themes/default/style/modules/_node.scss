@@ -60,6 +60,12 @@ $input-action-vertical-offset-richtext: -7px;
     }
 }
 
+md-content {
+    &.node-content {
+        background-color: #ffffff;
+    }
+}
+
 .node-content__rubric {
     position: absolute;
     top: -22px;

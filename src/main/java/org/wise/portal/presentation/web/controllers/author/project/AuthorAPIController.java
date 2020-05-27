@@ -151,6 +151,10 @@ public class AuthorAPIController {
         ModelAndView wise5AuthoringView = new ModelAndView(
             new RedirectView("../teacher/edit/unit/" + projectIdStr));
         return wise5AuthoringView;
+      } else if (project.getWiseVersion().equals(4)) {
+        ModelAndView wise4AuthoringView = new ModelAndView(
+            new RedirectView("/legacy/author/authorproject.html?projectId=" + projectIdStr));
+        return wise4AuthoringView;
       }
     }
     return null;

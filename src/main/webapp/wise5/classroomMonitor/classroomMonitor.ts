@@ -53,7 +53,6 @@ import '../components/multipleChoice/multipleChoiceComponentModule';
 import NodeService from '../services/nodeService';
 import '../themes/default/notebook/notebookComponents';
 import NotebookGradingController from './notebook/notebookGradingController';
-import NotebookItemGrading from './notebook/notebookItemGrading/notebookItemGrading';
 import NotebookService from '../services/notebookService';
 import NotificationService from '../services/notificationService';
 import '../components/openResponse/openResponseComponentModule';
@@ -143,7 +142,6 @@ const classroomMonitorModule = angular
   .controller('NotebookGradingController', NotebookGradingController)
   .controller('StudentGradingController', StudentGradingController)
   .controller('StudentProgressController', StudentProgressController)
-  .component('notebookItemGrading', NotebookItemGrading)
   .config([
     '$urlRouterProvider',
     '$stateProvider',

@@ -1,0 +1,38 @@
+<div class="annotations--grading annotations--notebook component--grading__annotations">
+    <div class="annotations--grading__item annotations--grading__score" layout="row"
+            layout-align="start-center">
+        <md-input-container class="md-no-float" layout="row" layout-align="start-center">
+            <label class="input-label md-no-float annotations--grading__score__label">
+                <span>
+                    <span ng-if="$ctrl.score != null"
+                            class="animate-fade">{{ ::'SCORE' | translate }}</span>
+                    <span ng-if="$ctrl.score == null"
+                            class="animate-fade">{{ ::'SET_SCORE' | translate }}</span>
+                </span>
+            </label>
+            <input type="number" placeholder="0" ng-model="$ctrl.score"
+                    ng-change="$ctrl.postAnnotation('score')"
+                    ng-model-options="{ debounce: 5000 }"
+                    ng-disabled="!$ctrl.canGradeStudentWork">
+        </md-input-container>
+        <span class="annotations--grading__score__max md-subhead text-secondary"> /
+            {{$ctrl.maxScore}}</span>
+    </div>
+    <div class="annotations--grading__item">
+        <md-input-container class="input-container md-block md-no-float" flex>
+            <label class="input-label md-no-float">
+                <md-icon class="md-accent">account_box</md-icon>
+                <span ng-if="$ctrl.comment"
+                        class="animate-fade">{{ ::'TEACHER_COMMENT' | translate }}</span>
+                <span ng-if="!$ctrl.comment"
+                        class="animate-fade">{{ ::'SEND_COMMENT' | translate }}</span>
+            </label>
+            <div class="input-wrapper">
+                <textarea md-detect-hidden placeholder="Enter comment here"
+                            ng-model="$ctrl.comment" ng-change="$ctrl.postAnnotation('comment')"
+                            ng-model-options="{ debounce: 10000 }"
+                            ng-disabled="!$ctrl.canGradeStudentWork"></textarea>
+            </div>
+        </md-input-container>
+    </div>
+</div>

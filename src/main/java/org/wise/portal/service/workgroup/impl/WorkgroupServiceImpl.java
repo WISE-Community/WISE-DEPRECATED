@@ -216,4 +216,12 @@ public class WorkgroupServiceImpl implements WorkgroupService {
     }
     return result;
   }
+
+  public void changePeriod(Workgroup workgroup, Group newPeriod) {
+    Set<User> members = workgroup.getMembers();
+    groupService.removeMembers(workgroup.getPeriod(), members);
+    groupService.addMembers(newPeriod, members);
+    workgroup.setPeriod(newPeriod);
+    workgroupDao.save(workgroup);
+  }
 }

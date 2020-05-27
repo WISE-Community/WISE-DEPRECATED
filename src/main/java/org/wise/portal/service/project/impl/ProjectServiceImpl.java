@@ -317,7 +317,17 @@ public class ProjectServiceImpl implements ProjectService {
 
   public ModelAndView previewProject(PreviewProjectParameters params) throws Exception {
     Project project = params.getProject();
-    return previewProjectWISE5(params, project);
+    if (project.getWiseVersion().equals(4)) {
+      return previewProjectWISE4(params, project);
+    } else {
+      return previewProjectWISE5(params, project);
+    }
+  }
+
+  private ModelAndView previewProjectWISE4(PreviewProjectParameters params, Project project) {
+    String contextPath = params.getHttpServletRequest().getContextPath();
+    String wise4URL = contextPath + "/legacy/previewproject.html?projectId=" + project.getId();
+    return new ModelAndView(new RedirectView(wise4URL));
   }
 
   private ModelAndView previewProjectWISE5(PreviewProjectParameters params, Project project) {
