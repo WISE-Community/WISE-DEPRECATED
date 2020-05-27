@@ -8,6 +8,7 @@ import { MediaChange, MediaObserver } from '@angular/flex-layout';
 import { UtilService } from "./services/util.service";
 import { ConfigService } from "./services/config.service";
 import { Announcement } from './domain/announcement';
+import { environment } from '../environments/environment';
 declare let gtag: Function;
 
 @Component({
@@ -19,6 +20,7 @@ export class AppComponent {
   title = 'app';
   showMobileMenu: boolean = false;
   mediaWatcher: Subscription;
+  googleAnalyticsId: string = null;
   hasAnnouncement: boolean = false;
   isAngularJSPath: boolean = false;
   showDefaultMode: boolean = true;
@@ -95,9 +97,25 @@ export class AppComponent {
   }
 
   ngOnInit() {
+    if (environment.production) {
+      this.configService.getConfig().subscribe((config) => {
+        if (config) {
+          this.setGTagManager();
+        }
+      });
+    }
+
+    this.configService.getAnnouncement().subscribe((announcement: Announcement) => {
+      this.announcement = announcement;
+      this.hasAnnouncement = announcement.visible;
+    });
+
+    this.subscribeToRouterEvents();
+  }
+
+  subscribeToRouterEvents() {
     this.router.events.subscribe((ev: any) => {
       if (ev instanceof NavigationEnd) {
-        gtag('config', 'UA-789725-1', { 'page_path': ev.urlAfterRedirects });
         this.showDefaultMode = this.isShowDefaultMode();
         this.showHeaderAndFooter = this.isShowHeaderAndFooter();
         this.isAngularJSPath = this.isAngularJSRoute();
@@ -111,11 +129,27 @@ export class AppComponent {
        */
       this.fixScrollTop(ev);
     });
+  }
 
-    this.configService.getAnnouncement().subscribe((announcement: Announcement) => {
-      this.announcement = announcement;
-      this.hasAnnouncement = announcement.visible;
-    });
+  setGTagManager() {
+    this.googleAnalyticsId = this.configService.getGoogleAnalyticsId();
+    if (this.googleAnalyticsId) {
+      const gtagScript = this.document.createElement('script');
+      gtagScript.src = `https://www.googletagmanager.com/gtag/js?id=${this.googleAnalyticsId}`;
+      this.document.head.appendChild(gtagScript);
+      const script = this.document.createElement('script');
+      script.innerHTML = `window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());`;
+      this.document.head.appendChild(script);
+      gtag('config', this.googleAnalyticsId, { 'page_path': this.router.url });
+
+      this.router.events.subscribe((ev: any) => {
+        if (ev instanceof NavigationEnd) {
+          gtag('config', this.googleAnalyticsId, { 'page_path': ev.urlAfterRedirects });
+        }
+      });
+    }
   }
 
   toggleSiteStyles(disable: boolean) {
