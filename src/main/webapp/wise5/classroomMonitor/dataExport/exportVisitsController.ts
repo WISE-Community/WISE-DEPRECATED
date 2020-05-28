@@ -16,12 +16,15 @@ class ExportVisitsController extends ExportController {
   idToNode: any = {};
   idToStepNumber: any = {};
   idToStepNumberAndTitle: any = {};
+  idToUserInfo: any[] = [];
   rowCounter: number = 1;
   workgroupIdNodeIdToVisitCounter: any = {};
   canViewStudentNames: boolean = false;
   includeStudentNames: boolean = false;
   isShowColumnExplanations: boolean = false;
   columnExplanations: any[];
+  includeDeletedSteps: boolean = true;
+  deletedSteps: any = {};
 
   static $inject = [
     '$filter',
@@ -49,16 +52,17 @@ class ExportVisitsController extends ExportController {
     this.nodes = nodeOrderOfProject.nodes;
     this.initializeIdToChecked(this.nodes);
     this.initializeIdToNode(this.nodes);
-    this.initializeIdToVisitCounter(this.nodes);
     this.initializeColumnNames();
     this.initializeColumnNameToColumnNumber();
     this.initializeColumnExplanations();
+    this.initializeIdToUserInfo();
   }
 
   initializeIdToChecked(nodes: any[]) {
     for (const node of nodes) {
       this.idToChecked[node.node.id] = true;
     }
+    this.includeDeletedSteps = true;
   }
 
   initializeIdToNode(nodes: any[]) {
@@ -71,11 +75,15 @@ class ExportVisitsController extends ExportController {
     }
   }
 
-  initializeIdToVisitCounter(nodes: any[]) {
+  initializeWorkgroupIdNodeIdToVisitCounter(nodes: any[]) {
     const workgroupIds = this.ConfigService.getClassmateWorkgroupIds();
     for (const workgroupId of workgroupIds) {
       for (const node of nodes) {
         const key = this.getWorkgroupIdNodeIdKey(workgroupId, node.node.id);
+        this.workgroupIdNodeIdToVisitCounter[key] = 0;
+      }
+      for (const deletedStepNodeId of Object.keys(this.deletedSteps)) {
+        const key = this.getWorkgroupIdNodeIdKey(workgroupId, deletedStepNodeId);
         this.workgroupIdNodeIdToVisitCounter[key] = 0;
       }
     }
@@ -147,6 +155,18 @@ class ExportVisitsController extends ExportController {
     ];
   }
 
+  initializeIdToUserInfo() {
+    const workgroupIds = this.ConfigService.getClassmateWorkgroupIds();
+    for (const workgroupId of workgroupIds) {
+      this.idToUserInfo[workgroupId] =
+          this.ConfigService.getUserInfoByWorkgroupId(workgroupId);
+    }
+  }
+  
+  isActiveWorkgroup(workgroupId) {
+    return this.idToUserInfo[workgroupId] != null;
+  }
+
   getHeaderRow() {
     return this.columnNames;
   }
@@ -161,12 +181,14 @@ class ExportVisitsController extends ExportController {
     for (const node of this.nodes) {
       this.idToChecked[node.node.id] = true;
     }
+    this.includeDeletedSteps = true;
   }
 
   deselectAll() {
     for (const node of this.nodes) {
       this.idToChecked[node.node.id] = false;
     }
+    this.includeDeletedSteps = false;
   }
 
   nodeChecked(node: any) {
@@ -204,8 +226,10 @@ class ExportVisitsController extends ExportController {
   }
 
   handleExportCallback(response: any) {
-    const events = this.sortEvents(response.events);
-    this.initializeIdToVisitCounter(this.nodes);
+    let events = this.sortEvents(response.events);
+    this.deletedSteps = this.getDeletedSteps(events);
+    events = this.cleanEvents(events);
+    this.initializeWorkgroupIdNodeIdToVisitCounter(this.nodes);
     let previousEnteredEvent = null;
     let rows = [];
     for (const event of events) {
@@ -220,7 +244,7 @@ class ExportVisitsController extends ExportController {
         }
         previousEnteredEvent = null;
       }
-    }
+    };
     if (previousEnteredEvent != null) {
       rows.push(this.createVisit(previousEnteredEvent, null, rows));
     }
@@ -230,8 +254,73 @@ class ExportVisitsController extends ExportController {
     this.generateCSVFile(rows, fileName);
   }
 
+  cleanEvents(events: any[]) {
+    let cleanedEvents = [];
+    cleanedEvents = this.getNodeEnteredAndExitedEvents(events);
+    cleanedEvents = this.getEventsWithActiveWorkgroups(cleanedEvents);
+    cleanedEvents = this.getEventsThatAreNotErroneous(cleanedEvents);
+    return cleanedEvents;
+  }
+
+  getNodeEnteredAndExitedEvents(events: any[]) {
+    const cleanedEvents = [];
+    for (const event of events) {
+      if (this.isStepEnteredEvent(event) || this.isStepExitedEvent(event)) {
+        cleanedEvents.push(event);
+      }
+    }
+    return cleanedEvents;
+  }
+  
+  getEventsWithActiveWorkgroups(events: any[]) {
+    const cleanedEvents = [];
+    for (const event of events) {
+      if (this.isActiveWorkgroup(event.workgroupId)) {
+        cleanedEvents.push(event);
+      }
+    }
+    return cleanedEvents;
+  }
+
+  getEventsThatAreNotErroneous(events: any[]) {
+    const cleanedEvents = [];
+    events.forEach((event, index) => {
+      if (events[index + 1] == null || !this.isErroneousExitedEvent(event, events[index + 1])) {
+        cleanedEvents.push(event);
+      }
+    });
+    return cleanedEvents;
+  }
+
+  isErroneousExitedEvent(event: any, nextEvent: any) {
+    return this.isStepExitedEvent(event) &&
+        this.isStepExitedEvent(nextEvent) &&
+        this.isMatchingNodeId(event, nextEvent);
+  }
+
+  getDeletedSteps(events: any[]) {
+    const deletedSteps = {};
+    for (const event of events) {
+      const nodeId = event.nodeId;
+      if (nodeId != null &&
+          this.ProjectService.getNodeById(nodeId) == null &&
+          nodeId.startsWith('node')) {
+        deletedSteps[event.nodeId] = true;
+      }
+    }
+    return deletedSteps;
+  }
+
+  isDeletedStep(nodeId) {
+    return this.deletedSteps[nodeId] != null;
+  }
+
   filterRows(rows: any[]) {
-    return rows.filter(row => this.checkedItems.includes(this.getCellInRow(row, 'Node ID')));
+    return rows.filter(row => {
+      const nodeId = this.getCellInRow(row, 'Node ID');
+      return this.checkedItems.includes(nodeId) ||
+          (this.includeDeletedSteps && this.isDeletedStep(nodeId));
+    });
   }
 
   sortEvents(events: any[]) {
@@ -287,7 +376,10 @@ class ExportVisitsController extends ExportController {
     this.setCellInRow(visit, 'Step Title', this.getStepNumberAndTitle(nodeId));
     this.setCellInRow(visit, 'Enter Time',
         this.UtilService.convertMillisecondsToFormattedDateTime(nodeEnteredEvent.clientSaveTime));
-    if (nodeExitedEvent != null) {
+    if (nodeExitedEvent == null) {
+      this.setCellInRow(visit, 'Exit Time', '(Unknown Exit Time)');
+      this.setCellInRow(visit, 'Visit Duration (Seconds)', '(Unknown Visit Duration)');
+    } else if (nodeExitedEvent != null) {
       this.setCellInRow(visit, 'Exit Time',
           this.UtilService.convertMillisecondsToFormattedDateTime(nodeExitedEvent.clientSaveTime));
       this.setCellInRow(visit, 'Visit Duration (Seconds)',
@@ -296,7 +388,7 @@ class ExportVisitsController extends ExportController {
     this.setCellInRow(visit, 'Visit Counter', this.getVisitCounter(workgroupId, nodeId));
     const revisitCounter = this.getRevisitCounter(workgroupId, nodeId);
     this.setCellInRow(visit, 'Revisit Counter', revisitCounter);
-    const previousVisit = previousVisits[previousVisits.length - 1];
+    const previousVisit = this.getPreviousVisit(previousVisits, workgroupId);
     if (previousVisit != null) {
       this.setCellInRow(
           visit, 'Previous Node ID', this.getCellInRow(previousVisit, 'Node ID'));
@@ -315,6 +407,16 @@ class ExportVisitsController extends ExportController {
 
   createRowWithEmptyCells() {
     return new Array(this.columnNames.length);
+  }
+
+  getPreviousVisit(previousVisits: any[], workgroupId: number) {
+    if (previousVisits.length > 0) {
+      const previousVisit = previousVisits[previousVisits.length - 1];
+      if (this.getCellInRow(previousVisit, 'Workgroup ID') == workgroupId) {
+        return previousVisit;
+      }
+    }
+    return null;
   }
 
   getNodeIdsBetweenLastVisit(nodeId: string, previousVisits: any[]) {
@@ -382,11 +484,19 @@ class ExportVisitsController extends ExportController {
   }
 
   getStepNumber(nodeId: string) {
-    return this.idToStepNumber[nodeId];
+    if (this.isDeletedStep(nodeId)) {
+      return '(Deleted Step)';
+    } else {
+      return this.idToStepNumber[nodeId];
+    }
   }
 
   getStepNumberAndTitle(nodeId: string) {
-    return this.idToStepNumberAndTitle[nodeId];
+    if (this.isDeletedStep(nodeId)) {
+      return '(Deleted Step)';
+    } else {
+      return this.idToStepNumberAndTitle[nodeId];
+    }
   }
 
   getWorkgroupIdNodeIdKey(workgroupId: number, nodeId: string) {
