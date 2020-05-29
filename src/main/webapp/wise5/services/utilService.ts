@@ -31,7 +31,7 @@ export default class UtilService {
   }
 
   makeCopyOfJSONObject(jsonObject): any {
-    return JSON.parse(JSON.stringify(jsonObject));
+    return angular.fromJson(angular.toJson(jsonObject));
   }
 
   getImageObjectFromBase64String(img_b64) {

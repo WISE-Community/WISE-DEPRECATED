@@ -80,6 +80,10 @@ function makeCopyOfJSONObjectTests() {
       const copiedObj = service.makeCopyOfJSONObject(obj);
       expect(copiedObj).toEqual(obj);
     });
+
+    it('should return null for null input', () => {
+      expect(service.makeCopyOfJSONObject(null)).toEqual(null);
+    });
   });
 }
 
