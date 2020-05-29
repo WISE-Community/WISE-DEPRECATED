@@ -468,7 +468,6 @@ class NodeAuthoringController {
     this.summernoteRubricId = 'summernoteRubric_' + this.nodeId;
     let insertAssetString = this.$translate('INSERT_ASSET');
     let insertAssetButton = this.UtilService.createInsertAssetButton(
-      this,
       null,
       this.nodeId,
       null,

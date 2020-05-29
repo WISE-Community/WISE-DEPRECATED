@@ -5,6 +5,7 @@
     "baseUrl": "./",
     "types": [
       "jasmine",
+      "jquery",
       "node"
     ]
   },

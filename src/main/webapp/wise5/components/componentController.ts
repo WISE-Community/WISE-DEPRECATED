@@ -259,7 +259,7 @@ class ComponentController {
     this.summernoteRubricHTML = this.componentContent.rubric;
 
     const insertAssetString = this.$translate('INSERT_ASSET');
-    const InsertAssetButton = this.UtilService.createInsertAssetButton(this, null, this.nodeId, this.componentId, 'rubric', insertAssetString);
+    const InsertAssetButton = this.UtilService.createInsertAssetButton(null, this.nodeId, this.componentId, 'rubric', insertAssetString);
     this.summernoteRubricOptions = {
       toolbar: [
         ['style', ['style']],
@@ -334,19 +334,18 @@ class ComponentController {
   }
 
   restoreSummernoteCursorPosition(summernoteId) {
-    $('#' + summernoteId).summernote('editor.restoreRange');
-    $('#' + summernoteId).summernote('editor.focus');
+    this.UtilService.restoreSummernoteCursorPosition(summernoteId);
   }
 
   insertImageIntoSummernote(summernoteId, fullAssetPath, fileName) {
-    $('#' + summernoteId).summernote('insertImage', fullAssetPath, fileName);
+    ($('#' + summernoteId) as any).summernote('insertImage', fullAssetPath, fileName);
   }
 
   insertVideoIntoSummernote(summernoteId, fullAssetPath) {
     const videoElement: any = document.createElement('video');
     videoElement.controls = 'true';
     videoElement.innerHTML = '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
-    $('#' + summernoteId).summernote('insertNode', videoElement);
+    ($('#' + summernoteId) as any).summernote('insertNode', videoElement);
   }
 
   assetSelected(event, args) {

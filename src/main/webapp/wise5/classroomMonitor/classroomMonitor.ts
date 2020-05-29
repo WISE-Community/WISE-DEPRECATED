@@ -3,6 +3,7 @@
 import '../themes/default/js/webfonts';
 import AchievementService from '../services/achievementService';
 import * as angular from 'angular';
+import { downgradeInjectable } from '@angular/upgrade/static';
 import * as angularDragula from 'angular-dragula';
 import 'angular-file-saver';
 import 'angular-inview';
@@ -132,7 +133,7 @@ const classroomMonitorModule = angular
   .service('StudentWebSocketService', StudentWebSocketService)
   .service('TeacherDataService', TeacherDataService)
   .service('TeacherWebSocketService', TeacherWebSocketService)
-  .service('UtilService', UtilService)
+  .factory('UtilService', downgradeInjectable(UtilService))
   .controller('ClassroomMonitorController', ClassroomMonitorController)
   .controller('DataExportController', DataExportController)
   .controller('ExportController', ExportController)
