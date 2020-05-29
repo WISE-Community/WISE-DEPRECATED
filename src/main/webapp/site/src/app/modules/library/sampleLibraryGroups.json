@@ -1,4 +1,4 @@
-const sampleLibraryGroups = [{
+[{
   "children": [{
     "children": [{
       "metadata": {
@@ -1331,6 +1331,4 @@ const sampleLibraryGroups = [{
   "name": "DisciplineSpecific",
   "id": "disciplineSpecific",
   "type": "group"
-}];
-
-export default sampleLibraryGroups;
+}]
