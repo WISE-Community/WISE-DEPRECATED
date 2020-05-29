@@ -22,7 +22,11 @@
       </div>
       <div fxFlex="100%" fxFlex.gt-xs="50%">
         <div class="features__intros">
-          <img class="features__intro" src="assets/img/features/wise-students.jpg" i18n-alt alt="WISE students" />
+          <picture>
+            <source type="image/webp" srcset="assets/img/features/wise-students.webp, assets/img/features/wise-students@2x.webp 2x">
+            <source srcset="assets/img/features/wise-students.jpg, assets/img/features/wise-students@2x.jpg 2x">
+            <img class="features__intro" src="assets/img/features/wise-students.jpg" i18n-alt alt="WISE students" />
+          </picture>
         </div>
       </div>
     </section>
@@ -89,8 +93,16 @@
       </div>
       <div fxFlex="100%" fxFlex.gt-xs="50%">
         <div class="features__standards feature--r">
-          <img class="features__standard" src="assets/img/features/wise-solar-ovens.jpg" i18n-alt alt="WISE solar ovens unit" />
-          <img class="features__standard" src="assets/img/features/wise-students-building-oven.jpg" i18n-alt alt="WISE students building solar oven" />
+          <picture class="features__standard">
+            <source type="image/webp" srcset="assets/img/features/wise-solar-ovens.webp">
+            <source srcset="assets/img/features/wise-solar-ovens.png">
+            <img class="features__standard" src="assets/img/features/wise-solar-ovens.png" i18n-alt alt="WISE solar ovens unit" />
+          </picture>
+          <picture class="features__standard">
+            <source type="image/webp" srcset="assets/img/features/wise-students-building-oven.webp, assets/img/features/wise-students-building-oven@2x.webp 2x">
+            <source srcset="assets/img/features/wise-students-building-oven.jpg, assets/img/features/wise-students-building-oven@2x.jpg 2x">
+            <img class="features__standard" src="assets/img/features/wise-students-building-oven.jpg" i18n-alt alt="WISE students building solar oven" />
+          </picture>
         </div>
       </div>
     </section>
@@ -104,10 +116,26 @@
              fxLayoutGap.gt-md="64px">
       <div fxFlex="100%" fxFlex.gt-xs="50%" fxFlexOrder="2" fxFlexOrder.gt-xs="1">
         <div class="features__technologies feature--l">
-          <img class="features__tech" src="assets/img/features/wise-mymodel-guidance.jpg" i18n-alt alt="MyModel diagram with guidance" />
-          <img class="features__tech" src="assets/img/features/wise-cellular-respiraton-model.jpg" i18n-alt alt="WISE cellular respiration model" />
-          <img class="features__tech" src="assets/img/features/wise-design-report.jpg" i18n-alt alt="WISE design report" />
-          <img class="features__tech" src="assets/img/features/wise-thermo-insulator-model.jpg" i18n-alt alt="WISE thermodynamics insulator model" />
+          <picture class="features__tech">
+            <source type="image/webp" srcset="assets/img/features/wise-mymodel-guidance.webp, assets/img/features/wise-mymodel-guidance@2x.webp 2x">
+            <source srcset="assets/img/features/wise-mymodel-guidance.png, assets/img/features/wise-mymodel-guidance@2x.png 2x">
+            <img class="features__tech" src="assets/img/features/wise-mymodel-guidance.png" i18n-alt alt="MyModel diagram with guidance" />
+          </picture>
+          <picture class="features__tech">
+            <source type="image/webp" srcset="assets/img/features/wise-cellular-respiraton-model.webp, assets/img/features/wise-cellular-respiraton-model@2x.webp 2x">
+            <source srcset="assets/img/features/wise-cellular-respiraton-model.jpg, assets/img/features/wise-cellular-respiraton-model@2x.jpg 2x">
+            <img class="features__tech" src="assets/img/features/wise-cellular-respiraton-model.jpg" i18n-alt alt="WISE cellular respiration model" />
+          </picture>
+          <picture class="features__tech">
+            <source type="image/webp" srcset="assets/img/features/wise-design-report.webp">
+            <source srcset="assets/img/features/wise-design-report.png">
+            <img class="features__tech" src="assets/img/features/wise-design-report.png" i18n-alt alt="WISE design report" />
+          </picture>
+          <picture class="features__tech">
+            <source type="image/webp" srcset="assets/img/features/wise-thermo-insulator-model.webp, assets/img/features/wise-thermo-insulator-model@2x.webp 2x">
+            <source srcset="assets/img/features/wise-thermo-insulator-model.jpg, assets/img/features/wise-thermo-insulator-model@2x.jpg 2x">
+            <img class="features__tech" src="assets/img/features/wise-thermo-insulator-model.jpg" i18n-alt alt="WISE thermodynamics insulator model" />
+          </picture>
         </div>
       </div>
       <div fxFlex="100%" fxFlex.gt-xs="50%" fxFlexOrder="1" fxFlexOrder.gt-xs="2">
@@ -128,8 +156,16 @@
         <p i18n>WISE offers an extensive suite of integrated tools that help teachers plan, monitor progress, gain insights, provide feedback, and grade more efficiently. These tools are continually refined through collaborations with practicing teachers who understand the real challenges of managing modern classrooms.</p>
         <p i18n>By facilitating these necessary but time-consuming tasks, teachers are free to focus on what makes them indispensable: providing quality instruction to individual students.</p>
         <p class="features__teachers">
-          <img class="features__teacher" src="assets/img/features/wise-teacher-tools-progress.jpg" i18n-alt alt="WISE teacher progress" />
-          <img class="features__teacher" src="assets/img/features/wise-teacher-tools-grading.jpg" i18n-alt alt="WISE teacher grading" />
+          <picture class="features__teacher">
+            <source type="image/webp" srcset="assets/img/features/wise-teacher-tools-progress.webp, assets/img/features/wise-teacher-tools-progress@2x.webp 2x">
+            <source srcset="assets/img/features/wise-teacher-tools-progress.jpg, assets/img/features/wise-teacher-tools-progress@2x.jpg 2x">
+            <img class="features__teacher" src="assets/img/features/wise-teacher-tools-progress.jpg" i18n-alt alt="WISE teacher progress" />
+          </picture>
+          <picture class="features__teacher">
+            <source type="image/webp" srcset="assets/img/features/wise-teacher-tools-grading.webp, assets/img/features/wise-teacher-tools-grading@2x.webp 2x">
+            <source srcset="assets/img/features/wise-teacher-tools-grading.jpg, assets/img/features/wise-teacher-tools-grading@2x.jpg 2x">
+            <img class="features__teacher" src="assets/img/features/wise-teacher-tools-grading.jpg" i18n-alt alt="WISE teacher grading" />
+          </picture>
         </p>
       </div>
       <div fxFlex="100%" fxFlex.gt-xs="50%">
