@@ -3,7 +3,7 @@ import ConfigService from '../../services/configService';
 import NodeService from '../../services/nodeService';
 import VLEProjectService from '../vleProjectService';
 import StudentDataService from '../../services/studentDataService';
-import UtilService from '../../services/utilService';
+import { UtilService } from '../../services/utilService';
 import * as hopscotch from 'hopscotch';
 window['hopscotch'] = hopscotch;
 import * as $ from 'jquery';

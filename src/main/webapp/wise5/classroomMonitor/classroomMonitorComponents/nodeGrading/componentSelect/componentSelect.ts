@@ -1,7 +1,7 @@
 'use strict';
 
 import ClassroomMonitorProjectService from '../../../classroomMonitorProjectService';
-import UtilService from '../../../../services/utilService';
+import { UtilService } from '../../../../services/utilService';
 
 class ComponentSelectController {
   $translate: any;

@@ -5,7 +5,7 @@ import ConfigService from '../../services/configService';
 import MatchService from '../../components/match/matchService';
 import ClassroomMonitorProjectService from '../classroomMonitorProjectService';
 import TeacherDataService from '../../services/teacherDataService';
-import UtilService from '../../services/utilService';
+import { UtilService } from '../../services/utilService';
 import * as angular from 'angular';
 
 class DataExportController {

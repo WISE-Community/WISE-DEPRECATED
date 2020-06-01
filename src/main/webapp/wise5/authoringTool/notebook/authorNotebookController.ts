@@ -3,7 +3,7 @@
 import ConfigService from '../../services/configService';
 import AuthoringToolProjectService from '../authoringToolProjectService';
 import SpaceService from '../../services/spaceService';
-import UtilService from '../../services/utilService';
+import { UtilService } from '../../services/utilService';
 
 class AuthorNotebookController {
   $translate: any;

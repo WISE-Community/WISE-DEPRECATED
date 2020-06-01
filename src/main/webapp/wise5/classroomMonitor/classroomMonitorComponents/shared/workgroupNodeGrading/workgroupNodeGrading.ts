@@ -3,7 +3,7 @@
 import ConfigService from '../../../../services/configService';
 import ClassroomMonitorProjectService from '../../../classroomMonitorProjectService';
 import TeacherDataService from '../../../../services/teacherDataService';
-import UtilService from '../../../../services/utilService';
+import { UtilService } from '../../../../services/utilService';
 
 class WorkgroupNodeGradingController {
   components: any;

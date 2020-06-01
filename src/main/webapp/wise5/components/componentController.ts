@@ -6,7 +6,7 @@ import NodeService from "../services/nodeService";
 import NotebookService from "../services/notebookService";
 import ProjectService from "../services/projectService";
 import StudentAssetService from "../services/studentAssetService";
-import UtilService from "../services/utilService";
+import { UtilService } from "../services/utilService";
 import StudentDataService from "../services/studentDataService";
 
 class ComponentController {

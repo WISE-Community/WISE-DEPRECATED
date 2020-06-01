@@ -3,7 +3,7 @@
 import * as $ from 'jquery';
 import * as angular from 'angular';
 import ConfigService from './configService';
-import UtilService from './utilService';
+import { UtilService } from './utilService';
 
 class ProjectService {
   $translate: any;
