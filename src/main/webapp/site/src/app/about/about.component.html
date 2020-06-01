@@ -6,7 +6,7 @@
           fxLayoutGap="8px"
           ngClass="mat-display-1"
           [ngClass.xs]="{ 'mat-display-1': false }">
-        <mat-icon>info_circle</mat-icon>
+        <mat-icon>info</mat-icon>
         <span i18n>About Us</span>
       </h1>
     </header>
@@ -21,7 +21,11 @@
       </div>
       <div fxFlex="100%" fxFlex.gt-xs="50%">
         <div class="about__intros">
-          <img class="about__intro" src="assets/img/about/wise-workshop-group-2018-fun.jpg" alt="WISE teacher workshop 2018" />
+          <picture class="about__intro">
+            <source type="image/webp" srcset="assets/img/about/wise-workshop-group-2018-fun.webp, assets/img/about/wise-workshop-group-2018-fun@2x.webp 2x">
+            <source srcset="assets/img/about/wise-workshop-group-2018-fun.jpg, assets/img/about/wise-workshop-group-2018-fun@2x.jpg 2x">
+            <img class="about__intro" src="assets/img/about/wise-workshop-group-2018-fun.jpg" i18n-alt alt="WISE teacher workshop 2018" />
+          </picture>
         </div>
       </div>
     </section>
@@ -35,9 +39,21 @@
              fxLayoutGap.gt-md="64px">
       <div fxFlex="100%" fxFlex.gt-xs="50%" fxFlexOrder="2" fxFlexOrder.gt-xs="1">
         <div class="about__research-practice about--l">
-          <img class="about__research" src="assets/img/about/wise-student-and-teacher.jpg" i18n-alt alt="WISE student and teacher" />
-          <img class="about__research" src="assets/img/about/wise-teacher-workshop-design.jpg" i18n-alt alt="WISE teacher workshop design" />
-          <img class="about__research" src="assets/img/about/marcia-wise-workshop.jpg" i18n-alt alt="Marcia at WISE workshop" />
+          <picture class="about__research">
+            <source type="image/webp" srcset="assets/img/about/wise-student-and-teacher.webp, assets/img/about/wise-student-and-teacher@2x.webp 2x">
+            <source srcset="assets/img/about/wise-student-and-teacher.jpg, assets/img/about/wise-student-and-teacher@2x.jpg 2x">
+            <img class="about__research" src="assets/img/about/wise-student-and-teacher.jpg" i18n-alt alt="WISE student and teacher" />
+          </picture>
+          <picture class="about__research">
+            <source type="image/webp" srcset="assets/img/about/wise-teacher-workshop-design.webp, assets/img/about/wise-teacher-workshop-design@2x.webp 2x">
+            <source srcset="assets/img/about/wise-teacher-workshop-design.jpg, assets/img/about/wise-teacher-workshop-design@2x.jpg 2x">
+            <img class="about__research" src="assets/img/about/wise-teacher-workshop-design.jpg" i18n-alt alt="WISE teacher workshop design" />
+          </picture>
+          <picture class="about__research">
+            <source type="image/webp" srcset="assets/img/about/marcia-wise-workshop.webp, assets/img/about/marcia-wise-workshop@2x.webp 2x">
+            <source srcset="assets/img/about/marcia-wise-workshop.jpg, assets/img/about/wise-students-add-note@2x.png 2x">
+            <img class="about__research" src="assets/img/about/marcia-wise-workshop.jpg" i18n-alt alt="Marcia at WISE workshop" />
+          </picture>
         </div>
       </div>
       <div fxFlex="100%" fxFlex.gt-xs="50%" fxFlexOrder="1" fxFlexOrder.gt-xs="2">
@@ -138,10 +154,26 @@
     </section>
     <section>
       <div class="about__pics">
-        <img class="about__pic" src="assets/img/about/wise-students-add-note.jpg" i18n-alt alt="WISE on student computer" />
-        <img class="about__pic" src="assets/img/about/wise-workshop-researcher.jpg" i18n-alt alt="WISE researcher" />
-        <img class="about__pic" src="assets/img/about/wise-teachers-researcher.jpg" i18n-alt alt="WISE teachers and researcher" />
-        <img class="about__pic" src="assets/img/about/wise-tech-teacher-workshop.jpg" i18n-alt alt="WISE developers and teacher" />
+        <picture class="about__pic">
+          <source type="image/webp" srcset="assets/img/about/wise-students-add-note.webp, assets/img/about/wise-students-add-note@2x.webp 2x">
+          <source srcset="assets/img/about/wise-students-add-note.jpg, assets/img/about/wise-students-add-note@2x.jpg 2x">
+          <img class="about__pic" src="assets/img/about/wise-students-add-note.jpg" i18n-alt alt="WISE on student computer" />
+        </picture>
+        <picture class="about__pic">
+          <source type="image/webp" srcset="assets/img/about/wise-workshop-researcher.webp, assets/img/about/wise-workshop-researcher@2x.webp 2x">
+          <source srcset="assets/img/about/wise-workshop-researcher.jpg, assets/img/about/wise-workshop-researcher@2x.jpg 2x">
+          <img class="about__pic" src="assets/img/about/wise-workshop-researcher.jpg" i18n-alt alt="WISE researcher" />
+        </picture>
+        <picture class="about__pic">
+          <source type="image/webp" srcset="assets/img/about/wise-teachers-researcher.webp, assets/img/about/wise-teachers-researcher@2x.webp 2x">
+          <source srcset="assets/img/about/wise-teachers-researcher.jpg, assets/img/about/wise-teachers-researcher@2x.jpg 2x">
+          <img class="about__pic" src="assets/img/about/wise-teachers-researcher.jpg" i18n-alt alt="WISE teachers and researcher" />
+        </picture>
+        <picture class="about__pic">
+          <source type="image/webp" srcset="assets/img/about/wise-tech-teacher-workshop.webp, assets/img/about/wise-tech-teacher-workshop@2x.webp 2x">
+          <source srcset="assets/img/about/wise-tech-teacher-workshop.jpg, assets/img/about/wise-tech-teacher-workshop@2x.jpg 2x">
+          <img class="about__pic" src="assets/img/about/wise-tech-teacher-workshop.jpg" i18n-alt alt="WISE developers and teacher" />
+        </picture>
       </div>
     </section>
   </div>
