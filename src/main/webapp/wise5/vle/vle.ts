@@ -65,7 +65,7 @@ import StudentStatusService from '../services/studentStatusService';
 import StudentWebSocketService from '../services/studentWebSocketService';
 import '../components/summary/summaryComponentModule';
 import '../components/table/tableComponentModule';
-import UtilService from '../services/utilService';
+import { UtilService } from '../services/utilService';
 import VLEController from './vleController';
 import VLEProjectService from './vleProjectService';
 import * as moment from 'moment';

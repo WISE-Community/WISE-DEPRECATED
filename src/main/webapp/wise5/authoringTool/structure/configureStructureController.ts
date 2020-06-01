@@ -1,6 +1,6 @@
 'use strict';
 
-import UtilService from '../../services/utilService';
+import { UtilService } from '../../services/utilService';
 
 abstract class ConfigureStructureController {
   $translate: any;

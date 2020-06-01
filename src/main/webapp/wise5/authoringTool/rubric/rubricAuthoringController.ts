@@ -1,5 +1,5 @@
 import ConfigService from '../../services/configService';
-import UtilService from '../../services/utilService';
+import { UtilService } from '../../services/utilService';
 import AuthoringToolProjectService from '../authoringToolProjectService';
 
 class RubricAuthoringController {
