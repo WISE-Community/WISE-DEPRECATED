@@ -4,6 +4,7 @@ import '../lib/jquery/jquery-global';
 import '../lib/bootstrap/js/bootstrap.min'
 import AchievementService from '../services/achievementService';
 import * as angular from 'angular';
+import { downgradeInjectable } from '@angular/upgrade/static';
 import * as angularDragula from 'angular-dragula';
 import 'ng-file-upload';
 import 'angular-material';
@@ -130,7 +131,7 @@ export default angular
   .service('StudentDataService', StudentDataService)
   .service('StudentStatusService', StudentStatusService)
   .service('StudentWebSocketService', StudentWebSocketService)
-  .service('UtilService', UtilService)
+  .factory('UtilService', downgradeInjectable(UtilService))
   .controller('NavigationController', NavigationController)
   .controller('NodeController', NodeController)
   .controller('VLEController', VLEController)

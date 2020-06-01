@@ -1,80 +1,28 @@
 'use strict';
 
-class UtilService {
-  constructor($filter, $injector, $mdDialog, $q, $rootScope, $timeout) {
-    this.$filter = $filter;
-    this.$injector = $injector;
-    this.$mdDialog = $mdDialog;
-    this.$q = $q;
-    this.$rootScope = $rootScope;
-    this.$timeout = $timeout;
-    this.componentTypeToLabel = {};
-    this.$translate = this.$filter('translate');
+import { Injectable } from '@angular/core';
+import * as angular from 'angular';
+import { UpgradeModule } from '@angular/upgrade/static';
+import '../lib/jquery/jquery-global';
+
+@Injectable()
+export default class UtilService {
+  componentTypeToLabel = {};
+  CHARS = [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q',
+    'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
+  ];
+
+  constructor(private upgrade: UpgradeModule) {
   }
 
-  /**
-   * Generates and returns a random key of the given length if
-   * specified. If length is not specified, returns a key 10
-   * characters in length.
-   */
-  generateKey(length) {
-    this.CHARS = [
-      'a',
-      'b',
-      'c',
-      'd',
-      'e',
-      'f',
-      'g',
-      'h',
-      'i',
-      'j',
-      'k',
-      'l',
-      'm',
-      'n',
-      'o',
-      'p',
-      'q',
-      'r',
-      's',
-      't',
-      'u',
-      'v',
-      'w',
-      'x',
-      'y',
-      'z',
-      '0',
-      '1',
-      '2',
-      '3',
-      '4',
-      '5',
-      '6',
-      '7',
-      '8',
-      '9'
-    ];
-
-    if (!length) {
-      length = 10;
-    }
-
+  generateKey(length = 10) {
     let key = '';
     for (let a = 0; a < length; a++) {
       key += this.CHARS[Math.floor(Math.random() * (this.CHARS.length - 1))];
     }
-
     return key;
   }
 
-  /**
-   * Try to convert a string to a number
-   * @param str the string to convert
-   * @returns a number if we were able to convert the string to a number.
-   * if we couldn't convert the string to a number we will just return the string.
-   */
   convertStringToNumber(str) {
     if (str != null && str != '' && !isNaN(Number(str))) {
       return Number(str);
@@ -82,28 +30,12 @@ class UtilService {
     return str;
   }
 
-  /**
-   * Create a copy of a JSON object
-   * @param jsonObject the JSON object to get a copy of
-   * @return a copy of the JSON object that was passed in
-   */
-  makeCopyOfJSONObject(jsonObject) {
-    if (jsonObject != null) {
-      const jsonObjectString = angular.toJson(jsonObject);
-      return angular.fromJson(jsonObjectString);
-    }
-    return null;
+  makeCopyOfJSONObject(jsonObject): any {
+    return angular.fromJson(angular.toJson(jsonObject));
   }
 
-  /**
-   * Get the image object
-   * @params img_b64 the base64 image string
-   * @returns an image object
-   */
   getImageObjectFromBase64String(img_b64) {
-    // create a blob from the base64 image string
     const blob = this.dataURItoBlob(img_b64);
-
     const now = new Date().getTime();
     const filename = encodeURIComponent('picture_' + now + '.png');
     const pngFile = new File([blob], filename, {
@@ -122,14 +54,10 @@ class UtilService {
     let byteString;
     if (dataURI.split(',')[0].indexOf('base64') >= 0) byteString = atob(dataURI.split(',')[1]);
     else byteString = unescape(dataURI.split(',')[1]);
-
-    // separate out the mime component
     const mimeString = dataURI
       .split(',')[0]
       .split(':')[1]
       .split(';')[0];
-
-    // write the bytes of the string to a typed array
     const ia = new Uint8Array(byteString.length);
     for (let i = 0; i < byteString.length; i++) {
       ia[i] = byteString.charCodeAt(i);
@@ -145,46 +73,29 @@ class UtilService {
   getImageObjectFromImageElement(imageElement) {
     let imageObject = null;
     if (imageElement != null) {
-      // create a canvas element that we will use to generate a base64 string
       const canvas = document.createElement('canvas');
-
-      // set the width and height of the canvas to match the image dimensions
       canvas.width = imageElement.naturalWidth;
       canvas.height = imageElement.naturalHeight;
-
-      // draw the image onto the canvas
       const ctx = canvas.getContext('2d');
       ctx.drawImage(imageElement, 0, 0);
-
       const dataURL = canvas.toDataURL('image/png');
       imageObject = this.getImageObjectFromBase64String(dataURL);
     }
     return imageObject;
   }
 
-  /**
-   * Check if the asset is an image
-   * @param fileName the file name of the asset
-   * @return true iff the asset is an image
-   */
   isImage(fileName) {
     const imageExtensionsRegEx = new RegExp('.*.(png|jpg|jpeg|bmp|gif|tiff|svg)');
     return fileName.toLowerCase().match(imageExtensionsRegEx) != null;
   }
 
-  /**
-   * Check if the asset is a video
-   * @param fileName the file name of the asset
-   * @return true iff the asset is a video
-   */
   isVideo(fileName) {
     const videoExtensionsRegEx = new RegExp('.*.(mp4|mpg|mpeg|m4v|m2v|avi|gifv|mov|qt)');
     return fileName.toLowerCase().match(videoExtensionsRegEx) != null;
   }
 
   /**
-   * Replace <a> and <button> elements with <wiselink> elements where
-   * applicable
+   * Replace <a> and <button> elements with <wiselink> elements
    * @param html the html
    * @return the modified html with <wiselink> elements
    */
@@ -204,29 +115,18 @@ class UtilService {
   insertWISELinkAnchors(html) {
     let wiseLinkRegEx = new RegExp(/<a.*?wiselink="true".*?>(.*?)<\/a>/);
     let wiseLinkRegExMatchResult = wiseLinkRegEx.exec(html);
-
-    // loop until we have replaced all the matches
     while (wiseLinkRegExMatchResult != null) {
-      // get the whole <a> element
       let anchorHTML = wiseLinkRegExMatchResult[0];
-
-      // get the inner html of the <a> element
       let anchorText = wiseLinkRegExMatchResult[1];
-
-      // get the node id parameter of the <a> element
       let nodeId = this.getWISELinkNodeId(anchorHTML);
-
       if (nodeId == null) {
         nodeId = '';
       }
-
       let componentIdAttr = '';
       let componentId = this.getWISELinkComponentId(anchorHTML);
       if (componentId != null) {
         componentIdAttr = "component-id='" + componentId + "'";
       }
-
-      // create the <wiselink> element
       let wiselinkHtml =
         "<wiselink type='link' link-text='" +
         anchorText +
@@ -235,11 +135,7 @@ class UtilService {
         "' " +
         componentIdAttr +
         '/>';
-
-      // replace the <a> element with the <wiselink> element
       html = html.replace(wiseLinkRegExMatchResult[0], wiselinkHtml);
-
-      // search for the next <a> element with the parameter wiselink=true
       wiseLinkRegExMatchResult = wiseLinkRegEx.exec(html);
     }
     return html;
@@ -255,29 +151,18 @@ class UtilService {
   insertWISELinkButtons(html) {
     const wiseLinkRegEx = new RegExp(/<button.*?wiselink="true".*?>(.*?)<\/button>/);
     let wiseLinkRegExMatchResult = wiseLinkRegEx.exec(html);
-
-    // loop until we have replaced all the matches
     while (wiseLinkRegExMatchResult != null) {
-      // get the whole <button> element
       const buttonHTML = wiseLinkRegExMatchResult[0];
-
-      // get the inner html of the <button> element
       const buttonText = wiseLinkRegExMatchResult[1];
-
-      // get the node id parameter of the <button> element
       let nodeId = this.getWISELinkNodeId(buttonHTML);
-
       if (nodeId == null) {
         nodeId = '';
       }
-
       let componentIdAttr = '';
       let componentId = this.getWISELinkComponentId(buttonHTML);
       if (componentId != null) {
         componentIdAttr = "component-id='" + componentId + "'";
       }
-
-      // create the <wiselink> element
       const wiselinkHtml =
         "<wiselink type='button' link-text='" +
         buttonText +
@@ -286,11 +171,7 @@ class UtilService {
         "' " +
         componentIdAttr +
         '/>';
-
-      // replace the <button> element with the <wiselink> element
       html = html.replace(wiseLinkRegExMatchResult[0], wiselinkHtml);
-
-      // search for the next <button> element with the parameter wiselink=true
       wiseLinkRegExMatchResult = wiseLinkRegEx.exec(html);
     }
     return html;
@@ -298,75 +179,60 @@ class UtilService {
 
   /**
    * Get the node id from the wiselink element
-   * e.g.
-   * <wiselink node-id='node5'/>
-   * the node id in this case is 'node5'
+   * e.g. for input <wiselink node-id='node5'/>, returns 'node5'
    * @param html the html for the element
    * @return the node id from the node id parameter in the element
    */
-  getWISELinkNodeId(html) {
-    if (html != null) {
-      let nodeIdRegEx = new RegExp(/node-id=["'b](.*?)["']/, 'g');
-      let nodeIdRegExResult = nodeIdRegEx.exec(html);
-      if (nodeIdRegExResult != null) {
-        return nodeIdRegExResult[1];
-      }
+  getWISELinkNodeId(html = '') {
+    let nodeIdRegEx = new RegExp(/node-id=["'b](.*?)["']/, 'g');
+    let nodeIdRegExResult = nodeIdRegEx.exec(html);
+    if (nodeIdRegExResult != null) {
+      return nodeIdRegExResult[1];
     }
     return null;
   }
 
   /**
    * Get the component id from the wiselink element
-   * e.g.
-   * <wiselink node-id='node5' component-id='xyzabc' />
-   * the component id in this case is 'xyzabc'
+   * e.g. for input <wiselink node-id='node5' component-id='xyzabc' /> returns 'xyzabc'
    * @param html the html for the element
    * @return the component id from the component id parameter in the element
    */
-  getWISELinkComponentId(html) {
-    if (html != null) {
-      let componentIdRegEx = new RegExp(/component-id=["'b](.*?)["']/, 'g');
-      let componentIdRegExResult = componentIdRegEx.exec(html);
-      if (componentIdRegExResult != null) {
-        return componentIdRegExResult[1];
-      }
+  getWISELinkComponentId(html = '') {
+    let componentIdRegEx = new RegExp(/component-id=["'b](.*?)["']/, 'g');
+    let componentIdRegExResult = componentIdRegEx.exec(html);
+    if (componentIdRegExResult != null) {
+      return componentIdRegExResult[1];
     }
     return null;
   }
 
   /**
    * Get the link type from the wiselink element
-   * e.g.
-   * <wiselink type='button'/>
-   * the type in this case is 'button'
+   * e.g. for input <wiselink type='button'/> return 'button'
    * @param html the html for the element
    * @return the link type from the type parameter in the element
    */
-  getWISELinkType(html) {
-    if (html != null) {
-      let typeRegEx = new RegExp(/type=["'b](.*?)["']/, 'g');
-      let typeRegExResult = typeRegEx.exec(html);
-      if (typeRegExResult != null) {
-        return typeRegExResult[1];
-      }
+  getWISELinkType(html = '') {
+    let typeRegEx = new RegExp(/type=["'b](.*?)["']/, 'g');
+    let typeRegExResult = typeRegEx.exec(html);
+    if (typeRegExResult != null) {
+      return typeRegExResult[1];
     }
     return null;
   }
 
   /**
    * Get the link text from the wiselink element
-   * <wiselink link-text='Go to here'/>
-   * the link text in this case is 'Go to here'
+   * e.g. for input <wiselink link-text='Go to here'/> return 'Go to here'
    * @param html the html for the element
    * @return the link text from the link text parameter in the element
    */
-  getWISELinkLinkText(html) {
-    if (html != null) {
-      let linkTextRegEx = new RegExp(/link-text=["'b](.*?)["']/, 'g');
-      let linkTextRegExResult = linkTextRegEx.exec(html);
-      if (linkTextRegExResult != null) {
-        return linkTextRegExResult[1];
-      }
+  getWISELinkLinkText(html = '') {
+    let linkTextRegEx = new RegExp(/link-text=["'b](.*?)["']/, 'g');
+    let linkTextRegExResult = linkTextRegEx.exec(html);
+    if (linkTextRegExResult != null) {
+      return linkTextRegExResult[1];
     }
     return null;
   }
@@ -382,26 +248,11 @@ class UtilService {
     return html;
   }
 
-  /**
-   * Helper function for replacing <wiselink> elements with <a> and <button>
-   * elements
-   * @param html the html
-   * @param regex the regex string to search for
-   * @return the html without <wiselink> elements
-   */
   replaceWISELinksHelper(html, regex) {
     let wiseLinkRegEx = new RegExp(regex);
     let wiseLinkRegExMatchResult = wiseLinkRegEx.exec(html);
-
-    // loop until we have replaced all the matches
     while (wiseLinkRegExMatchResult != null) {
-      /*
-       * get the whole match
-       * e.g. <wiselink type='link' node-id='node5' link-text='Go to here'/>
-       */
       let wiseLinkHTML = wiseLinkRegExMatchResult[0];
-
-      // get the node id, component id (if exists), type and link text from the match
       let nodeId = this.getWISELinkNodeId(wiseLinkHTML);
       let componentId = this.getWISELinkComponentId(wiseLinkHTML);
       let componentHTML = '';
@@ -410,15 +261,11 @@ class UtilService {
       }
       let type = this.getWISELinkType(wiseLinkHTML);
       let linkText = this.getWISELinkLinkText(wiseLinkHTML);
-
       let newElement = null;
-
       if (type == 'link') {
-        // create a link that represents the wiselink
         newElement =
           "<a wiselink='true' node-id='" + nodeId + "' " + componentHTML + '>' + linkText + '</a>';
       } else if (type == 'button') {
-        // create a button that represents the wiselink
         newElement =
           "<button wiselink='true' node-id='" +
           nodeId +
@@ -428,27 +275,19 @@ class UtilService {
           linkText +
           '</button>';
       } else {
-        // default to creating a link that represents the wiselink
         newElement =
           "<a wiselink='true' node-id='" + nodeId + "' " + componentHTML + '>' + linkText + '</a>';
       }
-
       if (newElement != null) {
-        // replace the wiselink with the new element
         html = html.replace(wiseLinkHTML, newElement);
       }
-
-      // find the next match
       wiseLinkRegExMatchResult = wiseLinkRegEx.exec(html);
     }
     return html;
   }
 
   /**
-   * Create a custom summernote button that inserts a WISE asset into
-   * summernote
-   * @param controller the controller that is creating the button
-   * e.g. openResponseController
+   * Create a custom summernote button that inserts a WISE asset into summernote
    * @param nodeId the node id of the component that is creating the button
    * @param componentId the component id of the component that is creating the button
    * @param target the target element in the component to insert the asset into
@@ -456,38 +295,27 @@ class UtilService {
    * @param tooltip the tooltip text for the custom button
    * @return custom summernote button
    */
-  createInsertAssetButton(controller, projectId, nodeId, componentId, target, tooltip) {
-    const thisRootScope = this.$rootScope;
-
+  createInsertAssetButton(projectId, nodeId, componentId, target, tooltip) {
+    const thisRootScope = this.upgrade.$injector.get('$rootScope');
     const InsertAssetButton = function(context) {
-      const ui = $.summernote.ui;
-
+      const ui = ($ as any).summernote.ui;
       const button = ui.button({
         contents: '<i class="note-icon-picture"></i>',
         tooltip: tooltip,
         click: function() {
-          // remember the position of the cursor
           context.invoke('editor.saveRange');
-
-          // create the params for opening the asset chooser
-          const params = {};
+          const params: any = {};
           params.isPopup = true;
-
           if (projectId != null) {
             params.projectId = projectId;
           }
-
           if (nodeId != null) {
             params.nodeId = nodeId;
           }
-
           if (componentId != null) {
             params.componentId = componentId;
           }
-
           params.target = target;
-
-          // display the asset chooser
           thisRootScope.$broadcast('openAssetChooser', params);
         }
       });
@@ -499,8 +327,6 @@ class UtilService {
   /**
    * Create a custom summernote button that inserts a WISE link into
    * summernote
-   * @param controller the controller that is creating the WISE link
-   * e.g. openResponseController
    * @param nodeId the node id of the component that is creating the WISE link
    * @param componentId the component id of the component that is creating the WISE link
    * @param target the target element in the component to insert the WISE link into
@@ -508,37 +334,26 @@ class UtilService {
    * @param tooltip the tooltip text for the custom button
    * @return custom summernote button
    */
-  createInsertWISELinkButton(controller, projectId, nodeId, componentId, target, tooltip) {
-    const thisRootScope = this.$rootScope;
-
+  createInsertWISELinkButton(projectId, nodeId, componentId, target, tooltip) {
+    const thisRootScope = this.upgrade.$injector.get('$rootScope');
     const InsertWISELinkButton = function(context) {
-      const ui = $.summernote.ui;
-
+      const ui = ($ as any).summernote.ui;
       const button = ui.button({
         contents: '<i class="note-icon-link"></i>',
         tooltip: tooltip,
         click: function() {
-          // remember the position of the cursor
           context.invoke('editor.saveRange');
-
-          // create the params for opening the WISE Link chooser
-          const params = {};
-
+          const params: any = {};
           if (projectId != null) {
             params.projectId = projectId;
           }
-
           if (nodeId != null) {
             params.nodeId = nodeId;
           }
-
           if (componentId != null) {
             params.componentId = componentId;
           }
-
           params.target = target;
-
-          // display the WISE Link authoring popup
           thisRootScope.$broadcast('openWISELinkChooser', params);
         }
       });
@@ -548,18 +363,14 @@ class UtilService {
   }
 
   /**
-   * Remove html tags from the string. Also remove new lines.
+   * Remove html tags and newlines from the string.
    * @param html an html string
-   * @return text without html tags
+   * @return text without html tags and new lines
    */
-  removeHTMLTags(html) {
-    let text = '';
-    if (html != null) {
-      // remove tags
-      text = html.replace(/<\/?[^>]+(>|$)/g, ' ');
-      text = text.replace(/\n/g, ' ');
-      text = text.replace(/\r/g, ' ');
-    }
+  removeHTMLTags(html = '') {
+    let text = html.replace(/<\/?[^>]+(>|$)/g, ' ');
+    text = text.replace(/\n/g, ' ');
+    text = text.replace(/\r/g, ' ');
     return text;
   }
 
@@ -617,31 +428,16 @@ class UtilService {
     return '';
   }
 
-  /**
-   * Get the label for the given component type
-   * @param componentType string
-   * @return string label for the component type
-   */
   getComponentTypeLabel(componentType) {
-    /*
-     * check if we have already obtained the label for this component type
-     * before
-     */
     let label = this.componentTypeToLabel[componentType];
-
     if (label == null) {
-      let componentService = this.$injector.get(componentType + 'Service');
+      let componentService = this.upgrade.$injector.get(componentType + 'Service');
       if (componentService != null && componentService.getComponentTypeLabel != null) {
         label = componentService.getComponentTypeLabel();
         this.componentTypeToLabel[componentType] = label;
       }
     }
-
     if (label == null) {
-      /*
-       * we were unable to find the label so we will just use the
-       * component type as the label
-       */
       label = componentType;
     }
     return label;
@@ -664,18 +460,11 @@ class UtilService {
    * @return whether the arrays contain the same values
    */
   arraysContainSameValues(array1, array2) {
-    if (array1 != null && array2 != null) {
-      const array1Copy = this.makeCopyOfJSONObject(array1);
-      array1Copy.sort();
-
-      const array2Copy = this.makeCopyOfJSONObject(array2);
-      array2Copy.sort();
-
-      if (angular.toJson(array1Copy) == angular.toJson(array2Copy)) {
-        return true;
-      }
-    }
-    return false;
+    const array1Copy = this.makeCopyOfJSONObject(array1);
+    array1Copy.sort();
+    const array2Copy = this.makeCopyOfJSONObject(array2);
+    array2Copy.sort();
+    return JSON.stringify(array1Copy) == JSON.stringify(array2Copy);
   }
 
   /**
@@ -708,48 +497,6 @@ class UtilService {
               if (field.when == 'always') {
                 return true;
               }
-            }
-          }
-        }
-      }
-    }
-    return false;
-  }
-
-  /**
-   * Whether this component shows work from a connected component
-   * @param componentContent the component content
-   * @return whether this component shows work from a connected component
-   */
-  hasShowWorkConnectedComponent(componentContent) {
-    if (componentContent != null) {
-      const connectedComponents = componentContent.connectedComponents;
-      if (connectedComponents != null) {
-        for (let connectedComponent of connectedComponents) {
-          if (connectedComponent != null) {
-            if (connectedComponent.type == 'showWork') {
-              return true;
-            }
-          }
-        }
-      }
-    }
-    return false;
-  }
-
-  /**
-   * Whether this component imports work from a connected component
-   * @param componentContent the component content
-   * @return whether this component imports work from a connected component
-   */
-  hasImportWorkConnectedComponent(componentContent) {
-    if (componentContent != null) {
-      const connectedComponents = componentContent.connectedComponents;
-      if (connectedComponents != null) {
-        for (let connectedComponent of connectedComponents) {
-          if (connectedComponent != null) {
-            if (connectedComponent.type == 'importWork') {
-              return true;
             }
           }
         }
@@ -881,10 +628,8 @@ class UtilService {
   hasXConnectedComponent(componentContent, connectedComponentType) {
     if (componentContent.connectedComponents != null) {
       let connectedComponents = componentContent.connectedComponents;
-      // loop through all the connected components
       for (let connectedComponent of connectedComponents) {
         if (connectedComponent.type == connectedComponentType) {
-          // the connected component is the type we're looking for
           return true;
         }
       }
@@ -908,7 +653,7 @@ class UtilService {
      * element won't get highlighted in the first place
      * unless this timeout is used.
      */
-    this.$timeout(() => {
+    setTimeout(() => {
       // slowly fade back to the original background color
       element.css({
         transition: 'background-color 2s ease-in-out',
@@ -920,7 +665,7 @@ class UtilService {
        * the fade otherwise the regular mouseover
        * background color change will not work
        */
-      this.$timeout(() => {
+      setTimeout(() => {
         element.css({
           transition: '',
           'background-color': ''
@@ -935,8 +680,8 @@ class UtilService {
    * @return A promise that will return an image.
    */
   generateImageFromComponentState(componentState) {
-    let deferred = this.$q.defer();
-    this.$mdDialog.show({
+    let deferred = this.upgrade.$injector.get('$q').defer();
+    this.upgrade.$injector.get('$mdDialog').show({
       template: `
         <div style="position: fixed; width: 100%; height: 100%; top: 0; left: 0; background-color: rgba(0,0,0,0.2); z-index: 2;"></div>
         <div align="center" style="position: absolute; top: 100px; left: 200px; z-index: 1000; padding: 20px; background-color: yellow;">
@@ -967,21 +712,21 @@ class UtilService {
     }
     DialogController.$inject = ['$scope', '$mdDialog', 'nodeId', 'componentId', 'componentState'];
     // wait for the component in the dialog to finish rendering
-    let doneRenderingComponentListener = this.$rootScope.$on(
+    let doneRenderingComponentListener = this.upgrade.$injector.get('$rootScope').$on(
       'doneRenderingComponent',
       (event, args) => {
         if (
           componentState.nodeId == args.nodeId &&
           componentState.componentId == args.componentId
         ) {
-          this.$timeout(() => {
+          setTimeout(() => {
             this.generateImageFromComponentStateHelper(componentState).then(image => {
               /*
                * Destroy the listener otherwise this block of code will be called every time
                * doneRenderingComponent is fired in the future.
                */
               doneRenderingComponentListener();
-              this.$timeout.cancel(destroyDoneRenderingComponentListenerTimeout);
+              clearTimeout(destroyDoneRenderingComponentListenerTimeout);
               deferred.resolve(image);
             });
           }, 1000);
@@ -992,8 +737,7 @@ class UtilService {
      * Set a timeout to destroy the listener in case there is an error creating the image and
      * we don't get to destroying it above.
      */
-    let destroyDoneRenderingComponentListenerTimeout = this.$timeout(() => {
-      // destroy the listener
+    const destroyDoneRenderingComponentListenerTimeout = setTimeout(() => {
       doneRenderingComponentListener();
     }, 10000);
     return deferred.promise;
@@ -1006,11 +750,11 @@ class UtilService {
    * @return A promise that will return an image.
    */
   generateImageFromComponentStateHelper(componentState) {
-    let deferred = this.$q.defer();
-    let componentService = this.$injector.get(componentState.componentType + 'Service');
+    let deferred = this.upgrade.$injector.get('$q').defer();
+    let componentService = this.upgrade.$injector.get(componentState.componentType + 'Service');
     componentService.generateImageFromRenderedComponentState(componentState).then(image => {
       deferred.resolve(image);
-      this.$mdDialog.hide();
+      this.upgrade.$injector.get('$mdDialog').hide();
     });
     return deferred.promise;
   }
@@ -1035,7 +779,7 @@ class UtilService {
 
   isValidJSONString(jsonString) {
     try {
-      angular.fromJson(jsonString);
+      JSON.parse(jsonString);
       return true;
     } catch (e) {
       return false;
@@ -1062,7 +806,7 @@ class UtilService {
    * null if we don't want to show anything
    */
   setIsJSONValidMessage(isJSONValid) {
-    this.$rootScope.$broadcast('setIsJSONValid', { isJSONValid: isJSONValid });
+    this.upgrade.$injector.get('$rootScope').$broadcast('setIsJSONValid', { isJSONValid: isJSONValid });
   }
 
   moveObjectUp(objects, index) {
@@ -1103,7 +847,7 @@ class UtilService {
 
   insertVideoIntoSummernote(summernoteId, fullFilePath) {
     const videoElement = document.createElement('video');
-    videoElement.controls = 'true';
+    videoElement.controls = true;
     videoElement.innerHTML = '<source ng-src="' + fullFilePath + '" type="video/mp4">';
     angular
       .element(document.querySelector(`#${summernoteId}`))
@@ -1199,13 +943,14 @@ class UtilService {
       // Now that we have our delimiter out of the way,
       // let's check to see which kind of value we
       // captured (quoted or unquoted).
+      let strMatchedValue;
       if (arrMatches[2]) {
         // We found a quoted value. When we capture
         // this value, unescape any double quotes.
-        const strMatchedValue = arrMatches[2].replace(new RegExp('""', 'g'), '"');
+        strMatchedValue = arrMatches[2].replace(new RegExp('""', 'g'), '"');
       } else {
         // We found a non-quoted value.
-        const strMatchedValue = arrMatches[3];
+        strMatchedValue = arrMatches[3];
       }
 
       // Now that we have our value string, let's add
@@ -1217,18 +962,18 @@ class UtilService {
       }
       arrData[arrData.length - 1].push(finalValue);
     }
-    // Return the parsed data.
     return arrData;
   }
 }
 
-// Get the last element of the array
+declare global {
+  interface Array<T> {
+      last(): T;
+  }
+}
+// extend array prototype with a last() method
 if (!Array.prototype.last) {
   Array.prototype.last = function() {
     return this[this.length - 1];
   };
 }
-
-UtilService.$inject = ['$filter', '$injector', '$mdDialog', '$q', '$rootScope', '$timeout'];
-
-export default UtilService;

@@ -2,6 +2,7 @@
 
 import '../themes/default/js/webfonts';
 import * as angular from 'angular';
+import { downgradeInjectable } from '@angular/upgrade/static';
 import * as angularDragula from 'angular-dragula';
 import 'ng-file-upload';
 import 'angular-ui-router';
@@ -130,7 +131,7 @@ const authoringModule = angular
   .service('StudentWebSocketService', StudentWebSocketService)
   .service('TeacherDataService', TeacherDataService)
   .service('TeacherWebSocketService', TeacherWebSocketService)
-  .service('UtilService', UtilService)
+  .factory('UtilService', downgradeInjectable(UtilService))
   .controller('AuthoringToolController', AuthoringToolController)
   .controller('AuthoringToolMainController', AuthoringToolMainController)
   .controller('AdvancedAuthoringController', AdvancedAuthoringController)

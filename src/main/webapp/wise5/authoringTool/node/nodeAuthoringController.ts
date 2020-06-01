@@ -61,10 +61,9 @@ class NodeAuthoringController {
   showConstraints: boolean = false;
   showCreateComponent: boolean = false;
   showCreateBranch: boolean = false;
-  showEditButtons: boolean = false;
   showEditTransitions: boolean = false;
   showGeneralAdvanced: boolean = false;
-  showImportView: boolean = false;
+  showImport: boolean = false;
   showJSON: boolean = false;
   showRubric: boolean = false;
   showRubricButton: boolean = true;
@@ -469,7 +468,6 @@ class NodeAuthoringController {
     this.summernoteRubricId = 'summernoteRubric_' + this.nodeId;
     let insertAssetString = this.$translate('INSERT_ASSET');
     let insertAssetButton = this.UtilService.createInsertAssetButton(
-      this,
       null,
       this.nodeId,
       null,
@@ -528,18 +526,18 @@ class NodeAuthoringController {
 
     if (this.$state.current.name === 'root.at.project.nodeConstraints') {
       this.$timeout(() => {
-        this.nodeAuthoringViewButtonClicked('advanced');
+        this.showAdvancedView();
         this.$timeout(() => {
-          this.nodeAuthoringViewButtonClicked('editConstraints');
+          this.showEditConstraintsView();
         });
       });
     }
 
     if (this.$state.current.name === 'root.at.project.nodeEditPaths') {
       this.$timeout(() => {
-        this.nodeAuthoringViewButtonClicked('advanced');
+        this.showAdvancedView();
         this.$timeout(() => {
-          this.nodeAuthoringViewButtonClicked('editTransitions');
+          this.showEditTransitionsView();
         });
       });
     }
@@ -800,7 +798,7 @@ class NodeAuthoringController {
 
   addComponentButtonClicked() {
     this.selectedComponent = this.componentTypes[0].componentType;
-    this.nodeAuthoringViewButtonClicked('addComponent');
+    this.showAddComponentView();
     this.turnOnAddComponentMode();
     this.turnOffMoveComponentMode();
     this.turnOnInsertComponentMode();
@@ -1067,260 +1065,84 @@ class NodeAuthoringController {
     this.authoringViewNodeChanged();
   }
 
-  nodeAuthoringViewButtonClicked(view = null) {
-    if (view === 'addComponent') {
-      // toggle the add component view and hide all the other views
-      this.showCreateComponent = !this.showCreateComponent;
-      this.showGeneralAdvanced = false;
-      this.showEditTransitions = false;
-      this.showConstraints = false;
-      this.showEditButtons = false;
-      this.showRubric = false;
-      this.showCreateBranch = false;
-      this.showAdvanced = false;
-      this.showImportView = false;
-      this.showStepButtons = true;
-      this.showComponents = true;
-      this.showJSON = false;
-      this.UtilService.hideJSONValidMessage();
-    } else if (view === 'generalAdvanced') {
-      // toggle the edit transitions view and hide all the other views
-      this.showCreateComponent = false;
-      this.showGeneralAdvanced = !this.showGeneralAdvanced;
-      this.showEditTransitions = false;
-      this.showConstraints = false;
-      this.showEditButtons = false;
-      this.showRubricButton = false;
-      this.showCreateBranch = false;
-      //this.showAdvanced = false;
-      this.showImportView = false;
-      this.showStepButtons = false;
-      this.showComponents = false;
-      this.showJSON = false;
-      this.UtilService.hideJSONValidMessage();
-    } else if (view === 'editTransitions') {
-      // toggle the edit transitions view and hide all the other views
-      this.showCreateComponent = false;
-      this.showGeneralAdvanced = false;
-      this.showEditTransitions = !this.showEditTransitions;
-      this.showConstraints = false;
-      this.showEditButtons = false;
-      this.showRubricButton = false;
-      this.showCreateBranch = false;
-      //this.showAdvanced = false;
-      this.showImportView = false;
-      this.showStepButtons = false;
-      this.showComponents = false;
-      this.showJSON = false;
-      this.UtilService.hideJSONValidMessage();
-    } else if (view === 'editConstraints') {
-      // toggle the edit constraints view and hide all the other views
-      this.showCreateComponent = false;
-      this.showGeneralAdvanced = false;
-      this.showEditTransitions = false;
-      this.showConstraints = !this.showConstraints;
-      this.showEditButtons = false;
-      this.showRubric = false;
-      this.showCreateBranch = false;
-      //this.showAdvanced = false;
-      this.showImportView = false;
-      this.showStepButtons = false;
-      this.showComponents = false;
-      this.showJSON = false;
-      this.UtilService.hideJSONValidMessage();
-    } else if (view === 'editButtons') {
-      // toggle the edit buttons view and hide all the other views
-      this.showCreateComponent = false;
-      this.showGeneralAdvanced = false;
-      this.showEditTransitions = false;
-      this.showConstraints = false;
-      this.showEditButtons = !this.showEditButtons;
-      this.showRubric = false;
-      this.showCreateBranch = false;
-      this.showAdvanced = false;
-      this.showImportView = false;
-      this.showStepButtons = false;
-      this.showJSON = false;
-      this.UtilService.hideJSONValidMessage();
-    } else if (view === 'editRubric') {
-      // toggle the edit buttons view and hide all the other views
-      this.showCreateComponent = false;
-      this.showGeneralAdvanced = false;
-      this.showEditTransitions = false;
-      this.showConstraints = false;
-      this.showEditButtons = false;
-      this.showRubric = !this.showRubric;
-      this.showCreateBranch = false;
-      this.showAdvanced = false;
-      this.showImportView = false;
-      this.showStepButtons = false;
-      this.showComponents = false;
-      this.showJSON = false;
-      this.UtilService.hideJSONValidMessage();
-    } else if (view === 'createBranch') {
-      // toggle the edit buttons view and hide all the other views
-      this.showCreateComponent = false;
-      this.showGeneralAdvanced = false;
-      this.showEditTransitions = false;
-      this.showConstraints = false;
-      this.showEditButtons = false;
-      this.showRubric = false;
-      this.showCreateBranch = !this.showCreateBranch;
-      //this.showAdvanced = false;
-      this.showImportView = false;
-      this.showStepButtons = false;
-      this.showComponents = false;
-      this.showJSON = false;
-      this.UtilService.hideJSONValidMessage();
-    } else if (view === 'previousNode') {
-      // hide all the other views
-      this.showCreateComponent = false;
-      this.showGeneralAdvanced = false;
-      this.showEditTransitions = false;
-      this.showConstraints = false;
-      this.showEditButtons = false;
-      this.showRubric = false;
-      this.showCreateBranch = false;
-      this.showAdvanced = false;
-      this.showImportView = false;
-      this.showJSON = false;
-      this.UtilService.hideJSONValidMessage();
-      let prevNodeId = this.ProjectService.getPreviousNodeId(this.nodeId);
-      if (prevNodeId != null) {
-        // there is a previous node id so we will go to it
-        this.$state.go('root.at.project.node', { projectId: this.projectId, nodeId: prevNodeId });
-      } else {
-        // there is no previous node id so we will display a message
-        let thereIsNoPreviousStep = this.$translate('thereIsNoPreviousStep');
-        alert(thereIsNoPreviousStep);
-      }
-    } else if (view === 'nextNode') {
-      // hide all the other views
-      this.showCreateComponent = false;
-      this.showGeneralAdvanced = false;
-      this.showEditTransitions = false;
-      this.showConstraints = false;
-      this.showEditButtons = false;
-      this.showRubric = false;
-      this.showCreateBranch = false;
-      this.showAdvanced = false;
-      this.showImportView = false;
-      this.showJSON = false;
-      this.UtilService.hideJSONValidMessage();
-      let nextNodeId = this.ProjectService.getNextNodeId(this.nodeId);
-      if (nextNodeId != null) {
-        // there is a next node id so we will go to it
-        this.$state.go('root.at.project.node', { projectId: this.projectId, nodeId: nextNodeId });
-      } else {
-        // there is no next node id so we will display a message
-        let thereIsNoNextStep = this.$translate('thereIsNoNextStep');
-        alert(thereIsNoNextStep);
-      }
-    } else if (view === 'advanced') {
-      // toggle the advanced view and hide all the other views
-      this.showCreateComponent = false;
-      this.showGeneralAdvanced = false;
-      this.showEditTransitions = false;
-      this.showConstraints = false;
-      this.showEditButtons = false;
-      this.showRubric = false;
-      this.showCreateBranch = false;
-      this.showAdvanced = !this.showAdvanced;
-      this.showImportView = false;
-      this.showStepButtons = false;
-      this.showComponents = false;
-      this.showJSON = false;
-      this.UtilService.hideJSONValidMessage();
-    } else if (view === 'copy') {
-      // toggle the copy view and hide all the other views
-      this.showCreateComponent = false;
-      this.showGeneralAdvanced = false;
-      this.showEditTransitions = false;
-      this.showConstraints = false;
-      this.showEditButtons = false;
-      this.showRubric = false;
-      this.showCreateBranch = false;
-      this.showAdvanced = false;
-      this.showImportView = false;
-      this.showStepButtons = true;
-      this.showComponents = true;
-      this.showJSON = false;
-      this.UtilService.hideJSONValidMessage();
-    } else if (view === 'move') {
-      // toggle the move view and hide all the other views
-      this.showCreateComponent = false;
-      this.showGeneralAdvanced = false;
-      this.showEditTransitions = false;
-      this.showConstraints = false;
-      this.showEditButtons = false;
-      this.showRubric = false;
-      this.showCreateBranch = false;
-      this.showAdvanced = false;
-      this.showImportView = false;
-      this.showStepButtons = true;
-      this.showComponents = true;
-      this.showJSON = false;
-      this.UtilService.hideJSONValidMessage();
-    } else if (view === 'import') {
-      // toggle the import view and hide all the other views
-      this.showCreateComponent = false;
-      this.showGeneralAdvanced = false;
-      this.showEditTransitions = false;
-      this.showConstraints = false;
-      this.showEditButtons = false;
-      this.showRubric = false;
-      this.showCreateBranch = false;
-      this.showAdvanced = false;
-      this.showImportView = !this.showImportView;
-      this.showStepButtons = false;
-      this.showComponents = true;
-      this.showJSON = false;
-      this.UtilService.hideJSONValidMessage();
-    } else if (view === 'showJSON') {
-      // toggle the import view and hide all the other views
-      this.showCreateComponent = false;
-      this.showGeneralAdvanced = false;
-      this.showEditTransitions = false;
-      this.showConstraints = false;
-      this.showEditButtons = false;
-      this.showRubric = false;
-      this.showCreateBranch = false;
-      //this.showAdvanced = false;
-      this.showImportView = false;
-      this.showStepButtons = false;
-      this.showComponents = false;
-      if (this.showJSON) {
-        // we were showing the JSON view and the author now wants to hide it
-        if (!this.isJSONValid()) {
-          if (confirm(this.$translate('jsonInvalidErrorMessage'))) {
-            // the author wants to revert back to the last valid JSON
-            this.toggleJSONAuthoringView();
-            this.UtilService.hideJSONValidMessage();
-          }
-        } else {
+  hideAllViews() {
+    this.showCreateComponent = false;
+    this.showGeneralAdvanced = false;
+    this.showEditTransitions = false;
+    this.showConstraints = false;
+    this.showRubric = false;
+    this.showCreateBranch = false;
+    this.showAdvanced = false;
+    this.showImport = false;
+    this.showStepButtons = false;
+    this.showComponents = false;
+    this.showJSON = false;
+    this.UtilService.hideJSONValidMessage();
+  }
+
+  showDefaultComponentsView() {
+    this.hideAllViews();
+    this.showStepButtons = true;
+    this.showComponents = true;
+  }
+
+  showAddComponentView() {
+    this.showDefaultComponentsView();
+    this.showCreateComponent = true;
+  }
+
+  showGeneralAdvancedView() {
+    this.showAdvancedView();
+    this.showGeneralAdvanced = true;
+  }
+
+  showAdvancedView() {
+    this.hideAllViews();
+    this.showAdvanced = true;
+  }
+
+  showEditTransitionsView() {
+    this.showAdvancedView();
+    this.showEditTransitions = true;
+  }
+
+  showEditConstraintsView() {
+    this.showAdvancedView();
+    this.showConstraints = true;
+  }
+
+  showEditRubricView() {
+    this.hideAllViews();
+    this.showRubric = true;
+  }
+
+  showCreateBranchView() {
+    this.showAdvancedView();
+    this.showCreateBranch = true;
+  }
+
+  showImportView() {
+    this.hideAllViews();
+    this.showImport = true;
+    this.showComponents = true;
+  }
+
+  showJSONView() {
+    this.showAdvancedView();
+    if (this.showJSON) {
+      if (!this.isJSONValid()) {
+        if (confirm(this.$translate('jsonInvalidErrorMessage'))) {
           this.toggleJSONAuthoringView();
           this.UtilService.hideJSONValidMessage();
         }
       } else {
-        // we were not showing the JSON view and now the author wants to show it
         this.toggleJSONAuthoringView();
-        this.authoringNodeContentJSONString = angular.toJson(this.node, 4);
-        this.UtilService.showJSONValidMessage();
+        this.UtilService.hideJSONValidMessage();
       }
     } else {
-      // hide all the views
-      this.showCreateComponent = false;
-      this.showGeneralAdvanced = false;
-      this.showEditTransitions = false;
-      this.showConstraints = false;
-      this.showEditButtons = false;
-      this.showRubric = false;
-      this.showCreateBranch = false;
-      this.showAdvanced = false;
-      this.showImportView = false;
-      this.showStepButtons = true;
-      this.showComponents = true;
-      this.showJSON = false;
+      this.toggleJSONAuthoringView();
+      this.authoringNodeContentJSONString = angular.toJson(this.node, 4);
+      this.UtilService.showJSONValidMessage();
     }
   }
 
@@ -2043,8 +1865,8 @@ class NodeAuthoringController {
     this.importLibraryProjectId = null;
     this.importProjectId = null;
     this.importProject = null;
-    this.nodeAuthoringViewButtonClicked('import');
-    if (this.showImportView) {
+    this.showImportView();
+    if (this.showImport) {
       this.turnOnImportComponentMode();
       if (this.myProjectsList == null) {
         this.myProjectsList = this.ConfigService.getAuthorableProjects();
@@ -2064,7 +1886,7 @@ class NodeAuthoringController {
     if (this.getSelectedComponentIds().length === 0) {
       alert(this.$translate('pleaseSelectAComponentToMoveAndThenClickTheMoveButtonAgain'));
     } else {
-      this.nodeAuthoringViewButtonClicked('move');
+      this.showDefaultComponentsView();
       this.turnOffAddComponentMode();
       this.turnOnMoveComponentMode();
       this.turnOnInsertComponentMode();
@@ -2076,7 +1898,7 @@ class NodeAuthoringController {
     if (this.getSelectedComponentIds().length === 0) {
       alert(this.$translate('pleaseSelectAComponentToCopyAndThenClickTheCopyButtonAgain'));
     } else {
-      this.nodeAuthoringViewButtonClicked('copy');
+      this.showDefaultComponentsView();
       this.turnOnCopyComponentMode();
       this.turnOnInsertComponentMode();
       this.hideComponentAuthoring();
@@ -2133,7 +1955,7 @@ class NodeAuthoringController {
   }
 
   cancelInsertClicked() {
-    this.nodeAuthoringViewButtonClicked();
+    this.showDefaultComponentsView();
     this.turnOffAddComponentMode();
     this.turnOffMoveComponentMode();
     this.turnOffInsertComponentMode();
@@ -2303,7 +2125,7 @@ class NodeAuthoringController {
       this.$timeout(() => {
         this.showComponentAuthoring();
         this.turnOffInsertComponentMode();
-        this.nodeAuthoringViewButtonClicked();
+        this.showDefaultComponentsView();
         this.clearComponentsToChecked();
 
         /*
@@ -2389,7 +2211,7 @@ class NodeAuthoringController {
        * project view so that the author can choose where to place
        * the new steps
        */
-      this.showImportView = false;
+      this.showImport = false;
       this.turnOnInsertComponentMode();
       this.hideComponentAuthoring();
       this.scrollToTopOfPage();
@@ -2453,7 +2275,7 @@ class NodeAuthoringController {
   }
 
   cancelCreateComponentClicked() {
-    this.nodeAuthoringViewButtonClicked();
+    this.showDefaultComponentsView();
     this.turnOffAddComponentMode();
     this.turnOffMoveComponentMode();
     this.turnOffInsertComponentMode();
@@ -2471,9 +2293,9 @@ class NodeAuthoringController {
   }
 
   backButtonClicked() {
-    if (this.showImportView || this.showRubric || this.showAdvanced) {
+    if (this.showImport || this.showRubric || this.showAdvanced) {
       this.UtilService.hideJSONValidMessage();
-      this.nodeAuthoringViewButtonClicked();
+      this.showDefaultComponentsView();
       this.$state.go('root.at.project.node', { projectId: this.projectId, nodeId: this.nodeId });
     } else {
       this.close();

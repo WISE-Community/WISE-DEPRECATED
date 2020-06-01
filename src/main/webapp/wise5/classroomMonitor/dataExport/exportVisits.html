@@ -73,12 +73,18 @@
                 </md-tooltip>
               </md-button>
             </div>
-           <div ng-repeat="(key, value) in exportVisitsController.nodes"
+            <div ng-repeat="(key, value) in exportVisitsController.nodes"
                 ng-if="key !== 0">
               <md-checkbox ng-class="{'md-primary': true, 'groupHeader': value.node.type === 'group', 'stepHeader': value.node.type === 'node'}"
                   ng-model="exportVisitsController.idToChecked[value.node.id]"
                   ng-change="exportVisitsController.nodeChecked(value.node)">
                 <h6 style="display: inline; cursor: pointer">{{exportVisitsController.idToStepNumberAndTitle[value.node.id]}}</h6>
+              </md-checkbox>
+            </div>
+            <div>
+              <md-checkbox ng-class="{'md-primary': true, 'groupHeader': 'group'}"
+                  ng-model="exportVisitsController.includeDeletedSteps">
+                <h6 style="display: inline; cursor: pointer">{{ ::'includeDeletedStepsIfAny' | translate }}</h6>
               </md-checkbox>
             </div>
           </div>

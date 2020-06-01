@@ -2,7 +2,11 @@
   <mat-toolbar class="header__content section--slant">
     <div class="content" fxLayout="row" fxLayoutAlign="start center">
       <a routerLink="/" class="header__logo">
-        <img src="assets/img/wise-web-header-img.png" i18n-alt alt="WISE header logo" />
+        <picture>
+          <source type="image/webp" srcset="assets/img/wise-web-header-img.webp, assets/img/wise-web-header-img@2x.webp 2x">
+          <source srcset="assets/img/wise-web-header-img.png, assets/img/wise-web-header-img@2x.png 2x">
+          <img src="assets/img/wise-web-header-img@2x.png" i18n-alt alt="WISE header logo" />
+        </picture>
       </a>
       <span fxFlex="1 1 auto"></span>
       <app-header-links fxHide fxShow.gt-sm [user]="user" [location]="location"></app-header-links>

@@ -14,6 +14,9 @@ export class BlurbComponent implements OnInit {
   imgDescription: string;
 
   @Input()
+  imgSources: Object;
+
+  @Input()
   headline: string;
 
   @ContentChild('headlineTemplate', {static: false}) headlineRef: TemplateRef<any>;

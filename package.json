@@ -1,6 +1,6 @@
 {
   "name": "wise",
-  "version": "5.10.1",
+  "version": "5.11.0",
   "description": "Web-based Inquiry Science Environment",
   "main": "app.js",
   "browserslist": [
@@ -83,6 +83,7 @@
     "@babel/preset-env": "^7.9.5",
     "@types/jasmine": "^3.5.10",
     "@types/jasminewd2": "^2.0.8",
+    "@types/jquery": "^3.3.38",
     "@types/node": "^12.12.37",
     "autoprefixer": "^9.7.6",
     "babel-loader": "^8.1.0",
@@ -136,9 +137,7 @@
     "watch-sass": "npm rebuild node-sass && node ./node_modules/gulp/bin/gulp.js",
     "update-i18n": "node ./node_modules/gulp/bin/gulp.js update-i18n",
     "compile-sass": "node ./node_modules/gulp/bin/gulp.js compile-sass",
-    "test": "node ./node_modules/karma/bin/karma start src/main/webapp/wise5/karma.conf.js --single-run --browsers ChromeHeadlessNoSandbox",
-    "test-site": "ng test wise --karma-config src/main/webapp/site/karma.conf.js --browsers ChromeHeadlessNoSandbox --watch=false",
-    "test-watch": "node ./node_modules/karma/bin/karma start src/main/webapp/wise5/karma.conf.js --color --browsers ChromeHeadlessNoSandbox",
+    "test": "ng test wise --karma-config src/main/webapp/site/karma.conf.js --browsers ChromeHeadlessNoSandbox --watch=false",
     "test-e2e-comment": "test-e2e assumes wise is already running.",
     "test-e2e": "node ./node_modules/protractor/bin/protractor src/main/webapp/wise5/test-e2e/conf.js",
     "ngx-extractor": "./node_modules/.bin/ngx-extractor -i \"src/main/webapp/site/**/*.ts\" -o src/main/webapp/site/src/messages.xlf"

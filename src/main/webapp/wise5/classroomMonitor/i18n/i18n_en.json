@@ -108,6 +108,7 @@
   "includeComments": "Include Comments",
   "includeCommentTimestamps": "Include Comment Timestamps",
   "includeCorrectnessColumns": "Include Correctness Columns",
+  "includeDeletedStepsIfAny": "Include Deleted Steps (If Any)",
   "includeEvents": "Include Events",
   "includeOnlySubmits": "Include Only Submits",
   "includeScores": "Include Scores",

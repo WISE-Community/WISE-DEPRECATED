@@ -32,6 +32,10 @@ export class ConfigService {
     return this.config$.getValue().contextPath;
   }
 
+  getGoogleAnalyticsId() {
+    return this.config$.getValue().googleAnalyticsId;
+  }
+
   getGoogleClientId() {
     return this.config$.getValue().googleClientId;
   }

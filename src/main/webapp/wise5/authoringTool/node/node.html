@@ -74,14 +74,14 @@
     <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'DELETE' | translate }}</md-tooltip>
   </md-button>
   <md-button id='editStepRubricButton' class='topButton md-raised md-primary'
-         ng-click='nodeAuthoringController.nodeAuthoringViewButtonClicked("editRubric")'
+         ng-click='nodeAuthoringController.showEditRubricView()'
          ng-disabled='nodeAuthoringController.getSelectedComponentIds().length != 0 || nodeAuthoringController.insertComponentMode'
          ng-if='nodeAuthoringController.showStepButtons'>
     <md-icon>message</md-icon>
     <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'editStepRubric' | translate }}</md-tooltip>
   </md-button>
   <md-button id='stepAdvancedButton' class='topButton md-raised md-primary'
-         ng-click='nodeAuthoringController.nodeAuthoringViewButtonClicked("advanced")'
+         ng-click='nodeAuthoringController.showAdvancedView()'
          ng-disabled='nodeAuthoringController.getSelectedComponentIds().length != 0 || nodeAuthoringController.insertComponentMode'
          ng-if='nodeAuthoringController.showStepButtons'>
     <md-icon>build</md-icon>
@@ -97,34 +97,34 @@
       style="display: inline;">
     <md-button ng-if='!projectController.isGroupNode(nodeAuthoringController.node.id)'
            class='topButton md-raised md-primary'
-           ng-click='nodeAuthoringController.nodeAuthoringViewButtonClicked("generalAdvanced")'
+           ng-click='nodeAuthoringController.showGeneralAdvancedView()'
            ng-disabled='nodeAuthoringController.insertComponentMode'>
       <md-icon>settings</md-icon>
       <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'generalAdvanced' | translate }}</md-tooltip>
     </md-button>
     <md-button ng-if='!projectController.isGroupNode(nodeAuthoringController.node.id)'
            class='topButton md-raised md-primary'
-           ng-click='nodeAuthoringController.nodeAuthoringViewButtonClicked("editTransitions")'
+           ng-click='nodeAuthoringController.showEditTransitionsView()'
            ng-disabled='nodeAuthoringController.insertComponentMode'>
       <md-icon>trending_up</md-icon>
       <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'editTransitions' | translate }}</md-tooltip>
     </md-button>
     <md-button ng-if='!projectController.isGroupNode(nodeAuthoringController.node.id)'
            class='topButton md-raised md-primary'
-           ng-click='nodeAuthoringController.nodeAuthoringViewButtonClicked("editConstraints")'
+           ng-click='nodeAuthoringController.showEditConstraintsView()'
            ng-disabled='nodeAuthoringController.insertComponentMode'>
       <md-icon>block</md-icon>
       <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'editConstraints' | translate }}</md-tooltip>
     </md-button>
     <md-button ng-if='!projectController.isGroupNode(nodeAuthoringController.node.id)'
            class='topButton md-raised md-primary'
-           ng-click='nodeAuthoringController.nodeAuthoringViewButtonClicked("createBranch")'
+           ng-click='nodeAuthoringController.showCreateBranchView()'
            ng-disabled='nodeAuthoringController.insertComponentMode'>
       <md-icon style='transform: rotate(180deg);'>call_split</md-icon>
       <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'createBranch' | translate }}</md-tooltip>
     </md-button>
     <md-button class='topButton md-raised md-primary'
-           ng-click='nodeAuthoringController.nodeAuthoringViewButtonClicked("showJSON")'
+           ng-click='nodeAuthoringController.showJSONView()'
            ng-disabled='nodeAuthoringController.insertComponentMode'>
       <md-icon>code</md-icon>
       <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'showJSON' | translate }}</md-tooltip>
@@ -851,7 +851,7 @@
   </div>
 </div>
 
-<div ng-if='nodeAuthoringController.showImportView'>
+<div ng-if='nodeAuthoringController.showImport'>
   <h4>{{ ::'importComponentsParens' | translate }}</h4>
   <br/>
   <span>{{ ::'chooseAProjectToImportAndThenChooseAComponent' | translate }}</span>
@@ -964,14 +964,14 @@
   </md-button>
   <span style='font-weight:bold; margin-right:10px'>{{ ::'insertAsFirstComponent' | translate }}</span>
 </div>
-<div style='margin-left: 45px; margin-top: 45px; font-size: 1em; font-weight: bold;' ng-if='nodeAuthoringController.showComponents && !nodeAuthoringController.showImportView &&
+<div style='margin-left: 45px; margin-top: 45px; font-size: 1em; font-weight: bold;' ng-if='nodeAuthoringController.showComponents && !nodeAuthoringController.showImport &&
    nodeAuthoringController.components.length === 0 && !nodeAuthoringController.insertComponentMode && nodeAuthoringController.node.type != "group"''>
    <em>{{ ::'stepHasNoComponents' | translate }}</em>
 </div>
 <div ng-repeat='(componentIndex, component) in nodeAuthoringController.components'
    class='component md-padding'
    style='padding: 0; margin-top: 0; margin-left: 16px;'
-   ng-if='nodeAuthoringController.showComponents && !nodeAuthoringController.showImportView'>
+   ng-if='nodeAuthoringController.showComponents && !nodeAuthoringController.showImport'>
   <div id='{{component.id}}' layout='row' style='height: 40px; margin-top: 0; margin-bottom: 0;'>
     <div style='margin-top: 15px; width: 200px;'>
       <md-checkbox ng-model='nodeAuthoringController.componentsToChecked[component.id]'
