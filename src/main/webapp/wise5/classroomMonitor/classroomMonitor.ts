@@ -75,7 +75,7 @@ import '../components/summary/summaryComponentModule';
 import '../components/table/tableComponentModule';
 import TeacherDataService from '../services/teacherDataService';
 import TeacherWebSocketService from '../services/teacherWebSocketService';
-import UtilService from '../services/utilService';
+import { UtilService } from '../services/utilService';
 import * as moment from 'moment';
 
 const classroomMonitorModule = angular

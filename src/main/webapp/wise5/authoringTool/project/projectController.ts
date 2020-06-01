@@ -3,7 +3,7 @@
 import AuthoringToolProjectService from '../authoringToolProjectService';
 import ConfigService from '../../services/configService';
 import TeacherDataService from '../../services/teacherDataService';
-import UtilService from '../../services/utilService';
+import { UtilService } from '../../services/utilService';
 import * as angular from 'angular';
 import * as $ from 'jquery';
 

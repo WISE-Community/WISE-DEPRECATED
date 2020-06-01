@@ -5,7 +5,7 @@ import {RouterModule} from '@angular/router';
 import vle from '../../../../wise5/vle/vle';
 import {UpgradeModule} from '@angular/upgrade/static';
 import {setUpLocationSync} from '@angular/router/upgrade';
-import UtilService from '../../../../wise5/services/utilService';
+import { UtilService } from '../../../../wise5/services/utilService';
 
 @Component({template: ``})
 export class EmptyComponent {}

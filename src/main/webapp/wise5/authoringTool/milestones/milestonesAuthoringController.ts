@@ -1,7 +1,7 @@
 'use strict';
 
 import AuthoringToolProjectService from '../authoringToolProjectService';
-import UtilService from '../../services/utilService';
+import { UtilService } from '../../services/utilService';
 
 class MilestonesAuthoringController {
   $translate: any;

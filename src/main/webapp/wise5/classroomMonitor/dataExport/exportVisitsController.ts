@@ -4,7 +4,7 @@ import ClassroomMonitorProjectService from "../classroomMonitorProjectService";
 import TeacherDataService from "../../services/teacherDataService";
 import ExportController from "./exportController";
 import ConfigService from "../../services/configService";
-import UtilService from "../../services/utilService";
+import { UtilService } from "../../services/utilService";
 
 class ExportVisitsController extends ExportController {
   project: any;
