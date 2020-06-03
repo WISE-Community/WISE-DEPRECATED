@@ -22,7 +22,7 @@ class SummaryService extends ComponentService {
       'OpenResponse',
       'Table'
     ];
-    this.componentsWithResponsesSummary = ['MultipleChoice'];
+    this.componentsWithResponsesSummary = ['MultipleChoice', 'Table'];
   }
 
   getComponentTypeLabel() {

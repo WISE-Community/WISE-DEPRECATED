@@ -194,6 +194,9 @@
         <md-select ng-model='summaryController.authoringComponentContent.source'
                    ng-change='summaryController.authoringViewComponentChanged()'
                    style='min-width: 200px'>
+          <md-option value='self'>
+            {{ ::'summary.onlySelf' | translate }}
+          </md-option>
           <md-option value='period'>
             {{ ::'summary.onlyStudentsInPeriod' | translate }}
           </md-option>
@@ -266,9 +269,11 @@
       <summary-display node-id='summaryController.authoringComponentContent.summaryNodeId'
           component-id='summaryController.authoringComponentContent.summaryComponentId'
           student-data-type='summaryController.authoringComponentContent.studentDataType'
+          source='summaryController.authoringComponentContent.source'
           period-id='summaryController.authoringComponentContent.periodId'
           chart-type='summaryController.authoringComponentContent.chartType'
-          highlight-correct-answer='summaryController.authoringComponentContent.highlightCorrectAnswer'>
+          highlight-correct-answer='summaryController.authoringComponentContent.highlightCorrectAnswer'
+          do-render='true'>
       </summary-display>
     </div>
   </div>

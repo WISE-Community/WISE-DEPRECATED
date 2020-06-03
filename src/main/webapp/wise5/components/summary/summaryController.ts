@@ -17,6 +17,7 @@ class SummaryController extends ComponentController {
   otherStepTitle: string;
   isShowDisplay: boolean;
   periodId: number;
+  source: string;
 
   static $inject = [
     '$filter',
@@ -87,6 +88,7 @@ class SummaryController extends ComponentController {
     if (!this.isShowDisplay) {
       this.warningMessage = this.getWarningMessage();
     }
+    this.source = this.componentContent.source;
     this.setPeriodIdIfNecessary();
   }
 
@@ -160,9 +162,9 @@ class SummaryController extends ComponentController {
 
   setPeriodIdIfNecessary() {
     if (this.ConfigService.isStudentRun()) {
-      if (this.componentContent.source === 'period') {
+      if (this.source === 'period') {
         this.periodId = this.ConfigService.getPeriodId();
-      } else if (this.componentContent.source === 'allPeriods') {
+      } else if (this.source === 'allPeriods') {
         this.periodId = null;
       }
     }

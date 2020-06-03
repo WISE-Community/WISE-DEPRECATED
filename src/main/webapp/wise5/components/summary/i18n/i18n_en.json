@@ -6,6 +6,7 @@
   "summary.chooseTheStepAndComponent": "Choose the step and component to show the summary data for:",
   "summary.highlightCorrectAnswer": "Highlight Correct Answers",
   "summary.none": "None",
+  "summary.onlySelf": "Only Self",
   "summary.onlyStudentsInPeriod": "Only Students In Period",
   "summary.pie": "Pie",
   "summary.responses": "Responses",
@@ -15,7 +16,7 @@
   "summary.showPromptFromOtherComponent": "Show Prompt From Source Component",
   "summary.studentDataType": "Student Data Type",
   "summary.studentsInAllPeriods": "Students In All Periods",
-  "summary.submitWork" : "Submit Work",
+  "summary.submitWork": "Submit Work",
   "summary.youMustComplete": "You must complete \"{{stepTitle}}\" to view the class results.",
   "summary.youMustSubmitWork": "You must submit work on \"{{stepTitle}}\" to view the class results."
 }
