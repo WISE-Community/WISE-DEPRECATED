@@ -2,7 +2,7 @@
 
 import * as $ from 'jquery';
 import * as angular from 'angular';
-import ConfigService from './configService';
+import { ConfigService } from './configService';
 import { UtilService } from './utilService';
 
 class ProjectService {
@@ -5276,7 +5276,7 @@ class ProjectService {
   }
 
   getConnectedComponentParams(componentContent, componentId) {
-    
+
   }
 }
 

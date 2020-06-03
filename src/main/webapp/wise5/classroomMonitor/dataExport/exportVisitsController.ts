@@ -3,7 +3,7 @@
 import ClassroomMonitorProjectService from "../classroomMonitorProjectService";
 import TeacherDataService from "../../services/teacherDataService";
 import ExportController from "./exportController";
-import ConfigService from "../../services/configService";
+import { ConfigService } from "../../services/configService";
 import { UtilService } from "../../services/utilService";
 
 class ExportVisitsController extends ExportController {
@@ -162,7 +162,7 @@ class ExportVisitsController extends ExportController {
           this.ConfigService.getUserInfoByWorkgroupId(workgroupId);
     }
   }
-  
+
   isActiveWorkgroup(workgroupId) {
     return this.idToUserInfo[workgroupId] != null;
   }
@@ -271,7 +271,7 @@ class ExportVisitsController extends ExportController {
     }
     return cleanedEvents;
   }
-  
+
   getEventsWithActiveWorkgroups(events: any[]) {
     const cleanedEvents = [];
     for (const event of events) {
@@ -439,7 +439,7 @@ class ExportVisitsController extends ExportController {
         } else if (output === 'stepNumber') {
           steps.unshift(this.getStepNumber(previousNodeId));
         }
-        
+
       }
     }
     return steps.join(', ');
@@ -474,7 +474,7 @@ class ExportVisitsController extends ExportController {
   getColumnNumber(columnName: string) {
     return this.columnNameToColumnNumber[columnName];
   }
-  
+
   getNextRowNumber() {
     return this.rowCounter;
   }

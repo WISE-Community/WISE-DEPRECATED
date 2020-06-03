@@ -1,5 +1,5 @@
 import StudentStatusService from '../../services/studentDataService';
-import ConfigService from '../../services/configService';
+import { ConfigService } from '../../services/configService';
 import { Input } from '@angular/core';
 
 class ClassResponseController {

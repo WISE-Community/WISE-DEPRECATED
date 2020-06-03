@@ -1,6 +1,6 @@
 'use strict';
 
-import ConfigService from '../../services/configService';
+import { ConfigService } from '../../services/configService';
 import AuthoringToolProjectService from '../authoringToolProjectService';
 
 class ProjectInfoController {

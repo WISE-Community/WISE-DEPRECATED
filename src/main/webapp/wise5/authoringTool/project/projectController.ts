@@ -1,7 +1,7 @@
 'use strict';
 
 import AuthoringToolProjectService from '../authoringToolProjectService';
-import ConfigService from '../../services/configService';
+import { ConfigService } from '../../services/configService';
 import TeacherDataService from '../../services/teacherDataService';
 import { UtilService } from '../../services/utilService';
 import * as angular from 'angular';

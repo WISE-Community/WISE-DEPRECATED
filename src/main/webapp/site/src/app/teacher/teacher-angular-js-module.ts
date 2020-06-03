@@ -6,6 +6,7 @@ import teacher from '../../../../wise5/teacher/teacher';
 import {UpgradeModule} from '@angular/upgrade/static';
 import {setUpLocationSync} from '@angular/router/upgrade';
 import { UtilService } from '../../../../wise5/services/utilService';
+import { ConfigService } from '../../../../wise5/services/configService';
 
 @Component({template: ``})
 export class EmptyComponent {}
@@ -21,7 +22,8 @@ export class EmptyComponent {}
     ])
   ],
   providers: [
-    UtilService
+    UtilService,
+    ConfigService
   ]
 })
 export class TeacherAngularJSModule {
