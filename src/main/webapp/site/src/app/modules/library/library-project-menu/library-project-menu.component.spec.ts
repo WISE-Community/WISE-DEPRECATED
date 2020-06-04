@@ -2,7 +2,7 @@ import {async, ComponentFixture, fakeAsync, TestBed} from '@angular/core/testing
 import { LibraryProjectMenuComponent } from "./library-project-menu.component";
 import { TeacherService } from "../../../teacher/teacher.service";
 import { Project } from "../../../domain/project";
-import { MatDialog } from "@angular/material/dialog";
+import { MatDialogModule } from "@angular/material/dialog";
 import { MatMenuModule } from '@angular/material/menu';
 import { UserService } from "../../../services/user.service";
 import { User } from "../../../domain/user";
@@ -50,13 +50,12 @@ describe('LibraryProjectMenuComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ MatMenuModule ],
+      imports: [ MatMenuModule, MatDialogModule ],
       declarations: [ LibraryProjectMenuComponent ],
       providers: [
         { provide: TeacherService, useClass: MockTeacherService },
         { provide: UserService, useClass: MockUserService },
-        { provide: ConfigService, useClass: MockConfigService },
-        { provide: MatDialog }
+        { provide: ConfigService, useClass: MockConfigService }
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })

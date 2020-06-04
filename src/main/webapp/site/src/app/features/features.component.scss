@@ -3,12 +3,14 @@
   '~style/abstracts/mixins',
   '~style/abstracts/variables';
 
-@mixin feature-styles($radius: $feature-border-radius, $elevation: 6) {
-  border-radius: $radius;
-  @include mat-elevation($elevation);
-  overflow: hidden;
+@mixin feature-styles() {
   width: 100%;
   height: auto;
+}
+
+@mixin feature-styles-img($radius: $feature-border-radius, $elevation: 6) {
+  border-radius: $radius;
+  @include mat-elevation($elevation);
 }
 
 .section {
@@ -19,7 +21,8 @@
 
 .features__intro {
   $intro-border-radius: 70% 40% 60% 40%;
-  @include feature-styles($intro-border-radius, 0);
+  @include feature-styles();
+  @include feature-styles-img($intro-border-radius, 0);
 
   @media (min-width: breakpoint('sm.min')) {
     margin-top: -64px;
@@ -51,7 +54,6 @@
 .features__tech:nth-child(1) {
   grid-column: 3 / span 4;
   grid-row: 1 / span 3;
-  border: 2px solid #ffffff;
 }
 
 .features__tech:nth-child(2) {
@@ -67,7 +69,6 @@
 .features__tech:nth-child(4) {
   grid-column: 2 / span 5;
   grid-row: 4 / span 3;
-  border: 2px solid #ffffff;
 }
 
 .features__teachers {
@@ -89,6 +90,10 @@
 
 .features__standard, .features__tech, .features__teacher {
   @include feature-styles();
+
+  & img {
+    @include feature-styles-img();
+  }
 }
 
 .feature--r {

@@ -20,7 +20,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { SharedModule } from "../modules/shared/shared.module";
 import { ContactFormComponent } from './contact-form/contact-form.component';
-//import { RecaptchaModule, RecaptchaFormsModule } from 'ng-recaptcha';
+import { RecaptchaModule, RecaptchaFormsModule } from 'ng-recaptcha';
 
 const materialModules = [
   MatAutocompleteModule,
@@ -49,8 +49,8 @@ const materialModules = [
     ReactiveFormsModule,
     SharedModule,
     materialModules,
-    //RecaptchaModule.forRoot(),
-    //RecaptchaFormsModule
+    RecaptchaModule,
+    RecaptchaFormsModule
   ],
   declarations: [
     ContactFormComponent

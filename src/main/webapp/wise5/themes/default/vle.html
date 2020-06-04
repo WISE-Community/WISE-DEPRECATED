@@ -3,10 +3,6 @@
 <link rel="stylesheet" href="/wise5/lib/hopscotch/dist/css/hopscotch.min.css" />
 <link rel="stylesheet" href="/wise5/themes/default/style/angular-material.css" />
 <link rel="stylesheet" href="/wise5/themes/default/style/vle.css" />
-<script src="/wise5/lib/bootstrap/js/bootstrap.min.js"></script>
-<script src="/wise5/lib/summernote/dist/summernote.min.js"></script>
-<script src="/wise5/lib/summernoteExtensions/summernote-ext-addNote.js"></script>
-<script src="/wise5/lib/summernoteExtensions/summernote-ext-print.js"></script>
 <disable-delete-keypress>
     <listen-for-delete-keypress>
         <div ng-controller="ThemeController as themeCtrl" role="main" layout="column" layout-fill
@@ -18,6 +14,9 @@
             <md-content id="content" flex role="main" ui-scrollpoint-target
                         ng-class="{'l-nav': themeCtrl.layoutState === 'nav', 'l-node': themeCtrl.layoutState === 'node'}" layout="column">
                 <div id="nav" ng-include="::vleController.themePath + '/navigation/navigation.html'" ng-show="themeCtrl.layoutState === 'nav'"></div>
+                <div ng-if="themeCtrl.isEndedAndLocked" style="color: red; display: flex; justify-content: center; align-items: center; height: 30px;">
+                  <span style="border: 1px solid black; border-radius: 3px; padding-left: 8px; padding-right: 8px; background-color: white;">{{ themeCtrl.endedAndLockedMessage }}</span>
+                </div>
                 <div id="node" ng-cloak ui-view="nodeView" ng-if="themeCtrl.layoutState === 'node'"></div>
             </md-content>
             <global-annotations></global-annotations>

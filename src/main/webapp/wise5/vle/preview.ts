@@ -1,11 +1,12 @@
 'use strict';
 
-import 'jquery';
+import '../lib/jquery/jquery-global';
+import '../lib/bootstrap/js/bootstrap.min'
 import AchievementService from '../services/achievementService';
 import * as angular from 'angular';
+import { downgradeInjectable } from '@angular/upgrade/static';
 import * as angularDragula from 'angular-dragula';
 import 'ng-file-upload';
-import '../lib/highcharts/highcharts-ng';
 import 'angular-material';
 import 'angular-moment';
 import 'ng-onload';
@@ -19,7 +20,6 @@ import 'angular-ui-scrollpoint';
 import '../components/animation/animationComponentModule';
 import AnnotationService from '../services/annotationService';
 import '../components/audioOscillator/audioOscillatorComponentModule';
-import bootstrap from 'bootstrap';
 import * as canvg from 'canvg';
 import '../components/conceptMap/conceptMapComponentModule';
 import ConfigService from '../services/configService';
@@ -29,12 +29,20 @@ import ComponentService from '../components/componentService';
 import '../components/discussion/discussionComponentModule';
 import '../components/draw/drawComponentModule';
 import '../components/embedded/embeddedComponentModule';
-import Fabric from 'fabric';
-import * as Hopscotch from '../lib/hopscotch/dist/js/hopscotch.min';
+import * as fabric from 'fabric';
+window['fabric'] = fabric.fabric
 import Filters from '../filters/filters';
-import * as Highcharts from '../lib/highcharts@4.2.1';
+import '../lib/highcharts/highcharts-ng';
+import * as Highcharts from '../../wise5/lib/highcharts/highcharts.src';
+import '../../wise5/lib/draggable-points/draggable-points';
+import * as HighchartsExporting from '../../wise5/lib/highcharts-exporting@4.2.1';
+import * as covariance from 'compute-covariance';
+window['Highcharts'] = Highcharts;
+window['HighchartsExporting'] = HighchartsExporting;
+window['covariance'] = covariance;
 import '../components/graph/graphComponentModule';
-import hopscotch from 'hopscotch';
+import * as hopscotch from 'hopscotch';
+window['hopscotch'] = hopscotch;
 import '../components/html/htmlComponentModule';
 import HttpInterceptor from '../services/httpInterceptor';
 import '../components/label/labelComponentModule';
@@ -57,14 +65,18 @@ import StudentStatusService from '../services/studentStatusService';
 import StudentWebSocketService from '../services/studentWebSocketService';
 import '../components/summary/summaryComponentModule';
 import '../components/table/tableComponentModule';
-import UtilService from '../services/utilService';
+import { UtilService } from '../services/utilService';
 import VLEController from './vleController';
 import VLEProjectService from './vleProjectService';
 import * as moment from 'moment';
-import SockJS from 'sockjs-client';
-import * as Stomp from '@stomp/stompjs';
-import '../lib/summernote/dist/summernote';
-import '../lib/angular-summernote/dist/angular-summernote';
+import * as SockJS from 'sockjs-client';
+import * as StompJS from '@stomp/stompjs';
+window['SockJS'] = SockJS;
+window['Stomp'] = StompJS.Stomp;
+import '../lib/summernote/dist/summernote.min';
+import '../lib/angular-summernote/dist/angular-summernote.min';
+import '../lib/summernoteExtensions/summernote-ext-addNote.js';
+import '../lib/summernoteExtensions/summernote-ext-print.js'
 import '../themes/default/theme';
 
 export default angular
@@ -119,7 +131,7 @@ export default angular
   .service('StudentDataService', StudentDataService)
   .service('StudentStatusService', StudentStatusService)
   .service('StudentWebSocketService', StudentWebSocketService)
-  .service('UtilService', UtilService)
+  .factory('UtilService', downgradeInjectable(UtilService))
   .controller('NavigationController', NavigationController)
   .controller('NodeController', NodeController)
   .controller('VLEController', VLEController)
@@ -230,15 +242,6 @@ export default angular
               'project',
               (AchievementService, studentData, config, project) => {
                 return AchievementService.retrieveStudentAchievements();
-              }
-            ],
-            notifications: [
-              'NotificationService',
-              'studentData',
-              'config',
-              'project',
-              (NotificationService, studentData, config, project) => {
-                return NotificationService.retrieveNotifications();
               }
             ],
             runStatus: [

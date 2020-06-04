@@ -2,7 +2,7 @@
 
 import ClassroomMonitorProjectService from '../../../classroomMonitorProjectService';
 import AchievementService from '../../../../services/achievementService';
-import UtilService from '../../../../services/utilService';
+import { UtilService } from '../../../../services/utilService';
 
 class MilestoneDetailsController {
   $translate: any;

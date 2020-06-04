@@ -543,8 +543,8 @@
     <div>
       <h5>{{ ::'studentPreview' | translate }}</h5>
     </div>
-    <div ng-switch='::conceptMapController.mode'>
-      <div ng-switch-default>
+    <div>
+      <div>
         <md-input-container class='input-container md-block input-container--open-response input-container--component md-no-float'>
           <label class='input-label md-no-float'
                  ng-disabled='conceptMapController.isDisabled'
@@ -689,8 +689,5 @@
         </span>
       </span>
     </div>
-    <component-annotations annotations='conceptMapController.latestAnnotations'
-                           max-score='conceptMapController.componentContent.maxScore'>
-    </component-annotations>
   </div>
 </div>

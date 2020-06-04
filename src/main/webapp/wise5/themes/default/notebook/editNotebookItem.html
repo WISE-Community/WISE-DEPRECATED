@@ -28,6 +28,8 @@
                  ngf-drop
                  ngf-select
                  ngf-change="editNotebookItemController.attachStudentAssetToNote($files)"
+                 ngf-resize="{quality: .8, width: 1000, height: 1000, pattern:'image/*', restoreExif: true}"
+                 ngf-resize-if="$width > 1000 || $height > 1000"
                  class="notebook-item__upload"
                  drag-over-class="dragover" allow-dir="false"
                  accept="image/*,application/pdf,text/csv">
@@ -35,7 +37,7 @@
             </div>
             <div class="notebook-item__info md-caption">
                 <md-icon> place </md-icon>
-                <wiselink type="link"
+                <wiselink type="link" disable="!editNotebookItemController.isEditMode"
                           node-id="{{editNotebookItemController.getItemNodeId()}}"
                           link-text="{{editNotebookItemController.getItemNodeLink()}}"
                           link-class="md-caption"></wiselink>

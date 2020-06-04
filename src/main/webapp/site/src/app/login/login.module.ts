@@ -6,7 +6,7 @@ import { LoginHomeComponent } from "./login-home/login-home.component";
 import { LoginRoutingModule } from "./login-routing.module";
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-//import { RecaptchaModule, RecaptchaFormsModule } from 'ng-recaptcha';
+import { RecaptchaModule, RecaptchaFormsModule } from 'ng-recaptcha';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
@@ -31,8 +31,8 @@ const materialModules = [
     LoginRoutingModule,
     ReactiveFormsModule,
     materialModules,
-    //RecaptchaModule.forRoot(),
-    //RecaptchaFormsModule
+    RecaptchaModule,
+    RecaptchaFormsModule
   ],
   declarations: [
     LoginComponent,

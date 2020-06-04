@@ -3,7 +3,7 @@
 import ConfigService from '../../services/configService';
 import AuthoringToolProjectService from '../authoringToolProjectService';
 import SpaceService from '../../services/spaceService';
-import UtilService from '../../services/utilService';
+import { UtilService } from '../../services/utilService';
 
 class AuthorNotebookController {
   $translate: any;
@@ -114,14 +114,14 @@ class AuthorNotebookController {
         disableDragAndDrop: true,
         buttons: {
           insertAssetButton: this.UtilService.createInsertAssetButton(
-            this,
             this.projectId,
             null,
             null,
             note.reportId,
             this.$translate('INSERT_ASSET')
           )
-        }
+        },
+        dialogsInBody: true
       }
     };
     this.setReportIdToAuthoringNote(note.reportId, authoringReportNote);

@@ -151,6 +151,10 @@ public class AuthorAPIController {
         ModelAndView wise5AuthoringView = new ModelAndView(
             new RedirectView("../teacher/edit/unit/" + projectIdStr));
         return wise5AuthoringView;
+      } else if (project.getWiseVersion().equals(4)) {
+        ModelAndView wise4AuthoringView = new ModelAndView(
+            new RedirectView("/legacy/author/authorproject.html?projectId=" + projectIdStr));
+        return wise4AuthoringView;
       }
     }
     return null;
@@ -388,10 +392,11 @@ public class AuthorAPIController {
       config.put("saveProjectURL", contextPath + "/author/project/save/" + projectId);
       config.put("commitProjectURL", contextPath + "/project/commit/" + projectId);
     }
-    List<Run> runsOwnedByUser = runService.getRunListByOwner(user);
-    Long runId = getRunId(projectId, runsOwnedByUser);
-    if (runId != null) {
-      config.put("runId", runId);
+    List<Run> projectRuns = runService.getProjectRuns(projectId);
+    if (projectRuns.size() > 0) {
+      Run projectRun = projectRuns.get(0);
+      config.put("canGradeStudentWork", runService.isAllowedToGradeStudentWork(projectRun, user));
+      config.put("runId", projectRun.getId());
     }
     return config;
   }

@@ -1,6 +1,6 @@
 import { APP_INITIALIZER, NgModule, TRANSLATIONS, LOCALE_ID, TRANSLATIONS_FORMAT,
   MissingTranslationStrategy } from '@angular/core';
-//import { I18n, MISSING_TRANSLATION_STRATEGY } from '@ngx-translate/i18n-polyfill';
+import { I18n, MISSING_TRANSLATION_STRATEGY } from '@ngx-translate/i18n-polyfill';
 import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -67,7 +67,7 @@ export function getAuthServiceConfigs(configService: ConfigService) {
 
 declare const require;
 export function translationsFactory(locale: string) {
-  return require(`raw-loader!../locale/messages.xlf`);
+  return require(`raw-loader!../locale/messages.xlf`).default;
 }
 
 @NgModule({
@@ -117,7 +117,7 @@ export function translationsFactory(locale: string) {
     },
     { provide: TRANSLATIONS_FORMAT, useValue: 'xlf' },
     //{ provide: MISSING_TRANSLATION_STRATEGY, useValue: MissingTranslationStrategy.Ignore },
-    //I18n,
+    I18n,
     {
       provide: APP_INITIALIZER,
       useFactory: initialize,

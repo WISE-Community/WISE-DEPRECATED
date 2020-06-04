@@ -46,6 +46,7 @@
     border: 0 none;
     background-color: #ffffff;
     max-width: 100%;
+    overflow: auto;
 
     th, td {
         padding: 0 4px;
@@ -67,6 +68,10 @@
             font-weight: normal;
         }
     }
+}
+
+.table--list__wrap {
+    min-width: $layout-breakpoint-xs;
 }
 
 .table-wrap-sticky {

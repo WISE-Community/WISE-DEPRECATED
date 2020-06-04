@@ -1,55 +1,72 @@
 'use strict';
 
 class WiselinkController {
-    constructor($scope,
-                StudentDataService,
-                $timeout) {
-        this.$scope = $scope;
-        this.StudentDataService = StudentDataService;
-        this.$timeout = $timeout;
+  constructor($scope,
+              StudentDataService,
+              $timeout) {
+    this.$scope = $scope;
+    this.StudentDataService = StudentDataService;
+    this.$timeout = $timeout;
+    this.template;
+  }
+
+  $onInit() {
+    if (this.type === 'button') {
+      this.template = 'button';
+    } else {
+      if (this.disable) {
+        this.template = 'text';
+      } else {
+        this.template = 'link';
+      }
     }
+  }
 
-    scrollAndHighlightComponent() {
-        this.$timeout(() => {
-            let componentElement = $("#" + this.componentId);
-            let originalBg = componentElement.css("backgroundColor");  // save the original background image
-            componentElement.css("background-color", "#FFFF9C");  // highlight the background briefly to draw attention to it
+  scrollAndHighlightComponent() {
+    this.$timeout(() => {
+      const componentElement = $("#" + this.componentId);
+      const originalBg = componentElement.css("backgroundColor");  // save the original background image
+      componentElement.css("background-color", "#FFFF9C");  // highlight the background briefly to draw attention to it
 
-            // scroll to the component
-            $('#content').animate({
-                scrollTop: componentElement.prop("offsetTop")
-            }, 1000);
+      // scroll to the component
+      $('#content').animate({
+        scrollTop: componentElement.prop("offsetTop")
+      }, 1000);
 
-            // slowly fade back to original background color
-            componentElement.css({
-                transition: 'background-color 3s ease-in-out',
-                "background-color": originalBg
-            });
+      // slowly fade back to original background color
+      componentElement.css({
+        transition: 'background-color 3s ease-in-out',
+        "background-color": originalBg
+      });
 
-            // we need this to remove the transition animation so the highlight works again next time
-            this.$timeout(() => {
-               componentElement.css("transition", "");
-            }, 4000);
-        }, 500);
+      // we need this to remove the transition animation so the highlight works again next time
+      this.$timeout(() => {
+        componentElement.css("transition", "");
+      }, 4000);
+    }, 500);
+  }
+
+  follow() {
+    const currentNode = this.StudentDataService.getCurrentNode();
+    if (this.isLinkToComponentInStep(currentNode)) {
+      this.scrollAndHighlightComponent();
+    } else {
+      this.goToNode(currentNode);
     }
+  }
 
-    follow() {
-        let currentNode = this.StudentDataService.getCurrentNode();
-        if (currentNode != null && currentNode.id === this.nodeId && this.componentId != null) {
-            // this is a link to the component in this current step
-            this.scrollAndHighlightComponent();
-        } else {
-            this.$scope.$on('currentNodeChanged', (event, args) => {
-                let currentNode = this.StudentDataService.getCurrentNode();
+  isLinkToComponentInStep(currentNode) {
+    return currentNode != null && currentNode.id === this.nodeId && this.componentId != null;
+  }
 
-                // if componentId is also specified in this wiselink, scroll to it
-                if (this.componentId != null && currentNode != null && currentNode.id === this.nodeId) {
-                    this.scrollAndHighlightComponent();
-                }
-            });
-            this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(this.nodeId);
-        }
-    }
+  goToNode(currentNode) {
+    this.$scope.$on('currentNodeChanged', (event, args) => {
+      if (this.componentId != null && currentNode != null && currentNode.id === this.nodeId) {
+        this.scrollAndHighlightComponent();
+      }
+    });
+    this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(this.nodeId);
+  }
 }
 
 WiselinkController.$inject = ['$scope', 'StudentDataService', '$timeout'];
@@ -59,17 +76,18 @@ WiselinkController.$inject = ['$scope', 'StudentDataService', '$timeout'];
  * another step or activity in the project.
  */
 const Wiselink = {
-    bindings: {
-        nodeId: '@',
-        componentId: '@',
-        linkText: '@',
-        tooltip: '@',
-        linkClass: '@',
-        type: '@'
-    },
-    templateUrl: 'wise5/directives/wiselink/wiselink.html',
-    controller: WiselinkController,
-    controllerAs: 'wiselinkCtrl'
+  bindings: {
+    nodeId: '@',
+    componentId: '@',
+    disable: '<',
+    linkText: '@',
+    tooltip: '@',
+    linkClass: '@',
+    type: '@'
+  },
+  templateUrl: 'wise5/directives/wiselink/wiselink.html',
+  controller: WiselinkController,
+  controllerAs: 'wiselinkCtrl'
 };
 
 export default Wiselink;

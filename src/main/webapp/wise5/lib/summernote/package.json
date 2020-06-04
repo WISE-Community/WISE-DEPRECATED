@@ -21,6 +21,7 @@
     "bootstrap": "^3.3.7"
   },
   "devDependencies": {
+    "@angular-builders/custom-webpack": "^9.1.0",
     "chai": "^3.2.0",
     "chai-spies": "^0.7.1",
     "grunt": "*",
@@ -51,6 +52,7 @@
     "karma-sauce-launcher": "^1.1.0",
     "load-grunt-tasks": "3.5.2",
     "mocha": "^3.2.0",
+    "moment-locales-webpack-plugin": "^1.2.0",
     "open": "0.0.5",
     "phantomjs": "^2.1.7",
     "requirejs": "^2.1.22"

@@ -4,8 +4,9 @@ import { fakeAsyncResponse } from "../../../student/student-run-list/student-run
 import { LibraryService } from "../../../services/library.service";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { LibraryGroup } from "../libraryGroup";
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { BehaviorSubject } from 'rxjs';
+import { OverlayModule } from '@angular/cdk/overlay';
 
 export class MockLibraryService {
   libraryGroupsSource$ = fakeAsyncResponse({});
@@ -26,11 +27,10 @@ describe('OfficialLibraryComponent', () => {
   let fixture: ComponentFixture<OfficialLibraryComponent>;
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [],
+      imports: [ OverlayModule, MatDialogModule ],
       declarations: [ OfficialLibraryComponent ],
       providers: [
-        { provide: LibraryService, useClass: MockLibraryService },
-        { provide: MatDialog }
+        { provide: LibraryService, useClass: MockLibraryService }
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })

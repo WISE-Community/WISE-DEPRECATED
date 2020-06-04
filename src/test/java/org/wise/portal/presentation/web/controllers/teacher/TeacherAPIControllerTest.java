@@ -150,8 +150,8 @@ public class TeacherAPIControllerTest extends APIControllerTest {
     String displayName = "Mr. Squid";
     TeacherUserDetails tud = (TeacherUserDetails) teacher1.getUserDetails();
     SimpleResponse response = teacherAPIController.updateProfile(teacherAuth, displayName,
-        tud.getEmailAddress(), tud.getCity(), tud.getState(), tud.getCountry(),
-        tud.getSchoolname(), tud.getSchoollevel().toString(), tud.getLanguage());
+        tud.getEmailAddress(), tud.getCity(), tud.getState(), tud.getCountry(), tud.getSchoolname(),
+        tud.getSchoollevel().toString(), tud.getLanguage());
     assertEquals("success", response.getStatus());
     verify(userService);
   }
@@ -167,8 +167,8 @@ public class TeacherAPIControllerTest extends APIControllerTest {
     expectGetRunMapToBeCalled();
     replay(projectService);
     Integer newMaxStudentsPerTeam = 1;
-    HashMap<String, Object> response = teacherAPIController.editRunStudentsPerTeam(
-        teacherAuth, runId1, newMaxStudentsPerTeam);
+    HashMap<String, Object> response = teacherAPIController.editRunStudentsPerTeam(teacherAuth,
+        runId1, newMaxStudentsPerTeam);
     assertEquals("error", response.get("status"));
     assertEquals("notAllowedToDecreaseMaxStudentsPerTeam", response.get("messageCode"));
     verify(userService);
@@ -189,8 +189,8 @@ public class TeacherAPIControllerTest extends APIControllerTest {
     replay(runService);
     expectGetRunMapToBeCalled();
     replay(projectService);
-    HashMap<String, Object> response = teacherAPIController.editRunStudentsPerTeam(
-        teacherAuth, runId1, newMaxStudentsPerTeam);
+    HashMap<String, Object> response = teacherAPIController.editRunStudentsPerTeam(teacherAuth,
+        runId1, newMaxStudentsPerTeam);
     assertEquals("success", response.get("status"));
     verify(userService);
     verify(runService);
@@ -215,16 +215,16 @@ public class TeacherAPIControllerTest extends APIControllerTest {
   }
 
   @Test
-  public void deletePeriodFromRun_PeriodWithMembers_ReturnError() throws ObjectNotFoundException,
-      PeriodNotFoundException {
+  public void deletePeriodFromRun_PeriodWithMembers_ReturnError()
+      throws ObjectNotFoundException, PeriodNotFoundException {
     expect(userService.retrieveUserByUsername(TEACHER_USERNAME)).andReturn(teacher1);
     replay(userService);
     expect(runService.retrieveById(runId1)).andReturn(run1);
     replay(runService);
     expectGetRunMapToBeCalled();
     replay(projectService);
-    HashMap<String, Object> response = teacherAPIController.deletePeriodFromRun(
-        teacherAuth, runId1, RUN1_PERIOD1_NAME);
+    HashMap<String, Object> response = teacherAPIController.deletePeriodFromRun(teacherAuth, runId1,
+        RUN1_PERIOD1_NAME);
     assertEquals("error", response.get("status"));
     assertEquals("notAllowedToDeletePeriodWithStudents", response.get("messageCode"));
     verify(userService);
@@ -233,8 +233,8 @@ public class TeacherAPIControllerTest extends APIControllerTest {
   }
 
   @Test
-  public void deletePeriodFromRun_PeriodWithNoMembers_DeletePeriod() throws ObjectNotFoundException,
-      PeriodNotFoundException {
+  public void deletePeriodFromRun_PeriodWithNoMembers_DeletePeriod()
+      throws ObjectNotFoundException, PeriodNotFoundException {
     expect(userService.retrieveUserByUsername(TEACHER_USERNAME)).andReturn(teacher1);
     replay(userService);
     expect(runService.retrieveById(runId1)).andReturn(run1);
@@ -242,8 +242,8 @@ public class TeacherAPIControllerTest extends APIControllerTest {
     replay(runService);
     expectGetRunMapToBeCalled();
     replay(projectService);
-    HashMap<String, Object> response = teacherAPIController.deletePeriodFromRun(
-        teacherAuth, runId1, RUN1_PERIOD2_NAME);
+    HashMap<String, Object> response = teacherAPIController.deletePeriodFromRun(teacherAuth, runId1,
+        RUN1_PERIOD2_NAME);
     assertEquals("success", response.get("status"));
     verify(userService);
     verify(runService);
@@ -258,8 +258,8 @@ public class TeacherAPIControllerTest extends APIControllerTest {
     replay(runService);
     expectGetRunMapToBeCalled();
     replay(projectService);
-    HashMap<String, Object> response = teacherAPIController.addPeriodToRun(
-        teacherAuth, runId1, RUN1_PERIOD2_NAME);
+    HashMap<String, Object> response = teacherAPIController.addPeriodToRun(teacherAuth, runId1,
+        RUN1_PERIOD2_NAME);
     assertEquals("error", response.get("status"));
     assertEquals("periodNameAlreadyExists", response.get("messageCode"));
     verify(userService);
@@ -278,8 +278,8 @@ public class TeacherAPIControllerTest extends APIControllerTest {
     replay(runService);
     expectGetRunMapToBeCalled();
     replay(projectService);
-    HashMap<String, Object> response = teacherAPIController.addPeriodToRun(
-        teacherAuth, runId1, newPeriodName);
+    HashMap<String, Object> response = teacherAPIController.addPeriodToRun(teacherAuth, runId1,
+        newPeriodName);
     assertEquals("success", response.get("status"));
     verify(userService);
     verify(runService);
@@ -299,25 +299,24 @@ public class TeacherAPIControllerTest extends APIControllerTest {
     Integer maxStudentsPerTeam = 3;
     Long startDate = Calendar.getInstance().getTimeInMillis();
     Long endDate = null;
+    Boolean isLockedAfterEndDate = false;
     Set<String> periodNamesSet = new HashSet<String>();
     periodNamesSet.add("1");
     periodNamesSet.add("2");
     periodNamesSet.add("free");
-    expect(runService.createRun(projectId, teacher1, periodNamesSet, maxStudentsPerTeam,
-        startDate, endDate, Locale.US)).andReturn(run1);
+    expect(runService.createRun(projectId, teacher1, periodNamesSet, maxStudentsPerTeam, startDate,
+        endDate, isLockedAfterEndDate, Locale.US)).andReturn(run1);
     replay(runService);
-    teacherAPIController.createRun(teacherAuth, request, projectId, periods,
-        maxStudentsPerTeam, startDate, endDate);
+    teacherAPIController.createRun(teacherAuth, request, projectId, periods, maxStudentsPerTeam,
+        startDate, endDate, isLockedAfterEndDate);
     verify(userService);
     verify(request);
     verify(projectService);
     verify(runService);
   }
 
-
   @Test
-  public void createTeacherAccount_WithGoogleUserId_CreateUser()
-      throws DuplicateUsernameException {
+  public void createTeacherAccount_WithGoogleUserId_CreateUser() throws DuplicateUsernameException {
     HashMap<String, String> teacherFields = createDefaultTeacherFields();
     teacherFields.put("googleUserId", "123456789");
     expect(request.getLocale()).andReturn(Locale.US);
@@ -328,6 +327,60 @@ public class TeacherAPIControllerTest extends APIControllerTest {
     assertEquals(TEACHER_USERNAME, username);
     verify(request);
     verify(userService);
+  }
+
+  @Test
+  public void editRunEndTime_WithNullEndTime_ChangeEndTime() throws ObjectNotFoundException {
+    expect(userService.retrieveUserByUsername(teacherAuth.getName())).andReturn(teacher1);
+    replay(userService);
+    expect(runService.retrieveById(runId1)).andReturn(run1);
+    runService.setEndTime(runId1, null);
+    expectLastCall();
+    replay(runService);
+    expect(appProperties.getProperty("curriculum_base_www"))
+        .andReturn("http://localhost:8080/curriculum");
+    replay(appProperties);
+    expectGetRunMapToBeCalled();
+    replay(projectService);
+    teacherAPIController.editRunEndTime(teacherAuth, runId1, null);
+    verify(userService);
+    verify(runService);
+  }
+
+  @Test
+  public void editRunIsLockedAfterEndDate_WithTrue_ChangeValue() throws ObjectNotFoundException {
+    expect(userService.retrieveUserByUsername(teacherAuth.getName())).andReturn(teacher1);
+    replay(userService);
+    expect(runService.retrieveById(runId1)).andReturn(run1);
+    runService.setIsLockedAfterEndDate(runId1, true);
+    expectLastCall();
+    replay(runService);
+    expect(appProperties.getProperty("curriculum_base_www"))
+        .andReturn("http://localhost:8080/curriculum");
+    replay(appProperties);
+    expectGetRunMapToBeCalled();
+    replay(projectService);
+    teacherAPIController.editRunIsLockedAfterEndDate(teacherAuth, runId1, true);
+    verify(userService);
+    verify(runService);
+  }
+
+  @Test
+  public void editRunIsLockedAfterEndDate_WithFalse_ChangeValue() throws ObjectNotFoundException {
+    expect(userService.retrieveUserByUsername(teacherAuth.getName())).andReturn(teacher1);
+    replay(userService);
+    expect(runService.retrieveById(runId1)).andReturn(run1);
+    runService.setIsLockedAfterEndDate(runId1, false);
+    expectLastCall();
+    replay(runService);
+    expect(appProperties.getProperty("curriculum_base_www"))
+        .andReturn("http://localhost:8080/curriculum");
+    replay(appProperties);
+    expectGetRunMapToBeCalled();
+    replay(projectService);
+    teacherAPIController.editRunIsLockedAfterEndDate(teacherAuth, runId1, false);
+    verify(userService);
+    verify(runService);
   }
 
   private HashMap<String, String> createDefaultTeacherFields() {
@@ -343,11 +396,11 @@ public class TeacherAPIControllerTest extends APIControllerTest {
 
   private void expectGetRunMapToBeCalled() {
     expect(projectService.getProjectPath(isA(Project.class))).andReturn("/1/project.json");
-    expect(projectService.getProjectSharedOwnersList(isA(Project.class))).andReturn(
-        new ArrayList<HashMap<String, Object>>());
-    expect(projectService.getProjectURI(isA(Project.class))).andReturn(
-        "http://localhost:8080/curriculum/1/project.json");
-    expect(projectService.getLicensePath(isA(Project.class))).andReturn(
-        "http://localhost:8080/curriculum/1/license.txt");
+    expect(projectService.getProjectSharedOwnersList(isA(Project.class)))
+        .andReturn(new ArrayList<HashMap<String, Object>>());
+    expect(projectService.getProjectURI(isA(Project.class)))
+        .andReturn("http://localhost:8080/curriculum/1/project.json");
+    expect(projectService.getLicensePath(isA(Project.class)))
+        .andReturn("http://localhost:8080/curriculum/1/license.txt");
   }
 }

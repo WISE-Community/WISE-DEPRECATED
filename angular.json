@@ -19,9 +19,13 @@
       "projectType": "application",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-builders/custom-webpack:browser",
           "options": {
             "aot": true,
+            "customWebpackConfig": {
+              "path": "./custom-webpack.config.js",
+              "replaceDuplicatePlugins": true
+            },
             "outputPath": "src/main/webapp/site/dist",
             "index": "src/main/webapp/site/src/index.html",
             "main": "src/main/webapp/site/src/main.ts",

@@ -3,7 +3,7 @@
 import * as $ from 'jquery';
 import * as angular from 'angular';
 import ConfigService from './configService';
-import UtilService from './utilService';
+import { UtilService } from './utilService';
 
 class ProjectService {
   $translate: any;
@@ -836,7 +836,7 @@ class ProjectService {
     return this.project.startNodeId === nodeId;
   }
 
-  getConstraintsForNode(node) {
+  getConstraintsThatAffectNode(node) {
     const constraints = [];
     const allConstraints = this.activeConstraints;
     for (let constraint of allConstraints) {
@@ -5251,6 +5251,32 @@ class ProjectService {
     return this.$http(httpParams).then(result => {
       return result.data;
     });
+  }
+
+  replaceComponent(nodeId, componentId, component) {
+
+  }
+
+  retrieveScript(scriptFilename) {
+    const deferred = this.$q.defer();
+    deferred.resolve({});
+    return deferred.promise;
+  }
+
+  getGlobalAnnotationGroupByScore(component, previousScore, currentScore) {
+
+  }
+
+  getNotificationByScore(component, previousScore, currentScore) {
+
+  }
+
+  isConnectedComponent(nodeId, componentId, connectedComponentId): boolean {
+    return false;
+  }
+
+  getConnectedComponentParams(componentContent, componentId) {
+    
   }
 }
 

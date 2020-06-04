@@ -1,11 +1,10 @@
 'use strict';
 
 import '../themes/default/js/webfonts';
-import 'jquery';
 import * as angular from 'angular';
+import { downgradeInjectable } from '@angular/upgrade/static';
 import * as angularDragula from 'angular-dragula';
 import 'ng-file-upload';
-import '../lib/highcharts/highcharts-ng';
 import 'angular-ui-router';
 import 'angular-material';
 import 'angular-moment';
@@ -23,7 +22,6 @@ import AuthoringToolController from './authoringToolController';
 import AuthoringToolMainController from './main/authoringToolMainController';
 import AuthoringToolProjectService from './authoringToolProjectService';
 import AuthorNotebookController from './notebook/authorNotebookController';
-import bootstrap from 'bootstrap';
 import '../components/conceptMap/conceptMapAuthoringComponentModule';
 import ConfigService from '../services/configService';
 import CRaterService from '../services/cRaterService';
@@ -33,7 +31,14 @@ import '../components/discussion/discussionAuthoringComponentModule';
 import '../components/draw/drawAuthoringComponentModule';
 import '../components/embedded/embeddedAuthoringComponentModule';
 import '../filters/filters';
-import '../lib/highcharts@4.2.1';
+import '../lib/highcharts/highcharts-ng';
+import * as Highcharts from '../../wise5/lib/highcharts/highcharts.src';
+import '../../wise5/lib/draggable-points/draggable-points';
+import * as HighchartsExporting from '../../wise5/lib/highcharts-exporting@4.2.1';
+import * as covariance from 'compute-covariance';
+window['Highcharts'] = Highcharts;
+window['HighchartsExporting'] = HighchartsExporting;
+window['covariance'] = covariance;
 import '../components/graph/graphAuthoringComponentModule';
 import '../components/html/htmlAuthoringComponentModule';
 import './importStep/importStepModule';
@@ -54,8 +59,10 @@ import ProjectInfoController from './info/projectInfoController';
 import PlanningService from '../services/planningService';
 import RubricAuthoringController from './rubric/rubricAuthoringController';
 import SessionService from '../services/sessionService';
-import SockJS from 'sockjs-client';
-import * as Stomp from '@stomp/stompjs';
+import * as SockJS from 'sockjs-client';
+import * as StompJS from '@stomp/stompjs';
+window['SockJS'] = SockJS;
+window['Stomp'] = StompJS.Stomp;
 import SpaceService from '../services/spaceService';
 import './structure/structureAuthoringModule';
 import StudentAssetService from '../services/studentAssetService';
@@ -66,12 +73,8 @@ import '../components/summary/summaryAuthoringComponentModule';
 import '../components/table/tableAuthoringComponentModule';
 import TeacherDataService from '../services/teacherDataService';
 import TeacherWebSocketService from '../services/teacherWebSocketService';
-import UtilService from '../services/utilService';
+import { UtilService } from '../services/utilService';
 import WISELinkAuthoringController from './wiseLink/wiseLinkAuthoringController';
-import '../lib/summernote/dist/summernote';
-import '../lib/angular-summernote/dist/angular-summernote';
-import '../lib/summernoteExtensions/summernote-ext-addNote.js';
-import '../lib/summernoteExtensions/summernote-ext-print.js';
 import * as moment from 'moment';
 
 const authoringModule = angular
@@ -128,7 +131,7 @@ const authoringModule = angular
   .service('StudentWebSocketService', StudentWebSocketService)
   .service('TeacherDataService', TeacherDataService)
   .service('TeacherWebSocketService', TeacherWebSocketService)
-  .service('UtilService', UtilService)
+  .factory('UtilService', downgradeInjectable(UtilService))
   .controller('AuthoringToolController', AuthoringToolController)
   .controller('AuthoringToolMainController', AuthoringToolMainController)
   .controller('AdvancedAuthoringController', AdvancedAuthoringController)

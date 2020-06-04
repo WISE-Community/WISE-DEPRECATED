@@ -126,6 +126,7 @@ public class UserAPIController {
     String contextPath = request.getContextPath();
     config.put("contextPath", contextPath);
     config.put("currentTime", System.currentTimeMillis());
+    config.put("googleAnalyticsId", appProperties.get("google_analytics_id"));
     config.put("googleClientId", googleClientId);
     config.put("isGoogleClassroomEnabled", isGoogleClassroomEnabled());
     config.put("logOutURL", contextPath + "/logout");
@@ -262,6 +263,7 @@ public class UserAPIController {
     map.put("runCode", run.getRuncode());
     map.put("startTime", run.getStartTimeMilliseconds());
     map.put("endTime", run.getEndTimeMilliseconds());
+    map.put("isLockedAfterEndDate", run.isLockedAfterEndDate());
     map.put("project", getProjectMap(project));
     map.put("owner", convertUserToMap(run.getOwner()));
     map.put("numStudents", run.getNumStudents());

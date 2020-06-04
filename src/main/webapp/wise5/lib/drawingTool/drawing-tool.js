@@ -903,6 +903,10 @@ var $ = jQuery;
 
   'use strict';
 
+  if (global == null) {
+    global = window;
+  }
+  
   var fabric = global.fabric || (global.fabric = { }),
       extend = fabric.util.object.extend;
 
@@ -1182,8 +1186,8 @@ function lineDeselected() {
   // as otherwise control point will remove line as well!
   this._dt_controlPoints[0]._dt_sourceObj = null;
   this._dt_controlPoints[1]._dt_sourceObj = null;
-  this._dt_controlPoints[0].remove();
-  this._dt_controlPoints[1].remove();
+  this.canvas.remove(this._dt_controlPoints[0]);
+  this.canvas.remove(this._dt_controlPoints[1]);
   this._dt_controlPoints = undefined;
   this.hasCustomControlPoints = false;
   this.off('moving');
@@ -1199,7 +1203,7 @@ function lineDeleted() {
   if (!this._dt_controlPoints) return;
   // If there are some, just remove one of them
   // It will cause that the second one will be removed as well.
-  this._dt_controlPoints[0].remove();
+  this.canvas.remove(this._dt_controlPoints[0]);
 }
 
 function controlPointMoved() {
@@ -1222,8 +1226,8 @@ function controlPointDeleted() {
     secondControlPoint = line._dt_controlPoints[1];
   }
   secondControlPoint.line = null;
-  secondControlPoint.remove();
-  line.remove();
+  this.canvas.remove(secondControlPoint);
+  this.canvas.remove(line);
 }
 
 // Helpers
@@ -3765,3 +3769,4 @@ module.exports = {
 // code snippet that is used by Browserify when 'standalone' option is enabled).
 window.DrawingTool = require2('scripts/drawing-tool');
 
+export default DrawingTool;

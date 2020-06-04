@@ -23,6 +23,14 @@ class NodeGradingViewController {
   nodeHasWork: boolean;
   nodeId: string;
   numRubrics: number;
+  sortOrder: object = {
+    'team': ['-isVisible', 'workgroupId'],
+    '-team': ['-isVisible', '-workgroupId'],
+    'status': ['-isVisible', 'completionStatus', 'workgroupId'],
+    '-status': ['-isVisible', '-completionStatus', 'workgroupId'],
+    'score': ['-isVisible', 'score', 'workgroupId'],
+    '-score': ['-isVisible', '-score', 'workgroupId']
+  };
   sort: any;
   teacherWorkgroupId: number;
   workgroupInViewById: any;
@@ -412,34 +420,8 @@ class NodeGradingViewController {
     }
   }
 
-  /**
-   * Checks whether a workgroup should be shown
-   * @param workgroupId the workgroupId to look for
-   * @returns boolean whether the workgroup should be shown
-   */
-  isWorkgroupShown(workgroupId) {
-    let show = false;
-
-    let currentPeriodId = this.getCurrentPeriod().periodId;
-    let workgroup = this.workgroupsById[workgroupId];
-    let periodId = workgroup.periodId;
-
-    if (currentPeriodId === -1 || currentPeriodId === periodId) {
-      // workgroup is in current period
-      let currentWorkgroup = this.TeacherDataService.getCurrentWorkgroup();
-      if (currentWorkgroup) {
-        // there is a currently selected workgroup, so check if this one matches
-        if (currentWorkgroup.workgroupId === parseInt(workgroupId)) {
-          // workgroupIds match, so show this one
-          show = true;
-        }
-      } else {
-        // there is no currently selected workgroup, so show this one
-        show = true;
-      }
-    }
-
-    return show;
+  isWorkgroupShown(workgroup) {
+    return this.TeacherDataService.isWorkgroupShown(workgroup);
   }
 
   showRubric($event) {
@@ -447,28 +429,10 @@ class NodeGradingViewController {
   }
 
   setSort(value) {
-    switch (value) {
-      case 'team':
-        if (this.sort === 'team') {
-          this.sort = '-team';
-        } else {
-          this.sort = 'team';
-        }
-        break;
-      case 'status':
-        if (this.sort === 'status') {
-          this.sort = '-status';
-        } else {
-          this.sort = 'status';
-        }
-        break;
-      case 'score':
-        if (this.sort === 'score') {
-          this.sort = '-score';
-        } else {
-          this.sort = 'score';
-        }
-        break;
+    if (this.sort === value) {
+      this.sort = `-${value}`;
+    } else {
+      this.sort = value;
     }
 
     // update value in the teacher data service so we can persist across view instances and current node changes
@@ -476,30 +440,7 @@ class NodeGradingViewController {
   }
 
   getOrderBy() {
-    let orderBy = [];
-
-    switch (this.sort) {
-      case 'team':
-        orderBy = ['-isVisible', 'workgroupId'];
-        break;
-      case '-team':
-        orderBy = ['-isVisible', '-workgroupId'];
-        break;
-      case 'status':
-        orderBy = ['-isVisible', 'completionStatus', 'workgroupId'];
-        break;
-      case '-status':
-        orderBy = ['-isVisible', '-completionStatus', 'workgroupId'];
-        break;
-      case 'score':
-        orderBy = ['-isVisible', 'score', 'workgroupId'];
-        break;
-      case '-score':
-        orderBy = ['-isVisible', '-score', 'workgroupId'];
-        break;
-    }
-
-    return orderBy;
+    return this.sortOrder[this.sort];
   }
 
   expandAll() {

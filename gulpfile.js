@@ -87,29 +87,6 @@ gulp.task('site-i18n', (cb) => {
   });
 });
 
-gulp.task('transpile', gulp.series(() => {
-  return gulp.watch(['./src/main/webapp/wise5/**/*.es6'])
-    .on('change', (changedFilePath, stats) => {
-    let changedFileDir = '';
-    console.log('changedfilepath:' + changedFilePath);
-    const lastIndexOfForwardSlash = changedFilePath.lastIndexOf('/');
-    if (lastIndexOfForwardSlash > 0) {
-      changedFileDir = changedFilePath.substr(0, lastIndexOfForwardSlash);
-    } else {
-      changedFileDir =
-        changedFilePath.substr(0, changedFilePath.lastIndexOf('\\'));
-    }
-
-    gulp.src(changedFilePath)
-      .pipe(sourcemaps.init())
-      .pipe(babel({ presets: ['@babel/preset-env'] }))
-      .on('error', console.error.bind(console))
-      .pipe(sourcemaps.write('.'))
-      .pipe(gulp.dest(changedFileDir));
-    console.log('transpiled: ' + changedFilePath);
-  });
-}));
-
 // -----------------------------------------------------------------------------
 // merge i18n json files
 // Removes extra keys from foreignLocale
@@ -191,7 +168,7 @@ gulp.task('update-i18n', gulp.series(function() {
 // Default task
 // -----------------------------------------------------------------------------
 
-gulp.task('default', gulp.series('watch-sass', 'transpile'));
+gulp.task('default', gulp.series('watch-sass'));
 
 
 // http://stackoverflow.com/questions/27859691/gulp-handling-multiple-themes-and-folders

@@ -5,7 +5,7 @@ import ConfigService from '../../services/configService';
 import MatchService from '../../components/match/matchService';
 import ClassroomMonitorProjectService from '../classroomMonitorProjectService';
 import TeacherDataService from '../../services/teacherDataService';
-import UtilService from '../../services/utilService';
+import { UtilService } from '../../services/utilService';
 import * as angular from 'angular';
 
 class DataExportController {
@@ -42,6 +42,7 @@ class DataExportController {
     '$filter',
     '$injector',
     '$mdDialog',
+    '$state',
     'AnnotationService',
     'ConfigService',
     'FileSaver',
@@ -55,6 +56,7 @@ class DataExportController {
     $filter: any,
     private $injector: any,
     private $mdDialog: any,
+    private $state: any,
     private AnnotationService: AnnotationService,
     private ConfigService: ConfigService,
     private FileSaver: any,
@@ -3088,6 +3090,10 @@ class DataExportController {
 
   hideDownloadingExportMessage() {
     this.$mdDialog.hide();
+  }
+
+  exportVisitsClicked() {
+    this.$state.go('root.cm.exportVisits');
   }
 }
 

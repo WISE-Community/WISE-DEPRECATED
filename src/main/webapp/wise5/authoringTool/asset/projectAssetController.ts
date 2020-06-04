@@ -1,7 +1,7 @@
 'use strict';
 
 import AuthoringToolProjectService from '../authoringToolProjectService';
-import UtilService from '../../services/utilService';
+import { UtilService } from '../../services/utilService';
 import ConfigService from '../../services/configService';
 import ProjectAssetService from '../../services/projectAssetService';
 import * as $ from 'jquery';
@@ -304,7 +304,7 @@ class ProjectAssetController {
       this.assetIsImage = true;
     } else if (this.UtilService.isVideo(assetFileName)) {
       this.assetIsVideo = true;
-      $('video').load();
+      $('video').load(this.previewAssetURL);
     }
   }
 

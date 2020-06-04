@@ -3,12 +3,14 @@
   '~style/abstracts/mixins',
   '~style/abstracts/variables';
 
-@mixin about-styles($radius: $feature-border-radius, $elevation: 6) {
-  border-radius: $radius;
-  @include mat-elevation($elevation);
-  overflow: hidden;
+@mixin about-styles() {
   width: 100%;
   height: auto;
+}
+
+@mixin about-styles-img($radius: $feature-border-radius, $elevation: 6) {
+  border-radius: $radius;
+  @include mat-elevation($elevation);
 }
 
 .section {
@@ -19,7 +21,8 @@
 
 .about__intro {
   $intro-border-radius: 50% 70% 50% 80%;
-  @include about-styles($intro-border-radius, 0);
+  @include about-styles();
+  @include about-styles-img($intro-border-radius, 0);
 
   @media (min-width: breakpoint('sm.min')) {
     margin-top: -64px;
@@ -34,6 +37,10 @@
 
 .about__research {
   @include about-styles();
+
+  & img {
+    @include about-styles-img();
+  }
 }
 
 .about__research:nth-child(1) {
@@ -57,7 +64,9 @@
 
 .about__pics {
   @include about-styles();
+  @include about-styles-img();
   line-height: 0;
+  overflow: hidden;
 }
 
 .about__pic {

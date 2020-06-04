@@ -7,6 +7,7 @@ import { MatCheckboxModule } from "@angular/material/checkbox";
 import { MatRadioModule } from '@angular/material/radio';
 import { ReactiveFormsModule } from "@angular/forms";
 import { Observable } from 'rxjs';
+import { of } from 'rxjs';
 import { Project } from "../../domain/project";
 import { Run } from "../../domain/run";
 import { NO_ERRORS_SCHEMA } from '@angular/core';
@@ -178,5 +179,47 @@ describe('CreateRunDialogComponent', () => {
     const compiled = fixture.debugElement.nativeElement;
     expect(compiled.textContent).toContain('Dog1234');
     expect(compiled.textContent).toContain('Photosynthesis');
+  });
+
+  it('should create run with locked after end date false', async() => {
+    component.periodsGroup.controls[0].get("checkbox").setValue(true);
+    component.form.controls['isLockedAfterEndDate'].setValue(false);
+    const startDate = new Date();
+    const endDate = new Date(startDate.getTime() + 86400000);
+    component.form.controls['startDate'].setValue(startDate);
+    component.form.controls['endDate'].setValue(endDate);
+    const teacherService = TestBed.get(TeacherService);
+    spyOn(teacherService, 'createRun').and.returnValue(of({}));
+    component.create();
+    expect(teacherService.createRun).toHaveBeenCalledWith(
+        1, '1,', '3', jasmine.any(Number), jasmine.any(Number), false);
+  });
+
+  it('should create run with locked after end date true', async() => {
+    component.periodsGroup.controls[0].get("checkbox").setValue(true);
+    component.form.controls['isLockedAfterEndDate'].setValue(true);
+    const startDate = new Date();
+    const endDate = new Date(startDate.getTime() + 86400000);
+    component.form.controls['startDate'].setValue(startDate);
+    component.form.controls['endDate'].setValue(endDate);
+    const teacherService = TestBed.get(TeacherService);
+    spyOn(teacherService, 'createRun').and.returnValue(of({}));
+    component.create();
+    expect(teacherService.createRun).toHaveBeenCalledWith(
+        1, '1,', '3', jasmine.any(Number), jasmine.any(Number), true);
+  });
+
+  it('should enable locked after end date checkbox', async() => {
+    component.form.controls['endDate'].setValue(null);
+    component.updateLockedAfterEndDateCheckbox();
+    expect(component.form.controls['isLockedAfterEndDate'].value).toEqual(false);
+    expect(component.form.controls['isLockedAfterEndDate'].disabled).toEqual(true);
+  });
+
+  it('should disable locked after end date checkbox', async() => {
+    component.form.controls['endDate'].setValue(new Date());
+    component.updateLockedAfterEndDateCheckbox();
+    expect(component.form.controls['isLockedAfterEndDate'].value).toEqual(false);
+    expect(component.form.controls['isLockedAfterEndDate'].disabled).toEqual(false);
   });
 });

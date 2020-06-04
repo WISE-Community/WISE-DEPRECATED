@@ -3,8 +3,9 @@ import ConfigService from '../../services/configService';
 import NodeService from '../../services/nodeService';
 import VLEProjectService from '../vleProjectService';
 import StudentDataService from '../../services/studentDataService';
-import UtilService from '../../services/utilService';
+import { UtilService } from '../../services/utilService';
 import * as hopscotch from 'hopscotch';
+window['hopscotch'] = hopscotch;
 import * as $ from 'jquery';
 
 class NodeController {
@@ -14,7 +15,9 @@ class NodeController {
   componentToScope: any;
   dirtyComponentIds: any;
   dirtySubmitComponentIds: any;
+  endedAndLockedMessage: string;
   isDisabled: boolean;
+  isEndedAndLocked: boolean;
   logOutListener: any;
   mode: any;
   nodeContent: any;
@@ -83,6 +86,12 @@ class NodeController {
     this.workgroupId = this.ConfigService.getWorkgroupId();
     this.teacherWorkgroupId = this.ConfigService.getTeacherWorkgroupId();
     this.isDisabled = !this.ConfigService.isRunActive();
+
+    this.isEndedAndLocked = this.ConfigService.isEndedAndLocked();
+    if (this.isEndedAndLocked) {
+      const endDate = this.ConfigService.getPrettyEndDate();
+      this.endedAndLockedMessage = this.$translate('endedAndLockedMessage', { endDate: endDate });
+    }
 
     /*
      * an object that holds the mappings with the key being the component
@@ -674,23 +683,13 @@ class NodeController {
    * that needs saving
    */
   createAndSaveComponentData(isAutoSave, componentId = null, isSubmit = null) {
-    return this.createComponentStates(isAutoSave, componentId, isSubmit).then(componentStates => {
-      let componentAnnotations = [];
-      let componentEvents = [];
-      let nodeStates = [];
-      if (this.UtilService.arrayHasNonNullElement(componentStates)) {
-        for (const componentState of componentStates) {
-          if (componentState != null) {
-            let annotations = componentState.annotations;
-            if (annotations != null) {
-              componentAnnotations = componentAnnotations.concat(annotations);
-            }
-            delete componentState.annotations;
-          }
-        }
+    return this.createComponentStates(isAutoSave, componentId, isSubmit)
+        .then(componentStatesFromComponents => {
+      if (this.UtilService.arrayHasNonNullElement(componentStatesFromComponents)) {
+        const { componentStates, componentEvents, componentAnnotations } =
+            this.getDataArraysToSaveFromComponentStates(componentStatesFromComponents);
         return this.StudentDataService.saveToServer(
           componentStates,
-          nodeStates,
           componentEvents,
           componentAnnotations
         ).then(savedStudentDataResponse => {
@@ -735,6 +734,26 @@ class NodeController {
         });
       }
     });
+  }
+
+  getDataArraysToSaveFromComponentStates(componentStates) {
+    return {
+      componentStates: componentStates,
+      componentEvents: [],
+      componentAnnotations: this.getAnnotationsFromComponentStates(componentStates)
+    };
+  }
+
+  getAnnotationsFromComponentStates(componentStates) {
+    const componentAnnotations = [];
+    for (const componentState of componentStates) {
+      const annotations = componentState.annotations;
+      if (annotations != null) {
+        componentAnnotations.push(...annotations);
+      }
+      delete componentState.annotations;
+    }
+    return componentAnnotations;
   }
 
   /**
@@ -787,7 +806,9 @@ class NodeController {
         }
       }
     }
-    return this.$q.all(componentStatePromises);
+    return this.$q.all(componentStatePromises).then((componentStatesFromComponents) => {
+      return componentStatesFromComponents.filter(componentState => componentState != null);
+    });
   }
 
   /**

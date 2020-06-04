@@ -1,6 +1,7 @@
 'use strict';
-import ProjectService from '../services/projectService';
 import * as angular from 'angular';
+import * as $ from 'jquery';
+import ProjectService from '../services/projectService';
 
 class AuthoringToolProjectService extends ProjectService {
   static $inject = [
@@ -458,11 +459,11 @@ class AuthoringToolProjectService extends ProjectService {
       method: 'POST',
       url: this.ConfigService.getConfigParam('importStepsURL'),
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      params: {
+      data: $.param({
         steps: angular.toJson(selectedNodes),
         fromProjectId: fromProjectId,
         toProjectId: toProjectId
-      }
+      })
     };
 
     /*

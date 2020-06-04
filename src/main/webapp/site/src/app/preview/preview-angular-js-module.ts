@@ -5,6 +5,7 @@ import {RouterModule} from '@angular/router';
 import preview from '../../../../wise5/vle/preview';
 import {UpgradeModule} from '@angular/upgrade/static';
 import {setUpLocationSync} from '@angular/router/upgrade';
+import { UtilService } from '../../../../wise5/services/utilService';
 
 @Component({template: ``})
 export class EmptyComponent {}
@@ -18,6 +19,9 @@ export class EmptyComponent {}
     RouterModule.forChild([
       {path: '**', component: EmptyComponent}
     ])
+  ],
+  providers: [
+    UtilService
   ]
 })
 export class PreviewAngularJSModule {

@@ -42,6 +42,7 @@
   "edit": "Edit",
   "editNote": "Edit {{noteLabel}}",
   "editNotebookItem": "Edit Notebook Item",
+  "endedAndLockedMessage": "This unit ended on {{endDate}}. You can no longer save new work.",
   "goHome": "Go Home",
   "hideRubrics": "Hide Rubrics",
   "importClassmateWork": "Import Classmate Work",

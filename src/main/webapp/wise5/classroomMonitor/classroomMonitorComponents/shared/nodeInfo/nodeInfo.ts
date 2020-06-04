@@ -4,7 +4,7 @@ import AnnotationService from '../../../../services/annotationService';
 import ClassroomMonitorProjectService from '../../../classroomMonitorProjectService';
 import SummaryService from '../../../../components/summary/summaryService';
 import TeacherDataService from '../../../../services/teacherDataService';
-import UtilService from '../../../../services/utilService';
+import { UtilService } from '../../../../services/utilService';
 
 class NodeInfoController {
   color: any;

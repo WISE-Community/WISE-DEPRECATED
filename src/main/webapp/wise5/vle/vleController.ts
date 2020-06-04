@@ -42,6 +42,7 @@ class VLEController {
     '$mdMenu',
     '$state',
     '$transitions',
+    '$window',
     'AnnotationService',
     'ConfigService',
     'NotebookService',
@@ -55,11 +56,12 @@ class VLEController {
     private $anchorScroll: any,
     private $scope: any,
     private $rootScope: any,
-    $filter: any,
+    private $filter: any,
     private $mdDialog: any,
     private $mdMenu: any,
     private $state: any,
     private $transitions: any,
+    private $window: any,
     private AnnotationService: AnnotationService,
     private ConfigService: ConfigService,
     private NotebookService: NotebookService,
@@ -75,7 +77,8 @@ class VLEController {
     this.ProjectService = ProjectService;
     this.SessionService = SessionService;
     this.StudentDataService = StudentDataService;
-    this.$translate = $filter('translate');
+    this.$translate = this.$filter('translate');
+    this.$window.onbeforeunload = () => { this.$rootScope.$broadcast('exit'); };
 
     this.workgroupId = this.ConfigService.getWorkgroupId();
     this.currentNode = null;

@@ -3,7 +3,10 @@
   "compilerOptions": {
     "outDir": "../out-tsc/app",
     "baseUrl": "./",
-    "types": []
+    "types": ["jquery"],
+    "paths": {
+      "moment": ["../node_modules/moment/min/moment.min.js"]
+    }
   },
   "files": [
     "main.ts",
@@ -11,5 +14,6 @@
   ],
   "include": [
     "src/main/webapp/site/src/**/*.d.ts"
-  ]
+  ],
+  "exclude": ["test.ts", "**/*.spec.ts"]
 }

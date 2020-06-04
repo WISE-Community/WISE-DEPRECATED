@@ -1,8 +1,11 @@
 <div class="blurb mat-elevation-z3">
-  <img *ngIf="imgSrc"
-       class="blurb__image"
-       src="{{ imgSrc }}"
-       alt="{{ imgDescription }}" />
+  <picture *ngIf="imgSrc">
+    <ng-container *ngFor="let source of imgSources">
+      <source media="{{ source.media }}" sizes="{{ source.sizes }}" src="{{ source.src }}"
+              srcset="{{ source.srcset }}" type="{{ source.type }}">
+    </ng-container>
+    <img class="blurb__image" src="{{ imgSrc }}" alt="{{ imgDescription }}">
+  </picture>
   <hr class="blurb__divider accent-2-bg" />
   <div class="blurb__content">
     <ng-template #defaultHeadline>{{ headline }}</ng-template>

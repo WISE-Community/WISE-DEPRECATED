@@ -1,15 +1,23 @@
 package org.wise.vle.web.wise5;
 
-import org.json.JSONArray;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.acls.domain.BasePermission;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.authentication.impl.StudentUserDetails;
 import org.wise.portal.domain.run.Run;
@@ -17,14 +25,11 @@ import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.run.RunService;
+import org.wise.portal.service.user.UserService;
 import org.wise.portal.service.vle.wise5.VLEService;
 import org.wise.portal.service.workgroup.WorkgroupService;
 import org.wise.portal.spring.data.redis.MessagePublisher;
 import org.wise.vle.domain.notification.Notification;
-
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.List;
 
 /**
  * Controller for handling GET and POST of WISE5 Notifications
@@ -38,6 +43,9 @@ public class NotificationController {
 
   @Autowired
   private RunService runService;
+
+  @Autowired
+  private UserService userService;
 
   @Autowired
   private WorkgroupService workgroupService;
@@ -54,35 +62,33 @@ public class NotificationController {
     redisPublisher.publish(message.toString());
   }
 
-  @RequestMapping(method = RequestMethod.GET, value = "/notification/{runId}")
-  protected void getNotifications(
-      @PathVariable Integer runId,
+  @GetMapping("/notification/{runId}")
+  @ResponseBody
+  protected List<Notification> getNotifications(
+      Authentication auth,
+      @PathVariable Long runId,
       @RequestParam(value = "id", required = false) Integer id,
       @RequestParam(value = "periodId", required = false) Integer periodId,
-      @RequestParam(value = "toWorkgroupId", required = false) Integer toWorkgroupId,
+      @RequestParam(value = "toWorkgroupId", required = false) Long toWorkgroupId,
       @RequestParam(value = "groupId", required = false) String groupId,
       @RequestParam(value = "nodeId", required = false) String nodeId,
-      @RequestParam(value = "componentId", required = false) String componentId,
-      HttpServletResponse response) throws IOException, ObjectNotFoundException {
-    User signedInUser = ControllerUtil.getSignedInUser();
+      @RequestParam(value = "componentId", required = false) String componentId)
+      throws ObjectNotFoundException {
+    User user = userService.retrieveUserByUsername(auth.getName());
     Run run = runService.retrieveById(new Long(runId));
     if (toWorkgroupId != null) {
       Workgroup workgroup = workgroupService.retrieveById(new Long(toWorkgroupId));
-      if (signedInUser.getUserDetails() instanceof StudentUserDetails &&
-        (!run.isStudentAssociatedToThisRun(signedInUser) ||
-          !workgroup.getMembers().contains(signedInUser))) {
-        return;
+      if (user.getUserDetails() instanceof StudentUserDetails &&
+        (!run.isStudentAssociatedToThisRun(user) ||
+          !workgroup.getMembers().contains(user))) {
+        return new ArrayList<Notification>();
       }
-    } else if (!signedInUser.isAdmin() && !runService.hasRunPermission(run, signedInUser, BasePermission.READ)) {
-      return;
+    } else if (!user.isAdmin() && !runService.hasRunPermission(run, user, BasePermission.READ)) {
+      return new ArrayList<Notification>();
     }
-    List<Notification> notificationList = vleService.getNotifications(id, runId, periodId,
-      toWorkgroupId, groupId, nodeId, componentId);
-    JSONArray notifications = new JSONArray();
-    for (Notification notification : notificationList) {
-      notifications.put(notification.toJSON());
-    }
-    response.getWriter().write(notifications.toString());  }
+    return vleService.getNotifications(id, runId, periodId,
+        toWorkgroupId, groupId, nodeId, componentId);
+  }
 
   @RequestMapping(method = RequestMethod.POST, value = "/notification/{runId}")
   protected void saveNotification(

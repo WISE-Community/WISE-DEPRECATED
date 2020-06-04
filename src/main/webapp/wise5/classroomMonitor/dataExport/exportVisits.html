@@ -1,0 +1,108 @@
+<style>
+  .groupHeader {
+      margin-left: 20px !important;
+  }
+  .stepHeader {
+      margin-left: 40px !important;
+  }
+  .md-button {
+      text-transform: none;
+  }
+  md-checkbox.md-checked .md-icon {
+      background-color: rgba(21,101,192,0.87);
+  }
+  table, tr, th, td {
+    border: 1px solid black;
+  }
+  th, td {
+    padding: 10px;
+  }
+</style>
+<div class="view-content view-content--with-sidemenu top-content">
+  <div class="l-constrained" layout="column">
+      <div style="float:right">
+        <div style="margin-top: 20px; margin-left: 20px;">
+          <md-button ng-click="exportVisitsController.goBack()" class="md-primary md-raised">
+            <md-icon>arrow_back</md-icon>
+            <md-tooltip md-direction='top' class='projectButtonTooltip'>
+              {{ ::'back' | translate }}
+            </md-tooltip>
+          </md-button>
+          <div style="margin-left: 10px; margin-top: 20px;">
+            <h5>{{ ::'exportStepVisitEvents' | translate }}</h5>
+            <div>
+              <md-button class="md-primary md-raised"
+                  ng-click="exportVisitsController.toggleColumnExplanations()">
+                {{exportVisitsController.isShowColumnExplanations ? ('hideColumnExplanations' | translate) : ('showColumnExplanations' | translate)}}
+              </md-button>
+            </div>
+            <div ng-if="exportVisitsController.isShowColumnExplanations"
+                style="margin-left: 20px; margin-right: 40px; margin-top: 10px; margin-bottom: 10px;">
+              <table>
+                <tr>
+                  <th style="width: 200px;">{{ ::'columnName' | translate }}</th>
+                  <th>{{ ::'explanation' | translate }}</th>
+                </tr>
+                <tr ng-repeat="columnExplanation in exportVisitsController.columnExplanations">
+                  <td>{{columnExplanation.name}}</td>
+                  <td>{{columnExplanation.explanation}}</td>
+                </tr>
+              </table>
+              <div>
+                <md-button class="md-primary md-raised"
+                    style="margin-left: -10px; margin-top: 20px;"
+                    ng-click="exportVisitsController.toggleColumnExplanations()">
+                  {{exportVisitsController.isShowColumnExplanations ? ('hideColumnExplanations' | translate) : ('showColumnExplanations' | translate)}}
+                </md-button>
+              </div>
+            </div>
+            <md-checkbox class="md-primary"
+                ng-model="exportVisitsController.includeStudentNames"
+                ng-if="exportVisitsController.canViewStudentNames"
+                style="margin-left: 10px; margin-top: 10px;">
+              {{ ::'includeStudentNames' | translate }}
+            </md-checkbox>
+            <h6>{{ ::'chooseSteps' | translate }}</h6>
+            <div style="margin-bottom: 10px;">
+              <md-button class="md-primary md-raised" ng-click="exportVisitsController.selectAll()">{{ ::'selectAll' | translate }}</md-button>
+              <md-button class="md-primary md-raised" ng-click="exportVisitsController.deselectAll()">{{ ::'deselectAll' | translate }}</md-button>
+              <md-button ng-click="exportVisitsController.export()" class="md-primary md-raised">
+                <md-icon>file_download</md-icon>
+                <md-tooltip md-direction="top" class="projectButtonTooltip">
+                  {{ ::'download' | translate }}
+                </md-tooltip>
+              </md-button>
+            </div>
+            <div ng-repeat="(key, value) in exportVisitsController.nodes"
+                ng-if="key !== 0">
+              <md-checkbox ng-class="{'md-primary': true, 'groupHeader': value.node.type === 'group', 'stepHeader': value.node.type === 'node'}"
+                  ng-model="exportVisitsController.idToChecked[value.node.id]"
+                  ng-change="exportVisitsController.nodeChecked(value.node)">
+                <h6 style="display: inline; cursor: pointer">{{exportVisitsController.idToStepNumberAndTitle[value.node.id]}}</h6>
+              </md-checkbox>
+            </div>
+            <div>
+              <md-checkbox ng-class="{'md-primary': true, 'groupHeader': 'group'}"
+                  ng-model="exportVisitsController.includeDeletedSteps">
+                <h6 style="display: inline; cursor: pointer">{{ ::'includeDeletedStepsIfAny' | translate }}</h6>
+              </md-checkbox>
+            </div>
+          </div>
+          <div style="display: flex">
+            <md-button ng-click="exportVisitsController.export()" class="md-primary md-raised">
+              <md-icon>file_download</md-icon>
+              <md-tooltip md-direction="top" class="projectButtonTooltip">
+                {{ ::'download' | translate }}
+              </md-tooltip>
+            </md-button>
+            <md-button ng-click="exportVisitsController.backToTop()" class="md-primary md-raised" style="margin-left: auto;">
+              <md-icon>arrow_upward</md-icon>
+              <md-tooltip md-direction="top" class="projectButtonTooltip">
+                {{ ::'backToTop' | translate }}
+              </md-tooltip>
+            </md-button>
+          </div>
+       </div>
+      </div>
+  </div>
+</div>

@@ -1,5 +1,5 @@
 import ConfigService from '../../services/configService';
-import UtilService from '../../services/utilService';
+import { UtilService } from '../../services/utilService';
 import AuthoringToolProjectService from '../authoringToolProjectService';
 
 class RubricAuthoringController {
@@ -50,14 +50,14 @@ class RubricAuthoringController {
       disableDragAndDrop: true,
       buttons: {
         insertAssetButton: this.UtilService.createInsertAssetButton(
-          this,
           null,
           this.nodeId,
           null,
           'rubric',
           this.translate('INSERT_ASSET')
         )
-      }
+      },
+      dialogsInBody: true
     };
     this.summernoteRubricHTML = this.ProjectService.replaceAssetPaths(
       this.ProjectService.getProjectRubric()

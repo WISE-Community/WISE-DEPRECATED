@@ -60,7 +60,7 @@ class NotebookController {
 
     this.$scope.$on('editNote', (event, args) => {
       const note = args.note;
-      const isEditMode = true;
+      const isEditMode = args.isEditMode;
       const file = null;
       const noteText = null;
       const isEditTextEnabled = true;

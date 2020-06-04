@@ -30,9 +30,11 @@ import org.wise.portal.domain.user.impl.UserImpl;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.domain.workgroup.impl.WorkgroupImpl;
 import org.wise.portal.service.authentication.UserDetailsService;
+import org.wise.portal.service.portal.PortalService;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.user.UserService;
+import org.wise.portal.service.workgroup.WorkgroupService;
 
 public class APIControllerTest {
 
@@ -52,6 +54,8 @@ public class APIControllerTest {
 
   protected final String TEACHER_USERNAME = "SquidwardTentacles";
 
+  protected final String TEACHER2_USERNAME = "SandyCheeks";
+
   protected final String ADMIN_USERNAME = "MrKrabb";
 
   protected final String USERNAME_NOT_IN_DB = "usernameNotInDB";
@@ -70,6 +74,10 @@ public class APIControllerTest {
 
   protected Long runId1 = 1L;
 
+  protected Long runId2 = 2L;
+
+  protected Long runId3 = 3L;
+
   protected Long projectId1 = 1L;
 
   protected String RUN1_RUNCODE = "orca123";
@@ -82,9 +90,11 @@ public class APIControllerTest {
 
   protected List<Run> runs;
 
-  protected Workgroup workgroup1;
+  protected Workgroup workgroup1, teacher1Run1Workgroup;
 
   protected Project project1, project2, project3;
+
+  protected Group run1Period1, run1Period2;
 
   @Mock
   protected HttpServletRequest request;
@@ -96,7 +106,13 @@ public class APIControllerTest {
   protected RunService runService;
 
   @Mock
+  protected WorkgroupService workgroupService;
+
+  @Mock
   protected ProjectService projectService;
+
+  @Mock
+  protected PortalService portalService;
 
   @Mock
   protected Properties appProperties;
@@ -146,11 +162,11 @@ public class APIControllerTest {
     run1.setMaxWorkgroupSize(3);
     run1.setRuncode(RUN1_RUNCODE);
     HashSet<Group> run1Periods = new HashSet<Group>();
-    Group run1Period1 = new PersistentGroup();
+    run1Period1 = new PersistentGroup();
     run1Period1.setName(RUN1_PERIOD1_NAME);
     run1Period1.addMember(student1);
     run1Periods.add(run1Period1);
-    Group run1Period2 = new PersistentGroup();
+    run1Period2 = new PersistentGroup();
     run1Period2.setName(RUN1_PERIOD2_NAME);
     run1Periods.add(run1Period2);
     run1.setPeriods(run1Periods);
@@ -159,14 +175,18 @@ public class APIControllerTest {
     project1.setModulePath("/1/project.json");
     project1.setOwner(teacher1);
     project1.setWISEVersion(5);
+    project1.setMaxTotalAssetsSize(15728640L);
     run1.setProject(project1);
     run1.setLastRun(new Date());
     workgroup1 = new WorkgroupImpl();
     workgroup1.addMember(student1);
     workgroup1.setPeriod(run1Period1);
+    teacher1Run1Workgroup = new WorkgroupImpl();
+    teacher1Run1Workgroup.addMember(teacher1);
+    teacher1Run1Workgroup.setRun(run1);
     teacher2 = new UserImpl();
     TeacherUserDetails tud2 = new TeacherUserDetails();
-    tud2.setUsername("teacher2");
+    tud2.setUsername(TEACHER2_USERNAME);
     teacher2.setUserDetails(tud2);
     runs = new ArrayList<Run>();
     run2 = new RunImpl();

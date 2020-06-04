@@ -3,7 +3,7 @@ import { ListClassroomCoursesDialogComponent } from './list-classroom-courses-di
 import { TeacherService } from '../teacher.service';
 import { UserService } from '../../services/user.service';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { User } from '../../domain/user';
 import { Observable } from 'rxjs/internal/Observable';
@@ -11,6 +11,7 @@ import { NO_ERRORS_SCHEMA, TRANSLATIONS_FORMAT, TRANSLATIONS, LOCALE_ID } from "
 import { ReactiveFormsModule } from "@angular/forms";
 import { translationsFactory } from "../../app.module";
 import { I18n } from '@ngx-translate/i18n-polyfill';
+import { OverlayModule } from '@angular/cdk/overlay';
 
 export class MockTeacherService {
   addToClassroom: (accessCode: string, unitTitle: number, courseId: number) => {};
@@ -35,11 +36,12 @@ describe('ListClassroomCoursesDialogComponent', () => {
     TestBed.configureTestingModule({
       imports: [
         ReactiveFormsModule,
-        MatCheckboxModule
+        MatCheckboxModule,
+        OverlayModule,
+        MatDialogModule
       ],
       declarations: [ ListClassroomCoursesDialogComponent ],
       providers: [
-        { provide: MatDialog },
         { provide: MatDialogRef, useValue: { close: () => {} }},
         { provide: MAT_DIALOG_DATA, useValue: {
           run: {

@@ -1,4 +1,8 @@
 <div class="l-constrained">
+    <div ng-if="::nodeController.isEndedAndLocked" class="notice node-notice" layout="row" layout-align="center start">
+        <span><md-icon class="warn"> lock </md-icon>&nbsp;</span>
+        <span class="warn md-body-2">{{ ::nodeController.endedAndLockedMessage }}</span>
+      </div>
     <md-content class="node-content md-whiteframe-1dp" style="border-color: {{nodeController.nodeStatus.icon.color}}; position: relative;" layout="row" layout-wrap>
         <div ng-if="::nodeController.isShowNodeRubric()" class="node-content__rubric" layout="row" layout-align="center center">
             <help-icon id="nodeRubric_{{nodeController.nodeId}}"

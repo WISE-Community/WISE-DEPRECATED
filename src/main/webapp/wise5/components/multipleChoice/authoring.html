@@ -330,108 +330,14 @@
     <div>
       <h5>{{ 'studentPreview' | translate }}</h5>
     </div>
-    <div ng-switch='::multipleChoiceController.mode'>
-      <div ng-switch-when='grading|gradingRevision'
-           ng-switch-when-separator='|'
-           layout='row'
-           layout-wrap>
-        <div flex='100'
-             flex-gt-sm='66'
-             layout='column'
-             class='component--grading__response'>
-          <div class='component--grading__response__content'>
-            <md-input-container ng-if='multipleChoiceController.$scope.componentState'
-                                class='input-container md-block input-container--open-response input-container--component md-no-float'
-                                ng-switch on='::multipleChoiceController.getChoiceType()'>
-              <md-radio-group ng-switch-when='radio'
-                              ng-model='multipleChoiceController.studentChoices'>
-                <div ng-repeat='choice in multipleChoiceController.getChoices()'>
-                  <md-radio-button class='md-primary'
-                                   ng-value='choice.id'
-                                   disabled>
-                    <span>
-                      <compile data='choice.text'></compile>
-                    </span>
-                    <span ng-if='multipleChoiceController.showFeedback && choice.showFeedback'
-                          ng-class='{"success": multipleChoiceController.hasCorrectChoices() && choice.isCorrect, "warn": multipleChoiceController.hasCorrectChoices() && !choice.isCorrect, "info": !multipleChoiceController.hasCorrectChoices()}'>
-                        {{choice.feedbackToShow}}
-                    </span>
-                  </md-radio-button>
-                </div>
-              </md-radio-group>
-              <div ng-switch-when='checkbox'>
-                <div ng-repeat='choice in multipleChoiceController.getChoices()'>
-                  <md-checkbox class='md-primary'
-                               aria-label='::choice.text'
-                               ng-checked='multipleChoiceController.isChecked(choice.id)'
-                               disabled>
-                    <span>
-                      <compile data='choice.text'></compile>
-                    </span>
-                    <span ng-show='choice.showFeedback'
-                          ng-class='{"success": multipleChoiceController.hasCorrectChoices() && choice.isCorrect, "warn": multipleChoiceController.hasCorrectChoices() && !choice.isCorrect, "info": !multipleChoiceController.hasCorrectChoices()}'>
-                        {{choice.feedbackToShow}}
-                    </span>
-                  </md-checkbox>
-                </div>
-              </div>
-              <div class='md-caption'
-                   ng-if='multipleChoiceController.hasCorrectAnswer && multipleChoiceController.componentContent.maxSubmitCount != null && multipleChoiceController.componentContent.maxSubmitCount == 1'
-                   ng-show='multipleChoiceController.componentContent.maxSubmitCount != null'
-                   translate='YOU_HAVE_USED_X_OF_Y_ATTEMPT'
-                   translate-values='{x: multipleChoiceController.submitCounter, y: multipleChoiceController.componentContent.maxSubmitCount}'>
-              </div>
-              <div class='md-caption'
-                   ng-if='multipleChoiceController.hasCorrectAnswer && multipleChoiceController.componentContent.maxSubmitCount != null && multipleChoiceController.componentContent.maxSubmitCount > 1'
-                   ng-show='multipleChoiceController.componentContent.maxSubmitCount != null'
-                   translate='YOU_HAVE_USED_X_OF_Y_ATTEMPTS'
-                   translate-values='{x: multipleChoiceController.submitCounter, y: multipleChoiceController.componentContent.maxSubmitCount}'>
-              </div>
-              <div ng-if='multipleChoiceController.isLatestComponentStateSubmit == false || !multipleChoiceController.hasCorrectAnswer || !multipleChoiceController.showFeedback'>
-                &nbsp
-              </div>
-              <div ng-if='multipleChoiceController.isLatestComponentStateSubmit && multipleChoiceController.hasCorrectAnswer && multipleChoiceController.showFeedback && multipleChoiceController.isCorrect != null && multipleChoiceController.isCorrect'
-                   style='color: green'>
-                {{ 'CORRECT' | translate }}!
-              </div>
-              <div ng-if='multipleChoiceController.isLatestComponentStateSubmit && multipleChoiceController.hasCorrectAnswer && multipleChoiceController.showFeedback && multipleChoiceController.isCorrect != null && !multipleChoiceController.isCorrect'
-                   style='color: red'>
-                {{ 'INCORRECT' | translate }}
-              </div>
-            </md-input-container>
-          </div>
-          <span flex></span>
-          <component-revisions-info node-id='multipleChoiceController.nodeId'
-                                    component-id='multipleChoiceController.componentId'
-                                    to-workgroup-id='workgroupId'
-                                    component-state='componentState'
-                                    active='multipleChoiceController.mode === "grading"'>
-          </component-revisions-info>
-        </div>
-        <div flex='100'
-             flex-gt-sm='33'
-             class='component--grading__annotations'>
-          <component-grading node-id='multipleChoiceController.nodeId'
-                             component-id='multipleChoiceController.componentId'
-                             max-score='multipleChoiceController.componentContent.maxScore'
-                             from-workgroup-id='teacherWorkgroupId'
-                             to-workgroup-id='workgroupId'
-                             component-state-id='componentState.id'
-                             show-all-annotations='multipleChoiceController.mode !== "grading"'
-                             is-disabled='multipleChoiceController.mode !== "grading"'>
-          </component-grading>
-        </div>
-      </div>
-      <div ng-switch-default>
+    <div>
+      <div>
         <md-input-container class='input-container md-block input-container--open-response input-container--component md-no-float'
                             ng-switch on='::multipleChoiceController.getChoiceType()'>
           <label class='input-label md-no-float'
                  ng-if='multipleChoiceController.isPromptVisible'>
             <compile id='prompt' data='multipleChoiceController.getPrompt()'></compile>
           </label>
-          <possible-score max-score='multipleChoiceController.componentContent.maxScore'
-                          ng-if='multipleChoiceController.mode === "student" && !multipleChoiceController.latestAnnotations.score'>
-          </possible-score>
           <md-radio-group ng-switch-when='radio'
                           ng-model='multipleChoiceController.studentChoices'
                           ng-change='multipleChoiceController.studentDataChanged()'>
@@ -524,10 +430,6 @@
               </span>
           </span>
         </div>
-        <component-annotations ng-if='multipleChoiceController.mode === "student"'
-                               annotations='multipleChoiceController.latestAnnotations'
-                               max-score='multipleChoiceController.componentContent.maxScore'>
-        </component-annotations>
       </div>
     </div>
   </div>
