@@ -1,7 +1,7 @@
 'use strict';
 
 import AnnotationService from '../../../../services/annotationService';
-import ConfigService from '../../../../services/configService';
+import { ConfigService } from '../../../../services/configService';
 import NotificationService from '../../../../services/notificationService';
 import PlanningService from '../../../../services/planningService';
 import ClassroomMonitorProjectService from '../../../classroomMonitorProjectService';

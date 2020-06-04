@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { UtilService } from '../../../../wise5/services/utilService';
-import {UpgradeModule} from '@angular/upgrade/static';
+import { UpgradeModule } from '@angular/upgrade/static';
 let service: UtilService;
 
 describe('UtilService', () => {

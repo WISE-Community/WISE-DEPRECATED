@@ -23,7 +23,7 @@ import AuthoringToolMainController from './main/authoringToolMainController';
 import AuthoringToolProjectService from './authoringToolProjectService';
 import AuthorNotebookController from './notebook/authorNotebookController';
 import '../components/conceptMap/conceptMapAuthoringComponentModule';
-import ConfigService from '../services/configService';
+import { ConfigService } from '../services/configService';
 import CRaterService from '../services/cRaterService';
 import '../directives/components';
 import ComponentService from '../components/componentService';
@@ -115,7 +115,7 @@ const authoringModule = angular
   ])
   .service('AnnotationService', AnnotationService)
   .service('ComponentService', ComponentService)
-  .service('ConfigService', ConfigService)
+  .factory('ConfigService', downgradeInjectable(ConfigService))
   .service('CRaterService', CRaterService)
   .service('NodeService', NodeService)
   .service('NotebookService', NotebookService)

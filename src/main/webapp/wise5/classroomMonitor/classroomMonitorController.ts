@@ -1,6 +1,6 @@
 'use strict';
 
-import ConfigService from '../services/configService';
+import { ConfigService } from '../services/configService';
 import NodeService from '../services/nodeService';
 import NotebookService from '../services/notebookService';
 import NotificationService from '../services/notificationService';

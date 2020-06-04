@@ -1,0 +1,85 @@
+{
+  "canViewStudentNames": true,
+  "userInfo": {
+    "myUserInfo": {
+      "periodId": 1,
+      "workgroupId": 2,
+      "myClassInfo": {
+        "classmateUserInfos": [
+          {
+            "periodId": 1,
+            "workgroupId": 3,
+            "userIds": [6],
+            "periodName": "1",
+            "username": "t t (tt0101)"
+          },
+          {
+            "periodId": 1,
+            "workgroupId": 8,
+            "userIds": [8],
+            "periodName": "1",
+            "username": "k t (kt0101)"
+          }
+        ],
+        "sharedTeacherUserInfos": [],
+        "periods": [
+          {
+            "periodId": 1,
+            "periodName": "1"
+          },
+          {
+            "periodId": 2,
+            "periodName": "2"
+          },
+          {
+            "periodId": 3,
+            "periodName": "newperiod"
+          }
+        ],
+        "teacherUserInfo": {
+          "workgroupId": 1,
+          "username": "ht"
+        }
+      },
+      "userIds": [4],
+      "periodName": "1",
+      "username": "h t (ht0101)"
+    }
+  },
+  "projectURL": "/wise/curriculum/1/project.json",
+  "studentDataURL": "/wise/student/data",
+  "isRunActive": true,
+  "annotationsURL": "/wise/annotation?type=annotation&runId=1",
+  "runInfo": "{\"isRealTimeEnabled\":true}",
+  "sessionTimeoutCheckInterval": 60000,
+  "indexURL": "http://localhost:8080/wise/student",
+  "studentStatusURL": "/wise/studentStatus",
+  "mode": "run",
+  "sessionTimeoutInterval": 1200000,
+  "isRealTimeEnabled": true,
+  "postLevel": 5,
+  "parentProjectId": 1,
+  "runName": "Self-Propelled Vehicles Challenge!",
+  "flagsURL": "/wise/annotation?type=flag&runId=1",
+  "studentAssetManagerURL": "/wise/assetManager?type=studentAssetManager&runId=1",
+  "theme": "WISE",
+  "sessionLogOutURL": "/wise/logout",
+  "userInfoURL": "/wise/userInfo?runId=1",
+  "cRaterRequestURL": "/wise/cRater",
+  "renewSessionURL": "/wise/session/renew",
+  "contextPath": "/wise",
+  "webSocketURL": "ws://localhost:8080/wise/websocket",
+  "runStatusURL": "/wise/runStatus",
+  "projectBaseURL": "/wise/curriculum/1/",
+  "wiseBaseURL": "/wise",
+  "inappropriateFlagsURL": "/wise/annotation?type=inappropriateFlag&runId=1",
+  "studentUploadsBaseURL": "/wise/studentuploads",
+  "studentAssetsURL": "/wise/student/asset/1",
+  "mainHomePageURL": "/wise",
+  "studentMaxTotalAssetsSize": 2097152,
+  "runId": 1,
+  "userType": "student",
+  "projectId": 2,
+  "studentNotebookURL": "/wise/student/notebook/1",
+  "projectMetadataURL": "/wise/metadata.html"
+}

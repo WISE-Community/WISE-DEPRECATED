@@ -23,7 +23,7 @@ import './classroomMonitorComponents';
 import ClassroomMonitorController from './classroomMonitorController';
 import ClassroomMonitorProjectService from './classroomMonitorProjectService';
 import '../components/conceptMap/conceptMapComponentModule';
-import ConfigService from '../services/configService';
+import { ConfigService } from '../services/configService';
 import CRaterService from '../services/cRaterService';
 import '../directives/components';
 import ComponentService from '../components/componentService';
@@ -117,7 +117,7 @@ const classroomMonitorModule = angular
   .service('AchievementService', AchievementService)
   .service('AnnotationService', AnnotationService)
   .service('ComponentService', ComponentService)
-  .service('ConfigService', ConfigService)
+  .factory('ConfigService', downgradeInjectable(ConfigService))
   .service('CRaterService', CRaterService)
   .service('HttpInterceptor', HttpInterceptor)
   .service('MilestoneService', MilestoneService)

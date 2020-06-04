@@ -1,7 +1,7 @@
 'use strict';
 
 import AnnotationService from '../../../../services/annotationService';
-import ConfigService from '../../../../services/configService';
+import { ConfigService } from '../../../../services/configService';
 import TeacherDataService from '../../../../services/teacherDataService';
 
 class WorkgroupComponentRevisionsController {

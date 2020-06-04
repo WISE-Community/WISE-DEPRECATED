@@ -1,6 +1,6 @@
 'use strict';
 
-import ConfigService from '../../services/configService';
+import { ConfigService } from '../../services/configService';
 import AuthoringToolProjectService from '../authoringToolProjectService';
 import TeacherDataService from '../../services/teacherDataService';
 import { UtilService } from '../../services/utilService';

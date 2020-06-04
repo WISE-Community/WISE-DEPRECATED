@@ -22,7 +22,7 @@ import AnnotationService from '../services/annotationService';
 import '../components/audioOscillator/audioOscillatorComponentModule';
 import * as canvg from 'canvg';
 import '../components/conceptMap/conceptMapComponentModule';
-import ConfigService from '../services/configService';
+import { ConfigService } from '../services/configService';
 import CRaterService from '../services/cRaterService';
 import '../directives/components';
 import ComponentService from '../components/componentService';
@@ -117,7 +117,7 @@ export default angular
   ])
   .service('AchievementService', AchievementService)
   .service('AnnotationService', AnnotationService)
-  .service('ConfigService', ConfigService)
+  .factory('ConfigService', downgradeInjectable(ConfigService))
   .service('ComponentService', ComponentService)
   .service('CRaterService', CRaterService)
   .service('HttpInterceptor', HttpInterceptor)

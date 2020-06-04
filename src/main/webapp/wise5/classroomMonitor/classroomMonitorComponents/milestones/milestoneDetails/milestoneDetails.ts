@@ -1,6 +1,6 @@
 'use strict';
 
-import ConfigService from '../../../../services/configService';
+import { ConfigService } from '../../../../services/configService';
 import ClassroomMonitorProjectService from '../../../classroomMonitorProjectService';
 import TeacherDataService from '../../../../services/teacherDataService';
 import * as angular from 'angular';

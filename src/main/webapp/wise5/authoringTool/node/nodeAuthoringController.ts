@@ -1,7 +1,7 @@
 'use strict';
 
 import AuthoringToolProjectService from '../authoringToolProjectService';
-import ConfigService from '../../services/configService';
+import { ConfigService } from '../../services/configService';
 import NodeService from '../../services/nodeService';
 import ProjectAssetService from '../../services/projectAssetService';
 import TeacherDataService from '../../services/teacherDataService';

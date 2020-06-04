@@ -1,14 +1,14 @@
 'use strict';
 
-class ConfigService {
-  constructor($filter, $http, $location, moment, UtilService) {
-    this.$filter = $filter;
-    this.$http = $http;
-    this.$location = $location;
-    this.moment = moment;
-    this.UtilService = UtilService;
-    this.config = null;
-    this.$translate = this.$filter('translate');
+import { Injectable } from '@angular/core';
+import { UpgradeModule } from '@angular/upgrade/static';
+import { HttpClient } from '@angular/common/http';
+
+@Injectable()
+export class ConfigService {
+  public config: any = null;
+
+  constructor(private upgrade: UpgradeModule, private http: HttpClient) {
   }
 
   setConfig(config) {
@@ -18,13 +18,12 @@ class ConfigService {
   }
 
   retrieveConfig(configURL) {
-    return this.$http.get(configURL).then(result => {
-      const configJSON = result.data;
+    return this.http.get(configURL).toPromise().then((configJSON: any) => {
       this.setTimestampDiff(configJSON);
 
       let constraints = true;
 
-      const absURL = this.$location.$$absUrl;
+      const absURL = document.location.href;
 
       if (configJSON.mode === 'preview') {
         // constraints can only be disabled using the url in preview mode
@@ -80,7 +79,7 @@ class ConfigService {
   }
 
   getConfigParam(paramName) {
-    if (this.config !== null) {
+    if (this.config != null) {
       return this.config[paramName];
     } else {
       return null;
@@ -165,9 +164,6 @@ class ConfigService {
     return this.getConfigParam('contextPath');
   }
 
-  /**
-   * Returns the period id of the logged-in user.
-   */
   getPeriodId() {
     const myUserInfo = this.getMyUserInfo();
     if (myUserInfo != null) {
@@ -176,10 +172,6 @@ class ConfigService {
     return null;
   }
 
-  /**
-   * Get the periods
-   * @returns an array of period objects
-   */
   getPeriods() {
     const myUserInfo = this.getMyUserInfo();
     if (myUserInfo != null) {
@@ -201,10 +193,6 @@ class ConfigService {
     return null;
   }
 
-  /**
-   * Get the user id (aka WISE ID)
-   * @return the user id
-   */
   getUserId() {
     const myUserInfo = this.getMyUserInfo();
     if (myUserInfo != null) {
@@ -319,7 +307,7 @@ class ConfigService {
     return null;
   }
 
-  getClassmateWorkgroupIds(includeSelf) {
+  getClassmateWorkgroupIds(includeSelf = false) {
     const workgroupIds = [];
     if (includeSelf) {
       workgroupIds.push(this.getWorkgroupId());
@@ -400,11 +388,11 @@ class ConfigService {
   getWorkgroupsByPeriod(periodId) {
     const workgroupsInPeriod = [];
     const myUserInfo = this.getMyUserInfo();
-    if (this.isStudent() && this.UtilService.isMatchingPeriods(myUserInfo.periodId, periodId)) {
+    if (this.isStudent() && this.upgrade.$injector.get('UtilService').isMatchingPeriods(myUserInfo.periodId, periodId)) {
       workgroupsInPeriod.push(myUserInfo);
     }
     for (const classmateUserInfo of this.getClassmateUserInfos()) {
-      if (this.UtilService.isMatchingPeriods(classmateUserInfo.periodId, periodId)) {
+      if (this.upgrade.$injector.get('UtilService').isMatchingPeriods(classmateUserInfo.periodId, periodId)) {
         workgroupsInPeriod.push(classmateUserInfo);
       }
     }
@@ -438,11 +426,8 @@ class ConfigService {
   getStudentFirstNamesByWorkgroupId(workgroupId) {
     const studentNames = [];
     const usernames = this.getUsernameByWorkgroupId(workgroupId);
-
     if (usernames != null) {
-      // split the user names string by ':'
       const usernamesSplit = usernames.split(':');
-
       if (usernamesSplit != null) {
         for (let username of usernamesSplit) {
           const indexOfSpace = username.indexOf(' ');
@@ -530,7 +515,7 @@ class ConfigService {
           if (i !== 0) {
             usernames += ', ';
           }
-          usernames += this.$translate('studentId', { id: id });
+          usernames += this.upgrade.$injector.get('$filter')('translate')('studentId', { id: id });
         }
       }
     }
@@ -573,7 +558,7 @@ class ConfigService {
     return serverTimestamp + this.getConfigParam('timestampDiff');
   }
 
-  isStudent(workgroupId) {
+  isStudent(workgroupId = this.getWorkgroupId()) {
     return !this.isRunOwner(workgroupId) && !this.isRunSharedTeacher();
   }
 
@@ -905,7 +890,7 @@ class ConfigService {
   }
 
   getPrettyEndDate() {
-    return this.moment(this.getEndDate()).format('MMM D, YYYY');
+    return this.upgrade.$injector.get('moment')(this.getEndDate()).format('MMM D, YYYY');
   }
 
   getStartDate() {
@@ -921,17 +906,15 @@ class ConfigService {
   }
 
   getFormattedStartDate() {
-    return this.UtilService.convertMillisecondsToFormattedDateTime(this.getStartDate());
+    return this.upgrade.$injector.get('UtilService').convertMillisecondsToFormattedDateTime(this.getStartDate());
   }
 
   getFormattedEndDate() {
     if (this.getEndDate() != null) {
-      return this.UtilService.convertMillisecondsToFormattedDateTime(this.getEndDate());
+      return this.upgrade.$injector.get('UtilService').convertMillisecondsToFormattedDateTime(this.getEndDate());
     }
     return '';
   }
 }
-
-ConfigService.$inject = ['$filter', '$http', '$location', 'moment', 'UtilService'];
 
 export default ConfigService;

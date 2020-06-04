@@ -1,7 +1,7 @@
 import * as angular from 'angular';
 import * as $ from 'jquery';
 import AnnotationService from "../services/annotationService";
-import ConfigService from "../services/configService";
+import { ConfigService } from "../services/configService";
 import NodeService from "../services/nodeService";
 import NotebookService from "../services/notebookService";
 import ProjectService from "../services/projectService";

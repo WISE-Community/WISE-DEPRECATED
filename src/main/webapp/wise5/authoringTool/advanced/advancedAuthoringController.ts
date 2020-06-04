@@ -1,4 +1,4 @@
-import ConfigService from '../../services/configService';
+import { ConfigService } from '../../services/configService';
 import AuthoringToolProjectService from '../authoringToolProjectService';
 import { UtilService } from '../../services/utilService';
 import * as angular from 'angular';
