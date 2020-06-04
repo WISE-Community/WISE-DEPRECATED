@@ -37,6 +37,8 @@
 
 <div ngf-drop ngf-select
     ngf-change="projectAssetController.uploadAssetItems($files)" class="drop-box"
+    ngf-resize="{quality: .8, width: 1000, height: 1000, pattern:'image/*', restoreExif: true}"
+    ngf-resize-if="$width > 1000 || $height > 1000"
     drag-over-class="dragover" ngf-multiple="true" allow-dir="false"
     accept="image/*,application/pdf,text/csv,text/javascript" translate="dropAssetMessage"></div>
 <span translate="assetUsageMessage"
