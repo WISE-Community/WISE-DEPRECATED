@@ -41,7 +41,7 @@ import org.wise.portal.service.user.UserService;
  */
 @Controller
 @RequestMapping("/author/project/asset")
-@Secured({"ROLE_AUTHOR"})
+@Secured({ "ROLE_AUTHOR" })
 public class ProjectAssetAPIController {
 
   @Autowired
@@ -55,8 +55,8 @@ public class ProjectAssetAPIController {
 
   @GetMapping("/{projectId}")
   @ResponseBody
-  protected Map<String, Object> getProjectAssets(Authentication auth,
-      @PathVariable Long projectId) throws ObjectNotFoundException, IOException {
+  protected Map<String, Object> getProjectAssets(Authentication auth, @PathVariable Long projectId)
+      throws ObjectNotFoundException, IOException {
     Project project = projectService.getById(projectId);
     User user = userService.retrieveUserByUsername(auth.getName());
     if (projectService.canAuthorProject(project, user)) {
@@ -92,8 +92,8 @@ public class ProjectAssetAPIController {
     long sizeOfAssetsDirectory = FileUtils.sizeOfDirectory(projectAssetsDir);
     Long projectMaxTotalAssetsSize = project.getMaxTotalAssetsSize();
     if (projectMaxTotalAssetsSize == null) {
-      projectMaxTotalAssetsSize =
-          new Long(appProperties.getProperty("project_max_total_assets_size", "15728640"));
+      projectMaxTotalAssetsSize = new Long(
+          appProperties.getProperty("project_max_total_assets_size", "15728640"));
     }
     HashMap<String, String> fileObject = new HashMap<String, String>();
     fileObject.put("filename", file.getOriginalFilename());
@@ -101,12 +101,12 @@ public class ProjectAssetAPIController {
       fileObject.put("message", "Upload file not allowed.");
       ((ArrayList<HashMap<String, String>>) result.get("error")).add(fileObject);
     } else if (sizeOfAssetsDirectory + file.getSize() > projectMaxTotalAssetsSize) {
-      fileObject.put("message", "Exceeded project max asset size.\n" +
-          "Please delete unused assets.\n\nContact WISE if your project needs more disk space.");
+      fileObject.put("message", "Exceeded project max asset size.\n"
+          + "Please delete unused assets.\n\nContact WISE if your project needs more disk space.");
       ((ArrayList<HashMap<String, String>>) result.get("error")).add(fileObject);
     } else {
       Path path = Paths.get(projectAssetsDir.getPath(), file.getOriginalFilename());
-      Files.write(path, file.getBytes());
+      file.transferTo(path);
       ((ArrayList<HashMap<String, String>>) result.get("success")).add(fileObject);
     }
   }
@@ -114,8 +114,8 @@ public class ProjectAssetAPIController {
   private boolean isUserAllowedToUpload(User user, MultipartFile file) {
     String allowedTypes = appProperties.getProperty("normalAuthorAllowedProjectAssetContentTypes");
     if (user.isTrustedAuthor()) {
-      allowedTypes += "," +
-          appProperties.getProperty("trustedAuthorAllowedProjectAssetContentTypes");
+      allowedTypes += ","
+          + appProperties.getProperty("trustedAuthorAllowedProjectAssetContentTypes");
     }
     return allowedTypes.contains(file.getContentType());
   }
@@ -145,8 +145,7 @@ public class ProjectAssetAPIController {
     return projectBaseDir + "/assets";
   }
 
-  @GetMapping(value = "/{projectId}/download",
-      produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+  @GetMapping(value = "/{projectId}/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
   @ResponseBody
   protected FileSystemResource downloadProjectAsset(Authentication auth,
       HttpServletResponse response, @PathVariable Long projectId,
