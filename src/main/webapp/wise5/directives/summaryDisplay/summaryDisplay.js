@@ -136,11 +136,21 @@ class SummaryDisplayController {
   }
 
   renderResponses() {
-    if (this.isSourceSelf()) {
+    if (this.isSourceSelf() && this.isClassroomMonitor()) {
+      this.displaySourceSelfMessageToTeacher();
+    } else if (this.isSourceSelf()) {
       this.renderSelfResponse();
     } else {
       this.renderClassResponses();
     }
+  }
+
+  displaySourceSelfMessageToTeacher() {
+    this.doRender = false;
+    this.warningMessage = this.$translate(
+      'summary.theStudentWillSeeAGraphOfTheirIndividualDataHere'
+    );
+    this.hasWarning = true;
   }
 
   renderSelfResponse() {
@@ -194,7 +204,9 @@ class SummaryDisplayController {
   }
 
   renderScores() {
-    if (this.isSourceSelf()) {
+    if (this.isSourceSelf() && this.isClassroomMonitor()) {
+      this.displaySourceSelfMessageToTeacher();
+    } else if (this.isSourceSelf()) {
       this.renderSelfScore();
     } else {
       this.renderClassScores();
