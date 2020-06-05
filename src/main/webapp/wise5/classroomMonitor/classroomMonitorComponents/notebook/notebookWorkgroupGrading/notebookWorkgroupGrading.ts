@@ -1,7 +1,7 @@
 'use strict';
 
 import NotebookService from '../../../../services/notebookService';
-import ClassroomMonitorProjectService from '../../../classroomMonitorProjectService';
+import { ClassroomMonitorProjectService } from '../../../classroomMonitorProjectService';
 
 class NotebookWorkgroupGradingController {
   expand: boolean;

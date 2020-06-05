@@ -1,6 +1,6 @@
 'use strict';
 
-import ClassroomMonitorProjectService from '../../../classroomMonitorProjectService';
+import { ClassroomMonitorProjectService } from '../../../classroomMonitorProjectService';
 import AchievementService from '../../../../services/achievementService';
 import { UtilService } from '../../../../services/utilService';
 

@@ -1,7 +1,7 @@
 import AnnotationService from '../../services/annotationService';
 import { ConfigService } from '../../services/configService';
 import NodeService from '../../services/nodeService';
-import VLEProjectService from '../vleProjectService';
+import { VLEProjectService } from '../vleProjectService';
 import StudentDataService from '../../services/studentDataService';
 import { UtilService } from '../../services/utilService';
 import * as hopscotch from 'hopscotch';
@@ -307,7 +307,7 @@ class NodeController {
     });
     const script = this.nodeContent.script;
     if (script != null) {
-      this.ProjectService.retrieveScript(script).then(script => {
+      this.ProjectService.retrieveScript(script).then((script: string) => {
         new Function(script).call(this);
       });
     }

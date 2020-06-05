@@ -1,0 +1,10 @@
+{
+  "accountMenuItems": "アイテム{{item}}",
+  "accountMenuPoints": "{{point}}点",
+  "accountMenuTotalScore": "スコア合計",
+  "addNewNote": "新規ノート",
+  "newNote": "新規ノート",
+  "projectCompletion": "完成度",
+  "projectPlan": "プロジェクトマップ",
+  "typeYourNoteHere": "ここにノートを書いてください。。。"
+}

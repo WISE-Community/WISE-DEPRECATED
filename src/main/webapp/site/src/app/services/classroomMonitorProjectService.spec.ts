@@ -1,21 +1,28 @@
-import vleModule from '../../classroomMonitor/classroomMonitor';
+import { TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { UpgradeModule } from '@angular/upgrade/static';
+import { ClassroomMonitorProjectService } from '../../../../wise5/classroomMonitor/classroomMonitorProjectService';
+import { ConfigService } from '../../../../wise5/services/configService';
+import { UtilService } from '../../../../wise5/services/utilService';
+let service: ClassroomMonitorProjectService;
+let configService: ConfigService;
+let utilService: UtilService;
+let http: HttpTestingController;
 
-let ConfigService, ProjectService, $rootScope, $httpBackend;
-
-describe('ClassroomMonitorProjectService Unit Test', () => {
-  beforeEach(angular.mock.module(vleModule.name));
-
-  beforeEach(inject(function(_ConfigService_, _ProjectService_, _$rootScope_, _$httpBackend_) {
-    ConfigService = _ConfigService_;
-    ProjectService = _ProjectService_;
-    $rootScope = _$rootScope_;
-    $httpBackend = _$httpBackend_;
-  }));
-
-  describe('ClassroomMonitorProjectService', () => {
-    shouldGetTheNodeIdAndComponentIdObjects();
-    shouldGetTheBranchLetter();
+describe('ClassroomMonitorProjectService', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [ HttpClientTestingModule, UpgradeModule ],
+      providers: [ ClassroomMonitorProjectService, ConfigService, UtilService ]
+    });
+    http = TestBed.get(HttpTestingController);
+    service = TestBed.get(ClassroomMonitorProjectService);
+    configService = TestBed.get(ConfigService);
+    utilService = TestBed.get(UtilService);
+    spyOn(utilService, 'broadcastEventInRootScope');
   });
+  shouldGetTheNodeIdAndComponentIdObjects();
+  shouldGetTheBranchLetter();
 });
 
 function shouldGetTheNodeIdAndComponentIdObjects() {
@@ -43,12 +50,12 @@ function shouldGetTheNodeIdAndComponentIdObjects() {
         }
       ]
     };
-    ProjectService.setProject(project);
-    let nodeIdAndComponentIds = ProjectService.getNodeIdsAndComponentIds('node1');
+    service.setProject(project);
+    let nodeIdAndComponentIds = service.getNodeIdsAndComponentIds('node1');
     expect(nodeIdAndComponentIds.length).toEqual(1);
     expect(nodeIdAndComponentIds[0].nodeId).toEqual('node1');
     expect(nodeIdAndComponentIds[0].componentId).toEqual('node1component1');
-    nodeIdAndComponentIds = ProjectService.getNodeIdsAndComponentIds('node2');
+    nodeIdAndComponentIds = service.getNodeIdsAndComponentIds('node2');
     expect(nodeIdAndComponentIds.length).toEqual(2);
     expect(nodeIdAndComponentIds[0].nodeId).toEqual('node2');
     expect(nodeIdAndComponentIds[0].componentId).toEqual('node2component1');
@@ -316,18 +323,18 @@ function shouldGetTheBranchLetter() {
         }
       ]
     };
-    ProjectService.setProject(project);
-    let branchLetter = ProjectService.getBranchLetter('node1');
+    service.setProject(project);
+    let branchLetter = service.getBranchLetter('node1');
     expect(branchLetter).toEqual(null);
-    branchLetter = ProjectService.getBranchLetter('node2');
+    branchLetter = service.getBranchLetter('node2');
     expect(branchLetter).toEqual('A');
-    branchLetter = ProjectService.getBranchLetter('node3');
+    branchLetter = service.getBranchLetter('node3');
     expect(branchLetter).toEqual('A');
-    branchLetter = ProjectService.getBranchLetter('node4');
+    branchLetter = service.getBranchLetter('node4');
     expect(branchLetter).toEqual('B');
-    branchLetter = ProjectService.getBranchLetter('node5');
+    branchLetter = service.getBranchLetter('node5');
     expect(branchLetter).toEqual('B');
-    branchLetter = ProjectService.getBranchLetter('node6');
+    branchLetter = service.getBranchLetter('node6');
     expect(branchLetter).toEqual(null);
   });
 }

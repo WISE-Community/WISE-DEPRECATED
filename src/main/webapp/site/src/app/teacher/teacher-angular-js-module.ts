@@ -1,12 +1,16 @@
 
-import {Component, NgModule} from '@angular/core';
-import {RouterModule} from '@angular/router';
+import { Component, NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
 
 import teacher from '../../../../wise5/teacher/teacher';
-import {UpgradeModule} from '@angular/upgrade/static';
-import {setUpLocationSync} from '@angular/router/upgrade';
+import { UpgradeModule } from '@angular/upgrade/static';
+import { setUpLocationSync } from '@angular/router/upgrade';
 import { UtilService } from '../../../../wise5/services/utilService';
 import { ConfigService } from '../../../../wise5/services/configService';
+import { ProjectService } from '../../../../wise5/services/projectService';
+import { AuthoringToolProjectService } from '../../../../wise5/authoringTool/authoringToolProjectService';
+import { VLEProjectService } from '../../../../wise5/vle/vleProjectService';
+import { ClassroomMonitorProjectService } from '../../../../wise5/classroomMonitor/classroomMonitorProjectService';
 
 @Component({template: ``})
 export class EmptyComponent {}
@@ -23,7 +27,11 @@ export class EmptyComponent {}
   ],
   providers: [
     UtilService,
-    ConfigService
+    ConfigService,
+    ProjectService,
+    AuthoringToolProjectService,
+    ClassroomMonitorProjectService,
+    VLEProjectService
   ]
 })
 export class TeacherAngularJSModule {
