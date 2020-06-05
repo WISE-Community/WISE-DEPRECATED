@@ -116,7 +116,7 @@ export function translationsFactory(locale: string) {
       deps: [LOCALE_ID]
     },
     { provide: TRANSLATIONS_FORMAT, useValue: 'xlf' },
-    //{ provide: MISSING_TRANSLATION_STRATEGY, useValue: MissingTranslationStrategy.Ignore },
+    { provide: MISSING_TRANSLATION_STRATEGY, useValue: MissingTranslationStrategy.Ignore },
     I18n,
     {
       provide: APP_INITIALIZER,
