@@ -74,6 +74,7 @@ class SummaryController extends ComponentController {
     this.chartType = this.componentContent.chartType;
     this.prompt = this.componentContent.prompt;
     this.highlightCorrectAnswer = this.componentContent.highlightCorrectAnswer;
+    this.source = this.componentContent.source;
     this.warningMessage = '';
     if (this.componentContent.showPromptFromOtherComponent) {
       this.otherPrompt = this.getOtherPrompt(this.summaryNodeId, this.summaryComponentId);
@@ -88,7 +89,6 @@ class SummaryController extends ComponentController {
     if (!this.isShowDisplay) {
       this.warningMessage = this.getWarningMessage();
     }
-    this.source = this.componentContent.source;
     this.setPeriodIdIfNecessary();
   }
 
@@ -122,11 +122,41 @@ class SummaryController extends ComponentController {
   }
 
   getWarningMessage() {
+    if (this.isSourceSelf()) {
+      return this.getWarningMessageForSourceSelf();
+    } else if (this.isSourcePeriod() || this.isSourceAllPeriods()) {
+      return this.getWarningMessageForSourceClass();
+    }
+  }
+
+  isSourceSelf() {
+    return this.source === 'self';
+  }
+
+  isSourcePeriod() {
+    return this.source === 'period';
+  }
+
+  isSourceAllPeriods() {
+    return this.source === 'allPeriods';
+  }
+
+  getWarningMessageForSourceSelf() {
     let messageTranslationKey = '';
     if (this.componentContent.requirementToSeeSummary === 'submitWork') {
-      messageTranslationKey = 'summary.youMustSubmitWork';
+      messageTranslationKey = 'summary.youMustSubmitWorkToViewSelfSummary';
     } else if (this.componentContent.requirementToSeeSummary === 'completeComponent') {
-      messageTranslationKey = 'summary.youMustComplete';
+      messageTranslationKey = 'summary.youMustCompleteToViewSelfSummary';
+    }
+    return this.$translate(messageTranslationKey, { stepTitle: this.otherStepTitle });
+  }
+
+  getWarningMessageForSourceClass() {
+    let messageTranslationKey = '';
+    if (this.componentContent.requirementToSeeSummary === 'submitWork') {
+      messageTranslationKey = 'summary.youMustSubmitWorkToViewClassSummary';
+    } else if (this.componentContent.requirementToSeeSummary === 'completeComponent') {
+      messageTranslationKey = 'summary.youMustCompleteToViewClassSummary';
     }
     return this.$translate(messageTranslationKey, { stepTitle: this.otherStepTitle });
   }

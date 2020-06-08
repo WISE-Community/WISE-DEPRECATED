@@ -18,6 +18,8 @@
   "summary.studentsInAllPeriods": "Students In All Periods",
   "summary.submitWork": "Submit Work",
   "summary.theStudentWillSeeAGraphOfTheirIndividualDataHere": "The student will see a graph of their individual data here.",
-  "summary.youMustComplete": "You must complete \"{{stepTitle}}\" to view the class results.",
-  "summary.youMustSubmitWork": "You must submit work on \"{{stepTitle}}\" to view the class results."
+  "summary.youMustCompleteToViewClassSummary": "You must complete \"{{stepTitle}}\" to view the class summary.",
+  "summary.youMustCompleteToViewSelfSummary": "You must complete \"{{stepTitle}}\" to view the summary.",
+  "summary.youMustSubmitWorkToViewClassSummary": "You must submit work on \"{{stepTitle}}\" to view the class summary.",
+  "summary.youMustSubmitWorkToViewSelfSummary": "You must submit work on \"{{stepTitle}}\" to view the summary."
 }
