@@ -7,13 +7,15 @@ import {UpgradeModule} from '@angular/upgrade/static';
 import {setUpLocationSync} from '@angular/router/upgrade';
 import { UtilService } from '../../../../wise5/services/utilService';
 import { ConfigService } from '../../../../wise5/services/configService';
+import { MilestoneReportDataComponent } from './milestone/milestone-report-data/milestone-report-data.component';
 
 @Component({template: ``})
 export class EmptyComponent {}
 
 @NgModule({
   declarations: [
-    EmptyComponent
+    EmptyComponent,
+    MilestoneReportDataComponent
   ],
   imports: [
     UpgradeModule,
@@ -24,6 +26,9 @@ export class EmptyComponent {}
   providers: [
     UtilService,
     ConfigService
+  ],
+  entryComponents: [
+    MilestoneReportDataComponent
   ]
 })
 export class TeacherAngularJSModule {
