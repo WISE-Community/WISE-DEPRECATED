@@ -80,7 +80,7 @@
           <context context-type="sourcefile">app/modules/header/header-links/header-links.component.html</context>
           <context context-type="linenumber">9</context>
         </context-group>
-        <target state="needs-translation">News</target>
+        <target state="translated">Haberler</target>
       </trans-unit>
       <trans-unit id="53c1019d0a23e95290e125bf93e34257eaadb8b6" datatype="html">
         <source>Help + FAQs</source>
@@ -92,7 +92,7 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">82</context>
         </context-group>
-        <target state="needs-translation">Help + FAQs</target>
+        <target state="translated">Yardım + SSS</target>
       </trans-unit>
       <trans-unit id="3d469f0ca2f579eedee96edd4ef40883f65e77aa" datatype="html">
         <source>Privacy + Use</source>
@@ -100,7 +100,7 @@
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
           <context context-type="linenumber">14</context>
         </context-group>
-        <target state="needs-translation">Privacy + Use</target>
+        <target state="translated">Gizlilik + Kullanım</target>
       </trans-unit>
       <trans-unit id="02e9e69ddcbf93de9fd38bc4d0f312142658610d" datatype="html">
         <source>Contact Us</source>
@@ -112,7 +112,7 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">86</context>
         </context-group>
-        <target state="needs-translation">Contact Us</target>
+        <target state="translated">Bize Ulaş</target>
       </trans-unit>
       <trans-unit id="e1a07fb742a7b025b2a594d867a5805c37697f86" datatype="html">
         <source>WISE on Facebook</source>
@@ -124,7 +124,7 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">65</context>
         </context-group>
-        <target state="needs-translation">WISE on Facebook</target>
+        <target state="translated">Facebook'ta WISE</target>
       </trans-unit>
       <trans-unit id="0000062f4a98235fac57d3b130730592402b9e05" datatype="html">
         <source>WISE on Twitter</source>
@@ -136,7 +136,7 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">68</context>
         </context-group>
-        <target state="needs-translation">WISE on Twitter</target>
+        <target state="translated">Twitter'da WISE</target>
       </trans-unit>
       <trans-unit id="540452d4091ec883af6967b28abf89f2ac0c853d" datatype="html">
         <source>WISE on Github</source>
@@ -148,7 +148,7 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">71</context>
         </context-group>
-        <target state="needs-translation">WISE on Github</target>
+        <target state="translated">Github'da WISE</target>
       </trans-unit>
       <trans-unit id="c0cf90a4d22206da43e0ca71eab7a5e5998589a8" datatype="html">
         <source>Powered by the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>TELS Research Community<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> and <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>WISE Open Source Technology<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>. Help us <x id="START_LINK_2" ctype="x-a" equiv-text="&lt;a&gt;"/>translate<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> WISE!</source>
@@ -172,7 +172,7 @@
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
           <context context-type="linenumber">64</context>
         </context-group>
-        <target state="needs-translation">National Science Foundation</target>
+        <target state="translated">Ulusal Bilim Kurulu</target>
       </trans-unit>
       <trans-unit id="eb6ec6c4564dfbd4ffc8020d00aa0c48400f629b" datatype="html">
         <source>UC Berkeley</source>
@@ -180,7 +180,7 @@
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
           <context context-type="linenumber">71</context>
         </context-group>
-        <target state="needs-translation">UC Berkeley</target>
+        <target state="translated">UC Berkeley</target>
       </trans-unit>
       <trans-unit id="8f885baf51f23ab4c81a547cd984d9355bea0239" datatype="html">
         <source>Concord Consortium</source>
@@ -220,7 +220,7 @@
           <context context-type="sourcefile">app/modules/header/header.component.html</context>
           <context context-type="linenumber">15</context>
         </context-group>
-        <target state="needs-translation">Main menu</target>
+        <target state="translated">Ana menü</target>
       </trans-unit>
       <trans-unit id="99ee4faa69cd2ea8e3678c1f557c0ff1f05aae46" datatype="html">
         <source>Clear</source>
@@ -236,7 +236,7 @@
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
           <context context-type="linenumber">29</context>
         </context-group>
-        <target state="needs-translation">Clear</target>
+        <target state="translated">Temizle</target>
       </trans-unit>
       <trans-unit id="7f32abe3fc638f65c0d3eb269d478ee49ad41ebe" datatype="html">
         <source>more</source>
@@ -244,7 +244,7 @@
           <context context-type="sourcefile">app/modules/shared/select-menu/select-menu.component.html</context>
           <context context-type="linenumber">10</context>
         </context-group>
-        <target state="needs-translation">more</target>
+        <target state="translated">daha fazla</target>
       </trans-unit>
       <trans-unit id="1ae3dcf96b494406b6fd6fbd2f15f7259553bf4d" datatype="html">
         <source>Current Password</source>
@@ -252,7 +252,7 @@
           <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
           <context context-type="linenumber">8</context>
         </context-group>
-        <target state="needs-translation">Current Password</target>
+        <target state="translated">Şu Anki Şifre</target>
       </trans-unit>
       <trans-unit id="9b79b69a1ba8ba29e68a45acd0829da17da704ce" datatype="html">
         <source>Current Password required</source>
@@ -260,7 +260,7 @@
           <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
           <context context-type="linenumber">15</context>
         </context-group>
-        <target state="needs-translation">Current Password required</target>
+        <target state="translated">Şu Anki Şifre gerekli</target>
       </trans-unit>
       <trans-unit id="0315d84608647a2d4a2b2e7e509d10ad0ec78536" datatype="html">
         <source>Current Password is incorrect</source>
@@ -268,7 +268,7 @@
           <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
           <context context-type="linenumber">16</context>
         </context-group>
-        <target state="needs-translation">Current Password is incorrect</target>
+        <target state="translated">Şu Anki Şifre yanlış</target>
       </trans-unit>
       <trans-unit id="c7014c6360e94b236286b869c3fe0ea9911c0387" datatype="html">
         <source>New Password</source>
@@ -276,7 +276,7 @@
           <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
           <context context-type="linenumber">22</context>
         </context-group>
-        <target state="needs-translation">New Password</target>
+        <target state="translated">Yeni Şifre</target>
       </trans-unit>
       <trans-unit id="ae26b4e37fa94304d1fa1b0c46b10ad979bcecfa" datatype="html">
         <source>New Password required</source>
@@ -284,7 +284,7 @@
           <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
           <context context-type="linenumber">29</context>
         </context-group>
-        <target state="needs-translation">New Password required</target>
+        <target state="translated">Yeni Şifre gerekli</target>
       </trans-unit>
       <trans-unit id="b81fbd1b5d0723eba41870071d02065674bdd565" datatype="html">
         <source>Confirm New Password</source>
@@ -292,7 +292,7 @@
           <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
           <context context-type="linenumber">34</context>
         </context-group>
-        <target state="needs-translation">Confirm New Password</target>
+        <target state="translated">Yeni Şifreyi Onayla</target>
       </trans-unit>
       <trans-unit id="4b4b336ca43da85eee55391d95fbc03d921353b5" datatype="html">
         <source>Confirm Password required</source>
@@ -316,7 +316,7 @@
           <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
           <context context-type="linenumber">106</context>
         </context-group>
-        <target state="needs-translation">Confirm Password required</target>
+        <target state="translated">Şifre Onaylaması gerekli</target>
       </trans-unit>
       <trans-unit id="0a9dcaac5aadd48fe716eaff77ab9b21a8bef3af" datatype="html">
         <source>Passwords do not match</source>
@@ -324,7 +324,7 @@
           <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
           <context context-type="linenumber">42</context>
         </context-group>
-        <target state="needs-translation">Passwords do not match</target>
+        <target state="translated">Şifreler uyuşmuyor</target>
       </trans-unit>
       <trans-unit id="5edf054f14aa57bc25a28cb7db01956fee53dac8" datatype="html">
         <source>Change Password</source>
@@ -340,7 +340,7 @@
           <context context-type="sourcefile">app/forgot/teacher/forgot-teacher-password-change/forgot-teacher-password-change.component.html</context>
           <context context-type="linenumber">7</context>
         </context-group>
-        <target state="needs-translation">Change Password</target>
+        <target state="translated">Şifre Değiştir</target>
       </trans-unit>
       <trans-unit id="1622b67543d6f79dc5e9730e121f7e21b3d034b1" datatype="html">
         <source>This account was created using Google and doesn&apos;t use a WISE password. If you would like to unlink your Google account, please <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>contact us<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
@@ -376,7 +376,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">91</context>
         </context-group>
-        <target state="needs-translation">Add Ideas</target>
+        <target state="translated">Fikirler Ekle</target>
       </trans-unit>
       <trans-unit id="6f2168a4a47a1e6fa5d58a4334c7b67805dd3fe0" datatype="html">
         <source>Distinguish Ideas</source>
@@ -408,7 +408,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">100</context>
         </context-group>
-        <target state="needs-translation">Connect Ideas</target>
+        <target state="translated">Fikirleri Bağla</target>
       </trans-unit>
       <trans-unit id="6ce56d323684d1af10f44ca44809177cef1412eb" datatype="html">
         <source>Integrated science learning and teaching with technology</source>
@@ -424,7 +424,7 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">23</context>
         </context-group>
-        <target state="needs-translation">The WISE Advantage</target>
+        <target state="translated">WISE Avantajı</target>
       </trans-unit>
       <trans-unit id="23bd67ab9c1e8b08481bd99aa471c2a29b587143" datatype="html">
         <source>Curriculum Offerings</source>
@@ -440,7 +440,7 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">50</context>
         </context-group>
-        <target state="needs-translation">Ready to try WISE in the Classroom?</target>
+        <target state="translated">Sınıfta WISE'ı denemeye hazır mısın?</target>
       </trans-unit>
       <trans-unit id="b4b200f1299f2e043cae72f59718dca3b12f1f38" datatype="html">
         <source>Sign up for free!</source>
@@ -448,7 +448,7 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">51</context>
         </context-group>
-        <target state="needs-translation">Sign up for free!</target>
+        <target state="translated">Ücretsiz kaydol!</target>
       </trans-unit>
       <trans-unit id="da6aa9950c74cadd85a3bf26272f34f28d8338c8" datatype="html">
         <source>Connect</source>
@@ -456,7 +456,7 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">63</context>
         </context-group>
-        <target state="needs-translation">Connect</target>
+        <target state="translated">Bağlan</target>
       </trans-unit>
       <trans-unit id="34dc5c906ca725ffe2bfacaa6983bfdc30561ddb" datatype="html">
         <source>Learn what&apos;s new in the WISE community.</source>
@@ -464,7 +464,7 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">79</context>
         </context-group>
-        <target state="needs-translation">Learn what's new in the WISE community.</target>
+        <target state="translated">WISE topluluğunda nelerin yeni olduğunu öğren.</target>
       </trans-unit>
       <trans-unit id="ba44ee280d91539e6c5892dccbb8556bcce235be" datatype="html">
         <source>View tutorials and common questions.</source>
@@ -480,7 +480,7 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">87</context>
         </context-group>
-        <target state="needs-translation">Want to get in touch? Send us a message.</target>
+        <target state="translated">İletişimde mi kalmak istiyorsunuz? Bize bir mesaj gönderin.</target>
       </trans-unit>
       <trans-unit id="acd82db1a5e5f81b87f6a6b1639f028a4d106d49" datatype="html">
         <source>WISE logo</source>
@@ -492,7 +492,7 @@
           <context context-type="sourcefile">app/register/register.component.html</context>
           <context context-type="linenumber">7</context>
         </context-group>
-        <target state="needs-translation">WISE logo</target>
+        <target state="translated">WISE logosu</target>
       </trans-unit>
       <trans-unit id="a55bfaabb5258f66c2f853ce2383cfead1abd258" datatype="html">
         <source>Close menu</source>
@@ -500,7 +500,7 @@
           <context context-type="sourcefile">app/modules/mobile-menu/mobile-menu.component.html</context>
           <context context-type="linenumber">3</context>
         </context-group>
-        <target state="needs-translation">Close menu</target>
+        <target state="translated">Menüyü kapat</target>
       </trans-unit>
       <trans-unit id="c0b05f996bb39c9db400e2ec0d5506b75d464af0" datatype="html">
         <source>WISE Home</source>
@@ -508,7 +508,7 @@
           <context context-type="sourcefile">app/modules/mobile-menu/mobile-menu.component.html</context>
           <context context-type="linenumber">8</context>
         </context-group>
-        <target state="needs-translation">WISE Home</target>
+        <target state="translated">WISE Ev</target>
       </trans-unit>
       <trans-unit id="ab8be185fd77636da821443e6071c033ebc47a59" datatype="html">
         <source>Research <x id="START_TAG_MAT-ICON" ctype="x-mat-icon" equiv-text="&lt;mat-icon&gt;"/>call_made<x id="CLOSE_TAG_MAT-ICON" ctype="x-mat-icon" equiv-text="&lt;/mat-icon&gt;"/></source>
@@ -548,7 +548,7 @@
           <context context-type="sourcefile">app/student/team-sign-in-dialog/team-sign-in-dialog.component.html</context>
           <context context-type="linenumber">49</context>
         </context-group>
-        <target state="needs-translation">Sign In</target>
+        <target state="translated">Giriş Yap</target>
       </trans-unit>
       <trans-unit id="abc0c762d328168e523abf84749240e43593f8df" datatype="html">
         <source>WISE Features</source>
@@ -556,7 +556,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">10</context>
         </context-group>
-        <target state="needs-translation">WISE Features</target>
+        <target state="translated">WISE Özellikleri</target>
       </trans-unit>
       <trans-unit id="ddf8132cf62ce6ac16351585c35e306e6971af4b" datatype="html">
         <source>A powerful online platform for designing, developing, and implementing science inquiry units</source>
@@ -884,7 +884,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">212</context>
         </context-group>
-        <target state="needs-translation">Join for free</target>
+        <target state="translated">Ücretsiz olarak katılın</target>
       </trans-unit>
       <trans-unit id="ffc2518d2bc8ccd34f05251329883a6d0642a4ca" datatype="html">
         <source>WISE is the product of more than 25 years of research on teaching and learning with educational technologies</source>
@@ -908,7 +908,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">45</context>
         </context-group>
-        <target state="needs-translation">WISE student and teacher</target>
+        <target state="translated">WISE öğrenci ve öğretmen</target>
       </trans-unit>
       <trans-unit id="2b4a83d9816a80170d470f0cbe714553f33450ae" datatype="html">
         <source>WISE teacher workshop design</source>
@@ -956,7 +956,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">65</context>
         </context-group>
-        <target state="needs-translation">Our Research + Team</target>
+        <target state="translated">Bizim Araştırmamız + Takımımız</target>
       </trans-unit>
       <trans-unit id="2430d9c22ccaf6b5daf94c0135b02f753ca6b185" datatype="html">
         <source>Knowledge Integration</source>
@@ -964,7 +964,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">77</context>
         </context-group>
-        <target state="needs-translation">Knowledge Integration</target>
+        <target state="translated">Bilgi Entegrasyonu</target>
       </trans-unit>
       <trans-unit id="1a90e48699c691ba54728351e4be72af77b280ce" datatype="html">
         <source>As students grapple with multiple conflicting and confusing ideas, research has shown that instruction is most effective when student views are used as a starting point for scientific investigations.</source>
@@ -988,7 +988,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">110</context>
         </context-group>
-        <target state="needs-translation">~ WISE Goals ~</target>
+        <target state="translated">~ WISE Hedefleri ~</target>
       </trans-unit>
       <trans-unit id="a8c4f4b7ff2dc03b066549737367901b95c1f556" datatype="html">
         <source>Make Science Meaningful</source>
@@ -996,7 +996,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">124</context>
         </context-group>
-        <target state="needs-translation">Make Science Meaningful</target>
+        <target state="translated">Bilimi Anlamlı Hale Getirin</target>
       </trans-unit>
       <trans-unit id="d1d5c7485a7278e9df8a76c3481541ef3d231792" datatype="html">
         <source>WISE units introduce students to complex science concepts through personally and socially relevant topics. Each unit uses a classroom-tested pattern of instruction that values the ideas students bring with them, helps them connect new information to their personal experiences, and integrates their ideas into a coherent understanding of science.</source>
@@ -1044,7 +1044,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">150</context>
         </context-group>
-        <target state="needs-translation">Accessible to All</target>
+        <target state="translated">Herkese Erişime Açık</target>
       </trans-unit>
       <trans-unit id="416ce0bcfd9bbe81b9ccc34d764504df4c8088d1" datatype="html">
         <source>WISE is <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>free<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> and <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>open source<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>! WISE subsists on generous support from the National Science Foundation, which means it&apos;s available to anyone with an internet connection. Driven by an active community of developers, WISE is continually being expanded and improved. Bring science inquiry into the classroom, the museum, the after-school, or the home-school environment!</source>
@@ -1068,7 +1068,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">165</context>
         </context-group>
-        <target state="needs-translation">WISE researcher</target>
+        <target state="translated">WISE araştırmacısı</target>
       </trans-unit>
       <trans-unit id="6cc03c819c2923d3c2dd2a236ee0040ddac13c4b" datatype="html">
         <source>WISE teachers and researcher</source>
@@ -1124,7 +1124,7 @@
           <context context-type="sourcefile">app/modules/library/personal-library/personal-library-details.html</context>
           <context context-type="linenumber">9</context>
         </context-group>
-        <target state="needs-translation">Close</target>
+        <target state="translated">Kapat</target>
       </trans-unit>
       <trans-unit id="51d583eae34e00ff68b64c83bb27a77927206e5c" datatype="html">
         <source>WISE Terms of Use &amp; Privacy Policy</source>
@@ -1156,7 +1156,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">11</context>
         </context-group>
-        <target state="needs-translation">User Agreement</target>
+        <target state="translated">Kullanıcı Sözleşmesi</target>
       </trans-unit>
       <trans-unit id="bc5c8fc1c4e71b3ee81861339adbe75a81f330bd" datatype="html">
         <source>Information We Collect</source>
@@ -1164,7 +1164,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">12</context>
         </context-group>
-        <target state="needs-translation">Information We Collect</target>
+        <target state="translated">Topladığımız Bilgiler</target>
       </trans-unit>
       <trans-unit id="3b2c25aac9bb263b63bc9310da65eb68324d83da" datatype="html">
         <source>How We Use the Data</source>
@@ -1172,7 +1172,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">13</context>
         </context-group>
-        <target state="needs-translation">How We Use the Data</target>
+        <target state="translated">Veriyi Nasıl Kullanıyoruz</target>
       </trans-unit>
       <trans-unit id="fdceccac4c4cd3ede00411684560fc40b0b9df41" datatype="html">
         <source>Rules of Use</source>
@@ -1180,7 +1180,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">14</context>
         </context-group>
-        <target state="needs-translation">Rules of Use</target>
+        <target state="translated">Kullanım Kuralları</target>
       </trans-unit>
       <trans-unit id="d3a3efa42b14f2671bf3418fe0a7462293334ac0" datatype="html">
         <source>Information Security</source>
@@ -1188,7 +1188,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">15</context>
         </context-group>
-        <target state="needs-translation">Information Security</target>
+        <target state="translated">Bilgi Güvenliği</target>
       </trans-unit>
       <trans-unit id="a364c9c2a87d2b9cf91adffebe1e931310d94d60" datatype="html">
         <source>State &amp; Federal Laws</source>
@@ -1212,7 +1212,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">22</context>
         </context-group>
-        <target state="needs-translation">1. User Agreement</target>
+        <target state="translated">1. Kullanıcı Sözleşmesi</target>
       </trans-unit>
       <trans-unit id="3b103ca309b22df74ae171e0bccc2982acba1185" datatype="html">
         <source>We understand how important privacy is to our community, especially the teachers and students all over the world who use WISE resources in their educational endeavors. This policy explains what information we collect, how we use it, and what we do to keep it safe.</source>
@@ -1252,7 +1252,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">31</context>
         </context-group>
-        <target state="needs-translation">2. Information We Collect</target>
+        <target state="translated">2. Topladığımız Bilgiler</target>
       </trans-unit>
       <trans-unit id="2b16d754538c43298a40b3efa2b957beb1d29f27" datatype="html">
         <source>Personal Information</source>
@@ -1260,7 +1260,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">33</context>
         </context-group>
-        <target state="needs-translation">Personal Information</target>
+        <target state="translated">Kişisel Bilgi</target>
       </trans-unit>
       <trans-unit id="5398c70dfe79e17bc0f165376e45834878a98540" datatype="html">
         <source>In order to use some features of WISE, you will need to register by creating a user account. Creating an account is optional, but without an account you will not be able to create or publish curriculum projects or use WISE curricula to capture, store, review, or assess student work.</source>
@@ -1468,7 +1468,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">71</context>
         </context-group>
-        <target state="needs-translation">4. Rules of Use</target>
+        <target state="translated">4. Kullanım Kuralları</target>
       </trans-unit>
       <trans-unit id="b1bf615bcd41ce20e24ba76efcffeca199138119" datatype="html">
         <source>WISE promotes and supports freedom of speech and expression and strives to create a welcoming, supportive, and productive community of educators and learners.</source>
@@ -1516,7 +1516,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">80</context>
         </context-group>
-        <target state="needs-translation">5. Information Security</target>
+        <target state="translated">5. Bilgi Güvenliği</target>
       </trans-unit>
       <trans-unit id="9e8e34ba63c3678ef43b9bef38ad48245621d346" datatype="html">
         <source>The security of your information is important to us and we try to maintain a high standard for security by using technical safeguards. We will try our best to keep your data safe. However, no system can ever be 100% secure so we can not guarantee your personal information will be 100% safe from unauthorized access, either while stored on our site or our databases or while being transmitted to WISE over the internet.</source>
@@ -1636,7 +1636,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">104</context>
         </context-group>
-        <target state="needs-translation">Berkeley, CA 94720-1670</target>
+        <target state="translated">Berkeley, CA 94720-1670</target>
       </trans-unit>
       <trans-unit id="891537ceca296c8821e5edf088b3e9cc5c6f17c9" datatype="html">
         <source>Explore suggested WISE curricula for the given grade levels or search for specific units that address your needs.</source>
@@ -1652,7 +1652,7 @@
           <context context-type="sourcefile">app/modules/library/official-library/official-library.component.html</context>
           <context context-type="linenumber">14</context>
         </context-group>
-        <target state="needs-translation">unit(s)</target>
+        <target state="translated">birim(ler)</target>
       </trans-unit>
       <trans-unit id="73da064756ecee7cf3d056dc8a0b99f0f39863b6" datatype="html">
         <source>What is WISE Tested?</source>
@@ -1712,7 +1712,7 @@
           <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
           <context context-type="linenumber">31</context>
         </context-group>
-        <target state="needs-translation">Add to Google Classroom</target>
+        <target state="translated">Google Classroom'a Ekle</target>
       </trans-unit>
       <trans-unit id="d559090ad7dfe99c26a7143c93579f3b768f4dd3" datatype="html">
         <source>Hey there! Looks like you don&apos;t have any active Google classes.</source>
@@ -1736,7 +1736,7 @@
           <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
           <context context-type="linenumber">16</context>
         </context-group>
-        <target state="needs-translation">OK</target>
+        <target state="translated">Tamam</target>
       </trans-unit>
       <trans-unit id="81d287d330a52df6ba828022a1fcd0a749a27ab1" datatype="html">
         <source>(Run ID: <x id="INTERPOLATION" equiv-text="{{ data.run.id }}"/>)</source>
@@ -1748,7 +1748,7 @@
           <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
           <context context-type="linenumber">60</context>
         </context-group>
-        <target state="needs-translation">(Run ID: <x id="INTERPOLATION" equiv-text="{{ data.run.id }}"/>)</target>
+        <target state="translated">(Çalıştırma Kimliği: <x id="INTERPOLATION" equiv-text="{{ data.run.id }}"/>)</target>
       </trans-unit>
       <trans-unit id="b6d98e943848266c1ee9234245f2d1505d969d72" datatype="html">
         <source>Add an assignment for this unit in Google Classroom.</source>
@@ -1764,7 +1764,7 @@
           <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
           <context context-type="linenumber">26</context>
         </context-group>
-        <target state="needs-translation">1. Choose Google Class</target>
+        <target state="translated">1. Google Class'i Seç</target>
       </trans-unit>
       <trans-unit id="5566d6863125d49ad8caf9b1264b49f343f41f44" datatype="html">
         <source> (Section <x id="INTERPOLATION" equiv-text="{{ courses[i].section }}"/>)</source>
@@ -1780,7 +1780,7 @@
           <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
           <context context-type="linenumber">35</context>
         </context-group>
-        <target state="needs-translation">2. Add Description</target>
+        <target state="translated">2. Açıklama Ekle</target>
       </trans-unit>
       <trans-unit id="af6c19f94a19093641cec5233a2c7f1b03f355a1" datatype="html">
         <source>Assignment description</source>
@@ -1796,7 +1796,7 @@
           <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
           <context context-type="linenumber">39</context>
         </context-group>
-        <target state="needs-translation">Description is required.</target>
+        <target state="translated">Açıklama gereklidir.</target>
       </trans-unit>
       <trans-unit id="d7b35c384aecd25a516200d6921836374613dfe7" datatype="html">
         <source>Cancel</source>
@@ -1832,7 +1832,7 @@
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
           <context context-type="linenumber">95</context>
         </context-group>
-        <target state="needs-translation">Cancel</target>
+        <target state="translated">İptal</target>
       </trans-unit>
       <trans-unit id="f6755cff4957d5c3c89bafce5651f1b6fa2b1fd9" datatype="html">
         <source>Add</source>
@@ -1844,7 +1844,7 @@
           <context context-type="sourcefile">app/student/add-project-dialog/add-project-dialog.component.html</context>
           <context context-type="linenumber">30</context>
         </context-group>
-        <target state="needs-translation">Add</target>
+        <target state="translated">Ekle</target>
       </trans-unit>
       <trans-unit id="e9a74cfea4f80b5d5c656bd147bdf4588c98572e" datatype="html">
         <source>The unit has been successfully added to the following Google Classroom(s)</source>
@@ -1990,7 +1990,7 @@
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
           <context context-type="linenumber">38</context>
         </context-group>
-        <target state="needs-translation">Start date is required</target>
+        <target state="translated">Başlangıç tarihi gereklidir</target>
       </trans-unit>
       <trans-unit id="f60960faa2cd3e0db11e48688774d05dfa9d715b" datatype="html">
         <source>End date</source>
@@ -2002,7 +2002,7 @@
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
           <context context-type="linenumber">56</context>
         </context-group>
-        <target state="needs-translation">End date</target>
+        <target state="translated">Bitiş tarihi</target>
       </trans-unit>
       <trans-unit id="4005b12b4826f1ebfe46b5d64ecb84915f61be73" datatype="html">
         <source>
@@ -2012,8 +2012,8 @@
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
           <context context-type="linenumber">52</context>
         </context-group>
-        <target state="needs-translation">
-          Lock After End Date
+        <target state="translated">
+          Bitiş Tarihinden Sonra Kilitle
         </target>
       </trans-unit>
       <trans-unit id="70b1ab8a9900ee7a2907d90336ecbdb47bd4d018" datatype="html">
@@ -2087,8 +2087,8 @@
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
           <context context-type="linenumber">82</context>
         </context-group>
-        <target state="needs-translation">Add to Google
-      Classroom</target>
+        <target state="translated">Google Classroom'a
+      Ekle</target>
       </trans-unit>
       <trans-unit id="d9b2ffb3e1ce1ca42a3db04d00ea072777898eb3" datatype="html">
         <source>Legacy Unit Warning</source>
@@ -2184,7 +2184,7 @@
           <context context-type="sourcefile">app/modules/library/library-project-details/library-project-details.component.html</context>
           <context context-type="linenumber">48</context>
         </context-group>
-        <target state="needs-translation">Features:</target>
+        <target state="translated">Özellikler:</target>
       </trans-unit>
       <trans-unit id="4a074ee53886e04659f3cec8ec30b94ce5ce717c" datatype="html">
         <source>NGSS Performance Expectations: </source>
@@ -2232,7 +2232,7 @@
           <context context-type="sourcefile">app/modules/library/library-project-details/library-project-details.component.html</context>
           <context context-type="linenumber">75</context>
         </context-group>
-        <target state="needs-translation">More</target>
+        <target state="translated">Daha fazla</target>
       </trans-unit>
       <trans-unit id="01b7fa43a3428af3967f5ddeb02a21315ec636e4" datatype="html">
         <source>View License</source>
@@ -2240,7 +2240,7 @@
           <context context-type="sourcefile">app/modules/library/library-project-details/library-project-details.component.html</context>
           <context context-type="linenumber">78</context>
         </context-group>
-        <target state="needs-translation">View License</target>
+        <target state="translated">Lisansı Göster</target>
       </trans-unit>
       <trans-unit id="3e2a583f531f7dd9f089f68a6968e444c372c3e8" datatype="html">
         <source>Preview</source>
@@ -2252,7 +2252,7 @@
           <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
           <context context-type="linenumber">14</context>
         </context-group>
-        <target state="needs-translation">Preview</target>
+        <target state="translated">Önizle</target>
       </trans-unit>
       <trans-unit id="53c647ed0bda0187e7653c35e0856deea80c268b" datatype="html">
         <source>(ID: <x id="INTERPOLATION" equiv-text="{{ project.id }}"/>)</source>
@@ -2260,7 +2260,7 @@
           <context context-type="sourcefile">app/modules/library/library-project/library-project.component.html</context>
           <context context-type="linenumber">16</context>
         </context-group>
-        <target state="needs-translation">(ID: <x id="INTERPOLATION" equiv-text="{{ project.id }}"/>)</target>
+        <target state="translated">(Kimlik: <x id="INTERPOLATION" equiv-text="{{ project.id }}"/>)</target>
       </trans-unit>
       <trans-unit id="e3ae8640f4d05cb4f78a31cfbf18d5701f41d57e" datatype="html">
         <source>Shared by <x id="INTERPOLATION" equiv-text="{{ project.owner.displayName }}"/></source>
@@ -2276,7 +2276,7 @@
           <context context-type="sourcefile">app/modules/library/library-project/library-project.component.html</context>
           <context context-type="linenumber">9</context>
         </context-group>
-        <target state="needs-translation">Show project details</target>
+        <target state="translated">Proje detaylarını göster</target>
       </trans-unit>
       <trans-unit id="cf981dceeed8f731260f5eff3c51a5ea148cf8fe" datatype="html">
         <source>Share Unit</source>
@@ -2296,7 +2296,7 @@
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
           <context context-type="linenumber">17</context>
         </context-group>
-        <target state="needs-translation">Enter teacher username</target>
+        <target state="translated">Öğretmen kullanıcı adını giriniz</target>
       </trans-unit>
       <trans-unit id="39e715b9ebc52d3b9c9a0b629419034bf1610efa" datatype="html">
         <source>Teacher is already on shared list.</source>
@@ -2324,7 +2324,7 @@
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
           <context context-type="linenumber">46</context>
         </context-group>
-        <target state="needs-translation">Name</target>
+        <target state="translated">İsim</target>
       </trans-unit>
       <trans-unit id="53ea2772322e7d4d21515bb0c6dead283f8e18a5" datatype="html">
         <source>Revoke</source>
@@ -2336,7 +2336,7 @@
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
           <context context-type="linenumber">52</context>
         </context-group>
-        <target state="needs-translation">Revoke</target>
+        <target state="translated">İptal</target>
       </trans-unit>
       <trans-unit id="70f45880fce6ac5d8e468e25e82aefbba8098cfe" datatype="html">
         <source>Permissions</source>
@@ -2348,7 +2348,7 @@
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
           <context context-type="linenumber">57</context>
         </context-group>
-        <target state="needs-translation">Permissions</target>
+        <target state="translated">İzinler</target>
       </trans-unit>
       <trans-unit id="e4c62e79146aa053669046c6d0d40e889049f8a1" datatype="html">
         <source>Owner. Full permissions.</source>
@@ -2360,7 +2360,7 @@
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
           <context context-type="linenumber">59</context>
         </context-group>
-        <target state="needs-translation">Owner. Full permissions.</target>
+        <target state="translated">Kurucu. Tüm izinler.</target>
       </trans-unit>
       <trans-unit id="6bd0461d56d457667267858196994feefee0de48" datatype="html">
         <source>View &amp; Use with Students</source>
@@ -2416,7 +2416,7 @@
           <context context-type="sourcefile">app/modules/library/library-project-menu/library-project-menu.component.html</context>
           <context context-type="linenumber">10</context>
         </context-group>
-        <target state="needs-translation">Copy</target>
+        <target state="translated">Kopyala</target>
       </trans-unit>
       <trans-unit id="4c49a9bb7a99a9da256c6e678cbb49baa70e268a" datatype="html">
         <source>Edit Classroom Unit</source>
@@ -2696,7 +2696,7 @@
           <context context-type="sourcefile">app/forgot/teacher/forgot-teacher-password-verify/forgot-teacher-password-verify.component.html</context>
           <context context-type="linenumber">38</context>
         </context-group>
-        <target state="needs-translation">Contact WISE</target>
+        <target state="translated">WISE'la İletişime Geç</target>
       </trans-unit>
       <trans-unit id="4f25015c69f7e23714c642e14a711938efeab311" datatype="html">
         <source>Name required</source>
@@ -2704,7 +2704,7 @@
           <context context-type="sourcefile">app/contact/contact-form/contact-form.component.html</context>
           <context context-type="linenumber">30</context>
         </context-group>
-        <target state="needs-translation">Name required</target>
+        <target state="translated">İsim gerekli</target>
       </trans-unit>
       <trans-unit id="244aae9346da82b0922506c2d2581373a15641cc" datatype="html">
         <source>Email</source>
@@ -2728,7 +2728,7 @@
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
           <context context-type="linenumber">40</context>
         </context-group>
-        <target state="needs-translation">Email</target>
+        <target state="translated">E-posta</target>
       </trans-unit>
       <trans-unit id="234ce1f48e2e7c754873c9728092e878e08cf71d" datatype="html">
         <source>Email required</source>
@@ -2748,7 +2748,7 @@
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
           <context context-type="linenumber">45</context>
         </context-group>
-        <target state="needs-translation">Email required</target>
+        <target state="translated">E-posta gerekli</target>
       </trans-unit>
       <trans-unit id="7a69cf8e716fe0458fffe8b8a67948dfeb2b3eb6" datatype="html">
         <source>Invalid Email</source>
@@ -2756,7 +2756,7 @@
           <context context-type="sourcefile">app/contact/contact-form/contact-form.component.html</context>
           <context context-type="linenumber">41</context>
         </context-group>
-        <target state="needs-translation">Invalid Email</target>
+        <target state="translated">Geçersiz E-posta</target>
       </trans-unit>
       <trans-unit id="6237ff3a29d96a2418eb0007bebc0be1dda21cdd" datatype="html">
         <source>Teacher</source>
@@ -2772,7 +2772,7 @@
           <context context-type="sourcefile">app/register/register-home/register-home.component.html</context>
           <context context-type="linenumber">18</context>
         </context-group>
-        <target state="needs-translation">Teacher</target>
+        <target state="translated">Öğretmen</target>
       </trans-unit>
       <trans-unit id="f24b47c26f17b04695929c82f78baeafbbd1f599" datatype="html">
         <source>Teacher required</source>
@@ -2780,7 +2780,7 @@
           <context context-type="sourcefile">app/contact/contact-form/contact-form.component.html</context>
           <context context-type="linenumber">52</context>
         </context-group>
-        <target state="needs-translation">Teacher required</target>
+        <target state="translated">Öğretmen gerekli</target>
       </trans-unit>
       <trans-unit id="712648c55b8f81cc494ffeff1c304f275dcafc61" datatype="html">
         <source>Issue Type</source>
@@ -2788,7 +2788,7 @@
           <context context-type="sourcefile">app/contact/contact-form/contact-form.component.html</context>
           <context context-type="linenumber">57</context>
         </context-group>
-        <target state="needs-translation">Issue Type</target>
+        <target state="translated">Sorun Türü</target>
       </trans-unit>
       <trans-unit id="15b954ace707d502928339a1518c05e2c33a2bc4" datatype="html">
         <source>Issue Type required</source>
@@ -2796,7 +2796,7 @@
           <context context-type="sourcefile">app/contact/contact-form/contact-form.component.html</context>
           <context context-type="linenumber">63</context>
         </context-group>
-        <target state="needs-translation">Issue Type required</target>
+        <target state="translated">Sorun Türü gerekli</target>
       </trans-unit>
       <trans-unit id="84f64f26d4b4e040f0ca418bb766cf2120b052bd" datatype="html">
         <source>Project Name</source>
@@ -2804,7 +2804,7 @@
           <context context-type="sourcefile">app/contact/contact-form/contact-form.component.html</context>
           <context context-type="linenumber">68</context>
         </context-group>
-        <target state="needs-translation">Project Name</target>
+        <target state="translated">Proje Adı</target>
       </trans-unit>
       <trans-unit id="a8233de047500bf0f0d9f9f1712ddb071501a283" datatype="html">
         <source>Summary</source>
@@ -2812,7 +2812,7 @@
           <context context-type="sourcefile">app/contact/contact-form/contact-form.component.html</context>
           <context context-type="linenumber">77</context>
         </context-group>
-        <target state="needs-translation">Summary</target>
+        <target state="translated">Özet</target>
       </trans-unit>
       <trans-unit id="f57c6e5b9225f1a36757d76b0cb2a0b739487c87" datatype="html">
         <source>Summary required</source>
@@ -2820,7 +2820,7 @@
           <context context-type="sourcefile">app/contact/contact-form/contact-form.component.html</context>
           <context context-type="linenumber">82</context>
         </context-group>
-        <target state="needs-translation">Summary required</target>
+        <target state="translated">Özet gerekli</target>
       </trans-unit>
       <trans-unit id="eec715de352a6b114713b30b640d319fa78207a0" datatype="html">
         <source>Description</source>
@@ -2828,7 +2828,7 @@
           <context context-type="sourcefile">app/contact/contact-form/contact-form.component.html</context>
           <context context-type="linenumber">87</context>
         </context-group>
-        <target state="needs-translation">Description</target>
+        <target state="translated">Açıklama</target>
       </trans-unit>
       <trans-unit id="7491b1ebfc5dd457492a5c481e2d2254216dc1fc" datatype="html">
         <source>Description required</source>
@@ -2836,7 +2836,7 @@
           <context context-type="sourcefile">app/contact/contact-form/contact-form.component.html</context>
           <context context-type="linenumber">95</context>
         </context-group>
-        <target state="needs-translation">Description required</target>
+        <target state="translated">Açıklama gerekli</target>
       </trans-unit>
       <trans-unit id="5d9f08dc105485d86dacb30c4f2a3ac7ab951843" datatype="html">
         <source>Sorry, there was a problem submitting the form. Please try again.</source>
@@ -2880,7 +2880,7 @@
           <context context-type="sourcefile">app/forgot/teacher/forgot-teacher-password-verify/forgot-teacher-password-verify.component.html</context>
           <context context-type="linenumber">26</context>
         </context-group>
-        <target state="needs-translation">Submit</target>
+        <target state="translated">Gönder</target>
       </trans-unit>
       <trans-unit id="bef13b264d9f1244392852666ac27791c9a5979f" datatype="html">
         <source>Forgot Username or Password</source>
@@ -2888,7 +2888,7 @@
           <context context-type="sourcefile">app/forgot/forgot-home/forgot-home.component.html</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">Forgot Username or Password</target>
+        <target state="translated">Kullanıcı Adı ya da Şifreyi Unuttum</target>
       </trans-unit>
       <trans-unit id="61727bf4fa2cb34dc5bdf598b6cb917d0c44ac86" datatype="html">
         <source>Student</source>
@@ -2900,7 +2900,7 @@
           <context context-type="sourcefile">app/register/register-home/register-home.component.html</context>
           <context context-type="linenumber">10</context>
         </context-group>
-        <target state="needs-translation">Student</target>
+        <target state="translated">Öğrenci</target>
       </trans-unit>
       <trans-unit id="9b59fedafe883c50e868d884b7a0faeca8f2ccc9" datatype="html">
         <source>Look up username or reset password for a student account</source>
@@ -2956,7 +2956,7 @@
           <context context-type="sourcefile">app/student/account/edit-profile/edit-profile.component.html</context>
           <context context-type="linenumber">25</context>
         </context-group>
-        <target state="needs-translation">Username</target>
+        <target state="translated">Kullanıcı Adı</target>
       </trans-unit>
       <trans-unit id="9a0d8c396fd0398b5d49f9b509f33dce97a4f35d" datatype="html">
         <source>Look up username</source>
@@ -2968,7 +2968,7 @@
           <context context-type="sourcefile">app/forgot/teacher/forgot-teacher/forgot-teacher.component.html</context>
           <context context-type="linenumber">12</context>
         </context-group>
-        <target state="needs-translation">Look up username</target>
+        <target state="translated">Kullanıcı adı arat</target>
       </trans-unit>
       <trans-unit id="c32ef07f8803a223a83ed17024b38e8d82292407" datatype="html">
         <source>Password</source>
@@ -3012,7 +3012,7 @@
           <context context-type="sourcefile">app/teacher/account/edit/edit.component.html</context>
           <context context-type="linenumber">17</context>
         </context-group>
-        <target state="needs-translation">Password</target>
+        <target state="translated">Şifre</target>
       </trans-unit>
       <trans-unit id="6676f052ab9d1ed83317074f054f2ec6e896f0cc" datatype="html">
         <source>Reset password</source>
@@ -3024,7 +3024,7 @@
           <context context-type="sourcefile">app/forgot/teacher/forgot-teacher/forgot-teacher.component.html</context>
           <context context-type="linenumber">20</context>
         </context-group>
-        <target state="needs-translation">Reset password</target>
+        <target state="translated">Şifreyi Sıfırla</target>
       </trans-unit>
       <trans-unit id="0f389eb15835f04301ade3cba44a82feb40ea2bb" datatype="html">
         <source>Teacher Forgot Username or Password</source>
@@ -3040,7 +3040,7 @@
           <context context-type="sourcefile">app/forgot/student/forgot-student-password/forgot-student-password.component.html</context>
           <context context-type="linenumber">7</context>
         </context-group>
-        <target state="needs-translation">Forgot Student Password</target>
+        <target state="translated">Öğrenci Şifremi Unuttum</target>
       </trans-unit>
       <trans-unit id="fa35e72aac432810b1ffca368a2e203c894d28eb" datatype="html">
         <source>Username required</source>
@@ -3052,7 +3052,7 @@
           <context context-type="sourcefile">app/forgot/teacher/forgot-teacher-password/forgot-teacher-password.component.html</context>
           <context context-type="linenumber">17</context>
         </context-group>
-        <target state="needs-translation">Username required</target>
+        <target state="translated">Kullanıcı adı gerekli</target>
       </trans-unit>
       <trans-unit id="c69eedb9000f33dbc7e6fc00e2cbdb830c83f214" datatype="html">
         <source>Forgot Student Username</source>
@@ -3064,7 +3064,7 @@
           <context context-type="sourcefile">app/forgot/student/forgot-student-username/forgot-student-username.component.html</context>
           <context context-type="linenumber">7</context>
         </context-group>
-        <target state="needs-translation">Forgot Student Username</target>
+        <target state="translated">Öğrenci Kullanıcı Adını Unuttum</target>
       </trans-unit>
       <trans-unit id="8017fdbaf670dcefd48842920617824337d762f7" datatype="html">
         <source>Create New Account</source>
@@ -3100,7 +3100,7 @@
           <context context-type="sourcefile">app/forgot/teacher/forgot-teacher-password-verify/forgot-teacher-password-verify.component.html</context>
           <context context-type="linenumber">41</context>
         </context-group>
-        <target state="needs-translation">Create New Account</target>
+        <target state="translated">Yeni Hesap Oluştur</target>
       </trans-unit>
       <trans-unit id="c83b838d845690bcb897f775f53b5316535306dc" datatype="html">
         <source>First Name</source>
@@ -3128,7 +3128,7 @@
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
           <context context-type="linenumber">9</context>
         </context-group>
-        <target state="needs-translation">First Name</target>
+        <target state="translated">Adınız</target>
       </trans-unit>
       <trans-unit id="dfb446b53f5c04e99f7deed2f454d3e959e1d324" datatype="html">
         <source>First Name required</source>
@@ -3152,7 +3152,7 @@
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
           <context context-type="linenumber">14</context>
         </context-group>
-        <target state="needs-translation">First Name required</target>
+        <target state="translated">Adınız gerekli</target>
       </trans-unit>
       <trans-unit id="166b2cc65003221ff5f3ec05d5baca41e6821396" datatype="html">
         <source>Last Name</source>
@@ -3180,7 +3180,7 @@
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
           <context context-type="linenumber">19</context>
         </context-group>
-        <target state="needs-translation">Last Name</target>
+        <target state="translated">Soyadınız</target>
       </trans-unit>
       <trans-unit id="17de8a2f90413b5c8a6d622d9cfa4c5eda8bb742" datatype="html">
         <source>Last Name required</source>
@@ -3204,7 +3204,7 @@
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
           <context context-type="linenumber">24</context>
         </context-group>
-        <target state="needs-translation">Last Name required</target>
+        <target state="translated">Soyadınız gerekli</target>
       </trans-unit>
       <trans-unit id="4b7e7f2459572a6ee907c22976119464ae2556bf" datatype="html">
         <source>Birthday (Month)</source>
@@ -3216,7 +3216,7 @@
           <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
           <context context-type="linenumber">44</context>
         </context-group>
-        <target state="needs-translation">Birthday (Month)</target>
+        <target state="translated">Doğum Günü (Ay)</target>
       </trans-unit>
       <trans-unit id="53b5f38b420c0d1f9b62a0b34612ed28a20d37d8" datatype="html">
         <source>Month required</source>
@@ -3228,7 +3228,7 @@
           <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
           <context context-type="linenumber">50</context>
         </context-group>
-        <target state="needs-translation">Month required</target>
+        <target state="translated">Ay gerekli</target>
       </trans-unit>
       <trans-unit id="e3945fcac2b828a12bd531c748cf8bd08b04498c" datatype="html">
         <source>Birthday (Day)</source>
@@ -3240,7 +3240,7 @@
           <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
           <context context-type="linenumber">55</context>
         </context-group>
-        <target state="needs-translation">Birthday (Day)</target>
+        <target state="translated">Doğum Günü (Gün)</target>
       </trans-unit>
       <trans-unit id="c086edf00fc75cb05dc70186d7c2b60ddc8a7cb4" datatype="html">
         <source>Day required</source>
@@ -3252,7 +3252,7 @@
           <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
           <context context-type="linenumber">61</context>
         </context-group>
-        <target state="needs-translation">Day required</target>
+        <target state="translated">Gün gerekli</target>
       </trans-unit>
       <trans-unit id="7e892ba15f2c6c17e83510e273b3e10fc32ea016" datatype="html">
         <source>Search</source>
@@ -3260,7 +3260,7 @@
           <context context-type="sourcefile">app/forgot/student/forgot-student-username/forgot-student-username.component.html</context>
           <context context-type="linenumber">58</context>
         </context-group>
-        <target state="needs-translation">Search</target>
+        <target state="translated">Ara</target>
       </trans-unit>
       <trans-unit id="53a454dd8d85d4a61d248f7452828b57d70e5055" datatype="html">
         <source>Forgot Teacher Username</source>
@@ -3272,7 +3272,7 @@
           <context context-type="sourcefile">app/forgot/teacher/forgot-teacher-password/forgot-teacher-password.component.html</context>
           <context context-type="linenumber">31</context>
         </context-group>
-        <target state="needs-translation">Forgot Teacher Username</target>
+        <target state="translated">Öğretmen Kullanıcı Adımı Unuttum</target>
       </trans-unit>
       <trans-unit id="23af976ab1853a354809cbada9c79f9a9c64df3d" datatype="html">
         <source>Teacher Forgot Password</source>
@@ -3296,7 +3296,7 @@
           <context context-type="sourcefile">app/forgot/student/forgot-student-password-security/forgot-student-password-security.component.html</context>
           <context context-type="linenumber">7</context>
         </context-group>
-        <target state="needs-translation">Answer Security Question</target>
+        <target state="translated">Güvenlik Sorusunu Cevapla</target>
       </trans-unit>
       <trans-unit id="36a316cb26f14955dcbc311d9f6f326a079df159" datatype="html">
         <source>Answer required</source>
@@ -3304,7 +3304,7 @@
           <context context-type="sourcefile">app/forgot/student/forgot-student-password-security/forgot-student-password-security.component.html</context>
           <context context-type="linenumber">18</context>
         </context-group>
-        <target state="needs-translation">Answer required</target>
+        <target state="translated">Cevap gerekli</target>
       </trans-unit>
       <trans-unit id="5ead54400cc272b882d8fb68895f8cf558d8edd7" datatype="html">
         <source>Password required</source>
@@ -3760,7 +3760,7 @@
           <context context-type="sourcefile">app/help/help-home/help-home.component.html</context>
           <context context-type="linenumber">35</context>
         </context-group>
-        <target state="needs-translation">Questions from students.</target>
+        <target state="translated">Öğrencilerden gelen sorular.</target>
       </trans-unit>
       <trans-unit id="38e95ec15a2f0fb793f968881f7579478c680f40" datatype="html">
         <source>Teacher Frequently Asked Questions</source>
@@ -3768,7 +3768,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">3</context>
         </context-group>
-        <target state="needs-translation">Teacher Frequently Asked Questions</target>
+        <target state="translated">Öğretmen Sık Sorulan Sorular</target>
       </trans-unit>
       <trans-unit id="a266982867e61e43775b42a9d5f471fb904dbd2a" datatype="html">
         <source>General Questions</source>
@@ -3788,7 +3788,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">10</context>
         </context-group>
-        <target state="needs-translation">General Questions</target>
+        <target state="translated">Genel Sorular</target>
       </trans-unit>
       <trans-unit id="5f9d6dd89b42bf6d4b8ad3d8dc6001ede87581c5" datatype="html">
         <source>Student Management</source>
@@ -3800,7 +3800,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">38</context>
         </context-group>
-        <target state="needs-translation">Student Management</target>
+        <target state="translated">Öğrenci Yönetimi</target>
       </trans-unit>
       <trans-unit id="54cfeaed1219be5235387bc1c1e2d6e1ec4f4a22" datatype="html">
         <source>Project Management</source>
@@ -3812,7 +3812,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">94</context>
         </context-group>
-        <target state="needs-translation">Project Management</target>
+        <target state="translated">Proje Yönetimi</target>
       </trans-unit>
       <trans-unit id="f73ef77a670e03ed6e3d2c94dca0914611fb815b" datatype="html">
         <source>Assessment of Student Work</source>
@@ -3856,7 +3856,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">43</context>
         </context-group>
-        <target state="needs-translation">Technical Questions</target>
+        <target state="translated">Teknik Sorular</target>
       </trans-unit>
       <trans-unit id="cd11af56485642817d523589aaf166abc6e0d1e2" datatype="html">
         <source>How do I create an account?</source>
@@ -3868,7 +3868,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">11</context>
         </context-group>
-        <target state="needs-translation">How do I create an account?</target>
+        <target state="translated">Nasıl bir hesap oluşturabilirim?</target>
       </trans-unit>
       <trans-unit id="64649250206d05fcf6402616f25611f8282e964c" datatype="html">
         <source>Go to the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Register<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> page.</source>
@@ -3888,7 +3888,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">18</context>
         </context-group>
-        <target state="needs-translation">Click on "Teacher".</target>
+        <target state="translated">"Öğretmen"' e tıkla.</target>
       </trans-unit>
       <trans-unit id="0fb9b3530d8d70b28d4ab1ca863c04ec01db3dff" datatype="html">
         <source>How do I use a unit with my class?</source>
@@ -4140,7 +4140,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">70</context>
         </context-group>
-        <target state="needs-translation">Warning 1</target>
+        <target state="translated">Uyarı 1</target>
       </trans-unit>
       <trans-unit id="bce5e9f9e8847d8a1cf6f535b8d6ba481bf878ae" datatype="html">
         <source>If you move Student A into an established team, student A loses all of their current work and inherits the current work of the established team.</source>
@@ -4156,7 +4156,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">71</context>
         </context-group>
-        <target state="needs-translation">Warning 2</target>
+        <target state="translated">Uyarı 2</target>
       </trans-unit>
       <trans-unit id="65bda4225be9598df7203894abde67e92a0d83ad" datatype="html">
         <source>If you move Student A into a newly created (blank) team, student A will lose all of their work.</source>
@@ -4180,7 +4180,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">80</context>
         </context-group>
-        <target state="needs-translation">Find the student.</target>
+        <target state="translated">Öğrenciyi bul.</target>
       </trans-unit>
       <trans-unit id="5160d5b8364d4cce587256880224e695f6ed90e1" datatype="html">
         <source>Click the &quot;Period&quot; link.</source>
@@ -4212,7 +4212,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">84</context>
         </context-group>
-        <target state="needs-translation">Click "Save Changes".</target>
+        <target state="translated">"Değişimleri Kaydet"'e Tıkla.</target>
       </trans-unit>
       <trans-unit id="a8059e31694578c1b0344a76a345357dd60e8f01" datatype="html">
         <source>Warning</source>
@@ -4220,7 +4220,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">85</context>
         </context-group>
-        <target state="needs-translation">Warning</target>
+        <target state="translated">Uyarı</target>
       </trans-unit>
       <trans-unit id="4ad84d4f3bbc9a37b27cd1ff908aea5fa83dccf3" datatype="html">
         <source>If you move a student to a different period, they will lose all of their work.</source>
@@ -4492,7 +4492,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">156</context>
         </context-group>
-        <target state="needs-translation">Open the project.</target>
+        <target state="translated">Projeyi aç.</target>
       </trans-unit>
       <trans-unit id="fd1e6e8e6b4e2772c8bd4dece6ed05076b1a6647" datatype="html">
         <source>Go to the step that the teacher graded.</source>
@@ -4596,7 +4596,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">181</context>
         </context-group>
-        <target state="needs-translation">Yes it does.</target>
+        <target state="translated">Evet.</target>
       </trans-unit>
       <trans-unit id="a9d707572558962320f0d20f346be62a0ae3b4d0" datatype="html">
         <source>Can I use the Real Time Classroom Monitor to pause student screens?</source>
@@ -4712,7 +4712,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">54</context>
         </context-group>
-        <target state="needs-translation">Yes!</target>
+        <target state="translated">Evet!</target>
       </trans-unit>
       <trans-unit id="cd761cded422c423fa11257b80da3e4ecff46339" datatype="html">
         <source>Click on your account icon at the top right of the page. This should open a drop down with options.</source>
@@ -4824,7 +4824,7 @@
           <context context-type="sourcefile">app/help/help-home/help-home.component.html</context>
           <context context-type="linenumber">17</context>
         </context-group>
-        <target state="needs-translation">Information for new users.</target>
+        <target state="translated">Yeni kullanıcılar için bilgi.</target>
       </trans-unit>
       <trans-unit id="3ba2943f558468dbbc717d0d93b708c05640f297" datatype="html">
         <source>Student Frequently Asked Questions</source>
@@ -4832,7 +4832,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">3</context>
         </context-group>
-        <target state="needs-translation">Student Frequently Asked Questions</target>
+        <target state="translated">Öğrenci Sık Sorulan Sorular</target>
       </trans-unit>
       <trans-unit id="6f352eaa805d09d80fce681e63d73b007a681142" datatype="html">
         <source>Click on <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Student<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</source>
@@ -4848,7 +4848,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">19</context>
         </context-group>
-        <target state="needs-translation">I forgot my username, how can I find it?</target>
+        <target state="translated">Kullanıcı adımı unuttum, onu nasıl bulabilirim?</target>
       </trans-unit>
       <trans-unit id="1219a9794a1c01bab8fc1601bb58ce0a86310b93" datatype="html">
         <source>Go to the forgot username page and follow the instructions to retrieve your username.</source>
@@ -4864,7 +4864,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">23</context>
         </context-group>
-        <target state="needs-translation">I forgot my password, how can I change it?</target>
+        <target state="translated">Şifremi unuttum, onu nasıl değiştirebilirim?</target>
       </trans-unit>
       <trans-unit id="aa17e4de65d75d06e18b88dc9abca8177b575dac" datatype="html">
         <source>Go to the forgot password page and follow the instructions to reset your password.</source>
@@ -4928,7 +4928,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">34</context>
         </context-group>
-        <target state="needs-translation">Click "Add".</target>
+        <target state="translated">"Ekle"'ye Tıkla.</target>
       </trans-unit>
       <trans-unit id="29a187acf9e3654fbc3bc2f34dc7b8490c2c3085" datatype="html">
         <source>The run will be added to your list of runs.</source>
@@ -5016,7 +5016,7 @@
           <context context-type="sourcefile">app/register/register-student/register-student.component.html</context>
           <context context-type="linenumber">29</context>
         </context-group>
-        <target state="needs-translation">Sign Up</target>
+        <target state="translated">Kaydol</target>
       </trans-unit>
       <trans-unit id="223846e3b440a5bf278a46411d71586ac79cc6ec" datatype="html">
         <source>- or -</source>
@@ -5024,7 +5024,7 @@
           <context context-type="sourcefile">app/register/register-teacher/register-teacher.component.html</context>
           <context context-type="linenumber">22</context>
         </context-group>
-        <target state="needs-translation">- or -</target>
+        <target state="translated">- ya da -</target>
       </trans-unit>
       <trans-unit id="692e665f8177ee9150169dca0ff15418616cb3cb" datatype="html">
         <source>Google logo</source>
@@ -5052,7 +5052,7 @@
           <context context-type="sourcefile">app/student/team-sign-in-dialog/team-sign-in-dialog.component.html</context>
           <context context-type="linenumber">59</context>
         </context-group>
-        <target state="needs-translation">Google logo</target>
+        <target state="translated">Google logosu</target>
       </trans-unit>
       <trans-unit id="49ddce3277c9c81865f8d2278255426cdc9e94f2" datatype="html">
         <source>Sign up with Google</source>
@@ -5064,7 +5064,7 @@
           <context context-type="sourcefile">app/register/register-student/register-student.component.html</context>
           <context context-type="linenumber">39</context>
         </context-group>
-        <target state="needs-translation">Sign up with Google</target>
+        <target state="translated">Google'la kaydol</target>
       </trans-unit>
       <trans-unit id="cf1b0697a564b781038d0a13989200044d851de3" datatype="html">
         <source>We’ll never share your email address or personal information with anyone without your consent.</source>
@@ -5080,7 +5080,7 @@
           <context context-type="sourcefile">app/register/register-teacher-form/register-teacher-form.component.html</context>
           <context context-type="linenumber">43</context>
         </context-group>
-        <target state="needs-translation">Please enter a valid email address</target>
+        <target state="translated">Lütfen geçerli bir e-posta adresi giriniz</target>
       </trans-unit>
       <trans-unit id="5c7012b5a926b32d9e45fefdcc8a1a3cb6f023d0" datatype="html">
         <source>City</source>
@@ -5092,7 +5092,7 @@
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
           <context context-type="linenumber">50</context>
         </context-group>
-        <target state="needs-translation">City</target>
+        <target state="translated">Şehir</target>
       </trans-unit>
       <trans-unit id="526394b14298e223b7e076e1b0cd15e54b03fe22" datatype="html">
         <source>City required</source>
@@ -5104,7 +5104,7 @@
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
           <context context-type="linenumber">55</context>
         </context-group>
-        <target state="needs-translation">City required</target>
+        <target state="translated">Şehir gerekli</target>
       </trans-unit>
       <trans-unit id="873b72903b1858a9cd6c8967521030b4d7d1435b" datatype="html">
         <source>State</source>
@@ -5116,7 +5116,7 @@
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
           <context context-type="linenumber">60</context>
         </context-group>
-        <target state="needs-translation">State</target>
+        <target state="translated">İlçe</target>
       </trans-unit>
       <trans-unit id="1417d4b0e633084ccb2b0bdb43d119c17ac0cd01" datatype="html">
         <source>State required</source>
@@ -6215,8 +6215,8 @@
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
           <context context-type="linenumber">66</context>
         </context-group>
-        <target state="needs-translation">
-        Lock After End Date
+        <target state="translated">
+        Bitiş Tarihinden Sonra Kilitle
       </target>
       </trans-unit>
       <trans-unit id="9c83559c416a8e596b51a342566efdb2868f2404" datatype="html">
