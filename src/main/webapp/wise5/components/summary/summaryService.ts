@@ -39,6 +39,7 @@ class SummaryService extends ComponentService {
     component.chartType = 'column';
     component.requirementToSeeSummary = 'submitWork';
     component.highlightCorrectAnswer = false;
+    component.customLabelColors = [];
     return component;
   }
 

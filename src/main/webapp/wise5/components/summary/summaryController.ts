@@ -18,6 +18,7 @@ class SummaryController extends ComponentController {
   isShowDisplay: boolean;
   periodId: number;
   source: string;
+  customLabelColors: any[];
 
   static $inject = [
     '$filter',
@@ -75,6 +76,7 @@ class SummaryController extends ComponentController {
     this.prompt = this.componentContent.prompt;
     this.highlightCorrectAnswer = this.componentContent.highlightCorrectAnswer;
     this.source = this.componentContent.source;
+    this.customLabelColors = this.componentContent.customLabelColors;
     this.warningMessage = '';
     if (this.componentContent.showPromptFromOtherComponent) {
       this.otherPrompt = this.getOtherPrompt(this.summaryNodeId, this.summaryComponentId);

@@ -27,18 +27,19 @@ class SummaryDisplayController {
   }
 
   $onInit() {
-    this.setColors();
     this.setNumDummySamples();
+    this.initializeColors();
     this.initializeOtherComponent();
     this.initializeDataService();
     this.initializePeriodId();
+    this.initializeCustomLabelColors();
     this.initializeChangeListeners();
     if (this.doRender) {
       this.renderDisplay();
     }
   }
 
-  setColors() {
+  initializeColors() {
     this.colors = {
       palette: [
         '#1a237e',
@@ -96,8 +97,15 @@ class SummaryDisplayController {
     }
   }
 
+  initializeCustomLabelColors() {
+    if (this.customLabelColors == null) {
+      this.customLabelColors = [];
+    }
+  }
+
   initializeChangeListeners() {
     this.$onChanges = changes => {
+      this.initializeColors();
       this.renderDisplay();
     };
     this.$rootScope.$on('studentWorkSavedToServer', (event, args) => {
@@ -427,12 +435,16 @@ class SummaryDisplayController {
   }
 
   cleanLabel(label) {
-    return label
+    return (label + '')
       .trim()
       .toLowerCase()
       .split(' ')
       .map(word => {
-        return word[0].toUpperCase() + word.substr(1);
+        if (word.length > 0) {
+          return word[0].toUpperCase() + word.substr(1);
+        } else {
+          return '';
+        }
       })
       .join(' ');
   }
@@ -618,6 +630,7 @@ class SummaryDisplayController {
     const xAxisType = 'category';
     const series = this.createSeries(data);
     const colors = this.getChartColors();
+    this.setCustomLabelColors(series, colors, this.customLabelColors);
     this.chartConfig = this.createChartConfig(chartType, title, xAxisType, total, series, colors);
   }
 
@@ -696,6 +709,28 @@ class SummaryDisplayController {
       }
       return colors;
     }
+  }
+
+  setCustomLabelColors(series, colors, customLabelColors) {
+    for (const customLabelColor of customLabelColors) {
+      const index = this.getIndexByName(series, customLabelColor.label);
+      if (index != null) {
+        colors[index] = customLabelColor.color;
+      }
+    }
+  }
+
+  getIndexByName(series, name) {
+    for (const singleSeries of series) {
+      if (singleSeries.data != null) {
+        for (const [i, dataPoint] of singleSeries.data.entries()) {
+          if (this.cleanLabel(dataPoint.name) === this.cleanLabel(name)) {
+            return i;
+          }
+        }
+      }
+    }
+    return null;
   }
 
   isStudentDataTypeResponses() {
@@ -848,6 +883,7 @@ const SummaryDisplay = {
     chartType: '<',
     hasWarning: '<',
     warningMessage: '<',
+    customLabelColors: '<',
     doRender: '='
   },
   templateUrl: 'wise5/directives/summaryDisplay/summaryDisplay.html',
