@@ -114,11 +114,11 @@ class SummaryController extends ComponentController {
   }
 
   calculateIsShowDisplay() {
-    if (this.componentContent.requirementToSeeSummary === 'submitWork') {
+    if (this.isRequirementToSeeSummarySubmitWork()) {
       return this.studentHasSubmittedWork();
-    } else if (this.componentContent.requirementToSeeSummary === 'completeComponent') {
+    } else if (this.isRequirementToSeeSummaryCompleteComponent()) {
       return this.studentHasCompletedComponent();
-    } else if (this.componentContent.requirementToSeeSummary === 'none') {
+    } else if (this.isRequirementToSeeSummaryNone()) {
       return true;
     }
   }
@@ -145,9 +145,9 @@ class SummaryController extends ComponentController {
 
   getWarningMessageForSourceSelf() {
     let messageTranslationKey = '';
-    if (this.componentContent.requirementToSeeSummary === 'submitWork') {
+    if (this.isRequirementToSeeSummarySubmitWork()) {
       messageTranslationKey = 'summary.youMustSubmitWorkToViewSelfSummary';
-    } else if (this.componentContent.requirementToSeeSummary === 'completeComponent') {
+    } else if (this.isRequirementToSeeSummaryCompleteComponent()) {
       messageTranslationKey = 'summary.youMustCompleteToViewSelfSummary';
     }
     return this.$translate(messageTranslationKey, { stepTitle: this.otherStepTitle });
@@ -155,12 +155,24 @@ class SummaryController extends ComponentController {
 
   getWarningMessageForSourceClass() {
     let messageTranslationKey = '';
-    if (this.componentContent.requirementToSeeSummary === 'submitWork') {
+    if (this.isRequirementToSeeSummarySubmitWork()) {
       messageTranslationKey = 'summary.youMustSubmitWorkToViewClassSummary';
-    } else if (this.componentContent.requirementToSeeSummary === 'completeComponent') {
+    } else if (this.isRequirementToSeeSummaryCompleteComponent()) {
       messageTranslationKey = 'summary.youMustCompleteToViewClassSummary';
     }
     return this.$translate(messageTranslationKey, { stepTitle: this.otherStepTitle });
+  }
+
+  isRequirementToSeeSummarySubmitWork() {
+    return this.componentContent.requirementToSeeSummary === 'submitWork';
+  }
+
+  isRequirementToSeeSummaryCompleteComponent() {
+    return this.componentContent.requirementToSeeSummary === 'completeComponent';
+  }
+
+  isRequirementToSeeSummaryNone() {
+    return this.componentContent.requirementToSeeSummary === 'none';
   }
 
   studentHasSubmittedWork() {
@@ -202,7 +214,7 @@ class SummaryController extends ComponentController {
     }
   }
 
-  handleStudentWorkSavedToServerAdditionalProcessing(event, args) {
+  handleStudentWorkSavedToServerAdditionalProcessing(event: any, args: any) {
     if (this.isStudent) {
       this.isShowDisplay = this.calculateIsShowDisplay();
     }
