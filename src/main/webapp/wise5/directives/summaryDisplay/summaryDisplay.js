@@ -471,7 +471,9 @@ class SummaryDisplayController {
     if (labelToCount[key] == null) {
       labelToCount[key] = 0;
     }
-    labelToCount[key] += Number(value);
+    if (!isNaN(Number(value))) {
+      labelToCount[key] += Number(value);
+    }
   }
 
   processScoreAnnotations(annotations) {
@@ -780,7 +782,7 @@ class SummaryDisplayController {
             dataLabels: {
               formatter: function() {
                 if (chartType === 'pie') {
-                  const pct = Math.round((this.y / this.total) * 100);
+                  const pct = Math.round((this.y / total) * 100);
                   return this.key + ': ' + pct + '%';
                 } else {
                   return this.y;
