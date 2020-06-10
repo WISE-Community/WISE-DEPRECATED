@@ -365,17 +365,31 @@ class SummaryDisplayController {
     };
   }
 
-  createDummyTableComponentState() {
+  createDummyTableComponentState(component) {
     return {
       studentData: {
-        tableData: [
-          [{ text: 'Trait' }, { text: 'Count' }],
-          [{ text: 'Blue' }, { text: '3' }],
-          [{ text: 'Green' }, { text: '2' }],
-          [{ text: 'Red' }, { text: '1' }]
-        ]
+        tableData: this.getDummyTableDataSimilarToLatestComponentState()
       }
     };
+  }
+
+  getDummyTableDataSimilarToLatestComponentState() {
+    let tableData = [];
+    const componentState = this.dataService.getLatestComponentStateByNodeIdAndComponentId(
+      this.nodeId,
+      this.componentId
+    );
+    if (componentState != null) {
+      tableData = this.UtilService.makeCopyOfJSONObject(componentState.studentData.tableData);
+      for (let r = 1; r < tableData.length; r++) {
+        tableData[r][1].text = this.getRandomSimilarNumber(tableData[r][1].text);
+      }
+    }
+    return tableData;
+  }
+
+  getRandomSimilarNumber(text) {
+    return Math.ceil(this.convertToNumber(text) * Math.random());
   }
 
   getRandomChoice(choices) {
@@ -471,8 +485,14 @@ class SummaryDisplayController {
     if (labelToCount[key] == null) {
       labelToCount[key] = 0;
     }
+    labelToCount[key] += this.convertToNumber(value);
+  }
+
+  convertToNumber(value) {
     if (!isNaN(Number(value))) {
-      labelToCount[key] += Number(value);
+      return Number(value);
+    } else {
+      return 0;
     }
   }
 
