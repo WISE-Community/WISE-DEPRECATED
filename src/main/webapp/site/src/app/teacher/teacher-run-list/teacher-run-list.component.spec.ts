@@ -10,6 +10,7 @@ import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ConfigService } from '../../services/config.service';
 import { configureTestSuite } from 'ng-bullet';
 import { Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 
 @Component({selector: 'app-teacher-run-list-item', template: ''})
 class TeacherRunListItemStubComponent {
@@ -83,11 +84,10 @@ describe('TeacherRunListComponent', () => {
   configureTestSuite(() => {
     TestBed.configureTestingModule({
       declarations: [ TeacherRunListComponent ],
-      imports: [ MomentModule ],
+      imports: [ MomentModule, RouterTestingModule ],
       providers: [
         { provide: TeacherService, useClass: MockTeacherService },
         { provide: ConfigService, useClass: MockConfigService },
-        { provide: Router }
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     });

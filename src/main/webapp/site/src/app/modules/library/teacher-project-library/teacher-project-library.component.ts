@@ -1,7 +1,7 @@
 import { Component, ViewEncapsulation, OnInit } from '@angular/core';
 import { LibraryProject } from "../libraryProject";
 import { LibraryService } from "../../../services/library.service";
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { OfficialLibraryDetailsComponent } from '../official-library/official-library.component';
 import { I18n } from '@ngx-translate/i18n-polyfill';
 import { Router } from '@angular/router';

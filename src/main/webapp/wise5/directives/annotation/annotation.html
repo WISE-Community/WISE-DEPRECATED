@@ -4,7 +4,7 @@
     <textarea name="comment_{{annotationController.componentStateId}}" ng-model="annotationController.value"
               ng-disabled="!annotationController.active" ng-change="annotationController.postAnnotation()"
               ng-model-options="{ debounce: 10000 }"
-              rows="5"/>
+              rows="5"></textarea>
 </div>
 
 <div ng-if="annotationController.mode === 'grading' && annotationController.type === 'score' && annotationController.gradingMaxScore > -1"

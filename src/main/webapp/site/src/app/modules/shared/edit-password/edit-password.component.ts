@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators, FormBuilder } from "@angular/forms";
 import { finalize } from 'rxjs/operators';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserService } from "../../../services/user.service";
 import { I18n } from '@ngx-translate/i18n-polyfill';
 

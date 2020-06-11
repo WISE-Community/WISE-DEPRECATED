@@ -8,5 +8,12 @@
       "moment": ["../node_modules/moment/min/moment.min.js"]
     }
   },
+  "files": [
+    "main.ts",
+    "polyfills.ts"
+  ],
+  "include": [
+    "src/main/webapp/site/src/**/*.d.ts"
+  ],
   "exclude": ["test.ts", "**/*.spec.ts"]
 }

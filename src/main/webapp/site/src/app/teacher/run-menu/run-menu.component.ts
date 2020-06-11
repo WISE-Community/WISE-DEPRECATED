@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { TeacherService } from '../teacher.service';
 import { ShareRunDialogComponent } from '../share-run-dialog/share-run-dialog.component';
 import { LibraryProjectDetailsComponent } from '../../modules/library/library-project-details/library-project-details.component';

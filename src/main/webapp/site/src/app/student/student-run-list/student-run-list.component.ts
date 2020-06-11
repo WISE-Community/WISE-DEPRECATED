@@ -4,7 +4,7 @@ import { StudentRun } from '../student-run';
 import { StudentService } from '../student.service';
 import { ConfigService } from '../../services/config.service';
 import { ActivatedRoute } from '@angular/router';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { AddProjectDialogComponent } from '../add-project-dialog/add-project-dialog.component';
 
 @Component({

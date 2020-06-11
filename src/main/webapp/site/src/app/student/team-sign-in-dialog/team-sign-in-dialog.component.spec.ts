@@ -12,7 +12,7 @@ import { StudentService } from '../student.service';
 import { translationsFactory } from '../../app.module';
 import { I18n } from '@ngx-translate/i18n-polyfill';
 import { RouterTestingModule } from '@angular/router/testing';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 export class MockUserService {
   getUser(): BehaviorSubject<User> {

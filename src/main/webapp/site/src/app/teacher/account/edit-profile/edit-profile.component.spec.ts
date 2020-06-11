@@ -5,9 +5,9 @@ import { Teacher } from "../../../domain/teacher";
 import { Observable, BehaviorSubject } from 'rxjs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
-import {
-  MatInputModule, MatSelectModule,
-  MatSnackBarModule } from '@angular/material';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { TeacherService } from "../../teacher.service";
 import { NO_ERRORS_SCHEMA, TRANSLATIONS_FORMAT, TRANSLATIONS, LOCALE_ID } from "@angular/core";
 import { By } from '@angular/platform-browser';
