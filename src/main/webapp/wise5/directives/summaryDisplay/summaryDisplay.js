@@ -366,11 +366,28 @@ class SummaryDisplayController {
   }
 
   createDummyTableComponentState(component) {
-    return {
-      studentData: {
-        tableData: this.getDummyTableDataSimilarToLatestComponentState()
-      }
-    };
+    if (this.isAuthoringPreview()) {
+      return {
+        studentData: {
+          tableData: this.getDummyTableData()
+        }
+      };
+    } else {
+      return {
+        studentData: {
+          tableData: this.getDummyTableDataSimilarToLatestComponentState()
+        }
+      };
+    }
+  }
+
+  getDummyTableData() {
+    return [
+      [{ text: 'Trait' }, { text: 'Count' }],
+      [{ text: 'Blue' }, { text: '3' }],
+      [{ text: 'Green' }, { text: '2' }],
+      [{ text: 'Red' }, { text: '1' }]
+    ];
   }
 
   getDummyTableDataSimilarToLatestComponentState() {
