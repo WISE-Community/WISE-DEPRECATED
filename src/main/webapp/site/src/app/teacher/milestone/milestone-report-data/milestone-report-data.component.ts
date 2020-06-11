@@ -1,12 +1,30 @@
-'use strict';
+import { Component, Input } from '@angular/core';
 
-class MilestoneReportDataController {
+@Component({
+  selector: 'milestone-report-data',
+  template: `{{output}}`
+})
+export class MilestoneReportDataComponent {
+
+  @Input()
+  calc: string;
+
+  @Input()
+  scoreId: string;
+
+  @Input()
+  scoreValues: any = [];
+
+  @Input()
+  data: any;
+
+  output: string = '';
+
   constructor() {
-    this.output = '';
-    this.scoreValues = [];
   }
 
-  $onInit() {
+  ngOnInit() {
+    this.data = JSON.parse(this.data.replace(/\'/g, "\""));
     if (this.calc === 'percent') {
       this.output = this.getPercent();
     }
@@ -35,24 +53,9 @@ class MilestoneReportDataController {
     let count = 0;
     for (const [key, value] of Object.entries(this.data.counts)) {
       if (this.scoreValues.includes(Number(key))) {
-        count += value;
+        count += Number(value);
       }
     }
     return count;
   }
 }
-
-MilestoneReportDataController.$inject = [];
-
-const MilestoneReportData = {
-  bindings: {
-    scoreId: '@',
-    scoreValues: '<',
-    calc: '@',
-    data: '<'
-  },
-  templateUrl: 'wise5/directives/milestoneReportData/milestoneReportData.html',
-  controller: MilestoneReportDataController
-};
-
-export default MilestoneReportData;

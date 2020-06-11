@@ -1,5 +1,6 @@
 'use strict';
 
+import * as angular from 'angular';
 import Annotation from './annotation/annotation';
 import Compile from './compile/compile';
 import Component from './component/component';
@@ -9,12 +10,13 @@ import Draggable from './draggable/draggable';
 import GlobalAnnotations from './globalAnnotations/globalAnnotations';
 import GlobalAnnotationsList from './globalAnnotationsList/globalAnnotationsList';
 import ListenForDeleteKeypress from './listenForDeleteKeypress/listenForDeleteKeypress';
-import MilestoneReportData from './milestoneReportData/milestoneReportData';
 import MilestoneReportGraph from './milestoneReportGraph/milestoneReportGraph';
 import PossibleScore from './possibleScore/possibleScore';
 import SummaryDisplay from './summaryDisplay/summaryDisplay';
 import Wiselink from './wiselink/wiselink';
 import Sticky from './sticky/sticky';
+import { downgradeComponent } from '@angular/upgrade/static';
+import { MilestoneReportDataComponent } from '../../site/src/app/teacher/milestone/milestone-report-data/milestone-report-data.component';
 
 const Components = angular.module('components', []);
 
@@ -27,7 +29,8 @@ Components.component('draggable', Draggable);
 Components.component('globalAnnotations', GlobalAnnotations);
 Components.component('globalAnnotationsList', GlobalAnnotationsList);
 Components.component('listenForDeleteKeypress', ListenForDeleteKeypress);
-Components.component('milestoneReportData', MilestoneReportData);
+Components.directive('milestoneReportData',
+    downgradeComponent({ component: MilestoneReportDataComponent}) as angular.IDirectiveFactory);
 Components.component('milestoneReportGraph', MilestoneReportGraph);
 Components.component('possibleScore', PossibleScore);
 Components.component('summaryDisplay', SummaryDisplay);
