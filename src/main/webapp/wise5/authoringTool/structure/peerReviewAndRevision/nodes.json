@@ -39,7 +39,7 @@
       ]
     },
     "showSubmitButton": false,
-    "showSaveButton": true,
+    "showSaveButton": false,
     "id": "node1",
     "title": "Share your idea!",
     "type": "node",
@@ -67,7 +67,7 @@
         "showAddToNotebookButton": true,
         "starterSentence": null,
         "showSubmitButton": false,
-        "showSaveButton": false,
+        "showSaveButton": true,
         "id": "ktcho0acwm",
         "type": "OpenResponse",
         "prompt": "Explore the Discussion and find at least one idea that differs from your own. Explain how this student's idea is different than yours.",
@@ -99,7 +99,7 @@
       ]
     },
     "showSubmitButton": false,
-    "showSaveButton": true,
+    "showSaveButton": false,
     "id": "node2",
     "title": "What are your peers thinking?",
     "type": "node",
@@ -149,7 +149,7 @@
       ]
     },
     "showSubmitButton": false,
-    "showSaveButton": true,
+    "showSaveButton": false,
     "id": "node3",
     "title": "Help your peers revise their ideas!",
     "type": "node",
@@ -177,14 +177,7 @@
         "showAddToNotebookButton": true,
         "starterSentence": null,
         "showSubmitButton": false,
-        "connectedComponents": [
-          {
-            "componentId": "e3hs8mdfnc",
-            "type": "importWork",
-            "nodeId": "node1"
-          }
-        ],
-        "showSaveButton": false,
+        "showSaveButton": true,
         "id": "4qkh6bxy0s",
         "type": "OpenResponse",
         "prompt": "[Customize prompt] Use your peers' ideas to improve your own [answer/explanation]!",
@@ -196,8 +189,13 @@
         "showSubmitButton": false,
         "connectedComponents": [
           {
+            "componentId": "yz52a2noo5",
+            "type": "showWork",
+            "nodeId": "node1"
+          },
+          {
             "componentId": "uy562rafjo",
-            "type": "importWork",
+            "type": "showWork",
             "nodeId": "node3"
           }
         ],
@@ -212,7 +210,7 @@
       "transitions": []
     },
     "showSubmitButton": false,
-    "showSaveButton": true,
+    "showSaveButton": false,
     "id": "node4",
     "title": "Revise your own ideas",
     "type": "node",
