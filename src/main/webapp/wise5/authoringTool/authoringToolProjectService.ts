@@ -4,6 +4,7 @@ import * as $ from 'jquery';
 import ProjectService from '../services/projectService';
 
 class AuthoringToolProjectService extends ProjectService {
+
   static $inject = [
     '$filter',
     '$http',
@@ -1253,6 +1254,10 @@ class AuthoringToolProjectService extends ProjectService {
     } else {
       return 1;
     }
+  }
+
+  getAutomatedAssessmentProjectId(): number {
+    return this.ConfigService.getConfigParam('automatedAssessmentProjectId') || -1;
   }
 }
 

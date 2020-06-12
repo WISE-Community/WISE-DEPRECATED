@@ -1,0 +1,45 @@
+<h5 translate="automatedAssessment.label"></h5>
+<p translate="automatedAssessment.description"></p>
+<hr>
+<p translate="automatedAssessment.chooseAssessmentItem"></p>
+    <md-radio-group ng-model='$ctrl.node'>
+      <div ng-repeat='item in $ctrl.projectIdToOrder'
+        ng-class='::{"groupHeader": item.node.type == "group", "stepHeader": item.node.type != "group"}'>
+      <h6 ng-if='item.order != 0 && item.node.type == "group"'>
+        {{item.node.title}}
+      </h6>
+      <div layout='row' ng-if='item.order != 0 && item.node.type != "group"'>
+        <div layout='row'>
+          <md-radio-button ng-value='item.node'>
+            <h6 style='display: inline;'>{{item.node.title}}</h6>
+          </md-radio-button>
+        </div>
+        <div layout='row' style='height: 40px;'>
+          <md-button class='regularButton md-raised md-primary'
+              style='margin-top: -5;'
+              ng-click='$ctrl.previewNode(item.node)'
+              aria-label='{{ ::"previewStep" | translate }}'>
+            <md-icon>visibility</md-icon>
+            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'previewStep' | translate }}</md-tooltip>
+          </md-button>
+        </div>
+      </div>
+    </div>
+  </md-radio-group>
+<hr>
+<div layout="row">
+  <md-button class='createButton md-primary'
+             ng-click='$ctrl.goToChooseStructure()'
+             aria-label='{{ ::"back" | translate }}'
+             translate='back'></md-button>
+  <span flex></span>
+  <md-button class='createButton md-primary'
+             ng-click='$ctrl.cancel()'
+             aria-label='{{ ::"cancel" | translate }}'
+             translate='cancel'></md-button>
+  <md-button class='createButton md-raised md-primary'
+             ng-disabled='$ctrl.node == null'
+             ng-click='$ctrl.next()'
+             aria-label='{{ ::"next" | translate }}'
+             translate='next'></md-button>
+</div>
