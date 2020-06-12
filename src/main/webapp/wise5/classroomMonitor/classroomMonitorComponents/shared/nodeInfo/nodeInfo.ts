@@ -1,7 +1,7 @@
 'use strict';
 
 import AnnotationService from '../../../../services/annotationService';
-import ClassroomMonitorProjectService from '../../../classroomMonitorProjectService';
+import { ClassroomMonitorProjectService } from '../../../classroomMonitorProjectService';
 import SummaryService from '../../../../components/summary/summaryService';
 import TeacherDataService from '../../../../services/teacherDataService';
 import { UtilService } from '../../../../services/utilService';
@@ -30,7 +30,10 @@ class NodeInfoController {
     private TeacherDataService: TeacherDataService,
     private UtilService: UtilService
   ) {
-    this.periodId = this.TeacherDataService.getCurrentPeriod().periodId;
+    const currentPeriod = this.TeacherDataService.getCurrentPeriod();
+    if (currentPeriod != null) {
+      this.periodId = currentPeriod.periodId;
+    }
   }
 
   $onInit() {

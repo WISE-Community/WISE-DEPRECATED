@@ -21,9 +21,9 @@ import AnnotationService from '../services/annotationService';
 import '../components/audioOscillator/audioOscillatorComponentModule';
 import './classroomMonitorComponents';
 import ClassroomMonitorController from './classroomMonitorController';
-import ClassroomMonitorProjectService from './classroomMonitorProjectService';
+import { ClassroomMonitorProjectService } from './classroomMonitorProjectService';
 import '../components/conceptMap/conceptMapComponentModule';
-import ConfigService from '../services/configService';
+import { ConfigService } from '../services/configService';
 import CRaterService from '../services/cRaterService';
 import '../directives/components';
 import ComponentService from '../components/componentService';
@@ -59,7 +59,6 @@ import NotificationService from '../services/notificationService';
 import '../components/openResponse/openResponseComponentModule';
 import '../components/outsideURL/outsideURLComponentModule';
 import PlanningService from '../services/planningService';
-import ProjectService from '../services/projectService';
 import SessionService from '../services/sessionService';
 import * as SockJS from 'sockjs-client';
 import * as StompJS from '@stomp/stompjs';
@@ -117,7 +116,7 @@ const classroomMonitorModule = angular
   .service('AchievementService', AchievementService)
   .service('AnnotationService', AnnotationService)
   .service('ComponentService', ComponentService)
-  .service('ConfigService', ConfigService)
+  .factory('ConfigService', downgradeInjectable(ConfigService))
   .service('CRaterService', CRaterService)
   .service('HttpInterceptor', HttpInterceptor)
   .service('MilestoneService', MilestoneService)
@@ -125,7 +124,7 @@ const classroomMonitorModule = angular
   .service('NotebookService', NotebookService)
   .service('NotificationService', NotificationService)
   .service('PlanningService', PlanningService)
-  .service('ProjectService', ClassroomMonitorProjectService)
+  .factory('ProjectService', downgradeInjectable(ClassroomMonitorProjectService))
   .service('SessionService', SessionService)
   .service('StudentAssetService', StudentAssetService)
   .service('StudentDataService', StudentDataService)

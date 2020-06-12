@@ -3,12 +3,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ShareProjectDialogComponent } from './share-project-dialog.component';
 import { TeacherService } from "../../../teacher/teacher.service";
 import { Observable } from 'rxjs';
-import {
-  MatDialogRef,
-  MAT_DIALOG_DATA,
-  MatAutocompleteModule,
-  MatSnackBarModule,
-  MatTableModule } from '@angular/material';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTableModule } from '@angular/material/table';
 import { LibraryService } from "../../../services/library.service";
 import { NO_ERRORS_SCHEMA, TRANSLATIONS_FORMAT, TRANSLATIONS, LOCALE_ID } from "@angular/core";
 import { Project } from "../../../domain/project";

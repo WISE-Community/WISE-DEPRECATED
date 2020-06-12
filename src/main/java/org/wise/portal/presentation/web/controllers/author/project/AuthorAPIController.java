@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
 import java.util.regex.Matcher;
@@ -43,6 +44,9 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.json.JSONException;
@@ -201,8 +205,10 @@ public class AuthorAPIController {
   @PostMapping("/project/icon")
   @ResponseBody
   protected HashMap<String, String> setProjectIcon(Authentication auth,
-      @RequestParam Long projectId, @RequestParam String projectIcon,
-      @RequestParam boolean isCustom) throws ObjectNotFoundException, IOException {
+      @RequestBody ObjectNode objectNode) throws ObjectNotFoundException, IOException {
+    Long projectId = objectNode.get("projectId").asLong();
+    String projectIcon = objectNode.get("projectIcon").asText();
+    boolean isCustom = objectNode.get("isCustom").asBoolean();
     User user = userService.retrieveUserByUsername(auth.getName());
     Project project = projectService.getById(projectId);
     HashMap<String, String> response = new HashMap<String, String>();
@@ -255,8 +261,10 @@ public class AuthorAPIController {
 
   @GetMapping("/config")
   @ResponseBody
+  @SuppressWarnings("unchecked")
   protected HashMap<String, Object> getDefaultAuthorProjectConfig(Authentication auth,
-      HttpServletRequest request) throws ObjectNotFoundException {
+      HttpServletRequest request)
+      throws ObjectNotFoundException, JsonMappingException, JsonProcessingException {
     HashMap<String, Object> config = new HashMap<String, Object>();
     User user = userService.retrieveUserByUsername(auth.getName());
     String contextPath = request.getContextPath();
@@ -279,6 +287,12 @@ public class AuthorAPIController {
       projectMetadataSettings = portalService.getDefaultProjectMetadataSettings();
     }
     config.put("projectMetadataSettings", projectMetadataSettings);
+    String structures = portal.getStructures();
+    if (structures != null) {
+      ObjectMapper mapper = new ObjectMapper();
+      Map<String, Integer> map = mapper.readValue(structures, Map.class);
+      config.put("automatedAssessmentProjectId", map.get("automatedAssessmentProjectId"));
+    }
 
     MutableUserDetails userDetails = user.getUserDetails();
     String username = userDetails.getUsername();
@@ -419,10 +433,10 @@ public class AuthorAPIController {
     return null;
   }
 
-  @PostMapping("/project/notify/{projectId}")
+  @PostMapping("/project/notify/{projectId}/{isBegin}")
   @ResponseBody
   protected void notifyAuthorBeginEnd(Authentication auth, @PathVariable Long projectId,
-      @RequestParam boolean isBegin) throws Exception {
+      @PathVariable boolean isBegin) throws Exception {
     User user = userService.retrieveUserByUsername(auth.getName());
     Project project = projectService.getById(projectId);
     if (projectService.canAuthorProject(project, user)) {
@@ -455,8 +469,11 @@ public class AuthorAPIController {
    */
   @PostMapping("/project/importSteps/{projectId}")
   @ResponseBody
-  protected String importSteps(Authentication auth, @RequestParam String steps,
-      @RequestParam Integer toProjectId, @RequestParam Integer fromProjectId) throws Exception {
+  protected String importSteps(Authentication auth, @RequestBody ObjectNode objectNode)
+      throws Exception {
+    String steps = objectNode.get("steps").asText();
+    Integer toProjectId = objectNode.get("toProjectId").asInt();
+    Integer fromProjectId = objectNode.get("fromProjectId").asInt();
     User user = userService.retrieveUserByUsername(auth.getName());
     Project project = projectService.getById(toProjectId);
     if (!projectService.canAuthorProject(project, user)) {

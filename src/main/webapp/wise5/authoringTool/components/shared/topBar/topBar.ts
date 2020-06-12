@@ -1,7 +1,7 @@
 'use strict';
 
-import ConfigService from '../../../../services/configService';
-import AuthoringToolProjectService from '../../../authoringToolProjectService';
+import { ConfigService } from '../../../../services/configService';
+import { AuthoringToolProjectService } from '../../../authoringToolProjectService';
 
 class TopBarController {
   avatarColor: any;

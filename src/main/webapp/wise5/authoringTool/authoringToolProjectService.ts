@@ -1,21 +1,22 @@
 'use strict';
 import * as angular from 'angular';
 import * as $ from 'jquery';
-import ProjectService from '../services/projectService';
+import { ProjectService } from '../services/projectService';
+import { ConfigService } from '../services/configService';
+import { UtilService } from '../services/utilService';
+import { Injectable } from '@angular/core';
+import { UpgradeModule } from '@angular/upgrade/static';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
-class AuthoringToolProjectService extends ProjectService {
-  static $inject = [
-    '$filter',
-    '$http',
-    '$injector',
-    '$q',
-    '$rootScope',
-    'ConfigService',
-    'UtilService'
-  ];
+@Injectable()
+export class AuthoringToolProjectService extends ProjectService {
 
-  constructor($filter, $http, $injector, $q, $rootScope, ConfigService, UtilService) {
-    super($filter, $http, $injector, $q, $rootScope, ConfigService, UtilService);
+  constructor(
+      protected upgrade: UpgradeModule,
+      protected http: HttpClient,
+      protected ConfigService: ConfigService,
+      protected UtilService: UtilService) {
+    super(upgrade, http, ConfigService, UtilService);
   }
 
   getNewProjectTemplate() {
@@ -31,7 +32,7 @@ class AuthoringToolProjectService extends ProjectService {
         {
           id: 'group1',
           type: 'group',
-          title: this.$translate('FIRST_ACTIVITY'),
+          title: this.UtilService.translate('FIRST_ACTIVITY'),
           startId: 'node1',
           ids: ['node1'],
           icons: {
@@ -46,7 +47,7 @@ class AuthoringToolProjectService extends ProjectService {
         {
           id: 'node1',
           type: 'node',
-          title: this.$translate('FIRST_STEP'),
+          title: this.UtilService.translate('FIRST_STEP'),
           components: [],
           constraints: [],
           showSaveButton: false,
@@ -68,7 +69,7 @@ class AuthoringToolProjectService extends ProjectService {
       },
       notebook: {
         enabled: false,
-        label: this.$translate('NOTEBOOK'),
+        label: this.UtilService.translate('NOTEBOOK'),
         enableAddNew: true,
         itemTypes: {
           note: {
@@ -80,9 +81,9 @@ class AuthoringToolProjectService extends ProjectService {
             enableStudentUploads: true,
             requireTextOnEveryNote: false,
             label: {
-              singular: this.$translate('NOTE_LOWERCASE'),
-              plural: this.$translate('NOTES_LOWERCASE'),
-              link: this.$translate('NOTES'),
+              singular: this.UtilService.translate('NOTE_LOWERCASE'),
+              plural: this.UtilService.translate('NOTES_LOWERCASE'),
+              link: this.UtilService.translate('NOTES'),
               icon: 'note',
               color: '#1565C0'
             }
@@ -90,19 +91,19 @@ class AuthoringToolProjectService extends ProjectService {
           report: {
             enabled: false,
             label: {
-              singular: this.$translate('REPORT_LOWERCASE'),
-              plural: this.$translate('REPORTS_LOWERCASE'),
-              link: this.$translate('REPORT'),
+              singular: this.UtilService.translate('REPORT_LOWERCASE'),
+              plural: this.UtilService.translate('REPORTS_LOWERCASE'),
+              link: this.UtilService.translate('REPORT'),
               icon: 'assignment',
               color: '#AD1457'
             },
             notes: [
               {
                 reportId: 'finalReport',
-                title: this.$translate('FINAL_REPORT'),
-                description: this.$translate('REPORT_DESCRIPTION'),
-                prompt: this.$translate('REPORT_PROMPT'),
-                content: this.$translate('REPORT_CONTENT')
+                title: this.UtilService.translate('FINAL_REPORT'),
+                description: this.UtilService.translate('REPORT_DESCRIPTION'),
+                prompt: this.UtilService.translate('REPORT_PROMPT'),
+                content: this.UtilService.translate('REPORT_CONTENT')
               }
             ]
           }
@@ -110,7 +111,7 @@ class AuthoringToolProjectService extends ProjectService {
       },
       teacherNotebook: {
         enabled: true,
-        label: this.$translate('TEACHER_NOTEBOOK'),
+        label: this.UtilService.translate('TEACHER_NOTEBOOK'),
         enableAddNew: true,
         itemTypes: {
           note: {
@@ -122,9 +123,9 @@ class AuthoringToolProjectService extends ProjectService {
             enableStudentUploads: true,
             requireTextOnEveryNote: false,
             label: {
-              singular: this.$translate('NOTE_LOWERCASE'),
-              plural: this.$translate('NOTES_LOWERCASE'),
-              link: this.$translate('NOTES'),
+              singular: this.UtilService.translate('NOTE_LOWERCASE'),
+              plural: this.UtilService.translate('NOTES_LOWERCASE'),
+              link: this.UtilService.translate('NOTES'),
               icon: 'note',
               color: '#1565C0'
             }
@@ -132,19 +133,19 @@ class AuthoringToolProjectService extends ProjectService {
           report: {
             enabled: true,
             label: {
-              singular: this.$translate('TEACHER_REPORT_LOWERCASE'),
-              plural: this.$translate('TEACHER_REPORTS_LOWERCASE'),
-              link: this.$translate('TEACHER_REPORT'),
+              singular: this.UtilService.translate('TEACHER_REPORT_LOWERCASE'),
+              plural: this.UtilService.translate('TEACHER_REPORTS_LOWERCASE'),
+              link: this.UtilService.translate('TEACHER_REPORT'),
               icon: 'assignment',
               color: '#AD1457'
             },
             notes: [
               {
                 reportId: 'teacherReport',
-                title: this.$translate('TEACHER_REPORT'),
-                description: this.$translate('TEACHER_REPORT_DESCRIPTION'),
-                prompt: this.$translate('TEACHER_REPORT_PROMPT'),
-                content: this.$translate('TEACHER_REPORT_CONTENT')
+                title: this.UtilService.translate('TEACHER_REPORT'),
+                description: this.UtilService.translate('TEACHER_REPORT_DESCRIPTION'),
+                prompt: this.UtilService.translate('TEACHER_REPORT_PROMPT'),
+                content: this.UtilService.translate('TEACHER_REPORT_CONTENT')
               }
             ]
           }
@@ -155,12 +156,9 @@ class AuthoringToolProjectService extends ProjectService {
   }
 
   notifyAuthorProjectBeginEnd(projectId, isBegin) {
-    return this.$http({
-      method: 'POST',
-      url: `${this.ConfigService.getConfigParam('notifyAuthoringBeginEndURL')}/${projectId}`,
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      params: { isBegin: isBegin }
-    });
+    return this.http.post(
+        `${this.ConfigService.getConfigParam('notifyAuthoringBeginEndURL')}/${projectId}/${isBegin}`,
+        null).toPromise();
   }
 
   notifyAuthorProjectBegin(projectId) {
@@ -168,7 +166,7 @@ class AuthoringToolProjectService extends ProjectService {
   }
 
   notifyAuthorProjectEnd(projectId = null) {
-    return this.$q((resolve, reject) => {
+    return this.upgrade.$injector.get('$q')((resolve, reject) => {
       if (projectId == null) {
         if (this.project != null) {
           projectId = this.ConfigService.getProjectId();
@@ -183,13 +181,12 @@ class AuthoringToolProjectService extends ProjectService {
   }
 
   copyProject(projectId) {
-    return this.$http({
-      method: 'POST',
-      url: `${this.ConfigService.getConfigParam('copyProjectURL')}/${projectId}`,
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-    }).then(({ data: newProject }) => {
-      return newProject;
-    });
+    return this.http.post(`${this.ConfigService.getConfigParam('copyProjectURL')}/${projectId}`,
+        null)
+      .toPromise()
+      .then(newProject => {
+        return newProject;
+      });
   }
 
   /**
@@ -198,14 +195,15 @@ class AuthoringToolProjectService extends ProjectService {
    * @param projectJSONString a valid JSON string
    */
   registerNewProject(projectName, projectJSONString) {
-    return this.$http
-      .post(this.ConfigService.getConfigParam('registerNewProjectURL'), {
-        projectName: projectName,
-        projectJSONString: projectJSONString
-      })
-      .then(({ data: newProjectId }) => {
-        return newProjectId;
-      });
+    return this.http
+        .post(this.ConfigService.getConfigParam('registerNewProjectURL'), {
+          projectName: projectName,
+          projectJSONString: projectJSONString
+        })
+        .toPromise()
+        .then( newProjectId => {
+          return newProjectId;
+        });
   }
 
   /**
@@ -455,17 +453,6 @@ class AuthoringToolProjectService extends ProjectService {
    * the new step after it.
    */
   copyNodes(selectedNodes, fromProjectId, toProjectId, nodeIdToInsertInsideOrAfter) {
-    const httpParams = {
-      method: 'POST',
-      url: this.ConfigService.getConfigParam('importStepsURL'),
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      data: $.param({
-        steps: angular.toJson(selectedNodes),
-        fromProjectId: fromProjectId,
-        toProjectId: toProjectId
-      })
-    };
-
     /*
      * Make the request to import the steps. This will copy the asset files
      * and change file names if necessary. If an asset file with the same
@@ -475,7 +462,14 @@ class AuthoringToolProjectService extends ProjectService {
      * new name and change all the references in the steps to use the new
      * name.
      */
-    return this.$http(httpParams).then(({ data: selectedNodes }) => {
+    return this.http.post(this.ConfigService.getConfigParam('importStepsURL'),
+        {
+          steps: angular.toJson(selectedNodes),
+          fromProjectId: fromProjectId,
+          toProjectId: toProjectId
+        })
+        .toPromise()
+        .then((selectedNodes: any) => {
       const inactiveNodes = this.getInactiveNodes();
       const newNodes = [];
       const newNodeIds = [];
@@ -670,13 +664,12 @@ class AuthoringToolProjectService extends ProjectService {
    * if this is the last node in the sequence
    */
   getNodeIdAfter(nodeId) {
-    const orderedItems = this.$filter('orderBy')(this.$filter('toArray')(this.idToOrder), 'order');
-    for (let i = 0; i < orderedItems.length - 1; i++) {
-      if (orderedItems[i].$key === nodeId) {
-        return orderedItems[i + 1].$key;
-      }
+    const order = this.getOrderById(nodeId);
+    if (order != null) {
+      return this.getNodeIdByOrder(order + 1);
+    } else {
+      return null;
     }
-    return null;
   }
 
   /**
@@ -876,17 +869,6 @@ class AuthoringToolProjectService extends ProjectService {
       newComponentIds.push(newComponentId);
     }
 
-    const httpParams = {
-      method: 'POST',
-      url: this.ConfigService.getConfigParam('importStepsURL'),
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      params: {
-        steps: angular.toJson(newComponents),
-        fromProjectId: importProjectId,
-        toProjectId: this.ConfigService.getConfigParam('projectId')
-      }
-    };
-
     /*
      * Make the request to import the components. This will copy the asset files
      * and change file names if necessary. If an asset file with the same
@@ -896,7 +878,14 @@ class AuthoringToolProjectService extends ProjectService {
      * new name and change all the references in the steps to use the new
      * name.
      */
-    return this.$http(httpParams).then(({ data: newComponents }) => {
+    return this.http.post(this.ConfigService.getConfigParam('importStepsURL'),
+      {
+        steps: angular.toJson(newComponents),
+        fromProjectId: importProjectId,
+        toProjectId: this.ConfigService.getConfigParam('projectId')
+      })
+      .toPromise()
+      .then((newComponents: any) => {
       const node = this.getNodeById(nodeId);
       let insertPosition = 0;
       if (insertAfterComponentId == null) {
@@ -981,7 +970,7 @@ class AuthoringToolProjectService extends ProjectService {
 
   turnOnSaveButtonForAllComponents(node) {
     for (const component of node.components) {
-      const service = this.$injector.get(component.type + 'Service');
+      const service = this.upgrade.$injector.get(component.type + 'Service');
       if (service.componentUsesSaveButton()) {
         component.showSaveButton = true;
       }
@@ -990,7 +979,7 @@ class AuthoringToolProjectService extends ProjectService {
 
   turnOffSaveButtonForAllComponents(node) {
     for (const component of node.components) {
-      const service = this.$injector.get(component.type + 'Service');
+      const service = this.upgrade.$injector.get(component.type + 'Service');
       if (service.componentUsesSaveButton()) {
         component.showSaveButton = false;
       }
@@ -1219,9 +1208,10 @@ class AuthoringToolProjectService extends ProjectService {
   }
 
   getLibraryProjects() {
-    return this.$http
+    return this.http
       .get(this.ConfigService.getConfigParam('getLibraryProjectsURL'))
-      .then(({ data: projects }) => {
+      .toPromise()
+      .then(projects => {
         return projects;
       });
   }
@@ -1254,6 +1244,8 @@ class AuthoringToolProjectService extends ProjectService {
       return 1;
     }
   }
-}
 
-export default AuthoringToolProjectService;
+  getAutomatedAssessmentProjectId(): number {
+    return this.ConfigService.getConfigParam('automatedAssessmentProjectId') || -1;
+  }
+}

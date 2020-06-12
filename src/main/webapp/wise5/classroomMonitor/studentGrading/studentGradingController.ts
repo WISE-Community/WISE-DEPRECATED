@@ -1,9 +1,9 @@
 'use strict';
 
 import AnnotationService from '../../services/annotationService';
-import ConfigService from '../../services/configService';
+import { ConfigService } from '../../services/configService';
 import NotificationService from '../../services/notificationService';
-import ClassroomMonitorProjectService from '../classroomMonitorProjectService';
+import { ClassroomMonitorProjectService } from '../classroomMonitorProjectService';
 import StudentStatusService from '../../services/studentStatusService';
 import TeacherDataService from '../../services/teacherDataService';
 import * as angular from 'angular';

@@ -2,7 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { LibraryService } from "../../../services/library.service";
 import { LibraryProject } from "../libraryProject";
 import { LibraryComponent } from "../library/library.component";
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-community-library',

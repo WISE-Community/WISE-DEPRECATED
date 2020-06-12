@@ -1,10 +1,10 @@
 'use strict';
 
 import AnnotationService from '../../../../services/annotationService';
-import ConfigService from '../../../../services/configService';
+import { ConfigService } from '../../../../services/configService';
 import NotificationService from '../../../../services/notificationService';
 import PlanningService from '../../../../services/planningService';
-import ClassroomMonitorProjectService from '../../../classroomMonitorProjectService';
+import { ClassroomMonitorProjectService } from '../../../classroomMonitorProjectService';
 import StudentStatusService from '../../../../services/studentStatusService';
 import TeacherDataService from '../../../../services/teacherDataService';
 import TeacherWebSocketService from '../../../../services/teacherWebSocketService';

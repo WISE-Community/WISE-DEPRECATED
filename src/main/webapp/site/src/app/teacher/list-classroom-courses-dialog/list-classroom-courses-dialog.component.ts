@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { TeacherService } from '../teacher.service';
 import { Course } from '../../domain/course';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { UserService } from '../../services/user.service';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators, ValidatorFn } from "@angular/forms";
 import { I18n } from '@ngx-translate/i18n-polyfill';

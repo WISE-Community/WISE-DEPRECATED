@@ -1,6 +1,6 @@
 'use strict';
 
-import ConfigService from '../../services/configService';
+import { ConfigService } from '../../services/configService';
 import StudentAssetService from '../../services/studentAssetService';
 
 class StudentAssetController {

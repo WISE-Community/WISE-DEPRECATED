@@ -1,19 +1,20 @@
 'use strict';
-import AuthoringToolProjectService from '../authoringTool/authoringToolProjectService';
+import { AuthoringToolProjectService } from '../authoringTool/authoringToolProjectService';
+import { ConfigService } from '../services/configService';
+import { UtilService } from '../services/utilService';
+import { Injectable } from '@angular/core';
+import { UpgradeModule } from '@angular/upgrade/static';
+import { HttpClient } from '@angular/common/http';
 
-class ClassroomMonitorProjectService extends AuthoringToolProjectService {
-  static $inject = [
-    '$filter',
-    '$http',
-    '$injector',
-    '$q',
-    '$rootScope',
-    'ConfigService',
-    'UtilService'
-  ];
+@Injectable()
+export class ClassroomMonitorProjectService extends AuthoringToolProjectService {
 
-  constructor($filter, $http, $injector, $q, $rootScope, ConfigService, UtilService) {
-    super($filter, $http, $injector, $q, $rootScope, ConfigService, UtilService);
+  constructor(
+      protected upgrade: UpgradeModule,
+      protected http: HttpClient,
+      protected ConfigService: ConfigService,
+      protected UtilService: UtilService) {
+    super(upgrade, http, ConfigService, UtilService);
   }
 
   getNodeIdsAndComponentIds(nodeId) {
@@ -44,5 +45,3 @@ class ClassroomMonitorProjectService extends AuthoringToolProjectService {
     return null;
   }
 }
-
-export default ClassroomMonitorProjectService;

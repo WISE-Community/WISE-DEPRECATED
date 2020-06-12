@@ -1,7 +1,7 @@
 'use strict';
 
 import NodeService from '../../../../services/nodeService';
-import ClassroomMonitorProjectService from '../../../classroomMonitorProjectService';
+import { ClassroomMonitorProjectService } from '../../../classroomMonitorProjectService';
 import TeacherDataService from '../../../../services/teacherDataService';
 import * as $ from 'jquery';
 

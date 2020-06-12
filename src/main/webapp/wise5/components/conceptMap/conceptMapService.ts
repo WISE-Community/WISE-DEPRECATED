@@ -1,6 +1,6 @@
 import * as angular from 'angular';
 import ComponentService from '../componentService';
-import ConfigService from '../../services/configService';
+import { ConfigService } from '../../services/configService';
 import StudentAssetService from '../../services/studentAssetService';
 import ConceptMapNode from './conceptMapNode';
 import ConceptMapLink from './conceptMapLink';

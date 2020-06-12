@@ -1,6 +1,7 @@
 import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef, MatTableDataSource,
-  MatSnackBar } from "@angular/material";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTableDataSource } from '@angular/material/table'
 import { TeacherService } from "../../../teacher/teacher.service";
 import { LibraryService } from "../../../services/library.service";
 import { ShareItemDialogComponent } from "../share-item-dialog/share-item-dialog.component";

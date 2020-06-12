@@ -1,4 +1,4 @@
-import VLEProjectService from '../vleProjectService';
+import { VLEProjectService } from '../vleProjectService';
 
 class NavigationController {
   rootNode: any;

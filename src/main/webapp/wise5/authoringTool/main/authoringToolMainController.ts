@@ -1,7 +1,7 @@
 'use strict';
 
-import ConfigService from '../../services/configService';
-import AuthoringToolProjectService from '../authoringToolProjectService';
+import { ConfigService } from '../../services/configService';
+import { AuthoringToolProjectService } from '../authoringToolProjectService';
 import TeacherDataService from '../../services/teacherDataService';
 import { UtilService } from '../../services/utilService';
 import * as angular from 'angular';
@@ -89,7 +89,7 @@ class AuthoringToolMainController {
       'areYouSureYouWantToCopyThisProject'
     )}\n\n${projectInfo}`;
     if (confirm(confirmCopyMessage)) {
-      this.ProjectService.copyProject(projectId).then(project => {
+      this.ProjectService.copyProject(projectId).then((project: any) => {
         this.showCopyingProjectMessage();
         this.saveEvent('projectCopied', 'Authoring', {}, project.id);
         this.highlightProject(project.id);

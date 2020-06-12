@@ -1,5 +1,5 @@
 import ComponentService from '../componentService';
-import ConfigService from '../../services/configService';
+import { ConfigService } from '../../services/configService';
 import TeacherDataService from '../../services/teacherDataService';
 
 class DiscussionService extends ComponentService {

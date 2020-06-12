@@ -1,13 +1,13 @@
 'use strict';
 
-import ConfigService from '../services/configService';
+import { ConfigService } from '../services/configService';
 import NodeService from '../services/nodeService';
 import NotebookService from '../services/notebookService';
 import NotificationService from '../services/notificationService';
 import TeacherDataService from '../services/teacherDataService';
 import SessionService from '../services/sessionService';
 import * as angular from 'angular';
-import ClassroomMonitorProjectService from './classroomMonitorProjectService';
+import { ClassroomMonitorProjectService } from './classroomMonitorProjectService';
 
 class ClassroomMonitorController {
   $translate: any;

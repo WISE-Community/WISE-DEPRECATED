@@ -10,12 +10,22 @@ import { TeacherRunListItemComponent } from './teacher-run-list-item/teacher-run
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MomentModule } from 'ngx-moment';
 import { FormsModule } from '@angular/forms';
-import {
-  MatAutocompleteModule, MatButtonModule, MatCardModule, MatCheckboxModule,
-  MatDatepickerModule, MatDialogModule, MatDividerModule, MatIconModule,
-  MatMenuModule, MatNativeDateModule, MatProgressBarModule, MatRadioModule,
-  MatSnackBarModule, MatTableModule, MatTabsModule, MatTooltipModule
-} from '@angular/material';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTableModule } from '@angular/material/table';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { RunMenuComponent } from './run-menu/run-menu.component';
 import { CreateRunDialogComponent } from './create-run-dialog/create-run-dialog.component';
 import { LibraryModule } from "../modules/library/library.module";

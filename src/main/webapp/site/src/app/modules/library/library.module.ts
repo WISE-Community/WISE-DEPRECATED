@@ -10,27 +10,24 @@ import { LibraryProjectMenuComponent } from "./library-project-menu/library-proj
 import { LibraryService } from "../../services/library.service";
 import { RouterModule } from '@angular/router';
 import { SharedModule } from "../shared/shared.module";
-
-import {
-  MatAutocompleteModule,
-  MatBadgeModule,
-  MatButtonModule,
-  MatCardModule,
-  MatCheckboxModule,
-  MatDialogModule,
-  MatDividerModule,
-  MatExpansionModule,
-  MatFormFieldModule,
-  MatIconModule,
-  MatMenuModule,
-  MatPaginatorModule,
-  MatPaginatorIntl,
-  MatProgressBarModule,
-  MatOptionModule,
-  MatSelectModule,
-  MatTableModule,
-  MatTabsModule,
-  MatTooltipModule } from '@angular/material';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatOptionModule } from '@angular/material/core';
+import { MatPaginatorModule, MatPaginatorIntl } from '@angular/material/paginator';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTableModule } from '@angular/material/table';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { TimelineModule } from "../timeline/timeline.module";
 import { LibraryFiltersComponent } from './library-filters/library-filters.component';
 import { HomePageProjectLibraryComponent } from './home-page-project-library/home-page-project-library.component';

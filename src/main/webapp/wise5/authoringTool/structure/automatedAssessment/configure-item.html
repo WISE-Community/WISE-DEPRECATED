@@ -1,0 +1,39 @@
+<h5 translate="automatedAssessment.customizeFeedback"></h5>
+<p translate="automatedAssessment.customizeFeedback.description"></p>
+<hr>
+<div ng-repeat="item in $ctrl.node.components" ng-if="item.enableCRater" layout="column">
+  <p>
+    <md-checkbox name="tos" ng-model="item.cRater.showScore">
+      {{ ::'SHOW_SCORE' | translate }}
+    </md-checkbox>
+  </p>
+  <p>
+    <md-checkbox name="tos" ng-model="item.cRater.showFeedback">
+      {{ ::'SHOW_FEEDBACK' | translate }}
+    </md-checkbox>
+  </p>
+  <md-input-container ng-repeat="scoringRule in item.cRater.scoringRules" 
+                      class="input-container input-container--open-response md-block md-no-float">
+    <label class="input-lable">
+      {{ ::'SCORE' | translate }} {{scoringRule.score}}<br>{{ ::'FEEDBACK' | translate }}:
+    </label>
+    <textarea class="input--textarea" rows="3" ng-model="scoringRule.feedbackText" 
+              ng-disabled="!item.cRater.showFeedback"></textarea>
+  </md-input-container>
+</div>
+<hr>
+<div layout="row">
+  <md-button class='createButton md-primary'
+             ng-click='$ctrl.back()'
+             aria-label='{{ ::"back" | translate }}'
+             translate='back'></md-button>
+  <span flex></span>
+  <md-button class='createButton md-primary'
+             ng-click='$ctrl.cancel()'
+             aria-label='{{ ::"cancel" | translate }}'
+             translate='cancel'></md-button>
+  <md-button class='createButton md-raised md-primary'
+             ng-click='$ctrl.next()'
+             aria-label='{{ ::"next" | translate }}'
+             translate='next'></md-button>
+</div>
