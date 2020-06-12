@@ -1,11 +1,19 @@
 {
-  "id": "group4",
-  "type": "group",
-  "title": "Peer Review & Revision",
   "startId": "node1",
-  "constraints": [],
   "transitionLogic": {
     "transitions": []
   },
-  "ids": ["node1", "node2", "node3", "node4"]
+  "ids": ["node1", "node2", "node3", "node4"],
+  "icons": {
+    "default": {
+      "color": "#2196F3",
+      "type": "font",
+      "fontSet": "material-icons",
+      "fontName": "info"
+    }
+  },
+  "id": "group1",
+  "type": "group",
+  "title": "Peer Review & Revision",
+  "constraints": []
 }

@@ -1,231 +1,937 @@
 [
   {
-    "id": "node1",
-    "type": "node",
-    "title": "First Step (everyone)",
-    "components": [],
-    "constraints": [],
-    "showSaveButton": false,
-    "showSubmitButton": false,
+    "components": [
+      {
+        "showAddToNotebookButton": true,
+        "showSubmitButton": false,
+        "showSaveButton": false,
+        "html": "<h5 style=\"text-align: center;\"><font color=\"#085294\"><span style=\"font-size: 24px;\">What do you want students to explore?</span></font></h5><p><span style=\"font-size: 24px;\">1. Outline and provide a brief description of the topics students can choose from for the Jigsaw activity here.&nbsp;</span><span style=\"font-size: 24px;\">You can add images and links using the tools above.</span><br></p><p style=\"font-size: medium;\"><span style=\"font-size: 24px;\">2. Edit the each jigsaw multiple-choice option below.</span></p><p style=\"font-size: medium;\"><span style=\"font-size: 24px;\">3.&nbsp;</span><b style=\"\"><span style=\"font-size: 24px;\">Do not add or remove</span></b><span style=\"font-size: 24px;\">&nbsp;any of the pre-populated choices, as this will break the branching logic that is built into the lesson. You only need to edit the Prompts you want students to choose from. If you would like to change the number of topics in the Jigsaw, let the WISE staff know and we can help.</span></p>",
+        "id": "nhbnnln5mm",
+        "type": "HTML",
+        "prompt": ""
+      },
+      {
+        "choiceType": "radio",
+        "showAddToNotebookButton": true,
+        "showSubmitButton": true,
+        "showSaveButton": false,
+        "id": "0w3e2kgerw",
+        "type": "MultipleChoice",
+        "choices": [
+          {
+            "feedback": "",
+            "id": "4z4f8xiqsj",
+            "text": "Edit this to be branch 1 choice",
+            "isCorrect": false
+          },
+          {
+            "feedback": "",
+            "id": "2824d0tdlr",
+            "text": "Edit this to be branch 2 choice",
+            "isCorrect": false
+          },
+          {
+            "feedback": "",
+            "id": "ag98thyq2t",
+            "text": "Edit this to be branch 3 choice",
+            "isCorrect": false
+          },
+          {
+            "feedback": "",
+            "id": "gkja35a5se",
+            "text": "Edit this to be branch 4 choice",
+            "isCorrect": false
+          }
+        ],
+        "prompt": "Add your prompt here. Then, edit the student choices below. Each choice will open a new branch.",
+        "showFeedback": false
+      }
+    ],
     "transitionLogic": {
+      "whenToChoosePath": "studentDataChanged",
+      "maxPathsVisitable": 1,
+      "howToChooseAmongAvailablePaths": "random",
+      "canChangePath": false,
       "transitions": [
         {
+          "criteria": [
+            {
+              "name": "choiceChosen",
+              "params": {
+                "componentId": "0w3e2kgerw",
+                "choiceIds": ["4z4f8xiqsj"],
+                "nodeId": "node1"
+              }
+            }
+          ],
           "to": "node2"
         },
         {
-          "to": "node3"
-        },
-        {
+          "criteria": [
+            {
+              "name": "choiceChosen",
+              "params": {
+                "componentId": "0w3e2kgerw",
+                "choiceIds": ["2824d0tdlr"],
+                "nodeId": "node1"
+              }
+            }
+          ],
           "to": "node4"
         },
         {
+          "criteria": [
+            {
+              "name": "choiceChosen",
+              "params": {
+                "componentId": "0w3e2kgerw",
+                "choiceIds": ["ag98thyq2t"],
+                "nodeId": "node1"
+              }
+            }
+          ],
+          "to": "node6"
+        },
+        {
+          "criteria": [
+            {
+              "name": "choiceChosen",
+              "params": {
+                "componentId": "0w3e2kgerw",
+                "choiceIds": ["gkja35a5se"],
+                "nodeId": "node1"
+              }
+            }
+          ],
+          "to": "node8"
+        }
+      ]
+    },
+    "showSubmitButton": false,
+    "showSaveButton": false,
+    "id": "node1",
+    "title": "Pick your topic",
+    "type": "node",
+    "icons": {
+      "default": {
+        "imgAlt": "KI elicit ideas",
+        "type": "img",
+        "imgSrc": "wise5/themes/default/nodeIcons/ki-color-elicit.svg"
+      }
+    },
+    "constraints": []
+  },
+  {
+    "components": [
+      {
+        "showAddToNotebookButton": true,
+        "showSubmitButton": false,
+        "showSaveButton": false,
+        "html": "<h5 style=\"text-align: center;\"><font color=\"#085294\"><span style=\"font-size: 24px;\">Topic A</span></font></h5><h5 style=\"text-align: left;\"><span style=\"font-size: 24px; font-weight: normal;\">1. Edit this to introduce the content for Topic A.&nbsp;</span></h5><h5 style=\"text-align: left;\"><span style=\"font-size: 24px; font-weight: normal;\">2. Choose a web-based resource for students to review in the step below about the topic. If you don't want to use a resource, delete the component. You can add a different type of component if you'd like by clicking the + above and choosing the type of you want to add. Then edit that one.</span></h5><h5 style=\"text-align: left;\"><span style=\"font-size: 24px; font-weight: normal;\">3. Edit the open response prompt at the end of this sequence to prompt student reflection on the ideas you presented.</span></h5><h5 style=\"text-align: left;\"><span style=\"font-size: 24px; font-weight: normal;\">4. Delete this text once you are done.</span></h5>",
+        "id": "if7yrkajl3",
+        "type": "HTML",
+        "prompt": ""
+      },
+      {
+        "showAddToNotebookButton": true,
+        "showSubmitButton": false,
+        "showSaveButton": false,
+        "id": "vznhagylsn",
+        "type": "OutsideURL",
+        "prompt": "",
+        "url": "",
+        "height": 600
+      },
+      {
+        "showAddToNotebookButton": true,
+        "starterSentence": null,
+        "showSubmitButton": false,
+        "showSaveButton": false,
+        "id": "4t2qx4mwi6",
+        "type": "OpenResponse",
+        "prompt": "[EDIT REFLECTION PROMPT HERE] What did you notice about...? What did you learn about...? Record at least two observations about...",
+        "isStudentAttachmentEnabled": false
+      }
+    ],
+    "transitionLogic": {
+      "transitions": [
+        {
+          "to": "node3"
+        }
+      ]
+    },
+    "showSubmitButton": false,
+    "showSaveButton": true,
+    "id": "node2",
+    "title": "Topic A",
+    "type": "node",
+    "icons": {
+      "default": {
+        "imgAlt": "KI discover ideas",
+        "type": "img",
+        "imgSrc": "wise5/themes/default/nodeIcons/ki-color-add.svg"
+      }
+    },
+    "constraints": [
+      {
+        "removalConditional": "all",
+        "targetId": "node2",
+        "action": "makeThisNodeNotVisible",
+        "id": "node2Constraint1",
+        "removalCriteria": [
+          {
+            "name": "branchPathTaken",
+            "params": {
+              "toNodeId": "node2",
+              "fromNodeId": "node1"
+            }
+          }
+        ]
+      },
+      {
+        "removalConditional": "all",
+        "targetId": "node2",
+        "action": "makeThisNodeNotVisitable",
+        "id": "node2Constraint2",
+        "removalCriteria": [
+          {
+            "name": "branchPathTaken",
+            "params": {
+              "toNodeId": "node2",
+              "fromNodeId": "node1"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "components": [
+      {
+        "showAddToNotebookButton": true,
+        "showSubmitButton": false,
+        "showSaveButton": false,
+        "html": "<h5 style=\"text-align: center;\"><font color=\"#085294\"><span style=\"font-size: 24px;\">Discuss what you learned about your Selected Topic A</span></font><br></h5><p style=\"font-size: medium;\"><span style=\"font-size: 24px;\">1. For this step in the Jigsaw, you can choose to have students who chose the same topic discuss what they learned in pairs or small groups in the classroom (offline) or in an online discussion. This will help them synthesize what they have learned before sharing with students who chose another topic.</span></p><p style=\"font-size: medium;\"><span style=\"font-size: 24px;\">2. If you would like to use the online discussion, edit the Discussion component below that asks students to post what they've learned and comment on their peer's ideas. Feel free to edit the 'Prompt' text to better suit your needs.</span><br></p><p style=\"font-size: medium;\"><span style=\"font-size: 24px;\">3. If you would like students to work offline, add instructions here to help facilitate that process. Then delete the Discussion component below.</span></p><p style=\"font-size: medium;\"><span style=\"font-size: 24px;\">4. Customize the prompt for the Open Response component at the bottom of this step to prompt reflection what they learned about their topic - before they meet with students who studied the other topic.&nbsp;</span></p><p style=\"font-size: medium;\"><span style=\"font-size: 24px;\">5. Delete this text once you are done.</span></p>",
+        "id": "qh56u3lupz",
+        "type": "HTML",
+        "prompt": ""
+      },
+      {
+        "showAddToNotebookButton": true,
+        "starterSentence": null,
+        "showSubmitButton": false,
+        "connectedComponents": [
+          {
+            "componentId": "4t2qx4mwi6",
+            "type": "showWork",
+            "nodeId": "node2"
+          }
+        ],
+        "showSaveButton": false,
+        "id": "e6zkfriesm",
+        "type": "OpenResponse",
+        "prompt": "Here is what you learned in the previous step:",
+        "isStudentAttachmentEnabled": false
+      },
+      {
+        "showAddToNotebookButton": true,
+        "gateClassmateResponses": true,
+        "showSubmitButton": false,
+        "showSaveButton": false,
+        "id": "t84sg6f05k",
+        "type": "Discussion",
+        "prompt": "[Customize instructions] <p>Share what you've learned with the other members of Team [Enter topic #1 here].</p><p>Read the ideas from your teammates and comment on at least one.</p><p>When you're finished, answer the question at the bottom of the page.</p>",
+        "isStudentAttachmentEnabled": true
+      },
+      {
+        "showAddToNotebookButton": true,
+        "starterSentence": null,
+        "showSubmitButton": false,
+        "showSaveButton": false,
+        "id": "hylmcrchzv",
+        "type": "OpenResponse",
+        "prompt": "[Customize reflection prompt] After meeting with another team [OR] reviewing your teammates' ideas, how have your ideas about XXXX changed? Make sure you mention...",
+        "isStudentAttachmentEnabled": false
+      }
+    ],
+    "transitionLogic": {
+      "transitions": [
+        {
+          "to": "node10"
+        }
+      ]
+    },
+    "showSubmitButton": false,
+    "showSaveButton": true,
+    "id": "node3",
+    "title": "Discuss what you learned about Topic A",
+    "type": "node",
+    "icons": {
+      "default": {
+        "imgAlt": "KI discover ideas",
+        "type": "img",
+        "imgSrc": "wise5/themes/default/nodeIcons/ki-color-add.svg"
+      }
+    },
+    "constraints": [
+      {
+        "removalConditional": "all",
+        "targetId": "node3",
+        "action": "makeThisNodeNotVisible",
+        "id": "node3Constraint1",
+        "removalCriteria": [
+          {
+            "name": "branchPathTaken",
+            "params": {
+              "toNodeId": "node2",
+              "fromNodeId": "node1"
+            }
+          }
+        ]
+      },
+      {
+        "removalConditional": "all",
+        "targetId": "node3",
+        "action": "makeThisNodeNotVisitable",
+        "id": "node3Constraint2",
+        "removalCriteria": [
+          {
+            "name": "branchPathTaken",
+            "params": {
+              "toNodeId": "node2",
+              "fromNodeId": "node1"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "components": [
+      {
+        "showAddToNotebookButton": true,
+        "showSubmitButton": false,
+        "showSaveButton": false,
+        "html": "<h5 style=\"text-align: center;\"><font color=\"#085294\"><span style=\"font-size: 24px;\">Topic B</span></font></h5><h5><span style=\"font-size: 24px; font-weight: normal;\">1. Edit this to introduce the content for Topic B.&nbsp;</span></h5><h5><span style=\"font-size: 24px; font-weight: normal;\">2. Choose a web-based resource for students to review in the step below about the topic. If you don't want to use a resource, delete the component. You can add a different type of component if you'd like by clicking the + above and choosing the type of you want to add. Then edit that one.</span></h5><h5><span style=\"font-size: 24px; font-weight: normal;\">3. Edit the open response prompt at the end of this sequence to prompt student reflection on the ideas you presented.</span></h5><h5><span style=\"font-size: 24px; font-weight: normal;\">4. Delete this text once you are done.</span></h5>",
+        "id": "k208vvl7g6",
+        "type": "HTML",
+        "prompt": ""
+      },
+      {
+        "showAddToNotebookButton": true,
+        "showSubmitButton": false,
+        "showSaveButton": false,
+        "id": "4gx3373z38",
+        "type": "OutsideURL",
+        "prompt": "",
+        "url": "",
+        "height": 600
+      },
+      {
+        "showAddToNotebookButton": true,
+        "starterSentence": null,
+        "showSubmitButton": false,
+        "showSaveButton": false,
+        "id": "kd43661ip3",
+        "type": "OpenResponse",
+        "prompt": "[EDIT REFLECTION PROMPT HERE] What did you notice about...? What did you learn about...? Record at least two observations about...",
+        "isStudentAttachmentEnabled": false
+      }
+    ],
+    "transitionLogic": {
+      "transitions": [
+        {
           "to": "node5"
         }
-      ],
-      "howToChooseAmongAvailablePaths": "workgroupId",
-      "whenToChoosePath": "enterNode",
-      "canChangePath": false,
-      "maxPathsVisitable": 1
-    }
-  },
-  {
-    "id": "node2",
-    "title": "Group 1 Step 1",
-    "type": "node",
-    "constraints": [
-      {
-        "id": "node2Constraint1",
-        "action": "makeThisNodeNotVisible",
-        "targetId": "node2",
-        "removalConditional": "all",
-        "removalCriteria": [
-          {
-            "name": "branchPathTaken",
-            "params": {
-              "fromNodeId": "node1",
-              "toNodeId": "node2"
-            }
-          }
-        ]
-      },
-      {
-        "id": "node2Constraint2",
-        "action": "makeThisNodeNotVisitable",
-        "targetId": "node2",
-        "removalConditional": "all",
-        "removalCriteria": [
-          {
-            "name": "branchPathTaken",
-            "params": {
-              "fromNodeId": "node1",
-              "toNodeId": "node2"
-            }
-          }
-        ]
-      }
-    ],
-    "transitionLogic": {
-      "transitions": [
-        {
-          "to": "node6"
-        }
       ]
     },
-    "showSaveButton": false,
     "showSubmitButton": false,
-    "components": []
-  },
-  {
-    "id": "node3",
-    "title": "Group 2 Step 1",
-    "type": "node",
-    "constraints": [
-      {
-        "id": "node3Constraint1",
-        "action": "makeThisNodeNotVisible",
-        "targetId": "node3",
-        "removalConditional": "all",
-        "removalCriteria": [
-          {
-            "name": "branchPathTaken",
-            "params": {
-              "fromNodeId": "node1",
-              "toNodeId": "node3"
-            }
-          }
-        ]
-      },
-      {
-        "id": "node3Constraint2",
-        "action": "makeThisNodeNotVisitable",
-        "targetId": "node3",
-        "removalConditional": "all",
-        "removalCriteria": [
-          {
-            "name": "branchPathTaken",
-            "params": {
-              "fromNodeId": "node1",
-              "toNodeId": "node3"
-            }
-          }
-        ]
-      }
-    ],
-    "transitionLogic": {
-      "transitions": [
-        {
-          "to": "node6"
-        }
-      ]
-    },
-    "showSaveButton": false,
-    "showSubmitButton": false,
-    "components": []
-  },
-  {
+    "showSaveButton": true,
     "id": "node4",
-    "title": "Group 3 Step 1",
+    "title": "Topic B",
     "type": "node",
+    "icons": {
+      "default": {
+        "imgAlt": "KI discover ideas",
+        "type": "img",
+        "imgSrc": "wise5/themes/default/nodeIcons/ki-color-add.svg"
+      }
+    },
     "constraints": [
       {
+        "removalConditional": "all",
+        "targetId": "node4",
+        "action": "makeThisNodeNotVisible",
         "id": "node4Constraint1",
-        "action": "makeThisNodeNotVisible",
-        "targetId": "node4",
-        "removalConditional": "all",
         "removalCriteria": [
           {
             "name": "branchPathTaken",
             "params": {
-              "fromNodeId": "node1",
-              "toNodeId": "node4"
+              "toNodeId": "node4",
+              "fromNodeId": "node1"
             }
           }
         ]
       },
       {
-        "id": "node4Constraint2",
-        "action": "makeThisNodeNotVisitable",
-        "targetId": "node4",
         "removalConditional": "all",
+        "targetId": "node4",
+        "action": "makeThisNodeNotVisitable",
+        "id": "node4Constraint2",
         "removalCriteria": [
           {
             "name": "branchPathTaken",
             "params": {
-              "fromNodeId": "node1",
-              "toNodeId": "node4"
+              "toNodeId": "node4",
+              "fromNodeId": "node1"
             }
           }
         ]
+      }
+    ]
+  },
+  {
+    "components": [
+      {
+        "showAddToNotebookButton": true,
+        "showSubmitButton": false,
+        "showSaveButton": false,
+        "html": "<h5 style=\"text-align: center;\"><font color=\"#085294\"><span style=\"font-size: 24px;\">Discuss what you learned about your Selected Topic B</span></font><br></h5><h5 style=\"text-align: center;\"><p style=\"font-weight: 400; text-align: start; font-size: medium;\"><span style=\"font-size: 24px;\">1. For this step in the Jigsaw, you can choose to have students who chose the same topic discuss what they learned in pairs or small groups in the classroom (offline) or in an online discussion. This will help them synthesize what they have learned before sharing with students who chose another topic.</span></p><p style=\"font-weight: 400; text-align: start; font-size: medium;\"><span style=\"font-size: 24px;\">2. If you would like to use the online discussion, edit the Discussion component below that asks students to post what they've learned and comment on their peer's ideas. Feel free to edit the 'Prompt' text to better suit your needs.</span><br></p><p style=\"font-weight: 400; text-align: start; font-size: medium;\"><span style=\"font-size: 24px;\">3. If you would like students to work offline, add instructions here to help facilitate that process. Then delete the Discussion component below.</span></p><p style=\"font-weight: 400; text-align: start; font-size: medium;\"><span style=\"font-size: 24px;\">4. Customize the prompt for the Open Response component at the bottom of this step to prompt reflection what they learned about their topic - before they meet with students who studied the other topic.&nbsp;</span></p><p style=\"font-weight: 400; text-align: start; font-size: medium;\"><span style=\"font-size: 24px;\">5. Delete this text once you are done.</span></p></h5>",
+        "id": "euc2uab7br",
+        "type": "HTML",
+        "prompt": ""
+      },
+      {
+        "showAddToNotebookButton": true,
+        "starterSentence": null,
+        "showSubmitButton": false,
+        "connectedComponents": [
+          {
+            "componentId": "4t2qx4mwi6",
+            "type": "showWork",
+            "nodeId": "node2"
+          }
+        ],
+        "showSaveButton": false,
+        "id": "4ds7yjc84z",
+        "type": "OpenResponse",
+        "prompt": "Here is what you learned in the previous step:",
+        "isStudentAttachmentEnabled": false
+      },
+      {
+        "showAddToNotebookButton": true,
+        "gateClassmateResponses": true,
+        "showSubmitButton": false,
+        "showSaveButton": false,
+        "id": "pf7msod64f",
+        "type": "Discussion",
+        "prompt": "[Customize instructions] <p>Share what you've learned with the other members of Team XXXX.</p><p>Read the ideas from your teammates and comment on at least one.</p><p>When you're finished, answer the question at the bottom of the page.</p>",
+        "isStudentAttachmentEnabled": true
+      },
+      {
+        "showAddToNotebookButton": true,
+        "starterSentence": null,
+        "showSubmitButton": false,
+        "showSaveButton": false,
+        "id": "c10pptolm8",
+        "type": "OpenResponse",
+        "prompt": "[Customize reflection prompt] After meeting with another team [OR] reviewing your teammates' ideas, how have your ideas about XXXX changed? Make sure you mention...",
+        "isStudentAttachmentEnabled": false
       }
     ],
     "transitionLogic": {
       "transitions": [
         {
-          "to": "node6"
+          "to": "node10"
         }
       ]
     },
-    "showSaveButton": false,
     "showSubmitButton": false,
-    "components": []
-  },
-  {
+    "showSaveButton": true,
     "id": "node5",
-    "title": "Group 4 Step 1",
+    "title": "Discuss what you learned about Topic B",
     "type": "node",
+    "icons": {
+      "default": {
+        "imgAlt": "KI discover ideas",
+        "type": "img",
+        "imgSrc": "wise5/themes/default/nodeIcons/ki-color-add.svg"
+      }
+    },
     "constraints": [
       {
-        "id": "node5Constraint1",
-        "action": "makeThisNodeNotVisible",
-        "targetId": "node5",
         "removalConditional": "all",
+        "targetId": "node5",
+        "action": "makeThisNodeNotVisible",
+        "id": "node5Constraint1",
         "removalCriteria": [
           {
             "name": "branchPathTaken",
             "params": {
-              "fromNodeId": "node1",
-              "toNodeId": "node5"
+              "toNodeId": "node4",
+              "fromNodeId": "node1"
             }
           }
         ]
       },
       {
-        "id": "node5Constraint2",
-        "action": "makeThisNodeNotVisitable",
-        "targetId": "node5",
         "removalConditional": "all",
+        "targetId": "node5",
+        "action": "makeThisNodeNotVisitable",
+        "id": "node5Constraint2",
         "removalCriteria": [
           {
             "name": "branchPathTaken",
             "params": {
-              "fromNodeId": "node1",
-              "toNodeId": "node5"
+              "toNodeId": "node4",
+              "fromNodeId": "node1"
             }
           }
         ]
+      }
+    ]
+  },
+  {
+    "components": [
+      {
+        "showAddToNotebookButton": true,
+        "showSubmitButton": false,
+        "showSaveButton": false,
+        "html": "<h5 style=\"text-align: center;\"><font color=\"#085294\"><span style=\"font-size: 24px;\">Topic C</span></font></h5><h5><span style=\"font-size: 24px; font-weight: normal;\">1. Edit this to introduce the content for Topic C.&nbsp;</span></h5><h5><span style=\"font-size: 24px; font-weight: normal;\">2. Choose a web-based resource for students to review in the step below about the topic. If you don't want to use a resource, delete the component. You can add a different type of component if you'd like by clicking the + above and choosing the type of you want to add. Then edit that one.</span></h5><h5><span style=\"font-size: 24px; font-weight: normal;\">3. Edit the open response prompt at the end of this sequence to prompt student reflection on the ideas you presented.</span></h5><h5><span style=\"font-size: 24px; font-weight: normal;\">4. Delete this text once you are done.</span></h5>",
+        "id": "k208vvl7g6",
+        "type": "HTML",
+        "prompt": ""
+      },
+      {
+        "showAddToNotebookButton": true,
+        "showSubmitButton": false,
+        "showSaveButton": false,
+        "id": "4gx3373z38",
+        "type": "OutsideURL",
+        "prompt": "",
+        "url": "",
+        "height": 600
+      },
+      {
+        "showAddToNotebookButton": true,
+        "starterSentence": null,
+        "showSubmitButton": false,
+        "showSaveButton": false,
+        "id": "kd43661ip3",
+        "type": "OpenResponse",
+        "prompt": "[EDIT REFLECTION PROMPT HERE] What did you notice about...? What did you learn about...? Record at least two observations about...",
+        "isStudentAttachmentEnabled": false
       }
     ],
     "transitionLogic": {
       "transitions": [
         {
-          "to": "node6"
+          "to": "node7"
         }
       ]
     },
-    "showSaveButton": false,
     "showSubmitButton": false,
-    "components": []
+    "showSaveButton": true,
+    "id": "node6",
+    "title": "Topic C",
+    "type": "node",
+    "icons": {
+      "default": {
+        "imgAlt": "KI discover ideas",
+        "type": "img",
+        "imgSrc": "wise5/themes/default/nodeIcons/ki-color-add.svg"
+      }
+    },
+    "constraints": [
+      {
+        "removalConditional": "all",
+        "targetId": "node6",
+        "action": "makeThisNodeNotVisible",
+        "id": "node6Constraint1",
+        "removalCriteria": [
+          {
+            "name": "branchPathTaken",
+            "params": {
+              "toNodeId": "node6",
+              "fromNodeId": "node1"
+            }
+          }
+        ]
+      },
+      {
+        "removalConditional": "all",
+        "targetId": "node6",
+        "action": "makeThisNodeNotVisitable",
+        "id": "node6Constraint2",
+        "removalCriteria": [
+          {
+            "name": "branchPathTaken",
+            "params": {
+              "toNodeId": "node6",
+              "fromNodeId": "node1"
+            }
+          }
+        ]
+      }
+    ]
   },
   {
-    "id": "node6",
-    "title": "Synthesis Step (everyone)",
+    "components": [
+      {
+        "showAddToNotebookButton": true,
+        "showSubmitButton": false,
+        "showSaveButton": false,
+        "html": "<h5 style=\"text-align: center;\"><font color=\"#085294\"><span style=\"font-size: 24px;\">Discuss what you learned about your Selected Topic C</span></font><br></h5><h5 style=\"text-align: center;\"><p style=\"font-weight: 400; text-align: start; font-size: medium;\"><span style=\"font-size: 24px;\">1. For this step in the Jigsaw, you can choose to have students who chose the same topic discuss what they learned in pairs or small groups in the classroom (offline) or in an online discussion. This will help them synthesize what they have learned before sharing with students who chose another topic.</span></p><p style=\"font-weight: 400; text-align: start; font-size: medium;\"><span style=\"font-size: 24px;\">2. If you would like to use the online discussion, edit the Discussion component below that asks students to post what they've learned and comment on their peer's ideas. Feel free to edit the 'Prompt' text to better suit your needs.</span><br></p><p style=\"font-weight: 400; text-align: start; font-size: medium;\"><span style=\"font-size: 24px;\">3. If you would like students to work offline, add instructions here to help facilitate that process. Then delete the Discussion component below.</span></p><p style=\"font-weight: 400; text-align: start; font-size: medium;\"><span style=\"font-size: 24px;\">4. Customize the prompt for the Open Response component at the bottom of this step to prompt reflection what they learned about their topic - before they meet with students who studied the other topic.&nbsp;</span></p><p style=\"font-weight: 400; text-align: start; font-size: medium;\"><span style=\"font-size: 24px;\">5. Delete this text once you are done.</span></p></h5>",
+        "id": "euc2uab7br",
+        "type": "HTML",
+        "prompt": ""
+      },
+      {
+        "showAddToNotebookButton": true,
+        "starterSentence": null,
+        "showSubmitButton": false,
+        "connectedComponents": [
+          {
+            "componentId": "4t2qx4mwi6",
+            "type": "showWork",
+            "nodeId": "node2"
+          }
+        ],
+        "showSaveButton": false,
+        "id": "4ds7yjc84z",
+        "type": "OpenResponse",
+        "prompt": "Here is what you learned in the previous step:",
+        "isStudentAttachmentEnabled": false
+      },
+      {
+        "showAddToNotebookButton": true,
+        "gateClassmateResponses": true,
+        "showSubmitButton": false,
+        "showSaveButton": false,
+        "id": "pf7msod64f",
+        "type": "Discussion",
+        "prompt": "[Customize instructions] <p>Share what you've learned with the other members of Team XXXX.</p><p>Read the ideas from your teammates and comment on at least one.</p><p>When you're finished, answer the question at the bottom of the page.</p>",
+        "isStudentAttachmentEnabled": true
+      },
+      {
+        "showAddToNotebookButton": true,
+        "starterSentence": null,
+        "showSubmitButton": false,
+        "showSaveButton": false,
+        "id": "c10pptolm8",
+        "type": "OpenResponse",
+        "prompt": "[Customize reflection prompt] After meeting with another team [OR] reviewing your teammates' ideas, how have your ideas about XXXX changed? Make sure you mention...",
+        "isStudentAttachmentEnabled": false
+      }
+    ],
+    "transitionLogic": {
+      "transitions": [
+        {
+          "to": "node10"
+        }
+      ]
+    },
+    "showSubmitButton": false,
+    "showSaveButton": true,
+    "id": "node7",
+    "title": "Discuss what you learned about Topic C",
     "type": "node",
-    "constraints": [],
+    "icons": {
+      "default": {
+        "imgAlt": "KI discover ideas",
+        "type": "img",
+        "imgSrc": "wise5/themes/default/nodeIcons/ki-color-add.svg"
+      }
+    },
+    "constraints": [
+      {
+        "removalConditional": "all",
+        "targetId": "node6",
+        "action": "makeThisNodeNotVisible",
+        "id": "node6Constraint1",
+        "removalCriteria": [
+          {
+            "name": "branchPathTaken",
+            "params": {
+              "toNodeId": "node6",
+              "fromNodeId": "node1"
+            }
+          }
+        ]
+      },
+      {
+        "removalConditional": "all",
+        "targetId": "node6",
+        "action": "makeThisNodeNotVisitable",
+        "id": "node6Constraint2",
+        "removalCriteria": [
+          {
+            "name": "branchPathTaken",
+            "params": {
+              "toNodeId": "node6",
+              "fromNodeId": "node1"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "components": [
+      {
+        "showAddToNotebookButton": true,
+        "showSubmitButton": false,
+        "showSaveButton": false,
+        "html": "<h5 style=\"text-align: center;\"><font color=\"#085294\"><span style=\"font-size: 24px;\">Topic D</span></font></h5><h5><span style=\"font-size: 24px; font-weight: normal;\">1. Edit this to introduce the content for Topic D.&nbsp;</span></h5><h5><span style=\"font-size: 24px; font-weight: normal;\">2. Choose a web-based resource for students to review in the step below about the topic. If you don't want to use a resource, delete the component. You can add a different type of component if you'd like by clicking the + above and choosing the type of you want to add. Then edit that one.</span></h5><h5><span style=\"font-size: 24px; font-weight: normal;\">3. Edit the open response prompt at the end of this sequence to prompt student reflection on the ideas you presented.</span></h5><h5><span style=\"font-size: 24px; font-weight: normal;\">4. Delete this text once you are done.</span></h5>",
+        "id": "k208vvl7g6",
+        "type": "HTML",
+        "prompt": ""
+      },
+      {
+        "showAddToNotebookButton": true,
+        "showSubmitButton": false,
+        "showSaveButton": false,
+        "id": "4gx3373z38",
+        "type": "OutsideURL",
+        "prompt": "",
+        "url": "",
+        "height": 600
+      },
+      {
+        "showAddToNotebookButton": true,
+        "starterSentence": null,
+        "showSubmitButton": false,
+        "showSaveButton": false,
+        "id": "kd43661ip3",
+        "type": "OpenResponse",
+        "prompt": "[EDIT REFLECTION PROMPT HERE] What did you notice about...? What did you learn about...? Record at least two observations about...",
+        "isStudentAttachmentEnabled": false
+      }
+    ],
+    "transitionLogic": {
+      "transitions": [
+        {
+          "to": "node9"
+        }
+      ]
+    },
+    "showSubmitButton": false,
+    "showSaveButton": true,
+    "id": "node8",
+    "title": "Topic D",
+    "type": "node",
+    "icons": {
+      "default": {
+        "imgAlt": "KI discover ideas",
+        "type": "img",
+        "imgSrc": "wise5/themes/default/nodeIcons/ki-color-add.svg"
+      }
+    },
+    "constraints": [
+      {
+        "removalConditional": "all",
+        "targetId": "node8",
+        "action": "makeThisNodeNotVisible",
+        "id": "node8Constraint1",
+        "removalCriteria": [
+          {
+            "name": "branchPathTaken",
+            "params": {
+              "toNodeId": "node8",
+              "fromNodeId": "node1"
+            }
+          }
+        ]
+      },
+      {
+        "removalConditional": "all",
+        "targetId": "node8",
+        "action": "makeThisNodeNotVisitable",
+        "id": "node8Constraint2",
+        "removalCriteria": [
+          {
+            "name": "branchPathTaken",
+            "params": {
+              "toNodeId": "node8",
+              "fromNodeId": "node1"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "components": [
+      {
+        "showAddToNotebookButton": true,
+        "showSubmitButton": false,
+        "showSaveButton": false,
+        "html": "<h5 style=\"text-align: center;\"><font color=\"#085294\"><span style=\"font-size: 24px;\">Discuss what you learned about your Selected Topic D</span></font><br></h5><h5 style=\"text-align: center;\"><p style=\"font-weight: 400; text-align: start; font-size: medium;\"><span style=\"font-size: 24px;\">1. For this step in the Jigsaw, you can choose to have students who chose the same topic discuss what they learned in pairs or small groups in the classroom (offline) or in an online discussion. This will help them synthesize what they have learned before sharing with students who chose another topic.</span></p><p style=\"font-weight: 400; text-align: start; font-size: medium;\"><span style=\"font-size: 24px;\">2. If you would like to use the online discussion, edit the Discussion component below that asks students to post what they've learned and comment on their peer's ideas. Feel free to edit the 'Prompt' text to better suit your needs.</span><br></p><p style=\"font-weight: 400; text-align: start; font-size: medium;\"><span style=\"font-size: 24px;\">3. If you would like students to work offline, add instructions here to help facilitate that process. Then delete the Discussion component below.</span></p><p style=\"font-weight: 400; text-align: start; font-size: medium;\"><span style=\"font-size: 24px;\">4. Customize the prompt for the Open Response component at the bottom of this step to prompt reflection what they learned about their topic - before they meet with students who studied the other topic.&nbsp;</span></p><p style=\"font-weight: 400; text-align: start; font-size: medium;\"><span style=\"font-size: 24px;\">5. Delete this text once you are done.</span></p></h5>",
+        "id": "euc2uab7br",
+        "type": "HTML",
+        "prompt": ""
+      },
+      {
+        "showAddToNotebookButton": true,
+        "starterSentence": null,
+        "showSubmitButton": false,
+        "connectedComponents": [
+          {
+            "componentId": "4t2qx4mwi6",
+            "type": "showWork",
+            "nodeId": "node2"
+          }
+        ],
+        "showSaveButton": false,
+        "id": "4ds7yjc84z",
+        "type": "OpenResponse",
+        "prompt": "Here is what you learned in the previous step:",
+        "isStudentAttachmentEnabled": false
+      },
+      {
+        "showAddToNotebookButton": true,
+        "gateClassmateResponses": true,
+        "showSubmitButton": false,
+        "showSaveButton": false,
+        "id": "pf7msod64f",
+        "type": "Discussion",
+        "prompt": "[Customize instructions] <p>Share what you've learned with the other members of Team XXXX.</p><p>Read the ideas from your teammates and comment on at least one.</p><p>When you're finished, answer the question at the bottom of the page.</p>",
+        "isStudentAttachmentEnabled": true
+      },
+      {
+        "showAddToNotebookButton": true,
+        "starterSentence": null,
+        "showSubmitButton": false,
+        "showSaveButton": false,
+        "id": "c10pptolm8",
+        "type": "OpenResponse",
+        "prompt": "[Customize reflection prompt] After meeting with another team [OR] reviewing your teammates' ideas, how have your ideas about XXXX changed? Make sure you mention...",
+        "isStudentAttachmentEnabled": false
+      }
+    ],
+    "transitionLogic": {
+      "transitions": [
+        {
+          "to": "node10"
+        }
+      ]
+    },
+    "showSubmitButton": false,
+    "showSaveButton": true,
+    "id": "node9",
+    "title": "Discuss what you learned about Topic D",
+    "type": "node",
+    "icons": {
+      "default": {
+        "imgAlt": "KI discover ideas",
+        "type": "img",
+        "imgSrc": "wise5/themes/default/nodeIcons/ki-color-add.svg"
+      }
+    },
+    "constraints": [
+      {
+        "removalConditional": "all",
+        "targetId": "node8",
+        "action": "makeThisNodeNotVisible",
+        "id": "node8Constraint1",
+        "removalCriteria": [
+          {
+            "name": "branchPathTaken",
+            "params": {
+              "toNodeId": "node8",
+              "fromNodeId": "node1"
+            }
+          }
+        ]
+      },
+      {
+        "removalConditional": "all",
+        "targetId": "node8",
+        "action": "makeThisNodeNotVisitable",
+        "id": "node8Constraint2",
+        "removalCriteria": [
+          {
+            "name": "branchPathTaken",
+            "params": {
+              "toNodeId": "node8",
+              "fromNodeId": "node1"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "components": [
+      {
+        "showAddToNotebookButton": true,
+        "showSubmitButton": false,
+        "showSaveButton": false,
+        "html": "<h5 style=\"text-align: center;\"><font color=\"#085294\"><span style=\"font-size: 24px;\">Jigsaw Time!</span></font></h5><h5 style=\"text-align: center;\"><p style=\"font-weight: 400; font-size: 15px;\"><br></p><p style=\"font-size: 15px;\"><span style=\"font-size: 24px;\">Make connections between Topic A, Topic B, Topic C, and D</span></p><p style=\"font-weight: 400; font-size: 15px;\"><span style=\"font-size: 24px;\">Group students from Branch A, B, C, and D.</span></p><p style=\"font-weight: 400; font-size: 15px;\"><br></p><p style=\"text-align: left; font-weight: 400; font-size: 15px;\"><span style=\"font-size: 24px;\">1.&nbsp;</span><span style=\"font-size: 24px;\">Customize the instructions above to help students form a group with other students who studied the other topics. For example, you can have stations and tell 1 student from Topic A and 1 from Topic B and 1 from Topic C and 1 from Topic D go to each station.</span></p><p style=\"text-align: left; font-weight: 400; font-size: 15px;\"><span style=\"font-size: medium;\"><br></span><span style=\"font-size: 24px;\">2. Edit the text above to add more specific instructions about the sharing process.</span></p><p style=\"text-align: left; font-weight: 400; font-size: 15px;\"><br></p><p style=\"text-align: left; font-weight: 400; font-size: 15px;\"><span style=\"font-size: 24px;\">3.&nbsp;</span><span style=\"font-size: 24px;\">Delete this help text when you're finished.</span></p><p style=\"font-size: medium; font-weight: 400; text-align: start;\"><br></p></h5>",
+        "id": "eqhhrsfynt",
+        "type": "HTML",
+        "prompt": ""
+      }
+    ],
+    "transitionLogic": {
+      "transitions": [
+        {
+          "to": "node11"
+        }
+      ]
+    },
+    "showSubmitButton": false,
+    "showSaveButton": false,
+    "id": "node10",
+    "title": "Share what you learned",
+    "type": "node",
+    "icons": {
+      "default": {
+        "imgAlt": "KI distinguish ideas",
+        "type": "img",
+        "imgSrc": "wise5/themes/default/nodeIcons/ki-color-distinguish.svg"
+      }
+    },
+    "constraints": []
+  },
+  {
+    "components": [
+      {
+        "showAddToNotebookButton": true,
+        "starterSentence": "I learned from the other team:\n1.\n2.",
+        "showSubmitButton": false,
+        "showSaveButton": false,
+        "id": "blvba48xfw",
+        "type": "OpenResponse",
+        "prompt": "[Customize this reflection prompt] You had a chance to talk with a [classmate/group] who had learned about a different [topic/question]. Record two things you learned from talking with a [classmate/group] on the other team.",
+        "isStudentAttachmentEnabled": false
+      },
+      {
+        "showAddToNotebookButton": true,
+        "starterSentence": null,
+        "showSubmitButton": false,
+        "showSaveButton": false,
+        "id": "d84m1j8aao",
+        "type": "OpenResponse",
+        "prompt": "[Customize prompt] How does what you learned from the other team connect to the topic you investigated? Does it change or add to your understanding?",
+        "isStudentAttachmentEnabled": false
+      }
+    ],
     "transitionLogic": {
       "transitions": []
     },
-    "showSaveButton": false,
     "showSubmitButton": false,
-    "components": []
+    "showSaveButton": true,
+    "id": "node11",
+    "title": "What did you learn from your classmates?",
+    "type": "node",
+    "icons": {
+      "default": {
+        "imgAlt": "KI connect ideas",
+        "type": "img",
+        "imgSrc": "wise5/themes/default/nodeIcons/ki-color-connect.svg"
+      }
+    },
+    "constraints": []
   }
 ]
