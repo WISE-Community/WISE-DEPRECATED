@@ -225,7 +225,7 @@
         "showAddToNotebookButton": true,
         "showSubmitButton": false,
         "showSaveButton": false,
-        "html": "<h5 style=\"text-align: center;\"><font color=\"#397b21\"><span style=\"font-size: 24px;\">Help your peers revise!</span></font></h5><h5 style=\"text-align: center;\"><p style=\"\"><span style=\"font-size: 24px;\">Find a peers' explanation that is different than yours. Explain to them how you two are thinking differently about the topic and what idea you suggest they consider</span><br></p><ul style=\"text-align: start;\"><li><span style=\"font-size: 24px; font-weight: normal;\">1. Customize the introductory text above.</span></li><li><span style=\"font-weight: normal;\"><font size=\"3\"><span style=\"font-size: 24px;\">2. Edit the prompt to encourage students to provide feedback to peers.&nbsp;</span></font><span style=\"font-size: 24px;\">Students often decide to give rather general comments such as \"I like your idea\" or \"this is a nice idea\". In your prompt,&nbsp; help students engage in giving helpful (constructive and critical) feedback.</span></span></li></ul></h5><h5 style=\"text-align: center;\"><p style=\"font-size: medium; font-weight: 400; text-align: start;\"><span style=\"color: rgb(255, 0, 0);\">----</span><span style=\"color: rgb(255, 0, 0);\"><b><br></b></span></p><p style=\"font-size: medium; font-weight: 400; text-align: start;\"><span style=\"color: rgb(255, 0, 0);\"><b>Curriculum authors:</b></span></p><ul style=\"text-align: start;\"><li><font color=\"#ff0000\"><font size=\"3\"><span style=\"font-weight: 400;\">This requires students to scroll back up to the discussion. Students can comment on one or more peer explanation to distinguish between how they and their peer are thinking about what they observed in the model, simulation, video, or other OER</span></font></font></li><li><span style=\"font-weight: 400; color: rgb(255, 0, 0); font-size: medium;\">Edit the introductory text above to outline the peer feedback task you want students to engage in. Be sure to include directions about what you'd like students to do if they post the first explanation or see that some posts have many comments and some have none.</span></li><li><span style=\"font-weight: 400; color: rgb(255, 0, 0); font-size: medium;\">Delete this text when you are finished</span></li></ul></h5>",
+        "html": "<p><h5 style=\"text-align: center;\"><font color=\"#397b21\"><span style=\"font-size: 24px;\">Help your peers revise!</span></font></h5><p style=\"font-size: 24px; font-weight: normal; text-align: center;\">Find a peers' explanation that is different than yours. Explain to them how you two are thinking differently about the topic and what idea you suggest they consider.</p><p><br></p><b><span style=\"font-size: 24px;\">This task requires students to scroll back up to the discussion and comment on their peers' explanations.</span><br></b><p></p><ol style=\"text-align: start; font-size: 24px;\"><li>Customize the introductory text above to describe the peer feedback task you want students to engage in. Students can comment on one or more peer explanations to distinguish between how they and their peer are thinking about what they observed in the model, simulation, video, or other OER.</li><li>Students often decide to give rather general comments such as \"I like your idea\" or \"this is a nice idea\". In your instructions, help students engage in giving helpful (constructive and critical) feedback.</li><li>Delete this text when you are finished.</li></ol></p>",
         "id": "j7ehl4qthh",
         "type": "HTML",
         "prompt": ""
@@ -239,7 +239,7 @@
       ]
     },
     "showSubmitButton": false,
-    "showSaveButton": true,
+    "showSaveButton": false,
     "id": "node5",
     "title": "Distinguish Ideas: Help your peers revise their ideas!",
     "type": "node",
@@ -313,7 +313,7 @@
         ],
         "showAddToNotebookButton": true,
         "ordered": false,
-        "showSubmitButton": true,
+        "showSubmitButton": false,
         "buckets": [
           {
             "id": "2thnk4q1vr",
