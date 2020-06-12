@@ -205,8 +205,10 @@ public class AuthorAPIController {
   @PostMapping("/project/icon")
   @ResponseBody
   protected HashMap<String, String> setProjectIcon(Authentication auth,
-      @RequestParam Long projectId, @RequestParam String projectIcon,
-      @RequestParam boolean isCustom) throws ObjectNotFoundException, IOException {
+      @RequestBody ObjectNode objectNode) throws ObjectNotFoundException, IOException {
+    Long projectId = objectNode.get("projectId").asLong();
+    String projectIcon = objectNode.get("projectIcon").asText();
+    boolean isCustom = objectNode.get("isCustom").asBoolean();
     User user = userService.retrieveUserByUsername(auth.getName());
     Project project = projectService.getById(projectId);
     HashMap<String, String> response = new HashMap<String, String>();
@@ -431,10 +433,10 @@ public class AuthorAPIController {
     return null;
   }
 
-  @PostMapping("/project/notify/{projectId}")
+  @PostMapping("/project/notify/{projectId}/{isBegin}")
   @ResponseBody
   protected void notifyAuthorBeginEnd(Authentication auth, @PathVariable Long projectId,
-      @RequestParam boolean isBegin) throws Exception {
+      @PathVariable boolean isBegin) throws Exception {
     User user = userService.retrieveUserByUsername(auth.getName());
     Project project = projectService.getById(projectId);
     if (projectService.canAuthorProject(project, user)) {
@@ -467,8 +469,11 @@ public class AuthorAPIController {
    */
   @PostMapping("/project/importSteps/{projectId}")
   @ResponseBody
-  protected String importSteps(Authentication auth, @RequestParam String steps,
-      @RequestParam Integer toProjectId, @RequestParam Integer fromProjectId) throws Exception {
+  protected String importSteps(Authentication auth, @RequestBody ObjectNode objectNode)
+      throws Exception {
+    String steps = objectNode.get("steps").asText();
+    Integer toProjectId = objectNode.get("toProjectId").asInt();
+    Integer fromProjectId = objectNode.get("fromProjectId").asInt();
     User user = userService.retrieveUserByUsername(auth.getName());
     Project project = projectService.getById(toProjectId);
     if (!projectService.canAuthorProject(project, user)) {

@@ -1,6 +1,6 @@
 'use strict';
 
-import ProjectService from '../../services/projectService';
+import { ProjectService } from '../../services/projectService';
 
 class WISELinkAuthoringController {
   $rootScope: any;

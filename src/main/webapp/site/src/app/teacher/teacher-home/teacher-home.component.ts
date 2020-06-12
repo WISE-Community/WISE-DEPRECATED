@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { UserService } from "../../services/user.service";
 import { User } from "../../domain/user";
 import { ConfigService } from "../../services/config.service";
-import { MatTabGroup } from '@angular/material';
+import { MatTabGroup } from '@angular/material/tabs';
 import { I18n } from '@ngx-translate/i18n-polyfill';
 import { LibraryService } from '../../services/library.service';
 import { Router } from '@angular/router';

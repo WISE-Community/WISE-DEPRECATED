@@ -56,7 +56,6 @@ import NotificationService from '../services/notificationService';
 import '../components/openResponse/openResponseComponentModule';
 import '../components/outsideURL/outsideURLComponentModule';
 import PlanningService from '../services/planningService';
-import ProjectService from '../services/projectService';
 import SessionService from '../services/sessionService';
 import './studentAsset/studentAsset';
 import StudentAssetService from '../services/studentAssetService';
@@ -67,7 +66,7 @@ import '../components/summary/summaryComponentModule';
 import '../components/table/tableComponentModule';
 import { UtilService } from '../services/utilService';
 import VLEController from './vleController';
-import VLEProjectService from './vleProjectService';
+import { VLEProjectService } from './vleProjectService';
 import * as moment from 'moment';
 import * as SockJS from 'sockjs-client';
 import * as StompJS from '@stomp/stompjs';
@@ -125,7 +124,7 @@ export default angular
   .service('NotebookService', NotebookService)
   .service('NotificationService', NotificationService)
   .service('PlanningService', PlanningService)
-  .service('ProjectService', VLEProjectService)
+  .factory('ProjectService', downgradeInjectable(VLEProjectService))
   .service('SessionService', SessionService)
   .service('StudentAssetService', StudentAssetService)
   .service('StudentDataService', StudentDataService)

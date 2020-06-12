@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { TeacherProjectLibraryComponent } from './teacher-project-library.component';
-import { MatMenuModule, MatDialog } from "@angular/material";
+import { MatDialogModule } from "@angular/material/dialog";
+import { MatMenuModule } from '@angular/material/menu';
 import { NO_ERRORS_SCHEMA, TRANSLATIONS_FORMAT, TRANSLATIONS, LOCALE_ID } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { LibraryService } from '../../../services/library.service';
@@ -29,10 +30,9 @@ describe('TeacherProjectLibraryComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ MatMenuModule, RouterTestingModule ],
+      imports: [ MatMenuModule, RouterTestingModule, MatDialogModule ],
       declarations: [ TeacherProjectLibraryComponent ],
       providers: [
-        { provide: MatDialog },
         { provide: LibraryService, useClass: MockLibraryService },
         { provide: TRANSLATIONS_FORMAT, useValue: "xlf" },
         {

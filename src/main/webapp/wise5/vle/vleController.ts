@@ -4,7 +4,7 @@ import AnnotationService from '../services/annotationService';
 import { ConfigService } from '../services/configService';
 import NotificationService from '../services/notificationService';
 import NotebookService from '../services/notebookService';
-import VLEProjectService from './vleProjectService';
+import { VLEProjectService } from './vleProjectService';
 import SessionService from '../services/sessionService';
 import StudentDataService from '../services/studentDataService';
 import * as angular from 'angular';
@@ -114,7 +114,7 @@ class VLEController {
 
     let script = this.ProjectService.getProjectScript();
     if (script != null) {
-      this.ProjectService.retrieveScript(script).then(script => {
+      this.ProjectService.retrieveScript(script).then((script: string) => {
         new Function(script).call(this);
       });
     }

@@ -15,6 +15,14 @@ export class UtilService {
   constructor(private upgrade: UpgradeModule) {
   }
 
+  broadcastEventInRootScope(event) {
+    this.upgrade.$injector.get('$rootScope').$broadcast(event);
+  }
+
+  translate(key) {
+    return this.upgrade.$injector.get('$filter')('translate')(key);
+  }
+
   generateKey(length = 10) {
     let key = '';
     for (let a = 0; a < length; a++) {

@@ -1,11 +1,20 @@
 'use strict';
-import ProjectService from '../services/projectService';
+import { ProjectService } from '../services/projectService';
+import { ConfigService } from '../services/configService';
+import { UtilService } from '../services/utilService';
+import { Injectable } from '@angular/core';
+import { UpgradeModule } from '@angular/upgrade/static';
+import { HttpClient } from '@angular/common/http';
 
-class VLEProjectService extends ProjectService {
-  $inject = ['$filter', '$http', '$injector', '$q', '$rootScope', 'ConfigService', 'UtilService'];
+@Injectable()
+export class VLEProjectService extends ProjectService {
 
-  constructor($filter, $http, $injector, $q, $rootScope, ConfigService, UtilService) {
-    super($filter, $http, $injector, $q, $rootScope, ConfigService, UtilService);
+  constructor(
+    protected upgrade: UpgradeModule,
+    protected http: HttpClient,
+    protected ConfigService: ConfigService,
+    protected UtilService: UtilService) {
+    super(upgrade, http, ConfigService, UtilService);
   }
 
   /**
@@ -54,7 +63,7 @@ class VLEProjectService extends ProjectService {
       annotation.nodeId,
       annotation.componentId
     );
-    const componentService = this.$injector.get(component.type + 'Service');
+    const componentService = this.upgrade.$injector.get(component.type + 'Service');
     return componentService.displayAnnotation(component, annotation);
   }
 
@@ -122,9 +131,9 @@ class VLEProjectService extends ProjectService {
   }
 
   retrieveScript(scriptFilename) {
-    const assetDirectoryPath = this.ConfigService.getProjectAssetsDirectoryPath();
-    const scriptPath = assetDirectoryPath + '/' + scriptFilename;
-    return this.$http.get(scriptPath).then(result => {
+    return this.upgrade.$injector.get('$http')
+        .get(`${this.ConfigService.getProjectAssetsDirectoryPath()}/${scriptFilename}`)
+        .then(result => {
       return result.data;
     });
   }
@@ -142,5 +151,3 @@ class VLEProjectService extends ProjectService {
     this.additionalProcessingFunctionsMap[key].push(additionalProcessingFunction);
   }
 }
-
-export default VLEProjectService;

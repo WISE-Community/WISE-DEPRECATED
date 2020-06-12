@@ -5,9 +5,9 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { UserService } from "../../../services/user.service";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
-import {
-  MatInputModule, MatSelectModule,
-  MatSnackBarModule } from '@angular/material';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatInputModule } from '@angular/material/input';
 import { StudentService } from "../../student.service";
 import { NO_ERRORS_SCHEMA, TRANSLATIONS_FORMAT, TRANSLATIONS, LOCALE_ID } from "@angular/core";
 import { By } from '@angular/platform-browser';

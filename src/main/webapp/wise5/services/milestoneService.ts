@@ -3,7 +3,7 @@
 import AchievementService from './achievementService';
 import AnnotationService from './annotationService';
 import { ConfigService } from './configService';
-import ProjectService from './projectService';
+import { ProjectService } from './projectService';
 import TeacherDataService from './teacherDataService';
 import { UtilService } from './utilService';
 import * as angular from 'angular';

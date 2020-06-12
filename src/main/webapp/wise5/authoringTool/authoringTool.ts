@@ -20,7 +20,7 @@ import './components/authoringToolComponents';
 import AdvancedAuthoringController from './advanced/advancedAuthoringController';
 import AuthoringToolController from './authoringToolController';
 import AuthoringToolMainController from './main/authoringToolMainController';
-import AuthoringToolProjectService from './authoringToolProjectService';
+import { AuthoringToolProjectService } from './authoringToolProjectService';
 import AuthorNotebookController from './notebook/authorNotebookController';
 import '../components/conceptMap/conceptMapAuthoringComponentModule';
 import { ConfigService } from '../services/configService';
@@ -121,7 +121,7 @@ const authoringModule = angular
   .service('NotebookService', NotebookService)
   .service('NotificationService', NotificationService)
   .service('PlanningService', PlanningService)
-  .service('ProjectService', AuthoringToolProjectService)
+  .factory('ProjectService', downgradeInjectable(AuthoringToolProjectService))
   .service('ProjectAssetService', ProjectAssetService)
   .service('SessionService', SessionService)
   .service('SpaceService', SpaceService)

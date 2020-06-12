@@ -3,15 +3,15 @@ import { LibraryService } from './library.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { configureTestSuite } from 'ng-bullet';
 import { Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('LibraryService', () => {
   configureTestSuite(() => {
     TestBed.configureTestingModule({
       providers: [
-        LibraryService,
-        { provide: Router }
+        LibraryService
       ],
-      imports: [ HttpClientTestingModule ]
+      imports: [ HttpClientTestingModule, RouterTestingModule ]
     });
   });
 
