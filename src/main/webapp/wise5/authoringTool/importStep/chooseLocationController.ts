@@ -1,6 +1,6 @@
 'use strict';
 
-import AuthoringToolProjectService from '../authoringToolProjectService';
+import { AuthoringToolProjectService } from '../authoringToolProjectService';
 
 class ChooseLocationController {
   groupNodes: any;

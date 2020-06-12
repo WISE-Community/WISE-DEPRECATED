@@ -1,6 +1,5 @@
 'use strict';
 
-import AuthoringToolProjectService from '../authoringToolProjectService';
 import { UtilService } from '../../services/utilService';
 import { ConfigService } from '../../services/configService';
 import ProjectAssetService from '../../services/projectAssetService';

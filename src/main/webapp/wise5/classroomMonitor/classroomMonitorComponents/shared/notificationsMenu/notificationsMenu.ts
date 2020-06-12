@@ -1,7 +1,7 @@
 'use strict';
 
 import NotificationService from '../../../../services/notificationService';
-import ClassroomMonitorProjectService from '../../../classroomMonitorProjectService';
+import { ClassroomMonitorProjectService } from '../../../classroomMonitorProjectService';
 import * as angular from 'angular';
 
 class NotificationsMenuController {

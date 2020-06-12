@@ -4,7 +4,7 @@ import { UpgradeModule } from '@angular/upgrade/static';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import sampleConfig1 from './sampleData/sample_config_1.json';
 let service: ConfigService;
-let http;
+let http: HttpTestingController;
 
 describe('ConfigService', () => {
   beforeEach(() => {
