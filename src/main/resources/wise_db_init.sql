@@ -221,6 +221,7 @@ create table portal (
     run_survey_template text,
     sendmail_properties tinyblob,
     settings text,
+    structures text,
     announcement text,
     OPTLOCK integer,
     primary key (id)
