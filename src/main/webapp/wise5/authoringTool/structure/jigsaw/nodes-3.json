@@ -38,7 +38,8 @@
           }
         ],
         "prompt": "Add your prompt here. Then, edit the student choices below. Each choice will open a new branch.",
-        "showFeedback": false
+        "showFeedback": false,
+        "maxSubmitCount": 1
       }
     ],
     "transitionLogic": {
@@ -198,7 +199,7 @@
         "prompt": ""
       },
       {
-        "showAddToNotebookButton": true,
+        "showAddToNotebookButton": false,
         "starterSentence": null,
         "showSubmitButton": false,
         "connectedComponents": [
@@ -383,7 +384,7 @@
         "prompt": ""
       },
       {
-        "showAddToNotebookButton": true,
+        "showAddToNotebookButton": false,
         "starterSentence": null,
         "showSubmitButton": false,
         "connectedComponents": [
@@ -568,7 +569,7 @@
         "prompt": ""
       },
       {
-        "showAddToNotebookButton": true,
+        "showAddToNotebookButton": false,
         "starterSentence": null,
         "showSubmitButton": false,
         "connectedComponents": [

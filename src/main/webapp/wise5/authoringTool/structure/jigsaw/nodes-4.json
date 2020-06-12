@@ -44,7 +44,8 @@
           }
         ],
         "prompt": "Add your prompt here. Then, edit the student choices below. Each choice will open a new branch.",
-        "showFeedback": false
+        "showFeedback": false,
+        "maxSubmitCount": 1
       }
     ],
     "transitionLogic": {
