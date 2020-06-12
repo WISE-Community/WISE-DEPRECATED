@@ -1,10 +1,18 @@
 {
-  "id": "group1",
-  "type": "group",
-  "title": "Self-Directed Investigation",
-  "startId": "node241",
-  "ids": ["node241", "node242", "node244", "node247", "node248"],
+  "startId": "node1",
   "transitionLogic": {
     "transitions": []
-  }
+  },
+  "ids": ["node1", "node2", "node3", "node4", "node5"],
+  "icons": {
+    "default": {
+      "color": "#2196F3",
+      "type": "font",
+      "fontSet": "material-icons",
+      "fontName": "info"
+    }
+  },
+  "id": "group1",
+  "type": "group",
+  "title": "Self-Directed Investigation"
 }
