@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { EditRunWarningDialogComponent } from './edit-run-warning-dialog.component';
 import { ConfigService } from '../../services/config.service';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { Run } from "../../domain/run";
 import { configureTestSuite } from 'ng-bullet';
@@ -12,6 +12,10 @@ export class MockConfigService {
     return "";
   }
 }
+
+const mockDialogRef = {
+  close: jasmine.createSpy('close')
+};
 
 describe('EditRunWarningDialogComponent', () => {
   let component: EditRunWarningDialogComponent;
@@ -26,12 +30,14 @@ describe('EditRunWarningDialogComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ EditRunWarningDialogComponent ],
       providers: [
-        { provide: MatDialog },
-        { provide: MatDialogRef },
+        {
+          provide: MatDialogRef,
+          useValue: mockDialogRef
+        },
         { provide: MAT_DIALOG_DATA, useValue: { data: { run }}},
         { provide: ConfigService, useClass: MockConfigService }
       ],
-      imports: [ RouterTestingModule ],
+      imports: [ RouterTestingModule, MatDialogModule ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
   });

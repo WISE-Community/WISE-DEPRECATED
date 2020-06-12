@@ -31,7 +31,7 @@
   <textarea ng-if='metadataField.type == "textarea"' rows='3', cols='100'
       ng-model='projectInfoController.metadata[metadataField.key]'
       ng-model-options='{ debounce: 1000 }'
-      ng-change='projectInfoController.save()' />
+      ng-change='projectInfoController.save()'></textarea>
   <input ng-if='metadataField.type == "input"' size='50'
       ng-model='projectInfoController.metadata[metadataField.key]'
       ng-model-options='{ debounce: 1000 }'

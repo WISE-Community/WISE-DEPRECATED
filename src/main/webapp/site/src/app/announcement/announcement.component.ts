@@ -7,7 +7,7 @@ import {
   Inject
 } from '@angular/core';
 import { Announcement } from '../domain/announcement';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-announcement',

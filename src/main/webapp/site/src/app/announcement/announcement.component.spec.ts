@@ -3,7 +3,7 @@ import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { AnnouncementComponent } from './announcement.component';
 import { configureTestSuite } from 'ng-bullet';
 import { Announcement } from '../domain/announcement';
-import { MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import { By } from '@angular/platform-browser';
 
 describe('AnnouncementComponent', () => {

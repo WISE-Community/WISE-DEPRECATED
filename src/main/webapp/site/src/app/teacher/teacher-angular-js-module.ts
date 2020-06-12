@@ -11,13 +11,15 @@ import { ProjectService } from '../../../../wise5/services/projectService';
 import { AuthoringToolProjectService } from '../../../../wise5/authoringTool/authoringToolProjectService';
 import { VLEProjectService } from '../../../../wise5/vle/vleProjectService';
 import { ClassroomMonitorProjectService } from '../../../../wise5/classroomMonitor/classroomMonitorProjectService';
+import { MilestoneReportDataComponent } from './milestone/milestone-report-data/milestone-report-data.component';
 
 @Component({template: ``})
 export class EmptyComponent {}
 
 @NgModule({
   declarations: [
-    EmptyComponent
+    EmptyComponent,
+    MilestoneReportDataComponent
   ],
   imports: [
     UpgradeModule,
@@ -32,6 +34,9 @@ export class EmptyComponent {}
     AuthoringToolProjectService,
     ClassroomMonitorProjectService,
     VLEProjectService
+  ],
+  entryComponents: [
+    MilestoneReportDataComponent
   ]
 })
 export class TeacherAngularJSModule {

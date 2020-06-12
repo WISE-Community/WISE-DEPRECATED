@@ -8,7 +8,7 @@ import { MomentModule } from "ngx-moment";
 import { Project } from "../../domain/project";
 import { User } from "../../domain/user";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
-import { MatDialog } from "@angular/material";
+import { MatDialog, MatDialogModule } from "@angular/material/dialog";
 import { StudentService } from "../student.service";
 import { UserService } from "../../services/user.service";
 import { configureTestSuite } from 'ng-bullet';
@@ -48,13 +48,12 @@ describe('StudentRunListItemComponent', () => {
 
   configureTestSuite(() => {
     TestBed.configureTestingModule({
-      imports: [ MomentModule, BrowserAnimationsModule ],
+      imports: [ MomentModule, BrowserAnimationsModule, MatDialogModule ],
       declarations: [ StudentRunListItemComponent ],
       providers: [
         { provide: ConfigService, useClass: MockConfigService },
         { provide: StudentService, useClass: MockStudentService },
         { provide: UserService, useClass: MockUserService },
-        { provide: MatDialog }
         ],
       schemas: [ NO_ERRORS_SCHEMA ]
     });

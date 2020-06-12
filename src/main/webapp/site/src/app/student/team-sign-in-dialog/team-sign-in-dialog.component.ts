@@ -2,7 +2,7 @@ import { Component, Inject, Input, OnInit } from '@angular/core';
 import { UserService } from "../../services/user.service";
 import { Student } from "../../domain/student";
 import { StudentRun } from "../student-run";
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { AuthService, GoogleLoginProvider } from "angularx-social-login";
 import { ConfigService } from "../../services/config.service";
 import { StudentService } from "../student.service";

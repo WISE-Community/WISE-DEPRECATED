@@ -1,10 +1,10 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { LibraryProjectDetailsComponent } from "../library-project-details/library-project-details.component";
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { finalize } from 'rxjs/operators';
 import { LibraryProject } from "../libraryProject";
 import { LibraryService } from "../../../services/library.service";
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { I18n } from "@ngx-translate/i18n-polyfill";
 
 @Component({
