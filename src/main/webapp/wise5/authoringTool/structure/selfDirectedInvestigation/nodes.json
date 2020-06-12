@@ -187,7 +187,7 @@
         "prompt": ""
       },
       {
-        "showAddToNotebookButton": true,
+        "showAddToNotebookButton": false,
         "starterSentence": null,
         "showSubmitButton": false,
         "connectedComponents": [
@@ -362,7 +362,7 @@
   {
     "components": [
       {
-        "showAddToNotebookButton": true,
+        "showAddToNotebookButton": false,
         "starterSentence": null,
         "showSubmitButton": false,
         "connectedComponents": [
