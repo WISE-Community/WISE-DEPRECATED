@@ -1,11 +1,11 @@
 <md-card style="margin: 16px 8px 8px;" 
          ng-if="summaryDisplayCtrl.nodeId != null && summaryDisplayCtrl.componentId != null">
   <md-card-content>
-    <div ng-if="!summaryDisplayCtrl.hasWarning">
-      <highchart config="summaryDisplayCtrl.chartConfig"></highchart>
-    </div>
     <p ng-if="summaryDisplayCtrl.hasWarning" class="warn center">
       {{summaryDisplayCtrl.warningMessage}}
     </p>
+    <div ng-if="summaryDisplayCtrl.doRender">
+      <highchart config="summaryDisplayCtrl.chartConfig"></highchart>
+    </div>
   </md-card-content>
 </md-card>

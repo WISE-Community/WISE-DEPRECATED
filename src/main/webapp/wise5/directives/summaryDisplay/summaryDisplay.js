@@ -1,17 +1,25 @@
 'use strict';
 
 class SummaryDisplayController {
-  constructor($filter, $injector, $q, AnnotationService, ConfigService, ProjectService,
-        UtilService) {
+  constructor(
+    $filter,
+    $injector,
+    $q,
+    $rootScope,
+    AnnotationService,
+    ConfigService,
+    ProjectService,
+    UtilService
+  ) {
     this.$filter = $filter;
     this.$injector = $injector;
     this.$q = $q;
+    this.$rootScope = $rootScope;
     this.AnnotationService = AnnotationService;
     this.ConfigService = ConfigService;
     this.ProjectService = ProjectService;
     this.UtilService = UtilService;
     this.$translate = this.$filter('translate');
-    this.numDummySamples = 20;
     this.defaultMaxScore = 5;
     this.maxScore = this.defaultMaxScore;
     this.dataService = null;
@@ -19,27 +27,96 @@ class SummaryDisplayController {
   }
 
   $onInit() {
-    if (this.chartType == null) {
-      this.chartType = 'column';
+    this.setNumDummySamples();
+    this.initializeColors();
+    this.initializeOtherComponent();
+    this.initializeDataService();
+    this.initializePeriodId();
+    this.initializeCustomLabelColors();
+    this.initializeChangeListeners();
+    if (this.doRender) {
+      this.renderDisplay();
     }
+  }
+
+  initializeColors() {
+    this.colors = {
+      palette: [
+        '#1a237e',
+        '#701e82',
+        '#aa187b',
+        '#d72c6c',
+        '#f65158',
+        '#ff7d43',
+        '#ffab32',
+        '#fdd835',
+        '#ffee58',
+        '#ade563',
+        '#50d67f',
+        '#00c29d',
+        '#00aab3',
+        '#0090bc',
+        '#0074b4',
+        '#01579b'
+      ],
+      singleHue: 'rgb(170, 24, 123)',
+      correct: '#00C853',
+      incorrect: '#c62828'
+    };
+  }
+
+  setNumDummySamples() {
+    if (this.isSourcePeriod()) {
+      this.numDummySamples = 10;
+    } else if (this.isSourceAllPeriods()) {
+      this.numDummySamples = 20;
+    } else {
+      this.numDummySamples = 1;
+    }
+  }
+
+  initializeOtherComponent() {
+    this.otherComponent = this.ProjectService.getComponentByNodeIdAndComponentId(
+      this.nodeId,
+      this.componentId
+    );
+    this.otherComponentType = this.otherComponent.type;
+  }
+
+  initializeDataService() {
     if (this.isVLEPreview() || this.isStudentRun()) {
       this.dataService = this.$injector.get('StudentDataService');
     } else if (this.isClassroomMonitor() || this.isAuthoringPreview()) {
       this.dataService = this.$injector.get('TeacherDataService');
     }
-    this.renderDisplay();
-    if (this.isAuthoringPreview()) {
-      this.$onChanges = (changes) => {
+  }
+
+  initializePeriodId() {
+    if (this.isClassroomMonitor() && this.isSourcePeriod()) {
+      this.periodId = this.dataService.currentPeriod.periodId;
+    }
+  }
+
+  initializeCustomLabelColors() {
+    if (this.customLabelColors == null) {
+      this.customLabelColors = [];
+    }
+  }
+
+  initializeChangeListeners() {
+    this.$onChanges = changes => {
+      this.initializeColors();
+      this.renderDisplay();
+    };
+    this.$rootScope.$on('studentWorkSavedToServer', (event, args) => {
+      if (
+        this.doRender &&
+        this.nodeId === args.studentWork.nodeId &&
+        this.componentId === args.studentWork.componentId
+      ) {
         this.renderDisplay();
       }
-    }
-    this.colors = {
-      palette: ['#1a237e','#701e82','#aa187b','#d72c6c','#f65158','#ff7d43','#ffab32','#fdd835',
-          '#ffee58','#ade563','#50d67f','#00c29d','#00aab3','#0090bc','#0074b4','#01579b'],
-      singleHue: 'rgb(170, 24, 123)',
-      correct: '#00C853',
-      incorrect: '#c62828'
-    }
+    });
   }
 
   isVLEPreview() {
@@ -59,23 +136,122 @@ class SummaryDisplayController {
   }
 
   renderDisplay() {
-    const summaryComponent =
-        this.ProjectService.getComponentByNodeIdAndComponentId(this.nodeId, this.componentId);
-    if (summaryComponent != null) {
-      if (this.studentDataType === 'responses') {
-        this.getComponentStates(this.nodeId, this.componentId, this.periodId)
-            .then((componentStates = []) => {
-          this.processComponentStates(componentStates);
-        });
-      } else if (this.studentDataType === 'scores') {
-        this.setMaxScore(summaryComponent);
-        this.getScores(this.nodeId, this.componentId, this.periodId).then((annotations) => {
-          this.processScoreAnnotations(annotations);
-        });
-      }
-    } else {
-      this.clearChartConfig();
+    if (this.studentDataType === 'responses') {
+      this.renderResponses();
+    } else if (this.studentDataType === 'scores') {
+      this.renderScores();
     }
+  }
+
+  renderResponses() {
+    if (this.isSourceSelf() && this.isClassroomMonitor()) {
+      this.displaySourceSelfMessageToTeacher();
+    } else if (this.isSourceSelf()) {
+      this.renderSelfResponse();
+    } else {
+      this.renderClassResponses();
+    }
+  }
+
+  displaySourceSelfMessageToTeacher() {
+    this.doRender = false;
+    this.warningMessage = this.$translate(
+      'summary.theStudentWillSeeAGraphOfTheirIndividualDataHere'
+    );
+    this.hasWarning = true;
+  }
+
+  renderSelfResponse() {
+    const componentStates = [];
+    const componentState = this.getResponseForSelf();
+    if (componentState != null) {
+      componentStates.push(componentState);
+    }
+    this.processComponentStates(componentStates);
+  }
+
+  getResponseForSelf() {
+    if (this.isVLEPreview() || this.isStudentRun()) {
+      return this.getLatestComponentStateForWorkgroup();
+    } else if (this.isAuthoringPreview()) {
+      return this.createDummyComponentState(this.otherComponent);
+    }
+  }
+
+  getLatestComponentStateForWorkgroup() {
+    return this.dataService.getLatestComponentStateByNodeIdAndComponentId(
+      this.nodeId,
+      this.componentId,
+      this.workgroupId
+    );
+  }
+
+  renderClassResponses() {
+    this.getComponentStates(this.nodeId, this.componentId, this.periodId).then(
+      (componentStates = []) => {
+        this.processComponentStates(componentStates);
+      }
+    );
+  }
+
+  getScores(nodeId, componentId, periodId) {
+    if (this.isVLEPreview()) {
+      return this.getDummyStudentScoresForVLEPreview(nodeId, componentId);
+    } else if (this.isAuthoringPreview()) {
+      return this.getDummyStudentScoresForAuthoringPreview(nodeId, componentId);
+    } else if (this.isStudentRun()) {
+      return this.dataService
+        .getClassmateScores(nodeId, componentId, periodId)
+        .then(annotations => {
+          return this.filterLatestScoreAnnotations(annotations);
+        });
+    } else if (this.isClassroomMonitor()) {
+      const annotations = this.dataService.getAnnotationsByNodeIdAndPeriodId(nodeId, periodId);
+      return this.resolveData(this.filterLatestScoreAnnotations(annotations));
+    }
+  }
+
+  renderScores() {
+    if (this.isSourceSelf() && this.isClassroomMonitor()) {
+      this.displaySourceSelfMessageToTeacher();
+    } else if (this.isSourceSelf()) {
+      this.renderSelfScore();
+    } else {
+      this.renderClassScores();
+    }
+  }
+
+  renderSelfScore() {
+    this.setMaxScore(this.otherComponent);
+    const annotation = this.getScoreForSelf();
+    const annotations = [];
+    if (annotation != null) {
+      annotations.push(annotation);
+    }
+    this.processScoreAnnotations(annotations);
+  }
+
+  getScoreForSelf() {
+    if (this.isVLEPreview() || this.isStudentRun()) {
+      return this.getLatestScoreAnnotationForWorkgroup();
+    } else if (this.isAuthoringPreview()) {
+      return this.createDummyScoreAnnotation();
+    }
+  }
+
+  getLatestScoreAnnotationForWorkgroup() {
+    return this.AnnotationService.getLatestScoreAnnotation(
+      this.nodeId,
+      this.componentId,
+      this.ConfigService.getWorkgroupId()
+    );
+  }
+
+  renderClassScores() {
+    this.setMaxScore(this.otherComponent);
+    this.getScores(this.nodeId, this.componentId, this.periodId).then(annotations => {
+      this.processScoreAnnotations(annotations);
+    });
   }
 
   setMaxScore(component) {
@@ -84,22 +260,6 @@ class SummaryDisplayController {
     } else {
       this.maxScore = this.defaultMaxScore;
     }
-  }
-
-  clearChartConfig() {
-    this.chartConfig = {
-      options: {
-        legend: {
-          enabled: false
-        },
-        exporting: {
-          enabled: false
-        },
-        credits: {
-          enabled: false
-        }
-      }
-    };
   }
 
   getComponentStates(nodeId, componentId, periodId) {
@@ -111,23 +271,10 @@ class SummaryDisplayController {
       return this.dataService.getClassmateStudentWork(nodeId, componentId, periodId);
     } else if (this.isClassroomMonitor()) {
       return this.dataService.retrieveLatestStudentDataByNodeIdAndComponentIdAndPeriodId(
-          nodeId, componentId, periodId);
-    }
-  }
-
-  getScores(nodeId, componentId, periodId) {
-    if (this.isVLEPreview()) {
-      return this.getDummyStudentScoresForVLEPreview(nodeId, componentId);
-    } else if (this.isAuthoringPreview()) {
-      return this.getDummyStudentScoresForAuthoringPreview(nodeId, componentId);
-    } else if (this.isStudentRun()) {
-      return this.dataService.getClassmateScores(nodeId, componentId, periodId
-          ).then((annotations) => {
-        return this.filterLatestScoreAnnotations(annotations);
-      });
-    } else if (this.isClassroomMonitor()) {
-      const annotations = this.dataService.getAnnotationsByNodeIdAndPeriodId(nodeId, periodId);
-      return this.resolveData(this.filterLatestScoreAnnotations(annotations));
+        nodeId,
+        componentId,
+        periodId
+      );
     }
   }
 
@@ -150,15 +297,17 @@ class SummaryDisplayController {
   }
 
   convertObjectToArray(obj) {
-    return Object.keys(obj).map((key) => {
-      return obj[key]
-    })
+    return Object.keys(obj).map(key => {
+      return obj[key];
+    });
   }
 
   getDummyStudentWorkForVLEPreview(nodeId, componentId) {
     const componentStates = this.createDummyComponentStates();
-    const componentState = this.dataService
-        .getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
+    const componentState = this.dataService.getLatestComponentStateByNodeIdAndComponentId(
+      nodeId,
+      componentId
+    );
     if (componentState != null) {
       componentStates.push(componentState);
     }
@@ -167,8 +316,7 @@ class SummaryDisplayController {
 
   getDummyStudentScoresForVLEPreview(nodeId, componentId) {
     const annotations = this.createDummyScoreAnnotations();
-    const annotation = this.AnnotationService.getLatestScoreAnnotation(
-        nodeId, componentId, this.ConfigService.getWorkgroupId());
+    const annotation = this.getLatestScoreAnnotationForWorkgroup();
     if (annotation != null) {
       annotations.push(annotation);
     }
@@ -193,24 +341,72 @@ class SummaryDisplayController {
   }
 
   createDummyComponentStates() {
-    const component = this.ProjectService.getComponentByNodeIdAndComponentId(
-        this.nodeId, this.componentId);
-    const choices = component.choices;
     const dummyComponentStates = [];
     for (let dummyCounter = 0; dummyCounter < this.numDummySamples; dummyCounter++) {
-      dummyComponentStates.push(this.createDummyComponentState(choices));
+      dummyComponentStates.push(this.createDummyComponentState(this.otherComponent));
     }
     return dummyComponentStates;
   }
 
-  createDummyComponentState(choices) {
+  createDummyComponentState(component) {
+    if (this.otherComponentType === 'MultipleChoice') {
+      return this.createDummyMultipleChoiceComponentState(component);
+    } else if (this.otherComponentType === 'Table') {
+      return this.createDummyTableComponentState(component);
+    }
+  }
+
+  createDummyMultipleChoiceComponentState(component) {
+    const choices = component.choices;
     return {
       studentData: {
-        studentChoices: [
-          { id: this.getRandomChoice(choices).id }
-        ]
+        studentChoices: [{ id: this.getRandomChoice(choices).id }]
       }
     };
+  }
+
+  createDummyTableComponentState(component) {
+    if (this.isAuthoringPreview()) {
+      return {
+        studentData: {
+          tableData: this.getDummyTableData()
+        }
+      };
+    } else {
+      return {
+        studentData: {
+          tableData: this.getDummyTableDataSimilarToLatestComponentState()
+        }
+      };
+    }
+  }
+
+  getDummyTableData() {
+    return [
+      [{ text: 'Trait' }, { text: 'Count' }],
+      [{ text: 'Blue' }, { text: '3' }],
+      [{ text: 'Green' }, { text: '2' }],
+      [{ text: 'Red' }, { text: '1' }]
+    ];
+  }
+
+  getDummyTableDataSimilarToLatestComponentState() {
+    let tableData = [];
+    const componentState = this.dataService.getLatestComponentStateByNodeIdAndComponentId(
+      this.nodeId,
+      this.componentId
+    );
+    if (componentState != null) {
+      tableData = this.UtilService.makeCopyOfJSONObject(componentState.studentData.tableData);
+      for (let r = 1; r < tableData.length; r++) {
+        tableData[r][1].text = this.getRandomSimilarNumber(tableData[r][1].text);
+      }
+    }
+    return tableData;
+  }
+
+  getRandomSimilarNumber(text) {
+    return Math.ceil(this.convertToNumber(text) * Math.random());
   }
 
   getRandomChoice(choices) {
@@ -239,12 +435,82 @@ class SummaryDisplayController {
   }
 
   processComponentStates(componentStates) {
-    const component = this.ProjectService.getComponentByNodeIdAndComponentId(
-        this.nodeId, this.componentId);
-    const summaryData = this.createChoicesSummaryData(component, componentStates);
-    const data = this.createChoicesSeriesData(component, summaryData);
-    this.calculateCountsAndPercentage(componentStates.length);
-    this.renderGraph(data, componentStates.length);
+    if (this.otherComponentType === 'MultipleChoice') {
+      const summaryData = this.createChoicesSummaryData(this.otherComponent, componentStates);
+      const seriesData = this.createChoicesSeriesData(this.otherComponent, summaryData);
+      this.calculateCountsAndPercentage(componentStates.length);
+      this.renderGraph(seriesData, componentStates.length);
+    } else if (this.otherComponentType === 'Table') {
+      const summaryData = this.createTableSummaryData(componentStates);
+      const seriesData = this.createTableSeriesData(this.otherComponent, summaryData);
+      const totalCount = this.getTotalTableCount(seriesData);
+      this.calculateCountsAndPercentage(componentStates.length);
+      this.renderGraph(seriesData, totalCount);
+    }
+  }
+
+  createTableSummaryData(componentStates) {
+    const labelToCount = {};
+    for (const componentState of componentStates) {
+      const tableData = componentState.studentData.tableData;
+      for (let r = 1; r < tableData.length; r++) {
+        const row = tableData[r];
+        const key = row[0].text;
+        const value = row[1].text;
+        if (key != '') {
+          this.accumulateLabel(labelToCount, this.cleanLabel(key), value);
+        }
+      }
+    }
+    return labelToCount;
+  }
+
+  cleanLabel(label) {
+    return (label + '')
+      .trim()
+      .toLowerCase()
+      .split(' ')
+      .map(word => {
+        if (word.length > 0) {
+          return word[0].toUpperCase() + word.substr(1);
+        } else {
+          return '';
+        }
+      })
+      .join(' ');
+  }
+
+  createTableSeriesData(component, summaryData) {
+    const data = [];
+    for (const key of Object.keys(summaryData)) {
+      const count = summaryData[key];
+      const dataPoint = this.createDataPoint(key, count);
+      data.push(dataPoint);
+    }
+    return data;
+  }
+
+  getTotalTableCount(seriesData) {
+    let total = 0;
+    for (const dataPoint of seriesData) {
+      total += dataPoint.y;
+    }
+    return total;
+  }
+
+  accumulateLabel(labelToCount, key, value) {
+    if (labelToCount[key] == null) {
+      labelToCount[key] = 0;
+    }
+    labelToCount[key] += this.convertToNumber(value);
+  }
+
+  convertToNumber(value) {
+    if (!isNaN(Number(value))) {
+      return Number(value);
+    } else {
+      return 0;
+    }
   }
 
   processScoreAnnotations(annotations) {
@@ -272,7 +538,10 @@ class SummaryDisplayController {
     const summaryData = {};
     for (const choice of component.choices) {
       summaryData[choice.id] = this.createChoiceSummaryData(
-          choice.id, choice.text, choice.isCorrect);
+        choice.id,
+        choice.text,
+        choice.isCorrect
+      );
     }
     for (const componentState of componentStates) {
       this.addComponentStateDataToSummaryData(summaryData, componentState);
@@ -303,8 +572,11 @@ class SummaryDisplayController {
       const color = this.getDataPointColor(choice);
       let text = choice.text;
       if (this.highlightCorrectAnswer && this.chartType === 'pie') {
-        text = text + ' (' +
-          (choice.isCorrect ? this.$translate('CORRECT') : this.$translate('INCORRECT')) + ')';
+        text =
+          text +
+          ' (' +
+          (choice.isCorrect ? this.$translate('CORRECT') : this.$translate('INCORRECT')) +
+          ')';
       }
       const dataPoint = this.createDataPoint(text, count, color);
       data.push(dataPoint);
@@ -397,44 +669,68 @@ class SummaryDisplayController {
     const xAxisType = 'category';
     const series = this.createSeries(data);
     const colors = this.getChartColors();
-    this.chartConfig =  this.createChartConfig(chartType, title, xAxisType, total, series, colors);
+    this.setCustomLabelColors(series, colors, this.customLabelColors);
+    this.chartConfig = this.createChartConfig(chartType, title, xAxisType, total, series, colors);
   }
 
   createSeries(data) {
-    const series = [{
-      data: data,
-      dataLabels: {
-        enabled: true
+    const series = [
+      {
+        data: data,
+        dataLabels: {
+          enabled: true
+        }
       }
-    }]
+    ];
     if (this.highlightCorrectAnswer && this.chartType === 'column') {
       series[0].showInLegend = false;
-      series.push({
-        name: this.$translate('CORRECT'),
-        color: this.colors.correct
-      }, {
-        name: this.$translate('INCORRECT'),
-        color: this.colors.incorrect
-      });
+      series.push(
+        {
+          name: this.$translate('CORRECT'),
+          color: this.colors.correct
+        },
+        {
+          name: this.$translate('INCORRECT'),
+          color: this.colors.incorrect
+        }
+      );
     }
     return series;
   }
 
   getGraphTitle() {
+    if (this.isSourceSelf()) {
+      return this.getGraphTitleForSelf();
+    } else {
+      return this.getGraphTitleForClass();
+    }
+  }
+
+  getGraphTitleForSelf() {
+    return 'Your Response';
+  }
+
+  getGraphTitleForClass() {
     if (this.isStudentDataTypeResponses()) {
-      return this.$translate('CLASS_RESPONSES') + ' | ' +
+      return (
+        this.$translate('CLASS_RESPONSES') +
+        ' | ' +
         this.$translate('PERCENT_OF_CLASS_RESPONDED', {
           totalResponses: this.numResponses,
           totalTeams: this.totalWorkgroups,
           percentResponded: this.percentResponded
-      });
+        })
+      );
     } else if (this.isStudentDataTypeScores()) {
-      return this.$translate('CLASS_SCORES') + ' | ' +
+      return (
+        this.$translate('CLASS_SCORES') +
+        ' | ' +
         this.$translate('PERCENT_OF_CLASS_RESPONDED', {
           totalResponses: this.numResponses,
           totalTeams: this.totalWorkgroups,
           percentResponded: this.percentResponded
-      });
+        })
+      );
     }
   }
 
@@ -443,8 +739,8 @@ class SummaryDisplayController {
       return this.colors.palette;
     } else {
       let colors = [];
-      const step = 100/this.maxScore/100*.9;
-      let opacity = .1;
+      const step = (100 / this.maxScore / 100) * 0.9;
+      let opacity = 0.1;
       for (let i = 0; i < this.maxScore; i++) {
         opacity = opacity + step;
         const color = this.UtilService.rgbToHex(this.colors.singleHue, opacity);
@@ -452,6 +748,28 @@ class SummaryDisplayController {
       }
       return colors;
     }
+  }
+
+  setCustomLabelColors(series, colors, customLabelColors) {
+    for (const customLabelColor of customLabelColors) {
+      const index = this.getIndexByName(series, customLabelColor.label);
+      if (index != null) {
+        colors[index] = customLabelColor.color;
+      }
+    }
+  }
+
+  getIndexByName(series, name) {
+    for (const singleSeries of series) {
+      if (singleSeries.data != null) {
+        for (const [i, dataPoint] of singleSeries.data.entries()) {
+          if (this.cleanLabel(dataPoint.name) === this.cleanLabel(name)) {
+            return i;
+          }
+        }
+      }
+    }
+    return null;
   }
 
   isStudentDataTypeResponses() {
@@ -467,6 +785,8 @@ class SummaryDisplayController {
   }
 
   createChartConfig(chartType, title, xAxisType, total, series, colors) {
+    const thisSummaryDisplay = this;
+    thisSummaryDisplay.total = total;
     const chartConfig = {
       options: {
         colors: colors,
@@ -484,7 +804,7 @@ class SummaryDisplayController {
             if (chartType === 'pie') {
               return '<b>' + this.key + '</b>: ' + this.y;
             } else {
-              const pct = Math.round(this.y / total * 100);
+              const pct = Math.round((this.y / thisSummaryDisplay.total) * 100);
               return '<b>' + this.key + '</b>: ' + pct + '%';
             }
           }
@@ -501,13 +821,13 @@ class SummaryDisplayController {
             dataLabels: {
               formatter: function() {
                 if (chartType === 'pie') {
-                  const pct = Math.round(this.y / total * 100);
+                  const pct = Math.round((this.y / this.total) * 100);
                   return this.key + ': ' + pct + '%';
                 } else {
                   return this.y;
                 }
               },
-              style: {'fontSize': '12px'}
+              style: { fontSize: '12px' }
             }
           },
           column: {
@@ -517,18 +837,18 @@ class SummaryDisplayController {
       },
       title: {
         text: title,
-        style: {'fontSize': '16px', 'fontWeight': '500'}
+        style: { fontSize: '16px', fontWeight: '500' }
       },
       xAxis: {
         type: xAxisType,
         labels: {
-          style: {'fontSize': '14px'}
+          style: { fontSize: '14px' }
         }
       },
       yAxis: {
         title: {
           text: this.$translate('COUNT'),
-          style: {'fontSize': '14px'}
+          style: { fontSize: '14px' }
         }
       },
       series: series
@@ -541,7 +861,7 @@ class SummaryDisplayController {
         legendItemClick: function() {
           return false;
         }
-      }
+      };
     }
     return chartConfig;
   }
@@ -562,11 +882,23 @@ class SummaryDisplayController {
   }
 
   getPercentResponded(numResponses, totalWorkgroups) {
-    return Math.floor(100 * numResponses / totalWorkgroups);
+    return Math.floor((100 * numResponses) / totalWorkgroups);
   }
 
   getSummaryDataCount(summaryData, id) {
     return summaryData[id].count;
+  }
+
+  isSourceSelf() {
+    return this.source === 'self';
+  }
+
+  isSourcePeriod() {
+    return this.source === 'period';
+  }
+
+  isSourceAllPeriods() {
+    return this.source === 'allPeriods';
   }
 }
 
@@ -574,6 +906,7 @@ SummaryDisplayController.$inject = [
   '$filter',
   '$injector',
   '$q',
+  '$rootScope',
   'AnnotationService',
   'ConfigService',
   'ProjectService',
@@ -586,14 +919,17 @@ const SummaryDisplay = {
     componentId: '<',
     highlightCorrectAnswer: '<',
     studentDataType: '<',
+    source: '<',
     periodId: '<',
     chartType: '<',
     hasWarning: '<',
-    warningMessage: '<'
+    warningMessage: '<',
+    customLabelColors: '<',
+    doRender: '='
   },
   templateUrl: 'wise5/directives/summaryDisplay/summaryDisplay.html',
   controller: SummaryDisplayController,
   controllerAs: 'summaryDisplayCtrl'
-}
+};
 
 export default SummaryDisplay;

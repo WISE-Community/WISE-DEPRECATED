@@ -84,7 +84,7 @@ class SummaryAuthoringController extends SummaryController {
     this.authoringViewComponentChanged();
   }
 
-  isComponentTypeAllowed(componentType) {
+  isComponentTypeAllowed(componentType: string) {
     return this.SummaryService.isComponentTypeAllowed(componentType);
   }
 
@@ -195,6 +195,47 @@ class SummaryAuthoringController extends SummaryController {
       }
     }
     return false;
+  }
+
+  addCustomLabelColor() {
+    if (this.authoringComponentContent.customLabelColors == null) {
+      this.authoringComponentContent.customLabelColors = [];
+    }
+    this.authoringComponentContent.customLabelColors.push({ label: '', color: '' });
+    this.authoringViewComponentChanged();
+  }
+
+  deleteCustomLabelColor(index: number) {
+    if (confirm(this.$translate('summary.areYouSureYouWantToDeleteThisCustomLabelColor'))) {
+      this.authoringComponentContent.customLabelColors.splice(index, 1);
+      this.triggerCustomLabelColorChange();
+      this.authoringViewComponentChanged();
+    }
+  }
+
+  customLabelColorChanged() {
+    this.triggerCustomLabelColorChange();
+    this.authoringViewComponentChanged();
+  }
+
+  moveCustomLabelColorUp(index: number) {
+    this.UtilService.moveObjectUp(this.authoringComponentContent.customLabelColors, index);
+    this.authoringViewComponentChanged();
+  }
+
+  moveCustomLabelColorDown(index: number) {
+    this.UtilService.moveObjectDown(this.authoringComponentContent.customLabelColors, index);
+    this.authoringViewComponentChanged();
+  }
+
+  triggerCustomLabelColorChange() {
+    /*
+     * AngularJS doesn't detect a change on arrays when an array's content changes. We need to
+     * create a new array using concat() to actually trigger a change so the SummaryDisplay will
+     * update when a custom label color is changed in the authoring view.
+     */
+    this.authoringComponentContent.customLabelColors =
+        this.authoringComponentContent.customLabelColors.concat();
   }
 }
 

@@ -1,11 +1,17 @@
 {
+  "summary.addCustomLabelColor": "Add Custom Label Color",
+  "summary.areYouSureYouWantToDeleteThisCustomLabelColor": "Are you sure you want to delete this custom label color?",
   "summary.bar": "Bar",
   "summary.chartType": "Chart Type",
+  "summary.color": "Color",
   "summary.completeComponent": "Complete Component",
   "summary.componentTypeLabel": "Summary",
   "summary.chooseTheStepAndComponent": "Choose the step and component to show the summary data for:",
+  "summary.customLabelColors": "Custom Label Colors",
   "summary.highlightCorrectAnswer": "Highlight Correct Answers",
+  "summary.label": "Label",
   "summary.none": "None",
+  "summary.onlySelf": "Only Self",
   "summary.onlyStudentsInPeriod": "Only Students In Period",
   "summary.pie": "Pie",
   "summary.responses": "Responses",
@@ -15,7 +21,10 @@
   "summary.showPromptFromOtherComponent": "Show Prompt From Source Component",
   "summary.studentDataType": "Student Data Type",
   "summary.studentsInAllPeriods": "Students In All Periods",
-  "summary.submitWork" : "Submit Work",
-  "summary.youMustComplete": "You must complete \"{{stepTitle}}\" to view the class results.",
-  "summary.youMustSubmitWork": "You must submit work on \"{{stepTitle}}\" to view the class results."
+  "summary.submitWork": "Submit Work",
+  "summary.theStudentWillSeeAGraphOfTheirIndividualDataHere": "The student will see a graph of their individual data here.",
+  "summary.youMustCompleteToViewClassSummary": "You must complete \"{{stepTitle}}\" to view the class summary.",
+  "summary.youMustCompleteToViewSelfSummary": "You must complete \"{{stepTitle}}\" to view the summary.",
+  "summary.youMustSubmitWorkToViewClassSummary": "You must submit work on \"{{stepTitle}}\" to view the class summary.",
+  "summary.youMustSubmitWorkToViewSelfSummary": "You must submit work on \"{{stepTitle}}\" to view the summary."
 }
