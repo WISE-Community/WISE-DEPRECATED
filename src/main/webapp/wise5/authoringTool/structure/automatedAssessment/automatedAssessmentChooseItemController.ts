@@ -1,5 +1,5 @@
 import ConfigureStructureController from "../configureStructureController";
-import AuthoringToolProjectService from "../../authoringToolProjectService";
+import { AuthoringToolProjectService } from "../../authoringToolProjectService";
 
 export default class AutomatedAssessmentChooseItemController extends ConfigureStructureController {
 
