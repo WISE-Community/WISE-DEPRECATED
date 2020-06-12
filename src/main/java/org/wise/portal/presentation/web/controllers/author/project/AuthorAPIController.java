@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
 import java.util.regex.Matcher;
@@ -43,6 +44,9 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.json.JSONException;
@@ -257,8 +261,10 @@ public class AuthorAPIController {
 
   @GetMapping("/config")
   @ResponseBody
+  @SuppressWarnings("unchecked")
   protected HashMap<String, Object> getDefaultAuthorProjectConfig(Authentication auth,
-      HttpServletRequest request) throws ObjectNotFoundException {
+      HttpServletRequest request)
+      throws ObjectNotFoundException, JsonMappingException, JsonProcessingException {
     HashMap<String, Object> config = new HashMap<String, Object>();
     User user = userService.retrieveUserByUsername(auth.getName());
     String contextPath = request.getContextPath();
@@ -281,6 +287,12 @@ public class AuthorAPIController {
       projectMetadataSettings = portalService.getDefaultProjectMetadataSettings();
     }
     config.put("projectMetadataSettings", projectMetadataSettings);
+    String structures = portal.getStructures();
+    if (structures != null) {
+      ObjectMapper mapper = new ObjectMapper();
+      Map<String, Integer> map = mapper.readValue(structures, Map.class);
+      config.put("automatedAssessmentProjectId", map.get("automatedAssessmentProjectId"));
+    }
 
     MutableUserDetails userDetails = user.getUserDetails();
     String username = userDetails.getUsername();

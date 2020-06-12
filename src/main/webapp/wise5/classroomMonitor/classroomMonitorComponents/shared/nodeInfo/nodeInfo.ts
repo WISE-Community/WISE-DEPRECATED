@@ -30,7 +30,10 @@ class NodeInfoController {
     private TeacherDataService: TeacherDataService,
     private UtilService: UtilService
   ) {
-    this.periodId = this.TeacherDataService.getCurrentPeriod().periodId;
+    const currentPeriod = this.TeacherDataService.getCurrentPeriod();
+    if (currentPeriod != null) {
+      this.periodId = currentPeriod.periodId;
+    }
   }
 
   $onInit() {

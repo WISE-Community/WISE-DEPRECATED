@@ -1244,4 +1244,8 @@ export class AuthoringToolProjectService extends ProjectService {
       return 1;
     }
   }
+
+  getAutomatedAssessmentProjectId(): number {
+    return this.ConfigService.getConfigParam('automatedAssessmentProjectId') || -1;
+  }
 }

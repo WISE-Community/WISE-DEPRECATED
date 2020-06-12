@@ -172,4 +172,8 @@ public interface Portal extends Persistable {
   void setAnnouncement(String announcement);
 
   String getAnnouncement();
+
+  void setStructures(String structures);
+
+  String getStructures();
 }

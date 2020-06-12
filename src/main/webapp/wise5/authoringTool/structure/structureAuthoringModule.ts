@@ -9,9 +9,13 @@ import JigsawController from './jigsaw/jigsawController';
 import GuidanceChoiceController from './guidanceChoice/guidanceChoiceController';
 import SelfDirectedInvestigationController from './selfDirectedInvestigation/selfDirectedInvestigationController';
 import KICycleUSINGOERController from './kiCycleUsingOER/kiCycleUsingOERController';
+import AutomatedAssessmentChooseItemController from './automatedAssessment/automatedAssessmentChooseItemController';
+import AutomatedAssessmentConfigureController from './automatedAssessment/automatedAssessmentConfigureController';
 
 const structureAuthoringModule = angular
   .module('structureAuthoringModule', ['ui.router'])
+  .controller('AutomatedAssessmentChooseItemController', AutomatedAssessmentChooseItemController)
+  .controller('AutomatedAssessmentConfigureController', AutomatedAssessmentConfigureController)
   .controller('ConfigureStructureController', ConfigureStructureController)
   .controller('ChooseStructureLocationController', ChooseStructureLocationController)
   .controller('ChooseStructureController', ChooseStructureController)
@@ -93,6 +97,32 @@ const structureAuthoringModule = angular
           controllerAs: 'kiCycleUsingOERController',
           params: {
             structure: null
+          }
+        })
+        .state('root.at.project.structure.automated-assessment', {
+          url: '/automated-assessment',
+          abstract: true,
+          params: {
+            structure: null
+          }
+        })
+        .state('root.at.project.structure.automated-assessment.choose-item', {
+          url: '/choose-item',
+          templateUrl: 'wise5/authoringTool/structure/automatedAssessment/choose-item.html',
+          controller: 'AutomatedAssessmentChooseItemController',
+          controllerAs: '$ctrl',
+          params: {
+            structure: null
+          }
+        })
+        .state('root.at.project.structure.automated-assessment.configure', {
+          url: '/configure',
+          templateUrl: 'wise5/authoringTool/structure/automatedAssessment/configure-item.html',
+          controller: 'AutomatedAssessmentConfigureController',
+          controllerAs: '$ctrl',
+          params: {
+            node: null,
+            importFromProjectId: null
           }
         })
         .state('root.at.project.structure.location', {
