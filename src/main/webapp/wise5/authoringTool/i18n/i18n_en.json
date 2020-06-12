@@ -66,7 +66,7 @@
   "autoLogoutMessage": "You have been inactive for a long time. Do you want to stay logged in?",
   "automatedAssessment.chooseAssessmentItem": "Choose an assessment item:",
   "automatedAssessment.customizeFeedback": "Customize Feedback (optional)",
-  "automatedAssessment.customizeFeedback.description": "Customize what the students see when they receive an automated score.",
+  "automatedAssessment.customizeFeedback.description": "Choose whether students should see their score and whether they should receive feedback after submitting an answer. Customize the feedback students will receive for each automated score value.",
   "automatedAssessment.label": "Automated Assessment",
   "automatedAssessment.description": "The Automated Assessment KI lesson structure will automatically score student responses and provide feedback for reflection.",
   "back": "Back",
