@@ -785,6 +785,8 @@ class SummaryDisplayController {
   }
 
   createChartConfig(chartType, title, xAxisType, total, series, colors) {
+    const thisSummaryDisplay = this;
+    thisSummaryDisplay.total = total;
     const chartConfig = {
       options: {
         colors: colors,
@@ -802,7 +804,7 @@ class SummaryDisplayController {
             if (chartType === 'pie') {
               return '<b>' + this.key + '</b>: ' + this.y;
             } else {
-              const pct = Math.round((this.y / total) * 100);
+              const pct = Math.round((this.y / thisSummaryDisplay.total) * 100);
               return '<b>' + this.key + '</b>: ' + pct + '%';
             }
           }
@@ -819,7 +821,7 @@ class SummaryDisplayController {
             dataLabels: {
               formatter: function() {
                 if (chartType === 'pie') {
-                  const pct = Math.round((this.y / total) * 100);
+                  const pct = Math.round((this.y / this.total) * 100);
                   return this.key + ': ' + pct + '%';
                 } else {
                   return this.y;
