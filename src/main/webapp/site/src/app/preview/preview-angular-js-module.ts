@@ -8,9 +8,7 @@ import { setUpLocationSync } from '@angular/router/upgrade';
 import { UtilService } from '../../../../wise5/services/utilService';
 import { ConfigService } from '../../../../wise5/services/configService';
 import { ProjectService } from '../../../../wise5/services/projectService';
-import { AuthoringToolProjectService } from '../../../../wise5/authoringTool/authoringToolProjectService';
 import { VLEProjectService } from '../../../../wise5/vle/vleProjectService';
-import { ClassroomMonitorProjectService } from '../../../../wise5/classroomMonitor/classroomMonitorProjectService';
 
 @Component({template: ``})
 export class EmptyComponent {}
@@ -29,8 +27,6 @@ export class EmptyComponent {}
     UtilService,
     ConfigService,
     ProjectService,
-    AuthoringToolProjectService,
-    ClassroomMonitorProjectService,
     VLEProjectService
   ]
 })

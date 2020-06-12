@@ -63,7 +63,7 @@ export class VLEProjectService extends ProjectService {
       annotation.nodeId,
       annotation.componentId
     );
-    const componentService = this.upgrade.$injector.inject(component.type + 'Service');
+    const componentService = this.upgrade.$injector.get(component.type + 'Service');
     return componentService.displayAnnotation(component, annotation);
   }
 
@@ -131,9 +131,10 @@ export class VLEProjectService extends ProjectService {
   }
 
   retrieveScript(scriptFilename) {
-    return this.http.get(`${this.ConfigService.getProjectAssetsDirectoryPath()}/${scriptFilename}`)
-        .toPromise().then(result => {
-      return result;
+    return this.upgrade.$injector.get('$http')
+        .get(`${this.ConfigService.getProjectAssetsDirectoryPath()}/${scriptFilename}`)
+        .then(result => {
+      return result.data;
     });
   }
 
