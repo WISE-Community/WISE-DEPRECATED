@@ -22,6 +22,7 @@ class MatchController extends ComponentController {
   isLatestComponentStateSubmit: boolean;
   sourceBucket: any;
   privateNotebookItems: any[];
+  autoScroll: any;
 
   static $inject = [
     '$filter',
@@ -79,6 +80,7 @@ class MatchController extends ComponentController {
     this.dragulaService = dragulaService;
     this.MatchService = MatchService;
     this.$mdMedia = $mdMedia;
+    this.autoScroll = require('dom-autoscroller');
 
     this.choices = [];
     this.buckets = [];
@@ -219,6 +221,15 @@ class MatchController extends ComponentController {
     this.disableDraggingIfNeeded(dragId);
     const drake = this.dragulaService.find(this.$scope, dragId).drake;
     this.showVisualIndicatorWhileDragging(drake);
+    this.autoScroll(
+      [document.querySelector('#content')], {
+      margin: 30,
+      pixels: 50,
+      scrollWhenOutside: true,
+      autoScroll: function() {
+          return this.down && drake.dragging;
+      }
+  });
   }
 
   registerStudentDataChangedOnDrop(dragId) {
