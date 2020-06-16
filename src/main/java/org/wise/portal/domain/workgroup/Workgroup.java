@@ -83,6 +83,8 @@ public interface Workgroup extends Persistable {
    */
   Long getId();
 
+  void setId(Long id);
+
   /**
    * Generates a name for this workgroup.
    *
