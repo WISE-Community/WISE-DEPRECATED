@@ -33,7 +33,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import javax.persistence.criteria.Subquery;
 
 import org.hibernate.Session;
 import org.json.JSONException;
@@ -52,13 +51,13 @@ import org.wise.vle.domain.work.StudentWork;
 @Repository
 public class HibernateStudentWorkDao extends AbstractHibernateDao<StudentWork>
     implements StudentWorkDao<StudentWork> {
-      
+
   @PersistenceContext
   private EntityManager entityManager;
 
   private CriteriaBuilder getCriteriaBuilder() {
     Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-    return session.getCriteriaBuilder(); 
+    return session.getCriteriaBuilder();
   }
 
   @Override
@@ -74,34 +73,17 @@ public class HibernateStudentWorkDao extends AbstractHibernateDao<StudentWork>
   @Override
   public List<StudentWork> getStudentWorkListByParams(Integer id, Run run, Group period,
       Workgroup workgroup, Boolean isAutoSave, Boolean isSubmit, String nodeId, String componentId,
-      String componentType, List<JSONObject> components, Boolean onlyGetLatest) {
-    if (Boolean.TRUE.equals(onlyGetLatest)) {
-      CriteriaBuilder cb = getCriteriaBuilder();
-      CriteriaQuery<StudentWork> cq = cb.createQuery(StudentWork.class);
-      Subquery<Long> subQuery = cq.subquery(Long.class);
-      Root<StudentWork> subStudentWorkRoot = subQuery.from(StudentWork.class);
-      List<Predicate> predicates = getStudentWorkListByParamsPredicates(cb, subStudentWorkRoot,
-          id, run, period, workgroup, isAutoSave, isSubmit, nodeId, componentId, componentType,
-          components);
-      subQuery.select(cb.max(subStudentWorkRoot.get("id")))
-          .where(predicates.toArray(new Predicate[predicates.size()]))
-          .groupBy(subStudentWorkRoot.get("workgroup"));
-      Root<StudentWork> studentWorkRoot = cq.from(StudentWork.class);
-      cq.select(studentWorkRoot).where(cb.in(studentWorkRoot.get("id")).value(subQuery));
-      TypedQuery<StudentWork> query = entityManager.createQuery(cq);
-      return (List<StudentWork>) query.getResultList();
-    } else {
-      CriteriaBuilder cb = getCriteriaBuilder();
-      CriteriaQuery<StudentWork> cq = cb.createQuery(StudentWork.class);
-      Root<StudentWork> studentWorkRoot = cq.from(StudentWork.class);
-      List<Predicate> predicates = getStudentWorkListByParamsPredicates(cb, studentWorkRoot,
-          id, run, period, workgroup, isAutoSave, isSubmit, nodeId, componentId, componentType,
-          components);
-      cq.select(studentWorkRoot).where(predicates.toArray(new Predicate[predicates.size()]))
-          .orderBy(cb.asc(studentWorkRoot.get("serverSaveTime")));
-      TypedQuery<StudentWork> query = entityManager.createQuery(cq);
-      return (List<StudentWork>) query.getResultList();
-    }
+      String componentType, List<JSONObject> components) {
+    CriteriaBuilder cb = getCriteriaBuilder();
+    CriteriaQuery<StudentWork> cq = cb.createQuery(StudentWork.class);
+    Root<StudentWork> studentWorkRoot = cq.from(StudentWork.class);
+    List<Predicate> predicates = getStudentWorkListByParamsPredicates(cb, studentWorkRoot,
+        id, run, period, workgroup, isAutoSave, isSubmit, nodeId, componentId, componentType,
+        components);
+    cq.select(studentWorkRoot).where(predicates.toArray(new Predicate[predicates.size()]))
+        .orderBy(cb.asc(studentWorkRoot.get("serverSaveTime")));
+    TypedQuery<StudentWork> query = entityManager.createQuery(cq);
+    return (List<StudentWork>) query.getResultList();
   }
 
   private List<Predicate> getStudentWorkListByParamsPredicates(CriteriaBuilder cb,
