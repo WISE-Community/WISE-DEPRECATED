@@ -3,7 +3,7 @@
   "compilerOptions": {
     "outDir": "../out-tsc/app",
     "baseUrl": "./",
-    "types": ["jquery"],
+    "types": ["jquery", "node"],
     "paths": {
       "moment": ["../node_modules/moment/min/moment.min.js"]
     }
