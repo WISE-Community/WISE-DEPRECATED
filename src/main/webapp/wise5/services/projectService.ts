@@ -1600,7 +1600,7 @@ export class ProjectService {
     const consumedNodes = [];
     for (const path of paths) {
       if (path.includes(nodeId)) {
-        const subPath = path.slice(0, path.indexOf(nodeId));
+        const subPath = path.splice(0, path.indexOf(nodeId));
         for (const nodeIdInPath of subPath) {
           if (!consumedNodes.includes(nodeIdInPath)) {
             consumedNodes.push(nodeIdInPath);
