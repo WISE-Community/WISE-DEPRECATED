@@ -140,7 +140,7 @@
     "watch-sass": "npm rebuild node-sass && node ./node_modules/gulp/bin/gulp.js",
     "update-i18n": "node ./node_modules/gulp/bin/gulp.js update-i18n",
     "compile-sass": "node ./node_modules/gulp/bin/gulp.js compile-sass",
-    "test": "ng test wise --karma-config src/main/webapp/site/karma.conf.js --browsers ChromeHeadlessNoSandbox --watch=false",
+    "test": "ng test wise --source-map=false --karma-config src/main/webapp/site/karma.conf.js --browsers ChromeHeadlessNoSandbox --watch=false",
     "test-e2e-comment": "test-e2e assumes wise is already running.",
     "test-e2e": "node ./node_modules/protractor/bin/protractor src/main/webapp/wise5/test-e2e/conf.js",
     "locale-extractor": "./node_modules/.bin/ngx-extractor -i \"src/main/webapp/site/**/*.ts\" -o src/main/webapp/site/src/messages.xlf"
