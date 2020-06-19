@@ -75,8 +75,8 @@
     "zone.js": "~0.10.2"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~0.901.3",
     "@angular-builders/custom-webpack": "^9.0.0",
+    "@angular-devkit/build-angular": "~0.901.3",
     "@angular/cli": "^9.1.3",
     "@angular/compiler-cli": "^9.0.0",
     "@angular/language-service": "^9.0.0",
@@ -84,6 +84,7 @@
     "@babel/core": "^7.9.0",
     "@babel/preset-env": "^7.9.5",
     "@locl/cli": "0.0.1-beta.7",
+    "@types/dom-mediacapture-record": "^1.0.6",
     "@types/jasmine": "^3.5.10",
     "@types/jasminewd2": "^2.0.8",
     "@types/jquery": "^3.3.38",

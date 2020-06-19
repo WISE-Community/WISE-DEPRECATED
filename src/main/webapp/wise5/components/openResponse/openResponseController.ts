@@ -6,9 +6,11 @@ import ComponentController from '../componentController';
 import CRaterService from '../../services/cRaterService';
 import NotificationService from '../../services/notificationService';
 import OpenResponseService from './openResponseService';
+import { AudioRecorderService } from '../../services/audioRecorderService';
 
 class OpenResponseController extends ComponentController {
   $q: any;
+  AudioRecorderService: AudioRecorderService;
   CRaterService: CRaterService;
   NotificationService: NotificationService;
   OpenResponseService: OpenResponseService;
@@ -20,6 +22,10 @@ class OpenResponseController extends ComponentController {
   isVerifyingCRaterItemId: boolean;
   cRaterItemIdIsValid: boolean;
   tinymceOptions: any;
+  isRecordingAudio: boolean = false;
+  audioRecordingInterval: any;
+  audioRecordingStartTime: number = 0;
+  audioRecordingMaxTime: number = 60000;
 
   static $inject = [
     '$filter',
@@ -28,6 +34,7 @@ class OpenResponseController extends ComponentController {
     '$rootScope',
     '$scope',
     'AnnotationService',
+    'AudioRecorderService',
     'ConfigService',
     'CRaterService',
     'NodeService',
@@ -47,6 +54,7 @@ class OpenResponseController extends ComponentController {
     $rootScope,
     $scope,
     AnnotationService,
+    AudioRecorderService,
     ConfigService,
     CRaterService,
     NodeService,
@@ -74,6 +82,7 @@ class OpenResponseController extends ComponentController {
       UtilService
     );
     this.$q = $q;
+    this.AudioRecorderService = AudioRecorderService;
     this.CRaterService = CRaterService;
     this.NotificationService = NotificationService;
     this.OpenResponseService = OpenResponseService;
@@ -270,6 +279,7 @@ class OpenResponseController extends ComponentController {
     this.$scope.$on('exitNode', function(event, args) {}.bind(this));
 
     this.registerNotebookItemChosenListener();
+    this.registerAudioRecordedListener();
 
     // load script for this component, if any
     let script = this.componentContent.script;
@@ -312,10 +322,8 @@ class OpenResponseController extends ComponentController {
           this.submitCounter = submitCounter;
         }
 
-        const attachments = studentData.attachments;
-
-        if (attachments != null) {
-          this.attachments = attachments;
+        if (studentData.attachments != null) {
+          this.attachments = studentData.attachments;
         }
 
         this.processLatestStudentWork();
@@ -1034,6 +1042,63 @@ class OpenResponseController extends ComponentController {
     this.clearSaveText();
     const action = 'change';
     this.createComponentStateAndBroadcast(action);
+  }
+
+  startRecordingAudio() {
+    if (this.hasAudioResponses()) {
+      if (confirm(this.$translate(`openResponse.confirmReplaceAudioResponse`))) {
+        this.removeAudioAttachments();
+      } else {
+        return;
+      }
+    }
+    this.AudioRecorderService.startRecording(`${this.nodeId}-${this.componentId}`);
+    this.startAudioCountdown();
+    this.isRecordingAudio = true;
+  }
+
+  startAudioCountdown() {
+    this.audioRecordingStartTime = new Date().getTime();
+    this.audioRecordingInterval = setInterval(() => {
+      if (this.getAudioRecordingTimeLeft() <= 0) {
+        this.stopRecordingAudio();
+      }
+    }, 500);
+  }
+
+  stopRecordingAudio() {
+    this.AudioRecorderService.stopRecording();
+    this.isRecordingAudio = false;
+    clearInterval(this.audioRecordingInterval);
+  }
+
+  getAudioRecordingTimeElapsed() {
+    const now = new Date().getTime();
+    return now - this.audioRecordingStartTime;
+  }
+
+  getAudioRecordingTimeLeft() {
+    return Math.floor((this.audioRecordingMaxTime - this.getAudioRecordingTimeElapsed()) / 1000);
+  }
+
+  hasAudioResponses() {
+    return this.attachments.filter(attachment => {
+      return attachment.type === 'audio';
+    }).length > 0;
+  }
+
+  removeAudioAttachment(attachment) {
+    if (confirm(this.$translate(`openResponse.confirmRemoveAudioResponse`))) {
+      this.removeAttachment(attachment);
+    }
+  }
+
+  removeAudioAttachments() {
+    this.attachments.forEach(attachment => {
+      if (attachment.type === 'audio') {
+        this.removeAttachment(attachment);
+      }
+    });
   }
 }
 

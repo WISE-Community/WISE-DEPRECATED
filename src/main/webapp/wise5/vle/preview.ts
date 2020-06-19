@@ -77,6 +77,7 @@ import '../lib/angular-summernote/dist/angular-summernote.min';
 import '../lib/summernoteExtensions/summernote-ext-addNote.js';
 import '../lib/summernoteExtensions/summernote-ext-print.js'
 import '../themes/default/theme';
+import { AudioRecorderService } from '../services/audioRecorderService';
 
 export default angular
   .module('preview', [
@@ -116,6 +117,7 @@ export default angular
   ])
   .service('AchievementService', AchievementService)
   .service('AnnotationService', AnnotationService)
+  .service('AudioRecorderService', AudioRecorderService)
   .factory('ConfigService', downgradeInjectable(ConfigService))
   .service('ComponentService', ComponentService)
   .service('CRaterService', CRaterService)

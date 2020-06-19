@@ -20,6 +20,7 @@ import 'angular-ui-scrollpoint';
 import '../components/animation/animationComponentModule';
 import AnnotationService from '../services/annotationService';
 import '../components/audioOscillator/audioOscillatorComponentModule';
+import { AudioRecorderService } from '../services/audioRecorderService';
 import * as canvg from 'canvg';
 import '../components/conceptMap/conceptMapComponentModule';
 import { ConfigService } from '../services/configService';
@@ -116,6 +117,7 @@ export default angular
   ])
   .service('AchievementService', AchievementService)
   .service('AnnotationService', AnnotationService)
+  .service('AudioRecorderService', AudioRecorderService)
   .factory('ConfigService', downgradeInjectable(ConfigService))
   .service('ComponentService', ComponentService)
   .service('CRaterService', CRaterService)

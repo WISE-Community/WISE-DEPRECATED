@@ -76,6 +76,7 @@ import TeacherDataService from '../services/teacherDataService';
 import TeacherWebSocketService from '../services/teacherWebSocketService';
 import { UtilService } from '../services/utilService';
 import * as moment from 'moment';
+import { AudioRecorderService } from '../services/audioRecorderService';
 
 const classroomMonitorModule = angular
   .module('classroomMonitor', [
@@ -115,6 +116,7 @@ const classroomMonitorModule = angular
   ])
   .service('AchievementService', AchievementService)
   .service('AnnotationService', AnnotationService)
+  .service('AudioRecorderService', AudioRecorderService)
   .service('ComponentService', ComponentService)
   .factory('ConfigService', downgradeInjectable(ConfigService))
   .service('CRaterService', CRaterService)
