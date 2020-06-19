@@ -67,7 +67,7 @@ class StudentAssetService {
         return result;
       });
     }
-  };
+  }
 
   getAssetContent(asset) {
     const assetContentURL = asset.url;
@@ -79,35 +79,20 @@ class StudentAssetService {
     return this.$http(config).then((response) => {
       return response.data;
     });
-  };
+  }
+
+  hasSuffix(assetURL, suffixes) {
+    const assetExtension = assetURL.substring(assetURL.lastIndexOf('.') + 1);
+    return suffixes.includes(assetExtension.toLowerCase());
+  }
 
   isImage(asset) {
-    const imageFileExtensions = ['png', 'jpg', 'jpeg', 'gif'];
-    if (asset != null) {
-      const assetURL = asset.url;
-      if (assetURL != null && assetURL.lastIndexOf('.') !== -1) {
-        const assetExtension = assetURL.substring(assetURL.lastIndexOf('.') + 1);
-        if (imageFileExtensions.indexOf(assetExtension.toLowerCase()) != -1) {
-          return true;
-        }
-      }
-    }
-    return false;
-  };
+    return this.hasSuffix(asset.url, ['png', 'jpg', 'jpeg', 'gif']);
+  }
 
   isAudio(asset) {
-    const imageFileExtensions = ['wav', 'mp3', 'ogg', 'm4a', 'm4p', 'raw', 'aiff'];
-    if (asset != null) {
-      const assetURL = asset.url;
-      if (assetURL != null && assetURL.lastIndexOf('.') != -1) {
-        const assetExtension = assetURL.substring(assetURL.lastIndexOf('.') + 1);
-        if (imageFileExtensions.indexOf(assetExtension.toLowerCase()) != -1) {
-          return true;
-        }
-      }
-    }
-    return false;
-  };
+    return this.hasSuffix(asset.url, ['wav', 'mp3', 'ogg', 'm4a', 'm4p', 'raw', 'aiff', 'webm']);
+  }
 
   uploadAsset(file) {
     if (this.ConfigService.isPreview()) {
@@ -160,10 +145,10 @@ class StudentAssetService {
             asset.iconURL = asset.url;
           } else if (this.isAudio(asset)) {
             asset.type = 'audio';
-            asset.iconURL = 'wise5/vle/notebook/audio.png';
+            asset.iconURL = 'wise5/themes/default/images/audio.png';
           } else {
             asset.type = 'file';
-            asset.iconURL = 'wise5/vle/notebook/file.png';
+            asset.iconURL = 'wise5/themes/default/images/file.png';
           }
           this.allAssets.push(asset);
           this.$rootScope.$broadcast('studentAssetsUpdated');
@@ -246,7 +231,7 @@ class StudentAssetService {
   deleteAsset(studentAsset) {
     const config = {};
     config.method = 'POST';
-    config.url = this.ConfigService.getStudentAssetsURL() + '/remove';
+    config.url = this.ConfigService.getStudentAssetsURL() + '/delete';
     config.headers = {'Content-Type': 'application/x-www-form-urlencoded'};
     const params = {};
     params.studentAssetId = studentAsset.id;

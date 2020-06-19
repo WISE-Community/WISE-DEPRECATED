@@ -37,6 +37,7 @@ import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -212,14 +213,13 @@ public class StudentAssetController {
   /**
    * Removes specified asset from the filesystem and marks as deleted in the database
    */
-  @RequestMapping(method = RequestMethod.POST, value = "/student/asset/{runId}/remove")
+  @PostMapping("/student/asset/{runId}/delete")
   protected void removeStudentAsset(
       @PathVariable Integer runId,
       @RequestParam(value = "studentAssetId", required = true) Integer studentAssetId,
       @RequestParam(value = "workgroupId", required = true) Integer workgroupId,
       @RequestParam(value = "clientDeleteTime", required = true) Long clientDeleteTime,
       HttpServletResponse response) throws IOException {
-    User user = ControllerUtil.getSignedInUser();
     Run run = null;
     try {
       run = runService.retrieveById(new Long(runId));

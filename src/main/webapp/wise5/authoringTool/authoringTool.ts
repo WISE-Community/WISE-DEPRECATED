@@ -76,6 +76,7 @@ import TeacherWebSocketService from '../services/teacherWebSocketService';
 import { UtilService } from '../services/utilService';
 import WISELinkAuthoringController from './wiseLink/wiseLinkAuthoringController';
 import * as moment from 'moment';
+import { AudioRecorderService } from '../services/audioRecorderService';
 
 const authoringModule = angular
   .module('authoring', [
@@ -114,6 +115,7 @@ const authoringModule = angular
     'ui.router'
   ])
   .service('AnnotationService', AnnotationService)
+  .service('AudioRecorderService', AudioRecorderService)
   .service('ComponentService', ComponentService)
   .factory('ConfigService', downgradeInjectable(ConfigService))
   .service('CRaterService', CRaterService)

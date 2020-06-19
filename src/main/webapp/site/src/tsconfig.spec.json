@@ -6,7 +6,8 @@
     "types": [
       "jasmine",
       "jquery",
-      "node"
+      "node",
+      "dom-mediacapture-record"
     ]
   },
   "files": [
