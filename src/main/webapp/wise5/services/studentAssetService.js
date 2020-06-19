@@ -108,10 +108,16 @@ class StudentAssetService {
             let asset = {};
             asset.file = file;
             asset.url = fileSrc;
-            // assume this is an image for now. in the future, support audio and other file formats.
-            asset.type = 'image';
-            asset.iconURL = asset.url;
-
+            if (this.isImage(asset)) {
+              asset.type = 'image';
+              asset.iconURL = asset.url;
+            } else if (this.isAudio(asset)) {
+              asset.type = 'audio';
+              asset.iconURL = 'wise5/themes/default/images/audio.png';
+            } else {
+              asset.type = 'file';
+              asset.iconURL = 'wise5/themes/default/images/file.png';
+            }
             this.allAssets.push(asset);
             this.$rootScope.$broadcast('studentAssetsUpdated');
             return resolve(asset);

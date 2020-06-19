@@ -25,7 +25,7 @@ class OpenResponseController extends ComponentController {
   isRecordingAudio: boolean = false;
   audioRecordingInterval: any;
   audioRecordingStartTime: number = 0;
-  audioRecordingMaxTime: number = 45000;
+  audioRecordingMaxTime: number = 60000;
 
   static $inject = [
     '$filter',

@@ -12,6 +12,7 @@
   "openResponse.confirmRemoveAudioResponse": "Are you sure you want to delete your recording?",
   "openResponse.confirmReplaceAudioResponse": "This will replace your existing recording. Is this OK?",
   "openResponse.currentScore": "Current Score",
+  "openResponse.deleteRecording": "Delete recording",
   "openResponse.dismissCode": "Dismiss Code",
   "openResponse.enableAmbientDisplayDismissMode": "Enable Ambient Display Dismiss Mode",
   "openResponse.enableCRater": "Enable CRater",
