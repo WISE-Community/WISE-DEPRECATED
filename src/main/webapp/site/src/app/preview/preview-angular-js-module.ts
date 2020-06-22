@@ -9,6 +9,7 @@ import { UtilService } from '../../../../wise5/services/utilService';
 import { ConfigService } from '../../../../wise5/services/configService';
 import { ProjectService } from '../../../../wise5/services/projectService';
 import { VLEProjectService } from '../../../../wise5/vle/vleProjectService';
+import { CRaterService } from '../../../../wise5/services/cRaterService';
 
 @Component({template: ``})
 export class EmptyComponent {}
@@ -26,6 +27,7 @@ export class EmptyComponent {}
   providers: [
     UtilService,
     ConfigService,
+    CRaterService,
     ProjectService,
     VLEProjectService
   ]

@@ -24,7 +24,7 @@ import { AuthoringToolProjectService } from './authoringToolProjectService';
 import AuthorNotebookController from './notebook/authorNotebookController';
 import '../components/conceptMap/conceptMapAuthoringComponentModule';
 import { ConfigService } from '../services/configService';
-import CRaterService from '../services/cRaterService';
+import { CRaterService } from '../services/cRaterService';
 import '../directives/components';
 import ComponentService from '../components/componentService';
 import '../components/discussion/discussionAuthoringComponentModule';
@@ -118,7 +118,7 @@ const authoringModule = angular
   .service('AudioRecorderService', AudioRecorderService)
   .service('ComponentService', ComponentService)
   .factory('ConfigService', downgradeInjectable(ConfigService))
-  .service('CRaterService', CRaterService)
+  .factory('CRaterService', downgradeInjectable(CRaterService))
   .service('NodeService', NodeService)
   .service('NotebookService', NotebookService)
   .service('NotificationService', NotificationService)

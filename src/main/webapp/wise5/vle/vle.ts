@@ -24,7 +24,7 @@ import { AudioRecorderService } from '../services/audioRecorderService';
 import * as canvg from 'canvg';
 import '../components/conceptMap/conceptMapComponentModule';
 import { ConfigService } from '../services/configService';
-import CRaterService from '../services/cRaterService';
+import { CRaterService } from '../services/cRaterService';
 import '../directives/components';
 import ComponentService from '../components/componentService';
 import '../components/discussion/discussionComponentModule';
@@ -120,7 +120,7 @@ export default angular
   .service('AudioRecorderService', AudioRecorderService)
   .factory('ConfigService', downgradeInjectable(ConfigService))
   .service('ComponentService', ComponentService)
-  .service('CRaterService', CRaterService)
+  .factory('CRaterService', downgradeInjectable(CRaterService))
   .service('HttpInterceptor', HttpInterceptor)
   .service('NodeService', NodeService)
   .service('NotebookService', NotebookService)
