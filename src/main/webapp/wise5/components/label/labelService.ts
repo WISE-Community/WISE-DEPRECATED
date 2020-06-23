@@ -1,6 +1,6 @@
 import * as angular from 'angular';
 import ComponentService from '../componentService';
-import StudentAssetService from '../../services/studentAssetService';
+import { StudentAssetService } from '../../services/studentAssetService';
 
 class LabelService extends ComponentService {
   $q: any;

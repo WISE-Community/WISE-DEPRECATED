@@ -58,7 +58,7 @@ import '../components/outsideURL/outsideURLComponentModule';
 import PlanningService from '../services/planningService';
 import SessionService from '../services/sessionService';
 import './studentAsset/studentAsset';
-import StudentAssetService from '../services/studentAssetService';
+import { StudentAssetService } from '../services/studentAssetService';
 import StudentDataService from '../services/studentDataService';
 import StudentStatusService from '../services/studentStatusService';
 import StudentWebSocketService from '../services/studentWebSocketService';
@@ -128,7 +128,7 @@ export default angular
   .service('PlanningService', PlanningService)
   .factory('ProjectService', downgradeInjectable(VLEProjectService))
   .service('SessionService', SessionService)
-  .service('StudentAssetService', StudentAssetService)
+  .factory('StudentAssetService', downgradeInjectable(StudentAssetService))
   .service('StudentDataService', StudentDataService)
   .service('StudentStatusService', StudentStatusService)
   .service('StudentWebSocketService', StudentWebSocketService)

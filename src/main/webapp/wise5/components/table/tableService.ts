@@ -1,7 +1,7 @@
 import * as angular from 'angular';
 import * as html2canvas from 'html2canvas';
 import ComponentService from '../componentService';
-import StudentAssetService from '../../services/studentAssetService';
+import { StudentAssetService } from '../../services/studentAssetService';
 
 class TableService extends ComponentService {
   $q: any;
