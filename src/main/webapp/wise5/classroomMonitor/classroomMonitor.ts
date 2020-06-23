@@ -58,7 +58,6 @@ import NotebookService from '../services/notebookService';
 import NotificationService from '../services/notificationService';
 import '../components/openResponse/openResponseComponentModule';
 import '../components/outsideURL/outsideURLComponentModule';
-import PlanningService from '../services/planningService';
 import SessionService from '../services/sessionService';
 import * as SockJS from 'sockjs-client';
 import * as StompJS from '@stomp/stompjs';
@@ -125,7 +124,6 @@ const classroomMonitorModule = angular
   .service('NodeService', NodeService)
   .service('NotebookService', NotebookService)
   .service('NotificationService', NotificationService)
-  .service('PlanningService', PlanningService)
   .factory('ProjectService', downgradeInjectable(ClassroomMonitorProjectService))
   .service('SessionService', SessionService)
   .service('StudentAssetService', StudentAssetService)

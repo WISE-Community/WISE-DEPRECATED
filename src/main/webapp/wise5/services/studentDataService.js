@@ -9,7 +9,6 @@ class StudentDataService {
     $rootScope,
     AnnotationService,
     ConfigService,
-    PlanningService,
     ProjectService,
     UtilService
   ) {
@@ -20,7 +19,6 @@ class StudentDataService {
     this.$rootScope = $rootScope;
     this.AnnotationService = AnnotationService;
     this.ConfigService = ConfigService;
-    this.PlanningService = PlanningService;
     this.ProjectService = ProjectService;
     this.UtilService = UtilService;
     this.$translate = this.$filter('translate');
@@ -36,8 +34,6 @@ class StudentDataService {
     this.nodeStatuses = {};
     this.runStatus = null;
     this.maxScore = null;
-
-    this.maxPlanningNodeNumber = 0;
 
     /*
      * A counter to keep track of how many saveToServer requests we have
@@ -1661,7 +1657,6 @@ StudentDataService.$inject = [
   '$rootScope',
   'AnnotationService',
   'ConfigService',
-  'PlanningService',
   'ProjectService',
   'UtilService'
 ];

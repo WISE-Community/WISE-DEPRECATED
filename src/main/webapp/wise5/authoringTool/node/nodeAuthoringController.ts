@@ -283,10 +283,6 @@ class NodeAuthoringController {
         ]
       },
       {
-        value: 'isPlanningActivityCompleted',
-        text: this.$translate('isPlanningActivityCompleted')
-      },
-      {
         value: 'wroteXNumberOfWords',
         text: this.$translate('wroteXNumberOfWords'),
         params: [

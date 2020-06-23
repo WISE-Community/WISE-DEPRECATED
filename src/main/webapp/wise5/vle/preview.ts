@@ -55,7 +55,6 @@ import NotebookService from '../services/notebookService';
 import NotificationService from '../services/notificationService';
 import '../components/openResponse/openResponseComponentModule';
 import '../components/outsideURL/outsideURLComponentModule';
-import PlanningService from '../services/planningService';
 import SessionService from '../services/sessionService';
 import './studentAsset/studentAsset';
 import StudentAssetService from '../services/studentAssetService';
@@ -125,7 +124,6 @@ export default angular
   .service('NodeService', NodeService)
   .service('NotebookService', NotebookService)
   .service('NotificationService', NotificationService)
-  .service('PlanningService', PlanningService)
   .factory('ProjectService', downgradeInjectable(VLEProjectService))
   .service('SessionService', SessionService)
   .service('StudentAssetService', StudentAssetService)
