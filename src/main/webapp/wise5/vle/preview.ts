@@ -56,7 +56,7 @@ import NotificationService from '../services/notificationService';
 import '../components/openResponse/openResponseComponentModule';
 import '../components/outsideURL/outsideURLComponentModule';
 import PlanningService from '../services/planningService';
-import SessionService from '../services/sessionService';
+import { SessionService } from '../services/sessionService';
 import './studentAsset/studentAsset';
 import StudentAssetService from '../services/studentAssetService';
 import StudentDataService from '../services/studentDataService';
@@ -127,7 +127,7 @@ export default angular
   .service('NotificationService', NotificationService)
   .service('PlanningService', PlanningService)
   .factory('ProjectService', downgradeInjectable(VLEProjectService))
-  .service('SessionService', SessionService)
+  .factory('SessionService', downgradeInjectable(SessionService))
   .service('StudentAssetService', StudentAssetService)
   .service('StudentDataService', StudentDataService)
   .service('StudentStatusService', StudentStatusService)

@@ -1,7 +1,7 @@
 'use strict';
 import * as angular from 'angular';
 import { ConfigService } from '../services/configService';
-import SessionService from '../services/sessionService';
+import { SessionService } from '../services/sessionService';
 import TeacherDataService from '../services/teacherDataService';
 import { AuthoringToolProjectService } from './authoringToolProjectService';
 

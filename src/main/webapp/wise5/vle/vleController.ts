@@ -5,7 +5,7 @@ import { ConfigService } from '../services/configService';
 import NotificationService from '../services/notificationService';
 import NotebookService from '../services/notebookService';
 import { VLEProjectService } from './vleProjectService';
-import SessionService from '../services/sessionService';
+import { SessionService } from '../services/sessionService';
 import StudentDataService from '../services/studentDataService';
 import * as angular from 'angular';
 import * as $ from 'jquery';
