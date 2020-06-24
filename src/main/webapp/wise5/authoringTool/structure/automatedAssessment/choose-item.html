@@ -4,7 +4,7 @@
 <h6 translate="automatedAssessment.chooseAssessmentItem"></h6>
 <md-radio-group ng-model="$ctrl.node">
   <div ng-repeat="item in $ctrl.projectIdToOrder"
-       ng-class="::{'groupHeader': item.node.type == 'group', 'stepHeader': item.node.type != 'group'">
+       ng-class="::{'groupHeader': item.node.type == 'group', 'stepHeader': item.node.type != 'group'}">
     <div ng-if="item.order != 0 && item.node.type == 'group'">
       {{item.node.title}}:
     </div>

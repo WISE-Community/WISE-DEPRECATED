@@ -13,9 +13,6 @@
             <alert-status-corner has-alert="$ctrl.newAlert" has-new-alert="$ctrl.newAlert" message="$ctrl.alertIconLabel"></alert-status-corner>
         </md-card-content>
         <md-card-content ng-if="$ctrl.isGroup && $ctrl.expanded" class="nav-contents nav-contents--group">
-            <div ng-if="$ctrl.isPlanning" class="md-padding" layout="column" layout-align="center center">
-                {{ ::'noteThisActivityIncludesStudentPlanning' | translate }}
-            </div>
             <md-list class="nav-contents__list">
                 <nav-item ng-repeat="childId in $ctrl.item.ids"
                           ng-class="{'expanded': itemExpanded, 'prev': isPrevStep}"
@@ -24,15 +21,6 @@
                           node-id="::childId" type="'list'" ng-animate-ref="{{ ::childId }}"
                           class="nav-item"
                           data-nodeid="{{ ::childId }}">
-                </nav-item>
-                <nav-item ng-if="$ctrl.item.planning"
-                          ng-repeat="planningNode in $ctrl.item.availablePlanningNodes"
-                          ng-class="{'expanded': itemExpanded, 'prev': isPrevStep}"
-                          aria-label="{{ isPrevStep ? 'Last Viewed Item' : null }}"
-                          node-id="::planningNode.nodeId" type="'list'" is-planning-node="true"
-                          ng-animate-ref="{{ ::planningNode.nodeId }}"
-                          class="nav-item"
-                          data-nodeid="{{ ::planningNode.nodeId }}">
                 </nav-item>
             </md-list>
         </md-card-content>
@@ -47,7 +35,6 @@
                   class="md-long-text noright list-item md-whiteframe-1dp"
                   aria-label="{{::$ctrl.nodeTitle}}"
                   ng-class="{'nav-item--list--group': $ctrl.isGroup,
-                      'nav-item--planning-mode': $ctrl.planningMode && $ctrl.isPlanningInstance,
                       'list-item--warn': $ctrl.newAlert,
                       'warn': $ctrl.newAlert,
                       'text-secondary': !$ctrl.nodeHasWork}">

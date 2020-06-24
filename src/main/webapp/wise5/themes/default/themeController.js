@@ -52,7 +52,6 @@ class ThemeController {
     this.notebookConfig = this.NotebookService.getNotebookConfig();
     this.notebookFilter = '';
     this.currentNode = this.StudentDataService.getCurrentNode();
-    this.planningMode = false;
 
     // set current notebook type filter to first enabled type
     if (this.notebookConfig.enabled) {
@@ -249,11 +248,6 @@ class ThemeController {
         };
       }
       StudentAssetDialogController.$inject = ['$scope', '$mdDialog', 'componentController'];
-    });
-
-    // a group node has turned on or off planning mode
-    this.$scope.$on('togglePlanningMode', (event, args) => {
-      this.planningMode = args.planningMode;
     });
 
     // handle request for notification dismiss codes
