@@ -1,4 +1,4 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed, tick, fakeAsync } from '@angular/core/testing';
 import { SessionService } from '../../../../wise5/services/sessionService';
 import { UpgradeModule } from '@angular/upgrade/static';
 import ConfigService from '../../../../wise5/services/configService';
@@ -6,6 +6,7 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 let service: SessionService;
 let configService: ConfigService;
 let http: HttpTestingController;
+const renewSessionURL = '/wise/session/renew';
 
 describe('SessionService', () => {
   beforeEach(() => {
@@ -19,6 +20,11 @@ describe('SessionService', () => {
   });
 
   calculateIntervals();
+  initializeSession();
+  mouseMoved();
+  checkMouseevent();
+  checkForLogout();
+  renewSession();
 });
 
 function calculateIntervals() {
@@ -43,5 +49,95 @@ function calculateIntervals() {
       expect(intervals.showWarningInterval).toEqual(3300);
       expect(intervals.forceLogoutAfterWarningInterval).toEqual(300);
     });
+  });
+}
+
+function initializeSession() {
+  describe('initializeSession()', () => {
+    it('should start check mouse event if not in preview mode', () => {
+      spyOn(configService, 'isPreview').and.returnValue(false);
+      const startCheckMouseEventSpy = spyOn(service, 'startCheckMouseEvent');
+      service.initializeSession();
+      expect(startCheckMouseEventSpy).toHaveBeenCalled();
+    });
+  });
+}
+
+function mouseMoved() {
+  describe('mouseMoved()', () => {
+    it('should set last activity timestamp when mouse is moved', () => {
+      service.mouseMoved();
+      const renewSessionSpy = spyOn(service, 'renewSession');
+      service.checkMouseEvent();
+      expect(renewSessionSpy).toHaveBeenCalled();
+    });
+  });
+}
+
+function checkMouseevent() {
+  describe('checkMouseEvent()', () => {
+    it('should renew session if user has been active within last minute', () => {
+      spyOn(service, 'isActiveWithinLastMinute').and.returnValue(true);
+      const renewSessionSpy = spyOn(service, 'renewSession');
+      service.checkMouseEvent();
+      expect(renewSessionSpy).toHaveBeenCalled();
+    });
+
+    it('should check for logout if user has not been active within last minute', () => {
+      spyOn(service, 'isActiveWithinLastMinute').and.returnValue(false);
+      const checkForLogoutSpy = spyOn(service, 'checkForLogout');
+      service.checkMouseEvent();
+      expect(checkForLogoutSpy).toHaveBeenCalled();
+    });
+  });
+}
+
+function checkForLogout() {
+  describe('checkForLogout()', () => {
+    it('should force logout when user is inactive for long enough', () => {
+      spyOn(service, 'isInactiveLongEnoughToForceLogout').and.returnValue(true);
+      const forceLogOutSpy = spyOn(service, 'forceLogOut');
+      service.checkForLogout();
+      expect(forceLogOutSpy).toHaveBeenCalled();
+    });
+
+    it('should show warning when user is inactive for long enough to warn and warning is not showing', () => {
+      spyOn(service, 'isInactiveLongEnoughToForceLogout').and.returnValue(false);
+      spyOn(service, 'isInactiveLongEnoughToWarn').and.returnValue(true);
+      spyOn(service, 'isShowingWarning').and.returnValue(false);
+      const showWarningSpy = spyOn(service, 'showWarning');
+      service.checkForLogout();
+      expect(showWarningSpy).toHaveBeenCalled();
+    });
+  });
+}
+
+function renewSession() {
+  describe('renewSession()', () => {
+    it('should renew the session', fakeAsync(
+      () => {
+        spyOn(configService, 'getConfigParam')
+            .withArgs('renewSessionURL').and.returnValue(renewSessionURL);
+        const logOutSpy = spyOn(service, 'logOut')
+        service.renewSession();
+        expect(configService.getConfigParam).toHaveBeenCalledWith('renewSessionURL');
+        http.expectOne(renewSessionURL).flush('true');
+        tick();
+        expect(logOutSpy).not.toHaveBeenCalled();
+      })
+    );
+
+    it('should log the user out when renew session fails', fakeAsync(
+      () => {
+        spyOn(configService, 'getConfigParam')
+            .withArgs('renewSessionURL').and.returnValue(renewSessionURL);
+        const logOutSpy = spyOn(service, 'logOut');
+        service.renewSession();
+        expect(configService.getConfigParam).toHaveBeenCalledWith('renewSessionURL');
+        http.expectOne(renewSessionURL).flush('false');
+        tick();
+        expect(logOutSpy).toHaveBeenCalled();
+      })
+    );
   });
 }
