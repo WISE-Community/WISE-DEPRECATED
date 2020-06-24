@@ -2,6 +2,7 @@
 
 import { ConfigService } from '../../../../services/configService';
 import { AuthoringToolProjectService } from '../../../authoringToolProjectService';
+import { SessionService } from '../../../../services/sessionService';
 
 class TopBarController {
   avatarColor: any;
@@ -11,14 +12,22 @@ class TopBarController {
   contextPath: string;
   runId: number;
 
-  static $inject = ['$rootScope', '$state', '$window', 'ConfigService', 'ProjectService'];
+  static $inject = [
+    '$rootScope',
+    '$state',
+    '$window',
+    'ConfigService',
+    'ProjectService',
+    'SessionService'
+  ];
 
   constructor(
     private $rootScope: any,
     private $state: any,
     private $window: any,
     private ConfigService: ConfigService,
-    private ProjectService: AuthoringToolProjectService
+    private ProjectService: AuthoringToolProjectService,
+    private SessionService: SessionService
   ) {
     this.workgroupId = this.ConfigService.getWorkgroupId();
     if (this.workgroupId == null) {
@@ -57,12 +66,12 @@ class TopBarController {
 
   goHome() {
     this.ProjectService.notifyAuthorProjectEnd().then(() => {
-      this.$rootScope.$broadcast('goHome');
+      this.SessionService.goHome();
     });
   }
 
   logOut() {
-    this.$rootScope.$broadcast('logOut');
+    this.SessionService.logOut();
   }
 }
 

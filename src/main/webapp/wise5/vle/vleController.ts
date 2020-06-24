@@ -368,8 +368,7 @@ class VLEController {
       event,
       eventData
     );
-
-    this.$rootScope.$broadcast('goHome');
+    this.SessionService.goHome();
   }
 
   logOut() {
@@ -387,8 +386,7 @@ class VLEController {
       event,
       eventData
     );
-
-    this.$rootScope.$broadcast('logOut');
+    this.SessionService.logOut();
   }
 
   loadRoot() {

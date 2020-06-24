@@ -3,6 +3,7 @@
 import { ConfigService } from '../../../../services/configService';
 import { ClassroomMonitorProjectService } from '../../../classroomMonitorProjectService';
 import TeacherDataService from '../../../../services/teacherDataService';
+import { SessionService } from '../../../../services/sessionService';
 
 class TopBarController {
   $translate: any;
@@ -22,7 +23,8 @@ class TopBarController {
     '$state',
     'ConfigService',
     'ProjectService',
-    'TeacherDataService'
+    'TeacherDataService',
+    'SessionService'
   ];
 
   constructor(
@@ -31,7 +33,8 @@ class TopBarController {
     private $state: any,
     private ConfigService: ConfigService,
     private ProjectService: ClassroomMonitorProjectService,
-    private TeacherDataService: TeacherDataService
+    private TeacherDataService: TeacherDataService,
+    private SessionService: SessionService
   ) {
     this.$translate = $filter('translate');
     this.workgroupId = this.ConfigService.getWorkgroupId();
@@ -125,9 +128,10 @@ class TopBarController {
       componentType,
       category,
       event,
-      eventData
+      eventData,
+      null
     );
-    this.$rootScope.$broadcast('goHome');
+    this.SessionService.goHome();
   }
 
   logOut() {
@@ -145,9 +149,10 @@ class TopBarController {
       componentType,
       category,
       event,
-      eventData
+      eventData,
+      null
     );
-    this.$rootScope.$broadcast('logOut');
+    this.SessionService.logOut();
   }
 }
 

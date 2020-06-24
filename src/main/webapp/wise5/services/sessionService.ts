@@ -25,7 +25,6 @@ export class SessionService {
     this.forceLogoutAfterWarningInterval = intervals.forceLogoutAfterWarningInterval;
     this.checkMouseEventInterval = this.convertMinutesToMilliseconds(1);
     this.updateLastActivityTimestamp();
-    this.initializeListeners();
     this.initializeSession();
   }
 
@@ -41,16 +40,6 @@ export class SessionService {
     };
   }
 
-  initializeListeners() {
-    this.upgrade.$injector.get('$rootScope').$on('goHome', () => {
-      this.goHome();
-    });
-
-    this.upgrade.$injector.get('$rootScope').$on('logOut', () => {
-      this.logOut();
-    });
-  }
-
   goHome() {
     this.upgrade.$injector.get('$rootScope').$broadcast('exit');
     this.upgrade.$injector.get('$location').url(
@@ -63,7 +52,7 @@ export class SessionService {
   }
 
   initializeSession() {
-    if (this.ConfigService.isPreview()) {
+    if (!this.ConfigService.isPreview()) {
       this.startCheckMouseEvent();
     }
   }
