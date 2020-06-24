@@ -3,7 +3,6 @@
 import AnnotationService from '../../../../services/annotationService';
 import { ConfigService } from '../../../../services/configService';
 import NotificationService from '../../../../services/notificationService';
-import PlanningService from '../../../../services/planningService';
 import { ClassroomMonitorProjectService } from '../../../classroomMonitorProjectService';
 import StudentStatusService from '../../../../services/studentStatusService';
 import TeacherDataService from '../../../../services/teacherDataService';
@@ -12,7 +11,6 @@ import * as $ from 'jquery';
 
 class NavItemController {
   $translate: any;
-  availablePlanningNodes: any;
   alertIconClass: string;
   alertIconLabel: string;
   alertIconName: string;
@@ -27,9 +25,6 @@ class NavItemController {
   icon: any;
   isCurrentNode: boolean;
   isGroup: boolean;
-  isParentGroupPlanning: boolean;
-  isPlanning: boolean;
-  isPlanningNode: boolean;
   isWorkgroupOnlineOnNode: boolean;
   item: any;
   maxScore: number;
@@ -53,7 +48,6 @@ class NavItemController {
     'AnnotationService',
     'ConfigService',
     'NotificationService',
-    'PlanningService',
     'ProjectService',
     'StudentStatusService',
     'TeacherDataService',
@@ -68,7 +62,6 @@ class NavItemController {
     private AnnotationService: AnnotationService,
     private ConfigService: ConfigService,
     private NotificationService: NotificationService,
-    private PlanningService: PlanningService,
     private ProjectService: ClassroomMonitorProjectService,
     private StudentStatusService: StudentStatusService,
     private TeacherDataService: TeacherDataService,
@@ -80,7 +73,6 @@ class NavItemController {
     this.AnnotationService = AnnotationService;
     this.ConfigService = ConfigService;
     this.NotificationService = NotificationService;
-    this.PlanningService = PlanningService;
     this.ProjectService = ProjectService;
     this.StudentStatusService = StudentStatusService;
     this.TeacherDataService = TeacherDataService;
@@ -105,26 +97,12 @@ class NavItemController {
     this.maxScore = this.ProjectService.getMaxScoreForNode(this.nodeId);
     this.workgroupsOnNodeData = [];
     this.isWorkgroupOnlineOnNode = false;
-    this.isPlanning = this.PlanningService.isPlanning(this.nodeId);
     this.icon = this.ProjectService.getNodeIconByNodeId(this.nodeId);
     this.parentGroupId = null;
     var parentGroup = this.ProjectService.getParentGroup(this.nodeId);
     if (parentGroup != null) {
       this.parentGroupId = parentGroup.id;
     }
-    if (this.isPlanning) {
-      /*
-       * planning is enabled for this group so we will get the available
-       * planning nodes that can be used
-       */
-      this.availablePlanningNodes = this.PlanningService.getAvailablePlanningNodes(this.nodeId);
-    } else if (this.isPlanningNode) {
-      /* this is an available planning node for its parent group, so we
-       * need to calculate the total number of times it has been added
-       * to the project by all the workgroups in the current period
-       */
-    }
-
     this.setWorkgroupsOnNodeData();
 
     this.$onInit = () => {
@@ -261,64 +239,6 @@ class NavItemController {
   }
 
   /**
-   * Returns the max times a planning node can be added to the project (-1 is
-   * is returned if there is no limit)
-   * @param planningNodeId
-   */
-  getPlannindNodeMaxAllowed(planningNodeId) {
-    let maxAddAllowed = -1; // by default, students can add as many instances as they want
-    let planningGroupNode = null;
-    if (this.isParentGroupPlanning) {
-      planningGroupNode = this.ProjectService.getNodeById(this.parentGroupId);
-    } else {
-      planningGroupNode = this.ProjectService.getNodeById(this.nodeId);
-    }
-    // get the maxAddAllowed value by looking up the planningNode in the project.
-    if (planningGroupNode && planningGroupNode.availablePlanningNodes) {
-      for (let a = 0; a < planningGroupNode.availablePlanningNodes.length; a++) {
-        let availablePlanningNode = planningGroupNode.availablePlanningNodes[a];
-        if (availablePlanningNode.nodeId === planningNodeId && availablePlanningNode.max != null) {
-          maxAddAllowed = availablePlanningNode.max;
-        }
-      }
-    }
-
-    return maxAddAllowed;
-  }
-
-  /**
-   * Returns the number of times a planning node has been added to the project
-   * @param planningNodeId
-   */
-  getNumPlannindNodeInstances(planningNodeId) {
-    let numPlanningNodesAdded = 0; // keep track of number of instances
-    // otherwise, see how many times the planning node template has been used.
-
-    let planningGroupNode = null;
-    if (this.isParentGroupPlanning) {
-      planningGroupNode = this.ProjectService.getNodeById(this.parentGroupId);
-    } else {
-      planningGroupNode = this.ProjectService.getNodeById(this.nodeId);
-    }
-
-    // loop through the child ids in the planning group and see how many times they've been used
-    if (planningGroupNode && planningGroupNode.ids) {
-      for (let c = 0; c < planningGroupNode.ids.length; c++) {
-        let childPlanningNodeId = planningGroupNode.ids[c];
-        let childPlanningNode = this.ProjectService.getNodeById(childPlanningNodeId);
-        if (
-          childPlanningNode != null &&
-          childPlanningNode.planningNodeTemplateId === planningNodeId
-        ) {
-          numPlanningNodesAdded++;
-        }
-      }
-    }
-
-    return numPlanningNodesAdded;
-  }
-
-  /**
    * Get the node title
    * @param nodeId get the title for this node
    * @returns the title for the node
@@ -442,8 +362,7 @@ const NavItem = {
   bindings: {
     nodeId: '<',
     showPosition: '<',
-    type: '<',
-    isPlanningNode: '<'
+    type: '<'
   },
   templateUrl:
     '/wise5/classroomMonitor/classroomMonitorComponents/nodeProgress/navItem/navItem.html',
