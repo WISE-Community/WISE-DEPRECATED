@@ -33,14 +33,19 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.support.StandardMultipartHttpServletRequest;
 import org.wise.portal.dao.ObjectNotFoundException;
@@ -73,10 +78,7 @@ public class StudentAssetController {
   @Autowired
   private WorkgroupService workgroupService;
 
-  /**
-   * Returns student asset information based on specified parameters
-   */
-  @RequestMapping(method = RequestMethod.GET, value = "/student/asset/{runId}")
+  @GetMapping("/student/asset/{runId}")
   protected void getStudentAssets(
       @PathVariable Integer runId,
       @RequestParam(value = "id", required = false) Integer id,
@@ -144,7 +146,7 @@ public class StudentAssetController {
   /**
    * Saves POSTed file into logged-in user's asset folder in the filesystem and in the database
    */
-  @RequestMapping(method = RequestMethod.POST, value = "/student/asset/{runId}")
+  @PostMapping("/student/asset/{runId}")
   protected void postStudentAsset(
       @PathVariable Integer runId,
       @RequestParam(value = "periodId", required = true) Integer periodId,
@@ -210,102 +212,69 @@ public class StudentAssetController {
     }
   }
 
-  /**
-   * Removes specified asset from the filesystem and marks as deleted in the database
-   */
   @PostMapping("/student/asset/{runId}/delete")
-  protected void removeStudentAsset(
-      @PathVariable Integer runId,
-      @RequestParam(value = "studentAssetId", required = true) Integer studentAssetId,
-      @RequestParam(value = "workgroupId", required = true) Integer workgroupId,
-      @RequestParam(value = "clientDeleteTime", required = true) Long clientDeleteTime,
-      HttpServletResponse response) throws IOException {
-    Run run = null;
-    try {
-      run = runService.retrieveById(new Long(runId));
-    } catch (NumberFormatException e) {
-      e.printStackTrace();
-    } catch (ObjectNotFoundException e) {
-      e.printStackTrace();
-    }
-
-    StudentAsset studentAsset = null;
-    try {
-      studentAsset = vleService.getStudentAssetById(studentAssetId);
-    } catch (ObjectNotFoundException e) {
-      e.printStackTrace();
-    }
+  @ResponseBody
+  protected String removeStudentAsset(@PathVariable Integer runId,
+      @RequestBody ObjectNode postedParams) throws IOException, ObjectNotFoundException {
+    Run run = runService.retrieveById(new Long(runId));
+    Integer studentAssetId = postedParams.get("studentAssetId").asInt();
+    Integer workgroupId = postedParams.get("workgroupId").asInt();
+    Long clientDeleteTime = postedParams.get("clientDeleteTime").asLong();
+    StudentAsset studentAsset = vleService.getStudentAssetById(studentAssetId);
     String assetFileName = studentAsset.getFileName();
     String dirName = run.getId() + "/" + workgroupId + "/unreferenced"; // looks like /studentuploads/[runId]/[workgroupId]/unreferenced
     String path = appProperties.getProperty("studentuploads_base_dir");
     Boolean removeSuccess = AssetManager.removeAssetWISE5(path, dirName, assetFileName);
     if (removeSuccess) {
       studentAsset = vleService.deleteStudentAsset(studentAssetId, clientDeleteTime);
-      response.getWriter().write(studentAsset.toJSON().toString());
+      return studentAsset.toJSON().toString();
     }
+    return "error";
   }
 
-  /**
-   * Copies specified asset in the filesystem and in the database
-   */
-  @RequestMapping(method = RequestMethod.POST, value = "/student/asset/{runId}/copy")
-  protected void copyStudentAsset(
-      @PathVariable Integer runId,
-      @RequestParam(value = "studentAssetId", required = true) Integer studentAssetId,
-      @RequestParam(value = "periodId", required = true) Integer periodId,
-      @RequestParam(value = "workgroupId", required = true) Integer workgroupId,
-      @RequestParam(value = "nodeId", required = false) String nodeId,
-      @RequestParam(value = "componentId", required = false) String componentId,
-      @RequestParam(value = "componentType", required = false) String componentType,
-      @RequestParam(value = "clientSaveTime", required = true) String clientSaveTime,
-      HttpServletResponse response) throws IOException {
-    User user = ControllerUtil.getSignedInUser();
-    Run run = null;
-    try {
-      run = runService.retrieveById(new Long(runId));
-    } catch (NumberFormatException e) {
-      e.printStackTrace();
-    } catch (ObjectNotFoundException e) {
-      e.printStackTrace();
-    }
-
-    StudentAsset studentAsset = null;
-    try {
-      studentAsset = vleService.getStudentAssetById(studentAssetId);
-    } catch (ObjectNotFoundException e) {
-      e.printStackTrace();
-    }
+  @PostMapping("/student/asset/{runId}/copy")
+  @ResponseBody
+  protected String copyStudentAsset(@PathVariable Integer runId,
+      @RequestBody ObjectNode postedParams) throws IOException, ObjectNotFoundException {
+    Run run = runService.retrieveById(new Long(runId));
+    Integer studentAssetId = postedParams.get("studentAssetId").asInt();
+    Integer periodId = postedParams.get("periodId").asInt();
+    Integer workgroupId = postedParams.get("workgroupId").asInt();
+    String clientSaveTime = postedParams.get("clientSaveTime").asText();
+    StudentAsset studentAsset = vleService.getStudentAssetById(studentAssetId);
     String assetFileName = studentAsset.getFileName();
     String unreferencedDirName = run.getId() + "/" + workgroupId + "/unreferenced";
     String referencedDirName = run.getId() + "/" + workgroupId + "/referenced";
-    String copiedFileName = AssetManager.copyAssetForReferenceWISE5(unreferencedDirName, referencedDirName, assetFileName);
+    String copiedFileName = AssetManager.copyAssetForReferenceWISE5(unreferencedDirName,
+        referencedDirName, assetFileName);
     if (copiedFileName != null) {
       Integer id = null;
       Boolean isReferenced = true;
       String fileName = copiedFileName;
       String filePath = "/" + referencedDirName + "/" + copiedFileName;
       Long fileSize = studentAsset.getFileSize();
+      String nodeId  = null;
+      String componentId = null;
+      String componentType = null;
       String clientDeleteTime = null;
-
-      StudentAsset copiedStudentAsset = null;
       try {
-        copiedStudentAsset = vleService.saveStudentAsset(id, runId, periodId, workgroupId,
+        StudentAsset copiedStudentAsset = vleService.saveStudentAsset(id, runId, periodId, workgroupId,
             nodeId, componentId, componentType, isReferenced, fileName, filePath, fileSize,
             clientSaveTime, clientDeleteTime);
-        response.getWriter().write(copiedStudentAsset.toJSON().toString());
+        return copiedStudentAsset.toJSON().toString();
       } catch (ObjectNotFoundException e) {
         e.printStackTrace();
-        response.getWriter().write("error");
+        return "error";
       }
     } else {
-      response.getWriter().write("error");
+      return "error";
     }
   }
 
   /**
    * Returns size of logged-in student's unreferenced directory
    */
-  @RequestMapping(method = RequestMethod.GET, value = "/student/asset/{runId}/size")
+  @GetMapping("/student/asset/{runId}/size")
   protected void getStudentAssetsSize(@PathVariable Long runId, HttpServletResponse response)
       throws IOException {
     User user = ControllerUtil.getSignedInUser();
