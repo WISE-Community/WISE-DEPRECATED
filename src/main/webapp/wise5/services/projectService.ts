@@ -2939,11 +2939,19 @@ export class ProjectService {
                  * ]
                  */
                 for (let transitionCopy of transitionsCopy) {
-                  // insert a transition from the node we are removing
-                  transitions.splice(insertIndex, 0, transitionCopy);
-                  insertIndex++;
+                  if (!this.isTransitionExist(transitions, transitionCopy)) {
+                    const toNodeId = transitionCopy.to;
+                    if (this.isApplicationNode(node.id) && this.isGroupNode(toNodeId) &&
+                        this.hasGroupStartId(toNodeId)) {
+                      this.addToTransition(node, this.getGroupStartId(toNodeId));
+                    } else {
+                      transitions.splice(insertIndex, 0, transitionCopy);
+                      insertIndex++;
+                    }
+                  }
                 }
               }
+              t--;
 
               // check if the node we are moving is a group
               if (this.isGroupNode(nodeId)) {
@@ -2959,6 +2967,15 @@ export class ProjectService {
                 );
               }
             }
+          }
+
+          if (transitions.length === 0 && parentIdOfNodeToRemove != 'group0' &&
+              parentIdOfNodeToRemove != this.getParentGroupId(node.id)) {
+            /*
+             * the from node no longer has any transitions so we will make it transition to the
+             * parent of the node we are removing
+             */
+            this.addToTransition(node, parentIdOfNodeToRemove);
           }
 
           if (this.isBranchPoint(nodeId)) {
@@ -2988,6 +3005,15 @@ export class ProjectService {
     if (this.isGroupNode(nodeId)) {
       this.removeTransitionsOutOfGroup(nodeId);
     }
+  }
+
+  isTransitionExist(transitions: any[], transition: any) {
+    for (const tempTransition of transitions) {
+      if (tempTransition.from === transition.from && tempTransition.to === transition.to) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**
@@ -3585,6 +3611,11 @@ export class ProjectService {
    */
   getGroupStartId(nodeId) {
     return this.getNodeById(nodeId).startId;
+  }
+
+  hasGroupStartId(nodeId) {
+    const startId = this.getGroupStartId(nodeId);
+    return startId != null && startId != '';
   }
 
   /**

@@ -11,6 +11,7 @@ import { ProjectService } from '../../../../wise5/services/projectService';
 import { VLEProjectService } from '../../../../wise5/vle/vleProjectService';
 import { CRaterService } from '../../../../wise5/services/cRaterService';
 import { SessionService } from '../../../../wise5/services/sessionService';
+import { StudentAssetService } from '../../../../wise5/services/studentAssetService';
 
 @Component({template: ``})
 export class EmptyComponent {}
@@ -31,7 +32,9 @@ export class EmptyComponent {}
     CRaterService,
     ProjectService,
     VLEProjectService,
-    SessionService
+    SessionService,
+    StudentAssetService,
+    VLEProjectService
   ]
 })
 export class StudentAngularJSModule {

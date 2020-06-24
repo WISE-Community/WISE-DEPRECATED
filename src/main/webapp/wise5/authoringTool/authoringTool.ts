@@ -65,7 +65,7 @@ window['SockJS'] = SockJS;
 window['Stomp'] = StompJS.Stomp;
 import SpaceService from '../services/spaceService';
 import './structure/structureAuthoringModule';
-import StudentAssetService from '../services/studentAssetService';
+import { StudentAssetService } from '../services/studentAssetService';
 import StudentDataService from '../services/studentDataService';
 import StudentStatusService from '../services/studentStatusService';
 import StudentWebSocketService from '../services/studentWebSocketService';
@@ -127,7 +127,7 @@ const authoringModule = angular
   .service('ProjectAssetService', ProjectAssetService)
   .factory('SessionService', downgradeInjectable(SessionService))
   .service('SpaceService', SpaceService)
-  .service('StudentAssetService', StudentAssetService)
+  .factory('StudentAssetService', downgradeInjectable(StudentAssetService))
   .service('StudentDataService', StudentDataService)
   .service('StudentStatusService', StudentStatusService)
   .service('StudentWebSocketService', StudentWebSocketService)
