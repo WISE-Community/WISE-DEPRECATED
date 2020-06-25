@@ -56,7 +56,6 @@ import ProjectAssetController from './asset/projectAssetController';
 import ProjectAssetService from '../services/projectAssetService';
 import ProjectController from './project/projectController';
 import ProjectInfoController from './info/projectInfoController';
-import PlanningService from '../services/planningService';
 import RubricAuthoringController from './rubric/rubricAuthoringController';
 import { SessionService } from '../services/sessionService';
 import * as SockJS from 'sockjs-client';
@@ -122,7 +121,6 @@ const authoringModule = angular
   .service('NodeService', NodeService)
   .service('NotebookService', NotebookService)
   .service('NotificationService', NotificationService)
-  .service('PlanningService', PlanningService)
   .factory('ProjectService', downgradeInjectable(AuthoringToolProjectService))
   .service('ProjectAssetService', ProjectAssetService)
   .factory('SessionService', downgradeInjectable(SessionService))

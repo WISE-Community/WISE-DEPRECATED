@@ -112,20 +112,6 @@
     color: color('text-disabled');
 }
 
-.nav-item--planning-mode {
-    z-index: 2;
-
-    button._md-no-style {
-        cursor: move;
-    }
-
-    &:hover, &:focus, &:active {
-        .nav-item--list__reorder {
-            color: color('text-secondary');
-        }
-    }
-}
-
 .nav-item--card {
 
 }
@@ -198,22 +184,4 @@
 .progress-wrapper {
     padding: 2px 0;
     cursor: pointer;
-}
-
-.nav-item__planning-toggle {
-    margin: 0;
-}
-
-.planning-contents {
-    padding: 0;
-}
-
-.planning-item--list {
-    &.disabled {
-        opacity: 0.6;
-
-        button {
-            cursor: not-allowed !important;
-        }
-    }
 }

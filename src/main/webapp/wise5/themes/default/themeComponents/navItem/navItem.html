@@ -11,17 +11,8 @@
                 <md-icon class="nav-item__collapse" ng-if="navitemCtrl.isGroup && navitemCtrl.expanded" aria-label="collapse">remove</md-icon>
             </md-card-content>
             <md-card-content ng-if="navitemCtrl.isGroup && navitemCtrl.expanded" class="nav-contents nav-contents--group">
-                <div ng-if="navitemCtrl.isPlanning" class="md-padding" layout="column" layout-align="center center">
-                    <md-switch ng-model="navitemCtrl.planningMode"
-                               aria-label="Toggle planning mode"
-                               class="nav-item__planning-toggle md-primary"
-                               ng-change="navitemCtrl.togglePlanningMode()"
-                               ng-disabled="navitemCtrl.StudentDataService.planningMode && !navitemCtrl.planningMode">
-                        {{ ::'planningMode' | translate }}: {{ navitemCtrl.planningMode ? (::'on' | translate) : (::'off' | translate) }}
-                    </md-switch>
-                </div>
                 <md-list class="nav-contents__list">
-                    <div dragula="'planning_{{navitemCtrl.nodeId}}'" dragula-model="navitemCtrl.item.ids">
+                    <div>
                         <nav-item ng-repeat="childId in navitemCtrl.item.ids"
                                   ng-class="{'expanded': itemExpanded, 'prev': isPrevStep}"
                                   aria-label="{{ isPrevNode ? 'Last Visited Item' : null }}"
@@ -33,14 +24,6 @@
                         </nav-item>
                     </div>
                 </md-list>
-                <div ng-if="navitemCtrl.isPlanning && navitemCtrl.planningMode"
-                     class="animate-show" layout="column" layout-align="center center">
-                    <md-button class="md-accent" aria-label="Add new item to {{ navitemCtrl.nodeTitle }}"
-                               ng-click="navitemCtrl.item.ids.length ? navitemCtrl.addPlanningInstance($event, navitemCtrl.item.ids[navitemCtrl.item.ids.length-1]) : navitemCtrl.addPlanningInstance($event, navitemCtrl.nodeId, true)">
-                        <md-icon class="md-accent">add_circle</md-icon>
-                        {{ ::'addItem' | translate }}
-                    </md-button>
-                </div>
             </md-card-content>
             <md-card-footer class="nav-item__more" layout="row" layout-align="center center" flex>
                 <div class="progress-wrapper">
@@ -57,17 +40,10 @@
 
         <md-list-item ng-switch-when="list" ng-click="navitemCtrl.itemClicked($event)"
                       class="md-long-text noright list-item md-whiteframe-z1"
-                      aria-label="{{navitemCtrl.planningMode && navitemCtrl.isPlanningInstance ? 'Move' : 'Go to'}} {{::navitemCtrl.nodeTitle}}"
-                      ng-class="{'nav-item--list--group':navitemCtrl.isGroup, 'nav-item--planning-mode': navitemCtrl.planningMode && navitemCtrl.isPlanningInstance}">
+                      aria-label="Go to {{::navitemCtrl.nodeTitle}}"
+                      ng-class="{'nav-item--list--group':navitemCtrl.isGroup}">
             <node-icon node-id="navitemCtrl.nodeId" icon="navitemCtrl.nodeStatus.icon" custom-class="'md-avatar'"></node-icon>
             <p>{{ ::navitemCtrl.nodeTitle }} <node-status-icon node-id="navitemCtrl.nodeId" class="status-icon"></node-status-icon><md-icon class="status-icon" ng-if="!navitemCtrl.nodeStatus.isVisitable" aria-label="Item is locked"> lock </md-icon></p>
-            <md-icon class="md-secondary animate-show" 
-                     ng-if="navitemCtrl.isParentGroupPlanning && navitemCtrl.planningMode && navitemCtrl.isPlanningInstance"
-                     aria-label="Delete Item"
-                     ng-click="navitemCtrl.removePlanningNodeInstance(navitemCtrl.nodeId, $event)"> delete </md-icon>
-            <md-icon class="md-secondary nav-item--list__reorder animate-show" 
-                     ng-if="navitemCtrl.isParentGroupPlanning && navitemCtrl.planningMode && navitemCtrl.isPlanningInstance"
-                     aria-label="Move Item"> reorder </md-icon>
         </md-list-item>
     </ng-switch>
 </div>
