@@ -79,7 +79,7 @@ export class SessionService {
   }
 
   updateLastActivityTimestamp() {
-    this.lastActivityTimestamp = new Date().getMilliseconds();
+    this.lastActivityTimestamp = new Date().getTime();
   }
 
   checkMouseEvent() {
@@ -100,7 +100,7 @@ export class SessionService {
 
   isActiveWithinLastMinute(): boolean {
     return (
-      new Date().getMilliseconds() - this.lastActivityTimestamp < 
+      new Date().getTime() - this.lastActivityTimestamp < 
       this.convertMinutesToMilliseconds(1)
     );
   }
@@ -125,7 +125,7 @@ export class SessionService {
   }
 
   getInactiveTimeInMilliseconds(): number {
-    return new Date().getMilliseconds() - this.lastActivityTimestamp;
+    return new Date().getTime() - this.lastActivityTimestamp;
   }
 
   forceLogOut() {

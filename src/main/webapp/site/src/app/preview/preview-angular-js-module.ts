@@ -31,7 +31,6 @@ export class EmptyComponent {}
     ConfigService,
     CRaterService,
     ProjectService,
-    VLEProjectService,
     SessionService,
     StudentAssetService,
     VLEProjectService
