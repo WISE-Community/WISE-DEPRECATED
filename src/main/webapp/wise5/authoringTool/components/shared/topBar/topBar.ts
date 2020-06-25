@@ -3,6 +3,7 @@
 import { ConfigService } from '../../../../services/configService';
 import { AuthoringToolProjectService } from '../../../authoringToolProjectService';
 import { SessionService } from '../../../../services/sessionService';
+import TeacherDataService from '../../../../services/teacherDataService';
 
 class TopBarController {
   avatarColor: any;
@@ -27,7 +28,8 @@ class TopBarController {
     private $window: any,
     private ConfigService: ConfigService,
     private ProjectService: AuthoringToolProjectService,
-    private SessionService: SessionService
+    private SessionService: SessionService,
+    private TeacherDataService: TeacherDataService
   ) {
     this.workgroupId = this.ConfigService.getWorkgroupId();
     if (this.workgroupId == null) {
@@ -71,7 +73,26 @@ class TopBarController {
   }
 
   logOut() {
-    this.SessionService.logOut();
+    const context = 'AuthoringTool';
+    const category = 'Navigation';
+    const eventName = 'logOutButtonClicked';
+    const nodeId = null;
+    const componentId = null;
+    const componentType = null;
+    const data = {};
+    const projectId = null;
+    this.TeacherDataService.saveEvent(
+      context,
+      nodeId,
+      componentId,
+      componentType,
+      category,
+      eventName,
+      data,
+      projectId
+    ).then((result) => {
+      this.SessionService.logOut();
+    });
   }
 }
 

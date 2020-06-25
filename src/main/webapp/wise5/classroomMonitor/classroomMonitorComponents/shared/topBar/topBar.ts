@@ -135,24 +135,26 @@ class TopBarController {
   }
 
   logOut() {
-    var context = 'ClassroomMonitor';
-    var nodeId = null;
-    var componentId = null;
-    var componentType = null;
-    var category = 'Navigation';
-    var event = 'logOutButtonClicked';
-    var eventData = {};
+    const context = 'ClassroomMonitor';
+    const category = 'Navigation';
+    const eventName = 'logOutButtonClicked';
+    const nodeId = null;
+    const componentId = null;
+    const componentType = null;
+    const data = {};
+    const projectId = null;
     this.TeacherDataService.saveEvent(
       context,
       nodeId,
       componentId,
       componentType,
       category,
-      event,
-      eventData,
-      null
-    );
-    this.SessionService.logOut();
+      eventName,
+      data,
+      projectId
+    ).then((result) => {
+      this.SessionService.logOut();
+    });
   }
 }
 
