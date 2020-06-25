@@ -119,6 +119,29 @@ class VLEController {
       });
     }
 
+    this.$scope.$on('showSessionWarning', () => {
+      const confirm = $mdDialog
+        .confirm()
+        .parent(angular.element(document.body))
+        .title(this.$translate('SESSION_TIMEOUT'))
+        .content(this.$translate('SESSION_TIMEOUT_MESSAGE'))
+        .ariaLabel(this.$translate('SESSION_TIMEOUT'))
+        .ok(this.$translate('YES'))
+        .cancel(this.$translate('NO'));
+      $mdDialog.show(confirm).then(
+        () => {
+          this.SessionService.closeWarningAndRenewSession();
+        },
+        () => {
+          this.logOut();
+        }
+      );
+    });
+
+    this.$scope.$on('logOut', () => {
+      this.logOut();
+    });
+
     this.$scope.$on('currentNodeChanged', (event, args) => {
       let previousNode = args.previousNode;
       let currentNode = this.StudentDataService.getCurrentNode();
@@ -371,12 +394,12 @@ class VLEController {
     this.SessionService.goHome();
   }
 
-  logOut() {
+  logOut(eventName = 'logOut') {
     const nodeId = null;
     const componentId = null;
     const componentType = null;
     const category = 'Navigation';
-    const event = 'logOutButtonClicked';
+    const event = eventName;
     const eventData = {};
     this.StudentDataService.saveVLEEvent(
       nodeId,
@@ -385,8 +408,9 @@ class VLEController {
       category,
       event,
       eventData
-    );
-    this.SessionService.logOut();
+    ).then(() => {
+      this.SessionService.logOut();
+    });
   }
 
   loadRoot() {
