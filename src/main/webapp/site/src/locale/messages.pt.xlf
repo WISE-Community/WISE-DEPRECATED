@@ -164,7 +164,7 @@
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
           <context context-type="linenumber">53</context>
         </context-group>
-        <target state="needs-translation">This material is based upon work supported by the National Science Foundation. Any opinions, findings, and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the National Science Foundation.</target>
+        <target state="translated">Este material é baseado no trabalho com apoio financeiro da National Science Foundation. Quaisquer opiniões, descobertas e conclusões ou recomendações expressas neste material são de responsabilidade do (s) autor (es) e não refletem necessariamente as opiniões da National Science Foundation.</target>
       </trans-unit>
       <trans-unit id="0dc5b912bfe8d326a1af3975c6a7d049521eae12" datatype="html">
         <source>National Science Foundation</source>
@@ -260,7 +260,7 @@
           <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
           <context context-type="linenumber">15</context>
         </context-group>
-        <target state="needs-translation">Current Password required</target>
+        <target state="translated">Senha atual (obrigatório)</target>
       </trans-unit>
       <trans-unit id="0315d84608647a2d4a2b2e7e509d10ad0ec78536" datatype="html">
         <source>Current Password is incorrect</source>
@@ -376,7 +376,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">91</context>
         </context-group>
-        <target state="needs-translation">Add Ideas</target>
+        <target state="translated">Acrescente Ideias</target>
       </trans-unit>
       <trans-unit id="6f2168a4a47a1e6fa5d58a4334c7b67805dd3fe0" datatype="html">
         <source>Distinguish Ideas</source>
@@ -392,7 +392,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">96</context>
         </context-group>
-        <target state="needs-translation">Distinguish Ideas</target>
+        <target state="translated">Faça a Distinção entre Ideias</target>
       </trans-unit>
       <trans-unit id="b85ab229e72d6560e6193e30a362083ce7e12da6" datatype="html">
         <source>Connect Ideas</source>
@@ -408,7 +408,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">100</context>
         </context-group>
-        <target state="needs-translation">Connect Ideas</target>
+        <target state="translated">Relacione Ideias</target>
       </trans-unit>
       <trans-unit id="6ce56d323684d1af10f44ca44809177cef1412eb" datatype="html">
         <source>Integrated science learning and teaching with technology</source>
@@ -448,7 +448,7 @@
           <context context-type="sourcefile">app/home/home.component.html</context>
           <context context-type="linenumber">51</context>
         </context-group>
-        <target state="needs-translation">Sign up for free!</target>
+        <target state="translated">Inscreva-se gratuitamente!</target>
       </trans-unit>
       <trans-unit id="da6aa9950c74cadd85a3bf26272f34f28d8338c8" datatype="html">
         <source>Connect</source>
