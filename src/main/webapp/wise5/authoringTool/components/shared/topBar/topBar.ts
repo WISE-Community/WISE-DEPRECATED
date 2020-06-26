@@ -2,6 +2,8 @@
 
 import { ConfigService } from '../../../../services/configService';
 import { AuthoringToolProjectService } from '../../../authoringToolProjectService';
+import { SessionService } from '../../../../services/sessionService';
+import TeacherDataService from '../../../../services/teacherDataService';
 
 class TopBarController {
   avatarColor: any;
@@ -11,14 +13,23 @@ class TopBarController {
   contextPath: string;
   runId: number;
 
-  static $inject = ['$rootScope', '$state', '$window', 'ConfigService', 'ProjectService'];
+  static $inject = [
+    '$rootScope',
+    '$state',
+    '$window',
+    'ConfigService',
+    'ProjectService',
+    'SessionService'
+  ];
 
   constructor(
     private $rootScope: any,
     private $state: any,
     private $window: any,
     private ConfigService: ConfigService,
-    private ProjectService: AuthoringToolProjectService
+    private ProjectService: AuthoringToolProjectService,
+    private SessionService: SessionService,
+    private TeacherDataService: TeacherDataService
   ) {
     this.workgroupId = this.ConfigService.getWorkgroupId();
     if (this.workgroupId == null) {
@@ -57,12 +68,31 @@ class TopBarController {
 
   goHome() {
     this.ProjectService.notifyAuthorProjectEnd().then(() => {
-      this.$rootScope.$broadcast('goHome');
+      this.SessionService.goHome();
     });
   }
 
   logOut() {
-    this.$rootScope.$broadcast('logOut');
+    const context = 'AuthoringTool';
+    const category = 'Navigation';
+    const eventName = 'logOutButtonClicked';
+    const nodeId = null;
+    const componentId = null;
+    const componentType = null;
+    const data = {};
+    const projectId = null;
+    this.TeacherDataService.saveEvent(
+      context,
+      nodeId,
+      componentId,
+      componentType,
+      category,
+      eventName,
+      data,
+      projectId
+    ).then((result) => {
+      this.SessionService.logOut();
+    });
   }
 }
 

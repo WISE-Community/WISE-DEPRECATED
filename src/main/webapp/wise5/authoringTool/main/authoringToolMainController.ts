@@ -64,9 +64,6 @@ class AuthoringToolMainController {
     if (this.is_rtl) {
       this.icons = { prev: 'arrow_forward', next: 'arrow_back' };
     }
-    this.$rootScope.$on('logOut', () => {
-      this.saveEvent('logOut', 'Navigation', {}, null);
-    });
   }
 
   getProjectByProjectId(projectId) {

@@ -52,7 +52,6 @@ class ThemeController {
     this.notebookConfig = this.NotebookService.getNotebookConfig();
     this.notebookFilter = '';
     this.currentNode = this.StudentDataService.getCurrentNode();
-    this.planningMode = false;
 
     // set current notebook type filter to first enabled type
     if (this.notebookConfig.enabled) {
@@ -127,29 +126,6 @@ class ThemeController {
           .ariaLabel(this.$translate('itemLocked'))
           .ok(this.$translate('ok'))
           .targetEvent(event)
-      );
-    });
-
-    // alert user when inactive for a long time
-    this.$scope.$on('showSessionWarning', ev => {
-      let alert = this.$mdDialog
-        .confirm()
-        .parent(angular.element(document.body))
-        .title(this.$translate('sessionTimeout'))
-        .textContent(this.$translate('autoLogoutMessage'))
-        .ariaLabel(this.$translate('sessionTimeout'))
-        .targetEvent(ev)
-        .ok(this.$translate('yes'))
-        .cancel(this.$translate('no'));
-
-      this.$mdDialog.show(alert).then(
-        () => {
-          this.SessionService.closeWarningAndRenewSession();
-          alert = undefined;
-        },
-        () => {
-          this.SessionService.forceLogOut();
-        }
       );
     });
 
@@ -249,11 +225,6 @@ class ThemeController {
         };
       }
       StudentAssetDialogController.$inject = ['$scope', '$mdDialog', 'componentController'];
-    });
-
-    // a group node has turned on or off planning mode
-    this.$scope.$on('togglePlanningMode', (event, args) => {
-      this.planningMode = args.planningMode;
     });
 
     // handle request for notification dismiss codes

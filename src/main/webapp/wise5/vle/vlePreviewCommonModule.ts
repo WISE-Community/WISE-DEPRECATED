@@ -54,10 +54,9 @@ import NotebookService from '../services/notebookService';
 import NotificationService from '../services/notificationService';
 import '../components/openResponse/openResponseComponentModule';
 import '../components/outsideURL/outsideURLComponentModule';
-import PlanningService from '../services/planningService';
-import SessionService from '../services/sessionService';
+import { SessionService } from '../services/sessionService';
 import './studentAsset/studentAsset';
-import StudentAssetService from '../services/studentAssetService';
+import { StudentAssetService } from '../services/studentAssetService';
 import StudentDataService from '../services/studentDataService';
 import StudentStatusService from '../services/studentStatusService';
 import StudentWebSocketService from '../services/studentWebSocketService';
@@ -123,10 +122,9 @@ export function createModule(type = 'preview') {
   .service('NodeService', NodeService)
   .service('NotebookService', NotebookService)
   .service('NotificationService', NotificationService)
-  .service('PlanningService', PlanningService)
   .factory('ProjectService', downgradeInjectable(VLEProjectService))
-  .service('SessionService', SessionService)
-  .service('StudentAssetService', StudentAssetService)
+  .factory('SessionService', downgradeInjectable(SessionService))
+  .factory('StudentAssetService', downgradeInjectable(StudentAssetService))
   .service('StudentDataService', StudentDataService)
   .service('StudentStatusService', StudentStatusService)
   .service('StudentWebSocketService', StudentWebSocketService)

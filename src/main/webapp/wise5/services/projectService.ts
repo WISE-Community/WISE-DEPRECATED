@@ -248,19 +248,11 @@ export class ProjectService {
     }
   }
 
-  loadPlanningNodes(planningNodes) {
-    for (const planningNode of planningNodes) {
-      this.setIdToNode(planningNode.id, planningNode);
-      // TODO: may need to add more function calls here to add the planning
-    }
-  }
-
   parseProject() {
     this.clearProjectFields();
     this.instantiateDefaults();
     this.metadata = this.project.metadata;
     this.loadNodes(this.project.nodes);
-    this.loadPlanningNodes(this.project.planningNodes);
     this.loadInactiveNodes(this.project.inactiveNodes);
     this.loadConstraints(this.project.constraints);
     this.rootNode = this.getRootNode(this.project.nodes[0].id);
@@ -275,7 +267,6 @@ export class ProjectService {
 
   instantiateDefaults() {
     this.project.nodes = this.project.nodes ? this.project.nodes : [];
-    this.project.planningNodes = this.project.planningNodes ? this.project.planningNodes : [];
     this.project.inactiveNodes = this.project.inactiveNodes ? this.project.inactiveNodes : [];
     this.project.constraints = this.project.constraints ? this.project.constraints : [];
   }
@@ -3513,12 +3504,6 @@ export class ProjectService {
           fromNodeTitle: fromNodeTitle,
           toNodeTitle: toNodeTitle
         });
-      } else if (name === 'isPlanningActivityCompleted') {
-        const nodeId = params.nodeId;
-        if (nodeId != null) {
-          const nodeTitle = this.getNodePositionAndTitleByNodeId(nodeId);
-          message += this.upgrade.$injector.get('$filter')('translate')('completeNodeTitle', { nodeTitle: nodeTitle });
-        }
       } else if (name === 'wroteXNumberOfWords') {
         const nodeId = params.nodeId;
         if (nodeId != null) {

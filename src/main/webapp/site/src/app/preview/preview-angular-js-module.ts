@@ -10,6 +10,8 @@ import { ConfigService } from '../../../../wise5/services/configService';
 import { ProjectService } from '../../../../wise5/services/projectService';
 import { VLEProjectService } from '../../../../wise5/vle/vleProjectService';
 import { CRaterService } from '../../../../wise5/services/cRaterService';
+import { SessionService } from '../../../../wise5/services/sessionService';
+import { StudentAssetService } from '../../../../wise5/services/studentAssetService';
 
 @Component({template: ``})
 export class EmptyComponent {}
@@ -29,6 +31,8 @@ export class EmptyComponent {}
     ConfigService,
     CRaterService,
     ProjectService,
+    SessionService,
+    StudentAssetService,
     VLEProjectService
   ]
 })
