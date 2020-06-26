@@ -810,7 +810,7 @@ class StudentDataService {
       return;
     }
     const context = 'VLE';
-    this.saveEvent(context, nodeId, componentId, componentType, category, event, data);
+    return this.saveEvent(context, nodeId, componentId, componentType, category, event, data);
   }
 
   saveEvent(context, nodeId, componentId, componentType, category, event, data) {
@@ -827,7 +827,7 @@ class StudentDataService {
     events.push(newEvent);
     const componentStates = undefined;
     const annotations = undefined;
-    this.saveToServer(componentStates, events, annotations);
+    return this.saveToServer(componentStates, events, annotations);
   }
 
   createNewEvent(nodeId, componentId, context, componentType, category, event, data) {
