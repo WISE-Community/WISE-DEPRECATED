@@ -1,11 +1,10 @@
 import { Component, OnInit, Inject, Output, EventEmitter } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatSnackBar } from '@angular/material';
-import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-import { ChangeEvent } from '@ckeditor/ckeditor5-angular/ckeditor.component';
 import { FormControl, Validators, FormGroup } from '@angular/forms';
 import { NewsItemMode } from '../news-item-mode';
 import { NewsService } from '../../services/news.service';
 import { News } from '../../domain/news';
+import { I18n } from '@ngx-translate/i18n-polyfill';
 
 @Component({
   selector: 'app-news-item-dialog',
@@ -13,7 +12,6 @@ import { News } from '../../domain/news';
   styleUrls: ['./news-item-dialog.component.scss']
 })
 export class NewsItemDialogComponent implements OnInit {
-
   @Output() onCreate = new EventEmitter();
   @Output() onHide = new EventEmitter();
   @Output() onUpdate = new EventEmitter();
@@ -23,58 +21,83 @@ export class NewsItemDialogComponent implements OnInit {
   isHideMode: boolean;
   isEditMode: boolean;
   isDeleteMode: boolean;
-  public Editor = ClassicEditor;
-  
-  newsItemFormGroup: FormGroup = new FormGroup({
-    id: new FormControl(null),
-    date: new FormControl(null),
-    title: new FormControl(null, [Validators.required]),
-    type: new FormControl(null, [Validators.required])
-  });
-  news = new FormControl(null, [Validators.required]);
+
+  id = new FormControl(null);
+  date = new FormControl(null);
+  title = new FormControl(null, [Validators.required]);
+  type = new FormControl(null, [Validators.required]);
+  content = new FormControl(null, [Validators.required]);
 
   hideConfirmationMsg: string;
 
-  constructor(private dialogRef: MatDialogRef<NewsItemDialogComponent>,
-              private newsService: NewsService,
-              private snackBar: MatSnackBar,
-              @Inject(MAT_DIALOG_DATA) private data: any) {
-                this.isAddMode = NewsItemMode.ADD == data.mode;
-                this.isHideMode = NewsItemMode.HIDE == data.mode;
-                this.isEditMode = NewsItemMode.EDIT == data.mode;
-                this.isDeleteMode = NewsItemMode.DELETE == data.mode;
-                if (data.newsItem) {
-                  this.newsItemFormGroup.controls.id.setValue(data.newsItem.id);
-                  this.newsItemFormGroup.controls.date.setValue(data.newsItem.date);
-                  this.newsItemFormGroup.controls.title.setValue(data.newsItem.title);
-                  this.newsItemFormGroup.controls.type.setValue(data.newsItem.type);
-                  this.news.setValue(data.newsItem.news);
-                  if (data.newsItem.type === 'hidden') {
-                    this.hideConfirmationMsg = 'Are you sure you want to show this news item? This news item will be visible to everyone.';
-                  } else {
-                    this.hideConfirmationMsg = 'Are you sure you want to hide this news item? This news item will nolonger be visible to non-admin users.';
-                  }
-                }
-              }
 
-  ngOnInit() {
+  editorConfig = {
+    toolbar: [
+      ['bold', 'italic', 'underline'],
+      [{ header: 1 }, { header: 2 }, { header: 3 }],
+      [{ align: [] }],
+      [{ list: 'ordered' }, { list: 'bullet' }],
+      ['blockquote', 'code-block'],
+      [{ script: 'sub' }, { script: 'super' }],
+      [{ color: [] }, { background: [] }],
+      ['link', 'image', 'video']
+    ]
+  }
+
+  editorStyles = {
+    height: '220px'
+  }
+
+  constructor(
+    private dialogRef: MatDialogRef<NewsItemDialogComponent>,
+    private newsService: NewsService,
+    private snackBar: MatSnackBar,
+    private i18n: I18n,
+    @Inject(MAT_DIALOG_DATA) private data: any
+  ) {
+    this.isAddMode = NewsItemMode.ADD == data.mode;
+    this.isHideMode = NewsItemMode.HIDE == data.mode;
+    this.isEditMode = NewsItemMode.EDIT == data.mode;
+    this.isDeleteMode = NewsItemMode.DELETE == data.mode;
+    if (data.newsItem) {
+      this.id.setValue(data.newsItem.id);
+      this.date.setValue(data.newsItem.date);
+      this.title.setValue(data.newsItem.title);
+      this.type.setValue(data.newsItem.type);
+      this.content.setValue(data.newsItem.news);
+      if (data.newsItem.type === 'hidden') {
+        this.hideConfirmationMsg = this.i18n(
+          'Are you sure you want to show this news item to users?'
+        );
+      } else {
+        this.hideConfirmationMsg = this.i18n(
+          'Are you sure you want to hide this news item from users?'
+        );
+      }
+    }
+  }
+
+  ngOnInit() {}
+
+  ngAfterViewInit() {
+    // hack to include H3 tag not supported by Quill
+    const h3Elem = document.querySelector(".ql-toolbar .ql-formats button.ql-header[value='3']");
+    h3Elem.innerHTML = `
+    <svg viewBox="0 0 18 18">
+      <path class="ql-fill" d="M16.65186,12.30664a2.6742,2.6742,0,0,1-2.915,2.68457,3.96592,3.96592,0,0,1-2.25537-.6709.56007.56007,0,0,1-.13232-.83594L11.64648,13c.209-.34082.48389-.36328.82471-.1543a2.32654,2.32654,0,0,0,1.12256.33008c.71484,0,1.12207-.35156,1.12207-.78125,0-.61523-.61621-.86816-1.46338-.86816H13.2085a.65159.65159,0,0,1-.68213-.41895l-.05518-.10937a.67114.67114,0,0,1,.14307-.78125l.71533-.86914a8.55289,8.55289,0,0,1,.68213-.7373V8.58887a3.93913,3.93913,0,0,1-.748.05469H11.9873a.54085.54085,0,0,1-.605-.60547V7.59863a.54085.54085,0,0,1,.605-.60547h3.75146a.53773.53773,0,0,1,.60547.59375v.17676a1.03723,1.03723,0,0,1-.27539.748L14.74854,10.0293A2.31132,2.31132,0,0,1,16.65186,12.30664ZM9,3A.99974.99974,0,0,0,8,4V8H3V4A1,1,0,0,0,1,4V14a1,1,0,0,0,2,0V10H8v4a1,1,0,0,0,2,0V4A.99974.99974,0,0,0,9,3Z"/>
+    </svg>`;
   }
 
   close() {
     this.dialogRef.close();
   }
 
-  onChange({ editor }: ChangeEvent) {
-    const data = editor.getData();
-    this.news.setValue(data);
-  }
-
   create() {
-    const date = this.newsItemFormGroup.controls.date.value;
-    const title = this.newsItemFormGroup.controls.title.value;
-    const news = this.news.value;
-    const type = this.newsItemFormGroup.controls.type.value;
-    this.newsService.createNewsItem(date, title, news, type).subscribe(response => {
+    const date = this.date.value;
+    const title = this.title.value;
+    const content = this.content.value;
+    const type = this.type.value;
+    this.newsService.createNewsItem(date, title, content, type).subscribe(response => {
       if (response.status == 'success') {
         this.onCreate.emit(response.newsItem as News);
       }
@@ -83,14 +106,14 @@ export class NewsItemDialogComponent implements OnInit {
   }
 
   update() {
-    const id = this.newsItemFormGroup.controls.id.value;
-    const date = this.newsItemFormGroup.controls.date.value;
-    const title = this.newsItemFormGroup.controls.title.value;
-    const news = this.news.value;
-    const type = this.newsItemFormGroup.controls.type.value;
-    this.newsService.updateNewsItem(id, date, title, news, type).subscribe(response => {
+    const id = this.id.value;
+    const date = this.date.value;
+    const title = this.title.value;
+    const content = this.content.value;
+    const type = this.type.value;
+    this.newsService.updateNewsItem(id, date, title, content, type).subscribe(response => {
       if (response.status == 'success') {
-        this.onUpdate.emit({ id, date, title, news, type });
+        this.onUpdate.emit({ id, date, title, content, type });
       }
       this.openSnackBar(response, 'News item updated');
     });
@@ -105,12 +128,12 @@ export class NewsItemDialogComponent implements OnInit {
   }
 
   private toggleHide() {
-    const id = this.newsItemFormGroup.controls.id.value;
-    const date = this.newsItemFormGroup.controls.date.value;
-    const title = this.newsItemFormGroup.controls.title.value;
-    const news = this.news.value;
-    const type = this.newsItemFormGroup.controls.type.value !== 'hidden' ? 'hidden' : 'public';
-    this.newsService.updateNewsItem(id, date, title, news, type).subscribe(response => {
+    const id = this.id.value;
+    const date = this.date.value;
+    const title = this.title.value;
+    const content = this.content.value;
+    const type = this.type.value !== 'hidden' ? 'hidden' : 'public';
+    this.newsService.updateNewsItem(id, date, title, content, type).subscribe(response => {
       if (response.status == 'success') {
         this.onHide.emit({ id, type });
       }
@@ -119,7 +142,7 @@ export class NewsItemDialogComponent implements OnInit {
   }
 
   private delete() {
-    const id = this.newsItemFormGroup.controls.id.value;
+    const id = this.id.value;
     this.newsService.deleteNewsItem(id).subscribe(response => {
       if (response.status == 'success') {
         this.onDelete.emit(id);
@@ -130,13 +153,12 @@ export class NewsItemDialogComponent implements OnInit {
 
   private openSnackBar(response: any, defaultMsg: string) {
     if (response.status == 'success') {
-      this.snackBar.open(defaultMsg);
+      this.snackBar.open(this.i18n(defaultMsg));
     } else if (response.status == 'error') {
-      this.snackBar.open(response.message);
+      this.snackBar.open(this.i18n(response.message));
     } else {
-      this.snackBar.open('Unknown error occurred');
+      this.snackBar.open(this.i18n('Unknown error occurred'));
     }
-    this.newsItemFormGroup.reset();
     this.close();
   }
 }

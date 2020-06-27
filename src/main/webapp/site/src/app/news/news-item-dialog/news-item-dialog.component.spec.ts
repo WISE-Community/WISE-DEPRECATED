@@ -2,10 +2,12 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { NewsItemDialogComponent } from './news-item-dialog.component';
 import { MAT_DIALOG_DATA, MatDialogRef, MatSnackBar } from '@angular/material';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { NO_ERRORS_SCHEMA, TRANSLATIONS, LOCALE_ID, TRANSLATIONS_FORMAT } from '@angular/core';
 import { NewsItemMode } from '../news-item-mode';
 import { Observable } from 'rxjs';
 import { NewsService } from '../../services/news.service';
+import { I18n } from '@ngx-translate/i18n-polyfill';
+import { translationsFactory } from '../../app.module';
 
 export class MockNewsService {
   createNewsItem(date: number, title: string, news: string, type: string): Observable<any> {
@@ -44,7 +46,14 @@ describe('NewsItemDialogComponent', () => {
         { provide: NewsService, useClass: MockNewsService },
         { provide: MAT_DIALOG_DATA, useValue: { mode: NewsItemMode.ADD }},
         { provide: MatDialogRef, useValue: { close: () => {} }},
-        { provide: MatSnackBar, useValue: { open: msg => { }} }
+        { provide: TRANSLATIONS_FORMAT, useValue: "xlf" },
+        { provide: MatSnackBar, useValue: { open: msg => { }} },
+        {
+          provide: TRANSLATIONS,
+          useFactory: translationsFactory,
+          deps: [LOCALE_ID]
+        },
+        I18n
       ],
       schemas: [NO_ERRORS_SCHEMA]
     })
