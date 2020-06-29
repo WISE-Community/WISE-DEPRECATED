@@ -27,6 +27,27 @@ import { DomSanitizer } from '@angular/platform-browser';
 export class HomeComponent implements OnInit {
 
   loaded: boolean = false;
+  hero = {
+    imgSrc: 'assets/img/wise-students-hero.jpg',
+    imgDescription: this.i18n('WISE students in classroom'),
+    imgSources: [
+      {
+        type: 'image/webp',
+        sizes: '100vw',
+        srcset: `assets/img/wise-students-hero-600w.webp 600w,
+            assets/img/wise-students-hero-900w.webp 900w, 
+            assets/img/wise-students-hero-1200w.webp 1200w,
+            assets/img/wise-students-hero.webp 1600w`
+      },
+      {
+        sizes: '100vw',
+        srcset: `assets/img/wise-students-hero-600w.jpg 600w,
+          assets/img/wise-students-hero-900w.jpg 900w, 
+          assets/img/wise-students-hero-1200w.jpg 1200w,
+          assets/img/wise-students-hero.jpg 1600w`
+      }
+    ]
+  };
   blurbs: Array<Object> = [
     {
       imgSrc: 'assets/img/wise-students-building@2x.jpg',

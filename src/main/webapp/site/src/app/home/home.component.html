@@ -1,5 +1,6 @@
 <div class="main main--fullwidth home">
-  <app-hero-section imgSrc="assets/img/wise-students-hero.jpg">
+  <app-hero-section [imgSrc]="hero.imgSrc" [imgSources]="hero.imgSources" 
+                    [imgDescription]="hero.imgDescription">
     <ng-template #headlineTemplate>
       <div class="accent-2">
         <mat-icon [@jackInTheBox]="{value: '*', params: {delay: '1s'}}" svgIcon="ki-elicit"
