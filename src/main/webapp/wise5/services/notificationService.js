@@ -69,6 +69,10 @@ class NotificationService {
 
 
   retrieveNotifications() {
+    if (this.ConfigService.isPreview()) {
+      this.notifications = [];
+      return;
+    }
     const config = {
       method: 'GET',
       url: this.ConfigService.getNotificationURL(),
