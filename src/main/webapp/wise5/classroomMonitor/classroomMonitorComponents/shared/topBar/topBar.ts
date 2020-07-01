@@ -6,7 +6,7 @@ import TeacherDataService from '../../../../services/teacherDataService';
 import { SessionService } from '../../../../services/sessionService';
 
 class TopBarController {
-  $translate: any;
+  translate: any;
   avatarColor: any;
   canAuthorProject: boolean;
   contextPath: string;
@@ -15,9 +15,12 @@ class TopBarController {
   notifications: any;
   projectId: number;
   runId: number;
+  runCode: string;
+  runInfo: string;
   themePath: string;
   userInfo: any;
   workgroupId: number;
+
   static $inject = [
     '$filter',
     '$rootScope',
@@ -37,7 +40,7 @@ class TopBarController {
     private TeacherDataService: TeacherDataService,
     private SessionService: SessionService
   ) {
-    this.$translate = $filter('translate');
+    this.translate = $filter('translate');
     this.workgroupId = this.ConfigService.getWorkgroupId();
     if (this.workgroupId == null) {
       this.workgroupId = 100 * Math.random();
@@ -54,12 +57,19 @@ class TopBarController {
   $onInit() {
     const permissions = this.ConfigService.getPermissions();
     this.canAuthorProject = permissions.canAuthorProject;
+    this.runInfo = this.getRunInfo();
   }
 
   $onChanges(changesObj) {
     if (changesObj.notifications) {
       this.setNotifications();
     }
+  }
+
+  getRunInfo(): string {
+    let runInfo = `${this.translate('RUN_ID_DISPLAY', { id: this.runId })}
+        | ${this.translate('RUN_CODE_DISPLAY', { code: this.runCode })}`;
+    return runInfo;
   }
 
   /**
@@ -91,7 +101,7 @@ class TopBarController {
   }
 
   switchToAuthoringView() {
-    const proceed = confirm(this.$translate('editRunUnitWarning'));
+    const proceed = confirm(this.translate('editRunUnitWarning'));
     if (proceed) {
       this.doAuthoringViewSwitch();
     }
@@ -177,10 +187,12 @@ const TopBar = {
                     </a>
                 </span>
                 <h3 layout="row" layout-align="start center">
-                  <span>{{ ::$ctrl.projectTitle }}</span>
-                  <span class="md-caption">
-                    &nbsp;({{ ::'RUN_ID_DISPLAY' | translate:{id: $ctrl.runId} }} | {{ 'RUN_CODE_DISPLAY' | translate:{code: $ctrl.runCode} }})
-                  </span>
+                  <span>{{ ::$ctrl.projectTitle }}</span>&nbsp;
+                  <span class="md-caption" hide-xs hide-sm hide-md>({{ $ctrl.runInfo }})</span>
+                  <md-button aria-label="{{ ::'PROJECT_INFO' | translate }}" hide-gt-md class="md-icon-button">
+                    <md-icon>info</md-icon>
+                    <md-tooltip>{{ $ctrl.runInfo }}</md-tooltip>
+                  </md-button>
                   <md-button ng-if="$ctrl.canAuthorProject" aria-label="{{ ::'switchToAuthoringView' | translate }}" class="md-icon-button" ng-click="$ctrl.switchToAuthoringView()">
                       <md-icon md-menu-origin> edit </md-icon>
                       <md-tooltip>{{ ::'switchToAuthoringView' | translate }}</md-tooltip>
