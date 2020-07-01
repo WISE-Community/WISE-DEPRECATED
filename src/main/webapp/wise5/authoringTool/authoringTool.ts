@@ -24,7 +24,7 @@ import { AuthoringToolProjectService } from './authoringToolProjectService';
 import AuthorNotebookController from './notebook/authorNotebookController';
 import '../components/conceptMap/conceptMapAuthoringComponentModule';
 import { ConfigService } from '../services/configService';
-import CRaterService from '../services/cRaterService';
+import { CRaterService } from '../services/cRaterService';
 import '../directives/components';
 import ComponentService from '../components/componentService';
 import '../components/discussion/discussionAuthoringComponentModule';
@@ -56,16 +56,15 @@ import ProjectAssetController from './asset/projectAssetController';
 import ProjectAssetService from '../services/projectAssetService';
 import ProjectController from './project/projectController';
 import ProjectInfoController from './info/projectInfoController';
-import PlanningService from '../services/planningService';
 import RubricAuthoringController from './rubric/rubricAuthoringController';
-import SessionService from '../services/sessionService';
+import { SessionService } from '../services/sessionService';
 import * as SockJS from 'sockjs-client';
 import * as StompJS from '@stomp/stompjs';
 window['SockJS'] = SockJS;
 window['Stomp'] = StompJS.Stomp;
 import SpaceService from '../services/spaceService';
 import './structure/structureAuthoringModule';
-import StudentAssetService from '../services/studentAssetService';
+import { StudentAssetService } from '../services/studentAssetService';
 import StudentDataService from '../services/studentDataService';
 import StudentStatusService from '../services/studentStatusService';
 import StudentWebSocketService from '../services/studentWebSocketService';
@@ -76,6 +75,7 @@ import TeacherWebSocketService from '../services/teacherWebSocketService';
 import { UtilService } from '../services/utilService';
 import WISELinkAuthoringController from './wiseLink/wiseLinkAuthoringController';
 import * as moment from 'moment';
+import { AudioRecorderService } from '../services/audioRecorderService';
 
 const authoringModule = angular
   .module('authoring', [
@@ -114,18 +114,18 @@ const authoringModule = angular
     'ui.router'
   ])
   .service('AnnotationService', AnnotationService)
+  .service('AudioRecorderService', AudioRecorderService)
   .service('ComponentService', ComponentService)
   .factory('ConfigService', downgradeInjectable(ConfigService))
-  .service('CRaterService', CRaterService)
+  .factory('CRaterService', downgradeInjectable(CRaterService))
   .service('NodeService', NodeService)
   .service('NotebookService', NotebookService)
   .service('NotificationService', NotificationService)
-  .service('PlanningService', PlanningService)
   .factory('ProjectService', downgradeInjectable(AuthoringToolProjectService))
   .service('ProjectAssetService', ProjectAssetService)
-  .service('SessionService', SessionService)
+  .factory('SessionService', downgradeInjectable(SessionService))
   .service('SpaceService', SpaceService)
-  .service('StudentAssetService', StudentAssetService)
+  .factory('StudentAssetService', downgradeInjectable(StudentAssetService))
   .service('StudentDataService', StudentDataService)
   .service('StudentStatusService', StudentStatusService)
   .service('StudentWebSocketService', StudentWebSocketService)

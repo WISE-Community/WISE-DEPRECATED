@@ -1,6 +1,6 @@
 {
   "name": "wise",
-  "version": "5.12.0",
+  "version": "5.13.0",
   "description": "Web-based Inquiry Science Environment",
   "main": "app.js",
   "browserslist": [
@@ -48,7 +48,7 @@
     "compute-covariance": "^1.0.1",
     "core-js": "^3.6.5",
     "cssnano": "^4.1.10",
-    "dom-autoscroller": "^1.3.1",
+    "dom-autoscroller": "^2.3.4",
     "eventemitter2": "^5.0.1",
     "fabric": "^3.6.3",
     "hammerjs": "^2.0.8",
@@ -75,8 +75,8 @@
     "zone.js": "~0.10.2"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "~0.901.3",
     "@angular-builders/custom-webpack": "^9.0.0",
+    "@angular-devkit/build-angular": "~0.901.3",
     "@angular/cli": "^9.1.3",
     "@angular/compiler-cli": "^9.0.0",
     "@angular/language-service": "^9.0.0",
@@ -84,6 +84,7 @@
     "@babel/core": "^7.9.0",
     "@babel/preset-env": "^7.9.5",
     "@locl/cli": "0.0.1-beta.7",
+    "@types/dom-mediacapture-record": "^1.0.6",
     "@types/jasmine": "^3.5.10",
     "@types/jasminewd2": "^2.0.8",
     "@types/jquery": "^3.3.38",
@@ -140,7 +141,7 @@
     "watch-sass": "npm rebuild node-sass && node ./node_modules/gulp/bin/gulp.js",
     "update-i18n": "node ./node_modules/gulp/bin/gulp.js update-i18n",
     "compile-sass": "node ./node_modules/gulp/bin/gulp.js compile-sass",
-    "test": "ng test wise --karma-config src/main/webapp/site/karma.conf.js --browsers ChromeHeadlessNoSandbox --watch=false",
+    "test": "ng test wise --source-map=false --karma-config src/main/webapp/site/karma.conf.js --browsers ChromeHeadlessNoSandbox --watch=false",
     "test-e2e-comment": "test-e2e assumes wise is already running.",
     "test-e2e": "node ./node_modules/protractor/bin/protractor src/main/webapp/wise5/test-e2e/conf.js",
     "locale-extractor": "./node_modules/.bin/ngx-extractor -i \"src/main/webapp/site/**/*.ts\" -o src/main/webapp/site/src/messages.xlf"

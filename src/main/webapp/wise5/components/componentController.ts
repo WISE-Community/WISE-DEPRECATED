@@ -5,7 +5,7 @@ import { ConfigService } from "../services/configService";
 import NodeService from "../services/nodeService";
 import NotebookService from "../services/notebookService";
 import { ProjectService } from "../services/projectService";
-import StudentAssetService from "../services/studentAssetService";
+import { StudentAssetService } from "../services/studentAssetService";
 import { UtilService } from "../services/utilService";
 import StudentDataService from "../services/studentDataService";
 
@@ -42,6 +42,7 @@ class ComponentController {
   isSubmit: boolean;
   saveMessage: any;
   isStudentAttachmentEnabled: boolean;
+  isStudentAudioRecordingEnabled: boolean;
   isPromptVisible: boolean;
   isSaveButtonVisible: boolean;
   isSubmitButtonVisible: boolean;
@@ -114,7 +115,7 @@ class ComponentController {
     };
 
     this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
-
+    this.isStudentAudioRecordingEnabled = this.componentContent.isStudentAudioRecordingEnabled || false;
     this.isPromptVisible = true;
     this.isSaveButtonVisible = false;
     this.isSubmitButtonVisible = false;
@@ -1234,10 +1235,12 @@ class ComponentController {
   }
 
   attachStudentAsset(studentAsset) {
-    this.StudentAssetService.copyAssetForReference(studentAsset).then((copiedAsset) => {
+    return this.StudentAssetService.copyAssetForReference(studentAsset).then((copiedAsset) => {
       const attachment = {
         studentAssetId: copiedAsset.id,
-        iconURL: copiedAsset.iconURL
+        iconURL: copiedAsset.iconURL,
+        url: copiedAsset.url,
+        type: copiedAsset.type
       };
       this.attachments.push(attachment);
       this.studentDataChanged();
@@ -1286,6 +1289,18 @@ class ComponentController {
       if (requester === `${this.nodeId}-${this.componentId}`) {
         const studentWorkId = notebookItem.content.studentWorkIds[0];
         this.importWorkByStudentWorkId(studentWorkId);
+      }
+    });
+  }
+
+  registerAudioRecordedListener() {
+    this.$scope.$on('audioRecorded', (event, {requester, audioFile}) => {
+      if (requester === `${this.nodeId}-${this.componentId}`) {
+        this.StudentAssetService.uploadAsset(audioFile).then((studentAsset) => {
+          this.attachStudentAsset(studentAsset).then(() => {
+            this.StudentAssetService.deleteAsset(studentAsset);
+          })
+        });
       }
     });
   }

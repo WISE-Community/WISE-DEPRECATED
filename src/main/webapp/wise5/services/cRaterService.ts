@@ -1,27 +1,35 @@
-class CRaterService {
-  constructor($http, ConfigService) {
-    this.$http = $http;
-    this.ConfigService = ConfigService;
+'use strict';
+
+import { Injectable } from "@angular/core";
+import { HttpClient, HttpParams } from "@angular/common/http";
+import { ConfigService } from "./configService";
+
+@Injectable()
+export class CRaterService {
+  constructor(
+    protected http: HttpClient,
+    protected ConfigService: ConfigService
+  ) {
+
   }
 
   /**
    * Make a CRater request to score student data
-   * @param cRaterResponseId a randomly generated id used to keep track
-   * of the request
+   * @param cRaterItemId
+   * @param cRaterResponseId a randomly generated id used to keep track of the request
    * @param studentData the student data
    * @returns a promise that returns the result of the CRater request
    */
-  makeCRaterScoringRequest(cRaterItemId, cRaterResponseId, studentData) {
-    const httpParams = {
-      method: 'GET',
-      url: this.ConfigService.getCRaterRequestURL() + '/score',
-      params: {
-        itemId: cRaterItemId,
-        responseId: cRaterResponseId,
-        studentData: studentData
-      }
+  makeCRaterScoringRequest(cRaterItemId: string, cRaterResponseId: number, studentData: any) {
+    const url = this.ConfigService.getCRaterRequestURL() + '/score';
+    const params = new HttpParams()
+        .set('itemId', cRaterItemId)
+        .set('responseId', cRaterResponseId + '')
+        .set('studentData', studentData);
+    const options = {
+      params: params
     };
-    return this.$http(httpParams).then((response) => {
+    return this.http.get(url, options).toPromise().then((response) => {
       return response;
     });
   }
@@ -30,7 +38,7 @@ class CRaterService {
    * Get the CRater item type from the component
    * @param component the component content
    */
-  getCRaterItemType(component) {
+  getCRaterItemType(component: any) {
     if (component != null && component.cRater != null) {
       return component.cRater.itemType;
     }
@@ -41,7 +49,7 @@ class CRaterService {
    * Get the CRater item id from the component
    * @param component the component content
    */
-  getCRaterItemId(component) {
+  getCRaterItemId(component: any) {
     if (component != null && component.cRater != null) {
       return component.cRater.itemId;
     }
@@ -53,7 +61,7 @@ class CRaterService {
    * @param component the component content
    * @returns when to perform the CRater scoring e.g. 'submit', 'save', 'change', 'exit'
    */
-  getCRaterScoreOn(component) {
+  getCRaterScoreOn(component: any) {
     if (component != null) {
       /*
        * CRater can be enabled in two ways
@@ -74,7 +82,7 @@ class CRaterService {
    * Check if CRater is enabled for this component
    * @param component the component content
    */
-  isCRaterEnabled(component) {
+  isCRaterEnabled(component: any) {
     if (component != null) {
       // get the item type and item id
       const cRaterItemType = this.getCRaterItemType(component);
@@ -91,7 +99,7 @@ class CRaterService {
    * @param component the component content
    * @returns whether the CRater is set to score on save
    */
-  isCRaterScoreOnSave(component) {
+  isCRaterScoreOnSave(component: any) {
     if (component != null) {
       // find when we should perform the CRater scoring
       const scoreOn = this.getCRaterScoreOn(component);
@@ -107,7 +115,7 @@ class CRaterService {
    * @param component the component content
    * @returns whether the CRater is set to score on submit
    */
-  isCRaterScoreOnSubmit(component) {
+  isCRaterScoreOnSubmit(component: any) {
     if (component != null) {
       // find when we should perform the CRater scoring
       const scoreOn = this.getCRaterScoreOn(component);
@@ -123,7 +131,7 @@ class CRaterService {
    * @param component the component content
    * @returns whether the CRater is set to score on change
    */
-  isCRaterScoreOnChange(component) {
+  isCRaterScoreOnChange(component: any) {
     if (component != null) {
       // find when we should perform the CRater scoring
       const scoreOn = this.getCRaterScoreOn(component);
@@ -139,7 +147,7 @@ class CRaterService {
    * @param component the component content
    * @returns whether the CRater is set to score on exit
    */
-  isCRaterScoreOnExit(component) {
+  isCRaterScoreOnExit(component: any) {
     if (component != null) {
       // find when we should perform the CRater scoring
       const scoreOn = this.getCRaterScoreOn(component);
@@ -156,7 +164,7 @@ class CRaterService {
    * @param score the score
    * @returns the scoring rule for the given score
    */
-  getCRaterScoringRuleByScore(component, score) {
+  getCRaterScoringRuleByScore(component: any, score: any) {
     if (component != null && score != null) {
       const cRater = component.cRater;
       if (cRater != null) {
@@ -186,7 +194,7 @@ class CRaterService {
    * @param score the score we want feedback for
    * @returns the feedback text for the given score
    */
-  getCRaterFeedbackTextByScore(component, score) {
+  getCRaterFeedbackTextByScore(component: any, score: any) {
     const scoringRule = this.getCRaterScoringRuleByScore(component, score);
     if (scoringRule != null) {
       return scoringRule.feedbackText;
@@ -201,8 +209,8 @@ class CRaterService {
    * @param currentScore the score from the current submit
    * @returns the feedback text for the given previous score and current score
    */
-  getMultipleAttemptCRaterFeedbackTextByScore(component, previousScore,
-      currentScore) {
+  getMultipleAttemptCRaterFeedbackTextByScore(component: any, previousScore: any,
+      currentScore: any) {
     const scoringRule = this.getMultipleAttemptCRaterScoringRuleByScore(
         component, previousScore, currentScore);
     if (scoringRule != null) {
@@ -219,8 +227,8 @@ class CRaterService {
    * @param currentScore the score from the current submit
    * @returns the scoring rule for the given previous score and current score
    */
-  getMultipleAttemptCRaterScoringRuleByScore(component, previousScore,
-      currentScore) {
+  getMultipleAttemptCRaterScoringRuleByScore(component: any, previousScore: any,
+      currentScore: any) {
     if (component != null && previousScore != null && currentScore != null) {
       const cRater = component.cRater;
       if (cRater != null) {
@@ -260,23 +268,14 @@ class CRaterService {
    * @param itemId A string.
    * @return A promise that returns whether the item id is valid.
    */
-  makeCRaterVerifyRequest(itemId) {
-    const httpParams = {
-      method: 'GET',
-      url: this.ConfigService.getCRaterRequestURL() + '/verify',
-      params: {
-        itemId: itemId
-      }
-    };
-    return this.$http(httpParams).then((response) => {
-      return response.data.isAvailable;
+  makeCRaterVerifyRequest(itemId: string) {
+    const url = this.ConfigService.getCRaterRequestURL() + '/verify';
+    const params = new HttpParams().set('itemId', itemId);
+    const options = {
+      params: params
+    }; 
+    return this.http.get(url, options).toPromise().then((response: any) => {
+      return response.isAvailable;
     });
   }
 }
-
-CRaterService.$inject = [
-  '$http',
-  'ConfigService'
-];
-
-export default CRaterService;

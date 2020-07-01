@@ -9,7 +9,6 @@ class StudentDataService {
     $rootScope,
     AnnotationService,
     ConfigService,
-    PlanningService,
     ProjectService,
     UtilService
   ) {
@@ -20,7 +19,6 @@ class StudentDataService {
     this.$rootScope = $rootScope;
     this.AnnotationService = AnnotationService;
     this.ConfigService = ConfigService;
-    this.PlanningService = PlanningService;
     this.ProjectService = ProjectService;
     this.UtilService = UtilService;
     this.$translate = this.$filter('translate');
@@ -36,8 +34,6 @@ class StudentDataService {
     this.nodeStatuses = {};
     this.runStatus = null;
     this.maxScore = null;
-
-    this.maxPlanningNodeNumber = 0;
 
     /*
      * A counter to keep track of how many saveToServer requests we have
@@ -814,7 +810,7 @@ class StudentDataService {
       return;
     }
     const context = 'VLE';
-    this.saveEvent(context, nodeId, componentId, componentType, category, event, data);
+    return this.saveEvent(context, nodeId, componentId, componentType, category, event, data);
   }
 
   saveEvent(context, nodeId, componentId, componentType, category, event, data) {
@@ -831,7 +827,7 @@ class StudentDataService {
     events.push(newEvent);
     const componentStates = undefined;
     const annotations = undefined;
-    this.saveToServer(componentStates, events, annotations);
+    return this.saveToServer(componentStates, events, annotations);
   }
 
   createNewEvent(nodeId, componentId, context, componentType, category, event, data) {
@@ -1661,7 +1657,6 @@ StudentDataService.$inject = [
   '$rootScope',
   'AnnotationService',
   'ConfigService',
-  'PlanningService',
   'ProjectService',
   'UtilService'
 ];

@@ -24,7 +24,7 @@ import ClassroomMonitorController from './classroomMonitorController';
 import { ClassroomMonitorProjectService } from './classroomMonitorProjectService';
 import '../components/conceptMap/conceptMapComponentModule';
 import { ConfigService } from '../services/configService';
-import CRaterService from '../services/cRaterService';
+import { CRaterService } from '../services/cRaterService';
 import '../directives/components';
 import ComponentService from '../components/componentService';
 import './dashboard/dashboardController';
@@ -58,13 +58,12 @@ import NotebookService from '../services/notebookService';
 import NotificationService from '../services/notificationService';
 import '../components/openResponse/openResponseComponentModule';
 import '../components/outsideURL/outsideURLComponentModule';
-import PlanningService from '../services/planningService';
-import SessionService from '../services/sessionService';
+import { SessionService } from '../services/sessionService';
 import * as SockJS from 'sockjs-client';
 import * as StompJS from '@stomp/stompjs';
 window['SockJS'] = SockJS;
 window['Stomp'] = StompJS.Stomp;
-import StudentAssetService from '../services/studentAssetService';
+import { StudentAssetService } from '../services/studentAssetService';
 import StudentDataService from '../services/studentDataService';
 import StudentGradingController from './studentGrading/studentGradingController';
 import StudentProgressController from './studentProgress/studentProgressController';
@@ -76,6 +75,7 @@ import TeacherDataService from '../services/teacherDataService';
 import TeacherWebSocketService from '../services/teacherWebSocketService';
 import { UtilService } from '../services/utilService';
 import * as moment from 'moment';
+import { AudioRecorderService } from '../services/audioRecorderService';
 
 const classroomMonitorModule = angular
   .module('classroomMonitor', [
@@ -115,18 +115,18 @@ const classroomMonitorModule = angular
   ])
   .service('AchievementService', AchievementService)
   .service('AnnotationService', AnnotationService)
+  .service('AudioRecorderService', AudioRecorderService)
   .service('ComponentService', ComponentService)
   .factory('ConfigService', downgradeInjectable(ConfigService))
-  .service('CRaterService', CRaterService)
+  .factory('CRaterService', downgradeInjectable(CRaterService))
   .service('HttpInterceptor', HttpInterceptor)
   .service('MilestoneService', MilestoneService)
   .service('NodeService', NodeService)
   .service('NotebookService', NotebookService)
   .service('NotificationService', NotificationService)
-  .service('PlanningService', PlanningService)
   .factory('ProjectService', downgradeInjectable(ClassroomMonitorProjectService))
-  .service('SessionService', SessionService)
-  .service('StudentAssetService', StudentAssetService)
+  .factory('SessionService', downgradeInjectable(SessionService))
+  .factory('StudentAssetService', downgradeInjectable(StudentAssetService))
   .service('StudentDataService', StudentDataService)
   .service('StudentStatusService', StudentStatusService)
   .service('StudentWebSocketService', StudentWebSocketService)

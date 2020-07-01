@@ -25,6 +25,13 @@
                ng-change='openResponseController.authoringViewComponentChanged()'/>
       </md-input-container>
       <br/>
+      <div>
+        <md-checkbox class='md-primary'
+                     ng-model='openResponseController.authoringComponentContent.isStudentAudioRecordingEnabled'
+                     ng-change='openResponseController.authoringViewComponentChanged()'>
+          {{ ::'openResponse.enableStudentAudioResponse' | translate }}
+        </md-checkbox>
+      </div>
       <span>{{ ::'openResponse.enableCRater' | translate }}:</span>
       <input type='checkbox'
              ng-model='openResponseController.authoringComponentContent.enableCRater'

@@ -248,19 +248,11 @@ export class ProjectService {
     }
   }
 
-  loadPlanningNodes(planningNodes) {
-    for (const planningNode of planningNodes) {
-      this.setIdToNode(planningNode.id, planningNode);
-      // TODO: may need to add more function calls here to add the planning
-    }
-  }
-
   parseProject() {
     this.clearProjectFields();
     this.instantiateDefaults();
     this.metadata = this.project.metadata;
     this.loadNodes(this.project.nodes);
-    this.loadPlanningNodes(this.project.planningNodes);
     this.loadInactiveNodes(this.project.inactiveNodes);
     this.loadConstraints(this.project.constraints);
     this.rootNode = this.getRootNode(this.project.nodes[0].id);
@@ -275,7 +267,6 @@ export class ProjectService {
 
   instantiateDefaults() {
     this.project.nodes = this.project.nodes ? this.project.nodes : [];
-    this.project.planningNodes = this.project.planningNodes ? this.project.planningNodes : [];
     this.project.inactiveNodes = this.project.inactiveNodes ? this.project.inactiveNodes : [];
     this.project.constraints = this.project.constraints ? this.project.constraints : [];
   }
@@ -1600,7 +1591,7 @@ export class ProjectService {
     const consumedNodes = [];
     for (const path of paths) {
       if (path.includes(nodeId)) {
-        const subPath = path.slice(0, path.indexOf(nodeId));
+        const subPath = path.splice(0, path.indexOf(nodeId));
         for (const nodeIdInPath of subPath) {
           if (!consumedNodes.includes(nodeIdInPath)) {
             consumedNodes.push(nodeIdInPath);
@@ -2939,11 +2930,19 @@ export class ProjectService {
                  * ]
                  */
                 for (let transitionCopy of transitionsCopy) {
-                  // insert a transition from the node we are removing
-                  transitions.splice(insertIndex, 0, transitionCopy);
-                  insertIndex++;
+                  if (!this.isTransitionExist(transitions, transitionCopy)) {
+                    const toNodeId = transitionCopy.to;
+                    if (this.isApplicationNode(node.id) && this.isGroupNode(toNodeId) &&
+                        this.hasGroupStartId(toNodeId)) {
+                      this.addToTransition(node, this.getGroupStartId(toNodeId));
+                    } else {
+                      transitions.splice(insertIndex, 0, transitionCopy);
+                      insertIndex++;
+                    }
+                  }
                 }
               }
+              t--;
 
               // check if the node we are moving is a group
               if (this.isGroupNode(nodeId)) {
@@ -2959,6 +2958,15 @@ export class ProjectService {
                 );
               }
             }
+          }
+
+          if (transitions.length === 0 && parentIdOfNodeToRemove != 'group0' &&
+              parentIdOfNodeToRemove != this.getParentGroupId(node.id)) {
+            /*
+             * the from node no longer has any transitions so we will make it transition to the
+             * parent of the node we are removing
+             */
+            this.addToTransition(node, parentIdOfNodeToRemove);
           }
 
           if (this.isBranchPoint(nodeId)) {
@@ -2988,6 +2996,15 @@ export class ProjectService {
     if (this.isGroupNode(nodeId)) {
       this.removeTransitionsOutOfGroup(nodeId);
     }
+  }
+
+  isTransitionExist(transitions: any[], transition: any) {
+    for (const tempTransition of transitions) {
+      if (tempTransition.from === transition.from && tempTransition.to === transition.to) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**
@@ -3487,12 +3504,6 @@ export class ProjectService {
           fromNodeTitle: fromNodeTitle,
           toNodeTitle: toNodeTitle
         });
-      } else if (name === 'isPlanningActivityCompleted') {
-        const nodeId = params.nodeId;
-        if (nodeId != null) {
-          const nodeTitle = this.getNodePositionAndTitleByNodeId(nodeId);
-          message += this.upgrade.$injector.get('$filter')('translate')('completeNodeTitle', { nodeTitle: nodeTitle });
-        }
       } else if (name === 'wroteXNumberOfWords') {
         const nodeId = params.nodeId;
         if (nodeId != null) {
@@ -3585,6 +3596,11 @@ export class ProjectService {
    */
   getGroupStartId(nodeId) {
     return this.getNodeById(nodeId).startId;
+  }
+
+  hasGroupStartId(nodeId) {
+    const startId = this.getGroupStartId(nodeId);
+    return startId != null && startId != '';
   }
 
   /**

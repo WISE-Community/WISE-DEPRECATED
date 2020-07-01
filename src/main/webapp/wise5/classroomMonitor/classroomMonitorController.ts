@@ -5,7 +5,7 @@ import NodeService from '../services/nodeService';
 import NotebookService from '../services/notebookService';
 import NotificationService from '../services/notificationService';
 import TeacherDataService from '../services/teacherDataService';
-import SessionService from '../services/sessionService';
+import { SessionService } from '../services/sessionService';
 import * as angular from 'angular';
 import { ClassroomMonitorProjectService } from './classroomMonitorProjectService';
 
@@ -141,9 +141,13 @@ class ClassroomMonitorController {
           this.SessionService.closeWarningAndRenewSession();
         },
         () => {
-          this.SessionService.forceLogOut();
+          this.logOut();
         }
       );
+    });
+
+    this.$scope.$on('logOut', () => {
+      this.logOut();
     });
 
     this.$scope.$on('showRequestLogout', ev => {
@@ -177,13 +181,14 @@ class ClassroomMonitorController {
     this.themePath = this.ProjectService.getThemePath();
     this.notifications = this.NotificationService.notifications;
 
-    let context = 'ClassroomMonitor',
+    const context = 'ClassroomMonitor',
       nodeId = null,
       componentId = null,
       componentType = null,
       category = 'Navigation',
       event = 'sessionStarted',
-      data = {};
+      data = {},
+      projectId = null;
     this.TeacherDataService.saveEvent(
       context,
       nodeId,
@@ -191,7 +196,8 @@ class ClassroomMonitorController {
       componentType,
       category,
       event,
-      data
+      data,
+      projectId
     );
 
     this.$window.onbeforeunload = () => {
@@ -250,6 +256,33 @@ class ClassroomMonitorController {
   handleServerReconnect() {
     this.$mdToast.hide(this.connectionLostDisplay);
     this.connectionLostShown = false;
+  }
+
+  logOut() {
+    this.saveEvent('logOut', 'Navigation').then(() => {
+      this.SessionService.logOut();
+    });
+  }
+
+  saveEvent(eventName, category): any {
+    const context = 'ClassroomMonitor';
+    const nodeId = null;
+    const componentId = null;
+    const componentType = null;
+    const data = {};
+    const projectId = null;
+    return this.TeacherDataService.saveEvent(
+      context,
+      nodeId,
+      componentId,
+      componentType,
+      category,
+      eventName,
+      data,
+      projectId
+    ).then((result) => {
+      return result;
+    });
   }
 }
 

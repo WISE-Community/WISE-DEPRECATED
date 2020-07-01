@@ -24,7 +24,9 @@
 package org.wise.portal.service.vle.wise5.impl;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -146,8 +148,30 @@ public class VLEServiceImpl implements VLEService {
       }
     }
 
-    return studentWorkDao.getStudentWorkListByParams(id, run, period, workgroup, isAutoSave,
-        isSubmit, nodeId, componentId, componentType, components, onlyGetLatest);
+    List<StudentWork> studentWorkListByParams = studentWorkDao.getStudentWorkListByParams(id, run,
+        period, workgroup, isAutoSave, isSubmit, nodeId, componentId, componentType, components);
+    if (Boolean.TRUE.equals(onlyGetLatest)) {
+      return filterLatestWorkForEachWorkgroup(studentWorkListByParams);
+    } else {
+      return studentWorkListByParams;
+    }
+  }
+
+  private List<StudentWork> filterLatestWorkForEachWorkgroup(
+      List<StudentWork> allStudentWork) {
+    HashMap<Long, StudentWork> latestWorkPerWorkgroup = new HashMap<Long, StudentWork>();
+    for (StudentWork studentWork : allStudentWork) {
+      Long key = studentWork.getWorkgroup().getId();
+      if (latestWorkPerWorkgroup.containsKey(key)) {
+        if (studentWork.getServerSaveTime().after(
+            latestWorkPerWorkgroup.get(key).getServerSaveTime())) {
+          latestWorkPerWorkgroup.put(key, studentWork);
+        }
+      } else {
+        latestWorkPerWorkgroup.put(studentWork.getWorkgroup().getId(), studentWork);
+      }
+    }
+    return new ArrayList<StudentWork>(latestWorkPerWorkgroup.values());
   }
 
   public JSONArray getNotebookItemsExport(Integer runId) {

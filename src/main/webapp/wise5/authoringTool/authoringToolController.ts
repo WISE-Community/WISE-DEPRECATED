@@ -1,7 +1,7 @@
 'use strict';
 import * as angular from 'angular';
 import { ConfigService } from '../services/configService';
-import SessionService from '../services/sessionService';
+import { SessionService } from '../services/sessionService';
 import TeacherDataService from '../services/teacherDataService';
 import { AuthoringToolProjectService } from './authoringToolProjectService';
 
@@ -193,9 +193,13 @@ class AuthoringToolController {
           this.SessionService.closeWarningAndRenewSession();
         },
         () => {
-          this.SessionService.forceLogOut();
+          this.logOut();
         }
       );
+    });
+
+    $scope.$on('logOut', () => {
+      this.logOut();
     });
 
     this.$scope.$on('showRequestLogout', ev => {
@@ -343,21 +347,31 @@ class AuthoringToolController {
     this.$rootScope.$broadcast('setGlobalMessage', { globalMessage: globalMessage });
   }
 
-  saveEvent(eventName, category) {
+  logOut() {
+    this.saveEvent('logOut', 'Navigation').then(() => {
+      this.SessionService.logOut();
+    });
+  }
+
+  saveEvent(eventName, category): any {
     const context = 'AuthoringTool';
     const nodeId = null;
     const componentId = null;
     const componentType = null;
     const data = {};
-    this.TeacherDataService.saveEvent(
+    const projectId = null;
+    return this.TeacherDataService.saveEvent(
       context,
       nodeId,
       componentId,
       componentType,
       category,
       eventName,
-      data
-    );
+      data,
+      projectId
+    ).then((result) => {
+      return result;
+    });
   }
 }
 

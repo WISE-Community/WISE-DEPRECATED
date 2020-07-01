@@ -11,6 +11,9 @@ import { ProjectService } from '../../../../wise5/services/projectService';
 import { AuthoringToolProjectService } from '../../../../wise5/authoringTool/authoringToolProjectService';
 import { ClassroomMonitorProjectService } from '../../../../wise5/classroomMonitor/classroomMonitorProjectService';
 import { MilestoneReportDataComponent } from './milestone/milestone-report-data/milestone-report-data.component';
+import { CRaterService } from '../../../../wise5/services/cRaterService';
+import { SessionService } from '../../../../wise5/services/sessionService';
+import { StudentAssetService } from '../../../../wise5/services/studentAssetService';
 
 @Component({template: ``})
 export class EmptyComponent {}
@@ -29,9 +32,12 @@ export class EmptyComponent {}
   providers: [
     UtilService,
     ConfigService,
+    CRaterService,
     ProjectService,
     AuthoringToolProjectService,
-    ClassroomMonitorProjectService
+    ClassroomMonitorProjectService,
+    SessionService,
+    StudentAssetService
   ],
   entryComponents: [
     MilestoneReportDataComponent

@@ -1,5 +1,12 @@
 <section class="hero section"
          [style.background-image]="bgStyle">
+  <picture style="display: none;">
+    <ng-container *ngFor="let source of imgSources">
+      <source media="{{ source.media }}" sizes="{{ source.sizes }}" src="{{ source.src }}"
+              srcset="{{ source.srcset }}" type="{{ source.type }}">
+    </ng-container>
+    <img #bgRef src="{{ imgSrc }}" alt="{{ imgDescription }}">
+  </picture>
   <div class="hero__content" fxLayout="column" fxLayoutAlign="center center">
     <ng-template #defaultHeadline>{{ headline }}</ng-template>
     <h1 *ngIf="headline || headlineRef" class="hero__headline"

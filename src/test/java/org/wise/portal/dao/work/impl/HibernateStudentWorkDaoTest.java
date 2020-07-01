@@ -92,7 +92,7 @@ public class HibernateStudentWorkDaoTest extends AbstractTransactionalDbTests {
   @Test
   public void getStudentWorkListByParams_WithRunThatHasNoStudentWork_ShouldReturnNoStudentWork() {
     List<StudentWork> studentWorkList = studentWorkDao.getStudentWorkListByParams(null, run, null,
-        null, null, null, null, null, null, null, null);
+        null, null, null, null, null, null, null);
     assertEquals(0, studentWorkList.size());
   }
 
@@ -102,7 +102,7 @@ public class HibernateStudentWorkDaoTest extends AbstractTransactionalDbTests {
     createStudentWork(workgroup1, "node2", "studentWork2");
     createStudentWork(workgroup2, "node1", "studentWork3");
     List<StudentWork> studentWorkList = studentWorkDao.getStudentWorkListByParams(null, run, null,
-        null, null, null, null, null, null, null, null);
+        null, null, null, null, null, null, null);
     assertEquals(3, studentWorkList.size());
     assertEquals("studentWork1", studentWorkList.get(0).getStudentData());
     assertEquals("studentWork2", studentWorkList.get(1).getStudentData());
@@ -115,7 +115,7 @@ public class HibernateStudentWorkDaoTest extends AbstractTransactionalDbTests {
     createStudentWork(workgroup1, "node2", "studentWork2");
     createStudentWork(workgroup2, "node1", "studentWork3");
     List<StudentWork> studentWorkList = studentWorkDao.getStudentWorkListByParams(null, run, null,
-        workgroup1, null, null, null, null, null, null, null);
+        workgroup1, null, null, null, null, null, null);
     assertEquals(2, studentWorkList.size());
     assertEquals("studentWork1", studentWorkList.get(0).getStudentData());
     assertEquals("studentWork2", studentWorkList.get(1).getStudentData());
@@ -127,21 +127,9 @@ public class HibernateStudentWorkDaoTest extends AbstractTransactionalDbTests {
     createStudentWork(workgroup1, "node2", "studentWork2");
     createStudentWork(workgroup2, "node1", "studentWork3");
     List<StudentWork> studentWorkList = studentWorkDao.getStudentWorkListByParams(null, run, null,
-        null, null, null, "node1", null, null, null, null);
+        null, null, null, "node1", null, null, null);
     assertEquals(2, studentWorkList.size());
     assertEquals("studentWork1", studentWorkList.get(0).getStudentData());
-    assertEquals("studentWork3", studentWorkList.get(1).getStudentData());
-  }
-
-  @Test
-  public void getStudentWorkListByParams_OnlyLatest_ShouldReturnStudentWork() {
-    createStudentWork(workgroup1, "node1", "studentWork1");
-    createStudentWork(workgroup1, "node2", "studentWork2");
-    createStudentWork(workgroup2, "node1", "studentWork3");
-    List<StudentWork> studentWorkList = studentWorkDao.getStudentWorkListByParams(null, run, null,
-        null, null, null, null, null, null, null, true);
-    assertEquals(2, studentWorkList.size());
-    assertEquals("studentWork2", studentWorkList.get(0).getStudentData());
     assertEquals("studentWork3", studentWorkList.get(1).getStudentData());
   }
 

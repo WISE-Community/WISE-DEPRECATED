@@ -3,6 +3,7 @@
 import { ConfigService } from '../../../../services/configService';
 import { ClassroomMonitorProjectService } from '../../../classroomMonitorProjectService';
 import TeacherDataService from '../../../../services/teacherDataService';
+import { SessionService } from '../../../../services/sessionService';
 
 class TopBarController {
   $translate: any;
@@ -22,7 +23,8 @@ class TopBarController {
     '$state',
     'ConfigService',
     'ProjectService',
-    'TeacherDataService'
+    'TeacherDataService',
+    'SessionService'
   ];
 
   constructor(
@@ -31,7 +33,8 @@ class TopBarController {
     private $state: any,
     private ConfigService: ConfigService,
     private ProjectService: ClassroomMonitorProjectService,
-    private TeacherDataService: TeacherDataService
+    private TeacherDataService: TeacherDataService,
+    private SessionService: SessionService
   ) {
     this.$translate = $filter('translate');
     this.workgroupId = this.ConfigService.getWorkgroupId();
@@ -125,29 +128,33 @@ class TopBarController {
       componentType,
       category,
       event,
-      eventData
+      eventData,
+      null
     );
-    this.$rootScope.$broadcast('goHome');
+    this.SessionService.goHome();
   }
 
   logOut() {
-    var context = 'ClassroomMonitor';
-    var nodeId = null;
-    var componentId = null;
-    var componentType = null;
-    var category = 'Navigation';
-    var event = 'logOutButtonClicked';
-    var eventData = {};
+    const context = 'ClassroomMonitor';
+    const category = 'Navigation';
+    const eventName = 'logOutButtonClicked';
+    const nodeId = null;
+    const componentId = null;
+    const componentType = null;
+    const data = {};
+    const projectId = null;
     this.TeacherDataService.saveEvent(
       context,
       nodeId,
       componentId,
       componentType,
       category,
-      event,
-      eventData
-    );
-    this.$rootScope.$broadcast('logOut');
+      eventName,
+      data,
+      projectId
+    ).then((result) => {
+      this.SessionService.logOut();
+    });
   }
 }
 
