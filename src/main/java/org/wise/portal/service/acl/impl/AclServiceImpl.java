@@ -62,7 +62,6 @@ public class AclServiceImpl<T extends Persistable> implements AclService<T> {
       MutableAcl acl = null;
       ObjectIdentity objectIdentity = new ObjectIdentityImpl(
           HibernateProxyHelper.getClassWithoutInitializingProxy(object), object.getId());
-
       try {
         acl = (MutableAcl) mutableAclService.readAclById(objectIdentity);
       } catch (NotFoundException nfe) {
@@ -81,7 +80,6 @@ public class AclServiceImpl<T extends Persistable> implements AclService<T> {
       MutableAcl acl = null;
       ObjectIdentity objectIdentity = new ObjectIdentityImpl(
           HibernateProxyHelper.getClassWithoutInitializingProxy(object), object.getId());
-
       try {
         acl = (MutableAcl) mutableAclService.readAclById(objectIdentity);
       } catch (NotFoundException nfe) {

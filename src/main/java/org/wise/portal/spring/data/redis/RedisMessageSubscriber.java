@@ -9,9 +9,6 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.wise.vle.domain.WebSocketMessage;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Service
 public class RedisMessageSubscriber implements MessageListener {
 
@@ -48,6 +45,9 @@ public class RedisMessageSubscriber implements MessageListener {
         simpMessagingTemplate.convertAndSend(messageJSON.getString("topic"), webSockeMessage);
       } else if (messageJSON.get("type").equals("unpause")) {
         WebSocketMessage webSockeMessage = new WebSocketMessage("unpause", "");
+        simpMessagingTemplate.convertAndSend(messageJSON.getString("topic"), webSockeMessage);
+      } else if (messageJSON.get("type").equals("tagsToWorkgroup")) {
+        WebSocketMessage webSockeMessage = new WebSocketMessage("tagsToWorkgroup", messageJSON.getString("tags"));
         simpMessagingTemplate.convertAndSend(messageJSON.getString("topic"), webSockeMessage);
       }
     } catch (JSONException e) {

@@ -21,7 +21,7 @@
  * ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
  * REGENTS HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.wise.portal.presentation.web.controllers;
+package org.wise.portal.presentation.web.controllers.project;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -31,16 +31,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.domain.project.Project;
-import org.wise.portal.domain.project.Tag;
+import org.wise.portal.presentation.web.controllers.ControllerUtil;
+import org.wise.portal.domain.Tag;
 import org.wise.portal.service.project.ProjectService;
 
 /**
- * Controller to add/remove tags from projects
+ * Controller to add/remove tags
  *
  * @author Patrick Lawler
  */
 @Controller
-public class TaggerController {
+public class ProjectTagController {
 
   @Autowired
   private ProjectService projectService;

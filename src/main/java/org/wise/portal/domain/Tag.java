@@ -21,11 +21,11 @@
  * ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
  * REGENTS HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.wise.portal.domain.project;
+package org.wise.portal.domain;
 
 import java.io.Serializable;
 
-import org.wise.portal.domain.Persistable;
+import org.wise.portal.domain.run.Run;
 
 /**
  * @author Patrick Lawler
@@ -51,4 +51,8 @@ public interface Tag extends Persistable {
    * @param Long - the id to set
    */
   void setId(Integer id);
+
+  void setRun(Run run);
+
+  Run getRun();
 }

@@ -39,12 +39,13 @@ import org.hibernate.annotations.Cascade;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.wise.portal.domain.authentication.MutableUserDetails;
+import org.wise.portal.domain.impl.TagImpl;
 import org.wise.portal.domain.project.FamilyTag;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.ProjectInfo;
 import org.wise.portal.domain.project.ProjectMetadata;
 import org.wise.portal.domain.project.ProjectVisitor;
-import org.wise.portal.domain.project.Tag;
+import org.wise.portal.domain.Tag;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.user.impl.UserImpl;
 

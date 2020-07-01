@@ -23,7 +23,11 @@
  */
 package org.wise.portal.service.tag;
 
-import org.wise.portal.domain.project.Tag;
+import java.util.List;
+
+import org.springframework.security.core.Authentication;
+import org.wise.portal.domain.Tag;
+import org.wise.portal.domain.run.Run;
 
 /**
  * A Service for tags
@@ -62,4 +66,25 @@ public interface TagService {
    * @param Integer - tag id
    */
   void removeIfOrphaned(Integer tagId);
+
+  /**
+   * Creates a new tag and return it. If one exists with the same run and name, ignore
+   */
+  Tag createTag(Run run, String name);
+
+  /**
+   * Returns tags for a run
+   * @param run get the tags for
+   * @return Set<tag> set of tags for the specified run
+   */
+  List<Tag> getTagsForRun(Run run);
+
+  /**
+   * Updates existing tag and returns it
+   */
+  Tag updateTag(Tag tag);
+
+  boolean canEditTag(Authentication auth, Tag tag);
+
+  void deleteTag(Authentication auth, Tag tag);
 }

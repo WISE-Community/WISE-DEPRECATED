@@ -23,8 +23,11 @@
  */
 package org.wise.portal.dao.project;
 
+import java.util.List;
+
 import org.wise.portal.dao.SimpleDao;
-import org.wise.portal.domain.project.Tag;
+import org.wise.portal.domain.Tag;
+import org.wise.portal.domain.run.Run;
 
 /**
  * @author Patrick Lawler
@@ -47,4 +50,8 @@ public interface TagDao<T extends Tag> extends SimpleDao<T> {
    * @param Integer - tag id
    */
   void removeIfOrphaned(Integer tagId);
+
+  List<Tag> getTags(Run run);
+
+  Tag getTag(Run run, String name);
 }
