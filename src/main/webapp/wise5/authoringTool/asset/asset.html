@@ -83,7 +83,7 @@
           <md-icon ng-click="projectAssetController.downloadAsset(assetItem)">file_download</md-icon>
         </span>
         <md-icon ng-click='projectAssetController.deleteAsset(assetItem)'>delete</md-icon>
-        <span ng-if="assetItem.used === false">
+        <span ng-if="!assetItem.used">
           <span style="color:red">({{ ::'notUsed' | translate }})</span>
         </span>
       </li>

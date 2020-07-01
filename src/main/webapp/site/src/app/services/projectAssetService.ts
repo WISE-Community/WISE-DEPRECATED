@@ -16,13 +16,11 @@ export class ProjectAssetService {
   totalFileSize: BehaviorSubject<number> = new BehaviorSubject<number>(0);
   totalUnusedFileSize: BehaviorSubject<number> = new BehaviorSubject<number>(0);
 
-  constructor(
-    protected upgrade: UpgradeModule,
-    protected http: HttpClient,
-    protected ConfigService: ConfigService,
-    protected ProjectService: ProjectService,
-    protected UtilService: UtilService,
-      ) {
+  constructor(protected upgrade: UpgradeModule,
+      protected http: HttpClient,
+      protected ConfigService: ConfigService,
+      protected ProjectService: ProjectService,
+      protected UtilService: UtilService) {
     this.getProjectAssets().subscribe((projectAssets) => {
       if (projectAssets != null) {
         this.calculateAssetUsage(projectAssets);
@@ -170,7 +168,7 @@ export class ProjectAssetService {
   }
 
   isFileAlreadyAdded(usedTextFilenames: any[], fileName: string) {
-    return usedTextFilenames.indexOf(fileName) != -1;
+    return usedTextFilenames.includes(fileName);
   }
 
   isFileReferencedInContent(content: string, fileName: string) {
@@ -192,7 +190,7 @@ export class ProjectAssetService {
     const requests = [];
     const projectAssetsDirectoryPath = this.ConfigService.getProjectAssetsDirectoryPath();
     for (const textFileName of textFileNames) {
-      const request = this.http.get(projectAssetsDirectoryPath + '/' + textFileName,
+      const request = this.http.get(`${projectAssetsDirectoryPath}/${textFileName}`,
           { observe: 'response', responseType: 'text' });
       requests.push(request);
     }
