@@ -130,29 +130,6 @@ class ThemeController {
     });
 
     // alert user when inactive for a long time
-    this.$scope.$on('showSessionWarning', ev => {
-      let alert = this.$mdDialog
-        .confirm()
-        .parent(angular.element(document.body))
-        .title(this.$translate('sessionTimeout'))
-        .textContent(this.$translate('autoLogoutMessage'))
-        .ariaLabel(this.$translate('sessionTimeout'))
-        .targetEvent(ev)
-        .ok(this.$translate('yes'))
-        .cancel(this.$translate('no'));
-
-      this.$mdDialog.show(alert).then(
-        () => {
-          this.SessionService.closeWarningAndRenewSession();
-          alert = undefined;
-        },
-        () => {
-          this.SessionService.forceLogOut();
-        }
-      );
-    });
-
-    // alert user when inactive for a long time
     this.$scope.$on('showRequestLogout', ev => {
       let alert = this.$mdDialog
         .confirm()
