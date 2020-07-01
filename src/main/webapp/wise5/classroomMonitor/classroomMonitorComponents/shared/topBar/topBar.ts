@@ -13,6 +13,7 @@ class TopBarController {
   dismissedNotifications: any;
   newNotifications: any;
   notifications: any;
+  projectId: number;
   runId: number;
   themePath: string;
   userInfo: any;
@@ -99,16 +100,16 @@ class TopBarController {
   doAuthoringViewSwitch() {
     if (this.$state.current.name === 'root.cm.notebooks') {
       this.$state.go('root.at.project.notebook', {
-        projectId: this.runId
+        projectId: this.projectId
       });
     } else if (this.$state.current.name === 'root.cm.unit.node') {
       this.$state.go('root.at.project.node', {
-        projectId: this.runId,
+        projectId: this.projectId,
         nodeId: this.$state.params.nodeId
       });
     } else {
       this.$state.go('root.at.project', {
-        projectId: this.runId
+        projectId: this.projectId
       });
     }
   }
