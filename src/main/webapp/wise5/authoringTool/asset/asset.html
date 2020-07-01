@@ -42,7 +42,7 @@
     drag-over-class="dragover" ngf-multiple="true" allow-dir="false"
     accept="image/*,application/pdf,text/csv,text/javascript" translate="dropAssetMessage"></div>
 <span translate="assetUsageMessage"
-    translate-value-usage="{{projectAssetController.projectAssets.totalFileSize | appropriateSizeText }}"
+    translate-value-usage="{{projectAssetController.totalFileSize | appropriateSizeText }}"
     translate-value-max="{{projectAssetController.projectAssetTotalSizeMax | appropriateSizeText }}"
     translate-value-percentage="{{projectAssetController.projectAssetUsagePercentage | roundToDecimal:0 }}"></span>
 <span ng-if="projectAssetController.totalUnusedFilesSize != null && projectAssetController.totalUnusedFilesSize != 0"
@@ -60,7 +60,8 @@
     <b>{{::errorFile.filename}}</b> {{::errorFile.message}}
   </div>
 </div>
-<span translate="sortAssets"></span>: <select ng-model="projectAssetController.assetSortBy">
+<span translate="sortAssets"></span>: <select ng-model="projectAssetController.assetSortBy"
+    ng-change="projectAssetController.assetSortByChanged()">
   <option value="aToZ" translate="fileNameAToZ"></option>
   <option value="zToA" translate="fileNameZToA"></option>
   <option value="smallToLarge" translate="fileSizeSmallToLarge"></option>

@@ -2,7 +2,7 @@
 
 import { UtilService } from '../../services/utilService';
 import { ConfigService } from '../../services/configService';
-import ProjectAssetService from '../../services/projectAssetService';
+import { ProjectAssetService } from '../../../site/src/app/services/projectAssetService';
 import * as $ from 'jquery';
 
 class ProjectAssetController {
@@ -11,6 +11,7 @@ class ProjectAssetController {
   projectAssets: any;
   projectAssetTotalSizeMax: any;
   projectAssetUsagePercentage: any;
+  totalFileSize = 0;
   totalUnusedFilesSize = 0;
   unusedFilesPercentage = 0;
   isPopup = false;
@@ -55,9 +56,7 @@ class ProjectAssetController {
   ) {
     this.$translate = $filter('translate');
     this.projectId = this.$stateParams.projectId;
-    this.projectAssets = ProjectAssetService.projectAssets;
-    this.projectAssetTotalSizeMax = ProjectAssetService.projectAssetTotalSizeMax;
-    this.projectAssetUsagePercentage = ProjectAssetService.projectAssetUsagePercentage;
+    this.totalFileSize = 0;
     this.totalUnusedFilesSize = 0;
     this.unusedFilesPercentage = 0;
 
@@ -88,27 +87,25 @@ class ProjectAssetController {
       }
     }
 
-    this.$scope.$watch(
-      () => {
-        return this.projectAssets;
-      },
-      () => {
-        this.projectAssetUsagePercentage =
-          (this.projectAssets.totalFileSize / this.projectAssetTotalSizeMax) * 100;
+    this.ProjectAssetService.getProjectAssets().subscribe((projectAssets) => {
+      if (projectAssets != null) {
+        this.projectAssets = projectAssets;
         this.sortAssets(this.assetSortBy);
+        this.projectAssetTotalSizeMax = this.ProjectAssetService.totalSizeMax;
       }
-    );
+    });
 
-    this.$scope.$watch(
-      () => {
-        return this.assetSortBy;
-      },
-      () => {
-        this.sortAssets(this.assetSortBy);
-      }
-    );
+    this.ProjectAssetService.getTotalFileSize().subscribe((totalFileSize) => {
+      this.setTotalFileSize(totalFileSize);
+    });
 
-    this.calculateUnusedAssets();
+    this.ProjectAssetService.getTotalUnusedFileSize().subscribe((totalUnusedFilesSize) => {
+      this.setTotalUnusedFilesSize(totalUnusedFilesSize);
+    });
+  }
+
+  assetSortByChanged() {
+    this.sortAssets(this.assetSortBy);
   }
 
   sortAssets(sortBy) {
@@ -120,8 +117,8 @@ class ProjectAssetController {
       this.projectAssets.files.sort(this.sortAssetsSmallToLarge);
     } else if (sortBy === 'largeToSmall') {
       this.projectAssets.files = this.projectAssets.files
-        .sort(this.sortAssetsSmallToLarge)
-        .reverse();
+          .sort(this.sortAssetsSmallToLarge)
+          .reverse();
     }
   }
 
@@ -156,21 +153,12 @@ class ProjectAssetController {
       assetItem.fileName
     }`;
     if (confirm(message)) {
-      this.ProjectAssetService.deleteAssetItem(assetItem).then(newProjectAssets => {
-        this.projectAssets = this.ProjectAssetService.projectAssets;
-        this.calculateUnusedAssets();
-      });
+      this.ProjectAssetService.deleteAssetItem(assetItem);
     }
   }
 
   downloadAsset(assetItem) {
     this.ProjectAssetService.downloadAssetItem(assetItem);
-  }
-
-  calculateUnusedAssets() {
-    this.ProjectAssetService.calculateAssetUsage().then(totalUnusedFilesSize => {
-      this.setTotalUnusedFilesSize(totalUnusedFilesSize);
-    });
   }
 
   chooseAsset(assetItem) {
@@ -250,7 +238,7 @@ class ProjectAssetController {
   }
 
   uploadAssets(files) {
-    this.ProjectAssetService.uploadAssets(files).success(
+    this.ProjectAssetService.uploadAssets(files).subscribe(
       ({ success, error, assetDirectoryInfo }) => {
         if (success.length > 0) {
           this.showUploadedFiles(success);
@@ -259,7 +247,6 @@ class ProjectAssetController {
           this.showError(error);
         }
         this.projectAssets = assetDirectoryInfo;
-        this.calculateUnusedAssets();
         if (this.hasTarget()) {
           this.chooseAsset({ fileName: files[0].name, fileSize: files[0].size });
         }
@@ -315,9 +302,14 @@ class ProjectAssetController {
     }
   }
 
+  setTotalFileSize(totalFileSize) {
+    this.totalFileSize = totalFileSize;
+    this.projectAssetUsagePercentage = this.ProjectAssetService.getAssetUsagePercentage();
+  }
+
   setTotalUnusedFilesSize(totalUnusedFilesSize) {
     this.totalUnusedFilesSize = totalUnusedFilesSize;
-    this.unusedFilesPercentage = (this.totalUnusedFilesSize / this.projectAssetTotalSizeMax) * 100;
+    this.unusedFilesPercentage = this.ProjectAssetService.getAssetUnusedPercentage();
   }
 }
 

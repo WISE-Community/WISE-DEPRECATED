@@ -20,12 +20,12 @@ import './components/authoringToolComponents';
 import AdvancedAuthoringController from './advanced/advancedAuthoringController';
 import AuthoringToolController from './authoringToolController';
 import AuthoringToolMainController from './main/authoringToolMainController';
-import { AuthoringToolProjectService } from './authoringToolProjectService';
 import AuthorNotebookController from './notebook/authorNotebookController';
 import '../components/conceptMap/conceptMapAuthoringComponentModule';
 import { ConfigService } from '../services/configService';
 import { CRaterService } from '../services/cRaterService';
 import '../directives/components';
+import { ClassroomMonitorProjectService } from '../classroomMonitor/classroomMonitorProjectService';
 import ComponentService from '../components/componentService';
 import '../components/discussion/discussionAuthoringComponentModule';
 import '../components/draw/drawAuthoringComponentModule';
@@ -53,7 +53,7 @@ import NotificationService from '../services/notificationService';
 import '../components/openResponse/openResponseAuthoringComponentModule';
 import '../components/outsideURL/outsideURLAuthoringComponentModule';
 import ProjectAssetController from './asset/projectAssetController';
-import ProjectAssetService from '../services/projectAssetService';
+import { ProjectAssetService } from '../../site/src/app/services/projectAssetService';
 import ProjectController from './project/projectController';
 import ProjectInfoController from './info/projectInfoController';
 import RubricAuthoringController from './rubric/rubricAuthoringController';
@@ -121,8 +121,8 @@ const authoringModule = angular
   .service('NodeService', NodeService)
   .service('NotebookService', NotebookService)
   .service('NotificationService', NotificationService)
-  .factory('ProjectService', downgradeInjectable(AuthoringToolProjectService))
-  .service('ProjectAssetService', ProjectAssetService)
+  .factory('ProjectService', downgradeInjectable(ClassroomMonitorProjectService))
+  .service('ProjectAssetService', downgradeInjectable(ProjectAssetService))
   .service('SessionService', SessionService)
   .service('SpaceService', SpaceService)
   .factory('StudentAssetService', downgradeInjectable(StudentAssetService))
