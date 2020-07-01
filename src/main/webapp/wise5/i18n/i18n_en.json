@@ -107,6 +107,7 @@
   "RUBRIC": "Rubric",
   "RUN_ID": "Run ID",
   "RUN_ID_DISPLAY": "Run ID: {{id}}",
+  "RUN_CODE_DISPLAY": "Access Code: {{code}}",
   "SAVE": "Save",
   "SAVED": "Saved",
   "SCORE": "Score",

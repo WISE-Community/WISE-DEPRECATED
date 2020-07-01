@@ -101,7 +101,8 @@ const TopBar = {
     logoPath: '@',
     projectId: '<',
     projectTitle: '<',
-    runId: '<'
+    runId: '<',
+    runCode: '<'
   },
   controller: TopBarController,
   template: `<md-toolbar class="l-header">
@@ -116,7 +117,8 @@ const TopBar = {
           <span ng-if="!$ctrl.projectTitle" id="projectTitleSpan">{{ ::'authoringTool' | translate }}</span>
           <span class="md-caption" ng-if="$ctrl.projectId" layout="row" layout-align="start center">
             &nbsp;({{ 'PROJECT_ID_DISPLAY' | translate:{id: $ctrl.projectId} }}
-            <span class="md-caption" ng-if="$ctrl.runId">&nbsp;| {{ 'RUN_ID_DISPLAY' | translate:{id: $ctrl.runId} }}
+            <span ng-if="$ctrl.runId">
+              &nbsp;| {{ 'RUN_ID_DISPLAY' | translate:{id: $ctrl.runId} }} | {{ 'RUN_CODE_DISPLAY' | translate:{code: $ctrl.runCode} }}
             </span>)
             <md-button ng-if="$ctrl.runId" aria-label="{{ ::'switchToGradingView' | translate }}" class="md-icon-button" ng-click="$ctrl.switchToGradingView()">
                 <md-icon md-menu-origin> assignment_turned_in </md-icon>

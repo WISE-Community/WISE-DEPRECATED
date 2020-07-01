@@ -106,6 +106,10 @@ export class ConfigService {
     return this.getConfigParam('runId');
   }
 
+  getRunCode() {
+    return this.getConfigParam('runCode');
+  }
+
   getRunName() {
     return this.getConfigParam('runName');
   }

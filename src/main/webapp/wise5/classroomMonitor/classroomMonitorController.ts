@@ -21,6 +21,7 @@ class ClassroomMonitorController {
   numberProject: boolean = true;
   projectTitle: string;
   runId: number;
+  runCode: string;
   showGradeByStepTools: boolean = false;
   showGradeByTeamTools: boolean;
   showPeriodSelect: boolean = false;
@@ -66,6 +67,7 @@ class ClassroomMonitorController {
     this.$translate = $filter('translate');
     this.projectTitle = this.ProjectService.getProjectTitle();
     this.runId = this.ConfigService.getRunId();
+    this.runCode = this.ConfigService.getRunCode();
     this.enableProjectAchievements = this.ProjectService.getAchievements().isEnabled;
     this.views = {
       'root.cm.dashboard': {

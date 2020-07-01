@@ -164,7 +164,8 @@ const TopBar = {
     notifications: '<',
     projectId: '<',
     projectTitle: '<',
-    runId: '<'
+    runId: '<',
+    runCode: '<'
   },
   controller: TopBarController,
   template: `<md-toolbar class="l-header">
@@ -175,7 +176,10 @@ const TopBar = {
                     </a>
                 </span>
                 <h3 layout="row" layout-align="start center">
-                  {{ ::$ctrl.projectTitle }}&nbsp;<span class="md-caption">({{ ::'RUN_ID_DISPLAY' | translate:{id: $ctrl.runId} }})</span>
+                  <span>{{ ::$ctrl.projectTitle }}</span>
+                  <span class="md-caption">
+                    &nbsp;({{ ::'RUN_ID_DISPLAY' | translate:{id: $ctrl.runId} }} | {{ 'RUN_CODE_DISPLAY' | translate:{code: $ctrl.runCode} }})
+                  </span>
                   <md-button ng-if="$ctrl.canAuthorProject" aria-label="{{ ::'switchToAuthoringView' | translate }}" class="md-icon-button" ng-click="$ctrl.switchToAuthoringView()">
                       <md-icon md-menu-origin> edit </md-icon>
                       <md-tooltip>{{ ::'switchToAuthoringView' | translate }}</md-tooltip>
