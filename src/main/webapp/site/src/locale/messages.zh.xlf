@@ -2,7 +2,7 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file source-language="en" datatype="plaintext" original="ng2.template" target-language="zh-CN">
     <body>
-      <trans-unit id="e19fcf996343543e13789f17b550ab0c08124b5c" datatype="html">
+      <trans-unit id="e19fcf996343543e13789f17b550ab0c08124b5c" datatype="html" approved="yes">
         <source>Create Account</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
@@ -24,7 +24,7 @@
           <context context-type="sourcefile">app/register/register-google-user-already-exists/register-google-user-already-exists.component.html</context>
           <context context-type="linenumber">3</context>
         </context-group>
-        <target state="translated">创建账户</target>
+        <target state="final">创建账户test chinese simplified</target>
       </trans-unit>
       <trans-unit id="6cdb1fea93d77c07950c0c76c6e0ad79ebbef084" datatype="html">
         <source>Features</source>
