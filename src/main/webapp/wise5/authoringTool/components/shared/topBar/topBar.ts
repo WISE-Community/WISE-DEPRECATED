@@ -19,7 +19,8 @@ class TopBarController {
     '$window',
     'ConfigService',
     'ProjectService',
-    'SessionService'
+    'SessionService',
+    'TeacherDataService'
   ];
 
   constructor(
