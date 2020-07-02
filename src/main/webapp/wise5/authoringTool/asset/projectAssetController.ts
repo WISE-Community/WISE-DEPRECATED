@@ -28,6 +28,9 @@ class ProjectAssetController {
   previewAssetURL: string;
   assetIsImage: boolean;
   assetIsVideo: boolean;
+  getProjectAssetsSubscription: any;
+  getTotalFileSizeSubscription: any;
+  getTotalUnusedFileSizeSubscription: any;
 
   static $inject = [
     '$filter',
@@ -87,7 +90,8 @@ class ProjectAssetController {
       }
     }
 
-    this.ProjectAssetService.getProjectAssets().subscribe((projectAssets) => {
+    this.getProjectAssetsSubscription = 
+        this.ProjectAssetService.getProjectAssets().subscribe((projectAssets) => {
       if (projectAssets != null) {
         this.projectAssets = projectAssets;
         this.sortAssets(this.assetSortBy);
@@ -95,13 +99,29 @@ class ProjectAssetController {
       }
     });
 
-    this.ProjectAssetService.getTotalFileSize().subscribe((totalFileSize) => {
+    this.getTotalFileSizeSubscription = 
+        this.ProjectAssetService.getTotalFileSize().subscribe((totalFileSize) => {
       this.setTotalFileSize(totalFileSize);
     });
 
-    this.ProjectAssetService.getTotalUnusedFileSize().subscribe((totalUnusedFilesSize) => {
+    this.getTotalUnusedFileSizeSubscription = 
+        this.ProjectAssetService.getTotalUnusedFileSize().subscribe((totalUnusedFilesSize) => {
       this.setTotalUnusedFilesSize(totalUnusedFilesSize);
     });
+    
+    if (this.ProjectAssetService.isProjectAssetsAvailable()) {
+      this.ProjectAssetService.calculateAssetUsage();
+    }
+
+    this.$scope.$on('$destroy', () => {
+      this.unsubscribeAll();
+    });
+  }
+
+  unsubscribeAll() {
+    this.getProjectAssetsSubscription.unsubscribe();
+    this.getTotalFileSizeSubscription.unsubscribe();
+    this.getTotalUnusedFileSizeSubscription.unsubscribe();
   }
 
   assetSortByChanged() {

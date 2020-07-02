@@ -93,7 +93,7 @@ export class ProjectAssetService {
     });
   }
 
-  calculateAssetUsage(assets: any) {
+  calculateAssetUsage(assets: any = this.getProjectAssets().getValue()) {
     const usedTextContent = JSON.stringify(this.ProjectService.project);
     const allTextFiles = this.getAllTextFiles(assets);
     if (allTextFiles.length == 0) {
@@ -195,5 +195,9 @@ export class ProjectAssetService {
       requests.push(request);
     }
     return forkJoin(requests);
+  }
+
+  isProjectAssetsAvailable() {
+    return this.getProjectAssets().getValue() != null;
   }
 }
