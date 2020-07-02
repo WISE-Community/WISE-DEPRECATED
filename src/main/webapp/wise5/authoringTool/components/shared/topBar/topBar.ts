@@ -46,7 +46,7 @@ class TopBarController {
     this.contextPath = this.ConfigService.getContextPath();
   }
 
-  $onInit() {
+  $onChanges() {
     this.projectInfo = this.getProjectInfo();
   }
 
