@@ -6,17 +6,21 @@ import TeacherDataService from '../../../../services/teacherDataService';
 import { SessionService } from '../../../../services/sessionService';
 
 class TopBarController {
-  $translate: any;
+  translate: any;
   avatarColor: any;
   canAuthorProject: boolean;
   contextPath: string;
   dismissedNotifications: any;
   newNotifications: any;
   notifications: any;
+  projectId: number;
   runId: number;
+  runCode: string;
+  runInfo: string;
   themePath: string;
   userInfo: any;
   workgroupId: number;
+
   static $inject = [
     '$filter',
     '$rootScope',
@@ -36,7 +40,7 @@ class TopBarController {
     private TeacherDataService: TeacherDataService,
     private SessionService: SessionService
   ) {
-    this.$translate = $filter('translate');
+    this.translate = $filter('translate');
     this.workgroupId = this.ConfigService.getWorkgroupId();
     if (this.workgroupId == null) {
       this.workgroupId = 100 * Math.random();
@@ -53,12 +57,19 @@ class TopBarController {
   $onInit() {
     const permissions = this.ConfigService.getPermissions();
     this.canAuthorProject = permissions.canAuthorProject;
+    this.runInfo = this.getRunInfo();
   }
 
   $onChanges(changesObj) {
     if (changesObj.notifications) {
       this.setNotifications();
     }
+  }
+
+  getRunInfo(): string {
+    let runInfo = `${this.translate('RUN_ID_DISPLAY', { id: this.runId })}
+        | ${this.translate('RUN_CODE_DISPLAY', { code: this.runCode })}`;
+    return runInfo;
   }
 
   /**
@@ -90,7 +101,7 @@ class TopBarController {
   }
 
   switchToAuthoringView() {
-    const proceed = confirm(this.$translate('editRunUnitWarning'));
+    const proceed = confirm(this.translate('editRunUnitWarning'));
     if (proceed) {
       this.doAuthoringViewSwitch();
     }
@@ -99,16 +110,16 @@ class TopBarController {
   doAuthoringViewSwitch() {
     if (this.$state.current.name === 'root.cm.notebooks') {
       this.$state.go('root.at.project.notebook', {
-        projectId: this.runId
+        projectId: this.projectId
       });
     } else if (this.$state.current.name === 'root.cm.unit.node') {
       this.$state.go('root.at.project.node', {
-        projectId: this.runId,
+        projectId: this.projectId,
         nodeId: this.$state.params.nodeId
       });
     } else {
       this.$state.go('root.at.project', {
-        projectId: this.runId
+        projectId: this.projectId
       });
     }
   }
@@ -164,7 +175,8 @@ const TopBar = {
     notifications: '<',
     projectId: '<',
     projectTitle: '<',
-    runId: '<'
+    runId: '<',
+    runCode: '<'
   },
   controller: TopBarController,
   template: `<md-toolbar class="l-header">
@@ -175,7 +187,12 @@ const TopBar = {
                     </a>
                 </span>
                 <h3 layout="row" layout-align="start center">
-                  {{ ::$ctrl.projectTitle }}&nbsp;<span class="md-caption">({{ ::'RUN_ID_DISPLAY' | translate:{id: $ctrl.runId} }})</span>
+                  <span>{{ ::$ctrl.projectTitle }}</span>&nbsp;
+                  <span class="md-caption" hide-xs hide-sm hide-md>({{ $ctrl.runInfo }})</span>
+                  <md-button aria-label="{{ ::'PROJECT_INFO' | translate }}" hide-gt-md class="md-icon-button">
+                    <md-icon>info</md-icon>
+                    <md-tooltip>{{ $ctrl.runInfo }}</md-tooltip>
+                  </md-button>
                   <md-button ng-if="$ctrl.canAuthorProject" aria-label="{{ ::'switchToAuthoringView' | translate }}" class="md-icon-button" ng-click="$ctrl.switchToAuthoringView()">
                       <md-icon md-menu-origin> edit </md-icon>
                       <md-tooltip>{{ ::'switchToAuthoringView' | translate }}</md-tooltip>
