@@ -1,13 +1,13 @@
 'use strict';
 
-import { HttpClient, HttpParams } from "@angular/common/http";
-import { ConfigService } from "../../../../wise5/services/configService";
-import { Injectable } from "@angular/core";
-import { UtilService } from "../../../../wise5/services/utilService";
-import { ProjectService } from "../../../../wise5/services/projectService";
-import { map } from "rxjs/operators";
-import { forkJoin, BehaviorSubject } from "rxjs";
-import { UpgradeModule } from "@angular/upgrade/static";
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { ConfigService } from '../../../../wise5/services/configService';
+import { Injectable } from '@angular/core';
+import { UtilService } from '../../../../wise5/services/utilService';
+import { ProjectService } from '../../../../wise5/services/projectService';
+import { map } from 'rxjs/operators';
+import { forkJoin, BehaviorSubject } from 'rxjs';
+import { UpgradeModule } from '@angular/upgrade/static';
 
 @Injectable()
 export class ProjectAssetService {
@@ -17,12 +17,14 @@ export class ProjectAssetService {
   totalUnusedFileSize: BehaviorSubject<number> = new BehaviorSubject<number>(0);
   projectThumbnailFileName = 'project_thumb.png';
 
-  constructor(protected upgrade: UpgradeModule,
-      protected http: HttpClient,
-      protected ConfigService: ConfigService,
-      protected ProjectService: ProjectService,
-      protected UtilService: UtilService) {
-    this.getProjectAssets().subscribe((projectAssets) => {
+  constructor(
+    protected upgrade: UpgradeModule,
+    protected http: HttpClient,
+    protected ConfigService: ConfigService,
+    protected ProjectService: ProjectService,
+    protected UtilService: UtilService
+  ) {
+    this.getProjectAssets().subscribe(projectAssets => {
       if (projectAssets != null) {
         this.calculateAssetUsage(projectAssets);
       }
@@ -63,7 +65,7 @@ export class ProjectAssetService {
 
   retrieveProjectAssets(): any {
     const url = this.ConfigService.getConfigParam('projectAssetURL');
-    return this.http.get(url).subscribe((projectAssets) => {
+    return this.http.get(url).subscribe(projectAssets => {
       this.totalSizeMax = this.ConfigService.getConfigParam('projectAssetTotalSizeMax');
       this.setProjectAssets(projectAssets);
     });
@@ -74,22 +76,24 @@ export class ProjectAssetService {
     const formData = new FormData();
     files.forEach((file: any) => formData.append('files', file));
     return this.http.post(url, formData).pipe(
-        map((data: any) => {
-          this.setProjectAssets(data.assetDirectoryInfo);
-          return data;
-        })
+      map((data: any) => {
+        this.setProjectAssets(data.assetDirectoryInfo);
+        return data;
+      })
     );
   }
 
   downloadAssetItem(assetItem: any) {
-    window.open(`${this.ConfigService.getConfigParam('projectAssetURL')}` +
-        `/download?assetFileName=${assetItem.fileName}`);
+    window.open(
+      `${this.ConfigService.getConfigParam('projectAssetURL')}` +
+        `/download?assetFileName=${assetItem.fileName}`
+    );
   }
 
   deleteAssetItem(assetItem: any): any {
     const url = `${this.ConfigService.getConfigParam('projectAssetURL')}/delete`;
     const params = new HttpParams().set('assetFileName', assetItem.fileName);
-    return this.http.post(url, params).subscribe((projectAssets) => {
+    return this.http.post(url, params).subscribe(projectAssets => {
       this.setProjectAssets(projectAssets);
     });
   }
@@ -109,17 +113,19 @@ export class ProjectAssetService {
     const allTextFiles = [];
     for (const asset of assets.files) {
       const fileName = asset.fileName;
-        if (this.isTextFile(fileName)) {
-          allTextFiles.push(fileName);
-        }
+      if (this.isTextFile(fileName)) {
+        allTextFiles.push(fileName);
+      }
     }
     return allTextFiles;
   }
 
   isTextFile(fileName: string) {
-    return this.UtilService.endsWith(fileName, ".html") ||
-        this.UtilService.endsWith(fileName, ".htm") ||
-        this.UtilService.endsWith(fileName, ".js");
+    return (
+      this.UtilService.endsWith(fileName, '.html') ||
+      this.UtilService.endsWith(fileName, '.htm') ||
+      this.UtilService.endsWith(fileName, '.js')
+    );
   }
 
   calculateUsedFiles(assets: any, usedTextContent: string) {
@@ -137,8 +143,11 @@ export class ProjectAssetService {
     this.setTotalUnusedFileSize(totalUnusedFilesSize);
   }
 
-  retrieveTextFilesAndCalculateUsedFiles(assets: any, usedTextContent: string,
-      allTextFiles: any[]) {
+  retrieveTextFilesAndCalculateUsedFiles(
+    assets: any,
+    usedTextContent: string,
+    allTextFiles: any[]
+  ) {
     this.getTextFiles(allTextFiles).subscribe((textFiles: any[]) => {
       const allUsedTextContent = this.getAllUsedTextContent(usedTextContent, textFiles);
       this.calculateUsedFiles(assets, allUsedTextContent);
@@ -158,8 +167,10 @@ export class ProjectAssetService {
       foundNewUsedTextFile = false;
       for (const textFile of textFiles) {
         const fileName = this.getFileNameFromURL(textFile.url);
-        if (!this.isFileAlreadyAdded(usedTextFileNames, fileName) &&
-            this.isFileReferencedInContent(usedTextContentSoFar, fileName)) {
+        if (
+          !this.isFileAlreadyAdded(usedTextFileNames, fileName) &&
+          this.isFileReferencedInContent(usedTextContentSoFar, fileName)
+        ) {
           usedTextFileNames.push(fileName);
           usedTextContentSoFar += textFile.body;
           foundNewUsedTextFile = true;
@@ -192,8 +203,10 @@ export class ProjectAssetService {
     const requests = [];
     const projectAssetsDirectoryPath = this.ConfigService.getProjectAssetsDirectoryPath();
     for (const textFileName of textFileNames) {
-      const request = this.http.get(`${projectAssetsDirectoryPath}/${textFileName}`,
-          { observe: 'response', responseType: 'text' });
+      const request = this.http.get(`${projectAssetsDirectoryPath}/${textFileName}`, {
+        observe: 'response',
+        responseType: 'text'
+      });
       requests.push(request);
     }
     return forkJoin(requests);

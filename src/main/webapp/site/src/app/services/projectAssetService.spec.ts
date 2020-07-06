@@ -13,13 +13,13 @@ let spongeBobAndPatrickAssets: any;
 describe('ProjectAssetService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule, UpgradeModule ],
-      providers: [ ConfigService, ProjectAssetService, ProjectService, UtilService ]
+      imports: [HttpClientTestingModule, UpgradeModule],
+      providers: [ConfigService, ProjectAssetService, ProjectService, UtilService]
     });
     http = TestBed.get(HttpTestingController);
     configService = TestBed.get(ConfigService);
     service = TestBed.get(ProjectAssetService);
-    spyOn(configService, 'getConfigParam').and.callFake((param) => {
+    spyOn(configService, 'getConfigParam').and.callFake(param => {
       if (param === 'projectAssetURL') {
         return '/author/project/asset/1';
       } else if (param === 'projectAssetTotalSizeMax') {
@@ -63,10 +63,7 @@ function retrieveProjectAssets() {
 
 function uploadAssets() {
   it('should make a request to upload assets', fakeAsync(() => {
-    const files = [
-      new File([''], 'spongebob.png'),
-      new File([''], 'patrick.png')
-    ];
+    const files = [new File([''], 'spongebob.png'), new File([''], 'patrick.png')];
     const result = {
       assetDirectoryInfo: spongeBobAndPatrickAssets,
       success: [],
@@ -85,8 +82,9 @@ function downloadAssetItem() {
   it('should make a request to download an asset item', () => {
     spyOn(window, 'open');
     service.downloadAssetItem({ fileName: 'spongebob.png' });
-    expect(window.open)
-        .toHaveBeenCalledWith('/author/project/asset/1/download?assetFileName=spongebob.png');
+    expect(window.open).toHaveBeenCalledWith(
+      '/author/project/asset/1/download?assetFileName=spongebob.png'
+    );
   });
 }
 
@@ -125,12 +123,14 @@ function calculateAssetUsage() {
     service.calculateAssetUsage(assets);
     expect(service.retrieveTextFilesAndCalculateUsedFiles).toHaveBeenCalled();
   }));
-  it ('should calculate asset usage with usedTextContent containing project_thumb.png', () => {
+  it('should calculate asset usage with usedTextContent containing project_thumb.png', () => {
     spyOn(service, 'calculateUsedFiles');
     service.calculateAssetUsage(spongeBobAndPatrickAssets);
     const usedTextContent = 'null' + service.projectThumbnailFileName;
-    expect(service.calculateUsedFiles).toHaveBeenCalledWith(spongeBobAndPatrickAssets,
-        usedTextContent);
+    expect(service.calculateUsedFiles).toHaveBeenCalledWith(
+      spongeBobAndPatrickAssets,
+      usedTextContent
+    );
   });
 }
 
@@ -144,17 +144,14 @@ function getAllTextFiles() {
   });
   it('should get all text files when there are no text files', () => {
     const assets = {
-      files: [{ fileName: 'spongebob.png'}]
+      files: [{ fileName: 'spongebob.png' }]
     };
     const allTextFiles = service.getAllTextFiles(assets);
     expect(allTextFiles.length).toEqual(0);
   });
   it('should get all text files when there are text files', () => {
     const assets = {
-      files: [
-        { fileName: 'spongebob.png'},
-        { fileName: 'model.html'}
-      ]
+      files: [{ fileName: 'spongebob.png' }, { fileName: 'model.html' }]
     };
     const allTextFiles = service.getAllTextFiles(assets);
     expect(allTextFiles.length).toEqual(1);
@@ -200,32 +197,33 @@ function retrieveTextFilesAndCalculateUsedFiles() {
     const allUsedTextContent = usedTextContent + textFile1.body + textFile2.body;
     spyOn(service, 'getAllUsedTextContent').and.returnValue(allUsedTextContent);
     spyOn(service, 'calculateUsedFiles');
-    service.retrieveTextFilesAndCalculateUsedFiles(spongeBobAndPatrickAssets, usedTextContent,
-        allTextFiles);
+    service.retrieveTextFilesAndCalculateUsedFiles(
+      spongeBobAndPatrickAssets,
+      usedTextContent,
+      allTextFiles
+    );
     const request1 = http.expectOne({ url: 'assets/model.html', method: 'GET' });
     const request2 = http.expectOne({ url: 'assets/model.js', method: 'GET' });
     request1.flush(textFile1);
     request2.flush(textFile2);
     expect(service.getAllUsedTextContent).toHaveBeenCalled();
-    expect(service.calculateUsedFiles).toHaveBeenCalledWith(spongeBobAndPatrickAssets,
-        allUsedTextContent);
+    expect(service.calculateUsedFiles).toHaveBeenCalledWith(
+      spongeBobAndPatrickAssets,
+      allUsedTextContent
+    );
   }));
 }
 
 function getAllUsedTextContent() {
   it('should get all used text content when none of the text files are used', () => {
     const usedTextContentSoFar = '{}';
-    const textFiles = [
-      { url: 'model.html', body: '<html></html>' }
-    ];
+    const textFiles = [{ url: 'model.html', body: '<html></html>' }];
     const usedTextContent = service.getAllUsedTextContent(usedTextContentSoFar, textFiles);
     expect(usedTextContent).toEqual('{}');
   });
   it('should get all used text content when one of the text files are used', () => {
     const usedTextContentSoFar = '{url:"model.html"}';
-    const textFiles = [
-      { url: 'model.html', body: '<html></html>' }
-    ];
+    const textFiles = [{ url: 'model.html', body: '<html></html>' }];
     const usedTextContent = service.getAllUsedTextContent(usedTextContentSoFar, textFiles);
     expect(usedTextContent).toEqual('{url:"model.html"}<html></html>');
   });
@@ -237,7 +235,8 @@ function getAllUsedTextContent() {
     ];
     const usedTextContent = service.getAllUsedTextContent(usedTextContentSoFar, textFiles);
     expect(usedTextContent).toEqual(
-        '{url:"model.html"}<html><script src="model.js"></script></html>let a = 0;');
+      '{url:"model.html"}<html><script src="model.js"></script></html>let a = 0;'
+    );
   });
 }
 
@@ -261,12 +260,12 @@ function isFileAlreadyAdded() {
 
 function getFileNameFromURL() {
   it('should get file name from URL when the URL is an absolute path', () => {
-    expect(service.getFileNameFromURL('/curriculum/1/assets/spongebob.png'))
-        .toEqual('spongebob.png');
+    expect(service.getFileNameFromURL('/curriculum/1/assets/spongebob.png')).toEqual(
+      'spongebob.png'
+    );
   });
   it('should get file name from URL when URL is just the file name', () => {
-    expect(service.getFileNameFromURL('spongebob.png'))
-        .toEqual('spongebob.png');
+    expect(service.getFileNameFromURL('spongebob.png')).toEqual('spongebob.png');
   });
 }
 
@@ -277,7 +276,7 @@ function getTextFiles() {
     const text1 = 'text from model1';
     const text2 = 'text from model2';
     const textFileNames = ['model1.html', 'model2.html'];
-    service.getTextFiles(textFileNames).subscribe((textFiles) => {
+    service.getTextFiles(textFileNames).subscribe(textFiles => {
       expect(textFiles[0].url).toEqual(url1);
       expect(textFiles[1].url).toEqual(url2);
       expect(textFiles[0].body).toEqual(text1);
