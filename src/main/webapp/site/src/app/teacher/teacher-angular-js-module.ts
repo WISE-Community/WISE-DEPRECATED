@@ -8,12 +8,12 @@ import { setUpLocationSync } from '@angular/router/upgrade';
 import { UtilService } from '../../../../wise5/services/utilService';
 import { ConfigService } from '../../../../wise5/services/configService';
 import { ProjectService } from '../../../../wise5/services/projectService';
-import { AuthoringToolProjectService } from '../../../../wise5/authoringTool/authoringToolProjectService';
 import { ClassroomMonitorProjectService } from '../../../../wise5/classroomMonitor/classroomMonitorProjectService';
 import { MilestoneReportDataComponent } from './milestone/milestone-report-data/milestone-report-data.component';
 import { CRaterService } from '../../../../wise5/services/cRaterService';
 import { SessionService } from '../../../../wise5/services/sessionService';
 import { StudentAssetService } from '../../../../wise5/services/studentAssetService';
+import { ProjectAssetService } from '../services/projectAssetService';
 
 @Component({template: ``})
 export class EmptyComponent {}
@@ -33,9 +33,9 @@ export class EmptyComponent {}
     UtilService,
     ConfigService,
     CRaterService,
-    ProjectService,
-    AuthoringToolProjectService,
+    ProjectAssetService,
     ClassroomMonitorProjectService,
+    { provide: ProjectService, useExisting: ClassroomMonitorProjectService },
     SessionService,
     StudentAssetService
   ],

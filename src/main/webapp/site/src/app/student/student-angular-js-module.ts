@@ -30,7 +30,7 @@ export class EmptyComponent {}
     UtilService,
     ConfigService,
     CRaterService,
-    ProjectService,
+    { provide: ProjectService, useExisting: VLEProjectService },
     SessionService,
     StudentAssetService,
     VLEProjectService
