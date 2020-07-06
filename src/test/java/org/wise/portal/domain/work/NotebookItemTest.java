@@ -71,6 +71,7 @@ public class NotebookItemTest {
         ",\"localNotebookItemId\":\"ooacs8tls7\"" +
         ",\"content\":\"{\\\"text\\\":\\\"my note!\\\"}\"" +
         ",\"clientSaveTime\":1582337976000,\"serverSaveTime\":1582338031000" +
+        ",\"clientDeleteTime\":null,\"serverDeleteTime\":null" +
         ",\"periodId\":12,\"nodeId\":\"node78\",\"title\":\"Note from first step\"}", json);
   }
 

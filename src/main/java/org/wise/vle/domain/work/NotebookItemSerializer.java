@@ -20,6 +20,8 @@ public class NotebookItemSerializer extends JsonSerializer<NotebookItem> {
     gen.writeStringField("content", item.getContent());
     gen.writeObjectField("clientSaveTime", item.getClientSaveTime());
     gen.writeObjectField("serverSaveTime", item.getServerSaveTime());
+    gen.writeObjectField("clientDeleteTime", item.getClientDeleteTime());
+    gen.writeObjectField("serverDeleteTime", item.getServerDeleteTime());
     if (item.getType().equals("note")) {
       addNoteFields(gen, item);
     }
