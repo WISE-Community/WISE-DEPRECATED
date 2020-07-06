@@ -9,9 +9,12 @@ import static org.junit.Assert.fail;
 
 import java.util.List;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import org.easymock.EasyMockRunner;
 import org.easymock.Mock;
 import org.easymock.TestSubject;
+import org.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,6 +24,7 @@ import org.wise.portal.domain.Tag;
 import org.wise.portal.domain.impl.TagImpl;
 import org.wise.portal.presentation.web.controllers.APIControllerTest;
 import org.wise.portal.service.tag.TagService;
+import org.wise.portal.spring.data.redis.MessagePublisher;
 
 @RunWith(EasyMockRunner.class)
 public class WorkgroupTagAPIControllerTest extends APIControllerTest {
@@ -30,6 +34,9 @@ public class WorkgroupTagAPIControllerTest extends APIControllerTest {
 
   @Mock
   private TagService tagService;
+
+  @Mock
+  private MessagePublisher redisPublisher;
 
   private String tag1Name = "Group1";
 
@@ -45,8 +52,7 @@ public class WorkgroupTagAPIControllerTest extends APIControllerTest {
   }
 
   @Test
-  public void createTag_TeacherIsAssociatedWithRun_CreateTag()
-      throws ObjectNotFoundException {
+  public void createTag_TeacherIsAssociatedWithRun_CreateTag() throws ObjectNotFoundException {
     expect(runService.retrieveById(runId3)).andReturn(run3);
     expect(runService.hasWritePermission(teacherAuth, run3)).andReturn(true);
     expect(tagService.createTag(run3, tag1Name)).andReturn(tag1);
@@ -134,8 +140,7 @@ public class WorkgroupTagAPIControllerTest extends APIControllerTest {
   }
 
   @Test
-  public void getTagsForRun_TeacherIsAssociatedWithRun_ReturnTags()
-      throws ObjectNotFoundException {
+  public void getTagsForRun_TeacherIsAssociatedWithRun_ReturnTags() throws ObjectNotFoundException {
     expect(runService.retrieveById(runId1)).andReturn(run1);
     expect(runService.hasReadPermission(teacherAuth, run1)).andReturn(true);
     expect(tagService.getTagsForRun(run1)).andReturn(run1Tags);
@@ -146,7 +151,8 @@ public class WorkgroupTagAPIControllerTest extends APIControllerTest {
   }
 
   @Test
-  public void removeTagFromWorkgroup_HasPermission_RemoveTag() throws ObjectNotFoundException {
+  public void removeTagFromWorkgroup_HasPermission_RemoveTag()
+      throws ObjectNotFoundException, JsonProcessingException, JSONException {
     expect(workgroupService.retrieveById(workgroup1.getId())).andReturn(workgroup1);
     expect(userService.retrieveUserByUsername(teacherAuth.getName())).andReturn(teacher1);
     expect(workgroupService.isUserInWorkgroupForRun(teacher1, workgroup1.getRun(), workgroup1))

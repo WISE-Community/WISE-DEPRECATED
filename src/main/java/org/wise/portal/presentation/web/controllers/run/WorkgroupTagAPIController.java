@@ -121,12 +121,14 @@ public class WorkgroupTagAPIController {
 
   @Secured("ROLE_TEACHER")
   @DeleteMapping("/workgroup/{workgroupId}/delete")
-  void removeTagFromWorkgroup(@PathVariable Long workgroupId, @RequestBody TagImpl tag,
-      Authentication auth) throws ObjectNotFoundException {
+  Set<Tag> removeTagFromWorkgroup(@PathVariable Long workgroupId, @RequestBody TagImpl tag,
+      Authentication auth) throws ObjectNotFoundException, JsonProcessingException, JSONException {
     Workgroup workgroup = workgroupService.retrieveById(workgroupId);
     User user = userService.retrieveUserByUsername(auth.getName());
     if (canWriteTag(auth, workgroup, user)) {
       workgroupService.removeTag(workgroup, tag);
+      broadcastTags(workgroup);
+      return workgroup.getTags();
     } else {
       throw new AccessDeniedException("Not permitted");
     }
