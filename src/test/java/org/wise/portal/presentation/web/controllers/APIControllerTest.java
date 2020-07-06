@@ -34,6 +34,7 @@ import org.wise.portal.service.portal.PortalService;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.user.UserService;
+import org.wise.portal.service.vle.wise5.VLEService;
 import org.wise.portal.service.workgroup.WorkgroupService;
 
 public class APIControllerTest {
@@ -104,6 +105,9 @@ public class APIControllerTest {
 
   @Mock
   protected RunService runService;
+
+  @Mock
+  protected VLEService vleService;
 
   @Mock
   protected WorkgroupService workgroupService;

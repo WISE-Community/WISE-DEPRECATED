@@ -29,6 +29,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.run.Run;
+import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.vle.domain.achievement.Achievement;
 import org.wise.vle.domain.annotation.wise5.Annotation;
 import org.wise.vle.domain.notification.Notification;
@@ -139,11 +140,9 @@ public interface VLEService {
 
   StudentAsset deleteStudentAsset(Integer studentAssetId, Long clientDeleteTime);
 
-  /**
-   * @return NotebookItems from data store that match specified params
-   */
-  List<NotebookItem> getNotebookItems(Integer id, Integer runId, Integer periodId,
-      Integer workgroupId, String nodeId, String componentId);
+  List<NotebookItem> getNotebookItems(Run run);
+
+  List<NotebookItem> getNotebookItems(Run run, Workgroup workgroup);
 
   /**
    * Returns a list of notebook items that belong in a specified group.

@@ -183,7 +183,7 @@ class NotebookService {
       this.ProjectService.project.notebook.itemTypes.note.enableClipping;
   }
 
-  retrieveNotebookItems(workgroupId = null, periodId = null) {
+  retrieveNotebookItems(workgroupId = null) {
     if (this.ConfigService.isPreview()) {
       // we are previewing the project, initialize dummy student data
       const workgroupId = this.ConfigService.getWorkgroupId();
@@ -200,14 +200,11 @@ class NotebookService {
     } else {
       const config = {
         method : 'GET',
-        url : this.ConfigService.getStudentNotebookURL(),
+        url : this.ConfigService.getNotebookURL(),
         params : {}
       };
       if (workgroupId != null) {
-        config.params.workgroupId = workgroupId;
-      }
-      if (periodId != null) {
-        config.params.periodId = periodId;
+        config.url += `/workgroup/${workgroupId}`;
       }
       return this.$http(config).then((response) => {
         this.notebooksByWorkgroup = {};
@@ -357,7 +354,7 @@ class NotebookService {
     } else {
       const config = {
         method : 'GET',
-        url : this.ConfigService.getStudentNotebookURL() + `/group/${group}`,
+        url : `${this.ConfigService.getNotebookURL()}/group/${group}`,
         params : {}
       };
       if (periodId != null) {
@@ -412,7 +409,7 @@ class NotebookService {
     } else {
       const config = {
         method: 'POST',
-        url: this.ConfigService.getStudentNotebookURL(),
+        url: this.ConfigService.getNotebookURL(),
         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
       };
       const params = {
@@ -472,7 +469,7 @@ class NotebookService {
     if (!this.ConfigService.isPreview()) {
       const config = {
         method: 'POST',
-        url: this.ConfigService.getStudentNotebookURL() + '/parent/' + notebookItemId,
+        url: `${this.ConfigService.getNotebookURL()}/parent/${notebookItemId}`,
         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
       };
       const params = {
@@ -491,7 +488,7 @@ class NotebookService {
     if (!this.ConfigService.isPreview()) {
       const config = {
         method: 'POST',
-        url: this.ConfigService.getStudentNotebookURL() + '/group/' + group,
+        url: `${this.ConfigService.getNotebookURL()}/group/${group}`,
         headers: {'Content-Type': 'application/x-www-form-urlencoded'}
       };
       const params = {
@@ -511,7 +508,7 @@ class NotebookService {
     if (!this.ConfigService.isPreview()) {
       const config = {
         method: 'DELETE',
-        url: this.ConfigService.getStudentNotebookURL() + '/group/' + group,
+        url: `${this.ConfigService.getNotebookURL()}/group/${group}`,
         params : {
           workgroupId: this.ConfigService.getWorkgroupId(),
           notebookItemId: notebookItemId,

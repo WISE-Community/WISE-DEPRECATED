@@ -37,6 +37,10 @@ import org.wise.portal.domain.workgroup.impl.WorkgroupImpl;
 import org.wise.vle.domain.PersistableDomain;
 
 import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import java.sql.Timestamp;
 import java.util.Calendar;
 
@@ -50,6 +54,7 @@ import java.util.Calendar;
     @Index(columnList = "workgroupId", name = "notebookItemsWorkgroupIdIndex")})
 @Getter
 @Setter
+@JsonSerialize(using = NotebookItemSerializer.class)
 public class NotebookItem extends PersistableDomain {
 
   @Id
@@ -62,10 +67,12 @@ public class NotebookItem extends PersistableDomain {
 
   @ManyToOne(targetEntity = PersistentGroup.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
   @JoinColumn(name = "periodId")
+  @JsonIgnore
   private Group period;
 
   @ManyToOne(targetEntity = WorkgroupImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
   @JoinColumn(name = "workgroupId", nullable = false)
+  @JsonIgnore
   private Workgroup workgroup;
 
   @Column(name = "nodeId", length = 30, nullable = true)
@@ -76,10 +83,12 @@ public class NotebookItem extends PersistableDomain {
 
   @OneToOne(targetEntity = StudentWork.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
   @JoinColumn(name = "studentWorkId", nullable = true)
+  @JsonIgnore
   private StudentWork studentWork;
 
   @OneToOne(targetEntity = StudentAsset.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
   @JoinColumn(name = "studentAssetId", nullable = true)
+  @JsonIgnore
   private StudentAsset studentAsset;
 
   @Column(name = "localNotebookItemId", length = 30, nullable = true)
