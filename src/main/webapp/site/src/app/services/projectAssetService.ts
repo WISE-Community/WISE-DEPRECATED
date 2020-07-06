@@ -15,6 +15,7 @@ export class ProjectAssetService {
   projectAssets: BehaviorSubject<any> = new BehaviorSubject<any>(null);
   totalFileSize: BehaviorSubject<number> = new BehaviorSubject<number>(0);
   totalUnusedFileSize: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+  projectThumbnailFileName = 'project_thumb.png';
 
   constructor(protected upgrade: UpgradeModule,
       protected http: HttpClient,
@@ -94,7 +95,8 @@ export class ProjectAssetService {
   }
 
   calculateAssetUsage(assets: any = this.getProjectAssets().getValue()) {
-    const usedTextContent = JSON.stringify(this.ProjectService.project);
+    let usedTextContent = JSON.stringify(this.ProjectService.project);
+    usedTextContent += this.projectThumbnailFileName;
     const allTextFiles = this.getAllTextFiles(assets);
     if (allTextFiles.length == 0) {
       this.calculateUsedFiles(assets, usedTextContent);

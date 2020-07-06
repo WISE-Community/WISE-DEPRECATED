@@ -8,7 +8,7 @@ import { UpgradeModule } from '@angular/upgrade/static';
 let service: ProjectAssetService;
 let configService: ConfigService;
 let http: HttpTestingController;
-let spongBobAndPatrickAssets: any;
+let spongeBobAndPatrickAssets: any;
 
 describe('ProjectAssetService', () => {
   beforeEach(() => {
@@ -27,7 +27,7 @@ describe('ProjectAssetService', () => {
       }
       return '';
     });
-    spongBobAndPatrickAssets = {
+    spongeBobAndPatrickAssets = {
       files: [
         { fileName: 'spongebob.png', fileSize: 1000 },
         { fileName: 'patrick.png', fileSize: 2000 }
@@ -55,9 +55,9 @@ function retrieveProjectAssets() {
   it('should make a request to retrieve project assets', fakeAsync(() => {
     service.retrieveProjectAssets();
     const request = http.expectOne({ url: '/author/project/asset/1', method: 'GET' });
-    request.flush(spongBobAndPatrickAssets);
+    request.flush(spongeBobAndPatrickAssets);
     expect(service.totalSizeMax).toEqual(10000);
-    expect(service.getProjectAssets().getValue()).toEqual(spongBobAndPatrickAssets);
+    expect(service.getProjectAssets().getValue()).toEqual(spongeBobAndPatrickAssets);
   }));
 }
 
@@ -68,7 +68,7 @@ function uploadAssets() {
       new File([''], 'patrick.png')
     ];
     const result = {
-      assetDirectoryInfo: spongBobAndPatrickAssets,
+      assetDirectoryInfo: spongeBobAndPatrickAssets,
       success: [],
       error: []
     };
@@ -92,7 +92,7 @@ function downloadAssetItem() {
 
 function deleteAssetItem() {
   it('should make a request to delete an asset item', fakeAsync(() => {
-    service.setProjectAssets(spongBobAndPatrickAssets);
+    service.setProjectAssets(spongeBobAndPatrickAssets);
     const assetItem = { fileName: 'patrick.png' };
     service.deleteAssetItem(assetItem);
     const request = http.expectOne({ url: '/author/project/asset/1/delete', method: 'POST' });
@@ -108,7 +108,7 @@ function deleteAssetItem() {
 function calculateAssetUsage() {
   it('should calculate asset usage when there are no text files', fakeAsync(() => {
     spyOn(service, 'calculateUsedFiles');
-    service.calculateAssetUsage(spongBobAndPatrickAssets);
+    service.calculateAssetUsage(spongeBobAndPatrickAssets);
     expect(service.calculateUsedFiles).toHaveBeenCalled();
   }));
   it('should calculate asset usage when there are text files', fakeAsync(() => {
@@ -125,6 +125,13 @@ function calculateAssetUsage() {
     service.calculateAssetUsage(assets);
     expect(service.retrieveTextFilesAndCalculateUsedFiles).toHaveBeenCalled();
   }));
+  it ('should calculate asset usage with usedTextContent containing project_thumb.png', () => {
+    spyOn(service, 'calculateUsedFiles');
+    service.calculateAssetUsage(spongeBobAndPatrickAssets);
+    const usedTextContent = 'null' + service.projectThumbnailFileName;
+    expect(service.calculateUsedFiles).toHaveBeenCalledWith(spongeBobAndPatrickAssets,
+        usedTextContent);
+  });
 }
 
 function getAllTextFiles() {
@@ -166,19 +173,19 @@ function isTextFile() {
 function calculateUsedFiles() {
   it('should calculate used files when none are used', () => {
     const usedTextContent = '';
-    service.calculateUsedFiles(spongBobAndPatrickAssets, usedTextContent);
+    service.calculateUsedFiles(spongeBobAndPatrickAssets, usedTextContent);
     expect(service.getTotalFileSize().getValue()).toEqual(3000);
     expect(service.getTotalUnusedFileSize().getValue()).toEqual(3000);
   });
   it('should calculate used files when one is used', () => {
     const usedTextContent = 'spongebob.png';
-    service.calculateUsedFiles(spongBobAndPatrickAssets, usedTextContent);
+    service.calculateUsedFiles(spongeBobAndPatrickAssets, usedTextContent);
     expect(service.getTotalFileSize().getValue()).toEqual(3000);
     expect(service.getTotalUnusedFileSize().getValue()).toEqual(2000);
   });
   it('should calculate used files when all are used', () => {
     const usedTextContent = 'spongebob.png,patrick.png';
-    service.calculateUsedFiles(spongBobAndPatrickAssets, usedTextContent);
+    service.calculateUsedFiles(spongeBobAndPatrickAssets, usedTextContent);
     expect(service.getTotalFileSize().getValue()).toEqual(3000);
     expect(service.getTotalUnusedFileSize().getValue()).toEqual(0);
   });
@@ -193,13 +200,15 @@ function retrieveTextFilesAndCalculateUsedFiles() {
     const allUsedTextContent = usedTextContent + textFile1.body + textFile2.body;
     spyOn(service, 'getAllUsedTextContent').and.returnValue(allUsedTextContent);
     spyOn(service, 'calculateUsedFiles');
-    service.retrieveTextFilesAndCalculateUsedFiles(spongBobAndPatrickAssets, usedTextContent, allTextFiles);
+    service.retrieveTextFilesAndCalculateUsedFiles(spongeBobAndPatrickAssets, usedTextContent,
+        allTextFiles);
     const request1 = http.expectOne({ url: 'assets/model.html', method: 'GET' });
     const request2 = http.expectOne({ url: 'assets/model.js', method: 'GET' });
     request1.flush(textFile1);
     request2.flush(textFile2);
     expect(service.getAllUsedTextContent).toHaveBeenCalled();
-    expect(service.calculateUsedFiles).toHaveBeenCalledWith(spongBobAndPatrickAssets, allUsedTextContent);
+    expect(service.calculateUsedFiles).toHaveBeenCalledWith(spongeBobAndPatrickAssets,
+        allUsedTextContent);
   }));
 }
 
