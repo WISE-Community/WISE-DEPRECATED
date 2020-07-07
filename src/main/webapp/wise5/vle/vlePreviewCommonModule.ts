@@ -114,7 +114,7 @@ export function createModule(type = 'preview') {
   ])
   .service('AchievementService', AchievementService)
   .service('AnnotationService', AnnotationService)
-  .service('AudioRecorderService', AudioRecorderService)
+  .factory('AudioRecorderService', downgradeInjectable(AudioRecorderService))
   .factory('ConfigService', downgradeInjectable(ConfigService))
   .service('ComponentService', ComponentService)
   .factory('CRaterService', downgradeInjectable(CRaterService))

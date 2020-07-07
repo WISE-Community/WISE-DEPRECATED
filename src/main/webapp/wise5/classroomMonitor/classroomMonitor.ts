@@ -115,7 +115,7 @@ const classroomMonitorModule = angular
   ])
   .service('AchievementService', AchievementService)
   .service('AnnotationService', AnnotationService)
-  .service('AudioRecorderService', AudioRecorderService)
+  .factory('AudioRecorderService', downgradeInjectable(AudioRecorderService))
   .service('ComponentService', ComponentService)
   .factory('ConfigService', downgradeInjectable(ConfigService))
   .factory('CRaterService', downgradeInjectable(CRaterService))
