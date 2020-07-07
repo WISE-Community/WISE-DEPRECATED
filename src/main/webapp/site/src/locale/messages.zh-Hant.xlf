@@ -2,7 +2,7 @@
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
   <file source-language="en" datatype="plaintext" original="ng2.template" target-language="zh-TW">
     <body>
-      <trans-unit id="e19fcf996343543e13789f17b550ab0c08124b5c" datatype="html">
+      <trans-unit id="e19fcf996343543e13789f17b550ab0c08124b5c" datatype="html" approved="yes">
         <source>Create Account</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
@@ -24,7 +24,7 @@
           <context context-type="sourcefile">app/register/register-google-user-already-exists/register-google-user-already-exists.component.html</context>
           <context context-type="linenumber">3</context>
         </context-group>
-        <target state="translated">建立帳戶</target>
+        <target state="final">建立帳戶</target>
       </trans-unit>
       <trans-unit id="6cdb1fea93d77c07950c0c76c6e0ad79ebbef084" datatype="html">
         <source>Features</source>
@@ -70,7 +70,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/home/home.component.html</context>
-          <context context-type="linenumber">116</context>
+          <context context-type="linenumber">79</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/mobile-menu/mobile-menu.component.html</context>
@@ -90,7 +90,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/home/home.component.html</context>
-          <context context-type="linenumber">125</context>
+          <context context-type="linenumber">83</context>
         </context-group>
         <target state="translated">説明 / 常見問題</target>
       </trans-unit>
@@ -110,27 +110,19 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/home/home.component.html</context>
-          <context context-type="linenumber">134</context>
+          <context context-type="linenumber">87</context>
         </context-group>
         <target state="translated">聯繫我們</target>
-      </trans-unit>
-      <trans-unit id="d97fd6757dbd8190c0e310c2be8432718b2a417b" datatype="html">
-        <source>Legacy</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
-          <context context-type="linenumber">16</context>
-        </context-group>
-        <target state="translated">舊版</target>
       </trans-unit>
       <trans-unit id="e1a07fb742a7b025b2a594d867a5805c37697f86" datatype="html">
         <source>WISE on Facebook</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
-          <context context-type="linenumber">26</context>
+          <context context-type="linenumber">25</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/home/home.component.html</context>
-          <context context-type="linenumber">91</context>
+          <context context-type="linenumber">66</context>
         </context-group>
         <target state="translated">分享到 Facebook</target>
       </trans-unit>
@@ -138,11 +130,11 @@
         <source>WISE on Twitter</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
-          <context context-type="linenumber">33</context>
+          <context context-type="linenumber">32</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/home/home.component.html</context>
-          <context context-type="linenumber">96</context>
+          <context context-type="linenumber">69</context>
         </context-group>
         <target state="translated">分享到 Twitter</target>
       </trans-unit>
@@ -150,11 +142,11 @@
         <source>WISE on Github</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
-          <context context-type="linenumber">40</context>
+          <context context-type="linenumber">39</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/home/home.component.html</context>
-          <context context-type="linenumber">101</context>
+          <context context-type="linenumber">72</context>
         </context-group>
         <target state="translated">分享到 Github</target>
       </trans-unit>
@@ -162,15 +154,15 @@
         <source>Powered by the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>TELS Research Community<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> and <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>WISE Open Source Technology<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>. Help us <x id="START_LINK_2" ctype="x-a" equiv-text="&lt;a&gt;"/>translate<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> WISE!</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
-          <context context-type="linenumber">53</context>
+          <context context-type="linenumber">52</context>
         </context-group>
-        <target state="needs-translation">Powered by the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>TELS Research Community<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> and <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>WISE Open Source Technology<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>. Help us <x id="START_LINK_2" ctype="x-a" equiv-text="&lt;a&gt;"/>translate<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> WISE!</target>
+        <target state="translated">由 <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>TELS研究社群<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>和<x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>WISE開源技術<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>提供支持。請幫助我們<x id="START_LINK_2" ctype="x-a" equiv-text="&lt;a&gt;"/>翻譯<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>WISE!</target>
       </trans-unit>
       <trans-unit id="3e1904c6c60cfbdcfde26154fe8ed09b5ce0f9f4" datatype="html">
         <source>This material is based upon work supported by the National Science Foundation. Any opinions, findings, and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the National Science Foundation.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
-          <context context-type="linenumber">54</context>
+          <context context-type="linenumber">53</context>
         </context-group>
         <target state="translated">本站是由美國國家科學基金會所支持。 本站中所表達的任何意見、發現、結論或建議均為作者的觀點，並不一定代表美國國家科學基金會。</target>
       </trans-unit>
@@ -178,7 +170,7 @@
         <source>National Science Foundation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
-          <context context-type="linenumber">62</context>
+          <context context-type="linenumber">64</context>
         </context-group>
         <target state="translated">美國國家科學基金會</target>
       </trans-unit>
@@ -186,7 +178,7 @@
         <source>UC Berkeley</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
-          <context context-type="linenumber">65</context>
+          <context context-type="linenumber">71</context>
         </context-group>
         <target state="translated">加州大學柏克萊分校</target>
       </trans-unit>
@@ -194,7 +186,7 @@
         <source>Concord Consortium</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
-          <context context-type="linenumber">68</context>
+          <context context-type="linenumber">78</context>
         </context-group>
         <target state="translated">Concord Consortium</target>
       </trans-unit>
@@ -202,7 +194,7 @@
         <source>SAIL (Scalable Architecture for Interactive Learning)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
-          <context context-type="linenumber">70</context>
+          <context context-type="linenumber">84</context>
         </context-group>
         <target state="translated">SAIL (可擴充的互動式學習架構)</target>
       </trans-unit>
@@ -210,7 +202,7 @@
         <source>©1996-<x id="INTERPOLATION" equiv-text="{{time | amDateFormat:&apos;YYYY&apos;}}"/>, <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>UC Berkeley<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> | Web-based Inquiry Science Environment</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
-          <context context-type="linenumber">75</context>
+          <context context-type="linenumber">90</context>
         </context-group>
         <target state="translated">©1996-<x id="INTERPOLATION" equiv-text="{{time | amDateFormat:'YYYY'}}"/>, <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>UC Berkeley<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> | 線上科學探究平台</target>
       </trans-unit>
@@ -218,7 +210,7 @@
         <source>WISE header logo</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/header/header.component.html</context>
-          <context context-type="linenumber">5</context>
+          <context context-type="linenumber">8</context>
         </context-group>
         <target state="translated">WISE首頁區域logo</target>
       </trans-unit>
@@ -226,7 +218,7 @@
         <source>Main menu</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/header/header.component.html</context>
-          <context context-type="linenumber">11</context>
+          <context context-type="linenumber">15</context>
         </context-group>
         <target state="translated">主選單</target>
       </trans-unit>
@@ -277,9 +269,6 @@
           <context context-type="linenumber">16</context>
         </context-group>
         <target state="translated">密碼不正確</target>
-        <alt-trans>
-          <target>密碼不正確.</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="c7014c6360e94b236286b869c3fe0ea9911c0387" datatype="html">
         <source>New Password</source>
@@ -328,9 +317,6 @@
           <context context-type="linenumber">106</context>
         </context-group>
         <target state="translated">必須確認密碼</target>
-        <alt-trans>
-          <target>確認密碼是必需的.</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="0a9dcaac5aadd48fe716eaff77ab9b21a8bef3af" datatype="html">
         <source>Passwords do not match</source>
@@ -372,11 +358,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">71</context>
+          <context context-type="linenumber">87</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">72</context>
+          <context context-type="linenumber">88</context>
         </context-group>
         <target state="translated">激發想法</target>
       </trans-unit>
@@ -384,11 +370,11 @@
         <source>Add Ideas</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/home/home.component.html</context>
-          <context context-type="linenumber">10</context>
+          <context context-type="linenumber">9</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">75</context>
+          <context context-type="linenumber">91</context>
         </context-group>
         <target state="translated">新增想法</target>
       </trans-unit>
@@ -396,15 +382,15 @@
         <source>Distinguish Ideas</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/home/home.component.html</context>
-          <context context-type="linenumber">13</context>
+          <context context-type="linenumber">11</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">79</context>
+          <context context-type="linenumber">95</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">80</context>
+          <context context-type="linenumber">96</context>
         </context-group>
         <target state="translated">區分想法</target>
       </trans-unit>
@@ -412,15 +398,15 @@
         <source>Connect Ideas</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/home/home.component.html</context>
-          <context context-type="linenumber">16</context>
+          <context context-type="linenumber">13</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">83</context>
+          <context context-type="linenumber">99</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">84</context>
+          <context context-type="linenumber">100</context>
         </context-group>
         <target state="translated">連結想法</target>
       </trans-unit>
@@ -428,7 +414,7 @@
         <source>Integrated science learning and teaching with technology</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/home/home.component.html</context>
-          <context context-type="linenumber">20</context>
+          <context context-type="linenumber">17</context>
         </context-group>
         <target state="translated">將科學與技術融為一體</target>
       </trans-unit>
@@ -436,67 +422,15 @@
         <source>The WISE Advantage</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/home/home.component.html</context>
-          <context context-type="linenumber">26</context>
+          <context context-type="linenumber">24</context>
         </context-group>
         <target state="translated">WISE優勢</target>
-      </trans-unit>
-      <trans-unit id="8127b5c0780e941a1948d8ac7b49af813bd7df98" datatype="html">
-        <source>
-              Free, standards-aligned, and research-based inquiry curricula that address <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>NGSS 3D proficiency<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>
-            </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/home/home.component.html</context>
-          <context context-type="linenumber">38</context>
-        </context-group>
-        <target state="translated">
-              免費，符合標準且研究導向探究課程，可解決 <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>NGSS 3D 的能力<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>
-            </target>
-        <alt-trans>
-          <target>
-              免費，符合標準且研究導向探究課程，可解決 <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>新世代科學教育標準(NGSS)的3D 能力<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>
-            </target>
-        </alt-trans>
-      </trans-unit>
-      <trans-unit id="ea65faeacfcd369b74fd184e411eeb5d36b59c12" datatype="html">
-        <source>WISE project on laptop</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/home/home.component.html</context>
-          <context context-type="linenumber">46</context>
-        </context-group>
-        <target state="translated">在筆電上的WISE專題</target>
-        <alt-trans>
-          <target>筆電上的WISE專題</target>
-        </alt-trans>
-      </trans-unit>
-      <trans-unit id="0c8d974a19a8a92110e0b43514330732e936da2b" datatype="html">
-        <source>Interactive scientific models plus hands-on activities, personalized guidance, and rich embedded assessments</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/home/home.component.html</context>
-          <context context-type="linenumber">48</context>
-        </context-group>
-        <target state="translated">互動式科學模型以及動手實作、個人化指導和豐富的融入式評量</target>
-      </trans-unit>
-      <trans-unit id="82fc5ad6af1a149044ba97ac4d4e567312c6ce9f" datatype="html">
-        <source>WISE students and teacher</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/home/home.component.html</context>
-          <context context-type="linenumber">53</context>
-        </context-group>
-        <target state="translated">WISE學生和老師</target>
-      </trans-unit>
-      <trans-unit id="2acf9aae127d9822ffecf4d7509f05744f09e788" datatype="html">
-        <source>Robust teacher grading and management tools supporting individualized and customized learning</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/home/home.component.html</context>
-          <context context-type="linenumber">55</context>
-        </context-group>
-        <target state="translated">完整支援個人化及客製化學習的教師評分及管理工具</target>
       </trans-unit>
       <trans-unit id="23bd67ab9c1e8b08481bd99aa471c2a29b587143" datatype="html">
         <source>Curriculum Offerings</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/home/home.component.html</context>
-          <context context-type="linenumber">63</context>
+          <context context-type="linenumber">46</context>
         </context-group>
         <target state="translated">課程設置</target>
       </trans-unit>
@@ -504,7 +438,7 @@
         <source>Ready to try WISE in the Classroom?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/home/home.component.html</context>
-          <context context-type="linenumber">72</context>
+          <context context-type="linenumber">51</context>
         </context-group>
         <target state="translated">準備在課堂上嘗試使用WISE了嗎？</target>
       </trans-unit>
@@ -512,7 +446,7 @@
         <source>Sign up for free!</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/home/home.component.html</context>
-          <context context-type="linenumber">73</context>
+          <context context-type="linenumber">52</context>
         </context-group>
         <target state="translated">免費註冊</target>
       </trans-unit>
@@ -520,7 +454,7 @@
         <source>Connect</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/home/home.component.html</context>
-          <context context-type="linenumber">87</context>
+          <context context-type="linenumber">64</context>
         </context-group>
         <target state="translated">聯繫我們</target>
       </trans-unit>
@@ -528,7 +462,7 @@
         <source>Learn what&apos;s new in the WISE community.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/home/home.component.html</context>
-          <context context-type="linenumber">118</context>
+          <context context-type="linenumber">80</context>
         </context-group>
         <target state="translated">了解在WISE社群中的新功能。</target>
       </trans-unit>
@@ -536,7 +470,7 @@
         <source>View tutorials and common questions.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/home/home.component.html</context>
-          <context context-type="linenumber">127</context>
+          <context context-type="linenumber">84</context>
         </context-group>
         <target state="translated">瀏覽課程和常見問題。</target>
       </trans-unit>
@@ -544,9 +478,21 @@
         <source>Want to get in touch? Send us a message.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/home/home.component.html</context>
-          <context context-type="linenumber">136</context>
+          <context context-type="linenumber">88</context>
         </context-group>
         <target state="translated">想要聯繫我們嗎？ 歡迎您傳送信息。</target>
+      </trans-unit>
+      <trans-unit id="acd82db1a5e5f81b87f6a6b1639f028a4d106d49" datatype="html">
+        <source>WISE logo</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/login/login.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/register/register.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+        <target state="translated">WISE logo</target>
       </trans-unit>
       <trans-unit id="a55bfaabb5258f66c2f853ce2383cfead1abd258" datatype="html">
         <source>Close menu</source>
@@ -604,14 +550,6 @@
         </context-group>
         <target state="translated">登入</target>
       </trans-unit>
-      <trans-unit id="acd82db1a5e5f81b87f6a6b1639f028a4d106d49" datatype="html">
-        <source>WISE logo</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/register/register.component.html</context>
-          <context context-type="linenumber">4</context>
-        </context-group>
-        <target state="translated">WISE logo</target>
-      </trans-unit>
       <trans-unit id="abc0c762d328168e523abf84749240e43593f8df" datatype="html">
         <source>WISE Features</source>
         <context-group purpose="location">
@@ -640,7 +578,7 @@
         <source>WISE students</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">25</context>
+          <context context-type="linenumber">28</context>
         </context-group>
         <target state="translated">WISE學生</target>
       </trans-unit>
@@ -648,7 +586,7 @@
         <source>WISE students collaborate to:</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">39</context>
+          <context context-type="linenumber">43</context>
         </context-group>
         <target state="translated">WISE學生合作以：</target>
       </trans-unit>
@@ -656,7 +594,7 @@
         <source>Explore issues of social importance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">43</context>
+          <context context-type="linenumber">47</context>
         </context-group>
         <target state="translated">探索具有社會重要性的問題</target>
       </trans-unit>
@@ -664,7 +602,7 @@
         <source>Pose relevant questions and make predictions</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">47</context>
+          <context context-type="linenumber">51</context>
         </context-group>
         <target state="translated">提出相關問題並做出預測</target>
       </trans-unit>
@@ -672,7 +610,7 @@
         <source>Experiment with computational models</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">51</context>
+          <context context-type="linenumber">55</context>
         </context-group>
         <target state="translated">實驗計算模型</target>
       </trans-unit>
@@ -680,7 +618,7 @@
         <source>Evaluate and distinguish discrepant information</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">55</context>
+          <context context-type="linenumber">59</context>
         </context-group>
         <target state="translated">評估和區分不同的資訊</target>
       </trans-unit>
@@ -688,7 +626,7 @@
         <source>Construct explanations through reflection and discussion</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">59</context>
+          <context context-type="linenumber">63</context>
         </context-group>
         <target state="translated">透過反思和討論建構出解釋</target>
       </trans-unit>
@@ -696,7 +634,7 @@
         <source>Design and build evidence-based solutions</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">63</context>
+          <context context-type="linenumber">67</context>
         </context-group>
         <target state="translated">設計和建立基於證據的解決方案</target>
       </trans-unit>
@@ -704,7 +642,7 @@
         <source>Inquiry-Based Learning</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">69</context>
+          <context context-type="linenumber">73</context>
         </context-group>
         <target state="translated">探究式學習</target>
       </trans-unit>
@@ -712,7 +650,7 @@
         <source>WISE engages students in the methods of real scientists and engineers. We take a multidisciplinary approach so that students learn inquiry through activities that emphasize essential skills in reading, writing, and multimedia literacy. Many of our units are also project-based and feature hands-on design challenges.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">70</context>
+          <context context-type="linenumber">74</context>
         </context-group>
         <target state="translated">WISE讓學生學習真正的科學家和工程師的方法。 我們採用多學科方法，讓學生通過強調閱讀，寫作和多媒體素養的基本技能的活動來學習探究。 我們的很多學習單元也都是基於項目的，同時提供實踐動手操作的設計挑戰。</target>
       </trans-unit>
@@ -720,7 +658,7 @@
         <source>With WISE inquiry units, students not only learn skills that prepare them to be successful in STEM. They also learn skills necessary to be responsible, critical thinking citizens.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">71</context>
+          <context context-type="linenumber">75</context>
         </context-group>
         <target state="translated">通過WISE探究學習單元，學生不僅能夠掌握使他們在STEM中取得成功的技能，還能夠學習成為一名負責、具備批判性思維公民的所必需的技能。</target>
       </trans-unit>
@@ -728,29 +666,23 @@
         <source>Standards-Aligned Curricula</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">82</context>
+          <context context-type="linenumber">86</context>
         </context-group>
         <target state="translated">標準化的課程</target>
-        <alt-trans>
-          <target>標準化課程</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="28963fab05c3d72dc5ca696c47dd7d486df8292c" datatype="html">
         <source>WISE offers a growing collection of curriculum units that address key conceptual difficulties students encounter in science. Units are carefully crafted to supplement teachers&apos; core curricular scope and sequence and are iteratively refined through classroom-based research.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">83</context>
+          <context context-type="linenumber">87</context>
         </context-group>
         <target state="translated">WISE提供越來越多的課程單元，解決學生在科學學習中遇到的關鍵性概念難題。課程單元經過精心設計，以補充教師的核心課程範圍和順序，並通過基於課堂的研究進行反覆完善。</target>
-        <alt-trans>
-          <target>WISE提供越來越多的課程單元，解決學生在科學學習中遇到的關鍵性概念難題。課程單元經過精心設計，以補充教師的核心課程範圍和順序，並通過基於課堂的研究進行迭代完善。</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="09ce791db454a957cfc6658b0c198962ea7cac6c" datatype="html">
         <source>WISE units support the <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>Next Generation Science Standards (NGSS)<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>, encourage <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>3-dimensional learning<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>, and can be adapted to address local standards.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">85</context>
+          <context context-type="linenumber">89</context>
         </context-group>
         <target state="translated">WISE學習單元支持 <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>下一代科學標準（NGSS）<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>, encourage <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>三維學習<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>, 並且可以適用於解決本地標準。</target>
       </trans-unit>
@@ -758,18 +690,15 @@
         <source>Design Process &amp; Goals</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">87</context>
+          <context context-type="linenumber">91</context>
         </context-group>
         <target state="translated">設計流程與目標</target>
-        <alt-trans>
-          <target>設計流程目標</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="5ba7433a2233cdf924ae0948dc017372200293e3" datatype="html">
         <source>WISE solar ovens unit</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">92</context>
+          <context context-type="linenumber">99</context>
         </context-group>
         <target state="translated">WISE太陽能烤箱單元</target>
       </trans-unit>
@@ -777,7 +706,7 @@
         <source>WISE students building solar oven</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">93</context>
+          <context context-type="linenumber">104</context>
         </context-group>
         <target state="translated">WISE學生建造太陽能烤箱</target>
       </trans-unit>
@@ -785,7 +714,7 @@
         <source>MyModel diagram with guidance</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">107</context>
+          <context context-type="linenumber">122</context>
         </context-group>
         <target state="translated">指導性的我的模型圖</target>
       </trans-unit>
@@ -793,7 +722,7 @@
         <source>WISE cellular respiration model</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">108</context>
+          <context context-type="linenumber">127</context>
         </context-group>
         <target state="translated">WISE細胞呼吸模型</target>
       </trans-unit>
@@ -801,7 +730,7 @@
         <source>WISE design report</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">109</context>
+          <context context-type="linenumber">132</context>
         </context-group>
         <target state="translated">WISE設計報告</target>
       </trans-unit>
@@ -809,7 +738,7 @@
         <source>WISE thermodynamics insulator model</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">110</context>
+          <context context-type="linenumber">137</context>
         </context-group>
         <target state="translated">WISE熱力學絕緣子模型</target>
       </trans-unit>
@@ -817,7 +746,7 @@
         <source>Powerful Learning Technologies</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">114</context>
+          <context context-type="linenumber">142</context>
         </context-group>
         <target state="translated">強大的學習技術</target>
       </trans-unit>
@@ -825,7 +754,7 @@
         <source>WISE provides a simple user interface, cognitive hints, embedded assessments, and online discussions, as well as tools for drawing, annotation, concept mapping, diagramming, and graphing.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">115</context>
+          <context context-type="linenumber">143</context>
         </context-group>
         <target state="translated">WISE提供了簡單的用戶界面，認知提示，嵌入式評估和線上討論，以及用於繪圖，註釋，概念圖，圖表和圖形的工具。</target>
       </trans-unit>
@@ -833,7 +762,7 @@
         <source>Students conduct investigations using interactive simulations and models. A notebook tool helps students collect ideas and organize evidence into research and design reports. WISE units promote self-monitoring through collaborative reflection activities as well as automated, personalized guidance and adaptive instruction.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">116</context>
+          <context context-type="linenumber">144</context>
         </context-group>
         <target state="translated">學生可以使用互動式模擬和模型進行探索。筆記本工具可以幫助學生收集想法並將證據整理成研究和設計報告。WISE單元通過協作反思活動以及自動化、個性化指導和適應性指導來促進自我監控。</target>
       </trans-unit>
@@ -841,7 +770,7 @@
         <source>Comprehensive Instructional Supports</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">127</context>
+          <context context-type="linenumber">155</context>
         </context-group>
         <target state="translated">全方位的教學支援</target>
       </trans-unit>
@@ -849,7 +778,7 @@
         <source>WISE offers an extensive suite of integrated tools that help teachers plan, monitor progress, gain insights, provide feedback, and grade more efficiently. These tools are continually refined through collaborations with practicing teachers who understand the real challenges of managing modern classrooms.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">128</context>
+          <context context-type="linenumber">156</context>
         </context-group>
         <target state="translated">WISE提供了多元的完整工具套件，可幫助教師規劃、監控進度、獲取見解、提供回饋並更有效地評分。透過與在職教師的合作不斷完善這些工具，使他們了解管理現代化教室的真正挑戰。</target>
       </trans-unit>
@@ -857,7 +786,7 @@
         <source>By facilitating these necessary but time-consuming tasks, teachers are free to focus on what makes them indispensable: providing quality instruction to individual students.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">129</context>
+          <context context-type="linenumber">157</context>
         </context-group>
         <target state="translated">透過簡化這些必要但耗時的任務，教師可以自由的專注於他們必須要做的事情：為個別學生提供優質的指導。</target>
       </trans-unit>
@@ -865,7 +794,7 @@
         <source>WISE teacher progress</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">131</context>
+          <context context-type="linenumber">162</context>
         </context-group>
         <target state="translated">WISE教師進度</target>
       </trans-unit>
@@ -873,7 +802,7 @@
         <source>WISE teacher grading</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">132</context>
+          <context context-type="linenumber">167</context>
         </context-group>
         <target state="translated">WISE教師評分</target>
       </trans-unit>
@@ -881,7 +810,7 @@
         <source>Featured Teacher Tools:</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">138</context>
+          <context context-type="linenumber">174</context>
         </context-group>
         <target state="translated">特色教師工具：</target>
       </trans-unit>
@@ -889,7 +818,7 @@
         <source>Real-time progress monitor</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">142</context>
+          <context context-type="linenumber">178</context>
         </context-group>
         <target state="translated">即時進度監控</target>
       </trans-unit>
@@ -897,7 +826,7 @@
         <source>Grade and give feedback + sample scoring rubrics</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">146</context>
+          <context context-type="linenumber">182</context>
         </context-group>
         <target state="translated">評分並提供回饋+範例評分標準</target>
       </trans-unit>
@@ -905,7 +834,7 @@
         <source>Automatically scored assessment items</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">150</context>
+          <context context-type="linenumber">186</context>
         </context-group>
         <target state="translated">自動評分的評估項目</target>
       </trans-unit>
@@ -913,7 +842,7 @@
         <source>Pause student screens</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">154</context>
+          <context context-type="linenumber">190</context>
         </context-group>
         <target state="translated">暫停學生螢幕</target>
       </trans-unit>
@@ -921,7 +850,7 @@
         <source>Share and collaborate with colleagues</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">158</context>
+          <context context-type="linenumber">194</context>
         </context-group>
         <target state="translated">與同事分享和協作</target>
       </trans-unit>
@@ -929,7 +858,7 @@
         <source>Authoring environment that supports customization and creation of new units</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">162</context>
+          <context context-type="linenumber">198</context>
         </context-group>
         <target state="translated">支援客製化和建立新單元的創作環境</target>
       </trans-unit>
@@ -937,7 +866,7 @@
         <source>In development: Automated insights into student NGSS understanding + suggested classroom interventions!</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">166</context>
+          <context context-type="linenumber">202</context>
         </context-group>
         <target state="translated">開發中：自動了解學生對NGSS的理解+建議的課堂干預措施！</target>
       </trans-unit>
@@ -945,7 +874,7 @@
         <source>Explore what WISE has to offer!</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">175</context>
+          <context context-type="linenumber">211</context>
         </context-group>
         <target state="translated">探索WISE提供的功能！</target>
       </trans-unit>
@@ -953,7 +882,7 @@
         <source>Join for free</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">176</context>
+          <context context-type="linenumber">212</context>
         </context-group>
         <target state="translated">免費加入</target>
       </trans-unit>
@@ -965,11 +894,19 @@
         </context-group>
         <target state="translated">WISE是經過25年以上教育技術與教學研究的產物</target>
       </trans-unit>
+      <trans-unit id="876f7d4b1a4c8c619cbe4c0b32d0d1bf3219d4e8" datatype="html">
+        <source>WISE teacher workshop 2018</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/about/about.component.html</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
+        <target state="needs-translation">WISE teacher workshop 2018</target>
+      </trans-unit>
       <trans-unit id="70ff1cc8f851490c4cb6237ec6991ef6a644d4e4" datatype="html">
         <source>WISE student and teacher</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">38</context>
+          <context context-type="linenumber">45</context>
         </context-group>
         <target state="translated">WISE學生和老師</target>
       </trans-unit>
@@ -977,7 +914,7 @@
         <source>WISE teacher workshop design</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">39</context>
+          <context context-type="linenumber">50</context>
         </context-group>
         <target state="translated">WISE教師工作坊設計</target>
       </trans-unit>
@@ -985,7 +922,7 @@
         <source>Marcia at WISE workshop</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">40</context>
+          <context context-type="linenumber">55</context>
         </context-group>
         <target state="translated">Marcia在WISE研討會上</target>
       </trans-unit>
@@ -993,7 +930,7 @@
         <source>Based on Research, Refined Through Practice</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">44</context>
+          <context context-type="linenumber">60</context>
         </context-group>
         <target state="translated">以研究為基礎，透過實踐完善</target>
       </trans-unit>
@@ -1001,7 +938,7 @@
         <source>Through our collaborations with teachers, administrators, technology designers, and education researchers, we have refined a set of principles which guide the design of all WISE curriculum materials and tools.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">45</context>
+          <context context-type="linenumber">61</context>
         </context-group>
         <target state="translated">通過與老師、行政人員、技術設計師和教育研究人員的合作，我們濃縮了一套指導所有WISE課程教材和工具設計的原則。</target>
       </trans-unit>
@@ -1009,7 +946,7 @@
         <source>This means that when implementing WISE units, you can be assured that what you&apos;re using is grown from a solid foundation, advised by real teachers&apos; experiences, and tested in classrooms with real students.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">47</context>
+          <context context-type="linenumber">63</context>
         </context-group>
         <target state="translated">這意味著在實施WISE單元時，您可以放心，您所使用的內容是紮根於堅實的基礎上的，並受到真正老師的經驗的啟發，並在真實學生的課堂上進行了測試。</target>
       </trans-unit>
@@ -1017,7 +954,7 @@
         <source>Our Research + Team</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">49</context>
+          <context context-type="linenumber">65</context>
         </context-group>
         <target state="translated">我們的研究和小組</target>
       </trans-unit>
@@ -1025,7 +962,7 @@
         <source>Knowledge Integration</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">61</context>
+          <context context-type="linenumber">77</context>
         </context-group>
         <target state="translated">知識整合</target>
       </trans-unit>
@@ -1033,7 +970,7 @@
         <source>As students grapple with multiple conflicting and confusing ideas, research has shown that instruction is most effective when student views are used as a starting point for scientific investigations.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">62</context>
+          <context context-type="linenumber">78</context>
         </context-group>
         <target state="translated">當學生們努力面對多種矛盾和令人困惑的想法時，研究表示，以學生的觀點作為科學研究的起點，教學是最有效的。</target>
       </trans-unit>
@@ -1041,7 +978,7 @@
         <source>The KI Processes:</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">68</context>
+          <context context-type="linenumber">84</context>
         </context-group>
         <target state="translated">KI流程：</target>
       </trans-unit>
@@ -1049,7 +986,7 @@
         <source>~ WISE Goals ~</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">94</context>
+          <context context-type="linenumber">110</context>
         </context-group>
         <target state="translated">~ WISE目標 ~</target>
       </trans-unit>
@@ -1057,7 +994,7 @@
         <source>Make Science Meaningful</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">108</context>
+          <context context-type="linenumber">124</context>
         </context-group>
         <target state="translated">使科學有意義</target>
       </trans-unit>
@@ -1065,7 +1002,7 @@
         <source>WISE units introduce students to complex science concepts through personally and socially relevant topics. Each unit uses a classroom-tested pattern of instruction that values the ideas students bring with them, helps them connect new information to their personal experiences, and integrates their ideas into a coherent understanding of science.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">109</context>
+          <context context-type="linenumber">125</context>
         </context-group>
         <target state="translated">WISE單元透過與個人和社會相關的主題向學生介紹複雜的科學概念。 每個單元都使用經過課堂測試的教學模式，該模式重視學生帶來的想法，幫助他們將新的資訊與他們的個人經歷聯繫在一起，並將他們的思想融入對科學的理解中。</target>
       </trans-unit>
@@ -1073,7 +1010,7 @@
         <source>Support Diverse Learners</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">114</context>
+          <context context-type="linenumber">130</context>
         </context-group>
         <target state="translated">支持各色各樣的學習者</target>
       </trans-unit>
@@ -1081,7 +1018,7 @@
         <source>Individual students differ in their experiences, interests, and abilities. WISE provides a variety of tools, activity patterns, and instructional scaffolds that afford multiple ways for expressing and assessing understanding. That way, no students&apos; abilities go unrecognized, and all have the chance to succeed.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">115</context>
+          <context context-type="linenumber">131</context>
         </context-group>
         <target state="translated">每個學生的經歷、興趣和能力各不相同。 WISE提供了多種工具、活動模式和教學的鷹架，它們提供了多種表達和評估理解的方式。 這樣一來，所有學生的能力都不會被忽視，所有人都有機會獲得成功。</target>
       </trans-unit>
@@ -1089,7 +1026,7 @@
         <source>Increase Participation in Science</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">127</context>
+          <context context-type="linenumber">143</context>
         </context-group>
         <target state="translated">提高科學學習的參與度</target>
       </trans-unit>
@@ -1097,7 +1034,7 @@
         <source>WISE gives more teachers and students the opportunity to do inquiry-based science. Our units make difficult concepts accessible both for teachers to teach and students to learn. WISE curricula help students see themselves as capable of doing science and realize that, no matter their backgrounds, science can be a potential career.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">128</context>
+          <context context-type="linenumber">144</context>
         </context-group>
         <target state="translated">WISE使更多的師生有機會進行查詢式的科學。 我們的單元使教師和學生都能學習到困難的概念。 WISE課程可幫助學生將自己視為科學能力，並意識到無論其背景如何，科學都可以成為潛在的職業。</target>
       </trans-unit>
@@ -1105,7 +1042,7 @@
         <source>Accessible to All</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">134</context>
+          <context context-type="linenumber">150</context>
         </context-group>
         <target state="translated">所有人都可以存取</target>
       </trans-unit>
@@ -1113,7 +1050,7 @@
         <source>WISE is <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>free<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> and <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>open source<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>! WISE subsists on generous support from the National Science Foundation, which means it&apos;s available to anyone with an internet connection. Driven by an active community of developers, WISE is continually being expanded and improved. Bring science inquiry into the classroom, the museum, the after-school, or the home-school environment!</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">135</context>
+          <context context-type="linenumber">151</context>
         </context-group>
         <target state="translated">WISE是<x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>免費使用<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>及<x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>開放原始碼<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>! WISE在國家科學基金會的慷慨支援下繼續存在，這意味著只要有網路連接，任何人都可以使用WISE。 在社群開發人員積極的推動下，WISE不斷得到擴展和改進。 將科學探究帶入教室、博物館、課後或家庭學習環境中！</target>
       </trans-unit>
@@ -1121,7 +1058,7 @@
         <source>WISE on student computer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">141</context>
+          <context context-type="linenumber">160</context>
         </context-group>
         <target state="translated">WISE在學生電腦上</target>
       </trans-unit>
@@ -1129,18 +1066,15 @@
         <source>WISE researcher</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">142</context>
+          <context context-type="linenumber">165</context>
         </context-group>
         <target state="translated">WISE研究員</target>
-        <alt-trans>
-          <target>WISE研究人員</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="6cc03c819c2923d3c2dd2a236ee0040ddac13c4b" datatype="html">
         <source>WISE teachers and researcher</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">143</context>
+          <context context-type="linenumber">170</context>
         </context-group>
         <target state="translated">WISE教師和研究人員</target>
       </trans-unit>
@@ -1148,18 +1082,15 @@
         <source>WISE developers and teacher</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">144</context>
+          <context context-type="linenumber">175</context>
         </context-group>
         <target state="translated">WISE開發人員和教師</target>
-        <alt-trans>
-          <target>WISE開發者和教師</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="69410cfd03d0c317234765d99d86c2c9e88bb915" datatype="html">
         <source>Back to Top</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/app.component.html</context>
-          <context context-type="linenumber">33</context>
+          <context context-type="linenumber">35</context>
         </context-group>
         <target state="translated">回到頂端</target>
       </trans-unit>
@@ -1234,9 +1165,6 @@
           <context context-type="linenumber">12</context>
         </context-group>
         <target state="translated">我們收集的資訊</target>
-        <alt-trans>
-          <target>我們收集的信息</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="3b2c25aac9bb263b63bc9310da65eb68324d83da" datatype="html">
         <source>How We Use the Data</source>
@@ -1261,9 +1189,6 @@
           <context context-type="linenumber">15</context>
         </context-group>
         <target state="translated">資訊安全</target>
-        <alt-trans>
-          <target>訊息安全</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="a364c9c2a87d2b9cf91adffebe1e931310d94d60" datatype="html">
         <source>State &amp; Federal Laws</source>
@@ -1328,9 +1253,6 @@
           <context context-type="linenumber">31</context>
         </context-group>
         <target state="translated">我們收集的資訊</target>
-        <alt-trans>
-          <target>我們收集的信息</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="2b16d754538c43298a40b3efa2b957beb1d29f27" datatype="html">
         <source>Personal Information</source>
@@ -1787,10 +1709,6 @@
           <context context-type="linenumber">6</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
-          <context context-type="linenumber">83</context>
-        </context-group>
-        <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
           <context context-type="linenumber">31</context>
         </context-group>
@@ -1888,7 +1806,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
-          <context context-type="linenumber">62</context>
+          <context context-type="linenumber">63</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/use-with-class-warning-dialog/use-with-class-warning-dialog.component.html</context>
@@ -1964,7 +1882,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
-          <context context-type="linenumber">70</context>
+          <context context-type="linenumber">76</context>
         </context-group>
         <target state="translated">完成</target>
       </trans-unit>
@@ -2008,23 +1926,25 @@
         <source>Add your own periods</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
-          <context context-type="linenumber">17</context>
+          <context context-type="linenumber">16</context>
         </context-group>
         <target state="translated">添加自己的期間</target>
       </trans-unit>
-      <trans-unit id="b13b5b62a4356cdcd81f358640fb7863fdde1361" datatype="html">
-        <source>For &quot;Period 9&quot;, just enter the number 9. Separate periods with commas (e.g. &quot;Section 1, Section 2&quot;). Manually named periods should be no more than 16 characters long.</source>
+      <trans-unit id="085c6f5a5f7c79b5d092d1f6411d1bfdc9eec6d0" datatype="html">
+        <source>For &quot;Period 9&quot;, just enter the number 9. Separate periods with commas (e.g. &quot;Section 1, Section 2&quot;). Manually named periods should be no more than 16 characters long.
+      </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
-          <context context-type="linenumber">22</context>
+          <context context-type="linenumber">18</context>
         </context-group>
-        <target state="translated">對於“第9周”，只需輸入數字9。請用逗號分隔各個期間（例如，“第1節，第2節”）。 手動命名的句點不得超過16個字符。</target>
+        <target state="needs-translation">For "Period 9", just enter the number 9. Separate periods with commas (e.g. "Section 1, Section 2"). Manually named periods should be no more than 16 characters long.
+      </target>
       </trans-unit>
       <trans-unit id="6b0dd0933835c1e0d9e3ed4a19c8eb88a9df417b" datatype="html">
         <source>2. Choose Students Per Team</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
-          <context context-type="linenumber">25</context>
+          <context context-type="linenumber">22</context>
         </context-group>
         <target state="translated">2. 選擇每組的學生</target>
       </trans-unit>
@@ -2032,11 +1952,7 @@
         <source>Only 1 student</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
-          <context context-type="linenumber">29</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
-          <context context-type="linenumber">32</context>
+          <context context-type="linenumber">24</context>
         </context-group>
         <target state="translated">只有1名學生</target>
       </trans-unit>
@@ -2044,11 +1960,7 @@
         <source>1-3 students</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
-          <context context-type="linenumber">30</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
-          <context context-type="linenumber">34</context>
+          <context context-type="linenumber">25</context>
         </context-group>
         <target state="translated">1-3名學生</target>
       </trans-unit>
@@ -2056,7 +1968,7 @@
         <source>3. Set Schedule</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
-          <context context-type="linenumber">33</context>
+          <context context-type="linenumber">28</context>
         </context-group>
         <target state="translated">3. 設定時間表</target>
       </trans-unit>
@@ -2064,22 +1976,19 @@
         <source>Start date</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
-          <context context-type="linenumber">38</context>
+          <context context-type="linenumber">33</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
-          <context context-type="linenumber">47</context>
+          <context context-type="linenumber">45</context>
         </context-group>
         <target state="translated">起始日期</target>
-        <alt-trans>
-          <target>開始日期</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="6becdc6f27b75d5697cfd21fa1c80856ee184e64" datatype="html">
         <source>Start date is required</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
-          <context context-type="linenumber">44</context>
+          <context context-type="linenumber">38</context>
         </context-group>
         <target state="translated">起始日期是必填的</target>
       </trans-unit>
@@ -2087,19 +1996,43 @@
         <source>End date</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
-          <context context-type="linenumber">50</context>
+          <context context-type="linenumber">44</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
-          <context context-type="linenumber">59</context>
+          <context context-type="linenumber">56</context>
         </context-group>
         <target state="translated">結束日期</target>
+      </trans-unit>
+      <trans-unit id="4005b12b4826f1ebfe46b5d64ecb84915f61be73" datatype="html">
+        <source>
+          Lock After End Date
+        </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
+          <context context-type="linenumber">52</context>
+        </context-group>
+        <target state="needs-translation">
+          Lock After End Date
+        </target>
+      </trans-unit>
+      <trans-unit id="70b1ab8a9900ee7a2907d90336ecbdb47bd4d018" datatype="html">
+        <source>If the End Date has passed and the unit is locked, students will no longer be able to save new work</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
+          <context context-type="linenumber">70</context>
+        </context-group>
+        <target state="needs-translation">If the End Date has passed and the unit is locked, students will no longer be able to save new work</target>
       </trans-unit>
       <trans-unit id="dfe5fb2242551f7f7aae712b5449e38ec0ca79a8" datatype="html">
         <source>Note: These dates can be changed at any time from your Class Schedule. Just select &quot;Edit Settings&quot; from the unit&apos;s dropdown menu.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
-          <context context-type="linenumber">59</context>
+          <context context-type="linenumber">60</context>
         </context-group>
         <target state="translated">注意：這些日期可以隨時從課程表中更改。 只需從課程的下拉選單中選擇“編輯設定”即可。</target>
       </trans-unit>
@@ -2107,7 +2040,7 @@
         <source>Create Run</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
-          <context context-type="linenumber">68</context>
+          <context context-type="linenumber">66</context>
         </context-group>
         <target state="translated">建立執行</target>
       </trans-unit>
@@ -2115,7 +2048,7 @@
         <source>Success! This unit has been added to your Class Schedule.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
-          <context context-type="linenumber">75</context>
+          <context context-type="linenumber">73</context>
         </context-group>
         <target state="translated">成功！ 該單元已增加到您的課程表中。</target>
       </trans-unit>
@@ -2123,11 +2056,11 @@
         <source>Access Code: <x id="INTERPOLATION" equiv-text="{{ run.runCode }}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
-          <context context-type="linenumber">77</context>
+          <context context-type="linenumber">75</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
-          <context context-type="linenumber">22</context>
+          <context context-type="linenumber">31</context>
         </context-group>
         <target state="translated">課程代碼: <x id="INTERPOLATION" equiv-text="{{ run.runCode }}"/></target>
       </trans-unit>
@@ -2135,7 +2068,7 @@
         <source>Important: Every classroom unit has a unique Access Code. Students use this code to register for a unit. Give the code to your students when they first sign up for a WISE account. If they already have WISE accounts, have them log in and then select &quot;Add Unit&quot; from the student home page.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
-          <context context-type="linenumber">78</context>
+          <context context-type="linenumber">76</context>
         </context-group>
         <target state="translated">重要提醒：每個課程都有一個唯一的課程代碼。 學生可以使用此課程代碼加入一個課程。 在您的學生第一次註冊WISE帳號時，將其課程代碼提供給您的學生。 如果他們已經有WISE帳號，請讓他們登錄，然後從學生首頁選擇“新增課程”。</target>
       </trans-unit>
@@ -2143,9 +2076,19 @@
         <source>You can always find the Access Code for each classroom unit in your Class Schedule.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
-          <context context-type="linenumber">79</context>
+          <context context-type="linenumber">77</context>
         </context-group>
         <target state="translated">您永遠可以在課程表中找到每個課程的課程代碼。</target>
+      </trans-unit>
+      <trans-unit id="6d1b448d6bd57d2a29e2f8e1ea8a35aacd3101f5" datatype="html">
+        <source>Add to Google
+      Classroom</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
+          <context context-type="linenumber">82</context>
+        </context-group>
+        <target state="needs-translation">Add to Google
+      Classroom</target>
       </trans-unit>
       <trans-unit id="d9b2ffb3e1ce1ca42a3db04d00ea072777898eb3" datatype="html">
         <source>Legacy Unit Warning</source>
@@ -2223,7 +2166,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
-          <context context-type="linenumber">43</context>
+          <context context-type="linenumber">52</context>
         </context-group>
         <target state="translated">這個舊版的WISE課程已不再支援。 請找出未來要使用的替代課程，或與我們聯繫來選擇升級。</target>
       </trans-unit>
@@ -2303,7 +2246,7 @@
         <source>Preview</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/library-project-details/library-project-details.component.html</context>
-          <context context-type="linenumber">98</context>
+          <context context-type="linenumber">97</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
@@ -2498,9 +2441,6 @@
           <context context-type="linenumber">4</context>
         </context-group>
         <target state="translated">(課程 ID: <x id="INTERPOLATION" equiv-text="{{ run.id }}"/>)</target>
-        <alt-trans>
-          <target>(Run ID: <x id="INTERPOLATION" equiv-text="{{ run.id }}"/>)</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="7729e322ed636f18b5930ee33fde3b4a10f2e4ce" datatype="html">
         <source>Warning! You will be editing the content of a classroom unit. If students have already started working, this may result in lost data or other problems.</source>
@@ -3289,9 +3229,6 @@
           <context context-type="linenumber">50</context>
         </context-group>
         <target state="translated">出生月份是必填的</target>
-        <alt-trans>
-          <target>月份是必填的</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="e3945fcac2b828a12bd531c748cf8bd08b04498c" datatype="html">
         <source>Birthday (Day)</source>
@@ -4188,9 +4125,6 @@
           <context context-type="linenumber">68</context>
         </context-group>
         <target state="translated">拖放學生姓名即可將他們從一個組轉移到另一個組。 在離開此視窗之前，請確認您有儲存您的更改。</target>
-        <alt-trans>
-          <target>拖放學生姓名即可將他們從一個組轉移到另一個組。 在離開此窗口之前，請確認您有儲存您的更改。</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="8651e5c9fed5b42224d970458cb11046917dc6a6" datatype="html">
         <source>If you want to move students into a brand new team, click New Team, then drag 1 or more students into the new team. Save your changes.</source>
@@ -4591,10 +4525,6 @@
           <context context-type="linenumber">162</context>
         </context-group>
         <target state="translated">下面的連結將為您提供評量指標的範例，用於對有絲分裂和細胞過程專題中的步驟進行分級。該評量指標是在我們TELS中心的一項研究學生如何整合他們對複雜科學概念的知識的研究項目的基礎上進行的。 我們希望它可以讓您開始為計劃評分的筆記和步驟開發自己的評量指標。</target>
-        <alt-trans>
-          <target>下面的連結將為您提供評量指標的範例，用於對有絲分裂和細胞過程專題中的步驟進行分級。該評量指標是在我們TELS中心的一項研究學生如何整合他們對複雜科學概念的知識的研究項目的基礎上進行的。 我們希望它可以讓您開始為計劃評分的筆記和步驟開發自己的評量指標。
-</target>
-        </alt-trans>
       </trans-unit>
       <trans-unit id="4d5c08a9dd67d4172985bfa1e4ba5afaa90c8dd8" datatype="html">
         <source>Sample rubric for assessing student work</source>
@@ -5593,7 +5523,7 @@
           <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
           <context context-type="linenumber">21</context>
         </context-group>
-        <target state="needs-translation">Switch back to original user</target>
+        <target state="translated">切換回原來的使用者</target>
       </trans-unit>
       <trans-unit id="c4e3e4170654ee5a353d29a0c34b8008cd25a635" datatype="html">
         <source>Student Home</source>
@@ -5717,7 +5647,7 @@
           <context context-type="sourcefile">app/student/add-project-dialog/add-project-dialog.component.html</context>
           <context context-type="linenumber">10</context>
         </context-group>
-        <target state="needs-translation">This run has ended. Please talk to your teacher.</target>
+        <target state="translated">這門課程已經結束了。請找你的老師談談。</target>
       </trans-unit>
       <trans-unit id="38b627ddc0611e9f2027cb255872829f3c7917fc" datatype="html">
         <source>Choose Period</source>
@@ -5915,7 +5845,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
-          <context context-type="linenumber">74</context>
+          <context context-type="linenumber">83</context>
         </context-group>
         <target state="translated">開始 <x id="INTERPOLATION" equiv-text="{{run.startTime | amTimeAgo}}"/></target>
       </trans-unit>
@@ -6055,11 +5985,19 @@
         <source>students</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
-          <context context-type="linenumber">16</context>
+          <context context-type="linenumber">17</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
-          <context context-type="linenumber">18</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
+          <context context-type="linenumber">27</context>
         </context-group>
         <target state="translated">學生</target>
       </trans-unit>
@@ -6067,7 +6005,11 @@
         <source>student</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
-          <context context-type="linenumber">17</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
+          <context context-type="linenumber">26</context>
         </context-group>
         <target state="translated">學生</target>
       </trans-unit>
@@ -6077,7 +6019,7 @@
   </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
-          <context context-type="linenumber">23</context>
+          <context context-type="linenumber">32</context>
         </context-group>
         <target state="translated">
     <x id="INTERPOLATION" equiv-text="{{run.owner.firstName}}"/><x id="INTERPOLATION_1" equiv-text="{{run.owner.lastName}}"/>通過共享
@@ -6087,7 +6029,7 @@
         <source>(Legacy Unit)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
-          <context context-type="linenumber">45</context>
+          <context context-type="linenumber">54</context>
         </context-group>
         <target state="translated">（舊版課程）</target>
       </trans-unit>
@@ -6095,7 +6037,7 @@
         <source>Last student login: <x id="INTERPOLATION" equiv-text="{{run.lastRun | amCalendar}}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
-          <context context-type="linenumber">68</context>
+          <context context-type="linenumber">77</context>
         </context-group>
         <target state="translated">上次學生登入：<x id="INTERPOLATION" equiv-text="{{run.lastRun | amCalendar}}"/></target>
       </trans-unit>
@@ -6103,7 +6045,7 @@
         <source>Teacher Tools</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
-          <context context-type="linenumber">82</context>
+          <context context-type="linenumber">91</context>
         </context-group>
         <target state="translated">教師工具</target>
       </trans-unit>
@@ -6219,6 +6161,26 @@
         </context-group>
         <target state="translated">每組的學生</target>
       </trans-unit>
+      <trans-unit id="17fa4b58d131328449acdbaad4bbe404bfd31264" datatype="html">
+        <source>Only
+      1 student</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+        <target state="needs-translation">Only
+      1 student</target>
+      </trans-unit>
+      <trans-unit id="975a4029af4b0992dcdcbe682bcba819ea8cf809" datatype="html">
+        <source>1-3
+      students</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+        <target state="needs-translation">1-3
+      students</target>
+      </trans-unit>
       <trans-unit id="4a4f46a2dcec36bd5c8c371ceee55c2226dec27f" datatype="html">
         <source>Schedule</source>
         <context-group purpose="location">
@@ -6227,21 +6189,35 @@
         </context-group>
         <target state="translated">預定排程</target>
       </trans-unit>
-      <trans-unit id="966a68a11a339aa294e2d035b6982039b2448ef4" datatype="html">
-        <source>(Last student login: <x id="INTERPOLATION" equiv-text="{{ run.lastRun | amCalendar }}"/>)</source>
+      <trans-unit id="c1d7798f7e66f0c74760feddb4a5ebe92a5dd49f" datatype="html">
+        <source>(Last student login:
+      <x id="INTERPOLATION" equiv-text="{{ run.lastRun | amCalendar }}"/>)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
-          <context context-type="linenumber">41</context>
+          <context context-type="linenumber">39</context>
         </context-group>
-        <target state="translated">(上次學生登入：<x id="INTERPOLATION" equiv-text="{{ run.lastRun | amCalendar }}"/>)</target>
+        <target state="needs-translation">(Last student login:
+      <x id="INTERPOLATION" equiv-text="{{ run.lastRun | amCalendar }}"/>)</target>
       </trans-unit>
       <trans-unit id="a1c89f5496e99086127a54d08cecba1d0920397e" datatype="html">
         <source>Start date is required.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
-          <context context-type="linenumber">52</context>
+          <context context-type="linenumber">50</context>
         </context-group>
         <target state="translated">開始日期是必填的。</target>
+      </trans-unit>
+      <trans-unit id="1758732318fe8d8d5820744ec9691104301ced4f" datatype="html">
+        <source>
+        Lock After End Date
+      </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
+          <context context-type="linenumber">66</context>
+        </context-group>
+        <target state="needs-translation">
+        Lock After End Date
+      </target>
       </trans-unit>
       <trans-unit id="9c83559c416a8e596b51a342566efdb2868f2404" datatype="html">
         <source>Run Menu</source>
@@ -6305,843 +6281,7 @@
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
           <context context-type="linenumber">107</context>
         </context-group>
-        <target state="needs-translation">Help us translate WISE! Visit <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>https://crowdin.com/project/wise<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</target>
-      </trans-unit>
-      <trans-unit id="de4fdef260a86fc9c409a2d4562e8910d93e2b6d" datatype="html">
-        <source>Trouble Signing In</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/contact/contact-form/contact-form.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/contact/contact-form/contact-form.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">無法登錄</target>
-      </trans-unit>
-      <trans-unit id="84ca5513dca4fe431338da8c2b1f43d8c0d075cb" datatype="html">
-        <source>Need Help Using WISE</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/contact/contact-form/contact-form.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/contact/contact-form/contact-form.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">在使用WISE需要幫助</target>
-      </trans-unit>
-      <trans-unit id="6a6f97816b45d44504a072d73938c951bbd01810" datatype="html">
-        <source>Problems with a WISE Unit</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/contact/contact-form/contact-form.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/contact/contact-form/contact-form.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">WISE課程的问题</target>
-      </trans-unit>
-      <trans-unit id="f1807ecd6fbc3fe83f80ac9aa16bc7070b8b8710" datatype="html">
-        <source>Feedback to WISE</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/contact/contact-form/contact-form.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/contact/contact-form/contact-form.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">反應給WISE平台</target>
-      </trans-unit>
-      <trans-unit id="c2a9de3714f5767b174d0424bc8abe2dc37acc41" datatype="html">
-        <source>Other</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/contact/contact-form/contact-form.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/contact/contact-form/contact-form.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-teacher-form/register-teacher-form.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/account/edit-profile/edit-profile.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">其它</target>
-      </trans-unit>
-      <trans-unit id="f00f3d70974c43864db310ec95f4f39f7db4889d" datatype="html">
-        <source>Need Help with Authoring</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/contact/contact-form/contact-form.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">在編輯方面需要幫助</target>
-      </trans-unit>
-      <trans-unit id="5b010f83da62819ebc8fe9ef4617d06655d9956d" datatype="html">
-        <source>Password cannot be blank. Please try again.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/student/forgot-student-password-change/forgot-student-password-change.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">密碼不能為空白。 請再試一次。</target>
-      </trans-unit>
-      <trans-unit id="dd3e7d304d9699b552e74b3df8ba4db15bd73d45" datatype="html">
-        <source>Passwords do not match. Please try again.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/student/forgot-student-password-change/forgot-student-password-change.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">密碼不相符，請再試一次。</target>
-      </trans-unit>
-      <trans-unit id="a9c69d183e4c242ae401b97eb42e604e7d68b28b" datatype="html">
-        <source>Password is invalid. Please try a different password.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/student/forgot-student-password-change/forgot-student-password-change.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">密碼無效。 請嘗試使用其他密碼。</target>
-      </trans-unit>
-      <trans-unit id="b56dfebca6de6359c493b37573a9899570a588bc" datatype="html">
-        <source>An error occurred. Please try again.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/student/forgot-student-password-change/forgot-student-password-change.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/student/account/edit-profile/edit-profile.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/account/edit-profile/edit-profile.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">發生錯誤。 請再試一次。</target>
-      </trans-unit>
-      <trans-unit id="2b56c831427defc64625d11924305ed7799352a9" datatype="html">
-        <source>Incorrect answer, please try again. If you can&apos;t remember the answer to your security question, please ask your teacher to change your password or contact us for assistance.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/student/forgot-student-password-security/forgot-student-password-security.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">答案不正確，請再試一次。 如果您不記得安全問題的答案，請要求您的老師更改密碼或與我們聯繫以尋求幫助。</target>
-      </trans-unit>
-      <trans-unit id="0f14490b15e52e7783bc7797b74835bfb4d12ffd" datatype="html">
-        <source>We could not find that username. Please make sure you are typing it correctly and try again. If you have forgotten your username, please use the forgot username option below.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/student/forgot-student-password/forgot-student-password.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/teacher/forgot-teacher-password/forgot-teacher-password.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">我們找不到這個帳號。 請確認您輸入的是正確，然後重試。 如果您忘記了帳號，請使用下方的“遺失帳號”選項。</target>
-      </trans-unit>
-      <trans-unit id="0034d12a18c80ed8071f50dd902cc8bfc5694397" datatype="html">
-        <source>01 (Jan)</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/student/forgot-student-username/forgot-student-username.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">一月</target>
-      </trans-unit>
-      <trans-unit id="0931fb286156dee1394c7e61710a4f1ee029bec1" datatype="html">
-        <source>02 (Feb)</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/student/forgot-student-username/forgot-student-username.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">二月</target>
-      </trans-unit>
-      <trans-unit id="fb954f4c2bd25a40575cbbfd7dabf8c21413ff09" datatype="html">
-        <source>03 (Mar)</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/student/forgot-student-username/forgot-student-username.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">三月</target>
-      </trans-unit>
-      <trans-unit id="059ffe65f2882d4fa6aec1f22cd8bff61c648016" datatype="html">
-        <source>04 (Apr)</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/student/forgot-student-username/forgot-student-username.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">四月</target>
-      </trans-unit>
-      <trans-unit id="788337d5af8315eb94f8eeb875152947d81ed970" datatype="html">
-        <source>05 (May)</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/student/forgot-student-username/forgot-student-username.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">五月</target>
-      </trans-unit>
-      <trans-unit id="e78cea38fcaa585fd19d98676e1812b5d5837d34" datatype="html">
-        <source>06 (Jun)</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/student/forgot-student-username/forgot-student-username.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">六月</target>
-      </trans-unit>
-      <trans-unit id="ab1bb567d433c94269b4f2875fdd898d7276d5a6" datatype="html">
-        <source>07 (Jul)</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/student/forgot-student-username/forgot-student-username.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">七月</target>
-      </trans-unit>
-      <trans-unit id="490b1aa4b4768e1596c6c19e8dca77c401247588" datatype="html">
-        <source>08 (Aug)</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/student/forgot-student-username/forgot-student-username.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">八月</target>
-      </trans-unit>
-      <trans-unit id="06c5170eda5041ce09d9381ca2e5f739c7b6df6e" datatype="html">
-        <source>09 (Sep)</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/student/forgot-student-username/forgot-student-username.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">九月</target>
-      </trans-unit>
-      <trans-unit id="3245dcf86cb2ee2fba808cce33907d7f67b57f70" datatype="html">
-        <source>10 (Oct)</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/student/forgot-student-username/forgot-student-username.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">十月</target>
-      </trans-unit>
-      <trans-unit id="bc64ec063b9c3a1adfa2f4134e0b1cbcb0c6e02e" datatype="html">
-        <source>11 (Nov)</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/student/forgot-student-username/forgot-student-username.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">十一月</target>
-      </trans-unit>
-      <trans-unit id="fac808901a559404cc61fb3322fd0c351f1aa923" datatype="html">
-        <source>12 (Dec)</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/student/forgot-student-username/forgot-student-username.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">十二月</target>
-      </trans-unit>
-      <trans-unit id="7d2b424cec500d06336a5c74c64b0c93e126cbff" datatype="html">
-        <source>We did not find any usernames that match the information you provided. Please make sure you entered your information correctly. If you can&apos;t find your account, ask a teacher for help or contact us for assistance.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/student/forgot-student-username/forgot-student-username.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">我們找不到與您提供的資訊相符的帳號。 請確任您輸入的訊息是正確的。 如果找不到您的帳號，請向老師尋求幫助或與我們聯繫以尋求幫助。</target>
-      </trans-unit>
-      <trans-unit id="93256df87c3e35873c0b60f3c2478c9651291881" datatype="html">
-        <source>We found a username that matches. Select it to log in. If this username is not yours, ask a teacher for help or contact us for assistance.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/student/forgot-student-username/forgot-student-username.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">我們找到了一個匹配的帳號。 選擇它以登入。如果該帳號不是您的帳號，請向老師尋求幫助或與我們聯繫以獲取幫助。</target>
-      </trans-unit>
-      <trans-unit id="6b6d7c8be10b5e98805335844750cd1035e23f8d" datatype="html">
-        <source>We found multiple usernames that match. If one of these is yours, select it to log in. If you can&apos;t find your account, ask a teacher for help or contact us for assistance.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/student/forgot-student-username/forgot-student-username.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">我們找到了多個匹配的帳號。 如果其中之一屬於您，請選擇該帳號登錄。如果找不到您的帳號，請向老師尋求幫助或與我們聯繫以尋求幫助。</target>
-      </trans-unit>
-      <trans-unit id="bc97abab83efdcc1facad857f5ca74f8e420000d" datatype="html">
-        <source>The verification code has expired. Verification codes are valid for 10 minutes. Please go back to the Teacher Forgot Password page to generate a new one.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/teacher/forgot-teacher-password-change/forgot-teacher-password-change.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/teacher/forgot-teacher-password-verify/forgot-teacher-password-verify.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">驗證碼已過期。 驗證碼有效期限為10分鐘。 請返回“忘記教師密碼”頁面以產生一個新的驗證碼。</target>
-      </trans-unit>
-      <trans-unit id="4a0bbc0b76303940c748153ce1b20a3911abad6b" datatype="html">
-        <source>The verification code is invalid. Please try again.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/teacher/forgot-teacher-password-change/forgot-teacher-password-change.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/teacher/forgot-teacher-password-verify/forgot-teacher-password-verify.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">該驗證碼無效。 請再試一次。</target>
-      </trans-unit>
-      <trans-unit id="a36838ad01418074c9380499aeb8250c051c5067" datatype="html">
-        <source>You have submitted an invalid verification code too many times. For security reasons, we will lock the ability to change your password for 10 minutes. After 10 minutes, please go back to the Teacher Forgot Password page to generate a new verification code.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/teacher/forgot-teacher-password-change/forgot-teacher-password-change.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/teacher/forgot-teacher-password-verify/forgot-teacher-password-verify.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">您送出了無效的驗證碼太多次了。 基於安全考量，我們將鎖定您更改密碼的功能，持續10分鐘。 10分鐘後，請返回“忘記教師密碼”頁面以產成新的驗證碼。</target>
-      </trans-unit>
-      <trans-unit id="55cf53e519557dc8c87c01afd630ab40c7546172" datatype="html">
-        <source>Password cannot be blank, please enter a password.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/teacher/forgot-teacher-password-change/forgot-teacher-password-change.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">密碼不能空白。請輸入一個密碼。</target>
-      </trans-unit>
-      <trans-unit id="9ea89a76186e703222a3c0a8c261ef6f81c62791" datatype="html">
-        <source>Passwords do not match, please try again.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/teacher/forgot-teacher-password-change/forgot-teacher-password-change.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">密碼不相符，請再試一次。</target>
-      </trans-unit>
-      <trans-unit id="7ff2c787c56ea04e33595ef32a0f23104e3214ae" datatype="html">
-        <source>An error occurred, please try again.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/teacher/forgot-teacher-password-change/forgot-teacher-password-change.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">發生錯誤。 請再試一次。</target>
-      </trans-unit>
-      <trans-unit id="108de953d59b965b4454434ac2f8664651c396d5" datatype="html">
-        <source>You have submitted an invalid verification code too many times. For security reasons, we will lock the ability to change your password for 10 minutes. After 10 minutes, you can try again.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/teacher/forgot-teacher-password/forgot-teacher-password.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">您送出太多次無效的驗證碼了。 基於安全考量，我們將鎖定您更改密碼的功能，持續10分鐘。 10分鐘後，您可以再重試一次。</target>
-      </trans-unit>
-      <trans-unit id="5e14de974094b2e38989db1da25c34badbcb0888" datatype="html">
-        <source>The server has encountered an error and was unable to send you an email. Please try again. If the error continues to occur, please contact us.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/teacher/forgot-teacher-password/forgot-teacher-password.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">伺服器出現錯誤，無法向您發送電子郵件。 請再試一次。 如果持續發生錯誤，請與我們聯繫。</target>
-      </trans-unit>
-      <trans-unit id="4b2d0bc81118fc043b3b4474eb9924070cc22777" datatype="html">
-        <source>We did not find a WISE account associated with that email. Please make sure you have typed your email address correctly.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/teacher/forgot-teacher-username/forgot-teacher-username.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">我們找不到與該電子郵件相關的WISE帳號。 請確認您輸入的電子郵件是正確。</target>
-      </trans-unit>
-      <trans-unit id="0acdb2c552977a58eb0966e2f4a82f443ad2916e" datatype="html">
-        <source>The server has encountered an error and was unable to send an email to you. Please try again. If the error continues to occur, please contact us.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/forgot/teacher/forgot-teacher-username/forgot-teacher-username.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">伺服器遇到錯誤，無法向您發送電子郵件。 請再試一次。 如果持續發生錯誤，請與我們聯繫。</target>
-      </trans-unit>
-      <trans-unit id="5d6fe85e070e0a0291dcb60f4a95ac1cb9a4a991" datatype="html">
-        <source>An error occurred: </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/http-error.interceptor.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">發生錯誤： </target>
-      </trans-unit>
-      <trans-unit id="5093f1c7a1a2d4ef9a87d65d94c536a3d6b1e175" datatype="html">
-        <source>Backend returned code <x id="INTERPOLATION" equiv-text="{{status}}"/>, body was: <x id="INTERPOLATION_1" equiv-text="{{error}}"/></source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/http-error.interceptor.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">後台傳回的代碼<x id="INTERPOLATION" equiv-text="{{status}}"/>，內容為：<x id="INTERPOLATION_1" equiv-text="{{error}}"/></target>
-      </trans-unit>
-      <trans-unit id="7ddad2424cc5ebd2be4f9908c07b9b84c40d983b" datatype="html">
-        <source>An error occurred. Please refresh this page and try again.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/http-error.interceptor.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">發生錯誤。 請重新整理此頁面，然後重試。</target>
-      </trans-unit>
-      <trans-unit id="d527aaa5bbf9cc38467c1ba388a7a16d2eb3aabc" datatype="html">
-        <source>There was an error trying to copy the project. Please refresh the page and try again.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/modules/library/copy-project-dialog/copy-project-dialog.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">嘗試複製專題時出錯。 請重新整理頁面，然後重試。</target>
-      </trans-unit>
-      <trans-unit id="d936b9392ac810869ea9ae7c392a327b9267b0fd" datatype="html">
-        <source>License pertains to original content created by the author(s). Authors are responsible for the usage and attribution of any third-party content linked to or included in this work.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/modules/library/library-project-details/library-project-details.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">許可證適用於作者建立的原始內容。 作者負責連結或包含在本作品中的任何第三方內容的使用權和所有權。</target>
-      </trans-unit>
-      <trans-unit id="dbe9ffa58b07d48dc33f34c86b15c3ce33bbd2c2" datatype="html">
-        <source>Unit Details</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/modules/library/library-project/library-project.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">課程詳情</target>
-      </trans-unit>
-      <trans-unit id="615b3b60d98013117fa5ced450b1345d5ba5262d" datatype="html">
-        <source>Show:</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/modules/library/libraryPaginatorIntl.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">顯示：</target>
-      </trans-unit>
-      <trans-unit id="ce3cefb1cd0099aa5003dda16ec9eb21fd8ba789" datatype="html">
-        <source>Next page</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/modules/library/libraryPaginatorIntl.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">下一頁</target>
-      </trans-unit>
-      <trans-unit id="575e782fd27f2ee70a034a775efe9ad162472250" datatype="html">
-        <source>Previous page</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/modules/library/libraryPaginatorIntl.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">上一頁</target>
-      </trans-unit>
-      <trans-unit id="dddb2fd891082b5905adb176fbb382e6ccf3e10f" datatype="html">
-        <source>0 of <x id="INTERPOLATION" equiv-text="{{total}}"/></source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/modules/library/libraryPaginatorIntl.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">0 of <x id="INTERPOLATION" equiv-text="{{total}}"/></target>
-      </trans-unit>
-      <trans-unit id="1fa889a57be6df3fc55b83d402af3b2933b89acd" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="{{start}}"/> - <x id="INTERPOLATION_1" equiv-text="{{end}}"/> of <x id="INTERPOLATION_2" equiv-text="{{total}}"/></source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/modules/library/libraryPaginatorIntl.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated"><x id="INTERPOLATION" equiv-text="{{start}}"/> - <x id="INTERPOLATION_1" equiv-text="{{end}}"/> of <x id="INTERPOLATION_2" equiv-text="{{total}}"/></target>
-      </trans-unit>
-      <trans-unit id="87e83ba367d61f39003bd653b2be6b8deb0a4077" datatype="html">
-        <source>Sharing permissions updated for <x id="INTERPOLATION" equiv-text="{{firstName}}"/> <x id="INTERPOLATION_1" equiv-text="{{lastName}}"/>.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/modules/library/share-item-dialog/share-item-dialog.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">共享權限已更新為<x id="INTERPOLATION" equiv-text="{{firstName}}"/><x id="INTERPOLATION_1" equiv-text="{{lastName}}"/>。</target>
-      </trans-unit>
-      <trans-unit id="21e1f17b31c2539755f91af0891b3d45eb535b41" datatype="html">
-        <source>Added shared teacher: <x id="INTERPOLATION" equiv-text="{{firstName}}"/> <x id="INTERPOLATION_1" equiv-text="{{lastName}}"/>.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/modules/library/share-item-dialog/share-item-dialog.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">新增共享的老師：<x id="INTERPOLATION" equiv-text="{{firstName}}"/><x id="INTERPOLATION_1" equiv-text="{{lastName}}"/></target>
-      </trans-unit>
-      <trans-unit id="918997618ef46e7aafddf9ab28e6a59ed4aa6d4e" datatype="html">
-        <source>Removed shared teacher: <x id="INTERPOLATION" equiv-text="{{firstName}}"/> <x id="INTERPOLATION_1" equiv-text="{{lastName}}"/>.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/modules/library/share-item-dialog/share-item-dialog.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">移除共享的老師：<x id="INTERPOLATION" equiv-text="{{firstName}}"/><x id="INTERPOLATION_1" equiv-text="{{lastName}}"/></target>
-      </trans-unit>
-      <trans-unit id="807f39b93f38db144148c3e05f4886e99593227c" datatype="html">
-        <source>Password changed.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/modules/shared/edit-password/edit-password.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">密碼已更改.</target>
-      </trans-unit>
-      <trans-unit id="c8f0dbda0d557e58e54598c7d29d719d6c764413" datatype="html">
-        <source>Select an option</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/modules/shared/select-menu/select-menu.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">選擇一個選項</target>
-      </trans-unit>
-      <trans-unit id="18f3bafdc69b800737e303bc1cb0753bd9dd3f32" datatype="html">
-        <source>Female</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">女</target>
-      </trans-unit>
-      <trans-unit id="097b5dfee5665aa0f7daba8b696acecde6445474" datatype="html">
-        <source>Male</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">男</target>
-      </trans-unit>
-      <trans-unit id="f60d7936217a148dd26aae9c64f8d676369be901" datatype="html">
-        <source>No Answer/Other</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-student-form/register-student-form.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">沒有答案/其他</target>
-      </trans-unit>
-      <trans-unit id="a318c6afca84af8f01f017d075ff1c3f6257e4f3" datatype="html">
-        <source>Elementary School</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-teacher-form/register-teacher-form.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/account/edit-profile/edit-profile.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">小學</target>
-      </trans-unit>
-      <trans-unit id="09637ca64b2d5d3a393bd1ab2713c0bd4edbcc95" datatype="html">
-        <source>Middle School</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-teacher-form/register-teacher-form.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/account/edit-profile/edit-profile.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">國中</target>
-      </trans-unit>
-      <trans-unit id="883888e9073880687bd969a402dff0b136f09023" datatype="html">
-        <source>High School</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-teacher-form/register-teacher-form.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/account/edit-profile/edit-profile.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">高中</target>
-      </trans-unit>
-      <trans-unit id="687134b5f01a5de70837d9773ae0aaf9f005a205" datatype="html">
-        <source>College</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/register/register-teacher-form/register-teacher-form.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/account/edit-profile/edit-profile.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">大學</target>
-      </trans-unit>
-      <trans-unit id="db4ff52375f6a25ad0472e92754c8c265ae47c6b" datatype="html">
-        <source>Profile updated.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/student/account/edit-profile/edit-profile.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/account/edit-profile/edit-profile.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">更新個人資料</target>
-      </trans-unit>
-      <trans-unit id="96e3d7cc1051fa738cbb4f3ee6038c1751d85df6" datatype="html">
-        <source>A teacher cannot be added as a team member.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/student/team-sign-in-dialog/team-sign-in-dialog.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/student/team-sign-in-dialog/team-sign-in-dialog.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">教師不能被加入為小組成員。</target>
-      </trans-unit>
-      <trans-unit id="1a0ca479e7388aea7b2d26e84673bc88081cee7f" datatype="html">
-        <source>Invalid username. Please try again.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/student/team-sign-in-dialog/team-sign-in-dialog.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">無效的帳號，請再試一次。</target>
-      </trans-unit>
-      <trans-unit id="b02351365c2a5c4456bd54c342cfe09b3c065a95" datatype="html">
-        <source>Invalid password. Please try again.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/student/team-sign-in-dialog/team-sign-in-dialog.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">無效的密碼，請再試一次。</target>
-      </trans-unit>
-      <trans-unit id="66c9d5817cd540aa177f656419784731d3bfae26" datatype="html">
-        <source>Incorrect Google user. Please try again.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/student/team-sign-in-dialog/team-sign-in-dialog.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">無效的Google使用者，請再試一次。</target>
-      </trans-unit>
-      <trans-unit id="39ab535140dcc8123b6f3dc6a502ad4ab30924a1" datatype="html">
-        <source>No WISE user with this Google ID found.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/student/team-sign-in-dialog/team-sign-in-dialog.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">找不到具有此Google ID的WISE用戶。</target>
-      </trans-unit>
-      <trans-unit id="c18040a22a5dee82cf46a72d15dfec734dc172bb" datatype="html">
-        <source>Hi class! Please complete the &quot;<x id="INTERPOLATION" equiv-text="{{unitTitle}}"/>&quot; WISE unit. (Access Code: <x id="INTERPOLATION_1" equiv-text="{{accessCode}}"/>)</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">大家好！ 請完成<x id="INTERPOLATION" equiv-text="{{unitTitle}}"/>WISE課程。（課程代碼：<x id="INTERPOLATION_1" equiv-text="{{accessCode}}"/>）</target>
-      </trans-unit>
-      <trans-unit id="8447ecc2ee7816373dfb3a113b6e390d89b658b7" datatype="html">
-        <source> (Section <x id="INTERPOLATION" equiv-text="{{section}}"/>)</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated"> (<x id="INTERPOLATION" equiv-text="{{section}}"/>Section)</target>
-      </trans-unit>
-      <trans-unit id="7a73a1a02bcf341a627892f0d02e113981f96ee3" datatype="html">
-        <source>Run Settings</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-menu/run-menu.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">執行設定</target>
-      </trans-unit>
-      <trans-unit id="a4a01cfa1a6dfa138c0876ec8bfec1092317137c" datatype="html">
-        <source>Edit Classroom Unit Warning</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-menu/run-menu.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">編輯課程提醒</target>
-      </trans-unit>
-      <trans-unit id="e7d36246d5a33f55e55b2eb62510276f8f0aa387" datatype="html">
-        <source>There is already a period with that name.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">該時段名稱已存在</target>
-      </trans-unit>
-      <trans-unit id="e80540a5d520797610af6a2b765156063cadb46f" datatype="html">
-        <source>You do not have permission to add periods to this unit.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">您沒有權限向此課程增加時段。</target>
-      </trans-unit>
-      <trans-unit id="c4b14ec0b005bee96593685d8346973e8651ea82" datatype="html">
-        <source>You are not allowed to delete a period that contains students.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">您不能刪除包含學生的課程時段。</target>
-      </trans-unit>
-      <trans-unit id="f8f08ff0913736a1048d0f70a2b2390d5ec590ca" datatype="html">
-        <source>You do not have permission to delete periods from this unit.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">您沒有權限在此課程中刪除時段。</target>
-      </trans-unit>
-      <trans-unit id="fa0351289ae6073e666ece8b95c8d14958d50d98" datatype="html">
-        <source>You do not have permission to change the number of students per team for this unit.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">您無權更改此課程每個小組的學生人數。</target>
-      </trans-unit>
-      <trans-unit id="35a78a3d889db709b79f95e046051f10077c54de" datatype="html">
-        <source>You are not allowed to decrease the number of students per team because this unit already has teams with more than 1 student.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">不允許您減少每組的學生人數，因為該課程已經有超過1個學生的小組。</target>
-      </trans-unit>
-      <trans-unit id="fd540958a00446d8a204a5a9a0db472b73d7aaab" datatype="html">
-        <source>You do not have permission to change the dates for this unit.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">您無權更改此課程的日期。</target>
-      </trans-unit>
-      <trans-unit id="c39dc7dcb6dece34e9d5718449337e76cf892c91" datatype="html">
-        <source>End date can&apos;t be before start date.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">結束日期不能早於開始日期。</target>
-      </trans-unit>
-      <trans-unit id="f4e8826e636952f345f23611e61a77fec72cbc8b" datatype="html">
-        <source>Start date can&apos;t be after end date.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">開始日期不能晚於結束日期。</target>
-      </trans-unit>
-      <trans-unit id="b09df4f849aed6b523f0a26d8e99c4cd13880df3" datatype="html">
-        <source>Please enter a new period name.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">請輸入新的課程時段名稱。</target>
-      </trans-unit>
-      <trans-unit id="6d329babddc8b922dadb62f6034c992073e073e4" datatype="html">
-        <source>1-3</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">1-3</target>
-      </trans-unit>
-      <trans-unit id="333c363b9afc8c58567fc7686c3d2184d99f47a6" datatype="html">
-        <source>Are you sure you want to change the students per team to <x id="INTERPOLATION" equiv-text="{{value}}"/>?</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">確定要將每個小組的學生人數更改為<x id="INTERPOLATION" equiv-text="{{value}}"/>嗎？</target>
-      </trans-unit>
-      <trans-unit id="e9949fc7530006d3b20bfe00b30bfddbb60aac13" datatype="html">
-        <source>Are you sure you want to change the start date to <x id="INTERPOLATION" equiv-text="{{date}}"/>?</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">您確定要將開始日期更改為<x id="INTERPOLATION" equiv-text="{{date}}"/>嗎？</target>
-      </trans-unit>
-      <trans-unit id="1032b57a589b56e4122e7ca8b565a057f13f524b" datatype="html">
-        <source>Are you sure you want to change the end date to <x id="INTERPOLATION" equiv-text="{{date}}"/>?</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">您確定要將結束日期更改為<x id="INTERPOLATION" equiv-text="{{date}}"/>嗎？</target>
-      </trans-unit>
-      <trans-unit id="552cff32fa324f691b5ac17facdde8b9a963659f" datatype="html">
-        <source>Unit settings updated.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/run-settings-dialog/run-settings-dialog.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">課程設定已更新。</target>
-      </trans-unit>
-      <trans-unit id="13a4ce63135573625f668e8ccf5fda16933a846e" datatype="html">
-        <source>Transferred classroom unit ownership to <x id="INTERPOLATION" equiv-text="{{firstName}}"/> <x id="INTERPOLATION_1" equiv-text="{{lastName}}"/>.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/share-run-dialog/share-run-dialog.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">將課程所有權轉給<x id="INTERPOLATION" equiv-text="{{firstName}}"/><x id="INTERPOLATION_1" equiv-text="{{lastName}}"/>。</target>
-      </trans-unit>
-      <trans-unit id="6567489ecf0899e98c10bc65395798320d53ecc9" datatype="html">
-        <source>Class Schedule</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/teacher-home/teacher-home.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">班級課程表</target>
-      </trans-unit>
-      <trans-unit id="7aa747f76006993d92c4f88be5fa8a8968fa5dc2" datatype="html">
-        <source>Browse WISE Units</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/teacher-home/teacher-home.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">瀏覽WISE課程</target>
-      </trans-unit>
-      <trans-unit id="db4ff4b19bb2e0fe93c88a3dc04372503caa1135" datatype="html">
-        <source>Class Periods:</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/main/webapp/site/src/app/teacher/teacher-run-list-item/teacher-run-list-item.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="translated">課程時段：</target>
+        <target state="translated">請幫助我們翻譯WISE! 請瀏覽<x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>https://crowdin.com/project/wise<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/></target>
       </trans-unit>
     </body>
   </file>
