@@ -39,6 +39,10 @@ class NotebookWorkgroupGradingController {
     const expand = !this.expand;
     this.onUpdateExpand({ workgroupId: this.workgroup.workgroupId, value: expand });
   }
+
+  getNumActiveNotes() {
+    return this.workgroup.notes.filter(note => { return note.serverDeleteTime == null}).length;
+  }
 }
 
 const NotebookWorkgroupGrading = {

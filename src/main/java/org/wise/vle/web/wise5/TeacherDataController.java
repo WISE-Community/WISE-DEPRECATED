@@ -20,7 +20,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.acls.domain.BasePermission;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -40,7 +39,6 @@ import org.wise.portal.spring.data.redis.MessagePublisher;
 import org.wise.vle.domain.annotation.wise5.Annotation;
 import org.wise.vle.domain.notification.Notification;
 import org.wise.vle.domain.work.Event;
-import org.wise.vle.domain.work.NotebookItem;
 import org.wise.vle.domain.work.StudentWork;
 
 /**
@@ -467,39 +465,9 @@ public class TeacherDataController {
     }
   }
 
-  @RequestMapping(method = RequestMethod.GET, value = "/teacher/student-notebooks/{runId}")
-  protected void getNotebookItems(@PathVariable Integer runId,
-      @RequestParam(value = "id", required = false) Integer id,
-      @RequestParam(value = "periodId", required = false) Integer periodId,
-      @RequestParam(value = "workgroupId", required = false) Integer workgroupId,
-      @RequestParam(value = "nodeId", required = false) String nodeId,
-      @RequestParam(value = "componentId", required = false) String componentId,
-      HttpServletResponse response) throws IOException {
-    User signedInUser = ControllerUtil.getSignedInUser();
-    try {
-      Run run = runService.retrieveById(new Long(runId));
-      if (signedInUser.isAdmin()
-          || runService.hasRunPermission(run, signedInUser,
-              BasePermission.WRITE)
-          || runService.hasRunPermission(run, signedInUser,
-              BasePermission.READ)) {
-        List<NotebookItem> notebookItemList = vleService.getNotebookItems(id,
-            runId, periodId, workgroupId, nodeId, componentId);
-        JSONArray notebookItems = new JSONArray();
-        for (NotebookItem notebookItem : notebookItemList) {
-          notebookItems.put(notebookItem.toJSON());
-        }
-        response.getWriter().write(notebookItems.toString());
-      }
-    } catch (ObjectNotFoundException e) {
-      e.printStackTrace();
-      return;
-    }
-  }
-
   /**
    * Saves and returns a notification for the specified annotation
-   * 
+   *
    * @param annotation
    *                     Annotation to create the notification for
    * @return Notification notification for the specified annotation

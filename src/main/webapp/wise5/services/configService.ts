@@ -134,8 +134,8 @@ export class ConfigService {
     return this.getConfigParam('studentMaxTotalAssetsSize');
   }
 
-  getStudentNotebookURL() {
-    return this.getConfigParam('studentNotebookURL');
+  getNotebookURL() {
+    return this.getConfigParam('notebookURL');
   }
 
   getStudentUploadsBaseURL() {

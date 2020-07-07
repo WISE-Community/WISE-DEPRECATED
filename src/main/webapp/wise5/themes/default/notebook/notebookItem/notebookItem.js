@@ -72,10 +72,6 @@ class NotebookItemController {
     }
   }
 
-  getTemplateUrl() {
-    return this.ProjectService.getThemePath() + '/notebook/notebookItem.html';
-  }
-
   doDelete(ev) {
     ev.stopPropagation();
     const confirm = this.$mdDialog.confirm()
@@ -141,6 +137,10 @@ class NotebookItemController {
   isMyNotebookItem() {
     return this.item.workgroupId === this.ConfigService.getWorkgroupId();
   }
+
+  isNotebookItemActive() {
+    return this.item.serverDeleteTime == null;
+  }
 }
 
 NotebookItemController.$inject = [
@@ -170,6 +170,7 @@ const NotebookItem = {
   },
   template:
     `<md-card class="notebook-item"
+                  ng-if="$ctrl.isNotebookItemActive()"
                   ng-mouseenter="focus=true;"
                   ng-mouseleave="focus=false;"
                   ng-class="{'md-whiteframe-5dp': focus}"

@@ -97,4 +97,9 @@ public interface Group extends Persistable, Comparable<Group> {
    * @return the id
    */
   Long getId();
+
+  /**
+   * Sets the id for this object.
+   */
+  void setId(Long id);
 }
