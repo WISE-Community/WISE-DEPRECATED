@@ -14,6 +14,7 @@ import { CRaterService } from '../../../../wise5/services/cRaterService';
 import { SessionService } from '../../../../wise5/services/sessionService';
 import { StudentAssetService } from '../../../../wise5/services/studentAssetService';
 import { ProjectAssetService } from '../services/projectAssetService';
+import { AudioRecorderService } from '../../../../wise5/services/audioRecorderService';
 
 @Component({template: ``})
 export class EmptyComponent {}
@@ -30,6 +31,7 @@ export class EmptyComponent {}
     ])
   ],
   providers: [
+    AudioRecorderService,
     UtilService,
     ConfigService,
     CRaterService,

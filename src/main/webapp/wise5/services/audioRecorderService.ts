@@ -1,13 +1,13 @@
+import { Injectable } from "@angular/core";
+import { UpgradeModule } from "@angular/upgrade/static";
+
+@Injectable()
 export class AudioRecorderService {
 
   mediaRecorder: MediaRecorder;
   requester: string;
 
-  static $inject = [
-    '$rootScope',
-  ];
-
-  constructor(private $rootScope: any) {
+  constructor(private upgrade: UpgradeModule) {
   }
 
   async init(constraints) {
@@ -19,7 +19,7 @@ export class AudioRecorderService {
       try {
         this.mediaRecorder = new MediaRecorder(stream, options);
         this.mediaRecorder.ondataavailable = (event: any) => {
-          this.$rootScope.$broadcast('audioRecorded',
+          this.upgrade.$injector.get('$rootScope').$broadcast('audioRecorded',
               { requester: this.requester, audioFile: this.getAudioFile(event.data) });
         }
         this.mediaRecorder.start();
