@@ -1441,7 +1441,7 @@ class NodeAuthoringController {
           } else if (this.createBranchCriterion === 'tag') {
             const runId = this.ConfigService.getRunId();
             if (runId != null) {
-              await this.TagService.retrieveTags().subscribe(() => {});
+              await this.TagService.retrieveRunTags().subscribe(() => {});
             }
             transition.criteria = [];
             const criterion = {

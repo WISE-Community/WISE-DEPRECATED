@@ -6,7 +6,7 @@ import { UpgradeModule } from '@angular/upgrade/static';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ConfigService } from './configService';
 import { map } from 'rxjs/operators';
-import { TeacherProjectService } from './teacherProjectService';
+import { ProjectService } from './projectService';
 
 @Injectable()
 export class TagService {
@@ -15,7 +15,7 @@ export class TagService {
   constructor(
       protected http: HttpClient,
       protected ConfigService: ConfigService,
-      protected ProjectService: TeacherProjectService) {
+      protected ProjectService: ProjectService) {
 
   }
 
@@ -37,8 +37,16 @@ export class TagService {
     this.tags.push(tagObject);
   }
 
-  retrieveTags() {
+  retrieveRunTags() {
     return this.http.get(`/api/tag/run/${this.ConfigService.getRunId()}`).pipe(map((data: any) => {
+      this.tags = data;
+      return data;
+    }));
+  }
+
+  retrieveStudentTags() {
+    return this.http.get(`/api/tag/workgroup/${this.ConfigService.getWorkgroupId()}`)
+        .pipe(map((data: any) => {
       this.tags = data;
       return data;
     }));
@@ -67,5 +75,9 @@ export class TagService {
 
   getTagsFromProject() {
     this.tags = this.ProjectService.getTags();
+  }
+
+  hasTagName(tagName: string): boolean {
+    return this.getExistingTagNames().includes(tagName);
   }
 }

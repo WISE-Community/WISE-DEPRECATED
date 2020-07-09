@@ -24,17 +24,17 @@ describe('TagService', () => {
     utilService = TestBed.get(UtilService);
     service = TestBed.get(TagService);
   });
-  retrieveTags();
+  retrieveRunTags();
   getNextAvailableTag();
 });
 
-function retrieveTags() {
-  it('should retrieve tags', () => {
+function retrieveRunTags() {
+  it('should retrieve run tags', () => {
     const response = [
       { id: 1, name: 'Group 1' },
       { id: 2, name: 'Group 2' }
     ];
-    service.retrieveTags().subscribe((data) => {
+    service.retrieveRunTags().subscribe((data) => {
       expect(data).toEqual(response);
     });
     const req = http.expectOne(`/api/tag/run/${configService.getRunId()}`);

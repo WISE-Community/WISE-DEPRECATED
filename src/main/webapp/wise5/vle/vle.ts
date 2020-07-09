@@ -64,6 +64,7 @@ import StudentStatusService from '../services/studentStatusService';
 import StudentWebSocketService from '../services/studentWebSocketService';
 import '../components/summary/summaryComponentModule';
 import '../components/table/tableComponentModule';
+import { TagService } from '../services/tagService';
 import { UtilService } from '../services/utilService';
 import VLEController from './vleController';
 import { VLEProjectService } from './vleProjectService';
@@ -130,6 +131,7 @@ export default angular
   .service('StudentDataService', StudentDataService)
   .service('StudentStatusService', StudentStatusService)
   .service('StudentWebSocketService', StudentWebSocketService)
+  .factory('TagService', downgradeInjectable(TagService))
   .factory('UtilService', downgradeInjectable(UtilService))
   .controller('NavigationController', NavigationController)
   .controller('NodeController', NodeController)
@@ -206,7 +208,8 @@ export default angular
               'StudentDataService',
               'config',
               'project',
-              (StudentDataService, config, project) => {
+              'tags',
+              (StudentDataService, config, project, tags) => {
                 return StudentDataService.retrieveStudentData();
               }
             ],
@@ -257,6 +260,13 @@ export default angular
               'config',
               (StudentDataService, config) => {
                 return StudentDataService.retrieveRunStatus();
+              }
+            ],
+            tags: [
+              'TagService',
+              'config',
+              (TagService, config) => {
+                return TagService.retrieveStudentTags().toPromise();
               }
             ],
             webSocket: [
