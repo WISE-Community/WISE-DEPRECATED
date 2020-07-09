@@ -1,7 +1,7 @@
 'use strict';
 
 import { ConfigService } from '../../services/configService';
-import { AuthoringToolProjectService } from '../authoringToolProjectService';
+import { TeacherProjectService } from '../../services/teacherProjectService';
 import TeacherDataService from '../../services/teacherDataService';
 import { UtilService } from '../../services/utilService';
 import * as angular from 'angular';
@@ -43,7 +43,7 @@ class AuthoringToolMainController {
     private $state: any,
     private $timeout: any,
     private ConfigService: ConfigService,
-    private ProjectService: AuthoringToolProjectService,
+    private ProjectService: TeacherProjectService,
     private TeacherDataService: TeacherDataService,
     private UtilService: UtilService
   ) {

@@ -1,9 +1,9 @@
 'use strict';
 
 import NodeService from '../../../../services/nodeService';
-import { ClassroomMonitorProjectService } from '../../../classroomMonitorProjectService';
 import TeacherDataService from '../../../../services/teacherDataService';
 import * as $ from 'jquery';
+import { TeacherProjectService } from '../../../../services/teacherProjectService';
 
 class StepToolsController {
   icons: any;
@@ -18,7 +18,7 @@ class StepToolsController {
   constructor(
     $scope: any,
     private NodeService: NodeService,
-    private ProjectService: ClassroomMonitorProjectService,
+    private ProjectService: TeacherProjectService,
     private TeacherDataService: TeacherDataService
   ) {
     this.is_rtl = $('html').attr('dir') == 'rtl';

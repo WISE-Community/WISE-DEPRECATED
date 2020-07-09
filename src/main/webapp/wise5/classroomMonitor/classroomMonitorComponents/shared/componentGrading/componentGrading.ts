@@ -2,10 +2,10 @@
 
 import AnnotationService from '../../../../services/annotationService';
 import { ConfigService } from '../../../../services/configService';
-import { ClassroomMonitorProjectService } from '../../../classroomMonitorProjectService';
 import TeacherDataService from '../../../../services/teacherDataService';
 import { UtilService } from '../../../../services/utilService';
 import * as angular from 'angular';
+import { TeacherProjectService } from '../../../../services/teacherProjectService';
 
 class ComponentGradingController {
   $translate: any;
@@ -44,7 +44,7 @@ class ComponentGradingController {
     private $timeout: any,
     private AnnotationService: AnnotationService,
     private ConfigService: ConfigService,
-    private ProjectService: ClassroomMonitorProjectService,
+    private ProjectService: TeacherProjectService,
     private TeacherDataService: TeacherDataService,
     private UtilService: UtilService
   ) {

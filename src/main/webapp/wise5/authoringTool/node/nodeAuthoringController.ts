@@ -1,6 +1,6 @@
 'use strict';
 
-import { AuthoringToolProjectService } from '../authoringToolProjectService';
+import { TeacherProjectService } from '../../services/teacherProjectService';
 import { ConfigService } from '../../services/configService';
 import NodeService from '../../services/nodeService';
 import ProjectAssetService from '../../services/projectAssetService';
@@ -109,7 +109,7 @@ class NodeAuthoringController {
     private ConfigService: ConfigService,
     private NodeService: NodeService,
     private ProjectAssetService: ProjectAssetService,
-    private ProjectService: AuthoringToolProjectService,
+    private ProjectService: TeacherProjectService,
     private TagService: TagService,
     private TeacherDataService: TeacherDataService,
     private UtilService: UtilService
