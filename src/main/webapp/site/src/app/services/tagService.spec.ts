@@ -3,9 +3,12 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { UpgradeModule } from '@angular/upgrade/static';
 import { TagService } from '../../../../wise5/services/tagService';
 import { ConfigService } from '../../../../wise5/services/configService';
-import { ExpectedConditions } from 'protractor';
+import { ClassroomMonitorProjectService } from '../../../../wise5/classroomMonitor/classroomMonitorProjectService';
+import { UtilService } from '../../../../wise5/services/utilService';
 
 let configService: ConfigService;
+let projectService: ClassroomMonitorProjectService;
+let utilService: UtilService;
 let http: HttpTestingController;
 let service: TagService;
 
@@ -13,10 +16,12 @@ describe('TagService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [ HttpClientTestingModule, UpgradeModule ],
-      providers: [ ConfigService, TagService ]
+      providers: [ ClassroomMonitorProjectService, ConfigService, TagService, UtilService ]
     })
     http = TestBed.get(HttpTestingController);
     configService = TestBed.get(ConfigService);
+    projectService = TestBed.get(ClassroomMonitorProjectService);
+    utilService = TestBed.get(UtilService);
     service = TestBed.get(TagService);
   });
   retrieveTags();
@@ -41,10 +46,11 @@ function retrieveTags() {
 
 function getNextAvailableTag() {
   it('should get the next available tag', () => {
-    service.tags = [
-      { id: 1, name: 'Group 1' },
-      { id: 2, name: 'Group 2' }
+    const existingTags = [
+      { name: 'Group 1' },
+      { name: 'Group 2' }
     ];
+    spyOn(projectService, 'getTags').and.returnValue(existingTags);
     expect(service.getNextAvailableTag()).toEqual('Group 3');
   });
 }
