@@ -7,7 +7,7 @@ import NotificationService from '../services/notificationService';
 import TeacherDataService from '../services/teacherDataService';
 import { SessionService } from '../services/sessionService';
 import * as angular from 'angular';
-import { ClassroomMonitorProjectService } from './classroomMonitorProjectService';
+import { TeacherProjectService } from '../services/teacherProjectService';
 
 class ClassroomMonitorController {
   $translate: any;
@@ -59,7 +59,7 @@ class ClassroomMonitorController {
     private NodeService: NodeService,
     private NotebookService: NotebookService,
     private NotificationService: NotificationService,
-    private ProjectService: ClassroomMonitorProjectService,
+    private ProjectService: TeacherProjectService,
     private SessionService: SessionService,
     private TeacherDataService: TeacherDataService
   ) {

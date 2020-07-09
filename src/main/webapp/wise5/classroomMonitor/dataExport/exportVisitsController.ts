@@ -1,10 +1,10 @@
 'use strict';
 
-import { ClassroomMonitorProjectService } from "../classroomMonitorProjectService";
 import TeacherDataService from "../../services/teacherDataService";
 import ExportController from "./exportController";
 import { ConfigService } from "../../services/configService";
 import { UtilService } from "../../services/utilService";
+import { TeacherProjectService } from "../../services/teacherProjectService";
 
 class ExportVisitsController extends ExportController {
   project: any;
@@ -40,7 +40,7 @@ class ExportVisitsController extends ExportController {
     private $filter: any,
     private $state: any,
     private ConfigService: ConfigService,
-    private ProjectService: ClassroomMonitorProjectService,
+    private ProjectService: TeacherProjectService,
     FileSaver: any,
     private TeacherDataService: TeacherDataService,
     private UtilService: UtilService

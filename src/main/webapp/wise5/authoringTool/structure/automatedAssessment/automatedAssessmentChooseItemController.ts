@@ -1,5 +1,5 @@
 import ConfigureStructureController from "../configureStructureController";
-import { AuthoringToolProjectService } from "../../authoringToolProjectService";
+import { TeacherProjectService } from '../../../services/teacherProjectService';
 
 export default class AutomatedAssessmentChooseItemController extends ConfigureStructureController {
 
@@ -14,7 +14,7 @@ export default class AutomatedAssessmentChooseItemController extends ConfigureSt
       'UtilService', 'ProjectService'];
 
   constructor($filter, $http, $rootScope, $state, $stateParams, $scope, UtilService,
-      private ProjectService: AuthoringToolProjectService) {
+      private ProjectService: TeacherProjectService) {
     super($filter, $http, $rootScope, $state, $stateParams, $scope, UtilService);
   }
 

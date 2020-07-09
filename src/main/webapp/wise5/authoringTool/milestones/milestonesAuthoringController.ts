@@ -1,6 +1,6 @@
 'use strict';
 
-import { AuthoringToolProjectService } from '../authoringToolProjectService';
+import { TeacherProjectService } from '../../services/teacherProjectService';
 import { UtilService } from '../../services/utilService';
 
 class MilestonesAuthoringController {
@@ -33,7 +33,7 @@ class MilestonesAuthoringController {
   ];
 
   constructor(private $filter,
-      private ProjectService: AuthoringToolProjectService,
+      private ProjectService: TeacherProjectService,
       private UtilService: UtilService) {
     this.$translate = $filter('translate');
     this.project = this.ProjectService.project;

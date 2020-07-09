@@ -1,9 +1,9 @@
 'use strict';
 
 import { ConfigService } from '../../../../services/configService';
-import { ClassroomMonitorProjectService } from '../../../classroomMonitorProjectService';
 import TeacherDataService from '../../../../services/teacherDataService';
 import { SessionService } from '../../../../services/sessionService';
+import { TeacherProjectService } from '../../../../services/teacherProjectService';
 
 class TopBarController {
   $translate: any;
@@ -32,7 +32,7 @@ class TopBarController {
     private $rootScope: any,
     private $state: any,
     private ConfigService: ConfigService,
-    private ProjectService: ClassroomMonitorProjectService,
+    private ProjectService: TeacherProjectService,
     private TeacherDataService: TeacherDataService,
     private SessionService: SessionService
   ) {

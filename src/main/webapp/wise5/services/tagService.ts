@@ -6,7 +6,7 @@ import { UpgradeModule } from '@angular/upgrade/static';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { ConfigService } from './configService';
 import { map } from 'rxjs/operators';
-import { ClassroomMonitorProjectService } from '../classroomMonitor/classroomMonitorProjectService';
+import { TeacherProjectService } from './teacherProjectService';
 
 @Injectable()
 export class TagService {
@@ -15,8 +15,8 @@ export class TagService {
   constructor(
       protected http: HttpClient,
       protected ConfigService: ConfigService,
-      protected ProjectService: ClassroomMonitorProjectService) {
-    
+      protected ProjectService: TeacherProjectService) {
+
   }
 
   setTags(tags: any[]) {

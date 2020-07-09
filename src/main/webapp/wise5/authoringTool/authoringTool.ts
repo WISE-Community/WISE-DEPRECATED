@@ -20,7 +20,6 @@ import './components/authoringToolComponents';
 import AdvancedAuthoringController from './advanced/advancedAuthoringController';
 import AuthoringToolController from './authoringToolController';
 import AuthoringToolMainController from './main/authoringToolMainController';
-import { ClassroomMonitorProjectService } from '../classroomMonitor/classroomMonitorProjectService';
 import AuthorNotebookController from './notebook/authorNotebookController';
 import '../components/conceptMap/conceptMapAuthoringComponentModule';
 import { ConfigService } from '../services/configService';
@@ -77,6 +76,7 @@ import WISELinkAuthoringController from './wiseLink/wiseLinkAuthoringController'
 import * as moment from 'moment';
 import { AudioRecorderService } from '../services/audioRecorderService';
 import { TagService } from '../services/tagService';
+import { TeacherProjectService } from '../services/teacherProjectService';
 
 const authoringModule = angular
   .module('authoring', [
@@ -122,7 +122,7 @@ const authoringModule = angular
   .service('NodeService', NodeService)
   .service('NotebookService', NotebookService)
   .service('NotificationService', NotificationService)
-  .factory('ProjectService', downgradeInjectable(ClassroomMonitorProjectService))
+  .factory('ProjectService', downgradeInjectable(TeacherProjectService))
   .service('ProjectAssetService', ProjectAssetService)
   .factory('SessionService', downgradeInjectable(SessionService))
   .service('SpaceService', SpaceService)

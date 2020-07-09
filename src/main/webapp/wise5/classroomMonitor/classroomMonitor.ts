@@ -21,7 +21,6 @@ import AnnotationService from '../services/annotationService';
 import '../components/audioOscillator/audioOscillatorComponentModule';
 import './classroomMonitorComponents';
 import ClassroomMonitorController from './classroomMonitorController';
-import { ClassroomMonitorProjectService } from './classroomMonitorProjectService';
 import '../components/conceptMap/conceptMapComponentModule';
 import { ConfigService } from '../services/configService';
 import { CRaterService } from '../services/cRaterService';
@@ -76,6 +75,7 @@ import TeacherWebSocketService from '../services/teacherWebSocketService';
 import { UtilService } from '../services/utilService';
 import * as moment from 'moment';
 import { AudioRecorderService } from '../services/audioRecorderService';
+import { TeacherProjectService } from '../services/teacherProjectService';
 
 const classroomMonitorModule = angular
   .module('classroomMonitor', [
@@ -124,7 +124,7 @@ const classroomMonitorModule = angular
   .service('NodeService', NodeService)
   .service('NotebookService', NotebookService)
   .service('NotificationService', NotificationService)
-  .factory('ProjectService', downgradeInjectable(ClassroomMonitorProjectService))
+  .factory('ProjectService', downgradeInjectable(TeacherProjectService))
   .factory('SessionService', downgradeInjectable(SessionService))
   .factory('StudentAssetService', downgradeInjectable(StudentAssetService))
   .service('StudentDataService', StudentDataService)
