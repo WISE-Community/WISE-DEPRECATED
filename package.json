@@ -134,7 +134,11 @@
   "scripts": {
     "build-dev": "node node_modules/concurrently/bin/concurrently.js \"ng build wise --watch\" \"ng test --source-map=false --karma-config src/main/webapp/site/karma.conf.js --browsers ChromeHeadlessNoSandbox\"",
     "build-prod": "node --max_old_space_size=4096 ./node_modules/@angular/cli/bin/ng build wise --configuration=production",
+    "build-prod-es": "node --max_old_space_size=4096 ./node_modules/@angular/cli/bin/ng build wise --configuration=production-es",
+    "build-prod-pt": "node --max_old_space_size=4096 ./node_modules/@angular/cli/bin/ng build wise --configuration=production-pt",
+    "build-prod-tr": "node --max_old_space_size=4096 ./node_modules/@angular/cli/bin/ng build wise --configuration=production-tr",
     "build-prod-hans": "node --max_old_space_size=4096 ./node_modules/@angular/cli/bin/ng build wise --configuration=production-zh-Hans",
+    "build-prod-hant": "node --max_old_space_size=4096 ./node_modules/@angular/cli/bin/ng build wise --configuration=production-zh-Hant",
     "bundle-report": "node ./node_modules/webpack-bundle-analyzer/lib/bin/analyzer.js src/main/webapp/site/dist/stats.json",
     "watch-all-wise5": "node node_modules/concurrently/bin/concurrently.js \"node ./node_modules/gulp/bin/gulp.js\" \"npm run test-wise5-watch\"",
     "watch-sass": "npm rebuild node-sass && node ./node_modules/gulp/bin/gulp.js",
