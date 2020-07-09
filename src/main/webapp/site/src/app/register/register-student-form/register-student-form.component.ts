@@ -4,7 +4,6 @@ import { Student } from "../../domain/student";
 import { StudentService } from "../../student/student.service";
 import { FormControl, FormGroup, Validators, FormBuilder } from "@angular/forms";
 import { UtilService } from "../../services/util.service";
-import { I18n } from "@ngx-translate/i18n-polyfill";
 
 @Component({
   selector: 'app-register-student-form',
@@ -15,23 +14,23 @@ export class RegisterStudentFormComponent implements OnInit {
 
   studentUser: Student = new Student();
   genders: any[] = [
-    { code: "FEMALE", label: this.i18n('Female') },
-    { code: "MALE", label: this.i18n('Male') },
-    { code: "NO_ANSWER", label: this.i18n('No Answer/Other') }
+    { code: "FEMALE", label: $localize`Female` },
+    { code: "MALE", label: $localize`Male` },
+    { code: "NO_ANSWER", label: $localize`No Answer/Other` }
   ];
   months: any[] = [
-    { code: "1", label: this.i18n('01 (Jan)') },
-    { code: "2", label: this.i18n('02 (Feb)') },
-    { code: "3", label: this.i18n('03 (Mar)') },
-    { code: "4", label: this.i18n('04 (Apr)') },
-    { code: "5", label: this.i18n('05 (May)') },
-    { code: "6", label: this.i18n('06 (Jun)') },
-    { code: "7", label: this.i18n('07 (Jul)') },
-    { code: "8", label: this.i18n('08 (Aug)') },
-    { code: "9", label: this.i18n('09 (Sep)') },
-    { code: "10", label: this.i18n('10 (Oct)') },
-    { code: "11", label: this.i18n('11 (Nov)') },
-    { code: "12", label: this.i18n('12 (Dec)') }
+    { code: "1", label: $localize`01 (Jan)` },
+    { code: "2", label: $localize`02 (Feb)` },
+    { code: "3", label: $localize`03 (Mar)` },
+    { code: "4", label: $localize`04 (Apr)` },
+    { code: "5", label: $localize`05 (May)` },
+    { code: "6", label: $localize`06 (Jun)` },
+    { code: "7", label: $localize`07 (Jul)` },
+    { code: "8", label: $localize`08 (Aug)` },
+    { code: "9", label: $localize`09 (Sep)` },
+    { code: "10", label: $localize`10 (Oct)` },
+    { code: "11", label: $localize`11 (Nov)` },
+    { code: "12", label: $localize`12 (Dec)` }
   ];
   days: string[] = [];
   securityQuestions: object;
@@ -51,8 +50,7 @@ export class RegisterStudentFormComponent implements OnInit {
   constructor(private router: Router, private route: ActivatedRoute,
               private studentService: StudentService,
               private utilService: UtilService,
-              private fb: FormBuilder,
-              private i18n: I18n) {
+              private fb: FormBuilder) {
     this.studentService.retrieveSecurityQuestions().subscribe(response => {
       this.securityQuestions = response;
     });

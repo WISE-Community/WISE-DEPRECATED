@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { I18n } from "@ngx-translate/i18n-polyfill";
 import { TeacherService } from '../../../teacher/teacher.service';
 import { finalize } from 'rxjs/operators';
 
@@ -21,8 +20,7 @@ export class ForgotTeacherPasswordComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
               private router: Router,
-              private teacherService: TeacherService,
-              private i18n: I18n) { }
+              private teacherService: TeacherService) { }
 
   ngOnInit() {
   }
@@ -63,17 +61,17 @@ export class ForgotTeacherPasswordComponent implements OnInit {
   }
 
   setUsernameNotFoundMessage() {
-    const message = this.i18n(`We could not find that username. Please make sure you are typing it correctly and try again. If you have forgotten your username, please use the forgot username option below.`);
+    const message = $localize`We could not find that username. Please make sure you are typing it correctly and try again. If you have forgotten your username, please use the forgot username option below.`;
     this.setMessage(message);
   }
 
   setTooManyVerificationCodeAttemptsMessage() {
-    const message = this.i18n(`You have submitted an invalid verification code too many times. For security reasons, we will lock the ability to change your password for 10 minutes. After 10 minutes, you can try again.`);
+    const message = $localize`You have submitted an invalid verification code too many times. For security reasons, we will lock the ability to change your password for 10 minutes. After 10 minutes, you can try again.`;
     this.setMessage(message);
   }
 
   setFailedToSendEmailMessage() {
-    const message = this.i18n(`The server has encountered an error and was unable to send you an email. Please try again. If the error continues to occur, please contact us.`);
+    const message = $localize`The server has encountered an error and was unable to send you an email. Please try again. If the error continues to occur, please contact us.`;
     this.setMessage(message);
   }
 

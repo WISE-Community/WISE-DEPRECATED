@@ -1,5 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Component, Input, TRANSLATIONS, LOCALE_ID, TRANSLATIONS_FORMAT} from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Observable } from "rxjs";
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from "@angular/material/dialog";
 import { LibraryProjectDetailsComponent } from './library-project-details.component';
@@ -9,8 +9,6 @@ import { NGSSStandards } from "../ngssStandards";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { LibraryService } from "../../../services/library.service";
 import { ConfigService } from "../../../services/config.service";
-import { translationsFactory } from "../../../app.module";
-import { I18n } from '@ngx-translate/i18n-polyfill';
 import { ParentProject } from "../../../domain/parentProject";
 import { configureTestSuite } from 'ng-bullet';
 
@@ -66,14 +64,7 @@ describe('LibraryProjectDetailsComponent', () => {
         { provide: ConfigService, useClass: MockConfigService },
         { provide: MatDialogRef, useValue: {} },
         { provide: MAT_DIALOG_DATA, useValue: [] },
-        { provide: MatDialog, useClass: MockMatDialog },
-        { provide: TRANSLATIONS_FORMAT, useValue: "xlf" },
-        {
-          provide: TRANSLATIONS,
-          useFactory: translationsFactory,
-          deps: [LOCALE_ID]
-        },
-        I18n
+        { provide: MatDialog, useClass: MockMatDialog }
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })

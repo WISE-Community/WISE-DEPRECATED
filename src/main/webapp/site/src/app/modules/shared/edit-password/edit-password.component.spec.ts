@@ -4,12 +4,10 @@ import { UserService } from "../../../services/user.service";
 import { BehaviorSubject, Observable } from 'rxjs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
-import { NO_ERRORS_SCHEMA, Provider, TRANSLATIONS_FORMAT, TRANSLATIONS, LOCALE_ID } from '@angular/core';
+import { NO_ERRORS_SCHEMA, Provider } from '@angular/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { By } from '@angular/platform-browser';
 import { User } from "../../../domain/user";
-import { translationsFactory } from '../../../app.module';
-import { I18n } from '@ngx-translate/i18n-polyfill';
 import { configureTestSuite } from 'ng-bullet';
 
 export class MockUserService {
@@ -57,14 +55,7 @@ describe('EditPasswordComponent', () => {
         BrowserAnimationsModule, ReactiveFormsModule, MatSnackBarModule
       ],
       providers: [
-        { provide: UserService, useValue: new MockUserService() },
-        { provide: TRANSLATIONS_FORMAT, useValue: "xlf" },
-        {
-          provide: TRANSLATIONS,
-          useFactory: translationsFactory,
-          deps: [LOCALE_ID]
-        },
-        I18n
+        { provide: UserService, useValue: new MockUserService() }
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     });

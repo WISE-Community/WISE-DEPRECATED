@@ -3,7 +3,6 @@ import { LibraryProject } from "../libraryProject";
 import { LibraryService } from "../../../services/library.service";
 import { MatDialog } from '@angular/material/dialog';
 import { OfficialLibraryDetailsComponent } from '../official-library/official-library.component';
-import { I18n } from '@ngx-translate/i18n-polyfill';
 import { Router } from '@angular/router';
 
 @Component({
@@ -23,15 +22,14 @@ export class TeacherProjectLibraryComponent implements OnInit {
   numberOfPersonalProjectsVisible: number = 0;
   route: String;
   tabs: any[] = [
-    { path: 'library/tested', label: this.i18n(`WISE Tested`), numVisible: 0 },
-    { path: 'library/community', label: this.i18n(`Community Built`), numVisible: 0 },
-    { path: 'library/personal', label: this.i18n(`My Units`), numVisible: 0 }
+    { path: 'library/tested', label: $localize`WISE Tested`, numVisible: 0 },
+    { path: 'library/community', label: $localize`Community Built`, numVisible: 0 },
+    { path: 'library/personal', label: $localize`My Units`, numVisible: 0 }
   ];
 
   constructor(libraryService: LibraryService,
               public dialog: MatDialog,
-              private router: Router,
-              private i18n: I18n) {
+              private router: Router) {
     libraryService.numberOfOfficialProjectsVisible$.subscribe((num) => {
       this.tabs[0].numVisible = num;
     });

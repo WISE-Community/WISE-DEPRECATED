@@ -3,7 +3,6 @@ import { UserService } from "../../services/user.service";
 import { User } from "../../domain/user";
 import { ConfigService } from "../../services/config.service";
 import { MatTabGroup } from '@angular/material/tabs';
-import { I18n } from '@ngx-translate/i18n-polyfill';
 import { LibraryService } from '../../services/library.service';
 import { Router } from '@angular/router';
 
@@ -18,15 +17,14 @@ export class TeacherHomeComponent implements OnInit {
   user: User = new User();
   authoringToolLink: string = '';
   tabLinks: any[] = [
-    { path: 'schedule', label: this.i18n('Class Schedule') },
-    { path: 'library', label: this.i18n('Browse WISE Units') }
+    { path: 'schedule', label: $localize`Class Schedule` },
+    { path: 'library', label: $localize`Browse WISE Units` }
   ]
 
   constructor(private userService: UserService,
               private configService: ConfigService,
               private libraryService: LibraryService,
-              private router: Router,
-              private i18n: I18n) {
+              private router: Router) {
   }
 
   ngOnInit() {

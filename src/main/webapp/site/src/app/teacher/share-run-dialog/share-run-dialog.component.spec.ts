@@ -8,9 +8,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
-import { NO_ERRORS_SCHEMA, TRANSLATIONS_FORMAT, TRANSLATIONS, LOCALE_ID } from "@angular/core";
-import { translationsFactory } from '../../app.module';
-import { I18n } from '@ngx-translate/i18n-polyfill';
+import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { UserService } from '../../services/user.service';
 
 const runObj = {
@@ -87,14 +85,7 @@ describe('ShareRunDialogComponent', () => {
         { provide: TeacherService, useClass: MockTeacherService },
         { provide: MatDialogRef, useValue: {} },
         { provide: MAT_DIALOG_DATA, useValue: { run: runObj } },
-        { provide: TRANSLATIONS_FORMAT, useValue: "xlf" },
-        { provide: UserService, useClass: MockUserService },
-        {
-          provide: TRANSLATIONS,
-          useFactory: translationsFactory,
-          deps: [LOCALE_ID]
-        },
-        I18n
+        { provide: UserService, useClass: MockUserService }
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })

@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewEncapsulation, SecurityContext } from '@angular/core';
-import { I18n } from '@ngx-translate/i18n-polyfill';
 import {
   bounceIn,
   flipInX,
@@ -29,7 +28,7 @@ export class HomeComponent implements OnInit {
   loaded: boolean = false;
   hero = {
     imgSrc: 'assets/img/wise-students-hero.jpg',
-    imgDescription: this.i18n('WISE students in classroom'),
+    imgDescription: $localize`WISE students in classroom`,
     imgSources: [
       {
         type: 'image/webp',
@@ -51,7 +50,7 @@ export class HomeComponent implements OnInit {
   blurbs: Array<Object> = [
     {
       imgSrc: 'assets/img/wise-students-building@2x.jpg',
-      imgDescription: this.i18n('WISE students building'),
+      imgDescription: $localize`WISE students building`,
       imgSources: [
         {
           type: 'image/webp', 
@@ -65,7 +64,7 @@ export class HomeComponent implements OnInit {
     },
     {
       imgSrc: 'assets/img/wise-project-view@2x.jpg',
-      imgDescription: this.i18n('WISE unit on laptop'),
+      imgDescription: $localize`WISE unit on laptop`,
       imgSources: [
         {
           type: 'image/webp', 
@@ -75,11 +74,11 @@ export class HomeComponent implements OnInit {
           srcset: 'assets/img/wise-project-view.jpg, assets/img/wise-project-view@2x.jpg 2x'
         }
       ],
-      content: this.i18n('Interactive scientific models plus hands-on activities, personalized guidance, and rich embedded assessments')
+      content: $localize`Interactive scientific models plus hands-on activities, personalized guidance, and rich embedded assessments`
     },
     {
       imgSrc: 'assets/img/wise-students-and-teacher@2x.jpg',
-      imgDescription: this.i18n('WISE students and teacher'),
+      imgDescription: $localize`WISE students and teacher`,
       imgSources: [
         {
           type: 'image/webp', 
@@ -89,11 +88,11 @@ export class HomeComponent implements OnInit {
           srcset: 'assets/img/wise-students-and-teacher.jpg, assets/img/wise-students-and-teacher@2x.jpg 2x'
         }
       ],
-      content: this.i18n('Robust teacher grading and management tools supporting individualized and customized learning')
+      content: $localize`Robust teacher grading and management tools supporting individualized and customized learning`
     }
   ];
 
-  constructor(private i18n: I18n, private sanitizer: DomSanitizer) { }
+  constructor(private sanitizer: DomSanitizer) { }
 
   ngOnInit() {
   }
