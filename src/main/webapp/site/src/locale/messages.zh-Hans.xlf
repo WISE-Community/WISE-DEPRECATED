@@ -6279,6 +6279,496 @@
         </context-group>
         <target state="translated">请访问 <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>https://crowdin.com/project/wise<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>网址，帮助我们翻译WISE平台。</target>
       </trans-unit>
+      <trans-unit id="6178733511992894634">	
+        <source>Trouble Signing In</source>	
+        <target state="translated">无法登录</target>	
+      </trans-unit>	
+      <trans-unit id="6892681827231609313">	
+        <source>Need Help Using WISE</source>
+        <target state="translated">在使用WISE时请求帮助</target>	
+        <alt-trans>	
+          <target>在使用WISE需要帮助</target>	
+        </alt-trans>	
+      </trans-unit>	
+      <trans-unit id="2072690839988671006">	
+        <source>Problems with a WISE Unit</source>
+        <target state="translated">WISE学习单元的问题</target>	
+        <alt-trans>	
+          <target>WISE单元的问题</target>	
+        </alt-trans>	
+      </trans-unit>	
+      <trans-unit id="2959002981630304422">	
+        <source>Feedback to WISE</source>
+        <target state="translated">反馈给WISE平台</target>	
+      </trans-unit>	
+      <trans-unit id="8693603235657020323">	
+        <source>Other</source>	
+        <target state="translated">其他</target>	
+      </trans-unit>	
+      <trans-unit id="7735613040574061081">	
+        <source>Need Help with Authoring</source>
+        <target state="translated">在编辑时请求帮助</target>	
+        <alt-trans>	
+          <target>需要创作帮助</target>	
+        </alt-trans>	
+      </trans-unit>	
+      <trans-unit id="8384809960328910876">	
+        <source>Password cannot be blank. Please try again.</source>
+        <target state="translated">密码不能为空。请重新输入。</target>	
+      </trans-unit>	
+      <trans-unit id="6465250798669251020">	
+        <source>Passwords do not match. Please try again.</source>	
+        <target state="translated">密码不匹配。请重试一次。</target>	
+      </trans-unit>	
+      <trans-unit id="324815643617845517">	
+        <source>Password is invalid. Please try a different password.</source>
+        <target state="translated">该密码无效。 请尝试使用其他密码。</target>	
+      </trans-unit>	
+      <trans-unit id="7389211279729440739">	
+        <source>An error occurred. Please try again.</source>	
+        <target state="translated">发生错误，请再试一次。</target>	
+      </trans-unit>	
+      <trans-unit id="18036423310428495">	
+        <source>Incorrect answer, please try again. If you can't remember the answer to your security question, please ask your teacher to change your password or contact us for assistance.</source>	
+        <target state="translated">答案不正确，请再试一次。 如果您忘记了安全问题的答案，请让您的老师更改密码或与我们联系以获取帮助。</target>	
+      </trans-unit>	
+      <trans-unit id="2305544855268461756">	
+        <source>We could not find that username. Please make sure you are typing it correctly and try again. If you have forgotten your username, please use the forgot username option below.</source>	
+        <target state="translated">我们找不到该用户名。 请确保正确输入并重新尝试。 如果您忘记了用户名，请使用下面的忘记用户名选项。</target>	
+      </trans-unit>	
+      <trans-unit id="7528317085219048471">	
+        <source>01 (Jan)</source>
+        <target state="translated">01（一月）</target>	
+        <alt-trans>	
+          <target>一月</target>	
+        </alt-trans>	
+      </trans-unit>	
+      <trans-unit id="4169826993694069540">	
+        <source>02 (Feb)</source>	
+        <target state="translated">02（二月）</target>	
+        <alt-trans>	
+          <target>二月</target>	
+        </alt-trans>	
+      </trans-unit>	
+      <trans-unit id="7397319183527150382">	
+        <source>03 (Mar)</source>	
+        <target state="translated">03（三月）</target>	
+        <alt-trans>	
+          <target>三月</target>	
+        </alt-trans>	
+      </trans-unit>	
+      <trans-unit id="4401053003272735439">	
+        <source>04 (Apr)</source>
+        <target state="translated">04（四月）</target>	
+        <alt-trans>	
+          <target>四月</target>	
+        </alt-trans>	
+      </trans-unit>	
+      <trans-unit id="6130957074030941355">	
+        <source>05 (May)</source>	
+        <target state="translated">05（五月）</target>	
+        <alt-trans>	
+          <target>五月</target>	
+        </alt-trans>	
+      </trans-unit>	
+      <trans-unit id="3119348605846865468">	
+        <source>06 (Jun)</source>	
+        <target state="translated">06（六月）</target>	
+        <alt-trans>	
+          <target>六月</target>	
+        </alt-trans>	
+      </trans-unit>	
+      <trans-unit id="1295628669066090543">	
+        <source>07 (Jul)</source>	
+        <target state="translated">07（七月）</target>	
+        <alt-trans>	
+          <target>七月</target>	
+        </alt-trans>	
+      </trans-unit>	
+      <trans-unit id="3813724417684413959">	
+        <source>08 (Aug)</source>	
+        <target state="translated">08（八月）</target>	
+        <alt-trans>	
+          <target>八月</target>	
+        </alt-trans>	
+      </trans-unit>	
+      <trans-unit id="7039612753083856396">	
+        <source>09 (Sep)</source>	
+        <target state="translated">09（九月）</target>	
+        <alt-trans>	
+          <target>九月</target>	
+        </alt-trans>	
+      </trans-unit>	
+      <trans-unit id="5206495968805205248">	
+        <source>10 (Oct)</source>
+        <target state="translated">10（十月）</target>	
+        <alt-trans>	
+          <target>十月</target>	
+        </alt-trans>	
+      </trans-unit>	
+      <trans-unit id="5271095457941077047">	
+        <source>11 (Nov)</source>	
+        <target state="translated">11（十一月）</target>	
+        <alt-trans>	
+          <target>十一月</target>	
+        </alt-trans>	
+      </trans-unit>	
+      <trans-unit id="7367027577282611263">	
+        <source>12 (Dec)</source>	
+        <target state="translated">12（十二月）</target>	
+        <alt-trans>	
+          <target>十二月</target>	
+        </alt-trans>	
+      </trans-unit>	
+      <trans-unit id="8342090111716136539">	
+        <source>We did not find any usernames that match the information you provided. Please make sure you entered your information correctly. If you can't find your account, ask a teacher for help or contact us for assistance.</source>	
+        <target state="translated">我们未找到与您提供的信息相匹配的任何用户名。 请确保您输入的信息正确无误。 如果您找不到自己的帐户，请向老师寻求帮助或与我们联系。</target>	
+        <alt-trans>	
+          <target>我们未找到与您提供的信息相匹配的任何用户名。 请确保您输入的信息正确无误。 如果您找不到自己的帐户，请向老师寻求帮助或与我们联系以获取帮助。</target>	
+        </alt-trans>	
+      </trans-unit>	
+      <trans-unit id="2728844381564590456">	
+        <source>We found a username that matches. Select it to log in. If this username is not yours, ask a teacher for help or contact us for assistance.</source>	
+        <target state="translated">我们找到了匹配的用户名。 请选择它以登录。如果此用户名不是您的用户名，请向老师寻求帮助或与我们联系。</target>	
+        <alt-trans>	
+          <target>我们找到了匹配的用户名。 请选择它以登录。如果此用户名不是您的用户名，请向老师寻求帮助或与我们联系以获取帮助。</target>	
+        </alt-trans>	
+      </trans-unit>	
+      <trans-unit id="5966595713291556325">	
+        <source>We found multiple usernames that match. If one of these is yours, select it to log in. If you can't find your account, ask a teacher for help or contact us for assistance.</source>
+        <target state="translated">我们发现了多个匹配的用户名。 如果其中一个是您的，请选择它以登录。如果您找不到您的帐户，请向老师寻求帮助或与我们联系。</target>	
+        <alt-trans>	
+          <target>我们发现了多个匹配的用户名。 如果其中一个是您的，请选择它以登录。如果您找不到您的帐户，请向老师寻求帮助或联系我们寻求帮助。</target>	
+        </alt-trans>	
+      </trans-unit>	
+      <trans-unit id="5604597042379546047">	
+        <source>The verification code has expired. Verification codes are valid for 10 minutes. Please go back to the Teacher Forgot Password page to generate a new one.</source>
+        <target state="translated">该验证码已过期。 验证码有效期为10分钟。 请返回"教师忘记密码"页面以生成新的验证码。</target>	
+        <alt-trans>	
+          <target>该验证码已过期。 验证码有效期为10分钟。 请返回"教师忘记密码"页面以生成新的密码。</target>	
+        </alt-trans>	
+      </trans-unit>	
+      <trans-unit id="861030852489811059">	
+        <source>The verification code is invalid. Please try again.</source>
+        <target state="translated">该验证码无效。 请再试一次。</target>	
+      </trans-unit>	
+      <trans-unit id="2199576463342303449">	
+        <source>You have submitted an invalid verification code too many times. For security reasons, we will lock the ability to change your password for 10 minutes. After 10 minutes, please go back to the Teacher Forgot Password page to generate a new verification code.</source>	
+        <target state="translated">您重复多次提交无效的验证码。 出于安全原因，我们将锁定更改密码功能10分钟。 10分钟后，请返回教师忘记密码页面以生成新的验证码。</target>	
+        <alt-trans>	
+          <target>您提交的无效验证码太多次了。 出于安全原因，我们将锁定更改密码功能10分钟。 10分钟后，请返回教师忘记密码页面以生成新的验证码。</target>	
+        </alt-trans>	
+      </trans-unit>	
+      <trans-unit id="7375295840965754734">	
+        <source>Password cannot be blank, please enter a password.</source>
+        <target state="translated">密码不能为空，请输入密码。</target>	
+      </trans-unit>	
+      <trans-unit id="4839293263479159850">	
+        <source>Passwords do not match, please try again.</source>	
+        <target state="translated">密码不匹配，请再试一次。</target>	
+      </trans-unit>	
+      <trans-unit id="2359235425915349492">	
+        <source>An error occurred, please try again.</source>	
+        <target state="translated">发生错误，请重新尝试。</target>	
+      </trans-unit>
+      <trans-unit id="243316711119938992">	
+        <source>The server has encountered an error and was unable to send you an email. Please try again. If the error continues to occur, please contact us.</source>	
+        <target state="translated">服务器发生错误，无法向您发送电子邮件。 请再试一次。 如果错误继续发生，请与我们联系。</target>	
+      </trans-unit>	
+      <trans-unit id="3524867010032834126">	
+        <source>We did not find a WISE account associated with that email. Please make sure you have typed your email address correctly.</source>
+        <target state="translated">我们未找到与该电子邮件关联的WISE帐户。 请确保您正确输入您的电子邮件地址。</target>	
+        <alt-trans>	
+          <target>我们未找到与该电子邮件关联的WISE帐户。 请确保您已正确输入您的电子邮件地址。</target>	
+        </alt-trans>	
+      </trans-unit>	
+      <trans-unit id="3305550971863645938">	
+        <source>The server has encountered an error and was unable to send an email to you. Please try again. If the error continues to occur, please contact us.</source>	
+        <target state="translated">服务器发生错误，无法向您发送电子邮件。 请再试一次。 如果错误继续发生，请与我们联系。</target>	
+      </trans-unit>	
+      <trans-unit id="1934952699406892664">	
+        <source>An error occurred: </source>
+        <target state="translated">发生错误： </target>	
+      </trans-unit>	
+      <trans-unit id="8903463267282596576">	
+        <source>Backend returned code <x id="status"/>, body was: <x id="error"/></source>
+        <target state="translated">后端返回代码 <x id="status"/>, 代码主题是: <x id="error"/></target>	
+        <alt-trans>	
+          <target>后端返回代码 <x id="status"/>, body was: <x id="error"/></target>	
+        </alt-trans>	
+      </trans-unit>	
+      <trans-unit id="6272363620327622591">	
+        <source>An error occurred. Please refresh this page and try again.</source>	
+        <target state="translated">发生错误。请刷新页面并再试一次。</target>	
+      </trans-unit>	
+      <trans-unit id="4568352014425961102">	
+        <source>There was an error trying to copy the project. Please refresh the page and try again.</source>	
+        <target state="translated">在尝试复制学习项目时出错。请刷新页面并重试。</target>	
+      </trans-unit>	
+      <trans-unit id="3563179927132287246">	
+        <source>License pertains to original content created by the author(s). Authors are responsible for the usage and attribution of any third-party content linked to or included in this work.</source>
+        <target state="translated">许可证适用于作者创建的原始内容。 作者对链接或包含在项目中的任何第三方内容的使用权和归属权负责。</target>	
+        <alt-trans>	
+          <target>许可证适用于作者创建的原始内容。 作者负责链接或包含在本作品中的任何第三方内容的使用权和所有权。</target>	
+        </alt-trans>	
+      </trans-unit>	
+      <trans-unit id="7189355262232159449">	
+        <source>Unit Details</source>	
+        <target state="translated">学习单元详情</target>	
+        <alt-trans>	
+          <target>单元详情</target>	
+        </alt-trans>	
+      </trans-unit>	
+      <trans-unit id="1160916388490317189">	
+        <source>Show:</source>	
+        <target state="translated">显示：</target>	
+      </trans-unit>	
+      <trans-unit id="3337301694210287595">	
+        <source>Next page</source>
+        <target state="translated">下一页</target>	
+      </trans-unit>	
+      <trans-unit id="3629960544875360046">	
+        <source>Previous page</source>
+        <target state="translated">上一页</target>	
+      </trans-unit>	
+      <trans-unit id="4131502629887927598">	
+        <source>0 of <x id="total"/></source>
+        <target state="translated">0 of <x id="total"/></target>	
+      </trans-unit>	
+      <trans-unit id="2448240847827519051">	
+        <source><x id="start"/> - <x id="end"/> of <x id="total"/></source>
+        <target state="translated"><x id="start"/> - <x id="end"/> of <x id="total"/></target>	
+      </trans-unit>	
+      <trans-unit id="6028472408314831177">	
+        <source>Sharing permissions updated for <x id="firstName"/> <x id="lastName"/>.</source>
+        <target state="translated">针对 <x id="firstName"/> <x id="lastName"/>共享更新后的权限。</target>	
+      </trans-unit>	
+      <trans-unit id="7291412180108908080">	
+        <source>Added shared teacher: <x id="firstName"/> <x id="lastName"/>.</source>
+        <target state="translated">添加共享的教师：<x id="firstName"/> <x id="lastName"/>。</target>	
+      </trans-unit>	
+      <trans-unit id="4634849718587399690">	
+        <source>Removed shared teacher: <x id="firstName"/> <x id="lastName"/>.</source>	
+        <target state="translated">移除共享的教师：<x id="firstName"/> <x id="lastName"/>。</target>	
+      </trans-unit>	
+      <trans-unit id="8666615009060969246">	
+        <source>Password changed.</source>
+        <target state="translated">密码已更改。</target>	
+        <alt-trans>	
+          <target>密码已更改</target>	
+        </alt-trans>	
+      </trans-unit>	
+      <trans-unit id="213925514828623262">	
+        <source>Select an option</source>	
+        <target state="translated">请选择一个选项</target>	
+      </trans-unit>	
+      <trans-unit id="5667840900782067941">	
+        <source>Female</source>	
+        <target state="translated">女</target>	
+      </trans-unit>	
+      <trans-unit id="8012344910054029733">	
+        <source>Male</source>	
+        <target state="translated">男</target>	
+      </trans-unit>	
+      <trans-unit id="5848285129051061802">	
+        <source>No Answer/Other</source>	
+        <target state="translated">没有答案/其他</target>	
+      </trans-unit>	
+      <trans-unit id="8954371642157143595">	
+        <source>Elementary School</source>
+        <target state="translated">小学</target>	
+      </trans-unit>	
+      <trans-unit id="4661798863210162530">	
+        <source>Middle School</source>	
+        <target state="translated">初中</target>	
+        <alt-trans>	
+          <target>中学</target>	
+        </alt-trans>	
+      </trans-unit>	
+      <trans-unit id="5560057304612443507">	
+        <source>High School</source>	
+        <target state="translated">高中</target>	
+      </trans-unit>	
+      <trans-unit id="1400655560633958921">	
+        <source>College</source>	
+        <target state="translated">大学</target>	
+      </trans-unit>	
+      <trans-unit id="4967231969832964676">	
+        <source>Profile updated.</source>	
+        <target state="translated">信息已更新。</target>	
+        <alt-trans>	
+          <target>配置文件已更新。</target>	
+        </alt-trans>	
+      </trans-unit>	
+      <trans-unit id="3975065711327151501">	
+        <source>A teacher cannot be added as a team member.</source>	
+        <target state="translated">教师不能添加到团队成员中。</target>	
+        <alt-trans>	
+          <target>教师不能被添加为团队成员。</target>	
+        </alt-trans>	
+      </trans-unit>	
+      <trans-unit id="664214981022275787">	
+        <source>Invalid username. Please try again.</source>
+        <target state="translated">无效的用户名。请再试一次。</target>	
+        <alt-trans>	
+          <target>无效的用户名，请再试一次。</target>	
+        </alt-trans>	
+      </trans-unit>	
+      <trans-unit id="3661142959993862456">	
+        <source>Invalid password. Please try again.</source>
+        <target state="translated">无效的密码。请再试一次。</target>	
+        <alt-trans>	
+          <target>无效的密码，请再试一次。</target>	
+        </alt-trans>	
+      </trans-unit>	
+      <trans-unit id="2331585649152725791">	
+        <source>Incorrect Google user. Please try again.</source>
+        <target state="translated">Google用户不正确。请再试一次。</target>	
+        <alt-trans>	
+          <target>Google用户不正确，请再试一次。</target>	
+        </alt-trans>	
+      </trans-unit>	
+      <trans-unit id="7758936399344634446">	
+        <source>No WISE user with this Google ID found.</source>
+        <target state="translated">没有找到此Google ID关联的WISE用户。</target>	
+        <alt-trans>	
+          <target>没有找到此Google ID的WISE用户。</target>	
+        </alt-trans>	
+      </trans-unit>	
+      <trans-unit id="6202932382081568456">	
+        <source>Hi class! Please complete the "<x id="unitTitle"/>" WISE unit. (Access Code: <x id="accessCode"/>)</source>
+        <target state="translated">您好，同学们，请完成 "<x id="unitTitle"/>" WISE单元。 (访问码： <x id="accessCode"/>)</target>	
+        <alt-trans>	
+          <target>你好，请完成 "<x id="unitTitle"/>" WISE单元. (Access Code: <x id="accessCode"/>)</target>	
+        </alt-trans>	
+      </trans-unit>	
+      <trans-unit id="2719481583773153034">	
+        <source>(Section <x id="section"/>)</source>
+        <target state="translated"> (节 <x id="section"/>)</target>	
+        <alt-trans>	
+          <target> (部分 <x id="section"/>)</target>	
+        </alt-trans>	
+      </trans-unit>	
+      <trans-unit id="4842937154332673885">	
+        <source>Run Settings</source>
+        <target state="translated">学习单元执行设置</target>	
+        <alt-trans>	
+          <target>项目运行设置</target>	
+        </alt-trans>	
+      </trans-unit>	
+      <trans-unit id="8421677200321603991">	
+        <source>Edit Classroom Unit Warning</source>
+        <target state="translated">编辑课堂学习单元提醒</target>	
+        <alt-trans>	
+          <target>编辑课堂单元提醒</target>	
+        </alt-trans>	
+      </trans-unit>	
+      <trans-unit id="5800344060320957157">	
+        <source>There is already a period with that name.</source>
+        <target state="translated">以该名称命名的课时已存在。</target>	
+        <alt-trans>	
+          <target>该组名称已存在</target>	
+        </alt-trans>	
+      </trans-unit>	
+      <trans-unit id="7291953203299952730">	
+        <source>You do not have permission to add periods to this unit.</source>
+        <target state="translated">您无权向此单元添加课时。</target>	
+      </trans-unit>	
+      <trans-unit id="622558430501370414">
+        <source>You are not allowed to delete a period that contains students.</source>
+        <target state="translated">您不能删除包含学生的课时。</target>	
+        <alt-trans>	
+          <target>您不能删除包含学生的课程时间。</target>	
+        </alt-trans>	
+      </trans-unit>	
+      <trans-unit id="1043729639727499507">	
+        <source>You do not have permission to delete periods from this unit.</source>
+        <target state="translated">您没有权限从学习单元中删除课时。</target>	
+        <alt-trans>	
+          <target>您不能从学习单元中删除课时。</target>	
+        </alt-trans>	
+        <alt-trans>	
+          <target>您无权从学习单元删除课时。</target>	
+        </alt-trans>	
+      </trans-unit>	
+      <trans-unit id="9028638987976638715">	
+        <source>You do not have permission to change the number of students per team for this unit.</source>
+        <target state="translated">您没有权限更改此学习单元中每个团队的学生人数。</target>	
+        <alt-trans>	
+          <target>您无权更改此单元的每个团队的学生人数。</target>	
+        </alt-trans>	
+      </trans-unit>	
+      <trans-unit id="2769664721624079769">	
+        <source>You are not allowed to decrease the number of students per team because this unit already has teams with more than 1 student.</source>
+        <target state="translated">您不能减少每个团队的学生人数，因为该学习单元已经拥有超过1名学生的团队。</target>	
+        <alt-trans>	
+          <target>您不能减少每个团队的学生人数因为该单元已经拥有超过1名学生的团队。</target>	
+        </alt-trans>	
+      </trans-unit>	
+      <trans-unit id="1622862808392881517">	
+        <source>You do not have permission to change the dates for this unit.</source>
+        <target state="translated">您没有权限更改此学习单元的日期。</target>	
+        <alt-trans>	
+          <target>您无权更改此单元的日期。</target>	
+        </alt-trans>	
+      </trans-unit>	
+      <trans-unit id="2964269861601090315">	
+        <source>End date can't be before start date.</source>
+        <target state="translated">结束日期不能早于开始日期。</target>	
+      </trans-unit>	
+      <trans-unit id="4035307182253602220">	
+        <source>Start date can't be after end date.</source>
+        <target state="translated">开始日期不能在结束日期之后。</target>	
+      </trans-unit>	
+      <trans-unit id="5528736199269504039">	
+        <source>Please enter a new period name.</source>
+        <target state="translated">请输入新的课时名称。</target>	
+      </trans-unit>	
+      <trans-unit id="4283834044503624296">	
+        <source>1-3</source>
+        <target state="translated">1-3</target>	
+      </trans-unit>	
+      <trans-unit id="6127373082196535001">	
+        <source>Are you sure you want to change the students per team to <x id="value"/>?</source>
+        <target state="translated">您确定要将每个团队的学生更改为<x id="value"/>？</target>	
+      </trans-unit>	
+      <trans-unit id="7740591876616439835">	
+        <source>Are you sure you want to change the start date to <x id="date"/>?</source>
+        <target state="translated">您确定要将开始日期更改为<x id="date"/>？</target>	
+      </trans-unit>	
+      <trans-unit id="6150645879410305022">	
+        <source>Are you sure you want to change the end date to <x id="date"/>?</source>
+        <target state="translated">您确定要将结束日期更改为<x id="date"/>？</target>	
+      </trans-unit>	
+      <trans-unit id="2262426799118056083">	
+        <source>Unit settings updated.</source>
+        <target state="translated">学习单元设置已更新。</target>	
+        <alt-trans>	
+          <target>单元设置已更新。</target>	
+        </alt-trans>	
+      </trans-unit>	
+      <trans-unit id="230603552546841887">	
+        <source>Transferred classroom unit ownership to <x id="firstName"/> <x id="lastName"/>.</source>
+        <target state="translated">将课堂学习单元所有权转移给 <x id="firstName"/> <x id="lastName"/>。</target>	
+      </trans-unit>	
+      <trans-unit id="4778985982508820766">	
+        <source>Class Schedule</source>
+        <target state="translated">班级课程表</target>	
+      </trans-unit>	
+      <trans-unit id="968047685667963368">	
+        <source>Browse WISE Units</source>
+        <target state="translated">浏览WISE学习单元</target>	
+        <alt-trans>	
+          <target>浏览WISE单元</target>	
+        </alt-trans>	
+      </trans-unit>	
+      <trans-unit id="1133960927497534087">	
+        <source>Class Periods:</source>
+        <target state="translated">课程课时：</target>	
+        <alt-trans>	
+          <target>课程时间：</target>	
+        </alt-trans>	
+      </trans-unit>
     </body>
   </file>
 </xliff>
