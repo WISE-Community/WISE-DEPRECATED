@@ -20,7 +20,7 @@ import './components/authoringToolComponents';
 import AdvancedAuthoringController from './advanced/advancedAuthoringController';
 import AuthoringToolController from './authoringToolController';
 import AuthoringToolMainController from './main/authoringToolMainController';
-import { AuthoringToolProjectService } from './authoringToolProjectService';
+import { ClassroomMonitorProjectService } from '../classroomMonitor/classroomMonitorProjectService';
 import AuthorNotebookController from './notebook/authorNotebookController';
 import '../components/conceptMap/conceptMapAuthoringComponentModule';
 import { ConfigService } from '../services/configService';
@@ -76,6 +76,7 @@ import { UtilService } from '../services/utilService';
 import WISELinkAuthoringController from './wiseLink/wiseLinkAuthoringController';
 import * as moment from 'moment';
 import { AudioRecorderService } from '../services/audioRecorderService';
+import { TagService } from '../services/tagService';
 
 const authoringModule = angular
   .module('authoring', [
@@ -121,7 +122,7 @@ const authoringModule = angular
   .service('NodeService', NodeService)
   .service('NotebookService', NotebookService)
   .service('NotificationService', NotificationService)
-  .factory('ProjectService', downgradeInjectable(AuthoringToolProjectService))
+  .factory('ProjectService', downgradeInjectable(ClassroomMonitorProjectService))
   .service('ProjectAssetService', ProjectAssetService)
   .factory('SessionService', downgradeInjectable(SessionService))
   .service('SpaceService', SpaceService)
@@ -129,6 +130,7 @@ const authoringModule = angular
   .service('StudentDataService', StudentDataService)
   .service('StudentStatusService', StudentStatusService)
   .service('StudentWebSocketService', StudentWebSocketService)
+  .factory('TagService', downgradeInjectable(TagService))
   .service('TeacherDataService', TeacherDataService)
   .service('TeacherWebSocketService', TeacherWebSocketService)
   .factory('UtilService', downgradeInjectable(UtilService))

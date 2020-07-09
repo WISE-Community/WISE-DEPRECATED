@@ -8,6 +8,7 @@ import TeacherDataService from '../../services/teacherDataService';
 import { UtilService } from '../../services/utilService';
 import * as angular from 'angular';
 import * as $ from 'jquery';
+import { TagService } from '../../services/tagService';
 
 class NodeAuthoringController {
   $translate: any;
@@ -32,7 +33,8 @@ class NodeAuthoringController {
     'random',
     'workgroupId',
     'firstAvailable',
-    'lastAvailable'
+    'lastAvailable',
+    'tag'
   ];
   importComponentMode: boolean = false;
   importLibraryProjectId: any;
@@ -89,6 +91,7 @@ class NodeAuthoringController {
     'NodeService',
     'ProjectAssetService',
     'ProjectService',
+    'TagService',
     'TeacherDataService',
     'UtilService'
   ];
@@ -107,6 +110,7 @@ class NodeAuthoringController {
     private NodeService: NodeService,
     private ProjectAssetService: ProjectAssetService,
     private ProjectService: AuthoringToolProjectService,
+    private TagService: TagService,
     private TeacherDataService: TeacherDataService,
     private UtilService: UtilService
   ) {
@@ -380,6 +384,16 @@ class NodeAuthoringController {
             text: this.$translate('choices')
           }
         ]
+      },
+      {
+        value: 'tag',
+        text: this.$translate('tagAssignedToWorkgroup'),
+        params: [
+          {
+            value: 'tag',
+            text: this.$translate('tag')
+          }
+        ]
       }
     ];
     this.branchCriteria = [
@@ -398,6 +412,10 @@ class NodeAuthoringController {
       {
         value: 'random',
         text: this.$translate('random')
+      },
+      {
+        value: 'tag',
+        text: this.$translate('tag')
       }
     ];
 
@@ -1301,6 +1319,15 @@ class NodeAuthoringController {
         this.ProjectService.setTransitionLogicField(nodeId, 'whenToChoosePath', 'enterNode');
         this.ProjectService.setTransitionLogicField(nodeId, 'canChangePath', false);
         this.ProjectService.setTransitionLogicField(nodeId, 'maxPathsVisitable', 1);
+      } else if (this.createBranchCriterion === 'tag') {
+        this.ProjectService.setTransitionLogicField(
+          nodeId,
+          'howToChooseAmongAvailablePaths',
+          'tag'
+        );
+        this.ProjectService.setTransitionLogicField(nodeId, 'whenToChoosePath', 'enterNode');
+        this.ProjectService.setTransitionLogicField(nodeId, 'canChangePath', false);
+        this.ProjectService.setTransitionLogicField(nodeId, 'maxPathsVisitable', 1);
       }
     }
 
@@ -1345,7 +1372,7 @@ class NodeAuthoringController {
    * Update the transitions so that they have the necessary parameter
    * fields for the given branch criterion
    */
-  createBranchUpdateTransitions() {
+  async createBranchUpdateTransitions() {
     for (let b = 0; b < this.createBranchBranches.length; b++) {
       let branch = this.createBranchBranches[b];
       if (branch != null) {
@@ -1411,6 +1438,19 @@ class NodeAuthoringController {
             // clear the choice id and scores fields since we don't need them in random branching
             branch.choiceId = null;
             branch.scores = null;
+          } else if (this.createBranchCriterion === 'tag') {
+            const runId = this.ConfigService.getRunId();
+            if (runId != null) {
+              await this.TagService.retrieveTags().subscribe(() => {});
+            }
+            transition.criteria = [];
+            const criterion = {
+              name: 'tag',
+              params: {
+                tag: this.TagService.getNextAvailableTag()
+              }
+            };
+            transition.criteria.push(criterion);
           }
         }
       }
