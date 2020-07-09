@@ -16,7 +16,7 @@ import 'angular-translate-loader-partial';
 import 'angular-ui-router';
 import 'angular-ui-scrollpoint';
 import '../components/animation/animationComponentModule';
-import AnnotationService from '../services/annotationService';
+import { AnnotationService } from '../services/annotationService';
 import '../components/audioOscillator/audioOscillatorComponentModule';
 import { AudioRecorderService } from '../services/audioRecorderService';
 import * as canvg from 'canvg';
@@ -113,7 +113,7 @@ export function createModule(type = 'preview') {
     'ui.scrollpoint'
   ])
   .service('AchievementService', AchievementService)
-  .service('AnnotationService', AnnotationService)
+  .factory('AnnotationService', downgradeInjectable(AnnotationService))
   .factory('AudioRecorderService', downgradeInjectable(AudioRecorderService))
   .factory('ConfigService', downgradeInjectable(ConfigService))
   .service('ComponentService', ComponentService)

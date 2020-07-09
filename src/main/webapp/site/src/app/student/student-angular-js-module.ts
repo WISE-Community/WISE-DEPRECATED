@@ -13,6 +13,7 @@ import { CRaterService } from '../../../../wise5/services/cRaterService';
 import { SessionService } from '../../../../wise5/services/sessionService';
 import { StudentAssetService } from '../../../../wise5/services/studentAssetService';
 import { AudioRecorderService } from '../../../../wise5/services/audioRecorderService';
+import { AnnotationService } from '../../../../wise5/services/annotationService';
 
 @Component({template: ``})
 export class EmptyComponent {}
@@ -28,6 +29,7 @@ export class EmptyComponent {}
     ])
   ],
   providers: [
+    AnnotationService,
     AudioRecorderService,
     UtilService,
     ConfigService,
