@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
+  <file source-language="en-US" datatype="plaintext" original="ng2.template">
+    <body>
+      <trans-unit id="6178733511992894634">
+        <source>Trouble Signing In</source>
+      </trans-unit>
+      <trans-unit id="6892681827231609313">
+        <source>Need Help Using WISE</source>
+      </trans-unit>
+      <trans-unit id="2072690839988671006">
+        <source>Problems with a WISE Unit</source>
+      </trans-unit>
+      <trans-unit id="2959002981630304422">
+        <source>Feedback to WISE</source>
+      </trans-unit>
+      <trans-unit id="8693603235657020323">
+        <source>Other</source>
+      </trans-unit>
+      <trans-unit id="862335120638232941">
+        <source>Student Management</source>
+      </trans-unit>
+      <trans-unit id="7735613040574061081">
+        <source>Need Help with Authoring</source>
+      </trans-unit>
+      <trans-unit id="7528317085219048471">
+        <source>01 (Jan)</source>
+      </trans-unit>
+      <trans-unit id="4169826993694069540">
+        <source>02 (Feb)</source>
+      </trans-unit>
+      <trans-unit id="7397319183527150382">
+        <source>03 (Mar)</source>
+      </trans-unit>
+      <trans-unit id="4401053003272735439">
+        <source>04 (Apr)</source>
+      </trans-unit>
+      <trans-unit id="6130957074030941355">
+        <source>05 (May)</source>
+      </trans-unit>
+      <trans-unit id="3119348605846865468">
+        <source>06 (Jun)</source>
+      </trans-unit>
+      <trans-unit id="1295628669066090543">
+        <source>07 (Jul)</source>
+      </trans-unit>
+      <trans-unit id="3813724417684413959">
+        <source>08 (Aug)</source>
+      </trans-unit>
+      <trans-unit id="7039612753083856396">
+        <source>09 (Sep)</source>
+      </trans-unit>
+      <trans-unit id="5206495968805205248">
+        <source>10 (Oct)</source>
+      </trans-unit>
+      <trans-unit id="5271095457941077047">
+        <source>11 (Nov)</source>
+      </trans-unit>
+      <trans-unit id="7367027577282611263">
+        <source>12 (Dec)</source>
+      </trans-unit>
+      <trans-unit id="8342090111716136539">
+        <source>We did not find any usernames that match the information you provided. Please make sure you entered your information correctly. If you can't find your account, ask a teacher for help or contact us for assistance.</source>
+      </trans-unit>
+      <trans-unit id="2728844381564590456">
+        <source>We found a username that matches. Select it to log in. If this username is not yours, ask a teacher for help or contact us for assistance.</source>
+      </trans-unit>
+      <trans-unit id="5966595713291556325">
+        <source>We found multiple usernames that match. If one of these is yours, select it to log in. If you can't find your account, ask a teacher for help or contact us for assistance.</source>
+      </trans-unit>
+      <trans-unit id="2305544855268461756">
+        <source>We could not find that username. Please make sure you are typing it correctly and try again. If you have forgotten your username, please use the forgot username option below.</source>
+      </trans-unit>
+      <trans-unit id="18036423310428495">
+        <source>Incorrect answer, please try again. If you can't remember the answer to your security question, please ask your teacher to change your password or contact us for assistance.</source>
+      </trans-unit>
+      <trans-unit id="8384809960328910876">
+        <source>Password cannot be blank. Please try again.</source>
+      </trans-unit>
+      <trans-unit id="6465250798669251020">
+        <source>Passwords do not match. Please try again.</source>
+      </trans-unit>
+      <trans-unit id="324815643617845517">
+        <source>Password is invalid. Please try a different password.</source>
+      </trans-unit>
+      <trans-unit id="7389211279729440739">
+        <source>An error occurred. Please try again.</source>
+      </trans-unit>
+      <trans-unit id="3524867010032834126">
+        <source>We did not find a WISE account associated with that email. Please make sure you have typed your email address correctly.</source>
+      </trans-unit>
+      <trans-unit id="3305550971863645938">
+        <source>The server has encountered an error and was unable to send an email to you. Please try again. If the error continues to occur, please contact us.</source>
+      </trans-unit>
+      <trans-unit id="8855149280237623360">
+        <source>You have submitted an invalid verification code too many times. For security reasons, we will lock the ability to change your password for 10 minutes. After 10 minutes, you can try again.</source>
+      </trans-unit>
+      <trans-unit id="243316711119938992">
+        <source>The server has encountered an error and was unable to send you an email. Please try again. If the error continues to occur, please contact us.</source>
+      </trans-unit>
+      <trans-unit id="5604597042379546047">
+        <source>The verification code has expired. Verification codes are valid for 10 minutes. Please go back to the Teacher Forgot Password page to generate a new one.</source>
+      </trans-unit>
+      <trans-unit id="861030852489811059">
+        <source>The verification code is invalid. Please try again.</source>
+      </trans-unit>
+      <trans-unit id="2199576463342303449">
+        <source>You have submitted an invalid verification code too many times. For security reasons, we will lock the ability to change your password for 10 minutes. After 10 minutes, please go back to the Teacher Forgot Password page to generate a new verification code.</source>
+      </trans-unit>
+      <trans-unit id="7375295840965754734">
+        <source>Password cannot be blank, please enter a password.</source>
+      </trans-unit>
+      <trans-unit id="4839293263479159850">
+        <source>Passwords do not match, please try again.</source>
+      </trans-unit>
+      <trans-unit id="2359235425915349492">
+        <source>An error occurred, please try again.</source>
+      </trans-unit>
+      <trans-unit id="7189355262232159449">
+        <source>Unit Details</source>
+      </trans-unit>
+      <trans-unit id="8666615009060969246">
+        <source>Password changed.</source>
+      </trans-unit>
+      <trans-unit id="3563179927132287246">
+        <source>License pertains to original content created by the author(s). Authors are responsible for the usage and attribution of any third-party content linked to or included in this work.</source>
+      </trans-unit>
+      <trans-unit id="4580988005648117665">
+        <source>Search</source>
+      </trans-unit>
+      <trans-unit id="6202932382081568456">
+        <source>Hi class! Please complete the "<x id="unitTitle"/>" WISE unit. (Access Code: <x id="accessCode"/>)</source>
+      </trans-unit>
+      <trans-unit id="2719481583773153034">
+        <source>(Section <x id="section"/>)</source>
+      </trans-unit>
+      <trans-unit id="3220280128711469703">
+        <source>WISE students in classroom</source>
+      </trans-unit>
+      <trans-unit id="4788492906571844304">
+        <source>WISE students building</source>
+      </trans-unit>
+      <trans-unit id="2488461351187724080">
+        <source>WISE unit on laptop</source>
+      </trans-unit>
+      <trans-unit id="6104474954962536234">
+        <source>Interactive scientific models plus hands-on activities, personalized guidance, and rich embedded assessments</source>
+      </trans-unit>
+      <trans-unit id="5655885224951904964">
+        <source>WISE students and teacher</source>
+      </trans-unit>
+      <trans-unit id="2643991125797499080">
+        <source>Robust teacher grading and management tools supporting individualized and customized learning</source>
+      </trans-unit>
+      <trans-unit id="6028472408314831177">
+        <source>Sharing permissions updated for <x id="firstName"/> <x id="lastName"/>.</source>
+      </trans-unit>
+      <trans-unit id="7291412180108908080">
+        <source>Added shared teacher: <x id="firstName"/> <x id="lastName"/>.</source>
+      </trans-unit>
+      <trans-unit id="4634849718587399690">
+        <source>Removed shared teacher: <x id="firstName"/> <x id="lastName"/>.</source>
+      </trans-unit>
+      <trans-unit id="8381440848283879343">
+        <source>WISE Tested</source>
+      </trans-unit>
+      <trans-unit id="4827877614369437209">
+        <source>Community Built</source>
+      </trans-unit>
+      <trans-unit id="4742841752997470251">
+        <source>My Units</source>
+      </trans-unit>
+      <trans-unit id="4568352014425961102">
+        <source>There was an error trying to copy the project. Please refresh the page and try again.</source>
+      </trans-unit>
+      <trans-unit id="1160916388490317189">
+        <source>Show:</source>
+      </trans-unit>
+      <trans-unit id="3337301694210287595">
+        <source>Next page</source>
+      </trans-unit>
+      <trans-unit id="3629960544875360046">
+        <source>Previous page</source>
+      </trans-unit>
+      <trans-unit id="4131502629887927598">
+        <source>0 of <x id="total"/></source>
+      </trans-unit>
+      <trans-unit id="2448240847827519051">
+        <source><x id="start"/> - <x id="end"/> of <x id="total"/></source>
+      </trans-unit>
+      <trans-unit id="213925514828623262">
+        <source>Select an option</source>
+      </trans-unit>
+      <trans-unit id="5667840900782067941">
+        <source>Female</source>
+      </trans-unit>
+      <trans-unit id="8012344910054029733">
+        <source>Male</source>
+      </trans-unit>
+      <trans-unit id="5848285129051061802">
+        <source>No Answer/Other</source>
+      </trans-unit>
+      <trans-unit id="8954371642157143595">
+        <source>Elementary School</source>
+      </trans-unit>
+      <trans-unit id="4661798863210162530">
+        <source>Middle School</source>
+      </trans-unit>
+      <trans-unit id="5560057304612443507">
+        <source>High School</source>
+      </trans-unit>
+      <trans-unit id="1400655560633958921">
+        <source>College</source>
+      </trans-unit>
+      <trans-unit id="8693603235657020323">
+        <source>Other</source>
+      </trans-unit>
+      <trans-unit id="1934952699406892664">
+        <source>An error occurred: </source>
+      </trans-unit>
+      <trans-unit id="8903463267282596576">
+        <source>Backend returned code <x id="status"/>, body was: <x id="error"/></source>
+      </trans-unit>
+      <trans-unit id="6272363620327622591">
+        <source>An error occurred. Please refresh this page and try again.</source>
+      </trans-unit>
+      <trans-unit id="3975065711327151501">
+        <source>A teacher cannot be added as a team member.</source>
+      </trans-unit>
+      <trans-unit id="8956428055082238944">
+        <source><x id="studentName"/> is already in a team that is full</source>
+      </trans-unit>
+      <trans-unit id="7627380372981040413">
+        <source><x id="studentName"/> is already on another team</source>
+      </trans-unit>
+      <trans-unit id="998717888443653913">
+        <source><x id="studentName"/> is already in the team</source>
+      </trans-unit>
+      <trans-unit id="664214981022275787">
+        <source>Invalid username. Please try again.</source>
+      </trans-unit>
+      <trans-unit id="3661142959993862456">
+        <source>Invalid password. Please try again.</source>
+      </trans-unit>
+      <trans-unit id="2331585649152725791">
+        <source>Incorrect Google user. Please try again.</source>
+      </trans-unit>
+      <trans-unit id="7758936399344634446">
+        <source>No WISE user with this Google ID found.</source>
+      </trans-unit>
+      <trans-unit id="1105807609740514625">
+        <source><x id="studentName"/> is already in a team with <x id="studentNames"/></source>
+      </trans-unit>
+      <trans-unit id="4967231969832964676">
+        <source>Profile updated.</source>
+      </trans-unit>
+      <trans-unit id="7389211279729440739">
+        <source>An error occurred. Please try again.</source>
+      </trans-unit>
+      <trans-unit id="230603552546841887">
+        <source>Transferred classroom unit ownership to <x id="firstName"/> <x id="lastName"/>.</source>
+      </trans-unit>
+      <trans-unit id="5800344060320957157">
+        <source>There is already a period with that name.</source>
+      </trans-unit>
+      <trans-unit id="7291953203299952730">
+        <source>You do not have permission to add periods to this unit.</source>
+      </trans-unit>
+      <trans-unit id="622558430501370414">
+        <source>You are not allowed to delete a period that contains students.</source>
+      </trans-unit>
+      <trans-unit id="1043729639727499507">
+        <source>You do not have permission to delete periods from this unit.</source>
+      </trans-unit>
+      <trans-unit id="9028638987976638715">
+        <source>You do not have permission to change the number of students per team for this unit.</source>
+      </trans-unit>
+      <trans-unit id="2769664721624079769">
+        <source>You are not allowed to decrease the number of students per team because this unit already has teams with more than 1 student.</source>
+      </trans-unit>
+      <trans-unit id="1622862808392881517">
+        <source>You do not have permission to change the dates for this unit.</source>
+      </trans-unit>
+      <trans-unit id="2964269861601090315">
+        <source>End date can't be before start date.</source>
+      </trans-unit>
+      <trans-unit id="4035307182253602220">
+        <source>Start date can't be after end date.</source>
+      </trans-unit>
+      <trans-unit id="8074302458617519394">
+        <source>You do not have permission to change whether unit is locked after end date.</source>
+      </trans-unit>
+      <trans-unit id="5528736199269504039">
+        <source>Please enter a new period name.</source>
+      </trans-unit>
+      <trans-unit id="4283834044503624296">
+        <source>1-3</source>
+      </trans-unit>
+      <trans-unit id="6127373082196535001">
+        <source>Are you sure you want to change the students per team to <x id="value"/>?</source>
+      </trans-unit>
+      <trans-unit id="7740591876616439835">
+        <source>Are you sure you want to change the start date to <x id="date"/>?</source>
+      </trans-unit>
+      <trans-unit id="6150645879410305022">
+        <source>Are you sure you want to change the end date to <x id="date"/>?</source>
+      </trans-unit>
+      <trans-unit id="4810452891345359652">
+        <source>Are you sure you want to remove the end date?</source>
+      </trans-unit>
+      <trans-unit id="2262426799118056083">
+        <source>Unit settings updated.</source>
+      </trans-unit>
+      <trans-unit id="4842937154332673885">
+        <source>Run Settings</source>
+      </trans-unit>
+      <trans-unit id="8421677200321603991">
+        <source>Edit Classroom Unit Warning</source>
+      </trans-unit>
+      <trans-unit id="1133960927497534087">
+        <source>Class Periods:</source>
+      </trans-unit>
+      <trans-unit id="4778985982508820766">
+        <source>Class Schedule</source>
+      </trans-unit>
+      <trans-unit id="968047685667963368">
+        <source>Browse WISE Units</source>
+      </trans-unit>
+      <trans-unit id="4967231969832964676">
+        <source>Profile updated.</source>
+      </trans-unit>
+      <trans-unit id="7389211279729440739">
+        <source>An error occurred. Please try again.</source>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
