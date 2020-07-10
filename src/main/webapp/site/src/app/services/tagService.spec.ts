@@ -4,10 +4,10 @@ import { UpgradeModule } from '@angular/upgrade/static';
 import { TagService } from '../../../../wise5/services/tagService';
 import { ConfigService } from '../../../../wise5/services/configService';
 import { UtilService } from '../../../../wise5/services/utilService';
-import { TeacherProjectService } from '../../../../wise5/services/teacherProjectService';
+import { ProjectService } from '../../../../wise5/services/projectService';
 
 let configService: ConfigService;
-let projectService: TeacherProjectService;
+let projectService: ProjectService;
 let utilService: UtilService;
 let http: HttpTestingController;
 let service: TagService;
@@ -16,11 +16,11 @@ describe('TagService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [ HttpClientTestingModule, UpgradeModule ],
-      providers: [ TeacherProjectService, ConfigService, TagService, UtilService ]
+      providers: [ ProjectService, ConfigService, TagService, UtilService ]
     })
     http = TestBed.get(HttpTestingController);
     configService = TestBed.get(ConfigService);
-    projectService = TestBed.get(TeacherProjectService);
+    projectService = TestBed.get(ProjectService);
     utilService = TestBed.get(UtilService);
     service = TestBed.get(TagService);
   });
