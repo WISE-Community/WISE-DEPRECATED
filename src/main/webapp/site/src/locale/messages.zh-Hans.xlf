@@ -6769,6 +6769,17 @@
           <target>课程时间：</target>	
         </alt-trans>	
       </trans-unit>
+      <trans-unit id="6104474954962536234"> 
+        <source>Interactive scientific models plus hands-on activities, personalized guidance, and rich embedded assessments</source>
+        <target state="translated">交互式科学模型以及实践活动、个性化指导和丰富的嵌入式评估</target> 
+      </trans-unit>
+      <trans-unit id="2643991125797499080"> 
+        <source>Robust teacher grading and management tools supporting individualized and customized learning</source>
+        <target state="translated">强大的用于支持个性化和定制化学习的教师评分和管理工具</target> 
+        <alt-trans> 
+          <target>强大的支持个性化和定制化学习的教师评分和管理工具</target> 
+        </alt-trans> 
+      </trans-unit>
     </body>
   </file>
 </xliff>

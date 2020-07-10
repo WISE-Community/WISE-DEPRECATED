@@ -60,7 +60,8 @@ export class HomeComponent implements OnInit {
           srcset: 'assets/img/wise-students-building.jpg, assets/img/wise-students-building@2x.jpg 2x'
         }
       ],
-      contentTemplate: this.sanitizer.sanitize(SecurityContext.HTML, 'Free, standards-aligned, and research-based inquiry curricula that address <a href="http://www.nextgenscience.org/three-dimensions" target="_blank">NGSS 3D proficiency')
+      contentTemplate: this.sanitizer.sanitize(SecurityContext.HTML, 
+          $localize`Free, standards-aligned, and research-based inquiry curricula that address <a href="http://www.nextgenscience.org/three-dimensions" target="_blank">NGSS 3D proficiency</a>`)
     },
     {
       imgSrc: 'assets/img/wise-project-view@2x.jpg',

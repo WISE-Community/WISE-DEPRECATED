@@ -5953,6 +5953,9 @@
       <trans-unit id="7389211279729440739">
         <source>An error occurred. Please try again.</source>
       </trans-unit>
+      <trans-unit id="8774131075657907540">
+        <source>Free, standards-aligned, and research-based inquiry curricula that address <a href="http://www.nextgenscience.org/three-dimensions" target="_blank">NGSS 3D proficiency</a></source>
+      </trans-unit>
     </body>
   </file>
 </xliff>
