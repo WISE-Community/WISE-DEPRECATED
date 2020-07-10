@@ -1,11 +1,22 @@
 'use strict';
 
 class StudentWebSocketService {
-  constructor($log, $rootScope, $stomp, AnnotationService, ConfigService, TagService) {
+  constructor(
+    $log,
+    $rootScope,
+    $stomp,
+    AnnotationService,
+    ConfigService,
+    NodeService,
+    StudentDataService,
+    TagService
+  ) {
     this.$rootScope = $rootScope;
     this.$stomp = $stomp;
     this.AnnotationService = AnnotationService;
     this.ConfigService = ConfigService;
+    this.NodeService = NodeService;
+    this.StudentDataService = StudentDataService;
     this.TagService = TagService;
     this.$stomp.setDebug(function(args) {
       $log.debug(args);
@@ -54,6 +65,8 @@ class StudentWebSocketService {
       } else if (message.type === 'tagsToWorkgroup') {
         const tags = JSON.parse(message.content);
         this.TagService.setTags(tags);
+        this.StudentDataService.updateNodeStatuses();
+        this.NodeService.evaluateTransitionLogic();
       }
     });
   }
@@ -65,6 +78,8 @@ StudentWebSocketService.$inject = [
   '$stomp',
   'AnnotationService',
   'ConfigService',
+  'NodeService',
+  'StudentDataService',
   'TagService'
 ];
 

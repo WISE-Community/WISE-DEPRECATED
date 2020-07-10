@@ -63,6 +63,7 @@ import StudentStatusService from '../services/studentStatusService';
 import StudentWebSocketService from '../services/studentWebSocketService';
 import '../components/summary/summaryComponentModule';
 import '../components/table/tableComponentModule';
+import { TagService } from '../services/tagService';
 import { UtilService } from '../services/utilService';
 import VLEController from './vleController';
 import { VLEProjectService } from './vleProjectService';
@@ -130,6 +131,7 @@ export default angular
   .service('StudentDataService', StudentDataService)
   .service('StudentStatusService', StudentStatusService)
   .service('StudentWebSocketService', StudentWebSocketService)
+  .factory('TagService', downgradeInjectable(TagService))
   .factory('UtilService', downgradeInjectable(UtilService))
   .controller('NavigationController', NavigationController)
   .controller('NodeController', NodeController)
