@@ -33,8 +33,8 @@ export class EmptyComponent {}
     UtilService,
     ConfigService,
     CRaterService,
-    ProjectService,
     TeacherProjectService,
+    { provide: ProjectService, useExisting: TeacherProjectService },
     SessionService,
     StudentAssetService,
     TagService
