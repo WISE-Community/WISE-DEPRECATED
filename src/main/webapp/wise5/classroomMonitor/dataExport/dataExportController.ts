@@ -1,6 +1,6 @@
 'use strict';
 
-import AnnotationService from '../../services/annotationService';
+import { AnnotationService } from '../../services/annotationService';
 import { ConfigService } from '../../services/configService';
 import MatchService from '../../components/match/matchService';
 import { ClassroomMonitorProjectService } from '../classroomMonitorProjectService';
