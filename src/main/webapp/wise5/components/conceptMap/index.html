@@ -57,8 +57,7 @@
                ng-if='conceptMapController.isPromptVisible'>
           <compile data='conceptMapController.getPrompt()'></compile>
         </label>
-        <possible-score [max-score]='conceptMapController.componentContent.maxScore'
-                        ng-if='::conceptMapController.mode === "student" && !conceptMapController.latestAnnotations.score'></possible-score>
+        <possible-score [max-score]='conceptMapController.componentContent.maxScore'></possible-score>
         <div class='input-wrapper'>
           <md-button class='md-raised md-primary'
                      ng-if='::conceptMapController.mode !== "grading"'

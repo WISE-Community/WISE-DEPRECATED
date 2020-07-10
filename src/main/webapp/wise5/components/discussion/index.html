@@ -54,9 +54,7 @@
           <div class='component__prompt__content'>
             <compile data='::discussionController.getPrompt()'></compile>
           </div>
-          <possible-score [max-score]='::discussionController.componentContent.maxScore'
-              ng-if='::discussionController.mode === "student" && !discussionController.latestAnnotations.score'>
-          </possible-score>
+          <possible-score [max-score]='::discussionController.componentContent.maxScore'></possible-score>
         </div>
         <div class='md-padding discussion-content'>
           <component-annotations ng-if='::discussionController.mode === "student"'
