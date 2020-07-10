@@ -13,17 +13,21 @@ import { CRaterService } from '../../../../wise5/services/cRaterService';
 import { SessionService } from '../../../../wise5/services/sessionService';
 import { StudentAssetService } from '../../../../wise5/services/studentAssetService';
 import { AudioRecorderService } from '../../../../wise5/services/audioRecorderService';
+import { PossibleScoreComponent } from '../possible-score/possible-score.component';
 import { AnnotationService } from '../../../../wise5/services/annotationService';
+import { CommonModule } from '@angular/common';
 
 @Component({template: ``})
 export class EmptyComponent {}
 
 @NgModule({
   declarations: [
-    EmptyComponent
+    EmptyComponent,
+    PossibleScoreComponent
   ],
   imports: [
     UpgradeModule,
+    CommonModule,
     RouterModule.forChild([
       {path: '**', component: EmptyComponent}
     ])
@@ -38,6 +42,9 @@ export class EmptyComponent {}
     SessionService,
     StudentAssetService,
     VLEProjectService
+  ],
+  entryComponents: [
+    PossibleScoreComponent
   ]
 })
 export class StudentAngularJSModule {

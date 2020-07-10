@@ -16,6 +16,7 @@ import { StudentAssetService } from '../../../../wise5/services/studentAssetServ
 import { ProjectAssetService } from '../services/projectAssetService';
 import { AudioRecorderService } from '../../../../wise5/services/audioRecorderService';
 import { AnnotationService } from '../../../../wise5/services/annotationService';
+import { CommonModule } from '@angular/common';
 
 @Component({template: ``})
 export class EmptyComponent {}
@@ -27,6 +28,7 @@ export class EmptyComponent {}
   ],
   imports: [
     UpgradeModule,
+    CommonModule,
     RouterModule.forChild([
       {path: '**', component: EmptyComponent}
     ])
