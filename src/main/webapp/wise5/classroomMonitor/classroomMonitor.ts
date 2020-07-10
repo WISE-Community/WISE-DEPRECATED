@@ -17,7 +17,7 @@ import 'ng-stomp';
 import 'angular-translate';
 import 'angular-translate-loader-partial';
 import '../components/animation/animationComponentModule';
-import AnnotationService from '../services/annotationService';
+import { AnnotationService } from '../services/annotationService';
 import '../components/audioOscillator/audioOscillatorComponentModule';
 import './classroomMonitorComponents';
 import ClassroomMonitorController from './classroomMonitorController';
@@ -114,7 +114,7 @@ const classroomMonitorModule = angular
     'ui.router'
   ])
   .service('AchievementService', AchievementService)
-  .service('AnnotationService', AnnotationService)
+  .factory('AnnotationService', downgradeInjectable(AnnotationService))
   .factory('AudioRecorderService', downgradeInjectable(AudioRecorderService))
   .service('ComponentService', ComponentService)
   .factory('ConfigService', downgradeInjectable(ConfigService))

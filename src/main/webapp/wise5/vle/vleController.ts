@@ -1,6 +1,6 @@
 'use strict';
 
-import AnnotationService from '../services/annotationService';
+import { AnnotationService } from '../services/annotationService';
 import { ConfigService } from '../services/configService';
 import NotificationService from '../services/notificationService';
 import NotebookService from '../services/notebookService';

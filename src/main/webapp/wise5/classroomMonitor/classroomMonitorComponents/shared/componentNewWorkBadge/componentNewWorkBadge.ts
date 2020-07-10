@@ -1,6 +1,6 @@
 'use strict';
 
-import AnnotationService from '../../../../services/annotationService';
+import { AnnotationService } from '../../../../services/annotationService';
 import TeacherDataService from '../../../../services/teacherDataService';
 
 class ComponentNewWorkBadgeController {

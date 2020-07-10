@@ -14,7 +14,7 @@ import 'angular-toarrayfilter';
 import 'angular-translate';
 import 'angular-translate-loader-partial';
 import '../components/animation/animationAuthoringComponentModule';
-import AnnotationService from '../services/annotationService';
+import { AnnotationService } from '../services/annotationService';
 import '../components/audioOscillator/audioOscillatorAuthoringComponentModule';
 import './components/authoringToolComponents';
 import AdvancedAuthoringController from './advanced/advancedAuthoringController';
@@ -113,7 +113,7 @@ const authoringModule = angular
     'tableAuthoringComponentModule',
     'ui.router'
   ])
-  .service('AnnotationService', AnnotationService)
+  .factory('AnnotationService', downgradeInjectable(AnnotationService))
   .factory('AudioRecorderService', downgradeInjectable(AudioRecorderService))
   .service('ComponentService', ComponentService)
   .factory('ConfigService', downgradeInjectable(ConfigService))
