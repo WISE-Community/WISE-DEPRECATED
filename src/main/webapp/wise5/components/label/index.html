@@ -53,7 +53,7 @@
         <div class='component__prompt__content'>
           <compile data='::labelController.getPrompt()'></compile>
         </div>
-        <possible-score max-score='labelController.componentContent.maxScore'
+        <possible-score [max-score]='labelController.componentContent.maxScore'
             ng-if='labelController.mode === "student" && !labelController.latestAnnotations.score'>
         </possible-score>
       </div>

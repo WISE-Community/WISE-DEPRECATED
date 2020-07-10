@@ -169,7 +169,7 @@
           <div class='component__prompt__content'>
             <compile data='matchController.getPrompt()'></compile>
           </div>
-          <possible-score max-score='matchController.componentContent.maxScore'
+          <possible-score [max-score]='matchController.componentContent.maxScore'
               ng-if='matchController.mode === "student" && !matchController.latestAnnotations.score'>
           </possible-score>
         </div>

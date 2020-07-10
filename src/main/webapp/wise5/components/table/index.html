@@ -60,7 +60,7 @@
             <div class='component__prompt__content'>
               <compile data='tableController.getPrompt()'></compile>
             </div>
-            <possible-score max-score='tableController.componentContent.maxScore'
+            <possible-score [max-score]='tableController.componentContent.maxScore'
                 ng-if='tableController.mode === "student" && !tableController.latestAnnotations.score'>
             </possible-score>
           </div>

@@ -28,7 +28,7 @@
         <div ng-switch-default>
           <div class='component__prompt'>
             <div class='component__prompt__content'><compile data='graphController.getPrompt()'></compile></div>
-            <possible-score max-score='graphController.componentContent.maxScore'
+            <possible-score [max-score]='graphController.componentContent.maxScore'
                     ng-if='graphController.mode === "student" && !graphController.latestAnnotations.score'></possible-score>
           </div>
           <input type='file'

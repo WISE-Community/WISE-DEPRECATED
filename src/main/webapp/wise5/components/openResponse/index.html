@@ -9,7 +9,7 @@
           <div class='component--grading__response__content'>
             <compile data='openResponseController.studentResponse'></compile>
           </div>
-          <div class='component__attachment' 
+          <div class='component__attachment'
                ng-repeat='attachment in openResponseController.attachments | filter:{type:audio}'
                layout='row' layout-align="start center">
             <audio controls>
@@ -39,7 +39,7 @@
           <label class='input-label md-no-float' ng-disabled='openResponseController.isDisabled'
                ng-if='::openResponseController.isPromptVisible'>
             <compile id='prompt' data='::openResponseController.getPrompt()'></compile>
-            <possible-score max-score='openResponseController.componentContent.maxScore'></possible-score>
+            <possible-score [max-score]='openResponseController.componentContent.maxScore'></possible-score>
           </label>
           <md-button class='md-accent md-primary'
                      ng-click='openResponseController.snipButtonClicked($event)'
@@ -101,8 +101,8 @@
         </md-button>
       </div>
     </div>
-    <div class='component__actions' 
-         ng-if='openResponseController.mode !== "grading" && openResponseController.isStudentAudioRecordingEnabled' 
+    <div class='component__actions'
+         ng-if='openResponseController.mode !== "grading" && openResponseController.isStudentAudioRecordingEnabled'
          layout='row' layout-align='start center' layout-wrap='true'>
       <md-button class='md-accent'
                   ng-if='!openResponseController.isRecordingAudio'
@@ -120,7 +120,7 @@
             class="text-secondary">
         {{ ::'openResponse.recording' | translate }} {{ ::'openResponse.recordingTimeLeft' | translate }} :{{ openResponseController.getAudioRecordingTimeLeft() }}
       </span>
-      <div class='component__attachment' 
+      <div class='component__attachment'
            ng-repeat='attachment in openResponseController.attachments | filter:{type:audio}'
            layout='row' layout-align="start center">
         <audio controls>
