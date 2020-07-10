@@ -5605,6 +5605,22 @@
         </context-group>
         <target state="needs-translation">Sign Out</target>
       </trans-unit>
+      <trans-unit id="1cde0ecb1655843b8b682674d1ed9ff8138073b2" datatype="html">
+        <source>point</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/possible-score/possible-score.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+        <target state="needs-translation">point</target>
+      </trans-unit>
+      <trans-unit id="96fe69fa0552ff1362db05cebbd1ee4c0e154c8c" datatype="html">
+        <source>points</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/possible-score/possible-score.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <target state="needs-translation">points</target>
+      </trans-unit>
       <trans-unit id="36a606470097ddf0c32a250c8a902441729ca8ca" datatype="html">
         <source>Add Unit</source>
         <context-group purpose="location">
