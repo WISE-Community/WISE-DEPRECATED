@@ -174,32 +174,12 @@ public class VLEServiceImpl implements VLEService {
     return new ArrayList<StudentWork>(latestWorkPerWorkgroup.values());
   }
 
-  public JSONArray getNotebookItemsExport(Integer runId) {
-    try {
-      Run run = runService.retrieveById(new Long(runId));
-      List<NotebookItem> notebookItems = notebookItemDao.getNotebookItemsExport(run);
-      JSONArray notebookItemsJSONArray = new JSONArray();
-      for (int n = 0; n < notebookItems.size(); n++) {
-        notebookItemsJSONArray.put(notebookItems.get(n).toJSON());
-      }
-      return notebookItemsJSONArray;
-    } catch (Exception e) {
-      return new JSONArray();
-    }
+  public List<NotebookItem> getNotebookItemsExport(Run run) {
+    return notebookItemDao.getNotebookItemsExport(run);
   }
 
-  public JSONArray getLatestNotebookItemsExport(Integer runId) {
-    try {
-      Run run = runService.retrieveById(new Long(runId));
-      List<NotebookItem> notebookItems = notebookItemDao.getLatestNotebookItemsExport(run);
-      JSONArray notebookItemsJSONArray = new JSONArray();
-      for (int n = 0; n < notebookItems.size(); n++) {
-        notebookItemsJSONArray.put(notebookItems.get(n).toJSON());
-      }
-      return notebookItemsJSONArray;
-    } catch (Exception e) {
-      return new JSONArray();
-    }
+  public List<NotebookItem> getLatestNotebookItemsExport(Run run) {
+    return notebookItemDao.getLatestNotebookItemsExport(run);
   }
 
   public JSONArray getNotificationsExport(Integer runId) {

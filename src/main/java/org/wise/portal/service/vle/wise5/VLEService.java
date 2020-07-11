@@ -56,9 +56,9 @@ public interface VLEService {
       Integer workgroupId, Boolean isAutoSave, Boolean isSubmit, String nodeId, String componentId,
       String componentType, List<JSONObject> components, Boolean onlyGetLatest);
 
-  JSONArray getNotebookItemsExport(Integer runId);
+  List<NotebookItem> getNotebookItemsExport(Run run);
 
-  JSONArray getLatestNotebookItemsExport(Integer runId);
+  List<NotebookItem> getLatestNotebookItemsExport(Run run);
 
   /**
    * @return JSONArray of notification for researcher export for the given run id.

@@ -58,6 +58,30 @@ public class NotebookController {
     throw new AccessDeniedException("Not allowed to view notebook items");
   }
 
+  @Secured("ROLE_TEACHER")
+  @ResponseBody
+  @GetMapping("/{runId}/export-all")
+  protected List<NotebookItem> getAllNotebookItemsForExport(@PathVariable Long runId,
+      Authentication auth) throws ObjectNotFoundException, AccessDeniedException {
+    Run run = runService.retrieveById(runId);
+    if (runService.hasReadPermission(auth, run)) {
+      return vleService.getNotebookItemsExport(run);
+    }
+    throw new AccessDeniedException("Not allowed to export notebook items");
+  }
+
+  @Secured("ROLE_TEACHER")
+  @ResponseBody
+  @GetMapping("/{runId}/export-latest")
+  protected List<NotebookItem> getLatestNotebookItemsForExport(@PathVariable Long runId,
+      Authentication auth) throws ObjectNotFoundException, AccessDeniedException {
+    Run run = runService.retrieveById(runId);
+    if (runService.hasReadPermission(auth, run)) {
+      return vleService.getLatestNotebookItemsExport(run);
+    }
+    throw new AccessDeniedException("Not allowed to export notebook items");
+  }
+
   @Secured("ROLE_STUDENT")
   @ResponseBody
   @GetMapping("/{runId}/workgroup/{workgroupId}")

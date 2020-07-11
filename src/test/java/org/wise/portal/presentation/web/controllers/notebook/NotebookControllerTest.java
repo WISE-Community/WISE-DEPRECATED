@@ -50,6 +50,30 @@ public class NotebookControllerTest extends APIControllerTest {
   }
 
   @Test
+  public void getAllNotebookItemsForExport_TeacherHasRunReadPermission_ReturnAllItems()
+      throws AccessDeniedException, ObjectNotFoundException {
+    expect(runService.retrieveById(runId1)).andReturn(run1);
+    expect(runService.hasReadPermission(teacherAuth, run1)).andReturn(true);
+    expect(vleService.getNotebookItemsExport(run1)).andReturn(notebookItems);
+    replay(runService, vleService);
+    List<NotebookItem> items = controller.getAllNotebookItemsForExport(runId1, teacherAuth);
+    assertEquals(items.size(), 2);
+    verify(runService, vleService);
+  }
+
+  @Test
+  public void getLatestNotebookItemsForExport_TeacherHasRunReadPermission_ReturnLatestItems()
+      throws AccessDeniedException, ObjectNotFoundException {
+    expect(runService.retrieveById(runId1)).andReturn(run1);
+    expect(runService.hasReadPermission(teacherAuth, run1)).andReturn(true);
+    expect(vleService.getLatestNotebookItemsExport(run1)).andReturn(notebookItems);
+    replay(runService, vleService);
+    List<NotebookItem> items = controller.getLatestNotebookItemsForExport(runId1, teacherAuth);
+    assertEquals(items.size(), 2);
+    verify(runService, vleService);
+  }
+
+  @Test
   public void getNotebookItems_StudentIsInWorkgroup_ReturnItemsForWorkgroup()
       throws ObjectNotFoundException, AccessDeniedException {
     expect(runService.retrieveById(runId1)).andReturn(run1).times(3);

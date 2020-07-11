@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializerProvider;
 
 public class NotebookItemSerializer extends JsonSerializer<NotebookItem> {
@@ -32,5 +33,12 @@ public class NotebookItemSerializer extends JsonSerializer<NotebookItem> {
     gen.writeObjectField("periodId", item.getPeriod().getId());
     gen.writeStringField("nodeId", item.getNodeId());
     gen.writeStringField("title", item.getTitle());
+    ObjectMapper objectMapper = new ObjectMapper();
+    if (item.getGroups() != null) {
+      gen.writeObjectField("groups", objectMapper.readTree(item.getGroups()));
+    }
+    if (item.getParentNotebookItemId() != null) {
+      gen.writeObjectField("parentNotebookItemId", item.getParentNotebookItemId());
+    }
   }
 }
