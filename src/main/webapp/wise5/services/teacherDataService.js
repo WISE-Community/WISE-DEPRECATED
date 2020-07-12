@@ -157,8 +157,8 @@ class TeacherDataService {
   }
 
   retrieveNotebookExport(exportType) {
-    return this.$http.get(`/teacher/notebook/run/${this.ConfigService.getRunId()}/` +
-        `${exportType === 'allNotebookItems' ? 'export-all' : 'export-latest'}`).then(result => {
+    return this.$http.get(`/teacher/notebook/run/${this.ConfigService.getRunId()}`,
+        {params:{exportType:exportType}}).then(result => {
       return result.data;
     });
   }

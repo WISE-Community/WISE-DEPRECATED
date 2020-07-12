@@ -44,31 +44,32 @@ public class NotebookControllerTest extends APIControllerTest {
     expect(runService.hasReadPermission(teacherAuth, run1)).andReturn(true);
     expect(vleService.getNotebookItems(run1)).andReturn(notebookItems);
     replay(runService, vleService);
-    List<NotebookItem> items = controller.getNotebookItems(runId1, teacherAuth);
+    List<NotebookItem> items = controller.getNotebookItems(runId1, teacherAuth, null);
     assertEquals(items.size(), 2);
     verify(runService, vleService);
   }
 
   @Test
-  public void getAllNotebookItemsForExport_TeacherHasRunReadPermission_ReturnAllItems()
+  public void getAllNotebookItems_TeacherHasRunReadPermissionAllItems_ReturnAllItems()
       throws AccessDeniedException, ObjectNotFoundException {
     expect(runService.retrieveById(runId1)).andReturn(run1);
     expect(runService.hasReadPermission(teacherAuth, run1)).andReturn(true);
     expect(vleService.getNotebookItemsExport(run1)).andReturn(notebookItems);
     replay(runService, vleService);
-    List<NotebookItem> items = controller.getAllNotebookItemsForExport(runId1, teacherAuth);
+    List<NotebookItem> items = controller.getNotebookItems(runId1, teacherAuth, "allNotebookItems");
     assertEquals(items.size(), 2);
     verify(runService, vleService);
   }
 
   @Test
-  public void getLatestNotebookItemsForExport_TeacherHasRunReadPermission_ReturnLatestItems()
+  public void getLatestNotebookItems_TeacherHasRunReadPermissionLatestItems_ReturnLatestItems()
       throws AccessDeniedException, ObjectNotFoundException {
     expect(runService.retrieveById(runId1)).andReturn(run1);
     expect(runService.hasReadPermission(teacherAuth, run1)).andReturn(true);
     expect(vleService.getLatestNotebookItemsExport(run1)).andReturn(notebookItems);
     replay(runService, vleService);
-    List<NotebookItem> items = controller.getLatestNotebookItemsForExport(runId1, teacherAuth);
+    List<NotebookItem> items = controller.getNotebookItems(runId1, teacherAuth,
+        "latestNotebookItems");
     assertEquals(items.size(), 2);
     verify(runService, vleService);
   }
