@@ -17,6 +17,7 @@ import { ProjectAssetService } from '../services/projectAssetService';
 import { AudioRecorderService } from '../../../../wise5/services/audioRecorderService';
 import { AnnotationService } from '../../../../wise5/services/annotationService';
 import { CommonModule } from '@angular/common';
+import { StudentStatusService } from '../../../../wise5/services/studentStatusService';
 
 @Component({template: ``})
 export class EmptyComponent {}
@@ -43,7 +44,8 @@ export class EmptyComponent {}
     ClassroomMonitorProjectService,
     { provide: ProjectService, useExisting: ClassroomMonitorProjectService },
     SessionService,
-    StudentAssetService
+    StudentAssetService,
+    StudentStatusService
   ],
   entryComponents: [
     MilestoneReportDataComponent

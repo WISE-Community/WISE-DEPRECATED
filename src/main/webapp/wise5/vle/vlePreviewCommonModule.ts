@@ -58,7 +58,6 @@ import { SessionService } from '../services/sessionService';
 import './studentAsset/studentAsset';
 import { StudentAssetService } from '../services/studentAssetService';
 import StudentDataService from '../services/studentDataService';
-import StudentStatusService from '../services/studentStatusService';
 import StudentWebSocketService from '../services/studentWebSocketService';
 import '../components/summary/summaryComponentModule';
 import '../components/table/tableComponentModule';
@@ -126,7 +125,6 @@ export function createModule(type = 'preview') {
   .factory('SessionService', downgradeInjectable(SessionService))
   .factory('StudentAssetService', downgradeInjectable(StudentAssetService))
   .service('StudentDataService', StudentDataService)
-  .service('StudentStatusService', StudentStatusService)
   .service('StudentWebSocketService', StudentWebSocketService)
   .factory('UtilService', downgradeInjectable(UtilService))
   .controller('NavigationController', NavigationController)

@@ -1,7 +1,7 @@
 'use strict';
 
 import { ConfigService } from '../../services/configService';
-import StudentStatusService from '../../services/studentStatusService';
+import { StudentStatusService } from '../../services/studentStatusService';
 import TeacherDataService from '../../services/teacherDataService';
 import TeacherWebSocketService from '../../services/teacherWebSocketService';
 
