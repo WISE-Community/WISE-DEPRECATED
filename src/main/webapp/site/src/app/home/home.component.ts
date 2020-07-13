@@ -47,6 +47,10 @@ export class HomeComponent implements OnInit {
       }
     ]
   };
+  ngssLink = {
+    startTag: '<a href="http://www.nextgenscience.org/three-dimensions" target="_blank">',
+    closeTag: '</a>'
+  };
   blurbs: Array<Object> = [
     {
       imgSrc: 'assets/img/wise-students-building@2x.jpg',
@@ -61,7 +65,7 @@ export class HomeComponent implements OnInit {
         }
       ],
       contentTemplate: this.sanitizer.sanitize(SecurityContext.HTML, 
-          $localize`Free, standards-aligned, and research-based inquiry curricula that address <a href="http://www.nextgenscience.org/three-dimensions" target="_blank">NGSS 3D proficiency</a>`)
+          $localize`Free, standards-aligned, and research-based inquiry curricula that address ${this.ngssLink.startTag}:START_LINK:NGSS 3D proficiency${this.ngssLink.closeTag}:CLOSE_LINK:`)
     },
     {
       imgSrc: 'assets/img/wise-project-view@2x.jpg',
