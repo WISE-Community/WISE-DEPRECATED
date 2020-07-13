@@ -16,6 +16,7 @@ import { AudioRecorderService } from '../../../../wise5/services/audioRecorderSe
 import { PossibleScoreComponent } from '../possible-score/possible-score.component';
 import { AnnotationService } from '../../../../wise5/services/annotationService';
 import { CommonModule } from '@angular/common';
+import { StudentWebSocketService } from '../../../../wise5/services/studentWebSocketService';
 
 @Component({template: ``})
 export class EmptyComponent {}
@@ -41,6 +42,7 @@ export class EmptyComponent {}
     { provide: ProjectService, useExisting: VLEProjectService },
     SessionService,
     StudentAssetService,
+    StudentWebSocketService,
     VLEProjectService
   ],
   entryComponents: [

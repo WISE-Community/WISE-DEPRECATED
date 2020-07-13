@@ -6,7 +6,7 @@ import MilestoneService from '../../../../services/milestoneService';
 import NodeService from '../../../../services/nodeService';
 import NotificationService from '../../../../services/notificationService';
 import { ClassroomMonitorProjectService } from '../../../classroomMonitorProjectService';
-import StudentStatusService from '../../../../services/studentStatusService';
+import { StudentStatusService } from '../../../../services/studentStatusService';
 import TeacherDataService from '../../../../services/teacherDataService';
 import * as angular from 'angular';
 
