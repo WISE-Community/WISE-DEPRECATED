@@ -67,7 +67,7 @@ import './structure/structureAuthoringModule';
 import { StudentAssetService } from '../services/studentAssetService';
 import StudentDataService from '../services/studentDataService';
 import { StudentStatusService } from '../services/studentStatusService';
-import StudentWebSocketService from '../services/studentWebSocketService';
+import { StudentWebSocketService } from '../services/studentWebSocketService';
 import '../components/summary/summaryAuthoringComponentModule';
 import '../components/table/tableAuthoringComponentModule';
 import TeacherDataService from '../services/teacherDataService';
@@ -128,7 +128,7 @@ const authoringModule = angular
   .factory('StudentAssetService', downgradeInjectable(StudentAssetService))
   .service('StudentDataService', StudentDataService)
   .factory('StudentStatusService', downgradeInjectable(StudentStatusService))
-  .service('StudentWebSocketService', StudentWebSocketService)
+  .factory('StudentWebSocketService', downgradeInjectable(StudentWebSocketService))
   .service('TeacherDataService', TeacherDataService)
   .service('TeacherWebSocketService', TeacherWebSocketService)
   .factory('UtilService', downgradeInjectable(UtilService))

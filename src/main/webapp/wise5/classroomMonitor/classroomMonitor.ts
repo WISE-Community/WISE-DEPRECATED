@@ -68,7 +68,7 @@ import StudentDataService from '../services/studentDataService';
 import StudentGradingController from './studentGrading/studentGradingController';
 import StudentProgressController from './studentProgress/studentProgressController';
 import { StudentStatusService } from '../services/studentStatusService';
-import StudentWebSocketService from '../services/studentWebSocketService';
+import { StudentWebSocketService } from '../services/studentWebSocketService';
 import '../components/summary/summaryComponentModule';
 import '../components/table/tableComponentModule';
 import TeacherDataService from '../services/teacherDataService';
@@ -129,7 +129,7 @@ const classroomMonitorModule = angular
   .factory('StudentAssetService', downgradeInjectable(StudentAssetService))
   .service('StudentDataService', StudentDataService)
   .factory('StudentStatusService', downgradeInjectable(StudentStatusService))
-  .service('StudentWebSocketService', StudentWebSocketService)
+  .factory('StudentWebSocketService', downgradeInjectable(StudentWebSocketService))
   .service('TeacherDataService', TeacherDataService)
   .service('TeacherWebSocketService', TeacherWebSocketService)
   .factory('UtilService', downgradeInjectable(UtilService))
