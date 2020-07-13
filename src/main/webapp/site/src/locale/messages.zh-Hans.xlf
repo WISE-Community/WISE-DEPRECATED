@@ -6780,6 +6780,13 @@
           <target>强大的支持个性化和定制化学习的教师评分和管理工具</target> 
         </alt-trans> 
       </trans-unit>
+      <trans-unit id="8774131075657907540"> 
+        <source>Free, standards-aligned, and research-based inquiry curricula that address <a href="http://www.nextgenscience.org/three-dimensions" target="_blank">NGSS 3D proficiency</a></source> 
+        <target state="translated">针对<a href="http://www.nextgenscience.org/three-dimensions" target="_blank">NGSS(新一代科学教育标准)</a>提供免费的、标准一致的且基于研究的探究学习课程</target> 
+        <alt-trans> 
+          <target>免费，标准一致且基于研究的探究学习课程，课程地址是 <a href="http://www.nextgenscience.org/three-dimensions" target="_blank">NGSS 3D熟练程度<a/></target> 
+        </alt-trans> 
+      </trans-unit> 
     </body>
   </file>
 </xliff>
