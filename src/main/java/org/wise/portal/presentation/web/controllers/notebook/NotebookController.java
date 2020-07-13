@@ -26,7 +26,7 @@ import org.wise.vle.domain.work.NotebookItem;
 import org.wise.vle.domain.work.NotebookItemAlreadyInGroupException;
 
 /**
- * Controller for handling GET and POST of WISE Notebooks and Notebook Items
+ * Notebooks and NotebookItems API
  * @author Hiroki Terashima
  * @author Geoffrey Kwan
  */
@@ -49,11 +49,18 @@ public class NotebookController {
   @Secured("ROLE_TEACHER")
   @ResponseBody
   @GetMapping("/{runId}")
-  protected List<NotebookItem> getNotebookItems(@PathVariable Long runId, Authentication auth)
-      throws ObjectNotFoundException, AccessDeniedException {
+  protected List<NotebookItem> getNotebookItems(@PathVariable Long runId, Authentication auth,
+      @RequestParam(required = false) String exportType) throws ObjectNotFoundException,
+      AccessDeniedException {
     Run run = runService.retrieveById(runId);
     if (runService.hasReadPermission(auth, run)) {
-      return vleService.getNotebookItems(run);
+      if ("allNotebookItems".equals(exportType)) {
+        return vleService.getNotebookItemsExport(run);
+      } else if ("latestNotebookItems".equals(exportType)) {
+        return vleService.getLatestNotebookItemsExport(run);
+      } else {
+        return vleService.getNotebookItems(run);
+      }
     }
     throw new AccessDeniedException("Not allowed to view notebook items");
   }

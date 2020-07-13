@@ -89,17 +89,7 @@ public class TeacherDataController {
 
       if (owner.equals(signedInUser) || sharedOwners.contains(signedInUser)
           || signedInUser.isAdmin()) {
-        if ("allNotebookItems".equals(exportType)) {
-          JSONArray resultArray = vleService.getNotebookItemsExport(runId);
-          PrintWriter writer = response.getWriter();
-          writer.write(resultArray.toString());
-          writer.close();
-        } else if ("latestNotebookItems".equals(exportType)) {
-          JSONArray resultArray = vleService.getLatestNotebookItemsExport(runId);
-          PrintWriter writer = response.getWriter();
-          writer.write(resultArray.toString());
-          writer.close();
-        } else if ("notifications".equals(exportType)) {
+        if ("notifications".equals(exportType)) {
           JSONArray resultArray = vleService.getNotificationsExport(runId);
           PrintWriter writer = response.getWriter();
           writer.write(resultArray.toString());
