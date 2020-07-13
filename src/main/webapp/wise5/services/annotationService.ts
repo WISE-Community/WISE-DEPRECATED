@@ -1,34 +1,24 @@
 'use strict';
 
-class AnnotationService {
-  constructor(
-      $filter,
-      $http,
-      $q,
-      $rootScope,
-      ConfigService,
-      ProjectService,
-      UtilService) {
-    this.$filter = $filter;
-    this.$http = $http;
-    this.$q = $q;
-    this.$rootScope = $rootScope;
-    this.ConfigService = ConfigService;
-    this.ProjectService = ProjectService;
-    this.UtilService = UtilService;
-    this.$translate = this.$filter('translate');
-    this.annotations = null;
+import { Injectable } from "@angular/core";
+import { UpgradeModule } from "@angular/upgrade/static";
+import { ProjectService } from "./projectService";
+import { ConfigService } from "./configService";
+import { UtilService } from "./utilService";
+import * as angular from 'angular';
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 
-    /*
-     * A dummy annotation id that is used in preview mode when we simulate
-     * saving of annotation.
-     */
-    this.dummyAnnotationId = 1;
+@Injectable()
+export class AnnotationService {
+  activeGlobalAnnotationGroups: any;
+  annotations: any;
+  dummyAnnotationId: number = 1; // used in preview mode when we simulate saving of annotation
+
+  constructor(private upgrade: UpgradeModule, private http: HttpClient,
+      private ConfigService: ConfigService, private ProjectService: ProjectService,
+      private UtilService: UtilService) {
   }
 
-  /**
-   * Get all the annotations
-   */
   getAnnotations() {
     return this.annotations;
   }
@@ -125,21 +115,21 @@ class AnnotationService {
   createAnnotation(annotationId, runId, periodId, fromWorkgroupId,
       toWorkgroupId, nodeId, componentId, studentWorkId, localNotebookItemId,
       notebookItemId, annotationType, data, clientSaveTime) {
-    const annotation = {};
-    annotation.id = annotationId;
-    annotation.runId = runId;
-    annotation.periodId = periodId;
-    annotation.fromWorkgroupId = fromWorkgroupId;
-    annotation.toWorkgroupId = toWorkgroupId;
-    annotation.nodeId = nodeId;
-    annotation.componentId = componentId;
-    annotation.studentWorkId = studentWorkId;
-    annotation.localNotebookItemId = localNotebookItemId;
-    annotation.notebookItemId = notebookItemId;
-    annotation.type = annotationType;
-    annotation.data = data;
-    annotation.clientSaveTime = clientSaveTime;
-    return annotation;
+    return {
+      id: annotationId,
+      runId: runId,
+      periodId: periodId,
+      fromWorkgroupId: fromWorkgroupId,
+      toWorkgroupId: toWorkgroupId,
+      nodeId: nodeId,
+      componentId: componentId,
+      studentWorkId: studentWorkId,
+      localNotebookItemId: localNotebookItemId,
+      notebookItemId: notebookItemId,
+      type: annotationType,
+      data: data,
+      clientSaveTime: clientSaveTime
+    };
   };
 
   /**
@@ -148,56 +138,29 @@ class AnnotationService {
    * @returns a promise
    */
   saveAnnotation(annotation) {
-    if (annotation != null) {
-      let annotations = [];
-      annotations.push(annotation);
-      if (annotations != null && annotations.length > 0) {
-        for (let annotation of annotations) {
-          if (annotation != null) {
-            annotation.requestToken = this.UtilService.generateKey(); // use this to keep track of unsaved annotations.
-            this.addOrUpdateAnnotation(annotation);
-          }
-        }
-      } else {
-        annotations = [];
-      }
-
-      if (this.ConfigService.isPreview()) {
-        // if we're in preview, don't make any request to the server but pretend we did
-        let savedAnnotationDataResponse = {
-          annotations: annotations
-        };
-        let annotation = this.saveToServerSuccess(savedAnnotationDataResponse);
-
-        let deferred = this.$q.defer();
-        deferred.resolve(annotation);
-        return deferred.promise;
-      } else {
-        let params = {
-          runId: this.ConfigService.getRunId(),
-          workgroupId: this.ConfigService.getWorkgroupId(),
-          annotations: angular.toJson(annotations)
-        };
-
-        let httpParams = {
-          method: "POST",
-          url: this.ConfigService.getConfigParam('teacherDataURL'),
-          headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-          data: $.param(params)
-        };
-
-        return this.$http(httpParams).then(angular.bind(this, function(result) {
-
-          let localAnnotation = null;
-
-          if (result != null && result.data != null) {
-            let savedAnnotationDataResponse = result.data;
-            localAnnotation = this.saveToServerSuccess(savedAnnotationDataResponse);
-          }
-
-          return localAnnotation;
-        }));
-      }
+    annotation.requestToken = this.UtilService.generateKey(); // use this to keep track of unsaved annotations.
+    this.addOrUpdateAnnotation(annotation);
+    const annotations = [annotation];
+    if (this.ConfigService.isPreview()) {
+      // if we're in preview, don't make any request to the server but pretend we did
+      let savedAnnotationDataResponse = {
+        annotations: annotations
+      };
+      let annotation = this.saveToServerSuccess(savedAnnotationDataResponse);
+      let deferred = this.upgrade.$injector.get('$q').defer();
+      deferred.resolve(annotation);
+      return deferred.promise;
+    } else {
+      const params = {
+        runId: this.ConfigService.getRunId(),
+        workgroupId: this.ConfigService.getWorkgroupId(),
+        annotations: angular.toJson(annotations)
+      };
+      const headers = new HttpHeaders({'Content-Type': 'application/x-www-form-urlencoded'});
+      return this.http.post(this.ConfigService.getConfigParam('teacherDataURL'), $.param(params),
+          { headers: headers }).toPromise().then((savedAnnotationDataResponse: any) => {
+        return this.saveToServerSuccess(savedAnnotationDataResponse);
+      });
     }
   };
 
@@ -218,7 +181,7 @@ class AnnotationService {
               localAnnotation.serverSaveTime = savedAnnotation.serverSaveTime;
               //localAnnotation.requestToken = null; // requestToken is no longer needed.
 
-              this.$rootScope.$broadcast('annotationSavedToServer', {annotation: localAnnotation});
+              this.upgrade.$injector.get('$rootScope').$broadcast('annotationSavedToServer', {annotation: localAnnotation});
               break;
             } else if (localAnnotation.requestToken != null &&
               localAnnotation.requestToken === savedAnnotation.requestToken) {
@@ -241,7 +204,7 @@ class AnnotationService {
                 this.dummyAnnotationId++;
               }
 
-              this.$rootScope.$broadcast('annotationSavedToServer', {annotation: localAnnotation});
+              this.upgrade.$injector.get('$rootScope').$broadcast('annotationSavedToServer', {annotation: localAnnotation});
               break;
             }
           }
@@ -412,7 +375,7 @@ class AnnotationService {
     const localNotebookItemId = null;
     const notebookItemId = null;
     const annotationType = 'autoScore';
-    const clientSaveTime = Date.parse(new Date());
+    const clientSaveTime = Date.parse(new Date().toString());
     const annotation = this.createAnnotation(
       annotationId, runId, periodId, fromWorkgroupId, toWorkgroupId,
       nodeId, componentId, studentWorkId, localNotebookItemId, notebookItemId,
@@ -439,7 +402,7 @@ class AnnotationService {
     const localNotebookItemId = null;
     const notebookItemId = null;
     const annotationType = 'autoComment';
-    const clientSaveTime = Date.parse(new Date());
+    const clientSaveTime = Date.parse(new Date().toString());
     const annotation = this.createAnnotation(annotationId, runId, periodId,
         fromWorkgroupId, toWorkgroupId, nodeId, componentId, studentWorkId,
         localNotebookItemId, notebookItemId, annotationType, data,
@@ -465,7 +428,7 @@ class AnnotationService {
     const localNotebookItemId = null;
     const notebookItemId = null;
     const annotationType = 'inappropriateFlag';
-    const clientSaveTime = Date.parse(new Date());
+    const clientSaveTime = Date.parse(new Date().toString());
     const annotation = this.createAnnotation(annotationId, runId, periodId,
         fromWorkgroupId, toWorkgroupId, nodeId, componentId, studentWorkId,
         localNotebookItemId, notebookItemId, annotationType, data,
@@ -739,7 +702,7 @@ class AnnotationService {
             }
           } else {
             // each global annotation should have a name, so it shouldn't get here
-            console.error(this.$translate('GLOBAL_ANNOTATION_DOES_NOT_HAVE_A_NAME') + annotation);
+            console.error(this.upgrade.$injector.get('$filter')('translate')('GLOBAL_ANNOTATION_DOES_NOT_HAVE_A_NAME') + annotation);
           }
         }
       }
@@ -752,18 +715,18 @@ class AnnotationService {
    * @returns all global annotations that are active, in a group
    * [
    * {
-     *   annotationGroupName:"score1",
-     *   annotations:[
-     *   {
-     *     type:autoScore,
-     *     value:1
-     *   },
-     *   {
-     *     type:autoComment,
-     *     value:"you received a score of 1."
-     *   }
-     *   ]
-     * },
+    *   annotationGroupName:"score1",
+    *   annotations:[
+    *   {
+    *     type:autoScore,
+    *     value:1
+    *   },
+    *   {
+    *     type:autoComment,
+    *     value:"you received a score of 1."
+    *   }
+    *   ]
+    * },
    * {
      *   annotationGroupName:"score2",
      *   annotations:[...]
@@ -805,7 +768,7 @@ class AnnotationService {
             }
           } else {
             // each global annotation should have a name, so it shouldn't get here
-            console.error(his.$translate('GLOBAL_ANNOTATION_DOES_NOT_HAVE_A_NAME') + annotation);
+            console.error(this.upgrade.$injector.get('$filter')('translate')('GLOBAL_ANNOTATION_DOES_NOT_HAVE_A_NAME') + annotation);
           }
         }
       }
@@ -956,15 +919,3 @@ class AnnotationService {
     return null;
   }
 }
-
-AnnotationService.$inject = [
-  '$filter',
-  '$http',
-  '$q',
-  '$rootScope',
-  'ConfigService',
-  'ProjectService',
-  'UtilService'
-];
-
-export default AnnotationService;

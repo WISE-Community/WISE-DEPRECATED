@@ -17,7 +17,7 @@ import 'ng-stomp';
 import 'angular-translate';
 import 'angular-translate-loader-partial';
 import '../components/animation/animationComponentModule';
-import AnnotationService from '../services/annotationService';
+import { AnnotationService } from '../services/annotationService';
 import '../components/audioOscillator/audioOscillatorComponentModule';
 import './classroomMonitorComponents';
 import ClassroomMonitorController from './classroomMonitorController';
@@ -67,8 +67,8 @@ import { StudentAssetService } from '../services/studentAssetService';
 import StudentDataService from '../services/studentDataService';
 import StudentGradingController from './studentGrading/studentGradingController';
 import StudentProgressController from './studentProgress/studentProgressController';
-import StudentStatusService from '../services/studentStatusService';
-import StudentWebSocketService from '../services/studentWebSocketService';
+import { StudentStatusService } from '../services/studentStatusService';
+import { StudentWebSocketService } from '../services/studentWebSocketService';
 import '../components/summary/summaryComponentModule';
 import '../components/table/tableComponentModule';
 import TeacherDataService from '../services/teacherDataService';
@@ -114,7 +114,7 @@ const classroomMonitorModule = angular
     'ui.router'
   ])
   .service('AchievementService', AchievementService)
-  .service('AnnotationService', AnnotationService)
+  .factory('AnnotationService', downgradeInjectable(AnnotationService))
   .factory('AudioRecorderService', downgradeInjectable(AudioRecorderService))
   .service('ComponentService', ComponentService)
   .factory('ConfigService', downgradeInjectable(ConfigService))
@@ -128,8 +128,8 @@ const classroomMonitorModule = angular
   .factory('SessionService', downgradeInjectable(SessionService))
   .factory('StudentAssetService', downgradeInjectable(StudentAssetService))
   .service('StudentDataService', StudentDataService)
-  .service('StudentStatusService', StudentStatusService)
-  .service('StudentWebSocketService', StudentWebSocketService)
+  .factory('StudentStatusService', downgradeInjectable(StudentStatusService))
+  .factory('StudentWebSocketService', downgradeInjectable(StudentWebSocketService))
   .service('TeacherDataService', TeacherDataService)
   .service('TeacherWebSocketService', TeacherWebSocketService)
   .factory('UtilService', downgradeInjectable(UtilService))

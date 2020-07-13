@@ -8,7 +8,6 @@ class ThemeController {
     ConfigService,
     ProjectService,
     StudentDataService,
-    StudentStatusService,
     NotebookService,
     SessionService,
     $mdDialog,
@@ -24,7 +23,6 @@ class ThemeController {
     this.StudentDataService = StudentDataService;
     this.NotebookService = NotebookService;
     this.SessionService = SessionService;
-    this.StudentStatusService = StudentStatusService;
     this.$mdDialog = $mdDialog;
     this.$mdMedia = $mdMedia;
     this.$mdToast = $mdToast;
@@ -429,7 +427,6 @@ ThemeController.$inject = [
   'ConfigService',
   'ProjectService',
   'StudentDataService',
-  'StudentStatusService',
   'NotebookService',
   'SessionService',
   '$mdDialog',
