@@ -6,11 +6,9 @@ import { User } from '../../domain/user';
 import { Project} from '../../domain/project';
 import { TeacherHomeComponent } from './teacher-home.component';
 import { Run } from '../../domain/run';
-import { NO_ERRORS_SCHEMA, LOCALE_ID, TRANSLATIONS, TRANSLATIONS_FORMAT, Component } from '@angular/core';
+import { NO_ERRORS_SCHEMA, Component } from '@angular/core';
 import { ConfigService } from '../../services/config.service';
 import { Config } from '../../domain/config';
-import { I18n } from '@ngx-translate/i18n-polyfill';
-import { translationsFactory } from '../../app.module';
 import { LibraryService } from '../../services/library.service';
 import { RouterTestingModule } from '@angular/router/testing';
 
@@ -112,14 +110,7 @@ describe('TeacherHomeComponent', () => {
         { provide: TeacherService, useClass: MockTeacherService },
         { provide: UserService, useClass: MockUserService },
         { provide: ConfigService, useClass: MockConfigService },
-        { provide: LibraryService, useClass: MockLibraryService },
-        { provide: TRANSLATIONS_FORMAT, useValue: 'xlf' },
-        {
-          provide: TRANSLATIONS,
-          useFactory: translationsFactory,
-          deps: [LOCALE_ID]
-        },
-        I18n
+        { provide: LibraryService, useClass: MockLibraryService }
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })

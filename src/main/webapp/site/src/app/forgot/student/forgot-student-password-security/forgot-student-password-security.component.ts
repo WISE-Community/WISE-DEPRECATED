@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { I18n } from "@ngx-translate/i18n-polyfill";
 import {StudentService} from '../../../student/student.service';
 import { finalize } from 'rxjs/operators';
 
@@ -25,8 +24,7 @@ export class ForgotStudentPasswordSecurityComponent implements OnInit {
   constructor(private fb: FormBuilder,
               private router: Router,
               private route: ActivatedRoute,
-              private studentService: StudentService,
-              private i18n: I18n) { }
+              private studentService: StudentService) { }
 
   ngOnInit() {
     this.username = this.route.snapshot.queryParamMap.get('username');
@@ -67,7 +65,7 @@ export class ForgotStudentPasswordSecurityComponent implements OnInit {
   }
 
   setIncorrectAnswerMessage() {
-    const message = this.i18n(`Incorrect answer, please try again. If you can't remember the answer to your security question, please ask your teacher to change your password or contact us for assistance.`);
+    const message = $localize`Incorrect answer, please try again. If you can't remember the answer to your security question, please ask your teacher to change your password or contact us for assistance.`;
     this.setMessage(message);
   }
 

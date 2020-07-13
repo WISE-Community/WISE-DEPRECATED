@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges, ViewEncapsulation } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { I18n } from '@ngx-translate/i18n-polyfill';
 
 @Component({
   selector: 'app-select-menu',
@@ -20,7 +19,7 @@ export class SelectMenuComponent implements OnInit {
   options: any[] = []; // options for the select menu
 
   @Input()
-  placeholderText: string = this.i18n('Select an option'); // placeholder text
+  placeholderText: string = $localize`Select an option`; // placeholder text
 
   @Input()
   value: any; // selected value
@@ -36,7 +35,7 @@ export class SelectMenuComponent implements OnInit {
 
   selectField = new FormControl(""); // form control for the search input
 
-  constructor(private i18n: I18n) {
+  constructor() {
   }
 
   ngOnInit() {

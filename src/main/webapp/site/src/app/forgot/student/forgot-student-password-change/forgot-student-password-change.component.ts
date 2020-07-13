@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { I18n } from "@ngx-translate/i18n-polyfill";
 import { StudentService } from '../../../student/student.service';
 import { finalize } from 'rxjs/operators';
 
@@ -25,8 +24,7 @@ export class ForgotStudentPasswordChangeComponent implements OnInit {
   constructor(private fb: FormBuilder,
               private router: Router,
               private route: ActivatedRoute,
-              private studentService: StudentService,
-              private i18n: I18n) { }
+              private studentService: StudentService) { }
 
   ngOnInit() {
     this.username = this.route.snapshot.queryParamMap.get('username');
@@ -87,19 +85,19 @@ export class ForgotStudentPasswordChangeComponent implements OnInit {
   }
 
   setPasswordIsBlankMessage() {
-    this.setMessage(this.i18n('Password cannot be blank. Please try again.'));
+    this.setMessage($localize`Password cannot be blank. Please try again.`);
   }
 
   setPasswordsDoNotMatchMessage() {
-    this.setMessage(this.i18n('Passwords do not match. Please try again.'));
+    this.setMessage($localize`Passwords do not match. Please try again.`);
   }
 
   setInvalidPasswordMessage() {
-    this.setMessage(this.i18n('Password is invalid. Please try a different password.'));
+    this.setMessage($localize`Password is invalid. Please try a different password.`);
   }
 
   setErrorOccurredMessage() {
-    this.setMessage(this.i18n('An error occurred. Please try again.'));
+    this.setMessage($localize`An error occurred. Please try again.`);
   }
 
   setMessage(message) {
