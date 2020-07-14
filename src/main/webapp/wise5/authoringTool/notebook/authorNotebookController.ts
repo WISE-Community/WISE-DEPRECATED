@@ -1,8 +1,8 @@
 'use strict';
 
 import { ConfigService } from '../../services/configService';
+import { SpaceService } from '../../services/spaceService';
 import { TeacherProjectService } from '../../services/teacherProjectService';
-import SpaceService from '../../services/spaceService';
 import { UtilService } from '../../services/utilService';
 
 class AuthorNotebookController {

@@ -107,7 +107,7 @@ import { ProjectAssetService } from '../../site/src/app/services/projectAssetSer
 import ProjectController from '../authoringTool/project/projectController';
 import ProjectInfoController from '../authoringTool/info/projectInfoController';
 import RubricAuthoringController from '../authoringTool/rubric/rubricAuthoringController';
-import SpaceService from '../services/spaceService';
+import { SpaceService } from '../services/spaceService';
 import '../authoringTool/structure/structureAuthoringModule';
 import '../components/summary/summaryAuthoringComponentModule';
 import '../components/table/tableAuthoringComponentModule';
@@ -185,7 +185,7 @@ const teacherModule = angular
   .factory('ProjectService', downgradeInjectable(TeacherProjectService))
   .factory('ProjectAssetService', downgradeInjectable(ProjectAssetService))
   .factory('SessionService', downgradeInjectable(SessionService))
-  .service('SpaceService', SpaceService)
+  .factory('SpaceService', downgradeInjectable(SpaceService))
   .factory('StudentAssetService', downgradeInjectable(StudentAssetService))
   .factory('StudentDataService', downgradeInjectable(StudentDataService))
   .factory('StudentStatusService', downgradeInjectable(StudentStatusService))
