@@ -20,6 +20,7 @@ import { CommonModule } from '@angular/common';
 import { ProjectAssetService } from '../services/projectAssetService';
 import { StudentStatusService } from '../../../../wise5/services/studentStatusService';
 import { SpaceService } from '../../../../wise5/services/spaceService';
+import { TeacherWebSocketService } from '../../../../wise5/services/teacherWebSocketService';
 
 @Component({template: ``})
 export class EmptyComponent {}
@@ -49,7 +50,8 @@ export class EmptyComponent {}
     SpaceService,
     StudentAssetService,
     StudentStatusService,
-    TagService
+    TagService,
+    TeacherWebSocketService
   ],
   entryComponents: [
     MilestoneReportDataComponent
