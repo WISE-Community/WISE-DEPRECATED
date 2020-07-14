@@ -1,8 +1,8 @@
 'use strict';
 
 import NotificationService from '../../../../services/notificationService';
-import { ClassroomMonitorProjectService } from '../../../classroomMonitorProjectService';
 import * as angular from 'angular';
+import { TeacherProjectService } from '../../../../services/teacherProjectService';
 
 class NotificationsMenuController {
   $translate: any;
@@ -14,7 +14,7 @@ class NotificationsMenuController {
     $filter: any,
     private $mdDialog: any,
     private NotificationService: NotificationService,
-    private ProjectService: ClassroomMonitorProjectService
+    private ProjectService: TeacherProjectService
   ) {
     this.$translate = $filter('translate');
   }

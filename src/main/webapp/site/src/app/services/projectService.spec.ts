@@ -6,6 +6,7 @@ import { ConfigService } from '../../../../wise5/services/configService';
 import { UtilService } from '../../../../wise5/services/utilService';
 import demoProjectJSON_import from './sampleData/curriculum/Demo.project.json';
 import scootersProjectJSON_import from './sampleData/curriculum/SelfPropelledVehiclesChallenge.project.json';
+import { getAuthServiceConfigs } from '../app.module';
 const projectIdDefault = 1;
 const projectBaseURL = 'http://localhost:8080/curriculum/12345/';
 const projectURL = projectBaseURL + 'project.json';
@@ -88,6 +89,7 @@ describe('ProjectService', () => {
   deleteActivityWithBranching();
   deleteTheLastStepInAnActivity();
   deleteAllStepsInAnActivity();
+  getTags();
   // TODO: add test for service.getFlattenedProjectAsNodeIds()
   // TODO: add test for service.getAllPaths()
   // TODO: add test for service.consolidatePaths()
@@ -764,7 +766,7 @@ function shouldNotBeAbleToInsertAStepNodeInsideAStepNode() {
 function shouldDeleteAStepFromTheProject() {
   it('should delete a step from the project', () => {
     service.setProject(demoProjectJSON);
-    expect(service.getNodes().length).toEqual(48);
+    expect(service.getNodes().length).toEqual(54);
     expect(service.getNodeById('node5')).not.toBeNull();
     expect(
       service.nodeHasTransitionToNodeId(service.getNodeById('node4'), 'node5')
@@ -774,7 +776,7 @@ function shouldDeleteAStepFromTheProject() {
     ).toBeTruthy();
     expect(service.getNodesWithTransitionToNodeId('node6').length).toEqual(1);
     service.deleteNode('node5');
-    expect(service.getNodes().length).toEqual(47);
+    expect(service.getNodes().length).toEqual(53);
     expect(service.getNodeById('node5')).toBeNull();
     expect(
       service.nodeHasTransitionToNodeId(service.getNodeById('node4'), 'node6')
@@ -808,14 +810,14 @@ function shouldDeleteAStepThatIsTheStartIdOfTheProject() {
 function shouldDeleteAStepThatIsTheLastStepOfTheProject() {
   it('should delete a step that is the last step of the project', () => {
     service.setProject(demoProjectJSON);
-    expect(service.getTransitionsByFromNodeId('node797').length).toEqual(1);
+    expect(service.getTransitionsByFromNodeId('node802').length).toEqual(1);
     expect(
-      service.nodeHasTransitionToNodeId(service.getNodeById('node797'), 'node798')
+      service.nodeHasTransitionToNodeId(service.getNodeById('node802'), 'node803')
     ).toBeTruthy();
-    service.deleteNode('node798');
-    expect(service.getTransitionsByFromNodeId('node797').length).toEqual(0);
+    service.deleteNode('node803');
+    expect(service.getTransitionsByFromNodeId('node802').length).toEqual(0);
     expect(
-      service.nodeHasTransitionToNodeId(service.getNodeById('node797'), 'node798')
+      service.nodeHasTransitionToNodeId(service.getNodeById('node802'), 'node803')
     ).toBeFalsy();
   });
 }
@@ -844,13 +846,13 @@ function shouldDeleteTheFirstActivityFromTheProject() {
     service.setProject(demoProjectJSON);
     expect(service.getGroupStartId('group0')).toEqual('group1');
     expect(service.getStartNodeId()).toEqual('node1');
-    expect(service.getNodes().length).toEqual(48);
+    expect(service.getNodes().length).toEqual(54);
     expect(service.getNodesWithTransitionToNodeId('node20').length).toEqual(1);
     service.deleteNode('group1');
     expect(service.getNodeById('group1')).toBeNull();
     expect(service.getGroupStartId('group0')).toEqual('group2');
     expect(service.getStartNodeId()).toEqual('node20');
-    expect(service.getNodes().length).toEqual(28);
+    expect(service.getNodes().length).toEqual(34);
     expect(service.getNodesWithTransitionToNodeId('node20').length).toEqual(0);
   });
 }
@@ -861,7 +863,7 @@ function shouldDeleteAnActivityInTheMiddleOfTheProject() {
     expect(
       service.nodeHasTransitionToNodeId(service.getNodeById('group2'), 'group3')
     ).toBeTruthy();
-    expect(service.getNodes().length).toEqual(48);
+    expect(service.getNodes().length).toEqual(54);
     service.deleteNode('group3');
     expect(
       service.nodeHasTransitionToNodeId(service.getNodeById('group2'), 'group3')
@@ -869,7 +871,7 @@ function shouldDeleteAnActivityInTheMiddleOfTheProject() {
     expect(
       service.nodeHasTransitionToNodeId(service.getNodeById('group2'), 'group4')
     ).toBeTruthy();
-    expect(service.getNodes().length).toEqual(45);
+    expect(service.getNodes().length).toEqual(51);
   });
 }
 
@@ -877,16 +879,16 @@ function shouldDeleteTheLastActivityFromTheProject() {
   it('should delete the last activity from the project', () => {
     service.setProject(demoProjectJSON);
     expect(
-      service.nodeHasTransitionToNodeId(service.getNodeById('group3'), 'group4')
+      service.nodeHasTransitionToNodeId(service.getNodeById('group4'), 'group5')
     ).toBeTruthy();
-    expect(service.getTransitionsByFromNodeId('group3').length).toEqual(1);
-    expect(service.getNodes().length).toEqual(48);
-    service.deleteNode('group4');
+    expect(service.getTransitionsByFromNodeId('group4').length).toEqual(1);
+    expect(service.getNodes().length).toEqual(54);
+    service.deleteNode('group5');
     expect(
-      service.nodeHasTransitionToNodeId(service.getNodeById('group3'), 'group4')
+      service.nodeHasTransitionToNodeId(service.getNodeById('group4'), 'group5')
     ).toBeFalsy();
-    expect(service.getTransitionsByFromNodeId('group3').length).toEqual(0);
-    expect(service.getNodes().length).toEqual(40);
+    expect(service.getTransitionsByFromNodeId('group4').length).toEqual(0);
+    expect(service.getNodes().length).toEqual(48);
   });
 }
 
@@ -919,7 +921,8 @@ function getGroupNodesIdToOrder() {
         group1: { order: 1 },
         group2: { order: 21 },
         group3: { order: 37 },
-        group4: { order: 40 }
+        group4: { order: 40 },
+        group5: { order: 48 }
       });
     });
   });
@@ -1011,12 +1014,12 @@ function deleteActivityWithBranching() {
   it(`should delete an activity at the end of the project with branching and properly remove
       transitions from remaining steps`, () => {
     service.setProject(demoProjectJSON);
-    const node791 = service.getNodeById('node791');
-    const node791Transitions = node791.transitionLogic.transitions;
-    expect(node791Transitions.length).toEqual(1);
-    expect(node791Transitions[0].to).toEqual('node792');
-    service.deleteNode('group4');
-    expect(node791Transitions.length).toEqual(0);
+    const node798 = service.getNodeById('node798');
+    const node798Transitions = node798.transitionLogic.transitions;
+    expect(node798Transitions.length).toEqual(1);
+    expect(node798Transitions[0].to).toEqual('node799');
+    service.deleteNode('group5');
+    expect(node798Transitions.length).toEqual(0);
   });
 }
 
@@ -1049,5 +1052,15 @@ function deleteAllStepsInAnActivity() {
     service.deleteNode('node791');
     expect(node34Transitions.length).toEqual(1);
     expect(node34Transitions[0].to).toEqual('group3');
+  });
+}
+
+function getTags() {
+  it ('should get tags from the project', () => {
+    service.setProject(demoProjectJSON);
+    const tags = service.getTags();
+    expect(tags.length).toEqual(2);
+    expect(tags[0].name).toEqual('Group 1');
+    expect(tags[1].name).toEqual('Group 2');
   });
 }

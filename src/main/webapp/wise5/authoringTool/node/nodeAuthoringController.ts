@@ -1,13 +1,14 @@
 'use strict';
 
-import { AuthoringToolProjectService } from '../authoringToolProjectService';
+import { TeacherProjectService } from '../../services/teacherProjectService';
 import { ConfigService } from '../../services/configService';
 import NodeService from '../../services/nodeService';
-import ProjectAssetService from '../../services/projectAssetService';
+import { ProjectAssetService } from '../../../site/src/app/services/projectAssetService';
 import TeacherDataService from '../../services/teacherDataService';
 import { UtilService } from '../../services/utilService';
 import * as angular from 'angular';
 import * as $ from 'jquery';
+import { TagService } from '../../services/tagService';
 
 class NodeAuthoringController {
   $translate: any;
@@ -32,7 +33,8 @@ class NodeAuthoringController {
     'random',
     'workgroupId',
     'firstAvailable',
-    'lastAvailable'
+    'lastAvailable',
+    'tag'
   ];
   importComponentMode: boolean = false;
   importLibraryProjectId: any;
@@ -89,6 +91,7 @@ class NodeAuthoringController {
     'NodeService',
     'ProjectAssetService',
     'ProjectService',
+    'TagService',
     'TeacherDataService',
     'UtilService'
   ];
@@ -106,7 +109,8 @@ class NodeAuthoringController {
     private ConfigService: ConfigService,
     private NodeService: NodeService,
     private ProjectAssetService: ProjectAssetService,
-    private ProjectService: AuthoringToolProjectService,
+    private ProjectService: TeacherProjectService,
+    private TagService: TagService,
     private TeacherDataService: TeacherDataService,
     private UtilService: UtilService
   ) {
@@ -380,6 +384,16 @@ class NodeAuthoringController {
             text: this.$translate('choices')
           }
         ]
+      },
+      {
+        value: 'tag',
+        text: this.$translate('tagAssignedToWorkgroup'),
+        params: [
+          {
+            value: 'tag',
+            text: this.$translate('tag')
+          }
+        ]
       }
     ];
     this.branchCriteria = [
@@ -398,6 +412,10 @@ class NodeAuthoringController {
       {
         value: 'random',
         text: this.$translate('random')
+      },
+      {
+        value: 'tag',
+        text: this.$translate('tag')
       }
     ];
 
@@ -1301,6 +1319,15 @@ class NodeAuthoringController {
         this.ProjectService.setTransitionLogicField(nodeId, 'whenToChoosePath', 'enterNode');
         this.ProjectService.setTransitionLogicField(nodeId, 'canChangePath', false);
         this.ProjectService.setTransitionLogicField(nodeId, 'maxPathsVisitable', 1);
+      } else if (this.createBranchCriterion === 'tag') {
+        this.ProjectService.setTransitionLogicField(
+          nodeId,
+          'howToChooseAmongAvailablePaths',
+          'tag'
+        );
+        this.ProjectService.setTransitionLogicField(nodeId, 'whenToChoosePath', 'enterNode');
+        this.ProjectService.setTransitionLogicField(nodeId, 'canChangePath', false);
+        this.ProjectService.setTransitionLogicField(nodeId, 'maxPathsVisitable', 1);
       }
     }
 
@@ -1345,7 +1372,7 @@ class NodeAuthoringController {
    * Update the transitions so that they have the necessary parameter
    * fields for the given branch criterion
    */
-  createBranchUpdateTransitions() {
+  async createBranchUpdateTransitions() {
     for (let b = 0; b < this.createBranchBranches.length; b++) {
       let branch = this.createBranchBranches[b];
       if (branch != null) {
@@ -1411,6 +1438,19 @@ class NodeAuthoringController {
             // clear the choice id and scores fields since we don't need them in random branching
             branch.choiceId = null;
             branch.scores = null;
+          } else if (this.createBranchCriterion === 'tag') {
+            const runId = this.ConfigService.getRunId();
+            if (runId != null) {
+              await this.TagService.retrieveRunTags().subscribe(() => {});
+            }
+            transition.criteria = [];
+            const criterion = {
+              name: 'hasTag',
+              params: {
+                tag: this.TagService.getNextAvailableTag()
+              }
+            };
+            transition.criteria.push(criterion);
           }
         }
       }

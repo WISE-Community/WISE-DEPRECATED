@@ -2,7 +2,7 @@
 
 import ComponentController from '../componentController';
 import DiscussionService from './discussionService';
-import StudentWebSocketService from '../../services/studentWebSocketService';
+import { StudentWebSocketService } from '../../services/studentWebSocketService';
 import NotificationService from '../../services/notificationService';
 
 class DiscussionController extends ComponentController {

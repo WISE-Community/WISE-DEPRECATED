@@ -16,7 +16,7 @@ import 'angular-translate-loader-partial';
 import 'angular-ui-router';
 import 'angular-ui-scrollpoint';
 import '../components/animation/animationComponentModule';
-import AnnotationService from '../services/annotationService';
+import { AnnotationService } from '../services/annotationService';
 import '../components/audioOscillator/audioOscillatorComponentModule';
 import { AudioRecorderService } from '../services/audioRecorderService';
 import * as canvg from 'canvg';
@@ -57,11 +57,11 @@ import '../components/outsideURL/outsideURLComponentModule';
 import { SessionService } from '../services/sessionService';
 import './studentAsset/studentAsset';
 import { StudentAssetService } from '../services/studentAssetService';
-import StudentDataService from '../services/studentDataService';
-import StudentStatusService from '../services/studentStatusService';
-import StudentWebSocketService from '../services/studentWebSocketService';
+import { StudentDataService } from '../services/studentDataService';
+import { StudentWebSocketService } from '../services/studentWebSocketService';
 import '../components/summary/summaryComponentModule';
 import '../components/table/tableComponentModule';
+import { TagService } from '../services/tagService';
 import { UtilService } from '../services/utilService';
 import VLEController from './vleController';
 import { VLEProjectService } from './vleProjectService';
@@ -113,8 +113,8 @@ export function createModule(type = 'preview') {
     'ui.scrollpoint'
   ])
   .service('AchievementService', AchievementService)
-  .service('AnnotationService', AnnotationService)
-  .service('AudioRecorderService', AudioRecorderService)
+  .factory('AnnotationService', downgradeInjectable(AnnotationService))
+  .factory('AudioRecorderService', downgradeInjectable(AudioRecorderService))
   .factory('ConfigService', downgradeInjectable(ConfigService))
   .service('ComponentService', ComponentService)
   .factory('CRaterService', downgradeInjectable(CRaterService))
@@ -125,9 +125,9 @@ export function createModule(type = 'preview') {
   .factory('ProjectService', downgradeInjectable(VLEProjectService))
   .factory('SessionService', downgradeInjectable(SessionService))
   .factory('StudentAssetService', downgradeInjectable(StudentAssetService))
-  .service('StudentDataService', StudentDataService)
-  .service('StudentStatusService', StudentStatusService)
-  .service('StudentWebSocketService', StudentWebSocketService)
+  .factory('TagService', downgradeInjectable(TagService))
+  .factory('StudentDataService', downgradeInjectable(StudentDataService))
+  .factory('StudentWebSocketService', downgradeInjectable(StudentWebSocketService))
   .factory('UtilService', downgradeInjectable(UtilService))
   .controller('NavigationController', NavigationController)
   .controller('NodeController', NodeController)
@@ -202,7 +202,8 @@ export function createModule(type = 'preview') {
               'StudentDataService',
               'config',
               'project',
-              (StudentDataService, config, project) => {
+              'tags',
+              (StudentDataService, config, project, tags) => {
                 return StudentDataService.retrieveStudentData();
               }
             ],
@@ -253,6 +254,17 @@ export function createModule(type = 'preview') {
               'config',
               (StudentDataService, config) => {
                 return StudentDataService.retrieveRunStatus();
+              }
+            ],
+            tags: [
+              'TagService',
+              'config',
+              (TagService, config) => {
+                if (type === 'preview') {
+                  return {};
+                } else {
+                  return TagService.retrieveStudentTags().toPromise();
+                }
               }
             ],
             webSocket: [

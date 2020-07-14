@@ -23,11 +23,27 @@
  */
 package org.wise.vle.domain.work;
 
-import lombok.Getter;
-import lombok.Setter;
+import java.sql.Timestamp;
+import java.util.Calendar;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Index;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.group.impl.PersistentGroup;
 import org.wise.portal.domain.run.Run;
@@ -36,9 +52,8 @@ import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.domain.workgroup.impl.WorkgroupImpl;
 import org.wise.vle.domain.PersistableDomain;
 
-import javax.persistence.*;
-import java.sql.Timestamp;
-import java.util.Calendar;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Domain object representing assets uploaded by the student like images and video (used in WISE5)
@@ -50,6 +65,7 @@ import java.util.Calendar;
     @Index(columnList = "workgroupId", name = "notebookItemsWorkgroupIdIndex")})
 @Getter
 @Setter
+@JsonSerialize(using = NotebookItemSerializer.class)
 public class NotebookItem extends PersistableDomain {
 
   @Id
@@ -62,10 +78,12 @@ public class NotebookItem extends PersistableDomain {
 
   @ManyToOne(targetEntity = PersistentGroup.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
   @JoinColumn(name = "periodId")
+  @JsonIgnore
   private Group period;
 
   @ManyToOne(targetEntity = WorkgroupImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
   @JoinColumn(name = "workgroupId", nullable = false)
+  @JsonIgnore
   private Workgroup workgroup;
 
   @Column(name = "nodeId", length = 30, nullable = true)
@@ -76,10 +94,12 @@ public class NotebookItem extends PersistableDomain {
 
   @OneToOne(targetEntity = StudentWork.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
   @JoinColumn(name = "studentWorkId", nullable = true)
+  @JsonIgnore
   private StudentWork studentWork;
 
   @OneToOne(targetEntity = StudentAsset.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
   @JoinColumn(name = "studentAssetId", nullable = true)
+  @JsonIgnore
   private StudentAsset studentAsset;
 
   @Column(name = "localNotebookItemId", length = 30, nullable = true)
@@ -115,89 +135,6 @@ public class NotebookItem extends PersistableDomain {
   @Override
   protected Class<?> getObjectClass() {
     return NotebookItem.class;
-  }
-
-  public JSONObject toJSON() {
-    JSONObject notebookItemJSONObject = new JSONObject();
-    try {
-
-      if (id != null) {
-        notebookItemJSONObject.put("id", id);
-      }
-
-      if (run != null) {
-        Long runId = run.getId();
-        notebookItemJSONObject.put("runId", runId);
-      }
-
-      if (period != null) {
-        Long periodId = period.getId();
-        notebookItemJSONObject.put("periodId", periodId);
-      }
-
-      if (workgroup != null) {
-        Long workgroupId = workgroup.getId();
-        notebookItemJSONObject.put("workgroupId", workgroupId);
-      }
-
-      if (nodeId != null) {
-        notebookItemJSONObject.put("nodeId", nodeId);
-      }
-
-      if (componentId != null) {
-        notebookItemJSONObject.put("componentId", componentId);
-      }
-
-      if (studentWork != null) {
-        notebookItemJSONObject.put("studentWorkId", studentWork.getId());
-      }
-
-      if (studentAsset != null) {
-        notebookItemJSONObject.put("studentAssetId", studentAsset.getId());
-      }
-
-      if (localNotebookItemId != null) {
-        notebookItemJSONObject.put("localNotebookItemId", localNotebookItemId);
-      }
-
-      if (type != null) {
-        notebookItemJSONObject.put("type", type);
-      }
-
-      if (title != null) {
-        notebookItemJSONObject.put("title", title);
-      }
-
-      if (content != null) {
-        notebookItemJSONObject.put("content", content);
-      }
-
-      if (clientSaveTime != null) {
-        notebookItemJSONObject.put("clientSaveTime", clientSaveTime.getTime());
-      }
-
-      if (serverSaveTime != null) {
-        notebookItemJSONObject.put("serverSaveTime", serverSaveTime.getTime());
-      }
-
-      if (clientDeleteTime != null) {
-        notebookItemJSONObject.put("clientDeleteTime", clientDeleteTime.getTime());
-      }
-
-      if (serverDeleteTime != null) {
-        notebookItemJSONObject.put("serverDeleteTime", serverDeleteTime.getTime());
-      }
-      if (groups != null) {
-        notebookItemJSONObject.put("groups", new JSONArray(groups));
-      }
-
-      if (parentNotebookItemId != null) {
-        notebookItemJSONObject.put("parentNotebookItemId", parentNotebookItemId);
-      }
-    } catch (JSONException e) {
-      e.printStackTrace();
-    }
-    return notebookItemJSONObject;
   }
 
   public boolean isInGroup(String groupName) {

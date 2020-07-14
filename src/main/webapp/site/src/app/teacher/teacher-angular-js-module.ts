@@ -8,12 +8,20 @@ import { setUpLocationSync } from '@angular/router/upgrade';
 import { UtilService } from '../../../../wise5/services/utilService';
 import { ConfigService } from '../../../../wise5/services/configService';
 import { ProjectService } from '../../../../wise5/services/projectService';
-import { AuthoringToolProjectService } from '../../../../wise5/authoringTool/authoringToolProjectService';
-import { ClassroomMonitorProjectService } from '../../../../wise5/classroomMonitor/classroomMonitorProjectService';
+import { TeacherProjectService } from '../../../../wise5/services/teacherProjectService';
 import { MilestoneReportDataComponent } from './milestone/milestone-report-data/milestone-report-data.component';
 import { CRaterService } from '../../../../wise5/services/cRaterService';
 import { SessionService } from '../../../../wise5/services/sessionService';
 import { StudentAssetService } from '../../../../wise5/services/studentAssetService';
+import { TagService } from '../../../../wise5/services/tagService';
+import { AudioRecorderService } from '../../../../wise5/services/audioRecorderService';
+import { AnnotationService } from '../../../../wise5/services/annotationService';
+import { CommonModule } from '@angular/common';
+import { ProjectAssetService } from '../services/projectAssetService';
+import { StudentDataService } from '../../../../wise5/services/studentDataService';
+import { StudentStatusService } from '../../../../wise5/services/studentStatusService';
+import { SpaceService } from '../../../../wise5/services/spaceService';
+import { TeacherWebSocketService } from '../../../../wise5/services/teacherWebSocketService';
 
 @Component({template: ``})
 export class EmptyComponent {}
@@ -25,19 +33,27 @@ export class EmptyComponent {}
   ],
   imports: [
     UpgradeModule,
+    CommonModule,
     RouterModule.forChild([
       {path: '**', component: EmptyComponent}
     ])
   ],
   providers: [
+    AnnotationService,
+    AudioRecorderService,
     UtilService,
     ConfigService,
     CRaterService,
-    ProjectService,
-    AuthoringToolProjectService,
-    ClassroomMonitorProjectService,
+    ProjectAssetService,
+    TeacherProjectService,
+    { provide: ProjectService, useExisting: TeacherProjectService },
     SessionService,
-    StudentAssetService
+    SpaceService,
+    StudentAssetService,
+    StudentDataService,
+    StudentStatusService,
+    TagService,
+    TeacherWebSocketService
   ],
   entryComponents: [
     MilestoneReportDataComponent

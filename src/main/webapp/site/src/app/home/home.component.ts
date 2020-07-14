@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewEncapsulation, SecurityContext } from '@angular/core';
-import { I18n } from '@ngx-translate/i18n-polyfill';
 import {
   bounceIn,
   flipInX,
@@ -29,7 +28,7 @@ export class HomeComponent implements OnInit {
   loaded: boolean = false;
   hero = {
     imgSrc: 'assets/img/wise-students-hero.jpg',
-    imgDescription: this.i18n('WISE students in classroom'),
+    imgDescription: $localize`WISE students in classroom`,
     imgSources: [
       {
         type: 'image/webp',
@@ -48,10 +47,14 @@ export class HomeComponent implements OnInit {
       }
     ]
   };
+  ngssLink = {
+    startTag: '<a href="http://www.nextgenscience.org/three-dimensions" target="_blank">',
+    closeTag: '</a>'
+  };
   blurbs: Array<Object> = [
     {
       imgSrc: 'assets/img/wise-students-building@2x.jpg',
-      imgDescription: this.i18n('WISE students building'),
+      imgDescription: $localize`WISE students building`,
       imgSources: [
         {
           type: 'image/webp', 
@@ -61,11 +64,12 @@ export class HomeComponent implements OnInit {
           srcset: 'assets/img/wise-students-building.jpg, assets/img/wise-students-building@2x.jpg 2x'
         }
       ],
-      contentTemplate: this.sanitizer.sanitize(SecurityContext.HTML, 'Free, standards-aligned, and research-based inquiry curricula that address <a href="http://www.nextgenscience.org/three-dimensions" target="_blank">NGSS 3D proficiency')
+      contentTemplate: this.sanitizer.sanitize(SecurityContext.HTML, 
+          $localize`Free, standards-aligned, and research-based inquiry curricula that address ${this.ngssLink.startTag}:START_LINK:NGSS 3D proficiency${this.ngssLink.closeTag}:CLOSE_LINK:`)
     },
     {
       imgSrc: 'assets/img/wise-project-view@2x.jpg',
-      imgDescription: this.i18n('WISE unit on laptop'),
+      imgDescription: $localize`WISE unit on laptop`,
       imgSources: [
         {
           type: 'image/webp', 
@@ -75,11 +79,11 @@ export class HomeComponent implements OnInit {
           srcset: 'assets/img/wise-project-view.jpg, assets/img/wise-project-view@2x.jpg 2x'
         }
       ],
-      content: this.i18n('Interactive scientific models plus hands-on activities, personalized guidance, and rich embedded assessments')
+      content: $localize`Interactive scientific models plus hands-on activities, personalized guidance, and rich embedded assessments`
     },
     {
       imgSrc: 'assets/img/wise-students-and-teacher@2x.jpg',
-      imgDescription: this.i18n('WISE students and teacher'),
+      imgDescription: $localize`WISE students and teacher`,
       imgSources: [
         {
           type: 'image/webp', 
@@ -89,11 +93,11 @@ export class HomeComponent implements OnInit {
           srcset: 'assets/img/wise-students-and-teacher.jpg, assets/img/wise-students-and-teacher@2x.jpg 2x'
         }
       ],
-      content: this.i18n('Robust teacher grading and management tools supporting individualized and customized learning')
+      content: $localize`Robust teacher grading and management tools supporting individualized and customized learning`
     }
   ];
 
-  constructor(private i18n: I18n, private sanitizer: DomSanitizer) { }
+  constructor(private sanitizer: DomSanitizer) { }
 
   ngOnInit() {
   }

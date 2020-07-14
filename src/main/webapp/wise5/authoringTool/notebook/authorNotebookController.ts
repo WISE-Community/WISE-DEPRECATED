@@ -1,8 +1,8 @@
 'use strict';
 
 import { ConfigService } from '../../services/configService';
-import { AuthoringToolProjectService } from '../authoringToolProjectService';
-import SpaceService from '../../services/spaceService';
+import { SpaceService } from '../../services/spaceService';
+import { TeacherProjectService } from '../../services/teacherProjectService';
 import { UtilService } from '../../services/utilService';
 
 class AuthorNotebookController {
@@ -29,7 +29,7 @@ class AuthorNotebookController {
     $stateParams,
     private $scope,
     private ConfigService: ConfigService,
-    private ProjectService: AuthoringToolProjectService,
+    private ProjectService: TeacherProjectService,
     private SpaceService: SpaceService,
     private UtilService: UtilService
   ) {

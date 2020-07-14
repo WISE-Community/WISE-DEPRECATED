@@ -7,7 +7,7 @@ import NotificationService from '../services/notificationService';
 import TeacherDataService from '../services/teacherDataService';
 import { SessionService } from '../services/sessionService';
 import * as angular from 'angular';
-import { ClassroomMonitorProjectService } from './classroomMonitorProjectService';
+import { TeacherProjectService } from '../services/teacherProjectService';
 
 class ClassroomMonitorController {
   $translate: any;
@@ -19,8 +19,10 @@ class ClassroomMonitorController {
   menuOpen: boolean = false;
   notifications: any;
   numberProject: boolean = true;
+  projectId: number;
   projectTitle: string;
   runId: number;
+  runCode: string;
   showGradeByStepTools: boolean = false;
   showGradeByTeamTools: boolean;
   showPeriodSelect: boolean = false;
@@ -59,13 +61,15 @@ class ClassroomMonitorController {
     private NodeService: NodeService,
     private NotebookService: NotebookService,
     private NotificationService: NotificationService,
-    private ProjectService: ClassroomMonitorProjectService,
+    private ProjectService: TeacherProjectService,
     private SessionService: SessionService,
     private TeacherDataService: TeacherDataService
   ) {
     this.$translate = $filter('translate');
     this.projectTitle = this.ProjectService.getProjectTitle();
+    this.projectId = this.ConfigService.getProjectId();
     this.runId = this.ConfigService.getRunId();
+    this.runCode = this.ConfigService.getRunCode();
     this.enableProjectAchievements = this.ProjectService.getAchievements().isEnabled;
     this.views = {
       'root.cm.dashboard': {

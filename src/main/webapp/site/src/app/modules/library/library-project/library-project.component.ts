@@ -3,7 +3,6 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { MatDialog} from '@angular/material/dialog';
 import { LibraryProject } from '../libraryProject';
 import { LibraryProjectDetailsComponent } from '../library-project-details/library-project-details.component';
-import { I18n } from '@ngx-translate/i18n-polyfill';
 import { flash } from '../../../animations';
 
 @Component({
@@ -23,7 +22,6 @@ export class LibraryProjectComponent implements OnInit {
 
   constructor(public dialog: MatDialog,
               private sanitizer: DomSanitizer,
-              private i18n: I18n,
               private elRef: ElementRef) {
   }
 
@@ -52,7 +50,7 @@ export class LibraryProjectComponent implements OnInit {
   showDetails(): void {
     const project = this.project;
     this.dialog.open(LibraryProjectDetailsComponent, {
-      ariaLabel: this.i18n('Unit Details'),
+      ariaLabel: $localize`Unit Details`,
       data: { project: project },
       panelClass: 'mat-dialog--md'
     });

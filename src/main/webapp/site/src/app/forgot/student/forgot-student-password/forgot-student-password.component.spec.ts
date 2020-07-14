@@ -1,14 +1,12 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ForgotStudentPasswordComponent } from './forgot-student-password.component';
-import { NO_ERRORS_SCHEMA, LOCALE_ID, TRANSLATIONS_FORMAT, TRANSLATIONS } from '@angular/core';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { I18n } from "@ngx-translate/i18n-polyfill";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { StudentService } from '../../../student/student.service';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs/index';
-import { translationsFactory } from "../../../app.module";
 import { configureTestSuite } from 'ng-bullet';
 
 export class MockStudentService {
@@ -65,14 +63,7 @@ describe('ForgotStudentPasswordComponent', () => {
         ReactiveFormsModule
       ],
       providers: [
-        { provide: StudentService, useClass: MockStudentService },
-        { provide: TRANSLATIONS_FORMAT, useValue: "xlf" },
-        {
-          provide: TRANSLATIONS,
-          useFactory: translationsFactory,
-          deps: [LOCALE_ID]
-        },
-        I18n
+        { provide: StudentService, useClass: MockStudentService }
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })

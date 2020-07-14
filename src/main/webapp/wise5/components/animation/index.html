@@ -50,7 +50,7 @@
               ng-disabled='animationController.isDisabled'
               ng-if='animationController.isPromptVisible'>
             <compile data='animationController.getPrompt()'></compile>
-            <possible-score max-score='animationController.componentContent.maxScore'></possible-score>
+            <possible-score [max-score]='animationController.componentContent.maxScore'></possible-score>
           </label>
           <md-button class='regularButton md-raised md-primary'
               ng-click='animationController.playButtonClicked()'

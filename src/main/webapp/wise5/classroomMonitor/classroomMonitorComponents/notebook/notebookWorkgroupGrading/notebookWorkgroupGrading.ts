@@ -1,7 +1,7 @@
 'use strict';
 
 import NotebookService from '../../../../services/notebookService';
-import { ClassroomMonitorProjectService } from '../../../classroomMonitorProjectService';
+import { TeacherProjectService } from '../../../../services/teacherProjectService';
 
 class NotebookWorkgroupGradingController {
   expand: boolean;
@@ -16,11 +16,8 @@ class NotebookWorkgroupGradingController {
 
   static $inject = ['NotebookService', 'ProjectService'];
 
-  constructor(
-    private NotebookService: NotebookService,
-    private ProjectService: ClassroomMonitorProjectService
-  ) {
-  }
+  constructor(private NotebookService: NotebookService,
+      private ProjectService: TeacherProjectService) {}
 
   $onInit() {
     this.themePath = this.ProjectService.getThemePath();
@@ -38,6 +35,10 @@ class NotebookWorkgroupGradingController {
   toggleExpand() {
     const expand = !this.expand;
     this.onUpdateExpand({ workgroupId: this.workgroup.workgroupId, value: expand });
+  }
+
+  getNumActiveNotes() {
+    return this.workgroup.notes.filter(note => { return note.serverDeleteTime == null}).length;
   }
 }
 

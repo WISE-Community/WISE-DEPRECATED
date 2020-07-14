@@ -106,6 +106,10 @@ export class ConfigService {
     return this.getConfigParam('runId');
   }
 
+  getRunCode() {
+    return this.getConfigParam('runCode');
+  }
+
   getRunName() {
     return this.getConfigParam('runName');
   }
@@ -130,8 +134,8 @@ export class ConfigService {
     return this.getConfigParam('studentMaxTotalAssetsSize');
   }
 
-  getStudentNotebookURL() {
-    return this.getConfigParam('studentNotebookURL');
+  getNotebookURL() {
+    return this.getConfigParam('notebookURL');
   }
 
   getStudentUploadsBaseURL() {

@@ -8,7 +8,6 @@ class TeacherDataService {
     $rootScope,
     AnnotationService,
     ConfigService,
-    NotificationService,
     ProjectService,
     TeacherWebSocketService,
     UtilService
@@ -19,7 +18,6 @@ class TeacherDataService {
     this.$rootScope = $rootScope;
     this.AnnotationService = AnnotationService;
     this.ConfigService = ConfigService;
-    this.NotificationService = NotificationService;
     this.ProjectService = ProjectService;
     this.TeacherWebSocketService = TeacherWebSocketService;
     this.UtilService = UtilService;
@@ -157,12 +155,8 @@ class TeacherDataService {
   }
 
   retrieveNotebookExport(exportType) {
-    const httpParams = {
-      method: 'GET',
-      url: this.getExportURL(this.ConfigService.getRunId(), exportType),
-      params: {}
-    };
-    return this.$http(httpParams).then(result => {
+    return this.$http.get(`/teacher/notebook/run/${this.ConfigService.getRunId()}`,
+        {params:{exportType:exportType}}).then(result => {
       return result.data;
     });
   }
@@ -1042,10 +1036,10 @@ class TeacherDataService {
 
   isWorkgroupShown(workgroup) {
     let show = false;
-    if (this.currentPeriod.periodId === -1 || workgroup.periodId === this.currentPeriod.periodId) {	
+    if (this.currentPeriod.periodId === -1 || workgroup.periodId === this.currentPeriod.periodId) {
       show = true;
       if (!this.isCurrentWorkgroup(workgroup.workgroupId)) {
-        show = false;;	
+        show = false;
       }
     }
     return show;
@@ -1069,7 +1063,6 @@ TeacherDataService.$inject = [
   '$rootScope',
   'AnnotationService',
   'ConfigService',
-  'NotificationService',
   'ProjectService',
   'TeacherWebSocketService',
   'UtilService'

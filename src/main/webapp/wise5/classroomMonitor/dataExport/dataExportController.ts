@@ -1,12 +1,12 @@
 'use strict';
 
-import AnnotationService from '../../services/annotationService';
+import { AnnotationService } from '../../services/annotationService';
 import { ConfigService } from '../../services/configService';
 import MatchService from '../../components/match/matchService';
-import { ClassroomMonitorProjectService } from '../classroomMonitorProjectService';
 import TeacherDataService from '../../services/teacherDataService';
 import { UtilService } from '../../services/utilService';
 import * as angular from 'angular';
+import { TeacherProjectService } from '../../services/teacherProjectService';
 
 class DataExportController {
   $translate: any;
@@ -61,7 +61,7 @@ class DataExportController {
     private ConfigService: ConfigService,
     private FileSaver: any,
     private MatchService: MatchService,
-    private ProjectService: ClassroomMonitorProjectService,
+    private ProjectService: TeacherProjectService,
     private TeacherDataService: TeacherDataService,
     private UtilService: UtilService
   ) {

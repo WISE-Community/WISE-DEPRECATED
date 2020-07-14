@@ -1,9 +1,9 @@
 'use strict';
 
 import { ConfigService } from '../../../../services/configService';
-import { ClassroomMonitorProjectService } from '../../../classroomMonitorProjectService';
 import TeacherDataService from '../../../../services/teacherDataService';
 import { UtilService } from '../../../../services/utilService';
+import { TeacherProjectService } from '../../../../services/teacherProjectService';
 
 class WorkgroupNodeGradingController {
   components: any;
@@ -17,7 +17,7 @@ class WorkgroupNodeGradingController {
 
   constructor(
     private ConfigService: ConfigService,
-    private ProjectService: ClassroomMonitorProjectService,
+    private ProjectService: TeacherProjectService,
     private TeacherDataService: TeacherDataService,
     private UtilService: UtilService
   ) {

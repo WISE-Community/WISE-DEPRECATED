@@ -7,10 +7,8 @@ import { MAT_DIALOG_DATA, MatDialog, MatDialogRef, MatDialogModule } from '@angu
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { User } from '../../domain/user';
 import { Observable } from 'rxjs/internal/Observable';
-import { NO_ERRORS_SCHEMA, TRANSLATIONS_FORMAT, TRANSLATIONS, LOCALE_ID } from "@angular/core";
+import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { ReactiveFormsModule } from "@angular/forms";
-import { translationsFactory } from "../../app.module";
-import { I18n } from '@ngx-translate/i18n-polyfill';
 import { OverlayModule } from '@angular/cdk/overlay';
 
 export class MockTeacherService {
@@ -52,14 +50,7 @@ describe('ListClassroomCoursesDialogComponent', () => {
           courses: [{ id: '1', name: 'Test' }]
         }},
         { provide: TeacherService, useClass: MockTeacherService },
-        { provide: UserService, useClass: MockUserService },
-        { provide: TRANSLATIONS_FORMAT, useValue: "xlf" },
-        {
-          provide: TRANSLATIONS,
-          useFactory: translationsFactory,
-          deps: [LOCALE_ID]
-        },
-        I18n
+        { provide: UserService, useClass: MockUserService }
         ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })

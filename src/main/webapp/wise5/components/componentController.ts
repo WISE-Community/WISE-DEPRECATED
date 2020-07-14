@@ -1,13 +1,13 @@
 import * as angular from 'angular';
 import * as $ from 'jquery';
-import AnnotationService from "../services/annotationService";
+import { AnnotationService } from "../services/annotationService";
 import { ConfigService } from "../services/configService";
 import NodeService from "../services/nodeService";
 import NotebookService from "../services/notebookService";
 import { ProjectService } from "../services/projectService";
 import { StudentAssetService } from "../services/studentAssetService";
 import { UtilService } from "../services/utilService";
-import StudentDataService from "../services/studentDataService";
+import { StudentDataService } from "../services/studentDataService";
 
 class ComponentController {
   $filter: any;

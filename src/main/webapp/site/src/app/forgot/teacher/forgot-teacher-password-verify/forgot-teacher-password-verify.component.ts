@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TeacherService } from '../../../teacher/teacher.service';
-import { I18n } from '@ngx-translate/i18n-polyfill';
 import { finalize } from 'rxjs/operators';
 
 @Component({
@@ -25,8 +24,7 @@ export class ForgotTeacherPasswordVerifyComponent implements OnInit {
   constructor(private fb: FormBuilder,
               private router: Router,
               private route: ActivatedRoute,
-              private teacherService: TeacherService,
-              private i18n: I18n) { }
+              private teacherService: TeacherService) { }
 
   ngOnInit() {
     this.username = this.route.snapshot.queryParamMap.get('username');
@@ -77,17 +75,17 @@ export class ForgotTeacherPasswordVerifyComponent implements OnInit {
   }
 
   setVerificationCodeExpiredMessage() {
-    const message = this.i18n(`The verification code has expired. Verification codes are valid for 10 minutes. Please go back to the Teacher Forgot Password page to generate a new one.`);
+    const message = $localize`The verification code has expired. Verification codes are valid for 10 minutes. Please go back to the Teacher Forgot Password page to generate a new one.`;
     this.setMessage(message);
   }
 
   setVerificationCodeIncorrectMessage() {
-    const message = this.i18n('The verification code is invalid. Please try again.');
+    const message = $localize`The verification code is invalid. Please try again.`;
     this.setMessage(message);
   }
 
   setTooManyVerificationCodeAttemptsMessage() {
-    const message = this.i18n(`You have submitted an invalid verification code too many times. For security reasons, we will lock the ability to change your password for 10 minutes. After 10 minutes, please go back to the Teacher Forgot Password page to generate a new verification code.`);
+    const message = $localize`You have submitted an invalid verification code too many times. For security reasons, we will lock the ability to change your password for 10 minutes. After 10 minutes, please go back to the Teacher Forgot Password page to generate a new verification code.`;
     this.setMessage(message);
   }
 

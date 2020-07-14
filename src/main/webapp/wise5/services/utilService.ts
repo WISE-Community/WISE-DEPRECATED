@@ -389,7 +389,7 @@ export class UtilService {
    * @param position (optional) the position to start searching
    * @return whether the subjectString ends with the searchString
    */
-  endsWith(subjectString, searchString, position) {
+  endsWith(subjectString: string, searchString: string, position?: number) {
     if (
       typeof position !== 'number' ||
       !isFinite(position) ||
