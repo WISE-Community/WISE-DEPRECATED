@@ -402,6 +402,7 @@ class NotebookService {
           this.notebooksByWorkgroup[workgroupId] = { allItems: [notebookItem] };
         }
         this.groupNotebookItems();
+        this.StudentDataService.updateNodeStatuses();
         this.$rootScope.$broadcast('notebookUpdated',
             {notebook: this.notebooksByWorkgroup[workgroupId], notebookItem: notebookItem});
         resolve();
@@ -439,6 +440,7 @@ class NotebookService {
           if (this.isNotebookItemPrivate(notebookItem)) {
             this.updatePrivateNotebookItem(notebookItem, workgroupId);
           }
+          this.StudentDataService.updateNodeStatuses();
           this.$rootScope.$broadcast('notebookUpdated',
               {notebook: this.notebooksByWorkgroup[workgroupId],
                notebookItem: notebookItem});
@@ -529,6 +531,7 @@ class NotebookService {
     const workgroupId = notebookItem.workgroupId;
     this.notebooksByWorkgroup[workgroupId].allItems.push(notebookItem);
     this.groupNotebookItems();
+    this.StudentDataService.updateNodeStatuses();
     this.$rootScope.$broadcast('notebookUpdated',
         {notebook: this.notebooksByWorkgroup[workgroupId], notebookItem: notebookItem});
     return notebookItem;

@@ -27,14 +27,16 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
@@ -67,14 +69,14 @@ public class StudentStatusController {
    * @param response
    * @throws IOException
    */
-  @RequestMapping(method = RequestMethod.POST)
-  public ModelAndView saveStudentStatus(HttpServletRequest request, HttpServletResponse response)
-      throws IOException {
+  @PostMapping
+  public ModelAndView saveStudentStatus(@RequestBody ObjectNode postedParams,
+      HttpServletResponse response) throws IOException {
     User signedInUser = ControllerUtil.getSignedInUser();
-    String runIdString = request.getParameter("runId");
-    String periodIdString = request.getParameter("periodId");
-    String workgroupIdString = request.getParameter("workgroupId");
-    String status = request.getParameter("status");
+    String runIdString = postedParams.get("runId").asText();
+    String periodIdString = postedParams.get("periodId").asText();
+    String workgroupIdString = postedParams.get("workgroupId").asText();
+    String status = postedParams.get("status").asText();
 
     Long runId = null;
     Long periodId = null;

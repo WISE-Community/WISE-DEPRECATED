@@ -65,7 +65,7 @@ import * as StompJS from '@stomp/stompjs';
 window['SockJS'] = SockJS;
 window['Stomp'] = StompJS.Stomp;
 import { StudentAssetService } from '../services/studentAssetService';
-import StudentDataService from '../services/studentDataService';
+import { StudentDataService } from '../services/studentDataService';
 import StudentGradingController from '../classroomMonitor/studentGrading/studentGradingController';
 import StudentProgressController from '../classroomMonitor/studentProgress/studentProgressController';
 import { StudentStatusService } from '../services/studentStatusService';
@@ -187,7 +187,7 @@ const teacherModule = angular
   .factory('SessionService', downgradeInjectable(SessionService))
   .service('SpaceService', SpaceService)
   .factory('StudentAssetService', downgradeInjectable(StudentAssetService))
-  .service('StudentDataService', StudentDataService)
+  .factory('StudentDataService', downgradeInjectable(StudentDataService))
   .factory('StudentStatusService', downgradeInjectable(StudentStatusService))
   .factory('TagService', downgradeInjectable(TagService))
   .service('TeacherDataService', TeacherDataService)

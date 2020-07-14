@@ -19,6 +19,7 @@ import { AnnotationService } from '../../../../wise5/services/annotationService'
 import { CommonModule } from '@angular/common';
 import { StudentStatusService } from '../../../../wise5/services/studentStatusService';
 import { ProjectAssetService } from '../services/projectAssetService';
+import { StudentDataService } from '../../../../wise5/services/studentDataService';
 
 @Component({template: ``})
 export class EmptyComponent {}
@@ -46,6 +47,7 @@ export class EmptyComponent {}
     { provide: ProjectService, useExisting: TeacherProjectService },
     SessionService,
     StudentAssetService,
+    StudentDataService,
     StudentStatusService,
     TagService
   ],

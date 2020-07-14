@@ -57,7 +57,7 @@ import '../components/outsideURL/outsideURLComponentModule';
 import { SessionService } from '../services/sessionService';
 import './studentAsset/studentAsset';
 import { StudentAssetService } from '../services/studentAssetService';
-import StudentDataService from '../services/studentDataService';
+import { StudentDataService } from '../services/studentDataService';
 import { StudentWebSocketService } from '../services/studentWebSocketService';
 import '../components/summary/summaryComponentModule';
 import '../components/table/tableComponentModule';
@@ -125,8 +125,8 @@ export function createModule(type = 'preview') {
   .factory('ProjectService', downgradeInjectable(VLEProjectService))
   .factory('SessionService', downgradeInjectable(SessionService))
   .factory('StudentAssetService', downgradeInjectable(StudentAssetService))
-  .service('StudentDataService', StudentDataService)
   .factory('TagService', downgradeInjectable(TagService))
+  .factory('StudentDataService', downgradeInjectable(StudentDataService))
   .factory('StudentWebSocketService', downgradeInjectable(StudentWebSocketService))
   .factory('UtilService', downgradeInjectable(UtilService))
   .controller('NavigationController', NavigationController)
