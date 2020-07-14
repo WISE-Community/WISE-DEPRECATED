@@ -17,8 +17,9 @@ import { TagService } from '../../../../wise5/services/tagService';
 import { AudioRecorderService } from '../../../../wise5/services/audioRecorderService';
 import { AnnotationService } from '../../../../wise5/services/annotationService';
 import { CommonModule } from '@angular/common';
-import { StudentStatusService } from '../../../../wise5/services/studentStatusService';
 import { ProjectAssetService } from '../services/projectAssetService';
+import { StudentStatusService } from '../../../../wise5/services/studentStatusService';
+import { SpaceService } from '../../../../wise5/services/spaceService';
 
 @Component({template: ``})
 export class EmptyComponent {}
@@ -45,6 +46,7 @@ export class EmptyComponent {}
     TeacherProjectService,
     { provide: ProjectService, useExisting: TeacherProjectService },
     SessionService,
+    SpaceService,
     StudentAssetService,
     StudentStatusService,
     TagService
