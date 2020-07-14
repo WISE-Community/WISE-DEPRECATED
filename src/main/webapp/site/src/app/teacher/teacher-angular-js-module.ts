@@ -18,6 +18,7 @@ import { AudioRecorderService } from '../../../../wise5/services/audioRecorderSe
 import { AnnotationService } from '../../../../wise5/services/annotationService';
 import { CommonModule } from '@angular/common';
 import { ProjectAssetService } from '../services/projectAssetService';
+import { StudentDataService } from '../../../../wise5/services/studentDataService';
 import { StudentStatusService } from '../../../../wise5/services/studentStatusService';
 import { SpaceService } from '../../../../wise5/services/spaceService';
 
@@ -48,6 +49,7 @@ export class EmptyComponent {}
     SessionService,
     SpaceService,
     StudentAssetService,
+    StudentDataService,
     StudentStatusService,
     TagService
   ],

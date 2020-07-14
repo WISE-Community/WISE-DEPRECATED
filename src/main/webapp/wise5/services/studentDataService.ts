@@ -1,121 +1,93 @@
 'use strict';
 
-class StudentDataService {
-  constructor(
-    $filter,
-    $http,
-    $injector,
-    $q,
-    $rootScope,
-    AnnotationService,
-    ConfigService,
-    ProjectService,
-    TagService,
-    UtilService
-  ) {
-    this.$filter = $filter;
-    this.$http = $http;
-    this.$injector = $injector;
-    this.$q = $q;
-    this.$rootScope = $rootScope;
-    this.AnnotationService = AnnotationService;
-    this.ConfigService = ConfigService;
-    this.ProjectService = ProjectService;
-    this.TagService = TagService;
-    this.UtilService = UtilService;
-    this.$translate = this.$filter('translate');
-    this.currentNode = null;
-    this.previousStep = null;
-    this.studentData = {
-      componentStates: [],
-      events: [],
-      annotations: []
-    };
-    this.stackHistory = []; // array of node id's
-    this.visitedNodesHistory = [];
-    this.nodeStatuses = {};
-    this.runStatus = null;
-    this.maxScore = null;
+import { Injectable } from "@angular/core";
+import ConfigService from "./configService";
+import { AnnotationService } from "./annotationService";
+import { ProjectService } from "./projectService";
+import { UtilService } from "./utilService";
+import { UpgradeModule } from "@angular/upgrade/static";
+import { HttpClient, HttpParams } from "@angular/common/http";
+import * as angular from 'angular';
+import { TagService } from "./tagService";
 
-    /*
-     * A counter to keep track of how many saveToServer requests we have
-     * made that we haven't received a response for yet. When this value
-     * goes back down to 0, we will send update the student status and then
-     * save it to the server.
-     */
-    this.saveToServerRequestCount = 0;
+@Injectable()
+export class StudentDataService {
 
-    /*
-     * A dummy student work id that is used in preview mode when we simulate
-     * saving of student data.
-     */
-    this.dummyStudentWorkId = 1;
+  currentNode = null;
+  dummyStudentWorkId: number = 1;
+  maxScore: any = null;
+  nodeStatuses: any = {};
+  previousStep = null;
+  runStatus: any = null;
+  saveToServerRequestCount: number = 0;
+  stackHistory = []; // array of node id's
+  studentData: any = {
+    componentStates: [],
+    events: [],
+    annotations: []
+  };
+  visitedNodesHistory = [];
+  criteriaFunctionNameToFunction = {
+    branchPathTaken: criteria => {
+      return this.evaluateBranchPathTakenCriteria(criteria);
+    },
+    isVisible: criteria => {
+      return this.evaluateIsVisibleCriteria(criteria);
+    },
+    isVisitable: criteria => {
+      return this.evaluateIsVisitableCriteria(criteria);
+    },
+    isVisited: criteria => {
+      return this.evaluateIsVisitedCriteria(criteria);
+    },
+    isVisitedAfter: criteria => {
+      return this.evaluateIsVisitedAfterCriteria(criteria);
+    },
+    isRevisedAfter: criteria => {
+      return this.evaluateIsRevisedAfterCriteria(criteria);
+    },
+    isVisitedAndRevisedAfter: criteria => {
+      return this.evaluateIsVisitedAndRevisedAfterCriteria(criteria);
+    },
+    isCompleted: criteria => {
+      return this.evaluateIsCompletedCriteria(criteria);
+    },
+    isCorrect: criteria => {
+      return this.evaluateIsCorrectCriteria(criteria);
+    },
+    choiceChosen: criteria => {
+      return this.evaluateChoiceChosenCriteria(criteria);
+    },
+    score: criteria => {
+      return this.evaluateScoreCriteria(criteria);
+    },
+    usedXSubmits: criteria => {
+      return this.evaluateUsedXSubmitsCriteria(criteria);
+    },
+    wroteXNumberOfWords: criteria => {
+      return this.evaluateNumberOfWordsWrittenCriteria(criteria);
+    },
+    addXNumberOfNotesOnThisStep: criteria => {
+      return this.evaluateAddXNumberOfNotesOnThisStepCriteria(criteria);
+    },
+    fillXNumberOfRows: criteria => {
+      return this.evaluateFillXNumberOfRowsCriteria(criteria);
+    },
+    hasTag: criteria => {
+      return this.evaluateHasTagCriteria(criteria);
+    }
+  };
+  $q: any;
+  $rootScope: any;
+  $translate: any;
 
-    this.criteriaFunctionNameToFunction = {
-      branchPathTaken: criteria => {
-        return this.evaluateBranchPathTakenCriteria(criteria);
-      },
-      isVisible: criteria => {
-        return this.evaluateIsVisibleCriteria(criteria);
-      },
-      isVisitable: criteria => {
-        return this.evaluateIsVisitableCriteria(criteria);
-      },
-      isVisited: criteria => {
-        return this.evaluateIsVisitedCriteria(criteria);
-      },
-      isVisitedAfter: criteria => {
-        return this.evaluateIsVisitedAfterCriteria(criteria);
-      },
-      isRevisedAfter: criteria => {
-        return this.evaluateIsRevisedAfterCriteria(criteria);
-      },
-      isVisitedAndRevisedAfter: criteria => {
-        return this.evaluateIsVisitedAndRevisedAfterCriteria(criteria);
-      },
-      isCompleted: criteria => {
-        return this.evaluateIsCompletedCriteria(criteria);
-      },
-      isCorrect: criteria => {
-        return this.evaluateIsCorrectCriteria(criteria);
-      },
-      choiceChosen: criteria => {
-        return this.evaluateChoiceChosenCriteria(criteria);
-      },
-      score: criteria => {
-        return this.evaluateScoreCriteria(criteria);
-      },
-      usedXSubmits: criteria => {
-        return this.evaluateUsedXSubmitsCriteria(criteria);
-      },
-      wroteXNumberOfWords: criteria => {
-        return this.evaluateNumberOfWordsWrittenCriteria(criteria);
-      },
-      addXNumberOfNotesOnThisStep: criteria => {
-        return this.evaluateAddXNumberOfNotesOnThisStepCriteria(criteria);
-      },
-      fillXNumberOfRows: criteria => {
-        return this.evaluateFillXNumberOfRowsCriteria(criteria);
-      },
-      hasTag: criteria => {
-        return this.evaluateHasTagCriteria(criteria);
-      }
-    };
-
-    this.$rootScope.$on('nodeStatusesChanged', (event, args) => {
-      this.handleNodeStatusesChanged();
-    });
-
-    this.$rootScope.$on('newAnnotationReceived', (event, args) => {
-      this.handleAnnotationReceived(args.annotation);
-    });
-
-    this.$rootScope.$on('notebookUpdated', (event, args) => {
-      const mode = this.ConfigService.getMode();
-      if (mode === 'student' || mode === 'preview') {
-        this.updateNodeStatuses();
-      }
-    });
+  constructor(private upgrade: UpgradeModule,
+      public http: HttpClient,
+      private AnnotationService: AnnotationService,
+      private ConfigService: ConfigService,
+      private ProjectService: ProjectService,
+      private TagService: TagService,
+      private UtilService: UtilService) {
   }
 
   handleNodeStatusesChanged() {
@@ -148,7 +120,7 @@ class StudentDataService {
       anySatified = anySatified || unGlobalizeCriteriaResult;
     }
     if (anySatified) {
-      globalAnnotation.data.unGlobalizedTimestamp = Date.parse(new Date());
+      globalAnnotation.data.unGlobalizedTimestamp = Date.parse(new Date().toString());
       this.saveAnnotations([globalAnnotation]);
     }
   }
@@ -161,7 +133,7 @@ class StudentDataService {
       allSatisfied = allSatisfied && unGlobalizeCriteriaResult;
     }
     if (allSatisfied) {
-      globalAnnotation.data.unGlobalizedTimestamp = Date.parse(new Date());
+      globalAnnotation.data.unGlobalizedTimestamp = Date.parse(new Date().toString());
       this.saveAnnotations([globalAnnotation]);
     }
   }
@@ -180,7 +152,7 @@ class StudentDataService {
       componentStates: [],
       events: [],
       annotations: [],
-      username: this.$translate('PREVIEW_STUDENT'),
+      username: this.upgrade.$injector.get('$filter')('translate')('PREVIEW_STUDENT'),
       userId: '0'
     };
     this.AnnotationService.setAnnotations(this.studentData.annotations);
@@ -189,26 +161,23 @@ class StudentDataService {
   }
 
   retrieveStudentDataForSignedInStudent() {
-    const httpParams = {
-      method: 'GET',
-      url: this.ConfigService.getConfigParam('studentDataURL')
+    const params = new HttpParams()
+        .set('runId', this.ConfigService.getRunId())
+        .set('workgroupId', this.ConfigService.getWorkgroupId() + '')
+        .set('getStudentWork', true + '')
+        .set('getEvents', true + '')
+        .set('getAnnotations', true + '')
+        .set('toWorkgroupId', this.ConfigService.getWorkgroupId());
+    const options = {
+      params: params
     };
-    const params = {
-      workgroupId: this.ConfigService.getWorkgroupId(),
-      runId: this.ConfigService.getRunId(),
-      getStudentWork: true,
-      getEvents: true,
-      getAnnotations: true,
-      toWorkgroupId: this.ConfigService.getWorkgroupId()
-    };
-    httpParams.params = params;
-    return this.$http(httpParams).then(result => {
-      return this.handleStudentDataResponse(result);
+    return this.http.get(this.ConfigService.getConfigParam('studentDataURL'), options).toPromise()
+        .then(resultData => {
+      return this.handleStudentDataResponse(resultData);
     });
   }
 
-  handleStudentDataResponse(result) {
-    const resultData = result.data;
+  handleStudentDataResponse(resultData) {
     this.studentData = {
       componentStates: []
     };
@@ -230,24 +199,15 @@ class StudentDataService {
     if (this.ConfigService.isPreview()) {
       this.runStatus = {};
     } else {
-      const httpParams = this.getRunStatusRequestParams();
-      return this.$http(httpParams).then(result => {
-        this.runStatus = result.data;
+      const params = new HttpParams().set('runId', this.ConfigService.getConfigParam('runId'));
+      const options = {
+        params: params
+      };
+      return this.http.get(this.ConfigService.getConfigParam('runStatusURL'), options).toPromise()
+          .then((runStatus: any) => {
+        this.runStatus = runStatus;
       });
     }
-  }
-
-  getRunStatusRequestParams() {
-    const runStatusURL = this.ConfigService.getConfigParam('runStatusURL');
-    const runId = this.ConfigService.getConfigParam('runId');
-    return {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      url: runStatusURL,
-      params: {
-        runId: runId
-      }
-    };
   }
 
   getNodeStatuses() {
@@ -266,7 +226,8 @@ class StudentDataService {
     this.updateStepNodeStatuses();
     this.updateGroupNodeStatuses();
     this.maxScore = this.getMaxScore();
-    this.$rootScope.$broadcast('nodeStatusesChanged');
+    this.handleNodeStatusesChanged();
+    this.upgrade.$injector.get('$rootScope').$broadcast('nodeStatusesChanged');
   }
 
   updateStepNodeStatuses() {
@@ -281,7 +242,7 @@ class StudentDataService {
   updateGroupNodeStatuses() {
     const groups = this.ProjectService.getGroups();
     for (const group of groups) {
-      group.depth = this.ProjectService.getNodeDepth(group.id);
+      group.depth = this.ProjectService.getNodeDepth(group.id, 0);
     }
     groups.sort(function(a, b) {
       return b.depth - a.depth;
@@ -302,7 +263,7 @@ class StudentDataService {
 
   calculateNodeStatus(node) {
     const nodeId = node.id;
-    const nodeStatus = this.createNodeStatus(nodeId);
+    const nodeStatus: any = this.createNodeStatus(nodeId);
     const constraintsForNode = this.getConstraintsThatAffectNode(node);
     const constraintResults = this.evaluateConstraints(constraintsForNode);
     nodeStatus.isVisible = constraintResults.isVisible;
@@ -383,7 +344,7 @@ class StudentDataService {
       this.nodeStatuses[nodeId].isVisitable = nodeStatus.isVisitable;
       this.nodeStatuses[nodeId].isCompleted = nodeStatus.isCompleted;
       if (!previousIsCompletedValue && nodeStatus.isCompleted) {
-        this.$rootScope.$broadcast('nodeCompleted', { nodeId: nodeId });
+        this.upgrade.$injector.get('$rootScope').$broadcast('nodeCompleted', { nodeId: nodeId });
       }
     }
   }
@@ -581,8 +542,8 @@ class StudentDataService {
 
   evaluateChoiceChosenCriteria(criteria) {
     const serviceName = 'MultipleChoiceService';
-    if (this.$injector.has(serviceName)) {
-      const service = this.$injector.get(serviceName);
+    if (this.upgrade.$injector.has(serviceName)) {
+      const service = this.upgrade.$injector.get(serviceName);
       return service.choiceChosen(criteria);
     }
     return false;
@@ -670,7 +631,7 @@ class StudentDataService {
     const params = criteria.params;
     const nodeId = params.nodeId;
     const requiredNumberOfNotes = params.requiredNumberOfNotes;
-    const notebookService = this.$injector.get('NotebookService');
+    const notebookService = this.upgrade.$injector.get('NotebookService');
     try {
       const notebook = notebookService.getNotebookByWorkgroup();
       const notebookItemsByNodeId = this.getNotebookItemsByNodeId(notebook, nodeId);
@@ -686,7 +647,7 @@ class StudentDataService {
     const requiredNumberOfFilledRows = params.requiredNumberOfFilledRows;
     const tableHasHeaderRow = params.tableHasHeaderRow;
     const requireAllCellsInARowToBeFilled = params.requireAllCellsInARowToBeFilled;
-    const tableService = this.$injector.get('TableService');
+    const tableService = this.upgrade.$injector.get('TableService');
     const componentState = this.getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
     return (
       componentState != null &&
@@ -766,7 +727,7 @@ class StudentDataService {
 
   createComponentState() {
     return {
-      timestamp: Date.parse(new Date())
+      timestamp: Date.parse(new Date().toString())
     };
   }
 
@@ -785,16 +746,16 @@ class StudentDataService {
   handleAnnotationReceived(annotation) {
     this.studentData.annotations.push(annotation);
     if (annotation.notebookItemId) {
-      this.$rootScope.$broadcast('notebookItemAnnotationReceived', { annotation: annotation });
+      this.upgrade.$injector.get('$rootScope').$broadcast('notebookItemAnnotationReceived', { annotation: annotation });
     } else {
-      this.$rootScope.$broadcast('annotationReceived', { annotation: annotation });
+      this.upgrade.$injector.get('$rootScope').$broadcast('annotationReceived', { annotation: annotation });
     }
   }
 
   saveComponentEvent(component, category, event, data) {
     if (component == null || category == null || event == null) {
       alert(
-        this.$translate('STUDENT_DATA_SERVICE_SAVE_COMPONENT_EVENT_COMPONENT_CATEGORY_EVENT_ERROR')
+        this.upgrade.$injector.get('$filter')('translate')('STUDENT_DATA_SERVICE_SAVE_COMPONENT_EVENT_COMPONENT_CATEGORY_EVENT_ERROR')
       );
       return;
     }
@@ -804,7 +765,7 @@ class StudentDataService {
     const componentType = component.componentType;
     if (nodeId == null || componentId == null || componentType == null) {
       alert(
-        this.$translate(
+        this.upgrade.$injector.get('$filter')('translate')(
           'STUDENT_DATA_SERVICE_SAVE_COMPONENT_EVENT_NODE_ID_COMPONENT_ID_COMPONENT_TYPE_ERROR'
         )
       );
@@ -815,7 +776,7 @@ class StudentDataService {
 
   saveVLEEvent(nodeId, componentId, componentType, category, event, data) {
     if (category == null || event == null) {
-      alert(this.$translate('STUDENT_DATA_SERVICE_SAVE_VLE_EVENT_CATEGORY_EVENT_ERROR'));
+      alert(this.upgrade.$injector.get('$filter')('translate')('STUDENT_DATA_SERVICE_SAVE_VLE_EVENT_CATEGORY_EVENT_ERROR'));
       return;
     }
     const context = 'VLE';
@@ -852,7 +813,7 @@ class StudentDataService {
       runId: this.ConfigService.getRunId(),
       periodId: this.ConfigService.getPeriodId(),
       workgroupId: this.ConfigService.getWorkgroupId(),
-      clientSaveTime: Date.parse(new Date())
+      clientSaveTime: Date.parse(new Date().toString())
     };
   }
 
@@ -870,15 +831,23 @@ class StudentDataService {
     if (this.ConfigService.isPreview()) {
       return this.handlePreviewSaveToServer(studentWorkList, events, annotations);
     } else if (!this.ConfigService.isRunActive()) {
-      return this.$q.defer().promise;
+      return this.upgrade.$injector.get('$q').defer().promise;
     } else {
-      const httpParams = this.getSaveToServerHTTPParams(studentWorkList, events, annotations);
-      return this.$http(httpParams).then(
-        result => {
-          return this.handleSaveToServerSuccess(result.data);
+      const params = {
+        projectId: this.ConfigService.getProjectId(),
+        runId: this.ConfigService.getRunId(),
+        workgroupId: this.ConfigService.getWorkgroupId(),
+        studentWorkList: angular.toJson(studentWorkList),
+        events: angular.toJson(events),
+        annotations: angular.toJson(annotations)
+      };
+      return this.http.post(this.ConfigService.getConfigParam('studentDataURL'), params).toPromise()
+          .then(
+        (resultData: any) => {
+          return this.handleSaveToServerSuccess(resultData);
         },
-        result => {
-          return this.handleSaveToServerError(result);
+        (resultData: any) => {
+          return this.handleSaveToServerError();
         }
       );
     }
@@ -917,27 +886,9 @@ class StudentDataService {
       annotations: annotations
     };
     this.handleSaveToServerSuccess(savedStudentDataResponse);
-    const deferred = this.$q.defer();
+    const deferred = this.upgrade.$injector.get('$q').defer();
     deferred.resolve(savedStudentDataResponse);
     return deferred.promise;
-  }
-
-  getSaveToServerHTTPParams(studentWorkList, events, annotations) {
-    const params = {
-      projectId: this.ConfigService.getProjectId(),
-      runId: this.ConfigService.getRunId(),
-      workgroupId: this.ConfigService.getWorkgroupId(),
-      studentWorkList: angular.toJson(studentWorkList),
-      events: angular.toJson(events),
-      annotations: angular.toJson(annotations)
-    };
-    const httpParams = {
-      method: 'POST',
-      url: this.ConfigService.getConfigParam('studentDataURL'),
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      data: $.param(params)
-    };
-    return httpParams;
   }
 
   handleSaveToServerSuccess(savedStudentDataResponse) {
@@ -960,7 +911,7 @@ class StudentDataService {
       this.updateNodeStatuses();
       this.saveStudentStatus();
     }
-    const deferred = this.$q.defer();
+    const deferred = this.upgrade.$injector.get('$q').defer();
     deferred.resolve(savedStudentDataResponse);
     return deferred.promise;
   }
@@ -979,7 +930,7 @@ class StudentDataService {
             this.setRemoteServerSaveTimeIntoLocalServerSaveTime(savedStudentWork, localStudentWork);
           }
           this.clearRequestToken(localStudentWork);
-          this.$rootScope.$broadcast('studentWorkSavedToServer', { studentWork: localStudentWork });
+          this.upgrade.$injector.get('$rootScope').$broadcast('studentWorkSavedToServer', { studentWork: localStudentWork });
           break;
         }
       }
@@ -1004,7 +955,7 @@ class StudentDataService {
   }
 
   setDummyServerSaveTimeIntoLocalServerSaveTime(localObject) {
-    localObject.serverSaveTime = Date.parse(new Date());
+    localObject.serverSaveTime = Date.parse(new Date().toString());
   }
 
   clearRequestToken(obj) {
@@ -1020,7 +971,7 @@ class StudentDataService {
           this.setRemoteIdIntoLocalId(savedEvent, localEvent);
           this.setRemoteServerSaveTimeIntoLocalServerSaveTime(savedEvent, localEvent);
           this.clearRequestToken(localEvent);
-          this.$rootScope.$broadcast('eventSavedToServer', { event: localEvent });
+          this.upgrade.$injector.get('$rootScope').$broadcast('eventSavedToServer', { event: localEvent });
           break;
         }
       }
@@ -1036,7 +987,7 @@ class StudentDataService {
           this.setRemoteIdIntoLocalId(savedAnnotation, localAnnotation);
           this.setRemoteServerSaveTimeIntoLocalServerSaveTime(savedAnnotation, localAnnotation);
           this.clearRequestToken(localAnnotation);
-          this.$rootScope.$broadcast('annotationSavedToServer', { annotation: localAnnotation });
+          this.upgrade.$injector.get('$rootScope').$broadcast('annotationSavedToServer', { annotation: localAnnotation });
           break;
         }
       }
@@ -1045,14 +996,13 @@ class StudentDataService {
 
   handleSaveToServerError() {
     this.saveToServerRequestCount -= 1;
-    const deferred = this.$q.defer();
+    const deferred = this.upgrade.$injector.get('$q').defer();
     deferred.resolve();
     return deferred.promise;
   }
 
   saveStudentStatus() {
     if (!this.ConfigService.isPreview() && this.ConfigService.isRunActive()) {
-      const studentStatusURL = this.ConfigService.getStudentStatusURL();
       const runId = this.ConfigService.getRunId();
       const periodId = this.ConfigService.getPeriodId();
       const workgroupId = this.ConfigService.getWorkgroupId();
@@ -1067,20 +1017,14 @@ class StudentDataService {
         nodeStatuses: nodeStatuses,
         projectCompletion: projectCompletion
       };
-      const status = angular.toJson(studentStatusJSON);
       const studentStatusParams = {
         runId: runId,
         periodId: periodId,
         workgroupId: workgroupId,
-        status: status
+        status: angular.toJson(studentStatusJSON)
       };
-      const httpParams = {
-        method: 'POST',
-        url: studentStatusURL,
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        data: $.param(studentStatusParams)
-      };
-      return this.$http(httpParams).then(
+      return this.http.post(this.ConfigService.getStudentStatusURL(), studentStatusParams)
+          .toPromise().then(
         result => {
           return true;
         },
@@ -1233,10 +1177,6 @@ class StudentDataService {
     return false;
   }
 
-  getNodeStatusByNodeId(nodeId) {
-    return this.nodeStatuses[nodeId];
-  }
-
   /**
    * Get progress information for a given node
    * @param nodeId the node id
@@ -1321,7 +1261,7 @@ class StudentDataService {
    * @param componentId (optional) the component id
    * @returns whether the node or component is completed
    */
-  isCompleted(nodeId, componentId) {
+  isCompleted(nodeId, componentId = null) {
     let result = false;
     if (nodeId && componentId) {
       result = this.isComponentCompleted(nodeId, componentId);
@@ -1341,7 +1281,7 @@ class StudentDataService {
     const component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
     if (component != null) {
       const componentType = component.type;
-      const service = this.$injector.get(componentType + 'Service');
+      const service = this.upgrade.$injector.get(componentType + 'Service');
       return service.isCompleted(component, componentStates, componentEvents, nodeEvents, node);
     }
     return false;
@@ -1396,7 +1336,7 @@ class StudentDataService {
         this.previousStep = previousCurrentNode;
       }
       this.currentNode = node;
-      this.$rootScope.$broadcast('currentNodeChanged', {
+      this.upgrade.$injector.get('$rootScope').$broadcast('currentNodeChanged', {
         previousNode: previousCurrentNode,
         currentNode: this.currentNode
       });
@@ -1406,7 +1346,7 @@ class StudentDataService {
   endCurrentNode() {
     const previousCurrentNode = this.currentNode;
     if (previousCurrentNode != null) {
-      this.$rootScope.$broadcast('exitNode', { nodeToExit: previousCurrentNode });
+      this.upgrade.$injector.get('$rootScope').$broadcast('exitNode', { nodeToExit: previousCurrentNode });
     }
   }
 
@@ -1420,7 +1360,7 @@ class StudentDataService {
   }
 
   nodeClickLocked(nodeId) {
-    this.$rootScope.$broadcast('nodeClickLocked', { nodeId: nodeId });
+    this.upgrade.$injector.get('$rootScope').$broadcast('nodeClickLocked', { nodeId: nodeId });
   }
 
   getTotalScore() {
@@ -1567,64 +1507,56 @@ class StudentDataService {
   }
 
   getClassmateStudentWork(nodeId, componentId, periodId) {
-    const httpParams = {
-      method: 'GET',
-      url: this.ConfigService.getConfigParam('studentDataURL'),
-      params: {
-        runId: this.ConfigService.getRunId(),
-        nodeId: nodeId,
-        componentId: componentId,
-        getStudentWork: true,
-        getEvents: false,
-        getAnnotations: false,
-        onlyGetLatest: true,
-        periodId: periodId
-      }
+    const params = new HttpParams()
+        .set('runId', this.ConfigService.getRunId())
+        .set('nodeId', nodeId + '')
+        .set('componentId', componentId + '')
+        .set('getStudentWork', true + '')
+        .set('getEvents', false + '')
+        .set('getAnnotations', false + '')
+        .set('onlyGetLatest', true + '')
+        .set('periodId', periodId);
+    const options = {
+      params: params
     };
-    return this.$http(httpParams).then(result => {
-      const resultData = result.data;
-      if (resultData != null) {
-        return resultData.studentWorkList;
-      }
-      return [];
+    return this.http.get(this.ConfigService.getConfigParam('studentDataURL'), options).toPromise()
+        .then((resultData: any) => {
+      return resultData.studentWorkList;
     });
   }
 
   getClassmateScores(nodeId, componentId, periodId) {
-    const httpParams = {
-      method: 'GET',
-      url: this.ConfigService.getConfigParam('studentDataURL'),
-      params: {
-        runId: this.ConfigService.getRunId(),
-        nodeId: nodeId,
-        componentId: componentId,
-        getStudentWork: false,
-        getEvents: false,
-        getAnnotations: true,
-        onlyGetLatest: false,
-        periodId: periodId
-      }
+    const params = new HttpParams()
+        .set('runId', this.ConfigService.getRunId())
+        .set('nodeId', nodeId + '')
+        .set('componentId', componentId + '')
+        .set('getStudentWork', false + '')
+        .set('getEvents', false + '')
+        .set('getAnnotations', true + '')
+        .set('onlyGetLatest', false + '')
+        .set('periodId', periodId);
+    const options = {
+      params: params
     };
-    return this.$http(httpParams).then(result => {
-      return result.data.annotations;
+    return this.http.get(this.ConfigService.getConfigParam('studentDataURL'), options).toPromise()
+        .then((resultData: any) => {
+      return resultData.annotations;
     });
   }
 
   getStudentWorkById(id) {
-    const httpParams = {
-      method: 'GET',
-      url: this.ConfigService.getConfigParam('studentDataURL'),
-      params: {
-        runId: this.ConfigService.getRunId(),
-        id: id,
-        getStudentWork: true,
-        getEvents: false,
-        getAnnotations: false,
-        onlyGetLatest: true
-      }
+    const params = new HttpParams()
+        .set('runId', this.ConfigService.getRunId())
+        .set('id', id + '')
+        .set('getStudentWork', true + '')
+        .set('getEvents', false + '')
+        .set('getAnnotations', false + '')
+        .set('onlyGetLatest', true + '');
+    const options = {
+      params: params
     };
-    return this.$http(httpParams).then(result => {
-      const resultData = result.data;
+    return this.http.get(this.ConfigService.getConfigParam('studentDataURL'), options).toPromise()
+        .then((resultData: any) => {
       if (resultData != null && resultData.studentWorkList.length > 0) {
         return resultData.studentWorkList[0];
       }
@@ -1657,18 +1589,3 @@ class StudentDataService {
     return maxScore;
   }
 }
-
-StudentDataService.$inject = [
-  '$filter',
-  '$http',
-  '$injector',
-  '$q',
-  '$rootScope',
-  'AnnotationService',
-  'ConfigService',
-  'ProjectService',
-  'TagService',
-  'UtilService'
-];
-
-export default StudentDataService;

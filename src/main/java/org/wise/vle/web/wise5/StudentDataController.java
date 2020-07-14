@@ -23,12 +23,23 @@
  */
 package org.wise.vle.web.wise5;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
+
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -41,16 +52,10 @@ import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.vle.wise5.VLEService;
 import org.wise.portal.service.workgroup.WorkgroupService;
 import org.wise.portal.spring.data.redis.MessagePublisher;
-import org.wise.vle.domain.WebSocketMessage;
 import org.wise.vle.domain.achievement.Achievement;
 import org.wise.vle.domain.annotation.wise5.Annotation;
-import org.wise.vle.domain.work.StudentWork;
 import org.wise.vle.domain.work.Event;
-
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.*;
+import org.wise.vle.domain.work.StudentWork;
 
 /**
  * Controller for handling GET and POST requests of WISE5 student data
@@ -309,15 +314,15 @@ public class StudentDataController {
    * @param events JSON string containing events
    * @param annotations JSON string containing annotations
    */
-  @RequestMapping(method = RequestMethod.POST, value = "/student/data")
+  @PostMapping("/student/data")
   public void postWISE5StudentData(
       HttpServletResponse response,
-      @RequestParam(value = "runId", required = true) Integer runId,
-      @RequestParam(value = "studentWorkList", required = true) String studentWorkList,
-      @RequestParam(value = "events", required = true) String events,
-      @RequestParam(value = "annotations", required = true) String annotations
-      ) throws JSONException {
+      @RequestBody ObjectNode postedParams) throws JSONException {
     User signedInUser = ControllerUtil.getSignedInUser();
+    Integer runId = postedParams.get("runId").asInt();
+    String studentWorkList = postedParams.get("studentWorkList").asText();
+    String events = postedParams.get("events").asText();
+    String annotations = postedParams.get("annotations").asText();
     JSONObject result = new JSONObject();
     try {
       Run run = runService.retrieveById(new Long(runId));
