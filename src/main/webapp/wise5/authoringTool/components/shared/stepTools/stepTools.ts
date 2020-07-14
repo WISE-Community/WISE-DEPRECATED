@@ -2,7 +2,7 @@
 
 import { ConfigService } from '../../../../services/configService';
 import NodeService from '../../../../services/nodeService';
-import { AuthoringToolProjectService } from '../../../authoringToolProjectService';
+import { TeacherProjectService } from '../../../../services/teacherProjectService';
 import TeacherDataService from '../../../../services/teacherDataService';
 import * as $ from 'jquery';
 
@@ -29,7 +29,7 @@ class StepToolsController {
     private $state: any,
     private ConfigService: ConfigService,
     private NodeService: NodeService,
-    private ProjectService: AuthoringToolProjectService,
+    private ProjectService: TeacherProjectService,
     private TeacherDataService: TeacherDataService
   ) {
     this.$state = $state;

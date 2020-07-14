@@ -1,10 +1,10 @@
 'use strict';
 
 import { ConfigService } from '../../../../services/configService';
-import { ClassroomMonitorProjectService } from '../../../classroomMonitorProjectService';
 import TeacherDataService from '../../../../services/teacherDataService';
 import * as angular from 'angular';
 import NodeService from '../../../../services/nodeService';
+import { TeacherProjectService } from '../../../../services/teacherProjectService';
 
 class MilestoneDetailsController {
   $translate: any;
@@ -27,7 +27,7 @@ class MilestoneDetailsController {
     $scope,
     private ConfigService: ConfigService,
     private NodeService: NodeService,
-    private ProjectService: ClassroomMonitorProjectService,
+    private ProjectService: TeacherProjectService,
     private TeacherDataService: TeacherDataService
   ) {
     this.$translate = $filter('translate');

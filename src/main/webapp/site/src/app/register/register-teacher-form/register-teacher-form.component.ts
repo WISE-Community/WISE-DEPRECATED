@@ -4,7 +4,6 @@ import { Teacher } from "../../domain/teacher";
 import { TeacherService } from "../../teacher/teacher.service";
 import { FormControl, FormGroup, Validators, FormBuilder } from "@angular/forms";
 import { UtilService } from '../../services/util.service';
-import { I18n } from '@ngx-translate/i18n-polyfill';
 
 @Component({
   selector: 'app-register-teacher-form',
@@ -15,11 +14,11 @@ export class RegisterTeacherFormComponent implements OnInit {
 
   teacherUser: Teacher = new Teacher();
   schoolLevels: any[] = [
-    { code: "ELEMENTARY_SCHOOL", label: this.i18n('Elementary School') },
-    { code: "MIDDLE_SCHOOL", label: this.i18n('Middle School') },
-    { code: "HIGH_SCHOOL", label: this.i18n('High School') },
-    { code: "COLLEGE", label: this.i18n('College') },
-    { code: "OTHER", label: this.i18n('Other') }
+    { code: "ELEMENTARY_SCHOOL", label: $localize`Elementary School` },
+    { code: "MIDDLE_SCHOOL", label: $localize`Middle School` },
+    { code: "HIGH_SCHOOL", label: $localize`High School` },
+    { code: "COLLEGE", label: $localize`College` },
+    { code: "OTHER", label: $localize`Other` }
   ];
   passwordsFormGroup = this.fb.group({
     password: ['', [Validators.required]],
@@ -43,8 +42,7 @@ export class RegisterTeacherFormComponent implements OnInit {
   constructor(private router: Router, private route: ActivatedRoute,
               private teacherService: TeacherService,
               private utilService: UtilService,
-              private fb: FormBuilder,
-              private i18n: I18n) { }
+              private fb: FormBuilder) { }
 
   ngOnInit() {
     this.route.params.subscribe(params => {

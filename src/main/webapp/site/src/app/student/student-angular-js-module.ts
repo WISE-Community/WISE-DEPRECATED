@@ -12,6 +12,7 @@ import { VLEProjectService } from '../../../../wise5/vle/vleProjectService';
 import { CRaterService } from '../../../../wise5/services/cRaterService';
 import { SessionService } from '../../../../wise5/services/sessionService';
 import { StudentAssetService } from '../../../../wise5/services/studentAssetService';
+import { TagService } from '../../../../wise5/services/tagService';
 import { AudioRecorderService } from '../../../../wise5/services/audioRecorderService';
 import { PossibleScoreComponent } from '../possible-score/possible-score.component';
 import { AnnotationService } from '../../../../wise5/services/annotationService';
@@ -42,6 +43,7 @@ export class EmptyComponent {}
     { provide: ProjectService, useExisting: VLEProjectService },
     SessionService,
     StudentAssetService,
+    TagService,
     StudentWebSocketService,
     VLEProjectService
   ],

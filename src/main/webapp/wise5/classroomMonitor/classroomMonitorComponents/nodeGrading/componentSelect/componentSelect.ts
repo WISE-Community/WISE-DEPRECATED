@@ -1,7 +1,7 @@
 'use strict';
 
-import { ClassroomMonitorProjectService } from '../../../classroomMonitorProjectService';
 import { UtilService } from '../../../../services/utilService';
+import { TeacherProjectService } from '../../../../services/teacherProjectService';
 
 class ComponentSelectController {
   $translate: any;
@@ -13,7 +13,7 @@ class ComponentSelectController {
   static $inject = ['$filter', 'ProjectService', 'UtilService'];
   constructor(
     private $filter: any,
-    private ProjectService: ClassroomMonitorProjectService,
+    private ProjectService: TeacherProjectService,
     private UtilService: UtilService
   ) {
     this.$translate = this.$filter('translate');

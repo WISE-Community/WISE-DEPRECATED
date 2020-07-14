@@ -8,7 +8,6 @@ class TeacherDataService {
     $rootScope,
     AnnotationService,
     ConfigService,
-    NotificationService,
     ProjectService,
     TeacherWebSocketService,
     UtilService
@@ -19,7 +18,6 @@ class TeacherDataService {
     this.$rootScope = $rootScope;
     this.AnnotationService = AnnotationService;
     this.ConfigService = ConfigService;
-    this.NotificationService = NotificationService;
     this.ProjectService = ProjectService;
     this.TeacherWebSocketService = TeacherWebSocketService;
     this.UtilService = UtilService;
@@ -1065,7 +1063,6 @@ TeacherDataService.$inject = [
   '$rootScope',
   'AnnotationService',
   'ConfigService',
-  'NotificationService',
   'ProjectService',
   'TeacherWebSocketService',
   'UtilService'

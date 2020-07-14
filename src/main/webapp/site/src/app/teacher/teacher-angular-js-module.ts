@@ -8,17 +8,17 @@ import { setUpLocationSync } from '@angular/router/upgrade';
 import { UtilService } from '../../../../wise5/services/utilService';
 import { ConfigService } from '../../../../wise5/services/configService';
 import { ProjectService } from '../../../../wise5/services/projectService';
-import { ClassroomMonitorProjectService } from '../../../../wise5/classroomMonitor/classroomMonitorProjectService';
+import { TeacherProjectService } from '../../../../wise5/services/teacherProjectService';
 import { MilestoneReportDataComponent } from './milestone/milestone-report-data/milestone-report-data.component';
 import { CRaterService } from '../../../../wise5/services/cRaterService';
 import { SessionService } from '../../../../wise5/services/sessionService';
 import { StudentAssetService } from '../../../../wise5/services/studentAssetService';
-import { ProjectAssetService } from '../services/projectAssetService';
+import { TagService } from '../../../../wise5/services/tagService';
 import { AudioRecorderService } from '../../../../wise5/services/audioRecorderService';
 import { AnnotationService } from '../../../../wise5/services/annotationService';
 import { CommonModule } from '@angular/common';
+import { ProjectAssetService } from '../services/projectAssetService';
 import { StudentStatusService } from '../../../../wise5/services/studentStatusService';
-import { StudentWebSocketService } from '../../../../wise5/services/studentWebSocketService';
 import { SpaceService } from '../../../../wise5/services/spaceService';
 
 @Component({template: ``})
@@ -43,13 +43,13 @@ export class EmptyComponent {}
     ConfigService,
     CRaterService,
     ProjectAssetService,
-    ClassroomMonitorProjectService,
-    { provide: ProjectService, useExisting: ClassroomMonitorProjectService },
+    TeacherProjectService,
+    { provide: ProjectService, useExisting: TeacherProjectService },
     SessionService,
     SpaceService,
     StudentAssetService,
     StudentStatusService,
-    StudentWebSocketService
+    TagService
   ],
   entryComponents: [
     MilestoneReportDataComponent

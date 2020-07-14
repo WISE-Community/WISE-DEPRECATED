@@ -3,11 +3,11 @@
 import { AnnotationService } from '../../../../services/annotationService';
 import { ConfigService } from '../../../../services/configService';
 import NotificationService from '../../../../services/notificationService';
-import { ClassroomMonitorProjectService } from '../../../classroomMonitorProjectService';
 import { StudentStatusService } from '../../../../services/studentStatusService';
 import TeacherDataService from '../../../../services/teacherDataService';
 import TeacherWebSocketService from '../../../../services/teacherWebSocketService';
 import * as $ from 'jquery';
+import { TeacherProjectService } from '../../../../services/teacherProjectService';
 
 class NavItemController {
   $translate: any;
@@ -62,7 +62,7 @@ class NavItemController {
     private AnnotationService: AnnotationService,
     private ConfigService: ConfigService,
     private NotificationService: NotificationService,
-    private ProjectService: ClassroomMonitorProjectService,
+    private ProjectService: TeacherProjectService,
     private StudentStatusService: StudentStatusService,
     private TeacherDataService: TeacherDataService,
     private TeacherWebSocketService: TeacherWebSocketService

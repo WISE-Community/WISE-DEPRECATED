@@ -24,6 +24,7 @@
 package org.wise.portal.domain.project;
 
 import org.wise.portal.domain.Persistable;
+import org.wise.portal.domain.Tag;
 import org.wise.portal.domain.project.impl.ProjectType;
 import org.wise.portal.domain.user.User;
 

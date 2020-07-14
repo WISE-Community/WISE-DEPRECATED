@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { I18n } from "@ngx-translate/i18n-polyfill";
 import { StudentService } from '../../../student/student.service';
 import { Router } from '@angular/router';
 import { finalize } from 'rxjs/operators';
@@ -21,8 +20,7 @@ export class ForgotStudentPasswordComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
               private router: Router,
-              private studentService: StudentService,
-              private i18n: I18n) { }
+              private studentService: StudentService) { }
 
   ngOnInit() {
   }
@@ -73,7 +71,7 @@ export class ForgotStudentPasswordComponent implements OnInit {
   }
 
   setUsernameNotFoundMessage() {
-    const message = this.i18n(`We could not find that username. Please make sure you are typing it correctly and try again. If you have forgotten your username, please use the forgot username option below.`);
+    const message = $localize`We could not find that username. Please make sure you are typing it correctly and try again. If you have forgotten your username, please use the forgot username option below.`;
     this.setMessage(message);
   }
 

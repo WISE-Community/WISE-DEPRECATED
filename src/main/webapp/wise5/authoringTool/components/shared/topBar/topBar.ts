@@ -1,7 +1,7 @@
 'use strict';
 
 import { ConfigService } from '../../../../services/configService';
-import { AuthoringToolProjectService } from '../../../authoringToolProjectService';
+import { TeacherProjectService } from '../../../../services/teacherProjectService';
 import { SessionService } from '../../../../services/sessionService';
 import TeacherDataService from '../../../../services/teacherDataService';
 
@@ -32,7 +32,7 @@ class TopBarController {
     private $state: any,
     private $window: any,
     private ConfigService: ConfigService,
-    private ProjectService: AuthoringToolProjectService,
+    private ProjectService: TeacherProjectService,
     private SessionService: SessionService,
     private TeacherDataService: TeacherDataService
   ) {

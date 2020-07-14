@@ -1,8 +1,8 @@
 'use strict';
 
-import { ClassroomMonitorProjectService } from '../../../classroomMonitorProjectService';
 import { StudentStatusService } from '../../../../services/studentStatusService';
 import TeacherDataService from '../../../../services/teacherDataService';
+import { TeacherProjectService } from '../../../../services/teacherProjectService';
 
 class PeriodSelectController {
   $translate: any;
@@ -20,7 +20,7 @@ class PeriodSelectController {
   constructor(
     $filter: any,
     $scope: any,
-    private ProjectService: ClassroomMonitorProjectService,
+    private ProjectService: TeacherProjectService,
     private StudentStatusService: StudentStatusService,
     private TeacherDataService: TeacherDataService
   ) {

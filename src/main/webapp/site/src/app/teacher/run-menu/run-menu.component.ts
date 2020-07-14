@@ -7,7 +7,6 @@ import { UserService } from '../../services/user.service';
 import { TeacherRun } from '../teacher-run';
 import { ConfigService } from '../../services/config.service';
 import { RunSettingsDialogComponent } from '../run-settings-dialog/run-settings-dialog.component';
-import { I18n } from '@ngx-translate/i18n-polyfill';
 import { EditRunWarningDialogComponent } from '../edit-run-warning-dialog/edit-run-warning-dialog.component';
 import { ListClassroomCoursesDialogComponent } from '../list-classroom-courses-dialog/list-classroom-courses-dialog.component';
 import { Router } from '@angular/router';
@@ -29,8 +28,7 @@ export class RunMenuComponent implements OnInit {
     private teacherService: TeacherService,
     private userService: UserService,
     private configService: ConfigService,
-    private router: Router,
-    private i18n: I18n
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -112,7 +110,7 @@ export class RunMenuComponent implements OnInit {
   showEditRunDetails() {
     const run = this.run;
     this.dialog.open(RunSettingsDialogComponent, {
-      ariaLabel: this.i18n('Run Settings'),
+      ariaLabel: $localize`Run Settings`,
       data: { run: run },
       panelClass: 'mat-dialog--md',
       autoFocus: true
@@ -122,7 +120,7 @@ export class RunMenuComponent implements OnInit {
   editContent() {
     if (this.run.lastRun) {
       this.dialog.open(EditRunWarningDialogComponent, {
-        ariaLabel: this.i18n('Edit Classroom Unit Warning'),
+        ariaLabel: $localize`Edit Classroom Unit Warning`,
         data: { run: this.run },
         panelClass: 'mat-dialog--sm'
       });

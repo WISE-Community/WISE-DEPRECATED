@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.wise.portal.dao.ObjectNotFoundException;
+import org.wise.portal.domain.Tag;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.impl.ChangeWorkgroupParameters;
 import org.wise.portal.domain.run.Run;
@@ -137,4 +138,14 @@ public interface WorkgroupService {
    * @param newPeriod period to move the workgroup and its members to
    */
   void changePeriod(Workgroup workgroup, Group newPeriod);
+
+  /**
+   * Adds the tag to workgroup. If workgroup already has the tag, do not add again
+   */
+  void addTag(Workgroup workgroup, Tag tag);
+
+  /**
+   * Removes tag from workgroup. If workgroup does not have tag, do nothing
+   */
+  void removeTag(Workgroup workgroup, Tag tag);
 }

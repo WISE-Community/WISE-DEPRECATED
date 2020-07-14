@@ -4,6 +4,9 @@ import { Injectable } from "@angular/core";
 import { UpgradeModule } from "@angular/upgrade/static";
 import { AnnotationService } from "./annotationService";
 import { ConfigService } from "./configService";
+import NodeService from "./nodeService";
+import StudentDataService from './studentDataService';
+import { TagService } from "./tagService";
 
 @Injectable()
 export class StudentWebSocketService {
@@ -12,7 +15,7 @@ export class StudentWebSocketService {
   workgroupId: number;
 
   constructor(private upgrade: UpgradeModule, private AnnotationService: AnnotationService,
-      private ConfigService: ConfigService) {
+      private ConfigService: ConfigService, private TagService: TagService) {
   }
 
   initialize() {
@@ -57,6 +60,11 @@ export class StudentWebSocketService {
         const annotationData = JSON.parse(message.content);
         this.AnnotationService.addOrUpdateAnnotation(annotationData);
         this.upgrade.$injector.get('$rootScope').$broadcast('newAnnotationReceived', {annotation: annotationData});
+      } else if (message.type === 'tagsToWorkgroup') {
+        const tags = JSON.parse(message.content);
+        this.TagService.setTags(tags);
+        this.upgrade.$injector.get('StudentDataService').updateNodeStatuses();
+        this.upgrade.$injector.get('NodeService').evaluateTransitionLogic();
       }
     });
   }

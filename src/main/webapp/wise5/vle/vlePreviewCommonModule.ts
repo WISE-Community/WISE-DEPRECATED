@@ -61,6 +61,7 @@ import StudentDataService from '../services/studentDataService';
 import { StudentWebSocketService } from '../services/studentWebSocketService';
 import '../components/summary/summaryComponentModule';
 import '../components/table/tableComponentModule';
+import { TagService } from '../services/tagService';
 import { UtilService } from '../services/utilService';
 import VLEController from './vleController';
 import { VLEProjectService } from './vleProjectService';
@@ -125,6 +126,7 @@ export function createModule(type = 'preview') {
   .factory('SessionService', downgradeInjectable(SessionService))
   .factory('StudentAssetService', downgradeInjectable(StudentAssetService))
   .service('StudentDataService', StudentDataService)
+  .factory('TagService', downgradeInjectable(TagService))
   .factory('StudentWebSocketService', downgradeInjectable(StudentWebSocketService))
   .factory('UtilService', downgradeInjectable(UtilService))
   .controller('NavigationController', NavigationController)
@@ -200,7 +202,8 @@ export function createModule(type = 'preview') {
               'StudentDataService',
               'config',
               'project',
-              (StudentDataService, config, project) => {
+              'tags',
+              (StudentDataService, config, project, tags) => {
                 return StudentDataService.retrieveStudentData();
               }
             ],
@@ -251,6 +254,13 @@ export function createModule(type = 'preview') {
               'config',
               (StudentDataService, config) => {
                 return StudentDataService.retrieveRunStatus();
+              }
+            ],
+            tags: [
+              'TagService',
+              'config',
+              (TagService, config) => {
+                return TagService.retrieveStudentTags().toPromise();
               }
             ],
             webSocket: [

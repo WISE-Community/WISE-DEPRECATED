@@ -23,6 +23,7 @@
  */
 package org.wise.portal.domain.workgroup.impl;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -32,6 +33,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
@@ -41,6 +44,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.group.impl.PersistentGroup;
+import org.wise.portal.domain.Tag;
+import org.wise.portal.domain.impl.TagImpl;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.run.impl.RunImpl;
 import org.wise.portal.domain.user.User;
@@ -84,6 +89,10 @@ public class WorkgroupImpl implements Workgroup, Comparable<WorkgroupImpl> {
   @Column(name = "isTeacherWorkgroup")
   private boolean teacherWorkgroup;
 
+  @ManyToMany(targetEntity = TagImpl.class, fetch = FetchType.LAZY)
+  @JoinTable(name = "workgroups_related_to_tags", joinColumns = { @JoinColumn(name = "workgroups_fk", nullable = false) }, inverseJoinColumns = @JoinColumn(name = "tags_fk", nullable = false))
+  private Set<Tag> tags = new HashSet<Tag>();
+
   public Set<User> getMembers() {
     return this.group.getMembers();
   }
@@ -99,6 +108,16 @@ public class WorkgroupImpl implements Workgroup, Comparable<WorkgroupImpl> {
 
   public void setMembers(Set<User> members) {
     this.group.setMembers(members);
+  }
+
+  @Override
+  public void addTag(Tag tag) {
+    this.tags.add(tag);
+  }
+
+  @Override
+  public void removeTag(Tag tag) {
+    this.tags.remove(tag);
   }
 
   public int compareTo(WorkgroupImpl o) {

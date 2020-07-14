@@ -5,7 +5,6 @@ import { finalize } from 'rxjs/operators';
 import { LibraryProject } from "../libraryProject";
 import { LibraryService } from "../../../services/library.service";
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { I18n } from "@ngx-translate/i18n-polyfill";
 
 @Component({
   selector: 'app-copy-project-dialog',
@@ -20,8 +19,7 @@ export class CopyProjectDialogComponent implements OnInit {
               public dialogRef: MatDialogRef<LibraryProjectDetailsComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any,
               private libraryService: LibraryService,
-              private snackBar: MatSnackBar,
-              private i18n: I18n) {
+              private snackBar: MatSnackBar) {
 
     this.libraryService.newProjectSource$.subscribe(() => {
       this.dialog.closeAll();
@@ -53,6 +51,6 @@ export class CopyProjectDialogComponent implements OnInit {
   }
 
   showErrorMessage() {
-    this.snackBar.open(this.i18n('There was an error trying to copy the project. Please refresh the page and try again.'));
+    this.snackBar.open($localize`There was an error trying to copy the project. Please refresh the page and try again.`);
   }
 }

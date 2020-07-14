@@ -286,6 +286,14 @@ create table projects_related_to_tags (
     primary key (project_fk, tag_fk)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+create table workgroups_related_to_tags (
+    workgroups_fk bigint not null,
+    tags_fk integer not null,
+    constraint workgroups_related_to_tagsTagFK foreign key (tags_fk) references tags (id),
+    constraint workgroups_related_to_tagsWorkgroupFK foreign key (workgroups_fk) references workgroups (id),
+    primary key (workgroups_fk, tags_fk)
+);
+
 create table runs (
     archive_reminder datetime not null,
     end_time datetime,
@@ -423,6 +431,7 @@ create table studentstatus (
 create table tags (
     id integer not null auto_increment,
     name varchar(255),
+    runId bigint,
     primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

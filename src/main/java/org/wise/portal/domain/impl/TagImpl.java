@@ -21,19 +21,28 @@
  * ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
  * REGENTS HAS BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.wise.portal.domain.project.impl;
+package org.wise.portal.domain.impl;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import org.wise.portal.domain.Tag;
+import org.wise.portal.domain.run.Run;
+import org.wise.portal.domain.run.impl.RunImpl;
+
 import lombok.Getter;
 import lombok.Setter;
-import org.wise.portal.domain.project.Tag;
 
 /**
  * @author Patrick Lawler
@@ -47,8 +56,13 @@ public class TagImpl implements Tag {
   @Transient
   private static final long serialVersionUID = 1L;
 
-  @Column(name = "name")
+  @Column
   private String name;
+
+  @ManyToOne(targetEntity = RunImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
+  @JoinColumn(name = "runId")
+  @JsonIgnore
+  private Run run;
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)

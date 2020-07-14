@@ -10,6 +10,7 @@ class StudentDataService {
     AnnotationService,
     ConfigService,
     ProjectService,
+    TagService,
     UtilService
   ) {
     this.$filter = $filter;
@@ -20,6 +21,7 @@ class StudentDataService {
     this.AnnotationService = AnnotationService;
     this.ConfigService = ConfigService;
     this.ProjectService = ProjectService;
+    this.TagService = TagService;
     this.UtilService = UtilService;
     this.$translate = this.$filter('translate');
     this.currentNode = null;
@@ -94,6 +96,9 @@ class StudentDataService {
       },
       fillXNumberOfRows: criteria => {
         return this.evaluateFillXNumberOfRowsCriteria(criteria);
+      },
+      hasTag: criteria => {
+        return this.evaluateHasTagCriteria(criteria);
       }
     };
 
@@ -692,6 +697,10 @@ class StudentDataService {
         requireAllCellsInARowToBeFilled
       )
     );
+  }
+
+  evaluateHasTagCriteria(criteria) {
+    return this.TagService.hasTagName(criteria.params.tag);
   }
 
   getNotebookItemsByNodeId(notebook, nodeId) {
@@ -1658,6 +1667,7 @@ StudentDataService.$inject = [
   'AnnotationService',
   'ConfigService',
   'ProjectService',
+  'TagService',
   'UtilService'
 ];
 

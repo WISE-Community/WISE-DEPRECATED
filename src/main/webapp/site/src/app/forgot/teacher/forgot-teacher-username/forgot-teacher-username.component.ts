@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TeacherService } from '../../../teacher/teacher.service';
-import { I18n } from '@ngx-translate/i18n-polyfill';
 import { finalize } from 'rxjs/operators';
 
 @Component({
@@ -20,8 +19,7 @@ export class ForgotTeacherUsernameComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
               private router: Router,
-              private teacherService: TeacherService,
-              private i18n: I18n) { }
+              private teacherService: TeacherService) { }
 
   ngOnInit() {
   }
@@ -62,12 +60,12 @@ export class ForgotTeacherUsernameComponent implements OnInit {
   }
 
   setEmailNotFoundMessage() {
-    const message = this.i18n(`We did not find a WISE account associated with that email. Please make sure you have typed your email address correctly.`);
+    const message = $localize`We did not find a WISE account associated with that email. Please make sure you have typed your email address correctly.`;
     this.setMessage(message);
   }
 
   setFailedToSendEmailMessage() {
-    const message = this.i18n(`The server has encountered an error and was unable to send an email to you. Please try again. If the error continues to occur, please contact us.`);
+    const message = $localize`The server has encountered an error and was unable to send an email to you. Please try again. If the error continues to occur, please contact us.`;
     this.setMessage(message);
   }
 

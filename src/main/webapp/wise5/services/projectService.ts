@@ -5263,4 +5263,62 @@ export class ProjectService {
   getConnectedComponentParams(componentContent, componentId) {
 
   }
+
+  getTags() {
+    let tags = [];
+    const nodes = this.getNodes();
+    for (const node of nodes) {
+      tags = tags.concat(this.getTagsFromNode(node));
+    }
+    return tags;
+  }
+
+  getTagsFromNode(node: any) {
+    const tags = [];
+    const transitions = this.getTransitionsFromNode(node);
+    for (const transition of transitions) {
+      const criteriaArray = this.getCriteriaArrayFromTransition(transition);
+      for (const singleCriteria of criteriaArray) {
+        const tag = this.getTagFromSingleCriteria(singleCriteria);
+        if (tag != null) {
+          tags.push(tag);
+        }
+      }
+    }
+    return tags;
+  }
+
+  getTransitionsFromNode(node: any) {
+    const transitionLogic = node.transitionLogic;
+    if (transitionLogic == null) {
+      return [];
+    } else {
+      return node.transitionLogic.transitions;
+    }
+  }
+
+  getCriteriaArrayFromTransition(transition: any) {
+    if (transition.criteria == null) {
+      return [];
+    } else {
+      return transition.criteria;
+    }
+  }
+
+  getTagFromSingleCriteria(singleCriteria: any) {
+    const params = singleCriteria.params;
+    if (params == null) {
+      return null;
+    } else {
+      return this.getTagFromParams(params);
+    }
+  }
+
+  getTagFromParams(params: any) {
+    if (params.tag == null) {
+      return null;
+    } else {
+      return { name: params['tag'] };
+    }
+  }
 }

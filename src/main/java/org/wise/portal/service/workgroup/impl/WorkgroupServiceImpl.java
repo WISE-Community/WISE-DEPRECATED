@@ -31,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.group.GroupDao;
 import org.wise.portal.dao.workgroup.WorkgroupDao;
+import org.wise.portal.domain.Tag;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.impl.ChangeWorkgroupParameters;
 import org.wise.portal.domain.run.Run;
@@ -80,13 +81,15 @@ public class WorkgroupServiceImpl implements WorkgroupService {
   /**
    * A helper method to create a <code>Workgroup</code> given parameters.
    *
-   * A teacher can be in a Workgroup. In this case, the members
-   * provided as a parameter in this method must match the owners
-   * of the run.
+   * A teacher can be in a Workgroup. In this case, the members provided as a parameter in this
+   * method must match the owners of the run.
    *
-   * @param members set of users in this workgroup
-   * @param run the <code>Run</code> that this workgroup belongs in
-   * @param period <code>Group</code> that this workgroup belongs in
+   * @param members
+   *                  set of users in this workgroup
+   * @param run
+   *                  the <code>Run</code> that this workgroup belongs in
+   * @param period
+   *                  <code>Group</code> that this workgroup belongs in
    * @return the created <code>Workgroup</code>
    */
   private Workgroup createWorkgroup(Set<User> members, Run run, Group period) {
@@ -96,8 +99,9 @@ public class WorkgroupServiceImpl implements WorkgroupService {
     }
     workgroup.setRun(run);
     workgroup.setPeriod(period);
-    if ((run.getOwner() != null && members.size() == 1 && run.getOwner().equals(members.iterator().next())) ||
-      (run.getSharedowners() != null && run.getSharedowners().containsAll(members))) {
+    if ((run.getOwner() != null && members.size() == 1
+        && run.getOwner().equals(members.iterator().next()))
+        || (run.getSharedowners() != null && run.getSharedowners().containsAll(members))) {
       workgroup.setTeacherWorkgroup(true);
     }
     return workgroup;
@@ -143,9 +147,9 @@ public class WorkgroupServiceImpl implements WorkgroupService {
     Set<User> addMemberSet = new HashSet<User>();
     addMemberSet.add(user);
     if (params.getWorkgroupTo() == null) {
-      if ((params.getWorkgroupToId() != null) &&
-        (params.getWorkgroupToId().intValue() == -1)) {
-        workgroupCreated = createWorkgroup("workgroup " + user.getUserDetails().getUsername(), addMemberSet, run, period);
+      if ((params.getWorkgroupToId() != null) && (params.getWorkgroupToId().intValue() == -1)) {
+        workgroupCreated = createWorkgroup("workgroup " + user.getUserDetails().getUsername(),
+            addMemberSet, run, period);
       }
     } else {
       toGroup = params.getWorkgroupTo();
@@ -166,8 +170,11 @@ public class WorkgroupServiceImpl implements WorkgroupService {
 
   /**
    * Check if a user is in any workgroup for the run
-   * @param user the user
-   * @param run the run
+   *
+   * @param user
+   *               the user
+   * @param run
+   *               the run
    * @return whether the user is in a workgroup for the run
    */
   public boolean isUserInAnyWorkgroupForRun(User user, Run run) {
@@ -177,9 +184,13 @@ public class WorkgroupServiceImpl implements WorkgroupService {
 
   /**
    * Check if a user is in a specific workgroup for the run
-   * @param user the user
-   * @param run the run
-   * @param workgroup the workgroup
+   *
+   * @param user
+   *                    the user
+   * @param run
+   *                    the run
+   * @param workgroup
+   *                    the workgroup
    * @return whether the user is in the workgroup
    */
   public boolean isUserInWorkgroupForRun(User user, Run run, Workgroup workgroup) {
@@ -198,9 +209,13 @@ public class WorkgroupServiceImpl implements WorkgroupService {
 
   /**
    * Check if a user is in a workgroup besides the one provided for the run
-   * @param user the user
-   * @param run the run
-   * @param workgroup check if the user is in another workgroup besides this workgroup
+   *
+   * @param user
+   *                    the user
+   * @param run
+   *                    the run
+   * @param workgroup
+   *                    check if the user is in another workgroup besides this workgroup
    * @return whether the user is in another workgroup for the run
    */
   public boolean isUserInAnotherWorkgroupForRun(User user, Run run, Workgroup workgroup) {
@@ -222,6 +237,17 @@ public class WorkgroupServiceImpl implements WorkgroupService {
     groupService.removeMembers(workgroup.getPeriod(), members);
     groupService.addMembers(newPeriod, members);
     workgroup.setPeriod(newPeriod);
+    workgroupDao.save(workgroup);
+  }
+
+  public void addTag(Workgroup workgroup, Tag tag) {
+    workgroup.addTag(tag);
+    workgroupDao.save(workgroup);
+  }
+
+  @Override
+  public void removeTag(Workgroup workgroup, Tag tag) {
+    workgroup.getTags().removeIf(existingTag -> (existingTag.getId().equals(tag.getId())));
     workgroupDao.save(workgroup);
   }
 }
