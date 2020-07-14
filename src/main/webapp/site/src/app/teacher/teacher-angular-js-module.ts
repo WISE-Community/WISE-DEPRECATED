@@ -21,6 +21,7 @@ import { ProjectAssetService } from '../services/projectAssetService';
 import { StudentDataService } from '../../../../wise5/services/studentDataService';
 import { StudentStatusService } from '../../../../wise5/services/studentStatusService';
 import { SpaceService } from '../../../../wise5/services/spaceService';
+import { TeacherWebSocketService } from '../../../../wise5/services/teacherWebSocketService';
 
 @Component({template: ``})
 export class EmptyComponent {}
@@ -51,7 +52,8 @@ export class EmptyComponent {}
     StudentAssetService,
     StudentDataService,
     StudentStatusService,
-    TagService
+    TagService,
+    TeacherWebSocketService
   ],
   entryComponents: [
     MilestoneReportDataComponent
