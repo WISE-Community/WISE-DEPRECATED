@@ -22,6 +22,7 @@ class AuthoringToolController {
   projectId: number;
   projectTitle: string;
   runId: number;
+  runCode: string;
   showStepTools: boolean = false;
   showToolbar: boolean = true;
   views: any;
@@ -312,6 +313,7 @@ class AuthoringToolController {
     }
     this.projectId = this.ConfigService.getProjectId();
     this.runId = this.ConfigService.getRunId();
+    this.runCode = this.ConfigService.getRunCode();
     if (this.projectId) {
       this.projectTitle = this.ProjectService.getProjectTitle();
     } else {

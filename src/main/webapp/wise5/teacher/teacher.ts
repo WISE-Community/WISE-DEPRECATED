@@ -19,7 +19,7 @@ import 'ng-stomp';
 import 'angular-translate';
 import 'angular-translate-loader-partial';
 import '../components/animation/animationComponentModule';
-import AnnotationService from '../services/annotationService';
+import { AnnotationService } from '../services/annotationService';
 import '../components/audioOscillator/audioOscillatorComponentModule';
 import '../classroomMonitor/classroomMonitorComponents';
 import ClassroomMonitorController from '../classroomMonitor/classroomMonitorController';
@@ -68,7 +68,7 @@ import { StudentAssetService } from '../services/studentAssetService';
 import StudentDataService from '../services/studentDataService';
 import StudentGradingController from '../classroomMonitor/studentGrading/studentGradingController';
 import StudentProgressController from '../classroomMonitor/studentProgress/studentProgressController';
-import StudentStatusService from '../services/studentStatusService';
+import { StudentStatusService } from '../services/studentStatusService';
 import '../components/summary/summaryComponentModule';
 import '../components/table/tableComponentModule';
 import TeacherDataService from '../services/teacherDataService';
@@ -103,7 +103,7 @@ import NodeAuthoringController from '../authoringTool/node/nodeAuthoringControll
 import '../components/openResponse/openResponseAuthoringComponentModule';
 import '../components/outsideURL/outsideURLAuthoringComponentModule';
 import ProjectAssetController from '../authoringTool/asset/projectAssetController';
-import ProjectAssetService from '../services/projectAssetService';
+import { ProjectAssetService } from '../../site/src/app/services/projectAssetService';
 import ProjectController from '../authoringTool/project/projectController';
 import ProjectInfoController from '../authoringTool/info/projectInfoController';
 import RubricAuthoringController from '../authoringTool/rubric/rubricAuthoringController';
@@ -172,8 +172,8 @@ const teacherModule = angular
     'theme.notebook',
     'ui.router'])
   .service('AchievementService', AchievementService)
-  .service('AnnotationService', AnnotationService)
-  .service('AudioRecorderService', AudioRecorderService)
+  .factory('AnnotationService', downgradeInjectable(AnnotationService))
+  .factory('AudioRecorderService', downgradeInjectable(AudioRecorderService))
   .service('ComponentService', ComponentService)
   .factory('ConfigService', downgradeInjectable(ConfigService))
   .factory('CRaterService', downgradeInjectable(CRaterService))
@@ -183,12 +183,12 @@ const teacherModule = angular
   .service('NotebookService', NotebookService)
   .service('NotificationService', NotificationService)
   .factory('ProjectService', downgradeInjectable(TeacherProjectService))
-  .service('ProjectAssetService', ProjectAssetService)
+  .factory('ProjectAssetService', downgradeInjectable(ProjectAssetService))
   .factory('SessionService', downgradeInjectable(SessionService))
   .service('SpaceService', SpaceService)
   .factory('StudentAssetService', downgradeInjectable(StudentAssetService))
   .service('StudentDataService', StudentDataService)
-  .service('StudentStatusService', StudentStatusService)
+  .factory('StudentStatusService', downgradeInjectable(StudentStatusService))
   .factory('TagService', downgradeInjectable(TagService))
   .service('TeacherDataService', TeacherDataService)
   .service('TeacherWebSocketService', TeacherWebSocketService)

@@ -14,6 +14,11 @@ import { CRaterService } from '../../../../wise5/services/cRaterService';
 import { SessionService } from '../../../../wise5/services/sessionService';
 import { StudentAssetService } from '../../../../wise5/services/studentAssetService';
 import { TagService } from '../../../../wise5/services/tagService';
+import { AudioRecorderService } from '../../../../wise5/services/audioRecorderService';
+import { AnnotationService } from '../../../../wise5/services/annotationService';
+import { CommonModule } from '@angular/common';
+import { StudentStatusService } from '../../../../wise5/services/studentStatusService';
+import { ProjectAssetService } from '../services/projectAssetService';
 
 @Component({template: ``})
 export class EmptyComponent {}
@@ -25,18 +30,23 @@ export class EmptyComponent {}
   ],
   imports: [
     UpgradeModule,
+    CommonModule,
     RouterModule.forChild([
       {path: '**', component: EmptyComponent}
     ])
   ],
   providers: [
+    AnnotationService,
+    AudioRecorderService,
     UtilService,
     ConfigService,
     CRaterService,
+    ProjectAssetService,
     TeacherProjectService,
     { provide: ProjectService, useExisting: TeacherProjectService },
     SessionService,
     StudentAssetService,
+    StudentStatusService,
     TagService
   ],
   entryComponents: [

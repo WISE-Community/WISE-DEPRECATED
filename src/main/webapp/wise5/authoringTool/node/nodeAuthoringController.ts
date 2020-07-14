@@ -3,7 +3,7 @@
 import { TeacherProjectService } from '../../services/teacherProjectService';
 import { ConfigService } from '../../services/configService';
 import NodeService from '../../services/nodeService';
-import ProjectAssetService from '../../services/projectAssetService';
+import { ProjectAssetService } from '../../../site/src/app/services/projectAssetService';
 import TeacherDataService from '../../services/teacherDataService';
 import { UtilService } from '../../services/utilService';
 import * as angular from 'angular';
@@ -1445,7 +1445,7 @@ class NodeAuthoringController {
             }
             transition.criteria = [];
             const criterion = {
-              name: 'tag',
+              name: 'hasTag',
               params: {
                 tag: this.TagService.getNextAvailableTag()
               }

@@ -1,4 +1,4 @@
-import { Component, ContentChild, Input, OnInit, TemplateRef, ViewEncapsulation } from '@angular/core';
+import { Component, ContentChild, Input, OnInit, TemplateRef, ViewEncapsulation, ViewChild, ElementRef } from '@angular/core';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 
 @Component({
@@ -7,20 +7,28 @@ import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
   styleUrls: ['./hero-section.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
-export class HeroSectionComponent implements OnInit {
+export class HeroSectionComponent {
 
   @Input()
   imgSrc: string;
 
   @Input()
+  imgDescription: string;
+
+  @Input()
+  imgSources: Object;
+
+  @Input()
   headline: string;
 
-  @ContentChild('headlineTemplate', {static:false}) headlineRef: TemplateRef<any>;
+  @ContentChild('headlineTemplate', { static: false }) headlineRef: TemplateRef<any>;
 
   @Input()
   tagline: string;
 
-  @ContentChild('taglineTemplate', {static:false}) taglineRef: TemplateRef<any>;
+  @ContentChild('taglineTemplate', { static: false }) taglineRef: TemplateRef<any>;
+
+  @ViewChild('bgRef') bgRef: ElementRef;
 
   bgStyle: SafeStyle;
 
@@ -28,8 +36,10 @@ export class HeroSectionComponent implements OnInit {
     this.sanitizer = sanitizer;
   }
 
-  ngOnInit() {
-    this.bgStyle = this.getBgStyle();
+  ngAfterViewInit() {
+    this.bgRef.nativeElement.onload = () => {
+      this.bgStyle = this.getBgStyle();
+    }
   }
 
   /**
@@ -37,7 +47,7 @@ export class HeroSectionComponent implements OnInit {
    * @returns {SafeStyle}
    */
   getBgStyle(): SafeStyle {
-    const STYLE = `url(${this.imgSrc})`;
-    return this.sanitizer.bypassSecurityTrustStyle(STYLE);
+    const style: string = `url(${this.bgRef.nativeElement.currentSrc})`;
+    return this.sanitizer.bypassSecurityTrustStyle(style);
   }
 }

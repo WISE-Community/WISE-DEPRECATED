@@ -1,9 +1,9 @@
 'use strict';
 
-import AnnotationService from '../../../../services/annotationService';
+import { AnnotationService } from '../../../../services/annotationService';
 import { ConfigService } from '../../../../services/configService';
 import NotificationService from '../../../../services/notificationService';
-import StudentStatusService from '../../../../services/studentStatusService';
+import { StudentStatusService } from '../../../../services/studentStatusService';
 import TeacherDataService from '../../../../services/teacherDataService';
 import TeacherWebSocketService from '../../../../services/teacherWebSocketService';
 import * as $ from 'jquery';

@@ -1,6 +1,6 @@
 'use strict';
 
-import StudentStatusService from '../../../../services/studentStatusService';
+import { StudentStatusService } from '../../../../services/studentStatusService';
 import TeacherDataService from '../../../../services/teacherDataService';
 import { TeacherProjectService } from '../../../../services/teacherProjectService';
 

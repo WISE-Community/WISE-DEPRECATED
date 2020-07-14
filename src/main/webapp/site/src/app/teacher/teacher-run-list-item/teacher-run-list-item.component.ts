@@ -3,7 +3,6 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { SafeStyle } from '@angular/platform-browser';
 import { TeacherRun } from "../teacher-run";
 import { ConfigService } from "../../services/config.service";
-import { I18n } from '@ngx-translate/i18n-polyfill';
 import { flash } from '../../animations';
 import { Router } from '@angular/router';
 
@@ -29,7 +28,6 @@ export class TeacherRunListItemComponent implements OnInit {
   constructor(private sanitizer: DomSanitizer,
               private configService: ConfigService,
               private router: Router,
-              private i18n: I18n,
               private elRef: ElementRef) {
     this.sanitizer = sanitizer;
   }
@@ -79,7 +77,7 @@ export class TeacherRunListItemComponent implements OnInit {
     const length = this.run.periods.length;
     for (let p = 0; p < length; p++) {
       if (p === 0) {
-        string = this.i18n('Class Periods:') + ' ';
+        string = $localize`Class Periods:` + ' ';
       }
       string += this.run.periods[p];
       if (p < length - 1) {

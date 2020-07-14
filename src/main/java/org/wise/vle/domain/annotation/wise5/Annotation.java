@@ -24,6 +24,8 @@
 package org.wise.vle.domain.annotation.wise5;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import lombok.Getter;
 import lombok.Setter;
 import org.json.JSONException;
@@ -42,38 +44,44 @@ import javax.persistence.*;
 import java.sql.Timestamp;
 
 /**
- * WISE5 Annotation Domain Object
- * Annotations are what users annotate on other user's work, such as Comments, Scores, Flags.
+ * WISE5 Annotation Domain Object Annotations are what users annotate on other user's work, such as
+ * Comments, Scores, Flags.
+ * 
  * @author Hiroki Terashima
  */
 @Entity(name = "wise5Annotation")
-@Table(name = "annotations",  indexes = {
-  @Index(columnList = "runId", name = "annotationsRunIdIndex"),
-  @Index(columnList = "toWorkgroupId", name = "annotationsToWorkgroupIdIndex")})
+@Table(name = "annotations", indexes = {
+    @Index(columnList = "runId", name = "annotationsRunIdIndex"),
+    @Index(columnList = "toWorkgroupId", name = "annotationsToWorkgroupIdIndex") })
 @Getter
 @Setter
+@JsonSerialize(using = AnnotationSerializer.class)
 public class Annotation extends PersistableDomain {
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Integer id = null;
 
-  @ManyToOne(targetEntity = RunImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
+  @ManyToOne(targetEntity = RunImpl.class, cascade = {
+      CascadeType.PERSIST }, fetch = FetchType.LAZY)
   @JoinColumn(name = "runId", nullable = false)
   @JsonIgnore
   private Run run;
 
-  @ManyToOne(targetEntity = PersistentGroup.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
+  @ManyToOne(targetEntity = PersistentGroup.class, cascade = {
+      CascadeType.PERSIST }, fetch = FetchType.LAZY)
   @JoinColumn(name = "periodId", nullable = false)
   @JsonIgnore
   private Group period;
 
-  @ManyToOne(targetEntity = WorkgroupImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
+  @ManyToOne(targetEntity = WorkgroupImpl.class, cascade = {
+      CascadeType.PERSIST }, fetch = FetchType.LAZY)
   @JoinColumn(name = "fromWorkgroupId", nullable = true)
   @JsonIgnore
   private Workgroup fromWorkgroup;
 
-  @ManyToOne(targetEntity = WorkgroupImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
+  @ManyToOne(targetEntity = WorkgroupImpl.class, cascade = {
+      CascadeType.PERSIST }, fetch = FetchType.LAZY)
   @JoinColumn(name = "toWorkgroupId", nullable = false)
   @JsonIgnore
   private Workgroup toWorkgroup;
@@ -84,7 +92,8 @@ public class Annotation extends PersistableDomain {
   @Column(name = "componentId", length = 30, nullable = true)
   private String componentId;
 
-  @ManyToOne(targetEntity = StudentWork.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
+  @ManyToOne(targetEntity = StudentWork.class, cascade = {
+      CascadeType.PERSIST }, fetch = FetchType.LAZY)
   @JoinColumn(name = "studentWorkId", nullable = true)
   @JsonIgnore
   private StudentWork studentWork;
@@ -92,7 +101,8 @@ public class Annotation extends PersistableDomain {
   @Column(name = "localNotebookItemId", length = 30, nullable = true)
   private String localNotebookItemId;
 
-  @ManyToOne(targetEntity = NotebookItem.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
+  @ManyToOne(targetEntity = NotebookItem.class, cascade = {
+      CascadeType.PERSIST }, fetch = FetchType.LAZY)
   @JoinColumn(name = "notebookItemId", nullable = true)
   private NotebookItem notebookItem;
 

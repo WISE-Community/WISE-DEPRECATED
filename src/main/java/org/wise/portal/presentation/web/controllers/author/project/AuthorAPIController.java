@@ -318,9 +318,9 @@ public class AuthorAPIController {
         projectMap.put("name", project.getName());
         String projectIdString = project.getId().toString();
         Long projectId = new Long(projectIdString);
-        Long runId = getRunId(projectId, runsOwnedByUser);
-        if (runId != null) {
-          projectMap.put("runId", runId);
+        Run run = getRun(projectId, runsOwnedByUser);
+        if (run != null) {
+          projectMap.put("runId", run.getId());
         }
         if (project.isDeleted()) {
           projectMap.put("isDeleted", true);
@@ -340,9 +340,9 @@ public class AuthorAPIController {
         projectMap.put("name", project.getName());
         String projectIdString = project.getId().toString();
         Long projectId = new Long(projectIdString);
-        Long runId = getRunId(projectId, sharedRuns);
-        if (runId != null) {
-          projectMap.put("runId", runId);
+        Run run = getRun(projectId, sharedRuns);
+        if (run != null) {
+          projectMap.put("runId", run.getId());
         }
         if (projectService.canAuthorProject(project, user)) {
           projectMap.put("canEdit", true);
@@ -411,23 +411,24 @@ public class AuthorAPIController {
       Run projectRun = projectRuns.get(0);
       config.put("canGradeStudentWork", runService.isAllowedToGradeStudentWork(projectRun, user));
       config.put("runId", projectRun.getId());
+      config.put("runCode", projectRun.getRuncode());
     }
     return config;
   }
 
   /**
-   * Get the run id that uses the project id
+   * Get the run that uses the project id
    *
    * @param projectId
    *                    the project id
    * @param runs
    *                    list of runs to look in
-   * @returns the run id that uses the project if the project is used in a run
+   * @returns the run that uses the project if the project is used in a run
    */
-  private Long getRunId(Long projectId, List<Run> runs) {
+  private Run getRun(Long projectId, List<Run> runs) {
     for (Run run : runs) {
       if (run.getProject().getId().equals(projectId)) {
-        return run.getId();
+        return run;
       }
     }
     return null;

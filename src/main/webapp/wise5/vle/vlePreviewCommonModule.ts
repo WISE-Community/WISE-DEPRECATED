@@ -1,5 +1,3 @@
-'use strict';
-
 import '../lib/jquery/jquery-global';
 import '../lib/bootstrap/js/bootstrap.min'
 import AchievementService from '../services/achievementService';
@@ -18,8 +16,9 @@ import 'angular-translate-loader-partial';
 import 'angular-ui-router';
 import 'angular-ui-scrollpoint';
 import '../components/animation/animationComponentModule';
-import AnnotationService from '../services/annotationService';
+import { AnnotationService } from '../services/annotationService';
 import '../components/audioOscillator/audioOscillatorComponentModule';
+import { AudioRecorderService } from '../services/audioRecorderService';
 import * as canvg from 'canvg';
 import '../components/conceptMap/conceptMapComponentModule';
 import { ConfigService } from '../services/configService';
@@ -33,9 +32,9 @@ import * as fabric from 'fabric';
 window['fabric'] = fabric.fabric
 import Filters from '../filters/filters';
 import '../lib/highcharts/highcharts-ng';
-import * as Highcharts from '../../wise5/lib/highcharts/highcharts.src';
-import '../../wise5/lib/draggable-points/draggable-points';
-import * as HighchartsExporting from '../../wise5/lib/highcharts-exporting@4.2.1';
+import * as Highcharts from '../lib/highcharts/highcharts.src';
+import '../lib/draggable-points/draggable-points';
+import * as HighchartsExporting from '../lib/highcharts-exporting@4.2.1';
 import * as covariance from 'compute-covariance';
 window['Highcharts'] = Highcharts;
 window['HighchartsExporting'] = HighchartsExporting;
@@ -59,8 +58,7 @@ import { SessionService } from '../services/sessionService';
 import './studentAsset/studentAsset';
 import { StudentAssetService } from '../services/studentAssetService';
 import StudentDataService from '../services/studentDataService';
-import StudentStatusService from '../services/studentStatusService';
-import StudentWebSocketService from '../services/studentWebSocketService';
+import { StudentWebSocketService } from '../services/studentWebSocketService';
 import '../components/summary/summaryComponentModule';
 import '../components/table/tableComponentModule';
 import { TagService } from '../services/tagService';
@@ -75,12 +73,11 @@ window['Stomp'] = StompJS.Stomp;
 import '../lib/summernote/dist/summernote.min';
 import '../lib/angular-summernote/dist/angular-summernote.min';
 import '../lib/summernoteExtensions/summernote-ext-addNote.js';
-import '../lib/summernoteExtensions/summernote-ext-print.js'
+import '../lib/summernoteExtensions/summernote-ext-print.js';
 import '../themes/default/theme';
-import { AudioRecorderService } from '../services/audioRecorderService';
 
-export default angular
-  .module('preview', [
+export function createModule(type = 'preview') {
+  return angular.module(type, [
     angularDragula(angular),
     'angularMoment',
     'angular-toArrayFilter',
@@ -116,8 +113,8 @@ export default angular
     'ui.scrollpoint'
   ])
   .service('AchievementService', AchievementService)
-  .service('AnnotationService', AnnotationService)
-  .service('AudioRecorderService', AudioRecorderService)
+  .factory('AnnotationService', downgradeInjectable(AnnotationService))
+  .factory('AudioRecorderService', downgradeInjectable(AudioRecorderService))
   .factory('ConfigService', downgradeInjectable(ConfigService))
   .service('ComponentService', ComponentService)
   .factory('CRaterService', downgradeInjectable(CRaterService))
@@ -129,16 +126,14 @@ export default angular
   .factory('SessionService', downgradeInjectable(SessionService))
   .factory('StudentAssetService', downgradeInjectable(StudentAssetService))
   .service('StudentDataService', StudentDataService)
-  .service('StudentStatusService', StudentStatusService)
-  .service('StudentWebSocketService', StudentWebSocketService)
   .factory('TagService', downgradeInjectable(TagService))
+  .factory('StudentWebSocketService', downgradeInjectable(StudentWebSocketService))
   .factory('UtilService', downgradeInjectable(UtilService))
   .controller('NavigationController', NavigationController)
   .controller('NodeController', NodeController)
   .controller('VLEController', VLEController)
   .filter('Filters', Filters)
   .config([
-    '$urlRouterProvider',
     '$stateProvider',
     '$translateProvider',
     '$translatePartialLoaderProvider',
@@ -146,25 +141,20 @@ export default angular
     '$locationProvider',
     '$mdThemingProvider',
     '$httpProvider',
-    '$injector',
-    '$provide',
     (
-      $urlRouterProvider,
       $stateProvider,
       $translateProvider,
       $translatePartialLoaderProvider,
       $controllerProvider,
       $locationProvider,
       $mdThemingProvider,
-      $httpProvider,
-      $injector,
-      $provide
+      $httpProvider
     ) => {
-      angular.module('preview').$controllerProvider = $controllerProvider;
+      angular.module(type).$controllerProvider = $controllerProvider;
       $locationProvider.html5Mode(true);
       $stateProvider
         .state('root', {
-          url: '/preview',
+          url: type === 'preview' ? '/preview' : '/student',
           abstract: true,
           resolve: {
             config: [
@@ -187,14 +177,18 @@ export default angular
           controller: 'VLEController',
           controllerAs: 'vleController'
         })
-        .state('root.preview', {
-          url: '/unit/:projectId',
+        .state(type === 'preview' ? 'root.preview' : 'root.run', {
+          url: type === 'preview' ? '/unit/:projectId' : '/unit/:runId',
           resolve: {
             config: [
               'ConfigService',
               '$stateParams',
               (ConfigService, $stateParams) => {
-                return ConfigService.retrieveConfig(`/config/preview/${$stateParams.projectId}`);
+                if (type === 'preview') {
+                  return ConfigService.retrieveConfig(`/config/preview/${$stateParams.projectId}`);
+                } else {
+                  return ConfigService.retrieveConfig(`/config/studentRun/${$stateParams.runId}`);
+                }
               }
             ],
             project: [
@@ -208,7 +202,8 @@ export default angular
               'StudentDataService',
               'config',
               'project',
-              (StudentDataService, config, project) => {
+              'tags',
+              (StudentDataService, config, project, tags) => {
                 return StudentDataService.retrieveStudentData();
               }
             ],
@@ -245,11 +240,27 @@ export default angular
                 return AchievementService.retrieveStudentAchievements();
               }
             ],
+            notifications: [
+              'NotificationService',
+              'studentData',
+              'config',
+              'project',
+              (NotificationService, studentData, config, project) => {
+                return NotificationService.retrieveNotifications();
+              }
+            ],
             runStatus: [
               'StudentDataService',
               'config',
               (StudentDataService, config) => {
                 return StudentDataService.retrieveRunStatus();
+              }
+            ],
+            tags: [
+              'TagService',
+              'config',
+              (TagService, config) => {
+                return TagService.retrieveStudentTags().toPromise();
               }
             ],
             webSocket: [
@@ -288,7 +299,7 @@ export default angular
             }
           }
         })
-        .state('root.preview.node', {
+        .state(type === 'preview' ? 'root.preview.node' : 'root.run.node', {
           url: '/:nodeId',
           views: {
             nodeView: {
@@ -309,15 +320,7 @@ export default angular
         })
         .state("sink", {
           url: "/*path",
-          template: "",
-          resolve: {
-            config: [
-              'ConfigService',
-              ConfigService => {
-                return ConfigService.retrieveConfig(`/config/vle`);
-              }
-            ]
-          }
+          template: ""
         });
 
       $httpProvider.interceptors.push('HttpInterceptor');
@@ -428,3 +431,4 @@ export default angular
       });
     }
   ]);
+}

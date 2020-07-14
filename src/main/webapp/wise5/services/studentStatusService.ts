@@ -1,20 +1,21 @@
-class StudentStatusService {
-  constructor(
-      $http,
-      AnnotationService,
-      ConfigService,
-      ProjectService) {
-    this.$http = $http;
-    this.AnnotationService = AnnotationService;
-    this.ConfigService = ConfigService;
-    this.ProjectService = ProjectService;
-    this.studentStatuses = null;
+import { Injectable } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { AnnotationService } from "./annotationService";
+import ConfigService from "./configService";
+import { ProjectService } from "./projectService";
+
+@Injectable()
+export class StudentStatusService {
+  studentStatuses = [];
+
+  constructor(private http: HttpClient, private AnnotationService: AnnotationService,
+      private ConfigService: ConfigService, private ProjectService: ProjectService) {
   }
 
   retrieveStudentStatuses() {
     this.studentStatuses = [];
-    const studentStatusURL = `/api/teacher/run/${this.ConfigService.getRunId()}/student-status`;
-    return this.$http.get(studentStatusURL).then(({ data: studentStatuses }) => {
+    return this.http.get(`/api/teacher/run/${this.ConfigService.getRunId()}/student-status`)
+        .toPromise().then((studentStatuses: any) => {
       for (const studentStatus of studentStatuses) {
         const parsedStatus = JSON.parse(studentStatus.status)
         parsedStatus.postTimestamp = studentStatus.timestamp;
@@ -348,12 +349,3 @@ class StudentStatusService {
     return maxScore;
   }
 }
-
-StudentStatusService.$inject = [
-  '$http',
-  'AnnotationService',
-  'ConfigService',
-  'ProjectService'
-];
-
-export default StudentStatusService;

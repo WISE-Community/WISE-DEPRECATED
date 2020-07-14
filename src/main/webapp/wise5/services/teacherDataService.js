@@ -155,12 +155,8 @@ class TeacherDataService {
   }
 
   retrieveNotebookExport(exportType) {
-    const httpParams = {
-      method: 'GET',
-      url: this.getExportURL(this.ConfigService.getRunId(), exportType),
-      params: {}
-    };
-    return this.$http(httpParams).then(result => {
+    return this.$http.get(`/teacher/notebook/run/${this.ConfigService.getRunId()}`,
+        {params:{exportType:exportType}}).then(result => {
       return result.data;
     });
   }

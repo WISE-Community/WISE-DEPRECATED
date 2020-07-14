@@ -1,6 +1,6 @@
 {
   "name": "wise",
-  "version": "5.12.0",
+  "version": "5.13.1",
   "description": "Web-based Inquiry Science Environment",
   "main": "app.js",
   "browserslist": [
@@ -23,7 +23,6 @@
     "@angular/platform-browser-dynamic": "^9.0.0",
     "@angular/router": "^9.0.0",
     "@angular/upgrade": "^9.0.0",
-    "@ngx-translate/i18n-polyfill": "^1.0.0",
     "@stomp/stompjs": "^5.4.4",
     "angular": "1.7.9",
     "angular-animate": "1.7.8",
@@ -55,7 +54,7 @@
     "hopscotch": "^0.3.1",
     "html2canvas": "^0.5.0-beta4",
     "iframe-resizer": "^3.5.3",
-    "jquery": "^3.5.0",
+    "jquery": "3.4.1",
     "jsdom": "^15.2.1",
     "moment": "^2.24.0",
     "ng-file-upload": "^12.0.4",
@@ -135,7 +134,11 @@
   "scripts": {
     "build-dev": "node node_modules/concurrently/bin/concurrently.js \"ng build wise --watch\" \"ng test --source-map=false --karma-config src/main/webapp/site/karma.conf.js --browsers ChromeHeadlessNoSandbox\"",
     "build-prod": "node --max_old_space_size=4096 ./node_modules/@angular/cli/bin/ng build wise --configuration=production",
+    "build-prod-es": "node --max_old_space_size=4096 ./node_modules/@angular/cli/bin/ng build wise --configuration=production-es",
+    "build-prod-pt": "node --max_old_space_size=4096 ./node_modules/@angular/cli/bin/ng build wise --configuration=production-pt",
+    "build-prod-tr": "node --max_old_space_size=4096 ./node_modules/@angular/cli/bin/ng build wise --configuration=production-tr",
     "build-prod-hans": "node --max_old_space_size=4096 ./node_modules/@angular/cli/bin/ng build wise --configuration=production-zh-Hans",
+    "build-prod-hant": "node --max_old_space_size=4096 ./node_modules/@angular/cli/bin/ng build wise --configuration=production-zh-Hant",
     "bundle-report": "node ./node_modules/webpack-bundle-analyzer/lib/bin/analyzer.js src/main/webapp/site/dist/stats.json",
     "watch-all-wise5": "node node_modules/concurrently/bin/concurrently.js \"node ./node_modules/gulp/bin/gulp.js\" \"npm run test-wise5-watch\"",
     "watch-sass": "npm rebuild node-sass && node ./node_modules/gulp/bin/gulp.js",
@@ -144,7 +147,7 @@
     "test": "ng test wise --source-map=false --karma-config src/main/webapp/site/karma.conf.js --browsers ChromeHeadlessNoSandbox --watch=false",
     "test-e2e-comment": "test-e2e assumes wise is already running.",
     "test-e2e": "node ./node_modules/protractor/bin/protractor src/main/webapp/wise5/test-e2e/conf.js",
-    "locale-extractor": "./node_modules/.bin/ngx-extractor -i \"src/main/webapp/site/**/*.ts\" -o src/main/webapp/site/src/messages.xlf"
+    "extract-i18n": "ng xi18n && ./merge-messages.sh"
   },
   "repository": {
     "type": "git",
