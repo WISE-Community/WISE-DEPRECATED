@@ -124,37 +124,34 @@ class TopBarController {
     }
   }
 
+  previewProject() {
+    this.saveEvent('projectPreviewed').then(() => {
+      window.open(
+        `${this.ConfigService.getConfigParam('previewProjectURL')}`
+      );
+    });
+  }
+
   goHome() {
-    var context = 'ClassroomMonitor';
-    var nodeId = null;
-    var componentId = null;
-    var componentType = null;
-    var category = 'Navigation';
-    var event = 'goHomeButtonClicked';
-    var eventData = {};
-    this.TeacherDataService.saveEvent(
-      context,
-      nodeId,
-      componentId,
-      componentType,
-      category,
-      event,
-      eventData,
-      null
-    );
-    this.SessionService.goHome();
+    this.saveEvent('goHomeButtonClicked').then(() => {
+      this.SessionService.goHome();
+    });
   }
 
   logOut() {
+    this.saveEvent('logOutButtonClicked').then(() => {
+      this.SessionService.logOut();
+    });
+  }
+
+  saveEvent(eventName): any {
     const context = 'ClassroomMonitor';
     const category = 'Navigation';
-    const eventName = 'logOutButtonClicked';
     const nodeId = null;
     const componentId = null;
     const componentType = null;
     const data = {};
-    const projectId = null;
-    this.TeacherDataService.saveEvent(
+    return this.TeacherDataService.saveEvent(
       context,
       nodeId,
       componentId,
@@ -162,9 +159,9 @@ class TopBarController {
       category,
       eventName,
       data,
-      projectId
+      this.projectId
     ).then((result) => {
-      this.SessionService.logOut();
+      return result;
     });
   }
 }
@@ -196,6 +193,10 @@ const TopBar = {
                   <md-button ng-if="$ctrl.canAuthorProject" aria-label="{{ ::'switchToAuthoringView' | translate }}" class="md-icon-button" ng-click="$ctrl.switchToAuthoringView()">
                       <md-icon md-menu-origin> edit </md-icon>
                       <md-tooltip>{{ ::'switchToAuthoringView' | translate }}</md-tooltip>
+                  </md-button>
+                  <md-button aria-label="{{ ::'previewProject' | translate }}" class="md-icon-button" ng-click="$ctrl.previewProject()">
+                      <md-icon md-menu-origin> visibility </md-icon>
+                      <md-tooltip>{{ ::'previewProject' | translate }}</md-tooltip>
                   </md-button>
                 </h3>
                 <span flex></span>
