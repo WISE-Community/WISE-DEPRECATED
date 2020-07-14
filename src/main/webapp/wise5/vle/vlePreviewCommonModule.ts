@@ -260,7 +260,11 @@ export function createModule(type = 'preview') {
               'TagService',
               'config',
               (TagService, config) => {
-                return TagService.retrieveStudentTags().toPromise();
+                if (type === 'preview') {
+                  return {};
+                } else {
+                  return TagService.retrieveStudentTags().toPromise();
+                }
               }
             ],
             webSocket: [
