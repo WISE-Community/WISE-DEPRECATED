@@ -2,7 +2,7 @@
 
 import { ConfigService } from '../../services/configService';
 import { AuthoringToolProjectService } from '../authoringToolProjectService';
-import SpaceService from '../../services/spaceService';
+import { SpaceService } from '../../services/spaceService';
 import { UtilService } from '../../services/utilService';
 
 class AuthorNotebookController {
