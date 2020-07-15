@@ -1,5 +1,5 @@
 import * as angular from 'angular';
-import ComponentService from '../componentService';
+import { ComponentService } from '../componentService';
 import { ConfigService } from '../../services/configService';
 import { StudentAssetService } from '../../services/studentAssetService';
 import ConceptMapNode from './conceptMapNode';
@@ -10,6 +10,7 @@ class ConceptMapService extends ComponentService {
   $location: any;
   $q: any;
   $timeout: any;
+  $translate: any;
   ConfigService: ConfigService;
   StudentAssetService: StudentAssetService;
 
@@ -36,13 +37,14 @@ class ConceptMapService extends ComponentService {
     StudentDataService,
     UtilService
   ) {
-    super($filter, StudentDataService, UtilService);
+    super(StudentDataService, UtilService);
     this.$anchorScroll = $anchorScroll;
     this.$location = $location;
     this.$q = $q;
     this.$timeout = $timeout;
     this.ConfigService = ConfigService;
     this.StudentAssetService = StudentAssetService;
+    this.$translate = $filter('translate');
   }
 
   getComponentTypeLabel() {

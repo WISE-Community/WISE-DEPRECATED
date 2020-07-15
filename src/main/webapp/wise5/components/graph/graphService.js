@@ -1,10 +1,11 @@
-import ComponentService from '../componentService';
+import { ComponentService } from '../componentService';
 import * as html2canvas from 'html2canvas';
 
 class GraphService extends ComponentService {
   constructor($filter, $q, StudentAssetService, StudentDataService, UtilService) {
-    super($filter, StudentDataService, UtilService);
+    super(StudentDataService, UtilService);
     this.$q = $q;
+    this.$translate = $filter('translate');
     this.StudentAssetService = StudentAssetService;
   }
 

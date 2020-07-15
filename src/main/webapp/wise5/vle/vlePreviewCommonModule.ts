@@ -24,7 +24,7 @@ import '../components/conceptMap/conceptMapComponentModule';
 import { ConfigService } from '../services/configService';
 import { CRaterService } from '../services/cRaterService';
 import '../directives/components';
-import ComponentService from '../components/componentService';
+import { ComponentService } from '../components/componentService';
 import '../components/discussion/discussionComponentModule';
 import '../components/draw/drawComponentModule';
 import '../components/embedded/embeddedComponentModule';
@@ -116,7 +116,7 @@ export function createModule(type = 'preview') {
   .factory('AnnotationService', downgradeInjectable(AnnotationService))
   .factory('AudioRecorderService', downgradeInjectable(AudioRecorderService))
   .factory('ConfigService', downgradeInjectable(ConfigService))
-  .service('ComponentService', ComponentService)
+  .factory('ComponentService', downgradeInjectable(ComponentService))
   .factory('CRaterService', downgradeInjectable(CRaterService))
   .service('HttpInterceptor', HttpInterceptor)
   .service('NodeService', NodeService)

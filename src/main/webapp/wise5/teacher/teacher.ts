@@ -27,7 +27,7 @@ import '../components/conceptMap/conceptMapComponentModule';
 import { ConfigService } from '../services/configService';
 import { CRaterService } from '../services/cRaterService';
 import '../directives/components';
-import ComponentService from '../components/componentService';
+import { ComponentService } from '../components/componentService';
 import '../classroomMonitor/dashboard/dashboardController';
 import DataExportController from '../classroomMonitor/dataExport/dataExportController';
 import ExportController from '../classroomMonitor/dataExport/exportController';
@@ -174,7 +174,7 @@ const teacherModule = angular
   .service('AchievementService', AchievementService)
   .factory('AnnotationService', downgradeInjectable(AnnotationService))
   .factory('AudioRecorderService', downgradeInjectable(AudioRecorderService))
-  .service('ComponentService', ComponentService)
+  .factory('ComponentService', downgradeInjectable(ComponentService))
   .factory('ConfigService', downgradeInjectable(ConfigService))
   .factory('CRaterService', downgradeInjectable(CRaterService))
   .service('HttpInterceptor', HttpInterceptor)

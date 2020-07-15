@@ -1,14 +1,18 @@
-class ComponentService {
-  $filter: any;
-  $translate: any;
-  StudentDataService: any;
-  UtilService: any;
+'use strict';
+
+import { Injectable } from '@angular/core';
+import { StudentDataService } from "../services/studentDataService";
+import { UtilService } from "../services/utilService";
+
+@Injectable()
+export class ComponentService {
   
-  constructor($filter, StudentDataService, UtilService) {
-    this.$filter = $filter;
+  constructor(
+    protected StudentDataService: StudentDataService, 
+    protected UtilService: UtilService
+  ) {
     this.StudentDataService = StudentDataService;
     this.UtilService = UtilService;
-    this.$translate = this.$filter('translate');
   }
 
   /**
@@ -109,5 +113,3 @@ class ComponentService {
     return false;
   }
 }
-
-export default ComponentService;

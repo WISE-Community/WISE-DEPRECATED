@@ -1,13 +1,15 @@
-import ComponentService from '../componentService';
+  import { ComponentService } from '../componentService';
 
 class OutsideURLService extends ComponentService {
   $http: any;
+  $translate: any;
 
   static $inject = ['$filter', '$http', 'StudentDataService', 'UtilService'];
 
   constructor($filter, $http, StudentDataService, UtilService) {
-    super($filter, StudentDataService, UtilService);
+    super(StudentDataService, UtilService);
     this.$http = $http;
+    this.$translate = $filter('translate');
   }
 
   getComponentTypeLabel() {
