@@ -2,7 +2,6 @@
 
 import ComponentController from '../componentController';
 import DiscussionService from './discussionService';
-import { StudentWebSocketService } from '../../services/studentWebSocketService';
 import NotificationService from '../../services/notificationService';
 
 class DiscussionController extends ComponentController {
@@ -10,7 +9,6 @@ class DiscussionController extends ComponentController {
   $q: any;
   DiscussionService: DiscussionService;
   NotificationService: NotificationService;
-  StudentWebSocketService: StudentWebSocketService;
   studentResponse: string;
   newResponse: string;
   classResponses: any[];
@@ -36,7 +34,6 @@ class DiscussionController extends ComponentController {
     'ProjectService',
     'StudentAssetService',
     'StudentDataService',
-    'StudentWebSocketService',
     'UtilService',
     '$mdMedia'
   ];
@@ -56,7 +53,6 @@ class DiscussionController extends ComponentController {
     ProjectService,
     StudentAssetService,
     StudentDataService,
-    StudentWebSocketService,
     UtilService,
     $mdMedia
   ) {
@@ -78,7 +74,6 @@ class DiscussionController extends ComponentController {
     this.$q = $q;
     this.DiscussionService = DiscussionService;
     this.NotificationService = NotificationService;
-    this.StudentWebSocketService = StudentWebSocketService;
     this.$mdMedia = $mdMedia;
     this.studentResponse = '';
     this.newResponse = '';
