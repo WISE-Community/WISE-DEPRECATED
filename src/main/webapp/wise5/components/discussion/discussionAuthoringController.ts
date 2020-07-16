@@ -20,7 +20,6 @@ class DiscussionAuthoringController extends DiscussionController {
     'ProjectService',
     'StudentAssetService',
     'StudentDataService',
-    'StudentWebSocketService',
     'UtilService',
     '$mdMedia'
   ];
@@ -40,7 +39,6 @@ class DiscussionAuthoringController extends DiscussionController {
     ProjectService,
     StudentAssetService,
     StudentDataService,
-    StudentWebSocketService,
     UtilService,
     $mdMedia
   ) {
@@ -59,7 +57,6 @@ class DiscussionAuthoringController extends DiscussionController {
       ProjectService,
       StudentAssetService,
       StudentDataService,
-      StudentWebSocketService,
       UtilService,
       $mdMedia
     );
