@@ -1,13 +1,15 @@
-import ComponentService from '../componentService';
+import { ComponentService } from '../componentService';
 
 class SummaryService extends ComponentService {
+  $translate: any;
   componentsWithScoresSummary: string[];
   componentsWithResponsesSummary: string[];
 
   static $inject = ['$filter', 'ConfigService', 'UtilService'];
 
   constructor($filter, ConfigService, UtilService) {
-    super($filter, ConfigService, UtilService);
+    super(ConfigService, UtilService);
+    this.$translate = $filter('translate');
     this.componentsWithScoresSummary = [
       'Animation',
       'AudioOscillator',

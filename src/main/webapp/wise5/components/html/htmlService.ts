@@ -1,10 +1,13 @@
-import ComponentService from '../componentService';
+import { ComponentService } from '../componentService';
 
 class HTMLService extends ComponentService {
+  $translate: any;
+
   static $inject = ['$filter', 'StudentDataService', 'UtilService'];
 
   constructor($filter, StudentDataService, UtilService) {
-    super($filter, StudentDataService, UtilService);
+    super(StudentDataService, UtilService);
+    this.$translate = $filter('translate');
   }
 
   getComponentTypeLabel() {
