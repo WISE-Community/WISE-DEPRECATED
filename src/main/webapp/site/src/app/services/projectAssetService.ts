@@ -74,7 +74,7 @@ export class ProjectAssetService {
   uploadAssets(files: any[]) {
     const url = this.ConfigService.getConfigParam('projectAssetURL');
     const formData = new FormData();
-    files.forEach((file: any) => formData.append('files', file));
+    files.forEach((file: any) => formData.append('files', file, file.name));
     return this.http.post(url, formData).pipe(
       map((data: any) => {
         this.setProjectAssets(data.assetDirectoryInfo);
