@@ -4892,7 +4892,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">31</context>
         </context-group>
-        <target state="needs-translation">Click on the "Add Unit" button at the top right of the <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>Student Home Page<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/>.</target>
+        <target state="translated">点击 <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>学生主页右上方的“添加单元”按钮<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/>。</target>
       </trans-unit>
       <trans-unit datatype="html" id="318e90549e03b7a6a6fc59f3253708f3b9ed94ce">
         <source>Enter the Access Code from your teacher.</source>
