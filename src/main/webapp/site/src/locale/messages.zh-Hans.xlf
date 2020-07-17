@@ -156,7 +156,7 @@
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
           <context context-type="linenumber">52</context>
         </context-group>
-        <target state="needs-translation">Powered by the <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>TELS Research Community<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/> and <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK_1"/>WISE Open Source Technology<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/>. Help us <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK_2"/>translate<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/> WISE!</target>
+        <target state="translated">由 <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>TELS 研究团队<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/> 和 <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK_1"/>WISE开源技术 <x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/>提供支持。帮助我们 <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK_2"/>翻译<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/> WISE!</target>
       </trans-unit>
       <trans-unit datatype="html" id="3e1904c6c60cfbdcfde26154fe8ed09b5ce0f9f4">
         <source>This material is based upon work supported by the National Science Foundation. Any opinions, findings, and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the National Science Foundation.</source>
@@ -204,7 +204,7 @@
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
           <context context-type="linenumber">90</context>
         </context-group>
-        <target state="needs-translation">©1996-<x equiv-text="{{time | amDateFormat:'YYYY'}}" id="INTERPOLATION"/>, <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>UC Berkeley<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/> | Web-based Inquiry Science Environment</target>
+        <target state="translated">1996-<x equiv-text="{{time | amDateFormat:'YYYY'}}" id="INTERPOLATION"/>, <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>加利福尼亚大学伯克利分校<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/> | 基于网络的科学探究学习环境</target>
       </trans-unit>
       <trans-unit datatype="html" id="470b3fb4b02529d4f9f25850711632271fd27508">
         <source>WISE header logo</source>
@@ -348,7 +348,7 @@
           <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
           <context context-type="linenumber">60</context>
         </context-group>
-        <target state="needs-translation">This account was created using Google and doesn't use a WISE password. If you would like to unlink your Google account, please <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>contact us<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/>.</target>
+        <target state="translated">此帐户使用谷歌账号创建，并且不使用 WISE 密码。如果您想取消您的Google账户链接，请 <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>联系我们<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/>。</target>
       </trans-unit>
       <trans-unit datatype="html" id="9df7621dfbe30a790903d461e721c9029627ff34">
         <source>Elicit Ideas</source>
@@ -684,7 +684,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">89</context>
         </context-group>
-        <target state="needs-translation">WISE units support the <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>Next Generation Science Standards (NGSS)<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/>, encourage <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK_1"/>3-dimensional learning<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/>, and can be adapted to address local standards.</target>
+        <target state="translated">WISE 课程支持 <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>下一代科学标准 (NGSS)<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/>， 促进 <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK_1"/>学生3个维度的全面发展<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/>，并可根据所在国家或地区的当地标准进行调整。</target>
       </trans-unit>
       <trans-unit datatype="html" id="6e15a0555bed4b010ba36febb47e87ff32616dd8">
         <source>Design Process &amp; Goals</source>
@@ -1052,7 +1052,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">151</context>
         </context-group>
-        <target state="needs-translation">WISE is <x ctype="x-strong" equiv-text="&lt;strong&gt;" id="START_TAG_STRONG"/>free<x ctype="x-strong" equiv-text="&lt;/strong&gt;" id="CLOSE_TAG_STRONG"/> and <x ctype="x-strong" equiv-text="&lt;strong&gt;" id="START_TAG_STRONG"/>open source<x ctype="x-strong" equiv-text="&lt;/strong&gt;" id="CLOSE_TAG_STRONG"/>! WISE subsists on generous support from the National Science Foundation, which means it's available to anyone with an internet connection. Driven by an active community of developers, WISE is continually being expanded and improved. Bring science inquiry into the classroom, the museum, the after-school, or the home-school environment!</target>
+        <target state="translated">WISE 是 <x ctype="x-strong" equiv-text="&lt;strong&gt;" id="START_TAG_STRONG"/>免费<x ctype="x-strong" equiv-text="&lt;/strong&gt;" id="CLOSE_TAG_STRONG"/> 和 <x ctype="x-strong" equiv-text="&lt;strong&gt;" id="START_TAG_STRONG"/>开源的<x ctype="x-strong" equiv-text="&lt;/strong&gt;" id="CLOSE_TAG_STRONG"/>！ WISE依靠国家科学基金会的慷慨资助，因此任何人都可以通过互联网使用。在活跃的开发者社区的推动下，WISE不断扩大和改进。 WISE将科学探究带入教室、博物馆、校外或家庭学校环境当中！</target>
       </trans-unit>
       <trans-unit datatype="html" id="4ad1e5cce5dbc999f93e23e6bc9fa28d9cbb0ee1">
         <source>WISE on student computer</source>
@@ -1236,7 +1236,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">25</context>
         </context-group>
-        <target state="needs-translation">Please read this document carefully. By using WISE you affirm that you have read, understood, and accepted the terms and conditions outlined here. If you do not agree with any of these conditions, please do not use WISE. If you have questions about this policy, please feel free to contact us using our <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>Contact Form<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/>.</target>
+        <target state="translated">请仔细阅读此文档。使用WISE就表明您已经阅读、理解并接受了这里列举的条款和条件。 如果您不同意这些条款和条件，请不要使用WISE。如果您对此政策有疑问，请随时使用我们的 <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>联系表单<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/> 联系我们。</target>
       </trans-unit>
       <trans-unit datatype="html" id="5403166a98d789195745d246a5135c0416d77fe2">
         <source>This policy was last updated on September 8, 2017.</source>
@@ -1920,7 +1920,7 @@
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
           <context context-type="linenumber">7</context>
         </context-group>
-        <target state="translated">1. 选择课时</target>
+        <target state="translated">1. 选择班级</target>
       </trans-unit>
       <trans-unit datatype="html" id="91272b78c905b6e7e35774c484eb61a33cd3dd12">
         <source>Add your own periods</source>
@@ -1928,7 +1928,7 @@
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
           <context context-type="linenumber">16</context>
         </context-group>
-        <target state="translated">添加您自己的课时</target>
+        <target state="translated">添加您自己的班级</target>
       </trans-unit>
       <trans-unit datatype="html" id="085c6f5a5f7c79b5d092d1f6411d1bfdc9eec6d0">
         <source>For "Period 9", just enter the number 9. Separate periods with commas (e.g. "Section 1, Section 2"). Manually named periods should be no more than 16 characters long. </source>
@@ -1936,7 +1936,7 @@
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
           <context context-type="linenumber">18</context>
         </context-group>
-        <target state="translated">对于"课时9"，只需输入数字9。用逗号分隔课时（例如“第1节，第2节”）。 手动命名课时名称时，名称的长度不应超过16个英文字符。 </target>
+        <target state="translated">用逗号分隔班级名称（例如“1班，2班”）。 对于"9班"，只需输入数字9。手动命名班级名称时，名称的长度不应超过16个英文字符。 </target>
       </trans-unit>
       <trans-unit datatype="html" id="6b0dd0933835c1e0d9e3ed4a19c8eb88a9df417b">
         <source>2. Choose Students Per Team</source>
@@ -2064,7 +2064,7 @@
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
           <context context-type="linenumber">76</context>
         </context-group>
-        <target state="translated">重要提示：每个课堂单元都有唯一的访问代码。 学生可使用此代码注册一个单元。 当学生首次注册WISE帐户时，请将代码提供给他们。 如果他们已经拥有WISE帐户，请让他们登录，然后从学生主页中选择"添加单元"。</target>
+        <target state="translated">重要提示：每个课堂单元都有唯一的访问代码。 学生可使用此代码注册一个单元。 当学生首次注册WISE帐户时，请将代码提供给他们。 如果他们已经拥有WISE帐户，请让他们登录，然后从学生主页中选择“添加单元”。</target>
       </trans-unit>
       <trans-unit datatype="html" id="f2069492a5ba2249fb5f24e59009120d73623289">
         <source>You can always find the Access Code for each classroom unit in your Class Schedule.</source>
@@ -3444,7 +3444,7 @@
           <context context-type="sourcefile">app/help/getting-started/getting-started.component.html</context>
           <context context-type="linenumber">7</context>
         </context-group>
-        <target state="needs-translation"> All users must create their own account. Teachers must create a teacher account and students must create a student account. Users can create an account by going to the <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>WISE Home Page<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/> and clicking on the <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK_1"/>Register<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/> link at the upper right of the screen. </target>
+        <target state="translated"> 所有用户都必须创建自己的帐户。 教师必须创建教师帐户，学生必须创建学生帐户。 用户可以在 <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>WISE 主页<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/>点击屏幕右上方的 <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK_1"/>注册<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/> 创建账户。 </target>
       </trans-unit>
       <trans-unit datatype="html" id="8667ecd04a352367c4c964c92a7763320d3f8946">
         <source>Here are instructions on how to create a teacher account.</source>
@@ -3624,7 +3624,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">30</context>
         </context-group>
-        <target state="translated">选择您将使用项目的课时</target>
+        <target state="translated">选择您将使用项目的班级</target>
       </trans-unit>
       <trans-unit datatype="html" id="6cc37950c100f636f42e53a6c5f988f65778ea7f">
         <source>Choose the number of students per team. Choosing 1-3 will allow students to work together in a team.</source>
@@ -3900,7 +3900,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">40</context>
         </context-group>
-        <target state="translated">WISE使学生注册变得简单直观 - 让学生进入WISE主页并点击右上角的"注册"链接可直接进入注册页面。 他们应该在10分钟或更短的时间内注册。 但是，您也可以选择预先注册所有学生，并在项目运行的第一天向他们提供用户名/密码的副本。</target>
+        <target state="translated">WISE让学生注册变得简单直观。让学生进入WISE主页并点击右上角的"注册"链接进入注册页面。 他们应该在10分钟或更短的时间内注册。 但是，您也可以选择事先注册所有学生，并在项目运行的第一天向他们提供用户名/密码。</target>
       </trans-unit>
       <trans-unit datatype="html" id="90a07f702eb512ee62bff7940263f760a401a538">
         <source>Once a student has created a WISE account they should never need to create another one.</source>
@@ -3940,7 +3940,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">48</context>
         </context-group>
-        <target state="translated">第二，鼓励学生自己解决问题。 告诉他们登陆WISE主页，单击忘记用户名/密码链接，然后单击学生按钮。 如果学生可以回答他们的安全问题（在注册时创建），他们就可以更改密码。</target>
+        <target state="translated">第二，鼓励学生自己解决问题。 告诉他们登陆WISE主页，单击“忘记用户名/密码”链接，然后单击“学生”按钮。 如果学生可以回答他们的安全问题（在注册时创建），他们就可以更改密码。</target>
       </trans-unit>
       <trans-unit datatype="html" id="467c00b97052f8105444837a01e9d2fa9b2bc6cc">
         <source>Third, if the student can't solve the problem directly, you can change their password for them using the instructions below.</source>
@@ -4080,7 +4080,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">79</context>
         </context-group>
-        <target state="translated">找出学生所在的课时。</target>
+        <target state="translated">找出学生所在的班级。</target>
       </trans-unit>
       <trans-unit datatype="html" id="94caa8f0ed38f74d051cf5bff5256123b00f480c">
         <source>Find the student and click "Change Password".</source>
@@ -4096,7 +4096,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">59</context>
         </context-group>
-        <target state="translated">或者，您可以更改当前课时所有学生的密码（新密码将应用于该课时的所有学生）。</target>
+        <target state="translated">或者，您可以更改当前班级所有学生的密码（新密码将作用于该班级的所有学生）。</target>
       </trans-unit>
       <trans-unit datatype="html" id="3444260f02adf2bf6ac230295ebd2beb0cf5780a">
         <source>How do I change a student team after they've started a project run?</source>
@@ -4160,7 +4160,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">73</context>
         </context-group>
-        <target state="translated">如何更改学生的所在的课时？</target>
+        <target state="translated">如何更改学生的所在的班级？</target>
       </trans-unit>
       <trans-unit datatype="html" id="a8b110d308f84783e8f7b8ec3f441206dbefc360">
         <source>Find the student.</source>
@@ -4176,7 +4176,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">81</context>
         </context-group>
-        <target state="translated">单击"课时"链接。</target>
+        <target state="translated">单击"班级"链接。</target>
       </trans-unit>
       <trans-unit datatype="html" id="53b4864816bce90f3e8063cad9dcf3e17ff0d6a8">
         <source>A popup will show up that will allow you to choose a different period for the student.</source>
@@ -4184,7 +4184,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">82</context>
         </context-group>
-        <target state="translated">这时将显示一个弹出窗口，允许您为学生选择不同的课时。</target>
+        <target state="translated">这时将显示一个弹出窗口，允许您为学生选择不同的班级。</target>
       </trans-unit>
       <trans-unit datatype="html" id="f353c2c7b347f7afe8c9531375d467d1a71ce91f">
         <source>Choose a different period.</source>
@@ -4192,7 +4192,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">83</context>
         </context-group>
-        <target state="translated">选择不同的课时。</target>
+        <target state="translated">选择不同的班级。</target>
       </trans-unit>
       <trans-unit datatype="html" id="d7f5dbf0fe2a5617bcb850bda0f3fa07a8d43b9e">
         <source>Click "Save Changes".</source>
@@ -4216,7 +4216,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">85</context>
         </context-group>
-        <target state="translated">如果您将学生转移到另一个课时，他将失去所有工作。</target>
+        <target state="translated">如果您将学生转移到另一个班级，他所做的所有工作都将丢失。</target>
       </trans-unit>
       <trans-unit datatype="html" id="bfe729cbf22d109dbf516f23ddff904b60f0b601">
         <source>I do not remember my teacher access code that students need to create their account for my new students.</source>
@@ -4344,7 +4344,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">120</context>
         </context-group>
-        <target state="translated">如何在创建运行后添加一个课时？</target>
+        <target state="translated">如何在创建运行后添加一个班级？</target>
       </trans-unit>
       <trans-unit datatype="html" id="154b39e56c182703eed32833f84f4e6f955cf89d">
         <source>On the run, click the three vertical dots to view the run options.</source>
@@ -4376,7 +4376,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">126</context>
         </context-group>
-        <target state="translated">在“添加新课时”字段中输入课时名称。</target>
+        <target state="translated">在“添加新班级”字段中输入班级名称。</target>
       </trans-unit>
       <trans-unit datatype="html" id="df671da9712c9c220f2219c80e8eb13d8c591d09">
         <source>Click "Add Period".</source>
@@ -4384,7 +4384,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">127</context>
         </context-group>
-        <target state="translated">单击"添加课时"。</target>
+        <target state="translated">单击"添加班级"。</target>
       </trans-unit>
       <trans-unit datatype="html" id="33b8b8009eda1df67d154a725b9cd11e690a5405">
         <source>How do I delete a period after creating a run?</source>
@@ -4392,7 +4392,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">129</context>
         </context-group>
-        <target state="translated">如何在创建运行后删除课时？</target>
+        <target state="translated">如何在创建运行后删除班级？</target>
       </trans-unit>
       <trans-unit datatype="html" id="bb7ab3ec40a26c50c521d920bb1d22eec80d5880">
         <source>Find the period you want to delete and click the "Delete" button next to it.</source>
@@ -4400,7 +4400,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">135</context>
         </context-group>
-        <target state="translated">找到要删除的课时，然后单击旁边的"删除"按钮。</target>
+        <target state="translated">找到想要删除的班级，然后单击旁边的"删除"按钮。</target>
       </trans-unit>
       <trans-unit datatype="html" id="10ea9b60d7c7d6dd481af2b5d1920d07f4e84cc5">
         <source>Note: You are not allowed to delete a period that has students in it.</source>
@@ -4408,7 +4408,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">136</context>
         </context-group>
-        <target state="translated">注意：您不能删除包含学生的课时。</target>
+        <target state="translated">注意：您不能删除已经有学生的班级。</target>
       </trans-unit>
       <trans-unit datatype="html" id="4004c45063f2adf542a30c59d71e6a9b0b1a7587">
         <source>What if I run out of computer lab time but some of my students are not finished with the project?</source>
@@ -4796,7 +4796,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">66</context>
         </context-group>
-        <target state="needs-translation">The <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>Contact WISE form<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/> will send an email to the WISE technology group. You can find a link to the form at the bottom of the home page. Be sure to include as much information as you can about the problem. We will respond as quickly as we can.</target>
+        <target state="translated"><x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>联系WISE表单<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/>将发送电子邮件给WISE技术小组。 您可以在主页底部找到表单的链接。请务必尽可能多地提供有关问题的信息。 我们会尽快回复您。</target>
       </trans-unit>
       <trans-unit datatype="html" id="0b66532dc98434ee7c1a4b609e3f3a7d49c23d60">
         <source>Information for new users.</source>
@@ -4908,7 +4908,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">33</context>
         </context-group>
-        <target state="translated">选择你的课时。</target>
+        <target state="translated">选择你所在的班级。</target>
       </trans-unit>
       <trans-unit datatype="html" id="a28da34a2ca521ebd61814bb9df8f2c8106efa16">
         <source>Click "Add".</source>
@@ -4940,7 +4940,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">38</context>
         </context-group>
-        <target state="translated">我选择了错误的课时，我该如何修改呢？</target>
+        <target state="translated">我选择了错误的班级，我该如何修改呢？</target>
       </trans-unit>
       <trans-unit datatype="html" id="06df3524151d18c0a2e261269b0b4e41282dd91d">
         <source>Only your teacher can change your period. Please ask them for assistance.</source>
@@ -4948,7 +4948,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">40</context>
         </context-group>
-        <target state="translated">只有您的老师可以改变你的课时。 请向他们寻求帮助。</target>
+        <target state="translated">只有你的老师可以改变你的班级，请向你的老师寻求帮助。</target>
       </trans-unit>
       <trans-unit datatype="html" id="2c78c51700ea174231b7fb84a2d51a96f5b5ed78">
         <source>Sign into WISE with your student account.</source>
@@ -4980,7 +4980,7 @@
           <context context-type="sourcefile">app/register/register-home/register-home.component.html</context>
           <context context-type="linenumber">20</context>
         </context-group>
-        <target state="translated">教师可以和学生一起选择、编辑和运行WISE课程。</target>
+        <target state="translated">教师可以选择、制作WISE课程，并和学生一起运行WISE课程。</target>
       </trans-unit>
       <trans-unit datatype="html" id="9de680553fb4018566c2ad94c91e3a407f760ca4">
         <source>Create Teacher Account</source>
@@ -5592,7 +5592,7 @@
           <context context-type="sourcefile">app/possible-score/possible-score.component.html</context>
           <context context-type="linenumber">3</context>
         </context-group>
-        <target state="needs-translation">point</target>
+        <target state="translated">分数</target>
       </trans-unit>
       <trans-unit id="96fe69fa0552ff1362db05cebbd1ee4c0e154c8c" datatype="html">
         <source>points</source>
@@ -5600,7 +5600,7 @@
           <context context-type="sourcefile">app/possible-score/possible-score.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-        <target state="needs-translation">points</target>
+        <target state="translated">分数</target>
       </trans-unit>
       <trans-unit datatype="html" id="36a606470097ddf0c32a250c8a902441729ca8ca">
         <source>Add Unit</source>
@@ -5652,7 +5652,7 @@
           <context context-type="sourcefile">app/student/add-project-dialog/add-project-dialog.component.html</context>
           <context context-type="linenumber">15</context>
         </context-group>
-        <target state="translated">选择课时</target>
+        <target state="translated">选择班级</target>
       </trans-unit>
       <trans-unit datatype="html" id="a118959daf55b5584609654f7d5ee9e443b961d0">
         <source>Add unit</source>
@@ -5676,7 +5676,7 @@
           <context context-type="sourcefile">app/student/student-run-list/student-run-list.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-        <target state="needs-translation">Ask your teacher for an <x ctype="x-b" equiv-text="&lt;b&gt;" id="START_BOLD_TEXT"/>Access Code<x ctype="x-b" equiv-text="&lt;/b&gt;" id="CLOSE_BOLD_TEXT"/> and then tap the <x ctype="x-b" equiv-text="&lt;b&gt;" id="START_BOLD_TEXT"/>Add Unit<x ctype="x-b" equiv-text="&lt;/b&gt;" id="CLOSE_BOLD_TEXT"/> button to get started.</target>
+        <target state="translated">请向你的教师询问 <x ctype="x-b" equiv-text="&lt;b&gt;" id="START_BOLD_TEXT"/>选课码<x ctype="x-b" equiv-text="&lt;/b&gt;" id="CLOSE_BOLD_TEXT"/> ，然后点击 <x ctype="x-b" equiv-text="&lt;b&gt;" id="START_BOLD_TEXT"/>添加课程<x ctype="x-b" equiv-text="&lt;/b&gt;" id="CLOSE_BOLD_TEXT"/> 按钮开始学习。</target>
       </trans-unit>
       <trans-unit datatype="html" id="5b6d466cdfc67986fb402712d003dd3a455a3507">
         <source>Units found: <x equiv-text="{{ filteredRuns.length }}" id="INTERPOLATION"/></source>
@@ -5688,7 +5688,7 @@
           <context context-type="sourcefile">app/teacher/teacher-run-list/teacher-run-list.component.html</context>
           <context context-type="linenumber">29</context>
         </context-group>
-        <target state="needs-translation">Units found: <x equiv-text="{{ filteredRuns.length }}" id="INTERPOLATION"/></target>
+        <target state="translated">查找到的课程： <x equiv-text="{{ filteredRuns.length }}" id="INTERPOLATION"/></target>
       </trans-unit>
       <trans-unit datatype="html" id="cba86a51e8ee210e24b4d9b47ceffed1e70b61d1">
         <source>My WISE units: <x equiv-text="{{ filteredRuns.length }}" id="INTERPOLATION"/></source>
@@ -5696,7 +5696,7 @@
           <context context-type="sourcefile">app/student/student-run-list/student-run-list.component.html</context>
           <context context-type="linenumber">20</context>
         </context-group>
-        <target state="needs-translation">My WISE units: <x equiv-text="{{ filteredRuns.length }}" id="INTERPOLATION"/></target>
+        <target state="translated">我的WISE课程：<x equiv-text="{{ filteredRuns.length }}" id="INTERPOLATION"/></target>
       </trans-unit>
       <trans-unit datatype="html" id="c6a2c19b6bd10c35aca82f19ffebdc75a2fc164c">
         <source><x equiv-text="{{ scheduledTotal() }}" id="INTERPOLATION"/> scheduled</source>
@@ -5792,7 +5792,7 @@
           <context context-type="sourcefile">app/student/student-run-list-item/student-run-list-item.component.html</context>
           <context context-type="linenumber">9</context>
         </context-group>
-        <target state="translated">课时：</target>
+        <target state="translated">班级</target>
       </trans-unit>
       <trans-unit datatype="html" id="08a3263c58aafca24f31b3f312d90934a14069e5">
         <source>Code:</source>
@@ -5968,7 +5968,7 @@
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
           <context context-type="linenumber">10</context>
         </context-group>
-        <target state="translated">课时</target>
+        <target state="translated">班级</target>
       </trans-unit>
       <trans-unit datatype="html" id="97d146f3502e6472ae9aca1b2bdacfb3ae9c40a4">
         <source>period</source>
@@ -5976,7 +5976,7 @@
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
           <context context-type="linenumber">9</context>
         </context-group>
-        <target state="translated">课时</target>
+        <target state="translated">班级</target>
       </trans-unit>
       <trans-unit datatype="html" id="c1e3525227cd71f6849b07d4d0babd32b1e1ea9d">
         <source>students</source>
@@ -6120,7 +6120,7 @@
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
           <context context-type="linenumber">6</context>
         </context-group>
-        <target state="translated">课程课时</target>
+        <target state="translated">班级</target>
       </trans-unit>
       <trans-unit datatype="html" id="200beac9fb92373dc2bb97201d34e1346d1c08a0">
         <source>Delete period</source>
@@ -6128,7 +6128,7 @@
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
           <context context-type="linenumber">11</context>
         </context-group>
-        <target state="translated">删除课时</target>
+        <target state="translated">删除班级</target>
       </trans-unit>
       <trans-unit datatype="html" id="d82dfc07206fd771e111875d19d04941fb255662">
         <source>Add new period</source>
@@ -6136,7 +6136,7 @@
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
           <context context-type="linenumber">18</context>
         </context-group>
-        <target state="translated">添加新课时</target>
+        <target state="translated">添加新班级</target>
       </trans-unit>
       <trans-unit datatype="html" id="d184c11334133744f14daeee4fc04735cdc88e9e">
         <source>Add period</source>
@@ -6144,7 +6144,7 @@
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
           <context context-type="linenumber">22</context>
         </context-group>
-        <target state="translated">添加课时</target>
+        <target state="translated">添加班级</target>
       </trans-unit>
       <trans-unit datatype="html" id="9e52801929bc9e355f8de5c5c13ba357055d1bdf">
         <source>Students Per Team</source>
@@ -6264,27 +6264,27 @@
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
           <context context-type="linenumber">107</context>
         </context-group>
-        <target state="needs-translation">Help us translate WISE! Visit <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>https://crowdin.com/project/wise<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/>.</target>
+        <target state="translated">帮助我们翻译 WISE！请访问 <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>https://crowdin.com/project/wise<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/>。</target>
       </trans-unit>
       <trans-unit id="6178733511992894634">
         <source>Trouble Signing In</source>
-        <target state="needs-translation">Trouble Signing In</target>
+        <target state="translated">无法登录</target>
       </trans-unit>
       <trans-unit id="6892681827231609313">
         <source>Need Help Using WISE</source>
-        <target state="needs-translation">Need Help Using WISE</target>
+        <target state="translated">使用WISE时需要帮助</target>
       </trans-unit>
       <trans-unit id="2072690839988671006">
         <source>Problems with a WISE Unit</source>
-        <target state="needs-translation">Problems with a WISE Unit</target>
+        <target state="translated">WISE课程的问题</target>
       </trans-unit>
       <trans-unit id="2959002981630304422">
         <source>Feedback to WISE</source>
-        <target state="needs-translation">Feedback to WISE</target>
+        <target state="translated">对 WISE 的反馈</target>
       </trans-unit>
       <trans-unit id="8693603235657020323">
         <source>Other</source>
-        <target state="needs-translation">Other</target>
+        <target state="translated">其他</target>
       </trans-unit>
       <trans-unit id="862335120638232941">
         <source>Student Management</source>
@@ -6292,55 +6292,55 @@
       </trans-unit>
       <trans-unit id="7735613040574061081">
         <source>Need Help with Authoring</source>
-        <target state="needs-translation">Need Help with Authoring</target>
+        <target state="translated">制作课程时需要帮助</target>
       </trans-unit>
       <trans-unit id="7528317085219048471">
         <source>01 (Jan)</source>
-        <target state="needs-translation">01 (Jan)</target>
+        <target state="translated">01（一月）</target>
       </trans-unit>
       <trans-unit id="4169826993694069540">
         <source>02 (Feb)</source>
-        <target state="needs-translation">02 (Feb)</target>
+        <target state="translated">02（二月）</target>
       </trans-unit>
       <trans-unit id="7397319183527150382">
         <source>03 (Mar)</source>
-        <target state="needs-translation">03 (Mar)</target>
+        <target state="translated">03（三月）</target>
       </trans-unit>
       <trans-unit id="4401053003272735439">
         <source>04 (Apr)</source>
-        <target state="needs-translation">04 (Apr)</target>
+        <target state="translated">04（四月）</target>
       </trans-unit>
       <trans-unit id="6130957074030941355">
         <source>05 (May)</source>
-        <target state="needs-translation">05 (May)</target>
+        <target state="translated">05（五月）</target>
       </trans-unit>
       <trans-unit id="3119348605846865468">
         <source>06 (Jun)</source>
-        <target state="needs-translation">06 (Jun)</target>
+        <target state="translated">06（六月）</target>
       </trans-unit>
       <trans-unit id="1295628669066090543">
         <source>07 (Jul)</source>
-        <target state="needs-translation">07 (Jul)</target>
+        <target state="translated">07（七月）</target>
       </trans-unit>
       <trans-unit id="3813724417684413959">
         <source>08 (Aug)</source>
-        <target state="needs-translation">08 (Aug)</target>
+        <target state="translated">08（八月）</target>
       </trans-unit>
       <trans-unit id="7039612753083856396">
         <source>09 (Sep)</source>
-        <target state="needs-translation">09 (Sep)</target>
+        <target state="translated">09（九月）</target>
       </trans-unit>
       <trans-unit id="5206495968805205248">
         <source>10 (Oct)</source>
-        <target state="needs-translation">10 (Oct)</target>
+        <target state="translated">10（十月）</target>
       </trans-unit>
       <trans-unit id="5271095457941077047">
         <source>11 (Nov)</source>
-        <target state="needs-translation">11 (Nov)</target>
+        <target state="translated">11（十一月）</target>
       </trans-unit>
       <trans-unit id="7367027577282611263">
         <source>12 (Dec)</source>
-        <target state="needs-translation">12 (Dec)</target>
+        <target state="translated">12（十二月）</target>
       </trans-unit>
       <trans-unit id="8342090111716136539">
         <source>We did not find any usernames that match the information you provided. Please make sure you entered your information correctly. If you can't find your account, ask a teacher for help or contact us for assistance.</source>
@@ -6548,7 +6548,7 @@
       </trans-unit>
       <trans-unit id="8693603235657020323">
         <source>Other</source>
-        <target state="needs-translation">Other</target>
+        <target state="translated">其他</target>
       </trans-unit>
       <trans-unit id="1934952699406892664">
         <source>An error occurred: </source>
@@ -6612,19 +6612,19 @@
       </trans-unit>
       <trans-unit id="5800344060320957157">
         <source>There is already a period with that name.</source>
-        <target state="needs-translation">There is already a period with that name.</target>
+        <target state="translated">这个班级名称已经存在了。</target>
       </trans-unit>
       <trans-unit id="7291953203299952730">
         <source>You do not have permission to add periods to this unit.</source>
-        <target state="needs-translation">You do not have permission to add periods to this unit.</target>
+        <target state="translated">您没有权限在这个课程中添加班级。</target>
       </trans-unit>
       <trans-unit id="622558430501370414">
         <source>You are not allowed to delete a period that contains students.</source>
-        <target state="needs-translation">You are not allowed to delete a period that contains students.</target>
+        <target state="translated">您不能删除已经有学生的班级。</target>
       </trans-unit>
       <trans-unit id="1043729639727499507">
         <source>You do not have permission to delete periods from this unit.</source>
-        <target state="needs-translation">You do not have permission to delete periods from this unit.</target>
+        <target state="translated">您没有权限从这个课程中删除班级。</target>
       </trans-unit>
       <trans-unit id="9028638987976638715">
         <source>You do not have permission to change the number of students per team for this unit.</source>
@@ -6652,7 +6652,7 @@
       </trans-unit>
       <trans-unit id="5528736199269504039">
         <source>Please enter a new period name.</source>
-        <target state="needs-translation">Please enter a new period name.</target>
+        <target state="translated">请输入一个新班级名称。</target>
       </trans-unit>
       <trans-unit id="4283834044503624296">
         <source>1-3</source>
@@ -6688,7 +6688,7 @@
       </trans-unit>
       <trans-unit id="1133960927497534087">
         <source>Class Periods:</source>
-        <target state="needs-translation">Class Periods:</target>
+        <target state="translated">班级</target>
       </trans-unit>
       <trans-unit id="4778985982508820766">
         <source>Class Schedule</source>
