@@ -22,6 +22,7 @@ import { StudentDataService } from '../../../../wise5/services/studentDataServic
 import { StudentStatusService } from '../../../../wise5/services/studentStatusService';
 import { SpaceService } from '../../../../wise5/services/spaceService';
 import { TeacherWebSocketService } from '../../../../wise5/services/teacherWebSocketService';
+import { NotebookService } from '../../../../wise5/services/notebookService';
 
 @Component({template: ``})
 export class EmptyComponent {}
@@ -44,8 +45,8 @@ export class EmptyComponent {}
     UtilService,
     ConfigService,
     CRaterService,
+    NotebookService,
     ProjectAssetService,
-    TeacherProjectService,
     { provide: ProjectService, useExisting: TeacherProjectService },
     SessionService,
     SpaceService,
@@ -53,6 +54,7 @@ export class EmptyComponent {}
     StudentDataService,
     StudentStatusService,
     TagService,
+    TeacherProjectService,
     TeacherWebSocketService
   ],
   entryComponents: [

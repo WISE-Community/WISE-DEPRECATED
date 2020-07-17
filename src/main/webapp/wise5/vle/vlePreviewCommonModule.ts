@@ -50,7 +50,7 @@ import '../components/multipleChoice/multipleChoiceComponentModule';
 import NavigationController from './navigation/navigationController';
 import NodeController from './node/nodeController';
 import NodeService from '../services/nodeService';
-import NotebookService from '../services/notebookService';
+import { NotebookService } from '../services/notebookService';
 import NotificationService from '../services/notificationService';
 import '../components/openResponse/openResponseComponentModule';
 import '../components/outsideURL/outsideURLComponentModule';
@@ -120,7 +120,7 @@ export function createModule(type = 'preview') {
   .factory('CRaterService', downgradeInjectable(CRaterService))
   .service('HttpInterceptor', HttpInterceptor)
   .service('NodeService', NodeService)
-  .service('NotebookService', NotebookService)
+  .factory('NotebookService', downgradeInjectable(NotebookService))
   .service('NotificationService', NotificationService)
   .factory('ProjectService', downgradeInjectable(VLEProjectService))
   .factory('SessionService', downgradeInjectable(SessionService))
