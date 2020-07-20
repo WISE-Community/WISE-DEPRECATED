@@ -3,7 +3,7 @@
 import { ConfigService } from '../../../../services/configService';
 import NodeService from '../../../../services/nodeService';
 import { TeacherProjectService } from '../../../../services/teacherProjectService';
-import TeacherDataService from '../../../../services/teacherDataService';
+import { TeacherDataService } from '../../../../services/teacherDataService';
 import * as $ from 'jquery';
 
 class StepToolsController {

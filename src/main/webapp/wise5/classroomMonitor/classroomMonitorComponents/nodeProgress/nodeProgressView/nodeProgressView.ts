@@ -1,7 +1,7 @@
 'use strict';
 
 import { StudentStatusService } from '../../../../services/studentStatusService';
-import TeacherDataService from '../../../../services/teacherDataService';
+import { TeacherDataService } from '../../../../services/teacherDataService';
 import { TeacherProjectService } from '../../../../services/teacherProjectService';
 
 class NodeProgressViewController {

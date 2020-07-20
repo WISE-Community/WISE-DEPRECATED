@@ -1,7 +1,7 @@
 'use strict';
 
 import { ConfigService } from '../../../../services/configService';
-import TeacherDataService from '../../../../services/teacherDataService';
+import { TeacherDataService } from '../../../../services/teacherDataService';
 import * as angular from 'angular';
 
 class WorkgroupSelectController {

@@ -2,7 +2,7 @@
 
 import { TeacherProjectService } from '../../services/teacherProjectService';
 import { ConfigService } from '../../services/configService';
-import TeacherDataService from '../../services/teacherDataService';
+import { TeacherDataService } from '../../services/teacherDataService';
 import { UtilService } from '../../services/utilService';
 import * as angular from 'angular';
 import * as $ from 'jquery';
