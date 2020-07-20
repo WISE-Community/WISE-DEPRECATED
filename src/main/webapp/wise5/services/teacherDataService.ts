@@ -324,7 +324,7 @@ export class TeacherDataService {
         .set('toWorkgroupId', workgroupId)
         .set('getStudentWork', 'true')
         .set('getEvents', 'false')
-        .set('getAnnotations', 'false')
+        .set('getAnnotations', 'false');
     return this.retrieveStudentData(params);
   }
 
@@ -333,7 +333,7 @@ export class TeacherDataService {
         .set('runId', this.ConfigService.getRunId())
         .set('getStudentWork', 'false')
         .set('getEvents', 'false')
-        .set('getAnnotations', 'true')
+        .set('getAnnotations', 'true');
     return this.retrieveStudentData(params);
   }
 
@@ -346,7 +346,7 @@ export class TeacherDataService {
         .set('getStudentWork', 'true')
         .set('getEvents', 'false')
         .set('getAnnotations', 'false')
-        .set('onlyGetLatest', 'true')
+        .set('onlyGetLatest', 'true');
     return this.retrieveStudentData(params).then(result => {
       return result.studentWorkList;
     });
@@ -536,11 +536,11 @@ export class TeacherDataService {
 
   retrieveRunStatus() {
     const url = this.ConfigService.getConfigParam('runStatusURL');
-    const params = new HttpParams().set('runId', this.ConfigService.getConfigParam('runId'))
+    const params = new HttpParams().set('runId', this.ConfigService.getConfigParam('runId'));
     const options = {
       params: params,
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-    }
+    };
     return this.http.get(url, options).toPromise().then((data: any) => {
       this.runStatus = data;
       this.initializePeriods();
