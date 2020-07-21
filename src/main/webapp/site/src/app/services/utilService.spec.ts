@@ -16,8 +16,7 @@ describe('UtilService', () => {
   convertStringToNumberTests();
   makeCopyOfJSONObjectTests();
   arrayHasNonNullElementTests();
-  moveObjectUpTests();
-  moveObjectDownTests();
+  moveObjectTests();
   calculateMeanTests();
   getIntersectOfArraysTests();
   isValidJSONStringTests();
@@ -106,48 +105,52 @@ function arrayHasNonNullElementTests() {
   });
 }
 
-function moveObjectUpTests() {
-  describe('moveObjectUp()', () => {
-    it('should move an object up when the object is not the top element', () => {
-      const myArray = [{ name: 'a' }, { name: 'b' }, { name: 'c' }];
-      const elementToMove = 1;
-      service.moveObjectUp(myArray, elementToMove);
-      expect(myArray[0].name).toEqual('b');
-      expect(myArray[1].name).toEqual('a');
-      expect(myArray[2].name).toEqual('c');
+let myArray;
+function moveObjectTests() {
+  describe('moveObject', () => {
+    beforeEach(() => {
+      myArray = [{ name: 'a' }, { name: 'b' }, { name: 'c' }];
     });
-
-    it('should not move an object up when the object is the top element', () => {
-      const myArray = [{ name: 'a' }, { name: 'b' }, { name: 'c' }];
-      const elementToMove = 0;
-      service.moveObjectUp(myArray, elementToMove);
-      expect(myArray[0].name).toEqual('a');
-      expect(myArray[1].name).toEqual('b');
-      expect(myArray[2].name).toEqual('c');
-    });
+    moveObjectUpNotTopElement();
+    moveObjectUpIsTopElement();
+    moveObjectDownNotBottomElement();
+    moveObjectDownIsBottomElement();
   });
 }
 
-function moveObjectDownTests() {
-  describe('moveObjectDown()', () => {
-    it('should move an object down when the object is not the bottom element', () => {
-      const myArray = [{ name: 'a' }, { name: 'b' }, { name: 'c' }];
-      const elementToMove = 1;
-      service.moveObjectDown(myArray, elementToMove);
-      expect(myArray[0].name).toEqual('a');
-      expect(myArray[1].name).toEqual('c');
-      expect(myArray[2].name).toEqual('b');
-    });
+function expectArrayNameOrder(arr, nameOrder) {
+  for (let i = 0; i < arr.length; i++) {
+    expect(arr[i].name).toEqual(nameOrder[i]);
+  }
+}
 
-    it('should not move an object down when the object is the bottom element', () => {
-      const myArray = [{ name: 'a' }, { name: 'b' }, { name: 'c' }];
-      const elementToMove = 2;
-      service.moveObjectDown(myArray, elementToMove);
-      expect(myArray[0].name).toEqual('a');
-      expect(myArray[1].name).toEqual('b');
-      expect(myArray[2].name).toEqual('c');
-    });
+function moveObjectUpNotTopElement() {
+  it('moveObjectUp should move an object up when the object is not the top element', () => {
+    expectMoveFunctionResult('moveObjectUp', 1, ['b','a','c']);
   });
+}
+
+function moveObjectUpIsTopElement() {
+  it('moveObjectUp should not move an object up when the object is the top element', () => {
+    expectMoveFunctionResult('moveObjectUp', 0, ['a','b','c']);
+  });
+}
+
+function moveObjectDownNotBottomElement() {
+  it('moveObjectDown should move an object down when the object is not the bottom element', () => {
+    expectMoveFunctionResult('moveObjectDown', 1, ['a','c','b']);
+  });
+}
+
+function moveObjectDownIsBottomElement() {
+  it('moveObjectDown should not move an object down when the object is the bottom element', () => {
+    expectMoveFunctionResult('moveObjectDown', 2, ['a','b','c']);
+  });
+}
+
+function expectMoveFunctionResult(func, index, expectedResult) {
+  service[func](myArray, index);
+  expectArrayNameOrder(myArray, expectedResult);
 }
 
 function calculateMeanTests() {
@@ -166,10 +169,10 @@ function calculateMeanTests() {
 
 function getIntersectOfArraysTests() {
   describe('getIntersectOfArrays()', () => {
+    const obj1 = {};
+    const obj2 = {};
+    const obj3 = {};
     it('should find the intersect of arrays when there are no common items', () => {
-      const obj1 = {};
-      const obj2 = {};
-      const obj3 = {};
       const array1 = [obj1, obj2];
       const array2 = [obj3];
       const intersect = service.getIntersectOfArrays(array1, array2);
@@ -177,9 +180,6 @@ function getIntersectOfArraysTests() {
     });
 
     it('should find the intersect of arrays when there are some common items', () => {
-      const obj1 = {};
-      const obj2 = {};
-      const obj3 = {};
       const array1 = [obj1, obj2];
       const array2 = [obj2, obj3];
       const intersect = service.getIntersectOfArrays(array1, array2);
@@ -187,9 +187,6 @@ function getIntersectOfArraysTests() {
     });
 
     it('should find the intersect of arrays when all are common items', () => {
-      const obj1 = {};
-      const obj2 = {};
-      const obj3 = {};
       const array1 = [obj1, obj2, obj3];
       const array2 = [obj1, obj2, obj3];
       const intersect = service.getIntersectOfArrays(array1, array2);
