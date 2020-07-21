@@ -292,28 +292,25 @@ function getMultipleAttemptCRaterScoringRuleByScore() {
     scoreSequence: [2, 1],
     feedbackText: 'You got worse.'
   };
+  const component = {
+    cRater: {
+      multipleAttemptScoringRules: []
+    }
+  };
   it('should get multiple attempt CRater scoring rule by score with range', () => {
-    const component = {
-      cRater: {
-        multipleAttemptScoringRules: [
-          multipleAttemptScoringRule1To45,
-          multipleAttemptScoringRule2To1
-        ]
-      }
-    };
+    component.cRater.multipleAttemptScoringRules = [
+      multipleAttemptScoringRule1To45,
+      multipleAttemptScoringRule2To1
+    ];
     expect(service.getMultipleAttemptCRaterScoringRuleByScore(component, 1, 5))
         .toEqual(multipleAttemptScoringRule1To45);
   });
 
   it('should get multiple attempt CRater scoring rule by score with comma separated values', () => {
-    const component = {
-      cRater: {
-        multipleAttemptScoringRules: [
-          multipleAttemptScoringRule1To345,
-          multipleAttemptScoringRule2To1
-        ]
-      }
-    };
+    component.cRater.multipleAttemptScoringRules = [
+      multipleAttemptScoringRule1To345,
+      multipleAttemptScoringRule2To1
+    ];
     expect(service.getMultipleAttemptCRaterScoringRuleByScore(component, 1, 4))
         .toEqual(multipleAttemptScoringRule1To345);
   });
