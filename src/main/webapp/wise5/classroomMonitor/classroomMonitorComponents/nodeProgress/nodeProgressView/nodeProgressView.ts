@@ -108,8 +108,17 @@ class NodeProgressViewController {
         }
       }
     });
+    if (!this.isShowingNodeGradingView()) {
+      this.saveNodeProgressViewDisplayedEvent();
+    }
+  }
 
-    let context = 'ClassroomMonitor',
+  isShowingNodeGradingView() {
+    return this.isApplicationNode(this.nodeId);
+  }
+
+  saveNodeProgressViewDisplayedEvent() {
+    const context = 'ClassroomMonitor',
       nodeId = this.nodeId,
       componentId = null,
       componentType = null,
