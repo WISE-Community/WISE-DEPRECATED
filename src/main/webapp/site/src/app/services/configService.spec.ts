@@ -6,6 +6,8 @@ import sampleConfig1 from './sampleData/sample_config_1.json';
 let service: ConfigService;
 let http: HttpTestingController;
 
+let configJSON;
+
 describe('ConfigService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -14,6 +16,12 @@ describe('ConfigService', () => {
     });
     http = TestBed.get(HttpTestingController);
     service = TestBed.get(ConfigService);
+    configJSON = {
+      startTime: new Date(2020, 4, 10).getTime(),
+      endTime: new Date(2020, 4, 20).getTime(),
+      timestampDiff: 0,
+      isLockedAfterEndDate: false
+    };
   });
 
   retrieveConfig();
@@ -32,9 +40,7 @@ describe('ConfigService', () => {
 function retrieveConfig() {
   it('should retrieve config', () => {
     const configURL = 'http://localhost:8080/wise/config/1';
-    let configResponse;
     service.retrieveConfig(configURL).then((response) => {
-      configResponse = response;
       expect(response).toEqual(sampleConfig1);
     });
     http.expectOne(configURL).flush(sampleConfig1);
@@ -156,48 +162,25 @@ function calculateIsRunActive_RunOnlyHasAStartTime_ReturnWhetherRunIsActive() {
 function calculateIsRunActive_RunHasAStartTimeAndEndTimeAndIsNotLocked_ReturnWhetherRunIsActive() {
   it(`should calculate if a run is active to be true when it has a start time and end time and is
       locked value false`, () => {
-    const configJSON = {
-      startTime: new Date(2020, 4, 10).getTime(),
-      endTime: new Date(2020, 4, 20).getTime(),
-      timestampDiff: 0,
-      isLockedAfterEndDate: false
-    };
     jasmine.clock().mockDate(new Date(2020, 4, 15));
     expect(service.calculateIsRunActive(configJSON)).toBeTruthy();
   });
   it(`should calculate if a run is active to be false when it has a start time and end time and is
       locked value false`, () => {
-    const configJSON = {
-      startTime: new Date(2020, 4, 10).getTime(),
-      endTime: new Date(2020, 4, 20).getTime(),
-      timestampDiff: 0,
-      isLockedAfterEndDate: false
-    };
     jasmine.clock().mockDate(new Date(2020, 4, 30));
     expect(service.calculateIsRunActive(configJSON)).toBeTruthy();
   });
 }
 
 function calculateIsRunActive_RunHasAStartTimeAndEndTimeAndIsLocked_ReturnWhetherRunIsActive() {
+  configJSON.isLockedAfterEndDate = true;
   it(`should calculate if a run is active to be true when it has a start time and end time and is
       locked value true`, () => {
-    const configJSON = {
-      startTime: new Date(2020, 4, 10).getTime(),
-      endTime: new Date(2020, 4, 20).getTime(),
-      timestampDiff: 0,
-      isLockedAfterEndDate: true
-    };
     jasmine.clock().mockDate(new Date(2020, 4, 15));
     expect(service.calculateIsRunActive(configJSON)).toBeTruthy();
   });
   it(`should calculate if a run is active to be false when it has a start time and end time and is
       locked value true`, () => {
-    const configJSON = {
-      startTime: new Date(2020, 4, 10).getTime(),
-      endTime: new Date(2020, 4, 20).getTime(),
-      timestampDiff: 0,
-      isLockedAfterEndDate: true
-    };
     jasmine.clock().mockDate(new Date(2020, 4, 30));
     expect(service.calculateIsRunActive(configJSON)).toBeFalsy();
   });
@@ -214,12 +197,7 @@ function isEndedAndLocked() {
 
 function isEndedAndLocked_HasStartTimeAndNoEndTime_ReturnNotEndedAndLocked() {
   it('should calculate is ended and locked when it has a start time and no end time', () => {
-    const configJSON = {
-      startTime: new Date(2020, 4, 10).getTime(),
-      endTime: null,
-      timestampDiff: 0,
-      isLockedAfterEndDate: false
-    };
+    configJSON.endTime = null;
     jasmine.clock().mockDate(new Date(2020, 4, 11));
     expect(service.isEndedAndLocked(configJSON)).toBeFalsy();
   });
@@ -227,12 +205,6 @@ function isEndedAndLocked_HasStartTimeAndNoEndTime_ReturnNotEndedAndLocked() {
 
 function isEndedAndLocked_HasStartTimeAndEndTimeInFuture_ReturnNotEndedAndLocked() {
   it('should calculate is ended and locked when end time is in the future', () => {
-    const configJSON = {
-      startTime: new Date(2020, 4, 10).getTime(),
-      endTime: new Date(2020, 4, 20).getTime(),
-      timestampDiff: 0,
-      isLockedAfterEndDate: false
-    };
     jasmine.clock().mockDate(new Date(2020, 4, 15));
     expect(service.isEndedAndLocked(configJSON)).toBeFalsy();
   });
@@ -240,12 +212,6 @@ function isEndedAndLocked_HasStartTimeAndEndTimeInFuture_ReturnNotEndedAndLocked
 
 function isEndedAndLocked_EndTimeInPastButNotLocked_ReturnNotEndedAndLocked() {
   it('should calculate is ended and locked when end time is in the past but not locked', () => {
-    const configJSON = {
-      startTime: new Date(2020, 4, 10).getTime(),
-      endTime: new Date(2020, 4, 20).getTime(),
-      timestampDiff: 0,
-      isLockedAfterEndDate: false
-    };
     jasmine.clock().mockDate(new Date(2020, 4, 30));
     expect(service.isEndedAndLocked(configJSON)).toBeFalsy();
   });
@@ -253,12 +219,7 @@ function isEndedAndLocked_EndTimeInPastButNotLocked_ReturnNotEndedAndLocked() {
 
 function isEndedAndLocked_EndTimeInPastAndLocked_ReturnEndedAndLocked() {
   it('should calculate is ended and locked when end time is in the past and locked', () => {
-    const configJSON = {
-      startTime: new Date(2020, 4, 10).getTime(),
-      endTime: new Date(2020, 4, 20).getTime(),
-      timestampDiff: 0,
-      isLockedAfterEndDate: true
-    };
+    configJSON.isLockedAfterEndDate = true;
     jasmine.clock().mockDate(new Date(2020, 4, 30));
     expect(service.isEndedAndLocked(configJSON)).toBeTruthy();
   });
