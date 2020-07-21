@@ -981,14 +981,13 @@ export class TeacherDataService {
 
   sendRunStatus() {
     const url = this.ConfigService.getConfigParam('runStatusURL');
-    const params = new HttpParams()
+    const body = new HttpParams()
         .set('runId', this.ConfigService.getConfigParam('runId'))
         .set('status', JSON.stringify(this.runStatus));
     const options = {
-      params: params,
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-    }
-    return this.http.post(url, options);
+    };
+    return this.http.post(url, body, options);
   }
 
   createRunStatus() {
