@@ -156,7 +156,7 @@
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
           <context context-type="linenumber">52</context>
         </context-group>
-        <target state="translated">由 <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>TELS 研究团队<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/> 和 <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK_1"/>WISE开源技术 <x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/>提供支持。帮助我们 <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK_2"/>翻译<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/> WISE!</target>
+        <target state="translated">由 <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>TELS 研究团队<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> 和 <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>WISE开源技术 <x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>提供支持。帮助我们 <x id="START_LINK_2" ctype="x-a" equiv-text="&lt;a&gt;"/>翻译<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> WISE!</target>
       </trans-unit>
       <trans-unit datatype="html" id="3e1904c6c60cfbdcfde26154fe8ed09b5ce0f9f4">
         <source>This material is based upon work supported by the National Science Foundation. Any opinions, findings, and conclusions or recommendations expressed in this material are those of the author(s) and do not necessarily reflect the views of the National Science Foundation.</source>
@@ -204,7 +204,7 @@
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
           <context context-type="linenumber">90</context>
         </context-group>
-        <target state="translated">1996-<x equiv-text="{{time | amDateFormat:'YYYY'}}" id="INTERPOLATION"/>, <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>加利福尼亚大学伯克利分校<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/> | 基于网络的科学探究学习环境</target>
+        <target state="translated">1996-<x id="INTERPOLATION" equiv-text="{{time | amDateFormat:'YYYY'}}"/>, <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>加利福尼亚大学伯克利分校<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> | 基于网络的科学探究学习环境</target>
       </trans-unit>
       <trans-unit datatype="html" id="470b3fb4b02529d4f9f25850711632271fd27508">
         <source>WISE header logo</source>
@@ -348,7 +348,7 @@
           <context context-type="sourcefile">app/modules/shared/edit-password/edit-password.component.html</context>
           <context context-type="linenumber">60</context>
         </context-group>
-        <target state="translated">此帐户使用谷歌账号创建，并且不使用 WISE 密码。如果您想取消您的Google账户链接，请 <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>联系我们<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/>。</target>
+        <target state="translated">此帐户使用谷歌账号创建，并且不使用 WISE 密码。如果您想取消您的Google账户链接，请 <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>联系我们<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>。</target>
       </trans-unit>
       <trans-unit datatype="html" id="9df7621dfbe30a790903d461e721c9029627ff34">
         <source>Elicit Ideas</source>
@@ -510,7 +510,7 @@
         </context-group>
         <target state="translated">WISE主页</target>
       </trans-unit>
-      <trans-unit datatype="html" id="ab8be185fd77636da821443e6071c033ebc47a59">
+      <trans-unit datatype="html" id="ab8be185fd77636da821443e6071c033ebc47a59" approved="yes">
         <source>Research <x ctype="x-mat-icon" equiv-text="&lt;mat-icon&gt;" id="START_TAG_MAT-ICON"/>call_made<x ctype="x-mat-icon" equiv-text="&lt;/mat-icon&gt;" id="CLOSE_TAG_MAT-ICON"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/mobile-menu/mobile-menu.component.html</context>
@@ -520,7 +520,7 @@
           <context context-type="sourcefile">app/modules/header/header-links/header-links.component.html</context>
           <context context-type="linenumber">10</context>
         </context-group>
-        <target state="needs-translation">Research <x ctype="x-mat-icon" equiv-text="&lt;mat-icon&gt;" id="START_TAG_MAT-ICON"/>call_made<x ctype="x-mat-icon" equiv-text="&lt;/mat-icon&gt;" id="CLOSE_TAG_MAT-ICON"/></target>
+        <target state="final">研究 <x id="START_TAG_MAT-ICON" ctype="x-mat-icon" equiv-text="&lt;mat-icon&gt;"/>call_made<x id="CLOSE_TAG_MAT-ICON" ctype="x-mat-icon" equiv-text="&lt;/mat-icon&gt;"/></target>
       </trans-unit>
       <trans-unit datatype="html" id="ba4f24bf9bf3dc4db3d6bc1b8b63339295f0b806">
         <source>Sign In</source>
@@ -684,7 +684,7 @@
           <context context-type="sourcefile">app/features/features.component.html</context>
           <context context-type="linenumber">89</context>
         </context-group>
-        <target state="translated">WISE 课程支持 <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>下一代科学标准 (NGSS)<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/>， 促进 <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK_1"/>学生3个维度的全面发展<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/>，并可根据所在国家或地区的当地标准进行调整。</target>
+        <target state="translated">WISE学习单元支持 <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>下一代科学标准（NGSS）<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>, 鼓励 <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>3D学习<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>，并且能适用于当地的课程标准。</target>
       </trans-unit>
       <trans-unit datatype="html" id="6e15a0555bed4b010ba36febb47e87ff32616dd8">
         <source>Design Process &amp; Goals</source>
@@ -1052,7 +1052,7 @@
           <context context-type="sourcefile">app/about/about.component.html</context>
           <context context-type="linenumber">151</context>
         </context-group>
-        <target state="translated">WISE 是 <x ctype="x-strong" equiv-text="&lt;strong&gt;" id="START_TAG_STRONG"/>免费<x ctype="x-strong" equiv-text="&lt;/strong&gt;" id="CLOSE_TAG_STRONG"/> 和 <x ctype="x-strong" equiv-text="&lt;strong&gt;" id="START_TAG_STRONG"/>开源的<x ctype="x-strong" equiv-text="&lt;/strong&gt;" id="CLOSE_TAG_STRONG"/>！ WISE依靠国家科学基金会的慷慨资助，因此任何人都可以通过互联网使用。在活跃的开发者社区的推动下，WISE不断扩大和改进。 WISE将科学探究带入教室、博物馆、校外或家庭学校环境当中！</target>
+        <target state="translated">WISSE 是 <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>免费<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/> 和 <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>开放源码的平台<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>！ WISE依靠国家自然科学基金会的慷慨支持，因此任何人都可以通过互联网使用。在活跃的开发者社群的驱动下，WISE正在不断扩大和改进。它致力于将科学探究引入课堂、博物馆、课后或家庭环境中！</target>
       </trans-unit>
       <trans-unit datatype="html" id="4ad1e5cce5dbc999f93e23e6bc9fa28d9cbb0ee1">
         <source>WISE on student computer</source>
@@ -1236,7 +1236,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">25</context>
         </context-group>
-        <target state="translated">请仔细阅读此文档。使用WISE就表明您已经阅读、理解并接受了这里列举的条款和条件。 如果您不同意这些条款和条件，请不要使用WISE。如果您对此政策有疑问，请随时使用我们的 <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>联系表单<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/> 联系我们。</target>
+        <target state="translated">请仔细阅读此文件。 在使用WISE时，请确保您已阅读、理解并接受所列出的条款和条件。 如果您不同意其中的任何条件，请不要使用WISE。 如果您对此政策有任何疑问，请随时使用<x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>联系表格<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>与我们联系.</target>
       </trans-unit>
       <trans-unit datatype="html" id="5403166a98d789195745d246a5135c0416d77fe2">
         <source>This policy was last updated on September 8, 2017.</source>
@@ -1292,7 +1292,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">37</context>
         </context-group>
-        <target state="needs-translation">If you believe that your account is no longer secure for any reason, please change your password. If you cannot access your account to change your password, contact us using our <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>Contact Form<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/>.</target>
+        <target state="translated">如果您认为自己的帐户因任何原因不再安全，请及时更改您的密码。 如果您无法访问自己的帐户以更改密码，请使用我们的 <x id="START_LINK" ctype="xa" equiv-text="&lt;a&gt;"/>联系表单<x id="CLOSE_LINK" ctype="xa" equiv-text="&lt;/a&gt;"/> 联系我们。</target>
       </trans-unit>
       <trans-unit datatype="html" id="2cf496fcb22b06a82a9af4e628dbc97524e51dfb">
         <source>User-Generated Content</source>
@@ -1334,13 +1334,13 @@
         </context-group>
         <target state="translated">授权</target>
       </trans-unit>
-      <trans-unit datatype="html" id="d3cee34156cc74603c393d78d45916c7f94c8a8f">
+      <trans-unit datatype="html" id="d3cee34156cc74603c393d78d45916c7f94c8a8f" approved="yes">
         <source>All projects that you create on or share to the WISE site shall be licensed under the Creative Commons Attribution-ShareAlike 4.0 license. For more information about the terms of this license, visit <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>https://creativecommons.org/licenses/by-sa/4.0/<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/>. The WISE team reserves the right to remove any content that, in the WISE team's discretion, is harmful to the community or violates the WISE Terms of Use. Harmful use includes spam or repeated commercial advertisement through projects, comments, or discussion posts, as well as inappropriate or offensive material.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">45</context>
         </context-group>
-        <target state="needs-translation">All projects that you create on or share to the WISE site shall be licensed under the Creative Commons Attribution-ShareAlike 4.0 license. For more information about the terms of this license, visit <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>https://creativecommons.org/licenses/by-sa/4.0/<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/>. The WISE team reserves the right to remove any content that, in the WISE team's discretion, is harmful to the community or violates the WISE Terms of Use. Harmful use includes spam or repeated commercial advertisement through projects, comments, or discussion posts, as well as inappropriate or offensive material.</target>
+        <target state="final">您在WISE网站上创建或共享的所有项目均应根据知识共享许可协议-相同方式共享4.0许可 (Creative Commons Attribution-ShareAlike 4.0 license) 进行许可。 有关此许可条款的详细信息，请访问 <x id="START_LINK" ctype="xa" equiv-text="&lt;a&gt;"/> https://creativecommons.org/licenses/by-sa/4.0/<x id="CLOSE_LINK" ctype="xa" equiv-text="&lt;/a&gt;"/>。 由WISE团队判定的任何对学习社区有害或违反WISE使用条款的内容，WISE团队有权对其进行删除。 有害使用包括散播垃圾邮件或通过项目、评论或讨论帖等方式重复宣传商业广告以及不适当或令人反感的材料。</target>
       </trans-unit>
       <trans-unit datatype="html" id="d832788aab0ba91d394cc36c4c63bedb07a7e5ea">
         <source>You may link to or include outside resources or materials in your WISE projects or in any public parts of the WISE site, but it is your responsibility to obtain any necessary permission from the original owners and include any required attribution for your use of such content. WISE will not be held responsible for the unauthorized use by a WISE account holder of any third-party content in WISE projects or on any other sections of the WISE site.</source>
@@ -1396,7 +1396,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">55</context>
         </context-group>
-        <target state="needs-translation">WISE uses Google Analytics to help us understand our site usage. We use data like which pages you visit and clicks you make to help us improve the site. Information collected and processed by Google Analytics includes user IP addresses, network locations, and geographic locations. Some browsers allow you to opt-out of the Google Analytics tracking by installing add-ons for your browser.</target>
+        <target state="translated">WISE使用谷歌分析帮助我们了解该网站使用情况。 我们会使用类似于您访问或点击网页的数据来帮助我们改进网站。 谷歌分析收集和处理的信息包括用户IP地址、网络位置和地理位置。 某些浏览器允许您通过安装浏览器安装附加组件来选择退出谷歌分析跟踪。</target>
       </trans-unit>
       <trans-unit datatype="html" id="9af481581bbddd55af685583742a16757964160e">
         <source>3. How We Use the Data</source>
@@ -1508,7 +1508,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">76</context>
         </context-group>
-        <target state="needs-translation">If you notice any offensive material or user-generated content that are in violation with the rules above, please report them to the WISE Team using our <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>Contact Form<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/>.</target>
+        <target state="translated">如果您发现任何违反上述规则的冒犯性内容或用户生成的内容，请及时运用<x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>联系表单<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>向WISE团队报告。</target>
       </trans-unit>
       <trans-unit datatype="html" id="83e835d7ae5255ef507a1ed474c87044d226fde0">
         <source>5. Information Security</source>
@@ -1588,7 +1588,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">97</context>
         </context-group>
-        <target state="needs-translation">We may occasionally update or modify our Terms of Use and Privacy Policy. We will always display the date this document was last updated. If we make significant changes to these terms, we will display a prominent notice on the WISE home page and may notify users via registered email. We encourage you to review this document periodically. By continuing to use WISE after any changes to this document, you acknowledge that you agree to the current version of these terms.</target>
+        <target state="translated">我们可能偶尔会更新或修改我们的使用条款和隐私政策。 我们将始终在此文档上显示更新的日期。 如果我们对这些条款进行重大更改，我们将在WISE主页上显示醒目的通知，并可能通过注册的电子邮件通知用户。 我们建议您定期查看此文档。 在更改此文档后继续使用WISE时，请确保您认同当前版本条款的内容。</target>
       </trans-unit>
       <trans-unit datatype="html" id="88698050f16ebf91474ddae66b687f795af7e57b">
         <source>If you have any questions or concerns about this document or the WISE site, please contact us using our <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>Contact Form<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/>. We can also be reached by mail at:</source>
@@ -1596,7 +1596,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">98</context>
         </context-group>
-        <target state="needs-translation">If you have any questions or concerns about this document or the WISE site, please contact us using our <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>Contact Form<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/>. We can also be reached by mail at:</target>
+        <target state="translated">如果您对本文档或WISE网站有任何问题或疑虑，请使用 <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>联系表单<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>与我们联系。您也可以通过邮件联系我们：</target>
       </trans-unit>
       <trans-unit datatype="html" id="a53ebef13aa69d9f02d5e74bad14f75519260813">
         <source>UC Berkeley Graduate School of Education</source>
@@ -1692,7 +1692,7 @@
           <context context-type="sourcefile">app/modules/library/official-library/official-library-details.html</context>
           <context context-type="linenumber">6</context>
         </context-group>
-        <target state="needs-translation"><x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>Learn more<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/> about our design process and <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK_1"/>check out our research and publications<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/>.</target>
+        <target state="translated"><x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>了解更多<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> 我们的设计过程和 <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>查看我们的研究和出版物<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</target>
       </trans-unit>
       <trans-unit datatype="html" id="4d4b87e130f67964a35a56bdd05df593406fcc17">
         <source>Teacher unit library navigation</source>
@@ -1728,7 +1728,7 @@
           <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
           <context context-type="linenumber">12</context>
         </context-group>
-        <target state="needs-translation">Visit <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>Google Classroom<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/> to create a class and try again.</target>
+        <target state="translated">访问 <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>谷歌教室<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>用以创建一个课堂并进行尝试 。</target>
       </trans-unit>
       <trans-unit datatype="html" id="7e6c975ebea8b5f8b120905ca7acf9f8edf59d8e">
         <source>OK</source>
@@ -1748,7 +1748,7 @@
           <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
           <context context-type="linenumber">60</context>
         </context-group>
-        <target state="needs-translation">(Run ID: <x equiv-text="{{ data.run.id }}" id="INTERPOLATION"/>)</target>
+        <target state="translated">(执行项目 ID: <x id="INTERPOLATION" equiv-text="{{ data.run.id }}"/>)</target>
       </trans-unit>
       <trans-unit datatype="html" id="b6d98e943848266c1ee9234245f2d1505d969d72">
         <source>Add an assignment for this unit in Google Classroom.</source>
@@ -1772,7 +1772,7 @@
           <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
           <context context-type="linenumber">30</context>
         </context-group>
-        <target state="needs-translation"> (Section <x equiv-text="{{ courses[i].section }}" id="INTERPOLATION"/>)</target>
+        <target state="translated"> (节 <x id="INTERPOLATION" equiv-text="{{ courses[i].section }}"/>)</target>
       </trans-unit>
       <trans-unit datatype="html" id="20b6acf1174cff2aec4931ca70a8c1a3038695af">
         <source>2. Add Description</source>
@@ -1912,7 +1912,7 @@
           <context context-type="sourcefile">app/modules/library/share-project-dialog/share-project-dialog.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-        <target state="needs-translation">(Unit ID: <x equiv-text="{{ project.id }}" id="INTERPOLATION"/>)</target>
+        <target state="translated">(单元 ID: <x id="INTERPOLATION" equiv-text="{{ project.id }}"/>)</target>
       </trans-unit>
       <trans-unit datatype="html" id="a2d9400df68d9f4e89fe24f6a3f40bc5322f19f2">
         <source>1. Choose Periods</source>
@@ -1936,7 +1936,7 @@
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
           <context context-type="linenumber">18</context>
         </context-group>
-        <target state="translated">用逗号分隔班级名称（例如“1班，2班”）。 对于"9班"，只需输入数字9。手动命名班级名称时，名称的长度不应超过16个英文字符。 </target>
+        <target state="translated">对于"课时9"，只需输入数字9。用逗号分隔课时（例如“第1节，第2节”）。 手动命名课时名称时，名称的长度不应超过16个英文字符。 </target>
       </trans-unit>
       <trans-unit datatype="html" id="6b0dd0933835c1e0d9e3ed4a19c8eb88a9df417b">
         <source>2. Choose Students Per Team</source>
@@ -2056,7 +2056,7 @@
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
           <context context-type="linenumber">31</context>
         </context-group>
-        <target state="needs-translation">Access Code: <x equiv-text="{{ run.runCode }}" id="INTERPOLATION"/></target>
+        <target state="translated">访问代码：<x id="INTERPOLATION" equiv-text="{{ run.runCode }}"/></target>
       </trans-unit>
       <trans-unit datatype="html" id="534ba8ba6d05fed93bd074e67fb6d03d2e466b46">
         <source>Important: Every classroom unit has a unique Access Code. Students use this code to register for a unit. Give the code to your students when they first sign up for a WISE account. If they already have WISE accounts, have them log in and then select "Add Unit" from the student home page.</source>
@@ -2104,7 +2104,7 @@
           <context context-type="sourcefile">app/teacher/use-with-class-warning-dialog/use-with-class-warning-dialog.component.html</context>
           <context context-type="linenumber">6</context>
         </context-group>
-        <target state="needs-translation">We recommend finding a newer version in the library, as support for classroom implementations of legacy units will end on October 1, 2019. If you cannot find a newer version, <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>contact us<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/> if you're interested in upgrading the unit. Thanks!</target>
+        <target state="translated">我们建议您在课程库中寻找您的版本，因为在2019年10月1日之后我们将停止对旧版学习单元的课堂应用提供支持。如果你没有寻找到新的版本并且对更新版本的学习单元感兴趣，请<x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>联系我们<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>。谢谢！</target>
       </trans-unit>
       <trans-unit datatype="html" id="c90c99f8160be2e6bb39fcba6ae4a0009e652474">
         <source>Proceed Anyway</source>
@@ -2128,7 +2128,7 @@
           <context context-type="sourcefile">app/modules/library/library-project-details/library-project-details.component.html</context>
           <context context-type="linenumber">13</context>
         </context-group>
-        <target state="needs-translation">Duration: <x equiv-text="{{ project.metadata.totalTime }}" id="INTERPOLATION"/></target>
+        <target state="translated">持续时间：<x id="INTERPOLATION" equiv-text="{{ project.metadata.totalTime }}"/></target>
       </trans-unit>
       <trans-unit datatype="html" id="e9459a08449fe148a8a37f309d9d5e298e4944ed">
         <source>Unit ID: <x equiv-text="{{ project.id }}" id="INTERPOLATION"/></source>
@@ -2136,7 +2136,7 @@
           <context context-type="sourcefile">app/modules/library/library-project-details/library-project-details.component.html</context>
           <context context-type="linenumber">16</context>
         </context-group>
-        <target state="needs-translation">Unit ID: <x equiv-text="{{ project.id }}" id="INTERPOLATION"/></target>
+        <target state="translated">学习单元ID：<x id="INTERPOLATION" equiv-text="{{ project.id }}"/></target>
       </trans-unit>
       <trans-unit datatype="html" id="59a08e65c39e2cecb841fc7123a77756f52c8db3">
         <source>Legacy Unit</source>
@@ -2192,7 +2192,7 @@
           <context context-type="sourcefile">app/modules/library/library-project-details/library-project-details.component.html</context>
           <context context-type="linenumber">64</context>
         </context-group>
-        <target state="needs-translation"><x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>This unit<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/> is licensed under <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK_1"/>CC BY-SA<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/>.</target>
+        <target state="translated"><x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>这一学习单元<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> 符合 <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>CC BY-SA<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>的授权。</target>
       </trans-unit>
       <trans-unit datatype="html" id="88440ddf34ab09a19c9f781fe3d93f2cbbd0630c">
         <source><x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>This unit<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/> is licensed under <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK_1"/>CC BY-SA<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/> by <x equiv-text="{{authorsString}}" id="INTERPOLATION"/>.</source>
@@ -2200,7 +2200,7 @@
           <context context-type="sourcefile">app/modules/library/library-project-details/library-project-details.component.html</context>
           <context context-type="linenumber">65</context>
         </context-group>
-        <target state="needs-translation"><x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>This unit<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/> is licensed under <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK_1"/>CC BY-SA<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/> by <x equiv-text="{{authorsString}}" id="INTERPOLATION"/>.</target>
+        <target state="translated"><x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>这一学习单元<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> 符合<x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>CC BY-SA<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> 由 <x id="INTERPOLATION" equiv-text="{{authorsString}}"/>授权。</target>
       </trans-unit>
       <trans-unit datatype="html" id="19812b33be1cdeaa076d46cad963bf90e2fd2eb0">
         <source><x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>This unit<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/> is a copy of <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK_1"/><x equiv-text="{{parentProject.title}}" id="INTERPOLATION"/><x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/> (used under <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK_2"/>CC BY-SA<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/>).</source>
@@ -2208,7 +2208,7 @@
           <context context-type="sourcefile">app/modules/library/library-project-details/library-project-details.component.html</context>
           <context context-type="linenumber">68</context>
         </context-group>
-        <target state="needs-translation"><x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>This unit<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/> is a copy of <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK_1"/><x equiv-text="{{parentProject.title}}" id="INTERPOLATION"/><x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/> (used under <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK_2"/>CC BY-SA<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/>).</target>
+        <target state="translated"><x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>这个学习单元<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> 是一个副本 <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/><x id="INTERPOLATION" equiv-text="{{parentProject.title}}"/><x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> (符合 <x id="START_LINK_2" ctype="x-a" equiv-text="&lt;a&gt;"/>CC BY-SA标准<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>).</target>
       </trans-unit>
       <trans-unit datatype="html" id="41476bcc74edf123139f9d304fc569c7a066b386">
         <source><x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>This unit<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/> is a copy of <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK_1"/><x equiv-text="{{parentProject.title}}" id="INTERPOLATION"/><x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/> by <x equiv-text="{{parentAuthorsString}}" id="INTERPOLATION_1"/> (used under <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK_2"/>CC BY-SA<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/>).</source>
@@ -2216,7 +2216,7 @@
           <context context-type="sourcefile">app/modules/library/library-project-details/library-project-details.component.html</context>
           <context context-type="linenumber">69</context>
         </context-group>
-        <target state="needs-translation"><x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>This unit<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/> is a copy of <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK_1"/><x equiv-text="{{parentProject.title}}" id="INTERPOLATION"/><x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/> by <x equiv-text="{{parentAuthorsString}}" id="INTERPOLATION_1"/> (used under <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK_2"/>CC BY-SA<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/>).</target>
+        <target state="translated"><x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>这个学习单元<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>是一个副本 <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/><x id="INTERPOLATION" equiv-text="{{parentProject.title}}"/><x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> by <x id="INTERPOLATION_1" equiv-text="{{parentAuthorsString}}"/> (符合 <x id="START_LINK_2" ctype="x-a" equiv-text="&lt;a&gt;"/>CC BY-SA标准<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>).</target>
       </trans-unit>
       <trans-unit datatype="html" id="ac0f81713a84217c9bd1d9bb460245d8190b073f">
         <source>More</source>
@@ -2252,7 +2252,7 @@
           <context context-type="sourcefile">app/modules/library/library-project/library-project.component.html</context>
           <context context-type="linenumber">16</context>
         </context-group>
-        <target state="needs-translation">(ID: <x equiv-text="{{ project.id }}" id="INTERPOLATION"/>)</target>
+        <target state="translated">(ID: <x id="INTERPOLATION" equiv-text="{{ project.id }}"/>)</target>
       </trans-unit>
       <trans-unit datatype="html" id="e3ae8640f4d05cb4f78a31cfbf18d5701f41d57e">
         <source>Shared by <x equiv-text="{{ project.owner.displayName }}" id="INTERPOLATION"/></source>
@@ -2260,7 +2260,7 @@
           <context context-type="sourcefile">app/modules/library/library-project/library-project.component.html</context>
           <context context-type="linenumber">23</context>
         </context-group>
-        <target state="needs-translation">Shared by <x equiv-text="{{ project.owner.displayName }}" id="INTERPOLATION"/></target>
+        <target state="translated">由<x id="INTERPOLATION" equiv-text="{{ project.owner.displayName }}"/>共享</target>
       </trans-unit>
       <trans-unit datatype="html" id="4bad40355890bcbe1b4003d9fd0632beeffd6580">
         <source>Show project details</source>
@@ -2388,7 +2388,7 @@
           <context context-type="sourcefile">app/modules/library/copy-project-dialog/copy-project-dialog.component.html</context>
           <context context-type="linenumber">5</context>
         </context-group>
-        <target state="needs-translation">(Unit ID: <x equiv-text="{{ data.project.id }}" id="INTERPOLATION"/>)</target>
+        <target state="translated">(学习单元 ID: <x id="INTERPOLATION" equiv-text="{{ data.project.id }}"/>)</target>
       </trans-unit>
       <trans-unit datatype="html" id="459457d652be00e6fe313f88d938d4f063c3b3e0">
         <source>Copying creates a duplicate that will appear in “My Units”. You will be the owner and can edit the content and share the new unit with other WISE users.</source>
@@ -2432,7 +2432,7 @@
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-        <target state="needs-translation">(Run ID: <x equiv-text="{{ run.id }}" id="INTERPOLATION"/>)</target>
+        <target state="translated">(执行单元 ID: <x id="INTERPOLATION" equiv-text="{{ run.id }}"/>)</target>
       </trans-unit>
       <trans-unit datatype="html" id="7729e322ed636f18b5930ee33fde3b4a10f2e4ce">
         <source>Warning! You will be editing the content of a classroom unit. If students have already started working, this may result in lost data or other problems.</source>
@@ -2504,7 +2504,7 @@
           <context context-type="sourcefile">app/modules/library/library-filters/library-filters.component.html</context>
           <context context-type="linenumber">25</context>
         </context-group>
-        <target state="needs-translation">Filter by <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>Next Generation Science Standards<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/> (NGSS).</target>
+        <target state="translated">按照<x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>美国下一代科学课程标准<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> (NGSS)筛选。</target>
       </trans-unit>
       <trans-unit datatype="html" id="06c663bf1474713f57551123a46b34318543b67d">
         <source>Reset</source>
@@ -2576,7 +2576,7 @@
           <context context-type="sourcefile">app/modules/library/community-library/community-library-details.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-        <target state="needs-translation">The "Community Built" library contains units that were designed and contributed by WISE community members. Want to publicly share your custom unit? <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>Contact Us<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/>!</target>
+        <target state="translated">"学习社区建设"库包含由WISE学习社区成员设计和贡献的课程学习单元。 您想公开分享您的自定义单元吗？ <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>请联系我们<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>!</target>
       </trans-unit>
       <trans-unit datatype="html" id="1f519374aa2d63b8d101da2f56f778edf9052131">
         <source>*Please note: While WISE staff have reviewed the units listed here, we cannot specifically vouch for their effectiveness or quality. Please examine the units carefully before using in your classrooms. Thanks!</source>
@@ -3444,7 +3444,7 @@
           <context context-type="sourcefile">app/help/getting-started/getting-started.component.html</context>
           <context context-type="linenumber">7</context>
         </context-group>
-        <target state="translated"> 所有用户都必须创建自己的帐户。 教师必须创建教师帐户，学生必须创建学生帐户。 用户可以在 <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>WISE 主页<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/>点击屏幕右上方的 <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK_1"/>注册<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/> 创建账户。 </target>
+        <target state="translated"> 所有用户都必须创建自己的帐户。 教师必须创建教师帐户，学生必须创建学生帐户。 用户可以通过 <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>WISE 主页<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>创建账户，也可以点击 屏幕右上方的 <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>注册<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> 创建账户。 </target>
       </trans-unit>
       <trans-unit datatype="html" id="8667ecd04a352367c4c964c92a7763320d3f8946">
         <source>Here are instructions on how to create a teacher account.</source>
@@ -3460,7 +3460,7 @@
           <context context-type="sourcefile">app/help/getting-started/getting-started.component.html</context>
           <context context-type="linenumber">12</context>
         </context-group>
-        <target state="needs-translation">Go to the <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>WISE Home Page<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/>.</target>
+        <target state="translated">转到 <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>WISE 主页<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</target>
       </trans-unit>
       <trans-unit datatype="html" id="b6140858fd535cc6f3236e4446df5c52fa2caa1d">
         <source>Click the <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>Register<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/> link at the upper right of the screen.</source>
@@ -3468,7 +3468,7 @@
           <context context-type="sourcefile">app/help/getting-started/getting-started.component.html</context>
           <context context-type="linenumber">13</context>
         </context-group>
-        <target state="needs-translation">Click the <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>Register<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/> link at the upper right of the screen.</target>
+        <target state="translated">点击屏幕右上方的<x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>注册<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>。</target>
       </trans-unit>
       <trans-unit datatype="html" id="2e06e81d5bce0468d498f4f754a63511b54a31f1">
         <source>Click on <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>Teacher<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/>.</source>
@@ -3476,7 +3476,7 @@
           <context context-type="sourcefile">app/help/getting-started/getting-started.component.html</context>
           <context context-type="linenumber">14</context>
         </context-group>
-        <target state="needs-translation">Click on <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>Teacher<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/>.</target>
+        <target state="translated">点击 <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>教师<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</target>
       </trans-unit>
       <trans-unit datatype="html" id="802cc87d8831d0d77405a7acd6d0ac904580d1f8">
         <source>Choose to sign up with your email or with your Google Account.</source>
@@ -3868,7 +3868,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">13</context>
         </context-group>
-        <target state="needs-translation">Go to the <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>Register<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/> page.</target>
+        <target state="translated">登陆 <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>注册<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> 页面。</target>
       </trans-unit>
       <trans-unit datatype="html" id="500e3831ebdee994afba617d0be7ff667d7f6432">
         <source>Click on "Teacher".</source>
@@ -4624,7 +4624,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">46</context>
         </context-group>
-        <target state="needs-translation">You can try <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>clearing your browser cache<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/> and then reloading the WISE web site.</target>
+        <target state="translated">您可以尝试 <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>清除您的浏览器缓存<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> ，然后重新加载WISE网站。</target>
       </trans-unit>
       <trans-unit datatype="html" id="2b8d27d2ef531e0cdf597e90b8c80e339d679ad3">
         <source>You can try using a different web browser. We recommend using Chrome or Firefox.</source>
@@ -4724,7 +4724,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">58</context>
         </context-group>
-        <target state="needs-translation">Click the <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>"Edit Profile"<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/> option.</target>
+        <target state="translated">点击 <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>"信息编辑"<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> 选项。</target>
       </trans-unit>
       <trans-unit datatype="html" id="9d5b98a0d8b80864e5e2382f9c2f056f8b9393e5">
         <source>Near the bottom there will be a "Language" setting.</source>
@@ -4796,7 +4796,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">66</context>
         </context-group>
-        <target state="translated"><x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>联系WISE表单<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/>将发送电子邮件给WISE技术小组。 您可以在主页底部找到表单的链接。请务必尽可能多地提供有关问题的信息。 我们会尽快回复您。</target>
+        <target state="translated"><x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>联系WISE表单<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>将发送电子邮件给WISE技术小组。 您可以在主页底部找到表单的链接。请务必尽可能多地提供有关问题的信息。 我们会尽快回复您。</target>
       </trans-unit>
       <trans-unit datatype="html" id="0b66532dc98434ee7c1a4b609e3f3a7d49c23d60">
         <source>Information for new users.</source>
@@ -4828,7 +4828,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">14</context>
         </context-group>
-        <target state="needs-translation">Click on <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>Student<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/>.</target>
+        <target state="translated">点击 <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>学生<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</target>
       </trans-unit>
       <trans-unit datatype="html" id="ae21d5a7a66ab2122f138b30d6aec4e8538ee94c">
         <source>I forgot my username, how can I find it?</source>
@@ -4892,7 +4892,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">31</context>
         </context-group>
-        <target state="translated">点击 <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>学生主页右上方的“添加单元”按钮<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/>。</target>
+        <target state="translated">在 <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>学生主页<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>上点击右上角的"添加学习单元"按钮。</target>
       </trans-unit>
       <trans-unit datatype="html" id="318e90549e03b7a6a6fc59f3253708f3b9ed94ce">
         <source>Enter the Access Code from your teacher.</source>
@@ -5216,7 +5216,7 @@
           <context context-type="sourcefile">app/register/register-teacher-form/register-teacher-form.component.html</context>
           <context context-type="linenumber">142</context>
         </context-group>
-        <target state="needs-translation">I agree to the <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>WISE Privacy Policy &amp; Terms of Use<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/> *</target>
+        <target state="translated">我同意 <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>WISE 隐私策略和使用条款<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> *</target>
       </trans-unit>
       <trans-unit datatype="html" id="63fa2c4efa44cd8a08579763cdd62f981a8b1aaa">
         <source>You must agree to the Privacy Policy &amp; Terms of Use</source>
@@ -5248,7 +5248,7 @@
           <context context-type="sourcefile">app/register/register-student-complete/register-student-complete.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-        <target state="needs-translation"> Your username is: <x ctype="x-span" equiv-text="&lt;span&gt;" id="START_TAG_SPAN"/><x equiv-text="{{username}}" id="INTERPOLATION"/><x ctype="x-span" equiv-text="&lt;/span&gt;" id="CLOSE_TAG_SPAN"/>. </target>
+        <target state="translated"> 你的用户名是: <x id="START_TAG_SPAN" ctype="x-span" equiv-text="&lt;span&gt;"/><x id="INTERPOLATION" equiv-text="{{username}}"/><x id="CLOSE_TAG_SPAN" ctype="x-span" equiv-text="&lt;/span&gt;"/>. </target>
       </trans-unit>
       <trans-unit datatype="html" id="b6c571f49a9876275382c366aabd8aac85dbbd8f">
         <source>You should receive an email with your account details shortly.</source>
@@ -5360,7 +5360,7 @@
           <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
           <context context-type="linenumber">111</context>
         </context-group>
-        <target state="needs-translation">By clicking "Create Account", you agree to our <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>Privacy Policy &amp; Terms of Use<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/></target>
+        <target state="translated">点击"创建账号"，表示您同意我们的<x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>隐私策略和使用条款<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/></target>
       </trans-unit>
       <trans-unit datatype="html" id="34fe434c734c4d0366fc952715e5f93e68e55ba3">
         <source>Please write this down. You will need it when signing in to WISE in the future.</source>
@@ -5420,7 +5420,7 @@
           <context context-type="sourcefile">app/login/login-google-user-not-found/login-google-user-not-found.component.html</context>
           <context context-type="linenumber">5</context>
         </context-group>
-        <target state="needs-translation">New to WISE? <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>Join for free!<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/></target>
+        <target state="translated">您是WISE新用户吗? <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>请免费加入!<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/></target>
       </trans-unit>
       <trans-unit datatype="html" id="050473ed2d269f07090850ebf8f56f635436869e">
         <source>Your Google User ID was not found in WISE.</source>
@@ -5460,7 +5460,7 @@
           <context context-type="sourcefile">app/modules/header/header-signin/header-signin.component.html</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation"><x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>Register<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/> or <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK_1"/>Sign In<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/></target>
+        <target state="translated"><x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>注册<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> 或者 <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>登录<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/></target>
       </trans-unit>
       <trans-unit datatype="html" id="17f37e96c7b8059b23c07791dca1bdb3f3f6853f">
         <source>Welcome <x equiv-text="{{ user.firstName }}" id="INTERPOLATION"/>!</source>
@@ -5472,7 +5472,7 @@
           <context context-type="sourcefile">app/modules/header/header-links/header-links.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-        <target state="needs-translation">Welcome <x equiv-text="{{ user.firstName }}" id="INTERPOLATION"/>!</target>
+        <target state="translated">欢迎 <x id="INTERPOLATION" equiv-text="{{ user.firstName }}"/>!</target>
       </trans-unit>
       <trans-unit datatype="html" id="d222f6ff9f7e28fdb4e8b2af47898446cf2eafe4">
         <source>Account Menu</source>
@@ -5676,7 +5676,7 @@
           <context context-type="sourcefile">app/student/student-run-list/student-run-list.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-        <target state="translated">请向你的教师询问 <x ctype="x-b" equiv-text="&lt;b&gt;" id="START_BOLD_TEXT"/>选课码<x ctype="x-b" equiv-text="&lt;/b&gt;" id="CLOSE_BOLD_TEXT"/> ，然后点击 <x ctype="x-b" equiv-text="&lt;b&gt;" id="START_BOLD_TEXT"/>添加课程<x ctype="x-b" equiv-text="&lt;/b&gt;" id="CLOSE_BOLD_TEXT"/> 按钮开始学习。</target>
+        <target state="translated">请向您的教师询问 <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>访问码<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/> ，然后点击 <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>添加学习单元<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/> 按钮以开始新的学习。</target>
       </trans-unit>
       <trans-unit datatype="html" id="5b6d466cdfc67986fb402712d003dd3a455a3507">
         <source>Units found: <x equiv-text="{{ filteredRuns.length }}" id="INTERPOLATION"/></source>
@@ -5688,7 +5688,7 @@
           <context context-type="sourcefile">app/teacher/teacher-run-list/teacher-run-list.component.html</context>
           <context context-type="linenumber">29</context>
         </context-group>
-        <target state="translated">查找到的课程： <x equiv-text="{{ filteredRuns.length }}" id="INTERPOLATION"/></target>
+        <target state="translated">查找到的学习单元： <x id="INTERPOLATION" equiv-text="{{ filteredRuns.length }}"/></target>
       </trans-unit>
       <trans-unit datatype="html" id="cba86a51e8ee210e24b4d9b47ceffed1e70b61d1">
         <source>My WISE units: <x equiv-text="{{ filteredRuns.length }}" id="INTERPOLATION"/></source>
@@ -5696,7 +5696,7 @@
           <context context-type="sourcefile">app/student/student-run-list/student-run-list.component.html</context>
           <context context-type="linenumber">20</context>
         </context-group>
-        <target state="translated">我的WISE课程：<x equiv-text="{{ filteredRuns.length }}" id="INTERPOLATION"/></target>
+        <target state="translated">我的WISE学习单元：<x id="INTERPOLATION" equiv-text="{{ filteredRuns.length }}"/></target>
       </trans-unit>
       <trans-unit datatype="html" id="c6a2c19b6bd10c35aca82f19ffebdc75a2fc164c">
         <source><x equiv-text="{{ scheduledTotal() }}" id="INTERPOLATION"/> scheduled</source>
@@ -5708,7 +5708,7 @@
           <context context-type="sourcefile">app/teacher/teacher-run-list/teacher-run-list.component.html</context>
           <context context-type="linenumber">32</context>
         </context-group>
-        <target state="needs-translation"><x equiv-text="{{ scheduledTotal() }}" id="INTERPOLATION"/> scheduled</target>
+        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ scheduledTotal() }}"/> 已计划</target>
       </trans-unit>
       <trans-unit datatype="html" id="db39827bab98f8af5e0a97d4614a0d667e98fcb6">
         <source><x equiv-text="{{ activeTotal() }}" id="INTERPOLATION"/> active</source>
@@ -5720,7 +5720,7 @@
           <context context-type="sourcefile">app/teacher/teacher-run-list/teacher-run-list.component.html</context>
           <context context-type="linenumber">33</context>
         </context-group>
-        <target state="needs-translation"><x equiv-text="{{ activeTotal() }}" id="INTERPOLATION"/> active</target>
+        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ activeTotal() }}"/> 有效</target>
       </trans-unit>
       <trans-unit datatype="html" id="c3840ff3430f7c6130e4d7a2f0aec5a7cb3ebb3a">
         <source><x equiv-text="{{ completedTotal() }}" id="INTERPOLATION"/> completed</source>
@@ -5732,7 +5732,7 @@
           <context context-type="sourcefile">app/teacher/teacher-run-list/teacher-run-list.component.html</context>
           <context context-type="linenumber">34</context>
         </context-group>
-        <target state="needs-translation"><x equiv-text="{{ completedTotal() }}" id="INTERPOLATION"/> completed</target>
+        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ completedTotal() }}"/> 已完成</target>
       </trans-unit>
       <trans-unit datatype="html" id="13c602751734f72430891c9781167bf53c612481">
         <source>Team Sign In</source>
@@ -5820,7 +5820,7 @@
           <context context-type="sourcefile">app/student/student-run-list-item/student-run-list-item.component.html</context>
           <context context-type="linenumber">27</context>
         </context-group>
-        <target state="needs-translation">Run ID: <x equiv-text="{{run.id}}" id="INTERPOLATION"/></target>
+        <target state="translated">执行学习单元 ID: <x id="INTERPOLATION" equiv-text="{{run.id}}"/></target>
       </trans-unit>
       <trans-unit datatype="html" id="5bbe77fbbc93c3a34cea3b4b7c99aac62e670e08">
         <source>Report Problem</source>
@@ -5844,7 +5844,7 @@
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
           <context context-type="linenumber">83</context>
         </context-group>
-        <target state="needs-translation">Starts <x equiv-text="{{run.startTime | amTimeAgo}}" id="INTERPOLATION"/></target>
+        <target state="translated">开始 <x id="INTERPOLATION" equiv-text="{{run.startTime | amTimeAgo}}"/></target>
       </trans-unit>
       <trans-unit datatype="html" id="2874cc3a35edcf67e588849afeb796f57163458b">
         <source>Launch</source>
@@ -5956,7 +5956,7 @@
           <context context-type="sourcefile">app/teacher/teacher-run-list/teacher-run-list.component.html</context>
           <context context-type="linenumber">30</context>
         </context-group>
-        <target state="needs-translation">Total classroom units: <x equiv-text="{{ filteredRuns.length }}" id="INTERPOLATION"/></target>
+        <target state="translated">全部课堂学习单元：<x id="INTERPOLATION" equiv-text="{{ filteredRuns.length }}"/></target>
       </trans-unit>
       <trans-unit datatype="html" id="9a208893f13987ce5a706b3b5e4fed09e486cb5d">
         <source>periods</source>
@@ -6016,7 +6016,7 @@
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
           <context context-type="linenumber">32</context>
         </context-group>
-        <target state="needs-translation"> Shared by <x equiv-text="{{run.owner.firstName}}" id="INTERPOLATION"/> <x equiv-text="{{run.owner.lastName}}" id="INTERPOLATION_1"/></target>
+        <target state="translated"> 由 <x id="INTERPOLATION" equiv-text="{{run.owner.firstName}}"/> <x id="INTERPOLATION_1" equiv-text="{{run.owner.lastName}}"/>分享</target>
       </trans-unit>
       <trans-unit datatype="html" id="490233cd77b10fe95606d32aa5ed4be533645820">
         <source>(Legacy Unit)</source>
@@ -6032,7 +6032,7 @@
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
           <context context-type="linenumber">77</context>
         </context-group>
-        <target state="needs-translation">Last student login: <x equiv-text="{{run.lastRun | amCalendar}}" id="INTERPOLATION"/></target>
+        <target state="translated">上次学生登录：<x id="INTERPOLATION" equiv-text="{{run.lastRun | amCalendar}}"/></target>
       </trans-unit>
       <trans-unit datatype="html" id="f31a4ac5cfc26f2d23677bd24f59219dc5f1c491">
         <source>Teacher Tools</source>
@@ -6088,7 +6088,7 @@
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
           <context context-type="linenumber">86</context>
         </context-group>
-        <target state="needs-translation">Are you sure you want to make <x equiv-text="{{teacherSearchControl.value}}" id="INTERPOLATION"/> the new owner of this unit?</target>
+        <target state="translated">您确定想让 <x id="INTERPOLATION" equiv-text="{{teacherSearchControl.value}}"/> 成为这个学习单元新的拥有者吗？</target>
       </trans-unit>
       <trans-unit datatype="html" id="5b45cfc4c7c5c38692885d9d8eb056f42dd48a05">
         <source>You will still be able to access the unit but the new owner will have the ability to take away or change your access permissions.</source>
@@ -6184,7 +6184,7 @@
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
           <context context-type="linenumber">39</context>
         </context-group>
-        <target state="needs-translation">(Last student login: <x equiv-text="{{ run.lastRun | amCalendar }}" id="INTERPOLATION"/>)</target>
+        <target state="translated">(上次学生登录：<x id="INTERPOLATION" equiv-text="{{ run.lastRun | amCalendar }}"/>)</target>
       </trans-unit>
       <trans-unit datatype="html" id="a1c89f5496e99086127a54d08cecba1d0920397e">
         <source>Start date is required.</source>
@@ -6216,7 +6216,7 @@
           <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
           <context context-type="linenumber">6</context>
         </context-group>
-        <target state="needs-translation">Run ID: <x equiv-text="{{ run.id }}" id="INTERPOLATION"/></target>
+        <target state="translated">运行学习单元ID：<x id="INTERPOLATION" equiv-text="{{ run.id }}"/></target>
       </trans-unit>
       <trans-unit datatype="html" id="3ee54b66b7f53827035c3055f228bc2bf2550dab">
         <source>Unit Info</source>
@@ -6264,7 +6264,7 @@
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
           <context context-type="linenumber">107</context>
         </context-group>
-        <target state="translated">帮助我们翻译 WISE！请访问 <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>https://crowdin.com/project/wise<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/>。</target>
+        <target state="translated">请访问 <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>https://crowdin.com/project/wise<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>网址，帮助我们翻译WISE平台。</target>
       </trans-unit>
       <trans-unit id="6178733511992894634">
         <source>Trouble Signing In</source>
@@ -6272,15 +6272,15 @@
       </trans-unit>
       <trans-unit id="6892681827231609313">
         <source>Need Help Using WISE</source>
-        <target state="translated">使用WISE时需要帮助</target>
+        <target state="translated">在使用WISE时请求帮助</target>
       </trans-unit>
       <trans-unit id="2072690839988671006">
         <source>Problems with a WISE Unit</source>
-        <target state="translated">WISE课程的问题</target>
+        <target state="translated">WISE学习单元的问题</target>
       </trans-unit>
       <trans-unit id="2959002981630304422">
         <source>Feedback to WISE</source>
-        <target state="translated">对 WISE 的反馈</target>
+        <target state="translated">反馈给WISE平台</target>
       </trans-unit>
       <trans-unit id="8693603235657020323">
         <source>Other</source>
@@ -6292,7 +6292,7 @@
       </trans-unit>
       <trans-unit id="7735613040574061081">
         <source>Need Help with Authoring</source>
-        <target state="translated">制作课程时需要帮助</target>
+        <target state="translated">在编辑时请求帮助</target>
       </trans-unit>
       <trans-unit id="7528317085219048471">
         <source>01 (Jan)</source>
@@ -6344,47 +6344,47 @@
       </trans-unit>
       <trans-unit id="8342090111716136539">
         <source>We did not find any usernames that match the information you provided. Please make sure you entered your information correctly. If you can't find your account, ask a teacher for help or contact us for assistance.</source>
-        <target state="needs-translation">We did not find any usernames that match the information you provided. Please make sure you entered your information correctly. If you can't find your account, ask a teacher for help or contact us for assistance.</target>
+        <target state="translated">我们未找到与您提供的信息相匹配的任何用户名。 请确保您输入的信息正确无误。 如果您找不到自己的帐户，请向老师寻求帮助或与我们联系。</target>
       </trans-unit>
       <trans-unit id="2728844381564590456">
         <source>We found a username that matches. Select it to log in. If this username is not yours, ask a teacher for help or contact us for assistance.</source>
-        <target state="needs-translation">We found a username that matches. Select it to log in. If this username is not yours, ask a teacher for help or contact us for assistance.</target>
+        <target state="translated">我们找到了匹配的用户名。 请选择它以登录。如果此用户名不是您的用户名，请向老师寻求帮助或与我们联系。</target>
       </trans-unit>
       <trans-unit id="5966595713291556325">
         <source>We found multiple usernames that match. If one of these is yours, select it to log in. If you can't find your account, ask a teacher for help or contact us for assistance.</source>
-        <target state="needs-translation">We found multiple usernames that match. If one of these is yours, select it to log in. If you can't find your account, ask a teacher for help or contact us for assistance.</target>
+        <target state="translated">我们发现了多个匹配的用户名。 如果其中一个是您的，请选择它以登录。如果您找不到您的帐户，请向老师寻求帮助或与我们联系。</target>
       </trans-unit>
       <trans-unit id="2305544855268461756">
         <source>We could not find that username. Please make sure you are typing it correctly and try again. If you have forgotten your username, please use the forgot username option below.</source>
-        <target state="needs-translation">We could not find that username. Please make sure you are typing it correctly and try again. If you have forgotten your username, please use the forgot username option below.</target>
+        <target state="translated">我们找不到该用户名。 请确保正确输入并重新尝试。 如果您忘记了用户名，请使用下面的忘记用户名选项。</target>
       </trans-unit>
       <trans-unit id="18036423310428495">
         <source>Incorrect answer, please try again. If you can't remember the answer to your security question, please ask your teacher to change your password or contact us for assistance.</source>
-        <target state="needs-translation">Incorrect answer, please try again. If you can't remember the answer to your security question, please ask your teacher to change your password or contact us for assistance.</target>
+        <target state="translated">答案不正确，请再试一次。 如果您忘记了安全问题的答案，请让您的老师更改密码或与我们联系以获取帮助。</target>
       </trans-unit>
       <trans-unit id="8384809960328910876">
         <source>Password cannot be blank. Please try again.</source>
-        <target state="needs-translation">Password cannot be blank. Please try again.</target>
+        <target state="translated">密码不能为空。请重新输入。</target>
       </trans-unit>
       <trans-unit id="6465250798669251020">
         <source>Passwords do not match. Please try again.</source>
-        <target state="needs-translation">Passwords do not match. Please try again.</target>
+        <target state="translated">密码不匹配。请重试一次。</target>
       </trans-unit>
       <trans-unit id="324815643617845517">
         <source>Password is invalid. Please try a different password.</source>
-        <target state="needs-translation">Password is invalid. Please try a different password.</target>
+        <target state="translated">该密码无效。 请尝试使用其他密码。</target>
       </trans-unit>
       <trans-unit id="7389211279729440739">
         <source>An error occurred. Please try again.</source>
-        <target state="needs-translation">An error occurred. Please try again.</target>
+        <target state="translated">发生错误，请再试一次。</target>
       </trans-unit>
       <trans-unit id="3524867010032834126">
         <source>We did not find a WISE account associated with that email. Please make sure you have typed your email address correctly.</source>
-        <target state="needs-translation">We did not find a WISE account associated with that email. Please make sure you have typed your email address correctly.</target>
+        <target state="translated">我们未找到与该电子邮件关联的WISE帐户。 请确保您正确输入您的电子邮件地址。</target>
       </trans-unit>
       <trans-unit id="3305550971863645938">
         <source>The server has encountered an error and was unable to send an email to you. Please try again. If the error continues to occur, please contact us.</source>
-        <target state="needs-translation">The server has encountered an error and was unable to send an email to you. Please try again. If the error continues to occur, please contact us.</target>
+        <target state="translated">服务器发生错误，无法向您发送电子邮件。 请再试一次。 如果错误继续发生，请与我们联系。</target>
       </trans-unit>
       <trans-unit id="8855149280237623360">
         <source>You have submitted an invalid verification code too many times. For security reasons, we will lock the ability to change your password for 10 minutes. After 10 minutes, you can try again.</source>
@@ -6392,43 +6392,43 @@
       </trans-unit>
       <trans-unit id="243316711119938992">
         <source>The server has encountered an error and was unable to send you an email. Please try again. If the error continues to occur, please contact us.</source>
-        <target state="needs-translation">The server has encountered an error and was unable to send you an email. Please try again. If the error continues to occur, please contact us.</target>
+        <target state="translated">服务器发生错误，无法向您发送电子邮件。 请再试一次。 如果错误继续发生，请与我们联系。</target>
       </trans-unit>
       <trans-unit id="5604597042379546047">
         <source>The verification code has expired. Verification codes are valid for 10 minutes. Please go back to the Teacher Forgot Password page to generate a new one.</source>
-        <target state="needs-translation">The verification code has expired. Verification codes are valid for 10 minutes. Please go back to the Teacher Forgot Password page to generate a new one.</target>
+        <target state="translated">该验证码已过期。 验证码有效期为10分钟。 请返回"教师忘记密码"页面以生成新的验证码。</target>
       </trans-unit>
       <trans-unit id="861030852489811059">
         <source>The verification code is invalid. Please try again.</source>
-        <target state="needs-translation">The verification code is invalid. Please try again.</target>
+        <target state="translated">该验证码无效。 请再试一次。</target>
       </trans-unit>
       <trans-unit id="2199576463342303449">
         <source>You have submitted an invalid verification code too many times. For security reasons, we will lock the ability to change your password for 10 minutes. After 10 minutes, please go back to the Teacher Forgot Password page to generate a new verification code.</source>
-        <target state="needs-translation">You have submitted an invalid verification code too many times. For security reasons, we will lock the ability to change your password for 10 minutes. After 10 minutes, please go back to the Teacher Forgot Password page to generate a new verification code.</target>
+        <target state="translated">您重复多次提交无效的验证码。 出于安全原因，我们将锁定更改密码功能10分钟。 10分钟后，请返回教师忘记密码页面以生成新的验证码。</target>
       </trans-unit>
       <trans-unit id="7375295840965754734">
         <source>Password cannot be blank, please enter a password.</source>
-        <target state="needs-translation">Password cannot be blank, please enter a password.</target>
+        <target state="translated">密码不能为空，请输入密码。</target>
       </trans-unit>
       <trans-unit id="4839293263479159850">
         <source>Passwords do not match, please try again.</source>
-        <target state="needs-translation">Passwords do not match, please try again.</target>
+        <target state="translated">密码不匹配，请再试一次。</target>
       </trans-unit>
       <trans-unit id="2359235425915349492">
         <source>An error occurred, please try again.</source>
-        <target state="needs-translation">An error occurred, please try again.</target>
+        <target state="translated">发生错误，请重新尝试。</target>
       </trans-unit>
       <trans-unit id="7189355262232159449">
         <source>Unit Details</source>
-        <target state="needs-translation">Unit Details</target>
+        <target state="translated">学习单元详情</target>
       </trans-unit>
       <trans-unit id="8666615009060969246">
         <source>Password changed.</source>
-        <target state="needs-translation">Password changed.</target>
+        <target state="translated">密码已更改。</target>
       </trans-unit>
       <trans-unit id="3563179927132287246">
         <source>License pertains to original content created by the author(s). Authors are responsible for the usage and attribution of any third-party content linked to or included in this work.</source>
-        <target state="needs-translation">License pertains to original content created by the author(s). Authors are responsible for the usage and attribution of any third-party content linked to or included in this work.</target>
+        <target state="translated">许可证适用于作者创建的原始内容。 作者对链接或包含在项目中的任何第三方内容的使用权和归属权负责。</target>
       </trans-unit>
       <trans-unit id="4580988005648117665">
         <source>Search</source>
@@ -6436,11 +6436,11 @@
       </trans-unit>
       <trans-unit id="6202932382081568456">
         <source>Hi class! Please complete the "<x id="unitTitle"/>" WISE unit. (Access Code: <x id="accessCode"/>)</source>
-        <target state="needs-translation">Hi class! Please complete the "<x id="unitTitle"/>" WISE unit. (Access Code: <x id="accessCode"/>)</target>
+        <target state="translated">您好，同学们，请完成 "<x id="unitTitle"/>" WISE单元。 (访问码： <x id="accessCode"/>)</target>
       </trans-unit>
       <trans-unit id="2719481583773153034">
         <source>(Section <x id="section"/>)</source>
-        <target state="needs-translation">(Section <x id="section"/>)</target>
+        <target state="translated"> (节 <x id="section"/>)</target>
       </trans-unit>
       <trans-unit id="3220280128711469703">
         <source>WISE students in classroom</source>
@@ -6456,7 +6456,7 @@
       </trans-unit>
       <trans-unit id="6104474954962536234">
         <source>Interactive scientific models plus hands-on activities, personalized guidance, and rich embedded assessments</source>
-        <target state="needs-translation">Interactive scientific models plus hands-on activities, personalized guidance, and rich embedded assessments</target>
+        <target state="translated">交互式科学模型以及实践活动、个性化指导和丰富的嵌入式评估</target>
       </trans-unit>
       <trans-unit id="5655885224951904964">
         <source>WISE students and teacher</source>
@@ -6464,19 +6464,19 @@
       </trans-unit>
       <trans-unit id="2643991125797499080">
         <source>Robust teacher grading and management tools supporting individualized and customized learning</source>
-        <target state="needs-translation">Robust teacher grading and management tools supporting individualized and customized learning</target>
+        <target state="translated">强大的用于支持个性化和定制化学习的教师评分和管理工具</target>
       </trans-unit>
       <trans-unit id="6028472408314831177">
         <source>Sharing permissions updated for <x id="firstName"/> <x id="lastName"/>.</source>
-        <target state="needs-translation">Sharing permissions updated for <x id="firstName"/> <x id="lastName"/>.</target>
+        <target state="translated">针对 <x id="firstName"/> <x id="lastName"/>共享更新后的权限。</target>
       </trans-unit>
       <trans-unit id="7291412180108908080">
         <source>Added shared teacher: <x id="firstName"/> <x id="lastName"/>.</source>
-        <target state="needs-translation">Added shared teacher: <x id="firstName"/> <x id="lastName"/>.</target>
+        <target state="translated">添加共享的教师：<x id="firstName"/> <x id="lastName"/>。</target>
       </trans-unit>
       <trans-unit id="4634849718587399690">
         <source>Removed shared teacher: <x id="firstName"/> <x id="lastName"/>.</source>
-        <target state="needs-translation">Removed shared teacher: <x id="firstName"/> <x id="lastName"/>.</target>
+        <target state="translated">移除共享的教师：<x id="firstName"/> <x id="lastName"/>。</target>
       </trans-unit>
       <trans-unit id="8381440848283879343">
         <source>WISE Tested</source>
@@ -6492,19 +6492,19 @@
       </trans-unit>
       <trans-unit id="4568352014425961102">
         <source>There was an error trying to copy the project. Please refresh the page and try again.</source>
-        <target state="needs-translation">There was an error trying to copy the project. Please refresh the page and try again.</target>
+        <target state="translated">在尝试复制学习项目时出错。请刷新页面并重试。</target>
       </trans-unit>
       <trans-unit id="1160916388490317189">
         <source>Show:</source>
-        <target state="needs-translation">Show:</target>
+        <target state="translated">显示：</target>
       </trans-unit>
       <trans-unit id="3337301694210287595">
         <source>Next page</source>
-        <target state="needs-translation">Next page</target>
+        <target state="translated">下一页</target>
       </trans-unit>
       <trans-unit id="3629960544875360046">
         <source>Previous page</source>
-        <target state="needs-translation">Previous page</target>
+        <target state="translated">上一页</target>
       </trans-unit>
       <trans-unit id="4131502629887927598">
         <source>0 of <x id="total"/></source>
@@ -6516,35 +6516,35 @@
       </trans-unit>
       <trans-unit id="213925514828623262">
         <source>Select an option</source>
-        <target state="needs-translation">Select an option</target>
+        <target state="translated">请选择一个选项</target>
       </trans-unit>
       <trans-unit id="5667840900782067941">
         <source>Female</source>
-        <target state="needs-translation">Female</target>
+        <target state="translated">女</target>
       </trans-unit>
       <trans-unit id="8012344910054029733">
         <source>Male</source>
-        <target state="needs-translation">Male</target>
+        <target state="translated">男</target>
       </trans-unit>
       <trans-unit id="5848285129051061802">
         <source>No Answer/Other</source>
-        <target state="needs-translation">No Answer/Other</target>
+        <target state="translated">没有答案/其他</target>
       </trans-unit>
       <trans-unit id="8954371642157143595">
         <source>Elementary School</source>
-        <target state="needs-translation">Elementary School</target>
+        <target state="translated">小学</target>
       </trans-unit>
       <trans-unit id="4661798863210162530">
         <source>Middle School</source>
-        <target state="needs-translation">Middle School</target>
+        <target state="translated">初中</target>
       </trans-unit>
       <trans-unit id="5560057304612443507">
         <source>High School</source>
-        <target state="needs-translation">High School</target>
+        <target state="translated">高中</target>
       </trans-unit>
       <trans-unit id="1400655560633958921">
         <source>College</source>
-        <target state="needs-translation">College</target>
+        <target state="translated">大学</target>
       </trans-unit>
       <trans-unit id="8693603235657020323">
         <source>Other</source>
@@ -6552,19 +6552,19 @@
       </trans-unit>
       <trans-unit id="1934952699406892664">
         <source>An error occurred: </source>
-        <target state="needs-translation">An error occurred: </target>
+        <target state="translated">发生错误： </target>
       </trans-unit>
       <trans-unit id="8903463267282596576">
         <source>Backend returned code <x id="status"/>, body was: <x id="error"/></source>
-        <target state="needs-translation">Backend returned code <x id="status"/>, body was: <x id="error"/></target>
+        <target state="translated">后端返回代码 <x id="status"/>, 代码主题是: <x id="error"/></target>
       </trans-unit>
       <trans-unit id="6272363620327622591">
         <source>An error occurred. Please refresh this page and try again.</source>
-        <target state="needs-translation">An error occurred. Please refresh this page and try again.</target>
+        <target state="translated">发生错误。请刷新页面并再试一次。</target>
       </trans-unit>
       <trans-unit id="3975065711327151501">
         <source>A teacher cannot be added as a team member.</source>
-        <target state="needs-translation">A teacher cannot be added as a team member.</target>
+        <target state="translated">教师不能添加到团队成员中。</target>
       </trans-unit>
       <trans-unit id="8956428055082238944">
         <source><x id="studentName"/> is already in a team that is full</source>
@@ -6580,19 +6580,19 @@
       </trans-unit>
       <trans-unit id="664214981022275787">
         <source>Invalid username. Please try again.</source>
-        <target state="needs-translation">Invalid username. Please try again.</target>
+        <target state="translated">无效的用户名。请再试一次。</target>
       </trans-unit>
       <trans-unit id="3661142959993862456">
         <source>Invalid password. Please try again.</source>
-        <target state="needs-translation">Invalid password. Please try again.</target>
+        <target state="translated">无效的密码。请再试一次。</target>
       </trans-unit>
       <trans-unit id="2331585649152725791">
         <source>Incorrect Google user. Please try again.</source>
-        <target state="needs-translation">Incorrect Google user. Please try again.</target>
+        <target state="translated">Google用户不正确。请再试一次。</target>
       </trans-unit>
       <trans-unit id="7758936399344634446">
         <source>No WISE user with this Google ID found.</source>
-        <target state="needs-translation">No WISE user with this Google ID found.</target>
+        <target state="translated">没有找到此Google ID关联的WISE用户。</target>
       </trans-unit>
       <trans-unit id="1105807609740514625">
         <source><x id="studentName"/> is already in a team with <x id="studentNames"/></source>
@@ -6600,51 +6600,51 @@
       </trans-unit>
       <trans-unit id="4967231969832964676">
         <source>Profile updated.</source>
-        <target state="needs-translation">Profile updated.</target>
+        <target state="translated">信息已更新。</target>
       </trans-unit>
       <trans-unit id="7389211279729440739">
         <source>An error occurred. Please try again.</source>
-        <target state="needs-translation">An error occurred. Please try again.</target>
+        <target state="translated">发生错误，请再试一次。</target>
       </trans-unit>
       <trans-unit id="230603552546841887">
         <source>Transferred classroom unit ownership to <x id="firstName"/> <x id="lastName"/>.</source>
-        <target state="needs-translation">Transferred classroom unit ownership to <x id="firstName"/> <x id="lastName"/>.</target>
+        <target state="translated">将课堂学习单元所有权转移给 <x id="firstName"/> <x id="lastName"/>。</target>
       </trans-unit>
       <trans-unit id="5800344060320957157">
         <source>There is already a period with that name.</source>
-        <target state="translated">这个班级名称已经存在了。</target>
+        <target state="translated">以该名称命名的课时已存在。</target>
       </trans-unit>
       <trans-unit id="7291953203299952730">
         <source>You do not have permission to add periods to this unit.</source>
-        <target state="translated">您没有权限在这个课程中添加班级。</target>
+        <target state="translated">您无权向此单元添加课时。</target>
       </trans-unit>
       <trans-unit id="622558430501370414">
         <source>You are not allowed to delete a period that contains students.</source>
-        <target state="translated">您不能删除已经有学生的班级。</target>
+        <target state="translated">您不能删除包含学生的课时。</target>
       </trans-unit>
       <trans-unit id="1043729639727499507">
         <source>You do not have permission to delete periods from this unit.</source>
-        <target state="translated">您没有权限从这个课程中删除班级。</target>
+        <target state="translated">您没有权限从学习单元中删除课时。</target>
       </trans-unit>
       <trans-unit id="9028638987976638715">
         <source>You do not have permission to change the number of students per team for this unit.</source>
-        <target state="needs-translation">You do not have permission to change the number of students per team for this unit.</target>
+        <target state="translated">您没有权限更改此学习单元中每个团队的学生人数。</target>
       </trans-unit>
       <trans-unit id="2769664721624079769">
         <source>You are not allowed to decrease the number of students per team because this unit already has teams with more than 1 student.</source>
-        <target state="needs-translation">You are not allowed to decrease the number of students per team because this unit already has teams with more than 1 student.</target>
+        <target state="translated">您不能减少每个团队的学生人数，因为该学习单元已经拥有超过1名学生的团队。</target>
       </trans-unit>
       <trans-unit id="1622862808392881517">
         <source>You do not have permission to change the dates for this unit.</source>
-        <target state="needs-translation">You do not have permission to change the dates for this unit.</target>
+        <target state="translated">您没有权限更改此学习单元的日期。</target>
       </trans-unit>
       <trans-unit id="2964269861601090315">
         <source>End date can't be before start date.</source>
-        <target state="needs-translation">End date can't be before start date.</target>
+        <target state="translated">结束日期不能早于开始日期。</target>
       </trans-unit>
       <trans-unit id="4035307182253602220">
         <source>Start date can't be after end date.</source>
-        <target state="needs-translation">Start date can't be after end date.</target>
+        <target state="translated">开始日期不能在结束日期之后。</target>
       </trans-unit>
       <trans-unit id="8074302458617519394">
         <source>You do not have permission to change whether unit is locked after end date.</source>
@@ -6652,7 +6652,7 @@
       </trans-unit>
       <trans-unit id="5528736199269504039">
         <source>Please enter a new period name.</source>
-        <target state="translated">请输入一个新班级名称。</target>
+        <target state="translated">请输入新的课时名称。</target>
       </trans-unit>
       <trans-unit id="4283834044503624296">
         <source>1-3</source>
@@ -6660,15 +6660,15 @@
       </trans-unit>
       <trans-unit id="6127373082196535001">
         <source>Are you sure you want to change the students per team to <x id="value"/>?</source>
-        <target state="needs-translation">Are you sure you want to change the students per team to <x id="value"/>?</target>
+        <target state="translated">您确定要将每个团队的学生更改为<x id="value"/>？</target>
       </trans-unit>
       <trans-unit id="7740591876616439835">
         <source>Are you sure you want to change the start date to <x id="date"/>?</source>
-        <target state="needs-translation">Are you sure you want to change the start date to <x id="date"/>?</target>
+        <target state="translated">您确定要将开始日期更改为<x id="date"/>？</target>
       </trans-unit>
       <trans-unit id="6150645879410305022">
         <source>Are you sure you want to change the end date to <x id="date"/>?</source>
-        <target state="needs-translation">Are you sure you want to change the end date to <x id="date"/>?</target>
+        <target state="translated">您确定要将结束日期更改为<x id="date"/>？</target>
       </trans-unit>
       <trans-unit id="4810452891345359652">
         <source>Are you sure you want to remove the end date?</source>
@@ -6676,39 +6676,39 @@
       </trans-unit>
       <trans-unit id="2262426799118056083">
         <source>Unit settings updated.</source>
-        <target state="needs-translation">Unit settings updated.</target>
+        <target state="translated">学习单元设置已更新。</target>
       </trans-unit>
       <trans-unit id="4842937154332673885">
         <source>Run Settings</source>
-        <target state="needs-translation">Run Settings</target>
+        <target state="translated">学习单元执行设置</target>
       </trans-unit>
       <trans-unit id="8421677200321603991">
         <source>Edit Classroom Unit Warning</source>
-        <target state="needs-translation">Edit Classroom Unit Warning</target>
+        <target state="translated">编辑课堂学习单元提醒</target>
       </trans-unit>
       <trans-unit id="1133960927497534087">
         <source>Class Periods:</source>
-        <target state="translated">班级</target>
+        <target state="translated">课程课时：</target>
       </trans-unit>
       <trans-unit id="4778985982508820766">
         <source>Class Schedule</source>
-        <target state="needs-translation">Class Schedule</target>
+        <target state="translated">班级课程表</target>
       </trans-unit>
       <trans-unit id="968047685667963368">
         <source>Browse WISE Units</source>
-        <target state="needs-translation">Browse WISE Units</target>
+        <target state="translated">浏览WISE学习单元</target>
       </trans-unit>
       <trans-unit id="4967231969832964676">
         <source>Profile updated.</source>
-        <target state="needs-translation">Profile updated.</target>
+        <target state="translated">信息已更新。</target>
       </trans-unit>
       <trans-unit id="7389211279729440739">
         <source>An error occurred. Please try again.</source>
-        <target state="needs-translation">An error occurred. Please try again.</target>
+        <target state="translated">发生错误，请再试一次。</target>
       </trans-unit>
       <trans-unit id="399164538965188389">
         <source>Free, standards-aligned, and research-based inquiry curricula that address <x id="START_LINK"/>NGSS 3D proficiency<x id="CLOSE_LINK"/></source>
-        <target state="needs-translation">Free, standards-aligned, and research-based inquiry curricula that address <x id="START_LINK"/>NGSS 3D proficiency<x id="CLOSE_LINK"/></target>
+        <target state="translated">针对<x id="START_LINK"/>NGSS(新一代科学教育标准)<x id="CLOSE_LINK"/>提供免费的、标准一致的且基于研究的探究学习课程</target>
       </trans-unit>
     </body>
   </file>
