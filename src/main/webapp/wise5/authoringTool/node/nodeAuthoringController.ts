@@ -4,7 +4,7 @@ import { TeacherProjectService } from '../../services/teacherProjectService';
 import { ConfigService } from '../../services/configService';
 import NodeService from '../../services/nodeService';
 import { ProjectAssetService } from '../../../site/src/app/services/projectAssetService';
-import TeacherDataService from '../../services/teacherDataService';
+import { TeacherDataService } from '../../services/teacherDataService';
 import { UtilService } from '../../services/utilService';
 import * as angular from 'angular';
 import * as $ from 'jquery';

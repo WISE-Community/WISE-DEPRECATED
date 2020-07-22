@@ -71,7 +71,7 @@ import StudentProgressController from '../classroomMonitor/studentProgress/stude
 import { StudentStatusService } from '../services/studentStatusService';
 import '../components/summary/summaryComponentModule';
 import '../components/table/tableComponentModule';
-import TeacherDataService from '../services/teacherDataService';
+import { TeacherDataService } from '../services/teacherDataService';
 import { TeacherWebSocketService } from '../services/teacherWebSocketService';
 import { UtilService } from '../services/utilService';
 import * as moment from 'moment';
@@ -190,7 +190,7 @@ const teacherModule = angular
   .factory('StudentDataService', downgradeInjectable(StudentDataService))
   .factory('StudentStatusService', downgradeInjectable(StudentStatusService))
   .factory('TagService', downgradeInjectable(TagService))
-  .service('TeacherDataService', TeacherDataService)
+  .service('TeacherDataService', downgradeInjectable(TeacherDataService))
   .service('TeacherWebSocketService', downgradeInjectable(TeacherWebSocketService))
   .factory('UtilService', downgradeInjectable(UtilService))
   .controller('AuthoringToolController', AuthoringToolController)

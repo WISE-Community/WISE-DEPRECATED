@@ -3,7 +3,7 @@
 import * as angular from 'angular';
 import { ConfigService } from '../../services/configService';
 import NotebookService from '../../services/notebookService';
-import TeacherDataService from '../../services/teacherDataService';
+import { TeacherDataService } from '../../services/teacherDataService';
 
 class NotebookGradingController {
   canViewStudentNames: boolean;

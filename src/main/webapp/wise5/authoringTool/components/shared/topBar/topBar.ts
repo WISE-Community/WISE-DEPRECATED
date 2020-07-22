@@ -3,7 +3,7 @@
 import { ConfigService } from '../../../../services/configService';
 import { TeacherProjectService } from '../../../../services/teacherProjectService';
 import { SessionService } from '../../../../services/sessionService';
-import TeacherDataService from '../../../../services/teacherDataService';
+import { TeacherDataService } from '../../../../services/teacherDataService';
 
 class TopBarController {
   translate: any;
@@ -99,7 +99,6 @@ class TopBarController {
     const componentId = null;
     const componentType = null;
     const data = {};
-    const projectId = null;
     this.TeacherDataService.saveEvent(
       context,
       nodeId,
@@ -107,8 +106,7 @@ class TopBarController {
       componentType,
       category,
       eventName,
-      data,
-      projectId
+      data
     ).then((result) => {
       this.SessionService.logOut();
     });

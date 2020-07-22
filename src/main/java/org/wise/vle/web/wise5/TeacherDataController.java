@@ -239,9 +239,9 @@ public class TeacherDataController {
 
   @RequestMapping(method = RequestMethod.POST, value = "/teacher/data")
   public void postWISETeacherData(HttpServletResponse response,
-      @RequestParam(value = "workgroupId", required = true) Integer workgroupId,
+      @RequestParam(value = "workgroupId", required = false) Integer workgroupId,
       @RequestParam(value = "projectId", required = false) Integer projectId,
-      @RequestParam(value = "runId", required = true) Integer runId,
+      @RequestParam(value = "runId", required = false) Integer runId,
       @RequestParam(value = "annotations", required = false) String annotations,
       @RequestParam(value = "events", required = false) String events) {
     JSONObject result = new JSONObject();

@@ -6,7 +6,7 @@ import MilestoneService from '../../../../services/milestoneService';
 import NodeService from '../../../../services/nodeService';
 import NotificationService from '../../../../services/notificationService';
 import { StudentStatusService } from '../../../../services/studentStatusService';
-import TeacherDataService from '../../../../services/teacherDataService';
+import { TeacherDataService } from '../../../../services/teacherDataService';
 import * as angular from 'angular';
 import { TeacherProjectService } from '../../../../services/teacherProjectService';
 
@@ -472,8 +472,7 @@ class NodeGradingViewController {
       componentId = null,
       componentType = null,
       category = 'Navigation',
-      data = { milestoneId: this.milestone.id },
-      projectId = null;
+      data = { milestoneId: this.milestone.id };
     this.TeacherDataService.saveEvent(
       context,
       nodeId,
@@ -481,8 +480,7 @@ class NodeGradingViewController {
       componentType,
       category,
       event,
-      data,
-      projectId
+      data
     );
   }
 
@@ -505,8 +503,7 @@ class NodeGradingViewController {
       componentId = null,
       componentType = null,
       category = 'Navigation',
-      data = { milestoneId: this.milestone.id, workgroupId: workgroupId },
-      projectId = null;
+      data = { milestoneId: this.milestone.id, workgroupId: workgroupId };
     this.TeacherDataService.saveEvent(
       context,
       nodeId,
@@ -514,8 +511,7 @@ class NodeGradingViewController {
       componentType,
       category,
       event,
-      data,
-      projectId
+      data
     );
   }
 

@@ -1,44 +1,47 @@
 'use strict';
 
-class TeacherDataService {
+import { UpgradeModule } from "@angular/upgrade/static";
+import { HttpClient, HttpParams } from "@angular/common/http";
+import { AnnotationService } from "./annotationService";
+import ConfigService from "./configService";
+import { UtilService } from "./utilService";
+import { TeacherProjectService } from "./teacherProjectService";
+import { TeacherWebSocketService } from "./teacherWebSocketService";
+import { Injectable } from "@angular/core";
+
+@Injectable()
+export class TeacherDataService {
+  studentData: any;
+  $translate: any;
+  $rootScope: any;
+  currentPeriod = null;
+  currentWorkgroup = null;
+  currentStep = null;
+  currentNode = null;
+  previousStep = null;
+  runStatus = null;
+  periods = [];
+  nodeGradingSort = 'team';
+  studentGradingSort = 'step';
+  studentProgressSort = 'team';
+
   constructor(
-    $http,
-    $filter,
-    $q,
-    $rootScope,
-    AnnotationService,
-    ConfigService,
-    ProjectService,
-    TeacherWebSocketService,
-    UtilService
+    private upgrade: UpgradeModule,
+    private http: HttpClient,
+    private AnnotationService: AnnotationService,
+    private ConfigService: ConfigService,
+    private ProjectService: TeacherProjectService,
+    private TeacherWebSocketService: TeacherWebSocketService,
+    private UtilService: UtilService
   ) {
-    this.$http = $http;
-    this.$filter = $filter;
-    this.$q = $q;
-    this.$rootScope = $rootScope;
-    this.AnnotationService = AnnotationService;
-    this.ConfigService = ConfigService;
-    this.ProjectService = ProjectService;
-    this.TeacherWebSocketService = TeacherWebSocketService;
-    this.UtilService = UtilService;
-    this.$translate = this.$filter('translate');
+    this.$translate = this.upgrade.$injector.get('$translate');
+    this.$rootScope = this.upgrade.$injector.get('$rootScope');
 
     this.studentData = {
       componentStatesByWorkgroupId: {},
       componentStatesByNodeId: {},
       componentStatesByComponentId: {}
     };
-
-    this.currentPeriod = null;
-    this.currentWorkgroup = null;
-    this.currentStep = null;
-    this.currentNode = null;
-    this.previousStep = null;
-    this.runStatus = null;
-    this.periods = [];
-    this.nodeGradingSort = 'team';
-    this.studentGradingSort = 'step';
-    this.studentProgressSort = 'team';
 
     this.$rootScope.$on('annotationSavedToServer', (event, args) => {
       this.handleAnnotationReceived(args.annotation);
@@ -75,7 +78,7 @@ class TeacherDataService {
    * Get the data for the export and generate the csv file that will be downloaded
    * @param exportType the type of export
    */
-  getExport(exportType, selectedNodes = []) {
+  getExport(exportType, selectedNodes = []): any {
     if (this.isStudentWorkExport(exportType)) {
       return this.retrieveStudentDataExport(selectedNodes);
     } else if (this.isNotebookExport(exportType)) {
@@ -124,90 +127,143 @@ class TeacherDataService {
   }
 
   retrieveStudentDataExport(selectedNodes) {
-    const params = {
-      runId: this.ConfigService.getRunId(),
-      getStudentWork: true,
-      getAnnotations: true,
-      getEvents: false,
-      components: selectedNodes
-    };
+    let params = new HttpParams()
+        .set('runId', this.ConfigService.getRunId())
+        .set('getStudentWork', 'true')
+        .set('getEvents', 'false')
+        .set('getAnnotations', 'true');
+    if (selectedNodes != null) {
+      for (const selectedNode of selectedNodes) {
+        params = params.append('components', JSON.stringify(selectedNode));
+      }
+    }
     return this.retrieveStudentData(params);
   }
 
   retrieveEventsExport(includeStudentEvents, includeTeacherEvents, includeNames) {
-    const params = {
-      runId: this.ConfigService.getRunId(),
-      getStudentWork: false,
-      getAnnotations: false,
-      getEvents: true,
-      includeStudentEvents,
-      includeTeacherEvents,
-      includeNames
-    };
-    const httpParams = {
-      method: 'GET',
-      url: this.ConfigService.getConfigParam('runDataExportURL') + '/events',
+    const params = new HttpParams()
+        .set('runId', this.ConfigService.getRunId())
+        .set('getStudentWork', 'false')
+        .set('getAnnotations', 'false')
+        .set('getEvents', 'false')
+        .set('includeStudentEvents', includeStudentEvents + '')
+        .set('includeTeacherEvents', includeTeacherEvents + '')
+        .set('includeNames', includeNames + '');
+    const options = {
       params: params
     };
-    return this.$http(httpParams).then(result => {
-      return this.handleStudentDataResponse(result.data);
+    const url = this.ConfigService.getConfigParam('runDataExportURL') + '/events';
+    return this.http.get(url, options).toPromise().then((data: any) => {
+      return this.handleStudentDataResponse(data);
     });
   }
 
   retrieveNotebookExport(exportType) {
-    return this.$http.get(`/teacher/notebook/run/${this.ConfigService.getRunId()}`,
-        {params:{exportType:exportType}}).then(result => {
-      return result.data;
+    const params = new HttpParams().set('exportType', exportType);
+    const options = { params: params };
+    return this.http.get(`/teacher/notebook/run/${this.ConfigService.getRunId()}`, options)
+        .toPromise().then((data: any) => {
+      return data;
     });
   }
 
   retrieveNotificationsExport() {
-    const httpParams = {
-      method: 'GET',
-      url: this.getExportURL(this.ConfigService.getRunId(), 'notifications'),
-      params: {}
-    };
-    return this.$http(httpParams).then(result => {
-      return result.data;
+    const url = this.getExportURL(this.ConfigService.getRunId(), 'notifications');
+    return this.http.get(url).toPromise().then((data: any) => {
+      return data;
     });
   }
 
   retrieveOneWorkgroupPerRowExport(selectedNodes) {
-    const params = {
-      runId: this.ConfigService.getRunId(),
-      getStudentWork: true,
-      getAnnotations: true,
-      getEvents: true,
-      components: selectedNodes
-    };
+    let params = new HttpParams()
+        .set('runId', this.ConfigService.getRunId())
+        .set('getStudentWork', 'true')
+        .set('getEvents', 'true')
+        .set('getAnnotations', 'true');
+    if (selectedNodes != null) {
+      for (const selectedNode of selectedNodes) {
+        params = params.append('components', JSON.stringify(selectedNode));
+      }
+    }
     return this.retrieveStudentData(params);
   }
 
   retrieveStudentAssetsExport() {
     window.location.href = this.getExportURL(this.ConfigService.getRunId(), 'studentAssets');
-    const deferred = this.$q.defer();
-    const promise = deferred.promise;
-    deferred.resolve([]);
-    return promise;
+    return new Promise(resolve => {
+      resolve([]);
+    });
   }
 
   retrieveRawDataExport(selectedNodes) {
-    const params = {
-      runId: this.ConfigService.getRunId(),
-      getStudentWork: true,
-      getAnnotations: true,
-      getEvents: true,
-      components: selectedNodes
-    };
+    let params = new HttpParams()
+        .set('runId', this.ConfigService.getRunId())
+        .set('getStudentWork', 'true')
+        .set('getEvents', 'true')
+        .set('getAnnotations', 'true');
+    if (selectedNodes != null) {
+      for (const selectedNode of selectedNodes) {
+        params = params.append('components', JSON.stringify(selectedNode));
+      }
+    }
     return this.retrieveStudentData(params);
   }
 
-  saveEvent(context, nodeId, componentId, componentType, category, event, data, projectId) {
+  saveEvent(context, nodeId, componentId, componentType, category, event, data) {
+    const newEvent = this.createEvent(context, nodeId, componentId, componentType, category, event,
+        data);
+    const events = [newEvent];
+    let body = new HttpParams().set('events', JSON.stringify(events));
+    body = this.addCommonParams(body);
+    const options = {
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+    };
+    const url = this.ConfigService.getConfigParam('teacherDataURL');
+    return this.http.post(url, body, options).toPromise().then((data: any) => {
+      return data.events;
+    });
+  }
+
+  addCommonParams(params) {
+    params = this.addProjectIdToHttpParams(params);
+    params = this.addRunIdToHttpParams(params);
+    params = this.addWorkgroupIdToHttpParams(params);
+    return params;
+  }
+
+  addProjectIdToHttpParams(params) {
+    const projectId = this.ConfigService.getProjectId();
+    if (projectId != null) {
+      return params.set('projectId', projectId);
+    } else {
+      return params;
+    }
+  }
+
+  addRunIdToHttpParams(params) {
+    const runId = this.ConfigService.getRunId();
+    if (runId != null) {
+      return params.set('runId', runId);
+    } else {
+      return params;
+    }
+  }
+
+  addWorkgroupIdToHttpParams(params) {
+    const workgroupId = this.ConfigService.getWorkgroupId();
+    if (workgroupId != null) {
+      return params.set('workgroupId', workgroupId);
+    } else {
+      return params;
+    }
+  }
+
+  createEvent(context, nodeId, componentId, componentType, category, event, data) {
     const newEvent = {
       projectId: this.ConfigService.getProjectId(),
       runId: this.ConfigService.getRunId(),
       workgroupId: this.ConfigService.getWorkgroupId(),
-      clientSaveTime: Date.parse(new Date()),
+      clientSaveTime: Date.parse(new Date().toString()),
       context: context,
       nodeId: nodeId,
       componentId: componentId,
@@ -216,38 +272,19 @@ class TeacherDataService {
       event: event,
       data: data
     };
-    if (newEvent.projectId == null) {
-      newEvent.projectId = projectId;
-    }
-    const events = [newEvent];
-    const params = {
-      projectId: this.ConfigService.getProjectId(),
-      runId: this.ConfigService.getRunId(),
-      workgroupId: this.ConfigService.getWorkgroupId(),
-      events: angular.toJson(events)
-    };
-    if (params.projectId == null) {
-      params.projectId = projectId;
-    }
-    const httpParams = {
-      method: 'POST',
-      url: this.ConfigService.getConfigParam('teacherDataURL'),
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      data: $.param(params)
-    };
-    return this.$http(httpParams).then(result => {
-      return result.data.events;
-    });
+    return newEvent;
   }
 
   retrieveStudentDataByNodeId(nodeId) {
-    const params = {
-      periodId: null,
-      workgroupId: null,
-      components: this.getAllRelatedComponents(nodeId),
-      getAnnotations: false,
-      getEvents: false
-    };
+    let params = new HttpParams()
+        .set('runId', this.ConfigService.getRunId())
+        .set('getStudentWork', 'true')
+        .set('getAnnotations', 'false')
+        .set('getEvents', 'false');
+    const components = this.getAllRelatedComponents(nodeId);
+    for (const component of components) {
+      params = params.append('components', JSON.stringify(component));
+    }
     return this.retrieveStudentData(params);
   }
 
@@ -281,68 +318,48 @@ class TeacherDataService {
   }
 
   retrieveStudentDataByWorkgroupId(workgroupId) {
-    const params = {
-      periodId: null,
-      nodeId: null,
-      workgroupId: workgroupId,
-      toWorkgroupId: workgroupId,
-      getAnnotations: false
-    };
+    const params = new HttpParams()
+        .set('runId', this.ConfigService.getRunId())
+        .set('workgroupId', workgroupId)
+        .set('toWorkgroupId', workgroupId)
+        .set('getStudentWork', 'true')
+        .set('getEvents', 'false')
+        .set('getAnnotations', 'false');
     return this.retrieveStudentData(params);
   }
 
   retrieveAnnotations() {
-    const params = {
-      periodId: null,
-      nodeId: null,
-      workgroupId: null,
-      toWorkgroupId: null,
-      getStudentWork: false,
-      getEvents: false,
-      getAnnotations: true
-    };
+    const params = new HttpParams()
+        .set('runId', this.ConfigService.getRunId())
+        .set('getStudentWork', 'false')
+        .set('getEvents', 'false')
+        .set('getAnnotations', 'true');
     return this.retrieveStudentData(params);
   }
 
   retrieveLatestStudentDataByNodeIdAndComponentIdAndPeriodId(nodeId, componentId, periodId) {
-    const params = {
-      runId: this.ConfigService.getRunId(),
-      nodeId: nodeId,
-      componentId: componentId,
-      periodId: periodId,
-      getStudentWork: true,
-      getEvents: false,
-      getAnnotations: false,
-      onlyGetLatest: true
-    };
+    const params = new HttpParams()
+        .set('runId', this.ConfigService.getRunId())
+        .set('nodeId', nodeId)
+        .set('componentId', componentId)
+        .set('periodId', periodId)
+        .set('getStudentWork', 'true')
+        .set('getEvents', 'false')
+        .set('getAnnotations', 'false')
+        .set('onlyGetLatest', 'true');
     return this.retrieveStudentData(params).then(result => {
       return result.studentWorkList;
     });
   }
 
   retrieveStudentData(params) {
-    this.addDefaultsToRetrieveStudentDataParams(params);
-    const httpParams = {
-      method: 'GET',
-      url: this.ConfigService.getConfigParam('teacherDataURL'),
+    const url = this.ConfigService.getConfigParam('teacherDataURL');
+    const options = {
       params: params
     };
-    return this.$http(httpParams).then(result => {
-      return this.handleStudentDataResponse(result.data);
+    return this.http.get(url, options).toPromise().then((data: any) => {
+      return this.handleStudentDataResponse(data);
     });
-  }
-
-  addDefaultsToRetrieveStudentDataParams(params) {
-    params.runId = this.ConfigService.getRunId();
-    if (params.getStudentWork == null) {
-      params.getStudentWork = true;
-    }
-    if (params.getEvents == null) {
-      params.getEvents = false;
-    }
-    if (params.getAnnotations == null) {
-      params.getAnnotations = true;
-    }
   }
 
   handleStudentDataResponse(resultData) {
@@ -518,19 +535,13 @@ class TeacherDataService {
   }
 
   retrieveRunStatus() {
-    const runStatusURL = this.ConfigService.getConfigParam('runStatusURL');
-    const runId = this.ConfigService.getConfigParam('runId');
-    const params = {
-      runId: runId
+    const url = this.ConfigService.getConfigParam('runStatusURL');
+    const params = new HttpParams().set('runId', this.ConfigService.getConfigParam('runId'));
+    const options = {
+      params: params,
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     };
-    const httpParams = {
-      method: 'GET',
-      url: runStatusURL,
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      params: params
-    };
-    return this.$http(httpParams).then(result => {
-      const data = result.data;
+    return this.http.get(url, options).toPromise().then((data: any) => {
       this.runStatus = data;
       this.initializePeriods();
     });
@@ -902,10 +913,6 @@ class TeacherDataService {
     return null;
   }
 
-  getRunStatus() {
-    return this.runStatus;
-  }
-
   isAnyPeriodPaused() {
     for (const period of this.getPeriods()) {
       if (period.paused) {
@@ -913,14 +920,6 @@ class TeacherDataService {
       }
     }
     return false;
-  }
-
-  getPeriods() {
-    if (this.runStatus && this.runStatus.periods) {
-      return this.runStatus.periods;
-    } else {
-      return [];
-    }
   }
 
   isPeriodPaused(periodId) {
@@ -971,7 +970,7 @@ class TeacherDataService {
   }
 
   sendRunStatusThenHandlePauseScreen(periodId, isPaused) {
-    this.sendRunStatus().then(() => {
+    this.sendRunStatus().toPromise().then(() => {
       if (isPaused) {
         this.TeacherWebSocketService.pauseScreens(periodId);
       } else {
@@ -981,16 +980,14 @@ class TeacherDataService {
   }
 
   sendRunStatus() {
-    const httpParams = {
-      method: 'POST',
-      url: this.ConfigService.getConfigParam('runStatusURL'),
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      data: $.param({
-        runId: this.ConfigService.getConfigParam('runId'),
-        status: angular.toJson(this.runStatus)
-      })
+    const url = this.ConfigService.getConfigParam('runStatusURL');
+    const body = new HttpParams()
+        .set('runId', this.ConfigService.getConfigParam('runId'))
+        .set('status', JSON.stringify(this.runStatus));
+    const options = {
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     };
-    return this.$http(httpParams);
+    return this.http.post(url, body, options);
   }
 
   createRunStatus() {
@@ -1055,17 +1052,3 @@ class TeacherDataService {
     return isCurrentWorkgroup;
   }
 }
-
-TeacherDataService.$inject = [
-  '$http',
-  '$filter',
-  '$q',
-  '$rootScope',
-  'AnnotationService',
-  'ConfigService',
-  'ProjectService',
-  'TeacherWebSocketService',
-  'UtilService'
-];
-
-export default TeacherDataService;
