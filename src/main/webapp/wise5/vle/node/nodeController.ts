@@ -1,6 +1,6 @@
 import { AnnotationService } from '../../services/annotationService';
 import { ConfigService } from '../../services/configService';
-import NodeService from '../../services/nodeService';
+import { NodeService } from '../../services/nodeService';
 import { VLEProjectService } from '../vleProjectService';
 import { StudentDataService } from '../../services/studentDataService';
 import { UtilService } from '../../services/utilService';

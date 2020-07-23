@@ -1,7 +1,7 @@
 'use strict';
 
 import { ConfigService } from '../../../../services/configService';
-import NodeService from '../../../../services/nodeService';
+import { NodeService } from '../../../../services/nodeService';
 import { TeacherProjectService } from '../../../../services/teacherProjectService';
 import { TeacherDataService } from '../../../../services/teacherDataService';
 import * as $ from 'jquery';
@@ -99,7 +99,7 @@ class StepToolsController {
   }
 
   goToNextNode() {
-    this.NodeService.goToNextNode().then(nodeId => {
+    this.NodeService.goToNextNode().then((nodeId: any) => {
       this.nodeId = nodeId;
       this.$state.go('root.at.project.node', { projectId: this.projectId, nodeId: this.nodeId });
     });

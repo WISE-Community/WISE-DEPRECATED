@@ -52,7 +52,7 @@ import ManageStudentsController from '../classroomMonitor/manageStudents/manageS
 import MilestonesController from '../classroomMonitor/milestones/milestonesController';
 import MilestoneService from '../services/milestoneService';
 import '../components/multipleChoice/multipleChoiceComponentModule';
-import NodeService from '../services/nodeService';
+import { NodeService } from '../services/nodeService';
 import '../themes/default/notebook/notebookComponents';
 import NotebookGradingController from '../classroomMonitor/notebook/notebookGradingController';
 import NotebookService from '../services/notebookService';
@@ -179,7 +179,7 @@ const teacherModule = angular
   .factory('CRaterService', downgradeInjectable(CRaterService))
   .service('HttpInterceptor', HttpInterceptor)
   .service('MilestoneService', MilestoneService)
-  .service('NodeService', NodeService)
+  .service('NodeService', downgradeInjectable(NodeService))
   .service('NotebookService', NotebookService)
   .service('NotificationService', NotificationService)
   .factory('ProjectService', downgradeInjectable(TeacherProjectService))

@@ -989,7 +989,7 @@ class AnimationController extends ComponentController {
    */
   createComponentState(action) {
     const deferred = this.$q.defer();
-    const componentState = this.NodeService.createNewComponentState();
+    const componentState: any = this.NodeService.createNewComponentState();
     const studentData = {
       submitCounter: this.submitCounter
     };

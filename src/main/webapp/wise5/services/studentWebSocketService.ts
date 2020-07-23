@@ -4,7 +4,7 @@ import { Injectable } from "@angular/core";
 import { UpgradeModule } from "@angular/upgrade/static";
 import { AnnotationService } from "./annotationService";
 import { ConfigService } from "./configService";
-import NodeService from "./nodeService";
+import { NodeService } from "./nodeService";
 import { TagService } from "./tagService";
 import { StudentDataService } from "./studentDataService";
 

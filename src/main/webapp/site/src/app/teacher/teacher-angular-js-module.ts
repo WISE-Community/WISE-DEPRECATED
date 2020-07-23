@@ -23,6 +23,9 @@ import { StudentStatusService } from '../../../../wise5/services/studentStatusSe
 import { SpaceService } from '../../../../wise5/services/spaceService';
 import { TeacherWebSocketService } from '../../../../wise5/services/teacherWebSocketService';
 import { TeacherDataService } from '../../../../wise5/services/teacherDataService';
+import { NodeService } from '../../../../wise5/services/nodeService';
+import { MatDialogModule } from '@angular/material/dialog';
+import { DataService } from '../services/data.service';
 
 @Component({template: ``})
 export class EmptyComponent {}
@@ -35,6 +38,7 @@ export class EmptyComponent {}
   imports: [
     UpgradeModule,
     CommonModule,
+    MatDialogModule,
     RouterModule.forChild([
       {path: '**', component: EmptyComponent}
     ])
@@ -42,9 +46,10 @@ export class EmptyComponent {}
   providers: [
     AnnotationService,
     AudioRecorderService,
-    UtilService,
     ConfigService,
     CRaterService,
+    { provide: DataService, useExisting: TeacherDataService },
+    NodeService,
     ProjectAssetService,
     TeacherProjectService,
     { provide: ProjectService, useExisting: TeacherProjectService },
@@ -55,7 +60,8 @@ export class EmptyComponent {}
     StudentStatusService,
     TagService,
     TeacherDataService,
-    TeacherWebSocketService
+    TeacherWebSocketService,
+    UtilService
   ],
   entryComponents: [
     MilestoneReportDataComponent

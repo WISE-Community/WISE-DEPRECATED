@@ -119,7 +119,7 @@ export class AppComponent {
         this.showDefaultMode = this.isShowDefaultMode();
         this.showHeaderAndFooter = this.isShowHeaderAndFooter();
         this.isAngularJSPath = this.isAngularJSRoute();
-        this.toggleSiteStyles(this.isAngularJSPath);
+        //this.toggleSiteStyles(this.isAngularJSPath);
         this.scroll = false;
       }
 

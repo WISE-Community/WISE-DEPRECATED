@@ -19,18 +19,28 @@ import { AnnotationService } from '../../../../wise5/services/annotationService'
 import { CommonModule } from '@angular/common';
 import { StudentWebSocketService } from '../../../../wise5/services/studentWebSocketService';
 import { StudentDataService } from '../../../../wise5/services/studentDataService';
+import { NodeService } from '../../../../wise5/services/nodeService';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatListModule } from '@angular/material/list';
+import { ChooseBranchPathDialogComponent } from '../preview/modules/choose-branch-path-dialog/choose-branch-path-dialog.component';
+import { MatButtonModule } from '@angular/material/button';
+import { DataService } from '../services/data.service';
 
 @Component({template: ``})
 export class EmptyComponent {}
 
 @NgModule({
   declarations: [
+    ChooseBranchPathDialogComponent,
     EmptyComponent,
     PossibleScoreComponent
   ],
   imports: [
     UpgradeModule,
     CommonModule,
+    MatButtonModule,
+    MatDialogModule,
+    MatListModule,
     RouterModule.forChild([
       {path: '**', component: EmptyComponent}
     ])
@@ -38,18 +48,21 @@ export class EmptyComponent {}
   providers: [
     AnnotationService,
     AudioRecorderService,
-    UtilService,
     ConfigService,
     CRaterService,
+    { provide: DataService, useExisting: StudentDataService },
+    NodeService,
     { provide: ProjectService, useExisting: VLEProjectService },
     SessionService,
     StudentAssetService,
     StudentDataService,
     StudentWebSocketService,
     TagService,
+    UtilService,
     VLEProjectService
   ],
   entryComponents: [
+    ChooseBranchPathDialogComponent,
     PossibleScoreComponent
   ]
 })

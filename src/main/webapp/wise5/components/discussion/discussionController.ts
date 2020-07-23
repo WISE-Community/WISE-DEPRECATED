@@ -444,7 +444,7 @@ class DiscussionController extends ComponentController {
    * @return a promise that will return a component state
    */
   createComponentState(action) {
-    const componentState = this.NodeService.createNewComponentState();
+    const componentState: any = this.NodeService.createNewComponentState();
     const studentData: any = {
       response: this.studentResponse,
       attachments: this.attachments

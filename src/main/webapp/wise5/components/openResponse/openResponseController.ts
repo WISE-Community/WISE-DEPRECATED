@@ -407,7 +407,7 @@ class OpenResponseController extends ComponentController {
     const deferred = this.$q.defer();
 
     // create a new component state
-    const componentState = this.NodeService.createNewComponentState();
+    const componentState: any = this.NodeService.createNewComponentState();
 
     // set the response into the component state
     const studentData: any = {};
@@ -986,7 +986,7 @@ class OpenResponseController extends ComponentController {
    */
   createMergedComponentState(componentStates) {
     // create a new component state
-    let mergedComponentState = this.NodeService.createNewComponentState();
+    let mergedComponentState: any = this.NodeService.createNewComponentState();
 
     if (componentStates != null) {
       let mergedResponse = '';

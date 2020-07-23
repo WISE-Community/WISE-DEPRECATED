@@ -716,7 +716,7 @@ class MatchController extends ComponentController {
    * @return a promise that will return a component state
    */
   createComponentState(action) {
-    let componentState = this.NodeService.createNewComponentState();
+    let componentState: any = this.NodeService.createNewComponentState();
     let studentData: any = {};
     if (action === 'submit') {
       this.checkAnswer();
@@ -905,7 +905,7 @@ class MatchController extends ComponentController {
         this.mergeBucket(mergedBuckets, bucket);
       }
     }
-    const mergedComponentState = this.NodeService.createNewComponentState();
+    const mergedComponentState: any = this.NodeService.createNewComponentState();
     mergedComponentState.studentData = {
       buckets: mergedBuckets
     };

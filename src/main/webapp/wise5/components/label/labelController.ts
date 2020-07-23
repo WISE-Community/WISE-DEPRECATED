@@ -751,7 +751,7 @@ class LabelController extends ComponentController {
     const deferred = this.$q.defer();
 
     // create a new component state
-    const componentState = this.NodeService.createNewComponentState();
+    const componentState: any = this.NodeService.createNewComponentState();
 
     const studentData: any = {};
     studentData.version = this.getStudentDataVersion();
@@ -1667,7 +1667,7 @@ class LabelController extends ComponentController {
    * @return a component state with the merged student responses
    */
   createMergedComponentState(componentStates) {
-    let mergedComponentState = this.NodeService.createNewComponentState();
+    let mergedComponentState: any = this.NodeService.createNewComponentState();
 
     if (componentStates != null) {
       let mergedLabels = [];

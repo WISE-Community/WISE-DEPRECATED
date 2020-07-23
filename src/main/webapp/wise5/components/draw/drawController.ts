@@ -516,7 +516,7 @@ class DrawController extends ComponentController {
    */
   createComponentState(action) {
     const deferred = this.$q.defer();
-    const componentState = this.NodeService.createNewComponentState();
+    const componentState: any = this.NodeService.createNewComponentState();
     const studentData: any = {};
     const studentDataJSONString = this.getDrawData();
     studentData.drawData = studentDataJSONString;
@@ -637,7 +637,7 @@ class DrawController extends ComponentController {
    * @return a component state with the merged student responses
    */
   createMergedComponentState(componentStates) {
-    const mergedComponentState = this.NodeService.createNewComponentState();
+    const mergedComponentState: any = this.NodeService.createNewComponentState();
     if (componentStates != null) {
       let allDrawCanvasObjects = [];
       let firstDrawData = {};
