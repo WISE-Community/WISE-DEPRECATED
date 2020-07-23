@@ -1,7 +1,6 @@
 'use strict';
 
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import ConfigService from './configService';
 import { ProjectService } from './projectService';
@@ -402,7 +401,6 @@ export class NodeService {
    * Close the current node (and open the current node's parent group)
    */
   closeNode() {
-    let mode = this.ConfigService.getMode();
     let currentNode = null;
     currentNode = this.DataService.getCurrentNode();
     if (currentNode) {
