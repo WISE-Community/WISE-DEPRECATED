@@ -1,6 +1,6 @@
 'use strict';
 
-import AchievementService from './achievementService';
+import { AchievementService } from './achievementService';
 import { AnnotationService } from './annotationService';
 import { ConfigService } from './configService';
 import { ProjectService } from './projectService';
