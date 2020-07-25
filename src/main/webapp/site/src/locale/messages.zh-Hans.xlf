@@ -316,7 +316,7 @@
           <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
           <context context-type="linenumber">106</context>
         </context-group>
-        <target state="translated">确认密码</target>
+        <target state="translated">请输入确认密码</target>
       </trans-unit>
       <trans-unit datatype="html" id="0a9dcaac5aadd48fe716eaff77ab9b21a8bef3af">
         <source>Passwords do not match</source>
@@ -1268,7 +1268,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">34</context>
         </context-group>
-        <target state="translated">为了能使用WISE的某些特色功能，您需要通过创建用户帐户进行注册。 是否创建帐户是可选择的，但如果没有帐户，您将无法创建或发布课程项目，也不能使用WISE课程来捕获、存储、检阅或评估学生的学习情况。</target>
+        <target state="translated">为了能使用WISE的某些特色功能，您需要通过创建用户帐户进行注册。 是否创建帐户由您自己决定，但是如果没有帐户，您将无法创建或发布课程项目，也不能使用WISE课程来捕获、存储、查看或评估学生的学习情况。</target>
       </trans-unit>
       <trans-unit datatype="html" id="75c166e888318c9399a404e476a0637d5662cac3">
         <source>When creating a WISE teacher account, we ask you to provide your first and last name, email address, password, city, state, country, school name, school level, and school subjects. To create a WISE student account, we ask you to provide your first and last name, birth day and month, gender, and password, and choose a security question and answer.</source>
@@ -1316,7 +1316,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">41</context>
         </context-group>
-        <target state="translated">教师在WISE平台创建的课程项目也会保存并存储在我们的服务器上，也可以发布到其他WISE用户或访问者可访问的公共项目库（在所有者的许可下）中。 请注意：任何人都可以使用互联网访问由WISE网站托管的每个WISE项目（无论是否在公共项目库中共享）的唯一网址，对其进行查看。</target>
+        <target state="translated">教师在WISE平台上创建的课程项目会被保存并存储在我们的服务器上，也可能会（在著作者的许可下）被发布到公共项目库中，以便其他WISE用户或访问者可以使用。 请注意：WISE网站上托管的每个WISE项目，任何人都可以使用互联网通过其唯一网址，对其进行查看，无论该项目是否已在公共项目库中共享。</target>
       </trans-unit>
       <trans-unit datatype="html" id="542c08b88b52d143ac45330ea26b616f4877ea4c">
         <source>Some sections or features of WISE may allow you to share information concerning your opinions, experiences, or preferences about WISE content or other topics. For example, you might be able to voluntarily review or rate WISE resources, answer user questions, designate favorite WISE projects, respond to surveys, share personal information or social media profile links to your public WISE profile, etc. Information you provide will be stored by WISE and may be shared with other WISE users either anonymously or not (as long as you provide permission). Unless otherwise expressly provided for in this policy, WISE shall have no liability to you or to any third party with respect to information submitted voluntarily by you via the WISE site.</source>
@@ -1484,7 +1484,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">73</context>
         </context-group>
-        <target state="translated">您不得使用WISE来促进对任何个人或团体的偏见、歧视、仇恨或暴力。 未经本人许可，您不得泄露任何其他人的身份或联系信息。 如果用户生成的内容威胁、骚扰或恐吓到任何其他人，我们有权对其进行删除。 WSIE项目、讨论帖和用户个人资料页面不允许包含冒犯性或露骨色情内容。一旦被WISE团队发现，会立即从网站上删除。</target>
+        <target state="translated">您不得使用WISE来宣扬对任何个人或团体的偏见、歧视、仇恨或暴力。 未经本人许可，您不得泄露任何其他人的身份或联系信息。 用户不得生成威胁、骚扰或恐吓其他任何人的内容，我们有权根据我们自己的判断对这些内容进行删除。 WISE项目、讨论帖和用户个人资料页面不允许包含有冒犯性或露骨色情的内容，一旦WISE团队发现这类信息，会立即从网站上删除。</target>
       </trans-unit>
       <trans-unit datatype="html" id="f1330e63665b0b21c183e95f2531534fa397e652">
         <source>You may not deliberately perform actions that are intended to negatively affect the WISE website or its users. You may not post links to harmful sites to download viruses or malware.</source>
@@ -1492,7 +1492,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">74</context>
         </context-group>
-        <target state="translated">您不能故意执行对WISE网站或其用户产生负面影响的操作。 您不能发布有害网站的链接以下载病毒或恶意软件。</target>
+        <target state="translated">您不能故意执行对WISE网站或其用户产生负面影响的操作。 您不能发布链接包含病毒或恶意软件的有害网站。</target>
       </trans-unit>
       <trans-unit datatype="html" id="da13c45e9a2a5de6912e6c9674b210d0345d739b">
         <source>All user-generated content is provided as-is. The WISE Team is not responsible for the accuracy or reliability of any user-generated content available through WISE. The WISE Team does not endorse any views, opinions, or advice expressed in user-generated content. You agree to relieve the WISE Team of any and all liability arising from your user-generated content.</source>
@@ -1500,7 +1500,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">75</context>
         </context-group>
-        <target state="translated">所有用户生成的内容均按原样提供。 WISE团队对用户基于WISE平台生成内容的准确性或可靠性不负责。 WISE团队对用户生成内容中表达的任何观点、意见或建议不负责。 您同意免除WISE团队因用户生成的内容而产生的所有责任。</target>
+        <target state="translated">所有用户生成的内容均按原样提供。WISE团队对WISE平台上用户生成内容的准确性或可靠性不负责。WISE团队对用户生成内容中所表达的任何观点、意见或建议不负责。您同意免除WISE团队因用户生成的内容而产生的所有责任。</target>
       </trans-unit>
       <trans-unit datatype="html" id="58bf2f522bfb669f040c49d745a07badf14f8157">
         <source>If you notice any offensive material or user-generated content that are in violation with the rules above, please report them to the WISE Team using our <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>Contact Form<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/>.</source>
@@ -1508,7 +1508,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">76</context>
         </context-group>
-        <target state="translated">如果您发现任何违反上述规则的冒犯性内容或用户生成的内容，请及时运用<x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>联系表单<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>向WISE团队报告。</target>
+        <target state="translated">如果您发现任何违反上述规则的冒犯性内容或用户生成的内容，请及时使用<x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>联系表单<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>向WISE团队报告。</target>
       </trans-unit>
       <trans-unit datatype="html" id="83e835d7ae5255ef507a1ed474c87044d226fde0">
         <source>5. Information Security</source>
@@ -1676,7 +1676,7 @@
           <context context-type="sourcefile">app/modules/library/official-library/official-library-details.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-        <target state="translated">"WISE测试"库包含WISE团队开发的课程。</target>
+        <target state="translated">"WISE已测试"库包含WISE团队开发的课程。</target>
       </trans-unit>
       <trans-unit datatype="html" id="cda4813957412f125af0b3c464de60460ca0fe2f">
         <source>Each of the units in this collection has been designed and iteratively refined through a partnership of university-based education researchers and science teachers. They have all been implemeneted and tested in real classrooms and have shown proven learning gains.</source>
@@ -1944,7 +1944,7 @@
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
           <context context-type="linenumber">22</context>
         </context-group>
-        <target state="translated">2. 选择每个团队的学生</target>
+        <target state="translated">2. 选择每个小组的学生</target>
       </trans-unit>
       <trans-unit datatype="html" id="b0763ee4a00e318a081615d9fd5bc01fde5099ce">
         <source>Only 1 student</source>
@@ -2600,7 +2600,7 @@
           <context context-type="sourcefile">app/modules/library/personal-library/personal-library.component.html</context>
           <context context-type="linenumber">20</context>
         </context-group>
-        <target state="translated">找不到所属或共享的学习单元。</target>
+        <target state="translated">找不到您拥有的或给您共享的单元。</target>
       </trans-unit>
       <trans-unit datatype="html" id="c4058ff063f874b650aca76a5d972f11323bb6fb">
         <source>My Units</source>
@@ -2616,7 +2616,7 @@
           <context context-type="sourcefile">app/modules/library/personal-library/personal-library-details.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-        <target state="translated">"我的学习单元"库包含您拥有的课程学习单元或其他WISE用户与您共享的课程学习单元。</target>
+        <target state="translated">"我的单元"库列出了您自己拥有的课程单元或其他WISE用户给您共享的课程单元。</target>
       </trans-unit>
       <trans-unit datatype="html" id="855dab22c74d8f9a4e55113cef0c528802dc7bec">
         <source>Units that you create using the WISE Authoring Tool will appear here. Any units that you copy will also be listed here.</source>
@@ -3636,7 +3636,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">31</context>
         </context-group>
-        <target state="translated">选择每个团队的学生人数。 一般允许1-3名学生在同一团队中工作。</target>
+        <target state="translated">选择每个小组的学生人数。 选择1-3名学生让他们在同一个小组中工作。</target>
       </trans-unit>
       <trans-unit datatype="html" id="1cb2e099227c306dd9d16e07422d03b6aad86133">
         <source>Choose the start date. Students will not be able to use the project until this date.</source>
@@ -4104,7 +4104,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">61</context>
         </context-group>
-        <target state="translated">教师如何在项目运行开始后更改学生团队？</target>
+        <target state="translated">教师如何在项目运行开始后更改学生小组？</target>
       </trans-unit>
       <trans-unit datatype="html" id="e2ba447afc78e6be3baf2014b334cac6656236aa">
         <source>Drag-and-drop student names to move them from one team to another. Make sure to save your changes before leaving this window.</source>
@@ -4112,7 +4112,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">68</context>
         </context-group>
-        <target state="translated">拖放学生姓名可以将他们从一个团队移动到另一个团队。请确保在关闭此窗口之前保存更改。</target>
+        <target state="translated">拖放学生姓名可以将他们从一个小组移动到另一个小组。请确保在关闭此窗口之前保存更改。</target>
       </trans-unit>
       <trans-unit datatype="html" id="8651e5c9fed5b42224d970458cb11046917dc6a6">
         <source>If you want to move students into a brand new team, click New Team, then drag 1 or more students into the new team. Save your changes.</source>
@@ -4120,7 +4120,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">69</context>
         </context-group>
-        <target state="translated">如果您想将学生转移到一个全新的团队，请单击"新建团队"，然后将一个或多个学生拖入新团队。之后请保存更改。</target>
+        <target state="translated">如果您想将学生转移到一个全新的小组，请单击"新建小组"，然后将一个或多个学生拖入这个新小组。请注意保存更改。</target>
       </trans-unit>
       <trans-unit datatype="html" id="5418b88e19814f7ddcb2b6dbdd2d0d5adf57b556">
         <source>Warning 1</source>
@@ -4136,7 +4136,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">70</context>
         </context-group>
-        <target state="translated">如果您将学生A转移到已建立的团队，学生A将丢失他们当前的所有工作，并继承已建立团队的当前工作。</target>
+        <target state="translated">如果您将学生A转移到一个已存在的小组，学生A将丢失他/她在当前小组的所有工作，并继承移去小组的当前工作。</target>
       </trans-unit>
       <trans-unit datatype="html" id="9679a6f25e8483c0ebd3cadfe78df295eb1f6512">
         <source>Warning 2</source>
@@ -4152,7 +4152,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">71</context>
         </context-group>
-        <target state="translated">如果您将学生A移动到新创建的（空白）团队中，学生A将丢失他们的所有工作。</target>
+        <target state="translated">如果您将学生A移动到新创建的（空白）小组中，学生A将丢失他/她的所有工作。</target>
       </trans-unit>
       <trans-unit datatype="html" id="a5c647f6fc8b21841e3c0e59c93539b2c5a2b665">
         <source>How do I change the period for a student?</source>
@@ -4448,7 +4448,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">150</context>
         </context-group>
-        <target state="translated">在左侧栏目上，您可以单击"按步骤评估"逐步查看学生学习进展，也可以单击“按团队评估”以团体为单位查看学生学习进展。</target>
+        <target state="translated">在左侧工具栏目里，您可以单击"按步骤评分"逐步查看学生学习进展，也可以单击“按小组评分”以小组为单位查看学生学习进展。</target>
       </trans-unit>
       <trans-unit datatype="html" id="01d297ec79e8da8648c32bea29cc49b500480938">
         <source>Next to each student's work, you will be able to give them a score and comment.</source>
@@ -4600,7 +4600,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">185</context>
         </context-group>
-        <target state="translated">是的，你能！ 如果您需要引起他们的注意以便进行课堂讨论或发布公告，这将非常有用。</target>
+        <target state="translated">是的，您可以！如果您需要引起他们的注意以便进行课堂讨论或发布公告，这一功能将非常有用。</target>
       </trans-unit>
       <trans-unit datatype="html" id="c7a7fe783c37fe2f45e8cdee103e70f13c5c7a7e">
         <source>The WISE web site won't load on my web browser. What do I do?</source>
@@ -5740,7 +5740,7 @@
           <context context-type="sourcefile">app/student/team-sign-in-dialog/team-sign-in-dialog.component.html</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="translated">团队登录</target>
+        <target state="translated">小组登录</target>
       </trans-unit>
       <trans-unit datatype="html" id="756301ed182522fac63571d5cf61d3095dfb325a">
         <source>Signed In</source>
@@ -5760,7 +5760,7 @@
           <context context-type="sourcefile">app/student/team-sign-in-dialog/team-sign-in-dialog.component.html</context>
           <context context-type="linenumber">31</context>
         </context-group>
-        <target state="translated">添加团队成员</target>
+        <target state="translated">添加小组成员</target>
       </trans-unit>
       <trans-unit datatype="html" id="7db97e28a034d08df9488f5990cd17e2de2b3fb5">
         <source>Launch Unit</source>
@@ -5812,7 +5812,7 @@
           <context context-type="sourcefile">app/student/student-run-list-item/student-run-list-item.component.html</context>
           <context context-type="linenumber">12</context>
         </context-group>
-        <target state="translated">团队 ︰</target>
+        <target state="translated">小组︰</target>
       </trans-unit>
       <trans-unit datatype="html" id="8b41458d5cc58ec3df56d2e882893790347ec21e">
         <source>Run ID: <x equiv-text="{{run.id}}" id="INTERPOLATION"/></source>
@@ -5852,7 +5852,7 @@
           <context context-type="sourcefile">app/student/student-run-list-item/student-run-list-item.component.html</context>
           <context context-type="linenumber">71</context>
         </context-group>
-        <target state="translated">发布</target>
+        <target state="translated">开始学习</target>
       </trans-unit>
       <trans-unit datatype="html" id="385a5a4a2c1453ee22b0ab14da5cd4fb83df0ee5">
         <source>Review Work</source>
@@ -6152,7 +6152,7 @@
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
           <context context-type="linenumber">29</context>
         </context-group>
-        <target state="translated">每个团队的学生</target>
+        <target state="translated">每个小组的学生数</target>
       </trans-unit>
       <trans-unit datatype="html" id="17fa4b58d131328449acdbaad4bbe404bfd31264">
         <source>Only 1 student</source>
@@ -6388,7 +6388,7 @@
       </trans-unit>
       <trans-unit id="8855149280237623360">
         <source>You have submitted an invalid verification code too many times. For security reasons, we will lock the ability to change your password for 10 minutes. After 10 minutes, you can try again.</source>
-        <target state="needs-translation">You have submitted an invalid verification code too many times. For security reasons, we will lock the ability to change your password for 10 minutes. After 10 minutes, you can try again.</target>
+        <target state="translated">您多次重复提交无效的验证码。 出于安全原因，我们将锁定更改密码功能10分钟。 10分钟后，您可以再试一次。</target>
       </trans-unit>
       <trans-unit id="243316711119938992">
         <source>The server has encountered an error and was unable to send you an email. Please try again. If the error continues to occur, please contact us.</source>
@@ -6444,15 +6444,15 @@
       </trans-unit>
       <trans-unit id="3220280128711469703">
         <source>WISE students in classroom</source>
-        <target state="needs-translation">WISE students in classroom</target>
+        <target state="translated">教室中的WISE 学生</target>
       </trans-unit>
       <trans-unit id="4788492906571844304">
         <source>WISE students building</source>
-        <target state="needs-translation">WISE students building</target>
+        <target state="translated">WISE 学生构建</target>
       </trans-unit>
       <trans-unit id="2488461351187724080">
         <source>WISE unit on laptop</source>
-        <target state="needs-translation">WISE unit on laptop</target>
+        <target state="translated">笔记本电脑上的WISE单元</target>
       </trans-unit>
       <trans-unit id="6104474954962536234">
         <source>Interactive scientific models plus hands-on activities, personalized guidance, and rich embedded assessments</source>
@@ -6460,7 +6460,7 @@
       </trans-unit>
       <trans-unit id="5655885224951904964">
         <source>WISE students and teacher</source>
-        <target state="needs-translation">WISE students and teacher</target>
+        <target state="translated">WISE学生和教师</target>
       </trans-unit>
       <trans-unit id="2643991125797499080">
         <source>Robust teacher grading and management tools supporting individualized and customized learning</source>
@@ -6508,11 +6508,11 @@
       </trans-unit>
       <trans-unit id="4131502629887927598">
         <source>0 of <x id="total"/></source>
-        <target state="needs-translation">0 of <x id="total"/></target>
+        <target state="translated">0 / <x id="total"/></target>
       </trans-unit>
       <trans-unit id="2448240847827519051">
         <source><x id="start"/> - <x id="end"/> of <x id="total"/></source>
-        <target state="needs-translation"><x id="start"/> - <x id="end"/> of <x id="total"/></target>
+        <target state="translated">/</target>
       </trans-unit>
       <trans-unit id="213925514828623262">
         <source>Select an option</source>
@@ -6564,19 +6564,19 @@
       </trans-unit>
       <trans-unit id="3975065711327151501">
         <source>A teacher cannot be added as a team member.</source>
-        <target state="translated">教师不能添加到团队成员中。</target>
+        <target state="translated">教师不能被添加到小组成员中。</target>
       </trans-unit>
       <trans-unit id="8956428055082238944">
         <source><x id="studentName"/> is already in a team that is full</source>
-        <target state="needs-translation"><x id="studentName"/> is already in a team that is full</target>
+        <target state="translated"><x id="studentName"/> 已经在一个已经满员的小组中</target>
       </trans-unit>
       <trans-unit id="7627380372981040413">
         <source><x id="studentName"/> is already on another team</source>
-        <target state="needs-translation"><x id="studentName"/> is already on another team</target>
+        <target state="translated"><x id="studentName"/> 已经在另外一个小组中了</target>
       </trans-unit>
       <trans-unit id="998717888443653913">
         <source><x id="studentName"/> is already in the team</source>
-        <target state="needs-translation"><x id="studentName"/> is already in the team</target>
+        <target state="translated"><x id="studentName"/> 已在这个小组中了</target>
       </trans-unit>
       <trans-unit id="664214981022275787">
         <source>Invalid username. Please try again.</source>
@@ -6596,7 +6596,7 @@
       </trans-unit>
       <trans-unit id="1105807609740514625">
         <source><x id="studentName"/> is already in a team with <x id="studentNames"/></source>
-        <target state="needs-translation"><x id="studentName"/> is already in a team with <x id="studentNames"/></target>
+        <target state="translated"><x id="studentName"/> 已经在一个小组中了 <x id="studentNames"/></target>
       </trans-unit>
       <trans-unit id="4967231969832964676">
         <source>Profile updated.</source>
@@ -6628,11 +6628,11 @@
       </trans-unit>
       <trans-unit id="9028638987976638715">
         <source>You do not have permission to change the number of students per team for this unit.</source>
-        <target state="translated">您没有权限更改此学习单元中每个团队的学生人数。</target>
+        <target state="translated">您没有权限更改此学习单元中每个小组的学生人数。</target>
       </trans-unit>
       <trans-unit id="2769664721624079769">
         <source>You are not allowed to decrease the number of students per team because this unit already has teams with more than 1 student.</source>
-        <target state="translated">您不能减少每个团队的学生人数，因为该学习单元已经拥有超过1名学生的团队。</target>
+        <target state="translated">您不能减少每个小组的学生人数，因为该学习单元已经有超过1名学生的小组。</target>
       </trans-unit>
       <trans-unit id="1622862808392881517">
         <source>You do not have permission to change the dates for this unit.</source>
@@ -6648,7 +6648,7 @@
       </trans-unit>
       <trans-unit id="8074302458617519394">
         <source>You do not have permission to change whether unit is locked after end date.</source>
-        <target state="needs-translation">You do not have permission to change whether unit is locked after end date.</target>
+        <target state="translated">结束日期以后您没有权限更改是否锁定单元。</target>
       </trans-unit>
       <trans-unit id="5528736199269504039">
         <source>Please enter a new period name.</source>
@@ -6656,11 +6656,11 @@
       </trans-unit>
       <trans-unit id="4283834044503624296">
         <source>1-3</source>
-        <target state="needs-translation">1-3</target>
+        <target state="translated">1-3</target>
       </trans-unit>
       <trans-unit id="6127373082196535001">
         <source>Are you sure you want to change the students per team to <x id="value"/>?</source>
-        <target state="translated">您确定要将每个团队的学生更改为<x id="value"/>？</target>
+        <target state="translated">您确定要将每个小组的学生数更改为<x id="value"/>？</target>
       </trans-unit>
       <trans-unit id="7740591876616439835">
         <source>Are you sure you want to change the start date to <x id="date"/>?</source>
@@ -6672,7 +6672,7 @@
       </trans-unit>
       <trans-unit id="4810452891345359652">
         <source>Are you sure you want to remove the end date?</source>
-        <target state="needs-translation">Are you sure you want to remove the end date?</target>
+        <target state="translated">你确定要删除结束日期么？</target>
       </trans-unit>
       <trans-unit id="2262426799118056083">
         <source>Unit settings updated.</source>
