@@ -1420,7 +1420,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">62</context>
         </context-group>
-        <target state="translated">WISE团队使用非识别的用户数据进行研究。 加州大学伯克利分校教育研究生院和合作院校的研究人员可以使用非识别数据进行数据分析和探索研究课题。 此数据包括用户生成的内容和自动生成的内容（请参阅"我们收集的信息"部分）。 我们研究的结果可以通过会议、期刊和其他出版物与教育工作者和其他研究人员分享。</target>
+        <target state="translated">WISE团队进行研究时所使用的用户数据都隐去了用户的个人信息。 加利福尼亚大学伯克利分校教育研究生院及合作院校的研究人员可能使用这些隐去个人信息的数据进行数据分析和探索研究课题。 这些数据包括用户生成的内容和系统自动生成的内容（请参阅"我们收集的信息"部分）。我们研究的结果可能会通过会议、期刊和其他出版物与教育工作者和其他研究人员分享。</target>
       </trans-unit>
       <trans-unit datatype="html" id="c3e5c34f74aeac58acd9e6656046d51d968bae86">
         <source>When generating and analyzing research data, student names are removed from all student work and replaced with identification numbers. This process of replacing names with identification numbers is performed automatically by the WISE platform when exporting research data and will be performed by teachers if any other student work (e.g., from other instructional materials) is to be analyzed by researchers.</source>
@@ -1436,7 +1436,7 @@
           <context context-type="sourcefile">app/privacy/privacy.component.html</context>
           <context context-type="linenumber">64</context>
         </context-group>
-        <target state="translated">教师帐户的电子邮件用于沟通：（a）提供支持；（b）发布来自WISE团队的临时公告。 教师电子邮件也用于重置密码。</target>
+        <target state="translated">教师帐户的电子邮件用于：（a）提供支持；（b）发布来自WISE团队的临时公告。 教师电子邮件也会用于重置密码。</target>
       </trans-unit>
       <trans-unit datatype="html" id="79fd12be51fabc3997ebf91056835b68468377e4">
         <source>We do not ask students for their email address and do not share any student personal information with outside parties. Only the students' teachers can access student names and usernames within WISE (for purposes of reviewing student work, grading, sending feedback, etc). Each participating teacher will have access to his or her own students' project work and will not be able to see any information from other teachers' students. Teachers are also able to reset passwords for their students.</source>
