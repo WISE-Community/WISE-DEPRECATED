@@ -1,7 +1,7 @@
 'use strict';
 
 import { Injectable } from "@angular/core";
-import ConfigService from "./configService";
+import { ConfigService } from "./configService";
 import { AnnotationService } from "./annotationService";
 import { ProjectService } from "./projectService";
 import { UtilService } from "./utilService";

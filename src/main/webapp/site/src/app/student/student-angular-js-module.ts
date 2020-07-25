@@ -19,6 +19,7 @@ import { AnnotationService } from '../../../../wise5/services/annotationService'
 import { CommonModule } from '@angular/common';
 import { StudentWebSocketService } from '../../../../wise5/services/studentWebSocketService';
 import { StudentDataService } from '../../../../wise5/services/studentDataService';
+import { NotificationService } from '../../../../wise5/services/notificationService';
 
 @Component({template: ``})
 export class EmptyComponent {}
@@ -41,6 +42,7 @@ export class EmptyComponent {}
     UtilService,
     ConfigService,
     CRaterService,
+    NotificationService,
     { provide: ProjectService, useExisting: VLEProjectService },
     SessionService,
     StudentAssetService,

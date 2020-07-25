@@ -2,7 +2,7 @@
 
 import ComponentController from '../componentController';
 import DiscussionService from './discussionService';
-import NotificationService from '../../services/notificationService';
+import { NotificationService } from '../../services/notificationService';
 
 class DiscussionController extends ComponentController {
   $mdMedia: any;
@@ -316,6 +316,8 @@ class DiscussionController extends ComponentController {
     const toWorkgroupId = originalPostComponentState.workgroupId;
     if (toWorkgroupId != null && toWorkgroupId !== fromWorkgroupId) {
       const notification = this.NotificationService.createNewNotification(
+        this.ConfigService.getRunId(),
+        this.ConfigService.getPeriodId(),
         notificationType,
         nodeId,
         componentId,
@@ -348,6 +350,8 @@ class DiscussionController extends ComponentController {
           workgroupsNotifiedSoFar.indexOf(toWorkgroupId) === -1
         ) {
           const notification = this.NotificationService.createNewNotification(
+            this.ConfigService.getRunId(),
+            this.ConfigService.getPeriodId(),
             notificationType,
             nodeId,
             componentId,

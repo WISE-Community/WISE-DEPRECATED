@@ -23,6 +23,7 @@ import { StudentStatusService } from '../../../../wise5/services/studentStatusSe
 import { SpaceService } from '../../../../wise5/services/spaceService';
 import { TeacherWebSocketService } from '../../../../wise5/services/teacherWebSocketService';
 import { TeacherDataService } from '../../../../wise5/services/teacherDataService';
+import { NotificationService } from '../../../../wise5/services/notificationService';
 
 @Component({template: ``})
 export class EmptyComponent {}
@@ -45,6 +46,7 @@ export class EmptyComponent {}
     UtilService,
     ConfigService,
     CRaterService,
+    NotificationService,
     ProjectAssetService,
     TeacherProjectService,
     { provide: ProjectService, useExisting: TeacherProjectService },

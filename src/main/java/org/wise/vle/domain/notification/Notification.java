@@ -24,6 +24,7 @@
 package org.wise.vle.domain.notification;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Getter;
 import lombok.Setter;
 import org.json.JSONException;
@@ -186,9 +187,7 @@ public class Notification extends PersistableDomain {
         notificationJSONObject.put("componentId", componentId);
       }
 
-      if (componentType != null) {
-        notificationJSONObject.put("componentType", componentType);
-      }
+      notificationJSONObject.put("componentType", componentType);
 
       if (type != null) {
         notificationJSONObject.put("type", type);

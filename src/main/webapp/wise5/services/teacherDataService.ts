@@ -3,7 +3,7 @@
 import { UpgradeModule } from "@angular/upgrade/static";
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { AnnotationService } from "./annotationService";
-import ConfigService from "./configService";
+import { ConfigService } from "./configService";
 import { UtilService } from "./utilService";
 import { TeacherProjectService } from "./teacherProjectService";
 import { TeacherWebSocketService } from "./teacherWebSocketService";

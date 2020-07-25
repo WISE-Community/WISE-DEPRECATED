@@ -56,7 +56,7 @@ import NodeService from '../services/nodeService';
 import '../themes/default/notebook/notebookComponents';
 import NotebookGradingController from '../classroomMonitor/notebook/notebookGradingController';
 import NotebookService from '../services/notebookService';
-import NotificationService from '../services/notificationService';
+import { NotificationService } from '../services/notificationService';
 import '../components/openResponse/openResponseComponentModule';
 import '../components/outsideURL/outsideURLComponentModule';
 import { SessionService } from '../services/sessionService';
@@ -181,7 +181,7 @@ const teacherModule = angular
   .service('MilestoneService', MilestoneService)
   .service('NodeService', NodeService)
   .service('NotebookService', NotebookService)
-  .service('NotificationService', NotificationService)
+  .factory('NotificationService', downgradeInjectable(NotificationService))
   .factory('ProjectService', downgradeInjectable(TeacherProjectService))
   .factory('ProjectAssetService', downgradeInjectable(ProjectAssetService))
   .factory('SessionService', downgradeInjectable(SessionService))
