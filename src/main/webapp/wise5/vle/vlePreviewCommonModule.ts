@@ -1,8 +1,8 @@
 import '../lib/jquery/jquery-global';
 import '../lib/bootstrap/js/bootstrap.min'
-import AchievementService from '../services/achievementService';
 import * as angular from 'angular';
 import { downgradeInjectable } from '@angular/upgrade/static';
+import { AchievementService } from '../services/achievementService';
 import * as angularDragula from 'angular-dragula';
 import 'ng-file-upload';
 import 'angular-material';
@@ -112,7 +112,7 @@ export function createModule(type = 'preview') {
     'ui.router',
     'ui.scrollpoint'
   ])
-  .service('AchievementService', AchievementService)
+  .service('AchievementService', downgradeInjectable(AchievementService))
   .factory('AnnotationService', downgradeInjectable(AnnotationService))
   .factory('AudioRecorderService', downgradeInjectable(AudioRecorderService))
   .factory('ConfigService', downgradeInjectable(ConfigService))
