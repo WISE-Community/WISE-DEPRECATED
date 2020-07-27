@@ -1,6 +1,5 @@
 'use strict';
 
-import * as angular from 'angular';
 import { Injectable } from "@angular/core";
 import { UpgradeModule } from "@angular/upgrade/static";
 import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
@@ -8,9 +7,12 @@ import ConfigService from "./configService";
 import { ProjectService } from "./projectService";
 import { StudentAssetService } from "./studentAssetService";
 import { StudentDataService } from "./studentDataService";
+import { UtilService } from './utilService';
 
 @Injectable()
 export class NotebookService {
+  // TODO: i18n
+  // TODO: allow wise instance to set defaults, enabled/disabled for each type in wise config?
   config = {
     enabled: false,
     label: 'Notebook',
@@ -31,20 +33,6 @@ export class NotebookService {
           link: 'Manage Notes',
           icon: 'note',
           color: '#1565C0'
-        }
-      },
-      question: {
-        enabled: false,
-        enableLink: true,
-        enableClipping: true,
-        enableStudentUploads: true,
-        type: 'question',
-        label: {
-          singular: 'question',
-          plural: 'questions',
-          link: 'Manage Questions',
-          icon: 'live_help',
-          color: '#F57C00'
         }
       },
       report: {
@@ -71,24 +59,25 @@ export class NotebookService {
       private ConfigService: ConfigService,
       private ProjectService: ProjectService,
       private StudentAssetService: StudentAssetService,
-      private StudentDataService: StudentDataService) {
+      private StudentDataService: StudentDataService,
+      private UtilService: UtilService) {
   }
 
   getStudentNotebookConfig() {
-    return angular.merge(this.config, this.ProjectService.project.notebook);
+   return Object.assign(this.config, this.ProjectService.project.notebook);
   }
 
   getTeacherNotebookConfig() {
-    return angular.merge(this.config, this.ProjectService.project.teacherNotebook);
+    return Object.assign(this.config, this.ProjectService.project.teacherNotebook);
   }
 
   editItem(ev, itemId) {
-    this.upgrade.$injector.get('$rootScope').$broadcast('editNote', { itemId: itemId, ev: ev });
+    this.UtilService.broadcastEventInRootScope('editNote', { itemId: itemId, ev: ev });
   }
 
   addNote(ev, file, text = null, studentWorkIds = null, 
       isEditTextEnabled = true, isFileUploadEnabled = true) {
-    this.upgrade.$injector.get('$rootScope').$broadcast('addNote',
+    this.UtilService.broadcastEventInRootScope('addNote',
       {
         ev: ev, file: file, text: text, studentWorkIds: studentWorkIds,
         isEditTextEnabled: isEditTextEnabled, isFileUploadEnabled: isFileUploadEnabled
@@ -96,7 +85,7 @@ export class NotebookService {
   }
 
   deleteNote(note) {
-    const noteCopy = angular.copy(note);
+    const noteCopy = {...note};
     noteCopy.id = null; // set to null so we're creating a new notebook item
     noteCopy.content.clientSaveTime = Date.parse(new Date().toString());
     const clientDeleteTime = Date.parse(new Date().toString());
@@ -106,7 +95,7 @@ export class NotebookService {
   }
 
   reviveNote(note) {
-    const noteCopy = angular.copy(note);
+    const noteCopy = {...note};
     noteCopy.id = null; // set to null so we're creating a new notebook item
     noteCopy.content.clientSaveTime = Date.parse(new Date().toString());
     const clientDeleteTime = null; // if delete timestamp is null, then we are in effect un-deleting this note item
@@ -120,7 +109,7 @@ export class NotebookService {
       workgroupId = this.ConfigService.getWorkgroupId()) {
     const notebookByWorkgroup = this.getNotebookByWorkgroup(workgroupId);
     if (notebookByWorkgroup != null) {
-      const allNotebookItems = notebookByWorkgroup.allItems;
+      const allNotebookItems = [...notebookByWorkgroup.allItems].reverse();
       for (let notebookItem of allNotebookItems) {
         if (notebookItem.localNotebookItemId === localNotebookItemId) {
           return notebookItem;
@@ -207,9 +196,9 @@ export class NotebookService {
       this.notebooksByWorkgroup[workgroupId].deletedItems = [];
       this.groupNotebookItems();
       // pretend sending data to server
-      const deferred = this.upgrade.$injector.get('$q').defer();
-      deferred.resolve(this.notebooksByWorkgroup[workgroupId]);
-      return deferred.promise;
+      return new Promise((resolve, reject) => {
+        resolve(this.notebooksByWorkgroup[workgroupId]);
+      });
     } else {
       return this.doRetrieveNotebookItems(workgroupId);
     }
@@ -237,7 +226,7 @@ export class NotebookService {
           notebookItem.studentWork =
             this.StudentDataService.getStudentWorkByStudentWorkId(notebookItem.studentWorkId);
         } else if (notebookItem.type === 'note' || notebookItem.type === 'report') {
-          notebookItem.content = angular.fromJson(notebookItem.content);
+          notebookItem.content = JSON.parse(notebookItem.content);
         }
         const workgroupId = notebookItem.workgroupId;
         if (this.notebooksByWorkgroup.hasOwnProperty(workgroupId)) {
@@ -296,21 +285,6 @@ export class NotebookService {
     }
   }
 
-  /**
-   * Returns the notebook item with the specified notebook item id.
-   */
-  getPrivateNotebookItemById(notebookItemId, workgroupId = null) {
-    const notebookByWorkgroup = this.getNotebookByWorkgroup(workgroupId);
-    if (notebookByWorkgroup != null) {
-      const allNotebookItems = notebookByWorkgroup.allItems;
-      for (let notebookItem of allNotebookItems) {
-        if (notebookItem.id === notebookItemId) {
-          return notebookItem;
-        }
-      }
-    }
-  }
-
   getPrivateNotebookItems(workgroupId = this.ConfigService.getWorkgroupId()) {
     const notebookByWorkgroup = this.getNotebookByWorkgroup(workgroupId);
     const privateNotebookItems = [];
@@ -320,37 +294,6 @@ export class NotebookService {
       }
     }
     return privateNotebookItems;
-  }
-
-  getNotebookItemById(notebookItemId, workgroupId = null) {
-    let notebookItem = this.getPrivateNotebookItemById(notebookItemId, workgroupId);
-    if (notebookItem == null) {
-      notebookItem = this.getPublicNotebookItemById(notebookItemId);
-    }
-    return notebookItem;
-  }
-
-  getPublicNotebookItem(group, localNotebookItemId, workgroupId) {
-    const publicNotebookItemsInGroup = this.publicNotebookItems[group];
-    for (let publicNotebookItemInGroup of publicNotebookItemsInGroup) {
-      if (publicNotebookItemInGroup.localNotebookItemId === localNotebookItemId &&
-        publicNotebookItemInGroup.workgroupId === workgroupId) {
-        return publicNotebookItemInGroup;
-      }
-    }
-    return null;
-  }
-
-  getPublicNotebookItemById(id) {
-    for (let group in this.publicNotebookItems) {
-      let itemsInGroup = this.publicNotebookItems[group];
-      for (let itemInGroup of itemsInGroup) {
-        if (id === itemInGroup.id) {
-          return itemInGroup;
-        }
-      }
-    }
-    return null;
   }
 
   getNotebookByWorkgroup(workgroupId = this.ConfigService.getWorkgroupId()) {
@@ -368,9 +311,9 @@ export class NotebookService {
   retrievePublicNotebookItems(group = null, periodId = null) {
     if (this.ConfigService.isPreview()) {
       // pretend we made a request to server
-      const deferred = this.upgrade.$injector.get('$q').defer();
-      deferred.resolve({});
-      return deferred.promise;
+      return new Promise((resolve, reject) => {
+        resolve({});
+      });
     } else {
       return this.doRetrievePublicNotebookItems(group, periodId);
     }
@@ -394,10 +337,10 @@ export class NotebookService {
   handleRetrievePublicNotebookItems(publicNotebookItemsForGroup, group) {
     for (let publicNotebookItemForGroup of publicNotebookItemsForGroup) {
       publicNotebookItemForGroup.content =
-        angular.fromJson(publicNotebookItemForGroup.content);
+          JSON.parse(publicNotebookItemForGroup.content);
     }
     this.publicNotebookItems[group] = publicNotebookItemsForGroup;
-    this.upgrade.$injector.get('$rootScope').$broadcast('publicNotebookItemsRetrieved', 
+    this.UtilService.broadcastEventInRootScope('publicNotebookItemsRetrieved', 
         { publicNotebookItems: this.publicNotebookItems });
     return this.publicNotebookItems;
   }
@@ -415,7 +358,7 @@ export class NotebookService {
 
   savePreviewNotebookItem(notebookItemId, nodeId, localNotebookItemId, type, title, content, groups, 
       clientSaveTime, clientDeleteTime) {
-    return this.upgrade.$injector.get('$q')((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       const notebookItem = {
         content: content,
         localNotebookItemId: localNotebookItemId,
@@ -437,7 +380,7 @@ export class NotebookService {
       }
       this.groupNotebookItems();
       this.StudentDataService.updateNodeStatuses();
-      this.upgrade.$injector.get('$rootScope').$broadcast('notebookUpdated',
+      this.UtilService.broadcastEventInRootScope('notebookUpdated',
           { notebook: this.notebooksByWorkgroup[workgroupId], notebookItem: notebookItem });
       resolve();
     });
@@ -452,8 +395,8 @@ export class NotebookService {
       nodeId: nodeId,
       type: type,
       title: title,
-      content: angular.toJson(content),
-      groups: angular.toJson(groups),
+      content: JSON.stringify(content),
+      groups: JSON.stringify(groups),
       clientSaveTime: Date.parse(new Date().toString()),
       clientDeleteTime: clientDeleteTime
     };
@@ -473,14 +416,14 @@ export class NotebookService {
   handleSaveNotebookItem(notebookItem) {
     if (notebookItem != null) {
       if (notebookItem.type === 'note' || notebookItem.type === 'report') {
-        notebookItem.content = angular.fromJson(notebookItem.content);
+        notebookItem.content = JSON.parse(notebookItem.content);
       }
       const workgroupId = notebookItem.workgroupId;
       if (this.isNotebookItemPrivate(notebookItem)) {
         this.updatePrivateNotebookItem(notebookItem, workgroupId);
       }
       this.StudentDataService.updateNodeStatuses();
-      this.upgrade.$injector.get('$rootScope').$broadcast('notebookUpdated',
+      this.UtilService.broadcastEventInRootScope('notebookUpdated',
         {
           notebook: this.notebooksByWorkgroup[workgroupId],
           notebookItem: notebookItem
@@ -558,13 +501,13 @@ export class NotebookService {
 
   handleNewNotebookItem(notebookItem) {
     if (notebookItem.type === 'note' || notebookItem.type === 'report') {
-      notebookItem.content = angular.fromJson(notebookItem.content);
+      notebookItem.content = JSON.parse(notebookItem.content);
     }
     const workgroupId = notebookItem.workgroupId;
     this.notebooksByWorkgroup[workgroupId].allItems.push(notebookItem);
     this.groupNotebookItems();
     this.StudentDataService.updateNodeStatuses();
-    this.upgrade.$injector.get('$rootScope').$broadcast('notebookUpdated',
+    this.UtilService.broadcastEventInRootScope('notebookUpdated',
         { notebook: this.notebooksByWorkgroup[workgroupId], notebookItem: notebookItem });
     return notebookItem;
   }
