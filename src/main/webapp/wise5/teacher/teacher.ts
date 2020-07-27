@@ -3,9 +3,9 @@
 import '../lib/jquery/jquery-global';
 import '../lib/bootstrap/js/bootstrap.min';
 import '../themes/default/js/webfonts';
-import AchievementService from '../services/achievementService';
 import * as angular from 'angular';
 import { downgradeInjectable } from '@angular/upgrade/static';
+import { AchievementService } from '../services/achievementService';
 import * as angularDragula from 'angular-dragula';
 import 'angular-file-saver';
 import 'angular-inview';
@@ -171,7 +171,7 @@ const teacherModule = angular
     'tableComponentModule',
     'theme.notebook',
     'ui.router'])
-  .service('AchievementService', AchievementService)
+  .service('AchievementService', downgradeInjectable(AchievementService))
   .factory('AnnotationService', downgradeInjectable(AnnotationService))
   .factory('AudioRecorderService', downgradeInjectable(AudioRecorderService))
   .factory('ComponentService', downgradeInjectable(ComponentService))

@@ -25,6 +25,7 @@ import { MatListModule } from '@angular/material/list';
 import { ChooseBranchPathDialogComponent } from '../preview/modules/choose-branch-path-dialog/choose-branch-path-dialog.component';
 import { MatButtonModule } from '@angular/material/button';
 import { DataService } from '../services/data.service';
+import { AchievementService } from '../../../../wise5/services/achievementService';
 
 @Component({template: ``})
 export class EmptyComponent {}
@@ -46,6 +47,7 @@ export class EmptyComponent {}
     ])
   ],
   providers: [
+    AchievementService,
     AnnotationService,
     AudioRecorderService,
     ConfigService,

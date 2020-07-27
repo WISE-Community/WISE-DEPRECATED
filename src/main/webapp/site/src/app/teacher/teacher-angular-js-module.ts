@@ -26,6 +26,7 @@ import { TeacherDataService } from '../../../../wise5/services/teacherDataServic
 import { NodeService } from '../../../../wise5/services/nodeService';
 import { MatDialogModule } from '@angular/material/dialog';
 import { DataService } from '../services/data.service';
+import { AchievementService } from '../../../../wise5/services/achievementService';
 
 @Component({template: ``})
 export class EmptyComponent {}
@@ -44,6 +45,7 @@ export class EmptyComponent {}
     ])
   ],
   providers: [
+    AchievementService,
     AnnotationService,
     AudioRecorderService,
     ConfigService,
