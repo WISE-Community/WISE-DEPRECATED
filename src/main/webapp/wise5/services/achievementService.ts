@@ -1,23 +1,30 @@
-class AchievementService {
-  constructor(
-      $http,
-      $q,
-      $rootScope,
-      ConfigService,
-      ProjectService,
-      StudentDataService,
-      UtilService) {
-    this.$http = $http;
-    this.$q = $q;
-    this.$rootScope = $rootScope;
-    this.ConfigService = ConfigService;
-    this.ProjectService = ProjectService;
-    this.StudentDataService = StudentDataService;
-    this.UtilService = UtilService;
-    // an object of projectAchievements, where key is workgroupId and value is the array of projectAchievements for the workgroup.
-    this.studentAchievementsByWorkgroupId = {};
+'use strict';
 
-    // whether to print debug output to the console
+import { HttpClient, HttpParams } from "@angular/common/http";
+import ConfigService from "./configService";
+import { ProjectService } from "./projectService";
+import { StudentDataService } from "./studentDataService";
+import { Injectable } from "@angular/core";
+import { UpgradeModule } from "@angular/upgrade/static";
+import { UtilService } from "./utilService";
+
+@Injectable()
+export class AchievementService {
+
+  $rootScope: any;
+  studentAchievementsByWorkgroupId: any;
+  debug: boolean;
+
+  constructor(
+    private upgrade: UpgradeModule,
+    private http: HttpClient,
+    private ConfigService: ConfigService,
+    private ProjectService: ProjectService,
+    private StudentDataService: StudentDataService,
+    private UtilService: UtilService
+  ) {
+    this.$rootScope = this.upgrade.$injector.get('$rootScope');
+    this.studentAchievementsByWorkgroupId = {};
     this.debug = false;
   }
 
@@ -31,35 +38,36 @@ class AchievementService {
     }
   }
 
+  createAchievementsURLParams(workgroupId, type) {
+    let params = new HttpParams();
+    if (workgroupId != null) {
+      params = params.set('workgroupId', workgroupId);
+    } else if (this.ConfigService.getMode() !== 'classroomMonitor') {
+      params = params.set('workgroupId', this.ConfigService.getWorkgroupId());
+      params = params.set('periodId', this.ConfigService.getPeriodId());
+    }
+    if (type != null) {
+      params = params.set('type', type);
+    }
+    return params;
+  }
+
   retrieveStudentAchievements(workgroupId = null, type = null) {
     if (this.ConfigService.isPreview()) {
       const workgroupId = this.ConfigService.getWorkgroupId();
       this.studentAchievementsByWorkgroupId[workgroupId] = [];
       return Promise.resolve(this.studentAchievementsByWorkgroupId);
     } else {
-      const config = {
-        method: 'GET',
-        url: this.ConfigService.getAchievementsURL(),
-        params: {}
+      const url = this.ConfigService.getAchievementsURL();
+      const options = {
+        params: this.createAchievementsURLParams(workgroupId, type)
       };
-      if (workgroupId != null) {
-        config.params.workgroupId = workgroupId;
-      } else if (this.ConfigService.getMode() !== 'classroomMonitor') {
-        config.params.workgroupId = this.ConfigService.getWorkgroupId();
-        config.params.periodId = this.ConfigService.getPeriodId();
-      }
-      if (type != null) {
-        config.params.type = type;
-      }
-
-      return this.$http(config).then((response) => {
-        let studentAchievements = response.data;
-        for (let studentAchievement of studentAchievements) {
+      return this.http.get(url, options).toPromise().then((studentAchievements: any[]) => {
+        for (const studentAchievement of studentAchievements) {
           this.addOrUpdateStudentAchievement(studentAchievement);
-
           if (this.ConfigService.getMode() === 'studentRun') {
             const projectAchievement = this.ProjectService
-              .getAchievementByAchievementId(studentAchievement.achievementId);
+                .getAchievementByAchievementId(studentAchievement.achievementId);
             if (projectAchievement != null) {
               /*
                * set the completed field to true in case we ever
@@ -93,7 +101,7 @@ class AchievementService {
            * each time the student loads the VLE.
            */
           const projectAchievements = this.ProjectService.getAchievementItems();
-          for (let projectAchievement of projectAchievements) {
+          for (const projectAchievement of projectAchievements) {
             if (!this.isStudentAchievementExists(projectAchievement.id) &&
                 this.isProjectAchievementSatisfied(projectAchievement)) {
               this.createStudentAchievement(projectAchievement);
@@ -120,7 +128,6 @@ class AchievementService {
       let found = false;
       for (let achievementIndex = 0; achievementIndex < achievements.length; achievementIndex++) {
         let achievement = achievements[achievementIndex];
-
         if (achievement.achievementId != null &&
             achievement.achievementId === studentAchievement.achievementId &&
             achievement.workgroupId != null &&
@@ -141,45 +148,36 @@ class AchievementService {
     }
   }
 
+  createAchievementsURLBody(studentAchievement) {
+    let body = new HttpParams()
+        .set('achievementId', studentAchievement.achievementId)
+        .set('workgroupId', studentAchievement.workgroupId)
+        .set('type', studentAchievement.type);
+    if (studentAchievement.id != null) {
+      body = body.set('id', studentAchievement.id);
+    }
+    if (studentAchievement.data != null) {
+      body = body.set('data', JSON.stringify(studentAchievement.data));
+    }
+    return body;
+  }
+
   /**
    * Saves the achievement for the logged-in user
    * @param studentAchievement
    */
   saveAchievementToServer(studentAchievement) {
     if (this.ConfigService.isPreview()) {
-      // if we're in preview, don't make any request to the server and resolve the promise right away
-      const deferred = this.$q.defer();
-      deferred.resolve(studentAchievement);
-      return deferred.promise;
+      return Promise.resolve(studentAchievement);
     } else {
-      const config = {
-        method: "POST",
-        url: this.ConfigService.getAchievementsURL(),
+      const url = this.ConfigService.getAchievementsURL();
+      const body = this.createAchievementsURLBody(studentAchievement);
+      const options = {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
         }
-      };
-
-      let params = {
-        achievementId: studentAchievement.achievementId,
-        workgroupId: studentAchievement.workgroupId,
-        type: studentAchievement.type
-      };
-
-      if (studentAchievement.id != null) {
-        params.id = studentAchievement.id;
       }
-      if (studentAchievement.data != null) {
-        params.data = angular.toJson(studentAchievement.data);
-      }
-
-      config.data = $.param(params);
-
-      return this.$http(config).then((result) => {
-        let achievement = result.data;
-        if (achievement.data != null) {
-          achievement.data = angular.fromJson(achievement.data);
-        }
+      return this.http.post(url, body, options).toPromise().then((achievement: any) => {
         this.addOrUpdateStudentAchievement(achievement);
         return achievement;
       });
@@ -210,7 +208,7 @@ class AchievementService {
   registerAchievementListeners() {
     const projectAchievements = this.ProjectService.getAchievements();
     if (projectAchievements.isEnabled) {
-      for (let projectAchievement of projectAchievements.items) {
+      for (const projectAchievement of projectAchievements.items) {
         if (!this.isStudentAchievementExists(projectAchievement.id)) {
           this.createListenerFunction(projectAchievement);
         }
@@ -227,10 +225,8 @@ class AchievementService {
       deregisterListenerFunction = this.createAggregateAchievementListener(projectAchievement);
     }
     /*
-     * set the deregisterListenerFunction into the project
-     * achievement so that we can deregister the
-     * listener after the student has completed the
-     * achievement
+     * set the deregisterListenerFunction into the project achievement so that we can deregister the
+     * listener after the student has completed the achievement
      */
     projectAchievement.deregisterListenerFunction = deregisterListenerFunction;
   }
@@ -243,7 +239,7 @@ class AchievementService {
   isStudentAchievementExists(achievementId) {
     const workgroupId = this.ConfigService.getWorkgroupId();
     const achievements = this.getStudentAchievementsByWorkgroupId(workgroupId);
-    for (let achievement of achievements) {
+    for (const achievement of achievements) {
       if (achievement.achievementId === achievementId) {
         return true;
       }
@@ -258,7 +254,6 @@ class AchievementService {
   createStudentAchievement(achievement, data = {}) {
     if (achievement.isVisible) {
       alert(`Congratulations you completed: ${achievement.name}`);
-      console.log(`Congratulations you completed: ${achievement.name}`);
     }
 
     const projectAchievement = this.ProjectService.getAchievementByAchievementId(achievement.id);
@@ -272,7 +267,8 @@ class AchievementService {
     }
 
     const workgroupId = this.ConfigService.getWorkgroupId();
-    const newAchievement = this.createNewStudentAchievement(achievement.type, achievement.id, data, workgroupId);
+    const newAchievement =
+        this.createNewStudentAchievement(achievement.type, achievement.id, data, workgroupId);
     const achievements = this.getStudentAchievementsByWorkgroupId(workgroupId);
     achievements.push(newAchievement);
     this.saveAchievementToServer(newAchievement);
@@ -286,8 +282,10 @@ class AchievementService {
    */
   createStudentWorkSavedListener(projectAchievement) {
     this.debugOutput('registering ' + projectAchievement.id);
-    const deregisterListenerFunction = this.$rootScope.$on('studentWorkSavedToServer', (event, args) => {
-      this.debugOutput('createStudentWorkSavedListener checking ' + projectAchievement.id + ' completed ' + args.nodeId);
+    const deregisterListenerFunction = this.$rootScope.$on('studentWorkSavedToServer',
+        (event, args) => {
+      this.debugOutput('createStudentWorkSavedListener checking ' + projectAchievement.id +
+          ' completed ' + args.nodeId);
       if (!this.isStudentAchievementExists(projectAchievement.id)) {
         if (this.isAchievementCompletedByStudent(projectAchievement)) {
           this.createStudentAchievement(projectAchievement);
@@ -322,16 +320,18 @@ class AchievementService {
    * @return whether the student completed the node completed achievement
    */
   isAchievementCompletedByStudent(projectAchievement) {
-    let isCompleted = true;
-    for (let satisfyCriterion of projectAchievement.satisfyCriteria) {
-      isCompleted = isCompleted && this.isCriterionSatisfied(satisfyCriterion);
+    for (const satisfyCriterion of projectAchievement.satisfyCriteria) {
+      if (!this.isCriterionSatisfied(satisfyCriterion)) {
+        return false;
+      }
     }
-    return isCompleted;
+    return true;
   }
 
   isCriterionSatisfied(satisfyCriterion) {
     if (satisfyCriterion.name === 'isCompleted') {
-      return this.StudentDataService.isCompleted(satisfyCriterion.nodeId, satisfyCriterion.componentId);
+      return this.StudentDataService.isCompleted(
+          satisfyCriterion.nodeId, satisfyCriterion.componentId);
     }
     return false;
   }
@@ -345,24 +345,14 @@ class AchievementService {
     const thisAchievementService = this;
     const thisAchievement = projectAchievement;
     this.debugOutput('registering ' + projectAchievement.id);
-    const deregisterListenerFunction = this.$rootScope.$on('achievementCompleted', (event, args) => {
-      /*
-       * the achievementCompleted event was fired so we will check if this
-       * achievement has been completed
-       */
+    const deregisterListenerFunction = this.$rootScope.$on('achievementCompleted',
+        (event, args) => {
       const projectAchievement = thisAchievement;
       if (projectAchievement != null) {
-        this.debugOutput('createAggregateAchievementListener checking ' + projectAchievement.id + ' completed ' + args.achievementId);
-
+        this.debugOutput('createAggregateAchievementListener checking ' + projectAchievement.id +
+            ' completed ' + args.achievementId);
         const id = projectAchievement.id;
-        const achievementId = args.achievementId;
-
         if (!this.isStudentAchievementExists(id)) {
-          /*
-           * the student has not completed this achievement before
-           * so we will now check if they have completed it
-           */
-
           const completed = this.checkAggregateAchievement(projectAchievement);
           if (completed) {
             thisAchievementService.createStudentAchievement(projectAchievement);
@@ -379,25 +369,16 @@ class AchievementService {
    * @return whether the student completed the aggregate achievement
    */
   checkAggregateAchievement(projectAchievement) {
-    let completed = false;
     const params = projectAchievement.params;
     if (params != null) {
       const achievementIds = params.achievementIds;
-      for (let a = 0; a < achievementIds.length; a++) {
-        const tempAchievementId = achievementIds[a];
-        if (a === 0) {
-          // this is the first node id
-          completed = this.isStudentAchievementExists(tempAchievementId);
-        } else {
-          /*
-           * this is a node id after the first node id so
-           * we will use an and conditional
-           */
-          completed = completed && this.isStudentAchievementExists(tempAchievementId);
+      for (const achievementId of achievementIds) {
+        if (!this.isStudentAchievementExists(achievementId)) {
+          return false;
         }
       }
     }
-    return completed;
+    return true;
   }
 
   /**
@@ -427,7 +408,7 @@ class AchievementService {
   getStudentAchievementsByAchievementId(achievementId) {
     const achievementsByAchievementId = [];
     const workgroupIds = this.ConfigService.getClassmateWorkgroupIds();
-    for (let workgroupId of workgroupIds) {
+    for (const workgroupId of workgroupIds) {
       const achievementsForWorkgroup = this.studentAchievementsByWorkgroupId[workgroupId];
       if (achievementsForWorkgroup != null) {
         for (let a = achievementsForWorkgroup.length - 1; a >= 0; a--) {
@@ -451,12 +432,9 @@ class AchievementService {
   getAchievementIdToStudentAchievementsMappings() {
     const achievementIdToAchievements = {};
     const projectAchievements = this.ProjectService.getAchievementItems();
-    for (let projectAchievement of projectAchievements) {
-      if (projectAchievement != null) {
-        const studentAchievements =
-          this.getStudentAchievementsByAchievementId(projectAchievement.id);
-        achievementIdToAchievements[projectAchievement.id] = studentAchievements;
-      }
+    for (const projectAchievement of projectAchievements) {
+      const studentAchievements = this.getStudentAchievementsByAchievementId(projectAchievement.id);
+      achievementIdToAchievements[projectAchievement.id] = studentAchievements;
     }
     return achievementIdToAchievements;
   }
@@ -470,7 +448,7 @@ class AchievementService {
     const achievements = this.ProjectService.getAchievementItems();
     while (id == null) {
       id = this.UtilService.generateKey(10);
-      for (let achievement of achievements) {
+      for (const achievement of achievements) {
         if (achievement.id === id) {
           /*
            * the id is already being used so we need to find
@@ -484,15 +462,3 @@ class AchievementService {
     return id;
   }
 }
-
-AchievementService.$inject = [
-  '$http',
-  '$q',
-  '$rootScope',
-  'ConfigService',
-  'ProjectService',
-  'StudentDataService',
-  'UtilService'
-];
-
-export default AchievementService;

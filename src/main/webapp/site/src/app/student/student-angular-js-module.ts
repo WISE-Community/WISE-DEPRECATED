@@ -20,6 +20,7 @@ import { CommonModule } from '@angular/common';
 import { StudentWebSocketService } from '../../../../wise5/services/studentWebSocketService';
 import { StudentDataService } from '../../../../wise5/services/studentDataService';
 import { TableService } from '../../../../wise5/components/table/tableService';
+import { AchievementService } from '../../../../wise5/services/achievementService';
 
 @Component({template: ``})
 export class EmptyComponent {}
@@ -37,6 +38,7 @@ export class EmptyComponent {}
     ])
   ],
   providers: [
+    AchievementService,
     AnnotationService,
     AudioRecorderService,
     UtilService,
@@ -65,9 +67,7 @@ export class StudentAngularJSModule {
 })
 export class StudentVLEAngularJSModule {
   constructor(upgrade: UpgradeModule) {
-    const vle = createModule('vle');
-    upgrade.bootstrap(document.body, [vle.name]);
-    setUpLocationSync(upgrade);
+    bootstrapAngularJSModule(upgrade, 'vle');
   }
 }
 
@@ -78,8 +78,13 @@ export class StudentVLEAngularJSModule {
 })
 export class PreviewAngularJSModule {
   constructor(upgrade: UpgradeModule) {
-    const preview = createModule('preview');
-    upgrade.bootstrap(document.body, [preview.name]);
-    setUpLocationSync(upgrade);
+    bootstrapAngularJSModule(upgrade, 'preview');
   }
 }
+
+function bootstrapAngularJSModule(upgrade: UpgradeModule, moduleType: string) {
+  const module = createModule(moduleType);
+  upgrade.bootstrap(document.body, [module.name]);
+  setUpLocationSync(upgrade);
+}
+

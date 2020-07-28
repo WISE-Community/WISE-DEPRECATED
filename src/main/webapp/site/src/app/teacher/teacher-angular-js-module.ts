@@ -24,6 +24,7 @@ import { SpaceService } from '../../../../wise5/services/spaceService';
 import { TeacherWebSocketService } from '../../../../wise5/services/teacherWebSocketService';
 import { TeacherDataService } from '../../../../wise5/services/teacherDataService';
 import { TableService } from '../../../../wise5/components/table/tableService';
+import { AchievementService } from '../../../../wise5/services/achievementService';
 
 @Component({template: ``})
 export class EmptyComponent {}
@@ -41,6 +42,7 @@ export class EmptyComponent {}
     ])
   ],
   providers: [
+    AchievementService,
     AnnotationService,
     AudioRecorderService,
     UtilService,
