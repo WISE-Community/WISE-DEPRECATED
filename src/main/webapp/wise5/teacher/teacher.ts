@@ -118,8 +118,8 @@ import '../lib/angular-summernote/dist/angular-summernote.min';
 import '../lib/summernoteExtensions/summernote-ext-addNote.js';
 import '../lib/summernoteExtensions/summernote-ext-print.js';
 
-const teacherModule = angular
-  .module('teacher', [
+export function createTeacherModule() {
+  return angular.module('teacher', [
     angularDragula(angular),
     'angularMoment',
     'angular-inview',
@@ -216,14 +216,12 @@ const teacherModule = angular
   .config([
     '$locationProvider',
     '$stateProvider',
-    '$urlRouterProvider',
     '$translateProvider',
     '$translatePartialLoaderProvider',
-    '$controllerProvider',
     '$mdThemingProvider',
     '$httpProvider',
-    ($locationProvider, $stateProvider, $urlRouterProvider, $translateProvider,
-        $translatePartialLoaderProvider, $controllerProvider, $mdThemingProvider, $httpProvider) => {
+    ($locationProvider, $stateProvider, $translateProvider,
+        $translatePartialLoaderProvider, $mdThemingProvider, $httpProvider) => {
       $locationProvider.html5Mode(true);
       $stateProvider.state('root', {
         url: '/teacher',
@@ -614,5 +612,4 @@ const teacherModule = angular
       });
     }
   ]);
-
-export default teacherModule;
+}

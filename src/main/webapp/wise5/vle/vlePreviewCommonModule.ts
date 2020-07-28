@@ -137,7 +137,6 @@ export function createModule(type = 'preview') {
     '$stateProvider',
     '$translateProvider',
     '$translatePartialLoaderProvider',
-    '$controllerProvider',
     '$locationProvider',
     '$mdThemingProvider',
     '$httpProvider',
@@ -145,12 +144,10 @@ export function createModule(type = 'preview') {
       $stateProvider,
       $translateProvider,
       $translatePartialLoaderProvider,
-      $controllerProvider,
       $locationProvider,
       $mdThemingProvider,
       $httpProvider
     ) => {
-      angular.module(type).$controllerProvider = $controllerProvider;
       $locationProvider.html5Mode(true);
       $stateProvider
         .state('root', {
