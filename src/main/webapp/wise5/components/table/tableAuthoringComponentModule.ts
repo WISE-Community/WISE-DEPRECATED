@@ -1,7 +1,7 @@
 'use strict';
 
 import * as angular from 'angular';
-import TableService from './tableService';
+import { TableService } from './tableService';
 import TableController from './tableController';
 import TableAuthoringController from './tableAuthoringController';
 

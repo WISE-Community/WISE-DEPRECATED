@@ -1,12 +1,13 @@
 'use strict';
 
 import * as angular from 'angular';
-import TableService from './tableService';
+import { downgradeInjectable } from '@angular/upgrade/static';
+import { TableService } from './tableService';
 import TableController from './tableController';
 
 let tableComponentModule = angular
   .module('tableComponentModule', ['pascalprecht.translate'])
-  .service('TableService', TableService)
+  .service('TableService', downgradeInjectable(TableService))
   .controller('TableController', TableController)
   .config([
     '$translatePartialLoaderProvider',

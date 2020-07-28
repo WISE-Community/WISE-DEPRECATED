@@ -23,6 +23,7 @@ import { StudentStatusService } from '../../../../wise5/services/studentStatusSe
 import { SpaceService } from '../../../../wise5/services/spaceService';
 import { TeacherWebSocketService } from '../../../../wise5/services/teacherWebSocketService';
 import { TeacherDataService } from '../../../../wise5/services/teacherDataService';
+import { TableService } from '../../../../wise5/components/table/tableService';
 
 @Component({template: ``})
 export class EmptyComponent {}
@@ -53,6 +54,7 @@ export class EmptyComponent {}
     StudentAssetService,
     StudentDataService,
     StudentStatusService,
+    TableService,
     TagService,
     TeacherDataService,
     TeacherWebSocketService
