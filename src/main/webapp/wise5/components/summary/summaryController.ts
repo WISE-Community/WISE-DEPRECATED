@@ -1,7 +1,7 @@
 'use strict';
 
 import ComponentController from '../componentController';
-import SummaryService from './summaryService';
+import { SummaryService } from './summaryService';
 
 class SummaryController extends ComponentController {
   SummaryService: SummaryService;

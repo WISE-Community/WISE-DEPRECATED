@@ -20,6 +20,7 @@ import { CommonModule } from '@angular/common';
 import { StudentWebSocketService } from '../../../../wise5/services/studentWebSocketService';
 import { StudentDataService } from '../../../../wise5/services/studentDataService';
 import { AchievementService } from '../../../../wise5/services/achievementService';
+import { SummaryService } from '../../../../wise5/components/summary/summaryService';
 
 @Component({template: ``})
 export class EmptyComponent {}
@@ -48,6 +49,7 @@ export class EmptyComponent {}
     StudentAssetService,
     StudentDataService,
     StudentWebSocketService,
+    SummaryService,
     TagService,
     VLEProjectService
   ],
