@@ -25,6 +25,7 @@ import { TeacherProjectService } from '../../../wise5/services/teacherProjectSer
 import { ProjectAssetService } from './services/projectAssetService';
 import { SpaceService } from '../../../wise5/services/spaceService';
 import { StudentStatusService } from '../../../wise5/services/studentStatusService';
+import { SummaryService } from '../../../wise5/components/summary/summaryService';
 import { TeacherDataService } from '../../../wise5/services/teacherDataService';
 import { TeacherWebSocketService } from '../../../wise5/services/teacherWebSocketService';
 
@@ -54,6 +55,7 @@ export class EmptyComponent {}
     StudentAssetService,
     StudentDataService,
     StudentWebSocketService,
+    SummaryService,
     TagService,
     VLEProjectService
   ],
