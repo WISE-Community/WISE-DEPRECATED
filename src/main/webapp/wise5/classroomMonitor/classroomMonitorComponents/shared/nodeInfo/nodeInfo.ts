@@ -1,7 +1,7 @@
 'use strict';
 
 import { AnnotationService } from '../../../../services/annotationService';
-import SummaryService from '../../../../components/summary/summaryService';
+import { SummaryService } from '../../../../components/summary/summaryService';
 import { TeacherDataService } from '../../../../services/teacherDataService';
 import { UtilService } from '../../../../services/utilService';
 import { TeacherProjectService } from '../../../../services/teacherProjectService';

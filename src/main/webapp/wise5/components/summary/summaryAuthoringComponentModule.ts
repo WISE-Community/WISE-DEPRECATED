@@ -1,13 +1,14 @@
 'use strict';
 
 import * as angular from 'angular';
-import SummaryService from './summaryService';
+import { downgradeInjectable } from '@angular/upgrade/static';
+import { SummaryService } from './summaryService';
 import SummaryController from './summaryController';
 import SummaryAuthoringController from './summaryAuthoringController';
 
 const summaryAuthoringComponentModule = angular
   .module('summaryAuthoringComponentModule', ['pascalprecht.translate'])
-  .service('SummaryService', SummaryService)
+  .service('SummaryService', downgradeInjectable(SummaryService))
   .controller('SummaryController', SummaryController)
   .controller('SummaryAuthoringController', SummaryAuthoringController)
   .config([
