@@ -84,27 +84,17 @@ export class NotebookService {
       });
   }
 
-  deleteNote(note) {
+  reviveOrDeleteNote(note, revive: boolean = true) {
     const noteCopy = {...note};
+    const clientTime = Date.parse(new Date().toString());
     noteCopy.id = null; // set to null so we're creating a new notebook item
-    noteCopy.content.clientSaveTime = Date.parse(new Date().toString());
-    const clientDeleteTime = Date.parse(new Date().toString());
+    noteCopy.content.clientSaveTime = clientTime;
+    const clientDeleteTime = revive ? null : clientTime; // if delete timestamp is null, then we are in effect un-deleting this note item
     return this.saveNotebookItem(noteCopy.id, noteCopy.nodeId, noteCopy.localNotebookItemId, 
         noteCopy.type, noteCopy.title, noteCopy.content, noteCopy.groups, 
         noteCopy.content.clientSaveTime, clientDeleteTime);
   }
 
-  reviveNote(note) {
-    const noteCopy = {...note};
-    noteCopy.id = null; // set to null so we're creating a new notebook item
-    noteCopy.content.clientSaveTime = Date.parse(new Date().toString());
-    const clientDeleteTime = null; // if delete timestamp is null, then we are in effect un-deleting this note item
-    return this.saveNotebookItem(noteCopy.id, noteCopy.nodeId, noteCopy.localNotebookItemId, 
-        noteCopy.type, noteCopy.title, noteCopy.content, noteCopy.groups, 
-        noteCopy.content.clientSaveTime, clientDeleteTime);
-  }
-
-  // looks up notebook item by local notebook item id, including deleted notes
   getLatestNotebookItemByLocalNotebookItemId(localNotebookItemId, 
       workgroupId = this.ConfigService.getWorkgroupId()) {
     const notebookByWorkgroup = this.getNotebookByWorkgroup(workgroupId);
@@ -119,7 +109,6 @@ export class NotebookService {
     return null;
   }
 
-  // returns student's report item if they've done work, or the template if they haven't
   getLatestNotebookReportItemByReportId(reportId, 
       workgroupId = this.ConfigService.getWorkgroupId()) {
     return this.getLatestNotebookItemByLocalNotebookItemId(reportId, workgroupId);
@@ -166,19 +155,14 @@ export class NotebookService {
     return null;
   }
 
-  isNotebookEnabled() {
-    return this.ProjectService.project.notebook != null && 
-        this.ProjectService.project.notebook.enabled;
-  }
-
-  isTeacherNotebookEnabled() {
-    return this.ProjectService.project.teacherNotebook != null && 
-        this.ProjectService.project.teacherNotebook.enabled;
+  isNotebookEnabled(type: string = 'notebook') {
+    return this.ProjectService.project[type] != null && 
+        this.ProjectService.project[type].enabled;
   }
 
   isStudentNoteEnabled() {
     return this.ProjectService.project.notebook != null &&
-      this.ProjectService.project.notebook.itemTypes.note.enabled;
+        this.ProjectService.project.notebook.itemTypes.note.enabled;
   }
 
   isStudentNoteClippingEnabled() {
@@ -225,15 +209,11 @@ export class NotebookService {
         } else if (notebookItem.studentWorkId != null) {
           notebookItem.studentWork =
             this.StudentDataService.getStudentWorkByStudentWorkId(notebookItem.studentWorkId);
-        } else if (notebookItem.type === 'note' || notebookItem.type === 'report') {
+        } else {
           notebookItem.content = JSON.parse(notebookItem.content);
         }
         const workgroupId = notebookItem.workgroupId;
-        if (this.notebooksByWorkgroup.hasOwnProperty(workgroupId)) {
-          this.notebooksByWorkgroup[workgroupId].allItems.push(notebookItem);
-        } else {
-          this.notebooksByWorkgroup[workgroupId] = { allItems: [notebookItem] };
-        }
+        this.addToNotebooksByWorgkroup(notebookItem, workgroupId);
       } catch (e) {
       }
     }
@@ -241,12 +221,16 @@ export class NotebookService {
     return this.notebooksByWorkgroup;
   }
 
+  addToNotebooksByWorgkroup(notebookItem, workgroupId) {
+    if (this.notebooksByWorkgroup.hasOwnProperty(workgroupId)) {
+      this.notebooksByWorkgroup[workgroupId].allItems.push(notebookItem);
+    } else {
+      this.notebooksByWorkgroup[workgroupId] = { allItems: [notebookItem] };
+    }
+  }
+
   /**
-   * Groups the notebook items together in to a map-like structure inside this.notebook.items.
-   * {
-   *    'abc123': [{localNotebookItemId:'abc123', 'text':'first revision'}, {localNotebookItemId:'abc123', 'text':'second revision'}],
-   *    'def456': [{localNotebookItemId:'def456', 'text':'hello'}, {localNotebookItemId:'def456', 'text':'hello my friend'}]
-   * }
+   * Groups the notebook items together in to a map-like structure by workgroup inside this.notebook.items.
    */
   groupNotebookItems() {
     for (let workgroupId in this.notebooksByWorkgroup) {
@@ -373,11 +357,7 @@ export class NotebookService {
         serverDeleteTime: clientDeleteTime ? clientDeleteTime : null
       };
       const workgroupId = notebookItem.workgroupId;
-      if (this.notebooksByWorkgroup.hasOwnProperty(workgroupId)) {
-        this.notebooksByWorkgroup[workgroupId].allItems.push(notebookItem);
-      } else {
-        this.notebooksByWorkgroup[workgroupId] = { allItems: [notebookItem] };
-      }
+      this.addToNotebooksByWorgkroup(notebookItem, workgroupId);
       this.groupNotebookItems();
       this.StudentDataService.updateNodeStatuses();
       this.UtilService.broadcastEventInRootScope('notebookUpdated',
@@ -432,11 +412,7 @@ export class NotebookService {
   }
 
   updatePrivateNotebookItem(notebookItem, workgroupId) {
-    if (this.notebooksByWorkgroup.hasOwnProperty(workgroupId)) {
-      this.notebooksByWorkgroup[workgroupId].allItems.push(notebookItem);
-    } else {
-      this.notebooksByWorkgroup[workgroupId] = { allItems: [notebookItem] };
-    }
+    this.addToNotebooksByWorgkroup(notebookItem, workgroupId);
     this.groupNotebookItems();
   }
 
@@ -464,45 +440,8 @@ export class NotebookService {
     }
   }
 
-  addNotebookItemToGroup(notebookItemId, group) {
-    if (!this.ConfigService.isPreview()) {
-      const url = `${this.ConfigService.getNotebookURL()}/group/${group}`;
-      const params = {
-        workgroupId: this.ConfigService.getWorkgroupId(),
-        notebookItemId: notebookItemId,
-        clientSaveTime: Date.parse(new Date().toString())
-      };
-      const headers = new HttpHeaders({'Content-Type': 'application/x-www-form-urlencoded'});
-      return this.http.post(url, $.param(params), { headers: headers }).toPromise().then(
-        resultData => {
-          const notebookItem = resultData;
-          return this.handleNewNotebookItem(notebookItem);
-        });
-    }
-  }
-
-  removeNotebookItemFromGroup(notebookItemId, group) {
-    if (!this.ConfigService.isPreview()) {
-      const url = `${this.ConfigService.getNotebookURL()}/group/${group}`;
-      const params = new HttpParams()
-        .set('workgroupId', this.ConfigService.getWorkgroupId())
-        .set('notebookItemId', notebookItemId)
-        .set('clientSaveTime', Date.parse(new Date().toString()).toString())
-      const options = {
-        params: params
-      };
-      const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
-      return this.http.delete(url, options).toPromise().then(resultData => {
-        const notebookItem = resultData;
-        return this.handleNewNotebookItem(notebookItem);
-      });
-    }
-  }
-
   handleNewNotebookItem(notebookItem) {
-    if (notebookItem.type === 'note' || notebookItem.type === 'report') {
-      notebookItem.content = JSON.parse(notebookItem.content);
-    }
+    notebookItem.content = JSON.parse(notebookItem.content);
     const workgroupId = notebookItem.workgroupId;
     this.notebooksByWorkgroup[workgroupId].allItems.push(notebookItem);
     this.groupNotebookItems();

@@ -445,7 +445,7 @@ const teacherModule = angular
             (NotebookService, ConfigService, config, project) => {
               if (
                 NotebookService.isNotebookEnabled() ||
-                NotebookService.isTeacherNotebookEnabled()
+                NotebookService.isNotebookEnabled('teacherNotebook')
               ) {
                 return NotebookService.retrieveNotebookItems().then(notebook => {
                   return notebook;
