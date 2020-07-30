@@ -10,6 +10,12 @@ import { ProjectService } from "../../../../wise5/services/projectService";
 import { TagService } from "../../../../wise5/services/tagService";
 
 let service;
+const summaryAllowedComponentTypes = ['Animation', 'AudioOscillator', 'ConceptMap',
+'Discussion', 'Draw', 'Embedded', 'Graph', 'Label', 'Match', 'MultipleChoice',
+'OpenResponse', 'Table'];
+const summaryDisallowedComponentTypes = ['HTML', 'OutsideURL', 'Summary'];
+const scoreSummaryAllowedComponentTypes = summaryAllowedComponentTypes;
+const scoreSummaryDisallowedComponentTypes = summaryDisallowedComponentTypes;
 
 describe('SummaryService', () => {
   beforeEach(() => {
@@ -45,72 +51,34 @@ function createComponent() {
   });
 }
 
+function expectFunctionCall(funcName, componentTypes, expectedResult) {
+  componentTypes.forEach((componentType) => {
+    expect(service[funcName](componentType)).toEqual(expectedResult);
+  });
+}
+
 function isComponentTypeAllowed() {
-  function expectAllowed(componentType, expectedResult) {
-    expect(service.isComponentTypeAllowed(componentType)).toEqual(expectedResult);
-  }
   it('should check if component types are allowed to be used in the summary', () => {
-    expectAllowed('Animation', true);
-    expectAllowed('AudioOscillator', true);
-    expectAllowed('ConceptMap', true);
-    expectAllowed('Discussion', true);
-    expectAllowed('Draw', true);
-    expectAllowed('Embedded', true);
-    expectAllowed('Graph', true);
-    expectAllowed('HTML', false);
-    expectAllowed('Label', true);
-    expectAllowed('Match', true);
-    expectAllowed('MultipleChoice', true);
-    expectAllowed('OpenResponse', true);
-    expectAllowed('OutsideURL', false);
-    expectAllowed('Summary', false);
-    expectAllowed('Table', true);
+    expectFunctionCall('isComponentTypeAllowed', summaryAllowedComponentTypes, true);
+    expectFunctionCall('isComponentTypeAllowed', summaryDisallowedComponentTypes, false);
   });
 }
 
 function isScoresSummaryAvailableForComponentType() {
-  function expectIsScoresSummaryAvailable(componentType, expectedResult) {
-    expect(service.isScoresSummaryAvailableForComponentType(componentType)).toEqual(expectedResult);
-  }
-  it('should check if component types can be used with score summary', () => {
-    expectIsScoresSummaryAvailable('Animation', true);
-    expectIsScoresSummaryAvailable('AudioOscillator', true);
-    expectIsScoresSummaryAvailable('ConceptMap', true);
-    expectIsScoresSummaryAvailable('Discussion', true);
-    expectIsScoresSummaryAvailable('Draw', true);
-    expectIsScoresSummaryAvailable('Embedded', true);
-    expectIsScoresSummaryAvailable('Graph', true);
-    expectIsScoresSummaryAvailable('HTML', false);
-    expectIsScoresSummaryAvailable('Label', true);
-    expectIsScoresSummaryAvailable('Match', true);
-    expectIsScoresSummaryAvailable('MultipleChoice', true);
-    expectIsScoresSummaryAvailable('OpenResponse', true);
-    expectIsScoresSummaryAvailable('OutsideURL', false);
-    expectIsScoresSummaryAvailable('Summary', false);
-    expectIsScoresSummaryAvailable('Table', true);
+  it('should check if score summary is available', () => {
+    expectFunctionCall('isScoresSummaryAvailableForComponentType',
+        scoreSummaryAllowedComponentTypes, true);
+    expectFunctionCall('isScoresSummaryAvailableForComponentType',
+        scoreSummaryDisallowedComponentTypes, false);
   });
 }
 
 function isResponsesSummaryAvailableForComponentType() {
-  function expectIsResponsesSummaryAvailable(componentType, expectedResult) {
-    expect(service.isResponsesSummaryAvailableForComponentType(componentType))
-        .toEqual(expectedResult);
-  }
   it('should check if component types can be used with response summary', () => {
-    expectIsResponsesSummaryAvailable('Animation', false);
-    expectIsResponsesSummaryAvailable('AudioOscillator', false);
-    expectIsResponsesSummaryAvailable('ConceptMap', false);
-    expectIsResponsesSummaryAvailable('Discussion', false);
-    expectIsResponsesSummaryAvailable('Draw', false);
-    expectIsResponsesSummaryAvailable('Embedded', false);
-    expectIsResponsesSummaryAvailable('Graph', false);
-    expectIsResponsesSummaryAvailable('HTML', false);
-    expectIsResponsesSummaryAvailable('Label', false);
-    expectIsResponsesSummaryAvailable('Match', false);
-    expectIsResponsesSummaryAvailable('MultipleChoice', true);
-    expectIsResponsesSummaryAvailable('OpenResponse', false);
-    expectIsResponsesSummaryAvailable('OutsideURL', false);
-    expectIsResponsesSummaryAvailable('Summary', false);
-    expectIsResponsesSummaryAvailable('Table', true);
+    expectFunctionCall('isResponsesSummaryAvailableForComponentType', ['MultipleChoice', 'Table'],
+        true);
+    expectFunctionCall('isResponsesSummaryAvailableForComponentType', ['Animation',
+        'AudioOscillator', 'ConceptMap', 'Discussion', 'Draw', 'Embedded', 'Graph', 'HTML', 'Label',
+        'Match', 'OpenResponse', 'OutsideURL', 'Summary'], false);
   });
 }
