@@ -145,6 +145,32 @@ export function createCommonModule() {
         .determinePreferredLanguage()
         .useSanitizeValueStrategy('sanitizeParameters', 'escape');
     $translatePartialLoaderProvider.addPart('i18n');
+    $mdThemingProvider.definePalette('primary', {
+      '50': 'e1f0f4',
+      '100': 'b8dbe4',
+      '200': '8ec6d4',
+      '300': '5faec2',
+      '400': '3d9db5',
+      '500': '1c8ca8',
+      '600': '197f98',
+      '700': '167188',
+      '800': '136377',
+      '900': '0e4957',
+      A100: 'abf3ff',
+      A200: '66e2ff',
+      A400: '17bee5',
+      A700: '00A1C6',
+      contrastDefaultColor: 'light', // whether, by default, text (contrast)
+      // on this palette should be dark or light
+      contrastDarkColors: [
+        '50',
+        '100', //hues which contrast should be 'dark' by default
+        '200',
+        '300',
+        'A100'
+      ],
+      contrastLightColors: undefined // could also specify this if default was 'dark'
+    });
     $mdThemingProvider.definePalette('accent', {
       '50': 'fde9e6',
       '100': 'fbcbc4',
@@ -164,6 +190,11 @@ export function createCommonModule() {
       contrastDarkColors: ['50', '100', '200', '300', 'A100'],
       contrastLightColors: undefined
     });
+    const lightMap = $mdThemingProvider.extendPalette('grey', {
+      A100: 'ffffff'
+    });
+    $mdThemingProvider.definePalette('light', lightMap);
+    $mdThemingProvider.enableBrowserColor();
     moment.updateLocale('en', {
       calendar: {
         lastDay: '[Yesterday at] LT',

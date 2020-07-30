@@ -443,16 +443,11 @@ export function createTeacherAngularJSModule() {
           .warnPalette('red', {
             default: '800'
           });
-        const lightMap = $mdThemingProvider.extendPalette('grey', {
-          A100: 'ffffff'
-        });
-        $mdThemingProvider.definePalette('light', lightMap);
         $mdThemingProvider
           .theme('light')
           .primaryPalette('light', { default: 'A100' })
           .accentPalette('pink', { default: '900' });
         $mdThemingProvider.setDefaultTheme('at');
-        $mdThemingProvider.enableBrowserColor();
       }
     ]);
   }
