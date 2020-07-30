@@ -80,9 +80,7 @@ public class NotificationController {
     Run run = runService.retrieveById(new Long(runId));
     if (toWorkgroupId != null) {
       Workgroup workgroup = workgroupService.retrieveById(new Long(toWorkgroupId));
-      if (user.getUserDetails() instanceof StudentUserDetails &&
-        (!run.isStudentAssociatedToThisRun(user) ||
-          !workgroup.getMembers().contains(user))) {
+      if (isStudentAndNotAllowedToSaveNotification(user, run, workgroup)) {
         return new ArrayList<Notification>();
       }
     } else if (!user.isAdmin() && !runService.hasRunPermission(run, user, BasePermission.READ)) {
@@ -105,21 +103,13 @@ public class NotificationController {
         return null;
       }
     } else if (fromWorkgroup != null) {
-      if (user.getUserDetails() instanceof StudentUserDetails &&
-        (!run.isStudentAssociatedToThisRun(user) ||
-          !fromWorkgroup.getMembers().contains(user))) {
+      if (isStudentAndNotAllowedToSaveNotification(user, run, fromWorkgroup)) {
         return null;
       }
     } else if (toWorkgroup != null) {
       if (fromWorkgroup == null) {
         if ("CRaterResult".equals(notification.getType())) {
         } else {
-          return null;
-        }
-      } else {
-        if (user.getUserDetails() instanceof StudentUserDetails &&
-            (!run.isStudentAssociatedToThisRun(user) ||
-            !fromWorkgroup.getMembers().contains(user))) {
           return null;
         }
       }
@@ -131,6 +121,13 @@ public class NotificationController {
     return notification;
   }
 
+  private boolean isStudentAndNotAllowedToSaveNotification(User user, Run run,
+      Workgroup fromWorkgroup) {
+    return user.getUserDetails() instanceof StudentUserDetails &&
+      (!run.isStudentAssociatedToThisRun(user) ||
+        !fromWorkgroup.getMembers().contains(user));
+  }
+
   @PostMapping("/notification/{runId}/dismiss")
   protected Notification dismissNotification(@PathVariable Integer runId,
       @RequestBody Notification notification, Authentication authentication)
@@ -140,8 +137,7 @@ public class NotificationController {
     if (canDismissNotification(user, notification, run)) {
       Timestamp timeDismissed = notification.getTimeDismissed();
       notification = vleService.dismissNotification(notification, timeDismissed);
-      String type = notification.getType();
-      if ("CRaterResult".equals(type)) {
+      if ("CRaterResult".equals(notification.getType())) {
         String groupId = notification.getGroupId();
         List<Notification> notificationsInGroup = vleService.getNotificationsByGroupId(groupId);
         for (Notification notificationInGroup : notificationsInGroup) {

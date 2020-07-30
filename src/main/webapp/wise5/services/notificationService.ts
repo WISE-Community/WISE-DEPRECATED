@@ -99,29 +99,33 @@ export class NotificationService {
         notificationData.dismissCode = notificationForScore.dismissCode;
       }
       if (notificationForScore.isNotifyStudent) {
-        const toWorkgroupId = this.ConfigService.getWorkgroupId();
-        let notificationMessageToStudent = notificationForScore.notificationMessageToStudent;
-        notificationMessageToStudent = notificationMessageToStudent.replace('{{username}}', this.ConfigService.getUsernameByWorkgroupId(fromWorkgroupId));
-        notificationMessageToStudent = notificationMessageToStudent.replace('{{score}}', notificationForScore.score);
-        notificationMessageToStudent = notificationMessageToStudent.replace('{{dismissCode}}', notificationForScore.dismissCode);
-
-        const notificationToStudent = this.createNewNotification(runId, periodId, notificationType, notificationForScore.nodeId, notificationForScore.componentId,
-            fromWorkgroupId, toWorkgroupId, notificationMessageToStudent, notificationData, notificationGroupId);
-        this.saveNotificationToServer(notificationToStudent);
+        this.sendNotificationToUser(notificationForScore.notificationMessageToStudent,
+            fromWorkgroupId, notificationForScore, runId, periodId, notificationType,
+            this.ConfigService.getWorkgroupId(), notificationData, notificationGroupId)
+            .then((notification) => {
+              this.addNotification(notification);
+            });
       }
-
       if (notificationForScore.isNotifyTeacher) {
-        const toWorkgroupId = this.ConfigService.getTeacherWorkgroupId();
-        let notificationMessageToTeacher = notificationForScore.notificationMessageToTeacher;
-        notificationMessageToTeacher = notificationMessageToTeacher.replace('{{username}}', this.ConfigService.getUsernameByWorkgroupId(fromWorkgroupId));
-        notificationMessageToTeacher = notificationMessageToTeacher.replace('{{score}}', notificationForScore.score);
-        notificationMessageToTeacher = notificationMessageToTeacher.replace('{{dismissCode}}', notificationForScore.dismissCode);
-
-        const notificationToTeacher = this.createNewNotification(runId, periodId, notificationType, notificationForScore.nodeId, notificationForScore.componentId,
-            fromWorkgroupId, toWorkgroupId, notificationMessageToTeacher, notificationData, notificationGroupId);
-        this.saveNotificationToServer(notificationToTeacher);
+        this.sendNotificationToUser(notificationForScore.notificationMessageToTeacher,
+            fromWorkgroupId, notificationForScore, runId, periodId, notificationType,
+            this.ConfigService.getTeacherWorkgroupId(), notificationData, notificationGroupId);
       }
     }
+  }
+
+  private sendNotificationToUser(notificationMessage: any, fromWorkgroupId: any,
+      notificationForScore: any, runId: any, periodId: any, notificationType: any,
+      toWorkgroupId: any, notificationData: any, notificationGroupId: string) {
+    notificationMessage = notificationMessage.replace('{{username}}',
+        this.ConfigService.getUsernameByWorkgroupId(fromWorkgroupId));
+    notificationMessage = notificationMessage.replace('{{score}}', notificationForScore.score);
+    notificationMessage = notificationMessage.replace('{{dismissCode}}',
+        notificationForScore.dismissCode);
+    const notification = this.createNewNotification(runId, periodId, notificationType,
+        notificationForScore.nodeId, notificationForScore.componentId,
+        fromWorkgroupId, toWorkgroupId, notificationMessage, notificationData, notificationGroupId);
+    return this.saveNotificationToServer(notification);
   }
 
   saveNotificationToServer(notification) {
@@ -129,10 +133,7 @@ export class NotificationService {
       return this.pretendServerRequest(notification);
     } else {
       return this.http.post(this.ConfigService.getNotificationURL(), notification).toPromise()
-          .then((notification: any) => {
-        if (notification.data != null) {
-          notification.data = angular.fromJson(notification.data);
-        }
+          .then((notification: Notification) => {
         return notification;
       });
     }
@@ -146,14 +147,11 @@ export class NotificationService {
     return this.http.post(`${this.ConfigService.getNotificationURL()}/dismiss`, notification)
         .toPromise().then((notification: Notification) => {
       this.addNotification(notification);
-      return notification;
     });
   }
 
   pretendServerRequest(notification) {
-    const deferred = this.upgrade.$injector.get('$q').defer();
-    deferred.resolve(notification);
-    return deferred.promise;
+    return Promise.resolve(notification);
   }
 
   /**
@@ -164,15 +162,13 @@ export class NotificationService {
    */
   getNotifications(args) {
     let notifications = this.notifications;
-    if (args) {
-      for (let p in args) {
-        if (args.hasOwnProperty(p) && args[p] !== null) {
-          notifications = notifications.filter(
-            notification => {
-              return (notification[p] === args[p]);
-            }
-          );
-        }
+    for (const p in args) {
+      if (args.hasOwnProperty(p) && args[p] !== null) {
+        notifications = notifications.filter(
+          notification => {
+            return (notification[p] === args[p]);
+          }
+        );
       }
     }
     return notifications;

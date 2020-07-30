@@ -187,7 +187,9 @@ public class Notification extends PersistableDomain {
         notificationJSONObject.put("componentId", componentId);
       }
 
-      notificationJSONObject.put("componentType", componentType);
+      if (componentType != null) {
+        notificationJSONObject.put("componentType", componentType);
+      }
 
       if (type != null) {
         notificationJSONObject.put("type", type);
@@ -198,7 +200,7 @@ public class Notification extends PersistableDomain {
       }
 
       if (data != null) {
-        notificationJSONObject.put("data", data);
+        notificationJSONObject.put("data", new JSONObject(data));
       }
 
       if (serverSaveTime != null) {
