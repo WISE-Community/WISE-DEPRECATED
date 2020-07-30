@@ -1,24 +1,27 @@
+'use strict';
+
 import * as angular from 'angular';
 import * as html2canvas from 'html2canvas';
 import { ComponentService } from '../componentService';
 import { StudentAssetService } from '../../services/studentAssetService';
+import { StudentDataService } from '../../services/studentDataService';
+import { UtilService } from '../../services/utilService';
+import { Injectable } from '@angular/core';
+import { UpgradeModule } from '@angular/upgrade/static';
 
-class TableService extends ComponentService {
-  $q: any;
+@Injectable()
+export class TableService extends ComponentService {
   $translate: any;
-  StudentAssetService: StudentAssetService;
 
-  static $inject = ['$filter', '$q', 'StudentAssetService', 'StudentDataService', 'UtilService'];
-
-  constructor($filter, $q, StudentAssetService, StudentDataService, UtilService) {
+  constructor(private upgrade: UpgradeModule,
+      private StudentAssetService: StudentAssetService,
+      protected StudentDataService: StudentDataService,
+      protected UtilService: UtilService) {
     super(StudentDataService, UtilService);
-    this.$q = $q;
-    this.$translate = $filter('translate');
-    this.StudentAssetService = StudentAssetService;
   }
 
   getComponentTypeLabel() {
-    return this.$translate('table.componentTypeLabel');
+    return this.upgrade.$injector.get('$filter')('translate')('table.componentTypeLabel');
   }
 
   createComponent() {
@@ -80,7 +83,6 @@ class TableService extends ComponentService {
         }
       ]
     ];
-
     return component;
   }
 
@@ -92,21 +94,13 @@ class TableService extends ComponentService {
        */
       return true;
     }
-    if (componentStates && componentStates.length) {
-      let submitRequired =
-        node.showSubmitButton || (component.showSubmitButton && !node.showSaveButton);
-
-      // loop through all the component states
+    if (componentStates != null && componentStates.length > 0) {
+      const submitRequired = this.calculateIfIsSubmitIsRequired(node, component);
       for (let c = 0, l = componentStates.length; c < l; c++) {
-        // the component state
-        let componentState = componentStates[c];
-
-        // get the student data from the component state
-        let studentData = componentState.studentData;
-
+        const componentState = componentStates[c];
+        const studentData = componentState.studentData;
         if (studentData != null) {
-          let tableData = studentData.tableData;
-
+          const tableData = studentData.tableData;
           if (tableData != null) {
             // there is a table data so the component has saved work
             // TODO: check for actual student data from the table (compare to starting state)
@@ -122,8 +116,11 @@ class TableService extends ComponentService {
         }
       }
     }
-
     return false;
+  }
+
+  calculateIfIsSubmitIsRequired(node, component) {
+    return node.showSubmitButton || (!node.showSaveButton && component.showSubmitButton);
   }
 
   /**
@@ -132,59 +129,43 @@ class TableService extends ComponentService {
    * @return Whether the component has any editable cells.
    */
   componentHasEditableCells(component) {
-    if (component != null) {
-      let tableData = component.tableData;
-      if (tableData != null) {
-        for (let r = 0; r < tableData.length; r++) {
-          let row = tableData[r];
-          if (row != null) {
-            for (let c = 0; c < row.length; c++) {
-              let cell = row[c];
-              if (cell != null) {
-                if (cell.editable === true) {
-                  return true;
-                }
+    const tableData = component.tableData;
+    if (tableData != null) {
+      for (let r = 0; r < tableData.length; r++) {
+        const row = tableData[r];
+        if (row != null) {
+          for (let c = 0; c < row.length; c++) {
+            const cell = row[c];
+            if (cell != null) {
+              if (cell.editable === true) {
+                return true;
               }
             }
           }
         }
       }
     }
-
     return false;
   }
 
   componentStateHasStudentWork(componentState, componentContent) {
     if (componentState != null) {
-      let studentData = componentState.studentData;
-
+      const studentData = componentState.studentData;
       if (studentData != null) {
-        // get the table from the student data
-        let studentTableData = studentData.tableData;
-
-        // get the table from the component content
-        let componentContentTableData = componentContent.tableData;
-
+        const studentTableData = studentData.tableData;
+        const componentContentTableData = componentContent.tableData;
         if (studentTableData != null) {
-          let studentRows = studentTableData;
-
-          // loop through the student rows
+          const studentRows = studentTableData;
           for (let r = 0; r < studentRows.length; r++) {
-            let studentRow = studentRows[r];
-
+            const studentRow = studentRows[r];
             if (studentRow != null) {
-              // loop through the student columns
               for (let c = 0; c < studentRow.length; c++) {
-                // get cell from the student
-                let studentCell = this.getTableDataCellValue(r, c, studentTableData);
-
-                // get a cell from the component content
-                let componentContentCell = this.getTableDataCellValue(
+                const studentCell = this.getTableDataCellValue(r, c, studentTableData);
+                const componentContentCell = this.getTableDataCellValue(
                   r,
                   c,
                   componentContentTableData
                 );
-
                 if (studentCell !== componentContentCell) {
                   /*
                    * the cell values are not the same which means
@@ -198,7 +179,6 @@ class TableService extends ComponentService {
         }
       }
     }
-
     return false;
   }
 
@@ -211,24 +191,16 @@ class TableService extends ComponentService {
    * @returns the cell value (text or a number)
    */
   getTableDataCellValue(x, y, table) {
-    let cellValue = null;
-
     if (table != null) {
-      // get the row we want
       const row = table[y];
-
       if (row != null) {
-        // get the cell we want
         const cell = row[x];
-
         if (cell != null) {
-          // set the value into the cell
-          cellValue = cell.text;
+          return cell.text;
         }
       }
     }
-
-    return cellValue;
+    return null;
   }
 
   /**
@@ -238,27 +210,28 @@ class TableService extends ComponentService {
    * @return A promise that will return an image object.
    */
   generateImageFromRenderedComponentState(componentState) {
-    let deferred = this.$q.defer();
-    let tableElement = angular.element(
-      document.querySelector('#table_' + componentState.nodeId + '_' + componentState.componentId)
-    );
-    if (tableElement != null && tableElement.length > 0) {
-      tableElement = tableElement[0];
-      // convert the table element to a canvas element
-      html2canvas(tableElement).then(canvas => {
-        // get the canvas as a base64 string
-        let img_b64 = canvas.toDataURL('image/png');
+    const promise = new Promise((resolve, reject) => {
+      let tableElement = angular.element(
+        document.querySelector('#table_' + componentState.nodeId + '_' + componentState.componentId)
+      );
+      if (tableElement != null && tableElement.length > 0) {
+        tableElement = tableElement[0];
+        // convert the table element to a canvas element
+        html2canvas(tableElement).then(canvas => {
+          // get the canvas as a base64 string
+          const img_b64 = canvas.toDataURL('image/png');
 
-        // get the image object
-        let imageObject = this.UtilService.getImageObjectFromBase64String(img_b64);
+          // get the image object
+          const imageObject = this.UtilService.getImageObjectFromBase64String(img_b64);
 
-        // add the image to the student assets
-        this.StudentAssetService.uploadAsset(imageObject).then(asset => {
-          deferred.resolve(asset);
+          // add the image to the student assets
+          this.StudentAssetService.uploadAsset(imageObject).then(asset => {
+            resolve(asset);
+          });
         });
-      });
-    }
-    return deferred.promise;
+      }
+    });
+    return promise;
   }
 
   hasRequiredNumberOfFilledRows(
@@ -291,7 +264,7 @@ class TableService extends ComponentService {
   }
 
   isAllCellsFilledInRow(row) {
-    for (let c of row) {
+    for (const c of row) {
       if (c.text == null || c.text == '') {
         return false;
       }
@@ -300,7 +273,7 @@ class TableService extends ComponentService {
   }
 
   isAtLeastOneCellFilledInRow(row) {
-    for (let c of row) {
+    for (const c of row) {
       if (c.text != null && c.text != '') {
         return true;
       }
@@ -308,5 +281,3 @@ class TableService extends ComponentService {
     return false;
   }
 }
-
-export default TableService;
