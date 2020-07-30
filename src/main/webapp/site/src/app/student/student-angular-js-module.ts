@@ -19,6 +19,7 @@ import { AnnotationService } from '../../../../wise5/services/annotationService'
 import { CommonModule } from '@angular/common';
 import { StudentWebSocketService } from '../../../../wise5/services/studentWebSocketService';
 import { StudentDataService } from '../../../../wise5/services/studentDataService';
+import { TableService } from '../../../../wise5/components/table/tableService';
 import { AchievementService } from '../../../../wise5/services/achievementService';
 import { SummaryService } from '../../../../wise5/components/summary/summaryService';
 
@@ -50,6 +51,7 @@ export class EmptyComponent {}
     StudentDataService,
     StudentWebSocketService,
     SummaryService,
+    TableService,
     TagService,
     VLEProjectService
   ],
