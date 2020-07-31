@@ -114,14 +114,13 @@ export class NotificationService {
     }
   }
 
-  private sendNotificationToUser(notificationMessage: any, fromWorkgroupId: any,
-      notificationForScore: any, runId: any, periodId: any, notificationType: any,
-      toWorkgroupId: any, notificationData: any, notificationGroupId: string) {
-    notificationMessage = notificationMessage.replace('{{username}}',
-        this.ConfigService.getUsernameByWorkgroupId(fromWorkgroupId));
-    notificationMessage = notificationMessage.replace('{{score}}', notificationForScore.score);
-    notificationMessage = notificationMessage.replace('{{dismissCode}}',
-        notificationForScore.dismissCode);
+  private sendNotificationToUser(notificationMessage: string, fromWorkgroupId: number,
+      notificationForScore: any, runId: number, periodId: any, notificationType: string,
+      toWorkgroupId: number, notificationData: any, notificationGroupId: string) {
+    notificationMessage = notificationMessage
+        .replace('{{username}}', this.ConfigService.getUsernameByWorkgroupId(fromWorkgroupId))
+        .replace('{{score}}', notificationForScore.score)
+        .replace('{{dismissCode}}', notificationForScore.dismissCode);
     const notification = this.createNewNotification(runId, periodId, notificationType,
         notificationForScore.nodeId, notificationForScore.componentId,
         fromWorkgroupId, toWorkgroupId, notificationMessage, notificationData, notificationGroupId);
