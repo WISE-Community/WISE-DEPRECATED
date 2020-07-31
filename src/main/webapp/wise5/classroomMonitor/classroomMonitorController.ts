@@ -4,7 +4,7 @@ import { ConfigService } from '../services/configService';
 import NodeService from '../services/nodeService';
 import { NotebookService } from '../services/notebookService';
 import NotificationService from '../services/notificationService';
-import TeacherDataService from '../services/teacherDataService';
+import { TeacherDataService } from '../services/teacherDataService';
 import { SessionService } from '../services/sessionService';
 import * as angular from 'angular';
 import { TeacherProjectService } from '../services/teacherProjectService';
@@ -191,8 +191,7 @@ class ClassroomMonitorController {
       componentType = null,
       category = 'Navigation',
       event = 'sessionStarted',
-      data = {},
-      projectId = null;
+      data = {};
     this.TeacherDataService.saveEvent(
       context,
       nodeId,
@@ -200,8 +199,7 @@ class ClassroomMonitorController {
       componentType,
       category,
       event,
-      data,
-      projectId
+      data
     );
 
     this.$window.onbeforeunload = () => {
@@ -274,7 +272,6 @@ class ClassroomMonitorController {
     const componentId = null;
     const componentType = null;
     const data = {};
-    const projectId = null;
     return this.TeacherDataService.saveEvent(
       context,
       nodeId,
@@ -282,8 +279,7 @@ class ClassroomMonitorController {
       componentType,
       category,
       eventName,
-      data,
-      projectId
+      data
     ).then((result) => {
       return result;
     });

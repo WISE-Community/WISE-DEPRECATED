@@ -1,7 +1,7 @@
 'use strict';
 
 import { ConfigService } from '../../../../services/configService';
-import TeacherDataService from '../../../../services/teacherDataService';
+import { TeacherDataService } from '../../../../services/teacherDataService';
 import { SessionService } from '../../../../services/sessionService';
 import { TeacherProjectService } from '../../../../services/teacherProjectService';
 
@@ -158,8 +158,7 @@ class TopBarController {
       componentType,
       category,
       eventName,
-      data,
-      this.projectId
+      data
     ).then((result) => {
       return result;
     });

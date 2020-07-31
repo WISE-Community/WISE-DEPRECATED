@@ -1,12 +1,13 @@
-import ComponentService from '../componentService';
+import { ComponentService } from '../componentService';
 import { ConfigService } from '../../services/configService';
-import TeacherDataService from '../../services/teacherDataService';
+import { TeacherDataService } from '../../services/teacherDataService';
 
 class DiscussionService extends ComponentService {
   $http: any;
   $injector: any;
   $rootScope: any;
   $q: any;
+  $translate: any;
   ConfigService: ConfigService;
   TeacherDataService: TeacherDataService;
 
@@ -31,11 +32,12 @@ class DiscussionService extends ComponentService {
     StudentDataService,
     UtilService
   ) {
-    super($filter, StudentDataService, UtilService);
+    super(StudentDataService, UtilService);
     this.$http = $http;
     this.$rootScope = $rootScope;
     this.$q = $q;
     this.$injector = $injector;
+    this.$translate = $filter('translate');
     this.ConfigService = ConfigService;
     if (['classroomMonitor', 'author'].includes(this.ConfigService.getMode())) {
       /*

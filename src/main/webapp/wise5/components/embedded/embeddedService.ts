@@ -1,17 +1,19 @@
 import * as $ from 'jquery';
 import * as html2canvas from 'html2canvas';
-import ComponentService from '../componentService';
+import { ComponentService } from '../componentService';
 import { StudentAssetService } from '../../services/studentAssetService';
 
 class EmbeddedService extends ComponentService {
   $q: any;
+  $translate: any;
   StudentAssetService: StudentAssetService;
 
   static $inject = ['$filter', '$q', 'StudentAssetService', 'StudentDataService', 'UtilService'];
 
   constructor($filter, $q, StudentAssetService, StudentDataService, UtilService) {
-    super($filter, StudentDataService, UtilService);
+    super(StudentDataService, UtilService);
     this.$q = $q;
+    this.$translate = $filter('translate');
     this.StudentAssetService = StudentAssetService;
   }
 

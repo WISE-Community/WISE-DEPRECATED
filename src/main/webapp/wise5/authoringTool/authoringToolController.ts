@@ -2,7 +2,7 @@
 import * as angular from 'angular';
 import { ConfigService } from '../services/configService';
 import { SessionService } from '../services/sessionService';
-import TeacherDataService from '../services/teacherDataService';
+import { TeacherDataService } from '../services/teacherDataService';
 import { TeacherProjectService } from '../services/teacherProjectService';
 
 class AuthoringToolController {
@@ -361,7 +361,6 @@ class AuthoringToolController {
     const componentId = null;
     const componentType = null;
     const data = {};
-    const projectId = null;
     return this.TeacherDataService.saveEvent(
       context,
       nodeId,
@@ -369,8 +368,7 @@ class AuthoringToolController {
       componentType,
       category,
       eventName,
-      data,
-      projectId
+      data
     ).then((result) => {
       return result;
     });

@@ -2,7 +2,7 @@
 
 import { ConfigService } from '../../services/configService';
 import { TeacherProjectService } from '../../services/teacherProjectService';
-import TeacherDataService from '../../services/teacherDataService';
+import { TeacherDataService } from '../../services/teacherDataService';
 import { UtilService } from '../../services/utilService';
 import * as angular from 'angular';
 import * as $ from 'jquery';
@@ -238,8 +238,7 @@ class AuthoringToolMainController {
       componentType,
       category,
       eventName,
-      data,
-      projectId
+      data
     );
   }
 

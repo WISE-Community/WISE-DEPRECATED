@@ -1,6 +1,6 @@
 'use strict';
 
-import AchievementService from '../../services/achievementService';
+import { AchievementService } from '../../services/achievementService';
 import MilestoneService from '../../services/milestoneService';
 import * as angular from 'angular';
 
