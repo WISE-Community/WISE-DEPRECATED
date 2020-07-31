@@ -114,10 +114,10 @@ export class NotificationService {
     }
   }
 
-  private sendNotificationToUser(notificationMessage: string, fromWorkgroupId: number,
+  private sendNotificationToUser(notificationMessageTemplate: string, fromWorkgroupId: number,
       notificationForScore: any, runId: number, periodId: any, notificationType: string,
       toWorkgroupId: number, notificationData: any, notificationGroupId: string) {
-    notificationMessage = notificationMessage
+    const notificationMessage = notificationMessageTemplate
         .replace('{{username}}', this.ConfigService.getUsernameByWorkgroupId(fromWorkgroupId))
         .replace('{{score}}', notificationForScore.score)
         .replace('{{dismissCode}}', notificationForScore.dismissCode);
