@@ -338,15 +338,17 @@ export class TeacherDataService {
   }
 
   retrieveLatestStudentDataByNodeIdAndComponentIdAndPeriodId(nodeId, componentId, periodId) {
-    const params = new HttpParams()
+    let params = new HttpParams()
         .set('runId', this.ConfigService.getRunId())
         .set('nodeId', nodeId)
         .set('componentId', componentId)
-        .set('periodId', periodId)
         .set('getStudentWork', 'true')
         .set('getEvents', 'false')
         .set('getAnnotations', 'false')
         .set('onlyGetLatest', 'true');
+    if (periodId != null) {
+      params = params.set('periodId', periodId);
+    }
     return this.retrieveStudentData(params).then(result => {
       return result.studentWorkList;
     });

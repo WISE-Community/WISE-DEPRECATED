@@ -7,7 +7,7 @@ import { RouterModule } from '@angular/router';
       {
         path: 'preview',
         children: [
-          {path: '', loadChildren: () => import('../student/student-angular-js-module').then(m => m.PreviewAngularJSModule)}
+          {path: '', loadChildren: () => import('../hybrid-module').then(m => m.PreviewAngularJSModule)}
         ]
       }
     ])
