@@ -45,14 +45,12 @@ import javax.persistence.Entity;
 import javax.persistence.Index;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
 import java.sql.Timestamp;
 
 /**
  * Domain object representing an event that occur in the VLE (used in WISE5). An Event can be a
  * mouse click, step_enter, model_state_changed, etc.
- * 
+ *
  * @author Hiroki Terashima
  */
 @Entity
@@ -62,7 +60,6 @@ import java.sql.Timestamp;
     @Index(columnList = "userId", name = "eventsUserIdIndex") })
 @Getter
 @Setter
-@JsonSerialize(using = EventSerializer.class)
 public class Event extends PersistableDomain {
 
   @Id

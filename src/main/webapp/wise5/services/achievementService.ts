@@ -1,7 +1,7 @@
 'use strict';
 
 import { HttpClient, HttpParams } from "@angular/common/http";
-import ConfigService from "./configService";
+import { ConfigService } from "./configService";
 import { ProjectService } from "./projectService";
 import { StudentDataService } from "./studentDataService";
 import { Injectable } from "@angular/core";

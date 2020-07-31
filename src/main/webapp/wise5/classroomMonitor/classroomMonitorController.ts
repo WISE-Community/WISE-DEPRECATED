@@ -3,7 +3,7 @@
 import { ConfigService } from '../services/configService';
 import NodeService from '../services/nodeService';
 import NotebookService from '../services/notebookService';
-import NotificationService from '../services/notificationService';
+import { NotificationService } from '../services/notificationService';
 import { TeacherDataService } from '../services/teacherDataService';
 import { SessionService } from '../services/sessionService';
 import * as angular from 'angular';

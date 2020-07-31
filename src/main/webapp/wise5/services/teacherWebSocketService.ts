@@ -1,9 +1,10 @@
 'use strict';
 
 import { Injectable } from "@angular/core";
-import ConfigService from "./configService";
+import { ConfigService } from "./configService";
 import { StudentStatusService } from "./studentStatusService";
 import { UpgradeModule } from "@angular/upgrade/static";
+import { NotificationService } from "./notificationService";
 
 @Injectable()
 export class TeacherWebSocketService {
@@ -15,6 +16,7 @@ export class TeacherWebSocketService {
   constructor(
       private upgrade: UpgradeModule,
       private ConfigService: ConfigService,
+      private NotificationService: NotificationService,
       private StudentStatusService: StudentStatusService) {
     this.rootScope = this.upgrade.$injector.get('$rootScope');
     this.stomp = this.upgrade.$injector.get('$stomp');
@@ -57,8 +59,7 @@ export class TeacherWebSocketService {
   subscribeToTeacherWorkgroupTopic() {
     this.stomp.subscribe(`/topic/workgroup/${this.ConfigService.getWorkgroupId()}`, (message, headers, res) => {
       if (message.type === 'notification') {
-        const notification = JSON.parse(message.content);
-        this.rootScope.$broadcast('newNotificationReceived', notification);
+        this.NotificationService.addNotification(JSON.parse(message.content));
       }
     });
   }

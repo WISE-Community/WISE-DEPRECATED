@@ -23,6 +23,7 @@
  */
 package org.wise.portal.service.vle.wise5;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -197,14 +198,6 @@ public interface VLEService {
       String clientSaveTime);
 
   /**
-   * @param notificationId
-   *                         id of the notification
-   * @return the Notification with the specified id
-   * @throws ObjectNotFoundException
-   */
-  Notification getNotificationById(Integer notificationId) throws ObjectNotFoundException;
-
-  /**
    * @param groupId
    *                  id of the group
    * @return the Notifications that are in the specified group
@@ -240,14 +233,7 @@ public interface VLEService {
       String componentId, String componentType, String type, String message, String data,
       String timeGenerated, String timeDismissed);
 
-  /**
-   * Dismiss the given notification
-   *
-   * @param notification
-   * @param timeDismissed
-   * @return Notification dismissed notification
-   */
-  Notification dismissNotification(Notification notification, String timeDismissed);
+  Notification dismissNotification(Notification notification, Timestamp timeDismissed);
 
   void saveStudentStatus(StudentStatus studentStatus);
 

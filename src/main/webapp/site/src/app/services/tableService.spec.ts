@@ -3,7 +3,7 @@ import { TableService } from "../../../../wise5/components/table/tableService";
 import { UpgradeModule } from '@angular/upgrade/static';
 import { StudentAssetService } from '../../../../wise5/services/studentAssetService';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import ConfigService from '../../../../wise5/services/configService';
+import { ConfigService } from '../../../../wise5/services/configService';
 import { StudentDataService } from '../../../../wise5/services/studentDataService';
 import { AnnotationService } from '../../../../wise5/services/annotationService';
 import { ProjectService } from '../../../../wise5/services/projectService';

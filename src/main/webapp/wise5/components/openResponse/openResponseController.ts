@@ -4,7 +4,7 @@ import * as angular from 'angular';
 import * as $ from 'jquery';
 import ComponentController from '../componentController';
 import { CRaterService } from '../../services/cRaterService';
-import NotificationService from '../../services/notificationService';
+import { NotificationService } from '../../services/notificationService';
 import OpenResponseService from './openResponseService';
 import { AudioRecorderService } from '../../services/audioRecorderService';
 
