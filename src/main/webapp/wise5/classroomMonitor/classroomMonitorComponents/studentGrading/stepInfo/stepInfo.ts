@@ -1,6 +1,6 @@
 'use strict';
 
-import ClassroomMonitorProjectService from '../../../classroomMonitorProjectService';
+import { TeacherProjectService } from '../../../../services/teacherProjectService';
 
 class StepInfoController {
   $translate: any;
@@ -21,7 +21,7 @@ class StepInfoController {
 
   static $inject = ['$filter', 'ProjectService'];
 
-  constructor($filter: any, private ProjectService: ClassroomMonitorProjectService) {
+  constructor($filter: any, private ProjectService: TeacherProjectService) {
     this.$translate = $filter('translate');
   }
 

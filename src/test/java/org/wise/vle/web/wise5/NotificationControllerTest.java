@@ -1,20 +1,20 @@
 package org.wise.vle.web.wise5;
 
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.easymock.EasyMockRunner;
-import org.easymock.Mock;
 import org.easymock.TestSubject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.security.acls.domain.BasePermission;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.presentation.web.controllers.APIControllerTest;
-import org.wise.portal.service.vle.wise5.VLEService;
 import org.wise.vle.domain.notification.Notification;
 
 @RunWith(EasyMockRunner.class)
@@ -22,9 +22,6 @@ public class NotificationControllerTest extends APIControllerTest {
 
   @TestSubject
   private NotificationController controller = new NotificationController();
-
-  @Mock
-  private VLEService vleService;
 
   @Test
   public void getNotifications_NotTeacherOfRun_ReturnEmptyNotifications()

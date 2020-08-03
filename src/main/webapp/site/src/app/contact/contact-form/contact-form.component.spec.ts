@@ -1,20 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { TRANSLATIONS_FORMAT, TRANSLATIONS, LOCALE_ID } from '@angular/core';
 import { ContactFormComponent } from './contact-form.component';
 import { ReactiveFormsModule } from "@angular/forms";
 import { RouterTestingModule } from "@angular/router/testing";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
-import { MatInputModule, MatSelectModule } from "@angular/material";
-import { I18n } from "@ngx-translate/i18n-polyfill";
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { UserService } from "../../services/user.service";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { ConfigService } from "../../services/config.service";
 import { StudentService } from "../../student/student.service";
 import { User } from "../../domain/user";
-import { BehaviorSubject } from 'rxjs';
-import { translationsFactory } from "../../app.module";
+import { BehaviorSubject, Observable } from 'rxjs';
 import { configureTestSuite } from 'ng-bullet';
-import {LibraryService} from '../../services/library.service';
+import { LibraryService } from '../../services/library.service';
+import { Config } from '../../domain/config';
 
 export class MockUserService {
   getUser(): BehaviorSubject<User> {
@@ -37,9 +36,15 @@ export class MockUserService {
 }
 
 export class MockConfigService {
+  getConfig(): Observable<Config> {
+    return Observable.create(new Config());
+  }
 }
 
 export class MockStudentService {
+  getTeacherList(): Observable<User> {
+    return Observable.create(new User());
+  }
 
 }
 
@@ -51,7 +56,7 @@ describe('ContactFormComponent', () => {
   let component: ContactFormComponent;
   let fixture: ComponentFixture<ContactFormComponent>;
 
-  configureTestSuite(() => {
+  beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ ContactFormComponent ],
       imports: [
@@ -65,18 +70,12 @@ describe('ContactFormComponent', () => {
         { provide: ConfigService, useClass: MockConfigService },
         { provide: UserService, useClass: MockUserService },
         { provide: StudentService, useClass: MockStudentService },
-        { provide: LibraryService, useClass: MockLibraryService },
-        { provide: TRANSLATIONS_FORMAT, useValue: "xlf" },
-        {
-          provide: TRANSLATIONS,
-          useFactory: translationsFactory,
-          deps: [LOCALE_ID]
-        },
-        I18n
+        { provide: LibraryService, useClass: MockLibraryService }
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
-    });
-  });
+    })
+    .compileComponents();
+  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ContactFormComponent);
@@ -89,7 +88,7 @@ describe('ContactFormComponent', () => {
   });
 
   it('should show the email field if the user is not signed in', () => {
-    const userService = TestBed.get(UserService);
+    const userService = TestBed.inject(UserService);
     userService.isSignedIn = () => {
       return false;
     };
@@ -102,7 +101,7 @@ describe('ContactFormComponent', () => {
   });
 
   it('should show the email field if the user is signed in as a teacher', () => {
-    const userService = TestBed.get(UserService);
+    const userService = TestBed.inject(UserService);
     userService.isSignedIn = () => {
       return true;
     };
@@ -115,7 +114,7 @@ describe('ContactFormComponent', () => {
   });
 
   it('should not show the email field if the user is signed in as a student', () => {
-    const userService = TestBed.get(UserService);
+    const userService = TestBed.inject(UserService);
     userService.isSignedIn = () => {
       return true;
     };

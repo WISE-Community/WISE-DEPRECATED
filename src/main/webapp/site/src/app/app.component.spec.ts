@@ -4,16 +4,20 @@ import { Component } from "@angular/core";
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MediaChange, MediaObserver } from '@angular/flex-layout';
-import { Observable } from 'rxjs';
+import { Observable, config, BehaviorSubject } from 'rxjs';
 import { UtilService } from "./services/util.service";
 import { configureTestSuite } from 'ng-bullet';
 import { Announcement } from './domain/announcement';
 import { ConfigService } from './services/config.service';
+import { Config } from "./domain/config";
+import { environment } from '../environments/environment';
 
 @Component({selector: 'router-outlet', template: ''})
 class RouterOutletStubComponent { }
 
 export class MockConfigService {
+  private config$: BehaviorSubject<Config> = new BehaviorSubject<Config>(null);
+  
   getAnnouncement(): Observable<Announcement> {
     return Observable.create(observer => {
       const announcement: Announcement = new Announcement();
@@ -21,6 +25,17 @@ export class MockConfigService {
       observer.next(announcement);
       observer.complete();
     });
+  }
+
+  getConfig(): Observable<Config> {
+    const config: Config = new Config();
+    config.googleAnalyticsId = 'UA-XXXXXX-1';
+    this.config$.next(config);
+    return this.config$;
+  }
+
+  getGoogleAnalyticsId(): string {
+    return this.config$.getValue().googleAnalyticsId;
   }
 }
 
@@ -50,6 +65,7 @@ export class MockObservableMedia {
 describe('AppComponent', () => {
   let component: AppComponent;
   let fixture: ComponentFixture<AppComponent>;
+  environment.production = true;
 
   configureTestSuite(() => {
     TestBed.configureTestingModule({
@@ -86,5 +102,9 @@ describe('AppComponent', () => {
     component.dismissAnnouncement();
     fixture.detectChanges();
     expect(shadowRoot.querySelector('app-announcement')).toBeFalsy();
+  }));
+
+  it(`should set Google Analytics tracking code`, async(() => {
+    expect(component.googleAnalyticsId).toEqual('UA-XXXXXX-1');
   }));
 });

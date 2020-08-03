@@ -1,0 +1,3032 @@
+{
+  "nodes": [
+    {
+      "id": "group0",
+      "type": "group",
+      "title": "Master",
+      "startId": "group1",
+      "ids": ["group1", "group2", "group3", "group4", "group5", "group6"]
+    },
+    {
+      "id": "group1",
+      "type": "group",
+      "title": "Introduction to Newton Scooters",
+      "startId": "node1",
+      "ids": ["node1", "node2"],
+      "icons": {
+        "default": {
+          "color": "#2196F3",
+          "type": "font",
+          "fontSet": "material-icons",
+          "fontName": "info"
+        }
+      }
+    },
+    {
+      "id": "node1",
+      "type": "node",
+      "showSaveButton": true,
+      "showSubmitButton": false,
+      "constraints": [],
+      "transitionLogic": {
+        "transitions": [
+          {
+            "to": "node2"
+          }
+        ],
+        "howToChooseAmongAvailablePaths": null,
+        "whenToChoosePath": null,
+        "canChangePath": null,
+        "maxPathsVisitable": null
+      },
+      "title": "Introduction to Newton Scooters",
+      "components": [
+        {
+          "id": "ygip12bdtv",
+          "type": "HTML",
+          "html": "<!DOCTYPE html>\n<html>\n<head>\n</head>\n<body>\n<div style=\"background-image: url('background.jpg'); border-radius: 10px 10px 10px 10px; padding: 25px; background-size: cover; font-family: Arial, Helvetica, sans-serif; line-height: 150%;\">\n<div style=\"background-color: rgba(255,255,255,0.85); color: #006; border-radius: 30px 30px 30px 30px; padding: 15px; text-align: center;\">\n<h1>Why Study Newton Scooters?</h1>\n</div>\n<br />\n<div style=\"background-color: rgba(255,255,255,0.85); color: #006; border-radius: 20px 20px 20px 20px; padding: 20px;\">\n<p>YOUR GOAL is to build a scooter that can go farther than the Master Scooter pictured below. Your scooter should look exactly like the one below except for ONE change that you think will improve the scooter's performance.</p>\n<br/><p>In this unit, you will design, build, and test a scooter. We will show you how to make a better scooter by thinking about energy, where it comes from and where it goes.</p>\n<br />\n<p><img style=\"display: block; margin-left: auto; margin-right: auto;\" src=\"model_rubberbandcar_cropped.jpg\" alt=\"\" height=\"220\" /></p>\n<p style=\"text-align: center;\">Master Scooter</p>\n</div>\n</div>\n</body>\n</html>"
+        }
+      ],
+      "icons": {
+        "default": {
+          "color": "#2196F3",
+          "type": "font",
+          "fontSet": "material-icons",
+          "fontName": "chrome_reader_mode"
+        }
+      }
+    },
+    {
+      "id": "node2",
+      "type": "node",
+      "showSaveButton": true,
+      "showSubmitButton": false,
+      "constraints": [],
+      "transitionLogic": {
+        "transitions": [
+          {
+            "to": "node3"
+          }
+        ],
+        "howToChooseAmongAvailablePaths": null,
+        "whenToChoosePath": null,
+        "canChangePath": null,
+        "maxPathsVisitable": null
+      },
+      "title": "Initial Ideas",
+      "components": [
+        {
+          "id": "w610e11zej",
+          "type": "HTML",
+          "html": "<div style=\"margin: auto; background-image: url('background.jpg'); border-radius: 20px 20px 20px 20px; padding: 8px; background-size: cover;\"><div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 8px; text-align: center;\"><h2 style=\"text-align: center;\">Your Ideas About How Newton Scooters&nbsp;Work</h2></div></div><p>&nbsp;</p><div style=\"text-align: center;\"><h5>Watch a video of a rubber band car!</h5><object id=\"flashObj\" width=\"480\" height=\"270\" classid=\"clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\" codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=9,0,47,0\"><param name=\"movie\" value=\"http://c.brightcove.com/services/viewer/federated_f9?isVid=1&isUI=1\"/><param name=\"bgcolor\" value=\"#FFFFFF\"/><param name=\"flashVars\" value=\"videoId=1785707989001&linkBaseURL=http%3A%2F%2Fvideos.kidspot.com.au%2Fvideos%2Fmsccfimh%2Fhow-to-make-a-rubber-band-cd-car&playerID=1481257918001&playerKey=AQ~~,AAABWOeErfE~,m-zG2cTdbSFPmdIYTvrDXYGmMQGs9zYu&domain=embed&dynamicStreaming=true\"/><param name=\"base\" value=\"http://admin.brightcove.com\"/><param name=\"seamlesstabbing\" value=\"false\"/><param name=\"allowFullScreen\" value=\"true\"/><param name=\"swLiveConnect\" value=\"true\"/><param name=\"allowScriptAccess\" value=\"always\"/><embed src=\"http://c.brightcove.com/services/viewer/federated_f9?isVid=1&isUI=1\" bgcolor=\"#FFFFFF\" flashVars=\"videoId=1785707989001&linkBaseURL=http%3A%2F%2Fvideos.kidspot.com.au%2Fvideos%2Fmsccfimh%2Fhow-to-make-a-rubber-band-cd-car&playerID=1481257918001&playerKey=AQ~~,AAABWOeErfE~,m-zG2cTdbSFPmdIYTvrDXYGmMQGs9zYu&domain=embed&dynamicStreaming=true\" base=\"http://admin.brightcove.com\" name=\"flashObj\" width=\"480\" height=\"270\" seamlesstabbing=\"false\" type=\"application/x-shockwave-flash\" allowFullScreen=\"true\" allowScriptAccess=\"always\" swLiveConnect=\"true\" pluginspage=\"http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash\"></embed></object><p>&nbsp;</p><h5>Here are some other examples of Newton Scooters</h5><div><img src=\"rubber band car_lego wheels.JPG\" alt=\"rubber band car lego wheels\" style=\"height: 130px; width: auto; padding: 10px; display: inline-block;\"/><img src=\"balloon car with flare.JPG\" alt=\"ballon car with flare\" style=\"height: 130px; width: auto; padding: 10px; display: inline-block;\"/><img src=\"inflated balloon car_google.jpg\" alt=\"rubber band car inflated\" style=\"height: 130px; width: auto; padding: 10px; display: inline-block;\"/><img src=\"cds as wheels scooter.JPG\" alt=\"cds as wheels scooter\" style=\"height: 130px; width: auto; padding: 10px; display: inline-block;\"/></div><p>&nbsp;</p><h6>A rubber band car is a type of Newton Scooter. With materials right in your own home, you can build a Newton Scooter!</h6><h6>Write down your <span style=\"font-weight: bold;\">best ideas</span> about what might affect how far a Newton Scooter will travel.</h6></div>"
+        },
+        {
+          "id": "mpt65v012s",
+          "prompt": "What are some factors that are important for a scooter to move?",
+          "type": "OpenResponse",
+          "maxScore": 5
+        }
+      ],
+      "icons": {
+        "default": {
+          "color": "#2196F3",
+          "type": "font",
+          "fontSet": "material-icons",
+          "fontName": "assignment"
+        }
+      }
+    },
+    {
+      "id": "group2",
+      "type": "group",
+      "title": "Powering Your Newton Scooter",
+      "startId": "node3",
+      "ids": [
+        "node3",
+        "node4",
+        "node5",
+        "node6",
+        "node7",
+        "node9",
+        "node12",
+        "node13",
+        "node14",
+        "node18",
+        "node19"
+      ],
+      "icons": {
+        "default": {
+          "color": "#2196F3",
+          "type": "font",
+          "fontSet": "material-icons",
+          "fontName": "pageview"
+        }
+      }
+    },
+    {
+      "id": "node3",
+      "type": "node",
+      "showSaveButton": true,
+      "showSubmitButton": false,
+      "constraints": [],
+      "transitionLogic": {
+        "transitions": [
+          {
+            "to": "node4"
+          }
+        ],
+        "howToChooseAmongAvailablePaths": null,
+        "whenToChoosePath": null,
+        "canChangePath": null,
+        "maxPathsVisitable": null
+      },
+      "title": "Newton Scooter Concepts",
+      "components": [
+        {
+          "id": "zqwcqpgzfr",
+          "type": "HTML",
+          "html": "<div style=\"margin: auto; background-image: url('background.jpg'); border-radius: 20px 20px 20px 20px; padding: 15px; background-size: cover;\"><div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 1px; text-align: center; \"><h2>How Do Newton Scooters&nbsp;Work?</h2></div><br/><div style=\"background-color: #000099; border-radius: 20px 20px 20px 20px; padding: 5px;\"><div style=\"text-align: center;\"><img src=\"rubber band car_rubberCD wheels.JPG\" alt=\"rubber band car_rubberCD wheels\" style=\"height: 130px; width: auto; padding: 10px; display: inline-block;\"/><img src=\"triangle balloon car.JPG\" alt=\"triangle balloon car\" height=\"100px\" style=\"height: 130px; width: auto; padding: 10px; display: inline-block;\"/><img src=\"two balloons car.JPG\" alt=\"two balloons car\" height=\"100px\" style=\"height: 130px; width: auto; padding: 10px; display: inline-block;\"/><img src=\"flower power.JPG\" alt=\"flower power\" height=\"100px\" style=\"height: 130px; width: auto; padding: 10px; display: inline-block;\"/></div></div><br/><div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 10px;\"><h5 style=\"color: #000066; text-align: center;\">When you test your scooter you want it to go far. To help you think about the decisions you make as you design the scooter, we are going to investigate how the energy in the situation impacts the distance your scooter travels.</h5></div></div>"
+        }
+      ],
+      "icons": {
+        "default": {
+          "color": "#2196F3",
+          "type": "font",
+          "fontSet": "material-icons",
+          "fontName": "chrome_reader_mode"
+        }
+      }
+    },
+    {
+      "id": "node4",
+      "type": "node",
+      "showSaveButton": true,
+      "showSubmitButton": false,
+      "constraints": [],
+      "transitionLogic": {
+        "transitions": [
+          {
+            "to": "node5"
+          }
+        ],
+        "howToChooseAmongAvailablePaths": null,
+        "whenToChoosePath": null,
+        "canChangePath": null,
+        "maxPathsVisitable": null
+      },
+      "title": "Introducing the concepts",
+      "components": [
+        {
+          "id": "7p3phansz0",
+          "type": "HTML",
+          "html": "<div style=\"margin: auto; background-image: url('background.jpg'); border-radius: 20px 20px 20px 20px; padding: 15px; background-size: cover;\"><div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 1px; text-align: center;\"><h2>Conservation of Energy</h2></div><br/><p style=\"text-align: center;\"><img style=\"max-width: 300px; height: auto;\" src=\"http://wise.berkeley.edu/curriculum/15577/assets/moving_ballooncar.png\" alt=\"moving balloon car\"></p><br/><div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 10px; text-align: center;\"><h6>Energy is not created or destroyed, which means it is <span style=\"font-weight: bold;\">conserved</span>. Even though energy cannot be created or destroyed, it can be <span style=\"font-weight: bold;\">transformed</span>.</h6><h6>There are 3 types of energy: <span style=\"font-weight: bold;\">potential energy</span>, <span style=\"font-weight: bold;\">kinetic energy</span>, and <span style=\"font-weight: bold;\">thermal energy</span>. Let's explore how each of these affects your scooter!</h6></div></div>"
+        }
+      ],
+      "icons": {
+        "default": {
+          "color": "#2196F3",
+          "type": "font",
+          "fontSet": "material-icons",
+          "fontName": "pageview"
+        }
+      }
+    },
+    {
+      "id": "node5",
+      "type": "node",
+      "showSaveButton": true,
+      "showSubmitButton": false,
+      "constraints": [],
+      "transitionLogic": {
+        "transitions": [
+          {
+            "to": "node6"
+          }
+        ],
+        "howToChooseAmongAvailablePaths": null,
+        "whenToChoosePath": null,
+        "canChangePath": null,
+        "maxPathsVisitable": null
+      },
+      "title": "Explore the concepts",
+      "components": [
+        {
+          "id": "dgda78bdtv",
+          "type": "HTML",
+          "html": "<h5 style=\"text-align: center;\">Press \"Use Ramp\" or \"Use Spring\" to test the car using a ramp and a spring.</h5><h5  style=\"text-align: center;\">How can you make the scooter travel the greatest distance?</h5>"
+        },
+        {
+          "id": "87v9zdbei2",
+          "type": "embedded",
+          "url": "NewtonScooters-position.html",
+          "html": "<div style=\"margin: auto; background-color: 4170ad; border-radius: 20px 20px 20px 20px; padding: 10px; background-size: cover; font-family: Arial, Helvetica, sans serif;\">\n<div class=\"first last\" style=\"border-radius: 220px;\">\n<p style=\"position: relative; text-align: center; margin: 15px; color: #ffffff;\"><span style=\"font-size: x-large; color: #ffffff;\" data-mce-mark=\"1\"><strong>Testing a Newton Scooter</strong></span></p>\n</div>\n<div style=\"border-radius: 10px; padding: 10px; background-color: #ffffff;\">\n<p>Press \"Use Ramp\" or \"Use Spring\"&nbsp;to test the car using a ramp and a spring. Be sure to watch the position-time graph&nbsp;form once you release the lever.</p>\n<p>How can you make the scooter travel the greatest distance?</p>\n</div>\n<p style=\"background-color: #fff;\"><iframe style=\"height: 720px; width: 1020px;\" src=\"NewtonScooters-position.html\" width=\"100%\" height=\"100%\"></iframe></p>\n</div>",
+          "maxScore": 10
+        },
+        {
+          "id": "7zqfyy21af",
+          "prompt": "What was the farthest distance recorded with this scooter?",
+          "type": "OpenResponse",
+          "starterSentence": "__ m",
+          "maxScore": 3
+        },
+        {
+          "id": "9lvu90g5b4",
+          "prompt": "What changes in the spring and what position on the ramp make the car travel the farthest?",
+          "type": "MultipleChoice",
+          "choiceType": "radio",
+          "choices": [
+            {
+              "id": "ql0dndtiko",
+              "text": "Squeezing the spring more and placing the car at the bottom of the ramp",
+              "feedback": ""
+            },
+            {
+              "id": "yoss2byevm",
+              "text": "Squeezing the spring more and placing the car at the top of the ramp",
+              "feedback": ""
+            },
+            {
+              "id": "22yrp15x9n",
+              "text": "Squeezing the spring less and placing the car at the bottom of the ramp",
+              "feedback": ""
+            },
+            {
+              "id": "dijcpb02rf",
+              "text": "Squeezing the spring less and placing the car at the top of the ramp",
+              "feedback": ""
+            }
+          ]
+        },
+        {
+          "id": "l561tojc3f",
+          "prompt": "Explain how the energy from the spring and the energy from the ramp are the same.",
+          "type": "OpenResponse"
+        }
+      ],
+      "icons": {
+        "default": {
+          "color": "#9C27B0",
+          "type": "font",
+          "fontSet": "material-icons",
+          "fontName": "gamepad"
+        }
+      }
+    },
+    {
+      "id": "node6",
+      "type": "node",
+      "showSaveButton": true,
+      "showSubmitButton": false,
+      "constraints": [],
+      "transitionLogic": {
+        "transitions": [
+          {
+            "to": "node7"
+          }
+        ],
+        "howToChooseAmongAvailablePaths": null,
+        "whenToChoosePath": null,
+        "canChangePath": null,
+        "maxPathsVisitable": null
+      },
+      "title": "What is potential energy?",
+      "components": [
+        {
+          "id": "85ma9llvju",
+          "type": "HTML",
+          "html": "<div style=\"margin: auto; background-image: url('background.jpg'); border-radius: 20px 20px 20px 20px; padding: 10px; background-size: cover;\">\n<div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 1px; text-align: center;\">\n<h2>Potential Energy</h2>\n</div>\n</div>\n<p>&nbsp;</p>\n<div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 10px;\">\n<p>Both the car on the ramp and the car with the spring have energy that is stored and available to do a task. We call this type of energy potential energy.</p>\n<p>Other objects, like a bow and arrow, can also store potential energy.</p>\n</div>\n<p>&nbsp;</p>\n<table style=\"border-spacing: 40px 0px; padding-bottom: 5px;\" cellspacing=\"20\" align=\"center\">\n<tbody>\n<tr>\n<td style=\"width: 200px;\"><img src=\"sim_rampcar.png\" alt=\"\" width=\"200\" /></td>\n<td style=\"width: 200px;\"><img src=\"sim_springcar.png\" alt=\"\" width=\"200\" /></td>\n<td style=\"width: 100px;\"><img src=\"marksman.jpg\" alt=\"\" width=\"100\" /></td>\n</tr>\n<tr>\n<td style=\"text-align: center;\">Ramp&nbsp;Car</td>\n<td style=\"text-align: center;\">Spring Car</td>\n<td style=\"text-align: center; width: 100px;\">Archer</td>\n</tr>\n</tbody>\n</table>"
+        },
+        {
+          "id": "mp92w2ds20",
+          "prompt": "How can you maximize the potential energy for the spring car?",
+          "type": "MultipleChoice",
+          "choiceType": "radio",
+          "choices": [
+            {
+              "id": "fbnk3zef27",
+              "text": "Let the spring be loose.",
+              "feedback": ""
+            },
+            {
+              "id": "447o80kkj4",
+              "text": "Squeeze the spring just a little.",
+              "feedback": ""
+            },
+            {
+              "id": "1urcrlf0xq",
+              "text": "Squeeze the spring half way so that it's not too tight.",
+              "feedback": ""
+            },
+            {
+              "id": "a2jqcw8gfd",
+              "text": "Squeeze the spring all the way.",
+              "feedback": ""
+            }
+          ]
+        },
+        {
+          "id": "sax04rc0od",
+          "prompt": "How can you maximize the potential energy for the ramp car?",
+          "type": "MultipleChoice",
+          "choiceType": "radio",
+          "choices": [
+            {
+              "id": "j3kqgq60sa",
+              "text": "Leave the car at the bottom of the ramp.",
+              "feedback": ""
+            },
+            {
+              "id": "vpma290q1o",
+              "text": "Place the car on the ramp but near the bottom.",
+              "feedback": ""
+            },
+            {
+              "id": "18z07fw9wa",
+              "text": "Place the car halfway up the ramp.",
+              "feedback": ""
+            },
+            {
+              "id": "hu2otyduwp",
+              "text": "Place the car at the top of the ramp.",
+              "feedback": ""
+            }
+          ]
+        },
+        {
+          "id": "o3u1b1pflu",
+          "prompt": "Look at the archer. How does his bow and arrow store potential energy?",
+          "type": "MultipleChoice",
+          "choiceType": "radio",
+          "choices": [
+            {
+              "id": "hy3a4lnxgj",
+              "text": "It stores potential energy when the arrow is pulled back on the bow.",
+              "feedback": ""
+            },
+            {
+              "id": "at0gp3wznc",
+              "text": "It stores potential energy after the archer releases the arrow.",
+              "feedback": ""
+            },
+            {
+              "id": "t06wsovma9",
+              "text": "It stores potential energy only when the arrow is moving.",
+              "feedback": ""
+            },
+            {
+              "id": "vv7ina1l30",
+              "text": "The bow and arrow cannot store potential energy.",
+              "feedback": ""
+            }
+          ]
+        },
+        {
+          "id": "hs7oriuo8l",
+          "prompt": "What else can store potential energy like a bow and arrow. Explain. (Hint: Think of something that stretches.)",
+          "type": "OpenResponse"
+        }
+      ],
+      "icons": {
+        "default": {
+          "color": "#2196F3",
+          "type": "font",
+          "fontSet": "material-icons",
+          "fontName": "assignment"
+        }
+      }
+    },
+    {
+      "id": "node7",
+      "type": "node",
+      "showSaveButton": true,
+      "showSubmitButton": false,
+      "constraints": [],
+      "transitionLogic": {
+        "transitions": [
+          {
+            "to": "node9"
+          }
+        ],
+        "howToChooseAmongAvailablePaths": null,
+        "whenToChoosePath": null,
+        "canChangePath": null,
+        "maxPathsVisitable": null
+      },
+      "title": "Connecting Ideas",
+      "components": [
+        {
+          "id": "naip12bdtv",
+          "type": "HTML",
+          "html": "<h5 style=\"text-align: center;\">Vary potential energy for the car and show how it changes how far the car goes.</h5><h5 style=\"text-align: center;\">Complete at least 3 trials and enter your data in the table below.</h3>"
+        },
+        {
+          "id": "14qn0ch3th",
+          "type": "embedded",
+          "url": "NewtonScooters-potential.html",
+          "html": "<div style=\"margin: auto; background-color: #4170ad; border-radius: 20px 20px 20px 20px; padding: 10px; background-size: cover; font-family: Arial, Helvetica, sans serif;\">\n<div class=\"first last\" style=\"border-radius: 220px;\">\n<h1 style=\"position: relative; text-align: center; margin: 15px; color: #ffffff;\">How are potential energy and distance related?</h1>\n</div>\n<div style=\"border-radius: 10px; padding: 10px; background-color: #ffffff;\">\n<p>Use the simulation to explore the relationship between potential energy and distance.</p>\n</div>\n<p style=\"background-color: #fff;\"><iframe style=\"height: 720px; width: 1020px;\" src=\"NewtonScooters-potential.html\" width=\"100%\" height=\"100%\"></iframe></p>\n</div>"
+        },
+        {
+          "id": "dw44gt6r0l",
+          "type": "Table",
+          "prompt": "",
+          "globalCellSize": 20,
+          "tableData": [
+            [
+              {
+                "text": "Trial",
+                "editable": false,
+                "size": 7
+              },
+              {
+                "text": "Potential Energy Level (joules)",
+                "editable": false,
+                "size": 35
+              },
+              {
+                "text": "Distance car travels (m)",
+                "editable": false,
+                "size": 30
+              }
+            ],
+            [
+              {
+                "text": "1",
+                "editable": false,
+                "size": 7
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 35
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 30
+              }
+            ],
+            [
+              {
+                "text": "2",
+                "editable": false,
+                "size": 7
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 35
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 30
+              }
+            ],
+            [
+              {
+                "text": "3",
+                "editable": false,
+                "size": 7
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 35
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 30
+              }
+            ]
+          ]
+        },
+        {
+          "id": "z85iedovzt",
+          "prompt": "How does the spring vary potential energy for the car?",
+          "type": "MultipleChoice",
+          "choiceType": "radio",
+          "choices": [
+            {
+              "id": "cpo9e0omba",
+              "text": "The spring increases potential energy for the car after it is released.",
+              "feedback": ""
+            },
+            {
+              "id": "44uf1qn06s",
+              "text": "The spring increases potential energy for the car before it is released.",
+              "feedback": ""
+            },
+            {
+              "id": "gnfk1lp1c1",
+              "text": "The spring decreases potential energy for the car before it is released.",
+              "feedback": ""
+            }
+          ],
+          "correctChoice": "44uf1qn06s"
+        },
+        {
+          "id": "flv7gpqit8",
+          "type": "OpenResponse",
+          "prompt": "<br /><br />Use evidence from the trials to explain how potential energy affects how far the car goes."
+        }
+      ],
+      "icons": {
+        "default": {
+          "color": "#9C27B0",
+          "type": "font",
+          "fontSet": "material-icons",
+          "fontName": "gamepad"
+        }
+      }
+    },
+    {
+      "id": "node9",
+      "type": "node",
+      "showSaveButton": true,
+      "showSubmitButton": false,
+      "constraints": [],
+      "transitionLogic": {
+        "transitions": [
+          {
+            "to": "node12"
+          }
+        ],
+        "howToChooseAmongAvailablePaths": null,
+        "whenToChoosePath": null,
+        "canChangePath": null,
+        "maxPathsVisitable": null
+      },
+      "title": "Where does potential energy go?",
+      "components": [
+        {
+          "id": "hngs12bdtv",
+          "type": "HTML",
+          "html": "<h5 style=\"text-align: center;\">Vary potential energy for the car and show how it changes how far the car goes.</h5><h5 style=\"text-align: center;\">Enter the <span style='font-weight:bold'>highest levels</span> for potential energy for each trial below.</h5>"
+        },
+        {
+          "id": "mnzx68ix8h",
+          "type": "embedded",
+          "url": "NewtonScooters-potential-kinetic.html",
+          "html": "<div style=\"margin: auto; background-color: #4170ad; border-radius: 20px 20px 20px 20px; padding: 10px; background-size: cover; font-family: Arial, Helvetica, sans serif;\">\n<div class=\"first last\" style=\"border-radius: 220px;\">\n<h1 style=\"position: relative; text-align: center; margin: 15px; color: #ffffff;\">What happens to potential energy?</h1>\n</div>\n<div style=\"border-radius: 10px; padding: 10px; background-color: #ffffff;\">\n<p>This simulation shows what happens to potential energy to make the car move.<br /> <br />Use the simulation to explore how potential energy is transformed.</p>\n</div>\n<p style=\"background-color: #fff;\"><iframe style=\"height: 600px; width: 1020px;\" src=\"NewtonScooters-potential-kinetic.html\" width=\"100%\" height=\"100%\"></iframe></p>\n</div>"
+        },
+        {
+          "id": "nm080ntk8e",
+          "type": "Table",
+          "prompt": "",
+          "globalCellSize": 20,
+          "tableData": [
+            [
+              {
+                "text": "Trial",
+                "editable": false,
+                "size": 7
+              },
+              {
+                "text": "Potential Energy (joules)",
+                "editable": false,
+                "size": 35
+              },
+              {
+                "text": "Kinetic Energy Level (joules)",
+                "editable": false,
+                "size": 30
+              }
+            ],
+            [
+              {
+                "text": "1",
+                "editable": false,
+                "size": 7
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 35
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 30
+              }
+            ],
+            [
+              {
+                "text": "2",
+                "editable": false,
+                "size": 7
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 35
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 30
+              }
+            ],
+            [
+              {
+                "text": "3",
+                "editable": false,
+                "size": 7
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 35
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 30
+              }
+            ]
+          ]
+        },
+        {
+          "id": "my3b9k7vtr",
+          "prompt": "When the car is moving what kind of energy is it using?",
+          "type": "MultipleChoice",
+          "choiceType": "radio",
+          "choices": [
+            {
+              "id": "ld4ecp6jjn",
+              "text": "Kinetic",
+              "feedback": ""
+            },
+            {
+              "id": "jgfkyxb0nz",
+              "text": "Potential",
+              "feedback": ""
+            },
+            {
+              "id": "7fn1bp3ah3",
+              "text": "Thermal",
+              "feedback": ""
+            }
+          ]
+        },
+        {
+          "id": "e1g0ap218x",
+          "prompt": "How does potential energy affect how far the car travels?",
+          "type": "MultipleChoice",
+          "choiceType": "radio",
+          "choices": [
+            {
+              "id": "ko348c0j2u",
+              "text": "The less potential energy the farther the car travels.",
+              "feedback": ""
+            },
+            {
+              "id": "rs1v7nhxns",
+              "text": "The more potential energy the farther the car travels.",
+              "feedback": ""
+            },
+            {
+              "id": "aor9hy3d9z",
+              "text": "The more potential energy the less the car travels.",
+              "feedback": ""
+            },
+            {
+              "id": "zkbvt4d4ti",
+              "text": "Potential energy does not affect how the car travels.",
+              "feedback": ""
+            }
+          ]
+        },
+        {
+          "id": "yasiltk5rw",
+          "prompt": "Using evidence from the trials, explain what happens to the car's potential energy.",
+          "type": "MultipleChoice",
+          "choiceType": "radio",
+          "choices": [
+            {
+              "id": "fi7g5wxw1b",
+              "text": "It transforms.",
+              "feedback": ""
+            },
+            {
+              "id": "h2a9xfy7x5",
+              "text": "It stays the same.",
+              "feedback": ""
+            },
+            {
+              "id": "pxvimcevu9",
+              "text": "It is destroyed.",
+              "feedback": ""
+            },
+            {
+              "id": "vpttmwzuei",
+              "text": "It goes away.",
+              "feedback": ""
+            }
+          ]
+        },
+        {
+          "id": "zumcx9wdik",
+          "prompt": "Explain your choice.",
+          "type": "OpenResponse"
+        }
+      ],
+      "icons": {
+        "default": {
+          "color": "#9C27B0",
+          "type": "font",
+          "fontSet": "material-icons",
+          "fontName": "gamepad"
+        }
+      }
+    },
+    {
+      "id": "node12",
+      "type": "node",
+      "showSaveButton": true,
+      "showSubmitButton": false,
+      "constraints": [],
+      "transitionLogic": {
+        "transitions": [
+          {
+            "to": "node13"
+          }
+        ],
+        "howToChooseAmongAvailablePaths": null,
+        "whenToChoosePath": null,
+        "canChangePath": null,
+        "maxPathsVisitable": null
+      },
+      "title": "What is kinetic energy?",
+      "components": [
+        {
+          "id": "x5chkijvg3",
+          "type": "HTML",
+          "html": "<div style=\"margin: auto; background-image: url('background.jpg'); border-radius: 20px 20px 20px 20px; padding: 10px; background-size: cover;\">\n<div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 1px; text-align: center;\">\n<h2>Converting Potential Energy to Kinetic Energy</h2>\n</div>\n</div>\n<!-- ROW 1 -->\n<table cellspacing=\"10\" cellpadding=\"10\"><!-- ROW 0 TITLE -->\n<tbody>\n<tr class=\"first even\">\n<td class=\"last first\" style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 25px;\">\n<p>Kinetic energy is MOVEMENT energy. When the car is moving, it has kinetic energy.</p>\n<p>When the car starts moving, potential energy becomes kinetic energy.</p>\n<img style=\"display: block; margin-left: auto; margin-right: auto;\" src=\"arrows.png\" alt=\"\" height=\"275\" /></td>\n</tr>\n</tbody>\n</table>"
+        },
+        {
+          "id": "rct63keesu",
+          "prompt": "When is potential energy turned into kinetic energy in the bow and arrow?",
+          "type": "MultipleChoice",
+          "choiceType": "radio",
+          "choices": [
+            {
+              "id": "lws5pm9rwg",
+              "text": "When the bow and arrow are on the ground.",
+              "feedback": ""
+            },
+            {
+              "id": "y1yy3sncxl",
+              "text": "When the arrow is pulled back.",
+              "feedback": ""
+            },
+            {
+              "id": "xkq95zpvcf",
+              "text": "When the arrow is released from the bow.",
+              "feedback": ""
+            },
+            {
+              "id": "o9tnfn5pcq",
+              "text": "When the arrow is traveling through the air.",
+              "feedback": ""
+            }
+          ],
+          "correctChoice": "xkq95zpvcf"
+        },
+        {
+          "id": "5k4a2rqrji",
+          "prompt": "What else can change potential energy into kinetic energy like the bow and arrow? Explain. (Hint: Think back to the object that stretches.)",
+          "type": "OpenResponse"
+        },
+        {
+          "id": "5k91qi2z1k",
+          "prompt": "A car moving down a ramp and an arrow just released from a bow don't keep moving forever. What do you think happens to the kinetic energy?",
+          "type": "MultipleChoice",
+          "choiceType": "radio",
+          "choices": [
+            {
+              "id": "ppc4dkruty",
+              "text": "It transforms.",
+              "feedback": ""
+            },
+            {
+              "id": "e6kd1rzbka",
+              "text": "It stays the same.",
+              "feedback": ""
+            },
+            {
+              "id": "rd92q3ajsd",
+              "text": "It is destroyed.",
+              "feedback": ""
+            },
+            {
+              "id": "bpj9cszqs8",
+              "text": "It goes away.",
+              "feedback": ""
+            }
+          ]
+        }
+      ],
+      "icons": {
+        "default": {
+          "color": "#2196F3",
+          "type": "font",
+          "fontSet": "material-icons",
+          "fontName": "assignment"
+        }
+      }
+    },
+    {
+      "id": "node13",
+      "type": "node",
+      "showSaveButton": true,
+      "showSubmitButton": false,
+      "constraints": [],
+      "transitionLogic": {
+        "transitions": [
+          {
+            "to": "node14"
+          }
+        ],
+        "howToChooseAmongAvailablePaths": null,
+        "whenToChoosePath": null,
+        "canChangePath": null,
+        "maxPathsVisitable": null
+      },
+      "title": "Where is the wheel and axle?",
+      "components": [
+        {
+          "id": "57lxhwfp5r",
+          "type": "HTML",
+          "html": "<!DOCTYPE html>\n<html>\n<head>\n</head>\n<body>\n<div style=\"margin: auto; background-image: url('background.jpg'); border-radius: 20px 20px 20px 20px; padding: 10px; background-size: cover;\">\n<div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 1px; text-align: center;\">\n<h2>Where is the axle?</h2>\n</div>\n</div>\n<!-- ROW 1 -->\n<table cellspacing=\"10\" cellpadding=\"10\"><!-- ROW 0 TITLE -->\n<tbody>\n<tr class=\"first even\">\n<td class=\"last first\" style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 25px;\">\n<p>In the next simulation you will be able to adjust&nbsp;the friction between the axle and the car body.</p>\n<p>The axle is the rod that passes through the wheels.</p>\n<img style=\"display: block; margin-left: auto; margin-right: auto;\" src=\"model_highfriction2.jpg\" alt=\"\" height=\"300\" /></td>\n</tr>\n</tbody>\n</table>\n</body>\n</html>"
+        }
+      ],
+      "icons": {
+        "default": {
+          "color": "#2196F3",
+          "type": "font",
+          "fontSet": "material-icons",
+          "fontName": "pageview"
+        }
+      }
+    },
+    {
+      "id": "node14",
+      "type": "node",
+      "showSaveButton": true,
+      "showSubmitButton": false,
+      "constraints": [],
+      "transitionLogic": {
+        "transitions": [
+          {
+            "to": "node18"
+          }
+        ],
+        "howToChooseAmongAvailablePaths": null,
+        "whenToChoosePath": null,
+        "canChangePath": null,
+        "maxPathsVisitable": null
+      },
+      "title": "What else happens to the scooter's energy?",
+      "components": [
+        {
+          "id": "awdd98bdtv",
+          "type": "HTML",
+          "html": "<h5 style=\"text-align: center;\">Vary body shape for the car and show how it changes how far the car goes.</h5><h5 style=\"text-align: center;\">Enter the <span style=\"font-weight: bold;\">highest values</span> for each type of energy below.</h5>"
+        },
+        {
+          "id": "x0gxpp2817",
+          "type": "embedded",
+          "url": "NewtonScooters-spring.html",
+          "html": "<html>\n<head>\n<title>html</title>\n</head>\n<body>\n<div style=\"margin: auto; background-color: #4170ad; border-radius: 20px 20px 20px 20px; padding: 10px; background-size: cover; font-family: Arial, Helvetica, sans serif;\">\n<div class=\"first last\" style=\"border-radius: 220px;\">\n<h1 style=\"position: relative; text-align: center; margin: 15px; color: #ffffff;\">What else affects how far a car moves?</h1>\n</div>\n<div style=\"border-radius: 10px; padding: 10px; background-color: #ffffff;\">\n<p>Use the simulation to explore how body shape and body-axle friction affect&nbsp;how far the car travels.&nbsp;</p>\n</div>\n<p style=\"background-color: #fff;\"><iframe style=\"height: 720px; width: 1020px;\" src=\"NewtonScooters-spring.html\" width=\"100%\" height=\"100%\"></iframe></p>\n</div>\n</body>\n</html>"
+        },
+        {
+          "id": "d75jhjdf6u",
+          "type": "Table",
+          "prompt": "",
+          "globalCellSize": 20,
+          "tableData": [
+            [
+              {
+                "text": "Trial",
+                "editable": false,
+                "size": 7
+              },
+              {
+                "text": "Body Shape (long or short)",
+                "editable": false,
+                "size": 25
+              },
+              {
+                "text": "Potential Energy (J)",
+                "editable": false,
+                "size": 20
+              },
+              {
+                "text": "Kinetic Energy (J)",
+                "editable": false,
+                "size": 20
+              },
+              {
+                "text": "Thermal Energy (J)",
+                "editable": false,
+                "size": 20
+              },
+              {
+                "text": "Distance (m)",
+                "editable": false,
+                "size": 15
+              }
+            ],
+            [
+              {
+                "text": "1",
+                "editable": false,
+                "size": 7
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 25
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 20
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 20
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 20
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 15
+              }
+            ],
+            [
+              {
+                "text": "2",
+                "editable": false,
+                "size": 7
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 25
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 20
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 20
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 20
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 15
+              }
+            ]
+          ]
+        },
+        {
+          "id": "t2nbox5fa6",
+          "type": "Table",
+          "prompt": "Vary axle-body friction for the car and show how it changes how far the car goes. (Enter the <strong>highest values </strong>for each type of energy below.)<br /><br />",
+          "globalCellSize": 20,
+          "tableData": [
+            [
+              {
+                "text": "Trial",
+                "editable": false,
+                "size": 7
+              },
+              {
+                "text": "Axle-Body Friction (low, mid, high)",
+                "editable": false,
+                "size": 30
+              },
+              {
+                "text": "Potential Energy (J)",
+                "editable": false,
+                "size": 20
+              },
+              {
+                "text": "Kinetic Energy (J)",
+                "editable": false,
+                "size": 20
+              },
+              {
+                "text": "Thermal Energy (J)",
+                "editable": false,
+                "size": 20
+              },
+              {
+                "text": "Distance (m)",
+                "editable": false,
+                "size": 15
+              }
+            ],
+            [
+              {
+                "text": "1",
+                "editable": false,
+                "size": 7
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 30
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 20
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 20
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 20
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 15
+              }
+            ],
+            [
+              {
+                "text": "2",
+                "editable": false,
+                "size": 7
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 30
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 20
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 20
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 20
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 15
+              }
+            ],
+            [
+              {
+                "text": "3",
+                "editable": false,
+                "size": 7
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 30
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 20
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 20
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 20
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 15
+              }
+            ]
+          ]
+        },
+        {
+          "id": "f8zdjggbdv",
+          "prompt": "How does thermal energy affect how far the car travels?",
+          "type": "MultipleChoice",
+          "choiceType": "radio",
+          "choices": [
+            {
+              "id": "coq4zviqw5",
+              "text": "The more thermal energy the farther the car travels.",
+              "feedback": ""
+            },
+            {
+              "id": "mvlsh3tgfu",
+              "text": "The less thermal energy the less the car travels.",
+              "feedback": ""
+            },
+            {
+              "id": "666ilsko86",
+              "text": "The less thermal energy the farther the car travels.",
+              "feedback": ""
+            },
+            {
+              "id": "p3hffyzak3",
+              "text": "Thermal energy does not affect how the car travels.",
+              "feedback": ""
+            }
+          ]
+        },
+        {
+          "id": "kp96vned8u",
+          "prompt": "Which variable had the largest affect on how far the spring car travelled? Use evidence from the trials to support your answer.",
+          "type": "OpenResponse"
+        }
+      ],
+      "icons": {
+        "default": {
+          "color": "#9C27B0",
+          "type": "font",
+          "fontSet": "material-icons",
+          "fontName": "gamepad"
+        }
+      }
+    },
+    {
+      "id": "node18",
+      "type": "node",
+      "showSaveButton": true,
+      "showSubmitButton": false,
+      "constraints": [],
+      "transitionLogic": {
+        "transitions": [
+          {
+            "to": "node19"
+          }
+        ],
+        "howToChooseAmongAvailablePaths": null,
+        "whenToChoosePath": null,
+        "canChangePath": null,
+        "maxPathsVisitable": null
+      },
+      "title": "What is friction?",
+      "components": [
+        {
+          "id": "fgne21khvg",
+          "type": "HTML",
+          "html": "<div style=\"margin: auto; background-image: url('background.jpg'); border-radius: 20px 20px 20px 20px; padding: 10px; background-size: cover;\">\n<div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 1px; text-align: center;\">\n<h2>Converting Kinetic Energy into Thermal Energy</h2>\n</div>\n</div>\n<p>&nbsp;</p>\n<div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 25px;\">\n<p>When two objects rub against each other there is friction. Friction creates heat. This heat is called thermal energy.</p>\n<p>When there is friction while the car is moving, kinetic energy becomes thermal energy.</p>\n</div>\n<table style=\"border-spacing: 20px 20px; padding-bottom: 5px;\" cellspacing=\"20\" align=\"center\">\n<tbody>\n<tr>\n<td style=\"width: 320px; vertical-align: bottom;\"><img src=\"spring car_friction.png\" alt=\"\" width=\"320\" /></td>\n<td style=\"width: 320px;\"><img src=\"graph_springcarfriction.png\" alt=\"\" width=\"320\" /></td>\n</tr>\n<tr>\n<td style=\"text-align: center; width: 300px;\">Spring Car</td>\n<td style=\"text-align: center; width: 300px;\">Energy Graph</td>\n</tr>\n</tbody>\n</table>"
+        },
+        {
+          "id": "h3imak96qh",
+          "prompt": "What would happen if the spring was squeezed all the way and released, but the car had no friction?",
+          "type": "MultipleChoice",
+          "choiceType": "radio",
+          "choices": [
+            {
+              "id": "koxor0hgbh",
+              "text": "The car would never stop moving.",
+              "feedback": ""
+            },
+            {
+              "id": "5zcai7ml92",
+              "text": "The car would move for a while but would eventually stop.",
+              "feedback": ""
+            },
+            {
+              "id": "7lpqrh5eqf",
+              "text": "The car would not move from its starting position.",
+              "feedback": ""
+            }
+          ]
+        },
+        {
+          "id": "4n6vmqh89p",
+          "prompt": "Give another example of something that transfers kinetic energy into thermal energy as it moves. Explain how this transfer of energy affects how the object(s) move.",
+          "type": "OpenResponse"
+        },
+        {
+          "id": "jdymwckwxs",
+          "prompt": "Which of the following explains how energy transforms (->) in the scooter:",
+          "type": "MultipleChoice",
+          "choiceType": "radio",
+          "choices": [
+            {
+              "id": "30csi89rrn",
+              "text": "Potential Energy -> Kinetic Energy -> Thermal Energy",
+              "feedback": ""
+            },
+            {
+              "id": "j5p7jqf7xz",
+              "text": "Potential Energy -> Thermal Energy -> Kinetic Energy",
+              "feedback": ""
+            },
+            {
+              "id": "qx4wfmeuux",
+              "text": "Thermal Energy -> Potential Energy -> Kinetic Energy",
+              "feedback": ""
+            },
+            {
+              "id": "zl405ihnb2",
+              "text": "Kinetic Energy -> Thermal Energy -> Potential Energy",
+              "feedback": ""
+            }
+          ]
+        }
+      ],
+      "icons": {
+        "default": {
+          "color": "#2196F3",
+          "type": "font",
+          "fontSet": "material-icons",
+          "fontName": "assignment"
+        }
+      }
+    },
+    {
+      "id": "node19",
+      "type": "node",
+      "showSaveButton": true,
+      "showSubmitButton": false,
+      "constraints": [],
+      "transitionLogic": {
+        "transitions": [
+          {
+            "to": "node21"
+          }
+        ],
+        "howToChooseAmongAvailablePaths": null,
+        "whenToChoosePath": null,
+        "canChangePath": null,
+        "maxPathsVisitable": null
+      },
+      "title": "Law of the Conservation of Energy",
+      "components": [
+        {
+          "id": "12jv9yd72q",
+          "type": "HTML",
+          "html": "<html>\n<head>\n<title>html</title>\n</head>\n<body>\n<div style=\"margin: auto; background-image: url('background.jpg'); border-radius: 20px 20px 20px 20px; padding: 10px; background-size: cover;\">\n<div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 1px; text-align: center;\">\n<h2>Law of the Conservation of Energy</h2>\n</div>\n</div>\n<div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 15px;\">\n<p style=\"text-align: center; font-size: 20px;\"><span style=\"color: blue;\">Potential Energy</span> + <span style=\"color: green;\">Kinetic Energy</span> + <span style=\"color: red;\">Thermal Energy</span> = <span style=\"color: #000000;\"><strong>Total Energy</strong></span></p>\n<p>Energy is not lost or created. It is either stored or transformed. This is called the law of the conservation of energy.</p>\n</div>\n<p style=\"background-color: #fff;\"><iframe style=\"height: 400px; width: 600px;\" src=\"NewtonScooters-energyPlot.html\" width=\"100%\" height=\"100%\"></iframe></p>\n</body>\n</html>"
+        },
+        {
+          "id": "6jlwc65a62",
+          "type": "Table",
+          "prompt": "Let's test the law of the conservation of energy. Using the energy graph, record the energy values for potential energy, kinetic energy, and thermal energy at 3 time points: 0 seconds, 5 seconds, and 15 seconds.<br /><br />\nAdd potential energy, kinetic energy, and thermal energy to calculate the total energy.<br /><br />",
+          "globalCellSize": 10,
+          "tableData": [
+            [
+              {
+                "text": "Time (s)",
+                "editable": false,
+                "size": 7
+              },
+              {
+                "text": "Potential Energy (J)",
+                "editable": false,
+                "size": 25
+              },
+              {
+                "text": "Kinetic Energy (J)",
+                "editable": false,
+                "size": 25
+              },
+              {
+                "text": "Thermal Energy (J)",
+                "editable": false,
+                "size": 25
+              },
+              {
+                "text": "Total Energy (J)",
+                "editable": false,
+                "size": 25
+              }
+            ],
+            [
+              {
+                "text": "0",
+                "editable": false,
+                "size": 7
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 25
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 25
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 25
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 25
+              }
+            ],
+            [
+              {
+                "text": "5",
+                "editable": false,
+                "size": 7
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 25
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 25
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 25
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 25
+              }
+            ],
+            [
+              {
+                "text": "15",
+                "editable": false,
+                "size": 7
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 25
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 25
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 25
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 25
+              }
+            ]
+          ]
+        },
+        {
+          "id": "8ucrjqf4sc",
+          "type": "OpenResponse",
+          "prompt": "<br /><br />Using evidence from the table, how does the graph show the law of the conservation of energy?"
+        }
+      ],
+      "icons": {
+        "default": {
+          "color": "#2196F3",
+          "type": "font",
+          "fontSet": "material-icons",
+          "fontName": "insert_chart"
+        }
+      }
+    },
+    {
+      "id": "group3",
+      "type": "group",
+      "title": "Planning Your Newton Scooter",
+      "startId": "node21",
+      "ids": ["node21", "node22", "node23", "node24"],
+      "icons": {
+        "default": {
+          "color": "#9C27B0",
+          "type": "font",
+          "fontSet": "material-icons",
+          "fontName": "extension"
+        }
+      }
+    },
+    {
+      "id": "node21",
+      "type": "node",
+      "showSaveButton": true,
+      "showSubmitButton": false,
+      "constraints": [],
+      "transitionLogic": {
+        "transitions": [
+          {
+            "to": "node22"
+          }
+        ],
+        "howToChooseAmongAvailablePaths": null,
+        "whenToChoosePath": null,
+        "canChangePath": null,
+        "maxPathsVisitable": null
+      },
+      "title": "The Master Scooter Races!",
+      "components": [
+        {
+          "id": "vngzifwh1s",
+          "type": "HTML",
+          "html": "<html>\n<head>\n<title>html</title>\n</head>\n<body>\n<div style=\"margin: auto; background-image: url('background.jpg'); border-radius: 20px 20px 20px 20px; padding: 15px; background-size: cover;\">\n<div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 1px; text-align: center;\">\n<h2>The Master Scooter Races!</h2>\n</div>\n<p>&nbsp;</p>\n<div style=\"background-color: rgba(255,255,255,1); color: #000066; border-radius: 20px 20px 20px 20px; padding: 10px;\">\n<p style=\"text-size: 20px;\">Now that we know about how energy is stored and how it creates movement, let's find out how the Master Scooter performed.</p>\n<p>The scooter's best distance&nbsp;is the distance you will need to beat!</p>\n</div>\n</div>\n</body>\n</html>"
+        }
+      ],
+      "icons": {
+        "default": {
+          "color": "#2196F3",
+          "type": "font",
+          "fontSet": "material-icons",
+          "fontName": "access_time"
+        }
+      }
+    },
+    {
+      "id": "node22",
+      "type": "node",
+      "showSaveButton": true,
+      "showSubmitButton": false,
+      "constraints": [],
+      "transitionLogic": {
+        "transitions": [
+          {
+            "to": "node23"
+          }
+        ],
+        "howToChooseAmongAvailablePaths": null,
+        "whenToChoosePath": null,
+        "canChangePath": null,
+        "maxPathsVisitable": null
+      },
+      "title": "Master Scooter's Test Runs",
+      "components": [
+        {
+          "id": "l9vc46018v",
+          "type": "HTML",
+          "html": "<div style=\"margin: auto; background-image: url('background.jpg'); border-radius: 20px 20px 20px 20px; padding: 15px; background-size: cover;\">\n<div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 1px; text-align: center;\">\n<h2>The Master Scooter Races!</h2>\n</div>\n</div>\n<p>&nbsp;</p>\n<p>Below&nbsp;are the graphs of 2 Master Scooter test runs.</p>\n<p>&nbsp;</p>\n<table>\n<tbody>\n<tr>\n<td><img src=\"Rplot_positiontime2.jpeg\" alt=\"\" width=\"425\" /></td>\n<td><img src=\"Rplot_positiontime3.jpeg\" alt=\"\" width=\"425\" /></td>\n</tr>\n<tr>\n<td style=\"text-align: center;\">Test 1</td>\n<td style=\"text-align: center;\">Test 2</td>\n</tr>\n</tbody>\n</table>\n<p>&nbsp;</p>"
+        },
+        {
+          "id": "lnq5lqjc0r",
+          "prompt": "Something unexpected happened during Test 1. Use the graph to help you figure out what happened.",
+          "type": "MultipleChoice",
+          "choiceType": "radio",
+          "choices": [
+            {
+              "id": "jmvohk20nj",
+              "text": "The Master Scooter made it to the top of the hill but couldn't make it down.",
+              "feedback": ""
+            },
+            {
+              "id": "xkqyywnt8h",
+              "text": "The Master Scooter never moved.",
+              "feedback": ""
+            },
+            {
+              "id": "slqluwn42x",
+              "text": "The Master Scooter travelled 15 meters!",
+              "feedback": ""
+            },
+            {
+              "id": "w13u9wc2na",
+              "text": "The Master Scooter hit a rock and travelled backward before stopping.",
+              "feedback": ""
+            }
+          ]
+        },
+        {
+          "id": "olz4t7n8xy",
+          "prompt": "The Master Scooter had its best run during Test 2. How far did the Master Scooter travel?",
+          "type": "OpenResponse",
+          "starterSentence": "__ m"
+        }
+      ],
+      "icons": {
+        "default": {
+          "color": "#9C27B0",
+          "type": "font",
+          "fontSet": "material-icons",
+          "fontName": "insert_chart"
+        }
+      }
+    },
+    {
+      "id": "node23",
+      "type": "node",
+      "showSaveButton": true,
+      "showSubmitButton": false,
+      "constraints": [],
+      "transitionLogic": {
+        "transitions": [
+          {
+            "to": "node24"
+          }
+        ],
+        "howToChooseAmongAvailablePaths": null,
+        "whenToChoosePath": null,
+        "canChangePath": null,
+        "maxPathsVisitable": null
+      },
+      "title": "Guidelines for Your Newton Scooter",
+      "components": [
+        {
+          "id": "u6nmos07mv",
+          "type": "HTML",
+          "html": "<html>\n<head>\n<title>html</title>\n</head>\n<body>\n<div style=\"background-image: url('background.jpg'); border-radius: 10px 10px 10px 10px; padding: 25px; background-size: cover; font-family: Arial, Helvetica, sans-serif; line-height: 150%;\">\n<div style=\"background-color: rgba(255,255,255,0.85); color: #006; border-radius: 20px 20px 20px 20px; padding: 1px; text-align: center;\">\n<h2>What question do you want to investigate?</h2>\n</div>\n<br />\n<div style=\"background-color: rgba(255,255,255,0.85); color: #006; border-radius: 20px 20px 20px 20px; padding: 1px 25px;\">\n<h3 style=\"color: green;\">Your challenge is to beat the Master Scooter's best distance: 1.8 m.</h3><br/><h3>You will be investigating ONE variable to make your scooter different than the Master Scooter. Below are some ideas you can investigate or you can pick one of your own.</h3>\n<ul>\n<li>How will&nbsp;your&nbsp;scooter store <strong>potential energy</strong>?</li>\n</ul>\n<ul>\n<li>How much <strong>friction</strong>&nbsp;is between the axle and the scooter body?</li>\n</ul>\n<ul>\n<li>What <strong>shape</strong>&nbsp;is the scooter body?</li>\n</ul>\n<ul>\n<li>Is there <strong>another factor</strong> you think would make your scooter go a farther distance?</li>\n</ul>\n</div>\n</div>\n</body>\n</html>"
+        }
+      ],
+      "icons": {
+        "default": {
+          "color": "#2196F3",
+          "type": "font",
+          "fontSet": "material-icons",
+          "fontName": "help"
+        }
+      }
+    },
+    {
+      "id": "node24",
+      "type": "node",
+      "showSaveButton": true,
+      "showSubmitButton": false,
+      "constraints": [],
+      "transitionLogic": {
+        "transitions": [
+          {
+            "to": "node25"
+          }
+        ],
+        "howToChooseAmongAvailablePaths": null,
+        "whenToChoosePath": null,
+        "canChangePath": null,
+        "maxPathsVisitable": null
+      },
+      "title": "Feature Selection",
+      "components": [
+        {
+          "id": "sak9jhpoiy",
+          "type": "HTML",
+          "html": "<div style=\"margin: auto; background-image: url('background.jpg'); border-radius: 20px 20px 20px 20px; padding: 10px; background-size: cover;\">\n<div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 1px; text-align: center;\">\n<h2>Design Your Own Newton Scooter!</h2>\n</div>\n</div>\n<table style=\"margin-left: auto; margin-right: auto;\" cellspacing=\"10\" cellpadding=\"10\">\n<tbody>\n<tr class=\"first even\">\n<td class=\"last first\" style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 20px;\">\n<p>Now choose the variable you think will help your scooter to beat the Master!</p>\n<p>Your scooter should look exactly like the scooter below except for the variable you choose to test.</p>\n<p>&nbsp;</p>\n<p><img style=\"display: block; margin-left: auto; margin-right: auto;\" src=\"model_rubberbandcar_cropped.jpg\" alt=\"\" width=\"150\" /></p>\n</td>\n</tr>\n</tbody>\n</table>"
+        },
+        {
+          "id": "hwaapi09rf",
+          "prompt": "What variable would your group like to test?",
+          "type": "MultipleChoice",
+          "choiceType": "radio",
+          "choices": [
+            {
+              "id": "tt4k73l8ds",
+              "text": "potential energy source",
+              "feedback": ""
+            },
+            {
+              "id": "l7wtipsqq5",
+              "text": "friction between the wheels and axles",
+              "feedback": ""
+            },
+            {
+              "id": "jpk8rcb3s8",
+              "text": "scooter body size",
+              "feedback": ""
+            },
+            {
+              "id": "j5xtp4h773",
+              "text": "other (be sure to say which variable you choose in the box below)",
+              "feedback": ""
+            }
+          ]
+        },
+        {
+          "id": "5hltc76s2h",
+          "prompt": "How will the variable you change make your scooter different than the Master Scooter?",
+          "type": "OpenResponse"
+        },
+        {
+          "id": "jzgka9y0h8",
+          "prompt": "Why do you think your change will make your scooter better than the Master Scooter?",
+          "type": "OpenResponse"
+        }
+      ],
+      "icons": {
+        "default": {
+          "color": "#9C27B0",
+          "type": "font",
+          "fontSet": "material-icons",
+          "fontName": "view_list"
+        }
+      }
+    },
+    {
+      "id": "group4",
+      "type": "group",
+      "title": "Designing",
+      "startId": "node25",
+      "ids": ["node25", "node26"],
+      "icons": {
+        "default": {
+          "color": "#9C27B0",
+          "type": "font",
+          "fontSet": "material-icons",
+          "fontName": "developer_board"
+        }
+      }
+    },
+    {
+      "id": "node25",
+      "type": "node",
+      "showSaveButton": true,
+      "showSubmitButton": false,
+      "constraints": [],
+      "transitionLogic": {
+        "transitions": [
+          {
+            "to": "node26"
+          }
+        ],
+        "howToChooseAmongAvailablePaths": null,
+        "whenToChoosePath": null,
+        "canChangePath": null,
+        "maxPathsVisitable": null
+      },
+      "title": "Sketch Your Design",
+      "components": [
+        {
+          "id": "qphz5dysfj",
+          "type": "Draw",
+          "prompt": "<p>Use the stamp tool <img width='30px' height='30px' src='stamp.png'></img> to start designing your Newtoon Scooter.</p><p>You can draw new materials with the other tools.</p><p>Be sure to label all of the important parts.</p>",
+          "stamps": {
+            "Stamps": [
+              "Balloon.png",
+              "rubberband.png",
+              "carbody_long.png",
+              "carbody_short.png",
+              "Wheel.png"
+            ]
+          }
+        }
+      ],
+      "icons": {
+        "default": {
+          "color": "#9C27B0",
+          "type": "font",
+          "fontSet": "material-icons",
+          "fontName": "palette"
+        }
+      }
+    },
+    {
+      "id": "node26",
+      "type": "node",
+      "showSaveButton": true,
+      "showSubmitButton": false,
+      "constraints": [],
+      "transitionLogic": {
+        "transitions": [
+          {
+            "to": "node27"
+          }
+        ],
+        "howToChooseAmongAvailablePaths": null,
+        "whenToChoosePath": null,
+        "canChangePath": null,
+        "maxPathsVisitable": null
+      },
+      "title": "Scooter Materials List",
+      "components": [
+        {
+          "id": "c1ymuinc92",
+          "type": "Table",
+          "prompt": "Below are the materials used to make the Master Scooter. Update the \"Your Scooter\" and \"#\" columns with the materials you plan to use to build your scooter.<br/><br/>We will provide tape, glue, skewers, rubber bands, and straws.<br/><br/>",
+          "globalCellSize": 10,
+          "tableData": [
+            [
+              {
+                "text": "Master Scooter",
+                "editable": false,
+                "size": 30
+              },
+              {
+                "text": "#",
+                "editable": false,
+                "size": 7
+              },
+              {
+                "text": "Your Scooter",
+                "editable": false,
+                "size": 30
+              },
+              {
+                "text": "#",
+                "editable": false,
+                "size": 7
+              }
+            ],
+            [
+              {
+                "text": "Cardboard (10 cm x 26 cm)",
+                "editable": false,
+                "size": 30
+              },
+              {
+                "text": "1",
+                "editable": true,
+                "size": 7
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 30
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 7
+              }
+            ],
+            [
+              {
+                "text": "CDs",
+                "editable": false,
+                "size": 30
+              },
+              {
+                "text": "4",
+                "editable": true,
+                "size": 7
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 30
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 7
+              }
+            ],
+            [
+              {
+                "text": "Rubber Band",
+                "editable": false,
+                "size": 30
+              },
+              {
+                "text": "1",
+                "editable": true,
+                "size": 7
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 30
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 7
+              }
+            ],
+            [
+              {
+                "text": "Skewers",
+                "editable": false,
+                "size": 30
+              },
+              {
+                "text": "2",
+                "editable": true,
+                "size": 7
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 30
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 7
+              }
+            ],
+            [
+              {
+                "text": "",
+                "editable": true,
+                "size": 30
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 7
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 30
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 7
+              }
+            ],
+            [
+              {
+                "text": "",
+                "editable": true,
+                "size": 30
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 7
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 30
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 7
+              }
+            ],
+            [
+              {
+                "text": "",
+                "editable": true,
+                "size": 30
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 7
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 30
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 7
+              }
+            ]
+          ]
+        },
+        {
+          "id": "o6uhxzx5j3",
+          "type": "OpenResponse",
+          "prompt": "<br /><br />Remember: you are only changing ONE variable. What item is different between your scooter and the Master Scooter?"
+        }
+      ],
+      "icons": {
+        "default": {
+          "color": "#9C27B0",
+          "type": "font",
+          "fontSet": "material-icons",
+          "fontName": "view_list"
+        }
+      }
+    },
+    {
+      "id": "group5",
+      "type": "group",
+      "title": "Building and Testing",
+      "startId": "node27",
+      "ids": [
+        "node27",
+        "node28",
+        "node29",
+        "node30",
+        "node40",
+        "node32",
+        "node33",
+        "node34",
+        "node35"
+      ],
+      "icons": {
+        "default": {
+          "color": "#4CAF50",
+          "type": "font",
+          "fontSet": "material-icons",
+          "fontName": "domain"
+        }
+      }
+    },
+    {
+      "id": "node27",
+      "type": "node",
+      "showSaveButton": true,
+      "showSubmitButton": false,
+      "constraints": [],
+      "transitionLogic": {
+        "transitions": [
+          {
+            "to": "node28"
+          }
+        ],
+        "howToChooseAmongAvailablePaths": null,
+        "whenToChoosePath": null,
+        "canChangePath": null,
+        "maxPathsVisitable": null
+      },
+      "title": "Time to Start Building!",
+      "components": [
+        {
+          "id": "u3hvakyrar",
+          "type": "HTML",
+          "html": "<!DOCTYPE html>\n<html>\n<head>\n</head>\n<body>\n<div style=\"margin: auto; background-image: url('background.jpg'); border-radius: 20px 20px 20px 20px; padding: 10px; background-size: cover;\">\n<div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 1px; text-align: center;\">\n<h2>Start&nbsp;Building Your Newton Scooter!</h2>\n</div>\n<br />\n<div style=\"background-color: rgba(255,255,255,0.85); border-radius: 20px 20px 20px 20px; padding: 5px;\">\n<p style=\"color: #000066;\">Now that you've designed your Newton Scooter, it's time to build it! Gather all of your materials and start building!</p>\n<p style=\"color: #000066;\">Use the guidelines worksheet and the Master Scooter to help you build your scooter.</p>\n</div>\n</div>\n</body>\n</html>"
+        }
+      ],
+      "icons": {
+        "default": {
+          "color": "#4CAF50",
+          "type": "font",
+          "fontSet": "material-icons",
+          "fontName": "build"
+        }
+      }
+    },
+    {
+      "id": "node28",
+      "type": "node",
+      "showSaveButton": true,
+      "showSubmitButton": false,
+      "constraints": [],
+      "transitionLogic": {
+        "transitions": [
+          {
+            "to": "node29"
+          }
+        ],
+        "howToChooseAmongAvailablePaths": null,
+        "whenToChoosePath": null,
+        "canChangePath": null,
+        "maxPathsVisitable": null
+      },
+      "title": "Predict your scooter's performance",
+      "components": [
+        {
+          "id": "4f4i3wpu8i",
+          "type": "Graph",
+          "prompt": "<div style=\"margin: auto; background-image: url('background.jpg'); border-radius: 20px 20px 20px 20px; padding: 10px; background-size: cover;\">\n<div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 1px; text-align: center;\">\n<h2>Testing Your Scooter</h2>\n</div>\n</div>\n<div style=\"background-color: rgba(255,255,255,0.85); border-radius: 20px 20px 20px 20px; padding: 5px;\">\n<h4 style=\"color: #000066;\">How do you think your scooter will perform?</h4>\n<h4 style=\"color: #000066;\">Predict your scooter's performance on the graph below.</h4>\n</div>",
+          "showSaveButton": false,
+          "showSubmitButton": false,
+          "title": "Your Scooter",
+          "xAxis": {
+            "title": {
+              "text": "Time (seconds)"
+            },
+            "min": 0,
+            "max": 20
+          },
+          "yAxis": {
+            "title": {
+              "text": "Position (meters)"
+            },
+            "min": 0,
+            "max": 5
+          },
+          "series": [
+            {
+              "name": "Prediction",
+              "data": [],
+              "color": "blue",
+              "marker": {
+                "symbol": "square"
+              },
+              "regression": false,
+              "regressionSettings": {},
+              "canEdit": true
+            }
+          ]
+        }
+      ],
+      "icons": {
+        "default": {
+          "color": "#9C27B0",
+          "type": "font",
+          "fontSet": "material-icons",
+          "fontName": "insert_chart"
+        }
+      }
+    },
+    {
+      "id": "node29",
+      "type": "node",
+      "showSaveButton": true,
+      "showSubmitButton": false,
+      "constraints": [],
+      "transitionLogic": {
+        "transitions": [
+          {
+            "to": "node30"
+          }
+        ],
+        "howToChooseAmongAvailablePaths": null,
+        "whenToChoosePath": null,
+        "canChangePath": null,
+        "maxPathsVisitable": null
+      },
+      "title": "Predict your scooter's energy",
+      "components": [
+        {
+          "id": "e9kmebg2nr",
+          "type": "HTML",
+          "html": "<div style=\"margin: auto; background-image: url('background.jpg'); border-radius: 20px 20px 20px 20px; padding: 10px; background-size: cover;\">\n<div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 1px; marding-bottom: 20px; text-align: center;\">\n<h2>Predict Your Scooter's Performance</h2>\n</div>\n</div>\n<p><img style=\"display: block; margin-left: auto; margin-right: auto;\" src=\"energy graph.png\" alt=\"\" width=\"350\" /></p>"
+        },
+        {
+          "id": "lhi4k51vil",
+          "prompt": "What type(s) of energy will be affected by the variable you changed?",
+          "type": "MultipleChoice",
+          "choiceType": "checkbox",
+          "choices": [
+            {
+              "id": "5v3g2wee9v",
+              "text": "Potential Energy",
+              "feedback": ""
+            },
+            {
+              "id": "1ect3aisoe",
+              "text": "Kinetic Energy",
+              "feedback": ""
+            },
+            {
+              "id": "d9obrg9h2n",
+              "text": "Thermal Energy",
+              "feedback": ""
+            }
+          ]
+        },
+        {
+          "id": "84rmis8a6g",
+          "prompt": "Explain your choice. Be sure to describe how the lines in the graph above will change.",
+          "type": "OpenResponse"
+        }
+      ],
+      "icons": {
+        "default": {
+          "color": "#9C27B0",
+          "type": "font",
+          "fontSet": "material-icons",
+          "fontName": "assignment"
+        }
+      }
+    },
+    {
+      "id": "node30",
+      "type": "node",
+      "showSaveButton": true,
+      "showSubmitButton": false,
+      "constraints": [],
+      "transitionLogic": {
+        "transitions": [
+          {
+            "to": "node40"
+          }
+        ],
+        "howToChooseAmongAvailablePaths": null,
+        "whenToChoosePath": null,
+        "canChangePath": null,
+        "maxPathsVisitable": null
+      },
+      "title": "Time to Test!",
+      "components": [
+        {
+          "id": "pjwmzi8f9n",
+          "type": "HTML",
+          "html": "<!DOCTYPE html>\n<html>\n<head>\n</head>\n<body>\n<div style=\"margin: auto; background-image: url('background.jpg'); border-radius: 20px 20px 20px 20px; padding: 10px; background-size: cover;\">\n<div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 1px; text-align: center;\">\n<h2>Test Your Newton Scooter!&nbsp;</h2>\n<h3>Can you&nbsp;beat the Master?</h3>\n</div>\n<br />\n<div style=\"background-color: rgba(255,255,255,0.85); border-radius: 20px 20px 20px 20px; padding: 10px;\"><p>There are 3 jobs during testing:</p><br/><ol style=\"color: #000066;\">\n<li><strong style='font-weight:bold'>The Tester</strong> will increase the potential energy of the scooter and then release it.</li>\n<li><strong style='font-weight:bold'>The Time Keeper</strong> will take a timer and time how long your scooter travels. This person will announce each second for 5 seconds.</li>\n<li><strong style='font-weight:bold'>The Marker</strong> will place a marker on the ground to mark the scooter's location at each second.</li>\n</ol><br/><p>Once you have 3 people and everyone has a job, bring your scooter and a computer to a testing station.</p></div>\n</div>\n</body>\n</html>"
+        }
+      ],
+      "icons": {
+        "default": {
+          "color": "#4CAF50",
+          "type": "font",
+          "fontSet": "material-icons",
+          "fontName": "access_time"
+        }
+      }
+    },
+    {
+      "id": "node31",
+      "type": "node",
+      "showSaveButton": true,
+      "showSubmitButton": false,
+      "constraints": [],
+      "transitionLogic": {
+        "transitions": [
+          {
+            "to": "node40"
+          }
+        ],
+        "howToChooseAmongAvailablePaths": null,
+        "whenToChoosePath": null,
+        "canChangePath": null,
+        "maxPathsVisitable": null
+      },
+      "title": "Collect Data Removed",
+      "components": [
+        {
+          "id": "45xrytqupe",
+          "type": "HTML",
+          "html": "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n<html>\n<head>\n</head>\n<body>\n<div style=\"border-radius: 20px 20px 20px 20px; padding: 15px; background-color: #ddf; border-style: solid; border-color: #444488; font-family: Arial,Helvetica,sans-serif;\">\n<p style=\"position: relative; text-align: center; margin: 15px; color: #444888;\"><strong>GRAPH YOUR DATA</strong></p>\n<p style=\"font-family: Arial, Helvetica, sans-serif;\"><span>The motion sensor software allows you to export data as a \"csv\" file. Talk to your teacher about how to do this. When this file is on your computer, pick your best run and click <strong>Import Data</strong> below and select the file. When you see the graph answer the questions below. </span></p>\n\n</div>\n</body>\n</html>"
+        },
+        {
+          "id": "g5ir3t97pz",
+          "type": "Graph",
+          "showSaveButton": false,
+          "showSubmitButton": false,
+          "isStudentAttachmentEnabled": true,
+          "title": "Your Scooter",
+          "xAxis": {
+            "title": {
+              "text": "Time (seconds)"
+            },
+            "min": 0,
+            "max": 20
+          },
+          "yAxis": {
+            "title": {
+              "text": "Position (meters)"
+            },
+            "min": 0,
+            "max": 5
+          },
+          "series": []
+        },
+        {
+          "id": "8t6yvn57zf",
+          "type": "OpenResponse",
+          "prompt": "How does your scooter compare to the Master Scooter? Use evidence from the graphs to support your answer."
+        }
+      ],
+      "icons": {
+        "default": {
+          "color": "#4CAF50",
+          "type": "font",
+          "fontSet": "material-icons",
+          "fontName": "trending_up"
+        }
+      }
+    },
+    {
+      "id": "node40",
+      "type": "node",
+      "showSaveButton": true,
+      "showSubmitButton": false,
+      "constraints": [],
+      "transitionLogic": {
+        "transitions": [
+          {
+            "to": "node32"
+          }
+        ],
+        "howToChooseAmongAvailablePaths": null,
+        "whenToChoosePath": null,
+        "canChangePath": null,
+        "maxPathsVisitable": null
+      },
+      "title": "Collect Data",
+      "components": [
+        {
+          "id": "4cbwhqxmhe",
+          "type": "Table",
+          "prompt": "<p>Record how far your scooter has travelled at each time point.</p>",
+          "globalCellSize": 20,
+          "tableData": [
+            [
+              {
+                "text": "Trial",
+                "editable": false,
+                "size": 7
+              },
+              {
+                "text": "1 sec",
+                "editable": false,
+                "size": 10
+              },
+              {
+                "text": "2 sec",
+                "editable": false,
+                "size": 10
+              },
+              {
+                "text": "3 sec",
+                "editable": false,
+                "size": 10
+              },
+              {
+                "text": "4 sec",
+                "editable": false,
+                "size": 10
+              },
+              {
+                "text": "5 sec",
+                "editable": false,
+                "size": 10
+              }
+            ],
+            [
+              {
+                "text": "1",
+                "editable": false,
+                "size": 7
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 10
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 10
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 10
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 10
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 10
+              }
+            ],
+            [
+              {
+                "text": "2",
+                "editable": false,
+                "size": 7
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 10
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 10
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 10
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 10
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 10
+              }
+            ],
+            [
+              {
+                "text": "3",
+                "editable": false,
+                "size": 7
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 10
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 10
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 10
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 10
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 10
+              }
+            ]
+          ]
+        },
+        {
+          "id": "4f4i3wghwt",
+          "type": "Graph",
+          "prompt": "<p>Pick your best trial and graph your data below.</p>",
+          "showSaveButton": false,
+          "showSubmitButton": false,
+          "title": "My Best Trial",
+          "xAxis": {
+            "title": {
+              "text": "Time (seconds)"
+            },
+            "min": 0,
+            "max": 5
+          },
+          "yAxis": {
+            "title": {
+              "text": "Position (meters)"
+            },
+            "min": 0,
+            "max": 10
+          },
+          "series": [
+            {
+              "name": "Actual",
+              "data": [],
+              "color": "red",
+              "marker": {
+                "symbol": "circle"
+              },
+              "regression": false,
+              "regressionSettings": {},
+              "canEdit": true
+            }
+          ]
+        },
+        {
+          "id": "f9w1cna3hr",
+          "prompt": "What was the farthest distance your scooter travelled?",
+          "type": "OpenResponse"
+        },
+        {
+          "id": "834nch1dja",
+          "prompt": "<img src='Rplot_positiontime3.jpeg' /><br/><br/>How does your scooter compare to the Master Scooter? Use evidence from the graphs to support your answer.",
+          "type": "OpenResponse"
+        }
+      ],
+      "icons": {
+        "default": {
+          "color": "#4CAF50",
+          "type": "font",
+          "fontSet": "material-icons",
+          "fontName": "trending_up"
+        }
+      }
+    },
+    {
+      "id": "node32",
+      "type": "node",
+      "showSaveButton": true,
+      "showSubmitButton": false,
+      "constraints": [],
+      "transitionLogic": {
+        "transitions": [
+          {
+            "to": "node33"
+          }
+        ],
+        "howToChooseAmongAvailablePaths": null,
+        "whenToChoosePath": null,
+        "canChangePath": null,
+        "maxPathsVisitable": null
+      },
+      "title": "How did your scooter compare to your prediction?",
+      "components": [
+        {
+          "id": "7l3xva53w3",
+          "type": "HTML",
+          "html": "<p><font size='4'>Below is your prediction graph and the graph of your scooter. Think about how they compare.</font></p>"
+        },
+        {
+          "id": "jle2vm5qw9",
+          "type": "Graph",
+          "showPreviousWorkNodeId": "node28",
+          "showPreviousWorkComponentId": "4f4i3wpu8i",
+          "showPreviousWorkPrompt": false
+        },
+        {
+          "id": "al4pv2tq01",
+          "type": "Graph",
+          "showPreviousWorkNodeId": "node40",
+          "showPreviousWorkComponentId": "4f4i3wghwt"
+        },
+        {
+          "id": "qf4vm340rg",
+          "prompt": "How did your scooter compare to your prediction?",
+          "type": "OpenResponse"
+        }
+      ],
+      "icons": {
+        "default": {
+          "color": "#F57C00",
+          "type": "font",
+          "fontSet": "material-icons",
+          "fontName": "message"
+        }
+      }
+    },
+    {
+      "id": "node33",
+      "type": "node",
+      "showSaveButton": true,
+      "showSubmitButton": false,
+      "constraints": [],
+      "transitionLogic": {
+        "transitions": [
+          {
+            "to": "node34"
+          }
+        ],
+        "howToChooseAmongAvailablePaths": null,
+        "whenToChoosePath": null,
+        "canChangePath": null,
+        "maxPathsVisitable": null
+      },
+      "title": "Gathering more information",
+      "components": [
+        {
+          "id": "nbjwmfxfey",
+          "type": "HTML",
+          "html": "<div style=\"margin: auto; background-image: url('background.jpg'); border-radius: 20px 20px 20px 20px; padding: 10px; background-size: cover;\">\n<div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 1px; text-align: center;\">\n<h2>What other types of energy can we test?</h2>\n</div>\n</div>\n<p>&nbsp;</p>\n<p>Testing the whole scooter gives us some information, but we can still learn more.</p>\n<p>By using a ramp we can test the friction of your scooter. No need to wind up your rubber band or blow up a balloon, your scooter is&nbsp;only going to use gravity as a power source this time.</p>\n<p>&nbsp;</p>\n<p><img style=\"display: block; margin-left: auto; margin-right: auto;\" src=\"KE Testing Model.jpeg\" alt=\"\" width=\"400\" /></p>"
+        },
+        {
+          "id": "5ie09w6c1x",
+          "prompt": "You will be comparing your scooter's performance to the Master Scooter's performance on the ramp. What type(s) of energy are you comparing with the set-up above?",
+          "type": "MultipleChoice",
+          "choiceType": "checkbox",
+          "choices": [
+            {
+              "id": "rojc57cylt",
+              "text": "potential energy",
+              "feedback": ""
+            },
+            {
+              "id": "mle02me87o",
+              "text": "kinetic energy",
+              "feedback": ""
+            },
+            {
+              "id": "vj71j147ig",
+              "text": "thermal energy",
+              "feedback": ""
+            }
+          ]
+        }
+      ],
+      "icons": {
+        "default": {
+          "color": "#4CAF50",
+          "type": "font",
+          "fontSet": "material-icons",
+          "fontName": "assignment"
+        }
+      }
+    },
+    {
+      "id": "node34",
+      "type": "node",
+      "showSaveButton": true,
+      "showSubmitButton": false,
+      "constraints": [],
+      "transitionLogic": {
+        "transitions": [
+          {
+            "to": "node35"
+          }
+        ],
+        "howToChooseAmongAvailablePaths": null,
+        "whenToChoosePath": null,
+        "canChangePath": null,
+        "maxPathsVisitable": null
+      },
+      "title": "Friction Measurements",
+      "components": [
+        {
+          "id": "4cbwhqxnvp",
+          "type": "Table",
+          "prompt": "<p><img style=\"display: block; margin-left: auto; margin-right: auto;\" src=\"KE Testing Model.jpeg\" alt=\"\" width=\"400\" /></p>\n\nUse the ramp to test out how far your car can move without the elastic power source.<br />\n<ol>\n<li>Place your scooter at the top of the ramp and let it slide down. </li>\n<li>Measure the distance from the bottom of the platform to where your scooter stops (at the rear wheels).</li>\n</ol><br />\n<strong>What is your friction score? Based on how far your scooter traveled, find your score below.<br /><br />\n1: 200 cm and above (low friction)<br />\n2: 100-199 cm (medium friction) <br />\n3: 0-99cm (high friction)<br />\n<p> </p>",
+          "globalCellSize": 20,
+          "tableData": [
+            [
+              {
+                "text": "Trial",
+                "editable": false,
+                "size": 7
+              },
+              {
+                "text": "Master: Distance (cm)",
+                "editable": false,
+                "size": 19
+              },
+              {
+                "text": "Master: Friction Score",
+                "editable": false,
+                "size": 19
+              },
+              {
+                "text": "Distance (cm)",
+                "editable": false,
+                "size": 15
+              },
+              {
+                "text": "Friction Score",
+                "editable": false,
+                "size": 13
+              }
+            ],
+            [
+              {
+                "text": "1",
+                "editable": false,
+                "size": 7
+              },
+              {
+                "text": "195",
+                "editable": false,
+                "size": 19
+              },
+              {
+                "text": "2",
+                "editable": false,
+                "size": 19
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 15
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 13
+              }
+            ],
+            [
+              {
+                "text": "2",
+                "editable": false,
+                "size": 7
+              },
+              {
+                "text": "190",
+                "editable": false,
+                "size": 19
+              },
+              {
+                "text": "2",
+                "editable": false,
+                "size": 19
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 15
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 13
+              }
+            ],
+            [
+              {
+                "text": "3",
+                "editable": false,
+                "size": 7
+              },
+              {
+                "text": "192",
+                "editable": false,
+                "size": 19
+              },
+              {
+                "text": "2",
+                "editable": false,
+                "size": 19
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 15
+              },
+              {
+                "text": "",
+                "editable": true,
+                "size": 13
+              }
+            ]
+          ]
+        },
+        {
+          "id": "b8tb4su76c",
+          "type": "OpenResponse",
+          "prompt": "Using evidence from the table, how does your scooter's friction differ from the Master Scooter's friction?"
+        }
+      ],
+      "icons": {
+        "default": {
+          "color": "#4CAF50",
+          "type": "font",
+          "fontSet": "material-icons",
+          "fontName": "trending_up"
+        }
+      }
+    },
+    {
+      "id": "node35",
+      "type": "node",
+      "showSaveButton": true,
+      "showSubmitButton": false,
+      "constraints": [],
+      "transitionLogic": {
+        "transitions": [
+          {
+            "to": "node36"
+          }
+        ],
+        "howToChooseAmongAvailablePaths": null,
+        "whenToChoosePath": null,
+        "canChangePath": null,
+        "maxPathsVisitable": null
+      },
+      "title": "Take a picture and critique your Newton Scooter",
+      "components": [
+        {
+          "id": "x8weez6gv9",
+          "type": "Discussion",
+          "prompt": "<p>1. Take a picture of your Newton Scooter and upload it here.</p>\n<p>2. In the box that says \"Share with class\", post your answers to these 2 questions (you can use responses you put in your notebook):</p>\n<ol>\n<li>Did your scooter perform better than the Master Scooter?</li>\n<li>What evidence do you have to support your response to question 1?</li>\n</ol>\n<p>3. Press POST!</p>\n<p>4. Take a look at other groups' responses to see who beat the Master's distance!</p>",
+          "showSaveButton": false,
+          "showSubmitButton": true,
+          "isStudentAttachmentEnabled": true,
+          "gateClassmateResponses": true
+        }
+      ],
+      "icons": {
+        "default": {
+          "color": "#F57C00",
+          "type": "font",
+          "fontSet": "material-icons",
+          "fontName": "photo_camera"
+        }
+      }
+    },
+    {
+      "id": "group6",
+      "type": "group",
+      "title": "Reflection",
+      "startId": "node36",
+      "ids": ["node36", "node37", "node38", "node39"],
+      "icons": {
+        "default": {
+          "color": "#F57C00",
+          "type": "font",
+          "fontSet": "material-icons",
+          "fontName": "message"
+        }
+      }
+    },
+    {
+      "id": "node36",
+      "type": "node",
+      "showSaveButton": true,
+      "showSubmitButton": false,
+      "constraints": [],
+      "transitionLogic": {
+        "transitions": [
+          {
+            "to": "node37"
+          }
+        ],
+        "howToChooseAmongAvailablePaths": null,
+        "whenToChoosePath": null,
+        "canChangePath": null,
+        "maxPathsVisitable": null
+      },
+      "title": "How did other scooters perform?",
+      "components": [
+        {
+          "id": "7t2nc51r0h",
+          "prompt": "Based on the evidence, what could you change about your scooter to improve its performance?",
+          "type": "MultipleChoice",
+          "choiceType": "checkbox",
+          "choices": [
+            {
+              "id": "pti3hexfp3",
+              "text": "energy source",
+              "feedback": ""
+            },
+            {
+              "id": "77wo1f9bdl",
+              "text": "friction between the wheel and axle",
+              "feedback": ""
+            },
+            {
+              "id": "lqbyfpaiqe",
+              "text": "size of the scooter body",
+              "feedback": ""
+            },
+            {
+              "id": "apm4hqtvs2",
+              "text": "other variable (be sure to mention what variable below)",
+              "feedback": ""
+            }
+          ]
+        },
+        {
+          "id": "4usiars6wn",
+          "prompt": "Explain how changing the variable(s) you chose above will improve a scooter's performance.",
+          "type": "OpenResponse"
+        }
+      ],
+      "icons": {
+        "default": {
+          "color": "#F57C00",
+          "type": "font",
+          "fontSet": "material-icons",
+          "fontName": "assignment"
+        }
+      }
+    },
+    {
+      "id": "node37",
+      "type": "node",
+      "showSaveButton": true,
+      "showSubmitButton": false,
+      "constraints": [],
+      "transitionLogic": {
+        "transitions": [
+          {
+            "to": "node38"
+          }
+        ],
+        "howToChooseAmongAvailablePaths": null,
+        "whenToChoosePath": null,
+        "canChangePath": null,
+        "maxPathsVisitable": null
+      },
+      "title": "Energy Graph Reflection",
+      "components": [
+        {
+          "id": "ih6dxjiutn",
+          "type": "HTML",
+          "html": "<p>Below is a graph of the Master Scooter's energy during its best test.</p>\n<table style=\"border-spacing: 30px 0px; cellpadding: 0px 0px;\" cellspacing=\"10\">\n<tbody>\n<tr>\n<td>\n<p style=\"text-align: center;\">Energy Graph</p>\n</td>\n</tr>\n<tr>\n<td><img src=\"energy graph.png\" alt=\"\" width=\"350\" height=\"215\" /></td>\n</tr>\n</tbody>\n</table>"
+        },
+        {
+          "id": "giob7zpchy",
+          "prompt": "Based on the variable you tested, what type of energy did you expect to affect?",
+          "type": "MultipleChoice",
+          "choiceType": "checkbox",
+          "choices": [
+            {
+              "id": "bn7zwcpfjo",
+              "text": "potential energy",
+              "feedback": ""
+            },
+            {
+              "id": "ypxfyrhz1q",
+              "text": "kinetic energy",
+              "feedback": ""
+            },
+            {
+              "id": "o7fybkq145",
+              "text": "thermal energy",
+              "feedback": ""
+            }
+          ]
+        },
+        {
+          "id": "wjalikc19a",
+          "prompt": "Based on your scooter's performance, how would the energy graph for your scooter differ from the energy graph of the Master Scooter? Why?",
+          "type": "OpenResponse"
+        }
+      ],
+      "icons": {
+        "default": {
+          "color": "#F57C00",
+          "type": "font",
+          "fontSet": "material-icons",
+          "fontName": "assignment"
+        }
+      }
+    },
+    {
+      "id": "node38",
+      "type": "node",
+      "showSaveButton": true,
+      "showSubmitButton": false,
+      "constraints": [],
+      "transitionLogic": {
+        "transitions": [
+          {
+            "to": "node39"
+          }
+        ],
+        "howToChooseAmongAvailablePaths": null,
+        "whenToChoosePath": null,
+        "canChangePath": null,
+        "maxPathsVisitable": null
+      },
+      "title": "Improvements",
+      "components": [
+        {
+          "id": "2243e1dyhp",
+          "type": "HTML",
+          "html": "<div style=\"margin: auto; background-image: url('background.jpg'); border-radius: 20px 20px 20px 20px; padding: 10px; background-size: cover;\">\n<div style=\"background-color: rgba(255,255,255,0.85); color: #000066; border-radius: 20px 20px 20px 20px; padding: 1px; text-align: center;\">\n<h2>Improvements</h2>\n</div>\n</div>"
+        },
+        {
+          "id": "zknl0nzmld",
+          "prompt": "If you were able to re-build your scooter, what changes would you make?",
+          "type": "OpenResponse"
+        },
+        {
+          "id": "04lzgpxusa",
+          "prompt": "How would these changes make your scooter better?",
+          "type": "OpenResponse"
+        }
+      ],
+      "icons": {
+        "default": {
+          "color": "#F57C00",
+          "type": "font",
+          "fontSet": "material-icons",
+          "fontName": "compare"
+        }
+      }
+    },
+    {
+      "id": "node39",
+      "type": "node",
+      "showSaveButton": true,
+      "showSubmitButton": false,
+      "constraints": [],
+      "transitionLogic": {
+        "transitions": [],
+        "howToChooseAmongAvailablePaths": null,
+        "whenToChoosePath": null,
+        "canChangePath": null,
+        "maxPathsVisitable": null
+      },
+      "title": "Your Ideal Scooter",
+      "components": [
+        {
+          "id": "2xoo2m2bfr",
+          "type": "Draw",
+          "prompt": "<p>With the time you have left, use the draw tools to make your dream&nbsp;scooter. How would you design a scooter to go as far as possible? What would it look like?</p>",
+          "stamps": {
+            "Stamps": []
+          }
+        },
+        {
+          "id": "x4twq80e2n",
+          "prompt": "Label the picture.",
+          "type": "Label",
+          "backgroundImage": "ballon cars and skateboarder.png",
+          "canCreateLabels": true,
+          "canDeleteLabels": true,
+          "width": 800,
+          "height": 600,
+          "labels": [
+            {
+              "pointX": 25,
+              "pointY": 200,
+              "textX": 100,
+              "textY": -25,
+              "text": "more potential energy",
+              "color": "blue"
+            },
+            {
+              "pointX": 25,
+              "pointY": 250,
+              "textX": 100,
+              "textY": -25,
+              "text": "more potential energy",
+              "color": "blue"
+            },
+            {
+              "pointX": 25,
+              "pointY": 300,
+              "textX": 100,
+              "textY": -25,
+              "text": "more kinetic energy",
+              "color": "green"
+            },
+            {
+              "pointX": 25,
+              "pointY": 350,
+              "textX": 100,
+              "textY": -25,
+              "text": "more kinetic energy",
+              "color": "green"
+            }
+          ]
+        }
+      ],
+      "icons": {
+        "default": {
+          "color": "#9C27B0",
+          "type": "font",
+          "fontSet": "material-icons",
+          "fontName": "create"
+        }
+      }
+    },
+    {
+      "id": "nodeWithNoComponents",
+      "type": "node",
+      "showSaveButton": true,
+      "showSubmitButton": false,
+      "constraints": [],
+      "transitionLogic": {
+        "transitions": [
+          {
+            "to": "node39"
+          }
+        ],
+        "howToChooseAmongAvailablePaths": null,
+        "whenToChoosePath": null,
+        "canChangePath": null,
+        "maxPathsVisitable": null
+      },
+      "title": "Improvements"
+    }
+  ],
+  "spaces": [
+    {
+      "id": "public",
+      "name": "Public",
+      "isPublic": true,
+      "isShowInNotebook": true
+    },
+    {
+      "id": "ideasAboutGlobalClimateChange",
+      "name": "Your ideas about Global Climate Change",
+      "isPublic": true,
+      "isShowInNotebook": false
+    }
+  ],
+  "constraints": [],
+  "startGroupId": "group0",
+  "startNodeId": "node1",
+  "navigationMode": "guided",
+  "layout": {
+    "template": "starmap|leftNav|rightNav",
+    "studentIsOnGroupNode": "layout3",
+    "studentIsOnApplicationNode": "layout4"
+  },
+  "metadata": {
+    "title": "Self-Propelled Vehicles Challenge",
+    "authors": []
+  },
+  "inactiveNodes": [
+    {
+      "id": "node41",
+      "name": "a new node"
+    },
+    { "id": "node42", "name": "a new node again" }
+  ]
+}

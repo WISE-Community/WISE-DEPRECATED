@@ -230,7 +230,7 @@ class EmbeddedController extends ComponentController {
   handleApplicationInitializedMessage(messageEventData) {
     this.sendLatestWorkToApplication();
     this.processLatestStudentWork();
-    $('#' + this.embeddedApplicationIFrameId).iFrameResize({ scrolling: true });
+    ($('#' + this.embeddedApplicationIFrameId) as any).iFrameResize({ scrolling: true });
   }
 
   handleComponentDirtyMessage(messageEventData) {
@@ -418,7 +418,7 @@ class EmbeddedController extends ComponentController {
   snipModel($event) {
     const iframe = $('#' + this.embeddedApplicationIFrameId);
     if (iframe != null && iframe.length > 0) {
-      let modelElement = iframe.contents().find('html');
+      let modelElement: any = iframe.contents().find('html');
       if (modelElement != null && modelElement.length > 0) {
         modelElement = modelElement[0];
         html2canvas(modelElement).then(canvas => {

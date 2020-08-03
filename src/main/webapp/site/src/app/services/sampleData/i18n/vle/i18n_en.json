@@ -1,0 +1,10 @@
+{
+  "accountMenuItems": "{{item}} items",
+  "accountMenuPoints": "{{point}} points",
+  "accountMenuTotalScore": "Total Score",
+  "addNewNote": "Add New Note",
+  "newNote": "Add New Note",
+  "projectCompletion": "Unit Completion",
+  "projectPlan": "Unit Plan",
+  "typeYourNoteHere": "Type your note here..."
+}

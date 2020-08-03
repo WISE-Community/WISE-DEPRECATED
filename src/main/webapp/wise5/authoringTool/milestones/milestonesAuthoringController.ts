@@ -1,7 +1,7 @@
 'use strict';
 
-import AuthoringToolProjectService from '../authoringToolProjectService';
-import UtilService from '../../services/utilService';
+import { TeacherProjectService } from '../../services/teacherProjectService';
+import { UtilService } from '../../services/utilService';
 
 class MilestonesAuthoringController {
   $translate: any;
@@ -33,7 +33,7 @@ class MilestonesAuthoringController {
   ];
 
   constructor(private $filter,
-      private ProjectService: AuthoringToolProjectService,
+      private ProjectService: TeacherProjectService,
       private UtilService: UtilService) {
     this.$translate = $filter('translate');
     this.project = this.ProjectService.project;
@@ -189,7 +189,7 @@ class MilestonesAuthoringController {
         milestoneSatisfyCriteriaIds[milestoneSatisfyCriteria.id] = true;
       }
     }
-    return milestoneSatisfyCriteriaIds; 
+    return milestoneSatisfyCriteriaIds;
   }
 
   generateUniqueMilestoneSatisfyCriteriaId() {
@@ -397,7 +397,7 @@ class MilestonesAuthoringController {
   isUniqueTemplateId(id) {
     return this.templateIds[id] == null;
   }
-  
+
   addTemplate(report, index) {
     const template = this.createTemplate();
     report.templates.splice(index, 0, template);
@@ -488,7 +488,7 @@ class MilestonesAuthoringController {
   addToIdToExpanded(id) {
     this.idToExpanded[id] = true;
   }
-  
+
   deleteFromIdToExpanded(id) {
     delete this.idToExpanded[id];
   }

@@ -1,10 +1,9 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { TeacherService } from '../teacher.service';
 import { Course } from '../../domain/course';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { UserService } from '../../services/user.service';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators, ValidatorFn } from "@angular/forms";
-import { I18n } from '@ngx-translate/i18n-polyfill';
 import { Run } from "../../domain/run";
 
 @Component({
@@ -31,8 +30,7 @@ export class ListClassroomCoursesDialogComponent implements OnInit {
               @Inject(MAT_DIALOG_DATA) public data: any,
               private teacherService: TeacherService,
               private userService: UserService,
-              private fb: FormBuilder,
-              private i18n: I18n) {
+              private fb: FormBuilder) {
     this.run = data.run;
     for (const course of data.courses) {
       this.courses.push(new Course(course));
@@ -40,8 +38,7 @@ export class ListClassroomCoursesDialogComponent implements OnInit {
   }
 
   ngOnInit() {
-    const descriptionText = this.i18n(`Hi class! Please complete the "{{unitTitle}}" WISE unit. (Access Code: {{accessCode}})`,
-      {unitTitle: this.data.run.name, accessCode: this.data.run.runCode});
+    const descriptionText =$localize`Hi class! Please complete the "${this.data.run.name}:unitTitle:" WISE unit. (Access Code: ${this.data.run.runCode}:accessCode:)`;
     const description = new FormControl(descriptionText, Validators.required);
     this.coursesControl = new FormArray(this.courses.map(() =>
       new FormControl(false)
@@ -106,7 +103,7 @@ export class ListClassroomCoursesDialogComponent implements OnInit {
       if (course.id === courseId) {
         let courseNameAndSection = course.name;
         if (course.section) {
-          courseNameAndSection += this.i18n(` (Section {{section}})`, {section: course.section});
+          courseNameAndSection += ' ' + $localize`(Section ${course.section}:section:)`;
         }
         return courseNameAndSection;
       }

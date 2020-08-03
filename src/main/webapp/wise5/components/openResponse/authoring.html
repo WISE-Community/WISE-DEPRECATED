@@ -25,6 +25,13 @@
                ng-change='openResponseController.authoringViewComponentChanged()'/>
       </md-input-container>
       <br/>
+      <div>
+        <md-checkbox class='md-primary'
+                     ng-model='openResponseController.authoringComponentContent.isStudentAudioRecordingEnabled'
+                     ng-change='openResponseController.authoringViewComponentChanged()'>
+          {{ ::'openResponse.enableStudentAudioResponse' | translate }}
+        </md-checkbox>
+      </div>
       <span>{{ ::'openResponse.enableCRater' | translate }}:</span>
       <input type='checkbox'
              ng-model='openResponseController.authoringComponentContent.enableCRater'
@@ -76,7 +83,7 @@
                                                                                 rows='5'
                                                                                 cols='100'
                                                                                 ng-model-options='{ debounce: 500 }'
-                                                                                ng-change='openResponseController.authoringViewComponentChanged()'/>
+                                                                                ng-change='openResponseController.authoringViewComponentChanged()'></textarea>
           <button ng-click='openResponseController.authoringViewScoringRuleUpClicked($index)'>{{ ::'UP' | translate }}</button>
           <button ng-click='openResponseController.authoringViewScoringRuleDownClicked($index)'>{{ ::'DOWN' | translate }}</button>
           <button ng-click='openResponseController.authoringViewScoringRuleDeleteClicked($index)'>{{ ::'DELETE' | translate }}</button>
@@ -107,7 +114,7 @@
               rows='5'
               cols='100'
               ng-model-options='{ debounce: 500 }'
-              ng-change='openResponseController.authoringViewComponentChanged()'/>
+              ng-change='openResponseController.authoringViewComponentChanged()'></textarea>
             <button ng-click='openResponseController.authoringViewMultipleAttemptScoringRuleUpClicked($index)'>{{ ::'UP' | translate }}</button>
             <button ng-click='openResponseController.authoringViewMultipleAttemptScoringRuleDownClicked($index)'>{{ ::'DOWN' | translate }}</button>
             <button ng-click='openResponseController.authoringViewMultipleAttemptScoringRuleDeleteClicked($index)'>{{ ::'DELETE' | translate }}</button>
@@ -156,7 +163,7 @@
                         rows='5'
                         cols='100'
                         ng-model-options='{ debounce: 500 }'
-                        ng-change='openResponseController.authoringViewComponentChanged()'/>
+                        ng-change='openResponseController.authoringViewComponentChanged()'></textarea>
             </div>
             <span>{{ ::'openResponse.notifyTeacher' | translate }}</span>
             <input type='checkbox'
@@ -168,7 +175,7 @@
                         rows='5'
                         cols='100'
                         ng-model-options='{ debounce: 500 }'
-                        ng-change='openResponseController.authoringViewComponentChanged()'/>
+                        ng-change='openResponseController.authoringViewComponentChanged()'></textarea>
             </div>
             <br/>
             <button ng-click='openResponseController.authoringViewNotificationUpClicked($index)'>{{ ::'UP' | translate }}</button>

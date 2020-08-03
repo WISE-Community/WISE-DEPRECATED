@@ -1,8 +1,9 @@
 import { Component, Inject } from '@angular/core';
 import { TeacherService } from "../teacher.service";
-import { MAT_DIALOG_DATA, MatDialogRef, MatSnackBar, MatTableDataSource } from "@angular/material";
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTableDataSource } from "@angular/material/table";
 import { ShareItemDialogComponent } from "../../modules/library/share-item-dialog/share-item-dialog.component";
-import { I18n } from '@ngx-translate/i18n-polyfill';
 import { UserService } from '../../services/user.service';
 import { UtilService } from '../../services/util.service';
 import { TeacherRun } from '../teacher-run';
@@ -27,9 +28,8 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
               public teacherService: TeacherService,
               private userService: UserService,
               private utilService: UtilService,
-              public snackBar: MatSnackBar,
-              i18n: I18n) {
-    super(dialogRef, data, teacherService, snackBar, i18n);
+              public snackBar: MatSnackBar) {
+    super(dialogRef, data, teacherService, snackBar);
     this.teacherService.getRun(this.data.run.id).subscribe((run: TeacherRun) => {
       this.run = new TeacherRun(run);
       this.runId = this.run.id;
@@ -163,8 +163,7 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
     this.isOwner = run.isOwner(this.userService.getUserId());
     this.populateSharedOwners(run.sharedOwners);
     this.snackBar.open(
-        this.i18n('Transferred classroom unit ownership to {{firstName}} {{lastName}}.', 
-        {firstName: run.owner.firstName, lastName: run.owner.lastName}));
+        $localize`Transferred classroom unit ownership to ${run.owner.firstName}:firstName: ${run.owner.lastName}:lastName:.`);
   }
 
   unshareRun(sharedOwner) {

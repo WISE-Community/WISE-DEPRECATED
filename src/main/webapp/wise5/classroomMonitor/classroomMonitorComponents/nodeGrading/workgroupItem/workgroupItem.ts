@@ -1,6 +1,6 @@
 'use strict';
 
-import ClassroomMonitorProjectService from '../../../classroomMonitorProjectService';
+import { TeacherProjectService } from '../../../../services/teacherProjectService';
 import * as angular from 'angular';
 
 class WorkgroupItemController {
@@ -23,7 +23,7 @@ class WorkgroupItemController {
   workgroupId: number;
   static $inject = ['$filter', 'ProjectService'];
 
-  constructor($filter: any, private ProjectService: ClassroomMonitorProjectService) {
+  constructor($filter: any, private ProjectService: TeacherProjectService) {
     this.$translate = $filter('translate');
   }
 

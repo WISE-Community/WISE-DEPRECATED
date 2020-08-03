@@ -2,15 +2,13 @@
 
 import ComponentController from '../componentController';
 import DiscussionService from './discussionService';
-import StudentWebSocketService from '../../services/studentWebSocketService';
-import NotificationService from '../../services/notificationService';
+import { NotificationService } from '../../services/notificationService';
 
 class DiscussionController extends ComponentController {
   $mdMedia: any;
   $q: any;
   DiscussionService: DiscussionService;
   NotificationService: NotificationService;
-  StudentWebSocketService: StudentWebSocketService;
   studentResponse: string;
   newResponse: string;
   classResponses: any[];
@@ -36,7 +34,6 @@ class DiscussionController extends ComponentController {
     'ProjectService',
     'StudentAssetService',
     'StudentDataService',
-    'StudentWebSocketService',
     'UtilService',
     '$mdMedia'
   ];
@@ -56,7 +53,6 @@ class DiscussionController extends ComponentController {
     ProjectService,
     StudentAssetService,
     StudentDataService,
-    StudentWebSocketService,
     UtilService,
     $mdMedia
   ) {
@@ -78,7 +74,6 @@ class DiscussionController extends ComponentController {
     this.$q = $q;
     this.DiscussionService = DiscussionService;
     this.NotificationService = NotificationService;
-    this.StudentWebSocketService = StudentWebSocketService;
     this.$mdMedia = $mdMedia;
     this.studentResponse = '';
     this.newResponse = '';
@@ -321,6 +316,8 @@ class DiscussionController extends ComponentController {
     const toWorkgroupId = originalPostComponentState.workgroupId;
     if (toWorkgroupId != null && toWorkgroupId !== fromWorkgroupId) {
       const notification = this.NotificationService.createNewNotification(
+        this.ConfigService.getRunId(),
+        this.ConfigService.getPeriodId(),
         notificationType,
         nodeId,
         componentId,
@@ -353,6 +350,8 @@ class DiscussionController extends ComponentController {
           workgroupsNotifiedSoFar.indexOf(toWorkgroupId) === -1
         ) {
           const notification = this.NotificationService.createNewNotification(
+            this.ConfigService.getRunId(),
+            this.ConfigService.getPeriodId(),
             notificationType,
             nodeId,
             componentId,

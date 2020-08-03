@@ -1,7 +1,7 @@
 'use strict';
 
 import ComponentController from '../componentController';
-import SummaryService from './summaryService';
+import { SummaryService } from './summaryService';
 
 class SummaryController extends ComponentController {
   SummaryService: SummaryService;
@@ -17,6 +17,8 @@ class SummaryController extends ComponentController {
   otherStepTitle: string;
   isShowDisplay: boolean;
   periodId: number;
+  source: string;
+  customLabelColors: any[];
 
   static $inject = [
     '$filter',
@@ -73,6 +75,8 @@ class SummaryController extends ComponentController {
     this.chartType = this.componentContent.chartType;
     this.prompt = this.componentContent.prompt;
     this.highlightCorrectAnswer = this.componentContent.highlightCorrectAnswer;
+    this.source = this.componentContent.source;
+    this.customLabelColors = this.componentContent.customLabelColors;
     this.warningMessage = '';
     if (this.componentContent.showPromptFromOtherComponent) {
       this.otherPrompt = this.getOtherPrompt(this.summaryNodeId, this.summaryComponentId);
@@ -110,23 +114,65 @@ class SummaryController extends ComponentController {
   }
 
   calculateIsShowDisplay() {
-    if (this.componentContent.requirementToSeeSummary === 'submitWork') {
+    if (this.isRequirementToSeeSummarySubmitWork()) {
       return this.studentHasSubmittedWork();
-    } else if (this.componentContent.requirementToSeeSummary === 'completeComponent') {
+    } else if (this.isRequirementToSeeSummaryCompleteComponent()) {
       return this.studentHasCompletedComponent();
-    } else if (this.componentContent.requirementToSeeSummary === 'none') {
+    } else if (this.isRequirementToSeeSummaryNone()) {
       return true;
     }
   }
 
   getWarningMessage() {
+    if (this.isSourceSelf()) {
+      return this.getWarningMessageForSourceSelf();
+    } else if (this.isSourcePeriod() || this.isSourceAllPeriods()) {
+      return this.getWarningMessageForSourceClass();
+    }
+  }
+
+  isSourceSelf() {
+    return this.source === 'self';
+  }
+
+  isSourcePeriod() {
+    return this.source === 'period';
+  }
+
+  isSourceAllPeriods() {
+    return this.source === 'allPeriods';
+  }
+
+  getWarningMessageForSourceSelf() {
     let messageTranslationKey = '';
-    if (this.componentContent.requirementToSeeSummary === 'submitWork') {
-      messageTranslationKey = 'summary.youMustSubmitWork';
-    } else if (this.componentContent.requirementToSeeSummary === 'completeComponent') {
-      messageTranslationKey = 'summary.youMustComplete';
+    if (this.isRequirementToSeeSummarySubmitWork()) {
+      messageTranslationKey = 'summary.youMustSubmitWorkToViewSelfSummary';
+    } else if (this.isRequirementToSeeSummaryCompleteComponent()) {
+      messageTranslationKey = 'summary.youMustCompleteToViewSelfSummary';
     }
     return this.$translate(messageTranslationKey, { stepTitle: this.otherStepTitle });
+  }
+
+  getWarningMessageForSourceClass() {
+    let messageTranslationKey = '';
+    if (this.isRequirementToSeeSummarySubmitWork()) {
+      messageTranslationKey = 'summary.youMustSubmitWorkToViewClassSummary';
+    } else if (this.isRequirementToSeeSummaryCompleteComponent()) {
+      messageTranslationKey = 'summary.youMustCompleteToViewClassSummary';
+    }
+    return this.$translate(messageTranslationKey, { stepTitle: this.otherStepTitle });
+  }
+
+  isRequirementToSeeSummarySubmitWork() {
+    return this.componentContent.requirementToSeeSummary === 'submitWork';
+  }
+
+  isRequirementToSeeSummaryCompleteComponent() {
+    return this.componentContent.requirementToSeeSummary === 'completeComponent';
+  }
+
+  isRequirementToSeeSummaryNone() {
+    return this.componentContent.requirementToSeeSummary === 'none';
   }
 
   studentHasSubmittedWork() {
@@ -160,15 +206,15 @@ class SummaryController extends ComponentController {
 
   setPeriodIdIfNecessary() {
     if (this.ConfigService.isStudentRun()) {
-      if (this.componentContent.source === 'period') {
+      if (this.source === 'period') {
         this.periodId = this.ConfigService.getPeriodId();
-      } else if (this.componentContent.source === 'allPeriods') {
+      } else if (this.source === 'allPeriods') {
         this.periodId = null;
       }
     }
   }
 
-  handleStudentWorkSavedToServerAdditionalProcessing(event, args) {
+  handleStudentWorkSavedToServerAdditionalProcessing(event: any, args: any) {
     if (this.isStudent) {
       this.isShowDisplay = this.calculateIsShowDisplay();
     }

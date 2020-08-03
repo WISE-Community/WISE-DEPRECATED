@@ -24,7 +24,9 @@
 package org.wise.portal.service.vle.wise5.impl;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -146,36 +148,38 @@ public class VLEServiceImpl implements VLEService {
       }
     }
 
-    return studentWorkDao.getStudentWorkListByParams(id, run, period, workgroup, isAutoSave,
-        isSubmit, nodeId, componentId, componentType, components, onlyGetLatest);
-  }
-
-  public JSONArray getNotebookItemsExport(Integer runId) {
-    try {
-      Run run = runService.retrieveById(new Long(runId));
-      List<NotebookItem> notebookItems = notebookItemDao.getNotebookItemsExport(run);
-      JSONArray notebookItemsJSONArray = new JSONArray();
-      for (int n = 0; n < notebookItems.size(); n++) {
-        notebookItemsJSONArray.put(notebookItems.get(n).toJSON());
-      }
-      return notebookItemsJSONArray;
-    } catch (Exception e) {
-      return new JSONArray();
+    List<StudentWork> studentWorkListByParams = studentWorkDao.getStudentWorkListByParams(id, run,
+        period, workgroup, isAutoSave, isSubmit, nodeId, componentId, componentType, components);
+    if (Boolean.TRUE.equals(onlyGetLatest)) {
+      return filterLatestWorkForEachWorkgroup(studentWorkListByParams);
+    } else {
+      return studentWorkListByParams;
     }
   }
 
-  public JSONArray getLatestNotebookItemsExport(Integer runId) {
-    try {
-      Run run = runService.retrieveById(new Long(runId));
-      List<NotebookItem> notebookItems = notebookItemDao.getLatestNotebookItemsExport(run);
-      JSONArray notebookItemsJSONArray = new JSONArray();
-      for (int n = 0; n < notebookItems.size(); n++) {
-        notebookItemsJSONArray.put(notebookItems.get(n).toJSON());
+  private List<StudentWork> filterLatestWorkForEachWorkgroup(
+      List<StudentWork> allStudentWork) {
+    HashMap<Long, StudentWork> latestWorkPerWorkgroup = new HashMap<Long, StudentWork>();
+    for (StudentWork studentWork : allStudentWork) {
+      Long key = studentWork.getWorkgroup().getId();
+      if (latestWorkPerWorkgroup.containsKey(key)) {
+        if (studentWork.getServerSaveTime().after(
+            latestWorkPerWorkgroup.get(key).getServerSaveTime())) {
+          latestWorkPerWorkgroup.put(key, studentWork);
+        }
+      } else {
+        latestWorkPerWorkgroup.put(studentWork.getWorkgroup().getId(), studentWork);
       }
-      return notebookItemsJSONArray;
-    } catch (Exception e) {
-      return new JSONArray();
     }
+    return new ArrayList<StudentWork>(latestWorkPerWorkgroup.values());
+  }
+
+  public List<NotebookItem> getNotebookItemsExport(Run run) {
+    return notebookItemDao.getNotebookItemsExport(run);
+  }
+
+  public List<NotebookItem> getLatestNotebookItemsExport(Run run) {
+    return notebookItemDao.getLatestNotebookItemsExport(run);
   }
 
   public JSONArray getNotificationsExport(Integer runId) {
@@ -751,35 +755,14 @@ public class VLEServiceImpl implements VLEService {
     return studentAsset;
   }
 
-  @Override
-  public List<NotebookItem> getNotebookItems(Integer id, Integer runId, Integer periodId,
-      Integer workgroupId, String nodeId, String componentId) {
-    Run run = null;
-    if (runId != null) {
-      try {
-        run = runService.retrieveById(new Long(runId));
-      } catch (ObjectNotFoundException e) {
-        e.printStackTrace();
-      }
-    }
-    Group period = null;
-    if (periodId != null) {
-      try {
-        period = groupService.retrieveById(new Long(periodId));
-      } catch (ObjectNotFoundException e) {
-        e.printStackTrace();
-      }
-    }
-    Workgroup workgroup = null;
-    if (workgroupId != null) {
-      try {
-        workgroup = workgroupService.retrieveById(new Long(workgroupId));
-      } catch (ObjectNotFoundException e) {
-        e.printStackTrace();
-      }
-    }
-    return notebookItemDao.getNotebookItemListByParams(id, run, period, workgroup, nodeId,
-        componentId);
+  @SuppressWarnings("unchecked")
+  public List<NotebookItem> getNotebookItems(Run run) {
+    return notebookItemDao.getNotebookItemListByParams(null, run, null, null, null, null);
+  }
+
+  @SuppressWarnings("unchecked")
+  public List<NotebookItem> getNotebookItems(Run run, Workgroup workgroup) {
+    return notebookItemDao.getNotebookItemListByParams(null, run, null, workgroup, null, null);
   }
 
   public List<NotebookItem> getNotebookItemsByGroup(Integer runId, String groupName) {
@@ -973,11 +956,6 @@ public class VLEServiceImpl implements VLEService {
   }
 
   @Override
-  public Notification getNotificationById(Integer notificationId) throws ObjectNotFoundException {
-    return (Notification) notificationDao.getById(notificationId);
-  }
-
-  @Override
   public List<Notification> getNotificationsByGroupId(String groupId) {
     return getNotifications(null, null, null, null, groupId, null, null);
   }
@@ -1097,10 +1075,9 @@ public class VLEServiceImpl implements VLEService {
   }
 
   @Override
-  public Notification dismissNotification(Notification notification, String timeDismissed) {
+  public Notification dismissNotification(Notification notification, Timestamp timeDismissed) {
     if (timeDismissed != null) {
-      Timestamp timeDismissedTimestamp = new Timestamp(new Long(timeDismissed));
-      notification.setTimeDismissed(timeDismissedTimestamp);
+      notification.setTimeDismissed(timeDismissed);
     }
     notificationDao.save(notification);
     return notification;
@@ -1136,5 +1113,4 @@ public class VLEServiceImpl implements VLEService {
   public RunStatus getRunStatusByRunId(Long runId) {
     return runStatusDao.getRunStatusByRunId(runId);
   }
-
 }

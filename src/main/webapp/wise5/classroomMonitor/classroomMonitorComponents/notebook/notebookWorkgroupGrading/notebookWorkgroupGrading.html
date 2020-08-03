@@ -13,8 +13,8 @@
         </div>
         <div ng-if="$ctrl.notesEnabled" class="md-title" layout="row" layout-align="center center"
              flex="10">
-          <span ng-class="{ 'text-secondary': $ctrl.workgroup.notes.length === 0 }">
-            {{ ::$ctrl.workgroup.notes.length }}
+          <span ng-class="{ 'text-secondary': $ctrl.getNumActiveNotes() === 0 }">
+            {{ ::$ctrl.getNumActiveNotes() }}
           </span>
         </div>
         <div ng-if="$ctrl.reportEnabled" layout="row" layout-align="center center" flex="25">

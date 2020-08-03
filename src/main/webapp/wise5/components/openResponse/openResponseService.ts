@@ -1,10 +1,13 @@
-import ComponentService from '../componentService';
+import { ComponentService } from '../componentService';
 
 class OpenResponseService extends ComponentService {
+  $translate: any;
+
   static $inject = ['$filter', 'StudentDataService', 'UtilService'];
 
   constructor($filter, StudentDataService, UtilService) {
-    super($filter, StudentDataService, UtilService);
+    super(StudentDataService, UtilService);
+    this.$translate = $filter('translate');
   }
 
   getComponentTypeLabel() {
@@ -47,7 +50,7 @@ class OpenResponseService extends ComponentService {
         let studentData = componentState.studentData;
 
         if (studentData != null) {
-          if (studentData.response) {
+          if (studentData.response || studentData.attachments.length > 0) {
             // there is a response so the component is completed
             result = true;
           }
@@ -111,7 +114,8 @@ class OpenResponseService extends ComponentService {
 
   hasResponse(componentState) {
     const response = componentState.studentData.response;
-    return response != null && response !== '';
+    const attachments = componentState.studentData.attachments;
+    return (response != null && response !== '') || attachments.length > 0;
   }
 }
 

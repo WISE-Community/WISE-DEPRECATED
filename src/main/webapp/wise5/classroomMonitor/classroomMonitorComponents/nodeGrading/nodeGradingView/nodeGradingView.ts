@@ -1,14 +1,14 @@
 'use strict';
 
-import AnnotationService from '../../../../services/annotationService';
-import ConfigService from '../../../../services/configService';
+import { AnnotationService } from '../../../../services/annotationService';
+import { ConfigService } from '../../../../services/configService';
 import MilestoneService from '../../../../services/milestoneService';
 import NodeService from '../../../../services/nodeService';
-import NotificationService from '../../../../services/notificationService';
-import ClassroomMonitorProjectService from '../../../classroomMonitorProjectService';
-import StudentStatusService from '../../../../services/studentStatusService';
-import TeacherDataService from '../../../../services/teacherDataService';
+import { NotificationService } from '../../../../services/notificationService';
+import { StudentStatusService } from '../../../../services/studentStatusService';
+import { TeacherDataService } from '../../../../services/teacherDataService';
 import * as angular from 'angular';
+import { TeacherProjectService } from '../../../../services/teacherProjectService';
 
 class NodeGradingViewController {
   $translate: any;
@@ -59,7 +59,7 @@ class NodeGradingViewController {
     private MilestoneService: MilestoneService,
     private NodeService: NodeService,
     private NotificationService: NotificationService,
-    private ProjectService: ClassroomMonitorProjectService,
+    private ProjectService: TeacherProjectService,
     private StudentStatusService: StudentStatusService,
     private TeacherDataService: TeacherDataService
   ) {
@@ -472,8 +472,7 @@ class NodeGradingViewController {
       componentId = null,
       componentType = null,
       category = 'Navigation',
-      data = { milestoneId: this.milestone.id },
-      projectId = null;
+      data = { milestoneId: this.milestone.id };
     this.TeacherDataService.saveEvent(
       context,
       nodeId,
@@ -481,8 +480,7 @@ class NodeGradingViewController {
       componentType,
       category,
       event,
-      data,
-      projectId
+      data
     );
   }
 
@@ -505,8 +503,7 @@ class NodeGradingViewController {
       componentId = null,
       componentType = null,
       category = 'Navigation',
-      data = { milestoneId: this.milestone.id, workgroupId: workgroupId },
-      projectId = null;
+      data = { milestoneId: this.milestone.id, workgroupId: workgroupId };
     this.TeacherDataService.saveEvent(
       context,
       nodeId,
@@ -514,8 +511,7 @@ class NodeGradingViewController {
       componentType,
       category,
       event,
-      data,
-      projectId
+      data
     );
   }
 

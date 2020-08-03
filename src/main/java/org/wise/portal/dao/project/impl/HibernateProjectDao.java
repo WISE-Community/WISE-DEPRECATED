@@ -44,9 +44,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.impl.AbstractHibernateDao;
 import org.wise.portal.dao.project.ProjectDao;
+import org.wise.portal.domain.impl.TagImpl;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.impl.ProjectImpl;
-import org.wise.portal.domain.project.impl.TagImpl;
 import org.wise.portal.domain.run.impl.RunImpl;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.user.impl.UserImpl;
@@ -60,7 +60,7 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
 
   @PersistenceContext
   private EntityManager entityManager;
-  
+
   private static final String FIND_ALL_QUERY = "from ProjectImpl";
 
   @Override
@@ -79,9 +79,9 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
 
   private CriteriaBuilder getCriteriaBuilder() {
     Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
-    return session.getCriteriaBuilder(); 
+    return session.getCriteriaBuilder();
   }
-  
+
   @SuppressWarnings("unchecked")
   public List<Project> getSharedProjectsWithoutRun(User user) {
     Session session = this.getHibernateTemplate().getSessionFactory().getCurrentSession();
@@ -114,8 +114,8 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
     Root<ProjectImpl> projectRoot = cq.from(ProjectImpl.class);
     Root<UserImpl> userRoot = cq.from(UserImpl.class);
     List<Predicate> predicates = new ArrayList<>();
-    predicates.add(cb.equal(userRoot.get("id"), user.getId())); 
-    predicates.add(cb.isMember(userRoot, projectRoot.<Set<UserImpl>>get(role))); 
+    predicates.add(cb.equal(userRoot.get("id"), user.getId()));
+    predicates.add(cb.isMember(userRoot, projectRoot.<Set<UserImpl>>get(role)));
     cq.select(projectRoot).where(predicates.toArray(new Predicate[predicates.size()]));
     TypedQuery<ProjectImpl> query = entityManager.createQuery(cq);
     List<ProjectImpl> projectResultList = query.getResultList();
@@ -155,7 +155,7 @@ public class HibernateProjectDao extends AbstractHibernateDao<Project> implement
     Root<ProjectImpl> projectRoot = cq.from(ProjectImpl.class);
     cq.select(projectRoot).where(cb.equal(projectRoot.get("owner").get("id"), owner.getId()))
         .orderBy(cb.desc(projectRoot.get("id")));
-    TypedQuery<ProjectImpl> query = entityManager.createQuery(cq); 
+    TypedQuery<ProjectImpl> query = entityManager.createQuery(cq);
     List<ProjectImpl> projectResultList = query.getResultList();
     return (List<Project>) (Object) projectResultList;
   }

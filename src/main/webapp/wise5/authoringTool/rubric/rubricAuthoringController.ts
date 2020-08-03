@@ -1,6 +1,6 @@
-import ConfigService from '../../services/configService';
-import UtilService from '../../services/utilService';
-import AuthoringToolProjectService from '../authoringToolProjectService';
+import { ConfigService } from '../../services/configService';
+import { UtilService } from '../../services/utilService';
+import { TeacherProjectService } from '../../services/teacherProjectService';
 
 class RubricAuthoringController {
   translate: any;
@@ -27,7 +27,7 @@ class RubricAuthoringController {
     private $state: any,
     $stateParams: any,
     private ConfigService: ConfigService,
-    private ProjectService: AuthoringToolProjectService,
+    private ProjectService: TeacherProjectService,
     private UtilService: UtilService
   ) {
     this.translate = $filter('translate');
@@ -50,7 +50,6 @@ class RubricAuthoringController {
       disableDragAndDrop: true,
       buttons: {
         insertAssetButton: this.UtilService.createInsertAssetButton(
-          this,
           null,
           this.nodeId,
           null,

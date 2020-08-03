@@ -28,6 +28,7 @@ import java.sql.Timestamp;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Getter;
 import lombok.Setter;
 import org.json.JSONException;
@@ -42,12 +43,13 @@ import org.wise.vle.domain.PersistableDomain;
 
 /**
  * Domain object representing work for a student, which include components and nodes (used in WISE5)
+ *
  * @author Hiroki Terashima
  */
 @Entity
-@Table(name = "studentWork",  indexes = {
+@Table(name = "studentWork", indexes = {
     @Index(columnList = "runId", name = "studentWorkRunIdIndex"),
-    @Index(columnList = "workgroupId", name = "studentWorkWorkgroupIdIndex")})
+    @Index(columnList = "workgroupId", name = "studentWorkWorkgroupIdIndex") })
 @Getter
 @Setter
 public class StudentWork extends PersistableDomain {
@@ -56,17 +58,20 @@ public class StudentWork extends PersistableDomain {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Integer id = null;
 
-  @ManyToOne(targetEntity = RunImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
+  @ManyToOne(targetEntity = RunImpl.class, cascade = {
+      CascadeType.PERSIST }, fetch = FetchType.LAZY)
   @JoinColumn(name = "runId", nullable = false)
   @JsonIgnore
   private Run run;
 
-  @ManyToOne(targetEntity = PersistentGroup.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
+  @ManyToOne(targetEntity = PersistentGroup.class, cascade = {
+      CascadeType.PERSIST }, fetch = FetchType.LAZY)
   @JoinColumn(name = "periodId", nullable = false)
   @JsonIgnore
   private Group period;
 
-  @ManyToOne(targetEntity = WorkgroupImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
+  @ManyToOne(targetEntity = WorkgroupImpl.class, cascade = {
+      CascadeType.PERSIST }, fetch = FetchType.LAZY)
   @JoinColumn(name = "workgroupId", nullable = false)
   @JsonIgnore
   private Workgroup workgroup;

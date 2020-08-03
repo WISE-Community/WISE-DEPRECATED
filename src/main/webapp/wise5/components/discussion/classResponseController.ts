@@ -1,5 +1,4 @@
-import StudentStatusService from '../../services/studentDataService';
-import ConfigService from '../../services/configService';
+import { ConfigService } from '../../services/configService';
 import { Input } from '@angular/core';
 
 class ClassResponseController {
@@ -15,18 +14,16 @@ class ClassResponseController {
   $scope: any;
   $filter: any;
   $translate: any;
-  StudentStatusService: StudentStatusService;
   ConfigService: ConfigService;
   urlMatcher: any;
   expanded: boolean;
   response: any;
 
-  static $inject = ['$scope', '$filter', 'StudentStatusService', 'ConfigService'];
+  static $inject = ['$scope', '$filter', 'ConfigService'];
 
-  constructor($scope, $filter, StudentStatusService, ConfigService) {
+  constructor($scope, $filter, ConfigService) {
     this.$scope = $scope;
     this.$filter = $filter;
-    this.StudentStatusService = StudentStatusService;
     this.ConfigService = ConfigService;
     this.$translate = this.$filter('translate');
     this.urlMatcher = /((http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?)/g;

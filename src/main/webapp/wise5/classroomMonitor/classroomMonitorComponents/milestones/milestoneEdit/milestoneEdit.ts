@@ -1,8 +1,8 @@
 'use strict';
 
-import ClassroomMonitorProjectService from '../../../classroomMonitorProjectService';
-import AchievementService from '../../../../services/achievementService';
-import UtilService from '../../../../services/utilService';
+import { AchievementService } from '../../../../services/achievementService';
+import { UtilService } from '../../../../services/utilService';
+import { TeacherProjectService } from '../../../../services/teacherProjectService';
 
 class MilestoneDetailsController {
   $translate: any;
@@ -23,7 +23,7 @@ class MilestoneDetailsController {
     private $filter: any,
     private $scope: any,
     private AchievementService: AchievementService,
-    private ProjectService: ClassroomMonitorProjectService,
+    private ProjectService: TeacherProjectService,
     private UtilService: UtilService,
     private moment: any
   ) {

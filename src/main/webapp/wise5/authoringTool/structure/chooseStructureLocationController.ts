@@ -1,6 +1,6 @@
 'use strict';
 
-import AuthoringToolProjectService from '../authoringToolProjectService';
+import { TeacherProjectService } from '../../services/teacherProjectService';
 
 class ChooseStructureLocationController {
   groupNodes: any;
@@ -13,7 +13,7 @@ class ChooseStructureLocationController {
     private $rootScope: any,
     private $state: any,
     private $stateParams: any,
-    private ProjectService: AuthoringToolProjectService
+    private ProjectService: TeacherProjectService
   ) {
     this.groupNodes = this.ProjectService.getGroupNodesIdToOrder();
     this.projectId = $stateParams.projectId;

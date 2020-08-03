@@ -1,13 +1,13 @@
 'use strict';
 
-import ConfigService from '../services/configService';
+import { ConfigService } from '../services/configService';
 import NodeService from '../services/nodeService';
 import NotebookService from '../services/notebookService';
-import NotificationService from '../services/notificationService';
-import TeacherDataService from '../services/teacherDataService';
-import SessionService from '../services/sessionService';
+import { NotificationService } from '../services/notificationService';
+import { TeacherDataService } from '../services/teacherDataService';
+import { SessionService } from '../services/sessionService';
 import * as angular from 'angular';
-import ClassroomMonitorProjectService from './classroomMonitorProjectService';
+import { TeacherProjectService } from '../services/teacherProjectService';
 
 class ClassroomMonitorController {
   $translate: any;
@@ -19,8 +19,10 @@ class ClassroomMonitorController {
   menuOpen: boolean = false;
   notifications: any;
   numberProject: boolean = true;
+  projectId: number;
   projectTitle: string;
   runId: number;
+  runCode: string;
   showGradeByStepTools: boolean = false;
   showGradeByTeamTools: boolean;
   showPeriodSelect: boolean = false;
@@ -59,13 +61,15 @@ class ClassroomMonitorController {
     private NodeService: NodeService,
     private NotebookService: NotebookService,
     private NotificationService: NotificationService,
-    private ProjectService: ClassroomMonitorProjectService,
+    private ProjectService: TeacherProjectService,
     private SessionService: SessionService,
     private TeacherDataService: TeacherDataService
   ) {
     this.$translate = $filter('translate');
     this.projectTitle = this.ProjectService.getProjectTitle();
+    this.projectId = this.ConfigService.getProjectId();
     this.runId = this.ConfigService.getRunId();
+    this.runCode = this.ConfigService.getRunCode();
     this.enableProjectAchievements = this.ProjectService.getAchievements().isEnabled;
     this.views = {
       'root.cm.dashboard': {
@@ -141,9 +145,13 @@ class ClassroomMonitorController {
           this.SessionService.closeWarningAndRenewSession();
         },
         () => {
-          this.SessionService.forceLogOut();
+          this.logOut();
         }
       );
+    });
+
+    this.$scope.$on('logOut', () => {
+      this.logOut();
     });
 
     this.$scope.$on('showRequestLogout', ev => {
@@ -177,7 +185,7 @@ class ClassroomMonitorController {
     this.themePath = this.ProjectService.getThemePath();
     this.notifications = this.NotificationService.notifications;
 
-    let context = 'ClassroomMonitor',
+    const context = 'ClassroomMonitor',
       nodeId = null,
       componentId = null,
       componentType = null,
@@ -250,6 +258,31 @@ class ClassroomMonitorController {
   handleServerReconnect() {
     this.$mdToast.hide(this.connectionLostDisplay);
     this.connectionLostShown = false;
+  }
+
+  logOut() {
+    this.saveEvent('logOut', 'Navigation').then(() => {
+      this.SessionService.logOut();
+    });
+  }
+
+  saveEvent(eventName, category): any {
+    const context = 'ClassroomMonitor';
+    const nodeId = null;
+    const componentId = null;
+    const componentType = null;
+    const data = {};
+    return this.TeacherDataService.saveEvent(
+      context,
+      nodeId,
+      componentId,
+      componentType,
+      category,
+      eventName,
+      data
+    ).then((result) => {
+      return result;
+    });
   }
 }
 

@@ -5,15 +5,13 @@ import { Teacher } from "../../../domain/teacher";
 import { Observable, BehaviorSubject } from 'rxjs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
-import {
-  MatInputModule, MatSelectModule,
-  MatSnackBarModule } from '@angular/material';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { TeacherService } from "../../teacher.service";
-import { NO_ERRORS_SCHEMA, TRANSLATIONS_FORMAT, TRANSLATIONS, LOCALE_ID } from "@angular/core";
+import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { By } from '@angular/platform-browser';
 import { User } from "../../../domain/user";
-import { translationsFactory } from '../../../app.module';
-import { I18n } from '@ngx-translate/i18n-polyfill';
 import { configureTestSuite } from 'ng-bullet';
 
 export class MockUserService {
@@ -98,14 +96,7 @@ describe('EditProfileComponent', () => {
       ],
       providers: [
         { provide: TeacherService, useClass: MockTeacherService },
-        { provide: UserService, useClass: MockUserService },
-        { provide: TRANSLATIONS_FORMAT, useValue: "xlf" },
-        {
-          provide: TRANSLATIONS,
-          useFactory: translationsFactory,
-          deps: [LOCALE_ID]
-        },
-        I18n
+        { provide: UserService, useClass: MockUserService }
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     });

@@ -1,9 +1,9 @@
 {
-  "id": "group1",
-  "type": "group",
-  "title": "Jigsaw Activity",
   "startId": "node1",
-  "ids": ["node1", "node2", "node3", "node4", "node5"],
+  "transitionLogic": {
+    "transitions": []
+  },
+  "ids": ["node1", "node2", "node3", "node4", "node5", "node6", "node7", "node8", "node9"],
   "icons": {
     "default": {
       "color": "#2196F3",
@@ -12,7 +12,8 @@
       "fontName": "info"
     }
   },
-  "transitionLogic": {
-    "transitions": []
-  }
+  "id": "group1",
+  "type": "group",
+  "title": "Jigsaw",
+  "constraints": []
 }

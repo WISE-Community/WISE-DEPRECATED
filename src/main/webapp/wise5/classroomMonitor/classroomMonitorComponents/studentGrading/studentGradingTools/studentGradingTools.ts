@@ -1,7 +1,7 @@
 'use strict';
 
-import ConfigService from '../../../../services/configService';
-import TeacherDataService from '../../../../services/teacherDataService';
+import { ConfigService } from '../../../../services/configService';
+import { TeacherDataService } from '../../../../services/teacherDataService';
 import * as $ from 'jquery';
 import * as angular from 'angular';
 

@@ -1,13 +1,13 @@
 import * as angular from 'angular';
 import * as $ from 'jquery';
-import AnnotationService from "../services/annotationService";
-import ConfigService from "../services/configService";
+import { AnnotationService } from "../services/annotationService";
+import { ConfigService } from "../services/configService";
 import NodeService from "../services/nodeService";
 import NotebookService from "../services/notebookService";
-import ProjectService from "../services/projectService";
-import StudentAssetService from "../services/studentAssetService";
-import UtilService from "../services/utilService";
-import StudentDataService from "../services/studentDataService";
+import { ProjectService } from "../services/projectService";
+import { StudentAssetService } from "../services/studentAssetService";
+import { UtilService } from "../services/utilService";
+import { StudentDataService } from "../services/studentDataService";
 
 class ComponentController {
   $filter: any;
@@ -42,6 +42,7 @@ class ComponentController {
   isSubmit: boolean;
   saveMessage: any;
   isStudentAttachmentEnabled: boolean;
+  isStudentAudioRecordingEnabled: boolean;
   isPromptVisible: boolean;
   isSaveButtonVisible: boolean;
   isSubmitButtonVisible: boolean;
@@ -114,7 +115,7 @@ class ComponentController {
     };
 
     this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
-
+    this.isStudentAudioRecordingEnabled = this.componentContent.isStudentAudioRecordingEnabled || false;
     this.isPromptVisible = true;
     this.isSaveButtonVisible = false;
     this.isSubmitButtonVisible = false;
@@ -259,7 +260,7 @@ class ComponentController {
     this.summernoteRubricHTML = this.componentContent.rubric;
 
     const insertAssetString = this.$translate('INSERT_ASSET');
-    const InsertAssetButton = this.UtilService.createInsertAssetButton(this, null, this.nodeId, this.componentId, 'rubric', insertAssetString);
+    const InsertAssetButton = this.UtilService.createInsertAssetButton(null, this.nodeId, this.componentId, 'rubric', insertAssetString);
     this.summernoteRubricOptions = {
       toolbar: [
         ['style', ['style']],
@@ -334,19 +335,18 @@ class ComponentController {
   }
 
   restoreSummernoteCursorPosition(summernoteId) {
-    $('#' + summernoteId).summernote('editor.restoreRange');
-    $('#' + summernoteId).summernote('editor.focus');
+    this.UtilService.restoreSummernoteCursorPosition(summernoteId);
   }
 
   insertImageIntoSummernote(summernoteId, fullAssetPath, fileName) {
-    $('#' + summernoteId).summernote('insertImage', fullAssetPath, fileName);
+    ($('#' + summernoteId) as any).summernote('insertImage', fullAssetPath, fileName);
   }
 
   insertVideoIntoSummernote(summernoteId, fullAssetPath) {
     const videoElement: any = document.createElement('video');
     videoElement.controls = 'true';
     videoElement.innerHTML = '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
-    $('#' + summernoteId).summernote('insertNode', videoElement);
+    ($('#' + summernoteId) as any).summernote('insertNode', videoElement);
   }
 
   assetSelected(event, args) {
@@ -1235,10 +1235,12 @@ class ComponentController {
   }
 
   attachStudentAsset(studentAsset) {
-    this.StudentAssetService.copyAssetForReference(studentAsset).then((copiedAsset) => {
+    return this.StudentAssetService.copyAssetForReference(studentAsset).then((copiedAsset) => {
       const attachment = {
         studentAssetId: copiedAsset.id,
-        iconURL: copiedAsset.iconURL
+        iconURL: copiedAsset.iconURL,
+        url: copiedAsset.url,
+        type: copiedAsset.type
       };
       this.attachments.push(attachment);
       this.studentDataChanged();
@@ -1287,6 +1289,18 @@ class ComponentController {
       if (requester === `${this.nodeId}-${this.componentId}`) {
         const studentWorkId = notebookItem.content.studentWorkIds[0];
         this.importWorkByStudentWorkId(studentWorkId);
+      }
+    });
+  }
+
+  registerAudioRecordedListener() {
+    this.$scope.$on('audioRecorded', (event, {requester, audioFile}) => {
+      if (requester === `${this.nodeId}-${this.componentId}`) {
+        this.StudentAssetService.uploadAsset(audioFile).then((studentAsset) => {
+          this.attachStudentAsset(studentAsset).then(() => {
+            this.StudentAssetService.deleteAsset(studentAsset);
+          })
+        });
       }
     });
   }

@@ -82,7 +82,6 @@ class HTMLAuthoringController extends HTMLController {
       disableDragAndDrop: true,
       buttons: {
         insertWISELinkButton: this.UtilService.createInsertWISELinkButton(
-          this,
           null,
           this.nodeId,
           this.componentId,
@@ -90,7 +89,6 @@ class HTMLAuthoringController extends HTMLController {
           this.$translate('INSERT_WISE_LINK')
         ),
         insertAssetButton: this.UtilService.createInsertAssetButton(
-          this,
           null,
           this.nodeId,
           this.componentId,

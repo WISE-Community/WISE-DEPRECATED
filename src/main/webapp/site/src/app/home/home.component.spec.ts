@@ -10,7 +10,6 @@ describe('HomeComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ HomeComponent ],
       imports: [ ],
-      providers: [ ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();

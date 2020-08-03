@@ -1,12 +1,12 @@
 'use strict';
 
-import AnnotationService from '../services/annotationService';
-import ConfigService from '../services/configService';
-import NotificationService from '../services/notificationService';
+import { AnnotationService } from '../services/annotationService';
+import { ConfigService } from '../services/configService';
+import { NotificationService } from '../services/notificationService';
 import NotebookService from '../services/notebookService';
-import VLEProjectService from './vleProjectService';
-import SessionService from '../services/sessionService';
-import StudentDataService from '../services/studentDataService';
+import { VLEProjectService } from './vleProjectService';
+import { SessionService } from '../services/sessionService';
+import { StudentDataService } from '../services/studentDataService';
 import * as angular from 'angular';
 import * as $ from 'jquery';
 
@@ -114,10 +114,33 @@ class VLEController {
 
     let script = this.ProjectService.getProjectScript();
     if (script != null) {
-      this.ProjectService.retrieveScript(script).then(script => {
+      this.ProjectService.retrieveScript(script).then((script: string) => {
         new Function(script).call(this);
       });
     }
+
+    this.$scope.$on('showSessionWarning', () => {
+      const confirm = $mdDialog
+        .confirm()
+        .parent(angular.element(document.body))
+        .title(this.$translate('SESSION_TIMEOUT'))
+        .content(this.$translate('SESSION_TIMEOUT_MESSAGE'))
+        .ariaLabel(this.$translate('SESSION_TIMEOUT'))
+        .ok(this.$translate('YES'))
+        .cancel(this.$translate('NO'));
+      $mdDialog.show(confirm).then(
+        () => {
+          this.SessionService.closeWarningAndRenewSession();
+        },
+        () => {
+          this.logOut();
+        }
+      );
+    });
+
+    this.$scope.$on('logOut', () => {
+      this.logOut();
+    });
 
     this.$scope.$on('currentNodeChanged', (event, args) => {
       let previousNode = args.previousNode;
@@ -368,16 +391,15 @@ class VLEController {
       event,
       eventData
     );
-
-    this.$rootScope.$broadcast('goHome');
+    this.SessionService.goHome();
   }
 
-  logOut() {
+  logOut(eventName = 'logOut') {
     const nodeId = null;
     const componentId = null;
     const componentType = null;
     const category = 'Navigation';
-    const event = 'logOutButtonClicked';
+    const event = eventName;
     const eventData = {};
     this.StudentDataService.saveVLEEvent(
       nodeId,
@@ -386,9 +408,9 @@ class VLEController {
       category,
       event,
       eventData
-    );
-
-    this.$rootScope.$broadcast('logOut');
+    ).then(() => {
+      this.SessionService.logOut();
+    });
   }
 
   loadRoot() {
@@ -495,10 +517,6 @@ class VLEController {
     });
   }
 
-  /**
-   * Dismiss the specified notification
-   * @param notification
-   */
   dismissNotification(event, notification) {
     if (notification.data == null || notification.data.dismissCode == null) {
       this.NotificationService.dismissNotification(notification);

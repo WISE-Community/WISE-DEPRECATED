@@ -1,6 +1,6 @@
 'use strict';
 
-import ClassroomMonitorProjectService from '../../../classroomMonitorProjectService';
+import { TeacherProjectService } from '../../../../services/teacherProjectService';
 
 class NodeIconController {
   icon: any;
@@ -11,7 +11,7 @@ class NodeIconController {
 
   static $inject = ['ProjectService'];
 
-  constructor(private ProjectService: ClassroomMonitorProjectService) {}
+  constructor(private ProjectService: TeacherProjectService) {}
 
   $onChanges() {
     this.isGroup = this.ProjectService.isGroupNode(this.nodeId);

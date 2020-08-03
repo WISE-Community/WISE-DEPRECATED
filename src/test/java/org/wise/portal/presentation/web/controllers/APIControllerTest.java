@@ -14,6 +14,7 @@ import org.junit.Before;
 import org.springframework.security.authentication.TestingAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.wise.portal.domain.Tag;
 import org.wise.portal.domain.authentication.Gender;
 import org.wise.portal.domain.authentication.Schoollevel;
 import org.wise.portal.domain.authentication.impl.PersistentGrantedAuthority;
@@ -34,6 +35,7 @@ import org.wise.portal.service.portal.PortalService;
 import org.wise.portal.service.project.ProjectService;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.user.UserService;
+import org.wise.portal.service.vle.wise5.VLEService;
 import org.wise.portal.service.workgroup.WorkgroupService;
 
 public class APIControllerTest {
@@ -90,6 +92,8 @@ public class APIControllerTest {
 
   protected List<Run> runs;
 
+  protected List<Tag> run1Tags;
+
   protected Workgroup workgroup1, teacher1Run1Workgroup;
 
   protected Project project1, project2, project3;
@@ -104,6 +108,9 @@ public class APIControllerTest {
 
   @Mock
   protected RunService runService;
+
+  @Mock
+  protected VLEService vleService;
 
   @Mock
   protected WorkgroupService workgroupService;
@@ -181,6 +188,7 @@ public class APIControllerTest {
     workgroup1 = new WorkgroupImpl();
     workgroup1.addMember(student1);
     workgroup1.setPeriod(run1Period1);
+    workgroup1.setRun(run1);
     teacher1Run1Workgroup = new WorkgroupImpl();
     teacher1Run1Workgroup.addMember(teacher1);
     teacher1Run1Workgroup.setRun(run1);
@@ -190,6 +198,7 @@ public class APIControllerTest {
     teacher2.setUserDetails(tud2);
     runs = new ArrayList<Run>();
     run2 = new RunImpl();
+    run2.setId(runId2);
     run2.setOwner(teacher1);
     run2.setStarttime(new Date());
     HashSet<Group> run2Periods = new HashSet<Group>();
@@ -203,6 +212,7 @@ public class APIControllerTest {
     project2.setOwner(teacher2);
     run2.setProject(project2);
     run3 = new RunImpl();
+    run3.setId(runId3);
     run3.setOwner(teacher2);
     run3.setStarttime(new Date());
     HashSet<Group> run3Periods = new HashSet<Group>();

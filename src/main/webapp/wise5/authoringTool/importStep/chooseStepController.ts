@@ -1,7 +1,7 @@
 'use strict';
 
-import AuthoringToolProjectService from '../authoringToolProjectService';
-import ConfigService from '../../services/configService';
+import { TeacherProjectService } from '../../services/teacherProjectService';
+import { ConfigService } from '../../services/configService';
 
 class ChooseStepController {
   $translate: any;
@@ -22,7 +22,7 @@ class ChooseStepController {
     private $state: any,
     $stateParams: any,
     private ConfigService: ConfigService,
-    private ProjectService: AuthoringToolProjectService
+    private ProjectService: TeacherProjectService
   ) {
     this.$state = $state;
     this.$translate = $filter('translate');

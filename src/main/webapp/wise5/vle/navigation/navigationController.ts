@@ -1,22 +1,16 @@
-import VLEProjectService from '../vleProjectService';
-import StudentDataService from '../../services/studentDataService';
+import { VLEProjectService } from '../vleProjectService';
 
 class NavigationController {
   rootNode: any;
-  static $inject = ['$transitions', 'ProjectService', 'StudentDataService'];
+  static $inject = ['$transitions', 'ProjectService'];
 
   constructor(
     $transitions,
-    private ProjectService: VLEProjectService,
-    private StudentDataService: StudentDataService
+    private ProjectService: VLEProjectService
   ) {
     this.rootNode = this.ProjectService.rootNode;
     $transitions.onSuccess({}, $transition => {
       const toNodeId = $transition.params('to').nodeId;
-      const fromNodeId = $transition.params('from').nodeId;
-      if (toNodeId && fromNodeId && toNodeId !== fromNodeId) {
-        this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(toNodeId);
-      }
       if ($transition.name === 'root.vle' && this.ProjectService.isApplicationNode(toNodeId)) {
         document.getElementById('content').scrollTop = 0;
       }

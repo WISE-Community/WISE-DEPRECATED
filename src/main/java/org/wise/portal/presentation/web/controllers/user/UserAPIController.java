@@ -126,6 +126,7 @@ public class UserAPIController {
     String contextPath = request.getContextPath();
     config.put("contextPath", contextPath);
     config.put("currentTime", System.currentTimeMillis());
+    config.put("googleAnalyticsId", appProperties.get("google_analytics_id"));
     config.put("googleClientId", googleClientId);
     config.put("isGoogleClassroomEnabled", isGoogleClassroomEnabled());
     config.put("logOutURL", contextPath + "/logout");

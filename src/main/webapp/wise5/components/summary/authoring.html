@@ -194,6 +194,9 @@
         <md-select ng-model='summaryController.authoringComponentContent.source'
                    ng-change='summaryController.authoringViewComponentChanged()'
                    style='min-width: 200px'>
+          <md-option value='self'>
+            {{ ::'summary.onlySelf' | translate }}
+          </md-option>
           <md-option value='period'>
             {{ ::'summary.onlyStudentsInPeriod' | translate }}
           </md-option>
@@ -253,6 +256,57 @@
       </md-checkbox>
     </md-input-container>
   </div>
+  <div layout='row'>
+    <h6>{{ ::'summary.customLabelColors' | translate }}</h6>
+    <md-button class='topButton md-raised md-primary'
+               ng-click='summaryController.addCustomLabelColor()'>
+      <md-icon>add</md-icon>
+      <md-tooltip md-direction='top'
+                  class='projectButtonTooltip'>
+        {{ 'summary.addCustomLabelColor' | translate }}
+      </md-tooltip>
+    </md-button>
+  </div>
+  <div ng-repeat='customLabelColor in summaryController.authoringComponentContent.customLabelColors'>
+    <md-input-container>
+      <label>{{ ::'summary.label' | translate }}</label>
+      <input ng-model='customLabelColor.label'
+          ng-change='summaryController.customLabelColorChanged()'
+          size='50'
+          ng-model-options='{ debounce: 1000 }'/>
+    </md-input-container>
+    <md-input-container>
+      <label>{{ ::'summary.color' | translate }}</label>
+      <input ng-model='customLabelColor.color'
+          ng-change='summaryController.customLabelColorChanged()'
+          size='25'
+          ng-model-options='{ debounce: 1000 }'/>
+    </md-input-container>
+    <md-button class='regularButton md-raised md-primary'
+                ng-click="summaryController.moveCustomLabelColorUp($index)">
+      <md-icon>arrow_upward</md-icon>
+      <md-tooltip md-direction='top'
+                  class='projectButtonTooltip'>
+        {{ ::'UP' | translate}}
+      </md-tooltip>
+    </md-button>
+    <md-button class='regularButton md-raised md-primary'
+                ng-click="summaryController.moveCustomLabelColorDown($index)">
+      <md-icon>arrow_downward</md-icon>
+      <md-tooltip md-direction='top'
+                  class='projectButtonTooltip'>
+        {{ ::'DOWN' | translate}}
+      </md-tooltip>
+    </md-button>
+    <md-button class='regularButton md-raised md-primary'
+                ng-click='summaryController.deleteCustomLabelColor($index)'>
+      <md-icon>delete</md-icon>
+      <md-tooltip md-direction='top'
+                  class='projectButtonTooltip'>
+        {{ ::'DELETE' | translate}}
+      </md-tooltip>
+    </md-button>
+  </div>
   <div style='border: 5px solid black; padding: 20px;'>
     <div>
       <h5>{{ ::'studentPreview' | translate }}</h5>
@@ -266,9 +320,12 @@
       <summary-display node-id='summaryController.authoringComponentContent.summaryNodeId'
           component-id='summaryController.authoringComponentContent.summaryComponentId'
           student-data-type='summaryController.authoringComponentContent.studentDataType'
+          source='summaryController.authoringComponentContent.source'
           period-id='summaryController.authoringComponentContent.periodId'
           chart-type='summaryController.authoringComponentContent.chartType'
-          highlight-correct-answer='summaryController.authoringComponentContent.highlightCorrectAnswer'>
+          highlight-correct-answer='summaryController.authoringComponentContent.highlightCorrectAnswer'
+          custom-label-colors='summaryController.authoringComponentContent.customLabelColors'
+          do-render='true'>
       </summary-display>
     </div>
   </div>

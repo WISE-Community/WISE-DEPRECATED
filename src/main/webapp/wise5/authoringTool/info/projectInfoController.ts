@@ -1,7 +1,7 @@
 'use strict';
 
-import ConfigService from '../../services/configService';
-import AuthoringToolProjectService from '../authoringToolProjectService';
+import { ConfigService } from '../../services/configService';
+import { TeacherProjectService } from '../../services/teacherProjectService';
 
 class ProjectInfoController {
   $translate: any;
@@ -12,7 +12,7 @@ class ProjectInfoController {
   metadata: any;
   metadataAuthoring: any;
   projectIcon: string = '';
-  projectIcons: any[] = [];
+  projectIcons: any = [];
 
   static $inject = [
     '$filter',
@@ -31,7 +31,7 @@ class ProjectInfoController {
     private $scope: any,
     private $timeout: any,
     private ConfigService: ConfigService,
-    private ProjectService: AuthoringToolProjectService
+    private ProjectService: TeacherProjectService
   ) {
     this.$translate = $filter('translate');
     this.metadata = this.ProjectService.getProjectMetadata();

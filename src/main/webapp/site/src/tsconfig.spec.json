@@ -5,7 +5,9 @@
     "baseUrl": "./",
     "types": [
       "jasmine",
-      "node"
+      "jquery",
+      "node",
+      "dom-mediacapture-record"
     ]
   },
   "files": [

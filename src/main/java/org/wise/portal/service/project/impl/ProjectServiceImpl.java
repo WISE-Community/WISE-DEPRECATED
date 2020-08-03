@@ -67,7 +67,7 @@ import org.wise.portal.domain.impl.AddSharedTeacherParameters;
 import org.wise.portal.domain.project.FamilyTag;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.project.ProjectMetadata;
-import org.wise.portal.domain.project.Tag;
+import org.wise.portal.domain.Tag;
 import org.wise.portal.domain.project.impl.PreviewProjectParameters;
 import org.wise.portal.domain.project.impl.ProjectMetadataImpl;
 import org.wise.portal.domain.project.impl.ProjectParameters;

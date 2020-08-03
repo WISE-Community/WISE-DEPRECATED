@@ -1,17 +1,19 @@
 import * as $ from 'jquery';
 import * as html2canvas from 'html2canvas';
-import ComponentService from '../componentService';
-import StudentAssetService from '../../services/studentAssetService';
+import { ComponentService } from '../componentService';
+import { StudentAssetService } from '../../services/studentAssetService';
 
 class EmbeddedService extends ComponentService {
   $q: any;
+  $translate: any;
   StudentAssetService: StudentAssetService;
 
   static $inject = ['$filter', '$q', 'StudentAssetService', 'StudentDataService', 'UtilService'];
 
   constructor($filter, $q, StudentAssetService, StudentDataService, UtilService) {
-    super($filter, StudentDataService, UtilService);
+    super(StudentDataService, UtilService);
     this.$q = $q;
+    this.$translate = $filter('translate');
     this.StudentAssetService = StudentAssetService;
   }
 
@@ -75,7 +77,7 @@ class EmbeddedService extends ComponentService {
     const deferred = this.$q.defer();
     const iframe = $('#componentApp_' + componentState.componentId);
     if (iframe != null && iframe.length > 0) {
-      let modelElement = iframe.contents().find('html');
+      let modelElement: any = iframe.contents().find('html');
       if (modelElement != null && modelElement.length > 0) {
         modelElement = modelElement[0];
         html2canvas(modelElement).then(canvas => {

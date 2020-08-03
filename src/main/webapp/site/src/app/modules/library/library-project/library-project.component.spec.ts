@@ -1,12 +1,12 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { LibraryProjectComponent } from './library-project.component';
 import { LibraryProject } from "../libraryProject";
-import { NO_ERRORS_SCHEMA, TRANSLATIONS_FORMAT, TRANSLATIONS, LOCALE_ID } from "@angular/core";
-import { MatDialog } from "@angular/material";
-import { translationsFactory } from '../../../app.module';
-import { I18n } from '@ngx-translate/i18n-polyfill';
+import { NO_ERRORS_SCHEMA } from "@angular/core";
+import { MatDialogModule } from "@angular/material/dialog";
 import { Router } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
+import { OverlayModule } from '@angular/cdk/overlay';
 
 describe('LibraryProjectComponent', () => {
   let component: LibraryProjectComponent;
@@ -15,18 +15,7 @@ describe('LibraryProjectComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ LibraryProjectComponent ],
-      imports: [ BrowserAnimationsModule ],
-      providers: [
-        { provide: MatDialog },
-        { provide: Router },
-        { provide: TRANSLATIONS_FORMAT, useValue: "xlf" },
-        {
-          provide: TRANSLATIONS,
-          useFactory: translationsFactory,
-          deps: [LOCALE_ID]
-        },
-        I18n
-      ],
+      imports: [ BrowserAnimationsModule, RouterTestingModule, OverlayModule, MatDialogModule ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })
     .compileComponents();

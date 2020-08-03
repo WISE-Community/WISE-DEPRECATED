@@ -1,17 +1,24 @@
-import ComponentService from '../componentService';
+'use strict';
 
-class OutsideURLService extends ComponentService {
-  $http: any;
+import { ComponentService } from '../componentService';
+import { Injectable } from '@angular/core';
+import { UpgradeModule } from '@angular/upgrade/static';
+import { HttpClient } from '@angular/common/http';
+import { StudentDataService } from '../../services/studentDataService';
+import { UtilService } from '../../services/utilService';
 
-  static $inject = ['$filter', '$http', 'StudentDataService', 'UtilService'];
+@Injectable()
+export class OutsideURLService extends ComponentService {
 
-  constructor($filter, $http, StudentDataService, UtilService) {
-    super($filter, StudentDataService, UtilService);
-    this.$http = $http;
+  constructor(private upgrade: UpgradeModule,
+      private http: HttpClient,
+      protected StudentDataService: StudentDataService,
+      protected UtilService: UtilService) {
+    super(StudentDataService, UtilService);
   }
 
   getComponentTypeLabel() {
-    return this.$translate('outsideURL.componentTypeLabel');
+    return this.upgrade.$injector.get('$filter')('translate')('outsideURL.componentTypeLabel');
   }
 
   createComponent() {
@@ -22,7 +29,7 @@ class OutsideURLService extends ComponentService {
     return component;
   }
 
-  isCompleted(component, componentStates, componentEvents, nodeEvents) {
+  isCompleted(component: any, componentStates: any[], componentEvents: any[], nodeEvents: any[]) {
     if (nodeEvents != null) {
       for (const event of nodeEvents) {
         if (event.event === 'nodeEntered') {
@@ -33,7 +40,7 @@ class OutsideURLService extends ComponentService {
     return false;
   }
 
-  componentHasWork(component) {
+  componentHasWork(component: any) {
     return false;
   }
 
@@ -46,10 +53,8 @@ class OutsideURLService extends ComponentService {
   }
 
   getOpenEducationalResources() {
-    return this.$http.get(`wise5/components/outsideURL/resources.json`).then(result => {
-      return result.data;
+    return this.http.get(`wise5/components/outsideURL/resources.json`).toPromise().then(result => {
+      return result;
     });
   }
 }
-
-export default OutsideURLService;

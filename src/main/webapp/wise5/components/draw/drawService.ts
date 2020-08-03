@@ -1,18 +1,20 @@
 'use strict';
 
 import * as angular from 'angular';
-import ComponentService from '../componentService';
-import StudentAssetService from '../../services/studentAssetService';
+import { ComponentService } from '../componentService';
+import { StudentAssetService } from '../../services/studentAssetService';
 
 class DrawService extends ComponentService {
   $q: any;
+  $translate: any;
   StudentAssetService: StudentAssetService;
 
   static $inject = ['$filter', '$q', 'StudentAssetService', 'StudentDataService', 'UtilService'];
 
   constructor($filter, $q, StudentAssetService, StudentDataService, UtilService) {
-    super($filter, StudentDataService, UtilService);
+    super(StudentDataService, UtilService);
     this.$q = $q;
+    this.$translate = $filter('translate');
     this.StudentAssetService = StudentAssetService;
   }
 

@@ -1,6 +1,6 @@
 'use strict';
 
-import AuthoringToolProjectService from '../../../authoringToolProjectService';
+import { TeacherProjectService } from '../../../../services/teacherProjectService';
 
 class NodeIconController {
   static $inject = ['ProjectService'];
@@ -11,7 +11,7 @@ class NodeIconController {
   size: any;
   sizeClass: string;
 
-  constructor(private ProjectService: AuthoringToolProjectService) {
+  constructor(private ProjectService: TeacherProjectService) {
     this.ProjectService = ProjectService;
   }
 

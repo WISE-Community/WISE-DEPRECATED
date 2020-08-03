@@ -1,25 +1,42 @@
 'use strict';
 
-import ConfigService from '../../../../services/configService';
-import AuthoringToolProjectService from '../../../authoringToolProjectService';
+import { ConfigService } from '../../../../services/configService';
+import { TeacherProjectService } from '../../../../services/teacherProjectService';
+import { SessionService } from '../../../../services/sessionService';
+import { TeacherDataService } from '../../../../services/teacherDataService';
 
 class TopBarController {
+  translate: any;
   avatarColor: any;
   workgroupId: number;
   userInfo: any;
   themePath: string;
   contextPath: string;
+  projectId: number;
   runId: number;
+  runCode: string;
+  projectInfo: string;
 
-  static $inject = ['$rootScope', '$state', '$window', 'ConfigService', 'ProjectService'];
+  static $inject = [
+    '$filter',
+    '$state',
+    '$window',
+    'ConfigService',
+    'ProjectService',
+    'SessionService',
+    'TeacherDataService'
+  ];
 
   constructor(
-    private $rootScope: any,
+    private $filter: any,
     private $state: any,
     private $window: any,
     private ConfigService: ConfigService,
-    private ProjectService: AuthoringToolProjectService
+    private ProjectService: TeacherProjectService,
+    private SessionService: SessionService,
+    private TeacherDataService: TeacherDataService
   ) {
+    this.translate = this.$filter('translate');
     this.workgroupId = this.ConfigService.getWorkgroupId();
     if (this.workgroupId == null) {
       this.workgroupId = 100 * Math.random();
@@ -28,6 +45,19 @@ class TopBarController {
     this.userInfo = this.ConfigService.getMyUserInfo();
     this.themePath = this.ProjectService.getThemePath();
     this.contextPath = this.ConfigService.getContextPath();
+  }
+
+  $onChanges() {
+    this.projectInfo = this.getProjectInfo();
+  }
+
+  getProjectInfo(): string {
+    let projectInfo = this.translate('PROJECT_ID_DISPLAY', { id: this.projectId });
+    if (this.runId) {
+      projectInfo += ` | ${this.translate('RUN_ID_DISPLAY', { id: this.runId })}
+          | ${this.translate('RUN_CODE_DISPLAY', { code: this.runCode })}`;
+    }
+    return projectInfo;
   }
 
   helpButtonClicked() {
@@ -57,12 +87,29 @@ class TopBarController {
 
   goHome() {
     this.ProjectService.notifyAuthorProjectEnd().then(() => {
-      this.$rootScope.$broadcast('goHome');
+      this.SessionService.goHome();
     });
   }
 
   logOut() {
-    this.$rootScope.$broadcast('logOut');
+    const context = 'AuthoringTool';
+    const category = 'Navigation';
+    const eventName = 'logOutButtonClicked';
+    const nodeId = null;
+    const componentId = null;
+    const componentType = null;
+    const data = {};
+    this.TeacherDataService.saveEvent(
+      context,
+      nodeId,
+      componentId,
+      componentType,
+      category,
+      eventName,
+      data
+    ).then((result) => {
+      this.SessionService.logOut();
+    });
   }
 }
 
@@ -71,7 +118,8 @@ const TopBar = {
     logoPath: '@',
     projectId: '<',
     projectTitle: '<',
-    runId: '<'
+    runId: '<',
+    runCode: '<'
   },
   controller: TopBarController,
   template: `<md-toolbar class="l-header">
@@ -83,13 +131,15 @@ const TopBar = {
         </span>
         <h3 layout="row" layout-align="start center">
           <span ng-if="$ctrl.projectTitle" id="projectTitleSpan">{{ $ctrl.projectTitle }}</span>
-          <span ng-if="!$ctrl.projectTitle" id="projectTitleSpan">{{ ::'authoringTool' | translate }}</span>
+          <span ng-if="!$ctrl.projectTitle" id="projectTitleSpan">{{ ::'authoringTool' | translate }}</span>&nbsp;
           <span class="md-caption" ng-if="$ctrl.projectId" layout="row" layout-align="start center">
-            &nbsp;({{ 'PROJECT_ID_DISPLAY' | translate:{id: $ctrl.projectId} }}
-            <span class="md-caption" ng-if="$ctrl.runId">&nbsp;| {{ 'RUN_ID_DISPLAY' | translate:{id: $ctrl.runId} }}
-            </span>)
+            <span hide-xs hide-sm hide-md>({{ $ctrl.projectInfo }})</span>
+            <md-button aria-label="{{ ::'PROJECT_INFO' | translate }}" hide-gt-md class="md-icon-button">
+              <md-icon>info</md-icon>
+              <md-tooltip>{{ $ctrl.projectInfo }}</md-tooltip>
+            </md-button>
             <md-button ng-if="$ctrl.runId" aria-label="{{ ::'switchToGradingView' | translate }}" class="md-icon-button" ng-click="$ctrl.switchToGradingView()">
-                <md-icon md-menu-origin> assignment_turned_in </md-icon>
+                <md-icon> assignment_turned_in </md-icon>
                 <md-tooltip>{{ ::'switchToGradingView' | translate }}</md-tooltip>
             </md-button>
           </span>

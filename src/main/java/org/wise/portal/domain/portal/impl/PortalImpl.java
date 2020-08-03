@@ -87,6 +87,9 @@ public class PortalImpl implements Portal {
   @Column(name = "announcement", length = 32768, columnDefinition = "text")
   private String announcement;
 
+  @Column(name = "structures", length = 32768, columnDefinition = "text")
+  private String structures;
+
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   @Column(name = "id", columnDefinition = "tinyint")

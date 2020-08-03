@@ -2,66 +2,37 @@ import { async } from '@angular/core/testing';
 import {Run} from "./run";
 
 describe('Run', () => {
-  beforeEach(async(() => {
+  const run = new Run({
+    startTime: new Date('2019-03-21T08:00:00.0').getTime()
+  });
+  const beforeStartTime = new Date('2019-03-20T08:00:00.0').getTime();
+  const betweenStartAndEndTimes = new Date('2019-03-22T08:00:00.0').getTime();
+  const endTime = new Date('2019-03-23T08:00:00.0').getTime();
+  const afterEndTime = new Date('2019-03-24T08:00:00.0').getTime();
 
-  }));
+  function expectRun(func, timeNow, expectedValue) {
+    expect(run[func](timeNow)).toEqual(expectedValue);
+  }
 
-  it('should create', () => {
-    expect(true).toBeTruthy();
+  it('should calculate active', () => {
+    expectRun('isActive', beforeStartTime, false);
+    expectRun('isActive', betweenStartAndEndTimes, true);
+    run.endTime = endTime;
+    expectRun('isActive', beforeStartTime, false);
+    expectRun('isActive', betweenStartAndEndTimes, true);
+    expectRun('isActive', afterEndTime, false);
   });
 
-  it('should calculate active with no end time', () => {
-    const run = new Run({
-      startTime: new Date('2019-03-21T08:00:00.0').getTime()
-    });
-    const before = new Date('2019-03-20T08:00:00.0').getTime();
-    expect(run.isActive(before)).toBeFalsy();
-    const after = new Date('2019-03-22T08:00:00.0').getTime();
-    expect(run.isActive(after)).toBeTruthy();
-  });
-
-  it('should calculate active with end time', () => {
-    const run = new Run({
-      startTime: new Date('2019-03-21T08:00:00.0').getTime(),
-      endTime: new Date('2019-03-23T08:00:00.0').getTime()
-    });
-    const before = new Date('2019-03-20T08:00:00.0').getTime();
-    expect(run.isActive(before)).toBeFalsy();
-    const during = new Date('2019-03-22T08:00:00.0').getTime();
-    expect(run.isActive(during)).toBeTruthy();
-    const after = new Date('2019-03-24T08:00:00.0').getTime();
-    expect(run.isActive(after)).toBeFalsy();
-  });
-
-  it('should calculate completed with no end time', () => {
-    const run = new Run({
-      startTime: new Date('2019-03-21T08:00:00.0').getTime()
-    });
-    const now = new Date('2019-03-22T08:00:00.0').getTime();
-    expect(run.isCompleted(now)).toBeFalsy();
-  });
-
-  it('should calculate completed with end time', () => {
-    const run = new Run({
-      startTime: new Date('2019-03-21T08:00:00.0').getTime(),
-      endTime: new Date('2019-03-23T08:00:00.0').getTime()
-    });
-    const before = new Date('2019-03-20T08:00:00.0').getTime();
-    expect(run.isCompleted(before)).toBeFalsy();
-    const during = new Date('2019-03-22T08:00:00.0').getTime();
-    expect(run.isCompleted(during)).toBeFalsy();
-    const after = new Date('2019-03-24T08:00:00.0').getTime();
-    expect(run.isCompleted(after)).toBeTruthy();
+  it('should calculate completed', () => {
+    expect(run.isCompleted(betweenStartAndEndTimes)).toBeFalsy();
+    run.endTime = endTime;
+    expectRun('isCompleted', beforeStartTime, false);
+    expectRun('isCompleted', betweenStartAndEndTimes, false);
+    expectRun('isCompleted', afterEndTime, true);
   });
 
   it('should calculate scheduled', () => {
-    const run = new Run({
-      startTime: new Date('2019-03-21T08:00:00.0').getTime()
-    });
-    const before = new Date('2019-03-20T08:00:00.0').getTime();
-    expect(run.isScheduled(before)).toBeTruthy();
-    const after = new Date('2019-03-22T08:00:00.0').getTime();
-    expect(run.isScheduled(after)).toBeFalsy();
+    expectRun('isScheduled', beforeStartTime, true);
+    expectRun('isScheduled', betweenStartAndEndTimes, false);
   });
-
 });

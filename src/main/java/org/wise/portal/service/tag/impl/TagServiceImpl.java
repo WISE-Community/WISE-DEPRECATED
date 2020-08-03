@@ -23,14 +23,22 @@
  */
 package org.wise.portal.service.tag.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.acls.domain.BasePermission;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.dao.project.TagDao;
-import org.wise.portal.domain.project.Tag;
-import org.wise.portal.domain.project.impl.TagImpl;
+import org.wise.portal.domain.Tag;
+import org.wise.portal.domain.impl.TagImpl;
+import org.wise.portal.domain.run.Run;
+import org.wise.portal.domain.user.User;
+import org.wise.portal.service.acl.AclService;
 import org.wise.portal.service.tag.TagService;
+import org.wise.portal.service.user.UserService;
 
 /**
  * @author Patrick Lawler
@@ -41,9 +49,15 @@ public class TagServiceImpl implements TagService {
   @Autowired
   private TagDao<Tag> tagDao;
 
+  @Autowired
+  private AclService<Tag> aclService;
+
+  @Autowired
+  private UserService userService;
+
   @Transactional(readOnly = true)
   public Tag getTagById(Integer id) {
-    try{
+    try {
       return tagDao.getById(id);
     } catch (ObjectNotFoundException e) {
       e.printStackTrace();
@@ -73,5 +87,46 @@ public class TagServiceImpl implements TagService {
   @Transactional
   public void removeIfOrphaned(Integer tagId) {
     tagDao.removeIfOrphaned(tagId);
+  }
+
+  @Override
+  public List<Tag> getTagsForRun(Run run) {
+    return tagDao.getTags(run);
+  }
+
+  @Override
+  @Transactional()
+  public Tag createTag(Run run, String name) {
+    Tag tag = tagDao.getTag(run, name);
+    if (tag == null) {
+      tag = new TagImpl();
+      tag.setRun(run);
+      tag.setName(name);
+      tagDao.save(tag);
+      aclService.addPermission(tag, BasePermission.ADMINISTRATION);
+      aclService.addPermission(tag, BasePermission.WRITE);
+      aclService.addPermission(tag, BasePermission.READ);
+    }
+    return tag;
+  }
+
+  @Override
+  public Tag updateTag(Tag tag) {
+    tagDao.save(tag);
+    return tag;
+  }
+
+  public boolean canEditTag(Authentication auth, Tag tag) {
+    return aclService.hasPermission(auth, tag, BasePermission.WRITE);
+  }
+
+  @Override
+  @Transactional()
+  public void deleteTag(Authentication auth, Tag tag) {
+    tagDao.delete(tag);
+    User user = userService.retrieveUserByUsername(auth.getName());
+    aclService.removePermission(tag, BasePermission.ADMINISTRATION, user);
+    aclService.removePermission(tag, BasePermission.WRITE, user);
+    aclService.removePermission(tag, BasePermission.READ, user);
   }
 }

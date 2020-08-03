@@ -2,11 +2,10 @@ import { Component, Inject, Input, OnInit } from '@angular/core';
 import { UserService } from "../../services/user.service";
 import { Student } from "../../domain/student";
 import { StudentRun } from "../student-run";
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material";
+import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { AuthService, GoogleLoginProvider } from "angularx-social-login";
 import { ConfigService } from "../../services/config.service";
 import { StudentService } from "../student.service";
-import { I18n } from '@ngx-translate/i18n-polyfill';
 import { Router } from '@angular/router';
 
 @Component({
@@ -30,8 +29,7 @@ export class TeamSignInDialogComponent implements OnInit {
               private studentService: StudentService,
               private router: Router,
               public dialogRef: MatDialogRef<TeamSignInDialogComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: any,
-              private i18n: I18n) {
+              @Inject(MAT_DIALOG_DATA) public data: any) {
     this.run = this.data.run;
     this.user = <Student>this.getUser().getValue();
     if (this.run.workgroupMembers != null) {
@@ -83,7 +81,7 @@ export class TeamSignInDialogComponent implements OnInit {
         this.studentService.canBeAddedToWorkgroup(this.run.id, this.run.workgroupId, response.userId)
               .subscribe((canBeAddedToWorkgroupResponse) => {
           if (canBeAddedToWorkgroupResponse.isTeacher) {
-            alert(this.i18n('A teacher cannot be added as a team member.'));
+            alert($localize`A teacher cannot be added as a team member.`);
             teamMember.username = null;
           } else if (canBeAddedToWorkgroupResponse.status && this.allowSignIn(teamMember, 1)) {
             for (const member of canBeAddedToWorkgroupResponse.workgroupMembers) {
@@ -97,23 +95,23 @@ export class TeamSignInDialogComponent implements OnInit {
               this.run.workgroupId = canBeAddedToWorkgroupResponse.workgroupId;
             }
           } else if (canBeAddedToWorkgroupResponse.workgroupMembers.length === this.run.maxStudentsPerTeam) {
-            alert(this.i18n(`${this.getNameDisplay(response)} is already in a team that is full`));
+            alert($localize`${this.getNameDisplay(response)}:studentName: is already in a team that is full`);
             teamMember.username = null;
           } else if (!this.allowSignIn(teamMember, 1)) {
-            alert(this.i18n(`${this.getNameDisplay(response)} is already in the team`));
+            alert($localize`${this.getNameDisplay(response)}:studentName: is already in the team`);
             if (!this.isExistingStudent(teamMember)) {
               teamMember.username = null;
             }
           } else {
-            alert(this.i18n(`${this.getNameDisplay(response)} is already on another team`));
+            alert($localize`${this.getNameDisplay(response)}:studentName: is already on another team`);
             teamMember.username = null;
           }
         });
       } else if (response.isUsernameValid !== true) {
-        alert(this.i18n('Invalid username. Please try again.'));
+        alert($localize`Invalid username. Please try again.`);
         teamMember.username = null;
       } else if (response.isPasswordValid !== true) {
-        alert(this.i18n('Invalid password. Please try again.'));
+        alert($localize`Invalid password. Please try again.`);
       }
       teamMember.password = null;
     });
@@ -133,7 +131,7 @@ export class TeamSignInDialogComponent implements OnInit {
             if (isCorrect) {
               this.markAsSignedIn(teamMember);
             } else {
-              alert(this.i18n('Incorrect Google user. Please try again.'));
+              alert($localize`Incorrect Google user. Please try again.`);
             }
           });
         } else {
@@ -142,7 +140,7 @@ export class TeamSignInDialogComponent implements OnInit {
               this.studentService.canBeAddedToWorkgroup(this.run.id, this.run.workgroupId, response.userId)
                 .subscribe((canBeAddedToWorkgroupResponse) => {
                   if (canBeAddedToWorkgroupResponse.isTeacher) {
-                    alert(this.i18n('A teacher cannot be added as a team member.'));
+                    alert($localize`A teacher cannot be added as a team member.`);
                   } else if (canBeAddedToWorkgroupResponse.status && this.allowSignIn(response, 0)) {
                     for (const member of canBeAddedToWorkgroupResponse.workgroupMembers) {
                       if (!this.isLoggedInUser(member.username)) {
@@ -152,15 +150,15 @@ export class TeamSignInDialogComponent implements OnInit {
                     }
                     this.markAsSignedIn(teamMember);
                   } else if (canBeAddedToWorkgroupResponse.workgroupMembers.length === this.run.maxStudentsPerTeam) {
-                    alert(this.i18n(`${this.getNameDisplay(response)} is already in a team that is full`));
+                    alert($localize`${this.getNameDisplay(response)}:studentName: is already in a team that is full`);
                   } else if (!this.allowSignIn(response, 0)) {
-                    alert(this.i18n(`${this.getNameDisplay(response)} is already in the team`));
+                    alert($localize`${this.getNameDisplay(response)}:studentName: is already in the team`);
                   } else {
-                    alert(this.i18n(`${this.getNameDisplay(response)} is already on another team`));
+                    alert($localize`${this.getNameDisplay(response)}:studentName: is already on another team`);
                   }
                 });
             } else if (response.status === 'error') {
-              alert(this.i18n('No WISE user with this Google ID found.'));
+              alert($localize`No WISE user with this Google ID found.`);
             }
           });
         }
@@ -260,7 +258,7 @@ export class TeamSignInDialogComponent implements OnInit {
             }
             const teamMatesDisplay = this.getWorkgroupTeammatesDisplay(response.workgroupMembers, targetMember.username);
             setTimeout(() => {
-              alert(this.i18n(`${this.getNameDisplay(targetMember)} is already in a team with ${teamMatesDisplay}`));
+              alert($localize`${this.getNameDisplay(targetMember)}:studentName: is already in a team with ${teamMatesDisplay}:studentNames:`);
             }, 100);
           } else {
             this.router.navigateByUrl(response.startProjectUrl);

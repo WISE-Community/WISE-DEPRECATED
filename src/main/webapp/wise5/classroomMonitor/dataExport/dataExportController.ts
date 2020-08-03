@@ -1,12 +1,12 @@
 'use strict';
 
-import AnnotationService from '../../services/annotationService';
-import ConfigService from '../../services/configService';
+import { AnnotationService } from '../../services/annotationService';
+import { ConfigService } from '../../services/configService';
 import MatchService from '../../components/match/matchService';
-import ClassroomMonitorProjectService from '../classroomMonitorProjectService';
-import TeacherDataService from '../../services/teacherDataService';
-import UtilService from '../../services/utilService';
+import { TeacherDataService } from '../../services/teacherDataService';
+import { UtilService } from '../../services/utilService';
 import * as angular from 'angular';
+import { TeacherProjectService } from '../../services/teacherProjectService';
 
 class DataExportController {
   $translate: any;
@@ -61,7 +61,7 @@ class DataExportController {
     private ConfigService: ConfigService,
     private FileSaver: any,
     private MatchService: MatchService,
-    private ProjectService: ClassroomMonitorProjectService,
+    private ProjectService: TeacherProjectService,
     private TeacherDataService: TeacherDataService,
     private UtilService: UtilService
   ) {
@@ -786,7 +786,8 @@ class DataExportController {
     this.showDownloadingExportMessage();
     this.TeacherDataService.retrieveEventsExport(
       this.includeStudentEvents,
-      this.includeTeacherEvents
+      this.includeTeacherEvents,
+      this.includeStudentNames
     ).then(() => {
       this.handleExportEventsCallback();
     });
@@ -2770,7 +2771,7 @@ class DataExportController {
    */
   exportMatchComponent(nodeId, component) {
     this.showDownloadingExportMessage();
-    this.TeacherDataService.getExport('allStudentWork').then(result => {
+    this.TeacherDataService.getExport('allStudentWork').toPromise().then((result: any) => {
       let columnNames = [];
       let columnNameToNumber = {};
       let rows = [];

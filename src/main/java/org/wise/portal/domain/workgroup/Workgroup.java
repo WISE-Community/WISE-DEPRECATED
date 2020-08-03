@@ -27,6 +27,7 @@ import java.util.Set;
 
 import org.wise.portal.domain.Persistable;
 import org.wise.portal.domain.group.Group;
+import org.wise.portal.domain.Tag;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 
@@ -83,6 +84,8 @@ public interface Workgroup extends Persistable {
    */
   Long getId();
 
+  void setId(Long id);
+
   /**
    * Generates a name for this workgroup.
    *
@@ -118,4 +121,12 @@ public interface Workgroup extends Persistable {
    * @return true is this workgroup is a student workgroup
    */
   boolean isStudentWorkgroup();
+
+  Set<Tag> getTags();
+
+  void setTags(Set<Tag> tags);
+
+  void addTag(Tag tag);
+
+  void removeTag(Tag tag);
 }

@@ -1,9 +1,9 @@
 'use strict';
 
-import ConfigService from '../../services/configService';
-import AuthoringToolProjectService from '../authoringToolProjectService';
-import TeacherDataService from '../../services/teacherDataService';
-import UtilService from '../../services/utilService';
+import { ConfigService } from '../../services/configService';
+import { TeacherProjectService } from '../../services/teacherProjectService';
+import { TeacherDataService } from '../../services/teacherDataService';
+import { UtilService } from '../../services/utilService';
 import * as angular from 'angular';
 import * as $ from 'jquery';
 
@@ -43,7 +43,7 @@ class AuthoringToolMainController {
     private $state: any,
     private $timeout: any,
     private ConfigService: ConfigService,
-    private ProjectService: AuthoringToolProjectService,
+    private ProjectService: TeacherProjectService,
     private TeacherDataService: TeacherDataService,
     private UtilService: UtilService
   ) {
@@ -64,9 +64,6 @@ class AuthoringToolMainController {
     if (this.is_rtl) {
       this.icons = { prev: 'arrow_forward', next: 'arrow_back' };
     }
-    this.$rootScope.$on('logOut', () => {
-      this.saveEvent('logOut', 'Navigation', {}, null);
-    });
   }
 
   getProjectByProjectId(projectId) {
@@ -89,7 +86,7 @@ class AuthoringToolMainController {
       'areYouSureYouWantToCopyThisProject'
     )}\n\n${projectInfo}`;
     if (confirm(confirmCopyMessage)) {
-      this.ProjectService.copyProject(projectId).then(project => {
+      this.ProjectService.copyProject(projectId).then((project: any) => {
         this.showCopyingProjectMessage();
         this.saveEvent('projectCopied', 'Authoring', {}, project.id);
         this.highlightProject(project.id);
@@ -241,8 +238,7 @@ class AuthoringToolMainController {
       componentType,
       category,
       eventName,
-      data,
-      projectId
+      data
     );
   }
 

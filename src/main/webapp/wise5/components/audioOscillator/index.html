@@ -51,6 +51,7 @@
         <div id='prompt'
             ng-if='audioOscillatorController.isPromptVisible'>
           <compile data='audioOscillatorController.getPrompt()'></compile>
+          <possible-score [max-score]='audioOscillatorController.componentContent.maxScore'></possible-score>
         </div>
         <div class='component-content__actions' layout='row'>
           <md-button class='md-accent'

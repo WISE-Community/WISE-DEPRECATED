@@ -1,28 +1,34 @@
 'use strict';
 
-import ConfigService from '../../../../services/configService';
-import ClassroomMonitorProjectService from '../../../classroomMonitorProjectService';
-import TeacherDataService from '../../../../services/teacherDataService';
+import { ConfigService } from '../../../../services/configService';
+import { TeacherDataService } from '../../../../services/teacherDataService';
+import { SessionService } from '../../../../services/sessionService';
+import { TeacherProjectService } from '../../../../services/teacherProjectService';
 
 class TopBarController {
-  $translate: any;
+  translate: any;
   avatarColor: any;
   canAuthorProject: boolean;
   contextPath: string;
   dismissedNotifications: any;
   newNotifications: any;
   notifications: any;
+  projectId: number;
   runId: number;
+  runCode: string;
+  runInfo: string;
   themePath: string;
   userInfo: any;
   workgroupId: number;
+
   static $inject = [
     '$filter',
     '$rootScope',
     '$state',
     'ConfigService',
     'ProjectService',
-    'TeacherDataService'
+    'TeacherDataService',
+    'SessionService'
   ];
 
   constructor(
@@ -30,10 +36,11 @@ class TopBarController {
     private $rootScope: any,
     private $state: any,
     private ConfigService: ConfigService,
-    private ProjectService: ClassroomMonitorProjectService,
-    private TeacherDataService: TeacherDataService
+    private ProjectService: TeacherProjectService,
+    private TeacherDataService: TeacherDataService,
+    private SessionService: SessionService
   ) {
-    this.$translate = $filter('translate');
+    this.translate = $filter('translate');
     this.workgroupId = this.ConfigService.getWorkgroupId();
     if (this.workgroupId == null) {
       this.workgroupId = 100 * Math.random();
@@ -50,12 +57,19 @@ class TopBarController {
   $onInit() {
     const permissions = this.ConfigService.getPermissions();
     this.canAuthorProject = permissions.canAuthorProject;
+    this.runInfo = this.getRunInfo();
   }
 
   $onChanges(changesObj) {
     if (changesObj.notifications) {
       this.setNotifications();
     }
+  }
+
+  getRunInfo(): string {
+    let runInfo = `${this.translate('RUN_ID_DISPLAY', { id: this.runId })}
+        | ${this.translate('RUN_CODE_DISPLAY', { code: this.runCode })}`;
+    return runInfo;
   }
 
   /**
@@ -87,7 +101,7 @@ class TopBarController {
   }
 
   switchToAuthoringView() {
-    const proceed = confirm(this.$translate('editRunUnitWarning'));
+    const proceed = confirm(this.translate('editRunUnitWarning'));
     if (proceed) {
       this.doAuthoringViewSwitch();
     }
@@ -96,58 +110,58 @@ class TopBarController {
   doAuthoringViewSwitch() {
     if (this.$state.current.name === 'root.cm.notebooks') {
       this.$state.go('root.at.project.notebook', {
-        projectId: this.runId
+        projectId: this.projectId
       });
     } else if (this.$state.current.name === 'root.cm.unit.node') {
       this.$state.go('root.at.project.node', {
-        projectId: this.runId,
+        projectId: this.projectId,
         nodeId: this.$state.params.nodeId
       });
     } else {
       this.$state.go('root.at.project', {
-        projectId: this.runId
+        projectId: this.projectId
       });
     }
   }
 
+  previewProject() {
+    this.saveEvent('projectPreviewed').then(() => {
+      window.open(
+        `${this.ConfigService.getConfigParam('previewProjectURL')}`
+      );
+    });
+  }
+
   goHome() {
-    var context = 'ClassroomMonitor';
-    var nodeId = null;
-    var componentId = null;
-    var componentType = null;
-    var category = 'Navigation';
-    var event = 'goHomeButtonClicked';
-    var eventData = {};
-    this.TeacherDataService.saveEvent(
-      context,
-      nodeId,
-      componentId,
-      componentType,
-      category,
-      event,
-      eventData
-    );
-    this.$rootScope.$broadcast('goHome');
+    this.saveEvent('goHomeButtonClicked').then(() => {
+      this.SessionService.goHome();
+    });
   }
 
   logOut() {
-    var context = 'ClassroomMonitor';
-    var nodeId = null;
-    var componentId = null;
-    var componentType = null;
-    var category = 'Navigation';
-    var event = 'logOutButtonClicked';
-    var eventData = {};
-    this.TeacherDataService.saveEvent(
+    this.saveEvent('logOutButtonClicked').then(() => {
+      this.SessionService.logOut();
+    });
+  }
+
+  saveEvent(eventName): any {
+    const context = 'ClassroomMonitor';
+    const category = 'Navigation';
+    const nodeId = null;
+    const componentId = null;
+    const componentType = null;
+    const data = {};
+    return this.TeacherDataService.saveEvent(
       context,
       nodeId,
       componentId,
       componentType,
       category,
-      event,
-      eventData
-    );
-    this.$rootScope.$broadcast('logOut');
+      eventName,
+      data
+    ).then((result) => {
+      return result;
+    });
   }
 }
 
@@ -157,7 +171,8 @@ const TopBar = {
     notifications: '<',
     projectId: '<',
     projectTitle: '<',
-    runId: '<'
+    runId: '<',
+    runCode: '<'
   },
   controller: TopBarController,
   template: `<md-toolbar class="l-header">
@@ -168,10 +183,19 @@ const TopBar = {
                     </a>
                 </span>
                 <h3 layout="row" layout-align="start center">
-                  {{ ::$ctrl.projectTitle }}&nbsp;<span class="md-caption">({{ ::'RUN_ID_DISPLAY' | translate:{id: $ctrl.runId} }})</span>
+                  <span>{{ ::$ctrl.projectTitle }}</span>&nbsp;
+                  <span class="md-caption" hide-xs hide-sm hide-md>({{ $ctrl.runInfo }})</span>
+                  <md-button aria-label="{{ ::'PROJECT_INFO' | translate }}" hide-gt-md class="md-icon-button">
+                    <md-icon>info</md-icon>
+                    <md-tooltip>{{ $ctrl.runInfo }}</md-tooltip>
+                  </md-button>
                   <md-button ng-if="$ctrl.canAuthorProject" aria-label="{{ ::'switchToAuthoringView' | translate }}" class="md-icon-button" ng-click="$ctrl.switchToAuthoringView()">
                       <md-icon md-menu-origin> edit </md-icon>
                       <md-tooltip>{{ ::'switchToAuthoringView' | translate }}</md-tooltip>
+                  </md-button>
+                  <md-button aria-label="{{ ::'previewProject' | translate }}" class="md-icon-button" ng-click="$ctrl.previewProject()">
+                      <md-icon md-menu-origin> visibility </md-icon>
+                      <md-tooltip>{{ ::'previewProject' | translate }}</md-tooltip>
                   </md-button>
                 </h3>
                 <span flex></span>

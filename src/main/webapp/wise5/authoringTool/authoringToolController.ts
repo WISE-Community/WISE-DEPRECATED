@@ -1,9 +1,9 @@
 'use strict';
 import * as angular from 'angular';
-import ConfigService from '../services/configService';
-import SessionService from '../services/sessionService';
-import TeacherDataService from '../services/teacherDataService';
-import AuthoringToolProjectService from './authoringToolProjectService';
+import { ConfigService } from '../services/configService';
+import { SessionService } from '../services/sessionService';
+import { TeacherDataService } from '../services/teacherDataService';
+import { TeacherProjectService } from '../services/teacherProjectService';
 
 class AuthoringToolController {
   $anchorScroll: any;
@@ -22,11 +22,12 @@ class AuthoringToolController {
   projectId: number;
   projectTitle: string;
   runId: number;
+  runCode: string;
   showStepTools: boolean = false;
   showToolbar: boolean = true;
   views: any;
   ConfigService: ConfigService;
-  ProjectService: AuthoringToolProjectService;
+  ProjectService: TeacherProjectService;
   SessionService: SessionService;
   TeacherDataService: TeacherDataService;
 
@@ -193,9 +194,13 @@ class AuthoringToolController {
           this.SessionService.closeWarningAndRenewSession();
         },
         () => {
-          this.SessionService.forceLogOut();
+          this.logOut();
         }
       );
+    });
+
+    $scope.$on('logOut', () => {
+      this.logOut();
     });
 
     this.$scope.$on('showRequestLogout', ev => {
@@ -308,6 +313,7 @@ class AuthoringToolController {
     }
     this.projectId = this.ConfigService.getProjectId();
     this.runId = this.ConfigService.getRunId();
+    this.runCode = this.ConfigService.getRunCode();
     if (this.projectId) {
       this.projectTitle = this.ProjectService.getProjectTitle();
     } else {
@@ -343,13 +349,19 @@ class AuthoringToolController {
     this.$rootScope.$broadcast('setGlobalMessage', { globalMessage: globalMessage });
   }
 
-  saveEvent(eventName, category) {
+  logOut() {
+    this.saveEvent('logOut', 'Navigation').then(() => {
+      this.SessionService.logOut();
+    });
+  }
+
+  saveEvent(eventName, category): any {
     const context = 'AuthoringTool';
     const nodeId = null;
     const componentId = null;
     const componentType = null;
     const data = {};
-    this.TeacherDataService.saveEvent(
+    return this.TeacherDataService.saveEvent(
       context,
       nodeId,
       componentId,
@@ -357,7 +369,9 @@ class AuthoringToolController {
       category,
       eventName,
       data
-    );
+    ).then((result) => {
+      return result;
+    });
   }
 }
 

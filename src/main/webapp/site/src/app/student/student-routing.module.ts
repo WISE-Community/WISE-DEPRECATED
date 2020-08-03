@@ -16,7 +16,7 @@ const studentRoutes: Routes = [
       { path: 'home', component: StudentHomeComponent, pathMatch: 'full' },
       { path: 'profile', redirectTo: '', pathMatch: 'full' },
       { path: 'profile/edit', component: EditComponent },
-      {path: '', loadChildren: './student-angular-js-module#StudentAngularJSModule'}
+      {path: '', loadChildren: () => import('../hybrid-module').then(m => m.StudentVLEAngularJSModule)}
     ]
   }
 ];

@@ -2,7 +2,6 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup, Validators, FormBuilder } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { finalize } from 'rxjs/operators';
-import { I18n } from "@ngx-translate/i18n-polyfill";
 import { UserService } from "../../services/user.service";
 import { Teacher } from "../../domain/teacher";
 import { Student } from "../../domain/student";
@@ -44,8 +43,7 @@ export class ContactFormComponent implements OnInit {
               private studentService: StudentService,
               private libraryService: LibraryService,
               private route: ActivatedRoute,
-              private router: Router,
-              private i18n: I18n) {
+              private router: Router) {
   }
 
   ngOnInit() {
@@ -134,21 +132,21 @@ export class ContactFormComponent implements OnInit {
   populateIssueTypes() {
     if (this.isStudent) {
       this.issueTypes = [
-        { key: "TROUBLE_LOGGING_IN", value: this.i18n("Trouble Signing In") },
-        { key: "NEED_HELP_USING_WISE", value: this.i18n("Need Help Using WISE") },
-        { key: "PROJECT_PROBLEMS", value: this.i18n("Problems with a WISE Unit") },
-        { key: "FEEDBACK", value: this.i18n("Feedback to WISE") },
-        { key: "OTHER", value: this.i18n("Other") }
+        { key: "TROUBLE_LOGGING_IN", value: $localize`Trouble Signing In` },
+        { key: "NEED_HELP_USING_WISE", value: $localize`Need Help Using WISE` },
+        { key: "PROJECT_PROBLEMS", value: $localize`Problems with a WISE Unit` },
+        { key: "FEEDBACK", value: $localize`Feedback to WISE` },
+        { key: "OTHER", value: $localize`Other` }
       ];
     } else {
       this.issueTypes = [
-        { key: "TROUBLE_LOGGING_IN", value: this.i18n("Trouble Signing In") },
-        { key: "NEED_HELP_USING_WISE", value: this.i18n("Need Help Using WISE") },
-        { key: "PROJECT_PROBLEMS", value: this.i18n("Problems with a WISE Unit") },
-        { key: "STUDENT_MANAGEMENT", value: this.i18n("Student Management") },
-        { key: "AUTHORING", value: this.i18n("Need Help with Authoring") },
-        { key: "FEEDBACK", value: this.i18n("Feedback to WISE") },
-        { key: "OTHER", value: this.i18n("Other") }
+        { key: "TROUBLE_LOGGING_IN", value: $localize`Trouble Signing In` },
+        { key: "NEED_HELP_USING_WISE", value: $localize`Need Help Using WISE` },
+        { key: "PROJECT_PROBLEMS", value: $localize`Problems with a WISE Unit` },
+        { key: "STUDENT_MANAGEMENT", value: $localize`Student Management` },
+        { key: "AUTHORING", value: $localize`Need Help with Authoring` },
+        { key: "FEEDBACK", value: $localize`Feedback to WISE` },
+        { key: "OTHER", value: $localize`Other` }
       ];
     }
   }

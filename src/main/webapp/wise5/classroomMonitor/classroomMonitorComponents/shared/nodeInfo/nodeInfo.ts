@@ -1,10 +1,10 @@
 'use strict';
 
-import AnnotationService from '../../../../services/annotationService';
-import ClassroomMonitorProjectService from '../../../classroomMonitorProjectService';
-import SummaryService from '../../../../components/summary/summaryService';
-import TeacherDataService from '../../../../services/teacherDataService';
-import UtilService from '../../../../services/utilService';
+import { AnnotationService } from '../../../../services/annotationService';
+import { SummaryService } from '../../../../components/summary/summaryService';
+import { TeacherDataService } from '../../../../services/teacherDataService';
+import { UtilService } from '../../../../services/utilService';
+import { TeacherProjectService } from '../../../../services/teacherProjectService';
 
 class NodeInfoController {
   color: any;
@@ -25,12 +25,15 @@ class NodeInfoController {
   constructor(
     private $injector: any,
     private AnnotationService: AnnotationService,
-    private ProjectService: ClassroomMonitorProjectService,
+    private ProjectService: TeacherProjectService,
     private SummaryService: SummaryService,
     private TeacherDataService: TeacherDataService,
     private UtilService: UtilService
   ) {
-    this.periodId = this.TeacherDataService.getCurrentPeriod().periodId;
+    const currentPeriod = this.TeacherDataService.getCurrentPeriod();
+    if (currentPeriod != null) {
+      this.periodId = currentPeriod.periodId;
+    }
   }
 
   $onInit() {

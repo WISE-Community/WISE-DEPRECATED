@@ -1,6 +1,6 @@
 'use strict';
 
-import TeacherDataService from '../../../../services/teacherDataService';
+import { TeacherDataService } from '../../../../services/teacherDataService';
 
 class PauseScreensMenuController {
   allPeriodsPaused: boolean = false;

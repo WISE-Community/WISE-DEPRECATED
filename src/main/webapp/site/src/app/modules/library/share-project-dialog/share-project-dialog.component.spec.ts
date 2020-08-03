@@ -3,18 +3,14 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ShareProjectDialogComponent } from './share-project-dialog.component';
 import { TeacherService } from "../../../teacher/teacher.service";
 import { Observable } from 'rxjs';
-import {
-  MatDialogRef,
-  MAT_DIALOG_DATA,
-  MatAutocompleteModule,
-  MatSnackBarModule,
-  MatTableModule } from '@angular/material';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTableModule } from '@angular/material/table';
 import { LibraryService } from "../../../services/library.service";
-import { NO_ERRORS_SCHEMA, TRANSLATIONS_FORMAT, TRANSLATIONS, LOCALE_ID } from "@angular/core";
+import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { Project } from "../../../domain/project";
 import { User } from "../../../domain/user";
-import { translationsFactory } from '../../../app.module';
-import { I18n } from '@ngx-translate/i18n-polyfill';
 
 export class MockLibraryService {
   getProjectInfo() {
@@ -70,14 +66,7 @@ describe('ShareProjectDialogComponent', () => {
         { provide: MAT_DIALOG_DATA, useValue: {
             project: projectObj
           }
-        },
-        { provide: TRANSLATIONS_FORMAT, useValue: "xlf" },
-        {
-          provide: TRANSLATIONS,
-          useFactory: translationsFactory,
-          deps: [LOCALE_ID]
-        },
-        I18n
+        }
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })

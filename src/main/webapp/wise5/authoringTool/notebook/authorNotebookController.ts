@@ -1,9 +1,9 @@
 'use strict';
 
-import ConfigService from '../../services/configService';
-import AuthoringToolProjectService from '../authoringToolProjectService';
-import SpaceService from '../../services/spaceService';
-import UtilService from '../../services/utilService';
+import { ConfigService } from '../../services/configService';
+import { SpaceService } from '../../services/spaceService';
+import { TeacherProjectService } from '../../services/teacherProjectService';
+import { UtilService } from '../../services/utilService';
 
 class AuthorNotebookController {
   $translate: any;
@@ -29,7 +29,7 @@ class AuthorNotebookController {
     $stateParams,
     private $scope,
     private ConfigService: ConfigService,
-    private ProjectService: AuthoringToolProjectService,
+    private ProjectService: TeacherProjectService,
     private SpaceService: SpaceService,
     private UtilService: UtilService
   ) {
@@ -114,7 +114,6 @@ class AuthorNotebookController {
         disableDragAndDrop: true,
         buttons: {
           insertAssetButton: this.UtilService.createInsertAssetButton(
-            this,
             this.projectId,
             null,
             null,

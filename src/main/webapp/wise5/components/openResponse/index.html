@@ -6,7 +6,16 @@
     <div ng-switch='::openResponseController.mode'>
       <div ng-switch-when='grading|gradingRevision' ng-switch-when-separator='|' layout='row' layout-wrap>
         <div flex='100' flex-gt-sm='66' layout='column' class='component--grading__response'>
-          <div class='component--grading__response__content'><compile data='openResponseController.studentResponse'></compile></div>
+          <div class='component--grading__response__content'>
+            <compile data='openResponseController.studentResponse'></compile>
+          </div>
+          <div class='component__attachment'
+               ng-repeat='attachment in openResponseController.attachments | filter:{type:audio}'
+               layout='row' layout-align="start center">
+            <audio controls>
+              <source ng-src="{{attachment.url}}" type="audio/webm">
+            </audio>
+          </div>
           <span flex></span>
           <component-revisions-info node-id='openResponseController.nodeId'
                         component-id='openResponseController.componentId'
@@ -30,7 +39,7 @@
           <label class='input-label md-no-float' ng-disabled='openResponseController.isDisabled'
                ng-if='::openResponseController.isPromptVisible'>
             <compile id='prompt' data='::openResponseController.getPrompt()'></compile>
-            <possible-score max-score='openResponseController.componentContent.maxScore'></possible-score>
+            <possible-score [max-score]='openResponseController.componentContent.maxScore'></possible-score>
           </label>
           <md-button class='md-accent md-primary'
                      ng-click='openResponseController.snipButtonClicked($event)'
@@ -70,23 +79,60 @@
       </div>
     </div>
     <div ng-if='nodeController.getRevisions().length > 1' layout='row' layout-align='center end'>
-      <a ng-click='nodeController.showRevisions($event, component.id, openResponseController.isDisabled)'>
+      <a ng-click='nodeController.showRevisions($event, openResponseController.componentId, openResponseController.isDisabled)'>
          + {{ ::'openResponse.previousVersions' | translate }}: {{nodeController.getRevisions().length - 1}}
        </a>
     </div>
-    <div class='component__actions' ng-if='::openResponseController.isStudentAttachmentEnabled' layout='row' layout-wrap='true'>
+    <div class='component__actions' ng-if='::openResponseController.isStudentAttachmentEnabled' layout='row' layout-wrap='true' layout-align='start center'>
       <div class='component__add-attachment'>
         <md-button class='md-accent'
-               ng-click='nodeController.showStudentAssets($event, component.id, openResponseController.isDisabled)'
+               ng-if='::openResponseController.mode !== "grading"'
+               ng-click='nodeController.showStudentAssets($event, openResponseController.componentId, openResponseController.isDisabled)'
                ng-disabled='openResponseController.isDisabled'>
           <md-icon>image</md-icon> <span>{{ ::'openResponse.addFile' | translate }}</span>
         </md-button>
       </div>
-      <div class='component__attachment' ng-repeat='attachment in openResponseController.attachments'>
+      <div class='component__attachment' ng-repeat='attachment in openResponseController.attachments | filter:{type:"!audio"}'>
         <img ng-src='{{attachment.iconURL}}' class='component__attachment__content' />
-        <md-button ng-if='!openResponseController.isDisabled' class='component__attachment__delete'
+        <md-button class='component__attachment__delete'
                    ng-click='openResponseController.removeAttachment(attachment)' title='Remove file'
                    ng-disabled='openResponseController.isDisabled'>
+          <md-icon>cancel</md-icon>
+        </md-button>
+      </div>
+    </div>
+    <div class='component__actions'
+         ng-if='openResponseController.mode !== "grading" && openResponseController.isStudentAudioRecordingEnabled'
+         layout='row' layout-align='start center' layout-wrap='true'>
+      <md-button class='md-accent'
+                  ng-if='!openResponseController.isRecordingAudio'
+                  ng-click='openResponseController.startRecordingAudio($event, openResponseController.componentId, openResponseController.isDisabled)'
+                  ng-disabled='openResponseController.isDisabled'>
+        <md-icon>mic</md-icon> <span>{{ ::'openResponse.recordResponse' | translate }}</span>
+      </md-button>
+      <md-button class='md-warn'
+                  ng-if='openResponseController.isRecordingAudio'
+                  ng-click='openResponseController.stopRecordingAudio($event, openResponseController.componentId, openResponseController.isDisabled)'
+                  ng-disabled='openResponseController.isDisabled'>
+        <md-icon>stop</md-icon> <span>{{ ::'openResponse.stopRecording' | translate }}</span>
+      </md-button>
+      <span ng-if='openResponseController.isRecordingAudio'
+            class="text-secondary">
+        {{ ::'openResponse.recording' | translate }} {{ ::'openResponse.recordingTimeLeft' | translate }} :{{ openResponseController.getAudioRecordingTimeLeft() }}
+      </span>
+      <div class='component__attachment'
+           ng-repeat='attachment in openResponseController.attachments | filter:{type:audio}'
+           layout='row' layout-align="start center">
+        <audio controls>
+          <source ng-src="{{attachment.url}}" type="audio/webm">
+        </audio>
+        <md-button class='md-icon-button'
+                   ng-click='openResponseController.removeAudioAttachment(attachment)'
+                   aria-label="{{ ::'openResponse.deleteRecording' | translate }}"
+                   ng-disabled='openResponseController.isDisabled'>
+          <md-tooltip md-direction="top">
+            {{ ::'openResponse.deleteRecording' | translate }}
+          </md-tooltip>
           <md-icon>cancel</md-icon>
         </md-button>
       </div>

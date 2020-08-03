@@ -3,14 +3,13 @@ import { RunMenuComponent } from "./run-menu.component";
 import { TeacherService } from "../teacher.service";
 import { Project } from "../../domain/project";
 import { BehaviorSubject, Observable } from 'rxjs';
-import { MatDialog, MatMenuModule } from "@angular/material";
+import { MatDialog } from "@angular/material/dialog";
+import { MatMenuModule } from '@angular/material/menu';
 import { ConfigService } from "../../services/config.service";
 import { UserService } from "../../services/user.service";
 import { User } from "../../domain/user";
 import { TeacherRun } from "../teacher-run";
-import { NO_ERRORS_SCHEMA, TRANSLATIONS_FORMAT, TRANSLATIONS, LOCALE_ID } from '@angular/core';
-import { translationsFactory } from '../../app.module';
-import { I18n } from '@ngx-translate/i18n-polyfill';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { Course } from '../../domain/course';
 import { RouterTestingModule } from '@angular/router/testing';
 
@@ -69,14 +68,7 @@ describe('RunMenuComponent', () => {
         { provide: TeacherService, useClass: MockTeacherService },
         { provide: UserService, useClass: MockUserService },
         { provide: ConfigService, useClass: MockConfigService },
-        { provide: MatDialog, useValue: {} },
-        { provide: TRANSLATIONS_FORMAT, useValue: "xlf" },
-        {
-          provide: TRANSLATIONS,
-          useFactory: translationsFactory,
-          deps: [LOCALE_ID]
-        },
-        I18n
+        { provide: MatDialog, useValue: {} }
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })

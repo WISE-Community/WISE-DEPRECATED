@@ -4,6 +4,30 @@
   "newProjectRoot": "projects",
   "projects": {
     "wise": {
+      "i18n": {
+        "locales": {
+          "es": {
+            "translation": "src/main/webapp/site/src/locale/messages.es.xlf",
+            "baseHref": "/"
+          },
+          "pt": {
+            "translation": "src/main/webapp/site/src/locale/messages.pt.xlf",
+            "baseHref": "/"
+          },
+          "tr": {
+            "translation": "src/main/webapp/site/src/locale/messages.tr.xlf",
+            "baseHref": "/"
+          },
+          "zh-Hans": {
+            "translation": "src/main/webapp/site/src/locale/messages.zh-Hans.xlf",
+            "baseHref": "/"
+          },
+          "zh-Hant": {
+            "translation": "src/main/webapp/site/src/locale/messages.zh-Hant.xlf",
+            "baseHref": "/"
+          }
+        }
+      },
       "root": "src/main/webapp/site",
       "sourceRoot": "src/main/webapp/site/src",
       "projectType": "application",
@@ -11,6 +35,7 @@
         "build": {
           "builder": "@angular-builders/custom-webpack:browser",
           "options": {
+            "aot": true,
             "customWebpackConfig": {
               "path": "./custom-webpack.config.js",
               "replaceDuplicatePlugins": true
@@ -21,7 +46,10 @@
             "tsConfig": "src/main/webapp/site/src/tsconfig.app.json",
             "polyfills": "src/main/webapp/site/src/polyfills.ts",
             "extractCss": true,
-            "assets": ["src/main/webapp/site/src/assets", "src/main/webapp/site/src/favicon.ico"],
+            "assets": [
+              "src/main/webapp/site/src/assets",
+              "src/main/webapp/site/src/favicon.ico"
+            ],
             "styles": [
               {
                 "input": "src/main/webapp/site/src/style/styles.scss",
@@ -32,6 +60,12 @@
           },
           "configurations": {
             "production": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": true,
@@ -52,33 +86,12 @@
               "baseHref": "/"
             },
             "production-es": {
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": true,
-              "statsJson": true,
-              "extractCss": true,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": false,
-              "fileReplacements": [
+              "budgets": [
                 {
-                  "replace": "src/main/webapp/site/src/environments/environment.ts",
-                  "with": "src/main/webapp/site/src/environments/environment.prod.ts"
-                },
-                {
-                  "replace": "src/main/webapp/site/src/locale/messages.xlf",
-                  "with": "src/main/webapp/site/src/locale/messages.es.xlf"
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
                 }
               ],
-              "outputPath": "src/main/webapp/site/dist/es/",
-              "baseHref": "/es/",
-              "i18nFile": "src/main/webapp/site/src/locale/messages.es.xlf",
-              "i18nFormat": "xlf",
-              "i18nLocale": "es"
-            },
-            "production-zh-Hans": {
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": true,
@@ -93,19 +106,19 @@
                 {
                   "replace": "src/main/webapp/site/src/environments/environment.ts",
                   "with": "src/main/webapp/site/src/environments/environment.prod.ts"
-                },
-                {
-                  "replace": "src/main/webapp/site/src/locale/messages.xlf",
-                  "with": "src/main/webapp/site/src/locale/messages.zh-Hans.xlf"
                 }
               ],
               "outputPath": "src/main/webapp/site/dist/",
-              "baseHref": "/",
-              "i18nFile": "src/main/webapp/site/src/locale/messages.zh-Hans.xlf",
-              "i18nFormat": "xlf",
-              "i18nLocale": "zh-Hans"
+              "i18nFile": "src/main/webapp/site/src/locale/messages.es.xlf",
+              "i18nLocale": "es"
             },
-            "production-zh-Hant": {
+            "production-pt": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": true,
@@ -120,16 +133,91 @@
                 {
                   "replace": "src/main/webapp/site/src/environments/environment.ts",
                   "with": "src/main/webapp/site/src/environments/environment.prod.ts"
-                },
-                {
-                  "replace": "src/main/webapp/site/src/locale/messages.xlf",
-                  "with": "src/main/webapp/site/src/locale/messages.zh-Hant.xlf"
                 }
               ],
-              "outputPath": "src/main/webapp/site/dist/zh-Hant/",
-              "baseHref": "/zh-Hant/",
+              "outputPath": "src/main/webapp/site/dist/",
+              "i18nFile": "src/main/webapp/site/src/locale/messages.pt.xlf",
+              "i18nLocale": "pt"
+            },
+            "production-tr": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": true,
+              "statsJson": true,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": false,
+              "fileReplacements": [
+                {
+                  "replace": "src/main/webapp/site/src/environments/environment.ts",
+                  "with": "src/main/webapp/site/src/environments/environment.prod.ts"
+                }
+              ],
+              "outputPath": "src/main/webapp/site/dist/",
+              "i18nFile": "src/main/webapp/site/src/locale/messages.tr.xlf",
+              "i18nLocale": "tr"
+            },
+            "production-zh-Hans": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": true,
+              "statsJson": true,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": false,
+              "fileReplacements": [
+                {
+                  "replace": "src/main/webapp/site/src/environments/environment.ts",
+                  "with": "src/main/webapp/site/src/environments/environment.prod.ts"
+                }
+              ],
+              "outputPath": "src/main/webapp/site/dist/",
+              "i18nFile": "src/main/webapp/site/src/locale/messages.zh-Hans.xlf",
+              "i18nLocale": "zh-Hans"
+            },
+            "production-zh-Hant": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": true,
+              "statsJson": true,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": false,
+              "fileReplacements": [
+                {
+                  "replace": "src/main/webapp/site/src/environments/environment.ts",
+                  "with": "src/main/webapp/site/src/environments/environment.prod.ts"
+                }
+              ],
+              "outputPath": "src/main/webapp/site/dist/",
               "i18nFile": "src/main/webapp/site/src/locale/messages.zh-Hant.xlf",
-              "i18nFormat": "xlf",
               "i18nLocale": "zh-Hant"
             }
           }
@@ -142,6 +230,21 @@
           "configurations": {
             "production": {
               "browserTarget": "wise:build:production"
+            },
+            "es": {
+              "browserTarget": "wise:build:es"
+            },
+            "pt": {
+              "browserTarget": "wise:build:pt"
+            },
+            "tr": {
+              "browserTarget": "wise:build:tr"
+            },
+            "zh-Hans": {
+              "browserTarget": "wise:build:zh-Hans"
+            },
+            "zh-Hant": {
+              "browserTarget": "wise:build:zh-Hant"
             }
           }
         },
@@ -159,15 +262,25 @@
             "polyfills": "src/main/webapp/site/src/polyfills.ts",
             "tsConfig": "src/main/webapp/site/src/tsconfig.spec.json",
             "scripts": [],
-            "styles": ["src/main/webapp/site/src/style/styles.scss"],
-            "assets": ["src/main/webapp/site/src/assets", "src/main/webapp/site/src/favicon.ico"]
+            "styles": [
+              "src/main/webapp/site/src/style/styles.scss"
+            ],
+            "assets": [
+              "src/main/webapp/site/src/assets",
+              "src/main/webapp/site/src/favicon.ico"
+            ]
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": ["src/tsconfig.app.json", "src/tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**"]
+            "tsConfig": [
+              "src/tsconfig.app.json",
+              "src/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         }
       }
@@ -187,8 +300,12 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": ["e2e/tsconfig.e2e.json"],
-            "exclude": ["**/node_modules/**"]
+            "tsConfig": [
+              "e2e/tsconfig.e2e.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         }
       }
@@ -198,10 +315,13 @@
   "schematics": {
     "@schematics/angular:component": {
       "prefix": "app",
-      "styleext": "scss"
+      "style": "scss"
     },
     "@schematics/angular:directive": {
       "prefix": "app"
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }

@@ -2,7 +2,7 @@
 
 import ComponentController from '../componentController';
 import AnimationService from './animationService';
-import AnnotationService from '../../services/annotationService';
+import { AnnotationService } from '../../services/annotationService';
 import 'svg.js';
 
 class AnimationController extends ComponentController {

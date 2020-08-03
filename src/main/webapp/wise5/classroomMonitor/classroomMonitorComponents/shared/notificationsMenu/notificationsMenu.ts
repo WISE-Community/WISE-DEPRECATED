@@ -1,8 +1,8 @@
 'use strict';
 
-import NotificationService from '../../../../services/notificationService';
-import ClassroomMonitorProjectService from '../../../classroomMonitorProjectService';
+import { NotificationService } from '../../../../services/notificationService';
 import * as angular from 'angular';
+import { TeacherProjectService } from '../../../../services/teacherProjectService';
 
 class NotificationsMenuController {
   $translate: any;
@@ -14,7 +14,7 @@ class NotificationsMenuController {
     $filter: any,
     private $mdDialog: any,
     private NotificationService: NotificationService,
-    private ProjectService: ClassroomMonitorProjectService
+    private ProjectService: TeacherProjectService
   ) {
     this.$translate = $filter('translate');
   }
@@ -46,8 +46,6 @@ class NotificationsMenuController {
   dismissNotification(notification) {
     this.NotificationService.dismissNotification(notification);
   }
-
-  dismissNotificationAndVisitNode(notification) {}
 }
 
 const NotificationsMenu = {
@@ -75,7 +73,7 @@ const NotificationsMenu = {
                 <div class="md-padding center" ng-if="!$ctrl.newNotifications.length"><span class="md-body-1" translate="NO_ALERTS"></span></div>
                 <md-list class="notification-list" ng-if="$ctrl.newNotifications.length">
                     <md-list-item ng-repeat="notification in $ctrl.newNotifications track by $index"
-                                  ng-click="$ctrl.dismissNotificationAndVisitNode(notification)"
+                                  ng-click="$ctrl.dismissNotification(notification)"
                                   md-autofocus="$first"
                                   class="md-2-line">
                         <div class="md-list-item-text">

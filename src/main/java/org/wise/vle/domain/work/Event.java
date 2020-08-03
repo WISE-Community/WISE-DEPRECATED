@@ -44,19 +44,20 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Index;
 import javax.persistence.Table;
+
 import java.sql.Timestamp;
 
 /**
- * Domain object representing an event that occur in the VLE (used in WISE5). An Event can be
- * a mouse click, step_enter, model_state_changed, etc.
+ * Domain object representing an event that occur in the VLE (used in WISE5). An Event can be a
+ * mouse click, step_enter, model_state_changed, etc.
+ *
  * @author Hiroki Terashima
  */
 @Entity
-@Table(name = "events",  indexes = {
-  @Index(columnList = "runId", name = "eventsRunIdIndex"),
-  @Index(columnList = "workgroupId", name = "eventsWorkgroupIdIndex"),
-  @Index(columnList = "projectId", name = "eventsProjectIdIndex"),
-  @Index(columnList = "userId", name = "eventsUserIdIndex")})
+@Table(name = "events", indexes = { @Index(columnList = "runId", name = "eventsRunIdIndex"),
+    @Index(columnList = "workgroupId", name = "eventsWorkgroupIdIndex"),
+    @Index(columnList = "projectId", name = "eventsProjectIdIndex"),
+    @Index(columnList = "userId", name = "eventsUserIdIndex") })
 @Getter
 @Setter
 public class Event extends PersistableDomain {
@@ -65,23 +66,28 @@ public class Event extends PersistableDomain {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private Integer id = null;
 
-  @ManyToOne(targetEntity = ProjectImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
+  @ManyToOne(targetEntity = ProjectImpl.class, cascade = {
+      CascadeType.PERSIST }, fetch = FetchType.LAZY)
   @JoinColumn(name = "projectId", nullable = true)
   private Project project;
 
-  @ManyToOne(targetEntity = RunImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
+  @ManyToOne(targetEntity = RunImpl.class, cascade = {
+      CascadeType.PERSIST }, fetch = FetchType.LAZY)
   @JoinColumn(name = "runId", nullable = true)
   private Run run;
 
-  @ManyToOne(targetEntity = PersistentGroup.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
+  @ManyToOne(targetEntity = PersistentGroup.class, cascade = {
+      CascadeType.PERSIST }, fetch = FetchType.LAZY)
   @JoinColumn(name = "periodId")
   private Group period;
 
-  @ManyToOne(targetEntity = WorkgroupImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
+  @ManyToOne(targetEntity = WorkgroupImpl.class, cascade = {
+      CascadeType.PERSIST }, fetch = FetchType.LAZY)
   @JoinColumn(name = "workgroupId", nullable = true)
   private Workgroup workgroup;
 
-  @ManyToOne(targetEntity = UserImpl.class, cascade = {CascadeType.PERSIST}, fetch = FetchType.LAZY)
+  @ManyToOne(targetEntity = UserImpl.class, cascade = {
+      CascadeType.PERSIST }, fetch = FetchType.LAZY)
   @JoinColumn(name = "userId", nullable = true)
   private User user;
 

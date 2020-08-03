@@ -4,9 +4,7 @@ import { Project} from "../../domain/project";
 import { TeacherService } from "../teacher.service";
 import { TeacherRun } from "../teacher-run";
 import { ConfigService } from "../../services/config.service";
-import { NO_ERRORS_SCHEMA, TRANSLATIONS_FORMAT, TRANSLATIONS, LOCALE_ID } from "@angular/core";
-import { I18n } from '@ngx-translate/i18n-polyfill';
-import { translationsFactory } from "../../app.module";
+import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { MomentModule } from "ngx-moment";
 import { configureTestSuite } from 'ng-bullet';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -38,14 +36,7 @@ describe('TeacherRunListItemComponent', () => {
       imports: [ MomentModule, BrowserAnimationsModule, RouterTestingModule ],
       providers: [
         { provide: TeacherService, useClass: MockTeacherService },
-        { provide: ConfigService, useClass: MockConfigService },
-        { provide: TRANSLATIONS_FORMAT, useValue: "xlf" },
-        {
-          provide: TRANSLATIONS,
-          useFactory: translationsFactory,
-          deps: [LOCALE_ID]
-        },
-        I18n
+        { provide: ConfigService, useClass: MockConfigService }
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     });

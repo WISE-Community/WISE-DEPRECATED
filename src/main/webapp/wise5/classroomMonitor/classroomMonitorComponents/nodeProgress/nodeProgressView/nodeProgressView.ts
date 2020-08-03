@@ -1,8 +1,8 @@
 'use strict';
 
-import ClassroomMonitorProjectService from '../../../classroomMonitorProjectService';
-import StudentStatusService from '../../../../services/studentStatusService';
-import TeacherDataService from '../../../../services/teacherDataService';
+import { StudentStatusService } from '../../../../services/studentStatusService';
+import { TeacherDataService } from '../../../../services/teacherDataService';
+import { TeacherProjectService } from '../../../../services/teacherProjectService';
 
 class NodeProgressViewController {
   $translate: any;
@@ -32,7 +32,7 @@ class NodeProgressViewController {
     private $scope: any,
     private $state: any,
     private $transitions: any,
-    private ProjectService: ClassroomMonitorProjectService,
+    private ProjectService: TeacherProjectService,
     private StudentStatusService: StudentStatusService,
     private TeacherDataService: TeacherDataService
   ) {
@@ -108,8 +108,17 @@ class NodeProgressViewController {
         }
       }
     });
+    if (!this.isShowingNodeGradingView()) {
+      this.saveNodeProgressViewDisplayedEvent();
+    }
+  }
 
-    let context = 'ClassroomMonitor',
+  isShowingNodeGradingView() {
+    return this.isApplicationNode(this.nodeId);
+  }
+
+  saveNodeProgressViewDisplayedEvent() {
+    const context = 'ClassroomMonitor',
       nodeId = this.nodeId,
       componentId = null,
       componentType = null,

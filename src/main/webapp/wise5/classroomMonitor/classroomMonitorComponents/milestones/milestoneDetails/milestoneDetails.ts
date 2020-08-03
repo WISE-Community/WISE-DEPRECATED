@@ -1,10 +1,10 @@
 'use strict';
 
-import ConfigService from '../../../../services/configService';
-import ClassroomMonitorProjectService from '../../../classroomMonitorProjectService';
-import TeacherDataService from '../../../../services/teacherDataService';
+import { ConfigService } from '../../../../services/configService';
+import { TeacherDataService } from '../../../../services/teacherDataService';
 import * as angular from 'angular';
 import NodeService from '../../../../services/nodeService';
+import { TeacherProjectService } from '../../../../services/teacherProjectService';
 
 class MilestoneDetailsController {
   $translate: any;
@@ -27,7 +27,7 @@ class MilestoneDetailsController {
     $scope,
     private ConfigService: ConfigService,
     private NodeService: NodeService,
-    private ProjectService: ClassroomMonitorProjectService,
+    private ProjectService: TeacherProjectService,
     private TeacherDataService: TeacherDataService
   ) {
     this.$translate = $filter('translate');
@@ -54,8 +54,7 @@ class MilestoneDetailsController {
         periodId: currentPeriod.periodId,
         periodName: currentPeriod.periodName
       },
-      event = 'MilestonePeriodSelected',
-      projectId = null;
+      event = 'MilestonePeriodSelected';
     this.TeacherDataService.saveEvent(
       context,
       nodeId,
@@ -63,8 +62,7 @@ class MilestoneDetailsController {
       componentType,
       category,
       event,
-      data,
-      projectId
+      data
     );
   }
 
@@ -116,8 +114,7 @@ class MilestoneDetailsController {
       componentId = null,
       componentType = null,
       category = 'Navigation',
-      data = { milestoneId: this.milestone.id },
-      projectId = null;
+      data = { milestoneId: this.milestone.id };
     this.TeacherDataService.saveEvent(
       context,
       nodeId,
@@ -125,8 +122,7 @@ class MilestoneDetailsController {
       componentType,
       category,
       event,
-      data,
-      projectId
+      data
     );
   }
 
