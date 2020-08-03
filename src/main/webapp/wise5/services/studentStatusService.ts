@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { AnnotationService } from "./annotationService";
-import ConfigService from "./configService";
+import { ConfigService } from "./configService";
 import { ProjectService } from "./projectService";
 
 @Injectable()

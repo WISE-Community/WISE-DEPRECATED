@@ -956,11 +956,6 @@ public class VLEServiceImpl implements VLEService {
   }
 
   @Override
-  public Notification getNotificationById(Integer notificationId) throws ObjectNotFoundException {
-    return (Notification) notificationDao.getById(notificationId);
-  }
-
-  @Override
   public List<Notification> getNotificationsByGroupId(String groupId) {
     return getNotifications(null, null, null, null, groupId, null, null);
   }
@@ -1080,10 +1075,9 @@ public class VLEServiceImpl implements VLEService {
   }
 
   @Override
-  public Notification dismissNotification(Notification notification, String timeDismissed) {
+  public Notification dismissNotification(Notification notification, Timestamp timeDismissed) {
     if (timeDismissed != null) {
-      Timestamp timeDismissedTimestamp = new Timestamp(new Long(timeDismissed));
-      notification.setTimeDismissed(timeDismissedTimestamp);
+      notification.setTimeDismissed(timeDismissed);
     }
     notificationDao.save(notification);
     return notification;
