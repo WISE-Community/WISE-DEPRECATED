@@ -1,12 +1,13 @@
 'use strict';
 
 import * as angular from 'angular';
-import OpenResponseService from './openResponseService';
+import { downgradeInjectable } from '@angular/upgrade/static';
+import { OpenResponseService } from './openResponseService';
 import OpenResponseController from './openResponseController';
 
 const openResponseComponentModule = angular
   .module('openResponseComponentModule', ['pascalprecht.translate'])
-  .service('OpenResponseService', OpenResponseService)
+  .service('OpenResponseService', downgradeInjectable(OpenResponseService))
   .controller('OpenResponseController', OpenResponseController)
   .config([
     '$translatePartialLoaderProvider',
