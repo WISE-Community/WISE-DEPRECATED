@@ -112,4 +112,8 @@ export class ComponentService {
   componentHasCorrectAnswer(component) {
     return false;
   }
+
+  calculateIfIsSubmitIsRequired(node: any, component: any) {
+    return node.showSubmitButton || (!node.showSaveButton && component.showSubmitButton);
+  }
 }
