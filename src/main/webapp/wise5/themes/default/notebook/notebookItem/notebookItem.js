@@ -81,7 +81,7 @@ class NotebookItemController {
       .ok(this.$translate('delete'))
       .cancel(this.$translate('cancel'));
     this.$mdDialog.show(confirm).then(() => {
-      this.NotebookService.reviveOrDeleteNote(this.item, false);
+      this.NotebookService.deleteNote(this.item);
     }, () => {
       // they chose not to delete. Do nothing, the dialog will close.
     });
@@ -96,7 +96,7 @@ class NotebookItemController {
       .ok(this.$translate('revive'))
       .cancel(this.$translate('cancel'));
     this.$mdDialog.show(confirm).then(() => {
-      this.NotebookService.reviveOrDeleteNote(this.item);
+      this.NotebookService.reviveNote(this.item);
     }, () => {
       // they chose not to revive. Do nothing, the dialog will close.
     });

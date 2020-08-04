@@ -84,15 +84,27 @@ export class NotebookService {
       });
   }
 
-  reviveOrDeleteNote(note, revive: boolean = true) {
+  deleteNote(note) {
     const noteCopy = {...note};
     const clientTime = Date.parse(new Date().toString());
-    noteCopy.id = null; // set to null so we're creating a new notebook item
-    noteCopy.content.clientSaveTime = clientTime;
-    const clientDeleteTime = revive ? null : clientTime; // if delete timestamp is null, then we are in effect un-deleting this note item
-    return this.saveNotebookItem(noteCopy.id, noteCopy.nodeId, noteCopy.localNotebookItemId, 
-        noteCopy.type, noteCopy.title, noteCopy.content, noteCopy.groups, 
-        noteCopy.content.clientSaveTime, clientDeleteTime);
+    noteCopy.clientDeleteTime = clientTime;
+    note.content.clientSaveTime = clientTime;
+    return this.updateNote(noteCopy);
+  }
+
+  reviveNote(note) {
+    const noteCopy = {...note};
+    const clientTime = Date.parse(new Date().toString());
+    note.content.clientSaveTime = clientTime;
+    noteCopy.clientDeleteTime = null;
+    return this.updateNote(noteCopy);
+  }
+
+  updateNote(note) {
+    note.id = null; // set to null so we're creating a new notebook item
+    return this.saveNotebookItem(note.id, note.nodeId, note.localNotebookItemId, 
+        note.type, note.title, note.content, note.groups, 
+        note.content.clientSaveTime, note.clientDeleteTime);
   }
 
   getLatestNotebookItemByLocalNotebookItemId(localNotebookItemId, 

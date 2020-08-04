@@ -62,7 +62,9 @@ describe('NotebookService', () => {
     };
   });
 
-  shouldReviveOrDeleteNote();
+  shouldUpdateNote();
+  shouldDeleteNote();
+  shouldReviveNote();
   shouldGetLatestNotebookReportItemByReportId();
   shouldGetTemplateReportItemByReportId();
   shouldGetMaxScoreByReportId();
@@ -80,40 +82,45 @@ describe('NotebookService', () => {
   shouldHandleNewNotebookItem();
 });
 
-function shouldReviveOrDeleteNote() {
-  it('should revive or delete a note', () => {
+function shouldUpdateNote() {
+  it('should update a note', () => {
     spyOn(configService, 'isPreview').and.returnValue(false);
     spyOn(configService, 'getWorkgroupId').and.returnValue(2);
     spyOn(configService, 'getNotebookURL').and.returnValue(studentNotebookURL);
     spyOn(studentDataService, 'updateNodeStatuses');
     const note = service.getLatestNotebookItemByLocalNotebookItemId(localNotebookItemId, 2);
-    service.reviveOrDeleteNote(note, false).then(() => {
+    service.updateNote(note).then(() => {
       http.expectOne(studentNotebookURL).flush({});
       expect(service.handleNewNotebookItem).toHaveBeenCalled();
       expect(studentDataService.updateNodeStatuses).toHaveBeenCalled();
     });
   });
-  it('should revive a note in preview mode', () => {
-    spyOn(configService, 'isPreview').and.returnValue(true);
-    spyOn(configService, 'getWorkgroupId').and.returnValue(2);
-    spyOn(studentDataService, 'updateNodeStatuses');
-    let note = service.getLatestNotebookItemByLocalNotebookItemId('stb6er46ad', 2);
-    service.reviveOrDeleteNote(note).then(() => {
-      note = service.getLatestNotebookItemByLocalNotebookItemId('stb6er46ad', 2);
-      expect(note.serverDeleteTime).toBeNull();
-      expect(studentDataService.updateNodeStatuses).toHaveBeenCalled();
-    });
-  });
+}
 
+function shouldDeleteNote() {
   it('should delete a note in preview mode', () => {
     spyOn(configService, 'isPreview').and.returnValue(true);
     spyOn(configService, 'getWorkgroupId').and.returnValue(2);
     spyOn(studentDataService, 'updateNodeStatuses');
     let note = service.getLatestNotebookItemByLocalNotebookItemId(localNotebookItemId, 2);
     expect(note.serverDeleteTime).toBeNull();
-    service.reviveOrDeleteNote(note, false).then(() => {
+    service.deleteNote(note).then(() => {
       note = service.getLatestNotebookItemByLocalNotebookItemId(localNotebookItemId, 2);
       expect(note.serverDeleteTime).not.toBeNull();
+      expect(studentDataService.updateNodeStatuses).toHaveBeenCalled();
+    });
+  });
+}
+
+function shouldReviveNote() {
+  it('should revive a note in preview mode', () => {
+    spyOn(configService, 'isPreview').and.returnValue(true);
+    spyOn(configService, 'getWorkgroupId').and.returnValue(2);
+    spyOn(studentDataService, 'updateNodeStatuses');
+    let note = service.getLatestNotebookItemByLocalNotebookItemId('stb6er46ad', 2);
+    service.reviveNote(note).then(() => {
+      note = service.getLatestNotebookItemByLocalNotebookItemId('stb6er46ad', 2);
+      expect(note.serverDeleteTime).toBeNull();
       expect(studentDataService.updateNodeStatuses).toHaveBeenCalled();
     });
   });
