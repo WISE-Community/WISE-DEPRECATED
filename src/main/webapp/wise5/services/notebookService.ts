@@ -2,8 +2,8 @@
 
 import { Injectable } from "@angular/core";
 import { UpgradeModule } from "@angular/upgrade/static";
-import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
-import ConfigService from "./configService";
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { ConfigService } from "./configService";
 import { ProjectService } from "./projectService";
 import { StudentAssetService } from "./studentAssetService";
 import { StudentDataService } from "./studentDataService";
