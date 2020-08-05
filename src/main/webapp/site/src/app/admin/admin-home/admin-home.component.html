@@ -7,43 +7,25 @@
     <mat-icon>settings</mat-icon><span i18n>Administrator Tools</span>
   </h1>
 </header>
-
-<div fxLayout="row wrap" fxLayoutGap="8px">
-  <mat-card fxFlex="25">
-    <mat-card-title>
-      <h4 i18n>User Management</h4>
-    </mat-card-title>
-    <mat-divider></mat-divider>
-    <mat-card-content>
-      <div fxLayoutAlign="center center">
-        <mat-icon color="primary">group</mat-icon>
-      </div>
-      <span i18n>Manage WISE users.</span>
-    </mat-card-content>
-    <mat-divider></mat-divider>
-    <mat-card-actions fxLayoutAlign="center center">
-      <button mat-flat-button color="accent" routerLink="/admin/search">
-        <span i18n>Find User</span>
-      </button>
-    </mat-card-actions>
-  </mat-card>
-
-  <mat-card fxFlex="25">
-    <mat-card-title>
-      <h4 i18n>News Items Management</h4>
-    </mat-card-title>
-    <mat-divider></mat-divider>
-    <mat-card-content>
-      <div fxLayoutAlign="center center">
-        <mat-icon color="primary">vertical_split</mat-icon>
-      </div>
-      <span i18n>Manage WISE news items.</span>
-    </mat-card-content>
-    <mat-divider></mat-divider>
-    <mat-card-actions fxLayoutAlign="center center">
-      <button mat-flat-button color="accent" routerLink="/admin/news">
-        <span i18n>Manage News</span>
-      </button>
-    </mat-card-actions>
-  </mat-card>
+<div class="standalone_content"
+     fxLayout="row"
+     fxLayout.xs="column"
+     fxLayoutGap="16px"
+     fxLayoutAlign="center center">
+  <app-call-to-action fxFlex="30"
+                      icon="group"
+                      iconColor="accent"
+                      i18n-headline
+                      headline="Users"
+                      i18n-content
+                      content="Manage WISE users"
+                      destination="/admin/search"></app-call-to-action>
+  <app-call-to-action fxFlex="30"
+                      icon="vertical_split"
+                      iconColor="accent"
+                      i18n-headline
+                      headline="News"
+                      i18n-content
+                      content="Manage WISE news items"
+                      destination="/admin/news"></app-call-to-action>
 </div>
