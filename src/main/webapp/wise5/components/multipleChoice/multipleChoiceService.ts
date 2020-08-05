@@ -1,17 +1,22 @@
+'use strict';
+
 import { ComponentService } from '../componentService';
+import { Injectable } from '@angular/core';
+import { StudentDataService } from '../../services/studentDataService';
+import { UtilService } from '../../services/utilService';
+import { UpgradeModule } from '@angular/upgrade/static';
 
-class MultipleChoiceService extends ComponentService {
-  $translate: any;
+@Injectable()
+export class MultipleChoiceService extends ComponentService {
 
-  static $inject = ['$filter', 'StudentDataService', 'UtilService'];
-
-  constructor($filter, StudentDataService, UtilService) {
+  constructor(private upgrade: UpgradeModule,
+      protected StudentDataService: StudentDataService,
+      protected UtilService: UtilService) {
     super(StudentDataService, UtilService);
-    this.$translate = $filter('translate');
   }
 
   getComponentTypeLabel() {
-    return this.$translate('multipleChoice.componentTypeLabel');
+    return this.upgrade.$injector.get('$filter')('translate')('multipleChoice.componentTypeLabel');
   }
 
   createComponent() {
@@ -29,14 +34,12 @@ class MultipleChoiceService extends ComponentService {
    * @returns a boolean value whether the student chose the choice specified in the
    * criteria object
    */
-  choiceChosen(criteria) {
+  choiceChosen(criteria: any) {
     const nodeId = criteria.params.nodeId;
     const componentId = criteria.params.componentId;
     const constraintChoiceIds = criteria.params.choiceIds;
-    const latestComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(
-      nodeId,
-      componentId
-    );
+    const latestComponentState = this.StudentDataService
+        .getLatestComponentStateByNodeIdAndComponentId(nodeId, componentId);
     if (latestComponentState != null) {
       const studentChoices = latestComponentState.studentData.studentChoices;
       const studentChoiceIds = this.getStudentChoiceIdsFromStudentChoiceObjects(studentChoices);
@@ -45,18 +48,23 @@ class MultipleChoiceService extends ComponentService {
     return false;
   }
 
-  isChoicesSelected(studentChoiceIds, constraintChoiceIds) {
+  isChoicesSelected(studentChoiceIds: any, constraintChoiceIds: any) {
     if (typeof constraintChoiceIds === 'string') {
       return studentChoiceIds.length === 1 && studentChoiceIds[0] === constraintChoiceIds;
     } else if (Array.isArray(constraintChoiceIds)) {
-      if (studentChoiceIds.length === constraintChoiceIds.length) {
-        for (let constraintChoiceId of constraintChoiceIds) {
-          if (studentChoiceIds.indexOf(constraintChoiceId) === -1) {
+      return this.isChoiceIdsMatch(studentChoiceIds, constraintChoiceIds);
+    }
+    return false;
+  }
+
+  isChoiceIdsMatch(choiceIds1: string[], choiceIds2: string[]) {
+    if (choiceIds1.length === choiceIds2.length) {
+        for (let choiceId of choiceIds2) {
+          if (choiceIds1.indexOf(choiceId) === -1) {
             return false;
           }
         }
         return true;
-      }
     }
     return false;
   }
@@ -67,63 +75,39 @@ class MultipleChoiceService extends ComponentService {
    * an id and text fields
    * @returns an array of choice id strings
    */
-  getStudentChoiceIdsFromStudentChoiceObjects(studentChoices) {
-    let choiceIds = [];
-
+  getStudentChoiceIdsFromStudentChoiceObjects(studentChoices: any[]) {
+    const choiceIds = [];
     if (studentChoices != null) {
-      // loop through all the student choice objects
-      for (let c = 0; c < studentChoices.length; c++) {
-        // get a student choice object
-        let studentChoice = studentChoices[c];
-
+      for (const studentChoice of studentChoices) {
         if (studentChoice != null) {
-          // get the student choice id
-          let studentChoiceId = studentChoice.id;
-
-          choiceIds.push(studentChoiceId);
+          choiceIds.push(studentChoice.id);
         }
       }
     }
-
     return choiceIds;
   }
 
-  isCompleted(component, componentStates, componentEvents, nodeEvents, node) {
-    let result = false;
-
+  isCompleted(component: any, componentStates: any[], componentEvents: any[], nodeEvents: any[],
+      node: any) {
     if (componentStates && componentStates.length) {
-      let submitRequired =
-        node.showSubmitButton || (component.showSubmitButton && !node.showSaveButton);
-
-      // loop through all the component states
-      for (let c = 0, l = componentStates.length; c < l; c++) {
-        // the component state
-        let componentState = componentStates[c];
-
-        // get the student data from the component state
-        let studentData = componentState.studentData;
-
-        if (studentData != null) {
-          let studentChoices = studentData.studentChoices;
-
-          if (studentChoices != null) {
-            // there is a student choice so the component has saved work
-            if (submitRequired) {
-              // completion requires a submission, so check for isSubmit
-              if (componentState.isSubmit) {
-                result = true;
-                break;
-              }
-            } else {
-              result = true;
-              break;
-            }
-          }
+      const isSubmitRequired = this.calculateIfIsSubmitIsRequired(node, component);
+      for (let c = componentStates.length - 1; c >= 0; c--) {
+        const componentState = componentStates[c];
+        const studentChoices = this.getStudentChoicesFromComponentState(componentState);
+        if (studentChoices != null &&
+            (!isSubmitRequired || (isSubmitRequired && componentState.isSubmit))) {
+          return true;
         }
       }
     }
+    return false;
+  }
 
-    return result;
+  getStudentChoicesFromComponentState(componentState: any) {
+    if (componentState.studentData) {
+      return componentState.studentData.studentChoices;
+    }
+    return [];
   }
 
   /**
@@ -131,47 +115,24 @@ class MultipleChoiceService extends ComponentService {
    * @param componentState the component state
    * @return a human readable student data string
    */
-  getStudentDataString(componentState) {
-    let studentDataString = '';
-
+  getStudentDataString(componentState: any) {
     if (componentState != null) {
       const studentData = componentState.studentData;
-
       if (studentData != null) {
-        // get the choices the student chose
         const studentChoices = studentData.studentChoices;
-
         if (studentChoices != null) {
-          // loop through all the choices the student chose
-          for (let c = 0; c < studentChoices.length; c++) {
-            const studentChoice = studentChoices[c];
-
-            if (studentChoice != null) {
-              // get the choice text
-              const text = studentChoice.text;
-
-              if (text != null) {
-                if (studentDataString != '') {
-                  // separate the choices with a comma
-                  studentDataString += ', ';
-                }
-
-                // append the choice text
-                studentDataString += text;
-              }
-            }
-          }
+          return studentChoices.map(studentChoice => studentChoice.text).join(', ');
         }
       }
     }
-    return studentDataString;
+    return '';
   }
 
-  componentStateHasStudentWork(componentState, componentContent) {
+  componentStateHasStudentWork(componentState: any, componentContent: any) {
     if (componentState != null) {
-      let studentData = componentState.studentData;
+      const studentData = componentState.studentData;
       if (studentData != null) {
-        let studentChoices = studentData.studentChoices;
+        const studentChoices = studentData.studentChoices;
         if (studentChoices != null && studentChoices.length > 0) {
           return true;
         }
@@ -180,7 +141,7 @@ class MultipleChoiceService extends ComponentService {
     return false;
   }
 
-  componentHasCorrectAnswer(component) {
+  componentHasCorrectAnswer(component: any) {
     for (const choice of component.choices) {
       if (choice.isCorrect) {
         return true;
@@ -189,5 +150,3 @@ class MultipleChoiceService extends ComponentService {
     return false;
   }
 }
-
-export default MultipleChoiceService;
