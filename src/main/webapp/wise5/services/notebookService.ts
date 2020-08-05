@@ -88,23 +88,20 @@ export class NotebookService {
     const noteCopy = {...note};
     const clientTime = Date.parse(new Date().toString());
     noteCopy.clientDeleteTime = clientTime;
-    note.content.clientSaveTime = clientTime;
-    return this.updateNote(noteCopy);
+    return this.updateNote(noteCopy, clientTime);
   }
 
   reviveNote(note) {
     const noteCopy = {...note};
-    const clientTime = Date.parse(new Date().toString());
-    note.content.clientSaveTime = clientTime;
     noteCopy.clientDeleteTime = null;
     return this.updateNote(noteCopy);
   }
 
-  updateNote(note) {
+  updateNote(note, clientSaveTime = Date.parse(new Date().toString())) {
     note.id = null; // set to null so we're creating a new notebook item
     return this.saveNotebookItem(note.id, note.nodeId, note.localNotebookItemId, 
         note.type, note.title, note.content, note.groups, 
-        note.content.clientSaveTime, note.clientDeleteTime);
+        clientSaveTime, note.clientDeleteTime);
   }
 
   getLatestNotebookItemByLocalNotebookItemId(localNotebookItemId, 
