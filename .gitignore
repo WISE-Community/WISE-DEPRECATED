@@ -29,6 +29,7 @@ npm-debug.log
 hsqldb
 hsqldb_test
 src/main/webapp/curriculum/*
+src/main/webapp/newsuploads/*
 !src/main/webapp/curriculum/demo/
 !src/main/webapp/curriculum/e2e-test1/
 .classpath

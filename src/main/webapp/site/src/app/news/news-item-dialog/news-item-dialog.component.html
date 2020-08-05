@@ -1,6 +1,6 @@
 <h2 class="mat-dialog-title" i18n>News Item</h2>
 <div mat-dialog-content *ngIf="isAddMode || isEditMode">
-    <div fxLayout="row">
+    <div class="quill-container" fxLayout="row">
         <mat-form-field fxFlex="50" required>
             <mat-label i18n>Title</mat-label>
             <input class="accent-1" id="news-item-title" matInput fxFlexFill placeholder="News title" [formControl]="title" required />

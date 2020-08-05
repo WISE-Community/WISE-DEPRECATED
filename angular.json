@@ -18,8 +18,8 @@
             "polyfills": "src/main/webapp/site/src/polyfills.ts",
             "extractCss": true,
             "assets": ["src/main/webapp/site/src/assets", "src/main/webapp/site/src/favicon.ico"],
-            "styles": ["src/main/webapp/site/src/style/styles.scss", "./node_modules/quill/dist/quill.core.css", "./node_modules/quill/dist/quill.snow.css"],
-            "scripts": ["./node_modules/quill/dist/quill.js"]
+            "styles": ["src/main/webapp/site/src/style/styles.scss"],
+            "scripts": []
           },
           "configurations": {
             "production": {

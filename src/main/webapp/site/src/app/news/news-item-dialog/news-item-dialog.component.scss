@@ -7,9 +7,12 @@
 }
 
 #quill-editor {
-  height: 220px;
+  min-height: 220px;
+  max-height: 480px;
 
-  img {
-    max-width: 90% !important;
+  .ql-editor {
+    min-height: 220px;
+    max-height: 480px;
+    resize: vertical;
   }
 }

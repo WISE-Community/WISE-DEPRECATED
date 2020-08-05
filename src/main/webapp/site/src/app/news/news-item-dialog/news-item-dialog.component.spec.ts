@@ -10,6 +10,14 @@ import { I18n } from '@ngx-translate/i18n-polyfill';
 import { translationsFactory } from '../../app.module';
 
 export class MockNewsService {
+  getConfig(): Observable<any> {
+    return Observable.create(observer => {
+      const response = { newsUploadsBaseURL: '/mockBaseURL' };
+      observer.next(response);
+      observer.complete();
+    });
+  }
+
   createNewsItem(date: number, title: string, news: string, type: string): Observable<any> {
     return Observable.create(observer => {
       const response = { status: 'success' };

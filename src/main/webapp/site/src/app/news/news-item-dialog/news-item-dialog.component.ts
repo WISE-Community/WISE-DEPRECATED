@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Inject, Output, EventEmitter, ViewEncapsulation } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatSnackBar } from '@angular/material';
 import { FormControl, Validators } from '@angular/forms';
 import { NewsItemMode } from '../news-item-mode';
@@ -8,6 +8,7 @@ import { I18n } from '@ngx-translate/i18n-polyfill';
 import * as Quill from 'quill';
 
 @Component({
+  encapsulation: ViewEncapsulation.None,
   selector: 'app-news-item-dialog',
   templateUrl: './news-item-dialog.component.html',
   styleUrls: ['./news-item-dialog.component.scss']
@@ -17,7 +18,7 @@ export class NewsItemDialogComponent implements OnInit {
   @Output() onHide = new EventEmitter();
   @Output() onUpdate = new EventEmitter();
   @Output() onDelete = new EventEmitter();
-
+  
   isAddMode: boolean;
   isHideMode: boolean;
   isEditMode: boolean;
@@ -30,17 +31,16 @@ export class NewsItemDialogComponent implements OnInit {
   news = new FormControl(null, [Validators.required]);
 
   hideConfirmationMsg: string;
+  newsUploadsBaseUrl: string;
 
   editor: Quill;
-
   editorConfig = {
     modules: {
       toolbar: {
         container: [
           ['bold', 'italic', 'underline'],
           [{ header: 1 }, { header: 2 }, { header: 3 }],
-          [{ align: [] }],
-          [{ list: 'ordered' }, { list: 'bullet' }],
+          [{ align: [] }, { list: 'ordered' }, { list: 'bullet' }],
           ['blockquote', 'code-block'],
           [{ script: 'sub' }, { script: 'super' }],
           [{ color: [] }, { background: [] }],
@@ -55,13 +55,11 @@ export class NewsItemDialogComponent implements OnInit {
     theme: 'snow'
   };
 
-  constructor(
-    private dialogRef: MatDialogRef<NewsItemDialogComponent>,
-    private newsService: NewsService,
-    private snackBar: MatSnackBar,
-    private i18n: I18n,
-    @Inject(MAT_DIALOG_DATA) private data: any
-  ) {
+  constructor(private newsService: NewsService,
+              private dialogRef: MatDialogRef<NewsItemDialogComponent>,
+              private snackBar: MatSnackBar,
+              private i18n: I18n,
+              @Inject(MAT_DIALOG_DATA) private data: any) {
     this.isAddMode = NewsItemMode.ADD == data.mode;
     this.isHideMode = NewsItemMode.HIDE == data.mode;
     this.isEditMode = NewsItemMode.EDIT == data.mode;
@@ -84,7 +82,11 @@ export class NewsItemDialogComponent implements OnInit {
     }
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.newsService.getConfig().subscribe(config => {
+      this.newsUploadsBaseUrl = config.newsUploadsBaseURL;
+    });
+  }
 
   ngAfterViewInit() {
     if (this.isAddMode || this.isEditMode) {
@@ -194,7 +196,7 @@ export class NewsItemDialogComponent implements OnInit {
 
   private pushImageToEditor(imageName: string) {
     const range = this.editor.getSelection(true);
-    const imageUrl = `http://localhost:8080/news-uploads/${imageName}`;
+    const imageUrl = `${window.origin}${this.newsUploadsBaseUrl}/${imageName}`;
     this.editor.insertEmbed(range.index, 'image', imageUrl);
   }
 

@@ -46,10 +46,10 @@
 // Angular Material themes
 @import '~@angular/material/theming';
 
-// // 8. Quill Stylings
-// @import
-//   '../../../../../../node_modules/quill/dist/quill.core.css',
-//   '../../../../../../node_modules/quill/dist/quill.snow.css';
+// 8. Quill Stylings
+@import
+  '~quill/dist/quill.core.css',
+  '~quill/dist/quill.snow.css';
 
 // always include only once per project
 @include mat-core();

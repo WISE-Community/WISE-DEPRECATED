@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,11 +24,15 @@ import org.wise.portal.domain.user.User;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
+
+import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping(value = "/api/news", produces = "application/json;charset=UTF-8")
@@ -71,6 +76,13 @@ public class NewsAPIController {
       e.printStackTrace();
     }
     return newsItemJSON;
+  }
+
+  @GetMapping("/config")
+  protected HashMap<String, String> getConfig(HttpServletRequest request) {
+    HashMap<String, String> config = new HashMap<>();
+    config.put("newsUploadsBaseURL", appProperties.getProperty("newsuploads_base_www"));
+    return config;
   }
 
   @PostMapping("/create")
@@ -136,7 +148,11 @@ public class NewsAPIController {
     JSONObject response = new JSONObject();
     try {
       if (user.isAdmin()) {
-        String newsUploadDirPath = appProperties.getProperty("news_uploads_base_dir");
+        String newsUploadDirPath = appProperties.getProperty("newsuploads_base_dir");
+        File baseDirectory = new File(newsUploadDirPath);
+        if (!baseDirectory.exists()) {
+          baseDirectory.mkdir();
+        }
         String originalFileName = file.getOriginalFilename();
         String fileExtension = originalFileName.substring(originalFileName.length() - 4);
         String fileName = RandomStringUtils.randomAlphabetic(newsUploadNameLength);
