@@ -31,6 +31,7 @@ import { TeacherWebSocketService } from '../../../wise5/services/teacherWebSocke
 import { TableService } from '../../../wise5/components/table/tableService';
 import { OutsideURLService } from '../../../wise5/components/outsideURL/outsideURLService';
 import { NotificationService } from '../../../wise5/services/notificationService';
+import { MatchService } from '../../../wise5/components/match/matchService';
 
 @Component({template: ``})
 export class EmptyComponent {}
@@ -54,6 +55,7 @@ export class EmptyComponent {}
     ConfigService,
     CRaterService,
     OutsideURLService,
+    MatchService,
     NotificationService,
     { provide: ProjectService, useExisting: VLEProjectService },
     SessionService,

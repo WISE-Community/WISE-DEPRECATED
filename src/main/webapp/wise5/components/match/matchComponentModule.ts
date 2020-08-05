@@ -1,12 +1,13 @@
 'use strict';
 
 import * as angular from 'angular';
-import MatchService from './matchService';
+import { downgradeInjectable } from '@angular/upgrade/static';
+import { MatchService } from './matchService';
 import MatchController from './matchController';
 
 let matchComponentModule = angular
   .module('matchComponentModule', ['pascalprecht.translate'])
-  .service('MatchService', MatchService)
+  .service('MatchService', downgradeInjectable(MatchService))
   .controller('MatchController', MatchController)
   .config([
     '$translatePartialLoaderProvider',

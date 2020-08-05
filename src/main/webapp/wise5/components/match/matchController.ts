@@ -2,7 +2,7 @@
 
 import * as angular from 'angular';
 import ComponentController from '../componentController';
-import MatchService from './matchService';
+import { MatchService } from './matchService';
 
 class MatchController extends ComponentController {
   $mdMedia: any;
