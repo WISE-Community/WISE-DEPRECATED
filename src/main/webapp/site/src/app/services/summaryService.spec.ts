@@ -4,7 +4,7 @@ import { UpgradeModule } from "@angular/upgrade/static";
 import { StudentDataService } from "../../../../wise5/services/studentDataService";
 import { UtilService } from "../../../../wise5/services/utilService";
 import { HttpClientTestingModule } from "@angular/common/http/testing";
-import ConfigService from "../../../../wise5/services/configService";
+import { ConfigService } from "../../../../wise5/services/configService";
 import { AnnotationService } from "../../../../wise5/services/annotationService";
 import { ProjectService } from "../../../../wise5/services/projectService";
 import { TagService } from "../../../../wise5/services/tagService";

@@ -1,13 +1,14 @@
 'use strict';
 
 import * as angular from 'angular';
-import MatchService from './matchService';
+import { downgradeInjectable } from '@angular/upgrade/static';
+import { MatchService } from './matchService';
 import MatchController from './matchController';
 import MatchAuthoringController from './matchAuthoringController';
 
 let matchAuthoringComponentModule = angular
   .module('matchAuthoringComponentModule', ['pascalprecht.translate'])
-  .service('MatchService', MatchService)
+  .service('MatchService', downgradeInjectable(MatchService))
   .controller('MatchController', MatchController)
   .controller('MatchAuthoringController', MatchAuthoringController)
   .config([

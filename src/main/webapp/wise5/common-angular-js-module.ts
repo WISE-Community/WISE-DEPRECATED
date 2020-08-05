@@ -50,7 +50,7 @@ import './components/match/matchComponentModule';
 import './components/multipleChoice/multipleChoiceComponentModule';
 import NodeService from './services/nodeService';
 import { NotebookService } from './services/notebookService';
-import NotificationService from './services/notificationService';
+import { NotificationService } from './services/notificationService';
 import './components/openResponse/openResponseComponentModule';
 import './components/outsideURL/outsideURLComponentModule';
 import { SessionService } from './services/sessionService';
@@ -109,7 +109,7 @@ export function createCommonModule() {
   .service('HttpInterceptor', HttpInterceptor)
   .service('NodeService', NodeService)
   .service('NotebookService', downgradeInjectable(NotebookService))
-  .service('NotificationService', NotificationService)
+  .service('NotificationService', downgradeInjectable(NotificationService))
   .factory('SessionService', downgradeInjectable(SessionService))
   .factory('StudentAssetService', downgradeInjectable(StudentAssetService))
   .factory('TagService', downgradeInjectable(TagService))

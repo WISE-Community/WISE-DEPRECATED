@@ -8,26 +8,15 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.wise.portal.domain.group.Group;
-import org.wise.portal.domain.group.impl.PersistentGroup;
-import org.wise.portal.domain.run.Run;
-import org.wise.portal.domain.run.impl.RunImpl;
-import org.wise.portal.domain.workgroup.Workgroup;
-import org.wise.portal.domain.workgroup.impl.WorkgroupImpl;
+import org.wise.portal.domain.DomainTest;
 import org.wise.portal.service.notebook.NotebookItemJsonModule;
 import org.wise.vle.domain.work.NotebookItem;
 import org.wise.vle.domain.work.StudentAsset;
 import org.wise.vle.domain.work.StudentWork;
 
-public class NotebookItemTest {
-
-  Run run;
+public class NotebookItemTest extends DomainTest {
 
   StudentWork studentWork;
-
-  Workgroup workgroup;
-
-  Group period;
 
   StudentAsset studentAsset;
 
@@ -35,16 +24,11 @@ public class NotebookItemTest {
 
   @Before
   public void setup() {
-    run = new RunImpl();
-    run.setId(1L);
+    super.setup();
     studentWork = new StudentWork();
     studentWork.setId(154);
-    workgroup = new WorkgroupImpl();
-    workgroup.setId(64L);
     studentAsset = new StudentAsset();
     studentAsset.setId(45);
-    period = new PersistentGroup();
-    period.setId(12L);
 
     item = new NotebookItem();
     item.setId(99);
@@ -72,7 +56,7 @@ public class NotebookItemTest {
         ",\"content\":\"{\\\"text\\\":\\\"my note!\\\"}\"" +
         ",\"clientSaveTime\":1582337976000,\"serverSaveTime\":1582338031000" +
         ",\"clientDeleteTime\":null,\"serverDeleteTime\":null" +
-        ",\"periodId\":12,\"nodeId\":\"node78\",\"title\":\"Note from first step\"}", json);
+        ",\"periodId\":100,\"nodeId\":\"node78\",\"title\":\"Note from first step\"}", json);
   }
 
 }
