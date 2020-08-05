@@ -29,8 +29,9 @@ import { SummaryService } from '../../../wise5/components/summary/summaryService
 import { TeacherDataService } from '../../../wise5/services/teacherDataService';
 import { TeacherWebSocketService } from '../../../wise5/services/teacherWebSocketService';
 import { TableService } from '../../../wise5/components/table/tableService';
-import { OutsideURLService } from '../../../wise5/components/outsideURL/outsideURLService';
+import { NotebookService } from '../../../wise5/services/notebookService';
 import { NotificationService } from '../../../wise5/services/notificationService';
+import { OutsideURLService } from '../../../wise5/components/outsideURL/outsideURLService';
 import { MatchService } from '../../../wise5/components/match/matchService';
 import { MultipleChoiceService } from '../../../wise5/components/multipleChoice/multipleChoiceService';
 import { OpenResponseService } from '../../../wise5/components/openResponse/openResponseService';
@@ -56,6 +57,7 @@ export class EmptyComponent {}
     UtilService,
     ConfigService,
     CRaterService,
+    NotebookService,
     OutsideURLService,
     MatchService,
     MultipleChoiceService,

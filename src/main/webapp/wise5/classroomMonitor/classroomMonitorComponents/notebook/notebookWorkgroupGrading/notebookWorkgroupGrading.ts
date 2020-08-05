@@ -1,6 +1,6 @@
 'use strict';
 
-import NotebookService from '../../../../services/notebookService';
+import { NotebookService } from '../../../../services/notebookService';
 import { TeacherProjectService } from '../../../../services/teacherProjectService';
 
 class NotebookWorkgroupGradingController {

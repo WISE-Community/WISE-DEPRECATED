@@ -49,7 +49,7 @@ import './components/label/labelComponentModule';
 import './components/match/matchComponentModule';
 import './components/multipleChoice/multipleChoiceComponentModule';
 import NodeService from './services/nodeService';
-import NotebookService from './services/notebookService';
+import { NotebookService } from './services/notebookService';
 import { NotificationService } from './services/notificationService';
 import './components/openResponse/openResponseComponentModule';
 import './components/outsideURL/outsideURLComponentModule';
@@ -108,7 +108,7 @@ export function createCommonModule() {
   .factory('CRaterService', downgradeInjectable(CRaterService))
   .service('HttpInterceptor', HttpInterceptor)
   .service('NodeService', NodeService)
-  .service('NotebookService', NotebookService)
+  .service('NotebookService', downgradeInjectable(NotebookService))
   .service('NotificationService', downgradeInjectable(NotificationService))
   .factory('SessionService', downgradeInjectable(SessionService))
   .factory('StudentAssetService', downgradeInjectable(StudentAssetService))

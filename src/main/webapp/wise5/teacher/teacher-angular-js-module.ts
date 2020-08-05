@@ -10,6 +10,7 @@ import { SpaceService } from '../services/spaceService';
 import { StudentStatusService } from '../services/studentStatusService';
 import { TeacherDataService } from '../services/teacherDataService';
 import { TeacherWebSocketService } from '../services/teacherWebSocketService';
+import { NotebookService } from '../services/notebookService';
 import AuthoringToolController from '../authoringTool/authoringToolController';
 import AuthoringToolMainController from '../authoringTool/main/authoringToolMainController';
 import AdvancedAuthoringController from '../authoringTool/advanced/advancedAuthoringController';
@@ -89,6 +90,7 @@ export function createTeacherAngularJSModule() {
     .factory('StudentStatusService', downgradeInjectable(StudentStatusService))
     .service('TeacherDataService', downgradeInjectable(TeacherDataService))
     .service('TeacherWebSocketService', downgradeInjectable(TeacherWebSocketService))
+    .service('NotebookService', downgradeInjectable(NotebookService))
     .controller('AuthoringToolController', AuthoringToolController)
     .controller('AuthoringToolMainController', AuthoringToolMainController)
     .controller('AdvancedAuthoringController', AdvancedAuthoringController)
@@ -338,7 +340,7 @@ export function createTeacherAngularJSModule() {
               (NotebookService, ConfigService, config, project) => {
                 if (
                   NotebookService.isNotebookEnabled() ||
-                  NotebookService.isTeacherNotebookEnabled()
+                  NotebookService.isNotebookEnabled('teacherNotebook')
                 ) {
                   return NotebookService.retrieveNotebookItems().then(notebook => {
                     return notebook;

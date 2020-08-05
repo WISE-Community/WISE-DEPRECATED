@@ -2,7 +2,7 @@
 
 import { AnnotationService } from '../../../../services/annotationService';
 import { ConfigService } from '../../../../services/configService';
-import NotebookService from '../../../../services/notebookService';
+import { NotebookService } from '../../../../services/notebookService';
 import { TeacherDataService } from '../../../../services/teacherDataService';
 import { UtilService } from '../../../../services/utilService';
 

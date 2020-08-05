@@ -98,7 +98,7 @@ class NotebookItemController {
     this.$mdDialog.show(confirm).then(() => {
       this.NotebookService.reviveNote(this.item);
     }, () => {
-      // they chose not to delete. Do nothing, the dialog will close.
+      // they chose not to revive. Do nothing, the dialog will close.
     });
   }
 
