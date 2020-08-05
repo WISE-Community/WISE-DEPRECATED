@@ -7,6 +7,7 @@ import { ConfigService } from "./configService";
 import { NodeService } from "./nodeService";
 import { TagService } from "./tagService";
 import { StudentDataService } from "./studentDataService";
+import { NotificationService } from "./notificationService";
 
 @Injectable()
 export class StudentWebSocketService {
@@ -15,8 +16,8 @@ export class StudentWebSocketService {
   workgroupId: number;
 
   constructor(private upgrade: UpgradeModule, private AnnotationService: AnnotationService,
-      private ConfigService: ConfigService, private StudentDataService: StudentDataService,
-      private TagService: TagService) {
+      private ConfigService: ConfigService, private NotificationService: NotificationService,
+      private StudentDataService: StudentDataService, private TagService: TagService) {
   }
 
   initialize() {
@@ -56,7 +57,7 @@ export class StudentWebSocketService {
         (message, headers, res) => {
       if (message.type === 'notification') {
         const notification = JSON.parse(message.content);
-        this.upgrade.$injector.get('$rootScope').$broadcast('newNotificationReceived', notification);
+        this.NotificationService.addNotification(notification);
       } else if (message.type === 'annotation') {
         const annotationData = JSON.parse(message.content);
         this.AnnotationService.addOrUpdateAnnotation(annotationData);

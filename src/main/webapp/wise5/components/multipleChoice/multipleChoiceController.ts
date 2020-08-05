@@ -2,7 +2,7 @@
 
 import * as angular from 'angular';
 import ComponentController from '../componentController';
-import MultipleChoiceService from './multipleChoiceService';
+import { MultipleChoiceService } from './multipleChoiceService';
 
 class MultipleChoiceController extends ComponentController {
   $q: any;

@@ -2,7 +2,7 @@
 
 import { Injectable } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import ConfigService from './configService';
+import { ConfigService } from './configService';
 import { ProjectService } from './projectService';
 import { UpgradeModule } from '@angular/upgrade/static';
 import { ChooseBranchPathDialogComponent } from '../../site/src/app/preview/modules/choose-branch-path-dialog/choose-branch-path-dialog.component';

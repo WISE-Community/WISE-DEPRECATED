@@ -40,7 +40,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -65,7 +64,6 @@ import lombok.Setter;
     @Index(columnList = "workgroupId", name = "notebookItemsWorkgroupIdIndex")})
 @Getter
 @Setter
-@JsonSerialize(using = NotebookItemSerializer.class)
 public class NotebookItem extends PersistableDomain {
 
   @Id

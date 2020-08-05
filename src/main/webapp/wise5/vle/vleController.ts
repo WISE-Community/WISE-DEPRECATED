@@ -2,8 +2,8 @@
 
 import { AnnotationService } from '../services/annotationService';
 import { ConfigService } from '../services/configService';
-import NotificationService from '../services/notificationService';
-import NotebookService from '../services/notebookService';
+import { NotebookService } from '../services/notebookService';
+import { NotificationService } from '../services/notificationService';
 import { VLEProjectService } from './vleProjectService';
 import { SessionService } from '../services/sessionService';
 import { StudentDataService } from '../services/studentDataService';
@@ -517,10 +517,6 @@ class VLEController {
     });
   }
 
-  /**
-   * Dismiss the specified notification
-   * @param notification
-   */
   dismissNotification(event, notification) {
     if (notification.data == null || notification.data.dismissCode == null) {
       this.NotificationService.dismissNotification(notification);

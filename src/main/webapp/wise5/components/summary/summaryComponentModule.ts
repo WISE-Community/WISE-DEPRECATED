@@ -1,12 +1,13 @@
 'use strict';
 
 import * as angular from 'angular';
-import SummaryService from './summaryService';
+import { downgradeInjectable } from '@angular/upgrade/static';
+import { SummaryService } from './summaryService';
 import SummaryController from './summaryController';
 
 const summaryComponentModule = angular
   .module('summaryComponentModule', ['pascalprecht.translate'])
-  .service('SummaryService', SummaryService)
+  .service('SummaryService', downgradeInjectable(SummaryService))
   .controller('SummaryController', SummaryController)
   .config([
     '$translatePartialLoaderProvider',

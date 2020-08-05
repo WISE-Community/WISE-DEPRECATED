@@ -1,0 +1,196 @@
+{
+  "2": {
+    "allItems": [
+      {
+        "content": { "text": "test", "attachments": [], "clientSaveTime": 1500000000000 },
+        "id": 1,
+        "localNotebookItemId": "dlh2mz38vb",
+        "nodeId": "node1",
+        "periodId": 1,
+        "runId": 1,
+        "notebookItemId": null,
+        "title": "Note from Step #1",
+        "type": "note",
+        "workgroupId": 2,
+        "groups": [],
+        "clientSaveTime": 1500000000000,
+        "clientDeleteTime": null,
+        "serverDeleteTime": null,
+        "serverSaveTime": 1500000000000
+      },
+      {
+        "id": null,
+        "runId": 1,
+        "workgroupId": 2,
+        "type": "report",
+        "localNotebookItemId": "finalReport",
+        "content": {
+          "reportId": "finalReport",
+          "description": "Final summary report of what you learned in this project",
+          "title": "Final Report",
+          "prompt": "Use this space to write your final report using evidence from your notebook.",
+          "content": "<h3>This is a heading</h3><p>This is a paragraph.</p>",
+          "clientSaveTime": 1500000800000
+        },
+        "clientSaveTime": 1500000800000,
+        "serverSaveTime": 1500000800000,
+        "clientDeleteTime": null,
+        "serverDeleteTime": null
+      },
+      {
+        "content": { "text": "test 2", "attachments": [], "clientSaveTime": 1500000100000 },
+        "id": 2,
+        "localNotebookItemId": "stb6er46ad",
+        "nodeId": "node2",
+        "periodId": 1,
+        "runId": 1,
+        "notebookItemId": null,
+        "title": "Note from Step #2",
+        "type": "note",
+        "workgroupId": 2,
+        "groups": [],
+        "clientSaveTime": 1500000100000,
+        "clientDeleteTime": 1500002000000,
+        "serverDeleteTime": 1500002000000,
+        "serverSaveTime": 1500000100000
+      }
+    ],
+    "items": {
+      "dlh2mz38vb": [
+        {
+          "content": { "text": "test", "attachments": [], "clientSaveTime": 1500000000000 },
+          "id": 1,
+          "localNotebookItemId": "dlh2mz38vb",
+          "nodeId": "node1",
+          "periodId": 1,
+          "runId": 1,
+          "notebookItemId": null,
+          "title": "Note from Step #1",
+          "type": "note",
+          "workgroupId": 2,
+          "groups": [],
+          "clientSaveTime": 1500000000000,
+          "clientDeleteTime": null,
+          "serverDeleteTime": null,
+          "serverSaveTime": 1500000000000
+        }
+      ],
+      "finalReport": [
+        {
+          "id": null,
+          "runId": 1,
+          "workgroupId": 2,
+          "type": "report",
+          "localNotebookItemId": "finalReport",
+          "content": {
+            "reportId": "finalReport",
+            "description": "Final summary report of what you learned in this project",
+            "title": "Final Report",
+            "prompt": "Use this space to write your final report using evidence from your notebook.",
+            "content": "<h3>This is a heading</h3><p>This is a paragraph.</p>",
+            "clientSaveTime": 1500000800000
+          },
+          "clientSaveTime": 1500000800000,
+          "serverSaveTime": 1500000800000,
+          "clientDeleteTime": null,
+          "serverDeleteTime": null
+        }
+      ]
+    },
+    "deletedItems": {
+      "stb6er46ad": [
+        {
+          "content": { "text": "test 2", "attachments": [], "clientSaveTime": 1500000100000 },
+          "id": 2,
+          "localNotebookItemId": "stb6er46ad",
+          "nodeId": "node2",
+          "periodId": 1,
+          "runId": 1,
+          "notebookItemId": null,
+          "title": "Note from Step #2",
+          "type": "note",
+          "workgroupId": 2,
+          "groups": [],
+          "clientSaveTime": 1500000100000,
+          "clientDeleteTime": 1500002000000,
+          "serverDeleteTime": 1500002000000,
+          "serverSaveTime": 1500000100000
+        }
+      ]
+    }
+  },
+  "3": {
+    "allItems": [
+      {
+        "id": 4,
+        "runId": 1,
+        "workgroupId": 3,
+        "type": "note",
+        "localNotebookItemId": "x23rd6re23",
+        "content": "{\"text\":\"Yes. Woohoo!\",\"attachments\":[],\"studentWorkIds\":[1234],\"clientSaveTime\":1500010008000}",
+        "clientSaveTime": 1500010008000,
+        "serverSaveTime": 1500010008000,
+        "clientDeleteTime": null,
+        "serverDeleteTime": null,
+        "periodId": 1,
+        "nodeId": "node1",
+        "title": "Note from Step #1"
+      },
+      {
+        "id": 5,
+        "runId": 1,
+        "workgroupId": 3,
+        "type": "report",
+        "localNotebookItemId": "finalReport",
+        "content": "{\"reportId\":\"finalReport\",\"description\":\"Final summary report of what you learned in this project\",\"title\":\"Final Report\",\"prompt\":\"Use this space to write your final report using evidence from your notebook.\",\"content\":\"<h3>This is a heading</h3><p>This is a paragraph with some new text.</p></p>\",\"clientSaveTime\":1500000900000}",
+        "clientSaveTime": 1500000900000,
+        "serverSaveTime": 1500000900000,
+        "clientDeleteTime": null,
+        "serverDeleteTime": null
+      }
+    ],
+    "items": {
+      "dlh2mz38vb": [
+        {
+          "content": { "text": "Yes. Woohoo!", "attachments": [], "studentWorkIds":[1234], "clientSaveTime": 1500010008000 },
+          "id": 4,
+          "localNotebookItemId": "dlh2mz38vb",
+          "nodeId": "node1",
+          "periodId": 1,
+          "runId": 1,
+          "notebookItemId": null,
+          "title": "Note from Step #1",
+          "type": "note",
+          "workgroupId": 3,
+          "groups": [],
+          "clientSaveTime": 1500010008000,
+          "clientDeleteTime": null,
+          "serverDeleteTime": null,
+          "serverSaveTime": 1500010008000
+        }
+      ],
+      "finalReport": [
+        {
+          "id": null,
+          "runId": 1,
+          "workgroupId": 3,
+          "type": "report",
+          "localNotebookItemId": "finalReport",
+          "content": {
+            "reportId": "finalReport",
+            "description": "Final summary report of what you learned in this project",
+            "title": "Final Report",
+            "prompt": "Use this space to write your final report using evidence from your notebook.",
+            "content": "<h3>This is a heading</h3><p>This is a paragraph with some new text.</p>",
+            "clientSaveTime": 1500000900000
+          },
+          "clientSaveTime": 1500000900000,
+          "serverSaveTime": 1500000900000,
+          "clientDeleteTime": null,
+          "serverDeleteTime": null
+        }
+      ]
+    },
+    "deletedItems": {}
+  }
+}

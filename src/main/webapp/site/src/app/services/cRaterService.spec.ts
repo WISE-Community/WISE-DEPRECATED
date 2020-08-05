@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { CRaterService } from '../../../../wise5/services/cRaterService';
 import { UpgradeModule } from '@angular/upgrade/static';
-import ConfigService from '../../../../wise5/services/configService';
+import { ConfigService } from '../../../../wise5/services/configService';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 let service: CRaterService;
 let configService: ConfigService;

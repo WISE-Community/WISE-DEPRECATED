@@ -51,7 +51,7 @@ import NavigationController from './navigation/navigationController';
 import NodeController from './node/nodeController';
 import { NodeService } from '../services/nodeService';
 import NotebookService from '../services/notebookService';
-import NotificationService from '../services/notificationService';
+import { NotificationService } from '../services/notificationService';
 import '../components/openResponse/openResponseComponentModule';
 import '../components/outsideURL/outsideURLComponentModule';
 import { SessionService } from '../services/sessionService';
@@ -121,7 +121,7 @@ export function createModule(type = 'preview') {
   .service('HttpInterceptor', HttpInterceptor)
   .service('NodeService', downgradeInjectable(NodeService))
   .service('NotebookService', NotebookService)
-  .service('NotificationService', NotificationService)
+  .factory('NotificationService', downgradeInjectable(NotificationService))
   .factory('ProjectService', downgradeInjectable(VLEProjectService))
   .factory('SessionService', downgradeInjectable(SessionService))
   .factory('StudentAssetService', downgradeInjectable(StudentAssetService))

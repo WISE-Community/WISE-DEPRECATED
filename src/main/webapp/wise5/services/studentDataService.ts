@@ -1,7 +1,7 @@
 'use strict';
 
 import { Injectable } from "@angular/core";
-import ConfigService from "./configService";
+import { ConfigService } from "./configService";
 import { AnnotationService } from "./annotationService";
 import { ProjectService } from "./projectService";
 import { UtilService } from "./utilService";
@@ -1506,15 +1506,17 @@ export class StudentDataService extends DataService {
   }
 
   getClassmateStudentWork(nodeId, componentId, periodId) {
-    const params = new HttpParams()
+    let params = new HttpParams()
         .set('runId', this.ConfigService.getRunId())
         .set('nodeId', nodeId + '')
         .set('componentId', componentId + '')
         .set('getStudentWork', true + '')
         .set('getEvents', false + '')
         .set('getAnnotations', false + '')
-        .set('onlyGetLatest', true + '')
-        .set('periodId', periodId);
+        .set('onlyGetLatest', true + '');
+    if (periodId != null) {
+      params = params.set('periodId', periodId);
+    }
     const options = {
       params: params
     };
@@ -1525,15 +1527,17 @@ export class StudentDataService extends DataService {
   }
 
   getClassmateScores(nodeId, componentId, periodId) {
-    const params = new HttpParams()
+    let params = new HttpParams()
         .set('runId', this.ConfigService.getRunId())
         .set('nodeId', nodeId + '')
         .set('componentId', componentId + '')
         .set('getStudentWork', false + '')
         .set('getEvents', false + '')
         .set('getAnnotations', true + '')
-        .set('onlyGetLatest', false + '')
-        .set('periodId', periodId);
+        .set('onlyGetLatest', false + '');
+    if (periodId != null) {
+      params = params.set('periodId', periodId);
+    }
     const options = {
       params: params
     };

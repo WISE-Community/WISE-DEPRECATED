@@ -6,14 +6,12 @@ import { fabric } from 'fabric';
 window['fabric'] = fabric
 import ComponentController from '../componentController';
 import LabelService from './labelService';
-import OpenResponseService from '../openResponse/openResponseService';
 
 class LabelController extends ComponentController {
   $q: any;
   $timeout: any;
   $window: any;
   LabelService: LabelService;
-  OpenResponseService: OpenResponseService;
   isNewLabelButtonVisible: boolean;
   isCancelButtonVisible: boolean;
   notebookConfig: any;
@@ -49,7 +47,6 @@ class LabelController extends ComponentController {
     'LabelService',
     'NodeService',
     'NotebookService',
-    'OpenResponseService',
     'ProjectService',
     'StudentAssetService',
     'StudentDataService',
@@ -69,7 +66,6 @@ class LabelController extends ComponentController {
     LabelService,
     NodeService,
     NotebookService,
-    OpenResponseService,
     ProjectService,
     StudentAssetService,
     StudentDataService,
@@ -94,7 +90,6 @@ class LabelController extends ComponentController {
     this.$timeout = $timeout;
     this.$window = $window;
     this.LabelService = LabelService;
-    this.OpenResponseService = OpenResponseService;
 
     // whether the new label button is shown or not
     this.isNewLabelButtonVisible = true;

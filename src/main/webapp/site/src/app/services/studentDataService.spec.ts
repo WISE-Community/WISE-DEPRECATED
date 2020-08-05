@@ -1991,20 +1991,6 @@ function shouldGetClassmateStudentWork() {
       .withArgs('studentDataURL')
       .and.returnValue('/student');
     service.getClassmateStudentWork('node1', 'component1', 10);
-    const httpParams = {
-      method: 'GET',
-      url: '/student',
-      params: {
-        runId: 1,
-        nodeId: 'node1',
-        componentId: 'component1',
-        getStudentWork: true,
-        getEvents: false,
-        getAnnotations: false,
-        onlyGetLatest: true,
-        periodId: 10
-      }
-    };
     http.expectOne('/student?runId=1&nodeId=node1&componentId=component1&getStudentWork=true&' +
         'getEvents=false&getAnnotations=false&onlyGetLatest=true&periodId=10').flush({});
   });
@@ -2017,20 +2003,6 @@ function shouldGetClassmateScores() {
       .withArgs('studentDataURL')
       .and.returnValue('/student');
     service.getClassmateScores('node1', 'component1', 10);
-    const httpParams = {
-      method: 'GET',
-      url: '/student',
-      params: {
-        runId: 1,
-        nodeId: 'node1',
-        componentId: 'component1',
-        getStudentWork: false,
-        getEvents: false,
-        getAnnotations: true,
-        onlyGetLatest: false,
-        periodId: 10
-      }
-    };
     http.expectOne('/student?runId=1&nodeId=node1&componentId=component1&getStudentWork=false&' +
         'getEvents=false&getAnnotations=true&onlyGetLatest=false&periodId=10').flush({});
   });
@@ -2043,18 +2015,6 @@ function shouldGetStudentWorkById() {
       .withArgs('studentDataURL')
       .and.returnValue('/student');
     service.getStudentWorkById(1000);
-    const httpParams = {
-      method: 'GET',
-      url: '/student',
-      params: {
-        runId: 1,
-        id: 1000,
-        getStudentWork: true,
-        getEvents: false,
-        getAnnotations: false,
-        onlyGetLatest: true
-      }
-    };
     http.expectOne('/student?runId=1&id=1000&getStudentWork=true&getEvents=false&' +
         'getAnnotations=false&onlyGetLatest=true').flush({ studentWorkList: [] });
   });

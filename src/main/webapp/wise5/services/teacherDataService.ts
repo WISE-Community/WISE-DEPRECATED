@@ -3,7 +3,7 @@
 import { UpgradeModule } from "@angular/upgrade/static";
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { AnnotationService } from "./annotationService";
-import ConfigService from "./configService";
+import { ConfigService } from "./configService";
 import { UtilService } from "./utilService";
 import { TeacherProjectService } from "./teacherProjectService";
 import { TeacherWebSocketService } from "./teacherWebSocketService";
@@ -340,15 +340,17 @@ export class TeacherDataService extends DataService {
   }
 
   retrieveLatestStudentDataByNodeIdAndComponentIdAndPeriodId(nodeId, componentId, periodId) {
-    const params = new HttpParams()
+    let params = new HttpParams()
         .set('runId', this.ConfigService.getRunId())
         .set('nodeId', nodeId)
         .set('componentId', componentId)
-        .set('periodId', periodId)
         .set('getStudentWork', 'true')
         .set('getEvents', 'false')
         .set('getAnnotations', 'false')
         .set('onlyGetLatest', 'true');
+    if (periodId != null) {
+      params = params.set('periodId', periodId);
+    }
     return this.retrieveStudentData(params).then(result => {
       return result.studentWorkList;
     });

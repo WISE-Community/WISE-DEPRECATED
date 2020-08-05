@@ -24,7 +24,6 @@
 package org.wise.vle.domain.annotation.wise5;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -46,7 +45,7 @@ import java.sql.Timestamp;
 /**
  * WISE5 Annotation Domain Object Annotations are what users annotate on other user's work, such as
  * Comments, Scores, Flags.
- * 
+ *
  * @author Hiroki Terashima
  */
 @Entity(name = "wise5Annotation")
@@ -55,7 +54,6 @@ import java.sql.Timestamp;
     @Index(columnList = "toWorkgroupId", name = "annotationsToWorkgroupIdIndex") })
 @Getter
 @Setter
-@JsonSerialize(using = AnnotationSerializer.class)
 public class Annotation extends PersistableDomain {
 
   @Id

@@ -1,7 +1,7 @@
 'use strict';
 
 import ComponentController from '../componentController';
-import OutsideURLService from './outsideURLService';
+import { OutsideURLService } from './outsideURLService';
 
 class OutsideURLController extends ComponentController {
   $sce: any;

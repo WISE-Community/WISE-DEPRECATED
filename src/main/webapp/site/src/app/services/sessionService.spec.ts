@@ -1,7 +1,7 @@
 import { TestBed, tick, fakeAsync } from '@angular/core/testing';
 import { SessionService } from '../../../../wise5/services/sessionService';
 import { UpgradeModule } from '@angular/upgrade/static';
-import ConfigService from '../../../../wise5/services/configService';
+import { ConfigService } from '../../../../wise5/services/configService';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 let service: SessionService;
 let configService: ConfigService;

@@ -205,7 +205,6 @@ class EditNotebookItemController {
   save() {
     // go through the notebook item's attachments and look for any attachments that need to be uploaded and made into StudentAsset.
     let uploadAssetPromises = [];
-    this.item.content.clientSaveTime = Date.parse(new Date());  // set save timestamp
     if (this.item.content.attachments != null) {
       for (let i = 0; i < this.item.content.attachments.length; i++) {
         let attachment = this.item.content.attachments[i];
@@ -235,10 +234,10 @@ class EditNotebookItemController {
       this.NotebookService.saveNotebookItem(
           this.item.id, this.item.nodeId, this.item.localNotebookItemId,
           this.item.type, this.item.title, this.item.content, this.item.groups,
-          this.item.content.clientSaveTime)
-          .then(() => {
-            this.$mdDialog.hide();
-          });
+          Date.parse(new Date().toString()))
+        .then(() => {
+          this.$mdDialog.hide();
+        });
     });
   }
 

@@ -28,7 +28,6 @@ import java.sql.Timestamp;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -44,7 +43,7 @@ import org.wise.vle.domain.PersistableDomain;
 
 /**
  * Domain object representing work for a student, which include components and nodes (used in WISE5)
- * 
+ *
  * @author Hiroki Terashima
  */
 @Entity
@@ -53,7 +52,6 @@ import org.wise.vle.domain.PersistableDomain;
     @Index(columnList = "workgroupId", name = "studentWorkWorkgroupIdIndex") })
 @Getter
 @Setter
-@JsonSerialize(using = StudentWorkSerializer.class)
 public class StudentWork extends PersistableDomain {
 
   @Id
