@@ -6,9 +6,9 @@ import { UtilService } from "../services/utilService";
 
 @Injectable()
 export class ComponentService {
-  
+
   constructor(
-    protected StudentDataService: StudentDataService, 
+    protected StudentDataService: StudentDataService,
     protected UtilService: UtilService
   ) {
     this.StudentDataService = StudentDataService;
@@ -113,7 +113,7 @@ export class ComponentService {
     return false;
   }
 
-  calculateIfIsSubmitIsRequired(node: any, component: any) {
-    return node.showSubmitButton || (!node.showSaveButton && component.showSubmitButton);
+  isSubmitRequired(node: any, component: any) {
+    return node.showSubmitButton || (component.showSubmitButton && !node.showSaveButton);
   }
 }

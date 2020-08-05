@@ -38,7 +38,7 @@ export class OpenResponseService extends ComponentService {
   }
 
   isCompletedByComponentStates(component: any, componentStates: any[], node: any) {
-    if (this.calculateIfIsSubmitIsRequired(node, component)) {
+    if (this.isSubmitRequired(node, component)) {
       return this.isAnyComponentStateHasResponseAndIsSubmit(componentStates);
     } else {
       return this.isAnyComponentStateHasResponse(componentStates);

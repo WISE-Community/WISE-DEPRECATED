@@ -95,7 +95,7 @@ export class TableService extends ComponentService {
       return true;
     }
     if (componentStates != null && componentStates.length > 0) {
-      const submitRequired = this.calculateIfIsSubmitIsRequired(node, component);
+      const submitRequired = this.isSubmitRequired(node, component);
       for (let c = 0, l = componentStates.length; c < l; c++) {
         const componentState = componentStates[c];
         const studentData = componentState.studentData;
