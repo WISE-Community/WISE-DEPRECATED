@@ -11,6 +11,7 @@ export class NewsService {
   private createNewsItemUrl = 'api/news/create';
   private updateNewsItemUrl = 'api/news/update';
   private deleteNewsItemUrl = 'api/news/delete';
+  private saveNewsUploadUrl = 'api/news/news-upload/save';
 
   private headers = new HttpHeaders({ 'Cache-Control': 'no-cache' });
 
@@ -48,5 +49,11 @@ export class NewsService {
 
   deleteNewsItem(id: number): Observable<any> {
     return this.http.delete(`${this.deleteNewsItemUrl}/${id}`, { headers: this.headers }) as Observable<any>;
+  }
+
+  saveNewsUpload(file: File): Observable<any> {
+    const data = new FormData();
+    data.append('file', file);
+    return this.http.post(this.saveNewsUploadUrl, data);
   }
 }

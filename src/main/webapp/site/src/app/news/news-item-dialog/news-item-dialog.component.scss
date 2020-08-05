@@ -1,11 +1,15 @@
 #news-item-title {
-    font-size: 16px;
+  font-size: 16px;
 }
 
 #news-item-actions {
-    margin-top: 16px;
+  margin-top: 16px;
 }
 
-#editor-container {
-    height: 300px;
+#quill-editor {
+  height: 220px;
+
+  img {
+    max-width: 90% !important;
+  }
 }

@@ -14,16 +14,16 @@
             </mat-select>
         </mat-form-field>
     </div>
-    <quill-editor [formControl]="content" placeholder="Enter news content here ..." [styles]="editorStyles" [modules]="editorConfig"></quill-editor>
+    <div id="quill-editor"></div>
 </div>
 <div mat-dialog-content *ngIf="isDeleteMode || isHideMode" class="info-block">
     <p *ngIf="isHideMode" i18n>{{hideConfirmationMsg}}</p>
-    <p *ngIf="isDeleteMode" i18n>Are you sure you want to delete this news item? This action is not reversible.</p>
+    <p *ngIf="isDeleteMode" i18n>Are you sure you want to delete this news item?</p>
 </div>
 <div mat-dialog-actions fxLayoutGap="8px" id="news-item-actions">
     <span *ngIf="isDeleteMode || isHideMode" fxFlex="1 1 auto"></span>
     <button mat-button (click)="close()" color="accent" i18n>Cancel</button>
-    <button *ngIf="isAddMode" mat-button color="primary" (click)="create()" [disabled]="!title.valid || !type.valid || !content.valid" i18n>Publish</button>
-    <button *ngIf="isEditMode" mat-button color="primary" (click)="update()" [disabled]="!title.valid || !type.valid || !content.valid" i18n>Save</button>
+    <button *ngIf="isAddMode" mat-button color="primary" (click)="create()" [disabled]="!title.valid || !type.valid || !news.valid" i18n>Publish</button>
+    <button *ngIf="isEditMode" mat-button color="primary" (click)="update()" [disabled]="!title.valid || !type.valid || !news.valid" i18n>Save</button>
     <button *ngIf="isDeleteMode || isHideMode" mat-button color="primary" (click)="proceed()" i18n>Proceed</button>
 </div>
