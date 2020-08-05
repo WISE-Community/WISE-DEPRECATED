@@ -6,9 +6,9 @@ import { UtilService } from "../services/utilService";
 
 @Injectable()
 export class ComponentService {
-  
+
   constructor(
-    protected StudentDataService: StudentDataService, 
+    protected StudentDataService: StudentDataService,
     protected UtilService: UtilService
   ) {
     this.StudentDataService = StudentDataService;
