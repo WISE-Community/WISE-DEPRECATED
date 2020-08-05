@@ -119,10 +119,6 @@ export class TableService extends ComponentService {
     return false;
   }
 
-  calculateIfIsSubmitIsRequired(node, component) {
-    return node.showSubmitButton || (!node.showSaveButton && component.showSubmitButton);
-  }
-
   /**
    * Check if a table component has any editable cells.
    * @param component The component content.

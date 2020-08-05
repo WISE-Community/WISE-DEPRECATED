@@ -1,17 +1,22 @@
+'use strict';
+
+import { Injectable } from '@angular/core';
 import { ComponentService } from '../componentService';
+import { StudentDataService } from '../../services/studentDataService';
+import { UtilService } from '../../services/utilService';
+import { UpgradeModule } from '@angular/upgrade/static';
 
-class OpenResponseService extends ComponentService {
-  $translate: any;
+@Injectable()
+export class OpenResponseService extends ComponentService {
 
-  static $inject = ['$filter', 'StudentDataService', 'UtilService'];
-
-  constructor($filter, StudentDataService, UtilService) {
+  constructor(private upgrade: UpgradeModule,
+      protected StudentDataService: StudentDataService,
+      protected UtilService: UtilService) {
     super(StudentDataService, UtilService);
-    this.$translate = $filter('translate');
   }
 
   getComponentTypeLabel() {
-    return this.$translate('openResponse.componentTypeLabel');
+    return this.upgrade.$injector.get('$filter')('translate')('openResponse.componentTypeLabel');
   }
 
   createComponent() {
@@ -22,101 +27,96 @@ class OpenResponseService extends ComponentService {
     return component;
   }
 
-  isCompleted(component, componentStates, componentEvents, nodeEvents, node) {
-    let result = false;
-
-    if (componentStates && componentStates.length) {
-      let submitRequired =
-        node.showSubmitButton || (component.showSubmitButton && !node.showSaveButton);
-
-      if (submitRequired) {
-        // completion requires a submission, so check for isSubmit in any component states
-        for (let i = 0, l = componentStates.length; i < l; i++) {
-          let state = componentStates[i];
-          if (state.isSubmit && state.studentData) {
-            // component state is a submission
-            if (state.studentData.response) {
-              // there is a response so the component is completed
-              result = true;
-              break;
-            }
-          }
-        }
-      } else {
-        // get the last component state
-        let l = componentStates.length - 1;
-        let componentState = componentStates[l];
-
-        let studentData = componentState.studentData;
-
-        if (studentData != null) {
-          if (studentData.response || studentData.attachments.length > 0) {
-            // there is a response so the component is completed
-            result = true;
-          }
-        }
-      }
-    }
-
+  isCompleted(component: any, componentStates: any[], componentEvents: any[], nodeEvents: any[],
+      node: any) {
     if (component.completionCriteria != null) {
-      /*
-       * there is a special completion criteria authored in this component
-       * so we will evaluate the completion criteria to see if the student
-       * has completed this component
-       */
-      result = this.StudentDataService.isCompletionCriteriaSatisfied(component.completionCriteria);
+      return this.StudentDataService.isCompletionCriteriaSatisfied(component.completionCriteria);
+    } else if (this.hasComponentState(componentStates)) {
+      return this.isCompletedByComponentStates(component, componentStates, node);
     }
-
-    return result;
+    return false;
   }
 
-  displayAnnotation(componentContent, annotation) {
+  isCompletedByComponentStates(component: any, componentStates: any[], node: any) {
+    if (this.calculateIfIsSubmitIsRequired(node, component)) {
+      return this.isAnyComponentStateHasResponseAndIsSubmit(componentStates);
+    } else {
+      return this.isAnyComponentStateHasResponse(componentStates);
+    }
+  }
+
+  displayAnnotation(componentContent: any, annotation: any) {
     if (annotation.displayToStudent === false) {
       return false;
-    } else {
-      if (annotation.type == 'score') {
-      } else if (annotation.type == 'comment') {
-      } else if (annotation.type == 'autoScore') {
-        if (componentContent.cRater != null && !componentContent.cRater.showScore) {
-          return false;
-        } else if (componentContent.showAutoScore === false) {
-          return false;
-        }
-      } else if (annotation.type == 'autoComment') {
-        if (componentContent.cRater != null && !componentContent.cRater.showFeedback) {
-          return false;
-        } else if (componentContent.showAutoFeedback === false) {
-          return false;
-        }
-      }
+    } else if (annotation.type === 'autoScore') {
+      return this.isDisplayAnnotationForAutoScore(componentContent);
+    } else if (annotation.type === 'autoComment') {
+      return this.isDisplayAnnotationForAutoComment(componentContent);
     }
     return true;
   }
 
-  getStudentDataString(componentState) {
+  isDisplayAnnotationForAutoScore(componentContent: any) {
+    if ((componentContent.cRater != null && !componentContent.cRater.showScore) ||
+        componentContent.showAutoScore === false) {
+      return false;
+    }
+    return true;
+  }
+
+  isDisplayAnnotationForAutoComment(componentContent: any) {
+    if ((componentContent.cRater != null && !componentContent.cRater.showFeedback) ||
+        componentContent.showAutoFeedback === false) {
+      return false;
+    }
+    return true;
+  }
+
+  getStudentDataString(componentState: any) {
     return componentState.studentData.response;
   }
 
-  componentStateHasStudentWork(componentState, componentContent) {
+  componentStateHasStudentWork(componentState: any, componentContent: any) {
     if (this.hasStarterSentence(componentContent)) {
-      let response = componentState.studentData.response;
-      let starterSentence = componentContent.starterSentence;
+      const response = componentState.studentData.response;
+      const starterSentence = componentContent.starterSentence;
       return this.hasResponse(componentState) && response !== starterSentence;
     } else {
       return this.hasResponse(componentState);
     }
   }
 
-  hasStarterSentence(componentContent) {
+  hasComponentState(componentStates: any[]) {
+    return componentStates != null && componentStates.length > 0;
+  }
+
+  hasStarterSentence(componentContent: any) {
     const starterSentence = componentContent.starterSentence;
     return starterSentence != null && starterSentence !== '';
   }
 
-  hasResponse(componentState) {
+  hasResponse(componentState: any) {
     const response = componentState.studentData.response;
     const attachments = componentState.studentData.attachments;
     return (response != null && response !== '') || attachments.length > 0;
   }
-}
 
-export default OpenResponseService;
+  isAnyComponentStateHasResponse(componentStates: any[]) {
+    for (let c = componentStates.length - 1; c >= 0; c--) {
+      if (this.hasResponse(componentStates[c])) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  isAnyComponentStateHasResponseAndIsSubmit(componentStates: any[]) {
+    for (let c = componentStates.length - 1; c >= 0; c--) {
+      const componentState = componentStates[c];
+      if (this.hasResponse(componentState) && componentState.isSubmit) {
+        return true;
+      }
+    }
+    return false;
+  }
+}
