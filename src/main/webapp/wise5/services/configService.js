@@ -135,6 +135,10 @@ class ConfigService {
     return this.getConfigParam('studentUploadsBaseURL');
   }
 
+  getNewsUploadsBaseURL() {
+    return this.getConfigParam('newsUploadsBaseURL');
+  }
+
   getUserInfo() {
     return this.getConfigParam('userInfo');
   }
