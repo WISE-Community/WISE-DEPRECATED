@@ -4,7 +4,7 @@ import MultipleChoiceService from './multipleChoiceService';
 import MultipleChoiceController from './multipleChoiceController';
 import MultipleChoiceAuthoringController from './multipleChoiceAuthoringController';
 
-let multipleChoiceAuthoringComponentModule = angular.module('multipleChoiceAuthoringComponentModule', [
+const multipleChoiceAuthoringComponentModule = angular.module('multipleChoiceAuthoringComponentModule', [
   'pascalprecht.translate'
 ])
   .service('MultipleChoiceService', MultipleChoiceService)

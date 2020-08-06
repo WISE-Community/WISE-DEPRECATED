@@ -4,7 +4,7 @@ import AudioOscillatorService from './audioOscillatorService';
 import AudioOscillatorController from './audioOscillatorController';
 import AudioOscillatorAuthoringController from './audioOscillatorAuthoringController';
 
-let audioOscillatorAuthoringComponentModule = angular.module('audioOscillatorAuthoringComponentModule', [
+const audioOscillatorAuthoringComponentModule = angular.module('audioOscillatorAuthoringComponentModule', [
   'pascalprecht.translate'
 ])
   .service('AudioOscillatorService', AudioOscillatorService)

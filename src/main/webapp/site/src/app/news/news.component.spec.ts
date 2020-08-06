@@ -8,6 +8,7 @@ import { Observable } from 'rxjs';
 import { User } from "../domain/user";
 import * as moment from 'moment';
 import { configureTestSuite } from 'ng-bullet';
+import { MatDialog, MatSnackBar } from '@angular/material';
 
 const createNewsItem = (id, date, type, title, news, owner) => {
   return new News({
@@ -79,7 +80,9 @@ describe('NewsComponent', () => {
       declarations: [ NewsComponent ],
       imports: [ MomentModule ],
       providers: [
-        { provide: NewsService, useClass: MockNewsService }
+        { provide: NewsService, useClass: MockNewsService },
+        { provide: MatDialog, useValue: { open: () => {} }},
+        { provide: MatSnackBar, useValue: { open: msg => { }} }
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
     })

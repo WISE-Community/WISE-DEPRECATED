@@ -1,10 +1,9 @@
 package org.wise.portal.service.session;
 
-import org.springframework.security.core.userdetails.UserDetails;
-import org.wise.portal.domain.project.Project;
-
 import java.io.Serializable;
 import java.util.Set;
+
+import org.springframework.security.core.userdetails.UserDetails;
 
 public interface SessionService {
 
@@ -20,13 +19,13 @@ public interface SessionService {
 
   Set<String> getCurrentlyAuthoredProjects();
 
-  Set<String> getCurrentAuthors(String projectId);
+  Set<String> getCurrentAuthors(Serializable projectId);
 
-  void addCurrentAuthor(Project project, UserDetails author);
+  void addCurrentAuthor(Serializable projectdId, String authorUsername);
 
   void removeCurrentAuthor(UserDetails author);
 
-  void removeCurrentAuthor(Serializable id, UserDetails author);
+  void removeCurrentAuthor(Serializable projectdId, String authorUsername);
 
   void removeUser(UserDetails user);
 }

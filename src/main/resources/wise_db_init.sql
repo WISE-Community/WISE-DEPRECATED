@@ -64,23 +64,6 @@ create table acl_sid (
     primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-create table annotation (
-    id bigint not null auto_increment,
-    annotateTime datetime,
-    data mediumtext,
-    nodeId varchar(255),
-    postTime datetime,
-    runId bigint,
-    type varchar(255),
-    fromUser_id bigint,
-    stepWork_id bigint,
-    toUser_id bigint,
-    constraint annotationFromUserIdFK foreign key (fromUser_id) references userinfo (id),
-    constraint annotationStepWorkIdFK foreign key (stepWork_id) references stepwork (id),
-    constraint annotationToUserIdFK foreign key (toUser_id) references userinfo (id),
-    primary key (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 create table annotations (
     id integer not null auto_increment,
     clientSaveTime datetime not null,
@@ -99,34 +82,11 @@ create table annotations (
     index annotationsRunIdIndex (runId),
     index annotationsToWorkgroupIdIndex (toWorkgroupId),
     constraint annotationsFromWorkgroupIdFK foreign key (fromWorkgroupId) references workgroups (id),
-    constraint annotationsPeriodIdFK foreign key (periodId) references groups (id),
+    constraint annotationsPeriodIdFK foreign key (periodId) references `groups` (id),
     constraint annotationsRunIdFK foreign key (runId) references runs (id),
     constraint annotationsStudentWorkIdFK foreign key (studentWorkId) references studentWork (id),
     constraint annotationsToWorkgroupIdFK foreign key (toWorkgroupId) references workgroups (id),
     constraint annotationsNotebookItemIdFK foreign key (notebookItemId) references notebookItems (id),
-    primary key (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-create table announcements (
-    id mediumint not null auto_increment,
-    announcement mediumtext not null,
-    timestamp datetime not null,
-    title varchar(255) not null,
-    primary key (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-create table craterrequest (
-    id bigint not null auto_increment,
-    cRaterItemId varchar(255) not null,
-    cRaterItemType varchar(255),
-    cRaterResponse text,
-    failCount integer,
-    nodeStateId bigint not null,
-    runId bigint not null,
-    timeCompleted datetime,
-    timeCreated datetime,
-    stepWorkId bigint,
-    constraint craterrequestStepWorkIdFK foreign key (stepWorkId) references stepwork (id),
     primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -150,7 +110,7 @@ create table events (
     index eventsWorkgroupIdIndex (workgroupId),
     index eventsProjectIdIndex (projectId),
     index eventsUserIdIndex (userId),
-    constraint eventsPeriodIdFK foreign key (periodId) references groups (id),
+    constraint eventsPeriodIdFK foreign key (periodId) references `groups` (id),
     constraint eventsRunIdFK foreign key (runId) references runs (id),
     constraint eventsWorkgroupIdFK foreign key (workgroupId) references workgroups (id),
     constraint eventsProjectIdFK foreign key (projectId) references projects (id),
@@ -166,12 +126,12 @@ create table granted_authorities (
     primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-create table groups (
+create table `groups` (
     id bigint not null auto_increment,
     name varchar(255) not null,
     OPTLOCK integer,
     parent_fk bigint,
-    constraint groupsParentFK foreign key (parent_fk) references groups (id),
+    constraint groupsParentFK foreign key (parent_fk) references `groups` (id),
     primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -179,25 +139,8 @@ create table groups_related_to_users (
     group_fk bigint not null,
     user_fk bigint not null,
     constraint groups_related_to_usersUserFK foreign key (user_fk) references users (id),
-    constraint groups_related_to_usersGroupFK foreign key (group_fk) references groups (id),
+    constraint groups_related_to_usersGroupFK foreign key (group_fk) references `groups` (id),
     primary key (group_fk, user_fk)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-create table ideabasket (
-    id bigint not null auto_increment,
-    action varchar(255),
-    actionPerformer bigint,
-    data mediumtext,
-    ideaId bigint,
-    ideaWorkgroupId bigint,
-    isPublic bit,
-    periodId bigint,
-    postTime datetime,
-    projectId bigint,
-    runId bigint,
-    workgroupId bigint,
-    index ideabasketRunIdAndWorkgroupIdIndex (runId, workgroupId),
-    primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 create table newsitem (
@@ -208,15 +151,6 @@ create table newsitem (
     type varchar(255) not null,
     owner bigint not null,
     constraint newsitemOwnerFK foreign key (owner) references users (id),
-    primary key (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-create table node (
-    id bigint not null auto_increment,
-    nodeId varchar(255),
-    nodeType varchar(255),
-    runId varchar(255),
-    index nodeRunIdIndex (runId),
     primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -238,10 +172,10 @@ create table notebookItems (
     studentAssetId integer,
     studentWorkId integer,
     workgroupId bigint not null,
-    groups text,
+    `groups` text,
     index notebookItemsRunIdIndex (runId),
     index notebookItemsWorkgroupIdIndex (workgroupId),
-    constraint notebookItemsPeriodIdFK foreign key (periodId) references groups (id),
+    constraint notebookItemsPeriodIdFK foreign key (periodId) references `groups` (id),
     constraint notebookItemsRunIdFK foreign key (runId) references runs (id),
     constraint notebookItemsStudentIdFK foreign key (studentAssetId) references studentAssets (id),
     constraint notebookItemsStudentWorkIdFK foreign key (studentWorkId) references studentWork (id),
@@ -269,36 +203,9 @@ create table notification (
     index notificationToWorkgroupIdIndex (toWorkgroupId),
     index notificationFromWorkgroupIdIndex (fromWorkgroupId),
     constraint notificationFromWorkgroupIdFK foreign key (fromWorkgroupId) references workgroups (id),
-    constraint notificationPeriodIdFK foreign key (periodId) references groups (id),
+    constraint notificationPeriodIdFK foreign key (periodId) references `groups` (id),
     constraint notificationRunIdFK foreign key (runId) references runs (id),
     constraint notificationToWorkgroupIdFK foreign key (toWorkgroupId) references workgroups (id),
-    primary key (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-create table peerreviewgate (
-    id bigint not null auto_increment,
-    open bit,
-    periodId bigint,
-    runId bigint,
-    node_id bigint,
-    constraint peerreviewgateNodeIdFK foreign key (node_id) references node (id),
-    primary key (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-create table peerreviewwork (
-    id bigint not null auto_increment,
-    periodId bigint,
-    runId bigint,
-    annotation_id bigint,
-    node_id bigint,
-    reviewerUserInfo_id bigint,
-    stepWork_id bigint,
-    userInfo_id bigint,
-    constraint peerreviewworkAnnotationIdFK foreign key (annotation_id) references annotation (id),
-    constraint peerreviewworkNodeIdFK foreign key (node_id) references node (id),
-    constraint peerreviewworkReviewerUserInfoIdFK foreign key (reviewerUserInfo_id) references userinfo (id),
-    constraint peerreviewworkStepWorkIdFK foreign key (stepWork_id) references stepwork (id),
-    constraint peerreviewworkUserInfoIdFK foreign key (userInfo_id) references userinfo (id),
     primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -330,49 +237,6 @@ create table portal_statistics (
     totalNumberTeacherLogins bigint,
     totalNumberTeachers bigint,
     primary key (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-create table portfolio (
-    id bigint not null auto_increment,
-    deletedItems mediumtext,
-    isPublic bit,
-    isSubmitted bit,
-    items mediumtext,
-    metadata mediumtext,
-    postTime datetime,
-    runId bigint,
-    tags varchar(255),
-    workgroupId bigint,
-    index portfolioRunIdAndWorkgroupIdIndex (runId, workgroupId),
-    primary key (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-create table premadecommentlists (
-    id bigint not null auto_increment,
-    global bit,
-    label varchar(255) not null,
-    projectId bigint,
-    owner bigint,
-    constraint premadecommentlistsOwnerFK foreign key (owner) references users (id),
-    primary key (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-create table premadecomments (
-    id bigint not null auto_increment,
-    comment varchar(255) not null,
-    labels varchar(255),
-    listposition bigint,
-    owner bigint,
-    constraint premadecommentsOwnerFK foreign key (owner) references users (id),
-    primary key (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-create table premadecomments_related_to_premadecommentlists (
-    premadecommentslist_fk bigint not null,
-    premadecomments_fk bigint not null,
-    constraint premadecommentlistsPremadeCommentsFK foreign key (premadecomments_fk) references premadecomments (id),
-    constraint premadecommentlistsPremadeCommentsListFK foreign key (premadecommentslist_fk) references premadecommentlists (id),
-    primary key (premadecommentslist_fk, premadecomments_fk)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 create table projects (
@@ -446,19 +310,10 @@ create table runs (
     primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-create table runs_related_to_announcements (
-    runs_fk bigint not null,
-    announcements_fk mediumint not null,
-    constraint runs_related_to_announcementsAnnouncementsFK foreign key (announcements_fk) references announcements (id),
-    constraint runs_related_to_announcementsRunsFK foreign key (runs_fk) references runs (id),
-    constraint runs_related_to_announcementsAnnouncementsUnique unique (announcements_fk),
-    primary key (runs_fk, announcements_fk)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 create table runs_related_to_groups (
     runs_fk bigint not null,
     groups_fk bigint not null,
-    constraint runs_related_to_groupsGroupsFK foreign key (groups_fk) references groups (id),
+    constraint runs_related_to_groupsGroupsFK foreign key (groups_fk) references `groups` (id),
     constraint runs_related_to_groupsRunsFK foreign key (runs_fk) references runs (id),
     constraint runs_related_to_groupsGroupsUnique unique (groups_fk),
     primary key (runs_fk, groups_fk)
@@ -481,19 +336,6 @@ create table runstatus (
     primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-create table stepwork (
-    id bigint not null auto_increment,
-    data mediumtext not null,
-    endTime datetime,
-    postTime datetime not null,
-    startTime datetime,
-    node_id bigint not null,
-    userInfo_id bigint not null,
-    constraint stepworkNodeIdFK foreign key (node_id) references node (id),
-    constraint stepworkUserInfoIdFK foreign key (userInfo_id) references userinfo (id),
-    primary key (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 create table studentAssets (
     id integer not null auto_increment,
     clientDeleteTime datetime,
@@ -512,7 +354,7 @@ create table studentAssets (
     workgroupId bigint not null,
     index studentAssetsRunIdIndex (runId),
     index studentAssetsWorkgroupIdIndex (workgroupId),
-    constraint studentAssetsPeriodIdFK foreign key (periodId) references groups (id),
+    constraint studentAssetsPeriodIdFK foreign key (periodId) references `groups` (id),
     constraint studentAssetsRunIdFK foreign key (runId) references runs (id),
     constraint studentAssetsWorkgroupIdFK foreign key (workgroupId) references workgroups (id),
     primary key (id)
@@ -533,7 +375,7 @@ create table studentWork (
     workgroupId bigint not null,
     index studentWorkRunIdIndex (runId),
     index studentWorkWorkgroupIdIndex (workgroupId),
-    constraint studentWorkPeriodIdFK foreign key (periodId) references groups (id),
+    constraint studentWorkPeriodIdFK foreign key (periodId) references `groups` (id),
     constraint studentWorkRunIdFK foreign key (runId) references runs (id),
     constraint studentWorkWorkgroupIdFK foreign key (workgroupId) references workgroups (id),
     primary key (id)
@@ -634,27 +476,12 @@ create table user_details_related_to_roles (
     primary key (user_details_fk, granted_authorities_fk)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-create table userinfo (
-    id bigint not null auto_increment,
-    workgroupId bigint,
-    index userinfoWorkgroupIdIndex (workgroupId),
-    constraint userinfoWorkgroupIdUnique unique (workgroupId),
-    primary key (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
 create table users (
     id bigint not null auto_increment,
     OPTLOCK integer,
     user_details_fk bigint not null,
     constraint usersUserDetailsFK foreign key (user_details_fk) references user_details (id),
     constraint usersUserDetailsUnique unique (user_details_fk),
-    primary key (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-create table vle_statistics (
-    id bigint not null auto_increment,
-    data text,
-    timestamp datetime,
     primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -665,9 +492,9 @@ create table workgroups (
     period bigint,
     isTeacherWorkgroup bit,
     run_fk bigint not null,
-    constraint workgroupsGroupFK foreign key (group_fk) references groups (id),
+    constraint workgroupsGroupFK foreign key (group_fk) references `groups` (id),
     constraint workgroupsRunFK foreign key (run_fk) references runs (id),
-    constraint workgroupsPeriodFK foreign key (period) references groups (id),
+    constraint workgroupsPeriodFK foreign key (period) references `groups` (id),
     primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

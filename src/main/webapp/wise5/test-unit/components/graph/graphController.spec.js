@@ -1,73 +1,133 @@
 import vleModule from '../../../vle/vle';
 
+let $controller;
+let $rootScope;
+let $scope;
+let $httpBackend;
+let graphController;
+let component;
+
 describe('GraphController', () => {
-
-  let $controller;
-  let $rootScope;
-  let $scope;
-  let $httpBackend;
-  let graphController;
-  let component;
-  const createComponentState = (componentStateId, nodeId, componentId, componentStateIdReplyingTo, response) => {
-    return {
-      id: componentStateId,
-      nodeId: nodeId,
-      componentId: componentId,
-      studentData: {
-        response: response,
-        componentStateIdReplyingTo: componentStateIdReplyingTo
-      }
-    };
-  };
-
   beforeEach(angular.mock.module(vleModule.name));
 
   beforeEach(inject((_$controller_, _$rootScope_, _$httpBackend_) => {
     $controller = _$controller_;
     $rootScope = _$rootScope_;
     $httpBackend = _$httpBackend_;
-    component = {
-      id: '1sc05cn75f',
-      type: 'Graph',
-      prompt: 'Plot points on the graph.',
-      showSaveButton: false,
-      showSubmitButton: false,
-      graphType: 'line',
-      xAxis: {
-        title: {
-          text: 'Time (seconds)'
-        },
-        min: 0,
-        max: 100,
-        units: 's',
-        locked: true,
-        type: 'limits'
-      },
-      yAxis: {
-        title: {
-          text: 'Position (meters)'
-        },
-        min: 0,
-        max: 100,
-        units: 'm',
-        locked: true
-      },
-      series: [
-        {
-          id: 'series-0',
-          name: 'Prediction',
-          data: [],
-          color: 'blue',
-          canEdit: true
-        }
-      ]
-    };
+    component = createComponent();
     $scope = $rootScope.$new();
     $scope.componentContent = JSON.parse(JSON.stringify(component));
     graphController = $controller('GraphController', { $scope: $scope });
     graphController.nodeId = 'node1';
   }));
 
+  shouldMakeSureXIsWithinLimits();
+  shouldMakeSureYIsWithinLimits();
+  shouldGetTheSeriesFromTheTrials();
+  shouldPerformRounding();
+  shouldSetTheDefaultActiveSeries();
+  shouldGetSeriesByIndex();
+  shouldConvertRowDataToSeriesData();
+  shouldGetTheXColumnValueFromParams();
+  shouldGetTheYColumnValueFromParams();
+  shouldCheckIfASeriesIsTheActiveSeries();
+  shouldCreateANewTrial();
+  shouldGetTheTrialNumbers();
+  shouldDeleteATrial();
+  shouldMakeTheHighestTrialActive();
+  shouldGetTheHighestShownTrial();
+  shouldSetTheTrialIdsToShow();
+  shouldDeleteTrialsById();
+  shouldDeleteTrialById();
+  shouldGetTheLatestStudentDataTrial();
+  shouldHideAllTrials();
+  shouldCreateANewTrialObject();
+  shouldCopyASeries();
+  shouldRemoveDefaultTrialIfNecessary();
+  shouldCheckIfATrialHasAnEmptySeries();
+  shouldCheckIfASeriesIsEmpty();
+  shouldNotCreateNewTrialWhenNotNecessary();
+  shouldCopySeriesIntoTrial();
+  shouldCopyNameIntoTrial();
+  shouldGetTheTrialById();
+  shouldCheckIfThereIsAnEditableSeries();
+  shouldGetMinMaxValues();
+  shouldUpdateMinMaxAxisValues();
+  shouldClearSeriesIds();
+  shouldReadCSVIntoActiveSeries();
+  shouldConvertSeriesDataPointsFromLimitsToCategories();
+  shouldConvertSeriesDataPointsFromCategoriesToLimits();
+  shouldSetVerticalPlotLine();
+  shouldMergeComponentState();
+  shouldConvertSelectedCellsToTrialIds();
+  shouldConvertNullSelectedCellsToEmptyArrayOfTrialIds();
+  shouldReadTheConnectedComponentField();
+  shouldClickUndo();
+  shouldGetTheCategoryByIndex();
+  shouldGetTheXValueFromDataPoint();
+  shouldGetTheYValueFromDataPoint();
+  shouldGetTheLatestMouseOverPointX();
+  shouldGetTheLatestMouseOverPointY();
+  shouldAddPointToSeries();
+  shouldRemovePointFromSeries();
+  shouldGetTheTrialIndex();
+  shouldCreateTheChartConfig();
+  shouldCheckIfASeriesIsEditable();
+  shouldGetTheLatestEditableSeriesIndex();
+  shouldHandleTrialIdsToShowChanged();
+  shouldHandleTrialIbdsToShowChangedWhenTheLatestTrialIsNotEditable();
+  shouldShowAndHideTrials();
+  shouldShowTrialsAndHideTheCurrentlyActiveTrial();
+  shouldSetActiveTrialAndSeriesByTrialIdsToShow();
+  shouldNotSetTheActiveTrialAndSeriesIfTheTrialCanNotBeEdited();
+  shouldHandleDataExplorer();
+  shouldGenerateDataExplorerSeries();
+  shouldCalculateRegressionLine();
+  shouldGetValuesInColumn();
+  shouldSortLineData();
+  shouldConvertDataExplorerDataToSeriesData();
+});
+
+function createComponent() {
+  return {
+    id: '1sc05cn75f',
+    type: 'Graph',
+    prompt: 'Plot points on the graph.',
+    showSaveButton: false,
+    showSubmitButton: false,
+    graphType: 'line',
+    xAxis: {
+      title: {
+        text: 'Time (seconds)'
+      },
+      min: 0,
+      max: 100,
+      units: 's',
+      locked: true,
+      type: 'limits'
+    },
+    yAxis: {
+      title: {
+        text: 'Position (meters)'
+      },
+      min: 0,
+      max: 100,
+      units: 'm',
+      locked: true
+    },
+    series: [
+      {
+        id: 'series-0',
+        name: 'Prediction',
+        data: [],
+        color: 'blue',
+        canEdit: true
+      }
+    ]
+  };
+}
+
+function shouldMakeSureXIsWithinLimits() {
   it('should make sure x is within limits', () => {
     let highX = 120;
     highX = graphController.makeSureXIsWithinXMinMaxLimits(highX);
@@ -76,7 +136,9 @@ describe('GraphController', () => {
     lowX = graphController.makeSureXIsWithinXMinMaxLimits(lowX);
     expect(lowX).toEqual(0);
   });
+}
 
+function shouldMakeSureYIsWithinLimits() {
   it('should make sure y is within limits', () => {
     let highY = 120;
     highY = graphController.makeSureYIsWithinYMinMaxLimits(highY);
@@ -85,54 +147,64 @@ describe('GraphController', () => {
     lowY = graphController.makeSureYIsWithinYMinMaxLimits(lowY);
     expect(lowY).toEqual(0);
   });
+}
 
+function shouldGetTheSeriesFromTheTrials() {
   it('should get the series from the trials', () => {
     const trials = [
       {
         name: 'Trial 1',
         show: true,
-        series: [{
-          name: 'Prediction',
-          data: [
-            [0, 0],
-            [10, 20],
-            [20, 40]
-          ]
-        }, {
-          name: 'Actual',
-          data: [
-            [0, 0],
-            [10, 30],
-            [20, 60]
-          ]
-        }],
+        series: [
+          {
+            name: 'Prediction',
+            data: [
+              [0, 0],
+              [10, 20],
+              [20, 40]
+            ]
+          },
+          {
+            name: 'Actual',
+            data: [
+              [0, 0],
+              [10, 30],
+              [20, 60]
+            ]
+          }
+        ],
         id: 'u3ijj5vfxd'
       },
       {
         name: 'Trial 2',
         show: true,
-        series: [{
-          name: 'Prediction',
-          data: [
-            [0, 0],
-            [30, 20],
-            [40, 40]
-          ]
-        }, {
-          name: 'Actual',
-          data: [
-            [0, 0],
-            [30, 30],
-            [40, 60]
-          ]
-        }],
+        series: [
+          {
+            name: 'Prediction',
+            data: [
+              [0, 0],
+              [30, 20],
+              [40, 40]
+            ]
+          },
+          {
+            name: 'Actual',
+            data: [
+              [0, 0],
+              [30, 30],
+              [40, 60]
+            ]
+          }
+        ],
         id: 'u3ijj5vfxd'
       }
     ];
     const series = graphController.getSeriesFromTrials(trials);
     expect(series.length).toEqual(4);
   });
+}
 
+function shouldPerformRounding() {
   it('should perform rounding', () => {
     const number = 10.234;
     graphController.componentContent.roundValuesTo = 'integer';
@@ -142,7 +214,9 @@ describe('GraphController', () => {
     graphController.componentContent.roundValuesTo = 'hundredth';
     expect(graphController.performRounding(number)).toEqual(10.23);
   });
+}
 
+function shouldSetTheDefaultActiveSeries() {
   it('should set the default active series', () => {
     graphController.series = [
       {
@@ -159,7 +233,9 @@ describe('GraphController', () => {
     graphController.setDefaultActiveSeries();
     expect(graphController.activeSeries.name).toEqual('Series 2');
   });
+}
 
+function shouldGetSeriesByIndex() {
   it('should get series by index', () => {
     graphController.series = [
       {
@@ -175,12 +251,14 @@ describe('GraphController', () => {
     ];
     expect(graphController.getSeriesByIndex(1).name).toEqual('Series 2');
   });
+}
 
+function shouldConvertRowDataToSeriesData() {
   it('should convert row data to series data', () => {
     const rows = [
-      [{ text: 'Time' },{ text: 'Distance'}],
-      [{ text: '0' },{ text: '10' }],
-      [{ text: '20' },{ text: '30' }]
+      [{ text: 'Time' }, { text: 'Distance' }],
+      [{ text: '0' }, { text: '10' }],
+      [{ text: '20' }, { text: '30' }]
     ];
     const params = {
       skipFirstRow: true,
@@ -193,7 +271,9 @@ describe('GraphController', () => {
     expect(data[1][0]).toEqual(20);
     expect(data[1][1]).toEqual(30);
   });
+}
 
+function shouldGetTheXColumnValueFromParams() {
   it('should get the x column value from params', () => {
     const params1 = {
       skipFirstRow: true,
@@ -204,7 +284,9 @@ describe('GraphController', () => {
     const params2 = {};
     expect(graphController.getXColumnValue(params2)).toEqual(0);
   });
+}
 
+function shouldGetTheYColumnValueFromParams() {
   it('should get the y column value from params', () => {
     const params1 = {
       skipFirstRow: true,
@@ -215,59 +297,55 @@ describe('GraphController', () => {
     const params2 = {};
     expect(graphController.getYColumnValue(params2)).toEqual(1);
   });
+}
 
+function shouldCheckIfASeriesIsTheActiveSeries() {
   it('should check if a series is the active series', () => {
     const series1 = {};
     const series2 = {};
-    graphController.series = [
-      series1,
-      series2
-    ];
+    graphController.series = [series1, series2];
     graphController.activeSeries = series2;
     expect(graphController.isActiveSeries(series2)).toEqual(true);
   });
+}
 
+function shouldCreateANewTrial() {
   it('should create a new trial', () => {
     const series1 = {};
     const series2 = {};
-    graphController.series = [
-      series1,
-      series2
-    ];
+    graphController.series = [series1, series2];
     graphController.activeSeries = series1;
     expect(graphController.trials.length).toEqual(0);
     graphController.newTrial();
     expect(graphController.trials.length).toEqual(1);
   });
+}
 
+function shouldGetTheTrialNumbers() {
   it('should get the trial numbers', () => {
     graphController.trials = [];
     const trialNumbersEmpty = graphController.getTrialNumbers();
     expect(trialNumbersEmpty.length).toEqual(0);
-    graphController.trials = [
-      { name: 'Trial 1' },
-      { name: 'Trial 2' },
-      { name: 'Trial 3' }
-    ];
+    graphController.trials = [{ name: 'Trial 1' }, { name: 'Trial 2' }, { name: 'Trial 3' }];
     const trialNumbers = graphController.getTrialNumbers();
     expect(trialNumbers[0]).toEqual(1);
     expect(trialNumbers[1]).toEqual(2);
     expect(trialNumbers[2]).toEqual(3);
   });
+}
 
+function shouldDeleteATrial() {
   it('should delete a trial', () => {
-    graphController.trials = [
-      { name: 'Trial 1' },
-      { name: 'Trial 2' },
-      { name: 'Trial 3' }
-    ];
+    graphController.trials = [{ name: 'Trial 1' }, { name: 'Trial 2' }, { name: 'Trial 3' }];
     expect(graphController.trials.length).toEqual(3);
     graphController.deleteTrial(1);
     expect(graphController.trials.length).toEqual(2);
     expect(graphController.trials[0].name).toEqual('Trial 1');
     expect(graphController.trials[1].name).toEqual('Trial 3');
   });
+}
 
+function shouldMakeTheHighestTrialActive() {
   it('should make the highest trial active', () => {
     graphController.trials = [
       { name: 'Trial 1', id: 'aaaaaaaaaa', series: [] },
@@ -279,7 +357,9 @@ describe('GraphController', () => {
     graphController.makeHighestTrialActive();
     expect(graphController.activeTrial).toEqual(graphController.trials[1]);
   });
+}
 
+function shouldGetTheHighestShownTrial() {
   it('should get the highest shown trial', () => {
     graphController.trials = [
       { name: 'Trial 1', id: 'aaaaaaaaaa' },
@@ -291,7 +371,9 @@ describe('GraphController', () => {
     const highestTrial = graphController.getHighestTrial();
     expect(highestTrial).toEqual(graphController.trials[1]);
   });
+}
 
+function shouldSetTheTrialIdsToShow() {
   it('should set the trial ids to show', () => {
     expect(graphController.trialIdsToShow.length).toEqual(0);
     graphController.trials = [
@@ -304,7 +386,9 @@ describe('GraphController', () => {
     expect(graphController.trialIdsToShow[0]).toEqual('aaaaaaaaaa');
     expect(graphController.trialIdsToShow[1]).toEqual('cccccccccc');
   });
+}
 
+function shouldDeleteTrialsById() {
   it('should delete trials by id', () => {
     graphController.trials = [
       { name: 'Trial 1', id: 'aaaaaaaaaa' },
@@ -315,7 +399,9 @@ describe('GraphController', () => {
     graphController.deleteTrialsByTrialId(['aaaaaaaaaa', 'bbbbbbbbbb']);
     expect(graphController.trials.length).toEqual(1);
   });
+}
 
+function shouldDeleteTrialById() {
   it('should delete trial by id', () => {
     graphController.trials = [
       { name: 'Trial 1', id: 'aaaaaaaaaa' },
@@ -326,7 +412,9 @@ describe('GraphController', () => {
     graphController.deleteTrialId('bbbbbbbbbb');
     expect(graphController.trials.length).toEqual(2);
   });
+}
 
+function shouldGetTheLatestStudentDataTrial() {
   it('should get the latest student data trial', () => {
     const studentData = {
       trials: [
@@ -337,7 +425,9 @@ describe('GraphController', () => {
     const latestTrial = graphController.getLatestStudentDataTrial(studentData);
     expect(latestTrial.id).toEqual('bbbbbbbbbb');
   });
+}
 
+function shouldHideAllTrials() {
   it('should hide all trials', () => {
     graphController.trials = [
       { name: 'Trial 1', id: 'aaaaaaaaaa', show: true },
@@ -349,7 +439,9 @@ describe('GraphController', () => {
     expect(graphController.trials[0].show).toEqual(false);
     expect(graphController.trials[1].show).toEqual(false);
   });
+}
 
+function shouldCreateANewTrialObject() {
   it('should create a new trial object', () => {
     const trial = graphController.createNewTrial('aaaaaaaaaa');
     expect(trial.id).toEqual('aaaaaaaaaa');
@@ -357,7 +449,9 @@ describe('GraphController', () => {
     expect(trial.series.length).toEqual(0);
     expect(trial.show).toEqual(true);
   });
+}
 
+function shouldCopyASeries() {
   it('should copy a series', () => {
     const series = {
       name: 'Series 1',
@@ -373,54 +467,58 @@ describe('GraphController', () => {
     expect(newSeries.canEdit).toEqual(false);
     expect(newSeries.allowPointSelect).toEqual(false);
   });
+}
 
+function shouldRemoveDefaultTrialIfNecessary() {
   it('should remove default trial if necessary', () => {
-    graphController.trials = [
-      { name: 'Trial 1', id: 'aaaaaaaaaa', series: [] }
-    ];
+    graphController.trials = [{ name: 'Trial 1', id: 'aaaaaaaaaa', series: [] }];
     expect(graphController.trials.length).toEqual(1);
     const latestStudentDataTrialId = 2;
     graphController.removeDefaultTrialIfNecessary(latestStudentDataTrialId);
     expect(graphController.trials.length).toEqual(0);
   });
+}
 
+function shouldCheckIfATrialHasAnEmptySeries() {
   it('should check if a trial has an empty series', () => {
     const trial1 = { series: [] };
     expect(graphController.isTrialHasEmptySeries(trial1)).toEqual(true);
-    const trial2 = { series: [ { id: 'series-0' }, { id: 'series-1' }] };
+    const trial2 = { series: [{ id: 'series-0' }, { id: 'series-1' }] };
     expect(graphController.isTrialHasEmptySeries(trial2)).toEqual(false);
   });
+}
 
+function shouldCheckIfASeriesIsEmpty() {
   it('should check if a series is empty', () => {
-    const series1 = [ { data: [] } ];
+    const series1 = [{ data: [] }];
     expect(graphController.isSeriesEmpty(series1)).toEqual(true);
-    const series2 = [
-      { id: 'series-0', data: [[0, 10]] }
-    ];
+    const series2 = [{ id: 'series-0', data: [[0, 10]] }];
     expect(graphController.isSeriesEmpty(series2)).toEqual(false);
   });
+}
 
+function shouldCreateNewTrialIfNecessary() {
   it('should create new trial if necessary', () => {
-    graphController.trials = [
-      { name: 'Trial 1', id: 'aaaaaaaaaa', show: true }
-    ];
+    graphController.trials = [{ name: 'Trial 1', id: 'aaaaaaaaaa', show: true }];
     const trialId = 2;
     graphController.createNewTrialIfNecessary(trialId);
     expect(graphController.trials.length).toEqual(2);
   });
+}
 
+function shouldNotCreateNewTrialWhenNotNecessary() {
   it('should not create new trial when not necessary', () => {
-    graphController.trials = [
-      { name: 'Trial 1', id: 'aaaaaaaaaa', show: true }
-    ];
+    graphController.trials = [{ name: 'Trial 1', id: 'aaaaaaaaaa', show: true }];
     const trialId = 'aaaaaaaaaa';
     graphController.createNewTrialIfNecessary(trialId);
     expect(graphController.trials.length).toEqual(1);
   });
+}
 
+function shouldCopySeriesIntoTrial() {
   it('should copy series into trial', () => {
     const oldTrial = {
-      series: [ { id: 'series-0' } ]
+      series: [{ id: 'series-0' }]
     };
     const newTrial = {
       series: []
@@ -431,7 +529,9 @@ describe('GraphController', () => {
     graphController.copySeriesIntoTrial(oldTrial, newTrial, studentData, params);
     expect(newTrial.series.length).toEqual(1);
   });
+}
 
+function shouldCopyNameIntoTrial() {
   it('should copy name into trial', () => {
     const oldTrial = {
       name: 'Trial 1'
@@ -443,29 +543,25 @@ describe('GraphController', () => {
     graphController.copyTrialNameIntoTrial(oldTrial, newTrial);
     expect(newTrial.name).toEqual('Trial 1');
   });
+}
 
+function shouldGetTheTrialById() {
   it('should get the trial by id', () => {
     const trial1 = { name: 'Trial 1', id: 'aaaaaaaaaa' };
     const trial2 = { name: 'Trial 2', id: 'bbbbbbbbbb' };
     const trial3 = { name: 'Trial 3', id: 'cccccccccc' };
-    graphController.trials = [
-      trial1,
-      trial2,
-      trial3
-    ];
+    graphController.trials = [trial1, trial2, trial3];
     expect(graphController.getTrialById('aaaaaaaaaa')).toEqual(trial1);
     expect(graphController.getTrialById('bbbbbbbbbb')).toEqual(trial2);
     expect(graphController.getTrialById('cccccccccc')).toEqual(trial3);
   });
+}
 
+function shouldCheckIfThereIsAnEditableSeries() {
   it('should check if there is an editable series', () => {
-    graphController.series = [
-      { id: 'series-0', canEdit: false }
-    ];
+    graphController.series = [{ id: 'series-0', canEdit: false }];
     expect(graphController.hasEditableSeries()).toEqual(false);
-    graphController.series = [
-      { id: 'series-0', canEdit: true }
-    ];
+    graphController.series = [{ id: 'series-0', canEdit: true }];
     expect(graphController.hasEditableSeries()).toEqual(true);
     const trial0 = {
       id: 'trial0',
@@ -496,10 +592,18 @@ describe('GraphController', () => {
     };
     expect(graphController.hasEditableSeries(trial1.series)).toEqual(true);
   });
+}
 
+function shouldGetMinMaxValues() {
   it('should get min max values', () => {
     const series = [
-      { id: 'series-0', data: [[0, 20], [10, 200]] }
+      {
+        id: 'series-0',
+        data: [
+          [0, 20],
+          [10, 200]
+        ]
+      }
     ];
     const minMaxValues = graphController.getMinMaxValues(series);
     expect(minMaxValues.xMin).toEqual(0);
@@ -507,10 +611,18 @@ describe('GraphController', () => {
     expect(minMaxValues.yMin).toEqual(0);
     expect(minMaxValues.yMax).toEqual(200);
   });
+}
 
+function shouldUpdateMinMaxAxisValues() {
   it('should update min max axis values', () => {
     const series = [
-      { id: 'series-0', data: [[-10, -20], [1000, 2000]] }
+      {
+        id: 'series-0',
+        data: [
+          [-10, -20],
+          [1000, 2000]
+        ]
+      }
     ];
     const xAxis = { min: 0, max: 100 };
     const yAxis = { min: 0, max: 100 };
@@ -520,17 +632,18 @@ describe('GraphController', () => {
     expect(yAxis.min).toEqual(null);
     expect(yAxis.max).toEqual(null);
   });
+}
 
+function shouldClearSeriesIds() {
   it('should clear series ids', () => {
-    const series = [
-      { id: 'series-0' },
-      { id: 'series-1' }
-    ];
+    const series = [{ id: 'series-0' }, { id: 'series-1' }];
     graphController.clearSeriesIds(series);
     expect(series[0].id).toEqual(null);
     expect(series[1].id).toEqual(null);
   });
+}
 
+function shouldReadCSVIntoActiveSeries() {
   it('should read csv into active series', () => {
     const csvString = `0,100
     10, 200`;
@@ -541,17 +654,24 @@ describe('GraphController', () => {
     expect(graphController.activeSeries.data[1][0]).toEqual(10);
     expect(graphController.activeSeries.data[1][1]).toEqual(200);
   });
+}
 
+function shouldConvertSeriesDataPointsFromLimitsToCategories() {
   it('should convert series data points from limits to categories', () => {
     const series = {
-      data: [[0, 100],[10, 200]]
+      data: [
+        [0, 100],
+        [10, 200]
+      ]
     };
     const xAxisType = 'categories';
     graphController.convertSeriesDataPoints(series, xAxisType);
     expect(series.data[0]).toEqual(100);
     expect(series.data[1]).toEqual(200);
   });
+}
 
+function shouldConvertSeriesDataPointsFromCategoriesToLimits() {
   it('should convert series data points from categories to limits', () => {
     const series = {
       data: [100, 200]
@@ -561,27 +681,27 @@ describe('GraphController', () => {
     expect(series.data[0][1]).toEqual(100);
     expect(series.data[1][1]).toEqual(200);
   });
+}
 
+function shouldSetVerticalPlotLine() {
   it('should set vertical plot line', () => {
     const x = 10;
     graphController.setVerticalPlotLine(x);
     expect(graphController.plotLines.length).toEqual(1);
     expect(graphController.plotLines[0].value).toEqual(10);
   });
+}
 
+function shouldMergeComponentState() {
   it('should merge component state', () => {
     const baseComponentState = {
       studentData: {
-        trials: [
-          { id: 'aaaaaaaaaa', name: 'Trial 1', series: [] }
-        ]
+        trials: [{ id: 'aaaaaaaaaa', name: 'Trial 1', series: [] }]
       }
     };
     const connectedComponentState = {
       studentData: {
-        trials: [
-          { id: 'bbbbbbbbbb', name: 'Trial 2', series: [] }
-        ]
+        trials: [{ id: 'bbbbbbbbbb', name: 'Trial 2', series: [] }]
       }
     };
     const mergeFields = [
@@ -594,10 +714,16 @@ describe('GraphController', () => {
     const firstTime = false;
     expect(baseComponentState.studentData.trials[0].name).toEqual('Trial 1');
     graphController.mergeComponentState(
-      baseComponentState, connectedComponentState, mergeFields, firstTime);
+      baseComponentState,
+      connectedComponentState,
+      mergeFields,
+      firstTime
+    );
     expect(baseComponentState.studentData.trials[0].name).toEqual('Trial 2');
   });
+}
 
+function shouldConvertSelectedCellsToTrialIds() {
   it('should convert selected cells to trial ids', () => {
     const selectedCells = [
       {
@@ -618,13 +744,17 @@ describe('GraphController', () => {
     expect(selectedTrialIds[0]).toEqual('Aluminum-HotLiquid');
     expect(selectedTrialIds[1]).toEqual('Aluminum-ColdLiquid');
   });
+}
 
+function shouldConvertNullSelectedCellsToEmptyArrayOfTrialIds() {
   it('should convert null selected cells to empty array of trial ids', () => {
     const selectedCells = null;
     const selectedTrialIds = graphController.convertSelectedCellsToTrialIds(selectedCells);
     expect(selectedTrialIds.length).toEqual(0);
   });
+}
 
+function shouldReadTheConnectedComponentField() {
   it('should read the connected component field', () => {
     const studentData = {
       selectedCells: [
@@ -656,17 +786,14 @@ describe('GraphController', () => {
     expect(graphController.trials[2].show).toEqual(false);
     expect(graphController.trials[3].show).toEqual(false);
   });
+}
 
+function shouldClickUndo() {
   it('should click undo', () => {
-    graphController.trials = [
-      { id: 'aaaaaaaaaa' }
-    ];
+    graphController.trials = [{ id: 'aaaaaaaaaa' }];
     const componentState = {
       studentData: {
-        trials: [
-          { id: 'aaaaaaaaaa' },
-          { id: 'bbbbbbbbbb' }
-        ]
+        trials: [{ id: 'aaaaaaaaaa' }, { id: 'bbbbbbbbbb' }]
       }
     };
     graphController.undoStack = [componentState];
@@ -676,53 +803,76 @@ describe('GraphController', () => {
     expect(graphController.trials[0].id).toEqual('aaaaaaaaaa');
     expect(graphController.trials[1].id).toEqual('bbbbbbbbbb');
   });
+}
 
+function shouldGetTheCategoryByIndex() {
   it('should get the category by index', () => {
     graphController.componentContent = {
       xAxis: {
-        categories: [
-          'Computers',
-          'Phones',
-          'Pizzas'
-        ]
+        categories: ['Computers', 'Phones', 'Pizzas']
       }
     };
     expect(graphController.getCategoryByIndex(0)).toEqual('Computers');
     expect(graphController.getCategoryByIndex(1)).toEqual('Phones');
     expect(graphController.getCategoryByIndex(2)).toEqual('Pizzas');
   });
+}
 
+function shouldGetTheXValueFromDataPoint() {
   it('should get the x value from data point', () => {
     const dataPointObject = { x: 10, y: 20 };
     const dataPointArray = [100, 200];
     expect(graphController.getXValueFromDataPoint(dataPointObject)).toEqual(10);
     expect(graphController.getXValueFromDataPoint(dataPointArray)).toEqual(100);
   });
+}
 
+function shouldGetTheYValueFromDataPoint() {
   it('should get the y value from data point', () => {
     const dataPointObject = { x: 10, y: 20 };
     const dataPointArray = [100, 200];
     expect(graphController.getYValueFromDataPoint(dataPointObject)).toEqual(20);
     expect(graphController.getYValueFromDataPoint(dataPointArray)).toEqual(200);
   });
+}
 
+function shouldGetTheLatestMouseOverPointX() {
   it('should get the latest mouse over point x', () => {
-    graphController.mouseOverPoints = [{ x: 10, y: 20 }, { x: 11, y: 22 }];
+    graphController.mouseOverPoints = [
+      { x: 10, y: 20 },
+      { x: 11, y: 22 }
+    ];
     expect(graphController.getLatestMouseOverPointX()).toEqual(11);
-    graphController.mouseOverPoints = [[100, 200], [111, 222]];
+    graphController.mouseOverPoints = [
+      [100, 200],
+      [111, 222]
+    ];
     expect(graphController.getLatestMouseOverPointX()).toEqual(111);
   });
+}
 
+function shouldGetTheLatestMouseOverPointY() {
   it('should get the latest mouse over point y', () => {
-    graphController.mouseOverPoints = [{ x: 10, y: 20 }, { x: 11, y: 22 }];
+    graphController.mouseOverPoints = [
+      { x: 10, y: 20 },
+      { x: 11, y: 22 }
+    ];
     expect(graphController.getLatestMouseOverPointY()).toEqual(22);
-    graphController.mouseOverPoints = [[100, 200], [111, 222]];
+    graphController.mouseOverPoints = [
+      [100, 200],
+      [111, 222]
+    ];
     expect(graphController.getLatestMouseOverPointY()).toEqual(222);
   });
+}
 
+function shouldAddPointToSeries() {
   it('should add point to series', () => {
     const series = {
-      data: [[10, 20], [100, 200]]
+      data: [
+        [10, 20],
+        [100, 200]
+      ]
     };
     expect(series.data.length).toEqual(2);
     graphController.addPointToSeries(series, 1000, 2000);
@@ -730,10 +880,15 @@ describe('GraphController', () => {
     expect(series.data[2][0]).toEqual(1000);
     expect(series.data[2][1]).toEqual(2000);
   });
+}
 
+function shouldRemovePointFromSeries() {
   it('should remove point from series', () => {
     const series = {
-      data: [[10, 20], [100, 200]]
+      data: [
+        [10, 20],
+        [100, 200]
+      ]
     };
     expect(series.data.length).toEqual(2);
     graphController.removePointFromSeries(series, 10);
@@ -741,30 +896,26 @@ describe('GraphController', () => {
     expect(series.data[0][0]).toEqual(100);
     expect(series.data[0][1]).toEqual(200);
   });
+}
 
+function shouldGetTheTrialIndex() {
   it('should get the trial index', () => {
     const trial0 = {};
     const trial1 = {};
     const trial2 = {};
-    graphController.trials = [
-      trial0,
-      trial1,
-      trial2
-    ];
+    graphController.trials = [trial0, trial1, trial2];
     expect(graphController.getTrialIndex(trial0)).toEqual(0);
     expect(graphController.getTrialIndex(trial1)).toEqual(1);
     expect(graphController.getTrialIndex(trial2)).toEqual(2);
   });
+}
 
+function shouldCreateTheChartConfig() {
   it('should create the chart config', () => {
     const trial0 = {};
     const trial1 = {};
     const trial2 = {};
-    graphController.trials = [
-      trial0,
-      trial1,
-      trial2
-    ];
+    graphController.trials = [trial0, trial1, trial2];
     const deferred = {};
     const title = 'My Graph';
     const subtitle = 'My Subtitle';
@@ -776,10 +927,20 @@ describe('GraphController', () => {
       min: 0,
       max: 50
     };
-    const series = [[10, 20], [100, 200]];
+    const series = [
+      [10, 20],
+      [100, 200]
+    ];
     const zoomType = null;
-    const chartConfig = graphController.createChartConfig(deferred, title, subtitle, xAxis, yAxis,
-        series, zoomType);
+    const chartConfig = graphController.createChartConfig(
+      deferred,
+      title,
+      subtitle,
+      xAxis,
+      yAxis,
+      series,
+      zoomType
+    );
     expect(chartConfig.title.text).toEqual('My Graph');
     expect(chartConfig.xAxis.min).toEqual(0);
     expect(chartConfig.xAxis.max).toEqual(100);
@@ -788,45 +949,51 @@ describe('GraphController', () => {
     expect(chartConfig.series).toEqual(series);
     expect(chartConfig.options.chart.zoomType).toEqual(null);
   });
+}
 
+function shouldCheckIfASeriesIsEditable() {
   it('should check if a series is editable', () => {
     const multipleSeries = [
-      { id: 'series0', canEdit: true},
-      { id: 'series1', canEdit: false},
-      { id: 'series2', canEdit: true}
+      { id: 'series0', canEdit: true },
+      { id: 'series1', canEdit: false },
+      { id: 'series2', canEdit: true }
     ];
     expect(graphController.isSeriesEditable(multipleSeries, 0)).toEqual(true);
     expect(graphController.isSeriesEditable(multipleSeries, 1)).toEqual(false);
     expect(graphController.isSeriesEditable(multipleSeries, 2)).toEqual(true);
   });
+}
 
+function shouldGetTheLatestEditableSeriesIndex() {
   it('should get the latest editable series index', () => {
     const multipleSeries0 = [
-      { id: 'series0', canEdit: true},
-      { id: 'series1', canEdit: false},
-      { id: 'series2', canEdit: false}
+      { id: 'series0', canEdit: true },
+      { id: 'series1', canEdit: false },
+      { id: 'series2', canEdit: false }
     ];
     expect(graphController.getLatestEditableSeriesIndex(multipleSeries0)).toEqual(0);
     const multipleSeries1 = [
-      { id: 'series0', canEdit: true},
-      { id: 'series1', canEdit: true},
-      { id: 'series2', canEdit: false}
+      { id: 'series0', canEdit: true },
+      { id: 'series1', canEdit: true },
+      { id: 'series2', canEdit: false }
     ];
     expect(graphController.getLatestEditableSeriesIndex(multipleSeries1)).toEqual(1);
     const multipleSeries2 = [
-      { id: 'series0', canEdit: true},
-      { id: 'series1', canEdit: false},
-      { id: 'series2', canEdit: true}
+      { id: 'series0', canEdit: true },
+      { id: 'series1', canEdit: false },
+      { id: 'series2', canEdit: true }
     ];
     expect(graphController.getLatestEditableSeriesIndex(multipleSeries2)).toEqual(2);
     const multipleSeries3 = [
-      { id: 'series0', canEdit: false},
-      { id: 'series1', canEdit: false},
-      { id: 'series2', canEdit: false}
+      { id: 'series0', canEdit: false },
+      { id: 'series1', canEdit: false },
+      { id: 'series2', canEdit: false }
     ];
     expect(graphController.getLatestEditableSeriesIndex(multipleSeries3)).toEqual(null);
   });
+}
 
+function shouldHandleTrialIdsToShowChanged() {
   it('should handle trial ids to show changed', () => {
     const trial0 = {
       id: 'aaaaaaaaaa',
@@ -858,22 +1025,23 @@ describe('GraphController', () => {
         }
       ]
     };
-    graphController.trials = [
-      trial0,
-      trial1,
-      trial2
-    ];
+    graphController.trials = [trial0, trial1, trial2];
     graphController.activeTrial = trial1;
     graphController.activeSeries = trial1.series[0];
     graphController.previousTrialIdsToShow = ['aaaaaaaaaa', 'bbbbbbbbbb'];
     graphController.trialIdsToShow = ['aaaaaaaaaa', 'bbbbbbbbbb', 'cccccccccc'];
-    const studentDataChangedSpy = spyOn(graphController, 'studentDataChanged').and.callFake(() => {});
+    const studentDataChangedSpy = spyOn(
+      graphController,
+      'studentDataChanged'
+    ).and.callFake(() => {});
     graphController.trialIdsToShowChanged();
     expect(graphController.activeTrial).toEqual(trial2);
     expect(graphController.activeSeries).toEqual(trial2.series[0]);
     expect(studentDataChangedSpy).toHaveBeenCalled();
   });
+}
 
+function shouldHandleTrialIbdsToShowChangedWhenTheLatestTrialIsNotEditable() {
   it('should handle trial ids to show changed when the latest trial is not editable', () => {
     const trial0 = {
       id: 'aaaaaaaaaa',
@@ -905,11 +1073,7 @@ describe('GraphController', () => {
         }
       ]
     };
-    graphController.trials = [
-      trial0,
-      trial1,
-      trial2
-    ];
+    graphController.trials = [trial0, trial1, trial2];
     graphController.activeTrial = trial1;
     graphController.activeSeries = trial1.series[0];
     const trialIdsToShow = ['aaaaaaaaaa', 'bbbbbbbbbb', 'cccccccccc'];
@@ -919,7 +1083,9 @@ describe('GraphController', () => {
     expect(graphController.activeTrial).toEqual(trial1);
     expect(graphController.activeSeries).toEqual(trial1.series[0]);
   });
+}
 
+function shouldShowAndHideTrials() {
   it('should show and hide trials', () => {
     const trial0 = {
       id: 'aaaaaaaaaa',
@@ -951,11 +1117,7 @@ describe('GraphController', () => {
         }
       ]
     };
-    graphController.trials = [
-      trial0,
-      trial1,
-      trial2
-    ];
+    graphController.trials = [trial0, trial1, trial2];
     graphController.series = trial1.series;
     graphController.activeTrial = trial1;
     graphController.activeSeries = trial1.series[0];
@@ -965,7 +1127,9 @@ describe('GraphController', () => {
     expect(trial1.show).toEqual(true);
     expect(trial2.show).toEqual(false);
   });
+}
 
+function shouldShowTrialsAndHideTheCurrentlyActiveTrial() {
   it('should show trials and hide the currently active trial', () => {
     const trial0 = {
       id: 'aaaaaaaaaa',
@@ -997,11 +1161,7 @@ describe('GraphController', () => {
         }
       ]
     };
-    graphController.trials = [
-      trial0,
-      trial1,
-      trial2
-    ];
+    graphController.trials = [trial0, trial1, trial2];
     graphController.series = trial1.series;
     graphController.activeTrial = trial1;
     graphController.activeSeries = trial1.series[0];
@@ -1014,7 +1174,9 @@ describe('GraphController', () => {
     expect(graphController.activeTrial).toEqual(null);
     expect(graphController.activeSeries).toEqual(null);
   });
+}
 
+function shouldSetActiveTrialAndSeriesByTrialIdsToShow() {
   it('should set active trial and series by trial ids to show', () => {
     const trial0 = {
       id: 'aaaaaaaaaa',
@@ -1046,11 +1208,7 @@ describe('GraphController', () => {
         }
       ]
     };
-    graphController.trials = [
-      trial0,
-      trial1,
-      trial2
-    ];
+    graphController.trials = [trial0, trial1, trial2];
     graphController.series = trial2.series;
     graphController.activeTrial = trial2;
     graphController.activeSeries = trial2.series[0];
@@ -1060,7 +1218,9 @@ describe('GraphController', () => {
     expect(graphController.activeTrial).toEqual(trial1);
     expect(graphController.activeSeries).toEqual(trial1.series[0]);
   });
+}
 
+function shouldNotSetTheActiveTrialAndSeriesIfTheTrialCanNotBeEdited() {
   it('should not set the active trial and series if the trial can not be edited', () => {
     const trial0 = {
       id: 'aaaaaaaaaa',
@@ -1092,11 +1252,7 @@ describe('GraphController', () => {
         }
       ]
     };
-    graphController.trials = [
-      trial0,
-      trial1,
-      trial2
-    ];
+    graphController.trials = [trial0, trial1, trial2];
     graphController.series = trial1.series;
     graphController.activeTrial = trial1;
     graphController.activeSeries = trial1.series[0];
@@ -1106,7 +1262,9 @@ describe('GraphController', () => {
     expect(graphController.activeTrial).toEqual(trial1);
     expect(graphController.activeSeries).toEqual(trial1.series[0]);
   });
+}
 
+function shouldHandleDataExplorer() {
   it('should handle data explorer', () => {
     const studentData = {
       dataExplorerGraphType: 'scatter',
@@ -1116,9 +1274,7 @@ describe('GraphController', () => {
         [{ text: '2' }, { text: '20' }, { text: '200' }],
         [{ text: '3' }, { text: '30' }, { text: '300' }]
       ],
-      dataExplorerSeries: [
-        { xColumn: 0, yColumn: 1, name: 'The series name' }
-      ],
+      dataExplorerSeries: [{ xColumn: 0, yColumn: 1, name: 'The series name' }],
       dataExplorerXAxisLabel: 'Hello',
       dataExplorerYAxisLabel: 'World'
     };
@@ -1134,7 +1290,9 @@ describe('GraphController', () => {
     expect(series.data[0][0]).toEqual(1);
     expect(series.data[0][1]).toEqual(10);
   });
+}
 
+function shouldGenerateDataExplorerSeries() {
   it('should generate data explorer series', () => {
     const tableData = [
       [{ text: 'ID' }, { text: 'Age' }, { text: 'Score' }],
@@ -1147,8 +1305,14 @@ describe('GraphController', () => {
     const graphType = 'scatter';
     const name = 'Age';
     const color = 'blue';
-    const series = graphController.generateDataExplorerSeries(tableData, xColumn, yColumn,
-        graphType, name, color);
+    const series = graphController.generateDataExplorerSeries(
+      tableData,
+      xColumn,
+      yColumn,
+      graphType,
+      name,
+      color
+    );
     expect(series.name).toEqual('Age');
     expect(series.type).toEqual('scatter');
     expect(series.color).toEqual('blue');
@@ -1160,23 +1324,30 @@ describe('GraphController', () => {
     expect(series.data[2][0]).toEqual(3);
     expect(series.data[2][1]).toEqual(30);
   });
+}
 
+function shouldCalculateRegressionLine() {
   it('should calculate regression line', () => {
     const tableData = [
-      [{ text: "ID" }, { text: "Age" }, { text: "Score" }],
-      [{ text: "1" }, { text: "10" }, { text: "100" }],
-      [{ text: "2" }, { text: "20" }, { text: "200" }],
-      [{ text: "3" }, { text: "30" }, { text: "300" }]
+      [{ text: 'ID' }, { text: 'Age' }, { text: 'Score' }],
+      [{ text: '1' }, { text: '10' }, { text: '100' }],
+      [{ text: '2' }, { text: '20' }, { text: '200' }],
+      [{ text: '3' }, { text: '30' }, { text: '300' }]
     ];
     window.covariance = () => {};
-    spyOn(window, 'covariance').and.returnValue([[1, 10], [10, 100]]);
+    spyOn(window, 'covariance').and.returnValue([
+      [1, 10],
+      [10, 100]
+    ]);
     const regressionLineData = graphController.calculateRegressionLineData(tableData, 0, 1);
     expect(regressionLineData[0][0]).toEqual(1);
     expect(regressionLineData[0][1]).toEqual(10);
     expect(regressionLineData[1][0]).toEqual(3);
     expect(regressionLineData[1][1]).toEqual(30);
   });
-  
+}
+
+function shouldGetValuesInColumn() {
   it('should get values in column', () => {
     const tableData = [
       [{ text: 'ID' }, { text: 'Age' }, { text: 'Score' }],
@@ -1196,8 +1367,10 @@ describe('GraphController', () => {
     expect(column2[0]).toEqual(100);
     expect(column2[1]).toEqual(200);
     expect(column2[2]).toEqual(300);
-  }); 
+  });
+}
 
+function shouldSortLineData() {
   it('should sort line data', () => {
     const line = [
       [1, 10],
@@ -1210,7 +1383,9 @@ describe('GraphController', () => {
     expect(graphController.sortLineData(line[0], line[0])).toEqual(0);
     expect(graphController.sortLineData(line[2], line[3])).toEqual(-1);
   });
+}
 
+function shouldConvertDataExplorerDataToSeriesData() {
   it('should convert data explorer data to series data', () => {
     const rows = [
       [{ text: 'ID' }, { text: 'Age' }, { text: 'Score' }],
@@ -1229,4 +1404,4 @@ describe('GraphController', () => {
     expect(data[2][0]).toEqual(3);
     expect(data[2][1]).toEqual(30);
   });
-});
+}

@@ -7,12 +7,25 @@
     <mat-icon>settings</mat-icon><span i18n>Administrator Tools</span>
   </h1>
 </header>
-<section>
-  <h4>User Management</h4>
-  <a mat-button
-     routerLink="/admin/search"
-     routerLinkActive="active"
-     [routerLinkActiveOptions]="{ exact: true }">
-    <span i18n>Find User</span>
-  </a>
-</section>
+<div class="standalone_content"
+     fxLayout="row"
+     fxLayout.xs="column"
+     fxLayoutGap="16px"
+     fxLayoutAlign="center center">
+  <app-call-to-action fxFlex="30"
+                      icon="group"
+                      iconColor="accent"
+                      i18n-headline
+                      headline="Users"
+                      i18n-content
+                      content="Manage WISE users"
+                      destination="/admin/search"></app-call-to-action>
+  <app-call-to-action fxFlex="30"
+                      icon="vertical_split"
+                      iconColor="accent"
+                      i18n-headline
+                      headline="News"
+                      i18n-content
+                      content="Manage WISE news items"
+                      destination="/admin/news"></app-call-to-action>
+</div>

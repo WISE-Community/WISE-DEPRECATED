@@ -4,7 +4,7 @@ import ConceptMapService from './conceptMapService';
 import ConceptMapController from './conceptMapController';
 import ConceptMapAuthoringController from './conceptMapAuthoringController';
 
-let conceptMapAuthoringComponentModule = angular.module('conceptMapAuthoringComponentModule', [
+const conceptMapAuthoringComponentModule = angular.module('conceptMapAuthoringComponentModule', [
     'pascalprecht.translate'
   ])
   .service('ConceptMapService', ConceptMapService)

@@ -4,6 +4,7 @@ import { AuthGuard } from './auth.guard';
 import { AdminComponent } from './admin.component';
 import { AdminHomeComponent } from './admin-home/admin-home.component';
 import { FindUserComponent } from './find-user/find-user.component';
+import { ManageNewsComponent } from './manage-news/manage-news.component';
 
 const adminRoutes: Routes = [
   {
@@ -11,8 +12,9 @@ const adminRoutes: Routes = [
     component: AdminComponent,
     canActivate: [AuthGuard],
     children: [
-      { path: '', component: AdminHomeComponent },
-      { path: 'search', component: FindUserComponent }
+      { path: '', pathMatch: 'full', component: AdminHomeComponent },
+      { path: 'search', pathMatch: 'full', component: FindUserComponent },
+      { path: 'news', pathMatch: 'full', component: ManageNewsComponent }
     ]
   }
 ];

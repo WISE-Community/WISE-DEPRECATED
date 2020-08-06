@@ -1,0 +1,26 @@
+<h5 translate="chooseLessonStructure"></h5>
+<p translate="lessonStructuresDescription"></p>
+<div layout="row" layout-wrap layout-align="start stretch" layout-margin>
+  <md-card ng-repeat='structure in chooseStructureController.structures'
+      style="width: 280px;">
+    <md-card-title>
+      <md-card-title-text>
+        <h6 class="md-title center">{{ ::structure.label }}</h6>
+      </md-card-title-text>
+    </md-card-title>
+    <md-card-content layout-align="center center">
+      <md-icon class="md-48 text" style="display: block;">{{ ::structure.icon }}</md-icon>
+    </md-card-content>
+    <md-card-actions layout="column" layout-align="start">
+      <md-button class='createButton md-raised md-primary'
+        ng-click='chooseStructureController.chooseStructure(structure.route)'
+        aria-label="{{ ::'chooseStructure' | translate }}"
+        translate="SELECT"></md-button>
+    </md-card-actions>
+  </md-card>
+</div>
+<hr>
+<md-button class='createButton md-primary'
+    ng-click='chooseStructureController.cancel()'
+    aria-label='{{ ::"cancel" | translate }}'
+    translate='cancel'></md-button>

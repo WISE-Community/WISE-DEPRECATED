@@ -23,6 +23,13 @@
  */
 package org.wise.vle.domain.webservice.crater;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
@@ -35,32 +42,27 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.util.Properties;
-
 /**
  * Controller for using the CRater scoring servlet via HTTP
+ * 
  * @author Hiroki Terashima
  * @author Geoffrey Kwan
  */
 public class CRaterHttpClient {
 
   /**
-   * Handles POSTing a CRater Request to the CRater Servlet and returns the
-   * CRater response string.
-   * @param cRaterUrl the CRater url
-   * @param bodyData the xml body data to be sent to the CRater server
+   * Handles POSTing a CRater Request to the CRater Servlet and returns the CRater response string.
+   * 
+   * @param cRaterUrl
+   *                    the CRater url
+   * @param bodyData
+   *                    the xml body data to be sent to the CRater server
    * @return the response from the CRater server
    */
   public static String post(String cRaterUrl, String cRaterPassword, String bodyData) {
@@ -69,7 +71,8 @@ public class CRaterHttpClient {
       HttpClient client = HttpClientBuilder.create().build();
       HttpPost post = new HttpPost(cRaterUrl);
       try {
-        String authHeader = "Basic " + javax.xml.bind.DatatypeConverter.printBase64Binary(("extsyscrtr02dev:" + cRaterPassword).getBytes());
+        String authHeader = "Basic " + javax.xml.bind.DatatypeConverter
+            .printBase64Binary(("extsyscrtr02dev:" + cRaterPassword).getBytes());
         post.setHeader(HttpHeaders.AUTHORIZATION, authHeader);
         post.setEntity(new StringEntity(bodyData, ContentType.TEXT_XML));
         HttpResponse response = client.execute(post);
@@ -89,19 +92,28 @@ public class CRaterHttpClient {
 
   /**
    * Sends student work to the CRater server and receives the score as the response
-   * @param cRaterUrl the CRater scoring url
-   * @param cRaterPassword the CRater authorization password
-   * @param cRaterClientId the client id e.g. WISETEST
-   * @param itemId the item id e.g. Photo_Sun
-   * @param responseId the node state timestamp
-   * @param studentData the student work
+   * 
+   * @param cRaterUrl
+   *                         the CRater scoring url
+   * @param cRaterPassword
+   *                         the CRater authorization password
+   * @param cRaterClientId
+   *                         the client id e.g. WISETEST
+   * @param itemId
+   *                         the item id e.g. Photo_Sun
+   * @param responseId
+   *                         the node state timestamp
+   * @param studentData
+   *                         the student work
    * @return responseBody as a String, or null if there was an error during the request to CRater.
    */
-  public static String getCRaterScoringResponse(String cRaterUrl, String cRaterPassword, String cRaterClientId,
-      String itemId, String responseId, String studentData) {
+  public static String getCRaterScoringResponse(String cRaterUrl, String cRaterPassword,
+      String cRaterClientId, String itemId, String responseId, String studentData) {
     String responseString = null;
-    String bodyData = "<crater-request includeRNS='N'><client id='" + cRaterClientId + "'/><items><item id='" + itemId + "'>"
-      +"<responses><response id='" + responseId + "'><![CDATA["+studentData+"]]></response></responses></item></items></crater-request>";
+    String bodyData = "<crater-request includeRNS='N'><client id='" + cRaterClientId
+        + "'/><items><item id='" + itemId + "'>" + "<responses><response id='" + responseId
+        + "'><![CDATA[" + studentData
+        + "]]></response></responses></item></items></crater-request>";
 
     responseString = post(cRaterUrl, cRaterPassword, bodyData);
     return responseString;
@@ -109,32 +121,33 @@ public class CRaterHttpClient {
 
   /**
    * Makes a request to the CRater server for the scoring rubric for a specific item id.
-   * @param cRaterUrl the CRater verification url
-   * @param cRaterPassword the CRater authorization password
-   * @param cRaterClientId the client id e.g. WISETEST
-   * @param itemId the item id e.g. Photo_Sun
+   * 
+   * @param cRaterUrl
+   *                         the CRater verification url
+   * @param cRaterPassword
+   *                         the CRater authorization password
+   * @param cRaterClientId
+   *                         the client id e.g. WISETEST
+   * @param itemId
+   *                         the item id e.g. Photo_Sun
    * @return the scoring rubric for the item id
    */
-  public static String getCRaterVerificationResponse(String cRaterUrl, String cRaterPassword, String cRaterClientId,
-      String itemId) {
+  public static String getCRaterVerificationResponse(String cRaterUrl, String cRaterPassword,
+      String cRaterClientId, String itemId) {
     String responseString = null;
-    String bodyData = "<crater-verify><client id='" + cRaterClientId + "'/><items><item id='" + itemId + "'/></items></crater-verify>";
+    String bodyData = "<crater-verify><client id='" + cRaterClientId + "'/><items><item id='"
+        + itemId + "'/></items></crater-verify>";
     responseString = post(cRaterUrl, cRaterPassword, bodyData);
     return responseString;
   }
 
   /**
-   * @param cRaterResponseXML Response XML from CRater with one score. Example:
-   * <crater-results>
-   *   <tracking id="1013701"/>
-   *   <client id="WISETEST"/>
-   *   <items>
-   *     <item id="Photo_Sun">
-   *     <responses>
-   *       <response id="testID" score="4" concepts="1,2,3,4,5"/>
-   *     </responses>
-   *   </item>
-   * </items>
+   * @param cRaterResponseXML
+   *                            Response XML from CRater with one score. Example: <crater-results>
+   *                            <tracking id="1013701"/> <client id="WISETEST"/> <items>
+   *                            <item id="Photo_Sun"> <responses>
+   *                            <response id="testID" score="4" concepts="1,2,3,4,5"/> </responses>
+   *                            </item> </items>
    *
    * @return An integer.
    */
@@ -151,27 +164,17 @@ public class CRaterHttpClient {
   }
 
   /**
-   * @param cRaterResponseXML Response XML from CRater with multiple scores. Example:
-   * <crater-results>
-   *    <tracking id="1367459" />
-   *    <client id="WISETEST" />
-   *    <items>
-   *       <item id="STRIDES_EX1">
-   *          <responses>
-   *             <response id="1547591618656" score="" realNumberScore="" confidenceMeasure="0.99">
-   *                <scores>
-   *                   <score id="science" score="0" realNumberScore="0.2919" />
-   *                   <score id="engineering" score="0" realNumberScore="0.2075" />
-   *                   <score id="ki" score="0" realNumberScore="0.2075" />
-   *                </scores>
-   *                <advisorylist>
-   *                   <advisorycode>0</advisorycode>
-   *                </advisorylist>
-   *             </response>
-   *          </responses>
-   *       </item>
-   *    </items>
-   * </crater-results>
+   * @param cRaterResponseXML
+   *                            Response XML from CRater with multiple scores. Example:
+   *                            <crater-results> <tracking id="1367459" /> <client id="WISETEST" />
+   *                            <items> <item id="STRIDES_EX1"> <responses>
+   *                            <response id="1547591618656" score="" realNumberScore=""
+   *                            confidenceMeasure="0.99"> <scores>
+   *                            <score id="science" score="0" realNumberScore="0.2919" />
+   *                            <score id="engineering" score="0" realNumberScore="0.2075" />
+   *                            <score id="ki" score="0" realNumberScore="0.2075" /> </scores>
+   *                            <advisorylist> <advisorycode>0</advisorycode> </advisorylist>
+   *                            </response> </responses> </item> </items> </crater-results>
    * @return A JSONArray of objects.
    */
   public static JSONArray getScores(String cRaterResponseXML) throws JSONException {
@@ -224,21 +227,17 @@ public class CRaterHttpClient {
   }
 
   /**
-   * Gets and Returns the Concepts from the CRater response XML string,
-   * or "" if it does not exist.
-   * @param cRaterResponseXML response XML from the CRater. Looks like this:
-   * <crater-results>
-   *   <tracking id="1013701"/>
-   *   <client id="WISETEST"/>
-   *   <items>
-   *     <item id="Photo_Sun">
-   *     <responses>
-   *       <response id="testID" score="4" concepts="1,2,3,4,5"/>
-   *     </responses>
-   *   </item>
-   * </items>
+   * Gets and Returns the Concepts from the CRater response XML string, or "" if it does not exist.
+   * 
+   * @param cRaterResponseXML
+   *                            response XML from the CRater. Looks like this: <crater-results>
+   *                            <tracking id="1013701"/> <client id="WISETEST"/> <items>
+   *                            <item id="Photo_Sun"> <responses>
+   *                            <response id="testID" score="4" concepts="1,2,3,4,5"/> </responses>
+   *                            </item> </items>
    *
-   * @return String concepts returned from the CRater. In the case above, this method will return "1,2,3,4,5".
+   * @return String concepts returned from the CRater. In the case above, this method will return
+   *         "1,2,3,4,5".
    */
   public static String getConcepts(String cRaterResponseXML) {
     try {

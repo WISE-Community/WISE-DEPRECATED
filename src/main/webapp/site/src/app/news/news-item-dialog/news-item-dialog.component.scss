@@ -1,0 +1,18 @@
+#news-item-title {
+  font-size: 16px;
+}
+
+#news-item-actions {
+  margin-top: 16px;
+}
+
+#quill-editor {
+  min-height: 220px;
+  max-height: 480px;
+
+  .ql-editor {
+    min-height: 220px;
+    max-height: 480px;
+    resize: vertical;
+  }
+}

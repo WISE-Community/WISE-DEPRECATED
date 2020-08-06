@@ -24,6 +24,7 @@
 package org.wise.portal.dao.work;
 
 import org.json.JSONObject;
+
 import org.wise.portal.dao.SimpleDao;
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.run.Run;
@@ -34,12 +35,20 @@ import java.util.List;
 
 /**
  * Domain Access Object for Event
+ * 
  * @author Hiroki Terashima
  */
 public interface EventDao<T extends Event> extends SimpleDao<T> {
 
-  List<Event> getEventsByParams(Integer id, Run run, Group period, Workgroup workgroup,
-      String nodeId, String componentId, String componentType, String context, String category,
-      String event, List<JSONObject> components);
+  List<Event> getEvents(Run run);
+
+  List<Event> getStudentEvents(Run run);
+
+  List<Event> getTeacherEvents(Run run);
+
+  List<Event> getEventsByParams(Integer id, Run run, Group period,
+      Workgroup workgroup, String nodeId, String componentId,
+      String componentType, String context, String category, String event,
+      List<JSONObject> components);
 
 }

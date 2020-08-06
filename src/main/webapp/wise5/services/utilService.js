@@ -1,13 +1,7 @@
 'use strict';
 
 class UtilService {
-  constructor(
-      $filter,
-      $injector,
-      $mdDialog,
-      $q,
-      $rootScope,
-      $timeout) {
+  constructor($filter, $injector, $mdDialog, $q, $rootScope, $timeout) {
     this.$filter = $filter;
     this.$injector = $injector;
     this.$mdDialog = $mdDialog;
@@ -24,9 +18,44 @@ class UtilService {
    * characters in length.
    */
   generateKey(length) {
-    this.CHARS = ["a","b","c","d","e","f","g","h","i","j","k","l","m",
-        "n","o","p","q","r", "s","t","u","v","w","x","y","z",
-        "0","1","2","3","4","5","6","7","8","9"];
+    this.CHARS = [
+      'a',
+      'b',
+      'c',
+      'd',
+      'e',
+      'f',
+      'g',
+      'h',
+      'i',
+      'j',
+      'k',
+      'l',
+      'm',
+      'n',
+      'o',
+      'p',
+      'q',
+      'r',
+      's',
+      't',
+      'u',
+      'v',
+      'w',
+      'x',
+      'y',
+      'z',
+      '0',
+      '1',
+      '2',
+      '3',
+      '4',
+      '5',
+      '6',
+      '7',
+      '8',
+      '9'
+    ];
 
     if (!length) {
       length = 10;
@@ -38,7 +67,7 @@ class UtilService {
     }
 
     return key;
-  };
+  }
 
   /**
    * Try to convert a string to a number
@@ -51,7 +80,7 @@ class UtilService {
       return Number(str);
     }
     return str;
-  };
+  }
 
   /**
    * Create a copy of a JSON object
@@ -64,7 +93,7 @@ class UtilService {
       return angular.fromJson(jsonObjectString);
     }
     return null;
-  };
+  }
 
   /**
    * Get the image object
@@ -91,21 +120,22 @@ class UtilService {
    */
   dataURItoBlob(dataURI) {
     let byteString;
-    if (dataURI.split(',')[0].indexOf('base64') >= 0)
-      byteString = atob(dataURI.split(',')[1]);
-    else
-      byteString = unescape(dataURI.split(',')[1]);
+    if (dataURI.split(',')[0].indexOf('base64') >= 0) byteString = atob(dataURI.split(',')[1]);
+    else byteString = unescape(dataURI.split(',')[1]);
 
     // separate out the mime component
-    const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+    const mimeString = dataURI
+      .split(',')[0]
+      .split(':')[1]
+      .split(';')[0];
 
     // write the bytes of the string to a typed array
     const ia = new Uint8Array(byteString.length);
     for (let i = 0; i < byteString.length; i++) {
       ia[i] = byteString.charCodeAt(i);
     }
-    return new Blob([ia], {type:mimeString});
-  };
+    return new Blob([ia], { type: mimeString });
+  }
 
   /**
    * Get an image object from an image element
@@ -116,17 +146,17 @@ class UtilService {
     let imageObject = null;
     if (imageElement != null) {
       // create a canvas element that we will use to generate a base64 string
-      const canvas = document.createElement("canvas");
+      const canvas = document.createElement('canvas');
 
       // set the width and height of the canvas to match the image dimensions
       canvas.width = imageElement.naturalWidth;
       canvas.height = imageElement.naturalHeight;
 
       // draw the image onto the canvas
-      const ctx = canvas.getContext("2d");
+      const ctx = canvas.getContext('2d');
       ctx.drawImage(imageElement, 0, 0);
 
-      const dataURL = canvas.toDataURL("image/png");
+      const dataURL = canvas.toDataURL('image/png');
       imageObject = this.getImageObjectFromBase64String(dataURL);
     }
     return imageObject;
@@ -135,39 +165,21 @@ class UtilService {
   /**
    * Check if the asset is an image
    * @param fileName the file name of the asset
-   * @return whether the asset is an image or not
+   * @return true iff the asset is an image
    */
   isImage(fileName) {
-    if (fileName != null) {
-      const imageExtensionsRegEx =
-          new RegExp('.*\.(png|jpg|jpeg|bmp|gif|tiff|svg)');
-      const lowerCaseFileName = fileName.toLowerCase();
-      const matchResult = lowerCaseFileName.match(imageExtensionsRegEx);
-
-      if (matchResult != null) {
-        return true;
-      }
-    }
-    return false;
+    const imageExtensionsRegEx = new RegExp('.*.(png|jpg|jpeg|bmp|gif|tiff|svg)');
+    return fileName.toLowerCase().match(imageExtensionsRegEx) != null;
   }
 
   /**
    * Check if the asset is a video
    * @param fileName the file name of the asset
-   * @return whether the asset is a video or not
+   * @return true iff the asset is a video
    */
   isVideo(fileName) {
-    if (fileName != null) {
-      const videoExtensionsRegEx =
-          new RegExp('.*\.(mp4|mpg|mpeg|m4v|m2v|avi|gifv|mov|qt)');
-      const lowerCaseFileName = fileName.toLowerCase();
-      const matchResult = lowerCaseFileName.match(videoExtensionsRegEx);
-
-      if (matchResult != null) {
-        return true;
-      }
-    }
-    return false;
+    const videoExtensionsRegEx = new RegExp('.*.(mp4|mpg|mpeg|m4v|m2v|avi|gifv|mov|qt)');
+    return fileName.toLowerCase().match(videoExtensionsRegEx) != null;
   }
 
   /**
@@ -208,14 +220,21 @@ class UtilService {
         nodeId = '';
       }
 
-      let componentIdAttr = "";
+      let componentIdAttr = '';
       let componentId = this.getWISELinkComponentId(anchorHTML);
       if (componentId != null) {
         componentIdAttr = "component-id='" + componentId + "'";
       }
 
       // create the <wiselink> element
-      let wiselinkHtml = "<wiselink type='link' link-text='" + anchorText + "' node-id='" + nodeId + "' " + componentIdAttr + "/>";
+      let wiselinkHtml =
+        "<wiselink type='link' link-text='" +
+        anchorText +
+        "' node-id='" +
+        nodeId +
+        "' " +
+        componentIdAttr +
+        '/>';
 
       // replace the <a> element with the <wiselink> element
       html = html.replace(wiseLinkRegExMatchResult[0], wiselinkHtml);
@@ -252,14 +271,21 @@ class UtilService {
         nodeId = '';
       }
 
-      let componentIdAttr = "";
+      let componentIdAttr = '';
       let componentId = this.getWISELinkComponentId(buttonHTML);
       if (componentId != null) {
         componentIdAttr = "component-id='" + componentId + "'";
       }
 
       // create the <wiselink> element
-      const wiselinkHtml = "<wiselink type='button' link-text='" + buttonText + "' node-id='" + nodeId + "' " + componentIdAttr + "/>";
+      const wiselinkHtml =
+        "<wiselink type='button' link-text='" +
+        buttonText +
+        "' node-id='" +
+        nodeId +
+        "' " +
+        componentIdAttr +
+        '/>';
 
       // replace the <button> element with the <wiselink> element
       html = html.replace(wiseLinkRegExMatchResult[0], wiselinkHtml);
@@ -351,8 +377,8 @@ class UtilService {
    * @return the modified html without <wiselink> elements
    */
   replaceWISELinks(html) {
-    html = this.replaceWISELinksHelper(html, '<wiselink.*?\/>');
-    html = this.replaceWISELinksHelper(html, '<wiselink.*?>.*?<\/wiselink>');
+    html = this.replaceWISELinksHelper(html, '<wiselink.*?/>');
+    html = this.replaceWISELinksHelper(html, '<wiselink.*?>.*?</wiselink>');
     return html;
   }
 
@@ -389,13 +415,22 @@ class UtilService {
 
       if (type == 'link') {
         // create a link that represents the wiselink
-        newElement = "<a wiselink='true' node-id='" + nodeId + "' " + componentHTML + ">" + linkText + "</a>";
+        newElement =
+          "<a wiselink='true' node-id='" + nodeId + "' " + componentHTML + '>' + linkText + '</a>';
       } else if (type == 'button') {
         // create a button that represents the wiselink
-        newElement = "<button wiselink='true' node-id='" + nodeId + "' " + componentHTML + ">" + linkText + "</button>";
+        newElement =
+          "<button wiselink='true' node-id='" +
+          nodeId +
+          "' " +
+          componentHTML +
+          '>' +
+          linkText +
+          '</button>';
       } else {
         // default to creating a link that represents the wiselink
-        newElement = "<a wiselink='true' node-id='" + nodeId + "' " + componentHTML + ">" + linkText + "</a>";
+        newElement =
+          "<a wiselink='true' node-id='" + nodeId + "' " + componentHTML + '>' + linkText + '</a>';
       }
 
       if (newElement != null) {
@@ -430,7 +465,7 @@ class UtilService {
       const button = ui.button({
         contents: '<i class="note-icon-picture"></i>',
         tooltip: tooltip,
-        click: function () {
+        click: function() {
           // remember the position of the cursor
           context.invoke('editor.saveRange');
 
@@ -456,7 +491,7 @@ class UtilService {
           thisRootScope.$broadcast('openAssetChooser', params);
         }
       });
-      return button.render();   // return button as jquery object
+      return button.render(); // return button as jquery object
     };
     return InsertAssetButton;
   }
@@ -482,7 +517,7 @@ class UtilService {
       const button = ui.button({
         contents: '<i class="note-icon-link"></i>',
         tooltip: tooltip,
-        click: function () {
+        click: function() {
           // remember the position of the cursor
           context.invoke('editor.saveRange');
 
@@ -507,7 +542,7 @@ class UtilService {
           thisRootScope.$broadcast('openWISELinkChooser', params);
         }
       });
-      return button.render();   // return button as jquery object
+      return button.render(); // return button as jquery object
     };
     return InsertWISELinkButton;
   }
@@ -521,9 +556,9 @@ class UtilService {
     let text = '';
     if (html != null) {
       // remove tags
-      text = html.replace(/<\/?[^>]+(>|$)/g, " ");
-      text = text.replace(/\n/g, " ");
-      text = text.replace(/\r/g, " ");
+      text = html.replace(/<\/?[^>]+(>|$)/g, ' ');
+      text = text.replace(/\n/g, ' ');
+      text = text.replace(/\r/g, ' ');
     }
     return text;
   }
@@ -536,7 +571,12 @@ class UtilService {
    * @return whether the subjectString ends with the searchString
    */
   endsWith(subjectString, searchString, position) {
-    if (typeof position !== 'number' || !isFinite(position) || Math.floor(position) !== position || position > subjectString.length) {
+    if (
+      typeof position !== 'number' ||
+      !isFinite(position) ||
+      Math.floor(position) !== position ||
+      position > subjectString.length
+    ) {
       position = subjectString.length;
     }
     position -= searchString.length;
@@ -572,9 +612,9 @@ class UtilService {
   convertMillisecondsToFormattedDateTime(milliseconds) {
     const date = new Date(milliseconds);
     if (date != null) {
-      return date.toDateString() + " " + date.toLocaleTimeString();
+      return date.toDateString() + ' ' + date.toLocaleTimeString();
     }
-    return "";
+    return '';
   }
 
   /**
@@ -665,7 +705,7 @@ class UtilService {
         for (let connectedComponent of connectedComponents) {
           if (connectedComponent.fields != null) {
             for (let field of connectedComponent.fields) {
-              if (field.when == "always") {
+              if (field.when == 'always') {
                 return true;
               }
             }
@@ -746,28 +786,27 @@ class UtilService {
     if (str.length <= maxWidth) {
       return str;
     }
-    let newLineStr = "\n";
+    let newLineStr = '\n';
     let done = false;
     let res = '';
     do {
-        let found = false;
-        // Inserts new line at first whitespace of the line
-        for (let i = maxWidth - 1; i >= 0; i--) {
-            if (this.testWhite(str.charAt(i))) {
-                res = res + [str.slice(0, i), newLineStr].join('');
-                str = str.slice(i + 1);
-                found = true;
-                break;
-            }
+      let found = false;
+      // Inserts new line at first whitespace of the line
+      for (let i = maxWidth - 1; i >= 0; i--) {
+        if (this.testWhite(str.charAt(i))) {
+          res = res + [str.slice(0, i), newLineStr].join('');
+          str = str.slice(i + 1);
+          found = true;
+          break;
         }
-        // Inserts new line at maxWidth position, the word is too long to wrap
-        if (!found) {
-            res += [str.slice(0, maxWidth), newLineStr].join('');
-            str = str.slice(maxWidth);
-        }
+      }
+      // Inserts new line at maxWidth position, the word is too long to wrap
+      if (!found) {
+        res += [str.slice(0, maxWidth), newLineStr].join('');
+        str = str.slice(maxWidth);
+      }
 
-        if (str.length < maxWidth)
-            done = true;
+      if (str.length < maxWidth) done = true;
     } while (!done);
 
     return res + str;
@@ -781,7 +820,7 @@ class UtilService {
   testWhite(x) {
     let white = new RegExp(/^\s$/);
     return white.test(x.charAt(0));
-  };
+  }
 
   /**
    * Get the number of words in the string.
@@ -872,7 +911,7 @@ class UtilService {
     this.$timeout(() => {
       // slowly fade back to the original background color
       element.css({
-        'transition': 'background-color 2s ease-in-out',
+        transition: 'background-color 2s ease-in-out',
         'background-color': originalBackgroundColor
       });
 
@@ -883,7 +922,7 @@ class UtilService {
        */
       this.$timeout(() => {
         element.css({
-          'transition': '',
+          transition: '',
           'background-color': ''
         });
       }, 2000);
@@ -924,25 +963,31 @@ class UtilService {
       $scope.componentState = componentState;
       $scope.closeDialog = function() {
         $mdDialog.hide();
-      }
+      };
     }
     DialogController.$inject = ['$scope', '$mdDialog', 'nodeId', 'componentId', 'componentState'];
     // wait for the component in the dialog to finish rendering
-    let doneRenderingComponentListener = this.$rootScope.$on('doneRenderingComponent', (event, args) => {
-      if (componentState.nodeId == args.nodeId && componentState.componentId == args.componentId) {
-        this.$timeout(() => {
-          this.generateImageFromComponentStateHelper(componentState).then((image) => {
-            /*
-             * Destroy the listener otherwise this block of code will be called every time
-             * doneRenderingComponent is fired in the future.
-             */
-            doneRenderingComponentListener();
-            this.$timeout.cancel(destroyDoneRenderingComponentListenerTimeout);
-            deferred.resolve(image);
-          });
-        }, 1000);
+    let doneRenderingComponentListener = this.$rootScope.$on(
+      'doneRenderingComponent',
+      (event, args) => {
+        if (
+          componentState.nodeId == args.nodeId &&
+          componentState.componentId == args.componentId
+        ) {
+          this.$timeout(() => {
+            this.generateImageFromComponentStateHelper(componentState).then(image => {
+              /*
+               * Destroy the listener otherwise this block of code will be called every time
+               * doneRenderingComponent is fired in the future.
+               */
+              doneRenderingComponentListener();
+              this.$timeout.cancel(destroyDoneRenderingComponentListenerTimeout);
+              deferred.resolve(image);
+            });
+          }, 1000);
+        }
       }
-    });
+    );
     /*
      * Set a timeout to destroy the listener in case there is an error creating the image and
      * we don't get to destroying it above.
@@ -963,7 +1008,7 @@ class UtilService {
   generateImageFromComponentStateHelper(componentState) {
     let deferred = this.$q.defer();
     let componentService = this.$injector.get(componentState.componentType + 'Service');
-    componentService.generateImageFromRenderedComponentState(componentState).then((image) => {
+    componentService.generateImageFromRenderedComponentState(componentState).then(image => {
       deferred.resolve(image);
       this.$mdDialog.hide();
     });
@@ -986,6 +1031,15 @@ class UtilService {
       }
     }
     return null;
+  }
+
+  isValidJSONString(jsonString) {
+    try {
+      angular.fromJson(jsonString);
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   showJSONValidMessage() {
@@ -1027,20 +1081,33 @@ class UtilService {
     }
   }
 
+  insertFileInSummernoteEditor(summernoteId, fullFilePath, fileName) {
+    this.restoreSummernoteCursorPosition(summernoteId);
+    if (this.isImage(fileName)) {
+      this.insertImageIntoSummernote(summernoteId, fullFilePath, fileName);
+    } else if (this.isVideo(fileName)) {
+      this.insertVideoIntoSummernote(summernoteId, fullFilePath);
+    }
+  }
+
   restoreSummernoteCursorPosition(summernoteId) {
     angular.element(document.querySelector(`#${summernoteId}`)).summernote('editor.restoreRange');
     angular.element(document.querySelector(`#${summernoteId}`)).summernote('editor.focus');
   }
 
-  insertImageIntoSummernote(summernoteId, fullAssetPath, fileName) {
-    angular.element(document.querySelector(`#${summernoteId}`)).summernote('insertImage', fullAssetPath, fileName);
+  insertImageIntoSummernote(summernoteId, fullFilePath, fileName) {
+    angular
+      .element(document.querySelector(`#${summernoteId}`))
+      .summernote('insertImage', fullFilePath, fileName);
   }
 
-  insertVideoIntoSummernote(summernoteId, fullAssetPath) {
+  insertVideoIntoSummernote(summernoteId, fullFilePath) {
     const videoElement = document.createElement('video');
     videoElement.controls = 'true';
-    videoElement.innerHTML = '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
-    angular.element(document.querySelector(`#${summernoteId}`)).summernote('insertNode', videoElement);
+    videoElement.innerHTML = '<source ng-src="' + fullFilePath + '" type="video/mp4">';
+    angular
+      .element(document.querySelector(`#${summernoteId}`))
+      .summernote('insertNode', videoElement);
   }
 
   rgbToHex(color, opacity) {
@@ -1053,10 +1120,12 @@ class UtilService {
       r = Math.floor(a * parseInt(values[0]) + (1 - a) * 255),
       g = Math.floor(a * parseInt(values[1]) + (1 - a) * 255),
       b = Math.floor(a * parseInt(values[2]) + (1 - a) * 255);
-    return "#" +
-      ("0" + r.toString(16)).slice(-2) +
-      ("0" + g.toString(16)).slice(-2) +
-      ("0" + b.toString(16)).slice(-2);
+    return (
+      '#' +
+      ('0' + r.toString(16)).slice(-2) +
+      ('0' + g.toString(16)).slice(-2) +
+      ('0' + b.toString(16)).slice(-2)
+    );
   }
 
   isMatchingPeriods(periodId1, periodId2) {
@@ -1068,7 +1137,13 @@ class UtilService {
   }
 
   calculateMean(values) {
-    return values.reduce((a , b) => a + b) / values.length;
+    return values.reduce((a, b) => a + b) / values.length;
+  }
+
+  getIntersectOfArrays(array1, array2) {
+    return array1.filter((n) => {
+      return array2.indexOf(n) != -1;
+    });
   }
 }
 
@@ -1079,13 +1154,6 @@ if (!Array.prototype.last) {
   };
 }
 
-UtilService.$inject = [
-  '$filter',
-  '$injector',
-  '$mdDialog',
-  '$q',
-  '$rootScope',
-  '$timeout'
-];
+UtilService.$inject = ['$filter', '$injector', '$mdDialog', '$q', '$rootScope', '$timeout'];
 
 export default UtilService;

@@ -158,6 +158,7 @@ public class APIControllerTest {
     project1.setId(projectId1);
     project1.setModulePath("/1/project.json");
     project1.setOwner(teacher1);
+    project1.setWISEVersion(5);
     run1.setProject(project1);
     run1.setLastRun(new Date());
     workgroup1 = new WorkgroupImpl();

@@ -54,7 +54,7 @@ import org.wise.portal.domain.user.impl.UserImpl;
 public class PersistentGroup implements Group {
 
   @Transient
-  public static final String DATA_STORE_NAME = "groups";
+  public static final String DATA_STORE_NAME = "`groups`";
 
   @Transient
   public static final String USERS_JOIN_TABLE_NAME = "groups_related_to_users";

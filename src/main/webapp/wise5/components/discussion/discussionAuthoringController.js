@@ -1,6 +1,6 @@
 'use strict';
 
-import DiscussionController from "./discussionController";
+import DiscussionController from './discussionController';
 
 class DiscussionAuthoringController extends DiscussionController {
   constructor($filter,
@@ -43,16 +43,12 @@ class DiscussionAuthoringController extends DiscussionController {
   }
 
   authoringConnectedComponentTypeChanged(connectedComponent) {
-    const component = this.ProjectService.getComponentByNodeIdAndComponentId(
-        connectedComponent.nodeId, connectedComponent.componentId);
     this.changeAllDiscussionConnectedComponentTypesToMatch(connectedComponent.type);
     this.authoringViewComponentChanged();
   }
 
   changeAllDiscussionConnectedComponentTypesToMatch(connectedComponentType) {
     for (const connectedComponent of this.authoringComponentContent.connectedComponents) {
-      const component = this.ProjectService.getComponentByNodeIdAndComponentId(
-          connectedComponent.nodeId, connectedComponent.componentId);
       connectedComponent.type = connectedComponentType;
     }
   }

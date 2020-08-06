@@ -88,10 +88,6 @@ class DrawAuthoringController extends DrawController {
 
   authoringAddStampButtonClicked() {
     this.initializeAuthoringComponentContentStampsIfNecessary();
-    /*
-     * create the stamp as an empty string that the author will replace
-     * with a file name or url
-     */
     this.authoringComponentContent.stamps.Stamps.push('');
     this.authoringViewComponentChanged();
   }
@@ -243,9 +239,6 @@ class DrawAuthoringController extends DrawController {
     this.authoringInitializeDrawingToolAfterTimeout();
   }
 
-  /**
-   * Show the asset popup to allow the author to choose the background image
-   */
   chooseBackgroundImage() {
     const params = {
       isPopup: true,
@@ -269,16 +262,8 @@ class DrawAuthoringController extends DrawController {
         starterDrawDataJSON.canvas != null &&
         starterDrawDataJSON.canvas.backgroundImage != null &&
         starterDrawDataJSON.canvas.backgroundImage.src != null) {
-        /*
-         * get the project assets directory path
-         * e.g. https://www.berkeley.edu/curriculum/25/assets
-         */
         const projectAssetsDirectoryPath = this.ConfigService.getProjectAssetsDirectoryPath(true);
         const background = this.authoringComponentContent.background;
-        /*
-         * generate the absolute path to the background image
-         * e.g. https://www.berkeley.edu/curriculum/25/assets/earth.png
-         */
         const newSrc = projectAssetsDirectoryPath + '/' + background;
         starterDrawDataJSON.canvas.backgroundImage.src = newSrc;
         this.authoringComponentContent.starterDrawData = angular.toJson(starterDrawDataJSON);
@@ -286,17 +271,13 @@ class DrawAuthoringController extends DrawController {
     }
   }
 
-  /**
-   * Open the asset chooser to select an image for the stamp
-   * @param index the index of the stamp
-   */
-  chooseStampImage(index) {
+  chooseStampImage(stampIndex) {
     const params = {
       isPopup: true,
       nodeId: this.nodeId,
       componentId: this.componentId,
       target: 'stamp',
-      targetObject: index
+      targetObject: stampIndex
     };
     this.$rootScope.$broadcast('openAssetChooser', params);
   }
@@ -323,65 +304,37 @@ class DrawAuthoringController extends DrawController {
    * @param connectedComponent the connected component object we are authoring
    */
   authoringAutomaticallySetConnectedComponentComponentIdIfPossible(connectedComponent) {
-    let components = this.getComponentsByNodeId(connectedComponent.nodeId);
-    if (components != null) {
-      let numberOfAllowedComponents = 0;
-      let allowedComponent = null;
-      for (let component of components) {
-        if (component != null) {
-          if (this.isConnectedComponentTypeAllowed(component.type) &&
-              component.id != this.componentId) {
-            // we have found a viable component we can connect to
-            numberOfAllowedComponents += 1;
-            allowedComponent = component;
-          }
-        }
+    let numberOfAllowedComponents = 0;
+    let allowedComponent = null;
+    for (const component of this.getComponentsByNodeId(connectedComponent.nodeId)) {
+      if (this.isConnectedComponentTypeAllowed(component.type) &&
+          component.id != this.componentId) {
+        numberOfAllowedComponents += 1;
+        allowedComponent = component;
       }
-      if (numberOfAllowedComponents == 1) {
-        /*
-         * there is only one viable component to connect to so we
-         * will use it
-         */
-        connectedComponent.componentId = allowedComponent.id;
-        connectedComponent.type = 'importWork';
-        this.authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent);
-      }
+    }
+    if (numberOfAllowedComponents === 1) {
+      connectedComponent.componentId = allowedComponent.id;
+      connectedComponent.type = 'importWork';
+      this.authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent);
     }
   }
 
-  /**
-   * The connected component component id has changed
-   * @param connectedComponent the connected component that has changed
-   */
   authoringConnectedComponentComponentIdChanged(connectedComponent) {
-    // default the type to import work
     connectedComponent.type = 'importWork';
     this.authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent);
     this.authoringViewComponentChanged();
   }
 
-  /**
-   * If the component type is a certain type, we will set the importWorkAsBackground
-   * field to true.
-   * @param connectedComponent The connected component object.
-   */
   authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent) {
     const componentType = this.authoringGetConnectedComponentType(connectedComponent);
-    if (componentType === 'ConceptMap' ||
-      componentType === 'Embedded' ||
-      componentType === 'Graph' ||
-      componentType === 'Label' ||
-      componentType === 'Table') {
+    if (['ConceptMap','Embedded','Graph','Label','Table'].includes(componentType)) {
       connectedComponent.importWorkAsBackground = true;
     } else {
       delete connectedComponent.importWorkAsBackground;
     }
   }
 
-  /**
-   * The "Import Work As Background" checkbox was clicked.
-   * @param connectedComponent The connected component associated with the checkbox.
-   */
   authoringImportWorkAsBackgroundClicked(connectedComponent) {
     if (!connectedComponent.importWorkAsBackground) {
       delete connectedComponent.importWorkAsBackground;
@@ -410,6 +363,7 @@ DrawAuthoringController.$inject = [
   'ProjectService',
   'StudentAssetService',
   'StudentDataService',
-  'UtilService'];
+  'UtilService'
+];
 
 export default DrawAuthoringController;

@@ -735,25 +735,6 @@ class ConfigService {
   }
 
   /**
-   * Get the library projects
-   */
-  getLibraryProjects() {
-    const getLibraryProjectsURL = this.getConfigParam('getLibraryProjectsURL');
-
-    if (getLibraryProjectsURL != null) {
-      // request the list of library projects
-      return this.$http.get(getLibraryProjectsURL).then((result) => {
-        const data = result.data;
-        if (data != null) {
-          // reverse the list so that it is ordered newest to oldest
-          data.reverse();
-        }
-        return data;
-      });
-    }
-  }
-
-  /**
    * Get the project assets folder path
    * @param includeHost whether to include the host in the URL
    * @return the project assets folder path

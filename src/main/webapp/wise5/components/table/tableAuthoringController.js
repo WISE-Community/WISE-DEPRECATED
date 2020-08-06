@@ -36,8 +36,6 @@ class TableAuthoringController extends TableController {
       StudentDataService,
       TableService,
       UtilService);
-
-    // the component types we are allowed to connect to
     this.allowedConnectedComponentTypes = [
       {
         type: 'Embedded'
@@ -49,25 +47,13 @@ class TableAuthoringController extends TableController {
         type: 'Table'
       }
     ];
-
     if (this.authoringComponentContent.isDataExplorerEnabled) {
       this.repopulateDataExplorerGraphTypes();
     }
-
-    /*
-     * for the authoring view, get the cell sizes for each column if they
-     * have been customized
-     */
     this.columnCellSizes = this.parseColumnCellSizes(this.componentContent);
-
     $scope.$watch(function() {
       return this.authoringComponentContent;
     }.bind(this), function(newValue, oldValue) {
-
-      /*
-       * reset the values so that the preview is refreshed with
-       * the new content
-       */
       this.submitCounter = 0;
       this.componentContent = this.ProjectService.injectAssetPaths(newValue);
       this.columnCellSizes = this.parseColumnCellSizes(this.componentContent);
@@ -75,104 +61,36 @@ class TableAuthoringController extends TableController {
       this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
       this.resetTable();
     }.bind(this), true);
+    this.registerAssetListener();
+  }
 
-    /*
-     * Listen for the assetSelected event which occurs when the user
-     * selects an asset from the choose asset popup
-     */
-    this.$scope.$on('assetSelected', (event, args) => {
-
-      if (args != null) {
-
-        // make sure the event was fired for this component
-        if (args.nodeId == this.nodeId && args.componentId == this.componentId) {
-          // the asset was selected for this component
-          var assetItem = args.assetItem;
-
-          if (assetItem != null) {
-            var fileName = assetItem.fileName;
-
-            if (fileName != null) {
-              /*
-               * get the assets directory path
-               * e.g.
-               * /wise/curriculum/3/
-               */
-              var assetsDirectoryPath = this.ConfigService.getProjectAssetsDirectoryPath();
-              var fullAssetPath = assetsDirectoryPath + '/' + fileName;
-
-              var summernoteId = '';
-
-              if (args.target == 'prompt') {
-                // the target is the summernote prompt element
-                summernoteId = 'summernotePrompt_' + this.nodeId + '_' + this.componentId;
-              } else if (args.target == 'rubric') {
-                // the target is the summernote rubric element
-                summernoteId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
-              }
-
-              if (summernoteId != '') {
-                if (this.UtilService.isImage(fileName)) {
-                  /*
-                   * move the cursor back to its position when the asset chooser
-                   * popup was clicked
-                   */
-                  angular.element(document.querySelector(`#${summernoteId}`)).summernote('editor.restoreRange');
-                  angular.element(document.querySelector(`#${summernoteId}`)).summernote('editor.focus');
-
-                  // add the image html
-                  angular.element(document.querySelector(`#${summernoteId}`)).summernote('insertImage', fullAssetPath, fileName);
-                } else if (this.UtilService.isVideo(fileName)) {
-                  /*
-                   * move the cursor back to its position when the asset chooser
-                   * popup was clicked
-                   */
-                  angular.element(document.querySelector(`#${summernoteId}`)).summernote('editor.restoreRange');
-                  angular.element(document.querySelector(`#${summernoteId}`)).summernote('editor.focus');
-
-                  // insert the video element
-                  var videoElement = document.createElement('video');
-                  videoElement.controls = 'true';
-                  videoElement.innerHTML = '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
-                  angular.element(document.querySelector(`#${summernoteId}`)).summernote('insertNode', videoElement);
-                }
-              }
-            }
-          }
+  registerAssetListener() {
+    this.$scope.$on('assetSelected',
+        (event, {nodeId, componentId, assetItem, target}) => {
+      if (nodeId === this.nodeId && componentId === this.componentId) {
+        const fileName = assetItem.fileName;
+        const fullFilePath = `${this.ConfigService.getProjectAssetsDirectoryPath()}/${fileName}`;
+        if (target === 'rubric') {
+          this.UtilService.insertFileInSummernoteEditor(
+              `summernoteRubric_${this.nodeId}_${this.componentId}`, fullFilePath, fileName);
         }
       }
-
-      // close the popup
       this.$mdDialog.hide();
     });
   }
 
-  /**
-   * The author has changed the number of rows.
-   * @param oldValue The previous number of rows.
-   */
   authoringViewTableNumRowsChanged(oldValue) {
     if (this.authoringComponentContent.numRows < oldValue) {
-      // the author is reducing the number of rows
       if (this.areRowsAfterEmpty(this.authoringComponentContent.numRows)) {
-        // the rows that we will delete are empty so we will remove the rows
         this.authoringViewTableSizeChanged();
       } else {
-        /*
-         * the rows that we will delete are not empty so we will confirm that
-         * they want to delete the rows
-         */
-        let answer = confirm(this.$translate('table.areYouSureYouWantToDecreaseTheNumberOfRows'));
-        if (answer) {
-          // author confirms yes, proceed with change
+        if (confirm(this.$translate('table.areYouSureYouWantToDecreaseTheNumberOfRows'))) {
           this.authoringViewTableSizeChanged();
         } else {
-          // author says no, so revert
           this.authoringComponentContent.numRows = oldValue;
         }
       }
     } else {
-      // the author is increasing the number of rows
       this.authoringViewTableSizeChanged();
     }
   }
@@ -184,7 +102,7 @@ class TableAuthoringController extends TableController {
    * False if the row at the given index or any row after the row index is not empty.
    */
   areRowsAfterEmpty(rowIndex) {
-    let oldNumRows = this.authoringGetNumRowsInTableData();
+    const oldNumRows = this.authoringGetNumRowsInTableData();
     for (let r = rowIndex; r < oldNumRows; r++) {
       if (!this.isRowEmpty(r)) {
         return false;
@@ -200,9 +118,8 @@ class TableAuthoringController extends TableController {
    * False if the text in any cell in the row is not empty string.
    */
   isRowEmpty(rowIndex) {
-    let tableData = this.authoringComponentContent.tableData;
-    let row = tableData[rowIndex];
-    for (let cell of row) {
+    const tableData = this.authoringComponentContent.tableData;
+    for (const cell of tableData[rowIndex]) {
       if (cell.text != null && cell.text != "") {
         return false;
       }
@@ -221,16 +138,9 @@ class TableAuthoringController extends TableController {
         // the columns that we will delete are empty so we will remove the columns
         this.authoringViewTableSizeChanged();
       } else {
-        /*
-         * the columns that we will delete are not empty so we will confirm that
-         * they want to delete the columns
-         */
-        let answer = confirm(this.$translate('table.areYouSureYouWantToDecreaseTheNumberOfColumns'));
-        if (answer) {
-          // author confirms yes, proceed with change
+        if (confirm(this.$translate('table.areYouSureYouWantToDecreaseTheNumberOfColumns'))) {
           this.authoringViewTableSizeChanged();
         } else {
-          // author says no, so revert
           this.authoringComponentContent.numColumns = oldValue;
         }
       }
@@ -247,7 +157,7 @@ class TableAuthoringController extends TableController {
    * False if the column at the given index or any column after the column index is not empty.
    */
   areColumnsAfterEmpty(columnIndex) {
-    let oldNumColumns = this.authoringGetNumColumnsInTableData();
+    const oldNumColumns = this.authoringGetNumColumnsInTableData();
     for (let c = columnIndex; c < oldNumColumns; c++) {
       if (!this.isColumnEmpty(c)) {
         return false;
@@ -263,10 +173,8 @@ class TableAuthoringController extends TableController {
    * False if the text in any cell in the column is not empty string.
    */
   isColumnEmpty(columnIndex) {
-    let tableData = this.authoringComponentContent.tableData;
-    for (let row of tableData) {
-      // loop through all the rows and check the cell in the column
-      let cell = row[columnIndex];
+    for (const row of this.authoringComponentContent.tableData) {
+      const cell = row[columnIndex];
       if (cell.text != null && cell.text != "") {
         return false;
       }
@@ -278,14 +186,8 @@ class TableAuthoringController extends TableController {
    * The table size has changed in the authoring view so we will update it
    */
   authoringViewTableSizeChanged() {
-
-    // create a new table with the new size and populate it with the existing cells
-    var newTable = this.getUpdatedTableSize(this.authoringComponentContent.numRows, this.authoringComponentContent.numColumns);
-
-    // set the new table into the component content
-    this.authoringComponentContent.tableData = newTable;
-
-    // perform preview updating and project saving
+    this.authoringComponentContent.tableData = this.getUpdatedTableSize(
+        this.authoringComponentContent.numRows, this.authoringComponentContent.numColumns);
     this.authoringViewComponentChanged();
   }
 
@@ -297,34 +199,18 @@ class TableAuthoringController extends TableController {
    * @returns a new table
    */
   getUpdatedTableSize(newNumRows, newNumColumns) {
-
-    var newTable = [];
-
-    // create the rows
-    for (var r = 0; r < newNumRows; r++) {
-
-      var newRow = [];
-
-      // create the columns
-      for (var c = 0; c < newNumColumns; c++) {
-
-        // try to get the cell from the old table
-        var cell = this.getCellObjectFromComponentContent(c, r);
-
+    const newTable = [];
+    for (let r = 0; r < newNumRows; r++) {
+      const newRow = [];
+      for (let c = 0; c < newNumColumns; c++) {
+        let cell = this.getCellObjectFromComponentContent(c, r);
         if (cell == null) {
-          /*
-           * the old table does not have a cell for the given
-           * row/column location so we will create an empty cell
-           */
           cell = this.createEmptyCell();
         }
-
         newRow.push(cell);
       }
-
       newTable.push(newRow);
     }
-
     return newTable;
   }
 
@@ -335,37 +221,23 @@ class TableAuthoringController extends TableController {
    * @returns the cell at the given x, y location or null if there is none
    */
   getCellObjectFromComponentContent(x, y) {
-    var cellObject = null;
-
-    var tableData = this.authoringComponentContent.tableData;
-
+    let cellObject = null;
+    const tableData = this.authoringComponentContent.tableData;
     if (tableData != null) {
-
-      // get the row
-      var row = tableData[y];
-
+      const row = tableData[y];
       if (row != null) {
-
-        // get the cell
         cellObject = row[x];
       }
     }
-
     return cellObject;
   }
 
-  /**
-   * Create an empty cell
-   * @returns an empty cell object
-   */
   createEmptyCell() {
-    var cell = {};
-
-    cell.text = '';
-    cell.editable = true;
-    cell.size = null;
-
-    return cell;
+    return {
+      text: '',
+      editable: true,
+      size: null
+    };
   }
 
   /**
@@ -373,42 +245,21 @@ class TableAuthoringController extends TableController {
    * @param y the row number to insert at
    */
   authoringViewInsertRow(y) {
-
-    // get the table
-    var tableData = this.authoringComponentContent.tableData;
-
+    const tableData = this.authoringComponentContent.tableData;
     if (tableData != null) {
-
-      // create the new row that we will insert
-      var newRow = [];
-
-      // get the number of columns
-      var numColumns = this.authoringComponentContent.numColumns;
-
-      // populate the new row with the correct number of cells
-      for (var c = 0; c < numColumns; c++) {
-        // create an empty cell
-        var newCell = this.createEmptyCell();
-
-        // get the column cell size
-        var cellSize = this.columnCellSizes[c];
-
+      const newRow = [];
+      const numColumns = this.authoringComponentContent.numColumns;
+      for (let c = 0; c < numColumns; c++) {
+        const newCell = this.createEmptyCell();
+        const cellSize = this.columnCellSizes[c];
         if (cellSize != null) {
-          // set the cell size
           newCell.size = cellSize;
         }
-
         newRow.push(newCell);
       }
-
-      // insert the new row into the table
       tableData.splice(y, 0, newRow);
-
-      // update the number of rows value
       this.authoringComponentContent.numRows++;
     }
-
-    // save the project and update the preview
     this.authoringViewComponentChanged();
   }
 
@@ -417,23 +268,12 @@ class TableAuthoringController extends TableController {
    * @param y the row number to delete
    */
   authoringViewDeleteRow(y) {
-
-    var answer = confirm(this.$translate('table.areYouSureYouWantToDeleteThisRow'));
-
-    if (answer) {
-      // get the table
-      var tableData = this.authoringComponentContent.tableData;
-
+    if (confirm(this.$translate('table.areYouSureYouWantToDeleteThisRow'))) {
+      const tableData = this.authoringComponentContent.tableData;
       if (tableData != null) {
-
-        // remove the row
         tableData.splice(y, 1);
-
-        // update the number of rows value
         this.authoringComponentContent.numRows--;
       }
-
-      // save the project and update the preview
       this.authoringViewComponentChanged();
     }
   }
@@ -443,38 +283,19 @@ class TableAuthoringController extends TableController {
    * @param x the column number to insert at
    */
   authoringViewInsertColumn(x) {
-
-    // get the table
-    var tableData = this.authoringComponentContent.tableData;
-
+    const tableData = this.authoringComponentContent.tableData;
     if (tableData != null) {
-
-      var numRows = this.authoringComponentContent.numRows;
-
-      // loop through all the rows
-      for (var r = 0; r < numRows; r++) {
-
-        // get a row
-        var tempRow = tableData[r];
-
+      const numRows = this.authoringComponentContent.numRows;
+      for (let r = 0; r < numRows; r++) {
+        const tempRow = tableData[r];
         if (tempRow != null) {
-
-          // create an empty cell
-          var newCell = this.createEmptyCell();
-
-          // insert the cell into the row
+          const newCell = this.createEmptyCell();
           tempRow.splice(x, 0, newCell);
         }
       }
-
-      // update the number of columns value
       this.authoringComponentContent.numColumns++;
-
-      // update the column cell sizes model
       this.parseColumnCellSizes(this.authoringComponentContent);
     }
-
-    // save the project and update the preview
     this.authoringViewComponentChanged();
   }
 
@@ -483,38 +304,19 @@ class TableAuthoringController extends TableController {
    * @param x the column number to delete
    */
   authoringViewDeleteColumn(x) {
-
-    var answer = confirm(this.$translate('table.areYouSureYouWantToDeleteThisColumn'));
-
-    if (answer) {
-      // get the table
-      var tableData = this.authoringComponentContent.tableData;
-
+    if (confirm(this.$translate('table.areYouSureYouWantToDeleteThisColumn'))) {
+      const tableData = this.authoringComponentContent.tableData;
       if (tableData != null) {
-
-        var numRows = this.authoringComponentContent.numRows;
-
-        // loop through all the rows
-        for (var r = 0; r < numRows; r++) {
-
-          // get a row
-          var tempRow = tableData[r];
-
+        const numRows = this.authoringComponentContent.numRows;
+        for (let r = 0; r < numRows; r++) {
+          const tempRow = tableData[r];
           if (tempRow != null) {
-
-            // remove the cell from the row
             tempRow.splice(x, 1);
           }
         }
-
-        // update the number of columns value
         this.authoringComponentContent.numColumns--;
-
-        // update the column cell sizes model
         this.parseColumnCellSizes(this.authoringComponentContent);
       }
-
-      // save the project and update the preview
       this.authoringViewComponentChanged();
     }
   }
@@ -528,8 +330,7 @@ class TableAuthoringController extends TableController {
    * @return {number} The number of rows in the table data.
    */
   authoringGetNumRowsInTableData() {
-    let tableData = this.authoringComponentContent.tableData;
-    return tableData.length;
+    return this.authoringComponentContent.tableData.length;
   }
 
   /**
@@ -541,83 +342,46 @@ class TableAuthoringController extends TableController {
    * @return {number} The number of columns in the table data.
    */
   authoringGetNumColumnsInTableData() {
-    let tableData = this.authoringComponentContent.tableData;
+    const tableData = this.authoringComponentContent.tableData;
     if (tableData.length > 0) {
-      // get the number of cells in the first row
       return tableData[0].length;
     }
     return 0;
   }
 
-  /**
-   * Make all the cells uneditable
-   */
   makeAllCellsUneditable() {
-
-    // get the table data
-    var tableData = this.authoringComponentContent.tableData;
-
+    const tableData = this.authoringComponentContent.tableData;
     if (tableData != null) {
-
-      // loop through all the rows
-      for (var r = 0; r < tableData.length; r++) {
-        var row = tableData[r];
-
+      for (let r = 0; r < tableData.length; r++) {
+        const row = tableData[r];
         if (row != null) {
-
-          // loop through all the cells in the row
-          for (var c = 0; c < row.length; c++) {
-
-            // get a cell
-            var cell = row[c];
-
+          for (let c = 0; c < row.length; c++) {
+            const cell = row[c];
             if (cell != null) {
-
-              // make the cell uneditable
               cell.editable = false;
             }
           }
         }
       }
     }
-
-    // the authoring component content has changed so we will save the project
     this.authoringViewComponentChanged();
   }
 
-  /**
-   * Make all the cells edtiable
-   */
   makeAllCellsEditable() {
-
-    // get the table data
-    var tableData = this.authoringComponentContent.tableData;
-
+    const tableData = this.authoringComponentContent.tableData;
     if (tableData != null) {
-
-      // loop through all the rows
-      for (var r = 0; r < tableData.length; r++) {
-        var row = tableData[r];
-
+      for (let r = 0; r < tableData.length; r++) {
+        const row = tableData[r];
         if (row != null) {
-
-          // loop through all the cells in the row
-          for (var c = 0; c < row.length; c++) {
-
-            // get a cell
-            var cell = row[c];
-
+          for (let c = 0; c < row.length; c++) {
+            const cell = row[c];
             if (cell != null) {
-
-              // make the cell editable
               cell.editable = true;
             }
           }
         }
       }
     }
-
-    // the authoring component content has changed so we will save the project
     this.authoringViewComponentChanged();
   }
 
@@ -627,51 +391,26 @@ class TableAuthoringController extends TableController {
    * @param componentContent the component content
    */
   parseColumnCellSizes(componentContent) {
-
-    var columnCellSizes = {};
-
-    if (componentContent != null) {
-
-      // get the table data
-      var tableData = componentContent.tableData;
-
-      if (tableData != null) {
-        var firstRow = tableData[0];
-
-        if (firstRow != null) {
-
-          // loop through all the columns
-          for (var x = 0; x < firstRow.length; x++) {
-
-            // get the cell object
-            var cell = firstRow[x];
-
-            /*
-             * get the cell size and set it into our mapping of
-             * column to cell size
-             */
-            columnCellSizes[x] = cell.size;
-          }
+    const columnCellSizes = {};
+    const tableData = componentContent.tableData;
+    if (tableData != null) {
+      const firstRow = tableData[0];
+      if (firstRow != null) {
+        for (let x = 0; x < firstRow.length; x++) {
+          const cell = firstRow[x];
+          columnCellSizes[x] = cell.size;
         }
       }
     }
-
     return columnCellSizes;
   }
 
-  /**
-   * One of the column cell sizes has changed
-   */
   authoringViewColumnSizeChanged(index) {
-
     if (index != null) {
-      var cellSize = this.columnCellSizes[index];
-
+      let cellSize = this.columnCellSizes[index];
       if (cellSize == '') {
         cellSize = null;
       }
-
-      // set the cell size for all the cells in the column
       this.authoringSetColumnCellSizes(index, cellSize);
     }
   }
@@ -682,30 +421,18 @@ class TableAuthoringController extends TableController {
    * @param size the cell size
    */
   authoringSetColumnCellSizes(column, size) {
-
-    // get the table data
-    var tableData = this.authoringComponentContent.tableData;
-
+    const tableData = this.authoringComponentContent.tableData;
     if (tableData != null) {
-
-      // loop through all the rows
-      for (var r = 0; r < tableData.length; r++) {
-        var row = tableData[r];
-
+      for (let r = 0; r < tableData.length; r++) {
+        const row = tableData[r];
         if (row != null) {
-
-          // get the cell in the column
-          var cell = row[column];
-
+          const cell = row[column];
           if (cell != null) {
-            // set the cell size
             cell.size = size;
           }
         }
       }
     }
-
-    // the authoring component content has changed so we will save the project
     this.authoringViewComponentChanged();
   }
 

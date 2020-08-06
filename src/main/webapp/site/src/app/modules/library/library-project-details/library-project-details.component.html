@@ -21,7 +21,7 @@
       </div>
     </div>
     <span fxFlex></span>
-    <app-library-project-menu *ngIf="isTeacher && !isRunProject"
+    <app-library-project-menu *ngIf="isTeacher && !isRunProject && project.wiseVersion !== 4"
                               [project]="project"></app-library-project-menu>
   </div>
   <div class="info-block">
@@ -85,7 +85,7 @@
      fxLayoutAlign="end"
      fxLayoutGap="8px">
   <button mat-button cdkFocusRegionstart (click)="onClose()" i18n>Close</button>
-  <button *ngIf="isTeacher && !isRunProject"
+  <button *ngIf="isTeacher && !isRunProject && project.wiseVersion !== 4"
           mat-flat-button 
           color="accent" 
           (click)="runProject()">

@@ -4,7 +4,7 @@ import TableService from './tableService';
 import TableController from './tableController';
 import TableAuthoringController from './tableAuthoringController';
 
-let tableAuthoringComponentModule = angular.module('tableAuthoringComponentModule', [
+const tableAuthoringComponentModule = angular.module('tableAuthoringComponentModule', [
   'pascalprecht.translate'
 ])
   .service('TableService', TableService)
