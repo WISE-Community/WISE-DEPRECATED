@@ -35,6 +35,7 @@ import { OutsideURLService } from '../../../wise5/components/outsideURL/outsideU
 import { MatchService } from '../../../wise5/components/match/matchService';
 import { MultipleChoiceService } from '../../../wise5/components/multipleChoice/multipleChoiceService';
 import { OpenResponseService } from '../../../wise5/components/openResponse/openResponseService';
+import { LabelService } from '../../../wise5/components/label/labelService';
 
 @Component({template: ``})
 export class EmptyComponent {}
@@ -57,10 +58,10 @@ export class EmptyComponent {}
     UtilService,
     ConfigService,
     CRaterService,
-    NotebookService,
-    OutsideURLService,
+    LabelService,
     MatchService,
     MultipleChoiceService,
+    NotebookService,
     NotificationService,
     OutsideURLService,
     OpenResponseService,

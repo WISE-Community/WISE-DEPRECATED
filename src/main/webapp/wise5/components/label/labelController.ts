@@ -5,7 +5,7 @@ import * as $ from 'jquery';
 import { fabric } from 'fabric';
 window['fabric'] = fabric
 import ComponentController from '../componentController';
-import LabelService from './labelService';
+import { LabelService } from './labelService';
 
 class LabelController extends ComponentController {
   $q: any;
