@@ -177,7 +177,7 @@ const WorkgroupComponentRevisions = {
                               ng-class="{'component-revisions__item--latest': $first}">
                     <div class="md-list-item-text component-revisions__item__text"
                          flex>
-                        <h3 class="accent-2 md-body-2 gray-lightest-bg component__header">
+                        <h3 class="accent-1 md-body-2 gray-lightest-bg component__header">
                             #{{$ctrl.total - $index}}
                             <span ng-if="$first"> (Latest)</span>
                         </h3>

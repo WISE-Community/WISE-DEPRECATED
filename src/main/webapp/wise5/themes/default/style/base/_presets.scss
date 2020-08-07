@@ -101,7 +101,7 @@ label {
         position: absolute;
         border-radius: 50%;
         padding: 5px;
-        background-color: color('accent-1');
+        background-color: color('accent');
     }
 }
 
@@ -164,16 +164,6 @@ label {
 a {
   color: color('primary');
   cursor: pointer;
-  text-decoration: none;
-  border-bottom: 1px solid transparent;
-  transition: 300ms border-bottom;
-
-  &:not(.md-button) {
-    &:hover, &:focus {
-      border-bottom: 1px solid;
-      outline: none;
-    }
-  }
 }
 
 .active {
@@ -280,14 +270,14 @@ md-icon, .md-button:not([disabled]) {
   &.info {
     color: color('info') !important;
   }
+  &.accent {
+    color: color('accent') !important;
+  }
   &.accent-1 {
     color: color('accent-1') !important;
   }
   &.accent-2 {
     color: color('accent-2') !important;
-  }
-  &.accent-3 {
-    color: color('accent-3') !important;
   }
 }
 

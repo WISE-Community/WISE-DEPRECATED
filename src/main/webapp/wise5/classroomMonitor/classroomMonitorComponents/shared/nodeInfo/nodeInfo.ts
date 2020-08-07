@@ -138,7 +138,7 @@ const NodeInfo = {
                 <div id="component_{{::component.id}}" ng-repeat='component in ::$ctrl.components' class="component">
                     <md-divider class="divider divider--dashed" ng-if="!$first"></md-divider>
                     <h3 ng-if="component.hasWork"
-                        class="accent-2 md-body-2 gray-lightest-bg
+                        class="accent-1 md-body-2 gray-lightest-bg
                             component__header">
                         {{ component.assessmentItemIndex + '. ' + $ctrl.getComponentTypeLabel(component.type) }}&nbsp;
                     </h3>

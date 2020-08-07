@@ -17,9 +17,10 @@
     }
 }
 
-.component__header {
+h3.component__header, .component-header {
     padding: 8px 12px;
     margin: 0;
+    font-size: rem(1.4);
 }
 
 .component__rubric {
@@ -38,7 +39,7 @@
             //border: 2px solid transparent;
 
             &:hover, &:focus {
-                box-shadow: 0 0 5px 1px color('accent-1');
+                box-shadow: 0 0 5px 1px color('accent');
                 //border: 2px solid #ffffff;
             }
         }
@@ -58,7 +59,7 @@
 .component__actions__info {
     font-style: italic;
     margin-left: 8px;
-    //color: color('accent-2');
+    //color: color('accent-1');
     color: color('text-secondary');
 }
 
