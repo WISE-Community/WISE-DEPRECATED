@@ -1,7 +1,7 @@
 'use strict';
 
 import ComponentController from '../componentController';
-import DiscussionService from './discussionService';
+import { DiscussionService } from './discussionService';
 import { NotificationService } from '../../services/notificationService';
 
 class DiscussionController extends ComponentController {
@@ -418,7 +418,8 @@ class DiscussionController extends ComponentController {
   getClassmateResponses(components = [{ nodeId: this.nodeId, componentId: this.componentId }]) {
     const runId = this.ConfigService.getRunId();
     const periodId = this.ConfigService.getPeriodId();
-    this.DiscussionService.getClassmateResponses(runId, periodId, components).then(result => {
+    this.DiscussionService.getClassmateResponses(runId, periodId, components)
+        .then((result: any) => {
       this.setClassResponses(result.studentWorkList, result.annotations);
     });
   }
