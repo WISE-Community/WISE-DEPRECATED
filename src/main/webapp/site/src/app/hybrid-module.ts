@@ -35,6 +35,7 @@ import { OutsideURLService } from '../../../wise5/components/outsideURL/outsideU
 import { MatchService } from '../../../wise5/components/match/matchService';
 import { MultipleChoiceService } from '../../../wise5/components/multipleChoice/multipleChoiceService';
 import { OpenResponseService } from '../../../wise5/components/openResponse/openResponseService';
+import { DrawService } from '../../../wise5/components/draw/drawService';
 import { EmbeddedService } from '../../../wise5/components/embedded/embeddedService';
 import { HTMLService } from '../../../wise5/components/html/htmlService';
 import { LabelService } from '../../../wise5/components/label/labelService';
@@ -60,6 +61,7 @@ export class EmptyComponent {}
     UtilService,
     ConfigService,
     CRaterService,
+    DrawService,
     EmbeddedService,
     HTMLService,
     LabelService,

@@ -3,86 +3,86 @@
 import * as angular from 'angular';
 import { ComponentService } from '../componentService';
 import { StudentAssetService } from '../../services/studentAssetService';
+import { Injectable } from '@angular/core';
+import { StudentDataService } from '../../services/studentDataService';
+import { UpgradeModule } from '@angular/upgrade/static';
+import { UtilService } from '../../services/utilService';
 
-class DrawService extends ComponentService {
-  $q: any;
-  $translate: any;
-  StudentAssetService: StudentAssetService;
+@Injectable()
+export class DrawService extends ComponentService {
 
-  static $inject = ['$filter', '$q', 'StudentAssetService', 'StudentDataService', 'UtilService'];
-
-  constructor($filter, $q, StudentAssetService, StudentDataService, UtilService) {
+  constructor(private upgrade: UpgradeModule,
+      private StudentAssetService: StudentAssetService,
+      protected StudentDataService: StudentDataService,
+      protected UtilService: UtilService) {
     super(StudentDataService, UtilService);
-    this.$q = $q;
-    this.$translate = $filter('translate');
-    this.StudentAssetService = StudentAssetService;
   }
 
   getComponentTypeLabel() {
-    return this.$translate('draw.componentTypeLabel');
+    return this.getTranslation('draw.componentTypeLabel');
+  }
+
+  getTranslation(key: string) {
+    return this.upgrade.$injector.get('$filter')('translate')(key);
   }
 
   createComponent() {
     const component: any = super.createComponent();
     component.type = 'Draw';
-    component.stamps = {};
-    component.stamps.Stamps = [];
-    component.tools = {};
-    component.tools.select = true;
-    component.tools.line = true;
-    component.tools.shape = true;
-    component.tools.freeHand = true;
-    component.tools.text = true;
-    component.tools.stamp = true;
-    component.tools.strokeColor = true;
-    component.tools.fillColor = true;
-    component.tools.clone = true;
-    component.tools.strokeWidth = true;
-    component.tools.sendBack = true;
-    component.tools.sendForward = true;
-    component.tools.undo = true;
-    component.tools.redo = true;
-    component.tools.delete = true;
+    component.stamps = {
+      Stamps: []
+    };
+    component.tools = {
+      select: true,
+      line: true,
+      shape: true,
+      freeHand: true,
+      text: true,
+      stamp: true,
+      strokeColor: true,
+      fillColor: true,
+      clone: true,
+      strokeWidth: true,
+      sendBack: true,
+      sendForward: true,
+      undo: true,
+      redo: true,
+      delete: true
+    };
     return component;
   }
 
-  getStudentWorkJPEG(componentState) {
-    const studentData = componentState.studentData;
-    const drawData = JSON.parse(studentData.drawData);
-    if (drawData != null && drawData.jpeg != null && drawData.jpeg != '') {
-      return drawData.jpeg;
-    }
-    return null;
-  }
-
-  isCompleted(component, componentStates, componentEvents, nodeEvents, node) {
-    if (componentStates && componentStates.length) {
-      const submitRequired =
-        node.showSubmitButton || (component.showSubmitButton && !node.showSaveButton);
-      if (submitRequired) {
-        for (let componentState of componentStates) {
-          if (componentState.isSubmit) {
-            return true;
-          }
-        }
+  isCompleted(component: any, componentStates: any[], componentEvents: any[], nodeEvents: any[],
+      node: any) {
+    if (componentStates != null && componentStates.length > 0) {
+      if (this.isSubmitRequired(node, component)) {
+        return this.hasComponentStateWithIsSubmitTrue(componentStates);
       } else {
-        const componentState = componentStates[componentStates.length - 1];
-        if (componentState.studentData.drawData) {
-          // there is draw data so the component is completed
-          // TODO: check for empty drawing or drawing same as initial state
-          return true;
-        }
+        return this.hasComponentStateWithDrawData(componentStates);
       }
     }
     return false;
   }
 
-  /**
-   * Remove the background object from the draw data in the component state
-   * @param componentState the component state
-   * @returns the componentState
-   */
-  removeBackgroundFromComponentState(componentState) {
+  hasComponentStateWithIsSubmitTrue(componentStates: any[]) {
+    for (let c = componentStates.length - 1; c >= 0; c--) {
+      if (componentStates[c].isSubmit) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  hasComponentStateWithDrawData(componentStates: any[]) {
+    for (let c = componentStates.length - 1; c >= 0; c--) {
+      if (componentStates[c].studentData.drawData != null) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  removeBackgroundFromComponentState(componentState: any) {
     const drawData = componentState.studentData.drawData;
     const drawDataObject = angular.fromJson(drawData);
     const canvas = drawDataObject.canvas;
@@ -92,35 +92,21 @@ class DrawService extends ComponentService {
     return componentState;
   }
 
-  /**
-   * @param componentState
-   * @param componentContent (optional)
-   */
-  componentStateHasStudentWork(componentState, componentContent) {
+  componentStateHasStudentWork(componentState: any, componentContent: any) {
     if (componentState != null) {
       const drawDataString = componentState.studentData.drawData;
       const drawData = angular.fromJson(drawDataString);
-      if (componentContent == null) {
-        if (this.isDrawDataContainsObjects(drawData)) {
-          return true;
-        }
-      } else {
-        if (this.isStarterDrawDataExists(componentContent)) {
-          const starterDrawData = componentContent.starterDrawData;
-          if (this.isStudentDrawDataDifferentFromStarterData(drawDataString, starterDrawData)) {
-            return true;
-          }
-        } else {
-          if (this.isDrawDataContainsObjects(drawData)) {
-            return true;
-          }
-        }
+      if (this.isComponentContentNotNullAndStarterDrawDataExists(componentContent)) {
+        const starterDrawData = componentContent.starterDrawData;
+        return this.isStudentDrawDataDifferentFromStarterData(drawDataString, starterDrawData);
+      } else if (this.isDrawDataContainsObjects(drawData)) {
+        return true;
       }
     }
     return false;
   }
 
-  isDrawDataContainsObjects(drawData) {
+  isDrawDataContainsObjects(drawData: any) {
     return (
       drawData.canvas != null &&
       drawData.canvas.objects != null &&
@@ -128,11 +114,15 @@ class DrawService extends ComponentService {
     );
   }
 
-  isStarterDrawDataExists(componentContent) {
+  isComponentContentNotNullAndStarterDrawDataExists(componentContent: any) {
+    return componentContent != null && this.isStarterDrawDataExists(componentContent);
+  }
+
+  isStarterDrawDataExists(componentContent: any) {
     return componentContent.starterDrawData != null && componentContent.starterDrawData !== '';
   }
 
-  isStudentDrawDataDifferentFromStarterData(drawDataString, starterDrawData) {
+  isStudentDrawDataDifferentFromStarterData(drawDataString: string, starterDrawData: string) {
     return drawDataString != null && drawDataString !== '' && drawDataString !== starterDrawData;
   }
 
@@ -142,23 +132,23 @@ class DrawService extends ComponentService {
    * @param componentState The component state that has been rendered.
    * @return A promise that will return an image object.
    */
-  generateImageFromRenderedComponentState(componentState) {
-    const deferred = this.$q.defer();
-    let canvas = angular.element(
-      document.querySelector(
-        '#drawingtool_' + componentState.nodeId + '_' + componentState.componentId + ' canvas'
-      )
-    );
-    if (canvas != null && canvas.length > 0) {
-      canvas = canvas[0];
+  generateImageFromRenderedComponentState(componentState: any) {
+    return new Promise((resolve, reject) => {
+      const canvas = this.getDrawingToolCanvas(componentState.nodeId, componentState.componentId);
       const canvasBase64String = canvas.toDataURL('image/png');
       const imageObject = this.UtilService.getImageObjectFromBase64String(canvasBase64String);
       this.StudentAssetService.uploadAsset(imageObject).then(asset => {
-        deferred.resolve(asset);
+        resolve(asset);
       });
+    });
+  }
+
+  getDrawingToolCanvas(nodeId: string, componentId: string) {
+    const id = `#drawingtool_${nodeId}_${componentId} canvas`;
+    const canvas = angular.element(document.querySelector(id));
+    if (canvas != null && canvas.length > 0) {
+      return canvas[0];
     }
-    return deferred.promise;
+    return null;
   }
 }
-
-export default DrawService;
