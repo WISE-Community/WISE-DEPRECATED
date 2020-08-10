@@ -1,14 +1,15 @@
 'use strict';
 
 import * as angular from 'angular';
+import { downgradeInjectable } from '@angular/upgrade/static';
 import ClassResponseController from './classResponseController';
-import DiscussionService from './discussionService';
+import { DiscussionService } from './discussionService';
 import DiscussionController from './discussionController';
 import DiscussionAuthoringController from './discussionAuthoringController';
 
 const discussionAuthoringComponentModule = angular
   .module('discussionAuthoringComponentModule', ['pascalprecht.translate'])
-  .service('DiscussionService', DiscussionService)
+  .service('DiscussionService', downgradeInjectable(DiscussionService))
   .controller('DiscussionController', DiscussionController)
   .controller('DiscussionAuthoringController', DiscussionAuthoringController)
   .controller('ClassResponseController', ClassResponseController)

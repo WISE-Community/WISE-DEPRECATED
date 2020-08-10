@@ -1,105 +1,69 @@
 import { ComponentService } from '../componentService';
 import { ConfigService } from '../../services/configService';
 import { TeacherDataService } from '../../services/teacherDataService';
+import { UtilService } from '../../services/utilService';
+import { UpgradeModule } from '@angular/upgrade/static';
+import { StudentDataService } from '../../services/studentDataService';
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
-class DiscussionService extends ComponentService {
-  $http: any;
-  $injector: any;
-  $rootScope: any;
-  $q: any;
-  $translate: any;
-  ConfigService: ConfigService;
+@Injectable()
+export class DiscussionService extends ComponentService {
   TeacherDataService: TeacherDataService;
 
-  static $inject = [
-    '$filter',
-    '$http',
-    '$rootScope',
-    '$q',
-    '$injector',
-    'ConfigService',
-    'StudentDataService',
-    'UtilService'
-  ];
-
-  constructor(
-    $filter,
-    $http,
-    $rootScope,
-    $q,
-    $injector,
-    ConfigService,
-    StudentDataService,
-    UtilService
+  constructor(private upgrade: UpgradeModule,
+    private http: HttpClient,
+    private ConfigService: ConfigService,
+    protected StudentDataService: StudentDataService,
+    protected UtilService: UtilService
   ) {
     super(StudentDataService, UtilService);
-    this.$http = $http;
-    this.$rootScope = $rootScope;
-    this.$q = $q;
-    this.$injector = $injector;
-    this.$translate = $filter('translate');
-    this.ConfigService = ConfigService;
     if (['classroomMonitor', 'author'].includes(this.ConfigService.getMode())) {
       /*
        * In the Classroom Monitor, we need access to the TeacherDataService so we can retrieve posts
        * for all students.
        */
-      this.TeacherDataService = this.$injector.get('TeacherDataService');
+      this.TeacherDataService = this.upgrade.$injector.get('TeacherDataService');
     }
   }
 
   getComponentTypeLabel() {
-    return this.$translate('discussion.componentTypeLabel');
+    return this.getTranslation('discussion.componentTypeLabel');
+  }
+
+  getTranslation(key: string) {
+    return this.upgrade.$injector.get('$filter')('translate')(key);
   }
 
   createComponent() {
     const component: any = super.createComponent();
     component.type = 'Discussion';
-    component.prompt = this.$translate('ENTER_PROMPT_HERE');
+    component.prompt = this.getTranslation('ENTER_PROMPT_HERE');
     component.isStudentAttachmentEnabled = true;
     component.gateClassmateResponses = true;
     return component;
   }
 
-  getClassmateResponses(runId, periodId, components) {
-    return this.$q((resolve, reject) => {
-      const params = {
-        runId: runId,
-        periodId: periodId,
-        components: components,
-        getStudentWork: true,
-        getAnnotations: true
-      };
-      const httpParams = {
-        method: 'GET',
-        url: this.ConfigService.getConfigParam('studentDataURL'),
-        params: params
-      };
-      this.$http(httpParams).then(result => {
-        resolve(result.data);
-      });
-    });
+  isCompleted(component: any, componentStates: any[], componentEvents: any[], nodeEvents: any[]) {
+    if (this.hasShowWorkConnectedComponentThatHasWork(component)) {
+      return this.hasNodeEnteredEvent(nodeEvents);
+    }
+    return this.hasAnyComponentStateWithResponse(componentStates);
   }
 
-  isCompleted(component, componentStates, componentEvents, nodeEvents) {
-    if (this.hasShowWorkConnectedComponentThatHasWork(component)) {
-      if (this.hasNodeEnteredEvent(nodeEvents)) {
+  hasAnyComponentStateWithResponse(componentStates: any[]) {
+    for (const componentState of componentStates) {
+      if (componentState.studentData.response != null) {
         return true;
-      }
-    } else {
-      for (let componentState of componentStates) {
-        if (componentState.studentData.response != null) {
-          return true;
-        }
       }
     }
     return false;
   }
 
-  hasShowWorkConnectedComponentThatHasWork(componentContent) {
+  hasShowWorkConnectedComponentThatHasWork(componentContent: any) {
     const connectedComponents = componentContent.connectedComponents;
     if (connectedComponents != null) {
-      for (let connectedComponent of connectedComponents) {
+      for (const connectedComponent of connectedComponents) {
         if (connectedComponent.type === 'showWork') {
           const componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(
             connectedComponent.nodeId,
@@ -114,8 +78,8 @@ class DiscussionService extends ComponentService {
     return false;
   }
 
-  hasNodeEnteredEvent(nodeEvents) {
-    for (let nodeEvent of nodeEvents) {
+  hasNodeEnteredEvent(nodeEvents: any[]) {
+    for (const nodeEvent of nodeEvents) {
       if (nodeEvent.event === 'nodeEntered') {
         return true;
       }
@@ -123,7 +87,27 @@ class DiscussionService extends ComponentService {
     return false;
   }
 
-  workgroupHasWorkForComponent(workgroupId, componentId) {
+  getClassmateResponses(runId: number, periodId: number, components: any[]) {
+    return new Promise((resolve, reject) => {
+      let params = new HttpParams()
+          .set('runId', runId + '')
+          .set('periodId', periodId + '')
+          .set('getStudentWork', true + '')
+          .set('getAnnotations', true + '');
+      for (const component of components) {
+        params = params.append('components', JSON.stringify(component));
+      }
+      const options = {
+        params: params
+      };
+      const url = this.ConfigService.getConfigParam('studentDataURL');
+      this.http.get(url, options).toPromise().then(data => {
+        resolve(data);
+      });
+    });
+  }
+
+  workgroupHasWorkForComponent(workgroupId: number, componentId: string) {
     return (
       this.TeacherDataService.getComponentStatesByWorkgroupIdAndComponentId(
         workgroupId,
@@ -132,14 +116,14 @@ class DiscussionService extends ComponentService {
     );
   }
 
-  getPostsAssociatedWithComponentIdsAndWorkgroupId(componentIds, workgroupId) {
+  getPostsAssociatedWithComponentIdsAndWorkgroupId(componentIds: string[], workgroupId: number) {
     let allPosts = [];
     const topLevelComponentStateIdsFound = [];
     const componentStates = this.TeacherDataService.getComponentStatesByWorkgroupIdAndComponentIds(
       workgroupId,
       componentIds
     );
-    for (let componentState of componentStates) {
+    for (const componentState of componentStates) {
       const componentStateIdReplyingTo = componentState.studentData.componentStateIdReplyingTo;
       if (this.isTopLevelPost(componentState)) {
         if (
@@ -167,15 +151,16 @@ class DiscussionService extends ComponentService {
     return allPosts;
   }
 
-  isTopLevelPost(componentState) {
+  isTopLevelPost(componentState: any) {
     return componentState.studentData.componentStateIdReplyingTo == null;
   }
 
-  isTopLevelComponentStateIdFound(topLevelComponentStateIdsFound, componentStateId) {
+  isTopLevelComponentStateIdFound(topLevelComponentStateIdsFound: string[],
+      componentStateId: string) {
     return topLevelComponentStateIdsFound.indexOf(componentStateId) !== -1;
   }
 
-  getPostAndAllRepliesByComponentIds(componentIds, componentStateId) {
+  getPostAndAllRepliesByComponentIds(componentIds: string[], componentStateId: string) {
     const postAndAllReplies = [];
     const componentStatesForComponentIds = this.TeacherDataService.getComponentStatesByComponentIds(
       componentIds
@@ -201,7 +186,7 @@ class DiscussionService extends ComponentService {
     return false;
   }
 
-  componentStateHasStudentWork(componentState, componentContent) {
+  componentStateHasStudentWork(componentState: any, componentContent: any) {
     if (this.isStudentWorkHasAttachment(componentState)) {
       return true;
     }
@@ -215,26 +200,24 @@ class DiscussionService extends ComponentService {
     }
   }
 
-  isComponentHasStarterSentence(componentContent) {
+  isComponentHasStarterSentence(componentContent: any) {
     const starterSentence = componentContent.starterSentence;
     return starterSentence != null && starterSentence !== '';
   }
 
-  isStudentResponseDifferentFromStarterSentence(componentState, componentContent) {
+  isStudentResponseDifferentFromStarterSentence(componentState: any, componentContent: any) {
     const response = componentState.studentData.response;
     const starterSentence = componentContent.starterSentence;
     return response !== starterSentence;
   }
 
-  isStudentWorkHasText(componentState) {
+  isStudentWorkHasText(componentState: any) {
     const response = componentState.studentData.response;
     return response != null && response !== '';
   }
 
-  isStudentWorkHasAttachment(componentState) {
+  isStudentWorkHasAttachment(componentState: any) {
     const attachments = componentState.studentData.attachments;
     return attachments != null && attachments.length > 0;
   }
 }
-
-export default DiscussionService;
