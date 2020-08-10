@@ -1,13 +1,14 @@
 'use strict';
 
 import * as angular from 'angular';
-import EmbeddedService from './embeddedService';
+import { downgradeInjectable } from '@angular/upgrade/static';
+import { EmbeddedService } from './embeddedService';
 import EmbeddedController from './embeddedController';
 
 const embeddedComponentModule = angular.module('embeddedComponentModule', [
     'pascalprecht.translate'
   ])
-  .service('EmbeddedService', EmbeddedService)
+  .service('EmbeddedService', downgradeInjectable(EmbeddedService))
   .controller('EmbeddedController', EmbeddedController)
   .config([
     '$translatePartialLoaderProvider',
