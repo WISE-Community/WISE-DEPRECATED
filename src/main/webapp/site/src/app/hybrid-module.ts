@@ -40,6 +40,7 @@ import { DrawService } from '../../../wise5/components/draw/drawService';
 import { EmbeddedService } from '../../../wise5/components/embedded/embeddedService';
 import { HTMLService } from '../../../wise5/components/html/htmlService';
 import { LabelService } from '../../../wise5/components/label/labelService';
+import { AnimationService } from '../../../wise5/components/animation/animationService';
 
 @Component({template: ``})
 export class EmptyComponent {}
@@ -57,6 +58,7 @@ export class EmptyComponent {}
   ],
   providers: [
     AchievementService,
+    AnimationService,
     AnnotationService,
     AudioRecorderService,
     UtilService,
