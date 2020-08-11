@@ -40,6 +40,7 @@ import { DrawService } from '../../../wise5/components/draw/drawService';
 import { EmbeddedService } from '../../../wise5/components/embedded/embeddedService';
 import { HTMLService } from '../../../wise5/components/html/htmlService';
 import { LabelService } from '../../../wise5/components/label/labelService';
+import { ConceptMapService } from '../../../wise5/components/conceptMap/conceptMapService';
 
 @Component({template: ``})
 export class EmptyComponent {}
@@ -60,6 +61,7 @@ export class EmptyComponent {}
     AnnotationService,
     AudioRecorderService,
     UtilService,
+    ConceptMapService,
     ConfigService,
     CRaterService,
     DiscussionService,
