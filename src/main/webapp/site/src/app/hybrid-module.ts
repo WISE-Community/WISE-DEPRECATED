@@ -41,6 +41,7 @@ import { EmbeddedService } from '../../../wise5/components/embedded/embeddedServ
 import { HTMLService } from '../../../wise5/components/html/htmlService';
 import { LabelService } from '../../../wise5/components/label/labelService';
 import { AudioOscillatorService } from '../../../wise5/components/audioOscillator/audioOscillatorService';
+import { ConceptMapService } from '../../../wise5/components/conceptMap/conceptMapService';
 
 @Component({template: ``})
 export class EmptyComponent {}
@@ -62,6 +63,7 @@ export class EmptyComponent {}
     AudioOscillatorService,
     AudioRecorderService,
     UtilService,
+    ConceptMapService,
     ConfigService,
     CRaterService,
     DiscussionService,
