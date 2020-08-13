@@ -43,6 +43,7 @@ import { LabelService } from '../../../wise5/components/label/labelService';
 import { AnimationService } from '../../../wise5/components/animation/animationService';
 import { AudioOscillatorService } from '../../../wise5/components/audioOscillator/audioOscillatorService';
 import { ConceptMapService } from '../../../wise5/components/conceptMap/conceptMapService';
+import { GraphService } from '../../../wise5/components/graph/graphService';
 
 @Component({template: ``})
 export class EmptyComponent {}
@@ -64,13 +65,13 @@ export class EmptyComponent {}
     AnnotationService,
     AudioOscillatorService,
     AudioRecorderService,
-    UtilService,
     ConceptMapService,
     ConfigService,
     CRaterService,
     DiscussionService,
     DrawService,
     EmbeddedService,
+    GraphService,
     HTMLService,
     LabelService,
     MatchService,
@@ -87,6 +88,7 @@ export class EmptyComponent {}
     SummaryService,
     TableService,
     TagService,
+    UtilService,
     VLEProjectService
   ],
   entryComponents: [

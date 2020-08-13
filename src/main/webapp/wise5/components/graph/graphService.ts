@@ -1,16 +1,29 @@
-import { ComponentService } from '../componentService';
-import * as html2canvas from 'html2canvas';
+'use strict';
 
-class GraphService extends ComponentService {
-  constructor($filter, $q, StudentAssetService, StudentDataService, UtilService) {
+import * as angular from 'angular';
+import * as html2canvas from 'html2canvas';
+import { Injectable } from '@angular/core';
+import { ComponentService } from '../componentService';
+import { StudentAssetService } from '../../services/studentAssetService';
+import { StudentDataService } from '../../services/studentDataService';
+import { UtilService } from '../../services/utilService';
+import { UpgradeModule } from '@angular/upgrade/static';
+
+@Injectable()
+export class GraphService extends ComponentService {
+  constructor(private upgrade: UpgradeModule,
+      private StudentAssetService: StudentAssetService,
+      protected StudentDataService: StudentDataService,
+      protected UtilService: UtilService) {
     super(StudentDataService, UtilService);
-    this.$q = $q;
-    this.$translate = $filter('translate');
-    this.StudentAssetService = StudentAssetService;
   }
 
   getComponentTypeLabel() {
-    return this.$translate('graph.componentTypeLabel');
+    return this.getTranslation('graph.componentTypeLabel');
+  }
+
+  getTranslation(key: string) {
+    return this.upgrade.$injector.get('$filter')('translate')(key);
   }
 
   /**
@@ -18,7 +31,7 @@ class GraphService extends ComponentService {
    * @returns a new Graph component object
    */
   createComponent() {
-    const component = super.createComponent();
+    const component: any = super.createComponent();
     component.type = 'Graph';
     component.title = '';
     component.width = 800;
@@ -32,19 +45,19 @@ class GraphService extends ComponentService {
     component.graphType = 'line';
     component.xAxis = {
       title: {
-        text: this.$translate('graph.timeSeconds'),
+        text: this.getTranslation('graph.timeSeconds'),
         useHTML: true
       },
       min: 0,
       max: 100,
-      units: this.$translate('graph.secondsUnit'),
+      units: this.getTranslation('graph.secondsUnit'),
       locked: true,
       type: 'limits',
       allowDecimals: false
     };
     component.yAxis = {
       title: {
-        text: this.$translate('graph.positionMeters'),
+        text: this.getTranslation('graph.positionMeters'),
         useHTML: true,
         style: {
           color: null
@@ -57,13 +70,13 @@ class GraphService extends ComponentService {
       },
       min: 0,
       max: 100,
-      units: this.$translate('graph.metersUnit'),
+      units: this.getTranslation('graph.metersUnit'),
       locked: true,
       allowDecimals: false
     };
     component.series = [
       {
-        name: this.$translate('graph.prediction'),
+        name: this.getTranslation('graph.prediction'),
         data: [],
         color: 'blue',
         dashStyle: 'Solid',
@@ -77,31 +90,32 @@ class GraphService extends ComponentService {
     return component;
   }
 
-  isCompleted(component, componentStates, componentEvents, nodeEvents, node) {
+  isCompleted(component: any, componentStates: any[], componentEvents: any[], nodeEvents: any[],
+      node: any) {
     if (this.canEdit(component)) {
-      if (this.hasComponentStates(componentStates)) {
-        if (this.isSubmitRequired(node, component)) {
-          return this.hasSubmitComponentState(componentStates);
-        } else {
-          const componentState = componentStates[componentStates.length - 1];
-          return this.componentStateHasStudentWork(componentState);
-        }
-      }
+      return this.hasCompletedComponentState(componentStates, node, component);
     } else {
       return this.UtilService.hasNodeEnteredEvent(nodeEvents);
+    }
+  }
+
+  hasCompletedComponentState(componentStates: any[], node: any, component: any) {
+    if (this.hasComponentStates(componentStates)) {
+      if (this.isSubmitRequired(node, component)) {
+        return this.hasSubmitComponentState(componentStates);
+      } else {
+        const latestComponentState = componentStates[componentStates.length - 1];
+        return this.componentStateHasStudentWork(latestComponentState);
+      }
     }
     return false;
   }
 
-  hasComponentStates(componentStates) {
+  hasComponentStates(componentStates: any[]) {
     return componentStates != null && componentStates.length > 0;
   }
 
-  isSubmitRequired(node, component) {
-    return node.showSubmitButton || (component.showSubmitButton && !node.showSaveButton);
-  }
-
-  hasSubmitComponentState(componentStates) {
+  hasSubmitComponentState(componentStates: any[]) {
     for (const componentState of componentStates) {
       if (componentState.isSubmit && this.componentStateHasStudentWork(componentState)) {
         return true;
@@ -115,7 +129,7 @@ class GraphService extends ComponentService {
    * @param component The component content.
    * @return Whether the student can perform any work on this component.
    */
-  canEdit(component) {
+  canEdit(component: any) {
     const series = component.series;
     for (const singleSeries of series) {
       if (singleSeries.canEdit) {
@@ -128,7 +142,7 @@ class GraphService extends ComponentService {
     return false;
   }
 
-  hasSeriesData(studentData) {
+  hasSeriesData(studentData: any) {
     const series = studentData.series;
     if (series != null) {
       for (const singleSeries of series) {
@@ -140,7 +154,7 @@ class GraphService extends ComponentService {
     return false;
   }
 
-  hasTrialData(studentData) {
+  hasTrialData(studentData: any) {
     const trials = studentData.trials;
     if (trials != null) {
       for (const trial of trials) {
@@ -155,30 +169,34 @@ class GraphService extends ComponentService {
     return false;
   }
 
-  componentStateHasStudentWork(componentState, componentContent) {
+  componentStateHasStudentWork(componentState: any, componentContent: any = null) {
     if (componentState != null) {
       const studentData = componentState.studentData;
-      if (studentData != null) {
-        if (studentData.version == 1) {
-          /*
-           * this is the old graph student data format where the
-           * student data can contain multiple series.
-           */
-          if (this.anySeriesHasDataPoint(studentData.series)) {
-            return true;
-          }
-        } else {
-          /*
-           * this is the new graph student data format where the
-           * student data can contain multiple trials and each trial
-           * can contain multiple series.
-           */
-          if (this.anyTrialHasDataPoint(studentData.trials)) {
-            return true;
-          }
-        }
+      if (studentData != null && this.isStudentDataHasWork(studentData)) {
+        return true;
       }
       if (this.isStudentChangedAxisLimit(componentState, componentContent)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  isStudentDataHasWork(studentData: any) {
+    if (studentData.version == 1) {
+      /*
+       * this is the old graph student data format where the
+       * student data can contain multiple series.
+       */
+      if (this.anySeriesHasDataPoint(studentData.series)) {
+        return true;
+      }
+    } else {
+      /*
+       * this is the new graph student data format where the student data can contain multiple
+       * trials and each trial can contain multiple series.
+       */
+      if (this.anyTrialHasDataPoint(studentData.trials)) {
         return true;
       }
     }
@@ -191,21 +209,31 @@ class GraphService extends ComponentService {
    * @param componentContent the component content
    * @return whether the student has changed any of the axis limits
    */
-  isStudentChangedAxisLimit(componentState, componentContent) {
+  isStudentChangedAxisLimit(componentState: any, componentContent: any) {
     if (componentState != null && componentState.studentData != null && componentContent != null) {
-      if (componentState.studentData.xAxis != null && componentContent.xAxis != null) {
-        if (componentState.studentData.xAxis.min != componentContent.xAxis.min) {
-          return true;
-        } else if (componentState.studentData.xAxis.max != componentContent.xAxis.max) {
-          return true;
-        }
+      if (this.isXAxisChanged(componentState, componentContent) ||
+          this.isYAxisChanged(componentState, componentContent)) {
+        return true;
       }
-      if (componentState.studentData.yAxis != null && componentContent.yAxis != null) {
-        if (componentState.studentData.yAxis.min != componentContent.yAxis.min) {
-          return true;
-        } else if (componentState.studentData.yAxis.max != componentContent.yAxis.max) {
-          return true;
-        }
+    }
+    return false;
+  }
+
+  isXAxisChanged(componentState: any, componentContent: any) {
+    if (componentState.studentData.xAxis != null && componentContent.xAxis != null) {
+      if (componentState.studentData.xAxis.min != componentContent.xAxis.min ||
+          componentState.studentData.xAxis.max != componentContent.xAxis.max) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  isYAxisChanged(componentState: any, componentContent: any) {
+    if (componentState.studentData.yAxis != null && componentContent.yAxis != null) {
+      if (componentState.studentData.yAxis.min != componentContent.yAxis.min ||
+          componentState.studentData.yAxis.max != componentContent.yAxis.max) {
+        return true;
       }
     }
     return false;
@@ -216,7 +244,7 @@ class GraphService extends ComponentService {
    * @param trials an array of trials
    * @return whether any of the trials contains a data point
    */
-  anyTrialHasDataPoint(trials) {
+  anyTrialHasDataPoint(trials: any[]) {
     for (const trial of trials) {
       if (this.trialHasDataPoint(trial)) {
         return true;
@@ -230,7 +258,7 @@ class GraphService extends ComponentService {
    * @param trial a trial object which can contain multiple series
    * @return whether the trial contains a data point
    */
-  trialHasDataPoint(trial) {
+  trialHasDataPoint(trial: any) {
     for (const singleSeries of trial.series) {
       if (this.seriesHasDataPoint(singleSeries)) {
         return true;
@@ -244,7 +272,7 @@ class GraphService extends ComponentService {
    * @param multipleSeries an array of series
    * @return whether any of the series has a data point
    */
-  anySeriesHasDataPoint(multipleSeries) {
+  anySeriesHasDataPoint(multipleSeries: any[]) {
     if (multipleSeries != null) {
       for (const singleSeries of multipleSeries) {
         if (this.seriesHasDataPoint(singleSeries)) {
@@ -260,7 +288,7 @@ class GraphService extends ComponentService {
    * @param singleSeries a series object
    * @return whether the series object has any data points
    */
-  seriesHasDataPoint(singleSeries) {
+  seriesHasDataPoint(singleSeries: any) {
     return singleSeries.data.length > 0;
   }
 
@@ -270,30 +298,26 @@ class GraphService extends ComponentService {
    * @param componentState The component state that has been rendered.
    * @return A promise that will return an image object.
    */
-  generateImageFromRenderedComponentState(componentState) {
-    const deferred = this.$q.defer();
-    const componentId = componentState.componentId;
-    let highchartsDiv = angular.element('#chart_' + componentId).find('.highcharts-container');
-    if (highchartsDiv != null && highchartsDiv.length > 0) {
-      highchartsDiv = highchartsDiv[0];
+  generateImageFromRenderedComponentState(componentState: any) {
+    return new Promise((resolve, reject) => {
+      const highchartsDiv = this.getHighchartsDiv(componentState.componentId);
       html2canvas(highchartsDiv).then(canvas => {
         const base64Image = canvas.toDataURL('image/png');
         const imageObject = this.UtilService.getImageObjectFromBase64String(base64Image);
         this.StudentAssetService.uploadAsset(imageObject).then(asset => {
-          deferred.resolve(asset);
+          resolve(asset);
         });
       });
+    });
+  }
+
+  getHighchartsDiv(componentId: string) {
+    const highchartsDiv = angular.element('#chart_' + componentId).find('.highcharts-container');
+    if (highchartsDiv != null && highchartsDiv.length > 0) {
+      return highchartsDiv[0];
+    } else {
+      return null;
     }
-    return deferred.promise;
   }
 }
 
-GraphService.$inject = [
-  '$filter',
-  '$q',
-  'StudentAssetService',
-  'StudentDataService',
-  'UtilService'
-];
-
-export default GraphService;

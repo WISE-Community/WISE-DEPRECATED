@@ -1,10 +1,84 @@
 'use strict';
 
+import * as angular from 'angular';
+import * as Highcharts from '../../lib/highcharts/highcharts.src';
 import ComponentController from '../componentController';
 import canvg from 'canvg';
 import html2canvas from 'html2canvas';
+import * as covariance from 'compute-covariance';
 
 class GraphController extends ComponentController {
+  $q: any;
+  $timeout: any;
+  GraphService: any;
+  chartConfig: any;
+  graphType: string = null;
+  series: any[] = [];
+  seriesColors: string[] = ['blue', 'red', 'green', 'orange', 'purple', 'black'];
+  seriesMarkers: string[] = ['circle', 'square', 'diamond', 'triangle', 'triangle-down', 'circle'];
+  activeSeries: any = null;
+  isResetGraphButtonVisible: boolean = false;
+  isSelectSeriesVisible: boolean = false;
+  notebookConfig: any = this.NotebookService.getNotebookConfig();
+  hideAllTrialsOnNewTrial: boolean = true;
+  showUndoButton: boolean = false;
+  isLegendEnabled: boolean = true;
+  hasCustomLegendBeenSet: boolean = false;
+  showTrialSelect: boolean = true;
+  chartId: string = 'chart1';
+  width: number = null;
+  height: number = null;
+  trials: any[] = [];
+  activeTrial: any = null;
+  trialIdsToShow: any[] = [];
+  selectedTrialsText: string = '';
+  studentDataVersion: number = 2;
+  canCreateNewTrials: boolean = false;
+  canDeleteTrials: boolean = false;
+  uploadedFileName: string = null;
+  backgroundImage: string = null;
+  mouseOverPoints: any[] = [];
+  initialComponentState: any = null;
+  previousComponentState: any = null;
+  undoStack: any[] = [];
+  addNextComponentStateToUndoStack: boolean = false;
+  hiddenCanvasId: string;
+  dataExplorerColors: string[];
+  title: string;
+  subtitle: string;
+  xAxis: any;
+  yAxis: any;
+  plotLines: any[];
+  rectangle: any;
+  yAxisLocked: boolean;
+  setupMouseMoveListenerDone: boolean;
+  mouseDown: boolean;
+  deleteKeyPressedListenerDestroyer: any;
+  fileName: string;
+  lastSavedMouseMoveTimestamp: number;
+  xAxisLimitSpacerWidth: number;
+  lastDropTime: number;
+  isResetSeriesButtonVisible: boolean;
+  previousTrialIdsToShow: any[];
+
+  static $inject = [
+    '$filter',
+    '$mdDialog',
+    '$q',
+    '$rootScope',
+    '$scope',
+    '$timeout',
+    'AnnotationService',
+    'ConfigService',
+    'GraphService',
+    'NodeService',
+    'NotebookService',
+    'ProjectService',
+    'StudentAssetService',
+    'StudentDataService',
+    'UtilService'
+  ];
+
   constructor(
     $filter,
     $mdDialog,
@@ -257,7 +331,7 @@ class GraphController extends ComponentController {
 
   uploadFileAndReadContent(element) {
     const files = element.files;
-    const reader = new FileReader();
+    const reader: any = new FileReader();
     reader.onload = () => {
       const fileContent = reader.result;
       this.readCSVIntoActiveSeries(fileContent);
@@ -367,7 +441,7 @@ class GraphController extends ComponentController {
       this.yAxis.title.text = studentData.dataExplorerYAxisLabel;
     } else if (studentData.dataExplorerYAxisLabels != null) {
       for (let [index, yAxis] of Object.entries(this.yAxis)) {
-        yAxis.title.text = studentData.dataExplorerYAxisLabels[index];
+        (yAxis as any).title.text = studentData.dataExplorerYAxisLabels[index];
       }
     }
   }
@@ -635,11 +709,11 @@ class GraphController extends ComponentController {
    * @param x The x value to show the vertical line at.
    * @param text The text to show on the plot line.
    */
-  showXPlotLine(x, text) {
+  showXPlotLine(x, text: string = null) {
     const chart = this.getChartById(this.chartId);
     const chartXAxis = chart.xAxis[0];
     chartXAxis.removePlotLine('plot-line-x');
-    const plotLine = {
+    const plotLine: any = {
       value: x,
       color: 'red',
       width: 4,
@@ -726,11 +800,11 @@ class GraphController extends ComponentController {
    * @param y The y value to show the horizontal line at.
    * @param text The text to show on the plot line.
    */
-  showYPlotLine(y, text) {
+  showYPlotLine(y, text: string = null) {
     const chart = this.getChartById(this.chartId);
     const chartYAxis = chart.yAxis[0];
     chartYAxis.removePlotLine('plot-line-y');
-    const plotLine = {
+    const plotLine: any = {
       value: y,
       color: 'red',
       width: 2,
@@ -799,7 +873,7 @@ class GraphController extends ComponentController {
   /**
    * @param useTimeout whether to call the drawGraphHelper() function in a timeout callback
    */
-  drawGraph(useTimeout) {
+  drawGraph(useTimeout: boolean = false) {
     const deferred = this.$q.defer();
     if (useTimeout) {
       /*
@@ -1246,7 +1320,7 @@ class GraphController extends ComponentController {
   }
 
   createPointDragEventHandler() {
-    const thisGraphController = this;
+    const thisGraphController: any = this;
     return function(event) {
       if (!thisGraphController.isDisabled) {
         const activeSeries = thisGraphController.activeSeries;
@@ -1258,7 +1332,7 @@ class GraphController extends ComponentController {
   }
 
   createPointDropEventHandler() {
-    const thisGraphController = this;
+    const thisGraphController: any = this;
     return function(event) {
       // the student has stopped dragging the point and dropped the point
       if (!thisGraphController.isDisabled && thisGraphController.dragging) {
@@ -1577,7 +1651,7 @@ class GraphController extends ComponentController {
     this.studentDataChanged(useTimeoutSetupGraph);
   }
 
-  studentDataChanged(useTimeoutSetupGraph) {
+  studentDataChanged(useTimeoutSetupGraph: boolean = false) {
     this.isDirty = true;
     this.emitComponentDirty(true);
     this.isSubmitDirty = true;
@@ -1631,7 +1705,7 @@ class GraphController extends ComponentController {
   createComponentState(action) {
     const deferred = this.$q.defer();
     const componentState = this.NodeService.createNewComponentState();
-    const studentData = {};
+    const studentData: any = {};
     studentData.version = this.studentDataVersion;
     if (this.isStudentDataVersion1()) {
       studentData.series = this.UtilService.makeCopyOfJSONObject(this.getSeries());
@@ -1725,11 +1799,6 @@ class GraphController extends ComponentController {
     return null;
   }
 
-  getSeriesByIndex(index) {
-    const series = this.getSeries();
-    return series[index];
-  }
-
   getSeriesById(id) {
     for (const singleSeries of this.getSeries()) {
       if (singleSeries.id === id) {
@@ -1817,7 +1886,7 @@ class GraphController extends ComponentController {
   attachStudentAsset(studentAsset) {
     this.StudentAssetService.copyAssetForReference(studentAsset).then(copiedAsset => {
       this.StudentAssetService.getAssetContent(copiedAsset).then(assetContent => {
-        const rowData = this.StudentDataService.CSVToArray(assetContent);
+        const rowData = this.UtilService.CSVToArray(assetContent, ',');
         const params = {
           skipFirstRow: true,
           xColumn: 0,
@@ -1825,7 +1894,7 @@ class GraphController extends ComponentController {
         };
         const seriesData = this.convertRowDataToSeriesData(rowData, params);
         const newSeriesIndex = this.series.length;
-        const series = {
+        const series: any = {
           name: copiedAsset.fileName,
           color: this.seriesColors[newSeriesIndex],
           marker: {
@@ -2267,18 +2336,17 @@ class GraphController extends ComponentController {
         const name = field.name;
         const when = field.when;
         const action = field.action;
-        const firstTime = false;
-        if (when === 'firstTime' && firstTime === true) {
-          if (action === 'write') {
-            // TODO
-          } else if (action === 'read') {
-            // TODO
-          }
-        } else if (when === 'always') {
+        if (when === 'always') {
           if (action === 'write') {
             // TODO
           } else if (action === 'read') {
             this.readConnectedComponentFieldFromStudentData(studentData, params, name);
+          }
+        } else if (when === 'firstTime') {
+          if (action === 'write') {
+            // TODO
+          } else if (action === 'read') {
+            // TODO
           }
         }
       }
@@ -2397,7 +2465,7 @@ class GraphController extends ComponentController {
   }
 
   copySeries(series) {
-    const newSeries = {
+    const newSeries: any = {
       name: series.name,
       data: series.data,
       color: series.color,
@@ -2624,7 +2692,7 @@ class GraphController extends ComponentController {
   snipGraph($event) {
     const chart = this.getChartById(this.chartId);
     const svgString = chart.getSVG();
-    const hiddenCanvas = document.getElementById(this.hiddenCanvasId);
+    const hiddenCanvas: any = document.getElementById(this.hiddenCanvasId);
     canvg(hiddenCanvas, svgString, {
       renderCallback: () => {
         const base64Image = hiddenCanvas.toDataURL('image/png');
@@ -2762,7 +2830,7 @@ class GraphController extends ComponentController {
    * @param {boolean} isReset (optional) Whether this function call was
    * triggered by the student clicking the reset button.
    */
-  handleConnectedComponents(isReset) {
+  handleConnectedComponents(isReset: boolean = false) {
     /*
      * This will hold all the promises that will return the trials that we want. The trials will
      * either be from this student or from classmates.
@@ -3345,35 +3413,13 @@ class GraphController extends ComponentController {
     return this.componentContent.enableTrials === true;
   }
 
-  isStudentDataVersion1(version) {
+  isStudentDataVersion1(version: number = null) {
     if (version == null) {
       return this.studentDataVersion == null || this.studentDataVersion === 1;
     } else {
       return version === 1;
     }
   }
-
-  isSingleYAxis(yAxis) {
-    return !Array.isArray(yAxis);
-  }
 }
-
-GraphController.$inject = [
-  '$filter',
-  '$mdDialog',
-  '$q',
-  '$rootScope',
-  '$scope',
-  '$timeout',
-  'AnnotationService',
-  'ConfigService',
-  'GraphService',
-  'NodeService',
-  'NotebookService',
-  'ProjectService',
-  'StudentAssetService',
-  'StudentDataService',
-  'UtilService'
-];
 
 export default GraphController;
