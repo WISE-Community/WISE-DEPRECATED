@@ -4,6 +4,35 @@ import GraphController from "./graphController";
 import html2canvas from 'html2canvas';
 
 class GraphAuthoringController extends GraphController {
+
+  availableGraphTypes: any[];
+  availableRoundingOptions: any[];
+  availableSymbols: any[];
+  availableSeriesTypes: any[];
+  availableLineTypes: any[];
+  availableXAxisTypes: any[];
+  numYAxes: number;
+  enableMultipleYAxes: boolean;
+  legendEnabled: boolean;
+
+  static $inject = [
+    '$filter',
+    '$mdDialog',
+    '$q',
+    '$rootScope',
+    '$scope',
+    '$timeout',
+    'AnnotationService',
+    'ConfigService',
+    'GraphService',
+    'NodeService',
+    'NotebookService',
+    'ProjectService',
+    'StudentAssetService',
+    'StudentDataService',
+    'UtilService'
+  ];
+
   constructor($filter,
               $mdDialog,
               $q,
@@ -212,7 +241,7 @@ class GraphAuthoringController extends GraphController {
   }
 
   authoringAddSeriesClicked() {
-    const newSeries = this.createNewSeries();
+    const newSeries: any = this.createNewSeries();
     if (this.authoringComponentContent.graphType === 'line') {
       newSeries.type = 'line';
       newSeries.dashStyle = 'Solid';
@@ -611,8 +640,8 @@ class GraphAuthoringController extends GraphController {
   }
 
   addColorToYAxes() {
-    for (const [indexString, yAxis] of Object.entries(this.authoringComponentContent.yAxis)) {
-      const index = parseInt(indexString);
+    for (let index = 0; index < this.authoringComponentContent.yAxis.length; index++) {
+      const yAxis = this.authoringComponentContent.yAxis[index];
       if (yAxis.title.style.color == null || yAxis.title.style.color === '') {
         yAxis.title.style.color = this.seriesColors[index];
       }
@@ -734,23 +763,5 @@ class GraphAuthoringController extends GraphController {
     this.authoringViewComponentChanged();
   }
 }
-
-GraphAuthoringController.$inject = [
-  '$filter',
-  '$mdDialog',
-  '$q',
-  '$rootScope',
-  '$scope',
-  '$timeout',
-  'AnnotationService',
-  'ConfigService',
-  'GraphService',
-  'NodeService',
-  'NotebookService',
-  'ProjectService',
-  'StudentAssetService',
-  'StudentDataService',
-  'UtilService'
-];
 
 export default GraphAuthoringController;
