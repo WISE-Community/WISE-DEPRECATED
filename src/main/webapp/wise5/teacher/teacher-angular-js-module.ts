@@ -10,7 +10,6 @@ import { SpaceService } from '../services/spaceService';
 import { StudentStatusService } from '../services/studentStatusService';
 import { TeacherDataService } from '../services/teacherDataService';
 import { TeacherWebSocketService } from '../services/teacherWebSocketService';
-import { NotebookService } from '../services/notebookService';
 import AuthoringToolController from '../authoringTool/authoringToolController';
 import AuthoringToolMainController from '../authoringTool/main/authoringToolMainController';
 import AdvancedAuthoringController from '../authoringTool/advanced/advancedAuthoringController';
@@ -19,7 +18,6 @@ import ClassroomMonitorController from '../classroomMonitor/classroomMonitorCont
 import DataExportController from '../classroomMonitor/dataExport/dataExportController';
 import ExportController from '../classroomMonitor/dataExport/exportController';
 import ExportVisitsController from '../classroomMonitor/dataExport/exportVisitsController';
-import ManageStudentsController from '../classroomMonitor/manageStudents/manageStudentsController';
 import MilestonesAuthoringController from '../authoringTool/milestones/milestonesAuthoringController';
 import MilestonesController from '../classroomMonitor/milestones/milestonesController';
 import NodeAuthoringController from '../authoringTool/node/nodeAuthoringController';
@@ -90,7 +88,6 @@ export function createTeacherAngularJSModule() {
     .factory('StudentStatusService', downgradeInjectable(StudentStatusService))
     .service('TeacherDataService', downgradeInjectable(TeacherDataService))
     .service('TeacherWebSocketService', downgradeInjectable(TeacherWebSocketService))
-    .service('NotebookService', downgradeInjectable(NotebookService))
     .controller('AuthoringToolController', AuthoringToolController)
     .controller('AuthoringToolMainController', AuthoringToolMainController)
     .controller('AdvancedAuthoringController', AdvancedAuthoringController)
@@ -99,7 +96,6 @@ export function createTeacherAngularJSModule() {
     .controller('DataExportController', DataExportController)
     .controller('ExportController', ExportController)
     .controller('ExportVisitsController', ExportVisitsController)
-    .controller('ManageStudentsController', ManageStudentsController)
     .controller('MilestonesAuthoringController', MilestonesAuthoringController)
     .controller('MilestonesController', MilestonesController)
     .controller('NodeAuthoringController', NodeAuthoringController)
@@ -388,9 +384,7 @@ export function createTeacherAngularJSModule() {
         })
         .state('root.cm.manageStudents', {
           url: '/manageStudents',
-          templateUrl: '/wise5/classroomMonitor/manageStudents/manageStudents.html',
-          controller: 'ManageStudentsController',
-          controllerAs: 'manageStudentsController'
+          component: 'manageStudentsComponent'
         })
         .state('root.cm.dashboard', {
           url: '/dashboard',
