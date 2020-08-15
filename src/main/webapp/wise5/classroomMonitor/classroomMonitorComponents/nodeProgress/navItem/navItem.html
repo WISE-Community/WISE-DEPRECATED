@@ -28,6 +28,8 @@
             <nav-item-progress node-completion="$ctrl.getNodeCompletion()"
                                period-id="$ctrl.currentPeriod.periodId"
                                period-name="$ctrl.currentPeriod.periodName"></nav-item-progress>
+            <md-icon ng-if="!$ctrl.isLocked()" ng-click="$ctrl.lockNode(true)" aria-label="lock">lock_open</md-icon>
+            <md-icon ng-if="$ctrl.isLocked()" ng-click="$ctrl.lockNode(false)" aria-label="unlock">lock</md-icon>
         </md-card-footer>
     </md-card>
 

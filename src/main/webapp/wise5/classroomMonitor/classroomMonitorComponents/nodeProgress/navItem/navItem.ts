@@ -238,6 +238,17 @@ class NavItemController {
     }
   }
 
+  isLocked() {
+    const node = this.ProjectService.getNodeById(this.nodeId);
+    return node.constraints != null && node.constraints.filter(constraint => {
+      return constraint.action === 'makeThisNodeNotVisitable';
+    }).length > 0;
+  }
+
+  lockNode(doLock: boolean) {
+    this.ProjectService.lockNode(this.nodeId, doLock);
+  }
+
   /**
    * Get the node title
    * @param nodeId get the title for this node
