@@ -840,28 +840,6 @@ export class ProjectService {
     node.constraints.push(constraint);
   }
 
-  lockNode(nodeId: string, doLock: boolean) {
-    const node = this.getNodeById(nodeId);
-    if (doLock) {
-      const lockConstraint = {
-        id: this.getNextAvailableConstraintIdForNodeId(node.id),
-        action: 'makeThisNodeNotVisitable',
-        targetId: node.id,
-        removalConditional: 'any',
-        removalCriteria: [{
-          'name': 'teacherRemoval',
-          'params': {}
-        }]
-      };
-      this.addConstraintToNode(node, lockConstraint);
-    } else {
-      node.constraints = node.constraints.filter(constraint => {
-        return constraint.action !== 'makeThisNodeNotVisitable';
-      });
-    }
-    this.saveProject();
-  }
-
   /**
    * Check if a node has constraints.
    * @param nodeId The node id of the node.
@@ -3585,6 +3563,8 @@ export class ProjectService {
             nodeTitle: nodeTitle
           });
         }
+      } else if (name === 'teacherRemoval') {
+        message += this.upgrade.$injector.get('$filter')('translate')('waitForTeacherToUnlock');
       }
     }
     return message;

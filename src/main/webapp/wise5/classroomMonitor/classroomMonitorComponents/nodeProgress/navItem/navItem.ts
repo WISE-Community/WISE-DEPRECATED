@@ -247,6 +247,8 @@ class NavItemController {
 
   lockNode(doLock: boolean) {
     this.ProjectService.lockNode(this.nodeId, doLock);
+    this.TeacherWebSocketService.sendProjectToClass(this.currentPeriod.periodId,
+        this.ProjectService.project);
   }
 
   /**

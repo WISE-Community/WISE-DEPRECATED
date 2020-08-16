@@ -4,10 +4,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -73,5 +75,19 @@ public class TeacherRunAPIController {
     message.put("type", "unpause");
     message.put("topic", String.format("/topic/classroom/%s/%s", runId, periodId));
     redisPublisher.publish(message.toString());
+  }
+
+  @MessageMapping("/api/teacher/run/{runId}/project-to-period/{periodId}")
+  public void sendProjectToPeriod(Authentication auth,
+      @DestinationVariable Long runId, @DestinationVariable Long periodId, @Payload String project)
+      throws ObjectNotFoundException, JSONException {
+    Run run = runService.retrieveById(runId);
+    if (runService.hasReadPermission(auth, run)) {
+      JSONObject msg = new JSONObject();
+      msg.put("type", "project");
+      msg.put("project", new JSONObject(project));
+      msg.put("topic", String.format("/topic/classroom/%s/%s", runId, periodId));
+      redisPublisher.publish(msg.toString());
+    }
   }
 }
