@@ -43,6 +43,7 @@ import { LabelService } from '../../../wise5/components/label/labelService';
 import { AnimationService } from '../../../wise5/components/animation/animationService';
 import { AudioOscillatorService } from '../../../wise5/components/audioOscillator/audioOscillatorService';
 import { ConceptMapService } from '../../../wise5/components/conceptMap/conceptMapService';
+import { MilestoneService } from '../../../wise5/services/milestoneService';
 
 @Component({template: ``})
 export class EmptyComponent {}
@@ -141,6 +142,7 @@ export class PreviewAngularJSModule {
     AngularJSModule
   ],
   providers: [
+    MilestoneService,
     ProjectAssetService,
     SpaceService,
     StudentStatusService,

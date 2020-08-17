@@ -50,7 +50,7 @@ import '../components/label/labelComponentModule';
 import '../components/match/matchComponentModule';
 import ManageStudentsController from '../classroomMonitor/manageStudents/manageStudentsController';
 import MilestonesController from '../classroomMonitor/milestones/milestonesController';
-import MilestoneService from '../services/milestoneService';
+import { MilestoneService } from '../services/milestoneService';
 import '../components/multipleChoice/multipleChoiceComponentModule';
 import NodeService from '../services/nodeService';
 import '../themes/default/notebook/notebookComponents';
@@ -178,7 +178,7 @@ const teacherModule = angular
   .factory('ConfigService', downgradeInjectable(ConfigService))
   .factory('CRaterService', downgradeInjectable(CRaterService))
   .service('HttpInterceptor', HttpInterceptor)
-  .service('MilestoneService', MilestoneService)
+  .service('MilestoneService', downgradeInjectable(MilestoneService))
   .service('NodeService', NodeService)
   .service('NotebookService', NotebookService)
   .factory('NotificationService', downgradeInjectable(NotificationService))
