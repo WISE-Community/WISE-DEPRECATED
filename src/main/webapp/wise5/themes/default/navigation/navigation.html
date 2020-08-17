@@ -1,11 +1,10 @@
 <div class="l-constrained l-constrained-md md-padding nav" layout="column" ng-controller="NavigationController as navCtrl">
     <div class="md-toolbar-tools auto-width">
         <div class="md-subhead nav-head">
-            <span ng-click="navCtrl.showStudentStatistics()" translate="projectPlan" />
+            <span translate="projectPlan"></span>
         </div>
         <span flex></span>
     </div>
-
     <div class="nav-contents nav-contents--root">
         <div layout="row" layout-wrap layout-align="center start">
             <nav-item ng-repeat="id in navCtrl.rootNode.ids"
