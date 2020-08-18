@@ -11,7 +11,6 @@ import { UtilService } from "./utilService";
 @Injectable()
 export class AchievementService {
 
-  $rootScope: any;
   studentAchievementsByWorkgroupId: any;
   debug: boolean;
 
@@ -23,7 +22,6 @@ export class AchievementService {
     private StudentDataService: StudentDataService,
     private UtilService: UtilService
   ) {
-    this.$rootScope = this.upgrade.$injector.get('$rootScope');
     this.studentAchievementsByWorkgroupId = {};
     this.debug = false;
   }
@@ -272,7 +270,8 @@ export class AchievementService {
     const achievements = this.getStudentAchievementsByWorkgroupId(workgroupId);
     achievements.push(newAchievement);
     this.saveAchievementToServer(newAchievement);
-    this.$rootScope.$broadcast('achievementCompleted', { achievementId: achievement.id });
+    this.upgrade.$injector.get('$rootScope')
+        .$broadcast('achievementCompleted', { achievementId: achievement.id });
   }
 
   /**
@@ -282,8 +281,8 @@ export class AchievementService {
    */
   createStudentWorkSavedListener(projectAchievement) {
     this.debugOutput('registering ' + projectAchievement.id);
-    const deregisterListenerFunction = this.$rootScope.$on('studentWorkSavedToServer',
-        (event, args) => {
+    const deregisterListenerFunction = this.upgrade.$injector.get('$rootScope')
+        .$on('studentWorkSavedToServer', (event, args) => {
       this.debugOutput('createStudentWorkSavedListener checking ' + projectAchievement.id +
           ' completed ' + args.nodeId);
       if (!this.isStudentAchievementExists(projectAchievement.id)) {
@@ -345,8 +344,8 @@ export class AchievementService {
     const thisAchievementService = this;
     const thisAchievement = projectAchievement;
     this.debugOutput('registering ' + projectAchievement.id);
-    const deregisterListenerFunction = this.$rootScope.$on('achievementCompleted',
-        (event, args) => {
+    const deregisterListenerFunction = this.upgrade.$injector.get('$rootScope')
+        .$on('achievementCompleted', (event, args) => {
       const projectAchievement = thisAchievement;
       if (projectAchievement != null) {
         this.debugOutput('createAggregateAchievementListener checking ' + projectAchievement.id +

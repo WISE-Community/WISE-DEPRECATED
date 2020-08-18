@@ -1,10 +1,28 @@
-import classroomMonitorModule from '../../classroomMonitor/classroomMonitor';
-let AchievementService,
-  ConfigService,
-  MilestoneService,
-  ProjectService,
-  TeacherDataService,
-  UtilService;
+import * as angular from 'angular';
+import * as moment from 'moment';
+import { MilestoneService } from "../../../../wise5/services/milestoneService";
+import { TestBed } from "@angular/core/testing";
+import { HttpClientTestingModule } from "@angular/common/http/testing";
+import { UpgradeModule } from "@angular/upgrade/static";
+import { AchievementService } from "../../../../wise5/services/achievementService";
+import { AnnotationService } from "../../../../wise5/services/annotationService";
+import { ConfigService } from "../../../../wise5/services/configService";
+import { ProjectService } from "../../../../wise5/services/projectService";
+import { TeacherDataService } from "../../../../wise5/services/teacherDataService";
+import { UtilService } from "../../../../wise5/services/utilService";
+import { StudentDataService } from "../../../../wise5/services/studentDataService";
+import { TagService } from "../../../../wise5/services/tagService";
+import { TeacherProjectService } from "../../../../wise5/services/teacherProjectService";
+import { TeacherWebSocketService } from "../../../../wise5/services/teacherWebSocketService";
+import { NotificationService } from "../../../../wise5/services/notificationService";
+import { StudentStatusService } from "../../../../wise5/services/studentStatusService";
+
+let service: MilestoneService;
+let achievementService: AchievementService;
+let configService: ConfigService;
+let projectService: ProjectService;
+let teacherDataService: TeacherDataService;
+let utilService: UtilService;
 
 const satisfyCriterionSample = {
   percentThreshold: 50,
@@ -27,31 +45,43 @@ const aggregateAutoScoresSample = {
     }
   }
 };
+
 const possibleScoresKi = [1, 2, 3, 4, 5];
+
 const reportSettingsCustomScoreValuesSample = {
   customScoreValues: {
     ki: [1, 2, 3, 4]
   }
 };
 
-describe('UtilService', () => {
-  beforeEach(angular.mock.module(classroomMonitorModule.name));
-  beforeEach(inject((
-    _AchievementService_,
-    _ConfigService_,
-    _MilestoneService_,
-    _ProjectService_,
-    _TeacherDataService_,
-    _UtilService_
-  ) => {
-    AchievementService = _AchievementService_;
-    ConfigService = _ConfigService_;
-    MilestoneService = _MilestoneService_;
-    ProjectService = _ProjectService_;
-    TeacherDataService = _TeacherDataService_;
-    UtilService = _UtilService_;
-  }));
-
+describe('MilestoneService', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [ HttpClientTestingModule, UpgradeModule ],
+      providers: [
+        AchievementService,
+        AnnotationService,
+        ConfigService,
+        MilestoneService,
+        NotificationService,
+        ProjectService,
+        StudentDataService,
+        StudentStatusService,
+        TagService,
+        TeacherDataService,
+        TeacherProjectService,
+        TeacherWebSocketService,
+        UtilService
+      ]
+    });
+    service = TestBed.get(MilestoneService);
+    achievementService = TestBed.get(AchievementService);
+    configService = TestBed.get(ConfigService);
+    projectService = TestBed.get(ProjectService);
+    teacherDataService = TestBed.get(TeacherDataService);
+    utilService = TestBed.get(UtilService);
+    spyOn(utilService, 'broadcastEventInRootScope').and.callFake(() => {});
+  });
   getProjectMilestones();
   getProjectMilestoneReports();
   getMilestoneReportByNodeId();
@@ -96,7 +126,7 @@ describe('UtilService', () => {
   clearTempFields();
 });
 
-function createScoreCounts(counts) {
+function createScoreCounts(counts: any[]) {
   const countsObject = {};
   for (let c = 0; c < counts.length; c++) {
     countsObject[c + 1] = counts[c];
@@ -104,7 +134,8 @@ function createScoreCounts(counts) {
   return countsObject;
 }
 
-function createSatisfyCriteria(nodeId, componentId, targetVariable, func, value, percentThreshold) {
+function createSatisfyCriteria(nodeId: string, componentId: string, targetVariable: string = null,
+    func: string = null, value: number = null, percentThreshold: number = null) {
   return {
     nodeId: nodeId,
     componentId: componentId,
@@ -118,8 +149,8 @@ function createSatisfyCriteria(nodeId, componentId, targetVariable, func, value,
 function getProjectMilestones() {
   describe('getProjectMilestones()', () => {
     it('should get project milestones when it is not enabled', () => {
-      spyOn(ProjectService, 'getAchievements').and.returnValue({ isEnabled: false });
-      const milestones = MilestoneService.getProjectMilestones();
+      spyOn(projectService, 'getAchievements').and.returnValue({ isEnabled: false });
+      const milestones = service.getProjectMilestones();
       expect(milestones.length).toEqual(0);
     });
     it('should get project milestones when there are milestones', () => {
@@ -134,8 +165,8 @@ function getProjectMilestones() {
           }
         ]
       };
-      spyOn(ProjectService, 'getAchievements').and.returnValue(achievements);
-      const milestones = MilestoneService.getProjectMilestones();
+      spyOn(projectService, 'getAchievements').and.returnValue(achievements);
+      const milestones = service.getProjectMilestones();
       expect(milestones.length).toEqual(2);
     });
   });
@@ -155,8 +186,8 @@ function getProjectMilestoneReports() {
           }
         ]
       };
-      spyOn(ProjectService, 'getAchievements').and.returnValue(achievements);
-      const milestoneReports = MilestoneService.getProjectMilestoneReports();
+      spyOn(projectService, 'getAchievements').and.returnValue(achievements);
+      const milestoneReports = service.getProjectMilestoneReports();
       expect(milestoneReports.length).toEqual(1);
     });
   });
@@ -186,8 +217,8 @@ function getMilestoneReportByNodeId() {
           }
         ]
       };
-      spyOn(ProjectService, 'getAchievements').and.returnValue(achievements);
-      const milestoneReport = MilestoneService.getMilestoneReportByNodeId('node2');
+      spyOn(projectService, 'getAchievements').and.returnValue(achievements);
+      const milestoneReport = service.getMilestoneReportByNodeId('node2');
       expect(milestoneReport).toBeNull();
     });
     it('should get project milestone report by node id when there is one', () => {
@@ -212,8 +243,8 @@ function getMilestoneReportByNodeId() {
           }
         ]
       };
-      spyOn(ProjectService, 'getAchievements').and.returnValue(achievements);
-      const milestoneReport = MilestoneService.getMilestoneReportByNodeId('node1');
+      spyOn(projectService, 'getAchievements').and.returnValue(achievements);
+      const milestoneReport = service.getMilestoneReportByNodeId('node1');
       expect(milestoneReport).toBeDefined();
     });
   });
@@ -255,13 +286,13 @@ function getProjectMilestoneStatus() {
           createStudentAchievement('milestone1', 1000, 5)
         ]
       };
-      spyOn(AchievementService, 'getAchievementIdToStudentAchievementsMappings').and.returnValue(
+      spyOn(achievementService, 'getAchievementIdToStudentAchievementsMappings').and.returnValue(
         achievements
       );
-      spyOn(ConfigService, 'getDisplayUsernamesByWorkgroupId').and.returnValue('student');
-      spyOn(TeacherDataService, 'getCurrentPeriod').and.returnValue(1);
-      spyOn(ProjectService, 'getAchievementByAchievementId').and.returnValue(milestone);
-      const milestoneStatus = MilestoneService.getProjectMilestoneStatus(milestoneId);
+      spyOn(configService, 'getDisplayUsernamesByWorkgroupId').and.returnValue('student');
+      spyOn(teacherDataService, 'getCurrentPeriod').and.returnValue(1);
+      spyOn(projectService, 'getAchievementByAchievementId').and.returnValue(milestone);
+      const milestoneStatus = service.getProjectMilestoneStatus(milestoneId);
       expect(milestoneStatus.items).toBeDefined();
       expect(milestoneStatus.numberOfStudentsCompleted).toBeDefined();
       expect(milestoneStatus.numberOfStudentsInRun).toBeDefined();
@@ -273,17 +304,17 @@ function getProjectMilestoneStatus() {
 function insertMilestoneItems() {
   describe('insertMilestoneItems()', () => {
     it('should insert milestone items', () => {
-      const milestone = {
+      const milestone: any = {
         params: {
           nodeIds: ['node1', 'node2']
         }
       };
-      ProjectService.idToOrder = {
+      projectService.idToOrder = {
         node1: {},
         node2: {},
         node3: {}
       };
-      MilestoneService.insertMilestoneItems(milestone);
+      service.insertMilestoneItems(milestone);
       expect(milestone.items['node1'].checked).toEqual(true);
       expect(milestone.items['node2'].checked).toEqual(true);
       expect(milestone.items['node3'].checked).toBeUndefined();
@@ -295,7 +326,7 @@ function insertMilestoneCompletion() {
   describe('insertMilestoneCompletion()', () => {
     it('should insert milestone completion', () => {
       const content = 'template1Content';
-      const milestone = {
+      const milestone: any = {
         id: 'milestone1',
         report: {
           templates: [
@@ -326,18 +357,19 @@ function insertMilestoneCompletion() {
           createStudentAchievement('milestone1', 1000, 5)
         ]
       };
-      spyOn(AchievementService, 'getAchievementIdToStudentAchievementsMappings').and.returnValue(
+      spyOn(achievementService, 'getAchievementIdToStudentAchievementsMappings').and.returnValue(
         achievements
       );
-      spyOn(ConfigService, 'getDisplayUsernamesByWorkgroupId').and.returnValue('student');
-      MilestoneService.workgroupIds = [1, 2, 3, 4, 5];
-      MilestoneService.insertMilestoneCompletion(milestone);
+      spyOn(configService, 'getDisplayUsernamesByWorkgroupId').and.returnValue('student');
+      service.workgroupIds = [1, 2, 3, 4, 5];
+      service.insertMilestoneCompletion(milestone);
       expect(milestone.numberOfStudentsCompleted).toEqual(5);
     });
   });
 }
 
-function createStudentAchievement(achievementId, achievementTime, workgroupId) {
+function createStudentAchievement(achievementId: string, achievementTime: number,
+    workgroupId: number) {
   return {
     achievementId: achievementId,
     achievementTime: achievementTime,
@@ -349,7 +381,7 @@ function insertMilestoneReport() {
   describe('insertMilestoneReport()', () => {
     it('should insert milestone report', () => {
       const content = 'template1Content';
-      const milestone = {
+      const milestone: any = {
         report: {
           templates: [
             {
@@ -380,8 +412,8 @@ function insertMilestoneReport() {
           scoreCount: 50
         }
       };
-      spyOn(MilestoneService, 'calculateAggregateAutoScores').and.returnValue(aggregateAutoScores);
-      MilestoneService.insertMilestoneReport(milestone);
+      spyOn(service, 'calculateAggregateAutoScores').and.returnValue(aggregateAutoScores);
+      service.insertMilestoneReport(milestone);
       expect(milestone.isReportAvailable).toEqual(true);
       expect(milestone.generatedReport).toEqual(content);
     });
@@ -391,14 +423,14 @@ function insertMilestoneReport() {
 function setWorkgroupsInCurrentPeriod() {
   describe('setWorkgroupsInCurrentPeriod()', () => {
     it('should set workgroups in current period', () => {
-      spyOn(ConfigService, 'getClassmateWorkgroupIds').and.returnValue([1, 2, 3]);
-      spyOn(ConfigService, 'getPeriodIdByWorkgroupId').and.returnValue(1);
-      MilestoneService.periodId = 1;
-      MilestoneService.setWorkgroupsInCurrentPeriod();
-      expect(MilestoneService.numberOfStudentsInRun).toEqual(3);
-      expect(MilestoneService.workgroupIds[0]).toEqual(1);
-      expect(MilestoneService.workgroupIds[1]).toEqual(2);
-      expect(MilestoneService.workgroupIds[2]).toEqual(3);
+      spyOn(configService, 'getClassmateWorkgroupIds').and.returnValue([1, 2, 3]);
+      spyOn(configService, 'getPeriodIdByWorkgroupId').and.returnValue(1);
+      service.periodId = 1;
+      service.setWorkgroupsInCurrentPeriod();
+      expect(service.numberOfStudentsInRun).toEqual(3);
+      expect(service.workgroupIds[0]).toEqual(1);
+      expect(service.workgroupIds[1]).toEqual(2);
+      expect(service.workgroupIds[2]).toEqual(3);
     });
   });
 }
@@ -424,7 +456,7 @@ function getReferencedComponent() {
           ]
         }
       };
-      const referencedComponent = MilestoneService.getReferencedComponent(milestone);
+      const referencedComponent = service.getReferencedComponent(milestone);
       expect(referencedComponent).toEqual({ nodeId: 'node3', componentId: 'component3' });
     });
   });
@@ -439,7 +471,7 @@ function isCompletionReached() {
         numberOfStudentsCompleted: 2,
         satisfyMinNumWorkgroups: 4
       };
-      expect(MilestoneService.isCompletionReached(projectAchievement)).toEqual(false);
+      expect(service.isCompletionReached(projectAchievement)).toEqual(false);
     });
     it('should check is completion reached percent true and num students false', () => {
       const projectAchievement = {
@@ -448,7 +480,7 @@ function isCompletionReached() {
         numberOfStudentsCompleted: 2,
         satisfyMinNumWorkgroups: 4
       };
-      expect(MilestoneService.isCompletionReached(projectAchievement)).toEqual(false);
+      expect(service.isCompletionReached(projectAchievement)).toEqual(false);
     });
     it('should check is completion reached percent false and num students false', () => {
       const projectAchievement = {
@@ -457,7 +489,7 @@ function isCompletionReached() {
         numberOfStudentsCompleted: 6,
         satisfyMinNumWorkgroups: 4
       };
-      expect(MilestoneService.isCompletionReached(projectAchievement)).toEqual(false);
+      expect(service.isCompletionReached(projectAchievement)).toEqual(false);
     });
     it('should check is completion reached perecent true and num students true', () => {
       const projectAchievement = {
@@ -466,7 +498,7 @@ function isCompletionReached() {
         numberOfStudentsCompleted: 6,
         satisfyMinNumWorkgroups: 4
       };
-      expect(MilestoneService.isCompletionReached(projectAchievement)).toEqual(true);
+      expect(service.isCompletionReached(projectAchievement)).toEqual(true);
     });
   });
 }
@@ -501,8 +533,8 @@ function generateReport() {
         scoreCount: 50
       }
     };
-    spyOn(MilestoneService, 'calculateAggregateAutoScores').and.returnValue(aggregateAutoScores);
-    const report = MilestoneService.generateReport(projectAchievement);
+    spyOn(service, 'calculateAggregateAutoScores').and.returnValue(aggregateAutoScores);
+    const report = service.generateReport(projectAchievement);
     expect(report.content).toEqual(content);
   });
 }
@@ -518,14 +550,14 @@ function chooseTemplate() {
       };
       const templates = [template1, template2];
       const aggregateAutoScores = {};
-      spyOn(MilestoneService, 'isTemplateMatch').and.callFake((template, aggregateAutoScores) => {
+      spyOn(service, 'isTemplateMatch').and.callFake((template, aggregateAutoScores) => {
         if (template.id === 'template-1') {
           return false;
         } else if (template.id === 'template-2') {
           return true;
         }
       });
-      expect(MilestoneService.chooseTemplate(templates, aggregateAutoScores)).toEqual(template2);
+      expect(service.chooseTemplate(templates, aggregateAutoScores)).toEqual(template2);
     });
   });
 }
@@ -545,7 +577,7 @@ function isTemplateMatch() {
         ]
       };
       const aggregateAutoScores = {};
-      spyOn(MilestoneService, 'isTemplateCriterionSatisfied').and.callFake(
+      spyOn(service, 'isTemplateCriterionSatisfied').and.callFake(
         (satisfyCriterion, aggregateAutoScores) => {
           if (satisfyCriterion.id === 'satisfy-criteria-1') {
             return false;
@@ -554,7 +586,7 @@ function isTemplateMatch() {
           }
         }
       );
-      expect(MilestoneService.isTemplateMatch(template, aggregateAutoScores)).toEqual(false);
+      expect(service.isTemplateMatch(template, aggregateAutoScores)).toEqual(false);
     });
     it('should check is template match with all conditional true', () => {
       const template = {
@@ -569,7 +601,7 @@ function isTemplateMatch() {
         ]
       };
       const aggregateAutoScores = {};
-      spyOn(MilestoneService, 'isTemplateCriterionSatisfied').and.callFake(
+      spyOn(service, 'isTemplateCriterionSatisfied').and.callFake(
         (satisfyCriterion, aggregateAutoScores) => {
           if (satisfyCriterion.id === 'satisfy-criteria-1') {
             return true;
@@ -578,7 +610,7 @@ function isTemplateMatch() {
           }
         }
       );
-      expect(MilestoneService.isTemplateMatch(template, aggregateAutoScores)).toEqual(true);
+      expect(service.isTemplateMatch(template, aggregateAutoScores)).toEqual(true);
     });
     it('should check is template match with any conditional false', () => {
       const template = {
@@ -593,7 +625,7 @@ function isTemplateMatch() {
         ]
       };
       const aggregateAutoScores = {};
-      spyOn(MilestoneService, 'isTemplateCriterionSatisfied').and.callFake(
+      spyOn(service, 'isTemplateCriterionSatisfied').and.callFake(
         (satisfyCriterion, aggregateAutoScores) => {
           if (satisfyCriterion.id === 'satisfy-criteria-1') {
             return false;
@@ -602,7 +634,7 @@ function isTemplateMatch() {
           }
         }
       );
-      expect(MilestoneService.isTemplateMatch(template, aggregateAutoScores)).toEqual(false);
+      expect(service.isTemplateMatch(template, aggregateAutoScores)).toEqual(false);
     });
     it('should check is template match with any conditional true', () => {
       const template = {
@@ -617,7 +649,7 @@ function isTemplateMatch() {
         ]
       };
       const aggregateAutoScores = {};
-      spyOn(MilestoneService, 'isTemplateCriterionSatisfied').and.callFake(
+      spyOn(service, 'isTemplateCriterionSatisfied').and.callFake(
         (satisfyCriterion, aggregateAutoScores) => {
           if (satisfyCriterion.id === 'satisfy-criteria-1') {
             return false;
@@ -626,7 +658,7 @@ function isTemplateMatch() {
           }
         }
       );
-      expect(MilestoneService.isTemplateMatch(template, aggregateAutoScores)).toEqual(true);
+      expect(service.isTemplateMatch(template, aggregateAutoScores)).toEqual(true);
     });
   });
 }
@@ -649,7 +681,7 @@ function isTemplateCriterionSatisfied() {
       }
     };
     expect(
-      MilestoneService.isTemplateCriterionSatisfied(satisfyCriterion, aggregateAutoScores)
+      service.isTemplateCriterionSatisfied(satisfyCriterion, aggregateAutoScores)
     ).toEqual(false);
   });
   it('should check is template criterion satisfied true', () => {
@@ -670,7 +702,7 @@ function isTemplateCriterionSatisfied() {
       }
     };
     expect(
-      MilestoneService.isTemplateCriterionSatisfied(satisfyCriterion, aggregateAutoScores)
+      service.isTemplateCriterionSatisfied(satisfyCriterion, aggregateAutoScores)
     ).toEqual(true);
   });
 }
@@ -695,7 +727,7 @@ function isPercentOfScoresGreaterThan() {
         }
       };
       expect(
-        MilestoneService.isPercentOfScoresGreaterThan(satisfyCriterion, aggregateAutoScores)
+        service.isPercentOfScoresGreaterThan(satisfyCriterion, aggregateAutoScores)
       ).toEqual(false);
     });
     it('should check is percent of scores greater than true', () => {
@@ -716,7 +748,7 @@ function isPercentOfScoresGreaterThan() {
         }
       };
       expect(
-        MilestoneService.isPercentOfScoresGreaterThan(satisfyCriterion, aggregateAutoScores)
+        service.isPercentOfScoresGreaterThan(satisfyCriterion, aggregateAutoScores)
       ).toEqual(true);
     });
   });
@@ -731,7 +763,7 @@ function getGreaterThanSum() {
       };
       const possibleScores = [1, 2, 3, 4, 5];
       expect(
-        MilestoneService.getGreaterThanSum(satisfyCriterion, aggregateData, possibleScores)
+        service.getGreaterThanSum(satisfyCriterion, aggregateData, possibleScores)
       ).toEqual(140);
     });
     it('should get greater than sum with score 2', () => {
@@ -741,7 +773,7 @@ function getGreaterThanSum() {
       };
       const possibleScores = [1, 2, 3, 4, 5];
       expect(
-        MilestoneService.getGreaterThanSum(satisfyCriterion, aggregateData, possibleScores)
+        service.getGreaterThanSum(satisfyCriterion, aggregateData, possibleScores)
       ).toEqual(120);
     });
     it('should get greater than sum with score 3', () => {
@@ -751,7 +783,7 @@ function getGreaterThanSum() {
       };
       const possibleScores = [1, 2, 3, 4, 5];
       expect(
-        MilestoneService.getGreaterThanSum(satisfyCriterion, aggregateData, possibleScores)
+        service.getGreaterThanSum(satisfyCriterion, aggregateData, possibleScores)
       ).toEqual(90);
     });
     it('should get greater than sum with score 4', () => {
@@ -761,7 +793,7 @@ function getGreaterThanSum() {
       };
       const possibleScores = [1, 2, 3, 4, 5];
       expect(
-        MilestoneService.getGreaterThanSum(satisfyCriterion, aggregateData, possibleScores)
+        service.getGreaterThanSum(satisfyCriterion, aggregateData, possibleScores)
       ).toEqual(50);
     });
   });
@@ -787,7 +819,7 @@ function isPercentOfScoresGreaterThanOrEqualTo() {
         }
       };
       expect(
-        MilestoneService.isPercentOfScoresGreaterThanOrEqualTo(
+        service.isPercentOfScoresGreaterThanOrEqualTo(
           satisfyCriterion,
           aggregateAutoScores
         )
@@ -811,7 +843,7 @@ function isPercentOfScoresGreaterThanOrEqualTo() {
         }
       };
       expect(
-        MilestoneService.isPercentOfScoresGreaterThanOrEqualTo(
+        service.isPercentOfScoresGreaterThanOrEqualTo(
           satisfyCriterion,
           aggregateAutoScores
         )
@@ -829,7 +861,7 @@ function getGreaterThanOrEqualToSum() {
       };
       const possibleScores = [1, 2, 3, 4, 5];
       expect(
-        MilestoneService.getGreaterThanOrEqualToSum(satisfyCriterion, aggregateData, possibleScores)
+        service.getGreaterThanOrEqualToSum(satisfyCriterion, aggregateData, possibleScores)
       ).toEqual(150);
     });
     it('should get greater than or equal to sum with score 2', () => {
@@ -839,7 +871,7 @@ function getGreaterThanOrEqualToSum() {
       };
       const possibleScores = [1, 2, 3, 4, 5];
       expect(
-        MilestoneService.getGreaterThanOrEqualToSum(satisfyCriterion, aggregateData, possibleScores)
+        service.getGreaterThanOrEqualToSum(satisfyCriterion, aggregateData, possibleScores)
       ).toEqual(140);
     });
     it('should get greater than or equal to sum with score 3', () => {
@@ -849,7 +881,7 @@ function getGreaterThanOrEqualToSum() {
       };
       const possibleScores = [1, 2, 3, 4, 5];
       expect(
-        MilestoneService.getGreaterThanOrEqualToSum(satisfyCriterion, aggregateData, possibleScores)
+        service.getGreaterThanOrEqualToSum(satisfyCriterion, aggregateData, possibleScores)
       ).toEqual(120);
     });
     it('should get greater than or equal to sum with score 4', () => {
@@ -859,7 +891,7 @@ function getGreaterThanOrEqualToSum() {
       };
       const possibleScores = [1, 2, 3, 4, 5];
       expect(
-        MilestoneService.getGreaterThanOrEqualToSum(satisfyCriterion, aggregateData, possibleScores)
+        service.getGreaterThanOrEqualToSum(satisfyCriterion, aggregateData, possibleScores)
       ).toEqual(90);
     });
     it('should get greater than or equal to sum with score 5', () => {
@@ -869,7 +901,7 @@ function getGreaterThanOrEqualToSum() {
       };
       const possibleScores = [1, 2, 3, 4, 5];
       expect(
-        MilestoneService.getGreaterThanOrEqualToSum(satisfyCriterion, aggregateData, possibleScores)
+        service.getGreaterThanOrEqualToSum(satisfyCriterion, aggregateData, possibleScores)
       ).toEqual(50);
     });
   });
@@ -895,7 +927,7 @@ function isPercentOfScoresLessThan() {
         }
       };
       expect(
-        MilestoneService.isPercentOfScoresLessThan(satisfyCriterion, aggregateAutoScores)
+        service.isPercentOfScoresLessThan(satisfyCriterion, aggregateAutoScores)
       ).toEqual(false);
     });
     it('should check is percent of scores less than true', () => {
@@ -916,7 +948,7 @@ function isPercentOfScoresLessThan() {
         }
       };
       expect(
-        MilestoneService.isPercentOfScoresLessThan(satisfyCriterion, aggregateAutoScores)
+        service.isPercentOfScoresLessThan(satisfyCriterion, aggregateAutoScores)
       ).toEqual(true);
     });
   });
@@ -931,7 +963,7 @@ function getLessThanSum() {
       };
       const possibleScores = [1, 2, 3, 4, 5];
       expect(
-        MilestoneService.getLessThanSum(satisfyCriterion, aggregateData, possibleScores)
+        service.getLessThanSum(satisfyCriterion, aggregateData, possibleScores)
       ).toEqual(10);
     });
     it('should get less than sum with score 3', () => {
@@ -941,7 +973,7 @@ function getLessThanSum() {
       };
       const possibleScores = [1, 2, 3, 4, 5];
       expect(
-        MilestoneService.getLessThanSum(satisfyCriterion, aggregateData, possibleScores)
+        service.getLessThanSum(satisfyCriterion, aggregateData, possibleScores)
       ).toEqual(30);
     });
     it('should get less than sum with score 4', () => {
@@ -951,7 +983,7 @@ function getLessThanSum() {
       };
       const possibleScores = [1, 2, 3, 4, 5];
       expect(
-        MilestoneService.getLessThanSum(satisfyCriterion, aggregateData, possibleScores)
+        service.getLessThanSum(satisfyCriterion, aggregateData, possibleScores)
       ).toEqual(60);
     });
     it('should get less than sum with score 5', () => {
@@ -961,7 +993,7 @@ function getLessThanSum() {
       };
       const possibleScores = [1, 2, 3, 4, 5];
       expect(
-        MilestoneService.getLessThanSum(satisfyCriterion, aggregateData, possibleScores)
+        service.getLessThanSum(satisfyCriterion, aggregateData, possibleScores)
       ).toEqual(100);
     });
   });
@@ -987,7 +1019,7 @@ function isPercentOfScoresLessThanOrEqualTo() {
         }
       };
       expect(
-        MilestoneService.isPercentOfScoresLessThanOrEqualTo(satisfyCriterion, aggregateAutoScores)
+        service.isPercentOfScoresLessThanOrEqualTo(satisfyCriterion, aggregateAutoScores)
       ).toEqual(false);
     });
     it('should check is percent of scores less than or equal to true', () => {
@@ -1008,7 +1040,7 @@ function isPercentOfScoresLessThanOrEqualTo() {
         }
       };
       expect(
-        MilestoneService.isPercentOfScoresLessThanOrEqualTo(satisfyCriterion, aggregateAutoScores)
+        service.isPercentOfScoresLessThanOrEqualTo(satisfyCriterion, aggregateAutoScores)
       ).toEqual(true);
     });
   });
@@ -1023,7 +1055,7 @@ function getLessThanOrEqualToSum() {
       };
       const possibleScores = [1, 2, 3, 4, 5];
       expect(
-        MilestoneService.getLessThanOrEqualToSum(satisfyCriterion, aggregateData, possibleScores)
+        service.getLessThanOrEqualToSum(satisfyCriterion, aggregateData, possibleScores)
       ).toEqual(10);
     });
     it('should get less than or equal to sum with score 2', () => {
@@ -1033,7 +1065,7 @@ function getLessThanOrEqualToSum() {
       };
       const possibleScores = [1, 2, 3, 4, 5];
       expect(
-        MilestoneService.getLessThanOrEqualToSum(satisfyCriterion, aggregateData, possibleScores)
+        service.getLessThanOrEqualToSum(satisfyCriterion, aggregateData, possibleScores)
       ).toEqual(30);
     });
     it('should get less than or equal to sum with score 3', () => {
@@ -1043,7 +1075,7 @@ function getLessThanOrEqualToSum() {
       };
       const possibleScores = [1, 2, 3, 4, 5];
       expect(
-        MilestoneService.getLessThanOrEqualToSum(satisfyCriterion, aggregateData, possibleScores)
+        service.getLessThanOrEqualToSum(satisfyCriterion, aggregateData, possibleScores)
       ).toEqual(60);
     });
     it('should get less than or equal to sum with score 4', () => {
@@ -1053,7 +1085,7 @@ function getLessThanOrEqualToSum() {
       };
       const possibleScores = [1, 2, 3, 4, 5];
       expect(
-        MilestoneService.getLessThanOrEqualToSum(satisfyCriterion, aggregateData, possibleScores)
+        service.getLessThanOrEqualToSum(satisfyCriterion, aggregateData, possibleScores)
       ).toEqual(100);
     });
     it('should get less than or equal to sum with score 5', () => {
@@ -1063,7 +1095,7 @@ function getLessThanOrEqualToSum() {
       };
       const possibleScores = [1, 2, 3, 4, 5];
       expect(
-        MilestoneService.getLessThanOrEqualToSum(satisfyCriterion, aggregateData, possibleScores)
+        service.getLessThanOrEqualToSum(satisfyCriterion, aggregateData, possibleScores)
       ).toEqual(150);
     });
   });
@@ -1089,7 +1121,7 @@ function isPercentOfScoresEqualTo() {
         }
       };
       expect(
-        MilestoneService.isPercentOfScoresEqualTo(satisfyCriterion, aggregateAutoScores)
+        service.isPercentOfScoresEqualTo(satisfyCriterion, aggregateAutoScores)
       ).toEqual(false);
     });
     it('should check is percent of scores equal to true', () => {
@@ -1110,7 +1142,7 @@ function isPercentOfScoresEqualTo() {
         }
       };
       expect(
-        MilestoneService.isPercentOfScoresEqualTo(satisfyCriterion, aggregateAutoScores)
+        service.isPercentOfScoresEqualTo(satisfyCriterion, aggregateAutoScores)
       ).toEqual(true);
     });
   });
@@ -1125,7 +1157,7 @@ function getEqualToSum() {
       };
       const possibleScores = [1, 2, 3, 4, 5];
       expect(
-        MilestoneService.getEqualToSum(satisfyCriterion, aggregateData, possibleScores)
+        service.getEqualToSum(satisfyCriterion, aggregateData, possibleScores)
       ).toEqual(30);
     });
   });
@@ -1134,7 +1166,7 @@ function getEqualToSum() {
 function isPercentOfScoresNotEqualTo() {
   describe('isPercentOfScoresNotEqualTo()', () => {
     it('should return true when percent of scores equal to value are less than threshold', () => {
-      const result = MilestoneService.isPercentOfScoresNotEqualTo(
+      const result = service.isPercentOfScoresNotEqualTo(
         satisfyCriterionSample,
         aggregateAutoScoresSample
       );
@@ -1143,7 +1175,7 @@ function isPercentOfScoresNotEqualTo() {
     it('should return true when percent of scores equal to value meet threshold', () => {
       const aggregateAutoScores = angular.copy(aggregateAutoScoresSample);
       aggregateAutoScores.xfns1g7pga.ki.counts = { 1: 1, 2: 0, 3: 2, 4: 0, 5: 0 };
-      const result = MilestoneService.isPercentOfScoresNotEqualTo(
+      const result = service.isPercentOfScoresNotEqualTo(
         satisfyCriterionSample,
         aggregateAutoScores
       );
@@ -1159,7 +1191,7 @@ function getNotEqualToSum() {
       scoreCount: 3
     };
     it('should return the sum of scores not equal to value', () => {
-      const result = MilestoneService.getNotEqualToSum(
+      const result = service.getNotEqualToSum(
         satisfyCriterionSample,
         aggregateData,
         possibleScoresKi
@@ -1172,7 +1204,7 @@ function getNotEqualToSum() {
 function getAggregateData() {
   describe('getAggregateData()', () => {
     it('should return the aggregate data', () => {
-      const result = MilestoneService.getAggregateData(
+      const result = service.getAggregateData(
         satisfyCriterionSample,
         aggregateAutoScoresSample
       );
@@ -1192,7 +1224,7 @@ function getPossibleScores() {
       counts: { 2: 2, 1: 0, 3: 1, 4: 0, 5: 0 }
     };
     it('should return the possible scores', () => {
-      expect(MilestoneService.getPossibleScores(aggregateData)).toEqual([1, 2, 3, 4, 5]);
+      expect(service.getPossibleScores(aggregateData)).toEqual([1, 2, 3, 4, 5]);
     });
   });
 }
@@ -1205,16 +1237,16 @@ function isPercentThresholdSatisfied() {
           ki: { counts: { 1: 1, 2: 0, 3: 2, 4: 0, 5: 0 }, scoreCount: 3 }
         }
       };
-      const aggregateData = MilestoneService.getAggregateData(
+      const aggregateData = service.getAggregateData(
         satisfyCriterionSample,
         aggregateAutoScores
       );
-      const sum = MilestoneService.getEqualToSum(
+      const sum = service.getEqualToSum(
         satisfyCriterionSample,
         aggregateData,
         possibleScoresKi
       );
-      const result = MilestoneService.isPercentThresholdSatisfied(
+      const result = service.isPercentThresholdSatisfied(
         satisfyCriterionSample,
         aggregateData,
         sum
@@ -1222,16 +1254,16 @@ function isPercentThresholdSatisfied() {
       expect(result).toBeTruthy();
     });
     it('should return false when percent threshold is not satisfied', () => {
-      const aggregateData = MilestoneService.getAggregateData(
+      const aggregateData = service.getAggregateData(
         satisfyCriterionSample,
         aggregateAutoScoresSample
       );
-      const sum = MilestoneService.getEqualToSum(
+      const sum = service.getEqualToSum(
         satisfyCriterionSample,
         aggregateData,
         possibleScoresKi
       );
-      const result = MilestoneService.isPercentThresholdSatisfied(
+      const result = service.isPercentThresholdSatisfied(
         satisfyCriterionSample,
         aggregateData,
         sum
@@ -1255,7 +1287,7 @@ function getSatisfyCriteriaReferencedComponents() {
           ]
         }
       };
-      expect(MilestoneService.getSatisfyCriteriaReferencedComponents(projectAchievement)).toEqual({
+      expect(service.getSatisfyCriteriaReferencedComponents(projectAchievement)).toEqual({
         node1_xfns1g7pga: {
           nodeId: 'node1',
           componentId: 'xfns1g7pga'
@@ -1280,7 +1312,7 @@ function adjustKIScore() {
   describe('adjustKIScore()', () => {
     it('should return the adjusted KI score', () => {
       const value = 5;
-      expect(MilestoneService.adjustKIScore(value, reportSettingsCustomScoreValuesSample)).toEqual(
+      expect(service.adjustKIScore(value, reportSettingsCustomScoreValuesSample)).toEqual(
         4
       );
     });
@@ -1290,7 +1322,7 @@ function adjustKIScore() {
 function getKIScoreBounds() {
   describe('getKIScoreBounds()', () => {
     it('should return the KI score bounds', () => {
-      expect(MilestoneService.getKIScoreBounds(reportSettingsCustomScoreValuesSample)).toEqual({
+      expect(service.getKIScoreBounds(reportSettingsCustomScoreValuesSample)).toEqual({
         min: 1,
         max: 4
       });
@@ -1312,7 +1344,7 @@ function addDataToAggregate() {
         }
       };
       const aggregateAutoScore = angular.copy(aggregateAutoScoresSample).xfns1g7pga;
-      const result = MilestoneService.addDataToAggregate(
+      const result = service.addDataToAggregate(
         aggregateAutoScore,
         annotation,
         reportSettingsCustomScoreValuesSample
@@ -1334,7 +1366,7 @@ function setupAggregateSubScore() {
     it('should setup aggregate sub score', () => {
       const subScoreId = 'ki';
       const reportSettings = {};
-      const counts = MilestoneService.setupAggregateSubScore(subScoreId, reportSettings);
+      const counts = service.setupAggregateSubScore(subScoreId, reportSettings);
       expect(counts.scoreSum).toEqual(0);
       expect(counts.scoreCount).toEqual(0);
       expect(counts.counts).toEqual(createScoreCounts([0, 0, 0, 0, 0]));
@@ -1347,7 +1379,7 @@ function setupAggregateSubScore() {
           ki: [0, 1, 2]
         }
       };
-      const counts = MilestoneService.setupAggregateSubScore(subScoreId, reportSettings);
+      const counts = service.setupAggregateSubScore(subScoreId, reportSettings);
       expect(counts.scoreSum).toEqual(0);
       expect(counts.scoreCount).toEqual(0);
       expect(counts.counts).toEqual({ 0: 0, 1: 0, 2: 0 });
@@ -1359,7 +1391,7 @@ function setupAggregateSubScore() {
 function getCustomScoreValueCounts() {
   describe('getCustomScoreValueCounts()', () => {
     it('should get custom score value counts', () => {
-      const scoreValues = MilestoneService.getCustomScoreValueCounts([0, 1, 2]);
+      const scoreValues = service.getCustomScoreValueCounts([0, 1, 2]);
       expect(Object.entries(scoreValues).length).toEqual(3);
       expect(scoreValues[0]).toEqual(0);
       expect(scoreValues[1]).toEqual(0);
@@ -1371,7 +1403,7 @@ function getCustomScoreValueCounts() {
 function getPossibleScoreValueCounts() {
   describe('getPossibleScoreValueCounts()', () => {
     it('should get possible score value counts for ki', () => {
-      const scoreValues = MilestoneService.getPossibleScoreValueCounts('ki');
+      const scoreValues = service.getPossibleScoreValueCounts('ki');
       expect(Object.entries(scoreValues).length).toEqual(5);
       expect(scoreValues[1]).toEqual(0);
       expect(scoreValues[2]).toEqual(0);
@@ -1380,7 +1412,7 @@ function getPossibleScoreValueCounts() {
       expect(scoreValues[5]).toEqual(0);
     });
     it('should get possible score value counts for not ki', () => {
-      const scoreValues = MilestoneService.getPossibleScoreValueCounts('science');
+      const scoreValues = service.getPossibleScoreValueCounts('science');
       expect(Object.entries(scoreValues).length).toEqual(3);
       expect(scoreValues[1]).toEqual(0);
       expect(scoreValues[2]).toEqual(0);
@@ -1403,7 +1435,7 @@ function processMilestoneGraphsAndData() {
           }
         }
       };
-      content = MilestoneService.processMilestoneGraphsAndData(content, aggregateAutoScores);
+      content = service.processMilestoneGraphsAndData(content, aggregateAutoScores);
       expect(
         content.includes(
           `data="{'scoreSum':4,'scoreCount':2,'average':2,'counts':{'1':1,'2':0,'3':1,'4':0,'5':0}}"`
@@ -1422,7 +1454,7 @@ function processMilestoneGraphsAndData() {
           }
         }
       };
-      content = MilestoneService.processMilestoneGraphsAndData(content, aggregateAutoScores);
+      content = service.processMilestoneGraphsAndData(content, aggregateAutoScores);
       expect(
         content.includes(
           `data="{'scoreSum':4,'scoreCount':2,'average':2,` +
@@ -1436,13 +1468,13 @@ function processMilestoneGraphsAndData() {
 function setReportAvailable() {
   describe('setReportAvailable()', () => {
     it('should set report available false', () => {
-      const projectAchievement = {};
-      MilestoneService.setReportAvailable(projectAchievement, false);
+      const projectAchievement: any = {};
+      service.setReportAvailable(projectAchievement, false);
       expect(projectAchievement.isReportAvailable).toEqual(false);
     });
     it('should set report available true', () => {
-      const projectAchievement = {};
-      MilestoneService.setReportAvailable(projectAchievement, true);
+      const projectAchievement: any = {};
+      service.setReportAvailable(projectAchievement, true);
       expect(projectAchievement.isReportAvailable).toEqual(true);
     });
   });
@@ -1455,12 +1487,12 @@ function saveMilestone() {
         id: 'milestone1'
       };
       const projectAchievements = [milestone1];
-      spyOn(ProjectService, 'getAchievementItems').and.returnValue(projectAchievements);
-      spyOn(ProjectService, 'saveProject').and.callFake(() => {});
+      spyOn(projectService, 'getAchievementItems').and.returnValue(projectAchievements);
+      spyOn(projectService, 'saveProject').and.callFake(() => { return null; });
       const milestone2 = {
         id: 'milestone2'
       };
-      MilestoneService.saveMilestone(milestone2);
+      service.saveMilestone(milestone2);
       expect(projectAchievements.length).toEqual(2);
       expect(projectAchievements[0].id).toEqual('milestone1');
       expect(projectAchievements[1].id).toEqual('milestone2');
@@ -1470,9 +1502,9 @@ function saveMilestone() {
         id: 'milestone1'
       };
       const projectAchievements = [milestone1];
-      spyOn(ProjectService, 'getAchievementItems').and.returnValue(projectAchievements);
-      spyOn(ProjectService, 'saveProject').and.callFake(() => {});
-      MilestoneService.saveMilestone(milestone1);
+      spyOn(projectService, 'getAchievementItems').and.returnValue(projectAchievements);
+      spyOn(projectService, 'saveProject').and.callFake(() => { return null; });
+      service.saveMilestone(milestone1);
       expect(projectAchievements.length).toEqual(1);
       expect(projectAchievements[0].id).toEqual('milestone1');
     });
@@ -1486,13 +1518,13 @@ function createMilestone() {
         id: 'milestone1'
       };
       const projectAchievements = [milestone1];
-      spyOn(ProjectService, 'getAchievementItems').and.returnValue(projectAchievements);
-      spyOn(AchievementService, 'getAvailableAchievementId').and.returnValue('milestone2');
-      spyOn(UtilService, 'makeCopyOfJSONObject').and.returnValue({});
-      const milestone = MilestoneService.createMilestone();
+      spyOn(projectService, 'getAchievementItems').and.returnValue(projectAchievements);
+      spyOn(achievementService, 'getAvailableAchievementId').and.returnValue('milestone2');
+      spyOn(utilService, 'makeCopyOfJSONObject').and.returnValue({});
+      const milestone = service.createMilestone();
       expect(milestone.id).toEqual('milestone2');
-      const dayOfYear = MilestoneService.moment(milestone.params.targetDate).dayOfYear();
-      const todayDayOfYear = MilestoneService.moment().dayOfYear();
+      const dayOfYear = moment(milestone.params.targetDate).dayOfYear();
+      const todayDayOfYear = moment().dayOfYear();
       expect(dayOfYear).toEqual(todayDayOfYear + 1);
     });
   });
@@ -1505,9 +1537,9 @@ function deleteMilestone() {
       const milestone2 = { id: 'milestone2' };
       const milestone3 = { id: 'milestone3' };
       const projectAchievements = [milestone1, milestone2, milestone3];
-      spyOn(ProjectService, 'getAchievementItems').and.returnValue(projectAchievements);
-      spyOn(ProjectService, 'saveProject').and.callFake(() => {});
-      MilestoneService.deleteMilestone(milestone2);
+      spyOn(projectService, 'getAchievementItems').and.returnValue(projectAchievements);
+      spyOn(projectService, 'saveProject').and.callFake(() => { return null; });
+      service.deleteMilestone(milestone2);
       expect(projectAchievements.length).toEqual(2);
       expect(projectAchievements[0].id).toEqual('milestone1');
       expect(projectAchievements[1].id).toEqual('milestone3');
@@ -1532,8 +1564,8 @@ function clearTempFields() {
           isReportAvailable: true
         }
       ];
-      spyOn(ProjectService, 'getAchievementItems').and.returnValue(projectAchievements);
-      MilestoneService.clearTempFields();
+      spyOn(projectService, 'getAchievementItems').and.returnValue(projectAchievements);
+      service.clearTempFields();
       const projectAchievement = projectAchievements[0];
       expect(projectAchievement.items).toBeUndefined();
       expect(projectAchievement.workgroups).toBeUndefined();
@@ -1545,9 +1577,9 @@ function clearTempFields() {
       expect(projectAchievement.nodeId).toBeUndefined();
       expect(projectAchievement.componentId).toBeUndefined();
       expect(projectAchievement.isReportAvailable).toBeUndefined();
-      expect(MilestoneService.workgroupsStorage[0]).toEqual([1]);
-      expect(MilestoneService.numberOfStudentsCompletedStorage[0]).toEqual(2);
-      expect(MilestoneService.percentageCompletedStorage[0]).toEqual(50);
+      expect(service.workgroupsStorage[0]).toEqual([1]);
+      expect(service.numberOfStudentsCompletedStorage[0]).toEqual(2);
+      expect(service.percentageCompletedStorage[0]).toEqual(50);
     });
   });
 }
