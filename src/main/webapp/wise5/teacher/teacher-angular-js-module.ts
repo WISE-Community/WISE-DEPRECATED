@@ -3,7 +3,7 @@ import '../lib/bootstrap/js/bootstrap.min'
 import * as angular from 'angular';
 import { downgradeInjectable } from '@angular/upgrade/static';
 import { createCommonModule } from '../common-angular-js-module';
-import MilestoneService from '../services/milestoneService';
+import { MilestoneService } from '../services/milestoneService';
 import { TeacherProjectService } from '../services/teacherProjectService';
 import { ProjectAssetService } from '../../site/src/app/services/projectAssetService';
 import { SpaceService } from '../services/spaceService';
@@ -83,7 +83,7 @@ export function createTeacherAngularJSModule() {
       'tableAuthoringComponentModule',
       'theme.notebook'
       ])
-    .service('MilestoneService', MilestoneService)
+    .service('MilestoneService', downgradeInjectable(MilestoneService))
     .factory('ProjectService', downgradeInjectable(TeacherProjectService))
     .factory('ProjectAssetService', downgradeInjectable(ProjectAssetService))
     .factory('SpaceService', downgradeInjectable(SpaceService))

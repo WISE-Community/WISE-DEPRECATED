@@ -2,7 +2,7 @@
 
 import { AnnotationService } from '../../../../services/annotationService';
 import { ConfigService } from '../../../../services/configService';
-import MilestoneService from '../../../../services/milestoneService';
+import { MilestoneService } from '../../../../services/milestoneService';
 import NodeService from '../../../../services/nodeService';
 import { NotificationService } from '../../../../services/notificationService';
 import { StudentStatusService } from '../../../../services/studentStatusService';
