@@ -45,6 +45,8 @@ import { AudioOscillatorService } from '../../../wise5/components/audioOscillato
 import { ConceptMapService } from '../../../wise5/components/conceptMap/conceptMapService';
 import { MilestoneService } from '../../../wise5/services/milestoneService';
 import { GraphService } from '../../../wise5/components/graph/graphService';
+import { NodeIconComponent } from '../../../wise5/classroomMonitor/classroomMonitorComponents/shared/nodeIcon/node-icon.component';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({template: ``})
 export class EmptyComponent {}
@@ -52,10 +54,12 @@ export class EmptyComponent {}
 @NgModule({
   declarations: [
     EmptyComponent,
+    NodeIconComponent,
   ],
   imports: [
     UpgradeModule,
     CommonModule,
+    MatIconModule,
     RouterModule.forChild([
       {path: '**', component: EmptyComponent}
     ])
@@ -93,6 +97,11 @@ export class EmptyComponent {}
     VLEProjectService
   ],
   entryComponents: [
+  ],
+  exports: [
+    CommonModule,
+    MatIconModule,
+    NodeIconComponent
   ]
 })
 export class AngularJSModule {}
