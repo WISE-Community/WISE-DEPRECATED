@@ -8,7 +8,7 @@ import ComponentController from '../componentController';
 import * as EventEmitter2 from 'eventemitter2';
 window['EventEmitter2'] = EventEmitter2;
 import DrawingTool from '../../lib/drawingTool/drawing-tool';
-import DrawService from './drawService';
+import { DrawService } from './drawService';
 
 class DrawController extends ComponentController {
   $injector: any;

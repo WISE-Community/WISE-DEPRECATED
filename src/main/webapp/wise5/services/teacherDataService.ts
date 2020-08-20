@@ -14,7 +14,6 @@ import { DataService } from "../../site/src/app/services/data.service";
 export class TeacherDataService extends DataService {
   
   studentData: any;
-  $translate: any;
   $rootScope: any;
   currentPeriod = null;
   currentWorkgroup = null;
@@ -36,28 +35,38 @@ export class TeacherDataService extends DataService {
     private UtilService: UtilService
   ) {
     super();
-    this.$translate = this.upgrade.$injector.get('$translate');
-    this.$rootScope = this.upgrade.$injector.get('$rootScope');
-
     this.studentData = {
       componentStatesByWorkgroupId: {},
       componentStatesByNodeId: {},
       componentStatesByComponentId: {}
     };
 
-    this.$rootScope.$on('annotationSavedToServer', (event, args) => {
-      this.handleAnnotationReceived(args.annotation);
-    });
+    if (this.upgrade.$injector != null) {
+      this.getRootScope().$on('annotationSavedToServer', (event, args) => {
+        this.handleAnnotationReceived(args.annotation);
+      });
 
-    this.$rootScope.$on('newAnnotationReceived', (event, args) => {
-      this.handleAnnotationReceived(args.annotation);
-    });
+      this.getRootScope().$on('newAnnotationReceived', (event, args) => {
+        this.handleAnnotationReceived(args.annotation);
+      });
 
-    this.$rootScope.$on('newStudentWorkReceived', (event, args) => {
-      const studentWork = args.studentWork;
-      this.addOrUpdateComponentState(studentWork);
-      this.$rootScope.$broadcast('studentWorkReceived', { studentWork: studentWork });
-    });
+      this.getRootScope().$on('newStudentWorkReceived', (event, args) => {
+        const studentWork = args.studentWork;
+        this.addOrUpdateComponentState(studentWork);
+        this.getRootScope().$broadcast('studentWorkReceived', { studentWork: studentWork });
+      });
+    }
+  }
+
+  getTranslation(key: string) {
+    return this.upgrade.$injector.get('$translate')(key);
+  }
+
+  getRootScope() {
+    if (this.$rootScope == null) {
+      this.$rootScope = this.upgrade.$injector.get('$rootScope');
+    }
+    return this.$rootScope;
   }
 
   handleAnnotationReceived(annotation) {
@@ -73,7 +82,7 @@ export class TeacherDataService extends DataService {
     }
     this.studentData.annotationsByNodeId[nodeId].push(annotation);
     this.AnnotationService.setAnnotations(this.studentData.annotations);
-    this.$rootScope.$broadcast('annotationReceived', { annotation: annotation });
+    this.getRootScope().$broadcast('annotationReceived', { annotation: annotation });
   }
 
   /**
@@ -778,7 +787,7 @@ export class TeacherDataService extends DataService {
   addAllPeriods(periods) {
     const allPeriodsOption = {
       periodId: -1,
-      periodName: this.$translate('allPeriods')
+      periodName: this.getTranslation('allPeriods')
     };
     periods.unshift(allPeriodsOption);
     return periods;
@@ -815,7 +824,7 @@ export class TeacherDataService extends DataService {
     this.currentPeriod = period;
     this.clearCurrentWorkgroupIfNecessary(this.currentPeriod.periodId);
     if (previousPeriod == null || previousPeriod.periodId != this.currentPeriod.periodId) {
-      this.$rootScope.$broadcast('currentPeriodChanged', {
+      this.getRootScope().$broadcast('currentPeriodChanged', {
         previousPeriod: previousPeriod,
         currentPeriod: this.currentPeriod
       });
@@ -845,7 +854,7 @@ export class TeacherDataService extends DataService {
 
   setCurrentWorkgroup(workgroup) {
     this.currentWorkgroup = workgroup;
-    this.$rootScope.$broadcast('currentWorkgroupChanged', {
+    this.getRootScope().$broadcast('currentWorkgroupChanged', {
       currentWorkgroup: this.currentWorkgroup
     });
   }
@@ -856,7 +865,7 @@ export class TeacherDataService extends DataService {
 
   setCurrentStep(step) {
     this.currentStep = step;
-    this.$rootScope.$broadcast('currentStepChanged', { currentStep: this.currentStep });
+    this.getRootScope().$broadcast('currentStepChanged', { currentStep: this.currentStep });
   }
 
   getCurrentStep() {
@@ -876,7 +885,7 @@ export class TeacherDataService extends DataService {
         this.previousStep = previousCurrentNode;
       }
       this.currentNode = node;
-      this.$rootScope.$broadcast('currentNodeChanged', {
+      this.getRootScope().$broadcast('currentNodeChanged', {
         previousNode: previousCurrentNode,
         currentNode: this.currentNode
       });
@@ -886,7 +895,7 @@ export class TeacherDataService extends DataService {
   endCurrentNode() {
     const previousCurrentNode = this.currentNode;
     if (previousCurrentNode != null) {
-      this.$rootScope.$broadcast('exitNode', { nodeToExit: previousCurrentNode });
+      this.getRootScope().$broadcast('exitNode', { nodeToExit: previousCurrentNode });
     }
   }
 
@@ -959,7 +968,7 @@ export class TeacherDataService extends DataService {
       data = { periodId: periodId },
       event = isPaused ? 'pauseScreen' : 'unPauseScreen';
     this.saveEvent(context, nodeId, componentId, componentType, category, event, data);
-    this.$rootScope.$broadcast('pauseScreensChanged', { periods: this.runStatus.periods });
+    this.getRootScope().$broadcast('pauseScreensChanged', { periods: this.runStatus.periods });
   }
 
   sendRunStatusThenHandlePauseScreen(periodId, isPaused) {

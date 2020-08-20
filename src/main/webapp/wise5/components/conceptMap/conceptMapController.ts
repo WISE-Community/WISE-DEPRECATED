@@ -4,7 +4,7 @@ import 'svg.js';
 import 'svg.draggable.js';
 import * as angular from 'angular';
 import ComponentController from '../componentController';
-import ConceptMapService from './conceptMapService';
+import { ConceptMapService } from './conceptMapService';
 
 class ConceptMapController extends ComponentController {
   $anchorScroll: any;

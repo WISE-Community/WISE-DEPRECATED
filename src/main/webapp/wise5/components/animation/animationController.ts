@@ -1,7 +1,7 @@
 'use strict';
 
 import ComponentController from '../componentController';
-import AnimationService from './animationService';
+import { AnimationService } from './animationService';
 import { AnnotationService } from '../../services/annotationService';
 import 'svg.js';
 

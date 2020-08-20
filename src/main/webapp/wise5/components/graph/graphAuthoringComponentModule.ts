@@ -1,13 +1,14 @@
 'use strict';
 
-import GraphService from './graphService';
+import * as angular from 'angular';
+import { downgradeInjectable } from '@angular/upgrade/static';
+import { GraphService } from './graphService';
 import GraphController from './graphController';
 import GraphAuthoringController from './graphAuthoringController';
 
-const graphAuthoringComponentModule = angular.module('graphAuthoringComponentModule', [
-  'pascalprecht.translate'
-])
-  .service('GraphService', GraphService)
+const graphAuthoringComponentModule = angular
+  .module('graphAuthoringComponentModule', ['pascalprecht.translate'])
+  .service('GraphService', downgradeInjectable(GraphService))
   .controller('GraphController', GraphController)
   .controller('GraphAuthoringController', GraphAuthoringController)
   .config([

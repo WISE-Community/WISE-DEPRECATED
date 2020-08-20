@@ -41,6 +41,16 @@ import { ChooseBranchPathDialogComponent } from './preview/modules/choose-branch
 import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
 import { DataService } from './services/data.service';
+import { DiscussionService } from '../../../wise5/components/discussion/discussionService';
+import { DrawService } from '../../../wise5/components/draw/drawService';
+import { EmbeddedService } from '../../../wise5/components/embedded/embeddedService';
+import { HTMLService } from '../../../wise5/components/html/htmlService';
+import { LabelService } from '../../../wise5/components/label/labelService';
+import { AnimationService } from '../../../wise5/components/animation/animationService';
+import { AudioOscillatorService } from '../../../wise5/components/audioOscillator/audioOscillatorService';
+import { ConceptMapService } from '../../../wise5/components/conceptMap/conceptMapService';
+import { MilestoneService } from '../../../wise5/services/milestoneService';
+import { GraphService } from '../../../wise5/components/graph/graphService';
 
 @Component({template: ``})
 export class EmptyComponent {}
@@ -61,15 +71,23 @@ export class EmptyComponent {}
   ],
   providers: [
     AchievementService,
+    AnimationService,
     AnnotationService,
+    AudioOscillatorService,
     AudioRecorderService,
+    ConceptMapService,
     ConfigService,
     CRaterService,
-    NotebookService,
-    OutsideURLService,
+    DiscussionService,
+    DrawService,
+    EmbeddedService,
+    GraphService,
+    HTMLService,
+    LabelService,
     MatchService,
     MultipleChoiceService,
     NodeService,
+    NotebookService,
     NotificationService,
     OutsideURLService,
     OpenResponseService,
@@ -156,6 +174,7 @@ export class PreviewAngularJSModule {
   ],
   providers: [
     { provide: DataService, useExisting: TeacherDataService },
+    MilestoneService,
     ProjectAssetService,
     SpaceService,
     StudentStatusService,

@@ -3,7 +3,7 @@
 import * as $ from 'jquery';
 import * as html2canvas from 'html2canvas';
 import ComponentController from '../componentController';
-import EmbeddedService from './embeddedService';
+import { EmbeddedService } from './embeddedService';
 
 class EmbeddedController extends ComponentController {
   $q: any;

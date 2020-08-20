@@ -1,7 +1,7 @@
 'use strict';
 
 import ComponentController from '../componentController';
-import AudioOscillatorService from './audioOscillatorService';
+import { AudioOscillatorService } from './audioOscillatorService';
 
 class AudioOscillatorController extends ComponentController {
   $q: any;
