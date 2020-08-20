@@ -130,7 +130,7 @@ const WorkgroupItem = {
                             <workgroup-node-status status-text="{{$ctrl.statusText}}" status-class="{{$ctrl.statusClass}}"></workgroup-node-status>
                         </div>
                         <div ng-if="$ctrl.showScore" flex="20" layout="row" layout-align="center center">
-                            <workgroup-node-score score="{{$ctrl.score}}" max-score="{{$ctrl.maxScore}}"></workgroup-node-score>
+                            <workgroup-node-score [score]="$ctrl.score" [max-score]="$ctrl.maxScore"></workgroup-node-score>
                         </div>
                     </div>
                 </button>
