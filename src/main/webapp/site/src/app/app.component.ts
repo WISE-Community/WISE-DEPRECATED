@@ -19,6 +19,7 @@ declare let gtag: Function;
 export class AppComponent {
   title = 'app';
   showMobileMenu: boolean = false;
+  theme: string = '';
   mediaWatcher: Subscription;
   googleAnalyticsId: string = null;
   hasAnnouncement: boolean = false;
@@ -30,6 +31,10 @@ export class AppComponent {
   prevPageY: number = 0;
   scroll: boolean = false;
   announcement: Announcement = new Announcement();
+  themeClasses = {
+    '/teacher/manage': 'monitor-theme',
+    '/teacher/edit': 'author-theme'
+  };
 
   constructor(private router: Router,
               iconRegistry: MatIconRegistry,
@@ -82,10 +87,9 @@ export class AppComponent {
       'google-classroom',
       sanitizer.bypassSecurityTrustResourceUrl('assets/img/icons/google-classroom.svg')
     );
-    utilService.getMobileMenuState()
-      .subscribe(state => {
-        this.showMobileMenu = state;
-      });
+    utilService.getMobileMenuState().subscribe(state => {
+      this.showMobileMenu = state;
+    });
     this.mediaWatcher = media.asObservable().subscribe((change: MediaChange[]) => {
       if (media.isActive('gt-sm')) {
         utilService.showMobileMenu(false);
@@ -119,7 +123,7 @@ export class AppComponent {
         this.showDefaultMode = this.isShowDefaultMode();
         this.showHeaderAndFooter = this.isShowHeaderAndFooter();
         this.isAngularJSPath = this.isAngularJSRoute();
-        //this.toggleSiteStyles(this.isAngularJSPath);
+        this.setTheme();
         this.scroll = false;
       }
 
@@ -150,11 +154,6 @@ export class AppComponent {
         }
       });
     }
-  }
-
-  toggleSiteStyles(disable: boolean) {
-    const siteStylesheet = this.document.querySelector('[href^="siteStyles"]') as HTMLLinkElement;
-    siteStylesheet.disabled = disable;
   }
 
   fixScrollTop(ev: any) {
@@ -188,6 +187,16 @@ export class AppComponent {
       this.router.url.includes('/teacher/edit') ||
       this.router.url.includes('/student/unit') ||
       this.router.url.includes('/preview/unit');
+  }
+
+  setTheme() {
+    Object.keys(this.themeClasses).forEach(path => {
+      if (this.router.url.includes(path)) {
+        document.body.classList.add(this.themeClasses[path]);
+      } else {
+        document.body.classList.remove(this.themeClasses[path]);
+      }
+    });
   }
 
   dismissAnnouncement() {
