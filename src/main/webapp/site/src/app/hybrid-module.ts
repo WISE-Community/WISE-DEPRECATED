@@ -45,6 +45,8 @@ import { AudioOscillatorService } from '../../../wise5/components/audioOscillato
 import { ConceptMapService } from '../../../wise5/components/conceptMap/conceptMapService';
 import { MilestoneService } from '../../../wise5/services/milestoneService';
 import { GraphService } from '../../../wise5/components/graph/graphService';
+import { NavItemScoreComponent } from '../../../wise5/classroomMonitor/classroomMonitorComponents/nodeProgress/navItemScore/nav-item-score.component';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({template: ``})
 export class EmptyComponent {}
@@ -56,6 +58,7 @@ export class EmptyComponent {}
   imports: [
     UpgradeModule,
     CommonModule,
+    MatIconModule,
     RouterModule.forChild([
       {path: '**', component: EmptyComponent}
     ])
@@ -93,6 +96,10 @@ export class EmptyComponent {}
     VLEProjectService
   ],
   entryComponents: [
+  ],
+  exports: [
+    CommonModule,
+    MatIconModule
   ]
 })
 export class AngularJSModule {}
@@ -138,7 +145,8 @@ export class PreviewAngularJSModule {
 
 @NgModule({
   declarations: [
-    MilestoneReportDataComponent
+    MilestoneReportDataComponent,
+    NavItemScoreComponent
   ],
   imports: [
     AngularJSModule
@@ -154,7 +162,8 @@ export class PreviewAngularJSModule {
     TeacherWebSocketService
   ],
   entryComponents: [
-    MilestoneReportDataComponent
+    MilestoneReportDataComponent,
+    NavItemScoreComponent
   ]
 })
 export class TeacherAngularJSModule {

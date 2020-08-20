@@ -54,8 +54,8 @@
                          icon-tooltip="$ctrl.rubricIconLabel"></status-icon>
             <span flex hide-xs></span>
             <nav-item-score class="nav-item--list__info-item"
-                            max-score="$ctrl.maxScore"
-                            average-score="$ctrl.getNodeAverageScore()"></nav-item-score>
+                            [max-score]="$ctrl.maxScore"
+                            [average-score]="$ctrl.getNodeAverageScore()"></nav-item-score>
             <nav-item-progress node-completion="$ctrl.getNodeCompletion()"
                                period-id="$ctrl.currentPeriod.periodId"
                                period-name="$ctrl.currentPeriod.periodName"></nav-item-progress>
