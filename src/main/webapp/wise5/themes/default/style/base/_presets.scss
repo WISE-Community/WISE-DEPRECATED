@@ -1,8 +1,7 @@
-// 1. Config
+// Config
 $avatar-icon-padding: 6px !default;
 $avatar-icon-padding-lg: 8px !default;
 
-// 2. Base
 body {
   background: color('body-bg');
 
@@ -11,88 +10,19 @@ body {
   }
 }
 
-// Typography
-h1, h2, h3, h4, h5, h6 {
-  margin-bottom: 1rem;
-  margin-top: 1rem;
-  line-height: 1.2em;
-}
-
-p {
-  //line-height: 1.25rem;
-  margin-top: 0.5rem;
-  margin-bottom: 0.5rem;
-}
-
-blockquote {
-    background-color: lighten(color('primary'), 56%);
-    padding: 8px;
-    margin: 16px 0;
-    border-style: solid;
-    border-color: color('primary');
-    border-width: 0 0 0 3px;
-}
-
 a {
     &:hover, &:focus { // TODO: remove when bootstrap css dependency is removed
         color: color('primary');
     }
 }
 
-.overflow--ellipsis {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-// TODO: remove once bootstrap dependency is removed
-label {
-    font-weight: 500 !important;
-    display: inherit;
-    max-width: none;
-    margin-bottom: 0;
-}
-
-.transform--none {
-    text-transform: none;
-}
-
-.center {
-    text-align: center;
-}
-
-.block {
-    display: block;
-}
-
-.light {
-    font-weight: 300;
-}
-
-.normal {
-    font-weight: 400;
-}
-
-.heavy {
-    font-weight: 500;
-}
-
-.bold {
-    font-weight: 700;
-}
-
-.more-info {
-    border-bottom: 1px dotted;
-    font-style: italic;
-}
-
-.more {
-    display: inline-block;
-}
-
-// Buttons
-.button--small {
-    min-width: 0;
+blockquote {
+  background-color: lighten(color('primary'), 56%);
+  padding: 8px;
+  margin: 16px 0;
+  border-style: solid;
+  border-color: color('primary');
+  border-width: 0 0 0 3px;
 }
 
 .has-indicator {
@@ -169,22 +99,6 @@ a {
 .active {
     background-color: rgba(158,158,158,0.2);
     color: color('text');
-}
-
-// Inputs
-// Hide number picker on number inputs when disabled and not focused
-// Safari and Chrome
-input[type=number]:not(:hover):not(:focus)::-webkit-inner-spin-button,
-input[type=number]:not(:hover):not(:focus)::-webkit-outer-spin-button,
-input[type=number]:disabled::-webkit-inner-spin-button,
-input[type=number]:disabled::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-}
-// Firefox
-input[type=number]:not(:hover):not(:focus),
-input[type=number]:disabled {
-  -moz-appearance: textfield;
 }
 
 // Images & Icons
@@ -281,11 +195,6 @@ md-icon, .md-button:not([disabled]) {
   }
 }
 
-// Drawing tool custom - TODO: move to draw tool module scss
-.dt-container .dt-tools {
-  z-index: 1;
-}
-
 // Theme overrides
 md-input-container.md-wise-theme label {
   color: color('text');
@@ -299,87 +208,6 @@ md-select-menu.md-default-theme md-option[selected], md-select-menu md-option[se
 .md-autocomplete-suggestions-container li .highlight {
   color: color('primary');
   background-color: color('selected-bg');
-}
-
-// Animations
-.animate-show {
-  max-height: 9999px;
-  opacity: 1;
-}
-
-.animate-show.ng-hide-add, .animate-show.ng-hide-remove {
-  transition: all 250ms;
-}
-
-.animate-show.ng-hide {
-  max-height: 0;
-  min-height: 0;
-  opacity: 0;
-  padding: 0;
-}
-
-.animate-repeat {
-}
-
-.animate-repeat.ng-move,
-.animate-repeat.ng-enter,
-.animate-repeat.ng-leave {
-  transition:opacity 250ms;
-}
-
-.animate-repeat.ng-leave.ng-leave-active,
-.animate-repeat.ng-move,
-.animate-repeat.ng-enter {
-  opacity:0;
-}
-
-.animate-repeat.ng-leave,
-.animate-repeat.ng-move.ng-move-active,
-.animate-repeat.ng-enter.ng-enter-active {
-  opacity:1;
-}
-
-.animate-fade {
-    &.ng-hide-add, &.ng-hide-remove {
-        transition: all 250ms;
-    }
-
-    &.ng-enter, &.ng-hide {
-        opacity: 0;
-    }
-
-    &.ng-enter.ng-enter-active {
-      opacity: 1;
-    }
-
-    &.ng-leave {
-      transition: 0.5s linear all;
-      opacity: 1;
-    }
-
-    &.ng-leave.ng-leave-active {
-      opacity: 0;
-    }
-}
-
-.transition-all {
-    transition: 0.25s linear all;
-}
-
-.pulse {
-    animation: pulse 4s infinite;
-}
-
-@keyframes pulse {
-  0% {
-    box-shadow: 0 0 0 0 color('info');
-  }
-  50% {
-      box-shadow: 0 0 0 10px rgba(0,0,0,0);
-  }
-  100% {
-      box-shadow: 0 0 0 0 rgba(0,0,0,0);
-  }
 }
 
 // Color

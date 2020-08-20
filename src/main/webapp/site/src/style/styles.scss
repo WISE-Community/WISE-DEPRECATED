@@ -60,6 +60,11 @@
 @import 'themes/author';
 @import 'themes/monitor';
 
+// TODO: remove/merge after upgrading apps to Angular
+@import 'themes/apps';
+.app-styles {
+  @include apps-setup();
+}
 
 // specify custom theme classes eg: <body class="common-styles default-theme"> ... </body>
 .default-theme {
