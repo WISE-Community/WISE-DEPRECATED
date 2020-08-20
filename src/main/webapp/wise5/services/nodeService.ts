@@ -30,7 +30,7 @@ export class NodeService {
    * Create a new empty node state
    * @return a new empty node state
    */
-  createNewComponentState() {
+  createNewComponentState(): any {
     return {
       clientSaveTime: new Date().getTime()
     };

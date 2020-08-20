@@ -16,205 +16,203 @@ $title-font-size-base:     rem(2.000) !default;
 $subhead-font-size-base:   rem(1.600) !default;
 
 @mixin apps-setup() {
-  .app-styles {
-    font-size: rem(1.6);
+  font-size: rem(1.6);
 
-    // Typography
-    h1, h2, h3, h4, h5, h6 {
-      margin-bottom: 1rem;
-      margin-top: 1rem;
-      line-height: 1.2em;
-    }
+  // Typography
+  h1, h2, h3, h4, h5, h6 {
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+    line-height: 1.2em;
+  }
 
-    h1 {
-      font-size: $display-3-font-size-base;
-    }
+  h1 {
+    font-size: $display-3-font-size-base;
+  }
 
-    h2 {
-        font-size: $display-2-font-size-base;
-    }
+  h2 {
+      font-size: $display-2-font-size-base;
+  }
 
-    h3 {
-        font-size: $display-1-font-size-base;
-    }
+  h3 {
+      font-size: $display-1-font-size-base;
+  }
 
-    h4 {
-        font-size: $headline-font-size-base;
-    }
+  h4 {
+      font-size: $headline-font-size-base;
+  }
 
-    h5 {
-        font-size: $title-font-size-base;
-    }
+  h5 {
+      font-size: $title-font-size-base;
+  }
 
-    h6 {
-        font-size: $subhead-font-size-base;
-    }
+  h6 {
+      font-size: $subhead-font-size-base;
+  }
 
-    p {
-      //line-height: 1.25rem;
-      margin-top: 0.5rem;
-      margin-bottom: 0.5rem;
-    }
+  p {
+    //line-height: 1.25rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
 
-    .overflow--ellipsis {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
+  .overflow--ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 
-    // TODO: remove once bootstrap dependency is removed
-    label {
-      font-weight: 500 !important;
-      display: inherit;
-      max-width: none;
-      margin-bottom: 0;
-    }
+  // TODO: remove once bootstrap dependency is removed
+  label {
+    font-weight: 500 !important;
+    display: inherit;
+    max-width: none;
+    margin-bottom: 0;
+  }
 
-    .transform--none {
-      text-transform: none;
-    }
+  .transform--none {
+    text-transform: none;
+  }
 
-    .center {
-      text-align: center;
-    }
+  .center {
+    text-align: center;
+  }
 
-    .block {
-      display: block;
-    }
+  .block {
+    display: block;
+  }
 
-    .light {
-      font-weight: 300;
-    }
+  .light {
+    font-weight: 300;
+  }
 
-    .normal {
-      font-weight: 400;
-    }
+  .normal {
+    font-weight: 400;
+  }
 
-    .heavy {
-      font-weight: 500;
-    }
+  .heavy {
+    font-weight: 500;
+  }
 
-    .bold {
-      font-weight: 700;
-    }
+  .bold {
+    font-weight: 700;
+  }
 
-    .more-info {
-      border-bottom: 1px dotted;
-      font-style: italic;
-    }
+  .more-info {
+    border-bottom: 1px dotted;
+    font-style: italic;
+  }
 
-    .more {
-      display: inline-block;
-    }
+  .more {
+    display: inline-block;
+  }
 
-    // Buttons
-    .button--small {
-      min-width: 0;
-    }
+  // Buttons
+  .button--small {
+    min-width: 0;
+  }
 
-    // Inputs
-    // Hide number picker on number inputs when disabled and not focused
-    // Safari and Chrome
-    input[type='number']:not(:hover):not(:focus)::-webkit-inner-spin-button,
-    input[type='number']:not(:hover):not(:focus)::-webkit-outer-spin-button,
-    input[type='number']:disabled::-webkit-inner-spin-button,
-    input[type='number']:disabled::-webkit-outer-spin-button {
-      -webkit-appearance: none;
-      margin: 0;
-    }
-    // Firefox
-    input[type='number']:not(:hover):not(:focus),
-    input[type='number']:disabled {
-      -moz-appearance: textfield;
-    }
+  // Inputs
+  // Hide number picker on number inputs when disabled and not focused
+  // Safari and Chrome
+  input[type='number']:not(:hover):not(:focus)::-webkit-inner-spin-button,
+  input[type='number']:not(:hover):not(:focus)::-webkit-outer-spin-button,
+  input[type='number']:disabled::-webkit-inner-spin-button,
+  input[type='number']:disabled::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  // Firefox
+  input[type='number']:not(:hover):not(:focus),
+  input[type='number']:disabled {
+    -moz-appearance: textfield;
+  }
 
-    // Drawing tool custom - TODO: move to draw tool module scss
-    .dt-container .dt-tools {
-      z-index: 1;
-    }
+  // Drawing tool custom - TODO: move to draw tool module scss
+  .dt-container .dt-tools {
+    z-index: 1;
+  }
 
-    // Animations
-    .animate-show {
-      max-height: 9999px;
-      opacity: 1;
-    }
+  // Animations
+  .animate-show {
+    max-height: 9999px;
+    opacity: 1;
+  }
 
-    .animate-show.ng-hide-add,
-    .animate-show.ng-hide-remove {
+  .animate-show.ng-hide-add,
+  .animate-show.ng-hide-remove {
+    transition: all 250ms;
+  }
+
+  .animate-show.ng-hide {
+    max-height: 0;
+    min-height: 0;
+    opacity: 0;
+    padding: 0;
+  }
+
+  .animate-repeat {
+  }
+
+  .animate-repeat.ng-move,
+  .animate-repeat.ng-enter,
+  .animate-repeat.ng-leave {
+    transition: opacity 250ms;
+  }
+
+  .animate-repeat.ng-leave.ng-leave-active,
+  .animate-repeat.ng-move,
+  .animate-repeat.ng-enter {
+    opacity: 0;
+  }
+
+  .animate-repeat.ng-leave,
+  .animate-repeat.ng-move.ng-move-active,
+  .animate-repeat.ng-enter.ng-enter-active {
+    opacity: 1;
+  }
+
+  .animate-fade {
+    &.ng-hide-add,
+    &.ng-hide-remove {
       transition: all 250ms;
     }
 
-    .animate-show.ng-hide {
-      max-height: 0;
-      min-height: 0;
-      opacity: 0;
-      padding: 0;
-    }
-
-    .animate-repeat {
-    }
-
-    .animate-repeat.ng-move,
-    .animate-repeat.ng-enter,
-    .animate-repeat.ng-leave {
-      transition: opacity 250ms;
-    }
-
-    .animate-repeat.ng-leave.ng-leave-active,
-    .animate-repeat.ng-move,
-    .animate-repeat.ng-enter {
+    &.ng-enter,
+    &.ng-hide {
       opacity: 0;
     }
 
-    .animate-repeat.ng-leave,
-    .animate-repeat.ng-move.ng-move-active,
-    .animate-repeat.ng-enter.ng-enter-active {
+    &.ng-enter.ng-enter-active {
       opacity: 1;
     }
 
-    .animate-fade {
-      &.ng-hide-add,
-      &.ng-hide-remove {
-        transition: all 250ms;
-      }
-
-      &.ng-enter,
-      &.ng-hide {
-        opacity: 0;
-      }
-
-      &.ng-enter.ng-enter-active {
-        opacity: 1;
-      }
-
-      &.ng-leave {
-        transition: 0.5s linear all;
-        opacity: 1;
-      }
-
-      &.ng-leave.ng-leave-active {
-        opacity: 0;
-      }
+    &.ng-leave {
+      transition: 0.5s linear all;
+      opacity: 1;
     }
 
-    .transition-all {
-      transition: 0.25s linear all;
+    &.ng-leave.ng-leave-active {
+      opacity: 0;
     }
+  }
 
-    .pulse {
-      animation: pulse 4s infinite;
+  .transition-all {
+    transition: 0.25s linear all;
+  }
+
+  .pulse {
+    animation: pulse 4s infinite;
+  }
+
+  @keyframes pulse {
+    0% {
+      box-shadow: 0 0 0 0 color('info');
     }
-
-    @keyframes pulse {
-      0% {
-        box-shadow: 0 0 0 0 color('info');
-      }
-      50% {
-        box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
-      }
-      100% {
-        box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
-      }
+    50% {
+      box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
     }
   }
 }
