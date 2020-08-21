@@ -48,6 +48,7 @@ import { MilestoneService } from '../../../wise5/services/milestoneService';
 import { GraphService } from '../../../wise5/components/graph/graphService';
 import { NavItemScoreComponent } from '../../../wise5/classroomMonitor/classroomMonitorComponents/nodeProgress/navItemScore/nav-item-score.component';
 import { MatIconModule } from '@angular/material/icon';
+import { ManageStudentsComponent } from '../../../wise5/classroomMonitor/manageStudents/manage-students-component';
 
 @Component({template: ``})
 export class EmptyComponent {}
@@ -149,6 +150,7 @@ export class PreviewAngularJSModule {
 @NgModule({
   declarations: [
     MilestoneReportDataComponent,
+    ManageStudentsComponent,
     NavItemScoreComponent
   ],
   imports: [
@@ -166,6 +168,7 @@ export class PreviewAngularJSModule {
   ],
   entryComponents: [
     MilestoneReportDataComponent,
+    ManageStudentsComponent,
     NavItemScoreComponent
   ]
 })

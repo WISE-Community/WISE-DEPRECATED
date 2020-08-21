@@ -1,7 +1,6 @@
 'use strict';
 
 import * as angular from 'angular';
-import Annotation from './annotation/annotation';
 import Compile from './compile/compile';
 import Component from './component/component';
 import ComponentAnnotations from './componentAnnotations/componentAnnotations';
@@ -20,7 +19,6 @@ import { PossibleScoreComponent } from '../../site/src/app/possible-score/possib
 
 const Components = angular.module('components', []);
 
-Components.component('annotation', Annotation);
 Components.component('compile', Compile);
 Components.component('component', Component);
 Components.component('componentAnnotations', ComponentAnnotations);
