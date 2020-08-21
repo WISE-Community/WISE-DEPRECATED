@@ -30,8 +30,17 @@ export class NavItemScoreComponent {
     }
   }
 
-  formatAverageScore(averageScore): string {
-    if (typeof this.averageScore === 'number') {
+  getAverageScoreDisplay(): string {
+    const averageScore = this.formatAverageScore(this.averageScore);
+    if (typeof this.maxScore === 'number') {
+      return `${averageScore}/${this.maxScore}`;
+    } else {
+      return `${averageScore}/0`;
+    }
+  }
+
+  formatAverageScore(averageScore: any): string {
+    if (typeof averageScore === 'number') {
       if (averageScore % 1 !== 0) {
         averageScore = formatNumber(averageScore, this.locale, '1.1-1').toString();
       }
@@ -39,14 +48,5 @@ export class NavItemScoreComponent {
       averageScore = '-';
     }
     return averageScore;
-  }
-
-  getAverageScoreDisplay(): string {
-    let averageScore = this.formatAverageScore(this.averageScore);
-    if (typeof this.maxScore === 'number') {
-      return averageScore + '/' + this.maxScore;
-    } else {
-      return averageScore + '/0';
-    }
   }
 }
