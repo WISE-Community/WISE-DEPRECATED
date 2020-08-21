@@ -1,5 +1,6 @@
 import { Component, NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { createStudentAngularJSModule } from '../../../wise5/vle/student-angular-js-module';
 import { createTeacherAngularJSModule } from '../../../wise5/teacher/teacher-angular-js-module';
@@ -58,6 +59,7 @@ export class EmptyComponent {}
   imports: [
     UpgradeModule,
     CommonModule,
+    FlexLayoutModule,
     MatIconModule,
     RouterModule.forChild([
       {path: '**', component: EmptyComponent}
@@ -99,6 +101,7 @@ export class EmptyComponent {}
   ],
   exports: [
     CommonModule,
+    FlexLayoutModule,
     MatIconModule
   ]
 })
