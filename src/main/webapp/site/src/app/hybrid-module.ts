@@ -47,6 +47,7 @@ import { MilestoneService } from '../../../wise5/services/milestoneService';
 import { GraphService } from '../../../wise5/components/graph/graphService';
 import { NodeIconComponent } from '../../../wise5/classroomMonitor/classroomMonitorComponents/shared/nodeIcon/node-icon.component';
 import { MatIconModule } from '@angular/material/icon';
+import { ManageStudentsComponent } from '../../../wise5/classroomMonitor/manageStudents/manage-students-component';
 
 @Component({template: ``})
 export class EmptyComponent {}
@@ -147,7 +148,8 @@ export class PreviewAngularJSModule {
 
 @NgModule({
   declarations: [
-    MilestoneReportDataComponent
+    MilestoneReportDataComponent,
+    ManageStudentsComponent,
   ],
   imports: [
     AngularJSModule
@@ -163,7 +165,8 @@ export class PreviewAngularJSModule {
     TeacherWebSocketService
   ],
   entryComponents: [
-    MilestoneReportDataComponent
+    MilestoneReportDataComponent,
+    ManageStudentsComponent
   ]
 })
 export class TeacherAngularJSModule {
