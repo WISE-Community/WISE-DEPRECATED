@@ -1,7 +1,7 @@
 'use strict';
 
-import { Component, Input } from "@angular/core";
-import { UpgradeModule } from "@angular/upgrade/static";
+import { Component, Inject, Input, LOCALE_ID } from "@angular/core";
+import { formatNumber } from '@angular/common';
 
 @Component({
   selector: 'nav-item-score',
@@ -19,37 +19,34 @@ export class NavItemScoreComponent {
 
   showScore: boolean = false;
 
-  constructor(private upgrade: UpgradeModule) {}
+  constructor(@Inject(LOCALE_ID) private locale: string) {}
 
   ngOnChanges(changes) {
     if (typeof this.maxScore === 'number' || typeof this.averageScore === 'number') {
       this.showScore = true;
-      let averageScore = '';
-      if (typeof this.maxScore === 'number') {
-        if (typeof this.averageScore === 'number') {
-          if (this.averageScore >= 0) {
-            if (this.averageScore % 1 !== 0) {
-              averageScore = this.upgrade.$injector.get('$filter')('number')(this.averageScore, 1);
-            } else {
-              averageScore = this.averageScore.toString();
-            }
-          }
-        } else {
-          averageScore = '-';
-        }
-        this.averageScoreDisplay = averageScore + '/' + this.maxScore;
-      } else {
-        if (this.averageScore >= 0) {
-          if (this.averageScore % 1 !== 0) {
-            averageScore = this.upgrade.$injector.get('$filter')('number')(this.averageScore, 1);
-          } else {
-            averageScore = this.averageScore;
-          }
-        }
-        this.averageScoreDisplay = averageScore + '/0';
-      }
+      this.averageScoreDisplay = this.getAverageScoreDisplay();
     } else {
       this.showScore = false;
+    }
+  }
+
+  formatAverageScore(averageScore): string {
+    if (typeof this.averageScore === 'number') {
+      if (averageScore % 1 !== 0) {
+        averageScore = formatNumber(averageScore, this.locale, '1.1-1').toString();
+      }
+    } else {
+      averageScore = '-';
+    }
+    return averageScore;
+  }
+
+  getAverageScoreDisplay(): string {
+    let averageScore = this.formatAverageScore(this.averageScore);
+    if (typeof this.maxScore === 'number') {
+      return averageScore + '/' + this.maxScore;
+    } else {
+      return averageScore + '/0';
     }
   }
 }
