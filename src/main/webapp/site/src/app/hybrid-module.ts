@@ -46,6 +46,7 @@ import { ConceptMapService } from '../../../wise5/components/conceptMap/conceptM
 import { MilestoneService } from '../../../wise5/services/milestoneService';
 import { GraphService } from '../../../wise5/components/graph/graphService';
 import { WorkgroupNodeScoreComponent } from '../../../wise5/classroomMonitor/classroomMonitorComponents/shared/workgroupNodeScore/workgroup-node-score.component';
+import { ManageStudentsComponent } from '../../../wise5/classroomMonitor/manageStudents/manage-students-component';
 
 @Component({template: ``})
 export class EmptyComponent {}
@@ -94,6 +95,9 @@ export class EmptyComponent {}
     VLEProjectService
   ],
   entryComponents: [
+  ],
+  exports: [
+    CommonModule
   ]
 })
 export class AngularJSModule {}
@@ -139,6 +143,7 @@ export class PreviewAngularJSModule {
 
 @NgModule({
   declarations: [
+    ManageStudentsComponent,
     MilestoneReportDataComponent,
     WorkgroupNodeScoreComponent
   ],
@@ -156,6 +161,7 @@ export class PreviewAngularJSModule {
     TeacherWebSocketService
   ],
   entryComponents: [
+    ManageStudentsComponent,
     MilestoneReportDataComponent,
     WorkgroupNodeScoreComponent
   ]
