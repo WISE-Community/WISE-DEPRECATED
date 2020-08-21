@@ -45,6 +45,7 @@ import { AudioOscillatorService } from '../../../wise5/components/audioOscillato
 import { ConceptMapService } from '../../../wise5/components/conceptMap/conceptMapService';
 import { MilestoneService } from '../../../wise5/services/milestoneService';
 import { GraphService } from '../../../wise5/components/graph/graphService';
+import { ManageStudentsComponent } from '../../../wise5/classroomMonitor/manageStudents/manage-students-component';
 
 @Component({template: ``})
 export class EmptyComponent {}
@@ -93,6 +94,9 @@ export class EmptyComponent {}
     VLEProjectService
   ],
   entryComponents: [
+  ],
+  exports: [
+    CommonModule
   ]
 })
 export class AngularJSModule {}
@@ -138,7 +142,8 @@ export class PreviewAngularJSModule {
 
 @NgModule({
   declarations: [
-    MilestoneReportDataComponent
+    MilestoneReportDataComponent,
+    ManageStudentsComponent,
   ],
   imports: [
     AngularJSModule
@@ -154,7 +159,8 @@ export class PreviewAngularJSModule {
     TeacherWebSocketService
   ],
   entryComponents: [
-    MilestoneReportDataComponent
+    MilestoneReportDataComponent,
+    ManageStudentsComponent
   ]
 })
 export class TeacherAngularJSModule {

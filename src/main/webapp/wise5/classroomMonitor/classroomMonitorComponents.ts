@@ -1,5 +1,6 @@
 'use strict';
 
+import './classroomMonitorComponents/manageStudents/manageStudentsModule';
 import './classroomMonitorComponents/milestones/milestones';
 import './classroomMonitorComponents/nodeGrading/nodeGrading';
 import './classroomMonitorComponents/nodeProgress/nodeProgress';
@@ -10,6 +11,7 @@ import './classroomMonitorComponents/notebook/notebook';
 import * as angular from 'angular';
 
 const ClassroomMonitorComponents = angular.module('classroomMonitor.components', [
+  'manageStudents',
   'milestones',
   'nodeGrading',
   'nodeProgress',
