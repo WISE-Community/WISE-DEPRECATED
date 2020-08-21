@@ -206,12 +206,12 @@ class VLEController {
 
     this.$scope.$on('componentStudentDataChanged', () => {});
 
-    this.$scope.$on('pauseScreen', (event, args) => {
-      this.pauseScreen();
-    });
-
-    this.$scope.$on('unPauseScreen', (event, args) => {
-      this.unPauseScreen();
+    this.StudentDataService.pauseScreen$.subscribe((doPause: boolean) => {
+      if (doPause) {
+        this.pauseScreen();
+      } else {
+        this.unPauseScreen();
+      }
     });
 
     this.$scope.$on('requestImageCallback', (event, args) => {

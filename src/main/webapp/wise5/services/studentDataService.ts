@@ -9,6 +9,7 @@ import { UpgradeModule } from "@angular/upgrade/static";
 import { HttpClient, HttpParams } from "@angular/common/http";
 import * as angular from 'angular';
 import { TagService } from "./tagService";
+import { Subject } from "rxjs";
 
 @Injectable()
 export class StudentDataService {
@@ -77,9 +78,12 @@ export class StudentDataService {
       return this.evaluateHasTagCriteria(criteria);
     }
   };
+
   $q: any;
   $rootScope: any;
   $translate: any;
+  private pauseScreenSource: Subject<boolean> = new Subject<boolean>();
+  public pauseScreen$ = this.pauseScreenSource.asObservable();
 
   constructor(private upgrade: UpgradeModule,
       public http: HttpClient,
@@ -88,6 +92,10 @@ export class StudentDataService {
       private ProjectService: ProjectService,
       private TagService: TagService,
       private UtilService: UtilService) {
+  }
+
+  pauseScreen(doPause: boolean) {
+    this.pauseScreenSource.next(doPause);
   }
 
   handleNodeStatusesChanged() {
