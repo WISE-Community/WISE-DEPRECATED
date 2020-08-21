@@ -122,23 +122,6 @@ class DrawController extends ComponentController {
     this.$timeout(angular.bind(this, this.initializeDrawingTool));
 
     this.initializeScopeGetComponentState(this.$scope, 'drawController');
-
-    /*
-     * Listen for the requestImage event which is fired when something needs an image representation
-     * of the student data from a specific component.
-     */
-    this.$scope.$on('requestImage', (event, args) => {
-      if (this.isEventTargetThisComponent(args)) {
-        const imageObject = this.getImageObject();
-        const requestImageCallbackArgs = {
-          nodeId: args.nodeId,
-          componentId: args.componentId,
-          imageObject: imageObject
-        };
-        this.$scope.$emit('requestImageCallback', requestImageCallbackArgs);
-      }
-    });
-
     this.registerNotebookItemChosenListener();
     this.broadcastDoneRenderingComponent();
   }
