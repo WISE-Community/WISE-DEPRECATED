@@ -4,7 +4,6 @@ import { Injectable } from "@angular/core";
 import { UpgradeModule } from "@angular/upgrade/static";
 import { AnnotationService } from "./annotationService";
 import { ConfigService } from "./configService";
-import NodeService from "./nodeService";
 import { TagService } from "./tagService";
 import { StudentDataService } from "./studentDataService";
 import { NotificationService } from "./notificationService";
@@ -42,9 +41,9 @@ export class StudentWebSocketService {
     this.upgrade.$injector.get('$stomp').subscribe(
         `/topic/classroom/${this.runId}/${this.periodId}`, (message, headers, res) => {
       if (message.type === 'pause') {
-        this.upgrade.$injector.get('$rootScope').$broadcast('pauseScreen', {data: message.content});
+        this.StudentDataService.pauseScreen(true);
       } else if (message.type === 'unpause') {
-        this.upgrade.$injector.get('$rootScope').$broadcast('unPauseScreen', {data: message.content});
+        this.StudentDataService.pauseScreen(false);
       } else if (message.type === 'studentWork') {
         const studentWork = JSON.parse(message.content);
         this.upgrade.$injector.get('$rootScope').$broadcast('studentWorkReceived', studentWork);
