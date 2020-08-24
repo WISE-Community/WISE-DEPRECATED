@@ -1,5 +1,6 @@
 import { Component, NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { createStudentAngularJSModule } from '../../../wise5/vle/student-angular-js-module';
 import { createTeacherAngularJSModule } from '../../../wise5/teacher/teacher-angular-js-module';
@@ -46,6 +47,7 @@ import { ConceptMapService } from '../../../wise5/components/conceptMap/conceptM
 import { MilestoneService } from '../../../wise5/services/milestoneService';
 import { GraphService } from '../../../wise5/components/graph/graphService';
 import { WorkgroupNodeScoreComponent } from '../../../wise5/classroomMonitor/classroomMonitorComponents/shared/workgroupNodeScore/workgroup-node-score.component';
+import { NavItemScoreComponent } from '../../../wise5/classroomMonitor/classroomMonitorComponents/nodeProgress/navItemScore/nav-item-score.component';
 import { NodeIconComponent } from '../../../wise5/classroomMonitor/classroomMonitorComponents/shared/nodeIcon/node-icon.component';
 import { MatIconModule } from '@angular/material/icon';
 import { ManageStudentsComponent } from '../../../wise5/classroomMonitor/manageStudents/manage-students-component';
@@ -61,6 +63,7 @@ export class EmptyComponent {}
   imports: [
     UpgradeModule,
     CommonModule,
+    FlexLayoutModule,
     MatIconModule,
     RouterModule.forChild([
       {path: '**', component: EmptyComponent}
@@ -102,6 +105,7 @@ export class EmptyComponent {}
   ],
   exports: [
     CommonModule,
+    FlexLayoutModule,
     MatIconModule,
     NodeIconComponent
   ]
@@ -151,7 +155,8 @@ export class PreviewAngularJSModule {
   declarations: [
     ManageStudentsComponent,
     MilestoneReportDataComponent,
-    WorkgroupNodeScoreComponent
+    WorkgroupNodeScoreComponent,
+    NavItemScoreComponent
   ],
   imports: [
     AngularJSModule
@@ -169,7 +174,9 @@ export class PreviewAngularJSModule {
   entryComponents: [
     ManageStudentsComponent,
     MilestoneReportDataComponent,
-    WorkgroupNodeScoreComponent
+    WorkgroupNodeScoreComponent,
+    ManageStudentsComponent,
+    NavItemScoreComponent
   ]
 })
 export class TeacherAngularJSModule {
