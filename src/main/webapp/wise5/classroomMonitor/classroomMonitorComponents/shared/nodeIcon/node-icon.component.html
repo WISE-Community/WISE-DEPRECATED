@@ -1,0 +1,4 @@
+<img *ngIf="isImage()" class="{{ isGroup ? 'avatar--square ' : '' }}{{ customClass }} {{ sizeClass }} avatar" [src]="icon.imgSrc" alt="icon.imgAlt" />
+<div *ngIf="isFont()" style="background-color: {{ icon.color }}" class="{{ isGroup ? 'avatar--square ' : '' }}{{ customClass }} {{ sizeClass }} avatar avatar--icon">
+  <mat-icon class="{{ sizeClass }} {{ icon.fontSet }} md-light node-icon">{{ icon.fontName }}</mat-icon>
+</div>

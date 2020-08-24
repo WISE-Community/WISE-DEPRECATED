@@ -16,6 +16,7 @@ import Sticky from './sticky/sticky';
 import { downgradeComponent } from '@angular/upgrade/static';
 import { MilestoneReportDataComponent } from '../../site/src/app/teacher/milestone/milestone-report-data/milestone-report-data.component';
 import { PossibleScoreComponent } from '../../site/src/app/possible-score/possible-score.component';
+import { NodeIconComponent } from '../classroomMonitor/classroomMonitorComponents/shared/nodeIcon/node-icon.component';
 
 const Components = angular.module('components', []);
 
@@ -30,6 +31,8 @@ Components.component('listenForDeleteKeypress', ListenForDeleteKeypress);
 Components.directive('milestoneReportData',
     downgradeComponent({ component: MilestoneReportDataComponent}) as angular.IDirectiveFactory);
 Components.component('milestoneReportGraph', MilestoneReportGraph);
+Components.directive('nodeIcon',
+      downgradeComponent({ component: NodeIconComponent}) as angular.IDirectiveFactory)
 Components.directive('possibleScore',
     downgradeComponent({ component: PossibleScoreComponent}) as angular.IDirectiveFactory);
 Components.component('summaryDisplay', SummaryDisplay);

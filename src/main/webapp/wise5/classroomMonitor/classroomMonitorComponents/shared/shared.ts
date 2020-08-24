@@ -7,7 +7,6 @@ import ComponentNewWorkBadge from './componentNewWorkBadge/componentNewWorkBadge
 import ComponentRevisionsInfo from './componentRevisionsInfo/componentRevisionsInfo';
 import MainMenu from './mainMenu/mainMenu';
 import NodeCompletionIcon from './nodeCompletionIcon/nodeCompletionIcon';
-import NodeIcon from './nodeIcon/nodeIcon';
 import NodeInfo from './nodeInfo/nodeInfo';
 import NotificationsMenu from './notificationsMenu/notificationsMenu';
 import PauseScreensMenu from './pauseScreensMenu/pauseScreensMenu';
@@ -34,7 +33,6 @@ const Shared = angular
   .component('cmMainMenu', MainMenu)
   .component('notificationsMenu', NotificationsMenu)
   .component('nodeCompletionIcon', NodeCompletionIcon)
-  .component('nodeIcon', NodeIcon)
   .component('nodeInfo', NodeInfo)
   .component('pauseScreensMenu', PauseScreensMenu)
   .component('periodSelect', PeriodSelect)

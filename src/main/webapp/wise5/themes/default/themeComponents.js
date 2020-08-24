@@ -2,7 +2,6 @@
 
 import HelpIcon from './themeComponents/helpIcon/helpIcon';
 import NavItemController from './themeComponents/navItem/navItemController';
-import NodeIcon from './themeComponents/nodeIcon/nodeIcon';
 import StepToolsCtrl from './themeComponents/stepTools/stepToolsController';
 import NodeStatusIconCtrl from './themeComponents/nodeStatusIcon/nodeStatusIconController';
 
@@ -40,7 +39,6 @@ ThemeComponents.controller('NavItemController', NavItemController)
     .controller('NodeStatusIconCtrl', NodeStatusIconCtrl)
     .component('helpIcon', HelpIcon)
     .component('navItem', NavItem)
-    .component('nodeIcon', NodeIcon)
     .component('nodeStatusIcon', NodeStatusIcon)
     .component('stepTools', StepTools);
 
