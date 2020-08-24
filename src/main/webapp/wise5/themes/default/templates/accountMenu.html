@@ -21,7 +21,7 @@
         </div>
         <span flex></span>
         <md-progress-linear md-mode="determinate" value="{{themeCtrl.rootNodeStatus.progress.completionPct}}"></md-progress-linear>
-        <h3 class="accent-2">{{themeCtrl.rootNodeStatus.progress.completionPct}}%</h3>
+        <h3 class="accent-1">{{themeCtrl.rootNodeStatus.progress.completionPct}}%</h3>
     </div>
 </div>
 <span>
@@ -38,7 +38,7 @@
             <md-icon class="md-36"> grade </md-icon>
             <div class="account-menu__grade__overlay" ng-if="vleController.maxScore > 0" style="height: {{(1-vleController.totalScore/vleController.maxScore)*100 | number : 2}}%;"></div>
         </div>
-        <h3 class="accent-2" ng-if="vleController.maxScore > 0">{{vleController.totalScore/vleController.maxScore*100 | number : 0}}%</h3>
+        <h3 class="accent-1" ng-if="vleController.maxScore > 0">{{vleController.totalScore/vleController.maxScore*100 | number : 0}}%</h3>
     </div>
 </div>
 <md-divider></md-divider>

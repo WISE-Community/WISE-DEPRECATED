@@ -1,4 +1,4 @@
-// WISE Default theme
+// WISE Classroom Monitor theme
 
 // Material grey color palette for reference
 $mat-grey: (
@@ -19,27 +19,27 @@ $mat-grey: (
 );
 
 // define Angular Material theme colors
-$default-primary: (
-  50 : #e4f1f5,
-  100 : #bbdde5,
-  200 : #8ec6d4,
-  300 : #60afc2,
-  400 : #3e9db5,
-  500 : #1c8ca8,
-  600 : #1984a0,
-  700 : #147997,
-  800 : #116f8d,
-  900 : #095c7d,
-  A100 : #ade5ff,
-  A200 : #7ad5ff,
-  A400 : #47c4ff,
-  A700 : #2dbcff,
+$monitor-primary: (
+  50 : #E3EDF7,
+  100 : #B9D1EC,
+  200 : #8AB2E0,
+  300 : #5B93D3,
+  400 : #387CC9,
+  500 : #1565C0,
+  600 : #125DBA,
+  700 : #0F53B2,
+  800 : #0C49AA,
+  900 : #06379C,
+  A100 : #C8D7FF,
+  A200 : #95B2FF,
+  A400 : #628DFF,
+  A700 : #487AFF,
   contrast: (
     50 : #000000,
     100 : #000000,
     200 : #000000,
     300 : #000000,
-    400 : #000000,
+    400 : #ffffff,
     500 : #ffffff,
     600 : #ffffff,
     700 : #ffffff,
@@ -48,11 +48,11 @@ $default-primary: (
     A100 : #000000,
     A200 : #000000,
     A400 : #000000,
-    A700 : #000000,
+    A700 : #ffffff,
   )
 );
 
-$default-accent: (
+$monitor-accent: (
   50 : #fdebe8,
   100 : #fbcdc7,
   200 : #f8aca1,
@@ -85,26 +85,27 @@ $default-accent: (
   )
 );
 
-$default-theme-primary: mat-palette($default-primary);
-$default-theme-accent: mat-palette($default-accent);
-$default-theme-warn: mat-palette($mat-red, 800);
+$monitor-theme-primary: mat-palette($monitor-primary);
+$monitor-theme-accent: mat-palette($monitor-accent);
+$monitor-theme-warn: mat-palette($mat-red, 800);
 
 // create Angular Material theme
-$default: mat-light-theme(
-  $default-theme-primary,
-  $default-theme-accent,
-  $default-theme-warn
+$monitor: mat-light-theme(
+  $monitor-theme-primary,
+  $monitor-theme-accent,
+  $monitor-theme-warn
 );
 
-$default-mat-light-theme-background: (
+$monitor-mat-light-theme-background: (
   status-bar: map_get($mat-grey, 400),
   app-bar:    map_get($mat-grey, 300),
   background: map_get($mat-grey, 100),
-  hover:      rgba(black, 0.04),
+  hover:      rgba(black, 0.04), // TODO(kara): check style with Material Design UX
   card:       white,
   dialog:     white,
   disabled-button: rgba(black, 0.12),
   raised-button: white,
+  //focused-button: $dark-focused,
   focused-button: rgba(black, 0.12),
   selected-button: map_get($mat-grey, 300),
   selected-disabled-button: map_get($mat-grey, 400),
@@ -114,17 +115,17 @@ $default-mat-light-theme-background: (
   tooltip: map_get($mat-grey, 700)
 );
 
-$default-theme: map-merge($default, (background: $default-mat-light-theme-background));
+$monitor-theme: map-merge($monitor, (background: $monitor-mat-light-theme-background));
 
 // get theme color variables
-$primary: map-get($default-theme, primary);
-$accent: map-get($default-theme, accent);
-$warn: map-get($default-theme, warn);
-$foreground: map-get($default-theme, foreground);
-$background: map-get($default-theme, background);
+$primary: map-get($monitor-theme, primary);
+$accent: map-get($monitor-theme, accent);
+$warn: map-get($monitor-theme, warn);
+$foreground: map-get($monitor-theme, foreground);
+$background: map-get($monitor-theme, background);
 
 // create colors object (including additional colors)
-$default-colors: (
+$monitor-colors: (
   'accent': mat-color($accent),
   'accent-1': #795C3A,
   'accent-2': #CAD266,
@@ -139,7 +140,7 @@ $default-colors: (
   'primary': mat-color($primary),
   'score': #FFC107,
   'secondary-text': mat-color($foreground, secondary-text),
-  'selected-bg': map-get($default-theme-primary, 50),
+  'selected-bg': map-get($monitor-theme-primary, 50),
   'success': #00C853,
   'success-contrast': black,
   'text': mat-color($foreground, text),

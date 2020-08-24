@@ -1,0 +1,11 @@
+<h1 mat-dialog-title i18n>Choose a Branch Path</h1>
+<mat-dialog-content aria-label="Choose a Branch Path">
+    <p i18n>Note: This chooser screen is only available in preview mode. Students will not see this screen in a classroom run and will instead be assigned a branch path automatically. Once you have chosen a branch, complete the current step and then click the Next arrow.</p>
+    <mat-list>
+        <mat-list-item *ngFor="let path of paths">
+            <button mat-flat-button [mat-dialog-close]="path.transition">
+                <span>{{ path.nodeTitle }}</span>
+            </button>
+        </mat-list-item>
+    </mat-list>
+</mat-dialog-content>

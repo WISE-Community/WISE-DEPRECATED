@@ -36,6 +36,12 @@ import { OutsideURLService } from '../../../wise5/components/outsideURL/outsideU
 import { MatchService } from '../../../wise5/components/match/matchService';
 import { MultipleChoiceService } from '../../../wise5/components/multipleChoice/multipleChoiceService';
 import { OpenResponseService } from '../../../wise5/components/openResponse/openResponseService';
+import { NodeService } from '../../../wise5/services/nodeService';
+import { MatDialogModule } from '@angular/material/dialog';
+import { ChooseBranchPathDialogComponent } from './preview/modules/choose-branch-path-dialog/choose-branch-path-dialog.component';
+import { MatButtonModule } from '@angular/material/button';
+import { MatListModule } from '@angular/material/list';
+import { DataService } from './services/data.service';
 import { DiscussionService } from '../../../wise5/components/discussion/discussionService';
 import { DrawService } from '../../../wise5/components/draw/drawService';
 import { EmbeddedService } from '../../../wise5/components/embedded/embeddedService';
@@ -64,7 +70,10 @@ export class EmptyComponent {}
     UpgradeModule,
     CommonModule,
     FlexLayoutModule,
+    MatButtonModule,
+    MatDialogModule,
     MatIconModule,
+    MatListModule,
     RouterModule.forChild([
       {path: '**', component: EmptyComponent}
     ])
@@ -86,6 +95,7 @@ export class EmptyComponent {}
     LabelService,
     MatchService,
     MultipleChoiceService,
+    NodeService,
     NotebookService,
     NotificationService,
     OutsideURLService,
@@ -106,7 +116,10 @@ export class EmptyComponent {}
   exports: [
     CommonModule,
     FlexLayoutModule,
+    MatButtonModule,
+    MatDialogModule,
     MatIconModule,
+    MatListModule,
     NodeIconComponent
   ]
 })
@@ -120,18 +133,31 @@ export class AngularJSModule {}
     AngularJSModule
   ],
   providers: [
+    { provide: DataService, useExisting: StudentDataService },
     { provide: ProjectService, useExisting: VLEProjectService },
     VLEProjectService
   ],
   entryComponents: [
     PossibleScoreComponent
+  ],
+  exports: [
+    CommonModule,
+    MatButtonModule,
+    MatDialogModule,
+    MatListModule
   ]
 })
 export class StudentAngularJSModule {}
 
 @NgModule({
+  declarations: [
+    ChooseBranchPathDialogComponent
+  ],
   imports: [
     StudentAngularJSModule
+  ],
+  entryComponents: [
+    ChooseBranchPathDialogComponent
   ]
 })
 export class StudentVLEAngularJSModule {
@@ -162,6 +188,7 @@ export class PreviewAngularJSModule {
     AngularJSModule
   ],
   providers: [
+    { provide: DataService, useExisting: TeacherDataService },
     MilestoneService,
     ProjectAssetService,
     SpaceService,

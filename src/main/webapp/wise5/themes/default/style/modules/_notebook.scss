@@ -328,10 +328,10 @@ $notebook-sidebar-width: 56px;
 .notebook-item__info {
     font-style: italic;
     opacity: .8;
-    color: lighten(color('accent-2'), 5%);
+    color: lighten(color('accent-1'), 5%);
 
     a, md-icon {
-        color: lighten(color('accent-2'), 5%);
+        color: lighten(color('accent-1'), 5%);
     }
 
     md-icon {
@@ -357,12 +357,12 @@ $notebook-sidebar-width: 56px;
     }
 
     &:hover, &:focus, &.dragover {
-        border-color: color('accent-1');
-        background-color: lighten(color('accent-1'), 35%);
-        color: color('accent-1');
+        border-color: color('accent');
+        background-color: lighten(color('accent'), 35%);
+        color: color('accent');
 
         md-icon, span {
-            color: color('accent-1');
+            color: color('accent');
         }
     }
 }

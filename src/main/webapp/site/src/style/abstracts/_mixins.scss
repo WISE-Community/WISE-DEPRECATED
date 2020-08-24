@@ -1,15 +1,7 @@
 @import '~@angular/material/theming';
 
-// Define a custom mixin that takes in the current material theme and colors
-@mixin theme-setup($theme, $colors) {
-  // Include angular material theme
-  @include angular-material-theme($theme);
-  $background: map-get($theme, background);
-  $foreground: map-get($theme, foreground);
-
-  // Create theme-specific styles
-  color: map-get($foreground, text);
-
+// Define a custom mixin for common styles
+@mixin common-setup() {
   // Define a custom typography config
   $custom-typography: mat-typography-config(
     $body-1: mat-typography-level(16px, 22px, 400),
@@ -25,7 +17,7 @@
     @include mat-typography-level-to-styles($custom-typography, caption);
   }
 
-  &.mat-typography, .mat-body, .mat-body-1 {
+  .mat-typography, .mat-body, .mat-body-1 {
     @include mat-typography-level-to-styles($custom-typography, body-1);
   }
 
@@ -43,23 +35,6 @@
 
   h1, .mat-headline {
     @include mat-typography-level-to-styles($custom-typography, headline);
-  }
-
-  a {
-    &:not(.mat-button):not(.mat-raised-button):not(.mat-menu-item):not(.mat-flat-button):not(.mat-stroked-button):not(.mat-icon-button):not(.mat-tab-link) {
-      color: map-get($colors, primary);
-
-      // Set classes for each named color in the $colors map
-      @each $key, $value in $colors {
-        &.#{$key} {
-          color: $value;
-        }
-      }
-    }
-  }
-
-  a.active {
-    color: map-get($colors, primary);
   }
 
   h1, h2, .mat-display-1, .mat-display-2, .mat-display-3, .mat-display-4 {
@@ -100,30 +75,6 @@
     }
   }
 
-  .app-background {
-    background-color: map-get($colors, app-bg);
-  }
-
-  .content-block, .info-block, .notice {
-    background-color: map-get($colors, notice-bg);
-  }
-
-  .content-block__title {
-    border-color: map-get($background, focused-button);
-  }
-
-  .cta__headline {
-    border-color: map-get($colors, notice-bg);
-  }
-
-  .cta__wrap, .blurb {
-    background-color: map-get($background, card);
-  }
-
-  .can-highlight {
-    transition: 1s background-color;
-  }
-
   .mat-button, .mat-raised-button, .mat-flat-button, .mat-stroked-button {
     min-width: 0;
   }
@@ -137,23 +88,6 @@
 
     &[disabled] {
       box-shadow: none;
-    }
-  }
-
-  .mat-flat-button, .mat-raised-button, .mat-fab, .mat-mini-fab {
-    &.mat-secondary-text {
-      background-color: map-get($colors, secondary-text);
-      color: white;
-    }
-
-    &.mat-success {
-      background-color: map-get($colors, success);
-      color: map-get($colors, success-contrast);
-    }
-
-    &.mat-info {
-      background-color: map-get($colors, info);
-      color: map-get($colors, info-contrast);
     }
   }
 
@@ -187,10 +121,8 @@
   }
 
   .mat-dialog-content--scroll {
-    background-color: map-get($colors, notice-bg);
     border-bottom: 1px solid;
     border-top: 1px solid;
-    border-color: map_get($background, background);
   }
 
   .mat-dialog-actions {
@@ -223,6 +155,90 @@
     font-size: 14px;
   }
 
+  .mat-tab-label-active {
+    opacity: 1;
+  }
+
+  td {
+    &.mat-cell, &.mat-footer-cell, &.mat-header-cell {
+      padding: 4px 8px 4px 0;
+    }
+  }
+}
+
+// Define a custom mixin that takes in the current material theme and colors
+@mixin theme-setup($theme, $colors) {
+  // Include angular material theme
+  @include angular-material-theme($theme);
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+
+  // Create theme-specific styles
+  color: map-get($foreground, text);
+
+  a {
+    &:not(.mat-button):not(.mat-raised-button):not(.mat-menu-item):not(.mat-flat-button):not(.mat-stroked-button):not(.mat-icon-button):not(.mat-tab-link) {
+      color: map-get($colors, primary);
+
+      // Set classes for each named color in the $colors map
+      @each $key, $value in $colors {
+        &.#{$key} {
+          color: $value;
+        }
+      }
+    }
+  }
+
+  a.active {
+    color: map-get($colors, primary);
+  }
+
+  .app-background {
+    background-color: map-get($colors, app-bg);
+  }
+
+  .content-block, .info-block, .notice {
+    background-color: map-get($colors, notice-bg);
+  }
+
+  .content-block__title {
+    border-color: map-get($background, focused-button);
+  }
+
+  .cta__headline {
+    border-color: map-get($colors, notice-bg);
+  }
+
+  .cta__wrap, .blurb {
+    background-color: map-get($background, card);
+  }
+
+  .can-highlight {
+    transition: 1s background-color;
+  }
+
+  .mat-flat-button, .mat-raised-button, .mat-fab, .mat-mini-fab {
+    &.mat-secondary-text {
+      background-color: map-get($colors, secondary-text);
+      color: white;
+    }
+
+    &.mat-success {
+      background-color: map-get($colors, success);
+      color: map-get($colors, success-contrast);
+    }
+
+    &.mat-info {
+      background-color: map-get($colors, info);
+      color: map-get($colors, info-contrast);
+    }
+  }
+
+  .mat-dialog-content--scroll {
+    background-color: map-get($colors, notice-bg);
+    border-color: map_get($background, background);
+  }
+
   .mat-menu-item {
     &.active {
       background-color: map-get($background, hover);
@@ -233,18 +249,8 @@
     }
   }
 
-  .mat-tab-label-active {
-    opacity: 1;
-  }
-
   .mat-form-field-prefix, .mat-form-field-suffix {
     color: map-get($foreground, secondary-text);
-  }
-
-  td {
-    &.mat-cell, &.mat-footer-cell, &.mat-header-cell {
-      padding: 4px 8px 4px 0;
-    }
   }
 
   // Set classes for each named color in the $colors map

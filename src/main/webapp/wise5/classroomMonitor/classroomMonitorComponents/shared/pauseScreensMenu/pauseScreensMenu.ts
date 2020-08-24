@@ -27,7 +27,7 @@ const PauseScreensMenu = {
   template: `<div class="account-menu__caret account-menu__caret--pause" tabindex="0"></div>
         <div layout="column" class="account-menu--fixed-height">
             <md-toolbar md-theme="light" class="account-menu__info md-subhead md-whiteframe-1dp" layout="row" layout-align="start center">
-                <div class="accent-1 account-menu__info__title" layout="row" layout-align="start center"><md-icon class="accent-1"> lock </md-icon>&nbsp;
+                <div class="accent account-menu__info__title" layout="row" layout-align="start center"><md-icon class="accent"> lock </md-icon>&nbsp;
                     <span translate="lockStudentScreens"></span>
                 </div>
             </md-toolbar>

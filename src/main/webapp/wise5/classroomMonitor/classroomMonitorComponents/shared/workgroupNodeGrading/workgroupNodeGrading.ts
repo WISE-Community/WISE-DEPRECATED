@@ -130,7 +130,7 @@ const WorkgroupNodeGrading = {
   template: `<div class="grading__item">
             <div id="component_{{::component.id}}_{{::$ctrl.workgroupId}}" class="component component--grading" ng-repeat='component in $ctrl.components'>
                 <div ng-show="$ctrl.isComponentVisible(component.id)">
-                    <h3 class="accent-2 md-body-2 gray-lightest-bg component__header">
+                    <h3 class="accent-1 md-body-2 gray-lightest-bg component__header">
                         {{ $index+1 + '. ' + $ctrl.getComponentTypeLabel(component.type) }}&nbsp;
                         <component-new-work-badge component-id="::component.id"
                                                   workgroup-id="::$ctrl.workgroupId"

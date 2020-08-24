@@ -9,12 +9,12 @@ import { UpgradeModule } from "@angular/upgrade/static";
 import { HttpClient, HttpParams } from "@angular/common/http";
 import * as angular from 'angular';
 import { TagService } from "./tagService";
+import { DataService } from "../../site/src/app/services/data.service";
 import { Subject } from "rxjs";
 
 @Injectable()
-export class StudentDataService {
+export class StudentDataService extends DataService {
 
-  currentNode = null;
   dummyStudentWorkId: number = 1;
   maxScore: any = null;
   nodeStatuses: any = {};
@@ -92,6 +92,7 @@ export class StudentDataService {
       private ProjectService: ProjectService,
       private TagService: TagService,
       private UtilService: UtilService) {
+    super();
   }
 
   pauseScreen(doPause: boolean) {
@@ -412,6 +413,15 @@ export class StudentDataService {
       }
     }
     return result;
+  }
+
+  evaluateCriterias(criterias): boolean {
+    for (const criteria of criterias) {
+      if (!this.evaluateCriteria(criteria)) {
+        return false;
+      }
+    }
+    return true;
   }
 
   evaluateCriteria(criteria) {
@@ -1319,17 +1329,6 @@ export class StudentDataService {
       }
     }
     return result;
-  }
-
-  getCurrentNode() {
-    return this.currentNode;
-  }
-
-  getCurrentNodeId() {
-    if (this.currentNode != null) {
-      return this.currentNode.id;
-    }
-    return null;
   }
 
   setCurrentNodeByNodeId(nodeId) {

@@ -8,15 +8,16 @@ import { UtilService } from "./utilService";
 import { TeacherProjectService } from "./teacherProjectService";
 import { TeacherWebSocketService } from "./teacherWebSocketService";
 import { Injectable } from "@angular/core";
+import { DataService } from "../../site/src/app/services/data.service";
 
 @Injectable()
-export class TeacherDataService {
+export class TeacherDataService extends DataService {
+  
   studentData: any;
   $rootScope: any;
   currentPeriod = null;
   currentWorkgroup = null;
   currentStep = null;
-  currentNode = null;
   previousStep = null;
   runStatus = null;
   periods = [];
@@ -33,6 +34,7 @@ export class TeacherDataService {
     private TeacherWebSocketService: TeacherWebSocketService,
     private UtilService: UtilService
   ) {
+    super();
     this.studentData = {
       componentStatesByWorkgroupId: {},
       componentStatesByNodeId: {},
@@ -868,17 +870,6 @@ export class TeacherDataService {
 
   getCurrentStep() {
     return this.currentStep;
-  }
-
-  getCurrentNode() {
-    return this.currentNode;
-  }
-
-  getCurrentNodeId() {
-    if (this.currentNode != null) {
-      return this.currentNode.id;
-    }
-    return null;
   }
 
   setCurrentNodeByNodeId(nodeId) {
