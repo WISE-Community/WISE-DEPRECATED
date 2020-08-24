@@ -1,5 +1,6 @@
 import { Component, NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { createStudentAngularJSModule } from '../../../wise5/vle/student-angular-js-module';
 import { createTeacherAngularJSModule } from '../../../wise5/teacher/teacher-angular-js-module';
@@ -29,11 +30,26 @@ import { SummaryService } from '../../../wise5/components/summary/summaryService
 import { TeacherDataService } from '../../../wise5/services/teacherDataService';
 import { TeacherWebSocketService } from '../../../wise5/services/teacherWebSocketService';
 import { TableService } from '../../../wise5/components/table/tableService';
-import { OutsideURLService } from '../../../wise5/components/outsideURL/outsideURLService';
+import { NotebookService } from '../../../wise5/services/notebookService';
 import { NotificationService } from '../../../wise5/services/notificationService';
+import { OutsideURLService } from '../../../wise5/components/outsideURL/outsideURLService';
 import { MatchService } from '../../../wise5/components/match/matchService';
 import { MultipleChoiceService } from '../../../wise5/components/multipleChoice/multipleChoiceService';
 import { OpenResponseService } from '../../../wise5/components/openResponse/openResponseService';
+import { DiscussionService } from '../../../wise5/components/discussion/discussionService';
+import { DrawService } from '../../../wise5/components/draw/drawService';
+import { EmbeddedService } from '../../../wise5/components/embedded/embeddedService';
+import { HTMLService } from '../../../wise5/components/html/htmlService';
+import { LabelService } from '../../../wise5/components/label/labelService';
+import { AnimationService } from '../../../wise5/components/animation/animationService';
+import { AudioOscillatorService } from '../../../wise5/components/audioOscillator/audioOscillatorService';
+import { ConceptMapService } from '../../../wise5/components/conceptMap/conceptMapService';
+import { MilestoneService } from '../../../wise5/services/milestoneService';
+import { GraphService } from '../../../wise5/components/graph/graphService';
+import { NavItemScoreComponent } from '../../../wise5/classroomMonitor/classroomMonitorComponents/nodeProgress/navItemScore/nav-item-score.component';
+import { NodeIconComponent } from '../../../wise5/classroomMonitor/classroomMonitorComponents/shared/nodeIcon/node-icon.component';
+import { MatIconModule } from '@angular/material/icon';
+import { ManageStudentsComponent } from '../../../wise5/classroomMonitor/manageStudents/manage-students-component';
 
 @Component({template: ``})
 export class EmptyComponent {}
@@ -41,24 +57,35 @@ export class EmptyComponent {}
 @NgModule({
   declarations: [
     EmptyComponent,
+    NodeIconComponent,
   ],
   imports: [
     UpgradeModule,
     CommonModule,
+    FlexLayoutModule,
+    MatIconModule,
     RouterModule.forChild([
       {path: '**', component: EmptyComponent}
     ])
   ],
   providers: [
     AchievementService,
+    AnimationService,
     AnnotationService,
+    AudioOscillatorService,
     AudioRecorderService,
-    UtilService,
+    ConceptMapService,
     ConfigService,
     CRaterService,
-    OutsideURLService,
+    DiscussionService,
+    DrawService,
+    EmbeddedService,
+    GraphService,
+    HTMLService,
+    LabelService,
     MatchService,
     MultipleChoiceService,
+    NotebookService,
     NotificationService,
     OutsideURLService,
     OpenResponseService,
@@ -70,9 +97,16 @@ export class EmptyComponent {}
     SummaryService,
     TableService,
     TagService,
+    UtilService,
     VLEProjectService
   ],
   entryComponents: [
+  ],
+  exports: [
+    CommonModule,
+    FlexLayoutModule,
+    MatIconModule,
+    NodeIconComponent
   ]
 })
 export class AngularJSModule {}
@@ -118,12 +152,15 @@ export class PreviewAngularJSModule {
 
 @NgModule({
   declarations: [
-    MilestoneReportDataComponent
+    MilestoneReportDataComponent,
+    ManageStudentsComponent,
+    NavItemScoreComponent
   ],
   imports: [
     AngularJSModule
   ],
   providers: [
+    MilestoneService,
     ProjectAssetService,
     SpaceService,
     StudentStatusService,
@@ -133,7 +170,9 @@ export class PreviewAngularJSModule {
     TeacherWebSocketService
   ],
   entryComponents: [
-    MilestoneReportDataComponent
+    MilestoneReportDataComponent,
+    ManageStudentsComponent,
+    NavItemScoreComponent
   ]
 })
 export class TeacherAngularJSModule {

@@ -1,12 +1,13 @@
 'use strict';
 
-import GraphService from './graphService';
+import * as angular from 'angular';
+import { downgradeInjectable } from '@angular/upgrade/static';
+import { GraphService } from './graphService';
 import GraphController from './graphController';
 
-let graphComponentModule = angular.module('graphComponentModule', [
-    'pascalprecht.translate'
-  ])
-  .service('GraphService', GraphService)
+let graphComponentModule = angular
+  .module('graphComponentModule', ['pascalprecht.translate'])
+  .service('GraphService', downgradeInjectable(GraphService))
   .controller('GraphController', GraphController)
   .config([
     '$translatePartialLoaderProvider',

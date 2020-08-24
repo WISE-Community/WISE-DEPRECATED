@@ -3,7 +3,7 @@ import '../lib/bootstrap/js/bootstrap.min'
 import * as angular from 'angular';
 import { downgradeInjectable } from '@angular/upgrade/static';
 import { createCommonModule } from '../common-angular-js-module';
-import MilestoneService from '../services/milestoneService';
+import { MilestoneService } from '../services/milestoneService';
 import { TeacherProjectService } from '../services/teacherProjectService';
 import { ProjectAssetService } from '../../site/src/app/services/projectAssetService';
 import { SpaceService } from '../services/spaceService';
@@ -18,7 +18,6 @@ import ClassroomMonitorController from '../classroomMonitor/classroomMonitorCont
 import DataExportController from '../classroomMonitor/dataExport/dataExportController';
 import ExportController from '../classroomMonitor/dataExport/exportController';
 import ExportVisitsController from '../classroomMonitor/dataExport/exportVisitsController';
-import ManageStudentsController from '../classroomMonitor/manageStudents/manageStudentsController';
 import MilestonesAuthoringController from '../authoringTool/milestones/milestonesAuthoringController';
 import MilestonesController from '../classroomMonitor/milestones/milestonesController';
 import NodeAuthoringController from '../authoringTool/node/nodeAuthoringController';
@@ -82,7 +81,7 @@ export function createTeacherAngularJSModule() {
       'tableAuthoringComponentModule',
       'theme.notebook'
       ])
-    .service('MilestoneService', MilestoneService)
+    .service('MilestoneService', downgradeInjectable(MilestoneService))
     .factory('ProjectService', downgradeInjectable(TeacherProjectService))
     .factory('ProjectAssetService', downgradeInjectable(ProjectAssetService))
     .factory('SpaceService', downgradeInjectable(SpaceService))
@@ -97,7 +96,6 @@ export function createTeacherAngularJSModule() {
     .controller('DataExportController', DataExportController)
     .controller('ExportController', ExportController)
     .controller('ExportVisitsController', ExportVisitsController)
-    .controller('ManageStudentsController', ManageStudentsController)
     .controller('MilestonesAuthoringController', MilestonesAuthoringController)
     .controller('MilestonesController', MilestonesController)
     .controller('NodeAuthoringController', NodeAuthoringController)
@@ -338,7 +336,7 @@ export function createTeacherAngularJSModule() {
               (NotebookService, ConfigService, config, project) => {
                 if (
                   NotebookService.isNotebookEnabled() ||
-                  NotebookService.isTeacherNotebookEnabled()
+                  NotebookService.isNotebookEnabled('teacherNotebook')
                 ) {
                   return NotebookService.retrieveNotebookItems().then(notebook => {
                     return notebook;
@@ -386,9 +384,7 @@ export function createTeacherAngularJSModule() {
         })
         .state('root.cm.manageStudents', {
           url: '/manageStudents',
-          templateUrl: '/wise5/classroomMonitor/manageStudents/manageStudents.html',
-          controller: 'ManageStudentsController',
-          controllerAs: 'manageStudentsController'
+          component: 'manageStudentsComponent'
         })
         .state('root.cm.dashboard', {
           url: '/dashboard',

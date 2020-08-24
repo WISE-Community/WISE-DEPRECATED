@@ -190,10 +190,10 @@ class NotebookReportController {
     clearInterval(this.autoSaveIntervalId);
   }
 
-  saveNotebookReportItem() {
-    this.reportItem.content.clientSaveTime = Date.parse(new Date());  // set save timestamp
-    this.NotebookService.saveNotebookItem(this.reportItem.id, this.reportItem.nodeId, this.reportItem.localNotebookItemId,
-      this.reportItem.type, this.reportItem.title, this.reportItem.content, this.reportItem.groups, this.reportItem.content.clientSaveTime)
+  saveNotebookReportItem() { // set save timestamp
+    this.NotebookService.saveNotebookItem(this.reportItem.id, this.reportItem.nodeId, 
+        this.reportItem.localNotebookItemId, this.reportItem.type, this.reportItem.title, 
+        this.reportItem.content, this.reportItem.groups, Date.parse(new Date().toString()))
       .then((result) => {
         if (result) {
           this.dirty = false;
@@ -314,7 +314,7 @@ const NotebookReport = {
             </md-card>
         </div>
         <div ng-if="::$ctrl.mode === 'classroomMonitor'">
-            <article ng-if="$ctrl.hasReport" class="md-padding md-whiteframe-1dp">
+            <article ng-if="$ctrl.hasReport">
               <compile data="$ctrl.reportItemContent"></compile>
             </article>
             <p ng-if="!$ctrl.hasReport" translate="noReport" translate-value-term="{{$ctrl.config.itemTypes.report.notes[0].title}}"></p>

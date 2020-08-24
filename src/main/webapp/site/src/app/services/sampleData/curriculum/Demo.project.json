@@ -2665,5 +2665,87 @@
       "checked": false
     }
   ],
-  "theme": "MyCustomTheme"
+  "theme": "MyCustomTheme",
+  "notebook": {
+    "itemTypes": {
+      "note": {
+        "enabled": true,
+        "requireTextOnEveryNote": false,
+        "enableLink": true,
+        "enableClipping": true,
+        "enableStudentUploads": true,
+        "type": "note",
+        "label": {
+          "singular": "idea",
+          "plural": "ideas",
+          "link": "Idea Basket",
+          "icon": "note",
+          "color": "#1565C0"
+        }
+      },
+      "report": {
+        "enabled": true,
+        "enableLink": true,
+        "type": "report",
+        "label": {
+          "singular": "report",
+          "plural": "reports",
+          "link": "Report",
+          "icon": "assignment",
+          "color": "#AD1457"
+        },
+        "notes": [
+          {
+            "reportId": "finalReport",
+            "description": "Final summary report of what you learned in this project",
+            "title": "Final Report",
+            "prompt": "Use this space to write your letter using evidence from your notebook.",
+            "content": "<h3>This is a heading</h3><p>This is a paragraph.</p>"
+          }
+        ]
+      }
+    }
+  },
+  "teacherNotebook": {
+    "itemTypes": {
+      "note": {
+        "enableAddNote": true,
+        "requireTextOnEveryNote": false,
+        "enableClipping": true,
+        "enableLink": true,
+        "label": {
+          "plural": "notes",
+          "color": "#1565C0",
+          "link": "Notes",
+          "icon": "note",
+          "singular": "note"
+        },
+        "type": "note",
+        "enabled": false,
+        "enableStudentUploads": true
+      },
+      "report": {
+        "notes": [
+          {
+            "reportId": "teacherReport",
+            "description": "Notes for the teacher as they're running the WISE unit",
+            "title": "Teacher Notes",
+            "prompt": "Use this space to take notes for this unit",
+            "content": "<p>Use this space to take notes for this unit</p>"
+          }
+        ],
+        "label": {
+          "plural": "teacher notes",
+          "color": "#AD1457",
+          "link": "Teacher Notes",
+          "icon": "assignment",
+          "singular": "teacher notes"
+        },
+        "enabled": true
+      }
+    },
+    "enableAddNew": true,
+    "label": "Teacher Notebook",
+    "enabled": true
+  }
 }

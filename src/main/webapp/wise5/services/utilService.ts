@@ -15,8 +15,8 @@ export class UtilService {
   constructor(private upgrade: UpgradeModule) {
   }
 
-  broadcastEventInRootScope(event) {
-    this.upgrade.$injector.get('$rootScope').$broadcast(event);
+  broadcastEventInRootScope(event, data = {}) {
+    this.upgrade.$injector.get('$rootScope').$broadcast(event, data);
   }
 
   translate(key) {

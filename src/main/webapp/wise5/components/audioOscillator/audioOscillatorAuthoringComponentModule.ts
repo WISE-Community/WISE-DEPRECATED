@@ -1,13 +1,14 @@
 'use strict';
 
-import AudioOscillatorService from './audioOscillatorService';
+import * as angular from 'angular';
+import { downgradeInjectable } from '@angular/upgrade/static';
+import { AudioOscillatorService } from './audioOscillatorService';
 import AudioOscillatorController from './audioOscillatorController';
 import AudioOscillatorAuthoringController from './audioOscillatorAuthoringController';
-import * as angular from 'angular';
 
 const audioOscillatorAuthoringComponentModule = angular
   .module('audioOscillatorAuthoringComponentModule', ['pascalprecht.translate'])
-  .service('AudioOscillatorService', AudioOscillatorService)
+  .service('AudioOscillatorService', downgradeInjectable(AudioOscillatorService))
   .controller('AudioOscillatorController', AudioOscillatorController)
   .controller('AudioOscillatorAuthoringController', AudioOscillatorAuthoringController)
   .config([
