@@ -10,6 +10,7 @@ import { HttpClient, HttpParams } from "@angular/common/http";
 import * as angular from 'angular';
 import { TagService } from "./tagService";
 import { DataService } from "../../site/src/app/services/data.service";
+import { Subject } from "rxjs";
 
 @Injectable()
 export class StudentDataService extends DataService {
@@ -77,9 +78,12 @@ export class StudentDataService extends DataService {
       return this.evaluateHasTagCriteria(criteria);
     }
   };
+
   $q: any;
   $rootScope: any;
   $translate: any;
+  private pauseScreenSource: Subject<boolean> = new Subject<boolean>();
+  public pauseScreen$ = this.pauseScreenSource.asObservable();
 
   constructor(private upgrade: UpgradeModule,
       public http: HttpClient,
@@ -89,6 +93,10 @@ export class StudentDataService extends DataService {
       private TagService: TagService,
       private UtilService: UtilService) {
     super();
+  }
+
+  pauseScreen(doPause: boolean) {
+    this.pauseScreenSource.next(doPause);
   }
 
   handleNodeStatusesChanged() {

@@ -1,5 +1,6 @@
 import { Component, NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { createStudentAngularJSModule } from '../../../wise5/vle/student-angular-js-module';
 import { createTeacherAngularJSModule } from '../../../wise5/teacher/teacher-angular-js-module';
@@ -51,6 +52,9 @@ import { AudioOscillatorService } from '../../../wise5/components/audioOscillato
 import { ConceptMapService } from '../../../wise5/components/conceptMap/conceptMapService';
 import { MilestoneService } from '../../../wise5/services/milestoneService';
 import { GraphService } from '../../../wise5/components/graph/graphService';
+import { NavItemScoreComponent } from '../../../wise5/classroomMonitor/classroomMonitorComponents/nodeProgress/navItemScore/nav-item-score.component';
+import { NodeIconComponent } from '../../../wise5/classroomMonitor/classroomMonitorComponents/shared/nodeIcon/node-icon.component';
+import { MatIconModule } from '@angular/material/icon';
 import { ManageStudentsComponent } from '../../../wise5/classroomMonitor/manageStudents/manage-students-component';
 
 @Component({template: ``})
@@ -59,12 +63,15 @@ export class EmptyComponent {}
 @NgModule({
   declarations: [
     EmptyComponent,
+    NodeIconComponent,
   ],
   imports: [
     UpgradeModule,
     CommonModule,
+    FlexLayoutModule,
     MatButtonModule,
     MatDialogModule,
+    MatIconModule,
     MatListModule,
     RouterModule.forChild([
       {path: '**', component: EmptyComponent}
@@ -107,9 +114,12 @@ export class EmptyComponent {}
   ],
   exports: [
     CommonModule,
+    FlexLayoutModule,
     MatButtonModule,
     MatDialogModule,
-    MatListModule
+    MatIconModule,
+    MatListModule,
+    NodeIconComponent
   ]
 })
 export class AngularJSModule {}
@@ -170,6 +180,7 @@ export class PreviewAngularJSModule {
   declarations: [
     MilestoneReportDataComponent,
     ManageStudentsComponent,
+    NavItemScoreComponent
   ],
   imports: [
     AngularJSModule
@@ -187,7 +198,8 @@ export class PreviewAngularJSModule {
   ],
   entryComponents: [
     MilestoneReportDataComponent,
-    ManageStudentsComponent
+    ManageStudentsComponent,
+    NavItemScoreComponent
   ]
 })
 export class TeacherAngularJSModule {

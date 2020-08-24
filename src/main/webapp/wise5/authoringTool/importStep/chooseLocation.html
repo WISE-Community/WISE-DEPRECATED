@@ -9,7 +9,7 @@
        ng-style='::{"background-color": projectController.getStepBackgroundColor(item.$key)}'>
       <div layout='row' class='projectItemTitleDiv'>
         <div layout='row' layout-align="start center">
-          <node-icon node-id="::item.$key" size="18"></node-icon>&nbsp
+          <node-icon [node-id]="::item.$key" size="18"></node-icon>&nbsp
           <h6 style='display:inline; cursor:pointer;'
             ng-if='projectController.isGroupNode(item.$key)'>
             {{::projectController.getNodePositionById(item.$key)}}: {{::projectController.getNodeTitleByNodeId(item.$key)}}

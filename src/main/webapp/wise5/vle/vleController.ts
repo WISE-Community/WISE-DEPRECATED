@@ -205,12 +205,12 @@ class VLEController {
 
     this.$scope.$on('componentStudentDataChanged', () => {});
 
-    this.$scope.$on('pauseScreen', (event, args) => {
-      this.pauseScreen();
-    });
-
-    this.$scope.$on('unPauseScreen', (event, args) => {
-      this.unPauseScreen();
+    this.StudentDataService.pauseScreen$.subscribe((doPause: boolean) => {
+      if (doPause) {
+        this.pauseScreen();
+      } else {
+        this.unPauseScreen();
+      }
     });
 
     // Make sure if we drop something on the page we don't navigate away

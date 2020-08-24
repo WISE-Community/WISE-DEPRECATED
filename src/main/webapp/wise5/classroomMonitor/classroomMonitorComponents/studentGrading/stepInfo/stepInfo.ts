@@ -56,7 +56,7 @@ const StepInfo = {
   },
   controller: StepInfoController,
   template: `<div layout="row" layout-align="start center">
-    <node-icon node-id="$ctrl.nodeId" size="18" hide-xs></node-icon>
+    <node-icon [node-id]="$ctrl.nodeId" size="18" hide-xs></node-icon>
     <span hide-xs>&nbsp;&nbsp;</span>
     <div class="heavy">
       {{ ::$ctrl.stepTitle }}

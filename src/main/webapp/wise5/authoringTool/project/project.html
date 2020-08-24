@@ -261,7 +261,7 @@
                 </div>
                 <div layout='row' class='projectItemTitleDiv' ng-click='projectController.insertGroupMode == true || projectController.insertNodeMode == true || projectController.nodeClicked(item.$key)'>
                   <div layout='row' layout-align="start center">
-                    <node-icon node-id="::item.$key" size="18"></node-icon>&nbsp
+                    <node-icon [node-id]="::item.$key" size="18"></node-icon>&nbsp
                     <h6 style='display:inline; cursor:pointer;'
                       ng-if='projectController.isGroupNode(item.$key)'>
                       {{::projectController.getNodePositionById(item.$key)}}: {{::projectController.getNodeTitleByNodeId(item.$key)}}
@@ -323,7 +323,7 @@
                        class='projectItemTitleDiv'
                        ng-click='projectController.insertGroupMode == true || projectController.insertNodeMode == true || projectController.nodeClicked(inactiveNode.id)'>
                     <div layout='row' layout-align="start center">
-                      <node-icon node-id="::inactiveNode.id" size="18"></node-icon>&nbsp;
+                      <node-icon [node-id]="::inactiveNode.id" size="18"></node-icon>&nbsp;
                       <h6
                         style='display:inline; cursor:pointer;'>
                         {{::projectController.getNodeTitleByNodeId(inactiveNode.id)}}
@@ -363,7 +363,7 @@
                          class='projectItemTitleDiv'
                          ng-click='projectController.insertGroupMode == true || projectController.insertNodeMode == true || projectController.nodeClicked(inactiveChildId)'>
                       <div layout='row' layout-align="start center">
-                        <node-icon node-id="::inactiveChildId" size="18"></node-icon>&nbsp;
+                        <node-icon [node-id]="::inactiveChildId" size="18"></node-icon>&nbsp;
                         <p style='display:inline; cursor:pointer;'>
                           {{::projectController.getNodeTitleByNodeId(inactiveChildId)}}
                         </p>
@@ -412,7 +412,7 @@
                   </div>
                   <div layout='row' class='projectItemTitleDiv' ng-click='projectController.insertGroupMode == true || projectController.insertNodeMode == true || projectController.nodeClicked(inactiveNode.id)'>
                     <div layout='row' layout-align="start center">
-                      <node-icon node-id="::inactiveNode.id" size="18"></node-icon>&nbsp;
+                      <node-icon [node-id]="::inactiveNode.id" size="18"></node-icon>&nbsp;
                       <p style='display:inline; cursor:pointer;'>
                         {{::projectController.getNodeTitleByNodeId(inactiveNode.id)}}
                       </p>
