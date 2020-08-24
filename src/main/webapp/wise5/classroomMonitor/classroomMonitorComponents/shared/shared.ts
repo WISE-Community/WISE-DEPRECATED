@@ -17,10 +17,11 @@ import Toolbar from './toolbar/toolbar';
 import TopBar from './topBar/topBar';
 import WorkgroupComponentRevisions from './workgroupComponentRevisions/workgroupComponentRevisions';
 import WorkgroupNodeGrading from './workgroupNodeGrading/workgroupNodeGrading';
-import WorkgroupNodeScore from './workgroupNodeScore/workgroupNodeScore';
 import WorkgroupNodeStatus from './workgroupNodeStatus/workgroupNodeStatus';
 import WorkgroupSelect from './workgroupSelect/workgroupSelect';
 import * as angular from 'angular';
+import { WorkgroupNodeScoreComponent } from './workgroupNodeScore/workgroup-node-score.component';
+import { downgradeComponent } from '@angular/upgrade/static';
 
 const Shared = angular
   .module('shared', [])
@@ -41,7 +42,8 @@ const Shared = angular
   .component('cmTopBar', TopBar)
   .component('workgroupComponentRevisions', WorkgroupComponentRevisions)
   .component('workgroupNodeGrading', WorkgroupNodeGrading)
-  .component('workgroupNodeScore', WorkgroupNodeScore)
+  .directive('workgroupNodeScore',
+      downgradeComponent({ component: WorkgroupNodeScoreComponent}) as angular.IDirectiveFactory)
   .component('workgroupNodeStatus', WorkgroupNodeStatus)
   .component('workgroupSelect', WorkgroupSelect);
 

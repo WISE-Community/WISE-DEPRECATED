@@ -129,8 +129,8 @@ const StepItem = {
             </div>
             <div ng-if="$ctrl.showScore" flex="20" layout="row"
                  layout-align="center center">
-              <workgroup-node-score score="{{ $ctrl.score }}"
-                                    max-score="{{ $ctrl.maxScore }}">
+              <workgroup-node-score [score]="$ctrl.score"
+                                    [max-score]="$ctrl.maxScore">
               </workgroup-node-score>
             </div>
           </div>

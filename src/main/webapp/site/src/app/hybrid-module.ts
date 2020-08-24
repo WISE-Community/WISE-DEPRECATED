@@ -46,6 +46,7 @@ import { AudioOscillatorService } from '../../../wise5/components/audioOscillato
 import { ConceptMapService } from '../../../wise5/components/conceptMap/conceptMapService';
 import { MilestoneService } from '../../../wise5/services/milestoneService';
 import { GraphService } from '../../../wise5/components/graph/graphService';
+import { WorkgroupNodeScoreComponent } from '../../../wise5/classroomMonitor/classroomMonitorComponents/shared/workgroupNodeScore/workgroup-node-score.component';
 import { NavItemScoreComponent } from '../../../wise5/classroomMonitor/classroomMonitorComponents/nodeProgress/navItemScore/nav-item-score.component';
 import { NodeIconComponent } from '../../../wise5/classroomMonitor/classroomMonitorComponents/shared/nodeIcon/node-icon.component';
 import { MatIconModule } from '@angular/material/icon';
@@ -152,8 +153,9 @@ export class PreviewAngularJSModule {
 
 @NgModule({
   declarations: [
-    MilestoneReportDataComponent,
     ManageStudentsComponent,
+    MilestoneReportDataComponent,
+    WorkgroupNodeScoreComponent,
     NavItemScoreComponent
   ],
   imports: [
@@ -170,7 +172,9 @@ export class PreviewAngularJSModule {
     TeacherWebSocketService
   ],
   entryComponents: [
+    ManageStudentsComponent,
     MilestoneReportDataComponent,
+    WorkgroupNodeScoreComponent,
     ManageStudentsComponent,
     NavItemScoreComponent
   ]
