@@ -95,7 +95,7 @@ const StepTools = {
                 <md-icon> {{ ::$ctrl.icons.prev }} </md-icon>
                 <md-tooltip md-direction="bottom">{{ ::'PREVIOUS_STEP' | translate }}</md-tooltip>
             </md-button>
-            <node-icon node-id="$ctrl.nodeId" size="18"></node-icon>&nbsp;
+            <node-icon ng-if="$ctrl.nodeId" [node-id]="$ctrl.nodeId" size="18"></node-icon>&nbsp;
             <md-select id="stepSelectMenu" md-theme="cm"
                        class="md-button md-no-underline toolbar__select toolbar__select--fixedwidth"
                        md-container-class="stepSelectMenuContainer"
@@ -108,7 +108,7 @@ const StepTools = {
                            value="{{ ::item.$key }}"
                            ng-class="::{'node-select-option--group': $ctrl.isGroupNode(item.$key), 'node-select-option--node': !$ctrl.isGroupNode(item.$key)}">
                     <div layout="row" layout-align="start center">
-                        <node-icon node-id="item.$key" size="18" custom-class="'node-select__icon'"></node-icon>
+                        <node-icon [node-id]="item.$key" size="18" custom-class="node-select__icon"></node-icon>
                         <span class="node-select__text">{{ $ctrl.showPosition && $ctrl.getNodePositionById(item.$key) ? $ctrl.getNodePositionById(item.$key) + ': ' : '' }}{{ ::$ctrl.getNodeTitleByNodeId(item.$key) }}</span>
                     </div>
                 </md-option>

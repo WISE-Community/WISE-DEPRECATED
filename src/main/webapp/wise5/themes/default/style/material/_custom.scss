@@ -46,7 +46,7 @@ h6 {
 }
 
 // Rules for sizing material icons
-md-icon {
+md-icon, mat-icon {
     &.md-18 {
         font-size: 18px;
         width: 18px;
@@ -92,6 +92,10 @@ md-icon {
     &.md-light.md-inactive {
         color: rgba(255, 255, 255, 0.3);
     }
+}
+
+mat-icon {
+    margin: auto;
 }
 
 md-toolbar {
