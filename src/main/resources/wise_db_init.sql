@@ -313,7 +313,6 @@ create table runs (
     id bigint not null auto_increment,
     owner_fk bigint not null,
     project_fk bigint not null,
-    isRandomPeriodAssignment bit not null,
     isLockedAfterEndDate bit not null,
     constraint runsOwnerFK foreign key (owner_fk) references users (id),
     constraint runsProjectFK foreign key (project_fk) references projects (id),
@@ -509,46 +508,6 @@ create table workgroups (
     constraint workgroupsPeriodFK foreign key (period) references `groups` (id),
     primary key (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE tasks
-(
-    id            bigint(11) NOT NULL AUTO_INCREMENT,
-    name          varchar(255) DEFAULT NULL,
-    periodId      bigint(20)   DEFAULT NULL,
-    runId         bigint(20)   DEFAULT NULL,
-    workgroupId   bigint(20)   DEFAULT NULL,
-    projectId     bigint(20)   DEFAULT NULL,
-    periodName  varchar(255) DEFAULT NULL,
-    startTime     datetime     DEFAULT NULL,
-    endTime       datetime     DEFAULT NULL,
-    complete      tinyint(1)   DEFAULT NULL,
-    workgroupName varchar(255) DEFAULT NULL,
-    activityId varchar(255) DEFAULT NULL,
-    started tinyint(1) DEFAULT NULL,
-    duration bigint(20) DEFAULT NULL,
-    active tinyint(1) DEFAULT NULL,
-    PRIMARY KEY (id)
-) ENGINE = InnoDB
-  AUTO_INCREMENT = 11
-  DEFAULT CHARSET = utf8;
-
-CREATE TABLE task_requests
-(
-    id          int(11) NOT NULL AUTO_INCREMENT,
-    status      varchar(255) DEFAULT NULL,
-    periodId    bigint(20)   DEFAULT NULL,
-    runId       bigint(20)   DEFAULT NULL,
-    workgroupId bigint(20)   DEFAULT NULL,
-    projectId   bigint(20)   DEFAULT NULL,
-    startTime   datetime     DEFAULT NULL,
-    endTime     datetime     DEFAULT NULL,
-    tasks_id    bigint(20)   DEFAULT NULL,
-    complete tinyint(1) DEFAULT NULL,
-    PRIMARY KEY (id),
-    KEY taskFK (tasks_id)
-) ENGINE = InnoDB
-  AUTO_INCREMENT = 3
-  DEFAULT CHARSET = utf8;
 
 -- initial data for wise below
 
