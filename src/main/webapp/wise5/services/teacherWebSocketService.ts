@@ -18,6 +18,18 @@ export class TeacherWebSocketService {
       private ConfigService: ConfigService,
       private NotificationService: NotificationService,
       private StudentStatusService: StudentStatusService) {
+    if (this.upgrade.$injector != null) {
+      this.initializeStomp();
+    }
+  }
+
+  initializeStomp() {
+    this.stomp = this.upgrade.$injector.get('$stomp');
+    this.stomp.setDebug(() => {});
+  }
+
+  getStomp() {
+    return this.stomp;
   }
 
   getRootScope() {
@@ -25,14 +37,6 @@ export class TeacherWebSocketService {
       this.rootScope = this.upgrade.$injector.get('$rootScope');
     }
     return this.rootScope;
-  }
-
-  getStomp() {
-    if (this.stomp == null) {
-      this.stomp = this.upgrade.$injector.get('$stomp');
-      this.stomp.setDebug(() => {});
-    }
-    return this.stomp;
   }
 
   initialize() {
