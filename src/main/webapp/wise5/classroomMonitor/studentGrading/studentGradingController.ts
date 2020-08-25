@@ -130,6 +130,10 @@ class StudentGradingController {
       }
     });
 
+    this.$scope.$on('$destroy', () => {
+      this.TeacherDataService.setCurrentWorkgroup(null);
+    });
+
     const context = 'ClassroomMonitor',
       nodeId = null,
       componentId = null,

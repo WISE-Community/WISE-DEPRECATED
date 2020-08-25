@@ -110,7 +110,7 @@ class WorkgroupSelectController {
       for (let workgroup of this.workgroups) {
         if (currentWorkgroup.workgroupId === workgroup.workgroupId) {
           if (this.byStudent) {
-            if (currentWorkgroup.userId === workgroup.userId) {
+            if (currentWorkgroup.userIds.indexOf(workgroup.userId) > -1) {
               localGroup = workgroup;
               break;
             }
