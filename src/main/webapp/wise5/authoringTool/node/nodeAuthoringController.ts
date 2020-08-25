@@ -82,7 +82,6 @@ class NodeAuthoringController {
     '$filter',
     '$injector',
     '$mdDialog',
-    '$rootScope',
     '$scope',
     '$state',
     '$stateParams',
@@ -101,7 +100,6 @@ class NodeAuthoringController {
     private $filter: any,
     private $injector: any,
     private $mdDialog: any,
-    private $rootScope: any,
     private $scope: any,
     private $state: any,
     private $stateParams: any,
@@ -2430,14 +2428,8 @@ class NodeAuthoringController {
     }
   }
 
-  /**
-   * The advanced button was clicked on a component. We will broadcast an event
-   * so that the appropriate child component can display their advanced
-   * authoring options.
-   * @param componentId The component id whose advanced button was clicked.
-   */
-  componentAdvancedButtonClicked(componentId) {
-    this.$rootScope.$broadcast('componentAdvancedButtonClicked', { componentId: componentId });
+  toggleComponentAdvancedView(componentId: string) {
+    this.ProjectService.toggleComponentAdvancedView(componentId);
   }
 
   authoringViewConstraintRemovalCriteriaNodeIdChanged(criteria) {

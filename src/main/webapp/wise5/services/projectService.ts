@@ -7,6 +7,7 @@ import { UtilService } from './utilService';
 import { Injectable } from '@angular/core';
 import { UpgradeModule } from '@angular/upgrade/static';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Subject } from 'rxjs';
 
 @Injectable()
 export class ProjectService {
@@ -33,6 +34,9 @@ export class ProjectService {
   project: any;
   rootNode: any = null;
   transitions: any;
+
+  private toggleComponentAdvancedViewSource: Subject<string> = new Subject<string>();
+  public toggleComponentAdvancedView$ = this.toggleComponentAdvancedViewSource.asObservable();
 
   constructor(
     protected upgrade: UpgradeModule,
@@ -5320,5 +5324,9 @@ export class ProjectService {
     } else {
       return { name: params['tag'] };
     }
+  }
+
+  toggleComponentAdvancedView(componentId: string) {
+    this.toggleComponentAdvancedViewSource.next(componentId);
   }
 }

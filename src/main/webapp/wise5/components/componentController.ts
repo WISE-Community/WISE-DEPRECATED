@@ -8,6 +8,7 @@ import { ProjectService } from "../services/projectService";
 import { StudentAssetService } from "../services/studentAssetService";
 import { UtilService } from "../services/utilService";
 import { StudentDataService } from "../services/studentDataService";
+import { Subscription } from 'rxjs';
 
 class ComponentController {
   $filter: any;
@@ -60,6 +61,7 @@ class ComponentController {
   authoringComponentContentJSONString: string;
   isJSONStringChanged: boolean;
   authoringValidComponentContentJSONString: string;
+  toggleComponentAdvancedViewSubscription: Subscription;
 
   constructor(
       $filter,
@@ -169,6 +171,10 @@ class ComponentController {
 
     this.registerListeners();
     this.registerComponentWithParentNode();
+  }
+
+  $onDestroy() {
+    this.toggleComponentAdvancedViewSubscription.unsubscribe();
   }
 
   isStudentMode() {
@@ -297,8 +303,9 @@ class ComponentController {
         true
     );
 
-    this.$scope.$on('componentAdvancedButtonClicked', (event, args) => {
-      if (this.componentId === args.componentId) {
+    this.toggleComponentAdvancedViewSubscription =
+        this.ProjectService.toggleComponentAdvancedView$.subscribe((componentId) => {
+      if (componentId === this.componentId) {
         this.showAdvancedAuthoring = !this.showAdvancedAuthoring;
         this.UtilService.hideJSONValidMessage();
       }
