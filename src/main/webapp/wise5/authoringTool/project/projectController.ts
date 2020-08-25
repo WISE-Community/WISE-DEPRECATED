@@ -6,6 +6,7 @@ import { TeacherDataService } from '../../services/teacherDataService';
 import { UtilService } from '../../services/utilService';
 import * as angular from 'angular';
 import * as $ from 'jquery';
+import { Subscription } from 'rxjs';
 
 class ProjectController {
   $translate: any;
@@ -37,6 +38,7 @@ class ProjectController {
   metadata: any;
   moveMode: boolean;
   projectURL: string;
+  refreshProjectSubscription: Subscription;
 
   /*
    * The colors for the branch path steps. The colors are from
@@ -125,7 +127,7 @@ class ProjectController {
       }
     });
 
-    this.$rootScope.$on('parseProject', () => {
+    this.refreshProjectSubscription = this.ProjectService.refreshProject$.subscribe(() => {
       this.refreshProject();
     });
 
@@ -153,6 +155,10 @@ class ProjectController {
     this.$window.onbeforeunload = event => {
       this.endProjectAuthoringSession();
     };
+  }
+
+  $onDestroy() {
+    this.refreshProjectSubscription.unsubscribe();
   }
 
   endProjectAuthoringSession() {

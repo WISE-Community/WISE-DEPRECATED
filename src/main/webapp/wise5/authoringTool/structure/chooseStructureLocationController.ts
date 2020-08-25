@@ -7,10 +7,9 @@ class ChooseStructureLocationController {
   projectId: number;
   structure: any;
 
-  static $inject = ['$rootScope', '$state', '$stateParams', 'ProjectService'];
+  static $inject = ['$state', '$stateParams', 'ProjectService'];
 
   constructor(
-    private $rootScope: any,
     private $state: any,
     private $stateParams: any,
     private ProjectService: TeacherProjectService
@@ -45,7 +44,7 @@ class ChooseStructureLocationController {
 
   saveAndGoBackToProjectHome() {
     this.ProjectService.checkPotentialStartNodeIdChangeThenSaveProject().then(() => {
-      this.$rootScope.$broadcast('parseProject');
+      this.ProjectService.refreshProject();
       this.$state.go('root.at.project');
     });
   }
@@ -92,7 +91,7 @@ class ChooseStructureLocationController {
     const node2 = this.ProjectService.createNodeAndAddToLocalStorage('Gather Evidence');
     this.ProjectService.addNodeToGroup(node2, group);
     this.ProjectService.checkPotentialStartNodeIdChangeThenSaveProject().then(() => {
-      this.$rootScope.$broadcast('parseProject');
+      this.ProjectService.refreshProject();
       this.$state.go('root.at.project');
     });
   }
