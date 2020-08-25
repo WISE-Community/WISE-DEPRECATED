@@ -13,6 +13,7 @@ export class ProjectService {
   achievements: any = [];
   activeConstraints: any;
   additionalProcessingFunctionsMap: any = {};
+  allPaths: string[] = [];
   applicationNodes: any;
   branchesCache: any;
   componentServices: any = {};
@@ -936,9 +937,8 @@ export class ProjectService {
       if (nodeId1 == nodeId2) {
         return false;
       } else {
-        const pathsFromNodeId1ToEnd = this.getAllPaths([], nodeId1, true);
-        for (let pathToEnd of pathsFromNodeId1ToEnd) {
-          if (pathToEnd.indexOf(nodeId2) != -1) {
+        for (const onePath of this.getOrCalculateAllPaths()) {
+          if (onePath.indexOf(nodeId1) < onePath.indexOf(nodeId2)) {
             return true;
           }
         }
@@ -947,6 +947,13 @@ export class ProjectService {
       return this.isNodeAfterGroup(nodeId1, nodeId2);
     }
     return false;
+  }
+
+  getOrCalculateAllPaths(): string[] {
+    if (this.allPaths.length === 0) {
+      this.allPaths = this.getAllPaths([], this.getStartNodeId(), true);
+    }
+    return this.allPaths;
   }
 
   /**
@@ -1280,7 +1287,7 @@ export class ProjectService {
    * @param includeGroups whether to include the group node ids in the paths
    * @return an array of paths. each path is an array of node ids.
    */
-  getAllPaths(pathSoFar, nodeId, includeGroups = false) {
+  getAllPaths(pathSoFar: string[], nodeId: string, includeGroups: boolean = false) {
     const allPaths = [];
     if (nodeId != null) {
       if (this.isApplicationNode(nodeId)) {
