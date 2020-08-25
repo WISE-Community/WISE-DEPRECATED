@@ -14,6 +14,8 @@ export class TeacherProjectService extends ProjectService {
 
   private refreshProjectSource: Subject<void> = new Subject<void>();
   public refreshProject$ = this.refreshProjectSource.asObservable();
+  private scrollToBottomOfPageSource: Subject<void> = new Subject<void>();
+  public scrollToBottomOfPage$ = this.scrollToBottomOfPageSource.asObservable();
 
   constructor(
       protected upgrade: UpgradeModule,
@@ -1283,5 +1285,9 @@ export class TeacherProjectService extends ProjectService {
 
   refreshProject() {
     this.refreshProjectSource.next();
+  }
+
+  scrollToBottomOfPage() {
+    this.scrollToBottomOfPageSource.next();
   }
 }
