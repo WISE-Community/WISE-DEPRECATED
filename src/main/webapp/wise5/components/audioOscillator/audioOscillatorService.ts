@@ -1,14 +1,24 @@
-import ComponentService from '../componentService';
+import { ComponentService } from '../componentService';
+import { Injectable } from '@angular/core';
+import { UpgradeModule } from '@angular/upgrade/static';
+import { StudentDataService } from '../../services/studentDataService';
+import { UtilService } from '../../services/utilService';
 
-class AudioOscillatorService extends ComponentService {
-  static $inject = ['$filter', 'StudentDataService', 'UtilService'];
+@Injectable()
+export class AudioOscillatorService extends ComponentService {
 
-  constructor($filter, StudentDataService, UtilService) {
-    super($filter, StudentDataService, UtilService);
+  constructor(private upgrade: UpgradeModule,
+    protected StudentDataService: StudentDataService,
+    protected UtilService: UtilService) {
+    super(StudentDataService, UtilService);
   }
 
   getComponentTypeLabel() {
-    return this.$translate('audioOscillator.componentTypeLabel');
+    return this.getTranslation('audioOscillator.componentTypeLabel');
+  }
+
+  getTranslation(key: string) {
+    return this.upgrade.$injector.get('$filter')('translate')(key);
   }
 
   createComponent() {
@@ -23,17 +33,18 @@ class AudioOscillatorService extends ComponentService {
     return component;
   }
 
-  isCompleted(component, componentStates, componentEvents, nodeEvents, node) {
+  isCompleted(component: any, componentStates: any[], componentEvents: any[], nodeEvents: any[],
+      node: any) {
     if (componentStates && componentStates.length) {
-      let componentState = componentStates[componentStates.length - 1];
-      return this.componentStateHasStudentWork(componentState, component);
+      const latestComponentState = componentStates[componentStates.length - 1];
+      return this.componentStateHasStudentWork(latestComponentState, component);
     }
     return false;
   }
 
-  componentStateHasStudentWork(componentState, componentContent) {
+  componentStateHasStudentWork(componentState: any, componentContent: any) {
     if (componentState != null) {
-      let studentData = componentState.studentData;
+      const studentData = componentState.studentData;
       if (studentData != null) {
         if (studentData.frequenciesPlayed != null && studentData.frequenciesPlayed.length > 0) {
           return true;
@@ -43,5 +54,3 @@ class AudioOscillatorService extends ComponentService {
     return false;
   }
 }
-
-export default AudioOscillatorService;

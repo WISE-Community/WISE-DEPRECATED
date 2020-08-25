@@ -1,3 +1,6 @@
+// Angular Material variables and overrides we want to use in our theme styles
+@import "config";
+
 // Angular Material customizations and additions
 
 // 1. Config
@@ -9,35 +12,6 @@
   box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.4);
 }
 
-// 2. Base
-body {
-    font-size: rem(1.6); // TODO: remove when bootstrap is not being loaded
-}
-
-h1 {
-    font-size: $display-3-font-size-base;
-}
-
-h2 {
-    font-size: $display-2-font-size-base;
-}
-
-h3 {
-    font-size: $display-1-font-size-base;
-}
-
-h4 {
-    font-size: $headline-font-size-base;
-}
-
-h5 {
-    font-size: $title-font-size-base;
-}
-
-h6 {
-    font-size: $subhead-font-size-base;
-}
-
 .md-shadow-bottom-z-1 {
   @include md-shadow-bottom-z-1();
 }
@@ -46,7 +20,7 @@ h6 {
 }
 
 // Rules for sizing material icons
-md-icon {
+md-icon, mat-icon {
     &.md-18 {
         font-size: 18px;
         width: 18px;
@@ -92,6 +66,10 @@ md-icon {
     &.md-light.md-inactive {
         color: rgba(255, 255, 255, 0.3);
     }
+}
+
+mat-icon {
+    margin: auto;
 }
 
 md-toolbar {

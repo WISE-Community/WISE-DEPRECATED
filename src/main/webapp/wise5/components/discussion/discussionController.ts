@@ -1,8 +1,8 @@
 'use strict';
 
 import ComponentController from '../componentController';
-import DiscussionService from './discussionService';
-import NotificationService from '../../services/notificationService';
+import { DiscussionService } from './discussionService';
+import { NotificationService } from '../../services/notificationService';
 
 class DiscussionController extends ComponentController {
   $mdMedia: any;
@@ -316,6 +316,8 @@ class DiscussionController extends ComponentController {
     const toWorkgroupId = originalPostComponentState.workgroupId;
     if (toWorkgroupId != null && toWorkgroupId !== fromWorkgroupId) {
       const notification = this.NotificationService.createNewNotification(
+        this.ConfigService.getRunId(),
+        this.ConfigService.getPeriodId(),
         notificationType,
         nodeId,
         componentId,
@@ -348,6 +350,8 @@ class DiscussionController extends ComponentController {
           workgroupsNotifiedSoFar.indexOf(toWorkgroupId) === -1
         ) {
           const notification = this.NotificationService.createNewNotification(
+            this.ConfigService.getRunId(),
+            this.ConfigService.getPeriodId(),
             notificationType,
             nodeId,
             componentId,
@@ -414,7 +418,8 @@ class DiscussionController extends ComponentController {
   getClassmateResponses(components = [{ nodeId: this.nodeId, componentId: this.componentId }]) {
     const runId = this.ConfigService.getRunId();
     const periodId = this.ConfigService.getPeriodId();
-    this.DiscussionService.getClassmateResponses(runId, periodId, components).then(result => {
+    this.DiscussionService.getClassmateResponses(runId, periodId, components)
+        .then((result: any) => {
       this.setClassResponses(result.studentWorkList, result.annotations);
     });
   }
@@ -444,7 +449,7 @@ class DiscussionController extends ComponentController {
    * @return a promise that will return a component state
    */
   createComponentState(action) {
-    const componentState = this.NodeService.createNewComponentState();
+    const componentState: any = this.NodeService.createNewComponentState();
     const studentData: any = {
       response: this.studentResponse,
       attachments: this.attachments

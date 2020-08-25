@@ -1,8 +1,8 @@
 'use strict';
 
-import AchievementService from '../../services/achievementService';
-import MilestoneService from '../../services/milestoneService';
 import * as angular from 'angular';
+import { AchievementService } from '../../services/achievementService';
+import { MilestoneService } from '../../services/milestoneService';
 
 class MilestonesController {
   $translate: any;
@@ -32,7 +32,7 @@ class MilestonesController {
       if (args) {
         const studentAchievement = args.studentAchievement;
         this.AchievementService.addOrUpdateStudentAchievement(studentAchievement);
-        this.updateMilestoneStatus(studentAchievement.id);
+        this.updateMilestoneStatus(studentAchievement.achievementId);
       }
     });
 

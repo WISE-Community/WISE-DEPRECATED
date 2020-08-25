@@ -1,3 +1,5 @@
+// WISE Default theme
+
 // Material grey color palette for reference
 $mat-grey: (
   50: #fafafa,
@@ -16,7 +18,7 @@ $mat-grey: (
   A700: #616161
 );
 
-// define WISE Angular Material theme colors
+// define Angular Material theme colors
 $default-primary: (
   50 : #e4f1f5,
   100 : #bbdde5,
@@ -87,7 +89,7 @@ $default-theme-primary: mat-palette($default-primary);
 $default-theme-accent: mat-palette($default-accent);
 $default-theme-warn: mat-palette($mat-red, 800);
 
-// create Angular Material WISE theme
+// create Angular Material theme
 $default: mat-light-theme(
   $default-theme-primary,
   $default-theme-accent,
@@ -98,12 +100,11 @@ $default-mat-light-theme-background: (
   status-bar: map_get($mat-grey, 400),
   app-bar:    map_get($mat-grey, 300),
   background: map_get($mat-grey, 100),
-  hover:      rgba(black, 0.04), // TODO(kara): check style with Material Design UX
+  hover:      rgba(black, 0.04),
   card:       white,
   dialog:     white,
   disabled-button: rgba(black, 0.12),
   raised-button: white,
-  //focused-button: $dark-focused,
   focused-button: rgba(black, 0.12),
   selected-button: map_get($mat-grey, 300),
   selected-disabled-button: map_get($mat-grey, 400),

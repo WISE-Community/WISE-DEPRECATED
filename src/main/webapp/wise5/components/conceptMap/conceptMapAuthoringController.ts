@@ -3,7 +3,7 @@
 import 'svg.js';
 import 'svg.draggable.js';
 import ConceptMapController from './conceptMapController';
-import ConceptMapService from './conceptMapService';
+import { ConceptMapService } from './conceptMapService';
 
 class ConceptMapAuthoringController extends ConceptMapController {
   ConceptMapService: ConceptMapService;

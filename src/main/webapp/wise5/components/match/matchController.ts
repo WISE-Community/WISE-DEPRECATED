@@ -2,7 +2,7 @@
 
 import * as angular from 'angular';
 import ComponentController from '../componentController';
-import MatchService from './matchService';
+import { MatchService } from './matchService';
 
 class MatchController extends ComponentController {
   $mdMedia: any;
@@ -102,7 +102,10 @@ class MatchController extends ComponentController {
       this.isSaveButtonVisible = this.componentContent.showSaveButton;
       this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
       if (this.shouldImportPrivateNotes()) {
-        this.privateNotebookItems = this.NotebookService.getPrivateNotebookItems();
+        const allPrivateNotebookItems = this.NotebookService.getPrivateNotebookItems();
+        this.privateNotebookItems = allPrivateNotebookItems.filter(note => { 
+          return note.serverDeleteTime == null
+        });
         this.$rootScope.$on('notebookUpdated', (event, args) => {
           if (args.notebookItem.type === 'note') {
             this.addNotebookItemToSourceBucket(args.notebookItem);
@@ -716,7 +719,7 @@ class MatchController extends ComponentController {
    * @return a promise that will return a component state
    */
   createComponentState(action) {
-    let componentState = this.NodeService.createNewComponentState();
+    let componentState: any = this.NodeService.createNewComponentState();
     let studentData: any = {};
     if (action === 'submit') {
       this.checkAnswer();
@@ -905,7 +908,7 @@ class MatchController extends ComponentController {
         this.mergeBucket(mergedBuckets, bucket);
       }
     }
-    const mergedComponentState = this.NodeService.createNewComponentState();
+    const mergedComponentState: any = this.NodeService.createNewComponentState();
     mergedComponentState.studentData = {
       buckets: mergedBuckets
     };

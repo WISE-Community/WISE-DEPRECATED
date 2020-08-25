@@ -1,14 +1,26 @@
-import ComponentService from '../componentService';
+'use strict';
 
-class AnimationService extends ComponentService {
-  static $inject = ['$filter', 'StudentDataService', 'UtilService'];
+import { ComponentService } from '../componentService';
+import { Injectable } from '@angular/core';
+import { UtilService } from '../../services/utilService';
+import { UpgradeModule } from '@angular/upgrade/static';
+import { StudentDataService } from '../../services/studentDataService';
 
-  constructor($filter, StudentDataService, UtilService) {
-    super($filter, StudentDataService, UtilService);
+@Injectable()
+export class AnimationService extends ComponentService {
+
+  constructor(private upgrade: UpgradeModule,
+      protected StudentDataService: StudentDataService,
+      protected UtilService: UtilService) {
+    super(StudentDataService, UtilService);
   }
 
   getComponentTypeLabel() {
-    return this.$translate('animation.componentTypeLabel');
+    return this.getTranslation('animation.componentTypeLabel');
+  }
+
+  getTranslation(key: string) {
+    return this.upgrade.$injector.get('$filter')('translate')(key);
   }
 
   createComponent() {
@@ -25,16 +37,15 @@ class AnimationService extends ComponentService {
     return component;
   }
 
-  isCompleted(component, componentStates, componentEvents, nodeEvents, node) {
+  isCompleted(component: any, componentStates: any[], componentEvents: any[], nodeEvents: any[],
+      node: any) {
     return componentStates.length > 0;
   }
 
-  componentStateHasStudentWork(componentState, componentContent) {
+  componentStateHasStudentWork(componentState: any, componentContent: any) {
     if (componentState != null) {
       return componentState.studentData != null;
     }
     return false;
   }
 }
-
-export default AnimationService;

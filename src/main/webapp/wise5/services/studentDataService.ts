@@ -1,7 +1,7 @@
 'use strict';
 
 import { Injectable } from "@angular/core";
-import ConfigService from "./configService";
+import { ConfigService } from "./configService";
 import { AnnotationService } from "./annotationService";
 import { ProjectService } from "./projectService";
 import { UtilService } from "./utilService";
@@ -9,11 +9,12 @@ import { UpgradeModule } from "@angular/upgrade/static";
 import { HttpClient, HttpParams } from "@angular/common/http";
 import * as angular from 'angular';
 import { TagService } from "./tagService";
+import { DataService } from "../../site/src/app/services/data.service";
+import { Subject } from "rxjs";
 
 @Injectable()
-export class StudentDataService {
+export class StudentDataService extends DataService {
 
-  currentNode = null;
   dummyStudentWorkId: number = 1;
   maxScore: any = null;
   nodeStatuses: any = {};
@@ -77,9 +78,12 @@ export class StudentDataService {
       return this.evaluateHasTagCriteria(criteria);
     }
   };
+
   $q: any;
   $rootScope: any;
   $translate: any;
+  private pauseScreenSource: Subject<boolean> = new Subject<boolean>();
+  public pauseScreen$ = this.pauseScreenSource.asObservable();
 
   constructor(private upgrade: UpgradeModule,
       public http: HttpClient,
@@ -88,6 +92,11 @@ export class StudentDataService {
       private ProjectService: ProjectService,
       private TagService: TagService,
       private UtilService: UtilService) {
+    super();
+  }
+
+  pauseScreen(doPause: boolean) {
+    this.pauseScreenSource.next(doPause);
   }
 
   handleNodeStatusesChanged() {
@@ -404,6 +413,15 @@ export class StudentDataService {
       }
     }
     return result;
+  }
+
+  evaluateCriterias(criterias): boolean {
+    for (const criteria of criterias) {
+      if (!this.evaluateCriteria(criteria)) {
+        return false;
+      }
+    }
+    return true;
   }
 
   evaluateCriteria(criteria) {
@@ -1313,17 +1331,6 @@ export class StudentDataService {
     return result;
   }
 
-  getCurrentNode() {
-    return this.currentNode;
-  }
-
-  getCurrentNodeId() {
-    if (this.currentNode != null) {
-      return this.currentNode.id;
-    }
-    return null;
-  }
-
   setCurrentNodeByNodeId(nodeId) {
     const node = this.ProjectService.getNodeById(nodeId);
     this.setCurrentNode(node);
@@ -1507,15 +1514,17 @@ export class StudentDataService {
   }
 
   getClassmateStudentWork(nodeId, componentId, periodId) {
-    const params = new HttpParams()
+    let params = new HttpParams()
         .set('runId', this.ConfigService.getRunId())
         .set('nodeId', nodeId + '')
         .set('componentId', componentId + '')
         .set('getStudentWork', true + '')
         .set('getEvents', false + '')
         .set('getAnnotations', false + '')
-        .set('onlyGetLatest', true + '')
-        .set('periodId', periodId);
+        .set('onlyGetLatest', true + '');
+    if (periodId != null) {
+      params = params.set('periodId', periodId);
+    }
     const options = {
       params: params
     };
@@ -1526,15 +1535,17 @@ export class StudentDataService {
   }
 
   getClassmateScores(nodeId, componentId, periodId) {
-    const params = new HttpParams()
+    let params = new HttpParams()
         .set('runId', this.ConfigService.getRunId())
         .set('nodeId', nodeId + '')
         .set('componentId', componentId + '')
         .set('getStudentWork', false + '')
         .set('getEvents', false + '')
         .set('getAnnotations', true + '')
-        .set('onlyGetLatest', false + '')
-        .set('periodId', periodId);
+        .set('onlyGetLatest', false + '');
+    if (periodId != null) {
+      params = params.set('periodId', periodId);
+    }
     const options = {
       params: params
     };

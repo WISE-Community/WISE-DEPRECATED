@@ -4,9 +4,9 @@ import { Injectable } from "@angular/core";
 import { UpgradeModule } from "@angular/upgrade/static";
 import { AnnotationService } from "./annotationService";
 import { ConfigService } from "./configService";
-import NodeService from "./nodeService";
 import { TagService } from "./tagService";
 import { StudentDataService } from "./studentDataService";
+import { NotificationService } from "./notificationService";
 
 @Injectable()
 export class StudentWebSocketService {
@@ -15,8 +15,8 @@ export class StudentWebSocketService {
   workgroupId: number;
 
   constructor(private upgrade: UpgradeModule, private AnnotationService: AnnotationService,
-      private ConfigService: ConfigService, private StudentDataService: StudentDataService,
-      private TagService: TagService) {
+      private ConfigService: ConfigService, private NotificationService: NotificationService,
+      private StudentDataService: StudentDataService, private TagService: TagService) {
   }
 
   initialize() {
@@ -41,9 +41,9 @@ export class StudentWebSocketService {
     this.upgrade.$injector.get('$stomp').subscribe(
         `/topic/classroom/${this.runId}/${this.periodId}`, (message, headers, res) => {
       if (message.type === 'pause') {
-        this.upgrade.$injector.get('$rootScope').$broadcast('pauseScreen', {data: message.content});
+        this.StudentDataService.pauseScreen(true);
       } else if (message.type === 'unpause') {
-        this.upgrade.$injector.get('$rootScope').$broadcast('unPauseScreen', {data: message.content});
+        this.StudentDataService.pauseScreen(false);
       } else if (message.type === 'studentWork') {
         const studentWork = JSON.parse(message.content);
         this.upgrade.$injector.get('$rootScope').$broadcast('studentWorkReceived', studentWork);
@@ -56,7 +56,7 @@ export class StudentWebSocketService {
         (message, headers, res) => {
       if (message.type === 'notification') {
         const notification = JSON.parse(message.content);
-        this.upgrade.$injector.get('$rootScope').$broadcast('newNotificationReceived', notification);
+        this.NotificationService.addNotification(notification);
       } else if (message.type === 'annotation') {
         const annotationData = JSON.parse(message.content);
         this.AnnotationService.addOrUpdateAnnotation(annotationData);

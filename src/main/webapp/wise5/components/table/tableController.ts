@@ -3,7 +3,7 @@
 import * as angular from 'angular';
 import * as html2canvas from 'html2canvas';
 import ComponentController from '../componentController';
-import TableService from './tableService';
+import { TableService } from './tableService';
 
 class TableController extends ComponentController {
   $anchorScroll: any;
@@ -542,7 +542,7 @@ class TableController extends ComponentController {
     const deferred = this.$q.defer();
 
     // create a new component state
-    const componentState = this.NodeService.createNewComponentState();
+    const componentState: any = this.NodeService.createNewComponentState();
 
     const studentData: any = {};
 
@@ -599,7 +599,7 @@ class TableController extends ComponentController {
    */
   createBlankComponentState() {
     // create a new component state
-    const componentState = this.NodeService.createNewComponentState();
+    const componentState: any = this.NodeService.createNewComponentState();
 
     if (componentState != null) {
       const studentData = {};

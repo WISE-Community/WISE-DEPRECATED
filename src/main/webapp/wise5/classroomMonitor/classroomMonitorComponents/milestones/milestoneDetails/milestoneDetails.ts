@@ -1,9 +1,9 @@
 'use strict';
 
 import { ConfigService } from '../../../../services/configService';
-import TeacherDataService from '../../../../services/teacherDataService';
+import { TeacherDataService } from '../../../../services/teacherDataService';
 import * as angular from 'angular';
-import NodeService from '../../../../services/nodeService';
+import { NodeService } from '../../../../services/nodeService';
 import { TeacherProjectService } from '../../../../services/teacherProjectService';
 
 class MilestoneDetailsController {
@@ -54,8 +54,7 @@ class MilestoneDetailsController {
         periodId: currentPeriod.periodId,
         periodName: currentPeriod.periodName
       },
-      event = 'MilestonePeriodSelected',
-      projectId = null;
+      event = 'MilestonePeriodSelected';
     this.TeacherDataService.saveEvent(
       context,
       nodeId,
@@ -63,8 +62,7 @@ class MilestoneDetailsController {
       componentType,
       category,
       event,
-      data,
-      projectId
+      data
     );
   }
 
@@ -116,8 +114,7 @@ class MilestoneDetailsController {
       componentId = null,
       componentType = null,
       category = 'Navigation',
-      data = { milestoneId: this.milestone.id },
-      projectId = null;
+      data = { milestoneId: this.milestone.id };
     this.TeacherDataService.saveEvent(
       context,
       nodeId,
@@ -125,8 +122,7 @@ class MilestoneDetailsController {
       componentType,
       category,
       event,
-      data,
-      projectId
+      data
     );
   }
 

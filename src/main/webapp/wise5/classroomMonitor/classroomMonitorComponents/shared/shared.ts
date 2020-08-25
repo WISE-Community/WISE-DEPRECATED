@@ -7,7 +7,6 @@ import ComponentNewWorkBadge from './componentNewWorkBadge/componentNewWorkBadge
 import ComponentRevisionsInfo from './componentRevisionsInfo/componentRevisionsInfo';
 import MainMenu from './mainMenu/mainMenu';
 import NodeCompletionIcon from './nodeCompletionIcon/nodeCompletionIcon';
-import NodeIcon from './nodeIcon/nodeIcon';
 import NodeInfo from './nodeInfo/nodeInfo';
 import NotificationsMenu from './notificationsMenu/notificationsMenu';
 import PauseScreensMenu from './pauseScreensMenu/pauseScreensMenu';
@@ -18,10 +17,11 @@ import Toolbar from './toolbar/toolbar';
 import TopBar from './topBar/topBar';
 import WorkgroupComponentRevisions from './workgroupComponentRevisions/workgroupComponentRevisions';
 import WorkgroupNodeGrading from './workgroupNodeGrading/workgroupNodeGrading';
-import WorkgroupNodeScore from './workgroupNodeScore/workgroupNodeScore';
 import WorkgroupNodeStatus from './workgroupNodeStatus/workgroupNodeStatus';
 import WorkgroupSelect from './workgroupSelect/workgroupSelect';
 import * as angular from 'angular';
+import { WorkgroupNodeScoreComponent } from './workgroupNodeScore/workgroup-node-score.component';
+import { downgradeComponent } from '@angular/upgrade/static';
 
 const Shared = angular
   .module('shared', [])
@@ -33,7 +33,6 @@ const Shared = angular
   .component('cmMainMenu', MainMenu)
   .component('notificationsMenu', NotificationsMenu)
   .component('nodeCompletionIcon', NodeCompletionIcon)
-  .component('nodeIcon', NodeIcon)
   .component('nodeInfo', NodeInfo)
   .component('pauseScreensMenu', PauseScreensMenu)
   .component('periodSelect', PeriodSelect)
@@ -43,7 +42,8 @@ const Shared = angular
   .component('cmTopBar', TopBar)
   .component('workgroupComponentRevisions', WorkgroupComponentRevisions)
   .component('workgroupNodeGrading', WorkgroupNodeGrading)
-  .component('workgroupNodeScore', WorkgroupNodeScore)
+  .directive('workgroupNodeScore',
+      downgradeComponent({ component: WorkgroupNodeScoreComponent}) as angular.IDirectiveFactory)
   .component('workgroupNodeStatus', WorkgroupNodeStatus)
   .component('workgroupSelect', WorkgroupSelect);
 

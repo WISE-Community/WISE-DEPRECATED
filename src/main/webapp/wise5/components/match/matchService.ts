@@ -1,14 +1,22 @@
-import ComponentService from '../componentService';
+'use strict';
 
-class MatchService extends ComponentService {
-  static $inject = ['$filter', 'StudentDataService', 'UtilService'];
+import { ComponentService } from '../componentService';
+import { Injectable } from '@angular/core';
+import { StudentDataService } from '../../services/studentDataService';
+import { UtilService } from '../../services/utilService';
+import { UpgradeModule } from '@angular/upgrade/static';
 
-  constructor($filter, StudentDataService, UtilService) {
-    super($filter, StudentDataService, UtilService);
+@Injectable()
+export class MatchService extends ComponentService {
+
+  constructor(private upgrade: UpgradeModule,
+      protected StudentDataService: StudentDataService,
+      protected UtilService: UtilService) {
+    super(StudentDataService, UtilService);
   }
 
   getComponentTypeLabel() {
-    return this.$translate('match.componentTypeLabel');
+    return this.upgrade.$injector.get('$filter')('translate')('match.componentTypeLabel');
   }
 
   createComponent() {
@@ -21,16 +29,14 @@ class MatchService extends ComponentService {
     return component;
   }
 
-  isCompleted(component, componentStates, componentEvents, nodeEvents, node) {
+  isCompleted(component: any, componentStates: any[], componentEvents: any[], nodeEvents: any[],
+      node: any) {
     if (componentStates && componentStates.length > 0) {
-      for (let componentState of componentStates) {
+      const isSubmitRequired = this.isSubmitRequired(node, component);
+      for (const componentState of componentStates) {
         const buckets = componentState.studentData.buckets;
         if (buckets && buckets.length > 0) {
-          if (this.isSubmitRequired(node, component)) {
-            if (componentState.isSubmit) {
-              return true;
-            }
-          } else {
+          if (!isSubmitRequired || (isSubmitRequired && componentState.isSubmit)) {
             return true;
           }
         }
@@ -39,14 +45,10 @@ class MatchService extends ComponentService {
     return false;
   }
 
-  isSubmitRequired(node, component) {
-    return node.showSubmitButton || (component.showSubmitButton && !node.showSaveButton);
-  }
-
-  componentStateHasStudentWork(componentState, componentContent) {
+  componentStateHasStudentWork(componentState: any, componentContent: any) {
     if (componentState != null) {
       const buckets = componentState.studentData.buckets;
-      for (let bucket of buckets) {
+      for (const bucket of buckets) {
         const items = bucket.items;
         if (items != null && items.length > 0) {
           return true;
@@ -56,9 +58,9 @@ class MatchService extends ComponentService {
     return false;
   }
 
-  hasCorrectAnswer(component) {
-    for (let bucket of component.feedback) {
-      for (let choice of bucket.choices) {
+  hasCorrectAnswer(component: any) {
+    for (const bucket of component.feedback) {
+      for (const choice of bucket.choices) {
         if (choice.isCorrect) {
           return true;
         }
@@ -67,5 +69,3 @@ class MatchService extends ComponentService {
     return false;
   }
 }
-
-export default MatchService;

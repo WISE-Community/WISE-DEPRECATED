@@ -56,21 +56,13 @@ describe('ProjectService', () => {
   shouldReturnTheMaxScoreOfTheProject();
   shouldNotAddSpaceIfItDoesExist();
   shouldAddSpaceIfItDoesntExist();
-  shouldNotRemoveASpaceThatDoesNotExist();
-  shouldRemoveASpaceThatDoesExist();
-  shouldCheckOrderBetweenStepAndStepGroup();
-  shouldCheckOrderBetweenStepAndStepGroup();
-  shouldCheckOrderBetweenGroupAndStepGroup();
+  shouldRemoveSpaces();
+  shouldCheckOrderBetweenStepGroupAndStepGroup();
   shouldRemoveTransitionsGoingOutOfGroupInChildNodesOfGroup();
-  shouldRemoveNodeFromGroup();
-  shouldRemoveStartNodeFromGroup();
-  shouldIdentifyBranchStartPoint();
-  shouldIdentifyBranchMergePoint();
-  shouldGetPathWhenNodeIdIsFound();
-  shouldGetPathWhenNodeIdIsFoundAsFirst();
-  shouldGetPathWhenNodeIdIsNotFound();
-  shouldBeAbleToInsertAStepNodeAfterAnotherStepNode();
-  shouldBeAbleToInsertAnActivityNodeAfterAnotherActivityNode();
+  removeNodeFromGroup();
+  shouldIdentifyBranchStartAndMergePoints();
+  shouldGetPaths();
+  insertNodeAfterInTransitions();
   shouldNotBeAbleToInsertANodeAfterAnotherNodeWhenTheyAreDifferentTypes();
   shouldBeAbleToInsertAStepNodeInsideAGroupNode();
   shouldBeAbleToInsertAGroupNodeInsideAGroupNode();
@@ -118,7 +110,6 @@ describe('ProjectService', () => {
   // TODO: add test for service.createNodeInside()
   // TODO: add test for service.createNodeAfter()
   // TODO: add test for service.insertNodeAfterInGroups()
-  // TODO: add test for service.insertNodeAfterInTransitions()
   // TODO: add test for service.insertNodeInsideInGroups()
   // TODO: add test for service.insertNodeInsideOnlyUpdateTransitions()
   // MARK: Tests for Node and Group Id functions
@@ -531,39 +522,32 @@ function shouldAddSpaceIfItDoesntExist() {
   });
 }
 
-function shouldNotRemoveASpaceThatDoesNotExist() {
-  it('should not remove a space that does not exist', () => {
-    service.setProject(demoProjectJSON);
-    const spaces = service.getSpaces();
-    expect(spaces.length).toEqual(1);
-    service.removeSpace('public');
-    expect(spaces.length).toEqual(1);
+function shouldRemoveSpaces() {
+  let spaces;
+  describe('removeSpace', () => {
+    beforeEach(() => {
+      service.setProject(demoProjectJSON);
+      spaces = service.getSpaces();
+      expect(spaces.length).toEqual(1);
+    });
+    it('should not remove a space that does not exist', () => {
+      service.removeSpace('public');
+      expect(spaces.length).toEqual(1);
+    });
+    it('should remove a space that does exist', () => {
+      service.removeSpace('sharePictures');
+      expect(spaces.length).toEqual(0);
+    });
   });
 }
 
-function shouldRemoveASpaceThatDoesExist() {
-  it('should remove a space that does exist', () => {
-    service.setProject(demoProjectJSON);
-    const spaces = service.getSpaces();
-    expect(spaces.length).toEqual(1);
-    service.removeSpace('sharePictures');
-    expect(spaces.length).toEqual(0);
-  });
-}
-
-function shouldCheckOrderBetweenStepAndStepGroup() {
-  it('should check order between step and step/group', () => {
+function shouldCheckOrderBetweenStepGroupAndStepGroup() {
+  it('should check order between step/group and step/group', () => {
     service.setProject(demoProjectJSON);
     expect(service.isNodeIdAfter('node1', 'node2')).toBeTruthy();
     expect(service.isNodeIdAfter('node2', 'node1')).toBeFalsy();
     expect(service.isNodeIdAfter('node1', 'group2')).toBeTruthy();
     expect(service.isNodeIdAfter('node20', 'group1')).toBeFalsy();
-  });
-}
-
-function shouldCheckOrderBetweenGroupAndStepGroup() {
-  it('should check order between group and step/group', () => {
-    service.setProject(demoProjectJSON);
     expect(service.isNodeIdAfter('group1', 'group2')).toBeTruthy();
     expect(service.isNodeIdAfter('group2', 'group1')).toBeFalsy();
     expect(service.isNodeIdAfter('group1', 'node20')).toBeTruthy();
@@ -582,133 +566,89 @@ function shouldRemoveTransitionsGoingOutOfGroupInChildNodesOfGroup() {
   });
 }
 
-function shouldRemoveNodeFromGroup() {
+function expectChildNodeIdLength(nodeId, expectedLength) {
+  expect(service.getChildNodeIdsById(nodeId).length).toEqual(expectedLength);
+}
+
+function expectGroupStartId(groupId, expectedStartNodeId) {
+  expect(service.getGroupStartId(groupId)).toEqual(expectedStartNodeId);
+}
+
+function removeNodeFromGroup() {
   it('should remove node from group', () => {
     service.setProject(demoProjectJSON);
-    expect(service.getChildNodeIdsById('group1').length).toEqual(19);
-    service.removeNodeIdFromGroup(service.getNodeById('group1'), 'node3');
-    expect(service.getChildNodeIdsById('group1').length).toEqual(18);
-    expect(service.getGroupStartId('group1')).toEqual('node1');
-    service.removeNodeIdFromGroup(service.getNodeById('group1'), 'node4');
-    expect(service.getChildNodeIdsById('group1').length).toEqual(17);
-    expect(service.getGroupStartId('group1')).toEqual('node1');
+    expectChildNodeIdLength('group1', 19)
+    const group1 = service.getNodeById('group1');
+    service.removeNodeIdFromGroup(group1, 'node3');
+    expectChildNodeIdLength('group1', 18);
+    service.removeNodeIdFromGroup(group1, 'node4');
+    expectChildNodeIdLength('group1', 17);
+    expectGroupStartId('group1', 'node1');
+    service.removeNodeIdFromGroup(group1, 'node1');
+    expectChildNodeIdLength('group1', 16);
+    expectGroupStartId('group1', 'node2');
+    service.removeNodeIdFromGroup(group1, 'node2');
+    expectChildNodeIdLength('group1', 15);
+    expectGroupStartId('group1', 'node3');
   });
 }
 
-function shouldRemoveStartNodeFromGroup() {
-  it('should remove start node from group', () => {
-    service.setProject(demoProjectJSON);
-    expect(service.getChildNodeIdsById('group1').length).toEqual(19);
-    service.removeNodeIdFromGroup(service.getNodeById('group1'), 'node1');
-    expect(service.getChildNodeIdsById('group1').length).toEqual(18);
-    expect(service.getGroupStartId('group1')).toEqual('node2');
-    service.removeNodeIdFromGroup(service.getNodeById('group1'), 'node2');
-    expect(service.getChildNodeIdsById('group1').length).toEqual(17);
-    expect(service.getGroupStartId('group1')).toEqual('node3');
-  });
-}
-
-function shouldIdentifyBranchStartPoint() {
+function shouldIdentifyBranchStartAndMergePoints() {
   it('should identify branch start point', () => {
     service.setProject(demoProjectJSON);
-    expect(service.isBranchStartPoint('group1')).toBeFalsy();
-    expect(service.isBranchStartPoint('node29')).toBeFalsy();
-    expect(service.isBranchStartPoint('node32')).toBeFalsy();
-    expect(service.isBranchStartPoint('node30')).toBeTruthy();
+    expectFunctionCallToReturnValue('isBranchStartPoint', ['group1', 'node29', 'node32'], false);
+    expectFunctionCallToReturnValue('isBranchStartPoint', ['node30'], true);
+    expectFunctionCallToReturnValue('isBranchMergePoint', ['group1', 'node30', 'node32'], false);
+    expectFunctionCallToReturnValue('isBranchMergePoint', ['node34'], true);
   });
 }
 
-function shouldIdentifyBranchMergePoint() {
-  it('should identify branch merge point', () => {
-    service.setProject(demoProjectJSON);
-    expect(service.isBranchMergePoint('group1')).toBeFalsy();
-    expect(service.isBranchMergePoint('node30')).toBeFalsy();
-    expect(service.isBranchMergePoint('node32')).toBeFalsy();
-    expect(service.isBranchMergePoint('node34')).toBeTruthy();
+function expectFunctionCallToReturnValue(func, nodeIdArray, expectedValue) {
+  nodeIdArray.forEach(nodeId => {
+    expect(service[func](nodeId)).toEqual(expectedValue);
   });
 }
 
-function shouldGetPathWhenNodeIdIsFound() {
+function shouldGetPaths() {
+  const paths1 = [['node1', 'node2', 'node3', 'node4', 'node5']];
+  const paths2 = [
+    ['node1', 'node2', 'node3', 'node4', 'node5'],
+    ['node1', 'node2', 'node4', 'node3', 'node5']
+  ];
   it('should get path when nodeId is found', () => {
-    const paths = [['node1', 'node2', 'node3', 'node4', 'node5']];
-    const subPath = service.consumePathsUntilNodeId(paths, 'node3');
-    const expectedPath = ['node1', 'node2'];
-    expect(JSON.stringify(subPath)).toEqual(JSON.stringify(expectedPath));
-
-    const paths2 = [
-      ['node1', 'node2', 'node3', 'node4', 'node5'],
-      ['node1', 'node2', 'node4', 'node3', 'node5']
-    ];
-    const subPath2 = service.consumePathsUntilNodeId(paths2, 'node3');
-    const expectedPath2 = ['node1', 'node2', 'node4'];
-    expect(JSON.stringify(subPath2)).toEqual(JSON.stringify(expectedPath2));
+    expectPaths(paths1, 'node3', ['node1', 'node2']);
+    expectPaths(paths2, 'node3', ['node1', 'node2', 'node4']);
   });
-}
-
-function shouldGetPathWhenNodeIdIsFoundAsFirst() {
   it('should get path when nodeId is found as first', () => {
-    const paths = [['node1', 'node2', 'node3', 'node4', 'node5']];
-    const subPath = service.consumePathsUntilNodeId(paths, 'node1');
-    const expectedPath = [];
-    expect(JSON.stringify(subPath)).toEqual(JSON.stringify(expectedPath));
-
-    const paths2 = [
-      ['node1', 'node2', 'node3', 'node4', 'node5'],
-      ['node1', 'node2', 'node4', 'node3', 'node5']
-    ];
-    const subPath2 = service.consumePathsUntilNodeId(paths2, 'node1');
-    const expectedPath2 = [];
-    expect(JSON.stringify(subPath2)).toEqual(JSON.stringify(expectedPath2));
+    expectPaths(paths1, 'node1', []);
+    expectPaths(paths2, 'node1', []);
   });
-}
-
-function shouldGetPathWhenNodeIdIsNotFound() {
   it('should get path when nodeId is not found', () => {
-    const paths = [['node1', 'node2', 'node3', 'node4', 'node5']];
-    const subPath = service.consumePathsUntilNodeId(paths, 'node6');
-    const expectedPath = [];
-    expect(JSON.stringify(subPath)).toEqual(JSON.stringify(expectedPath));
-
-    const paths2 = [
-      ['node1', 'node2', 'node3', 'node4', 'node5'],
-      ['node1', 'node2', 'node4', 'node3', 'node5']
-    ];
-    const subPath2 = service.consumePathsUntilNodeId(paths2, 'node6');
-    const expectedPath2 = [];
-    expect(JSON.stringify(subPath2)).toEqual(JSON.stringify(expectedPath2));
+    expectPaths(paths1, 'node6', []);
+    expectPaths(paths2, 'node6', []);
   });
 }
 
-function shouldBeAbleToInsertAStepNodeAfterAnotherStepNode() {
+function expectPaths(paths, nodeId, expectedPath) {
+  const subPath = service.consumePathsUntilNodeId(paths, nodeId);
+  expect(subPath).toEqual(expectedPath);
+}
+
+function insertNodeAfterInTransitions() {
   it('should be able to insert a step node after another step node', () => {
-    service.setProject(demoProjectJSON);
-    expect(
-      service.nodeHasTransitionToNodeId(service.getNodeById('node1'), 'node2')
-    ).toBeTruthy();
-    service.insertNodeAfterInTransitions(service.getNodeById('node1'), 'node2');
-    expect(
-      service.nodeHasTransitionToNodeId(service.getNodeById('node1'), 'node2')
-    ).toBeFalsy();
-    expect(
-      service.nodeHasTransitionToNodeId(service.getNodeById('node2'), 'node1')
-    ).toBeTruthy();
+    expectInsertNodeAfterInTransition('node1', 'node2');
+  });
+  it('should be able to insert an activity node after another activity node', () => {
+    expectInsertNodeAfterInTransition('group1', 'group2');
   });
 }
 
-function shouldBeAbleToInsertAnActivityNodeAfterAnotherActivityNode() {
-  it('should be able to insert an activity node after another activity node', () => {
-    service.setProject(demoProjectJSON);
-    expect(
-      service.nodeHasTransitionToNodeId(service.getNodeById('group1'), 'group2')
-    ).toBeTruthy();
-    service.insertNodeAfterInTransitions(service.getNodeById('group1'), 'group2');
-    expect(
-      service.nodeHasTransitionToNodeId(service.getNodeById('group1'), 'group2')
-    ).toBeFalsy();
-    expect(
-      service.nodeHasTransitionToNodeId(service.getNodeById('group2'), 'group1')
-    ).toBeTruthy();
-  });
+function expectInsertNodeAfterInTransition(nodeIdBefore, nodeIdAfter) {
+  service.setProject(demoProjectJSON);
+  expect(service.nodeHasTransitionToNodeId(service.getNodeById(nodeIdBefore), nodeIdAfter)).toBeTruthy();
+  service.insertNodeAfterInTransitions(service.getNodeById(nodeIdBefore), nodeIdAfter);
+  expect(service.nodeHasTransitionToNodeId(service.getNodeById(nodeIdBefore), nodeIdAfter)).toBeFalsy();
+  expect(service.nodeHasTransitionToNodeId(service.getNodeById(nodeIdAfter), nodeIdBefore)).toBeTruthy();
 }
 
 function shouldNotBeAbleToInsertANodeAfterAnotherNodeWhenTheyAreDifferentTypes() {
@@ -991,7 +931,7 @@ function getUniqueAuthors() {
 }
 
 function deleteActivityWithBranching() {
-  it(`should delete an activity with branching and is also the first activity in the project 
+  it(`should delete an activity with branching and is also the first activity in the project
       and properly set the project start node id`, () => {
     service.setProject(demoProjectJSON);
     expect(service.getStartNodeId()).toEqual('node1');

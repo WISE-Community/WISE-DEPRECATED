@@ -1,7 +1,7 @@
 'use strict';
 
 import ComponentController from '../componentController';
-import AudioOscillatorService from './audioOscillatorService';
+import { AudioOscillatorService } from './audioOscillatorService';
 
 class AudioOscillatorController extends ComponentController {
   $q: any;
@@ -203,7 +203,7 @@ class AudioOscillatorController extends ComponentController {
 
   createComponentState(action) {
     const deferred = this.$q.defer();
-    const componentState = this.NodeService.createNewComponentState();
+    const componentState: any = this.NodeService.createNewComponentState();
     componentState.isSubmit = this.isSubmit;
     componentState.componentType = 'AudioOscillator';
     componentState.nodeId = this.nodeId;
@@ -476,7 +476,7 @@ class AudioOscillatorController extends ComponentController {
    * @return A component state with the merged student responses.
    */
   createMergedComponentState(componentStates) {
-    const mergedComponentState = this.NodeService.createNewComponentState();
+    const mergedComponentState: any = this.NodeService.createNewComponentState();
     if (componentStates != null) {
       const mergedStudentData = {};
       for (let c = 0; c < componentStates.length; c++) {

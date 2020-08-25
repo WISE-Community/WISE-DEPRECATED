@@ -1,13 +1,20 @@
-import ComponentService from '../componentService';
+'use strict';
 
-class SummaryService extends ComponentService {
+import { ComponentService } from '../componentService';
+import { UtilService } from '../../services/utilService';
+import { Injectable } from '@angular/core';
+import { UpgradeModule } from '@angular/upgrade/static';
+import { StudentDataService } from '../../services/studentDataService';
+
+@Injectable()
+export class SummaryService extends ComponentService {
   componentsWithScoresSummary: string[];
   componentsWithResponsesSummary: string[];
 
-  static $inject = ['$filter', 'ConfigService', 'UtilService'];
-
-  constructor($filter, ConfigService, UtilService) {
-    super($filter, ConfigService, UtilService);
+  constructor(private upgrade: UpgradeModule,
+      protected StudentDataService: StudentDataService,
+      protected UtilService: UtilService) {
+    super(StudentDataService, UtilService);
     this.componentsWithScoresSummary = [
       'Animation',
       'AudioOscillator',
@@ -26,7 +33,7 @@ class SummaryService extends ComponentService {
   }
 
   getComponentTypeLabel() {
-    return this.$translate('summary.componentTypeLabel');
+    return this.upgrade.$injector.get('$filter')('translate')('summary.componentTypeLabel');
   }
 
   createComponent() {
@@ -59,5 +66,3 @@ class SummaryService extends ComponentService {
     return this.componentsWithResponsesSummary.indexOf(componentType) != -1;
   }
 }
-
-export default SummaryService;

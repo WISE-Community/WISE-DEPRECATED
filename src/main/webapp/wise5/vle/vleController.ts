@@ -2,8 +2,8 @@
 
 import { AnnotationService } from '../services/annotationService';
 import { ConfigService } from '../services/configService';
-import NotificationService from '../services/notificationService';
-import NotebookService from '../services/notebookService';
+import { NotebookService } from '../services/notebookService';
+import { NotificationService } from '../services/notificationService';
 import { VLEProjectService } from './vleProjectService';
 import { SessionService } from '../services/sessionService';
 import { StudentDataService } from '../services/studentDataService';
@@ -29,7 +29,6 @@ class VLEController {
   projectName: string;
   projectStyle: string;
   reportItem: any;
-  snippableItems: any;
   themePath: string;
   totalScore: any;
 
@@ -206,29 +205,11 @@ class VLEController {
 
     this.$scope.$on('componentStudentDataChanged', () => {});
 
-    this.$scope.$on('pauseScreen', (event, args) => {
-      this.pauseScreen();
-    });
-
-    this.$scope.$on('unPauseScreen', (event, args) => {
-      this.unPauseScreen();
-    });
-
-    this.$scope.$on('requestImageCallback', (event, args) => {
-      if (this.snippableItems == null) {
-        this.snippableItems = [];
-      }
-
-      if (args.imageObject != null) {
-        this.snippableItems.push(args.imageObject);
-      }
-
-      if (args.imageObjects != null) {
-        for (const imageObject of args.imageObjects) {
-          if (imageObject != null) {
-            this.snippableItems.push(imageObject);
-          }
-        }
+    this.StudentDataService.pauseScreen$.subscribe((doPause: boolean) => {
+      if (doPause) {
+        this.pauseScreen();
+      } else {
+        this.unPauseScreen();
       }
     });
 
@@ -297,83 +278,6 @@ class VLEController {
         this.pauseScreen();
       }
     }
-  }
-
-  // TODO: remove and use inline clipping (with guidance)
-  snipNewNote($event) {
-    // Ask all of the components on the page for snippable items
-    let templateUrl = this.themePath + '/notebook/contentSnipper.html';
-
-    let currentNodeId = this.StudentDataService.getCurrentNodeId();
-    let currentComponents = this.ProjectService.getComponentsByNodeId(currentNodeId);
-
-    /*
-     * initialize the snippable items array that will become populated
-     * with snippable items
-     */
-    this.snippableItems = [];
-
-    for (const currentComponent of currentComponents) {
-      const args = {
-        nodeId: currentNodeId,
-        componentId: currentComponent.id
-      };
-      this.$rootScope.$broadcast('requestImage', args);
-    }
-    this.$mdDialog.show({
-      parent: angular.element(document.body),
-      targetEvent: $event,
-      templateUrl: templateUrl,
-      clickOutsideToClose: true,
-      locals: {
-        snippableItems: this.snippableItems
-      },
-      controller: NotebookContentSnippetController,
-      controllerAs: 'notebookContentSnippetController',
-      bindToController: true
-    });
-    function NotebookContentSnippetController(
-      $rootScope,
-      $scope,
-      $mdDialog,
-      snippableItems,
-      NotebookService,
-      StudentDataService,
-      ProjectService
-    ) {
-      $scope.NotebookService = NotebookService;
-      $scope.StudentDataService = StudentDataService;
-      $scope.ProjectService = ProjectService;
-      $scope.snippableItems = snippableItems;
-
-      for (const snippableItem of snippableItems) {
-        if (snippableItem != null) {
-          /*
-           * create a local browser URL for the snippable item so
-           * we can display it as an image
-           */
-          snippableItem.url = URL.createObjectURL(snippableItem);
-        }
-      }
-
-      $scope.close = () => {
-        $mdDialog.hide();
-      };
-      $scope.chooseSnippet = snippableItem => {
-        $scope.NotebookService.addNote($event, snippableItem);
-        $mdDialog.hide();
-      };
-    }
-
-    NotebookContentSnippetController.$inject = [
-      '$rootScope',
-      '$scope',
-      '$mdDialog',
-      'snippableItems',
-      'NotebookService',
-      'StudentDataService',
-      'ProjectService'
-    ];
   }
 
   goHome() {
@@ -517,10 +421,6 @@ class VLEController {
     });
   }
 
-  /**
-   * Dismiss the specified notification
-   * @param notification
-   */
   dismissNotification(event, notification) {
     if (notification.data == null || notification.data.dismissCode == null) {
       this.NotificationService.dismissNotification(notification);

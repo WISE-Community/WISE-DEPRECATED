@@ -1,7 +1,7 @@
 'use strict';
 
 import { ConfigService } from '../../../../services/configService';
-import TeacherDataService from '../../../../services/teacherDataService';
+import { TeacherDataService } from '../../../../services/teacherDataService';
 import * as angular from 'angular';
 
 class WorkgroupSelectController {
@@ -110,7 +110,7 @@ class WorkgroupSelectController {
       for (let workgroup of this.workgroups) {
         if (currentWorkgroup.workgroupId === workgroup.workgroupId) {
           if (this.byStudent) {
-            if (currentWorkgroup.userId === workgroup.userId) {
+            if (currentWorkgroup.userIds.indexOf(workgroup.userId) > -1) {
               localGroup = workgroup;
               break;
             }

@@ -1,6 +1,6 @@
 'use strict';
 
-import NotificationService from '../../../../services/notificationService';
+import { NotificationService } from '../../../../services/notificationService';
 import * as angular from 'angular';
 import { TeacherProjectService } from '../../../../services/teacherProjectService';
 
@@ -46,8 +46,6 @@ class NotificationsMenuController {
   dismissNotification(notification) {
     this.NotificationService.dismissNotification(notification);
   }
-
-  dismissNotificationAndVisitNode(notification) {}
 }
 
 const NotificationsMenu = {
@@ -61,7 +59,7 @@ const NotificationsMenu = {
                      ng-class="{ 'account-menu__caret--notification--with-pause': $ctrl.withPause }"></div>
         <div layout="column" class="account-menu--fixed-height account-menu--fixed-width">
             <md-toolbar md-theme="light" class="account-menu__info md-subhead md-whiteframe-1dp" layout="row" layout-align="start center">
-                <span class="accent-1 account-menu__info__title" layout="row" layout-align="start center"><md-icon class="accent-1"> notifications </md-icon>&nbsp;<span translate="ALERTS"></span></span>
+                <span class="accent account-menu__info__title" layout="row" layout-align="start center"><md-icon class="accent"> notifications </md-icon>&nbsp;<span translate="ALERTS"></span></span>
                 <span flex></span>
                 <!--<md-button class="md-icon-button"
                            aria-label="Clear all notifications"
@@ -75,7 +73,7 @@ const NotificationsMenu = {
                 <div class="md-padding center" ng-if="!$ctrl.newNotifications.length"><span class="md-body-1" translate="NO_ALERTS"></span></div>
                 <md-list class="notification-list" ng-if="$ctrl.newNotifications.length">
                     <md-list-item ng-repeat="notification in $ctrl.newNotifications track by $index"
-                                  ng-click="$ctrl.dismissNotificationAndVisitNode(notification)"
+                                  ng-click="$ctrl.dismissNotification(notification)"
                                   md-autofocus="$first"
                                   class="md-2-line">
                         <div class="md-list-item-text">

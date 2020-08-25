@@ -4,7 +4,7 @@ import 'svg.js';
 import 'svg.draggable.js';
 import * as angular from 'angular';
 import ComponentController from '../componentController';
-import ConceptMapService from './conceptMapService';
+import { ConceptMapService } from './conceptMapService';
 
 class ConceptMapController extends ComponentController {
   $anchorScroll: any;
@@ -674,7 +674,7 @@ class ConceptMapController extends ComponentController {
    */
   createComponentState(action) {
     const deferred = this.$q.defer();
-    const componentState = this.NodeService.createNewComponentState();
+    const componentState: any = this.NodeService.createNewComponentState();
     const studentData: any = {};
     const conceptMapData = this.getConceptMapData();
     studentData.conceptMapData = conceptMapData;
@@ -1929,7 +1929,7 @@ class ConceptMapController extends ComponentController {
       }
     }
 
-    let mergedComponentState = this.NodeService.createNewComponentState();
+    let mergedComponentState: any = this.NodeService.createNewComponentState();
     mergedComponentState.studentData = {
       conceptMapData: {
         nodes: mergedNodes,

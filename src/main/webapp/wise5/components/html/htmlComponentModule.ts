@@ -1,12 +1,13 @@
 'use strict';
 
 import * as angular from 'angular';
-import HTMLService from './htmlService';
+import { downgradeInjectable } from '@angular/upgrade/static';
+import { HTMLService } from './htmlService';
 import HTMLController from './htmlController';
 
 const htmlComponentModule = angular
   .module('htmlComponentModule', [])
-  .service('HTMLService', HTMLService)
+  .service('HTMLService', downgradeInjectable(HTMLService))
   .controller('HTMLController', HTMLController)
   .config([
     '$translatePartialLoaderProvider',

@@ -10,7 +10,6 @@ import * as angular from 'angular';
 import { TagService } from '../../../../wise5/services/tagService';
 
 let $injector, $rootScope;
-
 let http: HttpTestingController;
 let service: StudentDataService;
 let configService: ConfigService;
@@ -19,6 +18,8 @@ let projectService: ProjectService;
 let tagService: TagService;
 let utilService: UtilService;
 let upgrade: UpgradeModule;
+let criteria1: any;
+let criteria2: any;
 
 describe('StudentDataService', () => {
   beforeEach(() => {
@@ -35,6 +36,18 @@ describe('StudentDataService', () => {
     tagService = TestBed.get(TagService);
     utilService = TestBed.get(UtilService);
     upgrade = TestBed.get(UpgradeModule);
+    criteria1 = {
+      name: 'isCompleted',
+      params: {
+        nodeId: 'node1'
+      }
+    };
+    criteria2 = {
+      name: 'isCompleted',
+      params: {
+        nodeId: 'node2'
+      }
+    }
   });
 
   shouldHandleNodeStatusesChanged();
@@ -103,6 +116,7 @@ describe('StudentDataService', () => {
   shouldGetClassmateScores();
   shouldGetStudentWorkById();
   shouldGetMaxScore();
+  shouldEvaluateCriterias();
 });
 
 function shouldHandleNodeStatusesChanged() {
@@ -1977,20 +1991,6 @@ function shouldGetClassmateStudentWork() {
       .withArgs('studentDataURL')
       .and.returnValue('/student');
     service.getClassmateStudentWork('node1', 'component1', 10);
-    const httpParams = {
-      method: 'GET',
-      url: '/student',
-      params: {
-        runId: 1,
-        nodeId: 'node1',
-        componentId: 'component1',
-        getStudentWork: true,
-        getEvents: false,
-        getAnnotations: false,
-        onlyGetLatest: true,
-        periodId: 10
-      }
-    };
     http.expectOne('/student?runId=1&nodeId=node1&componentId=component1&getStudentWork=true&' +
         'getEvents=false&getAnnotations=false&onlyGetLatest=true&periodId=10').flush({});
   });
@@ -2003,20 +2003,6 @@ function shouldGetClassmateScores() {
       .withArgs('studentDataURL')
       .and.returnValue('/student');
     service.getClassmateScores('node1', 'component1', 10);
-    const httpParams = {
-      method: 'GET',
-      url: '/student',
-      params: {
-        runId: 1,
-        nodeId: 'node1',
-        componentId: 'component1',
-        getStudentWork: false,
-        getEvents: false,
-        getAnnotations: true,
-        onlyGetLatest: false,
-        periodId: 10
-      }
-    };
     http.expectOne('/student?runId=1&nodeId=node1&componentId=component1&getStudentWork=false&' +
         'getEvents=false&getAnnotations=true&onlyGetLatest=false&periodId=10').flush({});
   });
@@ -2029,20 +2015,8 @@ function shouldGetStudentWorkById() {
       .withArgs('studentDataURL')
       .and.returnValue('/student');
     service.getStudentWorkById(1000);
-    const httpParams = {
-      method: 'GET',
-      url: '/student',
-      params: {
-        runId: 1,
-        id: 1000,
-        getStudentWork: true,
-        getEvents: false,
-        getAnnotations: false,
-        onlyGetLatest: true
-      }
-    };
     http.expectOne('/student?runId=1&id=1000&getStudentWork=true&getEvents=false&' +
-        'getAnnotations=false&onlyGetLatest=true').flush({});
+        'getAnnotations=false&onlyGetLatest=true').flush({ studentWorkList: [] });
   });
 }
 
@@ -2075,5 +2049,66 @@ function shouldGetMaxScore() {
       }
     });
     expect(service.getMaxScore()).toEqual(6);
+  });
+}
+
+function shouldEvaluateCriterias() {
+  it('should evaluate criterias when it is passed one criteria that is false', () => {
+    const criterias = [criteria1];
+    spyOn(service, 'evaluateCriteria').and.callFake(() => {
+      return false;
+    });
+    expect(service.evaluateCriterias(criterias)).toEqual(false);
+  });
+  it('should evaluate criterias when it is passed one criteria that is true', () => {
+    const criterias = [criteria1];
+    spyOn(service, 'evaluateCriteria').and.callFake(() => {
+      return true;
+    });
+    expect(service.evaluateCriterias(criterias)).toEqual(true);
+  });
+  it('should evaluate criterias when it is passed multiple criteria false and false', () => {
+    const criterias = [criteria1, criteria2];
+    spyOn(service, 'evaluateCriteria').and.callFake((criteria) => {
+      if (criteria === criteria1) {
+        return false;
+      } else if (criteria === criteria2) {
+        return false;
+      }
+    });
+    expect(service.evaluateCriterias(criterias)).toEqual(false);
+  });
+  it('should evaluate criterias when it is passed multiple criteria false and true', () => {
+    const criterias = [criteria1, criteria2];
+    spyOn(service, 'evaluateCriteria').and.callFake((criteria) => {
+      if (criteria === criteria1) {
+        return false;
+      } else if (criteria === criteria2) {
+        return true;
+      }
+    });
+    expect(service.evaluateCriterias(criterias)).toEqual(false);
+  });
+  it('should evaluate criterias when it is passed multiple criteria true and false', () => {
+    const criterias = [criteria1, criteria2];
+    spyOn(service, 'evaluateCriteria').and.callFake((criteria) => {
+      if (criteria === criteria1) {
+        return true;
+      } else if (criteria === criteria2) {
+        return false;
+      }
+    });
+    expect(service.evaluateCriterias(criterias)).toEqual(false);
+  });
+  it('should evaluate criterias when it is passed multiple criteria true and true', () => {
+    const criterias = [criteria1, criteria2];
+    spyOn(service, 'evaluateCriteria').and.callFake((criteria) => {
+      if (criteria === criteria1) {
+        return true;
+      } else if (criteria === criteria2) {
+        return true;
+      }
+    });
+    expect(service.evaluateCriterias(criterias)).toEqual(true);
   });
 }

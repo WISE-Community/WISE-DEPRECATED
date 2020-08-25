@@ -2,7 +2,7 @@
 
 import * as angular from 'angular';
 import ComponentController from '../componentController';
-import MultipleChoiceService from './multipleChoiceService';
+import { MultipleChoiceService } from './multipleChoiceService';
 
 class MultipleChoiceController extends ComponentController {
   $q: any;
@@ -661,7 +661,7 @@ class MultipleChoiceController extends ComponentController {
    */
   createComponentState(action) {
     // create a new component state
-    const componentState = this.NodeService.createNewComponentState();
+    const componentState: any = this.NodeService.createNewComponentState();
 
     if (componentState != null) {
       const studentData: any = {};
@@ -985,7 +985,7 @@ class MultipleChoiceController extends ComponentController {
    */
   createMergedComponentState(componentStates) {
     // create a new component state
-    let mergedComponentState = this.NodeService.createNewComponentState();
+    let mergedComponentState: any = this.NodeService.createNewComponentState();
     if (componentStates != null) {
       let mergedStudentChoices = [];
       /*

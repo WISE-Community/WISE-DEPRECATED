@@ -1,14 +1,18 @@
-class ComponentService {
-  $filter: any;
-  $translate: any;
-  StudentDataService: any;
-  UtilService: any;
-  
-  constructor($filter, StudentDataService, UtilService) {
-    this.$filter = $filter;
+'use strict';
+
+import { Injectable } from '@angular/core';
+import { StudentDataService } from "../services/studentDataService";
+import { UtilService } from "../services/utilService";
+
+@Injectable()
+export class ComponentService {
+
+  constructor(
+    protected StudentDataService: StudentDataService,
+    protected UtilService: UtilService
+  ) {
     this.StudentDataService = StudentDataService;
     this.UtilService = UtilService;
-    this.$translate = this.$filter('translate');
   }
 
   /**
@@ -108,6 +112,8 @@ class ComponentService {
   componentHasCorrectAnswer(component) {
     return false;
   }
-}
 
-export default ComponentService;
+  isSubmitRequired(node: any, component: any) {
+    return node.showSubmitButton || (component.showSubmitButton && !node.showSaveButton);
+  }
+}

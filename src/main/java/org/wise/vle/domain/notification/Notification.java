@@ -24,6 +24,7 @@
 package org.wise.vle.domain.notification;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Getter;
 import lombok.Setter;
 import org.json.JSONException;
@@ -199,7 +200,7 @@ public class Notification extends PersistableDomain {
       }
 
       if (data != null) {
-        notificationJSONObject.put("data", data);
+        notificationJSONObject.put("data", new JSONObject(data));
       }
 
       if (serverSaveTime != null) {

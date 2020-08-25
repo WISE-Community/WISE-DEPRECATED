@@ -37,7 +37,7 @@ class NotebookReportController {
     this.reportItem = this.NotebookService.getLatestNotebookReportItemByReportId(this.reportId, this.workgroupId);
     if (this.reportItem) {
       this.hasReport = true;
-      const serverSaveTime = this.reportItem.serverSaveTime;
+      const serverSaveTime = Date.parse(this.reportItem.serverSaveTime);
       const clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
       this.setSavedMessage(clientSaveTime);
     } else {
@@ -190,16 +190,17 @@ class NotebookReportController {
     clearInterval(this.autoSaveIntervalId);
   }
 
-  saveNotebookReportItem() {
-    this.reportItem.content.clientSaveTime = Date.parse(new Date());  // set save timestamp
-    this.NotebookService.saveNotebookItem(this.reportItem.id, this.reportItem.nodeId, this.reportItem.localNotebookItemId,
-      this.reportItem.type, this.reportItem.title, this.reportItem.content, this.reportItem.groups, this.reportItem.content.clientSaveTime)
+  saveNotebookReportItem() { // set save timestamp
+    this.NotebookService.saveNotebookItem(this.reportItem.id, this.reportItem.nodeId, 
+        this.reportItem.localNotebookItemId, this.reportItem.type, this.reportItem.title, 
+        this.reportItem.content, this.reportItem.groups, Date.parse(new Date().toString()))
       .then((result) => {
         if (result) {
           this.dirty = false;
           this.hasNewAnnotation = false;
           this.reportItem.id = result.id; // set the reportNotebookItemId to the newly-incremented id so that future saves during this visit will be an update instead of an insert.
-          this.setSavedMessage(this.ConfigService.convertToClientTimestamp(result.serverSaveTime));
+          this.setSavedMessage(this.ConfigService.convertToClientTimestamp(
+              Date.parse(result.serverSaveTime)));
         }
       });
   }
@@ -224,7 +225,7 @@ class NotebookReportController {
       // TODO: i18n
       buttonText: 'Insert ' + this.config.itemTypes.note.label.singular + ' +',
       tooltip: 'Insert from ' + this.config.label,
-      buttonClass: 'accent-1 notebook-item--report__add-note',
+      buttonClass: 'accent notebook-item--report__add-note',
       action: ($event) => {
         this.addNotebookItemContent($event);
       }
@@ -314,7 +315,7 @@ const NotebookReport = {
             </md-card>
         </div>
         <div ng-if="::$ctrl.mode === 'classroomMonitor'">
-            <article ng-if="$ctrl.hasReport" class="md-padding md-whiteframe-1dp">
+            <article ng-if="$ctrl.hasReport">
               <compile data="$ctrl.reportItemContent"></compile>
             </article>
             <p ng-if="!$ctrl.hasReport" translate="noReport" translate-value-term="{{$ctrl.config.itemTypes.report.notes[0].title}}"></p>

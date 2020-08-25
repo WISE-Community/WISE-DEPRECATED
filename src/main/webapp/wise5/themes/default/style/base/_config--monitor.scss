@@ -4,9 +4,9 @@ $_selected-bg: lighten($_primary-color, 54%);
 
 $color: (
   'primary': $_primary-color,
-  'accent-1': #F05843, // should match the default color of your ng-material default theme's 'accent' palette
-  'accent-2': #795C3A,
-  'accent-3': #CAD266,
+  'accent': #F05843, // should match the default color of your ng-material default theme's 'accent' palette
+  'accent-1': #795C3A,
+  'accent-2': #CAD266,
   'warn': #c62828, // should match the default color of your ng-material default theme's 'warn' palette
   'info': #ef6c00,
   'success': #00C853,

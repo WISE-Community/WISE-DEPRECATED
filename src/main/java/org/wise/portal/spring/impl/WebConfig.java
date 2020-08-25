@@ -24,16 +24,22 @@
 package org.wise.portal.spring.impl;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.Ordered;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.ui.context.ThemeSource;
 import org.springframework.ui.context.support.ResourceBundleThemeSource;
 import org.springframework.web.context.request.RequestContextListener;
@@ -63,6 +69,9 @@ public class WebConfig implements WebMvcConfigurer {
 
   @Value("${google_analytics_id:}")
   private String googleAnalyticsId;
+
+  @Autowired
+  private ObjectMapper objectMapper;
 
   public void addResourceHandlers(final ResourceHandlerRegistry registry) {
     registry.setOrder(Ordered.HIGHEST_PRECEDENCE);
@@ -182,5 +191,10 @@ public class WebConfig implements WebMvcConfigurer {
     simpleUrlHandlerMapping.setMappings(mappings);
     simpleUrlHandlerMapping.setInterceptors(localeChangeInterceptor());
     return simpleUrlHandlerMapping;
+  }
+
+  @Override
+  public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
+    converters.add(2, new MappingJackson2HttpMessageConverter(this.objectMapper));
   }
 }

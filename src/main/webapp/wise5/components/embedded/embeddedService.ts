@@ -1,22 +1,30 @@
+'use strict';
+
 import * as $ from 'jquery';
 import * as html2canvas from 'html2canvas';
-import ComponentService from '../componentService';
+import { ComponentService } from '../componentService';
 import { StudentAssetService } from '../../services/studentAssetService';
+import { Injectable } from '@angular/core';
+import { UtilService } from '../../services/utilService';
+import { UpgradeModule } from '@angular/upgrade/static';
+import { StudentDataService } from '../../services/studentDataService';
 
-class EmbeddedService extends ComponentService {
-  $q: any;
-  StudentAssetService: StudentAssetService;
+@Injectable()
+export class EmbeddedService extends ComponentService {
 
-  static $inject = ['$filter', '$q', 'StudentAssetService', 'StudentDataService', 'UtilService'];
-
-  constructor($filter, $q, StudentAssetService, StudentDataService, UtilService) {
-    super($filter, StudentDataService, UtilService);
-    this.$q = $q;
-    this.StudentAssetService = StudentAssetService;
+  constructor(private upgrade: UpgradeModule,
+      protected StudentAssetService: StudentAssetService,
+      protected StudentDataService: StudentDataService,
+      protected UtilService: UtilService) {
+    super(StudentDataService, UtilService);
   }
 
   getComponentTypeLabel() {
-    return this.$translate('embedded.componentTypeLabel');
+    return this.getTranslation('embedded.componentTypeLabel');
+  }
+
+  getTranslation(key: string) {
+    return this.upgrade.$injector.get('$filter')('translate')(key);
   }
 
   createComponent() {
@@ -27,41 +35,50 @@ class EmbeddedService extends ComponentService {
     return component;
   }
 
-  isCompleted(component, componentStates, componentEvents, nodeEvents) {
-    let isCompletedFieldInComponentState = false;
+  isCompleted(component: any, componentStates: any[], componentEvents: any[], nodeEvents: any[]) {
     if (componentStates != null) {
-      for (let componentState of componentStates) {
-        const studentData = componentState.studentData;
-        if (studentData != null && studentData.isCompleted != null) {
-          if (studentData.isCompleted === true) {
-            return true;
-          }
-          isCompletedFieldInComponentState = true;
-        }
+      if (this.hasComponentStateWithIsCompletedField(componentStates) &&
+          this.hasComponentStateWithIsCompletedTrue(componentStates)) {
+        return true;
       }
     }
+    return this.hasNodeEnteredEvent(nodeEvents);
+  }
 
-    if (isCompletedFieldInComponentState === false) {
-      /*
-       * the isCompleted field was not set into the component state so
-       * we will look for events to determine isCompleted
-       */
-      if (nodeEvents != null) {
-        for (let event of nodeEvents) {
-          if (event.event === 'nodeEntered') {
-            return true;
-          }
-        }
+  hasComponentStateWithIsCompletedField(componentStates: any[]) {
+    for (const componentState of componentStates) {
+      const studentData = componentState.studentData;
+      if (studentData != null && studentData.isCompleted != null) {
+        return true;
       }
     }
     return false;
   }
 
-  componentHasWork(component) {
+  hasComponentStateWithIsCompletedTrue(componentStates: any[]) {
+    for (const componentState of componentStates) {
+      const studentData = componentState.studentData;
+      if (studentData != null && studentData.isCompleted === true) {
+        return true;
+      }
+    }
     return false;
   }
 
-  componentStateHasStudentWork(componentState, componentContent) {
+  hasNodeEnteredEvent(nodeEvents: any[]) {
+    for (const nodeEvent of nodeEvents) {
+      if (nodeEvent.event === 'nodeEntered') {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  componentHasWork(component: any) {
+    return false;
+  }
+
+  componentStateHasStudentWork(componentState: any, componentContent: any) {
     return componentState.studentData != null;
   }
 
@@ -71,24 +88,27 @@ class EmbeddedService extends ComponentService {
    * @param componentState The component state that has been rendered.
    * @return A promise that will return an image object.
    */
-  generateImageFromRenderedComponentState(componentState) {
-    const deferred = this.$q.defer();
-    const iframe = $('#componentApp_' + componentState.componentId);
-    if (iframe != null && iframe.length > 0) {
-      let modelElement: any = iframe.contents().find('html');
-      if (modelElement != null && modelElement.length > 0) {
-        modelElement = modelElement[0];
-        html2canvas(modelElement).then(canvas => {
-          const base64Image = canvas.toDataURL('image/png');
-          const imageObject = this.UtilService.getImageObjectFromBase64String(base64Image);
-          this.StudentAssetService.uploadAsset(imageObject).then(asset => {
-            deferred.resolve(asset);
-          });
+  generateImageFromRenderedComponentState(componentState: any) {
+    const modelElement = this.getModelElement(componentState.componentId);
+    return new Promise((resolve, reject) => {
+      html2canvas(modelElement).then(canvas => {
+        const base64Image = canvas.toDataURL('image/png');
+        const imageObject = this.UtilService.getImageObjectFromBase64String(base64Image);
+        this.StudentAssetService.uploadAsset(imageObject).then(asset => {
+          resolve(asset);
         });
+      });
+    });
+  }
+
+  getModelElement(componentId: string) {
+    const iframe = $('#componentApp_' + componentId);
+    if (iframe != null && iframe.length > 0) {
+      const modelElement: any = iframe.contents().find('html');
+      if (modelElement != null && modelElement.length > 0) {
+        return modelElement[0];
       }
     }
-    return deferred.promise;
+    return null;
   }
 }
-
-export default EmbeddedService;

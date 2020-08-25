@@ -99,7 +99,7 @@ class OutsideURLAuthoringController extends OutsideURLController {
       },
       true
     );
-    this.OutsideURLService.getOpenEducationalResources().then(openEducationalResources => {
+    this.OutsideURLService.getOpenEducationalResources().then((openEducationalResources: any) => {
       this.openEducationalResources = openEducationalResources.sort((a, b) =>
         a.metadata.title > b.metadata.title ? 1 : -1
       );

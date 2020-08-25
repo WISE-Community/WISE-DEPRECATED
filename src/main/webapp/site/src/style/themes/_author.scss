@@ -1,0 +1,148 @@
+// WISE Classroom Monitor theme
+
+// Material grey color palette for reference
+$mat-grey: (
+  50: #fafafa,
+  100: #f5f5f5,
+  200: #eeeeee,
+  300: #e0e0e0,
+  400: #bdbdbd,
+  500: #9e9e9e,
+  600: #757575,
+  700: #616161,
+  800: #424242,
+  900: #212121,
+  A100: #ffffff,
+  A200: #eeeeee,
+  A400: #bdbdbd,
+  A700: #616161
+);
+
+// define Angular Material theme colors
+$author-primary: (
+  50 : #F0EBF8,
+  100 : #D8CDED,
+  200 : #BFABE1,
+  300 : #A589D4,
+  400 : #9170CB,
+  500 : #7E57C2,
+  600 : #764FBC,
+  700 : #6B46B4,
+  800 : #613CAC,
+  900 : #4E2C9F,
+  A100 : #EAE2FF,
+  A200 : #C5AFFF,
+  A400 : #A17CFF,
+  A700 : #8E63FF,
+  contrast: (
+    50 : #000000,
+    100 : #000000,
+    200 : #000000,
+    300 : #000000,
+    400 : #000000,
+    500 : #ffffff,
+    600 : #ffffff,
+    700 : #ffffff,
+    800 : #ffffff,
+    900 : #ffffff,
+    A100 : #000000,
+    A200 : #000000,
+    A400 : #000000,
+    A700 : #000000,
+  )
+);
+
+$author-accent: (
+  50 : #fdebe8,
+  100 : #fbcdc7,
+  200 : #f8aca1,
+  300 : #f58a7b,
+  400 : #f2715f,
+  500 : #f05843,
+  600 : #ee503d,
+  700 : #ec4734,
+  800 : #e93d2c,
+  900 : #e52d1e,
+  A100 : #ffffff,
+  A200 : #ffe9e7,
+  A400 : #ffb9b4,
+  A700 : #ffa19b,
+  contrast: (
+    50 : #000000,
+    100 : #000000,
+    200 : #000000,
+    300 : #000000,
+    400 : #000000,
+    500 : #ffffff,
+    600 : #ffffff,
+    700 : #ffffff,
+    800 : #ffffff,
+    900 : #ffffff,
+    A100 : #000000,
+    A200 : #000000,
+    A400 : #000000,
+    A700 : #000000,
+  )
+);
+
+$author-theme-primary: mat-palette($author-primary);
+$author-theme-accent: mat-palette($author-accent);
+$author-theme-warn: mat-palette($mat-red, 800);
+
+// create Angular Material theme
+$author: mat-light-theme(
+  $author-theme-primary,
+  $author-theme-accent,
+  $author-theme-warn
+);
+
+$author-mat-light-theme-background: (
+  status-bar: map_get($mat-grey, 400),
+  app-bar:    map_get($mat-grey, 300),
+  background: map_get($mat-grey, 100),
+  hover:      rgba(black, 0.04), // TODO(kara): check style with Material Design UX
+  card:       white,
+  dialog:     white,
+  disabled-button: rgba(black, 0.12),
+  raised-button: white,
+  //focused-button: $dark-focused,
+  focused-button: rgba(black, 0.12),
+  selected-button: map_get($mat-grey, 300),
+  selected-disabled-button: map_get($mat-grey, 400),
+  disabled-button-toggle: map_get($mat-grey, 200),
+  unselected-chip: map_get($mat-grey, 300),
+  disabled-list-option: map_get($mat-grey, 200),
+  tooltip: map_get($mat-grey, 700)
+);
+
+$author-theme: map-merge($author, (background: $author-mat-light-theme-background));
+
+// get theme color variables
+$primary: map-get($author-theme, primary);
+$accent: map-get($author-theme, accent);
+$warn: map-get($author-theme, warn);
+$foreground: map-get($author-theme, foreground);
+$background: map-get($author-theme, background);
+
+// create colors object (including additional colors)
+$author-colors: (
+  'accent': mat-color($accent),
+  'accent-1': #795C3A,
+  'accent-2': #CAD266,
+  'app-bg': white,
+  'control-bg': white,
+  'control-bg-active': white,
+  'disabled-text': mat-color($foreground, disabled-text),
+  'highlighted': #fffaec,
+  'info': #ef6c00,
+  'info-contrast': white,
+  'notice-bg': rgba(black, 0.04),
+  'primary': mat-color($primary),
+  'score': #FFC107,
+  'secondary-text': mat-color($foreground, secondary-text),
+  'selected-bg': map-get($author-theme-primary, 50),
+  'success': #00C853,
+  'success-contrast': black,
+  'text': mat-color($foreground, text),
+  'warn': mat-color($warn)
+);

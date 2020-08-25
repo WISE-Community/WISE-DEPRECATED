@@ -8,7 +8,7 @@ import ComponentController from '../componentController';
 import * as EventEmitter2 from 'eventemitter2';
 window['EventEmitter2'] = EventEmitter2;
 import DrawingTool from '../../lib/drawingTool/drawing-tool';
-import DrawService from './drawService';
+import { DrawService } from './drawService';
 
 class DrawController extends ComponentController {
   $injector: any;
@@ -122,23 +122,6 @@ class DrawController extends ComponentController {
     this.$timeout(angular.bind(this, this.initializeDrawingTool));
 
     this.initializeScopeGetComponentState(this.$scope, 'drawController');
-
-    /*
-     * Listen for the requestImage event which is fired when something needs an image representation
-     * of the student data from a specific component.
-     */
-    this.$scope.$on('requestImage', (event, args) => {
-      if (this.isEventTargetThisComponent(args)) {
-        const imageObject = this.getImageObject();
-        const requestImageCallbackArgs = {
-          nodeId: args.nodeId,
-          componentId: args.componentId,
-          imageObject: imageObject
-        };
-        this.$scope.$emit('requestImageCallback', requestImageCallbackArgs);
-      }
-    });
-
     this.registerNotebookItemChosenListener();
     this.broadcastDoneRenderingComponent();
   }
@@ -516,7 +499,7 @@ class DrawController extends ComponentController {
    */
   createComponentState(action) {
     const deferred = this.$q.defer();
-    const componentState = this.NodeService.createNewComponentState();
+    const componentState: any = this.NodeService.createNewComponentState();
     const studentData: any = {};
     const studentDataJSONString = this.getDrawData();
     studentData.drawData = studentDataJSONString;
@@ -637,7 +620,7 @@ class DrawController extends ComponentController {
    * @return a component state with the merged student responses
    */
   createMergedComponentState(componentStates) {
-    const mergedComponentState = this.NodeService.createNewComponentState();
+    const mergedComponentState: any = this.NodeService.createNewComponentState();
     if (componentStates != null) {
       let allDrawCanvasObjects = [];
       let firstDrawData = {};

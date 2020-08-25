@@ -920,5 +920,3 @@ export class ConfigService {
     return '';
   }
 }
-
-export default ConfigService;

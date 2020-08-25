@@ -2,9 +2,9 @@
 
 import { AnnotationService } from '../../services/annotationService';
 import { ConfigService } from '../../services/configService';
-import NotificationService from '../../services/notificationService';
+import { NotificationService } from '../../services/notificationService';
 import { StudentStatusService } from '../../services/studentStatusService';
-import TeacherDataService from '../../services/teacherDataService';
+import { TeacherDataService } from '../../services/teacherDataService';
 import * as angular from 'angular';
 import { TeacherProjectService } from '../../services/teacherProjectService';
 
@@ -128,6 +128,10 @@ class StudentGradingController {
           }
         }
       }
+    });
+
+    this.$scope.$on('$destroy', () => {
+      this.TeacherDataService.setCurrentWorkgroup(null);
     });
 
     const context = 'ClassroomMonitor',

@@ -3,7 +3,7 @@
 import * as $ from 'jquery';
 import * as html2canvas from 'html2canvas';
 import ComponentController from '../componentController';
-import EmbeddedService from './embeddedService';
+import { EmbeddedService } from './embeddedService';
 
 class EmbeddedController extends ComponentController {
   $q: any;
@@ -366,7 +366,7 @@ class EmbeddedController extends ComponentController {
    * @return the componentState after it has been populated
    */
   createComponentState(action) {
-    const componentState = this.NodeService.createNewComponentState();
+    const componentState: any = this.NodeService.createNewComponentState();
     componentState.studentData = this.studentData;
     componentState.componentType = 'Embedded';
     componentState.nodeId = this.nodeId;

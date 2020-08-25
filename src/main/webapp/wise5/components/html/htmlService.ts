@@ -1,43 +1,45 @@
-import ComponentService from '../componentService';
+import { ComponentService } from '../componentService';
+import { Injectable } from '@angular/core';
+import { StudentDataService } from '../../services/studentDataService';
+import { UtilService } from '../../services/utilService';
+import { UpgradeModule } from '@angular/upgrade/static';
 
-class HTMLService extends ComponentService {
-  static $inject = ['$filter', 'StudentDataService', 'UtilService'];
+@Injectable()
+export class HTMLService extends ComponentService {
 
-  constructor($filter, StudentDataService, UtilService) {
-    super($filter, StudentDataService, UtilService);
+  constructor(private upgrade: UpgradeModule,
+      protected StudentDataService: StudentDataService,
+      protected UtilService: UtilService) {
+    super(StudentDataService, UtilService);
   }
 
   getComponentTypeLabel() {
-    return this.$translate('html.componentTypeLabel');
+    return this.getTranslation('html.componentTypeLabel');
+  }
+
+  getTranslation(key: string) {
+    return this.upgrade.$injector.get('$filter')('translate')(key);
   }
 
   createComponent() {
     const component: any = super.createComponent();
     component.type = 'HTML';
-    component.html = this.$translate('html.enterHTMLHere');
+    component.html = this.getTranslation('html.enterHTMLHere');
     return component;
   }
 
-  isCompleted(component, componentStates, componentEvents, nodeEvents) {
-    let result = false;
-
+  isCompleted(component: any, componentStates: any[], componentEvents: any[], nodeEvents: any[]) {
     if (nodeEvents != null) {
-      // loop through all the events
-      for (let e = 0; e < nodeEvents.length; e++) {
-        // get an event
-        const event = nodeEvents[e];
-
-        if (event != null && event.event === 'nodeEntered') {
-          result = true;
-          break;
+      for (const nodeEvent of nodeEvents) {
+        if (nodeEvent.event === 'nodeEntered') {
+          return true;
         }
       }
     }
-
-    return result;
+    return false;
   }
 
-  componentHasWork(component) {
+  componentHasWork(component: any) {
     return false;
   }
 
@@ -49,5 +51,3 @@ class HTMLService extends ComponentService {
     return false;
   }
 }
-
-export default HTMLService;

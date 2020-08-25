@@ -1,7 +1,7 @@
 'use strict';
 
 import { ConfigService } from '../../../../services/configService';
-import TeacherDataService from '../../../../services/teacherDataService';
+import { TeacherDataService } from '../../../../services/teacherDataService';
 import * as angular from 'angular';
 
 class ComponentRevisionsInfoController {
@@ -61,7 +61,7 @@ class ComponentRevisionsInfoController {
 
     if (latest) {
       // calculate the save time of the latest component state
-      let serverSaveTime = latest.serverSaveTime;
+      let serverSaveTime = Date.parse(latest.serverSaveTime);
       this.latestComponentStateTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
 
       // check if the latest component state is a submit

@@ -5,15 +5,13 @@ import * as $ from 'jquery';
 import { fabric } from 'fabric';
 window['fabric'] = fabric
 import ComponentController from '../componentController';
-import LabelService from './labelService';
-import OpenResponseService from '../openResponse/openResponseService';
+import { LabelService } from './labelService';
 
 class LabelController extends ComponentController {
   $q: any;
   $timeout: any;
   $window: any;
   LabelService: LabelService;
-  OpenResponseService: OpenResponseService;
   isNewLabelButtonVisible: boolean;
   isCancelButtonVisible: boolean;
   notebookConfig: any;
@@ -49,7 +47,6 @@ class LabelController extends ComponentController {
     'LabelService',
     'NodeService',
     'NotebookService',
-    'OpenResponseService',
     'ProjectService',
     'StudentAssetService',
     'StudentDataService',
@@ -69,7 +66,6 @@ class LabelController extends ComponentController {
     LabelService,
     NodeService,
     NotebookService,
-    OpenResponseService,
     ProjectService,
     StudentAssetService,
     StudentDataService,
@@ -94,7 +90,6 @@ class LabelController extends ComponentController {
     this.$timeout = $timeout;
     this.$window = $window;
     this.LabelService = LabelService;
-    this.OpenResponseService = OpenResponseService;
 
     // whether the new label button is shown or not
     this.isNewLabelButtonVisible = true;
@@ -293,33 +288,6 @@ class LabelController extends ComponentController {
 
       return deferred.promise;
     }.bind(this);
-
-    /*
-     * Listen for the requestImage event which is fired when something needs
-     * an image representation of the student data from a specific
-     * component.
-     */
-    this.$scope.$on('requestImage', (event, args) => {
-      // get the node id and component id from the args
-      const nodeId = args.nodeId;
-      const componentId = args.componentId;
-
-      // check if the image is being requested from this component
-      if (this.nodeId === nodeId && this.componentId === componentId) {
-        // obtain the image blob
-        const imageObject = this.getImageObject();
-
-        if (imageObject != null) {
-          const args: any = {};
-          args.nodeId = nodeId;
-          args.componentId = componentId;
-          args.imageObject = imageObject;
-
-          // fire an event that contains the image object
-          this.$scope.$emit('requestImageCallback', args);
-        }
-      }
-    });
 
     /**
      * Listen for the 'exitNode' event which is fired when the student
@@ -751,7 +719,7 @@ class LabelController extends ComponentController {
     const deferred = this.$q.defer();
 
     // create a new component state
-    const componentState = this.NodeService.createNewComponentState();
+    const componentState: any = this.NodeService.createNewComponentState();
 
     const studentData: any = {};
     studentData.version = this.getStudentDataVersion();
@@ -1667,7 +1635,7 @@ class LabelController extends ComponentController {
    * @return a component state with the merged student responses
    */
   createMergedComponentState(componentStates) {
-    let mergedComponentState = this.NodeService.createNewComponentState();
+    let mergedComponentState: any = this.NodeService.createNewComponentState();
 
     if (componentStates != null) {
       let mergedLabels = [];
