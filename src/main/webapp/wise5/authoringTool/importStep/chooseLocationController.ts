@@ -8,9 +8,8 @@ class ChooseLocationController {
   projectId: number;
   selectedNodes: any[];
 
-  static $inject = ['$rootScope', '$state', '$stateParams', 'ProjectService'];
+  static $inject = ['$state', '$stateParams', 'ProjectService'];
   constructor(
-    private $rootScope: any,
     private $state: any,
     $stateParams: any,
     private ProjectService: TeacherProjectService
@@ -30,7 +29,7 @@ class ChooseLocationController {
       nodeIdToInsertInsideOrAfter
     ).then(() => {
       this.ProjectService.checkPotentialStartNodeIdChangeThenSaveProject().then(() => {
-        this.$rootScope.$broadcast('parseProject');
+        this.ProjectService.refreshProject();
         this.$state.go('root.at.project');
       });
     });

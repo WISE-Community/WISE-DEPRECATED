@@ -2422,7 +2422,7 @@ class NodeAuthoringController {
       this.TeacherDataService.setCurrentNodeByNodeId(this.nodeId);
       this.populateBranchAuthoring();
       this.authoringViewNodeChanged().then(() => {
-        this.$rootScope.$broadcast('parseProject');
+        this.ProjectService.refreshProject();
       });
       this.UtilService.showJSONValidMessage();
     } catch (e) {
