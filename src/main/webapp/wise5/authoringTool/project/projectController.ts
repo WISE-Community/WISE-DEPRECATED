@@ -39,6 +39,7 @@ class ProjectController {
   moveMode: boolean;
   projectURL: string;
   refreshProjectSubscription: Subscription;
+  scrollToBottomOfPageSubscription: Subscription;
 
   /*
    * The colors for the branch path steps. The colors are from
@@ -131,7 +132,8 @@ class ProjectController {
       this.refreshProject();
     });
 
-    this.$rootScope.$on('scrollToBottom', () => {
+    this.scrollToBottomOfPageSubscription =
+        this.ProjectService.scrollToBottomOfPage$.subscribe(() => {
       this.scrollToBottomOfPage();
     });
 
@@ -159,6 +161,7 @@ class ProjectController {
 
   $onDestroy() {
     this.refreshProjectSubscription.unsubscribe();
+    this.scrollToBottomOfPageSubscription.unsubscribe();
   }
 
   endProjectAuthoringSession() {

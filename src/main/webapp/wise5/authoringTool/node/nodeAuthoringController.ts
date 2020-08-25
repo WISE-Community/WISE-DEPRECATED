@@ -978,7 +978,7 @@ class NodeAuthoringController {
   addConstraintAndScrollToBottom() {
     const newNodeConstraintId = this.addConstraint();
     this.$timeout(() => {
-      this.$rootScope.$broadcast('scrollToBottom'); // this is where the new constraint appears
+      this.ProjectService.scrollToBottomOfPage();
       this.UtilService.temporarilyHighlightElement(newNodeConstraintId);
     });
   }
