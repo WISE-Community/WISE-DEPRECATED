@@ -1702,8 +1702,8 @@
         </context-group>
         <target state="needs-translation">Teacher unit library navigation</target>
       </trans-unit>
-      <trans-unit datatype="html" id="a90197fbaf305621cf15da6e9f88ccff3087ea1d">
-        <source>Add to Google Classroom</source>
+      <trans-unit datatype="html" id="76de164da3c441addbf9b14950150aa869b00fdb">
+        <source>Share to Google Classroom</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
           <context context-type="linenumber">6</context>
@@ -1712,15 +1712,15 @@
           <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
           <context context-type="linenumber">31</context>
         </context-group>
-        <target state="translated">Google Classroom'a Ekle</target>
+        <target state="needs-translation">Share to Google Classroom</target>
       </trans-unit>
-      <trans-unit datatype="html" id="d559090ad7dfe99c26a7143c93579f3b768f4dd3">
-        <source>Hey there! Looks like you don't have any active Google classes.</source>
+      <trans-unit datatype="html" id="d730351c7b91474b615d35ca4357f0278194bf1d">
+        <source>Hey there! Looks like you don't have any active Google Classroom classes.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
           <context context-type="linenumber">11</context>
         </context-group>
-        <target state="needs-translation">Hey there! Looks like you don't have any active Google classes.</target>
+        <target state="needs-translation">Hey there! Looks like you don't have any active Google Classroom classes.</target>
       </trans-unit>
       <trans-unit datatype="html" id="c7e87d327022a7084f33267598e99b895289a5cc">
         <source>Visit <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>Google Classroom<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/> to create a class and try again.</source>
@@ -1750,21 +1750,21 @@
         </context-group>
         <target state="needs-translation">(Run ID: <x equiv-text="{{ data.run.id }}" id="INTERPOLATION"/>)</target>
       </trans-unit>
-      <trans-unit datatype="html" id="b6d98e943848266c1ee9234245f2d1505d969d72">
-        <source>Add an assignment for this unit in Google Classroom.</source>
+      <trans-unit datatype="html" id="d02edd143baf0e3ea363a7cf9c714bbb19d88cc2">
+        <source>Add an assignment for this unit to Google Classroom.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
           <context context-type="linenumber">25</context>
         </context-group>
-        <target state="needs-translation">Add an assignment for this unit in Google Classroom.</target>
+        <target state="needs-translation">Add an assignment for this unit to Google Classroom.</target>
       </trans-unit>
-      <trans-unit datatype="html" id="3f45dd6922690245cfed6cf0c6dd4f06f125d3ef">
-        <source>1. Choose Google Class</source>
+      <trans-unit datatype="html" id="513f7b099350e045450a1b47ee1987e7dc72d86b">
+        <source>1. Choose from your Google Classroom classes</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
           <context context-type="linenumber">26</context>
         </context-group>
-        <target state="translated">1. Google Class'i Seç</target>
+        <target state="needs-translation">1. Choose from your Google Classroom classes</target>
       </trans-unit>
       <trans-unit datatype="html" id="5566d6863125d49ad8caf9b1264b49f343f41f44">
         <source> (Section <x equiv-text="{{ courses[i].section }}" id="INTERPOLATION"/>)</source>
@@ -1846,21 +1846,21 @@
         </context-group>
         <target state="translated">Ekle</target>
       </trans-unit>
-      <trans-unit datatype="html" id="e9a74cfea4f80b5d5c656bd147bdf4588c98572e">
-        <source>The unit has been successfully added to the following Google Classroom(s)</source>
+      <trans-unit datatype="html" id="c04678929731aad2662284b7ce56c5c75b410df5">
+        <source>The unit has been successfully added to the following Google Classroom classes:</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
           <context context-type="linenumber">64</context>
         </context-group>
-        <target state="needs-translation">The unit has been successfully added to the following Google Classroom(s)</target>
+        <target state="needs-translation">The unit has been successfully added to the following Google Classroom classes:</target>
       </trans-unit>
-      <trans-unit datatype="html" id="5864637a64f27a59e5c5ffec7481035b9d025b1b">
-        <source>There was a problem trying to add the unit to the following Google Classroom(s)</source>
+      <trans-unit datatype="html" id="c5f8f353cc72109abe1365384bb7df8af0a83f63">
+        <source>There was a problem adding the unit to the following Google Classroom classes:</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
           <context context-type="linenumber">69</context>
         </context-group>
-        <target state="needs-translation">There was a problem trying to add the unit to the following Google Classroom(s)</target>
+        <target state="needs-translation">There was a problem adding the unit to the following Google Classroom classes:</target>
       </trans-unit>
       <trans-unit datatype="html" id="8dd413cee2228118c536f503709329a4d1a395e2">
         <source>Done</source>
@@ -1870,7 +1870,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
-          <context context-type="linenumber">84</context>
+          <context context-type="linenumber">85</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/share-project-dialog/share-project-dialog.component.html</context>
@@ -2074,13 +2074,13 @@
         </context-group>
         <target state="needs-translation">You can always find the Access Code for each classroom unit in your Class Schedule.</target>
       </trans-unit>
-      <trans-unit datatype="html" id="6d1b448d6bd57d2a29e2f8e1ea8a35aacd3101f5">
-        <source>Add to Google Classroom</source>
+      <trans-unit datatype="html" id="e57f5a8a6dae5484ae05dbdff681c11ec42c732f">
+        <source> Share to Google Classroom </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
           <context context-type="linenumber">82</context>
         </context-group>
-        <target state="translated">Google Classroom'a Ekle</target>
+        <target state="needs-translation"> Share to Google Classroom </target>
       </trans-unit>
       <trans-unit datatype="html" id="d9b2ffb3e1ce1ca42a3db04d00ea072777898eb3">
         <source>Legacy Unit Warning</source>
@@ -5586,7 +5586,7 @@
         </context-group>
         <target state="needs-translation">Sign Out</target>
       </trans-unit>
-      <trans-unit id="1cde0ecb1655843b8b682674d1ed9ff8138073b2" datatype="html">
+      <trans-unit datatype="html" id="1cde0ecb1655843b8b682674d1ed9ff8138073b2">
         <source>point</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/possible-score/possible-score.component.html</context>
@@ -5594,13 +5594,29 @@
         </context-group>
         <target state="needs-translation">point</target>
       </trans-unit>
-      <trans-unit id="96fe69fa0552ff1362db05cebbd1ee4c0e154c8c" datatype="html">
+      <trans-unit datatype="html" id="96fe69fa0552ff1362db05cebbd1ee4c0e154c8c">
         <source>points</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/possible-score/possible-score.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
         <target state="needs-translation">points</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="74b04b602d4148d1cb5de4da90c0e91ec9bae5ac">
+        <source>Choose a Branch Path</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/preview/modules/choose-branch-path-dialog/choose-branch-path-dialog.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target state="needs-translation">Choose a Branch Path</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="33587ab40a459dc3058a184e39bfa93737fbbd67">
+        <source>Note: This chooser screen is only available in preview mode. Students will not see this screen in a classroom run and will instead be assigned a branch path automatically. Once you have chosen a branch, complete the current step and then click the Next arrow.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/preview/modules/choose-branch-path-dialog/choose-branch-path-dialog.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+        <target state="needs-translation">Note: This chooser screen is only available in preview mode. Students will not see this screen in a classroom run and will instead be assigned a branch path automatically. Once you have chosen a branch, complete the current step and then click the Next arrow.</target>
       </trans-unit>
       <trans-unit datatype="html" id="36a606470097ddf0c32a250c8a902441729ca8ca">
         <source>Add Unit</source>
