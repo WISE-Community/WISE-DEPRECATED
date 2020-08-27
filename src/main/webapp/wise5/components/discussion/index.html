@@ -21,7 +21,7 @@
                       deletebuttonclicked='discussionController.deletebuttonclicked(componentState)'
                       undodeletebuttonclicked='discussionController.undodeletebuttonclicked(componentState)'
                       studentdatachanged='studentdatachanged()'
-                      class='post animate-repeat'>
+                      class='post'>
                   </class-response>
                 </div>
               </div>
@@ -126,7 +126,7 @@
                   undodeletebuttonclicked='discussionController.undodeletebuttonclicked(componentState)'
                   studentdatachanged='studentdatachanged()'
                   isdisabled='::discussionController.isDisabled'
-                  class='post animate-repeat'>
+                  class='post'>
               </class-response>
               <class-response ng-repeat='componentState in discussionController.topLevelResponses.col2'
                   ng-if='mdScreen'
@@ -137,7 +137,7 @@
                   undodeletebuttonclicked='discussionController.undodeletebuttonclicked(componentState)'
                   studentdatachanged='studentdatachanged()'
                   isdisabled='::discussionController.isDisabled'
-                  class='post animate-repeat'>
+                  class='post'>
               </class-response>
             </div>
             <div class='discussion-posts' ng-if='mdScreen' flex>
@@ -149,7 +149,6 @@
                   undodeletebuttonclicked='discussionController.undodeletebuttonclicked(componentState)'
                   studentdatachanged='studentdatachanged()'
                   isdisabled='::discussionController.isDisabled'
-                  class='animate-repeat'
                   style='display: block;'>
               </class-response>
             </div>
