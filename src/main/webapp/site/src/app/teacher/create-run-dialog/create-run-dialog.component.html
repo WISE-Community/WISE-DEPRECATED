@@ -79,8 +79,9 @@
   </mat-dialog-content>
   <mat-dialog-actions fxLayoutAlign="end">
     <button mat-button color="primary" (click)="checkClassroomAuthorization()"
-            *ngIf="isGoogleUser() && isGoogleClassroomEnabled()" i18n>Add to Google
-      Classroom</button>
+            *ngIf="isGoogleUser() && isGoogleClassroomEnabled()" i18n>
+      Share to Google Classroom
+    </button>
     <button mat-button (click)="closeAll()" i18n>Done</button>
   </mat-dialog-actions>
 </ng-container>
