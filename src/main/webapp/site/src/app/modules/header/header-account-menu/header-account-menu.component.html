@@ -18,11 +18,10 @@
       <span>{{ firstName }} {{ lastName }}</span>
     </div>
     <div *ngIf="isPreviousAdmin" class="user-switch">
-      <a (click)="switchToOriginalUser()" style="cursor: pointer" i18n>
+      <a (click)="switchToOriginalUser()" i18n>
         Switch back to original user
       </a>
       <form id="switchBackToOriginalUserForm"
-            style="visibility:hidden"
             action="/logout/impersonate"
             method="POST"></form>
     </div>
