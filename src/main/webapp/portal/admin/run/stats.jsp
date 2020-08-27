@@ -16,6 +16,7 @@
 
 <script src="${contextPath}/<spring:theme code="jquerysource"/>" type="text/javascript"></script>
 <script src="${contextPath}/<spring:theme code="superfishsource"/>" type="text/javascript"></script>
+<script src="${contextPath}/<spring:theme code="generalsource" />" type="text/javascript"></script>
 
 <style>
 th {
@@ -49,7 +50,7 @@ th {
 				<td>${run.id} (${run.runcode})</td>
 				<td>${run.name} (${run.project.wiseVersion})</td>
 				<td>
-						<a href="${contextPath}/login/impersonate?username=${run.owner.userDetails.username}">${run.owner.userDetails.username}</a><br/>
+						<a onclick='impersonateUser("${run.owner.userDetails.username}")'>${run.owner.userDetails.username}</a><br/>
 						(${run.owner.userDetails.schoolname}, ${run.owner.userDetails.city}, ${run.owner.userDetails.state},${run.owner.userDetails.country})
 				</td>
 				<c:if test="${period!=null}">

@@ -12,7 +12,7 @@
 <c:if test="${textDirection == 'rtl' }">
     <link href="${contextPath}/<spring:theme code="rtlstylesheet"/>" rel="stylesheet" type="text/css" >
 </c:if>
-
+<script type="text/javascript" src="${contextPath}/<spring:theme code="jquerysource"/>"></script>
 <script src="${contextPath}/<spring:theme code="superfishsource"/>" type="text/javascript"></script>
 <script src="${contextPath}/<spring:theme code="generalsource" />" type="text/javascript"></script>
 
@@ -49,7 +49,7 @@ table, tr, td {
                                            items="${projectsToAuthor.value}"
                                            varStatus="loopStatus">
                                     <c:out value="${username}" /> |
-                                    <a href="../../login/impersonate?username=${username}">Log in as this user</a> |
+                                    <a onclick='impersonateUser("${username}")'>Log in as this user</a> |
                                     <a target='_blank' href='../../teacher/account/info?username=${username}'>info</a>
                                     <c:if test="${!loopStatus.isLast()}"><br/></c:if>
                                 </c:forEach>
