@@ -19,6 +19,9 @@
     </div>
     <div *ngIf="isPreviousAdmin" class="user-switch">
       <a (click)="switchToOriginalUser()" i18n>Switch back to original user</a>
+      <form id="switchBackToOriginalUserForm"
+            action="/logout/impersonate"
+            method="POST"></form>
     </div>
     <mat-divider></mat-divider>
     <a *ngIf="role === 'student'"

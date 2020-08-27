@@ -74,7 +74,7 @@
 					</a>
 				</sec:authorize>
 				<sec:authorize access="hasRole('ROLE_PREVIOUS_ADMINISTRATOR')">
-					<a id="logOutImpersonator" href="${contextPath}/logout/impersonate">
+					<a id="logOutImpersonator" onclick='switchBackToOriginalUser()'>
 						<spring:message code="accountmenu.switchBackToOriginalUser" />
 					</a>
 				</sec:authorize>
