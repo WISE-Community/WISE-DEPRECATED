@@ -2771,7 +2771,7 @@ class DataExportController {
    */
   exportMatchComponent(nodeId, component) {
     this.showDownloadingExportMessage();
-    this.TeacherDataService.getExport('allStudentWork').toPromise().then((result: any) => {
+    this.TeacherDataService.getExport('allStudentWork').then((result: any) => {
       let columnNames = [];
       let columnNameToNumber = {};
       let rows = [];
