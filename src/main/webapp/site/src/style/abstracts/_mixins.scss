@@ -17,7 +17,7 @@
     @include mat-typography-level-to-styles($custom-typography, caption);
   }
 
-  .mat-typography, .mat-body, .mat-body-1 {
+  &.mat-typography, .mat-body, .mat-body-1 {
     @include mat-typography-level-to-styles($custom-typography, body-1);
   }
 

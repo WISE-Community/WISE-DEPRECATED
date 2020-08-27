@@ -3,12 +3,12 @@
     fxLayoutAlign="start center"
     fxLayoutGap="8px">
   <mat-icon svgIcon="google-classroom"></mat-icon>
-  <span i18n>Add to Google Classroom</span>
+  <span i18n>Share to Google Classroom</span>
 </h2>
 <ng-container *ngIf="!courses.length">
   <mat-dialog-content>
     <div class="info-block">
-      <p i18n>Hey there! Looks like you don't have any active Google classes.</p>
+      <p i18n>Hey there! Looks like you don't have any active Google Classroom classes.</p>
       <p i18n>Visit <a href="https://classroom.google.com" target="_blank">Google Classroom</a> to create a class and try again.</p>
     </div>
   </mat-dialog-content>
@@ -22,8 +22,8 @@
       <p class="mat-subheading-1 accent-1">
         {{ data.run.name }} <span class="mat-caption" i18n>(Run ID: {{ data.run.id }})</span>
       </p>
-      <p i18n>Add an assignment for this unit in Google Classroom.</p>
-      <h3 i18n>1. Choose Google Class</h3>
+      <p i18n>Add an assignment for this unit to Google Classroom.</p>
+      <h3 i18n>1. Choose from your Google Classroom classes</h3>
       <div formArrayName="selectedCourses">
         <p *ngFor="let control of selectedCoursesControl.controls; let i = index">
           <mat-checkbox [formControl]="control">
@@ -61,12 +61,12 @@
       </p>
       <div *ngIf="addSuccessCount > 0">
         <br/>
-        <p i18n>The unit has been successfully added to the following Google Classroom(s)</p>
+        <p i18n>The unit has been successfully added to the following Google Classroom classes:</p>
         <p *ngFor="let course of coursesSuccessfullyAdded">{{ course.name }}</p>
       </div>
       <div *ngIf="addFailureCount > 0" style="color: red">
         <br/>
-        <p i18n>There was a problem trying to add the unit to the following Google Classroom(s)</p>
+        <p i18n>There was a problem adding the unit to the following Google Classroom classes:</p>
         <p *ngFor="let course of coursesFailedToAdd">{{ course.name }}</p>
       </div>
     </div>
