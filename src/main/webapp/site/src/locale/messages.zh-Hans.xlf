@@ -5510,7 +5510,7 @@
         <source>Student Home</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">29</context>
+          <context context-type="linenumber">32</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/student-home/student-home.component.html</context>
@@ -5522,7 +5522,7 @@
         <source>Teacher Home</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">37</context>
+          <context context-type="linenumber">40</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-home/teacher-home.component.html</context>
@@ -5534,11 +5534,11 @@
         <source>Edit Profile</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">45</context>
+          <context context-type="linenumber">48</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">53</context>
+          <context context-type="linenumber">56</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/account/edit/edit.component.html</context>
@@ -5554,7 +5554,7 @@
         <source>Researcher Tools</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">59</context>
+          <context context-type="linenumber">62</context>
         </context-group>
         <target state="translated">研究人员工具</target>
       </trans-unit>
@@ -5562,7 +5562,7 @@
         <source>Admin Tools</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">65</context>
+          <context context-type="linenumber">68</context>
         </context-group>
         <target state="translated">管理员工具</target>
       </trans-unit>
@@ -5570,11 +5570,11 @@
         <source>Help</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">73</context>
+          <context context-type="linenumber">76</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">81</context>
+          <context context-type="linenumber">84</context>
         </context-group>
         <target state="translated">帮助</target>
       </trans-unit>
@@ -5582,7 +5582,7 @@
         <source>Sign Out</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">86</context>
+          <context context-type="linenumber">89</context>
         </context-group>
         <target state="translated">退出</target>
       </trans-unit>
