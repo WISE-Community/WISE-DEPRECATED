@@ -297,12 +297,14 @@ class ComponentController {
         true
     );
 
-    this.$scope.$on('componentAdvancedButtonClicked', (event, args) => {
-      if (this.componentId === args.componentId) {
-        this.showAdvancedAuthoring = !this.showAdvancedAuthoring;
+    this.$scope.$watch(() => {
+        return this.$scope.$parent.nodeAuthoringController
+            .showAdvancedAdvancedAuthoring[this.componentId];
+      }, () => {
+        this.showAdvancedAuthoring = this.$scope.$parent.nodeAuthoringController
+            .showAdvancedAdvancedAuthoring[this.componentId];
         this.UtilService.hideJSONValidMessage();
-      }
-    });
+      }, true);
 
     this.$scope.$on('assetSelected', (event, args) => {
       this.assetSelected(event, args);

@@ -58,6 +58,7 @@ class NodeAuthoringController {
   removalCriteria: any;
   selectedComponent: any = null;
   showAdvanced: boolean = false;
+  showAdvancedAdvancedAuthoring: any = {};
   showComponentAuthoringViews: boolean = true;
   showComponents: boolean = true;
   showConstraints: boolean = false;
@@ -2430,14 +2431,9 @@ class NodeAuthoringController {
     }
   }
 
-  /**
-   * The advanced button was clicked on a component. We will broadcast an event
-   * so that the appropriate child component can display their advanced
-   * authoring options.
-   * @param componentId The component id whose advanced button was clicked.
-   */
-  componentAdvancedButtonClicked(componentId) {
-    this.$rootScope.$broadcast('componentAdvancedButtonClicked', { componentId: componentId });
+  toggleComponentAdvancedAuthoring(componentId) {
+    this.showAdvancedAdvancedAuthoring[componentId] =
+        !this.showAdvancedAdvancedAuthoring[componentId];
   }
 
   authoringViewConstraintRemovalCriteriaNodeIdChanged(criteria) {

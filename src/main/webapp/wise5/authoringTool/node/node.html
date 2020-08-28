@@ -982,7 +982,8 @@
     </div>
     <div ng-if='!nodeAuthoringController.insertComponentMode && nodeAuthoringController.showComponentAuthoringViews'>
       <md-input-container style='margin-top: 0; margin-right: 20px; width: 150px;'>
-        <md-button class='topButton md-raised md-primary' ng-click='nodeAuthoringController.componentAdvancedButtonClicked(component.id)'>
+        <md-button class='topButton md-raised md-primary'
+                   ng-click='nodeAuthoringController.toggleComponentAdvancedAuthoring(component.id)'>
           <md-icon>build</md-icon>
           <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'ADVANCED' | translate }}</md-tooltip>
         </md-button>
