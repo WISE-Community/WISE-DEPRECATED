@@ -80,13 +80,13 @@ export class LabelService extends ComponentService {
     return !this.UtilService.hasShowWorkConnectedComponent(component);
   }
 
-  componentStateHasStudentWork(componentState: any, componentContent: any) {
+  componentStateHasStudentWork(componentState: any, componentContent: any): boolean {
     if (componentContent == null) {
       return this.componentStateHasLabel(componentState);
     } else {
       if (this.componentHasStarterLabel(componentContent)) {
-        return !this.labelArraysAreTheSame(componentState.studentData.labels,
-            componentContent.labels);
+        return componentState != null &&
+            !this.labelArraysAreTheSame(componentState.studentData.labels, componentContent.labels);
       } else {
         return this.componentStateHasLabel(componentState);
       }
@@ -324,7 +324,7 @@ export class LabelService extends ComponentService {
   }
 
   getSVGTextElementString(fontSize: any, tspans: string) {
-    return `<text id="SvgjsText1008" font-family="Helvetica, Arial, sans-serif" font-size="` + 
+    return `<text id="SvgjsText1008" font-family="Helvetica, Arial, sans-serif" font-size="` +
         `${fontSize}">${tspans}</text>`;
   }
 
