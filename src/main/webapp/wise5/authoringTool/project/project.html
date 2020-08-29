@@ -202,7 +202,7 @@
                   <md-icon>check</md-icon>
                   <md-tooltip md-direction="top" class="projectButtonTooltip">{{ ::"create" | translate }}</md-tooltip>
                 </md-button>
-                <md-button id="createGroupCancelButton" class='createButton md-raised md-primary' ng-click='projectController.cancelCreateGroupClicked()'>
+                <md-button id="createGroupCancelButton" class='createButton md-raised md-primary' ng-click='projectController.toggleView("project")'>
                   <md-icon>close</md-icon>
                   <md-tooltip md-direction="top" class="projectButtonTooltip">{{ ::"CANCEL" | translate }}</md-tooltip>
                 </md-button>
@@ -222,7 +222,7 @@
                   <md-icon>check</md-icon>
                   <md-tooltip md-direction="top" class="projectButtonTooltip">{{ ::"create" | translate }}</md-tooltip>
                 </md-button>
-                <md-button id="createNodeCancelButton" class='createButton md-raised md-primary' ng-click='projectController.cancelCreateNodeClicked()'>
+                <md-button id="createNodeCancelButton" class='createButton md-raised md-primary' ng-click='projectController.toggleView("project")'>
                   <md-icon>close</md-icon>
                   <md-tooltip md-direction="top" class="projectButtonTooltip">{{ ::"CANCEL" | translate }}</md-tooltip>
                 </md-button>

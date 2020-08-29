@@ -19,7 +19,6 @@ class ProjectController {
   projectTitle: string;
   showCreateGroup: boolean = false;
   showCreateNode: boolean = false;
-  showTemplateChooser: boolean;
 
   inactiveGroupNodes: any[];
   inactiveStepNodes: any[];
@@ -59,13 +58,10 @@ class ProjectController {
   ];
 
   static $inject = [
-    '$anchorScroll',
     '$filter',
     '$mdDialog',
-    '$rootScope',
     '$scope',
     '$state',
-    '$stateParams',
     '$stomp',
     '$timeout',
     '$transitions',
@@ -77,13 +73,10 @@ class ProjectController {
   ];
 
   constructor(
-    private $anchorScroll: any,
     $filter,
     private $mdDialog,
-    private $rootScope,
     private $scope,
     private $state,
-    $stateParams,
     private $stomp,
     private $timeout,
     private $transitions,
@@ -98,7 +91,7 @@ class ProjectController {
     this.ProjectService = ProjectService;
     this.TeacherDataService = TeacherDataService;
     this.UtilService = UtilService;
-    this.projectId = $stateParams.projectId;
+    this.projectId = this.ConfigService.getProjectId();
     this.runId = this.ConfigService.getRunId();
     this.items = this.ProjectService.idToOrder;
     this.nodeIds = this.ProjectService.getFlattenedProjectAsNodeIds();
@@ -137,10 +130,6 @@ class ProjectController {
       this.scrollToBottomOfPage();
     });
 
-    this.$rootScope.$on('$stateChangeSuccess', (event, transition) => {
-      this.scrollToBottomOfPage();
-    });
-
     this.saveEvent('projectOpened', 'Navigation');
 
     /*
@@ -170,20 +159,16 @@ class ProjectController {
     });
   }
 
-  previewProject() {
-    const previewProjectEventData = { constraints: true };
+  previewProject(enableConstraints: boolean = true) {
+    const previewProjectEventData = { constraints: enableConstraints };
     this.saveEvent('projectPreviewed', 'Navigation', previewProjectEventData);
     window.open(
-      `${this.ConfigService.getConfigParam('previewProjectURL')}`
+      `${this.ConfigService.getConfigParam('previewProjectURL')}?constraints=${enableConstraints}`
     );
   }
 
   previewProjectWithoutConstraints() {
-    const previewProjectEventData = { constraints: false };
-    this.saveEvent('projectPreviewed', 'Navigation', previewProjectEventData);
-    window.open(
-      `${this.ConfigService.getConfigParam('previewProjectURL')}?constraints=false`
-    );
+    this.previewProject(false);
   }
 
   viewProjectAssets() {
@@ -244,11 +229,6 @@ class ProjectController {
     this.$state.go('root.at.project.node', { projectId: this.projectId, nodeId: nodeId });
   }
 
-  /**
-   * The constraint icon on a step in the project view was clicked.
-   * We will open the constraint view for the step.
-   * @param nodeId The node id of the step.
-   */
   constraintIconClicked(nodeId) {
     this.TeacherDataService.endCurrentNodeAndSetCurrentNodeByNodeId(nodeId);
     this.$state.go('root.at.project.nodeConstraints', {
@@ -257,11 +237,6 @@ class ProjectController {
     });
   }
 
-  /**
-   * The branch icon on a step in the project view was clicked.
-   * We will open the transitions view for the step.
-   * @param nodeId The node id of the step.
-   */
   branchIconClicked(nodeId) {
     this.TeacherDataService.endCurrentNodeAndSetCurrentNodeByNodeId(nodeId);
     this.$state.go('root.at.project.nodeEditPaths', { projectId: this.projectId, nodeId: nodeId });
@@ -710,11 +685,6 @@ class ProjectController {
     });
   }
 
-  projectTitleChanged() {
-    this.ProjectService.setProjectTitle(this.projectTitle);
-    this.ProjectService.saveProject();
-  }
-
   importStep() {
     this.$state.go('root.at.project.import-step.choose-step', { projectId: this.projectId });
   }
@@ -731,11 +701,6 @@ class ProjectController {
     });
   }
 
-  /**
-   * Check if the specified node is in any branch path
-   * @param nodeId the node id of the node
-   * @return whether the node is in any branch path
-   */
   isNodeInAnyBranchPath(nodeId) {
     return this.ProjectService.isNodeInAnyBranchPath(nodeId);
   }
@@ -752,27 +717,11 @@ class ProjectController {
     } else if (view === 'createNode') {
       this.showCreateGroup = false;
       this.showCreateNode = !this.showCreateNode;
-      this.showTemplateChooser = false;
     }
   }
 
   goBackToProjectList() {
     this.$state.go('root.at.main');
-  }
-
-  projectHomeClicked() {
-    this.showProjectHome();
-  }
-
-  showProjectHome() {
-    // we are going to the project view so we will set the current node to null
-    this.TeacherDataService.setCurrentNode(null);
-    this.toggleView('project');
-    this.scrollToTopOfPage();
-  }
-
-  scrollToTopOfPage() {
-    this.$anchorScroll('top');
   }
 
   scrollToBottomOfPage() {
@@ -782,14 +731,6 @@ class ProjectController {
       },
       1000
     );
-  }
-
-  cancelCreateGroupClicked() {
-    this.toggleView('project');
-  }
-
-  cancelCreateNodeClicked() {
-    this.toggleView('project');
   }
 
   /**
@@ -964,7 +905,7 @@ class ProjectController {
   }
 
   getNumberOfConstraintsOnNode(nodeId) {
-    let constraints = this.ProjectService.getConstraintsOnNode(nodeId);
+    const constraints = this.ProjectService.getConstraintsOnNode(nodeId);
     return constraints.length;
   }
 
