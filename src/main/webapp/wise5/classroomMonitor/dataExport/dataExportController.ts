@@ -1411,17 +1411,18 @@ class DataExportController {
     row[columnNameToNumber['Period Name']] = userInfo.periodName;
     row[columnNameToNumber['Teacher Username']] = this.ConfigService.getTeacherUserInfo().username;
     row[columnNameToNumber['Project ID']] = this.ConfigService.getProjectId();
-    const student1 = userInfo.users[0];
-    const student2 = userInfo.users[1];
-    const student3 = userInfo.users[2];
-    if (student1 != null) {
-      row[columnNameToNumber['WISE ID 1']] = student1.id;
+    if (userInfo.users != null) {
+      this.addStudentWISEIDsToNotificationRow(row, columnNameToNumber, userInfo);
     }
-    if (student2 != null) {
-      row[columnNameToNumber['WISE ID 2']] = student2.id;
-    }
-    if (student3 != null) {
-      row[columnNameToNumber['WISE ID 3']] = student3.id;
+    return row;
+  }
+
+  addStudentWISEIDsToNotificationRow(row: any, columnNameToNumber: any, userInfo: any) {
+    for (let i = 0; i <= 2; i++) {
+      const student = userInfo.users[i];
+      if (student != null) {
+        row[columnNameToNumber[`WISE ID ${i + 1}`]] = student.id;
+      }
     }
     return row;
   }
@@ -2771,7 +2772,7 @@ class DataExportController {
    */
   exportMatchComponent(nodeId, component) {
     this.showDownloadingExportMessage();
-    this.TeacherDataService.getExport('allStudentWork').toPromise().then((result: any) => {
+    this.TeacherDataService.getExport('allStudentWork').then((result: any) => {
       let columnNames = [];
       let columnNameToNumber = {};
       let rows = [];

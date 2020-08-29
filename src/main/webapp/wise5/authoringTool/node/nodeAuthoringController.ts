@@ -978,7 +978,7 @@ class NodeAuthoringController {
   addConstraintAndScrollToBottom() {
     const newNodeConstraintId = this.addConstraint();
     this.$timeout(() => {
-      this.$rootScope.$broadcast('scrollToBottom'); // this is where the new constraint appears
+      this.ProjectService.scrollToBottomOfPage();
       this.UtilService.temporarilyHighlightElement(newNodeConstraintId);
     });
   }
@@ -2422,7 +2422,7 @@ class NodeAuthoringController {
       this.TeacherDataService.setCurrentNodeByNodeId(this.nodeId);
       this.populateBranchAuthoring();
       this.authoringViewNodeChanged().then(() => {
-        this.$rootScope.$broadcast('parseProject');
+        this.ProjectService.refreshProject();
       });
       this.UtilService.showJSONValidMessage();
     } catch (e) {

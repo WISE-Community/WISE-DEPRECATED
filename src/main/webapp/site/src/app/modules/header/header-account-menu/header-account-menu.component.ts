@@ -47,7 +47,7 @@ export class HeaderAccountMenuComponent implements OnInit {
   }
 
   switchToOriginalUser() {
-    window.location.href = '/logout/impersonate';
+    (<HTMLFormElement> document.getElementById('switchBackToOriginalUserForm')).submit();
   }
 
   logOut() {

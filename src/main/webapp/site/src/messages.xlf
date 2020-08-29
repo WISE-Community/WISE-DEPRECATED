@@ -1512,8 +1512,8 @@
           <context context-type="linenumber">8</context>
         </context-group>
       </trans-unit>
-      <trans-unit datatype="html" id="a90197fbaf305621cf15da6e9f88ccff3087ea1d">
-        <source>Add to Google Classroom</source>
+      <trans-unit datatype="html" id="76de164da3c441addbf9b14950150aa869b00fdb">
+        <source>Share to Google Classroom</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
           <context context-type="linenumber">6</context>
@@ -1523,8 +1523,8 @@
           <context context-type="linenumber">31</context>
         </context-group>
       </trans-unit>
-      <trans-unit datatype="html" id="d559090ad7dfe99c26a7143c93579f3b768f4dd3">
-        <source>Hey there! Looks like you don't have any active Google classes.</source>
+      <trans-unit datatype="html" id="d730351c7b91474b615d35ca4357f0278194bf1d">
+        <source>Hey there! Looks like you don't have any active Google Classroom classes.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
           <context context-type="linenumber">11</context>
@@ -1555,15 +1555,15 @@
           <context context-type="linenumber">60</context>
         </context-group>
       </trans-unit>
-      <trans-unit datatype="html" id="b6d98e943848266c1ee9234245f2d1505d969d72">
-        <source>Add an assignment for this unit in Google Classroom.</source>
+      <trans-unit datatype="html" id="d02edd143baf0e3ea363a7cf9c714bbb19d88cc2">
+        <source>Add an assignment for this unit to Google Classroom.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
           <context context-type="linenumber">25</context>
         </context-group>
       </trans-unit>
-      <trans-unit datatype="html" id="3f45dd6922690245cfed6cf0c6dd4f06f125d3ef">
-        <source>1. Choose Google Class</source>
+      <trans-unit datatype="html" id="513f7b099350e045450a1b47ee1987e7dc72d86b">
+        <source>1. Choose from your Google Classroom classes</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
           <context context-type="linenumber">26</context>
@@ -1643,15 +1643,15 @@
           <context context-type="linenumber">30</context>
         </context-group>
       </trans-unit>
-      <trans-unit datatype="html" id="e9a74cfea4f80b5d5c656bd147bdf4588c98572e">
-        <source>The unit has been successfully added to the following Google Classroom(s)</source>
+      <trans-unit datatype="html" id="c04678929731aad2662284b7ce56c5c75b410df5">
+        <source>The unit has been successfully added to the following Google Classroom classes:</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
           <context context-type="linenumber">64</context>
         </context-group>
       </trans-unit>
-      <trans-unit datatype="html" id="5864637a64f27a59e5c5ffec7481035b9d025b1b">
-        <source>There was a problem trying to add the unit to the following Google Classroom(s)</source>
+      <trans-unit datatype="html" id="c5f8f353cc72109abe1365384bb7df8af0a83f63">
+        <source>There was a problem adding the unit to the following Google Classroom classes:</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
           <context context-type="linenumber">69</context>
@@ -1665,7 +1665,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
-          <context context-type="linenumber">84</context>
+          <context context-type="linenumber">85</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/share-project-dialog/share-project-dialog.component.html</context>
@@ -1848,8 +1848,8 @@
           <context context-type="linenumber">77</context>
         </context-group>
       </trans-unit>
-      <trans-unit datatype="html" id="6d1b448d6bd57d2a29e2f8e1ea8a35aacd3101f5">
-        <source>Add to Google Classroom</source>
+      <trans-unit datatype="html" id="e57f5a8a6dae5484ae05dbdff681c11ec42c732f">
+        <source> Share to Google Classroom </source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
           <context context-type="linenumber">82</context>
@@ -4963,7 +4963,7 @@
         <source>Student Home</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">29</context>
+          <context context-type="linenumber">32</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/student-home/student-home.component.html</context>
@@ -4974,7 +4974,7 @@
         <source>Teacher Home</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">37</context>
+          <context context-type="linenumber">40</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-home/teacher-home.component.html</context>
@@ -4985,11 +4985,11 @@
         <source>Edit Profile</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">45</context>
+          <context context-type="linenumber">48</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">53</context>
+          <context context-type="linenumber">56</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/account/edit/edit.component.html</context>
@@ -5004,32 +5004,32 @@
         <source>Researcher Tools</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">59</context>
+          <context context-type="linenumber">62</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="593d1ae1c4b71457eda8476df2bb52624a3c6e74">
         <source>Admin Tools</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">65</context>
+          <context context-type="linenumber">68</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="85b79c9064aed1ead31ace985f31aa1363f6bdaf">
         <source>Help</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">73</context>
+          <context context-type="linenumber">76</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">81</context>
+          <context context-type="linenumber">84</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="640eec093c685babaa3265137215e3cc92ad704d">
         <source>Sign Out</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">86</context>
+          <context context-type="linenumber">89</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="1cde0ecb1655843b8b682674d1ed9ff8138073b2">
@@ -5044,6 +5044,20 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/possible-score/possible-score.component.html</context>
           <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="74b04b602d4148d1cb5de4da90c0e91ec9bae5ac">
+        <source>Choose a Branch Path</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/preview/modules/choose-branch-path-dialog/choose-branch-path-dialog.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="33587ab40a459dc3058a184e39bfa93737fbbd67">
+        <source>Note: This chooser screen is only available in preview mode. Students will not see this screen in a classroom run and will instead be assigned a branch path automatically. Once you have chosen a branch, complete the current step and then click the Next arrow.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/preview/modules/choose-branch-path-dialog/choose-branch-path-dialog.component.html</context>
+          <context context-type="linenumber">3</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="36a606470097ddf0c32a250c8a902441729ca8ca">
