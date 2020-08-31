@@ -323,8 +323,9 @@ public class TeacherAPIControllerTest extends APIControllerTest {
     replay(request);
     expect(userService.createUser(isA(TeacherUserDetails.class))).andReturn(teacher1);
     replay(userService);
-    String username = teacherAPIController.createTeacherAccount(teacherFields, request);
-    assertEquals(TEACHER_USERNAME, username);
+    HashMap<String, Object> response = teacherAPIController.createTeacherAccount(teacherFields,
+        request);
+    assertEquals(TEACHER_USERNAME, response.get("username"));
     verify(request);
     verify(userService);
   }
