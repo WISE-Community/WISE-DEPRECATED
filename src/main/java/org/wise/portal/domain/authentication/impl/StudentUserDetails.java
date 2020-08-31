@@ -38,8 +38,8 @@ import org.wise.portal.domain.authentication.Gender;
 import org.wise.portal.domain.authentication.MutableUserDetails;
 
 /**
- * Implementation class of <code>MutableUserDetails</code> that uses an EJB3
- * compliant object persistence mechanism.
+ * Implementation class of <code>MutableUserDetails</code> that uses an EJB3 compliant object
+ * persistence mechanism.
  *
  * UserDetails for a student in WISE
  *
@@ -133,7 +133,7 @@ public class StudentUserDetails extends PersistentUserDetails implements Mutable
     Calendar birthday = Calendar.getInstance();
     birthday.setTime(this.birthday);
 
-    int birthmonth = birthday.get(Calendar.MONTH) + 1;  // month is 0-based
+    int birthmonth = birthday.get(Calendar.MONTH) + 1; // month is 0-based
     int birthdate = birthday.get(Calendar.DATE);
     String birthmonthString = String.valueOf(birthmonth);
     if (birthmonth <= 9) {
@@ -144,29 +144,21 @@ public class StudentUserDetails extends PersistentUserDetails implements Mutable
       birthdateString = "0" + birthdateString;
     }
 
-    String username = firstname + lastnameInitial +
-      birthmonthString + birthdateString;
-    username = username.replaceAll("[^a-zA-Z0-9]", "");
-
-    return username;
+    return firstname + lastnameInitial + birthmonthString + birthdateString;
   }
 
   public String[] getUsernameSuffixes() {
-    return new String[] {"", "a", "b", "c", "d", "e", "f", "g", "h",
-      "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};
+    return new String[] { "", "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n",
+        "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z" };
   }
 
   /**
-   * Get the next username suffix. For students the suffix is just an alphabet letter.
-   * If we reach "z" we will then move on to "aa", if we reach "az" we will then move
-   * on to "aaa", etc.
-   * e.g.
-   * "x"
-   * "y"
-   * "z"
-   * "aa"
-   * "ab"
-   * @param currentUsernameSuffix the current suffix
+   * Get the next username suffix. For students the suffix is just an alphabet letter. If we reach
+   * "z" we will then move on to "aa", if we reach "az" we will then move on to "aaa", etc. e.g. "x"
+   * "y" "z" "aa" "ab"
+   * 
+   * @param currentUsernameSuffix
+   *                                the current suffix
    * @see MutableUserDetails#getNextUsernameSuffix(String)
    * @return the next username suffix which will be the next letter in the alphabet
    */
@@ -174,23 +166,25 @@ public class StudentUserDetails extends PersistentUserDetails implements Mutable
     String nextUsernameSuffix = "";
 
     if (currentUsernameSuffix == null) {
-      //empty suffix string
+      // empty suffix string
       nextUsernameSuffix = "";
     } else if ("".equals(currentUsernameSuffix)) {
-      //if the previous was "" we will now return "a"
+      // if the previous was "" we will now return "a"
       nextUsernameSuffix = "a";
     } else {
       if (currentUsernameSuffix.length() > 0) {
-        //get the last char in the suffix
+        // get the last char in the suffix
         char lastChar = currentUsernameSuffix.charAt(currentUsernameSuffix.length() - 1);
 
         if (lastChar == 'z') {
-          //the last char was 'z' so we need to move on to "aa"
-          String beginningCurrentUsernameSuffix = currentUsernameSuffix.substring(0, currentUsernameSuffix.length() - 1);
+          // the last char was 'z' so we need to move on to "aa"
+          String beginningCurrentUsernameSuffix = currentUsernameSuffix.substring(0,
+              currentUsernameSuffix.length() - 1);
           nextUsernameSuffix = beginningCurrentUsernameSuffix + "aa";
         } else {
-          //try the next letter in the alphabet
-          nextUsernameSuffix = currentUsernameSuffix.substring(0, currentUsernameSuffix.length() - 1) + (char) (lastChar + 1);
+          // try the next letter in the alphabet
+          nextUsernameSuffix = currentUsernameSuffix.substring(0,
+              currentUsernameSuffix.length() - 1) + (char) (lastChar + 1);
         }
       }
     }

@@ -129,11 +129,14 @@ public class TeacherAPIController extends UserAPIController {
 
   @PostMapping("/register")
   @Secured({ "ROLE_ANONYMOUS" })
-  String createTeacherAccount(@RequestBody Map<String, String> teacherFields,
+  HashMap<String, Object> createTeacherAccount(@RequestBody Map<String, String> teacherFields,
       HttpServletRequest request) throws DuplicateUsernameException {
     TeacherUserDetails tud = new TeacherUserDetails();
     String firstName = teacherFields.get("firstName");
     String lastName = teacherFields.get("lastName");
+    if (!isFirstNameAndLastNameValid(firstName, lastName)) {
+      return getInvalidNameErrorResponse(firstName, lastName);
+    }
     tud.setFirstname(firstName);
     tud.setLastname(lastName);
     String email = teacherFields.get("email");
@@ -163,7 +166,7 @@ public class TeacherAPIController extends UserAPIController {
     if (iSendEmailEnabled) {
       sendCreateTeacherAccountEmail(email, displayName, username, googleUserId, locale, request);
     }
-    return username;
+    return createRegisterSuccessResponse(username);
   }
 
   private void sendCreateTeacherAccountEmail(String email, String displayName, String username,

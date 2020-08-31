@@ -4,13 +4,15 @@ import { Teacher } from "../../domain/teacher";
 import { TeacherService } from "../../teacher/teacher.service";
 import { FormControl, FormGroup, Validators, FormBuilder } from "@angular/forms";
 import { UtilService } from '../../services/util.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { RegisterUserFormComponent } from '../register-user-form/register-user-form.component';
 
 @Component({
   selector: 'app-register-teacher-form',
   templateUrl: './register-teacher-form.component.html',
   styleUrls: ['./register-teacher-form.component.scss']
 })
-export class RegisterTeacherFormComponent implements OnInit {
+export class RegisterTeacherFormComponent extends RegisterUserFormComponent implements OnInit {
 
   teacherUser: Teacher = new Teacher();
   schoolLevels: any[] = [
@@ -25,8 +27,8 @@ export class RegisterTeacherFormComponent implements OnInit {
     confirmPassword: ['', [Validators.required]]
   }, { validator: this.passwordMatchValidator });
   createTeacherAccountFormGroup: FormGroup = this.fb.group({
-    firstName: new FormControl('', [Validators.required]),
-    lastName: new FormControl('', [Validators.required]),
+    firstName: new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z]+')]),
+    lastName: new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z]+')]),
     email: new FormControl('', [Validators.required, Validators.email]),
     city: new FormControl('', [Validators.required]),
     state: new FormControl('', [Validators.required]),
@@ -42,7 +44,10 @@ export class RegisterTeacherFormComponent implements OnInit {
   constructor(private router: Router, private route: ActivatedRoute,
               private teacherService: TeacherService,
               private utilService: UtilService,
-              private fb: FormBuilder) { }
+              private fb: FormBuilder,
+              private snackBar: MatSnackBar) {
+    super();
+  }
 
   ngOnInit() {
     this.route.params.subscribe(params => {
@@ -72,10 +77,14 @@ export class RegisterTeacherFormComponent implements OnInit {
     if (this.createTeacherAccountFormGroup.valid) {
       this.processing = true;
       this.populateTeacherUser();
-      this.teacherService.registerTeacherAccount(this.teacherUser, (username) => {
-        this.router.navigate(['join/teacher/complete',
-          { username: username, isUsingGoogleId: this.isUsingGoogleId() }
-        ]);
+      this.teacherService.registerTeacherAccount(this.teacherUser).subscribe((response: any) => {
+        if (response.status === 'success') {
+          this.router.navigate(['join/teacher/complete',
+            { username: response.username, isUsingGoogleId: this.isUsingGoogleId() }
+          ]);
+        } else {
+          this.snackBar.open(this.translateCreateAccountErrorMessageCode(response.messageCode));
+        }
         this.processing = false;
       });
     }

@@ -4,13 +4,15 @@ import { Student } from "../../domain/student";
 import { StudentService } from "../../student/student.service";
 import { FormControl, FormGroup, Validators, FormBuilder } from "@angular/forms";
 import { UtilService } from "../../services/util.service";
+import { MatSnackBar } from "@angular/material/snack-bar";
+import { RegisterUserFormComponent } from "../register-user-form/register-user-form.component";
 
 @Component({
   selector: 'app-register-student-form',
   templateUrl: './register-student-form.component.html',
   styleUrls: ['./register-student-form.component.scss']
 })
-export class RegisterStudentFormComponent implements OnInit {
+export class RegisterStudentFormComponent extends RegisterUserFormComponent implements OnInit {
 
   studentUser: Student = new Student();
   genders: any[] = [
@@ -39,8 +41,8 @@ export class RegisterStudentFormComponent implements OnInit {
     confirmPassword: ['', [Validators.required]]
   }, { validator: this.passwordMatchValidator });
   createStudentAccountFormGroup: FormGroup = this.fb.group({
-    firstName: new FormControl('', [Validators.required]),
-    lastName: new FormControl('', [Validators.required]),
+    firstName: new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z]+')]),
+    lastName: new FormControl('', [Validators.required, Validators.pattern('[a-zA-Z]+')]),
     gender: new FormControl('', [Validators.required]),
     birthMonth: new FormControl('', [Validators.required]),
     birthDay: new FormControl({value: '', disabled: true}, [Validators.required])
@@ -50,7 +52,9 @@ export class RegisterStudentFormComponent implements OnInit {
   constructor(private router: Router, private route: ActivatedRoute,
               private studentService: StudentService,
               private utilService: UtilService,
-              private fb: FormBuilder) {
+              private fb: FormBuilder,
+              private snackBar: MatSnackBar) {
+    super();
     this.studentService.retrieveSecurityQuestions().subscribe(response => {
       this.securityQuestions = response;
     });
@@ -87,10 +91,14 @@ export class RegisterStudentFormComponent implements OnInit {
     if (this.createStudentAccountFormGroup.valid) {
       this.processing = true;
       this.populateStudentUser();
-      this.studentService.registerStudentAccount(this.studentUser, (username) => {
-        this.router.navigate(['join/student/complete',
-          { username: username, isUsingGoogleId: this.isUsingGoogleId() }
-        ]);
+      this.studentService.registerStudentAccount(this.studentUser).subscribe((response: any) => {
+        if (response.status === 'success') {
+          this.router.navigate(['join/student/complete',
+            { username: response.username, isUsingGoogleId: this.isUsingGoogleId() }
+          ]);
+        } else {
+          this.snackBar.open(this.translateCreateAccountErrorMessageCode(response.messageCode));
+        }
         this.processing = false;
       });
     }

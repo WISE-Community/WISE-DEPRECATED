@@ -37,8 +37,8 @@ import org.wise.portal.domain.authentication.MutableUserDetails;
 import org.wise.portal.domain.authentication.Schoollevel;
 
 /**
- * Implementation class of <code>MutableUserDetails</code> that uses an EJB3
- * compliant object persistence mechanism.
+ * Implementation class of <code>MutableUserDetails</code> that uses an EJB3 compliant object
+ * persistence mechanism.
  *
  * UserDetails for a teacher in WISE
  *
@@ -156,7 +156,7 @@ public class TeacherUserDetails extends PersistentUserDetails implements Mutable
   @Setter
   private String displayname;
 
-  @Column(name = TeacherUserDetails.COMUN_NAME_EMAILVALID, nullable=false)
+  @Column(name = TeacherUserDetails.COMUN_NAME_EMAILVALID, nullable = false)
   private boolean emailValid = true;
 
   @Column(name = TeacherUserDetails.COLUMN_NAME_HOW_HEAR)
@@ -165,37 +165,35 @@ public class TeacherUserDetails extends PersistentUserDetails implements Mutable
   private String howDidYouHearAboutUs;
 
   public String getCoreUsername() {
-    // firstname + lastname, but make sure it's alphanumeric
-    String username = firstname + lastname;
-    username = username.replaceAll("[^a-zA-Z0-9]", "");
-    return username;
+    return firstname + lastname;
   }
 
   public String[] getUsernameSuffixes() {
-    return new String[] {"", "1", "2", "3", "4", "5", "6", "7", "8",
-      "9", "10", "11", "12", "13", "14", "15", "16"};
+    return new String[] { "", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13",
+        "14", "15", "16" };
   }
 
   /**
-   * Get the next username suffix. For teachers the suffix is just an integer
-   * that we will increment
-   * @param currentUsernameSuffix the current suffix
+   * Get the next username suffix. For teachers the suffix is just an integer that we will increment
+   * 
+   * @param currentUsernameSuffix
+   *                                the current suffix
    * @see org.wise.portal.domain.authentication.MutableUserDetails#getNextUsernameSuffix(java.lang.String)
    * @return the next username suffix which is just the next integer
    */
   public String getNextUsernameSuffix(String currentUsernameSuffix) {
     String nextUsernameSuffix = "";
     if (currentUsernameSuffix == null) {
-      //empty suffix string
+      // empty suffix string
       nextUsernameSuffix = "";
     } else if ("".equals(currentUsernameSuffix)) {
-      //if the previous was "" we will now return an integer
+      // if the previous was "" we will now return an integer
       nextUsernameSuffix = "1";
     } else {
       try {
-        //increment the integer by 1
+        // increment the integer by 1
         nextUsernameSuffix = (Integer.parseInt(currentUsernameSuffix) + 1) + "";
-      } catch(NumberFormatException e) {
+      } catch (NumberFormatException e) {
         e.printStackTrace();
       }
     }
@@ -221,7 +219,7 @@ public class TeacherUserDetails extends PersistentUserDetails implements Mutable
     infoMap.put("School Level", this.getSchoollevel().toString());
     String subjects = "";
     if (curriculumsubjects != null) {
-      for (String s:curriculumsubjects) {
+      for (String s : curriculumsubjects) {
         subjects = subjects + s + " ";
       }
     }

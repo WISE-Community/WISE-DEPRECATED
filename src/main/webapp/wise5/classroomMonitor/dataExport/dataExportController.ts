@@ -771,7 +771,7 @@ class DataExportController {
         }
       }
     }
-    const csvBlob = new Blob([csvString], { type: 'text/csv' });
+    const csvBlob = new Blob([csvString], { type: 'text/csv; charset=utf-8' });
     this.FileSaver.saveAs(csvBlob, fileName);
   }
 

@@ -78,17 +78,12 @@ export class StudentService {
     this.newRunSource.next(run);
   }
 
-  registerStudentAccount(studentUser: Student, callback: any): void {
+  registerStudentAccount(studentUser: Student): Observable<any> {
     const headers = {
       'Content-Type': 'application/json'
     };
-    this.http.post(this.registerUrl,
-      studentUser,
-      { headers: headers, responseType: "text" })
-      .subscribe(response => {
-        const username = response;
-        callback(username);
-      });
+    return this.http.post(this.registerUrl, studentUser,
+        { headers: headers, responseType: 'json' });
   }
 
   retrieveSecurityQuestions(): Observable<Object> {

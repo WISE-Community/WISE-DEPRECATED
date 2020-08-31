@@ -79,8 +79,8 @@ public class UserAPIControllerTest extends APIControllerTest {
     expect(userService.retrieveUserByUsername(USERNAME_NOT_IN_DB)).andReturn(null);
     replay(userService);
     String password = "s3cur3";
-    HashMap<String, Object> response = userAPIController.checkAuthentication(
-        USERNAME_NOT_IN_DB, password);
+    HashMap<String, Object> response = userAPIController.checkAuthentication(USERNAME_NOT_IN_DB,
+        password);
     assertFalse((boolean) response.get("isUsernameValid"));
     assertFalse((boolean) response.get("isPasswordValid"));
     verify(userService);
@@ -91,8 +91,8 @@ public class UserAPIControllerTest extends APIControllerTest {
     expect(userService.retrieveUserByUsername(STUDENT_USERNAME)).andReturn(student1);
     expect(userService.isPasswordCorrect(student1, STUDENT_PASSWORD)).andReturn(true);
     replay(userService);
-    HashMap<String, Object> response = userAPIController.checkAuthentication(
-        STUDENT_USERNAME, STUDENT_PASSWORD);
+    HashMap<String, Object> response = userAPIController.checkAuthentication(STUDENT_USERNAME,
+        STUDENT_PASSWORD);
     assertTrue((boolean) response.get("isUsernameValid"));
     assertTrue((boolean) response.get("isPasswordValid"));
     assertEquals(student1Id, (Long) response.get("userId"));
@@ -100,12 +100,11 @@ public class UserAPIControllerTest extends APIControllerTest {
   }
 
   @Test
-  public void changePassword_CorrectOldPassword_ChangePassword()
-      throws IncorrectPasswordException {
+  public void changePassword_CorrectOldPassword_ChangePassword() throws IncorrectPasswordException {
     String newPassword = "newPass";
     expect(userService.retrieveUserByUsername(STUDENT_USERNAME)).andReturn(student1);
-    expect(userService.updateUserPassword(student1, STUDENT_PASSWORD, newPassword)).andReturn(
-        student1);
+    expect(userService.updateUserPassword(student1, STUDENT_PASSWORD, newPassword))
+        .andReturn(student1);
     replay(userService);
     SimpleResponse response = userAPIController.changePassword(studentAuth, STUDENT_PASSWORD,
         newPassword);
@@ -120,8 +119,8 @@ public class UserAPIControllerTest extends APIControllerTest {
     String badPassword = "badPass";
     String newPassword = "newPass";
     expect(userService.retrieveUserByUsername(STUDENT_USERNAME)).andReturn(student1);
-    expect(userService.updateUserPassword(student1, badPassword, newPassword)).andStubThrow(
-        new IncorrectPasswordException());
+    expect(userService.updateUserPassword(student1, badPassword, newPassword))
+        .andStubThrow(new IncorrectPasswordException());
     replay(userService);
     SimpleResponse response = userAPIController.changePassword(studentAuth, badPassword,
         newPassword);
@@ -202,5 +201,70 @@ public class UserAPIControllerTest extends APIControllerTest {
     HashMap<String, Object> response = userAPIController.getUserByGoogleId(invalidGoogleId);
     assertEquals("error", response.get("status"));
     verify(userService);
+  }
+
+  @Test
+  public void isNameValid_InvalidName_ReturnFalse() {
+    assertFalse(userAPIController.isNameValid(""));
+    assertFalse(userAPIController.isNameValid("Spongebob!"));
+    assertFalse(userAPIController.isNameValid("Spongebób"));
+    assertFalse(userAPIController.isNameValid("海绵宝宝"));
+  }
+
+  @Test
+  public void isNameValid_ValidName_ReturnTrue() {
+    assertTrue(userAPIController.isNameValid("Spongebob"));
+  }
+
+  @Test
+  public void isFirstNameAndLastNameValid_ValidFirstNameInvalidLastName_ReturnFalse() {
+    assertFalse(userAPIController.isFirstNameAndLastNameValid("Spongebob", "Squarepants!"));
+  }
+
+  @Test
+  public void isFirstNameAndLastNameValid_InvalidFirstNameValidLastName_ReturnFalse() {
+    assertFalse(userAPIController.isFirstNameAndLastNameValid("Spongebob!", "Squarepants"));
+  }
+
+  @Test
+  public void isFirstNameAndLastNameValid_InvalidFirstNameInvalidLastName_ReturnFalse() {
+    assertFalse(userAPIController.isFirstNameAndLastNameValid("Spongebob!", "Squarepants!"));
+  }
+
+  @Test
+  public void isFirstNameAndLastNameValid_ValidFirstNameValidLastName_ReturnTrue() {
+    assertTrue(userAPIController.isFirstNameAndLastNameValid("Spongebob", "Squarepants"));
+  }
+
+  @Test
+  public void getInvalidNameErrorResponse_InvalidFirstName_ReturnInvalidFirstNameErrorResponse() {
+    HashMap<String, Object> response = userAPIController.getInvalidNameErrorResponse("Spongebob!",
+        "Squarepants");
+    assertEquals(response.get("status"), "error");
+    assertEquals(response.get("messageCode"), "invalidFirstName");
+  }
+
+  @Test
+  public void getInvalidNameErrorResponse_InvalidLastName_ReturnInvalidLastNameErrorResponse() {
+    HashMap<String, Object> response = userAPIController.getInvalidNameErrorResponse("Spongebob",
+        "Squarepants!");
+    assertEquals(response.get("status"), "error");
+    assertEquals(response.get("messageCode"), "invalidLastName");
+  }
+
+  @Test
+  public void getInvalidNameErrorResponse_InvalidFirstAndLastName_ReturnInvalidErrorResponse() {
+    HashMap<String, Object> response = userAPIController.getInvalidNameErrorResponse("Spongebob!",
+        "Squarepants!");
+    assertEquals(response.get("status"), "error");
+    assertEquals(response.get("messageCode"), "invalidFirstAndLastName");
+  }
+
+  @Test
+  public void createRegisterSuccessResponse_Username_ReturnSuccessResponse() {
+    String username = "Spongebob Squarepants";
+    HashMap<String, Object> response = userAPIController.createRegisterSuccessResponse(username);
+    assertEquals(response.get("status"), "success");
+    assertEquals(response.get("username"), username);
   }
 }

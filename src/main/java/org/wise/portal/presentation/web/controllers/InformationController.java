@@ -665,6 +665,7 @@ public class InformationController {
     response.setHeader("Pragma", "no-cache");
     response.setDateHeader("Expires", 0);
     response.setContentType("application/json");
+    response.setCharacterEncoding("UTF-8");
     response.getWriter().write(config.toString());
   }
 

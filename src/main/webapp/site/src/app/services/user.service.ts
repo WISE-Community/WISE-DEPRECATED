@@ -84,13 +84,15 @@ export class UserService {
     const headers = {
       'Content-Type': 'application/x-www-form-urlencoded'
     };
-    let formData = `username=${credentials.username}&password=${credentials.password}&site=new`;
+    let httpParams = new HttpParams()
+        .set('username', credentials.username)
+        .set('password', credentials.password);
     if (credentials.recaptchaResponse != null) {
-      formData += `&g-recaptcha-response=${credentials.recaptchaResponse}`;
+      httpParams = httpParams.set('g-recaptcha-response', credentials.recaptchaResponse);
     }
     const logInURL = `${this.configService.getContextPath()}/j_acegi_security_check`;
     this.http.post(logInURL,
-        formData,
+        httpParams,
         { headers: headers, responseType: 'text' })
         .subscribe((response) => {
           try {
