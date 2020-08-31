@@ -55,8 +55,8 @@ export class StudentWebSocketService {
         this.upgrade.$injector.get('$rootScope').$broadcast('annotationReceived', annotation);
       } else if (message.type === "goToNode") {
         this.goToStep(message.content);
-      } else if (message.type === 'project') {
-        this.updateProject(message.content);
+      } else if (message.type === 'node') {
+        this.updateNode(message.content);
       }
     });
   }
@@ -96,8 +96,10 @@ export class StudentWebSocketService {
     });
   }
 
-  updateProject(project: any) {
-    this.ProjectService.setProject(angular.fromJson(project));
+  updateNode(nodeString: string) {
+    const node = angular.fromJson(nodeString);
+    this.ProjectService.replaceNode(node.id, node);
+    this.ProjectService.parseProject();
     this.StudentDataService.updateNodeStatuses();
   }
 }

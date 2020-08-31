@@ -106,7 +106,7 @@ export class TeacherWebSocketService {
     this.getStomp().send(`/app/unpause/${this.runId}/${periodId}`, {}, {});
   }
 
-  sendProjectToClass(periodId: string, project: any) {
-    this.stomp.send(`/app/api/teacher/run/${this.runId}/project-to-period/${periodId}`, project, {});
+  sendNodeToClass(periodId: number, node: any) {
+    this.stomp.send(`/app/api/teacher/run/${this.runId}/node-to-period/${periodId}`, node, {});
   }
 }

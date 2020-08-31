@@ -77,15 +77,15 @@ public class TeacherRunAPIController {
     redisPublisher.publish(message.toString());
   }
 
-  @MessageMapping("/api/teacher/run/{runId}/project-to-period/{periodId}")
-  public void sendProjectToPeriod(Authentication auth,
-      @DestinationVariable Long runId, @DestinationVariable Long periodId, @Payload String project)
+  @MessageMapping("/api/teacher/run/{runId}/node-to-period/{periodId}")
+  public void sendNodeToPeriod(Authentication auth,
+      @DestinationVariable Long runId, @DestinationVariable Long periodId, @Payload String node)
       throws ObjectNotFoundException, JSONException {
     Run run = runService.retrieveById(runId);
     if (runService.hasReadPermission(auth, run)) {
       JSONObject msg = new JSONObject();
-      msg.put("type", "project");
-      msg.put("project", new JSONObject(project));
+      msg.put("type", "node");
+      msg.put("node", new JSONObject(node));
       msg.put("topic", String.format("/topic/classroom/%s/%s", runId, periodId));
       redisPublisher.publish(msg.toString());
     }

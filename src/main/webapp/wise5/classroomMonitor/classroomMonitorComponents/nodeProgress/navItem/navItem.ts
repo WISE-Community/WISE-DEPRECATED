@@ -238,17 +238,98 @@ class NavItemController {
     }
   }
 
-  isLocked() {
+  isLocked(): boolean {
     const node = this.ProjectService.getNodeById(this.nodeId);
-    return node.constraints != null && node.constraints.filter(constraint => {
-      return constraint.action === 'makeThisNodeNotVisitable';
+    const constraints = node.constraints;
+    if (constraints == null) {
+      return false;
+    } else {
+      return (this.isShowingAllPeriods() && this.isLockedForAll(constraints)) ||
+          (!this.isShowingAllPeriods() && this.isLockedForPeriod(constraints,
+          this.TeacherDataService.getCurrentPeriod().periodId));
+    }
+  }
+
+  isLockedForAll(constraints: any): boolean {
+    for (const period of this.TeacherDataService.getPeriods()) {
+      if (period.periodId !== -1 && !this.isLockedForPeriod(constraints, period.periodId)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  isLockedForPeriod(constraints: any, periodId: number): boolean {
+    return constraints.filter(constraint => {
+      return constraint.action === 'makeThisNodeNotVisitable' &&
+          constraint.targetId === this.nodeId &&
+          constraint.removalCriteria[0].params.periodId === periodId;
     }).length > 0;
   }
 
-  lockNode(doLock: boolean) {
-    this.ProjectService.lockNode(this.nodeId, doLock);
-    this.TeacherWebSocketService.sendProjectToClass(this.currentPeriod.periodId,
-        this.ProjectService.project);
+  toggleLockNode() {
+    const node = this.ProjectService.getNodeById(this.nodeId);
+    if (this.isLocked()) {
+      this.unlockNode(node);
+    } else {
+      this.lockNode(node);
+    }
+    this.ProjectService.saveProject();
+    this.sendNodeToClass(node);
+  }
+
+  unlockNode(node: any) {
+    if (this.isShowingAllPeriods()) {
+      this.unlockNodeForAllPeriods(node);
+    } else {
+      this.ProjectService.removeTeacherRemovalConstraint(node, this.TeacherDataService.getCurrentPeriod().periodId);
+    }
+  }
+
+  lockNode(node: any) {
+    if (this.isShowingAllPeriods()) {
+      this.lockNodeForAllPeriods(node);
+    } else {
+      this.ProjectService.addTeacherRemovalConstraint(node, this.TeacherDataService.getCurrentPeriod().periodId);
+    }
+  }
+
+  unlockNodeForAllPeriods(node: any) {
+    for (const period of this.TeacherDataService.getPeriods()) {
+      this.ProjectService.removeTeacherRemovalConstraint(node, period.periodId);
+    }
+  }
+
+  lockNodeForAllPeriods(node: any) {
+    for (const period of this.TeacherDataService.getPeriods()) {
+      if (period.periodId !== -1 && !this.isLockedForPeriod(node.constraints, period.periodId)) {
+        this.ProjectService.addTeacherRemovalConstraint(node, period.periodId);
+      }
+    }
+  }
+
+  isShowingAllPeriods(): boolean {
+    return this.TeacherDataService.getCurrentPeriod().periodId === -1;
+  }
+
+  sendNodeToClass(node: any) {
+    if (this.isShowingAllPeriods()) {
+      this.sendNodeToAllPeriods(node);
+    } else {
+      this.sendNodeToPeriod(node, this.currentPeriod.periodId);
+    }
+  }
+
+  sendNodeToAllPeriods(node: any) {
+    for (const period of this.TeacherDataService.getPeriods()) {
+      if (period.periodId !== -1) {
+        this.sendNodeToPeriod(node, period.periodId);
+      }
+    }
+  }
+
+  sendNodeToPeriod(node: any, periodId: number) {
+    this.TeacherWebSocketService.sendNodeToClass(periodId, node);
   }
 
   /**
