@@ -7,6 +7,7 @@ import { UtilService } from './utilService';
 import { Injectable } from '@angular/core';
 import { UpgradeModule } from '@angular/upgrade/static';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { SessionService } from './sessionService';
 
 @Injectable()
 export class ProjectService {
@@ -39,6 +40,7 @@ export class ProjectService {
     protected upgrade: UpgradeModule,
     protected http: HttpClient,
     protected ConfigService: ConfigService,
+    protected SessionService: SessionService,
     protected UtilService: UtilService
   ) {
     this.project = null;
@@ -1134,7 +1136,7 @@ export class ProjectService {
       if (response.status === 'error') {
         if (response.messageCode === 'notSignedIn') {
           this.UtilService.broadcastEventInRootScope('notLoggedInProjectNotSaved');
-          this.UtilService.broadcastEventInRootScope('logOut');
+          this.SessionService.forceLogOut();
         } else if (response.messageCode === 'notAllowedToEditThisProject') {
           this.UtilService.broadcastEventInRootScope('notAllowedToEditThisProject');
         } else if (response.messageCode === 'errorSavingProject') {

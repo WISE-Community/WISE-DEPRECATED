@@ -137,7 +137,7 @@ class VLEController {
       );
     });
 
-    this.$scope.$on('logOut', () => {
+    this.SessionService.logOut$.subscribe(() => {
       this.logOut();
     });
 
