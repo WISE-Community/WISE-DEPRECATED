@@ -474,7 +474,7 @@ function changeWorkgroupPeriod(workgroupId) {
 						<ul>
 						<li><a style="color:#FFF;padding: 2px 0;text-decoration: none !important;cursor: text !important;margin-left: 0;"><spring:message code="teacher.management.viewmystudents.changePeriodLabel"/> </a></li>
 						<c:forEach var="viewmystudentsperiod" varStatus="periodStatus" items="${viewmystudentsallperiods}">
-							<li><a href="#period_${viewmystudentsperiod.period.name}" class="periodChoice"><spring:message code="run_period"/> ${viewmystudentsperiod.period.name}</a></li>
+							<li><a href='#period_${fn:replace(viewmystudentsperiod.period.name, " ", "_")}' class="periodChoice"><spring:message code="run_period"/> ${viewmystudentsperiod.period.name}</a></li>
 						</c:forEach>
 						</ul>
 					</div>
@@ -483,7 +483,7 @@ function changeWorkgroupPeriod(workgroupId) {
 			</div>
 
 				<c:forEach var="viewmystudentsperiod" varStatus="periodStatus" items="${viewmystudentsallperiods}">
-					<div id="period_${viewmystudentsperiod.period.name}">
+					<div id='period_${fn:replace(viewmystudentsperiod.period.name, " ", "_")}'>
 					<c:choose>
 						<c:when test="${fn:length(viewmystudentsperiod.period.members) == 0}">
 							<div class="gradingHeader studentManageHeader">
