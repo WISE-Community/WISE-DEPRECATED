@@ -141,7 +141,7 @@ export class SessionService {
   }
 
   closeWarningAndRenewSession() {
-    this.warningVisible = false; 
+    this.warningVisible = false;
     this.updateLastActivityTimestamp();
     this.renewSession();
   }
