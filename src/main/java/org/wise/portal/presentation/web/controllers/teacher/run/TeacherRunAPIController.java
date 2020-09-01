@@ -51,7 +51,7 @@ public class TeacherRunAPIController {
       throws ObjectNotFoundException {
     User user = userService.retrieveUserByUsername(auth.getName());
     Run run = runService.retrieveById(runId);
-    if (run.isTeacherAssociatedToThisRun(user)) {
+    if (run.isTeacherAssociatedToThisRun(user) || user.isAdmin()) {
       return vleService.getStudentStatusesByRunId(runId);
     }
     return new ArrayList<StudentStatus>();
