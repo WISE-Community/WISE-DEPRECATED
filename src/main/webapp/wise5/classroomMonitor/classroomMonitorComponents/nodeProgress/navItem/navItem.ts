@@ -260,11 +260,14 @@ class NavItemController {
   }
 
   isLockedForPeriod(constraints: any, periodId: number): boolean {
-    return constraints.filter(constraint => {
-      return constraint.action === 'makeThisNodeNotVisitable' &&
+    for (const constraint of constraints) {
+      if (constraint.action === 'makeThisNodeNotVisitable' &&
           constraint.targetId === this.nodeId &&
-          constraint.removalCriteria[0].params.periodId === periodId;
-    }).length > 0;
+          constraint.removalCriteria[0].params.periodId === periodId) {
+        return true;
+      }
+    }
+    return false;
   }
 
   toggleLockNode() {
