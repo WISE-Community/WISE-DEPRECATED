@@ -19,6 +19,8 @@
 
     td.inactive, th {
         background-color: color('gray-lightest');
+        opacity: 1;
+        visibility: visible;
     }
 
     md-input-container {

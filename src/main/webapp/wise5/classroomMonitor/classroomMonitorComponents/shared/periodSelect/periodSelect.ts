@@ -77,7 +77,7 @@ class PeriodSelectController {
 
   getSelectedText() {
     if (this.currentPeriod.periodId === -1) {
-      return this.currentPeriod.periodName;
+      return this.$translate('allPeriods');
     } else {
       return this.$translate('periodLabel', { name: this.currentPeriod.periodName });
     }
