@@ -78,11 +78,6 @@
         </md-input-container>
       </div>
     </div>
-    <div ng-if='nodeController.getRevisions().length > 1' layout='row' layout-align='center end'>
-      <a ng-click='nodeController.showRevisions($event, openResponseController.componentId, openResponseController.isDisabled)'>
-         + {{ ::'openResponse.previousVersions' | translate }}: {{nodeController.getRevisions().length - 1}}
-       </a>
-    </div>
     <div class='component__actions' ng-if='::openResponseController.isStudentAttachmentEnabled' layout='row' layout-wrap='true' layout-align='start center'>
       <div class='component__add-attachment'>
         <md-button class='md-accent'

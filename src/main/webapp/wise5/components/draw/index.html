@@ -99,15 +99,6 @@
           </div>
           -->
         </div>
-        <md-button class='revision md-icon-button'
-            ng-click='nodeController.showRevisions($event, component.id)'
-            ng-if='nodeController.getRevisions(component.id).length > 1'
-            ng-disabled='drawController.isDisabled'>
-          <md-icon> history </md-icon>
-          <md-tooltip md-direction='top'>
-            {{nodeController.getRevisions(component.id).length}} {{ ::'draw.versions' | translate }}
-          </md-tooltip>
-        </md-button>
         <div ng-if='::drawController.isSaveOrSubmitButtonVisible()'
             class='component__actions'
             layout='row'

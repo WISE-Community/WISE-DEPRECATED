@@ -552,19 +552,11 @@ class ComponentController {
   createComponentStateAndBroadcast(action) {
     this.createComponentState(action).then((componentState) => {
       this.emitComponentStudentDataChanged(componentState);
-      if (componentState.isCompleted) {
-        this.emitComponentCompleted(componentState);
-      }
     });
   }
 
   emitComponentStudentDataChanged(componentState) {
     this.$scope.$emit('componentStudentDataChanged',
-        {nodeId: this.nodeId, componentId: this.componentId, componentState: componentState});
-  }
-
-  emitComponentCompleted(componentState) {
-    this.$scope.$emit('componentCompleted',
         {nodeId: this.nodeId, componentId: this.componentId, componentState: componentState});
   }
 

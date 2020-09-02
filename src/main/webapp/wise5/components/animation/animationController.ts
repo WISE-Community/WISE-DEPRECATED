@@ -1051,13 +1051,6 @@ class AnimationController extends ComponentController {
     );
   }
 
-  getRevisions() {
-    return this.StudentDataService.getComponentStatesByNodeIdAndComponentId(
-      this.nodeId,
-      this.componentId
-    );
-  }
-
   playButtonClicked() {
     this.setAnimationStateToPlaying();
     this.startAnimation();

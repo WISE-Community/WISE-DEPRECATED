@@ -113,13 +113,6 @@
         </md-input-container>
       </div>
     </div>
-    <div ng-if='nodeController.getRevisions().length > 1'
-        layout='row'
-        layout-align='center end'>
-      <a ng-click='nodeController.showRevisions($event, component.id, animationController.isDisabled)'>
-         + {{ ::'animation.previousVersions' | translate }}: {{nodeController.getRevisions().length - 1}}
-       </a>
-    </div>
     <div class='component__actions'
         ng-if='animationController.isStudentAttachmentEnabled'
         layout='row'
