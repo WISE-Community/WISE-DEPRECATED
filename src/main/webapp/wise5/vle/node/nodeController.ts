@@ -583,7 +583,6 @@ class NodeController {
   }
 
   saveButtonClicked() {
-    this.$rootScope.$broadcast('nodeSaveClicked', { nodeId: this.nodeId });
     const isAutoSave = false;
     this.createAndSaveComponentData(isAutoSave);
   }
