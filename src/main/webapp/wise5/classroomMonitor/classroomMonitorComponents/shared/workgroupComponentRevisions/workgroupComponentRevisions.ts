@@ -5,7 +5,7 @@ import { ConfigService } from '../../../../services/configService';
 import { TeacherDataService } from '../../../../services/teacherDataService';
 
 class WorkgroupComponentRevisionsController {
-  componentStates: any;
+  componentStates: any = [];
   data: any;
   increment: number = 5;
   nodeId: string;
@@ -39,102 +39,77 @@ class WorkgroupComponentRevisionsController {
   populateData() {
     this.data = {};
     this.total = 0;
-    if (this.componentStates) {
-      this.getNodeEnteredEvents().then(result => {
-        let events = result.events;
-        let nodeVisits = [];
-        if (events.length) {
-          for (let event of events) {
-            nodeVisits.push({
-              serverSaveTime: event.serverSaveTime,
-              states: []
-            });
-          }
-        }
-        let nVisits = nodeVisits.length;
+    this.getNodeEnteredEvents().then(({events}) => {
+      const nodeVisits = [];
+      for (const event of events) {
+        nodeVisits.push({
+          serverSaveTime: event.serverSaveTime,
+          states: []
+        });
+      }
+      let nVisits = nodeVisits.length;
 
-        // group all component states by node visit
-        for (
-          let cStatesIndex = this.componentStates.length - 1;
-          cStatesIndex > -1;
-          cStatesIndex--
-        ) {
-          let componentState = this.componentStates[cStatesIndex];
-          let id = componentState.id;
-          let componentSaveTime = componentState.serverSaveTime;
-          if (nVisits > 0) {
-            // add state to corresponding node visit
-            for (let nVisitsIndex = nVisits - 1; nVisitsIndex > -1; nVisitsIndex--) {
-              let nodeVisit = nodeVisits[nVisitsIndex];
-              let visitSaveTime = nodeVisit.serverSaveTime;
-              if (this.moment(componentSaveTime).isSameOrAfter(visitSaveTime)) {
-                nodeVisit.states.push(componentState);
+      // group all component states by node visit
+      for (
+        let cStatesIndex = this.componentStates.length - 1;
+        cStatesIndex > -1;
+        cStatesIndex--
+      ) {
+        let componentState = this.componentStates[cStatesIndex];
+        let id = componentState.id;
+        let componentSaveTime = componentState.serverSaveTime;
+        if (nVisits > 0) {
+          // add state to corresponding node visit
+          for (let nVisitsIndex = nVisits - 1; nVisitsIndex > -1; nVisitsIndex--) {
+            let nodeVisit = nodeVisits[nVisitsIndex];
+            let visitSaveTime = nodeVisit.serverSaveTime;
+            if (this.moment(componentSaveTime).isSameOrAfter(visitSaveTime)) {
+              nodeVisit.states.push(componentState);
+              break;
+            }
+          }
+        } else {
+          // we don't have any node visits, so count all all states as revisions.
+          this.total++;
+          this.data[id] = {
+            clientSaveTime: this.convertToClientTimestamp(componentSaveTime),
+            componentState: componentState
+          };
+        }
+      }
+
+      // find revisions in each node visit and add to model
+      for (let visitsIndex = 0; visitsIndex < nVisits; visitsIndex++) {
+        let states = nodeVisits[visitsIndex].states;
+        let nStates = states.length;
+        for (let statesIndex = 0; statesIndex < nStates; statesIndex++) {
+          let state = states[statesIndex];
+          let isRevision = false;
+          if (statesIndex === 0) {
+            // The latest state for a visit always counts as a revision
+            isRevision = true;
+          } else if (state.isSubmit) {
+            isRevision = true;
+          } else {
+            // Double check to see if there is an annotation associated with the component.
+            for (const annotation of
+                this.AnnotationService.getAnnotationsByStudentWorkId(state.id)) {
+              if (['score', 'autoScore', 'comment', 'autoComment'].includes(annotation.type)) {
+                isRevision = true;
                 break;
               }
             }
-          } else {
-            /*
-             * We don't have any node visits, so count all
-             * all states as revisions.
-             */
+          }
+          if (isRevision) {
             this.total++;
-            this.data[id] = {
-              clientSaveTime: this.convertToClientTimestamp(componentSaveTime),
-              componentState: componentState
+            this.data[state.id] = {
+              clientSaveTime: this.convertToClientTimestamp(state.serverSaveTime),
+              componentState: state
             };
           }
         }
-
-        // find revisions in each node visit and add to model
-        for (let visitsIndex = 0; visitsIndex < nVisits; visitsIndex++) {
-          let states = nodeVisits[visitsIndex].states;
-          let nStates = states.length;
-
-          // check if each state is a revision
-          for (let statesIndex = 0; statesIndex < nStates; statesIndex++) {
-            let state = states[statesIndex];
-            let isRevision = false;
-            if (statesIndex === 0) {
-              /*
-               * The latest state for a visit always counts as a
-               * revision
-               */
-              isRevision = true;
-            } else if (state.isSubmit) {
-              // any submit counts as a revision
-              isRevision = true;
-            } else {
-              /*
-               * Double check to see if there is an annotation
-               * associated with the component.
-               */
-              let latestAnnotations = this.AnnotationService.getAnnotationsByStudentWorkId(
-                state.id
-              );
-              for (let annotation of latestAnnotations) {
-                let type = annotation.type;
-                if (
-                  type === 'score' ||
-                  type === 'autoScore' ||
-                  type === 'comment' ||
-                  type === 'autoComment'
-                ) {
-                  isRevision = true;
-                  break;
-                }
-              }
-            }
-            if (isRevision) {
-              this.total++;
-              this.data[state.id] = {
-                clientSaveTime: this.convertToClientTimestamp(state.serverSaveTime),
-                componentState: state
-              };
-            }
-          }
-        }
-      });
-    }
+      }
+    });
   }
 
   getNodeEnteredEvents() {
@@ -144,7 +119,8 @@ class WorkgroupComponentRevisionsController {
       getStudentWork: false,
       event: 'nodeEntered',
       nodeId: this.nodeId,
-      workgroupId: this.workgroupId
+      workgroupId: this.workgroupId,
+      runId: this.ConfigService.getRunId()
     };
     return this.TeacherDataService.retrieveStudentData(params);
   }
