@@ -705,19 +705,26 @@ class ProjectController {
     return this.ProjectService.isNodeInAnyBranchPath(nodeId);
   }
 
+  showProjectView() {
+    this.clearNodeAndGroupTitle();
+    this.showCreateGroup = false;
+    this.showCreateNode = false;
+  }
+
   toggleView(view) {
-    this.createGroupTitle = '';
-    this.createNodeTitle = '';
-    if (view === 'project') {
-      this.showCreateGroup = false;
-      this.showCreateNode = false;
-    } else if (view === 'createGroup') {
+    this.clearNodeAndGroupTitle();
+    if (view === 'createGroup') {
       this.showCreateGroup = !this.showCreateGroup;
       this.showCreateNode = false;
     } else if (view === 'createNode') {
       this.showCreateGroup = false;
       this.showCreateNode = !this.showCreateNode;
     }
+  }
+
+  clearNodeAndGroupTitle() {
+    this.createGroupTitle = '';
+    this.createNodeTitle = '';
   }
 
   goBackToProjectList() {
