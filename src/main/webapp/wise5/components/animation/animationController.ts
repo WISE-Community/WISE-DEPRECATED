@@ -809,7 +809,7 @@ class AnimationController extends ComponentController {
       t: t
     };
 
-    this.$scope.$emit('componentStudentDataChanged', {
+    this.StudentDataService.broadcastComponentStudentData({
       nodeId: this.nodeId,
       componentId: this.componentId,
       componentState: componentState
@@ -973,7 +973,7 @@ class AnimationController extends ComponentController {
     this.clearSaveText();
 
     this.createComponentState('change').then(componentState => {
-      this.$scope.$emit('componentStudentDataChanged', {
+      this.StudentDataService.broadcastComponentStudentData({
         nodeId: this.nodeId,
         componentId: this.componentId,
         componentState: componentState
