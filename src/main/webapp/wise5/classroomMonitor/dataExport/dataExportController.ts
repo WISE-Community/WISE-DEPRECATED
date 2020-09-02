@@ -10,7 +10,9 @@ import { TeacherProjectService } from '../../services/teacherProjectService';
 
 class DataExportController {
   $translate: any;
-  availableComponentDataExports = ['Discussion', 'Match'];
+  availableComponentAllRevisionsDataExports = ['Discussion', 'Match'];
+  availableComponentLatestRevisionsDataExports = ['Match'];
+  componentExportTooltips = {};
   canViewStudentNames: boolean = false;
   componentTypeToComponentService: any = {};
   exportStepSelectionType: string = 'exportAllSteps';
@@ -67,6 +69,7 @@ class DataExportController {
   ) {
     this.canViewStudentNames = this.ConfigService.getPermissions().canViewStudentNames;
     this.$translate = $filter('translate');
+    this.componentExportTooltips['Match'] = this.$translate('matchCorrectnessColumnKey');
     this.setDefaultExportSettings();
     this.project = this.ProjectService.project;
     let nodeOrderOfProject = this.ProjectService.getNodeOrderOfProject(this.project);
@@ -2511,9 +2514,18 @@ class DataExportController {
    * @param componentType The component type.
    * @return Whether the component type has a specific export.
    */
-  canExportComponentDataType(componentType) {
-    for (let tempComponentType of this.availableComponentDataExports) {
-      if (componentType == tempComponentType) {
+  canExportAllRevisionsForComponentDataType(componentType: string) {
+    for (const allowedComponentType of this.availableComponentAllRevisionsDataExports) {
+      if (componentType === allowedComponentType) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  canExportLatestRevisionsForComponentDataType(componentType: string) {
+    for (const allowedComponentType of this.availableComponentLatestRevisionsDataExports) {
+      if (componentType === allowedComponentType) {
         return true;
       }
     }
@@ -2531,15 +2543,26 @@ class DataExportController {
   }
 
   /**
-   * Export the work for a specific component.
+   * Export all the work for each student for  a specific component.
    * @param nodeId The node id.
    * @param component The component content object.
    */
-  exportComponentClicked(nodeId, component) {
-    if (component.type == 'Match') {
-      this.exportMatchComponent(nodeId, component);
+  exportComponentAllRevisions(nodeId: string, component: any) {
+    if (component.type === 'Match') {
+      this.exportMatchComponentAllRevisions(nodeId, component);
     } else if (component.type === 'Discussion') {
       this.exportDiscussionComponent(nodeId, component);
+    }
+  }
+
+  /**
+   * Export the latest work for each student for a given component.
+   * @param nodeId The node id.
+   * @param component The component content object.
+   */
+  exportComponentLatestRevisions(nodeId: string, component: any) {
+    if (component.type === 'Match') {
+      this.exportMatchComponentLatestRevisions(nodeId, component);
     }
   }
 
@@ -2764,42 +2787,60 @@ class DataExportController {
     return runId + '_step_' + stepNumber + '_component_' + componentNumber + '_discussion_work.csv';
   }
 
+  exportMatchComponentAllRevisions(nodeId: string, component: any) {
+    this.workSelectionType = 'exportAllWork';
+    this.exportMatchComponentExport(nodeId, component);
+  }
+
+  exportMatchComponentLatestRevisions(nodeId: string, component: any) {
+    this.workSelectionType = 'exportLatestWork';
+    this.exportMatchComponentExport(nodeId, component);
+  }
+
   /**
    * Generate an export for a specific match component.
    * TODO: Move these Match export functions to the MatchService.
    * @param nodeId The node id.
    * @param component The component content object.
    */
-  exportMatchComponent(nodeId, component) {
-    this.showDownloadingExportMessage();
+  exportMatchComponentExport(nodeId: string, component: any) {
     this.TeacherDataService.getExport('allStudentWork').then((result: any) => {
-      let columnNames = [];
-      let columnNameToNumber = {};
-      let rows = [];
-      rows.push(this.generateMatchComponentHeaderRow(component, columnNames, columnNameToNumber));
-      rows = rows.concat(
-        this.generateMatchComponentWorkRows(component, columnNames, columnNameToNumber, nodeId)
-      );
-      let fileName = '';
-      let runId = this.ConfigService.getRunId();
-      let stepNumber = this.ProjectService.getNodePositionById(nodeId);
-      let componentNumber =
-        this.ProjectService.getComponentPositionByNodeIdAndComponentId(nodeId, component.id) + 1;
-      if (this.workSelectionType === 'exportAllWork') {
-        fileName =
-          runId + '_step_' + stepNumber + '_component_' + componentNumber + '_all_match_work.csv';
-      } else if (this.workSelectionType === 'exportLatestWork') {
-        fileName =
-          runId +
-          '_step_' +
-          stepNumber +
-          '_component_' +
-          componentNumber +
-          '_latest_match_work.csv';
-      }
-      this.generateCSVFile(rows, fileName);
-      this.hideDownloadingExportMessage();
+      this.generateMatchComponentExport(nodeId, component);
     });
+  }
+
+  generateMatchComponentExport(nodeId: string, component: any) {
+    const runId = this.ConfigService.getRunId();
+    const stepNumber = this.ProjectService.getNodePositionById(nodeId);
+    const componentNumber =
+        this.ProjectService.getComponentPositionByNodeIdAndComponentId(nodeId, component.id) + 1;
+    const fileName = this.getMatchExportFileName(runId, stepNumber, componentNumber,
+        this.workSelectionType);
+    const rows = this.getExportMatchComponentRows(nodeId, component);
+    this.generateCSVFile(rows, fileName);
+    this.hideDownloadingExportMessage();
+  }
+
+  getExportMatchComponentRows(nodeId: string, component: any) {
+    const columnNames = [];
+    const columnNameToNumber = {};
+    let rows = [];
+    rows.push(this.generateMatchComponentHeaderRow(component, columnNames, columnNameToNumber));
+    rows = rows.concat(
+      this.generateMatchComponentWorkRows(component, columnNames, columnNameToNumber, nodeId)
+    );
+    return rows;
+  }
+
+  getMatchExportFileName(runId: number, stepNumber: number, componentNumber: number,
+      workSelectionType: string) {
+    let allOrLatest = '';
+    if (workSelectionType === 'exportAllWork') {
+      allOrLatest = 'all';
+    } else if (workSelectionType === 'exportLatestWork') {
+      allOrLatest = 'latest';
+    }
+    return `${runId}_step_${stepNumber}_component_${componentNumber}_${allOrLatest}_match_work.csv`;
   }
 
   /**
