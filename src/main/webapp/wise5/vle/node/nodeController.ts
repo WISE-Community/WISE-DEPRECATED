@@ -527,37 +527,6 @@ class NodeController {
 
   importWork() {}
 
-  getRevisions(componentId) {
-    const revisions = [];
-    const componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(
-      this.nodeId,
-      componentId
-    );
-    return componentStates;
-  }
-
-  showRevisions($event, componentId, isComponentDisabled) {
-    const revisions = this.getRevisions(componentId);
-    const allowRevert = !isComponentDisabled;
-    const childScope = this.componentToScope[componentId];
-
-    // TODO: generalize for other controllers
-    let componentController = null;
-
-    if (childScope.openResponseController) {
-      componentController = childScope.openResponseController;
-    } else if (childScope.drawController) {
-      componentController = childScope.drawController;
-    }
-
-    this.$rootScope.$broadcast('showRevisions', {
-      revisions: revisions,
-      componentController: componentController,
-      allowRevert: allowRevert,
-      $event: $event
-    });
-  }
-
   showStudentAssets($event, componentId) {
     const childScope = this.componentToScope[componentId];
 
