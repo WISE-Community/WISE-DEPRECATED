@@ -2789,12 +2789,12 @@ class DataExportController {
 
   exportMatchComponentAllRevisions(nodeId: string, component: any) {
     this.workSelectionType = 'exportAllWork';
-    this.exportMatchComponentExport(nodeId, component);
+    this.exportMatchComponent(nodeId, component);
   }
 
   exportMatchComponentLatestRevisions(nodeId: string, component: any) {
     this.workSelectionType = 'exportLatestWork';
-    this.exportMatchComponentExport(nodeId, component);
+    this.exportMatchComponent(nodeId, component);
   }
 
   /**
@@ -2803,7 +2803,7 @@ class DataExportController {
    * @param nodeId The node id.
    * @param component The component content object.
    */
-  exportMatchComponentExport(nodeId: string, component: any) {
+  exportMatchComponent(nodeId: string, component: any) {
     this.TeacherDataService.getExport('allStudentWork').then((result: any) => {
       this.generateMatchComponentExport(nodeId, component);
     });
