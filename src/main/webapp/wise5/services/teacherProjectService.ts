@@ -213,28 +213,6 @@ export class TeacherProjectService extends ProjectService {
   }
 
   /**
-   * Replace a node. This is used when we want to revert a node back to a
-   * previous version in the authoring tool.
-   * @param nodeId the node id
-   * @param node the node object
-   */
-  replaceNode(nodeId, node) {
-    this.setIdToNode(nodeId, node);
-    const nodes = this.getNodes();
-    for (let n = 0; n < nodes.length; n++) {
-      if (nodeId === nodes[n].id) {
-        nodes.splice(n, 1, node);
-        break;
-      }
-    }
-    for (let a = 0; a < this.applicationNodes.length; a++) {
-      if (nodeId === this.applicationNodes[a].id) {
-        this.applicationNodes.splice(a, 1, node);
-      }
-    }
-  }
-
-  /**
    * Replace a component
    * @param nodeId the node id
    * @param componentId the component id
@@ -1289,5 +1267,30 @@ export class TeacherProjectService extends ProjectService {
 
   scrollToBottomOfPage() {
     this.scrollToBottomOfPageSource.next();
+  }
+
+  addTeacherRemovalConstraint(node: any, periodId: number) {
+    const lockConstraint = {
+      id: this.UtilService.generateKey(),
+      action: 'makeThisNodeNotVisitable',
+      targetId: node.id,
+      removalConditional: 'any',
+      removalCriteria: [{
+        'name': 'teacherRemoval',
+        'params': {
+          periodId: periodId
+        }
+      }]
+    };
+    this.addConstraintToNode(node, lockConstraint);
+  }
+
+  removeTeacherRemovalConstraint(node: any, periodId: number) {
+    node.constraints = node.constraints.filter(constraint => {
+      return !(constraint.action === 'makeThisNodeNotVisitable' &&
+          constraint.targetId === node.id &&
+          constraint.removalCriteria[0].name === 'teacherRemoval' &&
+          constraint.removalCriteria[0].params.periodId === periodId);
+    });
   }
 }

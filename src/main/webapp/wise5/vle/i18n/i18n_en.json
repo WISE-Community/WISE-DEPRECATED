@@ -108,6 +108,7 @@
   "viewDeletedNotes": "View deleted {{noteLabelPlural}}",
   "viewNote": "View {{noteLabel}}",
   "visitNodeTitle": "Visit <b>{{nodeTitle}}</b>",
+  "waitForTeacherToUnlock": "Wait for your teacher to unlock the item",
   "writeXNumberOfWordsOnNodeTitle": "Write <b>{{requiredNumberOfWords}}</b> words on <b>{{nodeTitle}}</b>",
   "yes": "Yes",
   "youMustFillInXRow": "You must fill in <b>{{requiredNumberOfFilledRows}}</b> row in the <b>Table</b> on <b>{{nodeTitle}}</b>",

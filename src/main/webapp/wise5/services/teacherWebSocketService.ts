@@ -8,6 +8,7 @@ import { NotificationService } from "./notificationService";
 
 @Injectable()
 export class TeacherWebSocketService {
+
   runId: number;
   studentsOnlineArray: any[] = [];
   rootScope: any;
@@ -103,5 +104,9 @@ export class TeacherWebSocketService {
 
   unPauseScreens(periodId) {
     this.getStomp().send(`/app/unpause/${this.runId}/${periodId}`, {}, {});
+  }
+
+  sendNodeToClass(periodId: number, node: any) {
+    this.stomp.send(`/app/api/teacher/run/${this.runId}/node-to-period/${periodId}`, node, {});
   }
 }

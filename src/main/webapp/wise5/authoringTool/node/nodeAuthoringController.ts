@@ -347,6 +347,12 @@ class NodeAuthoringController {
             text: this.$translate('requireAllCellsInARowToBeFilled')
           }
         ]
+      },
+      {
+        value: 'teacherRemoval',
+        text: this.$translate('teacherRemoval'),
+        params: [
+        ]
       }
     ];
     this.transitionCriterias = [
