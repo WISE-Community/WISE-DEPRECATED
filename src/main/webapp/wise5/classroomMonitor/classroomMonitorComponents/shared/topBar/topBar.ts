@@ -213,8 +213,8 @@ const TopBar = {
                                class="md-icon-button"
                                ng-class="{ 'has-indicator has-indicator--icon-button': $ctrl.isAnyPeriodPaused() }"
                                ng-click="$mdMenu.open($event)">
-                        <md-icon md-menu-origin ng-if="$ctrl.isAnyPeriodPaused()"> lock </md-icon>
-                        <md-icon md-menu-origin ng-if="!$ctrl.isAnyPeriodPaused()"> lock_open </md-icon>
+                        <md-icon md-menu-origin ng-if="$ctrl.isAnyPeriodPaused()"> pause_circle_filled </md-icon>
+                        <md-icon md-menu-origin ng-if="!$ctrl.isAnyPeriodPaused()"> pause_circle_outline </md-icon>
                     </md-button>
                     <md-menu-content width="5" class="account-menu">
                         <pause-screens-menu></pause-screens-menu>
