@@ -100,7 +100,7 @@
   "submitXTimesOnNodeTitle": "Submit <b>{{requiredSubmitCount}}</b> times on <b>{{nodeTitle}}</b>",
   "teacherFeedbackLabel": "Teacher Feedback",
   "toggleFullScreen": "Toggle full screen",
-  "toVisitNodeTitleYouNeedTo": "To visit <b>{{nodeTitle}}</b> you need to",
+  "toVisitNodeTitleYouNeedTo": "To visit <b>{{nodeTitle}}</b> you need to:",
   "theStudentAssetsWillAppearHereOnceYouSetUpAClassroomRun": "The student assets will appear here once you set up a classroom run.",
   "turnOffConstraints": "Turn Off Constraints",
   "typeYourNoteHere": "Note text...",
