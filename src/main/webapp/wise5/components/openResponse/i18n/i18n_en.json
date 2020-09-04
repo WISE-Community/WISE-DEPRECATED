@@ -33,7 +33,6 @@
   "openResponse.pleaseWait": "Please Wait",
   "openResponse.pleaseWaitWeAreScoringYourWork": "Please wait, we are scoring your work.",
   "openResponse.previousScore": "Previous Score",
-  "openResponse.previousVersions": "Previous Versions",
   "openResponse.promptTip": "If you want to use rich visuals (images, videos, links, bullets, etc.) in your prompt, use an HTML component above this",
   "openResponse.recording": "Recording...",
   "openResponse.recordingTimeLeft": "Time left",

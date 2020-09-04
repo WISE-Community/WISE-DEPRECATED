@@ -43,6 +43,7 @@ class NavItemController {
   static $inject = [
     '$element',
     '$filter',
+    '$mdToast',
     '$rootScope',
     '$scope',
     'AnnotationService',
@@ -57,6 +58,7 @@ class NavItemController {
   constructor(
     private $element: any,
     $filter: any,
+    private $mdToast: any,
     private $rootScope: any,
     private $scope: any,
     private AnnotationService: AnnotationService,
@@ -238,6 +240,123 @@ class NavItemController {
     }
   }
 
+  isLocked(): boolean {
+    const node = this.ProjectService.getNodeById(this.nodeId);
+    const constraints = node.constraints;
+    if (constraints == null) {
+      return false;
+    } else {
+      return (this.isShowingAllPeriods() && this.isLockedForAll(constraints)) ||
+          (!this.isShowingAllPeriods() && this.isLockedForPeriod(constraints,
+          this.TeacherDataService.getCurrentPeriod().periodId));
+    }
+  }
+
+  isLockedForAll(constraints: any): boolean {
+    for (const period of this.TeacherDataService.getPeriods()) {
+      if (period.periodId !== -1 && !this.isLockedForPeriod(constraints, period.periodId)) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  isLockedForPeriod(constraints: any, periodId: number): boolean {
+    for (const constraint of constraints) {
+      if (constraint.action === 'makeThisNodeNotVisitable' &&
+          constraint.targetId === this.nodeId &&
+          constraint.removalCriteria[0].params.periodId === periodId) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  toggleLockNode() {
+    const node = this.ProjectService.getNodeById(this.nodeId);
+    const isLocked = this.isLocked();
+    if (this.isLocked()) {
+      this.unlockNode(node);
+    } else {
+      this.lockNode(node);
+    }
+    this.ProjectService.saveProject().then(response => {
+      if (response.status === 'success') {
+        this.sendNodeToClass(node);
+        this.showToggleLockNodeConfirmation(!isLocked);
+      }
+    });
+  }
+
+  showToggleLockNodeConfirmation(isLocked: boolean) {
+    let message = '';
+    if (isLocked) {
+      message = this.$translate('lockNodeConfirmation', { nodeTitle: this.nodeTitle, 
+          periodName: this.getPeriodLabel() });
+    } else {
+      message = this.$translate('unlockNodeConfirmation', { nodeTitle: this.nodeTitle, 
+        periodName: this.getPeriodLabel() });
+    }
+    this.$mdToast.show(
+      this.$mdToast.simple()
+      .textContent(message)
+      .hideDelay(5000));
+  }
+
+  unlockNode(node: any) {
+    if (this.isShowingAllPeriods()) {
+      this.unlockNodeForAllPeriods(node);
+    } else {
+      this.ProjectService.removeTeacherRemovalConstraint(node, this.TeacherDataService.getCurrentPeriod().periodId);
+    }
+  }
+
+  lockNode(node: any) {
+    if (this.isShowingAllPeriods()) {
+      this.lockNodeForAllPeriods(node);
+    } else {
+      this.ProjectService.addTeacherRemovalConstraint(node, this.TeacherDataService.getCurrentPeriod().periodId);
+    }
+  }
+
+  unlockNodeForAllPeriods(node: any) {
+    for (const period of this.TeacherDataService.getPeriods()) {
+      this.ProjectService.removeTeacherRemovalConstraint(node, period.periodId);
+    }
+  }
+
+  lockNodeForAllPeriods(node: any) {
+    for (const period of this.TeacherDataService.getPeriods()) {
+      if (period.periodId !== -1 && !this.isLockedForPeriod(node.constraints, period.periodId)) {
+        this.ProjectService.addTeacherRemovalConstraint(node, period.periodId);
+      }
+    }
+  }
+
+  isShowingAllPeriods(): boolean {
+    return this.TeacherDataService.getCurrentPeriod().periodId === -1;
+  }
+
+  sendNodeToClass(node: any) {
+    if (this.isShowingAllPeriods()) {
+      this.sendNodeToAllPeriods(node);
+    } else {
+      this.sendNodeToPeriod(node, this.currentPeriod.periodId);
+    }
+  }
+
+  sendNodeToAllPeriods(node: any) {
+    for (const period of this.TeacherDataService.getPeriods()) {
+      if (period.periodId !== -1) {
+        this.sendNodeToPeriod(node, period.periodId);
+      }
+    }
+  }
+
+  sendNodeToPeriod(node: any, periodId: number) {
+    this.TeacherWebSocketService.sendNodeToClass(periodId, node);
+  }
+
   /**
    * Get the node title
    * @param nodeId get the title for this node
@@ -355,6 +474,19 @@ class NavItemController {
       }
     }
     return result;
+  }
+
+  getPeriodLabel() {
+    return this.isShowingAllPeriods() ? this.$translate('allPeriods') : 
+       this.$translate('periodLabel', { name: this.currentPeriod.periodName });
+  }
+
+  getNodeLockedText(): string {
+    if (this.isLocked()) {
+      return this.$translate('unlockNodeForPeriod', { periodName: this.getPeriodLabel() });
+    } else {
+      return this.$translate('lockNodeForPeriod', { periodName: this.getPeriodLabel() });
+    }
   }
 }
 

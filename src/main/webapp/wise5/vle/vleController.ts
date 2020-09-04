@@ -203,8 +203,6 @@ class VLEController {
       this.newNotifications = this.getNewNotifications();
     });
 
-    this.$scope.$on('componentStudentDataChanged', () => {});
-
     this.StudentDataService.pauseScreen$.subscribe((doPause: boolean) => {
       if (doPause) {
         this.pauseScreen();
@@ -494,7 +492,7 @@ class VLEController {
     // TODO: i18n
     this.pauseDialog = this.$mdDialog.show({
       template:
-        '<md-dialog aria-label="Screen Paused"><md-dialog-content><div class="md-dialog-content">' +
+        '<md-dialog aria-label="Screen Paused"><md-dialog-content><div class="md-dialog-content center">' +
         this.$translate('yourTeacherHasPausedAllTheScreensInTheClass') +
         '</div></md-dialog-content></md-dialog>',
       escapeToClose: false

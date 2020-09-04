@@ -969,17 +969,6 @@ class OpenResponseController extends ComponentController {
   }
 
   /**
-   * Returns all the revisions made by this user for the specified component
-   */
-  getRevisions() {
-    // get the component states for this component
-    return this.StudentDataService.getComponentStatesByNodeIdAndComponentId(
-      this.nodeId,
-      this.componentId
-    );
-  }
-
-  /**
    * Create a component state with the merged student responses
    * @param componentStates an array of component states
    * @return a component state with the merged student responses

@@ -809,7 +809,7 @@ class AnimationController extends ComponentController {
       t: t
     };
 
-    this.$scope.$emit('componentStudentDataChanged', {
+    this.StudentDataService.broadcastComponentStudentData({
       nodeId: this.nodeId,
       componentId: this.componentId,
       componentState: componentState
@@ -966,19 +966,10 @@ class AnimationController extends ComponentController {
   studentDataChanged() {
     this.setIsDirty(true);
     this.emitComponentDirty(true);
-
     this.setIsSubmit(true);
     this.emitComponentSubmitDirty(true);
-
     this.clearSaveText();
-
-    this.createComponentState('change').then(componentState => {
-      this.$scope.$emit('componentStudentDataChanged', {
-        nodeId: this.nodeId,
-        componentId: this.componentId,
-        componentState: componentState
-      });
-    });
+    this.createComponentStateAndBroadcast('change');
   }
 
   /**
@@ -1048,13 +1039,6 @@ class AnimationController extends ComponentController {
       componentId,
       toWorkgroupId,
       data
-    );
-  }
-
-  getRevisions() {
-    return this.StudentDataService.getComponentStatesByNodeIdAndComponentId(
-      this.nodeId,
-      this.componentId
     );
   }
 

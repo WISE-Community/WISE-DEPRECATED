@@ -93,7 +93,11 @@ class ThemeController {
         if (constraints != null && constraints.length > 0) {
           // get the node title the student is trying to go to
           let nodeTitle = this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
-          message = this.$translate('toVisitNodeTitleYouNeedTo', { nodeTitle: nodeTitle });
+          message = 
+            `<p>
+              ${this.$translate('toVisitNodeTitleYouNeedTo', { nodeTitle: nodeTitle })}
+            </p>
+            <ul>`;
         }
 
         // loop through all the constraints that affect this node
@@ -103,16 +107,11 @@ class ThemeController {
           // check if the constraint has been satisfied
           if (constraint != null && !this.StudentDataService.evaluateConstraint(constraint)) {
             // the constraint has not been satisfied and is still active
-
-            if (message != '') {
-              // separate multiple constraints with line breaks
-              message += '<br/>';
-            }
-
             // get the message that describes how to disable the constraint
-            message += this.ProjectService.getConstraintMessage(nodeId, constraint);
+            message += `<li>${this.ProjectService.getConstraintMessage(nodeId, constraint)}</li>`;
           }
         }
+        message += `</ul>`;
       }
 
       this.$mdDialog.show(
@@ -156,47 +155,6 @@ class ThemeController {
     // remove alert when server regains connection
     this.$scope.$on('serverConnected', () => {
       this.handleServerReconnect();
-    });
-
-    // show list of revisions in a dialog when user clicks the show revisions link for a component
-    this.$scope.$on('showRevisions', (event, args) => {
-      let revisions = args.revisions;
-      let componentController = args.componentController;
-      let allowRevert = args.allowRevert;
-      let $event = args.$event;
-      let revisionsTemplateUrl = this.themePath + '/templates/componentRevisions.html';
-
-      this.$mdDialog.show({
-        parent: angular.element(document.body),
-        targetEvent: $event,
-        templateUrl: revisionsTemplateUrl,
-        locals: {
-          items: revisions.reverse(),
-          componentController: componentController,
-          allowRevert: allowRevert
-        },
-        controller: RevisionsController
-      });
-      function RevisionsController($scope, $mdDialog, items, componentController, allowRevert) {
-        $scope.items = items;
-        $scope.componentController = componentController;
-        $scope.allowRevert = allowRevert;
-        $scope.close = () => {
-          $mdDialog.hide();
-        };
-        $scope.revertWork = componentState => {
-          $scope.componentController.setStudentWork(componentState);
-          $scope.componentController.studentDataChanged();
-          $mdDialog.hide();
-        };
-      }
-      RevisionsController.$inject = [
-        '$scope',
-        '$mdDialog',
-        'items',
-        'componentController',
-        'allowRevert'
-      ];
     });
 
     this.$scope.$on('showStudentAssets', (event, args) => {

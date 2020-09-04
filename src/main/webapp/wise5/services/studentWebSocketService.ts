@@ -7,6 +7,8 @@ import { ConfigService } from "./configService";
 import { TagService } from "./tagService";
 import { StudentDataService } from "./studentDataService";
 import { NotificationService } from "./notificationService";
+import { ProjectService } from "./projectService";
+import * as angular from 'angular';
 
 @Injectable()
 export class StudentWebSocketService {
@@ -16,7 +18,8 @@ export class StudentWebSocketService {
 
   constructor(private upgrade: UpgradeModule, private AnnotationService: AnnotationService,
       private ConfigService: ConfigService, private NotificationService: NotificationService,
-      private StudentDataService: StudentDataService, private TagService: TagService) {
+      private ProjectService: ProjectService, private StudentDataService: StudentDataService,
+      private TagService: TagService) {
   }
 
   initialize() {
@@ -47,6 +50,13 @@ export class StudentWebSocketService {
       } else if (message.type === 'studentWork') {
         const studentWork = JSON.parse(message.content);
         this.upgrade.$injector.get('$rootScope').$broadcast('studentWorkReceived', studentWork);
+      } else if (message.type === 'annotation') {
+        const annotation = JSON.parse(message.content);
+        this.upgrade.$injector.get('$rootScope').$broadcast('annotationReceived', annotation);
+      } else if (message.type === "goToNode") {
+        this.goToStep(message.content);
+      } else if (message.type === 'node') {
+        this.updateNode(message.content);
       }
     });
   }
@@ -66,7 +76,30 @@ export class StudentWebSocketService {
         this.TagService.setTags(tags);
         this.upgrade.$injector.get('StudentDataService').updateNodeStatuses();
         this.upgrade.$injector.get('NodeService').evaluateTransitionLogic()
+      } else if (message.type === 'goToNode') {
+        this.goToStep(message.content);
+      } else if (message.type === 'goToNextNode') {
+        this.goToNextStep();
       }
     });
+  }
+
+  goToStep(nodeId) {
+    this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(nodeId);
+  }
+
+  goToNextStep() {
+    this.upgrade.$injector.get('NodeService').getNextNodeId().then(nextNodeId => {
+      this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(
+        nextNodeId
+      );
+    });
+  }
+
+  updateNode(nodeString: string) {
+    const node = angular.fromJson(nodeString);
+    this.ProjectService.replaceNode(node.id, node);
+    this.ProjectService.parseProject();
+    this.StudentDataService.updateNodeStatuses();
   }
 }

@@ -199,7 +199,6 @@ export class PreviewAngularJSModule {
     TeacherWebSocketService
   ],
   entryComponents: [
-    ManageStudentsComponent,
     MilestoneReportDataComponent,
     WorkgroupNodeScoreComponent,
     ManageStudentsComponent,

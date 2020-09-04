@@ -1,0 +1,89 @@
+<h4>{{ ::'importComponentsParens' | translate }}</h4>
+<br/>
+<span>{{ ::'chooseAProjectToImportAndThenChooseAComponent' | translate }}</span>
+<md-button class='createButton md-raised md-primary'
+        ng-click='$ctrl.cancel()'
+        aria-label="{{ ::'CANCEL' | translate }}"
+        translate="CANCEL"></md-button>
+<br/>
+<md-input-container style='margin-right: 20px; width: 100%;'>
+  <label>{{ ::'myProjects' | translate }}</label>
+  <md-select ng-model='$ctrl.importMyProjectId'
+          ng-change='$ctrl.showMyImportProject($ctrl.importMyProjectId)'
+          style='width: 100%;'>
+    <md-option ng-repeat="project in $ctrl.myProjectsList"
+            value='{{project.id}}'>
+      {{project.id + ' - ' + project.name + (project.runId ? ' (' + ('RUN_ID' | translate) + ': ' + project.runId + ')': '')}}
+    </md-option>
+  </md-select>
+</md-input-container>
+<br/>
+<md-input-container style='margin-right: 20px; width: 100%;'>
+  <label>{{ ::'libraryProjects' | translate }}</label>
+  <md-select ng-model='$ctrl.importLibraryProjectId'
+          ng-change='$ctrl.showLibraryImportProject($ctrl.importLibraryProjectId)'
+          style='width: 100%;'>
+    <md-option ng-repeat="project in $ctrl.libraryProjectsList"
+            value='{{project.id}}'>
+      {{project.id + ' - ' + project.name + (project.runId ? ' (' + ('RUN_ID' | translate) + ': ' + project.runId + ')': '')}}
+    </md-option>
+  </md-select>
+</md-input-container>
+<br/>
+<span ng-if="$ctrl.importProject != null">
+  <div style='background-color: white; position: sticky; top: 65px; z-index: 3;'>
+    <span>{{ ::'afterYouHaveChosenTheComponentToImportClickThisButtonToImport' | translate }}</span>
+    <md-button class='topButton md-raised md-primary'
+        ng-click='$ctrl.importComponents()'>
+      <md-icon>vertical_align_bottom</md-icon>
+      <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'importComponentsParens' | translate }}</md-tooltip>
+    </md-button>
+  </div>
+  <br/>
+  <h4 style='display:inline'>{{$ctrl.importProject.metadata.title}}</h4>
+  <md-button class='topButton md-raised md-primary'
+      ng-click='$ctrl.previewImportProject()'>
+    <md-icon>visibility</md-icon>
+    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'previewProject' | translate }}</md-tooltip>
+  </md-button>
+  <br/>
+  <div ng-repeat='importItem in $ctrl.importProjectIdToOrder'
+    ng-class='{"groupHeader": importItem.node.type == "group", "stepHeader": importItem.node.type != "group"}'>
+    <h6 style='display: inline; cursor: pointer'
+      ng-if='importItem.order != 0'>
+      {{::importItem.stepNumber}}: {{::importItem.node.title}}
+    </h6>
+    <md-button class='topButton md-raised md-primary'
+        ng-if='importItem.node.type != "group"'
+        ng-click='$ctrl.previewImportNode(importItem.node)'
+        aria-label='{{ ::"previewStep" | translate }}'>
+      <md-icon>visibility</md-icon>
+      <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'previewStep' | translate }}</md-tooltip>
+    </md-button>
+    <div ng-repeat='component in importItem.node.components track by $index'
+      class='componentHeader'>
+      <div layout='row'>
+        <div layout='row'>
+          <md-checkbox ng-model='component.checked'>
+            <span>{{::($index + 1)}}. {{::component.type}}</span>
+          </md-checkbox>
+        </div>
+        <div layout='row' style='height: 40px;'>
+          <md-button class='regularButton md-raised md-primary'
+              style='margin-top: -5px;'
+              ng-if='importItem.node.type != "group"'
+              ng-click='$ctrl.previewImportNode(importItem.node)'
+              aria-label='{{ ::"previewComponent" | translate }}'>
+            <md-icon>visibility</md-icon>
+            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'previewComponent' | translate }}</md-tooltip>
+          </md-button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <md-button class='topButton md-raised md-primary'
+      ng-click='$ctrl.importComponents()'>
+    <md-icon>vertical_align_bottom</md-icon>
+    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'importComponentsParens' | translate }}</md-tooltip>
+  </md-button>
+</span>

@@ -245,7 +245,30 @@
       "id": "node6",
       "title": "End",
       "type": "node",
-      "constraints": [],
+      "constraints": [{
+        "id": "abcdefg",
+        "action": "makeThisNodeNotVisitable",
+        "targetId": "node6",
+        "removalConditional": "any",
+        "removalCriteria": [{
+          "name": "teacherRemoval",
+          "params": {
+            "periodId": 123
+          }
+        }]
+      },
+      {
+        "id": "hijklmnop",
+        "action": "makeThisNodeNotVisitable",
+        "targetId": "node6",
+        "removalConditional": "any",
+        "removalCriteria": [{
+          "name": "teacherRemoval",
+          "params": {
+            "periodId": 124
+          }
+        }]
+      }],
       "transitionLogic": {
         "transitions": []
       },
