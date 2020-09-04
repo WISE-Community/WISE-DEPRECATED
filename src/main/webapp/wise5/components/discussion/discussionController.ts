@@ -431,15 +431,8 @@ class DiscussionController extends ComponentController {
   }
 
   studentDataChanged() {
-    this.isDirty = true;
-    const action = 'change';
-    this.createComponentState(action).then(componentState => {
-      this.$scope.$emit('componentStudentDataChanged', {
-        nodeId: this.nodeId,
-        componentId: this.componentId,
-        componentState: componentState
-      });
-    });
+    this.setIsDirty(true);
+    this.createComponentStateAndBroadcast('change');
   }
 
   /**

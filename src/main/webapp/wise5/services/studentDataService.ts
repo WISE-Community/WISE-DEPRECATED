@@ -83,10 +83,11 @@ export class StudentDataService extends DataService {
   };
 
   $q: any;
-  $rootScope: any;
   $translate: any;
   private pauseScreenSource: Subject<boolean> = new Subject<boolean>();
   public pauseScreen$ = this.pauseScreenSource.asObservable();
+  private componentStudentDataSource: Subject<any> = new Subject<any>();
+  public componentStudentData$ = this.componentStudentDataSource.asObservable();
 
   constructor(private upgrade: UpgradeModule,
       public http: HttpClient,
@@ -100,6 +101,10 @@ export class StudentDataService extends DataService {
 
   pauseScreen(doPause: boolean) {
     this.pauseScreenSource.next(doPause);
+  }
+
+  broadcastComponentStudentData(componentStudentData: any) {
+    this.componentStudentDataSource.next(componentStudentData);
   }
 
   handleNodeStatusesChanged() {

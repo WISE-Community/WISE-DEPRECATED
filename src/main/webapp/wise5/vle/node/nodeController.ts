@@ -7,11 +7,13 @@ import { UtilService } from '../../services/utilService';
 import * as hopscotch from 'hopscotch';
 window['hopscotch'] = hopscotch;
 import * as $ from 'jquery';
+import { Subscription } from 'rxjs';
 
 class NodeController {
   $translate: any;
   autoSaveInterval: any;
   autoSaveIntervalId: any;
+  componentStudentDataSubscription: Subscription;
   componentToScope: any;
   dirtyComponentIds: any;
   dirtySubmitComponentIds: any;
@@ -210,42 +212,26 @@ class NodeController {
       }
     });
 
-    /**
-     * Listen for the componentStudentDataChanged event that will come from
-     * child component scopes
-     * @param event
-     * @param args the arguments provided when the event is fired
-     */
-    this.$scope.$on('componentStudentDataChanged', (event, args) => {
-      if (args != null) {
-        const componentId = args.componentId;
-        const componentState = args.componentState;
-        if (componentId != null && componentState != null) {
-          if (componentState.nodeId == null) {
-            if (args.nodeId != null) {
-              /*
-               * set the node id into the component state because
-               * the component state hasn't had it set at this
-               * point.
-               */
-              componentState.nodeId = args.nodeId;
-            }
-          }
-
-          if (componentState.componentId == null) {
-            if (args.componentId != null) {
-              /*
-               * set the component id into the component state
-               * because the component state hasn't had it set at
-               * this point.
-               */
-              componentState.componentId = args.componentId;
-            }
-          }
-          this.notifyConnectedParts(componentId, componentState);
-          this.$scope.$broadcast('siblingComponentStudentDataChanged', args);
+    this.componentStudentDataSubscription =
+        this.StudentDataService.componentStudentData$.subscribe((componentStudentData: any) => {
+      const componentId = componentStudentData.componentId;
+      const componentState = componentStudentData.componentState;
+      if (componentState.nodeId == null) {
+        if (componentStudentData.nodeId != null) {
+          componentState.nodeId = componentStudentData.nodeId;
         }
       }
+      if (componentState.componentId == null) {
+        if (componentStudentData.componentId != null) {
+          componentState.componentId = componentStudentData.componentId;
+        }
+      }
+      this.notifyConnectedParts(componentId, componentState);
+      this.$scope.$broadcast('siblingComponentStudentDataChanged', componentStudentData);
+    });
+
+    this.$scope.$on('$destroy', () => {
+      this.componentStudentDataSubscription.unsubscribe();
     });
 
     /**

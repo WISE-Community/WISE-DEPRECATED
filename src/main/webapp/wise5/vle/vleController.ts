@@ -203,8 +203,6 @@ class VLEController {
       this.newNotifications = this.getNewNotifications();
     });
 
-    this.$scope.$on('componentStudentDataChanged', () => {});
-
     this.StudentDataService.pauseScreen$.subscribe((doPause: boolean) => {
       if (doPause) {
         this.pauseScreen();

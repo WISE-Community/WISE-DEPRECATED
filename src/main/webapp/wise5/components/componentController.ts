@@ -556,8 +556,11 @@ class ComponentController {
   }
 
   emitComponentStudentDataChanged(componentState) {
-    this.$scope.$emit('componentStudentDataChanged',
-        {nodeId: this.nodeId, componentId: this.componentId, componentState: componentState});
+    this.StudentDataService.broadcastComponentStudentData({
+      nodeId: this.nodeId,
+      componentId: this.componentId,
+      componentState: componentState
+    });
   }
 
   processLatestStudentWork() {
