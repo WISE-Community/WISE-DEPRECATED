@@ -93,7 +93,11 @@ class ThemeController {
         if (constraints != null && constraints.length > 0) {
           // get the node title the student is trying to go to
           let nodeTitle = this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
-          message = this.$translate('toVisitNodeTitleYouNeedTo', { nodeTitle: nodeTitle });
+          message = 
+            `<p>
+              ${this.$translate('toVisitNodeTitleYouNeedTo', { nodeTitle: nodeTitle })}
+            </p>
+            <ul>`;
         }
 
         // loop through all the constraints that affect this node
@@ -103,16 +107,11 @@ class ThemeController {
           // check if the constraint has been satisfied
           if (constraint != null && !this.StudentDataService.evaluateConstraint(constraint)) {
             // the constraint has not been satisfied and is still active
-
-            if (message != '') {
-              // separate multiple constraints with line breaks
-              message += '<br/>';
-            }
-
             // get the message that describes how to disable the constraint
-            message += this.ProjectService.getConstraintMessage(nodeId, constraint);
+            message += `<li>${this.ProjectService.getConstraintMessage(nodeId, constraint)}</li>`;
           }
         }
+        message += `</ul>`;
       }
 
       this.$mdDialog.show(
