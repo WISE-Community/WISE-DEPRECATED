@@ -1692,7 +1692,7 @@ class GraphController extends ComponentController {
        */
       this.$timeout(() => {
         this.emitComponentStudentDataChanged(componentState);
-      }, 100);
+      }, 1000);
     });
   }
 
@@ -2984,11 +2984,13 @@ class GraphController extends ComponentController {
           connectedComponentBackgroundImage = promiseResult;
         }
       }
-      activeTrialIndex = this.addTrialFromThisComponentIfNecessary(
-        mergedTrials,
-        trialCount,
-        activeTrialIndex
-      );
+      if (this.isTrialsEnabled()) {
+        activeTrialIndex = this.addTrialFromThisComponentIfNecessary(
+          mergedTrials,
+          trialCount,
+          activeTrialIndex
+        );
+      }
       let newComponentState = this.NodeService.createNewComponentState();
       newComponentState.studentData = {
         trials: mergedTrials,
