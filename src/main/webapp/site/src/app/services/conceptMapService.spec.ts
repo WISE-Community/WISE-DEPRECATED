@@ -9,6 +9,7 @@ import { TagService } from "../../../../wise5/services/tagService";
 import { UtilService } from "../../../../wise5/services/utilService";
 import { ConceptMapService } from "../../../../wise5/components/conceptMap/conceptMapService";
 import { ConfigService } from "../../../../wise5/services/configService";
+import { SessionService } from "../../../../wise5/services/sessionService";
 
 let service: ConceptMapService;
 let conceptMapNode1: any;
@@ -49,6 +50,7 @@ describe('ConceptMapService', () => {
         ConceptMapService,
         ConfigService,
         ProjectService,
+        SessionService,
         StudentAssetService,
         StudentDataService,
         TagService,

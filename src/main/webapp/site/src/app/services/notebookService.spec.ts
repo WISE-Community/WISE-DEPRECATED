@@ -13,6 +13,7 @@ import demoNotebookItems_import from './sampleData/sample_notebookItems.json';
 import demoNotebooksByWorkgroupId_import from './sampleData/sample_notebooksByWorkgroup.json';
 import demoPublicNotebookItems_import from './sampleData/sample_publicNotebookItems.json';
 import demoProject_import from './sampleData/curriculum/Demo.project.json';
+import { SessionService } from '../../../../wise5/services/sessionService';
 
 let http: HttpTestingController;
 let configService: ConfigService;
@@ -33,7 +34,7 @@ describe('NotebookService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [ HttpClientTestingModule, UpgradeModule ],
-      providers: [ NotebookService, AnnotationService, ConfigService, ProjectService, 
+      providers: [ NotebookService, AnnotationService, ConfigService, ProjectService, SessionService,
           StudentAssetService, StudentDataService, TagService, UtilService ]
     });
     http = TestBed.get(HttpTestingController);

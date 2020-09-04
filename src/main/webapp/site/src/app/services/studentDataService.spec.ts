@@ -8,6 +8,7 @@ import { ProjectService } from '../../../../wise5/services/projectService';
 import { UtilService } from '../../../../wise5/services/utilService';
 import * as angular from 'angular';
 import { TagService } from '../../../../wise5/services/tagService';
+import { SessionService } from '../../../../wise5/services/sessionService';
 
 let $injector, $rootScope;
 let http: HttpTestingController;
@@ -25,7 +26,7 @@ describe('StudentDataService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [ HttpClientTestingModule, UpgradeModule ],
-      providers: [ StudentDataService, ConfigService, AnnotationService, ProjectService,
+      providers: [ AnnotationService, ConfigService, ProjectService, SessionService, StudentDataService, 
           TagService, UtilService ]
     });
     http = TestBed.get(HttpTestingController);

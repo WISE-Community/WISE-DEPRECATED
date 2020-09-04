@@ -16,6 +16,7 @@ import { TeacherProjectService } from "../../../../wise5/services/teacherProject
 import { TeacherWebSocketService } from "../../../../wise5/services/teacherWebSocketService";
 import { NotificationService } from "../../../../wise5/services/notificationService";
 import { StudentStatusService } from "../../../../wise5/services/studentStatusService";
+import { SessionService } from '../../../../wise5/services/sessionService';
 
 let service: MilestoneService;
 let achievementService: AchievementService;
@@ -65,6 +66,7 @@ describe('MilestoneService', () => {
         MilestoneService,
         NotificationService,
         ProjectService,
+        SessionService,
         StudentDataService,
         StudentStatusService,
         TagService,

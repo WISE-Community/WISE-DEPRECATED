@@ -5,6 +5,7 @@ import { ConfigService } from '../../../../wise5/services/configService';
 import { ProjectService } from '../../../../wise5/services/projectService';
 import { SpaceService } from '../../../../wise5/services/spaceService';
 import { UtilService } from '../../../../wise5/services/utilService';
+import { SessionService } from '../../../../wise5/services/sessionService';
 let service: SpaceService;
 let projectService: ProjectService;
 
@@ -12,7 +13,7 @@ describe('SpaceService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [ HttpClientTestingModule, UpgradeModule ],
-      providers: [ ConfigService, ProjectService, SpaceService, UtilService ]
+      providers: [ ConfigService, ProjectService, SessionService, SpaceService, UtilService ]
     });
     projectService = TestBed.get(ProjectService);
     service = TestBed.get(SpaceService)
