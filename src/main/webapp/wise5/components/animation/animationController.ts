@@ -966,19 +966,10 @@ class AnimationController extends ComponentController {
   studentDataChanged() {
     this.setIsDirty(true);
     this.emitComponentDirty(true);
-
     this.setIsSubmit(true);
     this.emitComponentSubmitDirty(true);
-
     this.clearSaveText();
-
-    this.createComponentState('change').then(componentState => {
-      this.StudentDataService.broadcastComponentStudentData({
-        nodeId: this.nodeId,
-        componentId: this.componentId,
-        componentState: componentState
-      });
-    });
+    this.createComponentStateAndBroadcast('change');
   }
 
   /**
