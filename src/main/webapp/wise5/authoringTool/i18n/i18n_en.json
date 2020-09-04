@@ -367,6 +367,7 @@
   "tag": "Tag",
   "tags": "Tags",
   "targetVariable": "Target Variable",
+  "teacherRemoval": "Teacher removes constraint",
   "template": "Template",
   "templateSatisfyCriteria": "Template Satisfy Criteria",
   "thereAreNotPathsOutOfThisStep": "There are no paths out of this step",

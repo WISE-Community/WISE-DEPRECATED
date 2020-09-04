@@ -3563,6 +3563,8 @@ export class ProjectService {
             nodeTitle: nodeTitle
           });
         }
+      } else if (name === 'teacherRemoval') {
+        message += this.upgrade.$injector.get('$filter')('translate')('waitForTeacherToUnlock');
       }
     }
     return message;
@@ -5243,6 +5245,22 @@ export class ProjectService {
     .then(result => {
       return result;
     });
+  }
+
+  replaceNode(nodeId, node) {
+    this.setIdToNode(nodeId, node);
+    const nodes = this.getNodes();
+    for (let n = 0; n < nodes.length; n++) {
+      if (nodeId === nodes[n].id) {
+        nodes.splice(n, 1, node);
+        break;
+      }
+    }
+    for (let a = 0; a < this.applicationNodes.length; a++) {
+      if (nodeId === this.applicationNodes[a].id) {
+        this.applicationNodes.splice(a, 1, node);
+      }
+    }
   }
 
   replaceComponent(nodeId, componentId, component) {

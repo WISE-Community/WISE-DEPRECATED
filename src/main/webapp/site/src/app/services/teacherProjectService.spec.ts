@@ -66,6 +66,8 @@ describe('TeacherProjectService', () => {
   filterUniqueProjects();
   shouldGetTheNodeIdAndComponentIdObjects();
   shouldGetTheBranchLetter();
+  lockNode();
+  unlockNode();
 });
 
 function createConfigServiceGetConfigParamSpy() {
@@ -291,5 +293,37 @@ function shouldGetTheBranchLetter() {
     expect(branchLetter).toEqual('B');
     branchLetter = service.getBranchLetter('node6');
     expect(branchLetter).toEqual(null);
+  });
+}
+
+function lockNode() {
+  describe('lockNode()', () => {
+    it('should add teacherRemoval constraint to node', () => {
+      service.setProject(teacherProjectJSON);
+      const group1 = service.getNodeById('group1');
+      const periodIdToLock = 123;
+      expect(group1.constraints).toBeUndefined();
+      service.addTeacherRemovalConstraint(group1, periodIdToLock);
+      expect(group1.constraints.length).toEqual(1);
+      const contraintRemovalCriteria = group1.constraints[0].removalCriteria[0];
+      expect(contraintRemovalCriteria.name).toEqual('teacherRemoval');
+      expect(contraintRemovalCriteria.params.periodId).toEqual(periodIdToLock);
+    });
+  });
+}
+
+function unlockNode() {
+  describe('unlockNode()', () => {
+    it('should remove teacherRemoval constraint from node', () => {
+      service.setProject(teacherProjectJSON);
+      const node6 = service.getNodeById('node6');
+      expect(node6.constraints.length).toEqual(2);
+      service.removeTeacherRemovalConstraint(node6, 123);
+      expect(node6.constraints.length).toEqual(1);
+      service.removeTeacherRemovalConstraint(node6, 124);
+      expect(node6.constraints.length).toEqual(0);
+      service.removeTeacherRemovalConstraint(node6, 999);
+      expect(node6.constraints.length).toEqual(0);
+    });
   });
 }
