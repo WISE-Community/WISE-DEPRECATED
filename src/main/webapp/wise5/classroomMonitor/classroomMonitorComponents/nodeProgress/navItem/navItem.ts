@@ -43,6 +43,7 @@ class NavItemController {
   static $inject = [
     '$element',
     '$filter',
+    '$mdToast',
     '$rootScope',
     '$scope',
     'AnnotationService',
@@ -57,6 +58,7 @@ class NavItemController {
   constructor(
     private $element: any,
     $filter: any,
+    private $mdToast: any,
     private $rootScope: any,
     private $scope: any,
     private AnnotationService: AnnotationService,
@@ -269,13 +271,33 @@ class NavItemController {
 
   toggleLockNode() {
     const node = this.ProjectService.getNodeById(this.nodeId);
+    const isLocked = this.isLocked();
     if (this.isLocked()) {
       this.unlockNode(node);
     } else {
       this.lockNode(node);
     }
-    this.ProjectService.saveProject();
-    this.sendNodeToClass(node);
+    this.ProjectService.saveProject().then(response => {
+      if (response.status === 'success') {
+        this.sendNodeToClass(node);
+        this.showToggleLockNodeConfirmation(!isLocked);
+      }
+    });
+  }
+
+  showToggleLockNodeConfirmation(isLocked: boolean) {
+    let message = '';
+    if (isLocked) {
+      message = this.$translate('lockNodeConfirmation', { nodeTitle: this.nodeTitle, 
+          periodName: this.getPeriodLabel() });
+    } else {
+      message = this.$translate('unlockNodeConfirmation', { nodeTitle: this.nodeTitle, 
+        periodName: this.getPeriodLabel() });
+    }
+    this.$mdToast.show(
+      this.$mdToast.simple()
+      .textContent(message)
+      .hideDelay(5000));
   }
 
   unlockNode(node: any) {
@@ -449,6 +471,19 @@ class NavItemController {
       }
     }
     return result;
+  }
+
+  getPeriodLabel() {
+    return this.isShowingAllPeriods() ? this.$translate('allPeriods') : 
+       this.$translate('periodLabel', { name: this.currentPeriod.periodName });
+  }
+
+  getNodeLockedText(): string {
+    if (this.isLocked()) {
+      return this.$translate('unlockNodeForPeriod', { periodName: this.getPeriodLabel() });
+    } else {
+      return this.$translate('lockNodeForPeriod', { periodName: this.getPeriodLabel() });
+    }
   }
 }
 
