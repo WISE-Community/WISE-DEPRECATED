@@ -1,0 +1,36 @@
+<div layout='row' style='margin-left: 10px; height:50px'>
+  <div layout='row'>
+    <h6 translate="chooseNewLocation"></h6>
+  </div>
+  <div layout='row'>
+    <md-button class='createButton md-raised md-primary'
+           ng-click='$ctrl.cancel()'
+           aria-label="{{ ::'CANCEL' | translate }}"
+           translate="CANCEL"></md-button>
+  </div>
+</div>
+<div style='margin-left: 45px;'>
+  <md-button class='moveComponentButton md-raised md-primary'
+         ng-click='$ctrl.insertComponentAsFirst()'>
+    <md-icon>keyboard_backspace</md-icon>
+    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'insertAsFirstComponent' | translate }}</md-tooltip>
+  </md-button>
+  <span style='font-weight:bold; margin-right:10px'>{{ ::'insertAsFirstComponent' | translate }}</span>
+</div>
+<div ng-repeat='(componentIndex, component) in $ctrl.components'
+   class='component md-padding'
+   style='padding: 0; margin-top: 0; margin-left: 16px;'>
+  <div id='{{component.id}}' layout='row' style='height: 40px; margin-top: 0; margin-bottom: 0;'>
+    <div style='margin-top: 15px; width: 200px;'>
+      <span style='font-weight:bold; margin-right:10px'>{{(componentIndex + 1)}}. {{::$ctrl.getComponentTypeLabel(component.type)}}</span>
+    </div>
+  </div>
+  <div style='height: 30px; margin-top: 10px; margin-left: 30px;'>
+    <md-button class='moveComponentButton md-raised md-primary'
+            style='margin-top: 0;'
+            ng-click='$ctrl.importComponentAfter(component.id)'>
+      <md-icon>keyboard_backspace</md-icon>
+      <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::"insertAfter" | translate }}</md-tooltip>
+    </md-button>
+  </div>
+</div>

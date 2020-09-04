@@ -17,6 +17,8 @@
       padding: 5px 20px;
   }
 </style>
+<div ui-view></div>
+<div ng-if="nodeAuthoringController.$state.current.name == 'root.at.project.node'">
 <div style='background-color: white; position: sticky; top: 17px; z-index: 2;'>
   <md-button id='backToProjectButton' class='topButton md-raised md-primary'
       ng-click='nodeAuthoringController.backButtonClicked()'
@@ -44,7 +46,7 @@
   <md-button id='importComponentButton'
       ng-if='nodeAuthoringController.showStepButtons && !projectController.isGroupNode(nodeAuthoringController.node.id)'
       class='topButton md-raised md-primary'
-      ng-click='nodeAuthoringController.importButtonClicked()'
+      ng-click='nodeAuthoringController.importComponent()'
       ng-disabled='nodeAuthoringController.getSelectedComponentIds().length != 0 || nodeAuthoringController.insertComponentMode'>
     <md-icon>system_update_alt</md-icon>
     <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'importComponent' | translate }}</md-tooltip>
@@ -850,96 +852,8 @@
     </div>
   </div>
 </div>
-
-<div ng-if='nodeAuthoringController.showImport'>
-  <h4>{{ ::'importComponentsParens' | translate }}</h4>
-  <br/>
-  <span>{{ ::'chooseAProjectToImportAndThenChooseAComponent' | translate }}</span>
-  <br/>
-  <md-input-container style='margin-right: 20px; width: 100%;'>
-    <label>{{ ::'myProjects' | translate }}</label>
-    <md-select ng-model='nodeAuthoringController.importMyProjectId'
-           ng-change='nodeAuthoringController.showMyImportProject(nodeAuthoringController.importMyProjectId)'
-           style='width: 100%;'>
-      <md-option ng-repeat="project in nodeAuthoringController.myProjectsList"
-             value='{{project.id}}'>
-        {{project.id + ' - ' + project.name + (project.runId ? ' (' + ('RUN_ID' | translate) + ': ' + project.runId + ')': '')}}
-      </md-option>
-    </md-select>
-  </md-input-container>
-  <br/>
-  <md-input-container style='margin-right: 20px; width: 100%;'>
-    <label>{{ ::'libraryProjects' | translate }}</label>
-    <md-select ng-model='nodeAuthoringController.importLibraryProjectId'
-           ng-change='nodeAuthoringController.showLibraryImportProject(nodeAuthoringController.importLibraryProjectId)'
-           style='width: 100%;'>
-      <md-option ng-repeat="project in nodeAuthoringController.libraryProjectsList"
-             value='{{project.id}}'>
-        {{project.id + ' - ' + project.name + (project.runId ? ' (' + ('RUN_ID' | translate) + ': ' + project.runId + ')': '')}}
-      </md-option>
-    </md-select>
-  </md-input-container>
-  <br/>
-  <span ng-if="nodeAuthoringController.importProject != null">
-    <div style='background-color: white; position: sticky; top: 65px; z-index: 3;'>
-      <span>{{ ::'afterYouHaveChosenTheComponentToImportClickThisButtonToImport' | translate }}</span>
-      <md-button class='topButton md-raised md-primary'
-          ng-click='nodeAuthoringController.importComponentsButtonClicked()'>
-        <md-icon>vertical_align_bottom</md-icon>
-        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'importComponentsParens' | translate }}</md-tooltip>
-      </md-button>
-    </div>
-    <br/>
-    <h4 style='display:inline'>{{nodeAuthoringController.importProject.metadata.title}}</h4>
-    <md-button class='topButton md-raised md-primary'
-        ng-click='nodeAuthoringController.previewImportProject()'>
-      <md-icon>visibility</md-icon>
-      <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'previewProject' | translate }}</md-tooltip>
-    </md-button>
-    <br/>
-    <div ng-repeat='importItem in nodeAuthoringController.importProjectIdToOrder'
-      ng-class='{"groupHeader": importItem.node.type == "group", "stepHeader": importItem.node.type != "group"}'>
-      <h6 style='display: inline; cursor: pointer'
-        ng-if='importItem.order != 0'>
-        {{::importItem.stepNumber}}: {{::importItem.node.title}}
-      </h6>
-      <md-button class='topButton md-raised md-primary'
-          ng-if='importItem.node.type != "group"'
-          ng-click='nodeAuthoringController.previewImportNode(importItem.node)'
-          aria-label='{{ ::"previewStep" | translate }}'>
-        <md-icon>visibility</md-icon>
-        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'previewStep' | translate }}</md-tooltip>
-      </md-button>
-      <div ng-repeat='component in importItem.node.components track by $index'
-        class='componentHeader'>
-        <div layout='row'>
-          <div layout='row'>
-            <md-checkbox ng-model='component.checked'>
-              <span>{{::($index + 1)}}. {{::component.type}}</span>
-            </md-checkbox>
-          </div>
-          <div layout='row' style='height: 40px;'>
-            <md-button class='regularButton md-raised md-primary'
-                style='margin-top: -5px;'
-                ng-if='importItem.node.type != "group"'
-                ng-click='nodeAuthoringController.previewImportNode(importItem.node)'
-                aria-label='{{ ::"previewComponent" | translate }}'>
-              <md-icon>visibility</md-icon>
-              <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'previewComponent' | translate }}</md-tooltip>
-            </md-button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <md-button class='topButton md-raised md-primary'
-        ng-click='nodeAuthoringController.importComponentsButtonClicked()'>
-      <md-icon>vertical_align_bottom</md-icon>
-      <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'importComponentsParens' | translate }}</md-tooltip>
-    </md-button>
-  </span>
-</div>
 <!-- input for changing the step title -->
-<div ng-if='nodeAuthoringController.showComponents && !nodeAuthoringController.insertComponentMode && !nodeAuthoringController.importComponentMode'>
+<div ng-if='nodeAuthoringController.showComponents && !nodeAuthoringController.insertComponentMode'>
   <div layout='row' style='margin-left: 10px; max-height: 60px;'>
     <div layout='row' style='margin-top: 18px; margin-right: 10px;'>
       <h6 ng-if="!projectController.isGroupNode(nodeAuthoringController.node.id)">{{ ::'stepTitle' | translate }} {{ nodeAuthoringController.nodePosition }}:</h6>
@@ -964,14 +878,14 @@
   </md-button>
   <span style='font-weight:bold; margin-right:10px'>{{ ::'insertAsFirstComponent' | translate }}</span>
 </div>
-<div style='margin-left: 45px; margin-top: 45px; font-size: 1em; font-weight: bold;' ng-if='nodeAuthoringController.showComponents && !nodeAuthoringController.showImport &&
+<div style='margin-left: 45px; margin-top: 45px; font-size: 1em; font-weight: bold;' ng-if='nodeAuthoringController.showComponents &&
    nodeAuthoringController.components.length === 0 && !nodeAuthoringController.insertComponentMode && nodeAuthoringController.node.type != "group"''>
    <em>{{ ::'stepHasNoComponents' | translate }}</em>
 </div>
 <div ng-repeat='(componentIndex, component) in nodeAuthoringController.components'
    class='component md-padding'
    style='padding: 0; margin-top: 0; margin-left: 16px;'
-   ng-if='nodeAuthoringController.showComponents && !nodeAuthoringController.showImport'>
+   ng-if='nodeAuthoringController.showComponents'>
   <div id='{{component.id}}' layout='row' style='height: 40px; margin-top: 0; margin-bottom: 0;'>
     <div style='margin-top: 15px; width: 200px;'>
       <md-checkbox ng-model='nodeAuthoringController.componentsToChecked[component.id]'
@@ -1000,4 +914,5 @@
   </div>
   <component ng-if='nodeAuthoringController.showComponentAuthoringViews' node-id='{{nodeAuthoringController.nodeId}}' component-id='{{component.id}}' mode='authoring'></component>
   <md-divider ng-if='nodeAuthoringController.showComponentAuthoringViews && !$last'></md-divider>
+</div>
 </div>

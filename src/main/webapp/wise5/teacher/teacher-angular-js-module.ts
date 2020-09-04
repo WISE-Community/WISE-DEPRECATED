@@ -41,6 +41,7 @@ import '../components/draw/drawAuthoringComponentModule';
 import '../components/embedded/embeddedAuthoringComponentModule';
 import '../components/graph/graphAuthoringComponentModule';
 import '../components/html/htmlAuthoringComponentModule';
+import '../authoringTool/importComponent/importComponentModule';
 import '../authoringTool/importStep/importStepModule';
 import '../components/label/labelAuthoringComponentModule';
 import '../components/match/matchAuthoringComponentModule';
@@ -69,6 +70,7 @@ export function createTeacherAngularJSModule() {
       'embeddedAuthoringComponentModule',
       'graphAuthoringComponentModule',
       'htmlAuthoringComponentModule',
+      'importComponentModule',
       'importStepModule',
       'labelAuthoringComponentModule',
       'matchAuthoringComponentModule',
@@ -193,7 +195,10 @@ export function createTeacherAngularJSModule() {
           templateUrl: '/wise5/authoringTool/node/node.html',
           controller: 'NodeAuthoringController',
           controllerAs: 'nodeAuthoringController',
-          resolve: {}
+          resolve: {},
+          params: {
+            newComponents: []
+          }
         })
         .state('root.at.project.nodeConstraints', {
           url: '/node/constraints/:nodeId',
