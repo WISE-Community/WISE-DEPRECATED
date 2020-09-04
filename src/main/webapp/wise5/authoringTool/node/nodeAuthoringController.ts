@@ -36,18 +36,9 @@ class NodeAuthoringController {
     'lastAvailable',
     'tag'
   ];
-  importComponentMode: boolean = false;
-  importLibraryProjectId: any;
-  importMyProjectId: any;
-  importProject: any;
-  importProjectId: any;
-  importProjectIdToOrder: any;
-  importProjectItems: any;
   insertComponentMode: boolean = false;
   items: any[];
-  libraryProjectsList: any;
   moveComponentMode: boolean = false;
-  myProjectsList: any;
   node: any;
   nodeCopy: any = null;
   nodeId: string;
@@ -66,7 +57,6 @@ class NodeAuthoringController {
   showCreateBranch: boolean = false;
   showEditTransitions: boolean = false;
   showGeneralAdvanced: boolean = false;
-  showImport: boolean = false;
   showJSON: boolean = false;
   showRubric: boolean = false;
   showRubricButton: boolean = true;
@@ -571,7 +561,11 @@ class NodeAuthoringController {
     } else {
       this.saveEvent('stepViewOpened', 'Navigation', data);
     }
-    this.scrollToTopOfPage();
+    if (this.$stateParams.newComponents.length > 0) {
+      this.highlightNewComponentsAndThenShowComponentAuthoring(this.$stateParams.newComponents);
+    } else {
+      this.scrollToTopOfPage();
+    }
   }
 
   /**
@@ -1094,7 +1088,6 @@ class NodeAuthoringController {
     this.showRubric = false;
     this.showCreateBranch = false;
     this.showAdvanced = false;
-    this.showImport = false;
     this.showStepButtons = false;
     this.showComponents = false;
     this.showJSON = false;
@@ -1140,12 +1133,6 @@ class NodeAuthoringController {
   showCreateBranchView() {
     this.showAdvancedView();
     this.showCreateBranch = true;
-  }
-
-  showImportView() {
-    this.hideAllViews();
-    this.showImport = true;
-    this.showComponents = true;
   }
 
   showJSONView() {
@@ -1848,14 +1835,6 @@ class NodeAuthoringController {
     this.copyComponentMode = false;
   }
 
-  turnOnImportComponentMode() {
-    this.importComponentMode = true;
-  }
-
-  turnOffImportComponentMode() {
-    this.importComponentMode = false;
-  }
-
   getSelectedComponentIds() {
     const selectedComponents = [];
     if (this.components != null) {
@@ -1901,28 +1880,8 @@ class NodeAuthoringController {
     return selectedComponents;
   }
 
-  importButtonClicked() {
-    this.importProjectIdToOrder = {};
-    this.importProjectItems = [];
-    this.importMyProjectId = null;
-    this.importLibraryProjectId = null;
-    this.importProjectId = null;
-    this.importProject = null;
-    this.showImportView();
-    if (this.showImport) {
-      this.turnOnImportComponentMode();
-      if (this.myProjectsList == null) {
-        this.myProjectsList = this.ConfigService.getAuthorableProjects();
-      }
-
-      if (this.libraryProjectsList == null) {
-        this.ProjectService.getLibraryProjects().then(libraryProjects => {
-          this.libraryProjectsList = this.ProjectService.sortAndFilterUniqueLibraryProjects(
-            libraryProjects
-          );
-        });
-      }
-    }
+  importComponent() {
+    this.$state.go('root.at.project.node.import-component.choose-step');
   }
 
   moveButtonClicked() {
@@ -2026,8 +1985,6 @@ class NodeAuthoringController {
       this.handleMoveComponent();
     } else if (this.copyComponentMode) {
       this.handleCopyComponent();
-    } else if (this.importComponentMode) {
-      this.handleImportComponent();
     }
   }
 
@@ -2038,8 +1995,6 @@ class NodeAuthoringController {
       this.handleMoveComponent(componentId);
     } else if (this.copyComponentMode) {
       this.handleCopyComponent(componentId);
-    } else if (this.importComponentMode) {
-      this.handleImportComponent(componentId);
     }
   }
 
@@ -2127,23 +2082,6 @@ class NodeAuthoringController {
   }
 
   /**
-   * Import components into this step.
-   * @param componentId (optional) Put the imported components after this
-   * component id. If the componentId is not provided, we will put the
-   * components at the beginning of the step.
-   */
-  handleImportComponent(componentId = null) {
-    this.importComponents(this.nodeId, componentId).then(newComponents => {
-      this.turnOffImportComponentMode();
-      this.ProjectService.saveProject();
-      this.highlightNewComponentsAndThenShowComponentAuthoring(newComponents);
-
-      // refresh the project assets in case any of the imported components also imported assets
-      this.ProjectAssetService.retrieveProjectAssets();
-    });
-  }
-
-  /**
    * Temporarily highlight the new components and then show the component
    * authoring views. Used to bring user's attention to new changes.
    * @param newComponents an array of the new components we have just added
@@ -2192,119 +2130,6 @@ class NodeAuthoringController {
     });
   }
 
-  /**
-   * The author has chosen an authorable project to import from
-   * @param importProjectId the project id to import from
-   */
-  showMyImportProject(importProjectId) {
-    this.importLibraryProjectId = null;
-    this.showImportProject(importProjectId);
-  }
-
-  /**
-   * The author has chosen a library project to import from
-   * @param importProjectId the project id to import from
-   */
-  showLibraryImportProject(importProjectId) {
-    this.importMyProjectId = null;
-    this.showImportProject(importProjectId);
-  }
-
-  /**
-   * Show the project we want to import steps from
-   * @param importProjectId the import project id
-   */
-  showImportProject(importProjectId) {
-    this.importProjectId = importProjectId;
-    if (this.importProjectId == null) {
-      this.importProjectIdToOrder = {};
-      this.importProjectItems = [];
-      this.importMyProjectId = null;
-      this.importLibraryProjectId = null;
-      this.importProjectId = null;
-      this.importProject = null;
-    } else {
-      this.ProjectService.retrieveProjectById(this.importProjectId).then(projectJSON => {
-        this.importProjectIdToOrder = {};
-        this.importProject = projectJSON;
-        const result = this.ProjectService.getNodeOrderOfProject(this.importProject);
-        this.importProjectIdToOrder = result.idToOrder;
-        this.importProjectItems = result.nodes;
-      });
-    }
-  }
-
-  previewImportNode(node) {
-    window.open(
-      `${this.importProject.previewProjectURL}/${node.id}`
-    );
-  }
-
-  previewImportProject() {
-    window.open(`${this.importProject.previewProjectURL}`);
-  }
-
-  importComponentsButtonClicked() {
-    let selectedComponents = this.getSelectedComponentsToImport();
-    if (selectedComponents == null || selectedComponents.length == 0) {
-      alert('Please select a component to import.');
-    } else {
-      /*
-       * hide the import view because we want to go back to the
-       * project view so that the author can choose where to place
-       * the new steps
-       */
-      this.showImport = false;
-      this.turnOnInsertComponentMode();
-      this.hideComponentAuthoring();
-      this.scrollToTopOfPage();
-    }
-  }
-
-  getSelectedComponentsToImport() {
-    const selectedComponents = [];
-    for (const item of this.importProjectItems) {
-      if (item.node.components != null) {
-        for (const component of item.node.components) {
-          if (component.checked) {
-            selectedComponents.push(component);
-          }
-        }
-      }
-    }
-    return selectedComponents;
-  }
-
-  /**
-   * Get the components that were selected
-   * @param insertAfterComponentId (optional) Insert the components after this
-   * component id. If this is null, we will insert the components at the
-   * beginning of the step.
-   */
-  importComponents(nodeId, insertAfterComponentId) {
-    const data = {
-      componentsImported: this.getComponentObjectsForImportEventData()
-    };
-    const selectedComponents = this.getSelectedComponentsToImport();
-    for (const selectedComponent of selectedComponents) {
-      delete selectedComponent.checked;
-    }
-    return this.ProjectService.importComponents(
-      selectedComponents,
-      this.importProjectId,
-      nodeId,
-      insertAfterComponentId
-    ).then(newComponents => {
-      for (let c = 0; c < data.componentsImported.length; c++) {
-        const componentImported = data.componentsImported[c];
-        let newComponentId = newComponents[c].id;
-        componentImported.toComponentId = newComponentId;
-      }
-      this.saveEvent('componentImported', 'Authoring', data);
-      return newComponents;
-    });
-  }
-
   scrollToTopOfPage() {
     this.$anchorScroll('top');
   }
@@ -2336,7 +2161,7 @@ class NodeAuthoringController {
   }
 
   backButtonClicked() {
-    if (this.showImport || this.showRubric || this.showAdvanced) {
+    if (this.showRubric || this.showAdvanced) {
       this.UtilService.hideJSONValidMessage();
       this.showDefaultComponentsView();
       this.$state.go('root.at.project.node', { projectId: this.projectId, nodeId: this.nodeId });
@@ -2390,31 +2215,6 @@ class NodeAuthoringController {
           type: component.type
         };
         componentObjects.push(tempComponent);
-      }
-    }
-    return componentObjects;
-  }
-
-  /**
-   * Get an array of objects that contain the node id, component id and type
-   * @return an array of objects that contain the node id, component id and type
-   * TODO refactor too many nesting
-   */
-  getComponentObjectsForImportEventData() {
-    const componentObjects = [];
-    for (let item of this.importProjectItems) {
-      if (item != null && item.node != null && item.node.components != null) {
-        for (let component of item.node.components) {
-          if (component != null && component.checked) {
-            const tempComponent = {
-              fromProjectId: parseInt(this.importProjectId),
-              fromNodeId: item.node.id,
-              fromComponentId: component.id,
-              type: component.type
-            };
-            componentObjects.push(tempComponent);
-          }
-        }
       }
     }
     return componentObjects;
