@@ -149,10 +149,6 @@
               </md-button>
               <h4>{{ ::'exportComponentData' | translate }}</h4>
               <br/>
-              <md-radio-group ng-model="dataExportController.workSelectionType">
-                  <md-radio-button value="exportAllWork" class="md-primary">{{ ::'exportAllStudentWork' | translate }}</md-radio-button>
-                  <md-radio-button value="exportLatestWork" class="md-primary">{{ ::'exportLatestStudentWork' | translate }}</md-radio-button>
-              </md-radio-group>
               <md-checkbox class="md-primary" ng-model="dataExportController.includeStudentNames" ng-if="dataExportController.canViewStudentNames">{{ ::'includeStudentNames' | translate }}</md-checkbox>
               <br ng-if="dataExportController.canViewStudentNames"/>
               <md-checkbox class="md-primary" ng-model="dataExportController.includeCorrectnessColumns">{{ ::'includeCorrectnessColumns' | translate }}</md-checkbox>
