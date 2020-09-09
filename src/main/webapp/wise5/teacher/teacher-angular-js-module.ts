@@ -158,9 +158,13 @@ export function createTeacherAngularJSModule() {
           resolve: {
             projectConfig: [
               'ConfigService',
+              'SessionService',
               '$stateParams',
-              (ConfigService, $stateParams) => {
-                return ConfigService.retrieveConfig(`/author/config/${$stateParams.projectId}`);
+              (ConfigService, SessionService, $stateParams) => {
+                return ConfigService.retrieveConfig(`/author/config/${$stateParams.projectId}`)
+                    .then(() => {
+                      SessionService.initializeSession();
+                    });
               }
             ],
             project: [
@@ -258,11 +262,14 @@ export function createTeacherAngularJSModule() {
           resolve: {
             config: [
               'ConfigService',
+              'SessionService',
               '$stateParams',
-              (ConfigService, $stateParams) => {
+              (ConfigService, SessionService, $stateParams) => {
                 return ConfigService.retrieveConfig(
                   `/config/classroomMonitor/${$stateParams.runId}`
-                );
+                ).then(() => {
+                  SessionService.initializeSession();
+                });
               }
             ],
             project: [

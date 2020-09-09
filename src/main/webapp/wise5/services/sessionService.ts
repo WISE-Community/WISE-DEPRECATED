@@ -22,13 +22,6 @@ export class SessionService {
     protected http: HttpClient,
     protected ConfigService: ConfigService
   ) {
-    const intervals: any = 
-        this.calculateIntervals(this.ConfigService.getConfigParam('sessionTimeout'));
-    this.showWarningInterval = intervals.showWarningInterval;
-    this.forceLogoutAfterWarningInterval = intervals.forceLogoutAfterWarningInterval;
-    this.checkMouseEventInterval = this.convertMinutesToMilliseconds(1);
-    this.updateLastActivityTimestamp();
-    this.initializeSession();
   }
 
   calculateIntervals(sessionTimeout): any {
@@ -55,9 +48,13 @@ export class SessionService {
   }
 
   initializeSession() {
-    if (!this.ConfigService.isPreview()) {
-      this.startCheckMouseEvent();
-    }
+    const intervals: any =
+        this.calculateIntervals(this.ConfigService.getConfigParam('sessionTimeout'));
+    this.showWarningInterval = intervals.showWarningInterval;
+    this.forceLogoutAfterWarningInterval = intervals.forceLogoutAfterWarningInterval;
+    this.checkMouseEventInterval = this.convertMinutesToMilliseconds(1);
+    this.updateLastActivityTimestamp();
+    this.startCheckMouseEvent();
   }
 
   startCheckMouseEvent() {
@@ -103,7 +100,7 @@ export class SessionService {
 
   isActiveWithinLastMinute(): boolean {
     return (
-      new Date().getTime() - this.lastActivityTimestamp < 
+      new Date().getTime() - this.lastActivityTimestamp <
       this.convertMinutesToMilliseconds(1)
     );
   }
