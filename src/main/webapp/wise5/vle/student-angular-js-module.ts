@@ -68,12 +68,16 @@ export function createStudentAngularJSModule(type = 'preview') {
           resolve: {
             config: [
               'ConfigService',
+              'SessionService',
               '$stateParams',
-              (ConfigService, $stateParams) => {
+              (ConfigService, SessionService, $stateParams) => {
                 if (type === 'preview') {
                   return ConfigService.retrieveConfig(`/config/preview/${$stateParams.projectId}`);
                 } else {
-                  return ConfigService.retrieveConfig(`/config/studentRun/${$stateParams.runId}`);
+                  return ConfigService.retrieveConfig(`/config/studentRun/${$stateParams.runId}`)
+                      .then(() => {
+                        SessionService.initializeSession();
+                      });
                 }
               }
             ],

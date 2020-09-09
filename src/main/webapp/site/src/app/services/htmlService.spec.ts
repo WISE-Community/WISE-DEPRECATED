@@ -10,6 +10,7 @@ import { ConfigService } from "../../../../wise5/services/configService";
 import { ProjectService } from "../../../../wise5/services/projectService";
 import { StudentAssetService } from "../../../../wise5/services/studentAssetService";
 import { TagService } from "../../../../wise5/services/tagService";
+import { SessionService } from "../../../../wise5/services/sessionService";
 
 let service: HTMLService;
 
@@ -22,6 +23,7 @@ describe('TableService', () => {
         ConfigService,
         ProjectService,
         HTMLService,
+        SessionService,
         StudentAssetService,
         StudentDataService,
         TagService,

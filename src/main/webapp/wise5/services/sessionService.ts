@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { UpgradeModule } from '@angular/upgrade/static';
 import { HttpClient } from '@angular/common/http';
 import { ConfigService } from "./configService";
+import { Subject } from 'rxjs';
 
 @Injectable()
 export class SessionService {
@@ -13,19 +14,14 @@ export class SessionService {
   private showWarningInterval: number;
   private checkMouseEventInterval: number;
   private lastActivityTimestamp: number;
+  private logOutSource: Subject<void> = new Subject<void>();
+  public logOut$ = this.logOutSource.asObservable();
 
   constructor(
     protected upgrade: UpgradeModule,
     protected http: HttpClient,
     protected ConfigService: ConfigService
   ) {
-    const intervals: any = 
-        this.calculateIntervals(this.ConfigService.getConfigParam('sessionTimeout'));
-    this.showWarningInterval = intervals.showWarningInterval;
-    this.forceLogoutAfterWarningInterval = intervals.forceLogoutAfterWarningInterval;
-    this.checkMouseEventInterval = this.convertMinutesToMilliseconds(1);
-    this.updateLastActivityTimestamp();
-    this.initializeSession();
   }
 
   calculateIntervals(sessionTimeout): any {
@@ -52,9 +48,13 @@ export class SessionService {
   }
 
   initializeSession() {
-    if (!this.ConfigService.isPreview()) {
-      this.startCheckMouseEvent();
-    }
+    const intervals: any =
+        this.calculateIntervals(this.ConfigService.getConfigParam('sessionTimeout'));
+    this.showWarningInterval = intervals.showWarningInterval;
+    this.forceLogoutAfterWarningInterval = intervals.forceLogoutAfterWarningInterval;
+    this.checkMouseEventInterval = this.convertMinutesToMilliseconds(1);
+    this.updateLastActivityTimestamp();
+    this.startCheckMouseEvent();
   }
 
   startCheckMouseEvent() {
@@ -100,7 +100,7 @@ export class SessionService {
 
   isActiveWithinLastMinute(): boolean {
     return (
-      new Date().getTime() - this.lastActivityTimestamp < 
+      new Date().getTime() - this.lastActivityTimestamp <
       this.convertMinutesToMilliseconds(1)
     );
   }
@@ -129,7 +129,7 @@ export class SessionService {
   }
 
   forceLogOut() {
-    this.upgrade.$injector.get('$rootScope').$broadcast('logOut');
+    this.logOutSource.next();
   }
 
   showWarning() {

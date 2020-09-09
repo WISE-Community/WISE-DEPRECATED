@@ -9,6 +9,7 @@ import { TagService } from "../../../../wise5/services/tagService";
 import { UtilService } from "../../../../wise5/services/utilService";
 import { LabelService } from "../../../../wise5/components/label/labelService";
 import { TestBed } from "@angular/core/testing";
+import { SessionService } from "../../../../wise5/services/sessionService";
 
 let service: LabelService;
 let utilService: UtilService;
@@ -24,6 +25,7 @@ describe('LabelServiceService', () => {
         ConfigService,
         LabelService,
         ProjectService,
+        SessionService,
         StudentAssetService,
         StudentDataService,
         TagService,

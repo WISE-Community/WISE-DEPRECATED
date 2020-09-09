@@ -199,7 +199,7 @@ class AuthoringToolController {
       );
     });
 
-    $scope.$on('logOut', () => {
+    this.SessionService.logOut$.subscribe(() => {
       this.logOut();
     });
 

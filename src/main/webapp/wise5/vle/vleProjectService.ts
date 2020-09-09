@@ -5,6 +5,7 @@ import { UtilService } from '../services/utilService';
 import { Injectable } from '@angular/core';
 import { UpgradeModule } from '@angular/upgrade/static';
 import { HttpClient } from '@angular/common/http';
+import { SessionService } from '../services/sessionService';
 
 @Injectable()
 export class VLEProjectService extends ProjectService {
@@ -13,8 +14,9 @@ export class VLEProjectService extends ProjectService {
     protected upgrade: UpgradeModule,
     protected http: HttpClient,
     protected ConfigService: ConfigService,
+    protected SessionService: SessionService,
     protected UtilService: UtilService) {
-    super(upgrade, http, ConfigService, UtilService);
+    super(upgrade, http, ConfigService, SessionService, UtilService);
   }
 
   /**

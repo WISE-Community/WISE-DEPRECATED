@@ -8,6 +8,7 @@ import { Injectable } from '@angular/core';
 import { UpgradeModule } from '@angular/upgrade/static';
 import { HttpClient } from '@angular/common/http';
 import { Subject } from 'rxjs';
+import { SessionService } from './sessionService';
 
 @Injectable()
 export class TeacherProjectService extends ProjectService {
@@ -21,8 +22,9 @@ export class TeacherProjectService extends ProjectService {
       protected upgrade: UpgradeModule,
       protected http: HttpClient,
       protected ConfigService: ConfigService,
+      protected SessionService: SessionService,
       protected UtilService: UtilService) {
-    super(upgrade, http, ConfigService, UtilService);
+    super(upgrade, http, ConfigService, SessionService, UtilService);
   }
 
   getNewProjectTemplate() {
