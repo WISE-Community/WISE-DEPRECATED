@@ -164,25 +164,18 @@ public class StudentUserDetails extends PersistentUserDetails implements Mutable
    */
   public String getNextUsernameSuffix(String currentUsernameSuffix) {
     String nextUsernameSuffix = "";
-
     if (currentUsernameSuffix == null) {
-      // empty suffix string
       nextUsernameSuffix = "";
     } else if ("".equals(currentUsernameSuffix)) {
-      // if the previous was "" we will now return "a"
       nextUsernameSuffix = "a";
     } else {
       if (currentUsernameSuffix.length() > 0) {
-        // get the last char in the suffix
         char lastChar = currentUsernameSuffix.charAt(currentUsernameSuffix.length() - 1);
-
         if (lastChar == 'z') {
-          // the last char was 'z' so we need to move on to "aa"
           String beginningCurrentUsernameSuffix = currentUsernameSuffix.substring(0,
               currentUsernameSuffix.length() - 1);
           nextUsernameSuffix = beginningCurrentUsernameSuffix + "aa";
         } else {
-          // try the next letter in the alphabet
           nextUsernameSuffix = currentUsernameSuffix.substring(0,
               currentUsernameSuffix.length() - 1) + (char) (lastChar + 1);
         }

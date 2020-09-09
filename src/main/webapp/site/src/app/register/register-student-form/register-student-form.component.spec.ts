@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { RegisterStudentFormComponent } from './register-student-form.component';
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { RouterTestingModule } from "@angular/router/testing";
-import { Observable, of } from "rxjs";
+import { Observable, of, throwError } from "rxjs";
 import { StudentService } from "../../student/student.service";
 import { UserService } from '../../services/user.service';
 import { ReactiveFormsModule } from "@angular/forms";
@@ -111,6 +111,13 @@ function createAccount() {
         'Error: Last Name must only contain characters A-Z'
       );
     })
+
+    it('should show error when invalid first and last name is sent to server', () => {
+      expectCreateAccountWithInvalidNameToShowError(
+        'invalidFirstAndLastName',
+        'Error: First Name and Last Name must only contain characters A-Z'
+      );
+    })
   });
 }
 
@@ -127,7 +134,7 @@ function expectCreateAccountWithInvalidNameToShowError(errorCode: string, errorM
     'a'
   ));
   const response: any = helpers.createAccountErrorResponse(errorCode);
-  spyOn(studentService, 'registerStudentAccount').and.returnValue(of(response));
+  spyOn(studentService, 'registerStudentAccount').and.returnValue(throwError(response));
   const snackBarSpy = spyOn(snackBar, 'open');
   component.createAccount();
   expect(snackBarSpy).toHaveBeenCalledWith(errorMessage);

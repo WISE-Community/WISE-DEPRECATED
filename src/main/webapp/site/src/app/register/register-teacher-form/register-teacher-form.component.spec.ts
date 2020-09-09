@@ -10,7 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { MatSnackBarModule, MatSnackBar } from '@angular/material/snack-bar';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import * as helpers from "../register-user-form/register-user-form-spec-helpers";
 
@@ -109,6 +109,13 @@ function createAccount() {
         'Error: Last Name must only contain characters A-Z'
       );
     });
+
+    it('should show error when invalid first and last name is sent to server', () => {
+      expectCreateAccountWithInvalidNameToShowError(
+        'invalidFirstAndLastName',
+        'Error: First Name and Last Name must only contain characters A-Z'
+      );
+    });
   });
 }
 
@@ -128,7 +135,7 @@ function expectCreateAccountWithInvalidNameToShowError(errorCode: string, errorM
     true
   ));
   const response: any = helpers.createAccountErrorResponse(errorCode);
-  spyOn(teacherService, 'registerTeacherAccount').and.returnValue(of(response));
+  spyOn(teacherService, 'registerTeacherAccount').and.returnValue(throwError(response));
   const snackBarSpy = spyOn(snackBar, 'open');
   component.createAccount();
   expect(snackBarSpy).toHaveBeenCalledWith(errorMessage);

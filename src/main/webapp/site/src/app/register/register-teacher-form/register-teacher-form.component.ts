@@ -6,6 +6,7 @@ import { FormControl, FormGroup, Validators, FormBuilder } from "@angular/forms"
 import { UtilService } from '../../services/util.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { RegisterUserFormComponent } from '../register-user-form/register-user-form.component';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-register-teacher-form',
@@ -85,6 +86,9 @@ export class RegisterTeacherFormComponent extends RegisterUserFormComponent impl
         } else {
           this.snackBar.open(this.translateCreateAccountErrorMessageCode(response.messageCode));
         }
+        this.processing = false;
+      }, (error: HttpErrorResponse) => {
+        this.snackBar.open(this.translateCreateAccountErrorMessageCode(error.error.messageCode));
         this.processing = false;
       });
     }

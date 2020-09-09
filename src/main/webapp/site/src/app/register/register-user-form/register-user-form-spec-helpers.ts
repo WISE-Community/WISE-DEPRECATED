@@ -8,7 +8,8 @@ export function createAccountSuccessResponse(username: string) {
 
 export function createAccountErrorResponse(messageCode: string) {
   return {
-    status: 'error',
-    messageCode: messageCode
+    error: {
+      messageCode: messageCode
+    }
   };
 }

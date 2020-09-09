@@ -330,7 +330,7 @@ public class UserAPIController {
     return isNameValid(firstName) && isNameValid(lastName);
   }
 
-  protected HashMap<String, Object> getInvalidNameErrorResponse(String firstName, String lastName) {
+  protected String getInvalidNameMessageCode(String firstName, String lastName) {
     Boolean isFirstNameValid = isNameValid((firstName));
     Boolean isLastNameValid = isNameValid((lastName));
     String messageCode = "";
@@ -341,10 +341,7 @@ public class UserAPIController {
     } else if (!isLastNameValid) {
       messageCode = "invalidLastName";
     }
-    HashMap<String, Object> response = new HashMap<String, Object>();
-    response.put("status", "error");
-    response.put("messageCode", messageCode);
-    return response;
+    return messageCode;
   }
 
   protected HashMap<String, Object> createRegisterSuccessResponse(String username) {

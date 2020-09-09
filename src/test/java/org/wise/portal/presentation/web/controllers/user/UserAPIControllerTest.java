@@ -237,27 +237,19 @@ public class UserAPIControllerTest extends APIControllerTest {
   }
 
   @Test
-  public void getInvalidNameErrorResponse_InvalidFirstName_ReturnInvalidFirstNameErrorResponse() {
-    HashMap<String, Object> response = userAPIController.getInvalidNameErrorResponse("Spongebob!",
-        "Squarepants");
-    assertEquals(response.get("status"), "error");
-    assertEquals(response.get("messageCode"), "invalidFirstName");
+  public void getInvalidNameMessageCode_InvalidFirstName_ReturnInvalidFirstNameMessageCode() {
+    assertEquals(userAPIController.getInvalidNameMessageCode("a!", "a"), "invalidFirstName");
   }
 
   @Test
-  public void getInvalidNameErrorResponse_InvalidLastName_ReturnInvalidLastNameErrorResponse() {
-    HashMap<String, Object> response = userAPIController.getInvalidNameErrorResponse("Spongebob",
-        "Squarepants!");
-    assertEquals(response.get("status"), "error");
-    assertEquals(response.get("messageCode"), "invalidLastName");
+  public void getInvalidNameMessageCode_InvalidLastName_ReturnInvalidLastNameMessageCode() {
+    assertEquals(userAPIController.getInvalidNameMessageCode("a", "a!"), "invalidLastName");
   }
 
   @Test
-  public void getInvalidNameErrorResponse_InvalidFirstAndLastName_ReturnInvalidErrorResponse() {
-    HashMap<String, Object> response = userAPIController.getInvalidNameErrorResponse("Spongebob!",
-        "Squarepants!");
-    assertEquals(response.get("status"), "error");
-    assertEquals(response.get("messageCode"), "invalidFirstAndLastName");
+  public void getInvalidNameMessageCode_InvalidFirstAndLastName_ReturnInvalidNameMessageCode() {
+    assertEquals(userAPIController.getInvalidNameMessageCode("a!", "a!"),
+        "invalidFirstAndLastName");
   }
 
   @Test

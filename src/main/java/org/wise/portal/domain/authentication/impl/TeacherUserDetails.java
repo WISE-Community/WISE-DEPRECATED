@@ -184,14 +184,11 @@ public class TeacherUserDetails extends PersistentUserDetails implements Mutable
   public String getNextUsernameSuffix(String currentUsernameSuffix) {
     String nextUsernameSuffix = "";
     if (currentUsernameSuffix == null) {
-      // empty suffix string
       nextUsernameSuffix = "";
     } else if ("".equals(currentUsernameSuffix)) {
-      // if the previous was "" we will now return an integer
       nextUsernameSuffix = "1";
     } else {
       try {
-        // increment the integer by 1
         nextUsernameSuffix = (Integer.parseInt(currentUsernameSuffix) + 1) + "";
       } catch (NumberFormatException e) {
         e.printStackTrace();
