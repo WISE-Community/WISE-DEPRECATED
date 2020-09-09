@@ -28,6 +28,7 @@ import org.wise.portal.domain.authentication.impl.TeacherUserDetails;
 import org.wise.portal.domain.project.Project;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.presentation.web.controllers.APIControllerTest;
+import org.wise.portal.presentation.web.exception.InvalidNameException;
 import org.wise.portal.presentation.web.response.SimpleResponse;
 import org.wise.portal.service.authentication.DuplicateUsernameException;
 import org.wise.portal.service.authentication.UserDetailsService;
@@ -316,7 +317,8 @@ public class TeacherAPIControllerTest extends APIControllerTest {
   }
 
   @Test
-  public void createTeacherAccount_WithGoogleUserId_CreateUser() throws DuplicateUsernameException {
+  public void createTeacherAccount_WithGoogleUserId_CreateUser()
+      throws DuplicateUsernameException, InvalidNameException {
     HashMap<String, String> teacherFields = createDefaultTeacherFields();
     teacherFields.put("googleUserId", "123456789");
     expect(request.getLocale()).andReturn(Locale.US);
