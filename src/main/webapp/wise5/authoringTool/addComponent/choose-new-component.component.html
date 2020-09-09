@@ -1,0 +1,30 @@
+<style>
+  .componentTypeSelected {
+    border-style: solid;
+    border-color: black;
+  }
+</style>
+<div layout='row' style='margin-left: 10px;'>
+  <div layout='row'>
+    <h6>{{ ::'clickTheNewComponentTypeYouWantToAdd' | translate }}</h6>
+    <md-button class='createButton md-raised md-primary'
+        ng-click='$ctrl.cancel()'
+        aria-label="{{ ::'CANCEL' | translate }}"
+        translate="CANCEL">
+    </md-button>
+  </div>
+</div>
+<div>
+  <md-grid-list md-cols-xs='1' md-cols-sm='2' md-cols-md='4' md-cols-gt-md='7' md-row-height='30'>
+    <md-grid-tile ng-repeat='componentType in $ctrl.componentTypes'
+        style='outline: none; cursor: pointer;'
+        ng-mousedown='$ctrl.componentTypeClicked(componentType.type)'
+        ng-class='{ componentTypeSelected: componentType.type == $ctrl.selectedComponentType }'>
+      {{componentType.name}}
+    </md-grid-tile>
+  </md-grid-list>
+</div>
+<md-button class='createButton md-raised md-primary'
+    ng-click='$ctrl.chooseLocation()'
+    aria-label='{{ ::"next" | translate }}'
+    translate='next'></md-button>
