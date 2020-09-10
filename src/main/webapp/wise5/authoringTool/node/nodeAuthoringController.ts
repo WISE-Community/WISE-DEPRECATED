@@ -3,7 +3,6 @@
 import { TeacherProjectService } from '../../services/teacherProjectService';
 import { ConfigService } from '../../services/configService';
 import { NodeService } from '../../services/nodeService';
-import { ProjectAssetService } from '../../../site/src/app/services/projectAssetService';
 import { TeacherDataService } from '../../services/teacherDataService';
 import { UtilService } from '../../services/utilService';
 import * as angular from 'angular';
@@ -12,13 +11,11 @@ import { TagService } from '../../services/tagService';
 
 class NodeAuthoringController {
   $translate: any;
-  addComponentMode: boolean = false;
   authoringNodeContentJSONString: string;
   branchCriteria: any;
   canChangePathOptions = [null, true, false];
   components: any;
   componentsToChecked = {};
-  componentTypes: any;
   constraintActions: any[];
   copyComponentMode: boolean = false;
   createBranchBranches = [];
@@ -53,7 +50,6 @@ class NodeAuthoringController {
   showComponentAuthoringViews: boolean = true;
   showComponents: boolean = true;
   showConstraints: boolean = false;
-  showCreateComponent: boolean = false;
   showCreateBranch: boolean = false;
   showEditTransitions: boolean = false;
   showGeneralAdvanced: boolean = false;
@@ -73,14 +69,12 @@ class NodeAuthoringController {
     '$filter',
     '$injector',
     '$mdDialog',
-    '$rootScope',
     '$scope',
     '$state',
     '$stateParams',
     '$timeout',
     'ConfigService',
     'NodeService',
-    'ProjectAssetService',
     'ProjectService',
     'TagService',
     'TeacherDataService',
@@ -92,14 +86,12 @@ class NodeAuthoringController {
     private $filter: any,
     private $injector: any,
     private $mdDialog: any,
-    private $rootScope: any,
     private $scope: any,
     private $state: any,
     private $stateParams: any,
     private $timeout: any,
     private ConfigService: ConfigService,
     private NodeService: NodeService,
-    private ProjectAssetService: ProjectAssetService,
     private ProjectService: TeacherProjectService,
     private TagService: TagService,
     private TeacherDataService: TeacherDataService,
@@ -416,54 +408,6 @@ class NodeAuthoringController {
       }
     ];
 
-    // the array of component types that can be created
-    // TODO: automate by looping through active component types for this WISE instance
-    this.componentTypes = [
-      {
-        componentType: 'Animation',
-        componentName: this.UtilService.getComponentTypeLabel('Animation')
-      },
-      {
-        componentType: 'AudioOscillator',
-        componentName: this.UtilService.getComponentTypeLabel('AudioOscillator')
-      },
-      {
-        componentType: 'ConceptMap',
-        componentName: this.UtilService.getComponentTypeLabel('ConceptMap')
-      },
-      {
-        componentType: 'Discussion',
-        componentName: this.UtilService.getComponentTypeLabel('Discussion')
-      },
-      { componentType: 'Draw', componentName: this.UtilService.getComponentTypeLabel('Draw') },
-      {
-        componentType: 'Embedded',
-        componentName: this.UtilService.getComponentTypeLabel('Embedded')
-      },
-      { componentType: 'Graph', componentName: this.UtilService.getComponentTypeLabel('Graph') },
-      { componentType: 'HTML', componentName: this.UtilService.getComponentTypeLabel('HTML') },
-      { componentType: 'Label', componentName: this.UtilService.getComponentTypeLabel('Label') },
-      { componentType: 'Match', componentName: this.UtilService.getComponentTypeLabel('Match') },
-      {
-        componentType: 'MultipleChoice',
-        componentName: this.UtilService.getComponentTypeLabel('MultipleChoice')
-      },
-      {
-        componentType: 'OpenResponse',
-        componentName: this.UtilService.getComponentTypeLabel('OpenResponse')
-      },
-      {
-        componentType: 'OutsideURL',
-        componentName: this.UtilService.getComponentTypeLabel('OutsideURL')
-      },
-      {
-        componentType: 'Summary',
-        componentName: this.UtilService.getComponentTypeLabel('Summary')
-      },
-      { componentType: 'Table', componentName: this.UtilService.getComponentTypeLabel('Table') }
-    ];
-
-    this.selectedComponent = this.componentTypes[0].componentType;
     this.node = this.ProjectService.getNodeById(this.nodeId);
     this.nodePosition = this.ProjectService.getNodePositionById(this.nodeId);
     this.components = this.ProjectService.getComponentsByNodeId(this.nodeId);
@@ -811,13 +755,8 @@ class NodeAuthoringController {
     this.showEditTransitions = false;
   }
 
-  addComponentButtonClicked() {
-    this.selectedComponent = this.componentTypes[0].componentType;
-    this.showAddComponentView();
-    this.turnOnAddComponentMode();
-    this.turnOffMoveComponentMode();
-    this.turnOnInsertComponentMode();
-    this.hideComponentAuthoring();
+  addComponent() {
+    this.$state.go('root.at.project.node.add-component.choose-component');
   }
 
   deleteComponent(componentId) {
@@ -1081,7 +1020,6 @@ class NodeAuthoringController {
   }
 
   hideAllViews() {
-    this.showCreateComponent = false;
     this.showGeneralAdvanced = false;
     this.showEditTransitions = false;
     this.showConstraints = false;
@@ -1098,11 +1036,6 @@ class NodeAuthoringController {
     this.hideAllViews();
     this.showStepButtons = true;
     this.showComponents = true;
-  }
-
-  showAddComponentView() {
-    this.showDefaultComponentsView();
-    this.showCreateComponent = true;
   }
 
   showGeneralAdvancedView() {
@@ -1811,14 +1744,6 @@ class NodeAuthoringController {
     this.insertComponentMode = false;
   }
 
-  turnOnAddComponentMode() {
-    this.addComponentMode = true;
-  }
-
-  turnOffAddComponentMode() {
-    this.addComponentMode = false;
-  }
-
   turnOnMoveComponentMode() {
     this.moveComponentMode = true;
   }
@@ -1889,7 +1814,6 @@ class NodeAuthoringController {
       alert(this.$translate('pleaseSelectAComponentToMoveAndThenClickTheMoveButtonAgain'));
     } else {
       this.showDefaultComponentsView();
-      this.turnOffAddComponentMode();
       this.turnOnMoveComponentMode();
       this.turnOnInsertComponentMode();
       this.hideComponentAuthoring();
@@ -1958,7 +1882,6 @@ class NodeAuthoringController {
 
   cancelInsertClicked() {
     this.showDefaultComponentsView();
-    this.turnOffAddComponentMode();
     this.turnOffMoveComponentMode();
     this.turnOffInsertComponentMode();
     this.clearComponentsToChecked();
@@ -1979,9 +1902,7 @@ class NodeAuthoringController {
   }
 
   insertComponentAsFirst() {
-    if (this.addComponentMode) {
-      this.handleAddComponent();
-    } else if (this.moveComponentMode) {
+    if (this.moveComponentMode) {
       this.handleMoveComponent();
     } else if (this.copyComponentMode) {
       this.handleCopyComponent();
@@ -1989,35 +1910,11 @@ class NodeAuthoringController {
   }
 
   insertComponentAfter(componentId) {
-    if (this.addComponentMode) {
-      this.handleAddComponent(componentId);
-    } else if (this.moveComponentMode) {
+    if (this.moveComponentMode) {
       this.handleMoveComponent(componentId);
     } else if (this.copyComponentMode) {
       this.handleCopyComponent(componentId);
     }
-  }
-
-  /**
-   * Add components to this step.
-   * @param componentId (optional) Add the components after this component id.
-   * If the componentId is not provided, we will put the components at the
-   * beginning of the step.
-   */
-  handleAddComponent(componentId = null) {
-    const newComponent = this.ProjectService.createComponent(
-      this.nodeId,
-      this.selectedComponent,
-      componentId
-    );
-    const data = {
-      componentId: newComponent.id,
-      componentType: newComponent.type
-    };
-    this.saveEvent('componentCreated', 'Authoring', data);
-    this.turnOffAddComponentMode();
-    this.ProjectService.saveProject();
-    this.highlightNewComponentsAndThenShowComponentAuthoring([newComponent]);
   }
 
   /**
@@ -2134,28 +2031,6 @@ class NodeAuthoringController {
     this.$anchorScroll('top');
   }
 
-  /**
-   * We are in the create a new component mode and the user has clicked on a component type
-   * @param componentType the component type the author clicked
-   */
-  componentTypeClicked(componentType) {
-    this.selectedComponent = componentType;
-  }
-
-  cancelCreateComponentClicked() {
-    this.showDefaultComponentsView();
-    this.turnOffAddComponentMode();
-    this.turnOffMoveComponentMode();
-    this.turnOffInsertComponentMode();
-    this.showComponentAuthoring();
-  }
-
-  /**
-   * Get the component type label
-   * @param componentType the component type
-   * @return the component type label
-   * example: "Open Response"
-   */
   getComponentTypeLabel(componentType) {
     return this.UtilService.getComponentTypeLabel(componentType);
   }

@@ -41,6 +41,7 @@ import '../components/draw/drawAuthoringComponentModule';
 import '../components/embedded/embeddedAuthoringComponentModule';
 import '../components/graph/graphAuthoringComponentModule';
 import '../components/html/htmlAuthoringComponentModule';
+import '../authoringTool/addComponent/addComponentModule';
 import '../authoringTool/importComponent/importComponentModule';
 import '../authoringTool/importStep/importStepModule';
 import '../components/label/labelAuthoringComponentModule';
@@ -59,6 +60,7 @@ export function createTeacherAngularJSModule() {
     return angular.module('teacher', [
       'common',
       'angular-inview',
+      'addComponentModule',
       'summaryAuthoringComponentModule',
       'animationAuthoringComponentModule',
       'audioOscillatorAuthoringComponentModule',
