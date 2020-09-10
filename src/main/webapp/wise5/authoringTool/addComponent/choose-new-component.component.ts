@@ -6,11 +6,11 @@ import { TeacherDataService } from "../../services/teacherDataService";
 class ChooseNewComponentController {
 
   componentTypes: any;
-  selectedComponentType: string = 'Animation';
+  componentType: string;
 
-  static $inject = ['$state', 'ConfigService', 'TeacherDataService', 'UtilService'];
+  static $inject = ['$state', '$stateParams', 'ConfigService', 'TeacherDataService', 'UtilService'];
 
-  constructor(private $state: any, private ConfigService: ConfigService,
+  constructor(private $state: any, private $stateParams: any, private ConfigService: ConfigService,
       private TeacherDataService: TeacherDataService, private UtilService: UtilService) {
   }
 
@@ -59,15 +59,16 @@ class ChooseNewComponentController {
       },
       { type: 'Table', name: this.UtilService.getComponentTypeLabel('Table') }
     ];
+    this.componentType = this.$stateParams.componentType;
   }
 
-  componentTypeClicked(componentType) {
-    this.selectedComponentType = componentType;
+  setComponentType(componentType) {
+    this.componentType = componentType;
   }
 
   chooseLocation() {
     this.$state.go('root.at.project.node.add-component.choose-location',
-        { componentType: this.selectedComponentType });
+        { componentType: this.componentType });
   }
 
   cancel() {

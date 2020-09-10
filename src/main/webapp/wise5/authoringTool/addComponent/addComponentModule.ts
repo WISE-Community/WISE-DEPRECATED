@@ -14,13 +14,16 @@ export default angular.module('addComponentModule', ['ui.router'])
       })
       .state('root.at.project.node.add-component.choose-component', {
         url: '/choose-component',
-        component: 'chooseNewComponent'
+        component: 'chooseNewComponent',
+        params: {
+          componentType: 'Animation'
+        }
       })
       .state('root.at.project.node.add-component.choose-location', {
         url: '/choose-location',
         component: 'chooseNewComponentLocation',
         params: {
-          componentType: ''
+          componentType: 'Animation'
         }
       });
   }]);

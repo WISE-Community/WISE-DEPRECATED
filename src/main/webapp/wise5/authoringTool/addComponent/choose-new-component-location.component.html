@@ -1,12 +1,6 @@
 <div layout='row' style='margin-left: 10px; height:50px'>
   <div layout='row'>
-    <h6 translate="chooseNewLocation"></h6>
-  </div>
-  <div layout='row'>
-    <md-button class='createButton md-raised md-primary'
-        ng-click='$ctrl.cancel()'
-        aria-label="{{ ::'CANCEL' | translate }}"
-        translate="CANCEL"></md-button>
+    <h5 translate="chooseNewLocation"></h5>
   </div>
 </div>
 <div style='margin-left: 45px;'>
@@ -33,4 +27,16 @@
       <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::"insertAfter" | translate }}</md-tooltip>
     </md-button>
   </div>
+</div>
+<hr>
+<div layout="row">
+  <md-button class='createButton md-primary'
+      ng-click='$ctrl.goToChooseNewComponent()'
+      aria-label='{{ ::"back" | translate }}'
+      translate='back'></md-button>
+  <span flex></span>
+  <md-button class='createButton md-primary'
+      ng-click='$ctrl.cancel()'
+      aria-label='{{ ::"cancel" | translate }}'
+      translate='cancel'></md-button>
 </div>

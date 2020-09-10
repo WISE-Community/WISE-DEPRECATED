@@ -44,6 +44,10 @@ class ChooseNewComponentLocationController {
         'componentCreated', { componentId: newComponent.id, componentType: newComponent.type });
   }
 
+  goToChooseNewComponent() {
+    this.$state.go('root.at.project.node.add-component.choose-component', this.$stateParams);
+  }
+
   cancel() {
     this.$state.go('root.at.project.node', { projectId: this.ConfigService.getProjectId(),
         nodeId: this.nodeId });
