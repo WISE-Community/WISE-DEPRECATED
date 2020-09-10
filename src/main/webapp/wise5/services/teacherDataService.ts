@@ -12,7 +12,7 @@ import { DataService } from "../../site/src/app/services/data.service";
 
 @Injectable()
 export class TeacherDataService extends DataService {
-  
+
   studentData: any;
   $rootScope: any;
   currentPeriod = null;
@@ -968,7 +968,6 @@ export class TeacherDataService extends DataService {
       data = { periodId: periodId },
       event = isPaused ? 'pauseScreen' : 'unPauseScreen';
     this.saveEvent(context, nodeId, componentId, componentType, category, event, data);
-    this.getRootScope().$broadcast('pauseScreensChanged', { periods: this.runStatus.periods });
   }
 
   sendRunStatusThenHandlePauseScreen(periodId, isPaused) {

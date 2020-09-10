@@ -58,25 +58,11 @@ class StudentProgressController {
     this.studentsOnline = this.TeacherWebSocketService.getStudentsOnline();
     this.students = [];
     this.initializeStudents();
-    this.$rootScope.$on('studentsOnlineReceived', (event, args) => {
-      this.studentsOnline = args.studentsOnline;
-      this.initializeStudents();
-    });
     this.$rootScope.$on('studentStatusReceived', (event, args) => {
       let studentStatus = args.studentStatus;
       let workgroupId = studentStatus.workgroupId;
       this.updateTimeSpentForWorkgroupId(workgroupId);
       this.updateTeam(workgroupId);
-    });
-    this.$rootScope.$on('studentDisconnected', (event, args) => {
-      var data = args.data;
-      var workgroupId = data.workgroupId;
-      var studentsOnline = this.studentsOnline;
-      var indexOfWorkgroupId = studentsOnline.indexOf(workgroupId);
-      if (indexOfWorkgroupId != -1) {
-        studentsOnline.splice(indexOfWorkgroupId, 1);
-        this.updateTeam(workgroupId);
-      }
     });
     this.$scope.$on('currentWorkgroupChanged', (event, args) => {
       this.currentWorkgroup = args.currentWorkgroup;

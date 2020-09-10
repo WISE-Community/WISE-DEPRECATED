@@ -187,19 +187,12 @@ class NavItemController {
       }
     );
 
-    // listen for the studentsOnlineReceived event
-    this.$rootScope.$on('studentsOnlineReceived', (event, args) => {
-      this.setWorkgroupsOnNodeData();
-    });
-
-    // listen for the studentStatusReceived event
     this.$rootScope.$on('studentStatusReceived', (event, args) => {
       this.setWorkgroupsOnNodeData();
       this.setCurrentNodeStatus();
       this.getAlertNotifications();
     });
 
-    // listen for the currentPeriodChanged event
     this.$rootScope.$on('currentPeriodChanged', (event, args) => {
       this.currentPeriod = args.currentPeriod;
       this.setWorkgroupsOnNodeData();
@@ -291,10 +284,10 @@ class NavItemController {
   showToggleLockNodeConfirmation(isLocked: boolean) {
     let message = '';
     if (isLocked) {
-      message = this.$translate('lockNodeConfirmation', { nodeTitle: this.nodeTitle, 
+      message = this.$translate('lockNodeConfirmation', { nodeTitle: this.nodeTitle,
           periodName: this.getPeriodLabel() });
     } else {
-      message = this.$translate('unlockNodeConfirmation', { nodeTitle: this.nodeTitle, 
+      message = this.$translate('unlockNodeConfirmation', { nodeTitle: this.nodeTitle,
         periodName: this.getPeriodLabel() });
     }
     this.$mdToast.show(
@@ -477,7 +470,7 @@ class NavItemController {
   }
 
   getPeriodLabel() {
-    return this.isShowingAllPeriods() ? this.$translate('allPeriods') : 
+    return this.isShowingAllPeriods() ? this.$translate('allPeriods') :
        this.$translate('periodLabel', { name: this.currentPeriod.periodName });
   }
 
