@@ -37,10 +37,6 @@ class WorkgroupsOnNodeController {
       this.close = () => {
         $mdDialog.hide();
       };
-
-      $scope.onlineFilter = object => {
-        return object.online === true;
-      };
     }
     DialogController.$inject = ['$scope', '$mdDialog', 'parent'];
   }
@@ -50,11 +46,9 @@ const WorkgroupsOnNode = {
   bindings: {
     isGroup: '<',
     nodeTitle: '<',
-    workgroups: '<',
-    online: '<'
+    workgroups: '<'
   },
   template: `<md-button class="badge nav-item__users" tabindex="0"
-              ng-class="{'success-bg': $ctrl.online}"
               ng-click="$ctrl.showWorkgroupsOnNode($event)">
             <md-icon>people</md-icon>{{$ctrl.workgroups.length}}
         </md-button>`,

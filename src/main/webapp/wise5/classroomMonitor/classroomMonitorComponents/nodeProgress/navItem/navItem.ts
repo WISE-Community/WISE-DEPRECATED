@@ -25,7 +25,6 @@ class NavItemController {
   icon: any;
   isCurrentNode: boolean;
   isGroup: boolean;
-  isWorkgroupOnlineOnNode: boolean;
   item: any;
   maxScore: number;
   newAlert: any;
@@ -98,7 +97,6 @@ class NavItemController {
     this.setCurrentNodeStatus();
     this.maxScore = this.ProjectService.getMaxScoreForNode(this.nodeId);
     this.workgroupsOnNodeData = [];
-    this.isWorkgroupOnlineOnNode = false;
     this.icon = this.ProjectService.getNodeIconByNodeId(this.nodeId);
     this.parentGroupId = null;
     var parentGroup = this.ProjectService.getParentGroup(this.nodeId);
@@ -409,7 +407,6 @@ class NavItemController {
 
   setWorkgroupsOnNodeData() {
     let workgroupIdsOnNode = this.getWorkgroupIdsOnNode();
-    let workgroupOnlineOnNode = false;
     this.workgroupsOnNodeData = [];
 
     let n = workgroupIdsOnNode.length;
@@ -418,20 +415,12 @@ class NavItemController {
 
       let usernames = this.ConfigService.getDisplayUsernamesByWorkgroupId(id);
       let avatarColor = this.ConfigService.getAvatarColorForWorkgroupId(id);
-      let online = this.TeacherWebSocketService.isStudentOnline(id);
-      if (online) {
-        workgroupOnlineOnNode = true;
-      }
-
       this.workgroupsOnNodeData.push({
         workgroupId: id,
         usernames: usernames,
         avatarColor: avatarColor,
-        online: online
       });
     }
-
-    this.isWorkgroupOnlineOnNode = workgroupOnlineOnNode;
   }
 
   setCurrentNodeStatus() {
