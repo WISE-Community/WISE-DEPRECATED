@@ -21,11 +21,12 @@ export class HttpErrorInterceptor implements HttpInterceptor {
           // The response body may contain clues as to what went wrong.
           console.error($localize`Backend returned code ${err.status}:status:, body was: ${err.error}:error:`);
         }
+        
+        if (err.status >= 500) {
+          this.snackBar.open($localize`An error occurred. Please refresh this page and try again.`);
+        }
 
-        this.snackBar.open($localize`An error occurred. Please refresh this page and try again.`);
-
-        // return an observable with an empty result
-        return throwError('');
+        return throwError(err);
       })
     )
   }

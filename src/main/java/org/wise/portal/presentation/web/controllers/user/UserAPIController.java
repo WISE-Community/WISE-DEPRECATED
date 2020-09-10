@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -316,5 +318,36 @@ public class UserAPIController {
       map.put("displayName", ((TeacherUserDetails) userDetails).getDisplayname());
     }
     return map;
+  }
+
+  protected Boolean isNameValid(String name) {
+    Pattern p = Pattern.compile("[a-zA-Z]+");
+    Matcher m = p.matcher(name);
+    return m.matches();
+  }
+
+  protected Boolean isFirstNameAndLastNameValid(String firstName, String lastName) {
+    return isNameValid(firstName) && isNameValid(lastName);
+  }
+
+  protected String getInvalidNameMessageCode(String firstName, String lastName) {
+    Boolean isFirstNameValid = isNameValid((firstName));
+    Boolean isLastNameValid = isNameValid((lastName));
+    String messageCode = "";
+    if (!isFirstNameValid && !isLastNameValid) {
+      messageCode = "invalidFirstAndLastName";
+    } else if (!isFirstNameValid) {
+      messageCode = "invalidFirstName";
+    } else if (!isLastNameValid) {
+      messageCode = "invalidLastName";
+    }
+    return messageCode;
+  }
+
+  protected HashMap<String, Object> createRegisterSuccessResponse(String username) {
+    HashMap<String, Object> response = new HashMap<String, Object>();
+    response.put("status", "success");
+    response.put("username", username);
+    return response;
   }
 }

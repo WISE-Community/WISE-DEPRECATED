@@ -15,6 +15,7 @@
                  autofocus
                  required />
           <mat-error *ngIf="createTeacherAccountFormGroup.controls['firstName'].hasError('required')" i18n>First Name required</mat-error>
+          <mat-error *ngIf="createTeacherAccountFormGroup.controls['firstName'].hasError('pattern')" i18n>First Name must only contain characters A-Z</mat-error>
         </mat-form-field>
       </p>
       <p>
@@ -26,6 +27,7 @@
                  formControlName="lastName"
                  required />
           <mat-error *ngIf="createTeacherAccountFormGroup.controls['lastName'].hasError('required')" i18n>Last Name required</mat-error>
+          <mat-error *ngIf="createTeacherAccountFormGroup.controls['lastName'].hasError('pattern')" i18n>Last Name must only contain characters A-Z</mat-error>
         </mat-form-field>
       </p>
       <p>
