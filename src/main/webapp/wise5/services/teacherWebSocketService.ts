@@ -10,7 +10,6 @@ import { NotificationService } from "./notificationService";
 export class TeacherWebSocketService {
 
   runId: number;
-  studentsOnlineArray: any[] = [];
   rootScope: any;
   stomp: any;
 
@@ -78,24 +77,6 @@ export class TeacherWebSocketService {
         this.NotificationService.addNotification(JSON.parse(message.content));
       }
     });
-  }
-
-  handleStudentsOnlineReceived(studentsOnlineMessage) {
-    this.studentsOnlineArray = studentsOnlineMessage.studentsOnlineList;
-    this.getRootScope().$broadcast('studentsOnlineReceived',
-        {studentsOnline: this.studentsOnlineArray});
-  }
-
-  getStudentsOnline() {
-    return this.studentsOnlineArray;
-  }
-
-  isStudentOnline(workgroupId) {
-    return this.studentsOnlineArray.indexOf(workgroupId) > -1;
-  }
-
-  handleStudentDisconnected(studentDisconnectedMessage) {
-    this.getRootScope().$broadcast('studentDisconnected', {data: studentDisconnectedMessage});
   }
 
   pauseScreens(periodId) {

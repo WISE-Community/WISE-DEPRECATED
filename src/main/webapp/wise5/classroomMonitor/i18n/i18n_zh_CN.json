@@ -49,7 +49,6 @@
   "numberOfTeams_1": "1 个小组",
   "numberOfTeams_other": "{{count}} 个小组",
   "offline": "离线",
-  "online": "在线",
   "partiallyCompleted": "部分完成",
   "pauseStudentScreens": "锁定学生屏幕",
   "percentCompletedPeriod": "{{percent}}% 已完成 (课时: {{period}})",
@@ -80,7 +79,6 @@
   "teamsOnItemNone": "没有正在学习该条目的小组。",
   "teamsOnItemTitle": "学习该条目的小组",
   "teamNoWorkSubmitted": "在这一步上没有提交作品的小组",
-  "timeSpent": "耗时",
   "unpauseStudentScreens": "解锁学生屏幕",
   "visited": "已访问",
   "yes": "是"
