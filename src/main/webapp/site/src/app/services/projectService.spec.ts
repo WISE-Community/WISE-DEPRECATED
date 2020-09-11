@@ -7,6 +7,7 @@ import { UtilService } from '../../../../wise5/services/utilService';
 import demoProjectJSON_import from './sampleData/curriculum/Demo.project.json';
 import scootersProjectJSON_import from './sampleData/curriculum/SelfPropelledVehiclesChallenge.project.json';
 import { getAuthServiceConfigs } from '../app.module';
+import { SessionService } from '../../../../wise5/services/sessionService';
 const projectIdDefault = 1;
 const projectBaseURL = 'http://localhost:8080/curriculum/12345/';
 const projectURL = projectBaseURL + 'project.json';
@@ -14,6 +15,7 @@ const saveProjectURL = 'http://localhost:8080/wise/project/save/' + projectIdDef
 const wiseBaseURL = '/wise';
 let service: ProjectService;
 let configService: ConfigService;
+let sessionService: SessionService;
 let utilService: UtilService;
 let http: HttpTestingController;
 let demoProjectJSON: any;
@@ -23,10 +25,11 @@ describe('ProjectService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [ HttpClientTestingModule, UpgradeModule ],
-      providers: [ ProjectService, ConfigService, UtilService ]
+      providers: [ ProjectService, ConfigService, SessionService, UtilService ]
     });
     http = TestBed.get(HttpTestingController);
     configService = TestBed.get(ConfigService);
+    sessionService = TestBed.get(SessionService)
     utilService = TestBed.get(UtilService);
     spyOn(utilService, 'broadcastEventInRootScope').and.callFake(() => {});
     service = TestBed.get(ProjectService);

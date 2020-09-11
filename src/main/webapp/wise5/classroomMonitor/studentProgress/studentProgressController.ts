@@ -19,19 +19,11 @@ class StudentProgressController {
     'completion': ['completion.completionPct', 'username'],
     '-completion': ['-completion.completionPct', 'username'],
     'location': ['location', 'username'],
-    '-location': ['-location', 'username'],
-    'time': ['-online', '-timeSpent', 'username'],
-    '-time': ['-online', 'timeSpent', 'username'],
-    'online': ['online', 'username'],
-    '-online': ['-online', 'username']
+    '-location': ['-location', 'username']
   };
   students: any;
-  studentsOnline: any;
-  studentTimeSpent: any;
   teacherWorkgroupId: number;
   teams: any;
-  updateTimeSpentInterval: any;
-  updateTimeSpentIntervalId: any;
 
   static $inject = [
     '$rootScope',
@@ -55,39 +47,16 @@ class StudentProgressController {
     this.teacherWorkgroupId = this.ConfigService.getWorkgroupId();
     this.sort = this.TeacherDataService.studentProgressSort;
     this.permissions = this.ConfigService.getPermissions();
-    this.studentsOnline = this.TeacherWebSocketService.getStudentsOnline();
     this.students = [];
     this.initializeStudents();
-    this.$rootScope.$on('studentsOnlineReceived', (event, args) => {
-      this.studentsOnline = args.studentsOnline;
-      this.initializeStudents();
-    });
     this.$rootScope.$on('studentStatusReceived', (event, args) => {
       let studentStatus = args.studentStatus;
       let workgroupId = studentStatus.workgroupId;
-      this.updateTimeSpentForWorkgroupId(workgroupId);
       this.updateTeam(workgroupId);
-    });
-    this.$rootScope.$on('studentDisconnected', (event, args) => {
-      var data = args.data;
-      var workgroupId = data.workgroupId;
-      var studentsOnline = this.studentsOnline;
-      var indexOfWorkgroupId = studentsOnline.indexOf(workgroupId);
-      if (indexOfWorkgroupId != -1) {
-        studentsOnline.splice(indexOfWorkgroupId, 1);
-        this.updateTeam(workgroupId);
-      }
     });
     this.$scope.$on('currentWorkgroupChanged', (event, args) => {
       this.currentWorkgroup = args.currentWorkgroup;
     });
-    this.updateTimeSpentInterval = 10000;
-    this.studentTimeSpent = {};
-    this.updateTimeSpent();
-    this.updateTimeSpentIntervalId = setInterval(() => {
-      this.updateTimeSpent();
-      this.$scope.$apply();
-    }, this.updateTimeSpentInterval);
     let context = 'ClassroomMonitor',
       nodeId = null,
       componentId = null,
@@ -121,110 +90,12 @@ class StudentProgressController {
     return this.StudentStatusService.getStudentProjectCompletion(workgroupId, true);
   }
 
-  isWorkgroupOnline(workgroupId) {
-    return this.studentsOnline.indexOf(workgroupId) != -1;
-  }
-
   isWorkgroupShown(workgroup) {
     return this.TeacherDataService.isWorkgroupShown(workgroup);
   }
 
   getStudentTotalScore(workgroupId) {
     return this.TeacherDataService.getTotalScoreByWorkgroupId(workgroupId);
-  }
-
-  getStudentTimeSpent(workgroupId) {
-    let timeSpent = null;
-    if (this.studentTimeSpent) {
-      timeSpent = this.studentTimeSpent[workgroupId];
-    }
-    return timeSpent;
-  }
-
-  updateTimeSpent() {
-    var studentsOnline = this.studentsOnline;
-    if (studentsOnline != null) {
-      for (var s = 0; s < studentsOnline.length; s++) {
-        var workgroupId = studentsOnline[s];
-        if (workgroupId != null) {
-          this.updateTimeSpentForWorkgroupId(workgroupId);
-        }
-      }
-    }
-  }
-
-  updateTimeSpentForWorkgroupId(workgroupId) {
-    if (workgroupId != null) {
-      var currentClientTimestamp = new Date().getTime();
-      var studentStatus = this.StudentStatusService.getStudentStatusForWorkgroupId(workgroupId);
-      if (studentStatus != null) {
-        var postTimestamp = studentStatus.postTimestamp;
-        /*
-         * convert the current client timestamp to a server timestamp
-         * this is requied in cases where the client and server clocks
-         * are not synchronized
-         */
-        var currentServerTimestamp = this.ConfigService.convertToServerTimestamp(
-          currentClientTimestamp
-        );
-        var timeSpent = currentServerTimestamp - postTimestamp;
-        var totalSeconds = Math.floor(timeSpent / 1000);
-        var hours = Math.floor((totalSeconds % 86400) / 3600);
-        var minutes = Math.floor(((totalSeconds % 86400) % 3600) / 60);
-        var seconds = totalSeconds % 60;
-
-        if (hours < 0) {
-          hours = 0;
-        }
-
-        if (minutes < 0) {
-          minutes = 0;
-        }
-
-        if (seconds < 0) {
-          seconds = 0;
-        }
-
-        var timeSpentText = '';
-
-        if (hours > 0) {
-          timeSpentText += hours + ':';
-        }
-
-        if (hours > 0) {
-          if (minutes == 0) {
-            timeSpentText += '00:';
-          } else if (minutes > 0 && minutes < 10) {
-            timeSpentText += '0' + minutes + ':';
-          } else {
-            timeSpentText += minutes + ':';
-          }
-        } else {
-          timeSpentText += minutes + ':';
-        }
-
-        if (seconds == 0) {
-          timeSpentText += '00';
-        } else if (seconds > 0 && seconds < 10) {
-          timeSpentText += '0' + seconds;
-        } else {
-          timeSpentText += seconds;
-        }
-
-        // update the mapping of workgroup id to time spent
-        //this.studentTimeSpent[workgroupId] = timeSpentText;
-
-        // update the timeSpent for the team with the matching workgroupID
-        for (let i = 0; i < this.teams.length; i++) {
-          let team = this.teams[i];
-          let id = team.workgroupId;
-
-          if (workgroupId === id) {
-            team.timeSpent = timeSpentText;
-          }
-        }
-      }
-    }
   }
 
   initializeStudents() {
@@ -249,9 +120,7 @@ class StudentProgressController {
   }
 
   updateTeam(workgroupId) {
-    let isOnline = this.isWorkgroupOnline(workgroupId);
     let location = this.getCurrentNodeForWorkgroupId(workgroupId);
-    let timeSpent = this.getStudentTimeSpent(workgroupId);
     let completion = this.getStudentProjectCompletion(workgroupId);
     let score = this.getStudentTotalScore(workgroupId);
     let maxScore = this.StudentStatusService.getMaxScoreForWorkgroupId(workgroupId);
@@ -261,9 +130,7 @@ class StudentProgressController {
       let team = this.teams[i];
 
       if (team.workgroupId === workgroupId) {
-        team.isOnline = isOnline;
         team.location = location;
-        team.timeSpent = timeSpent;
         team.completion = completion;
         team.score = score;
         team.maxScore = maxScore;

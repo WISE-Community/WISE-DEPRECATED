@@ -9,6 +9,7 @@ import { StudentDataService } from "../../../../wise5/services/studentDataServic
 import { TagService } from "../../../../wise5/services/tagService";
 import { UtilService } from "../../../../wise5/services/utilService";
 import { AudioOscillatorService } from "../../../../wise5/components/audioOscillator/audioOscillatorService";
+import { SessionService } from "../../../../wise5/services/sessionService";
 
 let service: AudioOscillatorService;
 
@@ -21,6 +22,7 @@ describe('AudioOscillatorService', () => {
         AudioOscillatorService,
         ConfigService,
         ProjectService,
+        SessionService,
         StudentAssetService,
         StudentDataService,
         TagService,

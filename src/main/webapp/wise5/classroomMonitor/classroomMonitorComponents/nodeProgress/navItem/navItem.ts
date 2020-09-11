@@ -25,7 +25,6 @@ class NavItemController {
   icon: any;
   isCurrentNode: boolean;
   isGroup: boolean;
-  isWorkgroupOnlineOnNode: boolean;
   item: any;
   maxScore: number;
   newAlert: any;
@@ -98,7 +97,6 @@ class NavItemController {
     this.setCurrentNodeStatus();
     this.maxScore = this.ProjectService.getMaxScoreForNode(this.nodeId);
     this.workgroupsOnNodeData = [];
-    this.isWorkgroupOnlineOnNode = false;
     this.icon = this.ProjectService.getNodeIconByNodeId(this.nodeId);
     this.parentGroupId = null;
     var parentGroup = this.ProjectService.getParentGroup(this.nodeId);
@@ -187,19 +185,12 @@ class NavItemController {
       }
     );
 
-    // listen for the studentsOnlineReceived event
-    this.$rootScope.$on('studentsOnlineReceived', (event, args) => {
-      this.setWorkgroupsOnNodeData();
-    });
-
-    // listen for the studentStatusReceived event
     this.$rootScope.$on('studentStatusReceived', (event, args) => {
       this.setWorkgroupsOnNodeData();
       this.setCurrentNodeStatus();
       this.getAlertNotifications();
     });
 
-    // listen for the currentPeriodChanged event
     this.$rootScope.$on('currentPeriodChanged', (event, args) => {
       this.currentPeriod = args.currentPeriod;
       this.setWorkgroupsOnNodeData();
@@ -291,10 +282,10 @@ class NavItemController {
   showToggleLockNodeConfirmation(isLocked: boolean) {
     let message = '';
     if (isLocked) {
-      message = this.$translate('lockNodeConfirmation', { nodeTitle: this.nodeTitle, 
+      message = this.$translate('lockNodeConfirmation', { nodeTitle: this.nodeTitle,
           periodName: this.getPeriodLabel() });
     } else {
-      message = this.$translate('unlockNodeConfirmation', { nodeTitle: this.nodeTitle, 
+      message = this.$translate('unlockNodeConfirmation', { nodeTitle: this.nodeTitle,
         periodName: this.getPeriodLabel() });
     }
     this.$mdToast.show(
@@ -416,7 +407,6 @@ class NavItemController {
 
   setWorkgroupsOnNodeData() {
     let workgroupIdsOnNode = this.getWorkgroupIdsOnNode();
-    let workgroupOnlineOnNode = false;
     this.workgroupsOnNodeData = [];
 
     let n = workgroupIdsOnNode.length;
@@ -425,20 +415,12 @@ class NavItemController {
 
       let usernames = this.ConfigService.getDisplayUsernamesByWorkgroupId(id);
       let avatarColor = this.ConfigService.getAvatarColorForWorkgroupId(id);
-      let online = this.TeacherWebSocketService.isStudentOnline(id);
-      if (online) {
-        workgroupOnlineOnNode = true;
-      }
-
       this.workgroupsOnNodeData.push({
         workgroupId: id,
         usernames: usernames,
         avatarColor: avatarColor,
-        online: online
       });
     }
-
-    this.isWorkgroupOnlineOnNode = workgroupOnlineOnNode;
   }
 
   setCurrentNodeStatus() {
@@ -477,7 +459,7 @@ class NavItemController {
   }
 
   getPeriodLabel() {
-    return this.isShowingAllPeriods() ? this.$translate('allPeriods') : 
+    return this.isShowingAllPeriods() ? this.$translate('allPeriods') :
        this.$translate('periodLabel', { name: this.currentPeriod.periodName });
   }
 

@@ -63,6 +63,7 @@ import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
 import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.user.UserAPIController;
+import org.wise.portal.presentation.web.exception.InvalidNameException;
 import org.wise.portal.presentation.web.response.ErrorResponse;
 import org.wise.portal.presentation.web.response.LaunchRunErrorResponse;
 import org.wise.portal.presentation.web.response.SimpleResponse;
@@ -325,11 +326,17 @@ public class StudentAPIController extends UserAPIController {
 
   @PostMapping("/register")
   @Secured({ "ROLE_ANONYMOUS" })
-  String createStudentAccount(@RequestBody Map<String, String> studentFields,
-      HttpServletRequest request) throws DuplicateUsernameException {
+  HashMap<String, Object> createStudentAccount(@RequestBody Map<String, String> studentFields,
+      HttpServletRequest request) throws DuplicateUsernameException, InvalidNameException {
     StudentUserDetails sud = new StudentUserDetails();
-    sud.setFirstname(studentFields.get("firstName"));
-    sud.setLastname(studentFields.get("lastName"));
+    String firstName = studentFields.get("firstName");
+    String lastName = studentFields.get("lastName");
+    if (!isFirstNameAndLastNameValid(firstName, lastName)) {
+      String messageCode = this.getInvalidNameMessageCode(firstName, lastName);
+      throw new InvalidNameException(messageCode);
+    }
+    sud.setFirstname(firstName);
+    sud.setLastname(lastName);
     sud.setGender(getGender(studentFields.get("gender")));
     sud.setAccountQuestion(studentFields.get("securityQuestion"));
     sud.setAccountAnswer(studentFields.get("securityQuestionAnswer"));
@@ -344,7 +351,8 @@ public class StudentAPIController extends UserAPIController {
     Locale locale = request.getLocale();
     sud.setLanguage(locale.getLanguage());
     User createdUser = userService.createUser(sud);
-    return createdUser.getUserDetails().getUsername();
+    String username = createdUser.getUserDetails().getUsername();
+    return createRegisterSuccessResponse(username);
   }
 
   private Gender getGender(String gender) {

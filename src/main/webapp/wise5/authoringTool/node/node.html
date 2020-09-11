@@ -1,8 +1,4 @@
 <style>
-  .componentTypeSelected {
-    border-style: solid;
-    border-color: black;
-  }
   .bodyDiv {
     margin-left: 10px;
   }
@@ -38,7 +34,7 @@
   <md-button id='addComponentButton'
          ng-if='nodeAuthoringController.showStepButtons && !projectController.isGroupNode(nodeAuthoringController.node.id)'
          class='topButton md-raised md-primary'
-         ng-click='nodeAuthoringController.addComponentButtonClicked()'
+         ng-click='nodeAuthoringController.addComponent()'
          ng-disabled='nodeAuthoringController.getSelectedComponentIds().length != 0 || nodeAuthoringController.insertComponentMode'>
     <md-icon>add</md-icon>
     <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'addNewComponent' | translate }}</md-tooltip>
@@ -145,26 +141,6 @@
       <md-icon>visibility_off</md-icon>
       <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'previewStepWithoutConstraints' | translate }}</md-tooltip>
     </md-button>
-  </div>
-  <div ng-if='nodeAuthoringController.showCreateComponent' layout='row' style='margin-left: 10px;'>
-    <div layout='row'>
-      <h6>{{ ::'clickTheNewComponentTypeYouWantToAdd' | translate }}</h6>
-      <md-button class='createButton md-raised md-primary'
-             ng-click='nodeAuthoringController.cancelCreateComponentClicked()'
-             aria-label="{{ ::'CANCEL' | translate }}"
-             translate="CANCEL">
-      </md-button>
-    </div>
-  </div>
-  <div ng-if='nodeAuthoringController.showCreateComponent'>
-    <md-grid-list md-cols-xs='1' md-cols-sm='2' md-cols-md='4' md-cols-gt-md='7' md-row-height='30'>
-      <md-grid-tile ng-repeat='componentType in nodeAuthoringController.componentTypes'
-              style='outline: none; cursor: pointer;'
-              ng-mousedown='nodeAuthoringController.componentTypeClicked(componentType.componentType)'
-              ng-class='{ componentTypeSelected: componentType.componentType == nodeAuthoringController.selectedComponent }'>
-        {{componentType.componentName}}
-      </md-grid-tile>
-    </md-grid-list>
   </div>
   <div ng-if='nodeAuthoringController.showAdvanced' style='margin-top: 10px;'>
     <div ng-if='nodeAuthoringController.showGeneralAdvanced' class='bodyDiv'>

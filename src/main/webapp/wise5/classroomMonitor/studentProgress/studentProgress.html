@@ -14,19 +14,6 @@
             <tr>
               <th class="table--list__thead__th" sticky>
                 <md-button class="table--list__thead__link"
-                           aria-label="{{ ::'onlineLabel' | translate }}"
-                           ng-click="studentProgressController.setSort('online')"
-                           title="{{::'sortByOnline' | translate}}" layout="row"
-                           layout-align="center center">
-                  <span translate="onlineLabel"></span>
-                  <md-icon ng-if="studentProgressController.sort === 'online' || studentProgressController.sort === '-online'"
-                           class="text-light table--list__thead__sort"
-                           ng-class="{'table--list__thead__sort--reverse': studentProgressController.sort === '-online'}">
-                    arrow_drop_up </md-icon>
-                </md-button>
-              </th>
-              <th class="table--list__thead__th" sticky>
-                <md-button class="table--list__thead__link"
                            aria-label="{{ ::'teamIdTitle' | translate }}"
                            ng-click="studentProgressController.setSort('team')"
                            title="{{::'sortByTeam' | translate}}" layout="row"
@@ -64,19 +51,6 @@
               </th>
               <th class="table--list__thead__th" sticky>
                 <md-button class="table--list__thead__link"
-                           aria-label="{{ ::'timeSpent' | translate }}"
-                           ng-click="studentProgressController.setSort('time')"
-                           title="{{::'sortByTimeSpent' | translate}}" layout="row"
-                           layout-align="center center">
-                  <span translate="timeSpent"></span>
-                  <md-icon ng-if="studentProgressController.sort === 'time' || studentProgressController.sort === '-time'"
-                           class="text-light table--list__thead__sort" md-theme="default"
-                           ng-class="{'table--list__thead__sort--reverse': studentProgressController.sort === '-time'}">
-                    arrow_drop_up </md-icon>
-                </md-button>
-              </th>
-              <th class="table--list__thead__th" sticky>
-                <md-button class="table--list__thead__link"
                            aria-label="{{ ::'projectCompletion' | translate }}"
                            ng-click="studentProgressController.setSort('completion')"
                            title="{{::'sortByCompletion' | translate}}" layout="row"
@@ -107,13 +81,6 @@
                 ng-repeat="team in studentProgressController.teams | orderBy:studentProgressController.getOrderBy()"
                 ng-if="studentProgressController.isWorkgroupShown(team)"
                 ng-click="studentProgressController.showStudentGradingView(team)">
-              <td class="center">
-                <md-icon ng-if="team.online" class="success"
-                         aria-label="{{ ::online | translate }}">
-                  fiber_manual_record </md-icon>
-                <md-icon ng-if="!team.online" aria-label="{{ ::'offline' | translate }}">
-                  fiber_manual_record </md-icon>
-              </td>
               <td class="center">{{ ::team.workgroupId }}</td>
               <td class="md-body-2 td--wrap">
                 <div layout="row" layout-wrap>{{ ::team.username }}</div>
@@ -121,7 +88,6 @@
               <td class="md-body-1 center td--wrap td--max-width">
                 {{ team.location }}
               </td>
-              <td class="md-body-1 center">{{ team.timeSpent }}</td>
               <td layout="row" layout-align="center center">
                 <project-progress completed="team.completion.completedItems"
                                   total="team.completion.totalItems"

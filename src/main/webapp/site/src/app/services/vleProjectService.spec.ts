@@ -4,8 +4,10 @@ import { UpgradeModule } from '@angular/upgrade/static';
 import { VLEProjectService } from '../../../../wise5/vle/vleProjectService';
 import { ConfigService } from '../../../../wise5/services/configService';
 import { UtilService } from '../../../../wise5/services/utilService';
+import { SessionService } from '../../../../wise5/services/sessionService';
 let service: VLEProjectService;
 let configService: ConfigService;
+let sessionService: SessionService;
 let utilService: UtilService;
 let http: HttpTestingController;
 
@@ -13,11 +15,12 @@ describe('VLEProjectService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [ HttpClientTestingModule, UpgradeModule ],
-      providers: [ VLEProjectService, ConfigService, UtilService ]
+      providers: [ VLEProjectService, ConfigService, SessionService, UtilService ]
     });
     http = TestBed.get(HttpTestingController);
     service = TestBed.get(VLEProjectService);
     configService = TestBed.get(ConfigService);
+    sessionService = TestBed.get(SessionService);
     utilService = TestBed.get(UtilService);
     spyOn(utilService, 'broadcastEventInRootScope');
   });

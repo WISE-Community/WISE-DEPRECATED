@@ -9,6 +9,7 @@ import { AnnotationService } from '../../../../wise5/services/annotationService'
 import { ProjectService } from '../../../../wise5/services/projectService';
 import { UtilService } from '../../../../wise5/services/utilService';
 import { TagService } from '../../../../wise5/services/tagService';
+import { SessionService } from '../../../../wise5/services/sessionService';
 
 let service: TableService;
 
@@ -20,6 +21,7 @@ describe('TableService', () => {
         AnnotationService,
         ConfigService,
         ProjectService,
+        SessionService,
         StudentAssetService,
         StudentDataService,
         TableService,

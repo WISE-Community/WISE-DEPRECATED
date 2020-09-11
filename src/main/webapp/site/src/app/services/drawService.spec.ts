@@ -9,6 +9,7 @@ import { StudentDataService } from "../../../../wise5/services/studentDataServic
 import { TagService } from "../../../../wise5/services/tagService";
 import { UtilService } from "../../../../wise5/services/utilService";
 import { DrawService } from "../../../../wise5/components/draw/drawService";
+import { SessionService } from "../../../../wise5/services/sessionService";
 
 let service: DrawService;
 let defaultDrawDataWithNoObjectsField: string = '{"canvas":{}}';
@@ -24,6 +25,7 @@ describe('DrawService', () => {
         ConfigService,
         DrawService,
         ProjectService,
+        SessionService,
         StudentAssetService,
         StudentDataService,
         TagService,

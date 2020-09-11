@@ -7,8 +7,10 @@ import { UtilService } from '../../../../wise5/services/utilService';
 import demoProjectJSON_import from './sampleData/curriculum/Demo.project.json';
 import scootersProjectJSON_import from './sampleData/curriculum/SelfPropelledVehiclesChallenge.project.json';
 import teacherProjctJSON_import from './sampleData/curriculum/TeacherProjectServiceSpec.project.json';
+import { SessionService } from '../../../../wise5/services/sessionService';
 let service: TeacherProjectService;
 let configService: ConfigService;
+let sessionService: SessionService;
 let utilService: UtilService;
 let http: HttpTestingController;
 let demoProjectJSON: any;
@@ -43,11 +45,12 @@ describe('TeacherProjectService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [ HttpClientTestingModule, UpgradeModule ],
-      providers: [ TeacherProjectService, ConfigService, UtilService ]
+      providers: [ TeacherProjectService, ConfigService, SessionService, UtilService ]
     });
     http = TestBed.get(HttpTestingController);
     service = TestBed.get(TeacherProjectService);
     configService = TestBed.get(ConfigService);
+    sessionService = TestBed.get(SessionService);
     utilService = TestBed.get(UtilService);
     spyOn(utilService, 'broadcastEventInRootScope');
     demoProjectJSON = JSON.parse(JSON.stringify(demoProjectJSON_import));

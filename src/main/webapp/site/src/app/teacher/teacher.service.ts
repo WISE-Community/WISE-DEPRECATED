@@ -59,17 +59,12 @@ export class TeacherService {
     return this.http.get<Run>(`${this.lastRunUrl}/${projectId}`);
   }
 
-  registerTeacherAccount(teacherUser: Teacher, callback: any) {
+  registerTeacherAccount(teacherUser: Teacher): Observable<any> {
     const headers = {
       'Content-Type': 'application/json'
     };
-    this.http.post(this.registerUrl,
-      teacherUser,
-      { headers: headers, responseType: 'text' })
-      .subscribe(response => {
-        const username = response;
-        callback(username);
-      });
+    return this.http.post(this.registerUrl, teacherUser,
+        { headers: headers, responseType: 'json' });
   }
 
   createRun(projectId: number, periods: string, maxStudentsPerTeam: number, startDate: number,

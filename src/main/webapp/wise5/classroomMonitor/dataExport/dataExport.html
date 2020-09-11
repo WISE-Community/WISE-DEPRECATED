@@ -15,7 +15,7 @@
         background-color: rgba(21,101,192,0.87);
     }
     .exportComponentDataButton {
-      min-height: 23px !important;
+      min-height: 30px !important;
       min-width: 46px !important;
       font-size: 12px !important;
       line-height: 0px;
@@ -149,10 +149,6 @@
               </md-button>
               <h4>{{ ::'exportComponentData' | translate }}</h4>
               <br/>
-              <md-radio-group ng-model="dataExportController.workSelectionType">
-                  <md-radio-button value="exportAllWork" class="md-primary">{{ ::'exportAllStudentWork' | translate }}</md-radio-button>
-                  <md-radio-button value="exportLatestWork" class="md-primary">{{ ::'exportLatestStudentWork' | translate }}</md-radio-button>
-              </md-radio-group>
               <md-checkbox class="md-primary" ng-model="dataExportController.includeStudentNames" ng-if="dataExportController.canViewStudentNames">{{ ::'includeStudentNames' | translate }}</md-checkbox>
               <br ng-if="dataExportController.canViewStudentNames"/>
               <md-checkbox class="md-primary" ng-model="dataExportController.includeCorrectnessColumns">{{ ::'includeCorrectnessColumns' | translate }}</md-checkbox>
@@ -180,15 +176,23 @@
                        class='componentHeader'>
                       <div>
                         {{::($index + 1)}}. {{::componentItem.type}}
-                        <md-button ng-if='dataExportController.canExportComponentDataType(componentItem.type)'
+                        <md-button ng-if='dataExportController.canExportAllRevisionsForComponentDataType(componentItem.type)'
                             class='md-primary md-raised exportComponentDataButton'
-                            ng-click='dataExportController.exportComponentClicked(projectItem.node.id, componentItem)'>
+                            ng-click='dataExportController.exportComponentAllRevisions(projectItem.node.id, componentItem)'>
                           <md-icon>file_download</md-icon>
-                          <md-tooltip>{{ ::'downloadExport' | translate }}</md-tooltip>
+                          <span>{{ ::'all' | translate }}</span>
+                          <md-tooltip>{{ ::'downloadAllRevisionsExport' | translate }}</md-tooltip>
                         </md-button>
-                        <span ng-if='::componentItem.type == "Match"'>
+                        <md-button ng-if='dataExportController.canExportLatestRevisionsForComponentDataType(componentItem.type)'
+                            class='md-primary md-raised exportComponentDataButton'
+                            ng-click='dataExportController.exportComponentLatestRevisions(projectItem.node.id, componentItem)'>
+                          <md-icon>file_download</md-icon>
+                          <span>{{ ::'latest' | translate }}</span>
+                          <md-tooltip>{{ ::'downloadLatestRevisionsExport' | translate }}</md-tooltip>
+                        </md-button>
+                        <span ng-if='dataExportController.componentExportTooltips[componentItem.type] != null'>
                           <md-icon>help</md-icon>
-                          <md-tooltip md-direction='right'>{{ ::'matchCorrectnessColumnKey' | translate }}</md-tooltip>
+                          <md-tooltip md-direction='right'>{{ dataExportController.componentExportTooltips[componentItem.type] }}</md-tooltip>
                         </span>
                       </div>
                   </div>

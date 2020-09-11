@@ -2,6 +2,7 @@
 
 import { ConfigService } from '../../services/configService';
 import { StudentAssetService } from '../../services/studentAssetService';
+import { SessionService } from '../../services/sessionService';
 
 class StudentAssetController {
   $translate: any;
@@ -20,17 +21,19 @@ class StudentAssetController {
     private $rootScope: any,
     $scope: any,
     private ConfigService: ConfigService,
+    private SessionService: SessionService,
     private StudentAssetService: StudentAssetService
   ) {
     this.$rootScope = $rootScope;
     this.mode = this.ConfigService.getMode();
+    this.SessionService = SessionService;
     this.StudentAssetService = StudentAssetService;
     this.$translate = $filter('translate');
     this.studentAssets = this.StudentAssetService.allAssets;
     this.itemId = null;
     this.item = null;
-
-    this.logOutListener = $scope.$on('logOut', (event, args) => {
+    
+    this.SessionService.logOut$.subscribe(() => {
       this.logOutListener();
       this.$rootScope.$broadcast('componentDoneUnloading');
     });
