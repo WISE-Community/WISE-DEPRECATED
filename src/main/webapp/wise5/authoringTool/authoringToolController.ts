@@ -168,6 +168,14 @@ class AuthoringToolController {
         type: 'secondary',
         showToolbar: true,
         active: false
+      },
+      'root.at.project.node.edit-rubric': {
+        name: '',
+        label: '',
+        icon: '',
+        type: 'secondary',
+        showToolbar: true,
+        active: false
       }
     };
     this.processUI();
