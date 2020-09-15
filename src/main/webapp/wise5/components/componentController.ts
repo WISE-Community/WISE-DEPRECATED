@@ -260,7 +260,8 @@ class ComponentController {
     this.summernoteRubricHTML = this.componentContent.rubric;
 
     const insertAssetString = this.$translate('INSERT_ASSET');
-    const InsertAssetButton = this.UtilService.createInsertAssetButton(null, this.nodeId, this.componentId, 'rubric', insertAssetString);
+    const InsertAssetButton = this.UtilService.createInsertAssetButton(null, this.nodeId,
+        this.componentId, 'rubric', insertAssetString, this.createOpenAssetChooserFunction());
     this.summernoteRubricOptions = {
       toolbar: [
         ['style', ['style']],
@@ -286,6 +287,24 @@ class ComponentController {
     this.updateAdvancedAuthoringView();
   }
 
+  /**
+   * Creates and returns a function so that within the function the 'this' object will be this
+   * rubricAuthoringController.
+   */
+  createOpenAssetChooserFunction() {
+    return (params: any) => {
+      this.openAssetChooser(params);
+    }
+  }
+
+  /**
+   * This function should be implemented by child components.
+   * @param params and object containing key value pairs
+   */
+  openAssetChooser(params: any) {
+
+  }
+
   registerAuthoringListeners() {
     this.$scope.$watch(
         () => {
@@ -305,10 +324,6 @@ class ComponentController {
             .showAdvancedAdvancedAuthoring[this.componentId];
         this.UtilService.hideJSONValidMessage();
       }, true);
-
-    this.$scope.$on('assetSelected', (event, args) => {
-      this.assetSelected(event, args);
-    });
   }
 
   handleAuthoringComponentContentChanged(newValue, oldValue) {
@@ -351,21 +366,18 @@ class ComponentController {
     ($('#' + summernoteId) as any).summernote('insertNode', videoElement);
   }
 
-  assetSelected(event, args) {
-    if (this.isEventTargetThisComponent(args)) {
-      if (args.target === 'rubric') {
-        const fileName = args.assetItem.fileName;
-        const summernoteId = this.getSummernoteId(args);
-        this.restoreSummernoteCursorPosition(summernoteId);
-        const fullAssetPath = this.getFullAssetPath(fileName);
-        if (this.UtilService.isImage(fileName)) {
-          this.insertImageIntoSummernote(summernoteId, fullAssetPath, fileName);
-        } else if (this.UtilService.isVideo(fileName)) {
-          this.insertVideoIntoSummernote(summernoteId, fullAssetPath);
-        }
+  assetSelected(args: any) {
+    if (args.target === 'rubric') {
+      const fileName = args.assetItem.fileName;
+      const summernoteId = this.getSummernoteId(args);
+      this.restoreSummernoteCursorPosition(summernoteId);
+      const fullAssetPath = this.getFullAssetPath(fileName);
+      if (this.UtilService.isImage(fileName)) {
+        this.insertImageIntoSummernote(summernoteId, fullAssetPath, fileName);
+      } else if (this.UtilService.isVideo(fileName)) {
+        this.insertVideoIntoSummernote(summernoteId, fullAssetPath);
       }
     }
-    this.$mdDialog.hide();
   }
 
   registerComponentWithParentNode() {
@@ -1173,7 +1185,6 @@ class ComponentController {
       this.ProjectService.replaceComponent(this.nodeId, this.componentId, editedComponentContent);
       this.componentContent = editedComponentContent;
       this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
-      this.$rootScope.$broadcast('scrollToComponent', { componentId: this.componentId });
       this.isJSONStringChanged = false;
     } catch(e) {
       this.$scope.$parent.nodeAuthoringController.showSaveErrorAdvancedAuthoring();
@@ -1301,6 +1312,7 @@ class ComponentController {
       }
     });
   }
+
 }
 
 export default ComponentController;

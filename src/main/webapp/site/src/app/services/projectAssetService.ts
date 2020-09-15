@@ -215,4 +215,15 @@ export class ProjectAssetService {
   isProjectAssetsAvailable() {
     return this.getProjectAssets().getValue() != null;
   }
+
+  openAssetChooser(params: any) {
+    return this.upgrade.$injector.get('$mdDialog').show({
+      templateUrl: 'wise5/authoringTool/asset/asset.html',
+      controller: 'ProjectAssetController',
+      controllerAs: 'projectAssetController',
+      $stateParams: params,
+      clickOutsideToClose: true,
+      escapeToClose: true
+    });
+  }
 }

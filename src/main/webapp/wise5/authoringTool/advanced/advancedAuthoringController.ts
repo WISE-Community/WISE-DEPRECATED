@@ -2,6 +2,7 @@ import { ConfigService } from '../../services/configService';
 import { TeacherProjectService } from '../../services/teacherProjectService';
 import { UtilService } from '../../services/utilService';
 import * as angular from 'angular';
+import { ProjectAssetService } from '../../../site/src/app/services/projectAssetService';
 
 class AdvancedAuthoringController {
   $translate: any;
@@ -17,6 +18,7 @@ class AdvancedAuthoringController {
     '$state',
     '$stateParams',
     'ConfigService',
+    'ProjectAssetService',
     'ProjectService',
     'UtilService'
   ];
@@ -28,6 +30,7 @@ class AdvancedAuthoringController {
     private $state,
     $stateParams: any,
     private ConfigService: ConfigService,
+    private ProjectAssetService: ProjectAssetService,
     private ProjectService: TeacherProjectService,
     private UtilService: UtilService
   ) {
@@ -36,6 +39,7 @@ class AdvancedAuthoringController {
     this.$state = $state;
     this.$translate = $filter('translate');
     this.ConfigService = ConfigService;
+    this.ProjectAssetService = ProjectAssetService;
     this.ProjectService = ProjectService;
     this.UtilService = UtilService;
     this.projectId = $stateParams.projectId;
@@ -43,12 +47,6 @@ class AdvancedAuthoringController {
 
   $onInit() {
     this.setProjectScriptFilename();
-    this.$scope.$on('assetSelected', (event, { assetItem, target }) => {
-      if (target === 'scriptFilename') {
-        this.projectScriptFilename = assetItem.fileName;
-        this.projectScriptFilenameChanged();
-      }
-    });
   }
 
   showJSONClicked() {
@@ -96,12 +94,21 @@ class AdvancedAuthoringController {
   }
 
   chooseProjectScriptFile() {
-    const openAssetChooserParams = {
+    const params = {
       isPopup: true,
       projectId: this.projectId,
       target: 'scriptFilename'
     };
-    this.$rootScope.$broadcast('openAssetChooser', openAssetChooserParams);
+    this.ProjectAssetService.openAssetChooser(params).then(
+      (data: any) => { this.assetSelected(data) }
+    );
+  }
+
+  assetSelected({ assetItem, target }) {
+    if (target === 'scriptFilename') {
+      this.projectScriptFilename = assetItem.fileName;
+      this.projectScriptFilenameChanged();
+    }
   }
 
   downloadProject() {

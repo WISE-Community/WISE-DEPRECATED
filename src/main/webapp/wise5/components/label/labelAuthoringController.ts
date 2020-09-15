@@ -5,8 +5,10 @@ import LabelController from './labelController';
 import * as fabric from 'fabric';
 window['fabric'] = fabric.fabric
 import html2canvas from 'html2canvas';
+import { ProjectAssetService } from '../../../site/src/app/services/projectAssetService';
 
 class LabelAuthoringController extends LabelController {
+  ProjectAssetService: ProjectAssetService;
   $window: any;
   allowedConnectedComponentTypes: any[];
 
@@ -23,6 +25,7 @@ class LabelAuthoringController extends LabelController {
     'LabelService',
     'NodeService',
     'NotebookService',
+    'ProjectAssetService',
     'ProjectService',
     'StudentAssetService',
     'StudentDataService',
@@ -42,6 +45,7 @@ class LabelAuthoringController extends LabelController {
     LabelService,
     NodeService,
     NotebookService,
+    ProjectAssetService,
     ProjectService,
     StudentAssetService,
     StudentDataService,
@@ -65,6 +69,7 @@ class LabelAuthoringController extends LabelController {
       StudentDataService,
       UtilService
     );
+    this.ProjectAssetService = ProjectAssetService;
     this.allowedConnectedComponentTypes = [
       { type: 'ConceptMap' },
       { type: 'Draw' },
@@ -118,27 +123,6 @@ class LabelAuthoringController extends LabelController {
       }.bind(this),
       true
     );
-    this.registerAssetListener();
-  }
-
-  registerAssetListener() {
-    this.$scope.$on('assetSelected', (event, { nodeId, componentId, assetItem, target }) => {
-      if (nodeId === this.nodeId && componentId === this.componentId) {
-        const fileName = assetItem.fileName;
-        const fullFilePath = `${this.ConfigService.getProjectAssetsDirectoryPath()}/${fileName}`;
-        if (target === 'rubric') {
-          this.UtilService.insertFileInSummernoteEditor(
-            `summernoteRubric_${this.nodeId}_${this.componentId}`,
-            fullFilePath,
-            fileName
-          );
-        } else if (target === 'background') {
-          this.authoringComponentContent.backgroundImage = fileName;
-          this.authoringViewComponentChanged();
-        }
-      }
-      this.$mdDialog.hide();
-    });
   }
 
   authoringAddLabelClicked() {
@@ -179,7 +163,28 @@ class LabelAuthoringController extends LabelController {
       componentId: this.componentId,
       target: 'background'
     };
-    this.$rootScope.$broadcast('openAssetChooser', params);
+    this.openAssetChooser(params);
+  }
+
+  openAssetChooser(params: any) {
+    this.ProjectAssetService.openAssetChooser(params).then(
+      (data: any) => { this.assetSelected(data) }
+    );
+  }
+
+  assetSelected({ nodeId, componentId, assetItem, target }) {
+    const fileName = assetItem.fileName;
+    const fullFilePath = `${this.ConfigService.getProjectAssetsDirectoryPath()}/${fileName}`;
+    if (target === 'rubric') {
+      this.UtilService.insertFileInSummernoteEditor(
+        `summernoteRubric_${this.nodeId}_${this.componentId}`,
+        fullFilePath,
+        fileName
+      );
+    } else if (target === 'background') {
+      this.authoringComponentContent.backgroundImage = fileName;
+      this.authoringViewComponentChanged();
+    }
   }
 
   saveStarterLabels() {

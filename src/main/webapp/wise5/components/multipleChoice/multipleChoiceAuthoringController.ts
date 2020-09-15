@@ -1,8 +1,10 @@
 'use strict';
 
+import { ProjectAssetService } from '../../../site/src/app/services/projectAssetService';
 import MultipleChoiceController from './multipleChoiceController';
 
 class MultipleChoiceAuthoringController extends MultipleChoiceController {
+  ProjectAssetService: ProjectAssetService;
   allowedConnectedComponentTypes: any[];
 
   static $inject = [
@@ -16,6 +18,7 @@ class MultipleChoiceAuthoringController extends MultipleChoiceController {
     'MultipleChoiceService',
     'NodeService',
     'NotebookService',
+    'ProjectAssetService',
     'ProjectService',
     'StudentAssetService',
     'StudentDataService',
@@ -33,6 +36,7 @@ class MultipleChoiceAuthoringController extends MultipleChoiceController {
     MultipleChoiceService,
     NodeService,
     NotebookService,
+    ProjectAssetService,
     ProjectService,
     StudentAssetService,
     StudentDataService,
@@ -54,6 +58,7 @@ class MultipleChoiceAuthoringController extends MultipleChoiceController {
       StudentDataService,
       UtilService
     );
+    this.ProjectAssetService = ProjectAssetService;
     this.allowedConnectedComponentTypes = [
       {
         type: 'MultipleChoice'
@@ -69,36 +74,6 @@ class MultipleChoiceAuthoringController extends MultipleChoiceController {
         this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
       }.bind(this),
       true
-    );
-    this.registerAssetListener();
-  }
-
-  registerAssetListener() {
-    this.$scope.$on(
-      'assetSelected',
-      (event, { nodeId, componentId, assetItem, target, targetObject }) => {
-        if (nodeId === this.nodeId && componentId === this.componentId) {
-          const fileName = assetItem.fileName;
-          const fullFilePath = `${this.ConfigService.getProjectAssetsDirectoryPath()}/${fileName}`;
-          if (target === 'prompt') {
-            this.UtilService.insertFileInSummernoteEditor(
-              `summernotePrompt_${this.nodeId}_${this.componentId}`,
-              fullFilePath,
-              fileName
-            );
-          } else if (target === 'rubric') {
-            this.UtilService.insertFileInSummernoteEditor(
-              `summernoteRubric_${this.nodeId}_${this.componentId}`,
-              fullFilePath,
-              fileName
-            );
-          } else if (target === 'choice') {
-            targetObject.text = `<img src="${fileName}"/>`;
-            this.authoringViewComponentChanged();
-          }
-        }
-        this.$mdDialog.hide();
-      }
     );
   }
 
@@ -202,7 +177,34 @@ class MultipleChoiceAuthoringController extends MultipleChoiceController {
       target: 'choice',
       targetObject: choice
     };
-    this.$rootScope.$broadcast('openAssetChooser', params);
+    this.openAssetChooser(params);
+  }
+
+  openAssetChooser(params: any) {
+    this.ProjectAssetService.openAssetChooser(params).then(
+      (data: any) => { this.assetSelected(data) }
+    );
+  }
+
+  assetSelected({ nodeId, componentId, assetItem, target, targetObject }) {
+    const fileName = assetItem.fileName;
+    const fullFilePath = `${this.ConfigService.getProjectAssetsDirectoryPath()}/${fileName}`;
+    if (target === 'prompt') {
+      this.UtilService.insertFileInSummernoteEditor(
+        `summernotePrompt_${this.nodeId}_${this.componentId}`,
+        fullFilePath,
+        fileName
+      );
+    } else if (target === 'rubric') {
+      this.UtilService.insertFileInSummernoteEditor(
+        `summernoteRubric_${this.nodeId}_${this.componentId}`,
+        fullFilePath,
+        fileName
+      );
+    } else if (target === 'choice') {
+      targetObject.text = `<img src="${fileName}"/>`;
+      this.authoringViewComponentChanged();
+    }
   }
 
   /**

@@ -1,5 +1,6 @@
 'use strict';
 
+import { ProjectAssetService } from '../../../site/src/app/services/projectAssetService';
 import { ConfigService } from '../../services/configService';
 import { SpaceService } from '../../services/spaceService';
 import { TeacherProjectService } from '../../services/teacherProjectService';
@@ -18,6 +19,7 @@ class AuthorNotebookController {
     '$stateParams',
     '$scope',
     'ConfigService',
+    'ProjectAssetService',
     'ProjectService',
     'SpaceService',
     'UtilService'
@@ -29,6 +31,7 @@ class AuthorNotebookController {
     $stateParams,
     private $scope,
     private ConfigService: ConfigService,
+    private ProjectAssetService: ProjectAssetService,
     private ProjectService: TeacherProjectService,
     private SpaceService: SpaceService,
     private UtilService: UtilService
@@ -52,28 +55,6 @@ class AuthorNotebookController {
     this.initializeStudentNotesAuthoring();
     this.initializeTeacherNotesAuthoring();
 
-    this.$scope.$on('assetSelected', (event, args) => {
-      if (
-        args.projectId == this.projectId &&
-        args.assetItem != null &&
-        args.assetItem.fileName != null &&
-        args.target != null
-      ) {
-        const assetsDirectoryPath = this.ConfigService.getProjectAssetsDirectoryPath();
-        const fileName = args.assetItem.fileName;
-        const fullAssetPath = assetsDirectoryPath + '/' + fileName;
-        const reportId = args.target;
-        const summernoteId = 'summernoteNotebook_' + reportId;
-        if (this.UtilService.isImage(fileName)) {
-          this.UtilService.restoreSummernoteCursorPosition(summernoteId);
-          this.UtilService.insertImageIntoSummernote(summernoteId, fullAssetPath, fileName);
-        } else if (this.UtilService.isVideo(fileName)) {
-          this.UtilService.restoreSummernoteCursorPosition(summernoteId);
-          this.UtilService.insertVideoIntoSummernote(summernoteId, fullAssetPath);
-        }
-      }
-      this.$mdDialog.hide();
-    });
     this.isPublicNotebookEnabled = this.ProjectService.isSpaceExists('public');
   }
 
@@ -118,13 +99,41 @@ class AuthorNotebookController {
             null,
             null,
             note.reportId,
-            this.$translate('INSERT_ASSET')
+            this.$translate('INSERT_ASSET'),
+            this.createOpenAssetChooserFunction()
           )
         },
         dialogsInBody: true
       }
     };
     this.setReportIdToAuthoringNote(note.reportId, authoringReportNote);
+  }
+
+  /**
+   * Creates and returns a function so that within the function the 'this' object will be this
+   * authorNotebookController.
+   */
+  createOpenAssetChooserFunction() {
+    return (params: any) => {
+      this.ProjectAssetService.openAssetChooser(params).then(
+        (data: any) => { this.assetSelected(data) }
+      );
+    }
+  }
+
+  assetSelected(args: any) {
+    const assetsDirectoryPath = this.ConfigService.getProjectAssetsDirectoryPath();
+    const fileName = args.assetItem.fileName;
+    const fullAssetPath = assetsDirectoryPath + '/' + fileName;
+    const reportId = args.target;
+    const summernoteId = 'summernoteNotebook_' + reportId;
+    if (this.UtilService.isImage(fileName)) {
+      this.UtilService.restoreSummernoteCursorPosition(summernoteId);
+      this.UtilService.insertImageIntoSummernote(summernoteId, fullAssetPath, fileName);
+    } else if (this.UtilService.isVideo(fileName)) {
+      this.UtilService.restoreSummernoteCursorPosition(summernoteId);
+      this.UtilService.insertVideoIntoSummernote(summernoteId, fullAssetPath);
+    }
   }
 
   setReportIdToAuthoringNote(reportId, authoringReportNote) {

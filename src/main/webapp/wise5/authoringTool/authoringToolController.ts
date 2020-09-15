@@ -252,25 +252,6 @@ class AuthoringToolController {
       this.setGlobalMessage(this.$translate('notAllowedToEditThisProject'), false, null);
     });
 
-    this.$scope.$on('openAssetChooser', (event, params) => {
-      const stateParams = {
-        isPopup: params.isPopup,
-        projectId: params.projectId,
-        nodeId: params.nodeId,
-        componentId: params.componentId,
-        target: params.target,
-        targetObject: params.targetObject
-      };
-      this.$mdDialog.show({
-        templateUrl: 'wise5/authoringTool/asset/asset.html',
-        controller: 'ProjectAssetController',
-        controllerAs: 'projectAssetController',
-        $stateParams: stateParams,
-        clickOutsideToClose: true,
-        escapeToClose: true
-      });
-    });
-
     this.$scope.$on('openWISELinkChooser', (event, params) => {
       const stateParams = {
         projectId: params.projectId,
