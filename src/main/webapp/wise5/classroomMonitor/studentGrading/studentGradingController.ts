@@ -113,8 +113,8 @@ class StudentGradingController {
       }
     });
 
-    this.$scope.$on('currentPeriodChanged', (event, args) => {
-      let periodId = args.currentPeriod.periodId;
+    this.TeacherDataService.currentPeriodChanged$.subscribe(({ currentPeriod }) => {
+      let periodId = currentPeriod.periodId;
       let currentWorkgroup = this.TeacherDataService.getCurrentWorkgroup();
       if (!currentWorkgroup) {
         let workgroups = angular.copy(this.ConfigService.getClassmateUserInfos());

@@ -31,9 +31,8 @@ class WorkgroupSelectController {
         this.setWorkgroups();
       }
     });
-
-    $scope.$on('currentPeriodChanged', (event, args) => {
-      this.periodId = args.currentPeriod.periodId;
+    this.TeacherDataService.currentPeriodChanged$.subscribe(({ currentPeriod }) => {
+      this.periodId = currentPeriod.periodId;
       this.setWorkgroups();
     });
   }

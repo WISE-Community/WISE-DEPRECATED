@@ -9,6 +9,7 @@ import { TeacherProjectService } from "./teacherProjectService";
 import { TeacherWebSocketService } from "./teacherWebSocketService";
 import { Injectable } from "@angular/core";
 import { DataService } from "../../site/src/app/services/data.service";
+import { Subject } from "rxjs";
 
 @Injectable()
 export class TeacherDataService extends DataService {
@@ -24,6 +25,8 @@ export class TeacherDataService extends DataService {
   nodeGradingSort = 'team';
   studentGradingSort = 'step';
   studentProgressSort = 'team';
+  private currentPeriodChangedSource: Subject<any> = new Subject<any>();
+  public currentPeriodChanged$ = this.currentPeriodChangedSource.asObservable();
 
   constructor(
     private upgrade: UpgradeModule,
@@ -824,11 +827,15 @@ export class TeacherDataService extends DataService {
     this.currentPeriod = period;
     this.clearCurrentWorkgroupIfNecessary(this.currentPeriod.periodId);
     if (previousPeriod == null || previousPeriod.periodId != this.currentPeriod.periodId) {
-      this.getRootScope().$broadcast('currentPeriodChanged', {
+      this.broadcastCurrentPeriodChanged({
         previousPeriod: previousPeriod,
         currentPeriod: this.currentPeriod
       });
     }
+  }
+
+  broadcastCurrentPeriodChanged(previousAndCurrentPeriod: any) {
+    this.currentPeriodChangedSource.next(previousAndCurrentPeriod);
   }
 
   clearCurrentWorkgroupIfNecessary(periodId) {

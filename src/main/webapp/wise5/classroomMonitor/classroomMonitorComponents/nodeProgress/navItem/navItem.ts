@@ -191,8 +191,8 @@ class NavItemController {
       this.getAlertNotifications();
     });
 
-    this.$rootScope.$on('currentPeriodChanged', (event, args) => {
-      this.currentPeriod = args.currentPeriod;
+    this.TeacherDataService.currentPeriodChanged$.subscribe(({ currentPeriod }) => {
+      this.currentPeriod = currentPeriod;
       this.setWorkgroupsOnNodeData();
       this.getAlertNotifications();
     });

@@ -42,8 +42,8 @@ class StudentGradingToolsController {
       this.icons = { prev: 'chevron_right', next: 'chevron_left' };
     }
 
-    $scope.$on('currentPeriodChanged', (event, args) => {
-      this.periodId = args.currentPeriod.periodId;
+    this.TeacherDataService.currentPeriodChanged$.subscribe(({ currentPeriod }) => {
+      this.periodId = currentPeriod.periodId;
       this.filterForPeriod();
     });
   }

@@ -32,7 +32,7 @@ class MilestoneDetailsController {
   ) {
     this.$translate = $filter('translate');
     this.periodId = this.TeacherDataService.getCurrentPeriod().periodId;
-    $scope.$on('currentPeriodChanged', (event, { currentPeriod }) => {
+    this.TeacherDataService.currentPeriodChanged$.subscribe(({ currentPeriod }) => {
       this.periodId = currentPeriod.periodId;
       this.saveMilestoneCurrentPeriodSelectedEvent(currentPeriod);
     });

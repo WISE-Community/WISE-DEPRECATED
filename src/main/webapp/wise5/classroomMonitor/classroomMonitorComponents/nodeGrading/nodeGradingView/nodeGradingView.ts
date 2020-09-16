@@ -130,7 +130,7 @@ class NodeGradingViewController {
       }
     });
 
-    this.$scope.$on('currentPeriodChanged', () => {
+    this.TeacherDataService.currentPeriodChanged$.subscribe(() => {
       if (!this.milestone) {
         this.milestoneReport = this.MilestoneService.getMilestoneReportByNodeId(this.nodeId);
       }
