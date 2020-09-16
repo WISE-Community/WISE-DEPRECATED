@@ -6,7 +6,6 @@ import * as $ from 'jquery';
 import * as angular from 'angular';
 
 class StudentGradingToolsController {
-  $scope: any;
   $translate: any;
   avatarColor: string;
   icons: any;
@@ -30,7 +29,7 @@ class StudentGradingToolsController {
 
   constructor(
     $filter: any,
-    $scope: any,
+    private $scope: any,
     private $state: any,
     private orderBy: any,
     private ConfigService: ConfigService,

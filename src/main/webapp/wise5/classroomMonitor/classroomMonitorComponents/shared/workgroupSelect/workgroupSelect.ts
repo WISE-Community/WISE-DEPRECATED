@@ -5,7 +5,6 @@ import { TeacherDataService } from '../../../../services/teacherDataService';
 import * as angular from 'angular';
 
 class WorkgroupSelectController {
-  $scope: any;
   $translate: any;
   byStudent: boolean;
   canViewStudentNames: boolean;
@@ -20,14 +19,14 @@ class WorkgroupSelectController {
   static $inject = ['$filter', '$scope', 'orderByFilter', 'ConfigService', 'TeacherDataService'];
   constructor(
     $filter: any,
-    $scope: any,
+    private $scope: any,
     private orderBy: any,
     private ConfigService: ConfigService,
     private TeacherDataService: TeacherDataService
   ) {
     this.$translate = $filter('translate');
 
-    $scope.$on('currentWorkgroupChanged', (event, args) => {
+    this.$scope.$on('currentWorkgroupChanged', (event, args) => {
       let workgroup = args.currentWorkgroup;
       if (workgroup != null) {
         this.setWorkgroups();

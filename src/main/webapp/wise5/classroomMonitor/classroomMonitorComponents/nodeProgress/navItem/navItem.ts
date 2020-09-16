@@ -71,7 +71,6 @@ class NavItemController {
   ) {
     this.$element = $element;
     this.$rootScope = $rootScope;
-    this.$scope = $scope;
     this.AnnotationService = AnnotationService;
     this.ConfigService = ConfigService;
     this.NotificationService = NotificationService;

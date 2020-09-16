@@ -5,7 +5,6 @@ import { TeacherDataService } from '../../../../services/teacherDataService';
 import { TeacherProjectService } from '../../../../services/teacherProjectService';
 
 class PeriodSelectController {
-  $scope: any;
   $translate: any;
   currentPeriod: any;
   periods: any;
@@ -21,7 +20,7 @@ class PeriodSelectController {
 
   constructor(
     $filter: any,
-    $scope: any,
+    private $scope: any,
     private ProjectService: TeacherProjectService,
     private StudentStatusService: StudentStatusService,
     private TeacherDataService: TeacherDataService

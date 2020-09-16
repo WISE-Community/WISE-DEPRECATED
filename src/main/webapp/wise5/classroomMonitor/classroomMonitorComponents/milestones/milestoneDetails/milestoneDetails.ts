@@ -7,7 +7,6 @@ import { NodeService } from '../../../../services/nodeService';
 import { TeacherProjectService } from '../../../../services/teacherProjectService';
 
 class MilestoneDetailsController {
-  $scope: any;
   $translate: any;
   onShowWorkgroup: any;
   onVisitNodeGrading: any;
@@ -26,13 +25,12 @@ class MilestoneDetailsController {
   ];
   constructor(
     $filter,
-    $scope,
+    private $scope,
     private ConfigService: ConfigService,
     private NodeService: NodeService,
     private ProjectService: TeacherProjectService,
     private TeacherDataService: TeacherDataService
   ) {
-    this.$scope = $scope;
     this.$translate = $filter('translate');
     this.periodId = this.TeacherDataService.getCurrentPeriod().periodId;
     this.currentPeriodChangedSubscription = this.TeacherDataService.currentPeriodChanged$

@@ -62,7 +62,7 @@ class StudentGradingController {
     private StudentStatusService: StudentStatusService,
     private TeacherDataService: TeacherDataService
   ) {
-    $scope.$mdMedia = $mdMedia;
+    this.$scope.$mdMedia = $mdMedia;
     this.$translate = $filter('translate');
 
     this.$scope.$on('projectSaved', (event, args) => {
