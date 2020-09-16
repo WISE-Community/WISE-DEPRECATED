@@ -88,6 +88,8 @@ export class StudentDataService extends DataService {
   public pauseScreen$ = this.pauseScreenSource.asObservable();
   private componentStudentDataSource: Subject<any> = new Subject<any>();
   public componentStudentData$ = this.componentStudentDataSource.asObservable();
+  private currentNodeChangedSource: Subject<any> = new Subject<any>();
+  public currentNodeChanged$ = this.currentNodeChangedSource.asObservable();
 
   constructor(private upgrade: UpgradeModule,
       public http: HttpClient,
@@ -1355,11 +1357,15 @@ export class StudentDataService extends DataService {
         this.previousStep = previousCurrentNode;
       }
       this.currentNode = node;
-      this.upgrade.$injector.get('$rootScope').$broadcast('currentNodeChanged', {
+      this.broadcastCurrentNodeChanged({
         previousNode: previousCurrentNode,
         currentNode: this.currentNode
       });
     }
+  }
+
+  broadcastCurrentNodeChanged(previousAndCurrentNode: any) {
+    this.currentNodeChangedSource.next(previousAndCurrentNode);
   }
 
   endCurrentNode() {

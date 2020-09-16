@@ -8,6 +8,17 @@ class WiselinkController {
     this.StudentDataService = StudentDataService;
     this.$timeout = $timeout;
     this.template;
+    this.$scope.$on('$destroy', () => {
+      this.ngOnDestroy();
+    });
+  }
+
+  ngOnDestroy() {
+    this.unsubscribeAll();
+  }
+
+  unsubscribeAll() {
+    this.currentNodeChangedSubscription.unsubscribe();
   }
 
   $onInit() {
@@ -60,7 +71,8 @@ class WiselinkController {
   }
 
   goToNode(currentNode) {
-    this.$scope.$on('currentNodeChanged', (event, args) => {
+    this.currentNodeChangedSubscription = this.StudentDataService.currentNodeChanged$
+        .subscribe(() => {
       if (this.componentId != null && currentNode != null && currentNode.id === this.nodeId) {
         this.scrollAndHighlightComponent();
       }

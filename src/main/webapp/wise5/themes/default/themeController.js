@@ -75,7 +75,8 @@ class ThemeController {
     this.setLayoutState();
 
     // update layout state when current node changes
-    this.$scope.$on('currentNodeChanged', (event, args) => {
+    this.currentNodeChangedSubscription = this.StudentDataService.currentNodeChanged$
+        .subscribe(() => {
       this.currentNode = this.StudentDataService.getCurrentNode();
       this.setLayoutState();
     });
@@ -309,6 +310,18 @@ class ThemeController {
         eventData
       );
     });
+
+    this.$scope.$on('$destroy', () => {
+      this.ngOnDestroy();
+    });
+  }
+
+  ngOnDestroy() {
+    this.unsubscribeAll();
+  }
+
+  unsubscribeAll() {
+    this.currentNodeChangedSubscription.unsubscribe();
   }
 
   /**
