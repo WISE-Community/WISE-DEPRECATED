@@ -109,10 +109,6 @@ class AuthorNotebookController {
     this.setReportIdToAuthoringNote(note.reportId, authoringReportNote);
   }
 
-  /**
-   * Creates and returns a function so that within the function the 'this' object will be this
-   * authorNotebookController.
-   */
   createOpenAssetChooserFunction() {
     return (params: any) => {
       this.ProjectAssetService.openAssetChooser(params).then(

@@ -68,10 +68,6 @@ class RubricAuthoringController {
     );
   }
 
-  /**
-   * Creates and returns a function so that within the function the 'this' object will be this
-   * rubricAuthoringController.
-   */
   createOpenAssetChooserFunction() {
     return (params: any) => {
       this.ProjectAssetService.openAssetChooser(params).then(

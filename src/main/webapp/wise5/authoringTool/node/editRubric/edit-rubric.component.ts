@@ -50,10 +50,6 @@ class EditRubricComponentController {
     this.summernoteRubricHTML = this.ProjectService.replaceAssetPaths(this.node.rubric);
   }
 
-  /**
-   * Creates and returns a function so that within the function the 'this' object will be this
-   * authorNotebookController.
-   */
   createOpenAssetChooserFunction() {
     return (params: any) => {
       this.ProjectAssetService.openAssetChooser(params).then(
