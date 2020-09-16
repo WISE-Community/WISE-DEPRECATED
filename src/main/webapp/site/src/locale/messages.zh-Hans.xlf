@@ -1660,7 +1660,7 @@
           <context context-type="sourcefile">app/modules/library/official-library/official-library.component.html</context>
           <context context-type="linenumber">38</context>
         </context-group>
-        <target state="translated">WISE测试的是什么？</target>
+        <target state="translated">什么是经过WISE测试的课程？</target>
       </trans-unit>
       <trans-unit datatype="html" id="5080207bff284204adb9544ae12ef39917aa74ae">
         <source>WISE Tested</source>
@@ -1668,7 +1668,7 @@
           <context context-type="sourcefile">app/modules/library/official-library/official-library-details.html</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="translated">WISE测试</target>
+        <target state="translated">经过WISE测试的课程</target>
       </trans-unit>
       <trans-unit datatype="html" id="babd041c8f47bf5bb8dcabfc02d9904a8e363c9c">
         <source>The "WISE Tested" library contains curricula developed by the WISE team.</source>
@@ -1676,7 +1676,7 @@
           <context context-type="sourcefile">app/modules/library/official-library/official-library-details.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-        <target state="translated">"WISE已测试"库包含WISE团队开发的课程。</target>
+        <target state="translated">"经过WISE测试的课程"库包含WISE团队开发的课程。</target>
       </trans-unit>
       <trans-unit datatype="html" id="cda4813957412f125af0b3c464de60460ca0fe2f">
         <source>Each of the units in this collection has been designed and iteratively refined through a partnership of university-based education researchers and science teachers. They have all been implemeneted and tested in real classrooms and have shown proven learning gains.</source>
@@ -1684,7 +1684,7 @@
           <context context-type="sourcefile">app/modules/library/official-library/official-library-details.html</context>
           <context context-type="linenumber">5</context>
         </context-group>
-        <target state="translated">该系列中的每个单元都是通过大学教育研究人员和科学教师的合作设计和迭代完善的。 它们都在真实的教室中进行了实施和测试，并且已经证明具有一定的学习成效。</target>
+        <target state="translated">该系列中的每个课程都是由大学教育研究者和科学教师合作设计并经反复迭代完善的课程。这些课程都已经在真实的教学情境中进行过实施和测试，证明具有一定的教学功效。</target>
       </trans-unit>
       <trans-unit datatype="html" id="e67065cfae11c998159fc6722e70e4ee76db2c8f">
         <source><x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>Learn more<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/> about our design process and <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK_1"/>check out our research and publications<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/>.</source>
@@ -1692,7 +1692,7 @@
           <context context-type="sourcefile">app/modules/library/official-library/official-library-details.html</context>
           <context context-type="linenumber">6</context>
         </context-group>
-        <target state="translated"><x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>了解更多<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> 我们的设计过程和 <x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>查看我们的研究和出版物<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>.</target>
+        <target state="translated"><x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>进一步了解<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/> 我们的设计过程，并<x id="START_LINK_1" ctype="x-a" equiv-text="&lt;a&gt;"/>查看我们的研究和出版物<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>。</target>
       </trans-unit>
       <trans-unit datatype="html" id="4d4b87e130f67964a35a56bdd05df593406fcc17">
         <source>Teacher unit library navigation</source>
@@ -2056,7 +2056,7 @@
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
           <context context-type="linenumber">31</context>
         </context-group>
-        <target state="translated">访问代码：<x id="INTERPOLATION" equiv-text="{{ run.runCode }}"/></target>
+        <target state="translated">访问码：<x id="INTERPOLATION" equiv-text="{{ run.runCode }}"/></target>
       </trans-unit>
       <trans-unit datatype="html" id="534ba8ba6d05fed93bd074e67fb6d03d2e466b46">
         <source>Important: Every classroom unit has a unique Access Code. Students use this code to register for a unit. Give the code to your students when they first sign up for a WISE account. If they already have WISE accounts, have them log in and then select "Add Unit" from the student home page.</source>
@@ -2064,7 +2064,7 @@
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
           <context context-type="linenumber">76</context>
         </context-group>
-        <target state="translated">重要提示：每个课堂单元都有唯一的访问代码。 学生可使用此代码注册一个单元。 当学生首次注册WISE帐户时，请将代码提供给他们。 如果他们已经拥有WISE帐户，请让他们登录，然后从学生主页中选择“添加单元”。</target>
+        <target state="translated">重要提示：在每一轮上课时都需要一个唯一的课程运行访问码，学生可使用此代码注册上课。 当学生首次注册WISE帐户时，请给他们提供此代码。 如果他们已经拥有WISE帐户，请让他们登录，然后从学生主页中选择“添加课程”。</target>
       </trans-unit>
       <trans-unit datatype="html" id="f2069492a5ba2249fb5f24e59009120d73623289">
         <source>You can always find the Access Code for each classroom unit in your Class Schedule.</source>
@@ -2072,7 +2072,7 @@
           <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
           <context context-type="linenumber">77</context>
         </context-group>
-        <target state="translated">您可以在您的课程表中找到每个学习单元的访问代码。</target>
+        <target state="translated">您可以在您的课程表中找到每个正在进行中的课程的访问码。</target>
       </trans-unit>
       <trans-unit datatype="html" id="e57f5a8a6dae5484ae05dbdff681c11ec42c732f">
         <source> Share to Google Classroom </source>
@@ -2552,7 +2552,7 @@
           <context context-type="sourcefile">app/modules/library/community-library/community-library.component.html</context>
           <context context-type="linenumber">3</context>
         </context-group>
-        <target state="translated">什么是学习社区建设？</target>
+        <target state="translated">什么是社区制作课程？</target>
       </trans-unit>
       <trans-unit datatype="html" id="4f6276982b612e3be0a1c89c456d29506016d863">
         <source>No community designed units found.</source>
@@ -2568,7 +2568,7 @@
           <context context-type="sourcefile">app/modules/library/community-library/community-library-details.html</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="translated">学习社区建设</target>
+        <target state="translated">社区制作课程</target>
       </trans-unit>
       <trans-unit datatype="html" id="adc984d8f77dc423434e753052fcf8b519a4d69d">
         <source>The "Community Built" library contains units that were designed and contributed by WISE community members. Want to publicly share your custom unit? <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>Contact Us<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/>!</source>
@@ -2576,7 +2576,7 @@
           <context context-type="sourcefile">app/modules/library/community-library/community-library-details.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-        <target state="translated">"学习社区建设"库包含由WISE学习社区成员设计和贡献的课程学习单元。 您想公开分享您的自定义单元吗？ <x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>请联系我们<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>!</target>
+        <target state="translated">"社区制作课程"库包含由WISE社区成员所设计和贡献的课程。 想公开分享您自己制作的课程吗？<x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>请联系我们<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/>!</target>
       </trans-unit>
       <trans-unit datatype="html" id="1f519374aa2d63b8d101da2f56f778edf9052131">
         <source>*Please note: While WISE staff have reviewed the units listed here, we cannot specifically vouch for their effectiveness or quality. Please examine the units carefully before using in your classrooms. Thanks!</source>
@@ -2584,7 +2584,7 @@
           <context context-type="sourcefile">app/modules/library/community-library/community-library-details.html</context>
           <context context-type="linenumber">5</context>
         </context-group>
-        <target state="translated">请注意：虽然WISE工作人员已经审查了此处列出的课程学习单元，但我们无法保证其有效性或质量。 在课堂上使用之前请仔细检查学习单元。 谢谢！</target>
+        <target state="translated">请注意：虽然WISE工作人员已经审查了此处列出的课程，但我们无法保证其有效性或质量。请在课堂上使用之前仔细检查课程内容。谢谢！</target>
       </trans-unit>
       <trans-unit datatype="html" id="c7dd4f5065afe35f6940c8c4214cbf4c02cd32fc">
         <source>What are My Units?</source>
@@ -2592,7 +2592,7 @@
           <context context-type="sourcefile">app/modules/library/personal-library/personal-library.component.html</context>
           <context context-type="linenumber">3</context>
         </context-group>
-        <target state="translated">什么是我的学习单元？</target>
+        <target state="translated">什么是我的课程？</target>
       </trans-unit>
       <trans-unit datatype="html" id="329cfb58bde439dc1f1839ebf205991382a9a2de">
         <source>No owned or shared units found.</source>
@@ -2608,7 +2608,7 @@
           <context context-type="sourcefile">app/modules/library/personal-library/personal-library-details.html</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="translated">我的学习单元</target>
+        <target state="translated">我的课程</target>
       </trans-unit>
       <trans-unit datatype="html" id="35f92c76101a5f5b5010e09dedea982832cf1e87">
         <source>The "My Units" library contains curriculum units that you own or that have been shared with you by other WISE users.</source>
@@ -2616,7 +2616,7 @@
           <context context-type="sourcefile">app/modules/library/personal-library/personal-library-details.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-        <target state="translated">"我的单元"库列出了您自己拥有的课程单元或其他WISE用户给您共享的课程单元。</target>
+        <target state="translated">"我的课程"库列出了您自己拥有的课程或其他WISE用户给您共享的课程。</target>
       </trans-unit>
       <trans-unit datatype="html" id="855dab22c74d8f9a4e55113cef0c528802dc7bec">
         <source>Units that you create using the WISE Authoring Tool will appear here. Any units that you copy will also be listed here.</source>
@@ -2624,7 +2624,7 @@
           <context context-type="sourcefile">app/modules/library/personal-library/personal-library-details.html</context>
           <context context-type="linenumber">5</context>
         </context-group>
-        <target state="translated">您使用WISE编辑工具创建的课程学习单元将显示在此处。 您复制的课程学习单元也将显示在此处。</target>
+        <target state="translated">您使用WISE著作工具创建的课程将显示在此处，您复制的课程也将显示在此处。</target>
       </trans-unit>
       <trans-unit datatype="html" id="4c00c8f929591b166c1e22e74a414a4dd42ff00b">
         <source>Thank you for contacting WISE!</source>
@@ -3576,7 +3576,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">110</context>
         </context-group>
-        <target state="translated">单击"浏览WISE学习单元"选项卡。</target>
+        <target state="translated">单击"浏览WISE课程"选项卡。</target>
       </trans-unit>
       <trans-unit datatype="html" id="6aad599c3073e68956b4f15a368db489510bbe7e">
         <source>Find a project that you would like to use with your class.</source>
@@ -3684,7 +3684,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">35</context>
         </context-group>
-        <target state="translated">复制"访问代码"使学习单元处于新的执行状态，并将其写在类似于白板的地方。 学生需要使用此访问代码参与到您创建的新课程单元中。</target>
+        <target state="translated">请将这个新的"访问码"记录在某个地方，比如白板上。在进行新一轮的课程教学时，学生需要使用此代码进入您创建的新一轮课程运行中。</target>
       </trans-unit>
       <trans-unit datatype="html" id="688edac32995bc4fd9d4d04172c545200250a958">
         <source>Teacher FAQ</source>
@@ -4224,7 +4224,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">87</context>
         </context-group>
-        <target state="translated">我不记得学生需要的教师访问码，这时需要为我的新学生创建他们的帐户。</target>
+        <target state="translated">我不记得学生创建新的账号时所需要的教师访问码了。</target>
       </trans-unit>
       <trans-unit datatype="html" id="800efa41db8f7709cb535c6d48b3f49f603d634c">
         <source>The Access Code will be displayed below the run title.</source>
@@ -4232,7 +4232,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">91</context>
         </context-group>
-        <target state="translated">访问码将显示在运行项目标题的下方。</target>
+        <target state="translated">课程代码将显示在正在进行的课程标题的下方。</target>
       </trans-unit>
       <trans-unit datatype="html" id="e23e4609edb082ee01454228ae34637e0e21f82a">
         <source>When should I set up my project run?</source>
@@ -4248,7 +4248,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">97</context>
         </context-group>
-        <target state="translated">您需要在学生开始学习项目之前及时设置项目运行。 他们需要访问码才能在运行的项目中开始学习任务。</target>
+        <target state="translated">您需要在学生开始课程学习之前设置好新一轮的课程运行。 他们需要这个新一轮课程运行的访问码才能开始学习任务。</target>
       </trans-unit>
       <trans-unit datatype="html" id="61504e3160c50523130413ebf4b97bf35a3c7eb8">
         <source>How long does it take to run a project?</source>
@@ -4876,7 +4876,7 @@
           <context context-type="sourcefile">app/help/student-faq/student-faq.component.html</context>
           <context context-type="linenumber">28</context>
         </context-group>
-        <target state="translated">如果要开始参与项目学习，您必须从老师那里获取访问码。 获得访问码后，请按照以下说明操作。</target>
+        <target state="translated">如果要开始一个课程的学习，你必须从老师那里获取课程访问码。 获得访问码后，请按照以下说明操作。</target>
       </trans-unit>
       <trans-unit datatype="html" id="6ad63a4282b7f50738ef1f9293cc8d44bb81a3b0">
         <source>Log into WISE with your student account.</source>
@@ -5628,7 +5628,7 @@
           <context context-type="sourcefile">app/student/student-home/student-home.component.html</context>
           <context context-type="linenumber">19</context>
         </context-group>
-        <target state="translated">添加学习单元</target>
+        <target state="translated">添加课程</target>
       </trans-unit>
       <trans-unit datatype="html" id="190a0caf6ddac8b5347008c55791abc9e26655d8">
         <source>Access Code</source>
@@ -5676,7 +5676,7 @@
           <context context-type="sourcefile">app/student/student-home/student-home.component.html</context>
           <context context-type="linenumber">16</context>
         </context-group>
-        <target state="translated">添加学习单元</target>
+        <target state="translated">添加课程</target>
       </trans-unit>
       <trans-unit datatype="html" id="2278f83021a218f6d93e2cea52ba171c864b7b9d">
         <source>Hey there! Looks like you don't have any WISE units yet.</source>
@@ -5692,7 +5692,7 @@
           <context context-type="sourcefile">app/student/student-run-list/student-run-list.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
-        <target state="translated">请向您的教师询问 <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>访问码<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/> ，然后点击 <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>添加学习单元<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/> 按钮以开始新的学习。</target>
+        <target state="translated">请向您的教师询问 <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>访问码<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/> ，然后点击 <x id="START_BOLD_TEXT" ctype="x-b" equiv-text="&lt;b&gt;"/>添加课程<x id="CLOSE_BOLD_TEXT" ctype="x-b" equiv-text="&lt;/b&gt;"/> 按钮以开始新的学习。</target>
       </trans-unit>
       <trans-unit datatype="html" id="5b6d466cdfc67986fb402712d003dd3a455a3507">
         <source>Units found: <x equiv-text="{{ filteredRuns.length }}" id="INTERPOLATION"/></source>
@@ -5736,7 +5736,7 @@
           <context context-type="sourcefile">app/teacher/teacher-run-list/teacher-run-list.component.html</context>
           <context context-type="linenumber">33</context>
         </context-group>
-        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ activeTotal() }}"/> 有效</target>
+        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ activeTotal() }}"/> 个正在进行中</target>
       </trans-unit>
       <trans-unit datatype="html" id="c3840ff3430f7c6130e4d7a2f0aec5a7cb3ebb3a">
         <source><x equiv-text="{{ completedTotal() }}" id="INTERPOLATION"/> completed</source>
@@ -5748,7 +5748,7 @@
           <context context-type="sourcefile">app/teacher/teacher-run-list/teacher-run-list.component.html</context>
           <context context-type="linenumber">34</context>
         </context-group>
-        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ completedTotal() }}"/> 已完成</target>
+        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ completedTotal() }}"/> 个已完成</target>
       </trans-unit>
       <trans-unit datatype="html" id="13c602751734f72430891c9781167bf53c612481">
         <source>Team Sign In</source>
@@ -5876,7 +5876,7 @@
           <context context-type="sourcefile">app/student/student-run-list-item/student-run-list-item.component.html</context>
           <context context-type="linenumber">79</context>
         </context-group>
-        <target state="translated">查看进展情况</target>
+        <target state="translated">查看完成情况</target>
       </trans-unit>
       <trans-unit datatype="html" id="a41a1ea741ebed7a4ff655f233fc2d275b9bfa42">
         <source>Account Info</source>
@@ -5972,7 +5972,7 @@
           <context context-type="sourcefile">app/teacher/teacher-run-list/teacher-run-list.component.html</context>
           <context context-type="linenumber">30</context>
         </context-group>
-        <target state="translated">全部课堂学习单元：<x id="INTERPOLATION" equiv-text="{{ filteredRuns.length }}"/></target>
+        <target state="translated">全部课程运行：<x id="INTERPOLATION" equiv-text="{{ filteredRuns.length }}"/></target>
       </trans-unit>
       <trans-unit datatype="html" id="9a208893f13987ce5a706b3b5e4fed09e486cb5d">
         <source>periods</source>
@@ -6452,7 +6452,7 @@
       </trans-unit>
       <trans-unit id="6202932382081568456">
         <source>Hi class! Please complete the "<x id="unitTitle"/>" WISE unit. (Access Code: <x id="accessCode"/>)</source>
-        <target state="translated">您好，同学们，请完成 "<x id="unitTitle"/>" WISE单元。 (访问码： <x id="accessCode"/>)</target>
+        <target state="translated">您好，同学们，请完成 "<x id="unitTitle"/>" WISE课程。 (访问码： <x id="accessCode"/>)</target>
       </trans-unit>
       <trans-unit id="2719481583773153034">
         <source>(Section <x id="section"/>)</source>
@@ -6496,15 +6496,15 @@
       </trans-unit>
       <trans-unit id="8381440848283879343">
         <source>WISE Tested</source>
-        <target state="translated">WISE测试</target>
+        <target state="translated">经过WISE测试的课程</target>
       </trans-unit>
       <trans-unit id="4827877614369437209">
         <source>Community Built</source>
-        <target state="translated">学习社区建设</target>
+        <target state="translated">社区制作课程</target>
       </trans-unit>
       <trans-unit id="4742841752997470251">
         <source>My Units</source>
-        <target state="translated">我的学习单元</target>
+        <target state="translated">我的课程</target>
       </trans-unit>
       <trans-unit id="4568352014425961102">
         <source>There was an error trying to copy the project. Please refresh the page and try again.</source>
@@ -6708,11 +6708,11 @@
       </trans-unit>
       <trans-unit id="4778985982508820766">
         <source>Class Schedule</source>
-        <target state="translated">班级课程表</target>
+        <target state="translated">我的课程表</target>
       </trans-unit>
       <trans-unit id="968047685667963368">
         <source>Browse WISE Units</source>
-        <target state="translated">浏览WISE学习单元</target>
+        <target state="translated">浏览WISE课程</target>
       </trans-unit>
       <trans-unit id="4967231969832964676">
         <source>Profile updated.</source>
