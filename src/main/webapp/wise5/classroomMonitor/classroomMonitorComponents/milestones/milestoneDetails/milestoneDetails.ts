@@ -7,12 +7,14 @@ import { NodeService } from '../../../../services/nodeService';
 import { TeacherProjectService } from '../../../../services/teacherProjectService';
 
 class MilestoneDetailsController {
+  $scope: any;
   $translate: any;
   onShowWorkgroup: any;
   onVisitNodeGrading: any;
   milestone: any;
   periodId: number;
   requirements: any;
+  currentPeriodChangedSubscription: any;
 
   static $inject = [
     '$filter',
@@ -30,12 +32,25 @@ class MilestoneDetailsController {
     private ProjectService: TeacherProjectService,
     private TeacherDataService: TeacherDataService
   ) {
+    this.$scope = $scope;
     this.$translate = $filter('translate');
     this.periodId = this.TeacherDataService.getCurrentPeriod().periodId;
-    this.TeacherDataService.currentPeriodChanged$.subscribe(({ currentPeriod }) => {
+    this.currentPeriodChangedSubscription = this.TeacherDataService.currentPeriodChanged$
+        .subscribe(({ currentPeriod }) => {
       this.periodId = currentPeriod.periodId;
       this.saveMilestoneCurrentPeriodSelectedEvent(currentPeriod);
     });
+    this.$scope.$on('$destroy', () => {
+      this.ngOnDestroy();
+    });
+  }
+
+  ngOnDestroy() {
+    this.unsubscribeAll();
+  }
+
+  unsubscribeAll() {
+    this.currentPeriodChangedSubscription.unsubscribe();
   }
 
   $onInit() {

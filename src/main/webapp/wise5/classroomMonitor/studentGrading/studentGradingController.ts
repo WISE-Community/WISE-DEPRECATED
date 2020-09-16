@@ -31,7 +31,8 @@ class StudentGradingController {
   sort: any;
   totalScore: number;
   workgroupId: number;
-
+  currentPeriodChangedSubscription: any;
+  
   static $inject = [
     '$filter',
     '$mdMedia',
@@ -113,7 +114,8 @@ class StudentGradingController {
       }
     });
 
-    this.TeacherDataService.currentPeriodChanged$.subscribe(({ currentPeriod }) => {
+    this.currentPeriodChangedSubscription = this.TeacherDataService.currentPeriodChanged$
+        .subscribe(({ currentPeriod }) => {
       let periodId = currentPeriod.periodId;
       let currentWorkgroup = this.TeacherDataService.getCurrentWorkgroup();
       if (!currentWorkgroup) {
@@ -132,6 +134,7 @@ class StudentGradingController {
 
     this.$scope.$on('$destroy', () => {
       this.TeacherDataService.setCurrentWorkgroup(null);
+      this.ngOnDestroy();
     });
 
     const context = 'ClassroomMonitor',
@@ -150,6 +153,14 @@ class StudentGradingController {
       event,
       data
     );
+  }
+
+  ngOnDestroy() {
+    this.unsubscribeAll();
+  }
+
+  unsubscribeAll() {
+    this.currentPeriodChangedSubscription.unsubscribe();
   }
 
   $onInit() {

@@ -8,6 +8,7 @@ import { TeacherDataService } from '../../services/teacherDataService';
 class MilestonesController {
   $translate: any;
   milestones: any[];
+  currentPeriodChangedSubscription: any;
   static $inject = [
     '$filter',
     '$mdDialog',
@@ -39,7 +40,8 @@ class MilestonesController {
       }
     });
 
-    this.TeacherDataService.currentPeriodChanged$.subscribe(() => {
+    this.currentPeriodChangedSubscription = this.TeacherDataService.currentPeriodChanged$
+        .subscribe(() => {
       for (let milestone of this.milestones) {
         this.updateMilestoneStatus(milestone.id);
       }
@@ -63,6 +65,18 @@ class MilestonesController {
     this.$scope.$on('milestoneDeleted', () => {
       this.loadProjectMilestones();
     });
+
+    this.$scope.$on('$destroy', () => {
+      this.ngOnDestroy();
+    });
+  }
+
+  ngOnDestroy() {
+    this.unsubscribeAll();
+  }
+
+  unsubscribeAll() {
+    this.currentPeriodChangedSubscription.unsubscribe();
   }
 
   loadProjectMilestones() {

@@ -5,6 +5,7 @@ import { TeacherDataService } from '../../../../services/teacherDataService';
 import * as angular from 'angular';
 
 class WorkgroupSelectController {
+  $scope: any;
   $translate: any;
   byStudent: boolean;
   canViewStudentNames: boolean;
@@ -14,6 +15,7 @@ class WorkgroupSelectController {
   searchTerm: string;
   selectedItem: any;
   workgroups: any;
+  currentPeriodChangedSubscription: any;
 
   static $inject = ['$filter', '$scope', 'orderByFilter', 'ConfigService', 'TeacherDataService'];
   constructor(
@@ -31,10 +33,22 @@ class WorkgroupSelectController {
         this.setWorkgroups();
       }
     });
-    this.TeacherDataService.currentPeriodChanged$.subscribe(({ currentPeriod }) => {
+    this.currentPeriodChangedSubscription = this.TeacherDataService.currentPeriodChanged$
+        .subscribe(({ currentPeriod }) => {
       this.periodId = currentPeriod.periodId;
       this.setWorkgroups();
     });
+    this.$scope.$on('$destroy', () => {
+      this.ngOnDestroy();
+    });
+  }
+
+  ngOnDestroy() {
+    this.unsubscribeAll();
+  }
+
+  unsubscribeAll() {
+    this.currentPeriodChangedSubscription.unsubscribe();
   }
 
   $onInit() {

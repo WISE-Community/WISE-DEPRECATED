@@ -38,6 +38,7 @@ class NavItemController {
   rubricIconName: string;
   showPosition: any;
   workgroupsOnNodeData: any;
+  currentPeriodChangedSubscription: any;
 
   static $inject = [
     '$element',
@@ -191,11 +192,24 @@ class NavItemController {
       this.getAlertNotifications();
     });
 
-    this.TeacherDataService.currentPeriodChanged$.subscribe(({ currentPeriod }) => {
+    this.currentPeriodChangedSubscription = this.TeacherDataService.currentPeriodChanged$
+        .subscribe(({ currentPeriod }) => {
       this.currentPeriod = currentPeriod;
       this.setWorkgroupsOnNodeData();
       this.getAlertNotifications();
     });
+
+    this.$scope.$on('$destroy', () => {
+      this.ngOnDestroy();
+    });
+  }
+
+  ngOnDestroy() {
+    this.unsubscribeAll();
+  }
+
+  unsubscribeAll() {
+    this.currentPeriodChangedSubscription.unsubscribe();
   }
 
   zoomToElement() {

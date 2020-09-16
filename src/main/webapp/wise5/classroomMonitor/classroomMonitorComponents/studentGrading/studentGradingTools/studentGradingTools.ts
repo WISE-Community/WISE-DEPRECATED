@@ -6,6 +6,7 @@ import * as $ from 'jquery';
 import * as angular from 'angular';
 
 class StudentGradingToolsController {
+  $scope: any;
   $translate: any;
   avatarColor: string;
   icons: any;
@@ -16,6 +17,7 @@ class StudentGradingToolsController {
   selectTeamPlaceholder: string;
   workgroupId: number;
   workgroups: any;
+  currentPeriodChangedSubscription: any;
 
   static $inject = [
     '$filter',
@@ -42,10 +44,22 @@ class StudentGradingToolsController {
       this.icons = { prev: 'chevron_right', next: 'chevron_left' };
     }
 
-    this.TeacherDataService.currentPeriodChanged$.subscribe(({ currentPeriod }) => {
+    this.currentPeriodChangedSubscription = this.TeacherDataService.currentPeriodChanged$
+        .subscribe(({ currentPeriod }) => {
       this.periodId = currentPeriod.periodId;
       this.filterForPeriod();
     });
+    this.$scope.$on('$destroy', () => {
+      this.ngOnDestroy();
+    });
+  }
+
+  ngOnDestroy() {
+    this.unsubscribeAll();
+  }
+
+  unsubscribeAll() {
+    this.currentPeriodChangedSubscription.unsubscribe();
   }
 
   $onInit() {

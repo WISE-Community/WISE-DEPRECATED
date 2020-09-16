@@ -5,10 +5,12 @@ import { TeacherDataService } from '../../../../services/teacherDataService';
 import { TeacherProjectService } from '../../../../services/teacherProjectService';
 
 class PeriodSelectController {
+  $scope: any;
   $translate: any;
   currentPeriod: any;
   periods: any;
   rootNodeId: string;
+  currentPeriodChangedSubscription: any;
   static $inject = [
     '$filter',
     '$scope',
@@ -35,9 +37,21 @@ class PeriodSelectController {
     this.currentPeriod = null;
     this.periods = [];
     this.initializePeriods();
-    this.TeacherDataService.currentPeriodChanged$.subscribe(({ currentPeriod }) => {
+    this.currentPeriodChangedSubscription = this.TeacherDataService.currentPeriodChanged$
+        .subscribe(({ currentPeriod }) => {
       this.currentPeriod = currentPeriod;
     });
+    this.$scope.$on('$destroy', () => {
+      this.ngOnDestroy();
+    });
+  }
+
+  ngOnDestroy() {
+    this.unsubscribeAll();
+  }
+
+  unsubscribeAll() {
+    this.currentPeriodChangedSubscription.unsubscribe();
   }
 
   initializePeriods() {
