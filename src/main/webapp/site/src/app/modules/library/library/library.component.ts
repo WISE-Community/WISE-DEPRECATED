@@ -1,10 +1,11 @@
-import { EventEmitter, OnInit, Output, QueryList, ViewChildren } from '@angular/core';
+import { EventEmitter, OnInit, Output, QueryList, ViewChildren, Directive } from '@angular/core';
 import { ProjectFilterValues } from '../../../domain/projectFilterValues';
 import { LibraryService } from '../../../services/library.service';
 import { Standard } from '../standard';
 import { LibraryProject } from '../libraryProject';
 import { PageEvent, MatPaginator } from '@angular/material/paginator';
 
+@Directive()
 export abstract class LibraryComponent implements OnInit {
 
   projects: LibraryProject[] = [];

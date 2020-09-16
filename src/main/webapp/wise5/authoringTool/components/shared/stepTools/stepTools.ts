@@ -5,7 +5,9 @@ import { NodeService } from '../../../../services/nodeService';
 import { TeacherProjectService } from '../../../../services/teacherProjectService';
 import { TeacherDataService } from '../../../../services/teacherDataService';
 import * as $ from 'jquery';
+import { Directive } from '@angular/core';
 
+@Directive()
 class StepToolsController {
   is_rtl: boolean;
   icons: any;

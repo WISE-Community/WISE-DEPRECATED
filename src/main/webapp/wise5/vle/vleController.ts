@@ -9,7 +9,9 @@ import { SessionService } from '../services/sessionService';
 import { StudentDataService } from '../services/studentDataService';
 import * as angular from 'angular';
 import * as $ from 'jquery';
+import { Directive } from '@angular/core';
 
+@Directive()
 class VLEController {
   $translate: any;
   workgroupId: number;
