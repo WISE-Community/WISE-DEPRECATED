@@ -190,7 +190,7 @@ class ProjectAssetController {
       target: this.target,
       targetObject: this.targetObject
     };
-    this.$rootScope.$broadcast('assetSelected', params);
+    this.$mdDialog.hide(params);
   }
 
   /**

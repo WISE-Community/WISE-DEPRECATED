@@ -1,9 +1,11 @@
 'use strict';
 
 import * as angular from 'angular';
+import { ProjectAssetService } from '../../../site/src/app/services/projectAssetService';
 import HTMLController from './htmlController';
 
 class HTMLAuthoringController extends HTMLController {
+  ProjectAssetService: ProjectAssetService;
   summernotePromptHTML: string;
   summernotePromptOptions: any;
   summernotePromptId: string;
@@ -21,6 +23,7 @@ class HTMLAuthoringController extends HTMLController {
     'ConfigService',
     'NodeService',
     'NotebookService',
+    'ProjectAssetService',
     'ProjectService',
     'StudentAssetService',
     'StudentDataService',
@@ -40,6 +43,7 @@ class HTMLAuthoringController extends HTMLController {
     ConfigService,
     NodeService,
     NotebookService,
+    ProjectAssetService,
     ProjectService,
     StudentAssetService,
     StudentDataService,
@@ -63,6 +67,7 @@ class HTMLAuthoringController extends HTMLController {
       StudentDataService,
       UtilService
     );
+    this.ProjectAssetService = ProjectAssetService;
     this.summernotePromptHTML = '';
     this.summernotePromptOptions = {
       toolbar: [
@@ -93,7 +98,8 @@ class HTMLAuthoringController extends HTMLController {
           this.nodeId,
           this.componentId,
           'prompt',
-          this.$translate('INSERT_ASSET')
+          this.$translate('INSERT_ASSET'),
+          this.createOpenAssetChooserFunction()
         )
       },
       dialogsInBody: true
@@ -113,31 +119,33 @@ class HTMLAuthoringController extends HTMLController {
   }
 
   $onInit() {
-    this.registerAssetListener();
     this.registerWISELinkListener();
   }
 
-  registerAssetListener() {
-    this.$scope.$on('assetSelected', (event, { nodeId, componentId, assetItem, target }) => {
-      if (nodeId === this.nodeId && componentId === this.componentId) {
-        const fileName = assetItem.fileName;
-        const fullFilePath = `${this.ConfigService.getProjectAssetsDirectoryPath()}/${fileName}`;
-        if (target === 'prompt') {
-          this.UtilService.insertFileInSummernoteEditor(
-            `summernotePrompt_${this.nodeId}_${this.componentId}`,
-            fullFilePath,
-            fileName
-          );
-        } else {
-          this.UtilService.insertFileInSummernoteEditor(
-            `summernoteRubric_${this.nodeId}_${this.componentId}`,
-            fullFilePath,
-            fileName
-          );
-        }
-      }
-      this.$mdDialog.hide();
-    });
+  createOpenAssetChooserFunction() {
+    return (params: any) => {
+      this.ProjectAssetService.openAssetChooser(params).then(
+        (data: any) => { this.assetSelected(data) }
+      );
+    }
+  }
+
+  assetSelected({ nodeId, componentId, assetItem, target }) {
+    const fileName = assetItem.fileName;
+    const fullFilePath = `${this.ConfigService.getProjectAssetsDirectoryPath()}/${fileName}`;
+    if (target === 'prompt') {
+      this.UtilService.insertFileInSummernoteEditor(
+        `summernotePrompt_${this.nodeId}_${this.componentId}`,
+        fullFilePath,
+        fileName
+      );
+    } else {
+      this.UtilService.insertFileInSummernoteEditor(
+        `summernoteRubric_${this.nodeId}_${this.componentId}`,
+        fullFilePath,
+        fileName
+      );
+    }
   }
 
   registerWISELinkListener() {

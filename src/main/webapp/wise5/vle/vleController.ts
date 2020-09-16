@@ -31,6 +31,7 @@ class VLEController {
   reportItem: any;
   themePath: string;
   totalScore: any;
+  currentNodeChangedSubscription: any;
 
   static $inject = [
     '$anchorScroll',
@@ -141,8 +142,8 @@ class VLEController {
       this.logOut();
     });
 
-    this.$scope.$on('currentNodeChanged', (event, args) => {
-      let previousNode = args.previousNode;
+    this.currentNodeChangedSubscription = this.StudentDataService.currentNodeChanged$
+        .subscribe(({ previousNode }) => {
       let currentNode = this.StudentDataService.getCurrentNode();
       let currentNodeId = currentNode.id;
 
@@ -276,6 +277,18 @@ class VLEController {
         this.pauseScreen();
       }
     }
+
+    this.$scope.$on('$destroy', () => {
+      this.ngOnDestroy();
+    });
+  }
+
+  ngOnDestroy() {
+    this.unsubscribeAll();
+  }
+
+  unsubscribeAll() {
+    this.currentNodeChangedSubscription.unsubscribe();
   }
 
   goHome() {

@@ -1,8 +1,10 @@
 'use strict';
 
+import { ProjectAssetService } from '../../../site/src/app/services/projectAssetService';
 import AnimationController from './animationController';
 
 class AnimationAuthoringController extends AnimationController {
+  ProjectAssetService: ProjectAssetService;
   allowedConnectedComponentTypes: any[];
 
   static $inject = [
@@ -17,6 +19,7 @@ class AnimationAuthoringController extends AnimationController {
     'ConfigService',
     'NodeService',
     'NotebookService',
+    'ProjectAssetService',
     'ProjectService',
     'StudentAssetService',
     'StudentDataService',
@@ -35,6 +38,7 @@ class AnimationAuthoringController extends AnimationController {
     ConfigService,
     NodeService,
     NotebookService,
+    ProjectAssetService,
     ProjectService,
     StudentAssetService,
     StudentDataService,
@@ -57,6 +61,7 @@ class AnimationAuthoringController extends AnimationController {
       StudentDataService,
       UtilService
     );
+    this.ProjectAssetService = ProjectAssetService;
     this.allowedConnectedComponentTypes = [{ type: 'Animation' }, { type: 'Graph' }];
   }
 
@@ -69,32 +74,6 @@ class AnimationAuthoringController extends AnimationController {
     this.removeAllObjectsFromSVG();
     this.initializeCoordinates();
     this.setupSVG();
-  }
-
-  assetSelected(event, args) {
-    if (this.isEventTargetThisComponent(args)) {
-      const fileName = args.assetItem.fileName;
-      if (args.target === 'rubric') {
-        const summernoteId = this.getSummernoteId(args);
-        this.restoreSummernoteCursorPosition(summernoteId);
-        const fullAssetPath = this.getFullAssetPath(fileName);
-        if (this.UtilService.isImage(fileName)) {
-          this.insertImageIntoSummernote(summernoteId, fullAssetPath, fileName);
-        } else if (this.UtilService.isVideo(fileName)) {
-          this.insertVideoIntoSummernote(summernoteId, fullAssetPath);
-        }
-      } else if (args.target === 'image') {
-        args.targetObject.image = fileName;
-        this.authoringViewComponentChanged();
-      } else if (args.target === 'imageMovingLeft') {
-        args.targetObject.imageMovingLeft = fileName;
-        this.authoringViewComponentChanged();
-      } else if (args.target === 'imageMovingRight') {
-        args.targetObject.imageMovingRight = fileName;
-        this.authoringViewComponentChanged();
-      }
-    }
-    this.$mdDialog.hide();
   }
 
   removeAllObjectsFromSVG() {
@@ -280,19 +259,19 @@ class AnimationAuthoringController extends AnimationController {
   chooseImage(authoredObject) {
     const targetString = 'image';
     const params = this.createOpenAssetChooserParamsObject(targetString, authoredObject);
-    this.$rootScope.$broadcast('openAssetChooser', params);
+    this.openAssetChooser(params);
   }
 
   chooseImageMovingLeft(authoredObject) {
     const targetString = 'imageMovingLeft';
     const params = this.createOpenAssetChooserParamsObject(targetString, authoredObject);
-    this.$rootScope.$broadcast('openAssetChooser', params);
+    this.openAssetChooser(params);
   }
 
   chooseImageMovingRight(authoredObject) {
     const targetString = 'imageMovingRight';
     const params = this.createOpenAssetChooserParamsObject(targetString, authoredObject);
-    this.$rootScope.$broadcast('openAssetChooser', params);
+    this.openAssetChooser(params);
   }
 
   /**
@@ -308,6 +287,35 @@ class AnimationAuthoringController extends AnimationController {
       target: targetString,
       targetObject: authoredObject
     };
+  }
+
+  openAssetChooser(params: any) {
+    this.ProjectAssetService.openAssetChooser(params).then(
+      (data: any) => { this.assetSelected(data) }
+    );
+  }
+
+  assetSelected(args: any) {
+    const fileName = args.assetItem.fileName;
+    if (args.target === 'rubric') {
+      const summernoteId = this.getSummernoteId(args);
+      this.restoreSummernoteCursorPosition(summernoteId);
+      const fullAssetPath = this.getFullAssetPath(fileName);
+      if (this.UtilService.isImage(fileName)) {
+        this.insertImageIntoSummernote(summernoteId, fullAssetPath, fileName);
+      } else if (this.UtilService.isVideo(fileName)) {
+        this.insertVideoIntoSummernote(summernoteId, fullAssetPath);
+      }
+    } else if (args.target === 'image') {
+      args.targetObject.image = fileName;
+      this.authoringViewComponentChanged();
+    } else if (args.target === 'imageMovingLeft') {
+      args.targetObject.imageMovingLeft = fileName;
+      this.authoringViewComponentChanged();
+    } else if (args.target === 'imageMovingRight') {
+      args.targetObject.imageMovingRight = fileName;
+      this.authoringViewComponentChanged();
+    }
   }
 
   authoringAuthoredObjectTypeChanged(authoredObject) {

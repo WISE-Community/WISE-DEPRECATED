@@ -72,7 +72,7 @@
     <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'DELETE' | translate }}</md-tooltip>
   </md-button>
   <md-button id='editStepRubricButton' class='topButton md-raised md-primary'
-         ng-click='nodeAuthoringController.showEditRubricView()'
+         ng-click='nodeAuthoringController.editRubric()'
          ng-disabled='nodeAuthoringController.getSelectedComponentIds().length != 0 || nodeAuthoringController.insertComponentMode'
          ng-if='nodeAuthoringController.showStepButtons'>
     <md-icon>message</md-icon>
@@ -803,17 +803,6 @@
             style='width: 90%; border: 1px solid black;'></textarea>
       </md-input-container>
     </div>
-  </div>
-
-  <div ng-if='nodeAuthoringController.showRubric'>
-    <summernote id='{{nodeAuthoringController.summernoteRubricId}}'
-          ng-model='nodeAuthoringController.summernoteRubricHTML'
-          ng-change='nodeAuthoringController.summernoteRubricHTMLChanged()'
-          config='nodeAuthoringController.summernoteRubricOptions'
-          ng-model-options='{ debounce: 1000 }'
-          rows='10'
-          cols='100'>
-    </summernote>
   </div>
 
   <div ng-if='nodeAuthoringController.insertComponentMode' layout='row' style='margin-left: 10px; height:50px'>

@@ -1,8 +1,10 @@
 'use strict';
 
+import { ProjectAssetService } from '../../../site/src/app/services/projectAssetService';
 import DiscussionController from './discussionController';
 
 class DiscussionAuthoringController extends DiscussionController {
+  ProjectAssetService: ProjectAssetService;
   allowedConnectedComponentTypes: any[];
 
   static $inject = [
@@ -17,6 +19,7 @@ class DiscussionAuthoringController extends DiscussionController {
     'NodeService',
     'NotebookService',
     'NotificationService',
+    'ProjectAssetService',
     'ProjectService',
     'StudentAssetService',
     'StudentDataService',
@@ -36,6 +39,7 @@ class DiscussionAuthoringController extends DiscussionController {
     NodeService,
     NotebookService,
     NotificationService,
+    ProjectAssetService,
     ProjectService,
     StudentAssetService,
     StudentDataService,
@@ -60,6 +64,7 @@ class DiscussionAuthoringController extends DiscussionController {
       UtilService,
       $mdMedia
     );
+    this.ProjectAssetService = ProjectAssetService;
     this.allowedConnectedComponentTypes = [{ type: 'Discussion' }];
   }
 
@@ -80,6 +85,13 @@ class DiscussionAuthoringController extends DiscussionController {
       connectedComponent.type = firstConnectedComponent.type;
     }
   }
+
+  openAssetChooser(params: any) {
+    this.ProjectAssetService.openAssetChooser(params).then(
+      (data: any) => { this.assetSelected(data) }
+    );
+  }
+
 }
 
 export default DiscussionAuthoringController;

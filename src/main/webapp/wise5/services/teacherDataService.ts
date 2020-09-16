@@ -9,6 +9,7 @@ import { TeacherProjectService } from "./teacherProjectService";
 import { TeacherWebSocketService } from "./teacherWebSocketService";
 import { Injectable } from "@angular/core";
 import { DataService } from "../../site/src/app/services/data.service";
+import { Subject } from "rxjs";
 
 @Injectable()
 export class TeacherDataService extends DataService {
@@ -24,6 +25,8 @@ export class TeacherDataService extends DataService {
   nodeGradingSort = 'team';
   studentGradingSort = 'step';
   studentProgressSort = 'team';
+  private currentNodeChangedSource: Subject<any> = new Subject<any>();
+  public currentNodeChanged$ = this.currentNodeChangedSource.asObservable();
 
   constructor(
     private upgrade: UpgradeModule,
@@ -865,7 +868,6 @@ export class TeacherDataService extends DataService {
 
   setCurrentStep(step) {
     this.currentStep = step;
-    this.getRootScope().$broadcast('currentStepChanged', { currentStep: this.currentStep });
   }
 
   getCurrentStep() {
@@ -885,11 +887,15 @@ export class TeacherDataService extends DataService {
         this.previousStep = previousCurrentNode;
       }
       this.currentNode = node;
-      this.getRootScope().$broadcast('currentNodeChanged', {
+      this.broadcastCurrentNodeChanged({
         previousNode: previousCurrentNode,
         currentNode: this.currentNode
       });
     }
+  }
+
+  broadcastCurrentNodeChanged(previousAndCurrentNode: any) {
+    this.currentNodeChangedSource.next(previousAndCurrentNode);
   }
 
   endCurrentNode() {

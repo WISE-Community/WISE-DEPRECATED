@@ -4,9 +4,11 @@ import 'svg.js';
 import 'svg.draggable.js';
 import ConceptMapController from './conceptMapController';
 import { ConceptMapService } from './conceptMapService';
+import { ProjectAssetService } from '../../../site/src/app/services/projectAssetService';
 
 class ConceptMapAuthoringController extends ConceptMapController {
   ConceptMapService: ConceptMapService;
+  ProjectAssetService: ProjectAssetService;
   allowedConnectedComponentTypes: any[];
   shouldOptions: any[];
   availableNodes: any[];
@@ -26,6 +28,7 @@ class ConceptMapAuthoringController extends ConceptMapController {
     'ConfigService',
     'NodeService',
     'NotebookService',
+    'ProjectAssetService',
     'ProjectService',
     'StudentAssetService',
     'StudentDataService',
@@ -46,6 +49,7 @@ class ConceptMapAuthoringController extends ConceptMapController {
     ConfigService,
     NodeService,
     NotebookService,
+    ProjectAssetService,
     ProjectService,
     StudentAssetService,
     StudentDataService,
@@ -71,6 +75,7 @@ class ConceptMapAuthoringController extends ConceptMapController {
       UtilService
     );
     this.ConceptMapService = ConceptMapService;
+    this.ProjectAssetService = ProjectAssetService;
 
     this.allowedConnectedComponentTypes = [
       { type: 'ConceptMap' },
@@ -130,30 +135,6 @@ class ConceptMapAuthoringController extends ConceptMapController {
       }.bind(this),
       true
     );
-  }
-
-  assetSelected(event, args) {
-    if (this.isEventTargetThisComponent(args)) {
-      const fileName = args.assetItem.fileName;
-      if (args.target === 'rubric') {
-        const summernoteId = this.getSummernoteId(args);
-        this.restoreSummernoteCursorPosition(summernoteId);
-        const fullAssetPath = this.getFullAssetPath(fileName);
-        if (this.UtilService.isImage(fileName)) {
-          this.insertImageIntoSummernote(summernoteId, fullAssetPath, fileName);
-        } else if (this.UtilService.isVideo(fileName)) {
-          this.insertVideoIntoSummernote(summernoteId, fullAssetPath);
-        }
-      } else if (args.target === 'background') {
-        this.authoringComponentContent.background = fileName;
-        this.authoringViewComponentChanged();
-      } else if (args.target != null && args.target.indexOf('node') == 0) {
-        const node = this.authoringViewGetNodeById(args.target);
-        node.fileName = fileName;
-        this.authoringViewComponentChanged();
-      }
-    }
-    this.$mdDialog.hide();
   }
 
   /**
@@ -409,7 +390,7 @@ class ConceptMapAuthoringController extends ConceptMapController {
       componentId: this.componentId,
       target: 'background'
     };
-    this.$rootScope.$broadcast('openAssetChooser', params);
+    this.openAssetChooser(params);
   }
 
   /**
@@ -423,7 +404,34 @@ class ConceptMapAuthoringController extends ConceptMapController {
       componentId: this.componentId,
       target: conceptMapNodeId
     };
-    this.$rootScope.$broadcast('openAssetChooser', params);
+    this.openAssetChooser(params);
+  }
+
+  openAssetChooser(params: any) {
+    this.ProjectAssetService.openAssetChooser(params).then(
+      (data: any) => { this.assetSelected(data) }
+    );
+  }
+
+  assetSelected(args: any) {
+    const fileName = args.assetItem.fileName;
+    if (args.target === 'rubric') {
+      const summernoteId = this.getSummernoteId(args);
+      this.restoreSummernoteCursorPosition(summernoteId);
+      const fullAssetPath = this.getFullAssetPath(fileName);
+      if (this.UtilService.isImage(fileName)) {
+        this.insertImageIntoSummernote(summernoteId, fullAssetPath, fileName);
+      } else if (this.UtilService.isVideo(fileName)) {
+        this.insertVideoIntoSummernote(summernoteId, fullAssetPath);
+      }
+    } else if (args.target === 'background') {
+      this.authoringComponentContent.background = fileName;
+      this.authoringViewComponentChanged();
+    } else if (args.target != null && args.target.indexOf('node') == 0) {
+      const node = this.authoringViewGetNodeById(args.target);
+      node.fileName = fileName;
+      this.authoringViewComponentChanged();
+    }
   }
 
   /**

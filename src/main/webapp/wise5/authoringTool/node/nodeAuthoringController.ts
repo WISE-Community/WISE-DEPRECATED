@@ -54,12 +54,7 @@ class NodeAuthoringController {
   showEditTransitions: boolean = false;
   showGeneralAdvanced: boolean = false;
   showJSON: boolean = false;
-  showRubric: boolean = false;
-  showRubricButton: boolean = true;
   showStepButtons: boolean = true;
-  summernoteRubricHTML: string;
-  summernoteRubricId: string;
-  summernoteRubricOptions: any;
   transitionCriterias: any;
   undoStack: any[] = [];
   whenToChoosePathOptions = [null, 'enterNode', 'exitNode', 'scoreChanged', 'studentDataChanged'];
@@ -420,47 +415,6 @@ class NodeAuthoringController {
     this.originalNodeCopy = this.UtilService.makeCopyOfJSONObject(this.node);
     this.currentNodeCopy = this.UtilService.makeCopyOfJSONObject(this.node);
     this.populateBranchAuthoring();
-    this.summernoteRubricId = 'summernoteRubric_' + this.nodeId;
-    let insertAssetString = this.$translate('INSERT_ASSET');
-    let insertAssetButton = this.UtilService.createInsertAssetButton(
-      null,
-      this.nodeId,
-      null,
-      'rubric',
-      insertAssetString
-    );
-    this.summernoteRubricOptions = {
-      toolbar: [
-        ['style', ['style']],
-        ['font', ['bold', 'underline', 'clear']],
-        ['fontname', ['fontname']],
-        ['fontsize', ['fontsize']],
-        ['color', ['color']],
-        ['para', ['ul', 'ol', 'paragraph']],
-        ['table', ['table']],
-        ['insert', ['link', 'video']],
-        ['view', ['fullscreen', 'codeview', 'help']],
-        ['customButton', ['insertAssetButton']]
-      ],
-      height: 300,
-      disableDragAndDrop: true,
-      buttons: {
-        insertAssetButton: insertAssetButton
-      },
-      dialogsInBody: true
-    };
-    this.summernoteRubricHTML = this.ProjectService.replaceAssetPaths(this.node.rubric);
-
-    this.$scope.$on('assetSelected', (event, { assetItem, target }) => {
-      if (target === 'rubric') {
-        this.UtilService.insertFileInSummernoteEditor(
-          `summernoteRubric_${this.nodeId}`,
-          `${this.ConfigService.getProjectAssetsDirectoryPath()}/${assetItem.fileName}`,
-          assetItem.fileName
-        );
-      }
-      this.$mdDialog.hide();
-    });
 
     this.$scope.$on('componentShowSubmitButtonValueChanged', (event, { showSubmitButton }) => {
       if (showSubmitButton) {
@@ -1023,7 +977,6 @@ class NodeAuthoringController {
     this.showGeneralAdvanced = false;
     this.showEditTransitions = false;
     this.showConstraints = false;
-    this.showRubric = false;
     this.showCreateBranch = false;
     this.showAdvanced = false;
     this.showStepButtons = false;
@@ -1058,9 +1011,8 @@ class NodeAuthoringController {
     this.showConstraints = true;
   }
 
-  showEditRubricView() {
-    this.hideAllViews();
-    this.showRubric = true;
+  editRubric() {
+    this.$state.go('root.at.project.node.edit-rubric');
   }
 
   showCreateBranchView() {
@@ -1710,24 +1662,6 @@ class NodeAuthoringController {
     this.node.transitionLogic.transitions.splice(branchPathIndex, 1);
   }
 
-  summernoteRubricHTMLChanged() {
-    let html = this.summernoteRubricHTML;
-
-    /*
-     * remove the absolute asset paths
-     * e.g.
-     * <img src='https://wise.berkeley.edu/curriculum/3/assets/sun.png'/>
-     * will be changed to
-     * <img src='sun.png'/>
-     */
-    html = this.ConfigService.removeAbsoluteAssetPaths(html);
-
-    // replace <a> and <button> elements with <wiselink> elements when applicable
-    html = this.UtilService.insertWISELinks(html);
-    this.node.rubric = html;
-    this.authoringViewNodeChanged();
-  }
-
   showComponentAuthoring() {
     this.showComponentAuthoringViews = true;
   }
@@ -2036,7 +1970,7 @@ class NodeAuthoringController {
   }
 
   backButtonClicked() {
-    if (this.showRubric || this.showAdvanced) {
+    if (this.showAdvanced) {
       this.UtilService.hideJSONValidMessage();
       this.showDefaultComponentsView();
       this.$state.go('root.at.project.node', { projectId: this.projectId, nodeId: this.nodeId });
