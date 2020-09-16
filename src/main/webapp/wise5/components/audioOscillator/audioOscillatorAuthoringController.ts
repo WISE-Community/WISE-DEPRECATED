@@ -1,8 +1,10 @@
 'use strict';
 
+import { ProjectAssetService } from '../../../site/src/app/services/projectAssetService';
 import AudioOscillatorController from './audioOscillatorController';
 
 class AudioOscillatorAuthoringController extends AudioOscillatorController {
+  ProjectAssetService: ProjectAssetService;
   allowedConnectedComponentTypes: any[];
   authoringSineChecked: boolean;
   authoringSquareChecked: boolean;
@@ -21,6 +23,7 @@ class AudioOscillatorAuthoringController extends AudioOscillatorController {
     'ConfigService',
     'NodeService',
     'NotebookService',
+    'ProjectAssetService',
     'ProjectService',
     'StudentAssetService',
     'StudentDataService',
@@ -39,6 +42,7 @@ class AudioOscillatorAuthoringController extends AudioOscillatorController {
     ConfigService,
     NodeService,
     NotebookService,
+    ProjectAssetService,
     ProjectService,
     StudentAssetService,
     StudentDataService,
@@ -61,6 +65,7 @@ class AudioOscillatorAuthoringController extends AudioOscillatorController {
       StudentDataService,
       UtilService
     );
+    this.ProjectAssetService = ProjectAssetService;
     this.allowedConnectedComponentTypes = [{ type: 'AudioOscillator' }];
     this.populateCheckedOscillatorTypes();
   }
@@ -107,6 +112,13 @@ class AudioOscillatorAuthoringController extends AudioOscillatorController {
     }
     this.authoringViewComponentChanged();
   }
+
+  openAssetChooser(params: any) {
+    this.ProjectAssetService.openAssetChooser(params).then(
+      (data: any) => { this.assetSelected(data) }
+    );
+  }
+
 }
 
 export default AudioOscillatorAuthoringController;

@@ -1,8 +1,12 @@
 'use strict';
 
+import { Project } from '../../../site/src/app/domain/project';
+import { ProjectAssetService } from '../../../site/src/app/services/projectAssetService';
 import TableController from './tableController';
 
 class TableAuthoringController extends TableController {
+  ProjectAssetService: ProjectAssetService;
+  
   constructor(
     $anchorScroll,
     $filter,
@@ -15,6 +19,7 @@ class TableAuthoringController extends TableController {
     ConfigService,
     NodeService,
     NotebookService,
+    ProjectAssetService,
     ProjectService,
     StudentAssetService,
     StudentDataService,
@@ -39,6 +44,7 @@ class TableAuthoringController extends TableController {
       TableService,
       UtilService
     );
+    this.ProjectAssetService = ProjectAssetService;
     this.allowedConnectedComponentTypes = [
       {
         type: 'Embedded'
@@ -69,24 +75,24 @@ class TableAuthoringController extends TableController {
       }.bind(this),
       true
     );
-    this.registerAssetListener();
   }
 
-  registerAssetListener() {
-    this.$scope.$on('assetSelected', (event, { nodeId, componentId, assetItem, target }) => {
-      if (nodeId === this.nodeId && componentId === this.componentId) {
-        const fileName = assetItem.fileName;
-        const fullFilePath = `${this.ConfigService.getProjectAssetsDirectoryPath()}/${fileName}`;
-        if (target === 'rubric') {
-          this.UtilService.insertFileInSummernoteEditor(
-            `summernoteRubric_${this.nodeId}_${this.componentId}`,
-            fullFilePath,
-            fileName
-          );
-        }
-      }
-      this.$mdDialog.hide();
-    });
+  openAssetChooser(params: any) {
+    this.ProjectAssetService.openAssetChooser(params).then(
+      (data: any) => { this.assetSelected(data) }
+    );
+  }
+
+  assetSelected({ nodeId, componentId, assetItem, target }) {
+    const fileName = assetItem.fileName;
+    const fullFilePath = `${this.ConfigService.getProjectAssetsDirectoryPath()}/${fileName}`;
+    if (target === 'rubric') {
+      this.UtilService.insertFileInSummernoteEditor(
+        `summernoteRubric_${this.nodeId}_${this.componentId}`,
+        fullFilePath,
+        fileName
+      );
+    }
   }
 
   initializeDataExplorerSeriesParams() {
@@ -580,6 +586,7 @@ TableAuthoringController.$inject = [
   'ConfigService',
   'NodeService',
   'NotebookService',
+  'ProjectAssetService',
   'ProjectService',
   'StudentAssetService',
   'StudentDataService',

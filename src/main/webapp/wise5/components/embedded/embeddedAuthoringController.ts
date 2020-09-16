@@ -1,8 +1,10 @@
 'use strict';
 
+import { ProjectAssetService } from "../../../site/src/app/services/projectAssetService";
 import EmbeddedController from "./embeddedController";
 
 class EmbeddedAuthoringController extends EmbeddedController {
+  ProjectAssetService: ProjectAssetService;
   allowedConnectedComponentTypes: any[];
   embeddedApplicationIFrameId: string;
 
@@ -20,6 +22,7 @@ class EmbeddedAuthoringController extends EmbeddedController {
     'EmbeddedService',
     'NodeService',
     'NotebookService',
+    'ProjectAssetService',
     'ProjectService',
     'StudentAssetService',
     'StudentDataService',
@@ -39,6 +42,7 @@ class EmbeddedAuthoringController extends EmbeddedController {
               EmbeddedService,
               NodeService,
               NotebookService,
+              ProjectAssetService,
               ProjectService,
               StudentAssetService,
               StudentDataService,
@@ -60,6 +64,8 @@ class EmbeddedAuthoringController extends EmbeddedController {
       StudentAssetService,
       StudentDataService,
       UtilService);
+
+    this.ProjectAssetService = ProjectAssetService;
 
     this.allowedConnectedComponentTypes = [
       { type: 'Animation' },
@@ -87,26 +93,6 @@ class EmbeddedAuthoringController extends EmbeddedController {
     }.bind(this), true);
   }
 
-  assetSelected(event, args) {
-    if (this.isEventTargetThisComponent(args)) {
-      const fileName = args.assetItem.fileName;
-      if (args.target === 'rubric') {
-        const summernoteId = this.getSummernoteId(args);
-        this.restoreSummernoteCursorPosition(summernoteId);
-        const fullAssetPath = this.getFullAssetPath(fileName);
-        if (this.UtilService.isImage(fileName)) {
-          this.insertImageIntoSummernote(summernoteId, fullAssetPath, fileName);
-        } else if (this.UtilService.isVideo(fileName)) {
-          this.insertVideoIntoSummernote(summernoteId, fullAssetPath);
-        }
-      } else if (args.target === 'modelFile') {
-        this.authoringComponentContent.url = fileName;
-        this.authoringViewComponentChanged();
-      }
-    }
-    this.$mdDialog.hide();
-  }
-
   showModelFileChooserPopup() {
     const params = {
       isPopup: true,
@@ -114,7 +100,30 @@ class EmbeddedAuthoringController extends EmbeddedController {
       componentId: this.componentId,
       target: 'modelFile'
     };
-    this.$rootScope.$broadcast('openAssetChooser', params);
+    this.openAssetChooser(params);
+  }
+
+  openAssetChooser(params: any) {
+    this.ProjectAssetService.openAssetChooser(params).then(
+      (data: any) => { this.assetSelected(data) }
+    );
+  }
+
+  assetSelected(args: any) {
+    const fileName = args.assetItem.fileName;
+    if (args.target === 'rubric') {
+      const summernoteId = this.getSummernoteId(args);
+      this.restoreSummernoteCursorPosition(summernoteId);
+      const fullAssetPath = this.getFullAssetPath(fileName);
+      if (this.UtilService.isImage(fileName)) {
+        this.insertImageIntoSummernote(summernoteId, fullAssetPath, fileName);
+      } else if (this.UtilService.isVideo(fileName)) {
+        this.insertVideoIntoSummernote(summernoteId, fullAssetPath);
+      }
+    } else if (args.target === 'modelFile') {
+      this.authoringComponentContent.url = fileName;
+      this.authoringViewComponentChanged();
+    }
   }
 
   reloadModel() {

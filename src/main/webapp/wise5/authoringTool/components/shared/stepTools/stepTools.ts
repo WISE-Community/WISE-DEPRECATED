@@ -14,6 +14,7 @@ class StepToolsController {
   nodeId: string;
   prevId: any;
   projectId: number;
+  currentNodeChangedSubscription: any;
 
   static $inject = [
     '$scope',
@@ -46,7 +47,8 @@ class StepToolsController {
     this.nodeId = this.TeacherDataService.getCurrentNodeId();
     this.idToOrder = this.ProjectService.idToOrder;
     this.updateModel();
-    this.$scope.$on('currentNodeChanged', (event, args) => {
+    this.currentNodeChangedSubscription = this.TeacherDataService.currentNodeChanged$
+        .subscribe(() => {
       this.updateModel();
     });
     this.$scope.$on('projectChanged', (event, args) => {
@@ -54,6 +56,17 @@ class StepToolsController {
       this.idToOrder = this.ProjectService.idToOrder;
       this.updateModel();
     });
+    this.$scope.$on('$destroy', () => {
+      this.ngOnDestroy();
+    });
+  }
+
+  ngOnDestroy() {
+    this.unsubscribeAll();
+  }
+
+  unsubscribeAll() {
+    this.currentNodeChangedSubscription.unsubscribe();
   }
 
   nodeIdChanged() {

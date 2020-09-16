@@ -303,7 +303,8 @@ export class UtilService {
    * @param tooltip the tooltip text for the custom button
    * @return custom summernote button
    */
-  createInsertAssetButton(projectId, nodeId, componentId, target, tooltip) {
+  createInsertAssetButton(projectId, nodeId, componentId, target, tooltip,
+      openAssetChooserFunction) {
     const thisRootScope = this.upgrade.$injector.get('$rootScope');
     const InsertAssetButton = function(context) {
       const ui = ($ as any).summernote.ui;
@@ -324,7 +325,7 @@ export class UtilService {
             params.componentId = componentId;
           }
           params.target = target;
-          thisRootScope.$broadcast('openAssetChooser', params);
+          openAssetChooserFunction(params);
         }
       });
       return button.render(); // return button as jquery object

@@ -1,5 +1,6 @@
 'use strict';
 
+import { ProjectAssetService } from '../../../site/src/app/services/projectAssetService';
 import { ConfigService } from '../../services/configService';
 import { TeacherProjectService } from '../../services/teacherProjectService';
 
@@ -21,6 +22,7 @@ class ProjectInfoController {
     '$scope',
     '$timeout',
     'ConfigService',
+    'ProjectAssetService',
     'ProjectService'
   ];
 
@@ -31,6 +33,7 @@ class ProjectInfoController {
     private $scope: any,
     private $timeout: any,
     private ConfigService: ConfigService,
+    private ProjectAssetService: ProjectAssetService,
     private ProjectService: TeacherProjectService
   ) {
     this.$translate = $filter('translate');
@@ -40,16 +43,6 @@ class ProjectInfoController {
     );
     this.loadProjectIcon();
     this.processMetadata();
-    this.registerListeners();
-  }
-
-  registerListeners() {
-    this.$scope.$on('assetSelected', (event, args) => {
-      if (args.target === 'projectIcon') {
-        this.setCustomProjectIcon(args.assetItem.fileName);
-        this.$mdDialog.hide();
-      }
-    });
   }
 
   processMetadata() {
@@ -155,7 +148,16 @@ class ProjectInfoController {
       isPopup: true,
       target: 'projectIcon'
     };
-    this.$rootScope.$broadcast('openAssetChooser', params);
+    this.ProjectAssetService.openAssetChooser(params).then(
+      (data: any) => { this.assetSelected(data) }
+    );
+  }
+
+  assetSelected(args) {
+    if (args.target === 'projectIcon') {
+      this.setCustomProjectIcon(args.assetItem.fileName);
+      this.$mdDialog.hide();
+    }
   }
 
   setCustomProjectIcon(projectIcon) {

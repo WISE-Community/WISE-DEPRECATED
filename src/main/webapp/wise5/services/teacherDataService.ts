@@ -27,6 +27,8 @@ export class TeacherDataService extends DataService {
   studentProgressSort = 'team';
   private currentPeriodChangedSource: Subject<any> = new Subject<any>();
   public currentPeriodChanged$ = this.currentPeriodChangedSource.asObservable();
+  private currentNodeChangedSource: Subject<any> = new Subject<any>();
+  public currentNodeChanged$ = this.currentNodeChangedSource.asObservable();
 
   constructor(
     private upgrade: UpgradeModule,
@@ -872,7 +874,6 @@ export class TeacherDataService extends DataService {
 
   setCurrentStep(step) {
     this.currentStep = step;
-    this.getRootScope().$broadcast('currentStepChanged', { currentStep: this.currentStep });
   }
 
   getCurrentStep() {
@@ -892,11 +893,15 @@ export class TeacherDataService extends DataService {
         this.previousStep = previousCurrentNode;
       }
       this.currentNode = node;
-      this.getRootScope().$broadcast('currentNodeChanged', {
+      this.broadcastCurrentNodeChanged({
         previousNode: previousCurrentNode,
         currentNode: this.currentNode
       });
     }
+  }
+
+  broadcastCurrentNodeChanged(previousAndCurrentNode: any) {
+    this.currentNodeChangedSource.next(previousAndCurrentNode);
   }
 
   endCurrentNode() {

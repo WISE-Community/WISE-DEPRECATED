@@ -14,6 +14,7 @@ class NodeProgressViewController {
   nodeId: string;
   rootNode: any;
   showRubricButton: boolean;
+  currentNodeChangedSubscription: any;
 
   static $inject = [
     '$filter',
@@ -37,6 +38,17 @@ class NodeProgressViewController {
     private TeacherDataService: TeacherDataService
   ) {
     this.$translate = $filter('translate');
+    this.$scope.$on('$destroy', () => {
+      this.ngOnDestroy();
+    });
+  }
+
+  ngOnDestroy() {
+    this.unsubscribeAll();
+  }
+
+  unsubscribeAll() {
+    this.currentNodeChangedSubscription.unsubscribe();
   }
 
   $onInit() {
@@ -77,16 +89,14 @@ class NodeProgressViewController {
       this.showRubricButton = true;
     }
 
-    this.$scope.$on('currentNodeChanged', (event, args) => {
-      let currentNode = args.currentNode;
-      if (currentNode != null) {
-        this.nodeId = currentNode.id;
-        this.TeacherDataService.setCurrentNode(currentNode);
-        if (this.isGroupNode(this.nodeId)) {
-          this.currentGroup = currentNode;
-          this.currentGroupId = this.currentGroup.id;
-          this.$scope.currentgroupid = this.currentGroupId;
-        }
+    this.currentNodeChangedSubscription = this.TeacherDataService.currentNodeChanged$
+        .subscribe(({ currentNode }) => {
+      this.nodeId = currentNode.id;
+      this.TeacherDataService.setCurrentNode(currentNode);
+      if (this.isGroupNode(this.nodeId)) {
+        this.currentGroup = currentNode;
+        this.currentGroupId = this.currentGroup.id;
+        this.$scope.currentgroupid = this.currentGroupId;
       }
       this.$state.go('root.cm.unit.node', { nodeId: this.nodeId });
     });
