@@ -54,10 +54,6 @@ import { TeamSignInDialogComponent } from './team-sign-in-dialog/team-sign-in-di
     EditProfileComponent,
     TeamSignInDialogComponent
   ],
-  entryComponents: [
-    AddProjectDialogComponent,
-    TeamSignInDialogComponent
-  ],
   providers: [
     AuthGuard
   ],

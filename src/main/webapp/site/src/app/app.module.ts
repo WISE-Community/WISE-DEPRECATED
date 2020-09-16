@@ -97,7 +97,6 @@ export function getAuthServiceConfigs(configService: ConfigService) {
       anchorScrolling: 'enabled',
     })
   ],
-  entryComponents: [ AnnouncementDialogComponent ],
   providers: [
     ConfigService,
     StudentService,
