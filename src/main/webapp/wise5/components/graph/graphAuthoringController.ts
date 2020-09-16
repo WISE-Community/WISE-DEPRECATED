@@ -2,8 +2,10 @@
 
 import GraphController from "./graphController";
 import html2canvas from 'html2canvas';
+import { ProjectAssetService } from "../../../site/src/app/services/projectAssetService";
 
 class GraphAuthoringController extends GraphController {
+  ProjectAssetService: ProjectAssetService;
 
   availableGraphTypes: any[];
   availableRoundingOptions: any[];
@@ -27,6 +29,7 @@ class GraphAuthoringController extends GraphController {
     'GraphService',
     'NodeService',
     'NotebookService',
+    'ProjectAssetService',
     'ProjectService',
     'StudentAssetService',
     'StudentDataService',
@@ -44,6 +47,7 @@ class GraphAuthoringController extends GraphController {
               GraphService,
               NodeService,
               NotebookService,
+              ProjectAssetService,
               ProjectService,
               StudentAssetService,
               StudentDataService,
@@ -63,6 +67,8 @@ class GraphAuthoringController extends GraphController {
       StudentAssetService,
       StudentDataService,
       UtilService);
+
+    this.ProjectAssetService = ProjectAssetService;
 
     this.availableGraphTypes = [
       {
@@ -220,26 +226,6 @@ class GraphAuthoringController extends GraphController {
     return false;
   }
 
-  assetSelected(event, args) {
-    if (this.isEventTargetThisComponent(args)) {
-      const fileName = args.assetItem.fileName;
-      if (args.target === 'rubric') {
-        const summernoteId = this.getSummernoteId(args);
-        this.restoreSummernoteCursorPosition(summernoteId);
-        const fullAssetPath = this.getFullAssetPath(fileName);
-        if (this.UtilService.isImage(fileName)) {
-          this.insertImageIntoSummernote(summernoteId, fullAssetPath, fileName);
-        } else if (this.UtilService.isVideo(fileName)) {
-          this.insertVideoIntoSummernote(summernoteId, fullAssetPath);
-        }
-      } else if (args.target === 'background') {
-        this.authoringComponentContent.backgroundImage = fileName;
-        this.authoringViewComponentChanged();
-      }
-    }
-    this.$mdDialog.hide();
-  }
-
   authoringAddSeriesClicked() {
     const newSeries: any = this.createNewSeries();
     if (this.authoringComponentContent.graphType === 'line') {
@@ -295,7 +281,30 @@ class GraphAuthoringController extends GraphController {
       componentId: this.componentId,
       target: 'background'
     };
-    this.$rootScope.$broadcast('openAssetChooser', params);
+    this.openAssetChooser(params);
+  }
+
+  openAssetChooser(params: any) {
+    this.ProjectAssetService.openAssetChooser(params).then(
+      (data: any) => { this.assetSelected(data) }
+    );
+  }
+
+  assetSelected(args: any) {
+    const fileName = args.assetItem.fileName;
+    if (args.target === 'rubric') {
+      const summernoteId = this.getSummernoteId(args);
+      this.restoreSummernoteCursorPosition(summernoteId);
+      const fullAssetPath = this.getFullAssetPath(fileName);
+      if (this.UtilService.isImage(fileName)) {
+        this.insertImageIntoSummernote(summernoteId, fullAssetPath, fileName);
+      } else if (this.UtilService.isVideo(fileName)) {
+        this.insertVideoIntoSummernote(summernoteId, fullAssetPath);
+      }
+    } else if (args.target === 'background') {
+      this.authoringComponentContent.backgroundImage = fileName;
+      this.authoringViewComponentChanged();
+    }
   }
 
   authoringAddXAxisCategory() {

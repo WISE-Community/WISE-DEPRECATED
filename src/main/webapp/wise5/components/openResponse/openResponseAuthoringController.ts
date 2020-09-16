@@ -1,8 +1,10 @@
 'use strict';
 
+import { ProjectAssetService } from '../../../site/src/app/services/projectAssetService';
 import OpenResponseController from './openResponseController';
 
 class OpenResponseAuthoringController extends OpenResponseController {
+  ProjectAssetService: ProjectAssetService;
   allowedConnectedComponentTypes: any[];
 
   static $inject = [
@@ -19,6 +21,7 @@ class OpenResponseAuthoringController extends OpenResponseController {
     'NotebookService',
     'NotificationService',
     'OpenResponseService',
+    'ProjectAssetService',
     'ProjectService',
     'StudentAssetService',
     'StudentDataService',
@@ -39,6 +42,7 @@ class OpenResponseAuthoringController extends OpenResponseController {
     NotebookService,
     NotificationService,
     OpenResponseService,
+    ProjectAssetService,
     ProjectService,
     StudentAssetService,
     StudentDataService,
@@ -63,6 +67,7 @@ class OpenResponseAuthoringController extends OpenResponseController {
       StudentDataService,
       UtilService
     );
+    this.ProjectAssetService = ProjectAssetService;
     this.allowedConnectedComponentTypes = [
       {
         type: 'OpenResponse'
@@ -88,24 +93,24 @@ class OpenResponseAuthoringController extends OpenResponseController {
       }.bind(this),
       true
     );
-    this.registerAssetListener();
   }
 
-  registerAssetListener() {
-    this.$scope.$on('assetSelected', (event, { nodeId, componentId, assetItem, target }) => {
-      if (nodeId === this.nodeId && componentId === this.componentId) {
-        const fileName = assetItem.fileName;
-        const fullFilePath = `${this.ConfigService.getProjectAssetsDirectoryPath()}/${fileName}`;
-        if (target === 'rubric') {
-          this.UtilService.insertFileInSummernoteEditor(
-            `summernoteRubric_${this.nodeId}_${this.componentId}`,
-            fullFilePath,
-            fileName
-          );
-        }
-      }
-      this.$mdDialog.hide();
-    });
+  openAssetChooser(params: any) {
+    this.ProjectAssetService.openAssetChooser(params).then(
+      (data: any) => { this.assetSelected(data) }
+    );
+  }
+
+  assetSelected({ nodeId, componentId, assetItem, target }) {
+    const fileName = assetItem.fileName;
+    const fullFilePath = `${this.ConfigService.getProjectAssetsDirectoryPath()}/${fileName}`;
+    if (target === 'rubric') {
+      this.UtilService.insertFileInSummernoteEditor(
+        `summernoteRubric_${this.nodeId}_${this.componentId}`,
+        fullFilePath,
+        fileName
+      );
+    }
   }
 
   authoringAddScoringRule() {

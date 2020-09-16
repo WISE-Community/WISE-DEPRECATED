@@ -1,3 +1,4 @@
+import { ProjectAssetService } from "../../../../site/src/app/services/projectAssetService";
 import { ConfigService } from "../../../services/configService";
 import { ProjectService } from "../../../services/projectService";
 import { TeacherDataService } from "../../../services/teacherDataService";
@@ -11,13 +12,13 @@ class EditRubricComponentController {
   summernoteRubricId: string;
   summernoteRubricOptions: any;
 
-  static $inject = ['$filter', '$mdDialog', '$scope', '$state', 'ConfigService', 'ProjectService',
-      'TeacherDataService', 'UtilService'];
+  static $inject = ['$filter', '$mdDialog', '$scope', '$state', 'ConfigService',
+      'ProjectAssetService', 'ProjectService', 'TeacherDataService', 'UtilService'];
 
   constructor(private $filter: any, private $mdDialog: any, private $scope: any,
       private $state: any, private ConfigService: ConfigService,
-      private ProjectService: ProjectService, private TeacherDataService: TeacherDataService,
-      private UtilService: UtilService) {
+      private ProjectAssetService: ProjectAssetService, private ProjectService: ProjectService,
+      private TeacherDataService: TeacherDataService, private UtilService: UtilService) {
   }
 
   $onInit() {
@@ -41,21 +42,30 @@ class EditRubricComponentController {
       disableDragAndDrop: true,
       buttons: {
         insertAssetButton: this.UtilService.createInsertAssetButton(null, this.nodeId, null,
-          'rubric', this.$filter('translate')('INSERT_ASSET'))
+          'rubric', this.$filter('translate')('INSERT_ASSET'),
+          this.createOpenAssetChooserFunction())
       },
       dialogsInBody: true
     };
     this.summernoteRubricHTML = this.ProjectService.replaceAssetPaths(this.node.rubric);
-    this.$scope.$on('assetSelected', (event, { assetItem, target }) => {
-      if (target === 'rubric') {
-        this.UtilService.insertFileInSummernoteEditor(
-          `summernoteRubric_${this.nodeId}`,
-          `${this.ConfigService.getProjectAssetsDirectoryPath()}/${assetItem.fileName}`,
-          assetItem.fileName
-        );
-      }
-      this.$mdDialog.hide();
-    });
+  }
+
+  createOpenAssetChooserFunction() {
+    return (params: any) => {
+      this.ProjectAssetService.openAssetChooser(params).then(
+        (data: any) => { this.assetSelected(data) }
+      );
+    }
+  }
+
+  assetSelected({ assetItem, target }) {
+    if (target === 'rubric') {
+      this.UtilService.insertFileInSummernoteEditor(
+        `summernoteRubric_${this.nodeId}`,
+        `${this.ConfigService.getProjectAssetsDirectoryPath()}/${assetItem.fileName}`,
+        assetItem.fileName
+      );
+    }
   }
 
   summernoteRubricHTMLChanged() {

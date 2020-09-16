@@ -1,6 +1,7 @@
 import { ConfigService } from '../../services/configService';
 import { UtilService } from '../../services/utilService';
 import { TeacherProjectService } from '../../services/teacherProjectService';
+import { ProjectAssetService } from '../../../site/src/app/services/projectAssetService';
 
 class RubricAuthoringController {
   translate: any;
@@ -16,6 +17,7 @@ class RubricAuthoringController {
     '$state',
     '$stateParams',
     'ConfigService',
+    'ProjectAssetService',
     'ProjectService',
     'UtilService'
   ];
@@ -27,6 +29,7 @@ class RubricAuthoringController {
     private $state: any,
     $stateParams: any,
     private ConfigService: ConfigService,
+    private ProjectAssetService: ProjectAssetService,
     private ProjectService: TeacherProjectService,
     private UtilService: UtilService
   ) {
@@ -54,7 +57,8 @@ class RubricAuthoringController {
           this.nodeId,
           null,
           'rubric',
-          this.translate('INSERT_ASSET')
+          this.translate('INSERT_ASSET'),
+          this.createOpenAssetChooserFunction()
         )
       },
       dialogsInBody: true
@@ -64,19 +68,25 @@ class RubricAuthoringController {
     );
   }
 
-  $onInit() {
-    this.$scope.$on('assetSelected', (event, { assetItem, target }) => {
-      if (target === 'rubric') {
-        const fileName = assetItem.fileName;
-        const fullFilePath = `${this.ConfigService.getProjectAssetsDirectoryPath()}/${fileName}`;
-        this.UtilService.insertFileInSummernoteEditor(
-          this.summernoteRubricId,
-          fullFilePath,
-          fileName
-        );
-        this.$mdDialog.hide();
-      }
-    });
+  createOpenAssetChooserFunction() {
+    return (params: any) => {
+      this.ProjectAssetService.openAssetChooser(params).then(
+        (data: any) => { this.assetSelected(data) }
+      );
+    }
+  }
+
+  assetSelected({ assetItem, target }) {
+    if (target === 'rubric') {
+      const fileName = assetItem.fileName;
+      const fullFilePath = `${this.ConfigService.getProjectAssetsDirectoryPath()}/${fileName}`;
+      this.UtilService.insertFileInSummernoteEditor(
+        this.summernoteRubricId,
+        fullFilePath,
+        fileName
+      );
+      this.$mdDialog.hide();
+    }
   }
 
   summernoteRubricHTMLChanged() {

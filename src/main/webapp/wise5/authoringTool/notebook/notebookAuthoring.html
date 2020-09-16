@@ -162,7 +162,7 @@
       <label>
         {{ ::'starterText' | translate }}
       </label>
-      <summernote id="{{::reportNote.summernoteId}}"
+      <summernote id="summernoteNotebook_{{reportNote.reportId}}"
                   ng-model="authorNotebookController.reportIdToAuthoringNote[reportNote.reportId].summernoteHTML"
                   ng-change="authorNotebookController.reportStarterTextChanged(reportNote.reportId)"
                   config="authorNotebookController.reportIdToAuthoringNote[reportNote.reportId].summernoteOptions"
@@ -250,7 +250,7 @@
       <label>
         {{ ::'starterText' | translate }}
       </label>
-      <summernote id="{{::reportNote.summernoteId}}"
+      <summernote id="summernoteNotebook_{{reportNote.reportId}}"
                   ng-model="authorNotebookController.reportIdToAuthoringNote[reportNote.reportId].summernoteHTML"
                   ng-change="authorNotebookController.reportStarterTextChanged(reportNote.reportId)"
                   config="authorNotebookController.reportIdToAuthoringNote[reportNote.reportId].summernoteOptions"

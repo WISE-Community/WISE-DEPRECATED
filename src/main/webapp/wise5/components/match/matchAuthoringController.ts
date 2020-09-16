@@ -1,8 +1,10 @@
 'use strict';
 
+import { ProjectAssetService } from '../../../site/src/app/services/projectAssetService';
 import MatchController from './matchController';
 
 class MatchAuthoringController extends MatchController {
+  ProjectAssetService: ProjectAssetService;
   $mdDialog: any;
   allowedConnectedComponentTypes: any[];
 
@@ -19,6 +21,7 @@ class MatchAuthoringController extends MatchController {
     'MatchService',
     'NodeService',
     'NotebookService',
+    'ProjectAssetService',
     'ProjectService',
     'StudentAssetService',
     'StudentDataService',
@@ -38,6 +41,7 @@ class MatchAuthoringController extends MatchController {
     MatchService,
     NodeService,
     NotebookService,
+    ProjectAssetService,
     ProjectService,
     StudentAssetService,
     StudentDataService,
@@ -61,6 +65,7 @@ class MatchAuthoringController extends MatchController {
       StudentDataService,
       UtilService
     );
+    this.ProjectAssetService = ProjectAssetService;
     this.allowedConnectedComponentTypes = [
       {
         type: 'Match'
@@ -83,33 +88,6 @@ class MatchAuthoringController extends MatchController {
         this.initializeBuckets();
       }.bind(this),
       true
-    );
-    this.registerAssetListener();
-  }
-
-  registerAssetListener() {
-    this.$scope.$on(
-      'assetSelected',
-      (event, { nodeId, componentId, assetItem, target, targetObject }) => {
-        if (nodeId === this.nodeId && componentId === this.componentId) {
-          const fileName = assetItem.fileName;
-          const fullFilePath = `${this.ConfigService.getProjectAssetsDirectoryPath()}/${fileName}`;
-          if (target === 'rubric') {
-            this.UtilService.insertFileInSummernoteEditor(
-              `summernoteRubric_${this.nodeId}_${this.componentId}`,
-              fullFilePath,
-              fileName
-            );
-          } else if (target === 'choice') {
-            targetObject.value = '<img src="' + fileName + '"/>';
-            this.authoringViewComponentChanged();
-          } else if (target === 'bucket') {
-            targetObject.value = '<img src="' + fileName + '"/>';
-            this.authoringViewComponentChanged();
-          }
-        }
-        this.$mdDialog.hide();
-      }
     );
   }
 
@@ -398,7 +376,7 @@ class MatchAuthoringController extends MatchController {
       target: 'choice',
       targetObject: choice
     };
-    this.$rootScope.$broadcast('openAssetChooser', params);
+    this.openAssetChooser(params);
   }
 
   /**
@@ -413,8 +391,33 @@ class MatchAuthoringController extends MatchController {
       target: 'bucket',
       targetObject: bucket
     };
-    this.$rootScope.$broadcast('openAssetChooser', params);
+    this.openAssetChooser(params);
   }
+
+  openAssetChooser(params: any) {
+    this.ProjectAssetService.openAssetChooser(params).then(
+      (data: any) => { this.assetSelected(data) }
+    );
+  }
+
+  assetSelected({ nodeId, componentId, assetItem, target, targetObject }) {
+    const fileName = assetItem.fileName;
+    const fullFilePath = `${this.ConfigService.getProjectAssetsDirectoryPath()}/${fileName}`;
+    if (target === 'rubric') {
+      this.UtilService.insertFileInSummernoteEditor(
+        `summernoteRubric_${this.nodeId}_${this.componentId}`,
+        fullFilePath,
+        fileName
+      );
+    } else if (target === 'choice') {
+      targetObject.value = '<img src="' + fileName + '"/>';
+      this.authoringViewComponentChanged();
+    } else if (target === 'bucket') {
+      targetObject.value = '<img src="' + fileName + '"/>';
+      this.authoringViewComponentChanged();
+    }
+  }
+
 }
 
 export default MatchAuthoringController;

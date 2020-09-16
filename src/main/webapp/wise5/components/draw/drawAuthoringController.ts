@@ -1,9 +1,11 @@
 'use strict';
 
 import * as angular from 'angular';
+import { ProjectAssetService } from '../../../site/src/app/services/projectAssetService';
 import DrawController from './drawController';
 
 class DrawAuthoringController extends DrawController {
+  ProjectAssetService: ProjectAssetService;
   $timeout: any;
   allowedConnectedComponentTypes: any[];
   isResetButtonVisible: boolean;
@@ -25,6 +27,7 @@ class DrawAuthoringController extends DrawController {
     'DrawService',
     'NodeService',
     'NotebookService',
+    'ProjectAssetService',
     'ProjectService',
     'StudentAssetService',
     'StudentDataService',
@@ -44,6 +47,7 @@ class DrawAuthoringController extends DrawController {
     DrawService,
     NodeService,
     NotebookService,
+    ProjectAssetService,
     ProjectService,
     StudentAssetService,
     StudentDataService,
@@ -67,6 +71,8 @@ class DrawAuthoringController extends DrawController {
       StudentDataService,
       UtilService
     );
+
+    this.ProjectAssetService = ProjectAssetService;
 
     this.allowedConnectedComponentTypes = [
       { type: 'ConceptMap' },
@@ -93,30 +99,6 @@ class DrawAuthoringController extends DrawController {
       }.bind(this),
       true
     );
-  }
-
-  assetSelected(event, args) {
-    if (this.isEventTargetThisComponent(args)) {
-      const fileName = args.assetItem.fileName;
-      if (args.target === 'rubric') {
-        const summernoteId = this.getSummernoteId(args);
-        this.restoreSummernoteCursorPosition(summernoteId);
-        const fullAssetPath = this.getFullAssetPath(fileName);
-        if (this.UtilService.isImage(fileName)) {
-          this.insertImageIntoSummernote(summernoteId, fullAssetPath, fileName);
-        } else if (this.UtilService.isVideo(fileName)) {
-          this.insertVideoIntoSummernote(summernoteId, fullAssetPath);
-        }
-      } else if (args.target === 'background') {
-        this.authoringComponentContent.background = fileName;
-        this.authoringViewBackgroundChanged();
-      } else if (args.target === 'stamp') {
-        const stampIndex = args.targetObject;
-        this.setStampImage(stampIndex, fileName);
-        this.authoringViewBackgroundChanged();
-      }
-    }
-    this.$mdDialog.hide();
   }
 
   authoringAddStampButtonClicked() {
@@ -289,7 +271,45 @@ class DrawAuthoringController extends DrawController {
       componentId: this.componentId,
       target: 'background'
     };
-    this.$rootScope.$broadcast('openAssetChooser', params);
+    this.openAssetChooser(params);
+  }
+
+  chooseStampImage(stampIndex) {
+    const params = {
+      isPopup: true,
+      nodeId: this.nodeId,
+      componentId: this.componentId,
+      target: 'stamp',
+      targetObject: stampIndex
+    };
+    this.openAssetChooser(params);
+  }
+
+  openAssetChooser(params: any) {
+    this.ProjectAssetService.openAssetChooser(params).then(
+      (data: any) => { this.assetSelected(data) }
+    );
+  }
+
+  assetSelected(args: any) {
+    const fileName = args.assetItem.fileName;
+    if (args.target === 'rubric') {
+      const summernoteId = this.getSummernoteId(args);
+      this.restoreSummernoteCursorPosition(summernoteId);
+      const fullAssetPath = this.getFullAssetPath(fileName);
+      if (this.UtilService.isImage(fileName)) {
+        this.insertImageIntoSummernote(summernoteId, fullAssetPath, fileName);
+      } else if (this.UtilService.isVideo(fileName)) {
+        this.insertVideoIntoSummernote(summernoteId, fullAssetPath);
+      }
+    } else if (args.target === 'background') {
+      this.authoringComponentContent.background = fileName;
+      this.authoringViewBackgroundChanged();
+    } else if (args.target === 'stamp') {
+      const stampIndex = args.targetObject;
+      this.setStampImage(stampIndex, fileName);
+      this.authoringViewBackgroundChanged();
+    }
   }
 
   authoringViewBackgroundChanged() {
@@ -314,17 +334,6 @@ class DrawAuthoringController extends DrawController {
         this.authoringComponentContent.starterDrawData = angular.toJson(starterDrawDataJSON);
       }
     }
-  }
-
-  chooseStampImage(stampIndex) {
-    const params = {
-      isPopup: true,
-      nodeId: this.nodeId,
-      componentId: this.componentId,
-      target: 'stamp',
-      targetObject: stampIndex
-    };
-    this.$rootScope.$broadcast('openAssetChooser', params);
   }
 
   /**
