@@ -27,19 +27,17 @@ export class TeacherDataService extends DataService {
   studentProgressSort = 'team';
   private currentPeriodChangedSource: Subject<any> = new Subject<any>();
   public currentPeriodChanged$ = this.currentPeriodChangedSource.asObservable();
-  private currentNodeChangedSource: Subject<any> = new Subject<any>();
-  public currentNodeChanged$ = this.currentNodeChangedSource.asObservable();
 
   constructor(
-    private upgrade: UpgradeModule,
+    upgrade: UpgradeModule,
     private http: HttpClient,
     private AnnotationService: AnnotationService,
     private ConfigService: ConfigService,
-    private ProjectService: TeacherProjectService,
+    ProjectService: TeacherProjectService,
     private TeacherWebSocketService: TeacherWebSocketService,
     private UtilService: UtilService
   ) {
-    super();
+    super(upgrade, ProjectService);
     this.studentData = {
       componentStatesByWorkgroupId: {},
       componentStatesByNodeId: {},
@@ -305,7 +303,8 @@ export class TeacherDataService extends DataService {
   }
 
   getAllRelatedComponents(nodeId) {
-    const components = this.ProjectService.getNodeIdsAndComponentIds(nodeId);
+    const components = (<TeacherProjectService>this.ProjectService)
+        .getNodeIdsAndComponentIds(nodeId);
     return components.concat(this.getConnectedComponentsIfNecessary(components));
   }
 
@@ -878,37 +877,6 @@ export class TeacherDataService extends DataService {
 
   getCurrentStep() {
     return this.currentStep;
-  }
-
-  setCurrentNodeByNodeId(nodeId) {
-    if (nodeId != null) {
-      this.setCurrentNode(this.ProjectService.getNodeById(nodeId));
-    }
-  }
-
-  setCurrentNode(node) {
-    const previousCurrentNode = this.currentNode;
-    if (previousCurrentNode !== node) {
-      if (previousCurrentNode && !this.ProjectService.isGroupNode(previousCurrentNode.id)) {
-        this.previousStep = previousCurrentNode;
-      }
-      this.currentNode = node;
-      this.broadcastCurrentNodeChanged({
-        previousNode: previousCurrentNode,
-        currentNode: this.currentNode
-      });
-    }
-  }
-
-  broadcastCurrentNodeChanged(previousAndCurrentNode: any) {
-    this.currentNodeChangedSource.next(previousAndCurrentNode);
-  }
-
-  endCurrentNode() {
-    const previousCurrentNode = this.currentNode;
-    if (previousCurrentNode != null) {
-      this.getRootScope().$broadcast('exitNode', { nodeToExit: previousCurrentNode });
-    }
   }
 
   /**
