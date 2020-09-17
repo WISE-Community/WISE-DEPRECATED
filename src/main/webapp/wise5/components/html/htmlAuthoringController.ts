@@ -91,7 +91,8 @@ class HTMLAuthoringController extends HTMLController {
           this.nodeId,
           this.componentId,
           'prompt',
-          this.$translate('INSERT_WISE_LINK')
+          this.$translate('INSERT_WISE_LINK'),
+          this.createOpenWISELinkChooserFunction()
         ),
         insertAssetButton: this.UtilService.createInsertAssetButton(
           null,
@@ -118,8 +119,44 @@ class HTMLAuthoringController extends HTMLController {
     );
   }
 
-  $onInit() {
-    this.registerWISELinkListener();
+  createOpenWISELinkChooserFunction() {
+    return (params: any) => {
+      this.openWISELinkChooser(params).then((linkParams: any) => {
+        this.createWISELink(linkParams)
+      });
+    }
+  }
+
+  openWISELinkChooser({ projectId, nodeId, componentId, target }) {
+    const stateParams = {
+      projectId: projectId,
+      nodeId: nodeId,
+      componentId: componentId,
+      target: target
+    };
+    return this.$mdDialog.show({
+      templateUrl: 'wise5/authoringTool/wiseLink/wiseLinkAuthoring.html',
+      controller: 'WISELinkAuthoringController',
+      controllerAs: 'wiseLinkAuthoringController',
+      $stateParams: stateParams,
+      clickOutsideToClose: true,
+      escapeToClose: true
+    });
+  }
+
+  createWISELink({ nodeId, componentId, wiseLinkNodeId, wiseLinkComponentId, wiseLinkType,
+      wiseLinkText, target }) {
+    if (nodeId === this.nodeId && componentId === this.componentId && target === 'prompt') {
+      if (wiseLinkType === 'link') {
+        this.injectWISELinkToPrompt(
+          this.createWISELinkLinkElement(wiseLinkNodeId, wiseLinkComponentId, wiseLinkText)
+        );
+      } else {
+        this.injectWISELinkToPrompt(
+          this.createWISELinkButtonElement(wiseLinkNodeId, wiseLinkComponentId, wiseLinkText)
+        );
+      }
+    }
   }
 
   createOpenAssetChooserFunction() {
@@ -146,37 +183,6 @@ class HTMLAuthoringController extends HTMLController {
         fileName
       );
     }
-  }
-
-  registerWISELinkListener() {
-    this.$scope.$on(
-      'createWISELink',
-      (
-        event,
-        {
-          nodeId,
-          componentId,
-          wiseLinkNodeId,
-          wiseLinkComponentId,
-          wiseLinkType,
-          wiseLinkText,
-          target
-        }
-      ) => {
-        if (nodeId === this.nodeId && componentId === this.componentId && target === 'prompt') {
-          if (wiseLinkType === 'link') {
-            this.injectWISELinkToPrompt(
-              this.createWISELinkLinkElement(wiseLinkNodeId, wiseLinkComponentId, wiseLinkText)
-            );
-          } else {
-            this.injectWISELinkToPrompt(
-              this.createWISELinkButtonElement(wiseLinkNodeId, wiseLinkComponentId, wiseLinkText)
-            );
-          }
-        }
-        this.$mdDialog.hide();
-      }
-    );
   }
 
   createWISELinkLinkElement(wiseLinkNodeId, wiseLinkComponentId = '', wiseLinkText) {

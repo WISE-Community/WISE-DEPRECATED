@@ -252,23 +252,6 @@ class AuthoringToolController {
       this.setGlobalMessage(this.$translate('notAllowedToEditThisProject'), false, null);
     });
 
-    this.$scope.$on('openWISELinkChooser', (event, params) => {
-      const stateParams = {
-        projectId: params.projectId,
-        nodeId: params.nodeId,
-        componentId: params.componentId,
-        target: params.target
-      };
-      this.$mdDialog.show({
-        templateUrl: 'wise5/authoringTool/wiseLink/wiseLinkAuthoring.html',
-        controller: 'WISELinkAuthoringController',
-        controllerAs: 'wiseLinkAuthoringController',
-        $stateParams: stateParams,
-        clickOutsideToClose: true,
-        escapeToClose: true
-      });
-    });
-
     if (this.$state.current.name === 'root.at.main') {
       this.saveEvent('projectListViewed', 'Navigation');
     }
