@@ -58,11 +58,11 @@ export class DataService {
 
   setCurrentNode(node) {
     const previousCurrentNode = this.currentNode;
+    this.currentNode = node;
     if (previousCurrentNode !== node) {
       if (previousCurrentNode && !this.ProjectService.isGroupNode(previousCurrentNode.id)) {
         this.previousStep = previousCurrentNode;
       }
-      this.currentNode = node;
       this.broadcastCurrentNodeChanged({
         previousNode: previousCurrentNode,
         currentNode: this.currentNode
