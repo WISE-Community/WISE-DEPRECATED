@@ -1,15 +1,19 @@
 'use strict';
 
-import { ProjectAssetService } from '../../../site/src/app/services/projectAssetService';
-import OutsideURLController from './outsideURLController';
+import { ComponentAuthoringController } from '../componentAuthoringController';
+import { OutsideURLService } from './outsideURLService';
 
-class OutsideURLAuthoringController extends OutsideURLController {
-  ProjectAssetService: ProjectAssetService;
+class OutsideURLAuthoringController extends ComponentAuthoringController {
+  height: string;
+  info: string;
   isShowOERs: boolean;
+  openEducationalResources: any[];
+  outsideURLIFrameId: string;
   subjects: any[];
   searchText: string;
   selectedSubjects: any[];
-  openEducationalResources: any[];
+  url: string;
+  width: string;
 
   static $inject = [
     '$filter',
@@ -18,6 +22,8 @@ class OutsideURLAuthoringController extends OutsideURLController {
     '$rootScope',
     '$sce',
     '$scope',
+    '$state',
+    '$stateParams',
     'AnnotationService',
     'ConfigService',
     'NodeService',
@@ -37,11 +43,13 @@ class OutsideURLAuthoringController extends OutsideURLController {
     $rootScope,
     $sce,
     $scope,
+    $state,
+    $stateParams,
     AnnotationService,
     ConfigService,
     NodeService,
     NotebookService,
-    OutsideURLService,
+    private OutsideURLService: OutsideURLService,
     ProjectAssetService,
     ProjectService,
     StudentAssetService,
@@ -49,23 +57,24 @@ class OutsideURLAuthoringController extends OutsideURLController {
     UtilService
   ) {
     super(
-      $filter,
-      $mdDialog,
       $q,
       $rootScope,
-      $sce,
       $scope,
+      $state,
+      $stateParams,
+      $sce,
+      $filter,
+      $mdDialog,
       AnnotationService,
       ConfigService,
       NodeService,
       NotebookService,
-      OutsideURLService,
+      ProjectAssetService,
       ProjectService,
       StudentAssetService,
       StudentDataService,
       UtilService
     );
-    this.ProjectAssetService = ProjectAssetService;
     this.$translate = this.$filter('translate');
     this.isShowOERs = this.componentContent.url === '';
     this.subjects = [
@@ -111,10 +120,25 @@ class OutsideURLAuthoringController extends OutsideURLController {
     });
   }
 
-  openAssetChooser(params: any) {
-    this.ProjectAssetService.openAssetChooser(params).then(
-      (data: any) => { this.assetSelected(data) }
-    );
+  setURL(url) {
+    if (url == null || url === '') {
+      this.url = ' ';
+    } else {
+      this.url = this.$sce.trustAsResourceUrl(url);
+    }
+  }
+
+  setInfo(info) {
+    if (info == null || info === '') {
+      this.info = this.url;
+    } else {
+      this.info = this.$sce.trustAsResourceUrl(info);
+    }
+  }
+
+  setWidthAndHeight(width, height) {
+    this.width = width ? width + 'px' : '100%';
+    this.height = height ? height + 'px' : '600px';
   }
 
   assetSelected({ nodeId, componentId, assetItem, target }) {

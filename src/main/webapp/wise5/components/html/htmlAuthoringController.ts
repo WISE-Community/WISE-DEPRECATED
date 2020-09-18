@@ -187,12 +187,6 @@ class HTMLAuthoringController extends ComponentAuthoringController {
     return wiseLinkElement;
   }
 
-  openAssetChooser(params: any): void {
-    this.ProjectAssetService.openAssetChooser(params).then(
-      (data: any) => { this.assetSelected(data) }
-    );
-  }
-
   assetSelected({ nodeId, componentId, assetItem, target }) {
     const fileName = assetItem.fileName;
     const fullFilePath = `${this.ConfigService.getProjectAssetsDirectoryPath()}/${fileName}`;

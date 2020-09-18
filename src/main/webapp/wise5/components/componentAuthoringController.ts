@@ -197,9 +197,15 @@ export abstract class ComponentAuthoringController {
     this.authoringViewComponentChanged();
   }
 
+  openAssetChooser(params: any): void {
+    this.ProjectAssetService.openAssetChooser(params).then(
+      (data: any) => { this.assetSelected(data) }
+    );
+  }
+
   /**
-   * This function should be implemented by child components.
-   * @param params and object containing key value pairs
+   * Callback when author selects an asset
+   * @param data object containing key value pairs
    */
-  abstract openAssetChooser(params: any): void;
+  abstract assetSelected(data: any): void;
 }
