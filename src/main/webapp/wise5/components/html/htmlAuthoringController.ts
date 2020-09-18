@@ -2,9 +2,9 @@
 
 import * as angular from 'angular';
 import { ProjectAssetService } from '../../../site/src/app/services/projectAssetService';
-import HTMLController from './htmlController';
+import { ComponentAuthoringController } from '../componentAuthoringController';
 
-class HTMLAuthoringController extends HTMLController {
+class HTMLAuthoringController extends ComponentAuthoringController {
   ProjectAssetService: ProjectAssetService;
   summernotePromptHTML: string;
   summernotePromptOptions: any;
@@ -62,12 +62,12 @@ class HTMLAuthoringController extends HTMLController {
       ConfigService,
       NodeService,
       NotebookService,
+      ProjectAssetService,
       ProjectService,
       StudentAssetService,
       StudentDataService,
       UtilService
     );
-    this.ProjectAssetService = ProjectAssetService;
     this.summernotePromptHTML = '';
     this.summernotePromptOptions = {
       toolbar: [
@@ -100,7 +100,7 @@ class HTMLAuthoringController extends HTMLController {
           this.componentId,
           'prompt',
           this.$translate('INSERT_ASSET'),
-          this.createOpenAssetChooserFunction()
+          (params: any) => { this.openAssetChooser(params); }
         )
       },
       dialogsInBody: true
@@ -187,12 +187,10 @@ class HTMLAuthoringController extends HTMLController {
     return wiseLinkElement;
   }
 
-  createOpenAssetChooserFunction() {
-    return (params: any) => {
-      this.ProjectAssetService.openAssetChooser(params).then(
-        (data: any) => { this.assetSelected(data) }
-      );
-    }
+  openAssetChooser(params: any): void {
+    this.ProjectAssetService.openAssetChooser(params).then(
+      (data: any) => { this.assetSelected(data) }
+    );
   }
 
   assetSelected({ nodeId, componentId, assetItem, target }) {
