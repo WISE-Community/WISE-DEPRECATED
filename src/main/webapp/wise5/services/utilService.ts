@@ -343,8 +343,8 @@ export class UtilService {
    * @param tooltip the tooltip text for the custom button
    * @return custom summernote button
    */
-  createInsertWISELinkButton(projectId, nodeId, componentId, target, tooltip) {
-    const thisRootScope = this.upgrade.$injector.get('$rootScope');
+  createInsertWISELinkButton(projectId, nodeId, componentId, target, tooltip,
+      openWISELinkChooserFunction) {
     const InsertWISELinkButton = function(context) {
       const ui = ($ as any).summernote.ui;
       const button = ui.button({
@@ -363,7 +363,7 @@ export class UtilService {
             params.componentId = componentId;
           }
           params.target = target;
-          thisRootScope.$broadcast('openWISELinkChooser', params);
+          openWISELinkChooserFunction(params);
         }
       });
       return button.render(); // return button as jquery object

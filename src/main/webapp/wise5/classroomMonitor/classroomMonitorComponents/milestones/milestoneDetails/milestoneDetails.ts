@@ -13,6 +13,7 @@ class MilestoneDetailsController {
   milestone: any;
   periodId: number;
   requirements: any;
+  currentPeriodChangedSubscription: any;
 
   static $inject = [
     '$filter',
@@ -24,7 +25,7 @@ class MilestoneDetailsController {
   ];
   constructor(
     $filter,
-    $scope,
+    private $scope,
     private ConfigService: ConfigService,
     private NodeService: NodeService,
     private ProjectService: TeacherProjectService,
@@ -32,10 +33,22 @@ class MilestoneDetailsController {
   ) {
     this.$translate = $filter('translate');
     this.periodId = this.TeacherDataService.getCurrentPeriod().periodId;
-    $scope.$on('currentPeriodChanged', (event, { currentPeriod }) => {
+    this.currentPeriodChangedSubscription = this.TeacherDataService.currentPeriodChanged$
+        .subscribe(({ currentPeriod }) => {
       this.periodId = currentPeriod.periodId;
       this.saveMilestoneCurrentPeriodSelectedEvent(currentPeriod);
     });
+    this.$scope.$on('$destroy', () => {
+      this.ngOnDestroy();
+    });
+  }
+
+  ngOnDestroy() {
+    this.unsubscribeAll();
+  }
+
+  unsubscribeAll() {
+    this.currentPeriodChangedSubscription.unsubscribe();
   }
 
   $onInit() {

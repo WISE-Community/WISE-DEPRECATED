@@ -3,10 +3,12 @@
 import * as angular from 'angular';
 import { AchievementService } from '../../services/achievementService';
 import { MilestoneService } from '../../services/milestoneService';
+import { TeacherDataService } from '../../services/teacherDataService';
 
 class MilestonesController {
   $translate: any;
   milestones: any[];
+  currentPeriodChangedSubscription: any;
   static $inject = [
     '$filter',
     '$mdDialog',
@@ -14,6 +16,7 @@ class MilestonesController {
     '$scope',
     'AchievementService',
     'MilestoneService',
+    'TeacherDataService',
     'moment'
   ];
   constructor(
@@ -23,6 +26,7 @@ class MilestonesController {
     private $scope: any,
     private AchievementService: AchievementService,
     private MilestoneService: MilestoneService,
+    private TeacherDataService: TeacherDataService,
     private moment: any
   ) {
     this.$translate = this.$filter('translate');
@@ -36,7 +40,8 @@ class MilestonesController {
       }
     });
 
-    this.$scope.$on('currentPeriodChanged', () => {
+    this.currentPeriodChangedSubscription = this.TeacherDataService.currentPeriodChanged$
+        .subscribe(() => {
       for (let milestone of this.milestones) {
         this.updateMilestoneStatus(milestone.id);
       }
@@ -60,6 +65,18 @@ class MilestonesController {
     this.$scope.$on('milestoneDeleted', () => {
       this.loadProjectMilestones();
     });
+
+    this.$scope.$on('$destroy', () => {
+      this.ngOnDestroy();
+    });
+  }
+
+  ngOnDestroy() {
+    this.unsubscribeAll();
+  }
+
+  unsubscribeAll() {
+    this.currentPeriodChangedSubscription.unsubscribe();
   }
 
   loadProjectMilestones() {

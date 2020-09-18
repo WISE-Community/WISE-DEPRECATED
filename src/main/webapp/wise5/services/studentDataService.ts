@@ -88,17 +88,16 @@ export class StudentDataService extends DataService {
   public pauseScreen$ = this.pauseScreenSource.asObservable();
   private componentStudentDataSource: Subject<any> = new Subject<any>();
   public componentStudentData$ = this.componentStudentDataSource.asObservable();
-  private currentNodeChangedSource: Subject<any> = new Subject<any>();
-  public currentNodeChanged$ = this.currentNodeChangedSource.asObservable();
 
-  constructor(private upgrade: UpgradeModule,
+  constructor(
+      upgrade: UpgradeModule,
       public http: HttpClient,
       private AnnotationService: AnnotationService,
       private ConfigService: ConfigService,
-      private ProjectService: ProjectService,
+      ProjectService: ProjectService,
       private TagService: TagService,
       private UtilService: UtilService) {
-    super();
+    super(upgrade, ProjectService);
   }
 
   pauseScreen(doPause: boolean) {
@@ -1343,36 +1342,6 @@ export class StudentDataService extends DataService {
       }
     }
     return result;
-  }
-
-  setCurrentNodeByNodeId(nodeId) {
-    const node = this.ProjectService.getNodeById(nodeId);
-    this.setCurrentNode(node);
-  }
-
-  setCurrentNode(node) {
-    const previousCurrentNode = this.currentNode;
-    if (previousCurrentNode !== node) {
-      if (previousCurrentNode && !this.ProjectService.isGroupNode(previousCurrentNode.id)) {
-        this.previousStep = previousCurrentNode;
-      }
-      this.currentNode = node;
-      this.broadcastCurrentNodeChanged({
-        previousNode: previousCurrentNode,
-        currentNode: this.currentNode
-      });
-    }
-  }
-
-  broadcastCurrentNodeChanged(previousAndCurrentNode: any) {
-    this.currentNodeChangedSource.next(previousAndCurrentNode);
-  }
-
-  endCurrentNode() {
-    const previousCurrentNode = this.currentNode;
-    if (previousCurrentNode != null) {
-      this.upgrade.$injector.get('$rootScope').$broadcast('exitNode', { nodeToExit: previousCurrentNode });
-    }
   }
 
   endCurrentNodeAndSetCurrentNodeByNodeId(nodeId) {

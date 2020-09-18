@@ -37,6 +37,7 @@ class NodeGradingViewController {
   workgroups: any;
   workgroupsById: any;
   workVisibilityById: any;
+  currentPeriodChangedSubscription: any;
 
   static $inject = [
     '$filter',
@@ -130,7 +131,8 @@ class NodeGradingViewController {
       }
     });
 
-    this.$scope.$on('currentPeriodChanged', () => {
+    this.currentPeriodChangedSubscription = this.TeacherDataService.currentPeriodChanged$
+        .subscribe(() => {
       if (!this.milestone) {
         this.milestoneReport = this.MilestoneService.getMilestoneReportByNodeId(this.nodeId);
       }
@@ -139,6 +141,18 @@ class NodeGradingViewController {
     if (!this.isDisplayInMilestone()) {
       this.saveNodeGradingViewDisplayedEvent();
     }
+
+    this.$scope.$on('$destroy', () => {
+      this.ngOnDestroy();
+    });
+  }
+
+  ngOnDestroy() {
+    this.unsubscribeAll();
+  }
+
+  unsubscribeAll() {
+    this.currentPeriodChangedSubscription.unsubscribe();
   }
 
   saveNodeGradingViewDisplayedEvent() {

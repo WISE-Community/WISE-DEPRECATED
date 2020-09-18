@@ -91,7 +91,8 @@ class HTMLAuthoringController extends HTMLController {
           this.nodeId,
           this.componentId,
           'prompt',
-          this.$translate('INSERT_WISE_LINK')
+          this.$translate('INSERT_WISE_LINK'),
+          this.createOpenWISELinkChooserFunction()
         ),
         insertAssetButton: this.UtilService.createInsertAssetButton(
           null,
@@ -118,8 +119,72 @@ class HTMLAuthoringController extends HTMLController {
     );
   }
 
-  $onInit() {
-    this.registerWISELinkListener();
+  createOpenWISELinkChooserFunction() {
+    return (params: any) => {
+      this.openWISELinkChooser(params).then((linkParams: any) => {
+        this.createWISELink(linkParams)
+      });
+    }
+  }
+
+  openWISELinkChooser({ projectId, nodeId, componentId, target }) {
+    const stateParams = {
+      projectId: projectId,
+      nodeId: nodeId,
+      componentId: componentId,
+      target: target
+    };
+    return this.$mdDialog.show({
+      templateUrl: 'wise5/authoringTool/wiseLink/wiseLinkAuthoring.html',
+      controller: 'WISELinkAuthoringController',
+      controllerAs: 'wiseLinkAuthoringController',
+      $stateParams: stateParams,
+      clickOutsideToClose: true,
+      escapeToClose: true
+    });
+  }
+
+  createWISELink({ nodeId, componentId, wiseLinkNodeId, wiseLinkComponentId, wiseLinkType,
+      wiseLinkText, target }) {
+    if (nodeId === this.nodeId && componentId === this.componentId && target === 'prompt') {
+      this.injectWISELinkToPrompt(
+        this.createWISELinkElement(wiseLinkType, wiseLinkNodeId, wiseLinkComponentId, wiseLinkText)
+      );
+    }
+  }
+
+  injectWISELinkToPrompt(wiseLinkElement) {
+    const summernoteId = 'summernotePrompt_' + this.nodeId + '_' + this.componentId;
+    angular.element(document.querySelector(`#${summernoteId}`)).summernote('editor.restoreRange');
+    angular.element(document.querySelector(`#${summernoteId}`)).summernote('editor.focus');
+    angular
+      .element(document.querySelector(`#${summernoteId}`))
+      .summernote('insertNode', wiseLinkElement);
+    angular
+      .element(document.querySelector(`#${summernoteId}`))
+      .summernote('insertNode', document.createElement('br'));
+  }
+
+  /**
+   * @param type Allowed values are 'link' or 'button'.
+   */
+  createWISELinkElement(type: string, wiseLinkNodeId: string, wiseLinkComponentId: string = '',
+      wiseLinkText: string) {
+    let wiseLinkElement: any;
+    if (type === 'link') {
+      wiseLinkElement = document.createElement('a');
+    } else {
+      wiseLinkElement = document.createElement('button');
+    }
+    wiseLinkElement.setAttribute('type', type);
+    wiseLinkElement.setAttribute('wiselink', true);
+    wiseLinkElement.setAttribute('node-id', wiseLinkNodeId);
+    if (wiseLinkComponentId != '') {
+      wiseLinkElement.setAttribute('component-id', wiseLinkComponentId);
+    }
+    wiseLinkElement.setAttribute('link-text', wiseLinkText);
+    wiseLinkElement.innerHTML = wiseLinkText;
+    return wiseLinkElement;
   }
 
   createOpenAssetChooserFunction() {
@@ -146,75 +211,6 @@ class HTMLAuthoringController extends HTMLController {
         fileName
       );
     }
-  }
-
-  registerWISELinkListener() {
-    this.$scope.$on(
-      'createWISELink',
-      (
-        event,
-        {
-          nodeId,
-          componentId,
-          wiseLinkNodeId,
-          wiseLinkComponentId,
-          wiseLinkType,
-          wiseLinkText,
-          target
-        }
-      ) => {
-        if (nodeId === this.nodeId && componentId === this.componentId && target === 'prompt') {
-          if (wiseLinkType === 'link') {
-            this.injectWISELinkToPrompt(
-              this.createWISELinkLinkElement(wiseLinkNodeId, wiseLinkComponentId, wiseLinkText)
-            );
-          } else {
-            this.injectWISELinkToPrompt(
-              this.createWISELinkButtonElement(wiseLinkNodeId, wiseLinkComponentId, wiseLinkText)
-            );
-          }
-        }
-        this.$mdDialog.hide();
-      }
-    );
-  }
-
-  createWISELinkLinkElement(wiseLinkNodeId, wiseLinkComponentId = '', wiseLinkText) {
-    const wiseLinkElement: any = document.createElement('a');
-    wiseLinkElement.innerHTML = wiseLinkText;
-    wiseLinkElement.setAttribute('wiselink', true);
-    wiseLinkElement.setAttribute('node-id', wiseLinkNodeId);
-    if (wiseLinkComponentId != '') {
-      wiseLinkElement.setAttribute('component-id', wiseLinkComponentId);
-    }
-    wiseLinkElement.setAttribute('type', 'link');
-    wiseLinkElement.setAttribute('link-text', wiseLinkText);
-    return wiseLinkElement;
-  }
-
-  createWISELinkButtonElement(wiseLinkNodeId, wiseLinkComponentId = '', wiseLinkText) {
-    const wiseLinkElement: any = document.createElement('button');
-    wiseLinkElement.innerHTML = wiseLinkText;
-    wiseLinkElement.setAttribute('wiselink', true);
-    wiseLinkElement.setAttribute('node-id', wiseLinkNodeId);
-    if (wiseLinkComponentId != '') {
-      wiseLinkElement.setAttribute('component-id', wiseLinkComponentId);
-    }
-    wiseLinkElement.setAttribute('type', 'button');
-    wiseLinkElement.setAttribute('link-text', wiseLinkText);
-    return wiseLinkElement;
-  }
-
-  injectWISELinkToPrompt(wiseLinkElement) {
-    const summernoteId = 'summernotePrompt_' + this.nodeId + '_' + this.componentId;
-    angular.element(document.querySelector(`#${summernoteId}`)).summernote('editor.restoreRange');
-    angular.element(document.querySelector(`#${summernoteId}`)).summernote('editor.focus');
-    angular
-      .element(document.querySelector(`#${summernoteId}`))
-      .summernote('insertNode', wiseLinkElement);
-    angular
-      .element(document.querySelector(`#${summernoteId}`))
-      .summernote('insertNode', document.createElement('br'));
   }
 
   summernotePromptHTMLChanged() {
