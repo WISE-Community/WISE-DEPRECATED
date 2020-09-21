@@ -1544,7 +1544,7 @@ class GraphController extends ComponentController {
 
   setActiveSeriesByIndex(index) {
     const series = this.getSeriesByIndex(index);
-    if (series.yAxis == null) {
+    if (series != null && series.yAxis == null) {
       series.yAxis = 0;
     }
     this.setActiveSeries(series);
