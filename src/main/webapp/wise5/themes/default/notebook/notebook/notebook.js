@@ -90,7 +90,6 @@ class NotebookController {
 
     this.logOutListener = $scope.$on('logOut', (event, args) => {
       this.logOutListener();
-      this.$rootScope.$broadcast('componentDoneUnloading');
     });
 
     this.notebook = this.NotebookService.getNotebookByWorkgroup(this.workgroupId);

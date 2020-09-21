@@ -63,6 +63,7 @@ class DrawController extends ComponentController {
   ) {
     super(
       $filter,
+      $injector,
       $mdDialog,
       $q,
       $rootScope,
@@ -673,7 +674,7 @@ class DrawController extends ComponentController {
    * @param componentState A component state.
    */
   setComponentStateAsBackgroundImage(componentState) {
-    this.UtilService.generateImageFromComponentState(componentState).then(image => {
+    this.generateImageFromComponentState(componentState).then(image => {
       this.drawingTool.setBackgroundImage(image.url);
     });
   }

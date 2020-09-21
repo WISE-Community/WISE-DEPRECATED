@@ -8,6 +8,7 @@ import { ConceptMapService } from './conceptMapService';
 
 class ConceptMapController extends ComponentController {
   $anchorScroll: any;
+  $injector: any;
   $location: any;
   $q: any;
   $timeout: any;
@@ -54,6 +55,7 @@ class ConceptMapController extends ComponentController {
   static $inject = [
     '$anchorScroll',
     '$filter',
+    '$injector',
     '$location',
     '$mdDialog',
     '$q',
@@ -74,6 +76,7 @@ class ConceptMapController extends ComponentController {
   constructor(
     $anchorScroll,
     $filter,
+    $injector,
     $location,
     $mdDialog,
     $q,
@@ -92,6 +95,7 @@ class ConceptMapController extends ComponentController {
   ) {
     super(
       $filter,
+      $injector,
       $mdDialog,
       $q,
       $rootScope,
@@ -186,6 +190,7 @@ class ConceptMapController extends ComponentController {
     this.$timeout(angular.bind(this, this.initializeSVG));
 
     this.initializeScopeGetComponentState(this.$scope, 'conceptMapController');
+    this.broadcastDoneRenderingComponent();
   }
 
   initialize() {
@@ -1951,7 +1956,7 @@ class ConceptMapController extends ComponentController {
    * @param componentState A component state.
    */
   setComponentStateAsBackgroundImage(componentState) {
-    this.UtilService.generateImageFromComponentState(componentState).then(image => {
+    this.generateImageFromComponentState(componentState).then(image => {
       const stretchBackground = false;
       this.setBackgroundImage(image.url, stretchBackground);
     });

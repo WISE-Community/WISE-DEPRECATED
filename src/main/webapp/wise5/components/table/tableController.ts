@@ -37,6 +37,7 @@ class TableController extends ComponentController {
   static $inject = [
     '$anchorScroll',
     '$filter',
+    '$injector',
     '$location',
     '$mdDialog',
     '$q',
@@ -56,6 +57,7 @@ class TableController extends ComponentController {
   constructor(
     $anchorScroll,
     $filter,
+    $injector,
     $location,
     $mdDialog,
     $q,
@@ -73,6 +75,7 @@ class TableController extends ComponentController {
   ) {
     super(
       $filter,
+      $injector,
       $mdDialog,
       $q,
       $rootScope,
@@ -324,10 +327,7 @@ class TableController extends ComponentController {
       return array;
     };
 
-    this.$rootScope.$broadcast('doneRenderingComponent', {
-      nodeId: this.nodeId,
-      componentId: this.componentId
-    });
+    this.broadcastDoneRenderingComponent();
   }
 
   registerStudentWorkSavedToServerListener() {

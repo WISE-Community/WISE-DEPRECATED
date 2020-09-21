@@ -35,7 +35,6 @@ class StudentAssetController {
     
     this.SessionService.logOut$.subscribe(() => {
       this.logOutListener();
-      this.$rootScope.$broadcast('componentDoneUnloading');
     });
 
     if (!this.ConfigService.isPreview()) {

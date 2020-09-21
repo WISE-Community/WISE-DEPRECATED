@@ -9,6 +9,7 @@ class OpenResponseAuthoringController extends OpenResponseController {
 
   static $inject = [
     '$filter',
+    '$injector',
     '$mdDialog',
     '$q',
     '$rootScope',
@@ -30,6 +31,7 @@ class OpenResponseAuthoringController extends OpenResponseController {
 
   constructor(
     $filter,
+    $injector,
     $mdDialog,
     $q,
     $rootScope,
@@ -50,6 +52,7 @@ class OpenResponseAuthoringController extends OpenResponseController {
   ) {
     super(
       $filter,
+      $injector,
       $mdDialog,
       $q,
       $rootScope,
