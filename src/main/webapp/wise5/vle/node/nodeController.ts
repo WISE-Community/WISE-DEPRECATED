@@ -227,7 +227,7 @@ class NodeController {
         }
       }
       this.notifyConnectedParts(componentId, componentState);
-      this.$scope.$broadcast('siblingComponentStudentDataChanged', componentStudentData);
+      this.NodeService.broadcastSiblingComponentStudentDataChanged(componentStudentData);
     });
 
     this.$scope.$on('$destroy', () => {
