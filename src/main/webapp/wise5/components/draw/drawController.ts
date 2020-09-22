@@ -591,7 +591,7 @@ class DrawController extends ComponentController {
       const canvasBase64Image = canvas.toDataURL('image/png');
       const imageObject = this.UtilService.getImageObjectFromBase64String(canvasBase64Image);
       const noteText = null;
-      this.NotebookService.addNote($event, imageObject, noteText, [studentWorkId]);
+      this.NotebookService.addNote(imageObject, noteText, [studentWorkId]);
     }
   }
 

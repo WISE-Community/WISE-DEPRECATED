@@ -23,6 +23,7 @@ class MatchController extends ComponentController {
   sourceBucket: any;
   privateNotebookItems: any[];
   autoScroll: any;
+  notebookUpdatedSubscription: any;
 
   static $inject = [
     '$filter',
@@ -106,7 +107,8 @@ class MatchController extends ComponentController {
         this.privateNotebookItems = allPrivateNotebookItems.filter(note => { 
           return note.serverDeleteTime == null
         });
-        this.$rootScope.$on('notebookUpdated', (event, args) => {
+        this.notebookUpdatedSubscription = this.NotebookService.notebookUpdated$
+            .subscribe((args) => {
           if (args.notebookItem.type === 'note') {
             this.addNotebookItemToSourceBucket(args.notebookItem);
           }
@@ -202,6 +204,20 @@ class MatchController extends ComponentController {
       nodeId: this.nodeId,
       componentId: this.componentId
     });
+
+    this.$scope.$on('$destroy', () => {
+      this.ngOnDestroy();
+    });
+  }
+
+  ngOnDestroy() {
+    this.unsubscribeAll();
+  }
+
+  unsubscribeAll() {
+    if (this.notebookUpdatedSubscription != null) {
+      this.notebookUpdatedSubscription.unsubscribe();
+    }
   }
 
   addNotebookItemToSourceBucket(notebookItem) {

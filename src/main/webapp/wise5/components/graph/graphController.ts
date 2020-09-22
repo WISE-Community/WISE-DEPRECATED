@@ -2700,7 +2700,7 @@ class GraphController extends ComponentController {
       renderCallback: () => {
         const base64Image = hiddenCanvas.toDataURL('image/png');
         const imageObject = this.UtilService.getImageObjectFromBase64String(base64Image);
-        this.NotebookService.addNote($event, imageObject);
+        this.NotebookService.addNote(imageObject);
       }
     });
   }

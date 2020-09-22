@@ -873,7 +873,6 @@ class OpenResponseController extends ComponentController {
           const isEditTextEnabled = false;
           const isFileUploadEnabled = false;
           this.NotebookService.addNote(
-            $event,
             imageObject,
             noteText,
             [componentState.id],
@@ -894,7 +893,6 @@ class OpenResponseController extends ComponentController {
       const isEditTextEnabled = false;
       const isFileUploadEnabled = false;
       this.NotebookService.addNote(
-        $event,
         imageObject,
         noteText,
         [studentWork.id],

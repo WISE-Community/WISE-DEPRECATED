@@ -1516,7 +1516,7 @@ class LabelController extends ComponentController {
       const imageObject = this.UtilService.getImageObjectFromBase64String(img_b64);
 
       // create a notebook item with the image populated into it
-      this.NotebookService.addNote($event, imageObject);
+      this.NotebookService.addNote(imageObject);
     }
   }
 

@@ -424,7 +424,7 @@ class EmbeddedController extends ComponentController {
         html2canvas(modelElement).then(canvas => {
           const base64Image = canvas.toDataURL('image/png');
           const imageObject = this.UtilService.getImageObjectFromBase64String(base64Image);
-          this.NotebookService.addNote($event, imageObject);
+          this.NotebookService.addNote(imageObject);
         });
       }
     }
