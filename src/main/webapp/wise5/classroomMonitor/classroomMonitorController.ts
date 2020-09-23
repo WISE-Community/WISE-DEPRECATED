@@ -31,6 +31,8 @@ class ClassroomMonitorController {
   themePath: string;
   views: any;
   workgroupId: number;
+  serverConnectionStatusSubscription: any;
+  showSessionWarningSubscription: any;
 
   static $inject = [
     '$filter',
@@ -131,7 +133,7 @@ class ClassroomMonitorController {
     });
     this.connectionLostShown = false;
 
-    this.$scope.$on('showSessionWarning', () => {
+    this.showSessionWarningSubscription = this.SessionService.showSessionWarning$.subscribe(() => {
       const confirm = $mdDialog
         .confirm()
         .parent(angular.element(document.body))
@@ -171,12 +173,13 @@ class ClassroomMonitorController {
       this.processUI();
     });
 
-    this.$scope.$on('serverDisconnected', () => {
-      this.handleServerDisconnect();
-    });
-
-    this.$scope.$on('serverConnected', () => {
-      this.handleServerReconnect();
+    this.serverConnectionStatusSubscription = 
+        this.NotificationService.serverConnectionStatus$.subscribe((isConnected: boolean) => {
+      if (isConnected) {
+        this.handleServerReconnect();
+      } else {
+        this.handleServerDisconnect();
+      }
     });
 
     // TODO: make dynamic, set somewhere like in config?
@@ -213,6 +216,19 @@ class ClassroomMonitorController {
         }
       }
     };
+
+    this.$scope.$on('$destroy', () => {
+      this.ngOnDestroy();
+    });
+  }
+
+  ngOnDestroy() {
+    this.unsubscribeAll();
+  }
+
+  unsubscribeAll() {
+    this.serverConnectionStatusSubscription.unsubscribe();
+    this.showSessionWarningSubscription.unsubscribe();
   }
 
   /**

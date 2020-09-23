@@ -6,10 +6,17 @@ import { ProjectService } from "./projectService";
 import { UtilService } from "./utilService";
 import * as angular from 'angular';
 import { Notification } from "../../site/src/app/domain/notification";
+import { Observable, Subject } from "rxjs";
 
 @Injectable()
 export class NotificationService {
   notifications: Notification[] = [];
+  private serverConnectionStatusSource: Subject<any> = new Subject<any>();
+  public serverConnectionStatus$: Observable<any> =
+      this.serverConnectionStatusSource.asObservable();
+  private viewCurrentAmbientNotificationSource: Subject<any> = new Subject<any>();
+  public viewCurrentAmbientNotification$: Observable<any> =
+      this.viewCurrentAmbientNotificationSource.asObservable();
 
   constructor(private upgrade: UpgradeModule, private http: HttpClient,
       private ConfigService: ConfigService, private ProjectService: ProjectService,
@@ -216,5 +223,13 @@ export class NotificationService {
     }
     this.notifications.push(notification);
     this.upgrade.$injector.get('$rootScope').$broadcast('notificationChanged', notification);
+  }
+
+  broadcastServerConnectionStatus(isConnected: boolean) {
+    this.serverConnectionStatusSource.next(isConnected);
+  }
+
+  broadcastViewCurrentAmbientNotification(args: any) {
+    this.viewCurrentAmbientNotificationSource.next(args);
   }
 }
