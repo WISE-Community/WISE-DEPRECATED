@@ -7,17 +7,33 @@ class ToolbarController {
   isJSONValid: boolean = null;
   onMenuToggle: any;
   NotificationService: NotificationService;
+  setGlobalMessageSubscription: any;
+  setIsJSONValidSubscription: any;
 
-  static $inject = ['NotificationService'];
+  static $inject = ['$scope', 'NotificationService'];
 
-  constructor(NotificationService: NotificationService) {
+  constructor(private $scope, NotificationService: NotificationService) {
     this.NotificationService = NotificationService;
-    this.NotificationService.setGlobalMessage$.subscribe(({ globalMessage }) => {
+    this.setGlobalMessageSubscription =
+        this.NotificationService.setGlobalMessage$.subscribe(({ globalMessage }) => {
       this.globalMessage = globalMessage;
     });
-    this.NotificationService.setIsJSONValid$.subscribe(({ isJSONValid }) => {
+    this.setIsJSONValidSubscription = 
+        this.NotificationService.setIsJSONValid$.subscribe(({ isJSONValid }) => {
       this.isJSONValid = isJSONValid;
     });
+    this.$scope.$on('$destroy', () => {
+      this.ngOnDestroy();
+    });
+  }
+
+  ngOnDestroy() {
+    this.unsubscribeAll();
+  }
+
+  unsubscribeAll() {
+    this.setGlobalMessageSubscription.unsubscribe();
+    this.setIsJSONValidSubscription.unsubscribe();
   }
 
   toggleMenu() {
