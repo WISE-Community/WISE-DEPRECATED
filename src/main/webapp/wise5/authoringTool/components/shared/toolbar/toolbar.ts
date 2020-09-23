@@ -1,18 +1,22 @@
 'use strict';
 
+import { NotificationService } from "../../../../services/notificationService";
+
 class ToolbarController {
   globalMessage: string;
-  isJSONValid: boolean = true;
+  isJSONValid: boolean = null;
   onMenuToggle: any;
+  NotificationService: NotificationService;
 
-  static $inject = ['$rootScope'];
+  static $inject = ['NotificationService'];
 
-  constructor($rootScope) {
-    $rootScope.$on('setGlobalMessage', (event, params) => {
-      this.globalMessage = params.globalMessage;
+  constructor(NotificationService: NotificationService) {
+    this.NotificationService = NotificationService;
+    this.NotificationService.setGlobalMessage$.subscribe(({ globalMessage }) => {
+      this.globalMessage = globalMessage;
     });
-    $rootScope.$on('setIsJSONValid', (event, params) => {
-      this.isJSONValid = params.isJSONValid;
+    this.NotificationService.setIsJSONValid$.subscribe(({ isJSONValid }) => {
+      this.isJSONValid = isJSONValid;
     });
   }
 

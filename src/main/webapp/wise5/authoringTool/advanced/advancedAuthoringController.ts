@@ -3,6 +3,7 @@ import { TeacherProjectService } from '../../services/teacherProjectService';
 import { UtilService } from '../../services/utilService';
 import * as angular from 'angular';
 import { ProjectAssetService } from '../../../site/src/app/services/projectAssetService';
+import { NotificationService } from '../../services/notificationService';
 
 class AdvancedAuthoringController {
   $translate: any;
@@ -18,6 +19,7 @@ class AdvancedAuthoringController {
     '$state',
     '$stateParams',
     'ConfigService',
+    'NotificationService',
     'ProjectAssetService',
     'ProjectService',
     'UtilService'
@@ -30,6 +32,7 @@ class AdvancedAuthoringController {
     private $state,
     $stateParams: any,
     private ConfigService: ConfigService,
+    private NotificationService: NotificationService,
     private ProjectAssetService: ProjectAssetService,
     private ProjectService: TeacherProjectService,
     private UtilService: UtilService
@@ -39,6 +42,7 @@ class AdvancedAuthoringController {
     this.$state = $state;
     this.$translate = $filter('translate');
     this.ConfigService = ConfigService;
+    this.NotificationService = NotificationService;
     this.ProjectAssetService = ProjectAssetService;
     this.ProjectService = ProjectService;
     this.UtilService = UtilService;
@@ -60,25 +64,25 @@ class AdvancedAuthoringController {
   hideJSON() {
     if (this.UtilService.isValidJSONString(this.projectJSONString)) {
       this.isJSONDisplayed = false;
-      this.UtilService.hideJSONValidMessage();
+      this.NotificationService.hideJSONValidMessage();
     } else if (confirm(this.$translate('jsonInvalidErrorMessage'))) {
       this.isJSONDisplayed = false;
-      this.UtilService.hideJSONValidMessage();
+      this.NotificationService.hideJSONValidMessage();
     }
   }
 
   showJSON() {
     this.isJSONDisplayed = true;
     this.projectJSONString = angular.toJson(this.ProjectService.project, 4);
-    this.UtilService.showJSONValidMessage();
+    this.NotificationService.showJSONValidMessage();
   }
 
   autoSaveProjectJSONString() {
     try {
       this.saveProjectJSON(this.projectJSONString);
-      this.UtilService.showJSONValidMessage();
+      this.NotificationService.showJSONValidMessage();
     } catch (e) {
-      this.UtilService.showJSONInvalidMessage();
+      this.NotificationService.showJSONInvalidMessage();
     }
   }
 
