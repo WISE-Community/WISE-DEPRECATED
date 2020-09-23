@@ -18,6 +18,7 @@ class DiscussionController extends ComponentController {
   destroyStudentWorkSavedToServerListener: any;
   destroyStudentWorkReceivedListener: any;
   componentStateIdReplyingTo: any;
+  studentWorkReceivedSubscription: any;
 
   static $inject = [
     '$filter',
@@ -160,6 +161,18 @@ class DiscussionController extends ComponentController {
     this.registerStudentWorkReceivedListener();
     this.initializeWatchMdMedia();
     this.broadcastDoneRenderingComponent();
+
+    this.$scope.$on('$destroy', () => {
+      this.ngOnDestroy();
+    });
+  }
+
+  ngOnDestroy() {
+    this.unsubscribeAll();
+  }
+
+  unsubscribeAll() {
+    this.studentWorkReceivedSubscription.unsubscribe();
   }
 
   isConnectedComponentShowWorkMode() {
@@ -367,19 +380,17 @@ class DiscussionController extends ComponentController {
   }
 
   registerStudentWorkReceivedListener() {
-    this.destroyStudentWorkReceivedListener = this.$rootScope.$on(
-      'studentWorkReceived',
-      (event, componentState) => {
-        if (
-          (this.isWorkFromThisComponent(componentState) ||
-            this.isWorkFromConnectedComponent(componentState)) &&
-          this.isWorkFromClassmate(componentState) &&
-          this.retrievedClassmateResponses
-        ) {
-          this.addClassResponse(componentState);
-        }
+    this.studentWorkReceivedSubscription = this.StudentDataService.studentWorkReceived$
+        .subscribe((componentState) => {
+      if (
+        (this.isWorkFromThisComponent(componentState) ||
+          this.isWorkFromConnectedComponent(componentState)) &&
+        this.isWorkFromClassmate(componentState) &&
+        this.retrievedClassmateResponses
+      ) {
+        this.addClassResponse(componentState);
       }
-    );
+    });
   }
 
   isWorkFromClassmate(componentState) {

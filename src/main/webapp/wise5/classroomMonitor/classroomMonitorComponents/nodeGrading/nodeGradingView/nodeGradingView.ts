@@ -38,6 +38,7 @@ class NodeGradingViewController {
   workgroupsById: any;
   workVisibilityById: any;
   currentPeriodChangedSubscription: any;
+  studentWorkReceivedSubscription: any;
 
   static $inject = [
     '$filter',
@@ -120,7 +121,8 @@ class NodeGradingViewController {
       }
     });
 
-    this.$scope.$on('studentWorkReceived', (event, args) => {
+    this.studentWorkReceivedSubscription = this.TeacherDataService.studentWorkReceived$
+        .subscribe((args: any) => {
       const studentWork = args.studentWork;
       if (studentWork != null) {
         const workgroupId = studentWork.workgroupId;
@@ -153,6 +155,7 @@ class NodeGradingViewController {
 
   unsubscribeAll() {
     this.currentPeriodChangedSubscription.unsubscribe();
+    this.studentWorkReceivedSubscription.unsubscribe();
   }
 
   saveNodeGradingViewDisplayedEvent() {

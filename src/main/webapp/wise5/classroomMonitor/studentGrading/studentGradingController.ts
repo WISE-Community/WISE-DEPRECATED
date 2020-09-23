@@ -32,6 +32,7 @@ class StudentGradingController {
   totalScore: number;
   workgroupId: number;
   currentPeriodChangedSubscription: any;
+  studentWorkReceivedSubscription: any;
   
   static $inject = [
     '$filter',
@@ -93,8 +94,10 @@ class StudentGradingController {
       }
     });
 
-    this.$scope.$on('studentWorkReceived', (event, args) => {
-      let studentWork = args.studentWork;
+
+    this.studentWorkReceivedSubscription = this.TeacherDataService.studentWorkReceived$
+        .subscribe((args: any) => {
+      const studentWork = args.studentWork;
       if (studentWork != null) {
         let workgroupId = studentWork.workgroupId;
         let nodeId = studentWork.nodeId;
@@ -161,6 +164,7 @@ class StudentGradingController {
 
   unsubscribeAll() {
     this.currentPeriodChangedSubscription.unsubscribe();
+    this.studentWorkReceivedSubscription.unsubscribe();
   }
 
   $onInit() {

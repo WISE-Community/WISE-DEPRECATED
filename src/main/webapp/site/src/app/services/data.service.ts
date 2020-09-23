@@ -12,6 +12,8 @@ export class DataService {
   previousStep = null;
   private currentNodeChangedSource: Subject<any> = new Subject<any>();
   public currentNodeChanged$ = this.currentNodeChangedSource.asObservable();
+  private studentWorkReceivedSource: Subject<any> = new Subject<any>();
+  public studentWorkReceived$ = this.studentWorkReceivedSource.asObservable();
 
   constructor(
     protected upgrade: UpgradeModule,
@@ -72,6 +74,10 @@ export class DataService {
 
   broadcastCurrentNodeChanged(previousAndCurrentNode: any) {
     this.currentNodeChangedSource.next(previousAndCurrentNode);
+  }
+
+  broadcastStudentWorkReceived(studentWork: any) {
+    this.studentWorkReceivedSource.next(studentWork);
   }
 
   endCurrentNode() {
