@@ -11,6 +11,8 @@ import { Observable, Subject } from "rxjs";
 @Injectable()
 export class NotificationService {
   notifications: Notification[] = [];
+  private notificationChangedSource: Subject<any> = new Subject<any>();
+  public notificationChanged$: Observable<any> = this.notificationChangedSource.asObservable();
   private serverConnectionStatusSource: Subject<any> = new Subject<any>();
   public serverConnectionStatus$: Observable<any> =
       this.serverConnectionStatusSource.asObservable();
@@ -217,12 +219,16 @@ export class NotificationService {
     for (let n = 0; n < this.notifications.length; n++) {
       if (this.notifications[n].id === notification.id) {
         this.notifications[n] = notification;
-        this.upgrade.$injector.get('$rootScope').$broadcast('notificationChanged', notification);
+        this.broadcastNotificationChanged(notification);
         return;
       }
     }
     this.notifications.push(notification);
-    this.upgrade.$injector.get('$rootScope').$broadcast('notificationChanged', notification);
+    this.broadcastNotificationChanged(notification);
+  }
+
+  broadcastNotificationChanged(notification: any) {
+    this.notificationChangedSource.next(notification);
   }
 
   broadcastServerConnectionStatus(isConnected: boolean) {

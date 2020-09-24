@@ -38,6 +38,7 @@ class NodeGradingViewController {
   workgroupsById: any;
   workVisibilityById: any;
   currentPeriodChangedSubscription: any;
+  notificationChangedSubscription: any;
 
   static $inject = [
     '$filter',
@@ -99,7 +100,8 @@ class NodeGradingViewController {
       this.maxScore = this.getMaxScore();
     });
 
-    this.$scope.$on('notificationChanged', (event, notification) => {
+    this.notificationChangedSubscription = this.NotificationService.notificationChanged$
+        .subscribe((notification) => {
       if (notification.type === 'CRaterResult') {
         // TODO: expand to encompass other notification types that should be shown to teacher
         const workgroupId = notification.toWorkgroupId;
@@ -153,6 +155,7 @@ class NodeGradingViewController {
 
   unsubscribeAll() {
     this.currentPeriodChangedSubscription.unsubscribe();
+    this.notificationChangedSubscription.unsubscribe();
   }
 
   saveNodeGradingViewDisplayedEvent() {
