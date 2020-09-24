@@ -500,7 +500,7 @@ class VLEController {
     } else if (notebookItemId != null) {
       // assume notification with notebookItemId is for the report for now,
       // as we don't currently support annotations on notes
-      this.$rootScope.$broadcast('showReportAnnotations', { ev: event });
+      this.NotebookService.broadcastShowReportAnnotations();
     }
   }
 

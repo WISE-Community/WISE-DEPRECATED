@@ -14,6 +14,20 @@ class NotebookNotesController {
     this.selectedTabIndex = 0;
     this.$scope = $scope;
     this.groupNameToGroup = {};
+
+    this.$scope.$on('$destroy', () => {
+      this.ngOnDestroy();
+    });
+  }
+
+  ngOnDestroy() {
+    this.unsubscribeAll();
+  }
+
+  unsubscribeAll() {
+    this.notebookUpdatedSubscription.unsubscribe();
+    this.openNotebookSubscription.unsubscribe();
+    this.publicNotebookItemsRetrievedSubscription.unsubscribe();
   }
 
   $onInit() {
@@ -29,19 +43,7 @@ class NotebookNotesController {
     this.addSpacesToGroups(spaces);
     this.hasNotes = this.isHasNotes();
     
-    this.$scope.$on('openNotebook', (event, args) => {
-      this.selectedTabIndex = args.visibleSpace === 'public' ? 1 : 0;
-    });
-
-    this.$rootScope.$on('publicNotebookItemsRetrieved', (event, args) => {
-      for (let group of this.groups) {
-        if (group.name !== 'private') {
-          group.items = this.NotebookService.publicNotebookItems[group.name];
-        }
-      }
-    });
-
-    this.$rootScope.$on('notebookUpdated', (event, args) => {
+    this.notebookUpdatedSubscription = this.NotebookService.notebookUpdated$.subscribe((args) => {
       const notebookItem = args.notebookItem;
       if ((notebookItem.groups == null || notebookItem.groups.length === 0) &&
           notebookItem.type === 'note') {
@@ -49,6 +51,19 @@ class NotebookNotesController {
       }
       if (notebookItem.groups != null && notebookItem.groups.includes('public')) {
         this.updatePublicNotebookNote(notebookItem);
+      }
+    });
+
+    this.openNotebookSubscription = this.NotebookService.openNotebook$.subscribe((args) => {
+      this.selectedTabIndex = args.visibleSpace === 'public' ? 1 : 0;
+    });
+    
+    this.publicNotebookItemsRetrievedSubscription = 
+        this.NotebookService.publicNotebookItemsRetrieved$.subscribe(() => {
+      for (const group of this.groups) {
+        if (group.name !== 'private') {
+          group.items = this.NotebookService.publicNotebookItems[group.name];
+        }
       }
     });
   }
@@ -140,7 +155,7 @@ class NotebookNotesController {
   }
 
   editItem($ev, note) {
-    this.$rootScope.$broadcast('editNote', {note: note, isEditMode: !this.viewOnly, ev: $ev});
+    this.NotebookService.broadcastEditNote({note: note, isEditMode: !this.viewOnly, ev: $ev});
   }
 
   select($ev, note) {
