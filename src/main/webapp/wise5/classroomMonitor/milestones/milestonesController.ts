@@ -9,6 +9,7 @@ class MilestonesController {
   $translate: any;
   milestones: any[];
   currentPeriodChangedSubscription: any;
+  newStudentAchievementSubscription: any;
   static $inject = [
     '$filter',
     '$mdDialog',
@@ -32,12 +33,11 @@ class MilestonesController {
     this.$translate = this.$filter('translate');
     this.loadProjectMilestones();
 
-    this.$rootScope.$on('newStudentAchievement', (event, args) => {
-      if (args) {
-        const studentAchievement = args.studentAchievement;
-        this.AchievementService.addOrUpdateStudentAchievement(studentAchievement);
-        this.updateMilestoneStatus(studentAchievement.achievementId);
-      }
+    this.newStudentAchievementSubscription = 
+        this.AchievementService.newStudentAchievement$.subscribe((args: any) => {
+      const studentAchievement = args.studentAchievement;
+      this.AchievementService.addOrUpdateStudentAchievement(studentAchievement);
+      this.updateMilestoneStatus(studentAchievement.achievementId);
     });
 
     this.currentPeriodChangedSubscription = this.TeacherDataService.currentPeriodChanged$
@@ -58,14 +58,6 @@ class MilestonesController {
       }
     });
 
-    this.$scope.$on('milestoneSaved', () => {
-      this.loadProjectMilestones();
-    });
-
-    this.$scope.$on('milestoneDeleted', () => {
-      this.loadProjectMilestones();
-    });
-
     this.$scope.$on('$destroy', () => {
       this.ngOnDestroy();
     });
@@ -77,6 +69,7 @@ class MilestonesController {
 
   unsubscribeAll() {
     this.currentPeriodChangedSubscription.unsubscribe();
+    this.newStudentAchievementSubscription.unsubscribe();
   }
 
   loadProjectMilestones() {
