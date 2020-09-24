@@ -9,6 +9,7 @@ class ThemeController {
     ProjectService,
     StudentDataService,
     NotebookService,
+    NotificationService,
     SessionService,
     $mdDialog,
     $mdMedia,
@@ -22,6 +23,7 @@ class ThemeController {
     this.ProjectService = ProjectService;
     this.StudentDataService = StudentDataService;
     this.NotebookService = NotebookService;
+    this.NotificationService = NotificationService;
     this.SessionService = SessionService;
     this.$mdDialog = $mdDialog;
     this.$mdMedia = $mdMedia;
@@ -148,14 +150,13 @@ class ThemeController {
       );
     });
 
-    // alert user when server loses connection
-    this.$scope.$on('serverDisconnected', () => {
-      this.handleServerDisconnect();
-    });
-
-    // remove alert when server regains connection
-    this.$scope.$on('serverConnected', () => {
-      this.handleServerReconnect();
+    this.serverConnectionStatusSubscription = 
+        this.NotificationService.serverConnectionStatus$.subscribe((isConnected) => {
+      if (isConnected) {
+        this.handleServerReconnect();
+      } else {
+        this.handleServerDisconnect();
+      }
     });
 
     this.$scope.$on('showStudentAssets', (event, args) => {
@@ -185,7 +186,9 @@ class ThemeController {
     });
 
     // handle request for notification dismiss codes
-    this.$scope.$on('viewCurrentAmbientNotification', (event, args) => {
+    this.viewCurrentAmbientNotificationSubscription = 
+        this.NotificationService.viewCurrentAmbientNotification$.subscribe((args) => {
+
       let notification = args.notification;
       let ev = args.event;
       let notificationDismissDialogTemplateUrl =
@@ -322,6 +325,8 @@ class ThemeController {
 
   unsubscribeAll() {
     this.currentNodeChangedSubscription.unsubscribe();
+    this.serverConnectionStatusSubscription.unsubscribe();
+    this.viewCurrentAmbientNotificationSubscription.unsubscribe();
   }
 
   /**
@@ -399,6 +404,7 @@ ThemeController.$inject = [
   'ProjectService',
   'StudentDataService',
   'NotebookService',
+  'NotificationService',
   'SessionService',
   '$mdDialog',
   '$mdMedia',
