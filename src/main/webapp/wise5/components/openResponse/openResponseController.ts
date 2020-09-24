@@ -861,8 +861,9 @@ class OpenResponseController extends ComponentController {
 
   snipButtonClicked($event) {
     if (this.isDirty) {
-      const deregisterListener = this.$scope.$on('studentWorkSavedToServer', (event, args) => {
-        let componentState = args.studentWork;
+      const studentWorkSavedToServerSubscription = this.StudentDataService.studentWorkSavedToServer$
+          .subscribe((args: any) => {
+        const componentState = args.studentWork;
         if (
           componentState &&
           this.nodeId === componentState.nodeId &&
@@ -879,7 +880,7 @@ class OpenResponseController extends ComponentController {
             isEditTextEnabled,
             isFileUploadEnabled
           );
-          deregisterListener();
+          studentWorkSavedToServerSubscription.unsubscribe();
         }
       });
       this.saveButtonClicked(); // trigger a save

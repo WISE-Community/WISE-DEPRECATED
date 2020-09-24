@@ -32,6 +32,7 @@ class VLEController {
   themePath: string;
   totalScore: any;
   currentNodeChangedSubscription: any;
+  showSessionWarningSubscription: any;
 
   static $inject = [
     '$anchorScroll',
@@ -119,7 +120,8 @@ class VLEController {
       });
     }
 
-    this.$scope.$on('showSessionWarning', () => {
+    this.showSessionWarningSubscription = 
+        this.SessionService.showSessionWarning$.subscribe(() => {
       const confirm = $mdDialog
         .confirm()
         .parent(angular.element(document.body))
@@ -289,6 +291,7 @@ class VLEController {
 
   unsubscribeAll() {
     this.currentNodeChangedSubscription.unsubscribe();
+    this.showSessionWarningSubscription.unsubscribe();
   }
 
   goHome() {
@@ -441,7 +444,7 @@ class VLEController {
         event: event,
         notification: notification
       };
-      this.$rootScope.$broadcast('viewCurrentAmbientNotification', args);
+      this.NotificationService.broadcastViewCurrentAmbientNotification(args);
       this.$mdMenu.hide();
     }
   }
@@ -457,7 +460,7 @@ class VLEController {
         event: event,
         notification: ambientNotifications[0]
       };
-      this.$rootScope.$broadcast('viewCurrentAmbientNotification', args);
+      this.NotificationService.broadcastViewCurrentAmbientNotification(args);
     }
   }
 

@@ -331,120 +331,110 @@ class TableController extends ComponentController {
   }
 
   registerStudentWorkSavedToServerListener() {
-    /**
-     * Listen for the 'studentWorkSavedToServer' event which is fired when
-     * we receive the response from saving a component state to the server
-     */
-    this.$scope.$on(
-      'studentWorkSavedToServer',
-      angular.bind(this, function(event, args) {
-        let componentState = args.studentWork;
+    this.studentWorkSavedToServerSubscription = 
+        this.StudentDataService.studentWorkSavedToServer$.subscribe((args: any) => {
+      let componentState = args.studentWork;
 
-        // check that the component state is for this component
-        if (
-          componentState &&
-          this.nodeId === componentState.nodeId &&
-          this.componentId === componentState.componentId
-        ) {
-          // set isDirty to false because the component state was just saved and notify node
-          this.isDirty = false;
-          this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: false });
+      // check that the component state is for this component
+      if (this.isForThisComponent(componentState)) {
+        // set isDirty to false because the component state was just saved and notify node
+        this.isDirty = false;
+        this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: false });
 
-          let isAutoSave = componentState.isAutoSave;
-          let isSubmit = componentState.isSubmit;
-          let serverSaveTime = componentState.serverSaveTime;
-          let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
+        let isAutoSave = componentState.isAutoSave;
+        let isSubmit = componentState.isSubmit;
+        let serverSaveTime = componentState.serverSaveTime;
+        let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
 
-          if (isSubmit) {
-            this.setSubmittedMessage(clientSaveTime);
-            this.lockIfNecessary();
+        if (isSubmit) {
+          this.setSubmittedMessage(clientSaveTime);
+          this.lockIfNecessary();
 
-            // set isSubmitDirty to false because the component state was just submitted and notify node
-            this.isSubmitDirty = false;
-            this.$scope.$emit('componentSubmitDirty', {
-              componentId: this.componentId,
-              isDirty: false
-            });
-          } else if (isAutoSave) {
-            this.setAutoSavedMessage(clientSaveTime);
-          } else {
-            this.setSavedMessage(clientSaveTime);
-          }
+          // set isSubmitDirty to false because the component state was just submitted and notify node
+          this.isSubmitDirty = false;
+          this.$scope.$emit('componentSubmitDirty', {
+            componentId: this.componentId,
+            isDirty: false
+          });
+        } else if (isAutoSave) {
+          this.setAutoSavedMessage(clientSaveTime);
+        } else {
+          this.setSavedMessage(clientSaveTime);
         }
+      }
 
-        // check if the component state is from a connected component
-        if (
-          this.ProjectService.isConnectedComponent(
-            this.nodeId,
-            this.componentId,
-            componentState.componentId
-          )
-        ) {
-          // get the connected component params
-          const connectedComponentParams = this.ProjectService.getConnectedComponentParams(
-            this.componentContent,
-            componentState.componentId
-          );
+      // check if the component state is from a connected component
+      if (
+        this.ProjectService.isConnectedComponent(
+          this.nodeId,
+          this.componentId,
+          componentState.componentId
+        )
+      ) {
+        // get the connected component params
+        const connectedComponentParams: any = this.ProjectService.getConnectedComponentParams(
+          this.componentContent,
+          componentState.componentId
+        );
 
-          if (connectedComponentParams != null) {
-            if (
-              connectedComponentParams.updateOn === 'save' ||
-              (connectedComponentParams.updateOn === 'submit' && componentState.isSubmit)
-            ) {
-              let performUpdate = false;
+        if (connectedComponentParams != null) {
+          if (
+            connectedComponentParams.updateOn === 'save' ||
+            (connectedComponentParams.updateOn === 'submit' && componentState.isSubmit)
+          ) {
+            let performUpdate = false;
 
+            /*
+             * make a copy of the component state so we don't accidentally
+             * change any values in the referenced object
+             */
+            componentState = this.UtilService.makeCopyOfJSONObject(componentState);
+
+            /*
+             * make sure the student hasn't entered any values into the
+             * table so that we don't overwrite any of their work.
+             */
+            if (this.isTableEmpty() || this.isTableReset()) {
               /*
-               * make a copy of the component state so we don't accidentally
-               * change any values in the referenced object
+               * the student has not entered any values into the table
+               * so we can update it
                */
-              componentState = this.UtilService.makeCopyOfJSONObject(componentState);
-
+              performUpdate = true;
+            } else {
               /*
-               * make sure the student hasn't entered any values into the
-               * table so that we don't overwrite any of their work.
+               * the student has entered values into the table so we
+               * will ask them if they want to update it
                */
-              if (this.isTableEmpty() || this.isTableReset()) {
-                /*
-                 * the student has not entered any values into the table
-                 * so we can update it
-                 */
-                performUpdate = true;
-              } else {
-                /*
-                 * the student has entered values into the table so we
-                 * will ask them if they want to update it
-                 */
-                /*
-              var answer = confirm('Do you want to update the connected table?');
-
-              if (answer) {
-                // the student answered yes
-                performUpdate = true;
-              }
-              */
-                performUpdate = true;
-              }
-
-              if (performUpdate) {
-                // set the table data
-                this.$scope.tableController.setStudentWork(componentState);
-
-                // the table has changed
-                this.$scope.tableController.isDirty = true;
-                this.$scope.tableController.isSubmitDirty = true;
-              }
-
               /*
-               * remember the component state and connected component params
-               * in case we need to use them again later
-               */
-              this.latestConnectedComponentState = componentState;
-              this.latestConnectedComponentParams = connectedComponentParams;
+            var answer = confirm('Do you want to update the connected table?');
+
+            if (answer) {
+              // the student answered yes
+              performUpdate = true;
             }
+            */
+              performUpdate = true;
+            }
+
+            if (performUpdate) {
+              // set the table data
+              this.$scope.tableController.setStudentWork(componentState);
+
+              // the table has changed
+              this.$scope.tableController.isDirty = true;
+              this.$scope.tableController.isSubmitDirty = true;
+            }
+
+            /*
+             * remember the component state and connected component params
+             * in case we need to use them again later
+             */
+            this.latestConnectedComponentState = componentState;
+            this.latestConnectedComponentParams = connectedComponentParams;
           }
         }
-      })
-    );
+      }
+    });
   }
 
   handleNodeSubmit() {

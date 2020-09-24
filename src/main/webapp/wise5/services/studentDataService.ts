@@ -90,6 +90,8 @@ export class StudentDataService extends DataService {
   public pauseScreen$ = this.pauseScreenSource.asObservable();
   private componentStudentDataSource: Subject<any> = new Subject<any>();
   public componentStudentData$ = this.componentStudentDataSource.asObservable();
+  private studentWorkSavedToServerSource: Subject<any> = new Subject<any>();
+  public studentWorkSavedToServer$ = this.studentWorkSavedToServerSource.asObservable();
 
   constructor(
       upgrade: UpgradeModule,
@@ -967,11 +969,15 @@ export class StudentDataService extends DataService {
             this.setRemoteServerSaveTimeIntoLocalServerSaveTime(savedStudentWork, localStudentWork);
           }
           this.clearRequestToken(localStudentWork);
-          this.upgrade.$injector.get('$rootScope').$broadcast('studentWorkSavedToServer', { studentWork: localStudentWork });
+          this.broadcastStudentWorkSavedToServer({ studentWork: localStudentWork });
           break;
         }
       }
     }
+  }
+
+  broadcastStudentWorkSavedToServer(args: any) {
+    this.studentWorkSavedToServerSource.next(args);
   }
 
   isMatchingRequestToken(localObj, remoteObj) {

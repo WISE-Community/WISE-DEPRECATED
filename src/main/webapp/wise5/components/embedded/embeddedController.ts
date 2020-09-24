@@ -317,7 +317,8 @@ class EmbeddedController extends ComponentController {
   }
 
   registerStudentWorkSavedToServerListener() {
-    this.$scope.$on('studentWorkSavedToServer', (event, args) => {
+    this.studentWorkSavedToServerSubscription = 
+        this.StudentDataService.studentWorkSavedToServer$.subscribe((args: any) => {
       const componentState = args.studentWork;
       if (componentState != null) {
         if (componentState.componentId === this.componentId) {

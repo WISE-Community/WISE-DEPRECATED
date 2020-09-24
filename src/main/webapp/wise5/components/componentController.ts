@@ -61,6 +61,7 @@ class ComponentController {
   isJSONStringChanged: boolean;
   authoringValidComponentContentJSONString: string;
   notebookItemChosenSubscription: any;
+  studentWorkSavedToServerSubscription: any;
 
   constructor(
       $filter,
@@ -398,7 +399,7 @@ class ComponentController {
   }
 
   cleanupBeforeExiting() {
-
+    this.studentWorkSavedToServerSubscription.unsubscribe();
   }
 
   broadcastDoneRenderingComponent() {
@@ -406,12 +407,13 @@ class ComponentController {
   }
 
   registerStudentWorkSavedToServerListener() {
-    this.$scope.$on('studentWorkSavedToServer', (event, args) => {
-      this.handleStudentWorkSavedToServer(event, args);
+    this.studentWorkSavedToServerSubscription = 
+        this.StudentDataService.studentWorkSavedToServer$.subscribe((args: any) => {
+      this.handleStudentWorkSavedToServer(args);
     });
   }
 
-  handleStudentWorkSavedToServer(event, args) {
+  handleStudentWorkSavedToServer(args: any) {
     const componentState = args.studentWork;
     if (this.isForThisComponent(componentState)) {
       this.setIsDirty(false);
@@ -428,10 +430,10 @@ class ComponentController {
         this.setSavedMessage(clientSaveTime);
       }
     }
-    this.handleStudentWorkSavedToServerAdditionalProcessing(event, args);
+    this.handleStudentWorkSavedToServerAdditionalProcessing(args);
   }
 
-  handleStudentWorkSavedToServerAdditionalProcessing(event, args) {
+  handleStudentWorkSavedToServerAdditionalProcessing(args: any) {
 
   }
 

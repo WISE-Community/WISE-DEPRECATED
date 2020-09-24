@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { UpgradeModule } from '@angular/upgrade/static';
 import { HttpClient } from '@angular/common/http';
 import { ConfigService } from "./configService";
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable()
 export class SessionService {
@@ -14,6 +14,8 @@ export class SessionService {
   private showWarningInterval: number;
   private checkMouseEventInterval: number;
   private lastActivityTimestamp: number;
+  private showSessionWarningSource: Subject<any> = new Subject<any>();
+  public showSessionWarning$: Observable<any> = this.showSessionWarningSource.asObservable();
   private logOutSource: Subject<void> = new Subject<void>();
   public logOut$ = this.logOutSource.asObservable();
 
@@ -134,7 +136,11 @@ export class SessionService {
 
   showWarning() {
     this.warningVisible = true;
-    this.upgrade.$injector.get('$rootScope').$broadcast('showSessionWarning');
+    this.broadcastShowSessionWarning();
+  }
+
+  broadcastShowSessionWarning() {
+    this.showSessionWarningSource.next();
   }
 
   closeWarningAndRenewSession() {
