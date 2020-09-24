@@ -194,6 +194,7 @@ class AuthoringToolController {
       const confirm = this.$mdDialog
         .confirm()
         .parent(angular.element(document.body))
+        .theme('at')
         .title(this.$translate('sessionTimeout'))
         .content(this.$translate('autoLogoutMessage'))
         .ariaLabel(this.$translate('sessionTimeout'))

@@ -137,6 +137,7 @@ class ClassroomMonitorController {
       const confirm = $mdDialog
         .confirm()
         .parent(angular.element(document.body))
+        .theme('cm')
         .title(this.$translate('SESSION_TIMEOUT'))
         .content(this.$translate('SESSION_TIMEOUT_MESSAGE'))
         .ariaLabel(this.$translate('SESSION_TIMEOUT'))
