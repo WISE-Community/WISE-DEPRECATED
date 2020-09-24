@@ -60,6 +60,7 @@ class ComponentController {
   authoringComponentContentJSONString: string;
   isJSONStringChanged: boolean;
   authoringValidComponentContentJSONString: string;
+  nodeSubmitClickedSubscription: any;
   studentWorkSavedToServerSubscription: any;
 
   constructor(
@@ -205,8 +206,9 @@ class ComponentController {
       }
     });
 
-    this.$scope.$on('nodeSubmitClicked', (event, args) => {
-      if (this.nodeId === args.nodeId) {
+    this.nodeSubmitClickedSubscription = 
+        this.NodeService.nodeSubmitClicked$.subscribe(({ nodeId }) => {
+      if (this.nodeId === nodeId) {
         this.handleNodeSubmit();
       }
     });
@@ -384,6 +386,7 @@ class ComponentController {
   }
 
   cleanupBeforeExiting() {
+    this.nodeSubmitClickedSubscription.unsubscribe();
     this.studentWorkSavedToServerSubscription.unsubscribe();
   }
 

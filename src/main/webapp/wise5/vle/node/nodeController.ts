@@ -543,7 +543,7 @@ class NodeController {
   }
 
   submitButtonClicked() {
-    this.$rootScope.$broadcast('nodeSubmitClicked', { nodeId: this.nodeId });
+    this.NodeService.broadcastNodeSubmitClicked({ nodeId: this.nodeId });
     const isAutoSave = false;
     const isSubmit = true;
     this.createAndSaveComponentData(isAutoSave, null, isSubmit);

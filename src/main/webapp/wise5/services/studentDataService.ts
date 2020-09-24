@@ -10,7 +10,7 @@ import { HttpClient, HttpParams } from "@angular/common/http";
 import * as angular from 'angular';
 import { TagService } from "./tagService";
 import { DataService } from "../../site/src/app/services/data.service";
-import { Subject } from "rxjs";
+import { Observable, Subject } from "rxjs";
 
 @Injectable()
 export class StudentDataService extends DataService {
@@ -85,11 +85,14 @@ export class StudentDataService extends DataService {
   $q: any;
   $translate: any;
   private pauseScreenSource: Subject<boolean> = new Subject<boolean>();
-  public pauseScreen$ = this.pauseScreenSource.asObservable();
+  public pauseScreen$: Observable<any> = this.pauseScreenSource.asObservable();
   private componentStudentDataSource: Subject<any> = new Subject<any>();
-  public componentStudentData$ = this.componentStudentDataSource.asObservable();
+  public componentStudentData$: Observable<any> = this.componentStudentDataSource.asObservable();
   private studentWorkSavedToServerSource: Subject<any> = new Subject<any>();
-  public studentWorkSavedToServer$ = this.studentWorkSavedToServerSource.asObservable();
+  public studentWorkSavedToServer$: Observable<any> =
+      this.studentWorkSavedToServerSource.asObservable();
+  private nodeStatusesChangedSource: Subject<any> = new Subject<any>();
+  public nodeStatusesChanged$: Observable<any> = this.nodeStatusesChangedSource.asObservable();
 
   constructor(
       upgrade: UpgradeModule,
@@ -247,7 +250,11 @@ export class StudentDataService extends DataService {
     this.updateGroupNodeStatuses();
     this.maxScore = this.getMaxScore();
     this.handleNodeStatusesChanged();
-    this.upgrade.$injector.get('$rootScope').$broadcast('nodeStatusesChanged');
+    this.broadcastNodeStatusesChanged();
+  }
+
+  broadcastNodeStatusesChanged() {
+    this.nodeStatusesChangedSource.next();
   }
 
   updateStepNodeStatuses() {
