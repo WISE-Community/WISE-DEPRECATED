@@ -1269,7 +1269,7 @@ function shouldHandleSaveAnnotationsToServerSuccess() {
         createAnnotation(3, 'c', 3000)
       ]
     };
-    spyOn($rootScope, '$broadcast');
+    spyOn(annotationService, 'broadcastAnnotationSavedToServer');
     spyOn(service, 'updateNodeStatuses').and.callFake(() => {});
     spyOn(service, 'saveStudentStatus').and.callFake(() => {
         return new Promise(() => { return true })});
@@ -1281,8 +1281,7 @@ function shouldHandleSaveAnnotationsToServerSuccess() {
     expect(service.studentData.annotations[1].requestToken).toEqual(null);
     expect(service.studentData.annotations[2].serverSaveTime).toEqual(3000);
     expect(service.studentData.annotations[2].requestToken).toEqual(null);
-    expect($rootScope.$broadcast).toHaveBeenCalledWith(
-      'annotationSavedToServer',
+    expect(annotationService.broadcastAnnotationSavedToServer).toHaveBeenCalledWith(
       jasmine.any(Object)
     );
     expect(service.saveToServerRequestCount).toEqual(0);

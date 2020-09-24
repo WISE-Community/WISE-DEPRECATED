@@ -23,8 +23,8 @@ class GlobalAnnotationsController {
             this.setModel();
         }
 
-        // list for new annotations or updates
-        this.$scope.$on('annotationSavedToServer', (event, args) => {
+        this.annotationSavedToServerSubscription = 
+                this.AnnotationService.annotationSavedToServer$.subscribe(() => {
             this.setModel();
         });
 
@@ -42,7 +42,19 @@ class GlobalAnnotationsController {
                 this.show();
             }, 300);
         });
+
+        this.$scope.$on('$destroy', () => {
+          this.ngOnDestroy();
+        });
     };
+
+    ngOnDestroy() {
+      this.unsubscribeAll();
+    }
+
+    unsubscribeAll() {
+      this.annotationSavedToServerSubscription.unsubscribe();
+    }
 
     setModel() {
         let activeGlobalAnnotationGroups = this.AnnotationService.getActiveGlobalAnnotationGroups();

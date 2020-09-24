@@ -52,7 +52,7 @@ export class StudentWebSocketService {
         this.upgrade.$injector.get('$rootScope').$broadcast('studentWorkReceived', studentWork);
       } else if (message.type === 'annotation') {
         const annotation = JSON.parse(message.content);
-        this.upgrade.$injector.get('$rootScope').$broadcast('annotationReceived', annotation);
+        this.AnnotationService.broadcastAnnotationReceived({ annotation: annotation });
       } else if (message.type === "goToNode") {
         this.goToStep(message.content);
       } else if (message.type === 'node') {

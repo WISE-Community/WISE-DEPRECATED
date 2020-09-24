@@ -2,12 +2,14 @@
 
 import * as angular from 'angular';
 import { AchievementService } from '../../services/achievementService';
+import { AnnotationService } from '../../services/annotationService';
 import { MilestoneService } from '../../services/milestoneService';
 import { TeacherDataService } from '../../services/teacherDataService';
 
 class MilestonesController {
   $translate: any;
   milestones: any[];
+  annotationReceivedSubscription: any;
   currentPeriodChangedSubscription: any;
   static $inject = [
     '$filter',
@@ -15,6 +17,7 @@ class MilestonesController {
     '$rootScope',
     '$scope',
     'AchievementService',
+    'AnnotationService',
     'MilestoneService',
     'TeacherDataService',
     'moment'
@@ -25,6 +28,7 @@ class MilestonesController {
     private $rootScope: any,
     private $scope: any,
     private AchievementService: AchievementService,
+    private AnnotationService: AnnotationService,
     private MilestoneService: MilestoneService,
     private TeacherDataService: TeacherDataService,
     private moment: any
@@ -47,11 +51,12 @@ class MilestonesController {
       }
     });
 
-    this.$scope.$on('annotationReceived', (event, args) => {
+    this.annotationReceivedSubscription = 
+        this.AnnotationService.annotationReceived$.subscribe(({ annotation }) => {
       for (const milestone of this.milestones) {
         if (
-          milestone.nodeId === args.annotation.nodeId &&
-          milestone.componentId === args.annotation.componentId
+          milestone.nodeId === annotation.nodeId &&
+          milestone.componentId === annotation.componentId
         ) {
           this.updateMilestoneStatus(milestone.id);
         }
@@ -76,6 +81,7 @@ class MilestonesController {
   }
 
   unsubscribeAll() {
+    this.annotationReceivedSubscription.unsubscribe();
     this.currentPeriodChangedSubscription.unsubscribe();
   }
 

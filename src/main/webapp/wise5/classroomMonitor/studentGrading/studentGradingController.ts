@@ -31,6 +31,7 @@ class StudentGradingController {
   sort: any;
   totalScore: number;
   workgroupId: number;
+  annotationReceivedSubscription: any;
   currentPeriodChangedSubscription: any;
   
   static $inject = [
@@ -81,15 +82,13 @@ class StudentGradingController {
       }
     });
 
-    this.$scope.$on('annotationReceived', (event, args) => {
-      let annotation = args.annotation;
-      if (annotation) {
-        let workgroupId = annotation.toWorkgroupId;
-        let nodeId = annotation.nodeId;
-        if (workgroupId === this.workgroupId && this.nodesById[nodeId]) {
-          this.totalScore = this.TeacherDataService.getTotalScoreByWorkgroupId(workgroupId);
-          this.updateNode(nodeId);
-        }
+    this.annotationReceivedSubscription = 
+        this.AnnotationService.annotationReceived$.subscribe(({ annotation }) => {
+      const workgroupId = annotation.toWorkgroupId;
+      const nodeId = annotation.nodeId;
+      if (workgroupId === this.workgroupId && this.nodesById[nodeId]) {
+        this.totalScore = this.TeacherDataService.getTotalScoreByWorkgroupId(workgroupId);
+        this.updateNode(nodeId);
       }
     });
 
@@ -160,6 +159,7 @@ class StudentGradingController {
   }
 
   unsubscribeAll() {
+    this.annotationReceivedSubscription.unsubscribe();
     this.currentPeriodChangedSubscription.unsubscribe();
   }
 

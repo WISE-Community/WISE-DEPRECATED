@@ -779,7 +779,7 @@ export class StudentDataService extends DataService {
     if (annotation.notebookItemId) {
       this.upgrade.$injector.get('$rootScope').$broadcast('notebookItemAnnotationReceived', { annotation: annotation });
     } else {
-      this.upgrade.$injector.get('$rootScope').$broadcast('annotationReceived', { annotation: annotation });
+      this.AnnotationService.broadcastAnnotationReceived({ annotation: annotation });
     }
   }
 
@@ -1018,7 +1018,7 @@ export class StudentDataService extends DataService {
           this.setRemoteIdIntoLocalId(savedAnnotation, localAnnotation);
           this.setRemoteServerSaveTimeIntoLocalServerSaveTime(savedAnnotation, localAnnotation);
           this.clearRequestToken(localAnnotation);
-          this.upgrade.$injector.get('$rootScope').$broadcast('annotationSavedToServer', { annotation: localAnnotation });
+          this.AnnotationService.broadcastAnnotationSavedToServer({ annotation: localAnnotation });
           break;
         }
       }

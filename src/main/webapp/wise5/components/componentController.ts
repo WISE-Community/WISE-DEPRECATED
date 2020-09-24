@@ -60,6 +60,7 @@ class ComponentController {
   authoringComponentContentJSONString: string;
   isJSONStringChanged: boolean;
   authoringValidComponentContentJSONString: string;
+  annotationSavedToServerSubscription: any;
 
   constructor(
       $filter,
@@ -196,8 +197,8 @@ class ComponentController {
   }
 
   registerListeners() {
-    this.$scope.$on('annotationSavedToServer', (event, args) => {
-      const annotation = args.annotation;
+    this.annotationSavedToServerSubscription = 
+        this.AnnotationService.annotationSavedToServer$.subscribe(({ annotation }) => {
       if (this.isEventTargetThisComponent(annotation)) {
         this.latestAnnotations = this.AnnotationService
           .getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
@@ -219,7 +220,19 @@ class ComponentController {
       this.cleanupBeforeExiting();
     });
 
+    this.$scope.$on('$destroy', () => {
+      this.ngOnDestroy();
+    });
+
     this.registerStudentWorkSavedToServerListener();
+  }
+
+  ngOnDestroy() {
+    this.unsubscribeAll();
+  }
+
+  unsubscribeAll() {
+    this.annotationSavedToServerSubscription.unsubscribe();
   }
 
   initializeScopeGetComponentState(scope, childControllerName) {
