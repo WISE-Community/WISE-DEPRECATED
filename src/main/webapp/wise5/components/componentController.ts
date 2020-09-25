@@ -8,6 +8,7 @@ import { ProjectService } from "../services/projectService";
 import { StudentAssetService } from "../services/studentAssetService";
 import { UtilService } from "../services/utilService";
 import { StudentDataService } from "../services/studentDataService";
+import { NotificationService } from '../services/notificationService';
 
 class ComponentController {
   $filter: any;
@@ -20,6 +21,7 @@ class ComponentController {
   ConfigService: ConfigService;
   NodeService: NodeService;
   NotebookService: NotebookService;
+  NotificationService: NotificationService;
   ProjectService: ProjectService;
   StudentAssetService: StudentAssetService;
   UtilService: UtilService;
@@ -73,6 +75,7 @@ class ComponentController {
       ConfigService,
       NodeService,
       NotebookService,
+      NotificationService,
       ProjectService,
       StudentAssetService,
       StudentDataService,
@@ -86,6 +89,7 @@ class ComponentController {
     this.ConfigService = ConfigService;
     this.NodeService = NodeService;
     this.NotebookService = NotebookService;
+    this.NotificationService = NotificationService;
     this.ProjectService = ProjectService;
     this.StudentAssetService = StudentAssetService;
     this.StudentDataService = StudentDataService;
@@ -334,7 +338,7 @@ class ComponentController {
       }, () => {
         this.showAdvancedAuthoring = this.$scope.$parent.nodeAuthoringController
             .showAdvancedAdvancedAuthoring[this.componentId];
-        this.UtilService.hideJSONValidMessage();
+        this.NotificationService.hideJSONValidMessage();
       }, true);
   }
 
@@ -1145,13 +1149,13 @@ class ComponentController {
       if (this.isJSONValid()) {
         this.saveJSONAuthoringViewChanges();
         this.toggleJSONAuthoringView();
-        this.UtilService.hideJSONValidMessage();
+        this.NotificationService.hideJSONValidMessage();
       } else {
         let isRollback = confirm(this.$translate('jsonInvalidErrorMessage'));
         if (isRollback) {
           // the author wants to revert back to the last valid JSON
           this.toggleJSONAuthoringView();
-          this.UtilService.hideJSONValidMessage();
+          this.NotificationService.hideJSONValidMessage();
           this.isJSONStringChanged = false;
           this.rollbackToRecentValidJSON();
           this.saveJSONAuthoringViewChanges();
@@ -1171,10 +1175,10 @@ class ComponentController {
   authoringJSONChanged() {
     this.isJSONStringChanged = true;
     if (this.isJSONValid()) {
-      this.UtilService.showJSONValidMessage();
+      this.NotificationService.showJSONValidMessage();
       this.rememberRecentValidJSON();
     } else {
-      this.UtilService.showJSONInvalidMessage();
+      this.NotificationService.showJSONInvalidMessage();
     }
   }
 

@@ -1,6 +1,7 @@
 'use strict';
 import * as angular from 'angular';
 import { ConfigService } from '../services/configService';
+import { NotificationService } from '../services/notificationService';
 import { SessionService } from '../services/sessionService';
 import { TeacherDataService } from '../services/teacherDataService';
 import { TeacherProjectService } from '../services/teacherProjectService';
@@ -27,6 +28,7 @@ class AuthoringToolController {
   showToolbar: boolean = true;
   views: any;
   ConfigService: ConfigService;
+  NotificationService: NotificationService;
   ProjectService: TeacherProjectService;
   SessionService: SessionService;
   TeacherDataService: TeacherDataService;
@@ -42,6 +44,7 @@ class AuthoringToolController {
     '$transitions',
     '$timeout',
     'ConfigService',
+    'NotificationService',
     'ProjectService',
     'SessionService',
     'TeacherDataService'
@@ -57,6 +60,7 @@ class AuthoringToolController {
     $transitions,
     $timeout,
     ConfigService,
+    NotificationService,
     ProjectService,
     SessionService,
     TeacherDataService
@@ -71,6 +75,7 @@ class AuthoringToolController {
     this.$timeout = $timeout;
     this.$translate = this.$filter('translate');
     this.ConfigService = ConfigService;
+    this.NotificationService = NotificationService;
     this.ProjectService = ProjectService;
     this.SessionService = SessionService;
     this.TeacherDataService = TeacherDataService;
@@ -310,7 +315,7 @@ class AuthoringToolController {
   }
 
   turnOffJSONValidMessage() {
-    this.$rootScope.$broadcast('setIsJSONValid', { isJSONValid: null });
+    this.NotificationService.hideJSONValidMessage();
   }
 
   toggleMenu() {
@@ -333,7 +338,7 @@ class AuthoringToolController {
       isProgressIndicatorVisible: isProgressIndicatorVisible,
       time: time
     };
-    this.$rootScope.$broadcast('setGlobalMessage', { globalMessage: globalMessage });
+    this.NotificationService.broadcastSetGlobalMessage({ globalMessage: globalMessage });
   }
 
   logOut() {
