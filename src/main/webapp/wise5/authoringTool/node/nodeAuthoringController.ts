@@ -575,7 +575,6 @@ class NodeAuthoringController {
   }
 
   close() {
-    this.$scope.$broadcast('exitNode', { nodeToExit: this.node });
     this.TeacherDataService.setCurrentNode(null);
     this.$state.go('root.at.project', { projectId: this.projectId });
     this.scrollToTopOfPage();
@@ -750,7 +749,6 @@ class NodeAuthoringController {
       alert(this.$translate('noUndoAvailable'));
     } else if (this.undoStack.length > 0) {
       if (confirm(this.$translate('confirmUndoLastChange'))) {
-        this.$scope.$broadcast('exitNode', { nodeToExit: this.node });
         const nodePreviousVersion = this.undoStack.pop();
         this.ProjectService.replaceNode(this.nodeId, nodePreviousVersion);
         this.node = this.ProjectService.getNodeById(this.nodeId);

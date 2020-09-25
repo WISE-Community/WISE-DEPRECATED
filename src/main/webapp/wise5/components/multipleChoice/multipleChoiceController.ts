@@ -195,16 +195,6 @@ class MultipleChoiceController extends ComponentController {
       return deferred.promise;
     }.bind(this);
 
-    /**
-     * Listen for the 'exitNode' event which is fired when the student
-     * exits the parent node. This will perform any necessary cleanup
-     * when the student exits the parent node.
-     */
-    this.$scope.$on(
-      'exitNode',
-      angular.bind(this, function(event, args) {})
-    );
-
     this.$rootScope.$broadcast('doneRenderingComponent', {
       nodeId: this.nodeId,
       componentId: this.componentId

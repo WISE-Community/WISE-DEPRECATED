@@ -79,7 +79,7 @@ class VLEController {
     this.SessionService = SessionService;
     this.StudentDataService = StudentDataService;
     this.$translate = this.$filter('translate');
-    this.$window.onbeforeunload = () => { this.$rootScope.$broadcast('exit'); };
+    this.$window.onbeforeunload = () => { this.SessionService.broadcastExit() };
 
     this.workgroupId = this.ConfigService.getWorkgroupId();
     this.currentNode = null;

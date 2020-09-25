@@ -150,7 +150,8 @@ class EmbeddedController extends ComponentController {
     this.height = height ? height + 'px' : '600px';
   }
 
-  cleanupBeforeExiting() {
+  ngOnDestroy() {
+    super.ngOnDestroy();
     this.$window.removeEventListener('message', this.messageEventListener);
   }
 

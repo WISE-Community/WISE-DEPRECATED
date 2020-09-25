@@ -134,6 +134,14 @@ class AudioOscillatorController extends ComponentController {
     this.broadcastDoneRenderingComponent();
   }
 
+  ngOnDestroy() {
+    super.ngOnDestroy();
+    if (!this.isGradingMode()) {
+      this.stop();
+      this.audioContext.close();
+    }
+  }
+
   initializeDefaultSettings() {
     this.isPlaying = false;
     this.oscillatorType = 'sine';
@@ -159,13 +167,6 @@ class AudioOscillatorController extends ComponentController {
     this.$timeout(() => {
       this.drawOscilloscopeGrid();
     }, 0);
-  }
-
-  cleanupBeforeExiting() {
-    if (!this.isGradingMode()) {
-      this.stop();
-      this.audioContext.close();
-    }
   }
 
   handleNodeSubmit() {
