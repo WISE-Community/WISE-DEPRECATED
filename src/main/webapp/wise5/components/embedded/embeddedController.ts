@@ -22,6 +22,7 @@ class EmbeddedController extends ComponentController {
   height: string;
   messageEventListener: any;
   studentData: any;
+  siblingComponentStudentDataChangedSubscription: any;
 
   static $inject = [
     '$filter',
@@ -128,10 +129,11 @@ class EmbeddedController extends ComponentController {
     this.initializeScopeGetComponentState(this.$scope, 'embeddedController');
 
     /*
-     * Listen for the siblingComponentStudentDataChanged event which occurs
-     * when the student data has changed for another component in this step.
+     * Watch for siblingComponentStudentDataChanged which occurs when the student data has changed
+     * for another component in this step.
      */
-    this.$scope.$on('siblingComponentStudentDataChanged', (event, args) => {
+    this.siblingComponentStudentDataChangedSubscription = 
+        this.NodeService.siblingComponentStudentDataChanged$.subscribe((args: any) => {
       if (this.isEventTargetThisComponent(args)) {
         const message = {
           messageType: 'siblingComponentStudentDataChanged',
@@ -143,6 +145,18 @@ class EmbeddedController extends ComponentController {
 
     this.initializeMessageEventListener();
     this.broadcastDoneRenderingComponent();
+
+    this.$scope.$on('$destroy', () => {
+      this.ngOnDestroy();
+    });
+  }
+
+  ngOnDestroy() {
+    this.unsubscribeAll();
+  }
+
+  unsubscribeAll() {
+    this.siblingComponentStudentDataChangedSubscription.unsubscribe();
   }
 
   setWidthAndHeight(width, height) {
