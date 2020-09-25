@@ -62,6 +62,8 @@ class ComponentController {
   authoringComponentContentJSONString: string;
   isJSONStringChanged: boolean;
   authoringValidComponentContentJSONString: string;
+  notebookItemChosenSubscription: any;
+  studentWorkSavedToServerSubscription: any;
 
   constructor(
       $filter,
@@ -173,6 +175,20 @@ class ComponentController {
 
     this.registerListeners();
     this.registerComponentWithParentNode();
+
+    this.$scope.$on('$destroy', () => {
+      this.ngOnDestroy();
+    });
+  }
+
+  ngOnDestroy() {
+    this.unsubscribeAll();
+  }
+
+  unsubscribeAll() {
+    if (this.notebookItemChosenSubscription != null) {
+      this.notebookItemChosenSubscription.unsubscribe();
+    }
   }
 
   isStudentMode() {
@@ -387,7 +403,7 @@ class ComponentController {
   }
 
   cleanupBeforeExiting() {
-
+    this.studentWorkSavedToServerSubscription.unsubscribe();
   }
 
   broadcastDoneRenderingComponent() {
@@ -395,12 +411,13 @@ class ComponentController {
   }
 
   registerStudentWorkSavedToServerListener() {
-    this.$scope.$on('studentWorkSavedToServer', (event, args) => {
-      this.handleStudentWorkSavedToServer(event, args);
+    this.studentWorkSavedToServerSubscription = 
+        this.StudentDataService.studentWorkSavedToServer$.subscribe((args: any) => {
+      this.handleStudentWorkSavedToServer(args);
     });
   }
 
-  handleStudentWorkSavedToServer(event, args) {
+  handleStudentWorkSavedToServer(args: any) {
     const componentState = args.studentWork;
     if (this.isForThisComponent(componentState)) {
       this.setIsDirty(false);
@@ -417,10 +434,10 @@ class ComponentController {
         this.setSavedMessage(clientSaveTime);
       }
     }
-    this.handleStudentWorkSavedToServerAdditionalProcessing(event, args);
+    this.handleStudentWorkSavedToServerAdditionalProcessing(args);
   }
 
-  handleStudentWorkSavedToServerAdditionalProcessing(event, args) {
+  handleStudentWorkSavedToServerAdditionalProcessing(args: any) {
 
   }
 
@@ -752,9 +769,16 @@ class ComponentController {
     return this.ProjectService.isSpaceExists("public");
   }
 
-  copyPublicNotebookItemButtonClicked(event) {
-    this.$rootScope.$broadcast('openNotebook',
-      { nodeId: this.nodeId, componentId: this.componentId, insertMode: true, requester: this.nodeId + '-' + this.componentId, visibleSpace: "public" });
+  copyPublicNotebookItemButtonClicked() {
+    this.NotebookService.broadcastOpenNotebook(
+      {
+        nodeId: this.nodeId,
+        componentId: this.componentId,
+        insertMode: true,
+        requester: this.nodeId + '-' + this.componentId,
+        visibleSpace: "public"
+      }
+    );
   }
 
   importWorkByStudentWorkId(studentWorkId) {
@@ -762,7 +786,7 @@ class ComponentController {
       if (componentState != null) {
         this.setStudentWork(componentState);
         this.setParentStudentWorkIdToCurrentStudentWork(studentWorkId);
-        this.$rootScope.$broadcast('closeNotebook');
+        this.NotebookService.broadcastCloseNotebook();
       }
     });
   }
@@ -1293,7 +1317,8 @@ class ComponentController {
   }
 
   registerNotebookItemChosenListener() {
-    this.$scope.$on('notebookItemChosen', (event, {requester, notebookItem}) => {
+    this.notebookItemChosenSubscription = this.NotebookService.notebookItemChosen$
+        .subscribe(({ requester, notebookItem }) => {
       if (requester === `${this.nodeId}-${this.componentId}`) {
         const studentWorkId = notebookItem.content.studentWorkIds[0];
         this.importWorkByStudentWorkId(studentWorkId);

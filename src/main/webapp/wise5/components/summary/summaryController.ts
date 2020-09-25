@@ -217,7 +217,7 @@ class SummaryController extends ComponentController {
     }
   }
 
-  handleStudentWorkSavedToServerAdditionalProcessing(event: any, args: any) {
+  handleStudentWorkSavedToServerAdditionalProcessing(args: any) {
     if (this.isStudent) {
       this.isShowDisplay = this.calculateIsShowDisplay();
     }

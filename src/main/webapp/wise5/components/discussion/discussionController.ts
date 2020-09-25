@@ -243,22 +243,20 @@ class DiscussionController extends ComponentController {
   }
 
   registerStudentWorkSavedToServerListener() {
-    this.destroyStudentWorkSavedToServerListener = this.$scope.$on(
-      'studentWorkSavedToServer',
-      (event, args) => {
-        const componentState = args.studentWork;
-        if (this.isWorkFromThisComponent(componentState)) {
-          if (this.isClassmateResponsesGated() && !this.retrievedClassmateResponses) {
-            this.getClassmateResponses();
-          } else {
-            this.addClassResponse(componentState);
-          }
-          this.disableComponentIfNecessary();
-          this.sendPostToStudentsInThread(componentState);
+    this.studentWorkSavedToServerSubscription = 
+        this.StudentDataService.studentWorkSavedToServer$.subscribe((args: any) => {
+      const componentState = args.studentWork;
+      if (this.isWorkFromThisComponent(componentState)) {
+        if (this.isClassmateResponsesGated() && !this.retrievedClassmateResponses) {
+          this.getClassmateResponses();
+        } else {
+          this.addClassResponse(componentState);
         }
-        this.isSubmit = null;
+        this.disableComponentIfNecessary();
+        this.sendPostToStudentsInThread(componentState);
       }
-    );
+      this.isSubmit = null;
+    });
   }
 
   sendPostToStudentsInThread(componentState) {
@@ -784,7 +782,6 @@ class DiscussionController extends ComponentController {
   }
 
   cleanupBeforeExiting() {
-    this.destroyStudentWorkSavedToServerListener();
     this.destroyStudentWorkReceivedListener();
   }
 }

@@ -84,10 +84,14 @@ export class StudentDataService extends DataService {
 
   $q: any;
   $translate: any;
+  private notebookItemAnnotationReceivedSource: Subject<boolean> = new Subject<boolean>();
+  public notebookItemAnnotationReceived$ = this.notebookItemAnnotationReceivedSource.asObservable();
   private pauseScreenSource: Subject<boolean> = new Subject<boolean>();
   public pauseScreen$ = this.pauseScreenSource.asObservable();
   private componentStudentDataSource: Subject<any> = new Subject<any>();
   public componentStudentData$ = this.componentStudentDataSource.asObservable();
+  private studentWorkSavedToServerSource: Subject<any> = new Subject<any>();
+  public studentWorkSavedToServer$ = this.studentWorkSavedToServerSource.asObservable();
 
   constructor(
       upgrade: UpgradeModule,
@@ -777,10 +781,14 @@ export class StudentDataService extends DataService {
   handleAnnotationReceived(annotation) {
     this.studentData.annotations.push(annotation);
     if (annotation.notebookItemId) {
-      this.upgrade.$injector.get('$rootScope').$broadcast('notebookItemAnnotationReceived', { annotation: annotation });
+      this.broadcastNotebookItemAnnotationReceived({ annotation: annotation });
     } else {
       this.upgrade.$injector.get('$rootScope').$broadcast('annotationReceived', { annotation: annotation });
     }
+  }
+
+  broadcastNotebookItemAnnotationReceived(args: any) {
+    this.notebookItemAnnotationReceivedSource.next(args);
   }
 
   saveComponentEvent(component, category, event, data) {
@@ -961,11 +969,15 @@ export class StudentDataService extends DataService {
             this.setRemoteServerSaveTimeIntoLocalServerSaveTime(savedStudentWork, localStudentWork);
           }
           this.clearRequestToken(localStudentWork);
-          this.upgrade.$injector.get('$rootScope').$broadcast('studentWorkSavedToServer', { studentWork: localStudentWork });
+          this.broadcastStudentWorkSavedToServer({ studentWork: localStudentWork });
           break;
         }
       }
     }
+  }
+
+  broadcastStudentWorkSavedToServer(args: any) {
+    this.studentWorkSavedToServerSource.next(args);
   }
 
   isMatchingRequestToken(localObj, remoteObj) {

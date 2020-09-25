@@ -32,6 +32,7 @@ class AuthoringToolController {
   ProjectService: TeacherProjectService;
   SessionService: SessionService;
   TeacherDataService: TeacherDataService;
+  showSessionWarningSubscription: any;
 
   static $inject = [
     '$anchorScroll',
@@ -193,10 +194,12 @@ class AuthoringToolController {
       }
     });
 
-    $scope.$on('showSessionWarning', () => {
+    this.showSessionWarningSubscription = 
+        this.SessionService.showSessionWarning$.subscribe(() => {
       const confirm = this.$mdDialog
         .confirm()
         .parent(angular.element(document.body))
+        .theme('at')
         .title(this.$translate('sessionTimeout'))
         .content(this.$translate('autoLogoutMessage'))
         .ariaLabel(this.$translate('sessionTimeout'))
@@ -266,6 +269,18 @@ class AuthoringToolController {
         this.setGlobalMessage(this.$translate('notAllowedToEditThisProject'), false, null);
       }, 1000);
     }
+
+    this.$scope.$on('$destroy', () => {
+      this.ngOnDestroy();
+    });
+  }
+
+  ngOnDestroy() {
+    this.unsubscribeAll();
+  }
+
+  unsubscribeAll() {
+    this.showSessionWarningSubscription.unsubscribe();
   }
 
   /**
