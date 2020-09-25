@@ -10,7 +10,7 @@ import { HttpClient, HttpParams } from "@angular/common/http";
 import * as angular from 'angular';
 import { TagService } from "./tagService";
 import { DataService } from "../../site/src/app/services/data.service";
-import { Subject } from "rxjs";
+import { Observable, Subject } from "rxjs";
 
 @Injectable()
 export class StudentDataService extends DataService {
@@ -84,6 +84,8 @@ export class StudentDataService extends DataService {
 
   $q: any;
   $translate: any;
+  private nodeClickLockedSource: Subject<any> = new Subject<any>();
+  public nodeClickLocked$: Observable<any> = this.nodeClickLockedSource.asObservable();
   private notebookItemAnnotationReceivedSource: Subject<boolean> = new Subject<boolean>();
   public notebookItemAnnotationReceived$ = this.notebookItemAnnotationReceivedSource.asObservable();
   private pauseScreenSource: Subject<boolean> = new Subject<boolean>();
@@ -1366,7 +1368,11 @@ export class StudentDataService extends DataService {
   }
 
   nodeClickLocked(nodeId) {
-    this.upgrade.$injector.get('$rootScope').$broadcast('nodeClickLocked', { nodeId: nodeId });
+    this.broadcastNodeClickLocked({ nodeId: nodeId });
+  }
+
+  broadcastNodeClickLocked(args: any) {
+    this.nodeClickLockedSource.next(args);
   }
 
   getTotalScore() {

@@ -7,6 +7,7 @@ class ThemeController {
     $filter,
     ConfigService,
     ProjectService,
+    StudentAssetService,
     StudentDataService,
     NotebookService,
     NotificationService,
@@ -21,6 +22,7 @@ class ThemeController {
     this.$filter = $filter;
     this.ConfigService = ConfigService;
     this.ProjectService = ProjectService;
+    this.StudentAssetService = StudentAssetService;
     this.StudentDataService = StudentDataService;
     this.NotebookService = NotebookService;
     this.NotificationService = NotificationService;
@@ -83,19 +85,18 @@ class ThemeController {
       this.setLayoutState();
     });
 
-    // alert user when a locked node has been clicked
-    this.$scope.$on('nodeClickLocked', (event, args) => {
-      var message = this.$translate('sorryYouCannotViewThisItemYet');
-      let nodeId = args.nodeId;
-      var node = this.ProjectService.getNodeById(nodeId);
+    this.nodeClickLockedSubscription = 
+        this.StudentDataService.nodeClickLocked$.subscribe(({ nodeId }) => {
+      let message = this.$translate('sorryYouCannotViewThisItemYet');
+      const node = this.ProjectService.getNodeById(nodeId);
       if (node != null) {
         // get the constraints that affect this node
-        var constraints = this.ProjectService.getConstraintsThatAffectNode(node);
+        const constraints = this.ProjectService.getConstraintsThatAffectNode(node);
         this.ProjectService.orderConstraints(constraints);
 
         if (constraints != null && constraints.length > 0) {
           // get the node title the student is trying to go to
-          let nodeTitle = this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
+          const nodeTitle = this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
           message = 
             `<p>
               ${this.$translate('toVisitNodeTitleYouNeedTo', { nodeTitle: nodeTitle })}
@@ -104,8 +105,8 @@ class ThemeController {
         }
 
         // loop through all the constraints that affect this node
-        for (var c = 0; c < constraints.length; c++) {
-          var constraint = constraints[c];
+        for (let c = 0; c < constraints.length; c++) {
+          const constraint = constraints[c];
 
           // check if the constraint has been satisfied
           if (constraint != null && !this.StudentDataService.evaluateConstraint(constraint)) {
@@ -125,7 +126,6 @@ class ThemeController {
           .htmlContent(message)
           .ariaLabel(this.$translate('itemLocked'))
           .ok(this.$translate('ok'))
-          .targetEvent(event)
       );
     });
 
@@ -159,12 +159,10 @@ class ThemeController {
       }
     });
 
-    this.$scope.$on('showStudentAssets', (event, args) => {
-      let componentController = args.componentController;
-      let $event = args.$event;
-      let studentAssetDialogTemplateUrl = this.themePath + '/templates/studentAssetDialog.html';
-      let studentAssetTemplateUrl = this.themePath + '/studentAsset/studentAsset.html';
-
+    this.showStudentAssetsSubscription = 
+        this.StudentAssetService.showStudentAssets$.subscribe(({ componentController, $event }) => {
+      const studentAssetDialogTemplateUrl = this.themePath + '/templates/studentAssetDialog.html';
+      const studentAssetTemplateUrl = this.themePath + '/studentAsset/studentAsset.html';
       this.$mdDialog.show({
         parent: angular.element(document.body),
         targetEvent: $event,
@@ -325,7 +323,9 @@ class ThemeController {
 
   unsubscribeAll() {
     this.currentNodeChangedSubscription.unsubscribe();
+    this.nodeClickLockedSubscription.unsubscribe();
     this.serverConnectionStatusSubscription.unsubscribe();
+    this.showStudentAssetsSubscription.unsubscribe();
     this.viewCurrentAmbientNotificationSubscription.unsubscribe();
   }
 
@@ -402,6 +402,7 @@ ThemeController.$inject = [
   '$filter',
   'ConfigService',
   'ProjectService',
+  'StudentAssetService',
   'StudentDataService',
   'NotebookService',
   'NotificationService',
