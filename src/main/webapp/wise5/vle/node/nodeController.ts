@@ -8,6 +8,7 @@ import * as hopscotch from 'hopscotch';
 window['hopscotch'] = hopscotch;
 import * as $ from 'jquery';
 import { Subscription } from 'rxjs';
+import { StudentAssetService } from '../../services/studentAssetService';
 
 class NodeController {
   $translate: any;
@@ -49,6 +50,7 @@ class NodeController {
     'ConfigService',
     'NodeService',
     'ProjectService',
+    'StudentAssetService',
     'StudentDataService',
     'UtilService'
   ];
@@ -65,6 +67,7 @@ class NodeController {
     private ConfigService: ConfigService,
     private NodeService: NodeService,
     private ProjectService: VLEProjectService,
+    private StudentAssetService: StudentAssetService,
     private StudentDataService: StudentDataService,
     private UtilService: UtilService
   ) {
@@ -514,7 +517,7 @@ class NodeController {
       componentController = childScope.graphController;
     }
 
-    this.$rootScope.$broadcast('showStudentAssets', {
+    this.StudentAssetService.broadcastShowStudentAssets({
       componentController: componentController,
       $event: $event
     });

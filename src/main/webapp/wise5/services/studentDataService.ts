@@ -84,6 +84,8 @@ export class StudentDataService extends DataService {
 
   $q: any;
   $translate: any;
+  private nodeClickLockedSource: Subject<any> = new Subject<any>();
+  public nodeClickLocked$: Observable<any> = this.nodeClickLockedSource.asObservable();
   private componentDirtySource: Subject<boolean> = new Subject<boolean>();
   public componentDirty$: Observable<any> = this.componentDirtySource.asObservable();
   private componentSaveTriggeredSource: Subject<boolean> = new Subject<boolean>();
@@ -1376,7 +1378,11 @@ export class StudentDataService extends DataService {
   }
 
   nodeClickLocked(nodeId) {
-    this.upgrade.$injector.get('$rootScope').$broadcast('nodeClickLocked', { nodeId: nodeId });
+    this.broadcastNodeClickLocked({ nodeId: nodeId });
+  }
+
+  broadcastNodeClickLocked(args: any) {
+    this.nodeClickLockedSource.next(args);
   }
 
   getTotalScore() {
