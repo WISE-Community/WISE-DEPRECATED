@@ -38,6 +38,12 @@ export class ProjectService {
   transitions: any;
   private errorSavingProjectSource: Subject<any> = new Subject<any>();
   public errorSavingProject$: Observable<any> = this.errorSavingProjectSource.asObservable();
+  private notAllowedToEditThisProjectSource: Subject<any> = new Subject<any>();
+  public notAllowedToEditThisProject$: Observable<any> =
+      this.notAllowedToEditThisProjectSource.asObservable();
+  private notLoggedInProjectNotSavedSource: Subject<any> = new Subject<any>();
+  public notLoggedInProjectNotSaved$: Observable<any> =
+      this.notLoggedInProjectNotSavedSource.asObservable();
   private projectSavedSource: Subject<any> = new Subject<any>();
   public projectSaved$: Observable<any> = this.projectSavedSource.asObservable();
   private savingProjectSource: Subject<any> = new Subject<any>();
@@ -1120,7 +1126,7 @@ export class ProjectService {
    */
   saveProject() {
     if (!this.ConfigService.getConfigParam('canEditProject')) {
-      this.UtilService.broadcastEventInRootScope('notAllowedToEditThisProject');
+      this.broadcastNotAllowedToEditThisProject();
       return null;
     }
     this.broadcastSavingProject();
@@ -1142,10 +1148,10 @@ export class ProjectService {
         angular.toJson(this.project, false)).toPromise().then((response: any) => {
       if (response.status === 'error') {
         if (response.messageCode === 'notSignedIn') {
-          this.UtilService.broadcastEventInRootScope('notLoggedInProjectNotSaved');
+          this.broadcastNotLoggedInProjectNotSaved();
           this.SessionService.forceLogOut();
         } else if (response.messageCode === 'notAllowedToEditThisProject') {
-          this.UtilService.broadcastEventInRootScope('notAllowedToEditThisProject');
+          this.broadcastNotAllowedToEditThisProject();
         } else if (response.messageCode === 'errorSavingProject') {
           this.broadcastErrorSavingProject();
         }
@@ -5362,6 +5368,14 @@ export class ProjectService {
 
   broadcastErrorSavingProject() {
     this.errorSavingProjectSource.next();
+  }
+
+  broadcastNotAllowedToEditThisProject() {
+    this.notAllowedToEditThisProjectSource.next();
+  }
+
+  broadcastNotLoggedInProjectNotSaved() {
+    this.notLoggedInProjectNotSavedSource.next();
   }
 
   broadcastProjectSaved() {
