@@ -9,6 +9,7 @@ import { StudentStatusService } from '../../../../services/studentStatusService'
 import { TeacherDataService } from '../../../../services/teacherDataService';
 import * as angular from 'angular';
 import { TeacherProjectService } from '../../../../services/teacherProjectService';
+import { Subscription } from 'rxjs';
 
 class NodeGradingViewController {
   $translate: any;
@@ -37,7 +38,8 @@ class NodeGradingViewController {
   workgroups: any;
   workgroupsById: any;
   workVisibilityById: any;
-  currentPeriodChangedSubscription: any;
+  currentPeriodChangedSubscription: Subscription;
+  projectSavedSubscription: Subscription;
 
   static $inject = [
     '$filter',
@@ -95,7 +97,7 @@ class NodeGradingViewController {
       document.body.scrollTop = document.documentElement.scrollTop = 0;
     });
 
-    this.$scope.$on('projectSaved', (event, args) => {
+    this.projectSavedSubscription = this.ProjectService.projectSaved$.subscribe(() => {
       this.maxScore = this.getMaxScore();
     });
 
@@ -153,6 +155,7 @@ class NodeGradingViewController {
 
   unsubscribeAll() {
     this.currentPeriodChangedSubscription.unsubscribe();
+    this.projectSavedSubscription.unsubscribe();
   }
 
   saveNodeGradingViewDisplayedEvent() {
