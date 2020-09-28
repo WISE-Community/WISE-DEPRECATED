@@ -13,7 +13,11 @@ class NodeController {
   $translate: any;
   autoSaveInterval: any;
   autoSaveIntervalId: any;
+  componentDirtySubscription: Subscription;
+  componentSaveTriggeredSubscription: Subscription;
   componentStudentDataSubscription: Subscription;
+  componentSubmitDirtySubscription: Subscription;
+  componentSubmitTriggeredSubscription: Subscription;
   componentToScope: any;
   dirtyComponentIds: any;
   dirtySubmitComponentIds: any;
@@ -179,17 +183,11 @@ class NodeController {
       }
     }
 
-    this.$scope.$on('componentSaveTriggered', (event, args) => {
-      if (args != null) {
-        const nodeId = args.nodeId;
-        const componentId = args.componentId;
-
-        if (nodeId != null && componentId != null) {
-          if (this.nodeId == nodeId && this.nodeContainsComponent(componentId)) {
-            const isAutoSave = false;
-            this.createAndSaveComponentData(isAutoSave, componentId);
-          }
-        }
+    this.componentSaveTriggeredSubscription =
+        this.StudentDataService.componentSaveTriggered$.subscribe(({ nodeId, componentId }) => {
+      if (this.nodeId == nodeId && this.nodeContainsComponent(componentId)) {
+        const isAutoSave = false;
+        this.createAndSaveComponentData(isAutoSave, componentId);
       }
     });
 
@@ -197,18 +195,12 @@ class NodeController {
      * Listen for the componentSubmitTriggered event which occurs when a
      * component is requesting student data to be submitted
      */
-    this.$scope.$on('componentSubmitTriggered', (event, args) => {
-      if (args != null) {
-        const nodeId = args.nodeId;
-        const componentId = args.componentId;
-
-        if (nodeId != null && componentId != null) {
-          if (this.nodeId == nodeId && this.nodeContainsComponent(componentId)) {
-            const isAutoSave = false;
-            const isSubmit = true;
-            this.createAndSaveComponentData(isAutoSave, componentId, isSubmit);
-          }
-        }
+    this.componentSubmitTriggeredSubscription =
+        this.StudentDataService.componentSubmitTriggered$.subscribe(({ nodeId, componentId }) => {
+      if (this.nodeId == nodeId && this.nodeContainsComponent(componentId)) {
+        const isAutoSave = false;
+        const isSubmit = true;
+        this.createAndSaveComponentData(isAutoSave, componentId, isSubmit);
       }
     });
 
@@ -231,45 +223,36 @@ class NodeController {
     });
 
     this.$scope.$on('$destroy', () => {
+      this.componentDirtySubscription.unsubscribe();
+      this.componentSaveTriggeredSubscription.unsubscribe();
       this.componentStudentDataSubscription.unsubscribe();
+      this.componentSubmitDirtySubscription.unsubscribe();
+      this.componentSubmitTriggeredSubscription.unsubscribe();
     });
 
     /**
-     * Listen for the componentDirty event that will come from child component
-     * scopes; notifies node that component has/doesn't have unsaved work
-     * @param event
-     * @param args the arguments provided when the event is fired
+     * Listen for the componentDirty observable that will come from child components.
      */
-    this.$scope.$on('componentDirty', (event, args) => {
-      const componentId = args.componentId;
-      if (componentId) {
-        const isDirty = args.isDirty;
-        const index = this.dirtyComponentIds.indexOf(componentId);
-        if (isDirty && index === -1) {
-          this.dirtyComponentIds.push(componentId);
-        } else if (!isDirty && index > -1) {
-          this.dirtyComponentIds.splice(index, 1);
-        }
+    this.componentDirtySubscription = 
+        this.StudentDataService.componentDirty$.subscribe(({ componentId, isDirty }) => {
+      const index = this.dirtyComponentIds.indexOf(componentId);
+      if (isDirty && index === -1) {
+        this.dirtyComponentIds.push(componentId);
+      } else if (!isDirty && index > -1) {
+        this.dirtyComponentIds.splice(index, 1);
       }
     });
 
     /**
-     * Listen for the componentSubmitDirty event that will come from child
-     * component scopes; notifies node that work has/has not changed for a
-     * component since last submission
-     * @param event
-     * @param args the arguments provided when the event is fired
+     * Listen for the componentSubmitDirty observable that will come from child components.
      */
-    this.$scope.$on('componentSubmitDirty', (event, args) => {
-      const componentId = args.componentId;
-      if (componentId) {
-        const isDirty = args.isDirty;
-        const index = this.dirtySubmitComponentIds.indexOf(componentId);
-        if (isDirty && index === -1) {
-          this.dirtySubmitComponentIds.push(componentId);
-        } else if (!isDirty && index > -1) {
-          this.dirtySubmitComponentIds.splice(index, 1);
-        }
+    this.componentSubmitDirtySubscription = 
+        this.StudentDataService.componentSubmitDirty$.subscribe(({ componentId, isDirty }) => {
+      const index = this.dirtySubmitComponentIds.indexOf(componentId);
+      if (isDirty && index === -1) {
+        this.dirtySubmitComponentIds.push(componentId);
+      } else if (!isDirty && index > -1) {
+        this.dirtySubmitComponentIds.splice(index, 1);
       }
     });
 

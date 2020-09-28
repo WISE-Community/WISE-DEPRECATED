@@ -515,11 +515,7 @@ class MultipleChoiceController extends ComponentController {
         }
 
         if (this.mode === 'authoring') {
-          /*
-           * we are in authoring mode so we will set values appropriately
-           * here because the 'componentSubmitTriggered' event won't
-           * work in authoring mode
-           */
+          // we are in authoring mode so we will set values manually
           this.checkAnswer();
           this.isLatestComponentStateSubmit = true;
           this.isDirty = false;
@@ -528,7 +524,7 @@ class MultipleChoiceController extends ComponentController {
 
         if (submitTriggeredBy == null || submitTriggeredBy === 'componentSubmitButton') {
           // tell the parent node that this component wants to submit
-          this.$scope.$emit('componentSubmitTriggered', {
+          this.StudentDataService.broadcastComponentSubmitTriggered({
             nodeId: this.nodeId,
             componentId: this.componentId
           });

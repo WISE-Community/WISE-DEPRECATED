@@ -419,7 +419,7 @@ class MatchController extends ComponentController {
 
   setIsSubmitDirty(isSubmitDirty) {
     this.isSubmitDirty = isSubmitDirty;
-    this.$scope.$emit('componentSubmitDirty', {
+    this.StudentDataService.broadcastComponentSubmitDirty({
       componentId: this.componentId,
       isDirty: isSubmitDirty
     });

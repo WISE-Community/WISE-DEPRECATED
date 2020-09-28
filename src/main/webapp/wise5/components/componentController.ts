@@ -427,7 +427,10 @@ class ComponentController {
         this.setSubmittedMessage(clientSaveTime);
         this.lockIfNecessary();
         this.setIsSubmitDirty(false);
-        this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: this.isSubmitDirty});
+        this.StudentDataService.broadcastComponentSubmitDirty({
+          componentId: this.componentId,
+          isDirty: this.isSubmitDirty
+        });
       } else if (componentState.isAutoSave) {
         this.setAutoSavedMessage(clientSaveTime);
       } else {
@@ -453,8 +456,10 @@ class ComponentController {
     this.isSubmit = false;
 
     // tell the parent node to save
-    this.$scope.$emit('componentSaveTriggered',
-        {nodeId: this.nodeId, componentId: this.componentId});
+    this.StudentDataService.broadcastComponentSaveTriggered({
+      nodeId: this.nodeId,
+      componentId: this.componentId
+    });
   }
 
   submitButtonClicked() {
@@ -507,11 +512,7 @@ class ComponentController {
     }
 
     if (this.isAuthoringMode()) {
-      /*
-       * We are in authoring mode so we will set values appropriately
-       * here because the 'componentSubmitTriggered' event won't
-       * work in authoring mode.
-       */
+      // we are in authoring mode so we will set values manually
       this.setIsDirty(false);
       this.setIsSubmitDirty(false);
       this.createComponentState('submit');
@@ -531,7 +532,10 @@ class ComponentController {
   }
 
   emitComponentSubmitTriggered() {
-    this.$scope.$emit('componentSubmitTriggered', {nodeId: this.nodeId, componentId: this.componentId});
+    this.StudentDataService.broadcastComponentSubmitTriggered({
+      nodeId: this.nodeId,
+      componentId: this.componentId
+    })
   }
 
   disableComponentIfNecessary() {
@@ -620,11 +624,17 @@ class ComponentController {
   }
 
   emitComponentDirty(isDirty) {
-    this.$scope.$emit('componentDirty', {componentId: this.componentId, isDirty: isDirty});
+    this.StudentDataService.broadcastComponentDirty({
+      componentId: this.componentId,
+      isDirty: isDirty
+    });
   }
 
   emitComponentSubmitDirty(isDirty) {
-    this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: isDirty});
+    this.StudentDataService.broadcastComponentSubmitDirty({
+      componentId: this.componentId,
+      isDirty: isDirty
+    });
   }
 
   setSavedMessage(time) {
