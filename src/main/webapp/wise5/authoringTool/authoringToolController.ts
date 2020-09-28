@@ -223,18 +223,6 @@ class AuthoringToolController {
       this.logOut();
     });
 
-    this.$scope.$on('showRequestLogout', ev => {
-      const alert = this.$mdDialog
-        .confirm()
-        .parent(angular.element(document.body))
-        .title(this.$translate('serverUpdate'))
-        .textContent(this.$translate('serverUpdateRequestLogoutMessage'))
-        .ariaLabel(this.$translate('serverUpdate'))
-        .targetEvent(ev)
-        .ok(this.$translate('ok'));
-      this.$mdDialog.show(alert);
-    });
-
     this.savingProjectSubscription = this.ProjectService.savingProject$.subscribe(() => {
       this.setGlobalMessage(this.$translate('saving'), true, null);
     });
