@@ -1,5 +1,6 @@
 'use strict';
 import * as angular from 'angular';
+import { Subscription } from 'rxjs';
 import { ConfigService } from '../services/configService';
 import { NotificationService } from '../services/notificationService';
 import { SessionService } from '../services/sessionService';
@@ -32,7 +33,10 @@ class AuthoringToolController {
   ProjectService: TeacherProjectService;
   SessionService: SessionService;
   TeacherDataService: TeacherDataService;
-  showSessionWarningSubscription: any;
+  errorSavingProjectSubscription: Subscription;
+  projectSavedSubscription: Subscription;
+  savingProjectSubscription: Subscription;
+  showSessionWarningSubscription: Subscription;
 
   static $inject = [
     '$anchorScroll',
@@ -231,11 +235,11 @@ class AuthoringToolController {
       this.$mdDialog.show(alert);
     });
 
-    this.$scope.$on('savingProject', () => {
+    this.savingProjectSubscription = this.ProjectService.savingProject$.subscribe(() => {
       this.setGlobalMessage(this.$translate('saving'), true, null);
     });
 
-    this.$scope.$on('projectSaved', () => {
+    this.projectSavedSubscription = this.ProjectService.projectSaved$.subscribe(() => {
       /*
        * Wait half a second before changing the message to 'Saved' so that
        * the 'Saving...' message stays up long enough for the author to
@@ -248,7 +252,7 @@ class AuthoringToolController {
       }, 500);
     });
 
-    this.$scope.$on('errorSavingProject', () => {
+    this.errorSavingProjectSubscription = this.ProjectService.errorSavingProject$.subscribe(() => {
       this.setGlobalMessage(this.$translate('errorSavingProject'), false, null);
     });
 
@@ -280,6 +284,9 @@ class AuthoringToolController {
   }
 
   unsubscribeAll() {
+    this.errorSavingProjectSubscription.unsubscribe();
+    this.projectSavedSubscription.unsubscribe();
+    this.savingProjectSubscription.unsubscribe();
     this.showSessionWarningSubscription.unsubscribe();
   }
 
