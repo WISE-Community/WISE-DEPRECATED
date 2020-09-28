@@ -135,7 +135,7 @@ class EmbeddedController extends ComponentController {
      * Watch for siblingComponentStudentDataChanged which occurs when the student data has changed
      * for another component in this step.
      */
-    this.siblingComponentStudentDataChangedSubscription = 
+    this.siblingComponentStudentDataChangedSubscription =
         this.NodeService.siblingComponentStudentDataChanged$.subscribe((args: any) => {
       if (this.isEventTargetThisComponent(args)) {
         const message = {
@@ -148,15 +148,10 @@ class EmbeddedController extends ComponentController {
 
     this.initializeMessageEventListener();
     this.broadcastDoneRenderingComponent();
-
-    this.$scope.$on('$destroy', () => {
-      this.ngOnDestroy();
-    });
   }
 
   ngOnDestroy() {
     super.ngOnDestroy();
-    this.unsubscribeAll();
     this.$window.removeEventListener('message', this.messageEventListener);
   }
 
@@ -335,7 +330,7 @@ class EmbeddedController extends ComponentController {
   }
 
   registerStudentWorkSavedToServerListener() {
-    this.studentWorkSavedToServerSubscription = 
+    this.studentWorkSavedToServerSubscription =
         this.StudentDataService.studentWorkSavedToServer$.subscribe((args: any) => {
       const componentState = args.studentWork;
       if (this.isForThisComponent(componentState)) {
