@@ -107,7 +107,7 @@ class MatchController extends ComponentController {
       this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
       if (this.shouldImportPrivateNotes()) {
         const allPrivateNotebookItems = this.NotebookService.getPrivateNotebookItems();
-        this.privateNotebookItems = allPrivateNotebookItems.filter(note => { 
+        this.privateNotebookItems = allPrivateNotebookItems.filter(note => {
           return note.serverDeleteTime == null
         });
         this.notebookUpdatedSubscription = this.NotebookService.notebookUpdated$
@@ -206,10 +206,6 @@ class MatchController extends ComponentController {
     this.$rootScope.$broadcast('doneRenderingComponent', {
       nodeId: this.nodeId,
       componentId: this.componentId
-    });
-
-    this.$scope.$on('$destroy', () => {
-      this.ngOnDestroy();
     });
   }
 
