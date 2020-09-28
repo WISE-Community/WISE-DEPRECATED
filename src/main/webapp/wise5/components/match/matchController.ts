@@ -38,6 +38,7 @@ class MatchController extends ComponentController {
     'MatchService',
     'NodeService',
     'NotebookService',
+    'NotificationService',
     'ProjectService',
     'StudentAssetService',
     'StudentDataService',
@@ -57,6 +58,7 @@ class MatchController extends ComponentController {
     MatchService,
     NodeService,
     NotebookService,
+    NotificationService,
     ProjectService,
     StudentAssetService,
     StudentDataService,
@@ -72,6 +74,7 @@ class MatchController extends ComponentController {
       ConfigService,
       NodeService,
       NotebookService,
+      NotificationService,
       ProjectService,
       StudentAssetService,
       StudentDataService,
@@ -416,7 +419,7 @@ class MatchController extends ComponentController {
 
   setIsSubmitDirty(isSubmitDirty) {
     this.isSubmitDirty = isSubmitDirty;
-    this.$scope.$emit('componentSubmitDirty', {
+    this.StudentDataService.broadcastComponentSubmitDirty({
       componentId: this.componentId,
       isDirty: isSubmitDirty
     });

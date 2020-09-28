@@ -795,29 +795,6 @@ export class UtilService {
     }
   }
 
-  showJSONValidMessage() {
-    this.setIsJSONValidMessage(true);
-  }
-
-  showJSONInvalidMessage() {
-    this.setIsJSONValidMessage(false);
-  }
-
-  hideJSONValidMessage() {
-    this.setIsJSONValidMessage(null);
-  }
-
-  /**
-   * Show the message in the toolbar that says "JSON Valid" or "JSON Invalid".
-   * @param isJSONValid
-   * true if we want to show "JSON Valid"
-   * false if we want to show "JSON Invalid"
-   * null if we don't want to show anything
-   */
-  setIsJSONValidMessage(isJSONValid) {
-    this.upgrade.$injector.get('$rootScope').$broadcast('setIsJSONValid', { isJSONValid: isJSONValid });
-  }
-
   moveObjectUp(objects, index) {
     if (index !== 0) {
       const object = objects[index];
