@@ -86,6 +86,16 @@ export class StudentDataService extends DataService {
   $translate: any;
   private nodeClickLockedSource: Subject<any> = new Subject<any>();
   public nodeClickLocked$: Observable<any> = this.nodeClickLockedSource.asObservable();
+  private componentDirtySource: Subject<boolean> = new Subject<boolean>();
+  public componentDirty$: Observable<any> = this.componentDirtySource.asObservable();
+  private componentSaveTriggeredSource: Subject<boolean> = new Subject<boolean>();
+  public componentSaveTriggered$: Observable<any> =
+      this.componentSaveTriggeredSource.asObservable();
+  private componentSubmitDirtySource: Subject<boolean> = new Subject<boolean>();
+  public componentSubmitDirty$: Observable<any> = this.componentSubmitDirtySource.asObservable();
+  private componentSubmitTriggeredSource: Subject<boolean> = new Subject<boolean>();
+  public componentSubmitTriggered$: Observable<any> =
+      this.componentSubmitTriggeredSource.asObservable();
   private notebookItemAnnotationReceivedSource: Subject<boolean> = new Subject<boolean>();
   public notebookItemAnnotationReceived$ = this.notebookItemAnnotationReceivedSource.asObservable();
   private pauseScreenSource: Subject<boolean> = new Subject<boolean>();
@@ -1603,5 +1613,18 @@ export class StudentDataService extends DataService {
       }
     }
     return maxScore;
+  }
+
+  broadcastComponentDirty(args: any) {
+    this.componentDirtySource.next(args);
+  }
+  broadcastComponentSaveTriggered(args: any) {
+    this.componentSaveTriggeredSource.next(args);
+  }
+  broadcastComponentSubmitDirty(args: any) {
+    this.componentSubmitDirtySource.next(args);
+  }
+  broadcastComponentSubmitTriggered(args: any) {
+    this.componentSubmitTriggeredSource.next(args);
   }
 }

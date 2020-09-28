@@ -8,6 +8,7 @@ import { ProjectService } from "../services/projectService";
 import { StudentAssetService } from "../services/studentAssetService";
 import { UtilService } from "../services/utilService";
 import { StudentDataService } from "../services/studentDataService";
+import { NotificationService } from '../services/notificationService';
 
 class ComponentController {
   $filter: any;
@@ -20,6 +21,7 @@ class ComponentController {
   ConfigService: ConfigService;
   NodeService: NodeService;
   NotebookService: NotebookService;
+  NotificationService: NotificationService;
   ProjectService: ProjectService;
   StudentAssetService: StudentAssetService;
   UtilService: UtilService;
@@ -73,6 +75,7 @@ class ComponentController {
       ConfigService,
       NodeService,
       NotebookService,
+      NotificationService,
       ProjectService,
       StudentAssetService,
       StudentDataService,
@@ -86,6 +89,7 @@ class ComponentController {
     this.ConfigService = ConfigService;
     this.NodeService = NodeService;
     this.NotebookService = NotebookService;
+    this.NotificationService = NotificationService;
     this.ProjectService = ProjectService;
     this.StudentAssetService = StudentAssetService;
     this.StudentDataService = StudentDataService;
@@ -334,7 +338,7 @@ class ComponentController {
       }, () => {
         this.showAdvancedAuthoring = this.$scope.$parent.nodeAuthoringController
             .showAdvancedAdvancedAuthoring[this.componentId];
-        this.UtilService.hideJSONValidMessage();
+        this.NotificationService.hideJSONValidMessage();
       }, true);
   }
 
@@ -423,7 +427,10 @@ class ComponentController {
         this.setSubmittedMessage(clientSaveTime);
         this.lockIfNecessary();
         this.setIsSubmitDirty(false);
-        this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: this.isSubmitDirty});
+        this.StudentDataService.broadcastComponentSubmitDirty({
+          componentId: this.componentId,
+          isDirty: this.isSubmitDirty
+        });
       } else if (componentState.isAutoSave) {
         this.setAutoSavedMessage(clientSaveTime);
       } else {
@@ -449,8 +456,10 @@ class ComponentController {
     this.isSubmit = false;
 
     // tell the parent node to save
-    this.$scope.$emit('componentSaveTriggered',
-        {nodeId: this.nodeId, componentId: this.componentId});
+    this.StudentDataService.broadcastComponentSaveTriggered({
+      nodeId: this.nodeId,
+      componentId: this.componentId
+    });
   }
 
   submitButtonClicked() {
@@ -503,11 +512,7 @@ class ComponentController {
     }
 
     if (this.isAuthoringMode()) {
-      /*
-       * We are in authoring mode so we will set values appropriately
-       * here because the 'componentSubmitTriggered' event won't
-       * work in authoring mode.
-       */
+      // we are in authoring mode so we will set values manually
       this.setIsDirty(false);
       this.setIsSubmitDirty(false);
       this.createComponentState('submit');
@@ -527,7 +532,10 @@ class ComponentController {
   }
 
   emitComponentSubmitTriggered() {
-    this.$scope.$emit('componentSubmitTriggered', {nodeId: this.nodeId, componentId: this.componentId});
+    this.StudentDataService.broadcastComponentSubmitTriggered({
+      nodeId: this.nodeId,
+      componentId: this.componentId
+    })
   }
 
   disableComponentIfNecessary() {
@@ -616,11 +624,17 @@ class ComponentController {
   }
 
   emitComponentDirty(isDirty) {
-    this.$scope.$emit('componentDirty', {componentId: this.componentId, isDirty: isDirty});
+    this.StudentDataService.broadcastComponentDirty({
+      componentId: this.componentId,
+      isDirty: isDirty
+    });
   }
 
   emitComponentSubmitDirty(isDirty) {
-    this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: isDirty});
+    this.StudentDataService.broadcastComponentSubmitDirty({
+      componentId: this.componentId,
+      isDirty: isDirty
+    });
   }
 
   setSavedMessage(time) {
@@ -1145,13 +1159,13 @@ class ComponentController {
       if (this.isJSONValid()) {
         this.saveJSONAuthoringViewChanges();
         this.toggleJSONAuthoringView();
-        this.UtilService.hideJSONValidMessage();
+        this.NotificationService.hideJSONValidMessage();
       } else {
         let isRollback = confirm(this.$translate('jsonInvalidErrorMessage'));
         if (isRollback) {
           // the author wants to revert back to the last valid JSON
           this.toggleJSONAuthoringView();
-          this.UtilService.hideJSONValidMessage();
+          this.NotificationService.hideJSONValidMessage();
           this.isJSONStringChanged = false;
           this.rollbackToRecentValidJSON();
           this.saveJSONAuthoringViewChanges();
@@ -1171,10 +1185,10 @@ class ComponentController {
   authoringJSONChanged() {
     this.isJSONStringChanged = true;
     if (this.isJSONValid()) {
-      this.UtilService.showJSONValidMessage();
+      this.NotificationService.showJSONValidMessage();
       this.rememberRecentValidJSON();
     } else {
-      this.UtilService.showJSONInvalidMessage();
+      this.NotificationService.showJSONInvalidMessage();
     }
   }
 

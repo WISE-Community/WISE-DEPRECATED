@@ -8,6 +8,7 @@ import { UtilService } from '../../services/utilService';
 import * as angular from 'angular';
 import * as $ from 'jquery';
 import { TagService } from '../../services/tagService';
+import { NotificationService } from '../../services/notificationService';
 
 class NodeAuthoringController {
   $translate: any;
@@ -70,6 +71,7 @@ class NodeAuthoringController {
     '$timeout',
     'ConfigService',
     'NodeService',
+    'NotificationService',
     'ProjectService',
     'TagService',
     'TeacherDataService',
@@ -87,6 +89,7 @@ class NodeAuthoringController {
     private $timeout: any,
     private ConfigService: ConfigService,
     private NodeService: NodeService,
+    private NotificationService: NotificationService,
     private ProjectService: TeacherProjectService,
     private TagService: TagService,
     private TeacherDataService: TeacherDataService,
@@ -982,7 +985,7 @@ class NodeAuthoringController {
     this.showStepButtons = false;
     this.showComponents = false;
     this.showJSON = false;
-    this.UtilService.hideJSONValidMessage();
+    this.NotificationService.hideJSONValidMessage();
   }
 
   showDefaultComponentsView() {
@@ -1026,16 +1029,16 @@ class NodeAuthoringController {
       if (!this.isJSONValid()) {
         if (confirm(this.$translate('jsonInvalidErrorMessage'))) {
           this.toggleJSONAuthoringView();
-          this.UtilService.hideJSONValidMessage();
+          this.NotificationService.hideJSONValidMessage();
         }
       } else {
         this.toggleJSONAuthoringView();
-        this.UtilService.hideJSONValidMessage();
+        this.NotificationService.hideJSONValidMessage();
       }
     } else {
       this.toggleJSONAuthoringView();
       this.authoringNodeContentJSONString = angular.toJson(this.node, 4);
-      this.UtilService.showJSONValidMessage();
+      this.NotificationService.showJSONValidMessage();
     }
   }
 
@@ -1971,7 +1974,7 @@ class NodeAuthoringController {
 
   backButtonClicked() {
     if (this.showAdvanced) {
-      this.UtilService.hideJSONValidMessage();
+      this.NotificationService.hideJSONValidMessage();
       this.showDefaultComponentsView();
       this.$state.go('root.at.project.node', { projectId: this.projectId, nodeId: this.nodeId });
     } else {
@@ -2040,9 +2043,9 @@ class NodeAuthoringController {
       this.authoringViewNodeChanged().then(() => {
         this.ProjectService.refreshProject();
       });
-      this.UtilService.showJSONValidMessage();
+      this.NotificationService.showJSONValidMessage();
     } catch (e) {
-      this.UtilService.showJSONInvalidMessage();
+      this.NotificationService.showJSONInvalidMessage();
     }
   }
 
