@@ -1,5 +1,6 @@
 'use strict';
 
+import { Subscription } from 'rxjs';
 import { ConfigService } from '../../services/configService';
 import { StudentStatusService } from '../../services/studentStatusService';
 import { TeacherDataService } from '../../services/teacherDataService';
@@ -24,6 +25,7 @@ class StudentProgressController {
   students: any;
   teacherWorkgroupId: number;
   teams: any;
+  studentStatusReceivedSubscription: Subscription;
 
   static $inject = [
     '$rootScope',
@@ -49,15 +51,16 @@ class StudentProgressController {
     this.permissions = this.ConfigService.getPermissions();
     this.students = [];
     this.initializeStudents();
-    this.$rootScope.$on('studentStatusReceived', (event, args) => {
-      let studentStatus = args.studentStatus;
-      let workgroupId = studentStatus.workgroupId;
+    this.studentStatusReceivedSubscription =
+        this.StudentStatusService.studentStatusReceived$.subscribe((args) => {
+      const studentStatus = args.studentStatus;
+      const workgroupId = studentStatus.workgroupId;
       this.updateTeam(workgroupId);
     });
     this.$scope.$on('currentWorkgroupChanged', (event, args) => {
       this.currentWorkgroup = args.currentWorkgroup;
     });
-    let context = 'ClassroomMonitor',
+    const context = 'ClassroomMonitor',
       nodeId = null,
       componentId = null,
       componentType = null,
@@ -73,6 +76,17 @@ class StudentProgressController {
       event,
       data
     );
+    this.$scope.$on('$destroy', () => {
+      this.ngOnDestroy();
+    })
+  }
+
+  ngOnDestroy() {
+    this.unsubscribeAll();
+  }
+
+  unsubscribeAll() {
+    this.studentStatusReceivedSubscription.unsubscribe();
   }
 
   getCurrentNodeForWorkgroupId(workgroupId) {
