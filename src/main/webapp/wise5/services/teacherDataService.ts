@@ -883,7 +883,6 @@ export class TeacherDataService extends DataService {
    * @param nodeId the node id of the new current node
    */
   endCurrentNodeAndSetCurrentNodeByNodeId(nodeId) {
-    this.endCurrentNode();
     this.setCurrentNodeByNodeId(nodeId);
   }
 

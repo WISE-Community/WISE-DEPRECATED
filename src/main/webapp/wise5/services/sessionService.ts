@@ -14,6 +14,8 @@ export class SessionService {
   private showWarningInterval: number;
   private checkMouseEventInterval: number;
   private lastActivityTimestamp: number;
+  private exitSource: Subject<any> = new Subject<any>();
+  public exit$: Observable<any> = this.exitSource.asObservable();
   private showSessionWarningSource: Subject<any> = new Subject<any>();
   public showSessionWarning$: Observable<any> = this.showSessionWarningSource.asObservable();
   private logOutSource: Subject<void> = new Subject<void>();
@@ -39,10 +41,14 @@ export class SessionService {
   }
 
   goHome() {
-    this.upgrade.$injector.get('$rootScope').$broadcast('exit');
+    this.broadcastExit();
     this.upgrade.$injector.get('$location').url(
       this.ConfigService.getConfigParam('userType')
     );
+  }
+
+  broadcastExit() {
+    this.exitSource.next();
   }
 
   logOut() {

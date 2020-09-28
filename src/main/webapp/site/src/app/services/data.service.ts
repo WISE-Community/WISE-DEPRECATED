@@ -74,11 +74,4 @@ export class DataService {
     this.currentNodeChangedSource.next(previousAndCurrentNode);
   }
 
-  endCurrentNode() {
-    if (this.currentNode != null) {
-      this.upgrade.$injector.get('$rootScope').$broadcast('exitNode',
-          { nodeToExit: this.currentNode });
-    }
-  }
-
 }

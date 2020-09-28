@@ -175,20 +175,6 @@ class ComponentController {
 
     this.registerListeners();
     this.registerComponentWithParentNode();
-
-    this.$scope.$on('$destroy', () => {
-      this.ngOnDestroy();
-    });
-  }
-
-  ngOnDestroy() {
-    this.unsubscribeAll();
-  }
-
-  unsubscribeAll() {
-    if (this.notebookItemChosenSubscription != null) {
-      this.notebookItemChosenSubscription.unsubscribe();
-    }
   }
 
   isStudentMode() {
@@ -230,16 +216,22 @@ class ComponentController {
       }
     });
 
-    /**
-     * Listen for the 'exitNode' event which is fired when the student
-     * exits the parent node. This will perform any necessary cleanup
-     * when the student exits the parent node.
-     */
-    this.$scope.$on('exitNode', (event, args) => {
-      this.cleanupBeforeExiting();
-    });
-
     this.registerStudentWorkSavedToServerListener();
+
+    this.$scope.$on('$destroy', () => {
+      this.ngOnDestroy();
+    })
+  }
+
+  ngOnDestroy() {
+    this.unsubscribeAll();
+  }
+
+  unsubscribeAll() {
+    this.studentWorkSavedToServerSubscription.unsubscribe();
+    if (this.notebookItemChosenSubscription != null) {
+      this.notebookItemChosenSubscription.unsubscribe();
+    }
   }
 
   initializeScopeGetComponentState(scope, childControllerName) {
@@ -400,10 +392,6 @@ class ComponentController {
     if (this.$scope.$parent.nodeController != null) {
       this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
     }
-  }
-
-  cleanupBeforeExiting() {
-    this.studentWorkSavedToServerSubscription.unsubscribe();
   }
 
   broadcastDoneRenderingComponent() {

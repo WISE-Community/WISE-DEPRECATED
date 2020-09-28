@@ -163,6 +163,11 @@ class DiscussionController extends ComponentController {
     this.broadcastDoneRenderingComponent();
   }
 
+  ngOnDestroy() {
+    super.ngOnDestroy();
+    this.destroyStudentWorkReceivedListener();
+  }
+
   isConnectedComponentShowWorkMode() {
     if (this.UtilService.hasConnectedComponent(this.componentContent)) {
       let isShowWorkMode = true;
@@ -781,9 +786,6 @@ class DiscussionController extends ComponentController {
     return annotations;
   }
 
-  cleanupBeforeExiting() {
-    this.destroyStudentWorkReceivedListener();
-  }
 }
 
 export default DiscussionController;

@@ -1370,7 +1370,6 @@ export class StudentDataService extends DataService {
 
   endCurrentNodeAndSetCurrentNodeByNodeId(nodeId) {
     if (this.nodeStatuses[nodeId].isVisitable) {
-      this.endCurrentNode();
       this.setCurrentNodeByNodeId(nodeId);
     } else {
       this.nodeClickLocked(nodeId);

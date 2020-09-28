@@ -189,6 +189,11 @@ class GraphController extends ComponentController {
     });
   }
 
+  ngOnDestroy() {
+    super.ngOnDestroy();
+    this.deleteKeyPressedListenerDestroyer();
+  }
+
   applyHighchartsPlotLinesLabelFix() {
     Highcharts.wrap(Highcharts.Axis.prototype, 'getPlotLinePath', function(proceed) {
       var path = proceed.apply(this, Array.prototype.slice.call(arguments, 1));
@@ -345,10 +350,6 @@ class GraphController extends ComponentController {
     reader.fileName = files[0].name;
     reader.readAsText(files[0]);
     this.StudentAssetService.uploadAsset(files[0]);
-  }
-
-  cleanupBeforeExiting() {
-    this.deleteKeyPressedListenerDestroyer();
   }
 
   handleTableConnectedComponentStudentDataChanged(
