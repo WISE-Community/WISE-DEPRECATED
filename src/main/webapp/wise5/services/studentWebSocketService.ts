@@ -49,7 +49,7 @@ export class StudentWebSocketService {
         this.StudentDataService.pauseScreen(false);
       } else if (message.type === 'studentWork') {
         const studentWork = JSON.parse(message.content);
-        this.upgrade.$injector.get('$rootScope').$broadcast('studentWorkReceived', studentWork);
+        this.StudentDataService.broadcastStudentWorkReceived(studentWork);
       } else if (message.type === 'annotation') {
         const annotation = JSON.parse(message.content);
         this.AnnotationService.broadcastAnnotationReceived({ annotation: annotation });

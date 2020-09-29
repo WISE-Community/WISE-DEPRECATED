@@ -6,7 +6,8 @@ class GlobalAnnotationsController {
                 $rootScope,
                 $scope,
                 $timeout,
-                AnnotationService) {
+                AnnotationService,
+                StudentDataService) {
 
         this.$filter = $filter;
         this.$mdDialog = $mdDialog;
@@ -14,6 +15,7 @@ class GlobalAnnotationsController {
         this.$scope = $scope;
         this.$timeout = $timeout;
         this.AnnotationService = AnnotationService;
+        this.StudentDataService = StudentDataService;
 
         this.$translate = this.$filter('translate');
 
@@ -23,18 +25,18 @@ class GlobalAnnotationsController {
             this.setModel();
         }
 
-        this.annotationSavedToServerSubscription = 
+        this.annotationSavedToServerSubscription =
                 this.AnnotationService.annotationSavedToServer$.subscribe(() => {
             this.setModel();
         });
 
-        // listen for node status changes
-        this.$rootScope.$on('nodeStatusesChanged', (event, args) => {
+        this.nodeStatusesChangedSubscription =
+                this.StudentDataService.nodeStatusesChanged$.subscribe(() => {
             this.setModel();
         });
 
-        // listen for the display global annotation event
-        this.$rootScope.$on('displayGlobalAnnotations', (event, args) => {
+        this.displayGlobalAnnotationsSubscription =
+                this.AnnotationService.displayGlobalAnnotations$.subscribe(() => {
             this.$timeout(() => {
                 /* waiting slightly here to make sure the #globalMsgTrigger is
                  * shown and $mdDialog can get it's position upon opening
@@ -49,11 +51,13 @@ class GlobalAnnotationsController {
     };
 
     ngOnDestroy() {
-      this.unsubscribeAll();
+        this.unsubscribeAll();
     }
 
     unsubscribeAll() {
-      this.annotationSavedToServerSubscription.unsubscribe();
+        this.annotationSavedToServerSubscription.unsubscribe();
+        this.nodeStatusesChangedSubscription.unsubscribe();
+        this.displayGlobalAnnotationsSubscription.unsubscribe();
     }
 
     setModel() {
@@ -112,7 +116,8 @@ GlobalAnnotationsController.$inject = [
     '$rootScope',
     '$scope',
     '$timeout',
-    'AnnotationService'
+    'AnnotationService',
+    'StudentDataService'
 ];
 
 const GlobalAnnotations = {

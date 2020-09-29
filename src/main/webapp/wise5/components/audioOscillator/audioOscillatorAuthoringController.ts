@@ -13,6 +13,7 @@ class AudioOscillatorAuthoringController extends AudioOscillatorController {
 
   static $inject = [
     '$filter',
+    '$injector',
     '$mdDialog',
     '$q',
     '$rootScope',
@@ -20,9 +21,11 @@ class AudioOscillatorAuthoringController extends AudioOscillatorController {
     '$timeout',
     'AnnotationService',
     'AudioOscillatorService',
+    'AudioRecorderService',
     'ConfigService',
     'NodeService',
     'NotebookService',
+    'NotificationService',
     'ProjectAssetService',
     'ProjectService',
     'StudentAssetService',
@@ -32,6 +35,7 @@ class AudioOscillatorAuthoringController extends AudioOscillatorController {
 
   constructor(
     $filter,
+    $injector,
     $mdDialog,
     $q,
     $rootScope,
@@ -39,9 +43,11 @@ class AudioOscillatorAuthoringController extends AudioOscillatorController {
     $timeout,
     AnnotationService,
     AudioOscillatorService,
+    AudioRecorderService,
     ConfigService,
     NodeService,
     NotebookService,
+    NotificationService,
     ProjectAssetService,
     ProjectService,
     StudentAssetService,
@@ -50,6 +56,7 @@ class AudioOscillatorAuthoringController extends AudioOscillatorController {
   ) {
     super(
       $filter,
+      $injector,
       $mdDialog,
       $q,
       $rootScope,
@@ -57,9 +64,11 @@ class AudioOscillatorAuthoringController extends AudioOscillatorController {
       $timeout,
       AnnotationService,
       AudioOscillatorService,
+      AudioRecorderService,
       ConfigService,
       NodeService,
       NotebookService,
+      NotificationService,
       ProjectService,
       StudentAssetService,
       StudentDataService,

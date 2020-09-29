@@ -7,11 +7,13 @@ import { ProjectService } from '../../../../wise5/services/projectService';
   providedIn: 'root'
 })
 export class DataService {
-  
+
   currentNode = null;
   previousStep = null;
   private currentNodeChangedSource: Subject<any> = new Subject<any>();
   public currentNodeChanged$ = this.currentNodeChangedSource.asObservable();
+  private studentWorkReceivedSource: Subject<any> = new Subject<any>();
+  public studentWorkReceived$ = this.studentWorkReceivedSource.asObservable();
 
   constructor(
     protected upgrade: UpgradeModule,
@@ -74,11 +76,7 @@ export class DataService {
     this.currentNodeChangedSource.next(previousAndCurrentNode);
   }
 
-  endCurrentNode() {
-    if (this.currentNode != null) {
-      this.upgrade.$injector.get('$rootScope').$broadcast('exitNode',
-          { nodeToExit: this.currentNode });
-    }
+  broadcastStudentWorkReceived(studentWork: any) {
+    this.studentWorkReceivedSource.next(studentWork);
   }
-
 }

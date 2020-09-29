@@ -124,12 +124,12 @@ class NotebookReportController {
      * Captures the annotation received event, checks whether the given
      * annotation id matches this report id, updates UI accordingly
      */
-    this.$scope.$on('notebookItemAnnotationReceived', (event, args) => {
-      const annotation = args.annotation;
+    this.notebookItemAnnotationReceivedSubscription = 
+        this.NotebookService.notebookItemAnnotationReceived$.subscribe(({ annotation }) => {
       if (annotation.localNotebookItemId === this.reportId) {
         this.hasNewAnnotation = true;
-        this.latestAnnotations =
-            this.AnnotationService.getLatestNotebookItemAnnotations(this.workgroupId, this.reportId);
+        this.latestAnnotations = this.AnnotationService.getLatestNotebookItemAnnotations(
+            this.workgroupId, this.reportId);
       }
     });
 
@@ -137,7 +137,8 @@ class NotebookReportController {
      * Captures the show report annotations event, opens report (if collapsed)
      * and scrolls to the report annotations display
      */
-    this.$scope.$on('showReportAnnotations', (args) => {
+    this.showReportAnnotationsSubscription =
+        this.NotebookService.showReportAnnotations$.subscribe(() => {
       if (this.collapsed) {
         this.collapse();
       }

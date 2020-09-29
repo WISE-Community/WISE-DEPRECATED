@@ -5,12 +5,14 @@ class GlobalAnnotationsListController {
                 $scope,
                 $filter,
                 AnnotationService,
-                ProjectService) {
+                ProjectService,
+                StudentDataService) {
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$filter = $filter;
         this.AnnotationService = AnnotationService;
         this.ProjectService = ProjectService;
+        this.StudentDataService = StudentDataService;
 
         this.$translate = this.$filter('translate');
 
@@ -20,13 +22,13 @@ class GlobalAnnotationsListController {
             this.setModel();
         }
 
-        this.annotationSavedToServerSubscription = 
+        this.annotationSavedToServerSubscription =
                 this.AnnotationService.annotationSavedToServer$.subscribe(() => {
             this.setModel();
         });
 
-        // listen for node status changes
-        this.$rootScope.$on('nodeStatusesChanged', (event, args) => {
+        this.nodeStatusesChangedSubscription =
+                this.StudentDataService.nodeStatusesChanged$.subscribe(() => {
             this.setModel();
         });
 
@@ -36,11 +38,12 @@ class GlobalAnnotationsListController {
     };
 
     ngOnDestroy() {
-      this.unsubscribeAll();
+        this.unsubscribeAll();
     }
 
     unsubscribeAll() {
-      this.annotationSavedToServerSubscription.unsubscribe();
+        this.annotationSavedToServerSubscription.unsubscribe();
+        this.nodeStatusesChangedSubscription.unsubscribe();
     }
 
     setModel() {
@@ -71,9 +74,6 @@ class GlobalAnnotationsListController {
         }
     }
 
-    /**
-     * Return the latest active global annotatin group
-     */
     getLatestGlobalAnnotationGroup() {
         let latestGlobalAnnotationGroup = null;
 
@@ -97,7 +97,8 @@ GlobalAnnotationsListController.$inject = [
     '$scope',
     '$filter',
     'AnnotationService',
-    'ProjectService'
+    'ProjectService',
+    'StudentDataService'
 ];
 
 const GlobalAnnotationsList = {

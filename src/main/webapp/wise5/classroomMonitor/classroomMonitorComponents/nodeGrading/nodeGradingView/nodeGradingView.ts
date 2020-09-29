@@ -9,6 +9,7 @@ import { StudentStatusService } from '../../../../services/studentStatusService'
 import { TeacherDataService } from '../../../../services/teacherDataService';
 import * as angular from 'angular';
 import { TeacherProjectService } from '../../../../services/teacherProjectService';
+import { Subscription } from 'rxjs';
 
 class NodeGradingViewController {
   $translate: any;
@@ -37,8 +38,11 @@ class NodeGradingViewController {
   workgroups: any;
   workgroupsById: any;
   workVisibilityById: any;
-  annotationReceivedSubscription: any;
-  currentPeriodChangedSubscription: any;
+  annotationReceivedSubscription: Subscription;
+  studentWorkReceivedSubscription: Subscription;
+  notificationChangedSubscription: Subscription;
+  currentPeriodChangedSubscription: Subscription;
+  projectSavedSubscription: Subscription;
 
   static $inject = [
     '$filter',
@@ -96,11 +100,12 @@ class NodeGradingViewController {
       document.body.scrollTop = document.documentElement.scrollTop = 0;
     });
 
-    this.$scope.$on('projectSaved', (event, args) => {
+    this.projectSavedSubscription = this.ProjectService.projectSaved$.subscribe(() => {
       this.maxScore = this.getMaxScore();
     });
 
-    this.$scope.$on('notificationChanged', (event, notification) => {
+    this.notificationChangedSubscription = this.NotificationService.notificationChanged$
+        .subscribe((notification) => {
       if (notification.type === 'CRaterResult') {
         // TODO: expand to encompass other notification types that should be shown to teacher
         const workgroupId = notification.toWorkgroupId;
@@ -110,7 +115,7 @@ class NodeGradingViewController {
       }
     });
 
-    this.annotationReceivedSubscription = 
+    this.annotationReceivedSubscription =
         this.AnnotationService.annotationReceived$.subscribe(({ annotation }) => {
       const workgroupId = annotation.toWorkgroupId;
       const nodeId = annotation.nodeId;
@@ -119,7 +124,8 @@ class NodeGradingViewController {
       }
     });
 
-    this.$scope.$on('studentWorkReceived', (event, args) => {
+    this.studentWorkReceivedSubscription = this.TeacherDataService.studentWorkReceived$
+        .subscribe((args: any) => {
       const studentWork = args.studentWork;
       if (studentWork != null) {
         const workgroupId = studentWork.workgroupId;
@@ -153,6 +159,9 @@ class NodeGradingViewController {
   unsubscribeAll() {
     this.annotationReceivedSubscription.unsubscribe();
     this.currentPeriodChangedSubscription.unsubscribe();
+    this.studentWorkReceivedSubscription.unsubscribe();
+    this.notificationChangedSubscription.unsubscribe();
+    this.projectSavedSubscription.unsubscribe();
   }
 
   saveNodeGradingViewDisplayedEvent() {

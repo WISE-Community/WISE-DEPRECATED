@@ -14,15 +14,18 @@ class OutsideURLController extends ComponentController {
 
   static $inject = [
     '$filter',
+    '$injector',
     '$mdDialog',
     '$q',
     '$rootScope',
     '$sce',
     '$scope',
     'AnnotationService',
+    'AudioRecorderService',
     'ConfigService',
     'NodeService',
     'NotebookService',
+    'NotificationService',
     'OutsideURLService',
     'ProjectService',
     'StudentAssetService',
@@ -32,15 +35,18 @@ class OutsideURLController extends ComponentController {
 
   constructor(
     $filter,
+    $injector,
     $mdDialog,
     $q,
     $rootScope,
     $sce,
     $scope,
     AnnotationService,
+    AudioRecorderService,
     ConfigService,
     NodeService,
     NotebookService,
+    NotificationService,
     OutsideURLService,
     ProjectService,
     StudentAssetService,
@@ -49,14 +55,17 @@ class OutsideURLController extends ComponentController {
   ) {
     super(
       $filter,
+      $injector,
       $mdDialog,
       $q,
       $rootScope,
       $scope,
       AnnotationService,
+      AudioRecorderService,
       ConfigService,
       NodeService,
       NotebookService,
+      NotificationService,
       ProjectService,
       StudentAssetService,
       StudentDataService,
@@ -75,10 +84,7 @@ class OutsideURLController extends ComponentController {
 
     this.setWidthAndHeight(this.componentContent.width, this.componentContent.height);
 
-    this.$rootScope.$broadcast('doneRenderingComponent', {
-      nodeId: this.nodeId,
-      componentId: this.componentId
-    });
+    this.broadcastDoneRenderingComponent();
   }
 
   setWidthAndHeight(width, height) {
