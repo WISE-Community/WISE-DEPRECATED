@@ -22,6 +22,7 @@ class EmbeddedController extends ComponentController {
   height: string;
   messageEventListener: any;
   studentData: any;
+  siblingComponentStudentDataChangedSubscription: any;
 
   static $inject = [
     '$filter',
@@ -37,6 +38,7 @@ class EmbeddedController extends ComponentController {
     'EmbeddedService',
     'NodeService',
     'NotebookService',
+    'NotificationService',
     'ProjectService',
     'StudentAssetService',
     'StudentDataService',
@@ -57,6 +59,7 @@ class EmbeddedController extends ComponentController {
     EmbeddedService,
     NodeService,
     NotebookService,
+    NotificationService,
     ProjectService,
     StudentAssetService,
     StudentDataService,
@@ -72,6 +75,7 @@ class EmbeddedController extends ComponentController {
       ConfigService,
       NodeService,
       NotebookService,
+      NotificationService,
       ProjectService,
       StudentAssetService,
       StudentDataService,
@@ -128,10 +132,11 @@ class EmbeddedController extends ComponentController {
     this.initializeScopeGetComponentState(this.$scope, 'embeddedController');
 
     /*
-     * Listen for the siblingComponentStudentDataChanged event which occurs
-     * when the student data has changed for another component in this step.
+     * Watch for siblingComponentStudentDataChanged which occurs when the student data has changed
+     * for another component in this step.
      */
-    this.$scope.$on('siblingComponentStudentDataChanged', (event, args) => {
+    this.siblingComponentStudentDataChangedSubscription =
+        this.NodeService.siblingComponentStudentDataChanged$.subscribe((args: any) => {
       if (this.isEventTargetThisComponent(args)) {
         const message = {
           messageType: 'siblingComponentStudentDataChanged',
@@ -145,13 +150,18 @@ class EmbeddedController extends ComponentController {
     this.broadcastDoneRenderingComponent();
   }
 
+  ngOnDestroy() {
+    super.ngOnDestroy();
+    this.$window.removeEventListener('message', this.messageEventListener);
+  }
+
+  unsubscribeAll() {
+    this.siblingComponentStudentDataChangedSubscription.unsubscribe();
+  }
+
   setWidthAndHeight(width, height) {
     this.width = width ? width + 'px' : '100%';
     this.height = height ? height + 'px' : '600px';
-  }
-
-  cleanupBeforeExiting() {
-    this.$window.removeEventListener('message', this.messageEventListener);
   }
 
   initializeMessageEventListener() {
@@ -221,7 +231,7 @@ class EmbeddedController extends ComponentController {
     this.studentDataChanged();
 
     // tell the parent node that this component wants to save
-    this.$scope.$emit('componentSaveTriggered', {
+    this.StudentDataService.broadcastComponentSaveTriggered({
       nodeId: this.nodeId,
       componentId: this.componentId
     });
@@ -235,12 +245,15 @@ class EmbeddedController extends ComponentController {
 
   handleComponentDirtyMessage(messageEventData) {
     this.isDirty = messageEventData.isDirty;
-    this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: this.isDirty });
+    this.StudentDataService.broadcastComponentDirty({
+      componentId: this.componentId,
+      isDirty: this.isDirty
+    });
   }
 
   handleComponentSubmitDirtyMessage(messageEventData) {
     this.isSubmitDirty = messageEventData.isDirty;
-    this.$scope.$emit('componentSubmitDirty', {
+    this.StudentDataService.broadcastComponentSubmitDirty({
       componentId: this.componentId,
       isDirty: this.isSubmitDirty
     });
@@ -317,37 +330,38 @@ class EmbeddedController extends ComponentController {
   }
 
   registerStudentWorkSavedToServerListener() {
-    this.studentWorkSavedToServerSubscription = 
+    this.studentWorkSavedToServerSubscription =
         this.StudentDataService.studentWorkSavedToServer$.subscribe((args: any) => {
       const componentState = args.studentWork;
-      if (componentState != null) {
-        if (componentState.componentId === this.componentId) {
-          this.isDirty = false;
-          this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: false });
-          this.$scope.embeddedController.componentState = null;
-          const isAutoSave = componentState.isAutoSave;
-          const isSubmit = componentState.isSubmit;
-          const serverSaveTime = componentState.serverSaveTime;
-          const clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
-          if (isSubmit) {
-            this.setSubmittedMessage(clientSaveTime);
-            this.submit();
-            this.isSubmitDirty = false;
-            this.$scope.$emit('componentSubmitDirty', {
-              componentId: this.componentId,
-              isDirty: false
-            });
-          } else if (isAutoSave) {
-            this.setAutoSavedMessage(clientSaveTime);
-          } else {
-            this.setSavedMessage(clientSaveTime);
-          }
-          const message = {
-            messageType: 'componentStateSaved',
-            componentState: componentState
-          };
-          this.sendMessageToApplication(message);
+      if (this.isForThisComponent(componentState)) {
+        this.isDirty = false;
+        this.StudentDataService.broadcastComponentDirty({
+          componentId: this.componentId,
+          isDirty: false
+        });
+        this.$scope.embeddedController.componentState = null;
+        const isAutoSave = componentState.isAutoSave;
+        const isSubmit = componentState.isSubmit;
+        const serverSaveTime = componentState.serverSaveTime;
+        const clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
+        if (isSubmit) {
+          this.setSubmittedMessage(clientSaveTime);
+          this.submit();
+          this.isSubmitDirty = false;
+          this.StudentDataService.broadcastComponentSubmitDirty({
+            componentId: this.componentId,
+            isDirty: false
+          });
+        } else if (isAutoSave) {
+          this.setAutoSavedMessage(clientSaveTime);
+        } else {
+          this.setSavedMessage(clientSaveTime);
         }
+        const message = {
+          messageType: 'componentStateSaved',
+          componentState: componentState
+        };
+        this.sendMessageToApplication(message);
       }
     });
   }
@@ -425,7 +439,7 @@ class EmbeddedController extends ComponentController {
         html2canvas(modelElement).then(canvas => {
           const base64Image = canvas.toDataURL('image/png');
           const imageObject = this.UtilService.getImageObjectFromBase64String(base64Image);
-          this.NotebookService.addNote($event, imageObject);
+          this.NotebookService.addNote(imageObject);
         });
       }
     }

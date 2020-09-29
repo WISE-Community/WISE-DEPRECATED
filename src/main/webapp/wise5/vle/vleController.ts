@@ -80,7 +80,7 @@ class VLEController {
     this.SessionService = SessionService;
     this.StudentDataService = StudentDataService;
     this.$translate = this.$filter('translate');
-    this.$window.onbeforeunload = () => { this.$rootScope.$broadcast('exit'); };
+    this.$window.onbeforeunload = () => { this.SessionService.broadcastExit() };
 
     this.workgroupId = this.ConfigService.getWorkgroupId();
     this.currentNode = null;
@@ -503,7 +503,7 @@ class VLEController {
     } else if (notebookItemId != null) {
       // assume notification with notebookItemId is for the report for now,
       // as we don't currently support annotations on notes
-      this.$rootScope.$broadcast('showReportAnnotations', { ev: event });
+      this.NotebookService.broadcastShowReportAnnotations();
     }
   }
 

@@ -46,6 +46,7 @@ class TableController extends ComponentController {
     'ConfigService',
     'NodeService',
     'NotebookService',
+    'NotificationService',
     'ProjectService',
     'StudentAssetService',
     'StudentDataService',
@@ -65,6 +66,7 @@ class TableController extends ComponentController {
     ConfigService,
     NodeService,
     NotebookService,
+    NotificationService,
     ProjectService,
     StudentAssetService,
     StudentDataService,
@@ -81,6 +83,7 @@ class TableController extends ComponentController {
       ConfigService,
       NodeService,
       NotebookService,
+      NotificationService,
       ProjectService,
       StudentAssetService,
       StudentDataService,
@@ -253,7 +256,7 @@ class TableController extends ComponentController {
         } else if (componentType === 'Embedded') {
           this.$scope.tableController.setStudentWork(componentState);
           this.$scope.tableController.isDirty = true;
-          this.$scope.$emit('componentSaveTriggered', {
+          this.StudentDataService.broadcastComponentSaveTriggered({
             nodeId: this.nodeId,
             componentId: this.componentId
           });
@@ -303,16 +306,6 @@ class TableController extends ComponentController {
       return deferred.promise;
     }.bind(this);
 
-    /**
-     * Listen for the 'exitNode' event which is fired when the student
-     * exits the parent node. This will perform any necessary cleanup
-     * when the student exits the parent node.
-     */
-    this.$scope.$on(
-      'exitNode',
-      angular.bind(this, function(event, args) {})
-    );
-
     this.$scope.getNumber = function(num) {
       let array = new Array();
 
@@ -333,26 +326,22 @@ class TableController extends ComponentController {
   registerStudentWorkSavedToServerListener() {
     this.studentWorkSavedToServerSubscription = 
         this.StudentDataService.studentWorkSavedToServer$.subscribe((args: any) => {
-      let componentState = args.studentWork;
-
-      // check that the component state is for this component
+      const componentState = args.studentWork;
       if (this.isForThisComponent(componentState)) {
-        // set isDirty to false because the component state was just saved and notify node
         this.isDirty = false;
-        this.$scope.$emit('componentDirty', { componentId: this.componentId, isDirty: false });
-
-        let isAutoSave = componentState.isAutoSave;
-        let isSubmit = componentState.isSubmit;
-        let serverSaveTime = componentState.serverSaveTime;
-        let clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
-
+        this.StudentDataService.broadcastComponentDirty({
+          componentId: this.componentId,
+          isDirty: false
+        });
+        const isAutoSave = componentState.isAutoSave;
+        const isSubmit = componentState.isSubmit;
+        const serverSaveTime = componentState.serverSaveTime;
+        const clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
         if (isSubmit) {
           this.setSubmittedMessage(clientSaveTime);
           this.lockIfNecessary();
-
-          // set isSubmitDirty to false because the component state was just submitted and notify node
           this.isSubmitDirty = false;
-          this.$scope.$emit('componentSubmitDirty', {
+          this.StudentDataService.broadcastComponentSubmitDirty({
             componentId: this.componentId,
             isDirty: false
           });
@@ -388,7 +377,7 @@ class TableController extends ComponentController {
              * make a copy of the component state so we don't accidentally
              * change any values in the referenced object
              */
-            componentState = this.UtilService.makeCopyOfJSONObject(componentState);
+            const componentStateCopy = this.UtilService.makeCopyOfJSONObject(componentState);
 
             /*
              * make sure the student hasn't entered any values into the
@@ -418,7 +407,7 @@ class TableController extends ComponentController {
 
             if (performUpdate) {
               // set the table data
-              this.$scope.tableController.setStudentWork(componentState);
+              this.$scope.tableController.setStudentWork(componentStateCopy);
 
               // the table has changed
               this.$scope.tableController.isDirty = true;
@@ -429,7 +418,7 @@ class TableController extends ComponentController {
              * remember the component state and connected component params
              * in case we need to use them again later
              */
-            this.latestConnectedComponentState = componentState;
+            this.latestConnectedComponentState = componentStateCopy;
             this.latestConnectedComponentParams = connectedComponentParams;
           }
         }
@@ -1076,7 +1065,7 @@ class TableController extends ComponentController {
         const imageObject = this.UtilService.getImageObjectFromBase64String(img_b64);
 
         // create a notebook item with the image populated into it
-        this.NotebookService.addNote($event, imageObject);
+        this.NotebookService.addNote(imageObject);
       });
     }
   }

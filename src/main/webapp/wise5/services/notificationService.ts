@@ -1,10 +1,10 @@
+import * as angular from 'angular';
 import { Injectable } from "@angular/core";
 import { UpgradeModule } from "@angular/upgrade/static";
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { ConfigService } from "./configService";
 import { ProjectService } from "./projectService";
 import { UtilService } from "./utilService";
-import * as angular from 'angular';
 import { Notification } from "../../site/src/app/domain/notification";
 import { Observable, Subject } from "rxjs";
 
@@ -13,6 +13,10 @@ export class NotificationService {
   notifications: Notification[] = [];
   private notificationChangedSource: Subject<any> = new Subject<any>();
   public notificationChanged$: Observable<any> = this.notificationChangedSource.asObservable();
+  private setGlobalMessageSource: Subject<any> = new Subject<any>();
+  public setGlobalMessage$: Observable<any> = this.setGlobalMessageSource.asObservable();
+  private setIsJSONValidSource: Subject<any> = new Subject<any>();
+  public setIsJSONValid$: Observable<any> = this.setIsJSONValidSource.asObservable();
   private serverConnectionStatusSource: Subject<any> = new Subject<any>();
   public serverConnectionStatus$: Observable<any> =
       this.serverConnectionStatusSource.asObservable();
@@ -229,6 +233,37 @@ export class NotificationService {
 
   broadcastNotificationChanged(notification: any) {
     this.notificationChangedSource.next(notification);
+  }
+
+  showJSONValidMessage() {
+    this.setIsJSONValidMessage(true);
+  }
+
+  showJSONInvalidMessage() {
+    this.setIsJSONValidMessage(false);
+  }
+
+  hideJSONValidMessage() {
+    this.setIsJSONValidMessage(null);
+  }
+
+  /**
+   * Show the message in the toolbar that says "JSON Valid" or "JSON Invalid".
+   * @param isJSONValid
+   * true if we want to show "JSON Valid"
+   * false if we want to show "JSON Invalid"
+   * null if we don't want to show anything
+   */
+  setIsJSONValidMessage(isJSONValid) {
+    this.broadcastSetIsJSONValid({ isJSONValid: isJSONValid });
+  }
+
+  broadcastSetGlobalMessage(args) {
+    this.setGlobalMessageSource.next(args);
+  }
+
+  broadcastSetIsJSONValid(args) {
+    this.setIsJSONValidSource.next(args);
   }
 
   broadcastServerConnectionStatus(isConnected: boolean) {

@@ -76,6 +76,7 @@ class OpenResponseController extends ComponentController {
       ConfigService,
       NodeService,
       NotebookService,
+      NotificationService,
       ProjectService,
       StudentAssetService,
       StudentDataService,
@@ -270,13 +271,6 @@ class OpenResponseController extends ComponentController {
 
       return deferred.promise;
     }.bind(this);
-
-    /**
-     * Listen for the 'exitNode' event which is fired when the student
-     * exits the parent node. This will perform any necessary cleanup
-     * when the student exits the parent node.
-     */
-    this.$scope.$on('exitNode', function(event, args) {}.bind(this));
 
     this.registerNotebookItemChosenListener();
     this.registerAudioRecordedListener();
@@ -874,7 +868,6 @@ class OpenResponseController extends ComponentController {
           const isEditTextEnabled = false;
           const isFileUploadEnabled = false;
           this.NotebookService.addNote(
-            $event,
             imageObject,
             noteText,
             [componentState.id],
@@ -895,7 +888,6 @@ class OpenResponseController extends ComponentController {
       const isEditTextEnabled = false;
       const isFileUploadEnabled = false;
       this.NotebookService.addNote(
-        $event,
         imageObject,
         noteText,
         [studentWork.id],

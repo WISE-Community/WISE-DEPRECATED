@@ -14,7 +14,14 @@ class StudentAssetController {
   studentAssets: any;
   templateUrl: string;
 
-  static $inject = ['$filter', '$rootScope', '$scope', 'ConfigService', 'StudentAssetService'];
+  static $inject = [
+    '$filter',
+    '$rootScope',
+    '$scope',
+    'ConfigService',
+    'SessionService',
+    'StudentAssetService'
+  ];
 
   constructor(
     $filter: any,

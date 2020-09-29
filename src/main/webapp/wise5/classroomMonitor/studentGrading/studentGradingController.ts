@@ -7,6 +7,7 @@ import { StudentStatusService } from '../../services/studentStatusService';
 import { TeacherDataService } from '../../services/teacherDataService';
 import * as angular from 'angular';
 import { TeacherProjectService } from '../../services/teacherProjectService';
+import { Subscription } from 'rxjs';
 
 class StudentGradingController {
   $translate: any;
@@ -31,9 +32,10 @@ class StudentGradingController {
   sort: any;
   totalScore: number;
   workgroupId: number;
-  currentPeriodChangedSubscription: any;
-  currentWorkgroupChangedSubscription: any;
-  notificationChangedSubscription: any;
+  currentWorkgroupChangedSubscription: Subscription;
+  notificationChangedSubscription: Subscription;
+  currentPeriodChangedSubscription: Subscription;
+  projectSavedSubscription: Subscription;
 
   static $inject = [
     '$filter',
@@ -67,7 +69,7 @@ class StudentGradingController {
     this.$scope.$mdMedia = $mdMedia;
     this.$translate = $filter('translate');
 
-    this.$scope.$on('projectSaved', (event, args) => {
+    this.projectSavedSubscription = this.ProjectService.projectSaved$.subscribe(() => {
       this.maxScore = this.StudentStatusService.getMaxScoreForWorkgroupId(this.workgroupId);
       this.setNodesById();
     });
@@ -166,6 +168,7 @@ class StudentGradingController {
     this.currentPeriodChangedSubscription.unsubscribe();
     this.currentWorkgroupChangedSubscription.unsubscribe();
     this.notificationChangedSubscription.unsubscribe();
+    this.projectSavedSubscription.unsubscribe();
   }
 
   $onInit() {

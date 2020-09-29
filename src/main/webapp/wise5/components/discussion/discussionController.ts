@@ -66,6 +66,7 @@ class DiscussionController extends ComponentController {
       ConfigService,
       NodeService,
       NotebookService,
+      NotificationService,
       ProjectService,
       StudentAssetService,
       StudentDataService,
@@ -162,6 +163,11 @@ class DiscussionController extends ComponentController {
     this.broadcastDoneRenderingComponent();
   }
 
+  ngOnDestroy() {
+    super.ngOnDestroy();
+    this.destroyStudentWorkReceivedListener();
+  }
+
   isConnectedComponentShowWorkMode() {
     if (this.UtilService.hasConnectedComponent(this.componentContent)) {
       let isShowWorkMode = true;
@@ -211,7 +217,7 @@ class DiscussionController extends ComponentController {
       if (this.isAuthoringMode()) {
         this.createComponentState('submit');
       }
-      this.$scope.$emit('componentSubmitTriggered', {
+      this.StudentDataService.broadcastComponentSubmitTriggered({
         nodeId: this.$scope.discussionController.nodeId,
         componentId: this.$scope.discussionController.componentId
       });
@@ -780,9 +786,6 @@ class DiscussionController extends ComponentController {
     return annotations;
   }
 
-  cleanupBeforeExiting() {
-    this.destroyStudentWorkReceivedListener();
-  }
 }
 
 export default DiscussionController;
