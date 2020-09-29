@@ -4,8 +4,8 @@
  * that needs to be compiled before rendering.
  */
 class CompileController {
-    constructor($compile, $element, $scope) {
-
+    constructor($compile, $element, $scope, ProjectService) {
+        this.ProjectService = ProjectService;
         $scope.$watch(() => {
             return this.data;
         }, (data) => {
@@ -16,7 +16,7 @@ class CompileController {
     }
 }
 
-CompileController.$inject = ['$compile', '$element', '$scope'];
+CompileController.$inject = ['$compile', '$element', '$scope', 'ProjectService'];
 
 const Compile = {
     bindings: {

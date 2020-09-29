@@ -50,6 +50,8 @@ export class ProjectService {
   public projectSaved$: Observable<any> = this.projectSavedSource.asObservable();
   private savingProjectSource: Subject<any> = new Subject<any>();
   public savingProject$: Observable<any> = this.savingProjectSource.asObservable();
+  private snipImageSource: Subject<any> = new Subject<any>();
+  public snipImage$: Observable<any> = this.snipImageSource.asObservable();
 
   constructor(
     protected upgrade: UpgradeModule,
@@ -607,6 +609,8 @@ export class ProjectService {
    */
   injectClickToSnipImageIntoContentString(contentString) {
     if (contentString != null) {
+      const componentId = JSON.parse(contentString).id;
+
       // regex to match image elements
       const imgMatcher = new RegExp('<img.*?src=\\\\?[\'"](.*?)\\\\?[\'"].*?>', 'gi');
 
@@ -614,14 +618,16 @@ export class ProjectService {
       contentString = contentString.replace(imgMatcher, (matchedString, matchGroup1) => {
         /*
          * insert the ng-click attribute
-         * Before: <img src="abc.png"/>
-         * After: <img ng-click="vleController.snipImage($event)" src="abc.png" />
+         * Before: <img src="some-image.png"/>
+         * After:
+         * <img ng-click="this.$ctrl.ProjectService.broadcastSnipImage(
+         *      { target: $event.target, componentId: 'abcdefghij' })" src="some-image.png"/>
          */
-        const newString = matchedString.replace(
+        return matchedString.replace(
           'img',
-          'img ng-click=\\"$emit(\'snipImage\', $event)\\"'
+          `img ng-click=\\"this.$ctrl.ProjectService.broadcastSnipImage(` + 
+          `{ target: $event.target, componentId: '${componentId}' })\\"`
         );
-        return newString;
       });
     }
     return contentString;
@@ -5393,5 +5399,9 @@ export class ProjectService {
 
   broadcastProjectSaved() {
     this.projectSavedSource.next();
+  }
+
+  broadcastSnipImage(args: any) {
+    this.snipImageSource.next(args);
   }
 }
