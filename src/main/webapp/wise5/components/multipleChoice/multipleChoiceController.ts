@@ -200,7 +200,6 @@ class MultipleChoiceController extends ComponentController {
 
       return deferred.promise;
     }.bind(this);
-    this.$scope.$on('exitNode', angular.bind(this, function(event, args) {}));
     this.broadcastDoneRenderingComponent();
   }
 

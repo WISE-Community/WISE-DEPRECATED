@@ -18,6 +18,7 @@ class DiscussionController extends ComponentController {
   destroyStudentWorkSavedToServerListener: any;
   destroyStudentWorkReceivedListener: any;
   componentStateIdReplyingTo: any;
+  studentWorkReceivedSubscription: any;
 
   static $inject = [
     '$filter',
@@ -166,6 +167,10 @@ class DiscussionController extends ComponentController {
     this.broadcastDoneRenderingComponent();
   }
 
+  unsubscribeAll() {
+    this.studentWorkReceivedSubscription.unsubscribe();
+  }
+
   ngOnDestroy() {
     super.ngOnDestroy();
     this.destroyStudentWorkReceivedListener();
@@ -251,7 +256,7 @@ class DiscussionController extends ComponentController {
   }
 
   registerStudentWorkSavedToServerListener() {
-    this.studentWorkSavedToServerSubscription = 
+    this.studentWorkSavedToServerSubscription =
         this.StudentDataService.studentWorkSavedToServer$.subscribe((args: any) => {
       const componentState = args.studentWork;
       if (this.isWorkFromThisComponent(componentState)) {
@@ -374,19 +379,17 @@ class DiscussionController extends ComponentController {
   }
 
   registerStudentWorkReceivedListener() {
-    this.destroyStudentWorkReceivedListener = this.$rootScope.$on(
-      'studentWorkReceived',
-      (event, componentState) => {
-        if (
-          (this.isWorkFromThisComponent(componentState) ||
-            this.isWorkFromConnectedComponent(componentState)) &&
-          this.isWorkFromClassmate(componentState) &&
-          this.retrievedClassmateResponses
-        ) {
-          this.addClassResponse(componentState);
-        }
+    this.studentWorkReceivedSubscription = this.StudentDataService.studentWorkReceived$
+        .subscribe((componentState) => {
+      if (
+        (this.isWorkFromThisComponent(componentState) ||
+          this.isWorkFromConnectedComponent(componentState)) &&
+        this.isWorkFromClassmate(componentState) &&
+        this.retrievedClassmateResponses
+      ) {
+        this.addClassResponse(componentState);
       }
-    );
+    });
   }
 
   isWorkFromClassmate(componentState) {

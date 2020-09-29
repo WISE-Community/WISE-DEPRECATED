@@ -56,10 +56,10 @@ export class TeacherDataService extends DataService {
         this.handleAnnotationReceived(args.annotation);
       });
 
-      this.getRootScope().$on('newStudentWorkReceived', (event, args) => {
+      this.TeacherWebSocketService.newStudentWorkReceived$.subscribe((args: any) => {
         const studentWork = args.studentWork;
         this.addOrUpdateComponentState(studentWork);
-        this.getRootScope().$broadcast('studentWorkReceived', { studentWork: studentWork });
+        this.broadcastStudentWorkReceived({ studentWork: studentWork });
       });
     }
   }
