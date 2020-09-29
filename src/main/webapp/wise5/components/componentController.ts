@@ -66,6 +66,7 @@ class ComponentController {
   authoringComponentContentJSONString: string;
   isJSONStringChanged: boolean;
   authoringValidComponentContentJSONString: string;
+  annotationSavedToServerSubscription: Subscription;
   nodeSubmitClickedSubscription: Subscription;
   audioRecordedSubscription: Subscription;
   notebookItemChosenSubscription: Subscription;
@@ -212,8 +213,8 @@ class ComponentController {
   }
 
   registerListeners() {
-    this.$scope.$on('annotationSavedToServer', (event, args) => {
-      const annotation = args.annotation;
+    this.annotationSavedToServerSubscription =
+        this.AnnotationService.annotationSavedToServer$.subscribe(({ annotation }) => {
       if (this.isEventTargetThisComponent(annotation)) {
         this.latestAnnotations = this.AnnotationService
           .getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
@@ -226,9 +227,7 @@ class ComponentController {
         this.handleNodeSubmit();
       }
     });
-
     this.registerStudentWorkSavedToServerListener();
-
     this.$scope.$on('$destroy', () => {
       this.ngOnDestroy();
     })
@@ -240,6 +239,7 @@ class ComponentController {
 
   unsubscribeAll() {
     this.nodeSubmitClickedSubscription.unsubscribe();
+    this.annotationSavedToServerSubscription.unsubscribe();
     this.studentWorkSavedToServerSubscription.unsubscribe();
     if (this.audioRecordedSubscription != null) {
       this.audioRecordedSubscription.unsubscribe();

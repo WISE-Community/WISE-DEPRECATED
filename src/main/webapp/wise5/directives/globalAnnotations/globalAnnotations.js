@@ -25,8 +25,8 @@ class GlobalAnnotationsController {
             this.setModel();
         }
 
-        // list for new annotations or updates
-        this.$scope.$on('annotationSavedToServer', (event, args) => {
+        this.annotationSavedToServerSubscription =
+                this.AnnotationService.annotationSavedToServer$.subscribe(() => {
             this.setModel();
         });
 
@@ -46,7 +46,7 @@ class GlobalAnnotationsController {
         });
 
         this.$scope.$on('$destroy', () => {
-            this.ngOnDestroy();
+          this.ngOnDestroy();
         });
     };
 
@@ -55,6 +55,7 @@ class GlobalAnnotationsController {
     }
 
     unsubscribeAll() {
+        this.annotationSavedToServerSubscription.unsubscribe();
         this.nodeStatusesChangedSubscription.unsubscribe();
         this.displayGlobalAnnotationsSubscription.unsubscribe();
     }

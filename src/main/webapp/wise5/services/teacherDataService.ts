@@ -25,6 +25,7 @@ export class TeacherDataService extends DataService {
   nodeGradingSort = 'team';
   studentGradingSort = 'step';
   studentProgressSort = 'team';
+  annotationSavedToServerSubscription: any;
   private currentPeriodChangedSource: Subject<any> = new Subject<any>();
   public currentPeriodChanged$: Observable<any> = this.currentPeriodChangedSource.asObservable();
   private currentWorkgroupChangedSource: Subject<any> = new Subject<any>();
@@ -48,8 +49,9 @@ export class TeacherDataService extends DataService {
     };
 
     if (this.upgrade.$injector != null) {
-      this.getRootScope().$on('annotationSavedToServer', (event, args) => {
-        this.handleAnnotationReceived(args.annotation);
+      this.annotationSavedToServerSubscription = 
+          this.AnnotationService.annotationSavedToServer$.subscribe(({ annotation }) => {
+        this.handleAnnotationReceived(annotation);
       });
 
       this.getRootScope().$on('newAnnotationReceived', (event, args) => {
@@ -88,7 +90,7 @@ export class TeacherDataService extends DataService {
     }
     this.studentData.annotationsByNodeId[nodeId].push(annotation);
     this.AnnotationService.setAnnotations(this.studentData.annotations);
-    this.getRootScope().$broadcast('annotationReceived', { annotation: annotation });
+    this.AnnotationService.broadcastAnnotationReceived({ annotation: annotation });
   }
 
   /**

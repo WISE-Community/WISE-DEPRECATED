@@ -38,6 +38,7 @@ class NodeGradingViewController {
   workgroups: any;
   workgroupsById: any;
   workVisibilityById: any;
+  annotationReceivedSubscription: Subscription;
   studentWorkReceivedSubscription: Subscription;
   notificationChangedSubscription: Subscription;
   currentPeriodChangedSubscription: Subscription;
@@ -114,14 +115,12 @@ class NodeGradingViewController {
       }
     });
 
-    this.$scope.$on('annotationReceived', (event, args) => {
-      const annotation = args.annotation;
-      if (annotation) {
-        const workgroupId = annotation.toWorkgroupId;
-        const nodeId = annotation.nodeId;
-        if (nodeId === this.nodeId && this.workgroupsById[workgroupId]) {
-          this.updateWorkgroup(workgroupId);
-        }
+    this.annotationReceivedSubscription =
+        this.AnnotationService.annotationReceived$.subscribe(({ annotation }) => {
+      const workgroupId = annotation.toWorkgroupId;
+      const nodeId = annotation.nodeId;
+      if (nodeId === this.nodeId && this.workgroupsById[workgroupId]) {
+        this.updateWorkgroup(workgroupId);
       }
     });
 
@@ -158,6 +157,7 @@ class NodeGradingViewController {
   }
 
   unsubscribeAll() {
+    this.annotationReceivedSubscription.unsubscribe();
     this.currentPeriodChangedSubscription.unsubscribe();
     this.studentWorkReceivedSubscription.unsubscribe();
     this.notificationChangedSubscription.unsubscribe();
