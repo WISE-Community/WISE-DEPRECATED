@@ -63,6 +63,7 @@ class GraphController extends ComponentController {
 
   static $inject = [
     '$filter',
+    '$injector',
     '$mdDialog',
     '$q',
     '$rootScope',
@@ -82,6 +83,7 @@ class GraphController extends ComponentController {
 
   constructor(
     $filter,
+    $injector,
     $mdDialog,
     $q,
     $rootScope,
@@ -100,6 +102,7 @@ class GraphController extends ComponentController {
   ) {
     super(
       $filter,
+      $injector,
       $mdDialog,
       $q,
       $rootScope,
@@ -3038,7 +3041,7 @@ class GraphController extends ComponentController {
    * @return A promise that returns the url of the image that is generated from the component state.
    */
   setComponentStateAsBackgroundImage(componentState) {
-    return this.UtilService.generateImageFromComponentState(componentState).then(image => {
+    return this.generateImageFromComponentState(componentState).then(image => {
       return image.url;
     });
   }

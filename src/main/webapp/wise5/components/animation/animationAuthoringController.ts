@@ -9,6 +9,7 @@ class AnimationAuthoringController extends AnimationController {
 
   static $inject = [
     '$filter',
+    '$injector',
     '$mdDialog',
     '$q',
     '$rootScope',
@@ -29,6 +30,7 @@ class AnimationAuthoringController extends AnimationController {
 
   constructor(
     $filter,
+    $injector,
     $mdDialog,
     $q,
     $rootScope,
@@ -48,6 +50,7 @@ class AnimationAuthoringController extends AnimationController {
   ) {
     super(
       $filter,
+      $injector,
       $mdDialog,
       $q,
       $rootScope,

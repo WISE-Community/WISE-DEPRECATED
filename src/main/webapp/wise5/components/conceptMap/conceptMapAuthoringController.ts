@@ -17,6 +17,7 @@ class ConceptMapAuthoringController extends ConceptMapController {
   static $inject = [
     '$anchorScroll',
     '$filter',
+    '$injector',
     '$location',
     '$mdDialog',
     '$q',
@@ -39,6 +40,7 @@ class ConceptMapAuthoringController extends ConceptMapController {
   constructor(
     $anchorScroll,
     $filter,
+    $injector,
     $location,
     $mdDialog,
     $q,
@@ -60,6 +62,7 @@ class ConceptMapAuthoringController extends ConceptMapController {
     super(
       $anchorScroll,
       $filter,
+      $injector,
       $location,
       $mdDialog,
       $q,

@@ -10,6 +10,7 @@ class EmbeddedAuthoringController extends EmbeddedController {
 
   static $inject = [
     '$filter',
+    '$injector',
     '$mdDialog',
     '$q',
     '$rootScope',
@@ -31,6 +32,7 @@ class EmbeddedAuthoringController extends EmbeddedController {
   ];
 
   constructor($filter,
+              $injector,
               $mdDialog,
               $q,
               $rootScope,
@@ -50,6 +52,7 @@ class EmbeddedAuthoringController extends EmbeddedController {
               StudentDataService,
               UtilService) {
     super($filter,
+      $injector,
       $mdDialog,
       $q,
       $rootScope,

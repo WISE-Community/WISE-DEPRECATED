@@ -10,6 +10,7 @@ class MatchAuthoringController extends MatchController {
 
   static $inject = [
     '$filter',
+    '$injector',
     '$mdDialog',
     '$mdMedia',
     '$q',
@@ -31,6 +32,7 @@ class MatchAuthoringController extends MatchController {
 
   constructor(
     $filter,
+    $injector,
     $mdDialog,
     $mdMedia,
     $q,
@@ -51,6 +53,7 @@ class MatchAuthoringController extends MatchController {
   ) {
     super(
       $filter,
+      $injector,
       $mdDialog,
       $mdMedia,
       $q,

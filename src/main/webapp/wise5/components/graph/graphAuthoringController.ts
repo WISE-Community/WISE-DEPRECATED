@@ -19,6 +19,7 @@ class GraphAuthoringController extends GraphController {
 
   static $inject = [
     '$filter',
+    '$injector',
     '$mdDialog',
     '$q',
     '$rootScope',
@@ -38,6 +39,7 @@ class GraphAuthoringController extends GraphController {
   ];
 
   constructor($filter,
+              $injector,
               $mdDialog,
               $q,
               $rootScope,
@@ -55,6 +57,7 @@ class GraphAuthoringController extends GraphController {
               StudentDataService,
               UtilService) {
     super($filter,
+      $injector,
       $mdDialog,
       $q,
       $rootScope,

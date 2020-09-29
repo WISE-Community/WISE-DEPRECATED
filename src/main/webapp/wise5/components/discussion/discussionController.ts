@@ -21,6 +21,7 @@ class DiscussionController extends ComponentController {
 
   static $inject = [
     '$filter',
+    '$injector',
     '$mdDialog',
     '$q',
     '$rootScope',
@@ -40,6 +41,7 @@ class DiscussionController extends ComponentController {
 
   constructor(
     $filter,
+    $injector,
     $mdDialog,
     $q,
     $rootScope,
@@ -58,6 +60,7 @@ class DiscussionController extends ComponentController {
   ) {
     super(
       $filter,
+      $injector,
       $mdDialog,
       $q,
       $rootScope,

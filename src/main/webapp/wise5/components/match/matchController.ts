@@ -27,6 +27,7 @@ class MatchController extends ComponentController {
 
   static $inject = [
     '$filter',
+    '$injector',
     '$mdDialog',
     '$mdMedia',
     '$q',
@@ -47,6 +48,7 @@ class MatchController extends ComponentController {
 
   constructor(
     $filter,
+    $injector,
     $mdDialog,
     $mdMedia,
     $q,
@@ -66,6 +68,7 @@ class MatchController extends ComponentController {
   ) {
     super(
       $filter,
+      $injector,
       $mdDialog,
       $q,
       $rootScope,
@@ -203,10 +206,7 @@ class MatchController extends ComponentController {
       return deferred.promise;
     };
 
-    this.$rootScope.$broadcast('doneRenderingComponent', {
-      nodeId: this.nodeId,
-      componentId: this.componentId
-    });
+    this.broadcastDoneRenderingComponent();
   }
 
   ngOnDestroy() {

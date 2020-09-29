@@ -9,6 +9,7 @@ class HTMLController extends ComponentController {
   html: string;
 
   static $inject = [
+    '$injector',
     '$q',
     '$rootScope',
     '$scope',
@@ -29,6 +30,7 @@ class HTMLController extends ComponentController {
   ];
 
   constructor(
+    $injector,
     $q,
     $rootScope,
     $scope,
@@ -49,6 +51,7 @@ class HTMLController extends ComponentController {
   ) {
     super(
       $filter,
+      $injector,
       $mdDialog,
       $q,
       $rootScope,
@@ -75,10 +78,7 @@ class HTMLController extends ComponentController {
       }
     }
 
-    this.$rootScope.$broadcast('doneRenderingComponent', {
-      nodeId: this.nodeId,
-      componentId: this.componentId
-    });
+    this.broadcastDoneRenderingComponent();
   }
 }
 
