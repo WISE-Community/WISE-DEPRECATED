@@ -6,6 +6,7 @@ import ComponentController from '../componentController';
 import canvg from 'canvg';
 import html2canvas from 'html2canvas';
 import * as covariance from 'compute-covariance';
+import { Subscription } from 'rxjs';
 
 class GraphController extends ComponentController {
   $q: any;
@@ -53,13 +54,13 @@ class GraphController extends ComponentController {
   yAxisLocked: boolean;
   setupMouseMoveListenerDone: boolean;
   mouseDown: boolean;
-  deleteKeyPressedListenerDestroyer: any;
   fileName: string;
   lastSavedMouseMoveTimestamp: number;
   xAxisLimitSpacerWidth: number;
   lastDropTime: number;
   isResetSeriesButtonVisible: boolean;
   previousTrialIdsToShow: any[];
+  deleteKeyPressedSubscription: Subscription;
 
   static $inject = [
     '$filter',
@@ -69,6 +70,7 @@ class GraphController extends ComponentController {
     '$scope',
     '$timeout',
     'AnnotationService',
+    'AudioRecorderService',
     'ConfigService',
     'GraphService',
     'NodeService',
@@ -88,6 +90,7 @@ class GraphController extends ComponentController {
     $scope,
     $timeout,
     AnnotationService,
+    AudioRecorderService,
     ConfigService,
     GraphService,
     NodeService,
@@ -105,6 +108,7 @@ class GraphController extends ComponentController {
       $rootScope,
       $scope,
       AnnotationService,
+      AudioRecorderService,
       ConfigService,
       NodeService,
       NotebookService,
@@ -191,7 +195,11 @@ class GraphController extends ComponentController {
 
   ngOnDestroy() {
     super.ngOnDestroy();
-    this.deleteKeyPressedListenerDestroyer();
+    this.unsubscribeAll();
+  }
+
+  unsubscribeAll() {
+    this.deleteKeyPressedSubscription.unsubscribe();
   }
 
   applyHighchartsPlotLinesLabelFix() {
@@ -312,7 +320,7 @@ class GraphController extends ComponentController {
   }
 
   initializeDeleteKeyPressedListener() {
-    this.deleteKeyPressedListenerDestroyer = this.$scope.$on('deleteKeyPressed', () => {
+    this.deleteKeyPressedSubscription = this.StudentDataService.deleteKeyPressed$.subscribe(() => {
       this.handleDeleteKeyPressed();
     });
   }

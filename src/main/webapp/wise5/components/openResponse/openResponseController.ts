@@ -73,6 +73,7 @@ class OpenResponseController extends ComponentController {
       $rootScope,
       $scope,
       AnnotationService,
+      AudioRecorderService,
       ConfigService,
       NodeService,
       NotebookService,
