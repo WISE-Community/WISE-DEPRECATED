@@ -6,7 +6,7 @@ import TableController from './tableController';
 
 class TableAuthoringController extends TableController {
   ProjectAssetService: ProjectAssetService;
-  
+
   static $inject = [
     '$anchorScroll',
     '$filter',
@@ -32,6 +32,7 @@ class TableAuthoringController extends TableController {
   constructor(
     $anchorScroll,
     $filter,
+    $injector,
     $location,
     $mdDialog,
     $q,
@@ -53,6 +54,7 @@ class TableAuthoringController extends TableController {
     super(
       $anchorScroll,
       $filter,
+      $injector,
       $location,
       $mdDialog,
       $q,

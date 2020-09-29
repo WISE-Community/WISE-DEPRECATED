@@ -32,6 +32,7 @@ class StudentGradingController {
   sort: any;
   totalScore: number;
   workgroupId: number;
+  studentWorkReceivedSubscription: Subscription;
   currentWorkgroupChangedSubscription: Subscription;
   notificationChangedSubscription: Subscription;
   currentPeriodChangedSubscription: Subscription;
@@ -98,8 +99,10 @@ class StudentGradingController {
       }
     });
 
-    this.$scope.$on('studentWorkReceived', (event, args) => {
-      let studentWork = args.studentWork;
+
+    this.studentWorkReceivedSubscription = this.TeacherDataService.studentWorkReceived$
+        .subscribe((args: any) => {
+      const studentWork = args.studentWork;
       if (studentWork != null) {
         let workgroupId = studentWork.workgroupId;
         let nodeId = studentWork.nodeId;
@@ -109,7 +112,7 @@ class StudentGradingController {
       }
     });
 
-    this.currentWorkgroupChangedSubscription = 
+    this.currentWorkgroupChangedSubscription =
         this.TeacherDataService.currentWorkgroupChanged$.subscribe(({ currentWorkgroup }) => {
       if (currentWorkgroup != null) {
         let workgroupId = currentWorkgroup.workgroupId;
@@ -166,6 +169,7 @@ class StudentGradingController {
 
   unsubscribeAll() {
     this.currentPeriodChangedSubscription.unsubscribe();
+    this.studentWorkReceivedSubscription.unsubscribe();
     this.currentWorkgroupChangedSubscription.unsubscribe();
     this.notificationChangedSubscription.unsubscribe();
     this.projectSavedSubscription.unsubscribe();

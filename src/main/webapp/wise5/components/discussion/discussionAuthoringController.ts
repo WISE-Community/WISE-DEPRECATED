@@ -9,6 +9,7 @@ class DiscussionAuthoringController extends DiscussionController {
 
   static $inject = [
     '$filter',
+    '$injector',
     '$mdDialog',
     '$q',
     '$rootScope',
@@ -30,6 +31,7 @@ class DiscussionAuthoringController extends DiscussionController {
 
   constructor(
     $filter,
+    $injector,
     $mdDialog,
     $q,
     $rootScope,
@@ -50,6 +52,7 @@ class DiscussionAuthoringController extends DiscussionController {
   ) {
     super(
       $filter,
+      $injector,
       $mdDialog,
       $q,
       $rootScope,

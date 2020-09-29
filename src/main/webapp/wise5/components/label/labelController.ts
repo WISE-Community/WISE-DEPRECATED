@@ -36,6 +36,7 @@ class LabelController extends ComponentController {
 
   static $inject = [
     '$filter',
+    '$injector',
     '$mdDialog',
     '$q',
     '$rootScope',
@@ -57,6 +58,7 @@ class LabelController extends ComponentController {
 
   constructor(
     $filter,
+    $injector,
     $mdDialog,
     $q,
     $rootScope,
@@ -77,6 +79,7 @@ class LabelController extends ComponentController {
   ) {
     super(
       $filter,
+      $injector,
       $mdDialog,
       $q,
       $rootScope,
@@ -360,10 +363,7 @@ class LabelController extends ComponentController {
       }
     };
 
-    this.$rootScope.$broadcast('doneRenderingComponent', {
-      nodeId: this.nodeId,
-      componentId: this.componentId
-    });
+    this.broadcastDoneRenderingComponent();
   }
 
   handleNodeSubmit() {
@@ -1737,7 +1737,7 @@ class LabelController extends ComponentController {
    * @param componentState A component state.
    */
   setComponentStateAsBackgroundImage(componentState) {
-    this.UtilService.generateImageFromComponentState(componentState).then(image => {
+    this.generateImageFromComponentState(componentState).then(image => {
       this.setBackgroundImage(image.url);
     });
   }

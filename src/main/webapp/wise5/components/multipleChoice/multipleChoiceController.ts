@@ -15,6 +15,7 @@ class MultipleChoiceController extends ComponentController {
 
   static $inject = [
     '$filter',
+    '$injector',
     '$mdDialog',
     '$q',
     '$rootScope',
@@ -34,6 +35,7 @@ class MultipleChoiceController extends ComponentController {
 
   constructor(
     $filter,
+    $injector,
     $mdDialog,
     $q,
     $rootScope,
@@ -52,6 +54,7 @@ class MultipleChoiceController extends ComponentController {
   ) {
     super(
       $filter,
+      $injector,
       $mdDialog,
       $q,
       $rootScope,
@@ -200,11 +203,7 @@ class MultipleChoiceController extends ComponentController {
 
       return deferred.promise;
     }.bind(this);
-
-    this.$rootScope.$broadcast('doneRenderingComponent', {
-      nodeId: this.nodeId,
-      componentId: this.componentId
-    });
+    this.broadcastDoneRenderingComponent();
   }
 
   handleNodeSubmit() {

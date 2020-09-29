@@ -34,6 +34,8 @@ class AuthoringToolController {
   SessionService: SessionService;
   TeacherDataService: TeacherDataService;
   errorSavingProjectSubscription: Subscription;
+  notAllowedToEditThisProjectSubscription: Subscription;
+  notLoggedInProjectNotSavedSubscription: Subscription;
   projectSavedSubscription: Subscription;
   savingProjectSubscription: Subscription;
   showSessionWarningSubscription: Subscription;
@@ -244,11 +246,13 @@ class AuthoringToolController {
       this.setGlobalMessage(this.$translate('errorSavingProject'), false, null);
     });
 
-    this.$scope.$on('notLoggedInProjectNotSaved', () => {
+    this.notLoggedInProjectNotSavedSubscription = 
+        this.ProjectService.notLoggedInProjectNotSaved$.subscribe(() => {
       this.setGlobalMessage(this.$translate('notLoggedInProjectNotSaved'), false, null);
     });
 
-    this.$scope.$on('notAllowedToEditThisProject', () => {
+    this.notAllowedToEditThisProjectSubscription = 
+        this.ProjectService.notAllowedToEditThisProject$.subscribe(() => {
       this.setGlobalMessage(this.$translate('notAllowedToEditThisProject'), false, null);
     });
 
@@ -273,6 +277,8 @@ class AuthoringToolController {
 
   unsubscribeAll() {
     this.errorSavingProjectSubscription.unsubscribe();
+    this.notAllowedToEditThisProjectSubscription.unsubscribe();
+    this.notLoggedInProjectNotSavedSubscription.unsubscribe();
     this.projectSavedSubscription.unsubscribe();
     this.savingProjectSubscription.unsubscribe();
     this.showSessionWarningSubscription.unsubscribe();

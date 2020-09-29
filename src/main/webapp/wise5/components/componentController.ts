@@ -14,6 +14,7 @@ import { Subscription } from 'rxjs';
 
 class ComponentController {
   $filter: any;
+  $injector: any;
   $mdDialog: any;
   $q: any;
   $rootScope: any;
@@ -71,6 +72,7 @@ class ComponentController {
 
   constructor(
       $filter,
+      $injector,
       $mdDialog,
       $q,
       $rootScope,
@@ -86,6 +88,7 @@ class ComponentController {
       StudentDataService,
       UtilService) {
     this.$filter = $filter;
+    this.$injector = $injector;
     this.$mdDialog = $mdDialog;
     this.$q = $q;
     this.$rootScope = $rootScope;
@@ -404,7 +407,9 @@ class ComponentController {
   }
 
   broadcastDoneRenderingComponent() {
-    this.$rootScope.$broadcast('doneRenderingComponent', { nodeId: this.nodeId, componentId: this.componentId });
+    this.NodeService.broadcastDoneRenderingComponent({
+      nodeId: this.nodeId, componentId: this.componentId
+    });
   }
 
   registerStudentWorkSavedToServerListener() {
@@ -1348,6 +1353,68 @@ class ComponentController {
         });
       }
     });
+  }
+
+  /**
+   * Render the component state and then generate an image from it.
+   * @param componentState The component state to render.
+   * @return A promise that will return an image.
+   */
+  generateImageFromComponentState(componentState) {
+    const deferred = this.$q.defer();
+    this.$mdDialog.show({
+      template: `
+        <div style="position: fixed; width: 100%; height: 100%; top: 0; left: 0; background-color: rgba(0,0,0,0.2); z-index: 2;"></div>
+        <div align="center" style="position: absolute; top: 100px; left: 200px; z-index: 1000; padding: 20px; background-color: yellow;">
+          <span>{{ "importingWork" | translate }}...</span>
+          <br/>
+          <br/>
+          <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+        </div>
+        <component node-id="{{nodeId}}"
+                   component-id="{{componentId}}"
+                   component-state="{{componentState}}"
+                   mode="student"></component>
+      `,
+      locals: {
+        nodeId: componentState.nodeId,
+        componentId: componentState.componentId,
+        componentState: componentState
+      },
+      controller: DialogController
+    });
+    function DialogController($scope, $mdDialog, nodeId, componentId, componentState) {
+      $scope.nodeId = nodeId;
+      $scope.componentId = componentId;
+      $scope.componentState = componentState;
+      $scope.closeDialog = function() {
+        $mdDialog.hide();
+      };
+    }
+    DialogController.$inject = ['$scope', '$mdDialog', 'nodeId', 'componentId', 'componentState'];
+
+    const doneRenderingComponentSubscription = 
+        this.NodeService.doneRenderingComponent$.subscribe(({ nodeId, componentId }) => {
+      if (componentState.nodeId == nodeId && componentState.componentId == componentId) {
+        setTimeout(() => {
+          const componentService = this.$injector.get(componentState.componentType + 'Service');
+          componentService.generateImageFromRenderedComponentState(componentState).then(image => {
+            clearTimeout(destroyDoneRenderingComponentListenerTimeout);
+            doneRenderingComponentSubscription.unsubscribe();
+            deferred.resolve(image);
+            this.$mdDialog.hide();
+          });
+        }, 1000);
+      }
+    });
+    /*
+     * Set a timeout to destroy the listener in case there is an error creating the image and
+     * we don't get to destroying it above.
+     */
+    const destroyDoneRenderingComponentListenerTimeout = setTimeout(() => {
+      doneRenderingComponentSubscription.unsubscribe();
+    }, 10000);
+    return deferred.promise;
   }
 
 }
