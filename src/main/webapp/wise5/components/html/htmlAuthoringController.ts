@@ -11,6 +11,7 @@ class HTMLAuthoringController extends HTMLController {
   summernotePromptId: string;
 
   static $inject = [
+    '$injector',
     '$q',
     '$rootScope',
     '$scope',
@@ -23,6 +24,7 @@ class HTMLAuthoringController extends HTMLController {
     'ConfigService',
     'NodeService',
     'NotebookService',
+    'NotificationService',
     'ProjectAssetService',
     'ProjectService',
     'StudentAssetService',
@@ -31,6 +33,7 @@ class HTMLAuthoringController extends HTMLController {
   ];
 
   constructor(
+    $injector,
     $q,
     $rootScope,
     $scope,
@@ -43,6 +46,7 @@ class HTMLAuthoringController extends HTMLController {
     ConfigService,
     NodeService,
     NotebookService,
+    NotificationService,
     ProjectAssetService,
     ProjectService,
     StudentAssetService,
@@ -50,6 +54,7 @@ class HTMLAuthoringController extends HTMLController {
     UtilService
   ) {
     super(
+      $injector,
       $q,
       $rootScope,
       $scope,
@@ -62,6 +67,7 @@ class HTMLAuthoringController extends HTMLController {
       ConfigService,
       NodeService,
       NotebookService,
+      NotificationService,
       ProjectService,
       StudentAssetService,
       StudentDataService,

@@ -6,24 +6,40 @@ class SummaryDisplayController {
     $injector,
     $q,
     $rootScope,
+    $scope,
     AnnotationService,
     ConfigService,
     ProjectService,
+    StudentDataService,
     UtilService
   ) {
     this.$filter = $filter;
     this.$injector = $injector;
     this.$q = $q;
     this.$rootScope = $rootScope;
+    this.$scope = $scope;
     this.AnnotationService = AnnotationService;
     this.ConfigService = ConfigService;
     this.ProjectService = ProjectService;
+    this.StudentDataService = StudentDataService;
     this.UtilService = UtilService;
     this.$translate = this.$filter('translate');
     this.defaultMaxScore = 5;
     this.maxScore = this.defaultMaxScore;
     this.dataService = null;
     this.hasCorrectness = false;
+
+    this.$scope.$on('$destroy', () => {
+      this.ngOnDestroy();
+    });
+  }
+
+  ngOnDestroy() {
+    this.unsubscribeAll();
+  }
+
+  unsubscribeAll() {
+    this.studentWorkSavedToServerSubscription.unsubscribe();
   }
 
   $onInit() {
@@ -108,7 +124,8 @@ class SummaryDisplayController {
       this.initializeColors();
       this.renderDisplay();
     };
-    this.$rootScope.$on('studentWorkSavedToServer', (event, args) => {
+    this.studentWorkSavedToServerSubscription = this.StudentDataService.studentWorkSavedToServer$
+        .subscribe((args) => {
       if (
         this.doRender &&
         this.nodeId === args.studentWork.nodeId &&
@@ -907,9 +924,11 @@ SummaryDisplayController.$inject = [
   '$injector',
   '$q',
   '$rootScope',
+  '$scope',
   'AnnotationService',
   'ConfigService',
   'ProjectService',
+  'StudentDataService',
   'UtilService'
 ];
 

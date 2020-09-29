@@ -10,6 +10,7 @@ class TableAuthoringController extends TableController {
   constructor(
     $anchorScroll,
     $filter,
+    $injector,
     $location,
     $mdDialog,
     $q,
@@ -19,6 +20,7 @@ class TableAuthoringController extends TableController {
     ConfigService,
     NodeService,
     NotebookService,
+    NotificationService,
     ProjectAssetService,
     ProjectService,
     StudentAssetService,
@@ -29,6 +31,7 @@ class TableAuthoringController extends TableController {
     super(
       $anchorScroll,
       $filter,
+      $injector,
       $location,
       $mdDialog,
       $q,
@@ -38,6 +41,7 @@ class TableAuthoringController extends TableController {
       ConfigService,
       NodeService,
       NotebookService,
+      NotificationService,
       ProjectService,
       StudentAssetService,
       StudentDataService,
@@ -577,6 +581,7 @@ class TableAuthoringController extends TableController {
 TableAuthoringController.$inject = [
   '$anchorScroll',
   '$filter',
+  '$injector',
   '$location',
   '$mdDialog',
   '$q',
@@ -586,6 +591,7 @@ TableAuthoringController.$inject = [
   'ConfigService',
   'NodeService',
   'NotebookService',
+  'NotificationService',
   'ProjectAssetService',
   'ProjectService',
   'StudentAssetService',

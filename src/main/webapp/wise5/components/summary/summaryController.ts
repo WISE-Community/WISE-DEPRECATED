@@ -22,6 +22,7 @@ class SummaryController extends ComponentController {
 
   static $inject = [
     '$filter',
+    '$injector',
     '$mdDialog',
     '$q',
     '$rootScope',
@@ -30,6 +31,7 @@ class SummaryController extends ComponentController {
     'ConfigService',
     'NodeService',
     'NotebookService',
+    'NotificationService',
     'ProjectService',
     'StudentAssetService',
     'StudentDataService',
@@ -39,6 +41,7 @@ class SummaryController extends ComponentController {
 
   constructor(
     $filter,
+    $injector,
     $mdDialog,
     $q,
     $rootScope,
@@ -47,6 +50,7 @@ class SummaryController extends ComponentController {
     ConfigService,
     NodeService,
     NotebookService,
+    NotificationService,
     ProjectService,
     StudentAssetService,
     StudentDataService,
@@ -55,6 +59,7 @@ class SummaryController extends ComponentController {
   ) {
     super(
       $filter,
+      $injector,
       $mdDialog,
       $q,
       $rootScope,
@@ -63,6 +68,7 @@ class SummaryController extends ComponentController {
       ConfigService,
       NodeService,
       NotebookService,
+      NotificationService,
       ProjectService,
       StudentAssetService,
       StudentDataService,
@@ -214,7 +220,7 @@ class SummaryController extends ComponentController {
     }
   }
 
-  handleStudentWorkSavedToServerAdditionalProcessing(event: any, args: any) {
+  handleStudentWorkSavedToServerAdditionalProcessing(args: any) {
     if (this.isStudent) {
       this.isShowDisplay = this.calculateIsShowDisplay();
     }

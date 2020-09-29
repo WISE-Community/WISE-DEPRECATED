@@ -17,6 +17,7 @@ class ConceptMapAuthoringController extends ConceptMapController {
   static $inject = [
     '$anchorScroll',
     '$filter',
+    '$injector',
     '$location',
     '$mdDialog',
     '$q',
@@ -28,6 +29,7 @@ class ConceptMapAuthoringController extends ConceptMapController {
     'ConfigService',
     'NodeService',
     'NotebookService',
+    'NotificationService',
     'ProjectAssetService',
     'ProjectService',
     'StudentAssetService',
@@ -38,6 +40,7 @@ class ConceptMapAuthoringController extends ConceptMapController {
   constructor(
     $anchorScroll,
     $filter,
+    $injector,
     $location,
     $mdDialog,
     $q,
@@ -49,6 +52,7 @@ class ConceptMapAuthoringController extends ConceptMapController {
     ConfigService,
     NodeService,
     NotebookService,
+    NotificationService,
     ProjectAssetService,
     ProjectService,
     StudentAssetService,
@@ -58,6 +62,7 @@ class ConceptMapAuthoringController extends ConceptMapController {
     super(
       $anchorScroll,
       $filter,
+      $injector,
       $location,
       $mdDialog,
       $q,
@@ -69,6 +74,7 @@ class ConceptMapAuthoringController extends ConceptMapController {
       ConfigService,
       NodeService,
       NotebookService,
+      NotificationService,
       ProjectService,
       StudentAssetService,
       StudentDataService,

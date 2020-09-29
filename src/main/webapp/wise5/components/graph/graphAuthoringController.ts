@@ -19,6 +19,7 @@ class GraphAuthoringController extends GraphController {
 
   static $inject = [
     '$filter',
+    '$injector',
     '$mdDialog',
     '$q',
     '$rootScope',
@@ -29,6 +30,7 @@ class GraphAuthoringController extends GraphController {
     'GraphService',
     'NodeService',
     'NotebookService',
+    'NotificationService',
     'ProjectAssetService',
     'ProjectService',
     'StudentAssetService',
@@ -37,6 +39,7 @@ class GraphAuthoringController extends GraphController {
   ];
 
   constructor($filter,
+              $injector,
               $mdDialog,
               $q,
               $rootScope,
@@ -47,12 +50,14 @@ class GraphAuthoringController extends GraphController {
               GraphService,
               NodeService,
               NotebookService,
+              NotificationService,
               ProjectAssetService,
               ProjectService,
               StudentAssetService,
               StudentDataService,
               UtilService) {
     super($filter,
+      $injector,
       $mdDialog,
       $q,
       $rootScope,
@@ -63,6 +68,7 @@ class GraphAuthoringController extends GraphController {
       GraphService,
       NodeService,
       NotebookService,
+      NotificationService,
       ProjectService,
       StudentAssetService,
       StudentDataService,

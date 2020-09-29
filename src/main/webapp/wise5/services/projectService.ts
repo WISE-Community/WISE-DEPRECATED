@@ -8,6 +8,7 @@ import { Injectable } from '@angular/core';
 import { UpgradeModule } from '@angular/upgrade/static';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { SessionService } from './sessionService';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable()
 export class ProjectService {
@@ -35,6 +36,20 @@ export class ProjectService {
   project: any;
   rootNode: any = null;
   transitions: any;
+  private errorSavingProjectSource: Subject<any> = new Subject<any>();
+  public errorSavingProject$: Observable<any> = this.errorSavingProjectSource.asObservable();
+  private notAllowedToEditThisProjectSource: Subject<any> = new Subject<any>();
+  public notAllowedToEditThisProject$: Observable<any> =
+      this.notAllowedToEditThisProjectSource.asObservable();
+  private notLoggedInProjectNotSavedSource: Subject<any> = new Subject<any>();
+  public notLoggedInProjectNotSaved$: Observable<any> =
+      this.notLoggedInProjectNotSavedSource.asObservable();
+  private projectChangedSource: Subject<any> = new Subject<any>();
+  public projectChanged$: Observable<any> = this.projectChangedSource.asObservable();
+  private projectSavedSource: Subject<any> = new Subject<any>();
+  public projectSaved$: Observable<any> = this.projectSavedSource.asObservable();
+  private savingProjectSource: Subject<any> = new Subject<any>();
+  public savingProject$: Observable<any> = this.savingProjectSource.asObservable();
 
   constructor(
     protected upgrade: UpgradeModule,
@@ -155,7 +170,6 @@ export class ProjectService {
     if (node != null && groupNodes != null) {
       groupNodes.push(node);
     }
-    this.UtilService.broadcastEventInRootScope('groupsChanged');
   }
 
   addNodeToGroupNode(groupId, nodeId) {
@@ -265,7 +279,7 @@ export class ProjectService {
     if (this.project.projectAchievements != null) {
       this.achievements = this.project.projectAchievements;
     }
-    this.UtilService.broadcastEventInRootScope('projectChanged');
+    this.broadcastProjectChanged();
   }
 
   instantiateDefaults() {
@@ -1111,13 +1125,21 @@ export class ProjectService {
    * Saves the project to Config.saveProjectURL and returns commit history promise.
    * if Config.saveProjectURL or Config.projectId are undefined, does not save and returns null
    */
-  saveProject() {
+  saveProject(): any {
     if (!this.ConfigService.getConfigParam('canEditProject')) {
-      this.UtilService.broadcastEventInRootScope('notAllowedToEditThisProject');
+      this.broadcastNotAllowedToEditThisProject();
       return null;
     }
-    this.UtilService.broadcastEventInRootScope('savingProject');
+    this.broadcastSavingProject();
     this.cleanupBeforeSave();
+    this.project.metadata.authors = this.getUniqueAuthors(this.getAuthors());
+    return this.http.post(this.ConfigService.getConfigParam('saveProjectURL'),
+        angular.toJson(this.project, false)).toPromise().then((response: any) => {
+      this.handleSaveProjectResponse(response);
+    });
+  }
+
+  getAuthors() {
     const authors = this.project.metadata.authors ? this.project.metadata.authors : [];
     const userInfo = this.ConfigService.getMyUserInfo();
     let exists = false;
@@ -1130,23 +1152,7 @@ export class ProjectService {
     if (!exists) {
       authors.push(userInfo);
     }
-    this.project.metadata.authors = this.getUniqueAuthors(authors);
-    return this.http.post(this.ConfigService.getConfigParam('saveProjectURL'),
-        angular.toJson(this.project, false)).toPromise().then((response: any) => {
-      if (response.status === 'error') {
-        if (response.messageCode === 'notSignedIn') {
-          this.UtilService.broadcastEventInRootScope('notLoggedInProjectNotSaved');
-          this.SessionService.forceLogOut();
-        } else if (response.messageCode === 'notAllowedToEditThisProject') {
-          this.UtilService.broadcastEventInRootScope('notAllowedToEditThisProject');
-        } else if (response.messageCode === 'errorSavingProject') {
-          this.UtilService.broadcastEventInRootScope('errorSavingProject');
-        }
-      } else {
-        this.UtilService.broadcastEventInRootScope('projectSaved');
-      }
-      return response;
-    });
+    return authors;
   }
 
   getUniqueAuthors(authors = []) {
@@ -1159,6 +1165,22 @@ export class ProjectService {
       }
     }
     return uniqueAuthors;
+  }
+
+  handleSaveProjectResponse(response: any): any {
+    if (response.status === 'error') {
+      if (response.messageCode === 'notSignedIn') {
+        this.broadcastNotLoggedInProjectNotSaved();
+        this.SessionService.forceLogOut();
+      } else if (response.messageCode === 'notAllowedToEditThisProject') {
+        this.broadcastNotAllowedToEditThisProject();
+      } else if (response.messageCode === 'errorSavingProject') {
+        this.broadcastErrorSavingProject();
+      }
+    } else {
+      this.broadcastProjectSaved();
+    }
+    return response;
   }
 
   /**
@@ -5347,5 +5369,29 @@ export class ProjectService {
     } else {
       return { name: params['tag'] };
     }
+  }
+
+  broadcastSavingProject() {
+    this.savingProjectSource.next();
+  }
+
+  broadcastErrorSavingProject() {
+    this.errorSavingProjectSource.next();
+  }
+
+  broadcastNotAllowedToEditThisProject() {
+    this.notAllowedToEditThisProjectSource.next();
+  }
+
+  broadcastNotLoggedInProjectNotSaved() {
+    this.notLoggedInProjectNotSavedSource.next();
+  }
+
+  broadcastProjectChanged() {
+    this.projectChangedSource.next();
+  }
+
+  broadcastProjectSaved() {
+    this.projectSavedSource.next();
   }
 }

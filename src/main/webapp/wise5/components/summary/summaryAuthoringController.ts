@@ -19,6 +19,7 @@ class SummaryAuthoringController extends SummaryController {
     'ConfigService',
     'NodeService',
     'NotebookService',
+    'NotificationService',
     'ProjectService',
     'StudentAssetService',
     'StudentDataService',
@@ -37,6 +38,7 @@ class SummaryAuthoringController extends SummaryController {
     ConfigService,
     NodeService,
     NotebookService,
+    NotificationService,
     ProjectService,
     StudentAssetService,
     StudentDataService,
@@ -45,6 +47,7 @@ class SummaryAuthoringController extends SummaryController {
   ) {
     super(
       $filter,
+      $injector,
       $mdDialog,
       $q,
       $rootScope,
@@ -53,6 +56,7 @@ class SummaryAuthoringController extends SummaryController {
       ConfigService,
       NodeService,
       NotebookService,
+      NotificationService,
       ProjectService,
       StudentAssetService,
       StudentDataService,

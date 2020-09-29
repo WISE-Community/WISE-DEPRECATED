@@ -9,6 +9,7 @@ class MultipleChoiceAuthoringController extends MultipleChoiceController {
 
   static $inject = [
     '$filter',
+    '$injector',
     '$mdDialog',
     '$q',
     '$rootScope',
@@ -18,6 +19,7 @@ class MultipleChoiceAuthoringController extends MultipleChoiceController {
     'MultipleChoiceService',
     'NodeService',
     'NotebookService',
+    'NotificationService',
     'ProjectAssetService',
     'ProjectService',
     'StudentAssetService',
@@ -27,6 +29,7 @@ class MultipleChoiceAuthoringController extends MultipleChoiceController {
 
   constructor(
     $filter,
+    $injector,
     $mdDialog,
     $q,
     $rootScope,
@@ -36,6 +39,7 @@ class MultipleChoiceAuthoringController extends MultipleChoiceController {
     MultipleChoiceService,
     NodeService,
     NotebookService,
+    NotificationService,
     ProjectAssetService,
     ProjectService,
     StudentAssetService,
@@ -44,6 +48,7 @@ class MultipleChoiceAuthoringController extends MultipleChoiceController {
   ) {
     super(
       $filter,
+      $injector,
       $mdDialog,
       $q,
       $rootScope,
@@ -53,6 +58,7 @@ class MultipleChoiceAuthoringController extends MultipleChoiceController {
       MultipleChoiceService,
       NodeService,
       NotebookService,
+      NotificationService,
       ProjectService,
       StudentAssetService,
       StudentDataService,

@@ -7,7 +7,7 @@ import { ProjectService } from '../../../../wise5/services/projectService';
   providedIn: 'root'
 })
 export class DataService {
-  
+
   currentNode = null;
   previousStep = null;
   private currentNodeChangedSource: Subject<any> = new Subject<any>();
@@ -79,12 +79,4 @@ export class DataService {
   broadcastStudentWorkReceived(studentWork: any) {
     this.studentWorkReceivedSource.next(studentWork);
   }
-
-  endCurrentNode() {
-    if (this.currentNode != null) {
-      this.upgrade.$injector.get('$rootScope').$broadcast('exitNode',
-          { nodeToExit: this.currentNode });
-    }
-  }
-
 }

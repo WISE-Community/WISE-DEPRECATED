@@ -8,6 +8,7 @@ import { TeacherDataService } from '../../../../services/teacherDataService';
 import { TeacherWebSocketService } from '../../../../services/teacherWebSocketService';
 import * as $ from 'jquery';
 import { TeacherProjectService } from '../../../../services/teacherProjectService';
+import { Subscription } from 'rxjs';
 
 class NavItemController {
   $translate: any;
@@ -38,7 +39,8 @@ class NavItemController {
   rubricIconName: string;
   showPosition: any;
   workgroupsOnNodeData: any;
-  currentPeriodChangedSubscription: any;
+  currentPeriodChangedSubscription: Subscription;
+  studentStatusReceivedSubscription: Subscription;
 
   static $inject = [
     '$element',
@@ -185,7 +187,8 @@ class NavItemController {
       }
     );
 
-    this.$rootScope.$on('studentStatusReceived', (event, args) => {
+    this.studentStatusReceivedSubscription =
+        this.StudentStatusService.studentStatusReceived$.subscribe(() => {
       this.setWorkgroupsOnNodeData();
       this.setCurrentNodeStatus();
       this.getAlertNotifications();
@@ -209,6 +212,7 @@ class NavItemController {
 
   unsubscribeAll() {
     this.currentPeriodChangedSubscription.unsubscribe();
+    this.studentStatusReceivedSubscription.unsubscribe();
   }
 
   zoomToElement() {
