@@ -9,6 +9,8 @@ import { StudentAssetService } from "../services/studentAssetService";
 import { UtilService } from "../services/utilService";
 import { StudentDataService } from "../services/studentDataService";
 import { NotificationService } from '../services/notificationService';
+import { AudioRecorderService } from '../services/audioRecorderService';
+import { Subscription } from 'rxjs';
 
 class ComponentController {
   $filter: any;
@@ -18,6 +20,7 @@ class ComponentController {
   $rootScope: any;
   $scope: any;
   $translate: any;
+  AudioRecorderService: AudioRecorderService;
   AnnotationService: AnnotationService;
   ConfigService: ConfigService;
   NodeService: NodeService;
@@ -63,8 +66,9 @@ class ComponentController {
   authoringComponentContentJSONString: string;
   isJSONStringChanged: boolean;
   authoringValidComponentContentJSONString: string;
-  notebookItemChosenSubscription: any;
-  studentWorkSavedToServerSubscription: any;
+  audioRecordedSubscription: Subscription;
+  notebookItemChosenSubscription: Subscription;
+  studentWorkSavedToServerSubscription: Subscription;
 
   constructor(
       $filter,
@@ -74,6 +78,7 @@ class ComponentController {
       $rootScope,
       $scope,
       AnnotationService,
+      AudioRecorderService,
       ConfigService,
       NodeService,
       NotebookService,
@@ -89,6 +94,7 @@ class ComponentController {
     this.$rootScope = $rootScope;
     this.$scope = $scope;
     this.AnnotationService = AnnotationService;
+    this.AudioRecorderService = AudioRecorderService;
     this.ConfigService = ConfigService;
     this.NodeService = NodeService;
     this.NotebookService = NotebookService;
@@ -232,6 +238,9 @@ class ComponentController {
 
   unsubscribeAll() {
     this.studentWorkSavedToServerSubscription.unsubscribe();
+    if (this.audioRecordedSubscription != null) {
+      this.audioRecordedSubscription.unsubscribe();
+    }
     if (this.notebookItemChosenSubscription != null) {
       this.notebookItemChosenSubscription.unsubscribe();
     }
@@ -1334,7 +1343,8 @@ class ComponentController {
   }
 
   registerAudioRecordedListener() {
-    this.$scope.$on('audioRecorded', (event, {requester, audioFile}) => {
+    this.audioRecordedSubscription = 
+        this.AudioRecorderService.audioRecorded$.subscribe(({requester, audioFile}) => {
       if (requester === `${this.nodeId}-${this.componentId}`) {
         this.StudentAssetService.uploadAsset(audioFile).then((studentAsset) => {
           this.attachStudentAsset(studentAsset).then(() => {

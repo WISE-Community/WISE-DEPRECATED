@@ -4,22 +4,18 @@
  * specific for components such as deleting a point in a graph component.
  */
 class ListenForDeleteKeypressController {
-    constructor($document, $rootScope) {
+    constructor($document, StudentDataService) {
+        this.StudentDataService = StudentDataService;
+        this.deleteKeyCode = 8;
         $document.bind('keydown', (e) => {
-
-            // check for the delete key press
-            if (e.keyCode === 8) {
-                // the delete key was pressed
-
-                // fire the deleteKeyPressed event
-                $rootScope.$broadcast('deleteKeyPressed');
+            if (e.keyCode === this.deleteKeyCode) {
+                this.StudentDataService.broadcastDeleteKeyPressed();
             }
         });
     }
 }
 
-ListenForDeleteKeypressController.$inject = ['$document', '$rootScope'];
-
+ListenForDeleteKeypressController.$inject = ['$document', 'StudentDataService'];
 
 const ListenForDeleteKeypress = {
     bindings: {

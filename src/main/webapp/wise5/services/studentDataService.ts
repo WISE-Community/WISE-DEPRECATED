@@ -84,6 +84,8 @@ export class StudentDataService extends DataService {
 
   $q: any;
   $translate: any;
+  private deleteKeyPressedSource: Subject<any> = new Subject<any>();
+  public deleteKeyPressed$: Observable<any> = this.deleteKeyPressedSource.asObservable();
   private nodeClickLockedSource: Subject<any> = new Subject<any>();
   public nodeClickLocked$: Observable<any> = this.nodeClickLockedSource.asObservable();
   private componentDirtySource: Subject<boolean> = new Subject<boolean>();
@@ -1624,5 +1626,8 @@ export class StudentDataService extends DataService {
   }
   broadcastComponentSubmitTriggered(args: any) {
     this.componentSubmitTriggeredSource.next(args);
+  }
+  broadcastDeleteKeyPressed() {
+    this.deleteKeyPressedSource.next();
   }
 }

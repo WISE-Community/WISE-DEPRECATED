@@ -6,7 +6,29 @@ import TableController from './tableController';
 
 class TableAuthoringController extends TableController {
   ProjectAssetService: ProjectAssetService;
-  
+
+  static $inject = [
+    '$anchorScroll',
+    '$filter',
+    '$location',
+    '$mdDialog',
+    '$q',
+    '$rootScope',
+    '$scope',
+    'AnnotationService',
+    'AudioRecorderService',
+    'ConfigService',
+    'NodeService',
+    'NotebookService',
+    'NotificationService',
+    'ProjectAssetService',
+    'ProjectService',
+    'StudentAssetService',
+    'StudentDataService',
+    'TableService',
+    'UtilService'
+  ];
+
   constructor(
     $anchorScroll,
     $filter,
@@ -17,6 +39,7 @@ class TableAuthoringController extends TableController {
     $rootScope,
     $scope,
     AnnotationService,
+    AudioRecorderService,
     ConfigService,
     NodeService,
     NotebookService,
@@ -38,6 +61,7 @@ class TableAuthoringController extends TableController {
       $rootScope,
       $scope,
       AnnotationService,
+      AudioRecorderService,
       ConfigService,
       NodeService,
       NotebookService,
@@ -577,27 +601,5 @@ class TableAuthoringController extends TableController {
     }
   }
 }
-
-TableAuthoringController.$inject = [
-  '$anchorScroll',
-  '$filter',
-  '$injector',
-  '$location',
-  '$mdDialog',
-  '$q',
-  '$rootScope',
-  '$scope',
-  'AnnotationService',
-  'ConfigService',
-  'NodeService',
-  'NotebookService',
-  'NotificationService',
-  'ProjectAssetService',
-  'ProjectService',
-  'StudentAssetService',
-  'StudentDataService',
-  'TableService',
-  'UtilService'
-];
 
 export default TableAuthoringController;
