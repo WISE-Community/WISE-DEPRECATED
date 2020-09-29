@@ -38,6 +38,12 @@ export class ProjectService {
   transitions: any;
   private errorSavingProjectSource: Subject<any> = new Subject<any>();
   public errorSavingProject$: Observable<any> = this.errorSavingProjectSource.asObservable();
+  private notAllowedToEditThisProjectSource: Subject<any> = new Subject<any>();
+  public notAllowedToEditThisProject$: Observable<any> =
+      this.notAllowedToEditThisProjectSource.asObservable();
+  private notLoggedInProjectNotSavedSource: Subject<any> = new Subject<any>();
+  public notLoggedInProjectNotSaved$: Observable<any> =
+      this.notLoggedInProjectNotSavedSource.asObservable();
   private projectChangedSource: Subject<any> = new Subject<any>();
   public projectChanged$: Observable<any> = this.projectChangedSource.asObservable();
   private projectSavedSource: Subject<any> = new Subject<any>();
@@ -1119,13 +1125,21 @@ export class ProjectService {
    * Saves the project to Config.saveProjectURL and returns commit history promise.
    * if Config.saveProjectURL or Config.projectId are undefined, does not save and returns null
    */
-  saveProject() {
+  saveProject(): any {
     if (!this.ConfigService.getConfigParam('canEditProject')) {
-      this.UtilService.broadcastEventInRootScope('notAllowedToEditThisProject');
+      this.broadcastNotAllowedToEditThisProject();
       return null;
     }
     this.broadcastSavingProject();
     this.cleanupBeforeSave();
+    this.project.metadata.authors = this.getUniqueAuthors(this.getAuthors());
+    return this.http.post(this.ConfigService.getConfigParam('saveProjectURL'),
+        angular.toJson(this.project, false)).toPromise().then((response: any) => {
+      this.handleSaveProjectResponse(response);
+    });
+  }
+
+  getAuthors() {
     const authors = this.project.metadata.authors ? this.project.metadata.authors : [];
     const userInfo = this.ConfigService.getMyUserInfo();
     let exists = false;
@@ -1138,23 +1152,7 @@ export class ProjectService {
     if (!exists) {
       authors.push(userInfo);
     }
-    this.project.metadata.authors = this.getUniqueAuthors(authors);
-    return this.http.post(this.ConfigService.getConfigParam('saveProjectURL'),
-        angular.toJson(this.project, false)).toPromise().then((response: any) => {
-      if (response.status === 'error') {
-        if (response.messageCode === 'notSignedIn') {
-          this.UtilService.broadcastEventInRootScope('notLoggedInProjectNotSaved');
-          this.SessionService.forceLogOut();
-        } else if (response.messageCode === 'notAllowedToEditThisProject') {
-          this.UtilService.broadcastEventInRootScope('notAllowedToEditThisProject');
-        } else if (response.messageCode === 'errorSavingProject') {
-          this.broadcastErrorSavingProject();
-        }
-      } else {
-        this.broadcastProjectSaved();
-      }
-      return response;
-    });
+    return authors;
   }
 
   getUniqueAuthors(authors = []) {
@@ -1167,6 +1165,22 @@ export class ProjectService {
       }
     }
     return uniqueAuthors;
+  }
+
+  handleSaveProjectResponse(response: any): any {
+    if (response.status === 'error') {
+      if (response.messageCode === 'notSignedIn') {
+        this.broadcastNotLoggedInProjectNotSaved();
+        this.SessionService.forceLogOut();
+      } else if (response.messageCode === 'notAllowedToEditThisProject') {
+        this.broadcastNotAllowedToEditThisProject();
+      } else if (response.messageCode === 'errorSavingProject') {
+        this.broadcastErrorSavingProject();
+      }
+    } else {
+      this.broadcastProjectSaved();
+    }
+    return response;
   }
 
   /**
@@ -5363,6 +5377,14 @@ export class ProjectService {
 
   broadcastErrorSavingProject() {
     this.errorSavingProjectSource.next();
+  }
+
+  broadcastNotAllowedToEditThisProject() {
+    this.notAllowedToEditThisProjectSource.next();
+  }
+
+  broadcastNotLoggedInProjectNotSaved() {
+    this.notLoggedInProjectNotSavedSource.next();
   }
 
   broadcastProjectChanged() {
