@@ -827,7 +827,11 @@ class ComponentController {
      * showSubmitButton value so that it can show save buttons on the
      * step or sibling components accordingly
      */
-    this.$scope.$emit('componentShowSubmitButtonValueChanged', {nodeId: this.nodeId, componentId: this.componentId, showSubmitButton: show});
+    this.NodeService.broadcastComponentShowSubmitButtonValueChanged({
+      nodeId: this.nodeId,
+      componentId: this.componentId,
+      showSubmitButton: show
+    });
   }
 
   /**

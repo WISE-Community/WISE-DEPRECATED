@@ -26,6 +26,7 @@ class StudentProgressController {
   teacherWorkgroupId: number;
   teams: any;
   studentStatusReceivedSubscription: Subscription;
+  currentWorkgroupChangedSubscription: Subscription;
 
   static $inject = [
     '$rootScope',
@@ -57,8 +58,9 @@ class StudentProgressController {
       const workgroupId = studentStatus.workgroupId;
       this.updateTeam(workgroupId);
     });
-    this.$scope.$on('currentWorkgroupChanged', (event, args) => {
-      this.currentWorkgroup = args.currentWorkgroup;
+    this.currentWorkgroupChangedSubscription = 
+        this.TeacherDataService.currentWorkgroupChanged$.subscribe(({ currentWorkgroup }) => {
+      this.currentWorkgroup = currentWorkgroup;
     });
     const context = 'ClassroomMonitor',
       nodeId = null,
@@ -78,7 +80,7 @@ class StudentProgressController {
     );
     this.$scope.$on('$destroy', () => {
       this.ngOnDestroy();
-    })
+    });
   }
 
   ngOnDestroy() {
@@ -87,6 +89,7 @@ class StudentProgressController {
 
   unsubscribeAll() {
     this.studentStatusReceivedSubscription.unsubscribe();
+    this.currentWorkgroupChangedSubscription.unsubscribe();
   }
 
   getCurrentNodeForWorkgroupId(workgroupId) {

@@ -38,6 +38,8 @@ export class ProjectService {
   transitions: any;
   private errorSavingProjectSource: Subject<any> = new Subject<any>();
   public errorSavingProject$: Observable<any> = this.errorSavingProjectSource.asObservable();
+  private projectChangedSource: Subject<any> = new Subject<any>();
+  public projectChanged$: Observable<any> = this.projectChangedSource.asObservable();
   private projectSavedSource: Subject<any> = new Subject<any>();
   public projectSaved$: Observable<any> = this.projectSavedSource.asObservable();
   private savingProjectSource: Subject<any> = new Subject<any>();
@@ -271,7 +273,7 @@ export class ProjectService {
     if (this.project.projectAchievements != null) {
       this.achievements = this.project.projectAchievements;
     }
-    this.UtilService.broadcastEventInRootScope('projectChanged');
+    this.broadcastProjectChanged();
   }
 
   instantiateDefaults() {
@@ -5361,6 +5363,10 @@ export class ProjectService {
 
   broadcastErrorSavingProject() {
     this.errorSavingProjectSource.next();
+  }
+
+  broadcastProjectChanged() {
+    this.projectChangedSource.next();
   }
 
   broadcastProjectSaved() {
