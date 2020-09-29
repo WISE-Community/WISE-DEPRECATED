@@ -84,6 +84,22 @@ export class StudentDataService extends DataService {
 
   $q: any;
   $translate: any;
+  private deleteKeyPressedSource: Subject<any> = new Subject<any>();
+  public deleteKeyPressed$: Observable<any> = this.deleteKeyPressedSource.asObservable();
+  private nodeClickLockedSource: Subject<any> = new Subject<any>();
+  public nodeClickLocked$: Observable<any> = this.nodeClickLockedSource.asObservable();
+  private componentDirtySource: Subject<boolean> = new Subject<boolean>();
+  public componentDirty$: Observable<any> = this.componentDirtySource.asObservable();
+  private componentSaveTriggeredSource: Subject<boolean> = new Subject<boolean>();
+  public componentSaveTriggered$: Observable<any> =
+      this.componentSaveTriggeredSource.asObservable();
+  private componentSubmitDirtySource: Subject<boolean> = new Subject<boolean>();
+  public componentSubmitDirty$: Observable<any> = this.componentSubmitDirtySource.asObservable();
+  private componentSubmitTriggeredSource: Subject<boolean> = new Subject<boolean>();
+  public componentSubmitTriggered$: Observable<any> =
+      this.componentSubmitTriggeredSource.asObservable();
+  private notebookItemAnnotationReceivedSource: Subject<boolean> = new Subject<boolean>();
+  public notebookItemAnnotationReceived$ = this.notebookItemAnnotationReceivedSource.asObservable();
   private pauseScreenSource: Subject<boolean> = new Subject<boolean>();
   public pauseScreen$: Observable<any> = this.pauseScreenSource.asObservable();
   private componentStudentDataSource: Subject<any> = new Subject<any>();
@@ -786,10 +802,14 @@ export class StudentDataService extends DataService {
   handleAnnotationReceived(annotation) {
     this.studentData.annotations.push(annotation);
     if (annotation.notebookItemId) {
-      this.upgrade.$injector.get('$rootScope').$broadcast('notebookItemAnnotationReceived', { annotation: annotation });
+      this.broadcastNotebookItemAnnotationReceived({ annotation: annotation });
     } else {
       this.upgrade.$injector.get('$rootScope').$broadcast('annotationReceived', { annotation: annotation });
     }
+  }
+
+  broadcastNotebookItemAnnotationReceived(args: any) {
+    this.notebookItemAnnotationReceivedSource.next(args);
   }
 
   saveComponentEvent(component, category, event, data) {
@@ -1015,7 +1035,6 @@ export class StudentDataService extends DataService {
           this.setRemoteIdIntoLocalId(savedEvent, localEvent);
           this.setRemoteServerSaveTimeIntoLocalServerSaveTime(savedEvent, localEvent);
           this.clearRequestToken(localEvent);
-          this.upgrade.$injector.get('$rootScope').$broadcast('eventSavedToServer', { event: localEvent });
           break;
         }
       }
@@ -1359,7 +1378,6 @@ export class StudentDataService extends DataService {
 
   endCurrentNodeAndSetCurrentNodeByNodeId(nodeId) {
     if (this.nodeStatuses[nodeId].isVisitable) {
-      this.endCurrentNode();
       this.setCurrentNodeByNodeId(nodeId);
     } else {
       this.nodeClickLocked(nodeId);
@@ -1367,7 +1385,11 @@ export class StudentDataService extends DataService {
   }
 
   nodeClickLocked(nodeId) {
-    this.upgrade.$injector.get('$rootScope').$broadcast('nodeClickLocked', { nodeId: nodeId });
+    this.broadcastNodeClickLocked({ nodeId: nodeId });
+  }
+
+  broadcastNodeClickLocked(args: any) {
+    this.nodeClickLockedSource.next(args);
   }
 
   getTotalScore() {
@@ -1598,5 +1620,21 @@ export class StudentDataService extends DataService {
       }
     }
     return maxScore;
+  }
+
+  broadcastComponentDirty(args: any) {
+    this.componentDirtySource.next(args);
+  }
+  broadcastComponentSaveTriggered(args: any) {
+    this.componentSaveTriggeredSource.next(args);
+  }
+  broadcastComponentSubmitDirty(args: any) {
+    this.componentSubmitDirtySource.next(args);
+  }
+  broadcastComponentSubmitTriggered(args: any) {
+    this.componentSubmitTriggeredSource.next(args);
+  }
+  broadcastDeleteKeyPressed() {
+    this.deleteKeyPressedSource.next();
   }
 }

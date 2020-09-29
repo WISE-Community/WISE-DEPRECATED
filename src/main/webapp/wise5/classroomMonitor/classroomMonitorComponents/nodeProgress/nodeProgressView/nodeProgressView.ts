@@ -15,6 +15,7 @@ class NodeProgressViewController {
   rootNode: any;
   showRubricButton: boolean;
   currentNodeChangedSubscription: any;
+  currentWorkgroupChangedSubscription: any;
 
   static $inject = [
     '$filter',
@@ -49,6 +50,7 @@ class NodeProgressViewController {
 
   unsubscribeAll() {
     this.currentNodeChangedSubscription.unsubscribe();
+    this.currentWorkgroupChangedSubscription.unsubscribe();
   }
 
   $onInit() {
@@ -101,8 +103,9 @@ class NodeProgressViewController {
       this.$state.go('root.cm.unit.node', { nodeId: this.nodeId });
     });
 
-    this.$scope.$on('currentWorkgroupChanged', (event, args) => {
-      this.currentWorkgroup = args.currentWorkgroup;
+    this.currentWorkgroupChangedSubscription = 
+        this.TeacherDataService.currentWorkgroupChanged$.subscribe(({ currentWorkgroup }) => {
+      this.currentWorkgroup = currentWorkgroup;
     });
 
     this.$transitions.onSuccess({}, $transition => {

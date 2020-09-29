@@ -1239,7 +1239,6 @@ function shouldHandleSaveEventsToServerSuccess() {
     expect(service.studentData.events[1].requestToken).toEqual(null);
     expect(service.studentData.events[2].serverSaveTime).toEqual(3000);
     expect(service.studentData.events[2].requestToken).toEqual(null);
-    expect($rootScope.$broadcast).toHaveBeenCalledWith('eventSavedToServer', jasmine.any(Object));
     expect(service.saveToServerRequestCount).toEqual(0);
     expect(service.updateNodeStatuses).toHaveBeenCalled();
     expect(service.saveStudentStatus).toHaveBeenCalled();

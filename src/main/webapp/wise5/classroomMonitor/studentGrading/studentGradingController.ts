@@ -7,6 +7,7 @@ import { StudentStatusService } from '../../services/studentStatusService';
 import { TeacherDataService } from '../../services/teacherDataService';
 import * as angular from 'angular';
 import { TeacherProjectService } from '../../services/teacherProjectService';
+import { Subscription } from 'rxjs';
 
 class StudentGradingController {
   $translate: any;
@@ -31,8 +32,12 @@ class StudentGradingController {
   sort: any;
   totalScore: number;
   workgroupId: number;
-  currentPeriodChangedSubscription: any;
-  
+  studentWorkReceivedSubscription: Subscription;
+  currentWorkgroupChangedSubscription: Subscription;
+  notificationChangedSubscription: Subscription;
+  currentPeriodChangedSubscription: Subscription;
+  projectSavedSubscription: Subscription;
+
   static $inject = [
     '$filter',
     '$mdMedia',
@@ -65,12 +70,13 @@ class StudentGradingController {
     this.$scope.$mdMedia = $mdMedia;
     this.$translate = $filter('translate');
 
-    this.$scope.$on('projectSaved', (event, args) => {
+    this.projectSavedSubscription = this.ProjectService.projectSaved$.subscribe(() => {
       this.maxScore = this.StudentStatusService.getMaxScoreForWorkgroupId(this.workgroupId);
       this.setNodesById();
     });
 
-    this.$scope.$on('notificationChanged', (event, notification) => {
+    this.notificationChangedSubscription = this.NotificationService.notificationChanged$
+        .subscribe((notification) => {
       if (notification.type === 'CRaterResult') {
         // TODO: expand to encompass other notification types that should be shown to teacher
         let workgroupId = notification.toWorkgroupId;
@@ -93,8 +99,10 @@ class StudentGradingController {
       }
     });
 
-    this.$scope.$on('studentWorkReceived', (event, args) => {
-      let studentWork = args.studentWork;
+
+    this.studentWorkReceivedSubscription = this.TeacherDataService.studentWorkReceived$
+        .subscribe((args: any) => {
+      const studentWork = args.studentWork;
       if (studentWork != null) {
         let workgroupId = studentWork.workgroupId;
         let nodeId = studentWork.nodeId;
@@ -104,10 +112,10 @@ class StudentGradingController {
       }
     });
 
-    this.$scope.$on('currentWorkgroupChanged', (event, args) => {
-      let workgroup = args.currentWorkgroup;
-      if (workgroup != null) {
-        let workgroupId = workgroup.workgroupId;
+    this.currentWorkgroupChangedSubscription =
+        this.TeacherDataService.currentWorkgroupChanged$.subscribe(({ currentWorkgroup }) => {
+      if (currentWorkgroup != null) {
+        let workgroupId = currentWorkgroup.workgroupId;
         if (this.workgroupId !== workgroupId) {
           this.$state.go('root.cm.team', { workgroupId: workgroupId });
         }
@@ -161,6 +169,10 @@ class StudentGradingController {
 
   unsubscribeAll() {
     this.currentPeriodChangedSubscription.unsubscribe();
+    this.studentWorkReceivedSubscription.unsubscribe();
+    this.currentWorkgroupChangedSubscription.unsubscribe();
+    this.notificationChangedSubscription.unsubscribe();
+    this.projectSavedSubscription.unsubscribe();
   }
 
   $onInit() {

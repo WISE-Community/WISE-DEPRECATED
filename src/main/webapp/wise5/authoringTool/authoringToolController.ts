@@ -1,6 +1,8 @@
 'use strict';
 import * as angular from 'angular';
+import { Subscription } from 'rxjs';
 import { ConfigService } from '../services/configService';
+import { NotificationService } from '../services/notificationService';
 import { SessionService } from '../services/sessionService';
 import { TeacherDataService } from '../services/teacherDataService';
 import { TeacherProjectService } from '../services/teacherProjectService';
@@ -27,10 +29,16 @@ class AuthoringToolController {
   showToolbar: boolean = true;
   views: any;
   ConfigService: ConfigService;
+  NotificationService: NotificationService;
   ProjectService: TeacherProjectService;
   SessionService: SessionService;
   TeacherDataService: TeacherDataService;
-  showSessionWarningSubscription: any;
+  errorSavingProjectSubscription: Subscription;
+  notAllowedToEditThisProjectSubscription: Subscription;
+  notLoggedInProjectNotSavedSubscription: Subscription;
+  projectSavedSubscription: Subscription;
+  savingProjectSubscription: Subscription;
+  showSessionWarningSubscription: Subscription;
 
   static $inject = [
     '$anchorScroll',
@@ -42,6 +50,7 @@ class AuthoringToolController {
     '$transitions',
     '$timeout',
     'ConfigService',
+    'NotificationService',
     'ProjectService',
     'SessionService',
     'TeacherDataService'
@@ -57,6 +66,7 @@ class AuthoringToolController {
     $transitions,
     $timeout,
     ConfigService,
+    NotificationService,
     ProjectService,
     SessionService,
     TeacherDataService
@@ -71,6 +81,7 @@ class AuthoringToolController {
     this.$timeout = $timeout;
     this.$translate = this.$filter('translate');
     this.ConfigService = ConfigService;
+    this.NotificationService = NotificationService;
     this.ProjectService = ProjectService;
     this.SessionService = SessionService;
     this.TeacherDataService = TeacherDataService;
@@ -214,23 +225,11 @@ class AuthoringToolController {
       this.logOut();
     });
 
-    this.$scope.$on('showRequestLogout', ev => {
-      const alert = this.$mdDialog
-        .confirm()
-        .parent(angular.element(document.body))
-        .title(this.$translate('serverUpdate'))
-        .textContent(this.$translate('serverUpdateRequestLogoutMessage'))
-        .ariaLabel(this.$translate('serverUpdate'))
-        .targetEvent(ev)
-        .ok(this.$translate('ok'));
-      this.$mdDialog.show(alert);
-    });
-
-    this.$scope.$on('savingProject', () => {
+    this.savingProjectSubscription = this.ProjectService.savingProject$.subscribe(() => {
       this.setGlobalMessage(this.$translate('saving'), true, null);
     });
 
-    this.$scope.$on('projectSaved', () => {
+    this.projectSavedSubscription = this.ProjectService.projectSaved$.subscribe(() => {
       /*
        * Wait half a second before changing the message to 'Saved' so that
        * the 'Saving...' message stays up long enough for the author to
@@ -243,15 +242,17 @@ class AuthoringToolController {
       }, 500);
     });
 
-    this.$scope.$on('errorSavingProject', () => {
+    this.errorSavingProjectSubscription = this.ProjectService.errorSavingProject$.subscribe(() => {
       this.setGlobalMessage(this.$translate('errorSavingProject'), false, null);
     });
 
-    this.$scope.$on('notLoggedInProjectNotSaved', () => {
+    this.notLoggedInProjectNotSavedSubscription = 
+        this.ProjectService.notLoggedInProjectNotSaved$.subscribe(() => {
       this.setGlobalMessage(this.$translate('notLoggedInProjectNotSaved'), false, null);
     });
 
-    this.$scope.$on('notAllowedToEditThisProject', () => {
+    this.notAllowedToEditThisProjectSubscription = 
+        this.ProjectService.notAllowedToEditThisProject$.subscribe(() => {
       this.setGlobalMessage(this.$translate('notAllowedToEditThisProject'), false, null);
     });
 
@@ -275,6 +276,11 @@ class AuthoringToolController {
   }
 
   unsubscribeAll() {
+    this.errorSavingProjectSubscription.unsubscribe();
+    this.notAllowedToEditThisProjectSubscription.unsubscribe();
+    this.notLoggedInProjectNotSavedSubscription.unsubscribe();
+    this.projectSavedSubscription.unsubscribe();
+    this.savingProjectSubscription.unsubscribe();
     this.showSessionWarningSubscription.unsubscribe();
   }
 
@@ -310,7 +316,7 @@ class AuthoringToolController {
   }
 
   turnOffJSONValidMessage() {
-    this.$rootScope.$broadcast('setIsJSONValid', { isJSONValid: null });
+    this.NotificationService.hideJSONValidMessage();
   }
 
   toggleMenu() {
@@ -333,7 +339,7 @@ class AuthoringToolController {
       isProgressIndicatorVisible: isProgressIndicatorVisible,
       time: time
     };
-    this.$rootScope.$broadcast('setGlobalMessage', { globalMessage: globalMessage });
+    this.NotificationService.broadcastSetGlobalMessage({ globalMessage: globalMessage });
   }
 
   logOut() {

@@ -18,14 +18,17 @@ class DiscussionController extends ComponentController {
   destroyStudentWorkSavedToServerListener: any;
   destroyStudentWorkReceivedListener: any;
   componentStateIdReplyingTo: any;
+  studentWorkReceivedSubscription: any;
 
   static $inject = [
     '$filter',
+    '$injector',
     '$mdDialog',
     '$q',
     '$rootScope',
     '$scope',
     'AnnotationService',
+    'AudioRecorderService',
     'ConfigService',
     'DiscussionService',
     'NodeService',
@@ -40,11 +43,13 @@ class DiscussionController extends ComponentController {
 
   constructor(
     $filter,
+    $injector,
     $mdDialog,
     $q,
     $rootScope,
     $scope,
     AnnotationService,
+    AudioRecorderService,
     ConfigService,
     DiscussionService,
     NodeService,
@@ -58,14 +63,17 @@ class DiscussionController extends ComponentController {
   ) {
     super(
       $filter,
+      $injector,
       $mdDialog,
       $q,
       $rootScope,
       $scope,
       AnnotationService,
+      AudioRecorderService,
       ConfigService,
       NodeService,
       NotebookService,
+      NotificationService,
       ProjectService,
       StudentAssetService,
       StudentDataService,
@@ -162,6 +170,15 @@ class DiscussionController extends ComponentController {
     this.broadcastDoneRenderingComponent();
   }
 
+  unsubscribeAll() {
+    this.studentWorkReceivedSubscription.unsubscribe();
+  }
+
+  ngOnDestroy() {
+    super.ngOnDestroy();
+    this.destroyStudentWorkReceivedListener();
+  }
+
   isConnectedComponentShowWorkMode() {
     if (this.UtilService.hasConnectedComponent(this.componentContent)) {
       let isShowWorkMode = true;
@@ -211,7 +228,7 @@ class DiscussionController extends ComponentController {
       if (this.isAuthoringMode()) {
         this.createComponentState('submit');
       }
-      this.$scope.$emit('componentSubmitTriggered', {
+      this.StudentDataService.broadcastComponentSubmitTriggered({
         nodeId: this.$scope.discussionController.nodeId,
         componentId: this.$scope.discussionController.componentId
       });
@@ -242,7 +259,7 @@ class DiscussionController extends ComponentController {
   }
 
   registerStudentWorkSavedToServerListener() {
-    this.studentWorkSavedToServerSubscription = 
+    this.studentWorkSavedToServerSubscription =
         this.StudentDataService.studentWorkSavedToServer$.subscribe((args: any) => {
       const componentState = args.studentWork;
       if (this.isWorkFromThisComponent(componentState)) {
@@ -365,19 +382,17 @@ class DiscussionController extends ComponentController {
   }
 
   registerStudentWorkReceivedListener() {
-    this.destroyStudentWorkReceivedListener = this.$rootScope.$on(
-      'studentWorkReceived',
-      (event, componentState) => {
-        if (
-          (this.isWorkFromThisComponent(componentState) ||
-            this.isWorkFromConnectedComponent(componentState)) &&
-          this.isWorkFromClassmate(componentState) &&
-          this.retrievedClassmateResponses
-        ) {
-          this.addClassResponse(componentState);
-        }
+    this.studentWorkReceivedSubscription = this.StudentDataService.studentWorkReceived$
+        .subscribe((componentState) => {
+      if (
+        (this.isWorkFromThisComponent(componentState) ||
+          this.isWorkFromConnectedComponent(componentState)) &&
+        this.isWorkFromClassmate(componentState) &&
+        this.retrievedClassmateResponses
+      ) {
+        this.addClassResponse(componentState);
       }
-    );
+    });
   }
 
   isWorkFromClassmate(componentState) {
@@ -780,9 +795,6 @@ class DiscussionController extends ComponentController {
     return annotations;
   }
 
-  cleanupBeforeExiting() {
-    this.destroyStudentWorkReceivedListener();
-  }
 }
 
 export default DiscussionController;

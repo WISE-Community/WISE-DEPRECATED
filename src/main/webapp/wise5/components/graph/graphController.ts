@@ -6,6 +6,7 @@ import ComponentController from '../componentController';
 import canvg from 'canvg';
 import html2canvas from 'html2canvas';
 import * as covariance from 'compute-covariance';
+import { Subscription } from 'rxjs';
 
 class GraphController extends ComponentController {
   $q: any;
@@ -53,26 +54,29 @@ class GraphController extends ComponentController {
   yAxisLocked: boolean;
   setupMouseMoveListenerDone: boolean;
   mouseDown: boolean;
-  deleteKeyPressedListenerDestroyer: any;
   fileName: string;
   lastSavedMouseMoveTimestamp: number;
   xAxisLimitSpacerWidth: number;
   lastDropTime: number;
   isResetSeriesButtonVisible: boolean;
   previousTrialIdsToShow: any[];
+  deleteKeyPressedSubscription: Subscription;
 
   static $inject = [
     '$filter',
+    '$injector',
     '$mdDialog',
     '$q',
     '$rootScope',
     '$scope',
     '$timeout',
     'AnnotationService',
+    'AudioRecorderService',
     'ConfigService',
     'GraphService',
     'NodeService',
     'NotebookService',
+    'NotificationService',
     'ProjectService',
     'StudentAssetService',
     'StudentDataService',
@@ -81,16 +85,19 @@ class GraphController extends ComponentController {
 
   constructor(
     $filter,
+    $injector,
     $mdDialog,
     $q,
     $rootScope,
     $scope,
     $timeout,
     AnnotationService,
+    AudioRecorderService,
     ConfigService,
     GraphService,
     NodeService,
     NotebookService,
+    NotificationService,
     ProjectService,
     StudentAssetService,
     StudentDataService,
@@ -98,14 +105,17 @@ class GraphController extends ComponentController {
   ) {
     super(
       $filter,
+      $injector,
       $mdDialog,
       $q,
       $rootScope,
       $scope,
       AnnotationService,
+      AudioRecorderService,
       ConfigService,
       NodeService,
       NotebookService,
+      NotificationService,
       ProjectService,
       StudentAssetService,
       StudentDataService,
@@ -184,6 +194,15 @@ class GraphController extends ComponentController {
     this.drawGraph().then(() => {
       this.broadcastDoneRenderingComponent();
     });
+  }
+
+  ngOnDestroy() {
+    super.ngOnDestroy();
+    this.unsubscribeAll();
+  }
+
+  unsubscribeAll() {
+    this.deleteKeyPressedSubscription.unsubscribe();
   }
 
   applyHighchartsPlotLinesLabelFix() {
@@ -304,7 +323,7 @@ class GraphController extends ComponentController {
   }
 
   initializeDeleteKeyPressedListener() {
-    this.deleteKeyPressedListenerDestroyer = this.$scope.$on('deleteKeyPressed', () => {
+    this.deleteKeyPressedSubscription = this.StudentDataService.deleteKeyPressed$.subscribe(() => {
       this.handleDeleteKeyPressed();
     });
   }
@@ -342,10 +361,6 @@ class GraphController extends ComponentController {
     reader.fileName = files[0].name;
     reader.readAsText(files[0]);
     this.StudentAssetService.uploadAsset(files[0]);
-  }
-
-  cleanupBeforeExiting() {
-    this.deleteKeyPressedListenerDestroyer();
   }
 
   handleTableConnectedComponentStudentDataChanged(
@@ -2700,7 +2715,7 @@ class GraphController extends ComponentController {
       renderCallback: () => {
         const base64Image = hiddenCanvas.toDataURL('image/png');
         const imageObject = this.UtilService.getImageObjectFromBase64String(base64Image);
-        this.NotebookService.addNote($event, imageObject);
+        this.NotebookService.addNote(imageObject);
       }
     });
   }
@@ -3034,7 +3049,7 @@ class GraphController extends ComponentController {
    * @return A promise that returns the url of the image that is generated from the component state.
    */
   setComponentStateAsBackgroundImage(componentState) {
-    return this.UtilService.generateImageFromComponentState(componentState).then(image => {
+    return this.generateImageFromComponentState(componentState).then(image => {
       return image.url;
     });
   }
