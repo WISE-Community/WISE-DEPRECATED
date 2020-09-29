@@ -565,7 +565,6 @@ export class MilestoneService {
       }
     }
     this.saveProject();
-    this.UtilService.broadcastEventInRootScope('milestonSaved');
   }
 
   createMilestone() {
@@ -609,7 +608,6 @@ export class MilestoneService {
     if (index > -1) {
       projectAchievements.splice(index, 1);
       this.saveProject();
-      this.UtilService.broadcastEventInRootScope('milestonDeleted');
     }
   }
 
