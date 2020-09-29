@@ -45,32 +45,7 @@ class NotebookController {
     this.insertContent = null;
     this.requester = null;
 
-    this.$scope.$on('notebookUpdated', (event, args) => {
-      this.notebook = angular.copy(args.notebook);
-    });
-
-    this.$scope.$on('openNotebook', (event, args) => {
-      this.open('note', event);
-      this.setInsertMode(args.insertMode, args.requester);
-    });
-
-    this.$scope.$on('closeNotebook', (event, args) => {
-      this.closeNotes(event);
-    });
-
-    this.$scope.$on('editNote', (event, args) => {
-      const note = args.note;
-      const isEditMode = args.isEditMode;
-      const file = null;
-      const noteText = null;
-      const isEditTextEnabled = true;
-      const isFileUploadEnabled = true;
-      const studentWorkIds = null;
-      const ev = args.ev;
-      this.showEditNoteDialog(note, isEditMode, file, noteText, isEditTextEnabled, isFileUploadEnabled, studentWorkIds, ev);
-    });
-
-    this.$scope.$on('addNote', (event, args) => {
+    this.addNoteSubscription = this.NotebookService.addNote$.subscribe((args) => {
       const note = null;
       const isEditMode = true;
       const file = args.file;
@@ -79,17 +54,34 @@ class NotebookController {
       const isFileUploadEnabled = args.isFileUploadEnabled;
       const studentWorkIds = args.studentWorkIds;
       const ev = args.ev;
-      this.showEditNoteDialog(note, isEditMode, file, noteText, isEditTextEnabled, isFileUploadEnabled, studentWorkIds, ev);
+      this.showEditNoteDialog(note, isEditMode, file, noteText, isEditTextEnabled,
+          isFileUploadEnabled, studentWorkIds, ev);
     });
 
-    this.$scope.$on('copyNote', (event, args) => {
-      const itemId = args.itemId;
+    this.closeNotebookSubscription = this.NotebookService.closeNotebook$.subscribe(() => {
+      this.closeNotes();
+    });
+
+    this.editNoteSubscription = this.NotebookService.editNote$.subscribe((args) => {
+      const note = args.note;
+      const isEditMode = args.isEditMode;
+      const file = null;
+      const noteText = null;
+      const isEditTextEnabled = true;
+      const isFileUploadEnabled = true;
+      const studentWorkIds = null;
       const ev = args.ev;
-      this.showCopyNoteConfirmDialog(itemId, ev);
+      this.showEditNoteDialog(note, isEditMode, file, noteText, isEditTextEnabled,
+          isFileUploadEnabled, studentWorkIds, ev);
     });
 
-    this.logOutListener = $scope.$on('logOut', (event, args) => {
-      this.logOutListener();
+    this.notebookUpdatedSubscription = this.NotebookService.notebookUpdated$.subscribe((args) => {
+      this.notebook = angular.copy(args.notebook);
+    });
+
+    this.openNotebookSubscription = this.NotebookService.openNotebook$.subscribe((args) => {
+      this.open('note');
+      this.setInsertMode(args.insertMode, args.requester);
     });
 
     this.notebook = this.NotebookService.getNotebookByWorkgroup(this.workgroupId);
@@ -97,6 +89,22 @@ class NotebookController {
 
     // assume only 1 report for now
     this.reportId = this.config.itemTypes.report.notes[0].reportId;
+
+    this.$scope.$on('$destroy', () => {
+      this.ngOnDestroy();
+    });
+  }
+
+  ngOnDestroy() {
+    this.unsubscribeAll();
+  }
+
+  unsubscribeAll() {
+    this.addNoteSubscription.unsubscribe();
+    this.closeNotebookSubscription.unsubscribe();
+    this.editNoteSubscription.unsubscribe();
+    this.notebookUpdatedSubscription.unsubscribe();
+    this.openNotebookSubscription.unsubscribe();
   }
 
   isStudentNotebook() {
@@ -110,11 +118,11 @@ class NotebookController {
     alert(this.$translate('deleteStudentAssetFromNotebookNotImplementedYet'));
   }
 
-  showEditNoteDialog(note, isEditMode, file, text, isEditTextEnabled, isFileUploadEnabled, studentWorkIds, ev) {
+  showEditNoteDialog(note, isEditMode, file, text, isEditTextEnabled, isFileUploadEnabled,
+      studentWorkIds) {
     const notebookItemTemplate = this.themePath + '/notebook/editNotebookItem.html';
     this.$mdDialog.show({
       parent: angular.element(document.body),
-      targetEvent: ev,
       templateUrl: notebookItemTemplate,
       controller: EditNotebookItemController,
       controllerAs: 'editNotebookItemController',
@@ -154,23 +162,23 @@ class NotebookController {
     return notes;
   }
 
-  open(value, event) {
+  open(value) {
     if (value === 'report') {
       this.reportVisible = !this.reportVisible;
     } else if (value === 'note') {
       if (this.notesVisible) {
-        this.closeNotes(event);
+        this.closeNotes();
       } else {
         this.NotebookService.retrievePublicNotebookItems('public').then(() => {
           this.notesVisible = true;
         });
       }
     } else if (value === 'new') {
-      this.NotebookService.addNote(event);
+      this.NotebookService.addNote();
     }
   }
 
-  closeNotes($event) {
+  closeNotes() {
     this.notesVisible = false;
     this.insertMode = false;
   }
@@ -189,7 +197,9 @@ class NotebookController {
     if (this.requester === 'report') {
       this.insertContent = angular.copy(notebookItem);
     } else {
-      this.$rootScope.$broadcast('notebookItemChosen', { requester: this.requester, notebookItem: notebookItem });
+      this.NotebookService.broadcastNotebookItemChosen(
+        { requester: this.requester, notebookItem: notebookItem }
+      );
     }
   }
 }

@@ -67,6 +67,7 @@ class ConceptMapController extends ComponentController {
     'ConfigService',
     'NodeService',
     'NotebookService',
+    'NotificationService',
     'ProjectService',
     'StudentAssetService',
     'StudentDataService',
@@ -88,6 +89,7 @@ class ConceptMapController extends ComponentController {
     ConfigService,
     NodeService,
     NotebookService,
+    NotificationService,
     ProjectService,
     StudentAssetService,
     StudentDataService,
@@ -104,6 +106,7 @@ class ConceptMapController extends ComponentController {
       ConfigService,
       NodeService,
       NotebookService,
+      NotificationService,
       ProjectService,
       StudentAssetService,
       StudentDataService,
@@ -1881,7 +1884,7 @@ class ConceptMapController extends ComponentController {
 
           // get the image object
           const imageObject = thisUtilService.getImageObjectFromBase64String(base64Image);
-          this.NotebookService.addNote($event, imageObject);
+          this.NotebookService.addNote(imageObject);
         };
 
         // set the src of the image so that the image gets loaded

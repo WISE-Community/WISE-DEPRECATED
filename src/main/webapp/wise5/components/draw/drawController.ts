@@ -37,6 +37,7 @@ class DrawController extends ComponentController {
     'DrawService',
     'NodeService',
     'NotebookService',
+    'NotificationService',
     'ProjectService',
     'StudentAssetService',
     'StudentDataService',
@@ -56,6 +57,7 @@ class DrawController extends ComponentController {
     DrawService,
     NodeService,
     NotebookService,
+    NotificationService,
     ProjectService,
     StudentAssetService,
     StudentDataService,
@@ -72,6 +74,7 @@ class DrawController extends ComponentController {
       ConfigService,
       NodeService,
       NotebookService,
+      NotificationService,
       ProjectService,
       StudentAssetService,
       StudentDataService,
@@ -127,7 +130,7 @@ class DrawController extends ComponentController {
     this.broadcastDoneRenderingComponent();
   }
 
-  handleStudentWorkSavedToServerAdditionalProcessing(event, args) {
+  handleStudentWorkSavedToServerAdditionalProcessing(args: any) {
     let componentState = args.studentWork;
     if (
       this.isForThisComponent(componentState) &&
@@ -592,17 +595,18 @@ class DrawController extends ComponentController {
       const canvasBase64Image = canvas.toDataURL('image/png');
       const imageObject = this.UtilService.getImageObjectFromBase64String(canvasBase64Image);
       const noteText = null;
-      this.NotebookService.addNote($event, imageObject, noteText, [studentWorkId]);
+      this.NotebookService.addNote(imageObject, noteText, [studentWorkId]);
     }
   }
 
   snipButtonClicked($event) {
     if (this.isDirty) {
-      const deregisterListener = this.$scope.$on('studentWorkSavedToServer', (event, args) => {
-        let componentState = args.studentWork;
+      const studentWorkSavedToServerSubscription = this.StudentDataService.studentWorkSavedToServer$
+          .subscribe((args: any) => {
+        const componentState = args.studentWork;
         if (this.isForThisComponent(componentState)) {
           this.snipDrawing($event, componentState.id);
-          deregisterListener();
+          studentWorkSavedToServerSubscription.unsubscribe();
         }
       });
       this.saveButtonClicked();

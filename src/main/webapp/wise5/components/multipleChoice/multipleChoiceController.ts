@@ -25,6 +25,7 @@ class MultipleChoiceController extends ComponentController {
     'MultipleChoiceService',
     'NodeService',
     'NotebookService',
+    'NotificationService',
     'ProjectService',
     'StudentAssetService',
     'StudentDataService',
@@ -43,6 +44,7 @@ class MultipleChoiceController extends ComponentController {
     MultipleChoiceService,
     NodeService,
     NotebookService,
+    NotificationService,
     ProjectService,
     StudentAssetService,
     StudentDataService,
@@ -59,6 +61,7 @@ class MultipleChoiceController extends ComponentController {
       ConfigService,
       NodeService,
       NotebookService,
+      NotificationService,
       ProjectService,
       StudentAssetService,
       StudentDataService,
@@ -197,17 +200,7 @@ class MultipleChoiceController extends ComponentController {
 
       return deferred.promise;
     }.bind(this);
-
-    /**
-     * Listen for the 'exitNode' event which is fired when the student
-     * exits the parent node. This will perform any necessary cleanup
-     * when the student exits the parent node.
-     */
-    this.$scope.$on(
-      'exitNode',
-      angular.bind(this, function(event, args) {})
-    );
-
+    this.$scope.$on('exitNode', angular.bind(this, function(event, args) {}));
     this.broadcastDoneRenderingComponent();
   }
 
@@ -512,11 +505,7 @@ class MultipleChoiceController extends ComponentController {
         }
 
         if (this.mode === 'authoring') {
-          /*
-           * we are in authoring mode so we will set values appropriately
-           * here because the 'componentSubmitTriggered' event won't
-           * work in authoring mode
-           */
+          // we are in authoring mode so we will set values manually
           this.checkAnswer();
           this.isLatestComponentStateSubmit = true;
           this.isDirty = false;
@@ -525,7 +514,7 @@ class MultipleChoiceController extends ComponentController {
 
         if (submitTriggeredBy == null || submitTriggeredBy === 'componentSubmitButton') {
           // tell the parent node that this component wants to submit
-          this.$scope.$emit('componentSubmitTriggered', {
+          this.StudentDataService.broadcastComponentSubmitTriggered({
             nodeId: this.nodeId,
             componentId: this.componentId
           });

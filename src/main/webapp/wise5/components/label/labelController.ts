@@ -48,6 +48,7 @@ class LabelController extends ComponentController {
     'LabelService',
     'NodeService',
     'NotebookService',
+    'NotificationService',
     'ProjectService',
     'StudentAssetService',
     'StudentDataService',
@@ -68,6 +69,7 @@ class LabelController extends ComponentController {
     LabelService,
     NodeService,
     NotebookService,
+    NotificationService,
     ProjectService,
     StudentAssetService,
     StudentDataService,
@@ -84,6 +86,7 @@ class LabelController extends ComponentController {
       ConfigService,
       NodeService,
       NotebookService,
+      NotificationService,
       ProjectService,
       StudentAssetService,
       StudentDataService,
@@ -291,16 +294,6 @@ class LabelController extends ComponentController {
 
       return deferred.promise;
     }.bind(this);
-
-    /**
-     * Listen for the 'exitNode' event which is fired when the student
-     * exits the parent node. This will perform any necessary cleanup
-     * when the student exits the parent node.
-     */
-    this.$scope.$on(
-      'exitNode',
-      angular.bind(this, function(event, args) {})
-    );
 
     /**
      * The student has changed the file input
@@ -1516,7 +1509,7 @@ class LabelController extends ComponentController {
       const imageObject = this.UtilService.getImageObjectFromBase64String(img_b64);
 
       // create a notebook item with the image populated into it
-      this.NotebookService.addNote($event, imageObject);
+      this.NotebookService.addNote(imageObject);
     }
   }
 

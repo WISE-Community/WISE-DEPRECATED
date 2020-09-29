@@ -33,8 +33,8 @@ class GlobalAnnotationsController {
             this.setModel();
         });
 
-        // listen for the display global annotation event
-        this.$rootScope.$on('displayGlobalAnnotations', (event, args) => {
+        this.displayGlobalAnnotationsSubscription = 
+                this.AnnotationService.displayGlobalAnnotations$.subscribe(() => {
             this.$timeout(() => {
                 /* waiting slightly here to make sure the #globalMsgTrigger is
                  * shown and $mdDialog can get it's position upon opening
@@ -42,7 +42,19 @@ class GlobalAnnotationsController {
                 this.show();
             }, 300);
         });
+
+        this.$scope.$on('$destroy', () => {
+            this.ngOnDestroy();
+        });
     };
+
+    ngOnDestroy() {
+        this.unsubscribeAll();
+    }
+
+    unsubscribeAll() {
+        this.displayGlobalAnnotationsSubscription.unsubscribe();
+    }
 
     setModel() {
         let activeGlobalAnnotationGroups = this.AnnotationService.getActiveGlobalAnnotationGroups();

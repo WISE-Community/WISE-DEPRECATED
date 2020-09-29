@@ -5,6 +5,7 @@ import { NodeService } from '../../../../services/nodeService';
 import { TeacherProjectService } from '../../../../services/teacherProjectService';
 import { TeacherDataService } from '../../../../services/teacherDataService';
 import * as $ from 'jquery';
+import { Subscription } from 'rxjs';
 
 class StepToolsController {
   is_rtl: boolean;
@@ -14,7 +15,8 @@ class StepToolsController {
   nodeId: string;
   prevId: any;
   projectId: number;
-  currentNodeChangedSubscription: any;
+  currentNodeChangedSubscription: Subscription;
+  projectChangedSubscription: Subscription;
 
   static $inject = [
     '$scope',
@@ -51,7 +53,7 @@ class StepToolsController {
         .subscribe(() => {
       this.updateModel();
     });
-    this.$scope.$on('projectChanged', (event, args) => {
+    this.projectChangedSubscription = this.ProjectService.projectChanged$.subscribe(() => {
       this.projectId = this.ConfigService.getProjectId();
       this.idToOrder = this.ProjectService.idToOrder;
       this.updateModel();
@@ -67,6 +69,7 @@ class StepToolsController {
 
   unsubscribeAll() {
     this.currentNodeChangedSubscription.unsubscribe();
+    this.projectChangedSubscription.unsubscribe();
   }
 
   nodeIdChanged() {

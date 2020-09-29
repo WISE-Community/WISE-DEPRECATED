@@ -14,11 +14,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-teacher-form/register-teacher-form.component.html</context>
-          <context context-type="linenumber">149</context>
+          <context context-type="linenumber">151</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
-          <context context-type="linenumber">114</context>
+          <context context-type="linenumber">116</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-google-user-already-exists/register-google-user-already-exists.component.html</context>
@@ -283,11 +283,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-teacher-form/register-teacher-form.component.html</context>
-          <context context-type="linenumber">135</context>
+          <context context-type="linenumber">137</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
-          <context context-type="linenumber">106</context>
+          <context context-type="linenumber">108</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="0a9dcaac5aadd48fe716eaff77ab9b21a8bef3af">
@@ -2423,7 +2423,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-teacher-form/register-teacher-form.component.html</context>
-          <context context-type="linenumber">35</context>
+          <context context-type="linenumber">37</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
@@ -2442,7 +2442,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-teacher-form/register-teacher-form.component.html</context>
-          <context context-type="linenumber">42</context>
+          <context context-type="linenumber">44</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
@@ -2670,11 +2670,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-teacher-form/register-teacher-form.component.html</context>
-          <context context-type="linenumber">116</context>
+          <context context-type="linenumber">118</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
-          <context context-type="linenumber">87</context>
+          <context context-type="linenumber">89</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/login/login-home/login-home.component.html</context>
@@ -2833,11 +2833,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-teacher-form/register-teacher-form.component.html</context>
-          <context context-type="linenumber">22</context>
+          <context context-type="linenumber">23</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
-          <context context-type="linenumber">22</context>
+          <context context-type="linenumber">23</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-student/register-student.component.html</context>
@@ -2860,11 +2860,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-teacher-form/register-teacher-form.component.html</context>
-          <context context-type="linenumber">28</context>
+          <context context-type="linenumber">29</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
-          <context context-type="linenumber">28</context>
+          <context context-type="linenumber">29</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/account/edit-profile/edit-profile.component.html</context>
@@ -2883,7 +2883,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
-          <context context-type="linenumber">44</context>
+          <context context-type="linenumber">46</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="53b5f38b420c0d1f9b62a0b34612ed28a20d37d8">
@@ -2894,7 +2894,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
-          <context context-type="linenumber">50</context>
+          <context context-type="linenumber">52</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="e3945fcac2b828a12bd531c748cf8bd08b04498c">
@@ -2905,7 +2905,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
-          <context context-type="linenumber">55</context>
+          <context context-type="linenumber">57</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="c086edf00fc75cb05dc70186d7c2b60ddc8a7cb4">
@@ -2916,7 +2916,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
-          <context context-type="linenumber">61</context>
+          <context context-type="linenumber">63</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="7e892ba15f2c6c17e83510e273b3e10fc32ea016">
@@ -2978,11 +2978,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-teacher-form/register-teacher-form.component.html</context>
-          <context context-type="linenumber">123</context>
+          <context context-type="linenumber">125</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
-          <context context-type="linenumber">94</context>
+          <context context-type="linenumber">96</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="c1b7e6d75ff4285c7636c67e5ef259629b81725b">
@@ -2997,11 +2997,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-teacher-form/register-teacher-form.component.html</context>
-          <context context-type="linenumber">128</context>
+          <context context-type="linenumber">130</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
-          <context context-type="linenumber">99</context>
+          <context context-type="linenumber">101</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="3979fc2476b643d89e8a9f38d1bbc3014c4a4891">
@@ -4551,25 +4551,47 @@
           <context context-type="linenumber">39</context>
         </context-group>
       </trans-unit>
+      <trans-unit datatype="html" id="a58e76c28d29e964d039949e807e1e5d3f61170b">
+        <source>First Name must only contain characters A-Z</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/register/register-teacher-form/register-teacher-form.component.html</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="c586e228c3eae79f5425108c9bdc43709ccaead1">
+        <source>Last Name must only contain characters A-Z</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/register/register-teacher-form/register-teacher-form.component.html</context>
+          <context context-type="linenumber">30</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
+          <context context-type="linenumber">30</context>
+        </context-group>
+      </trans-unit>
       <trans-unit datatype="html" id="cf1b0697a564b781038d0a13989200044d851de3">
         <source>We’ll never share your email address or personal information with anyone without your consent.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-teacher-form/register-teacher-form.component.html</context>
-          <context context-type="linenumber">41</context>
+          <context context-type="linenumber">43</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="e527ace700a5dfcd97e170b854de7b539afacc0c">
         <source>Please enter a valid email address</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-teacher-form/register-teacher-form.component.html</context>
-          <context context-type="linenumber">43</context>
+          <context context-type="linenumber">45</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="5c7012b5a926b32d9e45fefdcc8a1a3cb6f023d0">
         <source>City</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-teacher-form/register-teacher-form.component.html</context>
-          <context context-type="linenumber">48</context>
+          <context context-type="linenumber">50</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
@@ -4580,7 +4602,7 @@
         <source>City required</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-teacher-form/register-teacher-form.component.html</context>
-          <context context-type="linenumber">54</context>
+          <context context-type="linenumber">56</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
@@ -4591,7 +4613,7 @@
         <source>State</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-teacher-form/register-teacher-form.component.html</context>
-          <context context-type="linenumber">59</context>
+          <context context-type="linenumber">61</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
@@ -4602,7 +4624,7 @@
         <source>State required</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-teacher-form/register-teacher-form.component.html</context>
-          <context context-type="linenumber">65</context>
+          <context context-type="linenumber">67</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
@@ -4613,7 +4635,7 @@
         <source>Country</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-teacher-form/register-teacher-form.component.html</context>
-          <context context-type="linenumber">70</context>
+          <context context-type="linenumber">72</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
@@ -4624,7 +4646,7 @@
         <source>Country required</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-teacher-form/register-teacher-form.component.html</context>
-          <context context-type="linenumber">76</context>
+          <context context-type="linenumber">78</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
@@ -4635,7 +4657,7 @@
         <source>School Name</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-teacher-form/register-teacher-form.component.html</context>
-          <context context-type="linenumber">81</context>
+          <context context-type="linenumber">83</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
@@ -4646,7 +4668,7 @@
         <source>School Name required</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-teacher-form/register-teacher-form.component.html</context>
-          <context context-type="linenumber">87</context>
+          <context context-type="linenumber">89</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
@@ -4657,7 +4679,7 @@
         <source>School Level</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-teacher-form/register-teacher-form.component.html</context>
-          <context context-type="linenumber">92</context>
+          <context context-type="linenumber">94</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
@@ -4668,7 +4690,7 @@
         <source>School Level required</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-teacher-form/register-teacher-form.component.html</context>
-          <context context-type="linenumber">101</context>
+          <context context-type="linenumber">103</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
@@ -4679,32 +4701,32 @@
         <source>How did you hear about us?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-teacher-form/register-teacher-form.component.html</context>
-          <context context-type="linenumber">106</context>
+          <context context-type="linenumber">108</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="584ebc12808d276bf569e451417266bf68c6d8fa">
         <source>Password does not match</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-teacher-form/register-teacher-form.component.html</context>
-          <context context-type="linenumber">136</context>
+          <context context-type="linenumber">138</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
-          <context context-type="linenumber">107</context>
+          <context context-type="linenumber">109</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="bc1675556b151ef6a4e3031221cdb172cc3b9d5c">
         <source>I agree to the <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>WISE Privacy Policy &amp; Terms of Use<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/> *</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-teacher-form/register-teacher-form.component.html</context>
-          <context context-type="linenumber">142</context>
+          <context context-type="linenumber">144</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="63fa2c4efa44cd8a08579763cdd62f981a8b1aaa">
         <source>You must agree to the Privacy Policy &amp; Terms of Use</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-teacher-form/register-teacher-form.component.html</context>
-          <context context-type="linenumber">143</context>
+          <context context-type="linenumber">145</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="89a4722a9d6828f6aa9e3600033561ffad582c36">
@@ -4785,49 +4807,49 @@
         <source>Gender</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
-          <context context-type="linenumber">33</context>
+          <context context-type="linenumber">35</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="5497bf7696a020473be2ec2082c78d6c6c81e29a">
         <source>Gender required</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
-          <context context-type="linenumber">39</context>
+          <context context-type="linenumber">41</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="b3e41f03bc6ea2f17a56c29543587f77cd5247c5">
         <source>Security Question</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
-          <context context-type="linenumber">67</context>
+          <context context-type="linenumber">69</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="b22c1c2f78e92d3c683da9b673254fe7f3a40f85">
         <source>Security Question required</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
-          <context context-type="linenumber">73</context>
+          <context context-type="linenumber">75</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="402fdfe22e77d0e0b0e60acbf1c8dfe04ff4e076">
         <source>Security Question Answer</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
-          <context context-type="linenumber">78</context>
+          <context context-type="linenumber">80</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="59dcaff6c089405d4d18e483d6ed730a3f1cef8f">
         <source>Security Question Answer required</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
-          <context context-type="linenumber">80</context>
+          <context context-type="linenumber">82</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="60abd69611e9432d4d506e292e421a9a26bfa454">
         <source>By clicking "Create Account", you agree to our <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>Privacy Policy &amp; Terms of Use<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/register/register-student-form/register-student-form.component.html</context>
-          <context context-type="linenumber">111</context>
+          <context context-type="linenumber">113</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="34fe434c734c4d0366fc952715e5f93e68e55ba3">

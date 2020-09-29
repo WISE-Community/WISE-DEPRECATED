@@ -9,6 +9,7 @@ import { StudentStatusService } from '../../../../services/studentStatusService'
 import { TeacherDataService } from '../../../../services/teacherDataService';
 import * as angular from 'angular';
 import { TeacherProjectService } from '../../../../services/teacherProjectService';
+import { Subscription } from 'rxjs';
 
 class NodeGradingViewController {
   $translate: any;
@@ -37,7 +38,9 @@ class NodeGradingViewController {
   workgroups: any;
   workgroupsById: any;
   workVisibilityById: any;
-  currentPeriodChangedSubscription: any;
+  notificationChangedSubscription: Subscription;
+  currentPeriodChangedSubscription: Subscription;
+  projectSavedSubscription: Subscription;
 
   static $inject = [
     '$filter',
@@ -95,11 +98,12 @@ class NodeGradingViewController {
       document.body.scrollTop = document.documentElement.scrollTop = 0;
     });
 
-    this.$scope.$on('projectSaved', (event, args) => {
+    this.projectSavedSubscription = this.ProjectService.projectSaved$.subscribe(() => {
       this.maxScore = this.getMaxScore();
     });
 
-    this.$scope.$on('notificationChanged', (event, notification) => {
+    this.notificationChangedSubscription = this.NotificationService.notificationChanged$
+        .subscribe((notification) => {
       if (notification.type === 'CRaterResult') {
         // TODO: expand to encompass other notification types that should be shown to teacher
         const workgroupId = notification.toWorkgroupId;
@@ -153,6 +157,8 @@ class NodeGradingViewController {
 
   unsubscribeAll() {
     this.currentPeriodChangedSubscription.unsubscribe();
+    this.notificationChangedSubscription.unsubscribe();
+    this.projectSavedSubscription.unsubscribe();
   }
 
   saveNodeGradingViewDisplayedEvent() {

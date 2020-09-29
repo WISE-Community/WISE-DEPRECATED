@@ -7,12 +7,16 @@ import { ConfigService } from "./configService";
 import { UtilService } from "./utilService";
 import * as angular from 'angular';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { Observable, Subject } from "rxjs";
 
 @Injectable()
 export class AnnotationService {
   activeGlobalAnnotationGroups: any;
   annotations: any;
   dummyAnnotationId: number = 1; // used in preview mode when we simulate saving of annotation
+  private displayGlobalAnnotationsSource: Subject<any> = new Subject<any>();
+  public displayGlobalAnnotations$: Observable<any> =
+      this.displayGlobalAnnotationsSource.asObservable();
 
   constructor(private upgrade: UpgradeModule, private http: HttpClient,
       private ConfigService: ConfigService, private ProjectService: ProjectService,
@@ -917,5 +921,9 @@ export class AnnotationService {
       }
     }
     return null;
+  }
+
+  broadcastDisplayGlobalAnnotations() {
+    this.displayGlobalAnnotationsSource.next();
   }
 }

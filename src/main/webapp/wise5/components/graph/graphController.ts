@@ -74,6 +74,7 @@ class GraphController extends ComponentController {
     'GraphService',
     'NodeService',
     'NotebookService',
+    'NotificationService',
     'ProjectService',
     'StudentAssetService',
     'StudentDataService',
@@ -93,6 +94,7 @@ class GraphController extends ComponentController {
     GraphService,
     NodeService,
     NotebookService,
+    NotificationService,
     ProjectService,
     StudentAssetService,
     StudentDataService,
@@ -109,6 +111,7 @@ class GraphController extends ComponentController {
       ConfigService,
       NodeService,
       NotebookService,
+      NotificationService,
       ProjectService,
       StudentAssetService,
       StudentDataService,
@@ -187,6 +190,11 @@ class GraphController extends ComponentController {
     this.drawGraph().then(() => {
       this.broadcastDoneRenderingComponent();
     });
+  }
+
+  ngOnDestroy() {
+    super.ngOnDestroy();
+    this.deleteKeyPressedListenerDestroyer();
   }
 
   applyHighchartsPlotLinesLabelFix() {
@@ -345,10 +353,6 @@ class GraphController extends ComponentController {
     reader.fileName = files[0].name;
     reader.readAsText(files[0]);
     this.StudentAssetService.uploadAsset(files[0]);
-  }
-
-  cleanupBeforeExiting() {
-    this.deleteKeyPressedListenerDestroyer();
   }
 
   handleTableConnectedComponentStudentDataChanged(
@@ -2703,7 +2707,7 @@ class GraphController extends ComponentController {
       renderCallback: () => {
         const base64Image = hiddenCanvas.toDataURL('image/png');
         const imageObject = this.UtilService.getImageObjectFromBase64String(base64Image);
-        this.NotebookService.addNote($event, imageObject);
+        this.NotebookService.addNote(imageObject);
       }
     });
   }

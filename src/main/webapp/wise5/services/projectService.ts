@@ -8,6 +8,7 @@ import { Injectable } from '@angular/core';
 import { UpgradeModule } from '@angular/upgrade/static';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { SessionService } from './sessionService';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable()
 export class ProjectService {
@@ -35,6 +36,14 @@ export class ProjectService {
   project: any;
   rootNode: any = null;
   transitions: any;
+  private errorSavingProjectSource: Subject<any> = new Subject<any>();
+  public errorSavingProject$: Observable<any> = this.errorSavingProjectSource.asObservable();
+  private projectChangedSource: Subject<any> = new Subject<any>();
+  public projectChanged$: Observable<any> = this.projectChangedSource.asObservable();
+  private projectSavedSource: Subject<any> = new Subject<any>();
+  public projectSaved$: Observable<any> = this.projectSavedSource.asObservable();
+  private savingProjectSource: Subject<any> = new Subject<any>();
+  public savingProject$: Observable<any> = this.savingProjectSource.asObservable();
 
   constructor(
     protected upgrade: UpgradeModule,
@@ -155,7 +164,6 @@ export class ProjectService {
     if (node != null && groupNodes != null) {
       groupNodes.push(node);
     }
-    this.UtilService.broadcastEventInRootScope('groupsChanged');
   }
 
   addNodeToGroupNode(groupId, nodeId) {
@@ -265,7 +273,7 @@ export class ProjectService {
     if (this.project.projectAchievements != null) {
       this.achievements = this.project.projectAchievements;
     }
-    this.UtilService.broadcastEventInRootScope('projectChanged');
+    this.broadcastProjectChanged();
   }
 
   instantiateDefaults() {
@@ -1116,7 +1124,7 @@ export class ProjectService {
       this.UtilService.broadcastEventInRootScope('notAllowedToEditThisProject');
       return null;
     }
-    this.UtilService.broadcastEventInRootScope('savingProject');
+    this.broadcastSavingProject();
     this.cleanupBeforeSave();
     const authors = this.project.metadata.authors ? this.project.metadata.authors : [];
     const userInfo = this.ConfigService.getMyUserInfo();
@@ -1140,10 +1148,10 @@ export class ProjectService {
         } else if (response.messageCode === 'notAllowedToEditThisProject') {
           this.UtilService.broadcastEventInRootScope('notAllowedToEditThisProject');
         } else if (response.messageCode === 'errorSavingProject') {
-          this.UtilService.broadcastEventInRootScope('errorSavingProject');
+          this.broadcastErrorSavingProject();
         }
       } else {
-        this.UtilService.broadcastEventInRootScope('projectSaved');
+        this.broadcastProjectSaved();
       }
       return response;
     });
@@ -5347,5 +5355,21 @@ export class ProjectService {
     } else {
       return { name: params['tag'] };
     }
+  }
+
+  broadcastSavingProject() {
+    this.savingProjectSource.next();
+  }
+
+  broadcastErrorSavingProject() {
+    this.errorSavingProjectSource.next();
+  }
+
+  broadcastProjectChanged() {
+    this.projectChangedSource.next();
+  }
+
+  broadcastProjectSaved() {
+    this.projectSavedSource.next();
   }
 }

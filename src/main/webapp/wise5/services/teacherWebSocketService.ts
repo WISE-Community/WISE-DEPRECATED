@@ -5,6 +5,7 @@ import { ConfigService } from "./configService";
 import { StudentStatusService } from "./studentStatusService";
 import { UpgradeModule } from "@angular/upgrade/static";
 import { NotificationService } from "./notificationService";
+import { AchievementService } from "./achievementService";
 
 @Injectable()
 export class TeacherWebSocketService {
@@ -15,6 +16,7 @@ export class TeacherWebSocketService {
 
   constructor(
       private upgrade: UpgradeModule,
+      private AchievementService: AchievementService,
       private ConfigService: ConfigService,
       private NotificationService: NotificationService,
       private StudentStatusService: StudentStatusService) {
@@ -59,10 +61,10 @@ export class TeacherWebSocketService {
       } else if (message.type === 'studentStatus') {
         const status = JSON.parse(message.content);
         this.StudentStatusService.setStudentStatus(status);
-        this.getRootScope().$emit('studentStatusReceived', {studentStatus: status});
+        this.StudentStatusService.broadcastStudentStatusReceived({studentStatus: status});
       } else if (message.type === 'newStudentAchievement') {
         const achievement = JSON.parse(message.content);
-        this.getRootScope().$broadcast('newStudentAchievement', {studentAchievement: achievement});
+        this.AchievementService.broadcastNewStudentAchievement({studentAchievement: achievement});
       } else if (message.type === 'annotation') {
         const annotationData = JSON.parse(message.content);
         this.getRootScope().$broadcast('newAnnotationReceived', {annotation: annotationData});

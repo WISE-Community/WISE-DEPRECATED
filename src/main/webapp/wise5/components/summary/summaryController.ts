@@ -31,6 +31,7 @@ class SummaryController extends ComponentController {
     'ConfigService',
     'NodeService',
     'NotebookService',
+    'NotificationService',
     'ProjectService',
     'StudentAssetService',
     'StudentDataService',
@@ -49,6 +50,7 @@ class SummaryController extends ComponentController {
     ConfigService,
     NodeService,
     NotebookService,
+    NotificationService,
     ProjectService,
     StudentAssetService,
     StudentDataService,
@@ -66,6 +68,7 @@ class SummaryController extends ComponentController {
       ConfigService,
       NodeService,
       NotebookService,
+      NotificationService,
       ProjectService,
       StudentAssetService,
       StudentDataService,
@@ -217,7 +220,7 @@ class SummaryController extends ComponentController {
     }
   }
 
-  handleStudentWorkSavedToServerAdditionalProcessing(event: any, args: any) {
+  handleStudentWorkSavedToServerAdditionalProcessing(args: any) {
     if (this.isStudent) {
       this.isShowDisplay = this.calculateIsShowDisplay();
     }

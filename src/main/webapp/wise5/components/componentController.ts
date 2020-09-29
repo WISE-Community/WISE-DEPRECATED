@@ -8,6 +8,7 @@ import { ProjectService } from "../services/projectService";
 import { StudentAssetService } from "../services/studentAssetService";
 import { UtilService } from "../services/utilService";
 import { StudentDataService } from "../services/studentDataService";
+import { NotificationService } from '../services/notificationService';
 
 class ComponentController {
   $filter: any;
@@ -21,6 +22,7 @@ class ComponentController {
   ConfigService: ConfigService;
   NodeService: NodeService;
   NotebookService: NotebookService;
+  NotificationService: NotificationService;
   ProjectService: ProjectService;
   StudentAssetService: StudentAssetService;
   UtilService: UtilService;
@@ -61,6 +63,8 @@ class ComponentController {
   authoringComponentContentJSONString: string;
   isJSONStringChanged: boolean;
   authoringValidComponentContentJSONString: string;
+  notebookItemChosenSubscription: any;
+  studentWorkSavedToServerSubscription: any;
 
   constructor(
       $filter,
@@ -73,6 +77,7 @@ class ComponentController {
       ConfigService,
       NodeService,
       NotebookService,
+      NotificationService,
       ProjectService,
       StudentAssetService,
       StudentDataService,
@@ -87,6 +92,7 @@ class ComponentController {
     this.ConfigService = ConfigService;
     this.NodeService = NodeService;
     this.NotebookService = NotebookService;
+    this.NotificationService = NotificationService;
     this.ProjectService = ProjectService;
     this.StudentAssetService = StudentAssetService;
     this.StudentDataService = StudentDataService;
@@ -213,16 +219,22 @@ class ComponentController {
       }
     });
 
-    /**
-     * Listen for the 'exitNode' event which is fired when the student
-     * exits the parent node. This will perform any necessary cleanup
-     * when the student exits the parent node.
-     */
-    this.$scope.$on('exitNode', (event, args) => {
-      this.cleanupBeforeExiting();
-    });
-
     this.registerStudentWorkSavedToServerListener();
+
+    this.$scope.$on('$destroy', () => {
+      this.ngOnDestroy();
+    })
+  }
+
+  ngOnDestroy() {
+    this.unsubscribeAll();
+  }
+
+  unsubscribeAll() {
+    this.studentWorkSavedToServerSubscription.unsubscribe();
+    if (this.notebookItemChosenSubscription != null) {
+      this.notebookItemChosenSubscription.unsubscribe();
+    }
   }
 
   initializeScopeGetComponentState(scope, childControllerName) {
@@ -321,7 +333,7 @@ class ComponentController {
       }, () => {
         this.showAdvancedAuthoring = this.$scope.$parent.nodeAuthoringController
             .showAdvancedAdvancedAuthoring[this.componentId];
-        this.UtilService.hideJSONValidMessage();
+        this.NotificationService.hideJSONValidMessage();
       }, true);
   }
 
@@ -385,10 +397,6 @@ class ComponentController {
     }
   }
 
-  cleanupBeforeExiting() {
-
-  }
-
   broadcastDoneRenderingComponent() {
     this.NodeService.broadcastDoneRenderingComponent({
       nodeId: this.nodeId, componentId: this.componentId
@@ -396,12 +404,13 @@ class ComponentController {
   }
 
   registerStudentWorkSavedToServerListener() {
-    this.$scope.$on('studentWorkSavedToServer', (event, args) => {
-      this.handleStudentWorkSavedToServer(event, args);
+    this.studentWorkSavedToServerSubscription = 
+        this.StudentDataService.studentWorkSavedToServer$.subscribe((args: any) => {
+      this.handleStudentWorkSavedToServer(args);
     });
   }
 
-  handleStudentWorkSavedToServer(event, args) {
+  handleStudentWorkSavedToServer(args: any) {
     const componentState = args.studentWork;
     if (this.isForThisComponent(componentState)) {
       this.setIsDirty(false);
@@ -411,17 +420,20 @@ class ComponentController {
         this.setSubmittedMessage(clientSaveTime);
         this.lockIfNecessary();
         this.setIsSubmitDirty(false);
-        this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: this.isSubmitDirty});
+        this.StudentDataService.broadcastComponentSubmitDirty({
+          componentId: this.componentId,
+          isDirty: this.isSubmitDirty
+        });
       } else if (componentState.isAutoSave) {
         this.setAutoSavedMessage(clientSaveTime);
       } else {
         this.setSavedMessage(clientSaveTime);
       }
     }
-    this.handleStudentWorkSavedToServerAdditionalProcessing(event, args);
+    this.handleStudentWorkSavedToServerAdditionalProcessing(args);
   }
 
-  handleStudentWorkSavedToServerAdditionalProcessing(event, args) {
+  handleStudentWorkSavedToServerAdditionalProcessing(args: any) {
 
   }
 
@@ -437,8 +449,10 @@ class ComponentController {
     this.isSubmit = false;
 
     // tell the parent node to save
-    this.$scope.$emit('componentSaveTriggered',
-        {nodeId: this.nodeId, componentId: this.componentId});
+    this.StudentDataService.broadcastComponentSaveTriggered({
+      nodeId: this.nodeId,
+      componentId: this.componentId
+    });
   }
 
   submitButtonClicked() {
@@ -491,11 +505,7 @@ class ComponentController {
     }
 
     if (this.isAuthoringMode()) {
-      /*
-       * We are in authoring mode so we will set values appropriately
-       * here because the 'componentSubmitTriggered' event won't
-       * work in authoring mode.
-       */
+      // we are in authoring mode so we will set values manually
       this.setIsDirty(false);
       this.setIsSubmitDirty(false);
       this.createComponentState('submit');
@@ -515,7 +525,10 @@ class ComponentController {
   }
 
   emitComponentSubmitTriggered() {
-    this.$scope.$emit('componentSubmitTriggered', {nodeId: this.nodeId, componentId: this.componentId});
+    this.StudentDataService.broadcastComponentSubmitTriggered({
+      nodeId: this.nodeId,
+      componentId: this.componentId
+    })
   }
 
   disableComponentIfNecessary() {
@@ -604,11 +617,17 @@ class ComponentController {
   }
 
   emitComponentDirty(isDirty) {
-    this.$scope.$emit('componentDirty', {componentId: this.componentId, isDirty: isDirty});
+    this.StudentDataService.broadcastComponentDirty({
+      componentId: this.componentId,
+      isDirty: isDirty
+    });
   }
 
   emitComponentSubmitDirty(isDirty) {
-    this.$scope.$emit('componentSubmitDirty', {componentId: this.componentId, isDirty: isDirty});
+    this.StudentDataService.broadcastComponentSubmitDirty({
+      componentId: this.componentId,
+      isDirty: isDirty
+    });
   }
 
   setSavedMessage(time) {
@@ -753,9 +772,16 @@ class ComponentController {
     return this.ProjectService.isSpaceExists("public");
   }
 
-  copyPublicNotebookItemButtonClicked(event) {
-    this.$rootScope.$broadcast('openNotebook',
-      { nodeId: this.nodeId, componentId: this.componentId, insertMode: true, requester: this.nodeId + '-' + this.componentId, visibleSpace: "public" });
+  copyPublicNotebookItemButtonClicked() {
+    this.NotebookService.broadcastOpenNotebook(
+      {
+        nodeId: this.nodeId,
+        componentId: this.componentId,
+        insertMode: true,
+        requester: this.nodeId + '-' + this.componentId,
+        visibleSpace: "public"
+      }
+    );
   }
 
   importWorkByStudentWorkId(studentWorkId) {
@@ -763,7 +789,7 @@ class ComponentController {
       if (componentState != null) {
         this.setStudentWork(componentState);
         this.setParentStudentWorkIdToCurrentStudentWork(studentWorkId);
-        this.$rootScope.$broadcast('closeNotebook');
+        this.NotebookService.broadcastCloseNotebook();
       }
     });
   }
@@ -806,7 +832,11 @@ class ComponentController {
      * showSubmitButton value so that it can show save buttons on the
      * step or sibling components accordingly
      */
-    this.$scope.$emit('componentShowSubmitButtonValueChanged', {nodeId: this.nodeId, componentId: this.componentId, showSubmitButton: show});
+    this.NodeService.broadcastComponentShowSubmitButtonValueChanged({
+      nodeId: this.nodeId,
+      componentId: this.componentId,
+      showSubmitButton: show
+    });
   }
 
   /**
@@ -1126,13 +1156,13 @@ class ComponentController {
       if (this.isJSONValid()) {
         this.saveJSONAuthoringViewChanges();
         this.toggleJSONAuthoringView();
-        this.UtilService.hideJSONValidMessage();
+        this.NotificationService.hideJSONValidMessage();
       } else {
         let isRollback = confirm(this.$translate('jsonInvalidErrorMessage'));
         if (isRollback) {
           // the author wants to revert back to the last valid JSON
           this.toggleJSONAuthoringView();
-          this.UtilService.hideJSONValidMessage();
+          this.NotificationService.hideJSONValidMessage();
           this.isJSONStringChanged = false;
           this.rollbackToRecentValidJSON();
           this.saveJSONAuthoringViewChanges();
@@ -1152,10 +1182,10 @@ class ComponentController {
   authoringJSONChanged() {
     this.isJSONStringChanged = true;
     if (this.isJSONValid()) {
-      this.UtilService.showJSONValidMessage();
+      this.NotificationService.showJSONValidMessage();
       this.rememberRecentValidJSON();
     } else {
-      this.UtilService.showJSONInvalidMessage();
+      this.NotificationService.showJSONInvalidMessage();
     }
   }
 
@@ -1294,7 +1324,8 @@ class ComponentController {
   }
 
   registerNotebookItemChosenListener() {
-    this.$scope.$on('notebookItemChosen', (event, {requester, notebookItem}) => {
+    this.notebookItemChosenSubscription = this.NotebookService.notebookItemChosen$
+        .subscribe(({ requester, notebookItem }) => {
       if (requester === `${this.nodeId}-${this.componentId}`) {
         const studentWorkId = notebookItem.content.studentWorkIds[0];
         this.importWorkByStudentWorkId(studentWorkId);
