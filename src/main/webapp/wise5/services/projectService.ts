@@ -164,7 +164,6 @@ export class ProjectService {
     if (node != null && groupNodes != null) {
       groupNodes.push(node);
     }
-    this.UtilService.broadcastEventInRootScope('groupsChanged');
   }
 
   addNodeToGroupNode(groupId, nodeId) {

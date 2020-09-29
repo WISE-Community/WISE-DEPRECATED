@@ -157,18 +157,6 @@ class ClassroomMonitorController {
       this.logOut();
     });
 
-    this.$scope.$on('showRequestLogout', ev => {
-      const alert = $mdDialog
-        .confirm()
-        .parent(angular.element(document.body))
-        .title(this.$translate('serverUpdate'))
-        .textContent(this.$translate('serverUpdateRequestLogoutMessage'))
-        .ariaLabel(this.$translate('serverUpdate'))
-        .targetEvent(ev)
-        .ok(this.$translate('ok'));
-      $mdDialog.show(alert);
-    });
-
     $transitions.onSuccess({}, $transition => {
       this.menuOpen = false;
       this.processUI();

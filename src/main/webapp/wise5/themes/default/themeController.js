@@ -129,27 +129,6 @@ class ThemeController {
       );
     });
 
-    // alert user when inactive for a long time
-    this.$scope.$on('showRequestLogout', ev => {
-      let alert = this.$mdDialog
-        .confirm()
-        .parent(angular.element(document.body))
-        .title(this.$translate('serverUpdate'))
-        .textContent(this.$translate('serverUpdateRequestLogoutMessage'))
-        .ariaLabel(this.$translate('serverUpdate'))
-        .targetEvent(ev)
-        .ok(this.$translate('ok'));
-
-      this.$mdDialog.show(alert).then(
-        () => {
-          // do nothing
-        },
-        () => {
-          // do nothing
-        }
-      );
-    });
-
     this.serverConnectionStatusSubscription = 
         this.NotificationService.serverConnectionStatus$.subscribe((isConnected) => {
       if (isConnected) {
