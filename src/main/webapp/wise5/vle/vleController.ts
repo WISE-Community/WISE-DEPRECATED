@@ -33,6 +33,7 @@ class VLEController {
   totalScore: any;
   currentNodeChangedSubscription: any;
   showSessionWarningSubscription: any;
+  notificationChangedSubscription: any;
 
   static $inject = [
     '$anchorScroll',
@@ -200,7 +201,8 @@ class VLEController {
     this.notifications = this.NotificationService.notifications;
     this.newNotifications = this.getNewNotifications();
 
-    this.$scope.$on('notificationChanged', (event, notification) => {
+    this.notificationChangedSubscription = this.NotificationService.notificationChanged$
+        .subscribe(() => {
       // update new notifications
       this.notifications = this.NotificationService.notifications;
       this.newNotifications = this.getNewNotifications();
@@ -292,6 +294,7 @@ class VLEController {
   unsubscribeAll() {
     this.currentNodeChangedSubscription.unsubscribe();
     this.showSessionWarningSubscription.unsubscribe();
+    this.notificationChangedSubscription.unsubscribe();
   }
 
   goHome() {
