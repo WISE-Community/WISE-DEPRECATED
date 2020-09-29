@@ -27,6 +27,7 @@ class MatchController extends ComponentController {
 
   static $inject = [
     '$filter',
+    '$injector',
     '$mdDialog',
     '$mdMedia',
     '$q',
@@ -47,6 +48,7 @@ class MatchController extends ComponentController {
 
   constructor(
     $filter,
+    $injector,
     $mdDialog,
     $mdMedia,
     $q,
@@ -66,6 +68,7 @@ class MatchController extends ComponentController {
   ) {
     super(
       $filter,
+      $injector,
       $mdDialog,
       $q,
       $rootScope,
@@ -107,7 +110,7 @@ class MatchController extends ComponentController {
       this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
       if (this.shouldImportPrivateNotes()) {
         const allPrivateNotebookItems = this.NotebookService.getPrivateNotebookItems();
-        this.privateNotebookItems = allPrivateNotebookItems.filter(note => { 
+        this.privateNotebookItems = allPrivateNotebookItems.filter(note => {
           return note.serverDeleteTime == null
         });
         this.notebookUpdatedSubscription = this.NotebookService.notebookUpdated$
@@ -203,14 +206,7 @@ class MatchController extends ComponentController {
       return deferred.promise;
     };
 
-    this.$rootScope.$broadcast('doneRenderingComponent', {
-      nodeId: this.nodeId,
-      componentId: this.componentId
-    });
-
-    this.$scope.$on('$destroy', () => {
-      this.ngOnDestroy();
-    });
+    this.broadcastDoneRenderingComponent();
   }
 
   ngOnDestroy() {

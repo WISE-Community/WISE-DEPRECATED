@@ -26,6 +26,7 @@ class EmbeddedController extends ComponentController {
 
   static $inject = [
     '$filter',
+    '$injector',
     '$mdDialog',
     '$q',
     '$rootScope',
@@ -47,6 +48,7 @@ class EmbeddedController extends ComponentController {
 
   constructor(
     $filter,
+    $injector,
     $mdDialog,
     $q,
     $rootScope,
@@ -67,6 +69,7 @@ class EmbeddedController extends ComponentController {
   ) {
     super(
       $filter,
+      $injector,
       $mdDialog,
       $q,
       $rootScope,
@@ -135,7 +138,7 @@ class EmbeddedController extends ComponentController {
      * Watch for siblingComponentStudentDataChanged which occurs when the student data has changed
      * for another component in this step.
      */
-    this.siblingComponentStudentDataChangedSubscription = 
+    this.siblingComponentStudentDataChangedSubscription =
         this.NodeService.siblingComponentStudentDataChanged$.subscribe((args: any) => {
       if (this.isEventTargetThisComponent(args)) {
         const message = {
@@ -148,14 +151,11 @@ class EmbeddedController extends ComponentController {
 
     this.initializeMessageEventListener();
     this.broadcastDoneRenderingComponent();
-
-    this.$scope.$on('$destroy', () => {
-      this.ngOnDestroy();
-    });
   }
 
   ngOnDestroy() {
-    this.unsubscribeAll();
+    super.ngOnDestroy();
+    this.$window.removeEventListener('message', this.messageEventListener);
   }
 
   unsubscribeAll() {
@@ -165,10 +165,6 @@ class EmbeddedController extends ComponentController {
   setWidthAndHeight(width, height) {
     this.width = width ? width + 'px' : '100%';
     this.height = height ? height + 'px' : '600px';
-  }
-
-  cleanupBeforeExiting() {
-    this.$window.removeEventListener('message', this.messageEventListener);
   }
 
   initializeMessageEventListener() {
@@ -337,7 +333,7 @@ class EmbeddedController extends ComponentController {
   }
 
   registerStudentWorkSavedToServerListener() {
-    this.studentWorkSavedToServerSubscription = 
+    this.studentWorkSavedToServerSubscription =
         this.StudentDataService.studentWorkSavedToServer$.subscribe((args: any) => {
       const componentState = args.studentWork;
       if (this.isForThisComponent(componentState)) {

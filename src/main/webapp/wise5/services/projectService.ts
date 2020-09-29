@@ -44,6 +44,8 @@ export class ProjectService {
   private notLoggedInProjectNotSavedSource: Subject<any> = new Subject<any>();
   public notLoggedInProjectNotSaved$: Observable<any> =
       this.notLoggedInProjectNotSavedSource.asObservable();
+  private projectChangedSource: Subject<any> = new Subject<any>();
+  public projectChanged$: Observable<any> = this.projectChangedSource.asObservable();
   private projectSavedSource: Subject<any> = new Subject<any>();
   public projectSaved$: Observable<any> = this.projectSavedSource.asObservable();
   private savingProjectSource: Subject<any> = new Subject<any>();
@@ -168,7 +170,6 @@ export class ProjectService {
     if (node != null && groupNodes != null) {
       groupNodes.push(node);
     }
-    this.UtilService.broadcastEventInRootScope('groupsChanged');
   }
 
   addNodeToGroupNode(groupId, nodeId) {
@@ -278,7 +279,7 @@ export class ProjectService {
     if (this.project.projectAchievements != null) {
       this.achievements = this.project.projectAchievements;
     }
-    this.UtilService.broadcastEventInRootScope('projectChanged');
+    this.broadcastProjectChanged();
   }
 
   instantiateDefaults() {
@@ -5384,6 +5385,10 @@ export class ProjectService {
 
   broadcastNotLoggedInProjectNotSaved() {
     this.notLoggedInProjectNotSavedSource.next();
+  }
+
+  broadcastProjectChanged() {
+    this.projectChangedSource.next();
   }
 
   broadcastProjectSaved() {

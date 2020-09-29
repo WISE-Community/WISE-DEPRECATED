@@ -4,6 +4,7 @@ import { ConfigService } from '../../../../services/configService';
 import { TeacherDataService } from '../../../../services/teacherDataService';
 import { SessionService } from '../../../../services/sessionService';
 import { TeacherProjectService } from '../../../../services/teacherProjectService';
+import { NotificationService } from '../../../../services/notificationService';
 
 class TopBarController {
   translate: any;
@@ -20,12 +21,15 @@ class TopBarController {
   themePath: string;
   userInfo: any;
   workgroupId: number;
+  notificationChangedSubscription: any;
 
   static $inject = [
     '$filter',
     '$rootScope',
+    '$scope',
     '$state',
     'ConfigService',
+    'NotificationService',
     'ProjectService',
     'TeacherDataService',
     'SessionService'
@@ -34,8 +38,10 @@ class TopBarController {
   constructor(
     $filter: any,
     private $rootScope: any,
+    private $scope: any,
     private $state: any,
     private ConfigService: ConfigService,
+    private NotificationService: NotificationService,
     private ProjectService: TeacherProjectService,
     private TeacherDataService: TeacherDataService,
     private SessionService: SessionService
@@ -47,11 +53,24 @@ class TopBarController {
     }
     this.avatarColor = this.ConfigService.getAvatarColorForWorkgroupId(this.workgroupId);
     this.userInfo = this.ConfigService.getMyUserInfo();
-    this.$rootScope.$on('notificationChanged', (event, notification) => {
+    this.notificationChangedSubscription = this.NotificationService.notificationChanged$
+        .subscribe(() => {
       this.setNotifications();
     });
     this.themePath = this.ProjectService.getThemePath();
     this.contextPath = this.ConfigService.getContextPath();
+
+    this.$scope.$on('$destroy', () => {
+      this.ngOnDestroy();
+    });
+  }
+
+  ngOnDestroy() {
+    this.unsubscribeAll();
+  }
+
+  unsubscribeAll() {
+    this.notificationChangedSubscription.unsubscribe();
   }
 
   $onInit() {

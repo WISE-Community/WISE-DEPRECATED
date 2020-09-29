@@ -1026,7 +1026,6 @@ export class StudentDataService extends DataService {
           this.setRemoteIdIntoLocalId(savedEvent, localEvent);
           this.setRemoteServerSaveTimeIntoLocalServerSaveTime(savedEvent, localEvent);
           this.clearRequestToken(localEvent);
-          this.upgrade.$injector.get('$rootScope').$broadcast('eventSavedToServer', { event: localEvent });
           break;
         }
       }
@@ -1370,7 +1369,6 @@ export class StudentDataService extends DataService {
 
   endCurrentNodeAndSetCurrentNodeByNodeId(nodeId) {
     if (this.nodeStatuses[nodeId].isVisitable) {
-      this.endCurrentNode();
       this.setCurrentNodeByNodeId(nodeId);
     } else {
       this.nodeClickLocked(nodeId);

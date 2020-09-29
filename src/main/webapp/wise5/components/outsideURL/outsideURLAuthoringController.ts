@@ -13,6 +13,7 @@ class OutsideURLAuthoringController extends OutsideURLController {
 
   static $inject = [
     '$filter',
+    '$injector',
     '$mdDialog',
     '$q',
     '$rootScope',
@@ -33,6 +34,7 @@ class OutsideURLAuthoringController extends OutsideURLController {
 
   constructor(
     $filter,
+    $injector,
     $mdDialog,
     $q,
     $rootScope,
@@ -52,6 +54,7 @@ class OutsideURLAuthoringController extends OutsideURLController {
   ) {
     super(
       $filter,
+      $injector,
       $mdDialog,
       $q,
       $rootScope,

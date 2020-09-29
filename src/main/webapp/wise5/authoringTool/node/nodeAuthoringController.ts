@@ -9,6 +9,7 @@ import * as angular from 'angular';
 import * as $ from 'jquery';
 import { TagService } from '../../services/tagService';
 import { NotificationService } from '../../services/notificationService';
+import { Subscription } from 'rxjs';
 
 class NodeAuthoringController {
   $translate: any;
@@ -59,6 +60,7 @@ class NodeAuthoringController {
   transitionCriterias: any;
   undoStack: any[] = [];
   whenToChoosePathOptions = [null, 'enterNode', 'exitNode', 'scoreChanged', 'studentDataChanged'];
+  componentShowSubmitButtonValueChangedSubscription: Subscription;
 
   static $inject = [
     '$anchorScroll',
@@ -419,7 +421,9 @@ class NodeAuthoringController {
     this.currentNodeCopy = this.UtilService.makeCopyOfJSONObject(this.node);
     this.populateBranchAuthoring();
 
-    this.$scope.$on('componentShowSubmitButtonValueChanged', (event, { showSubmitButton }) => {
+    this.componentShowSubmitButtonValueChangedSubscription =
+        this.NodeService.componentShowSubmitButtonValueChanged$
+        .subscribe(({ showSubmitButton }) => {
       if (showSubmitButton) {
         this.node.showSaveButton = false;
         this.node.showSubmitButton = false;
@@ -467,6 +471,18 @@ class NodeAuthoringController {
     } else {
       this.scrollToTopOfPage();
     }
+
+    this.$scope.$on('$destroy', () => {
+      this.ngOnDestroy();
+    });
+  }
+
+  ngOnDestroy() {
+    this.unsubscribeAll();
+  }
+
+  unsubscribeAll() {
+    this.componentShowSubmitButtonValueChangedSubscription.unsubscribe();
   }
 
   /**
@@ -578,7 +594,6 @@ class NodeAuthoringController {
   }
 
   close() {
-    this.$scope.$broadcast('exitNode', { nodeToExit: this.node });
     this.TeacherDataService.setCurrentNode(null);
     this.$state.go('root.at.project', { projectId: this.projectId });
     this.scrollToTopOfPage();
@@ -753,7 +768,6 @@ class NodeAuthoringController {
       alert(this.$translate('noUndoAvailable'));
     } else if (this.undoStack.length > 0) {
       if (confirm(this.$translate('confirmUndoLastChange'))) {
-        this.$scope.$broadcast('exitNode', { nodeToExit: this.node });
         const nodePreviousVersion = this.undoStack.pop();
         this.ProjectService.replaceNode(this.nodeId, nodePreviousVersion);
         this.node = this.ProjectService.getNodeById(this.nodeId);

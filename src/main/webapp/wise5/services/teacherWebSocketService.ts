@@ -61,7 +61,7 @@ export class TeacherWebSocketService {
       } else if (message.type === 'studentStatus') {
         const status = JSON.parse(message.content);
         this.StudentStatusService.setStudentStatus(status);
-        this.getRootScope().$emit('studentStatusReceived', {studentStatus: status});
+        this.StudentStatusService.broadcastStudentStatusReceived({studentStatus: status});
       } else if (message.type === 'newStudentAchievement') {
         const achievement = JSON.parse(message.content);
         this.AchievementService.broadcastNewStudentAchievement({studentAchievement: achievement});

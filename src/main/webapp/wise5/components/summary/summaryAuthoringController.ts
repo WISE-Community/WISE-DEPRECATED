@@ -47,6 +47,7 @@ class SummaryAuthoringController extends SummaryController {
   ) {
     super(
       $filter,
+      $injector,
       $mdDialog,
       $q,
       $rootScope,

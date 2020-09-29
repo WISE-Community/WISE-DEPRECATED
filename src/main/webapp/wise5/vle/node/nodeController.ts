@@ -8,6 +8,7 @@ import * as hopscotch from 'hopscotch';
 window['hopscotch'] = hopscotch;
 import * as $ from 'jquery';
 import { Subscription } from 'rxjs';
+import { SessionService } from '../../services/sessionService';
 import { StudentAssetService } from '../../services/studentAssetService';
 
 class NodeController {
@@ -23,9 +24,9 @@ class NodeController {
   dirtyComponentIds: any;
   dirtySubmitComponentIds: any;
   endedAndLockedMessage: string;
+  exitSubscription: Subscription;
   isDisabled: boolean;
   isEndedAndLocked: boolean;
-  logOutListener: any;
   mode: any;
   nodeContent: any;
   nodeId: string;
@@ -50,6 +51,7 @@ class NodeController {
     'ConfigService',
     'NodeService',
     'ProjectService',
+    'SessionService',
     'StudentAssetService',
     'StudentDataService',
     'UtilService'
@@ -67,6 +69,7 @@ class NodeController {
     private ConfigService: ConfigService,
     private NodeService: NodeService,
     private ProjectService: VLEProjectService,
+    private SessionService: SessionService,
     private StudentAssetService: StudentAssetService,
     private StudentDataService: StudentDataService,
     private UtilService: UtilService
@@ -259,30 +262,33 @@ class NodeController {
       }
     });
 
-    /**
-     * Listen for the 'exitNode' event which is fired when the student
-     * exits the node. This will perform saving when the student exits
-     * the node.
-     */
-    this.$scope.$on('exitNode', (event, args) => {
-      const nodeToExit = args.nodeToExit;
-      if (nodeToExit.id === this.nodeId) {
-        this.stopAutoSaveInterval();
-        this.nodeUnloaded(this.nodeId);
-        if (
-          this.NodeService.currentNodeHasTransitionLogic() &&
-          this.NodeService.evaluateTransitionLogicOn('exitNode')
-        ) {
-          this.NodeService.evaluateTransitionLogic();
-        }
-      }
-    });
     const script = this.nodeContent.script;
     if (script != null) {
       this.ProjectService.retrieveScript(script).then((script: string) => {
         new Function(script).call(this);
       });
     }
+
+    this.$scope.$on('$destroy', () => {
+      this.ngOnDestroy();
+    });
+  }
+
+  ngOnDestroy() {
+    this.stopAutoSaveInterval();
+    this.nodeUnloaded(this.nodeId);
+    if (
+      this.NodeService.currentNodeHasTransitionLogic() &&
+      this.NodeService.evaluateTransitionLogicOn('exitNode')
+    ) {
+      this.NodeService.evaluateTransitionLogic();
+    }
+    this.unsubscribeAll();
+  }
+
+  unsubscribeAll() {
+    this.componentStudentDataSubscription.unsubscribe();
+    this.exitSubscription.unsubscribe();
   }
 
   createRubricTour() {
@@ -998,10 +1004,9 @@ class NodeController {
   }
 
   registerExitListener() {
-    this.logOutListener = this.$scope.$on('exit', (event, args) => {
+    this.exitSubscription = this.SessionService.exit$.subscribe(() => {
       this.stopAutoSaveInterval();
       this.nodeUnloaded(this.nodeId);
-      this.logOutListener();
       this.$rootScope.$broadcast('doneExiting');
     });
   }

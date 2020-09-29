@@ -31,6 +31,7 @@ class AudioOscillatorController extends ComponentController {
 
   static $inject = [
     '$filter',
+    '$injector',
     '$mdDialog',
     '$q',
     '$rootScope',
@@ -50,6 +51,7 @@ class AudioOscillatorController extends ComponentController {
 
   constructor(
     $filter,
+    $injector,
     $mdDialog,
     $q,
     $rootScope,
@@ -68,6 +70,7 @@ class AudioOscillatorController extends ComponentController {
   ) {
     super(
       $filter,
+      $injector,
       $mdDialog,
       $q,
       $rootScope,
@@ -137,6 +140,14 @@ class AudioOscillatorController extends ComponentController {
     this.broadcastDoneRenderingComponent();
   }
 
+  ngOnDestroy() {
+    super.ngOnDestroy();
+    if (!this.isGradingMode()) {
+      this.stop();
+      this.audioContext.close();
+    }
+  }
+
   initializeDefaultSettings() {
     this.isPlaying = false;
     this.oscillatorType = 'sine';
@@ -162,13 +173,6 @@ class AudioOscillatorController extends ComponentController {
     this.$timeout(() => {
       this.drawOscilloscopeGrid();
     }, 0);
-  }
-
-  cleanupBeforeExiting() {
-    if (!this.isGradingMode()) {
-      this.stop();
-      this.audioContext.close();
-    }
   }
 
   handleNodeSubmit() {

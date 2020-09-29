@@ -13,6 +13,7 @@ class AudioOscillatorAuthoringController extends AudioOscillatorController {
 
   static $inject = [
     '$filter',
+    '$injector',
     '$mdDialog',
     '$q',
     '$rootScope',
@@ -33,6 +34,7 @@ class AudioOscillatorAuthoringController extends AudioOscillatorController {
 
   constructor(
     $filter,
+    $injector,
     $mdDialog,
     $q,
     $rootScope,
@@ -52,6 +54,7 @@ class AudioOscillatorAuthoringController extends AudioOscillatorController {
   ) {
     super(
       $filter,
+      $injector,
       $mdDialog,
       $q,
       $rootScope,

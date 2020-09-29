@@ -29,6 +29,7 @@ class OpenResponseController extends ComponentController {
 
   static $inject = [
     '$filter',
+    '$injector',
     '$mdDialog',
     '$q',
     '$rootScope',
@@ -49,6 +50,7 @@ class OpenResponseController extends ComponentController {
 
   constructor(
     $filter,
+    $injector,
     $mdDialog,
     $q,
     $rootScope,
@@ -68,6 +70,7 @@ class OpenResponseController extends ComponentController {
   ) {
     super(
       $filter,
+      $injector,
       $mdDialog,
       $q,
       $rootScope,
@@ -272,13 +275,6 @@ class OpenResponseController extends ComponentController {
       return deferred.promise;
     }.bind(this);
 
-    /**
-     * Listen for the 'exitNode' event which is fired when the student
-     * exits the parent node. This will perform any necessary cleanup
-     * when the student exits the parent node.
-     */
-    this.$scope.$on('exitNode', function(event, args) {}.bind(this));
-
     this.registerNotebookItemChosenListener();
     this.registerAudioRecordedListener();
 
@@ -290,10 +286,7 @@ class OpenResponseController extends ComponentController {
       });
     }
 
-    this.$rootScope.$broadcast('doneRenderingComponent', {
-      nodeId: this.nodeId,
-      componentId: this.componentId
-    });
+    this.broadcastDoneRenderingComponent();
   }
 
   handleNodeSubmit() {
@@ -712,14 +705,13 @@ class OpenResponseController extends ComponentController {
               }
             }
 
-            // display global annotations dialog if needed
             if (
               this.componentContent.enableGlobalAnnotations &&
               annotationGroupForScore != null &&
               annotationGroupForScore.isGlobal &&
               annotationGroupForScore.isPopup
             ) {
-              this.$scope.$emit('displayGlobalAnnotations');
+              this.AnnotationService.broadcastDisplayGlobalAnnotations();
             }
           }
 
