@@ -705,14 +705,13 @@ class OpenResponseController extends ComponentController {
               }
             }
 
-            // display global annotations dialog if needed
             if (
               this.componentContent.enableGlobalAnnotations &&
               annotationGroupForScore != null &&
               annotationGroupForScore.isGlobal &&
               annotationGroupForScore.isPopup
             ) {
-              this.$scope.$emit('displayGlobalAnnotations');
+              this.AnnotationService.broadcastDisplayGlobalAnnotations();
             }
           }
 
