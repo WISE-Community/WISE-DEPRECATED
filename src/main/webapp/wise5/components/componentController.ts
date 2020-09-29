@@ -66,6 +66,7 @@ class ComponentController {
   authoringComponentContentJSONString: string;
   isJSONStringChanged: boolean;
   authoringValidComponentContentJSONString: string;
+  nodeSubmitClickedSubscription: Subscription;
   audioRecordedSubscription: Subscription;
   notebookItemChosenSubscription: Subscription;
   studentWorkSavedToServerSubscription: Subscription;
@@ -219,8 +220,9 @@ class ComponentController {
       }
     });
 
-    this.$scope.$on('nodeSubmitClicked', (event, args) => {
-      if (this.nodeId === args.nodeId) {
+    this.nodeSubmitClickedSubscription =
+        this.NodeService.nodeSubmitClicked$.subscribe(({ nodeId }) => {
+      if (this.nodeId === nodeId) {
         this.handleNodeSubmit();
       }
     });
@@ -237,6 +239,7 @@ class ComponentController {
   }
 
   unsubscribeAll() {
+    this.nodeSubmitClickedSubscription.unsubscribe();
     this.studentWorkSavedToServerSubscription.unsubscribe();
     if (this.audioRecordedSubscription != null) {
       this.audioRecordedSubscription.unsubscribe();
@@ -413,7 +416,7 @@ class ComponentController {
   }
 
   registerStudentWorkSavedToServerListener() {
-    this.studentWorkSavedToServerSubscription = 
+    this.studentWorkSavedToServerSubscription =
         this.StudentDataService.studentWorkSavedToServer$.subscribe((args: any) => {
       this.handleStudentWorkSavedToServer(args);
     });
@@ -1343,7 +1346,7 @@ class ComponentController {
   }
 
   registerAudioRecordedListener() {
-    this.audioRecordedSubscription = 
+    this.audioRecordedSubscription =
         this.AudioRecorderService.audioRecorded$.subscribe(({requester, audioFile}) => {
       if (requester === `${this.nodeId}-${this.componentId}`) {
         this.StudentAssetService.uploadAsset(audioFile).then((studentAsset) => {
@@ -1393,7 +1396,7 @@ class ComponentController {
     }
     DialogController.$inject = ['$scope', '$mdDialog', 'nodeId', 'componentId', 'componentState'];
 
-    const doneRenderingComponentSubscription = 
+    const doneRenderingComponentSubscription =
         this.NodeService.doneRenderingComponent$.subscribe(({ nodeId, componentId }) => {
       if (componentState.nodeId == nodeId && componentState.componentId == componentId) {
         setTimeout(() => {

@@ -15,6 +15,8 @@ export class NodeService {
   $translate: any;
   transitionResults = {};
   chooseTransitionPromises = {};
+  private nodeSubmitClickedSource: Subject<any> = new Subject<any>();
+  public nodeSubmitClicked$: Observable<any> = this.nodeSubmitClickedSource.asObservable();
   private doneRenderingComponentSource: Subject<any> = new Subject<any>();
   public doneRenderingComponent$ = this.doneRenderingComponentSource.asObservable();
   private componentShowSubmitButtonValueChangedSource: Subject<any> = new Subject<any>();
@@ -794,6 +796,10 @@ export class NodeService {
       clickOutsideToClose: true,
       escapeToClose: true
     });
+  }
+
+  broadcastNodeSubmitClicked(args: any) {
+    this.nodeSubmitClickedSource.next(args);
   }
 
   broadcastDoneRenderingComponent(nodeIdAndComponentId: any) {

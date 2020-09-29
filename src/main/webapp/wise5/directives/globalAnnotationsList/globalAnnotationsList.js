@@ -5,12 +5,14 @@ class GlobalAnnotationsListController {
                 $scope,
                 $filter,
                 AnnotationService,
-                ProjectService) {
+                ProjectService,
+                StudentDataService) {
         this.$rootScope = $rootScope;
         this.$scope = $scope;
         this.$filter = $filter;
         this.AnnotationService = AnnotationService;
         this.ProjectService = ProjectService;
+        this.StudentDataService = StudentDataService;
 
         this.$translate = this.$filter('translate');
 
@@ -25,11 +27,23 @@ class GlobalAnnotationsListController {
             this.setModel();
         });
 
-        // listen for node status changes
-        this.$rootScope.$on('nodeStatusesChanged', (event, args) => {
+        this.nodeStatusesChangedSubscription = 
+                this.StudentDataService.nodeStatusesChanged$.subscribe(() => {
             this.setModel();
         });
+
+        this.$scope.$on('$destroy', () => {
+            this.ngOnDestroy();
+        });
     };
+
+    ngOnDestroy() {
+        this.unsubscribeAll();
+    }
+
+    unsubscribeAll() {
+        this.nodeStatusesChangedSubscription.unsubscribe();
+    }
 
     setModel() {
         let latestGlobalAnnotationGroup = this.getLatestGlobalAnnotationGroup();
@@ -59,9 +73,6 @@ class GlobalAnnotationsListController {
         }
     }
 
-    /**
-     * Return the latest active global annotatin group
-     */
     getLatestGlobalAnnotationGroup() {
         let latestGlobalAnnotationGroup = null;
 
@@ -85,7 +96,8 @@ GlobalAnnotationsListController.$inject = [
     '$scope',
     '$filter',
     'AnnotationService',
-    'ProjectService'
+    'ProjectService',
+    'StudentDataService'
 ];
 
 const GlobalAnnotationsList = {
