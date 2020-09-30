@@ -5,7 +5,7 @@ import { ConfigService } from "./configService";
 import { StudentStatusService } from "./studentStatusService";
 import { UpgradeModule } from "@angular/upgrade/static";
 import { NotificationService } from "./notificationService";
-import { Subject } from "rxjs";
+import { Observable, Subject } from "rxjs";
 import { AchievementService } from "./achievementService";
 
 @Injectable()
@@ -14,8 +14,11 @@ export class TeacherWebSocketService {
   runId: number;
   rootScope: any;
   stomp: any;
+  private newAnnotationReceivedSource: Subject<any> = new Subject<any>();
+  public newAnnotationReceived$: Observable<any> = this.newAnnotationReceivedSource.asObservable();
   private newStudentWorkReceivedSource: Subject<any> = new Subject<any>();
-  public newStudentWorkReceived$ = this.newStudentWorkReceivedSource.asObservable();
+  public newStudentWorkReceived$: Observable<any> =
+      this.newStudentWorkReceivedSource.asObservable();
 
   constructor(
       private upgrade: UpgradeModule,
@@ -70,13 +73,17 @@ export class TeacherWebSocketService {
         this.AchievementService.broadcastNewStudentAchievement({studentAchievement: achievement});
       } else if (message.type === 'annotation') {
         const annotationData = JSON.parse(message.content);
-        this.getRootScope().$broadcast('newAnnotationReceived', {annotation: annotationData});
+        this.broadcastNewAnnotationReceived({annotation: annotationData});
       }
     });
   }
 
   broadcastNewStudentWorkReceived(args: any) {
     this.newStudentWorkReceivedSource.next(args);
+  }
+
+  broadcastNewAnnotationReceived(args: any) {
+    this.newAnnotationReceivedSource.next(args);
   }
 
   subscribeToTeacherWorkgroupTopic() {

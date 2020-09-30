@@ -386,9 +386,6 @@ export class StudentDataService extends DataService {
       this.nodeStatuses[nodeId].isVisible = nodeStatus.isVisible;
       this.nodeStatuses[nodeId].isVisitable = nodeStatus.isVisitable;
       this.nodeStatuses[nodeId].isCompleted = nodeStatus.isCompleted;
-      if (!previousIsCompletedValue && nodeStatus.isCompleted) {
-        this.upgrade.$injector.get('$rootScope').$broadcast('nodeCompleted', { nodeId: nodeId });
-      }
     }
   }
 

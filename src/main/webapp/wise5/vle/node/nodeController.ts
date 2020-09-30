@@ -1007,7 +1007,6 @@ class NodeController {
     this.exitSubscription = this.SessionService.exit$.subscribe(() => {
       this.stopAutoSaveInterval();
       this.nodeUnloaded(this.nodeId);
-      this.$rootScope.$broadcast('doneExiting');
     });
   }
 }
