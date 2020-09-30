@@ -18,9 +18,6 @@ class OpenResponseController extends ComponentController {
   isRichTextEnabled: boolean;
   onlyShowWork: boolean;
   messageDialog: any;
-  useCustomCompletionCriteria: boolean;
-  isVerifyingCRaterItemId: boolean;
-  cRaterItemIdIsValid: boolean;
   tinymceOptions: any;
   isRecordingAudio: boolean = false;
   audioRecordingInterval: any;
@@ -104,15 +101,6 @@ class OpenResponseController extends ComponentController {
     // used to hold a message dialog if we need to use one
     this.messageDialog = null;
 
-    // whether this component uses a custom completion criteria
-    this.useCustomCompletionCriteria = false;
-
-    // whether we are currently verifying a CRater item id
-    this.isVerifyingCRaterItemId = false;
-
-    // whether the CRater item id is valid
-    this.cRaterItemIdIsValid = null;
-
     let themePath = this.ProjectService.getThemePath();
 
     // TODO: make toolbar items and plugins customizable by authors (OR strip down to only special characters, support for equations)
@@ -174,10 +162,6 @@ class OpenResponseController extends ComponentController {
 
     // set whether rich text is enabled
     this.isRichTextEnabled = this.componentContent.isRichTextEnabled;
-
-    if (this.componentContent.completionCriteria != null) {
-      this.useCustomCompletionCriteria = true;
-    }
 
     // get the component state from the scope
     componentState = this.$scope.componentState;

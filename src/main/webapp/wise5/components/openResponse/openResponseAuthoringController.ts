@@ -1,19 +1,25 @@
 'use strict';
 
 import { ProjectAssetService } from '../../../site/src/app/services/projectAssetService';
-import OpenResponseController from './openResponseController';
+import { CRaterService } from '../../services/cRaterService';
+import { ComponentAuthoringController } from '../componentAuthoringController';
 
-class OpenResponseAuthoringController extends OpenResponseController {
+class OpenResponseAuthoringController extends ComponentAuthoringController {
   ProjectAssetService: ProjectAssetService;
   allowedConnectedComponentTypes: any[];
+  useCustomCompletionCriteria: boolean = false;
+  cRaterItemIdIsValid: boolean = null;
+  isVerifyingCRaterItemId: boolean = false;
 
   static $inject = [
     '$filter',
-    '$injector',
     '$mdDialog',
     '$q',
     '$rootScope',
+    '$sce',
     '$scope',
+    '$state',
+    '$stateParams',
     'AnnotationService',
     'AudioRecorderService',
     'ConfigService',
@@ -21,7 +27,6 @@ class OpenResponseAuthoringController extends OpenResponseController {
     'NodeService',
     'NotebookService',
     'NotificationService',
-    'OpenResponseService',
     'ProjectAssetService',
     'ProjectService',
     'StudentAssetService',
@@ -31,19 +36,20 @@ class OpenResponseAuthoringController extends OpenResponseController {
 
   constructor(
     $filter,
-    $injector,
     $mdDialog,
     $q,
     $rootScope,
+    $sce,
     $scope,
+    $state,
+    $stateParams,
     AnnotationService,
     AudioRecorderService,
     ConfigService,
-    CRaterService,
+    protected CRaterService: CRaterService,
     NodeService,
     NotebookService,
     NotificationService,
-    OpenResponseService,
     ProjectAssetService,
     ProjectService,
     StudentAssetService,
@@ -51,20 +57,21 @@ class OpenResponseAuthoringController extends OpenResponseController {
     UtilService
   ) {
     super(
-      $filter,
-      $injector,
-      $mdDialog,
       $q,
       $rootScope,
       $scope,
+      $state,
+      $stateParams,
+      $sce,
+      $filter,
+      $mdDialog,
       AnnotationService,
       AudioRecorderService,
       ConfigService,
-      CRaterService,
       NodeService,
       NotebookService,
       NotificationService,
-      OpenResponseService,
+      ProjectAssetService,
       ProjectService,
       StudentAssetService,
       StudentDataService,
@@ -76,6 +83,10 @@ class OpenResponseAuthoringController extends OpenResponseController {
         type: 'OpenResponse'
       }
     ];
+
+    if (this.authoringComponentContent.completionCriteria != null) {
+      this.useCustomCompletionCriteria = true;
+    }
 
     $scope.$watch(
       function() {

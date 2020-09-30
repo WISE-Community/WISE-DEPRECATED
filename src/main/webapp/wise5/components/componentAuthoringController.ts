@@ -217,5 +217,20 @@ export abstract class ComponentAuthoringController {
         fileName
       );
     }
-  };
+  }
+
+  setShowSubmitButtonValue(show) {
+    if (show == null || show == false) {
+      this.authoringComponentContent.showSaveButton = false;
+      this.authoringComponentContent.showSubmitButton = false;
+    } else {
+      this.authoringComponentContent.showSaveButton = true;
+      this.authoringComponentContent.showSubmitButton = true;
+    }
+    this.NodeService.broadcastComponentShowSubmitButtonValueChanged({
+      nodeId: this.nodeId,
+      componentId: this.componentId,
+      showSubmitButton: show
+    });
+  }
 }
