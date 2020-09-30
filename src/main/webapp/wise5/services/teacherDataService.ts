@@ -9,7 +9,7 @@ import { TeacherProjectService } from "./teacherProjectService";
 import { TeacherWebSocketService } from "./teacherWebSocketService";
 import { Injectable } from "@angular/core";
 import { DataService } from "../../site/src/app/services/data.service";
-import { Observable, Subject } from "rxjs";
+import { Observable, Subject, Subscription } from "rxjs";
 
 @Injectable()
 export class TeacherDataService extends DataService {
@@ -25,7 +25,9 @@ export class TeacherDataService extends DataService {
   nodeGradingSort = 'team';
   studentGradingSort = 'step';
   studentProgressSort = 'team';
-  annotationSavedToServerSubscription: any;
+  annotationSavedToServerSubscription: Subscription;
+  newAnnotationReceivedSubscription: Subscription;
+  newStudentWorkReceivedSubscription: Subscription;
   private currentPeriodChangedSource: Subject<any> = new Subject<any>();
   public currentPeriodChanged$: Observable<any> = this.currentPeriodChangedSource.asObservable();
   private currentWorkgroupChangedSource: Subject<any> = new Subject<any>();
@@ -54,12 +56,13 @@ export class TeacherDataService extends DataService {
         this.handleAnnotationReceived(annotation);
       });
 
-      this.getRootScope().$on('newAnnotationReceived', (event, args) => {
-        this.handleAnnotationReceived(args.annotation);
+      this.newAnnotationReceivedSubscription = this.TeacherWebSocketService.newAnnotationReceived$
+          .subscribe(({ annotation }) => {
+        this.handleAnnotationReceived(annotation);
       });
 
-      this.TeacherWebSocketService.newStudentWorkReceived$.subscribe((args: any) => {
-        const studentWork = args.studentWork;
+      this.newStudentWorkReceivedSubscription = this.TeacherWebSocketService.newStudentWorkReceived$
+          .subscribe(({ studentWork }) => {
         this.addOrUpdateComponentState(studentWork);
         this.broadcastStudentWorkReceived({ studentWork: studentWork });
       });
