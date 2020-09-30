@@ -68,11 +68,17 @@ class ComponentController {
             this.componentState = angular.fromJson(this.componentState);
             this.nodeId = this.componentState.nodeId;
             this.componentId = this.componentState.componentId;
-
         }
 
-        var authoringComponentContent = this.ProjectService.getComponentByNodeIdAndComponentId(this.nodeId, this.componentId);
-        var componentContent = this.ProjectService.injectAssetPaths(authoringComponentContent);
+        let authoringComponentContent;
+        let componentContent;
+        if (this.componentContent) {
+          authoringComponentContent = this.componentContent;
+          componentContent = this.componentContent;
+        } else {
+          authoringComponentContent = this.ProjectService.getComponentByNodeIdAndComponentId(this.nodeId, this.componentId);
+          componentContent = this.ProjectService.injectAssetPaths(authoringComponentContent);
+        }
 
         // replace any student names in the component content
         componentContent = this.ConfigService.replaceStudentNames(componentContent);
@@ -97,16 +103,25 @@ class ComponentController {
         this.$scope.teacherWorkgroupId = this.teacherWorkgroupId;
         this.$scope.type = componentContent.type;
         this.$scope.nodeController = this.$scope.$parent.nodeController;
+        this.compileComponent();
 
-        var componentHTML =
-            `<div class="component__wrapper">
-                <div ng-include="::componentTemplatePath" class="component__content component__content--{{::type}}"></div>
-            </div>`;
-
-        if (componentHTML != null) {
-            this.$element.html(componentHTML);
-            this.$compile(this.$element.contents())(this.$scope);
+        if (this.mode === 'authoringComponentPreview') {
+          this.$scope.$watch(
+            () => { return this.componentContent; },
+            () => {
+              this.$scope.componentContent = this.componentContent;
+              this.compileComponent();
+          });
         }
+    }
+
+    compileComponent() {
+      const componentHTML =
+          `<div class="component__wrapper">
+            <div ng-include="::componentTemplatePath" class="component__content component__content--{{::type}}"></div>
+          </div>`;
+      this.$element.html(componentHTML);
+      this.$compile(this.$element.contents())(this.$scope);
     }
 }
 
@@ -114,7 +129,7 @@ ComponentController.$inject = ['$injector', '$scope', '$compile', '$element', 'C
 
 const Component = {
     bindings: {
-        componentContent: '@',
+        componentContent: '<',
         componentId: '@',
         componentState: '@',
         mode: '@',
