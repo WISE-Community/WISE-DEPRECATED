@@ -11,6 +11,7 @@ class HTMLAuthoringController extends ComponentAuthoringController {
   summernotePromptId: string;
 
   static $inject = [
+    '$injector',
     '$q',
     '$rootScope',
     '$scope',
@@ -20,9 +21,11 @@ class HTMLAuthoringController extends ComponentAuthoringController {
     '$filter',
     '$mdDialog',
     'AnnotationService',
+    'AudioRecorderService',
     'ConfigService',
     'NodeService',
     'NotebookService',
+    'NotificationService',
     'ProjectAssetService',
     'ProjectService',
     'StudentAssetService',
@@ -31,6 +34,7 @@ class HTMLAuthoringController extends ComponentAuthoringController {
   ];
 
   constructor(
+    $injector,
     $q,
     $rootScope,
     $scope,
@@ -40,9 +44,11 @@ class HTMLAuthoringController extends ComponentAuthoringController {
     $filter,
     $mdDialog,
     AnnotationService,
+    AudioRecorderService,
     ConfigService,
     NodeService,
     NotebookService,
+    NotificationService,
     ProjectAssetService,
     ProjectService,
     StudentAssetService,
@@ -59,9 +65,11 @@ class HTMLAuthoringController extends ComponentAuthoringController {
       $filter,
       $mdDialog,
       AnnotationService,
+      AudioRecorderService,
       ConfigService,
       NodeService,
       NotebookService,
+      NotificationService,
       ProjectAssetService,
       ProjectService,
       StudentAssetService,

@@ -7,6 +7,7 @@ import { ProjectService } from './projectService';
 import { UpgradeModule } from '@angular/upgrade/static';
 import { ChooseBranchPathDialogComponent } from '../../site/src/app/preview/modules/choose-branch-path-dialog/choose-branch-path-dialog.component';
 import { DataService } from '../../site/src/app/services/data.service';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable()
 export class NodeService {
@@ -14,6 +15,16 @@ export class NodeService {
   $translate: any;
   transitionResults = {};
   chooseTransitionPromises = {};
+  private nodeSubmitClickedSource: Subject<any> = new Subject<any>();
+  public nodeSubmitClicked$: Observable<any> = this.nodeSubmitClickedSource.asObservable();
+  private doneRenderingComponentSource: Subject<any> = new Subject<any>();
+  public doneRenderingComponent$ = this.doneRenderingComponentSource.asObservable();
+  private componentShowSubmitButtonValueChangedSource: Subject<any> = new Subject<any>();
+  public componentShowSubmitButtonValueChanged$: Observable<any> =
+      this.componentShowSubmitButtonValueChangedSource.asObservable();
+  private siblingComponentStudentDataChangedSource: Subject<any> = new Subject<any>();
+  public siblingComponentStudentDataChanged$: Observable<any> =
+      this.siblingComponentStudentDataChangedSource.asObservable();
 
   constructor(
     private upgrade: UpgradeModule,
@@ -785,5 +796,21 @@ export class NodeService {
       clickOutsideToClose: true,
       escapeToClose: true
     });
+  }
+
+  broadcastNodeSubmitClicked(args: any) {
+    this.nodeSubmitClickedSource.next(args);
+  }
+
+  broadcastDoneRenderingComponent(nodeIdAndComponentId: any) {
+    this.doneRenderingComponentSource.next(nodeIdAndComponentId);
+  }
+
+  broadcastComponentShowSubmitButtonValueChanged(args: any) {
+    this.componentShowSubmitButtonValueChangedSource.next(args);
+  }
+
+  broadcastSiblingComponentStudentDataChanged(args: any) {
+    this.siblingComponentStudentDataChangedSource.next(args);
   }
 }

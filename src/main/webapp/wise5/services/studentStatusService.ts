@@ -3,10 +3,13 @@ import { HttpClient } from "@angular/common/http";
 import { AnnotationService } from "./annotationService";
 import { ConfigService } from "./configService";
 import { ProjectService } from "./projectService";
+import { Observable, Subject } from "rxjs";
 
 @Injectable()
 export class StudentStatusService {
   studentStatuses = [];
+  private studentStatusReceivedSource: Subject<any> = new Subject<any>();
+  public studentStatusReceived$: Observable<any> = this.studentStatusReceivedSource.asObservable();
 
   constructor(private http: HttpClient, private AnnotationService: AnnotationService,
       private ConfigService: ConfigService, private ProjectService: ProjectService) {
@@ -316,5 +319,9 @@ export class StudentStatusService {
       }
     }
     return maxScore;
+  }
+
+  broadcastStudentStatusReceived(args: any) {
+    this.studentStatusReceivedSource.next(args);
   }
 }

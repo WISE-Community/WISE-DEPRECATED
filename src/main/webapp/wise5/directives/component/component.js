@@ -11,6 +11,18 @@ class ComponentController {
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
         this.UtilService = UtilService;
+
+        this.$scope.$on('$destroy', () => {
+            this.ngOnDestroy();
+        });
+    }
+
+    ngOnDestroy() {
+        this.unsubscribeAll();
+    }
+
+    unsubscribeAll() {
+        this.snipImageSubscription.unsubscribe();
     }
 
     $onInit() {
@@ -24,19 +36,12 @@ class ComponentController {
          * Snip an image from the VLE
          * @param $event the click event from the student clicking on the image
          */
-        this.$scope.$on('snipImage', (event, $eventArgs) => {
-            // get the target that was clicked
-            var imageElement = $eventArgs.target;
-
-            if (imageElement != null) {
-
-                // create an image object
-                var imageObject = this.UtilService.getImageObjectFromImageElement(imageElement);
-
+        this.snipImageSubscription = this.ProjectService.snipImage$.subscribe(
+                ({ target, componentId }) => {
+            if (this.componentId === componentId) {
+                const imageObject = this.UtilService.getImageObjectFromImageElement(target);
                 if (imageObject != null) {
-
-                    // create a notebook item with the image populated into it
-                    this.NotebookService.addNote($eventArgs, imageObject);
+                    this.NotebookService.addNote(imageObject);
                 }
             }
         });

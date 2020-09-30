@@ -3,9 +3,11 @@ import { ConfigService } from "../services/configService";
 import { UtilService } from "../services/utilService";
 import { TeacherProjectService } from "../services/teacherProjectService";
 import { ProjectAssetService } from '../../site/src/app/services/projectAssetService';
+import { AudioRecorderService } from '../services/audioRecorderService';
 import { AnnotationService } from '../services/annotationService';
 import { NodeService } from '../services/nodeService';
 import { NotebookService } from '../services/notebookService';
+import { NotificationService } from '../services/notificationService';
 import { StudentAssetService } from '../services/studentAssetService';
 import { StudentDataService } from '../services/studentDataService';
 
@@ -42,9 +44,11 @@ export abstract class ComponentAuthoringController {
       protected $filter: any,
       protected $mdDialog: any,
       protected AnnotationService: AnnotationService,
+      protected AudioRecorderService: AudioRecorderService,
       protected ConfigService: ConfigService,
       protected NodeService: NodeService,
       protected NotebookService: NotebookService,
+      protected NotificationService: NotificationService,
       protected ProjectAssetService: ProjectAssetService,
       protected ProjectService: TeacherProjectService,
       protected StudentAssetService: StudentAssetService,
@@ -102,7 +106,7 @@ export abstract class ComponentAuthoringController {
     }, () => {
       this.showAdvancedAuthoring = this.$scope.$parent.nodeAuthoringController
           .showAdvancedAdvancedAuthoring[this.componentId];
-      this.UtilService.hideJSONValidMessage();
+      this.NotificationService.hideJSONValidMessage();
     }, true);
   }
 
@@ -121,12 +125,12 @@ export abstract class ComponentAuthoringController {
       if (this.isJSONValid()) {
         this.saveJSONAuthoringViewChanges();
         this.toggleJSONAuthoringView();
-        this.UtilService.hideJSONValidMessage();
+        this.NotificationService.hideJSONValidMessage();
       } else {
         let isRollback = confirm(this.$translate('jsonInvalidErrorMessage'));
         if (isRollback) {
           this.toggleJSONAuthoringView();
-          this.UtilService.hideJSONValidMessage();
+          this.NotificationService.hideJSONValidMessage();
           this.isJSONStringChanged = false;
           this.rollbackToRecentValidJSON();
           this.saveJSONAuthoringViewChanges();
@@ -166,10 +170,10 @@ export abstract class ComponentAuthoringController {
   authoringJSONChanged(): void {
     this.isJSONStringChanged = true;
     if (this.isJSONValid()) {
-      this.UtilService.showJSONValidMessage();
+      this.NotificationService.showJSONValidMessage();
       this.rememberRecentValidJSON();
     } else {
-      this.UtilService.showJSONInvalidMessage();
+      this.NotificationService.showJSONInvalidMessage();
     }
   }
 

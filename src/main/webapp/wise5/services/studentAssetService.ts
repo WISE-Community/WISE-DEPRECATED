@@ -4,12 +4,15 @@ import { Injectable } from '@angular/core';
 import { UpgradeModule } from '@angular/upgrade/static';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { ConfigService } from './configService';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable()
 export class StudentAssetService {
   allAssets = [];
   imageFileExtensions = ['png', 'jpg', 'jpeg', 'gif'];
   audioFileExtensions = ['wav', 'mp3', 'ogg', 'm4a', 'm4p', 'raw', 'aiff', 'webm'];
+  private showStudentAssetsSource: Subject<any> = new Subject<any>();
+  public showStudentAssets$: Observable<any> = this.showStudentAssetsSource.asObservable();
 
   constructor(private upgrade: UpgradeModule, private http: HttpClient,
       private ConfigService: ConfigService) {
@@ -227,5 +230,9 @@ export class StudentAssetService {
         return studentAsset;
       });
     }
+  }
+
+  broadcastShowStudentAssets(args: any) {
+    this.showStudentAssetsSource.next(args);
   }
 }

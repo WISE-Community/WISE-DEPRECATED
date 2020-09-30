@@ -18,7 +18,9 @@ class WiselinkController {
   }
 
   unsubscribeAll() {
-    this.currentNodeChangedSubscription.unsubscribe();
+    if (this.currentNodeChangedSubscription != null) {
+      this.currentNodeChangedSubscription.unsubscribe();
+    }
   }
 
   $onInit() {

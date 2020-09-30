@@ -7,12 +7,21 @@ import { ConfigService } from "./configService";
 import { UtilService } from "./utilService";
 import * as angular from 'angular';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { Observable, Subject } from "rxjs";
 
 @Injectable()
 export class AnnotationService {
   activeGlobalAnnotationGroups: any;
   annotations: any;
   dummyAnnotationId: number = 1; // used in preview mode when we simulate saving of annotation
+  private annotationSavedToServerSource: Subject<any> = new Subject<any>();
+  public annotationSavedToServer$: Observable<any> =
+      this.annotationSavedToServerSource.asObservable();
+  private annotationReceivedSource: Subject<any> = new Subject<any>();
+  public annotationReceived$: Observable<any> = this.annotationReceivedSource.asObservable();
+  private displayGlobalAnnotationsSource: Subject<any> = new Subject<any>();
+  public displayGlobalAnnotations$: Observable<any> =
+      this.displayGlobalAnnotationsSource.asObservable();
 
   constructor(private upgrade: UpgradeModule, private http: HttpClient,
       private ConfigService: ConfigService, private ProjectService: ProjectService,
@@ -181,7 +190,7 @@ export class AnnotationService {
               localAnnotation.serverSaveTime = savedAnnotation.serverSaveTime;
               //localAnnotation.requestToken = null; // requestToken is no longer needed.
 
-              this.upgrade.$injector.get('$rootScope').$broadcast('annotationSavedToServer', {annotation: localAnnotation});
+              this.broadcastAnnotationSavedToServer({annotation: localAnnotation});
               break;
             } else if (localAnnotation.requestToken != null &&
               localAnnotation.requestToken === savedAnnotation.requestToken) {
@@ -204,7 +213,7 @@ export class AnnotationService {
                 this.dummyAnnotationId++;
               }
 
-              this.upgrade.$injector.get('$rootScope').$broadcast('annotationSavedToServer', {annotation: localAnnotation});
+              this.broadcastAnnotationSavedToServer({annotation: localAnnotation});
               break;
             }
           }
@@ -917,5 +926,17 @@ export class AnnotationService {
       }
     }
     return null;
+  }
+
+  broadcastAnnotationSavedToServer(args: any) {
+    this.annotationSavedToServerSource.next(args);
+  }
+
+  broadcastAnnotationReceived(args: any) {
+    this.annotationReceivedSource.next(args);
+  }
+
+  broadcastDisplayGlobalAnnotations() {
+    this.displayGlobalAnnotationsSource.next();
   }
 }

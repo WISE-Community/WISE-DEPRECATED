@@ -1,15 +1,28 @@
+import * as angular from 'angular';
 import { Injectable } from "@angular/core";
 import { UpgradeModule } from "@angular/upgrade/static";
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { ConfigService } from "./configService";
 import { ProjectService } from "./projectService";
 import { UtilService } from "./utilService";
-import * as angular from 'angular';
 import { Notification } from "../../site/src/app/domain/notification";
+import { Observable, Subject } from "rxjs";
 
 @Injectable()
 export class NotificationService {
   notifications: Notification[] = [];
+  private notificationChangedSource: Subject<any> = new Subject<any>();
+  public notificationChanged$: Observable<any> = this.notificationChangedSource.asObservable();
+  private setGlobalMessageSource: Subject<any> = new Subject<any>();
+  public setGlobalMessage$: Observable<any> = this.setGlobalMessageSource.asObservable();
+  private setIsJSONValidSource: Subject<any> = new Subject<any>();
+  public setIsJSONValid$: Observable<any> = this.setIsJSONValidSource.asObservable();
+  private serverConnectionStatusSource: Subject<any> = new Subject<any>();
+  public serverConnectionStatus$: Observable<any> =
+      this.serverConnectionStatusSource.asObservable();
+  private viewCurrentAmbientNotificationSource: Subject<any> = new Subject<any>();
+  public viewCurrentAmbientNotification$: Observable<any> =
+      this.viewCurrentAmbientNotificationSource.asObservable();
 
   constructor(private upgrade: UpgradeModule, private http: HttpClient,
       private ConfigService: ConfigService, private ProjectService: ProjectService,
@@ -210,11 +223,54 @@ export class NotificationService {
     for (let n = 0; n < this.notifications.length; n++) {
       if (this.notifications[n].id === notification.id) {
         this.notifications[n] = notification;
-        this.upgrade.$injector.get('$rootScope').$broadcast('notificationChanged', notification);
+        this.broadcastNotificationChanged(notification);
         return;
       }
     }
     this.notifications.push(notification);
-    this.upgrade.$injector.get('$rootScope').$broadcast('notificationChanged', notification);
+    this.broadcastNotificationChanged(notification);
+  }
+
+  broadcastNotificationChanged(notification: any) {
+    this.notificationChangedSource.next(notification);
+  }
+
+  showJSONValidMessage() {
+    this.setIsJSONValidMessage(true);
+  }
+
+  showJSONInvalidMessage() {
+    this.setIsJSONValidMessage(false);
+  }
+
+  hideJSONValidMessage() {
+    this.setIsJSONValidMessage(null);
+  }
+
+  /**
+   * Show the message in the toolbar that says "JSON Valid" or "JSON Invalid".
+   * @param isJSONValid
+   * true if we want to show "JSON Valid"
+   * false if we want to show "JSON Invalid"
+   * null if we don't want to show anything
+   */
+  setIsJSONValidMessage(isJSONValid) {
+    this.broadcastSetIsJSONValid({ isJSONValid: isJSONValid });
+  }
+
+  broadcastSetGlobalMessage(args) {
+    this.setGlobalMessageSource.next(args);
+  }
+
+  broadcastSetIsJSONValid(args) {
+    this.setIsJSONValidSource.next(args);
+  }
+
+  broadcastServerConnectionStatus(isConnected: boolean) {
+    this.serverConnectionStatusSource.next(isConnected);
+  }
+
+  broadcastViewCurrentAmbientNotification(args: any) {
+    this.viewCurrentAmbientNotificationSource.next(args);
   }
 }
