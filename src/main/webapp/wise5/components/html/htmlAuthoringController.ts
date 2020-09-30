@@ -196,17 +196,12 @@ class HTMLAuthoringController extends ComponentAuthoringController {
   }
 
   assetSelected({ nodeId, componentId, assetItem, target }) {
-    const fileName = assetItem.fileName;
-    const fullFilePath = `${this.ConfigService.getProjectAssetsDirectoryPath()}/${fileName}`;
+    super.assetSelected({ nodeId, componentId, assetItem, target });
     if (target === 'prompt') {
+      const fileName = assetItem.fileName;
+      const fullFilePath = `${this.ConfigService.getProjectAssetsDirectoryPath()}/${fileName}`;
       this.UtilService.insertFileInSummernoteEditor(
         `summernotePrompt_${this.nodeId}_${this.componentId}`,
-        fullFilePath,
-        fileName
-      );
-    } else {
-      this.UtilService.insertFileInSummernoteEditor(
-        `summernoteRubric_${this.nodeId}_${this.componentId}`,
         fullFilePath,
         fileName
       );

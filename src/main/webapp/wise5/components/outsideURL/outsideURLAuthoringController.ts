@@ -149,18 +149,6 @@ class OutsideURLAuthoringController extends ComponentAuthoringController {
     this.height = height ? height + 'px' : '600px';
   }
 
-  assetSelected({ nodeId, componentId, assetItem, target }) {
-    const fileName = assetItem.fileName;
-    const fullFilePath = `${this.ConfigService.getProjectAssetsDirectoryPath()}/${fileName}`;
-    if (target === 'rubric') {
-      this.UtilService.insertFileInSummernoteEditor(
-        `summernoteRubric_${this.nodeId}_${this.componentId}`,
-        fullFilePath,
-        fileName
-      );
-    }
-  }
-
   urlInputChanged() {
     this.authoringComponentContent.info = null;
     this.authoringViewComponentChanged();

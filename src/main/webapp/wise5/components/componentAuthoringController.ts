@@ -207,9 +207,15 @@ export abstract class ComponentAuthoringController {
     );
   }
 
-  /**
-   * Callback when author selects an asset
-   * @param data object containing key value pairs
-   */
-  abstract assetSelected(data: any): void;
+  assetSelected({ nodeId, componentId, assetItem, target }): void {
+    if (target === 'rubric') {
+      const fileName = assetItem.fileName;
+      const fullFilePath = `${this.ConfigService.getProjectAssetsDirectoryPath()}/${fileName}`;
+      this.UtilService.insertFileInSummernoteEditor(
+        `summernoteRubric_${this.nodeId}_${this.componentId}`,
+        fullFilePath,
+        fileName
+      );
+    }
+  };
 }
