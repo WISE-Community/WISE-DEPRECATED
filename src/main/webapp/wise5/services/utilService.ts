@@ -343,8 +343,8 @@ export class UtilService {
    * @param tooltip the tooltip text for the custom button
    * @return custom summernote button
    */
-  createInsertWISELinkButton(projectId, nodeId, componentId, target, tooltip) {
-    const thisRootScope = this.upgrade.$injector.get('$rootScope');
+  createInsertWISELinkButton(projectId, nodeId, componentId, target, tooltip,
+      openWISELinkChooserFunction) {
     const InsertWISELinkButton = function(context) {
       const ui = ($ as any).summernote.ui;
       const button = ui.button({
@@ -363,7 +363,7 @@ export class UtilService {
             params.componentId = componentId;
           }
           params.target = target;
-          thisRootScope.$broadcast('openWISELinkChooser', params);
+          openWISELinkChooserFunction(params);
         }
       });
       return button.render(); // return button as jquery object
@@ -684,91 +684,6 @@ export class UtilService {
   }
 
   /**
-   * Render the component state and then generate an image from it.
-   * @param componentState The component state to render.
-   * @return A promise that will return an image.
-   */
-  generateImageFromComponentState(componentState) {
-    let deferred = this.upgrade.$injector.get('$q').defer();
-    this.upgrade.$injector.get('$mdDialog').show({
-      template: `
-        <div style="position: fixed; width: 100%; height: 100%; top: 0; left: 0; background-color: rgba(0,0,0,0.2); z-index: 2;"></div>
-        <div align="center" style="position: absolute; top: 100px; left: 200px; z-index: 1000; padding: 20px; background-color: yellow;">
-          <span>{{ "importingWork" | translate }}...</span>
-          <br/>
-          <br/>
-          <md-progress-circular md-mode="indeterminate"></md-progress-circular>
-        </div>
-        <component node-id="{{nodeId}}"
-                   component-id="{{componentId}}"
-                   component-state="{{componentState}}"
-                   mode="student"></component>
-      `,
-      locals: {
-        nodeId: componentState.nodeId,
-        componentId: componentState.componentId,
-        componentState: componentState
-      },
-      controller: DialogController
-    });
-    function DialogController($scope, $mdDialog, nodeId, componentId, componentState) {
-      $scope.nodeId = nodeId;
-      $scope.componentId = componentId;
-      $scope.componentState = componentState;
-      $scope.closeDialog = function() {
-        $mdDialog.hide();
-      };
-    }
-    DialogController.$inject = ['$scope', '$mdDialog', 'nodeId', 'componentId', 'componentState'];
-    // wait for the component in the dialog to finish rendering
-    let doneRenderingComponentListener = this.upgrade.$injector.get('$rootScope').$on(
-      'doneRenderingComponent',
-      (event, args) => {
-        if (
-          componentState.nodeId == args.nodeId &&
-          componentState.componentId == args.componentId
-        ) {
-          setTimeout(() => {
-            this.generateImageFromComponentStateHelper(componentState).then(image => {
-              /*
-               * Destroy the listener otherwise this block of code will be called every time
-               * doneRenderingComponent is fired in the future.
-               */
-              doneRenderingComponentListener();
-              clearTimeout(destroyDoneRenderingComponentListenerTimeout);
-              deferred.resolve(image);
-            });
-          }, 1000);
-        }
-      }
-    );
-    /*
-     * Set a timeout to destroy the listener in case there is an error creating the image and
-     * we don't get to destroying it above.
-     */
-    const destroyDoneRenderingComponentListenerTimeout = setTimeout(() => {
-      doneRenderingComponentListener();
-    }, 10000);
-    return deferred.promise;
-  }
-
-  /**
-   * The component state has been rendered in the DOM and now we want to create an image
-   * from it.
-   * @param componentState The component state that has been rendered.
-   * @return A promise that will return an image.
-   */
-  generateImageFromComponentStateHelper(componentState) {
-    let deferred = this.upgrade.$injector.get('$q').defer();
-    let componentService = this.upgrade.$injector.get(componentState.componentType + 'Service');
-    componentService.generateImageFromRenderedComponentState(componentState).then(image => {
-      deferred.resolve(image);
-      this.upgrade.$injector.get('$mdDialog').hide();
-    });
-    return deferred.promise;
-  }
-
-  /**
    * Get the connected component associated with the component state.
    * @param componentContent The component content.
    * @param componentState The component state.
@@ -793,29 +708,6 @@ export class UtilService {
     } catch (e) {
       return false;
     }
-  }
-
-  showJSONValidMessage() {
-    this.setIsJSONValidMessage(true);
-  }
-
-  showJSONInvalidMessage() {
-    this.setIsJSONValidMessage(false);
-  }
-
-  hideJSONValidMessage() {
-    this.setIsJSONValidMessage(null);
-  }
-
-  /**
-   * Show the message in the toolbar that says "JSON Valid" or "JSON Invalid".
-   * @param isJSONValid
-   * true if we want to show "JSON Valid"
-   * false if we want to show "JSON Invalid"
-   * null if we don't want to show anything
-   */
-  setIsJSONValidMessage(isJSONValid) {
-    this.upgrade.$injector.get('$rootScope').$broadcast('setIsJSONValid', { isJSONValid: isJSONValid });
   }
 
   moveObjectUp(objects, index) {

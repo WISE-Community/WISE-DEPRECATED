@@ -30,7 +30,8 @@ class StepToolsCtrl {
             this.updateModel();
         });
 
-        this.$scope.$on('nodeStatusesChanged', (event, arge) => {
+        this.nodeStatusesChangedSubscription = 
+                this.StudentDataService.nodeStatusesChanged$.subscribe(() => {
             this.updateModel();
         });
 
@@ -44,6 +45,7 @@ class StepToolsCtrl {
     }
 
     unsubscribeAll() {
+        this.currentNodeChangedSubscription.unsubscribe();
         this.currentNodeChangedSubscription.unsubscribe();
     }
 

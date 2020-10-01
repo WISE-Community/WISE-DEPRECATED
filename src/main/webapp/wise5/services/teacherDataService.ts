@@ -9,7 +9,7 @@ import { TeacherProjectService } from "./teacherProjectService";
 import { TeacherWebSocketService } from "./teacherWebSocketService";
 import { Injectable } from "@angular/core";
 import { DataService } from "../../site/src/app/services/data.service";
-import { Subject } from "rxjs";
+import { Observable, Subject, Subscription } from "rxjs";
 
 @Injectable()
 export class TeacherDataService extends DataService {
@@ -25,19 +25,25 @@ export class TeacherDataService extends DataService {
   nodeGradingSort = 'team';
   studentGradingSort = 'step';
   studentProgressSort = 'team';
-  private currentNodeChangedSource: Subject<any> = new Subject<any>();
-  public currentNodeChanged$ = this.currentNodeChangedSource.asObservable();
+  annotationSavedToServerSubscription: Subscription;
+  newAnnotationReceivedSubscription: Subscription;
+  newStudentWorkReceivedSubscription: Subscription;
+  private currentPeriodChangedSource: Subject<any> = new Subject<any>();
+  public currentPeriodChanged$: Observable<any> = this.currentPeriodChangedSource.asObservable();
+  private currentWorkgroupChangedSource: Subject<any> = new Subject<any>();
+  public currentWorkgroupChanged$: Observable<any> =
+      this.currentWorkgroupChangedSource.asObservable();
 
   constructor(
-    private upgrade: UpgradeModule,
+    upgrade: UpgradeModule,
     private http: HttpClient,
     private AnnotationService: AnnotationService,
     private ConfigService: ConfigService,
-    private ProjectService: TeacherProjectService,
+    ProjectService: TeacherProjectService,
     private TeacherWebSocketService: TeacherWebSocketService,
     private UtilService: UtilService
   ) {
-    super();
+    super(upgrade, ProjectService);
     this.studentData = {
       componentStatesByWorkgroupId: {},
       componentStatesByNodeId: {},
@@ -45,18 +51,20 @@ export class TeacherDataService extends DataService {
     };
 
     if (this.upgrade.$injector != null) {
-      this.getRootScope().$on('annotationSavedToServer', (event, args) => {
-        this.handleAnnotationReceived(args.annotation);
+      this.annotationSavedToServerSubscription = 
+          this.AnnotationService.annotationSavedToServer$.subscribe(({ annotation }) => {
+        this.handleAnnotationReceived(annotation);
       });
 
-      this.getRootScope().$on('newAnnotationReceived', (event, args) => {
-        this.handleAnnotationReceived(args.annotation);
+      this.newAnnotationReceivedSubscription = this.TeacherWebSocketService.newAnnotationReceived$
+          .subscribe(({ annotation }) => {
+        this.handleAnnotationReceived(annotation);
       });
 
-      this.getRootScope().$on('newStudentWorkReceived', (event, args) => {
-        const studentWork = args.studentWork;
+      this.newStudentWorkReceivedSubscription = this.TeacherWebSocketService.newStudentWorkReceived$
+          .subscribe(({ studentWork }) => {
         this.addOrUpdateComponentState(studentWork);
-        this.getRootScope().$broadcast('studentWorkReceived', { studentWork: studentWork });
+        this.broadcastStudentWorkReceived({ studentWork: studentWork });
       });
     }
   }
@@ -85,7 +93,7 @@ export class TeacherDataService extends DataService {
     }
     this.studentData.annotationsByNodeId[nodeId].push(annotation);
     this.AnnotationService.setAnnotations(this.studentData.annotations);
-    this.getRootScope().$broadcast('annotationReceived', { annotation: annotation });
+    this.AnnotationService.broadcastAnnotationReceived({ annotation: annotation });
   }
 
   /**
@@ -303,7 +311,8 @@ export class TeacherDataService extends DataService {
   }
 
   getAllRelatedComponents(nodeId) {
-    const components = this.ProjectService.getNodeIdsAndComponentIds(nodeId);
+    const components = (<TeacherProjectService>this.ProjectService)
+        .getNodeIdsAndComponentIds(nodeId);
     return components.concat(this.getConnectedComponentsIfNecessary(components));
   }
 
@@ -827,11 +836,15 @@ export class TeacherDataService extends DataService {
     this.currentPeriod = period;
     this.clearCurrentWorkgroupIfNecessary(this.currentPeriod.periodId);
     if (previousPeriod == null || previousPeriod.periodId != this.currentPeriod.periodId) {
-      this.getRootScope().$broadcast('currentPeriodChanged', {
+      this.broadcastCurrentPeriodChanged({
         previousPeriod: previousPeriod,
         currentPeriod: this.currentPeriod
       });
     }
+  }
+
+  broadcastCurrentPeriodChanged(previousAndCurrentPeriod: any) {
+    this.currentPeriodChangedSource.next(previousAndCurrentPeriod);
   }
 
   clearCurrentWorkgroupIfNecessary(periodId) {
@@ -857,9 +870,11 @@ export class TeacherDataService extends DataService {
 
   setCurrentWorkgroup(workgroup) {
     this.currentWorkgroup = workgroup;
-    this.getRootScope().$broadcast('currentWorkgroupChanged', {
-      currentWorkgroup: this.currentWorkgroup
-    });
+    this.broadcastCurrentWorkgroupChanged({ currentWorkgroup: this.currentWorkgroup });
+  }
+
+  broadcastCurrentWorkgroupChanged(args: any) {
+    this.currentWorkgroupChangedSource.next(args);
   }
 
   getCurrentWorkgroup() {
@@ -874,42 +889,10 @@ export class TeacherDataService extends DataService {
     return this.currentStep;
   }
 
-  setCurrentNodeByNodeId(nodeId) {
-    if (nodeId != null) {
-      this.setCurrentNode(this.ProjectService.getNodeById(nodeId));
-    }
-  }
-
-  setCurrentNode(node) {
-    const previousCurrentNode = this.currentNode;
-    if (previousCurrentNode !== node) {
-      if (previousCurrentNode && !this.ProjectService.isGroupNode(previousCurrentNode.id)) {
-        this.previousStep = previousCurrentNode;
-      }
-      this.currentNode = node;
-      this.broadcastCurrentNodeChanged({
-        previousNode: previousCurrentNode,
-        currentNode: this.currentNode
-      });
-    }
-  }
-
-  broadcastCurrentNodeChanged(previousAndCurrentNode: any) {
-    this.currentNodeChangedSource.next(previousAndCurrentNode);
-  }
-
-  endCurrentNode() {
-    const previousCurrentNode = this.currentNode;
-    if (previousCurrentNode != null) {
-      this.getRootScope().$broadcast('exitNode', { nodeToExit: previousCurrentNode });
-    }
-  }
-
   /**
    * @param nodeId the node id of the new current node
    */
   endCurrentNodeAndSetCurrentNodeByNodeId(nodeId) {
-    this.endCurrentNode();
     this.setCurrentNodeByNodeId(nodeId);
   }
 

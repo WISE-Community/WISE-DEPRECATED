@@ -1,11 +1,14 @@
 import { Injectable } from "@angular/core";
 import { UpgradeModule } from "@angular/upgrade/static";
+import { Observable, Subject } from "rxjs";
 
 @Injectable()
 export class AudioRecorderService {
 
   mediaRecorder: MediaRecorder;
   requester: string;
+  private audioRecordedSource: Subject<any> = new Subject<any>();
+  public audioRecorded$: Observable<any> = this.audioRecordedSource.asObservable();
 
   constructor(private upgrade: UpgradeModule) {
   }
@@ -19,8 +22,10 @@ export class AudioRecorderService {
       try {
         this.mediaRecorder = new MediaRecorder(stream, options);
         this.mediaRecorder.ondataavailable = (event: any) => {
-          this.upgrade.$injector.get('$rootScope').$broadcast('audioRecorded',
-              { requester: this.requester, audioFile: this.getAudioFile(event.data) });
+          this.broadcastAudioRecorded({
+            requester: this.requester,
+            audioFile: this.getAudioFile(event.data)
+          });
         }
         this.mediaRecorder.start();
       } catch (e) {
@@ -52,5 +57,9 @@ export class AudioRecorderService {
 
   stopRecording() {
     this.mediaRecorder.stop();
+  }
+
+  broadcastAudioRecorded(args: any) {
+    this.audioRecordedSource.next(args);
   }
 }

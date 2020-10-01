@@ -9,11 +9,13 @@ class DiscussionAuthoringController extends DiscussionController {
 
   static $inject = [
     '$filter',
+    '$injector',
     '$mdDialog',
     '$q',
     '$rootScope',
     '$scope',
     'AnnotationService',
+    'AudioRecorderService',
     'ConfigService',
     'DiscussionService',
     'NodeService',
@@ -29,11 +31,13 @@ class DiscussionAuthoringController extends DiscussionController {
 
   constructor(
     $filter,
+    $injector,
     $mdDialog,
     $q,
     $rootScope,
     $scope,
     AnnotationService,
+    AudioRecorderService,
     ConfigService,
     DiscussionService,
     NodeService,
@@ -48,11 +52,13 @@ class DiscussionAuthoringController extends DiscussionController {
   ) {
     super(
       $filter,
+      $injector,
       $mdDialog,
       $q,
       $rootScope,
       $scope,
       AnnotationService,
+      AudioRecorderService,
       ConfigService,
       DiscussionService,
       NodeService,

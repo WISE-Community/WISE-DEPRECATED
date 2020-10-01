@@ -28,14 +28,15 @@ class ComponentAnnotationsController {
         this.showScore = true;
         this.showComment = true;
 
-        this.$scope.$on('studentWorkSavedToServer', (event, args) => {
+        this.studentWorkSavedToServerSubscription =
+                this.StudentDataService.studentWorkSavedToServer$.subscribe((args) => {
             let nodeId = args.studentWork.nodeId;
             let componentId = args.studentWork.componentId;
             if (nodeId === this.nodeId && componentId === this.componentId) {
                 this.isNew = false;
             }
         });
-
+        
         /* used to pop up annotation
         $timeout(() => {
             this.$mdDialog.show({
@@ -60,6 +61,18 @@ class ComponentAnnotationsController {
                 this.processAnnotations();
             //}
         };
+
+        this.$scope.$on('$destroy', () => {
+            this.ngOnDestroy();
+        });
+    }
+
+    ngOnDestroy() {
+        this.unsubscribeAll();
+    }
+
+    unsubscribeAll() {
+        this.studentWorkSavedToServerSubscription.unsubscribe();
     }
 
     closeDialog() {

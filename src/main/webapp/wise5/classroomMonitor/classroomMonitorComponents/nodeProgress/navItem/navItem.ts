@@ -8,6 +8,7 @@ import { TeacherDataService } from '../../../../services/teacherDataService';
 import { TeacherWebSocketService } from '../../../../services/teacherWebSocketService';
 import * as $ from 'jquery';
 import { TeacherProjectService } from '../../../../services/teacherProjectService';
+import { Subscription } from 'rxjs';
 
 class NavItemController {
   $translate: any;
@@ -38,6 +39,8 @@ class NavItemController {
   rubricIconName: string;
   showPosition: any;
   workgroupsOnNodeData: any;
+  currentPeriodChangedSubscription: Subscription;
+  studentStatusReceivedSubscription: Subscription;
 
   static $inject = [
     '$element',
@@ -70,7 +73,6 @@ class NavItemController {
   ) {
     this.$element = $element;
     this.$rootScope = $rootScope;
-    this.$scope = $scope;
     this.AnnotationService = AnnotationService;
     this.ConfigService = ConfigService;
     this.NotificationService = NotificationService;
@@ -185,17 +187,32 @@ class NavItemController {
       }
     );
 
-    this.$rootScope.$on('studentStatusReceived', (event, args) => {
+    this.studentStatusReceivedSubscription =
+        this.StudentStatusService.studentStatusReceived$.subscribe(() => {
       this.setWorkgroupsOnNodeData();
       this.setCurrentNodeStatus();
       this.getAlertNotifications();
     });
 
-    this.$rootScope.$on('currentPeriodChanged', (event, args) => {
-      this.currentPeriod = args.currentPeriod;
+    this.currentPeriodChangedSubscription = this.TeacherDataService.currentPeriodChanged$
+        .subscribe(({ currentPeriod }) => {
+      this.currentPeriod = currentPeriod;
       this.setWorkgroupsOnNodeData();
       this.getAlertNotifications();
     });
+
+    this.$scope.$on('$destroy', () => {
+      this.ngOnDestroy();
+    });
+  }
+
+  ngOnDestroy() {
+    this.unsubscribeAll();
+  }
+
+  unsubscribeAll() {
+    this.currentPeriodChangedSubscription.unsubscribe();
+    this.studentStatusReceivedSubscription.unsubscribe();
   }
 
   zoomToElement() {

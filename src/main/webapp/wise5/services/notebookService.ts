@@ -8,6 +8,7 @@ import { ProjectService } from "./projectService";
 import { StudentAssetService } from "./studentAssetService";
 import { StudentDataService } from "./studentDataService";
 import { UtilService } from './utilService';
+import { Subject } from "rxjs";
 
 @Injectable()
 export class NotebookService {
@@ -53,6 +54,25 @@ export class NotebookService {
   reports = [];
   publicNotebookItems = {};
   notebooksByWorkgroup = {};
+  notebookItemAnnotationReceivedSubscription: any;
+  private addNoteSource: Subject<any> = new Subject<any>();
+  public addNote$ = this.addNoteSource.asObservable();
+  private closeNotebookSource: Subject<any> = new Subject<any>();
+  public closeNotebook$ = this.closeNotebookSource.asObservable();
+  private editNoteSource: Subject<any> = new Subject<any>();
+  public editNote$ = this.editNoteSource.asObservable();
+  private notebookItemAnnotationReceivedSource: Subject<boolean> = new Subject<boolean>();
+  public notebookItemAnnotationReceived$ = this.notebookItemAnnotationReceivedSource.asObservable();
+  private notebookItemChosenSource: Subject<any> = new Subject<any>();
+  public notebookItemChosen$ = this.notebookItemChosenSource.asObservable();
+  private notebookUpdatedSource: Subject<any> = new Subject<any>();
+  public notebookUpdated$ = this.notebookUpdatedSource.asObservable();
+  private openNotebookSource: Subject<any> = new Subject<any>();
+  public openNotebook$ = this.openNotebookSource.asObservable();
+  private publicNotebookItemsRetrievedSource: Subject<any> = new Subject<any>();
+  public publicNotebookItemsRetrieved$ = this.publicNotebookItemsRetrievedSource.asObservable();
+  private showReportAnnotationsSource: Subject<any> = new Subject<any>();
+  public showReportAnnotations$ = this.showReportAnnotationsSource.asObservable();
 
   constructor(private upgrade: UpgradeModule,
       public http: HttpClient,
@@ -61,6 +81,18 @@ export class NotebookService {
       private StudentAssetService: StudentAssetService,
       private StudentDataService: StudentDataService,
       private UtilService: UtilService) {
+    this.notebookItemAnnotationReceivedSubscription =
+        this.StudentDataService.notebookItemAnnotationReceived$.subscribe((args: any) => {
+      this.notebookItemAnnotationReceivedSource.next(args);
+    });
+  }
+
+  ngOnDestroy() {
+    this.unsubscribeAll();
+  }
+
+  unsubscribeAll() {
+    this.notebookItemAnnotationReceivedSubscription.unsubscribe();
   }
 
   getStudentNotebookConfig() {
@@ -72,16 +104,18 @@ export class NotebookService {
   }
 
   editItem(ev, itemId) {
-    this.UtilService.broadcastEventInRootScope('editNote', { itemId: itemId, ev: ev });
+    this.broadcastEditNote({ itemId: itemId, ev: ev });
   }
 
-  addNote(ev, file, text = null, studentWorkIds = null, 
+  addNote(file, text = null, studentWorkIds = null, 
       isEditTextEnabled = true, isFileUploadEnabled = true) {
-    this.UtilService.broadcastEventInRootScope('addNote',
-      {
-        ev: ev, file: file, text: text, studentWorkIds: studentWorkIds,
-        isEditTextEnabled: isEditTextEnabled, isFileUploadEnabled: isFileUploadEnabled
-      });
+    this.broadcastAddNote({
+        file: file,
+        text: text,
+        studentWorkIds: studentWorkIds,
+        isEditTextEnabled: isEditTextEnabled,
+        isFileUploadEnabled: isFileUploadEnabled
+    });
   }
 
   deleteNote(note) {
@@ -333,8 +367,7 @@ export class NotebookService {
           JSON.parse(publicNotebookItemForGroup.content);
     }
     this.publicNotebookItems[group] = publicNotebookItemsForGroup;
-    this.UtilService.broadcastEventInRootScope('publicNotebookItemsRetrieved', 
-        { publicNotebookItems: this.publicNotebookItems });
+    this.broadcastPublicNotebookItemsRetrieved({ publicNotebookItems: this.publicNotebookItems });
     return this.publicNotebookItems;
   }
 
@@ -369,8 +402,9 @@ export class NotebookService {
       this.addToNotebooksByWorgkroup(notebookItem, workgroupId);
       this.groupNotebookItems();
       this.StudentDataService.updateNodeStatuses();
-      this.UtilService.broadcastEventInRootScope('notebookUpdated',
-          { notebook: this.notebooksByWorkgroup[workgroupId], notebookItem: notebookItem });
+      this.broadcastNotebookUpdated(
+        { notebook: this.notebooksByWorkgroup[workgroupId], notebookItem: notebookItem }
+      );
       resolve();
     });
   }
@@ -412,11 +446,12 @@ export class NotebookService {
         this.updatePrivateNotebookItem(notebookItem, workgroupId);
       }
       this.StudentDataService.updateNodeStatuses();
-      this.UtilService.broadcastEventInRootScope('notebookUpdated',
+      this.broadcastNotebookUpdated(
         {
           notebook: this.notebooksByWorkgroup[workgroupId],
           notebookItem: notebookItem
-        });
+        }
+      );
     }
   }
 
@@ -455,8 +490,9 @@ export class NotebookService {
     this.notebooksByWorkgroup[workgroupId].allItems.push(notebookItem);
     this.groupNotebookItems();
     this.StudentDataService.updateNodeStatuses();
-    this.UtilService.broadcastEventInRootScope('notebookUpdated',
-        { notebook: this.notebooksByWorkgroup[workgroupId], notebookItem: notebookItem });
+    this.broadcastNotebookUpdated(
+      { notebook: this.notebooksByWorkgroup[workgroupId], notebookItem: notebookItem }
+    );
     return notebookItem;
   }
 
@@ -469,4 +505,37 @@ export class NotebookService {
     this.StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, 
         eventData);
   }
+
+  broadcastAddNote(args: any) {
+    this.addNoteSource.next(args);
+  }
+
+  broadcastCloseNotebook() {
+    this.closeNotebookSource.next();
+  }
+
+  broadcastEditNote(args: any) {
+    this.editNoteSource.next(args);
+  }
+
+  broadcastNotebookItemChosen(args: any) {
+    this.notebookItemChosenSource.next(args);
+  }
+
+  broadcastNotebookUpdated(args: any) {
+    this.notebookUpdatedSource.next(args);
+  }
+
+  broadcastOpenNotebook(args: any) {
+    this.openNotebookSource.next(args);
+  }
+
+  broadcastPublicNotebookItemsRetrieved(args: any) {
+    this.publicNotebookItemsRetrievedSource.next(args);
+  }
+
+  broadcastShowReportAnnotations() {
+    this.showReportAnnotationsSource.next();
+  }
+
 }

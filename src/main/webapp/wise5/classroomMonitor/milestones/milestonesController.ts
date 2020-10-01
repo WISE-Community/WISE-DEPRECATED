@@ -2,18 +2,25 @@
 
 import * as angular from 'angular';
 import { AchievementService } from '../../services/achievementService';
+import { AnnotationService } from '../../services/annotationService';
 import { MilestoneService } from '../../services/milestoneService';
+import { TeacherDataService } from '../../services/teacherDataService';
 
 class MilestonesController {
   $translate: any;
   milestones: any[];
+  annotationReceivedSubscription: any;
+  currentPeriodChangedSubscription: any;
+  newStudentAchievementSubscription: any;
   static $inject = [
     '$filter',
     '$mdDialog',
     '$rootScope',
     '$scope',
     'AchievementService',
+    'AnnotationService',
     'MilestoneService',
+    'TeacherDataService',
     'moment'
   ];
   constructor(
@@ -22,44 +29,53 @@ class MilestonesController {
     private $rootScope: any,
     private $scope: any,
     private AchievementService: AchievementService,
+    private AnnotationService: AnnotationService,
     private MilestoneService: MilestoneService,
+    private TeacherDataService: TeacherDataService,
     private moment: any
   ) {
     this.$translate = this.$filter('translate');
     this.loadProjectMilestones();
 
-    this.$rootScope.$on('newStudentAchievement', (event, args) => {
-      if (args) {
-        const studentAchievement = args.studentAchievement;
-        this.AchievementService.addOrUpdateStudentAchievement(studentAchievement);
-        this.updateMilestoneStatus(studentAchievement.achievementId);
-      }
+    this.newStudentAchievementSubscription = 
+        this.AchievementService.newStudentAchievement$.subscribe((args: any) => {
+      const studentAchievement = args.studentAchievement;
+      this.AchievementService.addOrUpdateStudentAchievement(studentAchievement);
+      this.updateMilestoneStatus(studentAchievement.achievementId);
     });
 
-    this.$scope.$on('currentPeriodChanged', () => {
+    this.currentPeriodChangedSubscription = this.TeacherDataService.currentPeriodChanged$
+        .subscribe(() => {
       for (let milestone of this.milestones) {
         this.updateMilestoneStatus(milestone.id);
       }
     });
 
-    this.$scope.$on('annotationReceived', (event, args) => {
+    this.annotationReceivedSubscription = 
+        this.AnnotationService.annotationReceived$.subscribe(({ annotation }) => {
       for (const milestone of this.milestones) {
         if (
-          milestone.nodeId === args.annotation.nodeId &&
-          milestone.componentId === args.annotation.componentId
+          milestone.nodeId === annotation.nodeId &&
+          milestone.componentId === annotation.componentId
         ) {
           this.updateMilestoneStatus(milestone.id);
         }
       }
     });
 
-    this.$scope.$on('milestoneSaved', () => {
-      this.loadProjectMilestones();
+    this.$scope.$on('$destroy', () => {
+      this.ngOnDestroy();
     });
+  }
 
-    this.$scope.$on('milestoneDeleted', () => {
-      this.loadProjectMilestones();
-    });
+  ngOnDestroy() {
+    this.unsubscribeAll();
+  }
+
+  unsubscribeAll() {
+    this.annotationReceivedSubscription.unsubscribe();
+    this.currentPeriodChangedSubscription.unsubscribe();
+    this.newStudentAchievementSubscription.unsubscribe();
   }
 
   loadProjectMilestones() {

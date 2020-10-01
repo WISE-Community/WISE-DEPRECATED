@@ -26,7 +26,8 @@ class ComponentGradingController {
   runId: number;
   score: number;
   showAllAnnotations: boolean;
-  toWorkgroupId: number;
+  toWorkgroupId: number
+  annotationSavedToServerSubscription: any;
 
   static $inject = [
     '$filter',
@@ -57,29 +58,31 @@ class ComponentGradingController {
     this.UtilService = UtilService;
     this.$translate = $filter('translate');
 
-    this.$scope.$on('annotationSavedToServer', (event, args) => {
+    this.annotationSavedToServerSubscription = 
+        this.AnnotationService.annotationSavedToServer$.subscribe(({ annotation }) => {
       // TODO: we're watching this here and in the parent component's controller; probably want to optimize!
-      if (args != null) {
-        // get the annotation that was saved to the server
-        let annotation = args.annotation;
-
-        if (annotation != null) {
-          // get the node id and component id of the annotation
-          let annotationNodeId = annotation.nodeId;
-          let annotationComponentId = annotation.componentId;
-
-          // make sure the annotation was for this component
-          if (this.nodeId === annotationNodeId && this.componentId === annotationComponentId) {
-            // get latest score and comment annotations for this component
-            this.processAnnotations();
-          }
-        }
+      const annotationNodeId = annotation.nodeId;
+      const annotationComponentId = annotation.componentId;
+      if (this.nodeId === annotationNodeId && this.componentId === annotationComponentId) {
+        this.processAnnotations();
       }
     });
 
     this.$scope.$on('projectSaved', (event, args) => {
       this.maxScore = this.ProjectService.getMaxScoreForComponent(this.nodeId, this.componentId);
     });
+
+    this.$scope.$on('$destroy', () => {
+      this.ngOnDestroy();
+    });
+  }
+
+  ngOnDestroy() {
+    this.unsubscribeAll();
+  }
+
+  unsubscribeAll() {
+    this.annotationSavedToServerSubscription.unsubscribe();
   }
 
   $onInit() {

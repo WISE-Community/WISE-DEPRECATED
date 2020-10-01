@@ -49,10 +49,10 @@ export class StudentWebSocketService {
         this.StudentDataService.pauseScreen(false);
       } else if (message.type === 'studentWork') {
         const studentWork = JSON.parse(message.content);
-        this.upgrade.$injector.get('$rootScope').$broadcast('studentWorkReceived', studentWork);
+        this.StudentDataService.broadcastStudentWorkReceived(studentWork);
       } else if (message.type === 'annotation') {
         const annotation = JSON.parse(message.content);
-        this.upgrade.$injector.get('$rootScope').$broadcast('annotationReceived', annotation);
+        this.AnnotationService.broadcastAnnotationReceived({ annotation: annotation });
       } else if (message.type === "goToNode") {
         this.goToStep(message.content);
       } else if (message.type === 'node') {
