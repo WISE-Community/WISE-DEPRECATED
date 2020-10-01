@@ -94,7 +94,7 @@ class OpenResponseAuthoringController extends ComponentAuthoringController {
     }
   }
 
-  authoringAddScoringRule() {
+  addScoringRule() {
     if (
       this.authoringComponentContent.cRater != null &&
       this.authoringComponentContent.cRater.scoringRules != null
@@ -108,7 +108,7 @@ class OpenResponseAuthoringController extends ComponentAuthoringController {
     }
   }
 
-  authoringViewScoringRuleUpClicked(index) {
+  scoringRuleUpClicked(index) {
     if (
       this.authoringComponentContent.cRater != null &&
       this.authoringComponentContent.cRater.scoringRules != null
@@ -122,7 +122,7 @@ class OpenResponseAuthoringController extends ComponentAuthoringController {
     }
   }
 
-  authoringViewScoringRuleDownClicked(index) {
+  scoringRuleDownClicked(index) {
     if (
       this.authoringComponentContent.cRater != null &&
       this.authoringComponentContent.cRater.scoringRules != null
@@ -136,7 +136,7 @@ class OpenResponseAuthoringController extends ComponentAuthoringController {
     }
   }
 
-  authoringViewScoringRuleDeleteClicked(index) {
+  scoringRuleDeleteClicked(index) {
     if (
       this.authoringComponentContent.cRater != null &&
       this.authoringComponentContent.cRater.scoringRules != null
@@ -161,7 +161,7 @@ class OpenResponseAuthoringController extends ComponentAuthoringController {
    * Add a new notification. Currently assumes this is a notification based on CRaterResult, but
    * we can add different types in the future.
    */
-  authoringAddNotification() {
+  addNotification() {
     if (
       this.authoringComponentContent.notificationSettings != null &&
       this.authoringComponentContent.notificationSettings.notifications != null
@@ -189,7 +189,7 @@ class OpenResponseAuthoringController extends ComponentAuthoringController {
     }
   }
 
-  authoringAddMultipleAttemptScoringRule() {
+  addMultipleAttemptScoringRule() {
     if (
       this.authoringComponentContent.cRater != null &&
       this.authoringComponentContent.cRater.multipleAttemptScoringRules != null
@@ -205,7 +205,7 @@ class OpenResponseAuthoringController extends ComponentAuthoringController {
     }
   }
 
-  authoringViewMultipleAttemptScoringRuleUpClicked(index) {
+  multipleAttemptScoringRuleUpClicked(index) {
     if (
       this.authoringComponentContent.cRater != null &&
       this.authoringComponentContent.cRater.multipleAttemptScoringRules != null
@@ -224,7 +224,7 @@ class OpenResponseAuthoringController extends ComponentAuthoringController {
     }
   }
 
-  authoringViewMultipleAttemptScoringRuleDownClicked(index) {
+  multipleAttemptScoringRuleDownClicked(index) {
     if (
       this.authoringComponentContent.cRater != null &&
       this.authoringComponentContent.cRater.multipleAttemptScoringRules != null
@@ -243,7 +243,7 @@ class OpenResponseAuthoringController extends ComponentAuthoringController {
     }
   }
 
-  authoringViewMultipleAttemptScoringRuleDeleteClicked(index) {
+  multipleAttemptScoringRuleDeleteClicked(index) {
     if (
       this.authoringComponentContent.cRater != null &&
       this.authoringComponentContent.cRater.multipleAttemptScoringRules != null
@@ -272,7 +272,7 @@ class OpenResponseAuthoringController extends ComponentAuthoringController {
     }
   }
 
-  authoringViewNotificationUpClicked(index) {
+  notificationUpClicked(index) {
     if (
       this.authoringComponentContent.notificationSettings != null &&
       this.authoringComponentContent.notificationSettings.notifications != null
@@ -292,7 +292,7 @@ class OpenResponseAuthoringController extends ComponentAuthoringController {
     }
   }
 
-  authoringViewNotificationDownClicked(index) {
+  notificationDownClicked(index) {
     if (
       this.authoringComponentContent.notificationSettings != null &&
       this.authoringComponentContent.notificationSettings.notifications != null
@@ -312,7 +312,7 @@ class OpenResponseAuthoringController extends ComponentAuthoringController {
     }
   }
 
-  authoringViewNotificationDeleteClicked(index) {
+  notificationDeleteClicked(index) {
     if (
       this.authoringComponentContent.notificationSettings != null &&
       this.authoringComponentContent.notificationSettings.notifications != null
@@ -338,7 +338,7 @@ class OpenResponseAuthoringController extends ComponentAuthoringController {
     }
   }
 
-  authoringViewEnableCRaterClicked() {
+  enableCRaterClicked() {
     if (this.authoringComponentContent.enableCRater) {
       if (this.authoringComponentContent.cRater == null) {
         const cRater = {
@@ -368,7 +368,7 @@ class OpenResponseAuthoringController extends ComponentAuthoringController {
     this.authoringViewComponentChanged();
   }
 
-  authoringViewEnableNotificationsClicked() {
+  enableNotificationsClicked() {
     if (this.authoringComponentContent.enableNotifications) {
       if (this.authoringComponentContent.notificationSettings == null) {
         this.authoringComponentContent.notificationSettings = {
@@ -430,7 +430,7 @@ class OpenResponseAuthoringController extends ComponentAuthoringController {
     this.authoringViewComponentChanged();
   }
 
-  authoringAddCompletionCriteria() {
+  addCompletionCriteria() {
     const newCompletionCriteria = {
       nodeId: this.nodeId,
       componentId: this.componentId,
@@ -440,7 +440,7 @@ class OpenResponseAuthoringController extends ComponentAuthoringController {
     this.authoringViewComponentChanged();
   }
 
-  authoringDeleteCompletionCriteria(index) {
+  deleteCompletionCriteria(index) {
     if (confirm(this.$translate('areYouSureYouWantToDeleteThisCompletionCriteria'))) {
       this.authoringComponentContent.completionCriteria.criteria.splice(index, 1);
       this.authoringViewComponentChanged();

@@ -926,18 +926,10 @@ class ComponentController {
    * @param index the index of the component to delete
    */
   authoringDeleteConnectedComponent(index) {
-
-    // ask the author if they are sure they want to delete the connected component
-    let answer = confirm(this.$translate('areYouSureYouWantToDeleteThisConnectedComponent'));
-
-    if (answer) {
-      // the author answered yes to delete
-
+    if (confirm(this.$translate('areYouSureYouWantToDeleteThisConnectedComponent'))) {
       if (this.authoringComponentContent.connectedComponents != null) {
         this.authoringComponentContent.connectedComponents.splice(index, 1);
       }
-
-      // the authoring component content has changed so we will save the project
       this.authoringViewComponentChanged();
     }
   }
@@ -969,19 +961,11 @@ class ComponentController {
     return connectedComponentType;
   }
 
-  /**
-   * The connected component node id has changed
-   * @param connectedComponent the connected component that has changed
-   */
   authoringConnectedComponentNodeIdChanged(connectedComponent) {
-    if (connectedComponent != null) {
-      connectedComponent.componentId = null;
-      connectedComponent.type = null;
-      this.authoringAutomaticallySetConnectedComponentComponentIdIfPossible(connectedComponent);
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
+    connectedComponent.componentId = null;
+    connectedComponent.type = null;
+    this.authoringAutomaticallySetConnectedComponentComponentIdIfPossible(connectedComponent);
+    this.authoringViewComponentChanged();
   }
 
   authoringConnectedComponentComponentIdChanged(connectedComponent) {
@@ -1012,30 +996,12 @@ class ComponentController {
     }
   }
 
-  /**
-   * Check if we are allowed to connect to this component type
-   * @param componentType the component type
-   * @return whether we can connect to the component type
-   */
   isConnectedComponentTypeAllowed(componentType) {
-
-    if (componentType != null) {
-
-      let allowedConnectedComponentTypes = this.allowedConnectedComponentTypes;
-
-      // loop through the allowed connected component types
-      for (let a = 0; a < allowedConnectedComponentTypes.length; a++) {
-        let allowedConnectedComponentType = allowedConnectedComponentTypes[a];
-
-        if (allowedConnectedComponentType != null) {
-          if (componentType == allowedConnectedComponentType.type) {
-            // the component type is allowed
-            return true;
-          }
-        }
+    for (const allowedConnectedComponentType of this.allowedConnectedComponentTypes) {
+      if (allowedConnectedComponentType.type === componentType) {
+        return true;
       }
     }
-
     return false;
   }
 

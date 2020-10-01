@@ -9,11 +9,13 @@ import { NotificationService } from '../services/notificationService';
 export abstract class ComponentAuthoringController {
 
   $translate: any;
+  allowedConnectedComponentTypes: any[];
   authoringComponentContent: any;
   authoringComponentContentJSONString: string;
   authoringValidComponentContentJSONString: string;
   componentContent: any;
   componentId: string;
+  idToOrder: any;
   isDirty: boolean;
   isJSONStringChanged: boolean = false;
   isPromptVisible: boolean = true;
@@ -41,6 +43,7 @@ export abstract class ComponentAuthoringController {
     this.authoringComponentContent = this.$scope.authoringComponentContent;
     this.componentContent = this.$scope.componentContent;
     this.componentId = this.componentContent.id;
+    this.idToOrder = this.ProjectService.idToOrder;
     this.nodeId = this.$scope.nodeId;
     this.$translate = $filter('translate');
     this.isSaveButtonVisible = this.componentContent.showSaveButton;
@@ -216,5 +219,100 @@ export abstract class ComponentAuthoringController {
       componentId: this.componentId,
       showSubmitButton: show
     });
+  }
+
+  addTag() {
+    if (this.authoringComponentContent.tags == null) {
+      this.authoringComponentContent.tags = [];
+    }
+    this.authoringComponentContent.tags.push('');
+    this.authoringViewComponentChanged();
+  }
+
+  connectedComponentNodeIdChanged(connectedComponent) {
+    connectedComponent.componentId = null;
+    connectedComponent.type = null;
+    this.automaticallySetConnectedComponentComponentIdIfPossible(connectedComponent);
+    this.authoringViewComponentChanged();
+  }
+
+  connectedComponentComponentIdChanged(connectedComponent) {
+    this.automaticallySetConnectedComponentTypeIfPossible(connectedComponent);
+    this.authoringViewComponentChanged();
+  }
+
+  isConnectedComponentTypeAllowed(componentType) {
+    for (const allowedConnectedComponentType of this.allowedConnectedComponentTypes) {
+      if (allowedConnectedComponentType.type === componentType) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  addConnectedComponent() {
+    const connectedComponent = this.createConnectedComponent();
+    if (this.authoringComponentContent.connectedComponents == null) {
+      this.authoringComponentContent.connectedComponents = [];
+    }
+    this.authoringComponentContent.connectedComponents.push(connectedComponent);
+    this.automaticallySetConnectedComponentComponentIdIfPossible(connectedComponent);
+    this.authoringViewComponentChanged();
+  }
+
+  automaticallySetConnectedComponentComponentIdIfPossible(connectedComponent) {
+    let numberOfAllowedComponents = 0;
+    let allowedComponent = null;
+    for (const component of this.ProjectService.getComponentsByNodeId(connectedComponent.nodeId)) {
+      if (this.isConnectedComponentTypeAllowed(component.type) &&
+          component.id != this.componentId) {
+        numberOfAllowedComponents += 1;
+        allowedComponent = component;
+      }
+    }
+    if (numberOfAllowedComponents === 1) {
+      connectedComponent.componentId = allowedComponent.id;
+      connectedComponent.type = 'importWork';
+    }
+    this.automaticallySetConnectedComponentTypeIfPossible(connectedComponent);
+  }
+
+  automaticallySetConnectedComponentTypeIfPossible(connectedComponent) {
+    if (connectedComponent.componentId != null) {
+      connectedComponent.type = 'importWork';
+    }
+    this.automaticallySetConnectedComponentFieldsIfPossible(connectedComponent);
+  }
+
+  automaticallySetConnectedComponentFieldsIfPossible(connectedComponent) {
+  }
+
+  createConnectedComponent() {
+    return {
+      nodeId: this.nodeId,
+      componentId: null,
+      type: null
+    };
+  }
+
+  deleteConnectedComponent(index) {
+    if (confirm(this.$translate('areYouSureYouWantToDeleteThisConnectedComponent'))) {
+      if (this.authoringComponentContent.connectedComponents != null) {
+        this.authoringComponentContent.connectedComponents.splice(index, 1);
+      }
+      this.authoringViewComponentChanged();
+    }
+  }
+
+  getNodePositionAndTitleByNodeId(nodeId) {
+    return this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
+  }
+
+  isApplicationNode(nodeId) {
+    return this.ProjectService.isApplicationNode(nodeId);
+  }
+
+  getComponentsByNodeId(nodeId) {
+    return this.ProjectService.getComponentsByNodeId(nodeId);
   }
 }
