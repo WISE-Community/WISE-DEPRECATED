@@ -6,7 +6,9 @@ import { TeacherDataService } from '../../../../services/teacherDataService';
 import { UtilService } from '../../../../services/utilService';
 import * as angular from 'angular';
 import { TeacherProjectService } from '../../../../services/teacherProjectService';
+import { Directive } from '@angular/core';
 
+@Directive()
 class ComponentGradingController {
   $translate: any;
   annotationId: number;

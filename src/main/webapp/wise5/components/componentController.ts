@@ -11,7 +11,9 @@ import { StudentDataService } from "../services/studentDataService";
 import { NotificationService } from '../services/notificationService';
 import { AudioRecorderService } from '../services/audioRecorderService';
 import { Subscription } from 'rxjs';
+import { Directive } from '@angular/core';
 
+@Directive()
 class ComponentController {
   $filter: any;
   $injector: any;

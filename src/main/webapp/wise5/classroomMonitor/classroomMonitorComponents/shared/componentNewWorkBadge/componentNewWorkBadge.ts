@@ -1,8 +1,10 @@
 'use strict';
 
+import { Directive } from '@angular/core';
 import { AnnotationService } from '../../../../services/annotationService';
 import { TeacherDataService } from '../../../../services/teacherDataService';
 
+@Directive()
 class ComponentNewWorkBadgeController {
   componentId: string;
   hasNewWork: boolean;

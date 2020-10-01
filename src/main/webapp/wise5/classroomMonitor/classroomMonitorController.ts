@@ -8,7 +8,9 @@ import { TeacherDataService } from '../services/teacherDataService';
 import { SessionService } from '../services/sessionService';
 import * as angular from 'angular';
 import { TeacherProjectService } from '../services/teacherProjectService';
+import { Directive } from '@angular/core';
 
+@Directive()
 class ClassroomMonitorController {
   $translate: any;
   connectionLostDisplay: any;

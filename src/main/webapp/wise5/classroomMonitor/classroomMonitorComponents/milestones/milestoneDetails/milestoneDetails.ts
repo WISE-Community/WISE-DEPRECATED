@@ -5,7 +5,9 @@ import { TeacherDataService } from '../../../../services/teacherDataService';
 import * as angular from 'angular';
 import { NodeService } from '../../../../services/nodeService';
 import { TeacherProjectService } from '../../../../services/teacherProjectService';
+import { Directive } from '@angular/core';
 
+@Directive()
 class MilestoneDetailsController {
   $translate: any;
   onShowWorkgroup: any;

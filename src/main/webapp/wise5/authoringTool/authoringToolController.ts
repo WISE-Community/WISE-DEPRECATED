@@ -1,4 +1,5 @@
 'use strict';
+import { Directive } from '@angular/core';
 import * as angular from 'angular';
 import { Subscription } from 'rxjs';
 import { ConfigService } from '../services/configService';
@@ -7,6 +8,7 @@ import { SessionService } from '../services/sessionService';
 import { TeacherDataService } from '../services/teacherDataService';
 import { TeacherProjectService } from '../services/teacherProjectService';
 
+@Directive()
 class AuthoringToolController {
   $anchorScroll: any;
   $filter: any;

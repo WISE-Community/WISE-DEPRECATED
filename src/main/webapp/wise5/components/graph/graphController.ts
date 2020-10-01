@@ -7,7 +7,9 @@ import canvg from 'canvg';
 import html2canvas from 'html2canvas';
 import * as covariance from 'compute-covariance';
 import { Subscription } from 'rxjs';
+import { Directive } from '@angular/core';
 
+@Directive()
 class GraphController extends ComponentController {
   $q: any;
   $timeout: any;

@@ -1,8 +1,10 @@
 'use strict';
 
+import { Directive } from '@angular/core';
 import ComponentController from '../componentController';
 import { AudioOscillatorService } from './audioOscillatorService';
 
+@Directive()
 class AudioOscillatorController extends ComponentController {
   $q: any;
   $timeout: any;

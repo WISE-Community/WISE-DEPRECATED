@@ -3,7 +3,9 @@
 import { ConfigService } from '../../../../services/configService';
 import { TeacherDataService } from '../../../../services/teacherDataService';
 import * as angular from 'angular';
+import { Directive } from '@angular/core';
 
+@Directive()
 class WorkgroupSelectController {
   $translate: any;
   byStudent: boolean;

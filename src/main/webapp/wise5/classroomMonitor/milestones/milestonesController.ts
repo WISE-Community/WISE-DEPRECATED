@@ -1,11 +1,13 @@
 'use strict';
 
+import { Directive } from '@angular/core';
 import * as angular from 'angular';
 import { AchievementService } from '../../services/achievementService';
 import { AnnotationService } from '../../services/annotationService';
 import { MilestoneService } from '../../services/milestoneService';
 import { TeacherDataService } from '../../services/teacherDataService';
 
+@Directive()
 class MilestonesController {
   $translate: any;
   milestones: any[];
