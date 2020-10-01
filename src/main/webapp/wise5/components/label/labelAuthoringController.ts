@@ -14,6 +14,7 @@ class LabelAuthoringController extends LabelController {
 
   static $inject = [
     '$filter',
+    '$injector',
     '$mdDialog',
     '$q',
     '$rootScope',
@@ -21,10 +22,12 @@ class LabelAuthoringController extends LabelController {
     '$timeout',
     '$window',
     'AnnotationService',
+    'AudioRecorderService',
     'ConfigService',
     'LabelService',
     'NodeService',
     'NotebookService',
+    'NotificationService',
     'ProjectAssetService',
     'ProjectService',
     'StudentAssetService',
@@ -34,6 +37,7 @@ class LabelAuthoringController extends LabelController {
 
   constructor(
     $filter,
+    $injector,
     $mdDialog,
     $q,
     $rootScope,
@@ -41,10 +45,12 @@ class LabelAuthoringController extends LabelController {
     $timeout,
     $window,
     AnnotationService,
+    AudioRecorderService,
     ConfigService,
     LabelService,
     NodeService,
     NotebookService,
+    NotificationService,
     ProjectAssetService,
     ProjectService,
     StudentAssetService,
@@ -53,6 +59,7 @@ class LabelAuthoringController extends LabelController {
   ) {
     super(
       $filter,
+      $injector,
       $mdDialog,
       $q,
       $rootScope,
@@ -60,10 +67,12 @@ class LabelAuthoringController extends LabelController {
       $timeout,
       $window,
       AnnotationService,
+      AudioRecorderService,
       ConfigService,
       LabelService,
       NodeService,
       NotebookService,
+      NotificationService,
       ProjectService,
       StudentAssetService,
       StudentDataService,

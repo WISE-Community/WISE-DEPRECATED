@@ -15,6 +15,7 @@ class WorkgroupSelectController {
   selectedItem: any;
   workgroups: any;
   currentPeriodChangedSubscription: any;
+  currentWorkgroupChangedSubscription: any;
 
   static $inject = ['$filter', '$scope', 'orderByFilter', 'ConfigService', 'TeacherDataService'];
   constructor(
@@ -26,9 +27,9 @@ class WorkgroupSelectController {
   ) {
     this.$translate = $filter('translate');
 
-    this.$scope.$on('currentWorkgroupChanged', (event, args) => {
-      let workgroup = args.currentWorkgroup;
-      if (workgroup != null) {
+    this.currentWorkgroupChangedSubscription = 
+        this.TeacherDataService.currentWorkgroupChanged$.subscribe(({ currentWorkgroup }) => {
+      if (currentWorkgroup != null) {
         this.setWorkgroups();
       }
     });
@@ -48,6 +49,7 @@ class WorkgroupSelectController {
 
   unsubscribeAll() {
     this.currentPeriodChangedSubscription.unsubscribe();
+    this.currentWorkgroupChangedSubscription.unsubscribe();
   }
 
   $onInit() {

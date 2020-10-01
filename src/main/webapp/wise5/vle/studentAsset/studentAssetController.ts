@@ -14,7 +14,14 @@ class StudentAssetController {
   studentAssets: any;
   templateUrl: string;
 
-  static $inject = ['$filter', '$rootScope', '$scope', 'ConfigService', 'StudentAssetService'];
+  static $inject = [
+    '$filter',
+    '$rootScope',
+    '$scope',
+    'ConfigService',
+    'SessionService',
+    'StudentAssetService'
+  ];
 
   constructor(
     $filter: any,
@@ -35,7 +42,6 @@ class StudentAssetController {
     
     this.SessionService.logOut$.subscribe(() => {
       this.logOutListener();
-      this.$rootScope.$broadcast('componentDoneUnloading');
     });
 
     if (!this.ConfigService.isPreview()) {

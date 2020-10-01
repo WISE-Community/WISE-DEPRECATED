@@ -14,8 +14,6 @@ import { RouterModule } from '@angular/router';
   ],
   declarations: [
   ],
-  entryComponents: [
-  ],
   providers: [
   ],
   exports: [

@@ -9,7 +9,9 @@ import { SessionService } from '../services/sessionService';
 import { StudentDataService } from '../services/studentDataService';
 import * as angular from 'angular';
 import * as $ from 'jquery';
+import { Directive } from '@angular/core';
 
+@Directive()
 class VLEController {
   $translate: any;
   workgroupId: number;
@@ -32,6 +34,8 @@ class VLEController {
   themePath: string;
   totalScore: any;
   currentNodeChangedSubscription: any;
+  showSessionWarningSubscription: any;
+  notificationChangedSubscription: any;
 
   static $inject = [
     '$anchorScroll',
@@ -78,7 +82,7 @@ class VLEController {
     this.SessionService = SessionService;
     this.StudentDataService = StudentDataService;
     this.$translate = this.$filter('translate');
-    this.$window.onbeforeunload = () => { this.$rootScope.$broadcast('exit'); };
+    this.$window.onbeforeunload = () => { this.SessionService.broadcastExit() };
 
     this.workgroupId = this.ConfigService.getWorkgroupId();
     this.currentNode = null;
@@ -119,7 +123,8 @@ class VLEController {
       });
     }
 
-    this.$scope.$on('showSessionWarning', () => {
+    this.showSessionWarningSubscription = 
+        this.SessionService.showSessionWarning$.subscribe(() => {
       const confirm = $mdDialog
         .confirm()
         .parent(angular.element(document.body))
@@ -198,7 +203,8 @@ class VLEController {
     this.notifications = this.NotificationService.notifications;
     this.newNotifications = this.getNewNotifications();
 
-    this.$scope.$on('notificationChanged', (event, notification) => {
+    this.notificationChangedSubscription = this.NotificationService.notificationChanged$
+        .subscribe(() => {
       // update new notifications
       this.notifications = this.NotificationService.notifications;
       this.newNotifications = this.getNewNotifications();
@@ -289,6 +295,8 @@ class VLEController {
 
   unsubscribeAll() {
     this.currentNodeChangedSubscription.unsubscribe();
+    this.showSessionWarningSubscription.unsubscribe();
+    this.notificationChangedSubscription.unsubscribe();
   }
 
   goHome() {
@@ -441,7 +449,7 @@ class VLEController {
         event: event,
         notification: notification
       };
-      this.$rootScope.$broadcast('viewCurrentAmbientNotification', args);
+      this.NotificationService.broadcastViewCurrentAmbientNotification(args);
       this.$mdMenu.hide();
     }
   }
@@ -457,7 +465,7 @@ class VLEController {
         event: event,
         notification: ambientNotifications[0]
       };
-      this.$rootScope.$broadcast('viewCurrentAmbientNotification', args);
+      this.NotificationService.broadcastViewCurrentAmbientNotification(args);
     }
   }
 
@@ -497,7 +505,7 @@ class VLEController {
     } else if (notebookItemId != null) {
       // assume notification with notebookItemId is for the report for now,
       // as we don't currently support annotations on notes
-      this.$rootScope.$broadcast('showReportAnnotations', { ev: event });
+      this.NotebookService.broadcastShowReportAnnotations();
     }
   }
 

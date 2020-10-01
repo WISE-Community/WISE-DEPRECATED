@@ -111,8 +111,6 @@ export class EmptyComponent {}
     UtilService,
     VLEProjectService
   ],
-  entryComponents: [
-  ],
   exports: [
     CommonModule,
     FlexLayoutModule,
@@ -137,9 +135,6 @@ export class AngularJSModule {}
     { provide: ProjectService, useExisting: VLEProjectService },
     VLEProjectService
   ],
-  entryComponents: [
-    PossibleScoreComponent
-  ],
   exports: [
     CommonModule,
     MatButtonModule,
@@ -155,9 +150,6 @@ export class StudentAngularJSModule {}
   ],
   imports: [
     StudentAngularJSModule
-  ],
-  entryComponents: [
-    ChooseBranchPathDialogComponent
   ]
 })
 export class StudentVLEAngularJSModule {
@@ -197,12 +189,6 @@ export class PreviewAngularJSModule {
     TeacherDataService,
     TeacherProjectService,
     TeacherWebSocketService
-  ],
-  entryComponents: [
-    MilestoneReportDataComponent,
-    WorkgroupNodeScoreComponent,
-    ManageStudentsComponent,
-    NavItemScoreComponent
   ]
 })
 export class TeacherAngularJSModule {

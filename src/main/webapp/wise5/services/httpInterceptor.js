@@ -3,10 +3,11 @@
 var self;
 
 class HttpInterceptor {
-  constructor($q, $rootScope) {
+  constructor($q, $rootScope, NotificationService) {
     self = this;
     self.$q = $q;
     self.$rootScope = $rootScope;
+    self.NotificationService = NotificationService;
   }
 
   // intercept request
@@ -22,7 +23,7 @@ class HttpInterceptor {
   // intercept response
   response(response) {
     // response received, clear any disconnection alerts
-    self.$rootScope.$broadcast('serverConnected');
+    self.NotificationService.broadcastServerConnectionStatus(true);
     return response;
   }
 
@@ -30,12 +31,12 @@ class HttpInterceptor {
   responseError(rejection) {
     if (rejection.status === -1 || rejection.status === 500 || rejection.status === 503 || rejection.status === 504 ) {
       // response error, broadcast disconnection alert
-      self.$rootScope.$broadcast('serverDisconnected');
+      self.NotificationService.broadcastServerConnectionStatus(false);
     }
     return self.$q.reject(rejection);
   }
 }
 
-HttpInterceptor.$inject = ['$q', '$rootScope'];
+HttpInterceptor.$inject = ['$q', '$rootScope', 'NotificationService'];
 
 export default HttpInterceptor;

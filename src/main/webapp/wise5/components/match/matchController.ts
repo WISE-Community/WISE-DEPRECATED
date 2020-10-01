@@ -23,20 +23,24 @@ class MatchController extends ComponentController {
   sourceBucket: any;
   privateNotebookItems: any[];
   autoScroll: any;
+  notebookUpdatedSubscription: any;
 
   static $inject = [
     '$filter',
+    '$injector',
     '$mdDialog',
     '$mdMedia',
     '$q',
     '$rootScope',
     '$scope',
     'AnnotationService',
+    'AudioRecorderService',
     'ConfigService',
     'dragulaService',
     'MatchService',
     'NodeService',
     'NotebookService',
+    'NotificationService',
     'ProjectService',
     'StudentAssetService',
     'StudentDataService',
@@ -45,17 +49,20 @@ class MatchController extends ComponentController {
 
   constructor(
     $filter,
+    $injector,
     $mdDialog,
     $mdMedia,
     $q,
     $rootScope,
     $scope,
     AnnotationService,
+    AudioRecorderService,
     ConfigService,
     dragulaService,
     MatchService,
     NodeService,
     NotebookService,
+    NotificationService,
     ProjectService,
     StudentAssetService,
     StudentDataService,
@@ -63,14 +70,17 @@ class MatchController extends ComponentController {
   ) {
     super(
       $filter,
+      $injector,
       $mdDialog,
       $q,
       $rootScope,
       $scope,
       AnnotationService,
+      AudioRecorderService,
       ConfigService,
       NodeService,
       NotebookService,
+      NotificationService,
       ProjectService,
       StudentAssetService,
       StudentDataService,
@@ -103,10 +113,11 @@ class MatchController extends ComponentController {
       this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
       if (this.shouldImportPrivateNotes()) {
         const allPrivateNotebookItems = this.NotebookService.getPrivateNotebookItems();
-        this.privateNotebookItems = allPrivateNotebookItems.filter(note => { 
+        this.privateNotebookItems = allPrivateNotebookItems.filter(note => {
           return note.serverDeleteTime == null
         });
-        this.$rootScope.$on('notebookUpdated', (event, args) => {
+        this.notebookUpdatedSubscription = this.NotebookService.notebookUpdated$
+            .subscribe((args) => {
           if (args.notebookItem.type === 'note') {
             this.addNotebookItemToSourceBucket(args.notebookItem);
           }
@@ -198,10 +209,17 @@ class MatchController extends ComponentController {
       return deferred.promise;
     };
 
-    this.$rootScope.$broadcast('doneRenderingComponent', {
-      nodeId: this.nodeId,
-      componentId: this.componentId
-    });
+    this.broadcastDoneRenderingComponent();
+  }
+
+  ngOnDestroy() {
+    this.unsubscribeAll();
+  }
+
+  unsubscribeAll() {
+    if (this.notebookUpdatedSubscription != null) {
+      this.notebookUpdatedSubscription.unsubscribe();
+    }
   }
 
   addNotebookItemToSourceBucket(notebookItem) {
@@ -400,7 +418,7 @@ class MatchController extends ComponentController {
 
   setIsSubmitDirty(isSubmitDirty) {
     this.isSubmitDirty = isSubmitDirty;
-    this.$scope.$emit('componentSubmitDirty', {
+    this.StudentDataService.broadcastComponentSubmitDirty({
       componentId: this.componentId,
       isDirty: isSubmitDirty
     });

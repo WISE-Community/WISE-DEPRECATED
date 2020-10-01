@@ -1,9 +1,11 @@
 'use strict';
 
+import { Directive } from '@angular/core';
 import { StudentStatusService } from '../../../../services/studentStatusService';
 import { TeacherDataService } from '../../../../services/teacherDataService';
 import { TeacherProjectService } from '../../../../services/teacherProjectService';
 
+@Directive()
 class NodeProgressViewController {
   $translate: any;
   currentGroup: any;
@@ -15,6 +17,7 @@ class NodeProgressViewController {
   rootNode: any;
   showRubricButton: boolean;
   currentNodeChangedSubscription: any;
+  currentWorkgroupChangedSubscription: any;
 
   static $inject = [
     '$filter',
@@ -49,6 +52,7 @@ class NodeProgressViewController {
 
   unsubscribeAll() {
     this.currentNodeChangedSubscription.unsubscribe();
+    this.currentWorkgroupChangedSubscription.unsubscribe();
   }
 
   $onInit() {
@@ -101,8 +105,9 @@ class NodeProgressViewController {
       this.$state.go('root.cm.unit.node', { nodeId: this.nodeId });
     });
 
-    this.$scope.$on('currentWorkgroupChanged', (event, args) => {
-      this.currentWorkgroup = args.currentWorkgroup;
+    this.currentWorkgroupChangedSubscription = 
+        this.TeacherDataService.currentWorkgroupChanged$.subscribe(({ currentWorkgroup }) => {
+      this.currentWorkgroup = currentWorkgroup;
     });
 
     this.$transitions.onSuccess({}, $transition => {

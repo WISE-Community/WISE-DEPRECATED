@@ -42,6 +42,7 @@ describe('ProjectService', () => {
   shouldRetrieveProjectWhenConfigProjectURLIsValid();
   shouldNotRetrieveProjectWhenConfigProjectURLIsUndefined();
   shouldSaveProject();
+  shouldHandleSaveProjectResponse();
   shouldNotSaveProjectWhenTheUserDoesNotHavePermissionToEditTheProject();
   shouldGetDefaultThemePathWhenThemeIsNotDefinedInTheProject();
   shouldGetProjectThemePathWhenThemeIsDefinedInTheProject();
@@ -218,6 +219,42 @@ function shouldSaveProject() {
     expect(configService.getConfigParam).toHaveBeenCalledWith('saveProjectURL');
     http.expectOne(saveProjectURL);
   });
+}
+
+function shouldHandleSaveProjectResponse() {
+  it('should broadcast project saved', () => {
+    shouldHandleSaveProjectResponseSuccessHelper('broadcastProjectSaved');
+  });
+  it('should broadcast not logged in project not saved', () => {
+    shouldHandleSaveProjectResponseErrorHelper('notSignedIn',
+        'broadcastNotLoggedInProjectNotSaved');
+  });
+  it('should broadcast not allowed to edit this project', () => {
+    shouldHandleSaveProjectResponseErrorHelper('notAllowedToEditThisProject',
+        'broadcastNotAllowedToEditThisProject');
+  });
+  it('should broadcast error saving project', () => {
+    shouldHandleSaveProjectResponseErrorHelper('errorSavingProject', 'broadcastErrorSavingProject');
+  });
+}
+
+function shouldHandleSaveProjectResponseSuccessHelper(functionName: any) {
+  shouldHandleSaveProjectResponseHelper('success', '', functionName);
+}
+
+function shouldHandleSaveProjectResponseErrorHelper(messageCode: string, functionName: any) {
+  shouldHandleSaveProjectResponseHelper('error', messageCode, functionName);
+}
+
+function shouldHandleSaveProjectResponseHelper(status: string, messageCode: string,
+    functionName: any) {
+  const response = {
+    status: status,
+    messageCode: messageCode
+  };
+  spyOn(service, functionName).and.callFake(() => {});
+  service.handleSaveProjectResponse(response);
+  expect(service[functionName]).toHaveBeenCalled();
 }
 
 function shouldNotSaveProjectWhenTheUserDoesNotHavePermissionToEditTheProject() {

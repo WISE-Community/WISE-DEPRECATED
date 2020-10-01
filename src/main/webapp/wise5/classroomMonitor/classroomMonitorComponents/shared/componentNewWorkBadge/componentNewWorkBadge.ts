@@ -8,26 +8,35 @@ class ComponentNewWorkBadgeController {
   hasNewWork: boolean;
   nodeId: string;
   workgroupId: number;
+  annotationSavedToServerSubscription: any;
 
   static $inject = ['AnnotationService', 'TeacherDataService', '$scope'];
 
   constructor(
     private AnnotationService: AnnotationService,
     private TeacherDataService: TeacherDataService,
-    $scope: any
+    private $scope: any
   ) {
-    $scope.$on('annotationSavedToServer', (event, args) => {
-      if (args != null) {
-        let annotation = args.annotation;
-        if (annotation != null) {
-          let annotationNodeId = annotation.nodeId;
-          let annotationComponentId = annotation.componentId;
-          if (this.nodeId === annotationNodeId && this.componentId === annotationComponentId) {
-            this.checkHasNewWork();
-          }
-        }
+    this.annotationSavedToServerSubscription = 
+        this.AnnotationService.annotationSavedToServer$.subscribe(({ annotation }) => {
+      const annotationNodeId = annotation.nodeId;
+      const annotationComponentId = annotation.componentId;
+      if (this.nodeId === annotationNodeId && this.componentId === annotationComponentId) {
+        this.checkHasNewWork();
       }
     });
+
+    this.$scope.$on('$destroy', () => {
+      this.ngOnDestroy();
+    });
+  }
+
+  ngOnDestroy() {
+    this.unsubscribeAll();
+  }
+
+  unsubscribeAll() {
+    this.annotationSavedToServerSubscription.unsubscribe();
   }
 
   $onInit() {

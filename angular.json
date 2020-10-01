@@ -35,6 +35,14 @@
         "build": {
           "builder": "@angular-builders/custom-webpack:browser",
           "options": {
+            "allowedCommonJsDependencies": [
+              "angular",
+              "jquery",
+              "rxjs/internal/BehaviorSubject",
+              "canvg",
+              "webfontloader",
+              "compute-covariance"
+            ],
             "aot": true,
             "customWebpackConfig": {
               "path": "./custom-webpack.config.js",
@@ -275,8 +283,8 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "src/tsconfig.app.json",
-              "src/tsconfig.spec.json"
+              "src/main/webapp/site/src/tsconfig.app.json",
+              "src/main/webapp/site/src/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"
