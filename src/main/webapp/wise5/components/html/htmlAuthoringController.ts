@@ -11,69 +11,36 @@ class HTMLAuthoringController extends ComponentAuthoringController {
   summernotePromptId: string;
 
   static $inject = [
-    '$injector',
-    '$q',
-    '$rootScope',
     '$scope',
-    '$state',
-    '$stateParams',
-    '$sce',
     '$filter',
     '$mdDialog',
-    'AnnotationService',
-    'AudioRecorderService',
     'ConfigService',
     'NodeService',
-    'NotebookService',
     'NotificationService',
     'ProjectAssetService',
     'ProjectService',
-    'StudentAssetService',
-    'StudentDataService',
     'UtilService'
   ];
 
   constructor(
-    $injector,
-    $q,
-    $rootScope,
     $scope,
-    $state,
-    $stateParams,
-    $sce,
     $filter,
-    $mdDialog,
-    AnnotationService,
-    AudioRecorderService,
+    private $mdDialog: any,
     ConfigService,
     NodeService,
-    NotebookService,
     NotificationService,
     ProjectAssetService,
     ProjectService,
-    StudentAssetService,
-    StudentDataService,
     UtilService
   ) {
     super(
-      $q,
-      $rootScope,
       $scope,
-      $state,
-      $stateParams,
-      $sce,
       $filter,
-      $mdDialog,
-      AnnotationService,
-      AudioRecorderService,
       ConfigService,
       NodeService,
-      NotebookService,
       NotificationService,
       ProjectAssetService,
       ProjectService,
-      StudentAssetService,
-      StudentDataService,
       UtilService
     );
     this.summernotePromptHTML = '';

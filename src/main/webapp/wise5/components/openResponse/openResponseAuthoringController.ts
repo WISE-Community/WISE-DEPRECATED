@@ -13,68 +13,35 @@ class OpenResponseAuthoringController extends ComponentAuthoringController {
 
   static $inject = [
     '$filter',
-    '$mdDialog',
-    '$q',
-    '$rootScope',
-    '$sce',
     '$scope',
-    '$state',
-    '$stateParams',
-    'AnnotationService',
-    'AudioRecorderService',
     'ConfigService',
     'CRaterService',
     'NodeService',
-    'NotebookService',
     'NotificationService',
     'ProjectAssetService',
     'ProjectService',
-    'StudentAssetService',
-    'StudentDataService',
     'UtilService'
   ];
 
   constructor(
     $filter,
-    $mdDialog,
-    $q,
-    $rootScope,
-    $sce,
     $scope,
-    $state,
-    $stateParams,
-    AnnotationService,
-    AudioRecorderService,
     ConfigService,
     protected CRaterService: CRaterService,
     NodeService,
-    NotebookService,
     NotificationService,
     ProjectAssetService,
     ProjectService,
-    StudentAssetService,
-    StudentDataService,
     UtilService
   ) {
     super(
-      $q,
-      $rootScope,
       $scope,
-      $state,
-      $stateParams,
-      $sce,
       $filter,
-      $mdDialog,
-      AnnotationService,
-      AudioRecorderService,
       ConfigService,
       NodeService,
-      NotebookService,
       NotificationService,
       ProjectAssetService,
       ProjectService,
-      StudentAssetService,
-      StudentDataService,
       UtilService
     );
     this.ProjectAssetService = ProjectAssetService;

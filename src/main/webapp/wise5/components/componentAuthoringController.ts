@@ -3,13 +3,8 @@ import { ConfigService } from "../services/configService";
 import { UtilService } from "../services/utilService";
 import { TeacherProjectService } from "../services/teacherProjectService";
 import { ProjectAssetService } from '../../site/src/app/services/projectAssetService';
-import { AudioRecorderService } from '../services/audioRecorderService';
-import { AnnotationService } from '../services/annotationService';
 import { NodeService } from '../services/nodeService';
-import { NotebookService } from '../services/notebookService';
 import { NotificationService } from '../services/notificationService';
-import { StudentAssetService } from '../services/studentAssetService';
-import { StudentDataService } from '../services/studentDataService';
 
 export abstract class ComponentAuthoringController {
 
@@ -35,24 +30,13 @@ export abstract class ComponentAuthoringController {
   summernoteRubricOptions: any;
 
   constructor(
-      protected $q: any,
-      protected $rootScope: any,
       protected $scope: any,
-      protected $state: any,
-      protected $stateParams: any,
-      protected $sce: any,
       protected $filter: any,
-      protected $mdDialog: any,
-      protected AnnotationService: AnnotationService,
-      protected AudioRecorderService: AudioRecorderService,
       protected ConfigService: ConfigService,
       protected NodeService: NodeService,
-      protected NotebookService: NotebookService,
       protected NotificationService: NotificationService,
       protected ProjectAssetService: ProjectAssetService,
       protected ProjectService: TeacherProjectService,
-      protected StudentAssetService: StudentAssetService,
-      protected StudentDataService: StudentDataService,
       protected UtilService: UtilService) {
     this.authoringComponentContent = this.$scope.authoringComponentContent;
     this.componentContent = this.$scope.componentContent;
