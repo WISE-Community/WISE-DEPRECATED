@@ -1,7 +1,9 @@
 'use strict';
 
+import { Directive } from "@angular/core";
 import { NotificationService } from "../../../../services/notificationService";
 
+@Directive()
 class ToolbarController {
   globalMessage: string;
   isJSONValid: boolean = null;

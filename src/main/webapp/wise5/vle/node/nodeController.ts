@@ -10,7 +10,9 @@ import * as $ from 'jquery';
 import { Subscription } from 'rxjs';
 import { SessionService } from '../../services/sessionService';
 import { StudentAssetService } from '../../services/studentAssetService';
+import { Directive } from '@angular/core';
 
+@Directive()
 class NodeController {
   $translate: any;
   autoSaveInterval: any;

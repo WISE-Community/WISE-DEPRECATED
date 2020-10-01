@@ -3,7 +3,9 @@
 import ComponentController from '../componentController';
 import { DiscussionService } from './discussionService';
 import { NotificationService } from '../../services/notificationService';
+import { Directive } from '@angular/core';
 
+@Directive()
 class DiscussionController extends ComponentController {
   $mdMedia: any;
   $q: any;

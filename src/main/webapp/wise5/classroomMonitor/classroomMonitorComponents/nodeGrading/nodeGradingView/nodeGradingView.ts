@@ -10,7 +10,9 @@ import { TeacherDataService } from '../../../../services/teacherDataService';
 import * as angular from 'angular';
 import { TeacherProjectService } from '../../../../services/teacherProjectService';
 import { Subscription } from 'rxjs';
+import { Directive } from '@angular/core';
 
+@Directive()
 class NodeGradingViewController {
   $translate: any;
   canViewStudentNames: boolean;

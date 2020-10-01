@@ -9,7 +9,9 @@ import { TeacherWebSocketService } from '../../../../services/teacherWebSocketSe
 import * as $ from 'jquery';
 import { TeacherProjectService } from '../../../../services/teacherProjectService';
 import { Subscription } from 'rxjs';
+import { Directive } from '@angular/core';
 
+@Directive()
 class NavItemController {
   $translate: any;
   alertIconClass: string;
