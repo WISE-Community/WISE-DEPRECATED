@@ -1,4 +1,4 @@
-import { OnInit, Inject } from '@angular/core';
+import { OnInit, Inject, Directive } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { TeacherService } from "../../../teacher/teacher.service";
@@ -7,6 +7,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { map, debounceTime } from 'rxjs/operators';
 import { Project } from "../../../domain/project";
 
+@Directive()
 export abstract class ShareItemDialogComponent implements OnInit {
 
   project: Project;

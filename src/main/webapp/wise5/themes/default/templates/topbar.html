@@ -16,7 +16,7 @@
             <span ng-if="vleController.constraintsDisabled">Constraints Are Off</span>
         </span>
         <md-menu md-position-mode="target-right target" md-offset="40 26">
-            <md-button id="viewNotificationsButton" aria-label="View notifications" class="md-icon-button notification-btn" ng-click="$mdOpenMenu(); $event.stopPropagation();">
+            <md-button id="viewNotificationsButton" aria-label="View notifications" class="md-icon-button notification-btn" ng-click="$mdMenu.open($event); $event.stopPropagation();">
                 <span ng-if="vleController.hasNewNotifications()" class="notification-count">{{vleController.newNotifications.length}}</span>
                 <md-icon md-menu-origin> notifications </md-icon>
             </md-button>
@@ -26,7 +26,7 @@
         </md-menu>
         <md-progress-circular class="menu-progress" md-mode="determinate" md-diameter="32" value="{{ themeCtrl.rootNodeStatus.progress.completionPct }}"></md-progress-circular>
         <md-menu id='accountMenu' md-position-mode="target-right target" md-offset="8 28">
-            <md-button id="openAccountMenuButton" aria-label="{{::'openAccountMenu' | translate}}" class="md-icon-button" ng-click="$mdOpenMenu(); $event.stopPropagation();">
+            <md-button id="openAccountMenuButton" aria-label="{{::'openAccountMenu' | translate}}" class="md-icon-button" ng-click="$mdMenu.open($event); $event.stopPropagation();">
                 <md-icon md-menu-origin class="account-menu__icon" style="color: {{::themeCtrl.getAvatarColorForWorkgroupId(themeCtrl.workgroupId)}};"> account_circle </md-icon>
             </md-button>
             <md-menu-content width="5" class="account-menu">

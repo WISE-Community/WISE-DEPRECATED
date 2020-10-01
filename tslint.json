@@ -2,7 +2,16 @@
   "rulesDirectory": [
     "node_modules/codelyzer"
   ],
+  "extends": [
+    "tslint:recommended"
+  ],
   "rules": {
+    "align": {
+      "options": [
+        "parameters",
+        "statements"
+      ]
+    },
     "arrow-return-shorthand": true,
     "callable-types": true,
     "class-name": true,
@@ -73,7 +82,6 @@
     "no-trailing-whitespace": true,
     "no-unnecessary-initializer": true,
     "no-unused-expression": true,
-    "no-use-before-declare": true,
     "no-var-keyword": true,
     "object-literal-sort-keys": false,
     "one-line": [
@@ -93,6 +101,15 @@
       true,
       "always"
     ],
+    "space-before-function-paren": {
+      "options": {
+        "anonymous": "never",
+        "asyncArrow": "always",
+        "constructor": "never",
+        "method": "never",
+        "named": "never"
+      }
+    },
     "triple-equals": [
       true,
       "allow-null-check"

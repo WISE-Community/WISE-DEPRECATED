@@ -89,14 +89,6 @@ const materialModules = [
     ShareProjectDialogComponent,
     CopyProjectDialogComponent
   ],
-  entryComponents: [
-    CommunityLibraryDetailsComponent,
-    CopyProjectDialogComponent,
-    LibraryProjectDetailsComponent,
-    OfficialLibraryDetailsComponent,
-    PersonalLibraryDetailsComponent,
-    ShareProjectDialogComponent
-  ],
   exports: [
     HomePageProjectLibraryComponent,
     ReactiveFormsModule,

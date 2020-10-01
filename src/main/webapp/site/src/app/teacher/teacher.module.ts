@@ -71,14 +71,6 @@ const materialModules = [
     EditRunWarningDialogComponent,
     ListClassroomCoursesDialogComponent
   ],
-  entryComponents: [
-    CreateRunDialogComponent,
-    RunSettingsDialogComponent,
-    ShareRunDialogComponent,
-    UseWithClassWarningDialogComponent,
-    EditRunWarningDialogComponent,
-    ListClassroomCoursesDialogComponent
-  ],
   providers: [
     AuthGuard
   ],
