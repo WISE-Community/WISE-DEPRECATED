@@ -1,6 +1,6 @@
 {
   "name": "wise",
-  "version": "5.16.3",
+  "version": "5.17.0",
   "description": "Web-based Inquiry Science Environment",
   "main": "app.js",
   "browserslist": [
