@@ -1,11 +1,13 @@
 'use strict';
 
+import { Directive } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { ConfigService } from '../../services/configService';
 import { StudentStatusService } from '../../services/studentStatusService';
 import { TeacherDataService } from '../../services/teacherDataService';
 import { TeacherWebSocketService } from '../../services/teacherWebSocketService';
 
+@Directive()
 class StudentProgressController {
   currentWorkgroup: any;
   permissions: any;

@@ -5,7 +5,9 @@ import { TeacherDataService } from '../../../../services/teacherDataService';
 import { SessionService } from '../../../../services/sessionService';
 import { TeacherProjectService } from '../../../../services/teacherProjectService';
 import { NotificationService } from '../../../../services/notificationService';
+import { Directive } from '@angular/core';
 
+@Directive()
 class TopBarController {
   translate: any;
   avatarColor: any;

@@ -1,9 +1,11 @@
 'use strict';
 
+import { Directive } from '@angular/core';
 import * as angular from 'angular';
 import ComponentController from '../componentController';
 import { MatchService } from './matchService';
 
+@Directive()
 class MatchController extends ComponentController {
   $mdMedia: any;
   $q: any;

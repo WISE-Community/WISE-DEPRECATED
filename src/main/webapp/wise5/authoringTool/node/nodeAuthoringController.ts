@@ -10,7 +10,9 @@ import * as $ from 'jquery';
 import { TagService } from '../../services/tagService';
 import { NotificationService } from '../../services/notificationService';
 import { Subscription } from 'rxjs';
+import { Directive } from '@angular/core';
 
+@Directive()
 class NodeAuthoringController {
   $translate: any;
   authoringNodeContentJSONString: string;
