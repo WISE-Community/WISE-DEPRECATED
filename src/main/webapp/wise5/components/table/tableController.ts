@@ -6,8 +6,6 @@ import ComponentController from '../componentController';
 import { TableService } from './tableService';
 
 class TableController extends ComponentController {
-  $anchorScroll: any;
-  $location: any;
   $q: any;
   TableService: TableService;
   allowedConnectedComponentTypes: any[];
@@ -35,10 +33,8 @@ class TableController extends ComponentController {
   dataExplorerXColumn: number;
 
   static $inject = [
-    '$anchorScroll',
     '$filter',
     '$injector',
-    '$location',
     '$mdDialog',
     '$q',
     '$rootScope',
@@ -57,10 +53,8 @@ class TableController extends ComponentController {
   ];
 
   constructor(
-    $anchorScroll,
     $filter,
     $injector,
-    $location,
     $mdDialog,
     $q,
     $rootScope,
@@ -95,8 +89,6 @@ class TableController extends ComponentController {
       StudentDataService,
       UtilService
     );
-    this.$anchorScroll = $anchorScroll;
-    this.$location = $location;
     this.$q = $q;
     this.TableService = TableService;
 
@@ -327,7 +319,7 @@ class TableController extends ComponentController {
   }
 
   registerStudentWorkSavedToServerListener() {
-    this.studentWorkSavedToServerSubscription = 
+    this.studentWorkSavedToServerSubscription =
         this.StudentDataService.studentWorkSavedToServer$.subscribe((args: any) => {
       const componentState = args.studentWork;
       if (this.isForThisComponent(componentState)) {
