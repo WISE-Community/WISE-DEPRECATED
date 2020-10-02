@@ -8,9 +8,8 @@ class TableAuthoringController extends TableController {
   ProjectAssetService: ProjectAssetService;
 
   static $inject = [
-    '$anchorScroll',
     '$filter',
-    '$location',
+    '$injector',
     '$mdDialog',
     '$q',
     '$rootScope',
@@ -30,10 +29,8 @@ class TableAuthoringController extends TableController {
   ];
 
   constructor(
-    $anchorScroll,
     $filter,
     $injector,
-    $location,
     $mdDialog,
     $q,
     $rootScope,
@@ -52,10 +49,8 @@ class TableAuthoringController extends TableController {
     UtilService
   ) {
     super(
-      $anchorScroll,
       $filter,
       $injector,
-      $location,
       $mdDialog,
       $q,
       $rootScope,
