@@ -1,63 +1,47 @@
-<div>
-  <md-button id='backToProjectButton' class='topButton md-raised md-primary'
-      ng-click='$ctrl.goBack()'>
-    <md-icon>arrow_back</md-icon>
-    <md-tooltip md-direction='top' class='projectButtonTooltip'>
-      {{ ::'backToProjectView' | translate }}
-    </md-tooltip>
-  </md-button>
-  <md-input-container>
-    <md-button id='showProjectJSONButton' class='topButton md-raised md-primary' ng-click='$ctrl.toggleJSON()'>
-      <md-icon>code</md-icon>
-      <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'SHOW_JSON' | translate }}</md-tooltip>
-    </md-button>
-  </md-input-container>
-  <md-input-container>
-    <md-button class='topButton md-raised md-primary' ng-click='$ctrl.downloadProject()'>
-      <md-icon>file_download</md-icon>
-      <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'downloadProject' | translate }}</md-tooltip>
-    </md-button>
-  </md-input-container>
+<div fxLayout="row wrap" fxLayoutGap="8px" fxLayoutAlign="start center">
+  <button mat-button id="backToProjectButton" class="topButton mat-raised-button mat-primary"
+      (click)="goBack()">
+    <mat-icon class="projectButtonTooltip" matTooltip="Back to Unit Plan" matTooltipPosition="above" i18n-matTooltip>arrow_back</mat-icon>
+  </button>
+  <button mat-button id="showProjectJSONButton" class="topButton mat-raised-button mat-primary" (click)="toggleJSON()">
+    <mat-icon class="projectButtonTooltip" matTooltip="Show JSON" matTooltipPosition="above" i18n-matTooltip>code</mat-icon>
+  </button>
+  <button mat-button class="topButton mat-raised-button mat-primary" (click)="downloadProject()">
+    <mat-icon class="projectButtonTooltip" matTooltip="Download Unit" matTooltipPosition="above" i18n-matTooltip>file_download</mat-icon>
+  </button>
 </div>
 <br/>
-<div ng-if='$ctrl.isJSONDisplayed'>
-  <h5 translate="editProjectJSON"></h5>
-  <md-input-container style='width: 100%;'>
-    <textarea ng-model='$ctrl.projectJSONString'
-        style='width: 90%; border: 1px solid black;'
-        ng-change='$ctrl.autoSaveProjectJSONString()'
-        ng-model-options='{ debounce: 1000 }'></textarea>
-  </md-input-container>
+<div *ngIf="isJSONDisplayed">
+  <h5 i18n>Edit Unit JSON</h5>
+  <textarea matInput
+      cdkTextareaAutosize
+      [(ngModel)]="projectJSONString"
+      style="width: 90%; border: 1px solid black;"
+      (change)="autoSaveProjectJSONString()"></textarea>
 </div>
-<div>
-  <md-input-container>
-    <label>{{ ::'scriptFilename' | translate }}</label>
-    <input size='100'
-        ng-model='$ctrl.projectScriptFilename'
-        ng-change='$ctrl.projectScriptFilenameChanged()'/>
-  </md-input-container>
-  <md-button class='topButton md-raised md-primary'
-      style='margin-top: -10;'
-      ng-click='$ctrl.chooseProjectScriptFile()'>
-    <md-icon>attach_file</md-icon>
-    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'CHOOSE' | translate }}</md-tooltip>
-  </md-button>
+<div fxLayout="row wrap" fxLayoutGap="8px" fxLayoutAlign="start center">
+  <mat-form-field style="width:400px; max-width:100%">
+    <mat-label i18n>Script Filename</mat-label>
+    <input matInput
+        [(ngModel)]="projectScriptFilename"
+        (change)="projectScriptFilenameChanged()"/>
+  </mat-form-field>
+  <button mat-button class="topButton mat-raised-button mat-primary"
+      (click)="chooseProjectScriptFile()">
+    <mat-icon class="projectButtonTooltip" matTooltip="Choose" matTooltipPosition="above" i18n-matTooltip>attach_file</mat-icon>
+  </button>
 </div>
-<div>
-  <md-input-container>
-    <label>{{ ::'projectURL' | translate }}</label>
-    <input size='100' value='{{::$ctrl.getProjectURL()}}' disabled='true'/>
-  </md-input-container>
-  <md-button class='topButton md-raised md-primary'
-      style='margin-top: -10;'
-      ng-click='$ctrl.copyProjectURL()'>
-    <md-icon>content_paste</md-icon>
-    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'copyProjectURLToClipboard' | translate }}</md-tooltip>
-  </md-button>
-  <md-button class='topButton md-raised md-primary'
-      style='margin-top: -10;'
-      ng-click='$ctrl.openProjectURLInNewTab()'>
-    <md-icon>open_in_new</md-icon>
-    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'openProjectURLInNewTab' | translate }}</md-tooltip>
-  </md-button>
+<div fxLayout="row wrap" fxLayoutGap="8px" fxLayoutAlign="start center">
+  <mat-form-field style="width:400px; max-width:100%">
+    <mat-label i18n>Unit URL</mat-label>
+    <input matInput value="{{getProjectURL()}}" disabled="true"/>
+  </mat-form-field>
+  <button mat-button class="topButton mat-raised-button mat-primary"
+      (click)="copyProjectURL()">
+    <mat-icon class="projectButtonTooltip" matTooltip="Copy Unit URL to Clipboard" matTooltipPosition="above" i18n-matTooltip>content_paste</mat-icon>
+  </button>
+  <button mat-button class="topButton mat-raised-button mat-primary"
+      (click)="openProjectURLInNewTab()">
+    <mat-icon class="projectButtonTooltip" matTooltip="Open Unit URL in New Tab" matTooltipPosition="above" i18n-matTooltip>open_in_new</mat-icon>
+  </button>
 </div>

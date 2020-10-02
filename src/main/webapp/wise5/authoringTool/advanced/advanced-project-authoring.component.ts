@@ -4,38 +4,32 @@ import { UtilService } from '../../services/utilService';
 import * as angular from 'angular';
 import { ProjectAssetService } from '../../../site/src/app/services/projectAssetService';
 import { NotificationService } from '../../services/notificationService';
+import { Component } from '@angular/core';
+import { UpgradeModule } from '@angular/upgrade/static';
 
-class AdvancedProjectAuthoringController {
-  $translate: any;
+@Component({
+  selector: 'advanced-project-authoring',
+  templateUrl: 'advanced-project-authoring.component.html'
+})
+export class AdvancedProjectAuthoringComponent {
+
   isJSONDisplayed: boolean = false;
   projectId: number;
   projectJSONString: string;
   projectScriptFilename: string;
 
-  static $inject = [
-    '$filter',
-    '$state',
-    'ConfigService',
-    'NotificationService',
-    'ProjectAssetService',
-    'ProjectService',
-    'UtilService'
-  ];
-
   constructor(
-    private $filter: any,
-    private $state: any,
+    private upgrade: UpgradeModule,
     private ConfigService: ConfigService,
     private NotificationService: NotificationService,
     private ProjectAssetService: ProjectAssetService,
     private ProjectService: TeacherProjectService,
     private UtilService: UtilService
   ) {
-    this.$translate = this.$filter('translate');
     this.projectId = this.ConfigService.getProjectId();
   }
 
-  $onInit() {
+  ngOnInit() {
     this.setProjectScriptFilename();
   }
 
@@ -51,7 +45,8 @@ class AdvancedProjectAuthoringController {
     if (this.UtilService.isValidJSONString(this.projectJSONString)) {
       this.isJSONDisplayed = false;
       this.NotificationService.hideJSONValidMessage();
-    } else if (confirm(this.$translate('jsonInvalidErrorMessage'))) {
+    } else if (confirm(
+        this.upgrade.$injector.get('$filter')('translate')('jsonInvalidErrorMessage'))) {
       this.isJSONDisplayed = false;
       this.NotificationService.hideJSONValidMessage();
     }
@@ -90,15 +85,12 @@ class AdvancedProjectAuthoringController {
       target: 'scriptFilename'
     };
     this.ProjectAssetService.openAssetChooser(params).then(
-      (data: any) => { this.assetSelected(data) }
-    );
+        (data: any) => { this.assetSelected(data); });
   }
 
-  assetSelected({ assetItem, target }) {
-    if (target === 'scriptFilename') {
-      this.projectScriptFilename = assetItem.fileName;
-      this.projectScriptFilenameChanged();
-    }
+  assetSelected({ assetItem }) {
+    this.projectScriptFilename = assetItem.fileName;
+    this.projectScriptFilenameChanged();
   }
 
   downloadProject() {
@@ -133,12 +125,6 @@ class AdvancedProjectAuthoringController {
   }
 
   goBack() {
-    this.$state.go('root.at.project');
+    this.upgrade.$injector.get('$state').go('root.at.project');
   }
-}
-
-
-export const AdvancedProjectAuthoringComponent = {
-  templateUrl: `/wise5/authoringTool/advanced/advanced-project-authoring.component.html`,
-  controller: AdvancedProjectAuthoringController
 }

@@ -1,7 +1,7 @@
 import '../lib/jquery/jquery-global';
 import '../lib/bootstrap/js/bootstrap.min'
 import * as angular from 'angular';
-import { downgradeInjectable } from '@angular/upgrade/static';
+import { downgradeComponent, downgradeInjectable } from '@angular/upgrade/static';
 import { createCommonModule } from '../common-angular-js-module';
 import { MilestoneService } from '../services/milestoneService';
 import { TeacherProjectService } from '../services/teacherProjectService';
@@ -94,7 +94,8 @@ export function createTeacherAngularJSModule() {
     .factory('StudentStatusService', downgradeInjectable(StudentStatusService))
     .service('TeacherDataService', downgradeInjectable(TeacherDataService))
     .service('TeacherWebSocketService', downgradeInjectable(TeacherWebSocketService))
-    .component('advancedProjectAuthoringComponent', AdvancedProjectAuthoringComponent)
+    .directive('advancedProjectAuthoringComponent', downgradeComponent(
+        { component: AdvancedProjectAuthoringComponent }) as angular.IDirectiveFactory)
     .controller('AuthoringToolController', AuthoringToolController)
     .controller('AuthoringToolMainController', AuthoringToolMainController)
     .controller('AuthorNotebookController', AuthorNotebookController)

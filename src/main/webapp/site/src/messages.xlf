@@ -5082,6 +5082,69 @@
           <context context-type="linenumber">3</context>
         </context-group>
       </trans-unit>
+      <trans-unit datatype="html" id="44fcb249525dd82d1fd32cae51412bcda7ffd765">
+        <source>Back to Unit Plan</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="077fb7924ecebe2ae768d860909315c29ee61fbe">
+        <source>Show JSON</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="a7ff0a41fdb9b51a30db6bed1494c740274cbb84">
+        <source>Download Unit</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="e810aa7f08f531d99ef09adc501a8dded58d34fb">
+        <source>Edit Unit JSON</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="9203b05eb7515e937cc5e5d8cbc8a03195bb2d7f">
+        <source>Script Filename</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="9fabdfadf0453602acf388171bd4f758df47e1a7">
+        <source>Choose</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
+          <context context-type="linenumber">31</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="0435f6f300b78e13d48ecd2ee6e404d40df04188">
+        <source>Unit URL</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
+          <context context-type="linenumber">36</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="3eb7b66b266bf315436e1888846133dd8106ca43">
+        <source>Copy Unit URL to Clipboard</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
+          <context context-type="linenumber">41</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="29024835e83ded5ae9cb4e4be0c3fba290a185b9">
+        <source>Open Unit URL in New Tab</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
+          <context context-type="linenumber">45</context>
+        </context-group>
+      </trans-unit>
       <trans-unit datatype="html" id="36a606470097ddf0c32a250c8a902441729ca8ca">
         <source>Add Unit</source>
         <context-group purpose="location">
