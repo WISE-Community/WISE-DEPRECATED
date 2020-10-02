@@ -5,7 +5,7 @@ import * as angular from 'angular';
 import { ProjectAssetService } from '../../../site/src/app/services/projectAssetService';
 import { NotificationService } from '../../services/notificationService';
 
-class AdvancedAuthoringController {
+class AdvancedProjectAuthoringController {
   $translate: any;
   isJSONDisplayed: boolean = false;
   projectId: number;
@@ -14,10 +14,7 @@ class AdvancedAuthoringController {
 
   static $inject = [
     '$filter',
-    '$rootScope',
-    '$scope',
     '$state',
-    '$stateParams',
     'ConfigService',
     'NotificationService',
     'ProjectAssetService',
@@ -26,34 +23,23 @@ class AdvancedAuthoringController {
   ];
 
   constructor(
-    $filter,
-    private $rootScope,
-    private $scope,
-    private $state,
-    $stateParams: any,
+    private $filter: any,
+    private $state: any,
     private ConfigService: ConfigService,
     private NotificationService: NotificationService,
     private ProjectAssetService: ProjectAssetService,
     private ProjectService: TeacherProjectService,
     private UtilService: UtilService
   ) {
-    this.$rootScope = $rootScope;
-    this.$scope = $scope;
-    this.$state = $state;
-    this.$translate = $filter('translate');
-    this.ConfigService = ConfigService;
-    this.NotificationService = NotificationService;
-    this.ProjectAssetService = ProjectAssetService;
-    this.ProjectService = ProjectService;
-    this.UtilService = UtilService;
-    this.projectId = $stateParams.projectId;
+    this.$translate = this.$filter('translate');
+    this.projectId = this.ConfigService.getProjectId();
   }
 
   $onInit() {
     this.setProjectScriptFilename();
   }
 
-  showJSONClicked() {
+  toggleJSON() {
     if (this.isJSONDisplayed) {
       this.hideJSON();
     } else {
@@ -151,4 +137,8 @@ class AdvancedAuthoringController {
   }
 }
 
-export default AdvancedAuthoringController;
+
+export const AdvancedProjectAuthoringComponent = {
+  templateUrl: `/wise5/authoringTool/advanced/advanced-project-authoring.component.html`,
+  controller: AdvancedProjectAuthoringController
+}

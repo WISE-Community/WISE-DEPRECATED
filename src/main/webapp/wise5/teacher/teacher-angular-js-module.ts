@@ -10,9 +10,9 @@ import { SpaceService } from '../services/spaceService';
 import { StudentStatusService } from '../services/studentStatusService';
 import { TeacherDataService } from '../services/teacherDataService';
 import { TeacherWebSocketService } from '../services/teacherWebSocketService';
+import { AdvancedProjectAuthoringComponent } from '../authoringTool/advanced/advanced-project-authoring.component';
 import AuthoringToolController from '../authoringTool/authoringToolController';
 import AuthoringToolMainController from '../authoringTool/main/authoringToolMainController';
-import AdvancedAuthoringController from '../authoringTool/advanced/advancedAuthoringController';
 import AuthorNotebookController from '../authoringTool/notebook/authorNotebookController';
 import ClassroomMonitorController from '../classroomMonitor/classroomMonitorController';
 import DataExportController from '../classroomMonitor/dataExport/dataExportController';
@@ -94,9 +94,9 @@ export function createTeacherAngularJSModule() {
     .factory('StudentStatusService', downgradeInjectable(StudentStatusService))
     .service('TeacherDataService', downgradeInjectable(TeacherDataService))
     .service('TeacherWebSocketService', downgradeInjectable(TeacherWebSocketService))
+    .component('advancedProjectAuthoringComponent', AdvancedProjectAuthoringComponent)
     .controller('AuthoringToolController', AuthoringToolController)
     .controller('AuthoringToolMainController', AuthoringToolMainController)
-    .controller('AdvancedAuthoringController', AdvancedAuthoringController)
     .controller('AuthorNotebookController', AuthorNotebookController)
     .controller('ClassroomMonitorController', ClassroomMonitorController)
     .controller('DataExportController', DataExportController)
@@ -238,9 +238,7 @@ export function createTeacherAngularJSModule() {
         })
         .state('root.at.project.advanced', {
           url: '/advanced',
-          templateUrl: '/wise5/authoringTool/advanced/advancedAuthoring.html',
-          controller: 'AdvancedAuthoringController',
-          controllerAs: 'advancedAuthoringController'
+          component: 'advancedProjectAuthoringComponent',
         })
         .state('root.at.project.rubric', {
           url: '/rubric',
