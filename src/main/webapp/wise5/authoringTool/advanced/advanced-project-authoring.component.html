@@ -12,19 +12,16 @@
 </div>
 <br/>
 <div *ngIf="isJSONDisplayed">
-  <h5 i18n>Edit Unit JSON</h5>
-  <textarea matInput
-      cdkTextareaAutosize
-      [(ngModel)]="projectJSONString"
-      style="width: 90%; border: 1px solid black;"
-      (change)="autoSaveProjectJSONString()"></textarea>
+  <mat-form-field fxFlex appearance="outline">
+    <mat-label i18n>Edit Unit JSON</mat-label>
+    <textarea class="mat-body-1" matInput cdkTextareaAutosize  [(ngModel)]="projectJSONString"
+        (change)="autoSaveProjectJSONString()"></textarea>
+  </mat-form-field>
 </div>
 <div fxLayout="row wrap" fxLayoutGap="8px" fxLayoutAlign="start center">
   <mat-form-field style="width:400px; max-width:100%">
     <mat-label i18n>Script Filename</mat-label>
-    <input matInput
-        [(ngModel)]="projectScriptFilename"
-        (change)="projectScriptFilenameChanged()"/>
+    <input matInput [(ngModel)]="projectScriptFilename" (change)="projectScriptFilenameChanged()"/>
   </mat-form-field>
   <button mat-button class="topButton mat-raised-button mat-primary"
       (click)="chooseProjectScriptFile()">
