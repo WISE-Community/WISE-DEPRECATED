@@ -1,0 +1,12 @@
+version: 0.2
+
+phases:
+  build:
+    commands:
+      - npm install
+      - npm run build-prod
+      - mvnw clean -Dmaven.test.skip=true package
+
+artifacts:
+  files:
+    - target/wise.war
