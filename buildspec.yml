@@ -5,7 +5,7 @@ phases:
     commands:
       - npm install
       - npm run build-prod
-      - mvnw clean -Dmaven.test.skip=true package
+      - ./mvnw clean -Dmaven.test.skip=true package
 
 artifacts:
   files:
