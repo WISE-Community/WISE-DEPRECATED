@@ -1,73 +1,47 @@
 'use strict';
 
 import { ProjectAssetService } from '../../../site/src/app/services/projectAssetService';
-import OpenResponseController from './openResponseController';
+import { CRaterService } from '../../services/cRaterService';
+import { ComponentAuthoringController } from '../componentAuthoringController';
 
-class OpenResponseAuthoringController extends OpenResponseController {
+class OpenResponseAuthoringController extends ComponentAuthoringController {
   ProjectAssetService: ProjectAssetService;
   allowedConnectedComponentTypes: any[];
+  useCustomCompletionCriteria: boolean = false;
+  cRaterItemIdIsValid: boolean = null;
+  isVerifyingCRaterItemId: boolean = false;
 
   static $inject = [
     '$filter',
-    '$injector',
-    '$mdDialog',
-    '$q',
-    '$rootScope',
     '$scope',
-    'AnnotationService',
-    'AudioRecorderService',
     'ConfigService',
     'CRaterService',
     'NodeService',
-    'NotebookService',
     'NotificationService',
-    'OpenResponseService',
     'ProjectAssetService',
     'ProjectService',
-    'StudentAssetService',
-    'StudentDataService',
     'UtilService'
   ];
 
   constructor(
     $filter,
-    $injector,
-    $mdDialog,
-    $q,
-    $rootScope,
     $scope,
-    AnnotationService,
-    AudioRecorderService,
     ConfigService,
-    CRaterService,
+    protected CRaterService: CRaterService,
     NodeService,
-    NotebookService,
     NotificationService,
-    OpenResponseService,
     ProjectAssetService,
     ProjectService,
-    StudentAssetService,
-    StudentDataService,
     UtilService
   ) {
     super(
-      $filter,
-      $injector,
-      $mdDialog,
-      $q,
-      $rootScope,
       $scope,
-      AnnotationService,
-      AudioRecorderService,
+      $filter,
       ConfigService,
-      CRaterService,
       NodeService,
-      NotebookService,
       NotificationService,
-      OpenResponseService,
+      ProjectAssetService,
       ProjectService,
-      StudentAssetService,
-      StudentDataService,
       UtilService
     );
     this.ProjectAssetService = ProjectAssetService;
@@ -76,6 +50,10 @@ class OpenResponseAuthoringController extends OpenResponseController {
         type: 'OpenResponse'
       }
     ];
+
+    if (this.authoringComponentContent.completionCriteria != null) {
+      this.useCustomCompletionCriteria = true;
+    }
 
     $scope.$watch(
       function() {
@@ -116,7 +94,7 @@ class OpenResponseAuthoringController extends OpenResponseController {
     }
   }
 
-  authoringAddScoringRule() {
+  addScoringRule() {
     if (
       this.authoringComponentContent.cRater != null &&
       this.authoringComponentContent.cRater.scoringRules != null
@@ -130,7 +108,7 @@ class OpenResponseAuthoringController extends OpenResponseController {
     }
   }
 
-  authoringViewScoringRuleUpClicked(index) {
+  scoringRuleUpClicked(index) {
     if (
       this.authoringComponentContent.cRater != null &&
       this.authoringComponentContent.cRater.scoringRules != null
@@ -144,7 +122,7 @@ class OpenResponseAuthoringController extends OpenResponseController {
     }
   }
 
-  authoringViewScoringRuleDownClicked(index) {
+  scoringRuleDownClicked(index) {
     if (
       this.authoringComponentContent.cRater != null &&
       this.authoringComponentContent.cRater.scoringRules != null
@@ -158,7 +136,7 @@ class OpenResponseAuthoringController extends OpenResponseController {
     }
   }
 
-  authoringViewScoringRuleDeleteClicked(index) {
+  scoringRuleDeleteClicked(index) {
     if (
       this.authoringComponentContent.cRater != null &&
       this.authoringComponentContent.cRater.scoringRules != null
@@ -183,7 +161,7 @@ class OpenResponseAuthoringController extends OpenResponseController {
    * Add a new notification. Currently assumes this is a notification based on CRaterResult, but
    * we can add different types in the future.
    */
-  authoringAddNotification() {
+  addNotification() {
     if (
       this.authoringComponentContent.notificationSettings != null &&
       this.authoringComponentContent.notificationSettings.notifications != null
@@ -211,7 +189,7 @@ class OpenResponseAuthoringController extends OpenResponseController {
     }
   }
 
-  authoringAddMultipleAttemptScoringRule() {
+  addMultipleAttemptScoringRule() {
     if (
       this.authoringComponentContent.cRater != null &&
       this.authoringComponentContent.cRater.multipleAttemptScoringRules != null
@@ -227,7 +205,7 @@ class OpenResponseAuthoringController extends OpenResponseController {
     }
   }
 
-  authoringViewMultipleAttemptScoringRuleUpClicked(index) {
+  multipleAttemptScoringRuleUpClicked(index) {
     if (
       this.authoringComponentContent.cRater != null &&
       this.authoringComponentContent.cRater.multipleAttemptScoringRules != null
@@ -246,7 +224,7 @@ class OpenResponseAuthoringController extends OpenResponseController {
     }
   }
 
-  authoringViewMultipleAttemptScoringRuleDownClicked(index) {
+  multipleAttemptScoringRuleDownClicked(index) {
     if (
       this.authoringComponentContent.cRater != null &&
       this.authoringComponentContent.cRater.multipleAttemptScoringRules != null
@@ -265,7 +243,7 @@ class OpenResponseAuthoringController extends OpenResponseController {
     }
   }
 
-  authoringViewMultipleAttemptScoringRuleDeleteClicked(index) {
+  multipleAttemptScoringRuleDeleteClicked(index) {
     if (
       this.authoringComponentContent.cRater != null &&
       this.authoringComponentContent.cRater.multipleAttemptScoringRules != null
@@ -294,7 +272,7 @@ class OpenResponseAuthoringController extends OpenResponseController {
     }
   }
 
-  authoringViewNotificationUpClicked(index) {
+  notificationUpClicked(index) {
     if (
       this.authoringComponentContent.notificationSettings != null &&
       this.authoringComponentContent.notificationSettings.notifications != null
@@ -314,7 +292,7 @@ class OpenResponseAuthoringController extends OpenResponseController {
     }
   }
 
-  authoringViewNotificationDownClicked(index) {
+  notificationDownClicked(index) {
     if (
       this.authoringComponentContent.notificationSettings != null &&
       this.authoringComponentContent.notificationSettings.notifications != null
@@ -334,7 +312,7 @@ class OpenResponseAuthoringController extends OpenResponseController {
     }
   }
 
-  authoringViewNotificationDeleteClicked(index) {
+  notificationDeleteClicked(index) {
     if (
       this.authoringComponentContent.notificationSettings != null &&
       this.authoringComponentContent.notificationSettings.notifications != null
@@ -360,7 +338,7 @@ class OpenResponseAuthoringController extends OpenResponseController {
     }
   }
 
-  authoringViewEnableCRaterClicked() {
+  enableCRaterClicked() {
     if (this.authoringComponentContent.enableCRater) {
       if (this.authoringComponentContent.cRater == null) {
         const cRater = {
@@ -390,7 +368,7 @@ class OpenResponseAuthoringController extends OpenResponseController {
     this.authoringViewComponentChanged();
   }
 
-  authoringViewEnableNotificationsClicked() {
+  enableNotificationsClicked() {
     if (this.authoringComponentContent.enableNotifications) {
       if (this.authoringComponentContent.notificationSettings == null) {
         this.authoringComponentContent.notificationSettings = {
@@ -452,7 +430,7 @@ class OpenResponseAuthoringController extends OpenResponseController {
     this.authoringViewComponentChanged();
   }
 
-  authoringAddCompletionCriteria() {
+  addCompletionCriteria() {
     const newCompletionCriteria = {
       nodeId: this.nodeId,
       componentId: this.componentId,
@@ -462,7 +440,7 @@ class OpenResponseAuthoringController extends OpenResponseController {
     this.authoringViewComponentChanged();
   }
 
-  authoringDeleteCompletionCriteria(index) {
+  deleteCompletionCriteria(index) {
     if (confirm(this.$translate('areYouSureYouWantToDeleteThisCompletionCriteria'))) {
       this.authoringComponentContent.completionCriteria.criteria.splice(index, 1);
       this.authoringViewComponentChanged();
