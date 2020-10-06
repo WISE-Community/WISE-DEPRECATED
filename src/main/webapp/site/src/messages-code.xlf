@@ -335,6 +335,9 @@
       <trans-unit id="399164538965188389">
         <source>Free, standards-aligned, and research-based inquiry curricula that address <x id="START_LINK"/>NGSS 3D proficiency<x id="CLOSE_LINK"/></source>
       </trans-unit>
+      <trans-unit id="19198353055300541">
+        <source>The JSON is invalid. Invalid JSON will not be saved.\nClick "OK" to revert back to the last valid JSON.\nClick "Cancel" to keep the invalid JSON open so you can fix it.</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

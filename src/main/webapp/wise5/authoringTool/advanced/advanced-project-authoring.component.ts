@@ -46,7 +46,7 @@ export class AdvancedProjectAuthoringComponent {
       this.isJSONDisplayed = false;
       this.NotificationService.hideJSONValidMessage();
     } else if (confirm(
-        this.upgrade.$injector.get('$filter')('translate')('jsonInvalidErrorMessage'))) {
+        $localize`The JSON is invalid. Invalid JSON will not be saved.\nClick "OK" to revert back to the last valid JSON.\nClick "Cancel" to keep the invalid JSON open so you can fix it.`)) {
       this.isJSONDisplayed = false;
       this.NotificationService.hideJSONValidMessage();
     }
