@@ -11,3 +11,4 @@ artifacts:
   files:
     - target/wise.war
     - appspec.yml
+    - updateWAR.sh
