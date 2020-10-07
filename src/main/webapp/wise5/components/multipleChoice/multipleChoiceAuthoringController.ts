@@ -1,70 +1,41 @@
 'use strict';
 
 import { ProjectAssetService } from '../../../site/src/app/services/projectAssetService';
-import MultipleChoiceController from './multipleChoiceController';
+import { ComponentAuthoringController } from '../componentAuthoringController';
 
-class MultipleChoiceAuthoringController extends MultipleChoiceController {
+class MultipleChoiceAuthoringController extends ComponentAuthoringController {
   ProjectAssetService: ProjectAssetService;
   allowedConnectedComponentTypes: any[];
 
   static $inject = [
     '$filter',
-    '$injector',
-    '$mdDialog',
-    '$q',
-    '$rootScope',
     '$scope',
-    'AnnotationService',
-    'AudioRecorderService',
     'ConfigService',
-    'MultipleChoiceService',
     'NodeService',
-    'NotebookService',
     'NotificationService',
     'ProjectAssetService',
     'ProjectService',
-    'StudentAssetService',
-    'StudentDataService',
     'UtilService'
   ];
 
   constructor(
     $filter,
-    $injector,
-    $mdDialog,
-    $q,
-    $rootScope,
     $scope,
-    AnnotationService,
-    AudioRecorderService,
     ConfigService,
-    MultipleChoiceService,
     NodeService,
-    NotebookService,
     NotificationService,
     ProjectAssetService,
     ProjectService,
-    StudentAssetService,
-    StudentDataService,
     UtilService
   ) {
     super(
-      $filter,
-      $injector,
-      $mdDialog,
-      $q,
-      $rootScope,
       $scope,
-      AnnotationService,
-      AudioRecorderService,
+      $filter,
       ConfigService,
-      MultipleChoiceService,
       NodeService,
-      NotebookService,
       NotificationService,
+      ProjectAssetService,
       ProjectService,
-      StudentAssetService,
-      StudentDataService,
       UtilService
     );
     this.ProjectAssetService = ProjectAssetService;
@@ -86,7 +57,7 @@ class MultipleChoiceAuthoringController extends MultipleChoiceController {
     );
   }
 
-  authoringViewFeedbackChanged() {
+  feedbackChanged() {
     let show = true;
     if (!this.componentHasFeedback()) {
       show = false;
@@ -95,10 +66,6 @@ class MultipleChoiceAuthoringController extends MultipleChoiceController {
     this.authoringViewComponentChanged();
   }
 
-  /**
-   * Check if this component has been authored to have feedback or has a correct choice
-   * @return whether this component has feedback or has a correct choice
-   */
   componentHasFeedback() {
     for (const choice of this.authoringComponentContent.choices) {
       if (choice.isCorrect || (choice.feedback != null && choice.feedback !== '')) {
@@ -162,22 +129,6 @@ class MultipleChoiceAuthoringController extends MultipleChoiceController {
     this.authoringViewComponentChanged();
   }
 
-  /**
-   * Clean up the choice objects. In the authoring tool this is required
-   * because we use the choice objects as ng-model values and inject
-   * fields into the choice objects such as showFeedback and feedbackToShow.
-   */
-  cleanUpChoices() {
-    for (const choice of this.authoringComponentContent.choices) {
-      delete choice.showFeedback;
-      delete choice.feedbackToShow;
-    }
-  }
-
-  /**
-   * Show the asset popup to allow the author to choose an image for the choice
-   * @param choice the choice object to set the image into
-   */
   chooseChoiceAsset(choice) {
     const params = {
       isPopup: true,
@@ -189,44 +140,20 @@ class MultipleChoiceAuthoringController extends MultipleChoiceController {
     this.openAssetChooser(params);
   }
 
-  openAssetChooser(params: any) {
-    this.ProjectAssetService.openAssetChooser(params).then(
-      (data: any) => { this.assetSelected(data) }
-    );
-  }
-
   assetSelected({ nodeId, componentId, assetItem, target, targetObject }) {
-    const fileName = assetItem.fileName;
-    const fullFilePath = `${this.ConfigService.getProjectAssetsDirectoryPath()}/${fileName}`;
-    if (target === 'prompt') {
-      this.UtilService.insertFileInSummernoteEditor(
-        `summernotePrompt_${this.nodeId}_${this.componentId}`,
-        fullFilePath,
-        fileName
-      );
-    } else if (target === 'rubric') {
-      this.UtilService.insertFileInSummernoteEditor(
-        `summernoteRubric_${this.nodeId}_${this.componentId}`,
-        fullFilePath,
-        fileName
-      );
-    } else if (target === 'choice') {
+    super.assetSelected({ nodeId, componentId, assetItem, target });
+    if (target === 'choice') {
+      const fileName = assetItem.fileName;
       targetObject.text = `<img src="${fileName}"/>`;
       this.authoringViewComponentChanged();
     }
   }
 
-  /**
-   * Automatically set the component id for the connected component if there
-   * is only one viable option.
-   * @param connectedComponent the connected component object we are authoring
-   */
-  authoringAutomaticallySetConnectedComponentComponentIdIfPossible(connectedComponent) {
+  automaticallySetConnectedComponentComponentIdIfPossible(connectedComponent) {
     let numberOfAllowedComponents = 0;
     let allowedComponent = null;
     for (const component of this.getComponentsByNodeId(connectedComponent.nodeId)) {
-      if (
-        this.isConnectedComponentTypeAllowed(component.type) &&
+      if (this.isConnectedComponentTypeAllowed(component.type) &&
         component.id != this.componentId
       ) {
         numberOfAllowedComponents += 1;
@@ -240,7 +167,7 @@ class MultipleChoiceAuthoringController extends MultipleChoiceController {
     }
   }
 
-  authoringConnectedComponentComponentIdChanged(connectedComponent) {
+  connectedComponentComponentIdChanged(connectedComponent) {
     connectedComponent.type = 'importWork';
     this.copyChoiceTypeAndChoicesFromConnectedComponent(connectedComponent);
     this.authoringViewComponentChanged();
