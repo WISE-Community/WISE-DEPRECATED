@@ -10,3 +10,4 @@ phases:
 artifacts:
   files:
     - target/wise.war
+    - appspec.yml
