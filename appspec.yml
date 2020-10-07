@@ -7,4 +7,5 @@ permissions:
     group: ubuntu
 hooks:
   BeforeInstall:
-    - location: /home/ubuntu/updateWAR.sh
+    - location: cd ~
+    - location: ./updateWAR.sh
