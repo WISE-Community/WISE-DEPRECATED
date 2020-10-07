@@ -5642,6 +5642,78 @@
         </context-group>
         <target state="needs-translation">Note: This chooser screen is only available in preview mode. Students will not see this screen in a classroom run and will instead be assigned a branch path automatically. Once you have chosen a branch, complete the current step and then click the Next arrow.</target>
       </trans-unit>
+      <trans-unit datatype="html" id="44fcb249525dd82d1fd32cae51412bcda7ffd765">
+        <source>Back to Unit Plan</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <target state="needs-translation">Back to Unit Plan</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="077fb7924ecebe2ae768d860909315c29ee61fbe">
+        <source>Show JSON</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+        <target state="needs-translation">Show JSON</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="a7ff0a41fdb9b51a30db6bed1494c740274cbb84">
+        <source>Download Unit</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+        <target state="needs-translation">Download Unit</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="e810aa7f08f531d99ef09adc501a8dded58d34fb">
+        <source>Edit Unit JSON</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+        <target state="needs-translation">Edit Unit JSON</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="9203b05eb7515e937cc5e5d8cbc8a03195bb2d7f">
+        <source>Script Filename</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+        <target state="needs-translation">Script Filename</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="9fabdfadf0453602acf388171bd4f758df47e1a7">
+        <source>Choose</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+        <target state="needs-translation">Choose</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="0435f6f300b78e13d48ecd2ee6e404d40df04188">
+        <source>Unit URL</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+        <target state="needs-translation">Unit URL</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="3eb7b66b266bf315436e1888846133dd8106ca43">
+        <source>Copy Unit URL to Clipboard</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+        <target state="needs-translation">Copy Unit URL to Clipboard</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="29024835e83ded5ae9cb4e4be0c3fba290a185b9">
+        <source>Open Unit URL in New Tab</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
+          <context context-type="linenumber">42</context>
+        </context-group>
+        <target state="needs-translation">Open Unit URL in New Tab</target>
+      </trans-unit>
       <trans-unit datatype="html" id="36a606470097ddf0c32a250c8a902441729ca8ca">
         <source>Add Unit</source>
         <context-group purpose="location">
@@ -6749,6 +6821,14 @@
       <trans-unit id="399164538965188389">
         <source>Free, standards-aligned, and research-based inquiry curricula that address <x id="START_LINK"/>NGSS 3D proficiency<x id="CLOSE_LINK"/></source>
         <target state="translated">针对<x id="START_LINK"/>NGSS(新一代科学教育标准)<x id="CLOSE_LINK"/>提供免费的、标准一致的且基于研究的探究学习课程</target>
+      </trans-unit>
+      <trans-unit id="19198353055300541">
+        <source>The JSON is invalid. Invalid JSON will not be saved.
+Click "OK" to revert back to the last valid JSON.
+Click "Cancel" to keep the invalid JSON open so you can fix it.</source>
+        <target state="needs-translation">The JSON is invalid. Invalid JSON will not be saved.
+Click "OK" to revert back to the last valid JSON.
+Click "Cancel" to keep the invalid JSON open so you can fix it.</target>
       </trans-unit>
     </body>
   </file>
