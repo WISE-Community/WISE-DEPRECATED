@@ -26,7 +26,6 @@ class NodeAdvancedAuthoringController {
   showConstraints: boolean = false;
   showCreateBranch: boolean = false;
   showEditTransitions: boolean = false;
-  showGeneralAdvanced: boolean = false;
   showJSON: boolean = false;
   transitionCriterias: any;
 
@@ -388,8 +387,7 @@ class NodeAdvancedAuthoringController {
   }
 
   showGeneralAdvancedView() {
-    this.hideAllViews();
-    this.showGeneralAdvanced = true;
+    this.$state.go('root.at.project.node.advanced.general');
   }
 
   showJSONView() {
@@ -412,7 +410,6 @@ class NodeAdvancedAuthoringController {
   }
 
   hideAllViews() {
-    this.showGeneralAdvanced = false;
     this.showJSON = false;
     this.showEditTransitions = false;
     this.showConstraints = false;

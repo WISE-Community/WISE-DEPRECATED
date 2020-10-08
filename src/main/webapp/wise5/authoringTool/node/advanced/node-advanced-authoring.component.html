@@ -32,23 +32,8 @@
     <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'showJSON' | translate }}</md-tooltip>
   </md-button>
 </div>
-<div style='margin-top: 10px;'>
-  <div ng-if='$ctrl.showGeneralAdvanced' class='bodyDiv'>
-    <div>
-      <md-checkbox class='md-primary'
-          ng-model='$ctrl.node.showSaveButton'
-          ng-change='$ctrl.authoringViewNodeChanged()'>
-        {{ ::'SHOW_SAVE_BUTTON' | translate }}
-      </md-checkbox>
-    </div>
-    <div>
-      <md-checkbox class='md-primary'
-          ng-model='$ctrl.node.showSubmitButton'
-          ng-change='$ctrl.authoringViewNodeChanged()'>
-        {{ ::'SHOW_SUBMIT_BUTTON' | translate }}
-      </md-checkbox>
-    </div>
-  </div>
+<div ui-view style='margin-top: 10px;'></div>
+<div ng-if="$ctrl.$state.current.name == 'root.at.project.node.advanced'" style='margin-top: 10px;'>
   <div ng-if='$ctrl.showEditTransitions' class='bodyDiv'>
     <div>
       <label class='node__label--vertical-alignment'>{{ ::'paths' | translate }}</label>

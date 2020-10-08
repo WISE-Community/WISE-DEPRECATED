@@ -21,6 +21,7 @@ import ExportVisitsController from '../classroomMonitor/dataExport/exportVisitsC
 import MilestonesAuthoringController from '../authoringTool/milestones/milestonesAuthoringController';
 import MilestonesController from '../classroomMonitor/milestones/milestonesController';
 import { NodeAdvancedAuthoringComponent } from '../authoringTool/node/advanced/node-advanced-authoring.component';
+import { NodeAdvancedGeneralAuthoringComponent } from '../authoringTool/node/advanced/general/node-advanced-general-authoring.component';
 import NodeAuthoringController from '../authoringTool/node/nodeAuthoringController';
 import NotebookGradingController from '../classroomMonitor/notebook/notebookGradingController';
 import ProjectAssetController from '../authoringTool/asset/projectAssetController';
@@ -96,6 +97,7 @@ export function createTeacherAngularJSModule() {
     .service('TeacherDataService', downgradeInjectable(TeacherDataService))
     .service('TeacherWebSocketService', downgradeInjectable(TeacherWebSocketService))
     .component('nodeAdvancedAuthoringComponent', NodeAdvancedAuthoringComponent)
+    .component('nodeAdvancedGeneralAuthoringComponent', NodeAdvancedGeneralAuthoringComponent)
     .directive('advancedProjectAuthoringComponent', downgradeComponent(
         { component: AdvancedProjectAuthoringComponent }) as angular.IDirectiveFactory)
     .controller('AuthoringToolController', AuthoringToolController)
@@ -214,6 +216,10 @@ export function createTeacherAngularJSModule() {
         .state('root.at.project.node.advanced', {
           url: '/advanced',
           component: 'nodeAdvancedAuthoringComponent'
+        })
+        .state('root.at.project.node.advanced.general', {
+          url: '/general',
+          component: 'nodeAdvancedGeneralAuthoringComponent'
         })
         .state('root.at.project.nodeConstraints', {
           url: '/advanced',
