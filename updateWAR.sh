@@ -9,6 +9,8 @@ export QA_BUILD_DIR=$HOME/build/qa
 export PROD_BUILD_DIR=$HOME/build/prod
 export WISE_BUILD_DIR=$BUILD_DIR/WISE
 
+echo $PWD
+echo "`ls -l`"
 echo DEPLOYMENT_GROUP_NAME=$DEPLOYMENT_GROUP_NAME
 
 if [[ $DEPLOYMENT_GROUP_NAME == "" ]]; then
@@ -27,6 +29,8 @@ if [[ $DEPLOYMENT_GROUP_NAME == "qa-deployment-group" ]]; then
     mv target/wise.war $QA_BUILD_DIR
     echo "Changing to QA_BUILD_DIR directory"
     cd $QA_BUILD_DIR
+    echo $PWD
+    echo "`ls -l`"
 elif [[ $DEPLOYMENT_GROUP_NAME == "prod-deployment-group" ]]; then
     echo "Moving target/wise.war to $PROD_BUILD_DIR"
     mv target/wise.war $PROD_BUILD_DIR
