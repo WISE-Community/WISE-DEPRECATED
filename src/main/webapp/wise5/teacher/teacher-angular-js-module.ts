@@ -20,6 +20,7 @@ import ExportController from '../classroomMonitor/dataExport/exportController';
 import ExportVisitsController from '../classroomMonitor/dataExport/exportVisitsController';
 import MilestonesAuthoringController from '../authoringTool/milestones/milestonesAuthoringController';
 import MilestonesController from '../classroomMonitor/milestones/milestonesController';
+import { NodeAdvancedAuthoringComponent } from '../authoringTool/node/advanced/node-advanced-authoring.component';
 import NodeAuthoringController from '../authoringTool/node/nodeAuthoringController';
 import NotebookGradingController from '../classroomMonitor/notebook/notebookGradingController';
 import ProjectAssetController from '../authoringTool/asset/projectAssetController';
@@ -94,6 +95,7 @@ export function createTeacherAngularJSModule() {
     .factory('StudentStatusService', downgradeInjectable(StudentStatusService))
     .service('TeacherDataService', downgradeInjectable(TeacherDataService))
     .service('TeacherWebSocketService', downgradeInjectable(TeacherWebSocketService))
+    .component('nodeAdvancedAuthoringComponent', NodeAdvancedAuthoringComponent)
     .directive('advancedProjectAuthoringComponent', downgradeComponent(
         { component: AdvancedProjectAuthoringComponent }) as angular.IDirectiveFactory)
     .controller('AuthoringToolController', AuthoringToolController)
@@ -209,19 +211,17 @@ export function createTeacherAngularJSModule() {
             newComponents: []
           }
         })
+        .state('root.at.project.node.advanced', {
+          url: '/advanced',
+          component: 'nodeAdvancedAuthoringComponent'
+        })
         .state('root.at.project.nodeConstraints', {
-          url: '/node/constraints/:nodeId',
-          templateUrl: '/wise5/authoringTool/node/node.html',
-          controller: 'NodeAuthoringController',
-          controllerAs: 'nodeAuthoringController',
-          resolve: {}
+          url: '/advanced',
+          component: 'nodeAdvancedAuthoringComponent'
         })
         .state('root.at.project.nodeEditPaths', {
-          url: '/node/editpaths/:nodeId',
-          templateUrl: '/wise5/authoringTool/node/node.html',
-          controller: 'NodeAuthoringController',
-          controllerAs: 'nodeAuthoringController',
-          resolve: {}
+          url: '/advanced',
+          component: 'nodeAdvancedAuthoringComponent'
         })
         .state('root.at.project.asset', {
           url: '/asset',

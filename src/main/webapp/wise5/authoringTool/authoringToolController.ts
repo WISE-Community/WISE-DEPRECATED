@@ -167,6 +167,14 @@ class AuthoringToolController {
         showToolbar: true,
         active: false
       },
+      'root.at.project.node.advanced': {
+        name: '',
+        label: '',
+        icon: '',
+        type: 'secondary',
+        showToolbar: true,
+        active: false
+      },
       'root.at.project.advanced': {
         name: '',
         label: '',
@@ -202,7 +210,7 @@ class AuthoringToolController {
       }
     });
 
-    this.showSessionWarningSubscription = 
+    this.showSessionWarningSubscription =
         this.SessionService.showSessionWarning$.subscribe(() => {
       const confirm = this.$mdDialog
         .confirm()
@@ -248,12 +256,12 @@ class AuthoringToolController {
       this.setGlobalMessage(this.$translate('errorSavingProject'), false, null);
     });
 
-    this.notLoggedInProjectNotSavedSubscription = 
+    this.notLoggedInProjectNotSavedSubscription =
         this.ProjectService.notLoggedInProjectNotSaved$.subscribe(() => {
       this.setGlobalMessage(this.$translate('notLoggedInProjectNotSaved'), false, null);
     });
 
-    this.notAllowedToEditThisProjectSubscription = 
+    this.notAllowedToEditThisProjectSubscription =
         this.ProjectService.notAllowedToEditThisProject$.subscribe(() => {
       this.setGlobalMessage(this.$translate('notAllowedToEditThisProject'), false, null);
     });
