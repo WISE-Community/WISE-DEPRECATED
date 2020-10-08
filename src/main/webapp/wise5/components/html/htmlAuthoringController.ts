@@ -2,81 +2,47 @@
 
 import * as angular from 'angular';
 import { ProjectAssetService } from '../../../site/src/app/services/projectAssetService';
-import HTMLController from './htmlController';
+import { ComponentAuthoringController } from '../componentAuthoringController';
 
-class HTMLAuthoringController extends HTMLController {
+class HTMLAuthoringController extends ComponentAuthoringController {
   ProjectAssetService: ProjectAssetService;
   summernotePromptHTML: string;
   summernotePromptOptions: any;
   summernotePromptId: string;
 
   static $inject = [
-    '$injector',
-    '$q',
-    '$rootScope',
     '$scope',
-    '$state',
-    '$stateParams',
-    '$sce',
     '$filter',
     '$mdDialog',
-    'AnnotationService',
-    'AudioRecorderService',
     'ConfigService',
     'NodeService',
-    'NotebookService',
     'NotificationService',
     'ProjectAssetService',
     'ProjectService',
-    'StudentAssetService',
-    'StudentDataService',
     'UtilService'
   ];
 
   constructor(
-    $injector,
-    $q,
-    $rootScope,
     $scope,
-    $state,
-    $stateParams,
-    $sce,
     $filter,
-    $mdDialog,
-    AnnotationService,
-    AudioRecorderService,
+    private $mdDialog: any,
     ConfigService,
     NodeService,
-    NotebookService,
     NotificationService,
     ProjectAssetService,
     ProjectService,
-    StudentAssetService,
-    StudentDataService,
     UtilService
   ) {
     super(
-      $injector,
-      $q,
-      $rootScope,
       $scope,
-      $state,
-      $stateParams,
-      $sce,
       $filter,
-      $mdDialog,
-      AnnotationService,
-      AudioRecorderService,
       ConfigService,
       NodeService,
-      NotebookService,
       NotificationService,
+      ProjectAssetService,
       ProjectService,
-      StudentAssetService,
-      StudentDataService,
       UtilService
     );
-    this.ProjectAssetService = ProjectAssetService;
     this.summernotePromptHTML = '';
     this.summernotePromptOptions = {
       toolbar: [
@@ -109,7 +75,7 @@ class HTMLAuthoringController extends HTMLController {
           this.componentId,
           'prompt',
           this.$translate('INSERT_ASSET'),
-          this.createOpenAssetChooserFunction()
+          (params: any) => { this.openAssetChooser(params); }
         )
       },
       dialogsInBody: true
@@ -196,26 +162,13 @@ class HTMLAuthoringController extends HTMLController {
     return wiseLinkElement;
   }
 
-  createOpenAssetChooserFunction() {
-    return (params: any) => {
-      this.ProjectAssetService.openAssetChooser(params).then(
-        (data: any) => { this.assetSelected(data) }
-      );
-    }
-  }
-
   assetSelected({ nodeId, componentId, assetItem, target }) {
-    const fileName = assetItem.fileName;
-    const fullFilePath = `${this.ConfigService.getProjectAssetsDirectoryPath()}/${fileName}`;
+    super.assetSelected({ nodeId, componentId, assetItem, target });
     if (target === 'prompt') {
+      const fileName = assetItem.fileName;
+      const fullFilePath = `${this.ConfigService.getProjectAssetsDirectoryPath()}/${fileName}`;
       this.UtilService.insertFileInSummernoteEditor(
         `summernotePrompt_${this.nodeId}_${this.componentId}`,
-        fullFilePath,
-        fileName
-      );
-    } else {
-      this.UtilService.insertFileInSummernoteEditor(
-        `summernoteRubric_${this.nodeId}_${this.componentId}`,
         fullFilePath,
         fileName
       );

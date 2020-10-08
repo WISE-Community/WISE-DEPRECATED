@@ -1,80 +1,55 @@
 'use strict';
 
-import { ProjectAssetService } from '../../../site/src/app/services/projectAssetService';
-import OutsideURLController from './outsideURLController';
+import { ComponentAuthoringController } from '../componentAuthoringController';
+import { OutsideURLService } from './outsideURLService';
 
-class OutsideURLAuthoringController extends OutsideURLController {
-  ProjectAssetService: ProjectAssetService;
+class OutsideURLAuthoringController extends ComponentAuthoringController {
+  height: string;
+  info: string;
   isShowOERs: boolean;
+  openEducationalResources: any[];
+  outsideURLIFrameId: string;
   subjects: any[];
   searchText: string;
   selectedSubjects: any[];
-  openEducationalResources: any[];
+  url: string;
+  width: string;
 
   static $inject = [
     '$filter',
-    '$injector',
-    '$mdDialog',
-    '$q',
-    '$rootScope',
     '$sce',
     '$scope',
-    'AnnotationService',
-    'AudioRecorderService',
     'ConfigService',
     'NodeService',
-    'NotebookService',
     'NotificationService',
     'OutsideURLService',
     'ProjectAssetService',
     'ProjectService',
-    'StudentAssetService',
-    'StudentDataService',
     'UtilService'
   ];
 
   constructor(
     $filter,
-    $injector,
-    $mdDialog,
-    $q,
-    $rootScope,
-    $sce,
+    private $sce: any,
     $scope,
-    AnnotationService,
-    AudioRecorderService,
     ConfigService,
     NodeService,
-    NotebookService,
     NotificationService,
-    OutsideURLService,
+    private OutsideURLService: OutsideURLService,
     ProjectAssetService,
     ProjectService,
-    StudentAssetService,
-    StudentDataService,
     UtilService
   ) {
     super(
-      $filter,
-      $injector,
-      $mdDialog,
-      $q,
-      $rootScope,
-      $sce,
       $scope,
-      AnnotationService,
-      AudioRecorderService,
+      $filter,
       ConfigService,
       NodeService,
-      NotebookService,
       NotificationService,
-      OutsideURLService,
+      ProjectAssetService,
       ProjectService,
-      StudentAssetService,
-      StudentDataService,
       UtilService
     );
-    this.ProjectAssetService = ProjectAssetService;
     this.$translate = this.$filter('translate');
     this.isShowOERs = this.componentContent.url === '';
     this.subjects = [
@@ -120,22 +95,25 @@ class OutsideURLAuthoringController extends OutsideURLController {
     });
   }
 
-  openAssetChooser(params: any) {
-    this.ProjectAssetService.openAssetChooser(params).then(
-      (data: any) => { this.assetSelected(data) }
-    );
+  setURL(url) {
+    if (url == null || url === '') {
+      this.url = ' ';
+    } else {
+      this.url = this.$sce.trustAsResourceUrl(url);
+    }
   }
 
-  assetSelected({ nodeId, componentId, assetItem, target }) {
-    const fileName = assetItem.fileName;
-    const fullFilePath = `${this.ConfigService.getProjectAssetsDirectoryPath()}/${fileName}`;
-    if (target === 'rubric') {
-      this.UtilService.insertFileInSummernoteEditor(
-        `summernoteRubric_${this.nodeId}_${this.componentId}`,
-        fullFilePath,
-        fileName
-      );
+  setInfo(info) {
+    if (info == null || info === '') {
+      this.info = this.url;
+    } else {
+      this.info = this.$sce.trustAsResourceUrl(info);
     }
+  }
+
+  setWidthAndHeight(width, height) {
+    this.width = width ? width + 'px' : '100%';
+    this.height = height ? height + 'px' : '600px';
   }
 
   urlInputChanged() {

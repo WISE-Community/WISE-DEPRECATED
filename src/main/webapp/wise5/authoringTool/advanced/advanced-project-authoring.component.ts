@@ -4,56 +4,36 @@ import { UtilService } from '../../services/utilService';
 import * as angular from 'angular';
 import { ProjectAssetService } from '../../../site/src/app/services/projectAssetService';
 import { NotificationService } from '../../services/notificationService';
+import { Component } from '@angular/core';
+import { UpgradeModule } from '@angular/upgrade/static';
 
-class AdvancedAuthoringController {
-  $translate: any;
+@Component({
+  selector: 'advanced-project-authoring',
+  templateUrl: 'advanced-project-authoring.component.html'
+})
+export class AdvancedProjectAuthoringComponent {
+
   isJSONDisplayed: boolean = false;
   projectId: number;
   projectJSONString: string;
   projectScriptFilename: string;
 
-  static $inject = [
-    '$filter',
-    '$rootScope',
-    '$scope',
-    '$state',
-    '$stateParams',
-    'ConfigService',
-    'NotificationService',
-    'ProjectAssetService',
-    'ProjectService',
-    'UtilService'
-  ];
-
   constructor(
-    $filter,
-    private $rootScope,
-    private $scope,
-    private $state,
-    $stateParams: any,
+    private upgrade: UpgradeModule,
     private ConfigService: ConfigService,
     private NotificationService: NotificationService,
     private ProjectAssetService: ProjectAssetService,
     private ProjectService: TeacherProjectService,
     private UtilService: UtilService
   ) {
-    this.$rootScope = $rootScope;
-    this.$scope = $scope;
-    this.$state = $state;
-    this.$translate = $filter('translate');
-    this.ConfigService = ConfigService;
-    this.NotificationService = NotificationService;
-    this.ProjectAssetService = ProjectAssetService;
-    this.ProjectService = ProjectService;
-    this.UtilService = UtilService;
-    this.projectId = $stateParams.projectId;
+    this.projectId = this.ConfigService.getProjectId();
   }
 
-  $onInit() {
+  ngOnInit() {
     this.setProjectScriptFilename();
   }
 
-  showJSONClicked() {
+  toggleJSON() {
     if (this.isJSONDisplayed) {
       this.hideJSON();
     } else {
@@ -65,7 +45,8 @@ class AdvancedAuthoringController {
     if (this.UtilService.isValidJSONString(this.projectJSONString)) {
       this.isJSONDisplayed = false;
       this.NotificationService.hideJSONValidMessage();
-    } else if (confirm(this.$translate('jsonInvalidErrorMessage'))) {
+    } else if (confirm(
+        $localize`The JSON is invalid. Invalid JSON will not be saved.\nClick "OK" to revert back to the last valid JSON.\nClick "Cancel" to keep the invalid JSON open so you can fix it.`)) {
       this.isJSONDisplayed = false;
       this.NotificationService.hideJSONValidMessage();
     }
@@ -104,15 +85,12 @@ class AdvancedAuthoringController {
       target: 'scriptFilename'
     };
     this.ProjectAssetService.openAssetChooser(params).then(
-      (data: any) => { this.assetSelected(data) }
-    );
+        (data: any) => { this.assetSelected(data); });
   }
 
-  assetSelected({ assetItem, target }) {
-    if (target === 'scriptFilename') {
-      this.projectScriptFilename = assetItem.fileName;
-      this.projectScriptFilenameChanged();
-    }
+  assetSelected({ assetItem }) {
+    this.projectScriptFilename = assetItem.fileName;
+    this.projectScriptFilenameChanged();
   }
 
   downloadProject() {
@@ -147,8 +125,6 @@ class AdvancedAuthoringController {
   }
 
   goBack() {
-    this.$state.go('root.at.project');
+    this.upgrade.$injector.get('$state').go('root.at.project');
   }
 }
-
-export default AdvancedAuthoringController;
