@@ -11,5 +11,7 @@ artifacts:
   files:
     - target/wise.war
     - appspec.yml
-    - updateWAR.sh
+    - beforeInstall.sh
+    - afterInstall.sh
+    - applicationStart.sh
   discard-paths: yes
