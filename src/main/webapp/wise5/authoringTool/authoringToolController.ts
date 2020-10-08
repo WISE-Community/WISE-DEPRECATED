@@ -159,7 +159,7 @@ class AuthoringToolController {
         showToolbar: true,
         active: false
       },
-      'root.at.project.nodeEditPaths': {
+      'root.at.project.node.advanced.path': {
         name: '',
         label: '',
         icon: '',
@@ -323,7 +323,7 @@ class AuthoringToolController {
       'root.at.project.node.advanced.constraint',
       'root.at.project.node.advanced.general',
       'root.at.project.node.advanced.json',
-      'root.at.project.nodeEditPaths'
+      'root.at.project.node.advanced.path'
     ].includes(this.$state.$current.name);
     const view = this.views[this.$state.$current.name];
     if (view) {

@@ -13,7 +13,6 @@ import { Directive } from '@angular/core';
 @Directive()
 class NodeAuthoringController {
   $translate: any;
-  canChangePathOptions = [null, true, false];
   components: any;
   componentsToChecked = {};
   copyComponentMode: boolean = false;
@@ -42,7 +41,6 @@ class NodeAuthoringController {
   showComponents: boolean = true;
   showStepButtons: boolean = true;
   undoStack: any[] = [];
-  whenToChoosePathOptions = [null, 'enterNode', 'exitNode', 'scoreChanged', 'studentDataChanged'];
   componentShowSubmitButtonValueChangedSubscription: Subscription;
 
   static $inject = [

@@ -18,8 +18,6 @@ class NodeAdvancedAuthoringController {
   createBranchNumberOfBranches: any;
   createBranchCriterion: any;
   showCreateBranch: boolean = false;
-  showEditTransitions: boolean = false;
-  transitionCriterias: any;
 
   static $injector = ['$filter', '$state', '$timeout', 'ConfigService',
       'ProjectService', 'TagService', 'TeacherDataService', 'UtilService'];
@@ -53,54 +51,6 @@ class NodeAdvancedAuthoringController {
         text: this.$translate('tag')
       }
     ];
-    this.transitionCriterias = [
-      {
-        value: 'score',
-        text: this.$translate('getASpecificScoreOnAComponent'),
-        params: [
-          {
-            value: 'nodeId',
-            text: this.$translate('nodeID')
-          },
-          {
-            value: 'componentId',
-            text: this.$translate('componentID')
-          },
-          {
-            value: 'scores',
-            text: this.$translate('scoresParens')
-          }
-        ]
-      },
-      {
-        value: 'choiceChosen',
-        text: this.$translate('chooseASpecificChoiceOnAComponent'),
-        params: [
-          {
-            value: 'nodeId',
-            text: this.$translate('nodeID')
-          },
-          {
-            value: 'componentId',
-            text: this.$translate('componentID')
-          },
-          {
-            value: 'choiceIds',
-            text: this.$translate('choices')
-          }
-        ]
-      },
-      {
-        value: 'tag',
-        text: this.$translate('tagAssignedToWorkgroup'),
-        params: [
-          {
-            value: 'tag',
-            text: this.$translate('tag')
-          }
-        ]
-      }
-    ];
   }
 
   $onInit() {
@@ -108,12 +58,6 @@ class NodeAdvancedAuthoringController {
     this.node = this.ProjectService.getNodeById(this.nodeId);
     this.items = this.ProjectService.idToOrder;
     this.populateBranchAuthoring()
-
-    if (this.$state.current.name === 'root.at.project.nodeEditPaths') {
-      this.$timeout(() => {
-        this.showEditTransitionsView();
-      });
-    }
   }
 
   goBack() {
@@ -127,8 +71,7 @@ class NodeAdvancedAuthoringController {
   }
 
   showEditTransitionsView() {
-    this.hideAllViews();
-    this.showEditTransitions = true;
+    this.$state.go('root.at.project.node.advanced.path');
   }
 
   showEditConstraintsView() {
@@ -144,13 +87,7 @@ class NodeAdvancedAuthoringController {
   }
 
   hideAllViews() {
-    this.showEditTransitions = false;
     this.showCreateBranch = false;
-  }
-
-  authoringViewTransitionToNodeIdChanged() {
-    this.ProjectService.calculateNodeNumbers();
-    this.authoringViewNodeChanged();
   }
 
   authoringViewNodeChanged(parseProject = false) {
@@ -159,157 +96,6 @@ class NodeAdvancedAuthoringController {
       this.items = this.ProjectService.idToOrder;
     }
     return this.ProjectService.saveProject();
-  }
-
-  addNewTransition() {
-    this.addNewTransitionsIfNeeded();
-    const nodeTransitions = this.node.transitionLogic.transitions;
-    if (nodeTransitions.length > 0) {
-      const lastNodeTransition = nodeTransitions[nodeTransitions.length - 1];
-      const newTransition = {
-        to: lastNodeTransition.to
-      };
-      nodeTransitions.push(newTransition);
-    } else {
-      const newTransition = {
-        to: this.nodeId
-      };
-      nodeTransitions.push(newTransition);
-    }
-    if (this.isABranchNode()) {
-      this.setDefaultBranchNodeTransitionLogic();
-    }
-    this.authoringViewNodeChanged();
-  }
-
-  addNewTransitionsIfNeeded() {
-    if (this.node.transitionLogic.transitions == null) {
-      this.node.transitionLogic.transitions = [];
-    }
-  }
-
-  getChoicesByNodeIdAndComponentId(nodeId, componentId) {
-    return this.ProjectService.getChoicesByNodeIdAndComponentId(nodeId, componentId);
-  }
-
-  getChoiceTypeByNodeIdAndComponentId(nodeId, componentId) {
-    let choiceType = null;
-    let component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
-    if (component != null && component.choiceType != null) {
-      choiceType = component.choiceType;
-    }
-    return choiceType;
-  }
-
-  getTransitionCriteriaParamsByName(name) {
-    for (const singleTransitionCriteria of this.transitionCriterias) {
-      if (singleTransitionCriteria.value === name) {
-        return singleTransitionCriteria.params;
-      }
-    }
-    return [];
-  }
-
-  deleteTransitionCriteria(transition, transitionCriteriaIndex) {
-    if (confirm(this.$translate('areYouSureYouWantToDeleteThisRequirement'))) {
-      const transitionCriterias = transition.criteria;
-      if (transitionCriterias != null) {
-        transitionCriterias.splice(transitionCriteriaIndex, 1);
-      }
-      this.ProjectService.saveProject();
-    }
-  }
-
-  transitionCriteriaNameChanged(transitionCriteria) {
-    let nodeId = null;
-    let componentId = null;
-    if (transitionCriteria.params != null) {
-      nodeId = transitionCriteria.params.nodeId;
-      componentId = transitionCriteria.params.componentId;
-    }
-    transitionCriteria.params = {};
-    if (nodeId != null) {
-      transitionCriteria.params.nodeId = nodeId;
-    }
-    if (componentId != null) {
-      transitionCriteria.params.componentId = componentId;
-    }
-    this.authoringViewNodeChanged();
-  }
-
-  isABranchNode() {
-    return this.node.transitionLogic.transitions.length > 1;
-  }
-
-  setDefaultBranchNodeTransitionLogic() {
-    if (this.node.transitionLogic.howToChooseAmongAvailablePaths == null) {
-      this.node.transitionLogic.howToChooseAmongAvailablePaths = 'workgroupId';
-    }
-    if (this.node.transitionLogic.whenToChoosePath == null) {
-      this.node.transitionLogic.whenToChoosePath = 'enterNode';
-    }
-    if (this.node.transitionLogic.canChangePath == null) {
-      this.node.transitionLogic.canChangePath = false;
-    }
-    if (this.node.transitionLogic.maxPathsVisitable == null) {
-      this.node.transitionLogic.maxPathsVisitable = 1;
-    }
-  }
-
-  addNewTransitionCriteria(transition) {
-    for (const nodeTransition of this.node.transitionLogic.transitions) {
-      if (nodeTransition == transition) {
-        if (nodeTransition.criteria == null) {
-          nodeTransition.criteria = [];
-        }
-        const newTransitionCriteria = {
-          name: '',
-          params: {
-            nodeId: '',
-            componentId: ''
-          }
-        };
-        nodeTransition.criteria.push(newTransitionCriteria);
-      }
-    }
-    this.authoringViewNodeChanged();
-  }
-
-  transitionCriteriaNodeIdChanged(transitionCriteria) {
-    if (transitionCriteria != null && transitionCriteria.params != null) {
-      let nodeId = transitionCriteria.params.nodeId;
-      transitionCriteria.params = {};
-      if (nodeId != null) {
-        transitionCriteria.params.nodeId = nodeId;
-      }
-    }
-    this.authoringViewNodeChanged();
-  }
-
-  transitionCriteriaComponentIdChanged(transitionCriteria) {
-    if (transitionCriteria != null && transitionCriteria.params != null) {
-      let nodeId = transitionCriteria.params.nodeId;
-      let componentId = transitionCriteria.params.componentId;
-      transitionCriteria.params = {};
-      if (nodeId != null) {
-        transitionCriteria.params.nodeId = nodeId;
-      }
-      if (componentId != null) {
-        transitionCriteria.params.componentId = componentId;
-      }
-    }
-    this.authoringViewNodeChanged();
-  }
-
-  deleteTransition(transition) {
-    const stepTitle = this.ProjectService.getNodePositionAndTitleByNodeId(transition.to);
-    const answer = confirm(
-      this.$translate('areYouSureYouWantToDeleteThisPath', { stepTitle: stepTitle })
-    );
-    if (answer) {
-      this.ProjectService.deleteTransition(this.node, transition);
-      this.authoringViewNodeChanged();
-    }
   }
 
   populateBranchAuthoring() {

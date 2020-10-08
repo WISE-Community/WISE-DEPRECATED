@@ -24,6 +24,7 @@ import { NodeAdvancedAuthoringComponent } from '../authoringTool/node/advanced/n
 import { NodeAdvancedConstraintAuthoringComponent } from '../authoringTool/node/advanced/constraint/node-advanced-constraint-authoring.component';
 import { NodeAdvancedGeneralAuthoringComponent } from '../authoringTool/node/advanced/general/node-advanced-general-authoring.component';
 import { NodeAdvancedJsonAuthoringComponent } from '../authoringTool/node/advanced/json/node-advanced-json-authoring.component';
+import { NodeAdvancedPathAuthoringComponent } from '../authoringTool/node/advanced/path/node-advanced-path-authoring.component';
 import NodeAuthoringController from '../authoringTool/node/nodeAuthoringController';
 import NotebookGradingController from '../classroomMonitor/notebook/notebookGradingController';
 import ProjectAssetController from '../authoringTool/asset/projectAssetController';
@@ -102,6 +103,7 @@ export function createTeacherAngularJSModule() {
     .component('nodeAdvancedConstraintAuthoringComponent', NodeAdvancedConstraintAuthoringComponent)
     .component('nodeAdvancedGeneralAuthoringComponent', NodeAdvancedGeneralAuthoringComponent)
     .component('nodeAdvancedJsonAuthoringComponent', NodeAdvancedJsonAuthoringComponent)
+    .component('nodeAdvancedPathAuthoringComponent', NodeAdvancedPathAuthoringComponent)
     .directive('advancedProjectAuthoringComponent', downgradeComponent(
         { component: AdvancedProjectAuthoringComponent }) as angular.IDirectiveFactory)
     .controller('AuthoringToolController', AuthoringToolController)
@@ -233,9 +235,9 @@ export function createTeacherAngularJSModule() {
           url: '/constraint',
           component: 'nodeAdvancedConstraintAuthoringComponent'
         })
-        .state('root.at.project.nodeEditPaths', {
-          url: '/advanced',
-          component: 'nodeAdvancedAuthoringComponent'
+        .state('root.at.project.node.advanced.path', {
+          url: '/path',
+          component: 'nodeAdvancedPathAuthoringComponent'
         })
         .state('root.at.project.asset', {
           url: '/asset',
