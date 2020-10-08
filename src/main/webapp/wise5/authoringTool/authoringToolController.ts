@@ -151,7 +151,7 @@ class AuthoringToolController {
         showToolbar: true,
         active: false
       },
-      'root.at.project.nodeConstraints': {
+      'root.at.project.node.advanced.constraint': {
         name: '',
         label: '',
         icon: '',
@@ -319,7 +319,10 @@ class AuthoringToolController {
     this.showStepTools = [
       'root.at.project',
       'root.at.project.node',
-      'root.at.project.nodeConstraints',
+      'root.at.project.node.advanced',
+      'root.at.project.node.advanced.constraint',
+      'root.at.project.node.advanced.general',
+      'root.at.project.node.advanced.json',
       'root.at.project.nodeEditPaths'
     ].includes(this.$state.$current.name);
     const view = this.views[this.$state.$current.name];

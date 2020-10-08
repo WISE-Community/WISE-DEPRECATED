@@ -231,7 +231,7 @@ class ProjectController {
 
   constraintIconClicked(nodeId) {
     this.TeacherDataService.endCurrentNodeAndSetCurrentNodeByNodeId(nodeId);
-    this.$state.go('root.at.project.nodeConstraints', {
+    this.$state.go('root.at.project.node.advanced.constraint', {
       projectId: this.projectId,
       nodeId: nodeId
     });
