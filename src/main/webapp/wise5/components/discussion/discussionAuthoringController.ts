@@ -1,103 +1,57 @@
 'use strict';
 
-import { ProjectAssetService } from '../../../site/src/app/services/projectAssetService';
-import DiscussionController from './discussionController';
+import { ComponentAuthoringController } from '../componentAuthoringController';
 
-class DiscussionAuthoringController extends DiscussionController {
-  ProjectAssetService: ProjectAssetService;
-  allowedConnectedComponentTypes: any[];
+class DiscussionAuthoringController extends ComponentAuthoringController {
+
+  allowedConnectedComponentTypes: any[] = [{ type: 'Discussion' }];
 
   static $inject = [
-    '$filter',
-    '$injector',
-    '$mdDialog',
-    '$q',
-    '$rootScope',
     '$scope',
-    'AnnotationService',
-    'AudioRecorderService',
+    '$filter',
     'ConfigService',
-    'DiscussionService',
     'NodeService',
-    'NotebookService',
     'NotificationService',
     'ProjectAssetService',
     'ProjectService',
-    'StudentAssetService',
-    'StudentDataService',
     'UtilService',
-    '$mdMedia'
   ];
 
   constructor(
-    $filter,
-    $injector,
-    $mdDialog,
-    $q,
-    $rootScope,
     $scope,
-    AnnotationService,
-    AudioRecorderService,
+    $filter,
     ConfigService,
-    DiscussionService,
     NodeService,
-    NotebookService,
     NotificationService,
     ProjectAssetService,
     ProjectService,
-    StudentAssetService,
-    StudentDataService,
-    UtilService,
-    $mdMedia
+    UtilService
   ) {
     super(
-      $filter,
-      $injector,
-      $mdDialog,
-      $q,
-      $rootScope,
       $scope,
-      AnnotationService,
-      AudioRecorderService,
+      $filter,
       ConfigService,
-      DiscussionService,
       NodeService,
-      NotebookService,
       NotificationService,
+      ProjectAssetService,
       ProjectService,
-      StudentAssetService,
-      StudentDataService,
       UtilService,
-      $mdMedia
     );
-    this.ProjectAssetService = ProjectAssetService;
-    this.allowedConnectedComponentTypes = [{ type: 'Discussion' }];
-  }
-
-  authoringConnectedComponentTypeChanged(connectedComponent) {
-    this.changeAllDiscussionConnectedComponentTypesToMatch(connectedComponent.type);
-    this.authoringViewComponentChanged();
   }
 
   changeAllDiscussionConnectedComponentTypesToMatch(connectedComponentType) {
     for (const connectedComponent of this.authoringComponentContent.connectedComponents) {
       connectedComponent.type = connectedComponentType;
     }
+    this.authoringViewComponentChanged();
   }
 
-  authoringAutomaticallySetConnectedComponentTypeIfPossible(connectedComponent) {
+  automaticallySetConnectedComponentTypeIfPossible(connectedComponent) {
     if (connectedComponent.componentId != null) {
       const firstConnectedComponent = this.authoringComponentContent.connectedComponents[0];
       connectedComponent.type = firstConnectedComponent.type;
     }
   }
-
-  openAssetChooser(params: any) {
-    this.ProjectAssetService.openAssetChooser(params).then(
-      (data: any) => { this.assetSelected(data) }
-    );
-  }
-
 }
 
 export default DiscussionAuthoringController;
