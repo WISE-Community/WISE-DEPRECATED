@@ -1,7 +1,6 @@
 import { ConfigService } from "../../../services/configService";
 import { NotificationService } from "../../../services/notificationService";
 import { TeacherDataService } from "../../../services/teacherDataService";
-import * as angular from 'angular';
 import { TeacherProjectService } from "../../../services/teacherProjectService";
 import { UtilService } from "../../../services/utilService";
 import { TagService } from "../../../services/tagService";
@@ -13,7 +12,6 @@ class NodeAdvancedAuthoringController {
   items: any[];
   node: any;
   nodeId: string;
-  authoringNodeContentJSONString: string;
   branchCriteria: any;
   createBranchBranches = [];
   createBranchComponentId: string;
@@ -26,7 +24,6 @@ class NodeAdvancedAuthoringController {
   showConstraints: boolean = false;
   showCreateBranch: boolean = false;
   showEditTransitions: boolean = false;
-  showJSON: boolean = false;
   transitionCriterias: any;
 
   static $injector = ['$filter', '$state', '$timeout', 'ConfigService', 'NotificationService',
@@ -391,63 +388,18 @@ class NodeAdvancedAuthoringController {
   }
 
   showJSONView() {
-    this.hideAllViews();
-    if (this.showJSON) {
-      if (!this.isJSONValid()) {
-        if (confirm(this.$translate('jsonInvalidErrorMessage'))) {
-          this.toggleJSONAuthoringView();
-          this.NotificationService.hideJSONValidMessage();
-        }
-      } else {
-        this.toggleJSONAuthoringView();
-        this.NotificationService.hideJSONValidMessage();
-      }
-    } else {
-      this.toggleJSONAuthoringView();
-      this.authoringNodeContentJSONString = angular.toJson(this.node, 4);
-      this.NotificationService.showJSONValidMessage();
-    }
+    this.$state.go('root.at.project.node.advanced.json')
   }
 
   hideAllViews() {
-    this.showJSON = false;
     this.showEditTransitions = false;
     this.showConstraints = false;
     this.showCreateBranch = false;
-    this.NotificationService.hideJSONValidMessage();
   }
 
   authoringViewTransitionToNodeIdChanged() {
     this.ProjectService.calculateNodeNumbers();
     this.authoringViewNodeChanged();
-  }
-
-  isJSONValid() {
-    try {
-      angular.fromJson(this.authoringNodeContentJSONString);
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  toggleJSONAuthoringView() {
-    this.showJSON = !this.showJSON;
-  }
-
-  autoSaveJSON() {
-    try {
-      let updatedNode = angular.fromJson(this.authoringNodeContentJSONString);
-      this.ProjectService.setNode(this.nodeId, updatedNode);
-      this.node = updatedNode;
-      this.populateBranchAuthoring();
-      this.authoringViewNodeChanged().then(() => {
-        this.ProjectService.refreshProject();
-      });
-      this.NotificationService.showJSONValidMessage();
-    } catch (e) {
-      this.NotificationService.showJSONInvalidMessage();
-    }
   }
 
   authoringViewNodeChanged(parseProject = false) {

@@ -175,6 +175,22 @@ class AuthoringToolController {
         showToolbar: true,
         active: false
       },
+      'root.at.project.node.advanced.general': {
+        name: '',
+        label: '',
+        icon: '',
+        type: 'secondary',
+        showToolbar: true,
+        active: false
+      },
+      'root.at.project.node.advanced.json': {
+        name: '',
+        label: '',
+        icon: '',
+        type: 'secondary',
+        showToolbar: true,
+        active: false
+      },
       'root.at.project.advanced': {
         name: '',
         label: '',
