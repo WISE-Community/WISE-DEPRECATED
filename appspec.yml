@@ -1,8 +1,8 @@
 version: 0.0
 os: linux
 files:
-  - source: /
-    destination: /home/ubuntu/build/WISE
+  - source: /wise.war
+    destination: /home/ubuntu/build
 permissions:
   - object: /
     pattern: "**"
@@ -10,6 +10,11 @@ permissions:
     group: ubuntu
 hooks:
   BeforeInstall:
-    - location: scripts/setupWISE.sh
+    - location: beforeInstall.sh
+      runas: ubuntu
   AfterInstall:
-    - location: scripts/updateWISE.sh
+    - location: afterInstall.sh
+      runas: ubuntu
+  ApplicationStart:
+    - location: applicationStart.sh
+      runas: ubuntu
