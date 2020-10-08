@@ -12,3 +12,4 @@ artifacts:
     - target/wise.war
     - appspec.yml
     - updateWAR.sh
+  discard-paths: yes
