@@ -151,6 +151,14 @@ class AuthoringToolController {
         showToolbar: true,
         active: false
       },
+      'root.at.project.node.advanced.branch': {
+        name: '',
+        label: '',
+        icon: '',
+        type: 'secondary',
+        showToolbar: true,
+        active: false
+      },
       'root.at.project.node.advanced.constraint': {
         name: '',
         label: '',
@@ -320,6 +328,7 @@ class AuthoringToolController {
       'root.at.project',
       'root.at.project.node',
       'root.at.project.node.advanced',
+      'root.at.project.node.advanced.branch',
       'root.at.project.node.advanced.constraint',
       'root.at.project.node.advanced.general',
       'root.at.project.node.advanced.json',

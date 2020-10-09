@@ -1,0 +1,122 @@
+<div class='bodyDiv'>
+  {{ ::'createBranch' | translate }}
+  <br/>
+  <div>
+    {{ ::'numberOfBranchPaths' | translate }}
+    <input type='number'
+        ng-model='$ctrl.createBranchNumberOfBranches'
+        ng-change='$ctrl.createBranchNumberOfBranchesChanged()'/>
+    <button ng-click='$ctrl.removeBranchButtonClicked()' translate='removeBranch'></button>
+  </div>
+  <div ng-if='$ctrl.createBranchNumberOfBranches > 1'>
+    <div>
+      {{ ::'howToChooseAmongPaths' | translate }}
+      <md-select md-theme="at"
+          class="node-select md-subhead"
+          style="margin-left:30px; width:600px"
+          ng-model="$ctrl.createBranchCriterion"
+          ng-change="$ctrl.createBranchCriterionChanged()">
+        <md-option ng-repeat="branchCriterion in $ctrl.branchCriteria"
+            value="{{ branchCriterion.value }}">
+          <span layout="row" layout-align="start center">
+            <span class="node-select__text">{{::branchCriterion.text}}</span>
+          </span>
+        </md-option>
+      </md-select>
+    </div>
+    <div ng-if='$ctrl.createBranchCriterion == "score" || $ctrl.createBranchCriterion == "choiceChosen"'>
+      {{ ::'chooseStep' | translate }}
+      <md-select md-theme="at"
+          class="node-select md-subhead"
+          ng-model="$ctrl.createBranchNodeId"
+          ng-change="$ctrl.createBranchNodeIdChanged()"
+          style="margin-left:30px; width:600px">
+        <md-option ng-repeat="item in $ctrl.items | toArray | orderBy : 'order'"
+            value="{{ item.$key }}"
+            ng-class="{'node-select-option--group': $ctrl.isGroupNode(item.$key), 'node-select-option--node': !$ctrl.isGroupNode(item.$key)}">
+          <span layout="row" layout-align="start center">
+            <span class="node-select__text">{{ ::$ctrl.getNodePositionById(item.$key) + ': '}}{{ ::$ctrl.getNodeTitleByNodeId(item.$key) }} ({{item.$key}})</span>
+            <node-status-icon node-id="item.$key" custom-class="'node-select__status'"></node-status-icon>
+          </span>
+        </md-option>
+      </md-select>
+    </div>
+    <div ng-if='$ctrl.createBranchCriterion == "score" || $ctrl.createBranchCriterion == "choiceChosen"'>
+      {{ ::'chooseComponent' | translate }}
+      <md-select md-theme="at"
+          class="node-select md-subhead"
+          ng-model="$ctrl.createBranchComponentId"
+          ng-change="$ctrl.createBranchComponentIdChanged()"
+          style="margin-left:30px; width:600px">
+        <md-option ng-repeat="component in $ctrl.getComponentsByNodeId($ctrl.createBranchNodeId)"
+            value="{{ ::component.id }}">
+          <span layout="row" layout-align="start center">
+            <span class="node-select__text">ID: {{::component.id}} | Type: {{::component.type}} | Prompt: {{::component.prompt}}</span>
+          </span>
+        </md-option>
+      </md-select>
+    </div>
+    <div ng-repeat='branch in $ctrl.createBranchBranches' style='border: 1px solid black'>
+      {{ ::'branchPath' | translate }} {{::branch.number}}
+      <div ng-if='$ctrl.createBranchCriterion == "workgroupId"'>
+        {{ ::'WORKGROUP_ID' | translate }}
+      </div>
+      <div ng-if='$ctrl.createBranchCriterion == "score"'>
+        {{ ::'SCORE' | translate }}
+        <input type='text'
+            ng-model='branch.scores'
+            ng-change='$ctrl.createBranchScoreChanged(branch)'
+            ng-list=','/>
+      </div>
+      <div ng-if='$ctrl.createBranchCriterion == "choiceChosen"'>
+        {{ ::'choiceChosen' | translate }}
+        <md-select ng-model='branch.choiceId'>
+          <md-option ng-repeat='choice in branch.choices' value='{{ choice.id }}'>
+              <span layout="row" layout-align="start center">
+                <span class="node-select__text">{{ ::'ID' | translate }}: {{choice.id}} | {{ ::'TEXT' | translate }}: {{choice.text}} | {{ ::'IS_CORRECT' | translate }}: {{choice.isCorrect}} | {{ ::'FEEDBACK' | translate }}: {{choice.feedback}}</span>
+              </span>
+          </md-option>
+        </md-select>
+      </div>
+      <div ng-if='$ctrl.createBranchCriterion == "random"'>
+        {{ ::'random' | translate }}
+      </div>
+      <button ng-click='branch.openStepsChooser = !branch.openStepsChooser'>{{ branch.openStepsChooser ? ('closeBranchPathXStepsChooser' | translate:'{ branchNumber: ' + branch.number + ' }') : 'openBranchPathXStepsChooser' | translate:'{ branchNumber: ' + branch.number + ' }' }}</button>
+      <div ng-if='branch.openStepsChooser'>
+        {{ ::'chooseStepsInPath' | translate }}
+        <br/>
+        <div ng-repeat='item in branch.items | toArray | orderBy : "order"'
+            ng-class='{"node-select--group": $ctrl.isGroupNode(item.$key), "node-select--node": !$ctrl.isGroupNode(item.$key)}'>
+          <input type='checkbox'
+              ng-model='item.checked'
+              ng-if='item.order!==0'
+              ng-change='$ctrl.createBranchStepClicked(branch, item)' />
+          <h6 ng-click='item.checked = !item.checked; $ctrl.createBranchStepClicked(branch, item)'
+              style='display:inline; cursor:pointer'
+              ng-class='{"groupHeader": $ctrl.isGroupNode(item.$key), "stepHeader": !$ctrl.isGroupNode(item.$key)}'
+              ng-if='item.order!==0'>
+            {{::$ctrl.getNodePositionById(item.$key)}} {{::$ctrl.getNodeTitleByNodeId(item.$key)}}
+          </h6>
+        </div>
+        <button ng-click='branch.openStepsChooser = !branch.openStepsChooser'>{{ branch.openStepsChooser ? ('closeBranchPathXStepsChooser' | translate:'{ branchNumber: ' + branch.number + ' }') : 'openBranchPathXStepsChooser' | translate:'{ branchNumber: ' + branch.number + ' }' }}</button>
+      </div>
+    </div>
+    <div>
+      {{ ::'chooseMergePoint' | translate }}
+      <md-select md-theme="at"
+          class="node-select md-subhead"
+          ng-model="$ctrl.createBranchMergePointNodeId"
+          ng-change="$ctrl.createBranchMergePointNodeIdChanged()"
+          style="margin-left:30px; width:600px">
+        <md-option ng-repeat="item in $ctrl.items | toArray | orderBy : 'order'"
+            value="{{ item.$key }}"
+            ng-class="{'node-select-option--group': $ctrl.isGroupNode(item.$key), 'node-select-option--node': !$ctrl.isGroupNode(item.$key)}">
+          <span layout="row" layout-align="start center">
+            <span class="node-select__text">{{ ::$ctrl.getNodePositionById(item.$key) + ': '}}{{ ::$ctrl.getNodeTitleByNodeId(item.$key) }} ({{item.$key}})</span>
+            <node-status-icon node-id="item.$key" custom-class="'node-select__status'"></node-status-icon>
+          </span>
+        </md-option>
+      </md-select>
+    </div>
+  </div>
+</div>

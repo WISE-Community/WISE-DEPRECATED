@@ -21,6 +21,7 @@ import ExportVisitsController from '../classroomMonitor/dataExport/exportVisitsC
 import MilestonesAuthoringController from '../authoringTool/milestones/milestonesAuthoringController';
 import MilestonesController from '../classroomMonitor/milestones/milestonesController';
 import { NodeAdvancedAuthoringComponent } from '../authoringTool/node/advanced/node-advanced-authoring.component';
+import { NodeAdvancedBranchAuthoringComponent } from '../authoringTool/node/advanced/branch/node-advanced-branch-authoring.component';
 import { NodeAdvancedConstraintAuthoringComponent } from '../authoringTool/node/advanced/constraint/node-advanced-constraint-authoring.component';
 import { NodeAdvancedGeneralAuthoringComponent } from '../authoringTool/node/advanced/general/node-advanced-general-authoring.component';
 import { NodeAdvancedJsonAuthoringComponent } from '../authoringTool/node/advanced/json/node-advanced-json-authoring.component';
@@ -100,6 +101,7 @@ export function createTeacherAngularJSModule() {
     .service('TeacherDataService', downgradeInjectable(TeacherDataService))
     .service('TeacherWebSocketService', downgradeInjectable(TeacherWebSocketService))
     .component('nodeAdvancedAuthoringComponent', NodeAdvancedAuthoringComponent)
+    .component('nodeAdvancedBranchAuthoringComponent', NodeAdvancedBranchAuthoringComponent)
     .component('nodeAdvancedConstraintAuthoringComponent', NodeAdvancedConstraintAuthoringComponent)
     .component('nodeAdvancedGeneralAuthoringComponent', NodeAdvancedGeneralAuthoringComponent)
     .component('nodeAdvancedJsonAuthoringComponent', NodeAdvancedJsonAuthoringComponent)
@@ -223,6 +225,14 @@ export function createTeacherAngularJSModule() {
           url: '/advanced',
           component: 'nodeAdvancedAuthoringComponent'
         })
+        .state('root.at.project.node.advanced.branch', {
+          url: '/branch',
+          component: 'nodeAdvancedBranchAuthoringComponent'
+        })
+        .state('root.at.project.node.advanced.constraint', {
+          url: '/constraint',
+          component: 'nodeAdvancedConstraintAuthoringComponent'
+        })
         .state('root.at.project.node.advanced.general', {
           url: '/general',
           component: 'nodeAdvancedGeneralAuthoringComponent'
@@ -230,10 +240,6 @@ export function createTeacherAngularJSModule() {
         .state('root.at.project.node.advanced.json', {
           url: '/json',
           component: 'nodeAdvancedJsonAuthoringComponent'
-        })
-        .state('root.at.project.node.advanced.constraint', {
-          url: '/constraint',
-          component: 'nodeAdvancedConstraintAuthoringComponent'
         })
         .state('root.at.project.node.advanced.path', {
           url: '/path',

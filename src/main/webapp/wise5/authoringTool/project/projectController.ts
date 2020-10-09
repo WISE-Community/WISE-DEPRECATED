@@ -239,7 +239,7 @@ class ProjectController {
 
   branchIconClicked(nodeId) {
     this.TeacherDataService.endCurrentNodeAndSetCurrentNodeByNodeId(nodeId);
-    this.$state.go('root.at.project.nodeEditPaths', { projectId: this.projectId, nodeId: nodeId });
+    this.$state.go('root.at.project.node.advanced.path', { projectId: this.projectId, nodeId: nodeId });
   }
 
   createGroup() {
