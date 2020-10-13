@@ -62,6 +62,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { ManageStudentsComponent } from '../../../wise5/classroomMonitor/manageStudents/manage-students-component';
 import { AdvancedProjectAuthoringComponent } from '../../../wise5/authoringTool/advanced/advanced-project-authoring.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ChooseNewComponent } from './authoring-tool/add-component/choose-new-component/choose-new-component.component';
+import { ChooseNewComponentLocation } from './authoring-tool/add-component/choose-new-component-location/choose-new-component-location.component';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({template: ``})
 export class EmptyComponent {}
@@ -77,6 +80,7 @@ export class EmptyComponent {}
     FlexLayoutModule,
     FormsModule,
     MatButtonModule,
+    MatCardModule,
     MatDialogModule,
     MatFormFieldModule,
     MatIconModule,
@@ -126,6 +130,7 @@ export class EmptyComponent {}
     FlexLayoutModule,
     FormsModule,
     MatButtonModule,
+    MatCardModule,
     MatDialogModule,
     MatFormFieldModule,
     MatIconModule,
@@ -187,6 +192,8 @@ export class PreviewAngularJSModule {
 @NgModule({
   declarations: [
     AdvancedProjectAuthoringComponent,
+    ChooseNewComponent,
+    ChooseNewComponentLocation,
     ManageStudentsComponent,
     MilestoneReportDataComponent,
     WorkgroupNodeScoreComponent,

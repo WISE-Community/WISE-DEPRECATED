@@ -1620,6 +1620,14 @@
           <context context-type="linenumber">20</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/add-component/choose-new-component/choose-new-component.component.html</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/add-component/choose-new-component-location/choose-new-component-location.component.html</context>
+          <context context-type="linenumber">41</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">app/student/add-project-dialog/add-project-dialog.component.html</context>
           <context context-type="linenumber">23</context>
         </context-group>
@@ -5143,6 +5151,52 @@
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
           <context context-type="linenumber">42</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="1bf58cf720f3aa0e4a6f06d2a84183b552f3f3c6">
+        <source>Click the new component type you want to add</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/add-component/choose-new-component/choose-new-component.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="f732c304c7433e5a83ffcd862c3dce709a0f4982">
+        <source>Next</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/add-component/choose-new-component/choose-new-component.component.html</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="1fa4d608488f8c688cef3cac8f93e5e2e43a39de">
+        <source>Choose New Location</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/add-component/choose-new-component-location/choose-new-component-location.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="d0feb44b6358f108a58480afa4b903c34031a110">
+        <source>Insert As First Component</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/add-component/choose-new-component-location/choose-new-component-location.component.html</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/add-component/choose-new-component-location/choose-new-component-location.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="1e9b22a987b26586870bb920525f8062d24c6267">
+        <source>Insert After</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/add-component/choose-new-component-location/choose-new-component-location.component.html</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="cda31dbd724cf5f4fa7a4274d9120651490c8a8c">
+        <source>Back</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/add-component/choose-new-component-location/choose-new-component-location.component.html</context>
+          <context context-type="linenumber">36</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="36a606470097ddf0c32a250c8a902441729ca8ca">
