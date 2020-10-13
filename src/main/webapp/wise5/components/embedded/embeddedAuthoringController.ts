@@ -1,80 +1,39 @@
 'use strict';
 
-import { ProjectAssetService } from "../../../site/src/app/services/projectAssetService";
-import EmbeddedController from "./embeddedController";
+import { ComponentAuthoringController } from "../componentAuthoringController";
 
-class EmbeddedAuthoringController extends EmbeddedController {
-  ProjectAssetService: ProjectAssetService;
+class EmbeddedAuthoringController extends ComponentAuthoringController {
+
   allowedConnectedComponentTypes: any[];
   embeddedApplicationIFrameId: string;
 
   static $inject = [
     '$filter',
-    '$injector',
-    '$mdDialog',
-    '$q',
-    '$rootScope',
     '$scope',
-    '$sce',
-    '$timeout',
-    '$window',
-    'AnnotationService',
-    'AudioRecorderService',
     'ConfigService',
-    'EmbeddedService',
     'NodeService',
-    'NotebookService',
     'NotificationService',
     'ProjectAssetService',
     'ProjectService',
-    'StudentAssetService',
-    'StudentDataService',
     'UtilService'
   ];
 
   constructor($filter,
-              $injector,
-              $mdDialog,
-              $q,
-              $rootScope,
-              $scope,
-              $sce,
-              $timeout,
-              $window,
-              AnnotationService,
-              AudioRecorderService,
-              ConfigService,
-              EmbeddedService,
-              NodeService,
-              NotebookService,
-              NotificationService,
-              ProjectAssetService,
-              ProjectService,
-              StudentAssetService,
-              StudentDataService,
-              UtilService) {
-    super($filter,
-      $injector,
-      $mdDialog,
-      $q,
-      $rootScope,
       $scope,
-      $sce,
-      $timeout,
-      $window,
-      AnnotationService,
-      AudioRecorderService,
       ConfigService,
-      EmbeddedService,
       NodeService,
-      NotebookService,
       NotificationService,
+      ProjectAssetService,
       ProjectService,
-      StudentAssetService,
-      StudentDataService,
-      UtilService);
-
-    this.ProjectAssetService = ProjectAssetService;
+      UtilService) {
+    super($scope,
+        $filter,
+        ConfigService,
+        NodeService,
+        NotificationService,
+        ProjectAssetService,
+        ProjectService,
+        UtilService);
 
     this.allowedConnectedComponentTypes = [
       { type: 'Animation' },
@@ -90,6 +49,7 @@ class EmbeddedAuthoringController extends EmbeddedController {
       { type: 'OpenResponse' },
       { type: 'Table' }
     ];
+    this.embeddedApplicationIFrameId = 'componentApp_' + this.componentId;
 
     $scope.$watch(function() {
       return this.authoringComponentContent;
@@ -97,8 +57,6 @@ class EmbeddedAuthoringController extends EmbeddedController {
       this.componentContent = this.ProjectService.injectAssetPaths(newValue);
       this.isSaveButtonVisible = this.componentContent.showSaveButton;
       this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-      this.setWidthAndHeight(this.componentContent.width, this.componentContent.height);
-      this.setURL(this.componentContent.url);
     }.bind(this), true);
   }
 
@@ -112,25 +70,10 @@ class EmbeddedAuthoringController extends EmbeddedController {
     this.openAssetChooser(params);
   }
 
-  openAssetChooser(params: any) {
-    this.ProjectAssetService.openAssetChooser(params).then(
-      (data: any) => { this.assetSelected(data) }
-    );
-  }
-
-  assetSelected(args: any) {
-    const fileName = args.assetItem.fileName;
-    if (args.target === 'rubric') {
-      const summernoteId = this.getSummernoteId(args);
-      this.restoreSummernoteCursorPosition(summernoteId);
-      const fullAssetPath = this.getFullAssetPath(fileName);
-      if (this.UtilService.isImage(fileName)) {
-        this.insertImageIntoSummernote(summernoteId, fullAssetPath, fileName);
-      } else if (this.UtilService.isVideo(fileName)) {
-        this.insertVideoIntoSummernote(summernoteId, fullAssetPath);
-      }
-    } else if (args.target === 'modelFile') {
-      this.authoringComponentContent.url = fileName;
+  assetSelected({ nodeId, componentId, assetItem, target }) {
+    super.assetSelected({ nodeId, componentId, assetItem, target });
+    if (target === 'modelFile') {
+      this.authoringComponentContent.url = assetItem.fileName;
       this.authoringViewComponentChanged();
     }
   }
