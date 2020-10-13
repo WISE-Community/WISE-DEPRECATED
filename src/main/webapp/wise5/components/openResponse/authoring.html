@@ -376,7 +376,7 @@
             <md-input-container style='margin-right: 20; width: 200;'>
               <label>{{ ::'type' | translate }}</label>
               <md-select ng-model='connectedComponent.type'
-                         ng-change='openResponseController.connectedComponentTypeChanged(connectedComponent)'
+                         ng-change='openResponseController.authoringViewComponentChanged()'
                          style='width: 200'>
                 <md-option value='importWork'>
                   {{ ::'importWork' | translate }}
