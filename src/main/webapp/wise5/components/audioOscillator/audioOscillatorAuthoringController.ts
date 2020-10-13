@@ -1,10 +1,9 @@
 'use strict';
 
-import { ProjectAssetService } from '../../../site/src/app/services/projectAssetService';
-import AudioOscillatorController from './audioOscillatorController';
+import { ComponentAuthoringController } from '../componentAuthoringController';
 
-class AudioOscillatorAuthoringController extends AudioOscillatorController {
-  ProjectAssetService: ProjectAssetService;
+class AudioOscillatorAuthoringController extends ComponentAuthoringController {
+
   allowedConnectedComponentTypes: any[];
   authoringSineChecked: boolean;
   authoringSquareChecked: boolean;
@@ -13,68 +12,35 @@ class AudioOscillatorAuthoringController extends AudioOscillatorController {
 
   static $inject = [
     '$filter',
-    '$injector',
-    '$mdDialog',
-    '$q',
-    '$rootScope',
     '$scope',
-    '$timeout',
-    'AnnotationService',
-    'AudioOscillatorService',
-    'AudioRecorderService',
     'ConfigService',
     'NodeService',
-    'NotebookService',
     'NotificationService',
     'ProjectAssetService',
     'ProjectService',
-    'StudentAssetService',
-    'StudentDataService',
     'UtilService'
   ];
 
   constructor(
     $filter,
-    $injector,
-    $mdDialog,
-    $q,
-    $rootScope,
     $scope,
-    $timeout,
-    AnnotationService,
-    AudioOscillatorService,
-    AudioRecorderService,
     ConfigService,
     NodeService,
-    NotebookService,
     NotificationService,
     ProjectAssetService,
     ProjectService,
-    StudentAssetService,
-    StudentDataService,
     UtilService
   ) {
     super(
-      $filter,
-      $injector,
-      $mdDialog,
-      $q,
-      $rootScope,
       $scope,
-      $timeout,
-      AnnotationService,
-      AudioOscillatorService,
-      AudioRecorderService,
+      $filter,
       ConfigService,
       NodeService,
-      NotebookService,
       NotificationService,
+      ProjectAssetService,
       ProjectService,
-      StudentAssetService,
-      StudentDataService,
       UtilService
     );
-    this.ProjectAssetService = ProjectAssetService;
     this.allowedConnectedComponentTypes = [{ type: 'AudioOscillator' }];
     this.populateCheckedOscillatorTypes();
   }
@@ -94,17 +60,6 @@ class AudioOscillatorAuthoringController extends AudioOscillatorController {
     }
   }
 
-  handleAuthoringComponentContentChanged(newValue, oldValue) {
-    super.handleAuthoringComponentContentChanged(newValue, oldValue);
-    this.refreshContentInAuthoringPreview();
-  }
-
-  refreshContentInAuthoringPreview() {
-    this.stop();
-    this.setParametersFromComponentContent();
-    this.drawOscilloscopeGridAfterTimeout();
-  }
-
   authoringViewOscillatorTypeClicked() {
     this.authoringComponentContent.oscillatorTypes = [];
     if (this.authoringSineChecked) {
@@ -121,13 +76,6 @@ class AudioOscillatorAuthoringController extends AudioOscillatorController {
     }
     this.authoringViewComponentChanged();
   }
-
-  openAssetChooser(params: any) {
-    this.ProjectAssetService.openAssetChooser(params).then(
-      (data: any) => { this.assetSelected(data) }
-    );
-  }
-
 }
 
 export default AudioOscillatorAuthoringController;
