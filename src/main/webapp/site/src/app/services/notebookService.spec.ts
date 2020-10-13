@@ -310,6 +310,7 @@ function shouldSaveNotebookItem() {
 
     it('should save a notebook item in preview mode', () => {
       spyOn(configService, 'isPreview').and.returnValue(true);
+      spyOn(studentDataService, 'updateNodeStatuses');
       let note = service.getLatestNotebookItemByLocalNotebookItemId(localNotebookItemId, 2);
       expect(note.content.text).toBe('test');
       expect(note.clientSaveTime).toBe(1500000000000);
