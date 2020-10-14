@@ -348,7 +348,7 @@ class NodeAdvancedConstraintAuthoringController {
         }
       }
     }
-    this.ProjectService.saveProject()();
+    this.ProjectService.saveProject();
   }
 
   getRemovalCriteriaParamsByName(name) {
