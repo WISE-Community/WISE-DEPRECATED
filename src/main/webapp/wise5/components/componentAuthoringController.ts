@@ -89,10 +89,10 @@ export abstract class ComponentAuthoringController {
     );
     this.$scope.$watch(() => {
       return this.$scope.$parent.nodeAuthoringController
-        .showAdvancedAdvancedAuthoring[this.componentId];
+        .showAdvancedComponentAuthoring[this.componentId];
     }, () => {
       this.showAdvancedAuthoring = this.$scope.$parent.nodeAuthoringController
-          .showAdvancedAdvancedAuthoring[this.componentId];
+          .showAdvancedComponentAuthoring[this.componentId];
       this.NotificationService.hideJSONValidMessage();
     }, true);
   }
