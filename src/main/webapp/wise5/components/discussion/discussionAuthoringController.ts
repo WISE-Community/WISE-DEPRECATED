@@ -39,11 +39,15 @@ class DiscussionAuthoringController extends ComponentAuthoringController {
     );
   }
 
+  connectedComponentTypeChanged(connectedComponent) {
+    this.changeAllDiscussionConnectedComponentTypesToMatch(connectedComponent.type);
+    super.connectedComponentTypeChanged(connectedComponent);
+  }
+
   changeAllDiscussionConnectedComponentTypesToMatch(connectedComponentType) {
     for (const connectedComponent of this.authoringComponentContent.connectedComponents) {
       connectedComponent.type = connectedComponentType;
     }
-    this.authoringViewComponentChanged();
   }
 
   automaticallySetConnectedComponentTypeIfPossible(connectedComponent) {
