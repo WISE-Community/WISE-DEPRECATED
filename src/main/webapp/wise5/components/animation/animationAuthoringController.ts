@@ -210,7 +210,7 @@ class AnimationAuthoringController extends ComponentAuthoringController {
   dataSourceComponentChanged(authoredObject) {
     const nodeId = authoredObject.dataSource.nodeId;
     const componentId = authoredObject.dataSource.componentId;
-    const component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
+    const component = this.getComponentByNodeIdAndComponentId(nodeId, componentId);
     authoredObject.dataSource = {
       nodeId: nodeId,
       componentId: componentId
@@ -295,6 +295,11 @@ class AnimationAuthoringController extends ComponentAuthoringController {
     delete authoredObject.imageMovingUp;
     delete authoredObject.imageMovingDown;
   }
+  
+  getComponentByNodeIdAndComponentId(nodeId: string, componentId: string) {
+    return this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
+  }
+
 }
 
 export default AnimationAuthoringController;
