@@ -1,0 +1,42 @@
+<div layout='row' style='margin-left: 10px; height:50px'>
+  <div layout='row'>
+    <h5 i18n>Choose New Location</h5>
+  </div>
+</div>
+<div style='margin-left: 45px;'>
+  <button mat-button class='moveComponentButton mat-raised-button mat-primary'
+      (click)='insertComponentAfter()'
+      matTooltip="Insert As First Component" i18n-matTooltip matTooltipPosition="above">
+    <mat-icon>keyboard_backspace</mat-icon>
+  </button>
+  <span style='font-weight:bold; margin-left:10px' i18n>Insert As First Component</span>
+</div>
+<div *ngFor='let component of components; index as componentIndex'
+    class='component'
+    style='padding: 0; margin-top: 0; margin-left: 16px;'>
+  <div id='{{component.id}}' layout='row' style='height: 40px; margin-top: 0; margin-bottom: 0;'>
+    <div style='margin-top: 15px; width: 200px;'>
+      <span style='font-weight:bold; margin-right:10px'>{{(componentIndex + 1)}}. {{getComponentTypeLabel(component.type)}}</span>
+    </div>
+  </div>
+  <div style='height: 30px; margin-top: 10px; margin-left: 30px;'>
+    <button mat-button class='moveComponentButton mat-raised-button mat-primary'
+        style='margin-top: 0;'
+        matTooltip="Insert After" i18n-matTooltip matTooltipPosition="above"
+        (click)='insertComponentAfter(component.id)'>
+      <mat-icon>keyboard_backspace</mat-icon>
+    </button>
+  </div>
+</div>
+<hr>
+<div fxLayout="row">
+  <button mat-button class='mat-primary'
+      (click)='goToChooseNewComponent()'
+      aria-label='Back'
+      i18n>Back</button>
+  <span fxFlex></span>
+  <button mat-button class='mat-primary'
+      (click)='cancel()'
+      aria-label='Cancel'
+      i18n>Cancel</button>
+</div>
