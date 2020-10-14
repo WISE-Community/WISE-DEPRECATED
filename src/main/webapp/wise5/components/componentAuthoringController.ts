@@ -229,6 +229,10 @@ export abstract class ComponentAuthoringController {
     this.authoringViewComponentChanged();
   }
 
+  connectedComponentTypeChanged(connectedComponent) {
+    this.authoringViewComponentChanged();
+  }
+
   connectedComponentNodeIdChanged(connectedComponent) {
     connectedComponent.componentId = null;
     connectedComponent.type = null;
