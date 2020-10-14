@@ -103,7 +103,6 @@ class ComponentController {
         this.$scope.teacherWorkgroupId = this.teacherWorkgroupId;
         this.$scope.type = componentContent.type;
         this.$scope.nodeController = this.$scope.$parent.nodeController;
-        this.compileComponent();
 
         if (this.mode === 'authoringComponentPreview') {
           this.$scope.$watch(
@@ -112,6 +111,8 @@ class ComponentController {
               this.$scope.componentContent = this.componentContent;
               this.compileComponent();
           });
+        } else {
+          this.compileComponent();
         }
     }
 

@@ -1,99 +1,45 @@
 'use strict';
 
-import { ProjectAssetService } from '../../../site/src/app/services/projectAssetService';
-import AnimationController from './animationController';
+import { ComponentAuthoringController } from '../componentAuthoringController';
 
-class AnimationAuthoringController extends AnimationController {
-  ProjectAssetService: ProjectAssetService;
-  allowedConnectedComponentTypes: any[];
+class AnimationAuthoringController extends ComponentAuthoringController {
+
+  allowedConnectedComponentTypes: any[] = [{ type: 'Animation' }, { type: 'Graph' }];
 
   static $inject = [
     '$filter',
-    '$injector',
-    '$mdDialog',
-    '$q',
-    '$rootScope',
     '$scope',
-    '$timeout',
-    'AnimationService',
-    'AnnotationService',
-    'AudioRecorderService',
     'ConfigService',
     'NodeService',
-    'NotebookService',
     'NotificationService',
     'ProjectAssetService',
     'ProjectService',
-    'StudentAssetService',
-    'StudentDataService',
     'UtilService'
   ];
 
   constructor(
     $filter,
-    $injector,
-    $mdDialog,
-    $q,
-    $rootScope,
     $scope,
-    $timeout,
-    AnimationService,
-    AnnotationService,
-    AudioRecorderService,
     ConfigService,
     NodeService,
-    NotebookService,
     NotificationService,
     ProjectAssetService,
     ProjectService,
-    StudentAssetService,
-    StudentDataService,
     UtilService
   ) {
     super(
-      $filter,
-      $injector,
-      $mdDialog,
-      $q,
-      $rootScope,
       $scope,
-      $timeout,
-      AnimationService,
-      AnnotationService,
-      AudioRecorderService,
+      $filter,
       ConfigService,
       NodeService,
-      NotebookService,
       NotificationService,
+      ProjectAssetService,
       ProjectService,
-      StudentAssetService,
-      StudentDataService,
       UtilService
     );
-    this.ProjectAssetService = ProjectAssetService;
-    this.allowedConnectedComponentTypes = [{ type: 'Animation' }, { type: 'Graph' }];
   }
 
-  handleAuthoringComponentContentChanged(newValue, oldValue) {
-    super.handleAuthoringComponentContentChanged(newValue, oldValue);
-    this.refreshContentInAuthoringPreview();
-  }
-
-  refreshContentInAuthoringPreview() {
-    this.removeAllObjectsFromSVG();
-    this.initializeCoordinates();
-    this.setupSVG();
-  }
-
-  removeAllObjectsFromSVG() {
-    const ids = Object.keys(this.idToSVGObject);
-    for (let id of ids) {
-      const svgObject = this.idToSVGObject[id];
-      svgObject.remove();
-    }
-  }
-
-  authoringAddObject() {
+  addObject() {
     if (this.authoringComponentContent.objects == null) {
       this.authoringComponentContent.objects = [];
     }
@@ -105,7 +51,7 @@ class AnimationAuthoringController extends AnimationController {
     this.authoringViewComponentChanged();
   }
 
-  authoringAddDataPointToObject(authoredObject) {
+  addDataPointToObject(authoredObject) {
     if (this.authoredObjectHasDataSource(authoredObject)) {
       if (this.askIfWantToDeleteDataSource()) {
         delete authoredObject.dataSource;
@@ -115,6 +61,10 @@ class AnimationAuthoringController extends AnimationController {
       this.addNewDataPoint(authoredObject);
     }
     this.authoringViewComponentChanged();
+  }
+
+  authoredObjectHasDataSource(authoredObject) {
+    return authoredObject.dataSource != null;
   }
 
   askIfWantToDeleteDataSource() {
@@ -133,13 +83,13 @@ class AnimationAuthoringController extends AnimationController {
     authoredObject.data.push(newDataPoint);
   }
 
-  authoringConfirmDeleteAnimationObjectDataPoint(animationObject, index) {
+  confirmDeleteAnimationObjectDataPoint(animationObject, index) {
     if (confirm(this.$translate('animation.areYouSureYouWantToDeleteThisDataPoint'))) {
-      this.authoringDeleteAnimationObjectDataPoint(animationObject, index);
+      this.deleteAnimationObjectDataPoint(animationObject, index);
     }
   }
 
-  authoringDeleteAnimationObjectDataPoint(animationObject, index) {
+  deleteAnimationObjectDataPoint(animationObject, index) {
     animationObject.data.splice(index, 1);
     this.authoringViewComponentChanged();
   }
@@ -153,7 +103,16 @@ class AnimationAuthoringController extends AnimationController {
     }
   }
 
-  authoringMoveAuthoredObjectDataPointDown(object, index) {
+  moveAuthoredObjectDataPointUp(object, index) {
+    if (this.canMoveUp(index)) {
+      const dataPoint = object.data[index];
+      object.data.splice(index, 1);
+      object.data.splice(index - 1, 0, dataPoint);
+      this.authoringViewComponentChanged();
+    }
+  }
+
+  moveAuthoredObjectDataPointDown(object, index) {
     if (this.canMoveDown(index, object.data.length)) {
       const dataPoint = object.data[index];
       object.data.splice(index, 1);
@@ -162,7 +121,7 @@ class AnimationAuthoringController extends AnimationController {
     }
   }
 
-  authoringMoveAuthoredObjectUp(index) {
+  moveAuthoredObjectUp(index) {
     if (this.canMoveUp(index)) {
       const objects = this.authoringComponentContent.objects;
       const object = objects[index];
@@ -172,7 +131,7 @@ class AnimationAuthoringController extends AnimationController {
     }
   }
 
-  authoringMoveAuthoredObjectDown(index) {
+  moveAuthoredObjectDown(index) {
     const objects = this.authoringComponentContent.objects;
     if (this.canMoveDown(index, objects.length)) {
       const object = objects[index];
@@ -190,18 +149,18 @@ class AnimationAuthoringController extends AnimationController {
     return index < length - 1;
   }
 
-  authoringConfirmDeleteAnimationObject(index) {
+  confirmDeleteAnimationObject(index) {
     if (confirm(this.$translate('animation.areYouSureYouWantToDeleteThisObject'))) {
-      this.authoringDeleteAnimationObject(index);
+      this.deleteAnimationObject(index);
     }
   }
 
-  authoringDeleteAnimationObject(index) {
+  deleteAnimationObject(index) {
     this.authoringComponentContent.objects.splice(index, 1);
     this.authoringViewComponentChanged();
   }
 
-  authoringAddDataSource(authoredObject) {
+  addDataSource(authoredObject) {
     if (this.authoredObjectHasData(authoredObject)) {
       if (confirm(this.$translate('animation.areYouSureYouWantToAddADataSource'))) {
         this.deleteDataAndAddDataSource(authoredObject);
@@ -210,6 +169,10 @@ class AnimationAuthoringController extends AnimationController {
       this.deleteDataAndAddDataSource(authoredObject);
     }
     this.authoringViewComponentChanged();
+  }
+
+  authoredObjectHasData(authoredObject) {
+    return authoredObject.data != null && authoredObject.data.length > 0;
   }
 
   deleteDataAndAddDataSource(authoredObject) {
@@ -225,7 +188,7 @@ class AnimationAuthoringController extends AnimationController {
     authoredObject.dataSource = {};
   }
 
-  authoringConfirmDeleteDataSource(animationObject) {
+  confirmDeleteDataSource(animationObject) {
     if (confirm(this.$translate('animation.areYouSureYouWantToDeleteTheDataSource'))) {
       this.authoringDeleteDataSource(animationObject);
     }
@@ -252,7 +215,7 @@ class AnimationAuthoringController extends AnimationController {
       nodeId: nodeId,
       componentId: componentId
     };
-    if (component.type == 'Graph') {
+    if (component.type === 'Graph') {
       this.setDefaultParamsForGraphDataSource(authoredObject);
     }
     this.authoringViewComponentChanged();
@@ -298,36 +261,19 @@ class AnimationAuthoringController extends AnimationController {
     };
   }
 
-  openAssetChooser(params: any) {
-    this.ProjectAssetService.openAssetChooser(params).then(
-      (data: any) => { this.assetSelected(data) }
-    );
-  }
-
-  assetSelected(args: any) {
-    const fileName = args.assetItem.fileName;
-    if (args.target === 'rubric') {
-      const summernoteId = this.getSummernoteId(args);
-      this.restoreSummernoteCursorPosition(summernoteId);
-      const fullAssetPath = this.getFullAssetPath(fileName);
-      if (this.UtilService.isImage(fileName)) {
-        this.insertImageIntoSummernote(summernoteId, fullAssetPath, fileName);
-      } else if (this.UtilService.isVideo(fileName)) {
-        this.insertVideoIntoSummernote(summernoteId, fullAssetPath);
-      }
-    } else if (args.target === 'image') {
-      args.targetObject.image = fileName;
-      this.authoringViewComponentChanged();
-    } else if (args.target === 'imageMovingLeft') {
-      args.targetObject.imageMovingLeft = fileName;
-      this.authoringViewComponentChanged();
-    } else if (args.target === 'imageMovingRight') {
-      args.targetObject.imageMovingRight = fileName;
-      this.authoringViewComponentChanged();
+  assetSelected({ nodeId, componentId, assetItem, target, targetObject }) {
+    super.assetSelected({ nodeId, componentId, assetItem, target });
+    if (target === 'image') {
+      targetObject.image = assetItem.fileName;
+    } else if (target === 'imageMovingLeft') {
+      targetObject.imageMovingLeft = assetItem.fileName;
+    } else if (target === 'imageMovingRight') {
+      targetObject.imageMovingRight = assetItem.fileName;
     }
+    this.authoringViewComponentChanged();
   }
 
-  authoringAuthoredObjectTypeChanged(authoredObject) {
+  authoredObjectTypeChanged(authoredObject) {
     if (authoredObject.type === 'image') {
       this.removeTextFromAuthoredObject(authoredObject);
     } else if (authoredObject.type === 'text') {
@@ -349,6 +295,11 @@ class AnimationAuthoringController extends AnimationController {
     delete authoredObject.imageMovingUp;
     delete authoredObject.imageMovingDown;
   }
+  
+  getComponentByNodeIdAndComponentId(nodeId: string, componentId: string) {
+    return this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
+  }
+
 }
 
 export default AnimationAuthoringController;
