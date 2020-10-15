@@ -99,7 +99,7 @@ function shouldUpdateNote() {
 }
 
 function shouldDeleteNote() {
-  it('should delete a note in preview mode', () => {
+  it('should delete a note in preview mode', (done) => {
     spyOn(configService, 'isPreview').and.returnValue(true);
     spyOn(configService, 'getWorkgroupId').and.returnValue(2);
     spyOn(studentDataService, 'updateNodeStatuses');
@@ -109,12 +109,13 @@ function shouldDeleteNote() {
       note = service.getLatestNotebookItemByLocalNotebookItemId(localNotebookItemId, 2);
       expect(note.serverDeleteTime).not.toBeNull();
       expect(studentDataService.updateNodeStatuses).toHaveBeenCalled();
+      done();
     });
   });
 }
 
 function shouldReviveNote() {
-  it('should revive a note in preview mode', () => {
+  it('should revive a note in preview mode', (done) => {
     spyOn(configService, 'isPreview').and.returnValue(true);
     spyOn(configService, 'getWorkgroupId').and.returnValue(2);
     spyOn(studentDataService, 'updateNodeStatuses');
@@ -123,6 +124,7 @@ function shouldReviveNote() {
       note = service.getLatestNotebookItemByLocalNotebookItemId('stb6er46ad', 2);
       expect(note.serverDeleteTime).toBeNull();
       expect(studentDataService.updateNodeStatuses).toHaveBeenCalled();
+      done();
     });
   });
 }
@@ -308,8 +310,9 @@ function shouldSaveNotebookItem() {
       });
     });
 
-    it('should save a notebook item in preview mode', () => {
+    it('should save a notebook item in preview mode', (done) => {
       spyOn(configService, 'isPreview').and.returnValue(true);
+      spyOn(studentDataService, 'updateNodeStatuses');
       let note = service.getLatestNotebookItemByLocalNotebookItemId(localNotebookItemId, 2);
       expect(note.content.text).toBe('test');
       expect(note.clientSaveTime).toBe(1500000000000);
@@ -318,6 +321,7 @@ function shouldSaveNotebookItem() {
         expect(note.content.text).toBe('some new text');
         expect(note.clientSaveTime).toBe(1500000100000);
         expect(studentDataService.updateNodeStatuses).toHaveBeenCalled();
+        done();
       });
     });
   });

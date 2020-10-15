@@ -55,8 +55,16 @@ import { GraphService } from '../../../wise5/components/graph/graphService';
 import { WorkgroupNodeScoreComponent } from '../../../wise5/classroomMonitor/classroomMonitorComponents/shared/workgroupNodeScore/workgroup-node-score.component';
 import { NavItemScoreComponent } from '../../../wise5/classroomMonitor/classroomMonitorComponents/nodeProgress/navItemScore/nav-item-score.component';
 import { NodeIconComponent } from '../../../wise5/classroomMonitor/classroomMonitorComponents/shared/nodeIcon/node-icon.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { ManageStudentsComponent } from '../../../wise5/classroomMonitor/manageStudents/manage-students-component';
+import { AdvancedProjectAuthoringComponent } from '../../../wise5/authoringTool/advanced/advanced-project-authoring.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ChooseNewComponent } from './authoring-tool/add-component/choose-new-component/choose-new-component.component';
+import { ChooseNewComponentLocation } from './authoring-tool/add-component/choose-new-component-location/choose-new-component-location.component';
+import { MatCardModule } from '@angular/material/card';
 
 @Component({template: ``})
 export class EmptyComponent {}
@@ -70,10 +78,16 @@ export class EmptyComponent {}
     UpgradeModule,
     CommonModule,
     FlexLayoutModule,
+    FormsModule,
     MatButtonModule,
+    MatCardModule,
     MatDialogModule,
+    MatFormFieldModule,
     MatIconModule,
+    MatInputModule,
     MatListModule,
+    MatTooltipModule,
+    ReactiveFormsModule,
     RouterModule.forChild([
       {path: '**', component: EmptyComponent}
     ])
@@ -114,11 +128,17 @@ export class EmptyComponent {}
   exports: [
     CommonModule,
     FlexLayoutModule,
+    FormsModule,
     MatButtonModule,
+    MatCardModule,
     MatDialogModule,
+    MatFormFieldModule,
     MatIconModule,
+    MatInputModule,
     MatListModule,
-    NodeIconComponent
+    MatTooltipModule,
+    NodeIconComponent,
+    ReactiveFormsModule
   ]
 })
 export class AngularJSModule {}
@@ -171,6 +191,9 @@ export class PreviewAngularJSModule {
 
 @NgModule({
   declarations: [
+    AdvancedProjectAuthoringComponent,
+    ChooseNewComponent,
+    ChooseNewComponentLocation,
     ManageStudentsComponent,
     MilestoneReportDataComponent,
     WorkgroupNodeScoreComponent,

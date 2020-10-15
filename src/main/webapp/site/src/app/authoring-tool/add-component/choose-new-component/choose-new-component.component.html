@@ -1,0 +1,28 @@
+<div layout="row" style="margin-left: 10px;">
+  <div layout="row">
+    <h5 i18n>Click the new component type you want to add</h5>
+  </div>
+</div>
+<div fxLayout="row wrap" fxLayoutAlign="start center">
+  <button *ngFor="let componentType of componentTypes"
+        class="mat-card component-type"
+        (click)="setComponentType(componentType.type)"
+        [ngClass]="{ 'component-type--selected': componentType.type == selectedComponentType }">
+    <mat-card-content>
+      <mat-card-title>
+        {{componentType.name}}
+      </mat-card-title>
+    </mat-card-content>
+  </button>
+</div>
+<hr>
+<div fxLayout="row" fxLayoutAlign="end center">
+  <button mat-button class="mat-primary"
+      (click)="cancel()"
+      aria-label="cancel"
+      i18n>Cancel</button>
+  <button mat-button class="mat-raised-button mat-primary"
+      (click)="chooseLocation()"
+      aria-label="next"
+      i18n>Next</button>
+</div>

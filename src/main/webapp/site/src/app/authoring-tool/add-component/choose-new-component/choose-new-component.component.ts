@@ -1,20 +1,24 @@
-import { UtilService } from "../../services/utilService";
-import { ConfigService } from "../../services/configService";
-import { TeacherDataService } from "../../services/teacherDataService";
+import { UtilService } from "../../../../../../wise5/services/utilService";
+import { ConfigService } from "../../../../../../wise5/services/configService";
+import { TeacherDataService } from "../../../../../../wise5/services/teacherDataService";
+import { Component } from "@angular/core";
+import { UpgradeModule } from "@angular/upgrade/static";
 
-
-class ChooseNewComponentController {
+@Component({
+  selector: 'choose-new-component',
+  styleUrls: ['./choose-new-component.component.scss'],
+  templateUrl: 'choose-new-component.component.html'
+})
+export class ChooseNewComponent {
 
   componentTypes: any;
-  componentType: string;
+  selectedComponentType: string;
 
-  static $inject = ['$state', '$stateParams', 'ConfigService', 'TeacherDataService', 'UtilService'];
-
-  constructor(private $state: any, private $stateParams: any, private ConfigService: ConfigService,
+  constructor(private upgrade: UpgradeModule, private ConfigService: ConfigService,
       private TeacherDataService: TeacherDataService, private UtilService: UtilService) {
   }
 
-  $onInit() {
+  ngOnInit() {
     this.componentTypes = [
       {
         type: 'Animation',
@@ -59,25 +63,21 @@ class ChooseNewComponentController {
       },
       { type: 'Table', name: this.UtilService.getComponentTypeLabel('Table') }
     ];
-    this.componentType = this.$stateParams.componentType;
+    this.selectedComponentType = this.upgrade.$injector.get('$stateParams').componentType;
   }
 
   setComponentType(componentType) {
-    this.componentType = componentType;
+    this.selectedComponentType = componentType;
   }
 
   chooseLocation() {
-    this.$state.go('root.at.project.node.add-component.choose-location',
-        { componentType: this.componentType });
+    this.upgrade.$injector.get('$state').go('root.at.project.node.add-component.choose-location',
+        { componentType: this.selectedComponentType });
   }
 
   cancel() {
-    this.$state.go('root.at.project.node', { projectId: this.ConfigService.getProjectId(),
+    this.upgrade.$injector.get('$state').go('root.at.project.node',
+        { projectId: this.ConfigService.getProjectId(),
         nodeId: this.TeacherDataService.getCurrentNodeId() });
   }
-}
-
-export const ChooseNewComponent = {
-  templateUrl: `/wise5/authoringTool/addComponent/choose-new-component.component.html`,
-  controller: ChooseNewComponentController
 }

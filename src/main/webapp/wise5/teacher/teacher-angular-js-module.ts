@@ -1,7 +1,7 @@
 import '../lib/jquery/jquery-global';
 import '../lib/bootstrap/js/bootstrap.min'
 import * as angular from 'angular';
-import { downgradeInjectable } from '@angular/upgrade/static';
+import { downgradeComponent, downgradeInjectable } from '@angular/upgrade/static';
 import { createCommonModule } from '../common-angular-js-module';
 import { MilestoneService } from '../services/milestoneService';
 import { TeacherProjectService } from '../services/teacherProjectService';
@@ -10,9 +10,9 @@ import { SpaceService } from '../services/spaceService';
 import { StudentStatusService } from '../services/studentStatusService';
 import { TeacherDataService } from '../services/teacherDataService';
 import { TeacherWebSocketService } from '../services/teacherWebSocketService';
+import { AdvancedProjectAuthoringComponent } from '../authoringTool/advanced/advanced-project-authoring.component';
 import AuthoringToolController from '../authoringTool/authoringToolController';
 import AuthoringToolMainController from '../authoringTool/main/authoringToolMainController';
-import AdvancedAuthoringController from '../authoringTool/advanced/advancedAuthoringController';
 import AuthorNotebookController from '../authoringTool/notebook/authorNotebookController';
 import ClassroomMonitorController from '../classroomMonitor/classroomMonitorController';
 import DataExportController from '../classroomMonitor/dataExport/dataExportController';
@@ -20,6 +20,12 @@ import ExportController from '../classroomMonitor/dataExport/exportController';
 import ExportVisitsController from '../classroomMonitor/dataExport/exportVisitsController';
 import MilestonesAuthoringController from '../authoringTool/milestones/milestonesAuthoringController';
 import MilestonesController from '../classroomMonitor/milestones/milestonesController';
+import { NodeAdvancedAuthoringComponent } from '../authoringTool/node/advanced/node-advanced-authoring.component';
+import { NodeAdvancedBranchAuthoringComponent } from '../authoringTool/node/advanced/branch/node-advanced-branch-authoring.component';
+import { NodeAdvancedConstraintAuthoringComponent } from '../authoringTool/node/advanced/constraint/node-advanced-constraint-authoring.component';
+import { NodeAdvancedGeneralAuthoringComponent } from '../authoringTool/node/advanced/general/node-advanced-general-authoring.component';
+import { NodeAdvancedJsonAuthoringComponent } from '../authoringTool/node/advanced/json/node-advanced-json-authoring.component';
+import { NodeAdvancedPathAuthoringComponent } from '../authoringTool/node/advanced/path/node-advanced-path-authoring.component';
 import NodeAuthoringController from '../authoringTool/node/nodeAuthoringController';
 import NotebookGradingController from '../classroomMonitor/notebook/notebookGradingController';
 import ProjectAssetController from '../authoringTool/asset/projectAssetController';
@@ -94,9 +100,16 @@ export function createTeacherAngularJSModule() {
     .factory('StudentStatusService', downgradeInjectable(StudentStatusService))
     .service('TeacherDataService', downgradeInjectable(TeacherDataService))
     .service('TeacherWebSocketService', downgradeInjectable(TeacherWebSocketService))
+    .component('nodeAdvancedAuthoringComponent', NodeAdvancedAuthoringComponent)
+    .component('nodeAdvancedBranchAuthoringComponent', NodeAdvancedBranchAuthoringComponent)
+    .component('nodeAdvancedConstraintAuthoringComponent', NodeAdvancedConstraintAuthoringComponent)
+    .component('nodeAdvancedGeneralAuthoringComponent', NodeAdvancedGeneralAuthoringComponent)
+    .component('nodeAdvancedJsonAuthoringComponent', NodeAdvancedJsonAuthoringComponent)
+    .component('nodeAdvancedPathAuthoringComponent', NodeAdvancedPathAuthoringComponent)
+    .directive('advancedProjectAuthoringComponent', downgradeComponent(
+        { component: AdvancedProjectAuthoringComponent }) as angular.IDirectiveFactory)
     .controller('AuthoringToolController', AuthoringToolController)
     .controller('AuthoringToolMainController', AuthoringToolMainController)
-    .controller('AdvancedAuthoringController', AdvancedAuthoringController)
     .controller('AuthorNotebookController', AuthorNotebookController)
     .controller('ClassroomMonitorController', ClassroomMonitorController)
     .controller('DataExportController', DataExportController)
@@ -208,19 +221,29 @@ export function createTeacherAngularJSModule() {
             newComponents: []
           }
         })
-        .state('root.at.project.nodeConstraints', {
-          url: '/node/constraints/:nodeId',
-          templateUrl: '/wise5/authoringTool/node/node.html',
-          controller: 'NodeAuthoringController',
-          controllerAs: 'nodeAuthoringController',
-          resolve: {}
+        .state('root.at.project.node.advanced', {
+          url: '/advanced',
+          component: 'nodeAdvancedAuthoringComponent'
         })
-        .state('root.at.project.nodeEditPaths', {
-          url: '/node/editpaths/:nodeId',
-          templateUrl: '/wise5/authoringTool/node/node.html',
-          controller: 'NodeAuthoringController',
-          controllerAs: 'nodeAuthoringController',
-          resolve: {}
+        .state('root.at.project.node.advanced.branch', {
+          url: '/branch',
+          component: 'nodeAdvancedBranchAuthoringComponent'
+        })
+        .state('root.at.project.node.advanced.constraint', {
+          url: '/constraint',
+          component: 'nodeAdvancedConstraintAuthoringComponent'
+        })
+        .state('root.at.project.node.advanced.general', {
+          url: '/general',
+          component: 'nodeAdvancedGeneralAuthoringComponent'
+        })
+        .state('root.at.project.node.advanced.json', {
+          url: '/json',
+          component: 'nodeAdvancedJsonAuthoringComponent'
+        })
+        .state('root.at.project.node.advanced.path', {
+          url: '/path',
+          component: 'nodeAdvancedPathAuthoringComponent'
         })
         .state('root.at.project.asset', {
           url: '/asset',
@@ -238,9 +261,7 @@ export function createTeacherAngularJSModule() {
         })
         .state('root.at.project.advanced', {
           url: '/advanced',
-          templateUrl: '/wise5/authoringTool/advanced/advancedAuthoring.html',
-          controller: 'AdvancedAuthoringController',
-          controllerAs: 'advancedAuthoringController'
+          component: 'advancedProjectAuthoringComponent',
         })
         .state('root.at.project.rubric', {
           url: '/rubric',

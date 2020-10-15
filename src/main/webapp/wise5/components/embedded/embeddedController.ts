@@ -101,7 +101,6 @@ class EmbeddedController extends ComponentController {
     this.maxHeight = null;
     this.notebookConfig = this.NotebookService.getNotebookConfig();
     this.componentStateId = null;
-    this.embeddedApplicationIFrameId = '';
     this.annotationsToSave = [];
     this.embeddedApplicationIFrameId = 'componentApp_' + this.componentId;
     this.componentType = this.componentContent.type;

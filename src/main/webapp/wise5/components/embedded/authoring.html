@@ -1,11 +1,7 @@
 <div ng-controller='EmbeddedAuthoringController as embeddedController' style='display: flex'>
   <div class='embedded-content' flex>
-    <script>
-      var embeddedController = embeddedController;
-    </script>
     <div>
-      <div class='advancedAuthoringDiv'
-           ng-if='embeddedController.showAdvancedAuthoring'>
+      <div class='advancedAuthoringDiv' ng-if='embeddedController.showAdvancedAuthoring'>
         <div>
           <h6>{{ ::'advancedAuthoringOptions' | translate }}</h6>
         </div>
@@ -13,78 +9,78 @@
           <md-input-container style='width: 100%; margin-bottom: -10'>
             <label>{{ ::'embedded.modelParameters' | translate }}</label>
             <textarea rows='1'
-                      ng-model='embeddedController.authoringComponentContent.parameters'
-                      ng-change='embeddedController.authoringViewComponentChanged()'
-                      ng-model-options='{ debounce: 1000 }'>
+                ng-model='embeddedController.authoringComponentContent.parameters'
+                ng-change='embeddedController.authoringViewComponentChanged()'
+                ng-model-options='{ debounce: 1000 }'>
             </textarea>
           </md-input-container>
         </div>
         <div>
           <md-checkbox class='md-primary'
-                       ng-model='embeddedController.authoringComponentContent.showSaveButton'
-                       ng-change='embeddedController.authoringViewComponentChanged()'>
+              ng-model='embeddedController.authoringComponentContent.showSaveButton'
+              ng-change='embeddedController.authoringViewComponentChanged()'>
             {{ ::'SHOW_SAVE_BUTTON' | translate }}
           </md-checkbox>
         </div>
         <div>
           <md-checkbox class='md-primary'
-                       ng-model='embeddedController.authoringComponentContent.showSubmitButton'
-                       ng-change='embeddedController.authoringViewComponentChanged()'>
+              ng-model='embeddedController.authoringComponentContent.showSubmitButton'
+              ng-change='embeddedController.authoringViewComponentChanged()'>
             {{ ::'SHOW_SUBMIT_BUTTON' | translate }}
           </md-checkbox>
         </div>
         <div>
           <md-checkbox class='md-primary'
-                       ng-if='embeddedController.isNotebookEnabled()'
-                       ng-model='embeddedController.authoringComponentContent.showAddToNotebookButton'
-                       ng-change='embeddedController.authoringViewComponentChanged()'>
+              ng-if='embeddedController.isNotebookEnabled()'
+              ng-model='embeddedController.authoringComponentContent.showAddToNotebookButton'
+              ng-change='embeddedController.authoringViewComponentChanged()'>
             {{ ::'SHOW_ADD_TO_NOTEBOOK_BUTTON' | translate }}
           </md-checkbox>
         </div>
         <div>
           <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'
-                              ng-if='embeddedController.authoringComponentContent.showSubmitButton'>
+              ng-if='embeddedController.authoringComponentContent.showSubmitButton'>
             <label>{{ ::'MAX_SUBMIT' | translate }}</label>
             <input type='number'
-                   ng-model='embeddedController.authoringComponentContent.maxSubmitCount'
-                   ng-model-options='{ debounce: 1000 }'
-                   ng-change='embeddedController.authoringViewComponentChanged()'/>
+                ng-model='embeddedController.authoringComponentContent.maxSubmitCount'
+                ng-model-options='{ debounce: 1000 }'
+                ng-change='embeddedController.authoringViewComponentChanged()'/>
           </md-input-container>
         </div>
         <div>
           <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
             <label>{{ ::'MAX_SCORE' | translate }}</label>
             <input type='number'
-                   ng-model='embeddedController.authoringComponentContent.maxScore'
-                   ng-model-options='{ debounce: 1000 }'
-                   ng-change='embeddedController.authoringViewComponentChanged()'/>
+                ng-model='embeddedController.authoringComponentContent.maxScore'
+                ng-model-options='{ debounce: 1000 }'
+                ng-change='embeddedController.authoringViewComponentChanged()'/>
           </md-input-container>
         </div>
         <div>
           <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
             <label>{{ ::'COMPONENT_WIDTH' | translate }}</label>
             <input type='number'
-                   ng-model='embeddedController.authoringComponentContent.componentWidth'
-                   ng-model-options='{ debounce: 1000 }'
-                   ng-change='embeddedController.authoringViewComponentChanged()'/>
+                ng-model='embeddedController.authoringComponentContent.componentWidth'
+                ng-model-options='{ debounce: 1000 }'
+                ng-change='embeddedController.authoringViewComponentChanged()'/>
           </md-input-container>
         </div>
         <div>
-          <label class='node__label--vertical-alignment'>
-            {{ ::'RUBRIC' | translate }}
-          </label>
+          <label class='node__label--vertical-alignment'>{{ ::'RUBRIC' | translate }}</label>
           <md-button class='topButton md-raised md-primary' ng-click='embeddedController.showRubricAuthoring = !embeddedController.showRubricAuthoring'>
             <md-icon>message</md-icon>
-            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'EDIT_COMPONENT_RUBRIC' | translate }}</md-tooltip>
+            <md-tooltip md-direction='top' class='projectButtonTooltip'>
+              {{ ::'EDIT_COMPONENT_RUBRIC' | translate }}
+            </md-tooltip>
           </md-button>
           <div ng-if='embeddedController.showRubricAuthoring'>
             <summernote id='{{embeddedController.summernoteRubricId}}'
-                        ng-model='embeddedController.summernoteRubricHTML'
-                        ng-change='embeddedController.summernoteRubricHTMLChanged()'
-                        config='embeddedController.summernoteRubricOptions'
-                        ng-model-options='{ debounce: 1000 }'
-                        rows='10'
-                        cols='100'>
+                ng-model='embeddedController.summernoteRubricHTML'
+                ng-change='embeddedController.summernoteRubricHTMLChanged()'
+                config='embeddedController.summernoteRubricOptions'
+                ng-model-options='{ debounce: 1000 }'
+                rows='10'
+                cols='100'>
             </summernote>
           </div>
         </div>
@@ -94,23 +90,25 @@
               {{ ::'CONNECTED_COMPONENTS' | translate }}
             </label>
             <md-button class='topButton md-raised md-primary'
-                       ng-click='embeddedController.authoringAddConnectedComponent()'>
+                ng-click='embeddedController.addConnectedComponent()'>
               <md-icon>add</md-icon>
-              <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'ADD_CONNECTED_COMPONENT' | translate }}</md-tooltip>
+              <md-tooltip md-direction='top' class='projectButtonTooltip'>
+                {{ ::'ADD_CONNECTED_COMPONENT' | translate }}
+              </md-tooltip>
             </md-button>
           </div>
           <div ng-repeat='connectedComponent in embeddedController.authoringComponentContent.connectedComponents track by $index'
-               style='border: 2px solid #dddddd; border-radius: 5px; margin-bottom: 10px; padding: 20px 20px 10px 20px;'
-               layout='row'>
+              style='border: 2px solid #dddddd; border-radius: 5px; margin-bottom: 10px; padding: 20px 20px 10px 20px;'
+              layout='row'>
             <div flex>
               <md-input-container style='margin-right: 20; width: 300;'>
                 <label>{{ ::'step' | translate }}</label>
                 <md-select ng-model='connectedComponent.nodeId'
-                           ng-change='embeddedController.authoringConnectedComponentNodeIdChanged(connectedComponent)'
-                           style='width: 300'>
+                    ng-change='embeddedController.connectedComponentNodeIdChanged(connectedComponent)'
+                    style='width: 300'>
                   <md-option ng-repeat='item in embeddedController.idToOrder | toArray | orderBy : "order"'
-                             value='{{item.$key}}'
-                             ng-if='embeddedController.isApplicationNode(item.$key)'>
+                      value='{{item.$key}}'
+                      ng-if='embeddedController.isApplicationNode(item.$key)'>
                     {{ embeddedController.getNodePositionAndTitleByNodeId(item.$key) }}
                   </md-option>
                 </md-select>
@@ -118,11 +116,11 @@
               <md-input-container style='margin-right: 20; width: 300;'>
                 <label>{{ ::'component' | translate }}</label>
                 <md-select ng-model='connectedComponent.componentId'
-                           ng-change='embeddedController.authoringConnectedComponentComponentIdChanged(connectedComponent)'
-                           style='width: 300'>
+                    ng-change='embeddedController.connectedComponentComponentIdChanged(connectedComponent)'
+                    style='width: 300'>
                   <md-option ng-repeat='(componentIndex, component) in embeddedController.getComponentsByNodeId(connectedComponent.nodeId)'
-                             value='{{component.id}}'
-                             ng-disabled='!embeddedController.isConnectedComponentTypeAllowed(component.type) || component.id == embeddedController.componentId'>
+                      value='{{component.id}}'
+                      ng-disabled='!embeddedController.isConnectedComponentTypeAllowed(component.type) || component.id == embeddedController.componentId'>
                     {{ componentIndex + 1 }}. {{ ::component.type }} <span ng-if='component.id == embeddedController.componentId'>({{ 'thisComponent' | translate }})</span>
                   </md-option>
                 </md-select>
@@ -130,20 +128,16 @@
               <md-input-container style='margin-right: 20; width: 200;'>
                 <label>{{ ::'type' | translate }}</label>
                 <md-select ng-model='connectedComponent.type'
-                           ng-change='embeddedController.authoringConnectedComponentTypeChanged(connectedComponent)'
-                           style='width: 200'>
-                  <md-option value='importWork'>
-                    {{ ::'importWork' | translate }}
-                  </md-option>
-                  <md-option value='showWork'>
-                    {{ ::'showWork' | translate }}
-                  </md-option>
+                    ng-change='embeddedController.connectedComponentTypeChanged(connectedComponent)'
+                    style='width: 200'>
+                  <md-option value='importWork'>{{ ::'importWork' | translate }}</md-option>
+                  <md-option value='showWork'>{{ ::'showWork' | translate }}</md-option>
                 </md-select>
               </md-input-container>
               <span flex></span>
               <md-input-container style='margin-left: 20;'>
                 <md-button class='topButton md-raised md-primary'
-                           ng-click='embeddedController.authoringDeleteConnectedComponent($index)'>
+                    ng-click='embeddedController.deleteConnectedComponent($index)'>
                   <md-icon>delete</md-icon>
                   <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'DELETE' | translate }}</md-tooltip>
                 </md-button>
@@ -154,11 +148,9 @@
         <div style='margin-top: 10px; margin-bottom: 10px;'>
           <div style='height: 50px;'>
             <label class='node__label--vertical-alignment'>{{ ::'tags' | translate }}</label>
-            <md-button class='topButton md-raised md-primary'
-                       ng-click='embeddedController.addTag()'>
+            <md-button class='topButton md-raised md-primary' ng-click='embeddedController.addTag()'>
               <md-icon>add</md-icon>
-              <md-tooltip md-direction='top'
-                          class='projectButtonTooltip'>
+              <md-tooltip md-direction='top' class='projectButtonTooltip'>
                 {{ ::'addTag' | translate }}
               </md-tooltip>
             </md-button>
@@ -168,10 +160,10 @@
               <md-input-container style='margin-bottom: 0px'>
                 <label></label>
                 <input ng-model='embeddedController.authoringComponentContent.tags[$index]'
-                       ng-change='embeddedController.authoringViewComponentChanged()'
-                       ng-model-options='{ debounce: 1000 }'
-                       size='100'
-                       placeholder='{{ ::"enterTag" | translate }}'/>
+                    ng-change='embeddedController.authoringViewComponentChanged()'
+                    ng-model-options='{ debounce: 1000 }'
+                    size='100'
+                    placeholder='{{ ::"enterTag" | translate }}'/>
               </md-input-container>
               <md-button class='moveComponentButton md-raised md-primary' ng-click='embeddedController.moveTagUp($index)'>
                 <md-icon>arrow_upward</md-icon>
@@ -191,7 +183,7 @@
         <div>
           <label class='node__label--vertical-alignment'>{{ ::'json' | translate }}</label>
           <md-button class='topButton md-raised md-primary'
-                     ng-click='embeddedController.showJSONButtonClicked()'>
+              ng-click='embeddedController.showJSONButtonClicked()'>
             <md-icon>code</md-icon>
             <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'SHOW_JSON' | translate }}</md-tooltip>
           </md-button>
@@ -201,8 +193,8 @@
           <div ng-if='embeddedController.showJSONAuthoring'>
             <md-input-container style='width: 100%;'>
               <textarea ng-model='embeddedController.authoringComponentContentJSONString'
-                        style='width: 90%; border: 1px solid black;'
-                        ng-change='embeddedController.authoringJSONChanged()'></textarea>
+                  style='width: 90%; border: 1px solid black;'
+                  ng-change='embeddedController.authoringJSONChanged()'></textarea>
             </md-input-container>
           </div>
         </div>
@@ -213,9 +205,9 @@
           <md-input-container style='height: 40px'>
             <label>{{ ::'embedded.modelFileName' | translate }}</label>
             <input size='100'
-                  ng-model='embeddedController.authoringComponentContent.url'
-                  ng-change='embeddedController.authoringViewComponentChanged()'
-                  ng-model-options='{ debounce: 1000 }'/>
+                ng-model='embeddedController.authoringComponentContent.url'
+                ng-change='embeddedController.authoringViewComponentChanged()'
+                ng-model-options='{ debounce: 1000 }'/>
           </md-input-container>
           <md-button class='topButton md-raised md-primary' ng-click="embeddedController.showModelFileChooserPopup()">
             <md-icon>insert_photo</md-icon>
@@ -226,23 +218,23 @@
           <md-input-container style='height: 40px'>
             <label>{{ ::'embedded.widthPlaceholder' | translate }}</label>
             <input size='20'
-                  type='number'
-                  ng-model='embeddedController.authoringComponentContent.width'
-                  ng-change='embeddedController.authoringViewComponentChanged()'
-                  ng-model-options='{ debounce: 1000 }'/>
+                type='number'
+                ng-model='embeddedController.authoringComponentContent.width'
+                ng-change='embeddedController.authoringViewComponentChanged()'
+                ng-model-options='{ debounce: 1000 }'/>
           </md-input-container>
           <md-input-container style='height: 40px'>
             <label>{{ ::'embedded.heightPlaceholder' | translate }}</label>
             <input size='20'
-                  type='number'
-                  ng-model='embeddedController.authoringComponentContent.height'
-                  ng-change='embeddedController.authoringViewComponentChanged()'
-                  ng-model-options='{ debounce: 1000 }'/>
+                type='number'
+                ng-model='embeddedController.authoringComponentContent.height'
+                ng-change='embeddedController.authoringViewComponentChanged()'
+                ng-model-options='{ debounce: 1000 }'/>
           </md-input-container>
           <span flex></span>
           <md-button class="md-icon-button md-primary"
-                    aria-label="{{ ::'embedded.reloadModel' | translate }}"
-                    ng-click="embeddedController.reloadModel()">
+              aria-label="{{ ::'embedded.reloadModel' | translate }}"
+              ng-click="embeddedController.reloadModel()">
             <md-tooltip md-direction="top">{{ ::'embedded.reloadModel' | translate }}</md-tooltip>
             <md-icon>refresh</md-icon>
           </md-button>
@@ -250,49 +242,9 @@
       </div>
     </div>
     <div ng-style='{"border": "5px solid black", "padding": "20px"}'>
-      <div>
-        <h5>{{ ::'studentPreview' | translate }}</h5>
-      </div>
-      <div>
-        <div>
-          <div style='text-align: center'>
-            <md-button class='md-accent md-primary'
-                       ng-click='embeddedController.snipModel($event)'
-                       ng-if='embeddedController.isAddToNotebookEnabled()'>
-              <md-icon> note_add </md-icon>  {{ ::'ADD_TO_NOTEBOOK' | translate:{label:embeddedController.notebookConfig.label} }}
-            </md-button>
-            <br/>
-            <div style='width: {{embeddedController.width}}; height: {{embeddedController.height}};'>
-              <iframe ng-attr-id='{{"componentApp_" + embeddedController.componentId}}'
-                      ng-src='{{embeddedController.url}}'
-                      ng-onload='embeddedController.iframeLoaded(contentLocation)'
-                      class='embedded-content__iframe'
-                      style='width: 100%; height: 100%;'>
-              </iframe>
-            </div>
-          </div>
-          <div ng-if='embeddedController.isSaveButtonVisible || embeddedController.isSubmitButtonVisible'
-               class='component__actions' layout='row' layout-align='start center'>
-            <md-button class='md-raised md-primary'
-                       ng-class='{"md-raised": !embeddedController.isSubmitButtonVisible}'
-                       ng-click='embeddedController.saveButtonClicked()'
-                       ng-disabled='embeddedController.isDisabled || !embeddedController.isDirty'
-                       ng-if='embeddedController.isSaveButtonVisible'
-                       aria-label='Save'
-                       translate='SAVE'></md-button>
-            <md-button class='md-raised md-primary'
-                       ng-click='embeddedController.submitButtonClicked()'
-                       ng-disabled='embeddedController.isDisabled || !embeddedController.isSubmitDirty'
-                       ng-if='embeddedController.isSubmitButtonVisible'
-                       aria-label='Submit'
-                       translate='SUBMIT'></md-button>
-            <span ng-if='embeddedController.saveMessage.text'
-                  class='component__actions__info md-caption'>
-                {{embeddedController.saveMessage.text}} <span class='component__actions__more'><md-tooltip md-direction='top'>{{ embeddedController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}</md-tooltip><span am-time-ago='embeddedController.saveMessage.time'></span></span>
-            </span>
-          </div>
-        </div>
-      </div>
+      <div><h5>{{ ::'studentPreview' | translate }}</h5></div>
+      <component component-content='embeddedController.componentContent'
+          mode='authoringComponentPreview'></component>
     </div>
   </div>
 </div>

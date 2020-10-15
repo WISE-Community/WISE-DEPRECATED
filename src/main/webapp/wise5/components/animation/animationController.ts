@@ -1156,10 +1156,6 @@ class AnimationController extends ComponentController {
     }
   }
 
-  getComponentByNodeIdAndComponentId(nodeId, componentId) {
-    return this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
-  }
-
   authoredObjectHasData(authoredObject) {
     return authoredObject.data != null && authoredObject.data.length > 0;
   }

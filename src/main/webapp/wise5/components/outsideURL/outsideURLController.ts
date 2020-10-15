@@ -81,9 +81,7 @@ class OutsideURLController extends ComponentController {
       this.setURL(this.componentContent.url);
       this.setInfo(this.componentContent.info);
     }
-
     this.setWidthAndHeight(this.componentContent.width, this.componentContent.height);
-
     this.broadcastDoneRenderingComponent();
   }
 

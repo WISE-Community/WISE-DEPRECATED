@@ -1,0 +1,35 @@
+<div style="display: inline;">
+  <md-button id='backToStepButton' class='createButton md-raised md-primary' ng-click='$ctrl.goBack()'>
+    <md-icon>arrow_back</md-icon>
+    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'back' | translate }}</md-tooltip>
+  </md-button>
+  <md-button ng-if='!$ctrl.isGroupNode($ctrl.node.id)'
+      class='topButton md-raised md-primary'
+      ng-click='$ctrl.showGeneralAdvancedView()'>
+    <md-icon>settings</md-icon>
+    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'generalAdvanced' | translate }}</md-tooltip>
+  </md-button>
+  <md-button ng-if='!$ctrl.isGroupNode($ctrl.node.id)'
+      class='topButton md-raised md-primary'
+      ng-click='$ctrl.showEditTransitionsView()'>
+    <md-icon>trending_up</md-icon>
+    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'editTransitions' | translate }}</md-tooltip>
+  </md-button>
+  <md-button ng-if='!$ctrl.isGroupNode($ctrl.node.id)'
+      class='topButton md-raised md-primary'
+      ng-click='$ctrl.showEditConstraintsView()'>
+    <md-icon>block</md-icon>
+    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'editConstraints' | translate }}</md-tooltip>
+  </md-button>
+  <md-button ng-if='!$ctrl.isGroupNode($ctrl.node.id)'
+      class='topButton md-raised md-primary'
+      ng-click='$ctrl.showCreateBranchView()'>
+    <md-icon style='transform: rotate(180deg);'>call_split</md-icon>
+    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'createBranch' | translate }}</md-tooltip>
+  </md-button>
+  <md-button class='topButton md-raised md-primary' ng-click='$ctrl.showJSONView()'>
+    <md-icon>code</md-icon>
+    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'showJSON' | translate }}</md-tooltip>
+  </md-button>
+</div>
+<div ui-view style='margin-top: 10px;'></div>

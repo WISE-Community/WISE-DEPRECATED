@@ -17,8 +17,6 @@ class DiscussionController extends ComponentController {
   topLevelResponses: any;
   responsesMap: any;
   retrievedClassmateResponses: boolean;
-  destroyStudentWorkSavedToServerListener: any;
-  destroyStudentWorkReceivedListener: any;
   componentStateIdReplyingTo: any;
   studentWorkReceivedSubscription: any;
 
@@ -174,11 +172,6 @@ class DiscussionController extends ComponentController {
 
   unsubscribeAll() {
     this.studentWorkReceivedSubscription.unsubscribe();
-  }
-
-  ngOnDestroy() {
-    super.ngOnDestroy();
-    this.destroyStudentWorkReceivedListener();
   }
 
   isConnectedComponentShowWorkMode() {
