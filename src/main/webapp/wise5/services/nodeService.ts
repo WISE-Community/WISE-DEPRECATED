@@ -25,6 +25,10 @@ export class NodeService {
   private siblingComponentStudentDataChangedSource: Subject<any> = new Subject<any>();
   public siblingComponentStudentDataChanged$: Observable<any> =
       this.siblingComponentStudentDataChangedSource.asObservable();
+  private starterStateRequestedSource: Subject<any> = new Subject<any>();
+  public starterStateRequested$: Observable<any> = this.starterStateRequestedSource.asObservable();
+  private starterStateResponseSource: Subject<any> = new Subject<any>();
+  public starterStateResponse$: Observable<any> = this.starterStateResponseSource.asObservable();
 
   constructor(
     private upgrade: UpgradeModule,
@@ -812,5 +816,13 @@ export class NodeService {
 
   broadcastSiblingComponentStudentDataChanged(args: any) {
     this.siblingComponentStudentDataChangedSource.next(args);
+  }
+
+  requestStarterState(args: any) {
+    this.starterStateRequestedSource.next(args);
+  }
+
+  respondStarterState(args: any) {
+    this.starterStateResponseSource.next(args);
   }
 }

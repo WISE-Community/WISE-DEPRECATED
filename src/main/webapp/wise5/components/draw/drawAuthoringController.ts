@@ -1,6 +1,7 @@
 'use strict';
 
 import * as angular from 'angular';
+import { Subscription } from 'rxjs';
 import { ProjectAssetService } from '../../../site/src/app/services/projectAssetService';
 import DrawController from './drawController';
 
@@ -13,6 +14,8 @@ class DrawAuthoringController extends DrawController {
   drawingTool: any;
   width: number;
   height: number;
+  starterStateRequestedSubscription: Subscription;
+  starterStateResponseSubscription: Subscription;
 
   static $inject = [
     '$filter',
@@ -105,6 +108,27 @@ class DrawAuthoringController extends DrawController {
       }.bind(this),
       true
     );
+  }
+
+  $onInit() {
+    this.starterStateRequestedSubscription =
+        this.NodeService.starterStateRequested$.subscribe((args: any) => {
+      if (this.isForThisComponent(args)) {
+        this.generateStarterState();
+      }
+    });
+    this.starterStateResponseSubscription =
+        this.NodeService.starterStateResponse$.subscribe((args: any) => {
+      if (this.isForThisComponent(args)) {
+        this.saveStarterState(args.starterState);
+      }
+    });
+  }
+
+  unsubscribeAll() {
+    this.starterStateRequestedSubscription.unsubscribe();
+    this.starterStateResponseSubscription.unsubscribe();
+    super.unsubscribeAll();
   }
 
   authoringAddStampButtonClicked() {
@@ -213,10 +237,18 @@ class DrawAuthoringController extends DrawController {
 
   authoringSaveStarterDrawData() {
     if (confirm(this.$translate('draw.areYouSureYouWantToSaveTheStarterDrawing'))) {
-      const drawData = this.getDrawData();
-      this.authoringComponentContent.starterDrawData = drawData;
-      this.authoringViewComponentChanged();
+      this.NodeService.requestStarterState({nodeId: this.nodeId, componentId: this.componentId});
     }
+  }
+
+  generateStarterState() {
+    this.NodeService.respondStarterState({nodeId: this.nodeId, componentId: this.componentId,
+        starterState: this.getDrawData()});
+  }
+
+  saveStarterState(starterState) {
+    this.authoringComponentContent.starterDrawData = starterState;
+    this.authoringViewComponentChanged();
   }
 
   authoringDeleteStarterDrawData() {
