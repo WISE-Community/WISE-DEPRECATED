@@ -65,6 +65,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ChooseNewComponent } from './authoring-tool/add-component/choose-new-component/choose-new-component.component';
 import { ChooseNewComponentLocation } from './authoring-tool/add-component/choose-new-component-location/choose-new-component-location.component';
 import { MatCardModule } from '@angular/material/card';
+import { ComponentNewWorkBadgeComponent } from './classroom-monitor/component-new-work-badge/component-new-work-badge.component';
 
 @Component({template: ``})
 export class EmptyComponent {}
@@ -194,6 +195,7 @@ export class PreviewAngularJSModule {
     AdvancedProjectAuthoringComponent,
     ChooseNewComponent,
     ChooseNewComponentLocation,
+    ComponentNewWorkBadgeComponent,
     ManageStudentsComponent,
     MilestoneReportDataComponent,
     WorkgroupNodeScoreComponent,

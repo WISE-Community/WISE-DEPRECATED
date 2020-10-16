@@ -3,7 +3,7 @@
 import AlertStatusCorner from './alertStatusCorner/alertStatusCorner';
 import AlertStatusIcon from './alertStatusIcon/alertStatusIcon';
 import ComponentGrading from './componentGrading/componentGrading';
-import ComponentNewWorkBadge from './componentNewWorkBadge/componentNewWorkBadge';
+import { ComponentNewWorkBadgeComponent } from '../../../../site/src/app/classroom-monitor/component-new-work-badge/component-new-work-badge.component';
 import ComponentRevisionsInfo from './componentRevisionsInfo/componentRevisionsInfo';
 import MainMenu from './mainMenu/mainMenu';
 import NodeCompletionIcon from './nodeCompletionIcon/nodeCompletionIcon';
@@ -28,7 +28,8 @@ const Shared = angular
   .component('alertStatusCorner', AlertStatusCorner)
   .component('alertStatusIcon', AlertStatusIcon)
   .component('componentGrading', ComponentGrading)
-  .component('componentNewWorkBadge', ComponentNewWorkBadge)
+  .directive('componentNewWorkBadge',
+      downgradeComponent({ component: ComponentNewWorkBadgeComponent }) as angular.IDirectiveFactory)
   .component('componentRevisionsInfo', ComponentRevisionsInfo)
   .component('cmMainMenu', MainMenu)
   .component('notificationsMenu', NotificationsMenu)

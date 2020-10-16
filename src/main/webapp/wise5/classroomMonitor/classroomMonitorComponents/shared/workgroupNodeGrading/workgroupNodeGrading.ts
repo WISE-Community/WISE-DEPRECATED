@@ -132,9 +132,9 @@ const WorkgroupNodeGrading = {
                 <div ng-show="$ctrl.isComponentVisible(component.id)">
                     <h3 class="accent-1 md-body-2 gray-lightest-bg component__header">
                         {{ $index+1 + '. ' + $ctrl.getComponentTypeLabel(component.type) }}&nbsp;
-                        <component-new-work-badge component-id="::component.id"
-                                                  workgroup-id="::$ctrl.workgroupId"
-                                                  node-id="$ctrl.nodeId"></component-new-work-badge>
+                        <component-new-work-badge [component-id]="component.id"
+                                                  [workgroup-id]="$ctrl.workgroupId"
+                                                  [node-id]="$ctrl.nodeId"></component-new-work-badge>
                     </h3>
                     <component class="component-container"
                                node-id='{{::$ctrl.nodeId}}'
