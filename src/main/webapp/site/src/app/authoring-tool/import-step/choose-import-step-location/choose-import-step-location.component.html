@@ -1,0 +1,40 @@
+<h5 i18n>Choose a location for the imported steps</h5>
+<div style="margin-top: 20px; margin-left: 20px">
+  <div *ngFor="let nodeId of nodeIds"
+     class="project-item"
+     [ngClass]="{'node-select--group': isGroupNode(nodeId), 'node-select--node': !isGroupNode(nodeId)}">
+    <div id="{{nodeId}}"
+       [ngClass]="{'groupHeader': isGroupNode(nodeId), 'stepHeader': !isGroupNode(nodeId), 'branchPathStepHeader': isNodeInAnyBranchPath(nodeId) && !isGroupNode(nodeId)}">
+      <div fxLayout="row" fxLayoutGap="8px" class="projectItemTitleDiv">
+        <div fxLayout="row" fxLayoutAlign="start center">
+          <node-icon [nodeId]="nodeId" size="18"></node-icon>&nbsp;
+          <p style="display:inline; cursor:pointer;">
+            {{getNodePositionById(nodeId)}}: {{getNodeTitleByNodeId(nodeId)}}
+          </p>
+        </div>
+        <button mat-button class="mat-raised-button mat-primary"
+            *ngIf="isGroupNode(nodeId)"
+            matTooltip="Insert As First Step"
+            i18n-matTooltip
+            matTooltipPosition="above"
+            (click)="importSelectedNodes(nodeId); $event.stopPropagation();">
+          <mat-icon>call_received</mat-icon>
+        </button>
+        <button mat-button class="mat-raised-button mat-primary"
+            *ngIf="!isGroupNode(nodeId)"
+            matTooltip="Insert After"
+            i18n-matTooltip
+            matTooltipPosition="above"
+            (click)="importSelectedNodes(nodeId); $event.stopPropagation();">
+          <mat-icon>subdirectory_arrow_left</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<hr>
+<button mat-button
+    class="mat-primary"
+    (click)="cancel()"
+    aria-label="Cancel"
+    i18n>Cancel</button>
