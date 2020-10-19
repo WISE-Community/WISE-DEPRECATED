@@ -7,7 +7,8 @@
     <listen-for-delete-keypress>
         <div class="app-styles" role="main" layout="column" layout-fill
              ng-controller="ThemeController as themeCtrl" ng-mousemove="themeCtrl.mouseMoved()"
-             ng-class="::{'notebook-enabled': vleController.notebookEnabled}">
+             ng-class="::{'notebook-enabled': vleController.notebookEnabled}"
+             ng-style="::vleController.projectStyle">
             <ng-include src="::vleController.themePath + '/templates/topbar.html'"></ng-include>
             <step-tools show-position="themeCtrl.numberProject"
                         ng-if="themeCtrl.layoutState === 'node'"></step-tools>
