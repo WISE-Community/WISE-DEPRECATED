@@ -5286,6 +5286,13 @@
           <context context-type="linenumber">36</context>
         </context-group>
       </trans-unit>
+      <trans-unit datatype="html" id="d81f00c85d3b507f3e3d78bfc617a2c66e028391">
+        <source>New</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/classroom-monitor/component-new-work-badge/component-new-work-badge.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
       <trans-unit datatype="html" id="36a606470097ddf0c32a250c8a902441729ca8ca">
         <source>Add Unit</source>
         <context-group purpose="location">

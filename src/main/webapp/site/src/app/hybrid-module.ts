@@ -69,6 +69,7 @@ import { ChooseNewComponent } from './authoring-tool/add-component/choose-new-co
 import { ChooseNewComponentLocation } from './authoring-tool/add-component/choose-new-component-location/choose-new-component-location.component';
 import { ChooseImportStepComponent } from './authoring-tool/import-step/choose-import-step/choose-import-step.component';
 import { ChooseImportStepLocationComponent } from './authoring-tool/import-step/choose-import-step-location/choose-import-step-location.component';
+import { ComponentNewWorkBadgeComponent } from './classroom-monitor/component-new-work-badge/component-new-work-badge.component';
 
 @Component({template: ``})
 export class EmptyComponent {}
@@ -204,6 +205,7 @@ export class PreviewAngularJSModule {
     ChooseImportStepLocationComponent,
     ChooseNewComponent,
     ChooseNewComponentLocation,
+    ComponentNewWorkBadgeComponent,
     ManageStudentsComponent,
     MilestoneReportDataComponent,
     WorkgroupNodeScoreComponent,
