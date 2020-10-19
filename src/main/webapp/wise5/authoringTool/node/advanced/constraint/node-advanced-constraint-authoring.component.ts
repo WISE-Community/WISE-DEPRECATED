@@ -12,6 +12,8 @@ class NodeAdvancedConstraintAuthoringController {
   removalCriteria: any;
   $translate: any;
 
+  static $inject = ['$filter', '$timeout', 'ProjectService', 'TeacherDataService', 'UtilService'];
+
   constructor(private $filter: any,
       private $timeout: any,
       private ProjectService: TeacherProjectService,

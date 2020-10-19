@@ -11,6 +11,8 @@ class NodeAdvancedPathAuthoringController {
   transitionCriterias: any;
   $translate: any;
 
+  static $inject = ['$filter', 'ProjectService', 'TeacherDataService'];
+
   constructor(private $filter: any,
       private ProjectService: TeacherProjectService,
       private TeacherDataService: TeacherDataService) {
