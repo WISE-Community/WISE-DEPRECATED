@@ -82,7 +82,7 @@ function shouldAddAnXAxisPlotLine() {
   it('should add an x axis plot line', () => {
     spyOn(graphAuthoringController, 'authoringViewComponentChanged').and.callFake(() => {});
     expect(graphAuthoringController.authoringComponentContent.xAxis.plotLines.length).toEqual(0);
-    graphAuthoringController.authoringAddXAxisPlotLine();
+    graphAuthoringController.addXAxisPlotLine();
     expect(graphAuthoringController.authoringComponentContent.xAxis.plotLines.length).toEqual(1);
   });
 }
@@ -98,7 +98,7 @@ function shouldDeleteAnAAxisPlotLine() {
     };
     graphAuthoringController.authoringComponentContent.xAxis.plotLines.push(plotLine);
     expect(graphAuthoringController.authoringComponentContent.xAxis.plotLines.length).toEqual(1);
-    graphAuthoringController.authoringDeleteXAxisPlotLine();
+    graphAuthoringController.deleteXAxisPlotLine();
     expect(graphAuthoringController.authoringComponentContent.xAxis.plotLines.length).toEqual(0);
   });
 }
@@ -107,7 +107,7 @@ function shouldAddAYAxisPlotLine() {
   it('should add a y axis plot line', () => {
     spyOn(graphAuthoringController, 'authoringViewComponentChanged').and.callFake(() => {});
     expect(graphAuthoringController.authoringComponentContent.yAxis.plotLines.length).toEqual(0);
-    graphAuthoringController.authoringAddYAxisPlotLine();
+    graphAuthoringController.addYAxisPlotLine();
     expect(graphAuthoringController.authoringComponentContent.yAxis.plotLines.length).toEqual(1);
   });
 }
@@ -123,7 +123,7 @@ function shouldDeleteAYAxisPlotLine() {
     };
     graphAuthoringController.authoringComponentContent.yAxis.plotLines.push(plotLine);
     expect(graphAuthoringController.authoringComponentContent.yAxis.plotLines.length).toEqual(1);
-    graphAuthoringController.authoringDeleteYAxisPlotLine();
+    graphAuthoringController.deleteYAxisPlotLine();
     expect(graphAuthoringController.authoringComponentContent.yAxis.plotLines.length).toEqual(0);
   });
 }
@@ -170,7 +170,7 @@ function shouldConvertMultipleYAxesToSingleYAxis() {
       units: '',
       locked: true,
       opposite: true
-    }
+    };
     graphAuthoringController.authoringComponentContent.yAxis = [firstYAxis, secondYAxis];
     graphAuthoringController.convertMultipleYAxesToSingleYAxis();
     expect(Array.isArray(graphAuthoringController.authoringComponentContent.yAxis)).toBe(false);
@@ -204,11 +204,14 @@ function shouldRemoveYAxisToAllSeries() {
 
 function shouldIncreaseYAxes() {
   it('should increase y axes', () => {
-    graphAuthoringController.authoringComponentContent.yAxis = [{
-      title: { text: 'Y Axis 1' }
-    },{
-      title: { text: 'Y Axis 2' }
-    }];
+    graphAuthoringController.authoringComponentContent.yAxis = [
+      {
+        title: { text: 'Y Axis 1' }
+      },
+      {
+        title: { text: 'Y Axis 2' }
+      }
+    ];
     graphAuthoringController.increaseYAxes(4);
     const yAxis = graphAuthoringController.authoringComponentContent.yAxis;
     expect(yAxis.length).toEqual(4);
@@ -221,13 +224,17 @@ function shouldIncreaseYAxes() {
 
 function shouldDecreaseYAxes() {
   it('should decrease y axes', () => {
-    graphAuthoringController.authoringComponentContent.yAxis = [{
-      title: { text: 'Y Axis 1' }
-    },{
-      title: { text: 'Y Axis 2' }
-    },{
-      title: { text: 'Y Axis 3' }
-    }];
+    graphAuthoringController.authoringComponentContent.yAxis = [
+      {
+        title: { text: 'Y Axis 1' }
+      },
+      {
+        title: { text: 'Y Axis 2' }
+      },
+      {
+        title: { text: 'Y Axis 3' }
+      }
+    ];
     graphAuthoringController.decreaseYAxes(2);
     const yAxis = graphAuthoringController.authoringComponentContent.yAxis;
     expect(yAxis.length).toEqual(2);
@@ -270,7 +277,7 @@ function shouldAddAnyMissingYAxisFieldsToAllYAxesWithOneYAxis() {
 
 function shouldAddAnyMissingYAxisFieldsToAllYAxesWithMultipleYAxes() {
   it('should add any missing y axis fields to all y axes with multiple y axes', () => {
-    const yAxis = [{},{}];
+    const yAxis = [{}, {}];
     graphAuthoringController.addAnyMissingYAxisFieldsToAllYAxes(yAxis);
     expect(yAxis[0].title.style).toBeDefined();
     expect(yAxis[0].labels.style).toBeDefined();
@@ -310,10 +317,7 @@ function shouldAddColorToSeries() {
       createYAxis('blue'),
       createYAxis('red')
     ];
-    graphAuthoringController.authoringComponentContent.series = [
-      { yAxis: 0 },
-      { yAxis: 1 }
-    ];
+    graphAuthoringController.authoringComponentContent.series = [{ yAxis: 0 }, { yAxis: 1 }];
     graphAuthoringController.addColorToSeries();
     expect(graphAuthoringController.authoringComponentContent.series[0].color).toEqual('blue');
     expect(graphAuthoringController.authoringComponentContent.series[1].color).toEqual('red');
@@ -360,7 +364,7 @@ function shouldUpdateSeriesColorsToMatchYAxisColor() {
       series3,
       series4
     ];
-    graphAuthoringController.updateSeriesColors(0, 'green')
+    graphAuthoringController.updateSeriesColors(0, 'green');
     expect(series1.color).toEqual('green');
     expect(series2.color).toEqual('blue');
     expect(series3.color).toEqual('blue');
@@ -392,7 +396,7 @@ function shouldSetTheNewSeriesColorToMatchYAxis() {
     graphAuthoringController.enableMultipleYAxes = true;
     graphAuthoringController.authoringComponentContent.series = [];
     spyOn(graphAuthoringController, 'authoringViewComponentChanged').and.callFake(() => {});
-    graphAuthoringController.authoringAddSeriesClicked();
+    graphAuthoringController.addSeriesClicked();
     expect(graphAuthoringController.authoringComponentContent.series[0].color).toEqual('black');
   });
 }
@@ -401,9 +405,7 @@ function shouldTurnOnMultipleYAxes() {
   it('should turn on multiple y axes', () => {
     graphAuthoringController.authoringComponentContent.yAxis = createYAxis('black');
     graphAuthoringController.enableMultipleYAxes = true;
-    graphAuthoringController.authoringComponentContent.series = [
-      {}
-    ];
+    graphAuthoringController.authoringComponentContent.series = [{}];
     spyOn(graphAuthoringController, 'authoringViewComponentChanged').and.callFake(() => {});
     graphAuthoringController.enableMultipleYAxesChanged();
     expect(graphAuthoringController.authoringComponentContent.yAxis.length).toEqual(2);
@@ -413,13 +415,9 @@ function shouldTurnOnMultipleYAxes() {
 
 function shouldTurnOffMultipleYAxes() {
   it('should turn off multiple y axes', () => {
-    graphAuthoringController.authoringComponentContent.yAxis = [
-      createYAxis('black')
-    ];
+    graphAuthoringController.authoringComponentContent.yAxis = [createYAxis('black')];
     graphAuthoringController.enableMultipleYAxes = false;
-    graphAuthoringController.authoringComponentContent.series = [
-      {}
-    ];
+    graphAuthoringController.authoringComponentContent.series = [{}];
     spyOn(window, 'confirm').and.returnValue(true);
     spyOn(graphAuthoringController, 'authoringViewComponentChanged').and.callFake(() => {});
     graphAuthoringController.enableMultipleYAxesChanged();

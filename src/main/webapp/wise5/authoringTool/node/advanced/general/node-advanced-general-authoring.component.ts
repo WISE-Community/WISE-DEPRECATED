@@ -5,6 +5,8 @@ class NodeAdvancedGeneralAuthoringController {
 
   node: any;
 
+  static $inject = ['ProjectService', 'TeacherDataService'];
+
   constructor(private ProjectService: TeacherProjectService,
       private TeacherDataService: TeacherDataService) {
   }

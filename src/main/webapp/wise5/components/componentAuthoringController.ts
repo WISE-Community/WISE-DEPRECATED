@@ -5,6 +5,7 @@ import { TeacherProjectService } from "../services/teacherProjectService";
 import { ProjectAssetService } from '../../site/src/app/services/projectAssetService';
 import { NodeService } from '../services/nodeService';
 import { NotificationService } from '../services/notificationService';
+import { Subscription } from 'rxjs';
 
 export abstract class ComponentAuthoringController {
 
@@ -30,6 +31,7 @@ export abstract class ComponentAuthoringController {
   summernoteRubricId: string;
   summernoteRubricHTML: string;
   summernoteRubricOptions: any;
+  starterStateResponseSubscription: Subscription;
 
   constructor(
       protected $scope: any,
@@ -95,6 +97,16 @@ export abstract class ComponentAuthoringController {
           .showAdvancedComponentAuthoring[this.componentId];
       this.NotificationService.hideJSONValidMessage();
     }, true);
+    this.starterStateResponseSubscription =
+        this.NodeService.starterStateResponse$.subscribe((args: any) => {
+      if (this.isForThisComponent(args)) {
+        this.saveStarterState(args.starterState);
+      }
+    });
+  }
+
+  $onDestroy() {
+    this.starterStateResponseSubscription.unsubscribe();
   }
 
   handleAuthoringComponentContentChanged(newValue, oldValue): void {
@@ -255,13 +267,17 @@ export abstract class ComponentAuthoringController {
   }
 
   addConnectedComponent() {
+    this.addConnectedComponentAndSetComponentIdIfPossible();
+    this.authoringViewComponentChanged();
+  }
+
+  addConnectedComponentAndSetComponentIdIfPossible() {
     const connectedComponent = this.createConnectedComponent();
     if (this.authoringComponentContent.connectedComponents == null) {
       this.authoringComponentContent.connectedComponents = [];
     }
     this.authoringComponentContent.connectedComponents.push(connectedComponent);
     this.automaticallySetConnectedComponentComponentIdIfPossible(connectedComponent);
-    this.authoringViewComponentChanged();
   }
 
   automaticallySetConnectedComponentComponentIdIfPossible(connectedComponent) {
@@ -319,4 +335,19 @@ export abstract class ComponentAuthoringController {
   getComponentsByNodeId(nodeId) {
     return this.ProjectService.getComponentsByNodeId(nodeId);
   }
+
+  getConnectedComponentType(
+      {nodeId, componentId}: { nodeId: string, componentId: string }) {
+    const component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
+    if (component != null) {
+      return component.type;
+    }
+    return null;
+  }
+
+  isForThisComponent(object) {
+    return this.nodeId == object.nodeId && this.componentId == object.componentId;
+  }
+
+  saveStarterState(starterState: any) {}
 }

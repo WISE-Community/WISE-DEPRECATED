@@ -88,7 +88,7 @@ function shouldMoveAStampUp() {
       'oxygen.png'
     );
     spyOn(drawAuthoringController, 'authoringViewComponentChanged').and.callFake(() => {});
-    drawAuthoringController.authoringMoveStampUp(1);
+    drawAuthoringController.moveStampUp(1);
     expect(drawAuthoringController.authoringComponentContent.stamps.Stamps[0]).toEqual(
       'oxygen.png'
     );
@@ -107,7 +107,7 @@ function shouldMoveAStampDown() {
       'oxygen.png'
     );
     spyOn(drawAuthoringController, 'authoringViewComponentChanged').and.callFake(() => {});
-    drawAuthoringController.authoringMoveStampDown(0);
+    drawAuthoringController.moveStampDown(0);
     expect(drawAuthoringController.authoringComponentContent.stamps.Stamps[0]).toEqual(
       'oxygen.png'
     );

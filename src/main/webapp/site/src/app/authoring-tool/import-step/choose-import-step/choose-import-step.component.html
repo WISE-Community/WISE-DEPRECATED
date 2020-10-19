@@ -1,0 +1,71 @@
+<h4 i18n>Import Step(s)</h4>
+<br/>
+<div i18n>Choose a unit to import from:</div>
+<mat-form-field style="margin-right: 20px; width: 100%;">
+  <mat-label i18n>My Units</mat-label>
+  <mat-select [(ngModel)]="importMyProjectId"
+          (selectionChange)="showMyProject()"
+          style="width: 100%;">
+    <mat-option *ngFor="let project of myProjectsList" value="{{project.id}}">
+      {{project.id + " - " + project.name}}
+      <span *ngIf="project.runId != null"> (<span i18n>Run ID</span>: {{project.runId}})</span>
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+<br/>
+<mat-form-field style="margin-right: 20px; width: 100%;">
+  <mat-label i18n>Library Units</mat-label>
+  <mat-select [(ngModel)]="importLibraryProjectId"
+          (selectionChange)="showLibraryProject()"
+          style="width: 100%;">
+    <mat-option *ngFor="let project of libraryProjectsList" value="{{project.id}}">
+      {{project.id + " - " + project.name}}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+<br/>
+<div *ngIf="importProject != null">
+  <div i18n>Choose the step(s) that you want to import, then click next.</div>
+  <br/>
+  <div fxLayout="row wrap" fxLayoutGap="8px">
+    <h4 style="display:inline">{{importProject.metadata.title}}</h4>
+    <button mat-button class="topButton mat-raised-button mat-primary"
+        (click)="previewImportProject()"
+        matTooltip="Preview Unit" i18n-matTooltip matTooltipPosition="above">
+      <mat-icon>visibility</mat-icon>
+    </button>
+  </div>
+  <div *ngFor="let importItem of importProjectIdToOrder"
+      [ngClass]="{'groupHeader': importItem.node.type == 'group', 'stepHeader': importItem.node.type != 'group'}">
+    <h6 *ngIf="importItem.order != 0 && importItem.node.type == 'group'">
+      {{importItem.stepNumber}}: {{importItem.node.title}}
+    </h6>
+    <div fxLayout="row wrap" fxLayoutGap="8px" *ngIf="importItem.order != 0 && importItem.node.type != 'group'">
+      <mat-checkbox name="importItem" ngDefaultControl [(ngModel)]="importItem.checked">
+        <h6 style="display: inline;">{{importItem.stepNumber}}: {{importItem.node.title}}</h6>
+      </mat-checkbox>
+      <button mat-button class="regularButton mat-raised-button mat-primary"
+          style="margin-top: -5;"
+          (click)="previewImportNode(importItem.node)"
+          aria-label="Preview Step"
+          matTooltip="Preview Step" i18n-matTooltip matTooltipPosition="above">
+        <mat-icon>visibility</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>
+<hr>
+<div class="nav-controls" fxLayout="row" fxLayoutAlign="end center">
+  <button mat-button class="mat-primary"
+      (click)="cancel()"
+      aria-label="cancel"
+      i18n>Cancel</button>
+  <button mat-button class="mat-raised-button mat-primary"
+      (click)="importSteps()"
+      [disabled]="getSelectedNodesToImport().length == 0"
+      matTooltip="Next"
+      i18n-matTooltip
+      matTooltipPosition="above"
+      aria-label="next"
+      i18n>Next</button>
+</div>
