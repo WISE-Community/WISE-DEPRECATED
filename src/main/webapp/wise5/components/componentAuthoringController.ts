@@ -267,13 +267,17 @@ export abstract class ComponentAuthoringController {
   }
 
   addConnectedComponent() {
+    this.addConnectedComponentAndSetComponentIdIfPossible();
+    this.authoringViewComponentChanged();
+  }
+
+  addConnectedComponentAndSetComponentIdIfPossible() {
     const connectedComponent = this.createConnectedComponent();
     if (this.authoringComponentContent.connectedComponents == null) {
       this.authoringComponentContent.connectedComponents = [];
     }
     this.authoringComponentContent.connectedComponents.push(connectedComponent);
     this.automaticallySetConnectedComponentComponentIdIfPossible(connectedComponent);
-    this.authoringViewComponentChanged();
   }
 
   automaticallySetConnectedComponentComponentIdIfPossible(connectedComponent) {
@@ -330,6 +334,15 @@ export abstract class ComponentAuthoringController {
 
   getComponentsByNodeId(nodeId) {
     return this.ProjectService.getComponentsByNodeId(nodeId);
+  }
+
+  getConnectedComponentType(
+      {nodeId, componentId}: { nodeId: string, componentId: string }) {
+    const component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
+    if (component != null) {
+      return component.type;
+    }
+    return null;
   }
 
   isForThisComponent(object) {

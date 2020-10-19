@@ -11,6 +11,8 @@ import { UpgradeModule } from '@angular/upgrade/static';
 
 @Injectable()
 export class GraphService extends ComponentService {
+  seriesColors: string[] = ['blue', 'red', 'green', 'orange', 'purple', 'black'];
+
   constructor(private upgrade: UpgradeModule,
       private StudentAssetService: StudentAssetService,
       protected StudentDataService: StudentDataService,
@@ -319,5 +321,14 @@ export class GraphService extends ComponentService {
       return null;
     }
   }
+
+  isMultipleYAxes(yAxis: any): boolean {
+    return Array.isArray(yAxis);
+  }
+
+  getSeriesColor(index: number): string {
+    return this.seriesColors[index];
+  }
+
 }
 

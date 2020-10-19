@@ -17,7 +17,6 @@ class GraphController extends ComponentController {
   chartConfig: any;
   graphType: string = null;
   series: any[] = [];
-  seriesColors: string[] = ['blue', 'red', 'green', 'orange', 'purple', 'black'];
   seriesMarkers: string[] = ['circle', 'square', 'diamond', 'triangle', 'triangle-down', 'circle'];
   activeSeries: any = null;
   isResetGraphButtonVisible: boolean = false;
@@ -128,7 +127,6 @@ class GraphController extends ComponentController {
     this.GraphService = GraphService;
     this.graphType = null;
     this.series = [];
-    this.seriesColors = ['blue', 'red', 'green', 'orange', 'purple', 'black'];
     this.seriesMarkers = ['circle', 'square', 'diamond', 'triangle', 'triangle-down', 'circle'];
     this.activeSeries = null;
     this.isResetGraphButtonVisible = false;
@@ -176,6 +174,11 @@ class GraphController extends ComponentController {
       this.initializeGradingMode(componentState);
     } else if (this.mode === 'onlyShowWork') {
       this.initializeOnlyShowWorkMode();
+    } else {
+      this.isResetSeriesButtonVisible = true;
+      this.isSelectSeriesVisible = true;
+      this.backgroundImage = this.componentContent.backgroundImage;
+      this.newTrial();
     }
     if (
       !this.isStudentMode() &&
@@ -440,17 +443,13 @@ class GraphController extends ComponentController {
         }
       }
     }
-    if (this.isMultipleYAxes(this.yAxis)) {
+    if (this.GraphService.isMultipleYAxes(this.yAxis)) {
       this.setAllSeriesColorsToMatchYAxes(this.activeTrial.series);
     }
   }
 
   isSingleYAxis(yAxis) {
     return !Array.isArray(yAxis);
-  }
-
-  isMultipleYAxes(yAxis) {
-    return Array.isArray(yAxis);
   }
 
   setYAxisLabels(studentData) {
@@ -464,7 +463,7 @@ class GraphController extends ComponentController {
   }
 
   setSeriesYAxisIndex(series, seriesIndex) {
-    if (this.isMultipleYAxes(this.yAxis) && this.yAxis.length == 2) {
+    if (this.GraphService.isMultipleYAxes(this.yAxis) && this.yAxis.length == 2) {
       if (seriesIndex === 0 || seriesIndex === 1) {
         series.yAxis = seriesIndex;
       } else {
@@ -509,7 +508,7 @@ class GraphController extends ComponentController {
   }
 
   isYAxisLabelBlank(yAxis, index) {
-    if (this.isMultipleYAxes(yAxis)) {
+    if (this.GraphService.isMultipleYAxes(yAxis)) {
       return yAxis[index].title.text === '';
     } else {
       return yAxis.title.text === '';
@@ -1305,7 +1304,7 @@ class GraphController extends ComponentController {
   }
 
   getSeriesYAxisIndex(series) {
-    if (this.isMultipleYAxes(this.yAxis) && series.yAxis != null) {
+    if (this.GraphService.isMultipleYAxes(this.yAxis) && series.yAxis != null) {
       return series.yAxis;
     } else {
       return 0;
@@ -1916,7 +1915,7 @@ class GraphController extends ComponentController {
         const newSeriesIndex = this.series.length;
         const series: any = {
           name: copiedAsset.fileName,
-          color: this.seriesColors[newSeriesIndex],
+          color: this.GraphService.getSeriesColor(newSeriesIndex),
           marker: {
             symbol: this.seriesMarkers[newSeriesIndex]
           },
@@ -2089,17 +2088,6 @@ class GraphController extends ComponentController {
     }
   }
 
-  createNewSeries() {
-    return {
-      name: '',
-      data: [],
-      marker: {
-        symbol: 'circle'
-      },
-      canEdit: true
-    };
-  }
-
   isActiveSeries(series) {
     const seriesIndex = this.getSeriesIndex(series);
     return this.isActiveSeriesIndex(seriesIndex);
@@ -2254,6 +2242,8 @@ class GraphController extends ComponentController {
      * is called.
      */
     if (
+      this.previousTrialIdsToShow != null &&
+      this.trialIdsToShow != null &&
       !this.UtilService.arraysContainSameValues(this.previousTrialIdsToShow, this.trialIdsToShow)
     ) {
       this.trialIdsToShow = this.trialIdsToShow;
@@ -2742,33 +2732,6 @@ class GraphController extends ComponentController {
 
   getUploadedFileName() {
     return this.uploadedFileName;
-  }
-
-  /**
-   * Convert all the data points in the series
-   * @param series convert the data points in the series
-   * @param xAxisType the new x axis type to convert to
-   */
-  convertSeriesDataPoints(series, xAxisType) {
-    const data = series.data;
-    const convertedData = [];
-    for (let d = 0; d < data.length; d++) {
-      const oldDataPoint = data[d];
-      if (xAxisType == null || xAxisType === '' || xAxisType === 'limits') {
-        if (!Array.isArray(oldDataPoint)) {
-          convertedData.push([d + 1, oldDataPoint]);
-        } else {
-          convertedData.push(oldDataPoint);
-        }
-      } else if (xAxisType === 'categories') {
-        if (Array.isArray(oldDataPoint)) {
-          convertedData.push(oldDataPoint[1]);
-        } else {
-          convertedData.push(oldDataPoint);
-        }
-      }
-    }
-    series.data = convertedData;
   }
 
   /**
