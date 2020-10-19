@@ -9,6 +9,8 @@ class NodeAdvancedJsonAuthoringController {
   node: any;
   nodeId: string;
 
+  static $inject = ['NotificationService', 'ProjectService', 'TeacherDataService'];
+
   constructor(private NotificationService: NotificationService,
       private ProjectService: TeacherProjectService,
       private TeacherDataService: TeacherDataService) {

@@ -625,7 +625,7 @@ export class ProjectService {
          */
         return matchedString.replace(
           'img',
-          `img ng-click=\\"this.$ctrl.ProjectService.broadcastSnipImage(` + 
+          `img ng-click=\\"this.$ctrl.ProjectService.broadcastSnipImage(` +
           `{ target: $event.target, componentId: '${componentId}' })\\"`
         );
       });
@@ -4384,6 +4384,11 @@ export class ProjectService {
       this.componentServices[componentServiceName] = componentService;
     }
     return componentService;
+  }
+
+  getComponentType(nodeId: string, componentId: string): string {
+    const component = this.getComponentByNodeIdAndComponentId(nodeId, componentId);
+    return component.type;
   }
 
   /**

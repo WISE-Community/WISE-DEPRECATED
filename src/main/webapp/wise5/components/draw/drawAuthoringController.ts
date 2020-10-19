@@ -1,97 +1,45 @@
 'use strict';
 
 import * as angular from 'angular';
-import { ProjectAssetService } from '../../../site/src/app/services/projectAssetService';
-import DrawController from './drawController';
+import { ComponentAuthoringController } from '../componentAuthoringController';
 
-class DrawAuthoringController extends DrawController {
-  ProjectAssetService: ProjectAssetService;
-  $timeout: any;
-  allowedConnectedComponentTypes: any[];
-  isResetButtonVisible: boolean;
-  drawingToolId: string;
-  drawingTool: any;
+class DrawAuthoringController extends ComponentAuthoringController {
+  allowedConnectedComponentTypes: any[] = [{ type: 'ConceptMap' }, { type: 'Draw' },
+      { type: 'Embedded' }, { type: 'Graph' }, { type: 'Label' }, { type: 'Table' }];
   width: number;
   height: number;
 
   static $inject = [
     '$filter',
-    '$injector',
-    '$mdDialog',
-    '$q',
-    '$rootScope',
     '$scope',
-    '$timeout',
-    'AnnotationService',
-    'AudioRecorderService',
     'ConfigService',
-    'DrawService',
     'NodeService',
-    'NotebookService',
     'NotificationService',
     'ProjectAssetService',
     'ProjectService',
-    'StudentAssetService',
-    'StudentDataService',
     'UtilService'
   ];
 
   constructor(
     $filter,
-    $injector,
-    $mdDialog,
-    $q,
-    $rootScope,
     $scope,
-    $timeout,
-    AnnotationService,
-    AudioRecorderService,
     ConfigService,
-    DrawService,
     NodeService,
-    NotebookService,
     NotificationService,
     ProjectAssetService,
     ProjectService,
-    StudentAssetService,
-    StudentDataService,
     UtilService
   ) {
     super(
-      $filter,
-      $injector,
-      $mdDialog,
-      $q,
-      $rootScope,
       $scope,
-      $timeout,
-      AnnotationService,
-      AudioRecorderService,
+      $filter,
       ConfigService,
-      DrawService,
       NodeService,
-      NotebookService,
       NotificationService,
+      ProjectAssetService,
       ProjectService,
-      StudentAssetService,
-      StudentDataService,
       UtilService
     );
-
-    this.ProjectAssetService = ProjectAssetService;
-
-    this.allowedConnectedComponentTypes = [
-      { type: 'ConceptMap' },
-      { type: 'Draw' },
-      { type: 'Embedded' },
-      { type: 'Graph' },
-      { type: 'Label' },
-      { type: 'Table' }
-    ];
-
-    this.isResetButtonVisible = true;
-    this.drawingToolId = 'drawingtool_' + this.nodeId + '_' + this.componentId;
-
     $scope.$watch(
       function() {
         return this.authoringComponentContent;
@@ -99,7 +47,6 @@ class DrawAuthoringController extends DrawController {
       function(newValue, oldValue) {
         this.componentContent = this.ProjectService.injectAssetPaths(newValue);
         this.submitCounter = 0;
-        this.initializeDrawingTool();
         this.isSaveButtonVisible = this.componentContent.showSaveButton;
         this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
       }.bind(this),
@@ -107,7 +54,7 @@ class DrawAuthoringController extends DrawController {
     );
   }
 
-  authoringAddStampButtonClicked() {
+  addStampButtonClicked() {
     this.initializeAuthoringComponentContentStampsIfNecessary();
     this.authoringComponentContent.stamps.Stamps.push('');
     this.authoringViewComponentChanged();
@@ -124,11 +71,7 @@ class DrawAuthoringController extends DrawController {
     }
   }
 
-  /**
-   * Move a stamp up in the authoring view
-   * @param index the index of the stamp to move
-   */
-  authoringMoveStampUp(index) {
+  moveStampUp(index) {
     if (index != 0) {
       const stamp = this.authoringComponentContent.stamps.Stamps[index];
       this.authoringComponentContent.stamps.Stamps.splice(index, 1);
@@ -137,11 +80,7 @@ class DrawAuthoringController extends DrawController {
     }
   }
 
-  /**
-   * Move the stamp down in the authoring view
-   * @param index the index of the stamp to move
-   */
-  authoringMoveStampDown(index) {
+  moveStampDown(index) {
     if (index != this.authoringComponentContent.stamps.Stamps.length - 1) {
       const stamp = this.authoringComponentContent.stamps.Stamps[index];
       this.authoringComponentContent.stamps.Stamps.splice(index, 1);
@@ -150,11 +89,7 @@ class DrawAuthoringController extends DrawController {
     }
   }
 
-  /**
-   * Delete a stamp from the authoring view
-   * @param index the index of the stamp
-   */
-  authoringDeleteStampClicked(index) {
+  deleteStampClicked(index) {
     if (
       confirm(
         this.$translate('draw.areYouSureYouWantToDeleteThisStamp') +
@@ -167,7 +102,7 @@ class DrawAuthoringController extends DrawController {
     }
   }
 
-  authoringEnableAllToolsButtonClicked() {
+  enableAllToolsButtonClicked() {
     if (this.authoringComponentContent.tools == null) {
       this.authoringComponentContent.tools = {};
     }
@@ -189,7 +124,7 @@ class DrawAuthoringController extends DrawController {
     this.authoringViewComponentChanged();
   }
 
-  authoringDisableAllToolsButtonClicked() {
+  disableAllToolsButtonClicked() {
     if (this.authoringComponentContent.tools == null) {
       this.authoringComponentContent.tools = {};
     }
@@ -211,27 +146,28 @@ class DrawAuthoringController extends DrawController {
     this.authoringViewComponentChanged();
   }
 
-  authoringSaveStarterDrawData() {
+  saveStarterDrawData() {
     if (confirm(this.$translate('draw.areYouSureYouWantToSaveTheStarterDrawing'))) {
-      const drawData = this.getDrawData();
-      this.authoringComponentContent.starterDrawData = drawData;
-      this.authoringViewComponentChanged();
+      this.NodeService.requestStarterState({nodeId: this.nodeId, componentId: this.componentId});
     }
   }
 
-  authoringDeleteStarterDrawData() {
+  saveStarterState(starterState) {
+    this.authoringComponentContent.starterDrawData = starterState;
+    this.authoringViewComponentChanged();
+  }
+
+  deleteStarterDrawData() {
     if (confirm(this.$translate('draw.areYouSureYouWantToDeleteTheStarterDrawing'))) {
       this.authoringComponentContent.starterDrawData = null;
-      this.drawingTool.clear();
       this.authoringViewComponentChanged();
     }
   }
 
-  authoringViewWidthChanged() {
+  viewWidthChanged() {
     this.width = this.authoringComponentContent.width;
     this.updateStarterDrawDataWidth();
     this.authoringViewComponentChanged();
-    this.authoringInitializeDrawingToolAfterTimeout();
   }
 
   updateStarterDrawDataWidth() {
@@ -246,11 +182,10 @@ class DrawAuthoringController extends DrawController {
     }
   }
 
-  authoringViewHeightChanged() {
+  viewHeightChanged() {
     this.height = this.authoringComponentContent.height;
     this.updateStarterDrawDataHeight();
     this.authoringViewComponentChanged();
-    this.authoringInitializeDrawingToolAfterTimeout();
   }
 
   updateStarterDrawDataHeight() {
@@ -265,9 +200,8 @@ class DrawAuthoringController extends DrawController {
     }
   }
 
-  authoringViewToolClicked() {
+  toolClicked() {
     this.authoringViewComponentChanged();
-    this.authoringInitializeDrawingToolAfterTimeout();
   }
 
   chooseBackgroundImage() {
@@ -297,28 +231,20 @@ class DrawAuthoringController extends DrawController {
     );
   }
 
-  assetSelected(args: any) {
-    const fileName = args.assetItem.fileName;
-    if (args.target === 'rubric') {
-      const summernoteId = this.getSummernoteId(args);
-      this.restoreSummernoteCursorPosition(summernoteId);
-      const fullAssetPath = this.getFullAssetPath(fileName);
-      if (this.UtilService.isImage(fileName)) {
-        this.insertImageIntoSummernote(summernoteId, fullAssetPath, fileName);
-      } else if (this.UtilService.isVideo(fileName)) {
-        this.insertVideoIntoSummernote(summernoteId, fullAssetPath);
-      }
-    } else if (args.target === 'background') {
+  assetSelected({ nodeId, componentId, assetItem, target, targetObject }) {
+    super.assetSelected({ nodeId, componentId, assetItem, target });
+    const fileName = assetItem.fileName;
+    if (target === 'background') {
       this.authoringComponentContent.background = fileName;
-      this.authoringViewBackgroundChanged();
-    } else if (args.target === 'stamp') {
-      const stampIndex = args.targetObject;
+      this.backgroundChanged();
+    } else if (target === 'stamp') {
+      const stampIndex = targetObject;
       this.setStampImage(stampIndex, fileName);
-      this.authoringViewBackgroundChanged();
+      this.backgroundChanged();
     }
   }
 
-  authoringViewBackgroundChanged() {
+  backgroundChanged() {
     this.updateStarterDrawDataBackground();
     this.authoringViewComponentChanged();
   }
@@ -342,27 +268,11 @@ class DrawAuthoringController extends DrawController {
     }
   }
 
-  /**
-   * Set the stamp image
-   * @param index the index of the stamp
-   * @param fileName the file name of the image
-   */
   setStampImage(index, fileName) {
     this.authoringComponentContent.stamps.Stamps[index] = fileName;
   }
 
-  handleConnectedComponentsPostProcess() {
-    if (this.componentContent != null && this.componentContent.background != null) {
-      this.drawingTool.setBackgroundImage(this.componentContent.background);
-    }
-  }
-
-  /**
-   * Automatically set the component id for the connected component if there
-   * is only one viable option.
-   * @param connectedComponent the connected component object we are authoring
-   */
-  authoringAutomaticallySetConnectedComponentComponentIdIfPossible(connectedComponent) {
+  automaticallySetConnectedComponentComponentIdIfPossible(connectedComponent) {
     let numberOfAllowedComponents = 0;
     let allowedComponent = null;
     for (const component of this.getComponentsByNodeId(connectedComponent.nodeId)) {
@@ -377,18 +287,19 @@ class DrawAuthoringController extends DrawController {
     if (numberOfAllowedComponents === 1) {
       connectedComponent.componentId = allowedComponent.id;
       connectedComponent.type = 'importWork';
-      this.authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent);
+      this.setImportWorkAsBackgroundIfApplicable(connectedComponent);
     }
   }
 
-  authoringConnectedComponentComponentIdChanged(connectedComponent) {
+  connectedComponentComponentIdChanged(connectedComponent) {
     connectedComponent.type = 'importWork';
-    this.authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent);
+    this.setImportWorkAsBackgroundIfApplicable(connectedComponent);
     this.authoringViewComponentChanged();
   }
 
-  authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent) {
-    const componentType = this.authoringGetConnectedComponentType(connectedComponent);
+  setImportWorkAsBackgroundIfApplicable(connectedComponent) {
+    const componentType = this.ProjectService.getComponentType(connectedComponent.nodeId,
+        connectedComponent.componentId);
     if (['ConceptMap', 'Embedded', 'Graph', 'Label', 'Table'].includes(componentType)) {
       connectedComponent.importWorkAsBackground = true;
     } else {
@@ -396,15 +307,11 @@ class DrawAuthoringController extends DrawController {
     }
   }
 
-  authoringImportWorkAsBackgroundClicked(connectedComponent) {
+  importWorkAsBackgroundClicked(connectedComponent) {
     if (!connectedComponent.importWorkAsBackground) {
       delete connectedComponent.importWorkAsBackground;
     }
     this.authoringViewComponentChanged();
-  }
-
-  authoringInitializeDrawingToolAfterTimeout() {
-    this.$timeout(angular.bind(this, this.initializeDrawingTool));
   }
 }
 

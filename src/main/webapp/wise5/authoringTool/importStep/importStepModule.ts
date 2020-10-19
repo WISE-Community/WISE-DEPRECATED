@@ -1,13 +1,16 @@
 'use strict';
 
-import ChooseStepController from './chooseStepController';
-import ChooseLocationController from './chooseLocationController';
+import { ChooseImportStepComponent } from '../../../site/src/app/authoring-tool/import-step/choose-import-step/choose-import-step.component';
+import { ChooseImportStepLocationComponent } from '../../../site/src/app/authoring-tool/import-step/choose-import-step-location/choose-import-step-location.component';
 import * as angular from 'angular';
+import { downgradeComponent } from '@angular/upgrade/static';
 
 const importStepModule = angular
   .module('importStepModule', ['ui.router'])
-  .controller('ChooseStepController', ChooseStepController)
-  .controller('ChooseLocationController', ChooseLocationController)
+  .directive('chooseImportStepComponent',
+      downgradeComponent({ component: ChooseImportStepComponent}) as angular.IDirectiveFactory)
+  .directive('chooseImportStepLocationComponent',
+      downgradeComponent({ component: ChooseImportStepLocationComponent}) as angular.IDirectiveFactory)
   .config([
     '$stateProvider',
     $stateProvider => {
@@ -19,9 +22,7 @@ const importStepModule = angular
         })
         .state('root.at.project.import-step.choose-step', {
           url: '/choose-step',
-          templateUrl: 'wise5/authoringTool/importStep/chooseStep.html',
-          controller: 'ChooseStepController',
-          controllerAs: 'chooseStepController',
+          component: 'chooseImportStepComponent',
           params: {
             selectedNodes: [],
             importFromProjectId: null
@@ -29,9 +30,7 @@ const importStepModule = angular
         })
         .state('root.at.project.import-step.choose-location', {
           url: '/choose-location',
-          templateUrl: 'wise5/authoringTool/importStep/chooseLocation.html',
-          controller: 'ChooseLocationController',
-          controllerAs: 'chooseLocationController',
+          component: 'chooseImportStepLocationComponent',
           params: {
             selectedNodes: [],
             importFromProjectId: null

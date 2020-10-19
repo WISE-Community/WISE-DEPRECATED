@@ -5,6 +5,7 @@ import { TeacherProjectService } from "../services/teacherProjectService";
 import { ProjectAssetService } from '../../site/src/app/services/projectAssetService';
 import { NodeService } from '../services/nodeService';
 import { NotificationService } from '../services/notificationService';
+import { Subscription } from 'rxjs';
 
 export abstract class ComponentAuthoringController {
 
@@ -30,6 +31,7 @@ export abstract class ComponentAuthoringController {
   summernoteRubricId: string;
   summernoteRubricHTML: string;
   summernoteRubricOptions: any;
+  starterStateResponseSubscription: Subscription;
 
   constructor(
       protected $scope: any,
@@ -95,6 +97,16 @@ export abstract class ComponentAuthoringController {
           .showAdvancedComponentAuthoring[this.componentId];
       this.NotificationService.hideJSONValidMessage();
     }, true);
+    this.starterStateResponseSubscription =
+        this.NodeService.starterStateResponse$.subscribe((args: any) => {
+      if (this.isForThisComponent(args)) {
+        this.saveStarterState(args.starterState);
+      }
+    });
+  }
+
+  $onDestroy() {
+    this.starterStateResponseSubscription.unsubscribe();
   }
 
   handleAuthoringComponentContentChanged(newValue, oldValue): void {
@@ -332,4 +344,10 @@ export abstract class ComponentAuthoringController {
     }
     return null;
   }
+
+  isForThisComponent(object) {
+    return this.nodeId == object.nodeId && this.componentId == object.componentId;
+  }
+
+  saveStarterState(starterState: any) {}
 }

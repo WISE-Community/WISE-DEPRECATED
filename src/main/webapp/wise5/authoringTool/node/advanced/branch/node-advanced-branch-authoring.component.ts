@@ -18,6 +18,9 @@ class NodeAdvancedBranchAuthoringController {
   nodeId: string;
   $translate: any;
 
+  static $inject = ['$filter', 'ConfigService', 'TagService', 'ProjectService',
+      'TeacherDataService', 'UtilService'];
+
   constructor(private $filter: any, private ConfigService: ConfigService,
       private TagService: TagService, private ProjectService: TeacherProjectService,
       private TeacherDataService: TeacherDataService, private UtilService: UtilService) {
