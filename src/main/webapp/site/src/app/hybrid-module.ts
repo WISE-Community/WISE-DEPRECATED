@@ -62,9 +62,13 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { ManageStudentsComponent } from '../../../wise5/classroomMonitor/manageStudents/manage-students-component';
 import { AdvancedProjectAuthoringComponent } from '../../../wise5/authoringTool/advanced/advanced-project-authoring.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSelectModule } from '@angular/material/select';
 import { ChooseNewComponent } from './authoring-tool/add-component/choose-new-component/choose-new-component.component';
 import { ChooseNewComponentLocation } from './authoring-tool/add-component/choose-new-component-location/choose-new-component-location.component';
-import { MatCardModule } from '@angular/material/card';
+import { ChooseImportStepComponent } from './authoring-tool/import-step/choose-import-step/choose-import-step.component';
+import { ChooseImportStepLocationComponent } from './authoring-tool/import-step/choose-import-step-location/choose-import-step-location.component';
 import { ComponentNewWorkBadgeComponent } from './classroom-monitor/component-new-work-badge/component-new-work-badge.component';
 
 @Component({template: ``})
@@ -82,11 +86,13 @@ export class EmptyComponent {}
     FormsModule,
     MatButtonModule,
     MatCardModule,
+    MatCheckboxModule,
     MatDialogModule,
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
     MatListModule,
+    MatSelectModule,
     MatTooltipModule,
     ReactiveFormsModule,
     RouterModule.forChild([
@@ -132,11 +138,13 @@ export class EmptyComponent {}
     FormsModule,
     MatButtonModule,
     MatCardModule,
+    MatCheckboxModule,
     MatDialogModule,
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
     MatListModule,
+    MatSelectModule,
     MatTooltipModule,
     NodeIconComponent,
     ReactiveFormsModule
@@ -193,6 +201,8 @@ export class PreviewAngularJSModule {
 @NgModule({
   declarations: [
     AdvancedProjectAuthoringComponent,
+    ChooseImportStepComponent,
+    ChooseImportStepLocationComponent,
     ChooseNewComponent,
     ChooseNewComponentLocation,
     ComponentNewWorkBadgeComponent,
