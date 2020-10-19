@@ -9,6 +9,17 @@ class DrawAuthoringController extends ComponentAuthoringController {
   width: number;
   height: number;
 
+  static $inject = [
+    '$filter',
+    '$scope',
+    'ConfigService',
+    'NodeService',
+    'NotificationService',
+    'ProjectAssetService',
+    'ProjectService',
+    'UtilService'
+  ];
+
   constructor(
     $filter,
     $scope,
