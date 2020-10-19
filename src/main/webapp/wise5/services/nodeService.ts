@@ -25,8 +25,8 @@ export class NodeService {
   private siblingComponentStudentDataChangedSource: Subject<any> = new Subject<any>();
   public siblingComponentStudentDataChanged$: Observable<any> =
       this.siblingComponentStudentDataChangedSource.asObservable();
-  private starterStateRequestedSource: Subject<any> = new Subject<any>();
-  public starterStateRequested$: Observable<any> = this.starterStateRequestedSource.asObservable();
+  private starterStateRequestSource: Subject<any> = new Subject<any>();
+  public starterStateRequest$: Observable<any> = this.starterStateRequestSource.asObservable();
   private starterStateResponseSource: Subject<any> = new Subject<any>();
   public starterStateResponse$: Observable<any> = this.starterStateResponseSource.asObservable();
 
@@ -819,7 +819,7 @@ export class NodeService {
   }
 
   requestStarterState(args: any) {
-    this.starterStateRequestedSource.next(args);
+    this.starterStateRequestSource.next(args);
   }
 
   respondStarterState(args: any) {

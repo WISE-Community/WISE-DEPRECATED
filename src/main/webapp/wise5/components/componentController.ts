@@ -73,6 +73,7 @@ class ComponentController {
   audioRecordedSubscription: Subscription;
   notebookItemChosenSubscription: Subscription;
   studentWorkSavedToServerSubscription: Subscription;
+  starterStateRequestSubscription: Subscription;
 
   constructor(
       $filter,
@@ -190,6 +191,15 @@ class ComponentController {
     this.registerComponentWithParentNode();
   }
 
+  $onInit() {
+    this.starterStateRequestSubscription =
+        this.NodeService.starterStateRequest$.subscribe((args: any) => {
+      if (this.isForThisComponent(args)) {
+        this.generateStarterState();
+      }
+    });
+  }
+
   isStudentMode() {
     return this.mode === 'student';
   }
@@ -208,6 +218,10 @@ class ComponentController {
 
   isOnlyShowWorkMode() {
     return this.mode === 'onlyShowWork';
+  }
+
+  isAuthoringComponentPreviewMode() {
+    return this.mode === 'authoringComponentPreview';
   }
 
   isSaveOrSubmitButtonVisible() {
@@ -249,6 +263,7 @@ class ComponentController {
     if (this.notebookItemChosenSubscription != null) {
       this.notebookItemChosenSubscription.unsubscribe();
     }
+    this.starterStateRequestSubscription.unsubscribe();
   }
 
   initializeScopeGetComponentState(scope, childControllerName) {
@@ -1388,6 +1403,7 @@ class ComponentController {
     return deferred.promise;
   }
 
+  generateStarterState() {}
 }
 
 export default ComponentController;

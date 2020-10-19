@@ -106,7 +106,7 @@ class DrawController extends ComponentController {
 
     this.componentType = this.componentContent.type;
 
-    if (this.isStudentMode()) {
+    if (this.isStudentMode() || this.isAuthoringComponentPreviewMode()) {
       this.isSaveButtonVisible = this.componentContent.showSaveButton;
       this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
       this.isResetButtonVisible = true;
@@ -245,7 +245,7 @@ class DrawController extends ComponentController {
           this.drawingTool.setBackgroundImage(this.componentContent.background);
         }
       }
-    } else if (this.isAuthoringMode()) {
+    } else if (this.isAuthoringComponentPreviewMode()) {
       if (this.componentContent.starterDrawData != null) {
         this.drawingTool.load(this.componentContent.starterDrawData);
       }
@@ -684,6 +684,11 @@ class DrawController extends ComponentController {
     this.generateImageFromComponentState(componentState).then(image => {
       this.drawingTool.setBackgroundImage(image.url);
     });
+  }
+
+  generateStarterState() {
+    this.NodeService.respondStarterState({nodeId: this.nodeId, componentId: this.componentId,
+        starterState: this.getDrawData()});
   }
 }
 
