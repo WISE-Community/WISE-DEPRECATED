@@ -83,7 +83,7 @@ function shouldCheckThatTheComponentIdIsNotAutomaticallySetWhenNoComponents() {
       'zptq1ndv4h'
     );
     spyOn(summaryAuthoringController, 'getComponentsByNodeId').and.returnValue(components);
-    summaryAuthoringController.authoringSummaryNodeIdChanged();
+    summaryAuthoringController.summaryNodeIdChanged();
     expect(summaryAuthoringController.authoringComponentContent.summaryComponentId).toBe(null);
   });
 }
@@ -100,7 +100,7 @@ function shouldCheckThatTheComponentIdIsNotAutomaticallySetWhenMultipleComponent
       'zptq1ndv4h'
     );
     spyOn(summaryAuthoringController, 'getComponentsByNodeId').and.returnValue(components);
-    summaryAuthoringController.authoringSummaryNodeIdChanged();
+    summaryAuthoringController.summaryNodeIdChanged();
     expect(summaryAuthoringController.authoringComponentContent.summaryComponentId).toBe(null);
   });
 }
@@ -117,7 +117,7 @@ function shouldCheckThatTheComponentIdIsAutomaticallySet() {
       'zptq1ndv4h'
     );
     spyOn(summaryAuthoringController, 'getComponentsByNodeId').and.returnValue(components);
-    summaryAuthoringController.authoringSummaryNodeIdChanged();
+    summaryAuthoringController.summaryNodeIdChanged();
     expect(summaryAuthoringController.authoringComponentContent.summaryComponentId).toBe(
       'dghm45su45'
     );

@@ -1,81 +1,53 @@
 'use strict';
 
-import SummaryController from './summaryController';
+import { ComponentAuthoringController } from '../componentAuthoringController';
 
-class SummaryAuthoringController extends SummaryController {
-  $injector: any;
-  isResponsesOptionAvailable: boolean;
-  isHighlightCorrectAnswerAvailable: boolean;
-  isPieChartAllowed: boolean;
+class SummaryAuthoringController extends ComponentAuthoringController {
+  isResponsesOptionAvailable: boolean = false;
+  isHighlightCorrectAnswerAvailable: boolean = false;
+  isPieChartAllowed: boolean = true;
 
   static $inject = [
     '$filter',
     '$injector',
-    '$q',
-    '$mdDialog',
-    '$rootScope',
     '$scope',
-    'AnnotationService',
-    'AudioRecorderService',
     'ConfigService',
     'NodeService',
-    'NotebookService',
     'NotificationService',
+    'ProjectAssetService',
     'ProjectService',
-    'StudentAssetService',
-    'StudentDataService',
     'SummaryService',
     'UtilService'
   ];
 
   constructor(
-    $filter,
-    $injector,
-    $q,
-    $mdDialog,
-    $rootScope,
-    $scope,
-    AnnotationService,
-    AudioRecorderService,
-    ConfigService,
-    NodeService,
-    NotebookService,
-    NotificationService,
-    ProjectService,
-    StudentAssetService,
-    StudentDataService,
-    SummaryService,
-    UtilService
+    protected $filter,
+    protected $injector,
+    protected $scope,
+    protected ConfigService,
+    protected NodeService,
+    protected NotificationService,
+    protected ProjectAssetService,
+    protected ProjectService,
+    protected SummaryService,
+    protected UtilService
   ) {
     super(
-      $filter,
-      $injector,
-      $mdDialog,
-      $q,
-      $rootScope,
       $scope,
-      AnnotationService,
-      AudioRecorderService,
+      $filter,
       ConfigService,
       NodeService,
-      NotebookService,
       NotificationService,
+      ProjectAssetService,
       ProjectService,
-      StudentAssetService,
-      StudentDataService,
-      SummaryService,
       UtilService
     );
-    this.$injector = $injector;
-    this.isResponsesOptionAvailable = false;
-    this.isHighlightCorrectAnswerAvailable = false;
-    this.isPieChartAllowed = true;
     this.updateStudentDataTypeOptionsIfNecessary();
     this.updateHasCorrectAnswerIfNecessary();
     this.updateChartTypeOptionsIfNecessary();
   }
 
-  authoringSummaryNodeIdChanged() {
+  summaryNodeIdChanged() {
     this.authoringComponentContent.summaryComponentId = null;
     const components = this.getComponentsByNodeId(this.authoringComponentContent.summaryNodeId);
     const allowedComponents = [];
@@ -95,7 +67,7 @@ class SummaryAuthoringController extends SummaryController {
     return this.SummaryService.isComponentTypeAllowed(componentType);
   }
 
-  authoringSummaryComponentIdChanged() {
+  summaryComponentIdChanged() {
     this.performUpdatesIfNecessary();
     this.authoringViewComponentChanged();
   }
@@ -107,18 +79,10 @@ class SummaryAuthoringController extends SummaryController {
   }
 
   performUpdatesIfNecessary() {
-    this.updateOtherPrompt();
     this.updateStudentDataTypeOptionsIfNecessary();
     this.updateStudentDataTypeIfNecessary();
     this.updateHasCorrectAnswerIfNecessary();
     this.updateChartTypeOptionsIfNecessary();
-  }
-
-  updateOtherPrompt() {
-    this.otherPrompt = this.getOtherPrompt(
-      this.authoringComponentContent.summaryNodeId,
-      this.authoringComponentContent.summaryComponentId
-    );
   }
 
   updateStudentDataTypeOptionsIfNecessary() {
@@ -175,7 +139,6 @@ class SummaryAuthoringController extends SummaryController {
   }
 
   showPromptFromOtherComponentChanged() {
-    this.updateOtherPrompt();
     this.authoringViewComponentChanged();
   }
 
