@@ -7,8 +7,7 @@ class NodeAdvancedAuthoringController {
   node: any;
   nodeId: string;
 
-  static $injector = ['$filter', '$state', 'ConfigService', 'ProjectService', 'TagService',
-      'UtilService'];
+  static $inject = ['$state', 'ConfigService', 'ProjectService', 'TeacherDataService'];
 
   constructor(private $state: any, private ConfigService: ConfigService,
       private ProjectService: TeacherProjectService,
