@@ -23,6 +23,8 @@
   "graph.canStudentHideSeriesOnLegendClick": "Can Student Hide Series By Clicking On Legend",
   "graph.categories": "Categories",
   "graph.categoryName": "Category Name",
+  "graph.categoryOne": "Category One",
+  "graph.categoryTwo": "Category Two",
   "graph.circle": "Circle",
   "graph.color": "Color",
   "graph.columnPlot": "Column Plot",
