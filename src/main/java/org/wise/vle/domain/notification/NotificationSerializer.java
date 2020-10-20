@@ -33,9 +33,11 @@ public class NotificationSerializer extends JsonSerializer<Notification> {
     } else {
       gen.writeObjectField("data", null);
     }
-    gen.writeObjectField("timeGenerated", notification.getTimeGenerated());
-    gen.writeObjectField("serverSaveTime", notification.getServerSaveTime());
-    gen.writeObjectField("timeDismissed", notification.getTimeDismissed());
+    gen.writeObjectField("timeGenerated", notification.getTimeGenerated().getTime());
+    gen.writeObjectField("serverSaveTime", notification.getServerSaveTime().getTime());
+    if (notification.getTimeDismissed() != null) {
+      gen.writeObjectField("timeDismissed", notification.getTimeDismissed().getTime());
+    }
     gen.writeEndObject();
   }
 
