@@ -11,18 +11,6 @@ class ComponentController {
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
         this.UtilService = UtilService;
-
-        this.$scope.$on('$destroy', () => {
-            this.ngOnDestroy();
-        });
-    }
-
-    ngOnDestroy() {
-        this.unsubscribeAll();
-    }
-
-    unsubscribeAll() {
-        this.snipImageSubscription.unsubscribe();
     }
 
     $onInit() {
@@ -31,20 +19,6 @@ class ComponentController {
         } else {
             this.$scope.mode = 'student';
         }
-
-        /**
-         * Snip an image from the VLE
-         * @param $event the click event from the student clicking on the image
-         */
-        this.snipImageSubscription = this.ProjectService.snipImage$.subscribe(
-                ({ target, componentId }) => {
-            if (this.componentId === componentId) {
-                const imageObject = this.UtilService.getImageObjectFromImageElement(target);
-                if (imageObject != null) {
-                    this.NotebookService.addNote(imageObject);
-                }
-            }
-        });
 
         if (this.workgroupId != null) {
             try {
