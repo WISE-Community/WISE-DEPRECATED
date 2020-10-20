@@ -21,7 +21,7 @@ public class EventSerializer extends JsonSerializer<Event> {
     gen.writeStartObject();
     gen.writeObjectField("id", event.getId());
     gen.writeObjectField("category", event.getCategory());
-    gen.writeObjectField("clientSaveTime", event.getClientSaveTime());
+    gen.writeObjectField("clientSaveTime", event.getClientSaveTime().getTime());
     gen.writeObjectField("componentId", event.getComponentId());
     gen.writeObjectField("componentType", event.getComponentType());
     gen.writeObjectField("context", event.getContext());
@@ -41,7 +41,7 @@ public class EventSerializer extends JsonSerializer<Event> {
     if (run != null) {
       gen.writeObjectField("runId", run.getId());
     }
-    gen.writeObjectField("serverSaveTime", event.getServerSaveTime());
+    gen.writeObjectField("serverSaveTime", event.getServerSaveTime().getTime());
     Workgroup workgroup = event.getWorkgroup();
     if (workgroup != null) {
       gen.writeObjectField("workgroupId", workgroup.getId());

@@ -14,7 +14,7 @@ public class StudentWorkSerializer extends JsonSerializer<StudentWork> {
       throws IOException {
     gen.writeStartObject();
     gen.writeObjectField("id", studentWork.getId());
-    gen.writeObjectField("clientSaveTime", studentWork.getClientSaveTime());
+    gen.writeObjectField("clientSaveTime", studentWork.getClientSaveTime().getTime());
     gen.writeObjectField("componentId", studentWork.getComponentId());
     gen.writeObjectField("componentType", studentWork.getComponentType());
     gen.writeObjectField("isAutoSave", studentWork.getIsAutoSave());
@@ -22,7 +22,7 @@ public class StudentWorkSerializer extends JsonSerializer<StudentWork> {
     gen.writeObjectField("nodeId", studentWork.getNodeId());
     gen.writeObjectField("periodId", studentWork.getPeriod().getId());
     gen.writeObjectField("runId", studentWork.getRun().getId());
-    gen.writeObjectField("serverSaveTime", studentWork.getServerSaveTime());
+    gen.writeObjectField("serverSaveTime", studentWork.getServerSaveTime().getTime());
     ObjectMapper objectMapper = new ObjectMapper();
     gen.writeObjectField("studentData", objectMapper.readTree(studentWork.getStudentData()));
     gen.writeObjectField("workgroupId", studentWork.getWorkgroup().getId());
