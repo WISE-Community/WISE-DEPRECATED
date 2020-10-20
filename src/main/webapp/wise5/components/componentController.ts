@@ -72,6 +72,7 @@ class ComponentController {
   nodeSubmitClickedSubscription: Subscription;
   audioRecordedSubscription: Subscription;
   notebookItemChosenSubscription: Subscription;
+  snipImageSubscription: Subscription;
   studentWorkSavedToServerSubscription: Subscription;
   starterStateRequestSubscription: Subscription;
 
@@ -192,6 +193,15 @@ class ComponentController {
   }
 
   $onInit() {
+    this.snipImageSubscription =
+        this.ProjectService.snipImage$.subscribe(({ target, componentId }) => {
+      if (componentId === this.componentId) {
+        const imageObject = this.UtilService.getImageObjectFromImageElement(target);
+        if (imageObject != null) {
+          this.NotebookService.addNote(imageObject);
+        }
+      }
+    });
     this.starterStateRequestSubscription =
         this.NodeService.starterStateRequest$.subscribe((args: any) => {
       if (this.isForThisComponent(args)) {
@@ -263,6 +273,7 @@ class ComponentController {
     if (this.notebookItemChosenSubscription != null) {
       this.notebookItemChosenSubscription.unsubscribe();
     }
+    this.snipImageSubscription.unsubscribe();
     this.starterStateRequestSubscription.unsubscribe();
   }
 
