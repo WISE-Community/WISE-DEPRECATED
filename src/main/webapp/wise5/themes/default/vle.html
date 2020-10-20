@@ -3,12 +3,12 @@
 <link rel="stylesheet" href="/wise5/lib/hopscotch/dist/css/hopscotch.min.css" />
 <link rel="stylesheet" href="/wise5/themes/default/style/angular-material.css" />
 <link rel="stylesheet" href="/wise5/themes/default/style/vle.css" />
+<style ng-bind-html="::vleController.projectStyle"></style>
 <disable-delete-keypress>
     <listen-for-delete-keypress>
         <div class="app-styles" role="main" layout="column" layout-fill
              ng-controller="ThemeController as themeCtrl" ng-mousemove="themeCtrl.mouseMoved()"
-             ng-class="::{'notebook-enabled': vleController.notebookEnabled}"
-             ng-style="::vleController.projectStyle">
+             ng-class="::{'notebook-enabled': vleController.notebookEnabled}">
             <ng-include src="::vleController.themePath + '/templates/topbar.html'"></ng-include>
             <step-tools show-position="themeCtrl.numberProject"
                         ng-if="themeCtrl.layoutState === 'node'"></step-tools>
