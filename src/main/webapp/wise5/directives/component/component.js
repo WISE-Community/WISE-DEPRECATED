@@ -1,7 +1,7 @@
 
 class ComponentController {
-    constructor($injector, $scope, $compile, $element, ConfigService, NodeService, NotebookService, ProjectService, StudentDataService, UtilService) {
-        this.$injector = $injector;
+
+    constructor($scope, $compile, $element, ConfigService, NodeService, NotebookService, ProjectService, StudentDataService) {
         this.$scope = $scope;
         this.$element = $element;
         this.$compile = $compile;
@@ -10,7 +10,6 @@ class ComponentController {
         this.NotebookService = NotebookService;
         this.ProjectService = ProjectService;
         this.StudentDataService = StudentDataService;
-        this.UtilService = UtilService;
     }
 
     $onInit() {
@@ -62,14 +61,7 @@ class ComponentController {
             componentContent = this.ProjectService.injectClickToSnipImage(componentContent);
         }
 
-        if (this.$scope.mode === 'authoring') {
-            this.$scope.authoringComponentContent = authoringComponentContent;
-            this.$scope.nodeAuthoringController = this.$scope.$parent.nodeAuthoringController;
-            this.$scope.componentTemplatePath = this.NodeService.getComponentAuthoringTemplatePath(componentContent.type);
-        } else {
-            this.$scope.componentTemplatePath = this.NodeService.getComponentTemplatePath(componentContent.type);
-        }
-
+        this.$scope.componentTemplatePath = this.NodeService.getComponentTemplatePath(componentContent.type);
         this.$scope.componentContent = componentContent;
         this.$scope.componentState = this.componentState;
         this.$scope.nodeId = this.nodeId;
@@ -99,8 +91,7 @@ class ComponentController {
       this.$compile(this.$element.contents())(this.$scope);
     }
 }
-
-ComponentController.$inject = ['$injector', '$scope', '$compile', '$element', 'ConfigService', 'NodeService', 'NotebookService', 'ProjectService', 'StudentDataService', 'UtilService'];
+ComponentController.$inject = ['$scope', '$compile', '$element', 'ConfigService', 'NodeService', 'NotebookService', 'ProjectService', 'StudentDataService'];
 
 const Component = {
     bindings: {
