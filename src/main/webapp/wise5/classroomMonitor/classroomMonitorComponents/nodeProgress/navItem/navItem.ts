@@ -290,11 +290,9 @@ class NavItemController {
     } else {
       this.lockNode(node);
     }
-    this.ProjectService.saveProject().then(response => {
-      if (response.status === 'success') {
-        this.sendNodeToClass(node);
-        this.showToggleLockNodeConfirmation(!isLocked);
-      }
+    this.ProjectService.saveProject().then(() => {
+      this.sendNodeToClass(node);
+      this.showToggleLockNodeConfirmation(!isLocked);
     });
   }
 
