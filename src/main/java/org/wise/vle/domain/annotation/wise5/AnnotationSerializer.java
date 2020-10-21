@@ -18,7 +18,7 @@ public class AnnotationSerializer extends JsonSerializer<Annotation> {
       throws IOException {
     gen.writeStartObject();
     gen.writeObjectField("id", annotation.getId());
-    gen.writeObjectField("clientSaveTime", annotation.getClientSaveTime());
+    gen.writeObjectField("clientSaveTime", annotation.getClientSaveTime().getTime());
     gen.writeObjectField("componentId", annotation.getComponentId());
     ObjectMapper objectMapper = new ObjectMapper();
     gen.writeObjectField("data", objectMapper.readTree(annotation.getData()));
@@ -35,7 +35,7 @@ public class AnnotationSerializer extends JsonSerializer<Annotation> {
     }
     gen.writeObjectField("periodId", annotation.getPeriod().getId());
     gen.writeObjectField("runId", annotation.getRun().getId());
-    gen.writeObjectField("serverSaveTime", annotation.getServerSaveTime());
+    gen.writeObjectField("serverSaveTime", annotation.getServerSaveTime().getTime());
     StudentWork studentWork = annotation.getStudentWork();
     if (studentWork != null) {
       gen.writeObjectField("studentWorkId", studentWork.getId());

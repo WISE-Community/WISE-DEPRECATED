@@ -177,7 +177,7 @@
       <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::"insertAfter" | translate }}</md-tooltip>
     </md-button>
   </div>
-  <component ng-if='nodeAuthoringController.showComponentAuthoringViews' node-id='{{nodeAuthoringController.nodeId}}' component-id='{{component.id}}' mode='authoring'></component>
+  <edit-component ng-if='nodeAuthoringController.showComponentAuthoringViews' node-id='{{nodeAuthoringController.nodeId}}' component-id='{{component.id}}'></edit-component>
   <md-divider ng-if='nodeAuthoringController.showComponentAuthoringViews && !$last'></md-divider>
 </div>
 </div>

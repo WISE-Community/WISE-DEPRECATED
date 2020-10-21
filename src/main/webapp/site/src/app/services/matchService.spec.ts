@@ -38,6 +38,7 @@ describe('MatchService', () => {
   isCompleted();
   componentStateHasStudentWork();
   hasCorrectAnswer();
+  getItemById();
 });
 
 function createMatchComponent(choices: any[], buckets: any[], feedback: any[]) {
@@ -67,7 +68,7 @@ function createChoice(id: string, value: string) {
   return {
     id: id,
     value: value,
-    type: 'string'
+    type: 'choice'
   };
 }
 
@@ -184,5 +185,20 @@ function hasCorrectAnswer() {
   it('should check if there is a correct answer when there is one', () => {
     component.feedback[0].choices[1].isCorrect = true;
     expectHasCorrectAnswer(component, true);
+  });
+}
+
+function getItemById() {
+  const item1 = createChoice('item1', 'Item 1');
+  const item2 = createChoice('item2', 'Item 2');
+  const items: any[] = [
+    item1,
+    item2
+  ];
+  it('should get the item by id when the id exists', () => {
+    expect(service.getItemById('item1', items)).toEqual(item1);
+  });
+  it('should return null when the item id does not exist', () => {
+    expect(service.getItemById('item3', items)).toEqual(null);
   });
 }
