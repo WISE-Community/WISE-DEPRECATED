@@ -1138,30 +1138,33 @@ export class ProjectService {
     }
     this.broadcastSavingProject();
     this.cleanupBeforeSave();
-    this.project.metadata.authors = this.getUniqueAuthors(this.getAuthors());
+    this.project.metadata.authors = this.getUniqueAuthors(this.addCurrentUserToAuthors(
+        this.getAuthors()));
     return this.http.post(this.ConfigService.getConfigParam('saveProjectURL'),
         angular.toJson(this.project, false)).toPromise().then((response: any) => {
       this.handleSaveProjectResponse(response);
     });
   }
 
-  getAuthors() {
-    const authors = this.project.metadata.authors ? this.project.metadata.authors : [];
-    const userInfo = this.ConfigService.getMyUserInfo();
-    let exists = false;
-    for (const author of authors) {
-      if (author.id === userInfo.id) {
-        exists = true;
-        break;
-      }
+  getAuthors(): any[] {
+    return this.project.metadata.authors ? this.project.metadata.authors : [];
+  }
+
+  addCurrentUserToAuthors(authors: any[]): any[] {
+    let userInfo = this.ConfigService.getMyUserInfo();
+    if (this.ConfigService.isClassroomMonitor()) {
+      userInfo = {
+        id: userInfo.userIds[0],
+        firstName: userInfo.firstName,
+        lastName: userInfo.lastName,
+        username: userInfo.username
+      };
     }
-    if (!exists) {
-      authors.push(userInfo);
-    }
+    authors.push(userInfo);
     return authors;
   }
 
-  getUniqueAuthors(authors = []) {
+  getUniqueAuthors(authors = []): any[] {
     const idToAuthor = {};
     const uniqueAuthors = [];
     for (const author of authors) {
