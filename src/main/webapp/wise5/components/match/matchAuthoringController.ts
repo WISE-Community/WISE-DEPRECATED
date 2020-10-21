@@ -346,22 +346,10 @@ class MatchAuthoringController extends ComponentAuthoringController {
     this.openAssetChooser(params);
   }
 
-  openAssetChooser(params: any): void {
-    this.ProjectAssetService.openAssetChooser(params).then(
-      (data: any) => { this.assetSelected(data) }
-    );
-  }
-
   assetSelected({ nodeId, componentId, assetItem, target, targetObject }): void {
+    super.assetSelected({ nodeId, componentId, assetItem, target });
     const fileName = assetItem.fileName;
-    const fullFilePath = `${this.ConfigService.getProjectAssetsDirectoryPath()}/${fileName}`;
-    if (target === 'rubric') {
-      this.UtilService.insertFileInSummernoteEditor(
-        `summernoteRubric_${this.nodeId}_${this.componentId}`,
-        fullFilePath,
-        fileName
-      );
-    } else if (target === 'choice') {
+    if (target === 'choice') {
       targetObject.value = '<img src="' + fileName + '"/>';
       this.authoringViewComponentChanged();
     } else if (target === 'bucket') {
