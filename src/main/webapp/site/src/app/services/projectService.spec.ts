@@ -86,6 +86,7 @@ describe('ProjectService', () => {
   deleteTheLastStepInAnActivity();
   deleteAllStepsInAnActivity();
   getTags();
+  addCurrentUserToAuthors_CM_shouldAddUserInfo();
   // TODO: add test for service.getFlattenedProjectAsNodeIds()
   // TODO: add test for service.getAllPaths()
   // TODO: add test for service.consolidatePaths()
@@ -1042,5 +1043,20 @@ function getTags() {
     expect(tags.length).toEqual(2);
     expect(tags[0].name).toEqual('Group 1');
     expect(tags[1].name).toEqual('Group 2');
+  });
+}
+
+function addCurrentUserToAuthors_CM_shouldAddUserInfo() {
+  it('should add current user to authors in CM mode', () => {
+    spyOn(configService, 'getMyUserInfo').and.returnValue({
+      userIds: [1],
+      firstName: 'wise',
+      lastName: 'panda',
+      username: 'wisepanda'
+    });
+    spyOn(configService, 'isClassroomMonitor').and.returnValue(true);
+    const authors = service.addCurrentUserToAuthors([]);
+    expect(authors.length).toEqual(1);
+    expect(authors[0].id).toEqual(1);
   });
 }
