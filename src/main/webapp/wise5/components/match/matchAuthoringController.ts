@@ -1,106 +1,49 @@
 'use strict';
 
-import { ProjectAssetService } from '../../../site/src/app/services/projectAssetService';
-import MatchController from './matchController';
+import { ComponentAuthoringController } from '../componentAuthoringController';
 
-class MatchAuthoringController extends MatchController {
-  ProjectAssetService: ProjectAssetService;
-  $mdDialog: any;
-  allowedConnectedComponentTypes: any[];
+class MatchAuthoringController extends ComponentAuthoringController {
+  allowedConnectedComponentTypes: any[] = [{ type: 'Match' }];
+  defaultSourceBucketId: string = '0';
 
   static $inject = [
-    '$filter',
-    '$injector',
-    '$mdDialog',
-    '$mdMedia',
-    '$q',
-    '$rootScope',
     '$scope',
-    'AnnotationService',
-    'AudioRecorderService',
+    '$filter',
     'ConfigService',
-    'dragulaService',
     'MatchService',
     'NodeService',
     'NotebookService',
     'NotificationService',
     'ProjectAssetService',
     'ProjectService',
-    'StudentAssetService',
-    'StudentDataService',
     'UtilService'
   ];
 
   constructor(
-    $filter,
-    $injector,
-    $mdDialog,
-    $mdMedia,
-    $q,
-    $rootScope,
     $scope,
-    AnnotationService,
-    AudioRecorderService,
+    $filter,
     ConfigService,
-    dragulaService,
-    MatchService,
+    private MatchService,
     NodeService,
-    NotebookService,
+    private NotebookService,
     NotificationService,
-    ProjectAssetService,
+    protected ProjectAssetService,
     ProjectService,
-    StudentAssetService,
-    StudentDataService,
     UtilService
   ) {
     super(
-      $filter,
-      $injector,
-      $mdDialog,
-      $mdMedia,
-      $q,
-      $rootScope,
       $scope,
-      AnnotationService,
-      AudioRecorderService,
+      $filter,
       ConfigService,
-      dragulaService,
-      MatchService,
       NodeService,
-      NotebookService,
       NotificationService,
+      ProjectAssetService,
       ProjectService,
-      StudentAssetService,
-      StudentDataService,
       UtilService
-    );
-    this.ProjectAssetService = ProjectAssetService;
-    this.allowedConnectedComponentTypes = [
-      {
-        type: 'Match'
-      }
-    ];
-    $scope.$watch(
-      function() {
-        return this.authoringComponentContent;
-      }.bind(this),
-      function(newValue, oldValue) {
-        this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-        this.isHorizontal = this.componentContent.horizontal;
-        this.isSaveButtonVisible = this.componentContent.showSaveButton;
-        this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-        this.isCorrect = null;
-        this.submitCounter = 0;
-        this.isDisabled = false;
-        this.isSubmitButtonDisabled = false;
-        this.initializeChoices();
-        this.initializeBuckets();
-      }.bind(this),
-      true
     );
   }
 
-  authoringAddChoice() {
+  addChoice(): void {
     const newChoice = {
       id: this.UtilService.generateKey(10),
       value: '',
@@ -111,7 +54,7 @@ class MatchAuthoringController extends MatchController {
     this.authoringViewComponentChanged();
   }
 
-  authoringAddBucket() {
+  addBucket(): void {
     const newBucket = {
       id: this.UtilService.generateKey(10),
       value: '',
@@ -122,7 +65,7 @@ class MatchAuthoringController extends MatchController {
     this.authoringViewComponentChanged();
   }
 
-  authoringMoveChoiceUp(index) {
+  moveChoiceUp(index: number): void {
     if (index != 0) {
       const choice = this.authoringComponentContent.choices[index];
       this.authoringComponentContent.choices.splice(index, 1);
@@ -144,7 +87,7 @@ class MatchAuthoringController extends MatchController {
     }
   }
 
-  authoringMoveChoiceDown(index) {
+  moveChoiceDown(index: number): void {
     if (index < this.authoringComponentContent.choices.length - 1) {
       const choice = this.authoringComponentContent.choices[index];
       this.authoringComponentContent.choices.splice(index, 1);
@@ -166,7 +109,7 @@ class MatchAuthoringController extends MatchController {
     }
   }
 
-  authoringDeleteChoice(index) {
+  deleteChoice(index: number): void {
     if (confirm(this.$translate('match.areYouSureYouWantToDeleteThisChoice'))) {
       const deletedChoice = this.authoringComponentContent.choices.splice(index, 1);
       if (deletedChoice != null && deletedChoice.length > 0) {
@@ -176,7 +119,7 @@ class MatchAuthoringController extends MatchController {
     }
   }
 
-  authoringMoveBucketUp(index) {
+  moveBucketUp(index: number): void {
     if (index > 0) {
       const bucket = this.authoringComponentContent.buckets[index];
       this.authoringComponentContent.buckets.splice(index, 1);
@@ -197,7 +140,7 @@ class MatchAuthoringController extends MatchController {
     }
   }
 
-  authoringMoveBucketDown(index) {
+  moveBucketDown(index: number): void {
     if (index < this.authoringComponentContent.buckets.length - 1) {
       const bucket = this.authoringComponentContent.buckets[index];
       this.authoringComponentContent.buckets.splice(index, 1);
@@ -222,7 +165,7 @@ class MatchAuthoringController extends MatchController {
    * Delete a bucket
    * @param index the index of the bucket in the bucket array
    */
-  authoringDeleteBucket(index) {
+  deleteBucket(index: number): void {
     if (confirm(this.$translate('match.areYouSureYouWantToDeleteThisBucket'))) {
       const deletedBucket = this.authoringComponentContent.buckets.splice(index, 1);
       if (deletedBucket != null && deletedBucket.length > 0) {
@@ -232,7 +175,7 @@ class MatchAuthoringController extends MatchController {
     }
   }
 
-  addChoiceToFeedback(choiceId) {
+  addChoiceToFeedback(choiceId: string): void {
     const feedback = this.authoringComponentContent.feedback;
     if (feedback != null) {
       for (const bucketFeedback of feedback) {
@@ -243,7 +186,7 @@ class MatchAuthoringController extends MatchController {
     }
   }
 
-  addBucketToFeedback(bucketId) {
+  addBucketToFeedback(bucketId: string): void {
     const feedback = this.authoringComponentContent.feedback;
     if (feedback != null) {
       const bucket = {
@@ -272,12 +215,12 @@ class MatchAuthoringController extends MatchController {
    * @returns the feedback object
    */
   createFeedbackObject(
-    choiceId,
-    feedback,
-    isCorrect,
-    position = null,
-    incorrectPositionFeedback = null
-  ) {
+    choiceId: string,
+    feedback: string,
+    isCorrect: boolean,
+    position: number = null,
+    incorrectPositionFeedback: string = null
+  ): any {
     return {
       choiceId: choiceId,
       feedback: feedback,
@@ -291,7 +234,7 @@ class MatchAuthoringController extends MatchController {
    * Remove a choice from the feedback
    * @param choiceId the choice id to remove
    */
-  removeChoiceFromFeedback(choiceId) {
+  removeChoiceFromFeedback(choiceId: string): void {
     const feedback = this.authoringComponentContent.feedback;
     if (feedback != null) {
       for (const bucketFeedback of feedback) {
@@ -311,7 +254,7 @@ class MatchAuthoringController extends MatchController {
    * Remove a bucket from the feedback
    * @param bucketId the bucket id to remove
    */
-  removeBucketFromFeedback(bucketId) {
+  removeBucketFromFeedback(bucketId: string): void {
     const feedback = this.authoringComponentContent.feedback;
     if (feedback != null) {
       for (let f = 0; f < feedback.length; f++) {
@@ -326,7 +269,7 @@ class MatchAuthoringController extends MatchController {
     }
   }
 
-  authoringViewFeedbackChanged() {
+  feedbackChanged(): void {
     let show = true;
     if (this.componentHasFeedback()) {
       show = true;
@@ -341,7 +284,7 @@ class MatchAuthoringController extends MatchController {
    * Check if this component has been authored to have feedback or a correct choice
    * @return whether this component has feedback or a correct choice
    */
-  componentHasFeedback() {
+  componentHasFeedback(): boolean {
     const feedback = this.authoringComponentContent.feedback;
     if (feedback != null) {
       for (const tempFeedback of feedback) {
@@ -365,7 +308,7 @@ class MatchAuthoringController extends MatchController {
    * The "Is Correct" checkbox for a choice feedback has been clicked.
    * @param feedback The choice feedback.
    */
-  authoringViewIsCorrectClicked(feedback) {
+  isCorrectClicked(feedback: any): void {
     if (!feedback.isCorrect) {
       delete feedback.position;
       delete feedback.incorrectPositionFeedback;
@@ -377,7 +320,7 @@ class MatchAuthoringController extends MatchController {
    * Show the asset popup to allow the author to choose an image for the choice
    * @param choice the choice object to set the image into
    */
-  chooseChoiceAsset(choice) {
+  chooseChoiceAsset(choice: any): void {
     const params = {
       isPopup: true,
       nodeId: this.nodeId,
@@ -392,7 +335,7 @@ class MatchAuthoringController extends MatchController {
    * Show the asset popup to allow the author to choose an image for the bucket
    * @param bucket the bucket object to set the image into
    */
-  chooseBucketAsset(bucket) {
+  chooseBucketAsset(bucket: any): void {
     const params = {
       isPopup: true,
       nodeId: this.nodeId,
@@ -403,13 +346,13 @@ class MatchAuthoringController extends MatchController {
     this.openAssetChooser(params);
   }
 
-  openAssetChooser(params: any) {
+  openAssetChooser(params: any): void {
     this.ProjectAssetService.openAssetChooser(params).then(
       (data: any) => { this.assetSelected(data) }
     );
   }
 
-  assetSelected({ nodeId, componentId, assetItem, target, targetObject }) {
+  assetSelected({ nodeId, componentId, assetItem, target, targetObject }): void {
     const fileName = assetItem.fileName;
     const fullFilePath = `${this.ConfigService.getProjectAssetsDirectoryPath()}/${fileName}`;
     if (target === 'rubric') {
@@ -427,6 +370,35 @@ class MatchAuthoringController extends MatchController {
     }
   }
 
+  getChoiceTextById(choiceId: string): string {
+    const choice = this.MatchService.getChoiceById(
+      choiceId,
+      this.authoringComponentContent.choices
+    );
+    if (choice != null) {
+      return choice.value;
+    }
+    return null;
+  }
+
+  getBucketNameById(bucketId: string): string {
+    if (bucketId === this.defaultSourceBucketId) {
+      const choicesLabel = this.authoringComponentContent.choicesLabel;
+      return choicesLabel ? choicesLabel : this.$translate('match.choices');
+    }
+    const bucket = this.MatchService.getBucketById(
+      bucketId,
+      this.authoringComponentContent.buckets
+    );
+    if (bucket != null) {
+      return bucket.value;
+    }
+    return null;
+  }
+
+  isNotebookEnabled() {
+    return this.NotebookService.isNotebookEnabled();
+  }
 }
 
 export default MatchAuthoringController;

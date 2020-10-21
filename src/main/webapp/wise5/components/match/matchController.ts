@@ -227,7 +227,7 @@ class MatchController extends ComponentController {
   addNotebookItemToSourceBucket(notebookItem) {
     const choice = this.createChoiceFromNotebookItem(notebookItem);
     this.choices.push(choice);
-    const sourceBucket = this.getBucketById(this.sourceBucketId);
+    const sourceBucket = this.MatchService.getBucketById(this.sourceBucketId, this.buckets);
     sourceBucket.items.push(choice);
   }
 
@@ -291,7 +291,7 @@ class MatchController extends ComponentController {
   setStudentWork(componentState) {
     const studentData = componentState.studentData;
     const componentStateBuckets = studentData.buckets;
-    const sourceBucket = this.getBucketById(this.sourceBucketId);
+    const sourceBucket = this.MatchService.getBucketById(this.sourceBucketId, this.buckets);
     sourceBucket.items = []; // clear the source bucket
     const bucketIds = this.getBucketIds();
     const choiceIds = this.getChoiceIds();
@@ -302,12 +302,12 @@ class MatchController extends ComponentController {
         for (let currentChoice of componentStateBucket.items) {
           const currentChoiceId = currentChoice.id;
           const currentChoiceLocation = choiceIds.indexOf(currentChoiceId);
-          const bucket = this.getBucketById(componentStateBucketId);
+          const bucket = this.MatchService.getBucketById(componentStateBucketId, this.buckets);
           if (currentChoiceLocation > -1) {
             // choice is valid and used by student in a valid bucket, so add it to that bucket
 
             // content for choice with this id may have changed, so get updated content
-            const updatedChoice = this.getChoiceById(currentChoiceId);
+            const updatedChoice = this.MatchService.getChoiceById(currentChoiceId, this.choices);
             bucket.items.push(updatedChoice);
             choiceIds.splice(currentChoiceLocation, 1);
           } else {
@@ -319,7 +319,7 @@ class MatchController extends ComponentController {
 
     // add unused choices to the source bucket
     for (let choiceId of choiceIds) {
-      sourceBucket.items.push(this.getChoiceById(choiceId));
+      sourceBucket.items.push(this.MatchService.getChoiceById(choiceId, this.choices));
     }
 
     const submitCounter = studentData.submitCounter;
@@ -447,7 +447,7 @@ class MatchController extends ComponentController {
       const currentComponentStateBucketChoiceIds = currentComponentStateBucket.items.map(choice => {
         return choice.id;
       });
-      let bucketFromSubmitComponentState = this.getBucketById(
+      let bucketFromSubmitComponentState = this.MatchService.getBucketById(
         currentComponentStateBucket.id,
         latestSubmitComponentStateBuckets
       );
@@ -783,20 +783,6 @@ class MatchController extends ComponentController {
   }
 
   /**
-   * Get the choice by id from the authoring component content
-   * @param {string} id the choice id
-   * @returns {object} the choice object from the authoring component content
-   */
-  getChoiceById(id) {
-    for (let choice of this.componentContent.choices) {
-      if (choice.id === id) {
-        return choice;
-      }
-    }
-    return null;
-  }
-
-  /**
    * Get the choice with the given text.
    * @param {string} text look for a choice with this text
    * @returns {object} the choice with the given text
@@ -810,46 +796,6 @@ class MatchController extends ComponentController {
     return null;
   }
 
-  /**
-   * Get the bucket by id from the authoring component content.
-   * @param {string} id the bucket id
-   * @param {array} buckets (optional) the buckets to get the bucket from
-   * @returns {object} the bucket object from the authoring component content
-   */
-  getBucketById(id, buckets = this.buckets) {
-    for (let bucket of buckets) {
-      if (bucket.id == id) {
-        return bucket;
-      }
-    }
-    return null;
-  }
-
-  /**
-   * Get the choice value by id from the authoring component content
-   * @param {string} choiceId the choice id
-   * @returns {string} the choice value from the authoring component content
-   */
-  getChoiceValueById(choiceId) {
-    const choice = this.getChoiceById(choiceId);
-    if (choice != null) {
-      return choice.value;
-    }
-    return null;
-  }
-
-  /**
-   * Get the bucket value by id from the authoring component content
-   * @param {string} bucketId the bucket id
-   * @returns {string} the bucket value from the authoring component content
-   */
-  getBucketValueById(bucketId) {
-    const bucket = this.getBucketById(bucketId);
-    if (bucket != null) {
-      return bucket.value;
-    }
-    return null;
-  }
 
   /**
    * Check if the component has been authored with a correct choice

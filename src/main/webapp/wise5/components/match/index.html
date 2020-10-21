@@ -41,7 +41,7 @@
                               </div>
                               <p class='match-feedback md-body-2'
                                   ng-if='::item.feedback'
-                                  ng-class='{"success-bg": !matchController.hasCorrectAnswer || item.isCorrect, "info-bg": item.isIncorrectPosition, "warn-bg": !item.isCorrect}'>
+                                  ng-class='{"success-bg": !matchController.hasCorrectAnswer || item.isCorrect, "info-bg": item.isIncorrectPosition, "warn-bg": matchController.hasCorrectAnswer && !item.isCorrect}'>
                                 <md-icon ng-if='::matchController.hasCorrectAnswer && item.isCorrect'>
                                   check
                                 </md-icon>
@@ -92,7 +92,7 @@
                                 </div>
                                 <p class='match-feedback md-body-2'
                                     ng-show='::item.feedback'
-                                    ng-class='::{"success-bg": !matchController.hasCorrectAnswer || item.isCorrect, "info-bg": item.isIncorrectPosition, "warn-bg": !item.isCorrect}'>
+                                    ng-class='::{"success-bg": !matchController.hasCorrectAnswer || item.isCorrect, "info-bg": item.isIncorrectPosition, "warn-bg": matchController.hasCorrectAnswer && !item.isCorrect}'>
                                   <md-icon ng-if='::matchController.hasCorrectAnswer && item.isCorrect'>
                                     check
                                   </md-icon>
@@ -225,7 +225,7 @@
                           </div>
                           <p class='match-feedback md-body-2'
                               ng-show='item.feedback'
-                              ng-class='{"success-bg": !matchController.hasCorrectAnswer || item.isCorrect, "info-bg": item.isIncorrectPosition, "warn-bg": !item.isCorrect}'>
+                              ng-class='{"success-bg": !matchController.hasCorrectAnswer || item.isCorrect, "info-bg": item.isIncorrectPosition, "warn-bg": matchController.hasCorrectAnswer && !item.isCorrect}'>
                             <md-icon ng-if='matchController.hasCorrectAnswer && item.isCorrect'>
                               check
                             </md-icon>
@@ -287,7 +287,7 @@
                             </div>
                             <p class='match-feedback md-body-2'
                                 ng-show='item.feedback'
-                                ng-class='{"success-bg": !matchController.hasCorrectAnswer || item.isCorrect, "info-bg": item.isIncorrectPosition, "warn-bg": !item.isCorrect}'>
+                                ng-class='{"success-bg": !matchController.hasCorrectAnswer || item.isCorrect, "info-bg": item.isIncorrectPosition, "warn-bg": matchController.hasCorrectAnswer && !item.isCorrect}'>
                               <md-icon ng-if='matchController.hasCorrectAnswer && item.isCorrect'>
                                 check
                               </md-icon>
