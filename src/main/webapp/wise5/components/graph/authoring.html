@@ -452,7 +452,7 @@
           <md-input-container style='margin-right: 20px; width: 120px;'>
             <label>{{ ::'graph.plotType' | translate }}</label>
             <md-select ng-model='graphController.authoringComponentContent.graphType'
-                       ng-change='graphController.authoringViewComponentChanged()'
+                       ng-change='graphController.graphTypeChanged()'
                        style='width: 120px'>
               <md-option ng-repeat='availableGraphType in graphController.availableGraphTypes'
                          value='{{availableGraphType.value}}'>
@@ -789,7 +789,7 @@
                               ng-if='graphController.authoringComponentContent.graphType == "line" || graphController.authoringComponentContent.graphType == "scatter"'>
             <label>{{ ::'graph.type' | translate }}</label>
             <md-select ng-model='series.type'
-                       ng-change='graphController.authoringViewComponentChanged()'
+                       ng-change='graphController.seriesTypeChanged(series)'
                        style='width: 120px'>
               <md-option ng-repeat='availableSeriesType in graphController.availableSeriesTypes'
                          value='{{availableSeriesType.value}}'>

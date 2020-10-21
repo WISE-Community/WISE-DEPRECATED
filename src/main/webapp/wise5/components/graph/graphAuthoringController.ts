@@ -9,8 +9,10 @@ class GraphAuthoringController extends ComponentAuthoringController {
   availableSeriesTypes: any[];
   availableLineTypes: any[];
   availableXAxisTypes: any[];
+  plotTypeToLimitType: object;
   numYAxes: number;
   enableMultipleYAxes: boolean;
+  defaultDashStyle: string = 'Solid';
 
   static $inject = [
     '$filter',
@@ -153,6 +155,12 @@ class GraphAuthoringController extends ComponentAuthoringController {
       { type: 'Label' },
       { type: 'Table' }
     ];
+
+    this.plotTypeToLimitType = {
+      line: 'limits',
+      scatter: 'limits',
+      column: 'categories'
+    }
 
     this.numYAxes = 0;
     this.enableMultipleYAxes = this.isMultipleYAxesEnabled();
@@ -310,24 +318,23 @@ class GraphAuthoringController extends ComponentAuthoringController {
     this.authoringViewComponentChanged();
   }
 
-  xAxisTypeChanged(newValue, oldValue) {
-    if (confirm(this.$translate('graph.areYouSureYouWantToChangeTheXAxisType'))) {
-      if (oldValue === 'categories' && newValue === 'limits') {
-        delete this.authoringComponentContent.xAxis.categories;
-        this.authoringComponentContent.xAxis.min = 0;
-        this.authoringComponentContent.xAxis.max = 10;
-        this.convertAllSeriesDataPoints(newValue);
-      } else if ((oldValue === 'limits' || oldValue === '' || oldValue == null) &&
-          newValue === 'categories') {
-        delete this.authoringComponentContent.xAxis.min;
-        delete this.authoringComponentContent.xAxis.max;
-        delete this.authoringComponentContent.xAxis.units;
-        delete this.authoringComponentContent.yAxis.units;
-        this.authoringComponentContent.xAxis.categories = [];
-        this.convertAllSeriesDataPoints(newValue);
-      }
-    } else {
-      this.authoringComponentContent.xAxis.type = oldValue;
+  xAxisTypeChanged(newValue: string, oldValue: string): void {
+    if (oldValue === 'categories' && newValue === 'limits') {
+      delete this.authoringComponentContent.xAxis.categories;
+      this.authoringComponentContent.xAxis.min = 0;
+      this.authoringComponentContent.xAxis.max = 10;
+      this.convertAllSeriesDataPoints(newValue);
+    } else if ((oldValue === 'limits' || oldValue === '' || oldValue == null) &&
+        newValue === 'categories') {
+      delete this.authoringComponentContent.xAxis.min;
+      delete this.authoringComponentContent.xAxis.max;
+      delete this.authoringComponentContent.xAxis.units;
+      delete this.authoringComponentContent.yAxis.units;
+      this.authoringComponentContent.xAxis.categories = [
+        this.$translate('graph.categoryOne'),
+        this.$translate('graph.categoryTwo')
+      ];
+      this.convertAllSeriesDataPoints(newValue);
     }
     this.authoringViewComponentChanged();
   }
@@ -712,6 +719,43 @@ class GraphAuthoringController extends ComponentAuthoringController {
   seriesYAxisChanged(series) {
     this.setSeriesColorToMatchYAxisColor(series);
     this.authoringViewComponentChanged();
+  }
+
+  graphTypeChanged(): void {
+    const graphType = this.authoringComponentContent.graphType;
+    this.updateAllSeriesPlotTypes(graphType);
+    this.changeXAxisTypeIfNecessary(graphType);
+    this.authoringViewComponentChanged();
+  }
+
+  updateAllSeriesPlotTypes(plotType: string): void {
+    const multipleSeries = this.authoringComponentContent.series;
+    for (const singleSeries of multipleSeries) {
+      singleSeries.type = plotType;
+      this.updateDashStyleField(singleSeries);
+    }
+  }
+
+  changeXAxisTypeIfNecessary(graphType: string): void {
+    const oldXAxisType = this.authoringComponentContent.xAxis.type;
+    const newXAxisType = this.plotTypeToLimitType[graphType];
+    if (oldXAxisType != newXAxisType) {
+      this.authoringComponentContent.xAxis.type = newXAxisType;
+      this.xAxisTypeChanged(newXAxisType, oldXAxisType);
+    }
+  }
+
+  seriesTypeChanged(series: any): void {
+    this.updateDashStyleField(series);
+    this.authoringViewComponentChanged();
+  }
+
+  updateDashStyleField(series: any): void {
+    if (series.type === 'line') {
+      series.dashStyle = this.defaultDashStyle;
+    } else {
+      delete series.dashStyle;
+    }
   }
 }
 
