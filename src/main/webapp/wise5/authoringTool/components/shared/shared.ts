@@ -7,14 +7,16 @@ import Toolbar from './toolbar/toolbar';
 import TopBar from './topBar/topBar';
 import * as angular from 'angular';
 import EditComponent from '../edit-component/editComponent';
+import PreviewComponent from '../preview-component/previewComponent';
 
 const SharedComponents = angular
   .module('sharedComponents', [])
-  .component('editComponent', EditComponent)
   .component('atMainMenu', MainMenu)
   .component('atSideMenu', SideMenu)
   .component('atStepTools', StepTools)
   .component('atToolbar', Toolbar)
-  .component('atTopBar', TopBar);
+  .component('atTopBar', TopBar)
+  .component('editComponent', EditComponent)
+  .component('previewComponent', PreviewComponent);
 
 export default SharedComponents;
