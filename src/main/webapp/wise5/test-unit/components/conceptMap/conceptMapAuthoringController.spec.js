@@ -102,7 +102,7 @@ function shouldMoveTheObjectUp() {
       conceptMapAuthoringController,
       'authoringViewComponentChanged'
     );
-    conceptMapAuthoringController.authoringViewMoveNodeUpButtonClicked(1);
+    conceptMapAuthoringController.moveNodeUpButtonClicked(1);
     expect(authoringViewComponentChangedSpy).toHaveBeenCalled();
     expect(conceptMapAuthoringController.authoringComponentContent.nodes[0].id).toEqual('node2');
     expect(conceptMapAuthoringController.authoringComponentContent.nodes[1].id).toEqual('node1');
@@ -117,7 +117,7 @@ function shouldMoveTheObjectDown() {
       conceptMapAuthoringController,
       'authoringViewComponentChanged'
     );
-    conceptMapAuthoringController.authoringViewMoveNodeDownButtonClicked(1);
+    conceptMapAuthoringController.moveNodeDownButtonClicked(1);
     expect(authoringViewComponentChangedSpy).toHaveBeenCalled();
     expect(conceptMapAuthoringController.authoringComponentContent.nodes[0].id).toEqual('node1');
     expect(conceptMapAuthoringController.authoringComponentContent.nodes[1].id).toEqual('node3');

@@ -2,89 +2,47 @@
 
 import 'svg.js';
 import 'svg.draggable.js';
-import ConceptMapController from './conceptMapController';
-import { ConceptMapService } from './conceptMapService';
-import { ProjectAssetService } from '../../../site/src/app/services/projectAssetService';
+import { ComponentAuthoringController } from '../componentAuthoringController';
 
-class ConceptMapAuthoringController extends ConceptMapController {
-  ConceptMapService: ConceptMapService;
-  ProjectAssetService: ProjectAssetService;
+class ConceptMapAuthoringController extends ComponentAuthoringController {
   allowedConnectedComponentTypes: any[];
   shouldOptions: any[];
   availableNodes: any[];
   availableLinks: any[];
 
   static $inject = [
-    '$anchorScroll',
-    '$filter',
-    '$injector',
-    '$location',
-    '$mdDialog',
-    '$q',
-    '$rootScope',
     '$scope',
-    '$timeout',
-    'AnnotationService',
-    'AudioRecorderService',
+    '$filter',
     'ConceptMapService',
     'ConfigService',
     'NodeService',
-    'NotebookService',
     'NotificationService',
     'ProjectAssetService',
     'ProjectService',
-    'StudentAssetService',
-    'StudentDataService',
     'UtilService'
   ];
 
   constructor(
-    $anchorScroll,
-    $filter,
-    $injector,
-    $location,
-    $mdDialog,
-    $q,
-    $rootScope,
     $scope,
-    $timeout,
-    AnnotationService,
-    AudioRecorderService,
-    ConceptMapService,
+    $filter,
+    private ConceptMapService,
     ConfigService,
     NodeService,
-    NotebookService,
     NotificationService,
     ProjectAssetService,
     ProjectService,
-    StudentAssetService,
-    StudentDataService,
     UtilService
   ) {
     super(
-      $anchorScroll,
-      $filter,
-      $injector,
-      $location,
-      $mdDialog,
-      $q,
-      $rootScope,
       $scope,
-      $timeout,
-      AnnotationService,
-      AudioRecorderService,
-      ConceptMapService,
+      $filter,
       ConfigService,
       NodeService,
-      NotebookService,
       NotificationService,
+      ProjectAssetService,
       ProjectService,
-      StudentAssetService,
-      StudentDataService,
       UtilService
     );
-    this.ConceptMapService = ConceptMapService;
-    this.ProjectAssetService = ProjectAssetService;
 
     this.allowedConnectedComponentTypes = [
       { type: 'ConceptMap' },
@@ -113,44 +71,13 @@ class ConceptMapAuthoringController extends ConceptMapController {
       this.componentContent.showNodeLabels = true;
       this.authoringComponentContent.showNodeLabels = true;
     }
-
-    $scope.$watch(
-      function() {
-        return this.authoringComponentContent;
-      }.bind(this),
-      function(newValue, oldValue) {
-        this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-        this.isSaveButtonVisible = this.componentContent.showSaveButton;
-        this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-        this.availableNodes = this.componentContent.nodes;
-        this.availableLinks = this.componentContent.links;
-        this.width = this.componentContent.width;
-        this.height = this.componentContent.height;
-        this.setBackgroundImage(
-          this.componentContent.background,
-          this.componentContent.stretchBackground
-        );
-
-        /*
-         * make sure the SVG element can be accessed. we need to
-         * perform this check because this watch is getting fired
-         * before angular sets the svgId on the svg element. if
-         * setupSVG() is called before the svgId is set on the svg
-         * element, we will get an error.
-         */
-        if (document.getElementById(this.svgId) != null) {
-          this.setupSVG();
-        }
-      }.bind(this),
-      true
-    );
   }
 
   /**
    * A move node up button was clicked in the authoring tool
    * @param index the index of the node that we will move
    */
-  authoringViewMoveNodeUpButtonClicked(index) {
+  moveNodeUpButtonClicked(index: number): void {
     this.UtilService.moveObjectUp(this.authoringComponentContent.nodes, index);
     this.authoringViewComponentChanged();
   }
@@ -159,7 +86,7 @@ class ConceptMapAuthoringController extends ConceptMapController {
    * A move node down button was clicked in the authoring tool.
    * @param index the index of the node that we will move
    */
-  authoringViewMoveNodeDownButtonClicked(index) {
+  moveNodeDownButtonClicked(index: number): void {
     this.UtilService.moveObjectDown(this.authoringComponentContent.nodes, index);
     this.authoringViewComponentChanged();
   }
@@ -168,7 +95,7 @@ class ConceptMapAuthoringController extends ConceptMapController {
    * A node delete button was clicked in the authoring tool.
    * @param index the index of the node that we will delete
    */
-  authoringViewNodeDeleteButtonClicked(index) {
+  nodeDeleteButtonClicked(index: number): void {
     const nodes = this.authoringComponentContent.nodes;
     const node = nodes[index];
     const nodeFileName = node.fileName;
@@ -190,7 +117,7 @@ class ConceptMapAuthoringController extends ConceptMapController {
    * A move link up button was clicked in the authoring tool.
    * @param index the index of the link
    */
-  authoringViewMoveLinkUpButtonClicked(index) {
+  moveLinkUpButtonClicked(index: number): void {
     this.UtilService.moveObjectUp(this.authoringComponentContent.links, index);
     this.authoringViewComponentChanged();
   }
@@ -199,7 +126,7 @@ class ConceptMapAuthoringController extends ConceptMapController {
    * A move link down button was clicked in the authoring tool.
    * @param index the index of the link
    */
-  authoringViewMoveLinkDownButtonClicked(index) {
+  moveLinkDownButtonClicked(index: number): void {
     this.UtilService.moveObjectDown(this.authoringComponentContent.links, index);
     this.authoringViewComponentChanged();
   }
@@ -208,7 +135,7 @@ class ConceptMapAuthoringController extends ConceptMapController {
    * A link delete button was clicked in the authoring tool.
    * @param index the index of the link
    */
-  authoringViewLinkDeleteButtonClicked(index) {
+  linkDeleteButtonClicked(index: number): void {
     const links = this.authoringComponentContent.links;
     const link = links[index];
     const linkLabel = link.label;
@@ -222,9 +149,9 @@ class ConceptMapAuthoringController extends ConceptMapController {
     }
   }
 
-  authoringViewAddNode() {
+  addNode(): void {
     const newNode = {
-      id: this.authoringGetNewConceptMapNodeId(),
+      id: this.getNewConceptMapNodeId(),
       label: '',
       fileName: '',
       width: 100,
@@ -239,7 +166,7 @@ class ConceptMapAuthoringController extends ConceptMapController {
    * @param nodeId the concept map node id
    * @return the concept map node with the given node id
    */
-  authoringViewGetNodeById(nodeId) {
+  getNodeById(nodeId: number): any {
     for (const node of this.authoringComponentContent.nodes) {
       if (nodeId === node.id) {
         return node;
@@ -248,9 +175,9 @@ class ConceptMapAuthoringController extends ConceptMapController {
     return null;
   }
 
-  authoringViewAddLink() {
+  addLink(): void {
     const newLink = {
-      id: this.authoringGetNewConceptMapLinkId(),
+      id: this.getNewConceptMapLinkId(),
       label: '',
       color: ''
     };
@@ -262,7 +189,7 @@ class ConceptMapAuthoringController extends ConceptMapController {
    * Get a new ConceptMapNode id that isn't being used
    * @returns a new ConceptMapNode id e.g. 'node3'
    */
-  authoringGetNewConceptMapNodeId() {
+  getNewConceptMapNodeId(): string {
     return this.ConceptMapService.getNextAvailableId(this.authoringComponentContent.nodes, 'node');
   }
 
@@ -270,7 +197,7 @@ class ConceptMapAuthoringController extends ConceptMapController {
    * Get a new ConceptMapLink id that isn't being used
    * @returns a new ConceptMapLink id e.g. 'link3'
    */
-  authoringGetNewConceptMapLinkId() {
+  getNewConceptMapLinkId(): string {
     return this.ConceptMapService.getNextAvailableId(this.authoringComponentContent.links, 'link');
   }
 
@@ -278,7 +205,7 @@ class ConceptMapAuthoringController extends ConceptMapController {
    * A "with link" checkbox was checked
    * @param ruleIndex the index of the rule
    */
-  authoringRuleLinkCheckboxClicked(ruleIndex) {
+  ruleLinkCheckboxClicked(ruleIndex: number): void {
     const rule = this.authoringComponentContent.rules[ruleIndex];
     if (rule.type === 'node') {
       /*
@@ -291,7 +218,7 @@ class ConceptMapAuthoringController extends ConceptMapController {
     this.authoringViewComponentChanged();
   }
 
-  authoringAddRule() {
+  addRule(): void {
     const newRule = {
       name: '',
       type: 'node',
@@ -316,7 +243,7 @@ class ConceptMapAuthoringController extends ConceptMapController {
    * Move a rule up
    * @param index the index of the rule
    */
-  authoringViewMoveRuleUpButtonClicked(index) {
+  moveRuleUpButtonClicked(index: number): void {
     this.UtilService.moveObjectUp(this.authoringComponentContent.rules, index);
     this.authoringViewComponentChanged();
   }
@@ -325,7 +252,7 @@ class ConceptMapAuthoringController extends ConceptMapController {
    * Move a rule down
    * @param index the index of the rule
    */
-  authoringViewMoveRuleDownButtonClicked(index) {
+  moveRuleDownButtonClicked(index: number): void {
     this.UtilService.moveObjectDown(this.authoringComponentContent.rules, index);
     this.authoringViewComponentChanged();
   }
@@ -334,7 +261,7 @@ class ConceptMapAuthoringController extends ConceptMapController {
    * Delete a rule
    * @param index the index of the rule to delete
    */
-  authoringViewRuleDeleteButtonClicked(index) {
+  ruleDeleteButtonClicked(index: number): void {
     const rule = this.authoringComponentContent.rules[index];
     const ruleName = rule.name;
     if (
@@ -353,12 +280,12 @@ class ConceptMapAuthoringController extends ConceptMapController {
     this.setShowSubmitButtonValue(showSubmitButton);
   }
 
-  authoringViewAddCategoryToRule(rule) {
+  addCategoryToRule(rule: any): void {
     rule.categories.push('');
     this.authoringViewComponentChanged();
   }
 
-  authoringViewDeleteCategoryFromRule(rule, index) {
+  deleteCategoryFromRule(rule: any, index: number): void {
     const ruleName = rule.name;
     const categoryName = rule.categories[index];
     if (
@@ -374,17 +301,20 @@ class ConceptMapAuthoringController extends ConceptMapController {
     }
   }
 
-  saveStarterConceptMap() {
+  saveStarterConceptMap(): void {
     if (confirm(this.$translate('conceptMap.areYouSureYouWantToSaveTheStarterConceptMap'))) {
-      this.authoringComponentContent.starterConceptMap = this.getConceptMapData();
-      this.authoringViewComponentChanged();
+      this.NodeService.requestStarterState({nodeId: this.nodeId, componentId: this.componentId});
     }
   }
 
-  deleteStarterConceptMap() {
+  saveStarterState(starterState: any): void {
+    this.authoringComponentContent.starterConceptMap = starterState;
+    this.authoringViewComponentChanged();
+  }
+
+  deleteStarterConceptMap(): void {
     if (confirm(this.$translate('conceptMap.areYouSureYouWantToDeleteTheStarterConceptMap'))) {
       this.authoringComponentContent.starterConceptMap = null;
-      this.clearConceptMap();
       this.authoringViewComponentChanged();
     }
   }
@@ -392,7 +322,7 @@ class ConceptMapAuthoringController extends ConceptMapController {
   /**
    * Show the asset popup to allow the author to choose the background image
    */
-  chooseBackgroundImage() {
+  chooseBackgroundImage(): void {
     const params = {
       isPopup: true,
       nodeId: this.nodeId,
@@ -406,7 +336,7 @@ class ConceptMapAuthoringController extends ConceptMapController {
    * Show the asset popup to allow the author to choose an image for the node
    * @param conceptMapNodeId the id of the node in the concept map
    */
-  chooseNodeImage(conceptMapNodeId) {
+  chooseNodeImage(conceptMapNodeId: string): void {
     const params = {
       isPopup: true,
       nodeId: this.nodeId,
@@ -416,28 +346,14 @@ class ConceptMapAuthoringController extends ConceptMapController {
     this.openAssetChooser(params);
   }
 
-  openAssetChooser(params: any) {
-    this.ProjectAssetService.openAssetChooser(params).then(
-      (data: any) => { this.assetSelected(data) }
-    );
-  }
-
-  assetSelected(args: any) {
+  assetSelected(args: any): void {
+    super.assetSelected(args);
     const fileName = args.assetItem.fileName;
-    if (args.target === 'rubric') {
-      const summernoteId = this.getSummernoteId(args);
-      this.restoreSummernoteCursorPosition(summernoteId);
-      const fullAssetPath = this.getFullAssetPath(fileName);
-      if (this.UtilService.isImage(fileName)) {
-        this.insertImageIntoSummernote(summernoteId, fullAssetPath, fileName);
-      } else if (this.UtilService.isVideo(fileName)) {
-        this.insertVideoIntoSummernote(summernoteId, fullAssetPath);
-      }
-    } else if (args.target === 'background') {
+    if (args.target === 'background') {
       this.authoringComponentContent.background = fileName;
       this.authoringViewComponentChanged();
     } else if (args.target != null && args.target.indexOf('node') == 0) {
-      const node = this.authoringViewGetNodeById(args.target);
+      const node = this.getNodeById(args.target);
       node.fileName = fileName;
       this.authoringViewComponentChanged();
     }
@@ -448,22 +364,10 @@ class ConceptMapAuthoringController extends ConceptMapController {
    * is only one viable option.
    * @param connectedComponent the connected component object we are authoring
    */
-  authoringAutomaticallySetConnectedComponentComponentIdIfPossible(connectedComponent) {
-    let numberOfAllowedComponents = 0;
-    let allowedComponent = null;
-    for (const component of this.getComponentsByNodeId(connectedComponent.nodeId)) {
-      if (
-        this.isConnectedComponentTypeAllowed(component.type) &&
-        component.id != this.componentId
-      ) {
-        numberOfAllowedComponents += 1;
-        allowedComponent = component;
-      }
-    }
-    if (numberOfAllowedComponents === 1) {
-      connectedComponent.componentId = allowedComponent.id;
-      connectedComponent.type = 'importWork';
-      this.authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent);
+  automaticallySetConnectedComponentComponentIdIfPossible(connectedComponent: any): void {
+    super.automaticallySetConnectedComponentComponentIdIfPossible(connectedComponent);
+    if (connectedComponent.componentId != null) {
+      this.setImportWorkAsBackgroundIfApplicable(connectedComponent);
     }
   }
 
@@ -471,9 +375,9 @@ class ConceptMapAuthoringController extends ConceptMapController {
    * The connected component component id has changed
    * @param connectedComponent the connected component that has changed
    */
-  authoringConnectedComponentComponentIdChanged(connectedComponent) {
-    connectedComponent.type = 'importWork';
-    this.authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent);
+  connectedComponentComponentIdChanged(connectedComponent: any): void {
+    this.automaticallySetConnectedComponentTypeIfPossible(connectedComponent);
+    this.setImportWorkAsBackgroundIfApplicable(connectedComponent);
     this.authoringViewComponentChanged();
   }
 
@@ -482,8 +386,8 @@ class ConceptMapAuthoringController extends ConceptMapController {
    * field to true.
    * @param connectedComponent The connected component object.
    */
-  authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent) {
-    const componentType = this.authoringGetConnectedComponentType(connectedComponent);
+  setImportWorkAsBackgroundIfApplicable(connectedComponent: any): void {
+    const componentType = this.getConnectedComponentType(connectedComponent);
     if (['Draw', 'Embedded', 'Graph', 'Label', 'Table'].includes(componentType)) {
       connectedComponent.importWorkAsBackground = true;
     } else {
@@ -495,19 +399,13 @@ class ConceptMapAuthoringController extends ConceptMapController {
    * The "Import Work As Background" checkbox was clicked.
    * @param connectedComponent The connected component associated with the checkbox.
    */
-  authoringImportWorkAsBackgroundClicked(connectedComponent) {
+  importWorkAsBackgroundClicked(connectedComponent: any): void {
     if (!connectedComponent.importWorkAsBackground) {
       delete connectedComponent.importWorkAsBackground;
     }
     this.authoringViewComponentChanged();
   }
 
-  submit(submitTriggeredBy) {
-    super.submit(submitTriggeredBy);
-    this.isDirty = false;
-    this.isSubmitDirty = false;
-    this.createComponentState('submit');
-  }
 }
 
 export default ConceptMapAuthoringController;
