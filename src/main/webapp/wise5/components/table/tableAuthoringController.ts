@@ -1,73 +1,44 @@
 'use strict';
 
-import { Project } from '../../../site/src/app/domain/project';
-import { ProjectAssetService } from '../../../site/src/app/services/projectAssetService';
-import TableController from './tableController';
+import { ComponentAuthoringController } from '../componentAuthoringController';
 
-class TableAuthoringController extends TableController {
-  ProjectAssetService: ProjectAssetService;
+class TableAuthoringController extends ComponentAuthoringController {
+  columnCellSizes: any;
+  isDataExplorerScatterPlotEnabled: boolean;
+  isDataExplorerLineGraphEnabled: boolean;
+  isDataExplorerBarGraphEnabled: boolean;
 
   static $inject = [
-    '$filter',
-    '$injector',
-    '$mdDialog',
-    '$q',
-    '$rootScope',
     '$scope',
-    'AnnotationService',
-    'AudioRecorderService',
+    '$filter',
     'ConfigService',
     'NodeService',
-    'NotebookService',
     'NotificationService',
     'ProjectAssetService',
     'ProjectService',
-    'StudentAssetService',
-    'StudentDataService',
-    'TableService',
     'UtilService'
   ];
 
   constructor(
-    $filter,
-    $injector,
-    $mdDialog,
-    $q,
-    $rootScope,
     $scope,
-    AnnotationService,
-    AudioRecorderService,
+    $filter,
     ConfigService,
     NodeService,
-    NotebookService,
     NotificationService,
     ProjectAssetService,
     ProjectService,
-    StudentAssetService,
-    StudentDataService,
-    TableService,
     UtilService
   ) {
     super(
-      $filter,
-      $injector,
-      $mdDialog,
-      $q,
-      $rootScope,
       $scope,
-      AnnotationService,
-      AudioRecorderService,
+      $filter,
       ConfigService,
       NodeService,
-      NotebookService,
       NotificationService,
+      ProjectAssetService,
       ProjectService,
-      StudentAssetService,
-      StudentDataService,
-      TableService,
       UtilService
     );
-    this.ProjectAssetService = ProjectAssetService;
     this.allowedConnectedComponentTypes = [
       {
         type: 'Embedded'
@@ -84,41 +55,9 @@ class TableAuthoringController extends TableController {
       this.initializeDataExplorerSeriesParams();
     }
     this.columnCellSizes = this.parseColumnCellSizes(this.componentContent);
-    $scope.$watch(
-      function() {
-        return this.authoringComponentContent;
-      }.bind(this),
-      function(newValue, oldValue) {
-        this.submitCounter = 0;
-        this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-        this.columnCellSizes = this.parseColumnCellSizes(this.componentContent);
-        this.isSaveButtonVisible = this.componentContent.showSaveButton;
-        this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-        this.resetTable();
-      }.bind(this),
-      true
-    );
   }
 
-  openAssetChooser(params: any) {
-    this.ProjectAssetService.openAssetChooser(params).then(
-      (data: any) => { this.assetSelected(data) }
-    );
-  }
-
-  assetSelected({ nodeId, componentId, assetItem, target }) {
-    const fileName = assetItem.fileName;
-    const fullFilePath = `${this.ConfigService.getProjectAssetsDirectoryPath()}/${fileName}`;
-    if (target === 'rubric') {
-      this.UtilService.insertFileInSummernoteEditor(
-        `summernoteRubric_${this.nodeId}_${this.componentId}`,
-        fullFilePath,
-        fileName
-      );
-    }
-  }
-
-  initializeDataExplorerSeriesParams() {
+  initializeDataExplorerSeriesParams(): void {
     if (this.authoringComponentContent.dataExplorerSeriesParams == null) {
       this.authoringComponentContent.dataExplorerSeriesParams = [];
       for (let s = 0; s < this.authoringComponentContent.numDataExplorerSeries; s++) {
@@ -127,19 +66,19 @@ class TableAuthoringController extends TableController {
     }
   }
 
-  authoringViewTableNumRowsChanged(oldValue) {
+  tableNumRowsChanged(oldValue: number): void {
     if (this.authoringComponentContent.numRows < oldValue) {
       if (this.areRowsAfterEmpty(this.authoringComponentContent.numRows)) {
-        this.authoringViewTableSizeChanged();
+        this.tableSizeChanged();
       } else {
         if (confirm(this.$translate('table.areYouSureYouWantToDecreaseTheNumberOfRows'))) {
-          this.authoringViewTableSizeChanged();
+          this.tableSizeChanged();
         } else {
           this.authoringComponentContent.numRows = oldValue;
         }
       }
     } else {
-      this.authoringViewTableSizeChanged();
+      this.tableSizeChanged();
     }
   }
 
@@ -149,8 +88,8 @@ class TableAuthoringController extends TableController {
    * @return {boolean} True if the row at the given index and all the rows after are empty.
    * False if the row at the given index or any row after the row index is not empty.
    */
-  areRowsAfterEmpty(rowIndex) {
-    const oldNumRows = this.authoringGetNumRowsInTableData();
+  areRowsAfterEmpty(rowIndex: number): boolean {
+    const oldNumRows = this.getNumRowsInTableData();
     for (let r = rowIndex; r < oldNumRows; r++) {
       if (!this.isRowEmpty(r)) {
         return false;
@@ -165,7 +104,7 @@ class TableAuthoringController extends TableController {
    * @returns {boolean} True if the text in all the cells in the row are empty string.
    * False if the text in any cell in the row is not empty string.
    */
-  isRowEmpty(rowIndex) {
+  isRowEmpty(rowIndex: number): boolean {
     const tableData = this.authoringComponentContent.tableData;
     for (const cell of tableData[rowIndex]) {
       if (cell.text != null && cell.text != '') {
@@ -179,22 +118,22 @@ class TableAuthoringController extends TableController {
    * The author has changed the number of columns.
    * @param oldValue The previous number of columns.
    */
-  authoringViewTableNumColumnsChanged(oldValue) {
+  tableNumColumnsChanged(oldValue: number): void {
     if (this.authoringComponentContent.numColumns < oldValue) {
       // the author is reducing the number of columns
       if (this.areColumnsAfterEmpty(this.authoringComponentContent.numColumns)) {
         // the columns that we will delete are empty so we will remove the columns
-        this.authoringViewTableSizeChanged();
+        this.tableSizeChanged();
       } else {
         if (confirm(this.$translate('table.areYouSureYouWantToDecreaseTheNumberOfColumns'))) {
-          this.authoringViewTableSizeChanged();
+          this.tableSizeChanged();
         } else {
           this.authoringComponentContent.numColumns = oldValue;
         }
       }
     } else {
       // the author is increasing the number of columns
-      this.authoringViewTableSizeChanged();
+      this.tableSizeChanged();
     }
   }
 
@@ -204,8 +143,8 @@ class TableAuthoringController extends TableController {
    * @return {boolean} True if the column at the given index and all the columns after are empty.
    * False if the column at the given index or any column after the column index is not empty.
    */
-  areColumnsAfterEmpty(columnIndex) {
-    const oldNumColumns = this.authoringGetNumColumnsInTableData();
+  areColumnsAfterEmpty(columnIndex: number): boolean {
+    const oldNumColumns = this.getNumColumnsInTableData();
     for (let c = columnIndex; c < oldNumColumns; c++) {
       if (!this.isColumnEmpty(c)) {
         return false;
@@ -220,7 +159,7 @@ class TableAuthoringController extends TableController {
    * @returns {boolean} True if the text in all the cells in the column are empty string.
    * False if the text in any cell in the column is not empty string.
    */
-  isColumnEmpty(columnIndex) {
+  isColumnEmpty(columnIndex: number): boolean {
     for (const row of this.authoringComponentContent.tableData) {
       const cell = row[columnIndex];
       if (cell.text != null && cell.text != '') {
@@ -233,7 +172,7 @@ class TableAuthoringController extends TableController {
   /**
    * The table size has changed in the authoring view so we will update it
    */
-  authoringViewTableSizeChanged() {
+  tableSizeChanged(): void {
     this.authoringComponentContent.tableData = this.getUpdatedTableSize(
       this.authoringComponentContent.numRows,
       this.authoringComponentContent.numColumns
@@ -248,7 +187,7 @@ class TableAuthoringController extends TableController {
    * @param newNumColumns the number of columns in the new table
    * @returns a new table
    */
-  getUpdatedTableSize(newNumRows, newNumColumns) {
+  getUpdatedTableSize(newNumRows: number, newNumColumns: number): any {
     const newTable = [];
     for (let r = 0; r < newNumRows; r++) {
       const newRow = [];
@@ -270,7 +209,7 @@ class TableAuthoringController extends TableController {
    * @param y the row number (zero indexed)
    * @returns the cell at the given x, y location or null if there is none
    */
-  getCellObjectFromComponentContent(x, y) {
+  getCellObjectFromComponentContent(x: number, y: number): any {
     let cellObject = null;
     const tableData = this.authoringComponentContent.tableData;
     if (tableData != null) {
@@ -282,7 +221,7 @@ class TableAuthoringController extends TableController {
     return cellObject;
   }
 
-  createEmptyCell() {
+  createEmptyCell(): any {
     return {
       text: '',
       editable: true,
@@ -294,7 +233,7 @@ class TableAuthoringController extends TableController {
    * Insert a row into the table from the authoring view
    * @param y the row number to insert at
    */
-  authoringViewInsertRow(y) {
+  insertRow(y: number): void {
     const tableData = this.authoringComponentContent.tableData;
     if (tableData != null) {
       const newRow = [];
@@ -317,7 +256,7 @@ class TableAuthoringController extends TableController {
    * Delete a row in the table from the authoring view
    * @param y the row number to delete
    */
-  authoringViewDeleteRow(y) {
+  deleteRow(y: number): void {
     if (confirm(this.$translate('table.areYouSureYouWantToDeleteThisRow'))) {
       const tableData = this.authoringComponentContent.tableData;
       if (tableData != null) {
@@ -332,7 +271,7 @@ class TableAuthoringController extends TableController {
    * Insert a column into the table from the authoring view
    * @param x the column number to insert at
    */
-  authoringViewInsertColumn(x) {
+  insertColumn(x: number): void {
     const tableData = this.authoringComponentContent.tableData;
     if (tableData != null) {
       const numRows = this.authoringComponentContent.numRows;
@@ -353,7 +292,7 @@ class TableAuthoringController extends TableController {
    * Delete a column in the table from the authoring view
    * @param x the column number to delete
    */
-  authoringViewDeleteColumn(x) {
+  deleteColumn(x: number): void {
     if (confirm(this.$translate('table.areYouSureYouWantToDeleteThisColumn'))) {
       const tableData = this.authoringComponentContent.tableData;
       if (tableData != null) {
@@ -379,7 +318,7 @@ class TableAuthoringController extends TableController {
    * of rows using the number of rows input.
    * @return {number} The number of rows in the table data.
    */
-  authoringGetNumRowsInTableData() {
+  getNumRowsInTableData(): number {
     return this.authoringComponentContent.tableData.length;
   }
 
@@ -391,7 +330,7 @@ class TableAuthoringController extends TableController {
    * of columns using the number of columns input.
    * @return {number} The number of columns in the table data.
    */
-  authoringGetNumColumnsInTableData() {
+  getNumColumnsInTableData(): number {
     const tableData = this.authoringComponentContent.tableData;
     if (tableData.length > 0) {
       return tableData[0].length;
@@ -399,7 +338,7 @@ class TableAuthoringController extends TableController {
     return 0;
   }
 
-  makeAllCellsUneditable() {
+  makeAllCellsUneditable(): void {
     const tableData = this.authoringComponentContent.tableData;
     if (tableData != null) {
       for (let r = 0; r < tableData.length; r++) {
@@ -417,7 +356,7 @@ class TableAuthoringController extends TableController {
     this.authoringViewComponentChanged();
   }
 
-  makeAllCellsEditable() {
+  makeAllCellsEditable(): void {
     const tableData = this.authoringComponentContent.tableData;
     if (tableData != null) {
       for (let r = 0; r < tableData.length; r++) {
@@ -440,7 +379,7 @@ class TableAuthoringController extends TableController {
    * at size value of each column in the first row.
    * @param componentContent the component content
    */
-  parseColumnCellSizes(componentContent) {
+  parseColumnCellSizes(componentContent: any): any {
     const columnCellSizes = {};
     const tableData = componentContent.tableData;
     if (tableData != null) {
@@ -455,13 +394,13 @@ class TableAuthoringController extends TableController {
     return columnCellSizes;
   }
 
-  authoringViewColumnSizeChanged(index) {
+  columnSizeChanged(index: number): void {
     if (index != null) {
       let cellSize = this.columnCellSizes[index];
       if (cellSize == '') {
         cellSize = null;
       }
-      this.authoringSetColumnCellSizes(index, cellSize);
+      this.setColumnCellSizes(index, cellSize);
     }
   }
 
@@ -470,7 +409,7 @@ class TableAuthoringController extends TableController {
    * @param column the column number
    * @param size the cell size
    */
-  authoringSetColumnCellSizes(column, size) {
+  setColumnCellSizes(column: number, size: number): void {
     const tableData = this.authoringComponentContent.tableData;
     if (tableData != null) {
       for (let r = 0; r < tableData.length; r++) {
@@ -486,7 +425,7 @@ class TableAuthoringController extends TableController {
     this.authoringViewComponentChanged();
   }
 
-  authoringToggleDataExplorer() {
+  toggleDataExplorer(): void {
     if (this.authoringComponentContent.isDataExplorerEnabled) {
       if (this.authoringComponentContent.dataExplorerGraphTypes == null) {
         this.initializeDataExplorerGraphTypes();
@@ -508,19 +447,19 @@ class TableAuthoringController extends TableController {
     this.authoringViewComponentChanged();
   }
 
-  dataExplorerToggleScatterPlot() {
+  dataExplorerToggleScatterPlot(): void {
     this.dataExplorerToggleGraphType('Scatter Plot', 'scatter');
   }
 
-  dataExplorerToggleLineGraph() {
+  dataExplorerToggleLineGraph(): void {
     this.dataExplorerToggleGraphType('Line Graph', 'line');
   }
 
-  dataExplorerToggleBarGraph() {
+  dataExplorerToggleBarGraph(): void {
     this.dataExplorerToggleGraphType('Bar Graph', 'column');
   }
 
-  dataExplorerToggleGraphType(name, value) {
+  dataExplorerToggleGraphType(name: string, value: string): void {
     const graphTypes = this.authoringComponentContent.dataExplorerGraphTypes;
     for (let index = 0; index < graphTypes.length; index++) {
       if (graphTypes[index].value === value) {
@@ -533,18 +472,18 @@ class TableAuthoringController extends TableController {
     this.authoringViewComponentChanged();
   }
 
-  createGraphTypeObject(name, value) {
+  createGraphTypeObject(name: string, value: string): any {
     return { name: name, value: value };
   }
 
-  initializeDataExplorerGraphTypes() {
+  initializeDataExplorerGraphTypes(): void {
     this.authoringComponentContent.dataExplorerGraphTypes = [];
     this.authoringComponentContent.dataExplorerGraphTypes.push(
       this.createGraphTypeObject('Scatter Plot', 'scatter')
     );
   }
 
-  repopulateDataExplorerGraphTypes() {
+  repopulateDataExplorerGraphTypes(): void {
     this.isDataExplorerScatterPlotEnabled = false;
     this.isDataExplorerLineGraphEnabled = false;
     this.isDataExplorerBarGraphEnabled = false;
@@ -559,7 +498,7 @@ class TableAuthoringController extends TableController {
     }
   }
 
-  numDataExplorerSeriesChanged() {
+  numDataExplorerSeriesChanged(): void {
     const count = this.authoringComponentContent.numDataExplorerSeries;
     if (this.authoringComponentContent.dataExplorerSeriesParams.length < count) {
       this.increaseNumDataExplorerSeries(count);
@@ -569,26 +508,26 @@ class TableAuthoringController extends TableController {
     this.authoringViewComponentChanged();
   }
 
-  increaseNumDataExplorerSeries(count) {
+  increaseNumDataExplorerSeries(count: number): void {
     const numToAdd = count - this.authoringComponentContent.dataExplorerSeriesParams.length;
     for (let s = 0; s < numToAdd; s++) {
       this.authoringComponentContent.dataExplorerSeriesParams.push({});
     }
   }
 
-  decreaseNumDataExplorerSeries(count) {
+  decreaseNumDataExplorerSeries(count: number): void {
     this.authoringComponentContent.dataExplorerSeriesParams = this.authoringComponentContent.dataExplorerSeriesParams.slice(
       0,
       count
     );
   }
 
-  numDataExplorerYAxisChanged() {
+  numDataExplorerYAxisChanged(): void {
     this.updateDataExplorerSeriesParamsYAxis();
     this.authoringViewComponentChanged();
   }
 
-  updateDataExplorerSeriesParamsYAxis() {
+  updateDataExplorerSeriesParamsYAxis(): void {
     for (const params of this.authoringComponentContent.dataExplorerSeriesParams) {
       if (params.yAxis >= this.authoringComponentContent.numDataExplorerYAxis) {
         params.yAxis = 0;
