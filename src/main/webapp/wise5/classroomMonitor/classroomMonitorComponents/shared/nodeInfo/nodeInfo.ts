@@ -142,9 +142,7 @@ const NodeInfo = {
                             component__header">
                         {{ component.assessmentItemIndex + '. ' + $ctrl.getComponentTypeLabel(component.type) }}&nbsp;
                     </h3>
-                    <component node-id='{{::$ctrl.nodeId}}'
-                               component-id='{{::component.id}}'
-                               mode='student'></component>
+                    <preview-component component-content='component'/>
                     <md-card class="annotations annotations--info" ng-if="component.rubric">
                        <md-card-title class="annotations__header">
                            <div class="annotations__avatar md-avatar avatar--icon md-36 avatar md-whiteframe-1dp">
