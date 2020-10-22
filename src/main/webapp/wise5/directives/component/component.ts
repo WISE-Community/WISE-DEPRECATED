@@ -1,38 +1,29 @@
+import { ConfigService } from "../../services/configService";
+import { NodeService } from "../../services/nodeService";
+import { NotebookService } from "../../services/notebookService";
+import { ProjectService } from "../../services/projectService";
+import { StudentDataService } from "../../services/studentDataService";
+import * as angular from 'angular';
+
 class ComponentController {
-  constructor(
-    $scope,
-    ConfigService,
-    NodeService,
-    NotebookService,
-    ProjectService,
-    StudentDataService
-  ) {
-    this.$scope = $scope;
-    this.ConfigService = ConfigService;
-    this.NodeService = NodeService;
-    this.NotebookService = NotebookService;
-    this.ProjectService = ProjectService;
-    this.StudentDataService = StudentDataService;
+
+  componentId: string;
+  componentState: any;
+  mode: string;
+  nodeId: string;
+  teacherWorkgroupId: number;
+  workgroupId: number;
+
+  static $inject = ['$scope', 'ConfigService', 'NodeService', 'NotebookService', 'ProjectService',
+      'StudentDataService'];
+
+  constructor(private $scope: any, private ConfigService: ConfigService,
+      private NodeService: NodeService, private NotebookService: NotebookService,
+      private ProjectService: ProjectService, private StudentDataService: StudentDataService) {
   }
 
   $onInit() {
-    if (this.mode) {
-      this.$scope.mode = this.mode;
-    } else {
-      this.$scope.mode = 'student';
-    }
-
-    if (this.workgroupId != null) {
-      try {
-        this.workgroupId = parseInt(this.workgroupId);
-      } catch (e) {}
-    }
-
-    if (this.teacherWorkgroupId) {
-      try {
-        this.teacherWorkgroupId = parseInt(this.teacherWorkgroupId);
-      } catch (e) {}
-    }
+    this.$scope.mode = this.mode;
 
     if (this.componentState == null || this.componentState === '') {
       this.componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(
@@ -70,14 +61,6 @@ class ComponentController {
     this.$scope.nodeController = this.$scope.$parent.nodeController;
   }
 }
-ComponentController.$inject = [
-  '$scope',
-  'ConfigService',
-  'NodeService',
-  'NotebookService',
-  'ProjectService',
-  'StudentDataService'
-];
 
 const Component = {
   bindings: {
