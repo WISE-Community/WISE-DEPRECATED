@@ -86,12 +86,12 @@
       </div>
     </div>
     <div>
-      <div style='height: 50px;'>
+      <div>
         <label class='node__label--vertical-alignment'>
           {{ ::'CONNECTED_COMPONENTS' | translate }}
         </label>
         <md-button class='topButton md-raised md-primary'
-                   ng-click='labelController.authoringAddConnectedComponent()'>
+                   ng-click='labelController.addConnectedComponent()'>
           <md-icon>add</md-icon>
           <md-tooltip md-direction='top'
                       class='projectButtonTooltip'>
@@ -105,7 +105,7 @@
           <md-input-container style='margin-right: 20px; width: 300px;'>
             <label>{{ ::'step' | translate }}</label>
             <md-select ng-model='connectedComponent.nodeId'
-                       ng-change='labelController.authoringConnectedComponentNodeIdChanged(connectedComponent)'
+                       ng-change='labelController.connectedComponentNodeIdChanged(connectedComponent)'
                        style='width: 300px'>
               <md-option ng-repeat='item in labelController.idToOrder | toArray | orderBy : "order"'
                          value='{{item.$key}}'
@@ -117,7 +117,7 @@
           <md-input-container style='margin-right: 20px; width: 300px;'>
             <label>{{ ::'component' | translate }}</label>
             <md-select ng-model='connectedComponent.componentId'
-                       ng-change='labelController.authoringConnectedComponentComponentIdChanged(connectedComponent)'
+                       ng-change='labelController.connectedComponentComponentIdChanged(connectedComponent)'
                        style='width: 300px'>
               <md-option ng-repeat='(componentIndex, component) in labelController.getComponentsByNodeId(connectedComponent.nodeId)'
                          value='{{component.id}}'
@@ -132,7 +132,7 @@
           <md-input-container style='margin-right: 20px; width: 200px;'>
             <label>{{ ::'type' | translate }}</label>
             <md-select ng-model='connectedComponent.type'
-                       ng-change='labelController.authoringConnectedComponentTypeChanged(connectedComponent)'
+                       ng-change='labelController.connectedComponentTypeChanged(connectedComponent)'
                        style='width: 200px'>
               <md-option value='importWork'>
                 {{ ::'importWork' | translate }}
@@ -145,7 +145,7 @@
           <span flex></span>
           <md-input-container style='margin-left: 20px;'>
             <md-button class='topButton md-raised md-primary'
-                       ng-click='labelController.authoringDeleteConnectedComponent($index)'>
+                       ng-click='labelController.deleteConnectedComponent($index)'>
               <md-icon>delete</md-icon>
               <md-tooltip md-direction='top'
                           class='projectButtonTooltip'>
@@ -154,11 +154,11 @@
             </md-button>
           </md-input-container>
         </div>
-        <div ng-if='labelController.authoringGetConnectedComponentType(connectedComponent) == "OpenResponse"' flex>
+        <div ng-if='labelController.getConnectedComponentType(connectedComponent) == "OpenResponse"' flex>
           <md-input-container style='margin-right: 20px;'>
             <md-checkbox class='md-primary'
                          ng-model='connectedComponent.importWorkAsBackground'
-                         ng-change='labelController.authoringImportWorkAsBackgroundClicked(connectedComponent)'>
+                         ng-change='labelController.importWorkAsBackgroundClicked(connectedComponent)'>
               {{ ::'importWorkAsBackground' | translate }}
             </md-checkbox>
           </md-input-container>
@@ -184,11 +184,11 @@
             </md-input-container>
           </div>
         </div>
-        <div ng-if='labelController.authoringGetConnectedComponentType(connectedComponent) == "ConceptMap" || labelController.authoringGetConnectedComponentType(connectedComponent) == "Draw" || labelController.authoringGetConnectedComponentType(connectedComponent) == "Embedded" || labelController.authoringGetConnectedComponentType(connectedComponent) == "Graph" || labelController.authoringGetConnectedComponentType(connectedComponent) == "Table"' flex>
+        <div ng-if='labelController.getConnectedComponentType(connectedComponent) == "ConceptMap" || labelController.getConnectedComponentType(connectedComponent) == "Draw" || labelController.getConnectedComponentType(connectedComponent) == "Embedded" || labelController.getConnectedComponentType(connectedComponent) == "Graph" || labelController.getConnectedComponentType(connectedComponent) == "Table"' flex>
           <md-input-container style='margin-right: 20px;'>
             <md-checkbox class='md-primary'
                          ng-model='connectedComponent.importWorkAsBackground'
-                         ng-change='labelController.authoringImportWorkAsBackgroundClicked(connectedComponent)'
+                         ng-change='labelController.importWorkAsBackgroundClicked(connectedComponent)'
                          ng-disabled='true'>
               {{ ::'importWorkAsBackground' | translate }}
             </md-checkbox>
@@ -360,7 +360,7 @@
         <div layout='row'>
           <h6>{{ ::'label.starterLabels' | translate }}</h6>
           <md-button class='topButton md-raised md-primary'
-                     ng-click='labelController.authoringAddLabelClicked()'>
+                     ng-click='labelController.addLabelClicked()'>
             <md-icon>add</md-icon>
             <md-tooltip md-direction='top'
                         class='projectButtonTooltip'>
@@ -452,7 +452,7 @@
             <span flex></span>
             <md-button class='moveComponentButton md-raised md-primary'
                        style='margin-top: 20px;'
-                       ng-click='labelController.authoringDeleteLabelClicked($index, label)'>
+                       ng-click='labelController.deleteLabelClicked($index, label)'>
               <md-icon>delete</md-icon>
               <md-tooltip md-direction='top'
                           class='projectButtonTooltip'>
@@ -480,145 +480,12 @@
       </md-button>
     </div>
   </div>
-  <div ng-style='{"border": "5px solid black", "padding": "20px"}'>
-    <div>
+  <div ng-style='{"border": "5px solid black"}'>
+    <div ng-style='{"padding-top": "20px", "padding-left": "20px"}'>
       <h5>{{ ::'studentPreview' | translate }}</h5>
     </div>
-    <div>
-      <div>
-        <div class='component__prompt'>
-          <div class='component__prompt__content'>
-            <compile data='labelController.getPrompt()'></compile>
-          </div>
-        </div>
-        <div class='input-wrapper' style='display: flex; align-items: center; width: 800px;'>
-          <md-button class='studentButton md-raised md-primary'
-                     ng-click='labelController.newLabelButtonClicked()'
-                     ng-disabled='labelController.isDisabled'
-                     ng-if='labelController.showNewLabelButton() && !labelController.createLabelMode'>
-            <md-icon>add</md-icon>
-            <md-tooltip md-direction='top'
-                        class='projectButtonTooltip'>
-              {{ ::'label.addNewLabel' | translate }}
-            </md-tooltip>
-          </md-button>
-          <span ng-if='labelController.createLabelMode'>
-            {{ ::'label.clickOnTheImageToCreateALabelOr' | translate }}
-          </span>
-          <md-button class='studentButton md-raised md-primary'
-                     ng-click='labelController.cancelButtonClicked()'
-                     ng-disabled='labelController.isDisabled'
-                     ng-if='labelController.showCancelButton()'>
-            <md-icon>clear</md-icon>
-            <md-tooltip md-direction='top'
-                        class='projectButtonTooltip'>
-              {{ ::'CANCEL' | translate }}
-              <md-tooltip>
-          </md-button>
-          <span ng-if='labelController.createLabelMode'>
-            {{ ::'label.toCancel' | translate }}
-          </span>
-          <span ng-if='labelController.editLabelMode'>
-            {{ ::'label.labelText' | translate }}:&nbsp
-          </span>
-          <input id='editLabelTextInput'
-                 type='text'
-                 ng-model='labelController.selectedLabel.textString'
-                 ng-if='labelController.editLabelMode'
-                 ng-change='labelController.selectedLabelTextChanged(labelController.selectedLabel, labelController.selectedLabel.text, labelController.selectedLabel.textString)'
-                 size='50'/>
-          <md-button class='studentButton md-raised md-primary'
-                     ng-click='labelController.deleteLabelButtonClicked()'
-                     ng-if='!labelController.isDisabled && labelController.selectedLabel != null && labelController.selectedLabel.canDelete'>
-            <md-icon>delete</md-icon>
-            <md-tooltip md-direction='top'
-                        class='projectButtonTooltip'>
-              {{ ::'DELETE' | translate }}
-            </md-tooltip>
-          </md-button>
-          <span style='flex-grow: 1;'></span>
-          <md-button class='md-accent'
-                     ng-click='labelController.resetButtonClicked()'
-                     ng-if='labelController.isResetButtonVisible'>
-            <md-icon>restore</md-icon>
-            {{ ::'RESET' | translate }}
-          </md-button>
-          <md-button class='studentButton md-accent md-primary'
-                     ng-click='labelController.snipImage($event)'
-                     ng-if='labelController.isAddToNotebookEnabled()'>
-            <md-icon> note_add </md-icon>
-            <md-tooltip md-direction='top'
-                        class='projectButtonTooltip'>
-              {{ ::'ADD_TO_NOTEBOOK' | translate:{label:labelController.notebookConfig.label} }}
-            </md-tooltip>
-          </md-button>
-          <br/>
-          <div ng-if='labelController.componentContent.enableStudentUploadBackground'>
-            {{ ::'label.uploadBackgroundImage' | translate }}:
-            <input type='file'
-                   ng-if='labelController.componentContent.enableStudentUploadBackground'
-                   onchange='angular.element(this).scope().fileUploadChanged(this)'
-                   style='display:inline'/>
-          </div>
-        </div>
-        <div id='canvasParent_{{labelController.canvasId}}' style='margin-top: 10px;'>
-          <canvas id='{{labelController.canvasId}}'
-                  width='800'
-                  height='600'
-                  style='border:1px solid black;'>
-          </canvas>
-        </div>
-        <div class='component__actions'
-             ng-if='labelController.attachments.length && labelController.isStudentAttachmentEnabled'
-             layout='row'
-             layout-wrap='true'>
-          <div class='component__add-attachment'>
-            <md-button class='md-accent'
-                       ng-click='nodeController.showStudentAssets($event, component.id, labelController.isDisabled)'>
-              <md-icon>image</md-icon>
-              <span>{{ ::'label.addFile' | translate }}</span>
-            </md-button>
-          </div>
-          <div class='component__attachment'
-               ng-repeat='attachment in labelController.attachments'>
-            <img ng-src='{{attachment.iconURL}}'
-                 class='component__attachment__content' />
-            <md-button class='component__attachment__delete'
-                       ng-click='labelController.removeAttachment(attachment)'
-                       title='Remove file'>
-              <md-icon>cancel</md-icon>
-            </md-button>
-          </div>
-        </div>
-        <div ng-if='labelController.isSaveButtonVisible || labelController.isSubmitButtonVisible'
-             class='component__actions'
-             layout='row'
-             layout-align='start center'>
-          <md-button class='md-raised md-primary'
-                     ng-click='labelController.saveButtonClicked()'
-                     ng-if='labelController.isSaveButtonVisible'
-                     ng-disabled='labelController.isDisabled || !labelController.isDirty'>
-            {{ ::'SAVE' | translate }}
-          </md-button>
-          <md-button class='md-raised md-primary'
-                     ng-click='labelController.submitButtonClicked()'
-                     ng-if='labelController.isSubmitButtonVisible'
-                     ng-disabled='labelController.isDisabled || !labelController.isSubmitDirty || labelController.isSubmitButtonDisabled'>
-            {{ ::'SUBMIT' | translate }}
-          </md-button>
-          <span ng-if='labelController.saveMessage.text'
-                class='component__actions__info md-caption'>
-              {{labelController.saveMessage.text}}
-              <span class='component__actions__more'>
-                <md-tooltip md-direction='top'>
-                  {{ labelController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}
-                </md-tooltip>
-                <span am-time-ago='labelController.saveMessage.time'></span>
-              </span>
-            </span>
-        </div>
-      </div>
-    </div>
+    <preview-component component-content='labelController.componentContent'
+        node-id='{{labelController.nodeId}}'/>
   </div>
 </div>
 </div>

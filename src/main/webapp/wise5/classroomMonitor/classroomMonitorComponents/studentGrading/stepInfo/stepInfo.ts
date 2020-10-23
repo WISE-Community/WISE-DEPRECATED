@@ -61,15 +61,15 @@ const StepInfo = {
     <div class="heavy">
       {{ ::$ctrl.stepTitle }}
       <status-icon ng-if="$ctrl.hasAlert"
-                   icon-class="$ctrl.alertIconClass"
-                   icon-name="$ctrl.alertIconName"
-                   icon-label="$ctrl.alertIconLabel"
-                   icon-tooltip="$ctrl.alertIconLabel"></status-icon>
+                   [icon-class]="$ctrl.alertIconClass"
+                   [icon-name]="$ctrl.alertIconName"
+                   [icon-label]="$ctrl.alertIconLabel"
+                   [icon-tooltip]="$ctrl.alertIconLabel"></status-icon>
       <status-icon ng-if="$ctrl.hasRubrics"
-                   icon-class="$ctrl.rubricIconClass"
-                   icon-name="$ctrl.rubricIconName"
-                   icon-label="$ctrl.rubricIconLabel"
-                   icon-tooltip="$ctrl.rubricIconLabel"></status-icon>
+                   [icon-class]="$ctrl.rubricIconClass"
+                   [icon-name]="$ctrl.rubricIconName"
+                   [icon-label]="$ctrl.rubricIconLabel"
+                   [icon-tooltip]="$ctrl.rubricIconLabel"></status-icon>
       <span ng-if="$ctrl.hasNewWork" class="badge badge--info
             animate-fade">{{ ::'NEW' | translate }}</span>
     </div>

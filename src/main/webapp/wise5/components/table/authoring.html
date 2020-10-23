@@ -71,7 +71,7 @@
           <div>
             <md-checkbox class='md-primary'
                 ng-model='tableController.authoringComponentContent.isDataExplorerEnabled'
-                ng-change='tableController.authoringToggleDataExplorer()'>
+                ng-change='tableController.toggleDataExplorer()'>
               {{ ::'table.enableDataExplorer' | translate }}
             </md-checkbox>
           </div>
@@ -136,7 +136,6 @@
                     </md-option>
                   </md-select>
                 </md-input-container>
-
               </div>
             </div>
             <div>
@@ -178,7 +177,7 @@
               {{ ::'CONNECTED_COMPONENTS' | translate }}
             </label>
             <md-button class='topButton md-raised md-primary'
-                       ng-click='tableController.authoringAddConnectedComponent()'>
+                       ng-click='tableController.addConnectedComponent()'>
               <md-icon>add</md-icon>
               <md-tooltip md-direction='top'
                           class='projectButtonTooltip'>
@@ -192,7 +191,7 @@
               <md-input-container style='margin-right: 20px; width: 300px;'>
                 <label>{{ ::'step' | translate }}</label>
                 <md-select ng-model='connectedComponent.nodeId'
-                           ng-change='tableController.authoringConnectedComponentNodeIdChanged(connectedComponent)'
+                           ng-change='tableController.connectedComponentNodeIdChanged(connectedComponent)'
                            style='width: 300px'>
                   <md-option ng-repeat='item in tableController.idToOrder | toArray | orderBy : "order"'
                              value='{{item.$key}}'
@@ -204,7 +203,7 @@
               <md-input-container style='margin-right: 20px; width: 300px;'>
                 <label>{{ ::'component' | translate }}</label>
                 <md-select ng-model='connectedComponent.componentId'
-                           ng-change='tableController.authoringConnectedComponentComponentIdChanged(connectedComponent)'
+                           ng-change='tableController.connectedComponentComponentIdChanged(connectedComponent)'
                            style='width: 300px'>
                   <md-option ng-repeat='(componentIndex, component) in tableController.getComponentsByNodeId(connectedComponent.nodeId)'
                              value='{{component.id}}'
@@ -219,7 +218,7 @@
               <md-input-container style='margin-right: 20px; width: 200px;'>
                 <label>{{ ::'type' | translate }}</label>
                 <md-select ng-model='connectedComponent.type'
-                           ng-change='tableController.authoringConnectedComponentTypeChanged(connectedComponent)'
+                           ng-change='tableController.connectedComponentTypeChanged(connectedComponent)'
                            style='width: 200px'>
                   <md-option value='importWork'>
                     {{ ::'importWork' | translate }}
@@ -246,7 +245,7 @@
               <span flex></span>
               <md-input-container style='margin-left: 20px;'>
                 <md-button class='topButton md-raised md-primary'
-                           ng-click='tableController.authoringDeleteConnectedComponent($index)'>
+                           ng-click='tableController.deleteConnectedComponent($index)'>
                   <md-icon>delete</md-icon>
                   <md-tooltip md-direction='top'
                               class='projectButtonTooltip'>
@@ -254,7 +253,7 @@
                   </md-tooltip>
                 </md-button>
               </md-input-container>
-              <md-input-container ng-if='tableController.authoringGetConnectedComponentType(connectedComponent) == "Graph"'>
+              <md-input-container ng-if='tableController.getConnectedComponentType(connectedComponent) == "Graph"'>
                 <md-checkbox class='md-primary'
                              ng-model='connectedComponent.showDataAtMouseX'
                              ng-change='tableController.authoringViewComponentChanged()'>
@@ -358,7 +357,7 @@
                    style='width: 120px'
                    ng-model='tableController.authoringComponentContent.numColumns'
                    ng-model-options='{ debounce: 500 }'
-                   ng-change='tableController.authoringViewTableNumColumnsChanged({{tableController.authoringComponentContent.numColumns}})'/>
+                   ng-change='tableController.tableNumColumnsChanged({{tableController.authoringComponentContent.numColumns}})'/>
           </md-input-container>
           <md-input-container>
             <label>{{ ::'table.rows' | translate }}</label>
@@ -366,7 +365,7 @@
                    style='width: 120px'
                    ng-model-options='{ debounce: 500 }'
                    ng-model='tableController.authoringComponentContent.numRows'
-                   ng-change='tableController.authoringViewTableNumRowsChanged({{tableController.authoringComponentContent.numRows}})'/>
+                   ng-change='tableController.tableNumRowsChanged({{tableController.authoringComponentContent.numRows}})'/>
           </md-input-container>
           <md-input-container>
             <label>{{ ::'table.globalCellSize' | translate }}</label>
@@ -380,10 +379,10 @@
         <table style='border: 1px solid black;'>
           <tr>
             <td style='border: 1px solid black;'></td>
-            <td ng-repeat='x in getNumber(tableController.authoringComponentContent.numColumns) track by $index'
+            <td ng-repeat='x in [].constructor(tableController.authoringComponentContent.numColumns) track by $index'
                 style='border: 1px solid black;'>
               <md-button class='topButton md-raised md-primary'
-                         ng-click='tableController.authoringViewInsertColumn($index)'>
+                         ng-click='tableController.insertColumn($index)'>
                 <md-icon class='rotate90'>loupe</md-icon>
                 <md-tooltip md-direction='top'
                             class='projectButtonTooltip'>
@@ -391,7 +390,7 @@
                 </md-tooltip>
               </md-button>
               <md-button class='topButton md-raised md-primary'
-                         ng-click='tableController.authoringViewDeleteColumn($index)'>
+                         ng-click='tableController.deleteColumn($index)'>
                 <md-icon>delete</md-icon>
                 <md-tooltip md-direction='top'
                             class='projectButtonTooltip'>
@@ -400,7 +399,7 @@
               </md-button>
               <md-button class='topButton md-raised md-primary'
                          ng-if='$last'
-                         ng-click='tableController.authoringViewInsertColumn($index + 1)'>
+                         ng-click='tableController.insertColumn($index + 1)'>
                 <md-icon>loupe</md-icon>
                 <md-tooltip md-direction='top'
                             class='projectButtonTooltip'>
@@ -412,7 +411,7 @@
           <tr ng-repeat='row in tableController.authoringComponentContent.tableData'>
             <td style='border: 1px solid black;'>
               <md-button class='topButton md-raised md-primary'
-                         ng-click='tableController.authoringViewInsertRow($index)'>
+                         ng-click='tableController.insertRow($index)'>
                 <md-icon class='rotate270'>loupe</md-icon>
                 <md-tooltip md-direction='top'
                             class='projectButtonTooltip'>
@@ -421,7 +420,7 @@
               </md-button>
               <br/>
               <md-button class='topButton md-raised md-primary'
-                         ng-click='tableController.authoringViewDeleteRow($index)'>
+                         ng-click='tableController.deleteRow($index)'>
                 <md-icon>delete</md-icon>
                 <md-tooltip md-direction='top'
                             class='projectButtonTooltip'>
@@ -431,7 +430,7 @@
               <br/>
               <md-button class='topButton md-raised md-primary'
                          ng-if='$last'
-                         ng-click='tableController.authoringViewInsertRow($index + 1)'>
+                         ng-click='tableController.insertRow($index + 1)'>
                 <md-icon>loupe</md-icon>
                 <md-tooltip md-direction='top'
                             class='projectButtonTooltip'>
@@ -458,7 +457,7 @@
           </tr>
           <tr>
             <td></td>
-            <td ng-repeat='x in getNumber(tableController.authoringComponentContent.numColumns) track by $index'>
+            <td ng-repeat='x in [].constructor(tableController.authoringComponentContent.numColumns) track by $index'>
               &nbsp
             </td>
           </tr>
@@ -466,12 +465,12 @@
             <td style='border: 1px solid black; height: 20px;'>
               <label style='padding: 5px;'>{{ ::'OPTIONAL' | translate }}</label>
             </td>
-            <td ng-repeat='x in getNumber(tableController.authoringComponentContent.numColumns) track by $index' style='border: 1px solid black; height: 20px;'>
+            <td ng-repeat='x in [].constructor(tableController.authoringComponentContent.numColumns) track by $index' style='border: 1px solid black; height: 20px;'>
               <md-input-container style='height: 20px;'>
                 <label>{{ ::'table.columnCellSizes' | translate }}</label>
                 <input type='number'
                        ng-model='tableController.columnCellSizes[$index]'
-                       ng-change='tableController.authoringViewColumnSizeChanged($index)'/>
+                       ng-change='tableController.columnSizeChanged($index)'/>
               </md-input-container>
             </td>
           </tr>
@@ -490,88 +489,10 @@
       </div>
     </div>
     <br/>
-    <div ng-style='{"border": "5px solid black", "padding": "20px"}'>
-      <div>
+    <div ng-style='{"border": "5px solid black"}'>
+      <div ng-style='{"padding-top": "20px", "padding-left": "20px"}'>
         <h5>{{ ::'studentPreview' | translate }}</h5>
       </div>
-      <div>
-        <div>
-          <div class='component__prompt'>
-            <div class='component__prompt__content'>
-              <compile data='tableController.getPrompt()'></compile>
-            </div>
-          </div>
-          <div class='component__actions'
-               layout='row'>
-            <md-button class='md-accent'
-                       ng-if='tableController.isStudentAttachmentEnabled'
-                       ng-click='nodeController.showStudentAssets($event, component.id, tableController.isDisabled)'>
-              <md-icon>image</md-icon>
-              {{ ::'table.importData' | translate }}
-            </md-button>
-          </div>
-          <md-button class='md-accent'
-                     ng-click='tableController.resetTable()'
-                     ng-if='tableController.showResetTableButton()'>
-            <md-icon>restore</md-icon>
-            {{ ::'reset' | translate }}
-          </md-button>
-          <md-button class='md-accent'
-                     ng-click='tableController.snipTable($event)'
-                     ng-if='tableController.isAddToNotebookEnabled()'>
-            <md-icon>note_add</md-icon>
-            {{ ::'ADD_TO_NOTEBOOK' | translate:{label:tableController.notebookConfig.label} }}
-          </md-button>
-          <table id='{{tableController.tableId}}'
-                 class='table table--student'>
-            <tr ng-repeat='row in tableController.getTableDataRows()'>
-              <td ng-repeat='cell in row'
-                  ng-class='{ "inactive" : !cell.editable }'>
-                <span ng-if='!cell.editable || tableController.isDisabled'>
-                  {{ cell.text }}
-                </span>
-                <md-input-container ng-if='cell.editable && !tableController.isDisabled'>
-                  <input type='text'
-                         ng-model='cell.text'
-                         ng-change='tableController.studentDataChanged()'
-                         aria-label='Text'
-                         size='{{cell.size || tableController.componentContent.globalCellSize}}'/>
-                </md-input-container>
-              </td>
-            </tr>
-          </table>
-          <div ng-if='tableController.isSaveButtonVisible || tableController.isSubmitButtonVisible'
-               class='component__actions'
-               layout='row'
-               layout-align='start center'>
-            <md-button class='md-raised md-primary'
-                       ng-click='tableController.saveButtonClicked()'
-                       ng-disabled='tableController.isDisabled || !tableController.isDirty'
-                       ng-if='tableController.isSaveButtonVisible'
-                       aria-label='Save'
-                       translate='SAVE'>
-              {{ ::'save' | translate }}
-            </md-button>
-            <md-button class='md-raised md-primary'
-                       ng-click='tableController.submitButtonClicked()'
-                       ng-disabled='tableController.isDisabled || !tableController.isSubmitDirty || tableController.isSubmitButtonDisabled'
-                       ng-if='tableController.isSubmitButtonVisible'
-                       aria-label='Submit'
-                       translate='SUBMIT'>
-              {{ ::'submit' | translate }}
-            </md-button>
-            <span ng-if='tableController.saveMessage.text'
-                  class='component__actions__info md-caption'>
-              {{tableController.saveMessage.text}}
-              <span class='component__actions__more'>
-                <md-tooltip md-direction='top'>
-                  {{ tableController.saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}
-                </md-tooltip>
-                <span am-time-ago='tableController.saveMessage.time'></span>
-              </span>
-            </span>
-          </div>
-        </div>
-      </div>
+      <preview-component component-content='tableController.componentContent'/>
     </div>
   </div>

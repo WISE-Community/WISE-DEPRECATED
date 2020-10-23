@@ -9,7 +9,6 @@ class TableController extends ComponentController {
   $q: any;
   TableService: TableService;
   allowedConnectedComponentTypes: any[];
-  columnCellSizes: any;
   tableData: any;
   isResetTableButtonVisible: boolean;
   notebookConfig: any;
@@ -23,9 +22,6 @@ class TableController extends ComponentController {
   isDataExplorerScatterPlotRegressionLineEnabled: boolean;
   dataExplorerYAxisLabels: string[];
   dataExplorerSeriesParams: any[];
-  isDataExplorerScatterPlotEnabled: boolean;
-  isDataExplorerLineGraphEnabled: boolean;
-  isDataExplorerBarGraphEnabled: boolean;
   dataExplorerXAxisLabel: string;
   dataExplorerYAxisLabel: string;
   dataExplorerSeries: any[];
@@ -107,16 +103,7 @@ class TableController extends ComponentController {
     this.tableId = 'table_' + this.nodeId + '_' + this.componentId;
     this.isDataExplorerEnabled = this.componentContent.isDataExplorerEnabled;
     if (this.isDataExplorerEnabled) {
-      this.numDataExplorerSeries = this.componentContent.numDataExplorerSeries;
-      this.dataExplorerGraphTypes = this.componentContent.dataExplorerGraphTypes;
-      if (this.dataExplorerGraphTypes.length > 0) {
-        this.dataExplorerGraphType = this.dataExplorerGraphTypes[0].value;
-      }
-      this.isDataExplorerScatterPlotRegressionLineEnabled = this.componentContent.isDataExplorerScatterPlotRegressionLineEnabled;
-      if (this.componentContent.numDataExplorerYAxis > 1) {
-        this.dataExplorerYAxisLabels = Array(this.componentContent.numDataExplorerYAxis).fill('');
-      }
-      this.dataExplorerSeriesParams = this.componentContent.dataExplorerSeriesParams;
+      this.initializeDataExplorer();
     }
 
     if (this.mode === 'student') {
@@ -304,18 +291,21 @@ class TableController extends ComponentController {
       return deferred.promise;
     }.bind(this);
 
-    this.$scope.getNumber = function(num) {
-      let array = new Array();
-
-      // make sure num is a valid number
-      if (num != null && !isNaN(num)) {
-        array = new Array(parseInt(num));
-      }
-
-      return array;
-    };
-
     this.broadcastDoneRenderingComponent();
+  }
+
+  initializeDataExplorer() {
+    this.numDataExplorerSeries = this.componentContent.numDataExplorerSeries;
+    this.dataExplorerGraphTypes = this.componentContent.dataExplorerGraphTypes;
+    if (this.dataExplorerGraphTypes.length > 0) {
+      this.dataExplorerGraphType = this.dataExplorerGraphTypes[0].value;
+    }
+    this.isDataExplorerScatterPlotRegressionLineEnabled =
+        this.componentContent.isDataExplorerScatterPlotRegressionLineEnabled;
+    if (this.componentContent.numDataExplorerYAxis > 1) {
+      this.dataExplorerYAxisLabels = Array(this.componentContent.numDataExplorerYAxis).fill('');
+    }
+    this.dataExplorerSeriesParams = this.componentContent.dataExplorerSeriesParams;
   }
 
   registerStudentWorkSavedToServerListener() {
@@ -470,6 +460,14 @@ class TableController extends ComponentController {
     } else {
       // get the original table from the step content
       this.tableData = this.getCopyOfTableData(this.componentContent.tableData);
+      if (this.isDataExplorerEnabled) {
+        this.dataExplorerGraphType = null;
+        this.dataExplorerXColumn = null;
+        this.dataExplorerXAxisLabel = null;
+        this.dataExplorerYAxisLabel = null;
+        this.dataExplorerYAxisLabels = null;
+        this.createDataExplorerSeries();
+      }
       this.studentDataChanged();
     }
   }
@@ -1246,10 +1244,12 @@ class TableController extends ComponentController {
     this.dataExplorerXAxisLabel = componentState.studentData.dataExplorerXAxisLabel;
     this.dataExplorerYAxisLabel = componentState.studentData.dataExplorerYAxisLabel;
     this.dataExplorerYAxisLabels = componentState.studentData.dataExplorerYAxisLabels;
-    this.dataExplorerSeries = this.UtilService.makeCopyOfJSONObject(
-      componentState.studentData.dataExplorerSeries
-    );
-    this.dataExplorerXColumn = this.dataExplorerSeries[0].xColumn;
+    if (componentState.studentData.dataExplorerSeries != null) {
+      this.dataExplorerSeries = this.UtilService.makeCopyOfJSONObject(
+        componentState.studentData.dataExplorerSeries
+      );
+      this.dataExplorerXColumn = this.dataExplorerSeries[0].xColumn;
+    }
   }
 }
 

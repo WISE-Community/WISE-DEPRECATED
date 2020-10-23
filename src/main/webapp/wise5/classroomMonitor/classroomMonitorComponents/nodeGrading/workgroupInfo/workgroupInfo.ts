@@ -41,11 +41,10 @@ const WorkgroupInfo = {
             <div class="heavy">
                 {{ ::$ctrl.usernames }} <span class="md-caption text-secondary more">({{ ::'teamId' | translate:{ id: $ctrl.workgroupId} }})</span>
                 <status-icon ng-if="$ctrl.hasAlert"
-                             icon-label="$ctrl.alertLabel"
-                             icon-tooltip="$ctrl.alertLabel"
-                             icon-tooltip="$ctrl.alertMsg"
-                             icon-name="$ctrl.alertIconName"
-                             icon-class="$ctrl.alertIconClass"></status-icon>
+                             [icon-label]="$ctrl.alertLabel"
+                             [icon-tooltip]="$ctrl.alertLabel"
+                             [icon-name]="$ctrl.alertIconName"
+                             [icon-class]="$ctrl.alertIconClass"></status-icon>
                 <span ng-if="$ctrl.hasNewWork" class="badge badge--info animate-fade">{{ ::'NEW' | translate }}</span>
             </div>
         </div>`,
