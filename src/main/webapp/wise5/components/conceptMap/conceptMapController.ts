@@ -158,10 +158,7 @@ class ConceptMapController extends ComponentController {
 
     this.initialize();
 
-    if (this.isStudentMode()) {
-      this.availableNodes = this.componentContent.nodes;
-      this.availableLinks = this.componentContent.links;
-    } else if (this.isGradingMode() || this.isGradingRevisionMode()) {
+    if (this.isGradingMode() || this.isGradingRevisionMode()) {
       const componentState = this.$scope.componentState;
       if (componentState) {
         if (this.mode === 'gradingRevision') {
@@ -185,6 +182,9 @@ class ConceptMapController extends ComponentController {
           'onlyShowWork_'
         );
       }
+    } else {
+      this.availableNodes = this.componentContent.nodes;
+      this.availableLinks = this.componentContent.links;
     }
 
     /*
@@ -1984,6 +1984,11 @@ class ConceptMapController extends ComponentController {
       // use the original dimensions of the background image
       this.backgroundSize = '';
     }
+  }
+
+  generateStarterState(): void {
+    this.NodeService.respondStarterState({nodeId: this.nodeId, componentId: this.componentId,
+        starterState: this.getConceptMapData()});
   }
 }
 

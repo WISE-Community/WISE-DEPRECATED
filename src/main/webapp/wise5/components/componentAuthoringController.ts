@@ -292,7 +292,6 @@ export abstract class ComponentAuthoringController {
     }
     if (numberOfAllowedComponents === 1) {
       connectedComponent.componentId = allowedComponent.id;
-      connectedComponent.type = 'importWork';
     }
     this.automaticallySetConnectedComponentTypeIfPossible(connectedComponent);
   }
