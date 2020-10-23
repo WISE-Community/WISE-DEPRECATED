@@ -19,12 +19,11 @@ class PreviewComponentController {
         this.NodeService.getComponentTemplatePath(this.componentContent.type);
     this.$scope.nodeId = this.nodeId;
     this.$scope.type = this.componentContent.type;
-    this.compileComponent();
     this.$scope.$watch(
        () => { return this.componentContent; },
        () => {
-         this.$scope.componentContent = this.componentContent;
-         this.compileComponent();
+          this.$scope.componentContent = this.componentContent;
+          this.compileComponent();
        });
   }
 

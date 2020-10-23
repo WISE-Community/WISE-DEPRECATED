@@ -1,94 +1,55 @@
 'use strict';
 
 import * as $ from 'jquery';
-import LabelController from './labelController';
 import * as fabric from 'fabric';
 window['fabric'] = fabric.fabric
 import html2canvas from 'html2canvas';
-import { ProjectAssetService } from '../../../site/src/app/services/projectAssetService';
+import { ComponentAuthoringController } from '../componentAuthoringController';
 
-class LabelAuthoringController extends LabelController {
-  ProjectAssetService: ProjectAssetService;
-  $window: any;
-  allowedConnectedComponentTypes: any[];
+class LabelAuthoringController extends ComponentAuthoringController {
+  allowedConnectedComponentTypes: any[] = [
+    { type: 'ConceptMap' },
+    { type: 'Draw' },
+    { type: 'Embedded' },
+    { type: 'Graph' },
+    { type: 'Label' },
+    { type: 'OpenResponse' },
+    { type: 'Table' }
+  ];
 
   static $inject = [
-    '$filter',
-    '$injector',
-    '$mdDialog',
-    '$q',
-    '$rootScope',
     '$scope',
-    '$timeout',
+    '$filter',
     '$window',
-    'AnnotationService',
-    'AudioRecorderService',
     'ConfigService',
-    'LabelService',
     'NodeService',
-    'NotebookService',
     'NotificationService',
     'ProjectAssetService',
     'ProjectService',
-    'StudentAssetService',
-    'StudentDataService',
     'UtilService'
   ];
 
   constructor(
-    $filter,
-    $injector,
-    $mdDialog,
-    $q,
-    $rootScope,
     $scope,
-    $timeout,
-    $window,
-    AnnotationService,
-    AudioRecorderService,
+    $filter,
+    private $window,
     ConfigService,
-    LabelService,
     NodeService,
-    NotebookService,
     NotificationService,
     ProjectAssetService,
     ProjectService,
-    StudentAssetService,
-    StudentDataService,
     UtilService
   ) {
     super(
-      $filter,
-      $injector,
-      $mdDialog,
-      $q,
-      $rootScope,
       $scope,
-      $timeout,
-      $window,
-      AnnotationService,
-      AudioRecorderService,
+      $filter,
       ConfigService,
-      LabelService,
       NodeService,
-      NotebookService,
       NotificationService,
+      ProjectAssetService,
       ProjectService,
-      StudentAssetService,
-      StudentDataService,
       UtilService
     );
-    this.ProjectAssetService = ProjectAssetService;
-    this.allowedConnectedComponentTypes = [
-      { type: 'ConceptMap' },
-      { type: 'Draw' },
-      { type: 'Embedded' },
-      { type: 'Graph' },
-      { type: 'Label' },
-      { type: 'OpenResponse' },
-      { type: 'Table' }
-    ];
-
     if (this.componentContent.enableCircles == null) {
       /*
        * If this component was created before enableCircles was implemented,
@@ -97,44 +58,9 @@ class LabelAuthoringController extends LabelController {
        */
       this.authoringComponentContent.enableCircles = true;
     }
-
-    $scope.$watch(
-      function() {
-        return this.authoringComponentContent;
-      }.bind(this),
-      function(newValue, oldValue) {
-        this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-        this.canvasWidth = 800;
-        this.canvasHeight = 600;
-        this.submitCounter = 0;
-        this.isSaveButtonVisible = this.componentContent.showSaveButton;
-        this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-        this.enableCircles = this.componentContent.enableCircles;
-
-        if (this.canvas != null) {
-          $('#canvasParent_' + this.canvasId).empty();
-          const canvas = $('<canvas/>');
-          canvas.attr('id', this.canvasId);
-          canvas.css('border', '1px solid black');
-          $('#canvasParent_' + this.canvasId).append(canvas);
-          // clear the background so that setupCanvas() can reapply the background
-          this.backgroundImage = null;
-          this.setupCanvas();
-        }
-        if (this.componentContent.canCreateLabels != null) {
-          this.canCreateLabels = this.componentContent.canCreateLabels;
-        }
-        if (this.canCreateLabels) {
-          this.isNewLabelButtonVisible = true;
-        } else {
-          this.isNewLabelButtonVisible = false;
-        }
-      }.bind(this),
-      true
-    );
   }
 
-  authoringAddLabelClicked() {
+  addLabelClicked(): void {
     const newLabel = {
       text: this.$translate('label.enterTextHere'),
       color: 'blue',
@@ -153,7 +79,7 @@ class LabelAuthoringController extends LabelController {
    * Delete a label in the authoring view
    * @param index the index of the label in the labels array
    */
-  authoringDeleteLabelClicked(index, label) {
+  deleteLabelClicked(index: number, label: any): void {
     const answer = confirm(
       this.$translate('label.areYouSureYouWantToDeleteThisLabel', {
         selectedLabelText: label.textString
@@ -165,7 +91,7 @@ class LabelAuthoringController extends LabelController {
     }
   }
 
-  chooseBackgroundImage() {
+  chooseBackgroundImage(): void {
     const params = {
       isPopup: true,
       nodeId: this.nodeId,
@@ -175,34 +101,25 @@ class LabelAuthoringController extends LabelController {
     this.openAssetChooser(params);
   }
 
-  openAssetChooser(params: any) {
-    this.ProjectAssetService.openAssetChooser(params).then(
-      (data: any) => { this.assetSelected(data) }
-    );
-  }
-
-  assetSelected({ nodeId, componentId, assetItem, target }) {
+  assetSelected({ nodeId, componentId, assetItem, target }): void {
+    super.assetSelected({ nodeId, componentId, assetItem, target });
     const fileName = assetItem.fileName;
-    const fullFilePath = `${this.ConfigService.getProjectAssetsDirectoryPath()}/${fileName}`;
-    if (target === 'rubric') {
-      this.UtilService.insertFileInSummernoteEditor(
-        `summernoteRubric_${this.nodeId}_${this.componentId}`,
-        fullFilePath,
-        fileName
-      );
-    } else if (target === 'background') {
+    if (target === 'background') {
       this.authoringComponentContent.backgroundImage = fileName;
       this.authoringViewComponentChanged();
     }
   }
 
-  saveStarterLabels() {
+  saveStarterLabels(): void {
     if (confirm(this.$translate('label.areYouSureYouWantToSaveTheStarterLabels'))) {
-      const starterLabels = this.UtilService.makeCopyOfJSONObject(this.getLabelData());
-      starterLabels.sort(this.labelTextComparator);
-      this.authoringComponentContent.labels = starterLabels;
-      this.authoringViewComponentChanged();
+      this.NodeService.requestStarterState({nodeId: this.nodeId, componentId: this.componentId});
     }
+  }
+
+  saveStarterState(starterState: any): void {
+    starterState.sort(this.labelTextComparator);
+    this.authoringComponentContent.labels = starterState;
+    this.authoringViewComponentChanged();
   }
 
   /**
@@ -214,7 +131,7 @@ class LabelAuthoringController extends LabelController {
    * 1 if labelB comes after labelB
    * 0 of the labels are equal
    */
-  labelTextComparator(labelA, labelB) {
+  labelTextComparator(labelA: any, labelB: any): number {
     if (labelA.text < labelB.text) {
       return -1;
     } else if (labelA.text > labelB.text) {
@@ -242,14 +159,14 @@ class LabelAuthoringController extends LabelController {
     }
   }
 
-  deleteStarterLabels() {
+  deleteStarterLabels(): void {
     if (confirm(this.$translate('label.areYouSureYouWantToDeleteAllTheStarterLabels'))) {
       this.authoringComponentContent.labels = [];
       this.authoringViewComponentChanged();
     }
   }
 
-  openColorViewer() {
+  openColorViewer(): void {
     this.$window.open('http://www.javascripter.net/faq/colornam.htm');
   }
 
@@ -258,39 +175,25 @@ class LabelAuthoringController extends LabelController {
    * is only one viable option.
    * @param connectedComponent the connected component object we are authoring
    */
-  authoringAutomaticallySetConnectedComponentComponentIdIfPossible(connectedComponent) {
-    let numberOfAllowedComponents = 0;
-    let allowedComponent = null;
-    for (const component of this.getComponentsByNodeId(connectedComponent.nodeId)) {
-      if (
-        this.isConnectedComponentTypeAllowed(component.type) &&
-        component.id != this.componentId
-      ) {
-        numberOfAllowedComponents += 1;
-        allowedComponent = component;
-      }
-    }
-    if (numberOfAllowedComponents === 1) {
-      connectedComponent.componentId = allowedComponent.id;
-      connectedComponent.type = 'importWork';
+  automaticallySetConnectedComponentComponentIdIfPossible(connectedComponent: any): void {
+    super.automaticallySetConnectedComponentComponentIdIfPossible(connectedComponent);
+    if (connectedComponent.componentId != null) {
       this.authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent);
     }
   }
 
-  authoringConnectedComponentComponentIdChanged(connectedComponent) {
-    if (connectedComponent != null) {
-      connectedComponent.type = 'importWork';
-      this.authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent);
-      this.authoringViewComponentChanged();
-    }
+  authoringConnectedComponentComponentIdChanged(connectedComponent: any): void {
+    this.automaticallySetConnectedComponentTypeIfPossible(connectedComponent);
+    this.authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent);
+    this.authoringViewComponentChanged();
   }
 
   /**
    * For certain component types, set the importWorkAsBackground field to true by default
    * @param connectedComponent The connected component object.
    */
-  authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent) {
-    const componentType = this.authoringGetConnectedComponentType(connectedComponent);
+  authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent: any): void {
+    const componentType = this.getConnectedComponentType(connectedComponent);
     if (['ConceptMap', 'Draw', 'Embedded', 'Graph', 'Table'].includes(componentType)) {
       connectedComponent.importWorkAsBackground = true;
     } else {
@@ -298,7 +201,7 @@ class LabelAuthoringController extends LabelController {
     }
   }
 
-  authoringImportWorkAsBackgroundClicked(connectedComponent) {
+  importWorkAsBackgroundClicked(connectedComponent: any): void {
     if (connectedComponent.importWorkAsBackground) {
       connectedComponent.charactersPerLine = 100;
       connectedComponent.spaceInbetweenLines = 40;
