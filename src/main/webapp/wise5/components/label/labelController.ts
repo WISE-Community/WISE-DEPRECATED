@@ -32,7 +32,7 @@ class LabelController extends ComponentController {
   disabled: boolean;
   selectedLabel: any;
   selectedLabelText: any;
-  editLabelMode: boolean;
+  editLabelMode: boolean = false;
 
   static $inject = [
     '$filter',
@@ -194,27 +194,7 @@ class LabelController extends ComponentController {
       this.enableCircles = this.componentContent.enableCircles;
     }
 
-    if (this.mode === 'student') {
-      this.isPromptVisible = true;
-      this.isSaveButtonVisible = this.componentContent.showSaveButton;
-      this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-
-      if (this.onlyHasShowWorkConnectedComponents()) {
-        this.isDisabled = true;
-      }
-
-      if (this.canCreateLabels) {
-        this.isNewLabelButtonVisible = true;
-      } else {
-        this.isNewLabelButtonVisible = false;
-      }
-
-      if (this.isDisabled) {
-        this.isNewLabelButtonVisible = false;
-        this.canCreateLabels = false;
-        this.isResetButtonVisible = false;
-      }
-    } else if (this.mode === 'grading' || this.mode === 'gradingRevision') {
+    if (this.mode === 'grading' || this.mode === 'gradingRevision') {
       this.isSaveButtonVisible = false;
       this.isSubmitButtonVisible = false;
       this.isNewLabelButtonVisible = false;
@@ -239,8 +219,27 @@ class LabelController extends ComponentController {
       this.isSubmitButtonVisible = false;
       this.isNewLabelButtonVisible = false;
       this.isDisabled = true;
-    }
+    } else {
+      this.isPromptVisible = true;
+      this.isSaveButtonVisible = this.componentContent.showSaveButton;
+      this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
 
+      if (this.onlyHasShowWorkConnectedComponents()) {
+        this.isDisabled = true;
+      }
+
+      if (this.canCreateLabels) {
+        this.isNewLabelButtonVisible = true;
+      } else {
+        this.isNewLabelButtonVisible = false;
+      }
+
+      if (this.isDisabled) {
+        this.isNewLabelButtonVisible = false;
+        this.canCreateLabels = false;
+        this.isResetButtonVisible = false;
+      }
+    }
     this.$timeout(
       angular.bind(this, function() {
         // wait for angular to completely render the html before we initialize the canvas
@@ -1760,6 +1759,10 @@ class LabelController extends ComponentController {
         this.deleteLabel(tempLabel);
       }
 
+      if (this.componentContent.backgroundImage != null) {
+        this.setBackgroundImage(this.componentContent.backgroundImage);
+      }
+
       /*
        * remove the reference to the selected label since it will no
        * longer be selected
@@ -1836,6 +1839,11 @@ class LabelController extends ComponentController {
       }
     }
     return false;
+  }
+
+  generateStarterState() {
+    this.NodeService.respondStarterState({nodeId: this.nodeId, componentId: this.componentId,
+        starterState: this.getLabelData()});
   }
 }
 
