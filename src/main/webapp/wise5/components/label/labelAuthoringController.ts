@@ -178,13 +178,13 @@ class LabelAuthoringController extends ComponentAuthoringController {
   automaticallySetConnectedComponentComponentIdIfPossible(connectedComponent: any): void {
     super.automaticallySetConnectedComponentComponentIdIfPossible(connectedComponent);
     if (connectedComponent.componentId != null) {
-      this.authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent);
+      this.setImportWorkAsBackgroundIfApplicable(connectedComponent);
     }
   }
 
-  authoringConnectedComponentComponentIdChanged(connectedComponent: any): void {
+  connectedComponentComponentIdChanged(connectedComponent: any): void {
     this.automaticallySetConnectedComponentTypeIfPossible(connectedComponent);
-    this.authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent);
+    this.setImportWorkAsBackgroundIfApplicable(connectedComponent);
     this.authoringViewComponentChanged();
   }
 
@@ -192,7 +192,7 @@ class LabelAuthoringController extends ComponentAuthoringController {
    * For certain component types, set the importWorkAsBackground field to true by default
    * @param connectedComponent The connected component object.
    */
-  authoringSetImportWorkAsBackgroundIfApplicable(connectedComponent: any): void {
+  setImportWorkAsBackgroundIfApplicable(connectedComponent: any): void {
     const componentType = this.getConnectedComponentType(connectedComponent);
     if (['ConceptMap', 'Draw', 'Embedded', 'Graph', 'Table'].includes(componentType)) {
       connectedComponent.importWorkAsBackground = true;
