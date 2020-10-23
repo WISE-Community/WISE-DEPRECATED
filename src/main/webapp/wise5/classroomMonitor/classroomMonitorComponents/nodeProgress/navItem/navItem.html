@@ -53,12 +53,12 @@
     <p flex layout="row" layout-align="start center">
       <span>{{ ::$ctrl.nodeTitle }}</span>&nbsp;
       <span flex hide-gt-xs></span>
-      <status-icon ng-if="$ctrl.newAlert" icon-class="$ctrl.alertIconClass"
-                   icon-name="$ctrl.alertIconName" icon-label="$ctrl.alertIconLabel"
-                   icon-tooltip="$ctrl.alertIconLabel"></status-icon>
-      <status-icon ng-if="$ctrl.hasRubrics" icon-class="$ctrl.rubricIconClass"
-                   icon-name="$ctrl.rubricIconName" icon-label="$ctrl.rubricIconLabel"
-                   icon-tooltip="$ctrl.rubricIconLabel"></status-icon>
+      <status-icon ng-if="$ctrl.newAlert" [icon-class]="$ctrl.alertIconClass"
+                   [icon-name]="$ctrl.alertIconName" [icon-label]="$ctrl.alertIconLabel"
+                   [icon-tooltip]="$ctrl.alertIconLabel"></status-icon>
+      <status-icon ng-if="$ctrl.hasRubrics" [icon-class]="$ctrl.rubricIconClass"
+                   [icon-name]="$ctrl.rubricIconName" [icon-label]="$ctrl.rubricIconLabel"
+                   [icon-tooltip]="$ctrl.rubricIconLabel"></status-icon>
       <span flex hide-xs></span>
       <nav-item-score class="nav-item--list__info-item" [max-score]="$ctrl.maxScore"
                       [average-score]="$ctrl.getNodeAverageScore()"></nav-item-score>

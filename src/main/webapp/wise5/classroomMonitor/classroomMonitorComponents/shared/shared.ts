@@ -12,7 +12,7 @@ import NotificationsMenu from './notificationsMenu/notificationsMenu';
 import PauseScreensMenu from './pauseScreensMenu/pauseScreensMenu';
 import PeriodSelect from './periodSelect/periodSelect';
 import SideMenu from './sideMenu/sideMenu';
-import StatusIcon from './statusIcon/statusIcon';
+import { StatusIconComponent } from '../../../../site/src/app/classroom-monitor/status-icon/status-icon.component';
 import Toolbar from './toolbar/toolbar';
 import TopBar from './topBar/topBar';
 import WorkgroupComponentRevisions from './workgroupComponentRevisions/workgroupComponentRevisions';
@@ -38,7 +38,8 @@ const Shared = angular
   .component('pauseScreensMenu', PauseScreensMenu)
   .component('periodSelect', PeriodSelect)
   .component('cmSideMenu', SideMenu)
-  .component('statusIcon', StatusIcon)
+  .directive('statusIcon',
+      downgradeComponent({ component: StatusIconComponent }) as angular.IDirectiveFactory)
   .component('cmToolbar', Toolbar)
   .component('cmTopBar', TopBar)
   .component('workgroupComponentRevisions', WorkgroupComponentRevisions)
