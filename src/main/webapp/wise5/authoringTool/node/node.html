@@ -179,6 +179,7 @@
   </div>
   <div ng-if="nodeAuthoringController.showComponentAuthoringViews">
     <ng-content ng-switch="::component.type">
+      <audio-oscillator-authoring ng-switch-when="AudioOscillator" node-id='{{nodeAuthoringController.nodeId}}' component-id='{{component.id}}'/>
       <html-authoring ng-switch-when="HTML" node-id='{{nodeAuthoringController.nodeId}}' component-id='{{component.id}}'/>
       <open-response-authoring ng-switch-when="OpenResponse" node-id='{{nodeAuthoringController.nodeId}}' component-id='{{component.id}}'/>
       <outside-url-authoring ng-switch-when="OutsideURL" node-id='{{nodeAuthoringController.nodeId}}' component-id='{{component.id}}'/>
