@@ -1,10 +1,23 @@
 'use strict';
 
-import { ComponentAuthoringController } from "../componentAuthoringController";
+import { EditComponentController } from "../../authoringTool/components/editComponentController";
 
-class EmbeddedAuthoringController extends ComponentAuthoringController {
+class EmbeddedAuthoringController extends EditComponentController {
 
-  allowedConnectedComponentTypes: any[];
+  allowedConnectedComponentTypes: any[] = [
+    { type: 'Animation' },
+    { type: 'AudioOscillator' },
+    { type: 'ConceptMap' },
+    { type: 'Discussion' },
+    { type: 'Draw' },
+    { type: 'Embedded' },
+    { type: 'Graph' },
+    { type: 'Label' },
+    { type: 'Match' },
+    { type: 'MultipleChoice' },
+    { type: 'OpenResponse' },
+    { type: 'Table' }
+  ];
   embeddedApplicationIFrameId: string;
 
   static $inject = [
@@ -34,24 +47,13 @@ class EmbeddedAuthoringController extends ComponentAuthoringController {
         ProjectAssetService,
         ProjectService,
         UtilService);
+  }
 
-    this.allowedConnectedComponentTypes = [
-      { type: 'Animation' },
-      { type: 'AudioOscillator' },
-      { type: 'ConceptMap' },
-      { type: 'Discussion' },
-      { type: 'Draw' },
-      { type: 'Embedded' },
-      { type: 'Graph' },
-      { type: 'Label' },
-      { type: 'Match' },
-      { type: 'MultipleChoice' },
-      { type: 'OpenResponse' },
-      { type: 'Table' }
-    ];
+  $onInit() {
+    super.$onInit();
     this.embeddedApplicationIFrameId = 'componentApp_' + this.componentId;
 
-    $scope.$watch(function() {
+    this.$scope.$watch(function() {
       return this.authoringComponentContent;
     }.bind(this), function(newValue, oldValue) {
       this.componentContent = this.ProjectService.injectAssetPaths(newValue);
@@ -86,4 +88,15 @@ class EmbeddedAuthoringController extends ComponentAuthoringController {
   }
 }
 
-export default EmbeddedAuthoringController;
+
+const EmbeddedAuthoring = {
+  bindings: {
+    nodeId: '@',
+    componentId: '@'
+  },
+  controller: EmbeddedAuthoringController,
+  controllerAs: 'embeddedController',
+  templateUrl: 'wise5/components/embedded/authoring.html'
+}
+
+export default EmbeddedAuthoring;
