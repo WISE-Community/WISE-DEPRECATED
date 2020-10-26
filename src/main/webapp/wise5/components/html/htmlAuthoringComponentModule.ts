@@ -3,7 +3,7 @@
 import * as angular from 'angular';
 import { downgradeInjectable } from '@angular/upgrade/static';
 import { HTMLService } from './htmlService';
-import HTMLAuthoring from './htmlAuthoringController';
+import HTMLAuthoring from './htmlAuthoring';
 
 const htmlComponentModule = angular.module('htmlAuthoringComponentModule', [])
   .service('HTMLService', downgradeInjectable(HTMLService))

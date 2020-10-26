@@ -1,7 +1,9 @@
 'use strict';
 
+import { Directive } from "@angular/core";
 import { EditComponentController } from "../../authoringTool/components/editComponentController";
 
+@Directive()
 class EmbeddedAuthoringController extends EditComponentController {
 
   allowedConnectedComponentTypes: any[] = [

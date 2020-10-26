@@ -1,8 +1,21 @@
 'use strict';
 
-import { ComponentAuthoringController } from '../componentAuthoringController';
+import { Directive } from '@angular/core';
+import { EditComponentController } from '../../authoringTool/components/editComponentController';
 
-class TableAuthoringController extends ComponentAuthoringController {
+@Directive()
+class TableAuthoringController extends EditComponentController {
+  allowedConnectedComponentTypes: any[] = [
+    {
+      type: 'Embedded'
+    },
+    {
+      type: 'Graph'
+    },
+    {
+      type: 'Table'
+    }
+  ];
   columnCellSizes: any;
   isDataExplorerScatterPlotEnabled: boolean;
   isDataExplorerLineGraphEnabled: boolean;
@@ -39,17 +52,10 @@ class TableAuthoringController extends ComponentAuthoringController {
       ProjectService,
       UtilService
     );
-    this.allowedConnectedComponentTypes = [
-      {
-        type: 'Embedded'
-      },
-      {
-        type: 'Graph'
-      },
-      {
-        type: 'Table'
-      }
-    ];
+  }
+
+  $onInit() {
+    super.$onInit();
     if (this.authoringComponentContent.isDataExplorerEnabled) {
       this.repopulateDataExplorerGraphTypes();
       this.initializeDataExplorerSeriesParams();
@@ -536,4 +542,15 @@ class TableAuthoringController extends ComponentAuthoringController {
   }
 }
 
-export default TableAuthoringController;
+const TableAuthoring = {
+  bindings: {
+    nodeId: '@',
+    componentId: '@'
+  },
+  controller: TableAuthoringController,
+  controllerAs: 'tableController',
+  templateUrl: 'wise5/components/table/authoring.html'
+}
+
+
+export default TableAuthoring;
