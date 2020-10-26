@@ -177,7 +177,14 @@
       <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::"insertAfter" | translate }}</md-tooltip>
     </md-button>
   </div>
-  <edit-component ng-if='nodeAuthoringController.showComponentAuthoringViews' node-id='{{nodeAuthoringController.nodeId}}' component-id='{{component.id}}'></edit-component>
-  <md-divider ng-if='nodeAuthoringController.showComponentAuthoringViews && !$last'></md-divider>
+  <div ng-if="nodeAuthoringController.showComponentAuthoringViews">
+    <ng-content ng-switch="::component.type">
+      <html-authoring ng-switch-when="HTML" node-id='{{nodeAuthoringController.nodeId}}' component-id='{{component.id}}'/>
+      <open-response-authoring ng-switch-when="OpenResponse" node-id='{{nodeAuthoringController.nodeId}}' component-id='{{component.id}}'/>
+      <outside-url-authoring ng-switch-when="OutsideURL" node-id='{{nodeAuthoringController.nodeId}}' component-id='{{component.id}}'/>
+      <edit-component ng-switch-default node-id='{{nodeAuthoringController.nodeId}}' component-id='{{component.id}}'></edit-component>
+    </ng-content>
+    <md-divider ng-if='!$last'></md-divider>
+  </div>
 </div>
 </div>
