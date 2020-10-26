@@ -1,8 +1,10 @@
 'use strict';
 
-import { ComponentAuthoringController } from '../componentAuthoringController';
+import { Directive } from '@angular/core';
+import { EditComponentController } from '../../authoringTool/components/editComponentController';
 
-class MatchAuthoringController extends ComponentAuthoringController {
+@Directive()
+class MatchAuthoringController extends EditComponentController {
   allowedConnectedComponentTypes: any[] = [{ type: 'Match' }];
   defaultSourceBucketId: string = '0';
 
@@ -41,6 +43,10 @@ class MatchAuthoringController extends ComponentAuthoringController {
       ProjectService,
       UtilService
     );
+  }
+
+  $onInit() {
+    super.$onInit();
   }
 
   addChoice(): void {
@@ -389,4 +395,14 @@ class MatchAuthoringController extends ComponentAuthoringController {
   }
 }
 
-export default MatchAuthoringController;
+const MatchAuthoring = {
+  bindings: {
+    nodeId: '@',
+    componentId: '@'
+  },
+  controller: MatchAuthoringController,
+  controllerAs: 'matchController',
+  templateUrl: 'wise5/components/match/authoring.html'
+}
+
+export default MatchAuthoring;

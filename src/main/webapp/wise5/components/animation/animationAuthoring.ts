@@ -1,7 +1,9 @@
 'use strict';
 
+import { Directive } from '@angular/core';
 import { EditComponentController } from '../../authoringTool/components/editComponentController';
 
+@Directive()
 class AnimationAuthoringController extends EditComponentController {
 
   allowedConnectedComponentTypes: any[] = [{ type: 'Animation' }, { type: 'Graph' }];
