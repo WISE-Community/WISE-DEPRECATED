@@ -3,14 +3,12 @@
 import * as angular from 'angular';
 import { downgradeInjectable } from '@angular/upgrade/static';
 import { EmbeddedService } from './embeddedService';
-import EmbeddedController from './embeddedController';
-import EmbeddedAuthoringController from './embeddedAuthoringController';
+import EmbeddedAuthoring from './embeddedAuthoring';
 
 const embeddedAuthoringComponentModule = angular
   .module('embeddedAuthoringComponentModule', ['pascalprecht.translate'])
   .service('EmbeddedService', downgradeInjectable(EmbeddedService))
-  .controller('EmbeddedController', EmbeddedController)
-  .controller('EmbeddedAuthoringController', EmbeddedAuthoringController)
+  .component('embeddedAuthoring', EmbeddedAuthoring)
   .config([
     '$translatePartialLoaderProvider',
     $translatePartialLoaderProvider => {
