@@ -45,10 +45,6 @@ class MatchAuthoringController extends EditComponentController {
     );
   }
 
-  $onInit() {
-    super.$onInit();
-  }
-
   addChoice(): void {
     const newChoice = {
       id: this.UtilService.generateKey(10),

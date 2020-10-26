@@ -41,10 +41,6 @@ class DiscussionAuthoringController extends EditComponentController {
     );
   }
 
-  $onInit() {
-    super.$onInit();
-  }
-
   connectedComponentTypeChanged(connectedComponent) {
     this.changeAllDiscussionConnectedComponentTypesToMatch(connectedComponent.type);
     super.connectedComponentTypeChanged(connectedComponent);
