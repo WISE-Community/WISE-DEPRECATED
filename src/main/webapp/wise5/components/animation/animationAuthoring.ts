@@ -1,8 +1,8 @@
 'use strict';
 
-import { ComponentAuthoringController } from '../componentAuthoringController';
+import { EditComponentController } from '../../authoringTool/components/editComponentController';
 
-class AnimationAuthoringController extends ComponentAuthoringController {
+class AnimationAuthoringController extends EditComponentController {
 
   allowedConnectedComponentTypes: any[] = [{ type: 'Animation' }, { type: 'Graph' }];
 
@@ -295,11 +295,21 @@ class AnimationAuthoringController extends ComponentAuthoringController {
     delete authoredObject.imageMovingUp;
     delete authoredObject.imageMovingDown;
   }
-  
+
   getComponentByNodeIdAndComponentId(nodeId: string, componentId: string) {
     return this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
   }
 
 }
 
-export default AnimationAuthoringController;
+const AnimationAuthoring = {
+  bindings: {
+    nodeId: '@',
+    componentId: '@'
+  },
+  controller: AnimationAuthoringController,
+  controllerAs: 'animationController',
+  templateUrl: 'wise5/components/animation/authoring.html'
+}
+
+export default AnimationAuthoring;
