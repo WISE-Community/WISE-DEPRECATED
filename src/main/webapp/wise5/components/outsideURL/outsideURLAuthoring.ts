@@ -78,23 +78,6 @@ class OutsideURLAuthoringController extends EditComponentController {
     ];
     this.searchText = '';
     this.selectedSubjects = [];
-
-    this.$scope.$watch(
-      () => {
-        return this.authoringComponentContent;
-      },
-      (newValue, oldValue) => {
-        this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-        this.setURL(this.authoringComponentContent.url);
-        this.setInfo(this.authoringComponentContent.info);
-        this.setWidthAndHeight(
-          this.authoringComponentContent.width,
-          this.authoringComponentContent.height
-        );
-      },
-      true
-    );
-
     this.OutsideURLService.getOpenEducationalResources().then((openEducationalResources: any) => {
       this.openEducationalResources = openEducationalResources.sort((a, b) =>
         a.metadata.title > b.metadata.title ? 1 : -1

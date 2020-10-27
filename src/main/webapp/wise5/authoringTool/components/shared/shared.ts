@@ -6,7 +6,6 @@ import StepTools from './stepTools/stepTools';
 import Toolbar from './toolbar/toolbar';
 import TopBar from './topBar/topBar';
 import * as angular from 'angular';
-import EditComponent from '../edit-component/editComponent';
 import PreviewComponent from '../preview-component/previewComponent';
 
 const SharedComponents = angular
@@ -16,7 +15,6 @@ const SharedComponents = angular
   .component('atStepTools', StepTools)
   .component('atToolbar', Toolbar)
   .component('atTopBar', TopBar)
-  .component('editComponent', EditComponent)
   .component('previewComponent', PreviewComponent);
 
 export default SharedComponents;

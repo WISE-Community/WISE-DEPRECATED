@@ -720,13 +720,6 @@ class ConceptMapController extends ComponentController {
             data
           );
           componentState.annotations.push(scoreAnnotation);
-
-          if (this.isAuthoringMode()) {
-            if (this.latestAnnotations == null) {
-              this.latestAnnotations = {};
-            }
-            this.latestAnnotations.score = scoreAnnotation;
-          }
         }
 
         if (this.hasAutoFeedbackText()) {
@@ -743,13 +736,6 @@ class ConceptMapController extends ComponentController {
             data
           );
           componentState.annotations.push(commentAnnotation);
-
-          if (this.isAuthoringMode()) {
-            if (this.latestAnnotations == null) {
-              this.latestAnnotations = {};
-            }
-            this.latestAnnotations.comment = commentAnnotation;
-          }
         }
       }
     }
