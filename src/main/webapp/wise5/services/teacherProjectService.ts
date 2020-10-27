@@ -7,16 +7,21 @@ import { UtilService } from '../services/utilService';
 import { Injectable } from '@angular/core';
 import { UpgradeModule } from '@angular/upgrade/static';
 import { HttpClient } from '@angular/common/http';
-import { Subject } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { SessionService } from './sessionService';
 
 @Injectable()
 export class TeacherProjectService extends ProjectService {
 
+  private nodeChangedSource: Subject<boolean> = new Subject<boolean>();
+  public nodeChanged$: Observable<boolean> = this.nodeChangedSource.asObservable();
   private refreshProjectSource: Subject<void> = new Subject<void>();
   public refreshProject$ = this.refreshProjectSource.asObservable();
   private scrollToBottomOfPageSource: Subject<void> = new Subject<void>();
   public scrollToBottomOfPage$ = this.scrollToBottomOfPageSource.asObservable();
+  private showAdvancedComponentViewSource: Subject<any> = new Subject<any>();
+  public showAdvancedComponentView$: Observable<any> =
+      this.showAdvancedComponentViewSource.asObservable();
 
   constructor(
       protected upgrade: UpgradeModule,
@@ -1263,12 +1268,21 @@ export class TeacherProjectService extends ProjectService {
     return null;
   }
 
+  nodeChanged(doParseProject: boolean = false): void {
+    this.nodeChangedSource.next(doParseProject);
+  }
+
   refreshProject() {
     this.refreshProjectSource.next();
   }
 
   scrollToBottomOfPage() {
     this.scrollToBottomOfPageSource.next();
+  }
+
+  showAdvancedComponentView(componentId: string, isShow: boolean) {
+    this.showAdvancedComponentViewSource
+        .next({componentId: componentId, isShow: isShow});
   }
 
   addTeacherRemovalConstraint(node: any, periodId: number) {

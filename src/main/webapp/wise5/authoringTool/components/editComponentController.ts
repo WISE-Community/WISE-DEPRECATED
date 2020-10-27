@@ -32,6 +32,7 @@ export abstract class EditComponentController {
   summernoteRubricHTML: string;
   summernoteRubricOptions: any;
   starterStateResponseSubscription: Subscription;
+  showAdvancedAuthoringSubscription: Subscription;
 
   constructor(
       protected $scope: any,
@@ -90,14 +91,13 @@ export abstract class EditComponentController {
         },
         true
     );
-    this.$scope.$watch(() => {
-      return this.$scope.$parent.nodeAuthoringController
-        .showAdvancedComponentAuthoring[this.componentId];
-    }, () => {
-      this.showAdvancedAuthoring = this.$scope.$parent.nodeAuthoringController
-          .showAdvancedComponentAuthoring[this.componentId];
-      this.NotificationService.hideJSONValidMessage();
-    }, true);
+    this.showAdvancedAuthoringSubscription =
+        this.ProjectService.showAdvancedComponentView$.subscribe((event) => {
+      if (event.componentId === this.componentId) {
+        this.showAdvancedAuthoring = event.isShow;
+        this.NotificationService.hideJSONValidMessage();
+      }
+    });
     this.starterStateResponseSubscription =
         this.NodeService.starterStateResponse$.subscribe((args: any) => {
       if (this.isForThisComponent(args)) {
@@ -108,6 +108,7 @@ export abstract class EditComponentController {
 
   $onDestroy() {
     this.starterStateResponseSubscription.unsubscribe();
+    this.showAdvancedAuthoringSubscription.unsubscribe();
   }
 
   handleAuthoringComponentContentChanged(newValue, oldValue): void {
@@ -156,10 +157,10 @@ export abstract class EditComponentController {
       const editedComponentContent = angular.fromJson(this.authoringComponentContentJSONString);
       this.ProjectService.replaceComponent(this.nodeId, this.componentId, editedComponentContent);
       this.componentContent = editedComponentContent;
-      this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
+      this.ProjectService.nodeChanged();
       this.isJSONStringChanged = false;
     } catch(e) {
-      this.$scope.$parent.nodeAuthoringController.showSaveErrorAdvancedAuthoring();
+      alert(this.$translate('saveErrorAdvancedAuthoring'));
     }
   }
 
@@ -187,7 +188,7 @@ export abstract class EditComponentController {
 
   authoringViewComponentChanged(): void {
     this.updateAdvancedAuthoringView();
-    this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
+    this.ProjectService.nodeChanged();
   }
 
   updateAdvancedAuthoringView(): void {
