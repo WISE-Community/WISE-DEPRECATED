@@ -4,9 +4,11 @@ import * as $ from 'jquery';
 import * as fabric from 'fabric';
 window['fabric'] = fabric.fabric
 import html2canvas from 'html2canvas';
-import { ComponentAuthoringController } from '../componentAuthoringController';
+import { Directive } from '@angular/core';
+import { EditComponentController } from '../../authoringTool/components/editComponentController';
 
-class LabelAuthoringController extends ComponentAuthoringController {
+@Directive()
+class LabelAuthoringController extends EditComponentController {
   allowedConnectedComponentTypes: any[] = [
     { type: 'ConceptMap' },
     { type: 'Draw' },
@@ -50,7 +52,11 @@ class LabelAuthoringController extends ComponentAuthoringController {
       ProjectService,
       UtilService
     );
-    if (this.componentContent.enableCircles == null) {
+  }
+
+  $onInit() {
+    super.$onInit();
+    if (this.authoringComponentContent.enableCircles == null) {
       /*
        * If this component was created before enableCircles was implemented,
        * we will default it to true in the authoring so that the
@@ -216,4 +222,14 @@ class LabelAuthoringController extends ComponentAuthoringController {
   }
 }
 
-export default LabelAuthoringController;
+const LabelAuthoring = {
+  bindings: {
+    nodeId: '@',
+    componentId: '@'
+  },
+  controller: LabelAuthoringController,
+  controllerAs: 'labelController',
+  templateUrl: 'wise5/components/label/authoring.html'
+}
+
+export default LabelAuthoring;

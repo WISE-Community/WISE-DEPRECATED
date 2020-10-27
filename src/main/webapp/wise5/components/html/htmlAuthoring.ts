@@ -87,15 +87,6 @@ class HTMLAuthoringController extends EditComponentController {
 
     this.summernotePromptId = 'summernotePrompt_' + this.nodeId + '_' + this.componentId;
     this.summernotePromptHTML = this.UtilService.replaceWISELinks(this.componentContent.html);
-    this.$scope.$watch(
-      function() {
-        return this.authoringComponentContent;
-      }.bind(this),
-      function(newValue, oldValue) {
-        this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-      }.bind(this),
-      true
-    );
   }
 
   createOpenWISELinkChooserFunction() {

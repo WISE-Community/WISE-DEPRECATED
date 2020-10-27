@@ -540,6 +540,20 @@ class TableAuthoringController extends EditComponentController {
       }
     }
   }
+  
+  automaticallySetConnectedComponentFieldsIfPossible(connectedComponent) {
+    if (connectedComponent.type === 'importWork' && connectedComponent.action == null) {
+      connectedComponent.action = 'merge';
+    } else if (connectedComponent.type === 'showWork') {
+      connectedComponent.action = null;
+    }
+  }
+
+  connectedComponentTypeChanged(connectedComponent) {
+    this.automaticallySetConnectedComponentFieldsIfPossible(connectedComponent);
+    this.authoringViewComponentChanged();
+  }
+
 }
 
 const TableAuthoring = {

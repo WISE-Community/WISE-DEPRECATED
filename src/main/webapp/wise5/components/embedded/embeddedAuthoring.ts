@@ -54,14 +54,6 @@ class EmbeddedAuthoringController extends EditComponentController {
   $onInit() {
     super.$onInit();
     this.embeddedApplicationIFrameId = 'componentApp_' + this.componentId;
-
-    this.$scope.$watch(function() {
-      return this.authoringComponentContent;
-    }.bind(this), function(newValue, oldValue) {
-      this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-      this.isSaveButtonVisible = this.componentContent.showSaveButton;
-      this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-    }.bind(this), true);
   }
 
   showModelFileChooserPopup() {
@@ -89,7 +81,6 @@ class EmbeddedAuthoringController extends EditComponentController {
     iframe.src = src;
   }
 }
-
 
 const EmbeddedAuthoring = {
   bindings: {

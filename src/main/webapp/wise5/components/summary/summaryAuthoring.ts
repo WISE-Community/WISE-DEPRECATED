@@ -1,8 +1,10 @@
 'use strict';
 
-import { ComponentAuthoringController } from '../componentAuthoringController';
+import { Directive } from '@angular/core';
+import { EditComponentController } from '../../authoringTool/components/editComponentController';
 
-class SummaryAuthoringController extends ComponentAuthoringController {
+@Directive()
+class SummaryAuthoringController extends EditComponentController {
   isResponsesOptionAvailable: boolean = false;
   isHighlightCorrectAnswerAvailable: boolean = false;
   isPieChartAllowed: boolean = true;
@@ -42,6 +44,10 @@ class SummaryAuthoringController extends ComponentAuthoringController {
       ProjectService,
       UtilService
     );
+  }
+
+  $onInit() {
+    super.$onInit();
     this.updateStudentDataTypeOptionsIfNecessary();
     this.updateHasCorrectAnswerIfNecessary();
     this.updateChartTypeOptionsIfNecessary();
@@ -209,4 +215,14 @@ class SummaryAuthoringController extends ComponentAuthoringController {
   }
 }
 
-export default SummaryAuthoringController;
+const SummaryAuthoring = {
+  bindings: {
+    nodeId: '@',
+    componentId: '@'
+  },
+  controller: SummaryAuthoringController,
+  controllerAs: 'summaryController',
+  templateUrl: 'wise5/components/summary/authoring.html'
+}
+
+export default SummaryAuthoring;

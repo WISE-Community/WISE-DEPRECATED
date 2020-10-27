@@ -181,14 +181,19 @@
     <ng-content ng-switch="::component.type">
       <animation-authoring ng-switch-when="Animation" node-id='{{nodeAuthoringController.nodeId}}' component-id='{{component.id}}'></animation-authoring>
       <audio-oscillator-authoring ng-switch-when="AudioOscillator" node-id='{{nodeAuthoringController.nodeId}}' component-id='{{component.id}}'></audio-oscillator-authoring>
+      <concept-map-authoring ng-switch-when="ConceptMap" node-id='{{nodeAuthoringController.nodeId}}' component-id='{{component.id}}'></concept-map-authoring>
       <discussion-authoring ng-switch-when="Discussion" node-id='{{nodeAuthoringController.nodeId}}' component-id='{{component.id}}'></discussion-authoring>
+      <draw-authoring ng-switch-when="Draw" node-id='{{nodeAuthoringController.nodeId}}' component-id='{{component.id}}'></draw-authoring>
       <embedded-authoring ng-switch-when="Embedded" node-id='{{nodeAuthoringController.nodeId}}' component-id='{{component.id}}'></embedded-authoring>
+      <graph-authoring ng-switch-when="Graph" node-id='{{nodeAuthoringController.nodeId}}' component-id='{{component.id}}'></graph-authoring>
       <html-authoring ng-switch-when="HTML" node-id='{{nodeAuthoringController.nodeId}}' component-id='{{component.id}}'></html-authoring>
+      <label-authoring ng-switch-when="Label" node-id='{{nodeAuthoringController.nodeId}}' component-id='{{component.id}}'></label-authoring>
       <match-authoring ng-switch-when="Match" node-id='{{nodeAuthoringController.nodeId}}' component-id='{{component.id}}'></match-authoring>
+      <multiple-choice-authoring ng-switch-when="MultipleChoice" node-id='{{nodeAuthoringController.nodeId}}' component-id='{{component.id}}'></multiple-choice-authoring>
       <open-response-authoring ng-switch-when="OpenResponse" node-id='{{nodeAuthoringController.nodeId}}' component-id='{{component.id}}'></open-response-authoring>
       <outside-url-authoring ng-switch-when="OutsideURL" node-id='{{nodeAuthoringController.nodeId}}' component-id='{{component.id}}'></outside-url-authoring>
+      <summary-authoring ng-switch-when="Summary" node-id='{{nodeAuthoringController.nodeId}}' component-id='{{component.id}}'></summary-authoring>
       <table-authoring ng-switch-when="Table" node-id='{{nodeAuthoringController.nodeId}}' component-id='{{component.id}}'></table-authoring>
-      <edit-component ng-switch-default node-id='{{nodeAuthoringController.nodeId}}' component-id='{{component.id}}'></edit-component>
     </ng-content>
     <md-divider ng-if='!$last'></md-divider>
   </div>

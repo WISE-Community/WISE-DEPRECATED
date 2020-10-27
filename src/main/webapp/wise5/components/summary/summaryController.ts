@@ -1,5 +1,6 @@
 'use strict';
 
+import * as angular from 'angular';
 import ComponentController from '../componentController';
 import { SummaryService } from './summaryService';
 

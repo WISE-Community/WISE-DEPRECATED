@@ -1,9 +1,11 @@
 'use strict';
 
 import * as angular from 'angular';
-import { ComponentAuthoringController } from '../componentAuthoringController';
+import { Directive } from '@angular/core';
+import { EditComponentController } from '../../authoringTool/components/editComponentController';
 
-class DrawAuthoringController extends ComponentAuthoringController {
+@Directive()
+class DrawAuthoringController extends EditComponentController {
   allowedConnectedComponentTypes: any[] = [{ type: 'ConceptMap' }, { type: 'Draw' },
       { type: 'Embedded' }, { type: 'Graph' }, { type: 'Label' }, { type: 'Table' }];
   width: number;
@@ -39,18 +41,6 @@ class DrawAuthoringController extends ComponentAuthoringController {
       ProjectAssetService,
       ProjectService,
       UtilService
-    );
-    $scope.$watch(
-      function() {
-        return this.authoringComponentContent;
-      }.bind(this),
-      function(newValue, oldValue) {
-        this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-        this.submitCounter = 0;
-        this.isSaveButtonVisible = this.componentContent.showSaveButton;
-        this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-      }.bind(this),
-      true
     );
   }
 
@@ -225,12 +215,6 @@ class DrawAuthoringController extends ComponentAuthoringController {
     this.openAssetChooser(params);
   }
 
-  openAssetChooser(params: any) {
-    this.ProjectAssetService.openAssetChooser(params).then(
-      (data: any) => { this.assetSelected(data) }
-    );
-  }
-
   assetSelected({ nodeId, componentId, assetItem, target, targetObject }) {
     super.assetSelected({ nodeId, componentId, assetItem, target });
     const fileName = assetItem.fileName;
@@ -315,4 +299,14 @@ class DrawAuthoringController extends ComponentAuthoringController {
   }
 }
 
-export default DrawAuthoringController;
+const DrawAuthoring = {
+  bindings: {
+    nodeId: '@',
+    componentId: '@'
+  },
+  controller: DrawAuthoringController,
+  controllerAs: 'drawController',
+  templateUrl: 'wise5/components/draw/authoring.html'
+}
+
+export default DrawAuthoring;
