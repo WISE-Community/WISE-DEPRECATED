@@ -11,8 +11,8 @@ class ComponentController {
   componentState: any;
   mode: string;
   nodeId: string;
-  teacherWorkgroupId: number;
-  workgroupId: number;
+  teacherWorkgroupId: string;
+  workgroupId: string;
 
   static $inject = ['$scope', 'ConfigService', 'NodeService', 'NotebookService', 'ProjectService',
       'StudentDataService'];
@@ -55,8 +55,8 @@ class ComponentController {
     this.$scope.componentContent = componentContent;
     this.$scope.componentState = this.componentState;
     this.$scope.nodeId = this.nodeId;
-    this.$scope.workgroupId = this.workgroupId;
-    this.$scope.teacherWorkgroupId = this.teacherWorkgroupId;
+    this.$scope.workgroupId = parseInt(this.workgroupId);
+    this.$scope.teacherWorkgroupId = parseInt(this.teacherWorkgroupId);
     this.$scope.type = componentContent.type;
     this.$scope.nodeController = this.$scope.$parent.nodeController;
   }
