@@ -2,11 +2,10 @@ import { TestBed, tick, fakeAsync } from '@angular/core/testing';
 import { SessionService } from '../../../../wise5/services/sessionService';
 import { UpgradeModule } from '@angular/upgrade/static';
 import { ConfigService } from '../../../../wise5/services/configService';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { of } from 'rxjs';
 let service: SessionService;
 let configService: ConfigService;
-let http: HttpTestingController;
-const renewSessionURL = '/wise/session/renew';
 
 describe('SessionService', () => {
   beforeEach(() => {
@@ -14,7 +13,6 @@ describe('SessionService', () => {
       imports: [ HttpClientTestingModule, UpgradeModule ],
       providers: [ ConfigService, SessionService ]
     });
-    http = TestBed.get(HttpTestingController);
     configService = TestBed.get(ConfigService);
     service = TestBed.get(SessionService);
   });
@@ -96,9 +94,18 @@ function checkForLogout() {
   describe('checkForLogout()', () => {
     it('should force logout when user is inactive for long enough', () => {
       spyOn(service, 'isInactiveLongEnoughToForceLogout').and.returnValue(true);
+      spyOn(service, 'checkIfSessionIsActive').and.returnValue(of(false));
       const forceLogOutSpy = spyOn(service, 'forceLogOut');
       service.checkForLogout();
       expect(forceLogOutSpy).toHaveBeenCalled();
+    });
+
+    it('should not force logout when user is inactive for long enough but session is active', () => {
+      spyOn(service, 'isInactiveLongEnoughToForceLogout').and.returnValue(true);
+      spyOn(service, 'checkIfSessionIsActive').and.returnValue(of(true));
+      const forceLogOutSpy = spyOn(service, 'forceLogOut');
+      service.checkForLogout();
+      expect(forceLogOutSpy).not.toHaveBeenCalled();
     });
 
     it('should show warning when user is inactive for long enough to warn and warning is not showing', () => {
@@ -116,12 +123,9 @@ function renewSession() {
   describe('renewSession()', () => {
     it('should renew the session', fakeAsync(
       () => {
-        spyOn(configService, 'getConfigParam')
-            .withArgs('renewSessionURL').and.returnValue(renewSessionURL);
+        spyOn(service, 'checkIfSessionIsActive').and.returnValue(of(true));
         const logOutSpy = spyOn(service, 'logOut')
         service.renewSession();
-        expect(configService.getConfigParam).toHaveBeenCalledWith('renewSessionURL');
-        http.expectOne(renewSessionURL).flush('true');
         tick();
         expect(logOutSpy).not.toHaveBeenCalled();
       })
@@ -129,12 +133,9 @@ function renewSession() {
 
     it('should log the user out when renew session fails', fakeAsync(
       () => {
-        spyOn(configService, 'getConfigParam')
-            .withArgs('renewSessionURL').and.returnValue(renewSessionURL);
+        spyOn(service, 'checkIfSessionIsActive').and.returnValue(of(false));
         const logOutSpy = spyOn(service, 'logOut');
         service.renewSession();
-        expect(configService.getConfigParam).toHaveBeenCalledWith('renewSessionURL');
-        http.expectOne(renewSessionURL).flush('false');
         tick();
         expect(logOutSpy).toHaveBeenCalled();
       })
