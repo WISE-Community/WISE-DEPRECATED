@@ -14,7 +14,6 @@ class AudioOscillatorAuthoringController extends EditComponentController {
 
   static $inject = [
     '$filter',
-    '$scope',
     'ConfigService',
     'NodeService',
     'NotificationService',
@@ -25,7 +24,6 @@ class AudioOscillatorAuthoringController extends EditComponentController {
 
   constructor(
     $filter,
-    $scope,
     ConfigService,
     NodeService,
     NotificationService,
@@ -34,7 +32,6 @@ class AudioOscillatorAuthoringController extends EditComponentController {
     UtilService
   ) {
     super(
-      $scope,
       $filter,
       ConfigService,
       NodeService,

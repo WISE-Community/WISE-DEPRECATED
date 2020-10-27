@@ -20,7 +20,6 @@ class OutsideURLAuthoringController extends EditComponentController {
   static $inject = [
     '$filter',
     '$sce',
-    '$scope',
     'ConfigService',
     'NodeService',
     'NotificationService',
@@ -33,7 +32,6 @@ class OutsideURLAuthoringController extends EditComponentController {
   constructor(
     $filter,
     private $sce: any,
-    $scope,
     ConfigService,
     NodeService,
     NotificationService,
@@ -43,7 +41,6 @@ class OutsideURLAuthoringController extends EditComponentController {
     UtilService
   ) {
     super(
-      $scope,
       $filter,
       ConfigService,
       NodeService,

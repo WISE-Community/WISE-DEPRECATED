@@ -20,7 +20,6 @@ class LabelAuthoringController extends EditComponentController {
   ];
 
   static $inject = [
-    '$scope',
     '$filter',
     '$window',
     'ConfigService',
@@ -32,7 +31,6 @@ class LabelAuthoringController extends EditComponentController {
   ];
 
   constructor(
-    $scope,
     $filter,
     private $window,
     ConfigService,
@@ -43,7 +41,6 @@ class LabelAuthoringController extends EditComponentController {
     UtilService
   ) {
     super(
-      $scope,
       $filter,
       ConfigService,
       NodeService,

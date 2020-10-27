@@ -11,7 +11,6 @@ class ConceptMapAuthoringController extends EditComponentController {
   availableLinks: any[];
 
   static $inject = [
-    '$scope',
     '$filter',
     'ConceptMapService',
     'ConfigService',
@@ -23,7 +22,6 @@ class ConceptMapAuthoringController extends EditComponentController {
   ];
 
   constructor(
-    $scope,
     $filter,
     private ConceptMapService,
     ConfigService,
@@ -34,7 +32,6 @@ class ConceptMapAuthoringController extends EditComponentController {
     UtilService
   ) {
     super(
-      $scope,
       $filter,
       ConfigService,
       NodeService,

@@ -17,17 +17,16 @@ export abstract class EditComponentController {
   componentContent: any;
   componentId: string;
   idToOrder: any;
-  isDirty: boolean;
+  isDirty: boolean = false;
   isJSONStringChanged: boolean = false;
   isPromptVisible: boolean = true;
   isSaveButtonVisible: boolean;
   isSubmitButtonVisible: boolean;
-  isSubmitDirty: boolean;
-  latestAnnotations: any;
+  isSubmitDirty: boolean = false;
   nodeId: string;
   showAdvancedAuthoring: boolean = false;
   showJSONAuthoring: boolean = false;
-  submitCounter: number;
+  submitCounter: number = 0;
   summernoteRubricId: string;
   summernoteRubricHTML: string;
   summernoteRubricOptions: any;
@@ -35,7 +34,6 @@ export abstract class EditComponentController {
   showAdvancedAuthoringSubscription: Subscription;
 
   constructor(
-      protected $scope: any,
       protected $filter: any,
       protected ConfigService: ConfigService,
       protected NodeService: NodeService,
@@ -47,13 +45,9 @@ export abstract class EditComponentController {
 
   $onInit() {
     this.authoringComponentContent = this.ProjectService.getComponentByNodeIdAndComponentId(this.nodeId, this.componentId);
-    this.componentContent = this.ConfigService.replaceStudentNames(
-        this.ProjectService.injectAssetPaths(this.authoringComponentContent));
-    this.componentId = this.componentContent.id;
+    this.resetUI();
     this.idToOrder = this.ProjectService.idToOrder;
     this.$translate = this.$filter('translate');
-    this.isSaveButtonVisible = this.componentContent.showSaveButton;
-    this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
     this.summernoteRubricId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
     this.summernoteRubricHTML = this.componentContent.rubric;
     const insertAssetString = this.$translate('INSERT_ASSET');
@@ -82,15 +76,6 @@ export abstract class EditComponentController {
     };
 
     this.updateAdvancedAuthoringView();
-    this.$scope.$watch(
-        () => {
-          return this.authoringComponentContent
-        },
-        (newValue, oldValue) => {
-          this.handleAuthoringComponentContentChanged(newValue, oldValue);
-        },
-        true
-    );
     this.showAdvancedAuthoringSubscription =
         this.ProjectService.showAdvancedComponentView$.subscribe((event) => {
       if (event.componentId === this.componentId) {
@@ -109,16 +94,6 @@ export abstract class EditComponentController {
   $onDestroy() {
     this.starterStateResponseSubscription.unsubscribe();
     this.showAdvancedAuthoringSubscription.unsubscribe();
-  }
-
-  handleAuthoringComponentContentChanged(newValue, oldValue): void {
-    this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-    this.isSaveButtonVisible = this.componentContent.showSaveButton;
-    this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-    this.latestAnnotations = null;
-    this.isDirty = false;
-    this.isSubmitDirty = false;
-    this.submitCounter = 0;
   }
 
   showJSONButtonClicked(): void {
@@ -187,8 +162,19 @@ export abstract class EditComponentController {
   }
 
   authoringViewComponentChanged(): void {
+    this.resetUI();
     this.updateAdvancedAuthoringView();
     this.ProjectService.nodeChanged();
+  }
+
+  resetUI(): void {
+    this.componentContent = this.ConfigService.replaceStudentNames(
+        this.ProjectService.injectAssetPaths(this.authoringComponentContent));
+    this.isSaveButtonVisible = this.componentContent.showSaveButton;
+    this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+    this.isDirty = false;
+    this.isSubmitDirty = false;
+    this.submitCounter = 0;
   }
 
   updateAdvancedAuthoringView(): void {
@@ -243,28 +229,18 @@ export abstract class EditComponentController {
     this.authoringViewComponentChanged();
   }
 
-  /**
-   * Move a tag up
-   * @param index the index of the tag to move up
-   */
   moveTagUp(index) {
     if (index > 0) {
-      // the index is not at the top so we can move it up
-      let tag = this.authoringComponentContent.tags[index];
+      const tag = this.authoringComponentContent.tags[index];
       this.authoringComponentContent.tags.splice(index, 1);
       this.authoringComponentContent.tags.splice(index - 1, 0, tag);
       this.authoringViewComponentChanged();
     }
   }
 
-  /**
-   * Move a tag down
-   * @param index the index of the tag to move down
-   */
   moveTagDown(index) {
     if (index < this.authoringComponentContent.tags.length - 1) {
-      // the index is not at the bottom so we can move it down
-      let tag = this.authoringComponentContent.tags[index];
+      const tag = this.authoringComponentContent.tags[index];
       this.authoringComponentContent.tags.splice(index, 1);
       this.authoringComponentContent.tags.splice(index + 1, 0, tag);
       this.authoringViewComponentChanged();

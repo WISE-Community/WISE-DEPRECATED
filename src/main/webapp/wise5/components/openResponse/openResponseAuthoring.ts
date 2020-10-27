@@ -13,7 +13,6 @@ class OpenResponseAuthoringController extends EditComponentController {
 
   static $inject = [
     '$filter',
-    '$scope',
     'ConfigService',
     'CRaterService',
     'NodeService',
@@ -25,7 +24,6 @@ class OpenResponseAuthoringController extends EditComponentController {
 
   constructor(
     $filter,
-    $scope,
     ConfigService,
     protected CRaterService: CRaterService,
     NodeService,
@@ -35,7 +33,6 @@ class OpenResponseAuthoringController extends EditComponentController {
     UtilService
   ) {
     super(
-      $scope,
       $filter,
       ConfigService,
       NodeService,

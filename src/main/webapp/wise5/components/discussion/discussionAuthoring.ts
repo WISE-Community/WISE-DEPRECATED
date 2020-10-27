@@ -9,7 +9,6 @@ class DiscussionAuthoringController extends EditComponentController {
   allowedConnectedComponentTypes: any[] = [{ type: 'Discussion' }];
 
   static $inject = [
-    '$scope',
     '$filter',
     'ConfigService',
     'NodeService',
@@ -20,7 +19,6 @@ class DiscussionAuthoringController extends EditComponentController {
   ];
 
   constructor(
-    $scope,
     $filter,
     ConfigService,
     NodeService,
@@ -30,7 +28,6 @@ class DiscussionAuthoringController extends EditComponentController {
     UtilService
   ) {
     super(
-      $scope,
       $filter,
       ConfigService,
       NodeService,
