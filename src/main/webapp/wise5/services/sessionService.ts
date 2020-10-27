@@ -100,7 +100,11 @@ export class SessionService {
 
   checkForLogout() {
     if (this.isInactiveLongEnoughToForceLogout()) {
-      this.forceLogOut();
+      this.checkIfSessionIsActive().subscribe(isSessionActive => {
+        if (!isSessionActive) {
+          this.forceLogOut();
+        }
+      });
     } else if (this.isInactiveLongEnoughToWarn() && !this.isShowingWarning()) {
       this.showWarning();
     }
@@ -155,10 +159,13 @@ export class SessionService {
     this.renewSession();
   }
 
+  checkIfSessionIsActive() {
+    return this.http.get(this.ConfigService.getConfigParam('renewSessionURL'));
+  }
+
   renewSession() {
-    const renewSessionURL = this.ConfigService.getConfigParam('renewSessionURL');
-    this.http.get(renewSessionURL).toPromise().then(result => {
-      if (result === 'false') {
+    this.checkIfSessionIsActive().subscribe(isSessionActive => {
+      if (!isSessionActive) {
         this.logOut();
       }
     });

@@ -1,13 +1,13 @@
 import * as angular from 'angular';
-import { ConfigService } from "../services/configService";
-import { UtilService } from "../services/utilService";
-import { TeacherProjectService } from "../services/teacherProjectService";
-import { ProjectAssetService } from '../../site/src/app/services/projectAssetService';
-import { NodeService } from '../services/nodeService';
-import { NotificationService } from '../services/notificationService';
+import { ConfigService } from "../../services/configService";
+import { UtilService } from "../../services/utilService";
+import { TeacherProjectService } from "../../services/teacherProjectService";
+import { ProjectAssetService } from '../../../site/src/app/services/projectAssetService';
+import { NodeService } from '../../services/nodeService';
+import { NotificationService } from '../../services/notificationService';
 import { Subscription } from 'rxjs';
 
-export abstract class ComponentAuthoringController {
+export abstract class EditComponentController {
 
   $translate: any;
   allowedConnectedComponentTypes: any[];
@@ -42,12 +42,15 @@ export abstract class ComponentAuthoringController {
       protected ProjectAssetService: ProjectAssetService,
       protected ProjectService: TeacherProjectService,
       protected UtilService: UtilService) {
-    this.authoringComponentContent = this.$scope.authoringComponentContent;
-    this.componentContent = this.$scope.componentContent;
+  }
+
+  $onInit() {
+    this.authoringComponentContent = this.ProjectService.getComponentByNodeIdAndComponentId(this.nodeId, this.componentId);
+    this.componentContent = this.ConfigService.replaceStudentNames(
+        this.ProjectService.injectAssetPaths(this.authoringComponentContent));
     this.componentId = this.componentContent.id;
     this.idToOrder = this.ProjectService.idToOrder;
-    this.nodeId = this.$scope.nodeId;
-    this.$translate = $filter('translate');
+    this.$translate = this.$filter('translate');
     this.isSaveButtonVisible = this.componentContent.showSaveButton;
     this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
     this.summernoteRubricId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
@@ -76,9 +79,7 @@ export abstract class ComponentAuthoringController {
       },
       dialogsInBody: true
     };
-  }
 
-  $onInit() {
     this.updateAdvancedAuthoringView();
     this.$scope.$watch(
         () => {
@@ -241,6 +242,41 @@ export abstract class ComponentAuthoringController {
     this.authoringViewComponentChanged();
   }
 
+  /**
+   * Move a tag up
+   * @param index the index of the tag to move up
+   */
+  moveTagUp(index) {
+    if (index > 0) {
+      // the index is not at the top so we can move it up
+      let tag = this.authoringComponentContent.tags[index];
+      this.authoringComponentContent.tags.splice(index, 1);
+      this.authoringComponentContent.tags.splice(index - 1, 0, tag);
+      this.authoringViewComponentChanged();
+    }
+  }
+
+  /**
+   * Move a tag down
+   * @param index the index of the tag to move down
+   */
+  moveTagDown(index) {
+    if (index < this.authoringComponentContent.tags.length - 1) {
+      // the index is not at the bottom so we can move it down
+      let tag = this.authoringComponentContent.tags[index];
+      this.authoringComponentContent.tags.splice(index, 1);
+      this.authoringComponentContent.tags.splice(index + 1, 0, tag);
+      this.authoringViewComponentChanged();
+    }
+  }
+
+  deleteTag(indexOfTagToDelete) {
+    if (confirm(this.$translate('areYouSureYouWantToDeleteThisTag'))) {
+      this.authoringComponentContent.tags.splice(indexOfTagToDelete, 1);
+      this.authoringViewComponentChanged();
+    }
+  }
+
   connectedComponentTypeChanged(connectedComponent) {
     this.authoringViewComponentChanged();
   }
@@ -292,6 +328,7 @@ export abstract class ComponentAuthoringController {
     }
     if (numberOfAllowedComponents === 1) {
       connectedComponent.componentId = allowedComponent.id;
+      connectedComponent.type = 'importWork';
     }
     this.automaticallySetConnectedComponentTypeIfPossible(connectedComponent);
   }

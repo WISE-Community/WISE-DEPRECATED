@@ -3,14 +3,12 @@
 import * as angular from 'angular';
 import { downgradeInjectable } from '@angular/upgrade/static';
 import { AudioOscillatorService } from './audioOscillatorService';
-import AudioOscillatorController from './audioOscillatorController';
-import AudioOscillatorAuthoringController from './audioOscillatorAuthoringController';
+import AudioOscillatorAuthoring from './audioOscillatorAuthoring';
 
 const audioOscillatorAuthoringComponentModule = angular
   .module('audioOscillatorAuthoringComponentModule', ['pascalprecht.translate'])
   .service('AudioOscillatorService', downgradeInjectable(AudioOscillatorService))
-  .controller('AudioOscillatorController', AudioOscillatorController)
-  .controller('AudioOscillatorAuthoringController', AudioOscillatorAuthoringController)
+  .component('audioOscillatorAuthoring', AudioOscillatorAuthoring)
   .config([
     '$translatePartialLoaderProvider',
     $translatePartialLoaderProvider => {

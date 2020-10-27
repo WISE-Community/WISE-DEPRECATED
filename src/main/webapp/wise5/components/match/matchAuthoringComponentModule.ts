@@ -3,14 +3,12 @@
 import * as angular from 'angular';
 import { downgradeInjectable } from '@angular/upgrade/static';
 import { MatchService } from './matchService';
-import MatchController from './matchController';
-import MatchAuthoringController from './matchAuthoringController';
+import MatchAuthoring from './matchAuthoring';
 
 let matchAuthoringComponentModule = angular
   .module('matchAuthoringComponentModule', ['pascalprecht.translate'])
   .service('MatchService', downgradeInjectable(MatchService))
-  .controller('MatchController', MatchController)
-  .controller('MatchAuthoringController', MatchAuthoringController)
+  .component('matchAuthoring', MatchAuthoring)
   .config([
     '$translatePartialLoaderProvider',
     $translatePartialLoaderProvider => {

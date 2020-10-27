@@ -3,14 +3,12 @@
 import * as angular from 'angular';
 import { downgradeInjectable } from '@angular/upgrade/static';
 import { ConceptMapService } from './conceptMapService';
-import ConceptMapController from './conceptMapController';
-import ConceptMapAuthoringController from './conceptMapAuthoringController';
+import ConceptMapAuthoring from './conceptMapAuthoring';
 
 const conceptMapAuthoringComponentModule = angular
   .module('conceptMapAuthoringComponentModule', ['pascalprecht.translate'])
   .service('ConceptMapService', downgradeInjectable(ConceptMapService))
-  .controller('ConceptMapController', ConceptMapController)
-  .controller('ConceptMapAuthoringController', ConceptMapAuthoringController)
+  .component('conceptMapAuthoring', ConceptMapAuthoring)
   .config([
     '$translatePartialLoaderProvider',
     $translatePartialLoaderProvider => {

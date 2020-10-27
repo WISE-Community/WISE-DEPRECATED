@@ -3,13 +3,11 @@
 import * as angular from 'angular';
 import { downgradeInjectable } from '@angular/upgrade/static';
 import { HTMLService } from './htmlService';
-import HTMLController from './htmlController';
-import HTMLAuthoringController from './htmlAuthoringController';
+import HTMLAuthoring from './htmlAuthoring';
 
 const htmlComponentModule = angular.module('htmlAuthoringComponentModule', [])
   .service('HTMLService', downgradeInjectable(HTMLService))
-  .controller('HTMLController', HTMLController)
-  .controller('HTMLAuthoringController', HTMLAuthoringController)
+  .component('htmlAuthoring', HTMLAuthoring)
   .config([
     '$translatePartialLoaderProvider',
     $translatePartialLoaderProvider => {

@@ -1,4 +1,4 @@
-<div ng-controller='MatchAuthoringController as matchController' flex>
+<div flex>
   <div>
     <div class='advancedAuthoringDiv'
          ng-if='matchController.showAdvancedAuthoring'>
@@ -98,7 +98,7 @@
             {{ ::'CONNECTED_COMPONENTS' | translate }}
           </label>
           <md-button class='topButton md-raised md-primary'
-                     ng-click='matchController.authoringAddConnectedComponent()'>
+                     ng-click='matchController.addConnectedComponent()'>
             <md-icon>add</md-icon>
             <md-tooltip md-direction='top'
                         class='projectButtonTooltip'>
@@ -113,7 +113,7 @@
             <md-input-container style='margin-right: 20; width: 300;'>
               <label>{{ ::'step' | translate }}</label>
               <md-select ng-model='connectedComponent.nodeId'
-                         ng-change='matchController.authoringConnectedComponentNodeIdChanged(connectedComponent)'
+                         ng-change='matchController.connectedComponentNodeIdChanged(connectedComponent)'
                          style='width: 300'>
                 <md-option ng-repeat='item in matchController.idToOrder | toArray | orderBy : "order"'
                            value='{{item.$key}}'
@@ -125,7 +125,7 @@
             <md-input-container style='margin-right: 20; width: 300;'>
               <label>{{ ::'component' | translate }}</label>
               <md-select ng-model='connectedComponent.componentId'
-                         ng-change='matchController.authoringConnectedComponentComponentIdChanged(connectedComponent)'
+                         ng-change='matchController.connectedComponentComponentIdChanged(connectedComponent)'
                          style='width: 300'>
                 <md-option ng-repeat='(componentIndex, component) in matchController.getComponentsByNodeId(connectedComponent.nodeId)'
                            value='{{component.id}}'
@@ -140,7 +140,7 @@
             <md-input-container style='margin-right: 20; width: 200;'>
               <label>{{ ::'type' | translate }}</label>
               <md-select ng-model='connectedComponent.type'
-                         ng-change='matchController.authoringConnectedComponentTypeChanged(connectedComponent)'
+                         ng-change='matchController.connectedComponentTypeChanged(connectedComponent)'
                          style='width: 200'>
                 <md-option value='importWork'>
                   {{ ::'importWork' | translate }}
@@ -153,7 +153,7 @@
             <span flex></span>
             <md-input-container style='margin-left: 20;'>
               <md-button class='topButton md-raised md-primary'
-                         ng-click='matchController.authoringDeleteConnectedComponent($index)'>
+                         ng-click='matchController.deleteConnectedComponent($index)'>
                 <md-icon>delete</md-icon>
                 <md-tooltip md-direction='top'
                             class='projectButtonTooltip'>

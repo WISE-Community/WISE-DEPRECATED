@@ -1,11 +1,11 @@
 'use strict';
 
-import { ProjectAssetService } from '../../../site/src/app/services/projectAssetService';
+import { Directive } from '@angular/core';
+import { EditComponentController } from '../../authoringTool/components/editComponentController';
 import { CRaterService } from '../../services/cRaterService';
-import { ComponentAuthoringController } from '../componentAuthoringController';
 
-class OpenResponseAuthoringController extends ComponentAuthoringController {
-  ProjectAssetService: ProjectAssetService;
+@Directive()
+class OpenResponseAuthoringController extends EditComponentController {
   allowedConnectedComponentTypes: any[];
   useCustomCompletionCriteria: boolean = false;
   cRaterItemIdIsValid: boolean = null;
@@ -44,7 +44,10 @@ class OpenResponseAuthoringController extends ComponentAuthoringController {
       ProjectService,
       UtilService
     );
-    this.ProjectAssetService = ProjectAssetService;
+  }
+
+  $onInit() {
+    super.$onInit();
     this.allowedConnectedComponentTypes = [
       {
         type: 'OpenResponse'
@@ -54,26 +57,6 @@ class OpenResponseAuthoringController extends ComponentAuthoringController {
     if (this.authoringComponentContent.completionCriteria != null) {
       this.useCustomCompletionCriteria = true;
     }
-
-    $scope.$watch(
-      function() {
-        return this.authoringComponentContent;
-      }.bind(this),
-      function(newValue, oldValue) {
-        this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-        this.submitCounter = 0;
-        this.studentResponse = '';
-        this.latestAnnotations = null;
-        this.isDirty = false;
-        this.isSubmitDirty = false;
-        this.isSaveButtonVisible = this.componentContent.showSaveButton;
-        this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-        if (this.componentContent.starterSentence != null) {
-          this.studentResponse = this.componentContent.starterSentence;
-        }
-      }.bind(this),
-      true
-    );
   }
 
   addScoringRule() {
@@ -439,4 +422,14 @@ class OpenResponseAuthoringController extends ComponentAuthoringController {
   }
 }
 
-export default OpenResponseAuthoringController;
+const OpenResponseAuthoring = {
+  bindings: {
+    nodeId: '@',
+    componentId: '@'
+  },
+  controller: OpenResponseAuthoringController,
+  controllerAs: 'openResponseController',
+  templateUrl: 'wise5/components/openResponse/authoring.html'
+}
+
+export default OpenResponseAuthoring;

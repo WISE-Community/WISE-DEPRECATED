@@ -3,14 +3,12 @@
 import * as angular from 'angular';
 import { downgradeInjectable } from '@angular/upgrade/static';
 import { OutsideURLService } from './outsideURLService';
-import OutsideURLController from './outsideURLController';
-import OutsideURLAuthoringController from './outsideURLAuthoringController';
+import OutsideURLAuthoring from './outsideURLAuthoring';
 
 const outsideURLAuthoringComponentModule = angular
   .module('outsideURLAuthoringComponentModule', [])
   .service('OutsideURLService', downgradeInjectable(OutsideURLService))
-  .controller('OutsideURLController', OutsideURLController)
-  .controller('OutsideURLAuthoringController', OutsideURLAuthoringController)
+  .component('outsideUrlAuthoring', OutsideURLAuthoring)
   .config([
     '$translatePartialLoaderProvider',
     $translatePartialLoaderProvider => {

@@ -1,4 +1,4 @@
-<div class='openResponse' ng-controller='OpenResponseAuthoringController as openResponseController' flex>
+<div class='openResponse' flex>
   <style>
     {{openResponseController.nodeContent.style}}
   </style>
@@ -352,7 +352,7 @@
             <md-input-container style='margin-right: 20; width: 300;'>
               <label>{{ ::'step' | translate }}</label>
               <md-select ng-model='connectedComponent.nodeId'
-                         ng-change='openResponseController.authoringConnectedComponentNodeIdChanged(connectedComponent)'
+                         ng-change='openResponseController.connectedComponentNodeIdChanged(connectedComponent)'
                          style='width: 300'>
                 <md-option ng-repeat='item in openResponseController.idToOrder | toArray | orderBy : "order"'
                            value='{{item.$key}}'

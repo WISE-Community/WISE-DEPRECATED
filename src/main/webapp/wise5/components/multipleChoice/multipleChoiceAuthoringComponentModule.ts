@@ -3,14 +3,12 @@
 import * as angular from 'angular';
 import { downgradeInjectable } from '@angular/upgrade/static';
 import { MultipleChoiceService } from './multipleChoiceService';
-import MultipleChoiceController from './multipleChoiceController';
-import MultipleChoiceAuthoringController from './multipleChoiceAuthoringController';
+import MultipleChoiceAuthoring from './multipleChoiceAuthoring';
 
 const multipleChoiceAuthoringComponentModule = angular
   .module('multipleChoiceAuthoringComponentModule', ['pascalprecht.translate'])
   .service('MultipleChoiceService', downgradeInjectable(MultipleChoiceService))
-  .controller('MultipleChoiceController', MultipleChoiceController)
-  .controller('MultipleChoiceAuthoringController', MultipleChoiceAuthoringController)
+  .component('multipleChoiceAuthoring', MultipleChoiceAuthoring)
   .config([
     '$translatePartialLoaderProvider',
     $translatePartialLoaderProvider => {

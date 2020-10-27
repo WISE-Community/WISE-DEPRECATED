@@ -2,17 +2,13 @@
 
 import * as angular from 'angular';
 import { downgradeInjectable } from '@angular/upgrade/static';
-import ClassResponseController from './classResponseController';
 import { DiscussionService } from './discussionService';
-import DiscussionController from './discussionController';
-import DiscussionAuthoringController from './discussionAuthoringController';
+import DiscussionAuthoring from './discussionAuthoring';
 
 const discussionAuthoringComponentModule = angular
   .module('discussionAuthoringComponentModule', ['pascalprecht.translate'])
   .service('DiscussionService', downgradeInjectable(DiscussionService))
-  .controller('DiscussionController', DiscussionController)
-  .controller('DiscussionAuthoringController', DiscussionAuthoringController)
-  .controller('ClassResponseController', ClassResponseController)
+  .component('discussionAuthoring', DiscussionAuthoring)
   .config([
     '$translatePartialLoaderProvider',
     $translatePartialLoaderProvider => {

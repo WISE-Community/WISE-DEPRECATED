@@ -1,8 +1,10 @@
 'use strict';
 
-import { ComponentAuthoringController } from '../componentAuthoringController';
+import { Directive } from '@angular/core';
+import { EditComponentController } from '../../authoringTool/components/editComponentController';
 
-class DiscussionAuthoringController extends ComponentAuthoringController {
+@Directive()
+class DiscussionAuthoringController extends EditComponentController {
 
   allowedConnectedComponentTypes: any[] = [{ type: 'Discussion' }];
 
@@ -58,4 +60,14 @@ class DiscussionAuthoringController extends ComponentAuthoringController {
   }
 }
 
-export default DiscussionAuthoringController;
+const DiscussionAuthoring = {
+  bindings: {
+    nodeId: '@',
+    componentId: '@'
+  },
+  controller: DiscussionAuthoringController,
+  controllerAs: 'discussionController',
+  templateUrl: 'wise5/components/discussion/authoring.html'
+}
+
+export default DiscussionAuthoring;

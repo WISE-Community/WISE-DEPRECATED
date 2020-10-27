@@ -1,11 +1,11 @@
 'use strict';
 
+import { Directive } from '@angular/core';
 import * as angular from 'angular';
-import { ProjectAssetService } from '../../../site/src/app/services/projectAssetService';
-import { ComponentAuthoringController } from '../componentAuthoringController';
+import { EditComponentController } from '../../authoringTool/components/editComponentController';
 
-class HTMLAuthoringController extends ComponentAuthoringController {
-  ProjectAssetService: ProjectAssetService;
+@Directive()
+class HTMLAuthoringController extends EditComponentController {
   summernotePromptHTML: string;
   summernotePromptOptions: any;
   summernotePromptId: string;
@@ -43,6 +43,10 @@ class HTMLAuthoringController extends ComponentAuthoringController {
       ProjectService,
       UtilService
     );
+  }
+
+  $onInit() {
+    super.$onInit();
     this.summernotePromptHTML = '';
     this.summernotePromptOptions = {
       toolbar: [
@@ -83,15 +87,6 @@ class HTMLAuthoringController extends ComponentAuthoringController {
 
     this.summernotePromptId = 'summernotePrompt_' + this.nodeId + '_' + this.componentId;
     this.summernotePromptHTML = this.UtilService.replaceWISELinks(this.componentContent.html);
-    $scope.$watch(
-      function() {
-        return this.authoringComponentContent;
-      }.bind(this),
-      function(newValue, oldValue) {
-        this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-      }.bind(this),
-      true
-    );
   }
 
   createOpenWISELinkChooserFunction() {
@@ -183,4 +178,15 @@ class HTMLAuthoringController extends ComponentAuthoringController {
   }
 }
 
-export default HTMLAuthoringController;
+const HTMLAuthoring = {
+  bindings: {
+    nodeId: '@',
+    componentId: '@'
+  },
+  controller: HTMLAuthoringController,
+  controllerAs: 'htmlController',
+  templateUrl: 'wise5/components/html/authoring.html'
+}
+
+export default HTMLAuthoring;
+

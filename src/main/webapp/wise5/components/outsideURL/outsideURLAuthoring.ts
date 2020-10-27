@@ -1,9 +1,11 @@
 'use strict';
 
-import { ComponentAuthoringController } from '../componentAuthoringController';
+import { Directive } from '@angular/core';
+import { EditComponentController } from '../../authoringTool/components/editComponentController';
 import { OutsideURLService } from './outsideURLService';
 
-class OutsideURLAuthoringController extends ComponentAuthoringController {
+@Directive()
+class OutsideURLAuthoringController extends EditComponentController {
   height: string;
   info: string;
   isShowOERs: boolean;
@@ -50,6 +52,10 @@ class OutsideURLAuthoringController extends ComponentAuthoringController {
       ProjectService,
       UtilService
     );
+  }
+
+  $onInit() {
+    super.$onInit();
     this.$translate = this.$filter('translate');
     this.isShowOERs = this.componentContent.url === '';
     this.subjects = [
@@ -72,22 +78,6 @@ class OutsideURLAuthoringController extends ComponentAuthoringController {
     ];
     this.searchText = '';
     this.selectedSubjects = [];
-
-    $scope.$watch(
-      () => {
-        return this.authoringComponentContent;
-      },
-      (newValue, oldValue) => {
-        this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-        this.setURL(this.authoringComponentContent.url);
-        this.setInfo(this.authoringComponentContent.info);
-        this.setWidthAndHeight(
-          this.authoringComponentContent.width,
-          this.authoringComponentContent.height
-        );
-      },
-      true
-    );
     this.OutsideURLService.getOpenEducationalResources().then((openEducationalResources: any) => {
       this.openEducationalResources = openEducationalResources.sort((a, b) =>
         a.metadata.title > b.metadata.title ? 1 : -1
@@ -152,4 +142,14 @@ class OutsideURLAuthoringController extends ComponentAuthoringController {
   }
 }
 
-export default OutsideURLAuthoringController;
+const OutsideURLAuthoring = {
+  bindings: {
+    nodeId: '@',
+    componentId: '@'
+  },
+  controller: OutsideURLAuthoringController,
+  controllerAs: 'outsideURLController',
+  templateUrl: 'wise5/components/outsideURL/authoring.html'
+}
+
+export default OutsideURLAuthoring;

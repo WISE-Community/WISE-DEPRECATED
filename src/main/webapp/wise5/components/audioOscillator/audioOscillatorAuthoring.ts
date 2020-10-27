@@ -1,10 +1,12 @@
 'use strict';
 
-import { ComponentAuthoringController } from '../componentAuthoringController';
+import { Directive } from '@angular/core';
+import { EditComponentController } from '../../authoringTool/components/editComponentController';
 
-class AudioOscillatorAuthoringController extends ComponentAuthoringController {
+@Directive()
+class AudioOscillatorAuthoringController extends EditComponentController {
 
-  allowedConnectedComponentTypes: any[];
+  allowedConnectedComponentTypes: any[] = [{ type: 'AudioOscillator' }];
   authoringSineChecked: boolean;
   authoringSquareChecked: boolean;
   authoringTriangleChecked: boolean;
@@ -41,7 +43,10 @@ class AudioOscillatorAuthoringController extends ComponentAuthoringController {
       ProjectService,
       UtilService
     );
-    this.allowedConnectedComponentTypes = [{ type: 'AudioOscillator' }];
+  }
+
+  $onInit() {
+    super.$onInit();
     this.populateCheckedOscillatorTypes();
   }
 
@@ -78,4 +83,15 @@ class AudioOscillatorAuthoringController extends ComponentAuthoringController {
   }
 }
 
-export default AudioOscillatorAuthoringController;
+
+const AudioOscillatorAuthoring = {
+  bindings: {
+    nodeId: '@',
+    componentId: '@'
+  },
+  controller: AudioOscillatorAuthoringController,
+  controllerAs: 'audioOscillatorController',
+  templateUrl: 'wise5/components/audioOscillator/authoring.html'
+}
+
+export default AudioOscillatorAuthoring;
