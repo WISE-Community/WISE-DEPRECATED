@@ -9,7 +9,6 @@ class MatchAuthoringController extends EditComponentController {
   defaultSourceBucketId: string = '0';
 
   static $inject = [
-    '$scope',
     '$filter',
     'ConfigService',
     'MatchService',
@@ -22,7 +21,6 @@ class MatchAuthoringController extends EditComponentController {
   ];
 
   constructor(
-    $scope,
     $filter,
     ConfigService,
     private MatchService,
@@ -34,7 +32,6 @@ class MatchAuthoringController extends EditComponentController {
     UtilService
   ) {
     super(
-      $scope,
       $filter,
       ConfigService,
       NodeService,

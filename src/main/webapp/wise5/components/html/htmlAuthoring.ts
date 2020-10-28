@@ -11,7 +11,6 @@ class HTMLAuthoringController extends EditComponentController {
   summernotePromptId: string;
 
   static $inject = [
-    '$scope',
     '$filter',
     '$mdDialog',
     'ConfigService',
@@ -23,7 +22,6 @@ class HTMLAuthoringController extends EditComponentController {
   ];
 
   constructor(
-    $scope,
     $filter,
     private $mdDialog: any,
     ConfigService,
@@ -34,7 +32,6 @@ class HTMLAuthoringController extends EditComponentController {
     UtilService
   ) {
     super(
-      $scope,
       $filter,
       ConfigService,
       NodeService,
