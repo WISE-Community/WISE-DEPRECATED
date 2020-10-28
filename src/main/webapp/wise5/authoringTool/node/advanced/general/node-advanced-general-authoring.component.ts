@@ -1,17 +1,19 @@
+import { Component } from "@angular/core";
 import { TeacherDataService } from "../../../../services/teacherDataService";
 import { TeacherProjectService } from "../../../../services/teacherProjectService";
 
-class NodeAdvancedGeneralAuthoringController {
+@Component({
+  templateUrl: 'node-advanced-general-authoring.component.html'
+})
+export class NodeAdvancedGeneralAuthoringComponent {
 
   node: any;
-
-  static $inject = ['ProjectService', 'TeacherDataService'];
 
   constructor(private ProjectService: TeacherProjectService,
       private TeacherDataService: TeacherDataService) {
   }
 
-  $onInit() {
+  ngOnInit() {
     const nodeId = this.TeacherDataService.getCurrentNodeId();
     this.node = this.ProjectService.getNodeById(nodeId);
   }
@@ -19,9 +21,4 @@ class NodeAdvancedGeneralAuthoringController {
   saveProject() {
     return this.ProjectService.saveProject();
   }
-}
-
-export const NodeAdvancedGeneralAuthoringComponent = {
-  templateUrl: `/wise5/authoringTool/node/advanced/general/node-advanced-general-authoring.component.html`,
-  controller: NodeAdvancedGeneralAuthoringController
 }

@@ -5102,6 +5102,20 @@
           <context context-type="linenumber">3</context>
         </context-group>
       </trans-unit>
+      <trans-unit datatype="html" id="bfab7f41cfc32a926c55987d6a9c3349ae417131">
+        <source> Show Save Button </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/authoringTool/node/advanced/general/node-advanced-general-authoring.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="770c5cff3389877453481f51ed615bc3e2e3ae44">
+        <source> Show Submit Button </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/authoringTool/node/advanced/general/node-advanced-general-authoring.component.html</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+      </trans-unit>
       <trans-unit datatype="html" id="44fcb249525dd82d1fd32cae51412bcda7ffd765">
         <source>Back to Unit Plan</source>
         <context-group purpose="location">

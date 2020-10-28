@@ -103,7 +103,8 @@ export function createTeacherAngularJSModule() {
     .component('nodeAdvancedAuthoringComponent', NodeAdvancedAuthoringComponent)
     .component('nodeAdvancedBranchAuthoringComponent', NodeAdvancedBranchAuthoringComponent)
     .component('nodeAdvancedConstraintAuthoringComponent', NodeAdvancedConstraintAuthoringComponent)
-    .component('nodeAdvancedGeneralAuthoringComponent', NodeAdvancedGeneralAuthoringComponent)
+    .directive('nodeAdvancedGeneralAuthoringComponent', downgradeComponent(
+        { component: NodeAdvancedGeneralAuthoringComponent }) as angular.IDirectiveFactory)
     .component('nodeAdvancedJsonAuthoringComponent', NodeAdvancedJsonAuthoringComponent)
     .component('nodeAdvancedPathAuthoringComponent', NodeAdvancedPathAuthoringComponent)
     .directive('advancedProjectAuthoringComponent', downgradeComponent(
