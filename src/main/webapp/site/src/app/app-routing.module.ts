@@ -15,7 +15,9 @@ const routes: Routes = [
   { path: 'join', loadChildren: () => import('./register/register.module').then(m => m.RegisterModule) },
   { path: 'login', loadChildren: () => import('./login/login.module').then(m => m.LoginModule) },
   { path: 'news', loadChildren: () => import('./news/news.module').then(m => m.NewsModule) },
-  { path: 'privacy', component: PrivacyComponent }
+  { path: 'privacy', component: PrivacyComponent },
+  { path: 'student', loadChildren: () => import('./student/student.module').then(m => m.StudentModule) },
+  { path: 'teacher', loadChildren: () => import('./teacher/teacher.module').then(m => m.TeacherModule) }
 ];
 
 @Injectable()

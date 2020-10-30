@@ -26,8 +26,8 @@
             <component node-id='{{::nodeController.nodeId}}'
                        component-id='{{::component.id}}'
                        component-state='{{::nodeController.getComponentStateByComponentId(component.id)}}'
-                       workgroup-id='{{::nodeController.workgroupId}}'
-                       teacher-workgroup-id='{{::nodeController.teacherWorkgroupId}}'
+                       workgroup-id='::nodeController.workgroupId'
+                       teacher-workgroup-id='::nodeController.teacherWorkgroupId'
                        mode='student'></component>
         </div>
         <div class="node-content__actions" layout="row" layout-align="start center" flex="100">

@@ -91,7 +91,7 @@
                     ng-if="$ctrl.isWorkgroupShown(workgroup)"
                     expand="$ctrl.workVisibilityById[workgroup.$key]" max-score="$ctrl.maxScore"
                     show-score="$ctrl.nodeHasWork" node-id="$ctrl.nodeId"
-                    component-id="$ctrl.componentId" workgroup-id="workgroup.$key"
+                    component-id="$ctrl.componentId" workgroup-id="::workgroup.workgroupId"
                     workgroup-data="workgroup" hidden-components="$ctrl.hiddenComponents"
                     on-update-expand="$ctrl.onUpdateExpand(workgroupId, value)"
                     in-view="$ctrl.workgroupInView(workgroup.$key, $inview)"></workgroup-item>

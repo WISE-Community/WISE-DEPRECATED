@@ -19,7 +19,6 @@ class GraphAuthoringController extends EditComponentController {
 
   static $inject = [
     '$filter',
-    '$scope',
     'ConfigService',
     'GraphService',
     'NodeService',
@@ -30,7 +29,6 @@ class GraphAuthoringController extends EditComponentController {
   ];
 
   constructor($filter,
-              $scope,
               ConfigService,
               private GraphService,
               NodeService,
@@ -38,7 +36,7 @@ class GraphAuthoringController extends EditComponentController {
               ProjectAssetService,
               ProjectService,
               UtilService) {
-    super($scope,
+    super(
       $filter,
       ConfigService,
       NodeService,
@@ -683,7 +681,7 @@ class GraphAuthoringController extends EditComponentController {
       if (singleSeries.yAxis === yAxisIndex) {
         singleSeries.color = color;
       }
-    } 
+    }
   }
 
   addAnyMissingYAxisFieldsToAllYAxes(yAxis) {

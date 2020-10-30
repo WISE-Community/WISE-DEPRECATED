@@ -13,7 +13,7 @@ import { PersonalLibraryComponent } from '../modules/library/personal-library/pe
 
 const teacherRoutes: Routes = [
   {
-    path: 'teacher',
+    path: '',
     component: TeacherComponent,
     canActivate: [AuthGuard],
     children: [
