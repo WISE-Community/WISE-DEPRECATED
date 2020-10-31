@@ -133,11 +133,6 @@ class MatchController extends ComponentController {
       if (this.shouldImportPrivateNotes()) {
         this.privateNotebookItems = this.NotebookService.getPrivateNotebookItems(this.workgroupId);
       }
-    } else if (this.mode === 'onlyShowWork') {
-      this.isPromptVisible = false;
-      this.isSaveButtonVisible = false;
-      this.isSubmitButtonVisible = false;
-      this.isDisabled = true;
     } else if (this.mode === 'showPreviousWork') {
       this.isPromptVisible = true;
       this.isSaveButtonVisible = false;

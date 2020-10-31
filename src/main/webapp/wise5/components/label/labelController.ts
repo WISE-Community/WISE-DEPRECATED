@@ -207,12 +207,6 @@ class LabelController extends ComponentController {
           this.canvasId = 'labelCanvas_gradingRevision_' + componentState.id;
         }
       }
-    } else if (this.mode === 'onlyShowWork') {
-      this.isPromptVisible = false;
-      this.isSaveButtonVisible = false;
-      this.isSubmitButtonVisible = false;
-      this.isNewLabelButtonVisible = false;
-      this.isDisabled = true;
     } else if (this.mode === 'showPreviousWork') {
       this.isPromptVisible = true;
       this.isSaveButtonVisible = false;

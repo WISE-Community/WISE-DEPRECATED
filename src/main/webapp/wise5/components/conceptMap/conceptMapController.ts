@@ -169,19 +169,6 @@ class ConceptMapController extends ComponentController {
       } else {
         this.setIdsWithNodeIdComponentIdWorkgroupId();
       }
-    } else if (this.isOnlyShowWorkMode()) {
-      const componentState = this.$scope.componentState;
-      if (componentState == null) {
-        this.setSVGId(this.nodeId, this.componentId, this.workgroupId, 'onlyShowWork_');
-      } else {
-        this.setSVGId(
-          this.nodeId,
-          this.componentId,
-          this.workgroupId,
-          this.componentStateId,
-          'onlyShowWork_'
-        );
-      }
     } else {
       this.availableNodes = this.componentContent.nodes;
       this.availableLinks = this.componentContent.links;

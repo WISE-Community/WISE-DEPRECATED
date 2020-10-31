@@ -15,23 +15,7 @@ import { Directive } from '@angular/core';
 
 @Directive()
 class ComponentController {
-  $filter: any;
-  $injector: any;
-  $mdDialog: any;
-  $q: any;
-  $rootScope: any;
-  $scope: any;
   $translate: any;
-  AudioRecorderService: AudioRecorderService;
-  AnnotationService: AnnotationService;
-  ConfigService: ConfigService;
-  NodeService: NodeService;
-  NotebookService: NotebookService;
-  NotificationService: NotificationService;
-  ProjectService: ProjectService;
-  StudentAssetService: StudentAssetService;
-  UtilService: UtilService;
-  StudentDataService: StudentDataService;
   nodeId: string;
   componentId: string;
   componentContent: any;
@@ -72,40 +56,23 @@ class ComponentController {
   starterStateRequestSubscription: Subscription;
 
   constructor(
-      $filter,
-      $injector,
-      $mdDialog,
-      $q,
-      $rootScope,
-      $scope,
-      AnnotationService,
-      AudioRecorderService,
-      ConfigService,
-      NodeService,
-      NotebookService,
-      NotificationService,
-      ProjectService,
-      StudentAssetService,
-      StudentDataService,
-      UtilService) {
-    this.$filter = $filter;
-    this.$injector = $injector;
-    this.$mdDialog = $mdDialog;
-    this.$q = $q;
-    this.$rootScope = $rootScope;
-    this.$scope = $scope;
-    this.AnnotationService = AnnotationService;
-    this.AudioRecorderService = AudioRecorderService;
-    this.ConfigService = ConfigService;
-    this.NodeService = NodeService;
-    this.NotebookService = NotebookService;
-    this.NotificationService = NotificationService;
-    this.ProjectService = ProjectService;
-    this.StudentAssetService = StudentAssetService;
-    this.StudentDataService = StudentDataService;
-    this.UtilService = UtilService;
+      protected $filter: any,
+      protected $injector: any,
+      protected $mdDialog: any,
+      protected $q: any,
+      protected $rootScope: any,
+      protected $scope: any,
+      protected AnnotationService: AnnotationService,
+      protected AudioRecorderService: AudioRecorderService,
+      protected ConfigService: ConfigService,
+      protected NodeService: NodeService,
+      protected NotebookService: NotebookService,
+      protected NotificationService: NotificationService,
+      protected ProjectService: ProjectService,
+      protected StudentAssetService: StudentAssetService,
+      protected StudentDataService: StudentDataService,
+      protected UtilService: UtilService) {
     this.$translate = this.$filter('translate');
-
     this.nodeId = this.$scope.nodeId;
     this.componentContent = this.$scope.componentContent;
     this.componentId = this.componentContent.id;
@@ -160,18 +127,13 @@ class ComponentController {
       this.isSaveButtonVisible = false;
       this.isSubmitButtonVisible = false;
       this.isDisabled = true;
-    } else if (this.isOnlyShowWorkMode()) {
-      this.isPromptVisible = false;
-      this.isSaveButtonVisible = false;
-      this.isSubmitButtonVisible = false;
-      this.isDisabled = true;
     }
 
     if (this.isStudentMode() || this.isGradingMode() || this.isGradingRevisionMode()) {
       this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
     }
 
-    if (this.isGradingMode() || this.isGradingRevisionMode() || this.isOnlyShowWorkMode()) {
+    if (this.isGradingMode() || this.isGradingRevisionMode()) {
       this.showAddToNotebookButton = false;
     }
 
@@ -207,10 +169,6 @@ class ComponentController {
 
   isGradingRevisionMode() {
     return this.mode === 'gradingRevision';
-  }
-
-  isOnlyShowWorkMode() {
-    return this.mode === 'onlyShowWork';
   }
 
   isAuthoringComponentPreviewMode() {
@@ -634,7 +592,6 @@ class ComponentController {
   isApplicationNode(nodeId) {
     return this.ProjectService.isApplicationNode(nodeId);
   }
-
 
   /**
    * Create a new component state populated with the student data
