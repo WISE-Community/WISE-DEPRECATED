@@ -37,6 +37,7 @@ class NodeController {
   rubric: any;
   rubricTour: any;
   saveMessage: any;
+  showRubricSubscription: Subscription;
   submit: any;
   teacherWorkgroupId: number;
   workgroupId: number;
@@ -241,7 +242,7 @@ class NodeController {
     /**
      * Listen for the componentDirty observable that will come from child components.
      */
-    this.componentDirtySubscription = 
+    this.componentDirtySubscription =
         this.StudentDataService.componentDirty$.subscribe(({ componentId, isDirty }) => {
       const index = this.dirtyComponentIds.indexOf(componentId);
       if (isDirty && index === -1) {
@@ -254,7 +255,7 @@ class NodeController {
     /**
      * Listen for the componentSubmitDirty observable that will come from child components.
      */
-    this.componentSubmitDirtySubscription = 
+    this.componentSubmitDirtySubscription =
         this.StudentDataService.componentSubmitDirty$.subscribe(({ componentId, isDirty }) => {
       const index = this.dirtySubmitComponentIds.indexOf(componentId);
       if (isDirty && index === -1) {
@@ -262,6 +263,10 @@ class NodeController {
       } else if (!isDirty && index > -1) {
         this.dirtySubmitComponentIds.splice(index, 1);
       }
+    });
+
+    this.showRubricSubscription = this.NodeService.showRubric$.subscribe((id: string) => {
+      this.showRubric(id);
     });
 
     const script = this.nodeContent.script;
@@ -291,6 +296,7 @@ class NodeController {
   unsubscribeAll() {
     this.componentStudentDataSubscription.unsubscribe();
     this.exitSubscription.unsubscribe();
+    this.showRubricSubscription.unsubscribe();
   }
 
   createRubricTour() {
@@ -355,8 +361,6 @@ class NodeController {
     if (this.rubricTour) {
       let step = -1;
       let index = 0;
-
-      let thisTarget = '#nodeRubric_' + this.nodeId;
       if (this.nodeId === id) {
         step = index;
       }
@@ -369,7 +373,6 @@ class NodeController {
         const components = this.getComponents();
         for (let component of components) {
           if (component.rubric) {
-            thisTarget = '#rubric_' + component.id;
             if (component.id === id) {
               step = index;
               break;

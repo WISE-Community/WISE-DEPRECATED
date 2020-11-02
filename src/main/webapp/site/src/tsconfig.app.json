@@ -13,6 +13,7 @@
     "polyfills.ts"
   ],
   "include": [
+    "../../wise5/themes/**/*.ts"
   ],
   "exclude": ["test.ts", "**/*.spec.ts"]
 }
