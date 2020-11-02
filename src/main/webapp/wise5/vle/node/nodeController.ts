@@ -46,7 +46,6 @@ class NodeController {
     '$compile',
     '$filter',
     '$q',
-    '$rootScope',
     '$scope',
     '$state',
     '$timeout',
@@ -64,7 +63,6 @@ class NodeController {
     private $compile: any,
     $filter: any,
     private $q: any,
-    private $rootScope: any,
     private $scope: any,
     private $state: any,
     private $timeout: any,
@@ -77,18 +75,6 @@ class NodeController {
     private StudentDataService: StudentDataService,
     private UtilService: UtilService
   ) {
-    this.$compile = $compile;
-    this.$q = $q;
-    this.$rootScope = $rootScope;
-    this.$scope = $scope;
-    this.$state = $state;
-    this.$timeout = $timeout;
-    this.AnnotationService = AnnotationService;
-    this.ConfigService = ConfigService;
-    this.NodeService = NodeService;
-    this.ProjectService = ProjectService;
-    this.StudentDataService = StudentDataService;
-    this.UtilService = UtilService;
     this.$translate = $filter('translate');
     this.autoSaveInterval = 60000; // in milliseconds
     this.nodeId = null;
@@ -122,11 +108,8 @@ class NodeController {
     this.rubric = null;
     this.mode = this.ConfigService.getMode();
 
-    // perform setup of this node only if the current node is not a group.
-    if (
-      this.StudentDataService.getCurrentNode() &&
-      this.ProjectService.isApplicationNode(this.StudentDataService.getCurrentNodeId())
-    ) {
+    if (this.StudentDataService.getCurrentNode() &&
+        this.ProjectService.isApplicationNode(this.StudentDataService.getCurrentNodeId())) {
       const currentNode = this.StudentDataService.getCurrentNode();
       if (currentNode != null) {
         this.nodeId = currentNode.id;
@@ -200,10 +183,6 @@ class NodeController {
       }
     });
 
-    /**
-     * Listen for the componentSubmitTriggered event which occurs when a
-     * component is requesting student data to be submitted
-     */
     this.componentSubmitTriggeredSubscription =
         this.StudentDataService.componentSubmitTriggered$.subscribe(({ nodeId, componentId }) => {
       if (this.nodeId == nodeId && this.nodeContainsComponent(componentId)) {
@@ -231,17 +210,6 @@ class NodeController {
       this.NodeService.broadcastSiblingComponentStudentDataChanged(componentStudentData);
     });
 
-    this.$scope.$on('$destroy', () => {
-      this.componentDirtySubscription.unsubscribe();
-      this.componentSaveTriggeredSubscription.unsubscribe();
-      this.componentStudentDataSubscription.unsubscribe();
-      this.componentSubmitDirtySubscription.unsubscribe();
-      this.componentSubmitTriggeredSubscription.unsubscribe();
-    });
-
-    /**
-     * Listen for the componentDirty observable that will come from child components.
-     */
     this.componentDirtySubscription =
         this.StudentDataService.componentDirty$.subscribe(({ componentId, isDirty }) => {
       const index = this.dirtyComponentIds.indexOf(componentId);
@@ -252,9 +220,6 @@ class NodeController {
       }
     });
 
-    /**
-     * Listen for the componentSubmitDirty observable that will come from child components.
-     */
     this.componentSubmitDirtySubscription =
         this.StudentDataService.componentSubmitDirty$.subscribe(({ componentId, isDirty }) => {
       const index = this.dirtySubmitComponentIds.indexOf(componentId);
@@ -284,17 +249,19 @@ class NodeController {
   ngOnDestroy() {
     this.stopAutoSaveInterval();
     this.nodeUnloaded(this.nodeId);
-    if (
-      this.NodeService.currentNodeHasTransitionLogic() &&
-      this.NodeService.evaluateTransitionLogicOn('exitNode')
-    ) {
+    if (this.NodeService.currentNodeHasTransitionLogic() &&
+        this.NodeService.evaluateTransitionLogicOn('exitNode')) {
       this.NodeService.evaluateTransitionLogic();
     }
     this.unsubscribeAll();
   }
 
   unsubscribeAll() {
+    this.componentDirtySubscription.unsubscribe();
+    this.componentSaveTriggeredSubscription.unsubscribe();
     this.componentStudentDataSubscription.unsubscribe();
+    this.componentSubmitDirtySubscription.unsubscribe();
+    this.componentSubmitTriggeredSubscription.unsubscribe();
     this.exitSubscription.unsubscribe();
     this.showRubricSubscription.unsubscribe();
   }
@@ -997,9 +964,8 @@ class NodeController {
   getSubmitDirty() {
     const components = this.getComponents();
     if (components != null) {
-      for (let component of components) {
-        const componentId = component.id;
-        const latestState = this.getComponentStateByComponentId(componentId);
+      for (const component of components) {
+        const latestState = this.getComponentStateByComponentId(component.id);
         if (latestState && !latestState.isSubmit) {
           return true;
         }
