@@ -172,8 +172,6 @@ class GraphController extends ComponentController {
       this.initializeStudentMode(componentState);
     } else if (this.mode === 'grading' || this.mode === 'gradingRevision') {
       this.initializeGradingMode(componentState);
-    } else if (this.mode === 'onlyShowWork') {
-      this.initializeOnlyShowWorkMode();
     } else {
       this.isResetSeriesButtonVisible = true;
       this.isSelectSeriesVisible = true;
@@ -289,13 +287,6 @@ class GraphController extends ComponentController {
         this.chartId = 'chart_' + componentState.id;
       }
     }
-  }
-
-  initializeOnlyShowWorkMode() {
-    this.isResetGraphButtonVisible = false;
-    this.isResetSeriesButtonVisible = false;
-    this.isSelectSeriesVisible = false;
-    this.backgroundImage = this.componentContent.backgroundImage;
   }
 
   initializeHandleConnectedComponentStudentDataChanged() {
