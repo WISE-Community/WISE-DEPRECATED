@@ -2,8 +2,8 @@ import { Component, NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
-import { createStudentAngularJSModule } from '../../../wise5/vle/student-angular-js-module';
-import { createTeacherAngularJSModule } from '../../../wise5/teacher/teacher-angular-js-module';
+import { createStudentAngularJSModule} from '../../../wise5/vle/student-angular-js-module';
+import '../../../wise5/teacher/teacher-angular-js-module';
 import { UpgradeModule } from '@angular/upgrade/static';
 import { setUpLocationSync } from '@angular/router/upgrade';
 import { UtilService } from '../../../wise5/services/utilService';
@@ -235,12 +235,9 @@ export class TeacherAngularJSModule {
 }
 
 function bootstrapAngularJSModule(upgrade: UpgradeModule, moduleType: string) {
-  let module;
-  if (moduleType === 'teacher') {
-    module = createTeacherAngularJSModule();
-  } else {
-    module = createStudentAngularJSModule(moduleType);
+  if (moduleType !== 'teacher') {
+    createStudentAngularJSModule(moduleType);
   }
-  upgrade.bootstrap(document.body, [module.name]);
+  upgrade.bootstrap(document.body, [moduleType]);
   setUpLocationSync(upgrade);
 }

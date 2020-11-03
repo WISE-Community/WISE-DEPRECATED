@@ -69,8 +69,7 @@ window['Stomp'] = StompJS.Stomp;
 import './lib/angular-summernote/dist/angular-summernote.min';
 import './themes/default/theme';
 
-export function createCommonModule() {
-  return angular.module('common', [
+  angular.module('common', [
     angularDragula(angular),
     'angularMoment',
     'angular-toArrayFilter',
@@ -207,4 +206,3 @@ export function createCommonModule() {
       }
     });
   }]);
-}
