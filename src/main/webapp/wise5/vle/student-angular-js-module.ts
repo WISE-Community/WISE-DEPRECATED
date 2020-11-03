@@ -3,7 +3,6 @@ import '../lib/bootstrap/js/bootstrap.min'
 import * as angular from 'angular';
 import { downgradeInjectable } from '@angular/upgrade/static';
 import '../common-angular-js-module';
-import Filters from '../filters/filters';
 import NavigationController from '../vle/navigation/navigationController';
 import NodeController from '../vle/node/nodeController';
 import { StudentWebSocketService } from '../services/studentWebSocketService';
@@ -27,7 +26,6 @@ export function createStudentAngularJSModule(type = 'preview') {
   .controller('NavigationController', NavigationController)
   .controller('NodeController', NodeController)
   .controller('VLEController', VLEController)
-  .filter('Filters', Filters)
   .config([
     '$stateProvider',
     '$translatePartialLoaderProvider',
