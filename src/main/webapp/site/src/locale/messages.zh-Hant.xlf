@@ -6094,6 +6094,14 @@
         </context-group>
         <target state="needs-translation">New</target>
       </trans-unit>
+      <trans-unit datatype="html" id="397caaa290032309390882c11de492805dead8e4">
+        <source>Edit Step JSON</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/authoringTool/node/advanced/json/node-advanced-json-authoring.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+        <target state="needs-translation">Edit Step JSON</target>
+      </trans-unit>
       <trans-unit datatype="html" id="4c42d0c12ddaebc2efdfc00bbf1d714bf385f278">
         <source>Teacher Home</source>
         <context-group purpose="location">
