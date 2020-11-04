@@ -3,14 +3,12 @@
 import * as angular from 'angular';
 import { downgradeInjectable } from '@angular/upgrade/static';
 import { DrawService } from './drawService';
-import DrawController from './drawController';
-import DrawAuthoringController from './drawAuthoringController';
+import DrawAuthoring from './drawAuthoring';
 
 const drawAuthoringComponentModule = angular
   .module('drawAuthoringComponentModule', ['pascalprecht.translate'])
   .service('DrawService', downgradeInjectable(DrawService))
-  .controller('DrawController', DrawController)
-  .controller('DrawAuthoringController', DrawAuthoringController)
+  .component('drawAuthoring', DrawAuthoring)
   .config([
     '$translatePartialLoaderProvider',
     $translatePartialLoaderProvider => {

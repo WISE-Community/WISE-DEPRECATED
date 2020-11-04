@@ -22,7 +22,6 @@ class TableAuthoringController extends EditComponentController {
   isDataExplorerBarGraphEnabled: boolean;
 
   static $inject = [
-    '$scope',
     '$filter',
     'ConfigService',
     'NodeService',
@@ -33,7 +32,6 @@ class TableAuthoringController extends EditComponentController {
   ];
 
   constructor(
-    $scope,
     $filter,
     ConfigService,
     NodeService,
@@ -43,7 +41,6 @@ class TableAuthoringController extends EditComponentController {
     UtilService
   ) {
     super(
-      $scope,
       $filter,
       ConfigService,
       NodeService,
@@ -540,6 +537,20 @@ class TableAuthoringController extends EditComponentController {
       }
     }
   }
+
+  automaticallySetConnectedComponentFieldsIfPossible(connectedComponent) {
+    if (connectedComponent.type === 'importWork' && connectedComponent.action == null) {
+      connectedComponent.action = 'merge';
+    } else if (connectedComponent.type === 'showWork') {
+      connectedComponent.action = null;
+    }
+  }
+
+  connectedComponentTypeChanged(connectedComponent) {
+    this.automaticallySetConnectedComponentFieldsIfPossible(connectedComponent);
+    this.authoringViewComponentChanged();
+  }
+
 }
 
 const TableAuthoring = {

@@ -17,24 +17,23 @@ export abstract class EditComponentController {
   componentContent: any;
   componentId: string;
   idToOrder: any;
-  isDirty: boolean;
+  isDirty: boolean = false;
   isJSONStringChanged: boolean = false;
   isPromptVisible: boolean = true;
   isSaveButtonVisible: boolean;
   isSubmitButtonVisible: boolean;
-  isSubmitDirty: boolean;
-  latestAnnotations: any;
+  isSubmitDirty: boolean = false;
   nodeId: string;
   showAdvancedAuthoring: boolean = false;
   showJSONAuthoring: boolean = false;
-  submitCounter: number;
+  submitCounter: number = 0;
   summernoteRubricId: string;
   summernoteRubricHTML: string;
   summernoteRubricOptions: any;
   starterStateResponseSubscription: Subscription;
+  showAdvancedAuthoringSubscription: Subscription;
 
   constructor(
-      protected $scope: any,
       protected $filter: any,
       protected ConfigService: ConfigService,
       protected NodeService: NodeService,
@@ -46,13 +45,9 @@ export abstract class EditComponentController {
 
   $onInit() {
     this.authoringComponentContent = this.ProjectService.getComponentByNodeIdAndComponentId(this.nodeId, this.componentId);
-    this.componentContent = this.ConfigService.replaceStudentNames(
-        this.ProjectService.injectAssetPaths(this.authoringComponentContent));
-    this.componentId = this.componentContent.id;
+    this.resetUI();
     this.idToOrder = this.ProjectService.idToOrder;
     this.$translate = this.$filter('translate');
-    this.isSaveButtonVisible = this.componentContent.showSaveButton;
-    this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
     this.summernoteRubricId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
     this.summernoteRubricHTML = this.componentContent.rubric;
     const insertAssetString = this.$translate('INSERT_ASSET');
@@ -81,23 +76,13 @@ export abstract class EditComponentController {
     };
 
     this.updateAdvancedAuthoringView();
-    this.$scope.$watch(
-        () => {
-          return this.authoringComponentContent
-        },
-        (newValue, oldValue) => {
-          this.handleAuthoringComponentContentChanged(newValue, oldValue);
-        },
-        true
-    );
-    this.$scope.$watch(() => {
-      return this.$scope.$parent.nodeAuthoringController
-        .showAdvancedComponentAuthoring[this.componentId];
-    }, () => {
-      this.showAdvancedAuthoring = this.$scope.$parent.nodeAuthoringController
-          .showAdvancedComponentAuthoring[this.componentId];
-      this.NotificationService.hideJSONValidMessage();
-    }, true);
+    this.showAdvancedAuthoringSubscription =
+        this.ProjectService.showAdvancedComponentView$.subscribe((event) => {
+      if (event.componentId === this.componentId) {
+        this.showAdvancedAuthoring = event.isShow;
+        this.NotificationService.hideJSONValidMessage();
+      }
+    });
     this.starterStateResponseSubscription =
         this.NodeService.starterStateResponse$.subscribe((args: any) => {
       if (this.isForThisComponent(args)) {
@@ -108,16 +93,7 @@ export abstract class EditComponentController {
 
   $onDestroy() {
     this.starterStateResponseSubscription.unsubscribe();
-  }
-
-  handleAuthoringComponentContentChanged(newValue, oldValue): void {
-    this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-    this.isSaveButtonVisible = this.componentContent.showSaveButton;
-    this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-    this.latestAnnotations = null;
-    this.isDirty = false;
-    this.isSubmitDirty = false;
-    this.submitCounter = 0;
+    this.showAdvancedAuthoringSubscription.unsubscribe();
   }
 
   showJSONButtonClicked(): void {
@@ -156,10 +132,10 @@ export abstract class EditComponentController {
       const editedComponentContent = angular.fromJson(this.authoringComponentContentJSONString);
       this.ProjectService.replaceComponent(this.nodeId, this.componentId, editedComponentContent);
       this.componentContent = editedComponentContent;
-      this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
+      this.ProjectService.nodeChanged();
       this.isJSONStringChanged = false;
     } catch(e) {
-      this.$scope.$parent.nodeAuthoringController.showSaveErrorAdvancedAuthoring();
+      alert(this.$translate('saveErrorAdvancedAuthoring'));
     }
   }
 
@@ -186,8 +162,19 @@ export abstract class EditComponentController {
   }
 
   authoringViewComponentChanged(): void {
+    this.resetUI();
     this.updateAdvancedAuthoringView();
-    this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
+    this.ProjectService.nodeChanged();
+  }
+
+  resetUI(): void {
+    this.componentContent = this.ConfigService.replaceStudentNames(
+        this.ProjectService.injectAssetPaths(this.authoringComponentContent));
+    this.isSaveButtonVisible = this.componentContent.showSaveButton;
+    this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
+    this.isDirty = false;
+    this.isSubmitDirty = false;
+    this.submitCounter = 0;
   }
 
   updateAdvancedAuthoringView(): void {
@@ -240,6 +227,31 @@ export abstract class EditComponentController {
     }
     this.authoringComponentContent.tags.push('');
     this.authoringViewComponentChanged();
+  }
+
+  moveTagUp(index) {
+    if (index > 0) {
+      const tag = this.authoringComponentContent.tags[index];
+      this.authoringComponentContent.tags.splice(index, 1);
+      this.authoringComponentContent.tags.splice(index - 1, 0, tag);
+      this.authoringViewComponentChanged();
+    }
+  }
+
+  moveTagDown(index) {
+    if (index < this.authoringComponentContent.tags.length - 1) {
+      const tag = this.authoringComponentContent.tags[index];
+      this.authoringComponentContent.tags.splice(index, 1);
+      this.authoringComponentContent.tags.splice(index + 1, 0, tag);
+      this.authoringViewComponentChanged();
+    }
+  }
+
+  deleteTag(indexOfTagToDelete) {
+    if (confirm(this.$translate('areYouSureYouWantToDeleteThisTag'))) {
+      this.authoringComponentContent.tags.splice(indexOfTagToDelete, 1);
+      this.authoringViewComponentChanged();
+    }
   }
 
   connectedComponentTypeChanged(connectedComponent) {

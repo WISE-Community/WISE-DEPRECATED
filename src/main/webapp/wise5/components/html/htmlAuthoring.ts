@@ -11,7 +11,6 @@ class HTMLAuthoringController extends EditComponentController {
   summernotePromptId: string;
 
   static $inject = [
-    '$scope',
     '$filter',
     '$mdDialog',
     'ConfigService',
@@ -23,7 +22,6 @@ class HTMLAuthoringController extends EditComponentController {
   ];
 
   constructor(
-    $scope,
     $filter,
     private $mdDialog: any,
     ConfigService,
@@ -34,7 +32,6 @@ class HTMLAuthoringController extends EditComponentController {
     UtilService
   ) {
     super(
-      $scope,
       $filter,
       ConfigService,
       NodeService,
@@ -87,15 +84,6 @@ class HTMLAuthoringController extends EditComponentController {
 
     this.summernotePromptId = 'summernotePrompt_' + this.nodeId + '_' + this.componentId;
     this.summernotePromptHTML = this.UtilService.replaceWISELinks(this.componentContent.html);
-    this.$scope.$watch(
-      function() {
-        return this.authoringComponentContent;
-      }.bind(this),
-      function(newValue, oldValue) {
-        this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-      }.bind(this),
-      true
-    );
   }
 
   createOpenWISELinkChooserFunction() {

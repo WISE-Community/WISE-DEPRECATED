@@ -1,15 +1,20 @@
 'use strict';
 
+import { Directive } from '@angular/core';
 import { ProjectAssetService } from '../../../site/src/app/services/projectAssetService';
-import { ComponentAuthoringController } from '../componentAuthoringController';
+import { EditComponentController } from '../../authoringTool/components/editComponentController';
 
-class MultipleChoiceAuthoringController extends ComponentAuthoringController {
+@Directive()
+class MultipleChoiceAuthoringController extends EditComponentController {
   ProjectAssetService: ProjectAssetService;
-  allowedConnectedComponentTypes: any[];
+  allowedConnectedComponentTypes: any[] = [
+    {
+      type: 'MultipleChoice'
+    }
+  ];
 
   static $inject = [
     '$filter',
-    '$scope',
     'ConfigService',
     'NodeService',
     'NotificationService',
@@ -20,7 +25,6 @@ class MultipleChoiceAuthoringController extends ComponentAuthoringController {
 
   constructor(
     $filter,
-    $scope,
     ConfigService,
     NodeService,
     NotificationService,
@@ -29,7 +33,6 @@ class MultipleChoiceAuthoringController extends ComponentAuthoringController {
     UtilService
   ) {
     super(
-      $scope,
       $filter,
       ConfigService,
       NodeService,
@@ -37,23 +40,6 @@ class MultipleChoiceAuthoringController extends ComponentAuthoringController {
       ProjectAssetService,
       ProjectService,
       UtilService
-    );
-    this.ProjectAssetService = ProjectAssetService;
-    this.allowedConnectedComponentTypes = [
-      {
-        type: 'MultipleChoice'
-      }
-    ];
-    $scope.$watch(
-      function() {
-        return this.authoringComponentContent;
-      }.bind(this),
-      function(newValue, oldValue) {
-        this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-        this.isSaveButtonVisible = this.componentContent.showSaveButton;
-        this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-      }.bind(this),
-      true
     );
   }
 
@@ -203,4 +189,14 @@ class MultipleChoiceAuthoringController extends ComponentAuthoringController {
   }
 }
 
-export default MultipleChoiceAuthoringController;
+const MultipleChoiceAuthoring = {
+  bindings: {
+    nodeId: '@',
+    componentId: '@'
+  },
+  controller: MultipleChoiceAuthoringController,
+  controllerAs: 'multipleChoiceController',
+  templateUrl: 'wise5/components/multipleChoice/authoring.html'
+}
+
+export default MultipleChoiceAuthoring;

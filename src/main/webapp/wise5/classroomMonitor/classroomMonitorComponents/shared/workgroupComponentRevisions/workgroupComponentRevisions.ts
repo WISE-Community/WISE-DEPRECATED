@@ -159,7 +159,7 @@ const WorkgroupComponentRevisions = {
                         </h3>
                         <div>
                             <component component-state="{{ item.componentState }}"
-                                       workgroup-id="{{ $ctrl.workgroupId }}"
+                                       workgroup-id="::$ctrl.workgroupId"
                                        mode="gradingRevision">
                         </div>
                     </div>

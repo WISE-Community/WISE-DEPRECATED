@@ -96,6 +96,7 @@ export function createCommonModule() {
     'openResponseComponentModule',
     'outsideURLComponentModule',
     'pascalprecht.translate',
+    'summaryComponentModule',
     'summernote',
     'tableComponentModule',
     'ui.router'

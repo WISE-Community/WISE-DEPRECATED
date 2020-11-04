@@ -13,7 +13,6 @@ class OpenResponseAuthoringController extends EditComponentController {
 
   static $inject = [
     '$filter',
-    '$scope',
     'ConfigService',
     'CRaterService',
     'NodeService',
@@ -25,7 +24,6 @@ class OpenResponseAuthoringController extends EditComponentController {
 
   constructor(
     $filter,
-    $scope,
     ConfigService,
     protected CRaterService: CRaterService,
     NodeService,
@@ -35,7 +33,6 @@ class OpenResponseAuthoringController extends EditComponentController {
     UtilService
   ) {
     super(
-      $scope,
       $filter,
       ConfigService,
       NodeService,
@@ -57,26 +54,6 @@ class OpenResponseAuthoringController extends EditComponentController {
     if (this.authoringComponentContent.completionCriteria != null) {
       this.useCustomCompletionCriteria = true;
     }
-
-    this.$scope.$watch(
-      function() {
-        return this.authoringComponentContent;
-      }.bind(this),
-      function(newValue, oldValue) {
-        this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-        this.submitCounter = 0;
-        this.studentResponse = '';
-        this.latestAnnotations = null;
-        this.isDirty = false;
-        this.isSubmitDirty = false;
-        this.isSaveButtonVisible = this.componentContent.showSaveButton;
-        this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-        if (this.componentContent.starterSentence != null) {
-          this.studentResponse = this.componentContent.starterSentence;
-        }
-      }.bind(this),
-      true
-    );
   }
 
   addScoringRule() {

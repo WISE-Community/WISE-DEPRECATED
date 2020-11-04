@@ -16,7 +16,6 @@ class OpenResponseController extends ComponentController {
   OpenResponseService: OpenResponseService;
   studentResponse: string;
   isRichTextEnabled: boolean;
-  onlyShowWork: boolean;
   messageDialog: any;
   tinymceOptions: any;
   isRecordingAudio: boolean = false;
@@ -95,9 +94,6 @@ class OpenResponseController extends ComponentController {
     // whether rich text editing is enabled
     this.isRichTextEnabled = false;
 
-    // whether we're only showing the student work
-    this.onlyShowWork = false;
-
     // used to hold a message dialog if we need to use one
     this.messageDialog = null;
 
@@ -141,12 +137,6 @@ class OpenResponseController extends ComponentController {
       this.isSaveButtonVisible = this.componentContent.showSaveButton;
       this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
     } else if (this.mode === 'grading') {
-      this.isPromptVisible = false;
-      this.isSaveButtonVisible = false;
-      this.isSubmitButtonVisible = false;
-      this.isDisabled = true;
-    } else if (this.mode === 'onlyShowWork') {
-      this.onlyShowWork = true;
       this.isPromptVisible = false;
       this.isSaveButtonVisible = false;
       this.isSubmitButtonVisible = false;

@@ -116,12 +116,6 @@ class TableController extends ComponentController {
       this.isSubmitButtonVisible = false;
       this.isResetTableButtonVisible = false;
       this.isDisabled = true;
-    } else if (this.mode === 'onlyShowWork') {
-      this.isPromptVisible = false;
-      this.isSaveButtonVisible = false;
-      this.isSubmitButtonVisible = false;
-      this.isResetTableButtonVisible = false;
-      this.isDisabled = true;
     } else if (this.mode === 'showPreviousWork') {
       this.isPromptVisible = true;
       this.isSaveButtonVisible = false;
@@ -1123,19 +1117,6 @@ class TableController extends ComponentController {
 
   appendTable(tableData) {
     this.tableData = this.tableData.concat(tableData);
-  }
-
-  authoringAutomaticallySetConnectedComponentFieldsIfPossible(connectedComponent) {
-    if (connectedComponent.type === 'importWork' && connectedComponent.action == null) {
-      connectedComponent.action = 'merge';
-    } else if (connectedComponent.type === 'showWork') {
-      connectedComponent.action = null;
-    }
-  }
-
-  authoringConnectedComponentTypeChanged(connectedComponent) {
-    this.authoringAutomaticallySetConnectedComponentFieldsIfPossible(connectedComponent);
-    this.authoringViewComponentChanged();
   }
 
   studentDataChanged() {

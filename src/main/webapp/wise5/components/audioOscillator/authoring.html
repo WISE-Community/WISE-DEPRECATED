@@ -85,7 +85,7 @@
             {{ 'CONNECTED_COMPONENTS' | translate }}
           </label>
           <md-button class='topButton md-raised md-primary'
-                     ng-click='audioOscillatorController.authoringAddConnectedComponent()'>
+                     ng-click='audioOscillatorController.addConnectedComponent()'>
             <md-icon>add</md-icon>
             <md-tooltip md-direction='top'
                         class='projectButtonTooltip'>
@@ -100,7 +100,7 @@
             <md-input-container style='margin-right: 20; width: 300;'>
               <label>{{ 'step' | translate }}</label>
               <md-select ng-model='connectedComponent.nodeId'
-                         ng-change='audioOscillatorController.authoringConnectedComponentNodeIdChanged(connectedComponent)'
+                         ng-change='audioOscillatorController.connectedComponentNodeIdChanged(connectedComponent)'
                          style='width: 300'>
                 <md-option ng-repeat='item in audioOscillatorController.idToOrder | toArray | orderBy : "order"'
                            value='{{item.$key}}'
@@ -112,7 +112,7 @@
             <md-input-container style='margin-right: 20; width: 300;'>
               <label>{{ 'component' | translate }}</label>
               <md-select ng-model='connectedComponent.componentId'
-                         ng-change='audioOscillatorController.authoringConnectedComponentComponentIdChanged(connectedComponent)'
+                         ng-change='audioOscillatorController.connectedComponentComponentIdChanged(connectedComponent)'
                          style='width: 300'>
                 <md-option ng-repeat='(componentIndex, component) in audioOscillatorController.getComponentsByNodeId(connectedComponent.nodeId)'
                            value='{{component.id}}'
@@ -127,7 +127,7 @@
             <md-input-container style='margin-right: 20; width: 200;'>
               <label>{{ 'type' | translate }}</label>
               <md-select ng-model='connectedComponent.type'
-                         ng-change='audioOscillatorController.authoringConnectedComponentTypeChanged(connectedComponent)'
+                         ng-change='audioOscillatorController.connectedComponentTypeChanged(connectedComponent)'
                          style='width: 200'>
                 <md-option value='importWork'>
                   {{ 'importWork' | translate }}
@@ -140,7 +140,7 @@
             <span flex></span>
             <md-input-container style='margin-left: 20;'>
               <md-button class='topButton md-raised md-primary'
-                         ng-click='audioOscillatorController.authoringDeleteConnectedComponent($index)'>
+                         ng-click='audioOscillatorController.deleteConnectedComponent($index)'>
                 <md-icon>delete</md-icon>
                 <md-tooltip md-direction='top'
                             class='projectButtonTooltip'>

@@ -169,19 +169,6 @@ class ConceptMapController extends ComponentController {
       } else {
         this.setIdsWithNodeIdComponentIdWorkgroupId();
       }
-    } else if (this.isOnlyShowWorkMode()) {
-      const componentState = this.$scope.componentState;
-      if (componentState == null) {
-        this.setSVGId(this.nodeId, this.componentId, this.workgroupId, 'onlyShowWork_');
-      } else {
-        this.setSVGId(
-          this.nodeId,
-          this.componentId,
-          this.workgroupId,
-          this.componentStateId,
-          'onlyShowWork_'
-        );
-      }
     } else {
       this.availableNodes = this.componentContent.nodes;
       this.availableLinks = this.componentContent.links;
@@ -720,13 +707,6 @@ class ConceptMapController extends ComponentController {
             data
           );
           componentState.annotations.push(scoreAnnotation);
-
-          if (this.isAuthoringMode()) {
-            if (this.latestAnnotations == null) {
-              this.latestAnnotations = {};
-            }
-            this.latestAnnotations.score = scoreAnnotation;
-          }
         }
 
         if (this.hasAutoFeedbackText()) {
@@ -743,13 +723,6 @@ class ConceptMapController extends ComponentController {
             data
           );
           componentState.annotations.push(commentAnnotation);
-
-          if (this.isAuthoringMode()) {
-            if (this.latestAnnotations == null) {
-              this.latestAnnotations = {};
-            }
-            this.latestAnnotations.comment = commentAnnotation;
-          }
         }
       }
     }

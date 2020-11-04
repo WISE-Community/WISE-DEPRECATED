@@ -64,7 +64,7 @@ function shouldChangeAllDiscussionConnectedComponentTypes() {
     const secondConnectedComponent =
       discussionAuthoringController.authoringComponentContent.connectedComponents[1];
     firstConnectedComponent.type = 'importWork';
-    discussionAuthoringController.authoringConnectedComponentTypeChanged(firstConnectedComponent);
+    discussionAuthoringController.connectedComponentTypeChanged(firstConnectedComponent);
     expect(firstConnectedComponent.type).toEqual('importWork');
     expect(secondConnectedComponent.type).toEqual('importWork');
   });

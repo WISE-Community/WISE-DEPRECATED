@@ -220,9 +220,6 @@ class DiscussionController extends ComponentController {
         this.$scope.discussionController.studentResponse = this.$scope.discussionController.newResponse;
         this.$scope.discussionController.isSubmit = true;
       }
-      if (this.isAuthoringMode()) {
-        this.createComponentState('submit');
-      }
       this.StudentDataService.broadcastComponentSubmitTriggered({
         nodeId: this.$scope.discussionController.nodeId,
         componentId: this.$scope.discussionController.componentId

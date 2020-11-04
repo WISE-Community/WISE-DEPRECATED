@@ -1,17 +1,16 @@
 'use strict';
 
-import 'svg.js';
-import 'svg.draggable.js';
-import { ComponentAuthoringController } from '../componentAuthoringController';
+import { Directive } from '@angular/core';
+import { EditComponentController } from '../../authoringTool/components/editComponentController';
 
-class ConceptMapAuthoringController extends ComponentAuthoringController {
+@Directive()
+class ConceptMapAuthoringController extends EditComponentController {
   allowedConnectedComponentTypes: any[];
   shouldOptions: any[];
   availableNodes: any[];
   availableLinks: any[];
 
   static $inject = [
-    '$scope',
     '$filter',
     'ConceptMapService',
     'ConfigService',
@@ -23,7 +22,6 @@ class ConceptMapAuthoringController extends ComponentAuthoringController {
   ];
 
   constructor(
-    $scope,
     $filter,
     private ConceptMapService,
     ConfigService,
@@ -34,7 +32,6 @@ class ConceptMapAuthoringController extends ComponentAuthoringController {
     UtilService
   ) {
     super(
-      $scope,
       $filter,
       ConfigService,
       NodeService,
@@ -43,7 +40,10 @@ class ConceptMapAuthoringController extends ComponentAuthoringController {
       ProjectService,
       UtilService
     );
+  }
 
+  $onInit() {
+    super.$onInit();
     this.allowedConnectedComponentTypes = [
       { type: 'ConceptMap' },
       { type: 'Draw' },
@@ -408,4 +408,14 @@ class ConceptMapAuthoringController extends ComponentAuthoringController {
 
 }
 
-export default ConceptMapAuthoringController;
+const ConceptMapAuthoring = {
+  bindings: {
+    nodeId: '@',
+    componentId: '@'
+  },
+  controller: ConceptMapAuthoringController,
+  controllerAs: 'conceptMapController',
+  templateUrl: 'wise5/components/conceptMap/authoring.html'
+}
+
+export default ConceptMapAuthoring;

@@ -1,22 +1,24 @@
 'use strict';
 
-import { ComponentAuthoringController } from "../componentAuthoringController";
+import { Directive } from "@angular/core";
+import { EditComponentController } from "../../authoringTool/components/editComponentController";
 
-class GraphAuthoringController extends ComponentAuthoringController {
+@Directive()
+class GraphAuthoringController extends EditComponentController {
+  allowedConnectedComponentTypes: any[];
   availableGraphTypes: any[];
   availableRoundingOptions: any[];
   availableSymbols: any[];
   availableSeriesTypes: any[];
   availableLineTypes: any[];
   availableXAxisTypes: any[];
-  plotTypeToLimitType: object;
-  numYAxes: number;
-  enableMultipleYAxes: boolean;
   defaultDashStyle: string = 'Solid';
+  enableMultipleYAxes: boolean = false;
+  numYAxes: number = 0;
+  plotTypeToLimitType: any;
 
   static $inject = [
     '$filter',
-    '$scope',
     'ConfigService',
     'GraphService',
     'NodeService',
@@ -27,7 +29,6 @@ class GraphAuthoringController extends ComponentAuthoringController {
   ];
 
   constructor($filter,
-              $scope,
               ConfigService,
               private GraphService,
               NodeService,
@@ -35,7 +36,7 @@ class GraphAuthoringController extends ComponentAuthoringController {
               ProjectAssetService,
               ProjectService,
               UtilService) {
-    super($scope,
+    super(
       $filter,
       ConfigService,
       NodeService,
@@ -43,7 +44,10 @@ class GraphAuthoringController extends ComponentAuthoringController {
       ProjectAssetService,
       ProjectService,
       UtilService);
+  }
 
+  $onInit() {
+    super.$onInit();
     this.availableGraphTypes = [
       {
         value: 'line',
@@ -162,7 +166,6 @@ class GraphAuthoringController extends ComponentAuthoringController {
       column: 'categories'
     }
 
-    this.numYAxes = 0;
     this.enableMultipleYAxes = this.isMultipleYAxesEnabled();
     if (this.enableMultipleYAxes) {
       this.numYAxes = this.authoringComponentContent.yAxis.length;
@@ -678,7 +681,7 @@ class GraphAuthoringController extends ComponentAuthoringController {
       if (singleSeries.yAxis === yAxisIndex) {
         singleSeries.color = color;
       }
-    } 
+    }
   }
 
   addAnyMissingYAxisFieldsToAllYAxes(yAxis) {
@@ -759,4 +762,14 @@ class GraphAuthoringController extends ComponentAuthoringController {
   }
 }
 
-export default GraphAuthoringController;
+const GraphAuthoring = {
+  bindings: {
+    nodeId: '@',
+    componentId: '@'
+  },
+  controller: GraphAuthoringController,
+  controllerAs: 'graphController',
+  templateUrl: 'wise5/components/graph/authoring.html'
+}
+
+export default GraphAuthoring;

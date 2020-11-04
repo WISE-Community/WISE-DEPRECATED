@@ -24,7 +24,6 @@ class EmbeddedAuthoringController extends EditComponentController {
 
   static $inject = [
     '$filter',
-    '$scope',
     'ConfigService',
     'NodeService',
     'NotificationService',
@@ -34,14 +33,13 @@ class EmbeddedAuthoringController extends EditComponentController {
   ];
 
   constructor($filter,
-      $scope,
       ConfigService,
       NodeService,
       NotificationService,
       ProjectAssetService,
       ProjectService,
       UtilService) {
-    super($scope,
+    super(
         $filter,
         ConfigService,
         NodeService,
@@ -54,14 +52,6 @@ class EmbeddedAuthoringController extends EditComponentController {
   $onInit() {
     super.$onInit();
     this.embeddedApplicationIFrameId = 'componentApp_' + this.componentId;
-
-    this.$scope.$watch(function() {
-      return this.authoringComponentContent;
-    }.bind(this), function(newValue, oldValue) {
-      this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-      this.isSaveButtonVisible = this.componentContent.showSaveButton;
-      this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-    }.bind(this), true);
   }
 
   showModelFileChooserPopup() {
@@ -89,7 +79,6 @@ class EmbeddedAuthoringController extends EditComponentController {
     iframe.src = src;
   }
 }
-
 
 const EmbeddedAuthoring = {
   bindings: {

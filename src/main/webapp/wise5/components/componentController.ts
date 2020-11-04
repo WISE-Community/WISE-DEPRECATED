@@ -15,33 +15,14 @@ import { Directive } from '@angular/core';
 
 @Directive()
 class ComponentController {
-  $filter: any;
-  $injector: any;
-  $mdDialog: any;
-  $q: any;
-  $rootScope: any;
-  $scope: any;
   $translate: any;
-  AudioRecorderService: AudioRecorderService;
-  AnnotationService: AnnotationService;
-  ConfigService: ConfigService;
-  NodeService: NodeService;
-  NotebookService: NotebookService;
-  NotificationService: NotificationService;
-  ProjectService: ProjectService;
-  StudentAssetService: StudentAssetService;
-  UtilService: UtilService;
-  StudentDataService: StudentDataService;
   nodeId: string;
   componentId: string;
   componentContent: any;
   componentType: string;
   idToOrder: any;
   mode: string;
-  authoringComponentContent: any;
   isShowPreviousWork: boolean;
-  showAdvancedAuthoring: boolean;
-  showJSONAuthoring: boolean;
   isDisabled: boolean;
   isDirty: boolean;
   parentStudentWorkIds: any[];
@@ -65,9 +46,7 @@ class ComponentController {
   summernoteRubricHTML: string;
   summernoteRubricOptions: any;
   allowedConnectedComponentTypes: any[];
-  authoringComponentContentJSONString: string;
   isJSONStringChanged: boolean;
-  authoringValidComponentContentJSONString: string;
   annotationSavedToServerSubscription: Subscription;
   nodeSubmitClickedSubscription: Subscription;
   audioRecordedSubscription: Subscription;
@@ -77,50 +56,30 @@ class ComponentController {
   starterStateRequestSubscription: Subscription;
 
   constructor(
-      $filter,
-      $injector,
-      $mdDialog,
-      $q,
-      $rootScope,
-      $scope,
-      AnnotationService,
-      AudioRecorderService,
-      ConfigService,
-      NodeService,
-      NotebookService,
-      NotificationService,
-      ProjectService,
-      StudentAssetService,
-      StudentDataService,
-      UtilService) {
-    this.$filter = $filter;
-    this.$injector = $injector;
-    this.$mdDialog = $mdDialog;
-    this.$q = $q;
-    this.$rootScope = $rootScope;
-    this.$scope = $scope;
-    this.AnnotationService = AnnotationService;
-    this.AudioRecorderService = AudioRecorderService;
-    this.ConfigService = ConfigService;
-    this.NodeService = NodeService;
-    this.NotebookService = NotebookService;
-    this.NotificationService = NotificationService;
-    this.ProjectService = ProjectService;
-    this.StudentAssetService = StudentAssetService;
-    this.StudentDataService = StudentDataService;
-    this.UtilService = UtilService;
+      protected $filter: any,
+      protected $injector: any,
+      protected $mdDialog: any,
+      protected $q: any,
+      protected $rootScope: any,
+      protected $scope: any,
+      protected AnnotationService: AnnotationService,
+      protected AudioRecorderService: AudioRecorderService,
+      protected ConfigService: ConfigService,
+      protected NodeService: NodeService,
+      protected NotebookService: NotebookService,
+      protected NotificationService: NotificationService,
+      protected ProjectService: ProjectService,
+      protected StudentAssetService: StudentAssetService,
+      protected StudentDataService: StudentDataService,
+      protected UtilService: UtilService) {
     this.$translate = this.$filter('translate');
-
     this.nodeId = this.$scope.nodeId;
     this.componentContent = this.$scope.componentContent;
     this.componentId = this.componentContent.id;
     this.componentType = this.componentContent.type;
     this.idToOrder = this.ProjectService.idToOrder;
     this.mode = this.$scope.mode;
-    this.authoringComponentContent = this.$scope.authoringComponentContent;
     this.isShowPreviousWork = false;
-    this.showAdvancedAuthoring = false;
-    this.showJSONAuthoring = false;
     this.isDisabled = false;
     this.isDirty = false;
     this.parentStudentWorkIds = null;
@@ -168,24 +127,14 @@ class ComponentController {
       this.isSaveButtonVisible = false;
       this.isSubmitButtonVisible = false;
       this.isDisabled = true;
-    } else if (this.isOnlyShowWorkMode()) {
-      this.isPromptVisible = false;
-      this.isSaveButtonVisible = false;
-      this.isSubmitButtonVisible = false;
-      this.isDisabled = true;
     }
 
     if (this.isStudentMode() || this.isGradingMode() || this.isGradingRevisionMode()) {
       this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
     }
 
-    if (this.isGradingMode() || this.isGradingRevisionMode() || this.isOnlyShowWorkMode()) {
+    if (this.isGradingMode() || this.isGradingRevisionMode()) {
       this.showAddToNotebookButton = false;
-    } else if (this.isAuthoringMode()) {
-      if (this.authoringComponentContent.showAddToNotebookButton == null) {
-        this.authoringComponentContent.showAddToNotebookButton = true;
-      }
-      this.authoringConstructor();
     }
 
     this.registerListeners();
@@ -214,20 +163,12 @@ class ComponentController {
     return this.mode === 'student';
   }
 
-  isAuthoringMode() {
-    return this.mode === 'authoring';
-  }
-
   isGradingMode() {
     return this.mode === 'grading';
   }
 
   isGradingRevisionMode() {
     return this.mode === 'gradingRevision';
-  }
-
-  isOnlyShowWorkMode() {
-    return this.mode === 'onlyShowWork';
   }
 
   isAuthoringComponentPreviewMode() {
@@ -306,42 +247,6 @@ class ComponentController {
     return 'change';
   }
 
-  authoringConstructor() {
-    this.isPromptVisible = true;
-    this.isSaveButtonVisible = this.componentContent.showSaveButton;
-    this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-
-    this.summernoteRubricId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
-    this.summernoteRubricHTML = this.componentContent.rubric;
-
-    const insertAssetString = this.$translate('INSERT_ASSET');
-    const InsertAssetButton = this.UtilService.createInsertAssetButton(null, this.nodeId,
-        this.componentId, 'rubric', insertAssetString, this.createOpenAssetChooserFunction());
-    this.summernoteRubricOptions = {
-      toolbar: [
-        ['style', ['style']],
-        ['font', ['bold', 'underline', 'clear']],
-        ['fontname', ['fontname']],
-        ['fontsize', ['fontsize']],
-        ['color', ['color']],
-        ['para', ['ul', 'ol', 'paragraph']],
-        ['table', ['table']],
-        ['insert', ['link', 'video']],
-        ['view', ['fullscreen', 'codeview', 'help']],
-        ['customButton', ['insertAssetButton']]
-      ],
-      height: 300,
-      disableDragAndDrop: true,
-      buttons: {
-        insertAssetButton: InsertAssetButton
-      },
-      dialogsInBody: true
-    };
-
-    this.registerAuthoringListeners();
-    this.updateAdvancedAuthoringView();
-  }
-
   createOpenAssetChooserFunction() {
     return (params: any) => {
       this.openAssetChooser(params);
@@ -354,37 +259,6 @@ class ComponentController {
    */
   openAssetChooser(params: any) {
 
-  }
-
-  registerAuthoringListeners() {
-    this.$scope.$watch(
-        () => {
-          return this.authoringComponentContent
-        },
-        (newValue, oldValue) => {
-          this.handleAuthoringComponentContentChanged(newValue, oldValue);
-        },
-        true
-    );
-
-    this.$scope.$watch(() => {
-        return this.$scope.$parent.nodeAuthoringController
-            .showAdvancedComponentAuthoring[this.componentId];
-      }, () => {
-        this.showAdvancedAuthoring = this.$scope.$parent.nodeAuthoringController
-            .showAdvancedComponentAuthoring[this.componentId];
-        this.NotificationService.hideJSONValidMessage();
-      }, true);
-  }
-
-  handleAuthoringComponentContentChanged(newValue, oldValue) {
-    this.componentContent = this.ProjectService.injectAssetPaths(newValue);
-    this.isSaveButtonVisible = this.componentContent.showSaveButton;
-    this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
-    this.latestAnnotations = null;
-    this.isDirty = false;
-    this.isSubmitDirty = false;
-    this.submitCounter = 0;
   }
 
   getFullAssetPath(fileName) {
@@ -544,15 +418,8 @@ class ComponentController {
       this.disableSubmitButton();
     }
 
-    if (this.isAuthoringMode()) {
-      // we are in authoring mode so we will set values manually
-      this.setIsDirty(false);
-      this.setIsSubmitDirty(false);
-      this.createComponentState('submit');
-    } else {
-      if (submitTriggeredBy == null || submitTriggeredBy === 'componentSubmitButton') {
-        this.emitComponentSubmitTriggered();
-      }
+    if (submitTriggeredBy == null || submitTriggeredBy === 'componentSubmitButton') {
+      this.emitComponentSubmitTriggered();
     }
   }
 
@@ -726,7 +593,6 @@ class ComponentController {
     return this.ProjectService.isApplicationNode(nodeId);
   }
 
-
   /**
    * Create a new component state populated with the student data
    * @param action the action that is triggering creating of this component state
@@ -849,383 +715,6 @@ class ComponentController {
   isAddToNotebookEnabled() {
     return this.isNotebookEnabled() && this.isStudentNoteClippingEnabled() &&
         this.showAddToNotebookButton;
-  }
-
-  /**
-   * Set the show submit button value
-   * @param show whether to show the submit button
-   */
-  setShowSubmitButtonValue(show) {
-
-    if (show == null || show == false) {
-      // we are hiding the submit button
-      this.authoringComponentContent.showSaveButton = false;
-      this.authoringComponentContent.showSubmitButton = false;
-    } else {
-      // we are showing the submit button
-      this.authoringComponentContent.showSaveButton = true;
-      this.authoringComponentContent.showSubmitButton = true;
-    }
-
-    /*
-     * notify the parent node that this component is changing its
-     * showSubmitButton value so that it can show save buttons on the
-     * step or sibling components accordingly
-     */
-    this.NodeService.broadcastComponentShowSubmitButtonValueChanged({
-      nodeId: this.nodeId,
-      componentId: this.componentId,
-      showSubmitButton: show
-    });
-  }
-
-  /**
-   * The showSubmitButton value has changed
-   */
-  showSubmitButtonValueChanged() {
-
-    /*
-     * perform additional processing for when we change the showSubmitButton
-     * value
-     */
-    this.setShowSubmitButtonValue(this.authoringComponentContent.showSubmitButton);
-
-    // the authoring component content has changed so we will save the project
-    this.authoringViewComponentChanged();
-  }
-
-  authoringAddConnectedComponent() {
-    const connectedComponent = this.createConnectedComponent();
-    this.addConnectedComponent(connectedComponent);
-    this.authoringAutomaticallySetConnectedComponentComponentIdIfPossible(connectedComponent);
-    this.authoringViewComponentChanged();
-  }
-
-  addConnectedComponent(connectedComponent) {
-    if (this.authoringComponentContent.connectedComponents == null) {
-      this.authoringComponentContent.connectedComponents = [];
-    }
-    this.authoringComponentContent.connectedComponents.push(connectedComponent);
-  }
-
-  createConnectedComponent() {
-    return {
-      nodeId: this.nodeId,
-      componentId: null,
-      type: null
-    };
-  }
-
-  /**
-   * Automatically set the component id for the connected component if there
-   * is only one viable option.
-   * @param connectedComponent the connected component object we are authoring
-   */
-  authoringAutomaticallySetConnectedComponentComponentIdIfPossible(connectedComponent) {
-    let numberOfAllowedComponents = 0;
-    let allowedComponent = null;
-    for (const component of this.getComponentsByNodeId(connectedComponent.nodeId)) {
-      if (this.isConnectedComponentTypeAllowed(component.type) &&
-          component.id != this.componentId) {
-        numberOfAllowedComponents += 1;
-        allowedComponent = component;
-      }
-    }
-    if (numberOfAllowedComponents === 1) {
-      connectedComponent.componentId = allowedComponent.id;
-      connectedComponent.type = 'importWork';
-    }
-    this.authoringAutomaticallySetConnectedComponentTypeIfPossible(connectedComponent);
-  }
-
-  authoringAutomaticallySetConnectedComponentTypeIfPossible(connectedComponent) {
-    if (connectedComponent.componentId != null) {
-      connectedComponent.type = 'importWork';
-    }
-    this.authoringAutomaticallySetConnectedComponentFieldsIfPossible(connectedComponent);
-  }
-
-  authoringAutomaticallySetConnectedComponentFieldsIfPossible(connectedComponent) {
-
-  }
-
-  /**
-   * Delete a connected component
-   * @param index the index of the component to delete
-   */
-  authoringDeleteConnectedComponent(index) {
-    if (confirm(this.$translate('areYouSureYouWantToDeleteThisConnectedComponent'))) {
-      if (this.authoringComponentContent.connectedComponents != null) {
-        this.authoringComponentContent.connectedComponents.splice(index, 1);
-      }
-      this.authoringViewComponentChanged();
-    }
-  }
-
-  /**
-   * Get the connected component type
-   * @param connectedComponent get the component type of this connected component
-   * @return the connected component type
-   */
-  authoringGetConnectedComponentType(connectedComponent) {
-
-    let connectedComponentType = null;
-
-    if (connectedComponent != null) {
-
-      // get the node id and component id of the connected component
-      const nodeId = connectedComponent.nodeId;
-      const componentId = connectedComponent.componentId;
-
-      // get the component
-      const component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
-
-      if (component != null) {
-        // get the component type
-        connectedComponentType = component.type;
-      }
-    }
-
-    return connectedComponentType;
-  }
-
-  authoringConnectedComponentNodeIdChanged(connectedComponent) {
-    connectedComponent.componentId = null;
-    connectedComponent.type = null;
-    this.authoringAutomaticallySetConnectedComponentComponentIdIfPossible(connectedComponent);
-    this.authoringViewComponentChanged();
-  }
-
-  authoringConnectedComponentComponentIdChanged(connectedComponent) {
-    this.authoringAutomaticallySetConnectedComponentTypeIfPossible(connectedComponent);
-    this.authoringViewComponentChanged();
-  }
-
-  /**
-   * The connected component type has changed
-   * @param connectedComponent the connected component that changed
-   */
-  authoringConnectedComponentTypeChanged(connectedComponent) {
-
-    if (connectedComponent != null) {
-
-      if (connectedComponent.type === 'importWork') {
-        /*
-         * the type has changed to import work
-         */
-      } else if (connectedComponent.type === 'showWork') {
-        /*
-         * the type has changed to show work
-         */
-      }
-
-      // the authoring component content has changed so we will save the project
-      this.authoringViewComponentChanged();
-    }
-  }
-
-  isConnectedComponentTypeAllowed(componentType) {
-    for (const allowedConnectedComponentType of this.allowedConnectedComponentTypes) {
-      if (allowedConnectedComponentType.type === componentType) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  addTag() {
-    if (this.authoringComponentContent.tags == null) {
-      this.authoringComponentContent.tags = [];
-    }
-    this.authoringComponentContent.tags.push('');
-    this.authoringViewComponentChanged();
-  }
-
-  /**
-   * Move a tag up
-   * @param index the index of the tag to move up
-   */
-  moveTagUp(index) {
-    if (index > 0) {
-      // the index is not at the top so we can move it up
-      let tag = this.authoringComponentContent.tags[index];
-      this.authoringComponentContent.tags.splice(index, 1);
-      this.authoringComponentContent.tags.splice(index - 1, 0, tag);
-      this.authoringViewComponentChanged();
-    }
-  }
-
-  /**
-   * Move a tag down
-   * @param index the index of the tag to move down
-   */
-  moveTagDown(index) {
-    if (index < this.authoringComponentContent.tags.length - 1) {
-      // the index is not at the bottom so we can move it down
-      let tag = this.authoringComponentContent.tags[index];
-      this.authoringComponentContent.tags.splice(index, 1);
-      this.authoringComponentContent.tags.splice(index + 1, 0, tag);
-      this.authoringViewComponentChanged();
-    }
-  }
-
-  deleteTag(indexOfTagToDelete) {
-    if (confirm(this.$translate('areYouSureYouWantToDeleteThisTag'))) {
-      this.authoringComponentContent.tags.splice(indexOfTagToDelete, 1);
-      this.authoringViewComponentChanged();
-    }
-  }
-
-  /**
-   * The author has changed the rubric
-   */
-  summernoteRubricHTMLChanged() {
-
-    // get the summernote rubric html
-    let html = this.summernoteRubricHTML;
-
-    /*
-     * remove the absolute asset paths
-     * e.g.
-     * <img src='https://wise.berkeley.edu/curriculum/3/assets/sun.png'/>
-     * will be changed to
-     * <img src='sun.png'/>
-     */
-    html = this.ConfigService.removeAbsoluteAssetPaths(html);
-
-    /*
-     * replace <a> and <button> elements with <wiselink> elements when
-     * applicable
-     */
-    html = this.UtilService.insertWISELinks(html);
-
-    // update the component rubric
-    this.authoringComponentContent.rubric = html;
-
-    // the authoring component content has changed so we will save the project
-    this.authoringViewComponentChanged();
-  }
-
-  /**
-   * The component has changed in the regular authoring view so we will save the project
-   */
-  authoringViewComponentChanged() {
-
-    // update the JSON string in the advanced authoring view textarea
-    this.updateAdvancedAuthoringView();
-
-    /*
-     * notify the parent node that the content has changed which will save
-     * the project to the server
-     */
-    this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
-  }
-
-  /**
-   * Update the component JSON string that will be displayed in the advanced authoring view textarea
-   */
-  updateAdvancedAuthoringView() {
-    this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
-  }
-
-  /**
-   * The component has changed in the advanced authoring view so we will update
-   * the component and save the project.
-   */
-  advancedAuthoringViewComponentChanged() {
-    try {
-      /*
-       * create a new component by converting the JSON string in the advanced
-       * authoring view into a JSON object
-       */
-      const editedComponentContent = angular.fromJson(this.authoringComponentContentJSONString);
-
-      // replace the component in the project
-      this.ProjectService.replaceComponent(this.nodeId, this.componentId, editedComponentContent);
-
-      // set the new component into the controller
-      this.componentContent = editedComponentContent;
-
-      /*
-       * notify the parent node that the content has changed which will save
-       * the project to the server
-       */
-      this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
-    } catch(e) {
-      this.$scope.$parent.nodeAuthoringController.showSaveErrorAdvancedAuthoring();
-    }
-  }
-
-  showJSONButtonClicked() {
-    if (this.showJSONAuthoring) {
-      // we were showing the JSON authoring view and now we want to hide it
-      if (this.isJSONValid()) {
-        this.saveJSONAuthoringViewChanges();
-        this.toggleJSONAuthoringView();
-        this.NotificationService.hideJSONValidMessage();
-      } else {
-        let isRollback = confirm(this.$translate('jsonInvalidErrorMessage'));
-        if (isRollback) {
-          // the author wants to revert back to the last valid JSON
-          this.toggleJSONAuthoringView();
-          this.NotificationService.hideJSONValidMessage();
-          this.isJSONStringChanged = false;
-          this.rollbackToRecentValidJSON();
-          this.saveJSONAuthoringViewChanges();
-        }
-      }
-    } else {
-      // we were not showing the JSON authoring view and now we want to show it
-      this.toggleJSONAuthoringView();
-      this.rememberRecentValidJSON();
-    }
-  }
-
-  toggleJSONAuthoringView() {
-    this.showJSONAuthoring = !this.showJSONAuthoring;
-  }
-
-  authoringJSONChanged() {
-    this.isJSONStringChanged = true;
-    if (this.isJSONValid()) {
-      this.NotificationService.showJSONValidMessage();
-      this.rememberRecentValidJSON();
-    } else {
-      this.NotificationService.showJSONInvalidMessage();
-    }
-  }
-
-  isJSONValid() {
-    try {
-      angular.fromJson(this.authoringComponentContentJSONString);
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  rememberRecentValidJSON() {
-    this.authoringValidComponentContentJSONString = this.authoringComponentContentJSONString;
-  }
-
-  rollbackToRecentValidJSON() {
-    this.authoringComponentContentJSONString = this.authoringValidComponentContentJSONString;
-  }
-
-  /**
-   * The component has changed in the advanced authoring view so we will update
-   * the component and save the project.
-   */
-  saveJSONAuthoringViewChanges() {
-    try {
-      const editedComponentContent = angular.fromJson(this.authoringComponentContentJSONString);
-      this.ProjectService.replaceComponent(this.nodeId, this.componentId, editedComponentContent);
-      this.componentContent = editedComponentContent;
-      this.$scope.$parent.nodeAuthoringController.authoringViewNodeChanged();
-      this.isJSONStringChanged = false;
-    } catch(e) {
-      this.$scope.$parent.nodeAuthoringController.showSaveErrorAdvancedAuthoring();
-    }
   }
 
   isEventTargetThisComponent(args) {

@@ -140,8 +140,8 @@ const WorkgroupNodeGrading = {
                                node-id='{{::$ctrl.nodeId}}'
                                component-id='{{::component.id}}'
                                component-state='{{$ctrl.getLatestComponentStateByWorkgroupIdAndComponentId($ctrl.workgroupId, component.id)}}'
-                               workgroup-id='{{::$ctrl.workgroupId}}'
-                               teacher-workgroup-id='{{::$ctrl.teacherWorkgroupId}}'
+                               workgroup-id='::$ctrl.workgroupId'
+                               teacher-workgroup-id='::$ctrl.teacherWorkgroupId'
                                mode='grading'></component>
                 </div>
             </div>

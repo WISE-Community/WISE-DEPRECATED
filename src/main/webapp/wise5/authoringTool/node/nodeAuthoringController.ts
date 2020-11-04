@@ -42,6 +42,7 @@ class NodeAuthoringController {
   showStepButtons: boolean = true;
   undoStack: any[] = [];
   componentShowSubmitButtonValueChangedSubscription: Subscription;
+  nodeChangedSubscription: Subscription;
 
   static $inject = [
     '$anchorScroll',
@@ -128,12 +129,19 @@ class NodeAuthoringController {
     });
   }
 
+  $onInit() {
+    this.nodeChangedSubscription = this.ProjectService.nodeChanged$.subscribe((doParseProject) => {
+      this.authoringViewNodeChanged(doParseProject);
+    })
+  }
+
   ngOnDestroy() {
     this.unsubscribeAll();
   }
 
   unsubscribeAll() {
     this.componentShowSubmitButtonValueChangedSubscription.unsubscribe();
+    this.nodeChangedSubscription.unsubscribe();
   }
 
   previewStepInNewWindow() {
@@ -590,9 +598,11 @@ class NodeAuthoringController {
     return componentObjects;
   }
 
-  toggleComponentAdvancedAuthoring(componentId) {
+  toggleComponentAdvancedAuthoring(componentId: string) {
     this.showAdvancedComponentAuthoring[componentId] =
         !this.showAdvancedComponentAuthoring[componentId];
+    this.ProjectService.showAdvancedComponentView(componentId,
+      this.showAdvancedComponentAuthoring[componentId]);
   }
 }
 
