@@ -17,10 +17,6 @@
       <mat-icon>info</mat-icon>
       <span i18n>Unit Info</span>
     </a>
-    <a mat-menu-item (click)="editContent()" *ngIf="canEdit() && run.project.wiseVersion !== 4">
-      <mat-icon>edit</mat-icon>
-      <span i18n>Edit Content</span>
-    </a>
     <a mat-menu-item (click)="shareRun()" *ngIf="canShare() && run.project.wiseVersion !== 4">
       <mat-icon>share</mat-icon>
       <span i18n>Share</span>
@@ -29,6 +25,10 @@
        *ngIf="isGoogleUser() && isGoogleClassroomEnabled() && !isRunCompleted() && run.project.wiseVersion !== 4">
       <mat-icon svgIcon="google-classroom"></mat-icon>
       <span i18n>Share to Google Classroom</span>
+    </a>
+    <a mat-menu-item (click)="editContent()" *ngIf="canEdit() && run.project.wiseVersion !== 4">
+      <mat-icon>edit</mat-icon>
+      <span i18n>Edit Content</span>
     </a>
     <a mat-menu-item href="{{ reportProblemLink }}">
       <mat-icon>report_problem</mat-icon>
