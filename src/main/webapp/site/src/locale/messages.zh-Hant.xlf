@@ -5846,22 +5846,6 @@
         </context-group>
         <target state="translated">儲存更改</target>
       </trans-unit>
-      <trans-unit datatype="html" id="1cde0ecb1655843b8b682674d1ed9ff8138073b2">
-        <source>point</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/possible-score/possible-score.component.html</context>
-          <context context-type="linenumber">3</context>
-        </context-group>
-        <target state="needs-translation">point</target>
-      </trans-unit>
-      <trans-unit datatype="html" id="96fe69fa0552ff1362db05cebbd1ee4c0e154c8c">
-        <source>points</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/possible-score/possible-score.component.html</context>
-          <context context-type="linenumber">4</context>
-        </context-group>
-        <target state="needs-translation">points</target>
-      </trans-unit>
       <trans-unit datatype="html" id="74b04b602d4148d1cb5de4da90c0e91ec9bae5ac">
         <source>Choose a Branch Path</source>
         <context-group purpose="location">
@@ -5877,6 +5861,22 @@
           <context context-type="linenumber">3</context>
         </context-group>
         <target state="needs-translation">Note: This chooser screen is only available in preview mode. Students will not see this screen in a classroom run and will instead be assigned a branch path automatically. Once you have chosen a branch, complete the current step and then click the Next arrow.</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="1cde0ecb1655843b8b682674d1ed9ff8138073b2">
+        <source>point</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/possible-score/possible-score.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+        <target state="needs-translation">point</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="96fe69fa0552ff1362db05cebbd1ee4c0e154c8c">
+        <source>points</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/possible-score/possible-score.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <target state="needs-translation">points</target>
       </trans-unit>
       <trans-unit datatype="html" id="44fcb249525dd82d1fd32cae51412bcda7ffd765">
         <source>Back to Unit Plan</source>
