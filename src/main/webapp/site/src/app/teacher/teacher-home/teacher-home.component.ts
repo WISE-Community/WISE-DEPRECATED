@@ -18,7 +18,7 @@ export class TeacherHomeComponent implements OnInit {
   authoringToolLink: string = '';
   tabLinks: any[] = [
     { path: 'schedule', label: $localize`Class Schedule` },
-    { path: 'library', label: $localize`Browse WISE Units` }
+    { path: 'library', label: $localize`Unit Library` }
   ]
 
   constructor(private userService: UserService,

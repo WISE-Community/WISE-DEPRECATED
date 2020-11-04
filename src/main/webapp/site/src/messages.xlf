@@ -3226,8 +3226,8 @@
           <context context-type="linenumber">25</context>
         </context-group>
       </trans-unit>
-      <trans-unit datatype="html" id="9d2a72632d6e73065adbe8ea78a680e16c07619c">
-        <source>Click the "Browse WISE Units" tab.</source>
+      <trans-unit datatype="html" id="95c22fc191e91241d3fe6293898fec4d41e20c7d">
+        <source>Click the "Unit Library" tab.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/getting-started/getting-started.component.html</context>
           <context context-type="linenumber">25</context>
@@ -6195,7 +6195,7 @@
         <source>Class Schedule</source>
       </trans-unit>
       <trans-unit id="968047685667963368">
-        <source>Browse WISE Units</source>
+        <source>Unit Library</source>
       </trans-unit>
       <trans-unit id="4967231969832964676">
         <source>Profile updated.</source>
