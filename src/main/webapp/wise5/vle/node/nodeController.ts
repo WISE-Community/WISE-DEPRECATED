@@ -37,6 +37,7 @@ class NodeController {
   rubric: any;
   rubricTour: any;
   saveMessage: any;
+  showRubricSubscription: Subscription;
   submit: any;
   teacherWorkgroupId: number;
   workgroupId: number;
@@ -229,6 +230,10 @@ class NodeController {
       }
     });
 
+    this.showRubricSubscription = this.NodeService.showRubric$.subscribe((id: string) => {
+      this.showRubric(id);
+    });
+
     const script = this.nodeContent.script;
     if (script != null) {
       this.ProjectService.retrieveScript(script).then((script: string) => {
@@ -258,6 +263,7 @@ class NodeController {
     this.componentSubmitDirtySubscription.unsubscribe();
     this.componentSubmitTriggeredSubscription.unsubscribe();
     this.exitSubscription.unsubscribe();
+    this.showRubricSubscription.unsubscribe();
   }
 
   createRubricTour() {
@@ -322,8 +328,6 @@ class NodeController {
     if (this.rubricTour) {
       let step = -1;
       let index = 0;
-
-      let thisTarget = '#nodeRubric_' + this.nodeId;
       if (this.nodeId === id) {
         step = index;
       }
@@ -336,7 +340,6 @@ class NodeController {
         const components = this.getComponents();
         for (let component of components) {
           if (component.rubric) {
-            thisTarget = '#rubric_' + component.id;
             if (component.id === id) {
               step = index;
               break;

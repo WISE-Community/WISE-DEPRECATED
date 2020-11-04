@@ -71,6 +71,7 @@ import { ChooseImportStepComponent } from './authoring-tool/import-step/choose-i
 import { ChooseImportStepLocationComponent } from './authoring-tool/import-step/choose-import-step-location/choose-import-step-location.component';
 import { ComponentNewWorkBadgeComponent } from './classroom-monitor/component-new-work-badge/component-new-work-badge.component';
 import { StatusIconComponent } from './classroom-monitor/status-icon/status-icon.component';
+import { HelpIconComponent } from '../../../wise5/themes/default/themeComponents/helpIcon/help-icon.component';
 import { NodeAdvancedJsonAuthoringComponent } from '../../../wise5/authoringTool/node/advanced/json/node-advanced-json-authoring.component';
 
 @Component({template: ``})
@@ -79,6 +80,7 @@ export class EmptyComponent {}
 @NgModule({
   declarations: [
     EmptyComponent,
+    HelpIconComponent,
     NodeIconComponent,
   ],
   imports: [

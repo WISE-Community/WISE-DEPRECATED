@@ -5268,20 +5268,6 @@
           <context context-type="linenumber">120</context>
         </context-group>
       </trans-unit>
-      <trans-unit datatype="html" id="1cde0ecb1655843b8b682674d1ed9ff8138073b2">
-        <source>point</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/possible-score/possible-score.component.html</context>
-          <context context-type="linenumber">3</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="96fe69fa0552ff1362db05cebbd1ee4c0e154c8c">
-        <source>points</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/possible-score/possible-score.component.html</context>
-          <context context-type="linenumber">4</context>
-        </context-group>
-      </trans-unit>
       <trans-unit datatype="html" id="74b04b602d4148d1cb5de4da90c0e91ec9bae5ac">
         <source>Choose a Branch Path</source>
         <context-group purpose="location">
@@ -5294,6 +5280,20 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/preview/modules/choose-branch-path-dialog/choose-branch-path-dialog.component.html</context>
           <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="1cde0ecb1655843b8b682674d1ed9ff8138073b2">
+        <source>point</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/possible-score/possible-score.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="96fe69fa0552ff1362db05cebbd1ee4c0e154c8c">
+        <source>points</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/possible-score/possible-score.component.html</context>
+          <context context-type="linenumber">4</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="44fcb249525dd82d1fd32cae51412bcda7ffd765">
