@@ -1,6 +1,8 @@
 'use strict';
 
-import HelpIcon from './themeComponents/helpIcon/helpIcon';
+import * as angular from 'angular';
+import { downgradeComponent } from '@angular/upgrade/static';
+import { HelpIconComponent } from './themeComponents/helpIcon/help-icon.component';
 import NavItemController from './themeComponents/navItem/navItemController';
 import StepToolsCtrl from './themeComponents/stepTools/stepToolsController';
 import NodeStatusIconCtrl from './themeComponents/nodeStatusIcon/nodeStatusIconController';
@@ -37,7 +39,8 @@ let ThemeComponents = angular.module('theme.components', []);
 ThemeComponents.controller('NavItemController', NavItemController)
     .controller('StepToolsCtrl', StepToolsCtrl)
     .controller('NodeStatusIconCtrl', NodeStatusIconCtrl)
-    .component('helpIcon', HelpIcon)
+    .directive('helpIcon',
+        downgradeComponent({ component: HelpIconComponent }) as angular.IDirectiveFactory)
     .component('navItem', NavItem)
     .component('nodeStatusIcon', NodeStatusIcon)
     .component('stepTools', StepTools);

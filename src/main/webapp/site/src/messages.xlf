@@ -5805,6 +5805,13 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
+      <trans-unit datatype="html" id="397caaa290032309390882c11de492805dead8e4">
+        <source>Edit Step JSON</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/authoringTool/node/advanced/json/node-advanced-json-authoring.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit>
       <trans-unit datatype="html" id="2d1bd68dd6cbd034f0b62c1dfabf7e17ee27081c">
         <source><x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>Register<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/> or <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK_1"/>Sign In<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/></source>
         <context-group purpose="location">

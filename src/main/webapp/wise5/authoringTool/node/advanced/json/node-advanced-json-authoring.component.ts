@@ -2,25 +2,44 @@ import { TeacherDataService } from "../../../../services/teacherDataService";
 import { TeacherProjectService } from "../../../../services/teacherProjectService";
 import * as angular from 'angular';
 import { NotificationService } from "../../../../services/notificationService";
+import { Component } from "@angular/core";
+import { Subject, Subscription } from "rxjs";
+import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 
-class NodeAdvancedJsonAuthoringController {
+@Component({
+  templateUrl: 'node-advanced-json-authoring.component.html'
+})
+export class NodeAdvancedJsonAuthoringComponent {
 
-  nodeContentJSONString: string;
   node: any;
+  nodeContentJSONString: string;
+  nodeContentChanged: Subject<string> = new Subject<string>();
+  nodeContentChangedSubscription: Subscription;
   nodeId: string;
-
-  static $inject = ['NotificationService', 'ProjectService', 'TeacherDataService'];
 
   constructor(private NotificationService: NotificationService,
       private ProjectService: TeacherProjectService,
       private TeacherDataService: TeacherDataService) {
   }
 
-  $onInit() {
+  ngOnInit() {
     this.nodeId = this.TeacherDataService.getCurrentNodeId();
     this.node = this.ProjectService.getNodeById(this.nodeId);
     this.nodeContentJSONString = angular.toJson(this.node, 4);
     this.NotificationService.showJSONValidMessage();
+    this.nodeContentChangedSubscription = this.nodeContentChanged
+      .pipe(
+        debounceTime(1000),
+        distinctUntilChanged()
+      )
+      .subscribe(newText => {
+        this.nodeContentJSONString = newText;
+        this.autoSaveJSON();
+      });
+  }
+
+  ngOnDestroy() {
+    this.nodeContentChangedSubscription.unsubscribe();
   }
 
   autoSaveJSON() {
@@ -36,13 +55,4 @@ class NodeAdvancedJsonAuthoringController {
       this.NotificationService.showJSONInvalidMessage();
     }
   }
-
-  isGroupNode(nodeId) {
-    return this.ProjectService.isGroupNode(nodeId);
-  }
-}
-
-export const NodeAdvancedJsonAuthoringComponent = {
-  templateUrl: `/wise5/authoringTool/node/advanced/json/node-advanced-json-authoring.component.html`,
-  controller: NodeAdvancedJsonAuthoringController
 }

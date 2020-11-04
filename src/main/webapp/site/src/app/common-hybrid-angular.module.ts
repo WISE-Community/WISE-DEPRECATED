@@ -47,6 +47,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
+import { HelpIconComponent } from '../../../wise5/themes/default/themeComponents/helpIcon/help-icon.component';
 
 @Component({template: ``})
 export class EmptyComponent {}
@@ -54,6 +55,7 @@ export class EmptyComponent {}
 @NgModule({
   declarations: [
     EmptyComponent,
+    HelpIconComponent,
     NodeIconComponent,
   ],
   imports: [
