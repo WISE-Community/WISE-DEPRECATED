@@ -17,6 +17,9 @@ export class LibraryProjectMenuComponent implements OnInit {
   @Input()
   project: Project;
 
+  @Input()
+  isRun: boolean;
+
   @Output('menuAction')
   select: EventEmitter<string> = new EventEmitter<string>();
 
