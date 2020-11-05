@@ -1040,7 +1040,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
-          <context context-type="linenumber">31</context>
+          <context context-type="linenumber">27</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="d730351c7b91474b615d35ca4357f0278194bf1d">
@@ -1681,7 +1681,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/library-project-menu/library-project-menu.component.html</context>
-          <context context-type="linenumber">10</context>
+          <context context-type="linenumber">11</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="4c49a9bb7a99a9da256c6e678cbb49baa70e268a">
@@ -1731,8 +1731,8 @@
           <context context-type="linenumber">96</context>
         </context-group>
       </trans-unit>
-      <trans-unit datatype="html" id="8dce5a1b53185785ceb8eaece03a45f95a1058ae">
-        <source>Parent ID:</source>
+      <trans-unit datatype="html" id="77bd1ad738d92e35036a6caa0afba8152299876b">
+        <source>Parent ID: <x equiv-text="{{ project.parentId }}" id="INTERPOLATION"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/library-project-menu/library-project-menu.component.html</context>
           <context context-type="linenumber">7</context>
@@ -1742,18 +1742,18 @@
         <source>Edit</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/library-project-menu/library-project-menu.component.html</context>
-          <context context-type="linenumber">13</context>
+          <context context-type="linenumber">14</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="0bd8b27f60a1f098a53e06328426d818e3508ff9">
         <source>Share</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/library-project-menu/library-project-menu.component.html</context>
-          <context context-type="linenumber">16</context>
+          <context context-type="linenumber">17</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
-          <context context-type="linenumber">26</context>
+          <context context-type="linenumber">22</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="1ada756975a68f38f92477600b2ca2864ea89533">
@@ -1778,11 +1778,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/student-run-list/student-run-list.component.html</context>
-          <context context-type="linenumber">27</context>
+          <context context-type="linenumber">26</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-run-list/teacher-run-list.component.html</context>
-          <context context-type="linenumber">37</context>
+          <context context-type="linenumber">36</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="e2f5ddbb1c62ee08bb0cc5a18ecba95e1e621760">
@@ -3215,8 +3215,8 @@
           <context context-type="linenumber">25</context>
         </context-group>
       </trans-unit>
-      <trans-unit datatype="html" id="9d2a72632d6e73065adbe8ea78a680e16c07619c">
-        <source>Click the "Browse WISE Units" tab.</source>
+      <trans-unit datatype="html" id="95c22fc191e91241d3fe6293898fec4d41e20c7d">
+        <source>Click the "Unit Library" tab.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/getting-started/getting-started.component.html</context>
           <context context-type="linenumber">25</context>
@@ -4947,11 +4947,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/student-run-list/student-run-list.component.html</context>
-          <context context-type="linenumber">64</context>
+          <context context-type="linenumber">63</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-run-list/teacher-run-list.component.html</context>
-          <context context-type="linenumber">76</context>
+          <context context-type="linenumber">75</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="36a606470097ddf0c32a250c8a902441729ca8ca">
@@ -5070,17 +5070,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-run-list/teacher-run-list.component.html</context>
           <context context-type="linenumber">33</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="c3840ff3430f7c6130e4d7a2f0aec5a7cb3ebb3a">
-        <source><x equiv-text="{{ completedTotal() }}" id="INTERPOLATION"/> completed</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/student/student-run-list/student-run-list.component.html</context>
-          <context context-type="linenumber">24</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/teacher-run-list/teacher-run-list.component.html</context>
-          <context context-type="linenumber">34</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="13c602751734f72430891c9781167bf53c612481">
@@ -5781,7 +5770,7 @@
         <source>Edit Content</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
-          <context context-type="linenumber">22</context>
+          <context context-type="linenumber">31</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="e438ba78cbafdb5bcbce0820bfaad995a504f222">
@@ -6213,7 +6202,7 @@
         <source>Class Schedule</source>
       </trans-unit>
       <trans-unit id="968047685667963368">
-        <source>Browse WISE Units</source>
+        <source>Unit Library</source>
       </trans-unit>
       <trans-unit id="4967231969832964676">
         <source>Profile updated.</source>

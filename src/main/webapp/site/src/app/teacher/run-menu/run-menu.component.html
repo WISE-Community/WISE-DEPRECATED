@@ -3,7 +3,7 @@
 </button>
 <mat-menu #runMenu="matMenu" xPosition="before">
   <div>
-    <div class="run-info mat-body-2" i18n>Run ID: {{ run.id }}</div>
+    <div class="menu-info secondary-text" i18n>Run ID: {{ run.id }}</div>
     <mat-divider></mat-divider>
     <a *ngIf="run.project.wiseVersion !== 4" mat-menu-item (click)="showEditRunDetails()">
       <mat-icon>settings</mat-icon>
@@ -17,10 +17,6 @@
       <mat-icon>info</mat-icon>
       <span i18n>Unit Info</span>
     </a>
-    <a mat-menu-item (click)="editContent()" *ngIf="canEdit() && run.project.wiseVersion !== 4">
-      <mat-icon>edit</mat-icon>
-      <span i18n>Edit Content</span>
-    </a>
     <a mat-menu-item (click)="shareRun()" *ngIf="canShare() && run.project.wiseVersion !== 4">
       <mat-icon>share</mat-icon>
       <span i18n>Share</span>
@@ -29,6 +25,10 @@
        *ngIf="isGoogleUser() && isGoogleClassroomEnabled() && !isRunCompleted() && run.project.wiseVersion !== 4">
       <mat-icon svgIcon="google-classroom"></mat-icon>
       <span i18n>Share to Google Classroom</span>
+    </a>
+    <a mat-menu-item (click)="editContent()" *ngIf="canEdit() && run.project.wiseVersion !== 4">
+      <mat-icon>edit</mat-icon>
+      <span i18n>Edit Content</span>
     </a>
     <a mat-menu-item href="{{ reportProblemLink }}">
       <mat-icon>report_problem</mat-icon>
