@@ -1162,7 +1162,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
-          <context context-type="linenumber">31</context>
+          <context context-type="linenumber">27</context>
         </context-group>
         <target state="needs-translation">Share to Google Classroom</target>
       </trans-unit>
@@ -1281,6 +1281,10 @@
           <context context-type="linenumber">68</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
+          <context context-type="linenumber">95</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step/choose-import-step.component.html</context>
           <context context-type="linenumber">62</context>
         </context-group>
@@ -1295,10 +1299,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/authoring-tool/add-component/choose-new-component-location/choose-new-component-location.component.html</context>
           <context context-type="linenumber">41</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
-          <context context-type="linenumber">95</context>
         </context-group>
         <target state="translated">取消</target>
       </trans-unit>
@@ -1874,7 +1874,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/library-project-menu/library-project-menu.component.html</context>
-          <context context-type="linenumber">10</context>
+          <context context-type="linenumber">11</context>
         </context-group>
         <target state="translated">複製</target>
       </trans-unit>
@@ -1930,19 +1930,19 @@
         </context-group>
         <target state="translated">繼續</target>
       </trans-unit>
-      <trans-unit datatype="html" id="8dce5a1b53185785ceb8eaece03a45f95a1058ae">
-        <source>Parent ID:</source>
+      <trans-unit datatype="html" id="77bd1ad738d92e35036a6caa0afba8152299876b">
+        <source>Parent ID: <x equiv-text="{{ project.parentId }}" id="INTERPOLATION"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/library-project-menu/library-project-menu.component.html</context>
           <context context-type="linenumber">7</context>
         </context-group>
-        <target state="translated">父層ID:</target>
+        <target state="needs-translation">Parent ID: <x equiv-text="{{ project.parentId }}" id="INTERPOLATION"/></target>
       </trans-unit>
       <trans-unit datatype="html" id="28f86ffd419b869711aa13f5e5ff54be6d70731c">
         <source>Edit</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/library-project-menu/library-project-menu.component.html</context>
-          <context context-type="linenumber">13</context>
+          <context context-type="linenumber">14</context>
         </context-group>
         <target state="translated">編輯</target>
       </trans-unit>
@@ -1950,11 +1950,11 @@
         <source>Share</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/library-project-menu/library-project-menu.component.html</context>
-          <context context-type="linenumber">16</context>
+          <context context-type="linenumber">17</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
-          <context context-type="linenumber">26</context>
+          <context context-type="linenumber">22</context>
         </context-group>
         <target state="translated">分享</target>
       </trans-unit>
@@ -1982,11 +1982,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/student-run-list/student-run-list.component.html</context>
-          <context context-type="linenumber">27</context>
+          <context context-type="linenumber">26</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-run-list/teacher-run-list.component.html</context>
-          <context context-type="linenumber">37</context>
+          <context context-type="linenumber">36</context>
         </context-group>
         <target state="translated">重置</target>
       </trans-unit>
@@ -3570,8 +3570,8 @@
         </context-group>
         <target state="translated">使用您的教師帳號登入WISE。</target>
       </trans-unit>
-      <trans-unit datatype="html" id="9d2a72632d6e73065adbe8ea78a680e16c07619c">
-        <source>Click the "Browse WISE Units" tab.</source>
+      <trans-unit datatype="html" id="95c22fc191e91241d3fe6293898fec4d41e20c7d">
+        <source>Click the "Unit Library" tab.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/getting-started/getting-started.component.html</context>
           <context context-type="linenumber">25</context>
@@ -3584,7 +3584,7 @@
           <context context-type="sourcefile">app/help/teacher-faq/teacher-faq.component.html</context>
           <context context-type="linenumber">110</context>
         </context-group>
-        <target state="translated">點擊“瀏覽WISE課程”標籤。</target>
+        <target state="needs-translation">Click the "Unit Library" tab.</target>
       </trans-unit>
       <trans-unit datatype="html" id="6aad599c3073e68956b4f15a368db489510bbe7e">
         <source>Find a project that you would like to use with your class.</source>
@@ -5490,11 +5490,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/student-run-list/student-run-list.component.html</context>
-          <context context-type="linenumber">64</context>
+          <context context-type="linenumber">63</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-run-list/teacher-run-list.component.html</context>
-          <context context-type="linenumber">76</context>
+          <context context-type="linenumber">75</context>
         </context-group>
         <target state="translated">顯示更多</target>
       </trans-unit>
@@ -5629,18 +5629,6 @@
           <context context-type="linenumber">33</context>
         </context-group>
         <target state="translated"><x id="INTERPOLATION" equiv-text="{{ activeTotal() }}"/> 有效</target>
-      </trans-unit>
-      <trans-unit datatype="html" id="c3840ff3430f7c6130e4d7a2f0aec5a7cb3ebb3a">
-        <source><x equiv-text="{{ completedTotal() }}" id="INTERPOLATION"/> completed</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/student/student-run-list/student-run-list.component.html</context>
-          <context context-type="linenumber">24</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/teacher-run-list/teacher-run-list.component.html</context>
-          <context context-type="linenumber">34</context>
-        </context-group>
-        <target state="translated"><x id="INTERPOLATION" equiv-text="{{ completedTotal() }}"/> 已完成</target>
       </trans-unit>
       <trans-unit datatype="html" id="13c602751734f72430891c9781167bf53c612481">
         <source>Team Sign In</source>
@@ -5846,22 +5834,6 @@
         </context-group>
         <target state="translated">儲存更改</target>
       </trans-unit>
-      <trans-unit datatype="html" id="74b04b602d4148d1cb5de4da90c0e91ec9bae5ac">
-        <source>Choose a Branch Path</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/preview/modules/choose-branch-path-dialog/choose-branch-path-dialog.component.html</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="needs-translation">Choose a Branch Path</target>
-      </trans-unit>
-      <trans-unit datatype="html" id="33587ab40a459dc3058a184e39bfa93737fbbd67">
-        <source>Note: This chooser screen is only available in preview mode. Students will not see this screen in a classroom run and will instead be assigned a branch path automatically. Once you have chosen a branch, complete the current step and then click the Next arrow.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/preview/modules/choose-branch-path-dialog/choose-branch-path-dialog.component.html</context>
-          <context context-type="linenumber">3</context>
-        </context-group>
-        <target state="needs-translation">Note: This chooser screen is only available in preview mode. Students will not see this screen in a classroom run and will instead be assigned a branch path automatically. Once you have chosen a branch, complete the current step and then click the Next arrow.</target>
-      </trans-unit>
       <trans-unit datatype="html" id="1cde0ecb1655843b8b682674d1ed9ff8138073b2">
         <source>point</source>
         <context-group purpose="location">
@@ -5878,229 +5850,21 @@
         </context-group>
         <target state="needs-translation">points</target>
       </trans-unit>
-      <trans-unit datatype="html" id="44fcb249525dd82d1fd32cae51412bcda7ffd765">
-        <source>Back to Unit Plan</source>
+      <trans-unit datatype="html" id="74b04b602d4148d1cb5de4da90c0e91ec9bae5ac">
+        <source>Choose a Branch Path</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
-          <context context-type="linenumber">4</context>
-        </context-group>
-        <target state="needs-translation">Back to Unit Plan</target>
-      </trans-unit>
-      <trans-unit datatype="html" id="077fb7924ecebe2ae768d860909315c29ee61fbe">
-        <source>Show JSON</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
-          <context context-type="linenumber">7</context>
-        </context-group>
-        <target state="needs-translation">Show JSON</target>
-      </trans-unit>
-      <trans-unit datatype="html" id="a7ff0a41fdb9b51a30db6bed1494c740274cbb84">
-        <source>Download Unit</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
-          <context context-type="linenumber">10</context>
-        </context-group>
-        <target state="needs-translation">Download Unit</target>
-      </trans-unit>
-      <trans-unit datatype="html" id="e810aa7f08f531d99ef09adc501a8dded58d34fb">
-        <source>Edit Unit JSON</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
-          <context context-type="linenumber">16</context>
-        </context-group>
-        <target state="needs-translation">Edit Unit JSON</target>
-      </trans-unit>
-      <trans-unit datatype="html" id="9203b05eb7515e937cc5e5d8cbc8a03195bb2d7f">
-        <source>Script Filename</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
-          <context context-type="linenumber">23</context>
-        </context-group>
-        <target state="needs-translation">Script Filename</target>
-      </trans-unit>
-      <trans-unit datatype="html" id="9fabdfadf0453602acf388171bd4f758df47e1a7">
-        <source>Choose</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
-          <context context-type="linenumber">28</context>
-        </context-group>
-        <target state="needs-translation">Choose</target>
-      </trans-unit>
-      <trans-unit datatype="html" id="0435f6f300b78e13d48ecd2ee6e404d40df04188">
-        <source>Unit URL</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
-          <context context-type="linenumber">33</context>
-        </context-group>
-        <target state="needs-translation">Unit URL</target>
-      </trans-unit>
-      <trans-unit datatype="html" id="3eb7b66b266bf315436e1888846133dd8106ca43">
-        <source>Copy Unit URL to Clipboard</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
-          <context context-type="linenumber">38</context>
-        </context-group>
-        <target state="needs-translation">Copy Unit URL to Clipboard</target>
-      </trans-unit>
-      <trans-unit datatype="html" id="29024835e83ded5ae9cb4e4be0c3fba290a185b9">
-        <source>Open Unit URL in New Tab</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
-          <context context-type="linenumber">42</context>
-        </context-group>
-        <target state="needs-translation">Open Unit URL in New Tab</target>
-      </trans-unit>
-      <trans-unit datatype="html" id="64216e7ef99605d9f05614beb1919360ee012177">
-        <source>Import Step(s)</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step/choose-import-step.component.html</context>
+          <context context-type="sourcefile">app/preview/modules/choose-branch-path-dialog/choose-branch-path-dialog.component.html</context>
           <context context-type="linenumber">1</context>
         </context-group>
-        <target state="needs-translation">Import Step(s)</target>
+        <target state="needs-translation">Choose a Branch Path</target>
       </trans-unit>
-      <trans-unit datatype="html" id="1371bc59ef18c928caf36f5d66a7af1af8ce17a2">
-        <source>Choose a unit to import from:</source>
+      <trans-unit datatype="html" id="33587ab40a459dc3058a184e39bfa93737fbbd67">
+        <source>Note: This chooser screen is only available in preview mode. Students will not see this screen in a classroom run and will instead be assigned a branch path automatically. Once you have chosen a branch, complete the current step and then click the Next arrow.</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step/choose-import-step.component.html</context>
+          <context context-type="sourcefile">app/preview/modules/choose-branch-path-dialog/choose-branch-path-dialog.component.html</context>
           <context context-type="linenumber">3</context>
         </context-group>
-        <target state="needs-translation">Choose a unit to import from:</target>
-      </trans-unit>
-      <trans-unit datatype="html" id="dc834df3c90c7b9021cfa37b2be737c2134249a5">
-        <source>Run ID</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step/choose-import-step.component.html</context>
-          <context context-type="linenumber">11</context>
-        </context-group>
-        <target state="needs-translation">Run ID</target>
-      </trans-unit>
-      <trans-unit datatype="html" id="325291e71ff2bb75a324c2c02e5deb1ff8600043">
-        <source>Library Units</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step/choose-import-step.component.html</context>
-          <context context-type="linenumber">17</context>
-        </context-group>
-        <target state="needs-translation">Library Units</target>
-      </trans-unit>
-      <trans-unit datatype="html" id="38d584510075ce8ab505c1081beb607c36898b2b">
-        <source>Choose the step(s) that you want to import, then click next.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step/choose-import-step.component.html</context>
-          <context context-type="linenumber">28</context>
-        </context-group>
-        <target state="needs-translation">Choose the step(s) that you want to import, then click next.</target>
-      </trans-unit>
-      <trans-unit datatype="html" id="76176dda9f079e8ab3c78d6975eee76b8b3eddad">
-        <source>Preview Unit</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step/choose-import-step.component.html</context>
-          <context context-type="linenumber">34</context>
-        </context-group>
-        <target state="needs-translation">Preview Unit</target>
-      </trans-unit>
-      <trans-unit datatype="html" id="0fb1aad24bc0920a8c5e9d43e320e261dbca3f09">
-        <source>Preview Step</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step/choose-import-step.component.html</context>
-          <context context-type="linenumber">51</context>
-        </context-group>
-        <target state="needs-translation">Preview Step</target>
-      </trans-unit>
-      <trans-unit datatype="html" id="f732c304c7433e5a83ffcd862c3dce709a0f4982">
-        <source>Next</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step/choose-import-step.component.html</context>
-          <context context-type="linenumber">70</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step/choose-import-step.component.html</context>
-          <context context-type="linenumber">66</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/authoring-tool/add-component/choose-new-component/choose-new-component.component.html</context>
-          <context context-type="linenumber">27</context>
-        </context-group>
-        <target state="needs-translation">Next</target>
-      </trans-unit>
-      <trans-unit datatype="html" id="e8c21747e8604f974b3ed6ecf6089306b7cc0aae">
-        <source>Choose a location for the imported steps</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step-location/choose-import-step-location.component.html</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="needs-translation">Choose a location for the imported steps</target>
-      </trans-unit>
-      <trans-unit datatype="html" id="2487b6259288414268ebb0273e79a0dbd975205b">
-        <source>Insert As First Step</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step-location/choose-import-step-location.component.html</context>
-          <context context-type="linenumber">17</context>
-        </context-group>
-        <target state="needs-translation">Insert As First Step</target>
-      </trans-unit>
-      <trans-unit datatype="html" id="1e9b22a987b26586870bb920525f8062d24c6267">
-        <source>Insert After</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step-location/choose-import-step-location.component.html</context>
-          <context context-type="linenumber">25</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/authoring-tool/add-component/choose-new-component-location/choose-new-component-location.component.html</context>
-          <context context-type="linenumber">25</context>
-        </context-group>
-        <target state="needs-translation">Insert After</target>
-      </trans-unit>
-      <trans-unit datatype="html" id="1bf58cf720f3aa0e4a6f06d2a84183b552f3f3c6">
-        <source>Click the new component type you want to add</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/authoring-tool/add-component/choose-new-component/choose-new-component.component.html</context>
-          <context context-type="linenumber">3</context>
-        </context-group>
-        <target state="needs-translation">Click the new component type you want to add</target>
-      </trans-unit>
-      <trans-unit datatype="html" id="1fa4d608488f8c688cef3cac8f93e5e2e43a39de">
-        <source>Choose New Location</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/authoring-tool/add-component/choose-new-component-location/choose-new-component-location.component.html</context>
-          <context context-type="linenumber">3</context>
-        </context-group>
-        <target state="needs-translation">Choose New Location</target>
-      </trans-unit>
-      <trans-unit datatype="html" id="d0feb44b6358f108a58480afa4b903c34031a110">
-        <source>Insert As First Component</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/authoring-tool/add-component/choose-new-component-location/choose-new-component-location.component.html</context>
-          <context context-type="linenumber">9</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/authoring-tool/add-component/choose-new-component-location/choose-new-component-location.component.html</context>
-          <context context-type="linenumber">12</context>
-        </context-group>
-        <target state="needs-translation">Insert As First Component</target>
-      </trans-unit>
-      <trans-unit datatype="html" id="cda31dbd724cf5f4fa7a4274d9120651490c8a8c">
-        <source>Back</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/authoring-tool/add-component/choose-new-component-location/choose-new-component-location.component.html</context>
-          <context context-type="linenumber">36</context>
-        </context-group>
-        <target state="needs-translation">Back</target>
-      </trans-unit>
-      <trans-unit datatype="html" id="d81f00c85d3b507f3e3d78bfc617a2c66e028391">
-        <source>New</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/classroom-monitor/component-new-work-badge/component-new-work-badge.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <target state="needs-translation">New</target>
-      </trans-unit>
-      <trans-unit datatype="html" id="397caaa290032309390882c11de492805dead8e4">
-        <source>Edit Step JSON</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/authoringTool/node/advanced/json/node-advanced-json-authoring.component.html</context>
-          <context context-type="linenumber">2</context>
-        </context-group>
-        <target state="needs-translation">Edit Step JSON</target>
+        <target state="needs-translation">Note: This chooser screen is only available in preview mode. Students will not see this screen in a classroom run and will instead be assigned a branch path automatically. Once you have chosen a branch, complete the current step and then click the Next arrow.</target>
       </trans-unit>
       <trans-unit datatype="html" id="4c42d0c12ddaebc2efdfc00bbf1d714bf385f278">
         <source>Teacher Home</source>
@@ -6426,7 +6190,7 @@
         <source>Edit Content</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
-          <context context-type="linenumber">22</context>
+          <context context-type="linenumber">31</context>
         </context-group>
         <target state="translated">編輯內容</target>
       </trans-unit>
@@ -6461,6 +6225,230 @@
           <context context-type="linenumber">107</context>
         </context-group>
         <target state="translated">請幫助我們翻譯WISE! 請瀏覽<x id="START_LINK" ctype="x-a" equiv-text="&lt;a&gt;"/>https://crowdin.com/project/wise<x id="CLOSE_LINK" ctype="x-a" equiv-text="&lt;/a&gt;"/></target>
+      </trans-unit>
+      <trans-unit datatype="html" id="44fcb249525dd82d1fd32cae51412bcda7ffd765">
+        <source>Back to Unit Plan</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <target state="needs-translation">Back to Unit Plan</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="077fb7924ecebe2ae768d860909315c29ee61fbe">
+        <source>Show JSON</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+        <target state="needs-translation">Show JSON</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="a7ff0a41fdb9b51a30db6bed1494c740274cbb84">
+        <source>Download Unit</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+        <target state="needs-translation">Download Unit</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="e810aa7f08f531d99ef09adc501a8dded58d34fb">
+        <source>Edit Unit JSON</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+        <target state="needs-translation">Edit Unit JSON</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="9203b05eb7515e937cc5e5d8cbc8a03195bb2d7f">
+        <source>Script Filename</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+        <target state="needs-translation">Script Filename</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="9fabdfadf0453602acf388171bd4f758df47e1a7">
+        <source>Choose</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+        <target state="needs-translation">Choose</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="0435f6f300b78e13d48ecd2ee6e404d40df04188">
+        <source>Unit URL</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+        <target state="needs-translation">Unit URL</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="3eb7b66b266bf315436e1888846133dd8106ca43">
+        <source>Copy Unit URL to Clipboard</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+        <target state="needs-translation">Copy Unit URL to Clipboard</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="29024835e83ded5ae9cb4e4be0c3fba290a185b9">
+        <source>Open Unit URL in New Tab</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
+          <context context-type="linenumber">42</context>
+        </context-group>
+        <target state="needs-translation">Open Unit URL in New Tab</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="64216e7ef99605d9f05614beb1919360ee012177">
+        <source>Import Step(s)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step/choose-import-step.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target state="needs-translation">Import Step(s)</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="1371bc59ef18c928caf36f5d66a7af1af8ce17a2">
+        <source>Choose a unit to import from:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step/choose-import-step.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+        <target state="needs-translation">Choose a unit to import from:</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="dc834df3c90c7b9021cfa37b2be737c2134249a5">
+        <source>Run ID</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step/choose-import-step.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+        <target state="needs-translation">Run ID</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="325291e71ff2bb75a324c2c02e5deb1ff8600043">
+        <source>Library Units</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step/choose-import-step.component.html</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+        <target state="needs-translation">Library Units</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="38d584510075ce8ab505c1081beb607c36898b2b">
+        <source>Choose the step(s) that you want to import, then click next.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step/choose-import-step.component.html</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+        <target state="needs-translation">Choose the step(s) that you want to import, then click next.</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="76176dda9f079e8ab3c78d6975eee76b8b3eddad">
+        <source>Preview Unit</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step/choose-import-step.component.html</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+        <target state="needs-translation">Preview Unit</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="0fb1aad24bc0920a8c5e9d43e320e261dbca3f09">
+        <source>Preview Step</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step/choose-import-step.component.html</context>
+          <context context-type="linenumber">51</context>
+        </context-group>
+        <target state="needs-translation">Preview Step</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="f732c304c7433e5a83ffcd862c3dce709a0f4982">
+        <source>Next</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step/choose-import-step.component.html</context>
+          <context context-type="linenumber">70</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step/choose-import-step.component.html</context>
+          <context context-type="linenumber">66</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/add-component/choose-new-component/choose-new-component.component.html</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
+        <target state="needs-translation">Next</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="e8c21747e8604f974b3ed6ecf6089306b7cc0aae">
+        <source>Choose a location for the imported steps</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step-location/choose-import-step-location.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target state="needs-translation">Choose a location for the imported steps</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="2487b6259288414268ebb0273e79a0dbd975205b">
+        <source>Insert As First Step</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step-location/choose-import-step-location.component.html</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+        <target state="needs-translation">Insert As First Step</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="1e9b22a987b26586870bb920525f8062d24c6267">
+        <source>Insert After</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step-location/choose-import-step-location.component.html</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/add-component/choose-new-component-location/choose-new-component-location.component.html</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+        <target state="needs-translation">Insert After</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="1bf58cf720f3aa0e4a6f06d2a84183b552f3f3c6">
+        <source>Click the new component type you want to add</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/add-component/choose-new-component/choose-new-component.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+        <target state="needs-translation">Click the new component type you want to add</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="1fa4d608488f8c688cef3cac8f93e5e2e43a39de">
+        <source>Choose New Location</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/add-component/choose-new-component-location/choose-new-component-location.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+        <target state="needs-translation">Choose New Location</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="d0feb44b6358f108a58480afa4b903c34031a110">
+        <source>Insert As First Component</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/add-component/choose-new-component-location/choose-new-component-location.component.html</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/add-component/choose-new-component-location/choose-new-component-location.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+        <target state="needs-translation">Insert As First Component</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="cda31dbd724cf5f4fa7a4274d9120651490c8a8c">
+        <source>Back</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/add-component/choose-new-component-location/choose-new-component-location.component.html</context>
+          <context context-type="linenumber">36</context>
+        </context-group>
+        <target state="needs-translation">Back</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="d81f00c85d3b507f3e3d78bfc617a2c66e028391">
+        <source>New</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/classroom-monitor/component-new-work-badge/component-new-work-badge.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target state="needs-translation">New</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="397caaa290032309390882c11de492805dead8e4">
+        <source>Edit Step JSON</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/authoringTool/node/advanced/json/node-advanced-json-authoring.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+        <target state="needs-translation">Edit Step JSON</target>
       </trans-unit>
       <trans-unit datatype="html" id="2d1bd68dd6cbd034f0b62c1dfabf7e17ee27081c">
         <source><x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>Register<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/> or <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK_1"/>Sign In<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/></source>
@@ -6979,8 +6967,8 @@
         <target state="translated">班級課程表</target>
       </trans-unit>
       <trans-unit id="968047685667963368">
-        <source>Browse WISE Units</source>
-        <target state="translated">瀏覽WISE課程</target>
+        <source>Unit Library</source>
+        <target state="needs-translation">Unit Library</target>
       </trans-unit>
       <trans-unit id="4967231969832964676">
         <source>Profile updated.</source>
