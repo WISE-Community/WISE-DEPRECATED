@@ -20,9 +20,6 @@ export class LibraryProjectMenuComponent implements OnInit {
   @Input()
   isRun: boolean;
 
-  @Output('menuAction')
-  select: EventEmitter<string> = new EventEmitter<string>();
-
   editLink: string = '';
   previewLink: string = '';
   isCanEdit: boolean = false;
