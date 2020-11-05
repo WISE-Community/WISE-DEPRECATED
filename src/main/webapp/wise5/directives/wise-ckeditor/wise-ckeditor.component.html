@@ -1,0 +1,9 @@
+<div>
+  <ckeditor
+      [editor]="editorClass"
+      [config]="config"
+      [(ngModel)]="model"
+      (change)="onChange($event)"
+      (ready)="onReady($event)">
+  </ckeditor>
+</div>

@@ -74,14 +74,10 @@
           </md-tooltip>
         </md-button>
         <div ng-if='drawController.showRubricAuthoring'>
-          <summernote id='{{drawController.summernoteRubricId}}'
-                      ng-model='drawController.summernoteRubricHTML'
-                      ng-change='drawController.summernoteRubricHTMLChanged()'
-                      config='drawController.summernoteRubricOptions'
-                      ng-model-options='{ debounce: 1000 }'
-                      rows='10'
-                      cols='100'>
-          </summernote>
+          <wise-ckeditor
+              [(model)]='drawController.rubric'
+              (model-change)='drawController.rubricChanged()' >
+          </wise-ckeditor>
         </div>
       </div>
       <div>

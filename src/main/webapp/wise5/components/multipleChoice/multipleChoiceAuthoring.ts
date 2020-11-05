@@ -15,6 +15,7 @@ class MultipleChoiceAuthoringController extends EditComponentController {
 
   static $inject = [
     '$filter',
+    '$mdDialog',
     'ConfigService',
     'NodeService',
     'NotificationService',
@@ -25,6 +26,7 @@ class MultipleChoiceAuthoringController extends EditComponentController {
 
   constructor(
     $filter,
+    $mdDialog: any,
     ConfigService,
     NodeService,
     NotificationService,
@@ -34,6 +36,7 @@ class MultipleChoiceAuthoringController extends EditComponentController {
   ) {
     super(
       $filter,
+      $mdDialog,
       ConfigService,
       NodeService,
       NotificationService,

@@ -23,7 +23,7 @@ class HTMLAuthoringController extends EditComponentController {
 
   constructor(
     $filter,
-    private $mdDialog: any,
+    $mdDialog: any,
     ConfigService,
     NodeService,
     NotificationService,
@@ -33,6 +33,7 @@ class HTMLAuthoringController extends EditComponentController {
   ) {
     super(
       $filter,
+      $mdDialog,
       ConfigService,
       NodeService,
       NotificationService,

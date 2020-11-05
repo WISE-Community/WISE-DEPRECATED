@@ -13,6 +13,7 @@ class DrawAuthoringController extends EditComponentController {
 
   static $inject = [
     '$filter',
+    '$mdDialog',
     'ConfigService',
     'NodeService',
     'NotificationService',
@@ -23,6 +24,7 @@ class DrawAuthoringController extends EditComponentController {
 
   constructor(
     $filter,
+    $mdDialog: any,
     ConfigService,
     NodeService,
     NotificationService,
@@ -32,6 +34,7 @@ class DrawAuthoringController extends EditComponentController {
   ) {
     super(
       $filter,
+      $mdDialog,
       ConfigService,
       NodeService,
       NotificationService,

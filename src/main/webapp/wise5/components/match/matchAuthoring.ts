@@ -10,6 +10,7 @@ class MatchAuthoringController extends EditComponentController {
 
   static $inject = [
     '$filter',
+    '$mdDialog',
     'ConfigService',
     'MatchService',
     'NodeService',
@@ -22,6 +23,7 @@ class MatchAuthoringController extends EditComponentController {
 
   constructor(
     $filter,
+    $mdDialog: any,
     ConfigService,
     private MatchService,
     NodeService,
@@ -33,6 +35,7 @@ class MatchAuthoringController extends EditComponentController {
   ) {
     super(
       $filter,
+      $mdDialog,
       ConfigService,
       NodeService,
       NotificationService,

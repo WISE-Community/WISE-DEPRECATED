@@ -58,14 +58,10 @@
           <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'EDIT_COMPONENT_RUBRIC' | translate }}</md-tooltip>
         </md-button>
         <div ng-if='summaryController.showRubricAuthoring'>
-          <summernote id='{{summaryController.summernoteRubricId}}'
-                      ng-model='summaryController.summernoteRubricHTML'
-                      ng-change='summaryController.summernoteRubricHTMLChanged()'
-                      config='summaryController.summernoteRubricOptions'
-                      ng-model-options='{ debounce: 1000 }'
-                      rows='10'
-                      cols='100'>
-          </summernote>
+          <wise-ckeditor
+              [(model)]='summaryController.rubric'
+              (model-change)='summaryController.rubricChanged()' >
+          </wise-ckeditor>
         </div>
       </div>
       <div style='margin-top: 10px; margin-bottom: 10px;'>

@@ -61,6 +61,8 @@ import '../components/table/tableAuthoringComponentModule';
 import '../lib/summernote/dist/summernote.min';
 import '../lib/summernoteExtensions/summernote-ext-addNote.js';
 import '../lib/summernoteExtensions/summernote-ext-print.js'
+import { CKEditorComponent } from '@ckeditor/ckeditor5-angular';
+import { WiseCkeditorComponent } from '../directives/wise-ckeditor/wise-ckeditor.component';
 
     angular.module('teacher', [
       'common',
@@ -107,6 +109,10 @@ import '../lib/summernoteExtensions/summernote-ext-print.js'
     .component('nodeAdvancedPathAuthoringComponent', NodeAdvancedPathAuthoringComponent)
     .directive('advancedProjectAuthoringComponent', downgradeComponent(
         { component: AdvancedProjectAuthoringComponent }) as angular.IDirectiveFactory)
+    .directive('ckeditor', downgradeComponent(
+        { component: CKEditorComponent }) as angular.IDirectiveFactory)
+    .directive('wiseCkeditor', downgradeComponent(
+        { component: WiseCkeditorComponent }) as angular.IDirectiveFactory)
     .controller('AuthoringToolController', AuthoringToolController)
     .controller('AuthoringToolMainController', AuthoringToolMainController)
     .controller('AuthorNotebookController', AuthorNotebookController)

@@ -21,6 +21,7 @@ class LabelAuthoringController extends EditComponentController {
 
   static $inject = [
     '$filter',
+    '$mdDialog',
     '$window',
     'ConfigService',
     'NodeService',
@@ -32,6 +33,7 @@ class LabelAuthoringController extends EditComponentController {
 
   constructor(
     $filter,
+    $mdDialog: any,
     private $window,
     ConfigService,
     NodeService,
@@ -42,6 +44,7 @@ class LabelAuthoringController extends EditComponentController {
   ) {
     super(
       $filter,
+      $mdDialog,
       ConfigService,
       NodeService,
       NotificationService,

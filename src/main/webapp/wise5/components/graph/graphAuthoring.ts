@@ -19,6 +19,7 @@ class GraphAuthoringController extends EditComponentController {
 
   static $inject = [
     '$filter',
+    '$mdDialog',
     'ConfigService',
     'GraphService',
     'NodeService',
@@ -29,6 +30,7 @@ class GraphAuthoringController extends EditComponentController {
   ];
 
   constructor($filter,
+              $mdDialog: any,
               ConfigService,
               private GraphService,
               NodeService,
@@ -38,6 +40,7 @@ class GraphAuthoringController extends EditComponentController {
               UtilService) {
     super(
       $filter,
+      $mdDialog,
       ConfigService,
       NodeService,
       NotificationService,

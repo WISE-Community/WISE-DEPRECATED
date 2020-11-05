@@ -9,11 +9,7 @@
   </md-button>
 </div><br/>
 <h5 translate="editProjectRubric"></h5>
-<summernote id='{{::rubricAuthoringController.summernoteRubricId}}'
-      ng-model='rubricAuthoringController.summernoteRubricHTML'
-      ng-change='rubricAuthoringController.summernoteRubricHTMLChanged()'
-      config='rubricAuthoringController.summernoteRubricOptions'
-      ng-model-options='{ debounce: 1000 }'
-      rows='10'
-      cols='100'>
-</summernote>
+<wise-ckeditor
+    [(model)]='rubricAuthoringController.rubric'
+    (model-change)='rubricAuthoringController.rubricChanged()' >
+</wise-ckeditor>

@@ -12,6 +12,7 @@ class ConceptMapAuthoringController extends EditComponentController {
 
   static $inject = [
     '$filter',
+    '$mdDialog',
     'ConceptMapService',
     'ConfigService',
     'NodeService',
@@ -23,6 +24,7 @@ class ConceptMapAuthoringController extends EditComponentController {
 
   constructor(
     $filter,
+    $mdDialog: any,
     private ConceptMapService,
     ConfigService,
     NodeService,
@@ -33,6 +35,7 @@ class ConceptMapAuthoringController extends EditComponentController {
   ) {
     super(
       $filter,
+      $mdDialog,
       ConfigService,
       NodeService,
       NotificationService,

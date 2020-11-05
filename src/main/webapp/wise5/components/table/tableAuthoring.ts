@@ -23,6 +23,7 @@ class TableAuthoringController extends EditComponentController {
 
   static $inject = [
     '$filter',
+    '$mdDialog',
     'ConfigService',
     'NodeService',
     'NotificationService',
@@ -33,6 +34,7 @@ class TableAuthoringController extends EditComponentController {
 
   constructor(
     $filter,
+    $mdDialog: any,
     ConfigService,
     NodeService,
     NotificationService,
@@ -42,6 +44,7 @@ class TableAuthoringController extends EditComponentController {
   ) {
     super(
       $filter,
+      $mdDialog,
       ConfigService,
       NodeService,
       NotificationService,

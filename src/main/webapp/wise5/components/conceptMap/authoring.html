@@ -160,14 +160,10 @@
           </md-tooltip>
         </md-button>
         <div ng-if='conceptMapController.showRubricAuthoring'>
-          <summernote id='{{conceptMapController.summernoteRubricId}}'
-                      ng-model='conceptMapController.summernoteRubricHTML'
-                      ng-change='conceptMapController.summernoteRubricHTMLChanged()'
-                      config='conceptMapController.summernoteRubricOptions'
-                      ng-model-options='{ debounce: 1000 }'
-                      rows='10'
-                      cols='100'>
-          </summernote>
+          <wise-ckeditor
+              [(model)]='conceptMapController.rubric'
+              (model-change)='conceptMapController.rubricChanged()' >
+          </wise-ckeditor>
         </div>
       </div>
       <div>

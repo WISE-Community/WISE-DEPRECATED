@@ -12,6 +12,7 @@ class SummaryAuthoringController extends EditComponentController {
   static $inject = [
     '$filter',
     '$injector',
+    '$mdDialog',
     'ConfigService',
     'NodeService',
     'NotificationService',
@@ -23,6 +24,7 @@ class SummaryAuthoringController extends EditComponentController {
 
   constructor(
     protected $filter,
+    protected $mdDialog: any,
     protected $injector,
     protected ConfigService,
     protected NodeService,
@@ -34,6 +36,7 @@ class SummaryAuthoringController extends EditComponentController {
   ) {
     super(
       $filter,
+      $mdDialog,
       ConfigService,
       NodeService,
       NotificationService,

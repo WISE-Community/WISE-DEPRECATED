@@ -24,6 +24,7 @@ class EmbeddedAuthoringController extends EditComponentController {
 
   static $inject = [
     '$filter',
+    '$mdDialog',
     'ConfigService',
     'NodeService',
     'NotificationService',
@@ -33,6 +34,7 @@ class EmbeddedAuthoringController extends EditComponentController {
   ];
 
   constructor($filter,
+      $mdDialog: any,
       ConfigService,
       NodeService,
       NotificationService,
@@ -41,6 +43,7 @@ class EmbeddedAuthoringController extends EditComponentController {
       UtilService) {
     super(
         $filter,
+        $mdDialog,
         ConfigService,
         NodeService,
         NotificationService,

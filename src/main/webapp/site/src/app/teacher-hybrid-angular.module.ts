@@ -25,6 +25,8 @@ import { ComponentNewWorkBadgeComponent } from './classroom-monitor/component-ne
 import { StatusIconComponent } from './classroom-monitor/status-icon/status-icon.component';
 import { AngularJSModule } from './common-hybrid-angular.module';
 import { NodeAdvancedJsonAuthoringComponent } from '../../../wise5/authoringTool/node/advanced/json/node-advanced-json-authoring.component';
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
+import { WiseCkeditorComponent } from '../../../wise5/directives/wise-ckeditor/wise-ckeditor.component';
 
 @NgModule({
   declarations: [
@@ -39,10 +41,12 @@ import { NodeAdvancedJsonAuthoringComponent } from '../../../wise5/authoringTool
     NodeAdvancedJsonAuthoringComponent,
     StatusIconComponent,
     WorkgroupNodeScoreComponent,
-    NavItemScoreComponent
+    NavItemScoreComponent,
+    WiseCkeditorComponent
   ],
   imports: [
-    AngularJSModule
+    AngularJSModule,
+    CKEditorModule
   ],
   providers: [
     { provide: DataService, useExisting: TeacherDataService },

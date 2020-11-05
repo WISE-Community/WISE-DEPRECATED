@@ -7,11 +7,7 @@
 </md-button>
 <br/>
 <h5 translate="editStepRubric"></h5>
-<summernote id='{{$ctrl.summernoteRubricId}}'
-    ng-model='$ctrl.summernoteRubricHTML'
-    ng-change='$ctrl.summernoteRubricHTMLChanged()'
-    config='$ctrl.summernoteRubricOptions'
-    ng-model-options='{ debounce: 1000 }'
-    rows='10'
-    cols='100'>
-</summernote>
+<wise-ckeditor
+    [(model)]="$ctrl.rubric"
+    (model-change)="$ctrl.rubricChanged()" >
+</wise-ckeditor>

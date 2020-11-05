@@ -27,14 +27,13 @@ export abstract class EditComponentController {
   showAdvancedAuthoring: boolean = false;
   showJSONAuthoring: boolean = false;
   submitCounter: number = 0;
-  summernoteRubricId: string;
-  summernoteRubricHTML: string;
-  summernoteRubricOptions: any;
   starterStateResponseSubscription: Subscription;
   showAdvancedAuthoringSubscription: Subscription;
+  rubric: string = '';
 
   constructor(
       protected $filter: any,
+      protected $mdDialog: any,
       protected ConfigService: ConfigService,
       protected NodeService: NodeService,
       protected NotificationService: NotificationService,
@@ -48,33 +47,7 @@ export abstract class EditComponentController {
     this.resetUI();
     this.idToOrder = this.ProjectService.idToOrder;
     this.$translate = this.$filter('translate');
-    this.summernoteRubricId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
-    this.summernoteRubricHTML = this.componentContent.rubric;
-    const insertAssetString = this.$translate('INSERT_ASSET');
-    const InsertAssetButton = this.UtilService.createInsertAssetButton(null, this.nodeId,
-        this.componentId, 'rubric', insertAssetString,
-        (params: any) => { this.openAssetChooser(params); });
-    this.summernoteRubricOptions = {
-      toolbar: [
-        ['style', ['style']],
-        ['font', ['bold', 'underline', 'clear']],
-        ['fontname', ['fontname']],
-        ['fontsize', ['fontsize']],
-        ['color', ['color']],
-        ['para', ['ul', 'ol', 'paragraph']],
-        ['table', ['table']],
-        ['insert', ['link', 'video']],
-        ['view', ['fullscreen', 'codeview', 'help']],
-        ['customButton', ['insertAssetButton']]
-      ],
-      height: 300,
-      disableDragAndDrop: true,
-      buttons: {
-        insertAssetButton: InsertAssetButton
-      },
-      dialogsInBody: true
-    };
-
+    this.initializeRubric();
     this.updateAdvancedAuthoringView();
     this.showAdvancedAuthoringSubscription =
         this.ProjectService.showAdvancedComponentView$.subscribe((event) => {
@@ -94,6 +67,14 @@ export abstract class EditComponentController {
   $onDestroy() {
     this.starterStateResponseSubscription.unsubscribe();
     this.showAdvancedAuthoringSubscription.unsubscribe();
+  }
+
+  initializeRubric() {
+    if (this.componentContent.rubric == null) {
+      this.rubric = '';
+    } else {
+      this.rubric = this.componentContent.rubric;
+    }
   }
 
   showJSONButtonClicked(): void {
@@ -181,29 +162,13 @@ export abstract class EditComponentController {
     this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
   }
 
-  summernoteRubricHTMLChanged(): void {
-    let html = this.ConfigService.removeAbsoluteAssetPaths(this.summernoteRubricHTML);
-    html = this.UtilService.insertWISELinks(html);
-    this.authoringComponentContent.rubric = html;
-    this.authoringViewComponentChanged();
-  }
-
   openAssetChooser(params: any): void {
-    this.ProjectAssetService.openAssetChooser(params).then(
-      (data: any) => { this.assetSelected(data) }
+    return this.ProjectAssetService.openAssetChooser(params).then(
+      (data: any) => { return this.assetSelected(data) }
     );
   }
 
   assetSelected({ nodeId, componentId, assetItem, target }): void {
-    if (target === 'rubric') {
-      const fileName = assetItem.fileName;
-      const fullFilePath = `${this.ConfigService.getProjectAssetsDirectoryPath()}/${fileName}`;
-      this.UtilService.insertFileInSummernoteEditor(
-        `summernoteRubric_${this.nodeId}_${this.componentId}`,
-        fullFilePath,
-        fileName
-      );
-    }
   }
 
   setShowSubmitButtonValue(show) {
@@ -363,4 +328,11 @@ export abstract class EditComponentController {
   }
 
   saveStarterState(starterState: any) {}
+  
+  rubricChanged() {
+    this.authoringComponentContent.rubric =
+        this.ConfigService.removeAbsoluteAssetPaths(this.rubric);
+    this.authoringViewComponentChanged();
+  }
+
 }

@@ -19,6 +19,7 @@ class OutsideURLAuthoringController extends EditComponentController {
 
   static $inject = [
     '$filter',
+    '$mdDialog',
     '$sce',
     'ConfigService',
     'NodeService',
@@ -31,6 +32,7 @@ class OutsideURLAuthoringController extends EditComponentController {
 
   constructor(
     $filter,
+    $mdDialog: any,
     private $sce: any,
     ConfigService,
     NodeService,
@@ -42,6 +44,7 @@ class OutsideURLAuthoringController extends EditComponentController {
   ) {
     super(
       $filter,
+      $mdDialog,
       ConfigService,
       NodeService,
       NotificationService,
