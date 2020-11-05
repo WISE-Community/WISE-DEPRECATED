@@ -20,8 +20,7 @@
         <ng-container *ngIf="!search" i18n>My WISE units: {{ filteredRuns.length }}</ng-container>
         <span class="mat-caption" *ngIf="filteredRuns.length">
           (<ng-container *ngIf="scheduledTotal()"><span i18n>{{ scheduledTotal() }} scheduled</span>, </ng-container>
-          <ng-container><span i18n>{{ activeTotal() }} active</span>, </ng-container>
-          <ng-container><span i18n>{{ completedTotal() }} completed</span></ng-container>)
+          <ng-container><span i18n>{{ activeTotal() }} active</span></ng-container>)
         </span>
         <ng-container *ngIf="search">
           | <a [routerLink]="" (click)="reset()" i18n>Reset</a>

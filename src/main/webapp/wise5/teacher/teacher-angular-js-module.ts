@@ -2,7 +2,7 @@ import '../lib/jquery/jquery-global';
 import '../lib/bootstrap/js/bootstrap.min'
 import * as angular from 'angular';
 import { downgradeComponent, downgradeInjectable } from '@angular/upgrade/static';
-import { createCommonModule } from '../common-angular-js-module';
+import '../common-angular-js-module';
 import { MilestoneService } from '../services/milestoneService';
 import { TeacherProjectService } from '../services/teacherProjectService';
 import { ProjectAssetService } from '../../site/src/app/services/projectAssetService';
@@ -62,9 +62,7 @@ import '../lib/summernote/dist/summernote.min';
 import '../lib/summernoteExtensions/summernote-ext-addNote.js';
 import '../lib/summernoteExtensions/summernote-ext-print.js'
 
-export function createTeacherAngularJSModule() {
-    createCommonModule();
-    return angular.module('teacher', [
+    angular.module('teacher', [
       'common',
       'angular-inview',
       'addComponentModule',
@@ -104,7 +102,8 @@ export function createTeacherAngularJSModule() {
     .component('nodeAdvancedBranchAuthoringComponent', NodeAdvancedBranchAuthoringComponent)
     .component('nodeAdvancedConstraintAuthoringComponent', NodeAdvancedConstraintAuthoringComponent)
     .component('nodeAdvancedGeneralAuthoringComponent', NodeAdvancedGeneralAuthoringComponent)
-    .component('nodeAdvancedJsonAuthoringComponent', NodeAdvancedJsonAuthoringComponent)
+    .directive('nodeAdvancedJsonAuthoringComponent', downgradeComponent(
+        { component: NodeAdvancedJsonAuthoringComponent }) as angular.IDirectiveFactory)
     .component('nodeAdvancedPathAuthoringComponent', NodeAdvancedPathAuthoringComponent)
     .directive('advancedProjectAuthoringComponent', downgradeComponent(
         { component: AdvancedProjectAuthoringComponent }) as angular.IDirectiveFactory)
@@ -483,4 +482,3 @@ export function createTeacherAngularJSModule() {
         $mdThemingProvider.setDefaultTheme('at');
       }
     ]);
-  }

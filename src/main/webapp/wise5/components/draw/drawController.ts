@@ -111,7 +111,7 @@ class DrawController extends ComponentController {
       this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
       this.isResetButtonVisible = true;
       this.drawingToolId = 'drawingtool_' + this.nodeId + '_' + this.componentId;
-    } else if (this.isGradingMode() || this.isGradingRevisionMode() || this.isOnlyShowWorkMode()) {
+    } else if (this.isGradingMode() || this.isGradingRevisionMode()) {
       const componentState = this.$scope.componentState;
       if (componentState != null) {
         if (this.isGradingRevisionMode()) {
@@ -289,7 +289,7 @@ class DrawController extends ComponentController {
       });
     }
 
-    if (this.isGradingMode() || this.isGradingRevisionMode() || this.isOnlyShowWorkMode()) {
+    if (this.isGradingMode() || this.isGradingRevisionMode()) {
       $('#' + this.drawingToolId)
         .find('.dt-tools')
         .hide();
