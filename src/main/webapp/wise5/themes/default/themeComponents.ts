@@ -31,7 +31,8 @@ const ThemeComponents = angular.module('theme.components', [])
   .directive('helpIcon',
     downgradeComponent({ component: HelpIconComponent }) as angular.IDirectiveFactory)
   .component('navItem', NavItem)
-  .component('nodeStatusIcon', NodeStatusIcon)
+  .directive('nodeStatusIcon',
+    downgradeComponent({ component: NodeStatusIcon}) as angular.IDirectiveFactory)
   .component('stepTools', StepTools);
 
 export default ThemeComponents;

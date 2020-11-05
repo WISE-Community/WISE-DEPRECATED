@@ -1,23 +1,21 @@
+import { Component, Input } from "@angular/core";
 import { StudentDataService } from "../../../../services/studentDataService";
 
-class NodeStatusIconController {
-  nodeId: string;
-  nodeStatus: any;
+@Component({
+  selector: 'node-status-icon',
+  styleUrls: ['node-status-icon.component.scss'],
+  templateUrl: 'node-status-icon.component.html'
+})
+export class NodeStatusIcon {
 
-  static $inject = ['StudentDataService'];
+  @Input()
+  nodeId: string;
+
+  nodeStatus: any;
 
   constructor(private StudentDataService: StudentDataService) {}
 
-  $onChanges() {
+  ngOnChanges() {
     this.nodeStatus = this.StudentDataService.nodeStatuses[this.nodeId];
   }
-}
-
-export const NodeStatusIcon = {
-  bindings: {
-    nodeId: '<',
-    customClass: '<'
-  },
-  controller: NodeStatusIconController,
-  templateUrl: `/wise5/themes/default/themeComponents/nodeStatusIcon/node-status-icon.component.html`
 }
