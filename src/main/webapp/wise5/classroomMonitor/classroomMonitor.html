@@ -27,6 +27,8 @@
     <md-content id="content" flex role="main" layout="column" class="l-main l-main--with-toolbar" flex role="main">
         <div ui-view autoscroll="true"></div>
     </md-content>
-    <cm-side-menu ng-if="classroomMonitorController.showToolbar" state="classroomMonitorController.$state" views="classroomMonitorController.views" on-menu-toggle="classroomMonitorController.toggleMenu()"></cm-side-menu>
+    <side-menu ng-if="classroomMonitorController.showToolbar"
+        state="classroomMonitorController.$state"
+        views="classroomMonitorController.views"></side-menu>
     <notebook workgroup-id="::classroomMonitorController.workgroupId"></notebook>
 </div>

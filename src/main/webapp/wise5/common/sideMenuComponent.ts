@@ -1,21 +1,10 @@
 'use strict';
 
-class SideMenuController {
-  onMenuToggle: any;
-  constructor() {}
-
-  toggleMenu() {
-    this.onMenuToggle();
-  }
-}
-
 const SideMenu = {
   bindings: {
     state: '<',
-    views: '<',
-    onMenuToggle: '&'
+    views: '<'
   },
-  controller: SideMenuController,
   template: `<div class="menu-sidebar">
       <md-button ng-repeat="(key, value) in $ctrl.views"
              id="{{ ::value.id }}"

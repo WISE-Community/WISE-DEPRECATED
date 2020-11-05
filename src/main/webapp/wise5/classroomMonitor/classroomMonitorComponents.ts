@@ -11,14 +11,14 @@ import './classroomMonitorComponents/notebook/notebook';
 import * as angular from 'angular';
 
 const ClassroomMonitorComponents = angular.module('classroomMonitor.components', [
+  'cmShared',
   'manageStudents',
   'milestones',
   'nodeGrading',
   'nodeProgress',
   'notebook',
   'studentGrading',
-  'studentProgress',
-  'shared'
+  'studentProgress'
 ]);
 
 export default ClassroomMonitorComponents;

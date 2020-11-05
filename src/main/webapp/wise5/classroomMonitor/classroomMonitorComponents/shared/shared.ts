@@ -11,7 +11,6 @@ import NodeInfo from './nodeInfo/nodeInfo';
 import NotificationsMenu from './notificationsMenu/notificationsMenu';
 import PauseScreensMenu from './pauseScreensMenu/pauseScreensMenu';
 import PeriodSelect from './periodSelect/periodSelect';
-import SideMenu from './sideMenu/sideMenu';
 import { StatusIconComponent } from '../../../../site/src/app/classroom-monitor/status-icon/status-icon.component';
 import Toolbar from './toolbar/toolbar';
 import TopBar from './topBar/topBar';
@@ -24,7 +23,7 @@ import { WorkgroupNodeScoreComponent } from './workgroupNodeScore/workgroup-node
 import { downgradeComponent } from '@angular/upgrade/static';
 
 const Shared = angular
-  .module('shared', [])
+  .module('cmShared', [])
   .component('alertStatusCorner', AlertStatusCorner)
   .component('alertStatusIcon', AlertStatusIcon)
   .component('componentGrading', ComponentGrading)
@@ -37,7 +36,6 @@ const Shared = angular
   .component('nodeInfo', NodeInfo)
   .component('pauseScreensMenu', PauseScreensMenu)
   .component('periodSelect', PeriodSelect)
-  .component('cmSideMenu', SideMenu)
   .directive('statusIcon',
       downgradeComponent({ component: StatusIconComponent }) as angular.IDirectiveFactory)
   .component('cmToolbar', Toolbar)
