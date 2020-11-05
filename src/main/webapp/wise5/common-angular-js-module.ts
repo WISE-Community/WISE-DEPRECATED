@@ -68,6 +68,7 @@ window['SockJS'] = SockJS;
 window['Stomp'] = StompJS.Stomp;
 import './lib/angular-summernote/dist/angular-summernote.min';
 import './themes/default/theme';
+import SideMenu from './common/sideMenuComponent';
 
 export function createCommonModule() {
   return angular.module('common', [
@@ -116,6 +117,7 @@ export function createCommonModule() {
   .factory('TagService', downgradeInjectable(TagService))
   .factory('StudentDataService', downgradeInjectable(StudentDataService))
   .factory('UtilService', downgradeInjectable(UtilService))
+  .component('sideMenu', SideMenu)
   .config([
       '$httpProvider',
       '$locationProvider',
