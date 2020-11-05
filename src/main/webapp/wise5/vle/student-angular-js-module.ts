@@ -2,8 +2,7 @@ import '../lib/jquery/jquery-global';
 import '../lib/bootstrap/js/bootstrap.min'
 import * as angular from 'angular';
 import { downgradeInjectable } from '@angular/upgrade/static';
-import { createCommonModule } from '../common-angular-js-module';
-import Filters from '../filters/filters';
+import '../common-angular-js-module';
 import NavigationController from '../vle/navigation/navigationController';
 import NodeController from '../vle/node/nodeController';
 import { StudentWebSocketService } from '../services/studentWebSocketService';
@@ -14,7 +13,6 @@ import '../lib/summernoteExtensions/summernote-ext-addNote.js';
 import '../lib/summernoteExtensions/summernote-ext-print.js'
 
 export function createStudentAngularJSModule(type = 'preview') {
-  createCommonModule();
   return angular.module(type, [
     'common',
     'ngOnload',
@@ -28,7 +26,6 @@ export function createStudentAngularJSModule(type = 'preview') {
   .controller('NavigationController', NavigationController)
   .controller('NodeController', NodeController)
   .controller('VLEController', VLEController)
-  .filter('Filters', Filters)
   .config([
     '$stateProvider',
     '$translatePartialLoaderProvider',

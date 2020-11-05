@@ -19,6 +19,7 @@ export class EditRunWarningDialogComponent implements OnInit {
               private router: Router,
               private configService: ConfigService) {
     this.run = data.run;
+    this.dialog.closeAll();
   }
 
   ngOnInit() {
