@@ -172,33 +172,31 @@
 
                     </div>
 
-                    <sec:authorize access="hasRole('ROLE_ADMINISTRATOR')">
-                        <div class="sectionHead">
-                            <spring:message code='admin.index.projectManagement' />
-                        </div>
-                        <div class="sectionContent">
-                            <spring:message code='admin.index.manageProjectBy' />
-                            <form style="display:inline" id="lookupProjectForm" action="${contextPath}/admin/project/manageallprojects.html" method="GET" onsubmit="return validateForm('project')">
-                                <select name="projectLookupType" id="projectLookupType">
-                                    <option value="id"><spring:message code='id' /></option>
-                                    <option value="title"><spring:message code='title' /></option>
-                                    <option value="author"><spring:message code='author' /></option>
-                                </select>
-                                <input type="text" name="projectLookupValue" id="projectLookupValue" size="20"></input>
-                                <input type="Submit" value="Go"></input>
-                            </form> |
-                            <a href="${contextPath}/admin/project/manageallprojects.html">
-                                <spring:message code='admin.index.manageAllProjects' /></a>
-                            <h5>
-                                <a href="${contextPath}/admin/project/currentlyAuthoredProjects">
-                                    <spring:message code='admin.index.viewCurrentAuthors' /></a>
-                            </h5>
-                            <h5>
-                                <a href="${contextPath}/admin/project/import">
-                                    <spring:message code='admin.index.importProject' /></a>
-                            </h5>
-                        </div>
-                    </sec:authorize>
+                    <div class="sectionHead">
+                        <spring:message code='admin.index.projectManagement' />
+                    </div>
+                    <div class="sectionContent">
+                        <spring:message code='admin.index.manageProjectBy' />
+                        <form style="display:inline" id="lookupProjectForm" action="${contextPath}/admin/project/manageallprojects.html" method="GET" onsubmit="return validateForm('project')">
+                            <select name="projectLookupType" id="projectLookupType">
+                                <option value="id"><spring:message code='id' /></option>
+                                <option value="title"><spring:message code='title' /></option>
+                                <option value="author"><spring:message code='author' /></option>
+                            </select>
+                            <input type="text" name="projectLookupValue" id="projectLookupValue" size="20"></input>
+                            <input type="Submit" value="Go"></input>
+                        </form> |
+                        <a href="${contextPath}/admin/project/manageallprojects.html">
+                            <spring:message code='admin.index.manageAllProjects' /></a>
+                        <h5>
+                            <a href="${contextPath}/admin/project/currentlyAuthoredProjects">
+                                <spring:message code='admin.index.viewCurrentAuthors' /></a>
+                        </h5>
+                        <h5>
+                            <a href="${contextPath}/admin/project/import">
+                                <spring:message code='admin.index.importProject' /></a>
+                        </h5>
+                    </div>
 
                     <div class="sectionHead">
                         <spring:message code='misc' />
