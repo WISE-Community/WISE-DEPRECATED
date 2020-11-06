@@ -13,9 +13,14 @@ export class NodeStatusIcon {
 
   nodeStatus: any;
 
+  ariaLabel: string;
+
   constructor(private StudentDataService: StudentDataService) {}
 
   ngOnChanges() {
     this.nodeStatus = this.StudentDataService.nodeStatuses[this.nodeId];
+    this.ariaLabel = this.nodeStatus.isCompleted ? $localize`Completed` : '' +
+        this.nodeStatus.isSuccess ? $localize` with Success` : '' +
+        this.nodeStatus.isWarn ? $localize` with Warning` : '';
   }
 }

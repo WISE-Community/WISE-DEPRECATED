@@ -124,7 +124,7 @@ const WorkgroupItem = {
                                layout-wrap>
                     <div layout="row" flex>
                         <div flex layout="row" layout-align="start center">
-                            <workgroup-info has-alert="$ctrl.hasAlert" has-new-alert="$ctrl.hasNewAlert" has-new-work="$ctrl.hasNewWork" usernames="{{$ctrl.workgroupData.displayNames}}" workgroup-id="$ctrl.workgroupId"></workgroup-info>
+                            <workgroup-info [has-alert]="$ctrl.hasAlert" [has-new-alert]="$ctrl.hasNewAlert" [has-new-work]="$ctrl.hasNewWork" [usernames]="$ctrl.workgroupData.displayNames" [workgroup-id]="$ctrl.workgroupId"></workgroup-info>
                         </div>
                         <div flex="{{$ctrl.showScore ? 30 : 20}}" layout="row" layout-align="center center">
                             <workgroup-node-status status-text="{{$ctrl.statusText}}" status-class="{{$ctrl.statusClass}}"></workgroup-node-status>
