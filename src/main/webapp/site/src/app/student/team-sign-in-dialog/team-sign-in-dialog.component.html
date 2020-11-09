@@ -66,5 +66,6 @@
 </mat-dialog-content>
 <mat-dialog-actions fxLayoutAlign="end" fxLayoutGap="8px">
   <button mat-button mat-dialog-close i18n>Cancel</button>
-  <button mat-flat-button (click)="launchRun()" [disabled]="!isCanLaunch()" i18n>Launch Unit</button>
+  <button mat-flat-button color="primary" (click)="launchRun()" [disabled]="!isCanLaunch()" 
+          i18n>Launch Unit</button>
 </mat-dialog-actions>
