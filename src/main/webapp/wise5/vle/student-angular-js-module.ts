@@ -11,6 +11,7 @@ import { VLEProjectService } from '../vle/vleProjectService';
 import '../lib/summernote/dist/summernote.min';
 import '../lib/summernoteExtensions/summernote-ext-addNote.js';
 import '../lib/summernoteExtensions/summernote-ext-print.js'
+import { NavItem } from './nav-item/nav-item.component';
 
 export function createStudentAngularJSModule(type = 'preview') {
   return angular.module(type, [
@@ -23,6 +24,7 @@ export function createStudentAngularJSModule(type = 'preview') {
   ])
   .factory('ProjectService', downgradeInjectable(VLEProjectService))
   .factory('StudentWebSocketService', downgradeInjectable(StudentWebSocketService))
+  .component('navItem', NavItem)
   .controller('NavigationController', NavigationController)
   .controller('NodeController', NodeController)
   .controller('VLEController', VLEController)
