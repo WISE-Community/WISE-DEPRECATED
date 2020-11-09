@@ -182,4 +182,8 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
     this.transferRunWarning = false;
     this.teacherSearchControl.setValue('');
   }
+
+  copyProject() {
+    this.teacherService.copyProject(this.project);
+  }
 }

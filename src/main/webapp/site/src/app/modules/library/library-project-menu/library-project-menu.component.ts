@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Project } from '../../../domain/project';
 import { TeacherService } from '../../../teacher/teacher.service';
@@ -59,10 +59,7 @@ export class LibraryProjectMenuComponent implements OnInit {
   }
 
   copyProject() {
-    this.dialog.open(CopyProjectDialogComponent, {
-      data: { project: this.project },
-      panelClass: 'mat-dialog--sm'
-    });
+    this.teacherService.copyProject(this.project);
   }
 
   editProject() {

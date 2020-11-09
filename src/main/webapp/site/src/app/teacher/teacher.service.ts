@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { MatDialog } from '@angular/material/dialog';
 import { Project } from '../domain/project';
 import { Teacher } from '../domain/teacher';
 import { Run } from '../domain/run';
 import { Course } from '../domain/course';
+import { CopyProjectDialogComponent } from '../modules/library/copy-project-dialog/copy-project-dialog.component';
 
 @Injectable()
 export class TeacherService {
@@ -39,8 +41,15 @@ export class TeacherService {
   public newRunSource$ = this.newRunSource.asObservable();
   private updateProfileUrl = '/api/teacher/profile/update';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, public dialog: MatDialog) { }
 
+  copyProject(project: Project) {
+    this.dialog.open(CopyProjectDialogComponent, {
+      data: { project: project },
+      panelClass: 'mat-dialog--sm'
+    });
+  }
+  
   getRuns(): Observable<Run[]> {
     const headers = new HttpHeaders({ 'Cache-Control': 'no-cache' });
     return this.http.get<Run[]>(this.runsUrl, { headers: headers });
