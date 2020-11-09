@@ -422,9 +422,6 @@
                                                 |&nbsp;<a onclick="if(confirm('<spring:message code="teacher.management.projectruntabs.editWarning"/>')){window.top.location='${contextPath}/author/authorproject.html?projectId=${run.project.id}';} return true;"><img class="icon" alt="edit" src="${contextPath}/<spring:theme code="edit"/>" /><span><spring:message code="teacher.management.projectruntabs.edit"/></span></a>
                                             </li>
                                         </ul>
-                                        <ul class="actionList">
-                                            <li><a id="shareRun_${run.id}" class="shareRun" title="<spring:message code="teacher.management.projectruntabs.sharingPermissionsTitle"/> ${run.name} (<spring:message code="run_id"/> ${run.id})"><img class="icon" alt="share" src="${contextPath}/<spring:theme code="agent"/>" /><span><spring:message code="teacher.management.projectruntabs.sharingPermissions"/></span></a></li>
-                                        </ul>
                                     </td>
                                     <td style="display:none;">${run.starttime}</td>
                                     <td style="display:none;"></td>
