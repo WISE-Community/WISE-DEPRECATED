@@ -1,37 +1,55 @@
 "use strict";
 
+import { Component, Input } from "@angular/core";
 import { Subscription } from "rxjs";
 import { ProjectService } from "../../services/projectService";
 import { StudentDataService } from "../../services/studentDataService";
 
-class NavItemController {
+@Component({
+  selector: 'nav-item',
+  styleUrls: ['nav-item.component.scss'],
+  templateUrl: 'nav-item.component.html'
+})
+export class NavItemComponent {
 
   currentNode: any;
   currentNodeChangedSubscription: Subscription;
   expanded: boolean = false;
   isCurrentNode: boolean;
   isGroup: boolean;
+  isPrevStep: boolean = false;
   item: any;
+  navItemExpandedSubscription: Subscription;
+
+  @Input()
   nodeId: string;
   nodeStatus: any;
   nodeTitle: string;
+
+  @Input()
   showPosition: any;
+
+  @Input()
   type: string;
 
-  static $inject = ['$scope', 'ProjectService', 'StudentDataService'];
-
-  constructor(private $scope: any, private ProjectService: ProjectService,
+  constructor(private ProjectService: ProjectService,
       private StudentDataService: StudentDataService) {
   }
 
-  $onInit() {
+  ngOnInit() {
     this.item = this.ProjectService.idToNode[this.nodeId];
     this.isGroup = this.ProjectService.isGroupNode(this.nodeId);
     this.nodeStatus = this.StudentDataService.nodeStatuses[this.nodeId];
-    this.nodeTitle = this.showPosition ? (this.ProjectService.nodeIdToNumber[this.nodeId] + ': ' + this.item.title) : this.item.title;
+    this.nodeTitle = this.showPosition ? (this.ProjectService.nodeIdToNumber[this.nodeId] + ': '
+        + this.item.title) : this.item.title;
     this.currentNode = this.StudentDataService.currentNode;
     this.isCurrentNode = (this.currentNode.id === this.nodeId);
-
+    this.navItemExpandedSubscription = this.StudentDataService.navItemIsExpanded$
+        .subscribe(({nodeId, isExpanded}) => {
+          if (nodeId === this.nodeId) {
+            this.expanded = isExpanded;
+          }
+        });
     this.currentNodeChangedSubscription = this.StudentDataService.currentNodeChanged$
         .subscribe(({previousNode: oldNode, currentNode: newNode}) => {
       this.currentNode = newNode;
@@ -43,7 +61,7 @@ class NavItemController {
       if (oldNode) {
         isPrev = (this.nodeId === oldNode.id);
         if (this.StudentDataService.previousStep) {
-          this.$scope.$parent.isPrevStep = (this.nodeId === this.StudentDataService.previousStep.id);
+          this.isPrevStep = (this.nodeId === this.StudentDataService.previousStep.id);
         }
       }
       if (this.isGroup) {
@@ -63,13 +81,17 @@ class NavItemController {
             }
           }
         }
-        this.$scope.$parent.itemExpanded = this.expanded;
       } else {
         if (isPrev && this.ProjectService.isNodeDescendentOfGroup(this.item, newNode)) {
           this.zoomToElement();
         }
       }
     });
+  }
+
+  ngOnDestroy() {
+    this.currentNodeChangedSubscription.unsubscribe();
+    this.navItemExpandedSubscription.unsubscribe();
   }
 
   zoomToElement() {
@@ -86,18 +108,9 @@ class NavItemController {
           this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(this.nodeId);
         }
       }
+      this.StudentDataService.setNavItemExpanded(this.nodeId, this.expanded);
     } else {
       this.StudentDataService.endCurrentNodeAndSetCurrentNodeByNodeId(this.nodeId);
     }
   };
 }
-
-export const NavItem = {
-  bindings: {
-    nodeId: '<',
-    showPosition: '<',
-    type: '@'
-  },
-  templateUrl: '/wise5/vle/nav-item/nav-item.component.html',
-  controller: NavItemController
-};
