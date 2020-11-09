@@ -101464,13 +101464,31 @@ class insert_wise_asset_editing_InsertWISEAssetEditing extends plugin_Plugin {
   init() {
     this.editor.listenTo(this.editor, 'insertWISEAsset', (eventInfo, { fullFilePath }) => {
       this.editor.model.change((writer) => {
-        const imageElement = writer.createElement('image', {
-          src: fullFilePath,
-        });
-        this.editor.model.insertContent(imageElement, this.editor.model.document.selection);
+        if (this.isVideo(fullFilePath)) {
+          const videoElement = writer.createElement('video', {
+            src: fullFilePath,
+            controls: true,
+          });
+          this.editor.model.insertContent(videoElement, this.editor.model.document.selection);
+        } else {
+          const imageElement = writer.createElement('image', {
+            src: fullFilePath,
+          });
+          this.editor.model.insertContent(imageElement, this.editor.model.document.selection);
+        }
       });
     });
     this.editor.commands.add('openWISEAssetChooser', new open_wise_asset_chooser_OpenWISEAssetChooser(this.editor));
+  }
+
+  isVideo(fullFilePath) {
+    const videoFileExtensions = ['mp4', 'mov', 'mkv', 'webm', 'wmv', 'avi'];
+    const fileExtension = this.getFileExtension(fullFilePath);
+    return videoFileExtensions.includes(fileExtension);
+  }
+
+  getFileExtension(fullFilePath) {
+    return fullFilePath.split('.').pop();
   }
 }
 
@@ -101507,120 +101525,216 @@ class insert_wise_asset_InsertWISEAsset extends plugin_Plugin {
   }
 }
 
-// CONCATENATED MODULE: ./src/insert-wise-link/open-wise-link-chooser.js
+// CONCATENATED MODULE: ./src/video/utils.js
+/**
+ * @license Copyright (c) 2003-2020, CKSource - Frederico Knabben. All rights reserved.
+ * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
+ */
 
 
-class open_wise_link_chooser_OpenWISEAssetChooser extends Command {
-  execute() {
-    console.log('OpenWISELinkChooser.execute()');
-    this.editor.fire('openWISELinkChooser', this.editor);
+
+/**
+ * Converts a given {@link module:engine/view/element~Element} to an video widget:
+ * * Adds a {@link module:engine/view/element~Element#_setCustomProperty custom property} allowing to recognize the video widget element.
+ * * Calls the {@link module:widget/utils~toWidget} function with the proper element's label creator.
+ *
+ * @param {module:engine/view/element~Element} viewElement
+ * @param {module:engine/view/downcastwriter~DowncastWriter} writer An instance of the view writer.
+ * @param {String} label The element's label. It will be concatenated with the video `alt` attribute if one is present.
+ * @returns {module:engine/view/element~Element}
+ */
+function toVideoWidget(viewElement, writer, label) {
+  writer.setCustomProperty('video', true, viewElement);
+
+  return toWidget(viewElement, writer, { label: labelCreator });
+
+  function labelCreator() {
+    return 'video';
   }
 }
 
-// CONCATENATED MODULE: ./src/insert-wise-link/insert-wise-link-editing.js
+/**
+ * Get view `<video>` element from the view widget (`<figure>`).
+ *
+ * Assuming that video is always a first child of a widget (ie. `figureView.getChild( 0 )`) is unsafe as other features might
+ * inject their own elements to the widget.
+ *
+ * The `<video>` can be wrapped to other elements, e.g. `<a>`. Nested check required.
+ *
+ * @param {module:engine/view/element~Element} figureView
+ * @returns {module:engine/view/element~Element}
+ */
+function getViewVideoFromWidget(figureView) {
+  const figureChildren = [];
+
+  for (const figureChild of figureView.getChildren()) {
+    figureChildren.push(figureChild);
+
+    if (figureChild.is('element')) {
+      figureChildren.push(...figureChild.getChildren());
+    }
+  }
+
+  return figureChildren.find((viewChild) => viewChild.is('element', 'video'));
+}
+
+// CONCATENATED MODULE: ./src/video/converters.js
+/**
+ * @license Copyright (c) 2003-2020, CKSource - Frederico Knabben. All rights reserved.
+ * For licensing, see LICENSE.md or https://ckeditor.com/legal/ckeditor-oss-license
+ */
 
 
 
-class insert_wise_link_editing_InsertWISELinkEditing extends plugin_Plugin {
+
+/**
+ * Returns a function that converts the video view representation:
+ *
+ *		<figure class="video"><video src="..." alt="..."></video></figure>
+ *
+ * to the model representation:
+ *
+ *		<video src="..." alt="..."></video>
+ *
+ * The entire content of the `<figure>` element except the first `<video>` is being converted as children
+ * of the `<video>` model element.
+ *
+ * @returns {Function}
+ */
+function converters_viewFigureToModel() {
+  return (dispatcher) => {
+    dispatcher.on('element:figure', converter);
+  };
+
+  function converter(evt, data, conversionApi) {
+    // Do not convert if this is not an "video figure".
+    if (!conversionApi.consumable.test(data.viewItem, { name: true, classes: 'video' })) {
+      return;
+    }
+
+    // Find an video element inside the figure element.
+    const viewVideo = getViewVideoFromWidget(data.viewItem);
+
+    // Do not convert if video element is absent, is missing src attribute or was already converted.
+    if (
+      !viewVideo ||
+      !viewVideo.hasAttribute('src') ||
+      !conversionApi.consumable.test(viewVideo, { name: true })
+    ) {
+      return;
+    }
+
+    // Convert view video to model video.
+    const conversionResult = conversionApi.convertItem(viewVideo, data.modelCursor);
+
+    // Get video element from conversion result.
+    const modelVideo = first_first(conversionResult.modelRange.getItems());
+
+    // When video wasn't successfully converted then finish conversion.
+    if (!modelVideo) {
+      return;
+    }
+
+    // Convert rest of the figure element's children as an video children.
+    conversionApi.convertChildren(data.viewItem, modelVideo);
+
+    conversionApi.updateConversionResult(modelVideo, data);
+  }
+}
+
+function converters_modelToViewAttributeConverter(attributeKey) {
+  return (dispatcher) => {
+    dispatcher.on(`attribute:${attributeKey}:video`, converter);
+  };
+
+  function converter(evt, data, conversionApi) {
+    if (!conversionApi.consumable.consume(data.item, evt.name)) {
+      return;
+    }
+
+    const viewWriter = conversionApi.writer;
+    const figure = conversionApi.mapper.toViewElement(data.item);
+    const video = getViewVideoFromWidget(figure);
+
+    viewWriter.setAttribute(data.attributeKey, data.attributeNewValue || '', video);
+  }
+}
+
+// CONCATENATED MODULE: ./src/video/videoediting.js
+
+
+
+
+
+class videoediting_VideoEditing extends plugin_Plugin {
   init() {
-    console.log('InsertWISELinkEditing.init()');
-    this.editor.listenTo(this.editor, 'insertWISELink', (eventInfo, params) => {
-      this.editor.model.change((writer) => {
-        console.log('InsertWISELinkEditing');
-        console.log(params);
-        // const linkElement = writer.createAttributeElement('a', {});
-        // writer.setCustomProperty('wiselink', true, linkElement);
+    const editor = this.editor;
+    const schema = editor.model.schema;
+    const t = editor.t;
+    const conversion = editor.conversion;
 
-        const linkElement = writer.createText(params.wiseLinkText);
-        writer.setAttribute('linkHref', '#', linkElement);
-        // writer.setAttribute('type', params.wiseLinkType, linkElement);
-        writer.setAttribute('wiselink', 'true', linkElement);
-        writer.setAttribute('link-text', params.wiseLinkText, linkElement);
-        writer.setAttribute('node-id', params.wiseLinkNodeId, linkElement);
-        writer.setAttribute('component-id', params.wiseLinkComponentId, linkElement);
-        // writer.setAttribute('node-id', params.wiseLinkNodeId, linkElement);
-        // writer.setAttribute('component-id', params.wiseLinkComponentId, linkElement);
-        // writer.setAttribute('link-text', params.wiseLinkText, linkElement);
-
-        // const additionalParams = {
-        //   wiselink: true,
-        //   'node-id': params.nodeId,
-        //   'component-id': params.componentId,
-        // };
-        // const linkElement = writer.createElement('linkHref', additionalParams);
-        // if (params.wiseLinkType === 'button') {
-        // } else {
-        // }
-
-        // this.editor.execute('link', url);
-
-        // const imageElement = writer.createElement('image', {
-        //   src: fullFilePath,
-        // });
-        this.editor.model.insertContent(linkElement, this.editor.model.document.selection);
-      });
+    schema.register('video', {
+      isObject: true,
+      isBlock: true,
+      allowWhere: '$block',
+      allowAttributes: ['src', 'controls', 'width', 'height'],
     });
-    this.editor.commands.add('openWISELinkChooser', new open_wise_link_chooser_OpenWISEAssetChooser(this.editor));
-    this.registerCustomAttribute('wiselink');
-    this.registerCustomAttribute('link-text');
-    this.registerCustomAttribute('node-id');
-    this.registerCustomAttribute('component-id');
-  }
 
-  registerCustomAttribute(customAttribute) {
-    this.editor.model.schema.extend('$text', { allowAttributes: customAttribute });
-    this.editor.conversion.for('downcast').attributeToElement({
-      model: customAttribute,
-      view: (attributeValue, { writer }) => {
-        const attributeKeyValue = {};
-        attributeKeyValue[customAttribute] = attributeValue;
-        const linkElement = writer.createAttributeElement('a', attributeKeyValue, { priority: 5 });
-        writer.setCustomProperty('link', true, linkElement);
-        return linkElement;
-      },
-      converterPriority: 'low',
+    conversion.for('dataDowncast').elementToElement({
+      model: 'video',
+      view: (modelElement, { writer }) => createVideoViewElement(writer),
     });
-    this.editor.conversion.for('upcast').attributeToAttribute({
-      view: {
-        name: 'a',
-        key: customAttribute,
-        converterPriority: 'low',
-      },
+
+    conversion.for('editingDowncast').elementToElement({
+      model: 'video',
+      view: (modelElement, { writer }) =>
+        toVideoWidget(createVideoViewElement(writer), writer, t('video widget')),
     });
+
+    conversion
+      .for('downcast')
+      .add(converters_modelToViewAttributeConverter('src'))
+      .add(converters_modelToViewAttributeConverter('controls'))
+      .add(converters_modelToViewAttributeConverter('width'))
+      .add(converters_modelToViewAttributeConverter('height'));
+
+    conversion
+      .for('upcast')
+      .elementToElement({
+        view: {
+          name: 'video',
+          attributes: {
+            src: true,
+            controls: true,
+          },
+        },
+        model: (viewVideo, { writer }) =>
+          writer.createElement('video', {
+            src: viewVideo.getAttribute('src'),
+            controls: viewVideo.getAttribute('controls'),
+            width: viewVideo.getAttribute('width'),
+            height: viewVideo.getAttribute('height'),
+          }),
+      })
+      .add(converters_viewFigureToModel());
   }
 }
+function createVideoViewElement(writer) {
+  const emptyElement = writer.createEmptyElement('video');
+  const figure = writer.createContainerElement('figure', { class: 'video' });
 
-// CONCATENATED MODULE: ./src/insert-wise-link/insert-wise-link-ui.js
+  writer.insert(writer.createPositionAt(figure, 0), emptyElement);
 
-
-
-
-class insert_wise_link_ui_InsertWiseLinkUI extends plugin_Plugin {
-  init() {
-    console.log('InsertWISELinkUI.init()');
-    this.editor.ui.componentFactory.add('insertWISELink', (locale) => {
-      const buttonView = new buttonview_ButtonView(locale);
-      buttonView.set({
-        label: 'Insert WISE Link',
-        icon: icons_image,
-        tooltip: true,
-      });
-      const command = this.editor.commands.get('openWISELinkChooser');
-      buttonView.bind('isOn', 'isEnabled').to(command, 'value', 'isEnabled');
-      this.listenTo(buttonView, 'execute', () => this.editor.execute('openWISELinkChooser'));
-      return buttonView;
-    });
-  }
+  return figure;
 }
 
-// CONCATENATED MODULE: ./src/insert-wise-link/insert-wise-link.js
+// CONCATENATED MODULE: ./src/video/video.js
 
 
 
-
-class insert_wise_link_InsertWISELink extends plugin_Plugin {
+class video_Video extends plugin_Plugin {
   static get requires() {
-    return [insert_wise_link_editing_InsertWISELinkEditing, insert_wise_link_ui_InsertWiseLinkUI];
+    return [videoediting_VideoEditing];
   }
 }
 
@@ -101688,6 +101802,7 @@ ckeditor_ClassicEditor.builtinPlugins = [
   tabletoolbar_TableToolbar,
   texttransformation_TextTransformation,
   insert_wise_asset_InsertWISEAsset,
+  video_Video,
 ];
 
 // Editor configuration.
