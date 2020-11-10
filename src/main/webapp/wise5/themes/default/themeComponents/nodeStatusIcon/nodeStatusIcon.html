@@ -1,5 +1,0 @@
-<md-icon ng-if="nodeStatusIconCtrl.nodeStatus.isCompleted || nodeStatusIconCtrl.nodeStatus.isWarn"
-         ng-class="[nodeStatusIconCtrl.customClass, {'success': nodeStatusIconCtrl.nodeStatus.isSuccess, 'warn': nodeStatusIconCtrl.nodeStatus.isWarn}]"
-         aria-label="{{nodeStatusIconCtrl.nodeStatus.isCompleted ? 'Completed' : ''}}{{nodeStatusIconCtrl.nodeStatus.isSuccess ? ' with Success' : ''}}{{nodeStatusIconCtrl.nodeStatus.isWarn ? ' with Warning' : ''}}">
-         {{nodeStatusIconCtrl.nodeStatus.isWarn ? 'error' : 'check_circle'}}
-</md-icon>

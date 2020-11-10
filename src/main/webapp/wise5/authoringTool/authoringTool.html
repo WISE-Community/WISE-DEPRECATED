@@ -33,9 +33,8 @@
       flex role="main">
     <div ui-view></div>
   </md-content>
-  <at-side-menu ng-if="authoringToolController.showToolbar"
+  <side-menu ng-if="authoringToolController.showToolbar"
       state="authoringToolController.$state"
-      views="authoringToolController.views"
-      on-menu-toggle="authoringToolController.toggleMenu()">
-  </at-side-menu>
+      views="authoringToolController.views"></side-menu>
+  </side-menu>
 </div>
