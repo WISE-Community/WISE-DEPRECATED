@@ -5,7 +5,7 @@
 <span *ngIf="nodeStatus.isWarn; else notWarn" class="cdk-visually-hidden"
       i18n>Completed with warning</span>
 <ng-template #notWarn>
-  <span *ngIf="nodeStatus.isCompleted && nodeStatus.isSuccess; else notSuccess" 
+  <span *ngIf="nodeStatus.isCompleted && nodeStatus.isSuccess; else notSuccess"
         class="cdk-visually-hidden" i18n>Completed with success</span>
 </ng-template>
 <ng-template #notSuccess>

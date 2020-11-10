@@ -1,0 +1,12 @@
+<div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+  <mat-icon class="md-36" style="color: {{ avatarColor }};"> account_circle </mat-icon>
+  <div class="heavy">
+      {{ usernames }} <span class="md-caption text-secondary more" i18n>(Team {{workgroupId}})</span>
+      <status-icon *ngIf="hasAlert"
+                   [iconLabel]="alertLabel"
+                   [iconTooltip]="alertLabel"
+                   [iconName]="alertIconName"
+                   [iconClass]="alertIconClass"></status-icon>
+      <span *ngIf="hasNewWork" class="badge badge--info animate-fade" i18n>New</span>
+  </div>
+</div>
