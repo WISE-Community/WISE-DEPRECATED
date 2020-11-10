@@ -6472,6 +6472,10 @@
           <context context-type="sourcefile">app/classroom-monitor/component-new-work-badge/component-new-work-badge.component.ts</context>
           <context context-type="linenumber">1</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/classroomMonitor/classroomMonitorComponents/nodeGrading/workgroupInfo/workgroup-info.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
         <target state="needs-translation">New</target>
       </trans-unit>
       <trans-unit datatype="html" id="397caaa290032309390882c11de492805dead8e4">
@@ -6481,6 +6485,14 @@
           <context context-type="linenumber">2</context>
         </context-group>
         <target state="needs-translation">Edit Step JSON</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="f9c52903219e583ddefb23cd102d2057504ac980">
+        <source>(Team <x equiv-text="{{workgroupId}}" id="INTERPOLATION"/>)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/classroomMonitor/classroomMonitorComponents/nodeGrading/workgroupInfo/workgroup-info.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <target state="needs-translation">(Team <x equiv-text="{{workgroupId}}" id="INTERPOLATION"/>)</target>
       </trans-unit>
       <trans-unit datatype="html" id="2d1bd68dd6cbd034f0b62c1dfabf7e17ee27081c">
         <source><x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>Register<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/> or <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK_1"/>Sign In<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/></source>
