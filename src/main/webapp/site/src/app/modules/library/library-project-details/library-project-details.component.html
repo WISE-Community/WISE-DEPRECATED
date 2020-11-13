@@ -21,8 +21,8 @@
       </div>
     </div>
     <span fxFlex></span>
-    <app-library-project-menu *ngIf="isTeacher && !isRunProject && project.wiseVersion !== 4"
-                              [project]="project"></app-library-project-menu>
+    <app-library-project-menu *ngIf="isTeacher && project.wiseVersion !== 4" [project]="project"
+                              [isRun]="isRunProject"></app-library-project-menu>
   </div>
   <div class="info-block">
     <div class="library-project-details__info">

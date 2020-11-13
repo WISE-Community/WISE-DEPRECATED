@@ -8,7 +8,7 @@ import { EditComponent } from "./account/edit/edit.component";
 
 const studentRoutes: Routes = [
   {
-    path: 'student',
+    path: '',
     component: StudentComponent,
     canActivate: [AuthGuard],
     children: [
@@ -16,7 +16,7 @@ const studentRoutes: Routes = [
       { path: 'home', component: StudentHomeComponent, pathMatch: 'full' },
       { path: 'profile', redirectTo: '', pathMatch: 'full' },
       { path: 'profile/edit', component: EditComponent },
-      {path: '', loadChildren: () => import('../hybrid-module').then(m => m.StudentVLEAngularJSModule)}
+      {path: '', loadChildren: () => import('../student-hybrid-angular.module').then(m => m.StudentVLEAngularJSModule)}
     ]
   }
 ];

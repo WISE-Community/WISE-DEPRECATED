@@ -1,0 +1,9 @@
+<div class="help-icon {{ customClass }}" [ngClass]="{ 'pulse': pulse }">
+  <button mat-icon-button md-button [attr.aria-label]="label"
+      (click)="showRubric()"
+      class="mat-whiteframe-1dp mat-icon-button help-icon__button">
+  <mat-icon [ngClass]="['mat-36', 'help-icon__icon', 'info']">
+    {{ icon }}
+  </mat-icon>
+</button>
+</div>

@@ -116,12 +116,6 @@ class TableController extends ComponentController {
       this.isSubmitButtonVisible = false;
       this.isResetTableButtonVisible = false;
       this.isDisabled = true;
-    } else if (this.mode === 'onlyShowWork') {
-      this.isPromptVisible = false;
-      this.isSaveButtonVisible = false;
-      this.isSubmitButtonVisible = false;
-      this.isResetTableButtonVisible = false;
-      this.isDisabled = true;
     } else if (this.mode === 'showPreviousWork') {
       this.isPromptVisible = true;
       this.isSaveButtonVisible = false;

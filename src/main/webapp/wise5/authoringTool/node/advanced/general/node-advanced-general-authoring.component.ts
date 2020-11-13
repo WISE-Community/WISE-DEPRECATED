@@ -14,8 +14,7 @@ export class NodeAdvancedGeneralAuthoringComponent {
   }
 
   ngOnInit() {
-    const nodeId = this.TeacherDataService.getCurrentNodeId();
-    this.node = this.ProjectService.getNodeById(nodeId);
+    this.node = this.TeacherDataService.getCurrentNode();
   }
 
   saveProject() {

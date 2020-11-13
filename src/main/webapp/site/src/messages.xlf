@@ -111,7 +111,7 @@
         <source>WISE on Facebook</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
-          <context context-type="linenumber">25</context>
+          <context context-type="linenumber">24</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/home/home.component.html</context>
@@ -122,7 +122,7 @@
         <source>WISE on Twitter</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
-          <context context-type="linenumber">32</context>
+          <context context-type="linenumber">31</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/home/home.component.html</context>
@@ -133,7 +133,7 @@
         <source>WISE on Github</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
-          <context context-type="linenumber">39</context>
+          <context context-type="linenumber">38</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/home/home.component.html</context>
@@ -158,35 +158,42 @@
         <source>National Science Foundation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
-          <context context-type="linenumber">64</context>
+          <context context-type="linenumber">65</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="eb6ec6c4564dfbd4ffc8020d00aa0c48400f629b">
         <source>UC Berkeley</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
-          <context context-type="linenumber">71</context>
+          <context context-type="linenumber">72</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="180dea6fe6590f8a3fb1ff508b793ef0b2feed4b">
+        <source>ETS</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
+          <context context-type="linenumber">76</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="8f885baf51f23ab4c81a547cd984d9355bea0239">
         <source>Concord Consortium</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
-          <context context-type="linenumber">78</context>
+          <context context-type="linenumber">82</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="f8a12f0f1530051d1bc70b7df85a11832436cf00">
         <source>SAIL (Scalable Architecture for Interactive Learning)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
-          <context context-type="linenumber">84</context>
+          <context context-type="linenumber">88</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="ffac91e3ed3d3f9238f218aaa135735f55daec60">
         <source>©1996-<x equiv-text="{{time | amDateFormat:'YYYY'}}" id="INTERPOLATION"/>, <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>UC Berkeley<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/> | Web-based Inquiry Science Environment</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/footer/footer.component.html</context>
-          <context context-type="linenumber">90</context>
+          <context context-type="linenumber">94</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="470b3fb4b02529d4f9f25850711632271fd27508">
@@ -438,17 +445,6 @@
           <context context-type="linenumber">88</context>
         </context-group>
       </trans-unit>
-      <trans-unit datatype="html" id="acd82db1a5e5f81b87f6a6b1639f028a4d106d49">
-        <source>WISE logo</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/login/login.component.html</context>
-          <context context-type="linenumber">7</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/register/register.component.html</context>
-          <context context-type="linenumber">7</context>
-        </context-group>
-      </trans-unit>
       <trans-unit datatype="html" id="a55bfaabb5258f66c2f853ce2383cfead1abd258">
         <source>Close menu</source>
         <context-group purpose="location">
@@ -499,475 +495,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/team-sign-in-dialog/team-sign-in-dialog.component.html</context>
           <context context-type="linenumber">49</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="abc0c762d328168e523abf84749240e43593f8df">
-        <source>WISE Features</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">10</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="ddf8132cf62ce6ac16351585c35e306e6971af4b">
-        <source>A powerful online platform for designing, developing, and implementing science inquiry units</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">20</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="49a463f2fe873efdcbedb06a71cfbadc9c83cb14">
-        <source>Since 1997, WISE has served a growing community of more than 20,000 teachers, researchers, and curriculum designers, as well as over 200,000 K-12 students around the world.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">21</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="53d2c0a09cfd0d1836aa6306785412e894b571d5">
-        <source>WISE students</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">28</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="3c7d295a97553e2107807061d481f221cee12704">
-        <source>WISE students collaborate to:</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">43</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="c98d738b85e189cd244839c16b3dcdee30cac973">
-        <source>Explore issues of social importance</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">47</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="704339fc471e1b8d675435af5455c289241dbe1c">
-        <source>Pose relevant questions and make predictions</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">51</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="a372d9315580ccb7e6cc4bdaa345a9bc0b428fc4">
-        <source>Experiment with computational models</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">55</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="b07d8ea0af45cef781e5d604f6e9c2a7b2f701f0">
-        <source>Evaluate and distinguish discrepant information</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">59</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="85031434993fe1bad0400c10fb78687a633a21ac">
-        <source>Construct explanations through reflection and discussion</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">63</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="9fb0cd948878e98ed66ee30acc38db27f54ee91c">
-        <source>Design and build evidence-based solutions</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">67</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="120d488ee5852e71a5ff417392534368677d0e1d">
-        <source>Inquiry-Based Learning</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">73</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="ffe45ae6c8c4ce43774404fc9113d577f474b482">
-        <source>WISE engages students in the methods of real scientists and engineers. We take a multidisciplinary approach so that students learn inquiry through activities that emphasize essential skills in reading, writing, and multimedia literacy. Many of our units are also project-based and feature hands-on design challenges.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">74</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="7681bdf7430711347073032e83e99c10be4f4e7b">
-        <source>With WISE inquiry units, students not only learn skills that prepare them to be successful in STEM. They also learn skills necessary to be responsible, critical thinking citizens.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">75</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="811c99b1c960d5acedf84179c8c29e177ae0bf27">
-        <source>Standards-Aligned Curricula</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">86</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="28963fab05c3d72dc5ca696c47dd7d486df8292c">
-        <source>WISE offers a growing collection of curriculum units that address key conceptual difficulties students encounter in science. Units are carefully crafted to supplement teachers' core curricular scope and sequence and are iteratively refined through classroom-based research.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">87</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="09ce791db454a957cfc6658b0c198962ea7cac6c">
-        <source>WISE units support the <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>Next Generation Science Standards (NGSS)<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/>, encourage <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK_1"/>3-dimensional learning<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/>, and can be adapted to address local standards.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">89</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="6e15a0555bed4b010ba36febb47e87ff32616dd8">
-        <source>Design Process &amp; Goals</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">91</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="5ba7433a2233cdf924ae0948dc017372200293e3">
-        <source>WISE solar ovens unit</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">99</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="13e72d05735ba2963b1725426c59ba2f513bd709">
-        <source>WISE students building solar oven</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">104</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="faf67b4eceba9ca62f5db3703ae2d16a7da9dc2c">
-        <source>MyModel diagram with guidance</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">122</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="e7c4c4ab5b72934b5a6783e1e6084202e8610c4c">
-        <source>WISE cellular respiration model</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">127</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="68f9c6b469faf7dc111d7f51a9a77ff188844867">
-        <source>WISE design report</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">132</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="6a00767c4e60cdb9e156cced2058eaccb255c100">
-        <source>WISE thermodynamics insulator model</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">137</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="4382ac8d5db5536ce6c46dfe9e65a4d2b47fb2b4">
-        <source>Powerful Learning Technologies</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">142</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="5153efa236be513c65eb59c5f8daccf57898030a">
-        <source>WISE provides a simple user interface, cognitive hints, embedded assessments, and online discussions, as well as tools for drawing, annotation, concept mapping, diagramming, and graphing.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">143</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="e8c9262fe52f9282929800e851aee426dfd6ae48">
-        <source>Students conduct investigations using interactive simulations and models. A notebook tool helps students collect ideas and organize evidence into research and design reports. WISE units promote self-monitoring through collaborative reflection activities as well as automated, personalized guidance and adaptive instruction.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">144</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="7b049ab7ccd15afcbe53f4b4dae5b4292919fbb7">
-        <source>Comprehensive Instructional Supports</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">155</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="62933fa524d08c2b75f7b687ff566b5ee1118ec1">
-        <source>WISE offers an extensive suite of integrated tools that help teachers plan, monitor progress, gain insights, provide feedback, and grade more efficiently. These tools are continually refined through collaborations with practicing teachers who understand the real challenges of managing modern classrooms.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">156</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="4f7d6b85797f6cd6114c235b464ad7910657c631">
-        <source>By facilitating these necessary but time-consuming tasks, teachers are free to focus on what makes them indispensable: providing quality instruction to individual students.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">157</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="794ce33c32874cf59374bff4939512bbc71585d2">
-        <source>WISE teacher progress</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">162</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="334e3ef2374254d76dfe1f56599cf1d0598372e8">
-        <source>WISE teacher grading</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">167</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="7f5177858a6d5d359f61637516a36470cbf6ba89">
-        <source>Featured Teacher Tools:</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">174</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="6acdfffcc102679870fecbf9a48a200663b14017">
-        <source>Real-time progress monitor</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">178</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="cb1e93373a4084ceca88b2c7f7d135792293b743">
-        <source>Grade and give feedback + sample scoring rubrics</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">182</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="6047c27c7e32ac81f954987ee2574c123e088014">
-        <source>Automatically scored assessment items</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">186</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="eff210843d034ee2569f9b96f6b643934e473a45">
-        <source>Pause student screens</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">190</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="b062a147b8e789096be63da3fb5db00eb7e15304">
-        <source>Share and collaborate with colleagues</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">194</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="5c6c920ee56f5a35c5768fe01c5f9abfcd4ea002">
-        <source>Authoring environment that supports customization and creation of new units</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">198</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="9e46c9aca377fd39515f72e323c4c1e3e13fb3cb">
-        <source>In development: Automated insights into student NGSS understanding + suggested classroom interventions!</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">202</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="337a4aa817a8f5f73548041105128b973b9fb6d2">
-        <source>Explore what WISE has to offer!</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">211</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="681e76367080f43321e94e6462dd735296dc5c2f">
-        <source>Join for free</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/features/features.component.html</context>
-          <context context-type="linenumber">212</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="ffc2518d2bc8ccd34f05251329883a6d0642a4ca">
-        <source>WISE is the product of more than 25 years of research on teaching and learning with educational technologies</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">20</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="876f7d4b1a4c8c619cbe4c0b32d0d1bf3219d4e8">
-        <source>WISE teacher workshop 2018</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">27</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="70ff1cc8f851490c4cb6237ec6991ef6a644d4e4">
-        <source>WISE student and teacher</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">45</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="2b4a83d9816a80170d470f0cbe714553f33450ae">
-        <source>WISE teacher workshop design</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">50</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="cf46260d6f44d44d379d124ec8df098441107eb5">
-        <source>Marcia at WISE workshop</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">55</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="c0025974cf98becba943b54047f136ecdf25e5c1">
-        <source>Based on Research, Refined Through Practice</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">60</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="fd1c49d6e3e02db68fe37f6c2d12cf7d1658f200">
-        <source>Through our collaborations with teachers, administrators, technology designers, and education researchers, we have refined a set of principles which guide the design of all WISE curriculum materials and tools.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">61</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="93d7310ae0cdb74d49573a47634d9a7b1c771462">
-        <source>This means that when implementing WISE units, you can be assured that what you're using is grown from a solid foundation, advised by real teachers' experiences, and tested in classrooms with real students.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">63</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="ba47fad2e84864c65ead1cd83f593ddb919c274f">
-        <source>Our Research + Team</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">65</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="2430d9c22ccaf6b5daf94c0135b02f753ca6b185">
-        <source>Knowledge Integration</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">77</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="1a90e48699c691ba54728351e4be72af77b280ce">
-        <source>As students grapple with multiple conflicting and confusing ideas, research has shown that instruction is most effective when student views are used as a starting point for scientific investigations.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">78</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="e40dc97986107e694a5c5860f0fbf5bd0ddadeae">
-        <source>The KI Processes:</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">84</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="e85808e27272fa3c1d2dfaf998ce12ca205e5fbd">
-        <source>~ WISE Goals ~</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">110</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="a8c4f4b7ff2dc03b066549737367901b95c1f556">
-        <source>Make Science Meaningful</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">124</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="d1d5c7485a7278e9df8a76c3481541ef3d231792">
-        <source>WISE units introduce students to complex science concepts through personally and socially relevant topics. Each unit uses a classroom-tested pattern of instruction that values the ideas students bring with them, helps them connect new information to their personal experiences, and integrates their ideas into a coherent understanding of science.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">125</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="ae2bc001ed6c6fb5416b490b7c6dbe2260697024">
-        <source>Support Diverse Learners</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">130</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="e582a65e12f2b176d3eef63cd4caa67d68cfb5b9">
-        <source>Individual students differ in their experiences, interests, and abilities. WISE provides a variety of tools, activity patterns, and instructional scaffolds that afford multiple ways for expressing and assessing understanding. That way, no students' abilities go unrecognized, and all have the chance to succeed.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">131</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="92bb340c07c783bf551cd704462f3d7efa15f8a4">
-        <source>Increase Participation in Science</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">143</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="eb68c61cc5bb54a55a39d5ad7702268ba2c656f2">
-        <source>WISE gives more teachers and students the opportunity to do inquiry-based science. Our units make difficult concepts accessible both for teachers to teach and students to learn. WISE curricula help students see themselves as capable of doing science and realize that, no matter their backgrounds, science can be a potential career.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">144</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="d528a21d07675cb0c41c688a22371f4cc925a969">
-        <source>Accessible to All</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">150</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="416ce0bcfd9bbe81b9ccc34d764504df4c8088d1">
-        <source>WISE is <x ctype="x-strong" equiv-text="&lt;strong&gt;" id="START_TAG_STRONG"/>free<x ctype="x-strong" equiv-text="&lt;/strong&gt;" id="CLOSE_TAG_STRONG"/> and <x ctype="x-strong" equiv-text="&lt;strong&gt;" id="START_TAG_STRONG"/>open source<x ctype="x-strong" equiv-text="&lt;/strong&gt;" id="CLOSE_TAG_STRONG"/>! WISE subsists on generous support from the National Science Foundation, which means it's available to anyone with an internet connection. Driven by an active community of developers, WISE is continually being expanded and improved. Bring science inquiry into the classroom, the museum, the after-school, or the home-school environment!</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">151</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="4ad1e5cce5dbc999f93e23e6bc9fa28d9cbb0ee1">
-        <source>WISE on student computer</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">160</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="14a76370983f28622ac762d950962707e124e964">
-        <source>WISE researcher</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">165</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="6cc03c819c2923d3c2dd2a236ee0040ddac13c4b">
-        <source>WISE teachers and researcher</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">170</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="9d4d981f8068dbb230ef2048664016f5ff9c255e">
-        <source>WISE developers and teacher</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/about/about.component.html</context>
-          <context context-type="linenumber">175</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="69410cfd03d0c317234765d99d86c2c9e88bb915">
@@ -1520,7 +1047,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
-          <context context-type="linenumber">31</context>
+          <context context-type="linenumber">27</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="d730351c7b91474b615d35ca4357f0278194bf1d">
@@ -1620,6 +1147,18 @@
           <context context-type="linenumber">20</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">app/student/add-project-dialog/add-project-dialog.component.html</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/student/team-sign-in-dialog/team-sign-in-dialog.component.html</context>
+          <context context-type="linenumber">68</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
+          <context context-type="linenumber">95</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step/choose-import-step.component.html</context>
           <context context-type="linenumber">62</context>
         </context-group>
@@ -1634,18 +1173,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/authoring-tool/add-component/choose-new-component-location/choose-new-component-location.component.html</context>
           <context context-type="linenumber">41</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/student/add-project-dialog/add-project-dialog.component.html</context>
-          <context context-type="linenumber">23</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/student/team-sign-in-dialog/team-sign-in-dialog.component.html</context>
-          <context context-type="linenumber">68</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
-          <context context-type="linenumber">95</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="f6755cff4957d5c3c89bafce5651f1b6fa2b1fd9">
@@ -2161,7 +1688,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/library-project-menu/library-project-menu.component.html</context>
-          <context context-type="linenumber">10</context>
+          <context context-type="linenumber">11</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="4c49a9bb7a99a9da256c6e678cbb49baa70e268a">
@@ -2211,8 +1738,8 @@
           <context context-type="linenumber">96</context>
         </context-group>
       </trans-unit>
-      <trans-unit datatype="html" id="8dce5a1b53185785ceb8eaece03a45f95a1058ae">
-        <source>Parent ID:</source>
+      <trans-unit datatype="html" id="77bd1ad738d92e35036a6caa0afba8152299876b">
+        <source>Parent ID: <x equiv-text="{{ project.parentId }}" id="INTERPOLATION"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/library-project-menu/library-project-menu.component.html</context>
           <context context-type="linenumber">7</context>
@@ -2222,18 +1749,18 @@
         <source>Edit</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/library-project-menu/library-project-menu.component.html</context>
-          <context context-type="linenumber">13</context>
+          <context context-type="linenumber">14</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="0bd8b27f60a1f098a53e06328426d818e3508ff9">
         <source>Share</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/library-project-menu/library-project-menu.component.html</context>
-          <context context-type="linenumber">16</context>
+          <context context-type="linenumber">17</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
-          <context context-type="linenumber">26</context>
+          <context context-type="linenumber">22</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="1ada756975a68f38f92477600b2ca2864ea89533">
@@ -2258,11 +1785,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/student-run-list/student-run-list.component.html</context>
-          <context context-type="linenumber">27</context>
+          <context context-type="linenumber">26</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-run-list/teacher-run-list.component.html</context>
-          <context context-type="linenumber">37</context>
+          <context context-type="linenumber">36</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="e2f5ddbb1c62ee08bb0cc5a18ecba95e1e621760">
@@ -2358,6 +1885,181 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/personal-library/personal-library-details.html</context>
           <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="ffc2518d2bc8ccd34f05251329883a6d0642a4ca">
+        <source>WISE is the product of more than 25 years of research on teaching and learning with educational technologies</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/about/about.component.html</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="876f7d4b1a4c8c619cbe4c0b32d0d1bf3219d4e8">
+        <source>WISE teacher workshop 2018</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/about/about.component.html</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="70ff1cc8f851490c4cb6237ec6991ef6a644d4e4">
+        <source>WISE student and teacher</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/about/about.component.html</context>
+          <context context-type="linenumber">45</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="2b4a83d9816a80170d470f0cbe714553f33450ae">
+        <source>WISE teacher workshop design</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/about/about.component.html</context>
+          <context context-type="linenumber">50</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="cf46260d6f44d44d379d124ec8df098441107eb5">
+        <source>Marcia at WISE workshop</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/about/about.component.html</context>
+          <context context-type="linenumber">55</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="c0025974cf98becba943b54047f136ecdf25e5c1">
+        <source>Based on Research, Refined Through Practice</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/about/about.component.html</context>
+          <context context-type="linenumber">60</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="fd1c49d6e3e02db68fe37f6c2d12cf7d1658f200">
+        <source>Through our collaborations with teachers, administrators, technology designers, and education researchers, we have refined a set of principles which guide the design of all WISE curriculum materials and tools.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/about/about.component.html</context>
+          <context context-type="linenumber">61</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="93d7310ae0cdb74d49573a47634d9a7b1c771462">
+        <source>This means that when implementing WISE units, you can be assured that what you're using is grown from a solid foundation, advised by real teachers' experiences, and tested in classrooms with real students.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/about/about.component.html</context>
+          <context context-type="linenumber">63</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="ba47fad2e84864c65ead1cd83f593ddb919c274f">
+        <source>Our Research + Team</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/about/about.component.html</context>
+          <context context-type="linenumber">65</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="2430d9c22ccaf6b5daf94c0135b02f753ca6b185">
+        <source>Knowledge Integration</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/about/about.component.html</context>
+          <context context-type="linenumber">77</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="1a90e48699c691ba54728351e4be72af77b280ce">
+        <source>As students grapple with multiple conflicting and confusing ideas, research has shown that instruction is most effective when student views are used as a starting point for scientific investigations.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/about/about.component.html</context>
+          <context context-type="linenumber">78</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="e40dc97986107e694a5c5860f0fbf5bd0ddadeae">
+        <source>The KI Processes:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/about/about.component.html</context>
+          <context context-type="linenumber">84</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="e85808e27272fa3c1d2dfaf998ce12ca205e5fbd">
+        <source>~ WISE Goals ~</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/about/about.component.html</context>
+          <context context-type="linenumber">110</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="a8c4f4b7ff2dc03b066549737367901b95c1f556">
+        <source>Make Science Meaningful</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/about/about.component.html</context>
+          <context context-type="linenumber">124</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="d1d5c7485a7278e9df8a76c3481541ef3d231792">
+        <source>WISE units introduce students to complex science concepts through personally and socially relevant topics. Each unit uses a classroom-tested pattern of instruction that values the ideas students bring with them, helps them connect new information to their personal experiences, and integrates their ideas into a coherent understanding of science.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/about/about.component.html</context>
+          <context context-type="linenumber">125</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="ae2bc001ed6c6fb5416b490b7c6dbe2260697024">
+        <source>Support Diverse Learners</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/about/about.component.html</context>
+          <context context-type="linenumber">130</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="e582a65e12f2b176d3eef63cd4caa67d68cfb5b9">
+        <source>Individual students differ in their experiences, interests, and abilities. WISE provides a variety of tools, activity patterns, and instructional scaffolds that afford multiple ways for expressing and assessing understanding. That way, no students' abilities go unrecognized, and all have the chance to succeed.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/about/about.component.html</context>
+          <context context-type="linenumber">131</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="92bb340c07c783bf551cd704462f3d7efa15f8a4">
+        <source>Increase Participation in Science</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/about/about.component.html</context>
+          <context context-type="linenumber">143</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="eb68c61cc5bb54a55a39d5ad7702268ba2c656f2">
+        <source>WISE gives more teachers and students the opportunity to do inquiry-based science. Our units make difficult concepts accessible both for teachers to teach and students to learn. WISE curricula help students see themselves as capable of doing science and realize that, no matter their backgrounds, science can be a potential career.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/about/about.component.html</context>
+          <context context-type="linenumber">144</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="d528a21d07675cb0c41c688a22371f4cc925a969">
+        <source>Accessible to All</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/about/about.component.html</context>
+          <context context-type="linenumber">150</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="416ce0bcfd9bbe81b9ccc34d764504df4c8088d1">
+        <source>WISE is <x ctype="x-strong" equiv-text="&lt;strong&gt;" id="START_TAG_STRONG"/>free<x ctype="x-strong" equiv-text="&lt;/strong&gt;" id="CLOSE_TAG_STRONG"/> and <x ctype="x-strong" equiv-text="&lt;strong&gt;" id="START_TAG_STRONG"/>open source<x ctype="x-strong" equiv-text="&lt;/strong&gt;" id="CLOSE_TAG_STRONG"/>! WISE subsists on generous support from the National Science Foundation, which means it's available to anyone with an internet connection. Driven by an active community of developers, WISE is continually being expanded and improved. Bring science inquiry into the classroom, the museum, the after-school, or the home-school environment!</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/about/about.component.html</context>
+          <context context-type="linenumber">151</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="4ad1e5cce5dbc999f93e23e6bc9fa28d9cbb0ee1">
+        <source>WISE on student computer</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/about/about.component.html</context>
+          <context context-type="linenumber">160</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="14a76370983f28622ac762d950962707e124e964">
+        <source>WISE researcher</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/about/about.component.html</context>
+          <context context-type="linenumber">165</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="6cc03c819c2923d3c2dd2a236ee0040ddac13c4b">
+        <source>WISE teachers and researcher</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/about/about.component.html</context>
+          <context context-type="linenumber">170</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="9d4d981f8068dbb230ef2048664016f5ff9c255e">
+        <source>WISE developers and teacher</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/about/about.component.html</context>
+          <context context-type="linenumber">175</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="4c00c8f929591b166c1e22e74a414a4dd42ff00b">
@@ -2587,6 +2289,300 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/forgot/teacher/forgot-teacher-password-verify/forgot-teacher-password-verify.component.html</context>
           <context context-type="linenumber">26</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="abc0c762d328168e523abf84749240e43593f8df">
+        <source>WISE Features</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/features/features.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="ddf8132cf62ce6ac16351585c35e306e6971af4b">
+        <source>A powerful online platform for designing, developing, and implementing science inquiry units</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/features/features.component.html</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="49a463f2fe873efdcbedb06a71cfbadc9c83cb14">
+        <source>Since 1997, WISE has served a growing community of more than 20,000 teachers, researchers, and curriculum designers, as well as over 200,000 K-12 students around the world.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/features/features.component.html</context>
+          <context context-type="linenumber">21</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="53d2c0a09cfd0d1836aa6306785412e894b571d5">
+        <source>WISE students</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/features/features.component.html</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="3c7d295a97553e2107807061d481f221cee12704">
+        <source>WISE students collaborate to:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/features/features.component.html</context>
+          <context context-type="linenumber">43</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="c98d738b85e189cd244839c16b3dcdee30cac973">
+        <source>Explore issues of social importance</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/features/features.component.html</context>
+          <context context-type="linenumber">47</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="704339fc471e1b8d675435af5455c289241dbe1c">
+        <source>Pose relevant questions and make predictions</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/features/features.component.html</context>
+          <context context-type="linenumber">51</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="a372d9315580ccb7e6cc4bdaa345a9bc0b428fc4">
+        <source>Experiment with computational models</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/features/features.component.html</context>
+          <context context-type="linenumber">55</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="b07d8ea0af45cef781e5d604f6e9c2a7b2f701f0">
+        <source>Evaluate and distinguish discrepant information</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/features/features.component.html</context>
+          <context context-type="linenumber">59</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="85031434993fe1bad0400c10fb78687a633a21ac">
+        <source>Construct explanations through reflection and discussion</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/features/features.component.html</context>
+          <context context-type="linenumber">63</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="9fb0cd948878e98ed66ee30acc38db27f54ee91c">
+        <source>Design and build evidence-based solutions</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/features/features.component.html</context>
+          <context context-type="linenumber">67</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="120d488ee5852e71a5ff417392534368677d0e1d">
+        <source>Inquiry-Based Learning</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/features/features.component.html</context>
+          <context context-type="linenumber">73</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="ffe45ae6c8c4ce43774404fc9113d577f474b482">
+        <source>WISE engages students in the methods of real scientists and engineers. We take a multidisciplinary approach so that students learn inquiry through activities that emphasize essential skills in reading, writing, and multimedia literacy. Many of our units are also project-based and feature hands-on design challenges.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/features/features.component.html</context>
+          <context context-type="linenumber">74</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="7681bdf7430711347073032e83e99c10be4f4e7b">
+        <source>With WISE inquiry units, students not only learn skills that prepare them to be successful in STEM. They also learn skills necessary to be responsible, critical thinking citizens.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/features/features.component.html</context>
+          <context context-type="linenumber">75</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="811c99b1c960d5acedf84179c8c29e177ae0bf27">
+        <source>Standards-Aligned Curricula</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/features/features.component.html</context>
+          <context context-type="linenumber">86</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="28963fab05c3d72dc5ca696c47dd7d486df8292c">
+        <source>WISE offers a growing collection of curriculum units that address key conceptual difficulties students encounter in science. Units are carefully crafted to supplement teachers' core curricular scope and sequence and are iteratively refined through classroom-based research.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/features/features.component.html</context>
+          <context context-type="linenumber">87</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="09ce791db454a957cfc6658b0c198962ea7cac6c">
+        <source>WISE units support the <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>Next Generation Science Standards (NGSS)<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/>, encourage <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK_1"/>3-dimensional learning<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/>, and can be adapted to address local standards.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/features/features.component.html</context>
+          <context context-type="linenumber">89</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="6e15a0555bed4b010ba36febb47e87ff32616dd8">
+        <source>Design Process &amp; Goals</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/features/features.component.html</context>
+          <context context-type="linenumber">91</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="5ba7433a2233cdf924ae0948dc017372200293e3">
+        <source>WISE solar ovens unit</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/features/features.component.html</context>
+          <context context-type="linenumber">99</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="13e72d05735ba2963b1725426c59ba2f513bd709">
+        <source>WISE students building solar oven</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/features/features.component.html</context>
+          <context context-type="linenumber">104</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="faf67b4eceba9ca62f5db3703ae2d16a7da9dc2c">
+        <source>MyModel diagram with guidance</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/features/features.component.html</context>
+          <context context-type="linenumber">122</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="e7c4c4ab5b72934b5a6783e1e6084202e8610c4c">
+        <source>WISE cellular respiration model</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/features/features.component.html</context>
+          <context context-type="linenumber">127</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="68f9c6b469faf7dc111d7f51a9a77ff188844867">
+        <source>WISE design report</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/features/features.component.html</context>
+          <context context-type="linenumber">132</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="6a00767c4e60cdb9e156cced2058eaccb255c100">
+        <source>WISE thermodynamics insulator model</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/features/features.component.html</context>
+          <context context-type="linenumber">137</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="4382ac8d5db5536ce6c46dfe9e65a4d2b47fb2b4">
+        <source>Powerful Learning Technologies</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/features/features.component.html</context>
+          <context context-type="linenumber">142</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="5153efa236be513c65eb59c5f8daccf57898030a">
+        <source>WISE provides a simple user interface, cognitive hints, embedded assessments, and online discussions, as well as tools for drawing, annotation, concept mapping, diagramming, and graphing.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/features/features.component.html</context>
+          <context context-type="linenumber">143</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="e8c9262fe52f9282929800e851aee426dfd6ae48">
+        <source>Students conduct investigations using interactive simulations and models. A notebook tool helps students collect ideas and organize evidence into research and design reports. WISE units promote self-monitoring through collaborative reflection activities as well as automated, personalized guidance and adaptive instruction.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/features/features.component.html</context>
+          <context context-type="linenumber">144</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="7b049ab7ccd15afcbe53f4b4dae5b4292919fbb7">
+        <source>Comprehensive Instructional Supports</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/features/features.component.html</context>
+          <context context-type="linenumber">155</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="62933fa524d08c2b75f7b687ff566b5ee1118ec1">
+        <source>WISE offers an extensive suite of integrated tools that help teachers plan, monitor progress, gain insights, provide feedback, and grade more efficiently. These tools are continually refined through collaborations with practicing teachers who understand the real challenges of managing modern classrooms.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/features/features.component.html</context>
+          <context context-type="linenumber">156</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="4f7d6b85797f6cd6114c235b464ad7910657c631">
+        <source>By facilitating these necessary but time-consuming tasks, teachers are free to focus on what makes them indispensable: providing quality instruction to individual students.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/features/features.component.html</context>
+          <context context-type="linenumber">157</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="794ce33c32874cf59374bff4939512bbc71585d2">
+        <source>WISE teacher progress</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/features/features.component.html</context>
+          <context context-type="linenumber">162</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="334e3ef2374254d76dfe1f56599cf1d0598372e8">
+        <source>WISE teacher grading</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/features/features.component.html</context>
+          <context context-type="linenumber">167</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="7f5177858a6d5d359f61637516a36470cbf6ba89">
+        <source>Featured Teacher Tools:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/features/features.component.html</context>
+          <context context-type="linenumber">174</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="6acdfffcc102679870fecbf9a48a200663b14017">
+        <source>Real-time progress monitor</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/features/features.component.html</context>
+          <context context-type="linenumber">178</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="cb1e93373a4084ceca88b2c7f7d135792293b743">
+        <source>Grade and give feedback + sample scoring rubrics</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/features/features.component.html</context>
+          <context context-type="linenumber">182</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="6047c27c7e32ac81f954987ee2574c123e088014">
+        <source>Automatically scored assessment items</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/features/features.component.html</context>
+          <context context-type="linenumber">186</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="eff210843d034ee2569f9b96f6b643934e473a45">
+        <source>Pause student screens</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/features/features.component.html</context>
+          <context context-type="linenumber">190</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="b062a147b8e789096be63da3fb5db00eb7e15304">
+        <source>Share and collaborate with colleagues</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/features/features.component.html</context>
+          <context context-type="linenumber">194</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="5c6c920ee56f5a35c5768fe01c5f9abfcd4ea002">
+        <source>Authoring environment that supports customization and creation of new units</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/features/features.component.html</context>
+          <context context-type="linenumber">198</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="9e46c9aca377fd39515f72e323c4c1e3e13fb3cb">
+        <source>In development: Automated insights into student NGSS understanding + suggested classroom interventions!</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/features/features.component.html</context>
+          <context context-type="linenumber">202</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="337a4aa817a8f5f73548041105128b973b9fb6d2">
+        <source>Explore what WISE has to offer!</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/features/features.component.html</context>
+          <context context-type="linenumber">211</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="681e76367080f43321e94e6462dd735296dc5c2f">
+        <source>Join for free</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/features/features.component.html</context>
+          <context context-type="linenumber">212</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="bef13b264d9f1244392852666ac27791c9a5979f">
@@ -3226,8 +3222,8 @@
           <context context-type="linenumber">25</context>
         </context-group>
       </trans-unit>
-      <trans-unit datatype="html" id="9d2a72632d6e73065adbe8ea78a680e16c07619c">
-        <source>Click the "Browse WISE Units" tab.</source>
+      <trans-unit datatype="html" id="95c22fc191e91241d3fe6293898fec4d41e20c7d">
+        <source>Click the "Unit Library" tab.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/help/getting-started/getting-started.component.html</context>
           <context context-type="linenumber">25</context>
@@ -4483,6 +4479,17 @@
           <context context-type="linenumber">56</context>
         </context-group>
       </trans-unit>
+      <trans-unit datatype="html" id="acd82db1a5e5f81b87f6a6b1639f028a4d106d49">
+        <source>WISE logo</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/register/register.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/login/login.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+      </trans-unit>
       <trans-unit datatype="html" id="0374570fb5bc65ef42fa03c5923070a11d7f0b5e">
         <source>Create WISE Account</source>
         <context-group purpose="location">
@@ -4947,364 +4954,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/student-run-list/student-run-list.component.html</context>
-          <context context-type="linenumber">64</context>
+          <context context-type="linenumber">63</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-run-list/teacher-run-list.component.html</context>
-          <context context-type="linenumber">76</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="2d1bd68dd6cbd034f0b62c1dfabf7e17ee27081c">
-        <source><x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>Register<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/> or <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK_1"/>Sign In<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/></source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/modules/header/header-signin/header-signin.component.html</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="17f37e96c7b8059b23c07791dca1bdb3f3f6853f">
-        <source>Welcome <x equiv-text="{{ user.firstName }}" id="INTERPOLATION"/>!</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/modules/header/header-links/header-links.component.html</context>
-          <context context-type="linenumber">3</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/modules/header/header-links/header-links.component.html</context>
-          <context context-type="linenumber">4</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="d222f6ff9f7e28fdb4e8b2af47898446cf2eafe4">
-        <source>Account Menu</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">4</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">6</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="879fef27271d8247d791381cf1f9bb0eb8974166">
-        <source>Account avatar</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">14</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">16</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="c48210e0360714d757f8286144200648dc140e30">
-        <source>Switch back to original user</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">21</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="c4e3e4170654ee5a353d29a0c34b8008cd25a635">
-        <source>Student Home</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">32</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/student/student-home/student-home.component.html</context>
-          <context context-type="linenumber">10</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="4c42d0c12ddaebc2efdfc00bbf1d714bf385f278">
-        <source>Teacher Home</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">40</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/teacher-home/teacher-home.component.html</context>
-          <context context-type="linenumber">7</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="d3781ad331fdd0bc9055c45a41664ac467de63af">
-        <source>Edit Profile</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">48</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">56</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/student/account/edit/edit.component.html</context>
-          <context context-type="linenumber">6</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/account/edit/edit.component.html</context>
-          <context context-type="linenumber">6</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="ea7254c3121598c9cfd72210e1336473441546e3">
-        <source>Researcher Tools</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">62</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="593d1ae1c4b71457eda8476df2bb52624a3c6e74">
-        <source>Admin Tools</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">68</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="85b79c9064aed1ead31ace985f31aa1363f6bdaf">
-        <source>Help</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">76</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">84</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="640eec093c685babaa3265137215e3cc92ad704d">
-        <source>Sign Out</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
-          <context context-type="linenumber">89</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="1cde0ecb1655843b8b682674d1ed9ff8138073b2">
-        <source>point</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/possible-score/possible-score.component.html</context>
-          <context context-type="linenumber">3</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="96fe69fa0552ff1362db05cebbd1ee4c0e154c8c">
-        <source>points</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/possible-score/possible-score.component.html</context>
-          <context context-type="linenumber">4</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="74b04b602d4148d1cb5de4da90c0e91ec9bae5ac">
-        <source>Choose a Branch Path</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/preview/modules/choose-branch-path-dialog/choose-branch-path-dialog.component.html</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="33587ab40a459dc3058a184e39bfa93737fbbd67">
-        <source>Note: This chooser screen is only available in preview mode. Students will not see this screen in a classroom run and will instead be assigned a branch path automatically. Once you have chosen a branch, complete the current step and then click the Next arrow.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/preview/modules/choose-branch-path-dialog/choose-branch-path-dialog.component.html</context>
-          <context context-type="linenumber">3</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="bfab7f41cfc32a926c55987d6a9c3349ae417131">
-        <source> Show Save Button </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/authoringTool/node/advanced/general/node-advanced-general-authoring.component.html</context>
-          <context context-type="linenumber">6</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="770c5cff3389877453481f51ed615bc3e2e3ae44">
-        <source> Show Submit Button </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/authoringTool/node/advanced/general/node-advanced-general-authoring.component.html</context>
-          <context context-type="linenumber">14</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="44fcb249525dd82d1fd32cae51412bcda7ffd765">
-        <source>Back to Unit Plan</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
-          <context context-type="linenumber">4</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="077fb7924ecebe2ae768d860909315c29ee61fbe">
-        <source>Show JSON</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
-          <context context-type="linenumber">7</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="a7ff0a41fdb9b51a30db6bed1494c740274cbb84">
-        <source>Download Unit</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
-          <context context-type="linenumber">10</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="e810aa7f08f531d99ef09adc501a8dded58d34fb">
-        <source>Edit Unit JSON</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
-          <context context-type="linenumber">16</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="9203b05eb7515e937cc5e5d8cbc8a03195bb2d7f">
-        <source>Script Filename</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
-          <context context-type="linenumber">23</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="9fabdfadf0453602acf388171bd4f758df47e1a7">
-        <source>Choose</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
-          <context context-type="linenumber">28</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="0435f6f300b78e13d48ecd2ee6e404d40df04188">
-        <source>Unit URL</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
-          <context context-type="linenumber">33</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="3eb7b66b266bf315436e1888846133dd8106ca43">
-        <source>Copy Unit URL to Clipboard</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
-          <context context-type="linenumber">38</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="29024835e83ded5ae9cb4e4be0c3fba290a185b9">
-        <source>Open Unit URL in New Tab</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
-          <context context-type="linenumber">42</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="64216e7ef99605d9f05614beb1919360ee012177">
-        <source>Import Step(s)</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step/choose-import-step.component.html</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="1371bc59ef18c928caf36f5d66a7af1af8ce17a2">
-        <source>Choose a unit to import from:</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step/choose-import-step.component.html</context>
-          <context context-type="linenumber">3</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="dc834df3c90c7b9021cfa37b2be737c2134249a5">
-        <source>Run ID</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step/choose-import-step.component.html</context>
-          <context context-type="linenumber">11</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="325291e71ff2bb75a324c2c02e5deb1ff8600043">
-        <source>Library Units</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step/choose-import-step.component.html</context>
-          <context context-type="linenumber">17</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="38d584510075ce8ab505c1081beb607c36898b2b">
-        <source>Choose the step(s) that you want to import, then click next.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step/choose-import-step.component.html</context>
-          <context context-type="linenumber">28</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="76176dda9f079e8ab3c78d6975eee76b8b3eddad">
-        <source>Preview Unit</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step/choose-import-step.component.html</context>
-          <context context-type="linenumber">34</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="0fb1aad24bc0920a8c5e9d43e320e261dbca3f09">
-        <source>Preview Step</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step/choose-import-step.component.html</context>
-          <context context-type="linenumber">51</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="f732c304c7433e5a83ffcd862c3dce709a0f4982">
-        <source>Next</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step/choose-import-step.component.html</context>
-          <context context-type="linenumber">70</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step/choose-import-step.component.html</context>
-          <context context-type="linenumber">66</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/authoring-tool/add-component/choose-new-component/choose-new-component.component.html</context>
-          <context context-type="linenumber">27</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="e8c21747e8604f974b3ed6ecf6089306b7cc0aae">
-        <source>Choose a location for the imported steps</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step-location/choose-import-step-location.component.html</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="2487b6259288414268ebb0273e79a0dbd975205b">
-        <source>Insert As First Step</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step-location/choose-import-step-location.component.html</context>
-          <context context-type="linenumber">17</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="1e9b22a987b26586870bb920525f8062d24c6267">
-        <source>Insert After</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step-location/choose-import-step-location.component.html</context>
-          <context context-type="linenumber">25</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/authoring-tool/add-component/choose-new-component-location/choose-new-component-location.component.html</context>
-          <context context-type="linenumber">25</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="1bf58cf720f3aa0e4a6f06d2a84183b552f3f3c6">
-        <source>Click the new component type you want to add</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/authoring-tool/add-component/choose-new-component/choose-new-component.component.html</context>
-          <context context-type="linenumber">3</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="1fa4d608488f8c688cef3cac8f93e5e2e43a39de">
-        <source>Choose New Location</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/authoring-tool/add-component/choose-new-component-location/choose-new-component-location.component.html</context>
-          <context context-type="linenumber">3</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="d0feb44b6358f108a58480afa4b903c34031a110">
-        <source>Insert As First Component</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/authoring-tool/add-component/choose-new-component-location/choose-new-component-location.component.html</context>
-          <context context-type="linenumber">9</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/authoring-tool/add-component/choose-new-component-location/choose-new-component-location.component.html</context>
-          <context context-type="linenumber">12</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="cda31dbd724cf5f4fa7a4274d9120651490c8a8c">
-        <source>Back</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/authoring-tool/add-component/choose-new-component-location/choose-new-component-location.component.html</context>
-          <context context-type="linenumber">36</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="d81f00c85d3b507f3e3d78bfc617a2c66e028391">
-        <source>New</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/classroom-monitor/component-new-work-badge/component-new-work-badge.component.ts</context>
-          <context context-type="linenumber">1</context>
+          <context context-type="linenumber">75</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="36a606470097ddf0c32a250c8a902441729ca8ca">
@@ -5351,6 +5005,17 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/add-project-dialog/add-project-dialog.component.html</context>
           <context context-type="linenumber">15</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="c4e3e4170654ee5a353d29a0c34b8008cd25a635">
+        <source>Student Home</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/student/student-home/student-home.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
+          <context context-type="linenumber">32</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="a118959daf55b5584609654f7d5ee9e443b961d0">
@@ -5412,17 +5077,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-run-list/teacher-run-list.component.html</context>
           <context context-type="linenumber">33</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="c3840ff3430f7c6130e4d7a2f0aec5a7cb3ebb3a">
-        <source><x equiv-text="{{ completedTotal() }}" id="INTERPOLATION"/> completed</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/student/student-run-list/student-run-list.component.html</context>
-          <context context-type="linenumber">24</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/teacher-run-list/teacher-run-list.component.html</context>
-          <context context-type="linenumber">34</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="13c602751734f72430891c9781167bf53c612481">
@@ -5540,6 +5194,25 @@
           <context context-type="linenumber">79</context>
         </context-group>
       </trans-unit>
+      <trans-unit datatype="html" id="d3781ad331fdd0bc9055c45a41664ac467de63af">
+        <source>Edit Profile</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/student/account/edit/edit.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/account/edit/edit.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
+          <context context-type="linenumber">48</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+      </trans-unit>
       <trans-unit datatype="html" id="a41a1ea741ebed7a4ff655f233fc2d275b9bfa42">
         <source>Account Info</source>
         <context-group purpose="location">
@@ -5589,6 +5262,66 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
           <context context-type="linenumber">120</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="1cde0ecb1655843b8b682674d1ed9ff8138073b2">
+        <source>point</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/possible-score/possible-score.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="96fe69fa0552ff1362db05cebbd1ee4c0e154c8c">
+        <source>points</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/possible-score/possible-score.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="74b04b602d4148d1cb5de4da90c0e91ec9bae5ac">
+        <source>Choose a Branch Path</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/preview/modules/choose-branch-path-dialog/choose-branch-path-dialog.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="33587ab40a459dc3058a184e39bfa93737fbbd67">
+        <source>Note: This chooser screen is only available in preview mode. Students will not see this screen in a classroom run and will instead be assigned a branch path automatically. Once you have chosen a branch, complete the current step and then click the Next arrow.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/preview/modules/choose-branch-path-dialog/choose-branch-path-dialog.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="2e1aeaf8d183e6846a0463a08c784f472184fcf0">
+        <source>Completed with warning</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/themes/default/themeComponents/nodeStatusIcon/node-status-icon.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="4f6d0d29f0804d1cfceded31eb1ea74c6e3234dc">
+        <source>Completed with success</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/themes/default/themeComponents/nodeStatusIcon/node-status-icon.component.html</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="a7c328c4773db932ff14a1954e15e43dca58e7b7">
+        <source>Completed</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/themes/default/themeComponents/nodeStatusIcon/node-status-icon.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="4c42d0c12ddaebc2efdfc00bbf1d714bf385f278">
+        <source>Teacher Home</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/teacher-home/teacher-home.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
+          <context context-type="linenumber">40</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="9f4ae450ac1d2d2939642f56dffcfa210fd6020e">
@@ -5867,7 +5600,7 @@
         <source>Edit Content</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
-          <context context-type="linenumber">22</context>
+          <context context-type="linenumber">31</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="e438ba78cbafdb5bcbce0820bfaad995a504f222">
@@ -5896,6 +5629,308 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
           <context context-type="linenumber">107</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="44fcb249525dd82d1fd32cae51412bcda7ffd765">
+        <source>Back to Unit Plan</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="077fb7924ecebe2ae768d860909315c29ee61fbe">
+        <source>Show JSON</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="a7ff0a41fdb9b51a30db6bed1494c740274cbb84">
+        <source>Download Unit</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="e810aa7f08f531d99ef09adc501a8dded58d34fb">
+        <source>Edit Unit JSON</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="9203b05eb7515e937cc5e5d8cbc8a03195bb2d7f">
+        <source>Script Filename</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="9fabdfadf0453602acf388171bd4f758df47e1a7">
+        <source>Choose</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="0435f6f300b78e13d48ecd2ee6e404d40df04188">
+        <source>Unit URL</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="3eb7b66b266bf315436e1888846133dd8106ca43">
+        <source>Copy Unit URL to Clipboard</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="29024835e83ded5ae9cb4e4be0c3fba290a185b9">
+        <source>Open Unit URL in New Tab</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
+          <context context-type="linenumber">42</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="64216e7ef99605d9f05614beb1919360ee012177">
+        <source>Import Step(s)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step/choose-import-step.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="1371bc59ef18c928caf36f5d66a7af1af8ce17a2">
+        <source>Choose a unit to import from:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step/choose-import-step.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="dc834df3c90c7b9021cfa37b2be737c2134249a5">
+        <source>Run ID</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step/choose-import-step.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="325291e71ff2bb75a324c2c02e5deb1ff8600043">
+        <source>Library Units</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step/choose-import-step.component.html</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="38d584510075ce8ab505c1081beb607c36898b2b">
+        <source>Choose the step(s) that you want to import, then click next.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step/choose-import-step.component.html</context>
+          <context context-type="linenumber">28</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="76176dda9f079e8ab3c78d6975eee76b8b3eddad">
+        <source>Preview Unit</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step/choose-import-step.component.html</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="0fb1aad24bc0920a8c5e9d43e320e261dbca3f09">
+        <source>Preview Step</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step/choose-import-step.component.html</context>
+          <context context-type="linenumber">51</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="f732c304c7433e5a83ffcd862c3dce709a0f4982">
+        <source>Next</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step/choose-import-step.component.html</context>
+          <context context-type="linenumber">70</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step/choose-import-step.component.html</context>
+          <context context-type="linenumber">66</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/add-component/choose-new-component/choose-new-component.component.html</context>
+          <context context-type="linenumber">27</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="e8c21747e8604f974b3ed6ecf6089306b7cc0aae">
+        <source>Choose a location for the imported steps</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step-location/choose-import-step-location.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="2487b6259288414268ebb0273e79a0dbd975205b">
+        <source>Insert As First Step</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step-location/choose-import-step-location.component.html</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="1e9b22a987b26586870bb920525f8062d24c6267">
+        <source>Insert After</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step-location/choose-import-step-location.component.html</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/add-component/choose-new-component-location/choose-new-component-location.component.html</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="1bf58cf720f3aa0e4a6f06d2a84183b552f3f3c6">
+        <source>Click the new component type you want to add</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/add-component/choose-new-component/choose-new-component.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="1fa4d608488f8c688cef3cac8f93e5e2e43a39de">
+        <source>Choose New Location</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/add-component/choose-new-component-location/choose-new-component-location.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="d0feb44b6358f108a58480afa4b903c34031a110">
+        <source>Insert As First Component</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/add-component/choose-new-component-location/choose-new-component-location.component.html</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/add-component/choose-new-component-location/choose-new-component-location.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="cda31dbd724cf5f4fa7a4274d9120651490c8a8c">
+        <source>Back</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/add-component/choose-new-component-location/choose-new-component-location.component.html</context>
+          <context context-type="linenumber">36</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="d81f00c85d3b507f3e3d78bfc617a2c66e028391">
+        <source>New</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/classroom-monitor/component-new-work-badge/component-new-work-badge.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/classroomMonitor/classroomMonitorComponents/nodeGrading/workgroupInfo/workgroup-info.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="bfab7f41cfc32a926c55987d6a9c3349ae417131">
+        <source> Show Save Button </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/authoringTool/node/advanced/general/node-advanced-general-authoring.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="770c5cff3389877453481f51ed615bc3e2e3ae44">
+        <source> Show Submit Button </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/authoringTool/node/advanced/general/node-advanced-general-authoring.component.html</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="397caaa290032309390882c11de492805dead8e4">
+        <source>Edit Step JSON</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/authoringTool/node/advanced/json/node-advanced-json-authoring.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="f9c52903219e583ddefb23cd102d2057504ac980">
+        <source>(Team <x equiv-text="{{workgroupId}}" id="INTERPOLATION"/>)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/classroomMonitor/classroomMonitorComponents/nodeGrading/workgroupInfo/workgroup-info.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="2d1bd68dd6cbd034f0b62c1dfabf7e17ee27081c">
+        <source><x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>Register<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/> or <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK_1"/>Sign In<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/header/header-signin/header-signin.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="17f37e96c7b8059b23c07791dca1bdb3f3f6853f">
+        <source>Welcome <x equiv-text="{{ user.firstName }}" id="INTERPOLATION"/>!</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/header/header-links/header-links.component.html</context>
+          <context context-type="linenumber">3</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/header/header-links/header-links.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="d222f6ff9f7e28fdb4e8b2af47898446cf2eafe4">
+        <source>Account Menu</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="879fef27271d8247d791381cf1f9bb0eb8974166">
+        <source>Account avatar</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
+          <context context-type="linenumber">14</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="c48210e0360714d757f8286144200648dc140e30">
+        <source>Switch back to original user</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
+          <context context-type="linenumber">21</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="ea7254c3121598c9cfd72210e1336473441546e3">
+        <source>Researcher Tools</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
+          <context context-type="linenumber">62</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="593d1ae1c4b71457eda8476df2bb52624a3c6e74">
+        <source>Admin Tools</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
+          <context context-type="linenumber">68</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="85b79c9064aed1ead31ace985f31aa1363f6bdaf">
+        <source>Help</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
+          <context context-type="linenumber">76</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
+          <context context-type="linenumber">84</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="640eec093c685babaa3265137215e3cc92ad704d">
+        <source>Sign Out</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/header/header-account-menu/header-account-menu.component.html</context>
+          <context context-type="linenumber">89</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6178733511992894634">
@@ -6220,7 +6255,7 @@
         <source>Class Schedule</source>
       </trans-unit>
       <trans-unit id="968047685667963368">
-        <source>Browse WISE Units</source>
+        <source>Unit Library</source>
       </trans-unit>
       <trans-unit id="4967231969832964676">
         <source>Profile updated.</source>

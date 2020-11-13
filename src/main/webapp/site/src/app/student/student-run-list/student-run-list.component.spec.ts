@@ -37,7 +37,7 @@ export class MockStudentService {
       new Run({
         id:2,
         name:'Plate Tectonics',
-        startTime: new Date('2018-08-23T00:00:00.0').getTime()
+        startTime: new Date('2018-08-25T00:00:00.0').getTime()
       }),
       new Run({
         id:3,
@@ -89,6 +89,6 @@ describe('StudentRunListComponent', () => {
 
   it('should show number of runs', () => {
     const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('#unitCount').textContent).toContain('My WISE units: 3 (2 active, 1 completed)');
+    expect(compiled.querySelector('#unitCount').textContent).toContain('My WISE units: 3 (1 scheduled, 1 active)');
   })
 });

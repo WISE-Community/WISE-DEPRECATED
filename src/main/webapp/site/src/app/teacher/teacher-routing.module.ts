@@ -13,7 +13,7 @@ import { PersonalLibraryComponent } from '../modules/library/personal-library/pe
 
 const teacherRoutes: Routes = [
   {
-    path: 'teacher',
+    path: '',
     component: TeacherComponent,
     canActivate: [AuthGuard],
     children: [
@@ -39,7 +39,7 @@ const teacherRoutes: Routes = [
           }
         ]
       },
-      {path: '', loadChildren: () => import('../hybrid-module').then(m => m.TeacherAngularJSModule)}
+      {path: '', loadChildren: () => import('../teacher-hybrid-angular.module').then(m => m.TeacherAngularJSModule)}
     ],
   }
 ];

@@ -36,7 +36,6 @@
             ng-class="{'node-select-option--group': $ctrl.isGroupNode(item.$key), 'node-select-option--node': !$ctrl.isGroupNode(item.$key)}">
           <span layout="row" layout-align="start center">
             <span class="node-select__text">{{ ::$ctrl.getNodePositionById(item.$key) + ': '}}{{ ::$ctrl.getNodeTitleByNodeId(item.$key) }} ({{item.$key}})</span>
-            <node-status-icon node-id="item.$key" custom-class="'node-select__status'"></node-status-icon>
           </span>
         </md-option>
       </md-select>
@@ -113,7 +112,6 @@
             ng-class="{'node-select-option--group': $ctrl.isGroupNode(item.$key), 'node-select-option--node': !$ctrl.isGroupNode(item.$key)}">
           <span layout="row" layout-align="start center">
             <span class="node-select__text">{{ ::$ctrl.getNodePositionById(item.$key) + ': '}}{{ ::$ctrl.getNodeTitleByNodeId(item.$key) }} ({{item.$key}})</span>
-            <node-status-icon node-id="item.$key" custom-class="'node-select__status'"></node-status-icon>
           </span>
         </md-option>
       </md-select>

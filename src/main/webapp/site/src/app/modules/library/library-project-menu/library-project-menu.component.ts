@@ -17,8 +17,8 @@ export class LibraryProjectMenuComponent implements OnInit {
   @Input()
   project: Project;
 
-  @Output('menuAction')
-  select: EventEmitter<string> = new EventEmitter<string>();
+  @Input()
+  isRun: boolean;
 
   editLink: string = '';
   previewLink: string = '';
@@ -35,7 +35,7 @@ export class LibraryProjectMenuComponent implements OnInit {
 
   ngOnInit() {
     this.isCanEdit = this.isOwner() || this.isSharedOwnerWithEditPermission();
-    this.isCanShare = this.isOwner();
+    this.isCanShare = this.isOwner() && !this.isRun;
     this.editLink = `${this.configService.getContextPath()}/teacher/edit/unit/${this.project.id}`;
     this.isChild = this.project.isChild();
   }

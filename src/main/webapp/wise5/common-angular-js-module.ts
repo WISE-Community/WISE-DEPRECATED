@@ -32,6 +32,7 @@ import './components/draw/drawComponentModule';
 import './components/embedded/embeddedComponentModule';
 import * as fabric from 'fabric';
 window['fabric'] = fabric.fabric
+import Filters from './filters/filters';
 import './lib/highcharts/highcharts-ng';
 import * as Highcharts from './lib/highcharts/highcharts.src';
 import './lib/draggable-points/draggable-points';
@@ -68,9 +69,9 @@ window['SockJS'] = SockJS;
 window['Stomp'] = StompJS.Stomp;
 import './lib/angular-summernote/dist/angular-summernote.min';
 import './themes/default/theme';
+import SideMenu from './common/sideMenuComponent';
 
-export function createCommonModule() {
-  return angular.module('common', [
+  angular.module('common', [
     angularDragula(angular),
     'angularMoment',
     'angular-toArrayFilter',
@@ -116,6 +117,8 @@ export function createCommonModule() {
   .factory('TagService', downgradeInjectable(TagService))
   .factory('StudentDataService', downgradeInjectable(StudentDataService))
   .factory('UtilService', downgradeInjectable(UtilService))
+  .component('sideMenu', SideMenu)
+  .filter('Filters', Filters)
   .config([
       '$httpProvider',
       '$locationProvider',
@@ -207,4 +210,3 @@ export function createCommonModule() {
       }
     });
   }]);
-}

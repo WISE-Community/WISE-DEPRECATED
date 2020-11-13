@@ -17,13 +17,13 @@ const registerRoutes: Routes = [
     component: RegisterComponent,
     children: [
       { path: '', component: RegisterHomeComponent },
-      { path: 'join/student', component: RegisterStudentComponent },
-      { path: 'join/student/form', component: RegisterStudentFormComponent },
-      { path: 'join/student/complete', component: RegisterStudentCompleteComponent },
-      { path: 'join/teacher', component: RegisterTeacherComponent },
-      { path: 'join/teacher/complete', component: RegisterTeacherCompleteComponent },
-      { path: 'join/teacher/form', component: RegisterTeacherFormComponent },
-      { path: 'join/googleUserAlreadyExists', component: RegisterGoogleUserAlreadyExistsComponent }
+      { path: 'student', component: RegisterStudentComponent },
+      { path: 'student/form', component: RegisterStudentFormComponent },
+      { path: 'student/complete', component: RegisterStudentCompleteComponent },
+      { path: 'teacher', component: RegisterTeacherComponent },
+      { path: 'teacher/complete', component: RegisterTeacherCompleteComponent },
+      { path: 'teacher/form', component: RegisterTeacherFormComponent },
+      { path: 'googleUserAlreadyExists', component: RegisterGoogleUserAlreadyExistsComponent }
     ]
   }
 ];
