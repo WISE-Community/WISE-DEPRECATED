@@ -5313,6 +5313,13 @@
           <context context-type="linenumber">12</context>
         </context-group>
       </trans-unit>
+      <trans-unit datatype="html" id="68d196064bb4b2ae132a35a1e3514584df62e7b0">
+        <source>Recent Posts in Teacher Community</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/discourse-recent-activity/discourse-recent-activity.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
       <trans-unit datatype="html" id="4c42d0c12ddaebc2efdfc00bbf1d714bf385f278">
         <source>Teacher Home</source>
         <context-group purpose="location">
@@ -5328,14 +5335,14 @@
         <source>Authoring Tool</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-home/teacher-home.component.html</context>
-          <context context-type="linenumber">20</context>
+          <context context-type="linenumber">21</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="48ae429835665b58a2711db68e68b9a4dfa1f0ff">
         <source>Teacher home navigation</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-home/teacher-home.component.html</context>
-          <context context-type="linenumber">11</context>
+          <context context-type="linenumber">12</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="2353459e710912ab1e887bf5c0adbeaaf7e6b2af">

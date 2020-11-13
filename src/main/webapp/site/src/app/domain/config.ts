@@ -7,4 +7,5 @@ export class Config {
   logOutURL: string;
   currentTime: number;
   wise4Hostname?: string;
+  discourseURL?: string;
 }

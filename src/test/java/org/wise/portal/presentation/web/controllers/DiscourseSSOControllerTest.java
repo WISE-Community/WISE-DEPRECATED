@@ -9,7 +9,6 @@ import org.easymock.EasyMockRunner;
 import org.easymock.TestSubject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 @RunWith(EasyMockRunner.class)
@@ -33,9 +32,9 @@ public class DiscourseSSOControllerTest extends APIControllerTest {
     expect(appProperties.getProperty("discourse_sso_secret_key")).andReturn("do_the_right_thing");
     expect(appProperties.getProperty("discourse_url")).andReturn("http://localhost:9292");
     replay(userService, appProperties);
-    ModelAndView discourseSSOLoginRedirect =
+    RedirectView discourseSSOLoginRedirect =
         discourseSSOController.discourseSSOLogin(base64EncodedSSO, sigParam, teacherAuth);
-    assertEquals(redirectURL, ((RedirectView) discourseSSOLoginRedirect.getView()).getUrl());
+    assertEquals(redirectURL, discourseSSOLoginRedirect.getUrl());
     verify(userService, appProperties);
   }
 }

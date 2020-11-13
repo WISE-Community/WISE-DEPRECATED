@@ -7,6 +7,7 @@
     <mat-icon>home</mat-icon><span i18n>Teacher Home</span>
   </h1>
 </header>
+<discourse-recent-activity *ngIf="isDiscourseEnabled"></discourse-recent-activity>
 <section>
   <nav mat-tab-nav-bar i18n-aria-label aria-label="Teacher home navigation">
     <a mat-tab-link *ngFor="let tab of tabLinks"

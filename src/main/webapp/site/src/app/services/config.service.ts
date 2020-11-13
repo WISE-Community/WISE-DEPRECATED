@@ -32,6 +32,10 @@ export class ConfigService {
     return this.config$.getValue().contextPath;
   }
 
+  getDiscourseURL() {
+    return this.config$.getValue().discourseURL;
+  }
+
   getGoogleAnalyticsId() {
     return this.config$.getValue().googleAnalyticsId;
   }

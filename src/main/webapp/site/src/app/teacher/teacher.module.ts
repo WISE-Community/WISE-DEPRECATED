@@ -37,6 +37,7 @@ import { RunSettingsDialogComponent } from './run-settings-dialog/run-settings-d
 import { UseWithClassWarningDialogComponent } from './use-with-class-warning-dialog/use-with-class-warning-dialog.component';
 import { EditRunWarningDialogComponent } from './edit-run-warning-dialog/edit-run-warning-dialog.component';
 import { ListClassroomCoursesDialogComponent } from './list-classroom-courses-dialog/list-classroom-courses-dialog.component';
+import { DiscourseRecentActivityComponent } from './discourse-recent-activity/discourse-recent-activity.component';
 
 const materialModules = [
   MatAutocompleteModule, MatButtonModule, MatCardModule, MatCheckboxModule,
@@ -58,6 +59,7 @@ const materialModules = [
   ],
   declarations: [
     CreateRunDialogComponent,
+    DiscourseRecentActivityComponent,
     TeacherComponent,
     TeacherHomeComponent,
     TeacherRunListComponent,
