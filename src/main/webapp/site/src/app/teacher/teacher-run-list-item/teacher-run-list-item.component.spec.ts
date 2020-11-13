@@ -6,6 +6,7 @@ import { TeacherRun } from "../teacher-run";
 import { ConfigService } from "../../services/config.service";
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { MomentModule } from "ngx-moment";
+import { MatDialogModule } from "@angular/material/dialog";
 import { configureTestSuite } from 'ng-bullet';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -33,7 +34,7 @@ describe('TeacherRunListItemComponent', () => {
   configureTestSuite(() => {
     TestBed.configureTestingModule({
       declarations: [ TeacherRunListItemComponent ],
-      imports: [ MomentModule, BrowserAnimationsModule, RouterTestingModule ],
+      imports: [ MatDialogModule, MomentModule, BrowserAnimationsModule, RouterTestingModule ],
       providers: [
         { provide: TeacherService, useClass: MockTeacherService },
         { provide: ConfigService, useClass: MockConfigService }
@@ -52,6 +53,7 @@ describe('TeacherRunListItemComponent', () => {
     run.endTime = new Date('2018-10-18T23:59:59.0').getTime();
     run.numStudents = 30;
     run.periods = ['1', '2'];
+    run.runCode = 'Dog123'
     const project = new Project();
     project.id = 1;
     project.name = "Photosynthesis";
@@ -68,5 +70,8 @@ describe('TeacherRunListItemComponent', () => {
   it('should show run info', () => {
     const compiled = fixture.debugElement.nativeElement;
     expect(compiled.textContent).toContain('Photosynthesis');
+    expect(compiled.textContent).toContain('2 periods');
+    expect(compiled.textContent).toContain('30 students');
+    expect(compiled.textContent).toContain('Access Code: Dog123');
   });
 });

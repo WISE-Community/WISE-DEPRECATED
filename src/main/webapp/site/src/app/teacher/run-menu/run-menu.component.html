@@ -21,11 +21,6 @@
       <mat-icon>share</mat-icon>
       <span i18n>Share</span>
     </a>
-    <a mat-menu-item (click)="checkClassroomAuthorization()"
-       *ngIf="isGoogleUser() && isGoogleClassroomEnabled() && !isRunCompleted() && run.project.wiseVersion !== 4">
-      <mat-icon svgIcon="google-classroom"></mat-icon>
-      <span i18n>Share to Google Classroom</span>
-    </a>
     <a mat-menu-item (click)="editContent()" *ngIf="canEdit() && run.project.wiseVersion !== 4">
       <mat-icon>edit</mat-icon>
       <span i18n>Edit Content</span>
