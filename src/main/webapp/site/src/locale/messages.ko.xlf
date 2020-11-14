@@ -584,6 +584,10 @@
           <context context-type="sourcefile">app/modules/library/personal-library/personal-library-details.html</context>
           <context context-type="linenumber">9</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/share-run-code-dialog/share-run-code-dialog.component.html</context>
+          <context context-type="linenumber">44</context>
+        </context-group>
         <target state="needs-translation">Close</target>
       </trans-unit>
       <trans-unit datatype="html" id="51d583eae34e00ff68b64c83bb27a77927206e5c">
@@ -1169,8 +1173,8 @@
           <context context-type="linenumber">6</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
-          <context context-type="linenumber">27</context>
+          <context context-type="sourcefile">app/teacher/share-run-code-dialog/share-run-code-dialog.component.html</context>
+          <context context-type="linenumber">34</context>
         </context-group>
         <target state="needs-translation">Share to Google Classroom</target>
       </trans-unit>
@@ -1530,7 +1534,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
-          <context context-type="linenumber">31</context>
+          <context context-type="linenumber">32</context>
         </context-group>
         <target state="needs-translation">Access Code: <x equiv-text="{{ run.runCode }}" id="INTERPOLATION"/></target>
       </trans-unit>
@@ -1634,7 +1638,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
-          <context context-type="linenumber">52</context>
+          <context context-type="linenumber">55</context>
         </context-group>
         <target state="needs-translation">This unit is from an old version of WISE that is no longer supported. Please find an alternate unit to use in the future or contact us for upgrade options.</target>
       </trans-unit>
@@ -1899,6 +1903,10 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/edit-run-warning-dialog/edit-run-warning-dialog.component.html</context>
           <context context-type="linenumber">9</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/share-run-code-dialog/share-run-code-dialog.component.html</context>
+          <context context-type="linenumber">5</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
@@ -5734,7 +5742,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
-          <context context-type="linenumber">35</context>
+          <context context-type="linenumber">30</context>
         </context-group>
         <target state="needs-translation">Report Problem</target>
       </trans-unit>
@@ -5746,7 +5754,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
-          <context context-type="linenumber">83</context>
+          <context context-type="linenumber">86</context>
         </context-group>
         <target state="needs-translation">Starts <x equiv-text="{{run.startTime | amTimeAgo}}" id="INTERPOLATION"/></target>
       </trans-unit>
@@ -5950,6 +5958,38 @@
         </context-group>
         <target state="needs-translation">Total classroom units: <x equiv-text="{{ filteredRuns.length }}" id="INTERPOLATION"/></target>
       </trans-unit>
+      <trans-unit datatype="html" id="c76c2eeebe0adc81f3434495d189c56d70899cad">
+        <source>Share with Students</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/share-run-code-dialog/share-run-code-dialog.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <target state="needs-translation">Share with Students</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="a4d4aee1d5818b9823e4193327a30c38f606d74b">
+        <source>Copy this link to share with your students:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/share-run-code-dialog/share-run-code-dialog.component.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+        <target state="needs-translation">Copy this link to share with your students:</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="7bbddc45d6222dca137dc142330ab84c2d959aa2">
+        <source>Students with WISE accounts can also select <x ctype="x-strong" equiv-text="&lt;strong&gt;" id="START_TAG_STRONG"/>Add Unit+<x ctype="x-strong" equiv-text="&lt;/strong&gt;" id="CLOSE_TAG_STRONG"/> and type the Access Code:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/share-run-code-dialog/share-run-code-dialog.component.html</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+        <target state="needs-translation">Students with WISE accounts can also select <x ctype="x-strong" equiv-text="&lt;strong&gt;" id="START_TAG_STRONG"/>Add Unit+<x ctype="x-strong" equiv-text="&lt;/strong&gt;" id="CLOSE_TAG_STRONG"/> and type the Access Code:</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="209863274ddac11c65a5735ed1d1e2d869f665b2">
+        <source>Add as an assignment in Google Classroom:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/share-run-code-dialog/share-run-code-dialog.component.html</context>
+          <context context-type="linenumber">30</context>
+        </context-group>
+        <target state="needs-translation">Add as an assignment in Google Classroom:</target>
+      </trans-unit>
       <trans-unit datatype="html" id="9a208893f13987ce5a706b3b5e4fed09e486cb5d">
         <source>periods</source>
         <context-group purpose="location">
@@ -6002,11 +6042,19 @@
         </context-group>
         <target state="needs-translation">student</target>
       </trans-unit>
+      <trans-unit datatype="html" id="a6437b7108a94d0e2f631cf39c4f2a65469b5357">
+        <source>Share with students</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
+          <context context-type="linenumber">33</context>
+        </context-group>
+        <target state="needs-translation">Share with students</target>
+      </trans-unit>
       <trans-unit datatype="html" id="958238c9a38f867922fab7579f5e7c77194fe6a1">
         <source> Shared by <x equiv-text="{{run.owner.firstName}}" id="INTERPOLATION"/> <x equiv-text="{{run.owner.lastName}}" id="INTERPOLATION_1"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
-          <context context-type="linenumber">32</context>
+          <context context-type="linenumber">35</context>
         </context-group>
         <target state="needs-translation"> Shared by <x equiv-text="{{run.owner.firstName}}" id="INTERPOLATION"/> <x equiv-text="{{run.owner.lastName}}" id="INTERPOLATION_1"/></target>
       </trans-unit>
@@ -6014,7 +6062,7 @@
         <source>(Legacy Unit)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
-          <context context-type="linenumber">54</context>
+          <context context-type="linenumber">57</context>
         </context-group>
         <target state="needs-translation">(Legacy Unit)</target>
       </trans-unit>
@@ -6022,7 +6070,7 @@
         <source>Last student login: <x equiv-text="{{run.lastRun | amCalendar}}" id="INTERPOLATION"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
-          <context context-type="linenumber">77</context>
+          <context context-type="linenumber">80</context>
         </context-group>
         <target state="needs-translation">Last student login: <x equiv-text="{{run.lastRun | amCalendar}}" id="INTERPOLATION"/></target>
       </trans-unit>
@@ -6030,7 +6078,7 @@
         <source>Teacher Tools</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/teacher-run-list-item/teacher-run-list-item.component.html</context>
-          <context context-type="linenumber">91</context>
+          <context context-type="linenumber">94</context>
         </context-group>
         <target state="needs-translation">Teacher Tools</target>
       </trans-unit>
@@ -6222,7 +6270,7 @@
         <source>Edit Content</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
-          <context context-type="linenumber">31</context>
+          <context context-type="linenumber">26</context>
         </context-group>
         <target state="needs-translation">Edit Content</target>
       </trans-unit>
@@ -7049,6 +7097,10 @@ Click "Cancel" to keep the invalid JSON open so you can fix it.</source>
         <target state="needs-translation">The JSON is invalid. Invalid JSON will not be saved.
 Click "OK" to revert back to the last valid JSON.
 Click "Cancel" to keep the invalid JSON open so you can fix it.</target>
+      </trans-unit>
+      <trans-unit id="8057745565493131709">
+        <source>Copied to clipboard.</source>
+        <target state="needs-translation">Copied to clipboard.</target>
       </trans-unit>
     </body>
   </file>
