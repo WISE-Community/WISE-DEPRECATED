@@ -69,14 +69,10 @@
           </md-tooltip>
         </md-button>
         <div ng-if='audioOscillatorController.showRubricAuthoring'>
-          <summernote id='{{audioOscillatorController.summernoteRubricId}}'
-                      ng-model='audioOscillatorController.summernoteRubricHTML'
-                      ng-change='audioOscillatorController.summernoteRubricHTMLChanged()'
-                      config='audioOscillatorController.summernoteRubricOptions'
-                      ng-model-options='{ debounce: 1000 }'
-                      rows='10'
-                      cols='100'>
-          </summernote>
+          <wise-tinymce-editor
+            [(model)]='audioOscillatorController.rubric'
+            (model-change)='audioOscillatorController.rubricChanged()'>
+          </wise-tinymce-editor>
         </div>
       </div>
       <div>

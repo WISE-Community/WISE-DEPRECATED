@@ -22,14 +22,10 @@
         <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'EDIT_COMPONENT_RUBRIC' | translate }}</md-tooltip>
       </md-button>
       <div ng-if='htmlController.showRubricAuthoring'>
-        <summernote id='{{htmlController.summernoteRubricId}}'
-                    ng-model='htmlController.summernoteRubricHTML'
-                    ng-change='htmlController.summernoteRubricHTMLChanged()'
-                    config='htmlController.summernoteRubricOptions'
-                    ng-model-options='{ debounce: 1000 }'
-                    rows='10'
-                    cols='100'>
-        </summernote>
+        <wise-tinymce-editor
+            [(model)]='htmlController.rubric'
+            (model-change)='htmlController.rubricChanged()'>
+        </wise-tinymce-editor>
       </div>
     </div>
     <div>
@@ -52,11 +48,8 @@
     </div>
   </div>
   <br/>
-  <summernote id='{{::htmlController.summernotePromptId}}'
-              ng-model='htmlController.summernotePromptHTML'
-              ng-change='htmlController.summernotePromptHTMLChanged()'
-              config='htmlController.summernotePromptOptions'
-              ng-model-options='{ debounce: 1000 }'
-              rows='10'
-              cols='100'></summernote>
+  <wise-tinymce-editor
+      [(model)]='htmlController.html'
+      (model-change)='htmlController.htmlChanged()'>
+  </wise-tinymce-editor>
 </div>

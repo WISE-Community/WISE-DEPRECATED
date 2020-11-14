@@ -291,13 +291,14 @@ class NodeController {
 
     if (this.rubric) {
       const thisTarget = '#nodeRubric_' + this.nodeId;
-
+      const content = this.UtilService.insertWISELinks(this.ProjectService.replaceAssetPaths(
+          this.rubric));
       // add a tour bubble for the node rubric
       this.rubricTour.steps.push({
         target: thisTarget,
         placement: 'bottom',
         title: this.$translate('STEP_INFO'),
-        content: this.ProjectService.replaceAssetPaths(this.rubric),
+        content: content,
         xOffset: 'center',
         arrowOffset: 'center',
         onShow: this.onShowRubric,
@@ -310,13 +311,15 @@ class NodeController {
     for (let component of components) {
       if (component.rubric) {
         const thisTarget = '#rubric_' + component.id;
+        const content = this.UtilService.insertWISELinks(this.ProjectService.replaceAssetPaths(
+            component.rubric));
         this.rubricTour.steps.push({
           target: thisTarget,
           arrowOffset: 21,
           placement: 'right',
           yOffset: 1,
           title: this.$translate('ITEM_INFO'),
-          content: this.ProjectService.replaceAssetPaths(component.rubric),
+          content: content,
           onShow: this.onShowRubric,
           viewed: false
         });

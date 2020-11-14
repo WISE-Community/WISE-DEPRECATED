@@ -65,14 +65,10 @@
           </md-tooltip>
         </md-button>
         <div ng-if='multipleChoiceController.showRubricAuthoring'>
-          <summernote id='{{multipleChoiceController.summernoteRubricId}}'
-              ng-model='multipleChoiceController.summernoteRubricHTML'
-              ng-change='multipleChoiceController.summernoteRubricHTMLChanged()'
-              config='multipleChoiceController.summernoteRubricOptions'
-              ng-model-options='{ debounce: 1000 }'
-              rows='10'
-              cols='100'>
-          </summernote>
+          <wise-tinymce-editor
+              [(model)]='multipleChoiceController.rubric'
+              (model-change)='multipleChoiceController.rubricChanged()'>
+          </wise-tinymce-editor>
         </div>
       </div>
       <div>

@@ -272,7 +272,7 @@ export class UtilService {
       let newElement = null;
       if (type == 'link') {
         newElement =
-          "<a wiselink='true' node-id='" + nodeId + "' " + componentHTML + '>' + linkText + '</a>';
+          "<a href='#' wiselink='true' node-id='" + nodeId + "' " + componentHTML + '>' + linkText + '</a>';
       } else if (type == 'button') {
         newElement =
           "<button wiselink='true' node-id='" +
@@ -284,7 +284,7 @@ export class UtilService {
           '</button>';
       } else {
         newElement =
-          "<a wiselink='true' node-id='" + nodeId + "' " + componentHTML + '>' + linkText + '</a>';
+          "<a href='#' wiselink='true' node-id='" + nodeId + "' " + componentHTML + '>' + linkText + '</a>';
       }
       if (newElement != null) {
         html = html.replace(wiseLinkHTML, newElement);

@@ -27,6 +27,8 @@ import { AngularJSModule } from './common-hybrid-angular.module';
 import { NodeAdvancedJsonAuthoringComponent } from '../../../wise5/authoringTool/node/advanced/json/node-advanced-json-authoring.component';
 import { WorkgroupInfoComponent } from '../../../wise5/classroomMonitor/classroomMonitorComponents/nodeGrading/workgroupInfo/workgroup-info.component';
 import { NodeAdvancedGeneralAuthoringComponent } from '../../../wise5/authoringTool/node/advanced/general/node-advanced-general-authoring.component';
+import { EditorModule, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
+import { WiseTinymceEditorComponent } from '../../../wise5/directives/wise-tinymce-editor/wise-tinymce-editor.component';
 
 @NgModule({
   declarations: [
@@ -43,10 +45,12 @@ import { NodeAdvancedGeneralAuthoringComponent } from '../../../wise5/authoringT
     StatusIconComponent,
     WorkgroupInfoComponent,
     WorkgroupNodeScoreComponent,
-    NavItemScoreComponent
+    NavItemScoreComponent,
+    WiseTinymceEditorComponent
   ],
   imports: [
-    AngularJSModule
+    AngularJSModule,
+    EditorModule
   ],
   providers: [
     { provide: DataService, useExisting: TeacherDataService },
@@ -57,7 +61,8 @@ import { NodeAdvancedGeneralAuthoringComponent } from '../../../wise5/authoringT
     { provide: ProjectService, useExisting: TeacherProjectService },
     TeacherDataService,
     TeacherProjectService,
-    TeacherWebSocketService
+    TeacherWebSocketService,
+    { provide: TINYMCE_SCRIPT_SRC, useValue: 'tinymce/tinymce.min.js' }
   ]
 })
 export class TeacherAngularJSModule {

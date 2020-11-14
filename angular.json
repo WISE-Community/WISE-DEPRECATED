@@ -56,7 +56,8 @@
             "extractCss": true,
             "assets": [
               "src/main/webapp/site/src/assets",
-              "src/main/webapp/site/src/favicon.ico"
+              "src/main/webapp/site/src/favicon.ico",
+              { "glob": "**/*", "input": "node_modules/tinymce", "output": "/tinymce/" }
             ],
             "styles": [
               {
