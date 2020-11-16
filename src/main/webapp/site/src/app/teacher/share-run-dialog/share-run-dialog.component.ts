@@ -1,6 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { TeacherService } from "../teacher.service";
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from "@angular/material/table";
 import { ShareItemDialogComponent } from "../../modules/library/share-item-dialog/share-item-dialog.component";
@@ -28,7 +28,8 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
               public teacherService: TeacherService,
               private userService: UserService,
               private utilService: UtilService,
-              public snackBar: MatSnackBar) {
+              public snackBar: MatSnackBar,
+              public dialog: MatDialog) {
     super(dialogRef, data, teacherService, snackBar);
     this.teacherService.getRun(this.data.run.id).subscribe((run: TeacherRun) => {
       this.run = new TeacherRun(run);
@@ -184,6 +185,6 @@ export class ShareRunDialogComponent extends ShareItemDialogComponent {
   }
 
   copyProject() {
-    this.teacherService.copyProject(this.project);
+    this.teacherService.copyProject(this.project, this.dialog);
   }
 }

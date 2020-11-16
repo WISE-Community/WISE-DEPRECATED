@@ -1,17 +1,18 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { LibraryProjectDetailsComponent } from "../library-project-details/library-project-details.component";
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { finalize } from 'rxjs/operators';
 import { LibraryProject } from "../libraryProject";
 import { LibraryService } from "../../../services/library.service";
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-copy-project-dialog',
   templateUrl: './copy-project-dialog.component.html',
   styleUrls: ['./copy-project-dialog.component.scss']
 })
-export class CopyProjectDialogComponent implements OnInit {
+export class CopyProjectDialogComponent {
 
   isCopying: boolean = false;
 
@@ -20,13 +21,9 @@ export class CopyProjectDialogComponent implements OnInit {
               @Inject(MAT_DIALOG_DATA) public data: any,
               private libraryService: LibraryService,
               private snackBar: MatSnackBar) {
-
     this.libraryService.newProjectSource$.subscribe(() => {
       this.dialog.closeAll();
     });
-  }
-
-  ngOnInit() {
   }
 
   copy() {

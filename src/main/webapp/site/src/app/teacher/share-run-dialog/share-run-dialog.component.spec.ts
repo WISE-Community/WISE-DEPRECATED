@@ -4,7 +4,7 @@ import { Observable } from "rxjs";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TeacherService } from "../teacher.service";
 import { Run } from "../../domain/run";
-import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
@@ -85,6 +85,10 @@ describe('ShareRunDialogComponent', () => {
         { provide: TeacherService, useClass: MockTeacherService },
         { provide: MatDialogRef, useValue: {} },
         { provide: MAT_DIALOG_DATA, useValue: { run: runObj } },
+        { provide: MatDialog, useValue: {
+          closeAll: () => {
+          }
+        }},
         { provide: UserService, useClass: MockUserService }
       ],
       schemas: [ NO_ERRORS_SCHEMA ]
@@ -95,6 +99,7 @@ describe('ShareRunDialogComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(ShareRunDialogComponent);
     component = fixture.componentInstance;
+    component.dialog = TestBed.get(MatDialog);
     fixture.detectChanges();
   });
 

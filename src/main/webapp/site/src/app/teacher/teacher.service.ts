@@ -41,10 +41,10 @@ export class TeacherService {
   public newRunSource$ = this.newRunSource.asObservable();
   private updateProfileUrl = '/api/teacher/profile/update';
 
-  constructor(private http: HttpClient, public dialog: MatDialog) { }
+  constructor(private http: HttpClient) { }
 
-  copyProject(project: Project) {
-    this.dialog.open(CopyProjectDialogComponent, {
+  copyProject(project: Project, dialog: MatDialog) {
+    dialog.open(CopyProjectDialogComponent, {
       data: { project: project },
       panelClass: 'mat-dialog--sm'
     });
