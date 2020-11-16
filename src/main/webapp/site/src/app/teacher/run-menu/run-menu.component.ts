@@ -8,7 +8,6 @@ import { TeacherRun } from '../teacher-run';
 import { ConfigService } from '../../services/config.service';
 import { RunSettingsDialogComponent } from '../run-settings-dialog/run-settings-dialog.component';
 import { EditRunWarningDialogComponent } from '../edit-run-warning-dialog/edit-run-warning-dialog.component';
-import { ListClassroomCoursesDialogComponent } from '../list-classroom-courses-dialog/list-classroom-courses-dialog.component';
 import { Router } from '@angular/router';
 
 @Component({
@@ -45,36 +44,6 @@ export class RunMenuComponent implements OnInit {
     });
   }
 
-  checkClassroomAuthorization() {
-    this.teacherService
-      .getClassroomAuthorizationUrl(this.userService.getUser().getValue().username)
-      .subscribe(({ authorizationUrl }) => {
-        if (authorizationUrl == null) {
-          this.getClassroomCourses();
-        } else {
-          const authWindow = window.open(authorizationUrl, 'authorize', 'width=600,height=800');
-          const timer = setInterval(() => {
-            if (authWindow.closed) {
-              clearInterval(timer);
-              this.checkClassroomAuthorization();
-            }
-          }, 1000);
-        }
-      });
-  }
-
-  getClassroomCourses() {
-    this.teacherService
-      .getClassroomCourses(this.userService.getUser().getValue().username)
-      .subscribe(courses => {
-        const panelClass = courses.length ? 'mat-dialog--md' : '';
-        this.dialog.open(ListClassroomCoursesDialogComponent, {
-          data: { run: this.run, courses },
-          panelClass: panelClass
-        });
-      });
-  }
-
   showUnitDetails() {
     const project = this.run.project;
     this.dialog.open(LibraryProjectDetailsComponent, {
@@ -93,14 +62,6 @@ export class RunMenuComponent implements OnInit {
 
   isOwner() {
     return this.run.isOwner(this.userService.getUserId());
-  }
-
-  isGoogleUser() {
-    return this.userService.isGoogleUser();
-  }
-
-  isGoogleClassroomEnabled() {
-    return this.configService.isGoogleClassroomEnabled();
   }
 
   isRunCompleted() {

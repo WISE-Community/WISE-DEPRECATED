@@ -1,16 +1,18 @@
 <div class="bodyDiv">
   <div>
-    <md-checkbox class="md-primary"
-        ng-model="$ctrl.node.showSaveButton"
-        ng-change="$ctrl.saveProject()">
-      {{ ::"SHOW_SAVE_BUTTON" | translate }}
-    </md-checkbox>
+    <mat-checkbox class="mat-primary"
+        [(ngModel)]="node.showSaveButton"
+        (change)="saveProject()"
+        i18n>
+      Show Save Button
+    </mat-checkbox>
   </div>
   <div>
-    <md-checkbox class="md-primary"
-        ng-model="$ctrl.node.showSubmitButton"
-        ng-change="$ctrl.saveProject()">
-      {{ ::"SHOW_SUBMIT_BUTTON" | translate }}
-    </md-checkbox>
+    <mat-checkbox class="mat-primary"
+        [(ngModel)]="node.showSubmitButton"
+        (change)="saveProject()"
+        i18n>
+      Show Submit Button
+    </mat-checkbox>
   </div>
 </div>

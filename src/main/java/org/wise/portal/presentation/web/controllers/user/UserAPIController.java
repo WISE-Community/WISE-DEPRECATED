@@ -133,6 +133,7 @@ public class UserAPIController {
     config.put("isGoogleClassroomEnabled", isGoogleClassroomEnabled());
     config.put("logOutURL", contextPath + "/logout");
     config.put("recaptchaPublicKey", appProperties.get("recaptcha_public_key"));
+    config.put("wiseHostname", appProperties.get("wise.hostname"));
     config.put("wise4Hostname", appProperties.get("wise4.hostname"));
     config.put("discourseURL", appProperties.getOrDefault("discourse_url", null));
     return config;

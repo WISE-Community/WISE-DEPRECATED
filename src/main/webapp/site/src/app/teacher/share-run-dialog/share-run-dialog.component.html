@@ -1,4 +1,4 @@
-<h2 *ngIf="!isTransfer" mat-dialog-title i18n>Share Classroom Unit</h2>
+<h2 *ngIf="!isTransfer" mat-dialog-title i18n>Share Classroom Access</h2>
 <h2 *ngIf="isTransfer" 
     mat-dialog-title 
     fxLayoutAlign="start center" 
@@ -13,8 +13,13 @@
     <p class="mat-subheading-1 accent-1">
       {{ run.name }} <span class="mat-caption" i18n>(Run ID: {{ run.id }})</span>
     </p>
+    <ng-container *ngIf="!isTransfer">
+      <p><strong i18n>Sharing access allows other WISE teachers to view student work and optionally view student names, grade, manage teams, and edit unit content.</strong></p>
+      <p i18n>If you have customized the content in this unit and want to share so other teachers can use with their students, <a [routerLink]="" (click)="copyProject()">make a copy</a> of the unit.</p>
+      <mat-divider></mat-divider>
+    </ng-container>
     <mat-form-field appearance="fill" *ngIf="!transferRunWarning">
-      <mat-label i18n>Enter teacher username</mat-label>
+      <mat-label i18n>Find a teacher</mat-label>
       <mat-icon matPrefix>search</mat-icon>
       <input id="share-run-dialog-search"
              type="text"
