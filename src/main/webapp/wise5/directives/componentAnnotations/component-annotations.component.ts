@@ -1,15 +1,20 @@
 'use strict';
 
-import { Directive } from "@angular/core";
+import { Component, Input } from "@angular/core";
+import { UpgradeModule } from "@angular/upgrade/static";
 import { Subscription } from "rxjs";
 import { ConfigService } from "../../services/configService";
 import { StudentDataService } from "../../services/studentDataService";
 import { VLEProjectService } from "../../vle/vleProjectService";
 
-@Directive()
-class ComponentAnnotationsController {
+@Component({
+  selector: 'component-annotations',
+  styleUrls: ['component-annotations.component.scss'],
+  templateUrl: 'component-annotations.component.html'
+})
+export class ComponentAnnotationsComponent {
 
-  $translate: any;
+  @Input()
   annotations: any;
   maxScoreDisplay: string;
   nodeId: string = null;
@@ -17,22 +22,21 @@ class ComponentAnnotationsController {
   latestAnnotationTime: any = null;
   isNew: boolean;
   label: string = '';
+
+  @Input()
   maxScore: string;
   icon: string = 'person';
   showScore: boolean = true;
   showComment: boolean = true;
   studentWorkSavedToServerSubscription: Subscription;
 
-  static $inject = ['$filter', 'ConfigService', 'ProjectService', 'StudentDataService'];
-
-  constructor(private $filter: any,
+  constructor(private upgrade: UpgradeModule,
       private ConfigService: ConfigService,
       private ProjectService: VLEProjectService,
       private StudentDataService: StudentDataService) {
-    this.$translate = this.$filter('translate');
   }
 
-  $onInit() {
+  ngOnInit() {
     this.maxScoreDisplay = (parseInt(this.maxScore) > 0) ? '/' + this.maxScore : '';
     this.studentWorkSavedToServerSubscription =
         this.StudentDataService.studentWorkSavedToServer$.subscribe(({studentWork}) => {
@@ -42,19 +46,11 @@ class ComponentAnnotationsController {
     });
   }
 
-  $onChanges() {
+  ngOnChanges() {
     this.processAnnotations();
-  };
-
-  $onDestroy() {
-    this.ngOnDestroy();
   }
 
   ngOnDestroy() {
-    this.unsubscribeAll();
-  }
-
-  unsubscribeAll() {
     this.studentWorkSavedToServerSubscription.unsubscribe();
   }
 
@@ -136,24 +132,12 @@ class ComponentAnnotationsController {
     const latest = this.getLatestAnnotation();
     if (latest) {
       if (latest.type === 'autoComment' || latest.type === 'autoScore') {
-        this.label = this.$translate('automatedFeedbackLabel');
+        this.label = this.upgrade.$injector.get('$filter')('translate')('automatedFeedbackLabel');
         this.icon = 'keyboard';
       } else {
-        this.label = this.$translate('teacherFeedbackLabel');
+        this.label = this.upgrade.$injector.get('$filter')('translate')('teacherFeedbackLabel');
         this.icon = 'person';
       }
     }
   }
 }
-
-const ComponentAnnotations = {
-  bindings: {
-    annotations: '<',
-    maxScore: '<'
-  },
-  templateUrl: 'wise5/directives/componentAnnotations/componentAnnotations.html',
-  controller: ComponentAnnotationsController,
-  controllerAs: 'componentAnnotationsCtrl'
-};
-
-export default ComponentAnnotations;

@@ -197,8 +197,8 @@
         </div>
       </div>
       <component-annotations ng-if='graphController.mode === "student"'
-                   annotations='graphController.latestAnnotations'
-                   max-score='graphController.componentContent.maxScore'></component-annotations>
+                   [annotations]='graphController.latestAnnotations'
+                   [max-score]='graphController.componentContent.maxScore'></component-annotations>
       <div style="display:none">
         <canvas id="{{::graphController.hiddenCanvasId}}"></canvas>
       </div>

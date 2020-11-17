@@ -1,7 +1,7 @@
 import '../lib/jquery/jquery-global';
 import '../lib/bootstrap/js/bootstrap.min'
 import * as angular from 'angular';
-import { downgradeInjectable } from '@angular/upgrade/static';
+import { downgradeComponent, downgradeInjectable } from '@angular/upgrade/static';
 import '../common-angular-js-module';
 import NavigationController from '../vle/navigation/navigationController';
 import NodeController from '../vle/node/nodeController';
@@ -11,6 +11,7 @@ import { VLEProjectService } from '../vle/vleProjectService';
 import '../lib/summernote/dist/summernote.min';
 import '../lib/summernoteExtensions/summernote-ext-addNote.js';
 import '../lib/summernoteExtensions/summernote-ext-print.js'
+import { ComponentAnnotationsComponent } from '../directives/componentAnnotations/component-annotations.component';
 
 export function createStudentAngularJSModule(type = 'preview') {
   return angular.module(type, [
@@ -26,6 +27,8 @@ export function createStudentAngularJSModule(type = 'preview') {
   .controller('NavigationController', NavigationController)
   .controller('NodeController', NodeController)
   .controller('VLEController', VLEController)
+  .directive('componentAnnotations',
+      downgradeComponent({ component: ComponentAnnotationsComponent }) as angular.IDirectiveFactory)
   .config([
     '$stateProvider',
     '$translatePartialLoaderProvider',
