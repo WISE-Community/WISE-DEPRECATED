@@ -63,7 +63,7 @@ function retrieveAssets_StudentMode_FetchAssetsAndSetAttributes() {
       expect(response.length).toEqual(1);
       expect(response[0].type).toEqual('image');
     });
-    http.expectOne(`${studentAssetURL}?workgroupId=${workgroupId}`).flush([asset1]);
+    http.expectOne(`${studentAssetURL}/${workgroupId}`).flush([asset1]);
   });
 }
 

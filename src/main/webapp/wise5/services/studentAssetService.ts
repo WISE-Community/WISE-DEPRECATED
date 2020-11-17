@@ -34,14 +34,11 @@ export class StudentAssetService {
       deferred.resolve(this.allAssets);
       return deferred.promise;
     } else {
-      const options = {
-        params: new HttpParams().set("workgroupId", this.ConfigService.getWorkgroupId())
-      };
-      return this.http.get(this.ConfigService.getStudentAssetsURL(), options)
+      return this.http.get(
+          `${this.ConfigService.getStudentAssetsURL()}/${this.ConfigService.getWorkgroupId()}`)
           .toPromise().then((assets: any) => {
-        // loop through the assets and make them into JSON object with more details
-        let result = [];
-        let studentUploadsBaseURL = this.ConfigService.getStudentUploadsBaseURL();
+        this.allAssets = [];
+        const studentUploadsBaseURL = this.ConfigService.getStudentUploadsBaseURL();
         for (const asset of assets) {
           if (!asset.isReferenced && asset.serverDeleteTime == null &&
               asset.fileName !== '.DS_Store') {
@@ -56,11 +53,10 @@ export class StudentAssetService {
               asset.type = 'file';
               asset.iconURL = 'wise5/vle/notebook/file.png';
             }
-            result.push(asset);
+            this.allAssets.push(asset);
           }
         }
-        this.allAssets = result;
-        return result;
+        return this.allAssets;
       });
     }
   }
