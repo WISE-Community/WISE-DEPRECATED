@@ -1,0 +1,26 @@
+<mat-card class="annotations"
+         *ngIf="(showScore && annotations.score) || (showComment && annotations.comment)">
+    <mat-card-title class="annotations__header">
+        <div class="annotations__avatar md-avatar avatar--icon avatar--square md-36 avatar md-whiteframe-1dp">
+            <mat-icon class="annotations__icon md-36">{{icon}}</mat-icon>
+        </div>
+        <div class="annotations__title" fxLayout="row" flex>
+            <span>{{label}}</span>
+            <span *ngIf="isNewAnnotation()" class="badge annotations__status animate-fade" i18n>New</span>
+        </div>
+    </mat-card-title>
+    <mat-card-content class="annotations__body md-body-1">
+        <div *ngIf="showComment && annotations.comment.data.value" [innerHTML]="annotations.comment.data.value"></div>
+        <hr *ngIf="annotations.comment" />
+        <div fxLayout="row" fxLayoutAlign="start center">
+            <span *ngIf="showScore && annotations.score"
+                  class="annotations__score"
+                  i18n>Score: {{annotations.score.data.value}}{{maxScoreDisplay}}</span>
+            <span fxFlex></span>
+            <span>
+                <span matTooltip="{{ getLatestAnnotationTime() | date: 'EEE, MMM d yyyy, h:mm a' }}"
+                    matTooltipPosition="above" class="annotations__info">{{ getLatestAnnotationTime() | amTimeAgo }}</span>
+            </span>
+        </div>
+    </mat-card-content>
+</mat-card>
