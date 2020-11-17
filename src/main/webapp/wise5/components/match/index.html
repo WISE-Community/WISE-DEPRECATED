@@ -174,8 +174,8 @@
         <div class='match-content'>
           <component-annotations ng-if='matchController.mode === "student"'
               class='annotations--inside'
-              annotations='matchController.latestAnnotations'
-              max-score='matchController.componentContent.maxScore'>
+              [annotations]='matchController.latestAnnotations'
+              [max-score]='matchController.componentContent.maxScore'>
           </component-annotations>
           <div layout='row'
               layout-wrap>

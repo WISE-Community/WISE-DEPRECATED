@@ -28,7 +28,10 @@
       </ng-container>
     </span>
   </div>
-  <div i18n>Access Code: {{ run.runCode }}</div>
+  <div>
+    <span i18n>Access Code: {{ run.runCode }}</span> (<a [routerLink]="" 
+        (click)="shareCode()" i18n>Share with students</a>)
+  </div>
   <div *ngIf="run.shared" class="info" i18n>
     Shared by {{run.owner.firstName}} {{run.owner.lastName}}
   </div>

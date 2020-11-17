@@ -6,5 +6,6 @@ export class Config {
   recaptchaPublicKey?: string;
   logOutURL: string;
   currentTime: number;
+  wiseHostname?: string;
   wise4Hostname?: string;
 }

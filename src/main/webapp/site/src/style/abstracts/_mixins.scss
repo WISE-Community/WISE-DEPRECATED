@@ -91,6 +91,10 @@
     }
   }
 
+  .mat-divider {
+    margin: 16px 0;
+  }
+
   .mat-card-actions {
     margin-left: 0;
     margin-right: 0;
@@ -102,6 +106,10 @@
 
     >.mat-card-actions:last-child {
       margin-bottom: 0;
+    }
+
+    .mat-divider {
+      margin: 0;
     }
   }
 

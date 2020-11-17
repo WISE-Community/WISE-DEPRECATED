@@ -4,10 +4,6 @@
   '~style/abstracts/variables',
   '~style/abstracts/mixins';
 
-.mat-divider {
-  margin: 20px 0 16px;
-}
-
 h2 {
   .mat-icon {
     @include mat-icon-size(mat-font-size($config, display-1));

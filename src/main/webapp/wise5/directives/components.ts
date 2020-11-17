@@ -3,7 +3,6 @@
 import * as angular from 'angular';
 import Compile from './compile/compile';
 import Component from './component/component';
-import ComponentAnnotations from './componentAnnotations/componentAnnotations';
 import DisableDeleteKeypress from './disableDeleteKeypress/disableDeleteKeypress';
 import Draggable from './draggable/draggable';
 import GlobalAnnotations from './globalAnnotations/globalAnnotations';
@@ -22,7 +21,6 @@ const Components = angular.module('components', []);
 
 Components.component('compile', Compile);
 Components.component('component', Component);
-Components.component('componentAnnotations', ComponentAnnotations);
 Components.component('disableDeleteKeypress', DisableDeleteKeypress);
 Components.component('draggable', Draggable);
 Components.component('globalAnnotations', GlobalAnnotations);
@@ -32,7 +30,7 @@ Components.directive('milestoneReportData',
     downgradeComponent({ component: MilestoneReportDataComponent}) as angular.IDirectiveFactory);
 Components.component('milestoneReportGraph', MilestoneReportGraph);
 Components.directive('nodeIcon',
-      downgradeComponent({ component: NodeIconComponent}) as angular.IDirectiveFactory)
+    downgradeComponent({ component: NodeIconComponent}) as angular.IDirectiveFactory);
 Components.directive('possibleScore',
     downgradeComponent({ component: PossibleScoreComponent}) as angular.IDirectiveFactory);
 Components.component('summaryDisplay', SummaryDisplay);

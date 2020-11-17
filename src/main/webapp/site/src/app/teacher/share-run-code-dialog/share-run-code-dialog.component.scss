@@ -1,0 +1,19 @@
+.share {
+  display: block;
+  text-align: center;
+}
+
+.mat-raised-button, .mat-button {
+  text-transform: none;
+  white-space: normal;
+}
+
+.mat-raised-button {
+  margin-top: 8px;
+
+  img {
+    width: 32px;
+    margin-right: 8px;
+    padding: 4px 8px 4px 0;
+  }
+}

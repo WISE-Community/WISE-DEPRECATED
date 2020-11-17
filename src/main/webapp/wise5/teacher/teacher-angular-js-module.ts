@@ -101,7 +101,8 @@ import '../lib/summernoteExtensions/summernote-ext-print.js'
     .component('nodeAdvancedAuthoringComponent', NodeAdvancedAuthoringComponent)
     .component('nodeAdvancedBranchAuthoringComponent', NodeAdvancedBranchAuthoringComponent)
     .component('nodeAdvancedConstraintAuthoringComponent', NodeAdvancedConstraintAuthoringComponent)
-    .component('nodeAdvancedGeneralAuthoringComponent', NodeAdvancedGeneralAuthoringComponent)
+    .directive('nodeAdvancedGeneralAuthoringComponent', downgradeComponent(
+        { component: NodeAdvancedGeneralAuthoringComponent }) as angular.IDirectiveFactory)
     .directive('nodeAdvancedJsonAuthoringComponent', downgradeComponent(
         { component: NodeAdvancedJsonAuthoringComponent }) as angular.IDirectiveFactory)
     .component('nodeAdvancedPathAuthoringComponent', NodeAdvancedPathAuthoringComponent)

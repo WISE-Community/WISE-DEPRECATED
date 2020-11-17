@@ -338,6 +338,9 @@
       <trans-unit id="19198353055300541">
         <source>The JSON is invalid. Invalid JSON will not be saved.\nClick "OK" to revert back to the last valid JSON.\nClick "Cancel" to keep the invalid JSON open so you can fix it.</source>
       </trans-unit>
+      <trans-unit id="8057745565493131709">
+        <source>Copied to clipboard.</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

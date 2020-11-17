@@ -48,6 +48,10 @@ export class ConfigService {
     return this.config$.getValue().recaptchaPublicKey;
   }
 
+  getWISEHostname() {
+    return this.config$.getValue().wiseHostname;
+  }
+
   getWISE4Hostname() {
     return this.config$.getValue().wise4Hostname;
   }
