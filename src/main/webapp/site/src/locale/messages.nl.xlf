@@ -5862,6 +5862,30 @@
         </context-group>
         <target state="needs-translation">Save Changes</target>
       </trans-unit>
+      <trans-unit datatype="html" id="d81f00c85d3b507f3e3d78bfc617a2c66e028391">
+        <source>New</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/directives/componentAnnotations/component-annotations.component.html</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/classroom-monitor/component-new-work-badge/component-new-work-badge.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/classroomMonitor/classroomMonitorComponents/nodeGrading/workgroupInfo/workgroup-info.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+        <target state="needs-translation">New</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="13914f9fe459520b280fb4e82a4c44812a6d74ad">
+        <source>Score: <x equiv-text="{{annotations.score.data.value}}" id="INTERPOLATION"/><x equiv-text="{{maxScoreDisplay}}" id="INTERPOLATION_1"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/directives/componentAnnotations/component-annotations.component.html</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+        <target state="needs-translation">Score: <x equiv-text="{{annotations.score.data.value}}" id="INTERPOLATION"/><x equiv-text="{{maxScoreDisplay}}" id="INTERPOLATION_1"/></target>
+      </trans-unit>
       <trans-unit datatype="html" id="1cde0ecb1655843b8b682674d1ed9ff8138073b2">
         <source>point</source>
         <context-group purpose="location">
@@ -6549,18 +6573,6 @@
           <context context-type="linenumber">36</context>
         </context-group>
         <target state="needs-translation">Back</target>
-      </trans-unit>
-      <trans-unit datatype="html" id="d81f00c85d3b507f3e3d78bfc617a2c66e028391">
-        <source>New</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/classroom-monitor/component-new-work-badge/component-new-work-badge.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/classroomMonitor/classroomMonitorComponents/nodeGrading/workgroupInfo/workgroup-info.component.html</context>
-          <context context-type="linenumber">10</context>
-        </context-group>
-        <target state="needs-translation">New</target>
       </trans-unit>
       <trans-unit datatype="html" id="bfab7f41cfc32a926c55987d6a9c3349ae417131">
         <source> Show Save Button </source>
