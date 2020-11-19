@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, OnInit } from "@angular/core";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { debounceTime } from "rxjs/operators";
 import { Subject, Subscription } from "rxjs";
 import { NotebookService } from "../../services/notebookService";
@@ -8,9 +8,10 @@ declare let tinymce: any;
 
 @Component({
   selector: 'wise-tinymce-editor',
+  styleUrls: ['wise-tinymce-editor.component.scss'],
   templateUrl: 'wise-tinymce-editor.component.html'
 })
-export class WiseTinymceEditorComponent implements OnInit {
+export class WiseTinymceEditorComponent {
   public editor: any;
   public config: any;
   private previousContent: string;
@@ -79,7 +80,7 @@ export class WiseTinymceEditorComponent implements OnInit {
   protected toolbar: string[] = [
     'undo redo | \
     bold italic underline | \
-    image media'
+    numlist bullist'
   ];
 
   constructor(private NotebookService: NotebookService) {
@@ -108,7 +109,7 @@ export class WiseTinymceEditorComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.isAddNoteButtonAvailable) {
-      this.notebookItemChosenSubscription = 
+      this.notebookItemChosenSubscription =
           this.NotebookService.notebookItemChosen$.subscribe(({ requester, notebookItem }) => {
         if (requester === 'report') {
           this.insertWISENote(notebookItem);
@@ -127,7 +128,7 @@ export class WiseTinymceEditorComponent implements OnInit {
     this.config = {
       base_url: '/tinymce',
       suffix: '.min',
-      height: 410,
+      height: '100%',
       menubar: true,
       relative_urls: false,
       media_live_embeds: true,

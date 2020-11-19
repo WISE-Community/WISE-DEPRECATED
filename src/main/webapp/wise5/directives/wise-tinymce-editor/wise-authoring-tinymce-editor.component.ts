@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component } from "@angular/core";
 import { ConfigService } from "../../services/configService";
 import { ProjectAssetService } from "../../../site/src/app/services/projectAssetService";
 import { TeacherProjectService } from "../../services/teacherProjectService";
@@ -10,24 +10,24 @@ declare let tinymce: any;
 
 @Component({
   selector: 'wise-authoring-tinymce-editor',
+  styleUrls: ['wise-authoring-tinymce-editor.component.scss'],
   templateUrl: 'wise-tinymce-editor.component.html'
 })
-export class WiseAuthoringTinymceEditorComponent extends WiseTinymceEditorComponent
-    implements OnInit {
+export class WiseAuthoringTinymceEditorComponent extends WiseTinymceEditorComponent {
 
   protected toolbar: string[] = [
     'undo redo | \
-    bold italic underline strikethrough | \
+    bold italic underline | \
     fontselect fontsizeselect formatselect | \
-    alignleft aligncenter alignright alignjustify | \
+    alignleft aligncenter alignright | \
     outdent indent | \
     numlist bullist | \
     forecolor backcolor removeformat | \
-    charmap emoticons | \
-    fullscreen preview print | \
-    image media link anchor codesample'
+    emoticons | \
+    fullscreen | \
+    image media link'
   ];
-  
+
   constructor(
       private ConfigService: ConfigService,
       NotebookService: NotebookService,
@@ -112,5 +112,4 @@ export class WiseAuthoringTinymceEditorComponent extends WiseTinymceEditorCompon
   getFileExtension(fullFilePath: string): string {
     return fullFilePath.split('.').pop();
   }
-
 }
