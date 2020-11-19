@@ -218,11 +218,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/share-project-dialog/share-project-dialog.component.html</context>
-          <context context-type="linenumber">19</context>
+          <context context-type="linenumber">22</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
-          <context context-type="linenumber">29</context>
+          <context context-type="linenumber">34</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="7f32abe3fc638f65c0d3eb269d478ee49ad41ebe">
@@ -1043,6 +1043,89 @@
           <context context-type="linenumber">8</context>
         </context-group>
       </trans-unit>
+      <trans-unit datatype="html" id="d1acaeb5fa466988ff526619702c4bf21e0a5e15">
+        <source>Copy Unit</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/library/copy-project-dialog/copy-project-dialog.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="2883a2c78d97119d2ab3002336e04da6657a7dfd">
+        <source>(Unit ID: <x equiv-text="{{ data.project.id }}" id="INTERPOLATION"/>)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/library/copy-project-dialog/copy-project-dialog.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="459457d652be00e6fe313f88d938d4f063c3b3e0">
+        <source>Copying creates a duplicate that will appear in “My Units”. You will be the owner and can edit the content and share the new unit with other WISE users.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/library/copy-project-dialog/copy-project-dialog.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="d7b35c384aecd25a516200d6921836374613dfe7">
+        <source>Cancel</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/library/copy-project-dialog/copy-project-dialog.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
+          <context context-type="linenumber">47</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
+          <context context-type="linenumber">63</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/use-with-class-warning-dialog/use-with-class-warning-dialog.component.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/edit-run-warning-dialog/edit-run-warning-dialog.component.html</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/student/add-project-dialog/add-project-dialog.component.html</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/student/team-sign-in-dialog/team-sign-in-dialog.component.html</context>
+          <context context-type="linenumber">68</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
+          <context context-type="linenumber">100</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step/choose-import-step.component.html</context>
+          <context context-type="linenumber">62</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step-location/choose-import-step-location.component.html</context>
+          <context context-type="linenumber">40</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/add-component/choose-new-component/choose-new-component.component.html</context>
+          <context context-type="linenumber">23</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/add-component/choose-new-component-location/choose-new-component-location.component.html</context>
+          <context context-type="linenumber">41</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="1979da7460819153e11d2078244645d94291b69c">
+        <source>Copy</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/library/copy-project-dialog/copy-project-dialog.component.html</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/library/library-project-menu/library-project-menu.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit>
       <trans-unit datatype="html" id="76de164da3c441addbf9b14950150aa869b00fdb">
         <source>Share to Google Classroom</source>
         <context-group purpose="location">
@@ -1128,57 +1211,6 @@
           <context context-type="linenumber">39</context>
         </context-group>
       </trans-unit>
-      <trans-unit datatype="html" id="d7b35c384aecd25a516200d6921836374613dfe7">
-        <source>Cancel</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/list-classroom-courses-dialog/list-classroom-courses-dialog.component.html</context>
-          <context context-type="linenumber">47</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/create-run-dialog/create-run-dialog.component.html</context>
-          <context context-type="linenumber">63</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/use-with-class-warning-dialog/use-with-class-warning-dialog.component.html</context>
-          <context context-type="linenumber">15</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/modules/library/copy-project-dialog/copy-project-dialog.component.html</context>
-          <context context-type="linenumber">11</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/edit-run-warning-dialog/edit-run-warning-dialog.component.html</context>
-          <context context-type="linenumber">20</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/student/add-project-dialog/add-project-dialog.component.html</context>
-          <context context-type="linenumber">23</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/student/team-sign-in-dialog/team-sign-in-dialog.component.html</context>
-          <context context-type="linenumber">68</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
-          <context context-type="linenumber">95</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step/choose-import-step.component.html</context>
-          <context context-type="linenumber">62</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/authoring-tool/import-step/choose-import-step-location/choose-import-step-location.component.html</context>
-          <context context-type="linenumber">40</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/authoring-tool/add-component/choose-new-component/choose-new-component.component.html</context>
-          <context context-type="linenumber">23</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/authoring-tool/add-component/choose-new-component-location/choose-new-component-location.component.html</context>
-          <context context-type="linenumber">41</context>
-        </context-group>
-      </trans-unit>
       <trans-unit datatype="html" id="f6755cff4957d5c3c89bafce5651f1b6fa2b1fd9">
         <source>Add</source>
         <context-group purpose="location">
@@ -1216,11 +1248,11 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/share-project-dialog/share-project-dialog.component.html</context>
-          <context context-type="linenumber">67</context>
+          <context context-type="linenumber">70</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
-          <context context-type="linenumber">97</context>
+          <context context-type="linenumber">102</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/run-settings-dialog/run-settings-dialog.component.html</context>
@@ -1575,33 +1607,47 @@
           <context context-type="linenumber">1</context>
         </context-group>
       </trans-unit>
-      <trans-unit datatype="html" id="ee4d90b52495d483667dffbd2236c15b0c722cbb">
-        <source>Enter teacher username</source>
+      <trans-unit datatype="html" id="e37f493e816aac1bba5e9c25e50efb4ea9e357cf">
+        <source>Sharing a curriculum unit allows other WISE teachers to use it with their own students and optionally edit the unit's content.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/library/share-project-dialog/share-project-dialog.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="6324a3a991d13ea5359329e8ab667c8969f81e16">
+        <source>Shared units appear in a teacher's "My Units" library.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/share-project-dialog/share-project-dialog.component.html</context>
           <context context-type="linenumber">7</context>
         </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="d05f250fb7d4cc9b770a9efb7be3d54aef3014cf">
+        <source>Find a teacher</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/library/share-project-dialog/share-project-dialog.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
-          <context context-type="linenumber">17</context>
+          <context context-type="linenumber">22</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="39e715b9ebc52d3b9c9a0b629419034bf1610efa">
         <source>Teacher is already on shared list.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/share-project-dialog/share-project-dialog.component.html</context>
-          <context context-type="linenumber">24</context>
+          <context context-type="linenumber">27</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
-          <context context-type="linenumber">35</context>
+          <context context-type="linenumber">40</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="cff1428d10d59d14e45edec3c735a27b5482db59">
         <source>Name</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/share-project-dialog/share-project-dialog.component.html</context>
-          <context context-type="linenumber">34</context>
+          <context context-type="linenumber">37</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/contact/contact-form/contact-form.component.html</context>
@@ -1609,90 +1655,58 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
-          <context context-type="linenumber">46</context>
+          <context context-type="linenumber">51</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="53ea2772322e7d4d21515bb0c6dead283f8e18a5">
         <source>Revoke</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/share-project-dialog/share-project-dialog.component.html</context>
-          <context context-type="linenumber">40</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
-          <context context-type="linenumber">52</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="70f45880fce6ac5d8e468e25e82aefbba8098cfe">
-        <source>Permissions</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/modules/library/share-project-dialog/share-project-dialog.component.html</context>
-          <context context-type="linenumber">45</context>
+          <context context-type="linenumber">43</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
           <context context-type="linenumber">57</context>
         </context-group>
       </trans-unit>
+      <trans-unit datatype="html" id="70f45880fce6ac5d8e468e25e82aefbba8098cfe">
+        <source>Permissions</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/modules/library/share-project-dialog/share-project-dialog.component.html</context>
+          <context context-type="linenumber">48</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
+          <context context-type="linenumber">62</context>
+        </context-group>
+      </trans-unit>
       <trans-unit datatype="html" id="e4c62e79146aa053669046c6d0d40e889049f8a1">
         <source>Owner. Full permissions.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/share-project-dialog/share-project-dialog.component.html</context>
-          <context context-type="linenumber">47</context>
+          <context context-type="linenumber">50</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
-          <context context-type="linenumber">59</context>
+          <context context-type="linenumber">64</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="6bd0461d56d457667267858196994feefee0de48">
         <source>View &amp; Use with Students</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/share-project-dialog/share-project-dialog.component.html</context>
-          <context context-type="linenumber">52</context>
+          <context context-type="linenumber">55</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="66b2e8f48c13af491ad76683bc68fb0b07df83c4">
         <source>Edit Unit Content</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/share-project-dialog/share-project-dialog.component.html</context>
-          <context context-type="linenumber">56</context>
+          <context context-type="linenumber">59</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
-          <context context-type="linenumber">76</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="d1acaeb5fa466988ff526619702c4bf21e0a5e15">
-        <source>Copy Unit</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/modules/library/copy-project-dialog/copy-project-dialog.component.html</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="2883a2c78d97119d2ab3002336e04da6657a7dfd">
-        <source>(Unit ID: <x equiv-text="{{ data.project.id }}" id="INTERPOLATION"/>)</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/modules/library/copy-project-dialog/copy-project-dialog.component.html</context>
-          <context context-type="linenumber">5</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="459457d652be00e6fe313f88d938d4f063c3b3e0">
-        <source>Copying creates a duplicate that will appear in “My Units”. You will be the owner and can edit the content and share the new unit with other WISE users.</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/modules/library/copy-project-dialog/copy-project-dialog.component.html</context>
-          <context context-type="linenumber">7</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="1979da7460819153e11d2078244645d94291b69c">
-        <source>Copy</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/modules/library/copy-project-dialog/copy-project-dialog.component.html</context>
-          <context context-type="linenumber">17</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/modules/library/library-project-menu/library-project-menu.component.html</context>
-          <context context-type="linenumber">11</context>
+          <context context-type="linenumber">81</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="4c49a9bb7a99a9da256c6e678cbb49baa70e268a">
@@ -1743,7 +1757,7 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
-          <context context-type="linenumber">96</context>
+          <context context-type="linenumber">101</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="77bd1ad738d92e35036a6caa0afba8152299876b">
@@ -1765,10 +1779,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/modules/library/library-project-menu/library-project-menu.component.html</context>
           <context context-type="linenumber">17</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
-          <context context-type="linenumber">22</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="1ada756975a68f38f92477600b2ca2864ea89533">
@@ -5116,7 +5126,7 @@
         <source>Launch Unit</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/student/team-sign-in-dialog/team-sign-in-dialog.component.html</context>
-          <context context-type="linenumber">69</context>
+          <context context-type="linenumber">70</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="dbe6d72ccb1cef61c338292357b793077b7ed08a">
@@ -5270,6 +5280,28 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/account/edit-profile/edit-profile.component.html</context>
           <context context-type="linenumber">120</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="d81f00c85d3b507f3e3d78bfc617a2c66e028391">
+        <source>New</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/directives/componentAnnotations/component-annotations.component.html</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/classroom-monitor/component-new-work-badge/component-new-work-badge.component.ts</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/classroomMonitor/classroomMonitorComponents/nodeGrading/workgroupInfo/workgroup-info.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="13914f9fe459520b280fb4e82a4c44812a6d74ad">
+        <source>Score: <x equiv-text="{{annotations.score.data.value}}" id="INTERPOLATION"/><x equiv-text="{{maxScoreDisplay}}" id="INTERPOLATION_1"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/directives/componentAnnotations/component-annotations.component.html</context>
+          <context context-type="linenumber">18</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="1cde0ecb1655843b8b682674d1ed9ff8138073b2">
@@ -5478,8 +5510,8 @@
           <context context-type="linenumber">94</context>
         </context-group>
       </trans-unit>
-      <trans-unit datatype="html" id="a164f074813172df85048d4ce91c4e922abfcdf9">
-        <source>Share Classroom Unit</source>
+      <trans-unit datatype="html" id="88d53bd596808b844983e5bb4ec7b23a032ab84b">
+        <source>Share Classroom Access</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
           <context context-type="linenumber">1</context>
@@ -5492,46 +5524,60 @@
           <context context-type="linenumber">6</context>
         </context-group>
       </trans-unit>
+      <trans-unit datatype="html" id="024fbeb663ba44da37aa2e09552c26e13d489420">
+        <source>Sharing access allows other WISE teachers to view student work and optionally view student names, grade, manage teams, and edit unit content.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="07ea4c59d728355192870ed4608485551a2c376c">
+        <source>If you have customized the content in this unit and want to share so other teachers can use with their students, <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>make a copy<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/> of the unit.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
+          <context context-type="linenumber">18</context>
+        </context-group>
+      </trans-unit>
       <trans-unit datatype="html" id="ba04cd26cfc1093921e7196b9c934a2e45c5ca2d">
         <source>View Student Work</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
-          <context context-type="linenumber">64</context>
+          <context context-type="linenumber">69</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="93315f528b07c5cc6aa5eba3c97ac7815711d320">
         <source>View Student Names</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
-          <context context-type="linenumber">68</context>
+          <context context-type="linenumber">73</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="f95fae4dbd1692e5faa4c26a1c3b6ea1ae55f862">
         <source>Grade and Manage</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
-          <context context-type="linenumber">72</context>
+          <context context-type="linenumber">77</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="b26220770d5f6b450e9df4fbcadd454f492b7872">
         <source>Are you sure you want to make <x equiv-text="{{teacherSearchControl.value}}" id="INTERPOLATION"/> the new owner of this unit?</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
-          <context context-type="linenumber">86</context>
+          <context context-type="linenumber">91</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="5b45cfc4c7c5c38692885d9d8eb056f42dd48a05">
         <source>You will still be able to access the unit but the new owner will have the ability to take away or change your access permissions.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
-          <context context-type="linenumber">87</context>
+          <context context-type="linenumber">92</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="987c58bf54a75a2dad4d366b6546d80749bc5a30">
         <source>Transfer Ownership</source>
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
-          <context context-type="linenumber">94</context>
+          <context context-type="linenumber">99</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="a2a99d70cee0c47626832a30636f0ede3c84c2eb">
@@ -5637,6 +5683,13 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
           <context context-type="linenumber">18</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="c182679b176fe796dea0ffeba15359edec6fffbc">
+        <source>Share Access</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/teacher/run-menu/run-menu.component.html</context>
+          <context context-type="linenumber">22</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="6a7bd392c66daf784d909ea00e8530e93c232dd6">
@@ -5856,17 +5909,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/authoring-tool/add-component/choose-new-component-location/choose-new-component-location.component.html</context>
           <context context-type="linenumber">36</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="d81f00c85d3b507f3e3d78bfc617a2c66e028391">
-        <source>New</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">app/classroom-monitor/component-new-work-badge/component-new-work-badge.component.ts</context>
-          <context context-type="linenumber">1</context>
-        </context-group>
-        <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/classroomMonitor/classroomMonitorComponents/nodeGrading/workgroupInfo/workgroup-info.component.html</context>
-          <context context-type="linenumber">10</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="bfab7f41cfc32a926c55987d6a9c3349ae417131">

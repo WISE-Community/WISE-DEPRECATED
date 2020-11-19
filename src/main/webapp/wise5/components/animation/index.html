@@ -169,8 +169,8 @@
       </span>
     </div>
     <component-annotations ng-if='::animationController.mode === "student"'
-        annotations='animationController.latestAnnotations'
-        max-score='animationController.componentContent.maxScore'>
+        [annotations]='animationController.latestAnnotations'
+        [max-score]='animationController.componentContent.maxScore'>
     </component-annotations>
   </div>
 </div>

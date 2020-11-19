@@ -8,7 +8,7 @@ import NodeController from '../vle/node/nodeController';
 import { StudentWebSocketService } from '../services/studentWebSocketService';
 import VLEController from '../vle/vleController';
 import { VLEProjectService } from '../vle/vleProjectService';
-import { EditorComponent } from '@tinymce/tinymce-angular';
+import { ComponentAnnotationsComponent } from '../directives/componentAnnotations/component-annotations.component';
 
 export function createStudentAngularJSModule(type = 'preview') {
   return angular.module(type, [
@@ -24,6 +24,8 @@ export function createStudentAngularJSModule(type = 'preview') {
   .controller('NavigationController', NavigationController)
   .controller('NodeController', NodeController)
   .controller('VLEController', VLEController)
+  .directive('componentAnnotations',
+      downgradeComponent({ component: ComponentAnnotationsComponent }) as angular.IDirectiveFactory)
   .config([
     '$stateProvider',
     '$translatePartialLoaderProvider',
