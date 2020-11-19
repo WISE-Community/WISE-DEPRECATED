@@ -22,10 +22,10 @@
         <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'EDIT_COMPONENT_RUBRIC' | translate }}</md-tooltip>
       </md-button>
       <div ng-if='htmlController.showRubricAuthoring'>
-        <wise-tinymce-editor
+        <wise-authoring-tinymce-editor
             [(model)]='htmlController.rubric'
             (model-change)='htmlController.rubricChanged()'>
-        </wise-tinymce-editor>
+        </wise-authoring-tinymce-editor>
       </div>
     </div>
     <div>
@@ -48,8 +48,8 @@
     </div>
   </div>
   <br/>
-  <wise-tinymce-editor
+  <wise-authoring-tinymce-editor
       [(model)]='htmlController.html'
       (model-change)='htmlController.htmlChanged()'>
-  </wise-tinymce-editor>
+  </wise-authoring-tinymce-editor>
 </div>

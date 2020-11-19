@@ -58,10 +58,10 @@
           <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'EDIT_COMPONENT_RUBRIC' | translate }}</md-tooltip>
         </md-button>
         <div ng-if='summaryController.showRubricAuthoring'>
-          <wise-tinymce-editor
+          <wise-authoring-tinymce-editor
               [(model)]='summaryController.rubric'
               (model-change)='summaryController.rubricChanged()'>
-          </wise-tinymce-editor>
+          </wise-authoring-tinymce-editor>
         </div>
       </div>
       <div style='margin-top: 10px; margin-bottom: 10px;'>

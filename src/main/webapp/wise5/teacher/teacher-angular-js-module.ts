@@ -35,8 +35,7 @@ import RubricAuthoringController from '../authoringTool/rubric/rubricAuthoringCo
 import StudentGradingController from '../classroomMonitor/studentGrading/studentGradingController';
 import StudentProgressController from '../classroomMonitor/studentProgress/studentProgressController';
 import WISELinkAuthoringController from '../authoringTool/wiseLink/wiseLinkAuthoringController';
-import { EditorComponent } from '@tinymce/tinymce-angular';
-import { WiseTinymceEditorComponent } from '../directives/wise-tinymce-editor/wise-tinymce-editor.component';
+import { WiseAuthoringTinymceEditorComponent } from '../directives/wise-tinymce-editor/wise-authoring-tinymce-editor.component';
 
 import '../classroomMonitor/classroomMonitorComponents';
 import '../authoringTool/structure/structureAuthoringModule';
@@ -60,9 +59,6 @@ import '../components/openResponse/openResponseAuthoringComponentModule';
 import '../components/outsideURL/outsideURLAuthoringComponentModule';
 import '../components/summary/summaryAuthoringComponentModule';
 import '../components/table/tableAuthoringComponentModule';
-import '../lib/summernote/dist/summernote.min';
-import '../lib/summernoteExtensions/summernote-ext-addNote.js';
-import '../lib/summernoteExtensions/summernote-ext-print.js'
 
     angular.module('teacher', [
       'common',
@@ -110,10 +106,8 @@ import '../lib/summernoteExtensions/summernote-ext-print.js'
     .component('nodeAdvancedPathAuthoringComponent', NodeAdvancedPathAuthoringComponent)
     .directive('advancedProjectAuthoringComponent', downgradeComponent(
         { component: AdvancedProjectAuthoringComponent }) as angular.IDirectiveFactory)
-    .directive('editor', downgradeComponent(
-        { component: EditorComponent }) as angular.IDirectiveFactory)
-    .directive('wiseTinymceEditor', downgradeComponent(
-        { component: WiseTinymceEditorComponent }) as angular.IDirectiveFactory)
+    .directive('wiseAuthoringTinymceEditor', downgradeComponent(
+        { component: WiseAuthoringTinymceEditorComponent }) as angular.IDirectiveFactory)
     .controller('AuthoringToolController', AuthoringToolController)
     .controller('AuthoringToolMainController', AuthoringToolMainController)
     .controller('AuthorNotebookController', AuthorNotebookController)

@@ -160,10 +160,10 @@
           </md-tooltip>
         </md-button>
         <div ng-if='conceptMapController.showRubricAuthoring'>
-          <wise-tinymce-editor
+          <wise-authoring-tinymce-editor
               [(model)]='conceptMapController.rubric'
               (model-change)='conceptMapController.rubricChanged()'>
-          </wise-tinymce-editor>
+          </wise-authoring-tinymce-editor>
         </div>
       </div>
       <div>

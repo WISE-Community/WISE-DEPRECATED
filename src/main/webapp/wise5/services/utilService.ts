@@ -295,83 +295,6 @@ export class UtilService {
   }
 
   /**
-   * Create a custom summernote button that inserts a WISE asset into summernote
-   * @param nodeId the node id of the component that is creating the button
-   * @param componentId the component id of the component that is creating the button
-   * @param target the target element in the component to insert the asset into
-   * e.g. 'prompt' or 'rubricSummernoteId'
-   * @param tooltip the tooltip text for the custom button
-   * @return custom summernote button
-   */
-  createInsertAssetButton(projectId, nodeId, componentId, target, tooltip,
-      openAssetChooserFunction) {
-    const thisRootScope = this.upgrade.$injector.get('$rootScope');
-    const InsertAssetButton = function(context) {
-      const ui = ($ as any).summernote.ui;
-      const button = ui.button({
-        contents: '<i class="note-icon-picture"></i>',
-        tooltip: tooltip,
-        click: function() {
-          context.invoke('editor.saveRange');
-          const params: any = {};
-          params.isPopup = true;
-          if (projectId != null) {
-            params.projectId = projectId;
-          }
-          if (nodeId != null) {
-            params.nodeId = nodeId;
-          }
-          if (componentId != null) {
-            params.componentId = componentId;
-          }
-          params.target = target;
-          openAssetChooserFunction(params);
-        }
-      });
-      return button.render(); // return button as jquery object
-    };
-    return InsertAssetButton;
-  }
-
-  /**
-   * Create a custom summernote button that inserts a WISE link into
-   * summernote
-   * @param nodeId the node id of the component that is creating the WISE link
-   * @param componentId the component id of the component that is creating the WISE link
-   * @param target the target element in the component to insert the WISE link into
-   * e.g. 'prompt' or 'rubricSummernoteId'
-   * @param tooltip the tooltip text for the custom button
-   * @return custom summernote button
-   */
-  createInsertWISELinkButton(projectId, nodeId, componentId, target, tooltip,
-      openWISELinkChooserFunction) {
-    const InsertWISELinkButton = function(context) {
-      const ui = ($ as any).summernote.ui;
-      const button = ui.button({
-        contents: '<i class="note-icon-link"></i>',
-        tooltip: tooltip,
-        click: function() {
-          context.invoke('editor.saveRange');
-          const params: any = {};
-          if (projectId != null) {
-            params.projectId = projectId;
-          }
-          if (nodeId != null) {
-            params.nodeId = nodeId;
-          }
-          if (componentId != null) {
-            params.componentId = componentId;
-          }
-          params.target = target;
-          openWISELinkChooserFunction(params);
-        }
-      });
-      return button.render(); // return button as jquery object
-    };
-    return InsertWISELinkButton;
-  }
-
-  /**
    * Remove html tags and newlines from the string.
    * @param html an html string
    * @return text without html tags and new lines
@@ -724,35 +647,6 @@ export class UtilService {
       objects.splice(index, 1);
       objects.splice(index + 1, 0, object);
     }
-  }
-
-  insertFileInSummernoteEditor(summernoteId, fullFilePath, fileName) {
-    this.restoreSummernoteCursorPosition(summernoteId);
-    if (this.isImage(fileName)) {
-      this.insertImageIntoSummernote(summernoteId, fullFilePath, fileName);
-    } else if (this.isVideo(fileName)) {
-      this.insertVideoIntoSummernote(summernoteId, fullFilePath);
-    }
-  }
-
-  restoreSummernoteCursorPosition(summernoteId) {
-    angular.element(document.querySelector(`#${summernoteId}`)).summernote('editor.restoreRange');
-    angular.element(document.querySelector(`#${summernoteId}`)).summernote('editor.focus');
-  }
-
-  insertImageIntoSummernote(summernoteId, fullFilePath, fileName) {
-    angular
-      .element(document.querySelector(`#${summernoteId}`))
-      .summernote('insertImage', fullFilePath, fileName);
-  }
-
-  insertVideoIntoSummernote(summernoteId, fullFilePath) {
-    const videoElement = document.createElement('video');
-    videoElement.controls = true;
-    videoElement.innerHTML = '<source ng-src="' + fullFilePath + '" type="video/mp4">';
-    angular
-      .element(document.querySelector(`#${summernoteId}`))
-      .summernote('insertNode', videoElement);
   }
 
   rgbToHex(color, opacity) {

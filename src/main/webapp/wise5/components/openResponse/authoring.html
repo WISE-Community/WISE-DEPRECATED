@@ -246,10 +246,10 @@
           <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'EDIT_COMPONENT_RUBRIC' | translate }}</md-tooltip>
         </md-button>
         <div ng-if='openResponseController.showRubricAuthoring'>
-          <wise-tinymce-editor
+          <wise-authoring-tinymce-editor
               [(model)]='openResponseController.rubric'
               (model-change)='openResponseController.rubricChanged()'>
-          </wise-tinymce-editor>
+          </wise-authoring-tinymce-editor>
         </div>
       </div>
       <div>

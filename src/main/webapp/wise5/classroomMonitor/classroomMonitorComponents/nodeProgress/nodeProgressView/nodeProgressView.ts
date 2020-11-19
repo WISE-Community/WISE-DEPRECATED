@@ -223,7 +223,6 @@ class NodeProgressViewController {
     let windowString = `<link rel='stylesheet' href='/wise5/lib/bootstrap/css/bootstrap.min.css' />
             <link rel='stylesheet' href='/wise5/themes/default/style/monitor.css'>
             <link rel='stylesheet' href='/wise5/themes/default/style/angular-material.css'>
-            <link rel='stylesheet' href='/wise5/lib/summernote/dist/summernote.css' />
             <body class="layout-column">
                 <div class="layout-column">${windowHeader}<md-content class="md-padding">${rubricContent}</div></md-content></div>
             </body>`;

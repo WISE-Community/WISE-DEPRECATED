@@ -395,6 +395,7 @@ export class NotebookService {
         workgroupId: this.ConfigService.getWorkgroupId(),
         groups: groups,
         clientSaveTime: clientSaveTime,
+        serverSaveTime: clientSaveTime,
         clientDeleteTime: clientDeleteTime,
         serverDeleteTime: clientDeleteTime ? clientDeleteTime : null
       };
@@ -405,7 +406,7 @@ export class NotebookService {
       this.broadcastNotebookUpdated(
         { notebook: this.notebooksByWorkgroup[workgroupId], notebookItem: notebookItem }
       );
-      resolve();
+      resolve(notebookItem);
     });
   }
 

@@ -82,10 +82,10 @@
           </md-tooltip>
         </md-button>
         <div ng-if='matchController.showRubricAuthoring'>
-          <wise-tinymce-editor
+          <wise-authoring-tinymce-editor
               [(model)]='matchController.rubric'
               (model-change)='matchController.rubricChanged()'>
-          </wise-tinymce-editor>
+          </wise-authoring-tinymce-editor>
         </div>
       </div>
       <div>

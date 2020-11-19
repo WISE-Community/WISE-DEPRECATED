@@ -1,16 +1,14 @@
 import '../lib/jquery/jquery-global';
 import '../lib/bootstrap/js/bootstrap.min'
 import * as angular from 'angular';
-import { downgradeInjectable } from '@angular/upgrade/static';
+import { downgradeComponent, downgradeInjectable } from '@angular/upgrade/static';
 import '../common-angular-js-module';
 import NavigationController from '../vle/navigation/navigationController';
 import NodeController from '../vle/node/nodeController';
 import { StudentWebSocketService } from '../services/studentWebSocketService';
 import VLEController from '../vle/vleController';
 import { VLEProjectService } from '../vle/vleProjectService';
-import '../lib/summernote/dist/summernote.min';
-import '../lib/summernoteExtensions/summernote-ext-addNote.js';
-import '../lib/summernoteExtensions/summernote-ext-print.js'
+import { EditorComponent } from '@tinymce/tinymce-angular';
 
 export function createStudentAngularJSModule(type = 'preview') {
   return angular.module(type, [

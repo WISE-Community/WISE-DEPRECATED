@@ -65,10 +65,10 @@
           </md-tooltip>
         </md-button>
         <div ng-if='multipleChoiceController.showRubricAuthoring'>
-          <wise-tinymce-editor
+          <wise-authoring-tinymce-editor
               [(model)]='multipleChoiceController.rubric'
               (model-change)='multipleChoiceController.rubricChanged()'>
-          </wise-tinymce-editor>
+          </wise-authoring-tinymce-editor>
         </div>
       </div>
       <div>

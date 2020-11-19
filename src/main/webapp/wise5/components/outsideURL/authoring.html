@@ -25,10 +25,10 @@
           </md-tooltip>
         </md-button>
         <div ng-if="outsideURLController.showRubricAuthoring">
-          <wise-tinymce-editor
+          <wise-authoring-tinymce-editor
               [(model)]='outsideURLController.rubric'
               (model-change)='outsideURLController.rubricChanged()'>
-          </wise-tinymce-editor>
+          </wise-authoring-tinymce-editor>
         </div>
       </div>
       <div>

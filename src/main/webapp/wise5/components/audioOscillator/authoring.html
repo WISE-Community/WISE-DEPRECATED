@@ -69,10 +69,10 @@
           </md-tooltip>
         </md-button>
         <div ng-if='audioOscillatorController.showRubricAuthoring'>
-          <wise-tinymce-editor
+          <wise-authoring-tinymce-editor
             [(model)]='audioOscillatorController.rubric'
             (model-change)='audioOscillatorController.rubricChanged()'>
-          </wise-tinymce-editor>
+          </wise-authoring-tinymce-editor>
         </div>
       </div>
       <div>

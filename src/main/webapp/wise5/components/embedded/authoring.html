@@ -74,10 +74,10 @@
             </md-tooltip>
           </md-button>
           <div ng-if='embeddedController.showRubricAuthoring'>
-            <wise-tinymce-editor
+            <wise-authoring-tinymce-editor
                 [(model)]='embeddedController.rubric'
                 (model-change)='embeddedController.rubricChanged()'>
-            </wise-tinymce-editor>
+            </wise-authoring-tinymce-editor>
           </div>
         </div>
         <div>
