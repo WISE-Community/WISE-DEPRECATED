@@ -620,35 +620,10 @@ public class VLEServiceImpl implements VLEService {
   }
 
   @Override
-  public List<StudentAsset> getStudentAssets(Integer id, Integer runId, Integer periodId,
-      Integer workgroupId, String nodeId, String componentId, String componentType,
-      Boolean isReferenced) {
-    Run run = null;
-    if (runId != null) {
-      try {
-        run = runService.retrieveById(new Long(runId));
-      } catch (ObjectNotFoundException e) {
-        e.printStackTrace();
-      }
-    }
-    Group period = null;
-    if (periodId != null) {
-      try {
-        period = groupService.retrieveById(new Long(periodId));
-      } catch (ObjectNotFoundException e) {
-        e.printStackTrace();
-      }
-    }
-    Workgroup workgroup = null;
-    if (workgroupId != null) {
-      try {
-        workgroup = workgroupService.retrieveById(new Long(workgroupId));
-      } catch (ObjectNotFoundException e) {
-        e.printStackTrace();
-      }
-    }
-    return studentAssetDao.getStudentAssetListByParams(id, run, period, workgroup, nodeId,
-        componentId, componentType, isReferenced);
+  public List<StudentAsset> getWorkgroupAssets(Long workgroupId) throws ObjectNotFoundException {
+    Workgroup workgroup = workgroupService.retrieveById(workgroupId);
+    return studentAssetDao.getStudentAssetListByParams(null, null, null, workgroup, null,
+        null, null, null);
   }
 
   @Override
