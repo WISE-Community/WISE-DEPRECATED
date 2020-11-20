@@ -39,6 +39,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -61,6 +62,7 @@ import org.wise.vle.web.AssetManager;
 
 /**
  * REST endpoint for StudentAsset
+ * 
  * @author Hiroki Terashima
  */
 @Controller
@@ -84,8 +86,8 @@ public class StudentAssetController {
   @GetMapping("/student/asset/{runId}/{workgroupId}")
   @ResponseBody
   protected List<StudentAsset> getWorkgroupAssets(@PathVariable Long runId,
-      @PathVariable Long workgroupId, Authentication auth) throws IOException,
-      ObjectNotFoundException {
+      @PathVariable Long workgroupId, Authentication auth)
+      throws IOException, ObjectNotFoundException {
     User user = userService.retrieveUserByUsername(auth.getName());
     Run run = runService.retrieveById(runId);
     Workgroup workgroup = workgroupService.retrieveById(workgroupId);
@@ -97,8 +99,7 @@ public class StudentAssetController {
 
   @PostMapping("/student/asset/{runId}")
   @ResponseBody
-  protected StudentAsset postStudentAsset(
-      @PathVariable Integer runId,
+  protected StudentAsset postStudentAsset(@PathVariable Integer runId,
       @RequestParam(value = "periodId", required = true) Integer periodId,
       @RequestParam(value = "workgroupId", required = true) Integer workgroupId,
       @RequestParam(value = "nodeId", required = false) String nodeId,
@@ -117,8 +118,10 @@ public class StudentAssetController {
 
     String dirName = run.getId() + "/" + workgroupId + "/unreferenced";
     String path = appProperties.getProperty("studentuploads_base_dir");
-    Long studentMaxAssetSize = new Long(appProperties.getProperty("student_max_asset_size", "5242880"));
-    Long studentMaxTotalAssetsSize = new Long(appProperties.getProperty("student_max_total_assets_size", "10485760"));
+    Long studentMaxAssetSize = new Long(
+        appProperties.getProperty("student_max_asset_size", "5242880"));
+    Long studentMaxTotalAssetsSize = new Long(
+        appProperties.getProperty("student_max_total_assets_size", "10485760"));
     String pathToCheckSize = path + "/" + dirName;
     StandardMultipartHttpServletRequest multiRequest = (StandardMultipartHttpServletRequest) request;
     Map<String, MultipartFile> fileMap = multiRequest.getFileMap();
@@ -132,7 +135,8 @@ public class StudentAssetController {
           throw new Exception("error handling uploaded asset: filesize exceeds max allowed");
         }
         String clientDeleteTime = null;
-        Boolean result = AssetManager.uploadAssetWISE5(file, path, dirName, pathToCheckSize, studentMaxTotalAssetsSize);
+        Boolean result = AssetManager.uploadAssetWISE5(file, path, dirName, pathToCheckSize,
+            studentMaxTotalAssetsSize);
         if (result) {
           Integer id = null;
           Boolean isReferenced = false;
@@ -155,17 +159,17 @@ public class StudentAssetController {
     return null;
   }
 
-  @PostMapping("/student/asset/{runId}/delete")
+  @DeleteMapping("/student/asset/{runId}/delete")
   @ResponseBody
   protected StudentAsset removeStudentAsset(@PathVariable Integer runId,
-      @RequestBody ObjectNode postedParams) throws Exception {
+      @RequestParam(value = "studentAssetId", required = true) Integer studentAssetId,
+      @RequestParam(value = "workgroupId", required = true) Integer workgroupId,
+      @RequestParam(value = "clientDeleteTime", required = true) Long clientDeleteTime)
+      throws Exception {
     Run run = runService.retrieveById(new Long(runId));
-    Integer studentAssetId = postedParams.get("studentAssetId").asInt();
-    Integer workgroupId = postedParams.get("workgroupId").asInt();
-    Long clientDeleteTime = postedParams.get("clientDeleteTime").asLong();
     StudentAsset studentAsset = vleService.getStudentAssetById(studentAssetId);
     String assetFileName = studentAsset.getFileName();
-    String dirName = run.getId() + "/" + workgroupId + "/unreferenced"; // looks like /studentuploads/[runId]/[workgroupId]/unreferenced
+    String dirName = run.getId() + "/" + workgroupId + "/unreferenced";
     String path = appProperties.getProperty("studentuploads_base_dir");
     Boolean removeSuccess = AssetManager.removeAssetWISE5(path, dirName, assetFileName);
     if (removeSuccess) {
@@ -195,13 +199,13 @@ public class StudentAssetController {
       String fileName = copiedFileName;
       String filePath = "/" + referencedDirName + "/" + copiedFileName;
       Long fileSize = studentAsset.getFileSize();
-      String nodeId  = null;
+      String nodeId = null;
       String componentId = null;
       String componentType = null;
       String clientDeleteTime = null;
-      return vleService.saveStudentAsset(id, runId, periodId, workgroupId,
-            nodeId, componentId, componentType, isReferenced, fileName, filePath, fileSize,
-            clientSaveTime, clientDeleteTime);
+      return vleService.saveStudentAsset(id, runId, periodId, workgroupId, nodeId, componentId,
+          componentType, isReferenced, fileName, filePath, fileSize, clientSaveTime,
+          clientDeleteTime);
     } else {
       throw new Exception("Error occurred");
     }
@@ -219,11 +223,12 @@ public class StudentAssetController {
     } catch (ObjectNotFoundException e) {
       e.printStackTrace();
     }
-    List<Workgroup> workgroupListByRunAndUser =
-        workgroupService.getWorkgroupListByRunAndUser(run, user);
+    List<Workgroup> workgroupListByRunAndUser = workgroupService.getWorkgroupListByRunAndUser(run,
+        user);
     Workgroup workgroup = workgroupListByRunAndUser.get(0);
     Long workgroupId = workgroup.getId();
-    String dirName = run.getId() + "/" + workgroupId + "/unreferenced"; // looks like /studentuploads/[runId]/[workgroupId]/unreferenced
+    String dirName = run.getId() + "/" + workgroupId + "/unreferenced"; // looks like
+                                                                        // /studentuploads/[runId]/[workgroupId]/unreferenced
     String path = appProperties.getProperty("studentuploads_base_dir");
     String result = AssetManager.getSize(path, dirName);
     response.getWriter().write(result);
