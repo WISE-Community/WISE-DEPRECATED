@@ -4,7 +4,8 @@ import { ConfigService } from "../../services/config.service";
 
 @Component({
   selector: 'discourse-recent-activity',
-  templateUrl: 'discourse-recent-activity.component.html'
+  templateUrl: 'discourse-recent-activity.component.html',
+  styleUrls: ['discourse-recent-activity.component.scss']
 })
 export class DiscourseRecentActivityComponent {
 
@@ -22,18 +23,5 @@ export class DiscourseRecentActivityComponent {
       this.topics = topic_list.topics.slice(0,3);
       this.users = users;
     });
-  }
-
-  getName(userId: number): string {
-    for (const user of this.users) {
-      if (user.id === userId) {
-        return user.name;
-      }
-    }
-    return "";
-  }
-
-  launchDiscourse(): void {
-    window.open(`${this.discourseURL}/session/sso`);
   }
 }

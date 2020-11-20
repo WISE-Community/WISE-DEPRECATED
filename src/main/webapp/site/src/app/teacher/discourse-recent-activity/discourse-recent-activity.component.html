@@ -1,10 +1,22 @@
-<span i18n>Recent Posts in Teacher Community</span><button mat-button (click)="launchDiscourse()"><mat-icon>launch</mat-icon></button>
-<div *ngFor="let topic of topics">
-  <a target=_blank href="{{discourseURL}}/t/{{topic.slug}}/{{topic.id}}">
-    {{topic.title}}
-  </a>
-  <span *ngFor="let poster of topic.posters">
-    {{getName(poster.user_id)}}
-  </span>
-  {{topic.last_posted_at | date:'yyyy-MM-dd'}}
+<div class="content-block">
+  <div class="content-block__title" fxLayoutAlign="space-between center" fxLayoutGap="16px">
+    <h3 fxLayoutAlign="start start" fxLayoutGap="8px">
+      <mat-icon>groups</mat-icon>
+      <span i18n>Latest from the WISE Community</span>
+    </h3>
+    <a mat-icon-button color="primary" href="{{discourseURL}}/session/sso" target="_blank"
+       aria-label-i18n aria-label="Visit the WISE Community">
+      <mat-icon>launch</mat-icon>
+    </a>
+  </div>
+  <ul>
+    <li *ngFor="let topic of topics">
+      <a class="mat-body-1" href="{{discourseURL}}/t/{{topic.slug}}/{{topic.id}}" target="_blank">
+        {{topic.title}}
+      </a>
+      <span class="secondary-text mat-caption">
+        ({{topic.last_posted_at | date:'MMM dd y'}})
+      </span>
+    </li>
+  </ul>
 </div>
