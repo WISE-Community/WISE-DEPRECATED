@@ -37,7 +37,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,13 +45,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.wise.portal.dao.ObjectNotFoundException;
 import org.wise.portal.domain.run.Run;
 import org.wise.portal.domain.user.User;
-import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.presentation.web.controllers.ControllerUtil;
 import org.wise.portal.service.run.RunService;
 import org.wise.portal.service.vle.wise5.VLEService;
-import org.wise.portal.service.workgroup.WorkgroupService;
 import org.wise.portal.spring.data.redis.MessagePublisher;
-import org.wise.vle.domain.achievement.Achievement;
 import org.wise.vle.domain.annotation.wise5.Annotation;
 import org.wise.vle.domain.work.Event;
 import org.wise.vle.domain.work.StudentWork;
@@ -60,7 +56,7 @@ import org.wise.vle.domain.work.StudentWork;
 /**
  * Controller for handling GET and POST requests of WISE5 student data WISE5 student data is stored
  * as StudentWork, Event, Annotation, and StudentAsset domain objects
- * 
+ *
  * @author Hiroki Terashima
  */
 @Controller("wise5StudentDataController")
@@ -71,9 +67,6 @@ public class StudentDataController {
 
   @Autowired
   private RunService runService;
-
-  @Autowired
-  private WorkgroupService workgroupService;
 
   @Autowired
   private MessagePublisher redisPublisher;
@@ -157,145 +150,6 @@ public class StudentDataController {
     }
   }
 
-  /**
-   * Handles GETting achievements. Checks for permission to retrieve an existing achievement. Writes
-   * a list of achievements to response stream.
-   *
-   * If the student is making the request, the runId and workgroupId must be specified If the
-   * teacher is making the request, the runId must be specified
-   * 
-   * @param id
-   *                        id of the achievement
-   * @param runId
-   *                        id of the run
-   * @param workgroupId
-   *                        id of the workgroup for whom the achievement is for
-   * @param achievementId
-   *                        id of the achievement in project content
-   * @param type
-   *                        type of achievement (e.g. "completion", "milestone")
-   * @param response
-   *                        response stream
-   */
-  @RequestMapping(method = RequestMethod.GET, value = "/achievement/{runId}")
-  public void getWISE5StudentAchievements(@PathVariable Integer runId,
-      @RequestParam(value = "id", required = false) Integer id,
-      @RequestParam(value = "workgroupId", required = false) Integer workgroupId,
-      @RequestParam(value = "achievementId", required = false) String achievementId,
-      @RequestParam(value = "type", required = false) String type, HttpServletResponse response) {
-    User user = ControllerUtil.getSignedInUser();
-    Run run = null;
-    Workgroup workgroup = null;
-    try {
-      run = runService.retrieveById(new Long(runId));
-      if (workgroupId != null) {
-        workgroup = workgroupService.retrieveById(new Long(workgroupId));
-      }
-    } catch (ObjectNotFoundException e) {
-      e.printStackTrace();
-      return;
-    }
-    if (!isAssociatedWithRun(run, user, workgroup)) {
-      return;
-    }
-
-    List<Achievement> achievements = vleService.getAchievements(id, runId, workgroupId,
-        achievementId, type);
-    JSONArray achievementsJSONArray = new JSONArray();
-    for (int c = 0; c < achievements.size(); c++) {
-      Achievement achievement = achievements.get(c);
-      achievementsJSONArray.put(achievement.toJSON());
-    }
-    try {
-      PrintWriter writer = response.getWriter();
-      writer.write(achievementsJSONArray.toString());
-      writer.close();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-  }
-
-  private Boolean isAssociatedWithRun(Run run, User user, Workgroup workgroup) {
-    return isStudentAssociatedWithRun(run, user, workgroup)
-        || isTeacherAssociatedWithRun(run, user);
-  }
-
-  private Boolean isStudentAssociatedWithRun(Run run, User user, Workgroup workgroup) {
-    return user.isStudent() && run.isStudentAssociatedToThisRun(user)
-        && workgroupService.isUserInWorkgroupForRun(user, run, workgroup);
-  }
-
-  private Boolean isTeacherAssociatedWithRun(Run run, User user) {
-    return (user.isTeacher() && run.isTeacherAssociatedToThisRun(user)) || user.isAdmin();
-  }
-
-  /**
-   * Handles POSTed achievements. Checks for permission and saves a new achievement or update an
-   * existing achievement. Writes achievement to response stream.
-   *
-   * If the student is making the request, the runId and workgroupId must be specified If the
-   * teacher is making the request, the runId must be specified
-   * 
-   * @param id
-   * @param runId
-   * @param workgroupId
-   * @param achievementId
-   * @param type
-   * @param response
-   */
-  @RequestMapping(method = RequestMethod.POST, value = "/achievement/{runId}")
-  public void saveWISE5StudentAchievement(@PathVariable Integer runId,
-      @RequestParam(value = "id", required = false) Integer id,
-      @RequestParam(value = "workgroupId", required = true) Integer workgroupId,
-      @RequestParam(value = "achievementId", required = true) String achievementId,
-      @RequestParam(value = "type", required = true) String type,
-      @RequestParam(value = "data", required = true) String data, HttpServletResponse response)
-      throws JSONException {
-    User user = ControllerUtil.getSignedInUser();
-    Run run = null;
-    Workgroup workgroup = null;
-    try {
-      run = runService.retrieveById(new Long(runId));
-      if (workgroupId != null) {
-        workgroup = workgroupService.retrieveById(new Long(workgroupId));
-      }
-    } catch (ObjectNotFoundException e) {
-      e.printStackTrace();
-      return;
-    }
-    boolean isAllowed = false;
-    if (user.isStudent() && run.isStudentAssociatedToThisRun(user)
-        && workgroupService.isUserInWorkgroupForRun(user, run, workgroup)) {
-      isAllowed = true;
-    } else if (user.isTeacher()
-        && (run.getOwner().equals(user) || run.getSharedowners().contains(user))) {
-      isAllowed = true;
-    }
-    if (!isAllowed) {
-      return;
-    }
-
-    Achievement achievement = vleService.saveAchievement(id, runId, workgroupId, achievementId,
-        type, data);
-    try {
-      PrintWriter writer = response.getWriter();
-      writer.write(achievement.toJSON().toString());
-      writer.close();
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    achievement.convertToClientAchievement();
-    broadcastAchievementToTeacher(achievement);
-  }
-
-  public void broadcastAchievementToTeacher(Achievement achievement) throws JSONException {
-    JSONObject message = new JSONObject();
-    message.put("type", "achievementToTeacher");
-    message.put("topic", String.format("/topic/teacher/%s", achievement.getRunId()));
-    message.put("achievement", achievement.toJSON());
-    redisPublisher.publish(message.toString());
-  }
-
   public void broadcastAnnotationToTeacher(Annotation annotation) throws JSONException {
     JSONObject message = new JSONObject();
     message.put("type", "annotationToTeacher");
@@ -323,7 +177,7 @@ public class StudentDataController {
 
   /**
    * Handles batch POSTing student data (StudentWork, Action, Annotation)
-   * 
+   *
    * @param runId
    *                          Run that the POSTer (student) is in
    * @param studentWorkList
