@@ -1,5 +1,4 @@
 import './lib/jquery/jquery-global';
-import './lib/bootstrap/js/bootstrap.min'
 import * as angular from 'angular';
 import { downgradeComponent, downgradeInjectable } from '@angular/upgrade/static';
 import { AchievementService } from './services/achievementService';
