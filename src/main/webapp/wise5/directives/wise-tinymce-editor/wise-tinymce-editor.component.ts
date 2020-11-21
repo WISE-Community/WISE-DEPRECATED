@@ -135,6 +135,12 @@ export class WiseTinymceEditorComponent {
       extended_valid_elements: this.extendedValidElements,
       plugins: this.plugins,
       toolbar: this.toolbar,
+      audio_template_callback: data => {
+        return this.getAudioTemplate(data);
+      },
+      file_picker_callback: (cb, value, meta) => {
+        this.filePicker(cb, value, meta);
+      },
       menu: {
         file: {
           title: 'File',
@@ -230,4 +236,14 @@ export class WiseTinymceEditorComponent {
   isContentChanged(previousContent: string, newContent: string): boolean {
     return previousContent !== newContent;
   }
+
+  getAudioTemplate(data: any): string {
+    return `<audio controls>
+      <source src="${data.source}"${data.sourcemime ? ' type="' + data.sourcemime + '"' : ''}/>
+      ${(data.altsource ? '<source src="' + data.altsource + '"' + 
+      (data.altsourcemime ? ' type="' + data.altsourcemime + '"' : '') + ' />' : '')}
+      </audio>`;
+  }
+
+  filePicker(cb: any, value: any, meta: any) {}
 }

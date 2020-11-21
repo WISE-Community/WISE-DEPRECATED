@@ -37,39 +37,10 @@ export class WiseAuthoringTinymceEditorComponent extends WiseTinymceEditorCompon
   }
 
   ngOnInit(): void {
-    this.addPluginName('wiseasset');
-    this.addPluginToToolbar('wiseasset', true, false);
     this.addPluginName('wiselink');
     this.addPluginToToolbar('wiselink', false, false);
     this.initializeTinyMCE();
-    this.initializeInsertWISEAssetPlugin();
     this.initializeInsertWISELinkPlugin();
-  }
-
-  initializeInsertWISEAssetPlugin(): void {
-    const thisWiseTinymceEditorComponent = this;
-    const thisProjectAssetService = this.ProjectAssetService;
-    const thisConfigService = this.ConfigService;
-    tinymce.PluginManager.add('wiseasset', function(editor, url) {
-      editor.ui.registry.addButton('wiseasset', {
-        tooltip: 'Insert WISE Asset',
-        icon: 'gallery',
-        onAction: function () {
-          const params = { isPopup: true };
-          thisProjectAssetService.openAssetChooser(params).then((result) => {
-            const fileName = result.assetItem.fileName;
-            const fullFilePath = `${thisConfigService.getProjectAssetsDirectoryPath()}/${fileName}`;
-            let content = '';
-            if (thisWiseTinymceEditorComponent.isVideo(fullFilePath)) {
-              content = `<video src="${fullFilePath}" width="100%" height="100%" controls />`;
-            } else {
-              content = `<img src="${fullFilePath}" />`;
-            }
-            editor.insertContent(content);
-          });
-        }
-      });
-    });
   }
 
   initializeInsertWISELinkPlugin(): void {
@@ -103,13 +74,13 @@ export class WiseAuthoringTinymceEditorComponent extends WiseTinymceEditorCompon
     });
   }
 
-  isVideo(fullFilePath: string): boolean {
-    const videoFileExtensions = ['mp4', 'mov', 'mkv', 'webm', 'wmv', 'avi'];
-    const fileExtension = this.getFileExtension(fullFilePath);
-    return videoFileExtensions.includes(fileExtension);
-  }
-
-  getFileExtension(fullFilePath: string): string {
-    return fullFilePath.split('.').pop();
+  filePicker(cb: any, value: any, meta: any) {
+    const params = { isPopup: true };
+    this.ProjectAssetService.openAssetChooser(params).then((result) => {
+      const fileName = result.assetItem.fileName;
+      const fileNameNoExt = fileName.substr(0, fileName.lastIndexOf('.')) || fileName;
+      const fullFilePath = `${this.ConfigService.getProjectAssetsDirectoryPath()}/${fileName}`;
+      cb(fullFilePath, { alt: fileNameNoExt, text: fileNameNoExt });
+    });
   }
 }
