@@ -122,12 +122,7 @@ public interface VLEService {
       String localNotebookItemId, Integer notebookItemId, String type, String data,
       String clientSaveTime) throws ObjectNotFoundException;
 
-  /**
-   * @return StudentsAssets from data store
-   */
-  List<StudentAsset> getStudentAssets(Integer id, Integer runId, Integer periodId,
-      Integer workgroupId, String nodeId, String componentId, String componentType,
-      Boolean isReferenced) throws ObjectNotFoundException;
+  List<StudentAsset> getWorkgroupAssets(Long workgroupId) throws ObjectNotFoundException;
 
   /**
    * Saves StudentAssets in the data store

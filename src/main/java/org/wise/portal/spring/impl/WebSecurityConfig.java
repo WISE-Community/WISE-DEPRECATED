@@ -94,6 +94,7 @@ public class WebSecurityConfig<S extends Session> extends WebSecurityConfigurerA
         .antMatchers("/student/**").hasAnyRole("STUDENT")
         .antMatchers("/studentStatus").hasAnyRole("TEACHER,STUDENT")
         .antMatchers("/teacher/**").hasAnyRole("TEACHER")
+        .antMatchers("/sso/discourse").hasAnyRole("TEACHER,STUDENT")
         .antMatchers("/").permitAll();
     http.formLogin().loginPage("/login").permitAll();
     http.sessionManagement().maximumSessions(2).sessionRegistry(sessionRegistry());
@@ -182,7 +183,7 @@ public class WebSecurityConfig<S extends Session> extends WebSecurityConfigurerA
   @Bean
   public AuthenticationFailureHandler authFailureHandler() {
     WISEAuthenticationFailureHandler handler = new WISEAuthenticationFailureHandler();
-    handler.setAuthenticationFailureUrl("/legacy/login?failed=true");
+    handler.setAuthenticationFailureUrl("/login?failed=true");
     return handler;
   }
 

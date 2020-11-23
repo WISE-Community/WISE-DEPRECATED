@@ -1,42 +1,33 @@
-<ng-template #standalone>
-  <router-outlet></router-outlet>
-  <div ui-view [ngStyle]="{'height':isAngularJSPath ? '100%' : '0' }"></div>
-</ng-template>
-
-<ng-template #default>
-  <mat-sidenav-container fullscreen [class.has-announcement]="hasAnnouncement"
-                         class="app-background">
-    <mat-sidenav #mobileMenu
-                 class="primary-bg"
-                 [(opened)]="showMobileMenu"
-                 position="end">
-      <app-mobile-menu></app-mobile-menu>
-    </mat-sidenav>
-    <mat-sidenav-content fxLayout="column"
-                         track-scroll
-                         (yPositionChange)="onYPositionChange($event)">
-      <app-announcement *ngIf="hasAnnouncement && showHeaderAndFooter"
-                        class="top-content"
-                        [announcement]="announcement"
-                        (dismiss)="dismissAnnouncement()"></app-announcement>
-      <app-header *ngIf="showHeaderAndFooter" class="dark-theme top-content"></app-header>
-      <div fxFlex>
-        <router-outlet></router-outlet>
-        <div ui-view [ngStyle]="{'height':isAngularJSPath ? '100%' : '0' }"></div>
-      </div>
-      <app-footer *ngIf="showHeaderAndFooter"></app-footer>
-      <div *ngIf="showHeaderAndFooter" class="to-top dark-theme"
-           [ngClass]="{'active': scroll, 'inactive': !scroll}">
-        <button mat-fab
-                class="mat-fab--extended"
-                color="default"
-                (click)="scrollToTop()">
-          <mat-icon>arrow_upward</mat-icon>
-          &nbsp;<ng-container i18n>Back to Top</ng-container>
-        </button>
-      </div>
-    </mat-sidenav-content>
-  </mat-sidenav-container>
-</ng-template>
-
-<ng-container *ngTemplateOutlet="showDefaultMode ? default : standalone"></ng-container>
+<mat-sidenav-container fullscreen [class.has-announcement]="hasAnnouncement"
+                        class="app-background">
+  <mat-sidenav #mobileMenu
+                class="primary-bg"
+                [(opened)]="showMobileMenu"
+                position="end">
+    <app-mobile-menu></app-mobile-menu>
+  </mat-sidenav>
+  <mat-sidenav-content fxLayout="column"
+                        track-scroll
+                        (yPositionChange)="onYPositionChange($event)">
+    <app-announcement *ngIf="hasAnnouncement && showHeaderAndFooter"
+                      class="top-content"
+                      [announcement]="announcement"
+                      (dismiss)="dismissAnnouncement()"></app-announcement>
+    <app-header *ngIf="showHeaderAndFooter" class="dark-theme top-content"></app-header>
+    <div fxFlex>
+      <router-outlet></router-outlet>
+      <div ui-view [ngStyle]="{'height':isAngularJSPath ? '100%' : '0' }"></div>
+    </div>
+    <app-footer *ngIf="showHeaderAndFooter"></app-footer>
+    <div *ngIf="showHeaderAndFooter" class="to-top dark-theme"
+          [ngClass]="{'active': scroll, 'inactive': !scroll}">
+      <button mat-fab
+              class="mat-fab--extended"
+              color="default"
+              (click)="scrollToTop()">
+        <mat-icon>arrow_upward</mat-icon>
+        &nbsp;<ng-container i18n>Back to Top</ng-container>
+      </button>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

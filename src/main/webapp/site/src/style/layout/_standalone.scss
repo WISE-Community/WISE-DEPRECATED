@@ -1,5 +1,5 @@
 .standalone {
-  padding: 32px;
+  height: 100%;
 
   .mat-card-content {
     margin-bottom: 16px;
@@ -25,6 +25,7 @@
 
 .standalone__logo {
   margin: 0 auto 16px;
+  padding-top: 32px;
   max-width: 300px;
 
   img {
@@ -35,7 +36,7 @@
 
 .standalone__content {
   max-width: breakpoint('sm.min');
-  margin: 0 auto 16px;
+  margin: 0 auto 32px;
 
   @media (min-width: breakpoint('sm.min')) {
     &.mat-card {
