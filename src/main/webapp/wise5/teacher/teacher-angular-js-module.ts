@@ -30,7 +30,7 @@ import NotebookGradingController from '../classroomMonitor/notebook/notebookGrad
 import ProjectAssetController from '../authoringTool/asset/projectAssetController';
 import ProjectController from '../authoringTool/project/projectController';
 import ProjectInfoController from '../authoringTool/info/projectInfoController';
-import RubricAuthoringController from '../authoringTool/rubric/rubricAuthoringController';
+import { RubricAuthoringComponent } from '../authoringTool/rubric/rubricAuthoringComponent';
 import StudentGradingController from '../classroomMonitor/studentGrading/studentGradingController';
 import StudentProgressController from '../classroomMonitor/studentProgress/studentProgressController';
 import WISELinkAuthoringController from '../authoringTool/wiseLink/wiseLinkAuthoringController';
@@ -121,7 +121,7 @@ import '../components/table/tableAuthoringComponentModule';
     .controller('ProjectAssetController', ProjectAssetController)
     .controller('ProjectController', ProjectController)
     .controller('ProjectInfoController', ProjectInfoController)
-    .controller('RubricAuthoringController', RubricAuthoringController)
+    .component('rubricAuthoringComponent', RubricAuthoringComponent)
     .controller('StudentGradingController', StudentGradingController)
     .controller('StudentProgressController', StudentProgressController)
     .controller('WISELinkAuthoringController', WISELinkAuthoringController)
@@ -264,9 +264,7 @@ import '../components/table/tableAuthoringComponentModule';
         })
         .state('root.at.project.rubric', {
           url: '/rubric',
-          templateUrl: '/wise5/authoringTool/rubric/rubricAuthoring.html',
-          controller: 'RubricAuthoringController',
-          controllerAs: 'rubricAuthoringController'
+          component: 'rubricAuthoringComponent'
         })
         .state('root.at.project.notebook', {
           url: '/notebook',

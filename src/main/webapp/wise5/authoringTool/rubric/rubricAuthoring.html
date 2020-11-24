@@ -1,6 +1,6 @@
 <div>
   <md-button id='backToProjectButton' class='topButton md-raised md-primary'
-      ng-click='rubricAuthoringController.goBack()'>
+      ng-click='$ctrl.goBack()'>
     <md-icon>arrow_back</md-icon>
     <md-tooltip md-direction='top'
         class='projectButtonTooltip'>
@@ -10,6 +10,6 @@
 </div><br/>
 <h5 translate="editProjectRubric"></h5>
 <wise-authoring-tinymce-editor
-    [(model)]='rubricAuthoringController.rubric'
-    (model-change)='rubricAuthoringController.rubricChanged()'>
+    [(model)]='$ctrl.rubric'
+    (model-change)='$ctrl.rubricChanged()'>
 </wise-authoring-tinymce-editor>

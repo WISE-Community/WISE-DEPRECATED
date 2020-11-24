@@ -1,34 +1,16 @@
 import { ConfigService } from '../../services/configService';
 import { UtilService } from '../../services/utilService';
 import { TeacherProjectService } from '../../services/teacherProjectService';
-import { ProjectAssetService } from '../../../site/src/app/services/projectAssetService';
 
 class RubricAuthoringController {
-  translate: any;
-  nodeId: string;
-  projectId: number;
   rubric: string = '';
-  static $inject = [
-    '$filter',
-    '$state',
-    '$stateParams',
-    'ConfigService',
-    'ProjectService',
-    'UtilService'
-  ];
+  static $inject = [ '$state', 'ConfigService', 'ProjectService', 'UtilService' ];
 
-  constructor(
-    private $filter: any,
-    private $state: any,
-    private $stateParams: any,
-    private ConfigService: ConfigService,
-    private ProjectService: TeacherProjectService,
-    private UtilService: UtilService) {
+  constructor(private $state: any, private ConfigService: ConfigService,
+    private ProjectService: TeacherProjectService, private UtilService: UtilService) {
   }
 
   $onInit(): void {
-    this.translate = this.$filter('translate');
-    this.projectId = this.$stateParams.projectId;
     this.rubric = this.ProjectService.replaceAssetPaths(this.ProjectService.getProjectRubric());
   }
 
@@ -45,4 +27,7 @@ class RubricAuthoringController {
   }
 }
 
-export default RubricAuthoringController;
+export const RubricAuthoringComponent = {
+  templateUrl: '/wise5/authoringTool/rubric/rubricAuthoring.html',
+  controller: RubricAuthoringController
+};
