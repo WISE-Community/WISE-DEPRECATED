@@ -30,7 +30,7 @@ import NotebookGradingController from '../classroomMonitor/notebook/notebookGrad
 import ProjectAssetController from '../authoringTool/asset/projectAssetController';
 import ProjectController from '../authoringTool/project/projectController';
 import ProjectInfoController from '../authoringTool/info/projectInfoController';
-import { RubricAuthoringComponent } from '../authoringTool/rubric/rubricAuthoringComponent';
+import { RubricAuthoringComponent } from '../authoringTool/rubric/rubric-authoring.component';
 import StudentGradingController from '../classroomMonitor/studentGrading/studentGradingController';
 import StudentProgressController from '../classroomMonitor/studentProgress/studentProgressController';
 import WISELinkAuthoringController from '../authoringTool/wiseLink/wiseLinkAuthoringController';
@@ -121,7 +121,8 @@ import '../components/table/tableAuthoringComponentModule';
     .controller('ProjectAssetController', ProjectAssetController)
     .controller('ProjectController', ProjectController)
     .controller('ProjectInfoController', ProjectInfoController)
-    .component('rubricAuthoringComponent', RubricAuthoringComponent)
+    .directive('rubricAuthoringComponent', downgradeComponent(
+        { component: RubricAuthoringComponent }) as angular.IDirectiveFactory)
     .controller('StudentGradingController', StudentGradingController)
     .controller('StudentProgressController', StudentProgressController)
     .controller('WISELinkAuthoringController', WISELinkAuthoringController)
