@@ -55,6 +55,7 @@ export class WiseTinymceEditorComponent {
     'help',
     'hr',
     'image',
+    'imagetools',
     'importcss',
     'insertdatetime',
     'link',
@@ -77,11 +78,9 @@ export class WiseTinymceEditorComponent {
     'wordcount'
   ];
 
-  protected toolbar: string[] = [
-    'undo redo | \
-    bold italic underline | \
-    numlist bullist'
-  ];
+  protected toolbar: string = `undo redo | bold italic underline | numlist bullist`;
+
+  protected toolbarGroups: any;
 
   constructor(private NotebookService: NotebookService) {
     this.debouncerSubscription = this.debouncer.pipe(debounceTime(1000)).subscribe((value) => {
@@ -104,7 +103,7 @@ export class WiseTinymceEditorComponent {
     if (includeDividerAfter) {
       newToolbarString += ' |';
     }
-    this.toolbar = [newToolbarString];
+    this.toolbar = newToolbarString;
   }
 
   ngOnInit(): void {
@@ -129,22 +128,40 @@ export class WiseTinymceEditorComponent {
       base_url: '/tinymce',
       suffix: '.min',
       height: '100%',
-      menubar: true,
+      menubar: 'file edit insert view format table help',
       relative_urls: false,
+      body_class: 'common-styles mat-typography app-styles default-theme',
+      content_css: '/siteStyles.css',
       media_live_embeds: true,
       extended_valid_elements: this.extendedValidElements,
+      font_formats: `Roboto=Roboto,Helvetica Neue,sans-serif; Arial=arial,helvetica,sans-serif; 
+        Arial Black=arial black,avant garde; Comic Sans MS=comic sans ms,sans-serif; 
+        Courier New=courier new,courier; Georgia=georgia,palatino; Helvetica=helvetica; 
+        Impact=impact,chicago; Tahoma=tahoma,arial,helvetica,sans-serif; Terminal=terminal,monaco; 
+        Times New Roman=times new roman,times; Verdana=verdana,geneva`,
       plugins: this.plugins,
+      quickbars_insert_toolbar: false,
+      default_link_target: '_blank',
+      image_advtab: true,
+      image_caption: true,
+      imagetools_toolbar: 'imageoptions',
+      link_context_toolbar: true,
       toolbar: this.toolbar,
+      toolbar_groups: this.toolbarGroups,
       audio_template_callback: data => {
         return this.getAudioTemplate(data);
       },
       file_picker_callback: (cb, value, meta) => {
         this.filePicker(cb, value, meta);
       },
+      mobile: {
+        menubar: 'file edit insert view format table help',
+        toolbar_mode: 'floating'
+      },
       menu: {
         file: {
-          title: 'File',
-          items: 'preview | print'
+          title: $localize`File`,
+          items: 'preview wordcount | print'
         }
       }
     };
@@ -155,8 +172,8 @@ export class WiseTinymceEditorComponent {
     tinymce.PluginManager.add('wisenote', function(editor, url) {
       thisWiseTinymceEditorComponent.editor = editor;
       editor.ui.registry.addButton('wisenote', {
-        tooltip: 'Insert from Notebook',
-        text: 'Insert note +',
+        tooltip: $localize`Insert from Notebook`,
+        text: $localize`Insert note +`,
         onAction: function() {
           thisWiseTinymceEditorComponent.openNotebook.emit('openNotebook');
         }

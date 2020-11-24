@@ -6359,6 +6359,21 @@ Click "Cancel" to keep the invalid JSON open so you can fix it.</source>
       <trans-unit id="8057745565493131709">
         <source>Copied to clipboard.</source>
       </trans-unit>
+      <trans-unit id="8455204924704616723">
+        <source>Insert from Notebook</source>
+      </trans-unit>
+      <trans-unit id="3075681036535086015">
+        <source>File</source>
+      </trans-unit>
+      <trans-unit id="535405804327281099">
+        <source>Insert note +</source>
+      </trans-unit>
+      <trans-unit id="8560978883976627945">
+        <source>Alignment</source>
+      </trans-unit>
+      <trans-unit id="3696320199419440058">
+        <source>Insert WISE Link</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>
