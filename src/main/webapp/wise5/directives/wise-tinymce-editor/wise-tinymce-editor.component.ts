@@ -79,7 +79,6 @@ export class WiseTinymceEditorComponent {
   ];
 
   protected toolbar: string = `undo redo | bold italic underline | numlist bullist`;
-
   protected toolbarGroups: any;
 
   constructor(private NotebookService: NotebookService) {
@@ -92,20 +91,6 @@ export class WiseTinymceEditorComponent {
     this.plugins.push(pluginName);
   }
 
-  addPluginToToolbar(pluginName: string,
-        includeDividerBefore: boolean = false,
-        includeDividerAfter: boolean = false): void {
-    let newToolbarString: string = this.toolbar[0];
-    if (includeDividerBefore) {
-      newToolbarString += ' |';
-    }
-    newToolbarString += ` ${pluginName}`;
-    if (includeDividerAfter) {
-      newToolbarString += ' |';
-    }
-    this.toolbar = newToolbarString;
-  }
-
   ngOnInit(): void {
     if (this.isAddNoteButtonAvailable) {
       this.notebookItemChosenSubscription =
@@ -115,12 +100,10 @@ export class WiseTinymceEditorComponent {
         }
       });
       this.addPluginName('wisenote');
-      this.addPluginToToolbar('wisenote', true, false);
+      this.initializeInsertWISENotePlugin();
+      this.toolbar += ` | wisenote`;
     }
     this.initializeTinyMCE();
-    if (this.isAddNoteButtonAvailable) {
-      this.initializeInsertWISENotePlugin();
-    }
   }
 
   initializeTinyMCE(): void {
@@ -155,7 +138,6 @@ export class WiseTinymceEditorComponent {
         this.filePicker(cb, value, meta);
       },
       mobile: {
-        menubar: 'file edit insert view format table help',
         toolbar_mode: 'floating'
       },
       menu: {

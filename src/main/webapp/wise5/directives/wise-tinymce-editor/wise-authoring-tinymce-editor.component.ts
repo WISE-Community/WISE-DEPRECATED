@@ -18,14 +18,12 @@ export class WiseAuthoringTinymceEditorComponent extends WiseTinymceEditorCompon
   protected toolbar: string = `undo redo | fontselect | formatselect | fontsizeselect | 
     bold italic underline | forecolor backcolor | alignment numlist bullist | 
     image media link wiselink | emoticons removeformat fullscreen`;
-
   protected toolbarGroups: any = {
     alignment: {
       icon: 'align-left',
       tooltip: $localize`Alignment`,
       items: 'alignleft aligncenter alignright | outdent indent'
-    },
-
+    }
   };
 
   constructor(
