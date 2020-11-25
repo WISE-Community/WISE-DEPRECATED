@@ -356,6 +356,9 @@
       <trans-unit id="3696320199419440058">
         <source>Insert WISE Link</source>
       </trans-unit>
+      <trans-unit id="7138428925866529608">
+        <source>Image from notebook</source>
+      </trans-unit>
     </body>
   </file>
 </xliff>

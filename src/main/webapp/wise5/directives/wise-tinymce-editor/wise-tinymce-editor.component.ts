@@ -182,45 +182,37 @@ export class WiseTinymceEditorComponent {
   }
 
   insertWISENote(notebookItem: any): void {
-    this.insertLineBreak();
     const attachmentURLs = this.getAttachmentURLs(notebookItem);
     const text = this.getText(notebookItem);
-    this.insertAttachments(attachmentURLs);
+    let noteContent = this.insertAttachments(attachmentURLs, text);
+    if (noteContent) {
+      this.editor.insertContent(noteContent);
+    }
+  }
+
+  insertAttachments(attachmentURLs: string[], text: string): string {
+    let content = '';
     if (attachmentURLs.length === 0) {
-      this.insertText(text);
+      content = this.insertText(text);
     } else {
-      this.insertText(text, true, true);
+      content = `<figure class="image align-center">`;
+      attachmentURLs.forEach((attachmentURL) => {
+        content += `<img style="width: 500px; height: auto; max-width: 100%" src="${attachmentURL}"
+          alt="${$localize`Image from notebook`}" />`;
+      });
+      content += this.insertText(text, true) + `</figure>`;
     }
-    this.insertLineBreak();
+    return content;
   }
 
-  insertLineBreak(): void {
-    this.editor.insertContent('<br/><p></p>');
-  }
-
-  insertAttachments(attachmentURLs: string[]): void {
-    const style = 'style="width: 75%; max-width: 100%; height: auto; border: 1px solid #aaaaaa; ' +
-        'padding: 8px; margin-bottom: 4px; text-align: center; display: block; ' +
-        'margin-left: auto; margin-right: auto;"';
-    attachmentURLs.forEach((attachmentURL) => {
-      this.editor.insertContent(
-        `<br/><img src="${attachmentURL}" alt="notebook image" ${style} />`
-      );
-    });
-  }
-
-  insertText(text: string, isCenter: boolean = false, isBold: boolean = false): void {
-    if (text != '') {
-      let style = '';
-      if (isCenter) {
-        style = "style='text-align: center'";
-      }
-      let pContent = text;
-      if (isBold) {
-        pContent = `<b>${text}</b>`;
-      }
-      this.editor.insertContent(`<p ${style}>${pContent}</p>`);
+  insertText(text: string, caption: boolean = false): string {
+    let content = '';
+    if (caption) {
+      content = `<figcaption contenteditable="true">${text ? text : ' '}</figcaption>`;
+    } else if (text) {
+      content = `<p>${text}</p>`;
     }
+    return content;
   }
 
   getAttachmentURLs(notebookItem: any): string[] {
