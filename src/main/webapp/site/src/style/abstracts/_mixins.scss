@@ -6,7 +6,7 @@
   $custom-typography: mat-typography-config(
     $body-1: mat-typography-level(16px, 22px, 400),
     $body-2: mat-typography-level(16px, 22px, 500),
-    $caption: mat-typography-level(13px, 20px, 400),
+    $caption: mat-typography-level(14px, 20px, 400),
     $subheading-1: mat-typography-level(17px, 24px, 400),
     $subheading-2: mat-typography-level(17px, 24px, 500),
     $headline: mat-typography-level(24px, 32px, 500)
@@ -197,6 +197,14 @@
     background-color: map-get($colors, app-bg);
   }
 
+  .app-bar {
+    background-color: map-get($background, app-bar);
+  }
+
+  .avatar--icon {
+    background-color: map-get($colors, disabled-text);
+  }
+
   .content-block, .info-block, .notice {
     background-color: map-get($colors, notice-bg);
   }
@@ -219,7 +227,7 @@
 
   .mat-flat-button, .mat-raised-button, .mat-fab, .mat-mini-fab {
     &.mat-secondary-text {
-      background-color: map-get($colors, secondary-text);
+      background-color: map-get($foreground, secondary-text);
       color: white;
     }
 
@@ -250,6 +258,10 @@
   }
 
   .mat-form-field-prefix, .mat-form-field-suffix {
+    color: map-get($foreground, secondary-text);
+  }
+
+  .mat-icon {
     color: map-get($foreground, secondary-text);
   }
 

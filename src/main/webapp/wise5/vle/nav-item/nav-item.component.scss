@@ -1,21 +1,57 @@
-mat-card {
+.mat-card {
   margin: 8px;
+  padding-top: 0;
+  padding-bottom: 8px;
+
+  &:not([class*=mat-elevation-z]):not(.expanded) {
+    box-shadow: 0 3px 1px -2px rgba(0,0,0,.14), 0 2px 2px 0 rgba(0,0,0,.098), 
+        0 1px 5px 0 rgba(0,0,0,.084), 3px 3px 0 1px #d5d5d5, 6px 6px 0 1px #aaa;
+  }
 }
 
-mat-progress-bar {
+.mat-card-content, .mat-card-header {
+  margin: 0 -16px;
+  padding: 16px;
+}
+
+.mat-card-header {
+  &:focus, &:hover {
+    outline: none;
+
+    .title {
+      border-bottom: 1px dashed #aaaaaa;
+    }
+  }
+}
+
+.mat-card-actions {
+  padding: 8px 16px;
+  margin: 0 -16px;
+  border-top: 1px solid #dddddd;
+}
+
+.mat-list-base {
+  padding-top: 0;
+}
+
+.mat-caption {
+  font-weight: 500;
+}
+
+.group-icon {
+  height: auto;
+  width: auto;
+}
+
+.title {
+  font-weight: normal;
+}
+
+.collapse {
+  margin: 0;
+}
+
+.progress {
   height: 14px;
-}
-
-[flex] {
-  flex: 1;
-}
-
-.mat-card:not([class*=mat-elevation-z]):not(.expanded) {
-  box-shadow: 0 3px 1px -2px rgba(0,0,0,.14), 0 2px 2px 0 rgba(0,0,0,.098), 0 1px 5px 0 rgba(0,0,0,.084), 3px 3px 0 1px #d5d5d5, 6px 6px 0 1px #aaa;
-}
-
-mat-list-item node-icon {
-  margin: 8px 16px 8px 0;
-  height: 40px;
-  width: 40px;
+  width: 48px;
 }

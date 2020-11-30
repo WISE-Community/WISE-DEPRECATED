@@ -1,55 +1,48 @@
-<div *ngIf="nodeStatus.isVisible">
-  <span [ngSwitch]="type">
-    <mat-card *ngSwitchCase="'card'"
-        class="nav-item--card"
-        [ngClass]="{'nav-item--card--group':isGroup, 'expanded md-whiteframe-z3':expanded}">
-      <mat-card-content class="nav-item--card__content" (click)="itemClicked($event)" role="button" md-ink-ripple fxLayout="row">
-        <node-icon [nodeId]="nodeId" size="36" [icon]="nodeStatus.icon"></node-icon>
-        <div class="md-title mat-title nav-item__title" style="color: {{nodeStatus.icon.color}};" flex>
-          <span>{{ nodeTitle }}</span>
-        </div>
-        <mat-icon class="nav-item__collapse" *ngIf="isGroup && expanded" aria-label="collapse">remove</mat-icon>
-      </mat-card-content>
-      <mat-card-content *ngIf="isGroup && expanded" class="nav-contents nav-contents--group">
-        <mat-list class="nav-contents__list">
-          <div>
-            <nav-item *ngFor="let childId of item.ids"
-                [ngClass]="{'expanded': expanded, 'prev': isPrevStep}"
-                aria-label="{{ isPrevNode ? 'Last Visited Item' : null }}"
-                [showPosition]="showPosition"
-                [nodeId]="childId" type="list" ng-animate-ref="{{ childId }}"
-                class="nav-item"
-                data-nodeid="{{ childId }}"
-                style="display: block">
-            </nav-item>
-          </div>
-        </mat-list>
-      </mat-card-content>
-      <mat-card-footer class="nav-item__more" fxLayout="row" fxLayoutAlign="start center" flex>
-        <div class="progress-wrapper">
-          <mat-progress-bar mode="determinate"
-              class="nav-item__progress"
-              *ngIf="isGroup"
-              value="{{nodeStatus.progress.completionPct}}"
-              matTooltip="{{nodeStatus.progress.completionPct}}% completed"
-              i18n-matTooltip
-              matTooltipPosition="below"></mat-progress-bar>
-        </div>
-        <span *ngIf="isGroup" class="nav-item__info md-body-1" i18n>{{nodeStatus.progress.completedItems}}/{{nodeStatus.progress.totalItems}} items</span>
-        <span flex></span>
-        <node-score [nodeId]="nodeId"></node-score>
-        <node-status-icon [nodeId]="nodeId"></node-status-icon>
-        <mat-icon *ngIf="!nodeStatus.isVisitable" aria-label="Item is locked"> lock </mat-icon>
-      </mat-card-footer>
-    </mat-card>
-    <mat-list-item *ngSwitchCase="'list'" (click)="itemClicked($event)"
-        class="md-long-text noright list-item md-whiteframe-z1"
-        aria-label="Go to {{nodeTitle}}"
-        [ngClass]="{'nav-item--list--group':isGroup}">
-      <node-icon [nodeId]="nodeId" [icon]="nodeStatus.icon" [customClass]="'mat-avatar'"></node-icon>
-      <p>{{ nodeTitle }} <node-status-icon [nodeId]="nodeId" class="status-icon"></node-status-icon>
-        <mat-icon class="status-icon" *ngIf="!nodeStatus.isVisitable" aria-label="Item is locked"> lock </mat-icon>
-      </p>
-    </mat-list-item>
-  </span>
-</div>
+<ng-container *ngIf="nodeStatus.isVisible" [ngSwitch]="type">
+  <mat-card *ngSwitchCase="'card'" [ngClass]="{'expanded mat-elevation-z6': expanded}">
+    <mat-card-header (click)="itemClicked($event)" role="button" matRipple fxLayout="row"
+                     tabindex="0">
+      <node-icon mat-card-avatar class="group-icon" [nodeId]="nodeId" size="36"
+                 [icon]="nodeStatus.icon"></node-icon>
+      <mat-card-title class="title" style="color: {{nodeStatus.icon.color}};">
+        <span>{{ nodeTitle }}</span>
+      </mat-card-title>
+      <span fxFlex></span>
+      <mat-icon class="collapse" *ngIf="isGroup && expanded" aria-label-i18n aria-label="Collapse">
+        remove</mat-icon>
+    </mat-card-header>
+    <mat-card-content class="app-bar" *ngIf="isGroup && expanded">
+      <mat-action-list class="list mat-elevation-z1">
+        <nav-item *ngFor="let childId of item.ids"
+                  [class]="{'expanded': expanded, 'prev': isPrevStep}" [showPosition]="showPosition"
+                  [nodeId]="childId" type="list" ng-animate-ref="{{ childId }}"
+                  data-nodeid="{{ childId }}">
+        </nav-item>
+      </mat-action-list>
+    </mat-card-content>
+    <mat-card-actions fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+      <mat-progress-bar class="progress" mode="determinate" *ngIf="isGroup"
+                        value="{{nodeStatus.progress.completionPct}}" matTooltip-i18n
+                        matTooltip="{{nodeStatus.progress.completionPct}}% completed"
+                        matTooltipPosition="above"></mat-progress-bar>
+      <span *ngIf="isGroup" class="mat-caption secondary-text" i18n>
+        {{nodeStatus.progress.completedItems}}/{{nodeStatus.progress.totalItems}} items
+      </span>
+      <span fxFlex></span>
+      <node-score [nodeId]="nodeId"></node-score>
+      <node-status-icon [nodeId]="nodeId"></node-status-icon>
+      <mat-icon *ngIf="!nodeStatus.isVisitable" matTooltip-i8n matTooltip="Lesson is locked"
+                matTooltipPosition="above"> lock </mat-icon>
+    </mat-card-actions>
+  </mat-card>
+  <button mat-list-item class="list-item" *ngSwitchCase="'list'" (click)="itemClicked($event)"
+          tabindex="0" aria-label-i18n aria-label="Go to {{nodeTitle}}"
+          [ngClass]="{'group':isGroup}">
+    <node-icon matListAvatar [nodeId]="nodeId" [icon]="nodeStatus.icon"></node-icon>
+    <p matLine>{{ nodeTitle }} <node-status-icon [nodeId]="nodeId" class="status-icon">
+      </node-status-icon>
+      <mat-icon *ngIf="!nodeStatus.isVisitable" class="status-icon" matTooltip-i18n
+                matTooltip="Item is locked" matTooltipPosition="above"> lock </mat-icon>
+    </p>
+  </button>
+</ng-container>
