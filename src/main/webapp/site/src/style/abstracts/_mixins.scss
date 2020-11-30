@@ -261,10 +261,6 @@
     color: map-get($foreground, secondary-text);
   }
 
-  .mat-icon {
-    color: map-get($foreground, secondary-text);
-  }
-
   // Set classes for each named color in the $colors map
   @each $key, $value in $colors {
       .#{$key} {

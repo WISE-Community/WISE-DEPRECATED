@@ -5257,6 +5257,48 @@
           <context context-type="linenumber">120</context>
         </context-group>
       </trans-unit>
+      <trans-unit datatype="html" id="f3bb0234ead15a9bf90c2cb2ed7b48570d6011c5">
+        <source>Expand or collapse lesson content</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/vle/nav-item/nav-item.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="21b4a27510afaf13943eed74935b8a88b69725d4">
+        <source><x equiv-text="{{nodeStatus.progress.completionPct}}" id="INTERPOLATION"/>% completed</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/vle/nav-item/nav-item.component.html</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="d5af5e83b5a9ff687251f2871c50161ec34301c8">
+        <source><x equiv-text="{{nodeStatus.progress.completedItems}}" id="INTERPOLATION"/>/<x equiv-text="{{nodeStatus.progress.totalItems}}" id="INTERPOLATION_1"/> items </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/vle/nav-item/nav-item.component.html</context>
+          <context context-type="linenumber">26</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="3a46d8b67c3dede35e374f9c0a758feb64e7032b">
+        <source>Lesson is locked</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/vle/nav-item/nav-item.component.html</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="b73fb34ae49aef54ad30ef3b47b73bb3987c8c51">
+        <source>Item is locked</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/vle/nav-item/nav-item.component.html</context>
+          <context context-type="linenumber">46</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="4bd8e5001831bcc8ea5f999de7866924755f75a9">
+        <source>Go to <x equiv-text="{{nodeTitle}}" id="INTERPOLATION"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/vle/nav-item/nav-item.component.html</context>
+          <context context-type="linenumber">39</context>
+        </context-group>
+      </trans-unit>
       <trans-unit datatype="html" id="1cde0ecb1655843b8b682674d1ed9ff8138073b2">
         <source>point</source>
         <context-group purpose="location">

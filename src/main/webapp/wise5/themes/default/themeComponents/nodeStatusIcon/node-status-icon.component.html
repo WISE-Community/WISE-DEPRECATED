@@ -1,5 +1,7 @@
-<mat-icon *ngIf="nodeStatus.isCompleted || nodeStatus.isWarn"
-    [ngClass]="{'success': nodeStatus.isSuccess, 'warn': nodeStatus.isWarn}"
-    aria-label="{{nodeStatus.isCompleted ? 'Completed' : ''}}{{nodeStatus.isSuccess ? ' with Success' : ''}}{{nodeStatus.isWarn ? ' with Warning' : ''}}">
-  {{nodeStatus.isWarn ? 'error' : 'check_circle'}}
-</mat-icon>
+<ng-container *ngIf="nodeStatus.isCompleted || nodeStatus.isWarn">
+  <mat-icon class="secondary-text"
+            [ngClass]="{'success': nodeStatus.isSuccess, 'warn': nodeStatus.isWarn}">
+    {{nodeStatus.isWarn ? 'error' : 'check_circle'}}
+  </mat-icon>
+  <span class="cdk-visually-hidden">{{label}}</span>
+</ng-container>
