@@ -1,5 +1,4 @@
 import '../lib/jquery/jquery-global';
-import '../lib/bootstrap/js/bootstrap.min'
 import * as angular from 'angular';
 import { downgradeComponent, downgradeInjectable } from '@angular/upgrade/static';
 import '../common-angular-js-module';
@@ -35,6 +34,7 @@ import RubricAuthoringController from '../authoringTool/rubric/rubricAuthoringCo
 import StudentGradingController from '../classroomMonitor/studentGrading/studentGradingController';
 import StudentProgressController from '../classroomMonitor/studentProgress/studentProgressController';
 import WISELinkAuthoringController from '../authoringTool/wiseLink/wiseLinkAuthoringController';
+import { WiseAuthoringTinymceEditorComponent } from '../directives/wise-tinymce-editor/wise-authoring-tinymce-editor.component';
 
 import '../classroomMonitor/classroomMonitorComponents';
 import '../authoringTool/structure/structureAuthoringModule';
@@ -58,9 +58,6 @@ import '../components/openResponse/openResponseAuthoringComponentModule';
 import '../components/outsideURL/outsideURLAuthoringComponentModule';
 import '../components/summary/summaryAuthoringComponentModule';
 import '../components/table/tableAuthoringComponentModule';
-import '../lib/summernote/dist/summernote.min';
-import '../lib/summernoteExtensions/summernote-ext-addNote.js';
-import '../lib/summernoteExtensions/summernote-ext-print.js'
 
     angular.module('teacher', [
       'common',
@@ -108,6 +105,8 @@ import '../lib/summernoteExtensions/summernote-ext-print.js'
     .component('nodeAdvancedPathAuthoringComponent', NodeAdvancedPathAuthoringComponent)
     .directive('advancedProjectAuthoringComponent', downgradeComponent(
         { component: AdvancedProjectAuthoringComponent }) as angular.IDirectiveFactory)
+    .directive('wiseAuthoringTinymceEditor', downgradeComponent(
+        { component: WiseAuthoringTinymceEditorComponent }) as angular.IDirectiveFactory)
     .controller('AuthoringToolController', AuthoringToolController)
     .controller('AuthoringToolMainController', AuthoringToolMainController)
     .controller('AuthorNotebookController', AuthorNotebookController)

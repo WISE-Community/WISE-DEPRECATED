@@ -3,15 +3,17 @@
 import EditNotebookItemController from '../editNotebookItemController';
 
 class NotebookController {
-  constructor($filter,
-              $mdDialog,
-              $scope,
-              $rootScope,
-              ConfigService,
-              NotebookService,
-              ProjectService,
-              StudentAssetService,
-              StudentDataService) {
+  constructor(
+    $filter,
+    $mdDialog,
+    $scope,
+    $rootScope,
+    ConfigService,
+    NotebookService,
+    ProjectService,
+    StudentAssetService,
+    StudentDataService
+  ) {
     this.$filter = $filter;
     this.$mdDialog = $mdDialog;
     this.$scope = $scope;
@@ -45,7 +47,7 @@ class NotebookController {
     this.insertContent = null;
     this.requester = null;
 
-    this.addNoteSubscription = this.NotebookService.addNote$.subscribe((args) => {
+    this.addNoteSubscription = this.NotebookService.addNote$.subscribe(args => {
       const note = null;
       const isEditMode = true;
       const file = args.file;
@@ -54,15 +56,23 @@ class NotebookController {
       const isFileUploadEnabled = args.isFileUploadEnabled;
       const studentWorkIds = args.studentWorkIds;
       const ev = args.ev;
-      this.showEditNoteDialog(note, isEditMode, file, noteText, isEditTextEnabled,
-          isFileUploadEnabled, studentWorkIds, ev);
+      this.showEditNoteDialog(
+        note,
+        isEditMode,
+        file,
+        noteText,
+        isEditTextEnabled,
+        isFileUploadEnabled,
+        studentWorkIds,
+        ev
+      );
     });
 
     this.closeNotebookSubscription = this.NotebookService.closeNotebook$.subscribe(() => {
       this.closeNotes();
     });
 
-    this.editNoteSubscription = this.NotebookService.editNote$.subscribe((args) => {
+    this.editNoteSubscription = this.NotebookService.editNote$.subscribe(args => {
       const note = args.note;
       const isEditMode = args.isEditMode;
       const file = null;
@@ -71,15 +81,23 @@ class NotebookController {
       const isFileUploadEnabled = true;
       const studentWorkIds = null;
       const ev = args.ev;
-      this.showEditNoteDialog(note, isEditMode, file, noteText, isEditTextEnabled,
-          isFileUploadEnabled, studentWorkIds, ev);
+      this.showEditNoteDialog(
+        note,
+        isEditMode,
+        file,
+        noteText,
+        isEditTextEnabled,
+        isFileUploadEnabled,
+        studentWorkIds,
+        ev
+      );
     });
 
-    this.notebookUpdatedSubscription = this.NotebookService.notebookUpdated$.subscribe((args) => {
+    this.notebookUpdatedSubscription = this.NotebookService.notebookUpdated$.subscribe(args => {
       this.notebook = angular.copy(args.notebook);
     });
 
-    this.openNotebookSubscription = this.NotebookService.openNotebook$.subscribe((args) => {
+    this.openNotebookSubscription = this.NotebookService.openNotebook$.subscribe(args => {
       this.open('note');
       this.setInsertMode(args.insertMode, args.requester);
     });
@@ -108,18 +126,27 @@ class NotebookController {
   }
 
   isStudentNotebook() {
-    return this.ConfigService.getMode() === 'studentRun' ||
-        this.ConfigService.getMode() === 'preview' ||
-        ((this.ConfigService.isRunOwner() || this.ConfigService.isRunSharedTeacher()) &&
-          this.ConfigService.getWorkgroupId() !== this.workgroupId);
+    return (
+      this.ConfigService.getMode() === 'studentRun' ||
+      this.ConfigService.getMode() === 'preview' ||
+      ((this.ConfigService.isRunOwner() || this.ConfigService.isRunSharedTeacher()) &&
+        this.ConfigService.getWorkgroupId() !== this.workgroupId)
+    );
   }
 
   deleteStudentAsset(studentAsset) {
     alert(this.$translate('deleteStudentAssetFromNotebookNotImplementedYet'));
   }
 
-  showEditNoteDialog(note, isEditMode, file, text, isEditTextEnabled, isFileUploadEnabled,
-      studentWorkIds) {
+  showEditNoteDialog(
+    note,
+    isEditMode,
+    file,
+    text,
+    isEditTextEnabled,
+    isFileUploadEnabled,
+    studentWorkIds
+  ) {
     const notebookItemTemplate = this.themePath + '/notebook/editNotebookItem.html';
     this.$mdDialog.show({
       parent: angular.element(document.body),
@@ -145,9 +172,9 @@ class NotebookController {
 
   attachNotebookItemToComponent($event, notebookItem) {
     this.componentController.attachNotebookItemToComponent(notebookItem);
-    this.selectedNotebookItem = null;  // reset selected notebook item
+    this.selectedNotebookItem = null; // reset selected notebook item
     // TODO: add some kind of unobtrusive confirmation to let student know that the notebook item has been added to current component
-    $event.stopPropagation();  // prevents parent notebook list item from getting the onclick event so this item won't be re-selected.
+    $event.stopPropagation(); // prevents parent notebook list item from getting the onclick event so this item won't be re-selected.
   }
 
   getNotes() {
@@ -196,10 +223,15 @@ class NotebookController {
   insert(notebookItem, $event) {
     if (this.requester === 'report') {
       this.insertContent = angular.copy(notebookItem);
+      this.NotebookService.broadcastNotebookItemChosen({
+        requester: this.requester,
+        notebookItem: notebookItem
+      });
     } else {
-      this.NotebookService.broadcastNotebookItemChosen(
-        { requester: this.requester, notebookItem: notebookItem }
-      );
+      this.NotebookService.broadcastNotebookItemChosen({
+        requester: this.requester,
+        notebookItem: notebookItem
+      });
     }
   }
 }
@@ -222,8 +254,7 @@ const Notebook = {
     mode: '@',
     workgroupId: '='
   },
-  template:
-    `<div ng-if="::$ctrl.config.enabled" ng-class="{'notes-visible': $ctrl.notesVisible}">
+  template: `<div ng-if="::$ctrl.config.enabled" ng-class="{'notes-visible': $ctrl.notesVisible}">
       <div class="notebook-overlay"></div>
       <notebook-launcher ng-if="::$ctrl.config.itemTypes.note.enabled"
                  config="$ctrl.config"

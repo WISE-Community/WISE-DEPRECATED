@@ -1,7 +1,6 @@
 import './lib/jquery/jquery-global';
-import './lib/bootstrap/js/bootstrap.min'
 import * as angular from 'angular';
-import { downgradeInjectable } from '@angular/upgrade/static';
+import { downgradeComponent, downgradeInjectable } from '@angular/upgrade/static';
 import { AchievementService } from './services/achievementService';
 import * as angularDragula from 'angular-dragula';
 import 'angular-file-saver';
@@ -67,9 +66,10 @@ import * as SockJS from 'sockjs-client';
 import * as StompJS from '@stomp/stompjs';
 window['SockJS'] = SockJS;
 window['Stomp'] = StompJS.Stomp;
-import './lib/angular-summernote/dist/angular-summernote.min';
 import './themes/default/theme';
 import SideMenu from './common/sideMenuComponent';
+import { EditorComponent } from '@tinymce/tinymce-angular';
+import { WiseTinymceEditorComponent } from './directives/wise-tinymce-editor/wise-tinymce-editor.component';
 
   angular.module('common', [
     angularDragula(angular),
@@ -98,11 +98,14 @@ import SideMenu from './common/sideMenuComponent';
     'outsideURLComponentModule',
     'pascalprecht.translate',
     'summaryComponentModule',
-    'summernote',
     'tableComponentModule',
     'ui.router'
   ])
   .service('AchievementService', downgradeInjectable(AchievementService))
+  .directive('editor', downgradeComponent(
+      { component: EditorComponent }) as angular.IDirectiveFactory)
+  .directive('wiseTinymceEditor', downgradeComponent(
+      { component: WiseTinymceEditorComponent }) as angular.IDirectiveFactory)
   .factory('AnnotationService', downgradeInjectable(AnnotationService))
   .factory('AudioRecorderService', downgradeInjectable(AudioRecorderService))
   .factory('ConfigService', downgradeInjectable(ConfigService))

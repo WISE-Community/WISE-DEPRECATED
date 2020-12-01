@@ -1,3 +1,34 @@
 body {
   margin: 0;
 }
+
+figure {
+  &.image {
+    display: inline-block;
+    border: 1px solid #bdbdbd;
+    border-radius: 4px;
+    padding: 8px;
+
+    figcaption {
+      text-align: center;
+      margin-top: 4px;
+    }
+  }
+
+  &.align-center {
+    margin: 12px auto;
+    display: table;
+  }
+  
+  &.align-left {
+    float: left;
+  }
+  
+  &.align-right {
+    float: right;
+  }
+}
+
+.mce-content-body {
+  padding: 8px;
+}
