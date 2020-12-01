@@ -92,13 +92,18 @@ export class UtilService {
     return imageObject;
   }
 
-  isImage(fileName) {
-    const imageExtensionsRegEx = new RegExp('.*.(png|jpg|jpeg|bmp|gif|tiff|svg)');
+  isImage(fileName: string): boolean {
+    const imageExtensionsRegEx = new RegExp('.*.(png|jpg|jpeg|bmp|gif|tiff|svg|webp)');
     return fileName.toLowerCase().match(imageExtensionsRegEx) != null;
   }
 
-  isVideo(fileName) {
-    const videoExtensionsRegEx = new RegExp('.*.(mp4|mpg|mpeg|m4v|m2v|avi|gifv|mov|qt)');
+  isVideo(fileName: string): boolean {
+    const videoExtensionsRegEx = new RegExp('.*.(mp4|mpg|mpeg|m4v|m2v|avi|gifv|mov|qt|webm)');
+    return fileName.toLowerCase().match(videoExtensionsRegEx) != null;
+  }
+
+  isAudio(fileName: string): boolean {
+    const videoExtensionsRegEx = new RegExp('.*.(mp3|flac|m4a|ogg|wav|webm)');
     return fileName.toLowerCase().match(videoExtensionsRegEx) != null;
   }
 

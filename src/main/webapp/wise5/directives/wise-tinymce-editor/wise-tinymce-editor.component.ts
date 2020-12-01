@@ -87,10 +87,6 @@ export class WiseTinymceEditorComponent {
     });
   }
 
-  addPluginName(pluginName: string): void {
-    this.plugins.push(pluginName);
-  }
-
   ngOnInit(): void {
     if (this.isAddNoteButtonAvailable) {
       this.notebookItemChosenSubscription =
@@ -104,6 +100,10 @@ export class WiseTinymceEditorComponent {
       this.toolbar += ` | wisenote`;
     }
     this.initializeTinyMCE();
+  }
+
+  addPluginName(pluginName: string): void {
+    this.plugins.push(pluginName);
   }
 
   initializeTinyMCE(): void {
@@ -131,11 +131,11 @@ export class WiseTinymceEditorComponent {
       link_context_toolbar: true,
       toolbar: this.toolbar,
       toolbar_groups: this.toolbarGroups,
-      audio_template_callback: data => {
-        return this.getAudioTemplate(data);
+      audio_template_callback: (data: any) => {
+        return this.getAudioHTML(data);
       },
-      file_picker_callback: (cb, value, meta) => {
-        this.filePicker(cb, value, meta);
+      file_picker_callback: (callback: any, value: any, meta: any) => {
+        this.filePicker(callback, value, meta);
       },
       mobile: {
         toolbar_mode: 'floating'
@@ -151,7 +151,7 @@ export class WiseTinymceEditorComponent {
 
   initializeInsertWISENotePlugin(): void {
     const thisWiseTinymceEditorComponent = this;
-    tinymce.PluginManager.add('wisenote', function(editor, url) {
+    tinymce.PluginManager.add('wisenote', function(editor: any, url: string) {
       thisWiseTinymceEditorComponent.editor = editor;
       editor.ui.registry.addButton('wisenote', {
         tooltip: $localize`Insert from Notebook`,
@@ -166,35 +166,33 @@ export class WiseTinymceEditorComponent {
   insertWISENote(notebookItem: any): void {
     const attachmentURLs = this.getAttachmentURLs(notebookItem);
     const text = this.getText(notebookItem);
-    let noteContent = this.insertAttachments(attachmentURLs, text);
+    let noteContent = this.getAttachmentsHTML(attachmentURLs, text);
     if (noteContent) {
       this.editor.insertContent(noteContent);
     }
   }
 
-  insertAttachments(attachmentURLs: string[], text: string): string {
+  getAttachmentsHTML(attachmentURLs: string[], text: string): string {
     let content = '';
     if (attachmentURLs.length === 0) {
-      content = this.insertText(text);
+      content = this.getTextHTML(text);
     } else {
       content = `<figure class="image align-center">`;
       attachmentURLs.forEach((attachmentURL) => {
-        content += `<img style="width: 500px; height: auto; max-width: 100%" src="${attachmentURL}"
-          alt="${$localize`Image from notebook`}" />`;
+        content += '<img style="width: 500px; height: auto; max-width: 100%" ' + 
+          `src="${attachmentURL}" alt="${$localize`Image from notebook`}" />`;
       });
-      content += this.insertText(text, true) + `</figure>`;
+      content += this.getTextHTML(text, true) + `</figure>`;
     }
     return content;
   }
 
-  insertText(text: string, caption: boolean = false): string {
-    let content = '';
+  getTextHTML(text: string, caption: boolean = false): string {
     if (caption) {
-      content = `<figcaption contenteditable="true">${text ? text : ' '}</figcaption>`;
+      return `<figcaption contenteditable="true">${text ? text : ' '}</figcaption>`;
     } else if (text) {
-      content = `<p>${text}</p>`;
+      return `<p>${text}</p>`;
     }
-    return content;
   }
 
   getAttachmentURLs(notebookItem: any): string[] {
@@ -228,12 +226,25 @@ export class WiseTinymceEditorComponent {
     return previousContent !== newContent;
   }
 
-  getAudioTemplate(data: any): string {
-    return `<audio controls>
-      <source src="${data.source}"${data.sourcemime ? ' type="' + data.sourcemime + '"' : ''}/>
-      ${(data.altsource ? '<source src="' + data.altsource + '"' + 
-      (data.altsourcemime ? ' type="' + data.altsourcemime + '"' : '') + ' />' : '')}
-      </audio>`;
+  getAudioHTML(data: any): string {
+    let content = '';
+    content += '<audio controls>';
+    content += this.getAudioSourceHTML(data.source, data.sourcemime);
+    if (data.altsource != null) {
+      content += this.getAudioSourceHTML(data.altsource, data.altsourcemime);
+    }
+    content += '</audio>';
+    return content;
+  }
+
+  getAudioSourceHTML(src: string, mime: string): string {
+    let content = '';
+    content += `<source src="${src}"`;
+    if (mime != null) {
+      content += ` type="${mime}"`
+    }
+    content += '/>';
+    return content;
   }
 
   filePicker(cb: any, value: any, meta: any) {}
