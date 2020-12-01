@@ -42,9 +42,6 @@ class ComponentController {
   teacherWorkgroupId: number;
   showAddToNotebookButton: boolean;
   latestAnnotations: any;
-  summernoteRubricId: string;
-  summernoteRubricHTML: string;
-  summernoteRubricOptions: any;
   allowedConnectedComponentTypes: any[];
   isJSONStringChanged: boolean;
   annotationSavedToServerSubscription: Subscription;
@@ -264,45 +261,6 @@ class ComponentController {
   getFullAssetPath(fileName) {
     const assetsDirectoryPath = this.ConfigService.getProjectAssetsDirectoryPath();
     return assetsDirectoryPath + '/' + fileName;
-  }
-
-  getSummernoteId(args) {
-    let summernoteId = '';
-    if (args.target == 'prompt') {
-      summernoteId = 'summernotePrompt_' + this.nodeId + '_' + this.componentId;
-    } else if (args.target == 'rubric') {
-      summernoteId = 'summernoteRubric_' + this.nodeId + '_' + this.componentId;
-    }
-    return summernoteId;
-  }
-
-  restoreSummernoteCursorPosition(summernoteId) {
-    this.UtilService.restoreSummernoteCursorPosition(summernoteId);
-  }
-
-  insertImageIntoSummernote(summernoteId, fullAssetPath, fileName) {
-    ($('#' + summernoteId) as any).summernote('insertImage', fullAssetPath, fileName);
-  }
-
-  insertVideoIntoSummernote(summernoteId, fullAssetPath) {
-    const videoElement: any = document.createElement('video');
-    videoElement.controls = 'true';
-    videoElement.innerHTML = '<source ng-src="' + fullAssetPath + '" type="video/mp4">';
-    ($('#' + summernoteId) as any).summernote('insertNode', videoElement);
-  }
-
-  assetSelected(args: any) {
-    if (args.target === 'rubric') {
-      const fileName = args.assetItem.fileName;
-      const summernoteId = this.getSummernoteId(args);
-      this.restoreSummernoteCursorPosition(summernoteId);
-      const fullAssetPath = this.getFullAssetPath(fileName);
-      if (this.UtilService.isImage(fileName)) {
-        this.insertImageIntoSummernote(summernoteId, fullAssetPath, fileName);
-      } else if (this.UtilService.isVideo(fileName)) {
-        this.insertVideoIntoSummernote(summernoteId, fullAssetPath);
-      }
-    }
   }
 
   registerComponentWithParentNode() {

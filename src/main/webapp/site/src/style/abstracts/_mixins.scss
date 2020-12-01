@@ -269,6 +269,12 @@
     color: map-get($foreground, secondary-text);
   }
 
+  figure {
+    &.image {
+      border: 1px solid map-get($background, status-bar);
+    }
+  }
+
   // Set classes for each named color in the $colors map
   @each $key, $value in $colors {
       .#{$key} {
@@ -292,7 +298,6 @@
 // Set Angular Material icon button size (use mat-icon size as the $size parameter)
 @mixin mat-icon-button-size($size: 24px) {
   $button-size: ($size*1) + 16px;
-
   height: $button-size;
   width: $button-size;
   line-height: $button-size;

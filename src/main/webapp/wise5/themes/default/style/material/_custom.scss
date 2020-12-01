@@ -321,3 +321,10 @@ md-select {
         }
     }
 }
+
+// md-dialog on top of TinyMCE dialog
+.tox-dialog__disable-scroll {
+    .md-dialog-container {
+        z-index: 1300;
+    }
+}

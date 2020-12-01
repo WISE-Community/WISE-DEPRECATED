@@ -27,6 +27,7 @@ import { AngularJSModule } from './common-hybrid-angular.module';
 import { NodeAdvancedJsonAuthoringComponent } from '../../../wise5/authoringTool/node/advanced/json/node-advanced-json-authoring.component';
 import { WorkgroupInfoComponent } from '../../../wise5/classroomMonitor/classroomMonitorComponents/nodeGrading/workgroupInfo/workgroup-info.component';
 import { NodeAdvancedGeneralAuthoringComponent } from '../../../wise5/authoringTool/node/advanced/general/node-advanced-general-authoring.component';
+import { WiseAuthoringTinymceEditorComponent } from '../../../wise5/directives/wise-tinymce-editor/wise-authoring-tinymce-editor.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import { NodeAdvancedGeneralAuthoringComponent } from '../../../wise5/authoringT
     StatusIconComponent,
     WorkgroupInfoComponent,
     WorkgroupNodeScoreComponent,
-    NavItemScoreComponent
+    NavItemScoreComponent,
+    WiseAuthoringTinymceEditorComponent
   ],
   imports: [
     AngularJSModule

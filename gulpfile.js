@@ -19,6 +19,8 @@ const newer = require('gulp-newer');
 const postcss = require('gulp-postcss');
 const print = require('gulp-print').default;
 const sass = require('gulp-sass');
+const rename = require("gulp-rename");
+const replace = require('gulp-replace');
 //const rtlscss = require('rtlcss');
 
 // -----------------------------------------------------------------------------
@@ -162,6 +164,15 @@ gulp.task('update-i18n', gulp.series(function() {
   }
   done();
 }));
+
+gulp.task('rename-styles-bundle', (done) => {
+  const statsJSON = JSON.parse(fs.readFileSync('./src/main/webapp/site/dist/stats.json'));
+  const siteStylesPath = statsJSON.assetsByChunkName.siteStyles[0];
+  gulp.src('./src/main/webapp/site/dist/*.js')
+    .pipe(replace('siteStyles.css', siteStylesPath))
+    .pipe(gulp.dest('./src/main/webapp/site/dist'));
+  done();
+});
 
 
 // -----------------------------------------------------------------------------

@@ -51,6 +51,8 @@ import { HelpIconComponent } from '../../../wise5/themes/default/themeComponents
 import { NodeStatusIcon } from '../../../wise5/themes/default/themeComponents/nodeStatusIcon/node-status-icon.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MomentModule } from 'ngx-moment';
+import { EditorModule, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
+import { WiseTinymceEditorComponent } from '../../../wise5/directives/wise-tinymce-editor/wise-tinymce-editor.component';
 
 @Component({template: ``})
 export class EmptyComponent {}
@@ -60,11 +62,13 @@ export class EmptyComponent {}
     EmptyComponent,
     HelpIconComponent,
     NodeIconComponent,
-    NodeStatusIcon
+    NodeStatusIcon,
+    WiseTinymceEditorComponent
   ],
   imports: [
     UpgradeModule,
     CommonModule,
+    EditorModule,
     FlexLayoutModule,
     FormsModule,
     MatButtonModule,
@@ -114,11 +118,13 @@ export class EmptyComponent {}
     SummaryService,
     TableService,
     TagService,
+    { provide: TINYMCE_SCRIPT_SRC, useValue: 'tinymce/tinymce.min.js' },
     UtilService,
     VLEProjectService
   ],
   exports: [
     CommonModule,
+    EditorModule,
     FlexLayoutModule,
     FormsModule,
     MatButtonModule,
