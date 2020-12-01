@@ -7158,6 +7158,30 @@ Click "Cancel" to keep the invalid JSON open so you can fix it.</target>
         <source>Copied to clipboard.</source>
         <target state="needs-translation">Copied to clipboard.</target>
       </trans-unit>
+      <trans-unit id="8455204924704616723">
+        <source>Insert from Notebook</source>
+        <target state="needs-translation">Insert from Notebook</target>
+      </trans-unit>
+      <trans-unit id="3075681036535086015">
+        <source>File</source>
+        <target state="needs-translation">File</target>
+      </trans-unit>
+      <trans-unit id="535405804327281099">
+        <source>Insert note +</source>
+        <target state="needs-translation">Insert note +</target>
+      </trans-unit>
+      <trans-unit id="8560978883976627945">
+        <source>Alignment</source>
+        <target state="needs-translation">Alignment</target>
+      </trans-unit>
+      <trans-unit id="3696320199419440058">
+        <source>Insert WISE Link</source>
+        <target state="needs-translation">Insert WISE Link</target>
+      </trans-unit>
+      <trans-unit id="7138428925866529608">
+        <source>Image from notebook</source>
+        <target state="needs-translation">Image from notebook</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>
