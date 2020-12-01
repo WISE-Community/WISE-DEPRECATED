@@ -23,10 +23,20 @@
  */
 package org.wise.vle.domain.work;
 
-import lombok.Getter;
-import lombok.Setter;
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.sql.Timestamp;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Index;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+
 import org.wise.portal.domain.group.Group;
 import org.wise.portal.domain.group.impl.PersistentGroup;
 import org.wise.portal.domain.run.Run;
@@ -35,8 +45,8 @@ import org.wise.portal.domain.workgroup.Workgroup;
 import org.wise.portal.domain.workgroup.impl.WorkgroupImpl;
 import org.wise.vle.domain.PersistableDomain;
 
-import javax.persistence.*;
-import java.sql.Timestamp;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Domain object representing assets uploaded by the student like images and video (used in WISE5)
@@ -102,80 +112,5 @@ public class StudentAsset extends PersistableDomain {
   @Override
   protected Class<?> getObjectClass() {
     return StudentAsset.class;
-  }
-
-  /**
-   * Get the JSON representation of the StudentWork
-   * @return a JSONObject with the values from the StudentWork
-   */
-  public JSONObject toJSON() {
-    JSONObject studentWorkJSONObject = new JSONObject();
-    try {
-      if (id != null) {
-        studentWorkJSONObject.put("id", id);
-      }
-
-      if (run != null) {
-        Long runId = run.getId();
-        studentWorkJSONObject.put("runId", runId);
-      }
-
-      if (period != null) {
-        Long periodId = period.getId();
-        studentWorkJSONObject.put("periodId", periodId);
-      }
-
-      if (workgroup != null) {
-        Long workgroupId = workgroup.getId();
-        studentWorkJSONObject.put("workgroupId", workgroupId);
-      }
-
-      if (nodeId != null) {
-        studentWorkJSONObject.put("nodeId", nodeId);
-      }
-
-      if (componentId != null) {
-        studentWorkJSONObject.put("componentId", componentId);
-      }
-
-      if (componentType != null) {
-        studentWorkJSONObject.put("componentType", componentType);
-      }
-
-      if (isReferenced != null) {
-        studentWorkJSONObject.put("isReferenced", isReferenced);
-      }
-
-      if (fileName != null) {
-        studentWorkJSONObject.put("fileName", fileName);
-      }
-
-      if (filePath != null) {
-        studentWorkJSONObject.put("filePath", filePath);
-      }
-
-      if (fileSize != null) {
-        studentWorkJSONObject.put("fileSize", fileSize);
-      }
-
-      if (clientSaveTime != null) {
-        studentWorkJSONObject.put("clientSaveTime", clientSaveTime.getTime());
-      }
-
-      if (serverSaveTime != null) {
-        studentWorkJSONObject.put("serverSaveTime", serverSaveTime.getTime());
-      }
-
-      if (clientDeleteTime != null) {
-        studentWorkJSONObject.put("clientDeleteTime", clientDeleteTime.getTime());
-      }
-
-      if (serverDeleteTime != null) {
-        studentWorkJSONObject.put("serverDeleteTime", serverDeleteTime.getTime());
-      }
-    } catch (JSONException e) {
-      e.printStackTrace();
-    }
-    return studentWorkJSONObject;
   }
 }

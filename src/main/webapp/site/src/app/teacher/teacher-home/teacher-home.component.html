@@ -1,4 +1,5 @@
-<header fxLayout="row" class="content__header">
+<header class="content__header" fxLayout="row wrap" fxLayoutAlign="start start" 
+        fxLayoutAlign.gt-sm="space-between start" fxLayoutGap.gt-sm="16px">
   <h1 class="accent"
       fxLayoutAlign="center center"
       fxLayoutGap="8px"
@@ -6,6 +7,8 @@
       [ngClass.xs]="{ 'mat-display-1': false }">
     <mat-icon>home</mat-icon><span i18n>Teacher Home</span>
   </h1>
+  <discourse-recent-activity *ngIf="isDiscourseEnabled" fxFlex="100%" 
+                             fxFlex.gt-sm="0 0 auto"></discourse-recent-activity>
 </header>
 <section>
   <nav mat-tab-nav-bar i18n-aria-label aria-label="Teacher home navigation">

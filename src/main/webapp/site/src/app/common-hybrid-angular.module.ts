@@ -50,6 +50,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { HelpIconComponent } from '../../../wise5/themes/default/themeComponents/helpIcon/help-icon.component';
 import { NodeStatusIcon } from '../../../wise5/themes/default/themeComponents/nodeStatusIcon/node-status-icon.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MomentModule } from 'ngx-moment';
 
 @Component({template: ``})
 export class EmptyComponent {}
@@ -77,6 +78,7 @@ export class EmptyComponent {}
     MatProgressBarModule,
     MatSelectModule,
     MatTooltipModule,
+    MomentModule,
     ReactiveFormsModule,
     RouterModule.forChild([
       {path: '**', component: EmptyComponent}
@@ -130,6 +132,7 @@ export class EmptyComponent {}
     MatProgressBarModule,
     MatSelectModule,
     MatTooltipModule,
+    MomentModule,
     NodeIconComponent,
     NodeStatusIcon,
     ReactiveFormsModule

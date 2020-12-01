@@ -32,6 +32,10 @@ export class ConfigService {
     return this.config$.getValue().contextPath;
   }
 
+  getDiscourseURL() {
+    return this.config$.getValue().discourseURL;
+  }
+
   getGoogleAnalyticsId() {
     return this.config$.getValue().googleAnalyticsId;
   }
@@ -46,6 +50,10 @@ export class ConfigService {
 
   getRecaptchaPublicKey() {
     return this.config$.getValue().recaptchaPublicKey;
+  }
+
+  getWISEHostname() {
+    return this.config$.getValue().wiseHostname;
   }
 
   getWISE4Hostname() {

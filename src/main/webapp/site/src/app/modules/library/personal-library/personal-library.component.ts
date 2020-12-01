@@ -3,6 +3,7 @@ import { LibraryProject } from "../libraryProject";
 import { LibraryService } from "../../../services/library.service";
 import { LibraryComponent } from "../library/library.component";
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-personal-library',
@@ -15,20 +16,27 @@ export class PersonalLibraryComponent extends LibraryComponent {
   filteredProjects: LibraryProject[] = [];
   personalProjects: LibraryProject[] = [];
   sharedProjects: LibraryProject[] = [];
+  personalLibraryProjectsSourceSubscription: Subscription;
+  sharedLibraryProjectsSourceSubscription: Subscription;
+  newProjectSourceSubscription: Subscription;
 
-  constructor(libraryService: LibraryService, public dialog: MatDialog) {
+  constructor(libraryService: LibraryService, private dialog: MatDialog) {
     super(libraryService);
     this.libraryService = libraryService;
+  }
 
-    this.libraryService.personalLibraryProjectsSource$.subscribe((personalProjects: LibraryProject[]) => {
+  ngOnInit() {
+    this.personalLibraryProjectsSourceSubscription = 
+        this.libraryService.personalLibraryProjectsSource$.subscribe((personalProjects: LibraryProject[]) => {
       this.personalProjects = personalProjects;
       this.updateProjects();
     });
-    this.libraryService.sharedLibraryProjectsSource$.subscribe((sharedProjects: LibraryProject[]) => {
+    this.sharedLibraryProjectsSourceSubscription = 
+        this.libraryService.sharedLibraryProjectsSource$.subscribe((sharedProjects: LibraryProject[]) => {
       this.sharedProjects = sharedProjects;
       this.updateProjects();
     });
-    this.libraryService.newProjectSource$.subscribe(project => {
+    this.newProjectSourceSubscription = this.libraryService.newProjectSource$.subscribe(project => {
       if (project) {
         project.isHighlighted = true;
         this.projects.unshift(project);
@@ -37,7 +45,10 @@ export class PersonalLibraryComponent extends LibraryComponent {
     });
   }
 
-  ngOnInit() {
+  ngOnDestroy() {
+    this.personalLibraryProjectsSourceSubscription.unsubscribe();
+    this.sharedLibraryProjectsSourceSubscription.unsubscribe();
+    this.newProjectSourceSubscription.unsubscribe();
   }
 
   combinePersonalAndSharedProjects() {

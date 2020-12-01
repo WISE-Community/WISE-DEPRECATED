@@ -1,0 +1,37 @@
+@import '~style/abstracts/functions', '~style/abstracts/variables', '~style/abstracts/mixins';
+
+ul {
+  list-style-type: none;
+  padding: 0;
+  margin-bottom: 0;
+}
+
+li {
+  &:not(:last-of-type) {
+    margin-bottom: 4px;
+  }
+
+  a {
+    max-width: 660px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    display: inline-block;
+    vertical-align: middle;
+    
+    @media (min-width: breakpoint('md.min')) {
+      max-width: 360px;
+    }
+  }
+}
+
+.content-block {
+  h3 {
+    margin-bottom: 0;
+  }
+}
+
+.content-block__title {
+  padding-bottom: 8px;
+  margin-top: -8px;
+}

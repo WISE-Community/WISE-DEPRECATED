@@ -12,6 +12,7 @@ import '../lib/summernote/dist/summernote.min';
 import '../lib/summernoteExtensions/summernote-ext-addNote.js';
 import '../lib/summernoteExtensions/summernote-ext-print.js'
 import { NavItemComponent } from './nav-item/nav-item.component';
+import { ComponentAnnotationsComponent } from '../directives/componentAnnotations/component-annotations.component';
 
 export function createStudentAngularJSModule(type = 'preview') {
   return angular.module(type, [
@@ -29,6 +30,8 @@ export function createStudentAngularJSModule(type = 'preview') {
   .controller('NavigationController', NavigationController)
   .controller('NodeController', NodeController)
   .controller('VLEController', VLEController)
+  .directive('componentAnnotations',
+      downgradeComponent({ component: ComponentAnnotationsComponent }) as angular.IDirectiveFactory)
   .config([
     '$stateProvider',
     '$translatePartialLoaderProvider',

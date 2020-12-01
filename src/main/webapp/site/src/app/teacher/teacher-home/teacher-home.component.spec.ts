@@ -92,6 +92,10 @@ export class MockConfigService {
   getCurrentServerTime(): number {
     return new Date('2018-10-17 00:00:00.0').getTime();
   }
+
+  getDiscourseURL(): string {
+    return 'http://localhost:9292';
+  }
 }
 
 export class MockLibraryService {
@@ -125,5 +129,6 @@ describe('TeacherHomeComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+    expect(component.isDiscourseEnabled).toBeTruthy();
   });
 });

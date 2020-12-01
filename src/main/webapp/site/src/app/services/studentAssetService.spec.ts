@@ -1,4 +1,4 @@
-import { TestBed } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { UpgradeModule } from '@angular/upgrade/static';
 import { StudentAssetService } from '../../../../wise5/services/studentAssetService';
@@ -63,18 +63,23 @@ function retrieveAssets_StudentMode_FetchAssetsAndSetAttributes() {
       expect(response.length).toEqual(1);
       expect(response[0].type).toEqual('image');
     });
-    http.expectOne(`${studentAssetURL}?workgroupId=${workgroupId}`).flush([asset1]);
+    http.expectOne(`${studentAssetURL}/${workgroupId}`).flush([asset1]);
   });
 }
 
 function deleteAsset_StudentMode_DeleteAsset() {
-  it('should delete', () => {
+  it('should delete', fakeAsync(() => {
     service.allAssets = [asset2];
     expect(service.allAssets.length).toEqual(1);
     service.deleteAsset(asset2);
-    const req = http.expectOne(`${studentAssetURL}/delete`);
-    expect(req.request.method).toEqual('POST');
-    expect(req.request.body.studentAssetId).toEqual(2);
-    expect(req.request.body.clientDeleteTime).toBeDefined();
-  });
+    const request = http.expectOne((req): boolean => {
+      return req.url.startsWith(`${studentAssetURL}/delete`);
+    });
+    expect(request.request.method).toEqual('DELETE');
+    expect(request.request.params.get('studentAssetId')).toEqual(2 as any);
+    expect(request.request.params.get('clientDeleteTime')).toBeDefined();
+    request.flush({});
+    tick();
+    expect(service.allAssets.length).toEqual(0);
+  }));
 }

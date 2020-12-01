@@ -5,7 +5,8 @@ import { TeacherRun } from "../teacher-run";
 import { ConfigService } from "../../services/config.service";
 import { flash } from '../../animations';
 import { Router } from '@angular/router';
-
+import { MatDialog } from '@angular/material/dialog';
+import { ShareRunCodeDialogComponent } from '../share-run-code-dialog/share-run-code-dialog.component';
 
 @Component({
   selector: 'app-teacher-run-list-item',
@@ -28,7 +29,8 @@ export class TeacherRunListItemComponent implements OnInit {
   constructor(private sanitizer: DomSanitizer,
               private configService: ConfigService,
               private router: Router,
-              private elRef: ElementRef) {
+              private elRef: ElementRef,
+              private dialog: MatDialog,) {
     this.sanitizer = sanitizer;
   }
 
@@ -93,5 +95,12 @@ export class TeacherRunListItemComponent implements OnInit {
 
   isRunCompleted(run) {
     return run.isCompleted(this.configService.getCurrentServerTime());
+  }
+
+  shareCode() {
+    this.dialog.open(ShareRunCodeDialogComponent, {
+      data: { run: this.run },
+      panelClass: 'mat-dialog--sm'
+    });
   }
 }

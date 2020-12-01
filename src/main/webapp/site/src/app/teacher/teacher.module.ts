@@ -26,6 +26,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 import { RunMenuComponent } from './run-menu/run-menu.component';
 import { CreateRunDialogComponent } from './create-run-dialog/create-run-dialog.component';
 import { LibraryModule } from "../modules/library/library.module";
@@ -37,6 +38,8 @@ import { RunSettingsDialogComponent } from './run-settings-dialog/run-settings-d
 import { UseWithClassWarningDialogComponent } from './use-with-class-warning-dialog/use-with-class-warning-dialog.component';
 import { EditRunWarningDialogComponent } from './edit-run-warning-dialog/edit-run-warning-dialog.component';
 import { ListClassroomCoursesDialogComponent } from './list-classroom-courses-dialog/list-classroom-courses-dialog.component';
+import { DiscourseRecentActivityComponent } from './discourse-recent-activity/discourse-recent-activity.component';
+import { ShareRunCodeDialogComponent } from './share-run-code-dialog/share-run-code-dialog.component';
 
 const materialModules = [
   MatAutocompleteModule, MatButtonModule, MatCardModule, MatCheckboxModule,
@@ -54,10 +57,12 @@ const materialModules = [
     MomentModule,
     SharedModule,
     TeacherRoutingModule,
-    TimelineModule
+    TimelineModule,
+    ClipboardModule
   ],
   declarations: [
     CreateRunDialogComponent,
+    DiscourseRecentActivityComponent,
     TeacherComponent,
     TeacherHomeComponent,
     TeacherRunListComponent,
@@ -69,7 +74,8 @@ const materialModules = [
     EditProfileComponent,
     UseWithClassWarningDialogComponent,
     EditRunWarningDialogComponent,
-    ListClassroomCoursesDialogComponent
+    ListClassroomCoursesDialogComponent,
+    ShareRunCodeDialogComponent
   ],
   providers: [
     AuthGuard

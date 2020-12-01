@@ -205,8 +205,7 @@ export class AppComponent {
 
   onYPositionChange(el:HTMLElement) {
     this.pageY = el.scrollTop;
-    const isAtBottom = this.pageY >= el.scrollHeight - el.offsetHeight - 2;
-    this.scroll = isAtBottom || (this.pageY > 360 && this.pageY < this.prevPageY);
+    this.scroll = this.pageY > 360 && this.pageY < this.prevPageY;
     this.prevPageY = this.pageY;
   }
 

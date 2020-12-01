@@ -7,8 +7,6 @@ import { StudentDataService } from "../../../../services/studentDataService";
   templateUrl: 'node-status-icon.component.html'
 })
 export class NodeStatusIcon {
-  label: string;
-
   @Input()
   nodeId: string;
 
@@ -18,21 +16,5 @@ export class NodeStatusIcon {
 
   ngOnChanges() {
     this.nodeStatus = this.StudentDataService.nodeStatuses[this.nodeId];
-
-    this.StudentDataService.nodeStatusesChanged$.subscribe(() => {
-      this.updateLabel();
-    });
-  }
-
-  updateLabel() {
-    if (this.nodeStatus.isSuccess) {
-      this.label = $localize`Completed with success`;
-    } else if (this.nodeStatus.isCompleted) {
-      this.label = $localize`Completed`;
-    }
-
-    if (this.nodeStatus.isWarn) {
-      this.label = $localize`Warning`;
-    }
   }
 }

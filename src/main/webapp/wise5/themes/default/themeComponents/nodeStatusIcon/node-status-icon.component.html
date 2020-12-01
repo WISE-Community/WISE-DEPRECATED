@@ -1,7 +1,14 @@
-<ng-container *ngIf="nodeStatus.isCompleted || nodeStatus.isWarn">
-  <mat-icon class="secondary-text"
-            [ngClass]="{'success': nodeStatus.isSuccess, 'warn': nodeStatus.isWarn}">
-    {{nodeStatus.isWarn ? 'error' : 'check_circle'}}
-  </mat-icon>
-  <span class="cdk-visually-hidden">{{label}}</span>
-</ng-container>
+
+<mat-icon *ngIf="nodeStatus.isCompleted || nodeStatus.isWarn" class="secondary-text"
+    [ngClass]="{'success': nodeStatus.isSuccess, 'warn': nodeStatus.isWarn}">
+  {{nodeStatus.isWarn ? 'error' : 'check_circle'}}
+</mat-icon>
+<span *ngIf="nodeStatus.isWarn; else notWarn" class="cdk-visually-hidden"
+      i18n>Completed with warning</span>
+<ng-template #notWarn>
+  <span *ngIf="nodeStatus.isCompleted && nodeStatus.isSuccess; else notSuccess"
+        class="cdk-visually-hidden" i18n>Completed with success</span>
+</ng-template>
+<ng-template #notSuccess>
+  <span *ngIf="nodeStatus.isCompleted" class="cdk-visually-hidden" i18n>Completed</span>
+</ng-template>

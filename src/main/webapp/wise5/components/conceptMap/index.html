@@ -195,7 +195,7 @@
       </span>
   </div>
   <component-annotations ng-if='::conceptMapController.mode === "student"'
-                         annotations='conceptMapController.latestAnnotations'
-                         max-score='conceptMapController.componentContent.maxScore'>
+                         [annotations]='conceptMapController.latestAnnotations'
+                         [max-score]='conceptMapController.componentContent.maxScore'>
   </component-annotations>
 </div>

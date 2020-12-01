@@ -96,40 +96,19 @@ public class Achievement extends PersistableDomain {
 
   public JSONObject toJSON() {
     JSONObject achievementJSONObject = new JSONObject();
-
     try {
       if (id != null) {
         achievementJSONObject.put("id", id);
       }
-
-      if (run != null) {
-        Long runId = run.getId();
-        achievementJSONObject.put("runId", runId);
-      }
-
-      if (workgroup != null) {
-        Long workgroupId = workgroup.getId();
-        achievementJSONObject.put("workgroupId", workgroupId);
-      }
-
-      if (achievementId != null) {
-        achievementJSONObject.put("achievementId", achievementId);
-      }
-
-      if (type != null) {
-        achievementJSONObject.put("type", type);
-      }
-
-      if (achievementTime != null) {
-        achievementJSONObject.put("achievementTime", achievementTime.getTime());
-      }
-
-      if (data != null) {
-        try {
-          achievementJSONObject.put("data", new JSONObject(data));
-        } catch (JSONException e) {
-          achievementJSONObject.put("data", data);
-        }
+      achievementJSONObject.put("runId", run.getId());
+      achievementJSONObject.put("workgroupId", workgroup.getId());
+      achievementJSONObject.put("achievementId", achievementId);
+      achievementJSONObject.put("type", type);
+      achievementJSONObject.put("achievementTime", achievementTime.getTime());
+      try {
+        achievementJSONObject.put("data", new JSONObject(data));
+      } catch (JSONException e) {
+        achievementJSONObject.put("data", data);
       }
     } catch (JSONException e) {
       e.printStackTrace();

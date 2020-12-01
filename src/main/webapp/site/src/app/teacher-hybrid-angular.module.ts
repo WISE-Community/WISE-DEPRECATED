@@ -25,6 +25,8 @@ import { ComponentNewWorkBadgeComponent } from './classroom-monitor/component-ne
 import { StatusIconComponent } from './classroom-monitor/status-icon/status-icon.component';
 import { AngularJSModule } from './common-hybrid-angular.module';
 import { NodeAdvancedJsonAuthoringComponent } from '../../../wise5/authoringTool/node/advanced/json/node-advanced-json-authoring.component';
+import { WorkgroupInfoComponent } from '../../../wise5/classroomMonitor/classroomMonitorComponents/nodeGrading/workgroupInfo/workgroup-info.component';
+import { NodeAdvancedGeneralAuthoringComponent } from '../../../wise5/authoringTool/node/advanced/general/node-advanced-general-authoring.component';
 
 @NgModule({
   declarations: [
@@ -36,8 +38,10 @@ import { NodeAdvancedJsonAuthoringComponent } from '../../../wise5/authoringTool
     ComponentNewWorkBadgeComponent,
     ManageStudentsComponent,
     MilestoneReportDataComponent,
+    NodeAdvancedGeneralAuthoringComponent,
     NodeAdvancedJsonAuthoringComponent,
     StatusIconComponent,
+    WorkgroupInfoComponent,
     WorkgroupNodeScoreComponent,
     NavItemScoreComponent
   ],

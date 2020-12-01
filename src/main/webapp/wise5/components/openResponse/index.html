@@ -155,7 +155,7 @@
       </span>
     </div>
     <component-annotations ng-if='::openResponseController.mode === "student"'
-                 annotations='openResponseController.latestAnnotations'
-                 max-score='openResponseController.componentContent.maxScore'></component-annotations>
+                 [annotations]='openResponseController.latestAnnotations'
+                 [max-score]='openResponseController.componentContent.maxScore'></component-annotations>
   </div>
 </div>

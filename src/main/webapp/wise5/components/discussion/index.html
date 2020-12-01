@@ -59,8 +59,8 @@
         <div class='md-padding discussion-content'>
           <component-annotations ng-if='::discussionController.mode === "student"'
               class='annotations--inside'
-              annotations='discussionController.latestAnnotations'
-              max-score='::discussionController.componentContent.maxScore'>
+              [annotations]='discussionController.latestAnnotations'
+              [max-score]='::discussionController.componentContent.maxScore'>
           </component-annotations>
           <div layout='row'>
             <div class='discussion-posts' flex>
