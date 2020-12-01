@@ -7,7 +7,6 @@ import { StudentDataService } from "../../../../services/studentDataService";
   templateUrl: 'node-status-icon.component.html'
 })
 export class NodeStatusIcon {
-
   @Input()
   nodeId: string;
 

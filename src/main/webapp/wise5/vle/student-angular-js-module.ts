@@ -7,6 +7,7 @@ import NodeController from '../vle/node/nodeController';
 import { StudentWebSocketService } from '../services/studentWebSocketService';
 import VLEController from '../vle/vleController';
 import { VLEProjectService } from '../vle/vleProjectService';
+import { NavItemComponent } from './nav-item/nav-item.component';
 import { ComponentAnnotationsComponent } from '../directives/componentAnnotations/component-annotations.component';
 
 export function createStudentAngularJSModule(type = 'preview') {
@@ -20,6 +21,8 @@ export function createStudentAngularJSModule(type = 'preview') {
   ])
   .factory('ProjectService', downgradeInjectable(VLEProjectService))
   .factory('StudentWebSocketService', downgradeInjectable(StudentWebSocketService))
+  .directive('navItem',
+      downgradeComponent({ component: NavItemComponent }) as angular.IDirectiveFactory)
   .controller('NavigationController', NavigationController)
   .controller('NodeController', NodeController)
   .controller('VLEController', VLEController)
