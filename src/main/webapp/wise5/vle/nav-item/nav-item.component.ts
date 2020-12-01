@@ -69,6 +69,7 @@ export class NavItemComponent {
         let prevNodeIsDescendant = this.ProjectService.isNodeDescendentOfGroup(oldNode, this.item);
         if (this.isCurrentNode) {
           this.expanded = true;
+          this.StudentDataService.setNavItemExpanded(this.nodeId, this.expanded);
           if (prevNodeisGroup || !prevNodeIsDescendant) {
             this.zoomToElement();
           }
