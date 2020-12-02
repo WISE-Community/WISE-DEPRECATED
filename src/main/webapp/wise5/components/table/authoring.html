@@ -161,14 +161,10 @@
             </md-tooltip>
           </md-button>
           <div ng-if='tableController.showRubricAuthoring'>
-            <summernote id='{{tableController.summernoteRubricId}}'
-                        ng-model='tableController.summernoteRubricHTML'
-                        ng-change='tableController.summernoteRubricHTMLChanged()'
-                        config='tableController.summernoteRubricOptions'
-                        ng-model-options='{ debounce: 1000 }'
-                        rows='10'
-                        cols='100'>
-            </summernote>
+            <wise-authoring-tinymce-editor
+                [(model)]='tableController.rubric'
+                (model-change)='tableController.rubricChanged()'>
+            </wise-authoring-tinymce-editor>
           </div>
         </div>
         <div>

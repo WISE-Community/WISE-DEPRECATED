@@ -107,6 +107,8 @@ export class StudentDataService extends DataService {
   private studentWorkSavedToServerSource: Subject<any> = new Subject<any>();
   public studentWorkSavedToServer$: Observable<any> =
       this.studentWorkSavedToServerSource.asObservable();
+  private navItemIsExpandedSource: Subject<any> = new Subject<any>();
+  public navItemIsExpanded$: Observable<any> = this.navItemIsExpandedSource.asObservable();
   private nodeStatusesChangedSource: Subject<any> = new Subject<any>();
   public nodeStatusesChanged$: Observable<any> = this.nodeStatusesChangedSource.asObservable();
 
@@ -1633,5 +1635,8 @@ export class StudentDataService extends DataService {
   }
   broadcastDeleteKeyPressed() {
     this.deleteKeyPressedSource.next();
+  }
+  setNavItemExpanded(nodeId: string, isExpanded: boolean) {
+    this.navItemIsExpandedSource.next({nodeId: nodeId, isExpanded: isExpanded});
   }
 }

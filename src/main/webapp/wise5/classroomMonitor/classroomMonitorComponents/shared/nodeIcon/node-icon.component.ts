@@ -5,7 +5,8 @@ import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'node-icon',
-  templateUrl: 'node-icon.component.html'
+  templateUrl: 'node-icon.component.html',
+  styleUrls: ['node-icon.component.scss']
 })
 export class NodeIconComponent {
 
@@ -33,7 +34,7 @@ export class NodeIconComponent {
       this.icon = this.ProjectService.getNodeIconByNodeId(this.nodeId);
     }
     if (this.size) {
-      this.sizeClass = `md-${this.size}`;
+      this.sizeClass = `mat-${this.size}`;
     }
   }
 

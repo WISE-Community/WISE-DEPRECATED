@@ -65,9 +65,24 @@ export class ProjectAssetService {
 
   retrieveProjectAssets(): any {
     const url = this.ConfigService.getConfigParam('projectAssetURL');
-    return this.http.get(url).subscribe(projectAssets => {
+    return this.http.get(url).subscribe((projectAssets: any) => {
       this.totalSizeMax = this.ConfigService.getConfigParam('projectAssetTotalSizeMax');
+      this.injectFileTypeValues(projectAssets.files);
       this.setProjectAssets(projectAssets);
+    });
+  }
+
+  injectFileTypeValues(projectAssets: any[]) {
+    projectAssets.forEach((projectAsset) => {
+      if (this.UtilService.isImage(projectAsset.fileName)) {
+        projectAsset.fileType = 'image';
+      } else if (this.UtilService.isVideo(projectAsset.fileName)) {
+        projectAsset.fileType = 'video';
+      } else if (this.UtilService.isAudio(projectAsset.fileName)) {
+        projectAsset.fileType = 'audio';
+      } else {
+        projectAsset.fileType = 'other';
+      }
     });
   }
 
@@ -77,6 +92,7 @@ export class ProjectAssetService {
     files.forEach((file: any) => formData.append('files', file, file.name));
     return this.http.post(url, formData).pipe(
       map((data: any) => {
+        this.injectFileTypeValues(data.assetDirectoryInfo.files);
         this.setProjectAssets(data.assetDirectoryInfo);
         return data;
       })
@@ -93,7 +109,8 @@ export class ProjectAssetService {
   deleteAssetItem(assetItem: any): any {
     const url = `${this.ConfigService.getConfigParam('projectAssetURL')}/delete`;
     const params = new HttpParams().set('assetFileName', assetItem.fileName);
-    return this.http.post(url, params).subscribe(projectAssets => {
+    return this.http.post(url, params).subscribe((projectAssets: any) => {
+      this.injectFileTypeValues(projectAssets.files);
       this.setProjectAssets(projectAssets);
     });
   }

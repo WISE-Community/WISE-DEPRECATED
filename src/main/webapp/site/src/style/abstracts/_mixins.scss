@@ -6,7 +6,7 @@
   $custom-typography: mat-typography-config(
     $body-1: mat-typography-level(16px, 22px, 400),
     $body-2: mat-typography-level(16px, 22px, 500),
-    $caption: mat-typography-level(13px, 20px, 400),
+    $caption: mat-typography-level(14px, 20px, 400),
     $subheading-1: mat-typography-level(17px, 24px, 400),
     $subheading-2: mat-typography-level(17px, 24px, 500),
     $headline: mat-typography-level(24px, 32px, 500)
@@ -205,6 +205,14 @@
     background-color: map-get($colors, app-bg);
   }
 
+  .app-bar {
+    background-color: map-get($background, app-bar);
+  }
+
+  .avatar--icon {
+    background-color: map-get($colors, disabled-text);
+  }
+
   .content-block, .info-block, .notice {
     background-color: map-get($colors, notice-bg);
   }
@@ -227,7 +235,7 @@
 
   .mat-flat-button, .mat-raised-button, .mat-fab, .mat-mini-fab {
     &.mat-secondary-text {
-      background-color: map-get($colors, secondary-text);
+      background-color: map-get($foreground, secondary-text);
       color: white;
     }
 
@@ -261,6 +269,12 @@
     color: map-get($foreground, secondary-text);
   }
 
+  figure {
+    &.image {
+      border: 1px solid map-get($background, status-bar);
+    }
+  }
+
   // Set classes for each named color in the $colors map
   @each $key, $value in $colors {
       .#{$key} {
@@ -284,7 +298,6 @@
 // Set Angular Material icon button size (use mat-icon size as the $size parameter)
 @mixin mat-icon-button-size($size: 24px) {
   $button-size: ($size*1) + 16px;
-
   height: $button-size;
   width: $button-size;
   line-height: $button-size;

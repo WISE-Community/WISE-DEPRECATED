@@ -20,7 +20,7 @@
 }
 
 // Rules for sizing material icons
-md-icon, mat-icon {
+mat-icon {
     &.md-18 {
         font-size: 18px;
         width: 18px;
@@ -66,10 +66,6 @@ md-icon, mat-icon {
     &.md-light.md-inactive {
         color: rgba(255, 255, 255, 0.3);
     }
-}
-
-mat-icon {
-    margin: auto;
 }
 
 md-toolbar {
@@ -323,5 +319,12 @@ md-select {
           max-width: 100%;
           box-sizing: border-box;
         }
+    }
+}
+
+// md-dialog on top of TinyMCE dialog
+.tox-dialog__disable-scroll {
+    .md-dialog-container {
+        z-index: 1300;
     }
 }

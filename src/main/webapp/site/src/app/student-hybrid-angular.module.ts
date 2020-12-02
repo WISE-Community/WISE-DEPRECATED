@@ -14,12 +14,14 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
 import { DataService } from './services/data.service';
 import { AngularJSModule } from './common-hybrid-angular.module';
+import { NavItemComponent } from '../../../wise5/vle/nav-item/nav-item.component';
 import { ComponentAnnotationsComponent } from '../../../wise5/directives/componentAnnotations/component-annotations.component';
 import { MomentModule } from 'ngx-moment';
 
 @NgModule({
   declarations: [
     ComponentAnnotationsComponent,
+    NavItemComponent,
     PossibleScoreComponent
   ],
   imports: [

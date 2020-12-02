@@ -1,4 +1,5 @@
-<mat-icon *ngIf="nodeStatus.isCompleted || nodeStatus.isWarn"
+
+<mat-icon *ngIf="nodeStatus.isCompleted || nodeStatus.isWarn" class="secondary-text"
     [ngClass]="{'success': nodeStatus.isSuccess, 'warn': nodeStatus.isWarn}">
   {{nodeStatus.isWarn ? 'error' : 'check_circle'}}
 </mat-icon>

@@ -1,5 +1,4 @@
 import '../lib/jquery/jquery-global';
-import '../lib/bootstrap/js/bootstrap.min'
 import * as angular from 'angular';
 import { downgradeComponent, downgradeInjectable } from '@angular/upgrade/static';
 import '../common-angular-js-module';
@@ -8,9 +7,7 @@ import NodeController from '../vle/node/nodeController';
 import { StudentWebSocketService } from '../services/studentWebSocketService';
 import VLEController from '../vle/vleController';
 import { VLEProjectService } from '../vle/vleProjectService';
-import '../lib/summernote/dist/summernote.min';
-import '../lib/summernoteExtensions/summernote-ext-addNote.js';
-import '../lib/summernoteExtensions/summernote-ext-print.js'
+import { NavItemComponent } from './nav-item/nav-item.component';
 import { ComponentAnnotationsComponent } from '../directives/componentAnnotations/component-annotations.component';
 
 export function createStudentAngularJSModule(type = 'preview') {
@@ -24,6 +21,8 @@ export function createStudentAngularJSModule(type = 'preview') {
   ])
   .factory('ProjectService', downgradeInjectable(VLEProjectService))
   .factory('StudentWebSocketService', downgradeInjectable(StudentWebSocketService))
+  .directive('navItem',
+      downgradeComponent({ component: NavItemComponent }) as angular.IDirectiveFactory)
   .controller('NavigationController', NavigationController)
   .controller('NodeController', NodeController)
   .controller('VLEController', VLEController)

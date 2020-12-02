@@ -1309,4 +1309,22 @@ export class TeacherProjectService extends ProjectService {
           constraint.removalCriteria[0].params.periodId === periodId);
     });
   }
+
+  openWISELinkChooser({ projectId, nodeId, componentId, target }): any {
+    const stateParams = {
+      projectId: projectId,
+      nodeId: nodeId,
+      componentId: componentId,
+      target: target
+    };
+    return this.upgrade.$injector.get('$mdDialog').show({
+      templateUrl: 'wise5/authoringTool/wiseLink/wiseLinkAuthoring.html',
+      controller: 'WISELinkAuthoringController',
+      controllerAs: 'wiseLinkAuthoringController',
+      $stateParams: stateParams,
+      clickOutsideToClose: true,
+      escapeToClose: true
+    });
+  }
+
 }
