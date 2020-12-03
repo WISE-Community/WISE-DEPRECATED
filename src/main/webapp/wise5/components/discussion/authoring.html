@@ -22,25 +22,8 @@
                 ng-change='discussionController.authoringViewComponentChanged()'/>
       </md-input-container>
     </div>
-    <div>
-      <label class='node__label--vertical-alignment'>
-        {{ ::'RUBRIC' | translate }}
-      </label>
-      <md-button class='topButton md-raised md-primary'
-                  ng-click='discussionController.showRubricAuthoring = !discussionController.showRubricAuthoring'>
-        <md-icon>message</md-icon>
-        <md-tooltip md-direction='top'
-                    class='projectButtonTooltip'>
-          {{ ::'EDIT_COMPONENT_RUBRIC' | translate }}
-        </md-tooltip>
-      </md-button>
-      <div ng-if='discussionController.showRubricAuthoring'>
-        <wise-authoring-tinymce-editor
-            [(model)]='discussionController.rubric'
-            (model-change)='discussionController.rubricChanged()'>
-        </wise-authoring-tinymce-editor>
-      </div>
-    </div>
+    <edit-component-rubric [authoring-component-content]="discussionController.authoringComponentContent">
+    </edit-component-rubric>
     <div>
       <div style='height: 50;'>
         <label class='node__label--vertical-alignment'>

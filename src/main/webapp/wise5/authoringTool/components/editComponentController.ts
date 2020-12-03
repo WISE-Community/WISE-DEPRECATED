@@ -14,6 +14,7 @@ export abstract class EditComponentController {
   authoringComponentContent: any;
   authoringComponentContentJSONString: string;
   authoringValidComponentContentJSONString: string;
+  componentChangedSubscription: Subscription;
   componentContent: any;
   componentId: string;
   idToOrder: any;
@@ -29,7 +30,6 @@ export abstract class EditComponentController {
   submitCounter: number = 0;
   starterStateResponseSubscription: Subscription;
   showAdvancedAuthoringSubscription: Subscription;
-  rubric: string = '';
 
   constructor(
       protected $filter: any,
@@ -46,8 +46,10 @@ export abstract class EditComponentController {
     this.resetUI();
     this.idToOrder = this.ProjectService.idToOrder;
     this.$translate = this.$filter('translate');
-    this.initializeRubric();
     this.updateAdvancedAuthoringView();
+    this.componentChangedSubscription = this.ProjectService.componentChanged$.subscribe(() => {
+      this.authoringViewComponentChanged();
+    });
     this.showAdvancedAuthoringSubscription =
         this.ProjectService.showAdvancedComponentView$.subscribe((event) => {
       if (event.componentId === this.componentId) {
@@ -63,15 +65,8 @@ export abstract class EditComponentController {
     });
   }
 
-  initializeRubric() {
-    if (this.componentContent.rubric == null) {
-      this.rubric = '';
-    } else {
-      this.rubric = this.componentContent.rubric;
-    }
-  }
-
   $onDestroy() {
+    this.componentChangedSubscription.unsubscribe();
     this.starterStateResponseSubscription.unsubscribe();
     this.showAdvancedAuthoringSubscription.unsubscribe();
   }
@@ -327,10 +322,4 @@ export abstract class EditComponentController {
   }
 
   saveStarterState(starterState: any) {}
-
-  rubricChanged(): void {
-    this.authoringComponentContent.rubric =
-        this.ConfigService.removeAbsoluteAssetPaths(this.rubric);
-    this.authoringViewComponentChanged();
-  }
 }

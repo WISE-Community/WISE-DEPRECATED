@@ -49,21 +49,8 @@
                  ng-change='summaryController.authoringViewComponentChanged()'/>
         </md-input-container>
       </div>
-      <div>
-        <label class='node__label--vertical-alignment'>
-          {{ ::'RUBRIC' | translate }}
-        </label>
-        <md-button class='topButton md-raised md-primary' ng-click='summaryController.showRubricAuthoring = !summaryController.showRubricAuthoring'>
-          <md-icon>message</md-icon>
-          <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'EDIT_COMPONENT_RUBRIC' | translate }}</md-tooltip>
-        </md-button>
-        <div ng-if='summaryController.showRubricAuthoring'>
-          <wise-authoring-tinymce-editor
-              [(model)]='summaryController.rubric'
-              (model-change)='summaryController.rubricChanged()'>
-          </wise-authoring-tinymce-editor>
-        </div>
-      </div>
+      <edit-component-rubric [authoring-component-content]="summaryController.authoringComponentContent">
+      </edit-component-rubric>
       <div style='margin-top: 10px; margin-bottom: 10px;'>
         <div style='height: 50;'>
           <label class='node__label--vertical-alignment'>

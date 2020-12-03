@@ -13,6 +13,8 @@ import { SessionService } from './sessionService';
 @Injectable()
 export class TeacherProjectService extends ProjectService {
 
+  private componentChangedSource: Subject<boolean> = new Subject<boolean>();
+  public componentChanged$: Observable<boolean> = this.componentChangedSource.asObservable();
   private nodeChangedSource: Subject<boolean> = new Subject<boolean>();
   public nodeChanged$: Observable<boolean> = this.nodeChangedSource.asObservable();
   private refreshProjectSource: Subject<void> = new Subject<void>();
@@ -1266,6 +1268,10 @@ export class TeacherProjectService extends ProjectService {
       return match[1];
     }
     return null;
+  }
+
+  componentChanged(): void {
+    this.componentChangedSource.next();
   }
 
   nodeChanged(doParseProject: boolean = false): void {

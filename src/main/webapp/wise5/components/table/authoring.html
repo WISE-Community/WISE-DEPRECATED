@@ -148,25 +148,8 @@
             </div>
           </div>
         </div>
-        <div>
-          <label class='node__label--vertical-alignment'>
-            {{ ::'RUBRIC' | translate }}
-          </label>
-          <md-button class='topButton md-raised md-primary'
-                     ng-click='tableController.showRubricAuthoring = !tableController.showRubricAuthoring'>
-            <md-icon>message</md-icon>
-            <md-tooltip md-direction='top'
-                        class='projectButtonTooltip'>
-              {{ ::'EDIT_COMPONENT_RUBRIC' | translate }}
-            </md-tooltip>
-          </md-button>
-          <div ng-if='tableController.showRubricAuthoring'>
-            <wise-authoring-tinymce-editor
-                [(model)]='tableController.rubric'
-                (model-change)='tableController.rubricChanged()'>
-            </wise-authoring-tinymce-editor>
-          </div>
-        </div>
+        <edit-component-rubric [authoring-component-content]="tableController.authoringComponentContent">
+        </edit-component-rubric>
         <div>
           <div style='height: 50;'>
             <label class='node__label--vertical-alignment'>

@@ -1,6 +1,5 @@
 <div>
-  <div class='advancedAuthoringDiv'
-       ng-if='htmlController.showAdvancedAuthoring'>
+  <div class='advancedAuthoringDiv' ng-if='htmlController.showAdvancedAuthoring'>
     <div>
       <h6>{{ ::'advancedAuthoringOptions' | translate }}</h6>
     </div>
@@ -13,21 +12,8 @@
                ng-change='htmlController.authoringViewComponentChanged()'/>
       </md-input-container>
     </div>
-    <div>
-      <label class='node__label--vertical-alignment'>
-        {{ ::'RUBRIC' | translate }}
-      </label>
-      <md-button class='topButton md-raised md-primary' ng-click='htmlController.showRubricAuthoring = !htmlController.showRubricAuthoring'>
-        <md-icon>message</md-icon>
-        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'EDIT_COMPONENT_RUBRIC' | translate }}</md-tooltip>
-      </md-button>
-      <div ng-if='htmlController.showRubricAuthoring'>
-        <wise-authoring-tinymce-editor
-            [(model)]='htmlController.rubric'
-            (model-change)='htmlController.rubricChanged()'>
-        </wise-authoring-tinymce-editor>
-      </div>
-    </div>
+    <edit-component-rubric [authoring-component-content]="htmlController.authoringComponentContent">
+    </edit-component-rubric>
     <div>
       <label class='node__label--vertical-alignment'>{{ ::'json' | translate }}</label>
       <md-button class='topButton md-raised md-primary'

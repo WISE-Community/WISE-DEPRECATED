@@ -13,24 +13,8 @@
                  ng-change="outsideURLController.authoringViewComponentChanged()"/>
         </md-input-container>
       </div>
-      <div>
-        <label class="node__label--vertical-alignment">
-          {{ ::'RUBRIC' | translate }}
-        </label>
-        <md-button class="topButton md-raised md-primary"
-                   ng-click="outsideURLController.showRubricAuthoring = !outsideURLController.showRubricAuthoring">
-          <md-icon>message</md-icon>
-          <md-tooltip md-direction="top" class="projectButtonTooltip">
-            {{ ::'EDIT_COMPONENT_RUBRIC' | translate }}
-          </md-tooltip>
-        </md-button>
-        <div ng-if="outsideURLController.showRubricAuthoring">
-          <wise-authoring-tinymce-editor
-              [(model)]='outsideURLController.rubric'
-              (model-change)='outsideURLController.rubricChanged()'>
-          </wise-authoring-tinymce-editor>
-        </div>
-      </div>
+      <edit-component-rubric [authoring-component-content]="outsideURLController.authoringComponentContent">
+      </edit-component-rubric>
       <div>
         <label class="node__label--vertical-alignment">{{ ::'json' | translate }}</label>
         <md-button class="topButton md-raised md-primary"
