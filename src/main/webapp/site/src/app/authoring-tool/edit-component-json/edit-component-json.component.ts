@@ -17,6 +17,7 @@ export class EditComponentJsonComponent {
   componentContentJSONString: string;
   @Input()
   componentId: string;
+  nodeChangedSubscription: Subscription;
   @Input()
   nodeId: string;
   showJSONAuthoring: boolean = false;
@@ -28,9 +29,7 @@ export class EditComponentJsonComponent {
   }
 
   ngOnInit() {
-    const authoringComponentContent = this.ProjectService.getComponentByNodeIdAndComponentId(
-        this.nodeId, this.componentId);
-    this.componentContentJSONString = angular.toJson(authoringComponentContent, 4);
+    this.setComponentContentJsonString()
     this.jsonChangedSubscription = this.jsonChanged
         .pipe(
           debounceTime(1000),
@@ -44,10 +43,20 @@ export class EditComponentJsonComponent {
             this.NotificationService.showJSONInvalidMessage();
           }
         });
+    this.nodeChangedSubscription = this.ProjectService.nodeChanged$.subscribe(() => {
+      this.setComponentContentJsonString();
+    });
   }
 
   ngOnDestory() {
     this.jsonChangedSubscription.unsubscribe();
+    this.nodeChangedSubscription.unsubscribe();
+  }
+
+  setComponentContentJsonString() {
+    const authoringComponentContent = this.ProjectService.getComponentByNodeIdAndComponentId(
+        this.nodeId, this.componentId);
+    this.componentContentJSONString = angular.toJson(authoringComponentContent, 4);
   }
 
   toggleJSONView(): void {
