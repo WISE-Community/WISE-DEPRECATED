@@ -5782,6 +5782,10 @@
           <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/authoringTool/rubric/rubric-authoring.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="077fb7924ecebe2ae768d860909315c29ee61fbe">
         <source>Show JSON</source>
@@ -6018,6 +6022,13 @@
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/authoringTool/node/advanced/json/node-advanced-json-authoring.component.html</context>
           <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="92328333ea9c72926ca7c631e9e1c0f081cbf565">
+        <source>Edit Unit Rubric</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/authoringTool/rubric/rubric-authoring.component.html</context>
+          <context context-type="linenumber">6</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="f9c52903219e583ddefb23cd102d2057504ac980">

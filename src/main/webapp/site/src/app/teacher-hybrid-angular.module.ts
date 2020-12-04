@@ -30,6 +30,7 @@ import { NodeAdvancedGeneralAuthoringComponent } from '../../../wise5/authoringT
 import { WiseAuthoringTinymceEditorComponent } from '../../../wise5/directives/wise-tinymce-editor/wise-authoring-tinymce-editor.component';
 import { EditComponentRubricComponent } from './authoring-tool/edit-component-rubric/edit-component-rubric.component';
 import { EditComponentJsonComponent } from './authoring-tool/edit-component-json/edit-component-json.component';
+import { RubricAuthoringComponent } from '../../../wise5/authoringTool/rubric/rubric-authoring.component';
 
 @NgModule({
   declarations: [
@@ -45,6 +46,7 @@ import { EditComponentJsonComponent } from './authoring-tool/edit-component-json
     MilestoneReportDataComponent,
     NodeAdvancedGeneralAuthoringComponent,
     NodeAdvancedJsonAuthoringComponent,
+    RubricAuthoringComponent,
     StatusIconComponent,
     WorkgroupInfoComponent,
     WorkgroupNodeScoreComponent,
