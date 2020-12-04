@@ -28,6 +28,7 @@ import { NodeAdvancedJsonAuthoringComponent } from '../../../wise5/authoringTool
 import { WorkgroupInfoComponent } from '../../../wise5/classroomMonitor/classroomMonitorComponents/nodeGrading/workgroupInfo/workgroup-info.component';
 import { NodeAdvancedGeneralAuthoringComponent } from '../../../wise5/authoringTool/node/advanced/general/node-advanced-general-authoring.component';
 import { WiseAuthoringTinymceEditorComponent } from '../../../wise5/directives/wise-tinymce-editor/wise-authoring-tinymce-editor.component';
+import { RubricAuthoringComponent } from '../../../wise5/authoringTool/rubric/rubric-authoring.component';
 
 @NgModule({
   declarations: [
@@ -41,6 +42,7 @@ import { WiseAuthoringTinymceEditorComponent } from '../../../wise5/directives/w
     MilestoneReportDataComponent,
     NodeAdvancedGeneralAuthoringComponent,
     NodeAdvancedJsonAuthoringComponent,
+    RubricAuthoringComponent,
     StatusIconComponent,
     WorkgroupInfoComponent,
     WorkgroupNodeScoreComponent,

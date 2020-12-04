@@ -1,0 +1,8 @@
+<button mat-button class='topButton mat-raised-button mat-primary' (click)='goBack()'
+    matTooltip="Back to Unit Plan" i18n-matTooltip matToolTipPosition="above">
+  <mat-icon>arrow_back</mat-icon>
+</button>
+<br/>
+<h5 i18n>Edit Unit Rubric</h5>
+<wise-authoring-tinymce-editor [(model)]='rubric' (modelChange)='rubricChanged()'>
+</wise-authoring-tinymce-editor>
