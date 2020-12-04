@@ -166,27 +166,7 @@
           </div>
         </div>
       </div>
-      <div>
-        <label class='node__label--vertical-alignment'>{{ 'json' | translate }}</label>
-        <md-button class='topButton md-raised md-primary'
-            ng-click='multipleChoiceController.showJSONButtonClicked()'>
-          <md-icon>code</md-icon>
-          <md-tooltip md-direction='top' class='projectButtonTooltip'>
-            {{ 'SHOW_JSON' | translate }}
-          </md-tooltip>
-        </md-button>
-        <span ng-if='multipleChoiceController.isJSONStringChanged'>
-          {{ 'closeTheJSONViewToSaveTheChanges' | translate }}
-        </span>
-        <div ng-if='multipleChoiceController.showJSONAuthoring'>
-          <md-input-container style='width: 100%;'>
-            <textarea ng-model='multipleChoiceController.authoringComponentContentJSONString'
-                style='width: 90%; border: 1px solid black;'
-                ng-change='multipleChoiceController.authoringJSONChanged()'>
-            </textarea>
-          </md-input-container>
-        </div>
-      </div>
+      <edit-component-json [node-id]="multipleChoiceController.nodeId" [component-id]="multipleChoiceController.componentId"></edit-component-json>
     </div>
     <br/>
     <div ng-if='!multipleChoiceController.authoringComponentContent.showPreviousWork'>

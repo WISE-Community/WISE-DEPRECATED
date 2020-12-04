@@ -29,6 +29,7 @@ import { WorkgroupInfoComponent } from '../../../wise5/classroomMonitor/classroo
 import { NodeAdvancedGeneralAuthoringComponent } from '../../../wise5/authoringTool/node/advanced/general/node-advanced-general-authoring.component';
 import { WiseAuthoringTinymceEditorComponent } from '../../../wise5/directives/wise-tinymce-editor/wise-authoring-tinymce-editor.component';
 import { EditComponentRubricComponent } from './authoring-tool/edit-component-rubric/edit-component-rubric.component';
+import { EditComponentJsonComponent } from './authoring-tool/edit-component-json/edit-component-json.component';
 
 @NgModule({
   declarations: [
@@ -39,6 +40,7 @@ import { EditComponentRubricComponent } from './authoring-tool/edit-component-ru
     ChooseNewComponentLocation,
     ComponentNewWorkBadgeComponent,
     EditComponentRubricComponent,
+    EditComponentJsonComponent,
     ManageStudentsComponent,
     MilestoneReportDataComponent,
     NodeAdvancedGeneralAuthoringComponent,

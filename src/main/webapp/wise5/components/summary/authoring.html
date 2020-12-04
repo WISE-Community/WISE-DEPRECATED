@@ -90,24 +90,7 @@
           </div>
         </div>
       </div>
-      <div>
-        <label class='node__label--vertical-alignment'>{{ ::'json' | translate }}</label>
-        <md-button class='topButton md-raised md-primary'
-                   ng-click='summaryController.showJSONButtonClicked()'>
-          <md-icon>code</md-icon>
-          <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'SHOW_JSON' | translate }}</md-tooltip>
-        </md-button>
-        <span ng-if='summaryController.isJSONStringChanged'>
-          {{ ::'closeTheJSONViewToSaveTheChanges' | translate }}
-        </span>
-        <div ng-if='summaryController.showJSONAuthoring'>
-          <md-input-container style='width: 100%;'>
-            <textarea ng-model='summaryController.authoringComponentContentJSONString'
-                      style='width: 90%; border: 1px solid black;'
-                      ng-change='summaryController.authoringJSONChanged()'></textarea>
-          </md-input-container>
-        </div>
-      </div>
+      <edit-component-json [node-id]="summaryController.nodeId" [component-id]="summaryController.componentId"></edit-component-json>
     </div>
   </div>
   <div>

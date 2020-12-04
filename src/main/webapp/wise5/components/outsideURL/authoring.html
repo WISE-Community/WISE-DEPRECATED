@@ -15,27 +15,7 @@
       </div>
       <edit-component-rubric [authoring-component-content]="outsideURLController.authoringComponentContent">
       </edit-component-rubric>
-      <div>
-        <label class="node__label--vertical-alignment">{{ ::'json' | translate }}</label>
-        <md-button class="topButton md-raised md-primary"
-                   ng-click="outsideURLController.showJSONButtonClicked()">
-          <md-icon>code</md-icon>
-          <md-tooltip md-direction="top" class="projectButtonTooltip">
-            {{ ::'SHOW_JSON' | translate }}
-          </md-tooltip>
-        </md-button>
-        <span ng-if="outsideURLController.isJSONStringChanged">
-          {{ ::'closeTheJSONViewToSaveTheChanges' | translate }}
-        </span>
-        <div ng-if="outsideURLController.showJSONAuthoring">
-          <md-input-container style="width: 100%;">
-            <textarea ng-model="outsideURLController.authoringComponentContentJSONString"
-                      style="width: 90%; border: 1px solid black;"
-                      ng-change="outsideURLController.authoringJSONChanged()">
-            </textarea>
-          </md-input-container>
-        </div>
-      </div>
+      <edit-component-json [node-id]="outsideURLController.nodeId" [component-id]="outsideURLController.componentId"></edit-component-json>
     </div>
   </div>
   <md-input-container>

@@ -145,29 +145,7 @@
         </div>
       </div>
     </div>
-    <div>
-      <label class='node__label--vertical-alignment'>{{ ::'json' | translate }}</label>
-      <md-button class='topButton md-raised md-primary'
-                  ng-click='discussionController.showJSONButtonClicked()'>
-        <md-icon>code</md-icon>
-        <md-tooltip md-direction='top'
-                    class='projectButtonTooltip'>
-          {{ ::'SHOW_JSON' | translate }}
-        </md-tooltip>
-      </md-button>
-      <span ng-if='discussionController.isJSONStringChanged'>
-        {{ ::'closeTheJSONViewToSaveTheChanges' | translate }}
-      </span>
-      <div ng-if='discussionController.showJSONAuthoring'>
-        <md-input-container style='width: 100%;'>
-          <textarea ng-model='discussionController.authoringComponentContentJSONString'
-                    style='width: 90%; border: 1px solid black;'
-                    ng-change='discussionController.authoringJSONChanged()'
-                    ng-model-options='{ debounce: 1000 }'>
-          </textarea>
-        </md-input-container>
-      </div>
-    </div>
+    <edit-component-json [node-id]="discussionController.nodeId" [component-id]="discussionController.componentId"></edit-component-json>
   </div>
   <br/>
   <div ng-if='!discussionController.authoringComponentContent.showPreviousWork'>
