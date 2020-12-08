@@ -1,0 +1,16 @@
+<div>
+  <label class='node__label--vertical-alignment' i18n>JSON</label>
+  <button mat-button class='topButton mat-raised-button mat-primary'
+      (click)="toggleJSONView()"
+      matTooltip="Show JSON" i18n-matTooltip matTooltipPosition="above">
+    <mat-icon>code</mat-icon>
+  </button>
+</div>
+<div *ngIf="showJSONAuthoring" fxLayout="column" fxLayoutGap="8px">
+  <span i18n>Close the JSON view to save the changes</span>
+  <mat-form-field fxFlex appearance="outline">
+    <mat-label i18n>Edit Component JSON</mat-label>
+    <textarea class="mat-body-1" matInput cdkTextareaAutosize  [(ngModel)]="componentContentJSONString"
+        (ngModelChange)='jsonChanged.next($event)'></textarea>
+  </mat-form-field>
+</div>

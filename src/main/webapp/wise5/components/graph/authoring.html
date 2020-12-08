@@ -198,21 +198,8 @@
                    ng-change='graphController.authoringViewComponentChanged()'/>
           </md-input-container>
         </div>
-        <div>
-          <label class='node__label--vertical-alignment'>
-            {{ ::'RUBRIC' | translate }}
-          </label>
-          <md-button class='topButton md-raised md-primary' ng-click='graphController.showRubricAuthoring = !graphController.showRubricAuthoring'>
-            <md-icon>message</md-icon>
-            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'EDIT_COMPONENT_RUBRIC' | translate }}</md-tooltip>
-          </md-button>
-          <div ng-if='graphController.showRubricAuthoring'>
-            <wise-authoring-tinymce-editor
-                [(model)]='graphController.rubric'
-                (model-change)='graphController.rubricChanged()'>
-            </wise-authoring-tinymce-editor>
-          </div>
-        </div>
+        <edit-component-rubric [authoring-component-content]="graphController.authoringComponentContent">
+        </edit-component-rubric>
         <div>
           <div style='height: 50;'>
             <label class='node__label--vertical-alignment'>
@@ -406,24 +393,7 @@
             </div>
           </div>
         </div>
-        <div>
-          <label class='node__label--vertical-alignment'>{{ ::'json' | translate }}</label>
-          <md-button class='topButton md-raised md-primary'
-                     ng-click='graphController.showJSONButtonClicked()'>
-            <md-icon>code</md-icon>
-            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'SHOW_JSON' | translate }}</md-tooltip>
-          </md-button>
-          <span ng-if='graphController.isJSONStringChanged'>
-            {{ ::'closeTheJSONViewToSaveTheChanges' | translate }}
-          </span>
-          <div ng-if='graphController.showJSONAuthoring'>
-            <md-input-container style='width: 100%;'>
-              <textarea ng-model='graphController.authoringComponentContentJSONString'
-                        style='width: 90%; border: 1px solid black;'
-                        ng-change='graphController.authoringJSONChanged()'></textarea>
-            </md-input-container>
-          </div>
-        </div>
+        <edit-component-json [node-id]="graphController.nodeId" [component-id]="graphController.componentId"></edit-component-json>
       </div>
       <br/>
       <div ng-if='!graphController.authoringComponentContent.showPreviousWork'>

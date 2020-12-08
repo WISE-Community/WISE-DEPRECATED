@@ -12,24 +12,20 @@ export abstract class EditComponentController {
   $translate: any;
   allowedConnectedComponentTypes: any[];
   authoringComponentContent: any;
-  authoringComponentContentJSONString: string;
-  authoringValidComponentContentJSONString: string;
+  componentChangedSubscription: Subscription;
   componentContent: any;
   componentId: string;
   idToOrder: any;
   isDirty: boolean = false;
-  isJSONStringChanged: boolean = false;
   isPromptVisible: boolean = true;
   isSaveButtonVisible: boolean;
   isSubmitButtonVisible: boolean;
   isSubmitDirty: boolean = false;
   nodeId: string;
   showAdvancedAuthoring: boolean = false;
-  showJSONAuthoring: boolean = false;
   submitCounter: number = 0;
   starterStateResponseSubscription: Subscription;
   showAdvancedAuthoringSubscription: Subscription;
-  rubric: string = '';
 
   constructor(
       protected $filter: any,
@@ -46,8 +42,9 @@ export abstract class EditComponentController {
     this.resetUI();
     this.idToOrder = this.ProjectService.idToOrder;
     this.$translate = this.$filter('translate');
-    this.initializeRubric();
-    this.updateAdvancedAuthoringView();
+    this.componentChangedSubscription = this.ProjectService.componentChanged$.subscribe(() => {
+      this.authoringViewComponentChanged();
+    });
     this.showAdvancedAuthoringSubscription =
         this.ProjectService.showAdvancedComponentView$.subscribe((event) => {
       if (event.componentId === this.componentId) {
@@ -63,87 +60,14 @@ export abstract class EditComponentController {
     });
   }
 
-  initializeRubric() {
-    if (this.componentContent.rubric == null) {
-      this.rubric = '';
-    } else {
-      this.rubric = this.componentContent.rubric;
-    }
-  }
-
   $onDestroy() {
+    this.componentChangedSubscription.unsubscribe();
     this.starterStateResponseSubscription.unsubscribe();
     this.showAdvancedAuthoringSubscription.unsubscribe();
   }
 
-  showJSONButtonClicked(): void {
-    if (this.showJSONAuthoring) {
-      if (this.isJSONValid()) {
-        this.saveJSONAuthoringViewChanges();
-        this.toggleJSONAuthoringView();
-        this.NotificationService.hideJSONValidMessage();
-      } else {
-        let isRollback = confirm(this.$translate('jsonInvalidErrorMessage'));
-        if (isRollback) {
-          this.toggleJSONAuthoringView();
-          this.NotificationService.hideJSONValidMessage();
-          this.isJSONStringChanged = false;
-          this.rollbackToRecentValidJSON();
-          this.saveJSONAuthoringViewChanges();
-        }
-      }
-    } else {
-      this.toggleJSONAuthoringView();
-      this.rememberRecentValidJSON();
-    }
-  }
-
-  isJSONValid(): boolean {
-    try {
-      angular.fromJson(this.authoringComponentContentJSONString);
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  saveJSONAuthoringViewChanges(): void {
-    try {
-      const editedComponentContent = angular.fromJson(this.authoringComponentContentJSONString);
-      this.ProjectService.replaceComponent(this.nodeId, this.componentId, editedComponentContent);
-      this.componentContent = editedComponentContent;
-      this.ProjectService.nodeChanged();
-      this.isJSONStringChanged = false;
-    } catch(e) {
-      alert(this.$translate('saveErrorAdvancedAuthoring'));
-    }
-  }
-
-  toggleJSONAuthoringView(): void {
-    this.showJSONAuthoring = !this.showJSONAuthoring;
-  }
-
-  authoringJSONChanged(): void {
-    this.isJSONStringChanged = true;
-    if (this.isJSONValid()) {
-      this.NotificationService.showJSONValidMessage();
-      this.rememberRecentValidJSON();
-    } else {
-      this.NotificationService.showJSONInvalidMessage();
-    }
-  }
-
-  rememberRecentValidJSON(): void {
-    this.authoringValidComponentContentJSONString = this.authoringComponentContentJSONString;
-  }
-
-  rollbackToRecentValidJSON(): void {
-    this.authoringComponentContentJSONString = this.authoringValidComponentContentJSONString;
-  }
-
   authoringViewComponentChanged(): void {
     this.resetUI();
-    this.updateAdvancedAuthoringView();
     this.ProjectService.nodeChanged();
   }
 
@@ -155,10 +79,6 @@ export abstract class EditComponentController {
     this.isDirty = false;
     this.isSubmitDirty = false;
     this.submitCounter = 0;
-  }
-
-  updateAdvancedAuthoringView(): void {
-    this.authoringComponentContentJSONString = angular.toJson(this.authoringComponentContent, 4);
   }
 
   openAssetChooser(params: any): any {
@@ -327,10 +247,4 @@ export abstract class EditComponentController {
   }
 
   saveStarterState(starterState: any) {}
-
-  rubricChanged(): void {
-    this.authoringComponentContent.rubric =
-        this.ConfigService.removeAbsoluteAssetPaths(this.rubric);
-    this.authoringViewComponentChanged();
-  }
 }

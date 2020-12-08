@@ -62,25 +62,8 @@
                ng-change='labelController.authoringViewComponentChanged()'/>
       </md-input-container>
     </div>
-    <div>
-      <label class='node__label--vertical-alignment'>
-        {{ ::'RUBRIC' | translate }}
-      </label>
-      <md-button class='topButton md-raised md-primary'
-                 ng-click='labelController.showRubricAuthoring = !labelController.showRubricAuthoring'>
-        <md-icon>message</md-icon>
-        <md-tooltip md-direction='top'
-                    class='projectButtonTooltip'>
-          {{ ::'EDIT_COMPONENT_RUBRIC' | translate }}
-        </md-tooltip>
-      </md-button>
-      <div ng-if='labelController.showRubricAuthoring'>
-        <wise-authoring-tinymce-editor
-            [(model)]='labelController.rubric'
-            (model-change)='labelController.rubricChanged()'>
-        </wise-authoring-tinymce-editor>
-      </div>
-    </div>
+    <edit-component-rubric [authoring-component-content]="labelController.authoringComponentContent">
+    </edit-component-rubric>
     <div>
       <div>
         <label class='node__label--vertical-alignment'>
@@ -243,28 +226,7 @@
         </div>
       </div>
     </div>
-    <div>
-      <label class='node__label--vertical-alignment'>{{ ::'json' | translate }}</label>
-      <md-button class='topButton md-raised md-primary'
-                 ng-click='labelController.showJSONButtonClicked()'>
-        <md-icon>code</md-icon>
-        <md-tooltip md-direction='top'
-                    class='projectButtonTooltip'>
-          {{ ::'SHOW_JSON' | translate }}
-        </md-tooltip>
-      </md-button>
-      <span ng-if="labelController.isJSONStringChanged">
-        {{ ::'closeTheJSONViewToSaveTheChanges' | translate }}
-      </span>
-      <div ng-if='labelController.showJSONAuthoring'>
-        <md-input-container style='width: 100%;'>
-          <textarea ng-model='labelController.authoringComponentContentJSONString'
-                    style='width: 90%; border: 1px solid black;'
-                    ng-change='labelController.authoringJSONChanged()'>
-          </textarea>
-        </md-input-container>
-      </div>
-    </div>
+    <edit-component-json [node-id]="labelController.nodeId" [component-id]="labelController.componentId"></edit-component-json>
   </div>
   <br/>
   <div>

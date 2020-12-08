@@ -22,25 +22,8 @@
                 ng-change='discussionController.authoringViewComponentChanged()'/>
       </md-input-container>
     </div>
-    <div>
-      <label class='node__label--vertical-alignment'>
-        {{ ::'RUBRIC' | translate }}
-      </label>
-      <md-button class='topButton md-raised md-primary'
-                  ng-click='discussionController.showRubricAuthoring = !discussionController.showRubricAuthoring'>
-        <md-icon>message</md-icon>
-        <md-tooltip md-direction='top'
-                    class='projectButtonTooltip'>
-          {{ ::'EDIT_COMPONENT_RUBRIC' | translate }}
-        </md-tooltip>
-      </md-button>
-      <div ng-if='discussionController.showRubricAuthoring'>
-        <wise-authoring-tinymce-editor
-            [(model)]='discussionController.rubric'
-            (model-change)='discussionController.rubricChanged()'>
-        </wise-authoring-tinymce-editor>
-      </div>
-    </div>
+    <edit-component-rubric [authoring-component-content]="discussionController.authoringComponentContent">
+    </edit-component-rubric>
     <div>
       <div style='height: 50;'>
         <label class='node__label--vertical-alignment'>
@@ -162,29 +145,7 @@
         </div>
       </div>
     </div>
-    <div>
-      <label class='node__label--vertical-alignment'>{{ ::'json' | translate }}</label>
-      <md-button class='topButton md-raised md-primary'
-                  ng-click='discussionController.showJSONButtonClicked()'>
-        <md-icon>code</md-icon>
-        <md-tooltip md-direction='top'
-                    class='projectButtonTooltip'>
-          {{ ::'SHOW_JSON' | translate }}
-        </md-tooltip>
-      </md-button>
-      <span ng-if='discussionController.isJSONStringChanged'>
-        {{ ::'closeTheJSONViewToSaveTheChanges' | translate }}
-      </span>
-      <div ng-if='discussionController.showJSONAuthoring'>
-        <md-input-container style='width: 100%;'>
-          <textarea ng-model='discussionController.authoringComponentContentJSONString'
-                    style='width: 90%; border: 1px solid black;'
-                    ng-change='discussionController.authoringJSONChanged()'
-                    ng-model-options='{ debounce: 1000 }'>
-          </textarea>
-        </md-input-container>
-      </div>
-    </div>
+    <edit-component-json [node-id]="discussionController.nodeId" [component-id]="discussionController.componentId"></edit-component-json>
   </div>
   <br/>
   <div ng-if='!discussionController.authoringComponentContent.showPreviousWork'>
