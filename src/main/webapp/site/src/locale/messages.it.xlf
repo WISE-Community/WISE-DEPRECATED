@@ -6440,6 +6440,10 @@
           <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
           <context context-type="linenumber">7</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/edit-component-json/edit-component-json.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
         <target state="needs-translation">Show JSON</target>
       </trans-unit>
       <trans-unit datatype="html" id="a7ff0a41fdb9b51a30db6bed1494c740274cbb84">
@@ -6633,6 +6637,46 @@
           <context context-type="linenumber">36</context>
         </context-group>
         <target state="needs-translation">Back</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="7affaae0e14529c0192d5a4bfabd6fcb1ea27529">
+        <source>Rubric</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/edit-component-rubric/edit-component-rubric.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+        <target state="needs-translation">Rubric</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="234445d1fce45c501510346137158fe0e81665f6">
+        <source>Edit Component Rubric</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/edit-component-rubric/edit-component-rubric.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+        <target state="needs-translation">Edit Component Rubric</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="7ad24bfc056ad2a41aa93fbfd75ec6765060606f">
+        <source>JSON</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/edit-component-json/edit-component-json.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+        <target state="needs-translation">JSON</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="d1ee280fdc6bfc1ea2be84a9c2e38d0a69f432c7">
+        <source>Close the JSON view to save the changes</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/edit-component-json/edit-component-json.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+        <target state="needs-translation">Close the JSON view to save the changes</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="5d92fa48c74344c46842dca7fb8d35e009d7f5fb">
+        <source>Edit Component JSON</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/edit-component-json/edit-component-json.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+        <target state="needs-translation">Edit Component JSON</target>
       </trans-unit>
       <trans-unit datatype="html" id="bfab7f41cfc32a926c55987d6a9c3349ae417131">
         <source> Show Save Button </source>
