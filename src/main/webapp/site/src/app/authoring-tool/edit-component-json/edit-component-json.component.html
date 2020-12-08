@@ -10,7 +10,7 @@
   <span i18n>Close the JSON view to save the changes</span>
   <mat-form-field fxFlex appearance="outline">
     <mat-label i18n>Edit Component JSON</mat-label>
-    <textarea class="mat-body-1" matInput cdkTextareaAutosize  [(ngModel)]="componentContentJSONString"
+    <textarea class="mat-body-1" matInput cdkTextareaAutosize [(ngModel)]="componentContentJSONString"
         (ngModelChange)='jsonChanged.next($event)'></textarea>
   </mat-form-field>
 </div>

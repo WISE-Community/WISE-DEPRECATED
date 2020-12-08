@@ -3,17 +3,8 @@
     <div>
       <h6>{{ ::'advancedAuthoringOptions' | translate }}</h6>
     </div>
-    <div>
-      <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
-        <label>{{ ::'COMPONENT_WIDTH' | translate }}</label>
-        <input type='number'
-               ng-model='htmlController.authoringComponentContent.componentWidth'
-               ng-model-options='{ debounce: 1000 }'
-               ng-change='htmlController.authoringViewComponentChanged()'/>
-      </md-input-container>
-    </div>
-    <edit-component-rubric [authoring-component-content]="htmlController.authoringComponentContent">
-    </edit-component-rubric>
+    <edit-component-width [authoring-component-content]="htmlController.authoringComponentContent"></edit-component-width>
+    <edit-component-rubric [authoring-component-content]="htmlController.authoringComponentContent"></edit-component-rubric>
     <edit-component-json [node-id]="htmlController.nodeId" [component-id]="htmlController.componentId"></edit-component-json>
   </div>
   <br/>

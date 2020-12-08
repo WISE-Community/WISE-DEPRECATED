@@ -228,17 +228,8 @@
                  ng-change='openResponseController.authoringViewComponentChanged()'/>
         </md-input-container>
       </div>
-      <div>
-        <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
-          <label>{{ ::'COMPONENT_WIDTH' | translate }}</label>
-          <input type='number'
-                 ng-model='openResponseController.authoringComponentContent.componentWidth'
-                 ng-model-options='{ debounce: 1000 }'
-                 ng-change='openResponseController.authoringViewComponentChanged()'/>
-        </md-input-container>
-      </div>
-      <edit-component-rubric [authoring-component-content]="openResponseController.authoringComponentContent">
-      </edit-component-rubric>
+      <edit-component-width [authoring-component-content]="openResponseController.authoringComponentContent"></edit-component-width>
+      <edit-component-rubric [authoring-component-content]="openResponseController.authoringComponentContent"></edit-component-rubric>
       <div>
         <div style="border: 2px solid #dddddd; border-radius: 5px; margin-bottom: 10px; padding: 20px 20px 10px 20px;">
           <md-checkbox class='md-primary'

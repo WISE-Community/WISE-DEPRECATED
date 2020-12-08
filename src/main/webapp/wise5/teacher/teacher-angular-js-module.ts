@@ -37,6 +37,7 @@ import WISELinkAuthoringController from '../authoringTool/wiseLink/wiseLinkAutho
 import { WiseAuthoringTinymceEditorComponent } from '../directives/wise-tinymce-editor/wise-authoring-tinymce-editor.component';
 import { EditComponentJsonComponent } from '../../site/src/app/authoring-tool/edit-component-json/edit-component-json.component';
 import { EditComponentRubricComponent } from '../../site/src/app/authoring-tool/edit-component-rubric/edit-component-rubric.component';
+import { EditComponentWidthComponent } from '../../site/src/app/authoring-tool/edit-component-width/edit-component-width.component';
 
 import '../classroomMonitor/classroomMonitorComponents';
 import '../authoringTool/structure/structureAuthoringModule';
@@ -101,6 +102,8 @@ import '../components/table/tableAuthoringComponentModule';
         { component: EditComponentJsonComponent }) as angular.IDirectiveFactory)
     .directive('editComponentRubric', downgradeComponent(
         { component: EditComponentRubricComponent }) as angular.IDirectiveFactory)
+    .directive('editComponentWidth', downgradeComponent(
+        { component: EditComponentWidthComponent }) as angular.IDirectiveFactory)
     .component('nodeAdvancedAuthoringComponent', NodeAdvancedAuthoringComponent)
     .component('nodeAdvancedBranchAuthoringComponent', NodeAdvancedBranchAuthoringComponent)
     .component('nodeAdvancedConstraintAuthoringComponent', NodeAdvancedConstraintAuthoringComponent)

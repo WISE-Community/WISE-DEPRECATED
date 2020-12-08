@@ -6003,6 +6003,20 @@
           <context context-type="linenumber">12</context>
         </context-group>
       </trans-unit>
+      <trans-unit datatype="html" id="2af3e40232b763ae8a6cba9f4bb455ed49d4f86c">
+        <source>Max Score</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/edit-component-max-score/edit-component-max-score.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="2485299eb70909a6cfa961bfac54f062a220806c">
+        <source>Component Width</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/edit-component-width/edit-component-width.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit>
       <trans-unit datatype="html" id="bfab7f41cfc32a926c55987d6a9c3349ae417131">
         <source> Show Save Button </source>
         <context-group purpose="location">
