@@ -1,0 +1,44 @@
+<div fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="start center">
+  <mat-label class="node__label--vertical-alignment" i18n>Tags</mat-label>
+  <button mat-button
+      class="topButton mat-raised-button mat-primary"
+      matTooltip="Add Tag"
+      i18n-matTooltip
+      matTooltipPosition="above"
+      (click)="addTag()">
+    <mat-icon>add</mat-icon>
+  </button>
+</div>
+<div *ngFor="let tag of authoringComponentContent.tags; let i = index"
+    fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="start center" style="margin-top: 16px">
+  <mat-form-field>
+    <mat-label i18n>Tag Name</mat-label>
+    <input matInput
+            [ngModel]="tag"
+            (ngModelChange)="tagChanged.next({tagIndex: i, tag: $event})"/>
+  </mat-form-field>
+  <button mat-button
+      class="moveComponentButton mat-raised-button mat-primary"
+      matTooltip="Move Up"
+      i18n-matTooltip
+      matTooltipPosition="above"
+      (click)="moveTagUp(i)">
+    <mat-icon>arrow_upward</mat-icon>
+  </button>
+  <button mat-button
+      class="moveComponentButton mat-raised-button mat-primary"
+      matTooltip="Move Down"
+      i18n-matTooltip
+      matTooltipPosition="above"
+      (click)="moveTagDown(i)">
+    <mat-icon>arrow_downward</mat-icon>
+  </button>
+  <button mat-button
+      class="moveComponentButton mat-raised-button mat-primary"
+      matTooltip="Delete"
+      i18n-matTooltip
+      matTooltipPosition="above"
+      (click)="deleteTag(i)">
+    <mat-icon>delete</mat-icon>
+  </button>
+</div>

@@ -105,39 +105,6 @@ export abstract class EditComponentController {
     });
   }
 
-  addTag() {
-    if (this.authoringComponentContent.tags == null) {
-      this.authoringComponentContent.tags = [];
-    }
-    this.authoringComponentContent.tags.push('');
-    this.authoringViewComponentChanged();
-  }
-
-  moveTagUp(index) {
-    if (index > 0) {
-      const tag = this.authoringComponentContent.tags[index];
-      this.authoringComponentContent.tags.splice(index, 1);
-      this.authoringComponentContent.tags.splice(index - 1, 0, tag);
-      this.authoringViewComponentChanged();
-    }
-  }
-
-  moveTagDown(index) {
-    if (index < this.authoringComponentContent.tags.length - 1) {
-      const tag = this.authoringComponentContent.tags[index];
-      this.authoringComponentContent.tags.splice(index, 1);
-      this.authoringComponentContent.tags.splice(index + 1, 0, tag);
-      this.authoringViewComponentChanged();
-    }
-  }
-
-  deleteTag(indexOfTagToDelete) {
-    if (confirm(this.$translate('areYouSureYouWantToDeleteThisTag'))) {
-      this.authoringComponentContent.tags.splice(indexOfTagToDelete, 1);
-      this.authoringViewComponentChanged();
-    }
-  }
-
   connectedComponentTypeChanged(connectedComponent) {
     this.authoringViewComponentChanged();
   }
