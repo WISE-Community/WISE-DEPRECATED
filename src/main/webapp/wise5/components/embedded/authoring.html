@@ -47,17 +47,11 @@
                 ng-change='embeddedController.authoringViewComponentChanged()'/>
           </md-input-container>
         </div>
-        <div>
-          <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
-            <label>{{ ::'MAX_SCORE' | translate }}</label>
-            <input type='number'
-                ng-model='embeddedController.authoringComponentContent.maxScore'
-                ng-model-options='{ debounce: 1000 }'
-                ng-change='embeddedController.authoringViewComponentChanged()'/>
-          </md-input-container>
+        <div layout="column" layout-align="start start">
+          <edit-component-max-score [authoring-component-content]="embeddedController.authoringComponentContent"></edit-component-max-score>
+          <edit-component-width [authoring-component-content]="embeddedController.authoringComponentContent"></edit-component-width>
+          <edit-component-rubric [authoring-component-content]="embeddedController.authoringComponentContent"></edit-component-rubric>
         </div>
-        <edit-component-width [authoring-component-content]="embeddedController.authoringComponentContent"></edit-component-width>
-        <edit-component-rubric [authoring-component-content]="embeddedController.authoringComponentContent"></edit-component-rubric>
         <div>
           <div style='height: 50;'>
             <label class='node__label--vertical-alignment'>

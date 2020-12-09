@@ -28,10 +28,11 @@ import { NodeAdvancedJsonAuthoringComponent } from '../../../wise5/authoringTool
 import { WorkgroupInfoComponent } from '../../../wise5/classroomMonitor/classroomMonitorComponents/nodeGrading/workgroupInfo/workgroup-info.component';
 import { NodeAdvancedGeneralAuthoringComponent } from '../../../wise5/authoringTool/node/advanced/general/node-advanced-general-authoring.component';
 import { WiseAuthoringTinymceEditorComponent } from '../../../wise5/directives/wise-tinymce-editor/wise-authoring-tinymce-editor.component';
-import { EditComponentRubricComponent } from './authoring-tool/edit-component-rubric/edit-component-rubric.component';
 import { EditComponentJsonComponent } from './authoring-tool/edit-component-json/edit-component-json.component';
-import { RubricAuthoringComponent } from '../../../wise5/authoringTool/rubric/rubric-authoring.component';
+import { EditComponentMaxScoreComponent } from './authoring-tool/edit-component-max-score/edit-component-max-score.component';
 import { EditComponentWidthComponent } from './authoring-tool/edit-component-width/edit-component-width.component';
+import { EditComponentRubricComponent } from './authoring-tool/edit-component-rubric/edit-component-rubric.component';
+import { RubricAuthoringComponent } from '../../../wise5/authoringTool/rubric/rubric-authoring.component';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { EditComponentWidthComponent } from './authoring-tool/edit-component-wid
     ComponentNewWorkBadgeComponent,
     EditComponentRubricComponent,
     EditComponentJsonComponent,
+    EditComponentMaxScoreComponent,
     EditComponentWidthComponent,
     ManageStudentsComponent,
     MilestoneReportDataComponent,

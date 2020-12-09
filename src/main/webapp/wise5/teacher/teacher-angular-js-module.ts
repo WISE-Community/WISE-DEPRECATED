@@ -36,6 +36,7 @@ import StudentProgressController from '../classroomMonitor/studentProgress/stude
 import WISELinkAuthoringController from '../authoringTool/wiseLink/wiseLinkAuthoringController';
 import { WiseAuthoringTinymceEditorComponent } from '../directives/wise-tinymce-editor/wise-authoring-tinymce-editor.component';
 import { EditComponentJsonComponent } from '../../site/src/app/authoring-tool/edit-component-json/edit-component-json.component';
+import { EditComponentMaxScoreComponent } from '../../site/src/app/authoring-tool/edit-component-max-score/edit-component-max-score.component';
 import { EditComponentRubricComponent } from '../../site/src/app/authoring-tool/edit-component-rubric/edit-component-rubric.component';
 import { EditComponentWidthComponent } from '../../site/src/app/authoring-tool/edit-component-width/edit-component-width.component';
 
@@ -104,6 +105,8 @@ import '../components/table/tableAuthoringComponentModule';
         { component: EditComponentRubricComponent }) as angular.IDirectiveFactory)
     .directive('editComponentWidth', downgradeComponent(
         { component: EditComponentWidthComponent }) as angular.IDirectiveFactory)
+    .directive('editComponentMaxScore', downgradeComponent(
+        { component: EditComponentMaxScoreComponent }) as angular.IDirectiveFactory)
     .component('nodeAdvancedAuthoringComponent', NodeAdvancedAuthoringComponent)
     .component('nodeAdvancedBranchAuthoringComponent', NodeAdvancedBranchAuthoringComponent)
     .component('nodeAdvancedConstraintAuthoringComponent', NodeAdvancedConstraintAuthoringComponent)
