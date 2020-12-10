@@ -13,14 +13,24 @@ li {
 
   a {
     max-width: 660px;
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    display: inline-block;
     vertical-align: middle;
     
     @media (min-width: breakpoint('md.min')) {
+      max-width: 300px;
+      display: inline-block;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    @media (min-width: breakpoint('lg.min')) {
       max-width: 360px;
+    }
+  }
+
+  span {
+    @media (max-width: breakpoint('sm.max')) {
+      display: inline-block;
     }
   }
 }
