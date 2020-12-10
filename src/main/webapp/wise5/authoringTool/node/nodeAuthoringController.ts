@@ -602,7 +602,7 @@ class NodeAuthoringController {
   showComponentAdvancedAuthoring(component: any) {
     this.$mdDialog.show({
       templateUrl: 'wise5/authoringTool/components/edit-component-advanced.html',
-      controller: ComponentAdvancedAuthoringController,
+      controller: function() {},
       controllerAs: '$ctrl',
       bindToController: true,
       locals: {
@@ -611,8 +611,6 @@ class NodeAuthoringController {
       },
       fullscreen: true
     });
-    function ComponentAdvancedAuthoringController() {
-    }
   }
 }
 

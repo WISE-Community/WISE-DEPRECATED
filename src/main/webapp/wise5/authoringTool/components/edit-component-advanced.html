@@ -1,5 +1,6 @@
-
 <ng-content ng-switch="::$ctrl.component.type">
   <edit-html-advanced ng-switch-when="HTML" node-id="{{$ctrl.nodeId}}" component-id="{{$ctrl.component.id}}"></edit-html-advanced>
+  <edit-multiple-choice-advanced ng-switch-when="MultipleChoice" node-id='{{$ctrl.nodeId}}' component-id='{{$ctrl.component.id}}'></edit-multiple-choice-advanced>
+  <edit-open-response-advanced ng-switch-when="OpenResponse" node-id='{{$ctrl.nodeId}}' component-id='{{$ctrl.component.id}}'></edit-open-response-advanced>
   <edit-outside-url-advanced ng-switch-when="OutsideURL" node-id='{{$ctrl.nodeId}}' component-id='{{$ctrl.component.id}}'></edit-outside-url-advanced>
 </ng-content>
