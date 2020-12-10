@@ -5914,7 +5914,7 @@
         <source>Expand or collapse lesson content</source>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/vle/nav-item/nav-item.component.html</context>
-          <context context-type="linenumber">4</context>
+          <context context-type="linenumber">5</context>
         </context-group>
         <target state="needs-translation">Expand or collapse lesson content</target>
       </trans-unit>
@@ -5922,7 +5922,7 @@
         <source><x equiv-text="{{nodeStatus.progress.completionPct}}" id="INTERPOLATION"/>% completed</source>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/vle/nav-item/nav-item.component.html</context>
-          <context context-type="linenumber">24</context>
+          <context context-type="linenumber">25</context>
         </context-group>
         <target state="needs-translation"><x equiv-text="{{nodeStatus.progress.completionPct}}" id="INTERPOLATION"/>% completed</target>
       </trans-unit>
@@ -5930,7 +5930,7 @@
         <source><x equiv-text="{{nodeStatus.progress.completedItems}}" id="INTERPOLATION"/>/<x equiv-text="{{nodeStatus.progress.totalItems}}" id="INTERPOLATION_1"/> items </source>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/vle/nav-item/nav-item.component.html</context>
-          <context context-type="linenumber">26</context>
+          <context context-type="linenumber">27</context>
         </context-group>
         <target state="needs-translation"><x equiv-text="{{nodeStatus.progress.completedItems}}" id="INTERPOLATION"/>/<x equiv-text="{{nodeStatus.progress.totalItems}}" id="INTERPOLATION_1"/> items </target>
       </trans-unit>
@@ -5938,7 +5938,7 @@
         <source>Lesson is locked</source>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/vle/nav-item/nav-item.component.html</context>
-          <context context-type="linenumber">34</context>
+          <context context-type="linenumber">35</context>
         </context-group>
         <target state="needs-translation">Lesson is locked</target>
       </trans-unit>
@@ -5954,7 +5954,7 @@
         <source>Go to <x equiv-text="{{nodeTitle}}" id="INTERPOLATION"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/vle/nav-item/nav-item.component.html</context>
-          <context context-type="linenumber">39</context>
+          <context context-type="linenumber">40</context>
         </context-group>
         <target state="needs-translation">Go to <x equiv-text="{{nodeTitle}}" id="INTERPOLATION"/></target>
       </trans-unit>
