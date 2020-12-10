@@ -48,24 +48,6 @@
                    ng-change='tableController.authoringViewComponentChanged()'/>
           </md-input-container>
         </div>
-        <div>
-          <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
-            <label>{{ ::'MAX_SCORE' | translate }}</label>
-            <input type='number'
-                   ng-model='tableController.authoringComponentContent.maxScore'
-                   ng-model-options='{ debounce: 1000 }'
-                   ng-change='tableController.authoringViewComponentChanged()'/>
-          </md-input-container>
-        </div>
-        <div>
-          <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
-            <label>{{ ::'COMPONENT_WIDTH' | translate }}</label>
-            <input type='number'
-                   ng-model='tableController.authoringComponentContent.componentWidth'
-                   ng-model-options='{ debounce: 1000 }'
-                   ng-change='tableController.authoringViewComponentChanged()'/>
-          </md-input-container>
-        </div>
         <div style='border: 1px solid black'>
           <p>{{ ::'table.dataExplorer' | translate }}</p>
           <div>
@@ -148,8 +130,12 @@
             </div>
           </div>
         </div>
-        <edit-component-rubric [authoring-component-content]="tableController.authoringComponentContent">
-        </edit-component-rubric>
+        <div layout="column" layout-align="start start">
+          <edit-component-max-score [authoring-component-content]="tableController.authoringComponentContent"></edit-component-max-score>
+          <edit-component-width [authoring-component-content]="tableController.authoringComponentContent"></edit-component-width>
+          <edit-component-rubric [authoring-component-content]="tableController.authoringComponentContent"></edit-component-rubric>
+          <edit-component-tags [authoring-component-content]="tableController.authoringComponentContent"></edit-component-tags>
+        </div>
         <div>
           <div style='height: 50;'>
             <label class='node__label--vertical-alignment'>
@@ -239,57 +225,6 @@
                   {{ ::'table.onlyShowDataAtMouseXPosition' | translate }}
                 </md-checkbox>
               </md-input-container>
-            </div>
-          </div>
-        </div>
-        <div style='margin-top: 10px; margin-bottom: 10px;'>
-          <div style='height: 50px;'>
-            <label class='node__label--vertical-alignment'>
-              {{ ::'tags' | translate }}
-            </label>
-            <md-button class='topButton md-raised md-primary'
-                       ng-click='tableController.addTag()'>
-              <md-icon>add</md-icon>
-              <md-tooltip md-direction='top'
-                          class='projectButtonTooltip'>
-                {{ ::'addTag' | translate }}
-              </md-tooltip>
-            </md-button>
-          </div>
-          <div ng-repeat='tag in tableController.authoringComponentContent.tags track by $index'>
-            <div layout='row'>
-              <md-input-container style='margin-bottom: 0px'>
-                <label></label>
-                <input ng-model='tableController.authoringComponentContent.tags[$index]'
-                       ng-change='tableController.authoringViewComponentChanged()'
-                       ng-model-options='{ debounce: 1000 }'
-                       size='100'
-                       placeholder='{{ "enterTag" | translate }}'/>
-              </md-input-container>
-              <md-button class='moveComponentButton md-raised md-primary'
-                         ng-click='tableController.moveTagUp($index)'>
-                <md-icon>arrow_upward</md-icon>
-                <md-tooltip md-direction='top'
-                            class='projectButtonTooltip'>
-                  {{ ::'moveUp' | translate }}
-                </md-tooltip>
-              </md-button>
-              <md-button class='moveComponentButton md-raised md-primary'
-                         ng-click='tableController.moveTagDown($index)'>
-                <md-icon>arrow_downward</md-icon>
-                <md-tooltip md-direction='top'
-                            class='projectButtonTooltip'>
-                  {{ ::'moveDown' | translate }}
-                </md-tooltip>
-              </md-button>
-              <md-button class='moveComponentButton md-raised md-primary'
-                         ng-click='tableController.deleteTag($index)'>
-                <md-icon>delete</md-icon>
-                <md-tooltip md-direction='top'
-                            class='projectButtonTooltip'>
-                  {{ ::'DELETE' | translate }}
-                </md-tooltip>
-              </md-button>
             </div>
           </div>
         </div>

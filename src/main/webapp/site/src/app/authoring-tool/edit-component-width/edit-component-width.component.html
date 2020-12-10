@@ -1,0 +1,7 @@
+<mat-form-field>
+  <mat-label i18n>Component Width</mat-label>
+  <input matInput
+         type='number'
+         [(ngModel)]='authoringComponentContent.componentWidth'
+         (ngModelChange)='widthChanged.next($event)'/>
+</mat-form-field>
