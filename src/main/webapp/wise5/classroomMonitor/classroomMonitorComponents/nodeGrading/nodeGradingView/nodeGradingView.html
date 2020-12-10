@@ -12,7 +12,7 @@
       </div>
     </div>
     <span flex></span>
-    <div class="content-head__more" layout="row" layout-align="center center">
+    <div class="content-head__more" layout="row" layout-align="center center" layout-wrap>
       <component-select node-id="{{ ::$ctrl.nodeId }}" custom-class="'md-no-underline md-button'"
                         on-change="$ctrl.onUpdateHiddenComponents(value)"></component-select>
       <md-button ng-if="$ctrl.milestoneReport" ng-click="$ctrl.showReport($event)"

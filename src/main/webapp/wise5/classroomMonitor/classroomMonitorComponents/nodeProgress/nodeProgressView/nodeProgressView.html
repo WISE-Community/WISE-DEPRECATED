@@ -1,9 +1,9 @@
 <div class="view-content--with-sidemenu" ng-if="$ctrl.isGroupNode($ctrl.nodeId)">
   <div class="l-constrained l-constrained-md nav">
-    <div class="flex md-subhead" layout="row" layout-align="start center" layout-wrap layout-margin>
+    <div ng-if="$ctrl.showRubricButton" class="flex md-subhead" layout="row"
+         layout-align="start center" layout-wrap layout-margin>
       <span flex></span>
-      <md-button ng-if="$ctrl.showRubricButton" ng-click="$ctrl.showRubric($event)"
-                 class="info md-raised">
+      <md-button ng-click="$ctrl.showRubric($event)" class="info md-raised">
         <md-icon class="info"> info_outline </md-icon>
         {{ ::'projectInfo' | translate }}
       </md-button>
