@@ -13,11 +13,11 @@ li {
 
   a {
     max-width: 660px;
-    display: inline-block;
     vertical-align: middle;
     
     @media (min-width: breakpoint('md.min')) {
       max-width: 300px;
+      display: inline-block;
       overflow: hidden;
       white-space: nowrap;
       text-overflow: ellipsis;
@@ -25,6 +25,12 @@ li {
 
     @media (min-width: breakpoint('lg.min')) {
       max-width: 360px;
+    }
+  }
+
+  span {
+    @media (max-width: breakpoint('sm.max')) {
+      display: inline-block;
     }
   }
 }
