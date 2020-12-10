@@ -36,7 +36,6 @@ class NodeAuthoringController {
   projectId: number;
   selectedComponent: any = null;
   showAdvanced: boolean = false;
-  showAdvancedComponentAuthoring: any = {};
   showComponentAuthoringViews: boolean = true;
   showComponents: boolean = true;
   showStepButtons: boolean = true;
@@ -48,6 +47,7 @@ class NodeAuthoringController {
     '$anchorScroll',
     '$filter',
     '$injector',
+    '$mdDialog',
     '$scope',
     '$state',
     '$stateParams',
@@ -64,6 +64,7 @@ class NodeAuthoringController {
     private $anchorScroll: any,
     private $filter: any,
     private $injector: any,
+    private $mdDialog: any,
     private $scope: any,
     private $state: any,
     private $stateParams: any,
@@ -598,11 +599,20 @@ class NodeAuthoringController {
     return componentObjects;
   }
 
-  toggleComponentAdvancedAuthoring(componentId: string) {
-    this.showAdvancedComponentAuthoring[componentId] =
-        !this.showAdvancedComponentAuthoring[componentId];
-    this.ProjectService.showAdvancedComponentView(componentId,
-      this.showAdvancedComponentAuthoring[componentId]);
+  showComponentAdvancedAuthoring(component: any) {
+    this.$mdDialog.show({
+      templateUrl: 'wise5/authoringTool/components/edit-component-advanced.html',
+      controller: ComponentAdvancedAuthoringController,
+      controllerAs: '$ctrl',
+      bindToController: true,
+      locals: {
+        component: component,
+        nodeId: this.nodeId
+      },
+      fullscreen: true
+    });
+    function ComponentAdvancedAuthoringController() {
+    }
   }
 }
 

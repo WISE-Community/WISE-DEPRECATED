@@ -6059,6 +6059,17 @@
           <context context-type="linenumber">2</context>
         </context-group>
       </trans-unit>
+      <trans-unit datatype="html" id="339878da255ab55447c43afef8d9b2f9753bf5f6">
+        <source>Advanced Settings</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/html/edit-html-advanced/edit-html-advanced.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/outsideURL/edit-outside-url-advanced/edit-outside-url-advanced.component.html</context>
+          <context context-type="linenumber">1</context>
+        </context-group>
+      </trans-unit>
       <trans-unit datatype="html" id="bfab7f41cfc32a926c55987d6a9c3349ae417131">
         <source> Show Save Button </source>
         <context-group purpose="location">

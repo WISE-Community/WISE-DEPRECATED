@@ -1,0 +1,5 @@
+
+<ng-content ng-switch="::$ctrl.component.type">
+  <edit-html-advanced ng-switch-when="HTML" node-id="{{$ctrl.nodeId}}" component-id="{{$ctrl.component.id}}"></edit-html-advanced>
+  <edit-outside-url-advanced ng-switch-when="OutsideURL" node-id='{{$ctrl.nodeId}}' component-id='{{$ctrl.component.id}}'></edit-outside-url-advanced>
+</ng-content>
