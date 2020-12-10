@@ -6678,6 +6678,70 @@
         </context-group>
         <target state="needs-translation">Edit Component JSON</target>
       </trans-unit>
+      <trans-unit datatype="html" id="2af3e40232b763ae8a6cba9f4bb455ed49d4f86c">
+        <source>Max Score</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/edit-component-max-score/edit-component-max-score.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+        <target state="needs-translation">Max Score</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="cafc87479686947e2590b9f588a88040aeaf660b">
+        <source>Tags</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/edit-component-tags/edit-component-tags.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+        <target state="needs-translation">Tags</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="d9a6d2f30e57a02a6b36a7773c39a3791c42ae9c">
+        <source>Add Tag</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/edit-component-tags/edit-component-tags.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+        <target state="needs-translation">Add Tag</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="f339508e35745934e4cfe06c1f4eb888b0fda212">
+        <source>Tag Name</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/edit-component-tags/edit-component-tags.component.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+        <target state="needs-translation">Tag Name</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="ab36fe6b1ac84106333447d7c1c4e20fb79c7de3">
+        <source>Move Up</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/edit-component-tags/edit-component-tags.component.html</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+        <target state="needs-translation">Move Up</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="3a12bd96093f8972cbd9d52a68fb9178aaee4388">
+        <source>Move Down</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/edit-component-tags/edit-component-tags.component.html</context>
+          <context context-type="linenumber">30</context>
+        </context-group>
+        <target state="needs-translation">Move Down</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="826b25211922a1b46436589233cb6f1a163d89b7">
+        <source>Delete</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/edit-component-tags/edit-component-tags.component.html</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+        <target state="needs-translation">Delete</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="2485299eb70909a6cfa961bfac54f062a220806c">
+        <source>Component Width</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/edit-component-width/edit-component-width.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+        <target state="needs-translation">Component Width</target>
+      </trans-unit>
       <trans-unit datatype="html" id="bfab7f41cfc32a926c55987d6a9c3349ae417131">
         <source> Show Save Button </source>
         <context-group purpose="location">
