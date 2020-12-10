@@ -1,7 +1,6 @@
 'use strict';
 
 import { Directive } from '@angular/core';
-import * as angular from 'angular';
 import { EditComponentController } from '../../authoringTool/components/editComponentController';
 
 @Directive()
@@ -10,7 +9,6 @@ class HTMLAuthoringController extends EditComponentController {
 
   static $inject = [
     '$filter',
-    '$mdDialog',
     'ConfigService',
     'NodeService',
     'NotificationService',
@@ -21,7 +19,6 @@ class HTMLAuthoringController extends EditComponentController {
 
   constructor(
     $filter,
-    private $mdDialog: any,
     ConfigService,
     NodeService,
     NotificationService,
@@ -47,8 +44,7 @@ class HTMLAuthoringController extends EditComponentController {
 
   htmlChanged(): void {
     this.authoringComponentContent.html = this.UtilService.insertWISELinks(
-      this.ConfigService.removeAbsoluteAssetPaths(this.html)
-    );
+        this.ConfigService.removeAbsoluteAssetPaths(this.html));
     this.authoringViewComponentChanged();
   }
 }

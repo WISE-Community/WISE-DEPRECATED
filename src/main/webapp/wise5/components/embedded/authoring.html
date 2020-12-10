@@ -47,38 +47,11 @@
                 ng-change='embeddedController.authoringViewComponentChanged()'/>
           </md-input-container>
         </div>
-        <div>
-          <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
-            <label>{{ ::'MAX_SCORE' | translate }}</label>
-            <input type='number'
-                ng-model='embeddedController.authoringComponentContent.maxScore'
-                ng-model-options='{ debounce: 1000 }'
-                ng-change='embeddedController.authoringViewComponentChanged()'/>
-          </md-input-container>
-        </div>
-        <div>
-          <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
-            <label>{{ ::'COMPONENT_WIDTH' | translate }}</label>
-            <input type='number'
-                ng-model='embeddedController.authoringComponentContent.componentWidth'
-                ng-model-options='{ debounce: 1000 }'
-                ng-change='embeddedController.authoringViewComponentChanged()'/>
-          </md-input-container>
-        </div>
-        <div>
-          <label class='node__label--vertical-alignment'>{{ ::'RUBRIC' | translate }}</label>
-          <md-button class='topButton md-raised md-primary' ng-click='embeddedController.showRubricAuthoring = !embeddedController.showRubricAuthoring'>
-            <md-icon>message</md-icon>
-            <md-tooltip md-direction='top' class='projectButtonTooltip'>
-              {{ ::'EDIT_COMPONENT_RUBRIC' | translate }}
-            </md-tooltip>
-          </md-button>
-          <div ng-if='embeddedController.showRubricAuthoring'>
-            <wise-authoring-tinymce-editor
-                [(model)]='embeddedController.rubric'
-                (model-change)='embeddedController.rubricChanged()'>
-            </wise-authoring-tinymce-editor>
-          </div>
+        <div layout="column" layout-align="start start">
+          <edit-component-max-score [authoring-component-content]="embeddedController.authoringComponentContent"></edit-component-max-score>
+          <edit-component-width [authoring-component-content]="embeddedController.authoringComponentContent"></edit-component-width>
+          <edit-component-rubric [authoring-component-content]="embeddedController.authoringComponentContent"></edit-component-rubric>
+          <edit-component-tags [authoring-component-content]="embeddedController.authoringComponentContent"></edit-component-tags>
         </div>
         <div>
           <div style='height: 50;'>
@@ -141,59 +114,7 @@
             </div>
           </div>
         </div>
-        <div style='margin-top: 10px; margin-bottom: 10px;'>
-          <div style='height: 50px;'>
-            <label class='node__label--vertical-alignment'>{{ ::'tags' | translate }}</label>
-            <md-button class='topButton md-raised md-primary' ng-click='embeddedController.addTag()'>
-              <md-icon>add</md-icon>
-              <md-tooltip md-direction='top' class='projectButtonTooltip'>
-                {{ ::'addTag' | translate }}
-              </md-tooltip>
-            </md-button>
-          </div>
-          <div ng-repeat='tag in embeddedController.authoringComponentContent.tags track by $index'>
-            <div layout='row'>
-              <md-input-container style='margin-bottom: 0px'>
-                <label></label>
-                <input ng-model='embeddedController.authoringComponentContent.tags[$index]'
-                    ng-change='embeddedController.authoringViewComponentChanged()'
-                    ng-model-options='{ debounce: 1000 }'
-                    size='100'
-                    placeholder='{{ ::"enterTag" | translate }}'/>
-              </md-input-container>
-              <md-button class='moveComponentButton md-raised md-primary' ng-click='embeddedController.moveTagUp($index)'>
-                <md-icon>arrow_upward</md-icon>
-                <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'moveUp' | translate }}</md-tooltip>
-              </md-button>
-              <md-button class='moveComponentButton md-raised md-primary' ng-click='embeddedController.moveTagDown($index)'>
-                <md-icon>arrow_downward</md-icon>
-                <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'moveDown' | translate }}</md-tooltip>
-              </md-button>
-              <md-button class='moveComponentButton md-raised md-primary' ng-click='embeddedController.deleteTag($index)'>
-                <md-icon>delete</md-icon>
-                <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'DELETE' | translate }}</md-tooltip>
-              </md-button>
-            </div>
-          </div>
-        </div>
-        <div>
-          <label class='node__label--vertical-alignment'>{{ ::'json' | translate }}</label>
-          <md-button class='topButton md-raised md-primary'
-              ng-click='embeddedController.showJSONButtonClicked()'>
-            <md-icon>code</md-icon>
-            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'SHOW_JSON' | translate }}</md-tooltip>
-          </md-button>
-          <span ng-if='embeddedController.isJSONStringChanged'>
-            {{ ::'closeTheJSONViewToSaveTheChanges' | translate }}
-          </span>
-          <div ng-if='embeddedController.showJSONAuthoring'>
-            <md-input-container style='width: 100%;'>
-              <textarea ng-model='embeddedController.authoringComponentContentJSONString'
-                  style='width: 90%; border: 1px solid black;'
-                  ng-change='embeddedController.authoringJSONChanged()'></textarea>
-            </md-input-container>
-          </div>
-        </div>
+        <edit-component-json [node-id]="embeddedController.nodeId" [component-id]="embeddedController.componentId"></edit-component-json>
       </div>
       <br/>
       <div ng-if='!embeddedController.authoringComponentContent.showPreviousWork'>

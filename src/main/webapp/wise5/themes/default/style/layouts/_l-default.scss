@@ -8,11 +8,11 @@
   position: relative;
 
   @media (min-width: $layout-breakpoint-xs) {
-      width: 100%;
-      max-width: $layout-breakpoint-md;
+      width: $layout-breakpoint-md;
   }
 }
 
 .l-constrained-md {
-  max-width: $layout-breakpoint-sm;
+  width: $layout-breakpoint-sm;
+  max-width: 100%;
 }

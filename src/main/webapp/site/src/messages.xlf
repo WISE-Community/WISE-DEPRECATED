@@ -5329,28 +5329,28 @@
         <source>Expand or collapse lesson content</source>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/vle/nav-item/nav-item.component.html</context>
-          <context context-type="linenumber">4</context>
+          <context context-type="linenumber">5</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="21b4a27510afaf13943eed74935b8a88b69725d4">
         <source><x equiv-text="{{nodeStatus.progress.completionPct}}" id="INTERPOLATION"/>% completed</source>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/vle/nav-item/nav-item.component.html</context>
-          <context context-type="linenumber">24</context>
+          <context context-type="linenumber">25</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="d5af5e83b5a9ff687251f2871c50161ec34301c8">
         <source><x equiv-text="{{nodeStatus.progress.completedItems}}" id="INTERPOLATION"/>/<x equiv-text="{{nodeStatus.progress.totalItems}}" id="INTERPOLATION_1"/> items </source>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/vle/nav-item/nav-item.component.html</context>
-          <context context-type="linenumber">26</context>
+          <context context-type="linenumber">27</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="3a46d8b67c3dede35e374f9c0a758feb64e7032b">
         <source>Lesson is locked</source>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/vle/nav-item/nav-item.component.html</context>
-          <context context-type="linenumber">34</context>
+          <context context-type="linenumber">35</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="b73fb34ae49aef54ad30ef3b47b73bb3987c8c51">
@@ -5364,7 +5364,7 @@
         <source>Go to <x equiv-text="{{nodeTitle}}" id="INTERPOLATION"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/vle/nav-item/nav-item.component.html</context>
-          <context context-type="linenumber">39</context>
+          <context context-type="linenumber">40</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="1cde0ecb1655843b8b682674d1ed9ff8138073b2">
@@ -5782,12 +5782,20 @@
           <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
           <context context-type="linenumber">4</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/authoringTool/rubric/rubric-authoring.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="077fb7924ecebe2ae768d860909315c29ee61fbe">
         <source>Show JSON</source>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/authoringTool/advanced/advanced-project-authoring.component.html</context>
           <context context-type="linenumber">7</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/edit-component-json/edit-component-json.component.html</context>
+          <context context-type="linenumber">5</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="a7ff0a41fdb9b51a30db6bed1494c740274cbb84">
@@ -5960,6 +5968,97 @@
           <context context-type="linenumber">36</context>
         </context-group>
       </trans-unit>
+      <trans-unit datatype="html" id="7affaae0e14529c0192d5a4bfabd6fcb1ea27529">
+        <source>Rubric</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/edit-component-rubric/edit-component-rubric.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="234445d1fce45c501510346137158fe0e81665f6">
+        <source>Edit Component Rubric</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/edit-component-rubric/edit-component-rubric.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="7ad24bfc056ad2a41aa93fbfd75ec6765060606f">
+        <source>JSON</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/edit-component-json/edit-component-json.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="d1ee280fdc6bfc1ea2be84a9c2e38d0a69f432c7">
+        <source>Close the JSON view to save the changes</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/edit-component-json/edit-component-json.component.html</context>
+          <context context-type="linenumber">10</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="5d92fa48c74344c46842dca7fb8d35e009d7f5fb">
+        <source>Edit Component JSON</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/edit-component-json/edit-component-json.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="2af3e40232b763ae8a6cba9f4bb455ed49d4f86c">
+        <source>Max Score</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/edit-component-max-score/edit-component-max-score.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="cafc87479686947e2590b9f588a88040aeaf660b">
+        <source>Tags</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/edit-component-tags/edit-component-tags.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="d9a6d2f30e57a02a6b36a7773c39a3791c42ae9c">
+        <source>Add Tag</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/edit-component-tags/edit-component-tags.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="f339508e35745934e4cfe06c1f4eb888b0fda212">
+        <source>Tag Name</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/edit-component-tags/edit-component-tags.component.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="ab36fe6b1ac84106333447d7c1c4e20fb79c7de3">
+        <source>Move Up</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/edit-component-tags/edit-component-tags.component.html</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="3a12bd96093f8972cbd9d52a68fb9178aaee4388">
+        <source>Move Down</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/edit-component-tags/edit-component-tags.component.html</context>
+          <context context-type="linenumber">30</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="826b25211922a1b46436589233cb6f1a163d89b7">
+        <source>Delete</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/edit-component-tags/edit-component-tags.component.html</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="2485299eb70909a6cfa961bfac54f062a220806c">
+        <source>Component Width</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/authoring-tool/edit-component-width/edit-component-width.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit>
       <trans-unit datatype="html" id="bfab7f41cfc32a926c55987d6a9c3349ae417131">
         <source> Show Save Button </source>
         <context-group purpose="location">
@@ -5979,6 +6078,13 @@
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/authoringTool/node/advanced/json/node-advanced-json-authoring.component.html</context>
           <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="92328333ea9c72926ca7c631e9e1c0f081cbf565">
+        <source>Edit Unit Rubric</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/authoringTool/rubric/rubric-authoring.component.html</context>
+          <context context-type="linenumber">6</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="f9c52903219e583ddefb23cd102d2057504ac980">
