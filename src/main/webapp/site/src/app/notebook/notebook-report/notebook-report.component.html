@@ -1,0 +1,80 @@
+<div *ngIf="visible" class="notebook-report-container"
+    [ngClass]="{'notebook-report-container__collapsed': collapsed, 'notebook-report-container__full': full && !collapsed}">
+  <mat-card class="notebook-report md-whiteframe-3dp l-constrained">
+    <mat-toolbar (click)="collapsed ? collapse() : return" class="md-toolbar--wise md-toolbar--wise--sm notebook-report__toolbar">
+      <mat-toolbar-tools class="md-toolbar-tools">
+        <mat-icon>assignment</mat-icon>&nbsp;
+        <span *ngIf="collapsed" class="overflow--ellipsis notebook-report__toolbar__title">{{reportItem.content.title}}</span>
+        <span flex></span>
+        <button mat-button
+            i18n-aria-label="Toggle Full Screen"
+            title="Toggle Full Screen"
+            class="md-icon-button notebook-tools--full"
+            (click)="fullscreen()">
+          <mat-icon *ngIf="!full || collapsed"> fullscreen </mat-icon>
+          <mat-icon *ngIf="full && !collapsed"> fullscreen_exit </mat-icon>
+        </button>
+        <button mat-button i18n-aria-label="Collapse" title="Collapse" class="md-icon-button"
+            *ngIf="!collapsed" (click)="$event.stopPropagation(); collapse()">
+          <mat-icon> arrow_drop_down </mat-icon>
+        </button>
+        <button mat-button i18n-aria-label="Restore" title="Restore" class="md-icon-button"
+            *ngIf="collapsed" (click)="$event.stopPropagation(); collapse()">
+          <mat-icon> arrow_drop_up </mat-icon>
+        </button>
+      </mat-toolbar-tools>
+      <div class="notebook-report__content__header md-whiteframe-1dp" layout="row" layout-align="start center">
+        <span style="color: {{config.itemTypes.report.label.color}};">{{reportItem.content.title}}</span>
+        <span flex></span>
+        <mat-icon i18n-aria-label="{{reportItem.content.title}} info"
+            style="color: {{config.itemTypes.report.label.color}};"
+            matTooltip="{{reportItem.content.prompt}}"
+            matTooltipPosition="left"
+            i18n-matTooltip>
+          info
+        </mat-icon>
+      </div>
+    </mat-toolbar>
+    <mat-content class="notebook-report__content" flex>
+      <wise-tinymce-editor
+        [(model)]="reportItemContent"
+        (modelChange)="changed(reportItemContent)"
+        [isAddNoteButtonAvailable]="isAddNoteButtonAvailable"
+        (openNotebook)="addNotebookItemContent($event)">
+      </wise-tinymce-editor>
+      <notebook-report-annotations *ngIf="hasAnnotation"
+          [annotations]="latestAnnotations"
+          [hasNewAnnotation]="hasNewAnnotation"
+          [maxScore]="maxScore"></notebook-report-annotations>
+    </mat-content>
+    <mat-card-actions class="notebook-report__actions">
+      <div id="{{reportId}}-toolbar"></div>
+      <div layout="row" layout-align="start center">
+        <button mat-button class="md-primary md-raised button--small"
+            i18n-aria-label="Save"
+            [disabled]="!dirty"
+            (click)="saveNotebookReportItem()">Save</button>
+        <span *ngIf="saveMessage.text"
+            class="component__actions__info md-caption">
+            {{saveMessage.text}}
+          <span class="component__actions__more"
+              matTooltip="{{ saveMessage.time | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}"
+              matTooltipPosition="above"
+              i18n-matTooltip>
+            {{ saveMessage.time | amTimeAgo }}
+          </span>
+        </span>
+      </div>
+    </mat-card-actions>
+  </mat-card>
+</div>
+<div *ngIf="mode === 'classroomMonitor'">
+  <article *ngIf="hasReport">
+    <div [innerHTML]="reportItemContent"></div>
+  </article>
+  <p *ngIf="!hasReport"
+      translate="noReport"
+      translate-value-term="{{config.itemTypes.report.notes[0].title}}">
+  </p>
+  <!--<notebook-item-grading notebook-item="$ctrl.reportItem"></notebook-item-grading>-->
+</div>

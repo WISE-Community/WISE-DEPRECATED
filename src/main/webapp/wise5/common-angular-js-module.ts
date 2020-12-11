@@ -70,6 +70,12 @@ import './themes/default/theme';
 import SideMenu from './common/sideMenuComponent';
 import { EditorComponent } from '@tinymce/tinymce-angular';
 import { WiseTinymceEditorComponent } from './directives/wise-tinymce-editor/wise-tinymce-editor.component';
+import { NotebookComponent } from '../site/src/app/notebook/notebook/notebook.component';
+import { NotebookItemComponent } from '../site/src/app/notebook/notebook-item/notebook-item.component';
+import { NotebookNotesComponent } from '../site/src/app/notebook/notebook-notes/notebook-notes.component';
+import { NotebookReportComponent } from '../site/src/app/notebook/notebook-report/notebook-report.component';
+import { NotebookReportAnnotationsComponent } from '../site/src/app/notebook/notebook-report-annotations/notebook-report-annotations.component';
+import EditNotebookItemController from './themes/default/notebook/editNotebookItemController';
 
   angular.module('common', [
     angularDragula(angular),
@@ -106,6 +112,16 @@ import { WiseTinymceEditorComponent } from './directives/wise-tinymce-editor/wis
       { component: EditorComponent }) as angular.IDirectiveFactory)
   .directive('wiseTinymceEditor', downgradeComponent(
       { component: WiseTinymceEditorComponent }) as angular.IDirectiveFactory)
+  .directive('notebook', downgradeComponent(
+      { component: NotebookComponent }) as angular.IDirectiveFactory)
+  .directive('notebookItem', downgradeComponent(
+      { component: NotebookItemComponent }) as angular.IDirectiveFactory)
+  .directive('notebookNotes', downgradeComponent(
+      { component: NotebookNotesComponent }) as angular.IDirectiveFactory)
+  .directive('notebookReport', downgradeComponent(
+      { component: NotebookReportComponent }) as angular.IDirectiveFactory)
+  .directive('notebookReportAnnotations', downgradeComponent(
+      { component: NotebookReportAnnotationsComponent }) as angular.IDirectiveFactory)
   .factory('AnnotationService', downgradeInjectable(AnnotationService))
   .factory('AudioRecorderService', downgradeInjectable(AudioRecorderService))
   .factory('ConfigService', downgradeInjectable(ConfigService))
@@ -121,6 +137,7 @@ import { WiseTinymceEditorComponent } from './directives/wise-tinymce-editor/wis
   .factory('StudentDataService', downgradeInjectable(StudentDataService))
   .factory('UtilService', downgradeInjectable(UtilService))
   .component('sideMenu', SideMenu)
+  .controller('EditNotebookItemController', EditNotebookItemController)
   .filter('Filters', Filters)
   .config([
       '$httpProvider',

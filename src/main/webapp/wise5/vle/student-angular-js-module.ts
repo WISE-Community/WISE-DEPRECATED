@@ -9,6 +9,7 @@ import VLEController from '../vle/vleController';
 import { VLEProjectService } from '../vle/vleProjectService';
 import { NavItemComponent } from './nav-item/nav-item.component';
 import { ComponentAnnotationsComponent } from '../directives/componentAnnotations/component-annotations.component';
+import { NotebookLauncherComponent } from '../../site/src/app/notebook/notebook-launcher/notebook-launcher.component';
 
 export function createStudentAngularJSModule(type = 'preview') {
   return angular.module(type, [
@@ -23,6 +24,8 @@ export function createStudentAngularJSModule(type = 'preview') {
   .factory('StudentWebSocketService', downgradeInjectable(StudentWebSocketService))
   .directive('navItem',
       downgradeComponent({ component: NavItemComponent }) as angular.IDirectiveFactory)
+  .directive('notebookLauncher',
+      downgradeComponent({ component: NotebookLauncherComponent }) as angular.IDirectiveFactory)
   .controller('NavigationController', NavigationController)
   .controller('NodeController', NodeController)
   .controller('VLEController', VLEController)

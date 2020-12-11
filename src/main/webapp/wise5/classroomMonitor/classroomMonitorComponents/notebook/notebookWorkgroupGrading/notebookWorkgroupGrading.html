@@ -33,20 +33,17 @@
     <md-tabs class="md-body-2 gray-lightest-bg" md-dynamic-height md-border-bottom flex>
       <md-tab ng-if="$ctrl.notesEnabled" label="{{ ::'notes' | translate }}">
         <md-content>
-          <notebook-notes class="notebook-grading" mode="classroomMonitor" notebook="$ctrl.notebook"
-                          config="$ctrl.notebookConfig" notes-visible="true" view-only="true"
-                          workgroup-id="$ctrl.workgroup.workgroupId" theme-path="$ctrl.themePath"
-                          template-url="$ctrl.themePath + '/notebook/notebook.html'" filter="note">
+          <notebook-notes class="notebook-grading" [mode]="'classroomMonitor'" [notebook]="$ctrl.notebook"
+                          [config]="$ctrl.notebookConfig" [notes-visible]="false" [view-only]="true"
+                          [workgroup-id]="$ctrl.workgroup.workgroupId" [filter]="note">
           </notebook-notes>
         </md-content>
       </md-tab>
       <md-tab ng-if="$ctrl.reportEnabled" label="{{ ::$ctrl.reportTitle }}">
         <md-content>
-          <notebook-report class="notebook-grading md-padding" mode="classroomMonitor"
-                           config="$ctrl.notebookConfig" workgroup-id="$ctrl.workgroup.workgroupId"
-                           theme-path="$ctrl.themePath"
-                           template-url="$ctrl.themePath + '/notebook/notebook.html'"
-                           filter="report"></notebook-report>
+          <notebook-report class="notebook-grading md-padding" [mode]="'classroomMonitor'"
+                           [config]="$ctrl.notebookConfig" [workgroup-id]="$ctrl.workgroup.workgroupId"
+                           [filter]="report"></notebook-report>
         </md-content>
       </md-tab>
     </md-tabs>

@@ -53,6 +53,14 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MomentModule } from 'ngx-moment';
 import { EditorModule, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
 import { WiseTinymceEditorComponent } from '../../../wise5/directives/wise-tinymce-editor/wise-tinymce-editor.component';
+import { NotebookComponent } from './notebook/notebook/notebook.component';
+import { NotebookItemComponent } from './notebook/notebook-item/notebook-item.component';
+import { NotebookLauncherComponent } from './notebook/notebook-launcher/notebook-launcher.component';
+import { NotebookNotesComponent } from './notebook/notebook-notes/notebook-notes.component';
+import { NotebookReportComponent } from './notebook/notebook-report/notebook-report.component';
+import { NotebookReportAnnotationsComponent } from './notebook/notebook-report-annotations/notebook-report-annotations.component';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @Component({template: ``})
 export class EmptyComponent {}
@@ -63,6 +71,12 @@ export class EmptyComponent {}
     HelpIconComponent,
     NodeIconComponent,
     NodeStatusIcon,
+    NotebookComponent,
+    NotebookItemComponent,
+    NotebookLauncherComponent,
+    NotebookNotesComponent,
+    NotebookReportComponent,
+    NotebookReportAnnotationsComponent,
     WiseTinymceEditorComponent
   ],
   imports: [
@@ -81,6 +95,8 @@ export class EmptyComponent {}
     MatListModule,
     MatProgressBarModule,
     MatSelectModule,
+    MatSidenavModule,
+    MatTabsModule,
     MatTooltipModule,
     MomentModule,
     ReactiveFormsModule,
@@ -137,6 +153,8 @@ export class EmptyComponent {}
     MatListModule,
     MatProgressBarModule,
     MatSelectModule,
+    MatSidenavModule,
+    MatTabsModule,
     MatTooltipModule,
     MomentModule,
     NodeIconComponent,

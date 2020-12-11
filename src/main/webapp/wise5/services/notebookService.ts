@@ -96,7 +96,7 @@ export class NotebookService {
   }
 
   getStudentNotebookConfig() {
-   return Object.assign(this.config, this.ProjectService.project.notebook);
+    return Object.assign(this.config, this.ProjectService.project.notebook);
   }
 
   getTeacherNotebookConfig() {
@@ -107,7 +107,7 @@ export class NotebookService {
     this.broadcastEditNote({ itemId: itemId, ev: ev });
   }
 
-  addNote(file, text = null, studentWorkIds = null, 
+  addNote(file = null, text = null, studentWorkIds = null, 
       isEditTextEnabled = true, isFileUploadEnabled = true) {
     this.broadcastAddNote({
         file: file,

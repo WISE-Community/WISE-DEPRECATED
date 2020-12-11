@@ -1,0 +1,87 @@
+<mat-sidenav-container
+    *ngIf="notesVisible"
+    style="position: absolute; top: 0; bottom: 0; left: 0; right: 0;"
+    [hasBackdrop]="false">
+  <mat-sidenav
+      mode="over"
+      [(opened)]="notesVisible"
+      md-component-id="notes"
+      md-whiteframe="4"
+      md-disable-backdrop
+      layout="column"
+      class="md-sidenav-right notebook-sidebar">
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <mat-toolbar>
+      <div class="md-toolbar-tools"
+           [ngClass]="{'insert-mode': insertMode}"
+           style="background-color: {{color}}; display: flex;">
+          <span>{{getTitle()}}</span>
+          <span style="flex-grow: 1;"></span>
+          <button (click)="close($event)"
+              mat-button
+              i18n-aria-label="Close">
+            <mat-icon>close</mat-icon>
+          </button>
+      </div>
+    </mat-toolbar>
+    <mat-tab-group mat-selected="selectedTabIndex" md-dynamic-height md-border-bottom md-autoselect 
+             mat-swipe-content>
+      <mat-tab *ngFor="let group of groups"
+          [disabled]="group.disabled"
+          [label]="group.title">
+        <div class="center md-padding">
+          <div class="notebook-items" [ngClass]="{'notebook-items--insert': insertMode}" layout="row"
+              layout-wrap>
+            <div class="md-padding" *ngIf="!hasNotes" translate="noNotes"
+                translate-value-term="config.itemTypes.note.label.plural"></div>
+            <notebook-item *ngFor="let note of group.items"
+                [config]="config"
+                [group]="group.name"
+                [itemId]="note.localNotebookItemId"
+                [isChooseMode]="insertMode"
+                [note]="note"
+                (onSelect)="select($event)"
+                style="display: flex;"
+                flex="100"
+                flex-gt-xs="50">
+            </notebook-item>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </mat-sidenav>
+  <mat-sidenav-content>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+<div *ngIf="mode === 'classroomMonitor'"
+    md-dynamic-height md-border-bottom md-autoselect md-swipe-content>
+  <div *ngFor="let group of groups"
+      [disabled]="group.disabled"
+      label="group.title">
+    <div *ngIf="hasNotes" class="center md-padding">
+      <div class="notebook-items notebook-items--grading"
+          [ngClass]="{'notebook-items--insert': insertMode}" layout="row" layout-wrap>
+        <notebook-item *ngFor="let note of group.items"
+            [config]="config"
+            [group]="group.name"
+            [itemId]="note.localNotebookItemId"
+            [isEditAllowed]="group.isEditAllowed"
+            [isChooseMode]="insertMode"
+            [note]="note"
+            (onSelect)="select($event)"
+            style="display: flex;"
+            flex="100"
+            flex-gt-xs="50"
+            flex-gt-sm="33"
+            flex-gt-md="25">
+        </notebook-item>
+      </div>
+    </div>
+    <div *ngIf="!hasNotes" class="md-padding">
+      <p translate="noNotes" translate-value-term="config.itemTypes.note.label.plural"></p>
+    </div>
+  </div>
+</div>

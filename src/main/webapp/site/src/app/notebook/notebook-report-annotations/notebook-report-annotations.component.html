@@ -1,0 +1,36 @@
+<div class="md-padding gray-lightest-bg annotations-container--student--report"
+    *ngIf="show">
+  <mat-card class="annotations annotations--report">
+    <mat-card-title class="annotations__header">
+      <div class="annotations__avatar avatar--icon avatar--square md-36 avatar md-whiteframe-1dp">
+        <mat-icon class="annotations__icon md-36">{{icon}}</mat-icon>
+      </div>
+      <div class="annotations__title" layout="row" flex>
+        <span>{{label}}</span>
+        <span flex></span>
+        <span *ngIf="hasNew" class="badge annotations__status animate-fade" translate="new"></span>
+      </div>
+    </mat-card-title>
+    <mat-card-content class="annotations__body md-body-1">
+      <div *ngIf="showComment && annotations.comment">
+        <div [innerHTML]="annotations.comment.data.value"></div>
+      </div>
+      <hr *ngIf="annotations.comment" />
+      <div layout="row" laoyut-align="start center">
+        <span *ngIf="showScore && annotations.score"
+              class="annotations__score"
+              translate="SCORE_LABEL_AND_VALUE"
+              translate-value-score="{{annotations.score.data.value}}{{maxScoreDisplay}}"></span>
+        <span flex></span>
+        <span>
+          <span class="annotations__info"
+              am-time-ago="latestAnnotationTime"
+              matTooltip="{{ latestAnnotationTime | amDateFormat:'ddd, MMM D YYYY, h:mm a' }}"
+              matTooltipPosition="above"
+              i18n-matTooltip>
+          </span>
+        </span>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
