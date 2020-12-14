@@ -52,7 +52,7 @@ export class NotebookReportComponent {
   autoSaveIntervalId: any;
   saveMessage: any = {
     text: '',
-    time: null 
+    time: null
   };
   reportItem: any;
   reportItemContent: any;
@@ -68,7 +68,6 @@ export class NotebookReportComponent {
     private NotebookService: NotebookService,
     private ProjectService: ProjectService
   ) {
-
   }
 
   ngOnInit(): void {
@@ -87,10 +86,8 @@ export class NotebookReportComponent {
       );
       this.setSavedMessage(clientSaveTime);
     } else {
-      // student doesn't have work for this report yet, so get the default template.
       this.reportItem = this.NotebookService.getTemplateReportItemByReportId(this.reportId);
       if (this.reportItem == null) {
-        // don't allow student to work on the report
         return;
       }
     }
@@ -108,10 +105,6 @@ export class NotebookReportComponent {
     this.startAutoSaveInterval();
     this.isAddNoteButtonAvailable = this.isNoteEnabled();
 
-    /**
-     * Captures the annotation received event, checks whether the given
-     * annotation id matches this report id, updates UI accordingly
-     */
     this.notebookItemAnnotationReceivedSubscription = this.NotebookService.notebookItemAnnotationReceived$.subscribe(
       ({ annotation }: any) => {
         if (annotation.localNotebookItemId === this.reportId) {
@@ -125,17 +118,11 @@ export class NotebookReportComponent {
       }
     );
 
-    /**
-     * Captures the show report annotations event, opens report (if collapsed)
-     * and scrolls to the report annotations display
-     */
     this.showReportAnnotationsSubscription = this.NotebookService.showReportAnnotations$.subscribe(
       () => {
         if (this.collapsed) {
           this.collapse();
         }
-
-        // scroll to report annotations (bottom)
         const $notebookReportContent = $('.notebook-report__content');
         setTimeout(() => {
           $notebookReportContent.animate(
@@ -200,7 +187,6 @@ export class NotebookReportComponent {
   }
 
   saveNotebookReportItem(): void {
-    // set save timestamp
     this.NotebookService.saveNotebookItem(
       this.reportItem.id,
       this.reportItem.nodeId,

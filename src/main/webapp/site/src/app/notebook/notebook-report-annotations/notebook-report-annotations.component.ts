@@ -28,21 +28,13 @@ export class NotebookReportAnnotationsComponent {
   showComment: boolean = true;
   maxScoreDisplay: string;
 
-  constructor(
-    private ConfigService: ConfigService,
-    private ProjectService: VLEProjectService
-  ) {
-
+  constructor(private ConfigService: ConfigService, private ProjectService: VLEProjectService) {
   }
 
   ngOnInit(): void {
     this.maxScoreDisplay = (parseInt(this.maxScore) > 0) ? '/' + this.maxScore : '';
   }
 
-  /**
-   * Get the most recent annotation (from the current score and comment annotations)
-   * @return Object (latest annotation)
-   */
   getLatestAnnotation(): any {
     let latestAnnotation = null;
     if (this.annotations.comment || this.annotations.score) {
@@ -57,10 +49,6 @@ export class NotebookReportAnnotationsComponent {
     return latestAnnotation;
   }
 
-  /**
-   * Calculate the save time of the latest annotation
-   * @return Number (latest annotation post time)
-   */
   getLatestAnnotationTime(): any {
     const latestAnnotation = this.getLatestAnnotation();
     if (latestAnnotation) {
@@ -69,9 +57,6 @@ export class NotebookReportAnnotationsComponent {
     return null;
   }
 
-  /**
-   * Set the label based on whether this is an automated or teacher annotation
-   **/
   setLabelAndIcon(): void {
     const latestAnnotation = this.getLatestAnnotation();
     if (latestAnnotation) {

@@ -1,12 +1,11 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 
-
 @Component({
   selector: 'notebook-launcher',
   templateUrl: 'notebook-launcher.component.html'
 })
 export class NotebookLauncherComponent {
-  
+
   @Input()
   config: any;
 

@@ -48,28 +48,17 @@ export class NotebookNotesComponent {
   openNotebookSubscription: Subscription;
   publicNotebookItemsRetrievedSubscription: Subscription;
 
-  constructor(
-    private NotebookService: NotebookService,
-    private ProjectService: ProjectService
-  ) {
-
+  constructor(private NotebookService: NotebookService, private ProjectService: ProjectService) {
   }
 
   ngOnInit(): void {
     this.color = this.config.itemTypes.note.label.color;
-    const personalGroup = {
-      title: 'Personal',
-      name: 'private',
-      isEditAllowed: true,
-      items: []
-    };
-    this.addPersonalGroupToGroups(personalGroup);
-    const spaces = this.ProjectService.getSpaces();
-    this.addSpacesToGroups(spaces);
+    this.addPersonalGroupToGroups();
+    this.addSpacesToGroups();
     this.hasNotes = this.isHasNotes();
 
-    this.notebookUpdatedSubscription = this.NotebookService.notebookUpdated$.subscribe((args) => {
-      const notebookItem = args.notebookItem;
+    this.notebookUpdatedSubscription = this.NotebookService.notebookUpdated$.subscribe(
+        ({notebookItem}) => {
       if ((notebookItem.groups == null || notebookItem.groups.length === 0) &&
           notebookItem.type === 'note') {
         this.updatePrivateNotebookNote(notebookItem);
@@ -80,11 +69,12 @@ export class NotebookNotesComponent {
       this.hasNotes = this.isHasNotes();
     });
 
-    this.openNotebookSubscription = this.NotebookService.openNotebook$.subscribe((args) => {
-      this.selectedTabIndex = args.visibleSpace === 'public' ? 1 : 0;
+    this.openNotebookSubscription = this.NotebookService.openNotebook$.subscribe(
+        ({visibleSpace}) => {
+      this.selectedTabIndex = visibleSpace === 'public' ? 1 : 0;
     });
-    
-    this.publicNotebookItemsRetrievedSubscription = 
+
+    this.publicNotebookItemsRetrievedSubscription =
         this.NotebookService.publicNotebookItemsRetrieved$.subscribe(() => {
       for (const group of this.groups) {
         if (group.name !== 'private') {
@@ -108,7 +98,13 @@ export class NotebookNotesComponent {
     return Object.keys(this.notebook.items).length ? true : false;
   }
 
-  addPersonalGroupToGroups(personalGroup: any): void {
+  addPersonalGroupToGroups(): void {
+    const personalGroup = {
+      title: 'Personal',
+      name: 'private',
+      isEditAllowed: true,
+      items: []
+    };
     this.groupNameToGroup['private'] = personalGroup;
     for (const [personalItemKey, personalItemValue] of Object.entries(this.notebook.items)) {
       if ((personalItemValue as any).last().type === 'note') {
@@ -118,8 +114,8 @@ export class NotebookNotesComponent {
     this.groups.push(personalGroup);
   }
 
-  addSpacesToGroups(spaces: any[]): void {
-    for (const space of spaces) {
+  addSpacesToGroups(): void {
+    for (const space of this.ProjectService.getSpaces()) {
       if (space.isShowInNotebook) {
         const spaceGroup = {
           title: space.name,

@@ -21,7 +21,6 @@ export class NotebookComponent {
   @Input()
   workgroupId: number;
 
-  themePath: string;
   itemId: string;
   item: any;
   config: any;
@@ -47,11 +46,9 @@ export class NotebookComponent {
     private ProjectService: ProjectService,
     private UtilService: UtilService
   ) {
-
   }
 
   ngOnInit(): void {
-    this.themePath = this.ProjectService.getThemePath();
     this.itemId = null;
     this.item = null;
 
@@ -77,14 +74,10 @@ export class NotebookComponent {
     this.insertContent = null;
     this.requester = null;
 
-    this.addNoteSubscription = this.NotebookService.addNote$.subscribe(args => {
+    this.addNoteSubscription = this.NotebookService.addNote$.subscribe(
+        ({file, noteText, isEditTextEnabled, isFileUploadEnabled, studentWorkIds}) => {
       const note = null;
       const isEditMode = true;
-      const file = args.file;
-      const noteText = args.text;
-      const isEditTextEnabled = args.isEditTextEnabled;
-      const isFileUploadEnabled = args.isFileUploadEnabled;
-      const studentWorkIds = args.studentWorkIds;
       this.showEditNoteDialog(
         note,
         isEditMode,
@@ -100,9 +93,7 @@ export class NotebookComponent {
       this.closeNotes();
     });
 
-    this.editNoteSubscription = this.NotebookService.editNote$.subscribe(args => {
-      const note = args.note;
-      const isEditMode = args.isEditMode;
+    this.editNoteSubscription = this.NotebookService.editNote$.subscribe(({note, isEditMode}) => {
       const file = null;
       const noteText = null;
       const isEditTextEnabled = true;
@@ -119,13 +110,15 @@ export class NotebookComponent {
       );
     });
 
-    this.notebookUpdatedSubscription = this.NotebookService.notebookUpdated$.subscribe(args => {
-      this.notebook = this.UtilService.makeCopyOfJSONObject(args.notebook);
+    this.notebookUpdatedSubscription = this.NotebookService.notebookUpdated$.subscribe(
+        ({notebook}) => {
+      this.notebook = this.UtilService.makeCopyOfJSONObject(notebook);
     });
 
-    this.openNotebookSubscription = this.NotebookService.openNotebook$.subscribe(args => {
+    this.openNotebookSubscription = this.NotebookService.openNotebook$.subscribe(
+        ({insertMode, requester}) => {
       this.open({ value: 'note' });
-      this.setInsertMode({ value: args.insertMode, requester: args.requester });
+      this.setInsertMode({ value: insertMode, requester: requester });
     });
 
     this.notebook = this.NotebookService.getNotebookByWorkgroup(this.workgroupId);
@@ -169,9 +162,8 @@ export class NotebookComponent {
     isFileUploadEnabled: boolean,
     studentWorkIds: number[]
   ): void {
-    const notebookItemTemplate = this.themePath + '/notebook/editNotebookItem.html';
     this.upgrade.$injector.get('$mdDialog').show({
-      templateUrl: notebookItemTemplate,
+      templateUrl: `${this.ProjectService.getThemePath()}/notebook/editNotebookItem.html`,
       controller: 'EditNotebookItemController',
       controllerAs: 'editNotebookItemController',
       bindToController: true,

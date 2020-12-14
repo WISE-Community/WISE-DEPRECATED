@@ -17,7 +17,6 @@ import { NotebookItemComponent } from "./notebook-item.component";
 let component: NotebookItemComponent;
 
 describe('NotebookItemComponent', () => {
-
   configureTestSuite(() => {
     TestBed.configureTestingModule({
       imports: [ HttpClientTestingModule, UpgradeModule ],
@@ -34,13 +33,13 @@ describe('NotebookItemComponent', () => {
         UtilService
       ]
     });
-  })
+  });
 
   beforeEach(() => {
     const fixture = TestBed.createComponent(NotebookItemComponent);
     component = fixture.componentInstance;
     component.notebookUpdatedSubscription = new Subscription();
-  })
+  });
 
   isItemInGroup();
   isNotebookItemActive();

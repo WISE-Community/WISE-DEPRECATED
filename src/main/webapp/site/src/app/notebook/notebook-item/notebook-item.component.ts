@@ -42,7 +42,6 @@ export class NotebookItemComponent {
     private NotebookService: NotebookService,
     private ProjectService: ProjectService
   ) {
-
   }
 
   ngOnInit(): void {
@@ -55,8 +54,8 @@ export class NotebookItemComponent {
       this.color = this.label.color;
     }
 
-    this.notebookUpdatedSubscription = this.NotebookService.notebookUpdated$.subscribe((args) => {
-      const notebook = args.notebook;
+    this.notebookUpdatedSubscription = this.NotebookService.notebookUpdated$.subscribe(
+        ({notebook}) => {
       if (notebook.items[this.itemId]) {
         this.item = notebook.items[this.itemId].last();
       }

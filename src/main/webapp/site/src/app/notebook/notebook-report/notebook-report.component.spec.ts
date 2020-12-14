@@ -16,7 +16,6 @@ import { NotebookReportComponent } from "./notebook-report.component";
 let component: NotebookReportComponent;
 
 describe('NotebookReportComponent', () => {
-
   configureTestSuite(() => {
     TestBed.configureTestingModule({
       imports: [ HttpClientTestingModule, UpgradeModule ],
@@ -33,13 +32,13 @@ describe('NotebookReportComponent', () => {
         UtilService
       ]
     });
-  })
+  });
 
   beforeEach(() => {
     const fixture = TestBed.createComponent(NotebookReportComponent);
     component = fixture.componentInstance;
     component.config = createConfig();
-  })
+  });
 
   isNoteEnabled();
   setSavedMessage();

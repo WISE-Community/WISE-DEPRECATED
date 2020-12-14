@@ -12,7 +12,6 @@ import { NotebookReportAnnotationsComponent } from "./notebook-report-annotation
 let component: NotebookReportAnnotationsComponent;
 
 describe('NotebookReportAnnotationsComponent', () => {
-
   configureTestSuite(() => {
     TestBed.configureTestingModule({
       imports: [ HttpClientTestingModule, UpgradeModule ],
@@ -25,12 +24,12 @@ describe('NotebookReportAnnotationsComponent', () => {
         VLEProjectService
       ]
     });
-  })
+  });
 
   beforeEach(() => {
     const fixture = TestBed.createComponent(NotebookReportAnnotationsComponent);
     component = fixture.componentInstance;
-  })
+  });
 
   setLabelAndIcon();
 });

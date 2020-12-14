@@ -5,18 +5,17 @@ import { NotebookLauncherComponent } from "./notebook-launcher.component";
 let component: NotebookLauncherComponent;
 
 describe('NotebookLauncherComponent', () => {
-
   configureTestSuite(() => {
     TestBed.configureTestingModule({
       declarations: [ NotebookLauncherComponent ]
     });
-  })
+  });
 
   beforeEach(() => {
     const fixture = TestBed.createComponent(NotebookLauncherComponent);
     component = fixture.componentInstance;
     component.config = createConfig();
-  })
+  });
 
   isShowButton();
 });

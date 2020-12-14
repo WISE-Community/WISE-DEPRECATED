@@ -17,7 +17,6 @@ import { NotebookComponent } from "./notebook.component";
 let component: NotebookComponent;
 
 describe('NotebookComponent', () => {
-
   configureTestSuite(() => {
     TestBed.configureTestingModule({
       imports: [ HttpClientTestingModule, UpgradeModule ],
@@ -34,7 +33,7 @@ describe('NotebookComponent', () => {
         UtilService
       ]
     });
-  })
+  });
 
   beforeEach(() => {
     const fixture = TestBed.createComponent(NotebookComponent);
@@ -44,7 +43,7 @@ describe('NotebookComponent', () => {
     component.editNoteSubscription = new Subscription();
     component.notebookUpdatedSubscription = new Subscription();
     component.openNotebookSubscription = new Subscription();
-  })
+  });
 
   closeNotes();
 });

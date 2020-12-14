@@ -17,7 +17,6 @@ import { NotebookNotesComponent } from "./notebook-notes.component";
 let component: NotebookNotesComponent;
 
 describe('NotebookNotesComponent', () => {
-
   configureTestSuite(() => {
     TestBed.configureTestingModule({
       imports: [ HttpClientTestingModule, UpgradeModule ],
@@ -34,7 +33,7 @@ describe('NotebookNotesComponent', () => {
         UtilService
       ]
     });
-  })
+  });
 
   beforeEach(() => {
     const fixture = TestBed.createComponent(NotebookNotesComponent);
@@ -42,7 +41,7 @@ describe('NotebookNotesComponent', () => {
     component.notebookUpdatedSubscription = new Subscription();
     component.openNotebookSubscription = new Subscription();
     component.publicNotebookItemsRetrievedSubscription = new Subscription();
-  })
+  });
 
   isHasNotes();
 });
