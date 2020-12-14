@@ -1,0 +1,19 @@
+<span fxLayout="row" fxLayoutAlign="start center">
+  <span class="progress-wrapper" tabindex="0" [ngSwitch]="period.periodId">
+    <mat-progress-bar *ngSwitchCase="-1"
+        matTooltip="{{nodeCompletion}}% completed (All periods)"
+        i18n-matTooltip
+        matTooltipPosition="above"
+        class="nav-item__progress"
+        mode="determinate"
+        value="{{nodeCompletion}}"></mat-progress-bar>
+    <mat-progress-bar *ngSwitchDefault
+        matTooltip="{{nodeCompletion}}% completed (Period: {{period.periodName}})"
+        i18n-matTooltip
+        matTooltipPosition="above"
+        class="nav-item__progress"
+        mode="determinate"
+        value="{{nodeCompletion}}"></mat-progress-bar>
+  </span>
+  <span class="nav-item__progress-value md-body-2 text-secondary" hide-xs>{{nodeCompletion}}%</span>
+</span>
