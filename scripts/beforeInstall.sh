@@ -12,7 +12,7 @@ echo "Starting deployment at $(date)"
 
 if [[ $DEPLOYMENT_GROUP_NAME == "qa-deployment-group" ]]; then
     env="qa"
-elif [[ $DEPLOYMENT_GROUP_NAME == "prod-deployment-group" ]]; then
+elif [[ $DEPLOYMENT_GROUP_NAME == "prod-deployment-group" || $DEPLOYMENT_GROUP_NAME == "prod-test-deployment-group" ]]; then
     env="prod"
 fi
 
