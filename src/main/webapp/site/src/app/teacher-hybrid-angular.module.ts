@@ -14,6 +14,7 @@ import { TeacherWebSocketService } from '../../../wise5/services/teacherWebSocke
 import { DataService } from './services/data.service';
 import { MilestoneService } from '../../../wise5/services/milestoneService';
 import { WorkgroupNodeScoreComponent } from '../../../wise5/classroomMonitor/classroomMonitorComponents/shared/workgroupNodeScore/workgroup-node-score.component';
+import { WorkgroupNodeStatusComponent } from './classroom-monitor/workgroup-node-status/workgroup-node-status.component';
 import { NavItemScoreComponent } from '../../../wise5/classroomMonitor/classroomMonitorComponents/nodeProgress/navItemScore/nav-item-score.component';
 import { ManageStudentsComponent } from '../../../wise5/classroomMonitor/manageStudents/manage-students-component';
 import { AdvancedProjectAuthoringComponent } from '../../../wise5/authoringTool/advanced/advanced-project-authoring.component';
@@ -57,7 +58,8 @@ import { RubricAuthoringComponent } from '../../../wise5/authoringTool/rubric/ru
     WorkgroupInfoComponent,
     WorkgroupNodeScoreComponent,
     NavItemScoreComponent,
-    WiseAuthoringTinymceEditorComponent
+    WiseAuthoringTinymceEditorComponent,
+    WorkgroupNodeStatusComponent
   ],
   imports: [
     AngularJSModule
