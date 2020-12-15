@@ -22,6 +22,7 @@ import { ChooseNewComponentLocation } from './authoring-tool/add-component/choos
 import { ChooseImportStepComponent } from './authoring-tool/import-step/choose-import-step/choose-import-step.component';
 import { ChooseImportStepLocationComponent } from './authoring-tool/import-step/choose-import-step-location/choose-import-step-location.component';
 import { ComponentNewWorkBadgeComponent } from './classroom-monitor/component-new-work-badge/component-new-work-badge.component';
+import { ComponentSelectComponent } from './classroom-monitor/component-select/component-select.component';
 import { StatusIconComponent } from './classroom-monitor/status-icon/status-icon.component';
 import { AngularJSModule } from './common-hybrid-angular.module';
 import { NodeAdvancedJsonAuthoringComponent } from '../../../wise5/authoringTool/node/advanced/json/node-advanced-json-authoring.component';
@@ -43,6 +44,7 @@ import { RubricAuthoringComponent } from '../../../wise5/authoringTool/rubric/ru
     ChooseNewComponent,
     ChooseNewComponentLocation,
     ComponentNewWorkBadgeComponent,
+    ComponentSelectComponent,
     EditComponentRubricComponent,
     EditComponentJsonComponent,
     EditComponentMaxScoreComponent,
