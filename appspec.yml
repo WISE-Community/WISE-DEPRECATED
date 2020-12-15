@@ -2,19 +2,11 @@ version: 0.0
 os: linux
 files:
   - source: /wise.war
-    destination: /home/ubuntu/build
-permissions:
-  - object: /
-    pattern: "**"
-    owner: ubuntu
-    group: ubuntu
+    destination: /home/ubuntu/build-folder
 hooks:
   BeforeInstall:
     - location: beforeInstall.sh
-      runas: ubuntu
+      runas: root
   AfterInstall:
     - location: afterInstall.sh
-      runas: ubuntu
-  ApplicationStart:
-    - location: applicationStart.sh
-      runas: ubuntu
+      runas: root
