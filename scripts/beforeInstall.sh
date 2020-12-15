@@ -50,7 +50,8 @@ echo "Removing Tomcat ROOT folder"
 rm -rf $CATALINA_HOME/webapps/ROOT
 
 echo 'Setting Tomcat to run using ubuntu user'
-sudo sed 's/User=tomcat/User=ubuntu/' -i /lib/systemd/system/tomcat9.service
+sed 's/User=tomcat/User=ubuntu/' -i /lib/systemd/system/tomcat9.service
+systemctl daemon-reload
 
 echo "Add https to Tomcat server.xml"
 sed 's/<Connector port="8080"/<Connector port="8080" scheme="https"/' -i $CATALINA_HOME/conf/server.xml
