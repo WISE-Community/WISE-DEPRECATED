@@ -56,7 +56,7 @@ systemctl daemon-reload
 echo "Add https to Tomcat server.xml"
 sed 's/<Connector port="8080"/<Connector port="8080" scheme="https"/' -i $CATALINA_HOME/conf/server.xml
 
-echo "Downlading setenv.sh Tomcat file"
+echo "Copying setenv.sh file to Tomcat bin folder"
 cp $BUILD_FILES/setenv.sh /usr/share/tomcat9/bin/setenv.sh
 
 echo "Restarting Tomcat"
@@ -72,7 +72,7 @@ apt-get install nginx -y
 echo "Adding Nginx www-data user to tomcat group"
 usermod -a -G tomcat www-data
 
-echo "Downloading WISE Nginx config file"
+echo "Copying WISE Nginx config file to Nginx sites-enabled folder"
 rm -f /etc/nginx/sites-enabled/*
 cp $BUILD_FILES/$env/wise.conf /etc/nginx/sites-enabled/wise.conf
 systemctl restart nginx
@@ -82,7 +82,7 @@ mkdir -p $HOME/build-folder/WEB-INF/classes
 sudo -u ubuntu -g ubuntu mkdir $HOME/backup
 sudo -u ubuntu -g tomcat mkdir $HOME/googleTokens
 
-echo "Downloading application.properties file"
+echo "Copying application.properties file to the build folder"
 cp $BUILD_FILES/$env/application.properties $BUILD_DIR/WEB-INF/classes/application.properties
 
 echo "Installing network drive package"
@@ -92,16 +92,16 @@ echo "Mounting network drive folders"
 cp $BUILD_FILES/$env/fstab /etc/fstab
 mount -a
 
-echo "Downloading .vimrc file"
+echo "Copying .vimrc file to the ubuntu home folder"
 sudo -u ubuntu -g ubuntu cp $BUILD_FILES/.vimrc $HOME/.vimrc
 
-echo "Downloading text to append to .bashrc"
+echo "Appending text to .bashrc"
 cat $BUILD_FILES/append-to-bashrc.txt >> ~/.bashrc
 source ~/.bashrc
 
 echo "Installing tree"
 apt-get install tree -y
 
-echo "Downloading message of the day script to display notes"
+echo "Copying message of the day file to update-motd.d folder to display notes on login"
 cp $BUILD_FILES/99-notes /etc/update-motd.d/99-notes
 chmod 755 /etc/update-motd.d/99-notes
