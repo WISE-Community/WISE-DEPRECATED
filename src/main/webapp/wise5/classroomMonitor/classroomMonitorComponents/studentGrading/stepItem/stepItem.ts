@@ -44,8 +44,6 @@ class StepItemController {
   }
 
   update() {
-    let completion = 0;
-
     switch (this.status) {
       case -1:
         this.statusClass = ' ';
@@ -123,8 +121,8 @@ const StepItem = {
             </div>
             <div flex="{{ $ctrl.showScore ? 30 : 20 }}" layout="row"
                  layout-align="center center">
-              <workgroup-node-status status-text="{{ $ctrl.statusText }}"
-                                     status-class="{{ $ctrl.statusClass }}">
+              <workgroup-node-status [status-text]="$ctrl.statusText"
+                                     [status-class]="$ctrl.statusClass">
               </workgroup-node-status>
             </div>
             <div ng-if="$ctrl.showScore" flex="20" layout="row"
