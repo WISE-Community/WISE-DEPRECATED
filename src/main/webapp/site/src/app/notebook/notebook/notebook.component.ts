@@ -8,6 +8,7 @@ import { UtilService } from "../../../../../wise5/services/utilService";
 
 @Component({
   selector: 'notebook',
+  styleUrls: ['notebook.component.scss'],
   templateUrl: 'notebook.component.html'
 })
 export class NotebookComponent {

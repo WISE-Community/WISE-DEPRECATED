@@ -41,8 +41,8 @@ describe('NotebookReportComponent', () => {
   });
 
   isNoteEnabled();
-  setSavedMessage();
-  clearSavedMessage();
+  setSaveTime();
+  clearSaveTime();
 });
 
 function createConfig() {
@@ -66,24 +66,20 @@ function isNoteEnabled() {
   });
 }
 
-function setSavedMessage() {
-  it('should set the saved message', () => {
-    expect(component.saveMessage.text).toEqual('');
-    expect(component.saveMessage.time).toEqual(null);
+function setSaveTime() {
+  it('should set the save time', () => {
+    expect(component.saveTime).toEqual(null);
     const saveTimestamp = 1607718407613;
-    component.setSavedMessage(saveTimestamp);
-    expect(component.saveMessage.text).toEqual('Saved');
-    expect(component.saveMessage.time).toEqual(saveTimestamp);
+    component.setSaveTime(saveTimestamp);
+    expect(component.saveTime).toEqual(saveTimestamp);
   });
 }
 
-function clearSavedMessage() {
-  it('should clear the saved message', () => {
+function clearSaveTime() {
+  it('should clear the saved time', () => {
     const saveTimestamp = 1607718407613;
-    component.saveMessage.text = 'Saved';
-    component.saveMessage.time = saveTimestamp;
-    component.clearSavedMessage();
-    expect(component.saveMessage.text).toEqual('');
-    expect(component.saveMessage.time).toEqual(null);
+    component.saveTime = saveTimestamp;
+    component.clearSaveTime();
+    expect(component.saveTime).toEqual(null);
   });
 }

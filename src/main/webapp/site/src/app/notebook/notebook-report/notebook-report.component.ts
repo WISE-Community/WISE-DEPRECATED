@@ -7,6 +7,7 @@ import { ProjectService } from "../../../../../wise5/services/projectService";
 
 @Component({
   selector: 'notebook-report',
+  styleUrls: ['notebook-report.component.scss'],
   templateUrl: 'notebook-report.component.html'
 })
 export class NotebookReportComponent {
@@ -50,10 +51,7 @@ export class NotebookReportComponent {
   dirty: boolean = false;
   autoSaveIntervalMS: number = 30000;
   autoSaveIntervalId: any;
-  saveMessage: any = {
-    text: '',
-    time: null
-  };
+  saveTime: number = null;
   reportItem: any;
   reportItemContent: any;
   latestAnnotations: any;
@@ -84,7 +82,7 @@ export class NotebookReportComponent {
       const clientSaveTime = this.convertServerSaveTimeToClientSaveTime(
         this.reportItem.serverSaveTime
       );
-      this.setSavedMessage(clientSaveTime);
+      this.setSaveTime(clientSaveTime);
     } else {
       this.reportItem = this.NotebookService.getTemplateReportItemByReportId(this.reportId);
       if (this.reportItem == null) {
@@ -170,7 +168,7 @@ export class NotebookReportComponent {
   changed(value: string): void {
     this.dirty = true;
     this.reportItem.content.content = this.ConfigService.removeAbsoluteAssetPaths(value);
-    this.clearSavedMessage();
+    this.clearSaveTime();
   }
 
   startAutoSaveInterval(): void {
@@ -203,22 +201,17 @@ export class NotebookReportComponent {
         // set the reportNotebookItemId to the newly-incremented id so that future saves during this
         // visit will be an update instead of an insert.
         this.reportItem.id = result.id;
-        this.setSavedMessage(this.convertServerSaveTimeToClientSaveTime(result.serverSaveTime));
+        this.setSaveTime(this.convertServerSaveTimeToClientSaveTime(result.serverSaveTime));
       }
     });
   }
 
-  setSavedMessage(time: number): void {
-    this.setSaveText($localize`Saved`, time);
+  setSaveTime(time: number): void {
+    this.saveTime = time;
   }
 
-  clearSavedMessage(): void {
-    this.setSaveText('', null);
-  }
-
-  setSaveText(message: string, time: number): void {
-    this.saveMessage.text = message;
-    this.saveMessage.time = time;
+  clearSaveTime(): void {
+    this.setSaveTime(null);
   }
 
   isNoteEnabled(): boolean {
