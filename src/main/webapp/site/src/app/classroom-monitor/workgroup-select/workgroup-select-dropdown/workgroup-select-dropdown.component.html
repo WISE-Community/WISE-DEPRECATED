@@ -1,0 +1,21 @@
+<mat-select
+    [(ngModel)]="selectedItem"
+    [ngClass]="customClass"
+    md-container-class="stepSelectMenuContainer"
+    i18n-aria-label
+    aria-label="Find a student"
+    (selectionChange)="selectedItemChange()"
+    mat-theme="cm">
+  <span fxLayout="row" fxLayoutAlign="center center" flex>
+    <input [(ngModel)]="searchTerm"
+        type="search"
+        i18n-placeholder
+        placeholder="Find a student"
+        (keydown)="$event.stopPropagation()"
+        (ngModelChange)="setWorkgroups()"/>
+  </span>
+  <mat-divider></mat-divider>
+  <mat-option *ngFor="let workgroup of workgroups" [value]="workgroup">
+    <span class="node-select__text" i18n>{{workgroup.displayNames}} (Team {{workgroup.workgroupId}})</span>
+  </mat-option>
+</mat-select>
