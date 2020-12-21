@@ -5329,28 +5329,28 @@
         <source>Expand or collapse lesson content</source>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/vle/nav-item/nav-item.component.html</context>
-          <context context-type="linenumber">4</context>
+          <context context-type="linenumber">5</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="21b4a27510afaf13943eed74935b8a88b69725d4">
         <source><x equiv-text="{{nodeStatus.progress.completionPct}}" id="INTERPOLATION"/>% completed</source>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/vle/nav-item/nav-item.component.html</context>
-          <context context-type="linenumber">24</context>
+          <context context-type="linenumber">25</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="d5af5e83b5a9ff687251f2871c50161ec34301c8">
         <source><x equiv-text="{{nodeStatus.progress.completedItems}}" id="INTERPOLATION"/>/<x equiv-text="{{nodeStatus.progress.totalItems}}" id="INTERPOLATION_1"/> items </source>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/vle/nav-item/nav-item.component.html</context>
-          <context context-type="linenumber">26</context>
+          <context context-type="linenumber">27</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="3a46d8b67c3dede35e374f9c0a758feb64e7032b">
         <source>Lesson is locked</source>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/vle/nav-item/nav-item.component.html</context>
-          <context context-type="linenumber">34</context>
+          <context context-type="linenumber">35</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="b73fb34ae49aef54ad30ef3b47b73bb3987c8c51">
@@ -5364,7 +5364,7 @@
         <source>Go to <x equiv-text="{{nodeTitle}}" id="INTERPOLATION"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/vle/nav-item/nav-item.component.html</context>
-          <context context-type="linenumber">39</context>
+          <context context-type="linenumber">40</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="1cde0ecb1655843b8b682674d1ed9ff8138073b2">
@@ -5968,6 +5968,24 @@
           <context context-type="linenumber">36</context>
         </context-group>
       </trans-unit>
+      <trans-unit datatype="html" id="92159486420caf44d25e4f85cb0ed4f105d9c854">
+        <source>Assessment items to show</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/classroom-monitor/component-select/component-select.component.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/classroom-monitor/component-select/component-select.component.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="6b8ecc745edb25da9e81cee606a8cae77549dde2">
+        <source> 1 assessment item </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/classroom-monitor/component-select/component-select.component.html</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+      </trans-unit>
       <trans-unit datatype="html" id="7affaae0e14529c0192d5a4bfabd6fcb1ea27529">
         <source>Rubric</source>
         <context-group purpose="location">
@@ -6059,15 +6077,18 @@
           <context context-type="linenumber">2</context>
         </context-group>
       </trans-unit>
-      <trans-unit datatype="html" id="339878da255ab55447c43afef8d9b2f9753bf5f6">
-        <source>Advanced Settings</source>
+      <trans-unit datatype="html" id="6817513ddcee06a7cb2a7b2708e5616b861db81c">
+        <source><x equiv-text="{{nodeCompletion}}" id="INTERPOLATION"/>% completed (All periods)</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/components/html/edit-html-advanced/edit-html-advanced.component.html</context>
-          <context context-type="linenumber">1</context>
+          <context context-type="sourcefile">app/classroom-monitor/nav-item-progress/nav-item-progress.component.html</context>
+          <context context-type="linenumber">4</context>
         </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="988ec0475312fa85da7fa2f0f2e06e56b1e7f429">
+        <source><x equiv-text="{{nodeCompletion}}" id="INTERPOLATION"/>% completed (Period: <x equiv-text="{{period.periodName}}" id="INTERPOLATION_1"/>)</source>
         <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/components/outsideURL/edit-outside-url-advanced/edit-outside-url-advanced.component.html</context>
-          <context context-type="linenumber">1</context>
+          <context context-type="sourcefile">app/classroom-monitor/nav-item-progress/nav-item-progress.component.html</context>
+          <context context-type="linenumber">11</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="bfab7f41cfc32a926c55987d6a9c3349ae417131">

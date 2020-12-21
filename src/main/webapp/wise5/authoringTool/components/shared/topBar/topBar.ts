@@ -138,7 +138,7 @@ const TopBar = {
               <md-icon>info</md-icon>
               <md-tooltip>{{ $ctrl.projectInfo }}</md-tooltip>
             </md-button>
-            <md-button ng-if="$ctrl.runId" aria-label="{{ ::'switchToGradingView' | translate }}" class="md-icon-button" ng-click="$ctrl.switchToGradingView()">
+            <md-button ng-if="$ctrl.runId" hide-xs aria-label="{{ ::'switchToGradingView' | translate }}" class="md-icon-button" ng-click="$ctrl.switchToGradingView()">
                 <md-icon> assignment_turned_in </md-icon>
                 <md-tooltip>{{ ::'switchToGradingView' | translate }}</md-tooltip>
             </md-button>
