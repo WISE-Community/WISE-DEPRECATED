@@ -1,5 +1,4 @@
 import '../lib/jquery/jquery-global';
-import '../lib/bootstrap/js/bootstrap.min'
 import * as angular from 'angular';
 import { downgradeComponent, downgradeInjectable } from '@angular/upgrade/static';
 import '../common-angular-js-module';
@@ -31,10 +30,16 @@ import NotebookGradingController from '../classroomMonitor/notebook/notebookGrad
 import ProjectAssetController from '../authoringTool/asset/projectAssetController';
 import ProjectController from '../authoringTool/project/projectController';
 import ProjectInfoController from '../authoringTool/info/projectInfoController';
-import RubricAuthoringController from '../authoringTool/rubric/rubricAuthoringController';
+import { RubricAuthoringComponent } from '../authoringTool/rubric/rubric-authoring.component';
 import StudentGradingController from '../classroomMonitor/studentGrading/studentGradingController';
 import StudentProgressController from '../classroomMonitor/studentProgress/studentProgressController';
 import WISELinkAuthoringController from '../authoringTool/wiseLink/wiseLinkAuthoringController';
+import { WiseAuthoringTinymceEditorComponent } from '../directives/wise-tinymce-editor/wise-authoring-tinymce-editor.component';
+import { EditComponentJsonComponent } from '../../site/src/app/authoring-tool/edit-component-json/edit-component-json.component';
+import { EditComponentMaxScoreComponent } from '../../site/src/app/authoring-tool/edit-component-max-score/edit-component-max-score.component';
+import { EditComponentRubricComponent } from '../../site/src/app/authoring-tool/edit-component-rubric/edit-component-rubric.component';
+import { EditComponentTagsComponent } from '../../site/src/app/authoring-tool/edit-component-tags/edit-component-tags.component';
+import { EditComponentWidthComponent } from '../../site/src/app/authoring-tool/edit-component-width/edit-component-width.component';
 
 import '../classroomMonitor/classroomMonitorComponents';
 import '../authoringTool/structure/structureAuthoringModule';
@@ -58,9 +63,6 @@ import '../components/openResponse/openResponseAuthoringComponentModule';
 import '../components/outsideURL/outsideURLAuthoringComponentModule';
 import '../components/summary/summaryAuthoringComponentModule';
 import '../components/table/tableAuthoringComponentModule';
-import '../lib/summernote/dist/summernote.min';
-import '../lib/summernoteExtensions/summernote-ext-addNote.js';
-import '../lib/summernoteExtensions/summernote-ext-print.js'
 
     angular.module('teacher', [
       'common',
@@ -98,6 +100,16 @@ import '../lib/summernoteExtensions/summernote-ext-print.js'
     .factory('StudentStatusService', downgradeInjectable(StudentStatusService))
     .service('TeacherDataService', downgradeInjectable(TeacherDataService))
     .service('TeacherWebSocketService', downgradeInjectable(TeacherWebSocketService))
+    .directive('editComponentJson', downgradeComponent(
+        { component: EditComponentJsonComponent }) as angular.IDirectiveFactory)
+    .directive('editComponentRubric', downgradeComponent(
+        { component: EditComponentRubricComponent }) as angular.IDirectiveFactory)
+    .directive('editComponentTags', downgradeComponent(
+        { component: EditComponentTagsComponent }) as angular.IDirectiveFactory)
+    .directive('editComponentWidth', downgradeComponent(
+        { component: EditComponentWidthComponent }) as angular.IDirectiveFactory)
+    .directive('editComponentMaxScore', downgradeComponent(
+        { component: EditComponentMaxScoreComponent }) as angular.IDirectiveFactory)
     .component('nodeAdvancedAuthoringComponent', NodeAdvancedAuthoringComponent)
     .component('nodeAdvancedBranchAuthoringComponent', NodeAdvancedBranchAuthoringComponent)
     .component('nodeAdvancedConstraintAuthoringComponent', NodeAdvancedConstraintAuthoringComponent)
@@ -108,6 +120,8 @@ import '../lib/summernoteExtensions/summernote-ext-print.js'
     .component('nodeAdvancedPathAuthoringComponent', NodeAdvancedPathAuthoringComponent)
     .directive('advancedProjectAuthoringComponent', downgradeComponent(
         { component: AdvancedProjectAuthoringComponent }) as angular.IDirectiveFactory)
+    .directive('wiseAuthoringTinymceEditor', downgradeComponent(
+        { component: WiseAuthoringTinymceEditorComponent }) as angular.IDirectiveFactory)
     .controller('AuthoringToolController', AuthoringToolController)
     .controller('AuthoringToolMainController', AuthoringToolMainController)
     .controller('AuthorNotebookController', AuthorNotebookController)
@@ -122,7 +136,8 @@ import '../lib/summernoteExtensions/summernote-ext-print.js'
     .controller('ProjectAssetController', ProjectAssetController)
     .controller('ProjectController', ProjectController)
     .controller('ProjectInfoController', ProjectInfoController)
-    .controller('RubricAuthoringController', RubricAuthoringController)
+    .directive('rubricAuthoringComponent', downgradeComponent(
+        { component: RubricAuthoringComponent }) as angular.IDirectiveFactory)
     .controller('StudentGradingController', StudentGradingController)
     .controller('StudentProgressController', StudentProgressController)
     .controller('WISELinkAuthoringController', WISELinkAuthoringController)
@@ -265,9 +280,7 @@ import '../lib/summernoteExtensions/summernote-ext-print.js'
         })
         .state('root.at.project.rubric', {
           url: '/rubric',
-          templateUrl: '/wise5/authoringTool/rubric/rubricAuthoring.html',
-          controller: 'RubricAuthoringController',
-          controllerAs: 'rubricAuthoringController'
+          component: 'rubricAuthoringComponent'
         })
         .state('root.at.project.notebook', {
           url: '/notebook',

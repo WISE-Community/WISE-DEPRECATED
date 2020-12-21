@@ -210,11 +210,11 @@ const TopBar = {
                     <md-icon>info</md-icon>
                     <md-tooltip>{{ $ctrl.runInfo }}</md-tooltip>
                   </md-button>
-                  <md-button ng-if="$ctrl.canAuthorProject" aria-label="{{ ::'switchToAuthoringView' | translate }}" class="md-icon-button" ng-click="$ctrl.switchToAuthoringView()">
+                  <md-button ng-if="$ctrl.canAuthorProject" hide-xs aria-label="{{ ::'switchToAuthoringView' | translate }}" class="md-icon-button" ng-click="$ctrl.switchToAuthoringView()">
                       <md-icon md-menu-origin> edit </md-icon>
                       <md-tooltip>{{ ::'switchToAuthoringView' | translate }}</md-tooltip>
                   </md-button>
-                  <md-button aria-label="{{ ::'previewProject' | translate }}" class="md-icon-button" ng-click="$ctrl.previewProject()">
+                  <md-button aria-label="{{ ::'previewProject' | translate }}" hide-xs class="md-icon-button" ng-click="$ctrl.previewProject()">
                       <md-icon md-menu-origin> visibility </md-icon>
                       <md-tooltip>{{ ::'previewProject' | translate }}</md-tooltip>
                   </md-button>

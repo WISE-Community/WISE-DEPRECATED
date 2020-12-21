@@ -1,6 +1,52 @@
+$icon-padding: 16px !default;
+
 .mat-card-avatar, .mat-list-avatar {
   &.disabled {
     -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
     filter: grayscale(100%);
   }
+}
+
+.avatar {
+  display: flex;
+  border-radius: 50%;
+
+  .mat-icon {
+    margin: 8px;
+  }
+
+  &.mat-18 {
+    width: 18px + $icon-padding;
+    height: 18px + $icon-padding;
+    min-width: 0;
+  }
+  &.mat-24 {
+    width: 24px + $icon-padding;
+    height: 24px + $icon-padding;
+    min-width: 0;
+  }
+  &.mat-30 {
+    width: 30px + $icon-padding;
+    height: 30px + $icon-padding;
+    min-width: 0;
+  }
+  &.mat-36 {
+    width: 36px + $icon-padding;
+    height: 36px + $icon-padding;
+    min-width: 0;
+  }
+  &.mat-40 {
+    width: 40px + $icon-padding;
+    height: 40px + $icon-padding;
+    min-width: 0;
+  }
+  &.mat-48 {
+    width: 48px + $icon-padding;
+    height: 48px + $icon-padding;
+    min-width: 0;
+  }
+}
+
+.avatar--square {
+  border-radius: $card-border-radius;
 }

@@ -74,7 +74,8 @@
         class='assetItem'
         ng-click='projectAssetController.assetClicked($event, assetItem)'
         ng-mouseover='projectAssetController.previewAsset($event, assetItem)'
-        ng-style="projectAssetController.selectedAssetItem === assetItem ? { 'backgroundColor': 'yellow'} : { 'backgroundColor': '' }">
+        ng-style="projectAssetController.selectedAssetItem === assetItem ? { 'backgroundColor': 'yellow'} : { 'backgroundColor': '' }"
+        ng-if='(projectAssetController.allowedFileTypes.includes("any") || projectAssetController.allowedFileTypes.includes(assetItem.fileType))'>
         <span>{{::assetItem.fileName}} ({{::assetItem.fileSize | appropriateSizeText}})</span>
         <button ng-click='projectAssetController.chooseAsset(assetItem)'
             ng-show='projectAssetController.isPopup'>Choose</button>

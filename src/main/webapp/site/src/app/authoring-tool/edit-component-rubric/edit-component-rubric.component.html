@@ -1,0 +1,12 @@
+<div>
+  <label class='node__label--vertical-alignment' i18n>Rubric</label>
+  <button mat-button class='topButton mat-raised-button mat-primary'
+      (click)='showRubricAuthoring = !showRubricAuthoring'
+      matTooltip="Edit Component Rubric" i18n-matTooltip matTooltipPosition="above">
+    <mat-icon>message</mat-icon>
+  </button>
+</div>
+<wise-authoring-tinymce-editor *ngIf='showRubricAuthoring'
+    [(model)]='rubric'
+    (modelChange)='rubricChanged()'>
+</wise-authoring-tinymce-editor>

@@ -28,6 +28,7 @@ class ProjectAssetController {
   previewAssetURL: string;
   assetIsImage: boolean;
   assetIsVideo: boolean;
+  allowedFileTypes: string[] = ['any'];
   getProjectAssetsSubscription: any;
   getTotalFileSizeSubscription: any;
   getTotalUnusedFileSizeSubscription: any;
@@ -87,6 +88,10 @@ class ProjectAssetController {
 
       if (stateParams.targetObject != null) {
         this.targetObject = stateParams.targetObject;
+      }
+
+      if (stateParams.allowedFileTypes != null) {
+        this.allowedFileTypes = this.$stateParams.allowedFileTypes;
       }
     }
 

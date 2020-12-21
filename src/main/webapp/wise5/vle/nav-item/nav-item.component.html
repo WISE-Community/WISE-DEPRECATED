@@ -1,0 +1,49 @@
+<ng-container *ngIf="nodeStatus.isVisible" [ngSwitch]="type">
+  <mat-card *ngSwitchCase="'card'" [ngClass]="{'expanded mat-elevation-z6': expanded}">
+    <mat-card-header (click)="itemClicked($event)" (keyup.enter)="itemClicked($event)" role="button"
+                     matRipple fxLayout="row" tabindex="0" i18n-aria-label
+                     aria-label="Expand or collapse lesson content">
+      <node-icon mat-card-avatar class="group-icon" [nodeId]="nodeId" size="36"
+                 [icon]="nodeStatus.icon"></node-icon>
+      <mat-card-title class="title" style="color: {{nodeStatus.icon.color}};">
+        <span>{{ nodeTitle }}</span>
+      </mat-card-title>
+      <span fxFlex></span>
+      <mat-icon class="collapse" *ngIf="isGroup && expanded"> remove </mat-icon>
+    </mat-card-header>
+    <mat-card-content class="app-bar" *ngIf="isGroup && expanded">
+      <mat-action-list class="list mat-elevation-z1">
+        <nav-item *ngFor="let childId of item.ids"
+                  [class]="{'expanded': expanded, 'prev': isPrevStep}" [showPosition]="showPosition"
+                  [nodeId]="childId" type="list">
+        </nav-item>
+      </mat-action-list>
+    </mat-card-content>
+    <mat-card-actions fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="8px">
+      <mat-progress-bar class="progress" mode="determinate" *ngIf="isGroup"
+                        value="{{nodeStatus.progress.completionPct}}" i18n-matTooltip
+                        matTooltip="{{nodeStatus.progress.completionPct}}% completed"
+                        matTooltipPosition="above"></mat-progress-bar>
+      <span *ngIf="isGroup" class="mat-caption secondary-text" i18n>
+        {{nodeStatus.progress.completedItems}}/{{nodeStatus.progress.totalItems}} items
+      </span>
+      <span fxFlex></span>
+      <div fxLayoutAlign="center center" fxLayoutGap="8px">
+        <!-- <node-score [nodeId]="nodeId"></node-score> -->
+        <node-status-icon [nodeId]="nodeId"></node-status-icon>
+        <mat-icon *ngIf="!nodeStatus.isVisitable" class="secondary-text" i18n-matTooltip
+                  matTooltip="Lesson is locked" matTooltipPosition="above"> lock </mat-icon>
+      </div>
+    </mat-card-actions>
+  </mat-card>
+  <button mat-list-item class="list-item" *ngSwitchCase="'list'" (click)="itemClicked($event)"
+          tabindex="0" i18n-title title="Go to {{nodeTitle}}" [ngClass]="{'group':isGroup}">
+    <node-icon matListAvatar [nodeId]="nodeId" [icon]="nodeStatus.icon"></node-icon>
+    <p matLine>{{ nodeTitle }}</p>
+    <div fxLayoutAlign="center center" fxLayoutGap="8px">
+      <node-status-icon [nodeId]="nodeId"></node-status-icon>
+      <mat-icon *ngIf="!nodeStatus.isVisitable" class="secondary-text" i18n-matTooltip
+                matTooltip="Item is locked" matTooltipPosition="above"> lock </mat-icon>
+    </div>
+  </button>
+</ng-container>

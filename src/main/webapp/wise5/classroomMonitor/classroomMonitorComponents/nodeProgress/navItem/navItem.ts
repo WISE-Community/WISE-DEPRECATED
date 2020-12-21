@@ -109,21 +109,19 @@ class NavItemController {
     }
     this.setWorkgroupsOnNodeData();
 
-    this.$onInit = () => {
-      this.hasAlert = false;
-      this.newAlert = false;
-      this.alertNotifications = [];
+    this.hasAlert = false;
+    this.newAlert = false;
+    this.alertNotifications = [];
 
-      this.getAlertNotifications();
+    this.getAlertNotifications();
 
-      this.hasRubrics = this.ProjectService.getNumberOfRubricsByNodeId(this.nodeId) > 0;
-      this.alertIconLabel = this.$translate('HAS_ALERTS_NEW');
-      this.alertIconClass = 'warn';
-      this.alertIconName = 'notifications';
-      this.rubricIconLabel = this.$translate('STEP_HAS_RUBRICS_TIPS');
-      this.rubricIconClass = 'info';
-      this.rubricIconName = 'info';
-    };
+    this.hasRubrics = this.ProjectService.getNumberOfRubricsByNodeId(this.nodeId) > 0;
+    this.alertIconLabel = this.$translate('HAS_ALERTS_NEW');
+    this.alertIconClass = 'warn';
+    this.alertIconName = 'notifications';
+    this.rubricIconLabel = this.$translate('STEP_HAS_RUBRICS_TIPS');
+    this.rubricIconClass = 'info';
+    this.rubricIconName = 'info';
 
     this.$scope.$watch(
       () => {

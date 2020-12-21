@@ -162,14 +162,10 @@
       <label>
         {{ ::'starterText' | translate }}
       </label>
-      <summernote id="summernoteNotebook_{{reportNote.reportId}}"
-                  ng-model="authorNotebookController.reportIdToAuthoringNote[reportNote.reportId].summernoteHTML"
-                  ng-change="authorNotebookController.reportStarterTextChanged(reportNote.reportId)"
-                  config="authorNotebookController.reportIdToAuthoringNote[reportNote.reportId].summernoteOptions"
-                  ng-model-options="{ debounce: 1000 }"
-                  rows="10"
-                  cols="100">
-      </summernote>
+      <wise-authoring-tinymce-editor
+          [(model)]="authorNotebookController.reportIdToAuthoringNote[reportNote.reportId].html"
+          (model-change)="authorNotebookController.reportStarterTextChanged(reportNote.reportId)">
+      </wise-authoring-tinymce-editor>
     </div>
   </div>
 </div>
@@ -250,14 +246,10 @@
       <label>
         {{ ::'starterText' | translate }}
       </label>
-      <summernote id="summernoteNotebook_{{reportNote.reportId}}"
-                  ng-model="authorNotebookController.reportIdToAuthoringNote[reportNote.reportId].summernoteHTML"
-                  ng-change="authorNotebookController.reportStarterTextChanged(reportNote.reportId)"
-                  config="authorNotebookController.reportIdToAuthoringNote[reportNote.reportId].summernoteOptions"
-                  ng-model-options="{ debounce: 1000 }"
-                  rows="10"
-                  cols="100">
-      </summernote>
+      <wise-authoring-tinymce-editor
+          [(model)]="authorNotebookController.reportIdToAuthoringNote[reportNote.reportId].html"
+          (model-change)="authorNotebookController.reportStarterTextChanged(reportNote.reportId)">
+      </wise-authoring-tinymce-editor>
     </div>
   </div>
 </div>

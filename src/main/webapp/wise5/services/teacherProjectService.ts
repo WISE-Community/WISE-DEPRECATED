@@ -13,6 +13,8 @@ import { SessionService } from './sessionService';
 @Injectable()
 export class TeacherProjectService extends ProjectService {
 
+  private componentChangedSource: Subject<boolean> = new Subject<boolean>();
+  public componentChanged$: Observable<boolean> = this.componentChangedSource.asObservable();
   private nodeChangedSource: Subject<boolean> = new Subject<boolean>();
   public nodeChanged$: Observable<boolean> = this.nodeChangedSource.asObservable();
   private refreshProjectSource: Subject<void> = new Subject<void>();
@@ -1268,6 +1270,10 @@ export class TeacherProjectService extends ProjectService {
     return null;
   }
 
+  componentChanged(): void {
+    this.componentChangedSource.next();
+  }
+
   nodeChanged(doParseProject: boolean = false): void {
     this.nodeChangedSource.next(doParseProject);
   }
@@ -1309,4 +1315,22 @@ export class TeacherProjectService extends ProjectService {
           constraint.removalCriteria[0].params.periodId === periodId);
     });
   }
+
+  openWISELinkChooser({ projectId, nodeId, componentId, target }): any {
+    const stateParams = {
+      projectId: projectId,
+      nodeId: nodeId,
+      componentId: componentId,
+      target: target
+    };
+    return this.upgrade.$injector.get('$mdDialog').show({
+      templateUrl: 'wise5/authoringTool/wiseLink/wiseLinkAuthoring.html',
+      controller: 'WISELinkAuthoringController',
+      controllerAs: 'wiseLinkAuthoringController',
+      $stateParams: stateParams,
+      clickOutsideToClose: true,
+      escapeToClose: true
+    });
+  }
+
 }

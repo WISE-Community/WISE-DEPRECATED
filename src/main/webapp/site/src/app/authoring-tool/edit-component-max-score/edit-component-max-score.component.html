@@ -1,0 +1,7 @@
+<mat-form-field>
+  <mat-label i18n>Max Score</mat-label>
+  <input matInput
+         type='number'
+         [(ngModel)]='authoringComponentContent.maxScore'
+         (ngModelChange)='maxScoreChanged.next($event)'/>
+</mat-form-field>
