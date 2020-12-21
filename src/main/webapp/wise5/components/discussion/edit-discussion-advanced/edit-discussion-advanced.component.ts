@@ -1,7 +1,7 @@
 import { EditAdvancedComponentAngularJSController } from "../../../../site/src/app/authoring-tool/edit-advanced-component/editAdvancedComponentAngularJSController";
 
 class EditDiscussionAdvancedController extends EditAdvancedComponentAngularJSController {
-  allowedConnectedComponentTypes: any[] = [{ type: 'Discussion' }];
+  allowedConnectedComponentTypes = ['Discussion'];
 }
 
 export const EditDiscussionAdvancedComponent = {

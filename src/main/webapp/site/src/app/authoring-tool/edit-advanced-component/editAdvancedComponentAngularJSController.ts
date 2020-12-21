@@ -6,15 +6,12 @@ export class EditAdvancedComponentAngularJSController {
   authoringComponentContent: any;
   componentId: string;
   nodeId: string;
-  allowedConnectedComponentTypes: any[];
+  allowedConnectedComponentTypes: string[] = [];
   idToOrder: any;
 
-  static $inject = ['NodeService','ProjectService'];
+  static $inject = ['NodeService', 'ProjectService'];
 
-  constructor(
-    protected NodeService: NodeService,
-    protected ProjectService: TeacherProjectService
-  ) {
+  constructor(protected NodeService: NodeService, protected ProjectService: TeacherProjectService) {
   }
 
   $onInit(): void {
@@ -74,13 +71,8 @@ export class EditAdvancedComponentAngularJSController {
     this.authoringViewComponentChanged();
   }
 
-  isConnectedComponentTypeAllowed(componentType: any): boolean {
-    for (const allowedConnectedComponentType of this.allowedConnectedComponentTypes) {
-      if (allowedConnectedComponentType.type === componentType) {
-        return true;
-      }
-    }
-    return false;
+  isConnectedComponentTypeAllowed(componentType: string): boolean {
+    return this.allowedConnectedComponentTypes.includes(componentType);
   }
 
   automaticallySetConnectedComponentTypeIfPossible(connectedComponent: any): void {

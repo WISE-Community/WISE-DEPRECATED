@@ -1,7 +1,7 @@
 import { EditAdvancedComponentAngularJSController } from "../../../../site/src/app/authoring-tool/edit-advanced-component/editAdvancedComponentAngularJSController";
 
 class EditAudioOscillatorAdvancedController extends EditAdvancedComponentAngularJSController {
-  allowedConnectedComponentTypes: any[] = [{ type: 'AudioOscillator' }];
+  allowedConnectedComponentTypes = ['AudioOscillator'];
 }
 
 export const EditAudioOscillatorAdvancedComponent = {

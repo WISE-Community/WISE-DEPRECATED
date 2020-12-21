@@ -1,16 +1,9 @@
 import { EditAdvancedComponentAngularJSController } from "../../../../site/src/app/authoring-tool/edit-advanced-component/editAdvancedComponentAngularJSController";
 
 class EditGraphAdvancedController extends EditAdvancedComponentAngularJSController {
-  allowedConnectedComponentTypes = [
-    { type: 'Animation' },
-    { type: 'ConceptMap' },
-    { type: 'Draw' },
-    { type: 'Embedded' },
-    { type: 'Graph' },
-    { type: 'Label' },
-    { type: 'Table' }
-  ];
-  
+  allowedConnectedComponentTypes = ['Animation', 'ConceptMap', 'Draw', 'Embedded', 'Graph', 'Label',
+      'Table'];
+
   addXAxisPlotLine(): void {
     if (this.authoringComponentContent.xAxis.plotLines == null) {
       this.authoringComponentContent.xAxis.plotLines = [];

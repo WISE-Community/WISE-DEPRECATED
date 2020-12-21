@@ -1,10 +1,7 @@
 import { EditAdvancedComponentAngularJSController } from "../../../../site/src/app/authoring-tool/edit-advanced-component/editAdvancedComponentAngularJSController";
 
 class EditAnimationAdvancedController extends EditAdvancedComponentAngularJSController {
-  allowedConnectedComponentTypes: any[] = [
-    { type: 'Animation' },
-    { type: 'Graph' }
-  ];
+  allowedConnectedComponentTypes = ['Animation', 'Graph'];
 }
 
 export const EditAnimationAdvancedComponent = {

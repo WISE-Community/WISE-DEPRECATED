@@ -1,20 +1,8 @@
 import { EditAdvancedComponentAngularJSController } from "../../../../site/src/app/authoring-tool/edit-advanced-component/editAdvancedComponentAngularJSController";
 
 class EditEmbeddedAdvancedController extends EditAdvancedComponentAngularJSController {
-  allowedConnectedComponentTypes: any[] = [
-    { type: 'Animation' },
-    { type: 'AudioOscillator' },
-    { type: 'ConceptMap' },
-    { type: 'Discussion' },
-    { type: 'Draw' },
-    { type: 'Embedded' },
-    { type: 'Graph' },
-    { type: 'Label' },
-    { type: 'Match' },
-    { type: 'MultipleChoice' },
-    { type: 'OpenResponse' },
-    { type: 'Table' }
-  ];
+  allowedConnectedComponentTypes = ['Animation', 'AudioOscillator', 'ConceptMap', 'Discussion',
+      'Draw', 'Embedded', 'Graph', 'Label', 'Match', 'MultipleChoice', 'OpenResponse', 'Table'];
 }
 
 export const EditEmbeddedAdvancedComponent = {

@@ -1,12 +1,7 @@
 import { EditAdvancedComponentAngularJSController } from "../../../../site/src/app/authoring-tool/edit-advanced-component/editAdvancedComponentAngularJSController";
 
 class EditTableAdvancedController extends EditAdvancedComponentAngularJSController {
-  allowedConnectedComponentTypes: any[] = [
-    { type: 'Embedded' },
-    { type: 'Graph' },
-    { type: 'Table' }
-  ];
-
+  allowedConnectedComponentTypes = ['Embedded', 'Graph', 'Table'];
   isDataExplorerScatterPlotEnabled: boolean;
   isDataExplorerLineGraphEnabled: boolean;
   isDataExplorerBarGraphEnabled: boolean;

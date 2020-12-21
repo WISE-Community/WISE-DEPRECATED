@@ -5,7 +5,6 @@ import { EditComponentController } from '../../authoringTool/components/editComp
 
 @Directive()
 class ConceptMapAuthoringController extends EditComponentController {
-  allowedConnectedComponentTypes: any[];
   availableNodes: any[];
   availableLinks: any[];
 

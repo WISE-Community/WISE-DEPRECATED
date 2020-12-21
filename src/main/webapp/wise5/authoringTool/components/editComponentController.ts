@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
 export abstract class EditComponentController {
 
   $translate: any;
-  allowedConnectedComponentTypes: any[];
+  allowedConnectedComponentTypes: string[];
   authoringComponentContent: any;
   componentChangedSubscription: Subscription;
   componentContent: any;
@@ -112,13 +112,8 @@ export abstract class EditComponentController {
     this.authoringViewComponentChanged();
   }
 
-  isConnectedComponentTypeAllowed(componentType) {
-    for (const allowedConnectedComponentType of this.allowedConnectedComponentTypes) {
-      if (allowedConnectedComponentType.type === componentType) {
-        return true;
-      }
-    }
-    return false;
+  isConnectedComponentTypeAllowed(componentType: string) {
+    return this.allowedConnectedComponentTypes.includes(componentType);
   }
 
   addConnectedComponent() {

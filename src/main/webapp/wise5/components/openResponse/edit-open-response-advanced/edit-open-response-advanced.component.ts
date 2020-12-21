@@ -5,9 +5,7 @@ import { TeacherProjectService } from "../../../services/teacherProjectService";
 
 class EditOpenResponseAdvancedController extends EditAdvancedComponentAngularJSController {
 
-  allowedConnectedComponentTypes = [
-    { type: 'OpenResponse' }
-  ];
+  allowedConnectedComponentTypes = ['OpenResponse'];
   cRaterItemIdIsValid: boolean = null;
   isVerifyingCRaterItemId: boolean = false;
   useCustomCompletionCriteria: boolean = false;
@@ -140,9 +138,9 @@ class EditOpenResponseAdvancedController extends EditAdvancedComponentAngularJSC
         isNotifyStudent: true,
         notificationMessageToStudent:
           '{{username}}, ' +
-          $localize`you got a score of` + 
+          $localize`you got a score of` +
           ' {{score}}. ' +
-          $localize`Please talk to your teacher` + 
+          $localize`Please talk to your teacher` +
           '.',
         notificationMessageToTeacher:
           '{{username}} ' + $localize`got a score of` + ' {{score}}.'

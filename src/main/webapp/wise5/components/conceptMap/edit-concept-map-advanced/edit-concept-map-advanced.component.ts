@@ -4,14 +4,7 @@ import { TeacherProjectService } from "../../../services/teacherProjectService";
 import { UtilService } from "../../../services/utilService";
 
 class EditConceptMapAdvancedController extends EditAdvancedComponentAngularJSController {
-  allowedConnectedCoypes = [
-    { type: 'ConceptMap' },
-    { type: 'Draw' },
-    { type: 'Embedded' },
-    { type: 'Graph' },
-    { type: 'Label' },
-    { type: 'Table' }
-  ];
+  allowedConnectedComponentTypes = ['ConceptMap', 'Draw', 'Embedded', 'Graph', 'Label', 'Table'];
   shouldOptions: any[] = [
     {
       value: false,

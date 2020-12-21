@@ -4,7 +4,7 @@ import { NotebookService } from "../../../services/notebookService";
 import { TeacherProjectService } from "../../../services/teacherProjectService";
 
 class EditMatchAdvancedController extends EditAdvancedComponentAngularJSController {
-  allowedConnectedComponentTypes: any[] = [{ type: 'Match' }];
+  allowedConnectedComponentTypes = ['Match'];
 
   static $inject = ['NodeService', 'NotebookService', 'ProjectService'];
 
@@ -15,7 +15,7 @@ class EditMatchAdvancedController extends EditAdvancedComponentAngularJSControll
   ) {
     super(NodeService, ProjectService);
   }
-  
+
   isNotebookEnabled(): boolean {
     return this.NotebookService.isNotebookEnabled();
   }
