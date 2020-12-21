@@ -5,7 +5,6 @@ import { EditComponentController } from "../../authoringTool/components/editComp
 
 @Directive()
 class GraphAuthoringController extends EditComponentController {
-  allowedConnectedComponentTypes: any[];
   availableGraphTypes: any[];
   availableRoundingOptions: any[];
   availableSymbols: any[];
@@ -148,16 +147,6 @@ class GraphAuthoringController extends EditComponentController {
         value: 'categories',
         text: 'Categories'
       }
-    ];
-
-    this.allowedConnectedComponentTypes = [
-      { type: 'Animation' },
-      { type: 'ConceptMap' },
-      { type: 'Draw' },
-      { type: 'Embedded' },
-      { type: 'Graph' },
-      { type: 'Label' },
-      { type: 'Table' }
     ];
 
     this.plotTypeToLimitType = {
@@ -481,55 +470,6 @@ class GraphAuthoringController extends EditComponentController {
     if (!connectedComponent.importWorkAsBackground) {
       delete connectedComponent.importWorkAsBackground;
     }
-    this.authoringViewComponentChanged();
-  }
-
-  addXAxisPlotLine() {
-    if (this.authoringComponentContent.xAxis.plotLines == null) {
-      this.authoringComponentContent.xAxis.plotLines = [];
-    }
-    const plotLine = {
-      color: 'gray',
-      width: 1,
-      value: null,
-      label: {
-        text: '',
-        verticalAlign: 'bottom',
-        textAlign: 'right',
-        y: -10,
-        style: {
-          fontWeight: 'bold'
-        }
-      }
-    };
-    this.authoringComponentContent.xAxis.plotLines.push(plotLine);
-  }
-
-  deleteXAxisPlotLine(index) {
-    this.authoringComponentContent.xAxis.plotLines.splice(index, 1);
-    this.authoringViewComponentChanged();
-  }
-
-  addYAxisPlotLine() {
-    if (this.authoringComponentContent.yAxis.plotLines == null) {
-      this.authoringComponentContent.yAxis.plotLines = [];
-    }
-    const plotLine = {
-      color: 'gray',
-      width: 1,
-      value: null,
-      label: {
-        text: '',
-        style: {
-          fontWeight: 'bold'
-        }
-      }
-    };
-    this.authoringComponentContent.yAxis.plotLines.push(plotLine);
-  }
-
-  deleteYAxisPlotLine(index) {
-    this.authoringComponentContent.yAxis.plotLines.splice(index, 1);
     this.authoringViewComponentChanged();
   }
 

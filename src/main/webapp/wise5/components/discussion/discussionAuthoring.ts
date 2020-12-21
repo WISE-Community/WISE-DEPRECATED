@@ -6,8 +6,6 @@ import { EditComponentController } from '../../authoringTool/components/editComp
 @Directive()
 class DiscussionAuthoringController extends EditComponentController {
 
-  allowedConnectedComponentTypes: any[] = [{ type: 'Discussion' }];
-
   static $inject = [
     '$filter',
     'ConfigService',

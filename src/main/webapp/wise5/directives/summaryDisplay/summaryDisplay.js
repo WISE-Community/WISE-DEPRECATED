@@ -96,7 +96,9 @@ class SummaryDisplayController {
       this.nodeId,
       this.componentId
     );
-    this.otherComponentType = this.otherComponent.type;
+    if (this.otherComponent != null) {
+      this.otherComponentType = this.otherComponent.type;
+    }
   }
 
   initializeDataService() {

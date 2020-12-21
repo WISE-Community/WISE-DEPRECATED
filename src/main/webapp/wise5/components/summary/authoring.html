@@ -3,52 +3,6 @@
     {{summaryController.nodeContent.style}}
   </style>
   <div>
-    <div class='advancedAuthoringDiv'
-         ng-if='summaryController.showAdvancedAuthoring'>
-      <div>
-        <h6>{{ ::'advancedAuthoringOptions' | translate }}</h6>
-      </div>
-      <div>
-        <md-checkbox class='md-primary'
-                     ng-model='summaryController.authoringComponentContent.showSaveButton'
-                     ng-change='summaryController.authoringViewComponentChanged()'>
-          {{ ::'SHOW_SAVE_BUTTON' | translate }}
-        </md-checkbox>
-      </div>
-      <div>
-        <md-checkbox class='md-primary'
-                     ng-model='summaryController.authoringComponentContent.showSubmitButton'
-                     ng-change='summaryController.authoringViewComponentChanged()'>
-          {{ ::'SHOW_SUBMIT_BUTTON' | translate }}
-        </md-checkbox>
-      </div>
-      <div>
-        <md-checkbox class='md-primary'
-                     ng-if='summaryController.isNotebookEnabled()'
-                     ng-model='summaryController.authoringComponentContent.showAddToNotebookButton'
-                     ng-change='summaryController.authoringViewComponentChanged()'>
-          {{ ::'SHOW_ADD_TO_NOTEBOOK_BUTTON' | translate }}
-        </md-checkbox>
-      </div>
-      <div>
-        <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'
-                            ng-if='summaryController.authoringComponentContent.showSubmitButton'>
-          <label>{{ ::'MAX_SUBMIT' | translate }}</label>
-          <input type='number'
-                 ng-model='summaryController.authoringComponentContent.maxSubmitCount'
-                 ng-model-options='{ debounce: 1000 }'
-                 ng-change='summaryController.authoringViewComponentChanged()'/>
-        </md-input-container>
-      </div>
-      <div layout="column" layout-align="start start">
-        <edit-component-width [authoring-component-content]="summaryController.authoringComponentContent"></edit-component-width>
-        <edit-component-rubric [authoring-component-content]="summaryController.authoringComponentContent"></edit-component-rubric>
-        <edit-component-tags [authoring-component-content]="summaryController.authoringComponentContent"></edit-component-tags>
-      </div>
-      <edit-component-json [node-id]="summaryController.nodeId" [component-id]="summaryController.componentId"></edit-component-json>
-    </div>
-  </div>
-  <div>
     <md-input-container style='width:100%'>
       <label>{{ ::'PROMPT' | translate }}</label>
       <textarea rows='1'

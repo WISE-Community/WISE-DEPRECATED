@@ -12,7 +12,7 @@ export class EditHTMLAdvancedComponent extends EditAdvancedComponentComponent {
     super(ProjectService);
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     super.ngOnInit();
   }
 }

@@ -6,7 +6,6 @@ import { EditComponentController } from '../../authoringTool/components/editComp
 @Directive()
 class AudioOscillatorAuthoringController extends EditComponentController {
 
-  allowedConnectedComponentTypes: any[] = [{ type: 'AudioOscillator' }];
   authoringSineChecked: boolean;
   authoringSquareChecked: boolean;
   authoringTriangleChecked: boolean;
