@@ -103,11 +103,19 @@ sudo -u ubuntu -g ubuntu cp $BUILD_FILES/.vimrc $HOME/.vimrc
 
 echo "Appending text to .bashrc"
 cat $BUILD_FILES/append-to-bashrc.txt >> ~/.bashrc
+cat $BUILD_FILES/$env/append-to-bashrc.txt >> ~/.bashrc
 source ~/.bashrc
-
-echo "Installing tree"
-apt-get install tree -y
 
 echo "Copying message of the day file to update-motd.d folder to display notes on login"
 cp $BUILD_FILES/99-notes /etc/update-motd.d/99-notes
+cat $BUILD_FILES/$env/append-to-99-notes.txt >> /etc/update-motd.d/99-notes
 chmod 755 /etc/update-motd.d/99-notes
+
+echo "Install mysql client"
+apt-get install mysql-client-core-8.0 -y
+
+echo "Install redis client"
+apt-get install redis-tools -y
+
+echo "Installing tree"
+apt-get install tree -y
