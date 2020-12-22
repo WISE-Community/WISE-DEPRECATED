@@ -18,7 +18,7 @@ import DataExportController from '../classroomMonitor/dataExport/dataExportContr
 import ExportController from '../classroomMonitor/dataExport/exportController';
 import ExportVisitsController from '../classroomMonitor/dataExport/exportVisitsController';
 import MilestonesAuthoringController from '../authoringTool/milestones/milestonesAuthoringController';
-import MilestonesController from '../classroomMonitor/milestones/milestonesController';
+import { MilestonesComponent } from '../../site/src/app/classroom-monitor/milestones/milestones.component';
 import { NodeAdvancedAuthoringComponent } from '../authoringTool/node/advanced/node-advanced-authoring.component';
 import { NodeAdvancedBranchAuthoringComponent } from '../authoringTool/node/advanced/branch/node-advanced-branch-authoring.component';
 import { NodeAdvancedConstraintAuthoringComponent } from '../authoringTool/node/advanced/constraint/node-advanced-constraint-authoring.component';
@@ -130,7 +130,8 @@ import '../components/table/tableAuthoringComponentModule';
     .controller('ExportController', ExportController)
     .controller('ExportVisitsController', ExportVisitsController)
     .controller('MilestonesAuthoringController', MilestonesAuthoringController)
-    .controller('MilestonesController', MilestonesController)
+    .directive('milestones',
+        downgradeComponent({ component: MilestonesComponent }) as angular.IDirectiveFactory)
     .controller('NodeAuthoringController', NodeAuthoringController)
     .controller('NotebookGradingController', NotebookGradingController)
     .controller('ProjectAssetController', ProjectAssetController)
@@ -456,9 +457,7 @@ import '../components/table/tableAuthoringComponentModule';
         })
         .state('root.cm.milestones', {
           url: '/milestones',
-          templateUrl: '/wise5/classroomMonitor/milestones/milestones.html',
-          controller: 'MilestonesController',
-          controllerAs: 'milestonesController'
+          component: 'milestones'
         })
         .state('root.cm.notebooks', {
           url: '/notebook',
