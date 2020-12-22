@@ -6,6 +6,7 @@ import { TeacherDataService } from '../../../../../wise5/services/teacherDataSer
 
 @Component({
   selector: 'milestones',
+  styleUrls: ['milestones.component.scss'],
   templateUrl: 'milestones.component.html'
 })
 export class MilestonesComponent {
