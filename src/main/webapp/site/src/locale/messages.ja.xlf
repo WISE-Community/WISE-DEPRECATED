@@ -6762,6 +6762,14 @@
         </context-group>
         <target state="needs-translation">Component Width</target>
       </trans-unit>
+      <trans-unit datatype="html" id="e9f75e02d7db72cd425f81c273a721c62a617dc4">
+        <source>~ Report Available ~</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/classroom-monitor/milestones/milestones.component.html</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+        <target state="needs-translation">~ Report Available ~</target>
+      </trans-unit>
       <trans-unit datatype="html" id="6817513ddcee06a7cb2a7b2708e5616b861db81c">
         <source><x equiv-text="{{nodeCompletion}}" id="INTERPOLATION"/>% completed (All periods)</source>
         <context-group purpose="location">
