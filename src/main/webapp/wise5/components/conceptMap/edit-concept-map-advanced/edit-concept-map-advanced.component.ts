@@ -123,6 +123,52 @@ class EditConceptMapAdvancedController extends EditAdvancedComponentAngularJSCon
     }
   }
 
+  /**
+   * Automatically set the component id for the connected component if there
+   * is only one viable option.
+   * @param connectedComponent the connected component object we are authoring
+   */
+  automaticallySetConnectedComponentComponentIdIfPossible(connectedComponent: any): void {
+    super.automaticallySetConnectedComponentComponentIdIfPossible(connectedComponent);
+    if (connectedComponent.componentId != null) {
+      this.setImportWorkAsBackgroundIfApplicable(connectedComponent);
+    }
+  }
+
+  /**
+   * The connected component component id has changed
+   * @param connectedComponent the connected component that has changed
+   */
+  connectedComponentComponentIdChanged(connectedComponent: any): void {
+    this.automaticallySetConnectedComponentTypeIfPossible(connectedComponent);
+    this.setImportWorkAsBackgroundIfApplicable(connectedComponent);
+    this.authoringViewComponentChanged();
+  }
+
+  /**
+   * If the component type is a certain type, we will set the importWorkAsBackground
+   * field to true.
+   * @param connectedComponent The connected component object.
+   */
+  setImportWorkAsBackgroundIfApplicable(connectedComponent: any): void {
+    const componentType = this.getConnectedComponentType(connectedComponent);
+    if (['Draw', 'Embedded', 'Graph', 'Label', 'Table'].includes(componentType)) {
+      connectedComponent.importWorkAsBackground = true;
+    } else {
+      delete connectedComponent.importWorkAsBackground;
+    }
+  }
+
+  /**
+   * The "Import Work As Background" checkbox was clicked.
+   * @param connectedComponent The connected component associated with the checkbox.
+   */
+  importWorkAsBackgroundClicked(connectedComponent: any): void {
+    if (!connectedComponent.importWorkAsBackground) {
+      delete connectedComponent.importWorkAsBackground;
+    }
+    this.authoringViewComponentChanged();
+  }
 }
 
 export const EditConceptMapAdvancedComponent = {

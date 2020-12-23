@@ -3,6 +3,51 @@ import { EditAdvancedComponentAngularJSController } from "../../../../site/src/a
 class EditLabelAdvancedController extends EditAdvancedComponentAngularJSController {
   allowedConnectedComponentTypes = ['ConceptMap', 'Draw', 'Embedded', 'Graph', 'Label',
       'OpenResponse', 'Table'];
+
+  /**
+   * Automatically set the component id for the connected component if there
+   * is only one viable option.
+   * @param connectedComponent the connected component object we are authoring
+   */
+  automaticallySetConnectedComponentComponentIdIfPossible(connectedComponent: any): void {
+    super.automaticallySetConnectedComponentComponentIdIfPossible(connectedComponent);
+    if (connectedComponent.componentId != null) {
+      this.setImportWorkAsBackgroundIfApplicable(connectedComponent);
+    }
+  }
+
+  connectedComponentComponentIdChanged(connectedComponent: any): void {
+    this.automaticallySetConnectedComponentTypeIfPossible(connectedComponent);
+    this.setImportWorkAsBackgroundIfApplicable(connectedComponent);
+    this.authoringViewComponentChanged();
+  }
+
+  /**
+   * For certain component types, set the importWorkAsBackground field to true by default
+   * @param connectedComponent The connected component object.
+   */
+  setImportWorkAsBackgroundIfApplicable(connectedComponent: any): void {
+    const componentType = this.getConnectedComponentType(connectedComponent);
+    if (['ConceptMap', 'Draw', 'Embedded', 'Graph', 'Table'].includes(componentType)) {
+      connectedComponent.importWorkAsBackground = true;
+    } else {
+      delete connectedComponent.importWorkAsBackground;
+    }
+  }
+
+  importWorkAsBackgroundClicked(connectedComponent: any): void {
+    if (connectedComponent.importWorkAsBackground) {
+      connectedComponent.charactersPerLine = 100;
+      connectedComponent.spaceInbetweenLines = 40;
+      connectedComponent.fontSize = 16;
+    } else {
+      delete connectedComponent.charactersPerLine;
+      delete connectedComponent.spaceInbetweenLines;
+      delete connectedComponent.fontSize;
+      delete connectedComponent.importWorkAsBackground;
+    }
+    this.authoringViewComponentChanged();
+  }
 }
 
 export const EditLabelAdvancedComponent = {

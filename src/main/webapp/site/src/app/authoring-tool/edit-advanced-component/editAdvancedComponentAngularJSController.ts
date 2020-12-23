@@ -128,4 +128,14 @@ export class EditAdvancedComponentAngularJSController {
       showSubmitButton: show
     });
   }
+  
+  getConnectedComponentType(
+      {nodeId, componentId}: { nodeId: string, componentId: string }) {
+    const component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
+    if (component != null) {
+      return component.type;
+    }
+    return null;
+  }
+
 }
