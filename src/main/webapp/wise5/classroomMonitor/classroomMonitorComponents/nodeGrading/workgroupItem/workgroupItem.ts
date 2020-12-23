@@ -127,7 +127,7 @@ const WorkgroupItem = {
                             <workgroup-info [has-alert]="$ctrl.hasAlert" [has-new-alert]="$ctrl.hasNewAlert" [has-new-work]="$ctrl.hasNewWork" [usernames]="$ctrl.workgroupData.displayNames" [workgroup-id]="$ctrl.workgroupId"></workgroup-info>
                         </div>
                         <div flex="{{$ctrl.showScore ? 30 : 20}}" layout="row" layout-align="center center">
-                            <workgroup-node-status status-text="{{$ctrl.statusText}}" status-class="{{$ctrl.statusClass}}"></workgroup-node-status>
+                            <workgroup-node-status [status-text]="$ctrl.statusText" [status-class]="$ctrl.statusClass"></workgroup-node-status>
                         </div>
                         <div ng-if="$ctrl.showScore" flex="20" layout="row" layout-align="center center">
                             <workgroup-node-score [score]="$ctrl.score" [max-score]="$ctrl.maxScore"></workgroup-node-score>

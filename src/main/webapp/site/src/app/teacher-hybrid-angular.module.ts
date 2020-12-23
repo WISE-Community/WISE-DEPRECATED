@@ -4,6 +4,7 @@ import '../../../wise5/teacher/teacher-angular-js-module';
 import { UpgradeModule } from '@angular/upgrade/static';
 import { setUpLocationSync } from '@angular/router/upgrade';
 import { ProjectService } from '../../../wise5/services/projectService';
+import { MilestonesComponent } from './classroom-monitor/milestones/milestones.component';
 import { MilestoneReportDataComponent } from './teacher/milestone/milestone-report-data/milestone-report-data.component';
 import { TeacherProjectService } from '../../../wise5/services/teacherProjectService';
 import { ProjectAssetService } from './services/projectAssetService';
@@ -14,6 +15,7 @@ import { TeacherWebSocketService } from '../../../wise5/services/teacherWebSocke
 import { DataService } from './services/data.service';
 import { MilestoneService } from '../../../wise5/services/milestoneService';
 import { WorkgroupNodeScoreComponent } from '../../../wise5/classroomMonitor/classroomMonitorComponents/shared/workgroupNodeScore/workgroup-node-score.component';
+import { WorkgroupNodeStatusComponent } from './classroom-monitor/workgroup-node-status/workgroup-node-status.component';
 import { NavItemScoreComponent } from '../../../wise5/classroomMonitor/classroomMonitorComponents/nodeProgress/navItemScore/nav-item-score.component';
 import { ManageStudentsComponent } from '../../../wise5/classroomMonitor/manageStudents/manage-students-component';
 import { AdvancedProjectAuthoringComponent } from '../../../wise5/authoringTool/advanced/advanced-project-authoring.component';
@@ -22,7 +24,9 @@ import { ChooseNewComponentLocation } from './authoring-tool/add-component/choos
 import { ChooseImportStepComponent } from './authoring-tool/import-step/choose-import-step/choose-import-step.component';
 import { ChooseImportStepLocationComponent } from './authoring-tool/import-step/choose-import-step-location/choose-import-step-location.component';
 import { ComponentNewWorkBadgeComponent } from './classroom-monitor/component-new-work-badge/component-new-work-badge.component';
+import { ComponentSelectComponent } from './classroom-monitor/component-select/component-select.component';
 import { StatusIconComponent } from './classroom-monitor/status-icon/status-icon.component';
+import { StepInfoComponent } from './classroom-monitor/step-info/step-info.component';
 import { AngularJSModule } from './common-hybrid-angular.module';
 import { NodeAdvancedJsonAuthoringComponent } from '../../../wise5/authoringTool/node/advanced/json/node-advanced-json-authoring.component';
 import { WorkgroupInfoComponent } from '../../../wise5/classroomMonitor/classroomMonitorComponents/nodeGrading/workgroupInfo/workgroup-info.component';
@@ -34,6 +38,7 @@ import { EditComponentRubricComponent } from './authoring-tool/edit-component-ru
 import { EditComponentTagsComponent } from './authoring-tool/edit-component-tags/edit-component-tags.component';
 import { EditComponentWidthComponent } from './authoring-tool/edit-component-width/edit-component-width.component';
 import { RubricAuthoringComponent } from '../../../wise5/authoringTool/rubric/rubric-authoring.component';
+import { NavItemProgressComponent } from './classroom-monitor/nav-item-progress/nav-item-progress.component';
 
 @NgModule({
   declarations: [
@@ -43,21 +48,26 @@ import { RubricAuthoringComponent } from '../../../wise5/authoringTool/rubric/ru
     ChooseNewComponent,
     ChooseNewComponentLocation,
     ComponentNewWorkBadgeComponent,
+    ComponentSelectComponent,
     EditComponentRubricComponent,
     EditComponentJsonComponent,
     EditComponentMaxScoreComponent,
     EditComponentTagsComponent,
     EditComponentWidthComponent,
     ManageStudentsComponent,
+    MilestonesComponent,
     MilestoneReportDataComponent,
+    NavItemProgressComponent,
     NodeAdvancedGeneralAuthoringComponent,
     NodeAdvancedJsonAuthoringComponent,
     RubricAuthoringComponent,
     StatusIconComponent,
+    StepInfoComponent,
     WorkgroupInfoComponent,
     WorkgroupNodeScoreComponent,
     NavItemScoreComponent,
-    WiseAuthoringTinymceEditorComponent
+    WiseAuthoringTinymceEditorComponent,
+    WorkgroupNodeStatusComponent
   ],
   imports: [
     AngularJSModule

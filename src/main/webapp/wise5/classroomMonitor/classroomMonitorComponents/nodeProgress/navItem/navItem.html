@@ -29,9 +29,8 @@
       </md-list>
     </md-card-content>
     <md-card-footer class="nav-item__more md-body-1" layout="row" layout-align="start center" flex>
-      <nav-item-progress node-completion="$ctrl.getNodeCompletion()"
-                         period-id="$ctrl.currentPeriod.periodId"
-                         period-name="$ctrl.currentPeriod.periodName"></nav-item-progress>
+      <nav-item-progress [node-completion]="$ctrl.getNodeCompletion()"
+                         [period]="$ctrl.currentPeriod"></nav-item-progress>
       <span flex></span>
       <a href="#" ng-click="$ctrl.toggleLockNode()" aria-label="{{ $ctrl.getNodeLockedText() }}">
         <md-tooltip md-direction="top">{{ $ctrl.getNodeLockedText() }}</md-tooltip>
@@ -62,9 +61,8 @@
       <span flex hide-xs></span>
       <nav-item-score class="nav-item--list__info-item" [max-score]="$ctrl.maxScore"
                       [average-score]="$ctrl.getNodeAverageScore()"></nav-item-score>
-      <nav-item-progress node-completion="$ctrl.getNodeCompletion()"
-                         period-id="$ctrl.currentPeriod.periodId"
-                         period-name="$ctrl.currentPeriod.periodName"></nav-item-progress>
+      <nav-item-progress [node-completion]="$ctrl.getNodeCompletion()"
+                         [period]="$ctrl.currentPeriod"></nav-item-progress>
     </p>
   </md-list-item>
 </ng-switch>

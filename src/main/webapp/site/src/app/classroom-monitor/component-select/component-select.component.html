@@ -1,0 +1,21 @@
+<mat-select *ngIf="components.length > 1"
+    class="md-no-underline md-button mat-button-raised md-raised"
+    [(ngModel)]="selectedComponents"
+    (selectionChange)="selectedComponentsChange()"
+    placeholder="{{getSelectedText()}}"
+    multiple>
+  <mat-select-trigger>{{getSelectedText()}}</mat-select-trigger>
+  <mat-optgroup label="Assessment items to show" i18n-label>
+    <mat-option value="{{component.id}}" *ngFor="let component of components; let i = index">
+      {{ i+1 }}: {{ getComponentTypeLabel(component.type) }}
+    </mat-option>
+  </mat-optgroup>
+</mat-select>
+<button mat-button class="md-body-1 mat-button-raised"
+    *ngIf="components.length == 1"
+    aria-label="Assessment items to show"
+    i18n-aria-label
+    disabled
+    i18n>
+  1 assessment item
+</button>
