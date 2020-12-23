@@ -26,6 +26,7 @@ import { ChooseImportStepLocationComponent } from './authoring-tool/import-step/
 import { ComponentNewWorkBadgeComponent } from './classroom-monitor/component-new-work-badge/component-new-work-badge.component';
 import { ComponentSelectComponent } from './classroom-monitor/component-select/component-select.component';
 import { StatusIconComponent } from './classroom-monitor/status-icon/status-icon.component';
+import { StepInfoComponent } from './classroom-monitor/step-info/step-info.component';
 import { AngularJSModule } from './common-hybrid-angular.module';
 import { NodeAdvancedJsonAuthoringComponent } from '../../../wise5/authoringTool/node/advanced/json/node-advanced-json-authoring.component';
 import { WorkgroupInfoComponent } from '../../../wise5/classroomMonitor/classroomMonitorComponents/nodeGrading/workgroupInfo/workgroup-info.component';
@@ -61,6 +62,7 @@ import { NavItemProgressComponent } from './classroom-monitor/nav-item-progress/
     NodeAdvancedJsonAuthoringComponent,
     RubricAuthoringComponent,
     StatusIconComponent,
+    StepInfoComponent,
     WorkgroupInfoComponent,
     WorkgroupNodeScoreComponent,
     NavItemScoreComponent,

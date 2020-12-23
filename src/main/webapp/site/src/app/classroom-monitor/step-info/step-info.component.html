@@ -1,0 +1,18 @@
+<div fxLayout="row" fxLayoutAlign="start center">
+  <node-icon [nodeId]="nodeId" size="18" fxHide.xs></node-icon>
+  <span fxHide.xs>&nbsp;&nbsp;</span>
+  <div class="heavy">
+    {{ stepTitle }}
+    <status-icon *ngIf="hasAlert"
+        [iconClass]="alertIconClass"
+        [iconName]="alertIconName"
+        [iconLabel]="alertIconLabel"
+        [iconTooltip]="alertIconLabel"></status-icon>
+    <status-icon *ngIf="hasRubrics"
+        iconClass="info"
+        iconName="info"
+        [iconLabel]="rubricIconLabel"
+        [iconTooltip]="rubricIconLabel"></status-icon>
+    <span *ngIf="hasNewWork" class="badge badge--info animate-fade" i18n>New</span>
+  </div>
+</div>
