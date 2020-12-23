@@ -5,7 +5,6 @@ import { EditComponentController } from '../../authoringTool/components/editComp
 
 @Directive()
 class MatchAuthoringController extends EditComponentController {
-  allowedConnectedComponentTypes: any[] = [{ type: 'Match' }];
   defaultSourceBucketId: string = '0';
 
   static $inject = [
@@ -383,9 +382,6 @@ class MatchAuthoringController extends EditComponentController {
     return null;
   }
 
-  isNotebookEnabled() {
-    return this.NotebookService.isNotebookEnabled();
-  }
 }
 
 const MatchAuthoring = {

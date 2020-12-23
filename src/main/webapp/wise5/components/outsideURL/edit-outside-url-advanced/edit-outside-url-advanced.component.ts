@@ -12,7 +12,7 @@ export class EditOutsideUrlAdvancedComponent extends EditAdvancedComponentCompon
     super(ProjectService);
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     super.ngOnInit();
   }
 }

@@ -602,10 +602,10 @@ class NodeAuthoringController {
   showComponentAdvancedAuthoring(component: any) {
     this.$mdDialog.show({
       templateUrl: 'wise5/authoringTool/components/edit-component-advanced.html',
-      controller: ($scope, $mdDialog) => {
-        $scope.close = () => {
+      controller: function($scope: any, $mdDialog: any) {
+        $scope.close = function() {
           $mdDialog.hide();
-        };
+        }
       },
       controllerAs: '$ctrl',
       bindToController: true,
@@ -613,8 +613,8 @@ class NodeAuthoringController {
         component: component,
         nodeId: this.nodeId
       },
-      clickOutsideToClose: true,
-      fullscreen: true
+      fullscreen: true,
+      clickOutsideToClose: true
     });
   }
 }

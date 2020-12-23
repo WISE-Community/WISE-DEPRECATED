@@ -15,11 +15,16 @@
 }
 
 .mat-card-header {
+  cursor: pointer;
+
   &:focus, &:hover {
     outline: none;
 
     .title {
-      border-bottom: 1px dashed #aaaaaa;
+      text-decoration-line: underline;
+      text-decoration-style: dashed;
+      text-decoration-color: inherit;
+      text-decoration-thickness: from-font;
     }
   }
 }

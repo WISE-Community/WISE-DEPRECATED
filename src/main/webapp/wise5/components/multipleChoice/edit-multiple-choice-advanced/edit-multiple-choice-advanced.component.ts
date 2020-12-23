@@ -1,6 +1,7 @@
 import { EditAdvancedComponentAngularJSController } from "../../../../site/src/app/authoring-tool/edit-advanced-component/editAdvancedComponentAngularJSController";
 
 class EditMultipleChoiceAdvancedController extends EditAdvancedComponentAngularJSController {
+  allowedConnectedComponentTypes = ['MultipleChoice'];
 }
 
 export const EditMultipleChoiceAdvancedComponent = {

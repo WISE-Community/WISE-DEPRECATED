@@ -1,7 +1,8 @@
 <ng-container *ngIf="nodeStatus.isVisible" [ngSwitch]="type">
   <mat-card *ngSwitchCase="'card'" [ngClass]="{'expanded mat-elevation-z6': expanded}">
-    <mat-card-header (click)="itemClicked($event)" role="button" matRipple fxLayout="row"
-                     tabindex="0" i18n-aria-label aria-label="Expand or collapse lesson content">
+    <mat-card-header (click)="itemClicked($event)" (keyup.enter)="itemClicked($event)" role="button"
+                     matRipple fxLayout="row" tabindex="0" i18n-aria-label
+                     aria-label="Expand or collapse lesson content">
       <node-icon mat-card-avatar class="group-icon" [nodeId]="nodeId" size="36"
                  [icon]="nodeStatus.icon"></node-icon>
       <mat-card-title class="title" style="color: {{nodeStatus.icon.color}};">
@@ -36,8 +37,7 @@
     </mat-card-actions>
   </mat-card>
   <button mat-list-item class="list-item" *ngSwitchCase="'list'" (click)="itemClicked($event)"
-          tabindex="0" i18n-title title="Go to {{nodeTitle}}"
-          [ngClass]="{'group':isGroup}">
+          tabindex="0" i18n-title title="Go to {{nodeTitle}}" [ngClass]="{'group':isGroup}">
     <node-icon matListAvatar [nodeId]="nodeId" [icon]="nodeStatus.icon"></node-icon>
     <p matLine>{{ nodeTitle }}</p>
     <div fxLayoutAlign="center center" fxLayoutGap="8px">

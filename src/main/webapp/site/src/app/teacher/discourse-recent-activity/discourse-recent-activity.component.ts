@@ -11,7 +11,6 @@ export class DiscourseRecentActivityComponent {
 
   discourseURL: string;
   topics: any;
-  users: any;
 
   constructor(private configService: ConfigService, private http: HttpClient) {
   }
@@ -20,8 +19,9 @@ export class DiscourseRecentActivityComponent {
     this.discourseURL = this.configService.getDiscourseURL();
     this.http.get(`${this.discourseURL}/latest.json?order=activity`)
         .subscribe(({topic_list, users}: any)=> {
-      this.topics = topic_list.topics.slice(0,3);
-      this.users = users;
+      this.topics = topic_list.topics
+          .filter(topic => { return !topic.pinned_globally; })
+          .slice(0, 3);
     });
   }
 }
