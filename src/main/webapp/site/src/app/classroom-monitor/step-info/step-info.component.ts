@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { UpgradeModule } from '@angular/upgrade/static';
 import { TeacherProjectService } from '../../../../../wise5/services/teacherProjectService';
 
 @Component({
@@ -23,8 +22,7 @@ export class StepInfoComponent {
   rubricIconLabel: string;
   stepTitle: string;
 
-  constructor(upgrade: UpgradeModule, private ProjectService: TeacherProjectService) {
-    this.$translate = upgrade.$injector.get('$filter')('translate');
+  constructor(private ProjectService: TeacherProjectService) {
   }
 
   ngOnInit() {
@@ -32,10 +30,10 @@ export class StepInfoComponent {
     if (this.hasAlert) {
       this.alertIconClass = this.hasNewAlert ? 'warn' : 'text-disabled';
       this.alertIconName = 'notifications';
-      this.alertIconLabel = this.hasNewAlert ? this.$translate('HAS_ALERTS_NEW') :
-          this.$translate('HAS_ALERTS_DISMISSED');
+      this.alertIconLabel = this.hasNewAlert ? $localize`Has new alert(s)`:
+          $localize`Has dismissed alert(s)`;
     }
     this.hasRubrics = this.ProjectService.getNumberOfRubricsByNodeId(this.nodeId) > 0;
-    this.rubricIconLabel = this.$translate('STEP_HAS_RUBRICS_TIPS');
+    this.rubricIconLabel = $localize`Step has rubrics/teaching tips`;
   }
 }
