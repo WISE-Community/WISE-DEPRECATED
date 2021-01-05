@@ -3,9 +3,6 @@
     <div class='advancedAuthoringDiv'
          ng-if='matchController.showAdvancedAuthoring'>
       <div>
-        <h6>{{ ::'advancedAuthoringOptions' | translate }}</h6>
-      </div>
-      <div>
         <md-checkbox class='md-primary'
                      ng-model='matchController.authoringComponentContent.canCreateChoices'
                      ng-change='matchController.authoringViewComponentChanged()'>

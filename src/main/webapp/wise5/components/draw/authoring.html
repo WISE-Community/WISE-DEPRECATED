@@ -9,9 +9,6 @@
     <div class='advancedAuthoringDiv'
          ng-if='drawController.showAdvancedAuthoring'>
       <div>
-        <h6>{{ ::'advancedAuthoringOptions' | translate }}</h6>
-      </div>
-      <div>
         <md-checkbox class='md-primary'
                      ng-model='drawController.authoringComponentContent.showSaveButton'
                      ng-change='drawController.authoringViewComponentChanged()'>

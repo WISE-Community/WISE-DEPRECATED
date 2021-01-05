@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
 export abstract class EditComponentController {
 
   $translate: any;
-  allowedConnectedComponentTypes: any[];
+  allowedConnectedComponentTypes: string[];
   authoringComponentContent: any;
   componentChangedSubscription: Subscription;
   componentContent: any;
@@ -25,7 +25,6 @@ export abstract class EditComponentController {
   showAdvancedAuthoring: boolean = false;
   submitCounter: number = 0;
   starterStateResponseSubscription: Subscription;
-  showAdvancedAuthoringSubscription: Subscription;
 
   constructor(
       protected $filter: any,
@@ -45,13 +44,6 @@ export abstract class EditComponentController {
     this.componentChangedSubscription = this.ProjectService.componentChanged$.subscribe(() => {
       this.authoringViewComponentChanged();
     });
-    this.showAdvancedAuthoringSubscription =
-        this.ProjectService.showAdvancedComponentView$.subscribe((event) => {
-      if (event.componentId === this.componentId) {
-        this.showAdvancedAuthoring = event.isShow;
-        this.NotificationService.hideJSONValidMessage();
-      }
-    });
     this.starterStateResponseSubscription =
         this.NodeService.starterStateResponse$.subscribe((args: any) => {
       if (this.isForThisComponent(args)) {
@@ -63,7 +55,6 @@ export abstract class EditComponentController {
   $onDestroy() {
     this.componentChangedSubscription.unsubscribe();
     this.starterStateResponseSubscription.unsubscribe();
-    this.showAdvancedAuthoringSubscription.unsubscribe();
   }
 
   authoringViewComponentChanged(): void {
@@ -121,13 +112,8 @@ export abstract class EditComponentController {
     this.authoringViewComponentChanged();
   }
 
-  isConnectedComponentTypeAllowed(componentType) {
-    for (const allowedConnectedComponentType of this.allowedConnectedComponentTypes) {
-      if (allowedConnectedComponentType.type === componentType) {
-        return true;
-      }
-    }
-    return false;
+  isConnectedComponentTypeAllowed(componentType: string) {
+    return this.allowedConnectedComponentTypes.includes(componentType);
   }
 
   addConnectedComponent() {

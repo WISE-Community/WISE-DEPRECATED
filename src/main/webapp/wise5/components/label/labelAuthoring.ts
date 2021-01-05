@@ -9,16 +9,7 @@ import { EditComponentController } from '../../authoringTool/components/editComp
 
 @Directive()
 class LabelAuthoringController extends EditComponentController {
-  allowedConnectedComponentTypes: any[] = [
-    { type: 'ConceptMap' },
-    { type: 'Draw' },
-    { type: 'Embedded' },
-    { type: 'Graph' },
-    { type: 'Label' },
-    { type: 'OpenResponse' },
-    { type: 'Table' }
-  ];
-
+  
   static $inject = [
     '$filter',
     '$window',

@@ -8,7 +8,6 @@ import { TableService } from './tableService';
 class TableController extends ComponentController {
   $q: any;
   TableService: TableService;
-  allowedConnectedComponentTypes: any[];
   tableData: any;
   isResetTableButtonVisible: boolean;
   notebookConfig: any;

@@ -5,13 +5,6 @@
   .criteriaContent {
     margin-left: 30px;
   }
-  .advancedAuthoringDiv {
-    border: 2px solid black;
-    padding: 20px;
-  }
-  .advancedAuthoringDiv > div {
-    padding: 5px 20px;
-  }
 </style>
 <div ui-view></div>
 <div ng-if="nodeAuthoringController.$state.current.name == 'root.at.project.node'">
@@ -162,7 +155,7 @@
     <div ng-if='!nodeAuthoringController.insertComponentMode && nodeAuthoringController.showComponentAuthoringViews'>
       <md-input-container style='margin-top: 0; margin-right: 20px; width: 150px; height: 40px;'>
         <md-button class='topButton md-raised md-primary'
-            ng-click='nodeAuthoringController.toggleComponentAdvancedAuthoring(component.id)'>
+            ng-click='nodeAuthoringController.showComponentAdvancedAuthoring(component)'>
           <md-icon>build</md-icon>
           <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'ADVANCED' | translate }}</md-tooltip>
         </md-button>

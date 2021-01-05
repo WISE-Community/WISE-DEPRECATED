@@ -39,6 +39,8 @@ import { EditComponentTagsComponent } from './authoring-tool/edit-component-tags
 import { EditComponentWidthComponent } from './authoring-tool/edit-component-width/edit-component-width.component';
 import { RubricAuthoringComponent } from '../../../wise5/authoringTool/rubric/rubric-authoring.component';
 import { NavItemProgressComponent } from './classroom-monitor/nav-item-progress/nav-item-progress.component';
+import { EditHTMLAdvancedComponent } from '../../../wise5/components/html/edit-html-advanced/edit-html-advanced.component';
+import { EditOutsideUrlAdvancedComponent } from '../../../wise5/components/outsideURL/edit-outside-url-advanced/edit-outside-url-advanced.component';
 
 @NgModule({
   declarations: [
@@ -54,6 +56,8 @@ import { NavItemProgressComponent } from './classroom-monitor/nav-item-progress/
     EditComponentMaxScoreComponent,
     EditComponentTagsComponent,
     EditComponentWidthComponent,
+    EditHTMLAdvancedComponent,
+    EditOutsideUrlAdvancedComponent,
     ManageStudentsComponent,
     MilestonesComponent,
     MilestoneReportDataComponent,

@@ -6,8 +6,6 @@ import { EditComponentController } from '../../authoringTool/components/editComp
 @Directive()
 class AnimationAuthoringController extends EditComponentController {
 
-  allowedConnectedComponentTypes: any[] = [{ type: 'Animation' }, { type: 'Graph' }];
-
   static $inject = [
     '$filter',
     'ConfigService',

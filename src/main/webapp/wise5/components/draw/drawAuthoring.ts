@@ -6,8 +6,6 @@ import { EditComponentController } from '../../authoringTool/components/editComp
 
 @Directive()
 class DrawAuthoringController extends EditComponentController {
-  allowedConnectedComponentTypes: any[] = [{ type: 'ConceptMap' }, { type: 'Draw' },
-      { type: 'Embedded' }, { type: 'Graph' }, { type: 'Label' }, { type: 'Table' }];
   width: number;
   height: number;
 

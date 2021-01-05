@@ -1,17 +1,11 @@
 'use strict';
 
 import { Directive } from '@angular/core';
-import { ProjectAssetService } from '../../../site/src/app/services/projectAssetService';
 import { EditComponentController } from '../../authoringTool/components/editComponentController';
 
 @Directive()
 class MultipleChoiceAuthoringController extends EditComponentController {
-  ProjectAssetService: ProjectAssetService;
-  allowedConnectedComponentTypes: any[] = [
-    {
-      type: 'MultipleChoice'
-    }
-  ];
+  allowedConnectedComponentTypes = ['MultipleChoice'];
 
   static $inject = [
     '$filter',
