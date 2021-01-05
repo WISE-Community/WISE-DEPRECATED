@@ -8,14 +8,14 @@
       <div>
         <md-checkbox class='md-primary'
                      ng-model='summaryController.authoringComponentContent.showSaveButton'
-                     ng-change='summaryController.authoringViewComponentChanged()'>
+                     ng-change='summaryController.componentChanged()'>
           {{ ::'SHOW_SAVE_BUTTON' | translate }}
         </md-checkbox>
       </div>
       <div>
         <md-checkbox class='md-primary'
                      ng-model='summaryController.authoringComponentContent.showSubmitButton'
-                     ng-change='summaryController.authoringViewComponentChanged()'>
+                     ng-change='summaryController.componentChanged()'>
           {{ ::'SHOW_SUBMIT_BUTTON' | translate }}
         </md-checkbox>
       </div>
@@ -23,7 +23,7 @@
         <md-checkbox class='md-primary'
                      ng-if='summaryController.isNotebookEnabled()'
                      ng-model='summaryController.authoringComponentContent.showAddToNotebookButton'
-                     ng-change='summaryController.authoringViewComponentChanged()'>
+                     ng-change='summaryController.componentChanged()'>
           {{ ::'SHOW_ADD_TO_NOTEBOOK_BUTTON' | translate }}
         </md-checkbox>
       </div>
@@ -34,7 +34,7 @@
           <input type='number'
                  ng-model='summaryController.authoringComponentContent.maxSubmitCount'
                  ng-model-options='{ debounce: 1000 }'
-                 ng-change='summaryController.authoringViewComponentChanged()'/>
+                 ng-change='summaryController.componentChanged()'/>
         </md-input-container>
       </div>
       <div layout="column" layout-align="start start">
@@ -50,7 +50,7 @@
       <label>{{ ::'PROMPT' | translate }}</label>
       <textarea rows='1'
                 ng-model='summaryController.authoringComponentContent.prompt'
-                ng-change='summaryController.authoringViewComponentChanged()'
+                ng-change='summaryController.componentChanged()'
                 ng-model-options='{ debounce: 1000 }'
                 placeholder='{{ "enterPromptHere" | translate }}'>
     </textarea>
@@ -110,7 +110,7 @@
       <md-input-container>
         <label>{{ ::'source' | translate }}</label>
         <md-select ng-model='summaryController.authoringComponentContent.source'
-                   ng-change='summaryController.authoringViewComponentChanged()'
+                   ng-change='summaryController.componentChanged()'
                    style='min-width: 200px'>
           <md-option value='self'>
             {{ ::'summary.onlySelf' | translate }}
@@ -128,7 +128,7 @@
       <md-input-container>
         <label>{{ ::'summary.chartType' | translate }}</label>
         <md-select ng-model='summaryController.authoringComponentContent.chartType'
-            ng-change='summaryController.authoringViewComponentChanged()'
+            ng-change='summaryController.componentChanged()'
             style='min-width: 200px;'>
           <md-option value='column'>
             {{ ::'summary.bar' | translate }}
@@ -143,7 +143,7 @@
       <md-input-container>
         <label>{{ ::'summary.requirementToSeeSummary' | translate }}</label>
         <md-select ng-model='summaryController.authoringComponentContent.requirementToSeeSummary'
-            ng-change='summaryController.authoringViewComponentChanged()'
+            ng-change='summaryController.componentChanged()'
             style='min-width: 200px'>
             <md-option value='completeComponent'>
               {{ ::'summary.completeComponent' | translate }}
@@ -162,7 +162,7 @@
     <md-input-container ng-if='summaryController.isHighlightCorrectAnswerAvailable'>
       <md-checkbox class='md-primary'
                    ng-model='summaryController.authoringComponentContent.highlightCorrectAnswer'
-                   ng-change='summaryController.authoringViewComponentChanged()'>
+                   ng-change='summaryController.componentChanged()'>
         {{ ::'summary.highlightCorrectAnswer' | translate }}
       </md-checkbox>
     </md-input-container>

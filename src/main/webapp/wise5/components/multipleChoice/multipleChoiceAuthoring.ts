@@ -43,7 +43,7 @@ class MultipleChoiceAuthoringController extends EditComponentController {
       show = false;
     }
     this.setShowSubmitButtonValue(show);
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   componentHasFeedback() {
@@ -63,7 +63,7 @@ class MultipleChoiceAuthoringController extends EditComponentController {
       isCorrect: false
     };
     this.authoringComponentContent.choices.push(newChoice);
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   deleteChoice(choiceId) {
@@ -75,7 +75,7 @@ class MultipleChoiceAuthoringController extends EditComponentController {
           break;
         }
       }
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     }
   }
 
@@ -91,7 +91,7 @@ class MultipleChoiceAuthoringController extends EditComponentController {
         break;
       }
     }
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   moveChoiceDown(choiceId) {
@@ -106,7 +106,7 @@ class MultipleChoiceAuthoringController extends EditComponentController {
         break;
       }
     }
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   chooseChoiceAsset(choice) {
@@ -125,7 +125,7 @@ class MultipleChoiceAuthoringController extends EditComponentController {
     if (target === 'choice') {
       const fileName = assetItem.fileName;
       targetObject.text = `<img src="${fileName}"/>`;
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     }
   }
 

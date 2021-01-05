@@ -38,7 +38,7 @@ export abstract class ComponentAuthoring {
       .pipe(debounceTime(1000), distinctUntilChanged())
       .subscribe((prompt: string) => {
         this.authoringComponentContent.prompt = prompt;
-        this.authoringViewComponentChanged();
+        this.componentChanged();
       });
   }
 
@@ -47,7 +47,7 @@ export abstract class ComponentAuthoring {
     this.resetUI();
     this.idToOrder = this.ProjectService.idToOrder;
     this.componentChangedSubscription = this.ProjectService.componentChanged$.subscribe(() => {
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     });
     this.starterStateResponseSubscription =
         this.NodeService.starterStateResponse$.subscribe((args: any) => {
@@ -61,7 +61,7 @@ export abstract class ComponentAuthoring {
     this.promptChange.next(prompt);
   }
 
-  authoringViewComponentChanged(): void {
+  componentChanged(): void {
     this.resetUI();
     this.ProjectService.nodeChanged();
   }

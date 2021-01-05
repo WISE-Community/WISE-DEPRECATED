@@ -3,7 +3,7 @@
     <md-input-container style='width: 100%; margin-bottom: 0px;'>
       <label>{{ 'PROMPT' | translate }}</label>
       <textarea ng-model='multipleChoiceController.authoringComponentContent.prompt'
-          ng-change='multipleChoiceController.authoringViewComponentChanged()'
+          ng-change='multipleChoiceController.componentChanged()'
           ng-model-options='{ debounce: 1000 }'
           rows='1'
           placeholder='{{ "enterPromptHere" | translate }}'>
@@ -11,7 +11,7 @@
     </md-input-container>
     <p>{{ 'multipleChoice.selectionType' | translate }}:</p>
     <md-radio-group ng-model='multipleChoiceController.authoringComponentContent.choiceType'
-        ng-change='multipleChoiceController.authoringViewComponentChanged()'>
+        ng-change='multipleChoiceController.componentChanged()'>
       <md-radio-button class='md-primary' value='radio'>
         {{ 'multipleChoice.singleAnswer' | translate }}
       </md-radio-button>
@@ -28,7 +28,7 @@
         <md-input-container style='margin-bottom: 0px'>
           <label>{{ 'multipleChoice.choiceText' | translate }}</label>
           <input ng-model='choice.text'
-              ng-change='multipleChoiceController.authoringViewComponentChanged()'
+              ng-change='multipleChoiceController.componentChanged()'
               ng-model-options='{ debounce: 1000 }'
               size='100'
               placeholder='{{ "TYPE_TEXT_OR_CHOOSE_AN_IMAGE" | translate }}'/>

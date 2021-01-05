@@ -5,28 +5,28 @@
       <div>
         <md-checkbox class='md-primary'
                      ng-model='matchController.authoringComponentContent.canCreateChoices'
-                     ng-change='matchController.authoringViewComponentChanged()'>
+                     ng-change='matchController.componentChanged()'>
           {{ ::'match.studentCanCreateChoices' | translate }}
         </md-checkbox>
       </div>
       <div>
         <md-checkbox class='md-primary'
                      ng-model='matchController.authoringComponentContent.horizontal'
-                     ng-change='matchController.authoringViewComponentChanged()'>
+                     ng-change='matchController.componentChanged()'>
           {{ ::'match.showSourceBucketOnTheLeftAndTargetBucketsOnTheRight' | translate }}
         </md-checkbox>
       </div>
       <div>
         <md-checkbox class='md-primary'
                      ng-model='matchController.authoringComponentContent.showSaveButton'
-                     ng-change='matchController.authoringViewComponentChanged()'>
+                     ng-change='matchController.componentChanged()'>
           {{ ::'SHOW_SAVE_BUTTON' | translate }}
         </md-checkbox>
       </div>
       <div>
         <md-checkbox class='md-primary'
                      ng-model='matchController.authoringComponentContent.showSubmitButton'
-                     ng-change='matchController.authoringViewComponentChanged()'>
+                     ng-change='matchController.componentChanged()'>
           {{ ::'SHOW_SUBMIT_BUTTON' | translate }}
         </md-checkbox>
       </div>
@@ -34,7 +34,7 @@
         <md-checkbox class='md-primary'
                      ng-if='matchController.isNotebookEnabled()'
                      ng-model='matchController.authoringComponentContent.importPrivateNotes'
-                     ng-change='matchController.authoringViewComponentChanged()'>
+                     ng-change='matchController.componentChanged()'>
           {{ ::'match.showPrivateNotesAsChoices' | translate }}
         </md-checkbox>
       </div>
@@ -45,7 +45,7 @@
           <input type='number'
                  ng-model='matchController.authoringComponentContent.maxSubmitCount'
                  ng-model-options='{ debounce: 1000 }'
-                 ng-change='matchController.authoringViewComponentChanged()'/>
+                 ng-change='matchController.componentChanged()'/>
         </md-input-container>
       </div>
       <div layout="column" layout-align="start start">
@@ -134,7 +134,7 @@
         <label>{{ ::'PROMPT' | translate }}</label>
         <textarea rows='1'
                   ng-model='matchController.authoringComponentContent.prompt'
-                  ng-change='matchController.authoringViewComponentChanged()'
+                  ng-change='matchController.componentChanged()'
                   ng-model-options='{ debounce: 1000 }'
                   placeholder='{{ ::"enterPromptHere" | translate }}'>
       </textarea>
@@ -160,7 +160,7 @@
             <label>{{ ::'match.choiceName' | translate }}</label>
             <input ng-model='choice.value'
                    ng-model-options='{ debounce: 1000 }'
-                   ng-change='matchController.authoringViewComponentChanged()'
+                   ng-change='matchController.componentChanged()'
                    size='80'
                    placeholder='{{ ::"TYPE_TEXT_OR_CHOOSE_AN_IMAGE" | translate }}'/>
           </md-input-container>
@@ -202,7 +202,7 @@
         <md-input-container style="height: 30;">
           <label>{{ ::'match.sourceBucketName' | translate }}</label>
           <input ng-model='matchController.authoringComponentContent.choicesLabel'
-                 ng-change='matchController.authoringViewComponentChanged()'
+                 ng-change='matchController.componentChanged()'
                  ng-model-options='{ debounce: 1000 }'
                  size='80'/>
         </md-input-container>
@@ -226,7 +226,7 @@
             <label>{{ ::'match.targetBucketName' | translate }}</label>
             <input ng-model='bucket.value'
                    ng-model-options='{ debounce: 1000 }'
-                   ng-change='matchController.authoringViewComponentChanged()'
+                   ng-change='matchController.componentChanged()'
                    size='80'
                    placeholder='{{ ::"TYPE_TEXT_OR_CHOOSE_AN_IMAGE" | translate }}'/>
           </md-input-container>
@@ -268,7 +268,7 @@
         <h6>{{ ::'FEEDBACK' | translate }}</h6>
         <md-checkbox class='md-primary'
                      ng-model='matchController.authoringComponentContent.ordered'
-                     ng-change='matchController.authoringViewComponentChanged()'>
+                     ng-change='matchController.componentChanged()'>
           {{ ::'match.choicesNeedToBeOrderedWithinBuckets' | translate }}
         </md-checkbox>
         <div ng-repeat='bucketFeedback in matchController.authoringComponentContent.feedback'
@@ -308,14 +308,14 @@
                 <input type='number'
                        ng-model='choiceFeedback.position'
                        ng-model-options='{ debounce: 1000 }'
-                       ng-change='matchController.authoringViewComponentChanged()'
+                       ng-change='matchController.componentChanged()'
                        style='width: 4em'/>
               </md-input-container>
               <md-input-container style='height: 30;'>
                 <label>{{ ::'match.incorrectPositionFeedback' | translate }}</label>
                 <input ng-model='choiceFeedback.incorrectPositionFeedback'
                        ng-model-options='{ debounce: 1000 }'
-                       ng-change='matchController.authoringViewComponentChanged()'
+                       ng-change='matchController.componentChanged()'
                        size='60'/>
               </md-input-container>
             </div>

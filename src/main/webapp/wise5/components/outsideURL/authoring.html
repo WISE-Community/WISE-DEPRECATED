@@ -87,14 +87,14 @@
     <input type="number"
             ng-model="outsideURLController.authoringComponentContent.width"
             ng-model-options="{ debounce: 1000 }"
-            ng-change="outsideURLController.authoringViewComponentChanged()"/>
+            ng-change="outsideURLController.componentChanged()"/>
   </md-input-container>
   <md-input-container style="margin-right: 20px; width: 150px; height: 25px;">
     <label>{{ ::'outsideURL.heightPlaceholder' | translate }}</label>
     <input type="number"
             ng-model="outsideURLController.authoringComponentContent.height"
             ng-model-options="{ debounce: 1000 }"
-            ng-change="outsideURLController.authoringViewComponentChanged()"/>
+            ng-change="outsideURLController.componentChanged()"/>
   </md-input-container>
   <span flex></span>
   <md-button class="md-icon-button md-primary"

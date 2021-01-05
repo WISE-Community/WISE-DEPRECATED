@@ -58,7 +58,7 @@ class ConceptMapAuthoringController extends EditComponentController {
    */
   moveNodeUpButtonClicked(index: number): void {
     this.UtilService.moveObjectUp(this.authoringComponentContent.nodes, index);
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   /**
@@ -67,7 +67,7 @@ class ConceptMapAuthoringController extends EditComponentController {
    */
   moveNodeDownButtonClicked(index: number): void {
     this.UtilService.moveObjectDown(this.authoringComponentContent.nodes, index);
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   /**
@@ -88,7 +88,7 @@ class ConceptMapAuthoringController extends EditComponentController {
       )
     ) {
       nodes.splice(index, 1);
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     }
   }
 
@@ -98,7 +98,7 @@ class ConceptMapAuthoringController extends EditComponentController {
    */
   moveLinkUpButtonClicked(index: number): void {
     this.UtilService.moveObjectUp(this.authoringComponentContent.links, index);
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   /**
@@ -107,7 +107,7 @@ class ConceptMapAuthoringController extends EditComponentController {
    */
   moveLinkDownButtonClicked(index: number): void {
     this.UtilService.moveObjectDown(this.authoringComponentContent.links, index);
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   /**
@@ -124,7 +124,7 @@ class ConceptMapAuthoringController extends EditComponentController {
       )
     ) {
       links.splice(index, 1);
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     }
   }
 
@@ -137,7 +137,7 @@ class ConceptMapAuthoringController extends EditComponentController {
       height: 100
     };
     this.authoringComponentContent.nodes.push(newNode);
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   /**
@@ -161,7 +161,7 @@ class ConceptMapAuthoringController extends EditComponentController {
       color: ''
     };
     this.authoringComponentContent.links.push(newLink);
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   /**
@@ -188,13 +188,13 @@ class ConceptMapAuthoringController extends EditComponentController {
 
   saveStarterState(starterState: any): void {
     this.authoringComponentContent.starterConceptMap = starterState;
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   deleteStarterConceptMap(): void {
     if (confirm(this.$translate('conceptMap.areYouSureYouWantToDeleteTheStarterConceptMap'))) {
       this.authoringComponentContent.starterConceptMap = null;
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     }
   }
 
@@ -230,11 +230,11 @@ class ConceptMapAuthoringController extends EditComponentController {
     const fileName = args.assetItem.fileName;
     if (args.target === 'background') {
       this.authoringComponentContent.background = fileName;
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     } else if (args.target != null && args.target.indexOf('node') == 0) {
       const node = this.getNodeById(args.target);
       node.fileName = fileName;
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     }
   }
 

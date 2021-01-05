@@ -18,14 +18,14 @@
       <div>
         <md-checkbox class='md-primary'
                      ng-model='animationController.authoringComponentContent.showSaveButton'
-                     ng-change='animationController.authoringViewComponentChanged()'>
+                     ng-change='animationController.componentChanged()'>
           {{ ::'SHOW_SAVE_BUTTON' | translate }}
         </md-checkbox>
       </div>
       <div>
         <md-checkbox class='md-primary'
                      ng-model='animationController.authoringComponentContent.showSubmitButton'
-                     ng-change='animationController.authoringViewComponentChanged()'>
+                     ng-change='animationController.componentChanged()'>
           {{ ::'SHOW_SUBMIT_BUTTON' | translate }}
         </md-checkbox>
       </div>
@@ -36,7 +36,7 @@
           <input type='number'
                  ng-model='animationController.authoringComponentContent.maxSubmitCount'
                  ng-model-options='{ debounce: 1000 }'
-                 ng-change='animationController.authoringViewComponentChanged()'/>
+                 ng-change='animationController.componentChanged()'/>
         </md-input-container>
       </div>
       <div layout="column" layout-align="start start">
@@ -126,7 +126,7 @@
       <label>{{ ::'PROMPT' | translate }}</label>
       <textarea rows='1'
                 ng-model='animationController.authoringComponentContent.prompt'
-                ng-change='animationController.authoringViewComponentChanged()'
+                ng-change='animationController.componentChanged()'
                 ng-model-options='{ debounce: 1000 }'
                 placeholder='{{ ::"enterPromptHere" | translate }}'>
       </textarea>
@@ -137,14 +137,14 @@
         <input type='number'
                ng-model='animationController.authoringComponentContent.widthInPixels'
                ng-model-options='{ debounce: 1000 }'
-               ng-change='animationController.authoringViewComponentChanged()'/>
+               ng-change='animationController.componentChanged()'/>
       </md-input-container>
       <md-input-container style='margin-right: 20px; width: 110px;'>
         <label>{{ ::'animation.height' | translate }} ({{ ::'animation.pixels' | translate }})</label>
         <input type='number'
                ng-model='animationController.authoringComponentContent.heightInPixels'
                ng-model-options='{ debounce: 1000 }'
-               ng-change='animationController.authoringViewComponentChanged()'/>
+               ng-change='animationController.componentChanged()'/>
       </md-input-container>
     </div>
     <div layout='row'>
@@ -153,14 +153,14 @@
         <input type='number'
                ng-model='animationController.authoringComponentContent.widthInUnits'
                ng-model-options='{ debounce: 1000 }'
-               ng-change='animationController.authoringViewComponentChanged()'/>
+               ng-change='animationController.componentChanged()'/>
       </md-input-container>
       <md-input-container style='margin-right: 20px; width: 110px;'>
         <label>{{ ::'animation.height' | translate }} ({{ ::'animation.units' | translate }})</label>
         <input type='number'
                ng-model='animationController.authoringComponentContent.heightInUnits'
                ng-model-options='{ debounce: 1000 }'
-               ng-change='animationController.authoringViewComponentChanged()'/>
+               ng-change='animationController.componentChanged()'/>
       </md-input-container>
     </div>
     <div layout='row'>
@@ -169,19 +169,19 @@
         <input type='number'
                ng-model='animationController.authoringComponentContent.dataXOriginInPixels'
                ng-model-options='{ debounce: 1000 }'
-               ng-change='animationController.authoringViewComponentChanged()'/>
+               ng-change='animationController.componentChanged()'/>
       </md-input-container>
       <md-input-container style='margin-right: 20px; width: 150px;'>
         <label>{{ ::'animation.dataOriginY' | translate }} ({{ ::'animation.pixels' | translate }})</label>
         <input type='number'
                ng-model='animationController.authoringComponentContent.dataYOriginInPixels'
                ng-model-options='{ debounce: 1000 }'
-               ng-change='animationController.authoringViewComponentChanged()'/>
+               ng-change='animationController.componentChanged()'/>
       </md-input-container>
     </div>
     <div layout='row'>
       <md-radio-group ng-model='animationController.authoringComponentContent.coordinateSystem'
-                      ng-change='animationController.authoringViewComponentChanged()'>
+                      ng-change='animationController.componentChanged()'>
         <md-radio-button value='screen'
                          class='md-primary'>
           {{ ::'animation.screen' | translate }}
@@ -212,7 +212,7 @@
             <label>{{ ::'animation.image' | translate }}</label>
             <input ng-model='object.image'
                    ng-model-options='{ debounce: 1000 }'
-                   ng-change='animationController.authoringViewComponentChanged()'/>
+                   ng-change='animationController.componentChanged()'/>
           </md-input-container>
           <md-input-container>
             <md-button class='topButton md-raised md-primary'
@@ -232,7 +232,7 @@
           <label>{{ ::'animation.text' | translate }}</label>
           <input ng-model='object.text'
                  ng-model-options='{ debounce: 1000 }'
-                 ng-change='animationController.authoringViewComponentChanged()'/>
+                 ng-change='animationController.componentChanged()'/>
         </md-input-container>
         <div>
           <md-radio-group ng-model='object.type'
@@ -280,14 +280,14 @@
           <input type='number'
                  ng-model='object.width'
                  ng-model-options='{ debounce: 1000 }'
-                 ng-change='animationController.authoringViewComponentChanged()'/>
+                 ng-change='animationController.componentChanged()'/>
         </md-input-container>
         <md-input-container style='margin-right: 20px; width: 150px;'>
           <label>{{ ::'animation.imageHeight' | translate }} ({{ ::'animation.pixels' | translate }})</label>
           <input type='number'
                  ng-model='object.height'
                  ng-model-options='{ debounce: 1000 }'
-                 ng-change='animationController.authoringViewComponentChanged()'/>
+                 ng-change='animationController.componentChanged()'/>
         </md-input-container>
       </div>
       <div ng-if='object.type == "image"'
@@ -296,7 +296,7 @@
           <label>{{ ::'animation.imageMovingLeft' | translate }}</label>
           <input ng-model='object.imageMovingLeft'
                  ng-model-options='{ debounce: 1000 }'
-                 ng-change='animationController.authoringViewComponentChanged()'/>
+                 ng-change='animationController.componentChanged()'/>
         </md-input-container>
         <md-input-container>
           <md-button class='topButton md-raised md-primary'
@@ -313,7 +313,7 @@
           <label>{{ ::'animation.imageMovingRight' | translate }}</label>
           <input ng-model='object.imageMovingRight'
                  ng-model-options='{ debounce: 1000 }'
-                 ng-change='animationController.authoringViewComponentChanged()'/>
+                 ng-change='animationController.componentChanged()'/>
         </md-input-container>
         <md-input-container>
           <md-button class='topButton md-raised md-primary'
@@ -333,28 +333,28 @@
           <input type='number'
                  ng-model='object.pixelX'
                  ng-model-options='{ debounce: 1000 }'
-                 ng-change='animationController.authoringViewComponentChanged()'/>
+                 ng-change='animationController.componentChanged()'/>
         </md-input-container>
         <md-input-container style='margin-right: 20px; width: 150px;'>
           <label>{{ ::'animation.locationY' | translate }} ({{ ::'animation.pixels' | translate }})</label>
           <input type='number'
                  ng-model='object.pixelY'
                  ng-model-options='{ debounce: 1000 }'
-                 ng-change='animationController.authoringViewComponentChanged()'/>
+                 ng-change='animationController.componentChanged()'/>
         </md-input-container>
         <md-input-container style='margin-right: 20px; width: 100px;'>
           <label>{{ ::'animation.dataX' | translate }} ({{ ::'animation.units' | translate }})</label>
           <input type='number'
                  ng-model='object.dataX'
                  ng-model-options='{ debounce: 1000 }'
-                 ng-change='animationController.authoringViewComponentChanged()'/>
+                 ng-change='animationController.componentChanged()'/>
         </md-input-container>
         <md-input-container style='margin-right: 20px; width: 100px;'>
           <label>{{ ::'animation.dataY' | translate }} ({{ ::'animation.units' | translate }})</label>
           <input type='number'
                  ng-model='object.dataY'
                  ng-model-options='{ debounce: 1000 }'
-                 ng-change='animationController.authoringViewComponentChanged()'/>
+                 ng-change='animationController.componentChanged()'/>
         </md-input-container>
       </div>
       <div>
@@ -374,27 +374,27 @@
             <input type='number'
                    ng-model='dataPoint.t'
                    ng-model-options='{ debounce: 1000 }'
-                   ng-change='animationController.authoringViewComponentChanged()'/>
+                   ng-change='animationController.componentChanged()'/>
           </md-input-container>
           <md-input-container style='margin-right: 20px; width: 100px;'>
             <label>{{ ::'animation.x' | translate }}</label>
             <input type='number'
                    ng-model='dataPoint.x'
                    ng-model-options='{ debounce: 1000 }'
-                   ng-change='animationController.authoringViewComponentChanged()'/>
+                   ng-change='animationController.componentChanged()'/>
           </md-input-container>
           <md-input-container style='margin-right: 20px; width: 100px;'>
             <label>{{ ::'animation.y' | translate }}</label>
             <input type='number'
                    ng-model='dataPoint.y'
                    ng-model-options='{ debounce: 1000 }'
-                   ng-change='animationController.authoringViewComponentChanged()'/>
+                   ng-change='animationController.componentChanged()'/>
           </md-input-container>
           <md-input-container style='margin-right: 20; width: 400;'>
             <label>{{ ::'animation.image' | translate }} ({{ ::'animation.optional' | translate }})</label>
             <input ng-model='dataPoint.image'
                    ng-model-options='{ debounce: 1000 }'
-                   ng-change='animationController.authoringViewComponentChanged()'/>
+                   ng-change='animationController.componentChanged()'/>
           </md-input-container>
           <md-button class='regularButton md-raised md-primary'
                      ng-click='animationController.moveAuthoredObjectDataPointUp(object, $index)'>
@@ -474,35 +474,35 @@
               <input type='number'
                      ng-model='object.dataSource.trialIndex'
                      ng-model-options='{ debounce: 1000 }'
-                     ng-change='animationController.authoringViewComponentChanged()'/>
+                     ng-change='animationController.componentChanged()'/>
             </md-input-container>
             <md-input-container style='margin-right: 20px; width: 100px;'>
               <label>{{ ::'animation.seriesIndex' | translate }}</label>
               <input type='number'
                      ng-model='object.dataSource.seriesIndex'
                      ng-model-options='{ debounce: 1000 }'
-                     ng-change='animationController.authoringViewComponentChanged()'/>
+                     ng-change='animationController.componentChanged()'/>
             </md-input-container>
             <md-input-container style='margin-right: 20px; width: 150px;'>
               <label>{{ ::'animation.timeColumnIndex' | translate }}</label>
               <input type='number'
                      ng-model='object.dataSource.tColumnIndex'
                      ng-model-options='{ debounce: 1000 }'
-                     ng-change='animationController.authoringViewComponentChanged()'/>
+                     ng-change='animationController.componentChanged()'/>
             </md-input-container>
             <md-input-container style='margin-right: 20px; width: 150px;'>
               <label>{{ ::'animation.xColumnIndex' | translate }}</label>
               <input type='number'
                      ng-model='object.dataSource.xColumnIndex'
                      ng-model-options='{ debounce: 1000 }'
-                     ng-change='animationController.authoringViewComponentChanged()'/>
+                     ng-change='animationController.componentChanged()'/>
             </md-input-container>
             <md-input-container style='margin-right: 20px; width: 150px;'>
               <label>{{ ::'animation.yColumnIndex' | translate }}</label>
               <input type='number'
                      ng-model='object.dataSource.yColumnIndex'
                      ng-model-options='{ debounce: 1000 }'
-                     ng-change='animationController.authoringViewComponentChanged()'/>
+                     ng-change='animationController.componentChanged()'/>
             </md-input-container>
           </div>
         </div>

@@ -153,7 +153,7 @@ class TableAuthoringController extends EditComponentController {
       this.authoringComponentContent.numRows,
       this.authoringComponentContent.numColumns
     );
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   /**
@@ -225,7 +225,7 @@ class TableAuthoringController extends EditComponentController {
       tableData.splice(y, 0, newRow);
       this.authoringComponentContent.numRows++;
     }
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   /**
@@ -239,7 +239,7 @@ class TableAuthoringController extends EditComponentController {
         tableData.splice(y, 1);
         this.authoringComponentContent.numRows--;
       }
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     }
   }
 
@@ -261,7 +261,7 @@ class TableAuthoringController extends EditComponentController {
       this.authoringComponentContent.numColumns++;
       this.parseColumnCellSizes(this.authoringComponentContent);
     }
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   /**
@@ -282,7 +282,7 @@ class TableAuthoringController extends EditComponentController {
         this.authoringComponentContent.numColumns--;
         this.parseColumnCellSizes(this.authoringComponentContent);
       }
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     }
   }
 
@@ -329,7 +329,7 @@ class TableAuthoringController extends EditComponentController {
         }
       }
     }
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   makeAllCellsEditable(): void {
@@ -347,7 +347,7 @@ class TableAuthoringController extends EditComponentController {
         }
       }
     }
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   /**
@@ -398,7 +398,7 @@ class TableAuthoringController extends EditComponentController {
         }
       }
     }
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   automaticallySetConnectedComponentFieldsIfPossible(connectedComponent) {
@@ -411,7 +411,7 @@ class TableAuthoringController extends EditComponentController {
 
   connectedComponentTypeChanged(connectedComponent) {
     this.automaticallySetConnectedComponentFieldsIfPossible(connectedComponent);
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
 }

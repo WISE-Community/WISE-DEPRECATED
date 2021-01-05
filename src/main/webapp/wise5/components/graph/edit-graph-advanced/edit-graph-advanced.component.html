@@ -5,13 +5,13 @@
       <input type='text'
           ng-model='$ctrl.authoringComponentContent.subtitle'
           ng-model-options='{ debounce: 1000 }'
-          ng-change='$ctrl.authoringViewComponentChanged()'/>
+          ng-change='$ctrl.componentChanged()'/>
     </md-input-container>
   </div>
   <div>
     <md-checkbox class='md-primary'
                  ng-model='$ctrl.authoringComponentContent.showMouseXPlotLine'
-                 ng-change='$ctrl.authoringViewComponentChanged()'>
+                 ng-change='$ctrl.componentChanged()'>
       {{ ::'graph.showMouseXPlotLine' | translate }}
     </md-checkbox>
   </div>
@@ -20,42 +20,42 @@
                  style='left: 40px;'
                  ng-disabled='!$ctrl.authoringComponentContent.showMouseXPlotLine'
                  ng-model='$ctrl.authoringComponentContent.highlightXRangeFromZero'
-                 ng-change='$ctrl.authoringViewComponentChanged()'>
+                 ng-change='$ctrl.componentChanged()'>
       {{ ::'graph.highlightXRangeFromZero' | translate }}
     </md-checkbox>
   </div>
   <div>
     <md-checkbox class='md-primary'
                  ng-model='$ctrl.authoringComponentContent.showMouseYPlotLine'
-                 ng-change='$ctrl.authoringViewComponentChanged()'>
+                 ng-change='$ctrl.componentChanged()'>
       {{ ::'graph.showMouseYPlotLine' | translate }}
     </md-checkbox>
   </div>
   <div>
     <md-checkbox class='md-primary'
                  ng-model='$ctrl.authoringComponentContent.saveMouseOverPoints'
-                 ng-change='$ctrl.authoringViewComponentChanged()'>
+                 ng-change='$ctrl.componentChanged()'>
       {{ ::'graph.saveMouseOverPoints' | translate }}
     </md-checkbox>
   </div>
   <div>
     <md-checkbox class='md-primary'
                  ng-model='$ctrl.authoringComponentContent.hideTrialSelect'
-                 ng-change='$ctrl.authoringViewComponentChanged()'>
+                 ng-change='$ctrl.componentChanged()'>
       {{ ::'graph.hideTrialSelect' | translate }}
     </md-checkbox>
   </div>
   <div>
     <md-checkbox class='md-primary'
                  ng-model='$ctrl.authoringComponentContent.showSaveButton'
-                 ng-change='$ctrl.authoringViewComponentChanged()'>
+                 ng-change='$ctrl.componentChanged()'>
       {{ ::'SHOW_SAVE_BUTTON' | translate }}
     </md-checkbox>
   </div>
   <div>
     <md-checkbox class='md-primary'
                  ng-model='$ctrl.authoringComponentContent.showSubmitButton'
-                 ng-change='$ctrl.authoringViewComponentChanged()'>
+                 ng-change='$ctrl.componentChanged()'>
       {{ ::'SHOW_SUBMIT_BUTTON' | translate }}
     </md-checkbox>
   </div>
@@ -63,7 +63,7 @@
     <md-checkbox class='md-primary'
                  ng-if='$ctrl.isNotebookEnabled()'
                  ng-model='$ctrl.authoringComponentContent.showAddToNotebookButton'
-                 ng-change='$ctrl.authoringViewComponentChanged()'>
+                 ng-change='$ctrl.componentChanged()'>
       {{ ::'SHOW_ADD_TO_NOTEBOOK_BUTTON' | translate }}
     </md-checkbox>
   </div>
@@ -74,13 +74,13 @@
       <input type='number'
              ng-model='$ctrl.authoringComponentContent.maxSubmitCount'
              ng-model-options='{ debounce: 1000 }'
-             ng-change='$ctrl.authoringViewComponentChanged()'/>
+             ng-change='$ctrl.componentChanged()'/>
     </md-input-container>
   </div>
   <div>
     <md-checkbox class='md-primary'
                  ng-model='$ctrl.authoringComponentContent.useCustomLegend'
-                 ng-change='$ctrl.authoringViewComponentChanged()'>
+                 ng-change='$ctrl.componentChanged()'>
       {{ ::'graph.useCustomLegend' | translate }}
     </md-checkbox>
   </div>
@@ -90,7 +90,7 @@
       <label>{{ ::'graph.customLegend' | translate }}</label>
       <textarea rows='1'
                 ng-model='$ctrl.authoringComponentContent.customLegend'
-                ng-change='$ctrl.authoringViewComponentChanged()'
+                ng-change='$ctrl.componentChanged()'
                 ng-model-options='{ debounce: 1000 }'>
       </textarea>
     </md-input-container>
@@ -110,21 +110,21 @@
         <input type='text'
             ng-model='plotLine.label.text'
             ng-model-options='{ debounce: 1000 }'
-            ng-change='$ctrl.authoringViewComponentChanged()'/>
+            ng-change='$ctrl.componentChanged()'/>
       </md-input-container>
       <md-input-container>
         <label>{{ ::'graph.xValue' | translate }}</label>
         <input type='text'
             ng-model='plotLine.value'
             ng-model-options='{ debounce: 1000 }'
-            ng-change='$ctrl.authoringViewComponentChanged()'/>
+            ng-change='$ctrl.componentChanged()'/>
       </md-input-container>
       <md-input-container>
         <label>{{ ::'graph.color' | translate }}</label>
         <input type='text'
             ng-model='plotLine.color'
             ng-model-options='{ debounce: 1000 }'
-            ng-change='$ctrl.authoringViewComponentChanged()'/>
+            ng-change='$ctrl.componentChanged()'/>
       </md-input-container>
       <span flex></span>
       <md-button class='topButton md-raised md-primary'
@@ -149,21 +149,21 @@
         <input type='text'
             ng-model='plotLine.label.text'
             ng-model-options='{ debounce: 1000 }'
-            ng-change='$ctrl.authoringViewComponentChanged()'/>
+            ng-change='$ctrl.componentChanged()'/>
       </md-input-container>
       <md-input-container>
         <label>{{ ::'graph.yValue' | translate }}</label>
         <input type='text'
             ng-model='plotLine.value'
             ng-model-options='{ debounce: 1000 }'
-            ng-change='$ctrl.authoringViewComponentChanged()'/>
+            ng-change='$ctrl.componentChanged()'/>
       </md-input-container>
       <md-input-container>
         <label>{{ ::'graph.color' | translate }}</label>
         <input type='text'
             ng-model='plotLine.color'
             ng-model-options='{ debounce: 1000 }'
-            ng-change='$ctrl.authoringViewComponentChanged()'/>
+            ng-change='$ctrl.componentChanged()'/>
       </md-input-container>
       <span flex></span>
       <md-button class='topButton md-raised md-primary'
@@ -239,7 +239,7 @@
           <label>{{ ::'showClassmateWorkSource' | translate }}</label>
           <md-select ng-model='connectedComponent.showClassmateWorkSource'
                      style='margin-right: 20px;'
-                     ng-change='$ctrl.authoringViewComponentChanged()'>
+                     ng-change='$ctrl.componentChanged()'>
             <md-option value='period'>
               {{ ::'period' | translate }}
             </md-option>
@@ -253,7 +253,7 @@
           <md-checkbox class='md-primary'
                        ng-model='connectedComponent.importGraphSettings'
                        style='margin-right: 20px;'
-                       ng-change='$ctrl.authoringViewComponentChanged()'>
+                       ng-change='$ctrl.componentChanged()'>
             {{ ::'graph.importGraphSettings' | translate }}
           </md-checkbox>
         </md-input-container>
@@ -268,7 +268,7 @@
         <md-checkbox class='md-primary'
                      ng-model='connectedComponent.skipFirstRow'
                      style='margin-right: 20px;'
-                     ng-change='$ctrl.authoringViewComponentChanged()'>
+                     ng-change='$ctrl.componentChanged()'>
           {{ ::'graph.skipFirstRow' | translate }}
         </md-checkbox>
         <md-input-container style='margin-right: 20px; width: 100px; height: 30px;'>
@@ -276,27 +276,27 @@
           <input type='number'
                  ng-model='connectedComponent.xColumn'
                  ng-model-options='{ debounce: 1000 }'
-                 ng-change='$ctrl.authoringViewComponentChanged()'/>
+                 ng-change='$ctrl.componentChanged()'/>
         </md-input-container>
         <md-input-container style='margin-right: 20px; width: 100px; height: 30px;'>
           <label>{{ ::'graph.yColumn' | translate }}</label>
           <input type='number'
                  ng-model='connectedComponent.yColumn'
                  ng-model-options='{ debounce: 1000 }'
-                 ng-change='$ctrl.authoringViewComponentChanged()'/>
+                 ng-change='$ctrl.componentChanged()'/>
         </md-input-container>
       </div>
       <div ng-if='$ctrl.getConnectedComponentType(connectedComponent) == "Embedded"' flex>
         <div>
           <md-checkbox class='md-primary'
                        ng-model='connectedComponent.showXPlotLineOnLatestPoint'
-                       ng-change='$ctrl.authoringViewComponentChanged()'>
+                       ng-change='$ctrl.componentChanged()'>
             {{ ::'graph.showXPlotLineOnLatestPoint' | translate }}
           </md-checkbox>
           <br/>
           <md-checkbox class='md-primary'
                        ng-model='connectedComponent.highlightLatestPoint'
-                       ng-change='$ctrl.authoringViewComponentChanged()'>
+                       ng-change='$ctrl.componentChanged()'>
             {{ ::'graph.highlightLatestPoint' | translate }}
           </md-checkbox>
         </div>

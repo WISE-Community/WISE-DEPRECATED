@@ -27,7 +27,7 @@ class EditGraphAdvancedController extends EditAdvancedComponentAngularJSControll
 
   deleteXAxisPlotLine(index: number): void {
     this.authoringComponentContent.xAxis.plotLines.splice(index, 1);
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   addYAxisPlotLine(): void {
@@ -50,7 +50,7 @@ class EditGraphAdvancedController extends EditAdvancedComponentAngularJSControll
 
   deleteYAxisPlotLine(index: number): void {
     this.authoringComponentContent.yAxis.plotLines.splice(index, 1);
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   addConnectedComponent() {
@@ -60,7 +60,7 @@ class EditGraphAdvancedController extends EditAdvancedComponentAngularJSControll
       // enable trials so each connected component can put work in a different trial
       this.authoringComponentContent.enableTrials = true;
     }
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   addConnectedComponentSeriesNumber(connectedComponent) {
@@ -68,7 +68,7 @@ class EditGraphAdvancedController extends EditAdvancedComponentAngularJSControll
       connectedComponent.seriesNumbers = [];
     }
     connectedComponent.seriesNumbers.push(null);
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   deleteConnectedComponentSeriesNumber(connectedComponent, seriesNumberIndex) {
@@ -76,7 +76,7 @@ class EditGraphAdvancedController extends EditAdvancedComponentAngularJSControll
       connectedComponent.seriesNumbers = [];
     }
     connectedComponent.seriesNumbers.splice(seriesNumberIndex, 1);
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   connectedComponentSeriesNumberChanged(connectedComponent, seriesNumberIndex, value) {
@@ -86,7 +86,7 @@ class EditGraphAdvancedController extends EditAdvancedComponentAngularJSControll
     if (seriesNumberIndex < connectedComponent.seriesNumbers.length) {
       connectedComponent.seriesNumbers[seriesNumberIndex] = value;
     }
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   connectedComponentComponentIdChanged(connectedComponent) {
@@ -109,7 +109,7 @@ class EditGraphAdvancedController extends EditAdvancedComponentAngularJSControll
     }
     connectedComponent.type = 'importWork';
     this.setImportWorkAsBackgroundIfApplicable(connectedComponent);
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   connectedComponentShowClassmateWorkChanged(connectedComponent) {
@@ -119,7 +119,7 @@ class EditGraphAdvancedController extends EditAdvancedComponentAngularJSControll
       delete connectedComponent.showClassmateWork;
       delete connectedComponent.showClassmateWorkSource;
     }
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   setImportWorkAsBackgroundIfApplicable(connectedComponent) {
@@ -143,14 +143,14 @@ class EditGraphAdvancedController extends EditAdvancedComponentAngularJSControll
         connectedComponent.showClassmateWorkSource = 'period';
       }
     }
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   importWorkAsBackgroundClicked(connectedComponent) {
     if (!connectedComponent.importWorkAsBackground) {
       delete connectedComponent.importWorkAsBackground;
     }
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 }
 

@@ -45,7 +45,7 @@ function shouldSelectTheModelFile() {
     embeddedAuthoringController.nodeId = 'node1';
     embeddedAuthoringController.componentId = 'component1';
     expect(embeddedAuthoringController.authoringComponentContent.url).toEqual('glucose.html');
-    spyOn(embeddedAuthoringController, 'authoringViewComponentChanged').and.callFake(() => {});
+    spyOn(embeddedAuthoringController, 'componentChanged').and.callFake(() => {});
     const event = {};
     const args = {
       nodeId: 'node1',

@@ -77,7 +77,7 @@ function shouldCheckIfTheSummaryIsAllowedForAComponentType() {
 function shouldCheckThatTheComponentIdIsNotAutomaticallySetWhenNoComponents() {
   it(`should check that the component id is not automatically set when the node id is changed if
   there are no allowed components`, () => {
-    spyOn(summaryAuthoringController, 'authoringViewComponentChanged');
+    spyOn(summaryAuthoringController, 'componentChanged');
     const components = [{ id: '4ty89q3hj0', type: 'HTML' }];
     expect(summaryAuthoringController.authoringComponentContent.summaryComponentId).toEqual(
       'zptq1ndv4h'
@@ -91,7 +91,7 @@ function shouldCheckThatTheComponentIdIsNotAutomaticallySetWhenNoComponents() {
 function shouldCheckThatTheComponentIdIsNotAutomaticallySetWhenMultipleComponents() {
   it(`should check that the component id is not automatically set when the node id is changed if
   there are multiple allowed components`, () => {
-    spyOn(summaryAuthoringController, 'authoringViewComponentChanged');
+    spyOn(summaryAuthoringController, 'componentChanged');
     const components = [
       { id: '34j45u9w4j', type: 'OpenResponse' },
       { id: 'dghm45su45', type: 'MultipleChoice' }
@@ -108,7 +108,7 @@ function shouldCheckThatTheComponentIdIsNotAutomaticallySetWhenMultipleComponent
 function shouldCheckThatTheComponentIdIsAutomaticallySet() {
   it(`should check that the component id is automatically set when the node id is changed if there
   is one allowed component`, () => {
-    spyOn(summaryAuthoringController, 'authoringViewComponentChanged');
+    spyOn(summaryAuthoringController, 'componentChanged');
     const components = [
       { id: '34j45u9w4j', type: 'HTML' },
       { id: 'dghm45su45', type: 'MultipleChoice' }

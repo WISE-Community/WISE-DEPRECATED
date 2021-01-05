@@ -64,7 +64,7 @@ class EditTableAdvancedController extends EditAdvancedComponentAngularJSControll
         this.authoringComponentContent.dataExplorerSeriesParams = [{}];
       }
     }
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   dataExplorerToggleScatterPlot(): void {
@@ -84,12 +84,12 @@ class EditTableAdvancedController extends EditAdvancedComponentAngularJSControll
     for (let index = 0; index < graphTypes.length; index++) {
       if (graphTypes[index].value === value) {
         graphTypes.splice(index, 1);
-        this.authoringViewComponentChanged();
+        this.componentChanged();
         return;
       }
     }
     graphTypes.push(this.createGraphTypeObject(name, value));
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   createGraphTypeObject(name: string, value: string): any {
@@ -103,7 +103,7 @@ class EditTableAdvancedController extends EditAdvancedComponentAngularJSControll
     } else if (this.authoringComponentContent.dataExplorerSeriesParams.length > count) {
       this.decreaseNumDataExplorerSeries(count);
     }
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   increaseNumDataExplorerSeries(count: number): void {
@@ -120,7 +120,7 @@ class EditTableAdvancedController extends EditAdvancedComponentAngularJSControll
 
   numDataExplorerYAxisChanged(): void {
     this.updateDataExplorerSeriesParamsYAxis();
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   updateDataExplorerSeriesParamsYAxis(): void {

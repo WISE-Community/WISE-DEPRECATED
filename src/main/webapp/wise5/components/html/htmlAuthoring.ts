@@ -45,7 +45,7 @@ class HTMLAuthoringController extends EditComponentController {
   htmlChanged(): void {
     this.authoringComponentContent.html = this.UtilService.insertWISELinks(
         this.ConfigService.removeAbsoluteAssetPaths(this.html));
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 }
 

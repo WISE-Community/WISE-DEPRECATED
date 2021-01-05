@@ -182,7 +182,7 @@ class GraphAuthoringController extends EditComponentController {
       this.setSeriesColorToMatchYAxisColor(newSeries);
     }
     this.authoringComponentContent.series.push(newSeries);
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   createNewSeries() {
@@ -213,7 +213,7 @@ class GraphAuthoringController extends EditComponentController {
     }
     if (confirm(message)) {
       this.authoringComponentContent.series.splice(index, 1);
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     }
   }
 
@@ -226,7 +226,7 @@ class GraphAuthoringController extends EditComponentController {
       this.authoringComponentContent.canDeleteTrials = false;
       this.authoringComponentContent.hideAllTrialsOnNewTrial = true;
     }
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   showChooseBackgroundImagePopup() {
@@ -243,13 +243,13 @@ class GraphAuthoringController extends EditComponentController {
     super.assetSelected({ nodeId, componentId, assetItem, target });
     if (target === 'background') {
       this.authoringComponentContent.backgroundImage = assetItem.fileName;
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     }
   }
 
   addXAxisCategory() {
     this.authoringComponentContent.xAxis.categories.push('');
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   deleteXAxisCategory(index) {
@@ -267,7 +267,7 @@ class GraphAuthoringController extends EditComponentController {
     }
     if (confirm(confirmMessage)) {
       this.authoringComponentContent.xAxis.categories.splice(index, 1);
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     }
   }
 
@@ -280,14 +280,14 @@ class GraphAuthoringController extends EditComponentController {
         series.data.push(null);
       }
     }
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   deleteSeriesDataPoint(series, index) {
     if (series != null && series.data != null) {
       if (confirm(this.$translate('graph.areYouSureYouWantToDeleteTheDataPoint'))) {
         series.data.splice(index, 1);
-        this.authoringViewComponentChanged();
+        this.componentChanged();
       }
     }
   }
@@ -298,7 +298,7 @@ class GraphAuthoringController extends EditComponentController {
       series.data.splice(index, 1);
       series.data.splice(index - 1, 0, dataPoint);
     }
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   moveSeriesDataPointDown(series, index) {
@@ -307,7 +307,7 @@ class GraphAuthoringController extends EditComponentController {
       series.data.splice(index, 1);
       series.data.splice(index + 1, 0, dataPoint);
     }
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   xAxisTypeChanged(newValue: string, oldValue: string): void {
@@ -328,7 +328,7 @@ class GraphAuthoringController extends EditComponentController {
       ];
       this.convertAllSeriesDataPoints(newValue);
     }
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   convertAllSeriesDataPoints(xAxisType) {
@@ -372,13 +372,13 @@ class GraphAuthoringController extends EditComponentController {
       this.addYAxisToAllSeries();
       this.addColorToYAxes();
       this.addColorToSeries();
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     } else {
       if (confirm(this.$translate('graph.areYouSureYouWantToRemoveMultipleYAxes'))) {
         this.convertMultipleYAxesToSingleYAxis();
         this.numYAxes = this.authoringComponentContent.yAxis.length;
         this.removeYAxisFromAllSeries();
-        this.authoringViewComponentChanged();
+        this.componentChanged();
       } else {
         this.enableMultipleYAxes = true;
       }
@@ -462,12 +462,12 @@ class GraphAuthoringController extends EditComponentController {
     if (newValue > oldValue) {
       this.increaseYAxes(newValue);
       this.addColorToYAxes();
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     } else if (newValue < oldValue) {
       if (confirm(this.$translate('graph.areYouSureYouWantToDecreaseTheNumberOfYAxes'))) {
         this.decreaseYAxes(newValue);
         this.updateSeriesYAxesIfNecessary();
-        this.authoringViewComponentChanged();
+        this.componentChanged();
       } else {
         this.numYAxes = oldValue;
       }
@@ -505,7 +505,7 @@ class GraphAuthoringController extends EditComponentController {
     const color = yAxis.labels.style.color;
     yAxis.title.style.color = color;
     this.updateSeriesColors(yAxisIndex, color);
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   updateSeriesColors(yAxisIndex, color) {
@@ -553,14 +553,14 @@ class GraphAuthoringController extends EditComponentController {
 
   seriesYAxisChanged(series) {
     this.setSeriesColorToMatchYAxisColor(series);
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   graphTypeChanged(): void {
     const graphType = this.authoringComponentContent.graphType;
     this.updateAllSeriesPlotTypes(graphType);
     this.changeXAxisTypeIfNecessary(graphType);
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   updateAllSeriesPlotTypes(plotType: string): void {
@@ -582,7 +582,7 @@ class GraphAuthoringController extends EditComponentController {
 
   seriesTypeChanged(series: any): void {
     this.updateDashStyleField(series);
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   updateDashStyleField(series: any): void {

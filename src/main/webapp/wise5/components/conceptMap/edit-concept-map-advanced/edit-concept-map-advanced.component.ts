@@ -40,7 +40,7 @@ class EditConceptMapAdvancedController extends EditAdvancedComponentAngularJSCon
       delete rule.linkLabel;
       delete rule.otherNodeLabel;
     }
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   addRule(): void {
@@ -61,17 +61,17 @@ class EditConceptMapAdvancedController extends EditAdvancedComponentAngularJSCon
     }
 
     this.setShowSubmitButtonValue(showSubmitButton);
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   moveRuleUpButtonClicked(index: number): void {
     this.UtilService.moveObjectUp(this.authoringComponentContent.rules, index);
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   moveRuleDownButtonClicked(index: number): void {
     this.UtilService.moveObjectDown(this.authoringComponentContent.rules, index);
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   ruleDeleteButtonClicked(index: number): void {
@@ -83,7 +83,7 @@ class EditConceptMapAdvancedController extends EditAdvancedComponentAngularJSCon
       )
     ) {
       this.authoringComponentContent.rules.splice(index, 1);
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     }
 
     let showSubmitButton = false;
@@ -95,7 +95,7 @@ class EditConceptMapAdvancedController extends EditAdvancedComponentAngularJSCon
 
   addCategoryToRule(rule: any): void {
     rule.categories.push('');
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   deleteCategoryFromRule(rule: any, index: number): void {
@@ -107,7 +107,7 @@ class EditConceptMapAdvancedController extends EditAdvancedComponentAngularJSCon
       )
     ) {
       rule.categories.splice(index, 1);
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     }
   }
 
@@ -121,7 +121,7 @@ class EditConceptMapAdvancedController extends EditAdvancedComponentAngularJSCon
   connectedComponentComponentIdChanged(connectedComponent: any): void {
     this.automaticallySetConnectedComponentTypeIfPossible(connectedComponent);
     this.setImportWorkAsBackgroundIfApplicable(connectedComponent);
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   setImportWorkAsBackgroundIfApplicable(connectedComponent: any): void {
@@ -137,7 +137,7 @@ class EditConceptMapAdvancedController extends EditAdvancedComponentAngularJSCon
     if (!connectedComponent.importWorkAsBackground) {
       delete connectedComponent.importWorkAsBackground;
     }
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 }
 
