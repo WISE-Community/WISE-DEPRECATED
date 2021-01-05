@@ -4,11 +4,6 @@ class EditLabelAdvancedController extends EditAdvancedComponentAngularJSControll
   allowedConnectedComponentTypes = ['ConceptMap', 'Draw', 'Embedded', 'Graph', 'Label',
       'OpenResponse', 'Table'];
 
-  /**
-   * Automatically set the component id for the connected component if there
-   * is only one viable option.
-   * @param connectedComponent the connected component object we are authoring
-   */
   automaticallySetConnectedComponentComponentIdIfPossible(connectedComponent: any): void {
     super.automaticallySetConnectedComponentComponentIdIfPossible(connectedComponent);
     if (connectedComponent.componentId != null) {
@@ -22,10 +17,6 @@ class EditLabelAdvancedController extends EditAdvancedComponentAngularJSControll
     this.authoringViewComponentChanged();
   }
 
-  /**
-   * For certain component types, set the importWorkAsBackground field to true by default
-   * @param connectedComponent The connected component object.
-   */
   setImportWorkAsBackgroundIfApplicable(connectedComponent: any): void {
     const componentType = this.getConnectedComponentType(connectedComponent);
     if (['ConceptMap', 'Draw', 'Embedded', 'Graph', 'Table'].includes(componentType)) {

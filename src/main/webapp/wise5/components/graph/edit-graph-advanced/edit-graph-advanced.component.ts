@@ -57,11 +57,7 @@ class EditGraphAdvancedController extends EditAdvancedComponentAngularJSControll
     this.addConnectedComponentAndSetComponentIdIfPossible();
     if (this.authoringComponentContent.connectedComponents.length > 1 ||
         this.authoringComponentContent.series.length > 0) {
-      /*
-       * there is more than one connected component so we will enable
-       * trials so that each connected component can put work in a
-       * different trial
-       */
+      // enable trials so each connected component can put work in a different trial
       this.authoringComponentContent.enableTrials = true;
     }
     this.authoringViewComponentChanged();
@@ -141,11 +137,7 @@ class EditGraphAdvancedController extends EditAdvancedComponentAngularJSControll
     } else if (connectedComponent.type === 'showWork') {
       delete connectedComponent.showClassmateWorkSource;
     } else if (connectedComponent.type === 'showClassmateWork') {
-      /*
-       * the type has changed to show classmate work so we will enable
-       * trials so that each classmate work will show up in a
-       * different trial
-       */
+      // enable trials so each classmate work will show up in a different trial
       this.authoringComponentContent.enableTrials = true;
       if (connectedComponent.showClassmateWorkSource == null) {
         connectedComponent.showClassmateWorkSource = 'period';

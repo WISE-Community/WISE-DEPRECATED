@@ -64,28 +64,16 @@ class EditConceptMapAdvancedController extends EditAdvancedComponentAngularJSCon
     this.authoringViewComponentChanged();
   }
 
-  /**
-   * Move a rule up
-   * @param index the index of the rule
-   */
   moveRuleUpButtonClicked(index: number): void {
     this.UtilService.moveObjectUp(this.authoringComponentContent.rules, index);
     this.authoringViewComponentChanged();
   }
 
-  /**
-   * Move a rule down
-   * @param index the index of the rule
-   */
   moveRuleDownButtonClicked(index: number): void {
     this.UtilService.moveObjectDown(this.authoringComponentContent.rules, index);
     this.authoringViewComponentChanged();
   }
 
-  /*
-   * Delete a rule
-   * @param index the index of the rule to delete
-   */
   ruleDeleteButtonClicked(index: number): void {
     const rule = this.authoringComponentContent.rules[index];
     const ruleName = rule.name;
@@ -123,11 +111,6 @@ class EditConceptMapAdvancedController extends EditAdvancedComponentAngularJSCon
     }
   }
 
-  /**
-   * Automatically set the component id for the connected component if there
-   * is only one viable option.
-   * @param connectedComponent the connected component object we are authoring
-   */
   automaticallySetConnectedComponentComponentIdIfPossible(connectedComponent: any): void {
     super.automaticallySetConnectedComponentComponentIdIfPossible(connectedComponent);
     if (connectedComponent.componentId != null) {
@@ -135,21 +118,12 @@ class EditConceptMapAdvancedController extends EditAdvancedComponentAngularJSCon
     }
   }
 
-  /**
-   * The connected component component id has changed
-   * @param connectedComponent the connected component that has changed
-   */
   connectedComponentComponentIdChanged(connectedComponent: any): void {
     this.automaticallySetConnectedComponentTypeIfPossible(connectedComponent);
     this.setImportWorkAsBackgroundIfApplicable(connectedComponent);
     this.authoringViewComponentChanged();
   }
 
-  /**
-   * If the component type is a certain type, we will set the importWorkAsBackground
-   * field to true.
-   * @param connectedComponent The connected component object.
-   */
   setImportWorkAsBackgroundIfApplicable(connectedComponent: any): void {
     const componentType = this.getConnectedComponentType(connectedComponent);
     if (['Draw', 'Embedded', 'Graph', 'Label', 'Table'].includes(componentType)) {
@@ -159,10 +133,6 @@ class EditConceptMapAdvancedController extends EditAdvancedComponentAngularJSCon
     }
   }
 
-  /**
-   * The "Import Work As Background" checkbox was clicked.
-   * @param connectedComponent The connected component associated with the checkbox.
-   */
   importWorkAsBackgroundClicked(connectedComponent: any): void {
     if (!connectedComponent.importWorkAsBackground) {
       delete connectedComponent.importWorkAsBackground;

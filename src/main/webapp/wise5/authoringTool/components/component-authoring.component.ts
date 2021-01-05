@@ -1,26 +1,29 @@
-import { Component } from "@angular/core";
-import { Subscription } from "rxjs";
+import { Directive, Input } from "@angular/core";
+import { Subject, Subscription } from "rxjs";
+import { debounceTime, distinctUntilChanged } from "rxjs/operators";
 import { ConfigService } from "../../services/configService";
 import { NodeService } from "../../services/nodeService";
 import { TeacherProjectService } from "../../services/teacherProjectService";
 
-@Component({
-  template: ''
-})
+@Directive()
 export abstract class ComponentAuthoring {
+  @Input()
+  nodeId: string;
 
+  @Input()
+  componentId: string;
+
+  promptChange: Subject<string> = new Subject<string>();
   allowedConnectedComponentTypes: string[];
   authoringComponentContent: any;
   componentChangedSubscription: Subscription;
   componentContent: any;
-  componentId: string;
   idToOrder: any;
   isDirty: boolean = false;
   isPromptVisible: boolean = true;
   isSaveButtonVisible: boolean;
   isSubmitButtonVisible: boolean;
   isSubmitDirty: boolean = false;
-  nodeId: string;
   showAdvancedAuthoring: boolean = false;
   submitCounter: number = 0;
   starterStateResponseSubscription: Subscription;
@@ -31,6 +34,12 @@ export abstract class ComponentAuthoring {
     protected ProjectService: TeacherProjectService
   ) {
 
+    this.promptChange
+      .pipe(debounceTime(1000), distinctUntilChanged())
+      .subscribe((prompt: string) => {
+        this.authoringComponentContent.prompt = prompt;
+        this.authoringViewComponentChanged();
+      });
   }
 
   ngOnInit() {
@@ -48,6 +57,10 @@ export abstract class ComponentAuthoring {
     });
   }
 
+  promptChanged(prompt: string): void {
+    this.promptChange.next(prompt);
+  }
+
   authoringViewComponentChanged(): void {
     this.resetUI();
     this.ProjectService.nodeChanged();
@@ -63,9 +76,9 @@ export abstract class ComponentAuthoring {
     this.submitCounter = 0;
   }
 
-  isForThisComponent(object) {
-    return this.nodeId == object.nodeId && this.componentId == object.componentId;
+  isForThisComponent(object: any): boolean {
+    return object.nodeId == this.nodeId && object.componentId == this.componentId;
   }
 
-  saveStarterState(starterState: any) {}
+  saveStarterState(starterState: any): void {}
 }
