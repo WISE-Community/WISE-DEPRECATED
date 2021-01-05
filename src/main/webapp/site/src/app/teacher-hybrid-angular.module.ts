@@ -4,6 +4,7 @@ import '../../../wise5/teacher/teacher-angular-js-module';
 import { UpgradeModule } from '@angular/upgrade/static';
 import { setUpLocationSync } from '@angular/router/upgrade';
 import { ProjectService } from '../../../wise5/services/projectService';
+import { MilestonesComponent } from './classroom-monitor/milestones/milestones.component';
 import { MilestoneReportDataComponent } from './teacher/milestone/milestone-report-data/milestone-report-data.component';
 import { TeacherProjectService } from '../../../wise5/services/teacherProjectService';
 import { ProjectAssetService } from './services/projectAssetService';
@@ -25,6 +26,7 @@ import { ChooseImportStepLocationComponent } from './authoring-tool/import-step/
 import { ComponentNewWorkBadgeComponent } from './classroom-monitor/component-new-work-badge/component-new-work-badge.component';
 import { ComponentSelectComponent } from './classroom-monitor/component-select/component-select.component';
 import { StatusIconComponent } from './classroom-monitor/status-icon/status-icon.component';
+import { StepInfoComponent } from './classroom-monitor/step-info/step-info.component';
 import { AngularJSModule } from './common-hybrid-angular.module';
 import { NodeAdvancedJsonAuthoringComponent } from '../../../wise5/authoringTool/node/advanced/json/node-advanced-json-authoring.component';
 import { WorkgroupInfoComponent } from '../../../wise5/classroomMonitor/classroomMonitorComponents/nodeGrading/workgroupInfo/workgroup-info.component';
@@ -58,6 +60,7 @@ import { OpenResponseAuthoring } from '../../../wise5/components/openResponse/op
     EditHTMLAdvancedComponent,
     EditOutsideUrlAdvancedComponent,
     ManageStudentsComponent,
+    MilestonesComponent,
     MilestoneReportDataComponent,
     NavItemProgressComponent,
     NodeAdvancedGeneralAuthoringComponent,
@@ -65,6 +68,7 @@ import { OpenResponseAuthoring } from '../../../wise5/components/openResponse/op
     OpenResponseAuthoring,
     RubricAuthoringComponent,
     StatusIconComponent,
+    StepInfoComponent,
     WorkgroupInfoComponent,
     WorkgroupNodeScoreComponent,
     NavItemScoreComponent,
