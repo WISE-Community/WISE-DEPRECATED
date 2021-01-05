@@ -64,28 +64,16 @@ class EditConceptMapAdvancedController extends EditAdvancedComponentAngularJSCon
     this.authoringViewComponentChanged();
   }
 
-  /**
-   * Move a rule up
-   * @param index the index of the rule
-   */
   moveRuleUpButtonClicked(index: number): void {
     this.UtilService.moveObjectUp(this.authoringComponentContent.rules, index);
     this.authoringViewComponentChanged();
   }
 
-  /**
-   * Move a rule down
-   * @param index the index of the rule
-   */
   moveRuleDownButtonClicked(index: number): void {
     this.UtilService.moveObjectDown(this.authoringComponentContent.rules, index);
     this.authoringViewComponentChanged();
   }
 
-  /*
-   * Delete a rule
-   * @param index the index of the rule to delete
-   */
   ruleDeleteButtonClicked(index: number): void {
     const rule = this.authoringComponentContent.rules[index];
     const ruleName = rule.name;
@@ -123,6 +111,34 @@ class EditConceptMapAdvancedController extends EditAdvancedComponentAngularJSCon
     }
   }
 
+  automaticallySetConnectedComponentComponentIdIfPossible(connectedComponent: any): void {
+    super.automaticallySetConnectedComponentComponentIdIfPossible(connectedComponent);
+    if (connectedComponent.componentId != null) {
+      this.setImportWorkAsBackgroundIfApplicable(connectedComponent);
+    }
+  }
+
+  connectedComponentComponentIdChanged(connectedComponent: any): void {
+    this.automaticallySetConnectedComponentTypeIfPossible(connectedComponent);
+    this.setImportWorkAsBackgroundIfApplicable(connectedComponent);
+    this.authoringViewComponentChanged();
+  }
+
+  setImportWorkAsBackgroundIfApplicable(connectedComponent: any): void {
+    const componentType = this.getConnectedComponentType(connectedComponent);
+    if (['Draw', 'Embedded', 'Graph', 'Label', 'Table'].includes(componentType)) {
+      connectedComponent.importWorkAsBackground = true;
+    } else {
+      delete connectedComponent.importWorkAsBackground;
+    }
+  }
+
+  importWorkAsBackgroundClicked(connectedComponent: any): void {
+    if (!connectedComponent.importWorkAsBackground) {
+      delete connectedComponent.importWorkAsBackground;
+    }
+    this.authoringViewComponentChanged();
+  }
 }
 
 export const EditConceptMapAdvancedComponent = {

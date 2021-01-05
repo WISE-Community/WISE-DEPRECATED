@@ -96,84 +96,6 @@ export abstract class EditComponentController {
     });
   }
 
-  connectedComponentTypeChanged(connectedComponent) {
-    this.authoringViewComponentChanged();
-  }
-
-  connectedComponentNodeIdChanged(connectedComponent) {
-    connectedComponent.componentId = null;
-    connectedComponent.type = null;
-    this.automaticallySetConnectedComponentComponentIdIfPossible(connectedComponent);
-    this.authoringViewComponentChanged();
-  }
-
-  connectedComponentComponentIdChanged(connectedComponent) {
-    this.automaticallySetConnectedComponentTypeIfPossible(connectedComponent);
-    this.authoringViewComponentChanged();
-  }
-
-  isConnectedComponentTypeAllowed(componentType: string) {
-    return this.allowedConnectedComponentTypes.includes(componentType);
-  }
-
-  addConnectedComponent() {
-    this.addConnectedComponentAndSetComponentIdIfPossible();
-    this.authoringViewComponentChanged();
-  }
-
-  addConnectedComponentAndSetComponentIdIfPossible() {
-    const connectedComponent = this.createConnectedComponent();
-    if (this.authoringComponentContent.connectedComponents == null) {
-      this.authoringComponentContent.connectedComponents = [];
-    }
-    this.authoringComponentContent.connectedComponents.push(connectedComponent);
-    this.automaticallySetConnectedComponentComponentIdIfPossible(connectedComponent);
-  }
-
-  automaticallySetConnectedComponentComponentIdIfPossible(connectedComponent) {
-    let numberOfAllowedComponents = 0;
-    let allowedComponent = null;
-    for (const component of this.ProjectService.getComponentsByNodeId(connectedComponent.nodeId)) {
-      if (this.isConnectedComponentTypeAllowed(component.type) &&
-          component.id != this.componentId) {
-        numberOfAllowedComponents += 1;
-        allowedComponent = component;
-      }
-    }
-    if (numberOfAllowedComponents === 1) {
-      connectedComponent.componentId = allowedComponent.id;
-      connectedComponent.type = 'importWork';
-    }
-    this.automaticallySetConnectedComponentTypeIfPossible(connectedComponent);
-  }
-
-  automaticallySetConnectedComponentTypeIfPossible(connectedComponent) {
-    if (connectedComponent.componentId != null) {
-      connectedComponent.type = 'importWork';
-    }
-    this.automaticallySetConnectedComponentFieldsIfPossible(connectedComponent);
-  }
-
-  automaticallySetConnectedComponentFieldsIfPossible(connectedComponent) {
-  }
-
-  createConnectedComponent() {
-    return {
-      nodeId: this.nodeId,
-      componentId: null,
-      type: null
-    };
-  }
-
-  deleteConnectedComponent(index) {
-    if (confirm(this.$translate('areYouSureYouWantToDeleteThisConnectedComponent'))) {
-      if (this.authoringComponentContent.connectedComponents != null) {
-        this.authoringComponentContent.connectedComponents.splice(index, 1);
-      }
-      this.authoringViewComponentChanged();
-    }
-  }
-
   getNodePositionAndTitleByNodeId(nodeId) {
     return this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
   }
@@ -184,15 +106,6 @@ export abstract class EditComponentController {
 
   getComponentsByNodeId(nodeId) {
     return this.ProjectService.getComponentsByNodeId(nodeId);
-  }
-
-  getConnectedComponentType(
-      {nodeId, componentId}: { nodeId: string, componentId: string }) {
-    const component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
-    if (component != null) {
-      return component.type;
-    }
-    return null;
   }
 
   isForThisComponent(object) {
