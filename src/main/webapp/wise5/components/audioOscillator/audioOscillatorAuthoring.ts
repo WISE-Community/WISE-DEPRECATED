@@ -75,7 +75,7 @@ class AudioOscillatorAuthoringController extends EditComponentController {
     if (this.authoringSawtoothChecked) {
       this.authoringComponentContent.oscillatorTypes.push('sawtooth');
     }
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 }
 

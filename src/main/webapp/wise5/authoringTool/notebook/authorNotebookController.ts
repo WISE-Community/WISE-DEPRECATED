@@ -132,7 +132,7 @@ class AuthorNotebookController {
     this.SpaceService.removeSpace('public');
   }
 
-  authoringViewComponentChanged() {
+  componentChanged() {
     this.save();
   }
 

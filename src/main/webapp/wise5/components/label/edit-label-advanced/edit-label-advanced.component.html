@@ -2,14 +2,14 @@
   <div>
     <md-checkbox class='md-primary'
                  ng-model='$ctrl.authoringComponentContent.showSaveButton'
-                 ng-change='$ctrl.authoringViewComponentChanged()'>
+                 ng-change='$ctrl.componentChanged()'>
       {{ ::'SHOW_SAVE_BUTTON' | translate }}
     </md-checkbox>
   </div>
   <div>
     <md-checkbox class='md-primary'
                  ng-model='$ctrl.authoringComponentContent.showSubmitButton'
-                 ng-change='$ctrl.authoringViewComponentChanged()'>
+                 ng-change='$ctrl.componentChanged()'>
       {{ ::'SHOW_SUBMIT_BUTTON' | translate }}
     </md-checkbox>
   </div>
@@ -17,7 +17,7 @@
     <md-checkbox class='md-primary'
                  ng-if='$ctrl.isNotebookEnabled()'
                  ng-model='$ctrl.authoringComponentContent.showAddToNotebookButton'
-                 ng-change='$ctrl.authoringViewComponentChanged()'>
+                 ng-change='$ctrl.componentChanged()'>
       {{ ::'SHOW_ADD_TO_NOTEBOOK_BUTTON' | translate }}
     </md-checkbox>
   </div>
@@ -28,7 +28,7 @@
       <input type='number'
              ng-model='$ctrl.authoringComponentContent.maxSubmitCount'
              ng-model-options='{ debounce: 1000 }'
-             ng-change='$ctrl.authoringViewComponentChanged()'/>
+             ng-change='$ctrl.componentChanged()'/>
     </md-input-container>
   </div>
   <div layout="column" layout-align="start start">
@@ -120,19 +120,19 @@
             <label>{{ ::'label.charactersPerLine' | translate }}</label>
             <input ng-model='connectedComponent.charactersPerLine'
                    ng-model-options='{ debounce: 1000 }'
-                   ng-change='$ctrl.authoringViewComponentChanged()'/>
+                   ng-change='$ctrl.componentChanged()'/>
           </md-input-container>
           <md-input-container style='margin-right: 20px; width: 200px; height: 30px;'>
             <label>{{ ::'label.spaceInbetweenLines' | translate }}</label>
             <input ng-model='connectedComponent.spaceInbetweenLines'
                    ng-model-options='{ debounce: 1000 }'
-                   ng-change='$ctrl.authoringViewComponentChanged()'/>
+                   ng-change='$ctrl.componentChanged()'/>
           </md-input-container>
           <md-input-container style='margin-right: 20px; width: 100px; height: 30px;'>
             <label>{{ ::'label.fontSize' | translate }}</label>
             <input ng-model='connectedComponent.fontSize'
                    ng-model-options='{ debounce: 1000 }'
-                   ng-change='$ctrl.authoringViewComponentChanged()'/>
+                   ng-change='$ctrl.componentChanged()'/>
           </md-input-container>
         </div>
       </div>

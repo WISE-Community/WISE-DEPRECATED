@@ -3,36 +3,36 @@
   {{ ::'conceptMap.showAutoScore' | translate }}:
   <input type='checkbox'
          ng-model='$ctrl.authoringComponentContent.showAutoScore'
-         ng-change='$ctrl.authoringViewComponentChanged()'/>
+         ng-change='$ctrl.componentChanged()'/>
   <br/>
   {{ ::'conceptMap.showAutoFeedback' | translate }}:
   <input type='checkbox'
          ng-model='$ctrl.authoringComponentContent.showAutoFeedback'
-         ng-change='$ctrl.authoringViewComponentChanged()'/>
+         ng-change='$ctrl.componentChanged()'/>
   <br/>
   {{ ::'conceptMap.rules' | translate }}
   <div ng-repeat='rule in $ctrl.authoringComponentContent.rules'>
     {{ ::'conceptMap.ruleName' | translate }}:
     <input ng-model='rule.name'
            size='30'
-           ng-change='$ctrl.authoringViewComponentChanged()'
+           ng-change='$ctrl.componentChanged()'
            ng-model-options='{ debounce: 1000 }'/>
     <select ng-model='rule.not'
-            ng-change='$ctrl.authoringViewComponentChanged()'
+            ng-change='$ctrl.componentChanged()'
             ng-options='option.value as option.label for option in $ctrl.shouldOptions'>
     </select>
     {{ ::'conceptMap.contain' | translate }}
     <select ng-model='rule.comparison'
-            ng-change='$ctrl.authoringViewComponentChanged()'>
+            ng-change='$ctrl.componentChanged()'>
       <option value='exactly'>{{ ::'conceptMap.exactly' | translate }}</option>
       <option value='more than'>{{ ::'conceptMap.moreThan' | translate }}</option>
       <option value='less than'>{{ ::'conceptMap.lessThan' | translate }}</option>
     </select>
     <input ng-model='rule.number'
            size='3'
-           ng-change='$ctrl.authoringViewComponentChanged()'/>
+           ng-change='$ctrl.componentChanged()'/>
     <select ng-model='rule.nodeLabel'
-            ng-change='$ctrl.authoringViewComponentChanged()'>
+            ng-change='$ctrl.componentChanged()'>
       <option></option>
       <option value='any'>{{ ::'conceptMap.any' | translate }}</option>
       <option ng-repeat='node in $ctrl.authoringComponentContent.nodes'
@@ -45,7 +45,7 @@
            ng-false-value='"node"'
            ng-change='$ctrl.ruleLinkCheckboxClicked($index)'/>
     <select ng-model='rule.linkLabel'
-            ng-change='$ctrl.authoringViewComponentChanged()'
+            ng-change='$ctrl.componentChanged()'
             ng-if='rule.type == "link"'>
       <option></option>
       <option value='any'>{{ ::'conceptMap.any' | translate }}</option>
@@ -54,7 +54,7 @@
     </select>
     <span ng-if='rule.type == "link"'>{{ ::'conceptMap.to' | translate }}</span>
     <select ng-model='rule.otherNodeLabel'
-            ng-change='$ctrl.authoringViewComponentChanged()'
+            ng-change='$ctrl.componentChanged()'
             ng-if='rule.type == "link"'>
       <option></option>
       <option value='any'>{{ ::'conceptMap.any' | translate }}</option>
@@ -69,7 +69,7 @@
       <button ng-click="$ctrl.addCategoryToRule(rule)">{{ ::'conceptMap.addCategoryOptional' | translate }}</button>
       <span ng-repeat='category in rule.categories track by $index'>
         <input ng-model='rule.categories[$index]'
-               ng-change='$ctrl.authoringViewComponentChanged()'
+               ng-change='$ctrl.componentChanged()'
                ng-model-options='{ debounce: 1000 }'/>
         <button ng-click="$ctrl.deleteCategoryFromRule(rule, $index)">x</button>
       </span>
@@ -82,7 +82,7 @@
   {{ ::'conceptMap.customRuleEvaluator' | translate }}
   <br/>
   <textarea ng-model='$ctrl.authoringComponentContent.customRuleEvaluator'
-            ng-change='$ctrl.authoringViewComponentChanged()'
+            ng-change='$ctrl.componentChanged()'
             rows='10'
             cols='100'
             ng-model-options='{ debounce: 1000 }'>
@@ -92,14 +92,14 @@
   <div>
     <md-checkbox class='md-primary'
                  ng-model='$ctrl.authoringComponentContent.showSaveButton'
-                 ng-change='$ctrl.authoringViewComponentChanged()'>
+                 ng-change='$ctrl.componentChanged()'>
       {{ ::'SHOW_SAVE_BUTTON' | translate }}
     </md-checkbox>
   </div>
   <div>
     <md-checkbox class='md-primary'
                  ng-model='$ctrl.authoringComponentContent.showSubmitButton'
-                 ng-change='$ctrl.authoringViewComponentChanged()'>
+                 ng-change='$ctrl.componentChanged()'>
       {{ ::'SHOW_SUBMIT_BUTTON' | translate }}
     </md-checkbox>
   </div>
@@ -107,7 +107,7 @@
     <md-checkbox class='md-primary'
                  ng-if='$ctrl.isNotebookEnabled()'
                  ng-model='$ctrl.authoringComponentContent.showAddToNotebookButton'
-                 ng-change='$ctrl.authoringViewComponentChanged()'>
+                 ng-change='$ctrl.componentChanged()'>
       {{ ::'SHOW_ADD_TO_NOTEBOOK_BUTTON' | translate }}
     </md-checkbox>
   </div>
@@ -118,7 +118,7 @@
       <input type='number'
              ng-model='$ctrl.authoringComponentContent.maxSubmitCount'
              ng-model-options='{ debounce: 1000 }'
-             ng-change='$ctrl.authoringViewComponentChanged()'/>
+             ng-change='$ctrl.componentChanged()'/>
     </md-input-container>
   </div>
   <div layout="column" layout-align="start start">

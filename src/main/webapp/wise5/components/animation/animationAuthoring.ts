@@ -45,7 +45,7 @@ class AnimationAuthoringController extends EditComponentController {
       type: 'image'
     };
     this.authoringComponentContent.objects.push(newObject);
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   addDataPointToObject(authoredObject) {
@@ -57,7 +57,7 @@ class AnimationAuthoringController extends EditComponentController {
     } else {
       this.addNewDataPoint(authoredObject);
     }
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   authoredObjectHasDataSource(authoredObject) {
@@ -88,7 +88,7 @@ class AnimationAuthoringController extends EditComponentController {
 
   deleteAnimationObjectDataPoint(animationObject, index) {
     animationObject.data.splice(index, 1);
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   authoringMoveAnimationObjectDataPointUp(object, index) {
@@ -96,7 +96,7 @@ class AnimationAuthoringController extends EditComponentController {
       const dataPoint = object.data[index];
       object.data.splice(index, 1);
       object.data.splice(index - 1, 0, dataPoint);
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     }
   }
 
@@ -105,7 +105,7 @@ class AnimationAuthoringController extends EditComponentController {
       const dataPoint = object.data[index];
       object.data.splice(index, 1);
       object.data.splice(index - 1, 0, dataPoint);
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     }
   }
 
@@ -114,7 +114,7 @@ class AnimationAuthoringController extends EditComponentController {
       const dataPoint = object.data[index];
       object.data.splice(index, 1);
       object.data.splice(index + 1, 0, dataPoint);
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     }
   }
 
@@ -124,7 +124,7 @@ class AnimationAuthoringController extends EditComponentController {
       const object = objects[index];
       objects.splice(index, 1);
       objects.splice(index - 1, 0, object);
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     }
   }
 
@@ -134,7 +134,7 @@ class AnimationAuthoringController extends EditComponentController {
       const object = objects[index];
       objects.splice(index, 1);
       objects.splice(index + 1, 0, object);
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     }
   }
 
@@ -154,7 +154,7 @@ class AnimationAuthoringController extends EditComponentController {
 
   deleteAnimationObject(index) {
     this.authoringComponentContent.objects.splice(index, 1);
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   addDataSource(authoredObject) {
@@ -165,7 +165,7 @@ class AnimationAuthoringController extends EditComponentController {
     } else {
       this.deleteDataAndAddDataSource(authoredObject);
     }
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   authoredObjectHasData(authoredObject) {
@@ -193,7 +193,7 @@ class AnimationAuthoringController extends EditComponentController {
 
   authoringDeleteDataSource(animationObject) {
     delete animationObject.dataSource;
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   dataSourceNodeChanged(authoredObject) {
@@ -201,7 +201,7 @@ class AnimationAuthoringController extends EditComponentController {
     authoredObject.dataSource = {
       nodeId: nodeId
     };
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   dataSourceComponentChanged(authoredObject) {
@@ -215,7 +215,7 @@ class AnimationAuthoringController extends EditComponentController {
     if (component.type === 'Graph') {
       this.setDefaultParamsForGraphDataSource(authoredObject);
     }
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   setDefaultParamsForGraphDataSource(authoredObject) {
@@ -267,7 +267,7 @@ class AnimationAuthoringController extends EditComponentController {
     } else if (target === 'imageMovingRight') {
       targetObject.imageMovingRight = assetItem.fileName;
     }
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   authoredObjectTypeChanged(authoredObject) {
@@ -276,7 +276,7 @@ class AnimationAuthoringController extends EditComponentController {
     } else if (authoredObject.type === 'text') {
       this.removeImageFromAuthoredObject(authoredObject);
     }
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   removeTextFromAuthoredObject(authoredObject) {

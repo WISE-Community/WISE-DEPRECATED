@@ -66,7 +66,7 @@ class LabelAuthoringController extends EditComponentController {
       canDelete: false
     };
     this.authoringComponentContent.labels.push(newLabel);
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   /**
@@ -81,7 +81,7 @@ class LabelAuthoringController extends EditComponentController {
     );
     if (answer) {
       this.authoringComponentContent.labels.splice(index, 1);
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     }
   }
 
@@ -100,7 +100,7 @@ class LabelAuthoringController extends EditComponentController {
     const fileName = assetItem.fileName;
     if (target === 'background') {
       this.authoringComponentContent.backgroundImage = fileName;
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     }
   }
 
@@ -113,7 +113,7 @@ class LabelAuthoringController extends EditComponentController {
   saveStarterState(starterState: any): void {
     starterState.sort(this.labelTextComparator);
     this.authoringComponentContent.labels = starterState;
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   /**
@@ -156,7 +156,7 @@ class LabelAuthoringController extends EditComponentController {
   deleteStarterLabels(): void {
     if (confirm(this.$translate('label.areYouSureYouWantToDeleteAllTheStarterLabels'))) {
       this.authoringComponentContent.labels = [];
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     }
   }
 

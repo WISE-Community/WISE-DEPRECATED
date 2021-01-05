@@ -80,7 +80,7 @@ function createYAxis(color) {
 
 function shouldAddAnXAxisPlotLine() {
   it('should add an x axis plot line', () => {
-    spyOn(graphAuthoringController, 'authoringViewComponentChanged').and.callFake(() => {});
+    spyOn(graphAuthoringController, 'componentChanged').and.callFake(() => {});
     expect(graphAuthoringController.authoringComponentContent.xAxis.plotLines.length).toEqual(0);
     graphAuthoringController.addXAxisPlotLine();
     expect(graphAuthoringController.authoringComponentContent.xAxis.plotLines.length).toEqual(1);
@@ -89,7 +89,7 @@ function shouldAddAnXAxisPlotLine() {
 
 function shouldDeleteAnAAxisPlotLine() {
   it('should delete an x axis plot line', () => {
-    spyOn(graphAuthoringController, 'authoringViewComponentChanged').and.callFake(() => {});
+    spyOn(graphAuthoringController, 'componentChanged').and.callFake(() => {});
     const plotLine = {
       value: 10,
       label: {
@@ -105,7 +105,7 @@ function shouldDeleteAnAAxisPlotLine() {
 
 function shouldAddAYAxisPlotLine() {
   it('should add a y axis plot line', () => {
-    spyOn(graphAuthoringController, 'authoringViewComponentChanged').and.callFake(() => {});
+    spyOn(graphAuthoringController, 'componentChanged').and.callFake(() => {});
     expect(graphAuthoringController.authoringComponentContent.yAxis.plotLines.length).toEqual(0);
     graphAuthoringController.addYAxisPlotLine();
     expect(graphAuthoringController.authoringComponentContent.yAxis.plotLines.length).toEqual(1);
@@ -114,7 +114,7 @@ function shouldAddAYAxisPlotLine() {
 
 function shouldDeleteAYAxisPlotLine() {
   it('should delete a y axis plot line', () => {
-    spyOn(graphAuthoringController, 'authoringViewComponentChanged').and.callFake(() => {});
+    spyOn(graphAuthoringController, 'componentChanged').and.callFake(() => {});
     const plotLine = {
       value: 10,
       label: {
@@ -249,7 +249,7 @@ function shouldUpdateYAxisTitleColor() {
     graphAuthoringController.authoringComponentContent.yAxis = [yAxis];
     graphAuthoringController.authoringComponentContent.series = [];
     yAxis.labels.style.color = 'blue';
-    spyOn(graphAuthoringController, 'authoringViewComponentChanged').and.callFake(() => {});
+    spyOn(graphAuthoringController, 'componentChanged').and.callFake(() => {});
     graphAuthoringController.yAxisColorChanged(0);
     expect(yAxis.title.style.color).toEqual('blue');
   });
@@ -381,7 +381,7 @@ function shouldHandleSeriesYAxisChanged() {
     const series = {
       yAxis: 1
     };
-    spyOn(graphAuthoringController, 'authoringViewComponentChanged').and.callFake(() => {});
+    spyOn(graphAuthoringController, 'componentChanged').and.callFake(() => {});
     graphAuthoringController.seriesYAxisChanged(series);
     expect(series.color).toEqual('red');
   });
@@ -395,7 +395,7 @@ function shouldSetTheNewSeriesColorToMatchYAxis() {
     ];
     graphAuthoringController.enableMultipleYAxes = true;
     graphAuthoringController.authoringComponentContent.series = [];
-    spyOn(graphAuthoringController, 'authoringViewComponentChanged').and.callFake(() => {});
+    spyOn(graphAuthoringController, 'componentChanged').and.callFake(() => {});
     graphAuthoringController.addSeriesClicked();
     expect(graphAuthoringController.authoringComponentContent.series[0].color).toEqual('black');
   });
@@ -406,7 +406,7 @@ function shouldTurnOnMultipleYAxes() {
     graphAuthoringController.authoringComponentContent.yAxis = createYAxis('black');
     graphAuthoringController.enableMultipleYAxes = true;
     graphAuthoringController.authoringComponentContent.series = [{}];
-    spyOn(graphAuthoringController, 'authoringViewComponentChanged').and.callFake(() => {});
+    spyOn(graphAuthoringController, 'componentChanged').and.callFake(() => {});
     graphAuthoringController.enableMultipleYAxesChanged();
     expect(graphAuthoringController.authoringComponentContent.yAxis.length).toEqual(2);
     expect(graphAuthoringController.authoringComponentContent.series[0].color).toEqual('black');
@@ -419,7 +419,7 @@ function shouldTurnOffMultipleYAxes() {
     graphAuthoringController.enableMultipleYAxes = false;
     graphAuthoringController.authoringComponentContent.series = [{}];
     spyOn(window, 'confirm').and.returnValue(true);
-    spyOn(graphAuthoringController, 'authoringViewComponentChanged').and.callFake(() => {});
+    spyOn(graphAuthoringController, 'componentChanged').and.callFake(() => {});
     graphAuthoringController.enableMultipleYAxesChanged();
     expect(Array.isArray(graphAuthoringController.authoringComponentContent.yAxis)).toEqual(false);
     expect(graphAuthoringController.authoringComponentContent.series[0].yAxis).toBeUndefined();
@@ -432,7 +432,7 @@ function shouldIncreaseNumYAxes() {
       createYAxis('blue'),
       createYAxis('red')
     ];
-    spyOn(graphAuthoringController, 'authoringViewComponentChanged').and.callFake(() => {});
+    spyOn(graphAuthoringController, 'componentChanged').and.callFake(() => {});
     graphAuthoringController.numYAxesChanged(4, 2);
     const yAxis = graphAuthoringController.authoringComponentContent.yAxis;
     expect(yAxis.length).toEqual(4);
@@ -453,7 +453,7 @@ function shouldDecreaseNumYAxes() {
     ];
     graphAuthoringController.authoringComponentContent.series = [];
     spyOn(window, 'confirm').and.returnValue(true);
-    spyOn(graphAuthoringController, 'authoringViewComponentChanged').and.callFake(() => {});
+    spyOn(graphAuthoringController, 'componentChanged').and.callFake(() => {});
     graphAuthoringController.numYAxesChanged(2, 4);
     const yAxis = graphAuthoringController.authoringComponentContent.yAxis;
     expect(yAxis.length).toEqual(2);
@@ -476,7 +476,7 @@ function shouldUpdateSeriesYAxisAndColorWhenYAxisIsRemoved() {
       }
     ];
     spyOn(window, 'confirm').and.returnValue(true);
-    spyOn(graphAuthoringController, 'authoringViewComponentChanged').and.callFake(() => {});
+    spyOn(graphAuthoringController, 'componentChanged').and.callFake(() => {});
     graphAuthoringController.numYAxesChanged(2, 3);
     const singleSeries = graphAuthoringController.authoringComponentContent.series[0];
     expect(singleSeries.yAxis).toEqual(0);

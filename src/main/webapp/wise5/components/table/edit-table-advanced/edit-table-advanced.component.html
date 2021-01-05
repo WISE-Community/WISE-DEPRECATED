@@ -2,14 +2,14 @@
   <div>
     <md-checkbox class='md-primary'
                  ng-model='$ctrl.authoringComponentContent.showSaveButton'
-                 ng-change='$ctrl.authoringViewComponentChanged()'>
+                 ng-change='$ctrl.componentChanged()'>
       {{ ::'SHOW_SAVE_BUTTON' | translate }}
     </md-checkbox>
   </div>
   <div>
     <md-checkbox class='md-primary'
                  ng-model='$ctrl.authoringComponentContent.showSubmitButton'
-                 ng-change='$ctrl.authoringViewComponentChanged()'>
+                 ng-change='$ctrl.componentChanged()'>
       {{ ::'SHOW_SUBMIT_BUTTON' | translate }}
     </md-checkbox>
   </div>
@@ -17,7 +17,7 @@
     <md-checkbox class='md-primary'
                  ng-if='$ctrl.isNotebookEnabled()'
                  ng-model='$ctrl.authoringComponentContent.showAddToNotebookButton'
-                 ng-change='$ctrl.authoringViewComponentChanged()'>
+                 ng-change='$ctrl.componentChanged()'>
       {{ ::'SHOW_ADD_TO_NOTEBOOK_BUTTON' | translate }}
     </md-checkbox>
   </div>
@@ -28,7 +28,7 @@
       <input type='number'
              ng-model='$ctrl.authoringComponentContent.maxSubmitCount'
              ng-model-options='{ debounce: 1000 }'
-             ng-change='$ctrl.authoringViewComponentChanged()'/>
+             ng-change='$ctrl.componentChanged()'/>
     </md-input-container>
   </div>
   <div style='border: 1px solid black'>
@@ -64,7 +64,7 @@
       <div ng-if='$ctrl.isDataExplorerScatterPlotEnabled'>
         <md-checkbox class='md-primary'
             ng-model='$ctrl.authoringComponentContent.isDataExplorerScatterPlotRegressionLineEnabled'
-            ng-change='$ctrl.authoringViewComponentChanged()'>
+            ng-change='$ctrl.componentChanged()'>
           {{ ::'table.showScatterPlotRegressionLine' | translate }}
         </md-checkbox>
       </div>
@@ -91,7 +91,7 @@
           <md-input-container style='margin-right: 20px; width: 300px;'>
             <label>{{ ::'table.series' | translate }} {{ $index + 1 }}</label>
             <md-select ng-model='$ctrl.authoringComponentContent.dataExplorerSeriesParams[$index].yAxis'
-                ng-change='$ctrl.authoringViewComponentChanged()'
+                ng-change='$ctrl.componentChanged()'
                 style='width: 300px'>
               <md-option ng-repeat='y in [].constructor($ctrl.authoringComponentContent.numDataExplorerYAxis) track by $index'
                   ng-value='$index'>
@@ -107,7 +107,7 @@
         <md-checkbox class='md-primary'
             style='margin-right: 40px;'
             ng-model='$ctrl.authoringComponentContent.isDataExplorerAxisLabelsEditable'
-            ng-change='$ctrl.authoringViewComponentChanged()'>
+            ng-change='$ctrl.componentChanged()'>
           {{ ::'table.canStudentEditAxisLabels' | translate }}
         </md-checkbox>
       </div>
@@ -180,7 +180,7 @@
                             ng-if='connectedComponent.type == "importWork"'>
           <label>{{ ::'action' | translate }}</label>
           <md-select ng-model='connectedComponent.action'
-                     ng-change='$ctrl.authoringViewComponentChanged()'
+                     ng-change='$ctrl.componentChanged()'
                      style='width: 200px'>
             <md-option value='merge'>
               {{ ::'merge' | translate }}
@@ -204,7 +204,7 @@
         <md-input-container ng-if='$ctrl.getConnectedComponentType(connectedComponent) == "Graph"'>
           <md-checkbox class='md-primary'
                        ng-model='connectedComponent.showDataAtMouseX'
-                       ng-change='$ctrl.authoringViewComponentChanged()'>
+                       ng-change='$ctrl.componentChanged()'>
             {{ ::'table.onlyShowDataAtMouseXPosition' | translate }}
           </md-checkbox>
         </md-input-container>

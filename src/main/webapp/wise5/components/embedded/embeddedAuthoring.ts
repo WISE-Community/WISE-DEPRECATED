@@ -54,7 +54,7 @@ class EmbeddedAuthoringController extends EditComponentController {
     super.assetSelected({ nodeId, componentId, assetItem, target });
     if (target === 'modelFile') {
       this.authoringComponentContent.url = assetItem.fileName;
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     }
   }
 

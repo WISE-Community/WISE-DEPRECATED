@@ -2,14 +2,14 @@
   <div>
     <md-checkbox class='md-primary'
                  ng-model='$ctrl.authoringComponentContent.showSaveButton'
-                 ng-change='$ctrl.authoringViewComponentChanged()'>
+                 ng-change='$ctrl.componentChanged()'>
       {{ ::'SHOW_SAVE_BUTTON' | translate }}
     </md-checkbox>
   </div>
   <div>
     <md-checkbox class='md-primary'
                  ng-model='$ctrl.authoringComponentContent.showSubmitButton'
-                 ng-change='$ctrl.authoringViewComponentChanged()'>
+                 ng-change='$ctrl.componentChanged()'>
       {{ ::'SHOW_SUBMIT_BUTTON' | translate }}
     </md-checkbox>
   </div>
@@ -17,7 +17,7 @@
     <md-checkbox class='md-primary'
                  ng-if='$ctrl.isNotebookEnabled()'
                  ng-model='$ctrl.authoringComponentContent.showAddToNotebookButton'
-                 ng-change='$ctrl.authoringViewComponentChanged()'>
+                 ng-change='$ctrl.componentChanged()'>
       {{ ::'SHOW_ADD_TO_NOTEBOOK_BUTTON' | translate }}
     </md-checkbox>
   </div>
@@ -28,7 +28,7 @@
       <input type='number'
              ng-model='$ctrl.authoringComponentContent.maxSubmitCount'
              ng-model-options='{ debounce: 1000 }'
-             ng-change='$ctrl.authoringViewComponentChanged()'/>
+             ng-change='$ctrl.componentChanged()'/>
     </md-input-container>
   </div>
   <div layout="column" layout-align="start start">

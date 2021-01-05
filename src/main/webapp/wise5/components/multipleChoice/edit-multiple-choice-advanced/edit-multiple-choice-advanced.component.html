@@ -1,21 +1,21 @@
 <div>
   <md-checkbox class='md-primary'
       ng-model='$ctrl.authoringComponentContent.showFeedback'
-      ng-change='$ctrl.authoringViewComponentChanged()'>
+      ng-change='$ctrl.componentChanged()'>
     {{ 'SHOW_FEEDBACK' | translate }}
   </md-checkbox>
 </div>
 <div>
   <md-checkbox class='md-primary'
       ng-model='$ctrl.authoringComponentContent.showSaveButton'
-      ng-change='$ctrl.authoringViewComponentChanged()'>
+      ng-change='$ctrl.componentChanged()'>
     {{ 'SHOW_SAVE_BUTTON' | translate }}
   </md-checkbox>
 </div>
 <div>
   <md-checkbox class='md-primary'
       ng-model='$ctrl.authoringComponentContent.showSubmitButton'
-      ng-change='$ctrl.authoringViewComponentChanged()'>
+      ng-change='$ctrl.componentChanged()'>
     {{ 'SHOW_SUBMIT_BUTTON' | translate }}
   </md-checkbox>
 </div>
@@ -26,7 +26,7 @@
     <input type='number'
         ng-model='$ctrl.authoringComponentContent.maxSubmitCount'
         ng-model-options='{ debounce: 1000 }'
-        ng-change='$ctrl.authoringViewComponentChanged()'/>
+        ng-change='$ctrl.componentChanged()'/>
   </md-input-container>
 </div>
 <div layout="column" layout-align="start start">
@@ -82,7 +82,7 @@
       <md-input-container style='margin-right: 20; width: 200;'>
         <label>{{ 'type' | translate }}</label>
         <md-select ng-model='connectedComponent.type'
-            ng-change='$ctrl.authoringViewComponentChanged()'
+            ng-change='$ctrl.componentChanged()'
             style='width: 200'>
           <md-option value='importWork'>{{ 'importWork' | translate }}</md-option>
           <md-option value='showWork'>{{ 'showWork' | translate }}</md-option>

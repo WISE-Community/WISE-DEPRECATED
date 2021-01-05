@@ -7,7 +7,7 @@
             <label>{{ ::'embedded.modelParameters' | translate }}</label>
             <textarea rows='1'
                 ng-model='embeddedController.authoringComponentContent.parameters'
-                ng-change='embeddedController.authoringViewComponentChanged()'
+                ng-change='embeddedController.componentChanged()'
                 ng-model-options='{ debounce: 1000 }'>
             </textarea>
           </md-input-container>
@@ -15,14 +15,14 @@
         <div>
           <md-checkbox class='md-primary'
               ng-model='embeddedController.authoringComponentContent.showSaveButton'
-              ng-change='embeddedController.authoringViewComponentChanged()'>
+              ng-change='embeddedController.componentChanged()'>
             {{ ::'SHOW_SAVE_BUTTON' | translate }}
           </md-checkbox>
         </div>
         <div>
           <md-checkbox class='md-primary'
               ng-model='embeddedController.authoringComponentContent.showSubmitButton'
-              ng-change='embeddedController.authoringViewComponentChanged()'>
+              ng-change='embeddedController.componentChanged()'>
             {{ ::'SHOW_SUBMIT_BUTTON' | translate }}
           </md-checkbox>
         </div>
@@ -30,7 +30,7 @@
           <md-checkbox class='md-primary'
               ng-if='embeddedController.isNotebookEnabled()'
               ng-model='embeddedController.authoringComponentContent.showAddToNotebookButton'
-              ng-change='embeddedController.authoringViewComponentChanged()'>
+              ng-change='embeddedController.componentChanged()'>
             {{ ::'SHOW_ADD_TO_NOTEBOOK_BUTTON' | translate }}
           </md-checkbox>
         </div>
@@ -41,7 +41,7 @@
             <input type='number'
                 ng-model='embeddedController.authoringComponentContent.maxSubmitCount'
                 ng-model-options='{ debounce: 1000 }'
-                ng-change='embeddedController.authoringViewComponentChanged()'/>
+                ng-change='embeddedController.componentChanged()'/>
           </md-input-container>
         </div>
         <div layout="column" layout-align="start start">
@@ -120,7 +120,7 @@
             <label>{{ ::'embedded.modelFileName' | translate }}</label>
             <input size='100'
                 ng-model='embeddedController.authoringComponentContent.url'
-                ng-change='embeddedController.authoringViewComponentChanged()'
+                ng-change='embeddedController.componentChanged()'
                 ng-model-options='{ debounce: 1000 }'/>
           </md-input-container>
           <md-button class='topButton md-raised md-primary' ng-click="embeddedController.showModelFileChooserPopup()">
@@ -134,7 +134,7 @@
             <input size='20'
                 type='number'
                 ng-model='embeddedController.authoringComponentContent.width'
-                ng-change='embeddedController.authoringViewComponentChanged()'
+                ng-change='embeddedController.componentChanged()'
                 ng-model-options='{ debounce: 1000 }'/>
           </md-input-container>
           <md-input-container style='height: 40px'>
@@ -142,7 +142,7 @@
             <input size='20'
                 type='number'
                 ng-model='embeddedController.authoringComponentContent.height'
-                ng-change='embeddedController.authoringViewComponentChanged()'
+                ng-change='embeddedController.componentChanged()'
                 ng-model-options='{ debounce: 1000 }'/>
           </md-input-container>
           <span flex></span>

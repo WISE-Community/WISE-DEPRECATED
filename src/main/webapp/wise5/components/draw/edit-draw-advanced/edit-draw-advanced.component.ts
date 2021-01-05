@@ -25,7 +25,7 @@ class EditDrawAdvancedController extends EditAdvancedComponentAngularJSControlle
   connectedComponentComponentIdChanged(connectedComponent) {
     connectedComponent.type = 'importWork';
     this.setImportWorkAsBackgroundIfApplicable(connectedComponent);
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   setImportWorkAsBackgroundIfApplicable(connectedComponent) {
@@ -42,7 +42,7 @@ class EditDrawAdvancedController extends EditAdvancedComponentAngularJSControlle
     if (!connectedComponent.importWorkAsBackground) {
       delete connectedComponent.importWorkAsBackground;
     }
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 }
 

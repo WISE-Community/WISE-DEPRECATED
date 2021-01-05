@@ -46,7 +46,7 @@ class EditOpenResponseAdvancedController extends EditAdvancedComponentAngularJSC
     } else {
       this.setShowSubmitButtonValue(false);
     }
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   addScoringRule(): void {
@@ -59,7 +59,7 @@ class EditOpenResponseAdvancedController extends EditAdvancedComponentAngularJSC
         feedbackText: ''
       };
       this.authoringComponentContent.cRater.scoringRules.push(newScoringRule);
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     }
   }
 
@@ -72,7 +72,7 @@ class EditOpenResponseAdvancedController extends EditAdvancedComponentAngularJSC
         const scoringRule = this.authoringComponentContent.cRater.scoringRules[index];
         this.authoringComponentContent.cRater.scoringRules.splice(index, 1);
         this.authoringComponentContent.cRater.scoringRules.splice(index - 1, 0, scoringRule);
-        this.authoringViewComponentChanged();
+        this.componentChanged();
       }
     }
   }
@@ -86,7 +86,7 @@ class EditOpenResponseAdvancedController extends EditAdvancedComponentAngularJSC
         const scoringRule = this.authoringComponentContent.cRater.scoringRules[index];
         this.authoringComponentContent.cRater.scoringRules.splice(index, 1);
         this.authoringComponentContent.cRater.scoringRules.splice(index + 1, 0, scoringRule);
-        this.authoringViewComponentChanged();
+        this.componentChanged();
       }
     }
   }
@@ -104,7 +104,7 @@ class EditOpenResponseAdvancedController extends EditAdvancedComponentAngularJSC
       );
       if (answer) {
         this.authoringComponentContent.cRater.scoringRules.splice(index, 1);
-        this.authoringViewComponentChanged();
+        this.componentChanged();
       }
     }
   }
@@ -146,7 +146,7 @@ class EditOpenResponseAdvancedController extends EditAdvancedComponentAngularJSC
           '{{username}} ' + $localize`got a score of` + ' {{score}}.'
       };
       this.authoringComponentContent.notificationSettings.notifications.push(newNotification);
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     }
   }
 
@@ -162,7 +162,7 @@ class EditOpenResponseAdvancedController extends EditAdvancedComponentAngularJSC
       this.authoringComponentContent.cRater.multipleAttemptScoringRules.push(
         newMultipleAttemptScoringRule
       );
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     }
   }
 
@@ -180,7 +180,7 @@ class EditOpenResponseAdvancedController extends EditAdvancedComponentAngularJSC
           0,
           multipleAttemptScoringRule
         );
-        this.authoringViewComponentChanged();
+        this.componentChanged();
       }
     }
   }
@@ -199,7 +199,7 @@ class EditOpenResponseAdvancedController extends EditAdvancedComponentAngularJSC
           0,
           multipleAttemptScoringRule
         );
-        this.authoringViewComponentChanged();
+        this.componentChanged();
       }
     }
   }
@@ -224,7 +224,7 @@ class EditOpenResponseAdvancedController extends EditAdvancedComponentAngularJSC
       );
       if (answer) {
         this.authoringComponentContent.cRater.multipleAttemptScoringRules.splice(index, 1);
-        this.authoringViewComponentChanged();
+        this.componentChanged();
       }
     }
   }
@@ -244,7 +244,7 @@ class EditOpenResponseAdvancedController extends EditAdvancedComponentAngularJSC
           0,
           notification
         );
-        this.authoringViewComponentChanged();
+        this.componentChanged();
       }
     }
   }
@@ -264,7 +264,7 @@ class EditOpenResponseAdvancedController extends EditAdvancedComponentAngularJSC
           0,
           notification
         );
-        this.authoringViewComponentChanged();
+        this.componentChanged();
       }
     }
   }
@@ -287,7 +287,7 @@ class EditOpenResponseAdvancedController extends EditAdvancedComponentAngularJSC
       );
       if (answer) {
         this.authoringComponentContent.notificationSettings.notifications.splice(index, 1);
-        this.authoringViewComponentChanged();
+        this.componentChanged();
       }
     }
   }
@@ -297,7 +297,7 @@ class EditOpenResponseAdvancedController extends EditAdvancedComponentAngularJSC
     if (cRater != null && cRater.multipleAttemptScoringRules == null) {
       cRater.multipleAttemptScoringRules = [];
     }
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   enableNotificationsClicked(): void {
@@ -308,7 +308,7 @@ class EditOpenResponseAdvancedController extends EditAdvancedComponentAngularJSC
         };
       }
     }
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   /**
@@ -340,7 +340,7 @@ class EditOpenResponseAdvancedController extends EditAdvancedComponentAngularJSC
     } else {
       delete this.authoringComponentContent.completionCriteria;
     }
-    this.authoringViewComponentChanged();
+    this.componentChanged();
     return true;
   }
 
@@ -350,7 +350,7 @@ class EditOpenResponseAdvancedController extends EditAdvancedComponentAngularJSC
       this.authoringComponentContent.completionCriteria.criteria.splice(index, 1);
       this.authoringComponentContent.completionCriteria.criteria.splice(index - 1, 0, criteria);
     }
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   moveCompletionCriteriaDown(index: number): void {
@@ -359,7 +359,7 @@ class EditOpenResponseAdvancedController extends EditAdvancedComponentAngularJSC
       this.authoringComponentContent.completionCriteria.criteria.splice(index, 1);
       this.authoringComponentContent.completionCriteria.criteria.splice(index + 1, 0, criteria);
     }
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   addCompletionCriteria(): void {
@@ -369,13 +369,13 @@ class EditOpenResponseAdvancedController extends EditAdvancedComponentAngularJSC
       name: 'isSubmitted'
     };
     this.authoringComponentContent.completionCriteria.criteria.push(newCompletionCriteria);
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   deleteCompletionCriteria(index: number): void {
     if (confirm($localize`Are you sure you want to delete this completion criteria?`)) {
       this.authoringComponentContent.completionCriteria.criteria.splice(index, 1);
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     }
   }
 

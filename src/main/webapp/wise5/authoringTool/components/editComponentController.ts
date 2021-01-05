@@ -42,7 +42,7 @@ export abstract class EditComponentController {
     this.idToOrder = this.ProjectService.idToOrder;
     this.$translate = this.$filter('translate');
     this.componentChangedSubscription = this.ProjectService.componentChanged$.subscribe(() => {
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     });
     this.starterStateResponseSubscription =
         this.NodeService.starterStateResponse$.subscribe((args: any) => {
@@ -57,7 +57,7 @@ export abstract class EditComponentController {
     this.starterStateResponseSubscription.unsubscribe();
   }
 
-  authoringViewComponentChanged(): void {
+  componentChanged(): void {
     this.resetUI();
     this.ProjectService.nodeChanged();
   }

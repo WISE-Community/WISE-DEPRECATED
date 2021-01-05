@@ -35,7 +35,7 @@ class EditMultipleChoiceAdvancedController extends EditAdvancedComponentAngularJ
   connectedComponentComponentIdChanged(connectedComponent) {
     connectedComponent.type = 'importWork';
     this.copyChoiceTypeAndChoicesFromConnectedComponent(connectedComponent);
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   copyChoiceTypeAndChoicesFromConnectedComponent(connectedComponent) {

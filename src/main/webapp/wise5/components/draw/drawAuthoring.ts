@@ -42,7 +42,7 @@ class DrawAuthoringController extends EditComponentController {
   addStampButtonClicked() {
     this.initializeAuthoringComponentContentStampsIfNecessary();
     this.authoringComponentContent.stamps.Stamps.push('');
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   initializeAuthoringComponentContentStampsIfNecessary() {
@@ -61,7 +61,7 @@ class DrawAuthoringController extends EditComponentController {
       const stamp = this.authoringComponentContent.stamps.Stamps[index];
       this.authoringComponentContent.stamps.Stamps.splice(index, 1);
       this.authoringComponentContent.stamps.Stamps.splice(index - 1, 0, stamp);
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     }
   }
 
@@ -70,7 +70,7 @@ class DrawAuthoringController extends EditComponentController {
       const stamp = this.authoringComponentContent.stamps.Stamps[index];
       this.authoringComponentContent.stamps.Stamps.splice(index, 1);
       this.authoringComponentContent.stamps.Stamps.splice(index + 1, 0, stamp);
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     }
   }
 
@@ -83,7 +83,7 @@ class DrawAuthoringController extends EditComponentController {
       )
     ) {
       this.authoringComponentContent.stamps.Stamps.splice(index, 1);
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     }
   }
 
@@ -106,7 +106,7 @@ class DrawAuthoringController extends EditComponentController {
     this.authoringComponentContent.tools.undo = true;
     this.authoringComponentContent.tools.redo = true;
     this.authoringComponentContent.tools.delete = true;
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   disableAllToolsButtonClicked() {
@@ -128,7 +128,7 @@ class DrawAuthoringController extends EditComponentController {
     this.authoringComponentContent.tools.undo = false;
     this.authoringComponentContent.tools.redo = false;
     this.authoringComponentContent.tools.delete = false;
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   saveStarterDrawData() {
@@ -139,20 +139,20 @@ class DrawAuthoringController extends EditComponentController {
 
   saveStarterState(starterState) {
     this.authoringComponentContent.starterDrawData = starterState;
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   deleteStarterDrawData() {
     if (confirm(this.$translate('draw.areYouSureYouWantToDeleteTheStarterDrawing'))) {
       this.authoringComponentContent.starterDrawData = null;
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     }
   }
 
   viewWidthChanged() {
     this.width = this.authoringComponentContent.width;
     this.updateStarterDrawDataWidth();
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   updateStarterDrawDataWidth() {
@@ -170,7 +170,7 @@ class DrawAuthoringController extends EditComponentController {
   viewHeightChanged() {
     this.height = this.authoringComponentContent.height;
     this.updateStarterDrawDataHeight();
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   updateStarterDrawDataHeight() {
@@ -186,7 +186,7 @@ class DrawAuthoringController extends EditComponentController {
   }
 
   toolClicked() {
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   chooseBackgroundImage() {
@@ -225,7 +225,7 @@ class DrawAuthoringController extends EditComponentController {
 
   backgroundChanged() {
     this.updateStarterDrawDataBackground();
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   updateStarterDrawDataBackground() {

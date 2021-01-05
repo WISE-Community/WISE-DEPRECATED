@@ -14,7 +14,7 @@ class EditLabelAdvancedController extends EditAdvancedComponentAngularJSControll
   connectedComponentComponentIdChanged(connectedComponent: any): void {
     this.automaticallySetConnectedComponentTypeIfPossible(connectedComponent);
     this.setImportWorkAsBackgroundIfApplicable(connectedComponent);
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   setImportWorkAsBackgroundIfApplicable(connectedComponent: any): void {
@@ -37,7 +37,7 @@ class EditLabelAdvancedController extends EditAdvancedComponentAngularJSControll
       delete connectedComponent.fontSize;
       delete connectedComponent.importWorkAsBackground;
     }
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 }
 

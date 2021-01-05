@@ -20,13 +20,13 @@ export class EditAdvancedComponentAngularJSController {
     this.idToOrder = this.ProjectService.idToOrder;
   }
 
-  authoringViewComponentChanged(): void {
+  componentChanged(): void {
     this.ProjectService.nodeChanged();
   }
 
   addConnectedComponent(): void {
     this.addConnectedComponentAndSetComponentIdIfPossible();
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   addConnectedComponentAndSetComponentIdIfPossible(): void {
@@ -56,19 +56,19 @@ export class EditAdvancedComponentAngularJSController {
   }
 
   connectedComponentTypeChanged(connectedComponent: any): void {
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   connectedComponentNodeIdChanged(connectedComponent: any): void {
     connectedComponent.componentId = null;
     connectedComponent.type = null;
     this.automaticallySetConnectedComponentComponentIdIfPossible(connectedComponent);
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   connectedComponentComponentIdChanged(connectedComponent: any): void {
     this.automaticallySetConnectedComponentTypeIfPossible(connectedComponent);
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   isConnectedComponentTypeAllowed(componentType: string): boolean {
@@ -98,7 +98,7 @@ export class EditAdvancedComponentAngularJSController {
       if (this.authoringComponentContent.connectedComponents != null) {
         this.authoringComponentContent.connectedComponents.splice(index, 1);
       }
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     }
   }
 

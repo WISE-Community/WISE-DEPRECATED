@@ -4,7 +4,7 @@
       <label>{{ ::'PROMPT' | translate }}</label>
       <textarea rows='1'
                 ng-model='discussionController.authoringComponentContent.prompt'
-                ng-change='discussionController.authoringViewComponentChanged()'
+                ng-change='discussionController.componentChanged()'
                 ng-model-options='{ debounce: 1000 }'
                 placeholder='{{ ::"enterPromptHere" | translate }}'>
     </textarea>
@@ -12,7 +12,7 @@
     <md-input-container style='margin-top: 0; margin-bottom: 0;'>
       <md-checkbox class='md-primary'
                     ng-model='discussionController.authoringComponentContent.isStudentAttachmentEnabled'
-                    ng-change='discussionController.authoringViewComponentChanged()'>
+                    ng-change='discussionController.componentChanged()'>
         {{ ::'discussion.allowUploadedImagesInPosts' | translate }}
       </md-checkbox>
     </md-input-container>
@@ -20,7 +20,7 @@
     <md-input-container style='margin-top: 0; margin-bottom: 0;'>
       <md-checkbox class='md-primary'
                    ng-model='discussionController.authoringComponentContent.gateClassmateResponses'
-                   ng-change='discussionController.authoringViewComponentChanged()'>
+                   ng-change='discussionController.componentChanged()'>
         {{ ::'discussion.gateClassmateResponses' | translate }}
       </md-checkbox>
     </md-input-container>
