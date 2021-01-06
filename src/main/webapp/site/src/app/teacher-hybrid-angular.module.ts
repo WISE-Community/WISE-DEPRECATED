@@ -42,6 +42,7 @@ import { NavItemProgressComponent } from './classroom-monitor/nav-item-progress/
 import { EditHTMLAdvancedComponent } from '../../../wise5/components/html/edit-html-advanced/edit-html-advanced.component';
 import { EditOutsideUrlAdvancedComponent } from '../../../wise5/components/outsideURL/edit-outside-url-advanced/edit-outside-url-advanced.component';
 import { OpenResponseAuthoring } from '../../../wise5/components/openResponse/open-response-authoring/open-response-authoring.component';
+import { HtmlAuthoring } from '../../../wise5/components/html/html-authoring/html-authoring.component';
 
 @NgModule({
   declarations: [
@@ -59,6 +60,7 @@ import { OpenResponseAuthoring } from '../../../wise5/components/openResponse/op
     EditComponentWidthComponent,
     EditHTMLAdvancedComponent,
     EditOutsideUrlAdvancedComponent,
+    HtmlAuthoring,
     ManageStudentsComponent,
     MilestonesComponent,
     MilestoneReportDataComponent,
