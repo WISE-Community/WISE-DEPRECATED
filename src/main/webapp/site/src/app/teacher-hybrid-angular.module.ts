@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 
 import '../../../wise5/teacher/teacher-angular-js-module';
+import { AlertStatusCornerComponent } from './classroom-monitor/alert-status-corner/alert-status-corner.component';
 import { UpgradeModule } from '@angular/upgrade/static';
 import { setUpLocationSync } from '@angular/router/upgrade';
 import { ProjectService } from '../../../wise5/services/projectService';
@@ -47,6 +48,7 @@ import { HtmlAuthoring } from '../../../wise5/components/html/html-authoring/htm
 @NgModule({
   declarations: [
     AdvancedProjectAuthoringComponent,
+    AlertStatusCornerComponent,
     ChooseImportStepComponent,
     ChooseImportStepLocationComponent,
     ChooseNewComponent,
