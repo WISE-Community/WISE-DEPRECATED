@@ -1,17 +1,11 @@
 'use strict';
 
 import { Directive } from '@angular/core';
-import { ProjectAssetService } from '../../../site/src/app/services/projectAssetService';
 import { EditComponentController } from '../../authoringTool/components/editComponentController';
 
 @Directive()
 class MultipleChoiceAuthoringController extends EditComponentController {
-  ProjectAssetService: ProjectAssetService;
-  allowedConnectedComponentTypes: any[] = [
-    {
-      type: 'MultipleChoice'
-    }
-  ];
+  allowedConnectedComponentTypes = ['MultipleChoice'];
 
   static $inject = [
     '$filter',
@@ -49,7 +43,7 @@ class MultipleChoiceAuthoringController extends EditComponentController {
       show = false;
     }
     this.setShowSubmitButtonValue(show);
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   componentHasFeedback() {
@@ -69,7 +63,7 @@ class MultipleChoiceAuthoringController extends EditComponentController {
       isCorrect: false
     };
     this.authoringComponentContent.choices.push(newChoice);
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   deleteChoice(choiceId) {
@@ -81,7 +75,7 @@ class MultipleChoiceAuthoringController extends EditComponentController {
           break;
         }
       }
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     }
   }
 
@@ -97,7 +91,7 @@ class MultipleChoiceAuthoringController extends EditComponentController {
         break;
       }
     }
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   moveChoiceDown(choiceId) {
@@ -112,7 +106,7 @@ class MultipleChoiceAuthoringController extends EditComponentController {
         break;
       }
     }
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   chooseChoiceAsset(choice) {
@@ -131,62 +125,10 @@ class MultipleChoiceAuthoringController extends EditComponentController {
     if (target === 'choice') {
       const fileName = assetItem.fileName;
       targetObject.text = `<img src="${fileName}"/>`;
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     }
   }
 
-  automaticallySetConnectedComponentComponentIdIfPossible(connectedComponent) {
-    let numberOfAllowedComponents = 0;
-    let allowedComponent = null;
-    for (const component of this.getComponentsByNodeId(connectedComponent.nodeId)) {
-      if (this.isConnectedComponentTypeAllowed(component.type) &&
-        component.id != this.componentId
-      ) {
-        numberOfAllowedComponents += 1;
-        allowedComponent = component;
-      }
-    }
-    if (numberOfAllowedComponents === 1) {
-      connectedComponent.componentId = allowedComponent.id;
-      connectedComponent.type = 'importWork';
-      this.copyChoiceTypeAndChoicesFromConnectedComponent(connectedComponent);
-    }
-  }
-
-  connectedComponentComponentIdChanged(connectedComponent) {
-    connectedComponent.type = 'importWork';
-    this.copyChoiceTypeAndChoicesFromConnectedComponent(connectedComponent);
-    this.authoringViewComponentChanged();
-  }
-
-  copyChoiceTypeAndChoicesFromConnectedComponent(connectedComponent) {
-    const nodeId = connectedComponent.nodeId;
-    const componentId = connectedComponent.componentId;
-    if (
-      this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId).type ===
-      'MultipleChoice'
-    ) {
-      this.copyChoiceTypeFromComponent(nodeId, componentId);
-      this.copyChoicesFromComponent(nodeId, componentId);
-    }
-  }
-
-  copyChoiceTypeFromComponent(nodeId, componentId) {
-    const component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
-    this.authoringComponentContent.choiceType = component.choiceType;
-  }
-
-  copyChoicesFromComponent(nodeId, componentId) {
-    this.authoringComponentContent.choices = this.getCopyOfChoicesFromComponent(
-      nodeId,
-      componentId
-    );
-  }
-
-  getCopyOfChoicesFromComponent(nodeId, componentId) {
-    const component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
-    return this.UtilService.makeCopyOfJSONObject(component.choices);
-  }
 }
 
 const MultipleChoiceAuthoring = {

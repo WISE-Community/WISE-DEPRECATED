@@ -5,7 +5,6 @@ import { EditComponentController } from "../../authoringTool/components/editComp
 
 @Directive()
 class GraphAuthoringController extends EditComponentController {
-  allowedConnectedComponentTypes: any[];
   availableGraphTypes: any[];
   availableRoundingOptions: any[];
   availableSymbols: any[];
@@ -150,16 +149,6 @@ class GraphAuthoringController extends EditComponentController {
       }
     ];
 
-    this.allowedConnectedComponentTypes = [
-      { type: 'Animation' },
-      { type: 'ConceptMap' },
-      { type: 'Draw' },
-      { type: 'Embedded' },
-      { type: 'Graph' },
-      { type: 'Label' },
-      { type: 'Table' }
-    ];
-
     this.plotTypeToLimitType = {
       line: 'limits',
       scatter: 'limits',
@@ -193,7 +182,7 @@ class GraphAuthoringController extends EditComponentController {
       this.setSeriesColorToMatchYAxisColor(newSeries);
     }
     this.authoringComponentContent.series.push(newSeries);
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   createNewSeries() {
@@ -224,7 +213,7 @@ class GraphAuthoringController extends EditComponentController {
     }
     if (confirm(message)) {
       this.authoringComponentContent.series.splice(index, 1);
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     }
   }
 
@@ -237,7 +226,7 @@ class GraphAuthoringController extends EditComponentController {
       this.authoringComponentContent.canDeleteTrials = false;
       this.authoringComponentContent.hideAllTrialsOnNewTrial = true;
     }
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   showChooseBackgroundImagePopup() {
@@ -254,13 +243,13 @@ class GraphAuthoringController extends EditComponentController {
     super.assetSelected({ nodeId, componentId, assetItem, target });
     if (target === 'background') {
       this.authoringComponentContent.backgroundImage = assetItem.fileName;
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     }
   }
 
   addXAxisCategory() {
     this.authoringComponentContent.xAxis.categories.push('');
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   deleteXAxisCategory(index) {
@@ -278,7 +267,7 @@ class GraphAuthoringController extends EditComponentController {
     }
     if (confirm(confirmMessage)) {
       this.authoringComponentContent.xAxis.categories.splice(index, 1);
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     }
   }
 
@@ -291,14 +280,14 @@ class GraphAuthoringController extends EditComponentController {
         series.data.push(null);
       }
     }
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   deleteSeriesDataPoint(series, index) {
     if (series != null && series.data != null) {
       if (confirm(this.$translate('graph.areYouSureYouWantToDeleteTheDataPoint'))) {
         series.data.splice(index, 1);
-        this.authoringViewComponentChanged();
+        this.componentChanged();
       }
     }
   }
@@ -309,7 +298,7 @@ class GraphAuthoringController extends EditComponentController {
       series.data.splice(index, 1);
       series.data.splice(index - 1, 0, dataPoint);
     }
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   moveSeriesDataPointDown(series, index) {
@@ -318,7 +307,7 @@ class GraphAuthoringController extends EditComponentController {
       series.data.splice(index, 1);
       series.data.splice(index + 1, 0, dataPoint);
     }
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   xAxisTypeChanged(newValue: string, oldValue: string): void {
@@ -339,7 +328,7 @@ class GraphAuthoringController extends EditComponentController {
       ];
       this.convertAllSeriesDataPoints(newValue);
     }
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   convertAllSeriesDataPoints(xAxisType) {
@@ -376,163 +365,6 @@ class GraphAuthoringController extends EditComponentController {
     series.data = convertedData;
   }
 
-  addConnectedComponent() {
-    this.addConnectedComponentAndSetComponentIdIfPossible();
-    if (this.authoringComponentContent.connectedComponents.length > 1 ||
-        this.authoringComponentContent.series.length > 0) {
-      /*
-       * there is more than one connected component so we will enable
-       * trials so that each connected component can put work in a
-       * different trial
-       */
-      this.authoringComponentContent.enableTrials = true;
-    }
-    this.authoringViewComponentChanged();
-  }
-
-  addConnectedComponentSeriesNumber(connectedComponent) {
-    if (connectedComponent.seriesNumbers == null) {
-      connectedComponent.seriesNumbers = [];
-    }
-    connectedComponent.seriesNumbers.push(null);
-    this.authoringViewComponentChanged();
-  }
-
-  deleteConnectedComponentSeriesNumber(connectedComponent, seriesNumberIndex) {
-    if (connectedComponent.seriesNumbers == null) {
-      connectedComponent.seriesNumbers = [];
-    }
-    connectedComponent.seriesNumbers.splice(seriesNumberIndex, 1);
-    this.authoringViewComponentChanged();
-  }
-
-  connectedComponentSeriesNumberChanged(connectedComponent, seriesNumberIndex, value) {
-    if (connectedComponent.seriesNumbers == null) {
-      connectedComponent.seriesNumbers = [];
-    }
-    if (seriesNumberIndex < connectedComponent.seriesNumbers.length) {
-      connectedComponent.seriesNumbers[seriesNumberIndex] = value;
-    }
-    this.authoringViewComponentChanged();
-  }
-
-  connectedComponentComponentIdChanged(connectedComponent) {
-    const connectedComponentType = this.getConnectedComponentType(connectedComponent);
-    if (connectedComponentType !== 'Embedded') {
-      delete connectedComponent.seriesNumbers;
-    }
-    if (connectedComponentType !== 'Table') {
-      delete connectedComponent.skipFirstRow;
-      delete connectedComponent.xColumn;
-      delete connectedComponent.yColumn;
-    }
-    if (connectedComponentType !== 'Graph') {
-      delete connectedComponent.showClassmateWorkSource;
-    }
-    if (connectedComponentType === 'Table') {
-      connectedComponent.skipFirstRow = true;
-      connectedComponent.xColumn = 0;
-      connectedComponent.yColumn = 1;
-    }
-    connectedComponent.type = 'importWork';
-    this.setImportWorkAsBackgroundIfApplicable(connectedComponent);
-    this.authoringViewComponentChanged();
-  }
-
-  connectedComponentShowClassmateWorkChanged(connectedComponent) {
-    if (connectedComponent.showClassmateWork) {
-      connectedComponent.showClassmateWorkSource = 'period';
-    } else {
-      delete connectedComponent.showClassmateWork;
-      delete connectedComponent.showClassmateWorkSource;
-    }
-    this.authoringViewComponentChanged();
-  }
-
-  setImportWorkAsBackgroundIfApplicable(connectedComponent) {
-    const componentType = this.getConnectedComponentType(connectedComponent);
-    if (['ConceptMap','Draw','Label'].includes(componentType)) {
-      connectedComponent.importWorkAsBackground = true;
-    } else {
-      delete connectedComponent.importWorkAsBackground;
-    }
-  }
-
-  connectedComponentTypeChanged(connectedComponent) {
-    if (connectedComponent.type === 'importWork') {
-      delete connectedComponent.showClassmateWorkSource;
-    } else if (connectedComponent.type === 'showWork') {
-      delete connectedComponent.showClassmateWorkSource;
-    } else if (connectedComponent.type === 'showClassmateWork') {
-      /*
-       * the type has changed to show classmate work so we will enable
-       * trials so that each classmate work will show up in a
-       * different trial
-       */
-      this.authoringComponentContent.enableTrials = true;
-      if (connectedComponent.showClassmateWorkSource == null) {
-        connectedComponent.showClassmateWorkSource = 'period';
-      }
-    }
-    this.authoringViewComponentChanged();
-  }
-
-  importWorkAsBackgroundClicked(connectedComponent) {
-    if (!connectedComponent.importWorkAsBackground) {
-      delete connectedComponent.importWorkAsBackground;
-    }
-    this.authoringViewComponentChanged();
-  }
-
-  addXAxisPlotLine() {
-    if (this.authoringComponentContent.xAxis.plotLines == null) {
-      this.authoringComponentContent.xAxis.plotLines = [];
-    }
-    const plotLine = {
-      color: 'gray',
-      width: 1,
-      value: null,
-      label: {
-        text: '',
-        verticalAlign: 'bottom',
-        textAlign: 'right',
-        y: -10,
-        style: {
-          fontWeight: 'bold'
-        }
-      }
-    };
-    this.authoringComponentContent.xAxis.plotLines.push(plotLine);
-  }
-
-  deleteXAxisPlotLine(index) {
-    this.authoringComponentContent.xAxis.plotLines.splice(index, 1);
-    this.authoringViewComponentChanged();
-  }
-
-  addYAxisPlotLine() {
-    if (this.authoringComponentContent.yAxis.plotLines == null) {
-      this.authoringComponentContent.yAxis.plotLines = [];
-    }
-    const plotLine = {
-      color: 'gray',
-      width: 1,
-      value: null,
-      label: {
-        text: '',
-        style: {
-          fontWeight: 'bold'
-        }
-      }
-    };
-    this.authoringComponentContent.yAxis.plotLines.push(plotLine);
-  }
-
-  deleteYAxisPlotLine(index) {
-    this.authoringComponentContent.yAxis.plotLines.splice(index, 1);
-    this.authoringViewComponentChanged();
-  }
-
   enableMultipleYAxesChanged() {
     if (this.enableMultipleYAxes) {
       this.convertSingleYAxisToMultipleYAxes();
@@ -540,13 +372,13 @@ class GraphAuthoringController extends EditComponentController {
       this.addYAxisToAllSeries();
       this.addColorToYAxes();
       this.addColorToSeries();
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     } else {
       if (confirm(this.$translate('graph.areYouSureYouWantToRemoveMultipleYAxes'))) {
         this.convertMultipleYAxesToSingleYAxis();
         this.numYAxes = this.authoringComponentContent.yAxis.length;
         this.removeYAxisFromAllSeries();
-        this.authoringViewComponentChanged();
+        this.componentChanged();
       } else {
         this.enableMultipleYAxes = true;
       }
@@ -630,12 +462,12 @@ class GraphAuthoringController extends EditComponentController {
     if (newValue > oldValue) {
       this.increaseYAxes(newValue);
       this.addColorToYAxes();
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     } else if (newValue < oldValue) {
       if (confirm(this.$translate('graph.areYouSureYouWantToDecreaseTheNumberOfYAxes'))) {
         this.decreaseYAxes(newValue);
         this.updateSeriesYAxesIfNecessary();
-        this.authoringViewComponentChanged();
+        this.componentChanged();
       } else {
         this.numYAxes = oldValue;
       }
@@ -673,7 +505,7 @@ class GraphAuthoringController extends EditComponentController {
     const color = yAxis.labels.style.color;
     yAxis.title.style.color = color;
     this.updateSeriesColors(yAxisIndex, color);
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   updateSeriesColors(yAxisIndex, color) {
@@ -721,14 +553,14 @@ class GraphAuthoringController extends EditComponentController {
 
   seriesYAxisChanged(series) {
     this.setSeriesColorToMatchYAxisColor(series);
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   graphTypeChanged(): void {
     const graphType = this.authoringComponentContent.graphType;
     this.updateAllSeriesPlotTypes(graphType);
     this.changeXAxisTypeIfNecessary(graphType);
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   updateAllSeriesPlotTypes(plotType: string): void {
@@ -750,7 +582,7 @@ class GraphAuthoringController extends EditComponentController {
 
   seriesTypeChanged(series: any): void {
     this.updateDashStyleField(series);
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   updateDashStyleField(series: any): void {

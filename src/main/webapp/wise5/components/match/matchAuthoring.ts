@@ -5,7 +5,6 @@ import { EditComponentController } from '../../authoringTool/components/editComp
 
 @Directive()
 class MatchAuthoringController extends EditComponentController {
-  allowedConnectedComponentTypes: any[] = [{ type: 'Match' }];
   defaultSourceBucketId: string = '0';
 
   static $inject = [
@@ -50,7 +49,7 @@ class MatchAuthoringController extends EditComponentController {
     };
     this.authoringComponentContent.choices.push(newChoice);
     this.addChoiceToFeedback(newChoice.id);
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   addBucket(): void {
@@ -61,7 +60,7 @@ class MatchAuthoringController extends EditComponentController {
     };
     this.authoringComponentContent.buckets.push(newBucket);
     this.addBucketToFeedback(newBucket.id);
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   moveChoiceUp(index: number): void {
@@ -82,7 +81,7 @@ class MatchAuthoringController extends EditComponentController {
           }
         }
       }
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     }
   }
 
@@ -104,7 +103,7 @@ class MatchAuthoringController extends EditComponentController {
           }
         }
       }
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     }
   }
 
@@ -114,7 +113,7 @@ class MatchAuthoringController extends EditComponentController {
       if (deletedChoice != null && deletedChoice.length > 0) {
         this.removeChoiceFromFeedback(deletedChoice[0].id);
       }
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     }
   }
 
@@ -135,7 +134,7 @@ class MatchAuthoringController extends EditComponentController {
         this.authoringComponentContent.feedback.splice(index + 1, 1);
         this.authoringComponentContent.feedback.splice(index, 0, bucketFeedback);
       }
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     }
   }
 
@@ -156,7 +155,7 @@ class MatchAuthoringController extends EditComponentController {
         this.authoringComponentContent.feedback.splice(index + 1, 1);
         this.authoringComponentContent.feedback.splice(index + 2, 0, bucketFeedback);
       }
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     }
   }
 
@@ -170,7 +169,7 @@ class MatchAuthoringController extends EditComponentController {
       if (deletedBucket != null && deletedBucket.length > 0) {
         this.removeBucketFromFeedback(deletedBucket[0].id);
       }
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     }
   }
 
@@ -276,7 +275,7 @@ class MatchAuthoringController extends EditComponentController {
       show = false;
     }
     this.setShowSubmitButtonValue(show);
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   /**
@@ -312,7 +311,7 @@ class MatchAuthoringController extends EditComponentController {
       delete feedback.position;
       delete feedback.incorrectPositionFeedback;
     }
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   /**
@@ -350,10 +349,10 @@ class MatchAuthoringController extends EditComponentController {
     const fileName = assetItem.fileName;
     if (target === 'choice') {
       targetObject.value = '<img src="' + fileName + '"/>';
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     } else if (target === 'bucket') {
       targetObject.value = '<img src="' + fileName + '"/>';
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     }
   }
 
@@ -383,9 +382,6 @@ class MatchAuthoringController extends EditComponentController {
     return null;
   }
 
-  isNotebookEnabled() {
-    return this.NotebookService.isNotebookEnabled();
-  }
 }
 
 const MatchAuthoring = {

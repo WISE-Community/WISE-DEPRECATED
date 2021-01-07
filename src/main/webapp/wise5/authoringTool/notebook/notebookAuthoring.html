@@ -20,7 +20,7 @@
 </div>
 <md-switch ng-model="authorNotebookController.project.notebook.enabled"
            class="md-primary"
-           ng-change="authorNotebookController.authoringViewComponentChanged()">
+           ng-change="authorNotebookController.componentChanged()">
   Student Notebook
 </md-switch>
 <div ng-if="authorNotebookController.project.notebook.enabled"
@@ -30,11 +30,11 @@
       {{ ::'notebookLabel' | translate }}
     </label>
     <input ng-model="authorNotebookController.project.notebook.label"
-           ng-change="authorNotebookController.authoringViewComponentChanged()"/>
+           ng-change="authorNotebookController.componentChanged()"/>
   </md-input-container>
   <md-switch ng-model="authorNotebookController.project.notebook.itemTypes.note.enabled"
              class="md-primary"
-             ng-change="authorNotebookController.authoringViewComponentChanged()"
+             ng-change="authorNotebookController.componentChanged()"
              style="margin-left: 0px;">
     Enable Note
   </md-switch>
@@ -46,7 +46,7 @@
       </label>
       <input ng-model="authorNotebookController.project.notebook.itemTypes.note.label.singular"
              ng-model-options="{ debounce: 1000 }"
-             ng-change="authorNotebookController.authoringViewComponentChanged()"/>
+             ng-change="authorNotebookController.componentChanged()"/>
     </md-input-container>
     <md-input-container>
       <label>
@@ -54,7 +54,7 @@
       </label>
       <input ng-model="authorNotebookController.project.notebook.itemTypes.note.label.plural"
              ng-model-options="{ debounce: 1000 }"
-             ng-change="authorNotebookController.authoringViewComponentChanged()"/>
+             ng-change="authorNotebookController.componentChanged()"/>
     </md-input-container>
     <md-input-container>
       <label>
@@ -62,36 +62,36 @@
       </label>
       <input ng-model="authorNotebookController.project.notebook.itemTypes.note.label.link"
              ng-model-options="{ debounce: 1000 }"
-             ng-change="authorNotebookController.authoringViewComponentChanged()"/>
+             ng-change="authorNotebookController.componentChanged()"/>
     </md-input-container>
     <br/>
     <md-checkbox ng-model="authorNotebookController.project.notebook.itemTypes.note.enableAddNote"
-                 ng-change="authorNotebookController.authoringViewComponentChanged()"
+                 ng-change="authorNotebookController.componentChanged()"
                  class="md-primary">
       {{ ::'enableAddNoteButton' | translate }}
     </md-checkbox>
     <br/>
     <md-checkbox ng-model="authorNotebookController.project.notebook.itemTypes.note.requireTextOnEveryNote"
-                 ng-change="authorNotebookController.authoringViewComponentChanged()"
+                 ng-change="authorNotebookController.componentChanged()"
                  class="md-primary">
       {{ ::'requireTextOnEveryNote' | translate }}
     </md-checkbox>
     <br/>
     <md-checkbox ng-model="authorNotebookController.project.notebook.itemTypes.note.enableClipping"
-                 ng-change="authorNotebookController.authoringViewComponentChanged()"
+                 ng-change="authorNotebookController.componentChanged()"
                  class="md-primary">
       {{ ::'enableClipping' | translate }}
     </md-checkbox>
     <br/>
     <md-checkbox ng-model="authorNotebookController.project.notebook.itemTypes.note.enableStudentUploads"
-                 ng-change="authorNotebookController.authoringViewComponentChanged()"
+                 ng-change="authorNotebookController.componentChanged()"
                  class="md-primary">
       {{ ::'enableStudentUploads' | translate }}
     </md-checkbox>
   </div>
   <md-switch ng-model="authorNotebookController.project.notebook.itemTypes.report.enabled"
              class="md-primary"
-             ng-change="authorNotebookController.authoringViewComponentChanged()"
+             ng-change="authorNotebookController.componentChanged()"
              style="margin-left: 0px;">
     Enable Report
   </md-switch>
@@ -103,7 +103,7 @@
       </label>
       <input ng-model="authorNotebookController.project.notebook.itemTypes.report.label.singular"
              ng-model-options="{ debounce: 1000 }"
-             ng-change="authorNotebookController.authoringViewComponentChanged()"/>
+             ng-change="authorNotebookController.componentChanged()"/>
     </md-input-container>
     <md-input-container>
       <label>
@@ -111,7 +111,7 @@
       </label>
       <input ng-model="authorNotebookController.project.notebook.itemTypes.report.label.plural"
              ng-model-options="{ debounce: 1000 }"
-             ng-change="authorNotebookController.authoringViewComponentChanged()"/>
+             ng-change="authorNotebookController.componentChanged()"/>
     </md-input-container>
     <md-input-container>
       <label>
@@ -119,7 +119,7 @@
       </label>
       <input ng-model="authorNotebookController.project.notebook.itemTypes.report.label.link"
              ng-model-options="{ debounce: 1000 }"
-             ng-change="authorNotebookController.authoringViewComponentChanged()"/>
+             ng-change="authorNotebookController.componentChanged()"/>
     </md-input-container>
     <div ng-repeat="reportNote in authorNotebookController.project.notebook.itemTypes.report.notes">
       <md-input-container>
@@ -128,7 +128,7 @@
         </label>
         <input ng-model="reportNote.title"
                ng-model-options="{ debounce: 1000 }"
-               ng-change="authorNotebookController.authoringViewComponentChanged()"/>
+               ng-change="authorNotebookController.componentChanged()"/>
       </md-input-container>
       <br/>
       <md-input-container>
@@ -138,7 +138,7 @@
         <input ng-model="reportNote.maxScore"
                type="number"
                ng-model-options="{ debounce: 1000 }"
-               ng-change="authorNotebookController.authoringViewComponentChanged()"/>
+               ng-change="authorNotebookController.componentChanged()"/>
       </md-input-container>
       <br/>
       <md-input-container>
@@ -147,7 +147,7 @@
         </label>
         <textarea rows="5" cols="100" ng-model="reportNote.description"
                   ng-model-options="{ debounce: 1000 }"
-                  ng-change="authorNotebookController.authoringViewComponentChanged()"></textarea>
+                  ng-change="authorNotebookController.componentChanged()"></textarea>
       </md-input-container>
       <br/>
       <md-input-container>
@@ -156,7 +156,7 @@
         </label>
         <textarea rows="5" cols="100" ng-model="reportNote.prompt"
                   ng-model-options="{ debounce: 1000 }"
-                  ng-change="authorNotebookController.authoringViewComponentChanged()"></textarea>
+                  ng-change="authorNotebookController.componentChanged()"></textarea>
       </md-input-container>
       <br/>
       <label>
@@ -171,7 +171,7 @@
 </div>
 <md-switch ng-model="authorNotebookController.project.teacherNotebook.enabled"
            class="md-primary"
-           ng-change="authorNotebookController.authoringViewComponentChanged()">
+           ng-change="authorNotebookController.componentChanged()">
   Teacher Notebook
 </md-switch>
 <div ng-if="authorNotebookController.project.teacherNotebook.enabled"
@@ -181,11 +181,11 @@
       {{ ::'notebookLabel' | translate }}
     </label>
     <input ng-model="authorNotebookController.project.teacherNotebook.label"
-           ng-change="authorNotebookController.authoringViewComponentChanged()"/>
+           ng-change="authorNotebookController.componentChanged()"/>
   </md-input-container>
   <md-switch ng-model="authorNotebookController.project.teacherNotebook.itemTypes.report.enabled"
              class="md-primary"
-             ng-change="authorNotebookController.authoringViewComponentChanged()"
+             ng-change="authorNotebookController.componentChanged()"
              style="margin-left: 0px;">
     Enable Report
   </md-switch>
@@ -197,7 +197,7 @@
       </label>
       <input ng-model="authorNotebookController.project.teacherNotebook.itemTypes.report.label.singular"
              ng-model-options="{ debounce: 1000 }"
-             ng-change="authorNotebookController.authoringViewComponentChanged()"/>
+             ng-change="authorNotebookController.componentChanged()"/>
     </md-input-container>
     <md-input-container>
       <label>
@@ -205,7 +205,7 @@
       </label>
       <input ng-model="authorNotebookController.project.teacherNotebook.itemTypes.report.label.plural"
              ng-model-options="{ debounce: 1000 }"
-             ng-change="authorNotebookController.authoringViewComponentChanged()"/>
+             ng-change="authorNotebookController.componentChanged()"/>
     </md-input-container>
     <md-input-container>
       <label>
@@ -213,7 +213,7 @@
       </label>
       <input ng-model="authorNotebookController.project.teacherNotebook.itemTypes.report.label.link"
              ng-model-options="{ debounce: 1000 }"
-             ng-change="authorNotebookController.authoringViewComponentChanged()"/>
+             ng-change="authorNotebookController.componentChanged()"/>
     </md-input-container>
     <div ng-repeat="reportNote in authorNotebookController.project.teacherNotebook.itemTypes.report.notes">
       <md-input-container>
@@ -222,7 +222,7 @@
         </label>
         <input ng-model="reportNote.title"
                ng-model-options="{ debounce: 1000 }"
-               ng-change="authorNotebookController.authoringViewComponentChanged()"/>
+               ng-change="authorNotebookController.componentChanged()"/>
       </md-input-container>
       <br/>
       <md-input-container>
@@ -231,7 +231,7 @@
         </label>
         <textarea rows="5" cols="100" ng-model="reportNote.description"
                   ng-model-options="{ debounce: 1000 }"
-                  ng-change="authorNotebookController.authoringViewComponentChanged()"></textarea>
+                  ng-change="authorNotebookController.componentChanged()"></textarea>
       </md-input-container>
       <br/>
       <md-input-container>
@@ -240,7 +240,7 @@
         </label>
         <textarea rows="5" cols="100" ng-model="reportNote.prompt"
                   ng-model-options="{ debounce: 1000 }"
-                  ng-change="authorNotebookController.authoringViewComponentChanged()"></textarea>
+                  ng-change="authorNotebookController.componentChanged()"></textarea>
       </md-input-container>
       <br/>
       <label>

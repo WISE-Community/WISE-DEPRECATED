@@ -13,8 +13,8 @@
                  aria-label="collapse">remove
         </md-icon>
       </div>
-      <alert-status-corner has-alert="$ctrl.newAlert" has-new-alert="$ctrl.newAlert"
-                           message="$ctrl.alertIconLabel">
+      <alert-status-corner [has-alert]="$ctrl.newAlert" [has-new-alert]="$ctrl.newAlert"
+                           [message]="$ctrl.alertIconLabel">
       </alert-status-corner>
     </md-card-content>
     <md-card-content ng-if="$ctrl.isGroup && $ctrl.expanded"

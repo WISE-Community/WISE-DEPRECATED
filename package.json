@@ -1,6 +1,6 @@
 {
   "name": "wise",
-  "version": "5.20.2",
+  "version": "5.20.3",
   "description": "Web-based Inquiry Science Environment",
   "main": "app.js",
   "browserslist": [
@@ -121,7 +121,7 @@
     "moment-locales-webpack-plugin": "^1.2.0",
     "ng-bullet": "^1.0.3",
     "node-sass": "^4.14.1",
-    "prettier": "1.19.1",
+    "prettier": "2.2.1",
     "protractor": "~7.0.0",
     "ts-loader": "^6.2.2",
     "ts-node": "~8.2.0",
@@ -141,6 +141,7 @@
     "build-prod-hans": "node --max_old_space_size=4096 ./node_modules/@angular/cli/bin/ng build wise --configuration=production-zh-Hans; gulp rename-styles-bundle",
     "build-prod-hant": "node --max_old_space_size=4096 ./node_modules/@angular/cli/bin/ng build wise --configuration=production-zh-Hant; gulp rename-styles-bundle",
     "bundle-report": "node ./node_modules/webpack-bundle-analyzer/lib/bin/analyzer.js src/main/webapp/site/dist/stats.json",
+    "prettier-format": "prettier --config .prettierrc 'src' --write",
     "watch-all-wise5": "node node_modules/concurrently/bin/concurrently.js \"node ./node_modules/gulp/bin/gulp.js\" \"npm run test-wise5-watch\"",
     "watch-sass": "npm rebuild node-sass && node ./node_modules/gulp/bin/gulp.js",
     "update-i18n": "node ./node_modules/gulp/bin/gulp.js update-i18n",

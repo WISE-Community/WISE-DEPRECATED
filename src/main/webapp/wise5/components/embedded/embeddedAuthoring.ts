@@ -6,20 +6,6 @@ import { EditComponentController } from "../../authoringTool/components/editComp
 @Directive()
 class EmbeddedAuthoringController extends EditComponentController {
 
-  allowedConnectedComponentTypes: any[] = [
-    { type: 'Animation' },
-    { type: 'AudioOscillator' },
-    { type: 'ConceptMap' },
-    { type: 'Discussion' },
-    { type: 'Draw' },
-    { type: 'Embedded' },
-    { type: 'Graph' },
-    { type: 'Label' },
-    { type: 'Match' },
-    { type: 'MultipleChoice' },
-    { type: 'OpenResponse' },
-    { type: 'Table' }
-  ];
   embeddedApplicationIFrameId: string;
 
   static $inject = [
@@ -68,7 +54,7 @@ class EmbeddedAuthoringController extends EditComponentController {
     super.assetSelected({ nodeId, componentId, assetItem, target });
     if (target === 'modelFile') {
       this.authoringComponentContent.url = assetItem.fileName;
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     }
   }
 

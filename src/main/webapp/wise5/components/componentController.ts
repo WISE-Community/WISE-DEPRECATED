@@ -42,7 +42,6 @@ class ComponentController {
   teacherWorkgroupId: number;
   showAddToNotebookButton: boolean;
   latestAnnotations: any;
-  allowedConnectedComponentTypes: any[];
   isJSONStringChanged: boolean;
   annotationSavedToServerSubscription: Subscription;
   nodeSubmitClickedSubscription: Subscription;

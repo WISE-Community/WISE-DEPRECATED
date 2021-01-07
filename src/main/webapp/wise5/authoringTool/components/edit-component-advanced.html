@@ -1,0 +1,31 @@
+<md-dialog aria-label="{{ ::'advancedSettings' | translate }}" class="dialog--wide">
+  <md-toolbar>
+    <div class="md-toolbar-tools">
+      <h2>{{ ::'advancedSettings' | translate }}</h2>
+    </div>
+  </md-toolbar>
+  <md-dialog-content>
+    <div class="md-dialog-content">
+      <ng-content ng-switch="::$ctrl.component.type">
+        <edit-animation-advanced ng-switch-when="Animation" node-id='{{$ctrl.nodeId}}' component-id='{{$ctrl.component.id}}'></edit-animation-advanced>
+        <edit-audio-oscillator-advanced ng-switch-when="AudioOscillator" node-id='{{$ctrl.nodeId}}' component-id='{{$ctrl.component.id}}'></edit-audio-oscillator-advanced>
+        <edit-concept-map-advanced ng-switch-when="ConceptMap" node-id='{{$ctrl.nodeId}}' component-id='{{$ctrl.component.id}}'></edit-concept-map-advanced>
+        <edit-discussion-advanced ng-switch-when="Discussion" node-id='{{$ctrl.nodeId}}' component-id='{{$ctrl.component.id}}'></edit-discussion-advanced>
+        <edit-draw-advanced ng-switch-when="Draw" node-id='{{$ctrl.nodeId}}' component-id='{{$ctrl.component.id}}'></edit-draw-advanced>
+        <edit-embedded-advanced ng-switch-when="Embedded" node-id='{{$ctrl.nodeId}}' component-id='{{$ctrl.component.id}}'></edit-embedded-advanced>
+        <edit-graph-advanced ng-switch-when="Graph" node-id='{{$ctrl.nodeId}}' component-id='{{$ctrl.component.id}}'></edit-graph-advanced>
+        <edit-html-advanced ng-switch-when="HTML" node-id="{{$ctrl.nodeId}}" component-id="{{$ctrl.component.id}}"></edit-html-advanced>
+        <edit-label-advanced ng-switch-when="Label" node-id='{{$ctrl.nodeId}}' component-id='{{$ctrl.component.id}}'></edit-label-advanced>
+        <edit-match-advanced ng-switch-when="Match" node-id='{{$ctrl.nodeId}}' component-id='{{$ctrl.component.id}}'></edit-match-advanced>
+        <edit-multiple-choice-advanced ng-switch-when="MultipleChoice" node-id='{{$ctrl.nodeId}}' component-id='{{$ctrl.component.id}}'></edit-multiple-choice-advanced>
+        <edit-open-response-advanced ng-switch-when="OpenResponse" node-id='{{$ctrl.nodeId}}' component-id='{{$ctrl.component.id}}'></edit-open-response-advanced>
+        <edit-outside-url-advanced ng-switch-when="OutsideURL" node-id='{{$ctrl.nodeId}}' component-id='{{$ctrl.component.id}}'></edit-outside-url-advanced>
+        <edit-summary-advanced ng-switch-when="Summary" node-id='{{$ctrl.nodeId}}' component-id='{{$ctrl.component.id}}'></edit-summary-advanced>
+        <edit-table-advanced ng-switch-when="Table" node-id='{{$ctrl.nodeId}}' component-id='{{$ctrl.component.id}}'></edit-table-advanced>
+      </ng-content>
+    </div>
+  </md-dialog-content>
+  <md-dialog-actions layout="row" layout-align="end center">
+    <md-button class="md-primary" ng-click="close()">{{ ::'done' | translate }}</md-button>
+  </md-dialog-actions>
+</md-dialog>

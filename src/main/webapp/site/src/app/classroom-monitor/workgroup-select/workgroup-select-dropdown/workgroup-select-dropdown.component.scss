@@ -1,0 +1,40 @@
+@import '~style/abstracts/variables','~style/abstracts/functions', '~style/abstracts/mixins';
+
+.workgroup-select-dropdown {
+  @media (min-width: breakpoint('md.min')) {
+    width: 360px;
+  }
+
+  .mat-form-field-wrapper {
+    padding: 0;
+  }
+
+  .mat-form-field-infix {
+    padding-top: 0;
+    border-top-width: 0;
+  }
+
+  .mat-select-arrow-wrapper {
+    display: block;
+  }
+
+  .mat-form-field-label-wrapper {
+    display: none;
+  }
+
+  .mat-form-field-underline {
+    bottom: 0;
+  }
+
+  .mat-select-value-text {
+    font-weight: 500;
+  }
+}
+
+input.workgroup-select-dropdown-search {
+  padding: 0.75em;
+}
+
+.mat-divider.workgroup-select-dropdown-divider {
+  margin: 0;
+}

@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 
 import '../../../wise5/teacher/teacher-angular-js-module';
+import { AlertStatusCornerComponent } from './classroom-monitor/alert-status-corner/alert-status-corner.component';
 import { UpgradeModule } from '@angular/upgrade/static';
 import { setUpLocationSync } from '@angular/router/upgrade';
 import { ProjectService } from '../../../wise5/services/projectService';
@@ -39,10 +40,17 @@ import { EditComponentTagsComponent } from './authoring-tool/edit-component-tags
 import { EditComponentWidthComponent } from './authoring-tool/edit-component-width/edit-component-width.component';
 import { RubricAuthoringComponent } from '../../../wise5/authoringTool/rubric/rubric-authoring.component';
 import { NavItemProgressComponent } from './classroom-monitor/nav-item-progress/nav-item-progress.component';
+import { WorkgroupSelectDropdownComponent } from './classroom-monitor/workgroup-select/workgroup-select-dropdown/workgroup-select-dropdown.component';
+import { WorkgroupSelectAutocompleteComponent } from './classroom-monitor/workgroup-select/workgroup-select-autocomplete/workgroup-select-autocomplete.component';
+import { EditHTMLAdvancedComponent } from '../../../wise5/components/html/edit-html-advanced/edit-html-advanced.component';
+import { EditOutsideUrlAdvancedComponent } from '../../../wise5/components/outsideURL/edit-outside-url-advanced/edit-outside-url-advanced.component';
+import { OpenResponseAuthoring } from '../../../wise5/components/openResponse/open-response-authoring/open-response-authoring.component';
+import { HtmlAuthoring } from '../../../wise5/components/html/html-authoring/html-authoring.component';
 
 @NgModule({
   declarations: [
     AdvancedProjectAuthoringComponent,
+    AlertStatusCornerComponent,
     ChooseImportStepComponent,
     ChooseImportStepLocationComponent,
     ChooseNewComponent,
@@ -54,17 +62,23 @@ import { NavItemProgressComponent } from './classroom-monitor/nav-item-progress/
     EditComponentMaxScoreComponent,
     EditComponentTagsComponent,
     EditComponentWidthComponent,
+    EditHTMLAdvancedComponent,
+    EditOutsideUrlAdvancedComponent,
+    HtmlAuthoring,
     ManageStudentsComponent,
     MilestonesComponent,
     MilestoneReportDataComponent,
     NavItemProgressComponent,
     NodeAdvancedGeneralAuthoringComponent,
     NodeAdvancedJsonAuthoringComponent,
+    OpenResponseAuthoring,
     RubricAuthoringComponent,
     StatusIconComponent,
     StepInfoComponent,
     WorkgroupInfoComponent,
     WorkgroupNodeScoreComponent,
+    WorkgroupSelectAutocompleteComponent,
+    WorkgroupSelectDropdownComponent,
     NavItemScoreComponent,
     WiseAuthoringTinymceEditorComponent,
     WorkgroupNodeStatusComponent

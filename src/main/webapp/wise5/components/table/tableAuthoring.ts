@@ -5,21 +5,7 @@ import { EditComponentController } from '../../authoringTool/components/editComp
 
 @Directive()
 class TableAuthoringController extends EditComponentController {
-  allowedConnectedComponentTypes: any[] = [
-    {
-      type: 'Embedded'
-    },
-    {
-      type: 'Graph'
-    },
-    {
-      type: 'Table'
-    }
-  ];
   columnCellSizes: any;
-  isDataExplorerScatterPlotEnabled: boolean;
-  isDataExplorerLineGraphEnabled: boolean;
-  isDataExplorerBarGraphEnabled: boolean;
 
   static $inject = [
     '$filter',
@@ -53,20 +39,7 @@ class TableAuthoringController extends EditComponentController {
 
   $onInit() {
     super.$onInit();
-    if (this.authoringComponentContent.isDataExplorerEnabled) {
-      this.repopulateDataExplorerGraphTypes();
-      this.initializeDataExplorerSeriesParams();
-    }
     this.columnCellSizes = this.parseColumnCellSizes(this.componentContent);
-  }
-
-  initializeDataExplorerSeriesParams(): void {
-    if (this.authoringComponentContent.dataExplorerSeriesParams == null) {
-      this.authoringComponentContent.dataExplorerSeriesParams = [];
-      for (let s = 0; s < this.authoringComponentContent.numDataExplorerSeries; s++) {
-        this.authoringComponentContent.dataExplorerSeriesParams.push({});
-      }
-    }
   }
 
   tableNumRowsChanged(oldValue: number): void {
@@ -180,7 +153,7 @@ class TableAuthoringController extends EditComponentController {
       this.authoringComponentContent.numRows,
       this.authoringComponentContent.numColumns
     );
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   /**
@@ -252,7 +225,7 @@ class TableAuthoringController extends EditComponentController {
       tableData.splice(y, 0, newRow);
       this.authoringComponentContent.numRows++;
     }
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   /**
@@ -266,7 +239,7 @@ class TableAuthoringController extends EditComponentController {
         tableData.splice(y, 1);
         this.authoringComponentContent.numRows--;
       }
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     }
   }
 
@@ -288,7 +261,7 @@ class TableAuthoringController extends EditComponentController {
       this.authoringComponentContent.numColumns++;
       this.parseColumnCellSizes(this.authoringComponentContent);
     }
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   /**
@@ -309,7 +282,7 @@ class TableAuthoringController extends EditComponentController {
         this.authoringComponentContent.numColumns--;
         this.parseColumnCellSizes(this.authoringComponentContent);
       }
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     }
   }
 
@@ -356,7 +329,7 @@ class TableAuthoringController extends EditComponentController {
         }
       }
     }
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   makeAllCellsEditable(): void {
@@ -374,7 +347,7 @@ class TableAuthoringController extends EditComponentController {
         }
       }
     }
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   /**
@@ -425,117 +398,7 @@ class TableAuthoringController extends EditComponentController {
         }
       }
     }
-    this.authoringViewComponentChanged();
-  }
-
-  toggleDataExplorer(): void {
-    if (this.authoringComponentContent.isDataExplorerEnabled) {
-      if (this.authoringComponentContent.dataExplorerGraphTypes == null) {
-        this.initializeDataExplorerGraphTypes();
-        this.repopulateDataExplorerGraphTypes();
-      }
-      if (this.authoringComponentContent.numDataExplorerSeries == null) {
-        this.authoringComponentContent.numDataExplorerSeries = 1;
-      }
-      if (this.authoringComponentContent.numDataExplorerYAxis == null) {
-        this.authoringComponentContent.numDataExplorerYAxis = 1;
-      }
-      if (this.authoringComponentContent.isDataExplorerAxisLabelsEditable == null) {
-        this.authoringComponentContent.isDataExplorerAxisLabelsEditable = false;
-      }
-      if (this.authoringComponentContent.dataExplorerSeriesParams == null) {
-        this.authoringComponentContent.dataExplorerSeriesParams = [{}];
-      }
-    }
-    this.authoringViewComponentChanged();
-  }
-
-  dataExplorerToggleScatterPlot(): void {
-    this.dataExplorerToggleGraphType('Scatter Plot', 'scatter');
-  }
-
-  dataExplorerToggleLineGraph(): void {
-    this.dataExplorerToggleGraphType('Line Graph', 'line');
-  }
-
-  dataExplorerToggleBarGraph(): void {
-    this.dataExplorerToggleGraphType('Bar Graph', 'column');
-  }
-
-  dataExplorerToggleGraphType(name: string, value: string): void {
-    const graphTypes = this.authoringComponentContent.dataExplorerGraphTypes;
-    for (let index = 0; index < graphTypes.length; index++) {
-      if (graphTypes[index].value === value) {
-        graphTypes.splice(index, 1);
-        this.authoringViewComponentChanged();
-        return;
-      }
-    }
-    graphTypes.push(this.createGraphTypeObject(name, value));
-    this.authoringViewComponentChanged();
-  }
-
-  createGraphTypeObject(name: string, value: string): any {
-    return { name: name, value: value };
-  }
-
-  initializeDataExplorerGraphTypes(): void {
-    this.authoringComponentContent.dataExplorerGraphTypes = [];
-    this.authoringComponentContent.dataExplorerGraphTypes.push(
-      this.createGraphTypeObject('Scatter Plot', 'scatter')
-    );
-  }
-
-  repopulateDataExplorerGraphTypes(): void {
-    this.isDataExplorerScatterPlotEnabled = false;
-    this.isDataExplorerLineGraphEnabled = false;
-    this.isDataExplorerBarGraphEnabled = false;
-    for (const graphType of this.authoringComponentContent.dataExplorerGraphTypes) {
-      if (graphType.value === 'scatter') {
-        this.isDataExplorerScatterPlotEnabled = true;
-      } else if (graphType.value === 'line') {
-        this.isDataExplorerLineGraphEnabled = true;
-      } else if (graphType.value === 'column') {
-        this.isDataExplorerBarGraphEnabled = true;
-      }
-    }
-  }
-
-  numDataExplorerSeriesChanged(): void {
-    const count = this.authoringComponentContent.numDataExplorerSeries;
-    if (this.authoringComponentContent.dataExplorerSeriesParams.length < count) {
-      this.increaseNumDataExplorerSeries(count);
-    } else if (this.authoringComponentContent.dataExplorerSeriesParams.length > count) {
-      this.decreaseNumDataExplorerSeries(count);
-    }
-    this.authoringViewComponentChanged();
-  }
-
-  increaseNumDataExplorerSeries(count: number): void {
-    const numToAdd = count - this.authoringComponentContent.dataExplorerSeriesParams.length;
-    for (let s = 0; s < numToAdd; s++) {
-      this.authoringComponentContent.dataExplorerSeriesParams.push({});
-    }
-  }
-
-  decreaseNumDataExplorerSeries(count: number): void {
-    this.authoringComponentContent.dataExplorerSeriesParams = this.authoringComponentContent.dataExplorerSeriesParams.slice(
-      0,
-      count
-    );
-  }
-
-  numDataExplorerYAxisChanged(): void {
-    this.updateDataExplorerSeriesParamsYAxis();
-    this.authoringViewComponentChanged();
-  }
-
-  updateDataExplorerSeriesParamsYAxis(): void {
-    for (const params of this.authoringComponentContent.dataExplorerSeriesParams) {
-      if (params.yAxis >= this.authoringComponentContent.numDataExplorerYAxis) {
-        params.yAxis = 0;
-      }
-    }
+    this.componentChanged();
   }
 
   automaticallySetConnectedComponentFieldsIfPossible(connectedComponent) {
@@ -548,7 +411,7 @@ class TableAuthoringController extends EditComponentController {
 
   connectedComponentTypeChanged(connectedComponent) {
     this.automaticallySetConnectedComponentFieldsIfPossible(connectedComponent);
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
 }

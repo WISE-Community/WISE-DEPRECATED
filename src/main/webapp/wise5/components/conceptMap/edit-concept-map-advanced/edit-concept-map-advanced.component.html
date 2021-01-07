@@ -1,0 +1,213 @@
+
+<div class='advancedAuthoringDiv'>
+  {{ ::'conceptMap.showAutoScore' | translate }}:
+  <input type='checkbox'
+         ng-model='$ctrl.authoringComponentContent.showAutoScore'
+         ng-change='$ctrl.componentChanged()'/>
+  <br/>
+  {{ ::'conceptMap.showAutoFeedback' | translate }}:
+  <input type='checkbox'
+         ng-model='$ctrl.authoringComponentContent.showAutoFeedback'
+         ng-change='$ctrl.componentChanged()'/>
+  <br/>
+  {{ ::'conceptMap.rules' | translate }}
+  <div ng-repeat='rule in $ctrl.authoringComponentContent.rules'>
+    {{ ::'conceptMap.ruleName' | translate }}:
+    <input ng-model='rule.name'
+           size='30'
+           ng-change='$ctrl.componentChanged()'
+           ng-model-options='{ debounce: 1000 }'/>
+    <select ng-model='rule.not'
+            ng-change='$ctrl.componentChanged()'
+            ng-options='option.value as option.label for option in $ctrl.shouldOptions'>
+    </select>
+    {{ ::'conceptMap.contain' | translate }}
+    <select ng-model='rule.comparison'
+            ng-change='$ctrl.componentChanged()'>
+      <option value='exactly'>{{ ::'conceptMap.exactly' | translate }}</option>
+      <option value='more than'>{{ ::'conceptMap.moreThan' | translate }}</option>
+      <option value='less than'>{{ ::'conceptMap.lessThan' | translate }}</option>
+    </select>
+    <input ng-model='rule.number'
+           size='3'
+           ng-change='$ctrl.componentChanged()'/>
+    <select ng-model='rule.nodeLabel'
+            ng-change='$ctrl.componentChanged()'>
+      <option></option>
+      <option value='any'>{{ ::'conceptMap.any' | translate }}</option>
+      <option ng-repeat='node in $ctrl.authoringComponentContent.nodes'
+              value='{{node.label}}'>{{node.label}}</option>
+    </select>
+    {{ ::'conceptMap.withLink' | translate }}
+    <input type='checkbox'
+           ng-model='rule.type'
+           ng-true-value='"link"'
+           ng-false-value='"node"'
+           ng-change='$ctrl.ruleLinkCheckboxClicked($index)'/>
+    <select ng-model='rule.linkLabel'
+            ng-change='$ctrl.componentChanged()'
+            ng-if='rule.type == "link"'>
+      <option></option>
+      <option value='any'>{{ ::'conceptMap.any' | translate }}</option>
+      <option ng-repeat='link in $ctrl.authoringComponentContent.links'
+              value='{{link.label}}'>{{link.label}}</option>
+    </select>
+    <span ng-if='rule.type == "link"'>{{ ::'conceptMap.to' | translate }}</span>
+    <select ng-model='rule.otherNodeLabel'
+            ng-change='$ctrl.componentChanged()'
+            ng-if='rule.type == "link"'>
+      <option></option>
+      <option value='any'>{{ ::'conceptMap.any' | translate }}</option>
+      <option ng-repeat='node in $ctrl.authoringComponentContent.nodes'
+              value='{{node.label}}'>{{node.label}}</option>
+    </select>
+    <button ng-click="$ctrl.moveRuleUpButtonClicked($index)">{{ ::'UP' | translate }}</button>
+    <button ng-click="$ctrl.moveRuleDownButtonClicked($index)">{{ ::'DOWN' | translate }}</button>
+    <button ng-click='$ctrl.ruleDeleteButtonClicked($index)'>{{ ::'DELETE' | translate }}</button>
+    <br/>
+    <div style='text-indent: 80px'>
+      <button ng-click="$ctrl.addCategoryToRule(rule)">{{ ::'conceptMap.addCategoryOptional' | translate }}</button>
+      <span ng-repeat='category in rule.categories track by $index'>
+        <input ng-model='rule.categories[$index]'
+               ng-change='$ctrl.componentChanged()'
+               ng-model-options='{ debounce: 1000 }'/>
+        <button ng-click="$ctrl.deleteCategoryFromRule(rule, $index)">x</button>
+      </span>
+    </div>
+    <br/>
+  </div>
+  <button ng-click='$ctrl.addRule()'>{{ ::'conceptMap.addRule' | translate }}</button>
+  <br/>
+  <br/>
+  {{ ::'conceptMap.customRuleEvaluator' | translate }}
+  <br/>
+  <textarea ng-model='$ctrl.authoringComponentContent.customRuleEvaluator'
+            ng-change='$ctrl.componentChanged()'
+            rows='10'
+            cols='100'
+            ng-model-options='{ debounce: 1000 }'>
+  </textarea>
+  <br/>
+  <br/>
+  <div>
+    <md-checkbox class='md-primary'
+                 ng-model='$ctrl.authoringComponentContent.showSaveButton'
+                 ng-change='$ctrl.componentChanged()'>
+      {{ ::'SHOW_SAVE_BUTTON' | translate }}
+    </md-checkbox>
+  </div>
+  <div>
+    <md-checkbox class='md-primary'
+                 ng-model='$ctrl.authoringComponentContent.showSubmitButton'
+                 ng-change='$ctrl.componentChanged()'>
+      {{ ::'SHOW_SUBMIT_BUTTON' | translate }}
+    </md-checkbox>
+  </div>
+  <div>
+    <md-checkbox class='md-primary'
+                 ng-if='$ctrl.isNotebookEnabled()'
+                 ng-model='$ctrl.authoringComponentContent.showAddToNotebookButton'
+                 ng-change='$ctrl.componentChanged()'>
+      {{ ::'SHOW_ADD_TO_NOTEBOOK_BUTTON' | translate }}
+    </md-checkbox>
+  </div>
+  <div>
+    <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'
+                        ng-if='$ctrl.authoringComponentContent.showSubmitButton'>
+      <label>{{ ::'MAX_SUBMIT' | translate }}</label>
+      <input type='number'
+             ng-model='$ctrl.authoringComponentContent.maxSubmitCount'
+             ng-model-options='{ debounce: 1000 }'
+             ng-change='$ctrl.componentChanged()'/>
+    </md-input-container>
+  </div>
+  <div layout="column" layout-align="start start">
+    <edit-component-max-score [authoring-component-content]="$ctrl.authoringComponentContent"></edit-component-max-score>
+    <edit-component-width [authoring-component-content]="$ctrl.authoringComponentContent"></edit-component-width>
+    <edit-component-rubric [authoring-component-content]="$ctrl.authoringComponentContent"></edit-component-rubric>
+    <edit-component-tags [authoring-component-content]="$ctrl.authoringComponentContent"></edit-component-tags>
+  </div>
+  <div>
+    <div style='height: 50;'>
+      <label class='node__label--vertical-alignment'>
+        {{ ::'CONNECTED_COMPONENTS' | translate }}
+      </label>
+      <md-button class='topButton md-raised md-primary'
+                 ng-click='$ctrl.addConnectedComponent()'>
+        <md-icon>add</md-icon>
+        <md-tooltip md-direction='top'
+                    class='projectButtonTooltip'>
+          {{ ::'ADD_CONNECTED_COMPONENT' | translate }}
+        </md-tooltip>
+      </md-button>
+    </div>
+    <div ng-repeat='connectedComponent in $ctrl.authoringComponentContent.connectedComponents track by $index'
+         style='border: 2px solid #dddddd; border-radius: 5px; margin-bottom: 10px; padding: 20px 20px 10px 20px;'
+         layout='row'>
+      <div flex>
+        <md-input-container style='margin-right: 20; width: 300;'>
+          <label>{{ ::'step' | translate }}</label>
+          <md-select ng-model='connectedComponent.nodeId'
+                     ng-change='$ctrl.connectedComponentNodeIdChanged(connectedComponent)'
+                     style='width: 300'>
+            <md-option ng-repeat='item in $ctrl.idToOrder | toArray | orderBy : "order"'
+                       value='{{item.$key}}'
+                       ng-if='$ctrl.isApplicationNode(item.$key)'>
+              {{ $ctrl.getNodePositionAndTitleByNodeId(item.$key) }}
+            </md-option>
+          </md-select>
+        </md-input-container>
+        <md-input-container style='margin-right: 20; width: 300;'>
+          <label>{{ ::'component' | translate }}</label>
+          <md-select ng-model='connectedComponent.componentId'
+                     ng-change='$ctrl.connectedComponentComponentIdChanged(connectedComponent)'
+                     style='width: 300'>
+            <md-option ng-repeat='(componentIndex, component) in $ctrl.getComponentsByNodeId(connectedComponent.nodeId)'
+                       value='{{component.id}}'
+                       ng-disabled='!$ctrl.isConnectedComponentTypeAllowed(component.type) || component.id == $ctrl.componentId'>
+              {{ componentIndex + 1 }}. {{ ::component.type }}
+              <span ng-if='component.id == $ctrl.componentId'>
+                ({{ ::'thisComponent' | translate }})
+              </span>
+            </md-option>
+          </md-select>
+        </md-input-container>
+        <md-input-container style='margin-right: 20; width: 200;'>
+          <label>{{ ::'type' | translate }}</label>
+          <md-select ng-model='connectedComponent.type'
+                     ng-change='$ctrl.connectedComponentTypeChanged(connectedComponent)'
+                     style='width: 200'>
+            <md-option value='importWork'>
+              {{ ::'importWork' | translate }}
+            </md-option>
+            <md-option value='showWork'>
+              {{ ::'showWork' | translate }}
+            </md-option>
+          </md-select>
+        </md-input-container>
+        <span flex></span>
+        <md-input-container style='margin-left: 20;'>
+          <md-button class='topButton md-raised md-primary'
+                     ng-click='$ctrl.deleteConnectedComponent($index)'>
+            <md-icon>delete</md-icon>
+            <md-tooltip md-direction='top'
+                        class='projectButtonTooltip'>
+              {{ ::'DELETE' | translate }}
+            </md-tooltip>
+          </md-button>
+        </md-input-container>
+        <div ng-if='$ctrl.getConnectedComponentType(connectedComponent) == "Draw" || $ctrl.getConnectedComponentType(connectedComponent) == "Embedded" || $ctrl.getConnectedComponentType(connectedComponent) == "Graph" || $ctrl.getConnectedComponentType(connectedComponent) == "Label" || $ctrl.getConnectedComponentType(connectedComponent) == "Table"' flex>
+          <md-input-container style='margin-right: 20;'>
+            <md-checkbox class='md-primary'
+                         ng-model='connectedComponent.importWorkAsBackground'
+                         ng-change='$ctrl.importWorkAsBackgroundClicked(connectedComponent)'
+                         ng-disabled='true'>
+              {{ ::'importWorkAsBackground' | translate }}
+            </md-checkbox>
+          </md-input-container>
+        </div>
+      </div>
+    </div>
+  </div>
+  <edit-component-json [node-id]="$ctrl.nodeId" [component-id]="$ctrl.componentId"></edit-component-json>
+</div>

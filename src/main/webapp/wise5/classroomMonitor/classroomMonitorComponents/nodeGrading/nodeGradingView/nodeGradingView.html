@@ -13,8 +13,7 @@
     </div>
     <span flex></span>
     <div class="content-head__more" layout="row" layout-align="center center" layout-wrap>
-      <component-select node-id="{{::$ctrl.nodeId}}"
-                        class="md-button md-no-underline"
+      <component-select node-id="{{::$ctrl.nodeId}}" class="md-button md-no-underline"
                         (model-change)="$ctrl.onUpdateHiddenComponents($event)"></component-select>
       <md-button ng-if="$ctrl.milestoneReport" ng-click="$ctrl.showReport($event)"
                  class="md-raised info">
@@ -34,9 +33,7 @@
     <md-list-item class="md-whiteframe-1dp md-with-secondary list-item list-item--actions"
                   layout-wrap>
       <div flex-xs="100" flex-sm="100">
-        <workgroup-select by-student="true"
-                          custom-class="'autocomplete--flat autocomplete--minwidth'"
-                          use-autocomplete="true"></workgroup-select>
+        <workgroup-select-autocomplete></workgroup-select-autocomplete>
       </div>
       <span flex hide-xs hide-sm></span>
       <div class="md-secondary-container" ng-if="$ctrl.nodeHasWork" flex-xs="100" flex-sm="100"
