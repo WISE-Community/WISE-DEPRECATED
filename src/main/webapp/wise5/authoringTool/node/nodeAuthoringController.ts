@@ -92,24 +92,24 @@ class NodeAuthoringController {
     this.originalNodeCopy = this.UtilService.makeCopyOfJSONObject(this.node);
     this.currentNodeCopy = this.UtilService.makeCopyOfJSONObject(this.node);
 
-    this.componentShowSubmitButtonValueChangedSubscription =
-        this.NodeService.componentShowSubmitButtonValueChanged$
-        .subscribe(({ showSubmitButton }) => {
-      if (showSubmitButton) {
-        this.node.showSaveButton = false;
-        this.node.showSubmitButton = false;
-        this.ProjectService.turnOnSaveButtonForAllComponents(this.node);
-      } else {
-        if (this.ProjectService.doesAnyComponentInNodeShowSubmitButton(this.node.id)) {
+    this.componentShowSubmitButtonValueChangedSubscription = this.NodeService.componentShowSubmitButtonValueChanged$.subscribe(
+      ({ showSubmitButton }) => {
+        if (showSubmitButton) {
+          this.node.showSaveButton = false;
+          this.node.showSubmitButton = false;
           this.ProjectService.turnOnSaveButtonForAllComponents(this.node);
         } else {
-          this.node.showSaveButton = true;
-          this.node.showSubmitButton = false;
-          this.ProjectService.turnOffSaveButtonForAllComponents(this.node);
+          if (this.ProjectService.doesAnyComponentInNodeShowSubmitButton(this.node.id)) {
+            this.ProjectService.turnOnSaveButtonForAllComponents(this.node);
+          } else {
+            this.node.showSaveButton = true;
+            this.node.showSubmitButton = false;
+            this.ProjectService.turnOffSaveButtonForAllComponents(this.node);
+          }
         }
+        this.authoringViewNodeChanged();
       }
-      this.authoringViewNodeChanged();
-    });
+    );
 
     const data = {
       title: this.ProjectService.getNodePositionAndTitleByNodeId(this.nodeId)
@@ -133,7 +133,7 @@ class NodeAuthoringController {
   $onInit() {
     this.nodeChangedSubscription = this.ProjectService.nodeChanged$.subscribe((doParseProject) => {
       this.authoringViewNodeChanged(doParseProject);
-    })
+    });
   }
 
   ngOnDestroy() {
@@ -148,9 +148,7 @@ class NodeAuthoringController {
   previewStepInNewWindow() {
     const data = { constraints: true };
     this.saveEvent('stepPreviewed', 'Navigation', data);
-    window.open(
-      `${this.ConfigService.getConfigParam('previewProjectURL')}/${this.nodeId}`
-    );
+    window.open(`${this.ConfigService.getConfigParam('previewProjectURL')}/${this.nodeId}`);
   }
 
   previewStepWithoutConstraintsInNewWindow() {
@@ -602,11 +600,15 @@ class NodeAuthoringController {
   showComponentAdvancedAuthoring(component: any) {
     this.$mdDialog.show({
       templateUrl: 'wise5/authoringTool/components/edit-component-advanced.html',
-      controller: function($scope: any, $mdDialog: any) {
-        $scope.close = function() {
-          $mdDialog.hide();
+      controller: [
+        '$scope',
+        '$mdDialog',
+        function ($scope: any, $mdDialog: any) {
+          $scope.close = function () {
+            $mdDialog.hide();
+          };
         }
-      },
+      ],
       controllerAs: '$ctrl',
       bindToController: true,
       locals: {
