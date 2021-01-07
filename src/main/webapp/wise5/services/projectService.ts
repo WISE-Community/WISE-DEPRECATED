@@ -722,7 +722,7 @@ export class ProjectService {
     return nodeIcon;
   }
 
-  getParentGroup(nodeId = '') {
+  getParentGroup(nodeId = ''): any {
     const node = this.getNodeById(nodeId);
     if (node != null) {
       for (const groupNode of this.getGroupNodes()) {
@@ -739,12 +739,10 @@ export class ProjectService {
     return null;
   }
 
-  getParentGroupId(nodeId) {
-    if (nodeId != null) {
-      const parentGroup = this.getParentGroup(nodeId);
-      if (parentGroup != null) {
-        return parentGroup.id;
-      }
+  getParentGroupId(nodeId = ''): string {
+    const parentGroup = this.getParentGroup(nodeId);
+    if (parentGroup != null) {
+      return parentGroup.id;
     }
     return null;
   }

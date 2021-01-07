@@ -1109,15 +1109,14 @@ function consolidatePaths() {
 
 function getParentGroup() {
   describe('getParentGroup()', () => {
+    beforeEach(() => {
+      service.setProject(twoStepsProjectJSON);
+    });
     it('should get the parent group of an active node', () => {
-      service.setProject(oneBranchTwoPathsProjectJSON);
-      const parentGroup = service.getParentGroup('node1');
-      expect(parentGroup.id).toEqual('group1');
+      expect(service.getParentGroup('node1').id).toEqual('group1');
     });
     it('should get the parent group of an inactive node', () => {
-      service.setProject(twoStepsProjectJSON);
-      const parentGroup = service.getParentGroup('node3');
-      expect(parentGroup.id).toEqual('group2');
+      expect(service.getParentGroup('node3').id).toEqual('group2');
     });
   });
 }
