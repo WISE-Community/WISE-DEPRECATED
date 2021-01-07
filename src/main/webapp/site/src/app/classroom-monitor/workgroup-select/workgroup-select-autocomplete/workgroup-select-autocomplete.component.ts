@@ -1,6 +1,6 @@
 'use strict';
 
-import { Component } from '@angular/core';
+import { Component, ViewEncapsulation } from '@angular/core';
 import { ConfigService } from '../../../../../../wise5/services/configService';
 import { TeacherDataService } from '../../../../../../wise5/services/teacherDataService';
 import { WorkgroupSelectComponent } from '../workgroup-select.component';
@@ -11,7 +11,8 @@ import { filter, map, startWith } from 'rxjs/operators';
 @Component({
   selector: 'workgroup-select-autocomplete',
   styleUrls: ['workgroup-select-autocomplete.component.scss'],
-  templateUrl: 'workgroup-select-autocomplete.component.html'
+  templateUrl: 'workgroup-select-autocomplete.component.html',
+  encapsulation: ViewEncapsulation.None
 })
 export class WorkgroupSelectAutocompleteComponent extends WorkgroupSelectComponent {
 
