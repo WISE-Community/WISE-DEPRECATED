@@ -91,8 +91,14 @@
     }
   }
 
-  .mat-divider {
+  .mat-divider-horizontal {
     margin: 16px 0;
+  }
+
+  .mat-menu-content {
+    .mat-divider-horizontal {
+      margin: 8px 0;
+    }
   }
 
   .mat-card-actions {
@@ -108,7 +114,7 @@
       margin-bottom: 0;
     }
 
-    .mat-divider {
+    .mat-divider-horizontal {
       margin: 0;
     }
   }
