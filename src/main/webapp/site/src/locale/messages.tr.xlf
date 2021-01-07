@@ -244,6 +244,10 @@
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
           <context context-type="linenumber">34</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/classroom-monitor/workgroup-select/workgroup-select-autocomplete/workgroup-select-autocomplete.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
         <target state="translated">Temizle</target>
       </trans-unit>
       <trans-unit datatype="html" id="7f32abe3fc638f65c0d3eb269d478ee49ad41ebe">
@@ -6853,6 +6857,34 @@
           <context context-type="linenumber">4</context>
         </context-group>
         <target state="needs-translation">(Team <x equiv-text="{{workgroupId}}" id="INTERPOLATION"/>)</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="88936072a55699e997d6cc9e47305cdbb26ad42a">
+        <source>Find a student</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/classroom-monitor/workgroup-select/workgroup-select-autocomplete/workgroup-select-autocomplete.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/classroom-monitor/workgroup-select/workgroup-select-dropdown/workgroup-select-dropdown.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+        <target state="needs-translation">Find a student</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="efe5fca15b5face6a63bdc02ac969840b57eafff">
+        <source><x equiv-text="{{workgroup.displayNames}}" id="INTERPOLATION"/> (Team <x equiv-text="{{workgroup.workgroupId}}" id="INTERPOLATION_1"/>)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/classroom-monitor/workgroup-select/workgroup-select-dropdown/workgroup-select-dropdown.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+        <target state="needs-translation"><x equiv-text="{{workgroup.displayNames}}" id="INTERPOLATION"/> (Team <x equiv-text="{{workgroup.workgroupId}}" id="INTERPOLATION_1"/>)</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="0d06e94bc2e6a3bfbe619c7bd3b4947e2f931607">
+        <source>Select a team</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/classroom-monitor/workgroup-select/workgroup-select-dropdown/workgroup-select-dropdown.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+        <target state="needs-translation">Select a team</target>
       </trans-unit>
       <trans-unit datatype="html" id="2d1bd68dd6cbd034f0b62c1dfabf7e17ee27081c">
         <source><x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK"/>Register<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/> or <x ctype="x-a" equiv-text="&lt;a&gt;" id="START_LINK_1"/>Sign In<x ctype="x-a" equiv-text="&lt;/a&gt;" id="CLOSE_LINK"/></source>
