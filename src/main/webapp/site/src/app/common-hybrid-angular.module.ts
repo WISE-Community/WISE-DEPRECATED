@@ -54,6 +54,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MomentModule } from 'ngx-moment';
 import { EditorModule, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
 import { WiseTinymceEditorComponent } from '../../../wise5/directives/wise-tinymce-editor/wise-tinymce-editor.component';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 @Component({template: ``})
 export class EmptyComponent {}
@@ -72,6 +73,7 @@ export class EmptyComponent {}
     EditorModule,
     FlexLayoutModule,
     FormsModule,
+    MatAutocompleteModule,
     MatButtonModule,
     MatCardModule,
     MatCheckboxModule,
@@ -129,6 +131,7 @@ export class EmptyComponent {}
     EditorModule,
     FlexLayoutModule,
     FormsModule,
+    MatAutocompleteModule,
     MatButtonModule,
     MatCardModule,
     MatCheckboxModule,
