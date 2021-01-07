@@ -105,13 +105,13 @@ class OutsideURLAuthoringController extends EditComponentController {
 
   urlInputChanged() {
     this.authoringComponentContent.info = null;
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   populateOpenEducationalResourceURL(openEducationalResource) {
     this.authoringComponentContent.url = openEducationalResource.url;
     this.authoringComponentContent.info = openEducationalResource.info;
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   isResourceSelected(resourceUrl) {

@@ -14,19 +14,16 @@
       <div class='advancedAuthoringDiv'
            ng-if='tableController.showAdvancedAuthoring'>
         <div>
-          <h6>{{ ::'advancedAuthoringOptions' | translate }}</h6>
-        </div>
-        <div>
           <md-checkbox class='md-primary'
                        ng-model='tableController.authoringComponentContent.showSaveButton'
-                       ng-change='tableController.authoringViewComponentChanged()'>
+                       ng-change='tableController.componentChanged()'>
             {{ ::'SHOW_SAVE_BUTTON' | translate }}
           </md-checkbox>
         </div>
         <div>
           <md-checkbox class='md-primary'
                        ng-model='tableController.authoringComponentContent.showSubmitButton'
-                       ng-change='tableController.authoringViewComponentChanged()'>
+                       ng-change='tableController.componentChanged()'>
             {{ ::'SHOW_SUBMIT_BUTTON' | translate }}
           </md-checkbox>
         </div>
@@ -34,7 +31,7 @@
           <md-checkbox class='md-primary'
                        ng-if='tableController.isNotebookEnabled()'
                        ng-model='tableController.authoringComponentContent.showAddToNotebookButton'
-                       ng-change='tableController.authoringViewComponentChanged()'>
+                       ng-change='tableController.componentChanged()'>
             {{ ::'SHOW_ADD_TO_NOTEBOOK_BUTTON' | translate }}
           </md-checkbox>
         </div>
@@ -45,7 +42,7 @@
             <input type='number'
                    ng-model='tableController.authoringComponentContent.maxSubmitCount'
                    ng-model-options='{ debounce: 1000 }'
-                   ng-change='tableController.authoringViewComponentChanged()'/>
+                   ng-change='tableController.componentChanged()'/>
           </md-input-container>
         </div>
         <div style='border: 1px solid black'>
@@ -81,7 +78,7 @@
             <div ng-if='tableController.isDataExplorerScatterPlotEnabled'>
               <md-checkbox class='md-primary'
                   ng-model='tableController.authoringComponentContent.isDataExplorerScatterPlotRegressionLineEnabled'
-                  ng-change='tableController.authoringViewComponentChanged()'>
+                  ng-change='tableController.componentChanged()'>
                 {{ ::'table.showScatterPlotRegressionLine' | translate }}
               </md-checkbox>
             </div>
@@ -108,7 +105,7 @@
                 <md-input-container style='margin-right: 20px; width: 300px;'>
                   <label>{{ ::'table.series' | translate }} {{ $index + 1 }}</label>
                   <md-select ng-model='tableController.authoringComponentContent.dataExplorerSeriesParams[$index].yAxis'
-                      ng-change='tableController.authoringViewComponentChanged()'
+                      ng-change='tableController.componentChanged()'
                       style='width: 300px'>
                     <md-option ng-repeat='y in [].constructor(tableController.authoringComponentContent.numDataExplorerYAxis) track by $index'
                         ng-value='$index'>
@@ -124,7 +121,7 @@
               <md-checkbox class='md-primary'
                   style='margin-right: 40px;'
                   ng-model='tableController.authoringComponentContent.isDataExplorerAxisLabelsEditable'
-                  ng-change='tableController.authoringViewComponentChanged()'>
+                  ng-change='tableController.componentChanged()'>
                 {{ ::'table.canStudentEditAxisLabels' | translate }}
               </md-checkbox>
             </div>
@@ -197,7 +194,7 @@
                                   ng-if='connectedComponent.type == "importWork"'>
                 <label>{{ ::'action' | translate }}</label>
                 <md-select ng-model='connectedComponent.action'
-                           ng-change='tableController.authoringViewComponentChanged()'
+                           ng-change='tableController.componentChanged()'
                            style='width: 200px'>
                   <md-option value='merge'>
                     {{ ::'merge' | translate }}
@@ -221,7 +218,7 @@
               <md-input-container ng-if='tableController.getConnectedComponentType(connectedComponent) == "Graph"'>
                 <md-checkbox class='md-primary'
                              ng-model='connectedComponent.showDataAtMouseX'
-                             ng-change='tableController.authoringViewComponentChanged()'>
+                             ng-change='tableController.componentChanged()'>
                   {{ ::'table.onlyShowDataAtMouseXPosition' | translate }}
                 </md-checkbox>
               </md-input-container>
@@ -236,7 +233,7 @@
           <label>{{ ::'PROMPT' | translate }}</label>
           <textarea rows='1'
                     ng-model='tableController.authoringComponentContent.prompt'
-                    ng-change='tableController.authoringViewComponentChanged()'
+                    ng-change='tableController.componentChanged()'
                     ng-model-options='{ debounce: 1000 }'
                     aria-label='Prompt'
                     placeholder='{{ "enterPromptHere" | translate }}'>
@@ -265,7 +262,7 @@
             <input type='number'
                    style='width: 120px'
                    ng-model='tableController.authoringComponentContent.globalCellSize'
-                   ng-change='tableController.authoringViewComponentChanged()'/>
+                   ng-change='tableController.componentChanged()'/>
           </md-input-container>
         </div>
         <br/>
@@ -335,7 +332,7 @@
               <md-input-container style='height: 20px;'>
                 <input ng-model='cell.text'
                        ng-model-options='{ debounce: 1000 }'
-                       ng-change='tableController.authoringViewComponentChanged()'
+                       ng-change='tableController.componentChanged()'
                        aria-label='Text'
                        size='20'/>
               </md-input-container>
@@ -343,7 +340,7 @@
               <md-checkbox class='md-primary'
                            style='margin-left: 10px;'
                            ng-model='cell.editable'
-                           ng-change='tableController.authoringViewComponentChanged()'>
+                           ng-change='tableController.componentChanged()'>
                 {{ ::'table.editableByStudent' | translate }}
               </md-checkbox>
             </td>
@@ -380,12 +377,5 @@
           </md-button>
         </div>
       </div>
-    </div>
-    <br/>
-    <div ng-style='{"border": "5px solid black"}'>
-      <div ng-style='{"padding-top": "20px", "padding-left": "20px"}'>
-        <h5>{{ ::'studentPreview' | translate }}</h5>
-      </div>
-      <preview-component component-content='tableController.componentContent'/>
     </div>
   </div>

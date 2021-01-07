@@ -1,0 +1,104 @@
+<div>
+  <md-checkbox class='md-primary'
+      ng-model='$ctrl.authoringComponentContent.showFeedback'
+      ng-change='$ctrl.componentChanged()'>
+    {{ 'SHOW_FEEDBACK' | translate }}
+  </md-checkbox>
+</div>
+<div>
+  <md-checkbox class='md-primary'
+      ng-model='$ctrl.authoringComponentContent.showSaveButton'
+      ng-change='$ctrl.componentChanged()'>
+    {{ 'SHOW_SAVE_BUTTON' | translate }}
+  </md-checkbox>
+</div>
+<div>
+  <md-checkbox class='md-primary'
+      ng-model='$ctrl.authoringComponentContent.showSubmitButton'
+      ng-change='$ctrl.componentChanged()'>
+    {{ 'SHOW_SUBMIT_BUTTON' | translate }}
+  </md-checkbox>
+</div>
+<div>
+  <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'
+      ng-if='$ctrl.authoringComponentContent.showSubmitButton'>
+    <label>{{ 'MAX_SUBMIT' | translate }}</label>
+    <input type='number'
+        ng-model='$ctrl.authoringComponentContent.maxSubmitCount'
+        ng-model-options='{ debounce: 1000 }'
+        ng-change='$ctrl.componentChanged()'/>
+  </md-input-container>
+</div>
+<div layout="column" layout-align="start start">
+  <edit-component-max-score [authoring-component-content]="$ctrl.authoringComponentContent"></edit-component-max-score>
+  <edit-component-width [authoring-component-content]="$ctrl.authoringComponentContent"></edit-component-width>
+  <edit-component-rubric [authoring-component-content]="$ctrl.authoringComponentContent"></edit-component-rubric>
+  <edit-component-tags [authoring-component-content]="$ctrl.authoringComponentContent"></edit-component-tags>
+</div>
+<div>
+  <div style='height: 50;'>
+    <label class='node__label--vertical-alignment'>
+      {{ 'CONNECTED_COMPONENTS' | translate }}
+    </label>
+    <md-button class='topButton md-raised md-primary'
+        ng-click='$ctrl.addConnectedComponent()'>
+      <md-icon>add</md-icon>
+      <md-tooltip md-direction='top' class='projectButtonTooltip'>
+        {{ 'ADD_CONNECTED_COMPONENT' | translate }}
+      </md-tooltip>
+    </md-button>
+  </div>
+  <div ng-repeat='connectedComponent in $ctrl.authoringComponentContent.connectedComponents track by $index'
+      style='border: 2px solid #dddddd; border-radius: 5px; margin-bottom: 10px; padding: 20px 20px 10px 20px;'
+      layout='row'>
+    <div flex>
+      <md-input-container style='margin-right: 20; width: 300;'>
+        <label>{{ 'step' | translate }}</label>
+        <md-select ng-model='connectedComponent.nodeId'
+            ng-change='$ctrl.connectedComponentNodeIdChanged(connectedComponent)'
+            style='width: 300'>
+          <md-option ng-repeat='item in $ctrl.idToOrder | toArray | orderBy : "order"'
+              value='{{item.$key}}'
+              ng-if='$ctrl.isApplicationNode(item.$key)'>
+            {{ $ctrl.getNodePositionAndTitleByNodeId(item.$key) }}
+          </md-option>
+        </md-select>
+      </md-input-container>
+      <md-input-container style='margin-right: 20; width: 300;'>
+        <label>{{ 'component' | translate }}</label>
+        <md-select ng-model='connectedComponent.componentId'
+            ng-change='$ctrl.connectedComponentComponentIdChanged(connectedComponent)'
+            style='width: 300'>
+          <md-option ng-repeat='(componentIndex, component) in $ctrl.getComponentsByNodeId(connectedComponent.nodeId)'
+              value='{{component.id}}'
+              ng-disabled='!$ctrl.isConnectedComponentTypeAllowed(component.type) || component.id == $ctrl.componentId'>
+            {{ componentIndex + 1 }}. {{ component.type }}
+            <span ng-if='component.id == $ctrl.componentId'>
+              ({{ 'thisComponent' | translate }})
+            </span>
+          </md-option>
+        </md-select>
+      </md-input-container>
+      <md-input-container style='margin-right: 20; width: 200;'>
+        <label>{{ 'type' | translate }}</label>
+        <md-select ng-model='connectedComponent.type'
+            ng-change='$ctrl.componentChanged()'
+            style='width: 200'>
+          <md-option value='importWork'>{{ 'importWork' | translate }}</md-option>
+          <md-option value='showWork'>{{ 'showWork' | translate }}</md-option>
+        </md-select>
+      </md-input-container>
+      <span flex></span>
+      <md-input-container style='margin-left: 20;'>
+        <md-button class='topButton md-raised md-primary'
+            ng-click='$ctrl.deleteConnectedComponent($index)'>
+          <md-icon>delete</md-icon>
+          <md-tooltip md-direction='top' class='projectButtonTooltip'>
+            {{ 'DELETE' | translate }}
+          </md-tooltip>
+        </md-button>
+      </md-input-container>
+    </div>
+  </div>
+</div>
+<edit-component-json [node-id]="$ctrl.nodeId" [component-id]="$ctrl.componentId"></edit-component-json>

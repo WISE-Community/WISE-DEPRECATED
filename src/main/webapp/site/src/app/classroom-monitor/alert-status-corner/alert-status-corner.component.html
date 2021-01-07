@@ -1,0 +1,6 @@
+<div *ngIf="hasAlert" class="status-corner-wrapper status-corner-top-right">
+  <div class="status-corner"
+      [ngClass]="{'status-corner--warn': hasNewAlert}"
+      matTooltip="{{message}}"
+      matTooltipPosition="above"></div>
+</div>

@@ -5318,6 +5318,10 @@
           <context context-type="linenumber">1</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">app/classroom-monitor/step-info/step-info.component.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/classroomMonitor/classroomMonitorComponents/nodeGrading/workgroupInfo/workgroup-info.component.html</context>
           <context context-type="linenumber">10</context>
         </context-group>
@@ -6081,6 +6085,13 @@
           <context context-type="linenumber">2</context>
         </context-group>
       </trans-unit>
+      <trans-unit datatype="html" id="e9f75e02d7db72cd425f81c273a721c62a617dc4">
+        <source>~ Report Available ~</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/classroom-monitor/milestones/milestones.component.html</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+      </trans-unit>
       <trans-unit datatype="html" id="6817513ddcee06a7cb2a7b2708e5616b861db81c">
         <source><x equiv-text="{{nodeCompletion}}" id="INTERPOLATION"/>% completed (All periods)</source>
         <context-group purpose="location">
@@ -6114,6 +6125,27 @@
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/authoringTool/node/advanced/json/node-advanced-json-authoring.component.html</context>
           <context context-type="linenumber">2</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="350e893dc35c1ca7a171e2944630e2c8f3f4785a">
+        <source>If you want to use rich visuals (images, videos, links, bullets, etc.) in your prompt, use an HTML component above this</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/openResponse/open-response-authoring/open-response-authoring.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="6bc7f2c14cb3141e690735b278591defe07c68fb">
+        <source>Prompt</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/openResponse/open-response-authoring/open-response-authoring.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="495b53dee6164e1c3ec7d95ee3527bb23b62a8c2">
+        <source>Enter Prompt Here</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/openResponse/open-response-authoring/open-response-authoring.component.html</context>
+          <context context-type="linenumber">15</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="92328333ea9c72926ca7c631e9e1c0f081cbf565">

@@ -1,9 +1,11 @@
 import { NgModule } from '@angular/core';
 
 import '../../../wise5/teacher/teacher-angular-js-module';
+import { AlertStatusCornerComponent } from './classroom-monitor/alert-status-corner/alert-status-corner.component';
 import { UpgradeModule } from '@angular/upgrade/static';
 import { setUpLocationSync } from '@angular/router/upgrade';
 import { ProjectService } from '../../../wise5/services/projectService';
+import { MilestonesComponent } from './classroom-monitor/milestones/milestones.component';
 import { MilestoneReportDataComponent } from './teacher/milestone/milestone-report-data/milestone-report-data.component';
 import { TeacherProjectService } from '../../../wise5/services/teacherProjectService';
 import { ProjectAssetService } from './services/projectAssetService';
@@ -25,6 +27,7 @@ import { ChooseImportStepLocationComponent } from './authoring-tool/import-step/
 import { ComponentNewWorkBadgeComponent } from './classroom-monitor/component-new-work-badge/component-new-work-badge.component';
 import { ComponentSelectComponent } from './classroom-monitor/component-select/component-select.component';
 import { StatusIconComponent } from './classroom-monitor/status-icon/status-icon.component';
+import { StepInfoComponent } from './classroom-monitor/step-info/step-info.component';
 import { AngularJSModule } from './common-hybrid-angular.module';
 import { NodeAdvancedJsonAuthoringComponent } from '../../../wise5/authoringTool/node/advanced/json/node-advanced-json-authoring.component';
 import { WorkgroupInfoComponent } from '../../../wise5/classroomMonitor/classroomMonitorComponents/nodeGrading/workgroupInfo/workgroup-info.component';
@@ -39,10 +42,15 @@ import { RubricAuthoringComponent } from '../../../wise5/authoringTool/rubric/ru
 import { NavItemProgressComponent } from './classroom-monitor/nav-item-progress/nav-item-progress.component';
 import { WorkgroupSelectDropdownComponent } from './classroom-monitor/workgroup-select/workgroup-select-dropdown/workgroup-select-dropdown.component';
 import { WorkgroupSelectAutocompleteComponent } from './classroom-monitor/workgroup-select/workgroup-select-autocomplete/workgroup-select-autocomplete.component';
+import { EditHTMLAdvancedComponent } from '../../../wise5/components/html/edit-html-advanced/edit-html-advanced.component';
+import { EditOutsideUrlAdvancedComponent } from '../../../wise5/components/outsideURL/edit-outside-url-advanced/edit-outside-url-advanced.component';
+import { OpenResponseAuthoring } from '../../../wise5/components/openResponse/open-response-authoring/open-response-authoring.component';
+import { HtmlAuthoring } from '../../../wise5/components/html/html-authoring/html-authoring.component';
 
 @NgModule({
   declarations: [
     AdvancedProjectAuthoringComponent,
+    AlertStatusCornerComponent,
     ChooseImportStepComponent,
     ChooseImportStepLocationComponent,
     ChooseNewComponent,
@@ -54,13 +62,19 @@ import { WorkgroupSelectAutocompleteComponent } from './classroom-monitor/workgr
     EditComponentMaxScoreComponent,
     EditComponentTagsComponent,
     EditComponentWidthComponent,
+    EditHTMLAdvancedComponent,
+    EditOutsideUrlAdvancedComponent,
+    HtmlAuthoring,
     ManageStudentsComponent,
+    MilestonesComponent,
     MilestoneReportDataComponent,
     NavItemProgressComponent,
     NodeAdvancedGeneralAuthoringComponent,
     NodeAdvancedJsonAuthoringComponent,
+    OpenResponseAuthoring,
     RubricAuthoringComponent,
     StatusIconComponent,
+    StepInfoComponent,
     WorkgroupInfoComponent,
     WorkgroupNodeScoreComponent,
     WorkgroupSelectAutocompleteComponent,

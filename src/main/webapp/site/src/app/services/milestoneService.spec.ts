@@ -122,9 +122,6 @@ describe('MilestoneService', () => {
   getPossibleScoreValueCounts();
   processMilestoneGraphsAndData();
   setReportAvailable();
-  saveMilestone();
-  createMilestone();
-  deleteMilestone();
   clearTempFields();
 });
 
@@ -1478,73 +1475,6 @@ function setReportAvailable() {
       const projectAchievement: any = {};
       service.setReportAvailable(projectAchievement, true);
       expect(projectAchievement.isReportAvailable).toEqual(true);
-    });
-  });
-}
-
-function saveMilestone() {
-  describe('saveMilestone()', () => {
-    it('should save milestone when it is new', () => {
-      const milestone1 = {
-        id: 'milestone1'
-      };
-      const projectAchievements = [milestone1];
-      spyOn(projectService, 'getAchievementItems').and.returnValue(projectAchievements);
-      spyOn(projectService, 'saveProject').and.callFake(() => { return null; });
-      const milestone2 = {
-        id: 'milestone2'
-      };
-      service.saveMilestone(milestone2);
-      expect(projectAchievements.length).toEqual(2);
-      expect(projectAchievements[0].id).toEqual('milestone1');
-      expect(projectAchievements[1].id).toEqual('milestone2');
-    });
-    it('should save milestone when it already exists', () => {
-      const milestone1 = {
-        id: 'milestone1'
-      };
-      const projectAchievements = [milestone1];
-      spyOn(projectService, 'getAchievementItems').and.returnValue(projectAchievements);
-      spyOn(projectService, 'saveProject').and.callFake(() => { return null; });
-      service.saveMilestone(milestone1);
-      expect(projectAchievements.length).toEqual(1);
-      expect(projectAchievements[0].id).toEqual('milestone1');
-    });
-  });
-}
-
-function createMilestone() {
-  describe('createMilestone()', () => {
-    it('should create milestone', () => {
-      const milestone1 = {
-        id: 'milestone1'
-      };
-      const projectAchievements = [milestone1];
-      spyOn(projectService, 'getAchievementItems').and.returnValue(projectAchievements);
-      spyOn(achievementService, 'getAvailableAchievementId').and.returnValue('milestone2');
-      spyOn(utilService, 'makeCopyOfJSONObject').and.returnValue({});
-      const milestone = service.createMilestone();
-      expect(milestone.id).toEqual('milestone2');
-      const dayOfYear = moment(milestone.params.targetDate).dayOfYear();
-      const todayDayOfYear = moment().dayOfYear();
-      expect(dayOfYear).toEqual(todayDayOfYear + 1);
-    });
-  });
-}
-
-function deleteMilestone() {
-  describe('deleteMilestone()', () => {
-    it('should delete milestone', () => {
-      const milestone1 = { id: 'milestone1' };
-      const milestone2 = { id: 'milestone2' };
-      const milestone3 = { id: 'milestone3' };
-      const projectAchievements = [milestone1, milestone2, milestone3];
-      spyOn(projectService, 'getAchievementItems').and.returnValue(projectAchievements);
-      spyOn(projectService, 'saveProject').and.callFake(() => { return null; });
-      service.deleteMilestone(milestone2);
-      expect(projectAchievements.length).toEqual(2);
-      expect(projectAchievements[0].id).toEqual('milestone1');
-      expect(projectAchievements[1].id).toEqual('milestone3');
     });
   });
 }

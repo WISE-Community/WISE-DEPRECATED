@@ -1,7 +1,6 @@
 'use strict';
 
 import * as angular from 'angular';
-import * as moment from 'moment';
 import { AchievementService } from './achievementService';
 import { AnnotationService } from './annotationService';
 import { ConfigService } from './configService';
@@ -41,14 +40,13 @@ export class MilestoneService {
   }
 
   getProjectMilestones() {
-    let milestones = [];
-    const projectAchievements = this.ProjectService.getAchievements();
-    if (projectAchievements.isEnabled) {
-      milestones = projectAchievements.items.filter(achievement => {
-        return achievement.type === 'milestone' || achievement.type === 'milestoneReport';
+    const achievements = this.ProjectService.getAchievements();
+    if (achievements.isEnabled) {
+      return achievements.items.filter(achievement => {
+        return ['milestone', 'milestoneReport'].includes(achievement.type);
       });
     }
-    return milestones;
+    return [];
   }
 
   getProjectMilestoneReports() {
@@ -549,52 +547,6 @@ export class MilestoneService {
     projectAchievement.isReportAvailable = reportAvailable;
   }
 
-  saveMilestone(milestone: any) {
-    let index = -1;
-    const projectAchievements = this.ProjectService.getAchievementItems();
-    for (let i = 0; i < projectAchievements.length; i++) {
-      if (projectAchievements[i].id === milestone.id) {
-        index = i;
-        projectAchievements[i] = milestone;
-        break;
-      }
-    }
-    if (index < 0) {
-      if (projectAchievements && milestone) {
-        projectAchievements.push(milestone);
-      }
-    }
-    this.saveProject();
-  }
-
-  createMilestone() {
-    let projectAchievements = this.ProjectService.getAchievementItems();
-    if (projectAchievements != null) {
-      // get the time of tomorrow at 3pm
-      const tomorrow = moment()
-        .add(1, 'days')
-        .hours(23)
-        .minutes(11)
-        .seconds(59);
-      return {
-        id: this.AchievementService.getAvailableAchievementId(),
-        name: '',
-        description: '',
-        type: 'milestone',
-        params: {
-          nodeIds: [],
-          targetDate: tomorrow.valueOf()
-        },
-        icon: {
-          image: ''
-        },
-        items: this.UtilService.makeCopyOfJSONObject(this.ProjectService.idToOrder),
-        isVisible: true
-      };
-    }
-    return null;
-  }
-
   deleteMilestone(milestone: any) {
     const projectAchievements = this.ProjectService.getAchievementItems();
     let index = -1;
@@ -747,160 +699,6 @@ export class MilestoneService {
             $scope.saveMilestoneOpenedEvent();
           }
         ]
-      })
-      .then(
-        data => {
-          if (data && data.action && data.milestone) {
-            if (data.action === 'edit') {
-              let milestone = angular.copy(data.milestone);
-              this.editMilestone(milestone, data.$event);
-            }
-          }
-        },
-        () => {}
-      );
-  }
-
-  editMilestone(milestone: any, $event: any) {
-    let editMode = milestone ? true : false;
-    let title = editMode ? this.getTranslation('EDIT_MILESTONE') : this.getTranslation('ADD_MILESTONE');
-
-    if (!editMode) {
-      milestone = this.createMilestone();
-    }
-
-    let template = `<md-dialog class="dialog--wide">
-          <md-toolbar>
-            <div class="md-toolbar-tools">
-              <h2>${title}</h2>
-            </div>
-          </md-toolbar>
-          <md-dialog-content class="gray-lighter-bg md-dialog-content">
-            <milestone-edit milestone="milestone" on-change="onChange(milestone, valid)"></milestone-edit>
-          </md-dialog-content>
-          <md-dialog-actions layout="row" layout-align="end center">
-            <md-button ng-click="close()"
-                       aria-label="{{ ::'CANCEL' | translate }}">
-              {{ ::'CANCEL' | translate }}
-            </md-button>
-            <md-button class="md-warn"
-                       ng-click="delete()"
-                       aria-label="{{ ::'DELETE' | translate }}">
-              {{ ::'DELETE' | translate }}
-            </md-button>
-            <md-button class="md-primary"
-                       ng-click="save()"
-                       aria-label="{{ ::'SAVE' | translate }}">
-              {{ ::'SAVE' | translate }}
-            </md-button>
-          </md-dialog-actions>
-        </md-dialog>`;
-
-    // display the milestone edit form in a dialog
-    this.upgrade.$injector.get('$mdDialog')
-      .show({
-        parent: angular.element(document.body),
-        template: template,
-        ariaLabel: title,
-        fullscreen: true,
-        targetEvent: $event,
-        clickOutsideToClose: true,
-        escapeToClose: true,
-        locals: {
-          editMode: editMode,
-          $event: $event,
-          milestone: milestone
-        },
-        controller: [
-          '$scope',
-          '$mdDialog',
-          '$filter',
-          'milestone',
-          'editMode',
-          '$event',
-          function DialogController($scope: any, $mdDialog: any, $filter: any, milestone: any,
-              editMode: boolean, $event: any) {
-            $scope.editMode = editMode;
-            $scope.milestone = milestone;
-            $scope.$event = $event;
-            $scope.valid = editMode;
-
-            $scope.$translate = $filter('translate');
-
-            $scope.close = function() {
-              $mdDialog.hide({
-                milestone: $scope.milestone,
-                $event: $scope.$event
-              });
-            };
-
-            $scope.save = function() {
-              if ($scope.valid) {
-                $mdDialog.hide({
-                  milestone: $scope.milestone,
-                  save: true,
-                  $event: $scope.$event
-                });
-              } else {
-                alert($scope.$translate('MILESTONE_EDIT_INVALID_ALERT'));
-              }
-            };
-
-            $scope.delete = function() {
-              $mdDialog.hide({
-                milestone: $scope.milestone,
-                delete: true,
-                $event: $scope.$event
-              });
-            };
-
-            $scope.onChange = function(milestone: any, valid: boolean) {
-              $scope.milestone = milestone;
-              $scope.valid = valid;
-            };
-          }
-        ]
-      })
-      .then(
-        data => {
-          if (data) {
-            if (data.milestone) {
-              if (data.save) {
-                this.saveMilestone(data.milestone);
-              }
-              if (data.delete) {
-                this.deleteMilestoneConfirm(data.milestone, $event);
-              }
-            }
-          }
-        },
-        () => {}
-      );
-  }
-
-  deleteMilestoneConfirm(milestone: any, $event: any) {
-    if (milestone) {
-      const title = milestone.name;
-      const label = this.getTranslation('DELETE_MILESTONE');
-      const msg = this.getTranslation('DELETE_MILESTONE_CONFIRM', { name: milestone.name });
-      const yes = this.getTranslation('YES');
-      const cancel = this.getTranslation('CANCEL');
-
-      const confirm = this.upgrade.$injector.get('$mdDialog')
-        .confirm()
-        .title(title)
-        .textContent(msg)
-        .ariaLabel(label)
-        .targetEvent($event)
-        .ok(yes)
-        .cancel(cancel);
-
-      this.upgrade.$injector.get('$mdDialog').show(confirm).then(
-        () => {
-          this.deleteMilestone(milestone);
-        },
-        () => {}
-      );
-    }
+      });
   }
 }

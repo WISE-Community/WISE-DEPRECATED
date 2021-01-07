@@ -72,6 +72,12 @@ apt-get install nginx -y
 echo "Adding Nginx www-data user to tomcat group"
 usermod -a -G tomcat www-data
 
+echo "Adding ip to nginx.conf"
+sed 's/http {/http {\n        add_header ip $server_addr;/' -i /etc/nginx/nginx.conf
+
+echo "Adding gzip_types to nginx.conf"
+sed 's/gzip on;/gzip on;\n        gzip_types text\/plain text\/xml image\/gif image\/jpeg image\/png image\/svg+xml application\/json application\/javascript application\/x-javascript text\/javascript text\/css;/' -i /etc/nginx/nginx.conf
+
 echo "Copying WISE Nginx config file to Nginx sites-enabled folder"
 rm -f /etc/nginx/sites-enabled/*
 cp $BUILD_FILES/$env/wise.conf /etc/nginx/sites-enabled/wise.conf
@@ -97,11 +103,19 @@ sudo -u ubuntu -g ubuntu cp $BUILD_FILES/.vimrc $HOME/.vimrc
 
 echo "Appending text to .bashrc"
 cat $BUILD_FILES/append-to-bashrc.txt >> ~/.bashrc
+cat $BUILD_FILES/$env/append-to-bashrc.txt >> ~/.bashrc
 source ~/.bashrc
-
-echo "Installing tree"
-apt-get install tree -y
 
 echo "Copying message of the day file to update-motd.d folder to display notes on login"
 cp $BUILD_FILES/99-notes /etc/update-motd.d/99-notes
+cat $BUILD_FILES/$env/append-to-99-notes.txt >> /etc/update-motd.d/99-notes
 chmod 755 /etc/update-motd.d/99-notes
+
+echo "Install mysql client"
+apt-get install mysql-client-core-8.0 -y
+
+echo "Install redis client"
+apt-get install redis-tools -y
+
+echo "Installing tree"
+apt-get install tree -y

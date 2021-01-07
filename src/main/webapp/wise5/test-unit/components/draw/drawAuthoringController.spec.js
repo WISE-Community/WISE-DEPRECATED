@@ -62,7 +62,7 @@ function shouldSelectTheBackgroundImage() {
     drawAuthoringController.nodeId = 'node1';
     drawAuthoringController.componentId = 'component1';
     expect(drawAuthoringController.authoringComponentContent.background).toEqual('background.png');
-    spyOn(drawAuthoringController, 'authoringViewComponentChanged').and.callFake(() => {});
+    spyOn(drawAuthoringController, 'componentChanged').and.callFake(() => {});
     const event = {};
     const args = {
       nodeId: 'node1',
@@ -87,7 +87,7 @@ function shouldMoveAStampUp() {
     expect(drawAuthoringController.authoringComponentContent.stamps.Stamps[1]).toEqual(
       'oxygen.png'
     );
-    spyOn(drawAuthoringController, 'authoringViewComponentChanged').and.callFake(() => {});
+    spyOn(drawAuthoringController, 'componentChanged').and.callFake(() => {});
     drawAuthoringController.moveStampUp(1);
     expect(drawAuthoringController.authoringComponentContent.stamps.Stamps[0]).toEqual(
       'oxygen.png'
@@ -106,7 +106,7 @@ function shouldMoveAStampDown() {
     expect(drawAuthoringController.authoringComponentContent.stamps.Stamps[1]).toEqual(
       'oxygen.png'
     );
-    spyOn(drawAuthoringController, 'authoringViewComponentChanged').and.callFake(() => {});
+    spyOn(drawAuthoringController, 'componentChanged').and.callFake(() => {});
     drawAuthoringController.moveStampDown(0);
     expect(drawAuthoringController.authoringComponentContent.stamps.Stamps[0]).toEqual(
       'oxygen.png'

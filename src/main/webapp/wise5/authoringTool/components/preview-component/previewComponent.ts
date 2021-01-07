@@ -1,4 +1,5 @@
 import { NodeService } from "../../../services/nodeService";
+import { ProjectService } from "../../../services/projectService";
 
 class PreviewComponentController {
 
@@ -6,25 +7,28 @@ class PreviewComponentController {
   componentId: string;
   nodeId: string;
 
-  static $inject = ['$scope', '$compile', '$element', 'NodeService'];
+  static $inject = ['$scope', '$compile', '$element', 'NodeService', 'ProjectService'];
 
   constructor(private $scope: any, private $compile: any, private $element: any,
-      private NodeService: NodeService) {
+      private NodeService: NodeService, private ProjectService: ProjectService) {
   }
 
   $onInit() {
     this.$scope.mode = 'authoringComponentPreview';
-    this.$scope.componentContent = this.componentContent;
     this.$scope.componentTemplatePath =
         this.NodeService.getComponentTemplatePath(this.componentContent.type);
     this.$scope.nodeId = this.nodeId;
     this.$scope.type = this.componentContent.type;
     this.$scope.$watch(
-       () => { return this.componentContent; },
        () => {
-          this.$scope.componentContent = this.componentContent;
+         return this.componentContent;
+       },
+       () => {
+          this.$scope.componentContent =
+              this.ProjectService.injectAssetPaths(this.componentContent);
           this.compileComponent();
-       });
+       },
+       true);
   }
 
   compileComponent() {

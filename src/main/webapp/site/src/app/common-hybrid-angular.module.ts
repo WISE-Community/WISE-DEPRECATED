@@ -50,6 +50,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { HelpIconComponent } from '../../../wise5/themes/default/themeComponents/helpIcon/help-icon.component';
 import { NodeStatusIcon } from '../../../wise5/themes/default/themeComponents/nodeStatusIcon/node-status-icon.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MomentModule } from 'ngx-moment';
 import { EditorModule, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
 import { WiseTinymceEditorComponent } from '../../../wise5/directives/wise-tinymce-editor/wise-tinymce-editor.component';
@@ -82,6 +83,7 @@ export class EmptyComponent {}
     MatInputModule,
     MatListModule,
     MatProgressBarModule,
+    MatProgressSpinnerModule,
     MatSelectModule,
     MatTooltipModule,
     MomentModule,
@@ -139,6 +141,7 @@ export class EmptyComponent {}
     MatInputModule,
     MatListModule,
     MatProgressBarModule,
+    MatProgressSpinnerModule,
     MatSelectModule,
     MatTooltipModule,
     MomentModule,

@@ -1,0 +1,22 @@
+<div class='openResponse' flex>
+  <style>
+    {{nodeContent.style}}
+  </style>
+  <div>
+    <div *ngIf='!authoringComponentContent.showPreviousWork'>
+      <mat-icon matTooltip="If you want to use rich visuals (images, videos, links, bullets, etc.) in your prompt, use an HTML component above this"
+          matTooltipPosition="right"
+          i18n-matTooltip>announcement</mat-icon>
+      <mat-form-field style='width:100%' appearance='fill'>
+        <mat-label i18n>Prompt</mat-label>
+        <textarea matInput
+                  [ngModel]='authoringComponentContent.prompt'
+                  (ngModelChange)='promptChanged($event)'
+                  placeholder='Enter Prompt Here'
+                  i18n-placeholder
+                  cdkTextareaAutosize>
+        </textarea>
+      </mat-form-field>
+    </div>
+  </div>
+</div>

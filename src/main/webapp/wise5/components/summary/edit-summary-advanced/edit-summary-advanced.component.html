@@ -1,0 +1,40 @@
+<div class='advancedAuthoringDiv'>
+  <div>
+    <md-checkbox class='md-primary'
+                 ng-model='$ctrl.authoringComponentContent.showSaveButton'
+                 ng-change='$ctrl.componentChanged()'>
+      {{ ::'SHOW_SAVE_BUTTON' | translate }}
+    </md-checkbox>
+  </div>
+  <div>
+    <md-checkbox class='md-primary'
+                 ng-model='$ctrl.authoringComponentContent.showSubmitButton'
+                 ng-change='$ctrl.componentChanged()'>
+      {{ ::'SHOW_SUBMIT_BUTTON' | translate }}
+    </md-checkbox>
+  </div>
+  <div>
+    <md-checkbox class='md-primary'
+                 ng-if='$ctrl.isNotebookEnabled()'
+                 ng-model='$ctrl.authoringComponentContent.showAddToNotebookButton'
+                 ng-change='$ctrl.componentChanged()'>
+      {{ ::'SHOW_ADD_TO_NOTEBOOK_BUTTON' | translate }}
+    </md-checkbox>
+  </div>
+  <div>
+    <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'
+                        ng-if='$ctrl.authoringComponentContent.showSubmitButton'>
+      <label>{{ ::'MAX_SUBMIT' | translate }}</label>
+      <input type='number'
+             ng-model='$ctrl.authoringComponentContent.maxSubmitCount'
+             ng-model-options='{ debounce: 1000 }'
+             ng-change='$ctrl.componentChanged()'/>
+    </md-input-container>
+  </div>
+  <div layout="column" layout-align="start start">
+    <edit-component-width [authoring-component-content]="$ctrl.authoringComponentContent"></edit-component-width>
+    <edit-component-rubric [authoring-component-content]="$ctrl.authoringComponentContent"></edit-component-rubric>
+    <edit-component-tags [authoring-component-content]="$ctrl.authoringComponentContent"></edit-component-tags>
+    <edit-component-json [node-id]="$ctrl.nodeId" [component-id]="$ctrl.componentId"></edit-component-json>
+  </div>
+</div>

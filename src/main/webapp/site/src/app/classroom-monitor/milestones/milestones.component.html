@@ -1,0 +1,25 @@
+<div class="view-content view-content--with-sidemenu">
+  <div class="l-constrained">
+    <div fxLayout="row wrap" fxLayoutAlign="center center" fxLayoutAlign.gt-xs="start center">
+      <mat-card *ngFor="let milestone of milestones"
+          class="milestone md-button" md-ink-ripple
+          (click)="showMilestoneDetails(milestone, $event)">
+        <mat-card-content fxLayout="column" fxLayoutAlign="center center">
+          <div class="milestone__title" md-truncate>{{ milestone.name }}</div>
+          <div class="milestone__progress">
+            <mat-progress-spinner diameter="96"
+                mode="determinate"
+                [value]="milestone.percentageCompleted"
+                [ngClass]="{ 'success': milestone.percentageCompleted === 100 }"></mat-progress-spinner>
+             <div class="milestone__progress__percent" fxLayout="row" fxLayoutAlign="center center">
+               <span *ngIf="milestone.percentageCompleted < 100">{{ milestone.percentageCompleted }}%</span>
+               <mat-icon *ngIf="milestone.percentageCompleted === 100" class="success md-48"> check </mat-icon>
+              </div>
+            </div>
+            <p class="md-body-1 text-secondary">{{ milestone.numberOfStudentsCompleted }}/{{ milestone.numberOfStudentsInRun }} teams completed</p>
+            <p *ngIf="milestone.isReportAvailable" class="md-body-2 info" i18n>~ Report Available ~</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

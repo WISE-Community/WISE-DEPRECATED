@@ -56,7 +56,7 @@ function createComponent() {
 
 function shouldAddAnAnimationObject() {
   it('should add an animation object', () => {
-    spyOn(animationAuthoringController, 'authoringViewComponentChanged');
+    spyOn(animationAuthoringController, 'componentChanged');
     animationAuthoringController.authoringAddObject();
     expect(animationAuthoringController.authoringComponentContent.objects.length).toEqual(1);
   });
@@ -64,7 +64,7 @@ function shouldAddAnAnimationObject() {
 
 function shouldAddADataPointToAnAnimationObject() {
   it('should add a data point to an animation object', () => {
-    spyOn(animationAuthoringController, 'authoringViewComponentChanged');
+    spyOn(animationAuthoringController, 'componentChanged');
     const animationObject = {};
     animationAuthoringController.authoringAddDataPointToObject(animationObject);
     expect(animationObject.data.length).toEqual(1);
@@ -73,7 +73,7 @@ function shouldAddADataPointToAnAnimationObject() {
 
 function shouldAddADataSourceFromAnAnimationObject() {
   it('should add a data source from an animation object', () => {
-    spyOn(animationAuthoringController, 'authoringViewComponentChanged');
+    spyOn(animationAuthoringController, 'componentChanged');
     const animationObject = {};
     animationAuthoringController.authoringAddDataSource(animationObject);
     expect(animationObject.dataSource).not.toBeNull();
@@ -82,7 +82,7 @@ function shouldAddADataSourceFromAnAnimationObject() {
 
 function shouldDeleteADataSourceFromAnAnimationObject() {
   it('should delete a data source from an animation object', () => {
-    spyOn(animationAuthoringController, 'authoringViewComponentChanged');
+    spyOn(animationAuthoringController, 'componentChanged');
     spyOn(window, 'confirm').and.returnValue(true);
     const animationObject = {
       dataSource: {}
