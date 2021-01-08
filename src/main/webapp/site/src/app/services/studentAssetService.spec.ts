@@ -15,8 +15,8 @@ let asset1, asset2;
 describe('StudentAssetService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule, UpgradeModule ],
-      providers: [ StudentAssetService, ConfigService ]
+      imports: [HttpClientTestingModule, UpgradeModule],
+      providers: [StudentAssetService, ConfigService]
     });
     http = TestBed.get(HttpTestingController);
     service = TestBed.get(StudentAssetService);
@@ -28,17 +28,19 @@ describe('StudentAssetService', () => {
 });
 
 function initialize() {
-  asset1 = {id:1, fileName:'wise.png', url:'/curriculum/1/wise.png'};
-  asset2 = {id:2, fileName:'wiser.png', url:'/curriculum/1/wiser.png'};
+  asset1 = { id: 1, fileName: 'wise.png', url: '/curriculum/1/wise.png' };
+  asset2 = { id: 2, fileName: 'wiser.png', url: '/curriculum/1/wiser.png' };
 }
 
 function retrieveAssets() {
   describe('retrieveAssets', () => {
     beforeEach(() => {
       spyOn(configService, 'getWorkgroupId').and.returnValue(workgroupId);
-      spyOn(configService, 'getConfigParam').withArgs('mode').and
-          .returnValue('studentRun').withArgs('studentAssetsURL').and
-          .returnValue(studentAssetURL);
+      spyOn(configService, 'getConfigParam')
+        .withArgs('mode')
+        .and.returnValue('studentRun')
+        .withArgs('studentAssetsURL')
+        .and.returnValue(studentAssetURL);
     });
     retrieveAssets_StudentMode_FetchAssetsAndSetAttributes();
   });
@@ -49,9 +51,11 @@ function deleteAsset() {
     beforeEach(() => {
       spyOn(configService, 'getWorkgroupId').and.returnValue(workgroupId);
       spyOn(configService, 'getPeriodId').and.returnValue(periodId);
-      spyOn(configService, 'getConfigParam').withArgs('mode').and
-          .returnValue('studentRun').withArgs('studentAssetsURL').and
-          .returnValue(studentAssetURL);
+      spyOn(configService, 'getConfigParam')
+        .withArgs('mode')
+        .and.returnValue('studentRun')
+        .withArgs('studentAssetsURL')
+        .and.returnValue(studentAssetURL);
     });
     deleteAsset_StudentMode_DeleteAsset();
   });

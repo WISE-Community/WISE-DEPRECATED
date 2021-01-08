@@ -11,7 +11,7 @@ const openResponseComponentModule = angular
   .controller('OpenResponseController', OpenResponseController)
   .config([
     '$translatePartialLoaderProvider',
-    $translatePartialLoaderProvider => {
+    ($translatePartialLoaderProvider) => {
       $translatePartialLoaderProvider.addPart('components/openResponse/i18n');
     }
   ]);

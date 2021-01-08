@@ -8,16 +8,19 @@ class NavigationController {
   rootNode: any;
   static $inject = ['ProjectService', 'StudentDataService'];
 
-  constructor(private ProjectService: VLEProjectService,
-      private StudentDataService: StudentDataService) {
+  constructor(
+    private ProjectService: VLEProjectService,
+    private StudentDataService: StudentDataService
+  ) {
     this.rootNode = this.ProjectService.rootNode;
   }
 
   $onInit() {
-    this.navItemIsExpandedSubscription = this.StudentDataService.navItemIsExpanded$
-        .subscribe(({nodeId, isExpanded}) => {
-      this.navItemIsExpanded[nodeId] = isExpanded;
-    });
+    this.navItemIsExpandedSubscription = this.StudentDataService.navItemIsExpanded$.subscribe(
+      ({ nodeId, isExpanded }) => {
+        this.navItemIsExpanded[nodeId] = isExpanded;
+      }
+    );
   }
 
   $onDestroy() {

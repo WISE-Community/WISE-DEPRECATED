@@ -1,11 +1,10 @@
 'use strict';
 
-import { Directive } from "@angular/core";
-import { EditComponentController } from "../../authoringTool/components/editComponentController";
+import { Directive } from '@angular/core';
+import { EditComponentController } from '../../authoringTool/components/editComponentController';
 
 @Directive()
 class EmbeddedAuthoringController extends EditComponentController {
-
   embeddedApplicationIFrameId: string;
 
   static $inject = [
@@ -18,21 +17,24 @@ class EmbeddedAuthoringController extends EditComponentController {
     'UtilService'
   ];
 
-  constructor($filter,
+  constructor(
+    $filter,
+    ConfigService,
+    NodeService,
+    NotificationService,
+    ProjectAssetService,
+    ProjectService,
+    UtilService
+  ) {
+    super(
+      $filter,
       ConfigService,
       NodeService,
       NotificationService,
       ProjectAssetService,
       ProjectService,
-      UtilService) {
-    super(
-        $filter,
-        ConfigService,
-        NodeService,
-        NotificationService,
-        ProjectAssetService,
-        ProjectService,
-        UtilService);
+      UtilService
+    );
   }
 
   $onInit() {
@@ -74,6 +76,6 @@ const EmbeddedAuthoring = {
   controller: EmbeddedAuthoringController,
   controllerAs: 'embeddedController',
   templateUrl: 'wise5/components/embedded/authoring.html'
-}
+};
 
 export default EmbeddedAuthoring;

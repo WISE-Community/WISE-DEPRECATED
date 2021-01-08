@@ -38,10 +38,11 @@ class PeriodSelectController {
     this.currentPeriod = null;
     this.periods = [];
     this.initializePeriods();
-    this.currentPeriodChangedSubscription = this.TeacherDataService.currentPeriodChanged$
-        .subscribe(({ currentPeriod }) => {
-      this.currentPeriod = currentPeriod;
-    });
+    this.currentPeriodChangedSubscription = this.TeacherDataService.currentPeriodChanged$.subscribe(
+      ({ currentPeriod }) => {
+        this.currentPeriod = currentPeriod;
+      }
+    );
     this.$scope.$on('$destroy', () => {
       this.ngOnDestroy();
     });

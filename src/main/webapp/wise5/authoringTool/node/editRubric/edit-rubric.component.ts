@@ -1,11 +1,10 @@
-import { ProjectAssetService } from "../../../../site/src/app/services/projectAssetService";
-import { ConfigService } from "../../../services/configService";
-import { ProjectService } from "../../../services/projectService";
-import { TeacherDataService } from "../../../services/teacherDataService";
-import { UtilService } from "../../../services/utilService";
+import { ProjectAssetService } from '../../../../site/src/app/services/projectAssetService';
+import { ConfigService } from '../../../services/configService';
+import { ProjectService } from '../../../services/projectService';
+import { TeacherDataService } from '../../../services/teacherDataService';
+import { UtilService } from '../../../services/utilService';
 
 class EditRubricComponentController {
-
   node: any;
   nodeId: string;
   rubric: string;
@@ -19,12 +18,12 @@ class EditRubricComponentController {
   ];
 
   constructor(
-      private $state: any,
-      private ConfigService: ConfigService,
-      private ProjectService: ProjectService,
-      private TeacherDataService: TeacherDataService,
-      private UtilService: UtilService) {
-  }
+    private $state: any,
+    private ConfigService: ConfigService,
+    private ProjectService: ProjectService,
+    private TeacherDataService: TeacherDataService,
+    private UtilService: UtilService
+  ) {}
 
   $onInit(): void {
     this.nodeId = this.TeacherDataService.getCurrentNodeId();
@@ -38,14 +37,16 @@ class EditRubricComponentController {
     this.node.rubric = html;
     this.ProjectService.saveProject();
   }
-  
+
   goBack(): void {
-    this.$state.go('root.at.project.node', { projectId: this.ConfigService.getProjectId(),
-        nodeId: this.nodeId });
+    this.$state.go('root.at.project.node', {
+      projectId: this.ConfigService.getProjectId(),
+      nodeId: this.nodeId
+    });
   }
 }
 
 export const EditRubricComponent = {
   templateUrl: `/wise5/authoringTool/node/editRubric/edit-rubric.component.html`,
   controller: EditRubricComponentController
-}
+};

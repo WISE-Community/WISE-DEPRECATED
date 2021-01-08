@@ -38,7 +38,7 @@ class NotificationsMenuController {
   }
 
   dismissAllNotifications() {
-    this.newNotifications.map(newNotification => {
+    this.newNotifications.map((newNotification) => {
       this.dismissNotification(newNotification);
     });
   }

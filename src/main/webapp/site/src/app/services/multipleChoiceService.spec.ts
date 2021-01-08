@@ -1,15 +1,15 @@
-import { MultipleChoiceService } from "../../../../wise5/components/multipleChoice/multipleChoiceService";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { UpgradeModule } from "@angular/upgrade/static";
-import { TestBed } from "@angular/core/testing";
-import { AnnotationService } from "../../../../wise5/services/annotationService";
-import { ConfigService } from "../../../../wise5/services/configService";
-import { ProjectService } from "../../../../wise5/services/projectService";
-import { StudentAssetService } from "../../../../wise5/services/studentAssetService";
-import { StudentDataService } from "../../../../wise5/services/studentDataService";
-import { TagService } from "../../../../wise5/services/tagService";
-import { UtilService } from "../../../../wise5/services/utilService";
-import { SessionService } from "../../../../wise5/services/sessionService";
+import { MultipleChoiceService } from '../../../../wise5/components/multipleChoice/multipleChoiceService';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { UpgradeModule } from '@angular/upgrade/static';
+import { TestBed } from '@angular/core/testing';
+import { AnnotationService } from '../../../../wise5/services/annotationService';
+import { ConfigService } from '../../../../wise5/services/configService';
+import { ProjectService } from '../../../../wise5/services/projectService';
+import { StudentAssetService } from '../../../../wise5/services/studentAssetService';
+import { StudentDataService } from '../../../../wise5/services/studentDataService';
+import { TagService } from '../../../../wise5/services/tagService';
+import { UtilService } from '../../../../wise5/services/utilService';
+import { SessionService } from '../../../../wise5/services/sessionService';
 
 let service: MultipleChoiceService;
 let studentDataService: StudentDataService;
@@ -26,7 +26,7 @@ let componentId1: string = 'abcdefghij';
 describe('MultipleChoiceService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule, UpgradeModule ],
+      imports: [HttpClientTestingModule, UpgradeModule],
       providers: [
         AnnotationService,
         ConfigService,
@@ -100,8 +100,9 @@ function createChoice(id: string, text: string, feedback: string, isCorrect: boo
 
 function choiceChosen() {
   function expectChoiceChosen(criteria: any, componentState: any, expectedResult: boolean) {
-    spyOn(studentDataService, 'getLatestComponentStateByNodeIdAndComponentId').and
-        .returnValue(componentState);
+    spyOn(studentDataService, 'getLatestComponentStateByNodeIdAndComponentId').and.returnValue(
+      componentState
+    );
     expect(service.choiceChosen(criteria)).toEqual(expectedResult);
   }
   it(`should check if the student chose the choice in the criteria when the student does not have
@@ -131,10 +132,14 @@ function choiceChosen() {
 }
 
 function isChoicesSelected() {
-  function expectIsChoicesSelected(studentChoiceIds: any[], constraintChoiceIds: any,
-      expectedResult: boolean) {
-    expect(service.isChoicesSelected(studentChoiceIds, constraintChoiceIds))
-        .toEqual(expectedResult);
+  function expectIsChoicesSelected(
+    studentChoiceIds: any[],
+    constraintChoiceIds: any,
+    expectedResult: boolean
+  ) {
+    expect(service.isChoicesSelected(studentChoiceIds, constraintChoiceIds)).toEqual(
+      expectedResult
+    );
   }
   it(`should check if choices are selected when constraint choice ids is a string and the constraint
       choice id is not selected`, () => {
@@ -167,10 +172,13 @@ function isChoicesSelected() {
 }
 
 function getStudentChoiceIdsFromStudentChoiceObjects() {
-  function expectGetStudentChoiceIdsFromStudentChoiceObjects(studentChoices: any[],
-      expectedResult: any[]) {
-    expect(service.getStudentChoiceIdsFromStudentChoiceObjects(studentChoices))
-        .toEqual(expectedResult);
+  function expectGetStudentChoiceIdsFromStudentChoiceObjects(
+    studentChoices: any[],
+    expectedResult: any[]
+  ) {
+    expect(service.getStudentChoiceIdsFromStudentChoiceObjects(studentChoices)).toEqual(
+      expectedResult
+    );
   }
   it('should get student choice ids when there are none', () => {
     const studentChoices = [];
@@ -183,8 +191,12 @@ function getStudentChoiceIdsFromStudentChoiceObjects() {
 }
 
 function isCompleted() {
-  function expectIsCompleted(component: any, componentStates: any[], node: any,
-      expectedResult: boolean) {
+  function expectIsCompleted(
+    component: any,
+    componentStates: any[],
+    node: any,
+    expectedResult: boolean
+  ) {
     expect(service.isCompleted(component, componentStates, [], [], node)).toEqual(expectedResult);
   }
   it('should check if a component is completed when there are no component states', () => {
@@ -239,8 +251,9 @@ function componentStateHasStudentWork() {
 
 function componentHasCorrectAnswer() {
   function expectComponentHasCorrectAnswer(expectedResult: boolean) {
-    const component = createMultipleChoiceComponent(
-        [createChoice(choiceId1, choiceText1, '', expectedResult)]);
+    const component = createMultipleChoiceComponent([
+      createChoice(choiceId1, choiceText1, '', expectedResult)
+    ]);
     expect(service.componentHasCorrectAnswer(component)).toEqual(expectedResult);
   }
   it('should check if component has correct answer when it is false', () => {

@@ -1,8 +1,8 @@
 import { Component, OnInit, Input, ElementRef } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { SafeStyle } from '@angular/platform-browser';
-import { TeacherRun } from "../teacher-run";
-import { ConfigService } from "../../services/config.service";
+import { TeacherRun } from '../teacher-run';
+import { ConfigService } from '../../services/config.service';
 import { flash } from '../../animations';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
@@ -12,10 +12,9 @@ import { ShareRunCodeDialogComponent } from '../share-run-code-dialog/share-run-
   selector: 'app-teacher-run-list-item',
   templateUrl: './teacher-run-list-item.component.html',
   styleUrls: ['./teacher-run-list-item.component.scss'],
-  animations: [ flash ]
+  animations: [flash]
 })
 export class TeacherRunListItemComponent implements OnInit {
-
   @Input()
   run: TeacherRun = new TeacherRun();
 
@@ -26,11 +25,13 @@ export class TeacherRunListItemComponent implements OnInit {
   animateDuration: string = '0s';
   animateDelay: string = '0s';
 
-  constructor(private sanitizer: DomSanitizer,
-              private configService: ConfigService,
-              private router: Router,
-              private elRef: ElementRef,
-              private dialog: MatDialog,) {
+  constructor(
+    private sanitizer: DomSanitizer,
+    private configService: ConfigService,
+    private router: Router,
+    private elRef: ElementRef,
+    private dialog: MatDialog
+  ) {
     this.sanitizer = sanitizer;
   }
 
@@ -45,8 +46,9 @@ export class TeacherRunListItemComponent implements OnInit {
     const contextPath = this.configService.getContextPath();
     this.editLink = `${contextPath}/author/authorproject.html?projectId=${this.run.project.id}`;
     if (this.run.project.wiseVersion === 4) {
-      this.gradeAndManageLink = `${this.configService.getWISE4Hostname()}` +
-          `/teacher/classroomMonitor/classroomMonitor?runId=${this.run.id}&gradingType=monitor`;
+      this.gradeAndManageLink =
+        `${this.configService.getWISE4Hostname()}` +
+        `/teacher/classroomMonitor/classroomMonitor?runId=${this.run.id}&gradingType=monitor`;
     } else {
       this.gradeAndManageLink = `${contextPath}/teacher/manage/unit/${this.run.id}`;
     }
@@ -56,7 +58,7 @@ export class TeacherRunListItemComponent implements OnInit {
       this.animateDelay = '1s';
       setTimeout(() => {
         this.run.isHighlighted = false;
-      }, 7000)
+      }, 7000);
     }
   }
 

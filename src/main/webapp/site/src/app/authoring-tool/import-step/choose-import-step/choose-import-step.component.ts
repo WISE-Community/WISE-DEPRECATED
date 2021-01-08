@@ -8,7 +8,6 @@ import { TeacherProjectService } from '../../../../../../wise5/services/teacherP
   templateUrl: 'choose-import-step.component.html'
 })
 export class ChooseImportStepComponent {
-
   $state: any;
   importLibraryProjectId: number;
   importMyProjectId: number;
@@ -19,14 +18,17 @@ export class ChooseImportStepComponent {
   libraryProjectsList: any[];
   myProjectsList: any[];
 
-  constructor(private upgrade: UpgradeModule, private ConfigService: ConfigService,
-      private ProjectService: TeacherProjectService) {
+  constructor(
+    private upgrade: UpgradeModule,
+    private ConfigService: ConfigService,
+    private ProjectService: TeacherProjectService
+  ) {
     this.$state = this.upgrade.$injector.get('$state');
   }
 
   ngOnInit() {
     this.myProjectsList = this.ConfigService.getAuthorableProjects();
-    this.ProjectService.getLibraryProjects().then(libraryProjects => {
+    this.ProjectService.getLibraryProjects().then((libraryProjects) => {
       this.libraryProjectsList = this.ProjectService.sortAndFilterUniqueLibraryProjects(
         libraryProjects
       );
@@ -45,7 +47,7 @@ export class ChooseImportStepComponent {
 
   showProject(importProjectId) {
     this.importProjectId = importProjectId;
-    this.ProjectService.retrieveProjectById(this.importProjectId).then(projectJSON => {
+    this.ProjectService.retrieveProjectById(this.importProjectId).then((projectJSON) => {
       this.importProject = projectJSON;
       const nodeOrderOfProject = this.ProjectService.getNodeOrderOfProject(this.importProject);
       this.importProjectIdToOrder = Object.values(nodeOrderOfProject.idToOrder);

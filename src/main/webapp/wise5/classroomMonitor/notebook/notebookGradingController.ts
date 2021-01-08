@@ -12,15 +12,15 @@ class NotebookGradingController {
   notebookConfig: any;
   notesEnabled: boolean = false;
   sortOrder: object = {
-    'team': ['workgroupId'],
+    team: ['workgroupId'],
     '-team': ['-workgroupId'],
-    'student': ['displayNames', 'workgroupId'],
+    student: ['displayNames', 'workgroupId'],
     '-student': ['-displayNames', 'workgroupId'],
-    'notes': ['notes.length', 'workgroupId'],
+    notes: ['notes.length', 'workgroupId'],
     '-notes': ['-notes.length', 'workgroupId'],
-    'status': ['report.serverSaveTime', 'workgroupId'],
+    status: ['report.serverSaveTime', 'workgroupId'],
     '-status': ['-report.serverSaveTime', 'workgroupId'],
-    'score': ['score', 'workgroupId'],
+    score: ['score', 'workgroupId'],
     '-score': ['-score', 'workgroupId']
   };
   reportEnabled: boolean = false;
@@ -54,7 +54,10 @@ class NotebookGradingController {
       }
       if (this.reportEnabled) {
         const reportId = this.notebookConfig.itemTypes.report.notes[0].reportId;
-        workgroup.report = this.NotebookService.getLatestNotebookReportItemByReportId(reportId, workgroup.workgroupId);
+        workgroup.report = this.NotebookService.getLatestNotebookReportItemByReportId(
+          reportId,
+          workgroup.workgroupId
+        );
       }
     }
     this.setWorkgroupsById();
@@ -94,7 +97,7 @@ class NotebookGradingController {
 
   getWorkgroupNotes(workgroupId) {
     const notes = this.NotebookService.getPrivateNotebookItems(workgroupId);
-    return notes.filter(note => {
+    return notes.filter((note) => {
       return note.type !== 'report';
     });
   }
@@ -128,8 +131,9 @@ class NotebookGradingController {
   }
 
   getNotebookConfigForWorkgroup(workgroupId) {
-    if (this.ConfigService.isRunOwner(workgroupId) ||
-        this.ConfigService.isRunSharedTeacher(workgroupId)
+    if (
+      this.ConfigService.isRunOwner(workgroupId) ||
+      this.ConfigService.isRunSharedTeacher(workgroupId)
     ) {
       return this.NotebookService.getTeacherNotebookConfig();
     } else {

@@ -5,7 +5,6 @@ import { EditComponentController } from '../../authoringTool/components/editComp
 
 @Directive()
 class AudioOscillatorAuthoringController extends EditComponentController {
-
   authoringSineChecked: boolean;
   authoringSquareChecked: boolean;
   authoringTriangleChecked: boolean;
@@ -79,7 +78,6 @@ class AudioOscillatorAuthoringController extends EditComponentController {
   }
 }
 
-
 const AudioOscillatorAuthoring = {
   bindings: {
     nodeId: '@',
@@ -88,6 +86,6 @@ const AudioOscillatorAuthoring = {
   controller: AudioOscillatorAuthoringController,
   controllerAs: 'audioOscillatorController',
   templateUrl: 'wise5/components/audioOscillator/authoring.html'
-}
+};
 
 export default AudioOscillatorAuthoring;

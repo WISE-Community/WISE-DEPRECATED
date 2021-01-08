@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { UserService } from "../../services/user.service";
-import { User } from "../../domain/user";
-import { ConfigService } from "../../services/config.service";
+import { UserService } from '../../services/user.service';
+import { User } from '../../domain/user';
+import { ConfigService } from '../../services/config.service';
 import { MatTabGroup } from '@angular/material/tabs';
 import { LibraryService } from '../../services/library.service';
 import { Router } from '@angular/router';
@@ -22,11 +22,12 @@ export class TeacherHomeComponent implements OnInit {
     { path: 'library', label: $localize`Unit Library` }
   ];
 
-  constructor(private userService: UserService,
-              private configService: ConfigService,
-              private libraryService: LibraryService,
-              private router: Router) {
-  }
+  constructor(
+    private userService: UserService,
+    private configService: ConfigService,
+    private libraryService: LibraryService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.getUser();
@@ -43,10 +44,9 @@ export class TeacherHomeComponent implements OnInit {
   }
 
   getUser() {
-    this.userService.getUser()
-      .subscribe(user => {
-        this.user = user;
-      });
+    this.userService.getUser().subscribe((user) => {
+      this.user = user;
+    });
   }
 
   openAuthoringTool() {

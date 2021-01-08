@@ -11,7 +11,7 @@ import { configureTestSuite } from 'ng-bullet';
 
 export class MockStudentService {
   getSecurityQuestion(username: string): Observable<any> {
-    return Observable.create(observer => {
+    return Observable.create((observer) => {
       observer.next({
         status: 'success',
         messageCode: 'usernameFound'
@@ -34,7 +34,7 @@ describe('ForgotStudentPasswordComponent', () => {
   };
 
   const createObservableResponse = (status, messageCode) => {
-    const observableResponse = Observable.create(observer => {
+    const observableResponse = Observable.create((observer) => {
       const response = {
         status: status,
         messageCode: messageCode
@@ -56,17 +56,11 @@ describe('ForgotStudentPasswordComponent', () => {
 
   configureTestSuite(() => {
     TestBed.configureTestingModule({
-      declarations: [ ForgotStudentPasswordComponent ],
-      imports: [
-        RouterTestingModule,
-        BrowserAnimationsModule,
-        ReactiveFormsModule
-      ],
-      providers: [
-        { provide: StudentService, useClass: MockStudentService }
-      ],
-      schemas: [ NO_ERRORS_SCHEMA ]
-    })
+      declarations: [ForgotStudentPasswordComponent],
+      imports: [RouterTestingModule, BrowserAnimationsModule, ReactiveFormsModule],
+      providers: [{ provide: StudentService, useClass: MockStudentService }],
+      schemas: [NO_ERRORS_SCHEMA]
+    });
   });
 
   beforeEach(() => {
@@ -109,7 +103,9 @@ describe('ForgotStudentPasswordComponent', () => {
       questionKey: questionKey,
       question: question
     };
-    expect(navigateSpy).toHaveBeenCalledWith(['/forgot/student/password/security'],
-      {queryParams: params, skipLocationChange: true});
+    expect(navigateSpy).toHaveBeenCalledWith(['/forgot/student/password/security'], {
+      queryParams: params,
+      skipLocationChange: true
+    });
   });
 });

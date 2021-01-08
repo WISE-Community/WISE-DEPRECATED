@@ -1,5 +1,5 @@
-import { Component, Input } from "@angular/core";
-import { StudentDataService } from "../../../../services/studentDataService";
+import { Component, Input } from '@angular/core';
+import { StudentDataService } from '../../../../services/studentDataService';
 
 @Component({
   selector: 'node-status-icon',

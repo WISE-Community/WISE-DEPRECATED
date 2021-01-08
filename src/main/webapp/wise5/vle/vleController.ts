@@ -82,7 +82,9 @@ class VLEController {
     this.SessionService = SessionService;
     this.StudentDataService = StudentDataService;
     this.$translate = this.$filter('translate');
-    this.$window.onbeforeunload = () => { this.SessionService.broadcastExit() };
+    this.$window.onbeforeunload = () => {
+      this.SessionService.broadcastExit();
+    };
 
     this.workgroupId = this.ConfigService.getWorkgroupId();
     this.currentNode = null;
@@ -123,8 +125,7 @@ class VLEController {
       });
     }
 
-    this.showSessionWarningSubscription = 
-        this.SessionService.showSessionWarning$.subscribe(() => {
+    this.showSessionWarningSubscription = this.SessionService.showSessionWarning$.subscribe(() => {
       const confirm = $mdDialog
         .confirm()
         .parent(angular.element(document.body))
@@ -147,68 +148,70 @@ class VLEController {
       this.logOut();
     });
 
-    this.currentNodeChangedSubscription = this.StudentDataService.currentNodeChanged$
-        .subscribe(({ previousNode }) => {
-      let currentNode = this.StudentDataService.getCurrentNode();
-      let currentNodeId = currentNode.id;
+    this.currentNodeChangedSubscription = this.StudentDataService.currentNodeChanged$.subscribe(
+      ({ previousNode }) => {
+        let currentNode = this.StudentDataService.getCurrentNode();
+        let currentNodeId = currentNode.id;
 
-      this.StudentDataService.updateStackHistory(currentNodeId);
-      this.StudentDataService.updateVisitedNodesHistory(currentNodeId);
+        this.StudentDataService.updateStackHistory(currentNodeId);
+        this.StudentDataService.updateVisitedNodesHistory(currentNodeId);
 
-      let componentId, componentType, category, eventName, eventData, eventNodeId;
-      if (previousNode != null && this.ProjectService.isGroupNode(previousNode.id)) {
-        // going from group to node or group to group
-        componentId = null;
-        componentType = null;
-        category = 'Navigation';
-        eventName = 'nodeExited';
-        eventData = {
-          nodeId: previousNode.id
-        };
-        eventNodeId = previousNode.id;
-        this.StudentDataService.saveVLEEvent(
-          eventNodeId,
-          componentId,
-          componentType,
-          category,
-          eventName,
-          eventData
-        );
+        let componentId, componentType, category, eventName, eventData, eventNodeId;
+        if (previousNode != null && this.ProjectService.isGroupNode(previousNode.id)) {
+          // going from group to node or group to group
+          componentId = null;
+          componentType = null;
+          category = 'Navigation';
+          eventName = 'nodeExited';
+          eventData = {
+            nodeId: previousNode.id
+          };
+          eventNodeId = previousNode.id;
+          this.StudentDataService.saveVLEEvent(
+            eventNodeId,
+            componentId,
+            componentType,
+            category,
+            eventName,
+            eventData
+          );
+        }
+
+        if (this.ProjectService.isGroupNode(currentNodeId)) {
+          componentId = null;
+          componentType = null;
+          category = 'Navigation';
+          eventName = 'nodeEntered';
+          eventData = {
+            nodeId: currentNode.id
+          };
+          eventNodeId = currentNode.id;
+          this.StudentDataService.saveVLEEvent(
+            eventNodeId,
+            componentId,
+            componentType,
+            category,
+            eventName,
+            eventData
+          );
+        }
       }
+    );
 
-      if (this.ProjectService.isGroupNode(currentNodeId)) {
-        componentId = null;
-        componentType = null;
-        category = 'Navigation';
-        eventName = 'nodeEntered';
-        eventData = {
-          nodeId: currentNode.id
-        };
-        eventNodeId = currentNode.id;
-        this.StudentDataService.saveVLEEvent(
-          eventNodeId,
-          componentId,
-          componentType,
-          category,
-          eventName,
-          eventData
-        );
-      }
-    });
-
-    this.$transitions.onSuccess({}, $transition => {
+    this.$transitions.onSuccess({}, ($transition) => {
       this.$anchorScroll('node');
     });
 
     this.notifications = this.NotificationService.notifications;
     this.newNotifications = this.getNewNotifications();
 
-    this.notificationChangedSubscription = this.NotificationService.notificationChanged$
-        .subscribe(() => {
-      // update new notifications
-      this.notifications = this.NotificationService.notifications;
-      this.newNotifications = this.getNewNotifications();
-    });
+    this.notificationChangedSubscription = this.NotificationService.notificationChanged$.subscribe(
+      () => {
+        // update new notifications
+        this.notifications = this.NotificationService.notifications;
+        this.newNotifications = this.getNewNotifications();
+      }
+    );
 
     this.StudentDataService.pauseScreen$.subscribe((doPause: boolean) => {
       if (doPause) {
@@ -220,12 +223,12 @@ class VLEController {
 
     // Make sure if we drop something on the page we don't navigate away
     // https://developer.mozilla.org/En/DragDrop/Drag_Operations#drop
-    $(document.body).on('dragover', function(e) {
+    $(document.body).on('dragover', function (e) {
       e.preventDefault();
       return false;
     });
 
-    $(document.body).on('drop', function(e) {
+    $(document.body).on('drop', function (e) {
       e.preventDefault();
       return false;
     });
@@ -434,7 +437,7 @@ class VLEController {
    * Returns all ambient notifications that have not been dismissed yet
    */
   getNewAmbientNotifications() {
-    return this.notifications.filter(function(notification) {
+    return this.notifications.filter(function (notification) {
       let isAmbient = notification.data ? notification.data.isAmbient : false;
       return notification.timeDismissed == null && isAmbient;
     });
@@ -642,7 +645,7 @@ class VLEController {
        * Updates the annotation locally and on the server
        * @param annotation
        */
-      updateAnnotation: annotation => {
+      updateAnnotation: (annotation) => {
         this.AnnotationService.saveAnnotation(annotation);
       },
       /**

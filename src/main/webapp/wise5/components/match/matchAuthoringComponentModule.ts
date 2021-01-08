@@ -13,7 +13,7 @@ let matchAuthoringComponentModule = angular
   .component('editMatchAdvanced', EditMatchAdvancedComponent)
   .config([
     '$translatePartialLoaderProvider',
-    $translatePartialLoaderProvider => {
+    ($translatePartialLoaderProvider) => {
       $translatePartialLoaderProvider.addPart('components/match/i18n');
     }
   ]);

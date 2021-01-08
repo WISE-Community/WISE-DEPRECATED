@@ -11,7 +11,7 @@ let audioOscillatorComponentModule = angular
   .controller('AudioOscillatorController', AudioOscillatorController)
   .config([
     '$translatePartialLoaderProvider',
-    $translatePartialLoaderProvider => {
+    ($translatePartialLoaderProvider) => {
       $translatePartialLoaderProvider.addPart('components/audioOscillator/i18n');
     }
   ]);

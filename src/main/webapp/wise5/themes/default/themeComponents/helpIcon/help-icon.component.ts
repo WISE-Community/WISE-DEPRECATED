@@ -1,7 +1,7 @@
-"use strict";
+'use strict';
 
-import { Component, Input } from "@angular/core";
-import { NodeService } from "../../../../services/nodeService";
+import { Component, Input } from '@angular/core';
+import { NodeService } from '../../../../services/nodeService';
 
 @Component({
   selector: 'help-icon',
@@ -9,7 +9,6 @@ import { NodeService } from "../../../../services/nodeService";
   templateUrl: 'help-icon.component.html'
 })
 export class HelpIconComponent {
-
   @Input()
   color: string;
 

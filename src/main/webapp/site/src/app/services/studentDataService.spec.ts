@@ -25,9 +25,16 @@ let criteria2: any;
 describe('StudentDataService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule, UpgradeModule ],
-      providers: [ AnnotationService, ConfigService, ProjectService, SessionService, StudentDataService, 
-          TagService, UtilService ]
+      imports: [HttpClientTestingModule, UpgradeModule],
+      providers: [
+        AnnotationService,
+        ConfigService,
+        ProjectService,
+        SessionService,
+        StudentDataService,
+        TagService,
+        UtilService
+      ]
     });
     http = TestBed.get(HttpTestingController);
     service = TestBed.get(StudentDataService);
@@ -48,7 +55,7 @@ describe('StudentDataService', () => {
       params: {
         nodeId: 'node2'
       }
-    }
+    };
   });
 
   shouldHandleNodeStatusesChanged();
@@ -152,7 +159,7 @@ function shouldHandleNodeStatusesChanged() {
     spyOn(annotationService, 'getActiveGlobalAnnotationGroups').and.returnValue(
       globalAnnotationGroups
     );
-    spyOn(service, 'saveAnnotations').and.callFake(annotations => {
+    spyOn(service, 'saveAnnotations').and.callFake((annotations) => {
       return annotations;
     });
     const componentState1 = {
@@ -210,7 +217,7 @@ function shouldHandleNodeStatusesChanged() {
     spyOn(annotationService, 'getActiveGlobalAnnotationGroups').and.returnValue(
       globalAnnotationGroups
     );
-    spyOn(service, 'saveAnnotations').and.callFake(annotations => {
+    spyOn(service, 'saveAnnotations').and.callFake((annotations) => {
       return annotations;
     });
     const componentState1 = {
@@ -268,7 +275,7 @@ function shouldHandleNodeStatusesChanged() {
     spyOn(annotationService, 'getActiveGlobalAnnotationGroups').and.returnValue(
       globalAnnotationGroups
     );
-    spyOn(service, 'saveAnnotations').and.callFake(annotations => {
+    spyOn(service, 'saveAnnotations').and.callFake((annotations) => {
       return annotations;
     });
     const componentState1 = {
@@ -326,7 +333,7 @@ function shouldHandleNodeStatusesChanged() {
     spyOn(annotationService, 'getActiveGlobalAnnotationGroups').and.returnValue(
       globalAnnotationGroups
     );
-    spyOn(service, 'saveAnnotations').and.callFake(annotations => {
+    spyOn(service, 'saveAnnotations').and.callFake((annotations) => {
       return annotations;
     });
     const componentState1 = {
@@ -399,7 +406,7 @@ function shouldProcessGlobalAnnotationAnyConditional() {
       ]
     };
     const annotation = createAnnotationGroupAnnotation(1, 'node1', 'component1', data);
-    spyOn(service, 'saveAnnotations').and.callFake(annotations => {
+    spyOn(service, 'saveAnnotations').and.callFake((annotations) => {
       return annotations;
     });
     const componentState1 = {
@@ -453,7 +460,7 @@ function shouldProcessGlobalAnnotationAllConditional() {
       ]
     };
     const annotation = createAnnotationGroupAnnotation(1, 'node1', 'component1', data);
-    spyOn(service, 'saveAnnotations').and.callFake(annotations => {
+    spyOn(service, 'saveAnnotations').and.callFake((annotations) => {
       return annotations;
     });
     const componentState1 = {
@@ -517,7 +524,7 @@ function shouldEvaluateNodeConstraintWithTwoRemovalCriteriaRequiringAll() {
         nodeId: 'node2'
       }
     };
-    spyOn(service, 'evaluateCriteria').and.callFake(criteria => {
+    spyOn(service, 'evaluateCriteria').and.callFake((criteria) => {
       if (criteria == removalCriteria1) {
         return true;
       } else if (criteria == removalCriteria2) {
@@ -549,7 +556,7 @@ function shouldEvaluateNodeConstraintWithTwoRemovalCriteriaRequiringAny() {
         nodeId: 'node2'
       }
     };
-    spyOn(service, 'evaluateCriteria').and.callFake(criteria => {
+    spyOn(service, 'evaluateCriteria').and.callFake((criteria) => {
       if (criteria == removalCriteria1) {
         return true;
       } else if (criteria == removalCriteria2) {
@@ -570,9 +577,7 @@ function shouldEvaluateNodeConstraintWithTwoRemovalCriteriaRequiringAny() {
 function shouldEvaluateIsCorrectCriteriaFalseWhenNoComponentStates() {
   it('should evaluate is correct criteria false when no component states', () => {
     const componentStates = [];
-    spyOn(service, 'getComponentStatesByNodeIdAndComponentId').and.returnValue(
-      componentStates
-    );
+    spyOn(service, 'getComponentStatesByNodeIdAndComponentId').and.returnValue(componentStates);
     const criteria = {
       params: {
         nodeId: 'node1',
@@ -586,9 +591,7 @@ function shouldEvaluateIsCorrectCriteriaFalseWhenNoComponentStates() {
 function shouldEvaluateIsCorrectCriteriaFalse() {
   it('should evaluate is correct criteria false', () => {
     const componentStates = [{ studentData: { isCorrect: false } }];
-    spyOn(service, 'getComponentStatesByNodeIdAndComponentId').and.returnValue(
-      componentStates
-    );
+    spyOn(service, 'getComponentStatesByNodeIdAndComponentId').and.returnValue(componentStates);
     const criteria = {
       params: {
         nodeId: 'node1',
@@ -602,9 +605,7 @@ function shouldEvaluateIsCorrectCriteriaFalse() {
 function shouldEvaluateIsCorrectCriteriaTrue() {
   it('should evaluate is correct criteria true', () => {
     const componentStates = [{ studentData: { isCorrect: true } }];
-    spyOn(service, 'getComponentStatesByNodeIdAndComponentId').and.returnValue(
-      componentStates
-    );
+    spyOn(service, 'getComponentStatesByNodeIdAndComponentId').and.returnValue(componentStates);
     const criteria = {
       params: {
         nodeId: 'node1',
@@ -618,9 +619,7 @@ function shouldEvaluateIsCorrectCriteriaTrue() {
 function shouldEvaluateBranchPathTakenWhenNoPathsTaken() {
   it('should evaluate branch path taken', () => {
     const branchPathTakenEvents = [];
-    spyOn(service, 'getBranchPathTakenEventsByNodeId').and.returnValue(
-      branchPathTakenEvents
-    );
+    spyOn(service, 'getBranchPathTakenEventsByNodeId').and.returnValue(branchPathTakenEvents);
     const criteria = {
       params: {
         fromNodeId: 'node1',
@@ -634,9 +633,7 @@ function shouldEvaluateBranchPathTakenWhenNoPathsTaken() {
 function shouldEvaluateBranchPathTakenFalse() {
   it('should evaluate branch path taken false', () => {
     const branchPathTakenEvents = [{ data: { fromNodeId: 'node1', toNodeId: 'node3' } }];
-    spyOn(service, 'getBranchPathTakenEventsByNodeId').and.returnValue(
-      branchPathTakenEvents
-    );
+    spyOn(service, 'getBranchPathTakenEventsByNodeId').and.returnValue(branchPathTakenEvents);
     const criteria = {
       params: {
         fromNodeId: 'node1',
@@ -650,9 +647,7 @@ function shouldEvaluateBranchPathTakenFalse() {
 function shouldEvaluateBranchPathTakenTrue() {
   it('should evaluate branch path taken true', () => {
     const branchPathTakenEvents = [{ data: { fromNodeId: 'node1', toNodeId: 'node2' } }];
-    spyOn(service, 'getBranchPathTakenEventsByNodeId').and.returnValue(
-      branchPathTakenEvents
-    );
+    spyOn(service, 'getBranchPathTakenEventsByNodeId').and.returnValue(branchPathTakenEvents);
     const criteria = {
       params: {
         fromNodeId: 'node1',
@@ -744,9 +739,7 @@ function shouldEvaluateIsVisitedAfterCriteriaTrue() {
 function shouldEvaluateIsRevisedAfterCriteriaFalseWithNoComponentStates() {
   it('should evaluate is revised after criteria false', () => {
     const componentState = null;
-    spyOn(service, 'getLatestComponentStateByNodeIdAndComponentId').and.returnValue(
-      componentState
-    );
+    spyOn(service, 'getLatestComponentStateByNodeIdAndComponentId').and.returnValue(componentState);
     const criteria = {
       params: {
         isRevisedAfterNodeId: 'node1',
@@ -761,9 +754,7 @@ function shouldEvaluateIsRevisedAfterCriteriaFalseWithNoComponentStates() {
 function shouldEvaluateIsRevisedAfterCriteriaFalse() {
   it('should evaluate is revised after criteria false', () => {
     const componentState = { nodeId: 'node1', componentId: 'component1', clientSaveTime: 1000 };
-    spyOn(service, 'getLatestComponentStateByNodeIdAndComponentId').and.returnValue(
-      componentState
-    );
+    spyOn(service, 'getLatestComponentStateByNodeIdAndComponentId').and.returnValue(componentState);
     const criteria = {
       params: {
         isRevisedAfterNodeId: 'node1',
@@ -778,9 +769,7 @@ function shouldEvaluateIsRevisedAfterCriteriaFalse() {
 function shouldEvaluateIsRevisedAfterCriteriaTrue() {
   it('should evaluate is revised after criteria true', () => {
     const componentState = { nodeId: 'node1', componentId: 'component1', clientSaveTime: 3000 };
-    spyOn(service, 'getLatestComponentStateByNodeIdAndComponentId').and.returnValue(
-      componentState
-    );
+    spyOn(service, 'getLatestComponentStateByNodeIdAndComponentId').and.returnValue(componentState);
     const criteria = {
       params: {
         isRevisedAfterNodeId: 'node1',
@@ -797,9 +786,7 @@ function shouldEvaluateIsVisitedAndRevisedAfterCriteriaFalseWithNoComponentState
     const events = [{ nodeId: 'node1', event: 'nodeEntered', clientSaveTime: 2000 }];
     spyOn(service, 'getEvents').and.returnValue(events);
     const componentState = null;
-    spyOn(service, 'getLatestComponentStateByNodeIdAndComponentId').and.returnValue(
-      componentState
-    );
+    spyOn(service, 'getLatestComponentStateByNodeIdAndComponentId').and.returnValue(componentState);
     const criteria = {
       params: {
         isVisitedAfterNodeId: 'node1',
@@ -817,9 +804,7 @@ function shouldEvaluateIsVisitedAndRevisedAfterCriteriaFalse() {
     const events = [{ nodeId: 'node1', event: 'nodeEntered', clientSaveTime: 1000 }];
     spyOn(service, 'getEvents').and.returnValue(events);
     const componentState = { clientSaveTime: 2000 };
-    spyOn(service, 'getLatestComponentStateByNodeIdAndComponentId').and.returnValue(
-      componentState
-    );
+    spyOn(service, 'getLatestComponentStateByNodeIdAndComponentId').and.returnValue(componentState);
     const criteria = {
       params: {
         isVisitedAfterNodeId: 'node1',
@@ -837,9 +822,7 @@ function shouldEvaluateIsVisitedAndRevisedAfterCriteriaTrue() {
     const events = [{ nodeId: 'node1', event: 'nodeEntered', clientSaveTime: 4000 }];
     spyOn(service, 'getEvents').and.returnValue(events);
     const componentState = { nodeId: 'node2', componentId: 'component2', clientSaveTime: 5000 };
-    spyOn(service, 'getLatestComponentStateByNodeIdAndComponentId').and.returnValue(
-      componentState
-    );
+    spyOn(service, 'getLatestComponentStateByNodeIdAndComponentId').and.returnValue(componentState);
     const criteria = {
       params: {
         isVisitedAfterNodeId: 'node1',
@@ -857,9 +840,7 @@ function shouldEvaluateIsVisitedAndRevisedAfterCriteriaFalseNoVisitAfter() {
     const events = [{ nodeId: 'node1', event: 'nodeEntered', clientSaveTime: 1000 }];
     spyOn(service, 'getEvents').and.returnValue(events);
     const componentState = { nodeId: 'node2', componentId: 'component2', clientSaveTime: 2000 };
-    spyOn(service, 'getLatestComponentStateByNodeIdAndComponentId').and.returnValue(
-      componentState
-    );
+    spyOn(service, 'getLatestComponentStateByNodeIdAndComponentId').and.returnValue(componentState);
     const criteria = {
       params: {
         isVisitedAfterNodeId: 'node1',
@@ -877,9 +858,7 @@ function shouldEvaluateIsVisitedAndRevisedAfterCriteriaFalseVisitAfterNoRevise()
     const events = [{ nodeId: 'node1', event: 'nodeEntered', clientSaveTime: 4000 }];
     spyOn(service, 'getEvents').and.returnValue(events);
     const componentState = { nodeId: 'node2', componentId: 'component2', clientSaveTime: 2000 };
-    spyOn(service, 'getLatestComponentStateByNodeIdAndComponentId').and.returnValue(
-      componentState
-    );
+    spyOn(service, 'getLatestComponentStateByNodeIdAndComponentId').and.returnValue(componentState);
     const criteria = {
       params: {
         isVisitedAfterNodeId: 'node1',
@@ -909,24 +888,16 @@ function shouldEvaluateIsNodeVisitedAfterTimestampTrue() {
 function shouldEvaluateHasWorkCreatedAfterTimestampFalse() {
   it('should evaluate has work created after timestamp false', () => {
     const componentState = { nodeId: 'node1', componentId: 'component1', clientSaveTime: 4000 };
-    spyOn(service, 'getLatestComponentStateByNodeIdAndComponentId').and.returnValue(
-      componentState
-    );
-    expect(service.hasWorkCreatedAfterTimestamp('node1', 'component1', 5000)).toEqual(
-      false
-    );
+    spyOn(service, 'getLatestComponentStateByNodeIdAndComponentId').and.returnValue(componentState);
+    expect(service.hasWorkCreatedAfterTimestamp('node1', 'component1', 5000)).toEqual(false);
   });
 }
 
 function shouldEvaluateHasWorkCreatedAfterTimestampTrue() {
   it('should evaluate has work created after timestamp true', () => {
     const componentState = { nodeId: 'node2', componentId: 'component2', clientSaveTime: 6000 };
-    spyOn(service, 'getLatestComponentStateByNodeIdAndComponentId').and.returnValue(
-      componentState
-    );
-    expect(service.hasWorkCreatedAfterTimestamp('node1', 'component1', 5000)).toEqual(
-      true
-    );
+    spyOn(service, 'getLatestComponentStateByNodeIdAndComponentId').and.returnValue(componentState);
+    expect(service.hasWorkCreatedAfterTimestamp('node1', 'component1', 5000)).toEqual(true);
   });
 }
 
@@ -988,9 +959,7 @@ function shouldEvaluateUsedXSubmitsCriteriaFalse() {
       }
     };
     const componentStates = [{ studentData: { submitCounter: 1 } }];
-    spyOn(service, 'getComponentStatesByNodeIdAndComponentId').and.returnValue(
-      componentStates
-    );
+    spyOn(service, 'getComponentStatesByNodeIdAndComponentId').and.returnValue(componentStates);
     expect(service.evaluateUsedXSubmitsCriteria(criteria)).toEqual(false);
   });
 }
@@ -1005,9 +974,7 @@ function shouldEvaluateUsedXSubmitsCriteriaTrue() {
       }
     };
     const componentStates = [{ studentData: { submitCounter: 2 } }];
-    spyOn(service, 'getComponentStatesByNodeIdAndComponentId').and.returnValue(
-      componentStates
-    );
+    spyOn(service, 'getComponentStatesByNodeIdAndComponentId').and.returnValue(componentStates);
     expect(service.evaluateUsedXSubmitsCriteria(criteria)).toEqual(true);
   });
 }
@@ -1022,9 +989,7 @@ function shouldEvaluateNumberOfWordsWrittenCriteriaFalse() {
       }
     };
     const componentState = { studentData: { response: 'one two three four five' } };
-    spyOn(service, 'getLatestComponentStateByNodeIdAndComponentId').and.returnValue(
-      componentState
-    );
+    spyOn(service, 'getLatestComponentStateByNodeIdAndComponentId').and.returnValue(componentState);
     spyOn(utilService, 'wordCount').and.returnValue(5);
     expect(service.evaluateNumberOfWordsWrittenCriteria(criteria)).toEqual(false);
   });
@@ -1040,9 +1005,7 @@ function shouldEvaluateNumberOfWordsWrittenCriteriaTrue() {
       }
     };
     const componentState = { studentData: { response: '1 2 3 4 5 6 7 8 9 0' } };
-    spyOn(service, 'getLatestComponentStateByNodeIdAndComponentId').and.returnValue(
-      componentState
-    );
+    spyOn(service, 'getLatestComponentStateByNodeIdAndComponentId').and.returnValue(componentState);
     spyOn(utilService, 'wordCount').and.returnValue(10);
     expect(service.evaluateNumberOfWordsWrittenCriteria(criteria)).toEqual(true);
   });
@@ -1177,7 +1140,10 @@ function shouldHandleSaveStudentWorkToServerSuccess() {
     spyOn($rootScope, '$broadcast');
     spyOn(service, 'updateNodeStatuses').and.callFake(() => {});
     spyOn(service, 'saveStudentStatus').and.callFake(() => {
-        return new Promise(() => { return true })});
+      return new Promise(() => {
+        return true;
+      });
+    });
     service.saveToServerRequestCount = 1;
     service.handleSaveToServerSuccess(savedStudentDataResponse);
     expect(service.studentData.componentStates[0].serverSaveTime).toBeDefined();
@@ -1199,8 +1165,14 @@ function shouldHandleSaveStudentWorkToServerSuccess() {
   });
 }
 
-function createComponentState(id, nodeId, componentId, isSubmit = true, requestToken = 'abc',
-    serverSaveTime = 123) {
+function createComponentState(
+  id,
+  nodeId,
+  componentId,
+  isSubmit = true,
+  requestToken = 'abc',
+  serverSaveTime = 123
+) {
   return {
     id: id,
     nodeId: nodeId,
@@ -1230,7 +1202,10 @@ function shouldHandleSaveEventsToServerSuccess() {
     spyOn($rootScope, '$broadcast');
     spyOn(service, 'updateNodeStatuses').and.callFake(() => {});
     spyOn(service, 'saveStudentStatus').and.callFake(() => {
-        return new Promise(() => { return true })});
+      return new Promise(() => {
+        return true;
+      });
+    });
     service.saveToServerRequestCount = 1;
     service.handleSaveToServerSuccess(savedStudentDataResponse);
     expect(service.studentData.events[0].serverSaveTime).toEqual(1000);
@@ -1245,7 +1220,14 @@ function shouldHandleSaveEventsToServerSuccess() {
   });
 }
 
-function createEvent(id, nodeId, componentId, event = '', requestToken = 'abc', serverSaveTime = 123) {
+function createEvent(
+  id,
+  nodeId,
+  componentId,
+  event = '',
+  requestToken = 'abc',
+  serverSaveTime = 123
+) {
   return {
     id: id,
     nodeId: nodeId,
@@ -1271,7 +1253,10 @@ function shouldHandleSaveAnnotationsToServerSuccess() {
     spyOn(annotationService, 'broadcastAnnotationSavedToServer');
     spyOn(service, 'updateNodeStatuses').and.callFake(() => {});
     spyOn(service, 'saveStudentStatus').and.callFake(() => {
-        return new Promise(() => { return true })});
+      return new Promise(() => {
+        return true;
+      });
+    });
     service.saveToServerRequestCount = 1;
     service.handleSaveToServerSuccess(savedStudentDataResponse);
     expect(service.studentData.annotations[0].serverSaveTime).toEqual(1000);
@@ -1411,9 +1396,7 @@ function shouldGetLatestComponentStateByNodeIdAndComponentId() {
         createComponentState(3, 'node2', 'component3')
       ]
     };
-    const componentState = service.getLatestComponentStateByNodeIdAndComponentId(
-      'node1'
-    );
+    const componentState = service.getLatestComponentStateByNodeIdAndComponentId('node1');
     expect(componentState.id).toEqual(2);
     expect(componentState.nodeId).toEqual('node1');
     expect(componentState.componentId).toEqual('component2');
@@ -1527,10 +1510,7 @@ function shouldGetComponentStatesByNodeIdAndComponentId() {
         createComponentState(5, 'node1', 'component1')
       ]
     };
-    const componentStates = service.getComponentStatesByNodeIdAndComponentId(
-      'node1',
-      'component1'
-    );
+    const componentStates = service.getComponentStatesByNodeIdAndComponentId('node1', 'component1');
     expect(componentStates.length).toEqual(2);
     expect(componentStates[0].id).toEqual(1);
     expect(componentStates[1].id).toEqual(5);
@@ -1585,12 +1565,12 @@ function shouldGetLatestNodeEnteredEventNodeIdWithExistingNode() {
         createEvent(5, 'node1', 'component1', 'nodeEntered')
       ]
     };
-    spyOn(projectService, 'getNodeById').and.callFake(nodeId => {
+    spyOn(projectService, 'getNodeById').and.callFake((nodeId) => {
       return {
         id: nodeId
       };
     });
-    spyOn(projectService, 'isActive').and.callFake(nodeId => {
+    spyOn(projectService, 'isActive').and.callFake((nodeId) => {
       return nodeId === 'node1';
     });
     const nodeId = service.getLatestNodeEnteredEventNodeIdWithExistingNode();
@@ -1637,7 +1617,7 @@ function shouldGetProgressById() {
       node1: { nodeId: 'node1', isVisible: true, isCompleted: true },
       node2: { nodeId: 'node2', isVisible: true, isCompleted: false }
     };
-    spyOn(projectService, 'isGroupNode').and.callFake(nodeId => {
+    spyOn(projectService, 'isGroupNode').and.callFake((nodeId) => {
       return nodeId.startsWith('group');
     });
     const childNodeIds = ['node1', 'node2'];
@@ -1672,7 +1652,7 @@ function shouldGetProgressById() {
         }
       }
     };
-    spyOn(projectService, 'isGroupNode').and.callFake(nodeId => {
+    spyOn(projectService, 'isGroupNode').and.callFake((nodeId) => {
       return nodeId.startsWith('group');
     });
     const childNodeIds = ['group1', 'group2'];
@@ -1690,9 +1670,7 @@ function shouldGetProgressById() {
 function shouldCheckIsCompleted() {
   xit('should check a component is completed false', () => {
     const componentStates = [];
-    spyOn(service, 'getComponentStatesByNodeIdAndComponentId').and.returnValue(
-      componentStates
-    );
+    spyOn(service, 'getComponentStatesByNodeIdAndComponentId').and.returnValue(componentStates);
     const componentEvents = [];
     spyOn(service, 'getEventsByNodeIdAndComponentId').and.returnValue(componentEvents);
     const nodeEvents = [];
@@ -1705,9 +1683,7 @@ function shouldCheckIsCompleted() {
   });
   xit('should check a component is completed true', () => {
     const componentStates = [{ studentData: { response: 'Hello World' } }];
-    spyOn(service, 'getComponentStatesByNodeIdAndComponentId').and.returnValue(
-      componentStates
-    );
+    spyOn(service, 'getComponentStatesByNodeIdAndComponentId').and.returnValue(componentStates);
     const componentEvents = [];
     spyOn(service, 'getEventsByNodeIdAndComponentId').and.returnValue(componentEvents);
     const nodeEvents = [];
@@ -1901,11 +1877,7 @@ function shouldGetComponentStateSavedAfter() {
         createComponentState(3, 'node1', 'component1', false, null, 3000)
       ]
     };
-    const componentState = service.getComponentStateSavedAfter(
-      'node1',
-      'component1',
-      4000
-    );
+    const componentState = service.getComponentStateSavedAfter('node1', 'component1', 4000);
     expect(componentState).toBeNull();
   });
   it('should get component state saved after true', () => {
@@ -1916,11 +1888,7 @@ function shouldGetComponentStateSavedAfter() {
         createComponentState(3, 'node1', 'component1', false, null, 3000)
       ]
     };
-    const componentState = service.getComponentStateSavedAfter(
-      'node1',
-      'component1',
-      1500
-    );
+    const componentState = service.getComponentStateSavedAfter('node1', 'component1', 1500);
     expect(componentState.id).toEqual(2);
   });
 }
@@ -1934,11 +1902,7 @@ function shouldGetComponentStateSubmittedAfter() {
         createComponentState(3, 'node1', 'component1', false, null, 3000)
       ]
     };
-    const componentState = service.getComponentStateSubmittedAfter(
-      'node1',
-      'component1',
-      1500
-    );
+    const componentState = service.getComponentStateSubmittedAfter('node1', 'component1', 1500);
     expect(componentState).toBeNull();
   });
   it('should get component state submitted after true', () => {
@@ -1949,11 +1913,7 @@ function shouldGetComponentStateSubmittedAfter() {
         createComponentState(3, 'node1', 'component1', true, null, 3000)
       ]
     };
-    const componentState = service.getComponentStateSubmittedAfter(
-      'node1',
-      'component1',
-      1500
-    );
+    const componentState = service.getComponentStateSubmittedAfter('node1', 'component1', 1500);
     expect(componentState.id).toEqual(3);
   });
 }
@@ -1986,36 +1946,42 @@ function shouldGetVisitEventAfter() {
 function shouldGetClassmateStudentWork() {
   it('should get classmate student work', () => {
     spyOn(configService, 'getRunId').and.returnValue(1);
-    spyOn(configService, 'getConfigParam')
-      .withArgs('studentDataURL')
-      .and.returnValue('/student');
+    spyOn(configService, 'getConfigParam').withArgs('studentDataURL').and.returnValue('/student');
     service.getClassmateStudentWork('node1', 'component1', 10);
-    http.expectOne('/student?runId=1&nodeId=node1&componentId=component1&getStudentWork=true&' +
-        'getEvents=false&getAnnotations=false&onlyGetLatest=true&periodId=10').flush({});
+    http
+      .expectOne(
+        '/student?runId=1&nodeId=node1&componentId=component1&getStudentWork=true&' +
+          'getEvents=false&getAnnotations=false&onlyGetLatest=true&periodId=10'
+      )
+      .flush({});
   });
 }
 
 function shouldGetClassmateScores() {
   it('should get classmate scores', () => {
     spyOn(configService, 'getRunId').and.returnValue(1);
-    spyOn(configService, 'getConfigParam')
-      .withArgs('studentDataURL')
-      .and.returnValue('/student');
+    spyOn(configService, 'getConfigParam').withArgs('studentDataURL').and.returnValue('/student');
     service.getClassmateScores('node1', 'component1', 10);
-    http.expectOne('/student?runId=1&nodeId=node1&componentId=component1&getStudentWork=false&' +
-        'getEvents=false&getAnnotations=true&onlyGetLatest=false&periodId=10').flush({});
+    http
+      .expectOne(
+        '/student?runId=1&nodeId=node1&componentId=component1&getStudentWork=false&' +
+          'getEvents=false&getAnnotations=true&onlyGetLatest=false&periodId=10'
+      )
+      .flush({});
   });
 }
 
 function shouldGetStudentWorkById() {
   it('should get student work by id', () => {
     spyOn(configService, 'getRunId').and.returnValue(1);
-    spyOn(configService, 'getConfigParam')
-      .withArgs('studentDataURL')
-      .and.returnValue('/student');
+    spyOn(configService, 'getConfigParam').withArgs('studentDataURL').and.returnValue('/student');
     service.getStudentWorkById(1000);
-    http.expectOne('/student?runId=1&id=1000&getStudentWork=true&getEvents=false&' +
-        'getAnnotations=false&onlyGetLatest=true').flush({ studentWorkList: [] });
+    http
+      .expectOne(
+        '/student?runId=1&id=1000&getStudentWork=true&getEvents=false&' +
+          'getAnnotations=false&onlyGetLatest=true'
+      )
+      .flush({ studentWorkList: [] });
   });
 }
 
@@ -2035,10 +2001,10 @@ function shouldGetMaxScore() {
         isVisible: true
       }
     };
-    spyOn(projectService, 'isGroupNode').and.callFake(nodeId => {
+    spyOn(projectService, 'isGroupNode').and.callFake((nodeId) => {
       return nodeId.startsWith('group');
     });
-    spyOn(projectService, 'getMaxScoreForNode').and.callFake(nodeId => {
+    spyOn(projectService, 'getMaxScoreForNode').and.callFake((nodeId) => {
       if (nodeId === 'node1') {
         return 1;
       } else if (nodeId === 'node2') {

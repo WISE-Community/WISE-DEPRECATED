@@ -26,22 +26,18 @@ class MilestonesAuthoringController {
   customScoreKey: string;
   customScoreValues: string;
 
-  static $inject = [
-    '$filter',
-    'ProjectService',
-    'UtilService'
-  ];
+  static $inject = ['$filter', 'ProjectService', 'UtilService'];
 
-  constructor(private $filter,
-      private ProjectService: TeacherProjectService,
-      private UtilService: UtilService) {
+  constructor(
+    private $filter,
+    private ProjectService: TeacherProjectService,
+    private UtilService: UtilService
+  ) {
     this.$translate = $filter('translate');
     this.project = this.ProjectService.project;
     this.idToOrder = this.ProjectService.idToOrder;
     this.nodeIds = this.getStepNodeIds();
-    this.availableSatisfyCriteria = [
-      { value: 'isCompleted', text: 'Is Completed' }
-    ];
+    this.availableSatisfyCriteria = [{ value: 'isCompleted', text: 'Is Completed' }];
     this.availableSatisfyCriteriaFunctions = [
       {
         value: 'percentOfScoresLessThan',
@@ -57,7 +53,8 @@ class MilestonesAuthoringController {
       },
       {
         value: 'percentOfScoresGreaterThanOrEqualTo',
-        text: this.$translate('percentOfScoresGreaterThanOrEqualTo') },
+        text: this.$translate('percentOfScoresGreaterThanOrEqualTo')
+      },
       {
         value: 'percentOfScoresEqualTo',
         text: this.$translate('percentOfScoresEqualTo')
@@ -159,8 +156,9 @@ class MilestonesAuthoringController {
   }
 
   deleteMilestone(index) {
-    const message =
-        this.$translate('areYouSureYouWantToDeleteMilestoneX', { milestoneNumber: index + 1 });
+    const message = this.$translate('areYouSureYouWantToDeleteMilestoneX', {
+      milestoneNumber: index + 1
+    });
     if (confirm(message)) {
       const deletedMilestones = this.project.achievements.items.splice(index, 1);
       const deletedMilestone = deletedMilestones[0];
@@ -179,7 +177,7 @@ class MilestonesAuthoringController {
       nodeId: '',
       componentId: '',
       name: ''
-    }
+    };
   }
 
   getMilestoneSatisfyCriteriaIds() {
@@ -217,8 +215,9 @@ class MilestonesAuthoringController {
   }
 
   deleteMilestoneSatisfyCriteria(milestone, index) {
-    const message = this.$translate('areYouSureYouWantToDeleteMilestoneSatisfyCriteriaX',
-        { milestoneSatisfyCriteriaNumber: index + 1 });
+    const message = this.$translate('areYouSureYouWantToDeleteMilestoneSatisfyCriteriaX', {
+      milestoneSatisfyCriteriaNumber: index + 1
+    });
     if (confirm(message)) {
       const deletedMilestoneSatisfyCriterias = milestone.satisfyCriteria.splice(index, 1);
       const deletedMilestoneSatisfyCriteria = deletedMilestoneSatisfyCriterias[0];
@@ -231,8 +230,9 @@ class MilestonesAuthoringController {
   }
 
   copySatisfyCriteriaToMilestone(milestone, nodeId, componentId) {
-    const message =
-        this.$translate('areYouSureYouWantToCopyTheNodeIdAndComponentIdToTheRestOfThisMilestone');
+    const message = this.$translate(
+      'areYouSureYouWantToCopyTheNodeIdAndComponentIdToTheRestOfThisMilestone'
+    );
     if (confirm(message)) {
       for (const template of milestone.report.templates) {
         for (const satisfyCriteria of template.satisfyCriteria) {
@@ -294,7 +294,7 @@ class MilestonesAuthoringController {
     return {
       nodeId: '',
       componentId: ''
-    }
+    };
   }
 
   addLocation(report, index) {
@@ -369,7 +369,7 @@ class MilestonesAuthoringController {
       content: '',
       satisfyConditional: '',
       satisfyCriteria: []
-    }
+    };
   }
 
   getTemplateIds() {
@@ -408,8 +408,9 @@ class MilestonesAuthoringController {
   }
 
   deleteTemplate(report, index) {
-    const message =
-        this.$translate('areYouSureYouWantToDeleteTemplateX', { templateNumber: index + 1 });
+    const message = this.$translate('areYouSureYouWantToDeleteTemplateX', {
+      templateNumber: index + 1
+    });
     if (confirm(message)) {
       const deletedTemplates = report.templates.splice(index, 1);
       const deletedTemplate = deletedTemplates[0];
@@ -432,7 +433,7 @@ class MilestonesAuthoringController {
       function: '',
       type: 'autoScore',
       value: 3
-    }
+    };
   }
 
   getTemplateSatisfyCriteriaIds() {
@@ -472,8 +473,9 @@ class MilestonesAuthoringController {
   }
 
   deleteTemplateSatisfyCriteria(template, index) {
-    const message = this.$translate('areYouSureYouWantToDeleteTemplateSatisfyCriteriaX',
-        { templateSatisfyCriteriaNumber: index + 1 });
+    const message = this.$translate('areYouSureYouWantToDeleteTemplateSatisfyCriteriaX', {
+      templateSatisfyCriteriaNumber: index + 1
+    });
     if (confirm(message)) {
       const deletedSatisfyCriteria = template.satisfyCriteria.splice(index, 1);
       const deletedSatisfyCriterion = deletedSatisfyCriteria[0];

@@ -55,4 +55,4 @@ import { EditPasswordComponent } from './edit-password/edit-password.component';
     EditPasswordComponent
   ]
 })
-export class SharedModule { }
+export class SharedModule {}

@@ -17,14 +17,15 @@ export class ShareRunCodeDialogComponent {
   code: string;
   link: string;
 
-  constructor(private dialogRef: MatDialogRef<ShareRunCodeDialogComponent>,
-              @Inject(MAT_DIALOG_DATA) private data: any,
-              private dialog: MatDialog,
-              private snackBar: MatSnackBar,
-              private teacherService: TeacherService,
-              private userService: UserService,
-              private configService: ConfigService) { 
-  }
+  constructor(
+    private dialogRef: MatDialogRef<ShareRunCodeDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) private data: any,
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar,
+    private teacherService: TeacherService,
+    private userService: UserService,
+    private configService: ConfigService
+  ) {}
 
   ngOnInit() {
     this.run = new TeacherRun(this.data.run);
@@ -36,7 +37,7 @@ export class ShareRunCodeDialogComponent {
   copyMsg() {
     this.snackBar.open($localize`Copied to clipboard.`);
   }
-  
+
   isGoogleUser() {
     return this.userService.isGoogleUser();
   }
@@ -66,7 +67,7 @@ export class ShareRunCodeDialogComponent {
   getClassroomCourses() {
     this.teacherService
       .getClassroomCourses(this.userService.getUser().getValue().username)
-      .subscribe(courses => {
+      .subscribe((courses) => {
         const panelClass = courses.length ? 'mat-dialog--md' : '';
         this.dialog.open(ListClassroomCoursesDialogComponent, {
           data: { run: this.run, courses },

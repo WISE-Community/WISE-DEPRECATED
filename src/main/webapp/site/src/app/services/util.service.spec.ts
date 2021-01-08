@@ -5,7 +5,7 @@ import { UtilService } from './util.service';
 describe('UtilService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [ UtilService ]
+      providers: [UtilService]
     });
   });
 
@@ -14,11 +14,11 @@ describe('UtilService', () => {
   }));
 
   it('should get the firstName', inject([UtilService], (service: UtilService) => {
-    expect(service.getFirstName("Spongebob Squarepants")).toEqual("Spongebob");
+    expect(service.getFirstName('Spongebob Squarepants')).toEqual('Spongebob');
   }));
 
   it('should get the lastName', inject([UtilService], (service: UtilService) => {
-    expect(service.getLastName("Spongebob Squarepants")).toEqual("Squarepants");
+    expect(service.getLastName('Spongebob Squarepants')).toEqual('Squarepants');
   }));
 
   it('should set and get the mobile menu state', inject([UtilService], (service: UtilService) => {

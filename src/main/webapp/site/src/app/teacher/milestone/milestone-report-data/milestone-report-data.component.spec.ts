@@ -12,7 +12,7 @@ describe('MilestoneReportDataComponent', () => {
     comp.scoreValues = [5];
     comp.data = {
       average: 4.3333333333333,
-      counts: {1: 0, 2:0, 3: 1, 4: 0, 5: 2},
+      counts: { 1: 0, 2: 0, 3: 1, 4: 0, 5: 2 },
       scoreCount: 3,
       scoreSum: 13
     };

@@ -27,8 +27,8 @@ class StepItemController {
 
   $onChanges(changesObj) {
     if (changesObj.maxScore) {
-      this.maxScore = typeof changesObj.maxScore.currentValue === 'number' ?
-          changesObj.maxScore.currentValue : 0;
+      this.maxScore =
+        typeof changesObj.maxScore.currentValue === 'number' ? changesObj.maxScore.currentValue : 0;
     }
     if (changesObj.stepData) {
       let stepData = angular.copy(changesObj.stepData.currentValue);

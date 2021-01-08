@@ -13,7 +13,7 @@ const labelAuthoringComponentModule = angular
   .component('editLabelAdvanced', EditLabelAdvancedComponent)
   .config([
     '$translatePartialLoaderProvider',
-    $translatePartialLoaderProvider => {
+    ($translatePartialLoaderProvider) => {
       $translatePartialLoaderProvider.addPart('components/label/i18n');
     }
   ]);

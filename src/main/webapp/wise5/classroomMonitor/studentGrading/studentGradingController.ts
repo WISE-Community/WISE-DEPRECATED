@@ -21,12 +21,20 @@ class StudentGradingController {
   nodesInViewById: any;
   nodeVisibilityById: any;
   sortOrder: object = {
-    'step': ['-isVisible', 'order'],
+    step: ['-isVisible', 'order'],
     '-step': ['-isVisible', '-order'],
-    'status': ['-isVisible', 'completionStatus', '-hasNewAlert', 'order'],
+    status: ['-isVisible', 'completionStatus', '-hasNewAlert', 'order'],
     '-status': ['-isVisible', '-completionStatus', '-hasNewAlert', 'order'],
-    'score': ['-isVisible', '-hasScore', '-hasMaxScore', 'scorePct', '-maxScore', 'score', 'order'],
-    '-score': ['-isVisible', '-hasScore', '-hasMaxScore', '-scorePct', '-maxScore', 'score', 'order']
+    score: ['-isVisible', '-hasScore', '-hasMaxScore', 'scorePct', '-maxScore', 'score', 'order'],
+    '-score': [
+      '-isVisible',
+      '-hasScore',
+      '-hasMaxScore',
+      '-scorePct',
+      '-maxScore',
+      'score',
+      'order'
+    ]
   };
   permissions: any;
   projectCompletion: any;
@@ -78,68 +86,72 @@ class StudentGradingController {
       this.setNodesById();
     });
 
-    this.notificationChangedSubscription = this.NotificationService.notificationChanged$
-        .subscribe((notification) => {
-      if (notification.type === 'CRaterResult') {
-        // TODO: expand to encompass other notification types that should be shown to teacher
-        let workgroupId = notification.toWorkgroupId;
-        let nodeId = notification.nodeId;
-        if (workgroupId === this.workgroupId && this.nodesById[nodeId]) {
-          this.updateNode(nodeId);
-        }
-      }
-    });
-
-    this.annotationReceivedSubscription =
-        this.AnnotationService.annotationReceived$.subscribe(({ annotation }) => {
-      const workgroupId = annotation.toWorkgroupId;
-      const nodeId = annotation.nodeId;
-      if (workgroupId === this.workgroupId && this.nodesById[nodeId]) {
-        this.totalScore = this.TeacherDataService.getTotalScoreByWorkgroupId(workgroupId);
-        this.updateNode(nodeId);
-      }
-    });
-
-
-    this.studentWorkReceivedSubscription = this.TeacherDataService.studentWorkReceived$
-        .subscribe((args: any) => {
-      const studentWork = args.studentWork;
-      if (studentWork != null) {
-        let workgroupId = studentWork.workgroupId;
-        let nodeId = studentWork.nodeId;
-        if (workgroupId === this.workgroupId && this.nodesById[nodeId]) {
-          this.updateNode(nodeId);
-        }
-      }
-    });
-
-    this.currentWorkgroupChangedSubscription =
-        this.TeacherDataService.currentWorkgroupChanged$.subscribe(({ currentWorkgroup }) => {
-      if (currentWorkgroup != null) {
-        let workgroupId = currentWorkgroup.workgroupId;
-        if (this.workgroupId !== workgroupId) {
-          this.$state.go('root.cm.team', { workgroupId: workgroupId });
-        }
-      }
-    });
-
-    this.currentPeriodChangedSubscription = this.TeacherDataService.currentPeriodChanged$
-        .subscribe(({ currentPeriod }) => {
-      let periodId = currentPeriod.periodId;
-      let currentWorkgroup = this.TeacherDataService.getCurrentWorkgroup();
-      if (!currentWorkgroup) {
-        let workgroups = angular.copy(this.ConfigService.getClassmateUserInfos());
-        workgroups = this.orderBy(workgroups, 'workgroupId');
-        let n = workgroups.length;
-        for (let i = 0; i < n; i++) {
-          let workgroup = workgroups[i];
-          if (workgroup.periodId === periodId) {
-            this.TeacherDataService.setCurrentWorkgroup(workgroup);
-            break;
+    this.notificationChangedSubscription = this.NotificationService.notificationChanged$.subscribe(
+      (notification) => {
+        if (notification.type === 'CRaterResult') {
+          // TODO: expand to encompass other notification types that should be shown to teacher
+          let workgroupId = notification.toWorkgroupId;
+          let nodeId = notification.nodeId;
+          if (workgroupId === this.workgroupId && this.nodesById[nodeId]) {
+            this.updateNode(nodeId);
           }
         }
       }
-    });
+    );
+
+    this.annotationReceivedSubscription = this.AnnotationService.annotationReceived$.subscribe(
+      ({ annotation }) => {
+        const workgroupId = annotation.toWorkgroupId;
+        const nodeId = annotation.nodeId;
+        if (workgroupId === this.workgroupId && this.nodesById[nodeId]) {
+          this.totalScore = this.TeacherDataService.getTotalScoreByWorkgroupId(workgroupId);
+          this.updateNode(nodeId);
+        }
+      }
+    );
+
+    this.studentWorkReceivedSubscription = this.TeacherDataService.studentWorkReceived$.subscribe(
+      (args: any) => {
+        const studentWork = args.studentWork;
+        if (studentWork != null) {
+          let workgroupId = studentWork.workgroupId;
+          let nodeId = studentWork.nodeId;
+          if (workgroupId === this.workgroupId && this.nodesById[nodeId]) {
+            this.updateNode(nodeId);
+          }
+        }
+      }
+    );
+
+    this.currentWorkgroupChangedSubscription = this.TeacherDataService.currentWorkgroupChanged$.subscribe(
+      ({ currentWorkgroup }) => {
+        if (currentWorkgroup != null) {
+          let workgroupId = currentWorkgroup.workgroupId;
+          if (this.workgroupId !== workgroupId) {
+            this.$state.go('root.cm.team', { workgroupId: workgroupId });
+          }
+        }
+      }
+    );
+
+    this.currentPeriodChangedSubscription = this.TeacherDataService.currentPeriodChanged$.subscribe(
+      ({ currentPeriod }) => {
+        let periodId = currentPeriod.periodId;
+        let currentWorkgroup = this.TeacherDataService.getCurrentWorkgroup();
+        if (!currentWorkgroup) {
+          let workgroups = angular.copy(this.ConfigService.getClassmateUserInfos());
+          workgroups = this.orderBy(workgroups, 'workgroupId');
+          let n = workgroups.length;
+          for (let i = 0; i < n; i++) {
+            let workgroup = workgroups[i];
+            if (workgroup.periodId === periodId) {
+              this.TeacherDataService.setCurrentWorkgroup(workgroup);
+              break;
+            }
+          }
+        }
+      }
+    );
 
     this.$scope.$on('$destroy', () => {
       this.TeacherDataService.setCurrentWorkgroup(null);

@@ -1,7 +1,7 @@
-import { EditAdvancedComponentAngularJSController } from "../../../../site/src/app/authoring-tool/edit-advanced-component/editAdvancedComponentAngularJSController";
-import { NodeService } from "../../../services/nodeService";
-import { NotebookService } from "../../../services/notebookService";
-import { TeacherProjectService } from "../../../services/teacherProjectService";
+import { EditAdvancedComponentAngularJSController } from '../../../../site/src/app/authoring-tool/edit-advanced-component/editAdvancedComponentAngularJSController';
+import { NodeService } from '../../../services/nodeService';
+import { NotebookService } from '../../../services/notebookService';
+import { TeacherProjectService } from '../../../services/teacherProjectService';
 
 class EditMatchAdvancedController extends EditAdvancedComponentAngularJSController {
   allowedConnectedComponentTypes = ['Match'];
@@ -28,4 +28,4 @@ export const EditMatchAdvancedComponent = {
   },
   controller: EditMatchAdvancedController,
   templateUrl: 'wise5/components/label/edit-label-advanced/edit-label-advanced.component.html'
-}
+};

@@ -44,8 +44,8 @@ const libraryProjects = [
 describe('TeacherProjectService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule, UpgradeModule ],
-      providers: [ TeacherProjectService, ConfigService, SessionService, UtilService ]
+      imports: [HttpClientTestingModule, UpgradeModule],
+      providers: [TeacherProjectService, ConfigService, SessionService, UtilService]
     });
     http = TestBed.get(HttpTestingController);
     service = TestBed.get(TeacherProjectService);
@@ -74,7 +74,7 @@ describe('TeacherProjectService', () => {
 });
 
 function createConfigServiceGetConfigParamSpy() {
-  spyOn(configService, 'getConfigParam').and.callFake(param => {
+  spyOn(configService, 'getConfigParam').and.callFake((param) => {
     if (param === 'projectBaseURL') {
       return projectBaseURL;
     } else if (param === 'projectURL') {
@@ -96,10 +96,12 @@ function registerNewProject() {
     it('should register new project', () => {
       createConfigServiceGetConfigParamSpy();
       const newProjectIdExpected = projectIdDefault;
-      const newProjectIdActual = service.registerNewProject(scootersProjectName,
-          scootersProjectJSONString);
+      const newProjectIdActual = service.registerNewProject(
+        scootersProjectName,
+        scootersProjectJSONString
+      );
       http.expectOne(registerNewProjectURL).flush(newProjectIdExpected);
-      newProjectIdActual.then(result => {
+      newProjectIdActual.then((result) => {
         expect(result).toEqual(newProjectIdExpected);
       });
     });
@@ -145,9 +147,7 @@ function testDeleteComponent() {
   describe('deleteComponent', () => {
     it('should delete the component from the node', () => {
       service.setProject(demoProjectJSON);
-      expect(
-        service.getComponentByNodeIdAndComponentId('node1', 'zh4h1urdys')
-      ).not.toBeNull();
+      expect(service.getComponentByNodeIdAndComponentId('node1', 'zh4h1urdys')).not.toBeNull();
       service.deleteComponent('node1', 'zh4h1urdys');
       expect(service.getComponentByNodeIdAndComponentId('node1', 'zh4h1urdys')).toBeNull();
     });
@@ -203,7 +203,7 @@ function getLibraryProjects() {
       createConfigServiceGetConfigParamSpy();
       const result = service.getLibraryProjects();
       http.expectOne(getLibraryProjectsURL).flush(libraryProjects);
-      result.then(projects => {
+      result.then((projects) => {
         expect(projects).toEqual(libraryProjects);
       });
     });
@@ -240,7 +240,6 @@ function filterUniqueProjects() {
     });
   });
 }
-
 
 function shouldGetTheNodeIdAndComponentIdObjects() {
   it('should get the node id and component id objects', () => {

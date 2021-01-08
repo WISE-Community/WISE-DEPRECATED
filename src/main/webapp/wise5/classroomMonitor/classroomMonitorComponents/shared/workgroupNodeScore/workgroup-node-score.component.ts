@@ -7,10 +7,9 @@ import { Input, Component } from '@angular/core';
   templateUrl: 'workgroup-node-score.component.html'
 })
 export class WorkgroupNodeScoreComponent {
-
   @Input()
   score: number;
 
   @Input()
   maxScore: number;
-};
+}

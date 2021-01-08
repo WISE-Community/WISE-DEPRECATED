@@ -28,7 +28,7 @@ class ComponentGradingController {
   runId: number;
   score: number;
   showAllAnnotations: boolean;
-  toWorkgroupId: number
+  toWorkgroupId: number;
   annotationSavedToServerSubscription: any;
 
   static $inject = [
@@ -60,15 +60,16 @@ class ComponentGradingController {
     this.UtilService = UtilService;
     this.$translate = $filter('translate');
 
-    this.annotationSavedToServerSubscription = 
-        this.AnnotationService.annotationSavedToServer$.subscribe(({ annotation }) => {
-      // TODO: we're watching this here and in the parent component's controller; probably want to optimize!
-      const annotationNodeId = annotation.nodeId;
-      const annotationComponentId = annotation.componentId;
-      if (this.nodeId === annotationNodeId && this.componentId === annotationComponentId) {
-        this.processAnnotations();
+    this.annotationSavedToServerSubscription = this.AnnotationService.annotationSavedToServer$.subscribe(
+      ({ annotation }) => {
+        // TODO: we're watching this here and in the parent component's controller; probably want to optimize!
+        const annotationNodeId = annotation.nodeId;
+        const annotationComponentId = annotation.componentId;
+        if (this.nodeId === annotationNodeId && this.componentId === annotationComponentId) {
+          this.processAnnotations();
+        }
       }
-    });
+    );
 
     this.$scope.$on('projectSaved', (event, args) => {
       this.maxScore = this.ProjectService.getMaxScoreForComponent(this.nodeId, this.componentId);
@@ -296,7 +297,7 @@ class ComponentGradingController {
           data,
           clientSaveTime
         );
-        this.AnnotationService.saveAnnotation(annotation).then(result => {});
+        this.AnnotationService.saveAnnotation(annotation).then((result) => {});
       }
     }
   }

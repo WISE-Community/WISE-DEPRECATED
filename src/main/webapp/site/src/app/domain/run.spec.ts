@@ -1,5 +1,5 @@
 import { async } from '@angular/core/testing';
-import {Run} from "./run";
+import { Run } from './run';
 
 describe('Run', () => {
   const run = new Run({

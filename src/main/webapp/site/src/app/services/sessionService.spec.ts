@@ -10,8 +10,8 @@ let configService: ConfigService;
 describe('SessionService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule, UpgradeModule ],
-      providers: [ ConfigService, SessionService ]
+      imports: [HttpClientTestingModule, UpgradeModule],
+      providers: [ConfigService, SessionService]
     });
     configService = TestBed.get(ConfigService);
     service = TestBed.get(SessionService);
@@ -121,24 +121,20 @@ function checkForLogout() {
 
 function renewSession() {
   describe('renewSession()', () => {
-    it('should renew the session', fakeAsync(
-      () => {
-        spyOn(service, 'checkIfSessionIsActive').and.returnValue(of(true));
-        const logOutSpy = spyOn(service, 'logOut')
-        service.renewSession();
-        tick();
-        expect(logOutSpy).not.toHaveBeenCalled();
-      })
-    );
+    it('should renew the session', fakeAsync(() => {
+      spyOn(service, 'checkIfSessionIsActive').and.returnValue(of(true));
+      const logOutSpy = spyOn(service, 'logOut');
+      service.renewSession();
+      tick();
+      expect(logOutSpy).not.toHaveBeenCalled();
+    }));
 
-    it('should log the user out when renew session fails', fakeAsync(
-      () => {
-        spyOn(service, 'checkIfSessionIsActive').and.returnValue(of(false));
-        const logOutSpy = spyOn(service, 'logOut');
-        service.renewSession();
-        tick();
-        expect(logOutSpy).toHaveBeenCalled();
-      })
-    );
+    it('should log the user out when renew session fails', fakeAsync(() => {
+      spyOn(service, 'checkIfSessionIsActive').and.returnValue(of(false));
+      const logOutSpy = spyOn(service, 'logOut');
+      service.renewSession();
+      tick();
+      expect(logOutSpy).toHaveBeenCalled();
+    }));
   });
 }

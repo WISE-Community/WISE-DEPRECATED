@@ -1,5 +1,5 @@
-import { Project } from "./project";
-import { User } from "./user";
+import { Project } from './project';
+import { User } from './user';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 
 export class Run {
@@ -26,11 +26,11 @@ export class Run {
   constructor(jsonObject: any = {}) {
     for (let key of Object.keys(jsonObject)) {
       const value = jsonObject[key];
-      if (key == "owner") {
+      if (key == 'owner') {
         this[key] = new User(value);
-      } else if (key == "project") {
+      } else if (key == 'project') {
         this[key] = new Project(value);
-      } else if (key == "sharedOwners") {
+      } else if (key == 'sharedOwners') {
         const sharedOwners: User[] = [];
         for (let sharedOwner of value) {
           sharedOwners.push(new User(sharedOwner));
@@ -43,18 +43,24 @@ export class Run {
   }
 
   public canViewStudentWork(userId) {
-    return this.isOwner(userId) ||
-        this.isSharedOwnerWithPermission(userId, Run.VIEW_STUDENT_WORK_PERMISSION);
+    return (
+      this.isOwner(userId) ||
+      this.isSharedOwnerWithPermission(userId, Run.VIEW_STUDENT_WORK_PERMISSION)
+    );
   }
 
   public canGradeAndManage(userId) {
-    return this.isOwner(userId) ||
-        this.isSharedOwnerWithPermission(userId, Run.GRADE_AND_MANAGE_PERMISSION);
+    return (
+      this.isOwner(userId) ||
+      this.isSharedOwnerWithPermission(userId, Run.GRADE_AND_MANAGE_PERMISSION)
+    );
   }
 
   public canViewStudentNames(userId) {
-    return this.isOwner(userId) ||
-        this.isSharedOwnerWithPermission(userId, Run.VIEW_STUDENT_NAMES_PERMISSION);
+    return (
+      this.isOwner(userId) ||
+      this.isSharedOwnerWithPermission(userId, Run.VIEW_STUDENT_NAMES_PERMISSION)
+    );
   }
 
   isOwner(userId) {

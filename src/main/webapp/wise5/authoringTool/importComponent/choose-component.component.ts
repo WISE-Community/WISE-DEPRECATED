@@ -1,9 +1,8 @@
-import { TeacherProjectService } from "../../services/teacherProjectService";
-import { ConfigService } from "../../services/configService";
-import { TeacherDataService } from "../../services/teacherDataService";
+import { TeacherProjectService } from '../../services/teacherProjectService';
+import { ConfigService } from '../../services/configService';
+import { TeacherDataService } from '../../services/teacherDataService';
 
 class ChooseComponentController {
-
   importLibraryProjectId: number;
   importMyProjectId: number;
   importProject: any = null;
@@ -15,10 +14,12 @@ class ChooseComponentController {
 
   static $inject = ['$state', 'ConfigService', 'ProjectService', 'TeacherDataService'];
 
-  constructor(private $state: any, private ConfigService: ConfigService,
-      private ProjectService: TeacherProjectService,
-      private TeacherDataService: TeacherDataService) {
-  }
+  constructor(
+    private $state: any,
+    private ConfigService: ConfigService,
+    private ProjectService: TeacherProjectService,
+    private TeacherDataService: TeacherDataService
+  ) {}
 
   $onInit() {
     this.importProjectIdToOrder = {};
@@ -28,7 +29,7 @@ class ChooseComponentController {
     this.importProjectId = null;
     this.importProject = null;
     this.myProjectsList = this.ConfigService.getAuthorableProjects();
-    this.ProjectService.getLibraryProjects().then(libraryProjects => {
+    this.ProjectService.getLibraryProjects().then((libraryProjects) => {
       this.libraryProjectsList = this.ProjectService.sortAndFilterUniqueLibraryProjects(
         libraryProjects
       );
@@ -47,13 +48,14 @@ class ChooseComponentController {
 
   showImportProject(importProjectId) {
     this.importProjectId = importProjectId;
-    this.ProjectService.retrieveProjectById(this.importProjectId).then(projectJSON => {
+    this.ProjectService.retrieveProjectById(this.importProjectId).then((projectJSON) => {
       this.importProjectIdToOrder = {};
       this.importProject = projectJSON;
       const result = this.ProjectService.getNodeOrderOfProject(this.importProject);
       this.importProjectIdToOrder = result.idToOrder;
       this.importProjectItems = result.nodes.filter((nodeOrder) => {
-          return nodeOrder.node.type !== 'group';});
+        return nodeOrder.node.type !== 'group';
+      });
     });
   }
 
@@ -91,8 +93,10 @@ class ChooseComponentController {
   }
 
   cancel() {
-    this.$state.go('root.at.project.node', { projectId: this.ConfigService.getProjectId(),
-        nodeId: this.TeacherDataService.getCurrentNodeId() });
+    this.$state.go('root.at.project.node', {
+      projectId: this.ConfigService.getProjectId(),
+      nodeId: this.TeacherDataService.getCurrentNodeId()
+    });
   }
 }
 

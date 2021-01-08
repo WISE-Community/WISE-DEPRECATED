@@ -10,9 +10,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { configureTestSuite } from 'ng-bullet';
 
-export class MockStudentService {
-
-}
+export class MockStudentService {}
 
 describe('ForgotStudentUsernameComponent', () => {
   let component: ForgotStudentUsernameComponent;
@@ -24,7 +22,7 @@ describe('ForgotStudentUsernameComponent', () => {
 
   configureTestSuite(() => {
     TestBed.configureTestingModule({
-      declarations: [ ForgotStudentUsernameComponent ],
+      declarations: [ForgotStudentUsernameComponent],
       imports: [
         RouterTestingModule,
         BrowserAnimationsModule,
@@ -32,11 +30,9 @@ describe('ForgotStudentUsernameComponent', () => {
         MatSelectModule,
         MatInputModule
       ],
-      providers: [
-        { provide: StudentService, useClass: MockStudentService }
-      ],
-      schemas: [ NO_ERRORS_SCHEMA ]
-    })
+      providers: [{ provide: StudentService, useClass: MockStudentService }],
+      schemas: [NO_ERRORS_SCHEMA]
+    });
   });
 
   beforeEach(() => {

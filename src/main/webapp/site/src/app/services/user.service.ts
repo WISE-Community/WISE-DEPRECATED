@@ -3,14 +3,13 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { tap } from 'rxjs/operators';
 import { User } from '../domain/user';
-import { HttpParams } from "@angular/common/http";
+import { HttpParams } from '@angular/common/http';
 import { ConfigService } from './config.service';
-import { Teacher } from "../domain/teacher";
-import { Student } from "../domain/student";
+import { Teacher } from '../domain/teacher';
+import { Student } from '../domain/student';
 
 @Injectable()
 export class UserService {
-
   private userUrl = '/api/user/info';
   private user$: BehaviorSubject<User> = new BehaviorSubject<User>(null);
   private checkGoogleUserExistsUrl = '/api/user/check-google-user-exists';
@@ -24,8 +23,7 @@ export class UserService {
   isRecaptchaRequired = false;
   redirectUrl: string; // redirect here after logging in
 
-  constructor(private http: HttpClient, private configService: ConfigService) {
-  }
+  constructor(private http: HttpClient, private configService: ConfigService) {}
 
   getUser(): BehaviorSubject<User> {
     return this.user$;
@@ -40,14 +38,14 @@ export class UserService {
   }
 
   isStudent(): boolean {
-    return this.isAuthenticated &&
-      this.user$.getValue().role === 'student';
+    return this.isAuthenticated && this.user$.getValue().role === 'student';
   }
 
   isTeacher(): boolean {
     const role = this.user$.getValue().role;
-    return this.isAuthenticated &&
-      (role === 'teacher' || role === 'admin' || role === 'researcher');
+    return (
+      this.isAuthenticated && (role === 'teacher' || role === 'admin' || role === 'researcher')
+    );
   }
 
   isGoogleUser(): boolean {
@@ -60,16 +58,17 @@ export class UserService {
 
   retrieveUser(username?: string): Observable<User> {
     const params = new HttpParams().set('username', username);
-    return this.http.get<User>(this.userUrl, { params: params })
-        .pipe(
-          tap((user) => {
-            if (user != null && user.id != null) {
-              this.isAuthenticated = true;
-            }
-            this.isRecaptchaRequired = user.isRecaptchaRequired;
-            this.user$.next(user);
-          })
-        );
+    return this.http
+      .get<User>(this.userUrl, { params: params })
+      .pipe(
+        tap((user) => {
+          if (user != null && user.id != null) {
+            this.isAuthenticated = true;
+          }
+          this.isRecaptchaRequired = user.isRecaptchaRequired;
+          this.user$.next(user);
+        })
+      );
   }
 
   checkAuthentication(username, password) {
@@ -85,25 +84,22 @@ export class UserService {
       'Content-Type': 'application/x-www-form-urlencoded'
     };
     let httpParams = new HttpParams()
-        .set('username', credentials.username)
-        .set('password', credentials.password);
+      .set('username', credentials.username)
+      .set('password', credentials.password);
     if (credentials.recaptchaResponse != null) {
       httpParams = httpParams.set('g-recaptcha-response', credentials.recaptchaResponse);
     }
     const logInURL = `${this.configService.getContextPath()}/j_acegi_security_check`;
-    this.http.post(logInURL,
-        httpParams,
-        { headers: headers, responseType: 'text' })
-        .subscribe((response) => {
-          try {
-            response = JSON.parse(response);
-          } catch(e) {
-
-          }
-          this.retrieveUser(credentials.username).subscribe((user) => {
-            return callback && callback(response);
-          });
+    this.http
+      .post(logInURL, httpParams, { headers: headers, responseType: 'text' })
+      .subscribe((response) => {
+        try {
+          response = JSON.parse(response);
+        } catch (e) {}
+        this.retrieveUser(credentials.username).subscribe((user) => {
+          return callback && callback(response);
         });
+      });
   }
 
   getRedirectUrl(): string {
@@ -119,20 +115,20 @@ export class UserService {
   }
 
   isGoogleIdExists(googleUserId: string) {
-    let params = new HttpParams().set("googleUserId", googleUserId);
+    let params = new HttpParams().set('googleUserId', googleUserId);
     return this.http.get<User>(this.checkGoogleUserExistsUrl, { params: params });
   }
 
   isGoogleIdCorrect(googleUserId: string, userId: string) {
     let params = new HttpParams();
-    params = params.set("googleUserId", googleUserId);
-    params = params.set("userId", userId);
+    params = params.set('googleUserId', googleUserId);
+    params = params.set('userId', userId);
     return this.http.get<User>(this.checkGoogleUserMatchesUrl, { params: params });
   }
 
   getUserByGoogleId(googleUserId: string) {
     let params = new HttpParams();
-    params = params.set("googleUserId", googleUserId);
+    params = params.set('googleUserId', googleUserId);
     return this.http.get<any>(this.googleUserUrl, { params: params });
   }
 
@@ -166,16 +162,46 @@ export class UserService {
     user.language = language;
   }
 
-  sendContactMessage(name, email, teacherUsername, issueType, summary, description, runId,
-        projectId, userAgent, recaptchaResponse) {
+  sendContactMessage(
+    name,
+    email,
+    teacherUsername,
+    issueType,
+    summary,
+    description,
+    runId,
+    projectId,
+    userAgent,
+    recaptchaResponse
+  ) {
     const headers = new HttpHeaders().set('Content-Type', 'application/x-www-form-urlencoded');
-    const body = this.generateContactMessageParams(name, email, teacherUsername, issueType,
-          summary, description, runId, projectId, userAgent, recaptchaResponse);
+    const body = this.generateContactMessageParams(
+      name,
+      email,
+      teacherUsername,
+      issueType,
+      summary,
+      description,
+      runId,
+      projectId,
+      userAgent,
+      recaptchaResponse
+    );
     return this.http.post<any>(this.contactUrl, body, { headers: headers });
   }
 
-  generateContactMessageParams(name, email, teacherUsername, issueType, summary, description, runId,
-        projectId, userAgent, recaptchaResponse) {
+  generateContactMessageParams(
+    name,
+    email,
+    teacherUsername,
+    issueType,
+    summary,
+    description,
+    runId,
+    projectId,
+    userAgent,
+    recaptchaResponse
+  ) {
     let body = new HttpParams();
     body = body.set('name', name);
     if (email != null) {

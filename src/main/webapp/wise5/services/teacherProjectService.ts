@@ -12,7 +12,6 @@ import { SessionService } from './sessionService';
 
 @Injectable()
 export class TeacherProjectService extends ProjectService {
-
   private componentChangedSource: Subject<boolean> = new Subject<boolean>();
   public componentChanged$: Observable<boolean> = this.componentChangedSource.asObservable();
   private nodeChangedSource: Subject<boolean> = new Subject<boolean>();
@@ -23,11 +22,12 @@ export class TeacherProjectService extends ProjectService {
   public scrollToBottomOfPage$ = this.scrollToBottomOfPageSource.asObservable();
 
   constructor(
-      protected upgrade: UpgradeModule,
-      protected http: HttpClient,
-      protected ConfigService: ConfigService,
-      protected SessionService: SessionService,
-      protected UtilService: UtilService) {
+    protected upgrade: UpgradeModule,
+    protected http: HttpClient,
+    protected ConfigService: ConfigService,
+    protected SessionService: SessionService,
+    protected UtilService: UtilService
+  ) {
     super(upgrade, http, ConfigService, SessionService, UtilService);
   }
 
@@ -168,9 +168,14 @@ export class TeacherProjectService extends ProjectService {
   }
 
   notifyAuthorProjectBeginEnd(projectId, isBegin) {
-    return this.http.post(
-        `${this.ConfigService.getConfigParam('notifyAuthoringBeginEndURL')}/${projectId}/${isBegin}`,
-        null).toPromise();
+    return this.http
+      .post(
+        `${this.ConfigService.getConfigParam(
+          'notifyAuthoringBeginEndURL'
+        )}/${projectId}/${isBegin}`,
+        null
+      )
+      .toPromise();
   }
 
   notifyAuthorProjectBegin(projectId) {
@@ -193,10 +198,10 @@ export class TeacherProjectService extends ProjectService {
   }
 
   copyProject(projectId) {
-    return this.http.post(`${this.ConfigService.getConfigParam('copyProjectURL')}/${projectId}`,
-        null)
+    return this.http
+      .post(`${this.ConfigService.getConfigParam('copyProjectURL')}/${projectId}`, null)
       .toPromise()
-      .then(newProject => {
+      .then((newProject) => {
         return newProject;
       });
   }
@@ -208,14 +213,14 @@ export class TeacherProjectService extends ProjectService {
    */
   registerNewProject(projectName, projectJSONString) {
     return this.http
-        .post(this.ConfigService.getConfigParam('registerNewProjectURL'), {
-          projectName: projectName,
-          projectJSONString: projectJSONString
-        })
-        .toPromise()
-        .then( newProjectId => {
-          return newProjectId;
-        });
+      .post(this.ConfigService.getConfigParam('registerNewProjectURL'), {
+        projectName: projectName,
+        projectJSONString: projectJSONString
+      })
+      .toPromise()
+      .then((newProjectId) => {
+        return newProjectId;
+      });
   }
 
   /**
@@ -452,82 +457,82 @@ export class TeacherProjectService extends ProjectService {
      * new name and change all the references in the steps to use the new
      * name.
      */
-    return this.http.post(this.ConfigService.getConfigParam('importStepsURL'),
-        {
-          steps: angular.toJson(selectedNodes),
-          fromProjectId: fromProjectId,
-          toProjectId: toProjectId
-        })
-        .toPromise()
-        .then((selectedNodes: any) => {
-      const inactiveNodes = this.getInactiveNodes();
-      const newNodes = [];
-      const newNodeIds = [];
-      for (const selectedNode of selectedNodes) {
-        const tempNode = this.UtilService.makeCopyOfJSONObject(selectedNode);
-        if (this.isNodeIdUsed(tempNode.id)) {
-          const nextAvailableNodeId = this.getNextAvailableNodeId(newNodeIds);
-          tempNode.id = nextAvailableNodeId;
+    return this.http
+      .post(this.ConfigService.getConfigParam('importStepsURL'), {
+        steps: angular.toJson(selectedNodes),
+        fromProjectId: fromProjectId,
+        toProjectId: toProjectId
+      })
+      .toPromise()
+      .then((selectedNodes: any) => {
+        const inactiveNodes = this.getInactiveNodes();
+        const newNodes = [];
+        const newNodeIds = [];
+        for (const selectedNode of selectedNodes) {
+          const tempNode = this.UtilService.makeCopyOfJSONObject(selectedNode);
+          if (this.isNodeIdUsed(tempNode.id)) {
+            const nextAvailableNodeId = this.getNextAvailableNodeId(newNodeIds);
+            tempNode.id = nextAvailableNodeId;
+          }
+          const tempComponents = tempNode.components;
+          for (const tempComponent of tempComponents) {
+            if (this.isComponentIdUsed(tempComponent.id)) {
+              // we are already using the component id so we will need to change it
+              tempComponent.id = this.getUnusedComponentId();
+            }
+          }
+          tempNode.constraints = [];
+          newNodes.push(tempNode);
+          newNodeIds.push(tempNode.id);
         }
-        const tempComponents = tempNode.components;
-        for (const tempComponent of tempComponents) {
-          if (this.isComponentIdUsed(tempComponent.id)) {
-            // we are already using the component id so we will need to change it
-            tempComponent.id = this.getUnusedComponentId();
+
+        if (nodeIdToInsertInsideOrAfter == null) {
+          /*
+           * the place to put the new node has not been specified so we
+           * will place it in the inactive steps section
+           */
+
+          /*
+           * Insert the node after the last inactive node. If there
+           * are no inactive nodes it will just be placed in the
+           * inactive nodes section. In the latter case we do this by
+           * setting nodeIdToInsertInsideOrAfter to 'inactiveSteps'.
+           */
+          if (inactiveNodes != null && inactiveNodes.length > 0) {
+            nodeIdToInsertInsideOrAfter = inactiveNodes[inactiveNodes.length - 1];
+          } else {
+            nodeIdToInsertInsideOrAfter = 'inactiveSteps';
           }
         }
-        tempNode.constraints = [];
-        newNodes.push(tempNode);
-        newNodeIds.push(tempNode.id);
-      }
 
-      if (nodeIdToInsertInsideOrAfter == null) {
-        /*
-         * the place to put the new node has not been specified so we
-         * will place it in the inactive steps section
-         */
+        for (const newNode of newNodes) {
+          if (this.isGroupNode(nodeIdToInsertInsideOrAfter)) {
+            this.createNodeInside(newNode, nodeIdToInsertInsideOrAfter);
+          } else {
+            this.createNodeAfter(newNode, nodeIdToInsertInsideOrAfter);
+          }
 
-        /*
-         * Insert the node after the last inactive node. If there
-         * are no inactive nodes it will just be placed in the
-         * inactive nodes section. In the latter case we do this by
-         * setting nodeIdToInsertInsideOrAfter to 'inactiveSteps'.
-         */
-        if (inactiveNodes != null && inactiveNodes.length > 0) {
-          nodeIdToInsertInsideOrAfter = inactiveNodes[inactiveNodes.length - 1];
-        } else {
-          nodeIdToInsertInsideOrAfter = 'inactiveSteps';
+          /*
+           * Update the nodeIdToInsertInsideOrAfter so that when we are
+           * importing multiple steps, the steps get placed in the correct
+           * order.
+           *
+           * Example
+           * We are importing nodeA and nodeB and want to place them after
+           * nodeX. Therefore we want the order to be
+           *
+           * nodeX
+           * nodeA
+           * nodeB
+           *
+           * This means after we add nodeA, we must update
+           * nodeIdToInsertInsideOrAfter to be nodeA so that when we add
+           * nodeB, it will be placed after nodeA.
+           */
+          nodeIdToInsertInsideOrAfter = newNode.id;
         }
-      }
-
-      for (const newNode of newNodes) {
-        if (this.isGroupNode(nodeIdToInsertInsideOrAfter)) {
-          this.createNodeInside(newNode, nodeIdToInsertInsideOrAfter);
-        } else {
-          this.createNodeAfter(newNode, nodeIdToInsertInsideOrAfter);
-        }
-
-        /*
-         * Update the nodeIdToInsertInsideOrAfter so that when we are
-         * importing multiple steps, the steps get placed in the correct
-         * order.
-         *
-         * Example
-         * We are importing nodeA and nodeB and want to place them after
-         * nodeX. Therefore we want the order to be
-         *
-         * nodeX
-         * nodeA
-         * nodeB
-         *
-         * This means after we add nodeA, we must update
-         * nodeIdToInsertInsideOrAfter to be nodeA so that when we add
-         * nodeB, it will be placed after nodeA.
-         */
-        nodeIdToInsertInsideOrAfter = newNode.id;
-      }
-      return newNodes;
-    });
+        return newNodes;
+      });
   }
 
   /**
@@ -868,28 +873,28 @@ export class TeacherProjectService extends ProjectService {
      * new name and change all the references in the steps to use the new
      * name.
      */
-    return this.http.post(this.ConfigService.getConfigParam('importStepsURL'),
-      {
+    return this.http
+      .post(this.ConfigService.getConfigParam('importStepsURL'), {
         steps: angular.toJson(newComponents),
         fromProjectId: importProjectId,
         toProjectId: this.ConfigService.getConfigParam('projectId')
       })
       .toPromise()
       .then((newComponents: any) => {
-      const node = this.getNodeById(nodeId);
-      let insertPosition = 0;
-      if (insertAfterComponentId == null) {
-        insertPosition = 0;
-      } else {
-        insertPosition =
-          this.getComponentPositionByNodeIdAndComponentId(nodeId, insertAfterComponentId) + 1;
-      }
-      for (const newComponent of newComponents) {
-        node.components.splice(insertPosition, 0, newComponent);
-        insertPosition += 1;
-      }
-      return newComponents;
-    });
+        const node = this.getNodeById(nodeId);
+        let insertPosition = 0;
+        if (insertAfterComponentId == null) {
+          insertPosition = 0;
+        } else {
+          insertPosition =
+            this.getComponentPositionByNodeIdAndComponentId(nodeId, insertAfterComponentId) + 1;
+        }
+        for (const newComponent of newComponents) {
+          node.components.splice(insertPosition, 0, newComponent);
+          insertPosition += 1;
+        }
+        return newComponents;
+      });
   }
 
   /**
@@ -1201,14 +1206,14 @@ export class TeacherProjectService extends ProjectService {
     return this.http
       .get(this.ConfigService.getConfigParam('getLibraryProjectsURL'))
       .toPromise()
-      .then(projects => {
+      .then((projects) => {
         return projects;
       });
   }
 
   sortAndFilterUniqueLibraryProjects(libraryProjects) {
     const flatProjectList = libraryProjects
-      .map(grade => {
+      .map((grade) => {
         return grade.children;
       })
       .flat();
@@ -1289,22 +1294,26 @@ export class TeacherProjectService extends ProjectService {
       action: 'makeThisNodeNotVisitable',
       targetId: node.id,
       removalConditional: 'any',
-      removalCriteria: [{
-        'name': 'teacherRemoval',
-        'params': {
-          periodId: periodId
+      removalCriteria: [
+        {
+          name: 'teacherRemoval',
+          params: {
+            periodId: periodId
+          }
         }
-      }]
+      ]
     };
     this.addConstraintToNode(node, lockConstraint);
   }
 
   removeTeacherRemovalConstraint(node: any, periodId: number) {
-    node.constraints = node.constraints.filter(constraint => {
-      return !(constraint.action === 'makeThisNodeNotVisitable' &&
-          constraint.targetId === node.id &&
-          constraint.removalCriteria[0].name === 'teacherRemoval' &&
-          constraint.removalCriteria[0].params.periodId === periodId);
+    node.constraints = node.constraints.filter((constraint) => {
+      return !(
+        constraint.action === 'makeThisNodeNotVisitable' &&
+        constraint.targetId === node.id &&
+        constraint.removalCriteria[0].name === 'teacherRemoval' &&
+        constraint.removalCriteria[0].params.periodId === periodId
+      );
     });
   }
 
@@ -1324,5 +1333,4 @@ export class TeacherProjectService extends ProjectService {
       escapeToClose: true
     });
   }
-
 }

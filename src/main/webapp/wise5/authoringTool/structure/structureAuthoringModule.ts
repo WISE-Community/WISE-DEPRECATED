@@ -26,7 +26,7 @@ const structureAuthoringModule = angular
   .controller('KICycleUsingOERController', KICycleUSINGOERController)
   .config([
     '$stateProvider',
-    $stateProvider => {
+    ($stateProvider) => {
       $stateProvider
         .state('root.at.project.structure', {
           url: '/structure',

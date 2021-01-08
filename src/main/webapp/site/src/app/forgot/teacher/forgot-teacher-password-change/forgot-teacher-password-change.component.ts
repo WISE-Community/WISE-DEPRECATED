@@ -10,7 +10,6 @@ import { finalize } from 'rxjs/operators';
   styleUrls: ['./forgot-teacher-password-change.component.scss']
 })
 export class ForgotTeacherPasswordChangeComponent implements OnInit {
-
   username: string;
   verificationCode: string;
   changePasswordFormGroup: FormGroup = this.fb.group({
@@ -22,10 +21,12 @@ export class ForgotTeacherPasswordChangeComponent implements OnInit {
   isSubmitButtonEnabled: boolean = true;
   showForgotPasswordLink = false;
 
-  constructor(private fb: FormBuilder,
-              private router: Router,
-              private route: ActivatedRoute,
-              private teacherService: TeacherService) { }
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private route: ActivatedRoute,
+    private teacherService: TeacherService
+  ) {}
 
   ngOnInit() {
     this.username = this.route.snapshot.queryParamMap.get('username');
@@ -39,7 +40,8 @@ export class ForgotTeacherPasswordChangeComponent implements OnInit {
     this.showForgotPasswordLink = false;
     if (this.isPasswordsMatch(password, confirmPassword)) {
       this.processing = true;
-      this.teacherService.changePassword(this.username, this.verificationCode, password, confirmPassword)
+      this.teacherService
+        .changePassword(this.username, this.verificationCode, password, confirmPassword)
         .pipe(
           finalize(() => {
             this.processing = false;
@@ -147,7 +149,9 @@ export class ForgotTeacherPasswordChangeComponent implements OnInit {
     const params = {
       username: this.username
     };
-    this.router.navigate(['/forgot/teacher/password/complete'],
-      {queryParams: params, skipLocationChange: true});
+    this.router.navigate(['/forgot/teacher/password/complete'], {
+      queryParams: params,
+      skipLocationChange: true
+    });
   }
 }

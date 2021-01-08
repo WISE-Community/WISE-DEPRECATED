@@ -28,7 +28,7 @@ class NotebookItemGradingController {
   score: any;
   toWorkgroupId: number;
   usernames: string;
- annotationSavedToServerSubscription: any;
+  annotationSavedToServerSubscription: any;
 
   static $inject = [
     '$scope',
@@ -46,16 +46,17 @@ class NotebookItemGradingController {
     private TeacherDataService: TeacherDataService,
     private UtilService: UtilService
   ) {
-    this.annotationSavedToServerSubscription = 
-        this.AnnotationService.annotationSavedToServer$.subscribe(({ annotation }) => {
-      // TODO: we're watching this here and in the parent component's controller; probably want to optimize!
-      const annotationNodeId = annotation.nodeId;
-      const annotationComponentId = annotation.componentId;
-      if (this.nodeId === annotationNodeId && this.componentId === annotationComponentId) {
-        this.processAnnotations();
+    this.annotationSavedToServerSubscription = this.AnnotationService.annotationSavedToServer$.subscribe(
+      ({ annotation }) => {
+        // TODO: we're watching this here and in the parent component's controller; probably want to optimize!
+        const annotationNodeId = annotation.nodeId;
+        const annotationComponentId = annotation.componentId;
+        if (this.nodeId === annotationNodeId && this.componentId === annotationComponentId) {
+          this.processAnnotations();
+        }
       }
-    });
-    
+    );
+
     this.$scope.$on('$destroy', () => {
       this.ngOnDestroy();
     });
@@ -98,7 +99,7 @@ class NotebookItemGradingController {
     // get the workgroup user names
     let usernamesArray = this.ConfigService.getUsernamesByWorkgroupId(this.toWorkgroupId);
     this.usernames = usernamesArray
-      .map(obj => {
+      .map((obj) => {
         return obj.name;
       })
       .join(', ');
@@ -259,7 +260,8 @@ const NotebookItemGrading = {
     maxScore: '<',
     notebookItem: '<'
   },
-  templateUrl: 'wise5/classroomMonitor/classroomMonitorComponents/notebook/notebookItemGrading/notebookItemGrading.html',
+  templateUrl:
+    'wise5/classroomMonitor/classroomMonitorComponents/notebook/notebookItemGrading/notebookItemGrading.html',
   controller: NotebookItemGradingController
 };
 

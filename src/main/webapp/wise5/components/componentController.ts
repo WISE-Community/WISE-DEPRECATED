@@ -1,13 +1,13 @@
 import * as angular from 'angular';
 import * as $ from 'jquery';
-import { AnnotationService } from "../services/annotationService";
-import { ConfigService } from "../services/configService";
-import { NodeService } from "../services/nodeService";
-import { NotebookService } from "../services/notebookService";
-import { ProjectService } from "../services/projectService";
-import { StudentAssetService } from "../services/studentAssetService";
-import { UtilService } from "../services/utilService";
-import { StudentDataService } from "../services/studentDataService";
+import { AnnotationService } from '../services/annotationService';
+import { ConfigService } from '../services/configService';
+import { NodeService } from '../services/nodeService';
+import { NotebookService } from '../services/notebookService';
+import { ProjectService } from '../services/projectService';
+import { StudentAssetService } from '../services/studentAssetService';
+import { UtilService } from '../services/utilService';
+import { StudentDataService } from '../services/studentDataService';
 import { NotificationService } from '../services/notificationService';
 import { AudioRecorderService } from '../services/audioRecorderService';
 import { Subscription } from 'rxjs';
@@ -52,22 +52,23 @@ class ComponentController {
   starterStateRequestSubscription: Subscription;
 
   constructor(
-      protected $filter: any,
-      protected $injector: any,
-      protected $mdDialog: any,
-      protected $q: any,
-      protected $rootScope: any,
-      protected $scope: any,
-      protected AnnotationService: AnnotationService,
-      protected AudioRecorderService: AudioRecorderService,
-      protected ConfigService: ConfigService,
-      protected NodeService: NodeService,
-      protected NotebookService: NotebookService,
-      protected NotificationService: NotificationService,
-      protected ProjectService: ProjectService,
-      protected StudentAssetService: StudentAssetService,
-      protected StudentDataService: StudentDataService,
-      protected UtilService: UtilService) {
+    protected $filter: any,
+    protected $injector: any,
+    protected $mdDialog: any,
+    protected $q: any,
+    protected $rootScope: any,
+    protected $scope: any,
+    protected AnnotationService: AnnotationService,
+    protected AudioRecorderService: AudioRecorderService,
+    protected ConfigService: ConfigService,
+    protected NodeService: NodeService,
+    protected NotebookService: NotebookService,
+    protected NotificationService: NotificationService,
+    protected ProjectService: ProjectService,
+    protected StudentAssetService: StudentAssetService,
+    protected StudentDataService: StudentDataService,
+    protected UtilService: UtilService
+  ) {
     this.$translate = this.$filter('translate');
     this.nodeId = this.$scope.nodeId;
     this.componentContent = this.$scope.componentContent;
@@ -91,7 +92,8 @@ class ComponentController {
     };
 
     this.isStudentAttachmentEnabled = this.componentContent.isStudentAttachmentEnabled;
-    this.isStudentAudioRecordingEnabled = this.componentContent.isStudentAudioRecordingEnabled || false;
+    this.isStudentAudioRecordingEnabled =
+      this.componentContent.isStudentAudioRecordingEnabled || false;
     this.isPromptVisible = true;
     this.isSaveButtonVisible = false;
     this.isSubmitButtonVisible = false;
@@ -104,7 +106,9 @@ class ComponentController {
     this.teacherWorkgroupId = this.$scope.teacherWorkgroupId;
 
     this.showAddToNotebookButton =
-      this.componentContent.showAddToNotebookButton == null ? true : this.componentContent.showAddToNotebookButton;
+      this.componentContent.showAddToNotebookButton == null
+        ? true
+        : this.componentContent.showAddToNotebookButton;
 
     if (this.isStudentMode()) {
       this.isPromptVisible = true;
@@ -126,7 +130,11 @@ class ComponentController {
     }
 
     if (this.isStudentMode() || this.isGradingMode() || this.isGradingRevisionMode()) {
-      this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
+      this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(
+        this.nodeId,
+        this.componentId,
+        this.workgroupId
+      );
     }
 
     if (this.isGradingMode() || this.isGradingRevisionMode()) {
@@ -138,21 +146,23 @@ class ComponentController {
   }
 
   $onInit() {
-    this.snipImageSubscription =
-        this.ProjectService.snipImage$.subscribe(({ target, componentId }) => {
-      if (componentId === this.componentId) {
-        const imageObject = this.UtilService.getImageObjectFromImageElement(target);
-        if (imageObject != null) {
-          this.NotebookService.addNote(imageObject);
+    this.snipImageSubscription = this.ProjectService.snipImage$.subscribe(
+      ({ target, componentId }) => {
+        if (componentId === this.componentId) {
+          const imageObject = this.UtilService.getImageObjectFromImageElement(target);
+          if (imageObject != null) {
+            this.NotebookService.addNote(imageObject);
+          }
         }
       }
-    });
-    this.starterStateRequestSubscription =
-        this.NodeService.starterStateRequest$.subscribe((args: any) => {
-      if (this.isForThisComponent(args)) {
-        this.generateStarterState();
+    );
+    this.starterStateRequestSubscription = this.NodeService.starterStateRequest$.subscribe(
+      (args: any) => {
+        if (this.isForThisComponent(args)) {
+          this.generateStarterState();
+        }
       }
-    });
+    );
   }
 
   isStudentMode() {
@@ -176,24 +186,29 @@ class ComponentController {
   }
 
   registerListeners() {
-    this.annotationSavedToServerSubscription =
-        this.AnnotationService.annotationSavedToServer$.subscribe(({ annotation }) => {
-      if (this.isEventTargetThisComponent(annotation)) {
-        this.latestAnnotations = this.AnnotationService
-          .getLatestComponentAnnotations(this.nodeId, this.componentId, this.workgroupId);
+    this.annotationSavedToServerSubscription = this.AnnotationService.annotationSavedToServer$.subscribe(
+      ({ annotation }) => {
+        if (this.isEventTargetThisComponent(annotation)) {
+          this.latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(
+            this.nodeId,
+            this.componentId,
+            this.workgroupId
+          );
+        }
       }
-    });
+    );
 
-    this.nodeSubmitClickedSubscription =
-        this.NodeService.nodeSubmitClicked$.subscribe(({ nodeId }) => {
-      if (this.nodeId === nodeId) {
-        this.handleNodeSubmit();
+    this.nodeSubmitClickedSubscription = this.NodeService.nodeSubmitClicked$.subscribe(
+      ({ nodeId }) => {
+        if (this.nodeId === nodeId) {
+          this.handleNodeSubmit();
+        }
       }
-    });
+    );
     this.registerStudentWorkSavedToServerListener();
     this.$scope.$on('$destroy', () => {
       this.ngOnDestroy();
-    })
+    });
   }
 
   ngOnDestroy() {
@@ -246,16 +261,14 @@ class ComponentController {
   createOpenAssetChooserFunction() {
     return (params: any) => {
       this.openAssetChooser(params);
-    }
+    };
   }
 
   /**
    * This function should be implemented by child components.
    * @param params and object containing key value pairs
    */
-  openAssetChooser(params: any) {
-
-  }
+  openAssetChooser(params: any) {}
 
   getFullAssetPath(fileName) {
     const assetsDirectoryPath = this.ConfigService.getProjectAssetsDirectoryPath();
@@ -264,21 +277,26 @@ class ComponentController {
 
   registerComponentWithParentNode() {
     if (this.$scope.$parent.nodeController != null) {
-      this.$scope.$parent.nodeController.registerComponentController(this.$scope, this.componentContent);
+      this.$scope.$parent.nodeController.registerComponentController(
+        this.$scope,
+        this.componentContent
+      );
     }
   }
 
   broadcastDoneRenderingComponent() {
     this.NodeService.broadcastDoneRenderingComponent({
-      nodeId: this.nodeId, componentId: this.componentId
+      nodeId: this.nodeId,
+      componentId: this.componentId
     });
   }
 
   registerStudentWorkSavedToServerListener() {
-    this.studentWorkSavedToServerSubscription =
-        this.StudentDataService.studentWorkSavedToServer$.subscribe((args: any) => {
-      this.handleStudentWorkSavedToServer(args);
-    });
+    this.studentWorkSavedToServerSubscription = this.StudentDataService.studentWorkSavedToServer$.subscribe(
+      (args: any) => {
+        this.handleStudentWorkSavedToServer(args);
+      }
+    );
   }
 
   handleStudentWorkSavedToServer(args: any) {
@@ -286,7 +304,9 @@ class ComponentController {
     if (this.isForThisComponent(componentState)) {
       this.setIsDirty(false);
       this.emitComponentDirty(this.getIsDirty());
-      const clientSaveTime = this.ConfigService.convertToClientTimestamp(componentState.serverSaveTime);
+      const clientSaveTime = this.ConfigService.convertToClientTimestamp(
+        componentState.serverSaveTime
+      );
       if (componentState.isSubmit) {
         this.setSubmittedMessage(clientSaveTime);
         this.lockIfNecessary();
@@ -304,9 +324,7 @@ class ComponentController {
     this.handleStudentWorkSavedToServerAdditionalProcessing(args);
   }
 
-  handleStudentWorkSavedToServerAdditionalProcessing(args: any) {
-
-  }
+  handleStudentWorkSavedToServerAdditionalProcessing(args: any) {}
 
   handleNodeSubmit() {
     this.isSubmit = true;
@@ -392,13 +410,15 @@ class ComponentController {
     this.StudentDataService.broadcastComponentSubmitTriggered({
       nodeId: this.nodeId,
       componentId: this.componentId
-    })
+    });
   }
 
   disableComponentIfNecessary() {
     if (this.isLockAfterSubmit()) {
-      const componentStates = this.StudentDataService
-          .getComponentStatesByNodeIdAndComponentId(this.nodeId, this.componentId);
+      const componentStates = this.StudentDataService.getComponentStatesByNodeIdAndComponentId(
+        this.nodeId,
+        this.componentId
+      );
       if (this.NodeService.isWorkSubmitted(componentStates)) {
         this.isDisabled = true;
       }
@@ -454,8 +474,10 @@ class ComponentController {
   }
 
   processLatestStudentWork() {
-    const latestComponentState =
-        this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(this.nodeId, this.componentId);
+    const latestComponentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(
+      this.nodeId,
+      this.componentId
+    );
 
     if (latestComponentState) {
       const serverSaveTime = latestComponentState.serverSaveTime;
@@ -588,8 +610,10 @@ class ComponentController {
     if (connectedComponents != null) {
       const componentStates = [];
       for (let connectedComponent of connectedComponents) {
-        const componentState =
-            this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(connectedComponent.nodeId, connectedComponent.componentId);
+        const componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(
+          connectedComponent.nodeId,
+          connectedComponent.componentId
+        );
         if (componentState != null) {
           componentStates.push(this.UtilService.makeCopyOfJSONObject(componentState));
         }
@@ -605,9 +629,7 @@ class ComponentController {
     }
   }
 
-  setStudentWork(componentState) {
-
-  }
+  setStudentWork(componentState) {}
 
   createMergedComponentState(componentStates) {
     return componentStates[0];
@@ -621,7 +643,9 @@ class ComponentController {
     const connectedComponentsAndTheirComponentStates = [];
     for (const connectedComponent of this.componentContent.connectedComponents) {
       const componentState = this.StudentDataService.getLatestComponentStateByNodeIdAndComponentId(
-        connectedComponent.nodeId, connectedComponent.componentId);
+        connectedComponent.nodeId,
+        connectedComponent.componentId
+      );
       const connectedComponentsAndComponentState = {
         connectedComponent: connectedComponent,
         componentState: this.UtilService.makeCopyOfJSONObject(componentState)
@@ -632,19 +656,17 @@ class ComponentController {
   }
 
   showCopyPublicNotebookItemButton() {
-    return this.ProjectService.isSpaceExists("public");
+    return this.ProjectService.isSpaceExists('public');
   }
 
   copyPublicNotebookItemButtonClicked() {
-    this.NotebookService.broadcastOpenNotebook(
-      {
-        nodeId: this.nodeId,
-        componentId: this.componentId,
-        insertMode: true,
-        requester: this.nodeId + '-' + this.componentId,
-        visibleSpace: "public"
-      }
-    );
+    this.NotebookService.broadcastOpenNotebook({
+      nodeId: this.nodeId,
+      componentId: this.componentId,
+      insertMode: true,
+      requester: this.nodeId + '-' + this.componentId,
+      visibleSpace: 'public'
+    });
   }
 
   importWorkByStudentWorkId(studentWorkId) {
@@ -670,8 +692,11 @@ class ComponentController {
   }
 
   isAddToNotebookEnabled() {
-    return this.isNotebookEnabled() && this.isStudentNoteClippingEnabled() &&
-        this.showAddToNotebookButton;
+    return (
+      this.isNotebookEnabled() &&
+      this.isStudentNoteClippingEnabled() &&
+      this.showAddToNotebookButton
+    );
   }
 
   isEventTargetThisComponent(args) {
@@ -761,9 +786,23 @@ class ComponentController {
     const componentId = this.componentId;
     const toWorkgroupId = this.ConfigService.getWorkgroupId();
     if (type === 'autoScore') {
-      return this.AnnotationService.createAutoScoreAnnotation(runId, periodId, nodeId, componentId, toWorkgroupId, data);
+      return this.AnnotationService.createAutoScoreAnnotation(
+        runId,
+        periodId,
+        nodeId,
+        componentId,
+        toWorkgroupId,
+        data
+      );
     } else if (type === 'autoComment') {
-      return this.AnnotationService.createAutoCommentAnnotation(runId, periodId, nodeId, componentId, toWorkgroupId, data);
+      return this.AnnotationService.createAutoCommentAnnotation(
+        runId,
+        periodId,
+        nodeId,
+        componentId,
+        toWorkgroupId,
+        data
+      );
     }
   }
 
@@ -776,26 +815,28 @@ class ComponentController {
   }
 
   registerNotebookItemChosenListener() {
-    this.notebookItemChosenSubscription = this.NotebookService.notebookItemChosen$
-        .subscribe(({ requester, notebookItem }) => {
-      if (requester === `${this.nodeId}-${this.componentId}`) {
-        const studentWorkId = notebookItem.content.studentWorkIds[0];
-        this.importWorkByStudentWorkId(studentWorkId);
+    this.notebookItemChosenSubscription = this.NotebookService.notebookItemChosen$.subscribe(
+      ({ requester, notebookItem }) => {
+        if (requester === `${this.nodeId}-${this.componentId}`) {
+          const studentWorkId = notebookItem.content.studentWorkIds[0];
+          this.importWorkByStudentWorkId(studentWorkId);
+        }
       }
-    });
+    );
   }
 
   registerAudioRecordedListener() {
-    this.audioRecordedSubscription =
-        this.AudioRecorderService.audioRecorded$.subscribe(({requester, audioFile}) => {
-      if (requester === `${this.nodeId}-${this.componentId}`) {
-        this.StudentAssetService.uploadAsset(audioFile).then((studentAsset) => {
-          this.attachStudentAsset(studentAsset).then(() => {
-            this.StudentAssetService.deleteAsset(studentAsset);
-          })
-        });
+    this.audioRecordedSubscription = this.AudioRecorderService.audioRecorded$.subscribe(
+      ({ requester, audioFile }) => {
+        if (requester === `${this.nodeId}-${this.componentId}`) {
+          this.StudentAssetService.uploadAsset(audioFile).then((studentAsset) => {
+            this.attachStudentAsset(studentAsset).then(() => {
+              this.StudentAssetService.deleteAsset(studentAsset);
+            });
+          });
+        }
       }
-    });
+    );
   }
 
   /**
@@ -830,26 +871,29 @@ class ComponentController {
       $scope.nodeId = nodeId;
       $scope.componentId = componentId;
       $scope.componentState = componentState;
-      $scope.closeDialog = function() {
+      $scope.closeDialog = function () {
         $mdDialog.hide();
       };
     }
     DialogController.$inject = ['$scope', '$mdDialog', 'nodeId', 'componentId', 'componentState'];
 
-    const doneRenderingComponentSubscription =
-        this.NodeService.doneRenderingComponent$.subscribe(({ nodeId, componentId }) => {
-      if (componentState.nodeId == nodeId && componentState.componentId == componentId) {
-        setTimeout(() => {
-          const componentService = this.$injector.get(componentState.componentType + 'Service');
-          componentService.generateImageFromRenderedComponentState(componentState).then(image => {
-            clearTimeout(destroyDoneRenderingComponentListenerTimeout);
-            doneRenderingComponentSubscription.unsubscribe();
-            deferred.resolve(image);
-            this.$mdDialog.hide();
-          });
-        }, 1000);
+    const doneRenderingComponentSubscription = this.NodeService.doneRenderingComponent$.subscribe(
+      ({ nodeId, componentId }) => {
+        if (componentState.nodeId == nodeId && componentState.componentId == componentId) {
+          setTimeout(() => {
+            const componentService = this.$injector.get(componentState.componentType + 'Service');
+            componentService
+              .generateImageFromRenderedComponentState(componentState)
+              .then((image) => {
+                clearTimeout(destroyDoneRenderingComponentListenerTimeout);
+                doneRenderingComponentSubscription.unsubscribe();
+                deferred.resolve(image);
+                this.$mdDialog.hide();
+              });
+          }, 1000);
+        }
       }
-    });
+    );
     /*
      * Set a timeout to destroy the listener in case there is an error creating the image and
      * we don't get to destroying it above.

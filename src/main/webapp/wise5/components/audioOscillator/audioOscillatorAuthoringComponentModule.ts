@@ -13,7 +13,7 @@ const audioOscillatorAuthoringComponentModule = angular
   .component('editAudioOscillatorAdvanced', EditAudioOscillatorAdvancedComponent)
   .config([
     '$translatePartialLoaderProvider',
-    $translatePartialLoaderProvider => {
+    ($translatePartialLoaderProvider) => {
       $translatePartialLoaderProvider.addPart('components/audioOscillator/i18n');
     }
   ]);

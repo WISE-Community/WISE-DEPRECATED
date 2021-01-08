@@ -1,14 +1,14 @@
 'use strict';
 
-import { Injectable } from "@angular/core";
-import { UpgradeModule } from "@angular/upgrade/static";
+import { Injectable } from '@angular/core';
+import { UpgradeModule } from '@angular/upgrade/static';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { ConfigService } from "./configService";
-import { ProjectService } from "./projectService";
-import { StudentAssetService } from "./studentAssetService";
-import { StudentDataService } from "./studentDataService";
+import { ConfigService } from './configService';
+import { ProjectService } from './projectService';
+import { StudentAssetService } from './studentAssetService';
+import { StudentDataService } from './studentDataService';
 import { UtilService } from './utilService';
-import { Subject } from "rxjs";
+import { Subject } from 'rxjs';
 
 @Injectable()
 export class NotebookService {
@@ -74,17 +74,20 @@ export class NotebookService {
   private showReportAnnotationsSource: Subject<any> = new Subject<any>();
   public showReportAnnotations$ = this.showReportAnnotationsSource.asObservable();
 
-  constructor(private upgrade: UpgradeModule,
-      public http: HttpClient,
-      private ConfigService: ConfigService,
-      private ProjectService: ProjectService,
-      private StudentAssetService: StudentAssetService,
-      private StudentDataService: StudentDataService,
-      private UtilService: UtilService) {
-    this.notebookItemAnnotationReceivedSubscription =
-        this.StudentDataService.notebookItemAnnotationReceived$.subscribe((args: any) => {
-      this.notebookItemAnnotationReceivedSource.next(args);
-    });
+  constructor(
+    private upgrade: UpgradeModule,
+    public http: HttpClient,
+    private ConfigService: ConfigService,
+    private ProjectService: ProjectService,
+    private StudentAssetService: StudentAssetService,
+    private StudentDataService: StudentDataService,
+    private UtilService: UtilService
+  ) {
+    this.notebookItemAnnotationReceivedSubscription = this.StudentDataService.notebookItemAnnotationReceived$.subscribe(
+      (args: any) => {
+        this.notebookItemAnnotationReceivedSource.next(args);
+      }
+    );
   }
 
   ngOnDestroy() {
@@ -96,7 +99,7 @@ export class NotebookService {
   }
 
   getStudentNotebookConfig() {
-   return Object.assign(this.config, this.ProjectService.project.notebook);
+    return Object.assign(this.config, this.ProjectService.project.notebook);
   }
 
   getTeacherNotebookConfig() {
@@ -107,39 +110,54 @@ export class NotebookService {
     this.broadcastEditNote({ itemId: itemId, ev: ev });
   }
 
-  addNote(file, text = null, studentWorkIds = null, 
-      isEditTextEnabled = true, isFileUploadEnabled = true) {
+  addNote(
+    file,
+    text = null,
+    studentWorkIds = null,
+    isEditTextEnabled = true,
+    isFileUploadEnabled = true
+  ) {
     this.broadcastAddNote({
-        file: file,
-        text: text,
-        studentWorkIds: studentWorkIds,
-        isEditTextEnabled: isEditTextEnabled,
-        isFileUploadEnabled: isFileUploadEnabled
+      file: file,
+      text: text,
+      studentWorkIds: studentWorkIds,
+      isEditTextEnabled: isEditTextEnabled,
+      isFileUploadEnabled: isFileUploadEnabled
     });
   }
 
   deleteNote(note) {
-    const noteCopy = {...note};
+    const noteCopy = { ...note };
     const clientTime = Date.parse(new Date().toString());
     noteCopy.clientDeleteTime = clientTime;
     return this.updateNote(noteCopy, clientTime);
   }
 
   reviveNote(note) {
-    const noteCopy = {...note};
+    const noteCopy = { ...note };
     noteCopy.clientDeleteTime = null;
     return this.updateNote(noteCopy);
   }
 
   updateNote(note, clientSaveTime = Date.parse(new Date().toString())) {
     note.id = null; // set to null so we're creating a new notebook item
-    return this.saveNotebookItem(note.id, note.nodeId, note.localNotebookItemId, 
-        note.type, note.title, note.content, note.groups, 
-        clientSaveTime, note.clientDeleteTime);
+    return this.saveNotebookItem(
+      note.id,
+      note.nodeId,
+      note.localNotebookItemId,
+      note.type,
+      note.title,
+      note.content,
+      note.groups,
+      clientSaveTime,
+      note.clientDeleteTime
+    );
   }
 
-  getLatestNotebookItemByLocalNotebookItemId(localNotebookItemId, 
-      workgroupId = this.ConfigService.getWorkgroupId()) {
+  getLatestNotebookItemByLocalNotebookItemId(
+    localNotebookItemId,
+    workgroupId = this.ConfigService.getWorkgroupId()
+  ) {
     const notebookByWorkgroup = this.getNotebookByWorkgroup(workgroupId);
     if (notebookByWorkgroup != null) {
       const allNotebookItems = [...notebookByWorkgroup.allItems].reverse();
@@ -152,8 +170,10 @@ export class NotebookService {
     return null;
   }
 
-  getLatestNotebookReportItemByReportId(reportId, 
-      workgroupId = this.ConfigService.getWorkgroupId()) {
+  getLatestNotebookReportItemByReportId(
+    reportId,
+    workgroupId = this.ConfigService.getWorkgroupId()
+  ) {
     return this.getLatestNotebookItemByLocalNotebookItemId(reportId, workgroupId);
   }
 
@@ -199,18 +219,21 @@ export class NotebookService {
   }
 
   isNotebookEnabled(type: string = 'notebook') {
-    return this.ProjectService.project[type] != null && 
-        this.ProjectService.project[type].enabled;
+    return this.ProjectService.project[type] != null && this.ProjectService.project[type].enabled;
   }
 
   isStudentNoteEnabled() {
-    return this.ProjectService.project.notebook != null &&
-        this.ProjectService.project.notebook.itemTypes.note.enabled;
+    return (
+      this.ProjectService.project.notebook != null &&
+      this.ProjectService.project.notebook.itemTypes.note.enabled
+    );
   }
 
   isStudentNoteClippingEnabled() {
-    return this.isStudentNoteEnabled() &&
-      this.ProjectService.project.notebook.itemTypes.note.enableClipping;
+    return (
+      this.isStudentNoteEnabled() &&
+      this.ProjectService.project.notebook.itemTypes.note.enableClipping
+    );
   }
 
   retrieveNotebookItems(workgroupId = null) {
@@ -236,10 +259,13 @@ export class NotebookService {
     if (workgroupId != null) {
       url += `/workgroup/${workgroupId}`;
     }
-    return this.http.get(url).toPromise().then(resultData => {
-      const notebookItems = resultData;
-      return this.handleRetrieveNotebookItems(notebookItems);
-    });
+    return this.http
+      .get(url)
+      .toPromise()
+      .then((resultData) => {
+        const notebookItems = resultData;
+        return this.handleRetrieveNotebookItems(notebookItems);
+      });
   }
 
   handleRetrieveNotebookItems(notebookItems) {
@@ -247,18 +273,19 @@ export class NotebookService {
     for (let notebookItem of notebookItems) {
       try {
         if (notebookItem.studentAssetId != null) {
-          notebookItem.studentAsset = 
-              this.StudentAssetService.getAssetById(notebookItem.studentAssetId);
+          notebookItem.studentAsset = this.StudentAssetService.getAssetById(
+            notebookItem.studentAssetId
+          );
         } else if (notebookItem.studentWorkId != null) {
-          notebookItem.studentWork =
-            this.StudentDataService.getStudentWorkByStudentWorkId(notebookItem.studentWorkId);
+          notebookItem.studentWork = this.StudentDataService.getStudentWorkByStudentWorkId(
+            notebookItem.studentWorkId
+          );
         } else {
           notebookItem.content = JSON.parse(notebookItem.content);
         }
         const workgroupId = notebookItem.workgroupId;
         this.addToNotebooksByWorgkroup(notebookItem, workgroupId);
-      } catch (e) {
-      }
+      } catch (e) {}
     }
     this.groupNotebookItems();
     return this.notebooksByWorkgroup;
@@ -280,7 +307,7 @@ export class NotebookService {
       if (this.notebooksByWorkgroup.hasOwnProperty(workgroupId)) {
         const notebookByWorkgroup = this.notebooksByWorkgroup[workgroupId];
         notebookByWorkgroup.items = {};
-        notebookByWorkgroup.deletedItems = {};  // reset deleted items
+        notebookByWorkgroup.deletedItems = {}; // reset deleted items
         for (let ni = 0; ni < notebookByWorkgroup.allItems.length; ni++) {
           const notebookItem = notebookByWorkgroup.allItems[ni];
           const notebookItemLocalNotebookItemId = notebookItem.localNotebookItemId;
@@ -294,15 +321,19 @@ export class NotebookService {
         // If it's deleted, then move the entire item array to deletedItems
         for (let notebookItemLocalNotebookItemIdKey in notebookByWorkgroup.items) {
           if (notebookByWorkgroup.items.hasOwnProperty(notebookItemLocalNotebookItemIdKey)) {
-            const allRevisionsForThisLocalNotebookItemId = 
-                notebookByWorkgroup.items[notebookItemLocalNotebookItemIdKey];
+            const allRevisionsForThisLocalNotebookItemId =
+              notebookByWorkgroup.items[notebookItemLocalNotebookItemIdKey];
             if (allRevisionsForThisLocalNotebookItemId != null) {
-              const lastRevision = allRevisionsForThisLocalNotebookItemId[allRevisionsForThisLocalNotebookItemId.length - 1];
+              const lastRevision =
+                allRevisionsForThisLocalNotebookItemId[
+                  allRevisionsForThisLocalNotebookItemId.length - 1
+                ];
               if (lastRevision != null && lastRevision.serverDeleteTime != null) {
                 // the last revision for this was deleted,
                 // so move the entire note (with all its revisions) to deletedItems
-                notebookByWorkgroup.deletedItems[notebookItemLocalNotebookItemIdKey] = 
-                    allRevisionsForThisLocalNotebookItemId;
+                notebookByWorkgroup.deletedItems[
+                  notebookItemLocalNotebookItemIdKey
+                ] = allRevisionsForThisLocalNotebookItemId;
                 delete notebookByWorkgroup.items[notebookItemLocalNotebookItemIdKey];
               }
             }
@@ -354,36 +385,73 @@ export class NotebookService {
     }
     const options = {
       params: params
-    }
-    return this.http.get(url, options).toPromise().then(resultData => {
-      const publicNotebookItemsForGroup = resultData;
-      return this.handleRetrievePublicNotebookItems(publicNotebookItemsForGroup, group);
-    });
+    };
+    return this.http
+      .get(url, options)
+      .toPromise()
+      .then((resultData) => {
+        const publicNotebookItemsForGroup = resultData;
+        return this.handleRetrievePublicNotebookItems(publicNotebookItemsForGroup, group);
+      });
   }
 
   handleRetrievePublicNotebookItems(publicNotebookItemsForGroup, group) {
     for (let publicNotebookItemForGroup of publicNotebookItemsForGroup) {
-      publicNotebookItemForGroup.content =
-          JSON.parse(publicNotebookItemForGroup.content);
+      publicNotebookItemForGroup.content = JSON.parse(publicNotebookItemForGroup.content);
     }
     this.publicNotebookItems[group] = publicNotebookItemsForGroup;
     this.broadcastPublicNotebookItemsRetrieved({ publicNotebookItems: this.publicNotebookItems });
     return this.publicNotebookItems;
   }
 
-  saveNotebookItem(notebookItemId, nodeId, localNotebookItemId, type, title, content, groups = [],
-      clientSaveTime = null, clientDeleteTime = null) {
+  saveNotebookItem(
+    notebookItemId,
+    nodeId,
+    localNotebookItemId,
+    type,
+    title,
+    content,
+    groups = [],
+    clientSaveTime = null,
+    clientDeleteTime = null
+  ) {
     if (this.ConfigService.isPreview()) {
-      return this.savePreviewNotebookItem(notebookItemId, nodeId, localNotebookItemId, type, title, 
-          content, groups, clientSaveTime, clientDeleteTime);
+      return this.savePreviewNotebookItem(
+        notebookItemId,
+        nodeId,
+        localNotebookItemId,
+        type,
+        title,
+        content,
+        groups,
+        clientSaveTime,
+        clientDeleteTime
+      );
     } else {
-      return this.doSaveNotebookItem(notebookItemId, nodeId, localNotebookItemId, type, title, 
-          content, groups, clientDeleteTime);
+      return this.doSaveNotebookItem(
+        notebookItemId,
+        nodeId,
+        localNotebookItemId,
+        type,
+        title,
+        content,
+        groups,
+        clientDeleteTime
+      );
     }
   }
 
-  savePreviewNotebookItem(notebookItemId, nodeId, localNotebookItemId, type, title, content, groups, 
-      clientSaveTime, clientDeleteTime) {
+  savePreviewNotebookItem(
+    notebookItemId,
+    nodeId,
+    localNotebookItemId,
+    type,
+    title,
+    content,
+    groups,
+    clientSaveTime,
+    clientDeleteTime
+  ) {
     return new Promise((resolve, reject) => {
       const notebookItem = {
         content: content,
@@ -403,15 +471,24 @@ export class NotebookService {
       this.addToNotebooksByWorgkroup(notebookItem, workgroupId);
       this.groupNotebookItems();
       this.StudentDataService.updateNodeStatuses();
-      this.broadcastNotebookUpdated(
-        { notebook: this.notebooksByWorkgroup[workgroupId], notebookItem: notebookItem }
-      );
+      this.broadcastNotebookUpdated({
+        notebook: this.notebooksByWorkgroup[workgroupId],
+        notebookItem: notebookItem
+      });
       resolve(notebookItem);
     });
   }
 
-  doSaveNotebookItem(notebookItemId, nodeId, localNotebookItemId, type, title, content, groups, 
-      clientDeleteTime) {
+  doSaveNotebookItem(
+    notebookItemId,
+    nodeId,
+    localNotebookItemId,
+    type,
+    title,
+    content,
+    groups,
+    clientDeleteTime
+  ) {
     const params = {
       workgroupId: this.ConfigService.getWorkgroupId(),
       notebookItemId: notebookItemId,
@@ -427,10 +504,11 @@ export class NotebookService {
     if (this.ConfigService.getMode() !== 'classroomMonitor') {
       params['periodId'] = this.ConfigService.getPeriodId();
     }
-    const headers = new HttpHeaders({'Content-Type': 'application/x-www-form-urlencoded'});
-    return this.http.post(this.ConfigService.getNotebookURL(), $.param(params),
-        { headers: headers }).toPromise().then(
-      resultData => {
+    const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
+    return this.http
+      .post(this.ConfigService.getNotebookURL(), $.param(params), { headers: headers })
+      .toPromise()
+      .then((resultData) => {
         const notebookItem = resultData;
         this.handleSaveNotebookItem(notebookItem);
         return resultData;
@@ -447,12 +525,10 @@ export class NotebookService {
         this.updatePrivateNotebookItem(notebookItem, workgroupId);
       }
       this.StudentDataService.updateNodeStatuses();
-      this.broadcastNotebookUpdated(
-        {
-          notebook: this.notebooksByWorkgroup[workgroupId],
-          notebookItem: notebookItem
-        }
-      );
+      this.broadcastNotebookUpdated({
+        notebook: this.notebooksByWorkgroup[workgroupId],
+        notebookItem: notebookItem
+      });
     }
   }
 
@@ -476,9 +552,11 @@ export class NotebookService {
         workgroupId: this.ConfigService.getWorkgroupId(),
         clientSaveTime: Date.parse(new Date().toString())
       };
-      const headers = new HttpHeaders({'Content-Type': 'application/x-www-form-urlencoded'});
-      return this.http.post(url, $.param(params), { headers: headers }).toPromise().then(
-        resultData => {
+      const headers = new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' });
+      return this.http
+        .post(url, $.param(params), { headers: headers })
+        .toPromise()
+        .then((resultData) => {
           const notebookItem = resultData;
           return this.handleNewNotebookItem(notebookItem);
         });
@@ -491,20 +569,30 @@ export class NotebookService {
     this.notebooksByWorkgroup[workgroupId].allItems.push(notebookItem);
     this.groupNotebookItems();
     this.StudentDataService.updateNodeStatuses();
-    this.broadcastNotebookUpdated(
-      { notebook: this.notebooksByWorkgroup[workgroupId], notebookItem: notebookItem }
-    );
+    this.broadcastNotebookUpdated({
+      notebook: this.notebooksByWorkgroup[workgroupId],
+      notebookItem: notebookItem
+    });
     return notebookItem;
   }
 
   saveNotebookToggleEvent(isOpen, currentNode) {
-    const nodeId = null, componentId = null, componentType = null, category = 'Notebook';
+    const nodeId = null,
+      componentId = null,
+      componentType = null,
+      category = 'Notebook';
     const eventData = {
       curentNodeId: currentNode == null ? null : currentNode.id
     };
     const event = isOpen ? 'notebookOpened' : 'notebookClosed';
-    this.StudentDataService.saveVLEEvent(nodeId, componentId, componentType, category, event, 
-        eventData);
+    this.StudentDataService.saveVLEEvent(
+      nodeId,
+      componentId,
+      componentType,
+      category,
+      event,
+      eventData
+    );
   }
 
   broadcastAddNote(args: any) {
@@ -538,5 +626,4 @@ export class NotebookService {
   broadcastShowReportAnnotations() {
     this.showReportAnnotationsSource.next();
   }
-
 }

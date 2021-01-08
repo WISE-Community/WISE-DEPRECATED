@@ -207,7 +207,7 @@ class DiscussionController extends ComponentController {
   }
 
   initializeScopeSubmitButtonClicked() {
-    this.$scope.submitbuttonclicked = componentStateReplyingTo => {
+    this.$scope.submitbuttonclicked = (componentStateReplyingTo) => {
       if (componentStateReplyingTo && componentStateReplyingTo.replyText) {
         const componentState = componentStateReplyingTo;
         const componentStateId = componentState.id;
@@ -232,7 +232,7 @@ class DiscussionController extends ComponentController {
       const deferred = this.$q.defer();
       if (this.$scope.discussionController.isDirty && this.$scope.discussionController.isSubmit) {
         const action = 'submit';
-        this.$scope.discussionController.createComponentState(action).then(componentState => {
+        this.$scope.discussionController.createComponentState(action).then((componentState) => {
           this.$scope.discussionController.clearComponentValues();
           this.$scope.discussionController.isDirty = false;
           deferred.resolve(componentState);
@@ -251,20 +251,21 @@ class DiscussionController extends ComponentController {
   }
 
   registerStudentWorkSavedToServerListener() {
-    this.studentWorkSavedToServerSubscription =
-        this.StudentDataService.studentWorkSavedToServer$.subscribe((args: any) => {
-      const componentState = args.studentWork;
-      if (this.isWorkFromThisComponent(componentState)) {
-        if (this.isClassmateResponsesGated() && !this.retrievedClassmateResponses) {
-          this.getClassmateResponses();
-        } else {
-          this.addClassResponse(componentState);
+    this.studentWorkSavedToServerSubscription = this.StudentDataService.studentWorkSavedToServer$.subscribe(
+      (args: any) => {
+        const componentState = args.studentWork;
+        if (this.isWorkFromThisComponent(componentState)) {
+          if (this.isClassmateResponsesGated() && !this.retrievedClassmateResponses) {
+            this.getClassmateResponses();
+          } else {
+            this.addClassResponse(componentState);
+          }
+          this.disableComponentIfNecessary();
+          this.sendPostToStudentsInThread(componentState);
         }
-        this.disableComponentIfNecessary();
-        this.sendPostToStudentsInThread(componentState);
+        this.isSubmit = null;
       }
-      this.isSubmit = null;
-    });
+    );
   }
 
   sendPostToStudentsInThread(componentState) {
@@ -278,7 +279,7 @@ class DiscussionController extends ComponentController {
         const componentId = componentState.componentId;
         const usernamesArray = this.ConfigService.getUsernamesByWorkgroupId(fromWorkgroupId);
         const usernames = usernamesArray
-          .map(obj => {
+          .map((obj) => {
             return obj.name;
           })
           .join(', ');
@@ -374,17 +375,18 @@ class DiscussionController extends ComponentController {
   }
 
   registerStudentWorkReceivedListener() {
-    this.studentWorkReceivedSubscription = this.StudentDataService.studentWorkReceived$
-        .subscribe((componentState) => {
-      if (
-        (this.isWorkFromThisComponent(componentState) ||
-          this.isWorkFromConnectedComponent(componentState)) &&
-        this.isWorkFromClassmate(componentState) &&
-        this.retrievedClassmateResponses
-      ) {
-        this.addClassResponse(componentState);
+    this.studentWorkReceivedSubscription = this.StudentDataService.studentWorkReceived$.subscribe(
+      (componentState) => {
+        if (
+          (this.isWorkFromThisComponent(componentState) ||
+            this.isWorkFromConnectedComponent(componentState)) &&
+          this.isWorkFromClassmate(componentState) &&
+          this.retrievedClassmateResponses
+        ) {
+          this.addClassResponse(componentState);
+        }
       }
-    });
+    );
   }
 
   isWorkFromClassmate(componentState) {
@@ -414,7 +416,7 @@ class DiscussionController extends ComponentController {
       () => {
         return this.$mdMedia('gt-sm');
       },
-      md => {
+      (md) => {
         this.$scope.mdScreen = md;
       }
     );
@@ -423,10 +425,11 @@ class DiscussionController extends ComponentController {
   getClassmateResponses(components = [{ nodeId: this.nodeId, componentId: this.componentId }]) {
     const runId = this.ConfigService.getRunId();
     const periodId = this.ConfigService.getPeriodId();
-    this.DiscussionService.getClassmateResponses(runId, periodId, components)
-        .then((result: any) => {
-      this.setClassResponses(result.studentWorkList, result.annotations);
-    });
+    this.DiscussionService.getClassmateResponses(runId, periodId, components).then(
+      (result: any) => {
+        this.setClassResponses(result.studentWorkList, result.annotations);
+      }
+    );
   }
 
   submitButtonClicked() {
@@ -606,7 +609,7 @@ class DiscussionController extends ComponentController {
   threadHasPostFromThisComponentAndWorkgroupId(componentState) {
     const thisComponentId = this.componentId;
     const thisWorkgroupId = this.workgroupId;
-    return componentState => {
+    return (componentState) => {
       if (
         componentState.componentId === thisComponentId &&
         componentState.workgroupId === thisWorkgroupId
@@ -630,13 +633,13 @@ class DiscussionController extends ComponentController {
     const usernames = this.ConfigService.getUsernamesByWorkgroupId(workgroupId);
     if (usernames.length > 0) {
       componentState.usernames = usernames
-        .map(function(obj) {
+        .map(function (obj) {
           return obj.name;
         })
         .join(', ');
     } else if (componentState.usernamesArray != null) {
       componentState.usernames = componentState.usernamesArray
-        .map(function(obj) {
+        .map(function (obj) {
           return obj.name;
         })
         .join(', ');
@@ -786,7 +789,6 @@ class DiscussionController extends ComponentController {
     }
     return annotations;
   }
-
 }
 
 export default DiscussionController;

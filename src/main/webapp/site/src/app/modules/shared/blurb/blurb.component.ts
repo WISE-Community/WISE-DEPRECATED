@@ -6,7 +6,6 @@ import { Component, ContentChild, Input, OnInit, TemplateRef } from '@angular/co
   styleUrls: ['./blurb.component.scss']
 })
 export class BlurbComponent implements OnInit {
-
   @Input()
   imgSrc: string;
 
@@ -19,16 +18,14 @@ export class BlurbComponent implements OnInit {
   @Input()
   headline: string;
 
-  @ContentChild('headlineTemplate', {static: false}) headlineRef: TemplateRef<any>;
+  @ContentChild('headlineTemplate', { static: false }) headlineRef: TemplateRef<any>;
 
   @Input()
   content: string;
 
-  @ContentChild('contentTemplate', {static: false}) contentRef: TemplateRef<any>;
+  @ContentChild('contentTemplate', { static: false }) contentRef: TemplateRef<any>;
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }

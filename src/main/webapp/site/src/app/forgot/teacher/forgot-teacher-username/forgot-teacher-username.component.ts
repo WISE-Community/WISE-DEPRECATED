@@ -10,19 +10,19 @@ import { finalize } from 'rxjs/operators';
   styleUrls: ['./forgot-teacher-username.component.scss']
 })
 export class ForgotTeacherUsernameComponent implements OnInit {
-
   forgotTeacherUsernameFormGroup: FormGroup = this.fb.group({
     email: new FormControl('', [Validators.required, Validators.email])
   });
   message: string = '';
   processing: boolean = false;
 
-  constructor(private fb: FormBuilder,
-              private router: Router,
-              private teacherService: TeacherService) { }
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private teacherService: TeacherService
+  ) {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   getControlFieldValue(fieldName) {
     return this.forgotTeacherUsernameFormGroup.get(fieldName).value;
@@ -40,7 +40,8 @@ export class ForgotTeacherUsernameComponent implements OnInit {
     this.processing = true;
     this.clearMessage();
     const email = this.getEmail();
-    this.teacherService.sendForgotUsernameEmail(email)
+    this.teacherService
+      .sendForgotUsernameEmail(email)
       .pipe(
         finalize(() => {
           this.processing = false;

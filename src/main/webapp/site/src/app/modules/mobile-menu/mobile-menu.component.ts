@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { UserService } from "../../services/user.service";
-import { User } from "../../domain/user";
-import { UtilService } from "../../services/util.service";
+import { UserService } from '../../services/user.service';
+import { User } from '../../domain/user';
+import { UtilService } from '../../services/util.service';
 
 @Component({
   selector: 'app-mobile-menu',
@@ -9,11 +9,9 @@ import { UtilService } from "../../services/util.service";
   styleUrls: ['./mobile-menu.component.scss']
 })
 export class MobileMenuComponent implements OnInit {
-
   signedIn: boolean = false;
 
-  constructor(private userService: UserService,
-              private utilService: UtilService) {
+  constructor(private userService: UserService, private utilService: UtilService) {
     this.userService = userService;
     this.utilService = utilService;
   }
@@ -27,13 +25,12 @@ export class MobileMenuComponent implements OnInit {
   }
 
   getUser() {
-    this.userService.getUser()
-      .subscribe(user => {
-        if (user && user.role) {
-          this.signedIn = true;
-        } else {
-          this.signedIn = false;
-        }
-      });
+    this.userService.getUser().subscribe((user) => {
+      if (user && user.role) {
+        this.signedIn = true;
+      } else {
+        this.signedIn = false;
+      }
+    });
   }
 }

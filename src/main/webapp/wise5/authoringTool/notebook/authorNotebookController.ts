@@ -67,9 +67,7 @@ class AuthorNotebookController {
 
   initializeNoteAuthoring(note) {
     const authoringReportNote = {
-      html: this.UtilService.replaceWISELinks(
-        this.ProjectService.replaceAssetPaths(note.content)
-      )
+      html: this.UtilService.replaceWISELinks(this.ProjectService.replaceAssetPaths(note.content))
     };
     this.setReportIdToAuthoringNote(note.reportId, authoringReportNote);
   }

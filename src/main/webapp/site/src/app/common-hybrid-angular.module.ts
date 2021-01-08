@@ -56,7 +56,7 @@ import { EditorModule, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
 import { WiseTinymceEditorComponent } from '../../../wise5/directives/wise-tinymce-editor/wise-tinymce-editor.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
-@Component({template: ``})
+@Component({ template: `` })
 export class EmptyComponent {}
 
 @NgModule({
@@ -88,9 +88,7 @@ export class EmptyComponent {}
     MatTooltipModule,
     MomentModule,
     ReactiveFormsModule,
-    RouterModule.forChild([
-      {path: '**', component: EmptyComponent}
-    ])
+    RouterModule.forChild([{ path: '**', component: EmptyComponent }])
   ],
   providers: [
     AchievementService,

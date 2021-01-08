@@ -64,94 +64,122 @@ import '../components/outsideURL/outsideURLAuthoringComponentModule';
 import '../components/summary/summaryAuthoringComponentModule';
 import '../components/table/tableAuthoringComponentModule';
 
-    angular.module('teacher', [
-      'common',
-      'angular-inview',
-      'addComponentModule',
-      'editRubricModule',
-      'summaryAuthoringComponentModule',
-      'animationAuthoringComponentModule',
-      'audioOscillatorAuthoringComponentModule',
-      'authoringTool.components',
-      'classroomMonitor.components',
-      'conceptMapAuthoringComponentModule',
-      'discussionAuthoringComponentModule',
-      'drawAuthoringComponentModule',
-      'embeddedAuthoringComponentModule',
-      'graphAuthoringComponentModule',
-      'htmlAuthoringComponentModule',
-      'importComponentModule',
-      'importStepModule',
-      'labelAuthoringComponentModule',
-      'matchAuthoringComponentModule',
-      'multipleChoiceAuthoringComponentModule',
-      'ngAnimate',
-      'ngFileSaver',
-      'openResponseAuthoringComponentModule',
-      'outsideURLAuthoringComponentModule',
-      'structureAuthoringModule',
-      'tableAuthoringComponentModule',
-      'theme.notebook'
-      ])
-    .service('MilestoneService', downgradeInjectable(MilestoneService))
-    .factory('ProjectService', downgradeInjectable(TeacherProjectService))
-    .factory('ProjectAssetService', downgradeInjectable(ProjectAssetService))
-    .factory('SpaceService', downgradeInjectable(SpaceService))
-    .factory('StudentStatusService', downgradeInjectable(StudentStatusService))
-    .service('TeacherDataService', downgradeInjectable(TeacherDataService))
-    .service('TeacherWebSocketService', downgradeInjectable(TeacherWebSocketService))
-    .directive('editComponentJson', downgradeComponent(
-        { component: EditComponentJsonComponent }) as angular.IDirectiveFactory)
-    .directive('editComponentRubric', downgradeComponent(
-        { component: EditComponentRubricComponent }) as angular.IDirectiveFactory)
-    .directive('editComponentTags', downgradeComponent(
-        { component: EditComponentTagsComponent }) as angular.IDirectiveFactory)
-    .directive('editComponentWidth', downgradeComponent(
-        { component: EditComponentWidthComponent }) as angular.IDirectiveFactory)
-    .directive('editComponentMaxScore', downgradeComponent(
-        { component: EditComponentMaxScoreComponent }) as angular.IDirectiveFactory)
-    .component('nodeAdvancedAuthoringComponent', NodeAdvancedAuthoringComponent)
-    .component('nodeAdvancedBranchAuthoringComponent', NodeAdvancedBranchAuthoringComponent)
-    .component('nodeAdvancedConstraintAuthoringComponent', NodeAdvancedConstraintAuthoringComponent)
-    .directive('nodeAdvancedGeneralAuthoringComponent', downgradeComponent(
-        { component: NodeAdvancedGeneralAuthoringComponent }) as angular.IDirectiveFactory)
-    .directive('nodeAdvancedJsonAuthoringComponent', downgradeComponent(
-        { component: NodeAdvancedJsonAuthoringComponent }) as angular.IDirectiveFactory)
-    .component('nodeAdvancedPathAuthoringComponent', NodeAdvancedPathAuthoringComponent)
-    .directive('advancedProjectAuthoringComponent', downgradeComponent(
-        { component: AdvancedProjectAuthoringComponent }) as angular.IDirectiveFactory)
-    .directive('wiseAuthoringTinymceEditor', downgradeComponent(
-        { component: WiseAuthoringTinymceEditorComponent }) as angular.IDirectiveFactory)
-    .controller('AuthoringToolController', AuthoringToolController)
-    .controller('AuthoringToolMainController', AuthoringToolMainController)
-    .controller('AuthorNotebookController', AuthorNotebookController)
-    .controller('ClassroomMonitorController', ClassroomMonitorController)
-    .controller('DataExportController', DataExportController)
-    .controller('ExportController', ExportController)
-    .controller('ExportVisitsController', ExportVisitsController)
-    .controller('MilestonesAuthoringController', MilestonesAuthoringController)
-    .directive('milestones',
-        downgradeComponent({ component: MilestonesComponent }) as angular.IDirectiveFactory)
-    .controller('NodeAuthoringController', NodeAuthoringController)
-    .controller('NotebookGradingController', NotebookGradingController)
-    .controller('ProjectAssetController', ProjectAssetController)
-    .controller('ProjectController', ProjectController)
-    .controller('ProjectInfoController', ProjectInfoController)
-    .directive('rubricAuthoringComponent', downgradeComponent(
-        { component: RubricAuthoringComponent }) as angular.IDirectiveFactory)
-    .controller('StudentGradingController', StudentGradingController)
-    .controller('StudentProgressController', StudentProgressController)
-    .controller('WISELinkAuthoringController', WISELinkAuthoringController)
-    .config([
-      '$stateProvider',
-      '$translatePartialLoaderProvider',
-      '$mdThemingProvider',
-      (
-        $stateProvider,
-        $translatePartialLoaderProvider,
-        $mdThemingProvider
-      ) => {
-        $stateProvider.state('root', {
+angular
+  .module('teacher', [
+    'common',
+    'angular-inview',
+    'addComponentModule',
+    'editRubricModule',
+    'summaryAuthoringComponentModule',
+    'animationAuthoringComponentModule',
+    'audioOscillatorAuthoringComponentModule',
+    'authoringTool.components',
+    'classroomMonitor.components',
+    'conceptMapAuthoringComponentModule',
+    'discussionAuthoringComponentModule',
+    'drawAuthoringComponentModule',
+    'embeddedAuthoringComponentModule',
+    'graphAuthoringComponentModule',
+    'htmlAuthoringComponentModule',
+    'importComponentModule',
+    'importStepModule',
+    'labelAuthoringComponentModule',
+    'matchAuthoringComponentModule',
+    'multipleChoiceAuthoringComponentModule',
+    'ngAnimate',
+    'ngFileSaver',
+    'openResponseAuthoringComponentModule',
+    'outsideURLAuthoringComponentModule',
+    'structureAuthoringModule',
+    'tableAuthoringComponentModule',
+    'theme.notebook'
+  ])
+  .service('MilestoneService', downgradeInjectable(MilestoneService))
+  .factory('ProjectService', downgradeInjectable(TeacherProjectService))
+  .factory('ProjectAssetService', downgradeInjectable(ProjectAssetService))
+  .factory('SpaceService', downgradeInjectable(SpaceService))
+  .factory('StudentStatusService', downgradeInjectable(StudentStatusService))
+  .service('TeacherDataService', downgradeInjectable(TeacherDataService))
+  .service('TeacherWebSocketService', downgradeInjectable(TeacherWebSocketService))
+  .directive(
+    'editComponentJson',
+    downgradeComponent({ component: EditComponentJsonComponent }) as angular.IDirectiveFactory
+  )
+  .directive(
+    'editComponentRubric',
+    downgradeComponent({ component: EditComponentRubricComponent }) as angular.IDirectiveFactory
+  )
+  .directive(
+    'editComponentTags',
+    downgradeComponent({ component: EditComponentTagsComponent }) as angular.IDirectiveFactory
+  )
+  .directive(
+    'editComponentWidth',
+    downgradeComponent({ component: EditComponentWidthComponent }) as angular.IDirectiveFactory
+  )
+  .directive(
+    'editComponentMaxScore',
+    downgradeComponent({ component: EditComponentMaxScoreComponent }) as angular.IDirectiveFactory
+  )
+  .component('nodeAdvancedAuthoringComponent', NodeAdvancedAuthoringComponent)
+  .component('nodeAdvancedBranchAuthoringComponent', NodeAdvancedBranchAuthoringComponent)
+  .component('nodeAdvancedConstraintAuthoringComponent', NodeAdvancedConstraintAuthoringComponent)
+  .directive(
+    'nodeAdvancedGeneralAuthoringComponent',
+    downgradeComponent({
+      component: NodeAdvancedGeneralAuthoringComponent
+    }) as angular.IDirectiveFactory
+  )
+  .directive(
+    'nodeAdvancedJsonAuthoringComponent',
+    downgradeComponent({
+      component: NodeAdvancedJsonAuthoringComponent
+    }) as angular.IDirectiveFactory
+  )
+  .component('nodeAdvancedPathAuthoringComponent', NodeAdvancedPathAuthoringComponent)
+  .directive(
+    'advancedProjectAuthoringComponent',
+    downgradeComponent({
+      component: AdvancedProjectAuthoringComponent
+    }) as angular.IDirectiveFactory
+  )
+  .directive(
+    'wiseAuthoringTinymceEditor',
+    downgradeComponent({
+      component: WiseAuthoringTinymceEditorComponent
+    }) as angular.IDirectiveFactory
+  )
+  .controller('AuthoringToolController', AuthoringToolController)
+  .controller('AuthoringToolMainController', AuthoringToolMainController)
+  .controller('AuthorNotebookController', AuthorNotebookController)
+  .controller('ClassroomMonitorController', ClassroomMonitorController)
+  .controller('DataExportController', DataExportController)
+  .controller('ExportController', ExportController)
+  .controller('ExportVisitsController', ExportVisitsController)
+  .controller('MilestonesAuthoringController', MilestonesAuthoringController)
+  .directive(
+    'milestones',
+    downgradeComponent({ component: MilestonesComponent }) as angular.IDirectiveFactory
+  )
+  .controller('NodeAuthoringController', NodeAuthoringController)
+  .controller('NotebookGradingController', NotebookGradingController)
+  .controller('ProjectAssetController', ProjectAssetController)
+  .controller('ProjectController', ProjectController)
+  .controller('ProjectInfoController', ProjectInfoController)
+  .directive(
+    'rubricAuthoringComponent',
+    downgradeComponent({ component: RubricAuthoringComponent }) as angular.IDirectiveFactory
+  )
+  .controller('StudentGradingController', StudentGradingController)
+  .controller('StudentProgressController', StudentProgressController)
+  .controller('WISELinkAuthoringController', WISELinkAuthoringController)
+  .config([
+    '$stateProvider',
+    '$translatePartialLoaderProvider',
+    '$mdThemingProvider',
+    ($stateProvider, $translatePartialLoaderProvider, $mdThemingProvider) => {
+      $stateProvider
+        .state('root', {
           url: '/teacher',
           abstract: true
         })
@@ -171,7 +199,7 @@ import '../components/table/tableAuthoringComponentModule';
           resolve: {
             config: [
               'ConfigService',
-              ConfigService => {
+              (ConfigService) => {
                 return ConfigService.retrieveConfig(`/author/config`);
               }
             ],
@@ -196,10 +224,11 @@ import '../components/table/tableAuthoringComponentModule';
               'SessionService',
               '$stateParams',
               (ConfigService, SessionService, $stateParams) => {
-                return ConfigService.retrieveConfig(`/author/config/${$stateParams.projectId}`)
-                    .then(() => {
-                      SessionService.initializeSession();
-                    });
+                return ConfigService.retrieveConfig(
+                  `/author/config/${$stateParams.projectId}`
+                ).then(() => {
+                  SessionService.initializeSession();
+                });
               }
             ],
             project: [
@@ -277,7 +306,7 @@ import '../components/table/tableAuthoringComponentModule';
         })
         .state('root.at.project.advanced', {
           url: '/advanced',
-          component: 'advancedProjectAuthoringComponent',
+          component: 'advancedProjectAuthoringComponent'
         })
         .state('root.at.project.rubric', {
           url: '/rubric',
@@ -389,7 +418,7 @@ import '../components/table/tableAuthoringComponentModule';
                   NotebookService.isNotebookEnabled() ||
                   NotebookService.isNotebookEnabled('teacherNotebook')
                 ) {
-                  return NotebookService.retrieveNotebookItems().then(notebook => {
+                  return NotebookService.retrieveNotebookItems().then((notebook) => {
                     return notebook;
                   });
                 } else {
@@ -465,33 +494,33 @@ import '../components/table/tableAuthoringComponentModule';
           controller: 'NotebookGradingController',
           controllerAs: 'notebookGradingController'
         })
-        .state("sink", {
-          url: "/*path",
-          template: ""
+        .state('sink', {
+          url: '/*path',
+          template: ''
         });
 
-        $translatePartialLoaderProvider.addPart('authoringTool/i18n');
-        $translatePartialLoaderProvider.addPart('classroomMonitor/i18n');
-        $mdThemingProvider
-          .theme('at')
-          .primaryPalette('deep-purple', { default: '400' })
-          .accentPalette('accent', { default: '500' })
-          .warnPalette('red', { default: '800' });
-        $mdThemingProvider
-          .theme('cm')
-          .primaryPalette('blue', {
-            default: '800'
-          })
-          .accentPalette('accent', {
-            default: '500'
-          })
-          .warnPalette('red', {
-            default: '800'
-          });
-        $mdThemingProvider
-          .theme('light')
-          .primaryPalette('light', { default: 'A100' })
-          .accentPalette('pink', { default: '900' });
-        $mdThemingProvider.setDefaultTheme('at');
-      }
-    ]);
+      $translatePartialLoaderProvider.addPart('authoringTool/i18n');
+      $translatePartialLoaderProvider.addPart('classroomMonitor/i18n');
+      $mdThemingProvider
+        .theme('at')
+        .primaryPalette('deep-purple', { default: '400' })
+        .accentPalette('accent', { default: '500' })
+        .warnPalette('red', { default: '800' });
+      $mdThemingProvider
+        .theme('cm')
+        .primaryPalette('blue', {
+          default: '800'
+        })
+        .accentPalette('accent', {
+          default: '500'
+        })
+        .warnPalette('red', {
+          default: '800'
+        });
+      $mdThemingProvider
+        .theme('light')
+        .primaryPalette('light', { default: 'A100' })
+        .accentPalette('pink', { default: '900' });
+      $mdThemingProvider.setDefaultTheme('at');
+    }
+  ]);

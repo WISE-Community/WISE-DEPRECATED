@@ -1,21 +1,21 @@
 import * as angular from 'angular';
 import * as moment from 'moment';
-import { MilestoneService } from "../../../../wise5/services/milestoneService";
-import { TestBed } from "@angular/core/testing";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { UpgradeModule } from "@angular/upgrade/static";
-import { AchievementService } from "../../../../wise5/services/achievementService";
-import { AnnotationService } from "../../../../wise5/services/annotationService";
-import { ConfigService } from "../../../../wise5/services/configService";
-import { ProjectService } from "../../../../wise5/services/projectService";
-import { TeacherDataService } from "../../../../wise5/services/teacherDataService";
-import { UtilService } from "../../../../wise5/services/utilService";
-import { StudentDataService } from "../../../../wise5/services/studentDataService";
-import { TagService } from "../../../../wise5/services/tagService";
-import { TeacherProjectService } from "../../../../wise5/services/teacherProjectService";
-import { TeacherWebSocketService } from "../../../../wise5/services/teacherWebSocketService";
-import { NotificationService } from "../../../../wise5/services/notificationService";
-import { StudentStatusService } from "../../../../wise5/services/studentStatusService";
+import { MilestoneService } from '../../../../wise5/services/milestoneService';
+import { TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { UpgradeModule } from '@angular/upgrade/static';
+import { AchievementService } from '../../../../wise5/services/achievementService';
+import { AnnotationService } from '../../../../wise5/services/annotationService';
+import { ConfigService } from '../../../../wise5/services/configService';
+import { ProjectService } from '../../../../wise5/services/projectService';
+import { TeacherDataService } from '../../../../wise5/services/teacherDataService';
+import { UtilService } from '../../../../wise5/services/utilService';
+import { StudentDataService } from '../../../../wise5/services/studentDataService';
+import { TagService } from '../../../../wise5/services/tagService';
+import { TeacherProjectService } from '../../../../wise5/services/teacherProjectService';
+import { TeacherWebSocketService } from '../../../../wise5/services/teacherWebSocketService';
+import { NotificationService } from '../../../../wise5/services/notificationService';
+import { StudentStatusService } from '../../../../wise5/services/studentStatusService';
 import { SessionService } from '../../../../wise5/services/sessionService';
 
 let service: MilestoneService;
@@ -58,7 +58,7 @@ const reportSettingsCustomScoreValuesSample = {
 describe('MilestoneService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule, UpgradeModule ],
+      imports: [HttpClientTestingModule, UpgradeModule],
       providers: [
         AchievementService,
         AnnotationService,
@@ -133,8 +133,14 @@ function createScoreCounts(counts: any[]) {
   return countsObject;
 }
 
-function createSatisfyCriteria(nodeId: string, componentId: string, targetVariable: string = null,
-    func: string = null, value: number = null, percentThreshold: number = null) {
+function createSatisfyCriteria(
+  nodeId: string,
+  componentId: string,
+  targetVariable: string = null,
+  func: string = null,
+  value: number = null,
+  percentThreshold: number = null
+) {
   return {
     nodeId: nodeId,
     componentId: componentId,
@@ -367,8 +373,11 @@ function insertMilestoneCompletion() {
   });
 }
 
-function createStudentAchievement(achievementId: string, achievementTime: number,
-    workgroupId: number) {
+function createStudentAchievement(
+  achievementId: string,
+  achievementTime: number,
+  workgroupId: number
+) {
   return {
     achievementId: achievementId,
     achievementTime: achievementTime,
@@ -679,9 +688,9 @@ function isTemplateCriterionSatisfied() {
         }
       }
     };
-    expect(
-      service.isTemplateCriterionSatisfied(satisfyCriterion, aggregateAutoScores)
-    ).toEqual(false);
+    expect(service.isTemplateCriterionSatisfied(satisfyCriterion, aggregateAutoScores)).toEqual(
+      false
+    );
   });
   it('should check is template criterion satisfied true', () => {
     const satisfyCriterion = createSatisfyCriteria(
@@ -700,9 +709,9 @@ function isTemplateCriterionSatisfied() {
         }
       }
     };
-    expect(
-      service.isTemplateCriterionSatisfied(satisfyCriterion, aggregateAutoScores)
-    ).toEqual(true);
+    expect(service.isTemplateCriterionSatisfied(satisfyCriterion, aggregateAutoScores)).toEqual(
+      true
+    );
   });
 }
 
@@ -725,9 +734,9 @@ function isPercentOfScoresGreaterThan() {
           }
         }
       };
-      expect(
-        service.isPercentOfScoresGreaterThan(satisfyCriterion, aggregateAutoScores)
-      ).toEqual(false);
+      expect(service.isPercentOfScoresGreaterThan(satisfyCriterion, aggregateAutoScores)).toEqual(
+        false
+      );
     });
     it('should check is percent of scores greater than true', () => {
       const satisfyCriterion = createSatisfyCriteria(
@@ -746,9 +755,9 @@ function isPercentOfScoresGreaterThan() {
           }
         }
       };
-      expect(
-        service.isPercentOfScoresGreaterThan(satisfyCriterion, aggregateAutoScores)
-      ).toEqual(true);
+      expect(service.isPercentOfScoresGreaterThan(satisfyCriterion, aggregateAutoScores)).toEqual(
+        true
+      );
     });
   });
 }
@@ -761,9 +770,9 @@ function getGreaterThanSum() {
         counts: createScoreCounts([10, 20, 30, 40, 50])
       };
       const possibleScores = [1, 2, 3, 4, 5];
-      expect(
-        service.getGreaterThanSum(satisfyCriterion, aggregateData, possibleScores)
-      ).toEqual(140);
+      expect(service.getGreaterThanSum(satisfyCriterion, aggregateData, possibleScores)).toEqual(
+        140
+      );
     });
     it('should get greater than sum with score 2', () => {
       const satisfyCriterion = { value: 2 };
@@ -771,9 +780,9 @@ function getGreaterThanSum() {
         counts: createScoreCounts([10, 20, 30, 40, 50])
       };
       const possibleScores = [1, 2, 3, 4, 5];
-      expect(
-        service.getGreaterThanSum(satisfyCriterion, aggregateData, possibleScores)
-      ).toEqual(120);
+      expect(service.getGreaterThanSum(satisfyCriterion, aggregateData, possibleScores)).toEqual(
+        120
+      );
     });
     it('should get greater than sum with score 3', () => {
       const satisfyCriterion = { value: 3 };
@@ -781,9 +790,9 @@ function getGreaterThanSum() {
         counts: createScoreCounts([10, 20, 30, 40, 50])
       };
       const possibleScores = [1, 2, 3, 4, 5];
-      expect(
-        service.getGreaterThanSum(satisfyCriterion, aggregateData, possibleScores)
-      ).toEqual(90);
+      expect(service.getGreaterThanSum(satisfyCriterion, aggregateData, possibleScores)).toEqual(
+        90
+      );
     });
     it('should get greater than sum with score 4', () => {
       const satisfyCriterion = { value: 4 };
@@ -791,9 +800,9 @@ function getGreaterThanSum() {
         counts: createScoreCounts([10, 20, 30, 40, 50])
       };
       const possibleScores = [1, 2, 3, 4, 5];
-      expect(
-        service.getGreaterThanSum(satisfyCriterion, aggregateData, possibleScores)
-      ).toEqual(50);
+      expect(service.getGreaterThanSum(satisfyCriterion, aggregateData, possibleScores)).toEqual(
+        50
+      );
     });
   });
 }
@@ -818,10 +827,7 @@ function isPercentOfScoresGreaterThanOrEqualTo() {
         }
       };
       expect(
-        service.isPercentOfScoresGreaterThanOrEqualTo(
-          satisfyCriterion,
-          aggregateAutoScores
-        )
+        service.isPercentOfScoresGreaterThanOrEqualTo(satisfyCriterion, aggregateAutoScores)
       ).toEqual(false);
     });
     it('should check is percent of scores greater than or equal to true', () => {
@@ -842,10 +848,7 @@ function isPercentOfScoresGreaterThanOrEqualTo() {
         }
       };
       expect(
-        service.isPercentOfScoresGreaterThanOrEqualTo(
-          satisfyCriterion,
-          aggregateAutoScores
-        )
+        service.isPercentOfScoresGreaterThanOrEqualTo(satisfyCriterion, aggregateAutoScores)
       ).toEqual(true);
     });
   });
@@ -925,9 +928,9 @@ function isPercentOfScoresLessThan() {
           }
         }
       };
-      expect(
-        service.isPercentOfScoresLessThan(satisfyCriterion, aggregateAutoScores)
-      ).toEqual(false);
+      expect(service.isPercentOfScoresLessThan(satisfyCriterion, aggregateAutoScores)).toEqual(
+        false
+      );
     });
     it('should check is percent of scores less than true', () => {
       const satisfyCriterion = createSatisfyCriteria(
@@ -946,9 +949,9 @@ function isPercentOfScoresLessThan() {
           }
         }
       };
-      expect(
-        service.isPercentOfScoresLessThan(satisfyCriterion, aggregateAutoScores)
-      ).toEqual(true);
+      expect(service.isPercentOfScoresLessThan(satisfyCriterion, aggregateAutoScores)).toEqual(
+        true
+      );
     });
   });
 }
@@ -961,9 +964,7 @@ function getLessThanSum() {
         counts: createScoreCounts([10, 20, 30, 40, 50])
       };
       const possibleScores = [1, 2, 3, 4, 5];
-      expect(
-        service.getLessThanSum(satisfyCriterion, aggregateData, possibleScores)
-      ).toEqual(10);
+      expect(service.getLessThanSum(satisfyCriterion, aggregateData, possibleScores)).toEqual(10);
     });
     it('should get less than sum with score 3', () => {
       const satisfyCriterion = { value: 3 };
@@ -971,9 +972,7 @@ function getLessThanSum() {
         counts: createScoreCounts([10, 20, 30, 40, 50])
       };
       const possibleScores = [1, 2, 3, 4, 5];
-      expect(
-        service.getLessThanSum(satisfyCriterion, aggregateData, possibleScores)
-      ).toEqual(30);
+      expect(service.getLessThanSum(satisfyCriterion, aggregateData, possibleScores)).toEqual(30);
     });
     it('should get less than sum with score 4', () => {
       const satisfyCriterion = { value: 4 };
@@ -981,9 +980,7 @@ function getLessThanSum() {
         counts: createScoreCounts([10, 20, 30, 40, 50])
       };
       const possibleScores = [1, 2, 3, 4, 5];
-      expect(
-        service.getLessThanSum(satisfyCriterion, aggregateData, possibleScores)
-      ).toEqual(60);
+      expect(service.getLessThanSum(satisfyCriterion, aggregateData, possibleScores)).toEqual(60);
     });
     it('should get less than sum with score 5', () => {
       const satisfyCriterion = { value: 5 };
@@ -991,9 +988,7 @@ function getLessThanSum() {
         counts: createScoreCounts([10, 20, 30, 40, 50])
       };
       const possibleScores = [1, 2, 3, 4, 5];
-      expect(
-        service.getLessThanSum(satisfyCriterion, aggregateData, possibleScores)
-      ).toEqual(100);
+      expect(service.getLessThanSum(satisfyCriterion, aggregateData, possibleScores)).toEqual(100);
     });
   });
 }
@@ -1119,9 +1114,9 @@ function isPercentOfScoresEqualTo() {
           }
         }
       };
-      expect(
-        service.isPercentOfScoresEqualTo(satisfyCriterion, aggregateAutoScores)
-      ).toEqual(false);
+      expect(service.isPercentOfScoresEqualTo(satisfyCriterion, aggregateAutoScores)).toEqual(
+        false
+      );
     });
     it('should check is percent of scores equal to true', () => {
       const satisfyCriterion = createSatisfyCriteria(
@@ -1140,9 +1135,7 @@ function isPercentOfScoresEqualTo() {
           }
         }
       };
-      expect(
-        service.isPercentOfScoresEqualTo(satisfyCriterion, aggregateAutoScores)
-      ).toEqual(true);
+      expect(service.isPercentOfScoresEqualTo(satisfyCriterion, aggregateAutoScores)).toEqual(true);
     });
   });
 }
@@ -1155,9 +1148,7 @@ function getEqualToSum() {
         counts: createScoreCounts([10, 20, 30, 40, 50])
       };
       const possibleScores = [1, 2, 3, 4, 5];
-      expect(
-        service.getEqualToSum(satisfyCriterion, aggregateData, possibleScores)
-      ).toEqual(30);
+      expect(service.getEqualToSum(satisfyCriterion, aggregateData, possibleScores)).toEqual(30);
     });
   });
 }
@@ -1203,10 +1194,7 @@ function getNotEqualToSum() {
 function getAggregateData() {
   describe('getAggregateData()', () => {
     it('should return the aggregate data', () => {
-      const result = service.getAggregateData(
-        satisfyCriterionSample,
-        aggregateAutoScoresSample
-      );
+      const result = service.getAggregateData(satisfyCriterionSample, aggregateAutoScoresSample);
       expect(result).toEqual({
         counts: { 1: 2, 2: 0, 3: 1, 4: 0, 5: 0 },
         scoreCount: 3,
@@ -1236,15 +1224,8 @@ function isPercentThresholdSatisfied() {
           ki: { counts: { 1: 1, 2: 0, 3: 2, 4: 0, 5: 0 }, scoreCount: 3 }
         }
       };
-      const aggregateData = service.getAggregateData(
-        satisfyCriterionSample,
-        aggregateAutoScores
-      );
-      const sum = service.getEqualToSum(
-        satisfyCriterionSample,
-        aggregateData,
-        possibleScoresKi
-      );
+      const aggregateData = service.getAggregateData(satisfyCriterionSample, aggregateAutoScores);
+      const sum = service.getEqualToSum(satisfyCriterionSample, aggregateData, possibleScoresKi);
       const result = service.isPercentThresholdSatisfied(
         satisfyCriterionSample,
         aggregateData,
@@ -1257,11 +1238,7 @@ function isPercentThresholdSatisfied() {
         satisfyCriterionSample,
         aggregateAutoScoresSample
       );
-      const sum = service.getEqualToSum(
-        satisfyCriterionSample,
-        aggregateData,
-        possibleScoresKi
-      );
+      const sum = service.getEqualToSum(satisfyCriterionSample, aggregateData, possibleScoresKi);
       const result = service.isPercentThresholdSatisfied(
         satisfyCriterionSample,
         aggregateData,
@@ -1311,9 +1288,7 @@ function adjustKIScore() {
   describe('adjustKIScore()', () => {
     it('should return the adjusted KI score', () => {
       const value = 5;
-      expect(service.adjustKIScore(value, reportSettingsCustomScoreValuesSample)).toEqual(
-        4
-      );
+      expect(service.adjustKIScore(value, reportSettingsCustomScoreValuesSample)).toEqual(4);
     });
   });
 }

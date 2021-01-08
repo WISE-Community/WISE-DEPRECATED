@@ -28,8 +28,7 @@ export class MilestoneService {
     private ProjectService: ProjectService,
     private TeacherDataService: TeacherDataService,
     private UtilService: UtilService
-  ) {
-  }
+  ) {}
 
   getTranslation(key: string, args: any = null) {
     if (args == null) {
@@ -42,7 +41,7 @@ export class MilestoneService {
   getProjectMilestones() {
     const achievements = this.ProjectService.getAchievements();
     if (achievements.isEnabled) {
-      return achievements.items.filter(achievement => {
+      return achievements.items.filter((achievement) => {
         return ['milestone', 'milestoneReport'].includes(achievement.type);
       });
     }
@@ -50,7 +49,7 @@ export class MilestoneService {
   }
 
   getProjectMilestoneReports() {
-    return this.getProjectMilestones().filter(milestone => {
+    return this.getProjectMilestones().filter((milestone) => {
       return milestone.type === 'milestoneReport';
     });
   }
@@ -91,8 +90,7 @@ export class MilestoneService {
   }
 
   insertMilestoneCompletion(milestone: any) {
-    const achievementIdToStudentAchievements =
-        this.AchievementService.getAchievementIdToStudentAchievementsMappings();
+    const achievementIdToStudentAchievements = this.AchievementService.getAchievementIdToStudentAchievementsMappings();
     const studentAchievements = achievementIdToStudentAchievements[milestone.id];
     const workgroupIdsCompleted = [];
     const achievementTimes = [];
@@ -371,9 +369,7 @@ export class MilestoneService {
   }
 
   getPossibleScores(aggregateData: any) {
-    return Object.keys(aggregateData.counts)
-      .map(Number)
-      .sort();
+    return Object.keys(aggregateData.counts).map(Number).sort();
   }
 
   isPercentThresholdSatisfied(satisfyCriterion: any, aggregateData: any, sum: number) {
@@ -398,8 +394,12 @@ export class MilestoneService {
     return components;
   }
 
-  calculateAggregateAutoScores(nodeId: string, componentId: string, periodId: number,
-      reportSettings: any) {
+  calculateAggregateAutoScores(
+    nodeId: string,
+    componentId: string,
+    periodId: number,
+    reportSettings: any
+  ) {
     const aggregate = {};
     const scoreAnnotations = this.AnnotationService.getAllLatestScoreAnnotations(
       nodeId,
@@ -429,8 +429,11 @@ export class MilestoneService {
     return aggregate;
   }
 
-  mergeAutoScoreAndTeacherScore(autoScoreAnnotation: any, teacherScoreAnnotation: any,
-      reportSettings: any) {
+  mergeAutoScoreAndTeacherScore(
+    autoScoreAnnotation: any,
+    teacherScoreAnnotation: any,
+    reportSettings: any
+  ) {
     if (autoScoreAnnotation.data.scores) {
       for (const subScore of autoScoreAnnotation.data.scores) {
         if (subScore.id === 'ki') {
@@ -618,87 +621,86 @@ export class MilestoneService {
             </md-button>
           </md-dialog-actions>
         </md-dialog>`;
-    this.upgrade.$injector.get('$mdDialog')
-      .show({
-        parent: angular.element(document.body),
-        template: template,
-        ariaLabel: title,
-        fullscreen: true,
-        multiple: true,
-        targetEvent: $event,
-        clickOutsideToClose: true,
-        escapeToClose: true,
-        locals: {
-          $event: $event,
-          milestone: milestone,
-          hideStudentWork: hideStudentWork
-        },
-        controller: [
-          '$scope',
-          '$state',
-          '$mdDialog',
-          'milestone',
-          '$event',
-          'TeacherDataService',
-          function DialogController(
-            $scope,
-            $state,
-            $mdDialog,
-            milestone,
-            $event,
-            TeacherDataService
-          ) {
-            $scope.milestone = milestone;
-            $scope.hideStudentWork = hideStudentWork;
-            $scope.event = $event;
-            $scope.close = function() {
-              $scope.saveMilestoneClosedEvent();
-              $mdDialog.hide();
-            };
-            $scope.edit = function() {
-              $mdDialog.hide({
-                milestone: $scope.milestone,
-                action: 'edit',
-                $event: $event
-              });
-            };
-            $scope.onShowWorkgroup = function(workgroup: any) {
-              $scope.saveMilestoneClosedEvent();
-              $mdDialog.hide();
-              TeacherDataService.setCurrentWorkgroup(workgroup);
-              $state.go('root.nodeProgress');
-            };
-            $scope.onVisitNodeGrading = function() {
-              $mdDialog.hide();
-            };
-            $scope.saveMilestoneOpenedEvent = function() {
-              $scope.saveMilestoneEvent('MilestoneOpened');
-            };
-            $scope.saveMilestoneClosedEvent = function() {
-              $scope.saveMilestoneEvent('MilestoneClosed');
-            };
-            $scope.saveMilestoneEvent = function(event: any) {
-              const context = 'ClassroomMonitor',
-                nodeId = null,
-                componentId = null,
-                componentType = null,
-                category = 'Navigation',
-                data = { milestoneId: $scope.milestone.id },
-                projectId = null;
-              TeacherDataService.saveEvent(
-                context,
-                nodeId,
-                componentId,
-                componentType,
-                category,
-                event,
-                data,
-                projectId
-              );
-            };
-            $scope.saveMilestoneOpenedEvent();
-          }
-        ]
-      });
+    this.upgrade.$injector.get('$mdDialog').show({
+      parent: angular.element(document.body),
+      template: template,
+      ariaLabel: title,
+      fullscreen: true,
+      multiple: true,
+      targetEvent: $event,
+      clickOutsideToClose: true,
+      escapeToClose: true,
+      locals: {
+        $event: $event,
+        milestone: milestone,
+        hideStudentWork: hideStudentWork
+      },
+      controller: [
+        '$scope',
+        '$state',
+        '$mdDialog',
+        'milestone',
+        '$event',
+        'TeacherDataService',
+        function DialogController(
+          $scope,
+          $state,
+          $mdDialog,
+          milestone,
+          $event,
+          TeacherDataService
+        ) {
+          $scope.milestone = milestone;
+          $scope.hideStudentWork = hideStudentWork;
+          $scope.event = $event;
+          $scope.close = function () {
+            $scope.saveMilestoneClosedEvent();
+            $mdDialog.hide();
+          };
+          $scope.edit = function () {
+            $mdDialog.hide({
+              milestone: $scope.milestone,
+              action: 'edit',
+              $event: $event
+            });
+          };
+          $scope.onShowWorkgroup = function (workgroup: any) {
+            $scope.saveMilestoneClosedEvent();
+            $mdDialog.hide();
+            TeacherDataService.setCurrentWorkgroup(workgroup);
+            $state.go('root.nodeProgress');
+          };
+          $scope.onVisitNodeGrading = function () {
+            $mdDialog.hide();
+          };
+          $scope.saveMilestoneOpenedEvent = function () {
+            $scope.saveMilestoneEvent('MilestoneOpened');
+          };
+          $scope.saveMilestoneClosedEvent = function () {
+            $scope.saveMilestoneEvent('MilestoneClosed');
+          };
+          $scope.saveMilestoneEvent = function (event: any) {
+            const context = 'ClassroomMonitor',
+              nodeId = null,
+              componentId = null,
+              componentType = null,
+              category = 'Navigation',
+              data = { milestoneId: $scope.milestone.id },
+              projectId = null;
+            TeacherDataService.saveEvent(
+              context,
+              nodeId,
+              componentId,
+              componentType,
+              category,
+              event,
+              data,
+              projectId
+            );
+          };
+          $scope.saveMilestoneOpenedEvent();
+        }
+      ]
+    });
   }
 }

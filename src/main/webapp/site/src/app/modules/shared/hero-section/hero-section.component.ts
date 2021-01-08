@@ -1,4 +1,13 @@
-import { Component, ContentChild, Input, OnInit, TemplateRef, ViewEncapsulation, ViewChild, ElementRef } from '@angular/core';
+import {
+  Component,
+  ContentChild,
+  Input,
+  OnInit,
+  TemplateRef,
+  ViewEncapsulation,
+  ViewChild,
+  ElementRef
+} from '@angular/core';
 import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
 
 @Component({
@@ -8,7 +17,6 @@ import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
   encapsulation: ViewEncapsulation.None
 })
 export class HeroSectionComponent {
-
   @Input()
   imgSrc: string;
 
@@ -39,7 +47,7 @@ export class HeroSectionComponent {
   ngAfterViewInit() {
     this.bgRef.nativeElement.onload = () => {
       this.bgStyle = this.getBgStyle();
-    }
+    };
   }
 
   /**

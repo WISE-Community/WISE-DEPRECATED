@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing';
-import { TableService } from "../../../../wise5/components/table/tableService";
+import { TableService } from '../../../../wise5/components/table/tableService';
 import { UpgradeModule } from '@angular/upgrade/static';
 import { StudentAssetService } from '../../../../wise5/services/studentAssetService';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -16,7 +16,7 @@ let service: TableService;
 describe('TableService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule, UpgradeModule ],
+      imports: [HttpClientTestingModule, UpgradeModule],
       providers: [
         AnnotationService,
         ConfigService,
@@ -43,9 +43,10 @@ describe('TableService', () => {
 });
 
 function createTableComponent(
-    tableData: any[],
-    showSaveButton: boolean,
-    showSubmitButton: boolean) {
+  tableData: any[],
+  showSaveButton: boolean,
+  showSubmitButton: boolean
+) {
   return {
     tableData: tableData,
     showSaveButton: showSaveButton,
@@ -89,7 +90,7 @@ function createComponent() {
 
 function isCompleted() {
   const node = createNode(false);
-  const authoredTableData = [ [ createCell('Item'), createCell('Count') ] ];
+  const authoredTableData = [[createCell('Item'), createCell('Count')]];
   const componentNotShowingSaveOrSubmit = createTableComponent(authoredTableData, false, false);
   const componentShowingSaveAndSubmit = createTableComponent(authoredTableData, true, true);
   const studentData = createStudentData([]);
@@ -99,7 +100,7 @@ function isCompleted() {
     expect(service.isCompleted(component, componentStates, [], [], node)).toEqual(expectedResult);
   }
   it('should check if a component is completed when it has no editable cells', () => {
-    const component = { tableData: [ createCell('Item', false), createCell('Count', false) ] };
+    const component = { tableData: [createCell('Item', false), createCell('Count', false)] };
     expectIsCompleted(component, [], true);
   });
   it('should check if a component is completed is false when submit button is not showing', () => {
@@ -119,7 +120,7 @@ function isCompleted() {
 function componentHasEditableCells() {
   let component: any;
   beforeEach(() => {
-    const authoredTableData = [ [ createCell('Item', false), createCell('Count', false) ] ];
+    const authoredTableData = [[createCell('Item', false), createCell('Count', false)]];
     component = createTableComponent(authoredTableData, false, false);
   });
   it('should calculate if a component has editable cells when it is false', () => {
@@ -135,9 +136,9 @@ function componentStateHasStudentWork() {
   let componentState;
   let componentContent;
   beforeEach(() => {
-    const studentData = { tableData: [ [ createCell(''), createCell('') ] ] };
+    const studentData = { tableData: [[createCell(''), createCell('')]] };
     componentState = createComponentState(studentData, false);
-    const tableData = [ [ createCell(''), createCell('') ] ];
+    const tableData = [[createCell(''), createCell('')]];
     componentContent = createTableComponent(tableData, true, true);
   });
   it('should check if component state has student work when it is false', () => {
@@ -152,8 +153,8 @@ function componentStateHasStudentWork() {
 function getTableDataCellValue() {
   it('should get table data cell value', () => {
     const table = [
-      [ createCell('Upper Left'), createCell('Upper Right'), ],
-      [ createCell('Bottom Left'), createCell('Bottom Right') ]
+      [createCell('Upper Left'), createCell('Upper Right')],
+      [createCell('Bottom Left'), createCell('Bottom Right')]
     ];
     expect(service.getTableDataCellValue(0, 0, table)).toEqual('Upper Left');
     expect(service.getTableDataCellValue(1, 0, table)).toEqual('Upper Right');
@@ -166,17 +167,27 @@ function hasRequiredNumberOfFilledRows() {
   let componentState: any;
   beforeEach(() => {
     const studentData = createStudentData([
-      [ createCell('Object'), createCell('Count') ],
-      [ createCell('Computer'), createCell('') ],
-      [ createCell(''), createCell('') ]
+      [createCell('Object'), createCell('Count')],
+      [createCell('Computer'), createCell('')],
+      [createCell(''), createCell('')]
     ]);
     componentState = createComponentState(studentData, false);
   });
-  function expectHasRequiredNumberOfFilledRows(componentState: any,
-      requiredNumberOfFilledRows: number, tableHasHeaderRow: boolean,
-      requireAllCellsInARowToBeFilled: boolean, expectedResult: boolean) {
-    expect(service.hasRequiredNumberOfFilledRows(componentState, requiredNumberOfFilledRows,
-        tableHasHeaderRow, requireAllCellsInARowToBeFilled)).toEqual(expectedResult);
+  function expectHasRequiredNumberOfFilledRows(
+    componentState: any,
+    requiredNumberOfFilledRows: number,
+    tableHasHeaderRow: boolean,
+    requireAllCellsInARowToBeFilled: boolean,
+    expectedResult: boolean
+  ) {
+    expect(
+      service.hasRequiredNumberOfFilledRows(
+        componentState,
+        requiredNumberOfFilledRows,
+        tableHasHeaderRow,
+        requireAllCellsInARowToBeFilled
+      )
+    ).toEqual(expectedResult);
   }
   it(`should check if student data has the required number of filled rows when all cells in a row
       are not required to be filled and returns false`, () => {
@@ -204,7 +215,7 @@ function hasRequiredNumberOfFilledRows() {
 function isRowFilled() {
   let row;
   beforeEach(() => {
-    row = [ createCell(''), createCell('') ];
+    row = [createCell(''), createCell('')];
   });
   it('should check if row is filled when not all cells are required and returns false', () => {
     expect(service.isRowFilled(row, false)).toEqual(false);
@@ -227,7 +238,7 @@ function isRowFilled() {
 function isAllCellsFilledInRow() {
   let row;
   beforeEach(() => {
-    row = [ createCell(''), createCell('') ];
+    row = [createCell(''), createCell('')];
   });
   it('should check if all cells are filled in a row when it is false', () => {
     row[1].text = 'Hello World';
@@ -243,7 +254,7 @@ function isAllCellsFilledInRow() {
 function isAtLeastOneCellFilledInrow() {
   let row;
   beforeEach(() => {
-    row = [ createCell(''), createCell('') ];
+    row = [createCell(''), createCell('')];
   });
   it('should check if at least one cell is filled in a row when it is false', () => {
     expect(service.isAtLeastOneCellFilledInRow(row)).toEqual(false);

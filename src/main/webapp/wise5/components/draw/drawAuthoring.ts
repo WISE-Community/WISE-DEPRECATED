@@ -133,7 +133,7 @@ class DrawAuthoringController extends EditComponentController {
 
   saveStarterDrawData() {
     if (confirm(this.$translate('draw.areYouSureYouWantToSaveTheStarterDrawing'))) {
-      this.NodeService.requestStarterState({nodeId: this.nodeId, componentId: this.componentId});
+      this.NodeService.requestStarterState({ nodeId: this.nodeId, componentId: this.componentId });
     }
   }
 
@@ -250,7 +250,6 @@ class DrawAuthoringController extends EditComponentController {
   setStampImage(index, fileName) {
     this.authoringComponentContent.stamps.Stamps[index] = fileName;
   }
-
 }
 
 const DrawAuthoring = {
@@ -261,6 +260,6 @@ const DrawAuthoring = {
   controller: DrawAuthoringController,
   controllerAs: 'drawController',
   templateUrl: 'wise5/components/draw/authoring.html'
-}
+};
 
 export default DrawAuthoring;

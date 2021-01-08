@@ -9,13 +9,13 @@ import { SessionService } from '../services/sessionService';
 
 @Injectable()
 export class VLEProjectService extends ProjectService {
-
   constructor(
     protected upgrade: UpgradeModule,
     protected http: HttpClient,
     protected ConfigService: ConfigService,
     protected SessionService: SessionService,
-    protected UtilService: UtilService) {
+    protected UtilService: UtilService
+  ) {
     super(upgrade, http, ConfigService, SessionService, UtilService);
   }
 
@@ -133,11 +133,12 @@ export class VLEProjectService extends ProjectService {
   }
 
   retrieveScript(scriptFilename) {
-    return this.upgrade.$injector.get('$http')
-        .get(`${this.ConfigService.getProjectAssetsDirectoryPath()}/${scriptFilename}`)
-        .then(result => {
-      return result.data;
-    });
+    return this.upgrade.$injector
+      .get('$http')
+      .get(`${this.ConfigService.getProjectAssetsDirectoryPath()}/${scriptFilename}`)
+      .then((result) => {
+        return result.data;
+      });
   }
 
   /**

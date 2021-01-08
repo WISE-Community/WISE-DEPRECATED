@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SharedModule } from "../modules/shared/shared.module";
+import { SharedModule } from '../modules/shared/shared.module';
 import { TeacherRoutingModule } from './teacher-routing.module';
 import { TeacherComponent } from './teacher.component';
-import { TeacherHomeComponent } from "./teacher-home/teacher-home.component";
-import { AuthGuard } from "./auth.guard";
+import { TeacherHomeComponent } from './teacher-home/teacher-home.component';
+import { AuthGuard } from './auth.guard';
 import { TeacherRunListComponent } from './teacher-run-list/teacher-run-list.component';
 import { TeacherRunListItemComponent } from './teacher-run-list-item/teacher-run-list-item.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -29,9 +29,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { ClipboardModule } from '@angular/cdk/clipboard';
 import { RunMenuComponent } from './run-menu/run-menu.component';
 import { CreateRunDialogComponent } from './create-run-dialog/create-run-dialog.component';
-import { LibraryModule } from "../modules/library/library.module";
+import { LibraryModule } from '../modules/library/library.module';
 import { ShareRunDialogComponent } from './share-run-dialog/share-run-dialog.component';
-import { TimelineModule } from "../modules/timeline/timeline.module";
+import { TimelineModule } from '../modules/timeline/timeline.module';
 import { EditComponent } from './account/edit/edit.component';
 import { EditProfileComponent } from './account/edit-profile/edit-profile.component';
 import { RunSettingsDialogComponent } from './run-settings-dialog/run-settings-dialog.component';
@@ -42,10 +42,22 @@ import { DiscourseRecentActivityComponent } from './discourse-recent-activity/di
 import { ShareRunCodeDialogComponent } from './share-run-code-dialog/share-run-code-dialog.component';
 
 const materialModules = [
-  MatAutocompleteModule, MatButtonModule, MatCardModule, MatCheckboxModule,
-  MatDatepickerModule, MatDialogModule, MatDividerModule, MatIconModule,
-  MatMenuModule, MatNativeDateModule, MatProgressBarModule, MatRadioModule,
-  MatSnackBarModule, MatTabsModule, MatTableModule, MatTooltipModule
+  MatAutocompleteModule,
+  MatButtonModule,
+  MatCardModule,
+  MatCheckboxModule,
+  MatDatepickerModule,
+  MatDialogModule,
+  MatDividerModule,
+  MatIconModule,
+  MatMenuModule,
+  MatNativeDateModule,
+  MatProgressBarModule,
+  MatRadioModule,
+  MatSnackBarModule,
+  MatTabsModule,
+  MatTableModule,
+  MatTooltipModule
 ];
 @NgModule({
   imports: [
@@ -77,12 +89,7 @@ const materialModules = [
     ListClassroomCoursesDialogComponent,
     ShareRunCodeDialogComponent
   ],
-  providers: [
-    AuthGuard
-  ],
-  exports: [
-    TeacherComponent,
-    materialModules
-  ]
+  providers: [AuthGuard],
+  exports: [TeacherComponent, materialModules]
 })
-export class TeacherModule { }
+export class TeacherModule {}

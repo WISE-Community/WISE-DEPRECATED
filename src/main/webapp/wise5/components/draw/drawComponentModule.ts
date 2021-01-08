@@ -11,7 +11,7 @@ let drawComponentModule = angular
   .controller('DrawController', DrawController)
   .config([
     '$translatePartialLoaderProvider',
-    $translatePartialLoaderProvider => {
+    ($translatePartialLoaderProvider) => {
       $translatePartialLoaderProvider.addPart('components/draw/i18n');
     }
   ]);

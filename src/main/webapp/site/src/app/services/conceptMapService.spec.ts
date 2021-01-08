@@ -1,15 +1,15 @@
-import { TestBed } from "@angular/core/testing";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
-import { UpgradeModule } from "@angular/upgrade/static";
-import { AnnotationService } from "../../../../wise5/services/annotationService";
-import { ProjectService } from "../../../../wise5/services/projectService";
-import { StudentAssetService } from "../../../../wise5/services/studentAssetService";
-import { StudentDataService } from "../../../../wise5/services/studentDataService";
-import { TagService } from "../../../../wise5/services/tagService";
-import { UtilService } from "../../../../wise5/services/utilService";
-import { ConceptMapService } from "../../../../wise5/components/conceptMap/conceptMapService";
-import { ConfigService } from "../../../../wise5/services/configService";
-import { SessionService } from "../../../../wise5/services/sessionService";
+import { TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { UpgradeModule } from '@angular/upgrade/static';
+import { AnnotationService } from '../../../../wise5/services/annotationService';
+import { ProjectService } from '../../../../wise5/services/projectService';
+import { StudentAssetService } from '../../../../wise5/services/studentAssetService';
+import { StudentDataService } from '../../../../wise5/services/studentDataService';
+import { TagService } from '../../../../wise5/services/tagService';
+import { UtilService } from '../../../../wise5/services/utilService';
+import { ConceptMapService } from '../../../../wise5/components/conceptMap/conceptMapService';
+import { ConfigService } from '../../../../wise5/services/configService';
+import { SessionService } from '../../../../wise5/services/sessionService';
 
 let service: ConceptMapService;
 let conceptMapNode1: any;
@@ -44,7 +44,7 @@ const link2DestinationNodeInstanceId = 'studentNode2';
 describe('ConceptMapService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule, UpgradeModule ],
+      imports: [HttpClientTestingModule, UpgradeModule],
       providers: [
         AnnotationService,
         ConceptMapService,
@@ -58,16 +58,38 @@ describe('ConceptMapService', () => {
       ]
     });
     service = TestBed.get(ConceptMapService);
-    conceptMapNode1 = createConceptMapNode(node1OriginalId, node1InstanceId, node1Label,
-        node1X, node1Y);
-    conceptMapNode2 = createConceptMapNode(node2OriginalId, node2InstanceId, node2Label,
-        node2X, node2Y);
-    conceptMapLink1 = createConceptMapLink(link1OriginalId, link1InstanceId, link1Label,
-        link1SourceNodeOriginalId, link1SourceNodeInstanceId, link1DestinationNodeOriginalId,
-        link1DestinationNodeInstanceId);
-    conceptMapLink2 = createConceptMapLink(link2OriginalId, link2InstanceId, link2Label,
-        link2SourceNodeOriginalId, link2SourceNodeInstanceId, link2DestinationNodeOriginalId,
-        link2DestinationNodeInstanceId);
+    conceptMapNode1 = createConceptMapNode(
+      node1OriginalId,
+      node1InstanceId,
+      node1Label,
+      node1X,
+      node1Y
+    );
+    conceptMapNode2 = createConceptMapNode(
+      node2OriginalId,
+      node2InstanceId,
+      node2Label,
+      node2X,
+      node2Y
+    );
+    conceptMapLink1 = createConceptMapLink(
+      link1OriginalId,
+      link1InstanceId,
+      link1Label,
+      link1SourceNodeOriginalId,
+      link1SourceNodeInstanceId,
+      link1DestinationNodeOriginalId,
+      link1DestinationNodeInstanceId
+    );
+    conceptMapLink2 = createConceptMapLink(
+      link2OriginalId,
+      link2InstanceId,
+      link2Label,
+      link2SourceNodeOriginalId,
+      link2SourceNodeInstanceId,
+      link2DestinationNodeOriginalId,
+      link2DestinationNodeInstanceId
+    );
   });
   createComponent();
   isCompleted();
@@ -115,8 +137,11 @@ function createAnnotation(type: string, displayToStudent: boolean) {
   };
 }
 
-function createComponentContent(nodes: any[] = [], links: any[] = [],
-    starterConceptMap: any = null) {
+function createComponentContent(
+  nodes: any[] = [],
+  links: any[] = [],
+  starterConceptMap: any = null
+) {
   return {
     nodes: nodes,
     links: links,
@@ -131,8 +156,13 @@ function createConceptMapData(nodes: any[] = [], links: any[] = []) {
   };
 }
 
-function createConceptMapNode(originalId: string, instanceId: string, label: string, x: number,
-    y: number) {
+function createConceptMapNode(
+  originalId: string,
+  instanceId: string,
+  label: string,
+  x: number,
+  y: number
+) {
   return {
     originalId: originalId,
     instanceId: instanceId,
@@ -142,9 +172,15 @@ function createConceptMapNode(originalId: string, instanceId: string, label: str
   };
 }
 
-function createConceptMapLink(originalId: string, instanceId: string, label: string,
-    sourceNodeOriginalId: string, sourceNodeInstanceId: string, destinationNodeOriginalId: string,
-    destinationNodeInstanceId: string) {
+function createConceptMapLink(
+  originalId: string,
+  instanceId: string,
+  label: string,
+  sourceNodeOriginalId: string,
+  sourceNodeInstanceId: string,
+  destinationNodeOriginalId: string,
+  destinationNodeInstanceId: string
+) {
   return {
     originalId: originalId,
     instanceId: instanceId,
@@ -192,10 +228,15 @@ function isCompleted() {
     node = {};
     component = {};
   });
-  function expectIsCompleted(component: any, componentStates: any[], node: any,
-      expectedResult: boolean) {
-    expect(service.isCompleted(component, componentStates, null, null, node))
-        .toEqual(expectedResult);
+  function expectIsCompleted(
+    component: any,
+    componentStates: any[],
+    node: any,
+    expectedResult: boolean
+  ) {
+    expect(service.isCompleted(component, componentStates, null, null, node)).toEqual(
+      expectedResult
+    );
   }
   it(`should check if is completed when submit is required and there are no submit component
       states`, () => {
@@ -209,12 +250,10 @@ function isCompleted() {
     componentStates.push(createComponentState([], [], true));
     expectIsCompleted(component, componentStates, node, true);
   });
-  it(`should check if is completed when submit is not required and there are no component states`,
-      () => {
+  it(`should check if is completed when submit is not required and there are no component states`, () => {
     expectIsCompleted(component, componentStates, node, false);
   });
-  it(`should check if is completed when submit is not required and there are component states`,
-      () => {
+  it(`should check if is completed when submit is not required and there are component states`, () => {
     componentStates.push(createComponentState());
     expectIsCompleted(component, componentStates, node, true);
   });
@@ -337,38 +376,47 @@ function getLinksByLabels() {
 }
 
 function spyOnEvaluateRuleByRuleName(ruleToResult: any) {
-    spyOn(service, 'evaluateRuleByRuleName').and.callFake((componentContent: any,
-        conceptMapData: any, ruleName: string) => {
+  spyOn(service, 'evaluateRuleByRuleName').and.callFake(
+    (componentContent: any, conceptMapData: any, ruleName: string) => {
       return ruleToResult[ruleName];
-    });
+    }
+  );
 }
 
 function any() {
-  function expectAny(componentContent: any, conceptMapData: any, ruleNames: string[],
-      expectedResult: boolean) {
+  function expectAny(
+    componentContent: any,
+    conceptMapData: any,
+    ruleNames: string[],
+    expectedResult: boolean
+  ) {
     expect(service.any(componentContent, conceptMapData, ruleNames)).toEqual(expectedResult);
   }
   it('should check if any rule is satisfied when none are satisified', () => {
-    spyOnEvaluateRuleByRuleName({ 'rule1': false, 'rule2': false });
+    spyOnEvaluateRuleByRuleName({ rule1: false, rule2: false });
     expectAny({}, {}, ['rule1', 'rule2'], false);
   });
   it('should check if any rule is satisfied when one is satisified', () => {
-    spyOnEvaluateRuleByRuleName({ 'rule1': false, 'rule2': true });
+    spyOnEvaluateRuleByRuleName({ rule1: false, rule2: true });
     expectAny({}, {}, ['rule1', 'rule2'], true);
   });
 }
 
 function all() {
-  function expectAll(componentContent: any, conceptMapData: any, ruleNames: string[],
-      expectedResult: boolean) {
+  function expectAll(
+    componentContent: any,
+    conceptMapData: any,
+    ruleNames: string[],
+    expectedResult: boolean
+  ) {
     expect(service.all(componentContent, conceptMapData, ruleNames)).toEqual(expectedResult);
   }
   it('should check if all rules are satisfied when only one is satisified', () => {
-    spyOnEvaluateRuleByRuleName({ 'rule1': false, 'rule2': true });
+    spyOnEvaluateRuleByRuleName({ rule1: false, rule2: true });
     expectAll({}, {}, ['rule1', 'rule2'], false);
   });
   it('should check if all rules are satisfied when all are satisified', () => {
-    spyOnEvaluateRuleByRuleName({ 'rule1': true, 'rule2': true });
+    spyOnEvaluateRuleByRuleName({ rule1: true, rule2: true });
     expectAll({}, {}, ['rule1', 'rule2'], true);
   });
 }
@@ -425,10 +473,14 @@ function componentStateHasStudentWork() {
     componentState = createComponentState();
     componentContent = createComponentContent();
   });
-  function expectComponentStateHasStudentWork(componentState: any, componentContent: any,
-      expectedResult: boolean) {
-    expect(service.componentStateHasStudentWork(componentState, componentContent))
-        .toEqual(expectedResult);
+  function expectComponentStateHasStudentWork(
+    componentState: any,
+    componentContent: any,
+    expectedResult: boolean
+  ) {
+    expect(service.componentStateHasStudentWork(componentState, componentContent)).toEqual(
+      expectedResult
+    );
   }
   it('should check if component state has student work when it does not have work', () => {
     expectComponentStateHasStudentWork(componentState, componentContent, false);
@@ -440,47 +492,86 @@ function componentStateHasStudentWork() {
 }
 
 function isStudentConceptMapDifferentThanStarterConceptMap() {
-  function expectIsStudentConceptMapDifferentThanStarterConceptMap(studentNodes: any[],
-      studentLinks: any[], starterNodes: any[], starterLinks: any[], expectedResult: boolean) {
+  function expectIsStudentConceptMapDifferentThanStarterConceptMap(
+    studentNodes: any[],
+    studentLinks: any[],
+    starterNodes: any[],
+    starterLinks: any[],
+    expectedResult: boolean
+  ) {
     const studentConceptMap = createConceptMapData(studentNodes, studentLinks);
     const starterConceptMap = createConceptMapData(starterNodes, starterLinks);
-    expect(service.isStudentConceptMapDifferentThanStarterConceptMap(studentConceptMap,
-        starterConceptMap)).toEqual(expectedResult);
+    expect(
+      service.isStudentConceptMapDifferentThanStarterConceptMap(
+        studentConceptMap,
+        starterConceptMap
+      )
+    ).toEqual(expectedResult);
   }
   it(`should check if student concept map is different than starter concept map when nodes are not
       different`, () => {
-    expectIsStudentConceptMapDifferentThanStarterConceptMap([conceptMapNode1], [],
-        [conceptMapNode1], [], false);
+    expectIsStudentConceptMapDifferentThanStarterConceptMap(
+      [conceptMapNode1],
+      [],
+      [conceptMapNode1],
+      [],
+      false
+    );
   });
   it(`should check if student concept map is different than starter concept map when nodes are
       different`, () => {
-    expectIsStudentConceptMapDifferentThanStarterConceptMap([conceptMapNode1], [],
-        [conceptMapNode2], [], true);
+    expectIsStudentConceptMapDifferentThanStarterConceptMap(
+      [conceptMapNode1],
+      [],
+      [conceptMapNode2],
+      [],
+      true
+    );
   });
   it(`should check if student concept map is different than starter concept map when there are
       different number of nodes`, () => {
-    expectIsStudentConceptMapDifferentThanStarterConceptMap([conceptMapNode1], [],
-        [conceptMapNode1, conceptMapNode2], [], true);
+    expectIsStudentConceptMapDifferentThanStarterConceptMap(
+      [conceptMapNode1],
+      [],
+      [conceptMapNode1, conceptMapNode2],
+      [],
+      true
+    );
   });
   it(`should check if student concept map is different than starter concept map when links are not
       different`, () => {
-    expectIsStudentConceptMapDifferentThanStarterConceptMap([], [conceptMapLink1], [],
-        [conceptMapLink1], false);
+    expectIsStudentConceptMapDifferentThanStarterConceptMap(
+      [],
+      [conceptMapLink1],
+      [],
+      [conceptMapLink1],
+      false
+    );
   });
   it(`should check if student concept map is different than starter concept map when links are
       different`, () => {
-    expectIsStudentConceptMapDifferentThanStarterConceptMap([], [conceptMapLink1], [],
-        [conceptMapLink2], true);
+    expectIsStudentConceptMapDifferentThanStarterConceptMap(
+      [],
+      [conceptMapLink1],
+      [],
+      [conceptMapLink2],
+      true
+    );
   });
   it(`should check if student concept map is different than starter concept map when there are
       different number of links`, () => {
-    expectIsStudentConceptMapDifferentThanStarterConceptMap([], [conceptMapLink1], [],
-        [conceptMapLink1, conceptMapLink2], true);
+    expectIsStudentConceptMapDifferentThanStarterConceptMap(
+      [],
+      [conceptMapLink1],
+      [],
+      [conceptMapLink1, conceptMapLink2],
+      true
+    );
   });
 }
 
 function generateImageFromRenderedComponentState() {
-   // TODO
+  // TODO
 }
 
 function getNextAvailableId() {
@@ -495,8 +586,11 @@ function displayAnnotation() {
   beforeEach(() => {
     componentContent = createComponentContent([], []);
   });
-  function expectDisplayAnnotation(componentContent: any, annotation: any,
-      expectedResult: boolean) {
+  function expectDisplayAnnotation(
+    componentContent: any,
+    annotation: any,
+    expectedResult: boolean
+  ) {
     expect(service.displayAnnotation(componentContent, annotation)).toEqual(expectedResult);
   }
   it(`should check if we should display the annotation to the student when display to student is
@@ -505,12 +599,12 @@ function displayAnnotation() {
   });
   it(`should check if we should display the annotation to the student when type is auto
       score`, () => {
-    componentContent.showAutoScore = true
+    componentContent.showAutoScore = true;
     expectDisplayAnnotation(componentContent, createAnnotation('autoScore', true), true);
   });
   it(`should check if we should display the annotation to the student when type is auto
       comment`, () => {
-    componentContent.showAutoFeedback = true
+    componentContent.showAutoFeedback = true;
     expectDisplayAnnotation(componentContent, createAnnotation('autoComment', true), true);
   });
 }

@@ -1,9 +1,9 @@
-import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { AnnotationService } from "./annotationService";
-import { ConfigService } from "./configService";
-import { ProjectService } from "./projectService";
-import { Observable, Subject } from "rxjs";
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { AnnotationService } from './annotationService';
+import { ConfigService } from './configService';
+import { ProjectService } from './projectService';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable()
 export class StudentStatusService {
@@ -11,21 +11,26 @@ export class StudentStatusService {
   private studentStatusReceivedSource: Subject<any> = new Subject<any>();
   public studentStatusReceived$: Observable<any> = this.studentStatusReceivedSource.asObservable();
 
-  constructor(private http: HttpClient, private AnnotationService: AnnotationService,
-      private ConfigService: ConfigService, private ProjectService: ProjectService) {
-  }
+  constructor(
+    private http: HttpClient,
+    private AnnotationService: AnnotationService,
+    private ConfigService: ConfigService,
+    private ProjectService: ProjectService
+  ) {}
 
   retrieveStudentStatuses() {
     this.studentStatuses = [];
-    return this.http.get(`/api/teacher/run/${this.ConfigService.getRunId()}/student-status`)
-        .toPromise().then((studentStatuses: any) => {
-      for (const studentStatus of studentStatuses) {
-        const parsedStatus = JSON.parse(studentStatus.status)
-        parsedStatus.postTimestamp = studentStatus.timestamp;
-        this.studentStatuses.push(parsedStatus);
-      }
-      return this.studentStatuses;
-    });
+    return this.http
+      .get(`/api/teacher/run/${this.ConfigService.getRunId()}/student-status`)
+      .toPromise()
+      .then((studentStatuses: any) => {
+        for (const studentStatus of studentStatuses) {
+          const parsedStatus = JSON.parse(studentStatus.status);
+          parsedStatus.postTimestamp = studentStatus.timestamp;
+          this.studentStatuses.push(parsedStatus);
+        }
+        return this.studentStatuses;
+      });
   }
 
   getStudentStatuses() {
@@ -188,7 +193,11 @@ export class StudentStatusService {
                         if (!this.ProjectService.isGroupNode(descendantId)) {
                           let descendantStatus = nodeStatuses[descendantId];
 
-                          if (descendantStatus && descendantStatus.isVisible && this.ProjectService.nodeHasWork(descendantId)) {
+                          if (
+                            descendantStatus &&
+                            descendantStatus.isVisible &&
+                            this.ProjectService.nodeHasWork(descendantId)
+                          ) {
                             numTotal++;
 
                             if (descendantStatus.isCompleted) {
@@ -220,7 +229,8 @@ export class StudentStatusService {
                      * check whether we should include the node in the calculation
                      * i.e. either includeNonWorkNodes is true or the node has student work
                      */
-                    let includeNode = !excludeNonWorkNodes || this.ProjectService.nodeHasWork(nodeId);
+                    let includeNode =
+                      !excludeNonWorkNodes || this.ProjectService.nodeHasWork(nodeId);
 
                     if (includeNode) {
                       numTotal++;
@@ -240,7 +250,7 @@ export class StudentStatusService {
     }
 
     // generate the percentage number rounded down to the nearest integer
-    let completionPercentage = (numTotal > 0 ? Math.floor(100 * numCompleted / numTotal) : 0);
+    let completionPercentage = numTotal > 0 ? Math.floor((100 * numCompleted) / numTotal) : 0;
 
     return {
       completedItems: numCompleted,
@@ -284,7 +294,7 @@ export class StudentStatusService {
 
     if (numStudentsWithScore !== 0) {
       // calculate the average score for this node rounded down to the nearest hundredth
-      averageScore = Math.floor(100 * studentScoreSum / numStudentsWithScore) / 100;
+      averageScore = Math.floor((100 * studentScoreSum) / numStudentsWithScore) / 100;
     }
 
     return averageScore;

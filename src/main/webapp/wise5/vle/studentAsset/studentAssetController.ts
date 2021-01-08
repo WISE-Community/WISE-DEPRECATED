@@ -39,7 +39,7 @@ class StudentAssetController {
     this.studentAssets = this.StudentAssetService.allAssets;
     this.itemId = null;
     this.item = null;
-    
+
     this.SessionService.logOut$.subscribe(() => {
       this.logOutListener();
     });
@@ -54,7 +54,7 @@ class StudentAssetController {
   }
 
   retrieveStudentAssets() {
-    this.StudentAssetService.retrieveAssets().then(studentAssets => {
+    this.StudentAssetService.retrieveAssets().then((studentAssets) => {
       this.studentAssets = studentAssets;
     });
   }
@@ -63,7 +63,7 @@ class StudentAssetController {
   uploadStudentAssets(files) {
     if (files != null) {
       for (const file of files) {
-        this.StudentAssetService.uploadAsset(file).then(studentAsset => {
+        this.StudentAssetService.uploadAsset(file).then((studentAsset) => {
           if (this.componentController != null) {
             // If the student asset dialog is a part of a component (e.g. attaching image to OR or Discussion)
             // Also attach the file(s) to the componentstate's attachments

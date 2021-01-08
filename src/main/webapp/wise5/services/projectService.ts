@@ -39,11 +39,9 @@ export class ProjectService {
   private errorSavingProjectSource: Subject<any> = new Subject<any>();
   public errorSavingProject$: Observable<any> = this.errorSavingProjectSource.asObservable();
   private notAllowedToEditThisProjectSource: Subject<any> = new Subject<any>();
-  public notAllowedToEditThisProject$: Observable<any> =
-      this.notAllowedToEditThisProjectSource.asObservable();
+  public notAllowedToEditThisProject$: Observable<any> = this.notAllowedToEditThisProjectSource.asObservable();
   private notLoggedInProjectNotSavedSource: Subject<any> = new Subject<any>();
-  public notLoggedInProjectNotSaved$: Observable<any> =
-      this.notLoggedInProjectNotSavedSource.asObservable();
+  public notLoggedInProjectNotSaved$: Observable<any> = this.notLoggedInProjectNotSavedSource.asObservable();
   private projectChangedSource: Subject<any> = new Subject<any>();
   public projectChanged$: Observable<any> = this.projectChangedSource.asObservable();
   private projectSavedSource: Subject<any> = new Subject<any>();
@@ -426,7 +424,7 @@ export class ProjectService {
 
   getGroupNodesIdToOrder() {
     const idToOrder = {};
-    const onlyGroupNodes = Object.entries(this.idToOrder).filter(item => {
+    const onlyGroupNodes = Object.entries(this.idToOrder).filter((item) => {
       return this.isGroupNode(item[0]);
     });
     for (const [key, value] of onlyGroupNodes) {
@@ -532,7 +530,7 @@ export class ProjectService {
             '(\'|"|\\\\\'|\\\\")',
           'gi'
         ),
-        matchedString => {
+        (matchedString) => {
           /*
            * once found, we prepend the contentBaseURL + "assets/" to the string within the quotes
            * and keep everything else the same.
@@ -626,7 +624,7 @@ export class ProjectService {
         return matchedString.replace(
           'img',
           `img ng-click=\\"this.$ctrl.ProjectService.broadcastSnipImage(` +
-          `{ target: $event.target, componentId: '${componentId}' })\\"`
+            `{ target: $event.target, componentId: '${componentId}' })\\"`
         );
       });
     }
@@ -892,7 +890,7 @@ export class ProjectService {
    * the target ids show up in the project.
    */
   constraintsComparatorGenerator(orderedNodeIds) {
-    return function(constraintA, constraintB) {
+    return function (constraintA, constraintB) {
       let constraintAIndex = orderedNodeIds.indexOf(constraintA.targetId);
       let constraintBIndex = orderedNodeIds.indexOf(constraintB.targetId);
       if (constraintAIndex < constraintBIndex) {
@@ -1106,11 +1104,14 @@ export class ProjectService {
     if (projectURL == null) {
       return null;
     }
-    const headers = new HttpHeaders().set("cache-control", "no-cache");
-    return this.http.get(projectURL, {headers: headers}).toPromise().then(projectJSON => {
-      this.setProject(projectJSON);
-      return projectJSON;
-    });
+    const headers = new HttpHeaders().set('cache-control', 'no-cache');
+    return this.http
+      .get(projectURL, { headers: headers })
+      .toPromise()
+      .then((projectJSON) => {
+        this.setProject(projectJSON);
+        return projectJSON;
+      });
   }
 
   /**
@@ -1119,12 +1120,18 @@ export class ProjectService {
    * @return a promise to return the project JSON
    */
   retrieveProjectById(projectId) {
-    return this.http.get(`/author/config/${projectId}`).toPromise().then((configJSON: any) => {
-      return this.http.get(configJSON.projectURL).toPromise().then((projectJSON: any) => {
-        projectJSON.previewProjectURL = configJSON.previewProjectURL;
-        return projectJSON;
+    return this.http
+      .get(`/author/config/${projectId}`)
+      .toPromise()
+      .then((configJSON: any) => {
+        return this.http
+          .get(configJSON.projectURL)
+          .toPromise()
+          .then((projectJSON: any) => {
+            projectJSON.previewProjectURL = configJSON.previewProjectURL;
+            return projectJSON;
+          });
       });
-    });
   }
 
   /**
@@ -1138,12 +1145,18 @@ export class ProjectService {
     }
     this.broadcastSavingProject();
     this.cleanupBeforeSave();
-    this.project.metadata.authors = this.getUniqueAuthors(this.addCurrentUserToAuthors(
-        this.getAuthors()));
-    return this.http.post(this.ConfigService.getConfigParam('saveProjectURL'),
-        angular.toJson(this.project, false)).toPromise().then((response: any) => {
-      this.handleSaveProjectResponse(response);
-    });
+    this.project.metadata.authors = this.getUniqueAuthors(
+      this.addCurrentUserToAuthors(this.getAuthors())
+    );
+    return this.http
+      .post(
+        this.ConfigService.getConfigParam('saveProjectURL'),
+        angular.toJson(this.project, false)
+      )
+      .toPromise()
+      .then((response: any) => {
+        this.handleSaveProjectResponse(response);
+      });
   }
 
   getAuthors(): any[] {
@@ -1198,10 +1211,10 @@ export class ProjectService {
    * objects.
    */
   cleanupBeforeSave() {
-    this.getActiveNodes().forEach(activeNode => {
+    this.getActiveNodes().forEach((activeNode) => {
       this.cleanupNode(activeNode);
     });
-    this.getInactiveNodes().forEach(inactiveNode => {
+    this.getInactiveNodes().forEach((inactiveNode) => {
       this.cleanupNode(inactiveNode);
     });
   }
@@ -1228,7 +1241,7 @@ export class ProjectService {
 
     if (node.components != null) {
       // activity node does not have components but step node does
-      node.components.forEach(component => {
+      node.components.forEach((component) => {
         this.cleanupComponent(component);
       });
     }
@@ -2614,7 +2627,7 @@ export class ProjectService {
    * @returns an array with all the node ids
    */
   getNodeIds() {
-    return this.applicationNodes.map(node => {
+    return this.applicationNodes.map((node) => {
       return node.id;
     });
   }
@@ -2624,7 +2637,7 @@ export class ProjectService {
    * @returns an array with all the inactive node ids
    */
   getInactiveNodeIds() {
-    return this.project.inactiveNodes.map(node => {
+    return this.project.inactiveNodes.map((node) => {
       return node.id;
     });
   }
@@ -2972,8 +2985,11 @@ export class ProjectService {
                 for (let transitionCopy of transitionsCopy) {
                   if (!this.isTransitionExist(transitions, transitionCopy)) {
                     const toNodeId = transitionCopy.to;
-                    if (this.isApplicationNode(node.id) && this.isGroupNode(toNodeId) &&
-                        this.hasGroupStartId(toNodeId)) {
+                    if (
+                      this.isApplicationNode(node.id) &&
+                      this.isGroupNode(toNodeId) &&
+                      this.hasGroupStartId(toNodeId)
+                    ) {
                       this.addToTransition(node, this.getGroupStartId(toNodeId));
                     } else {
                       transitions.splice(insertIndex, 0, transitionCopy);
@@ -3000,8 +3016,11 @@ export class ProjectService {
             }
           }
 
-          if (transitions.length === 0 && parentIdOfNodeToRemove != 'group0' &&
-              parentIdOfNodeToRemove != this.getParentGroupId(node.id)) {
+          if (
+            transitions.length === 0 &&
+            parentIdOfNodeToRemove != 'group0' &&
+            parentIdOfNodeToRemove != this.getParentGroupId(node.id)
+          ) {
             /*
              * the from node no longer has any transitions so we will make it transition to the
              * parent of the node we are removing
@@ -3435,16 +3454,24 @@ export class ProjectService {
    */
   getActionMessage(action) {
     if (action === 'makeAllNodesAfterThisNotVisitable') {
-      return this.upgrade.$injector.get('$filter')('translate')('allStepsAfterThisOneWillNotBeVisitableUntil');
+      return this.upgrade.$injector.get('$filter')('translate')(
+        'allStepsAfterThisOneWillNotBeVisitableUntil'
+      );
     }
     if (action === 'makeAllNodesAfterThisNotVisible') {
-      return this.upgrade.$injector.get('$filter')('translate')('allStepsAfterThisOneWillNotBeVisibleUntil');
+      return this.upgrade.$injector.get('$filter')('translate')(
+        'allStepsAfterThisOneWillNotBeVisibleUntil'
+      );
     }
     if (action === 'makeAllOtherNodesNotVisitable') {
-      return this.upgrade.$injector.get('$filter')('translate')('allOtherStepsWillNotBeVisitableUntil');
+      return this.upgrade.$injector.get('$filter')('translate')(
+        'allOtherStepsWillNotBeVisitableUntil'
+      );
     }
     if (action === 'makeAllOtherNodesNotVisible') {
-      return this.upgrade.$injector.get('$filter')('translate')('allOtherStepsWillNotBeVisibleUntil');
+      return this.upgrade.$injector.get('$filter')('translate')(
+        'allOtherStepsWillNotBeVisibleUntil'
+      );
     }
     if (action === 'makeThisNodeNotVisitable') {
       return this.upgrade.$injector.get('$filter')('translate')('thisStepWillNotBeVisitableUntil');
@@ -3472,19 +3499,26 @@ export class ProjectService {
         const nodeId = params.nodeId;
         if (nodeId != null) {
           const nodeTitle = this.getNodePositionAndTitleByNodeId(nodeId);
-          message += this.upgrade.$injector.get('$filter')('translate')('completeNodeTitle', { nodeTitle: nodeTitle });
+          message += this.upgrade.$injector.get('$filter')('translate')('completeNodeTitle', {
+            nodeTitle: nodeTitle
+          });
         }
       } else if (name === 'isVisited') {
         const nodeId = params.nodeId;
         if (nodeId != null) {
           const nodeTitle = this.getNodePositionAndTitleByNodeId(nodeId);
-          message += this.upgrade.$injector.get('$filter')('translate')('visitNodeTitle', { nodeTitle: nodeTitle });
+          message += this.upgrade.$injector.get('$filter')('translate')('visitNodeTitle', {
+            nodeTitle: nodeTitle
+          });
         }
       } else if (name === 'isCorrect') {
         const nodeId = params.nodeId;
         if (nodeId != null) {
           const nodeTitle = this.getNodePositionAndTitleByNodeId(nodeId);
-          message += this.upgrade.$injector.get('$filter')('translate')('correctlyAnswerNodeTitle', { nodeTitle: nodeTitle });
+          message += this.upgrade.$injector.get('$filter')('translate')(
+            'correctlyAnswerNodeTitle',
+            { nodeTitle: nodeTitle }
+          );
         }
       } else if (name === 'score') {
         const nodeId = params.nodeId;
@@ -3499,10 +3533,13 @@ export class ProjectService {
         if (scores != null) {
           scoresString = scores.join(', ');
         }
-        message += this.upgrade.$injector.get('$filter')('translate')('obtainAScoreOfXOnNodeTitle', {
-          score: scoresString,
-          nodeTitle: nodeTitle
-        });
+        message += this.upgrade.$injector.get('$filter')('translate')(
+          'obtainAScoreOfXOnNodeTitle',
+          {
+            score: scoresString,
+            nodeTitle: nodeTitle
+          }
+        );
       } else if (name === 'choiceChosen') {
         const nodeId = params.nodeId;
         const componentId = params.componentId;
@@ -3549,37 +3586,50 @@ export class ProjectService {
         if (nodeId != null) {
           const requiredNumberOfWords = params.requiredNumberOfWords;
           const nodeTitle = this.getNodePositionAndTitleByNodeId(nodeId);
-          message += this.upgrade.$injector.get('$filter')('translate')('writeXNumberOfWordsOnNodeTitle', {
-            requiredNumberOfWords: requiredNumberOfWords,
-            nodeTitle: nodeTitle
-          });
+          message += this.upgrade.$injector.get('$filter')('translate')(
+            'writeXNumberOfWordsOnNodeTitle',
+            {
+              requiredNumberOfWords: requiredNumberOfWords,
+              nodeTitle: nodeTitle
+            }
+          );
         }
       } else if (name === 'isVisible') {
         const nodeId = params.nodeId;
         if (nodeId != null) {
           const nodeTitle = this.getNodePositionAndTitleByNodeId(nodeId);
-          message += this.upgrade.$injector.get('$filter')('translate')('nodeTitleIsVisible', { nodeTitle: nodeTitle });
+          message += this.upgrade.$injector.get('$filter')('translate')('nodeTitleIsVisible', {
+            nodeTitle: nodeTitle
+          });
         }
       } else if (name === 'isVisitable') {
         const nodeId = params.nodeId;
         if (nodeId != null) {
           const nodeTitle = this.getNodePositionAndTitleByNodeId(nodeId);
-          message += this.upgrade.$injector.get('$filter')('translate')('nodeTitleIsVisitable', { nodeTitle: nodeTitle });
+          message += this.upgrade.$injector.get('$filter')('translate')('nodeTitleIsVisitable', {
+            nodeTitle: nodeTitle
+          });
         }
       } else if (name === 'addXNumberOfNotesOnThisStep') {
         const nodeId = params.nodeId;
         const requiredNumberOfNotes = params.requiredNumberOfNotes;
         const nodeTitle = this.getNodePositionAndTitleByNodeId(nodeId);
         if (requiredNumberOfNotes == 1) {
-          message += this.upgrade.$injector.get('$filter')('translate')('addXNumberOfNotesOnThisStepSingular', {
-            requiredNumberOfNotes: requiredNumberOfNotes,
-            nodeTitle: nodeTitle
-          });
+          message += this.upgrade.$injector.get('$filter')('translate')(
+            'addXNumberOfNotesOnThisStepSingular',
+            {
+              requiredNumberOfNotes: requiredNumberOfNotes,
+              nodeTitle: nodeTitle
+            }
+          );
         } else {
-          message += this.upgrade.$injector.get('$filter')('translate')('addXNumberOfNotesOnThisStepPlural', {
-            requiredNumberOfNotes: requiredNumberOfNotes,
-            nodeTitle: nodeTitle
-          });
+          message += this.upgrade.$injector.get('$filter')('translate')(
+            'addXNumberOfNotesOnThisStepPlural',
+            {
+              requiredNumberOfNotes: requiredNumberOfNotes,
+              nodeTitle: nodeTitle
+            }
+          );
         }
       } else if (name === 'fillXNumberOfRows') {
         const requiredNumberOfFilledRows = params.requiredNumberOfFilledRows;
@@ -4540,7 +4590,7 @@ export class ProjectService {
    * up in the project.
    */
   nodeIdsComparatorGenerator(orderedNodeIds) {
-    return function(nodeIdA, nodeIdB) {
+    return function (nodeIdA, nodeIdB) {
       let nodeIdAIndex = orderedNodeIds.indexOf(nodeIdA);
       let nodeIdBIndex = orderedNodeIds.indexOf(nodeIdB);
       if (nodeIdAIndex < nodeIdBIndex) {
@@ -5258,7 +5308,7 @@ export class ProjectService {
     return this.http
       .get(this.ConfigService.getConfigParam('featuredProjectIconsURL'))
       .toPromise()
-      .then(data => {
+      .then((data) => {
         return data;
       });
   }
@@ -5274,15 +5324,16 @@ export class ProjectService {
   }
 
   setProjectIcon(projectIcon, isCustom) {
-    return this.http.post(this.ConfigService.getConfigParam('projectIconURL'), {
-      projectId: this.ConfigService.getProjectId(),
-      projectIcon: projectIcon,
-      isCustom: isCustom
-    })
-    .toPromise()
-    .then(result => {
-      return result;
-    });
+    return this.http
+      .post(this.ConfigService.getConfigParam('projectIconURL'), {
+        projectId: this.ConfigService.getProjectId(),
+        projectIcon: projectIcon,
+        isCustom: isCustom
+      })
+      .toPromise()
+      .then((result) => {
+        return result;
+      });
   }
 
   replaceNode(nodeId, node) {
@@ -5301,9 +5352,7 @@ export class ProjectService {
     }
   }
 
-  replaceComponent(nodeId, componentId, component) {
-
-  }
+  replaceComponent(nodeId, componentId, component) {}
 
   retrieveScript(scriptFilename) {
     const deferred = this.upgrade.$injector.get('$q').defer();
@@ -5311,21 +5360,15 @@ export class ProjectService {
     return deferred.promise;
   }
 
-  getGlobalAnnotationGroupByScore(component, previousScore, currentScore) {
+  getGlobalAnnotationGroupByScore(component, previousScore, currentScore) {}
 
-  }
-
-  getNotificationByScore(component, previousScore, currentScore) {
-
-  }
+  getNotificationByScore(component, previousScore, currentScore) {}
 
   isConnectedComponent(nodeId, componentId, connectedComponentId): boolean {
     return false;
   }
 
-  getConnectedComponentParams(componentContent, componentId) {
-
-  }
+  getConnectedComponentParams(componentContent, componentId) {}
 
   getTags() {
     let tags = [];

@@ -39,7 +39,7 @@ class WorkgroupComponentRevisionsController {
   populateData() {
     this.data = {};
     this.total = 0;
-    this.getNodeEnteredEvents().then(({events}) => {
+    this.getNodeEnteredEvents().then(({ events }) => {
       const nodeVisits = [];
       for (const event of events) {
         nodeVisits.push({
@@ -50,11 +50,7 @@ class WorkgroupComponentRevisionsController {
       let nVisits = nodeVisits.length;
 
       // group all component states by node visit
-      for (
-        let cStatesIndex = this.componentStates.length - 1;
-        cStatesIndex > -1;
-        cStatesIndex--
-      ) {
+      for (let cStatesIndex = this.componentStates.length - 1; cStatesIndex > -1; cStatesIndex--) {
         let componentState = this.componentStates[cStatesIndex];
         let id = componentState.id;
         let componentSaveTime = componentState.serverSaveTime;
@@ -92,8 +88,9 @@ class WorkgroupComponentRevisionsController {
             isRevision = true;
           } else {
             // Double check to see if there is an annotation associated with the component.
-            for (const annotation of
-                this.AnnotationService.getAnnotationsByStudentWorkId(state.id)) {
+            for (const annotation of this.AnnotationService.getAnnotationsByStudentWorkId(
+              state.id
+            )) {
               if (['score', 'autoScore', 'comment', 'autoComment'].includes(annotation.type)) {
                 isRevision = true;
                 break;

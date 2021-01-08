@@ -9,8 +9,8 @@ describe('ForgotStudentComponent', () => {
 
   configureTestSuite(() => {
     TestBed.configureTestingModule({
-      declarations: [ ForgotStudentComponent ],
-      schemas: [ NO_ERRORS_SCHEMA ]
+      declarations: [ForgotStudentComponent],
+      schemas: [NO_ERRORS_SCHEMA]
     });
   });
 

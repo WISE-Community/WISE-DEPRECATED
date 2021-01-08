@@ -1,8 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { PersonalLibraryComponent } from './personal-library.component';
-import { fakeAsyncResponse } from "../../../student/student-run-list/student-run-list.component.spec";
-import { LibraryService } from "../../../services/library.service";
-import { NO_ERRORS_SCHEMA } from "@angular/core";
+import { fakeAsyncResponse } from '../../../student/student-run-list/student-run-list.component.spec';
+import { LibraryService } from '../../../services/library.service';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { BehaviorSubject } from 'rxjs';
 import { OverlayModule } from '@angular/cdk/overlay';
@@ -12,7 +12,7 @@ export class MockLibraryService {
   personalLibraryProjectsSource$ = fakeAsyncResponse([]);
   sharedLibraryProjectsSource$ = fakeAsyncResponse([]);
   projectFilterValuesSource$ = fakeAsyncResponse({
-    searchValue: "",
+    searchValue: '',
     disciplineValue: [],
     dciArrangementValue: [],
     peValue: []
@@ -27,16 +27,11 @@ describe('PersonalLibraryComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ OverlayModule, MatDialogModule ],
-      declarations: [
-        PersonalLibraryComponent
-      ],
-      providers: [
-        { provide: LibraryService, useClass: MockLibraryService },
-      ],
-      schemas: [ NO_ERRORS_SCHEMA ]
-    })
-    .compileComponents();
+      imports: [OverlayModule, MatDialogModule],
+      declarations: [PersonalLibraryComponent],
+      providers: [{ provide: LibraryService, useClass: MockLibraryService }],
+      schemas: [NO_ERRORS_SCHEMA]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

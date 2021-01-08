@@ -4,19 +4,29 @@ import ConfigureStructureController from '../configureStructureController';
 
 class JigsawController extends ConfigureStructureController {
   numGroups: string = '2';
-  static $inject = ['$filter', '$http', '$rootScope', '$state', '$stateParams', '$scope',
-      'UtilService'];
+  static $inject = [
+    '$filter',
+    '$http',
+    '$rootScope',
+    '$state',
+    '$stateParams',
+    '$scope',
+    'UtilService'
+  ];
 
   constructor($filter, $http, $rootScope, $state, $stateParams, $scope, UtilService) {
     super($filter, $http, $rootScope, $state, $stateParams, $scope, UtilService);
   }
 
   $onInit() {
-    this.$scope.$watch(() => {
-      return this.numGroups;
-    }, numGroups => {
-      this.injectGroupAndNodes(numGroups);
-    });
+    this.$scope.$watch(
+      () => {
+        return this.numGroups;
+      },
+      (numGroups) => {
+        this.injectGroupAndNodes(numGroups);
+      }
+    );
   }
 
   fetchGroups(numGroups: string) {

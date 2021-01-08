@@ -2,10 +2,9 @@ import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'milestone-report-data',
-  template: `{{output}}`
+  template: `{{ output }}`
 })
 export class MilestoneReportDataComponent {
-
   @Input()
   calc: string;
 
@@ -20,11 +19,10 @@ export class MilestoneReportDataComponent {
 
   output: string = '';
 
-  constructor() {
-  }
+  constructor() {}
 
   ngOnInit() {
-    this.data = JSON.parse(this.data.replace(/\'/g, "\""));
+    this.data = JSON.parse(this.data.replace(/\'/g, '"'));
     if (this.calc === 'percent') {
       this.output = this.getPercent();
     }

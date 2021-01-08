@@ -9,15 +9,14 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
   templateUrl: 'manage-students.html'
 })
 export class ManageStudentsComponent {
-
   iframeSrc: SafeResourceUrl;
 
-  constructor(private configService: ConfigService, private sanitizer: DomSanitizer) {
-  }
+  constructor(private configService: ConfigService, private sanitizer: DomSanitizer) {}
 
   ngOnInit() {
     this.iframeSrc = this.sanitizer.bypassSecurityTrustResourceUrl(
-        `${this.configService.getConfigParam('contextPath')}/teacher/management/viewmystudents` +
-        `?runId=${this.configService.getRunId()}`);
+      `${this.configService.getConfigParam('contextPath')}/teacher/management/viewmystudents` +
+        `?runId=${this.configService.getRunId()}`
+    );
   }
 }

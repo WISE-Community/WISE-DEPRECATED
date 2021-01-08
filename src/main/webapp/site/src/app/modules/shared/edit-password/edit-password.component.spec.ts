@@ -1,13 +1,13 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { EditPasswordComponent } from './edit-password.component';
-import { UserService } from "../../../services/user.service";
+import { UserService } from '../../../services/user.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NO_ERRORS_SCHEMA, Provider } from '@angular/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { By } from '@angular/platform-browser';
-import { User } from "../../../domain/user";
+import { User } from '../../../domain/user';
 import { configureTestSuite } from 'ng-bullet';
 
 export class MockUserService {
@@ -23,12 +23,12 @@ export class MockUserService {
 
   changePassword(username, oldPassword, newPassword) {
     if (oldPassword === 'a') {
-      return Observable.create(observer => {
+      return Observable.create((observer) => {
         observer.next({ status: 'success', messageCode: 'passwordChanged' });
         observer.complete();
       });
     } else {
-      return Observable.create(observer => {
+      return Observable.create((observer) => {
         observer.next({ status: 'error', messageCode: 'incorrectPassword' });
         observer.complete();
       });
@@ -50,14 +50,10 @@ describe('EditPasswordComponent', () => {
 
   configureTestSuite(() => {
     TestBed.configureTestingModule({
-      declarations: [ EditPasswordComponent ],
-      imports: [
-        BrowserAnimationsModule, ReactiveFormsModule, MatSnackBarModule
-      ],
-      providers: [
-        { provide: UserService, useValue: new MockUserService() }
-      ],
-      schemas: [ NO_ERRORS_SCHEMA ]
+      declarations: [EditPasswordComponent],
+      imports: [BrowserAnimationsModule, ReactiveFormsModule, MatSnackBarModule],
+      providers: [{ provide: UserService, useValue: new MockUserService() }],
+      schemas: [NO_ERRORS_SCHEMA]
     });
   });
 
@@ -106,7 +102,9 @@ describe('EditPasswordComponent', () => {
     fixture.detectChanges();
     const submitButton = getSubmitButton();
     expect(submitButton.disabled).toBe(true);
-    expect(component.changePasswordFormGroup.get('oldPassword').getError('incorrectPassword')).toBe(true);
+    expect(component.changePasswordFormGroup.get('oldPassword').getError('incorrectPassword')).toBe(
+      true
+    );
   });
 
   it('should disable submit button when form is successfully submitted', async () => {
@@ -138,7 +136,8 @@ describe('EditPasswordComponent', () => {
       messageCode: 'incorrectPassword'
     };
     component.handleChangePasswordResponse(response);
-    expect(component.changePasswordFormGroup.get('oldPassword').getError('incorrectPassword'))
-        .toBe(true);
+    expect(component.changePasswordFormGroup.get('oldPassword').getError('incorrectPassword')).toBe(
+      true
+    );
   });
 });

@@ -11,7 +11,7 @@ let outsideURLComponentModule = angular
   .controller('OutsideURLController', OutsideURLController)
   .config([
     '$translatePartialLoaderProvider',
-    $translatePartialLoaderProvider => {
+    ($translatePartialLoaderProvider) => {
       $translatePartialLoaderProvider.addPart('components/outsideURL/i18n');
     }
   ]);

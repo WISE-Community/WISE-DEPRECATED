@@ -11,11 +11,12 @@ import { StudentDataService } from '../../services/studentDataService';
 
 @Injectable()
 export class EmbeddedService extends ComponentService {
-
-  constructor(private upgrade: UpgradeModule,
-      protected StudentAssetService: StudentAssetService,
-      protected StudentDataService: StudentDataService,
-      protected UtilService: UtilService) {
+  constructor(
+    private upgrade: UpgradeModule,
+    protected StudentAssetService: StudentAssetService,
+    protected StudentDataService: StudentDataService,
+    protected UtilService: UtilService
+  ) {
     super(StudentDataService, UtilService);
   }
 
@@ -37,8 +38,10 @@ export class EmbeddedService extends ComponentService {
 
   isCompleted(component: any, componentStates: any[], componentEvents: any[], nodeEvents: any[]) {
     if (componentStates != null) {
-      if (this.hasComponentStateWithIsCompletedField(componentStates) &&
-          this.hasComponentStateWithIsCompletedTrue(componentStates)) {
+      if (
+        this.hasComponentStateWithIsCompletedField(componentStates) &&
+        this.hasComponentStateWithIsCompletedTrue(componentStates)
+      ) {
         return true;
       }
     }
@@ -91,10 +94,10 @@ export class EmbeddedService extends ComponentService {
   generateImageFromRenderedComponentState(componentState: any) {
     const modelElement = this.getModelElement(componentState.componentId);
     return new Promise((resolve, reject) => {
-      html2canvas(modelElement).then(canvas => {
+      html2canvas(modelElement).then((canvas) => {
         const base64Image = canvas.toDataURL('image/png');
         const imageObject = this.UtilService.getImageObjectFromBase64String(base64Image);
-        this.StudentAssetService.uploadAsset(imageObject).then(asset => {
+        this.StudentAssetService.uploadAsset(imageObject).then((asset) => {
           resolve(asset);
         });
       });

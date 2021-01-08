@@ -1,8 +1,7 @@
-import ConfigureStructureController from "../configureStructureController";
+import ConfigureStructureController from '../configureStructureController';
 import { TeacherProjectService } from '../../../services/teacherProjectService';
 
 export default class AutomatedAssessmentChooseItemController extends ConfigureStructureController {
-
   automatedAssessmentProjectId: number;
   items = [];
   project: any;
@@ -10,11 +9,27 @@ export default class AutomatedAssessmentChooseItemController extends ConfigureSt
   projectIdToOrder: any;
   projectItems: any;
 
-  static $inject = ['$filter', '$http', '$rootScope', '$state', '$stateParams', '$scope',
-      'UtilService', 'ProjectService'];
+  static $inject = [
+    '$filter',
+    '$http',
+    '$rootScope',
+    '$state',
+    '$stateParams',
+    '$scope',
+    'UtilService',
+    'ProjectService'
+  ];
 
-  constructor($filter, $http, $rootScope, $state, $stateParams, $scope, UtilService,
-      private ProjectService: TeacherProjectService) {
+  constructor(
+    $filter,
+    $http,
+    $rootScope,
+    $state,
+    $stateParams,
+    $scope,
+    UtilService,
+    private ProjectService: TeacherProjectService
+  ) {
     super($filter, $http, $rootScope, $state, $stateParams, $scope, UtilService);
   }
 
@@ -24,12 +39,14 @@ export default class AutomatedAssessmentChooseItemController extends ConfigureSt
   }
 
   showAutomatedAssessmentProject() {
-    this.ProjectService.retrieveProjectById(this.automatedAssessmentProjectId).then(projectJSON => {
-      this.project = projectJSON;
-      const nodeOrderOfProject = this.ProjectService.getNodeOrderOfProject(this.project);
-      this.projectIdToOrder = nodeOrderOfProject.idToOrder;
-      this.projectItems = nodeOrderOfProject.nodes;
-    });
+    this.ProjectService.retrieveProjectById(this.automatedAssessmentProjectId).then(
+      (projectJSON) => {
+        this.project = projectJSON;
+        const nodeOrderOfProject = this.ProjectService.getNodeOrderOfProject(this.project);
+        this.projectIdToOrder = nodeOrderOfProject.idToOrder;
+        this.projectItems = nodeOrderOfProject.nodes;
+      }
+    );
   }
 
   previewNode(node) {

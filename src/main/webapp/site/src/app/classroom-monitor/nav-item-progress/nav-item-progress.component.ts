@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core";
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'nav-item-progress',
@@ -6,7 +6,6 @@ import { Component, Input } from "@angular/core";
   templateUrl: 'nav-item-progress.component.html'
 })
 export class NavItemProgressComponent {
-
   @Input()
   nodeCompletion: string;
 

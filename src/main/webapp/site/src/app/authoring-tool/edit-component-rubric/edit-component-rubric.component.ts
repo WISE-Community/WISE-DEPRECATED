@@ -1,6 +1,6 @@
-import { Component, Input } from "@angular/core";
-import { ConfigService } from "../../../../../wise5/services/configService";
-import { TeacherProjectService } from "../../../../../wise5/services/teacherProjectService";
+import { Component, Input } from '@angular/core';
+import { ConfigService } from '../../../../../wise5/services/configService';
+import { TeacherProjectService } from '../../../../../wise5/services/teacherProjectService';
 
 @Component({
   selector: 'edit-component-rubric',
@@ -8,18 +8,20 @@ import { TeacherProjectService } from "../../../../../wise5/services/teacherProj
   styleUrls: ['edit-component-rubric.component.scss']
 })
 export class EditComponentRubricComponent {
-
   @Input()
   authoringComponentContent: any;
   rubric: string;
   showRubricAuthoring: boolean = false;
 
-  constructor(private ConfigService: ConfigService, private ProjectService: TeacherProjectService) {
-  }
+  constructor(
+    private ConfigService: ConfigService,
+    private ProjectService: TeacherProjectService
+  ) {}
 
   ngOnInit() {
     const componentContent = this.ConfigService.replaceStudentNames(
-       this.ProjectService.injectAssetPaths(this.authoringComponentContent));
+      this.ProjectService.injectAssetPaths(this.authoringComponentContent)
+    );
     if (componentContent.rubric == null) {
       this.rubric = '';
     } else {
@@ -28,8 +30,9 @@ export class EditComponentRubricComponent {
   }
 
   rubricChanged(): void {
-    this.authoringComponentContent.rubric =
-        this.ConfigService.removeAbsoluteAssetPaths(this.rubric);
+    this.authoringComponentContent.rubric = this.ConfigService.removeAbsoluteAssetPaths(
+      this.rubric
+    );
     this.ProjectService.componentChanged();
   }
 }

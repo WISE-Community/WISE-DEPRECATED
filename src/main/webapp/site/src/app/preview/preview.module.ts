@@ -7,16 +7,17 @@ import { RouterModule } from '@angular/router';
       {
         path: 'preview',
         children: [
-          {path: '', loadChildren: () => import('../student-hybrid-angular.module').then(m => m.PreviewAngularJSModule)}
+          {
+            path: '',
+            loadChildren: () =>
+              import('../student-hybrid-angular.module').then((m) => m.PreviewAngularJSModule)
+          }
         ]
       }
     ])
   ],
-  declarations: [
-  ],
-  providers: [
-  ],
-  exports: [
-  ]
+  declarations: [],
+  providers: [],
+  exports: []
 })
-export class PreviewModule { }
+export class PreviewModule {}

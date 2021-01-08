@@ -5,15 +5,17 @@ import { UpgradeModule } from '@angular/upgrade/static';
 import { Component } from '@angular/core';
 
 @Component({
-  templateUrl: 'rubric-authoring.component.html',
+  templateUrl: 'rubric-authoring.component.html'
 })
 export class RubricAuthoringComponent {
-
   rubric: string = '';
 
-  constructor(private upgrade: UpgradeModule, private ConfigService: ConfigService,
-    private ProjectService: TeacherProjectService, private UtilService: UtilService) {
-  }
+  constructor(
+    private upgrade: UpgradeModule,
+    private ConfigService: ConfigService,
+    private ProjectService: TeacherProjectService,
+    private UtilService: UtilService
+  ) {}
 
   ngOnInit(): void {
     this.rubric = this.ProjectService.replaceAssetPaths(this.ProjectService.getProjectRubric());
@@ -21,7 +23,8 @@ export class RubricAuthoringComponent {
 
   rubricChanged(): void {
     const html = this.UtilService.insertWISELinks(
-      this.ConfigService.removeAbsoluteAssetPaths(this.rubric));
+      this.ConfigService.removeAbsoluteAssetPaths(this.rubric)
+    );
     this.ProjectService.setProjectRubric(html);
     this.ProjectService.saveProject();
   }

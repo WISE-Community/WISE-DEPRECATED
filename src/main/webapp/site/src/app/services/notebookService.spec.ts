@@ -33,9 +33,18 @@ const teacherNotebookURL = 'http://localhost:8080/teacher/notebook/run/1';
 describe('NotebookService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule, UpgradeModule ],
-      providers: [ NotebookService, AnnotationService, ConfigService, ProjectService, SessionService,
-          StudentAssetService, StudentDataService, TagService, UtilService ]
+      imports: [HttpClientTestingModule, UpgradeModule],
+      providers: [
+        NotebookService,
+        AnnotationService,
+        ConfigService,
+        ProjectService,
+        SessionService,
+        StudentAssetService,
+        StudentDataService,
+        TagService,
+        UtilService
+      ]
     });
     http = TestBed.get(HttpTestingController);
     configService = TestBed.get(ConfigService);
@@ -53,13 +62,13 @@ describe('NotebookService', () => {
     editNoteData = {
       runId: 1,
       workgroupId: 2,
-      type: "note",
+      type: 'note',
       localNotebookItemId: localNotebookItemId,
-      content: { text: "some new text", attachments: [], clientSaveTime: 1500000100000 },
+      content: { text: 'some new text', attachments: [], clientSaveTime: 1500000100000 },
       clientSaveTime: 1500000100000,
       periodId: 1,
-      nodeId: "node1",
-      title: "Note from Step #1"
+      nodeId: 'node1',
+      title: 'Note from Step #1'
     };
   });
 
@@ -195,9 +204,10 @@ function shouldHandleRetrieveNotebookItems() {
   it('should group retrieved notebook items by workgroup id', () => {
     service.handleRetrieveNotebookItems(demoNotebookItems);
     expect(service.notebooksByWorkgroup['2'].deletedItems['stb6er46ad'].length).toBe(1);
-    expect(service.notebooksByWorkgroup['3'].items['finalReport'][0].content.content)
-        .toContain('This is a paragraph with some new text.');
-  });  
+    expect(service.notebooksByWorkgroup['3'].items['finalReport'][0].content.content).toContain(
+      'This is a paragraph with some new text.'
+    );
+  });
 }
 
 function shouldAddToNotebooksByWorgkroup() {
@@ -235,8 +245,9 @@ function shouldGroupNotebookItems() {
     }
     service.groupNotebookItems();
     expect(service.notebooksByWorkgroup['2'].deletedItems['stb6er46ad'].length).toBe(1);
-    expect(service.notebooksByWorkgroup['3'].items['finalReport'][0].content.content)
-        .toContain('This is a paragraph with some new text.');
+    expect(service.notebooksByWorkgroup['3'].items['finalReport'][0].content.content).toContain(
+      'This is a paragraph with some new text.'
+    );
   });
 }
 
@@ -245,8 +256,9 @@ function shouldGetPrivateNotebookItems() {
     spyOn(configService, 'getWorkgroupId').and.returnValue(2);
     let privateNotebookItems = service.getPrivateNotebookItems();
     expect(privateNotebookItems.length).toBe(3);
-    expect(service.getLatestNotebookReportItemByReportId('finalReport').content.content)
-        .toContain('This is a paragraph.');
+    expect(service.getLatestNotebookReportItemByReportId('finalReport').content.content).toContain(
+      'This is a paragraph.'
+    );
     privateNotebookItems = service.getPrivateNotebookItems(4);
     expect(privateNotebookItems.length).toBe(0);
   });
@@ -275,7 +287,7 @@ function shouldRetrievePublicNotebookItems() {
 
   it('should retrieve all public notebook items in preview mode', () => {
     spyOn(configService, 'isPreview').and.returnValue(true);
-    service.retrievePublicNotebookItems('public').then(result => {
+    service.retrievePublicNotebookItems('public').then((result) => {
       expect(result).toEqual({});
     });
   });
@@ -290,9 +302,17 @@ function shouldHandleRetrievePublicNotebookItems() {
 }
 
 function saveNotebookItem(noteData) {
-  return service.saveNotebookItem(null, noteData.nodeId, noteData.localNotebookItemId, 
-    noteData.type, noteData.title, noteData.content, [], noteData.clientSaveTime,
-      null);
+  return service.saveNotebookItem(
+    null,
+    noteData.nodeId,
+    noteData.localNotebookItemId,
+    noteData.type,
+    noteData.title,
+    noteData.content,
+    [],
+    noteData.clientSaveTime,
+    null
+  );
 }
 
 function shouldSaveNotebookItem() {
@@ -366,7 +386,7 @@ function shouldHandleNewNotebookItem() {
     spyOn(studentDataService, 'updateNodeStatuses');
     service.handleRetrievePublicNotebookItems(demoPublicNotebookItems, 'public');
     const newLocalNotebookItemId = 'tr46ba89tq';
-    const copiedNote = {...service.publicNotebookItems['public'][0]};
+    const copiedNote = { ...service.publicNotebookItems['public'][0] };
     copiedNote.id = 8;
     copiedNote.localNotebookItemId = newLocalNotebookItemId;
     copiedNote.workgroupId = 3;

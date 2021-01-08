@@ -603,7 +603,7 @@ class ConceptMapController extends ComponentController {
      * any("Sun (Infrared Radiation) Space", "Sun (Heat) Space", "Sun (Solar Radiation) Space")
      * these dynamic arguments will be placed in the arguments variable
      */
-    const any = function() {
+    const any = function () {
       return thisConceptMapService.any(componentContent, conceptMapData, arguments);
     };
 
@@ -618,7 +618,7 @@ class ConceptMapController extends ComponentController {
      * all("Sun (Infrared Radiation) Space", "Sun (Heat) Space", "Sun (Solar Radiation) Space")
      * these dynamic arguments will be placed in the arguments variable
      */
-    const all = function() {
+    const all = function () {
       return thisConceptMapService.all(componentContent, conceptMapData, arguments);
     };
 
@@ -626,7 +626,7 @@ class ConceptMapController extends ComponentController {
      * create the setResult function that can be called in the custom rule
      * evaluator code
      */
-    const setResult = function(result: any) {
+    const setResult = function (result: any) {
       thisResult = result;
     };
 
@@ -872,15 +872,15 @@ class ConceptMapController extends ComponentController {
     this.newlyCreatedLink = null;
 
     if (!this.isDisabled) {
-      this.draw.mousedown(event => {
+      this.draw.mousedown((event) => {
         this.svgMouseDown(event);
       });
 
-      this.draw.mouseup(event => {
+      this.draw.mouseup((event) => {
         this.svgMouseUp(event);
       });
 
-      this.draw.mousemove(event => {
+      this.draw.mousemove((event) => {
         this.svgMouseMove(event);
       });
 
@@ -902,7 +902,7 @@ class ConceptMapController extends ComponentController {
        * listen for the dragover event which occurs when the user is
        * dragging a node onto the svg
        */
-      svg[0].addEventListener('dragover', event => {
+      svg[0].addEventListener('dragover', (event) => {
         /*
          * prevent the default because if we don't, the user won't
          * be able to drop a new node instance onto the svg in the
@@ -927,7 +927,7 @@ class ConceptMapController extends ComponentController {
        * listen for the drop event which occurs when the student drops
        * a new node onto the svg
        */
-      svg[0].addEventListener('drop', event => {
+      svg[0].addEventListener('drop', (event) => {
         /*
          * the user has dropped a new node onto the svg to create a
          * new instance of a node
@@ -1294,40 +1294,40 @@ class ConceptMapController extends ComponentController {
   }
 
   setNodeMouseEvents(conceptMapNode) {
-    conceptMapNode.setNodeMouseOver(event => {
+    conceptMapNode.setNodeMouseOver((event) => {
       this.nodeMouseOver(event);
     });
 
-    conceptMapNode.setNodeMouseOut(event => {
+    conceptMapNode.setNodeMouseOut((event) => {
       this.nodeMouseOut(event);
     });
 
-    conceptMapNode.setConnectorMouseDown(event => {
+    conceptMapNode.setConnectorMouseDown((event) => {
       this.disableNodeDragging();
       this.connectorMouseDown(event);
     });
 
-    conceptMapNode.setNodeMouseDown(event => {
+    conceptMapNode.setNodeMouseDown((event) => {
       this.nodeMouseDown(event);
     });
 
-    conceptMapNode.setNodeMouseUp(event => {
+    conceptMapNode.setNodeMouseUp((event) => {
       this.nodeMouseUp(event);
     });
 
-    conceptMapNode.setDeleteButtonMouseDown(event => {
+    conceptMapNode.setDeleteButtonMouseDown((event) => {
       this.nodeDeleteButtonMouseDown(event);
     });
 
-    conceptMapNode.setDeleteButtonMouseOver(event => {
+    conceptMapNode.setDeleteButtonMouseOver((event) => {
       this.nodeDeleteButtonMouseOver(event);
     });
 
-    conceptMapNode.setDeleteButtonMouseOut(event => {
+    conceptMapNode.setDeleteButtonMouseOut((event) => {
       this.nodeDeleteButtonMouseOut(event);
     });
 
-    conceptMapNode.setDragMove(event => {
+    conceptMapNode.setDragMove((event) => {
       this.nodeDragMove(event);
     });
   }
@@ -1623,23 +1623,23 @@ class ConceptMapController extends ComponentController {
   }
 
   setLinkMouseEvents(link) {
-    link.setLinkMouseDown(event => {
+    link.setLinkMouseDown((event) => {
       this.linkMouseDown(event);
     });
 
-    link.setLinkTextMouseDown(event => {
+    link.setLinkTextMouseDown((event) => {
       this.linkTextMouseDown(event);
     });
 
-    link.setLinkMouseOver(event => {
+    link.setLinkMouseOver((event) => {
       this.linkMouseOver(event);
     });
 
-    link.setLinkMouseOut(event => {
+    link.setLinkMouseOut((event) => {
       this.linkMouseOut(event);
     });
 
-    link.setDeleteButtonClicked(event => {
+    link.setDeleteButtonClicked((event) => {
       this.linkDeleteButtonClicked(event, link);
     });
   }
@@ -1819,7 +1819,7 @@ class ConceptMapController extends ComponentController {
       let svgString = serializer.serializeToString(svgElement);
 
       // find all the images in the svg and replace them with Base64 images
-      this.ConceptMapService.getHrefToBase64ImageReplacements(svgString).then(images => {
+      this.ConceptMapService.getHrefToBase64ImageReplacements(svgString).then((images) => {
         /*
          * Loop through all the image objects. Each object contains
          * an image href and a Base64 image.
@@ -1849,7 +1849,7 @@ class ConceptMapController extends ComponentController {
          * in the onload callback function
          */
         const thisUtilService = this.UtilService;
-        image.onload = event => {
+        image.onload = (event) => {
           const image: any = event.target;
 
           // set the dimensions of the canvas
@@ -1935,7 +1935,7 @@ class ConceptMapController extends ComponentController {
    * @param componentState A component state.
    */
   setComponentStateAsBackgroundImage(componentState) {
-    this.generateImageFromComponentState(componentState).then(image => {
+    this.generateImageFromComponentState(componentState).then((image) => {
       const stretchBackground = false;
       this.setBackgroundImage(image.url, stretchBackground);
     });
@@ -1960,8 +1960,11 @@ class ConceptMapController extends ComponentController {
   }
 
   generateStarterState(): void {
-    this.NodeService.respondStarterState({nodeId: this.nodeId, componentId: this.componentId,
-        starterState: this.getConceptMapData()});
+    this.NodeService.respondStarterState({
+      nodeId: this.nodeId,
+      componentId: this.componentId,
+      starterState: this.getConceptMapData()
+    });
   }
 }
 

@@ -226,7 +226,7 @@ class AuthoringToolController {
     };
     this.processUI();
 
-    $transitions.onSuccess({}, $transition => {
+    $transitions.onSuccess({}, ($transition) => {
       this.isMenuOpen = false;
       this.processUI();
       if ($transition.name === 'root.at.main') {
@@ -234,8 +234,7 @@ class AuthoringToolController {
       }
     });
 
-    this.showSessionWarningSubscription =
-        this.SessionService.showSessionWarning$.subscribe(() => {
+    this.showSessionWarningSubscription = this.SessionService.showSessionWarning$.subscribe(() => {
       const confirm = this.$mdDialog
         .confirm()
         .parent(angular.element(document.body))
@@ -280,15 +279,17 @@ class AuthoringToolController {
       this.setGlobalMessage(this.$translate('errorSavingProject'), false, null);
     });
 
-    this.notLoggedInProjectNotSavedSubscription =
-        this.ProjectService.notLoggedInProjectNotSaved$.subscribe(() => {
-      this.setGlobalMessage(this.$translate('notLoggedInProjectNotSaved'), false, null);
-    });
+    this.notLoggedInProjectNotSavedSubscription = this.ProjectService.notLoggedInProjectNotSaved$.subscribe(
+      () => {
+        this.setGlobalMessage(this.$translate('notLoggedInProjectNotSaved'), false, null);
+      }
+    );
 
-    this.notAllowedToEditThisProjectSubscription =
-        this.ProjectService.notAllowedToEditThisProject$.subscribe(() => {
-      this.setGlobalMessage(this.$translate('notAllowedToEditThisProject'), false, null);
-    });
+    this.notAllowedToEditThisProjectSubscription = this.ProjectService.notAllowedToEditThisProject$.subscribe(
+      () => {
+        this.setGlobalMessage(this.$translate('notAllowedToEditThisProject'), false, null);
+      }
+    );
 
     if (this.$state.current.name === 'root.at.main') {
       this.saveEvent('projectListViewed', 'Navigation');

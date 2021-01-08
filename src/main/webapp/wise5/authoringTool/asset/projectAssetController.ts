@@ -95,25 +95,28 @@ class ProjectAssetController {
       }
     }
 
-    this.getProjectAssetsSubscription = 
-        this.ProjectAssetService.getProjectAssets().subscribe((projectAssets) => {
-      if (projectAssets != null) {
-        this.projectAssets = projectAssets;
-        this.sortAssets(this.assetSortBy);
-        this.projectAssetTotalSizeMax = this.ProjectAssetService.totalSizeMax;
+    this.getProjectAssetsSubscription = this.ProjectAssetService.getProjectAssets().subscribe(
+      (projectAssets) => {
+        if (projectAssets != null) {
+          this.projectAssets = projectAssets;
+          this.sortAssets(this.assetSortBy);
+          this.projectAssetTotalSizeMax = this.ProjectAssetService.totalSizeMax;
+        }
       }
-    });
+    );
 
-    this.getTotalFileSizeSubscription = 
-        this.ProjectAssetService.getTotalFileSize().subscribe((totalFileSize) => {
-      this.setTotalFileSize(totalFileSize);
-    });
+    this.getTotalFileSizeSubscription = this.ProjectAssetService.getTotalFileSize().subscribe(
+      (totalFileSize) => {
+        this.setTotalFileSize(totalFileSize);
+      }
+    );
 
-    this.getTotalUnusedFileSizeSubscription = 
-        this.ProjectAssetService.getTotalUnusedFileSize().subscribe((totalUnusedFilesSize) => {
-      this.setTotalUnusedFilesSize(totalUnusedFilesSize);
-    });
-    
+    this.getTotalUnusedFileSizeSubscription = this.ProjectAssetService.getTotalUnusedFileSize().subscribe(
+      (totalUnusedFilesSize) => {
+        this.setTotalUnusedFilesSize(totalUnusedFilesSize);
+      }
+    );
+
     if (this.ProjectAssetService.isProjectAssetsAvailable()) {
       this.ProjectAssetService.calculateAssetUsage();
     }
@@ -142,8 +145,8 @@ class ProjectAssetController {
       this.projectAssets.files.sort(this.sortAssetsSmallToLarge);
     } else if (sortBy === 'largeToSmall') {
       this.projectAssets.files = this.projectAssets.files
-          .sort(this.sortAssetsSmallToLarge)
-          .reverse();
+        .sort(this.sortAssetsSmallToLarge)
+        .reverse();
     }
   }
 

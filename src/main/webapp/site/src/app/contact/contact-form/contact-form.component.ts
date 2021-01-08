@@ -1,12 +1,12 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { FormControl, FormGroup, Validators, FormBuilder } from "@angular/forms";
-import { ActivatedRoute, Router } from "@angular/router";
+import { FormControl, FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 import { finalize } from 'rxjs/operators';
-import { UserService } from "../../services/user.service";
-import { Teacher } from "../../domain/teacher";
-import { Student } from "../../domain/student";
-import { ConfigService } from "../../services/config.service";
-import { StudentService } from "../../student/student.service";
+import { UserService } from '../../services/user.service';
+import { Teacher } from '../../domain/teacher';
+import { Student } from '../../domain/student';
+import { ConfigService } from '../../services/config.service';
+import { StudentService } from '../../student/student.service';
 import { LibraryService } from '../../services/library.service';
 
 @Component({
@@ -16,10 +16,9 @@ import { LibraryService } from '../../services/library.service';
   encapsulation: ViewEncapsulation.None
 })
 export class ContactFormComponent implements OnInit {
-
   issueTypes: object[] = [];
   contactFormGroup: FormGroup = this.fb.group({
-    name: new FormControl( '', [Validators.required]),
+    name: new FormControl('', [Validators.required]),
     issueType: new FormControl('', [Validators.required]),
     summary: new FormControl('', [Validators.required]),
     description: new FormControl('', [Validators.required])
@@ -31,20 +30,21 @@ export class ContactFormComponent implements OnInit {
   isSignedIn: boolean = false;
   isSendingRequest: boolean = false;
   isRecaptchaEnabled: boolean = false;
-  recaptchaPublicKey: string = "";
-  recaptchaResponse: string = "";
+  recaptchaPublicKey: string = '';
+  recaptchaResponse: string = '';
   teachers: any[] = [];
   failure: boolean = false;
   complete: boolean = false;
 
-  constructor(private fb: FormBuilder,
-              private userService: UserService,
-              private configService: ConfigService,
-              private studentService: StudentService,
-              private libraryService: LibraryService,
-              private route: ActivatedRoute,
-              private router: Router) {
-  }
+  constructor(
+    private fb: FormBuilder,
+    private userService: UserService,
+    private configService: ConfigService,
+    private studentService: StudentService,
+    private libraryService: LibraryService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.isSignedIn = this.userService.isSignedIn();
@@ -59,16 +59,16 @@ export class ContactFormComponent implements OnInit {
   }
 
   obtainRunIdOrProjectIdIfNecessary() {
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.subscribe((params) => {
       this.runId = params['runId'];
       this.projectId = params['projectId'];
       if (this.runId) {
-        this.studentService.getRunInfoById(this.runId).subscribe(runInfo => {
+        this.studentService.getRunInfoById(this.runId).subscribe((runInfo) => {
           this.projectName = runInfo.name;
         });
       }
       if (this.projectId) {
-        this.libraryService.getProjectInfo(this.projectId).subscribe(project => {
+        this.libraryService.getProjectInfo(this.projectId).subscribe((project) => {
           this.projectName = project.name;
         });
       }
@@ -95,7 +95,10 @@ export class ContactFormComponent implements OnInit {
     if (this.isStudent) {
       this.contactFormGroup.removeControl('email');
     } else {
-      this.contactFormGroup.addControl('email', new FormControl('', [Validators.required, Validators.email]));
+      this.contactFormGroup.addControl(
+        'email',
+        new FormControl('', [Validators.required, Validators.email])
+      );
     }
   }
 
@@ -105,7 +108,10 @@ export class ContactFormComponent implements OnInit {
         if (config != null) {
           this.recaptchaPublicKey = this.configService.getRecaptchaPublicKey();
           if (this.recaptchaPublicKey != null && this.recaptchaPublicKey != '') {
-            this.contactFormGroup.addControl('recaptcha', new FormControl('', [Validators.required]));
+            this.contactFormGroup.addControl(
+              'recaptcha',
+              new FormControl('', [Validators.required])
+            );
             this.isRecaptchaEnabled = true;
           }
         }
@@ -132,28 +138,28 @@ export class ContactFormComponent implements OnInit {
   populateIssueTypes() {
     if (this.isStudent) {
       this.issueTypes = [
-        { key: "TROUBLE_LOGGING_IN", value: $localize`Trouble Signing In` },
-        { key: "NEED_HELP_USING_WISE", value: $localize`Need Help Using WISE` },
-        { key: "PROJECT_PROBLEMS", value: $localize`Problems with a WISE Unit` },
-        { key: "FEEDBACK", value: $localize`Feedback to WISE` },
-        { key: "OTHER", value: $localize`Other` }
+        { key: 'TROUBLE_LOGGING_IN', value: $localize`Trouble Signing In` },
+        { key: 'NEED_HELP_USING_WISE', value: $localize`Need Help Using WISE` },
+        { key: 'PROJECT_PROBLEMS', value: $localize`Problems with a WISE Unit` },
+        { key: 'FEEDBACK', value: $localize`Feedback to WISE` },
+        { key: 'OTHER', value: $localize`Other` }
       ];
     } else {
       this.issueTypes = [
-        { key: "TROUBLE_LOGGING_IN", value: $localize`Trouble Signing In` },
-        { key: "NEED_HELP_USING_WISE", value: $localize`Need Help Using WISE` },
-        { key: "PROJECT_PROBLEMS", value: $localize`Problems with a WISE Unit` },
-        { key: "STUDENT_MANAGEMENT", value: $localize`Student Management` },
-        { key: "AUTHORING", value: $localize`Need Help with Authoring` },
-        { key: "FEEDBACK", value: $localize`Feedback to WISE` },
-        { key: "OTHER", value: $localize`Other` }
+        { key: 'TROUBLE_LOGGING_IN', value: $localize`Trouble Signing In` },
+        { key: 'NEED_HELP_USING_WISE', value: $localize`Need Help Using WISE` },
+        { key: 'PROJECT_PROBLEMS', value: $localize`Problems with a WISE Unit` },
+        { key: 'STUDENT_MANAGEMENT', value: $localize`Student Management` },
+        { key: 'AUTHORING', value: $localize`Need Help with Authoring` },
+        { key: 'FEEDBACK', value: $localize`Feedback to WISE` },
+        { key: 'OTHER', value: $localize`Other` }
       ];
     }
   }
 
   setIssueTypeIfNecessary() {
     if (this.runId != null) {
-      this.setControlFieldValue('issueType', 'PROJECT_PROBLEMS')
+      this.setControlFieldValue('issueType', 'PROJECT_PROBLEMS');
     }
   }
 
@@ -170,8 +176,19 @@ export class ContactFormComponent implements OnInit {
     const userAgent = this.getUserAgent();
     const recaptchaResponse = this.getRecaptchaResponse();
     this.setIsSendingRequest(true);
-    this.userService.sendContactMessage(name, email, teacherUsername, issueType,
-        summary, description, runId, projectId, userAgent, recaptchaResponse)
+    this.userService
+      .sendContactMessage(
+        name,
+        email,
+        teacherUsername,
+        issueType,
+        summary,
+        description,
+        runId,
+        projectId,
+        userAgent,
+        recaptchaResponse
+      )
       .pipe(
         finalize(() => {
           this.setIsSendingRequest(false);
@@ -183,9 +200,9 @@ export class ContactFormComponent implements OnInit {
   }
 
   handleSendContactMessageResponse(response: any) {
-    if (response.status === "success") {
+    if (response.status === 'success') {
       this.complete = true;
-    } else if (response.status === "error") {
+    } else if (response.status === 'error') {
       this.failure = true;
       if (this.isRecaptchaEnabled) {
         this.resetRecaptcha();

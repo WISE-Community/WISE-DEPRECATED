@@ -1,4 +1,3 @@
-
 export function createAccountSuccessResponse(username: string) {
   return {
     status: 'success',

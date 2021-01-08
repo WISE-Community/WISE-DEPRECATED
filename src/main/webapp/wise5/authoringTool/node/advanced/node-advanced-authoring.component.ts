@@ -1,18 +1,19 @@
-import { ConfigService } from "../../../services/configService";
-import { TeacherDataService } from "../../../services/teacherDataService";
-import { TeacherProjectService } from "../../../services/teacherProjectService";
+import { ConfigService } from '../../../services/configService';
+import { TeacherDataService } from '../../../services/teacherDataService';
+import { TeacherProjectService } from '../../../services/teacherProjectService';
 
 class NodeAdvancedAuthoringController {
-
   node: any;
   nodeId: string;
 
   static $inject = ['$state', 'ConfigService', 'ProjectService', 'TeacherDataService'];
 
-  constructor(private $state: any, private ConfigService: ConfigService,
-      private ProjectService: TeacherProjectService,
-      private TeacherDataService: TeacherDataService) {
-  }
+  constructor(
+    private $state: any,
+    private ConfigService: ConfigService,
+    private ProjectService: TeacherProjectService,
+    private TeacherDataService: TeacherDataService
+  ) {}
 
   $onInit() {
     this.nodeId = this.TeacherDataService.getCurrentNodeId();
@@ -20,8 +21,10 @@ class NodeAdvancedAuthoringController {
   }
 
   goBack() {
-    this.$state.go('root.at.project.node', { projectId: this.ConfigService.getProjectId(),
-        nodeId: this.nodeId });
+    this.$state.go('root.at.project.node', {
+      projectId: this.ConfigService.getProjectId(),
+      nodeId: this.nodeId
+    });
   }
 
   showCreateBranchView() {
@@ -41,7 +44,7 @@ class NodeAdvancedAuthoringController {
   }
 
   showJSONView() {
-    this.$state.go('root.at.project.node.advanced.json')
+    this.$state.go('root.at.project.node.advanced.json');
   }
 
   isGroupNode(nodeId) {
@@ -52,4 +55,4 @@ class NodeAdvancedAuthoringController {
 export const NodeAdvancedAuthoringComponent = {
   templateUrl: `/wise5/authoringTool/node/advanced/node-advanced-authoring.component.html`,
   controller: NodeAdvancedAuthoringController
-}
+};

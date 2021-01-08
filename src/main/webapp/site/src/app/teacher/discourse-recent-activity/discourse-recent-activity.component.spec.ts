@@ -1,7 +1,7 @@
-import { HttpClientTestingModule, HttpTestingController } from "@angular/common/http/testing";
-import { TestBed } from "@angular/core/testing";
-import { ConfigService } from "../../services/config.service";
-import { DiscourseRecentActivityComponent } from "./discourse-recent-activity.component";
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { TestBed } from '@angular/core/testing';
+import { ConfigService } from '../../services/config.service';
+import { DiscourseRecentActivityComponent } from './discourse-recent-activity.component';
 
 describe('DiscourseRecentActivityComponent', () => {
   let component: DiscourseRecentActivityComponent;
@@ -11,7 +11,7 @@ describe('DiscourseRecentActivityComponent', () => {
   const sampleLatestResponse = {
     users: [],
     topic_list: {
-      topics: [{id:1},{id:2},{id:3},{id:4},{id:5}]
+      topics: [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }]
     }
   };
 
@@ -23,7 +23,7 @@ describe('DiscourseRecentActivityComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule ],
+      imports: [HttpClientTestingModule],
       providers: [
         DiscourseRecentActivityComponent,
         { provide: ConfigService, useClass: MockConfigService }

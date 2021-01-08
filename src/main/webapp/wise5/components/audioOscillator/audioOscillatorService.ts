@@ -6,10 +6,11 @@ import { UtilService } from '../../services/utilService';
 
 @Injectable()
 export class AudioOscillatorService extends ComponentService {
-
-  constructor(private upgrade: UpgradeModule,
+  constructor(
+    private upgrade: UpgradeModule,
     protected StudentDataService: StudentDataService,
-    protected UtilService: UtilService) {
+    protected UtilService: UtilService
+  ) {
     super(StudentDataService, UtilService);
   }
 
@@ -33,8 +34,13 @@ export class AudioOscillatorService extends ComponentService {
     return component;
   }
 
-  isCompleted(component: any, componentStates: any[], componentEvents: any[], nodeEvents: any[],
-      node: any) {
+  isCompleted(
+    component: any,
+    componentStates: any[],
+    componentEvents: any[],
+    nodeEvents: any[],
+    node: any
+  ) {
     if (componentStates && componentStates.length) {
       const latestComponentState = componentStates[componentStates.length - 1];
       return this.componentStateHasStudentWork(latestComponentState, component);

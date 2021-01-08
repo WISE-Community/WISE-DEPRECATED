@@ -1,12 +1,11 @@
 'use strict';
 
 import { Injectable } from '@angular/core';
-import { StudentDataService } from "../services/studentDataService";
-import { UtilService } from "../services/utilService";
+import { StudentDataService } from '../services/studentDataService';
+import { UtilService } from '../services/utilService';
 
 @Injectable()
 export class ComponentService {
-
   constructor(
     protected StudentDataService: StudentDataService,
     protected UtilService: UtilService

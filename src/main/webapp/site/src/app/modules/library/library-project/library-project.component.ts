@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, ViewEncapsulation, ElementRef } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { MatDialog} from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { LibraryProject } from '../libraryProject';
 import { LibraryProjectDetailsComponent } from '../library-project-details/library-project-details.component';
 import { flash } from '../../../animations';
@@ -10,20 +10,20 @@ import { flash } from '../../../animations';
   templateUrl: './library-project.component.html',
   styleUrls: ['./library-project.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  animations: [ flash ]
+  animations: [flash]
 })
 export class LibraryProjectComponent implements OnInit {
-
   @Input()
   project: LibraryProject = new LibraryProject();
 
   animateDuration: string = '0s';
   animateDelay: string = '0s';
 
-  constructor(public dialog: MatDialog,
-              private sanitizer: DomSanitizer,
-              private elRef: ElementRef) {
-  }
+  constructor(
+    public dialog: MatDialog,
+    private sanitizer: DomSanitizer,
+    private elRef: ElementRef
+  ) {}
 
   ngOnInit() {
     this.project.thumbStyle = this.getThumbStyle(this.project.projectThumb);

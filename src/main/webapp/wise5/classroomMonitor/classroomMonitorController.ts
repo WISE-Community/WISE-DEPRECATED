@@ -154,24 +154,25 @@ class ClassroomMonitorController {
         }
       );
     });
-    
+
     this.SessionService.logOut$.subscribe(() => {
       this.logOut();
     });
 
-    $transitions.onSuccess({}, $transition => {
+    $transitions.onSuccess({}, ($transition) => {
       this.menuOpen = false;
       this.processUI();
     });
 
-    this.serverConnectionStatusSubscription = 
-        this.NotificationService.serverConnectionStatus$.subscribe((isConnected: boolean) => {
-      if (isConnected) {
-        this.handleServerReconnect();
-      } else {
-        this.handleServerDisconnect();
+    this.serverConnectionStatusSubscription = this.NotificationService.serverConnectionStatus$.subscribe(
+      (isConnected: boolean) => {
+        if (isConnected) {
+          this.handleServerReconnect();
+        } else {
+          this.handleServerDisconnect();
+        }
       }
-    });
+    );
 
     // TODO: make dynamic, set somewhere like in config?
     this.logoPath = this.ProjectService.getThemePath() + '/images/WISE-logo-ffffff.svg';

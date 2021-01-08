@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import {StudentService} from '../../../student/student.service';
+import { StudentService } from '../../../student/student.service';
 import { finalize } from 'rxjs/operators';
 
 @Component({
@@ -10,7 +10,6 @@ import { finalize } from 'rxjs/operators';
   styleUrls: ['./forgot-student-password-security.component.scss']
 })
 export class ForgotStudentPasswordSecurityComponent implements OnInit {
-
   username: string;
   questionKey: string;
   question: string;
@@ -21,10 +20,12 @@ export class ForgotStudentPasswordSecurityComponent implements OnInit {
   message: string;
   processing: boolean = false;
 
-  constructor(private fb: FormBuilder,
-              private router: Router,
-              private route: ActivatedRoute,
-              private studentService: StudentService) { }
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private route: ActivatedRoute,
+    private studentService: StudentService
+  ) {}
 
   ngOnInit() {
     this.username = this.route.snapshot.queryParamMap.get('username');
@@ -35,7 +36,8 @@ export class ForgotStudentPasswordSecurityComponent implements OnInit {
   submit() {
     this.processing = true;
     this.clearMessage();
-    this.studentService.checkSecurityAnswer(this.username, this.getAnswer())
+    this.studentService
+      .checkSecurityAnswer(this.username, this.getAnswer())
       .pipe(
         finalize(() => {
           this.processing = false;
@@ -83,7 +85,9 @@ export class ForgotStudentPasswordSecurityComponent implements OnInit {
       questionKey: this.questionKey,
       answer: this.getAnswer()
     };
-    this.router.navigate(['/forgot/student/password/change'],
-      {queryParams: params, skipLocationChange: true});
+    this.router.navigate(['/forgot/student/password/change'], {
+      queryParams: params,
+      skipLocationChange: true
+    });
   }
 }

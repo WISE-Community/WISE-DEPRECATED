@@ -1,29 +1,25 @@
 import { TestBed, inject } from '@angular/core/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AuthGuard } from './auth.guard';
-import { UserService } from "../services/user.service";
-import { RouterTestingModule } from "@angular/router/testing";
-import { ConfigService } from "../services/config.service";
-import { NO_ERRORS_SCHEMA } from "@angular/core";
+import { UserService } from '../services/user.service';
+import { RouterTestingModule } from '@angular/router/testing';
+import { ConfigService } from '../services/config.service';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
-export class MockUserService {
+export class MockUserService {}
 
-}
-
-export class MockConfigService {
-
-}
+export class MockConfigService {}
 
 describe('StudentAuthGuard', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule, RouterTestingModule ],
+      imports: [HttpClientTestingModule, RouterTestingModule],
       providers: [
         AuthGuard,
         { provide: UserService, useClass: MockUserService },
         { provide: ConfigService, useClass: MockConfigService }
       ],
-      schemas: [ NO_ERRORS_SCHEMA ]
+      schemas: [NO_ERRORS_SCHEMA]
     });
   });
 

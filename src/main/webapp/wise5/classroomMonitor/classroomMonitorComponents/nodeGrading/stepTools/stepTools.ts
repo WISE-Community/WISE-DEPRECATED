@@ -32,10 +32,11 @@ class StepToolsController {
 
     this.idToOrder = this.ProjectService.idToOrder;
     this.updateModel();
-    this.currentNodeChangedSubscription = this.TeacherDataService.currentNodeChanged$
-        .subscribe(() => {
-      this.updateModel();
-    });
+    this.currentNodeChangedSubscription = this.TeacherDataService.currentNodeChanged$.subscribe(
+      () => {
+        this.updateModel();
+      }
+    );
     this.$scope.$on('$destroy', () => {
       this.ngOnDestroy();
     });
@@ -59,7 +60,7 @@ class StepToolsController {
       this.nodeId = nodeId;
       this.prevId = this.NodeService.getPrevNodeIdWithWork();
       this.nextId = null;
-      this.NodeService.getNextNodeIdWithWork().then(nextNodeId => {
+      this.NodeService.getNextNodeIdWithWork().then((nextNodeId) => {
         this.nextId = nextNodeId;
       });
       this.toNodeId = this.nodeId;

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService, GoogleLoginProvider } from "angularx-social-login";
-import { Router } from "@angular/router";
-import { TeacherService } from "../../teacher/teacher.service";
+import { AuthService, GoogleLoginProvider } from 'angularx-social-login';
+import { Router } from '@angular/router';
+import { TeacherService } from '../../teacher/teacher.service';
 import { UserService } from '../../services/user.service';
 import { ConfigService } from '../../services/config.service';
 
@@ -11,13 +11,16 @@ import { ConfigService } from '../../services/config.service';
   styleUrls: ['./register-teacher.component.scss']
 })
 export class RegisterTeacherComponent implements OnInit {
-
-  email: string = "";
+  email: string = '';
   isGoogleAuthenticationEnabled: boolean = false;
 
-  constructor(private socialAuthService: AuthService,
-      private teacherService: TeacherService, private userService: UserService,
-      private configService: ConfigService, private router: Router) {}
+  constructor(
+    private socialAuthService: AuthService,
+    private teacherService: TeacherService,
+    private userService: UserService,
+    private configService: ConfigService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.configService.getConfig().subscribe((config) => {
@@ -28,32 +31,27 @@ export class RegisterTeacherComponent implements OnInit {
   }
 
   public signUp() {
-    this.router.navigate(['join/teacher/form', { email: this.email} ]);
+    this.router.navigate(['join/teacher/form', { email: this.email }]);
   }
 
-  public socialSignIn(socialPlatform : string) {
+  public socialSignIn(socialPlatform: string) {
     let socialPlatformProvider;
-    if (socialPlatform == "google"){
+    if (socialPlatform == 'google') {
       socialPlatformProvider = GoogleLoginProvider.PROVIDER_ID;
     }
 
-    this.socialAuthService.signIn(socialPlatformProvider).then(
-      (userData) => {
-        const googleUserID = userData.id;
-        this.userService.isGoogleIdExists(googleUserID).subscribe((isExists) => {
-          if (isExists) {
-            this.router.navigate(['join/googleUserAlreadyExists']);
-          } else {
-            this.router.navigate(['join/teacher/form',
-              { gID: googleUserID,
-                name: userData.name,
-                email: userData.email
-              }
-            ]);
-
-          }
-        });
-      }
-    );
+    this.socialAuthService.signIn(socialPlatformProvider).then((userData) => {
+      const googleUserID = userData.id;
+      this.userService.isGoogleIdExists(googleUserID).subscribe((isExists) => {
+        if (isExists) {
+          this.router.navigate(['join/googleUserAlreadyExists']);
+        } else {
+          this.router.navigate([
+            'join/teacher/form',
+            { gID: googleUserID, name: userData.name, email: userData.email }
+          ]);
+        }
+      });
+    });
   }
 }

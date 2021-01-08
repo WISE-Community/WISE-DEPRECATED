@@ -10,8 +10,8 @@ let http: HttpTestingController;
 describe('CRaterService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule, UpgradeModule ],
-      providers: [ ConfigService, CRaterService ]
+      imports: [HttpClientTestingModule, UpgradeModule],
+      providers: [ConfigService, CRaterService]
     });
     http = TestBed.get(HttpTestingController);
     configService = TestBed.get(ConfigService);
@@ -36,14 +36,15 @@ describe('CRaterService', () => {
 function makeCRaterScoringRequest() {
   describe('makeCRaterScoringRequest()', () => {
     it('should make a CRater scoring request', () => {
-      spyOn(configService, 'getCRaterRequestURL').and.returnValue('/c-rater')
+      spyOn(configService, 'getCRaterRequestURL').and.returnValue('/c-rater');
       const itemId = 'ColdBeverage1Sub';
       const responseId = 1;
       const studentData = 'Hello World.';
       service.makeCRaterScoringRequest(itemId, responseId, studentData);
       http.expectOne({
-        url: `/c-rater/score?itemId=${itemId}&responseId=${responseId}` +
-            `&studentData=${encodeURI(studentData)}`,
+        url:
+          `/c-rater/score?itemId=${itemId}&responseId=${responseId}` +
+          `&studentData=${encodeURI(studentData)}`,
         method: 'GET'
       });
     });
@@ -178,7 +179,7 @@ function createScoringRule(score, feedbackText) {
   return {
     score: score,
     feedbackText: feedbackText
-  }
+  };
 }
 
 function getCRaterScoringRuleByScore() {
@@ -187,10 +188,7 @@ function getCRaterScoringRuleByScore() {
     const scoringRule2 = createScoringRule(2, 'You received a score of 2.');
     const component = {
       cRater: {
-        scoringRules: [
-          scoringRule1,
-          scoringRule2
-        ]
+        scoringRules: [scoringRule1, scoringRule2]
       }
     };
     it('should get CRater scoring rule by score 1', () => {
@@ -211,10 +209,7 @@ function getCRaterFeedbackTextByScore() {
     const scoringRule2 = createScoringRule(2, feedbackText2);
     const component = {
       cRater: {
-        scoringRules: [
-          scoringRule1,
-          scoringRule2
-        ]
+        scoringRules: [scoringRule1, scoringRule2]
       }
     };
     it('should get CRater feedback text by score 1', () => {
@@ -247,13 +242,15 @@ function getMultipleAttemptCRaterFeedbackTextByScore() {
     };
 
     it('should get multiple attempt CRater feedback text by score 1 then 2', () => {
-      expect(service.getMultipleAttemptCRaterFeedbackTextByScore(component, 1, 2))
-          .toEqual(feedbackText1);
+      expect(service.getMultipleAttemptCRaterFeedbackTextByScore(component, 1, 2)).toEqual(
+        feedbackText1
+      );
     });
 
     it('should get multiple attempt CRater feedback text by score 2 then 1', () => {
-      expect(service.getMultipleAttemptCRaterFeedbackTextByScore(component, 2, 1))
-          .toEqual(feedbackText2);
+      expect(service.getMultipleAttemptCRaterFeedbackTextByScore(component, 2, 1)).toEqual(
+        feedbackText2
+      );
     });
   });
 }
@@ -276,16 +273,17 @@ function getMultipleAttemptCRaterScoringRuleByScore() {
         ]
       }
     };
-    expect(service.getMultipleAttemptCRaterScoringRuleByScore(component, 1, 2))
-        .toEqual(multipleAttemptScoringRule1To2);
+    expect(service.getMultipleAttemptCRaterScoringRuleByScore(component, 1, 2)).toEqual(
+      multipleAttemptScoringRule1To2
+    );
   });
 
   const multipleAttemptScoringRule1To45 = {
-    scoreSequence: [1, "4-5"],
+    scoreSequence: [1, '4-5'],
     feedbackText: 'You improved a lot.'
   };
   const multipleAttemptScoringRule1To345 = {
-    scoreSequence: [1, "3,4,5"],
+    scoreSequence: [1, '3,4,5'],
     feedbackText: 'You improved a lot.'
   };
   const multipleAttemptScoringRule2To1 = {
@@ -302,8 +300,9 @@ function getMultipleAttemptCRaterScoringRuleByScore() {
       multipleAttemptScoringRule1To45,
       multipleAttemptScoringRule2To1
     ];
-    expect(service.getMultipleAttemptCRaterScoringRuleByScore(component, 1, 5))
-        .toEqual(multipleAttemptScoringRule1To45);
+    expect(service.getMultipleAttemptCRaterScoringRuleByScore(component, 1, 5)).toEqual(
+      multipleAttemptScoringRule1To45
+    );
   });
 
   it('should get multiple attempt CRater scoring rule by score with comma separated values', () => {
@@ -311,15 +310,16 @@ function getMultipleAttemptCRaterScoringRuleByScore() {
       multipleAttemptScoringRule1To345,
       multipleAttemptScoringRule2To1
     ];
-    expect(service.getMultipleAttemptCRaterScoringRuleByScore(component, 1, 4))
-        .toEqual(multipleAttemptScoringRule1To345);
+    expect(service.getMultipleAttemptCRaterScoringRuleByScore(component, 1, 4)).toEqual(
+      multipleAttemptScoringRule1To345
+    );
   });
 }
 
 function makeCRaterVerifyRequest() {
   describe('makeCRaterVerifyRequest()', () => {
     it('should make a CRater verify request', () => {
-      spyOn(configService, 'getCRaterRequestURL').and.returnValue('/c-rater')
+      spyOn(configService, 'getCRaterRequestURL').and.returnValue('/c-rater');
       const itemId = 'ColdBeverage1Sub';
       service.makeCRaterVerifyRequest(itemId);
       http.expectOne({
