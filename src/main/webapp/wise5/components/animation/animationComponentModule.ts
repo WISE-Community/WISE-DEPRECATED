@@ -11,7 +11,7 @@ const animationComponentModule = angular
   .controller('AnimationController', AnimationController)
   .config([
     '$translatePartialLoaderProvider',
-    $translatePartialLoaderProvider => {
+    ($translatePartialLoaderProvider) => {
       $translatePartialLoaderProvider.addPart('components/animation/i18n');
     }
   ]);

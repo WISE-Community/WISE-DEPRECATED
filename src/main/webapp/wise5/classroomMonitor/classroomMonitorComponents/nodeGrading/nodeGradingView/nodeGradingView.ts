@@ -27,11 +27,11 @@ class NodeGradingViewController {
   nodeId: string;
   numRubrics: number;
   sortOrder: object = {
-    'team': ['-isVisible', 'workgroupId'],
+    team: ['-isVisible', 'workgroupId'],
     '-team': ['-isVisible', '-workgroupId'],
-    'status': ['-isVisible', 'completionStatus', 'workgroupId'],
+    status: ['-isVisible', 'completionStatus', 'workgroupId'],
     '-status': ['-isVisible', '-completionStatus', 'workgroupId'],
-    'score': ['-isVisible', 'score', 'workgroupId'],
+    score: ['-isVisible', 'score', 'workgroupId'],
     '-score': ['-isVisible', '-score', 'workgroupId']
   };
   sort: any;
@@ -87,7 +87,7 @@ class NodeGradingViewController {
     }
 
     // TODO: add loading indicator
-    this.TeacherDataService.retrieveStudentDataByNodeId(this.nodeId).then(result => {
+    this.TeacherDataService.retrieveStudentDataByNodeId(this.nodeId).then((result) => {
       this.teacherWorkgroupId = this.ConfigService.getWorkgroupId();
       this.workgroups = this.ConfigService.getClassmateUserInfos();
       this.workgroupsById = {}; // object that will hold workgroup names, statuses, scores, notifications, etc.
@@ -106,44 +106,48 @@ class NodeGradingViewController {
       this.maxScore = this.getMaxScore();
     });
 
-    this.notificationChangedSubscription = this.NotificationService.notificationChanged$
-        .subscribe((notification) => {
-      if (notification.type === 'CRaterResult') {
-        // TODO: expand to encompass other notification types that should be shown to teacher
-        const workgroupId = notification.toWorkgroupId;
-        if (this.workgroupsById[workgroupId]) {
-          this.updateWorkgroup(workgroupId);
+    this.notificationChangedSubscription = this.NotificationService.notificationChanged$.subscribe(
+      (notification) => {
+        if (notification.type === 'CRaterResult') {
+          // TODO: expand to encompass other notification types that should be shown to teacher
+          const workgroupId = notification.toWorkgroupId;
+          if (this.workgroupsById[workgroupId]) {
+            this.updateWorkgroup(workgroupId);
+          }
         }
       }
-    });
+    );
 
-    this.annotationReceivedSubscription =
-        this.AnnotationService.annotationReceived$.subscribe(({ annotation }) => {
-      const workgroupId = annotation.toWorkgroupId;
-      const nodeId = annotation.nodeId;
-      if (nodeId === this.nodeId && this.workgroupsById[workgroupId]) {
-        this.updateWorkgroup(workgroupId);
-      }
-    });
-
-    this.studentWorkReceivedSubscription = this.TeacherDataService.studentWorkReceived$
-        .subscribe((args: any) => {
-      const studentWork = args.studentWork;
-      if (studentWork != null) {
-        const workgroupId = studentWork.workgroupId;
-        const nodeId = studentWork.nodeId;
+    this.annotationReceivedSubscription = this.AnnotationService.annotationReceived$.subscribe(
+      ({ annotation }) => {
+        const workgroupId = annotation.toWorkgroupId;
+        const nodeId = annotation.nodeId;
         if (nodeId === this.nodeId && this.workgroupsById[workgroupId]) {
           this.updateWorkgroup(workgroupId);
         }
       }
-    });
+    );
 
-    this.currentPeriodChangedSubscription = this.TeacherDataService.currentPeriodChanged$
-        .subscribe(() => {
-      if (!this.milestone) {
-        this.milestoneReport = this.MilestoneService.getMilestoneReportByNodeId(this.nodeId);
+    this.studentWorkReceivedSubscription = this.TeacherDataService.studentWorkReceived$.subscribe(
+      (args: any) => {
+        const studentWork = args.studentWork;
+        if (studentWork != null) {
+          const workgroupId = studentWork.workgroupId;
+          const nodeId = studentWork.nodeId;
+          if (nodeId === this.nodeId && this.workgroupsById[workgroupId]) {
+            this.updateWorkgroup(workgroupId);
+          }
+        }
       }
-    });
+    );
+
+    this.currentPeriodChangedSubscription = this.TeacherDataService.currentPeriodChanged$.subscribe(
+      () => {
+        if (!this.milestone) {
+          this.milestoneReport = this.MilestoneService.getMilestoneReportByNodeId(this.nodeId);
+        }
+      }
+    );
 
     if (!this.isDisplayInMilestone()) {
       this.saveNodeGradingViewDisplayedEvent();

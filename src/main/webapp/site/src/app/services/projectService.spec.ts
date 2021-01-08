@@ -24,12 +24,12 @@ let scootersProjectJSON: any;
 describe('ProjectService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule, UpgradeModule ],
-      providers: [ ProjectService, ConfigService, SessionService, UtilService ]
+      imports: [HttpClientTestingModule, UpgradeModule],
+      providers: [ProjectService, ConfigService, SessionService, UtilService]
     });
     http = TestBed.get(HttpTestingController);
     configService = TestBed.get(ConfigService);
-    sessionService = TestBed.get(SessionService)
+    sessionService = TestBed.get(SessionService);
     utilService = TestBed.get(UtilService);
     spyOn(utilService, 'broadcastEventInRootScope').and.callFake(() => {});
     service = TestBed.get(ProjectService);
@@ -134,7 +134,7 @@ describe('ProjectService', () => {
 });
 
 function createNormalSpy() {
-  spyOn(configService, 'getConfigParam').and.callFake(param => {
+  spyOn(configService, 'getConfigParam').and.callFake((param) => {
     if (param === 'projectBaseURL') {
       return projectBaseURL;
     } else if (param === 'projectURL') {
@@ -188,8 +188,7 @@ function shouldNotReplaceAssetPathsInHtmlComponentContent() {
 
 function shouldRetrieveProjectWhenConfigProjectURLIsValid() {
   it('should retrieve project when Config.projectURL is valid', () => {
-    spyOn(configService, 'getConfigParam').withArgs('projectURL')
-        .and.returnValue(projectURL);
+    spyOn(configService, 'getConfigParam').withArgs('projectURL').and.returnValue(projectURL);
     service.retrieveProject().then((response) => {
       expect(response).toEqual(scootersProjectJSON);
     });
@@ -209,12 +208,16 @@ function shouldNotRetrieveProjectWhenConfigProjectURLIsUndefined() {
 function shouldSaveProject() {
   it('should save project', () => {
     spyOn(configService, 'getConfigParam')
-        .withArgs('canEditProject').and.returnValue(true)
-        .withArgs('saveProjectURL').and.returnValue(saveProjectURL)
-        .withArgs('mode').and.returnValue('authoring')
-        .withArgs('userInfo').and.returnValue({});
+      .withArgs('canEditProject')
+      .and.returnValue(true)
+      .withArgs('saveProjectURL')
+      .and.returnValue(saveProjectURL)
+      .withArgs('mode')
+      .and.returnValue('authoring')
+      .withArgs('userInfo')
+      .and.returnValue({});
     spyOn(configService, 'getProjectId').and.returnValue(projectIdDefault);
-    spyOn(configService, 'getMyUserInfo').and.returnValue({id:1});
+    spyOn(configService, 'getMyUserInfo').and.returnValue({ id: 1 });
     service.setProject(scootersProjectJSON);
     service.saveProject();
     expect(configService.getConfigParam).toHaveBeenCalledWith('saveProjectURL');
@@ -227,12 +230,16 @@ function shouldHandleSaveProjectResponse() {
     shouldHandleSaveProjectResponseSuccessHelper('broadcastProjectSaved');
   });
   it('should broadcast not logged in project not saved', () => {
-    shouldHandleSaveProjectResponseErrorHelper('notSignedIn',
-        'broadcastNotLoggedInProjectNotSaved');
+    shouldHandleSaveProjectResponseErrorHelper(
+      'notSignedIn',
+      'broadcastNotLoggedInProjectNotSaved'
+    );
   });
   it('should broadcast not allowed to edit this project', () => {
-    shouldHandleSaveProjectResponseErrorHelper('notAllowedToEditThisProject',
-        'broadcastNotAllowedToEditThisProject');
+    shouldHandleSaveProjectResponseErrorHelper(
+      'notAllowedToEditThisProject',
+      'broadcastNotAllowedToEditThisProject'
+    );
   });
   it('should broadcast error saving project', () => {
     shouldHandleSaveProjectResponseErrorHelper('errorSavingProject', 'broadcastErrorSavingProject');
@@ -247,8 +254,11 @@ function shouldHandleSaveProjectResponseErrorHelper(messageCode: string, functio
   shouldHandleSaveProjectResponseHelper('error', messageCode, functionName);
 }
 
-function shouldHandleSaveProjectResponseHelper(status: string, messageCode: string,
-    functionName: any) {
+function shouldHandleSaveProjectResponseHelper(
+  status: string,
+  messageCode: string,
+  functionName: any
+) {
   const response = {
     status: status,
     messageCode: messageCode
@@ -361,40 +371,40 @@ function getNodeIds() {
     it('should return the node ids in the project', () => {
       service.setProject(scootersProjectJSON);
       const nodeIdsExpected = [
-      'node1',
-      'node2',
-      'node3',
-      'node4',
-      'node5',
-      'node6',
-      'node7',
-      'node9',
-      'node12',
-      'node13',
-      'node14',
-      'node18',
-      'node19',
-      'node21',
-      'node22',
-      'node23',
-      'node24',
-      'node25',
-      'node26',
-      'node27',
-      'node28',
-      'node29',
-      'node30',
-      'node31',
-      'node40',
-      'node32',
-      'node33',
-      'node34',
-      'node35',
-      'node36',
-      'node37',
-      'node38',
-      'node39',
-      'nodeWithNoComponents'
+        'node1',
+        'node2',
+        'node3',
+        'node4',
+        'node5',
+        'node6',
+        'node7',
+        'node9',
+        'node12',
+        'node13',
+        'node14',
+        'node18',
+        'node19',
+        'node21',
+        'node22',
+        'node23',
+        'node24',
+        'node25',
+        'node26',
+        'node27',
+        'node28',
+        'node29',
+        'node30',
+        'node31',
+        'node40',
+        'node32',
+        'node33',
+        'node34',
+        'node35',
+        'node36',
+        'node37',
+        'node38',
+        'node39',
+        'nodeWithNoComponents'
       ];
       const nodeIdsActual = service.getNodeIds();
       expect(nodeIdsActual).toEqual(nodeIdsExpected);
@@ -420,29 +430,20 @@ function shouldGetTheComponentByNodeIdAndComponentId() {
     const nullComponentIdResult = service.getComponentByNodeIdAndComponentId('node13', null);
     expect(nullComponentIdResult).toBeNull();
 
-    const nodeIdDNEResult = service.getComponentByNodeIdAndComponentId(
-    'badNodeId',
-    '57lxhwfp5r'
-    );
+    const nodeIdDNEResult = service.getComponentByNodeIdAndComponentId('badNodeId', '57lxhwfp5r');
     expect(nodeIdDNEResult).toBeNull();
 
     const componentIdDNEResult = service.getComponentByNodeIdAndComponentId(
-    'node13',
-    'badComponentId'
+      'node13',
+      'badComponentId'
     );
     expect(componentIdDNEResult).toBeNull();
 
-    const componentExists = service.getComponentByNodeIdAndComponentId(
-    'node13',
-    '57lxhwfp5r'
-    );
+    const componentExists = service.getComponentByNodeIdAndComponentId('node13', '57lxhwfp5r');
     expect(componentExists).not.toBe(null);
     expect(componentExists.type).toEqual('HTML');
 
-    const componentExists2 = service.getComponentByNodeIdAndComponentId(
-    'node9',
-    'mnzx68ix8h'
-    );
+    const componentExists2 = service.getComponentByNodeIdAndComponentId('node9', 'mnzx68ix8h');
     expect(componentExists2).not.toBe(null);
     expect(componentExists2.type).toEqual('embedded');
     expect(componentExists2.url).toEqual('NewtonScooters-potential-kinetic.html');
@@ -452,39 +453,36 @@ function shouldGetTheComponentByNodeIdAndComponentId() {
 function shouldGetTheComponentPositionByNodeIdAndComonentId() {
   it('should get the component position by node id and comonent id', () => {
     service.setProject(scootersProjectJSON);
-    const nullNodeIdResult = service.getComponentPositionByNodeIdAndComponentId(
-    null,
-    '57lxhwfp5r'
-    );
+    const nullNodeIdResult = service.getComponentPositionByNodeIdAndComponentId(null, '57lxhwfp5r');
     expect(nullNodeIdResult).toEqual(-1);
 
     const nullComponentIdResult = service.getComponentPositionByNodeIdAndComponentId(
-    'node13',
-    null
+      'node13',
+      null
     );
     expect(nullComponentIdResult).toEqual(-1);
 
     const nodeIdDNEResult = service.getComponentPositionByNodeIdAndComponentId(
-    'badNodeId',
-    '57lxhwfp5r'
+      'badNodeId',
+      '57lxhwfp5r'
     );
     expect(nodeIdDNEResult).toEqual(-1);
 
     const componentIdDNEResult = service.getComponentPositionByNodeIdAndComponentId(
-    'node13',
-    'badComponentId'
+      'node13',
+      'badComponentId'
     );
     expect(componentIdDNEResult).toEqual(-1);
 
     const componentExists = service.getComponentPositionByNodeIdAndComponentId(
-    'node13',
-    '57lxhwfp5r'
+      'node13',
+      '57lxhwfp5r'
     );
     expect(componentExists).toEqual(0);
 
     const componentExists2 = service.getComponentPositionByNodeIdAndComponentId(
-    'node9',
-    'mnzx68ix8h'
+      'node9',
+      'mnzx68ix8h'
     );
     expect(componentExists2).toEqual(1);
   });
@@ -497,9 +495,7 @@ function shouldGetTheComponentsByNodeId() {
     expect(nullNodeIdResult).toEqual([]);
     const nodeIdDNEResult = service.getComponentsByNodeId('badNodeId');
     expect(nodeIdDNEResult).toEqual([]);
-    const nodeWithNullComponentResult = service.getComponentsByNodeId(
-    'nodeWithNoComponents'
-    );
+    const nodeWithNullComponentResult = service.getComponentsByNodeId('nodeWithNoComponents');
     expect(nodeWithNullComponentResult).toEqual([]);
     const nodeExistsResult = service.getComponentsByNodeId('node13');
     expect(nodeExistsResult).not.toBe(null);
@@ -618,7 +614,7 @@ function expectGroupStartId(groupId, expectedStartNodeId) {
 function removeNodeFromGroup() {
   it('should remove node from group', () => {
     service.setProject(demoProjectJSON);
-    expectChildNodeIdLength('group1', 19)
+    expectChildNodeIdLength('group1', 19);
     const group1 = service.getNodeById('group1');
     service.removeNodeIdFromGroup(group1, 'node3');
     expectChildNodeIdLength('group1', 18);
@@ -645,7 +641,7 @@ function shouldIdentifyBranchStartAndMergePoints() {
 }
 
 function expectFunctionCallToReturnValue(func, nodeIdArray, expectedValue) {
-  nodeIdArray.forEach(nodeId => {
+  nodeIdArray.forEach((nodeId) => {
     expect(service[func](nodeId)).toEqual(expectedValue);
   });
 }
@@ -686,10 +682,16 @@ function insertNodeAfterInTransitions() {
 
 function expectInsertNodeAfterInTransition(nodeIdBefore, nodeIdAfter) {
   service.setProject(demoProjectJSON);
-  expect(service.nodeHasTransitionToNodeId(service.getNodeById(nodeIdBefore), nodeIdAfter)).toBeTruthy();
+  expect(
+    service.nodeHasTransitionToNodeId(service.getNodeById(nodeIdBefore), nodeIdAfter)
+  ).toBeTruthy();
   service.insertNodeAfterInTransitions(service.getNodeById(nodeIdBefore), nodeIdAfter);
-  expect(service.nodeHasTransitionToNodeId(service.getNodeById(nodeIdBefore), nodeIdAfter)).toBeFalsy();
-  expect(service.nodeHasTransitionToNodeId(service.getNodeById(nodeIdAfter), nodeIdBefore)).toBeTruthy();
+  expect(
+    service.nodeHasTransitionToNodeId(service.getNodeById(nodeIdBefore), nodeIdAfter)
+  ).toBeFalsy();
+  expect(
+    service.nodeHasTransitionToNodeId(service.getNodeById(nodeIdAfter), nodeIdBefore)
+  ).toBeTruthy();
 }
 
 function shouldNotBeAbleToInsertANodeAfterAnotherNodeWhenTheyAreDifferentTypes() {
@@ -749,19 +751,13 @@ function shouldDeleteAStepFromTheProject() {
     service.setProject(demoProjectJSON);
     expect(service.getNodes().length).toEqual(54);
     expect(service.getNodeById('node5')).not.toBeNull();
-    expect(
-      service.nodeHasTransitionToNodeId(service.getNodeById('node4'), 'node5')
-    ).toBeTruthy();
-    expect(
-      service.nodeHasTransitionToNodeId(service.getNodeById('node5'), 'node6')
-    ).toBeTruthy();
+    expect(service.nodeHasTransitionToNodeId(service.getNodeById('node4'), 'node5')).toBeTruthy();
+    expect(service.nodeHasTransitionToNodeId(service.getNodeById('node5'), 'node6')).toBeTruthy();
     expect(service.getNodesWithTransitionToNodeId('node6').length).toEqual(1);
     service.deleteNode('node5');
     expect(service.getNodes().length).toEqual(53);
     expect(service.getNodeById('node5')).toBeNull();
-    expect(
-      service.nodeHasTransitionToNodeId(service.getNodeById('node4'), 'node6')
-    ).toBeTruthy();
+    expect(service.nodeHasTransitionToNodeId(service.getNodeById('node4'), 'node6')).toBeTruthy();
     expect(service.getNodesWithTransitionToNodeId('node6').length).toEqual(1);
   });
 }
@@ -804,21 +800,14 @@ function shouldDeleteAStepThatIsTheLastStepOfTheProject() {
 }
 
 function shouldDeleteAStepThatIsTheStartIdOfAnAactivityThatIsNotTheFirstActivity() {
-  it('should delete a step that is the start id of an activity that is not the first activity',
-      () => {
+  it('should delete a step that is the start id of an activity that is not the first activity', () => {
     service.setProject(demoProjectJSON);
     expect(service.getGroupStartId('group2')).toEqual('node20');
-    expect(
-      service.nodeHasTransitionToNodeId(service.getNodeById('node19'), 'node20')
-    ).toBeTruthy();
-    expect(
-      service.nodeHasTransitionToNodeId(service.getNodeById('node20'), 'node21')
-    ).toBeTruthy();
+    expect(service.nodeHasTransitionToNodeId(service.getNodeById('node19'), 'node20')).toBeTruthy();
+    expect(service.nodeHasTransitionToNodeId(service.getNodeById('node20'), 'node21')).toBeTruthy();
     service.deleteNode('node20');
     expect(service.getGroupStartId('group2')).toEqual('node21');
-    expect(
-      service.nodeHasTransitionToNodeId(service.getNodeById('node19'), 'node21')
-    ).toBeTruthy();
+    expect(service.nodeHasTransitionToNodeId(service.getNodeById('node19'), 'node21')).toBeTruthy();
   });
 }
 
@@ -841,17 +830,11 @@ function shouldDeleteTheFirstActivityFromTheProject() {
 function shouldDeleteAnActivityInTheMiddleOfTheProject() {
   it('should delete an activity that is in the middle of the project', () => {
     service.setProject(demoProjectJSON);
-    expect(
-      service.nodeHasTransitionToNodeId(service.getNodeById('group2'), 'group3')
-    ).toBeTruthy();
+    expect(service.nodeHasTransitionToNodeId(service.getNodeById('group2'), 'group3')).toBeTruthy();
     expect(service.getNodes().length).toEqual(54);
     service.deleteNode('group3');
-    expect(
-      service.nodeHasTransitionToNodeId(service.getNodeById('group2'), 'group3')
-    ).toBeFalsy();
-    expect(
-      service.nodeHasTransitionToNodeId(service.getNodeById('group2'), 'group4')
-    ).toBeTruthy();
+    expect(service.nodeHasTransitionToNodeId(service.getNodeById('group2'), 'group3')).toBeFalsy();
+    expect(service.nodeHasTransitionToNodeId(service.getNodeById('group2'), 'group4')).toBeTruthy();
     expect(service.getNodes().length).toEqual(51);
   });
 }
@@ -859,15 +842,11 @@ function shouldDeleteAnActivityInTheMiddleOfTheProject() {
 function shouldDeleteTheLastActivityFromTheProject() {
   it('should delete the last activity from the project', () => {
     service.setProject(demoProjectJSON);
-    expect(
-      service.nodeHasTransitionToNodeId(service.getNodeById('group4'), 'group5')
-    ).toBeTruthy();
+    expect(service.nodeHasTransitionToNodeId(service.getNodeById('group4'), 'group5')).toBeTruthy();
     expect(service.getTransitionsByFromNodeId('group4').length).toEqual(1);
     expect(service.getNodes().length).toEqual(54);
     service.deleteNode('group5');
-    expect(
-      service.nodeHasTransitionToNodeId(service.getNodeById('group4'), 'group5')
-    ).toBeFalsy();
+    expect(service.nodeHasTransitionToNodeId(service.getNodeById('group4'), 'group5')).toBeFalsy();
     expect(service.getTransitionsByFromNodeId('group4').length).toEqual(0);
     expect(service.getNodes().length).toEqual(48);
   });
@@ -918,9 +897,7 @@ function getUniqueAuthors() {
     });
 
     it('should get unique authors when there is one author', () => {
-      const authors = [
-        { id: 1, firstName: 'a', lastName: 'a' }
-      ];
+      const authors = [{ id: 1, firstName: 'a', lastName: 'a' }];
       const uniqueAuthors = service.getUniqueAuthors(authors);
       expect(uniqueAuthors.length).toEqual(1);
       expect(uniqueAuthors[0].id).toEqual(1);
@@ -1037,7 +1014,7 @@ function deleteAllStepsInAnActivity() {
 }
 
 function getTags() {
-  it ('should get tags from the project', () => {
+  it('should get tags from the project', () => {
     service.setProject(demoProjectJSON);
     const tags = service.getTags();
     expect(tags.length).toEqual(2);

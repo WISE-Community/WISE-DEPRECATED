@@ -1,15 +1,15 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ContactFormComponent } from './contact-form.component';
-import { ReactiveFormsModule } from "@angular/forms";
-import { RouterTestingModule } from "@angular/router/testing";
-import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { ReactiveFormsModule } from '@angular/forms';
+import { RouterTestingModule } from '@angular/router/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { UserService } from "../../services/user.service";
-import { NO_ERRORS_SCHEMA } from "@angular/core";
-import { ConfigService } from "../../services/config.service";
-import { StudentService } from "../../student/student.service";
-import { User } from "../../domain/user";
+import { UserService } from '../../services/user.service';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { ConfigService } from '../../services/config.service';
+import { StudentService } from '../../student/student.service';
+import { User } from '../../domain/user';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { configureTestSuite } from 'ng-bullet';
 import { LibraryService } from '../../services/library.service';
@@ -45,12 +45,9 @@ export class MockStudentService {
   getTeacherList(): Observable<User> {
     return Observable.create(new User());
   }
-
 }
 
-export class MockLibraryService {
-
-}
+export class MockLibraryService {}
 
 describe('ContactFormComponent', () => {
   let component: ContactFormComponent;
@@ -58,7 +55,7 @@ describe('ContactFormComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ContactFormComponent ],
+      declarations: [ContactFormComponent],
       imports: [
         BrowserAnimationsModule,
         RouterTestingModule,
@@ -72,9 +69,8 @@ describe('ContactFormComponent', () => {
         { provide: StudentService, useClass: MockStudentService },
         { provide: LibraryService, useClass: MockLibraryService }
       ],
-      schemas: [ NO_ERRORS_SCHEMA ]
-    })
-    .compileComponents();
+      schemas: [NO_ERRORS_SCHEMA]
+    }).compileComponents();
   }));
 
   beforeEach(() => {
@@ -129,10 +125,10 @@ describe('ContactFormComponent', () => {
   it('should auto populate the name field if the user is signed in', () => {
     const nameInput = fixture.debugElement.nativeElement.querySelector('input[name="name"]');
     const name = nameInput.valueOf().value;
-    expect(name).toBe("Demo User");
+    expect(name).toBe('Demo User');
   });
 
-  it('should have its submit button disabled if the form isn\'t filled out', () => {
+  it("should have its submit button disabled if the form isn't filled out", () => {
     const submitButton = fixture.debugElement.nativeElement.querySelector('button');
     expect(submitButton.disabled).toBe(true);
   });

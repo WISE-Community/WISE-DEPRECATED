@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 
-import { createStudentAngularJSModule} from '../../../wise5/vle/student-angular-js-module';
+import { createStudentAngularJSModule } from '../../../wise5/vle/student-angular-js-module';
 import { UpgradeModule } from '@angular/upgrade/static';
 import { setUpLocationSync } from '@angular/router/upgrade';
 import { ProjectService } from '../../../wise5/services/projectService';
@@ -18,35 +18,20 @@ import { NavItemComponent } from '../../../wise5/vle/nav-item/nav-item.component
 import { ComponentAnnotationsComponent } from '../../../wise5/directives/componentAnnotations/component-annotations.component';
 
 @NgModule({
-  declarations: [
-    ComponentAnnotationsComponent,
-    NavItemComponent,
-    PossibleScoreComponent
-  ],
-  imports: [
-    AngularJSModule
-  ],
+  declarations: [ComponentAnnotationsComponent, NavItemComponent, PossibleScoreComponent],
+  imports: [AngularJSModule],
   providers: [
     { provide: DataService, useExisting: StudentDataService },
     { provide: ProjectService, useExisting: VLEProjectService },
     VLEProjectService
   ],
-  exports: [
-    CommonModule,
-    MatButtonModule,
-    MatDialogModule,
-    MatListModule
-  ]
+  exports: [CommonModule, MatButtonModule, MatDialogModule, MatListModule]
 })
 export class StudentAngularJSModule {}
 
 @NgModule({
-  declarations: [
-    ChooseBranchPathDialogComponent
-  ],
-  imports: [
-    StudentAngularJSModule
-  ]
+  declarations: [ChooseBranchPathDialogComponent],
+  imports: [StudentAngularJSModule]
 })
 export class StudentVLEAngularJSModule {
   constructor(upgrade: UpgradeModule) {
@@ -55,9 +40,7 @@ export class StudentVLEAngularJSModule {
 }
 
 @NgModule({
-  imports: [
-    StudentAngularJSModule
-  ]
+  imports: [StudentAngularJSModule]
 })
 export class PreviewAngularJSModule {
   constructor(upgrade: UpgradeModule) {

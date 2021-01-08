@@ -20,7 +20,7 @@ describe('ProjectAssetService', () => {
     http = TestBed.get(HttpTestingController);
     configService = TestBed.get(ConfigService);
     service = TestBed.get(ProjectAssetService);
-    spyOn(configService, 'getConfigParam').and.callFake(param => {
+    spyOn(configService, 'getConfigParam').and.callFake((param) => {
       if (param === 'projectAssetURL') {
         return '/author/project/asset/1';
       } else if (param === 'projectAssetTotalSizeMax') {
@@ -71,7 +71,7 @@ function uploadAssets() {
       success: [],
       error: []
     };
-    service.uploadAssets(files).subscribe(data => {
+    service.uploadAssets(files).subscribe((data) => {
       expect(data).toEqual(result);
     });
     const request = http.expectOne({ url: '/author/project/asset/1', method: 'POST' });
@@ -279,7 +279,7 @@ function getTextFiles() {
     const text1 = 'text from model1';
     const text2 = 'text from model2';
     const textFileNames = ['model1.html', 'model2.html'];
-    service.getTextFiles(textFileNames).subscribe(textFiles => {
+    service.getTextFiles(textFileNames).subscribe((textFiles) => {
       expect(textFiles[0].url).toEqual(url1);
       expect(textFiles[1].url).toEqual(url2);
       expect(textFiles[0].body).toEqual(text1);
@@ -305,5 +305,5 @@ function injectFileTypeValues() {
     expect(files[0].fileType).toEqual('image');
     expect(files[1].fileType).toEqual('video');
     expect(files[2].fileType).toEqual('other');
-  })
+  });
 }

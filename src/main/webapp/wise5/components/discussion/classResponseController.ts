@@ -51,7 +51,7 @@ class ClassResponseController {
   }
 
   injectLinks(response) {
-    return response.replace(this.urlMatcher, match => {
+    return response.replace(this.urlMatcher, (match) => {
       let matchUrl = match;
       if (!match.startsWith('http')) {
         /*

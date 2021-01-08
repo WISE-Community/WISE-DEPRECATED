@@ -22,7 +22,9 @@ export class SelectMenuTestHelper {
   }
 
   public getOptions(): HTMLElement[] {
-    return Array.from(this._containerElement.querySelectorAll('mat-option') as NodeListOf<HTMLElement>);
+    return Array.from(
+      this._containerElement.querySelectorAll('mat-option') as NodeListOf<HTMLElement>
+    );
   }
 
   public selectOption(option: HTMLElement) {
@@ -44,5 +46,4 @@ export class SelectMenuTestHelper {
   public cleanup() {
     this._container.ngOnDestroy();
   }
-
 }

@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { finalize } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Student } from "../../../domain/student";
-import { UserService } from "../../../services/user.service";
-import { StudentService } from "../../student.service";
+import { Student } from '../../../domain/student';
+import { UserService } from '../../../services/user.service';
+import { StudentService } from '../../student.service';
 
 @Component({
   selector: 'app-edit-profile',
@@ -12,7 +12,6 @@ import { StudentService } from "../../student.service";
   styleUrls: ['./edit-profile.component.scss']
 })
 export class EditProfileComponent implements OnInit {
-
   user: Student;
   languages: object[];
   changed: boolean = false;
@@ -25,10 +24,12 @@ export class EditProfileComponent implements OnInit {
     language: new FormControl('', [Validators.required])
   });
 
-  constructor(private fb: FormBuilder,
-              private studentService: StudentService,
-              private userService: UserService,
-              public snackBar: MatSnackBar) {
+  constructor(
+    private fb: FormBuilder,
+    private studentService: StudentService,
+    private userService: UserService,
+    public snackBar: MatSnackBar
+  ) {
     this.user = <Student>this.getUser().getValue();
     this.setControlFieldValue('firstName', this.user.firstName);
     this.setControlFieldValue('lastName', this.user.lastName);
@@ -51,23 +52,23 @@ export class EditProfileComponent implements OnInit {
     this.editProfileFormGroup.controls[name].setValue(value);
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   saveChanges() {
     this.isSaving = true;
     const username = this.user.username;
     const language = this.getControlFieldValue('language');
-    this.studentService.updateProfile(username, language)
-        .pipe(
-          finalize(() => {
-            this.isSaving = false;
-          })
-        )
-        .subscribe((response) => {
-          this.handleUpdateProfileResponse(response);
-          this.userService.updateStudentUser(language);
+    this.studentService
+      .updateProfile(username, language)
+      .pipe(
+        finalize(() => {
+          this.isSaving = false;
         })
+      )
+      .subscribe((response) => {
+        this.handleUpdateProfileResponse(response);
+        this.userService.updateStudentUser(language);
+      });
   }
 
   getControlFieldValue(fieldName) {

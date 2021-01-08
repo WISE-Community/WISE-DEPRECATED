@@ -13,7 +13,7 @@ const conceptMapAuthoringComponentModule = angular
   .component('editConceptMapAdvanced', EditConceptMapAdvancedComponent)
   .config([
     '$translatePartialLoaderProvider',
-    $translatePartialLoaderProvider => {
+    ($translatePartialLoaderProvider) => {
       $translatePartialLoaderProvider.addPart('components/conceptMap/i18n');
     }
   ]);

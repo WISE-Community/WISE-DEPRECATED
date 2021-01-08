@@ -1,10 +1,10 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog } from '@angular/material/dialog';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { finalize } from 'rxjs/operators';
-import { Project } from "../../domain/project";
-import { Run } from "../../domain/run";
-import { TeacherService } from "../teacher.service";
+import { Project } from '../../domain/project';
+import { Run } from '../../domain/run';
+import { TeacherService } from '../teacher.service';
 import { UserService } from '../../services/user.service';
 import { ConfigService } from '../../services/config.service';
 import { ListClassroomCoursesDialogComponent } from '../list-classroom-courses-dialog/list-classroom-courses-dialog.component';
@@ -13,10 +13,8 @@ import { ListClassroomCoursesDialogComponent } from '../list-classroom-courses-d
   selector: 'create-run-dialog',
   templateUrl: './create-run-dialog.component.html',
   styleUrls: ['./create-run-dialog.component.scss']
-
 })
 export class CreateRunDialogComponent {
-
   form: FormGroup;
   project: Project;
   periodsGroup: FormArray;
@@ -30,13 +28,15 @@ export class CreateRunDialogComponent {
   isCreated: boolean = false;
   run: Run = null;
 
-  constructor(public dialog: MatDialog,
-              public dialogRef: MatDialogRef<CreateRunDialogComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: any,
-              private teacherService: TeacherService,
-              private userService: UserService,
-              private configService: ConfigService,
-              private fb: FormBuilder) {
+  constructor(
+    public dialog: MatDialog,
+    public dialogRef: MatDialogRef<CreateRunDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private teacherService: TeacherService,
+    private userService: UserService,
+    private configService: ConfigService,
+    private fb: FormBuilder
+  ) {
     this.project = data.project;
     this.maxStudentsPerTeam = 3;
   }
@@ -44,10 +44,15 @@ export class CreateRunDialogComponent {
   ngOnInit() {
     this.setPeriodOptions();
     let hiddenControl = new FormControl('', Validators.required);
-    this.periodsGroup = new FormArray(this.periodOptions.map(period => new FormGroup({
-      name: new FormControl(period),
-      checkbox: new FormControl(false)
-    })));
+    this.periodsGroup = new FormArray(
+      this.periodOptions.map(
+        (period) =>
+          new FormGroup({
+            name: new FormControl(period),
+            checkbox: new FormControl(false)
+          })
+      )
+    );
     this.periodsGroup.valueChanges.subscribe((v) => {
       hiddenControl.setValue(this.getPeriodsString());
     });
@@ -86,7 +91,7 @@ export class CreateRunDialogComponent {
   }
 
   get selectedPeriodsControl() {
-    return <FormArray>this.form.get("selectedPeriods");
+    return <FormArray>this.form.get('selectedPeriods');
   }
 
   mapPeriods(items: any[]): string[] {
@@ -106,20 +111,27 @@ export class CreateRunDialogComponent {
     }
     const isLockedAfterEndDate = this.form.controls['isLockedAfterEndDate'].value;
     const maxStudentsPerTeam = this.form.controls['maxStudentsPerTeam'].value;
-    this.teacherService.createRun(this.project.id, combinedPeriods, maxStudentsPerTeam, startDate,
-        endDate, isLockedAfterEndDate)
-        .pipe(
-          finalize(() => {
-            this.isCreating = false;
-          })
-        )
-        .subscribe((newRun: Run) => {
-          this.run = new Run(newRun);
-          this.dialogRef.afterClosed().subscribe(result => {
-            this.teacherService.addNewRun(this.run);
-          });
-          this.isCreated = true;
+    this.teacherService
+      .createRun(
+        this.project.id,
+        combinedPeriods,
+        maxStudentsPerTeam,
+        startDate,
+        endDate,
+        isLockedAfterEndDate
+      )
+      .pipe(
+        finalize(() => {
+          this.isCreating = false;
+        })
+      )
+      .subscribe((newRun: Run) => {
+        this.run = new Run(newRun);
+        this.dialogRef.afterClosed().subscribe((result) => {
+          this.teacherService.addNewRun(this.run);
         });
+        this.isCreated = true;
+      });
   }
 
   getPeriodsString(): string {
@@ -145,28 +157,32 @@ export class CreateRunDialogComponent {
   }
 
   checkClassroomAuthorization() {
-    this.teacherService.getClassroomAuthorizationUrl(this.userService.getUser().getValue().username).subscribe(({ authorizationUrl }) => {
-      if (authorizationUrl == null) {
-        this.getClassroomCourses();
-      } else {
-        const authWindow = window.open(authorizationUrl, "authorize", "width=600,height=800");
-        const timer = setInterval(() => {
-          if (authWindow.closed) {
-            clearInterval(timer);
-            this.checkClassroomAuthorization();
-          }
-        }, 1000);
-      }
-    });
+    this.teacherService
+      .getClassroomAuthorizationUrl(this.userService.getUser().getValue().username)
+      .subscribe(({ authorizationUrl }) => {
+        if (authorizationUrl == null) {
+          this.getClassroomCourses();
+        } else {
+          const authWindow = window.open(authorizationUrl, 'authorize', 'width=600,height=800');
+          const timer = setInterval(() => {
+            if (authWindow.closed) {
+              clearInterval(timer);
+              this.checkClassroomAuthorization();
+            }
+          }, 1000);
+        }
+      });
   }
 
   getClassroomCourses() {
-    this.teacherService.getClassroomCourses(this.userService.getUser().getValue().username).subscribe(courses => {
-      this.dialog.open(ListClassroomCoursesDialogComponent, {
-        data: { run: this.run, courses },
-        panelClass: 'mat-dialog-md'
+    this.teacherService
+      .getClassroomCourses(this.userService.getUser().getValue().username)
+      .subscribe((courses) => {
+        this.dialog.open(ListClassroomCoursesDialogComponent, {
+          data: { run: this.run, courses },
+          panelClass: 'mat-dialog-md'
+        });
       });
-    });
   }
 
   updateLockedAfterEndDateCheckbox() {

@@ -381,7 +381,6 @@ class MatchAuthoringController extends EditComponentController {
     }
     return null;
   }
-
 }
 
 const MatchAuthoring = {
@@ -392,6 +391,6 @@ const MatchAuthoring = {
   controller: MatchAuthoringController,
   controllerAs: 'matchController',
   templateUrl: 'wise5/components/match/authoring.html'
-}
+};
 
 export default MatchAuthoring;

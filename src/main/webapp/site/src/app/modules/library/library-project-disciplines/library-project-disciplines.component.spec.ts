@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { LibraryProjectDisciplinesComponent } from './library-project-disciplines.component';
-import { LibraryProject } from "../libraryProject";
-import { NO_ERRORS_SCHEMA } from "@angular/core";
+import { LibraryProject } from '../libraryProject';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('LibraryProjectDisciplinesComponent', () => {
   let component: LibraryProjectDisciplinesComponent;
@@ -9,11 +9,10 @@ describe('LibraryProjectDisciplinesComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ LibraryProjectDisciplinesComponent ],
+      declarations: [LibraryProjectDisciplinesComponent],
       imports: [],
-      schemas: [ NO_ERRORS_SCHEMA ]
-    })
-    .compileComponents();
+      schemas: [NO_ERRORS_SCHEMA]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

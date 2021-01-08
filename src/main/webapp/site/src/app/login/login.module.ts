@@ -2,8 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LoginComponent } from './login.component';
 import { LoginGoogleUserNotFoundComponent } from './login-google-user-not-found/login-google-user-not-found.component';
-import { LoginHomeComponent } from "./login-home/login-home.component";
-import { LoginRoutingModule } from "./login-routing.module";
+import { LoginHomeComponent } from './login-home/login-home.component';
+import { LoginRoutingModule } from './login-routing.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RecaptchaModule, RecaptchaFormsModule } from 'ng-recaptcha';
@@ -40,8 +40,6 @@ const materialModules = [
     LoginGoogleUserNotFoundComponent,
     LoginComponent
   ],
-  exports: [
-    LoginComponent
-  ]
+  exports: [LoginComponent]
 })
-export class LoginModule { }
+export class LoginModule {}

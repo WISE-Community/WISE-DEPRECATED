@@ -1,19 +1,18 @@
 'use strict';
 
-import { UpgradeModule } from "@angular/upgrade/static";
-import { HttpClient, HttpParams } from "@angular/common/http";
-import { AnnotationService } from "./annotationService";
-import { ConfigService } from "./configService";
-import { UtilService } from "./utilService";
-import { TeacherProjectService } from "./teacherProjectService";
-import { TeacherWebSocketService } from "./teacherWebSocketService";
-import { Injectable } from "@angular/core";
-import { DataService } from "../../site/src/app/services/data.service";
-import { Observable, Subject, Subscription } from "rxjs";
+import { UpgradeModule } from '@angular/upgrade/static';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { AnnotationService } from './annotationService';
+import { ConfigService } from './configService';
+import { UtilService } from './utilService';
+import { TeacherProjectService } from './teacherProjectService';
+import { TeacherWebSocketService } from './teacherWebSocketService';
+import { Injectable } from '@angular/core';
+import { DataService } from '../../site/src/app/services/data.service';
+import { Observable, Subject, Subscription } from 'rxjs';
 
 @Injectable()
 export class TeacherDataService extends DataService {
-
   studentData: any;
   $rootScope: any;
   currentPeriod = null;
@@ -31,8 +30,7 @@ export class TeacherDataService extends DataService {
   private currentPeriodChangedSource: Subject<any> = new Subject<any>();
   public currentPeriodChanged$: Observable<any> = this.currentPeriodChangedSource.asObservable();
   private currentWorkgroupChangedSource: Subject<any> = new Subject<any>();
-  public currentWorkgroupChanged$: Observable<any> =
-      this.currentWorkgroupChangedSource.asObservable();
+  public currentWorkgroupChanged$: Observable<any> = this.currentWorkgroupChangedSource.asObservable();
 
   constructor(
     upgrade: UpgradeModule,
@@ -51,21 +49,24 @@ export class TeacherDataService extends DataService {
     };
 
     if (this.upgrade.$injector != null) {
-      this.annotationSavedToServerSubscription = 
-          this.AnnotationService.annotationSavedToServer$.subscribe(({ annotation }) => {
-        this.handleAnnotationReceived(annotation);
-      });
+      this.annotationSavedToServerSubscription = this.AnnotationService.annotationSavedToServer$.subscribe(
+        ({ annotation }) => {
+          this.handleAnnotationReceived(annotation);
+        }
+      );
 
-      this.newAnnotationReceivedSubscription = this.TeacherWebSocketService.newAnnotationReceived$
-          .subscribe(({ annotation }) => {
-        this.handleAnnotationReceived(annotation);
-      });
+      this.newAnnotationReceivedSubscription = this.TeacherWebSocketService.newAnnotationReceived$.subscribe(
+        ({ annotation }) => {
+          this.handleAnnotationReceived(annotation);
+        }
+      );
 
-      this.newStudentWorkReceivedSubscription = this.TeacherWebSocketService.newStudentWorkReceived$
-          .subscribe(({ studentWork }) => {
-        this.addOrUpdateComponentState(studentWork);
-        this.broadcastStudentWorkReceived({ studentWork: studentWork });
-      });
+      this.newStudentWorkReceivedSubscription = this.TeacherWebSocketService.newStudentWorkReceived$.subscribe(
+        ({ studentWork }) => {
+          this.addOrUpdateComponentState(studentWork);
+          this.broadcastStudentWorkReceived({ studentWork: studentWork });
+        }
+      );
     }
   }
 
@@ -150,10 +151,10 @@ export class TeacherDataService extends DataService {
 
   retrieveStudentDataExport(selectedNodes) {
     let params = new HttpParams()
-        .set('runId', this.ConfigService.getRunId())
-        .set('getStudentWork', 'true')
-        .set('getEvents', 'false')
-        .set('getAnnotations', 'true');
+      .set('runId', this.ConfigService.getRunId())
+      .set('getStudentWork', 'true')
+      .set('getEvents', 'false')
+      .set('getAnnotations', 'true');
     if (selectedNodes != null) {
       for (const selectedNode of selectedNodes) {
         params = params.append('components', JSON.stringify(selectedNode));
@@ -164,44 +165,52 @@ export class TeacherDataService extends DataService {
 
   retrieveEventsExport(includeStudentEvents, includeTeacherEvents, includeNames) {
     const params = new HttpParams()
-        .set('runId', this.ConfigService.getRunId())
-        .set('getStudentWork', 'false')
-        .set('getAnnotations', 'false')
-        .set('getEvents', 'false')
-        .set('includeStudentEvents', includeStudentEvents + '')
-        .set('includeTeacherEvents', includeTeacherEvents + '')
-        .set('includeNames', includeNames + '');
+      .set('runId', this.ConfigService.getRunId())
+      .set('getStudentWork', 'false')
+      .set('getAnnotations', 'false')
+      .set('getEvents', 'false')
+      .set('includeStudentEvents', includeStudentEvents + '')
+      .set('includeTeacherEvents', includeTeacherEvents + '')
+      .set('includeNames', includeNames + '');
     const options = {
       params: params
     };
     const url = this.ConfigService.getConfigParam('runDataExportURL') + '/events';
-    return this.http.get(url, options).toPromise().then((data: any) => {
-      return this.handleStudentDataResponse(data);
-    });
+    return this.http
+      .get(url, options)
+      .toPromise()
+      .then((data: any) => {
+        return this.handleStudentDataResponse(data);
+      });
   }
 
   retrieveNotebookExport(exportType) {
     const params = new HttpParams().set('exportType', exportType);
     const options = { params: params };
-    return this.http.get(`/teacher/notebook/run/${this.ConfigService.getRunId()}`, options)
-        .toPromise().then((data: any) => {
-      return data;
-    });
+    return this.http
+      .get(`/teacher/notebook/run/${this.ConfigService.getRunId()}`, options)
+      .toPromise()
+      .then((data: any) => {
+        return data;
+      });
   }
 
   retrieveNotificationsExport() {
     const url = this.getExportURL(this.ConfigService.getRunId(), 'notifications');
-    return this.http.get(url).toPromise().then((data: any) => {
-      return data;
-    });
+    return this.http
+      .get(url)
+      .toPromise()
+      .then((data: any) => {
+        return data;
+      });
   }
 
   retrieveOneWorkgroupPerRowExport(selectedNodes) {
     let params = new HttpParams()
-        .set('runId', this.ConfigService.getRunId())
-        .set('getStudentWork', 'true')
-        .set('getEvents', 'true')
-        .set('getAnnotations', 'true');
+      .set('runId', this.ConfigService.getRunId())
+      .set('getStudentWork', 'true')
+      .set('getEvents', 'true')
+      .set('getAnnotations', 'true');
     if (selectedNodes != null) {
       for (const selectedNode of selectedNodes) {
         params = params.append('components', JSON.stringify(selectedNode));
@@ -212,17 +221,17 @@ export class TeacherDataService extends DataService {
 
   retrieveStudentAssetsExport() {
     window.location.href = this.getExportURL(this.ConfigService.getRunId(), 'studentAssets');
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       resolve([]);
     });
   }
 
   retrieveRawDataExport(selectedNodes) {
     let params = new HttpParams()
-        .set('runId', this.ConfigService.getRunId())
-        .set('getStudentWork', 'true')
-        .set('getEvents', 'true')
-        .set('getAnnotations', 'true');
+      .set('runId', this.ConfigService.getRunId())
+      .set('getStudentWork', 'true')
+      .set('getEvents', 'true')
+      .set('getAnnotations', 'true');
     if (selectedNodes != null) {
       for (const selectedNode of selectedNodes) {
         params = params.append('components', JSON.stringify(selectedNode));
@@ -232,8 +241,15 @@ export class TeacherDataService extends DataService {
   }
 
   saveEvent(context, nodeId, componentId, componentType, category, event, data) {
-    const newEvent = this.createEvent(context, nodeId, componentId, componentType, category, event,
-        data);
+    const newEvent = this.createEvent(
+      context,
+      nodeId,
+      componentId,
+      componentType,
+      category,
+      event,
+      data
+    );
     const events = [newEvent];
     let body = new HttpParams().set('events', JSON.stringify(events));
     body = this.addCommonParams(body);
@@ -241,9 +257,12 @@ export class TeacherDataService extends DataService {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     };
     const url = this.ConfigService.getConfigParam('teacherDataURL');
-    return this.http.post(url, body, options).toPromise().then((data: any) => {
-      return data.events;
-    });
+    return this.http
+      .post(url, body, options)
+      .toPromise()
+      .then((data: any) => {
+        return data.events;
+      });
   }
 
   addCommonParams(params) {
@@ -299,10 +318,10 @@ export class TeacherDataService extends DataService {
 
   retrieveStudentDataByNodeId(nodeId) {
     let params = new HttpParams()
-        .set('runId', this.ConfigService.getRunId())
-        .set('getStudentWork', 'true')
-        .set('getAnnotations', 'false')
-        .set('getEvents', 'false');
+      .set('runId', this.ConfigService.getRunId())
+      .set('getStudentWork', 'true')
+      .set('getAnnotations', 'false')
+      .set('getEvents', 'false');
     const components = this.getAllRelatedComponents(nodeId);
     for (const component of components) {
       params = params.append('components', JSON.stringify(component));
@@ -311,8 +330,9 @@ export class TeacherDataService extends DataService {
   }
 
   getAllRelatedComponents(nodeId) {
-    const components = (<TeacherProjectService>this.ProjectService)
-        .getNodeIdsAndComponentIds(nodeId);
+    const components = (<TeacherProjectService>this.ProjectService).getNodeIdsAndComponentIds(
+      nodeId
+    );
     return components.concat(this.getConnectedComponentsIfNecessary(components));
   }
 
@@ -342,37 +362,37 @@ export class TeacherDataService extends DataService {
 
   retrieveStudentDataByWorkgroupId(workgroupId) {
     const params = new HttpParams()
-        .set('runId', this.ConfigService.getRunId())
-        .set('workgroupId', workgroupId)
-        .set('toWorkgroupId', workgroupId)
-        .set('getStudentWork', 'true')
-        .set('getEvents', 'false')
-        .set('getAnnotations', 'false');
+      .set('runId', this.ConfigService.getRunId())
+      .set('workgroupId', workgroupId)
+      .set('toWorkgroupId', workgroupId)
+      .set('getStudentWork', 'true')
+      .set('getEvents', 'false')
+      .set('getAnnotations', 'false');
     return this.retrieveStudentData(params);
   }
 
   retrieveAnnotations() {
     const params = new HttpParams()
-        .set('runId', this.ConfigService.getRunId())
-        .set('getStudentWork', 'false')
-        .set('getEvents', 'false')
-        .set('getAnnotations', 'true');
+      .set('runId', this.ConfigService.getRunId())
+      .set('getStudentWork', 'false')
+      .set('getEvents', 'false')
+      .set('getAnnotations', 'true');
     return this.retrieveStudentData(params);
   }
 
   retrieveLatestStudentDataByNodeIdAndComponentIdAndPeriodId(nodeId, componentId, periodId) {
     let params = new HttpParams()
-        .set('runId', this.ConfigService.getRunId())
-        .set('nodeId', nodeId)
-        .set('componentId', componentId)
-        .set('getStudentWork', 'true')
-        .set('getEvents', 'false')
-        .set('getAnnotations', 'false')
-        .set('onlyGetLatest', 'true');
+      .set('runId', this.ConfigService.getRunId())
+      .set('nodeId', nodeId)
+      .set('componentId', componentId)
+      .set('getStudentWork', 'true')
+      .set('getEvents', 'false')
+      .set('getAnnotations', 'false')
+      .set('onlyGetLatest', 'true');
     if (periodId != null) {
       params = params.set('periodId', periodId);
     }
-    return this.retrieveStudentData(params).then(result => {
+    return this.retrieveStudentData(params).then((result) => {
       return result.studentWorkList;
     });
   }
@@ -382,9 +402,12 @@ export class TeacherDataService extends DataService {
     const options = {
       params: params
     };
-    return this.http.get(url, options).toPromise().then((data: any) => {
-      return this.handleStudentDataResponse(data);
-    });
+    return this.http
+      .get(url, options)
+      .toPromise()
+      .then((data: any) => {
+        return this.handleStudentDataResponse(data);
+      });
   }
 
   handleStudentDataResponse(resultData) {
@@ -566,10 +589,13 @@ export class TeacherDataService extends DataService {
       params: params,
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     };
-    return this.http.get(url, options).toPromise().then((data: any) => {
-      this.runStatus = data;
-      this.initializePeriods();
-    });
+    return this.http
+      .get(url, options)
+      .toPromise()
+      .then((data: any) => {
+        this.runStatus = data;
+        this.initializePeriods();
+      });
   }
 
   getComponentStatesByWorkgroupId(workgroupId) {
@@ -768,7 +794,7 @@ export class TeacherDataService extends DataService {
   getAnnotationsByNodeIdAndPeriodId(nodeId, periodId) {
     const annotationsByNodeId = this.studentData.annotationsByNodeId[nodeId];
     if (annotationsByNodeId != null) {
-      return annotationsByNodeId.filter(annotation => {
+      return annotationsByNodeId.filter((annotation) => {
         return this.UtilService.isMatchingPeriods(annotation.periodId, periodId);
       });
     } else {
@@ -960,20 +986,22 @@ export class TeacherDataService extends DataService {
   }
 
   sendRunStatusThenHandlePauseScreen(periodId, isPaused) {
-    this.sendRunStatus().toPromise().then(() => {
-      if (isPaused) {
-        this.TeacherWebSocketService.pauseScreens(periodId);
-      } else {
-        this.TeacherWebSocketService.unPauseScreens(periodId);
-      }
-    });
+    this.sendRunStatus()
+      .toPromise()
+      .then(() => {
+        if (isPaused) {
+          this.TeacherWebSocketService.pauseScreens(periodId);
+        } else {
+          this.TeacherWebSocketService.unPauseScreens(periodId);
+        }
+      });
   }
 
   sendRunStatus() {
     const url = this.ConfigService.getConfigParam('runStatusURL');
     const body = new HttpParams()
-        .set('runId', this.ConfigService.getConfigParam('runId'))
-        .set('status', JSON.stringify(this.runStatus));
+      .set('runId', this.ConfigService.getConfigParam('runId'))
+      .set('status', JSON.stringify(this.runStatus));
     const options = {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     };

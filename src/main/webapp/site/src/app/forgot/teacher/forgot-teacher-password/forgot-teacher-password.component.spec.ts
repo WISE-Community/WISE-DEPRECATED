@@ -10,7 +10,7 @@ import { configureTestSuite } from 'ng-bullet';
 
 export class MockTeacherService {
   getVerificationCodeEmail(username: string): Observable<any> {
-    return Observable.create(observer => {
+    return Observable.create((observer) => {
       observer.next({
         status: 'success',
         messageCode: 'emailSent'
@@ -33,7 +33,7 @@ describe('ForgotTeacherPasswordComponent', () => {
   };
 
   const createObservableResponse = (status, messageCode) => {
-    const observableResponse = Observable.create(observer => {
+    const observableResponse = Observable.create((observer) => {
       const response = {
         status: status,
         messageCode: messageCode
@@ -51,16 +51,11 @@ describe('ForgotTeacherPasswordComponent', () => {
 
   configureTestSuite(() => {
     TestBed.configureTestingModule({
-      declarations: [ ForgotTeacherPasswordComponent ],
-      imports: [
-        RouterTestingModule,
-        ReactiveFormsModule
-      ],
-      providers: [
-        { provide: TeacherService, useClass: MockTeacherService }
-      ],
-      schemas: [ NO_ERRORS_SCHEMA ]
-    })
+      declarations: [ForgotTeacherPasswordComponent],
+      imports: [RouterTestingModule, ReactiveFormsModule],
+      providers: [{ provide: TeacherService, useClass: MockTeacherService }],
+      schemas: [NO_ERRORS_SCHEMA]
+    });
   });
 
   beforeEach(() => {
@@ -79,13 +74,21 @@ describe('ForgotTeacherPasswordComponent', () => {
   });
 
   it('should show the too many verification code attempts message', () => {
-    submitAndReceiveResponse('getVerificationCodeEmail', 'failure', 'tooManyVerificationCodeAttempts');
-    expect(getErrorMessage()).toContain('You have submitted an invalid verification code too many times');
+    submitAndReceiveResponse(
+      'getVerificationCodeEmail',
+      'failure',
+      'tooManyVerificationCodeAttempts'
+    );
+    expect(getErrorMessage()).toContain(
+      'You have submitted an invalid verification code too many times'
+    );
   });
 
   it('should show the failed to send email message', () => {
     submitAndReceiveResponse('getVerificationCodeEmail', 'failure', 'failedToSendEmail');
-    expect(getErrorMessage()).toContain('The server has encountered an error and was unable to send you an email');
+    expect(getErrorMessage()).toContain(
+      'The server has encountered an error and was unable to send you an email'
+    );
   });
 
   it('should navigate to the verify code page', () => {
@@ -95,7 +98,10 @@ describe('ForgotTeacherPasswordComponent', () => {
     const params = {
       username: ''
     };
-    expect(navigateSpy).toHaveBeenCalledWith(['/forgot/teacher/password/verify'], {queryParams: params, skipLocationChange: true});
+    expect(navigateSpy).toHaveBeenCalledWith(['/forgot/teacher/password/verify'], {
+      queryParams: params,
+      skipLocationChange: true
+    });
   });
 
   it('should navigate to the verify code page after successfully sending a valid username', () => {
@@ -107,6 +113,9 @@ describe('ForgotTeacherPasswordComponent', () => {
     const params = {
       username: 'SpongebobSquarepants'
     };
-    expect(navigateSpy).toHaveBeenCalledWith(['/forgot/teacher/password/verify'], {queryParams: params, skipLocationChange: true});
+    expect(navigateSpy).toHaveBeenCalledWith(['/forgot/teacher/password/verify'], {
+      queryParams: params,
+      skipLocationChange: true
+    });
   });
 });

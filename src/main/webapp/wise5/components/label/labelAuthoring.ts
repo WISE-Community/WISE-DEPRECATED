@@ -2,14 +2,13 @@
 
 import * as $ from 'jquery';
 import * as fabric from 'fabric';
-window['fabric'] = fabric.fabric
+window['fabric'] = fabric.fabric;
 import html2canvas from 'html2canvas';
 import { Directive } from '@angular/core';
 import { EditComponentController } from '../../authoringTool/components/editComponentController';
 
 @Directive()
 class LabelAuthoringController extends EditComponentController {
-  
   static $inject = [
     '$filter',
     '$window',
@@ -106,7 +105,7 @@ class LabelAuthoringController extends EditComponentController {
 
   saveStarterLabels(): void {
     if (confirm(this.$translate('label.areYouSureYouWantToSaveTheStarterLabels'))) {
-      this.NodeService.requestStarterState({nodeId: this.nodeId, componentId: this.componentId});
+      this.NodeService.requestStarterState({ nodeId: this.nodeId, componentId: this.componentId });
     }
   }
 
@@ -163,7 +162,6 @@ class LabelAuthoringController extends EditComponentController {
   openColorViewer(): void {
     this.$window.open('http://www.javascripter.net/faq/colornam.htm');
   }
-
 }
 
 const LabelAuthoring = {
@@ -174,6 +172,6 @@ const LabelAuthoring = {
   controller: LabelAuthoringController,
   controllerAs: 'labelController',
   templateUrl: 'wise5/components/label/authoring.html'
-}
+};
 
 export default LabelAuthoring;

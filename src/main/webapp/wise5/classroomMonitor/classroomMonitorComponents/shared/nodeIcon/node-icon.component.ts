@@ -9,7 +9,6 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['node-icon.component.scss']
 })
 export class NodeIconComponent {
-
   @Input()
   customClass: string;
 

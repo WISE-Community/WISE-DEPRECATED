@@ -13,7 +13,7 @@ const drawAuthoringComponentModule = angular
   .component('editDrawAdvanced', EditDrawAdvancedComponent)
   .config([
     '$translatePartialLoaderProvider',
-    $translatePartialLoaderProvider => {
+    ($translatePartialLoaderProvider) => {
       $translatePartialLoaderProvider.addPart('components/draw/i18n');
     }
   ]);

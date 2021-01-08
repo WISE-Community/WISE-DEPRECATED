@@ -15,15 +15,22 @@ let http: HttpTestingController;
 describe('StudentStatusService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule, UpgradeModule ],
-      providers: [AnnotationService, ConfigService, ProjectService, SessionService, StudentStatusService, UtilService ]
+      imports: [HttpClientTestingModule, UpgradeModule],
+      providers: [
+        AnnotationService,
+        ConfigService,
+        ProjectService,
+        SessionService,
+        StudentStatusService,
+        UtilService
+      ]
     });
     http = TestBed.get(HttpTestingController);
     service = TestBed.get(StudentStatusService);
     configService = TestBed.get(ConfigService);
   });
   retrieveStudentStatuses();
-})
+});
 
 function retrieveStudentStatuses() {
   describe('retrieveStudentStatuses', () => {
@@ -37,8 +44,9 @@ function retrieveStudentStatuses_SetStudentStatuses() {
     const statusPostTimestamp = 12345;
     spyOn(configService, 'getRunId').and.returnValue(currentRunId);
     const retrieveStudentStatusesURL = `/api/teacher/run/${currentRunId}/student-status`;
-    const statusesExpected =
-      [{timestamp: statusPostTimestamp, status: `{"runId":${currentRunId}}`}];
+    const statusesExpected = [
+      { timestamp: statusPostTimestamp, status: `{"runId":${currentRunId}}` }
+    ];
     service.retrieveStudentStatuses().then((response) => {
       expect(response.length).toEqual(1);
     });

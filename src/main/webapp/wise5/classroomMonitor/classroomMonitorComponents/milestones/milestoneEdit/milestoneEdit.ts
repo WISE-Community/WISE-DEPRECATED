@@ -47,11 +47,7 @@ class MilestoneDetailsController {
   createMilestone() {
     const projectAchievements = this.ProjectService.getAchievementItems();
     if (projectAchievements != null) {
-      let tomorrow = this.moment()
-        .add('days', 1)
-        .hours(23)
-        .minutes(11)
-        .seconds(59);
+      let tomorrow = this.moment().add('days', 1).hours(23).minutes(11).seconds(59);
       this.milestone = {
         id: this.AchievementService.getAvailableAchievementId(),
         name: '',
@@ -117,7 +113,7 @@ class MilestoneDetailsController {
   }
 
   change() {
-    let itemsArray = Object.keys(this.milestone.items).map(it => this.milestone.items[it]);
+    let itemsArray = Object.keys(this.milestone.items).map((it) => this.milestone.items[it]);
     let valid =
       this.$scope.milestoneEditForm.$valid &&
       this.$filter('filter')(itemsArray, { checked: true }).length > 0;

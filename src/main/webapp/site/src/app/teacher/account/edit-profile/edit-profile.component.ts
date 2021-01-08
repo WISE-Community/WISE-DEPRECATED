@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators, FormBuilder } from "@angular/forms";
+import { FormControl, FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { finalize } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { UserService } from "../../../services/user.service";
-import { Teacher } from "../../../domain/teacher";
-import { TeacherService } from "../../teacher.service";
+import { UserService } from '../../../services/user.service';
+import { Teacher } from '../../../domain/teacher';
+import { TeacherService } from '../../teacher.service';
 
 @Component({
   selector: 'app-edit-profile',
@@ -12,7 +12,6 @@ import { TeacherService } from "../../teacher.service";
   styleUrls: ['./edit-profile.component.scss']
 })
 export class EditProfileComponent implements OnInit {
-
   user: Teacher;
   schoolLevels: any[] = [
     { id: 'ELEMENTARY_SCHOOL', label: $localize`Elementary School` },
@@ -38,10 +37,12 @@ export class EditProfileComponent implements OnInit {
     language: new FormControl('', [Validators.required])
   });
 
-  constructor(private fb: FormBuilder,
-        private teacherService: TeacherService,
-        private userService: UserService,
-        public snackBar: MatSnackBar) {
+  constructor(
+    private fb: FormBuilder,
+    private teacherService: TeacherService,
+    private userService: UserService,
+    public snackBar: MatSnackBar
+  ) {
     this.user = <Teacher>this.getUser().getValue();
     this.setControlFieldValue('firstName', this.user.firstName);
     this.setControlFieldValue('lastName', this.user.lastName);
@@ -70,8 +71,7 @@ export class EditProfileComponent implements OnInit {
     this.editProfileFormGroup.controls[name].setValue(value);
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   saveChanges() {
     this.isSaving = true;
@@ -84,16 +84,36 @@ export class EditProfileComponent implements OnInit {
     const schoolLevel: string = this.getControlFieldValue('schoolLevel');
     const language: string = this.getControlFieldValue('language');
     const username = this.user.username;
-    this.teacherService.updateProfile(username, displayName, email, city, state, country, schoolName, schoolLevel, language)
-        .pipe(
-          finalize(() => {
-            this.isSaving = false;
-          })
-        )
-        .subscribe((response) => {
-          this.handleUpdateProfileResponse(response);
-          this.userService.updateTeacherUser(displayName, email, city, state, country, schoolName, schoolLevel, language);
+    this.teacherService
+      .updateProfile(
+        username,
+        displayName,
+        email,
+        city,
+        state,
+        country,
+        schoolName,
+        schoolLevel,
+        language
+      )
+      .pipe(
+        finalize(() => {
+          this.isSaving = false;
         })
+      )
+      .subscribe((response) => {
+        this.handleUpdateProfileResponse(response);
+        this.userService.updateTeacherUser(
+          displayName,
+          email,
+          city,
+          state,
+          country,
+          schoolName,
+          schoolLevel,
+          language
+        );
+      });
   }
 
   getControlFieldValue(fieldName) {

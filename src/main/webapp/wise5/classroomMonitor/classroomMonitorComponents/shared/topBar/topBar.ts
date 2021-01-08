@@ -55,10 +55,11 @@ class TopBarController {
     }
     this.avatarColor = this.ConfigService.getAvatarColorForWorkgroupId(this.workgroupId);
     this.userInfo = this.ConfigService.getMyUserInfo();
-    this.notificationChangedSubscription = this.NotificationService.notificationChanged$
-        .subscribe(() => {
-      this.setNotifications();
-    });
+    this.notificationChangedSubscription = this.NotificationService.notificationChanged$.subscribe(
+      () => {
+        this.setNotifications();
+      }
+    );
     this.themePath = this.ProjectService.getThemePath();
     this.contextPath = this.ConfigService.getContextPath();
 
@@ -100,15 +101,15 @@ class TopBarController {
   setNotifications() {
     // get all notifications for the logged in teacher
     // TODO: take into account shared teacher users!
-    let userNotifications = this.notifications.filter(notification => {
+    let userNotifications = this.notifications.filter((notification) => {
       return notification.toWorkgroupId === this.workgroupId;
     });
 
-    this.newNotifications = userNotifications.filter(notification => {
+    this.newNotifications = userNotifications.filter((notification) => {
       return notification.timeDismissed == null;
     });
 
-    this.dismissedNotifications = userNotifications.filter(notification => {
+    this.dismissedNotifications = userNotifications.filter((notification) => {
       return notification.timeDismissed != null;
     });
   }
@@ -147,9 +148,7 @@ class TopBarController {
 
   previewProject() {
     this.saveEvent('projectPreviewed').then(() => {
-      window.open(
-        `${this.ConfigService.getConfigParam('previewProjectURL')}`
-      );
+      window.open(`${this.ConfigService.getConfigParam('previewProjectURL')}`);
     });
   }
 

@@ -8,12 +8,9 @@ describe('ChooseBranchPathDialogComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      providers: [ MatDialogModule,
-        { provide: MAT_DIALOG_DATA, useValue: { } }
-      ],
-      declarations: [ ChooseBranchPathDialogComponent ]
-    })
-    .compileComponents();
+      providers: [MatDialogModule, { provide: MAT_DIALOG_DATA, useValue: {} }],
+      declarations: [ChooseBranchPathDialogComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

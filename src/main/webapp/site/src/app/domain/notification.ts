@@ -1,4 +1,3 @@
-
 export class Notification {
   id: number;
   runId: number;

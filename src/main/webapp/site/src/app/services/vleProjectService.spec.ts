@@ -14,8 +14,8 @@ let http: HttpTestingController;
 describe('VLEProjectService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule, UpgradeModule ],
-      providers: [ VLEProjectService, ConfigService, SessionService, UtilService ]
+      imports: [HttpClientTestingModule, UpgradeModule],
+      providers: [VLEProjectService, ConfigService, SessionService, UtilService]
     });
     http = TestBed.get(HttpTestingController);
     service = TestBed.get(VLEProjectService);

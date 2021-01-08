@@ -83,9 +83,7 @@ import { HtmlAuthoring } from '../../../wise5/components/html/html-authoring/htm
     WiseAuthoringTinymceEditorComponent,
     WorkgroupNodeStatusComponent
   ],
-  imports: [
-    AngularJSModule
-  ],
+  imports: [AngularJSModule],
   providers: [
     { provide: DataService, useExisting: TeacherDataService },
     MilestoneService,

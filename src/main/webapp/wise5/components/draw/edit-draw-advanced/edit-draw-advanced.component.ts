@@ -1,4 +1,4 @@
-import { EditAdvancedComponentAngularJSController } from "../../../../site/src/app/authoring-tool/edit-advanced-component/editAdvancedComponentAngularJSController";
+import { EditAdvancedComponentAngularJSController } from '../../../../site/src/app/authoring-tool/edit-advanced-component/editAdvancedComponentAngularJSController';
 
 class EditDrawAdvancedController extends EditAdvancedComponentAngularJSController {
   allowedConnectedComponentTypes = ['ConceptMap', 'Draw', 'Embedded', 'Graph', 'Label', 'Table'];
@@ -29,8 +29,10 @@ class EditDrawAdvancedController extends EditAdvancedComponentAngularJSControlle
   }
 
   setImportWorkAsBackgroundIfApplicable(connectedComponent) {
-    const componentType = this.ProjectService.getComponentType(connectedComponent.nodeId,
-        connectedComponent.componentId);
+    const componentType = this.ProjectService.getComponentType(
+      connectedComponent.nodeId,
+      connectedComponent.componentId
+    );
     if (['ConceptMap', 'Embedded', 'Graph', 'Label', 'Table'].includes(componentType)) {
       connectedComponent.importWorkAsBackground = true;
     } else {
@@ -53,4 +55,4 @@ export const EditDrawAdvancedComponent = {
   },
   controller: EditDrawAdvancedController,
   templateUrl: 'wise5/components/draw/edit-draw-advanced/edit-draw-advanced.component.html'
-}
+};

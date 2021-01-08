@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { UpgradeModule } from '@angular/upgrade/static';
-import { HttpClientTestingModule, HttpTestingController } from "@angular/common/http/testing";
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { ConfigService } from '../../../../wise5/services/configService';
 import { ProjectService } from '../../../../wise5/services/projectService';
 import { SpaceService } from '../../../../wise5/services/spaceService';
@@ -12,11 +12,11 @@ let projectService: ProjectService;
 describe('SpaceService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule, UpgradeModule ],
-      providers: [ ConfigService, ProjectService, SessionService, SpaceService, UtilService ]
+      imports: [HttpClientTestingModule, UpgradeModule],
+      providers: [ConfigService, ProjectService, SessionService, SpaceService, UtilService]
     });
     projectService = TestBed.get(ProjectService);
-    service = TestBed.get(SpaceService)
+    service = TestBed.get(SpaceService);
   });
   createSpace();
   addSpace();
@@ -36,7 +36,7 @@ function createSpace() {
         name: name,
         isPublic: isPublic,
         isShowInNotebook: isShowInNotebook
-      })
+      });
     });
   });
 }
@@ -55,7 +55,7 @@ function addSpace() {
         name: name,
         isPublic: isPublic,
         isShowInNotebook: isShowInNotebook
-      })
+      });
     });
   });
 }

@@ -1,17 +1,12 @@
 'use strict';
 
-import { Injectable } from "@angular/core";
-import { HttpClient, HttpParams } from "@angular/common/http";
-import { ConfigService } from "./configService";
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { ConfigService } from './configService';
 
 @Injectable()
 export class CRaterService {
-  constructor(
-    protected http: HttpClient,
-    protected ConfigService: ConfigService
-  ) {
-
-  }
+  constructor(protected http: HttpClient, protected ConfigService: ConfigService) {}
 
   /**
    * Make a CRater request to score student data
@@ -23,15 +18,18 @@ export class CRaterService {
   makeCRaterScoringRequest(cRaterItemId: string, cRaterResponseId: number, studentData: any) {
     const url = this.ConfigService.getCRaterRequestURL() + '/score';
     const params = new HttpParams()
-        .set('itemId', cRaterItemId)
-        .set('responseId', cRaterResponseId + '')
-        .set('studentData', studentData);
+      .set('itemId', cRaterItemId)
+      .set('responseId', cRaterResponseId + '')
+      .set('studentData', studentData);
     const options = {
       params: params
     };
-    return this.http.get(url, options).toPromise().then((response) => {
-      return response;
-    });
+    return this.http
+      .get(url, options)
+      .toPromise()
+      .then((response) => {
+        return response;
+      });
   }
 
   /**
@@ -68,9 +66,10 @@ export class CRaterService {
        * 1. the enableCRater field is true
        * 2. there is no enableCRater field but there is a cRater object (this is for legacy purposes)
        */
-      if ((component.enableCRater && component.cRater != null) ||
-        (!component.hasOwnProperty('enableCRater') && component.cRater != null)) {
-
+      if (
+        (component.enableCRater && component.cRater != null) ||
+        (!component.hasOwnProperty('enableCRater') && component.cRater != null)
+      ) {
         // get the score on value e.g. 'submit', 'save', 'change', or 'exit'
         return component.cRater.scoreOn;
       }
@@ -209,10 +208,16 @@ export class CRaterService {
    * @param currentScore the score from the current submit
    * @returns the feedback text for the given previous score and current score
    */
-  getMultipleAttemptCRaterFeedbackTextByScore(component: any, previousScore: any,
-      currentScore: any) {
+  getMultipleAttemptCRaterFeedbackTextByScore(
+    component: any,
+    previousScore: any,
+    currentScore: any
+  ) {
     const scoringRule = this.getMultipleAttemptCRaterScoringRuleByScore(
-        component, previousScore, currentScore);
+      component,
+      previousScore,
+      currentScore
+    );
     if (scoringRule != null) {
       return scoringRule.feedbackText;
     }
@@ -227,8 +232,11 @@ export class CRaterService {
    * @param currentScore the score from the current submit
    * @returns the scoring rule for the given previous score and current score
    */
-  getMultipleAttemptCRaterScoringRuleByScore(component: any, previousScore: any,
-      currentScore: any) {
+  getMultipleAttemptCRaterScoringRuleByScore(
+    component: any,
+    previousScore: any,
+    currentScore: any
+  ) {
     if (component != null && previousScore != null && currentScore != null) {
       const cRater = component.cRater;
       if (cRater != null) {
@@ -245,9 +253,10 @@ export class CRaterService {
                 const previousScoreMatch = scoreSequence[0];
                 const currentScoreMatch = scoreSequence[1];
 
-                if (previousScore.toString().match("[" + previousScoreMatch + "]") &&
-                  currentScore.toString().match("[" + currentScoreMatch + "]")) {
-
+                if (
+                  previousScore.toString().match('[' + previousScoreMatch + ']') &&
+                  currentScore.toString().match('[' + currentScoreMatch + ']')
+                ) {
                   /*
                    * the previous score and current score match the
                    * expected scores so we have found the rule we want
@@ -273,9 +282,12 @@ export class CRaterService {
     const params = new HttpParams().set('itemId', itemId);
     const options = {
       params: params
-    }; 
-    return this.http.get(url, options).toPromise().then((response: any) => {
-      return response.isAvailable;
-    });
+    };
+    return this.http
+      .get(url, options)
+      .toPromise()
+      .then((response: any) => {
+        return response.isAvailable;
+      });
   }
 }

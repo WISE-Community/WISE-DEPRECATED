@@ -13,7 +13,7 @@ const multipleChoiceAuthoringComponentModule = angular
   .component('editMultipleChoiceAdvanced', EditMultipleChoiceAdvancedComponent)
   .config([
     '$translatePartialLoaderProvider',
-    $translatePartialLoaderProvider => {
+    ($translatePartialLoaderProvider) => {
       $translatePartialLoaderProvider.addPart('components/multipleChoice/i18n');
     }
   ]);

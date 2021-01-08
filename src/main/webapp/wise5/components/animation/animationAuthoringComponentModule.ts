@@ -13,7 +13,7 @@ const animationAuthoringComponentModule = angular
   .component('editAnimationAdvanced', EditAnimationAdvancedComponent)
   .config([
     '$translatePartialLoaderProvider',
-    $translatePartialLoaderProvider => {
+    ($translatePartialLoaderProvider) => {
       $translatePartialLoaderProvider.addPart('components/animation/i18n');
     }
   ]);

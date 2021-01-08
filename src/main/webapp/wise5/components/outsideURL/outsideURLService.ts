@@ -9,11 +9,12 @@ import { UtilService } from '../../services/utilService';
 
 @Injectable()
 export class OutsideURLService extends ComponentService {
-
-  constructor(private upgrade: UpgradeModule,
-      private http: HttpClient,
-      protected StudentDataService: StudentDataService,
-      protected UtilService: UtilService) {
+  constructor(
+    private upgrade: UpgradeModule,
+    private http: HttpClient,
+    protected StudentDataService: StudentDataService,
+    protected UtilService: UtilService
+  ) {
     super(StudentDataService, UtilService);
   }
 
@@ -53,8 +54,11 @@ export class OutsideURLService extends ComponentService {
   }
 
   getOpenEducationalResources() {
-    return this.http.get(`wise5/components/outsideURL/resources.json`).toPromise().then(result => {
-      return result;
-    });
+    return this.http
+      .get(`wise5/components/outsideURL/resources.json`)
+      .toPromise()
+      .then((result) => {
+        return result;
+      });
   }
 }

@@ -142,16 +142,17 @@ class EmbeddedController extends ComponentController {
      * Watch for siblingComponentStudentDataChanged which occurs when the student data has changed
      * for another component in this step.
      */
-    this.siblingComponentStudentDataChangedSubscription =
-        this.NodeService.siblingComponentStudentDataChanged$.subscribe((args: any) => {
-      if (this.isEventTargetThisComponent(args)) {
-        const message = {
-          messageType: 'siblingComponentStudentDataChanged',
-          componentState: args.componentState
-        };
-        this.sendMessageToApplication(message);
+    this.siblingComponentStudentDataChangedSubscription = this.NodeService.siblingComponentStudentDataChanged$.subscribe(
+      (args: any) => {
+        if (this.isEventTargetThisComponent(args)) {
+          const message = {
+            messageType: 'siblingComponentStudentDataChanged',
+            componentState: args.componentState
+          };
+          this.sendMessageToApplication(message);
+        }
       }
-    });
+    );
 
     this.initializeMessageEventListener();
     this.broadcastDoneRenderingComponent();
@@ -172,7 +173,7 @@ class EmbeddedController extends ComponentController {
   }
 
   initializeMessageEventListener() {
-    this.messageEventListener = messageEvent => {
+    this.messageEventListener = (messageEvent) => {
       const messageEventData = messageEvent.data;
       if (messageEventData.messageType === 'event') {
         this.handleEventMessage(messageEventData);
@@ -337,40 +338,41 @@ class EmbeddedController extends ComponentController {
   }
 
   registerStudentWorkSavedToServerListener() {
-    this.studentWorkSavedToServerSubscription =
-        this.StudentDataService.studentWorkSavedToServer$.subscribe((args: any) => {
-      const componentState = args.studentWork;
-      if (this.isForThisComponent(componentState)) {
-        this.isDirty = false;
-        this.StudentDataService.broadcastComponentDirty({
-          componentId: this.componentId,
-          isDirty: false
-        });
-        this.$scope.embeddedController.componentState = null;
-        const isAutoSave = componentState.isAutoSave;
-        const isSubmit = componentState.isSubmit;
-        const serverSaveTime = componentState.serverSaveTime;
-        const clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
-        if (isSubmit) {
-          this.setSubmittedMessage(clientSaveTime);
-          this.submit();
-          this.isSubmitDirty = false;
-          this.StudentDataService.broadcastComponentSubmitDirty({
+    this.studentWorkSavedToServerSubscription = this.StudentDataService.studentWorkSavedToServer$.subscribe(
+      (args: any) => {
+        const componentState = args.studentWork;
+        if (this.isForThisComponent(componentState)) {
+          this.isDirty = false;
+          this.StudentDataService.broadcastComponentDirty({
             componentId: this.componentId,
             isDirty: false
           });
-        } else if (isAutoSave) {
-          this.setAutoSavedMessage(clientSaveTime);
-        } else {
-          this.setSavedMessage(clientSaveTime);
+          this.$scope.embeddedController.componentState = null;
+          const isAutoSave = componentState.isAutoSave;
+          const isSubmit = componentState.isSubmit;
+          const serverSaveTime = componentState.serverSaveTime;
+          const clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
+          if (isSubmit) {
+            this.setSubmittedMessage(clientSaveTime);
+            this.submit();
+            this.isSubmitDirty = false;
+            this.StudentDataService.broadcastComponentSubmitDirty({
+              componentId: this.componentId,
+              isDirty: false
+            });
+          } else if (isAutoSave) {
+            this.setAutoSavedMessage(clientSaveTime);
+          } else {
+            this.setSavedMessage(clientSaveTime);
+          }
+          const message = {
+            messageType: 'componentStateSaved',
+            componentState: componentState
+          };
+          this.sendMessageToApplication(message);
         }
-        const message = {
-          messageType: 'componentStateSaved',
-          componentState: componentState
-        };
-        this.sendMessageToApplication(message);
       }
-    });
+    );
   }
 
   iframeLoaded(contentLocation) {
@@ -443,7 +445,7 @@ class EmbeddedController extends ComponentController {
       let modelElement: any = iframe.contents().find('html');
       if (modelElement != null && modelElement.length > 0) {
         modelElement = modelElement[0];
-        html2canvas(modelElement).then(canvas => {
+        html2canvas(modelElement).then((canvas) => {
           const base64Image = canvas.toDataURL('image/png');
           const imageObject = this.UtilService.getImageObjectFromBase64String(base64Image);
           this.NotebookService.addNote(imageObject);

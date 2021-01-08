@@ -24,7 +24,7 @@ export class ProjectAssetService {
     protected ProjectService: ProjectService,
     protected UtilService: UtilService
   ) {
-    this.getProjectAssets().subscribe(projectAssets => {
+    this.getProjectAssets().subscribe((projectAssets) => {
       if (projectAssets != null) {
         this.calculateAssetUsage(projectAssets);
       }

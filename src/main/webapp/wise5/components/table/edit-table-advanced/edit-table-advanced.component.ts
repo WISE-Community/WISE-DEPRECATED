@@ -1,4 +1,4 @@
-import { EditAdvancedComponentAngularJSController } from "../../../../site/src/app/authoring-tool/edit-advanced-component/editAdvancedComponentAngularJSController";
+import { EditAdvancedComponentAngularJSController } from '../../../../site/src/app/authoring-tool/edit-advanced-component/editAdvancedComponentAngularJSController';
 
 class EditTableAdvancedController extends EditAdvancedComponentAngularJSController {
   allowedConnectedComponentTypes = ['Embedded', 'Graph', 'Table'];
@@ -114,8 +114,10 @@ class EditTableAdvancedController extends EditAdvancedComponentAngularJSControll
   }
 
   decreaseNumDataExplorerSeries(count: number): void {
-    this.authoringComponentContent.dataExplorerSeriesParams =
-        this.authoringComponentContent.dataExplorerSeriesParams.slice(0, count);
+    this.authoringComponentContent.dataExplorerSeriesParams = this.authoringComponentContent.dataExplorerSeriesParams.slice(
+      0,
+      count
+    );
   }
 
   numDataExplorerYAxisChanged(): void {
@@ -130,7 +132,6 @@ class EditTableAdvancedController extends EditAdvancedComponentAngularJSControll
       }
     }
   }
-
 }
 
 export const EditTableAdvancedComponent = {
@@ -140,4 +141,4 @@ export const EditTableAdvancedComponent = {
   },
   controller: EditTableAdvancedController,
   templateUrl: 'wise5/components/table/edit-table-advanced/edit-table-advanced.component.html'
-}
+};

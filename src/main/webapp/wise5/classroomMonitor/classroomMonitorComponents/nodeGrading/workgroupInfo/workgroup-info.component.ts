@@ -8,7 +8,6 @@ import { ConfigService } from '../../../../services/configService';
   templateUrl: 'workgroup-info.component.html'
 })
 export class WorkgroupInfoComponent {
-
   alertIconClass: string;
   alertIconName: string;
   alertLabel: string;

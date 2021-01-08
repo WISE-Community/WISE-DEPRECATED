@@ -11,8 +11,8 @@ let configJSON;
 describe('ConfigService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ HttpClientTestingModule, UpgradeModule ],
-      providers: [ ConfigService ]
+      imports: [HttpClientTestingModule, UpgradeModule],
+      providers: [ConfigService]
     });
     http = TestBed.get(HttpTestingController);
     service = TestBed.get(ConfigService);
@@ -60,7 +60,7 @@ function sortTheClassmatesAlphabeticallyByNameWhenSettingConfig() {
 
 function getLocale() {
   it('should get locale in config', () => {
-    service.setConfig({locale: 'ja'});
+    service.setConfig({ locale: 'ja' });
     expect(service.getLocale()).toEqual('ja');
   });
   it('should get default locale if config does not specify', () => {
@@ -71,11 +71,11 @@ function getLocale() {
 
 function getMode() {
   it('should get modes', () => {
-    service.setConfig({mode: 'run'});
+    service.setConfig({ mode: 'run' });
     expect(service.getMode()).toEqual('run');
     expect(service.isPreview()).toEqual(false);
 
-    service.setConfig({mode: 'preview'});
+    service.setConfig({ mode: 'preview' });
     expect(service.getMode()).toEqual('preview');
     expect(service.isPreview()).toEqual(true);
   });
@@ -83,7 +83,7 @@ function getMode() {
 
 function getPeriodIdOfStudent() {
   it('should get period id of student', () => {
-    service.setConfig({userInfo:{myUserInfo:{periodId: 1}}});
+    service.setConfig({ userInfo: { myUserInfo: { periodId: 1 } } });
     expect(service.getPeriodId()).toEqual(1);
   });
 }
@@ -129,7 +129,7 @@ function getPeriodIdGivenWorkgroupId() {
       expect(service.getUserInfoByWorkgroupId).toHaveBeenCalledWith(-1);
     });
 
-    it('should return workgroup\'s period id', () => {
+    it("should return workgroup's period id", () => {
       expect(service.getPeriodIdByWorkgroupId(8)).toEqual(1);
       expect(service.getUserInfoByWorkgroupId).toHaveBeenCalledWith(8);
     });
@@ -140,7 +140,7 @@ function calculateIsRunActive() {
   describe('calculateIsRunActive', () => {
     calculateIsRunActive_RunOnlyHasAStartTime_ReturnWhetherRunIsActive();
     calculateIsRunActive_RunHasAStartTimeAndEndTimeAndIsNotLocked_ReturnWhetherRunIsActive();
-    calculateIsRunActive_RunHasAStartTimeAndEndTimeAndIsLocked_ReturnWhetherRunIsActive
+    calculateIsRunActive_RunHasAStartTimeAndEndTimeAndIsLocked_ReturnWhetherRunIsActive;
   });
 }
 

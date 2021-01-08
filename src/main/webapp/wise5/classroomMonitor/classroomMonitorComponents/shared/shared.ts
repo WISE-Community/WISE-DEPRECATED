@@ -23,30 +23,46 @@ import { downgradeComponent } from '@angular/upgrade/static';
 
 const Shared = angular
   .module('cmShared', [])
-  .directive('alertStatusCorner',
-      downgradeComponent({ component: AlertStatusCornerComponent }) as angular.IDirectiveFactory)
+  .directive(
+    'alertStatusCorner',
+    downgradeComponent({ component: AlertStatusCornerComponent }) as angular.IDirectiveFactory
+  )
   .component('componentGrading', ComponentGrading)
-  .directive('componentNewWorkBadge',
-      downgradeComponent({ component: ComponentNewWorkBadgeComponent }) as angular.IDirectiveFactory)
+  .directive(
+    'componentNewWorkBadge',
+    downgradeComponent({ component: ComponentNewWorkBadgeComponent }) as angular.IDirectiveFactory
+  )
   .component('componentRevisionsInfo', ComponentRevisionsInfo)
   .component('cmMainMenu', MainMenu)
   .component('notificationsMenu', NotificationsMenu)
   .component('nodeInfo', NodeInfo)
   .component('pauseScreensMenu', PauseScreensMenu)
   .component('periodSelect', PeriodSelect)
-  .directive('statusIcon',
-      downgradeComponent({ component: StatusIconComponent }) as angular.IDirectiveFactory)
+  .directive(
+    'statusIcon',
+    downgradeComponent({ component: StatusIconComponent }) as angular.IDirectiveFactory
+  )
   .component('cmToolbar', Toolbar)
   .component('cmTopBar', TopBar)
   .component('workgroupComponentRevisions', WorkgroupComponentRevisions)
   .component('workgroupNodeGrading', WorkgroupNodeGrading)
-  .directive('workgroupNodeScore',
-      downgradeComponent({ component: WorkgroupNodeScoreComponent }) as angular.IDirectiveFactory)
-  .directive('workgroupNodeStatus',
-      downgradeComponent({ component: WorkgroupNodeStatusComponent }) as angular.IDirectiveFactory)
-  .directive('workgroupSelectAutocomplete',
-      downgradeComponent({ component: WorkgroupSelectAutocompleteComponent }) as angular.IDirectiveFactory)
-  .directive('workgroupSelectDropdown',
-      downgradeComponent({ component: WorkgroupSelectDropdownComponent }) as angular.IDirectiveFactory)
+  .directive(
+    'workgroupNodeScore',
+    downgradeComponent({ component: WorkgroupNodeScoreComponent }) as angular.IDirectiveFactory
+  )
+  .directive(
+    'workgroupNodeStatus',
+    downgradeComponent({ component: WorkgroupNodeStatusComponent }) as angular.IDirectiveFactory
+  )
+  .directive(
+    'workgroupSelectAutocomplete',
+    downgradeComponent({
+      component: WorkgroupSelectAutocompleteComponent
+    }) as angular.IDirectiveFactory
+  )
+  .directive(
+    'workgroupSelectDropdown',
+    downgradeComponent({ component: WorkgroupSelectDropdownComponent }) as angular.IDirectiveFactory
+  );
 
 export default Shared;

@@ -4,7 +4,7 @@ import StudentAssetController from './studentAssetController';
 
 const studentAssetModule = angular
   .module('studentAsset', [])
-  .directive('studentassets', function() {
+  .directive('studentassets', function () {
     return {
       scope: {
         filter: '=',

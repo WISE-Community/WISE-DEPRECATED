@@ -1,9 +1,9 @@
-import { Directive, Input } from "@angular/core";
-import { Subject, Subscription } from "rxjs";
-import { debounceTime, distinctUntilChanged } from "rxjs/operators";
-import { ConfigService } from "../../services/configService";
-import { NodeService } from "../../services/nodeService";
-import { TeacherProjectService } from "../../services/teacherProjectService";
+import { Directive, Input } from '@angular/core';
+import { Subject, Subscription } from 'rxjs';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { ConfigService } from '../../services/configService';
+import { NodeService } from '../../services/nodeService';
+import { TeacherProjectService } from '../../services/teacherProjectService';
 
 @Directive()
 export abstract class ComponentAuthoring {
@@ -33,7 +33,6 @@ export abstract class ComponentAuthoring {
     protected NodeService: NodeService,
     protected ProjectService: TeacherProjectService
   ) {
-
     this.promptChange
       .pipe(debounceTime(1000), distinctUntilChanged())
       .subscribe((prompt: string) => {
@@ -43,18 +42,22 @@ export abstract class ComponentAuthoring {
   }
 
   ngOnInit() {
-    this.authoringComponentContent = this.ProjectService.getComponentByNodeIdAndComponentId(this.nodeId, this.componentId);
+    this.authoringComponentContent = this.ProjectService.getComponentByNodeIdAndComponentId(
+      this.nodeId,
+      this.componentId
+    );
     this.resetUI();
     this.idToOrder = this.ProjectService.idToOrder;
     this.componentChangedSubscription = this.ProjectService.componentChanged$.subscribe(() => {
       this.componentChanged();
     });
-    this.starterStateResponseSubscription =
-        this.NodeService.starterStateResponse$.subscribe((args: any) => {
-      if (this.isForThisComponent(args)) {
-        this.saveStarterState(args.starterState);
+    this.starterStateResponseSubscription = this.NodeService.starterStateResponse$.subscribe(
+      (args: any) => {
+        if (this.isForThisComponent(args)) {
+          this.saveStarterState(args.starterState);
+        }
       }
-    });
+    );
   }
 
   promptChanged(prompt: string): void {
@@ -68,7 +71,8 @@ export abstract class ComponentAuthoring {
 
   resetUI(): void {
     this.componentContent = this.ConfigService.replaceStudentNames(
-        this.ProjectService.injectAssetPaths(this.authoringComponentContent));
+      this.ProjectService.injectAssetPaths(this.authoringComponentContent)
+    );
     this.isSaveButtonVisible = this.componentContent.showSaveButton;
     this.isSubmitButtonVisible = this.componentContent.showSubmitButton;
     this.isDirty = false;

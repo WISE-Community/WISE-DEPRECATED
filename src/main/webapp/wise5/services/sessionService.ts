@@ -3,7 +3,7 @@
 import { Injectable } from '@angular/core';
 import { UpgradeModule } from '@angular/upgrade/static';
 import { HttpClient } from '@angular/common/http';
-import { ConfigService } from "./configService";
+import { ConfigService } from './configService';
 import { Observable, Subject } from 'rxjs';
 
 @Injectable()
@@ -25,8 +25,7 @@ export class SessionService {
     protected upgrade: UpgradeModule,
     protected http: HttpClient,
     protected ConfigService: ConfigService
-  ) {
-  }
+  ) {}
 
   calculateIntervals(sessionTimeout): any {
     const forceLogoutAfterWarningInterval: number = Math.min(
@@ -42,9 +41,7 @@ export class SessionService {
 
   goHome() {
     this.broadcastExit();
-    this.upgrade.$injector.get('$location').url(
-      this.ConfigService.getConfigParam('userType')
-    );
+    this.upgrade.$injector.get('$location').url(this.ConfigService.getConfigParam('userType'));
   }
 
   broadcastExit() {
@@ -56,8 +53,9 @@ export class SessionService {
   }
 
   initializeSession() {
-    const intervals: any =
-        this.calculateIntervals(this.ConfigService.getConfigParam('sessionTimeout'));
+    const intervals: any = this.calculateIntervals(
+      this.ConfigService.getConfigParam('sessionTimeout')
+    );
     this.showWarningInterval = intervals.showWarningInterval;
     this.forceLogoutAfterWarningInterval = intervals.forceLogoutAfterWarningInterval;
     this.checkMouseEventInterval = this.convertMinutesToMilliseconds(1);
@@ -100,7 +98,7 @@ export class SessionService {
 
   checkForLogout() {
     if (this.isInactiveLongEnoughToForceLogout()) {
-      this.checkIfSessionIsActive().subscribe(isSessionActive => {
+      this.checkIfSessionIsActive().subscribe((isSessionActive) => {
         if (!isSessionActive) {
           this.forceLogOut();
         }
@@ -111,10 +109,7 @@ export class SessionService {
   }
 
   isActiveWithinLastMinute(): boolean {
-    return (
-      new Date().getTime() - this.lastActivityTimestamp <
-      this.convertMinutesToMilliseconds(1)
-    );
+    return new Date().getTime() - this.lastActivityTimestamp < this.convertMinutesToMilliseconds(1);
   }
 
   isInactiveLongEnoughToForceLogout(): boolean {
@@ -164,7 +159,7 @@ export class SessionService {
   }
 
   renewSession() {
-    this.checkIfSessionIsActive().subscribe(isSessionActive => {
+    this.checkIfSessionIsActive().subscribe((isSessionActive) => {
       if (!isSessionActive) {
         this.logOut();
       }

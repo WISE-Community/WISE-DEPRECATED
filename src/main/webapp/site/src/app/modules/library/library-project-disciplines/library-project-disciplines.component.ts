@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { LibraryProject } from "../libraryProject";
+import { LibraryProject } from '../libraryProject';
 
 @Component({
   selector: 'app-library-project-disciplines',
@@ -7,14 +7,12 @@ import { LibraryProject } from "../libraryProject";
   styleUrls: ['./library-project-disciplines.component.scss']
 })
 export class LibraryProjectDisciplinesComponent implements OnInit {
-
   @Input()
   project: LibraryProject = new LibraryProject();
 
   disciplines: any[];
 
-  constructor() {
-  }
+  constructor() {}
 
   ngOnInit() {
     let standards = this.project.metadata.standardsAddressed;
@@ -24,22 +22,22 @@ export class LibraryProjectDisciplinesComponent implements OnInit {
         this.disciplines = standards.ngss.disciplines;
         for (let discipline of this.disciplines) {
           // default color
-          discipline.color = "#000000";
+          discipline.color = '#000000';
 
           // assign color based on discipline id
           if (discipline.id) {
-            switch(discipline.id) {
-              case "ESS":
-                discipline.color = "#2E7D32";
+            switch (discipline.id) {
+              case 'ESS':
+                discipline.color = '#2E7D32';
                 break;
-              case "ETS":
-                discipline.color = "#1565C0";
+              case 'ETS':
+                discipline.color = '#1565C0';
                 break;
-              case "LS":
-                discipline.color = "#D81B60";
+              case 'LS':
+                discipline.color = '#D81B60';
                 break;
-              case "PS":
-                discipline.color = "#8E24AA";
+              case 'PS':
+                discipline.color = '#8E24AA';
                 break;
             }
           }
@@ -47,5 +45,4 @@ export class LibraryProjectDisciplinesComponent implements OnInit {
       }
     }
   }
-
 }

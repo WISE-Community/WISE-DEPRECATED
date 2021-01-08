@@ -165,7 +165,7 @@ class MultipleChoiceController extends ComponentController {
      * action (optional; default is false)
      * @return a promise of a component state containing the student data
      */
-    this.$scope.getComponentState = function(isSubmit) {
+    this.$scope.getComponentState = function (isSubmit) {
       const deferred = this.$q.defer();
       let getState = false;
       let action = 'change';
@@ -184,7 +184,7 @@ class MultipleChoiceController extends ComponentController {
 
       if (getState) {
         // create a component state populated with the student data
-        this.$scope.multipleChoiceController.createComponentState(action).then(componentState => {
+        this.$scope.multipleChoiceController.createComponentState(action).then((componentState) => {
           deferred.resolve(componentState);
         });
       } else {

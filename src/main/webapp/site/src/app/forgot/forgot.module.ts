@@ -49,8 +49,6 @@ import { ForgotTeacherPasswordVerifyComponent } from './teacher/forgot-teacher-p
     ForgotTeacherPasswordCompleteComponent,
     ForgotTeacherPasswordVerifyComponent
   ],
-  exports: [
-    ForgotComponent
-  ]
+  exports: [ForgotComponent]
 })
-export class ForgotModule { }
+export class ForgotModule {}

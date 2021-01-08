@@ -26,13 +26,19 @@ Components.component('draggable', Draggable);
 Components.component('globalAnnotations', GlobalAnnotations);
 Components.component('globalAnnotationsList', GlobalAnnotationsList);
 Components.component('listenForDeleteKeypress', ListenForDeleteKeypress);
-Components.directive('milestoneReportData',
-    downgradeComponent({ component: MilestoneReportDataComponent}) as angular.IDirectiveFactory);
+Components.directive(
+  'milestoneReportData',
+  downgradeComponent({ component: MilestoneReportDataComponent }) as angular.IDirectiveFactory
+);
 Components.component('milestoneReportGraph', MilestoneReportGraph);
-Components.directive('nodeIcon',
-    downgradeComponent({ component: NodeIconComponent}) as angular.IDirectiveFactory);
-Components.directive('possibleScore',
-    downgradeComponent({ component: PossibleScoreComponent}) as angular.IDirectiveFactory);
+Components.directive(
+  'nodeIcon',
+  downgradeComponent({ component: NodeIconComponent }) as angular.IDirectiveFactory
+);
+Components.directive(
+  'possibleScore',
+  downgradeComponent({ component: PossibleScoreComponent }) as angular.IDirectiveFactory
+);
 Components.component('summaryDisplay', SummaryDisplay);
 Components.component('wiselink', Wiselink);
 Components.directive('sticky', Sticky);

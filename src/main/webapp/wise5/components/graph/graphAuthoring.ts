@@ -1,7 +1,7 @@
 'use strict';
 
-import { Directive } from "@angular/core";
-import { EditComponentController } from "../../authoringTool/components/editComponentController";
+import { Directive } from '@angular/core';
+import { EditComponentController } from '../../authoringTool/components/editComponentController';
 
 @Directive()
 class GraphAuthoringController extends EditComponentController {
@@ -27,14 +27,16 @@ class GraphAuthoringController extends EditComponentController {
     'UtilService'
   ];
 
-  constructor($filter,
-              ConfigService,
-              private GraphService,
-              NodeService,
-              NotificationService,
-              ProjectAssetService,
-              ProjectService,
-              UtilService) {
+  constructor(
+    $filter,
+    ConfigService,
+    private GraphService,
+    NodeService,
+    NotificationService,
+    ProjectAssetService,
+    ProjectService,
+    UtilService
+  ) {
     super(
       $filter,
       ConfigService,
@@ -42,7 +44,8 @@ class GraphAuthoringController extends EditComponentController {
       NotificationService,
       ProjectAssetService,
       ProjectService,
-      UtilService);
+      UtilService
+    );
   }
 
   $onInit() {
@@ -153,7 +156,7 @@ class GraphAuthoringController extends EditComponentController {
       line: 'limits',
       scatter: 'limits',
       column: 'categories'
-    }
+    };
 
     this.enableMultipleYAxes = this.isMultipleYAxesEnabled();
     if (this.enableMultipleYAxes) {
@@ -208,8 +211,9 @@ class GraphAuthoringController extends EditComponentController {
     if (seriesName == null || seriesName === '') {
       message = this.$translate('graph.areYouSureYouWantToDeleteTheSeries');
     } else {
-      message = this.$translate('graph.areYouSureYouWantToDeleteTheNamedSeries',
-          { seriesName: seriesName });
+      message = this.$translate('graph.areYouSureYouWantToDeleteTheNamedSeries', {
+        seriesName: seriesName
+      });
     }
     if (confirm(message)) {
       this.authoringComponentContent.series.splice(index, 1);
@@ -255,15 +259,18 @@ class GraphAuthoringController extends EditComponentController {
   deleteXAxisCategory(index) {
     let confirmMessage = '';
     let categoryName = '';
-    if (this.authoringComponentContent.xAxis != null &&
-      this.authoringComponentContent.xAxis.categories != null) {
+    if (
+      this.authoringComponentContent.xAxis != null &&
+      this.authoringComponentContent.xAxis.categories != null
+    ) {
       categoryName = this.authoringComponentContent.xAxis.categories[index];
     }
     if (categoryName == null || categoryName === '') {
       confirmMessage = this.$translate('graph.areYouSureYouWantToDeleteTheCategory');
     } else {
-      confirmMessage = this.$translate('graph.areYouSureYouWantToDeleteTheNamedCategory',
-          { categoryName: categoryName });
+      confirmMessage = this.$translate('graph.areYouSureYouWantToDeleteTheNamedCategory', {
+        categoryName: categoryName
+      });
     }
     if (confirm(confirmMessage)) {
       this.authoringComponentContent.xAxis.categories.splice(index, 1);
@@ -273,8 +280,10 @@ class GraphAuthoringController extends EditComponentController {
 
   addSeriesDataPoint(series) {
     if (series != null && series.data != null) {
-      if (this.authoringComponentContent.xAxis.type == null ||
-        this.authoringComponentContent.xAxis.type === 'limits') {
+      if (
+        this.authoringComponentContent.xAxis.type == null ||
+        this.authoringComponentContent.xAxis.type === 'limits'
+      ) {
         series.data.push([]);
       } else if (this.authoringComponentContent.xAxis.type === 'categories') {
         series.data.push(null);
@@ -316,8 +325,10 @@ class GraphAuthoringController extends EditComponentController {
       this.authoringComponentContent.xAxis.min = 0;
       this.authoringComponentContent.xAxis.max = 10;
       this.convertAllSeriesDataPoints(newValue);
-    } else if ((oldValue === 'limits' || oldValue === '' || oldValue == null) &&
-        newValue === 'categories') {
+    } else if (
+      (oldValue === 'limits' || oldValue === '' || oldValue == null) &&
+      newValue === 'categories'
+    ) {
       delete this.authoringComponentContent.xAxis.min;
       delete this.authoringComponentContent.xAxis.max;
       delete this.authoringComponentContent.xAxis.units;
@@ -483,8 +494,10 @@ class GraphAuthoringController extends EditComponentController {
   }
 
   decreaseYAxes(newNumYAxes) {
-    this.authoringComponentContent.yAxis =
-        this.authoringComponentContent.yAxis.slice(0, newNumYAxes);
+    this.authoringComponentContent.yAxis = this.authoringComponentContent.yAxis.slice(
+      0,
+      newNumYAxes
+    );
   }
 
   updateSeriesYAxesIfNecessary() {
@@ -518,7 +531,7 @@ class GraphAuthoringController extends EditComponentController {
 
   addAnyMissingYAxisFieldsToAllYAxes(yAxis) {
     if (this.GraphService.isMultipleYAxes(yAxis)) {
-      yAxis.forEach(yAxis => this.addAnyMissingYAxisFields(yAxis));
+      yAxis.forEach((yAxis) => this.addAnyMissingYAxisFields(yAxis));
     } else {
       this.addAnyMissingYAxisFields(yAxis);
     }
@@ -602,6 +615,6 @@ const GraphAuthoring = {
   controller: GraphAuthoringController,
   controllerAs: 'graphController',
   templateUrl: 'wise5/components/graph/authoring.html'
-}
+};
 
 export default GraphAuthoring;

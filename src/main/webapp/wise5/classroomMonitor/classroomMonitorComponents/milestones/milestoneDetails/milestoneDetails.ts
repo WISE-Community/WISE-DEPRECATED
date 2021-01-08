@@ -35,11 +35,12 @@ class MilestoneDetailsController {
   ) {
     this.$translate = $filter('translate');
     this.periodId = this.TeacherDataService.getCurrentPeriod().periodId;
-    this.currentPeriodChangedSubscription = this.TeacherDataService.currentPeriodChanged$
-        .subscribe(({ currentPeriod }) => {
-      this.periodId = currentPeriod.periodId;
-      this.saveMilestoneCurrentPeriodSelectedEvent(currentPeriod);
-    });
+    this.currentPeriodChangedSubscription = this.TeacherDataService.currentPeriodChanged$.subscribe(
+      ({ currentPeriod }) => {
+        this.periodId = currentPeriod.periodId;
+        this.saveMilestoneCurrentPeriodSelectedEvent(currentPeriod);
+      }
+    );
     this.$scope.$on('$destroy', () => {
       this.ngOnDestroy();
     });

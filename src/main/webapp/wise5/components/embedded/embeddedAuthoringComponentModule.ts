@@ -13,7 +13,7 @@ const embeddedAuthoringComponentModule = angular
   .component('editEmbeddedAdvanced', EditEmbeddedAdvancedComponent)
   .config([
     '$translatePartialLoaderProvider',
-    $translatePartialLoaderProvider => {
+    ($translatePartialLoaderProvider) => {
       $translatePartialLoaderProvider.addPart('components/embedded/i18n');
     }
   ]);

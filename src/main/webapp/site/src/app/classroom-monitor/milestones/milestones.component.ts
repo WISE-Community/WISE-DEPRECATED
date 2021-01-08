@@ -15,36 +15,43 @@ export class MilestonesComponent {
   currentPeriodChangedSubscription: any;
   newStudentAchievementSubscription: any;
 
-  constructor(private AchievementService: AchievementService,
-      private AnnotationService: AnnotationService, private MilestoneService: MilestoneService,
-      private TeacherDataService: TeacherDataService) {
-  }
+  constructor(
+    private AchievementService: AchievementService,
+    private AnnotationService: AnnotationService,
+    private MilestoneService: MilestoneService,
+    private TeacherDataService: TeacherDataService
+  ) {}
 
   ngOnInit() {
     this.loadProjectMilestones();
-    this.newStudentAchievementSubscription =
-        this.AchievementService.newStudentAchievement$.subscribe((args: any) => {
-      const studentAchievement = args.studentAchievement;
-      this.AchievementService.addOrUpdateStudentAchievement(studentAchievement);
-      this.updateMilestoneStatus(studentAchievement.achievementId);
-    });
-
-    this.currentPeriodChangedSubscription = this.TeacherDataService.currentPeriodChanged$
-        .subscribe(() => {
-      for (const milestone of this.milestones) {
-        this.updateMilestoneStatus(milestone.id);
+    this.newStudentAchievementSubscription = this.AchievementService.newStudentAchievement$.subscribe(
+      (args: any) => {
+        const studentAchievement = args.studentAchievement;
+        this.AchievementService.addOrUpdateStudentAchievement(studentAchievement);
+        this.updateMilestoneStatus(studentAchievement.achievementId);
       }
-    });
+    );
 
-    this.annotationReceivedSubscription =
-        this.AnnotationService.annotationReceived$.subscribe(({ annotation }) => {
-      for (const milestone of this.milestones) {
-        if (milestone.nodeId === annotation.nodeId &&
-            milestone.componentId === annotation.componentId) {
+    this.currentPeriodChangedSubscription = this.TeacherDataService.currentPeriodChanged$.subscribe(
+      () => {
+        for (const milestone of this.milestones) {
           this.updateMilestoneStatus(milestone.id);
         }
       }
-    });
+    );
+
+    this.annotationReceivedSubscription = this.AnnotationService.annotationReceived$.subscribe(
+      ({ annotation }) => {
+        for (const milestone of this.milestones) {
+          if (
+            milestone.nodeId === annotation.nodeId &&
+            milestone.componentId === annotation.componentId
+          ) {
+            this.updateMilestoneStatus(milestone.id);
+          }
+        }
+      }
+    );
   }
 
   ngOnDestroy() {

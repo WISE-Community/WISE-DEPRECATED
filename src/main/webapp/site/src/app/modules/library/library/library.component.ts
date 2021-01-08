@@ -7,7 +7,6 @@ import { PageEvent, MatPaginator } from '@angular/material/paginator';
 
 @Directive()
 export abstract class LibraryComponent implements OnInit {
-
   projects: LibraryProject[] = [];
   filteredProjects: LibraryProject[] = [];
   searchValue: string = '';
@@ -28,7 +27,7 @@ export abstract class LibraryComponent implements OnInit {
   @Output('update')
   update: EventEmitter<number> = new EventEmitter<number>();
 
-  @ViewChildren(MatPaginator) paginators !: QueryList<MatPaginator>;
+  @ViewChildren(MatPaginator) paginators!: QueryList<MatPaginator>;
 
   constructor(protected libraryService: LibraryService) {
     libraryService.projectFilterValuesSource$.subscribe((projectFilterValues) => {
@@ -36,10 +35,9 @@ export abstract class LibraryComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
-  pageChange(event?:PageEvent, scroll?:boolean): void {
+  pageChange(event?: PageEvent, scroll?: boolean): void {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
     this.setPagination();
@@ -64,7 +62,7 @@ export abstract class LibraryComponent implements OnInit {
   }
 
   isOnPage(index: number): boolean {
-    return (index >= this.lowIndex && index < this.highIndex);
+    return index >= this.lowIndex && index < this.highIndex;
   }
 
   filterUpdated(filterValues: ProjectFilterValues = null): void {
@@ -92,21 +90,30 @@ export abstract class LibraryComponent implements OnInit {
     this.setPagination();
   }
 
-  emitNumberOfProjectsVisible(numProjectsVisible: number = null) {
-  }
+  emitNumberOfProjectsVisible(numProjectsVisible: number = null) {}
 
   hasFilters(): boolean {
-    return this.dciArrangementValue.length > 0 || this.peValue.length > 0 || this.disciplineValue.length > 0;
+    return (
+      this.dciArrangementValue.length > 0 ||
+      this.peValue.length > 0 ||
+      this.disciplineValue.length > 0
+    );
   }
 
   isSearchMatch(project: LibraryProject, searchValue: string): boolean {
     if (searchValue) {
       let data: any = project.metadata;
       data.id = project.id;
-      return Object.keys(data).some(prop => {
+      return Object.keys(data).some((prop) => {
         // only check for match in specific metadata fields
-        if (prop != 'title' && prop != 'summary' && prop != 'keywords' &&
-          prop != 'features' &&  prop != 'standardsAddressed' && prop != 'id') {
+        if (
+          prop != 'title' &&
+          prop != 'summary' &&
+          prop != 'keywords' &&
+          prop != 'features' &&
+          prop != 'standardsAddressed' &&
+          prop != 'id'
+        ) {
           return false;
         } else {
           let value = data[prop];
@@ -126,7 +133,7 @@ export abstract class LibraryComponent implements OnInit {
   }
 
   isFilterMatch(project: LibraryProject): boolean {
-     if (this.hasFilters()) {
+    if (this.hasFilters()) {
       const standardsAddressed = project.metadata.standardsAddressed;
       if (standardsAddressed.ngss) {
         const ngss = standardsAddressed.ngss;

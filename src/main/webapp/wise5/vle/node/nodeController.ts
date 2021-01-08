@@ -108,8 +108,10 @@ class NodeController {
     this.rubric = null;
     this.mode = this.ConfigService.getMode();
 
-    if (this.StudentDataService.getCurrentNode() &&
-        this.ProjectService.isApplicationNode(this.StudentDataService.getCurrentNodeId())) {
+    if (
+      this.StudentDataService.getCurrentNode() &&
+      this.ProjectService.isApplicationNode(this.StudentDataService.getCurrentNodeId())
+    ) {
       const currentNode = this.StudentDataService.getCurrentNode();
       if (currentNode != null) {
         this.nodeId = currentNode.id;
@@ -175,60 +177,65 @@ class NodeController {
       }
     }
 
-    this.componentSaveTriggeredSubscription =
-        this.StudentDataService.componentSaveTriggered$.subscribe(({ nodeId, componentId }) => {
-      if (this.nodeId == nodeId && this.nodeContainsComponent(componentId)) {
-        const isAutoSave = false;
-        this.createAndSaveComponentData(isAutoSave, componentId);
-      }
-    });
-
-    this.componentSubmitTriggeredSubscription =
-        this.StudentDataService.componentSubmitTriggered$.subscribe(({ nodeId, componentId }) => {
-      if (this.nodeId == nodeId && this.nodeContainsComponent(componentId)) {
-        const isAutoSave = false;
-        const isSubmit = true;
-        this.createAndSaveComponentData(isAutoSave, componentId, isSubmit);
-      }
-    });
-
-    this.componentStudentDataSubscription =
-        this.StudentDataService.componentStudentData$.subscribe((componentStudentData: any) => {
-      const componentId = componentStudentData.componentId;
-      const componentState = componentStudentData.componentState;
-      if (componentState.nodeId == null) {
-        if (componentStudentData.nodeId != null) {
-          componentState.nodeId = componentStudentData.nodeId;
+    this.componentSaveTriggeredSubscription = this.StudentDataService.componentSaveTriggered$.subscribe(
+      ({ nodeId, componentId }) => {
+        if (this.nodeId == nodeId && this.nodeContainsComponent(componentId)) {
+          const isAutoSave = false;
+          this.createAndSaveComponentData(isAutoSave, componentId);
         }
       }
-      if (componentState.componentId == null) {
-        if (componentStudentData.componentId != null) {
-          componentState.componentId = componentStudentData.componentId;
+    );
+
+    this.componentSubmitTriggeredSubscription = this.StudentDataService.componentSubmitTriggered$.subscribe(
+      ({ nodeId, componentId }) => {
+        if (this.nodeId == nodeId && this.nodeContainsComponent(componentId)) {
+          const isAutoSave = false;
+          const isSubmit = true;
+          this.createAndSaveComponentData(isAutoSave, componentId, isSubmit);
         }
       }
-      this.notifyConnectedParts(componentId, componentState);
-      this.NodeService.broadcastSiblingComponentStudentDataChanged(componentStudentData);
-    });
+    );
 
-    this.componentDirtySubscription =
-        this.StudentDataService.componentDirty$.subscribe(({ componentId, isDirty }) => {
-      const index = this.dirtyComponentIds.indexOf(componentId);
-      if (isDirty && index === -1) {
-        this.dirtyComponentIds.push(componentId);
-      } else if (!isDirty && index > -1) {
-        this.dirtyComponentIds.splice(index, 1);
+    this.componentStudentDataSubscription = this.StudentDataService.componentStudentData$.subscribe(
+      (componentStudentData: any) => {
+        const componentId = componentStudentData.componentId;
+        const componentState = componentStudentData.componentState;
+        if (componentState.nodeId == null) {
+          if (componentStudentData.nodeId != null) {
+            componentState.nodeId = componentStudentData.nodeId;
+          }
+        }
+        if (componentState.componentId == null) {
+          if (componentStudentData.componentId != null) {
+            componentState.componentId = componentStudentData.componentId;
+          }
+        }
+        this.notifyConnectedParts(componentId, componentState);
+        this.NodeService.broadcastSiblingComponentStudentDataChanged(componentStudentData);
       }
-    });
+    );
 
-    this.componentSubmitDirtySubscription =
-        this.StudentDataService.componentSubmitDirty$.subscribe(({ componentId, isDirty }) => {
-      const index = this.dirtySubmitComponentIds.indexOf(componentId);
-      if (isDirty && index === -1) {
-        this.dirtySubmitComponentIds.push(componentId);
-      } else if (!isDirty && index > -1) {
-        this.dirtySubmitComponentIds.splice(index, 1);
+    this.componentDirtySubscription = this.StudentDataService.componentDirty$.subscribe(
+      ({ componentId, isDirty }) => {
+        const index = this.dirtyComponentIds.indexOf(componentId);
+        if (isDirty && index === -1) {
+          this.dirtyComponentIds.push(componentId);
+        } else if (!isDirty && index > -1) {
+          this.dirtyComponentIds.splice(index, 1);
+        }
       }
-    });
+    );
+
+    this.componentSubmitDirtySubscription = this.StudentDataService.componentSubmitDirty$.subscribe(
+      ({ componentId, isDirty }) => {
+        const index = this.dirtySubmitComponentIds.indexOf(componentId);
+        if (isDirty && index === -1) {
+          this.dirtySubmitComponentIds.push(componentId);
+        } else if (!isDirty && index > -1) {
+          this.dirtySubmitComponentIds.splice(index, 1);
+        }
+      }
+    );
 
     this.showRubricSubscription = this.NodeService.showRubric$.subscribe((id: string) => {
       this.showRubric(id);
@@ -249,8 +256,10 @@ class NodeController {
   ngOnDestroy() {
     this.stopAutoSaveInterval();
     this.nodeUnloaded(this.nodeId);
-    if (this.NodeService.currentNodeHasTransitionLogic() &&
-        this.NodeService.evaluateTransitionLogicOn('exitNode')) {
+    if (
+      this.NodeService.currentNodeHasTransitionLogic() &&
+      this.NodeService.evaluateTransitionLogicOn('exitNode')
+    ) {
       this.NodeService.evaluateTransitionLogic();
     }
     this.unsubscribeAll();
@@ -291,8 +300,9 @@ class NodeController {
 
     if (this.rubric) {
       const thisTarget = '#nodeRubric_' + this.nodeId;
-      const content = this.UtilService.insertWISELinks(this.ProjectService.replaceAssetPaths(
-          this.rubric));
+      const content = this.UtilService.insertWISELinks(
+        this.ProjectService.replaceAssetPaths(this.rubric)
+      );
       // add a tour bubble for the node rubric
       this.rubricTour.steps.push({
         target: thisTarget,
@@ -311,8 +321,9 @@ class NodeController {
     for (let component of components) {
       if (component.rubric) {
         const thisTarget = '#rubric_' + component.id;
-        const content = this.UtilService.insertWISELinks(this.ProjectService.replaceAssetPaths(
-            component.rubric));
+        const content = this.UtilService.insertWISELinks(
+          this.ProjectService.replaceAssetPaths(component.rubric)
+        );
         this.rubricTour.steps.push({
           target: thisTarget,
           arrowOffset: 21,
@@ -604,57 +615,61 @@ class NodeController {
    * that needs saving
    */
   createAndSaveComponentData(isAutoSave, componentId = null, isSubmit = null) {
-    return this.createComponentStates(isAutoSave, componentId, isSubmit)
-        .then(componentStatesFromComponents => {
-      if (this.UtilService.arrayHasNonNullElement(componentStatesFromComponents)) {
-        const { componentStates, componentEvents, componentAnnotations } =
-            this.getDataArraysToSaveFromComponentStates(componentStatesFromComponents);
-        return this.StudentDataService.saveToServer(
-          componentStates,
-          componentEvents,
-          componentAnnotations
-        ).then(savedStudentDataResponse => {
-          if (savedStudentDataResponse) {
-            if (this.NodeService.currentNodeHasTransitionLogic()) {
-              if (this.NodeService.evaluateTransitionLogicOn('studentDataChanged')) {
-                this.NodeService.evaluateTransitionLogic();
-              }
-              if (this.NodeService.evaluateTransitionLogicOn('scoreChanged')) {
-                if (componentAnnotations != null && componentAnnotations.length > 0) {
-                  let evaluateTransitionLogic = false;
-                  for (const componentAnnotation of componentAnnotations) {
-                    if (componentAnnotation != null) {
-                      if (componentAnnotation.type === 'autoScore') {
-                        evaluateTransitionLogic = true;
+    return this.createComponentStates(isAutoSave, componentId, isSubmit).then(
+      (componentStatesFromComponents) => {
+        if (this.UtilService.arrayHasNonNullElement(componentStatesFromComponents)) {
+          const {
+            componentStates,
+            componentEvents,
+            componentAnnotations
+          } = this.getDataArraysToSaveFromComponentStates(componentStatesFromComponents);
+          return this.StudentDataService.saveToServer(
+            componentStates,
+            componentEvents,
+            componentAnnotations
+          ).then((savedStudentDataResponse) => {
+            if (savedStudentDataResponse) {
+              if (this.NodeService.currentNodeHasTransitionLogic()) {
+                if (this.NodeService.evaluateTransitionLogicOn('studentDataChanged')) {
+                  this.NodeService.evaluateTransitionLogic();
+                }
+                if (this.NodeService.evaluateTransitionLogicOn('scoreChanged')) {
+                  if (componentAnnotations != null && componentAnnotations.length > 0) {
+                    let evaluateTransitionLogic = false;
+                    for (const componentAnnotation of componentAnnotations) {
+                      if (componentAnnotation != null) {
+                        if (componentAnnotation.type === 'autoScore') {
+                          evaluateTransitionLogic = true;
+                        }
                       }
                     }
-                  }
-                  if (evaluateTransitionLogic) {
-                    this.NodeService.evaluateTransitionLogic();
+                    if (evaluateTransitionLogic) {
+                      this.NodeService.evaluateTransitionLogic();
+                    }
                   }
                 }
               }
-            }
-            const studentWorkList = savedStudentDataResponse.studentWorkList;
-            if (!componentId && studentWorkList && studentWorkList.length) {
-              const latestStudentWork = studentWorkList[studentWorkList.length - 1];
-              const serverSaveTime = latestStudentWork.serverSaveTime;
-              const clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
-              if (isAutoSave) {
-                this.setAutoSavedMessage(clientSaveTime);
-              } else if (isSubmit) {
-                this.setSubmittedMessage(clientSaveTime);
+              const studentWorkList = savedStudentDataResponse.studentWorkList;
+              if (!componentId && studentWorkList && studentWorkList.length) {
+                const latestStudentWork = studentWorkList[studentWorkList.length - 1];
+                const serverSaveTime = latestStudentWork.serverSaveTime;
+                const clientSaveTime = this.ConfigService.convertToClientTimestamp(serverSaveTime);
+                if (isAutoSave) {
+                  this.setAutoSavedMessage(clientSaveTime);
+                } else if (isSubmit) {
+                  this.setSubmittedMessage(clientSaveTime);
+                } else {
+                  this.setSavedMessage(clientSaveTime);
+                }
               } else {
-                this.setSavedMessage(clientSaveTime);
+                this.clearSaveText();
               }
-            } else {
-              this.clearSaveText();
             }
-          }
-          return savedStudentDataResponse;
-        });
+            return savedStudentDataResponse;
+          });
+        }
       }
-    });
+    );
   }
 
   getDataArraysToSaveFromComponentStates(componentStates) {
@@ -728,7 +743,7 @@ class NodeController {
       }
     }
     return this.$q.all(componentStatePromises).then((componentStatesFromComponents) => {
-      return componentStatesFromComponents.filter(componentState => componentState != null);
+      return componentStatesFromComponents.filter((componentState) => componentState != null);
     });
   }
 
@@ -758,7 +773,7 @@ class NodeController {
     isAutoSave,
     isSubmit
   ) {
-    return childScope.getComponentState(isSubmit).then(componentState => {
+    return childScope.getComponentState(isSubmit).then((componentState) => {
       if (componentState != null) {
         componentState.runId = runId;
         componentState.periodId = periodId;

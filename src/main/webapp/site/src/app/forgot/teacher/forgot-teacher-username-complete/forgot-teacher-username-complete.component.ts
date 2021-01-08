@@ -7,10 +7,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./forgot-teacher-username-complete.component.scss']
 })
 export class ForgotTeacherUsernameCompleteComponent implements OnInit {
+  constructor(private router: Router) {}
 
-  constructor(private router: Router) { }
-
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }

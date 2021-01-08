@@ -147,6 +147,6 @@ const OutsideURLAuthoring = {
   controller: OutsideURLAuthoringController,
   controllerAs: 'outsideURLController',
   templateUrl: 'wise5/components/outsideURL/authoring.html'
-}
+};
 
 export default OutsideURLAuthoring;

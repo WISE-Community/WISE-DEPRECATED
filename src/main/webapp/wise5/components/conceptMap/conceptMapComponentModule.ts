@@ -11,7 +11,7 @@ let conceptMapComponentModule = angular
   .controller('ConceptMapController', ConceptMapController)
   .config([
     '$translatePartialLoaderProvider',
-    $translatePartialLoaderProvider => {
+    ($translatePartialLoaderProvider) => {
       $translatePartialLoaderProvider.addPart('components/conceptMap/i18n');
     }
   ]);

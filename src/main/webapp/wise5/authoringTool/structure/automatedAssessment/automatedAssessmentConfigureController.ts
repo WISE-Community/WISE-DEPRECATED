@@ -1,15 +1,30 @@
-import ConfigureStructureController from "../configureStructureController";
+import ConfigureStructureController from '../configureStructureController';
 
-export default class AutomatedAssessmentConfigureController
-    extends ConfigureStructureController {
-
+export default class AutomatedAssessmentConfigureController extends ConfigureStructureController {
   node: any;
   importFromProjectId: number;
 
-  static $inject = ['$filter', '$http', '$rootScope', '$state', '$stateParams', '$scope',
-      'UtilService', 'ProjectService'];
+  static $inject = [
+    '$filter',
+    '$http',
+    '$rootScope',
+    '$state',
+    '$stateParams',
+    '$scope',
+    'UtilService',
+    'ProjectService'
+  ];
 
-  constructor($filter, $http, $rootScope, $state, $stateParams, $scope, UtilService, ProjectService) {
+  constructor(
+    $filter,
+    $http,
+    $rootScope,
+    $state,
+    $stateParams,
+    $scope,
+    UtilService,
+    ProjectService
+  ) {
     super($filter, $http, $rootScope, $state, $stateParams, $scope, UtilService);
   }
 

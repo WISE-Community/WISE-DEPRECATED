@@ -1,13 +1,13 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TeamSignInDialogComponent } from './team-sign-in-dialog.component';
-import { NO_ERRORS_SCHEMA } from "@angular/core";
-import { UserService } from "../../services/user.service";
-import { ConfigService } from "../../services/config.service";
-import { BehaviorSubject, Observable } from "rxjs";
-import { Config } from "../../domain/config";
-import { AuthService } from "angularx-social-login";
-import { User } from "../../domain/user";
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { UserService } from '../../services/user.service';
+import { ConfigService } from '../../services/config.service';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { Config } from '../../domain/config';
+import { AuthService } from 'angularx-social-login';
+import { User } from '../../domain/user';
 import { StudentService } from '../student.service';
 import { RouterTestingModule } from '@angular/router/testing';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -25,8 +25,13 @@ export class MockUserService {
 }
 
 export class MockStudentService {
-  launchRun(runId: string, workgroupId: string, presentUserIds: number[], absentUserIds: number[]): Observable<any> {
-    return Observable.create(observer => {
+  launchRun(
+    runId: string,
+    workgroupId: string,
+    presentUserIds: number[],
+    absentUserIds: number[]
+  ): Observable<any> {
+    return Observable.create((observer) => {
       observer.next({
         status: 'success',
         messageCode: 'passwordChanged'
@@ -36,25 +41,21 @@ export class MockStudentService {
   }
 }
 
-export class MockAuthService {
-
-}
+export class MockAuthService {}
 
 export class MockConfigService {
   getConfig(): Observable<Config> {
     const config: Config = {
-      contextPath: "/wise",
-      logOutURL: "/logout",
-      currentTime: new Date("2018-10-17T00:00:00.0").getTime()
+      contextPath: '/wise',
+      logOutURL: '/logout',
+      currentTime: new Date('2018-10-17T00:00:00.0').getTime()
     };
-    return Observable.create(observer => {
+    return Observable.create((observer) => {
       observer.next(config);
       observer.complete();
     });
   }
 }
-
-
 
 describe('TeamSignInDialogComponent', () => {
   let component: TeamSignInDialogComponent;
@@ -62,29 +63,27 @@ describe('TeamSignInDialogComponent', () => {
 
   const runObj = {
     id: 1,
-    name: "Test",
+    name: 'Test',
     workgroupMembers: [
       {
-        "id": 123,
-        "firstName": "Spongebob",
-        "lastName": "Squarepants",
-        "username": "SpongebobS0123"
+        id: 123,
+        firstName: 'Spongebob',
+        lastName: 'Squarepants',
+        username: 'SpongebobS0123'
       },
       {
-        "id": 154,
-        "firstName": "Patrick",
-        "lastName": "Starr",
-        "username": "PatrickS0619"
+        id: 154,
+        firstName: 'Patrick',
+        lastName: 'Starr',
+        username: 'PatrickS0619'
       }
     ]
   };
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TeamSignInDialogComponent ],
-      imports: [
-        RouterTestingModule
-      ],
+      declarations: [TeamSignInDialogComponent],
+      imports: [RouterTestingModule],
       providers: [
         { provide: AuthService, useClass: MockAuthService },
         { provide: ConfigService, useClass: MockConfigService },
@@ -93,9 +92,8 @@ describe('TeamSignInDialogComponent', () => {
         { provide: UserService, useClass: MockUserService },
         { provide: StudentService, useClass: MockStudentService }
       ],
-      schemas: [ NO_ERRORS_SCHEMA ]
-    })
-    .compileComponents();
+      schemas: [NO_ERRORS_SCHEMA]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

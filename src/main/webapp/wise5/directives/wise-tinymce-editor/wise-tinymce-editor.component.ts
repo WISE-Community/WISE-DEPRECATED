@@ -1,7 +1,7 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { debounceTime } from "rxjs/operators";
-import { Subject, Subscription } from "rxjs";
-import { NotebookService } from "../../services/notebookService";
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { debounceTime } from 'rxjs/operators';
+import { Subject, Subscription } from 'rxjs';
+import { NotebookService } from '../../services/notebookService';
 import 'tinymce';
 
 declare let tinymce: any;
@@ -32,14 +32,15 @@ export class WiseTinymceEditorComponent {
   private debouncerSubscription: Subscription;
   private notebookItemChosenSubscription: Subscription;
 
-  protected aValidAttributes: string = 'a[href|download|referrerpolicy|rel|target|type|style|' +
-      'class|wiselink|node-id|component-id|link-text]';
-  protected buttonValidAttributes: string = 'button[class|disabled|id|name|onblur|onclick|' +
-      'ondblclick|onfocus|onkeydown|onkeypress|onkeyup|onmousedown|onmousemove|onmouseout|' +
-      'onmouseover|onmouseup|style|tabindex|title|type|value|wiselink|node-id|component-id|' +
-      'link-text]';
-  protected extendedValidElements: string =
-      `${this.aValidAttributes},${this.buttonValidAttributes}`;
+  protected aValidAttributes: string =
+    'a[href|download|referrerpolicy|rel|target|type|style|' +
+    'class|wiselink|node-id|component-id|link-text]';
+  protected buttonValidAttributes: string =
+    'button[class|disabled|id|name|onblur|onclick|' +
+    'ondblclick|onfocus|onkeydown|onkeypress|onkeyup|onmousedown|onmousemove|onmouseout|' +
+    'onmouseover|onmouseup|style|tabindex|title|type|value|wiselink|node-id|component-id|' +
+    'link-text]';
+  protected extendedValidElements: string = `${this.aValidAttributes},${this.buttonValidAttributes}`;
 
   protected plugins: string[] = [
     'advlist',
@@ -89,12 +90,13 @@ export class WiseTinymceEditorComponent {
 
   ngOnInit(): void {
     if (this.isAddNoteButtonAvailable) {
-      this.notebookItemChosenSubscription =
-          this.NotebookService.notebookItemChosen$.subscribe(({ requester, notebookItem }) => {
-        if (requester === 'report') {
-          this.insertWISENote(notebookItem);
+      this.notebookItemChosenSubscription = this.NotebookService.notebookItemChosen$.subscribe(
+        ({ requester, notebookItem }) => {
+          if (requester === 'report') {
+            this.insertWISENote(notebookItem);
+          }
         }
-      });
+      );
       this.addPluginName('wisenote');
       this.initializeInsertWISENotePlugin();
       this.toolbar += ` | wisenote`;
@@ -151,15 +153,15 @@ export class WiseTinymceEditorComponent {
 
   initializeInsertWISENotePlugin(): void {
     const thisWiseTinymceEditorComponent = this;
-    tinymce.PluginManager.add('wisenote', function(editor: any, url: string) {
+    tinymce.PluginManager.add('wisenote', function (editor: any, url: string) {
       thisWiseTinymceEditorComponent.editor = editor;
       editor.ui.registry.addButton('wisenote', {
         tooltip: $localize`Insert from Notebook`,
         text: $localize`Insert note +`,
-        onAction: function() {
+        onAction: function () {
           thisWiseTinymceEditorComponent.openNotebook.emit('openNotebook');
         }
-      })
+      });
     });
   }
 
@@ -179,7 +181,8 @@ export class WiseTinymceEditorComponent {
     } else {
       content = `<figure class="image align-center">`;
       attachmentURLs.forEach((attachmentURL) => {
-        content += '<img style="width: 500px; height: auto; max-width: 100%" ' + 
+        content +=
+          '<img style="width: 500px; height: auto; max-width: 100%" ' +
           `src="${attachmentURL}" alt="${$localize`Image from notebook`}" />`;
       });
       content += this.getTextHTML(text, true) + `</figure>`;
@@ -241,7 +244,7 @@ export class WiseTinymceEditorComponent {
     let content = '';
     content += `<source src="${src}"`;
     if (mime != null) {
-      content += ` type="${mime}"`
+      content += ` type="${mime}"`;
     }
     content += '/>';
     return content;

@@ -42,13 +42,15 @@ export class Project {
   }
 
   public canView(userId) {
-    return this.isOwner(userId) ||
-        this.isSharedOwnerWithPermission(userId, Project.VIEW_PERMISSION);
+    return (
+      this.isOwner(userId) || this.isSharedOwnerWithPermission(userId, Project.VIEW_PERMISSION)
+    );
   }
 
   public canEdit(userId) {
-    return this.isOwner(userId) ||
-        this.isSharedOwnerWithPermission(userId, Project.EDIT_PERMISSION);
+    return (
+      this.isOwner(userId) || this.isSharedOwnerWithPermission(userId, Project.EDIT_PERMISSION)
+    );
   }
 
   public isChild() {

@@ -1,11 +1,10 @@
-import { ConfigService } from "../../../../services/configService";
-import { TagService } from "../../../../services/tagService";
-import { TeacherDataService } from "../../../../services/teacherDataService";
-import { TeacherProjectService } from "../../../../services/teacherProjectService";
-import { UtilService } from "../../../../services/utilService";
+import { ConfigService } from '../../../../services/configService';
+import { TagService } from '../../../../services/tagService';
+import { TeacherDataService } from '../../../../services/teacherDataService';
+import { TeacherProjectService } from '../../../../services/teacherProjectService';
+import { UtilService } from '../../../../services/utilService';
 
 class NodeAdvancedBranchAuthoringController {
-
   branchCriteria: any;
   createBranchBranches = [];
   createBranchComponentId: string;
@@ -18,34 +17,45 @@ class NodeAdvancedBranchAuthoringController {
   nodeId: string;
   $translate: any;
 
-  static $inject = ['$filter', 'ConfigService', 'TagService', 'ProjectService',
-      'TeacherDataService', 'UtilService'];
+  static $inject = [
+    '$filter',
+    'ConfigService',
+    'TagService',
+    'ProjectService',
+    'TeacherDataService',
+    'UtilService'
+  ];
 
-  constructor(private $filter: any, private ConfigService: ConfigService,
-      private TagService: TagService, private ProjectService: TeacherProjectService,
-      private TeacherDataService: TeacherDataService, private UtilService: UtilService) {
+  constructor(
+    private $filter: any,
+    private ConfigService: ConfigService,
+    private TagService: TagService,
+    private ProjectService: TeacherProjectService,
+    private TeacherDataService: TeacherDataService,
+    private UtilService: UtilService
+  ) {
     this.$translate = this.$filter('translate');
     this.branchCriteria = [
-        {
-            value: 'workgroupId',
-            text: this.$translate('WORKGROUP_ID')
-        },
-        {
-            value: 'score',
-            text: this.$translate('SCORE')
-        },
-        {
-            value: 'choiceChosen',
-            text: this.$translate('choiceChosen')
-        },
-        {
-            value: 'random',
-            text: this.$translate('random')
-        },
-        {
-            value: 'tag',
-            text: this.$translate('tag')
-        }
+      {
+        value: 'workgroupId',
+        text: this.$translate('WORKGROUP_ID')
+      },
+      {
+        value: 'score',
+        text: this.$translate('SCORE')
+      },
+      {
+        value: 'choiceChosen',
+        text: this.$translate('choiceChosen')
+      },
+      {
+        value: 'random',
+        text: this.$translate('random')
+      },
+      {
+        value: 'tag',
+        text: this.$translate('tag')
+      }
     ];
   }
 
@@ -53,7 +63,7 @@ class NodeAdvancedBranchAuthoringController {
     this.nodeId = this.TeacherDataService.getCurrentNodeId();
     this.node = this.ProjectService.getNodeById(this.nodeId);
     this.items = this.ProjectService.idToOrder;
-    this.populateBranchAuthoring()
+    this.populateBranchAuthoring();
   }
 
   populateBranchAuthoring() {
@@ -736,4 +746,4 @@ class NodeAdvancedBranchAuthoringController {
 export const NodeAdvancedBranchAuthoringComponent = {
   templateUrl: `/wise5/authoringTool/node/advanced/branch/node-advanced-branch-authoring.component.html`,
   controller: NodeAdvancedBranchAuthoringController
-}
+};

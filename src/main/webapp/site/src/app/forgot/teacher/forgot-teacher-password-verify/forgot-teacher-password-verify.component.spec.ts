@@ -10,7 +10,7 @@ import { configureTestSuite } from 'ng-bullet';
 
 export class MockTeacherService {
   checkVerificationCode(username: string, verificationCode: string): Observable<any> {
-    return Observable.create(observer => {
+    return Observable.create((observer) => {
       observer.next({
         status: 'success',
         messageCode: 'verificationCodeCorrect'
@@ -33,7 +33,7 @@ describe('ForgotTeacherPasswordVerifyComponent', () => {
   };
 
   const createObservableResponse = (status, messageCode) => {
-    const observableResponse = Observable.create(observer => {
+    const observableResponse = Observable.create((observer) => {
       const response = {
         status: status,
         messageCode: messageCode
@@ -51,16 +51,11 @@ describe('ForgotTeacherPasswordVerifyComponent', () => {
 
   configureTestSuite(() => {
     TestBed.configureTestingModule({
-      declarations: [ ForgotTeacherPasswordVerifyComponent ],
-      imports: [
-        RouterTestingModule,
-        ReactiveFormsModule
-      ],
-      providers: [
-        { provide: TeacherService, useClass: MockTeacherService }
-      ],
-      schemas: [ NO_ERRORS_SCHEMA ]
-    })
+      declarations: [ForgotTeacherPasswordVerifyComponent],
+      imports: [RouterTestingModule, ReactiveFormsModule],
+      providers: [{ provide: TeacherService, useClass: MockTeacherService }],
+      schemas: [NO_ERRORS_SCHEMA]
+    });
   });
 
   beforeEach(() => {
@@ -85,7 +80,9 @@ describe('ForgotTeacherPasswordVerifyComponent', () => {
 
   it('should show the too many verification code attempts message', () => {
     submitAndReceiveResponse('checkVerificationCode', 'failure', 'tooManyVerificationCodeAttempts');
-    expect(getErrorMessage()).toContain('You have submitted an invalid verification code too many times');
+    expect(getErrorMessage()).toContain(
+      'You have submitted an invalid verification code too many times'
+    );
   });
 
   it('should navigate to the change password page', () => {
@@ -96,8 +93,10 @@ describe('ForgotTeacherPasswordVerifyComponent', () => {
       username: null,
       verificationCode: ''
     };
-    expect(navigateSpy).toHaveBeenCalledWith(['/forgot/teacher/password/change'],
-      {queryParams: params, skipLocationChange: true});
+    expect(navigateSpy).toHaveBeenCalledWith(['/forgot/teacher/password/change'], {
+      queryParams: params,
+      skipLocationChange: true
+    });
   });
 
   it('should navigate to the change password page after successfully submitting the verification code', () => {
@@ -111,7 +110,9 @@ describe('ForgotTeacherPasswordVerifyComponent', () => {
       username: 'SpongebobSquarepants',
       verificationCode: '123456'
     };
-    expect(navigateSpy).toHaveBeenCalledWith(['/forgot/teacher/password/change'],
-      {queryParams: params, skipLocationChange: true});
+    expect(navigateSpy).toHaveBeenCalledWith(['/forgot/teacher/password/change'], {
+      queryParams: params,
+      skipLocationChange: true
+    });
   });
 });

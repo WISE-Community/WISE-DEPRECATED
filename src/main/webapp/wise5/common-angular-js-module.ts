@@ -30,7 +30,7 @@ import './components/discussion/discussionComponentModule';
 import './components/draw/drawComponentModule';
 import './components/embedded/embeddedComponentModule';
 import * as fabric from 'fabric';
-window['fabric'] = fabric.fabric
+window['fabric'] = fabric.fabric;
 import Filters from './filters/filters';
 import './lib/highcharts/highcharts-ng';
 import * as Highcharts from './lib/highcharts/highcharts.src';
@@ -77,7 +77,8 @@ import { NotebookReportComponent } from '../site/src/app/notebook/notebook-repor
 import { NotebookReportAnnotationsComponent } from '../site/src/app/notebook/notebook-report-annotations/notebook-report-annotations.component';
 import EditNotebookItemController from './themes/default/notebook/editNotebookItemController';
 
-  angular.module('common', [
+angular
+  .module('common', [
     angularDragula(angular),
     'angularMoment',
     'angular-toArrayFilter',
@@ -108,20 +109,36 @@ import EditNotebookItemController from './themes/default/notebook/editNotebookIt
     'ui.router'
   ])
   .service('AchievementService', downgradeInjectable(AchievementService))
-  .directive('editor', downgradeComponent(
-      { component: EditorComponent }) as angular.IDirectiveFactory)
-  .directive('wiseTinymceEditor', downgradeComponent(
-      { component: WiseTinymceEditorComponent }) as angular.IDirectiveFactory)
-  .directive('notebook', downgradeComponent(
-      { component: NotebookComponent }) as angular.IDirectiveFactory)
-  .directive('notebookItem', downgradeComponent(
-      { component: NotebookItemComponent }) as angular.IDirectiveFactory)
-  .directive('notebookNotes', downgradeComponent(
-      { component: NotebookNotesComponent }) as angular.IDirectiveFactory)
-  .directive('notebookReport', downgradeComponent(
-      { component: NotebookReportComponent }) as angular.IDirectiveFactory)
-  .directive('notebookReportAnnotations', downgradeComponent(
-      { component: NotebookReportAnnotationsComponent }) as angular.IDirectiveFactory)
+  .directive(
+    'editor',
+    downgradeComponent({ component: EditorComponent }) as angular.IDirectiveFactory
+  )
+  .directive(
+    'wiseTinymceEditor',
+    downgradeComponent({ component: WiseTinymceEditorComponent }) as angular.IDirectiveFactory
+  )
+  .directive(
+    'notebook',
+    downgradeComponent({ component: NotebookComponent }) as angular.IDirectiveFactory
+  )
+  .directive(
+    'notebookItem',
+    downgradeComponent({ component: NotebookItemComponent }) as angular.IDirectiveFactory
+  )
+  .directive(
+    'notebookNotes',
+    downgradeComponent({ component: NotebookNotesComponent }) as angular.IDirectiveFactory
+  )
+  .directive(
+    'notebookReport',
+    downgradeComponent({ component: NotebookReportComponent }) as angular.IDirectiveFactory
+  )
+  .directive(
+    'notebookReportAnnotations',
+    downgradeComponent({
+      component: NotebookReportAnnotationsComponent
+    }) as angular.IDirectiveFactory
+  )
   .factory('AnnotationService', downgradeInjectable(AnnotationService))
   .factory('AudioRecorderService', downgradeInjectable(AudioRecorderService))
   .factory('ConfigService', downgradeInjectable(ConfigService))
@@ -140,21 +157,21 @@ import EditNotebookItemController from './themes/default/notebook/editNotebookIt
   .controller('EditNotebookItemController', EditNotebookItemController)
   .filter('Filters', Filters)
   .config([
-      '$httpProvider',
-      '$locationProvider',
-      '$mdThemingProvider',
-      '$translateProvider',
-      '$translatePartialLoaderProvider',
-      (
-        $httpProvider,
-        $locationProvider,
-        $mdThemingProvider,
-        $translateProvider,
-        $translatePartialLoaderProvider
-      ) => {
-    $httpProvider.interceptors.push('HttpInterceptor');
-    $locationProvider.html5Mode(true);
-    $translateProvider
+    '$httpProvider',
+    '$locationProvider',
+    '$mdThemingProvider',
+    '$translateProvider',
+    '$translatePartialLoaderProvider',
+    (
+      $httpProvider,
+      $locationProvider,
+      $mdThemingProvider,
+      $translateProvider,
+      $translatePartialLoaderProvider
+    ) => {
+      $httpProvider.interceptors.push('HttpInterceptor');
+      $locationProvider.html5Mode(true);
+      $translateProvider
         .useLoader('$translatePartialLoader', {
           urlTemplate: '/wise5/{part}/i18n_{lang}.json'
         })
@@ -168,65 +185,66 @@ import EditNotebookItemController from './themes/default/notebook/editNotebookIt
         )
         .determinePreferredLanguage()
         .useSanitizeValueStrategy('sanitizeParameters', 'escape');
-    $translatePartialLoaderProvider.addPart('i18n');
-    $mdThemingProvider.definePalette('primary', {
-      '50': 'e1f0f4',
-      '100': 'b8dbe4',
-      '200': '8ec6d4',
-      '300': '5faec2',
-      '400': '3d9db5',
-      '500': '1c8ca8',
-      '600': '197f98',
-      '700': '167188',
-      '800': '136377',
-      '900': '0e4957',
-      A100: 'abf3ff',
-      A200: '66e2ff',
-      A400: '17bee5',
-      A700: '00A1C6',
-      contrastDefaultColor: 'light', // whether, by default, text (contrast)
-      // on this palette should be dark or light
-      contrastDarkColors: [
-        '50',
-        '100', //hues which contrast should be 'dark' by default
-        '200',
-        '300',
-        'A100'
-      ],
-      contrastLightColors: undefined // could also specify this if default was 'dark'
-    });
-    $mdThemingProvider.definePalette('accent', {
-      '50': 'fde9e6',
-      '100': 'fbcbc4',
-      '200': 'f8aca1',
-      '300': 'f4897b',
-      '400': 'f2705f',
-      '500': 'f05843',
-      '600': 'da503c',
-      '700': 'c34736',
-      '800': 'aa3e2f',
-      '900': '7d2e23',
-      A100: 'ff897d',
-      A200: 'ff7061',
-      A400: 'ff3829',
-      A700: 'cc1705',
-      contrastDefaultColor: 'light',
-      contrastDarkColors: ['50', '100', '200', '300', 'A100'],
-      contrastLightColors: undefined
-    });
-    const lightMap = $mdThemingProvider.extendPalette('grey', {
-      A100: 'ffffff'
-    });
-    $mdThemingProvider.definePalette('light', lightMap);
-    $mdThemingProvider.enableBrowserColor();
-    moment.updateLocale('en', {
-      calendar: {
-        lastDay: '[Yesterday at] LT',
-        sameDay: '[Today at] LT',
-        nextDay: '[Tomorrow at] LT',
-        lastWeek: '[last] dddd [at] LT',
-        nextWeek: 'dddd [at] LT',
-        sameElse: 'll'
-      }
-    });
-  }]);
+      $translatePartialLoaderProvider.addPart('i18n');
+      $mdThemingProvider.definePalette('primary', {
+        '50': 'e1f0f4',
+        '100': 'b8dbe4',
+        '200': '8ec6d4',
+        '300': '5faec2',
+        '400': '3d9db5',
+        '500': '1c8ca8',
+        '600': '197f98',
+        '700': '167188',
+        '800': '136377',
+        '900': '0e4957',
+        A100: 'abf3ff',
+        A200: '66e2ff',
+        A400: '17bee5',
+        A700: '00A1C6',
+        contrastDefaultColor: 'light', // whether, by default, text (contrast)
+        // on this palette should be dark or light
+        contrastDarkColors: [
+          '50',
+          '100', //hues which contrast should be 'dark' by default
+          '200',
+          '300',
+          'A100'
+        ],
+        contrastLightColors: undefined // could also specify this if default was 'dark'
+      });
+      $mdThemingProvider.definePalette('accent', {
+        '50': 'fde9e6',
+        '100': 'fbcbc4',
+        '200': 'f8aca1',
+        '300': 'f4897b',
+        '400': 'f2705f',
+        '500': 'f05843',
+        '600': 'da503c',
+        '700': 'c34736',
+        '800': 'aa3e2f',
+        '900': '7d2e23',
+        A100: 'ff897d',
+        A200: 'ff7061',
+        A400: 'ff3829',
+        A700: 'cc1705',
+        contrastDefaultColor: 'light',
+        contrastDarkColors: ['50', '100', '200', '300', 'A100'],
+        contrastLightColors: undefined
+      });
+      const lightMap = $mdThemingProvider.extendPalette('grey', {
+        A100: 'ffffff'
+      });
+      $mdThemingProvider.definePalette('light', lightMap);
+      $mdThemingProvider.enableBrowserColor();
+      moment.updateLocale('en', {
+        calendar: {
+          lastDay: '[Yesterday at] LT',
+          sameDay: '[Today at] LT',
+          nextDay: '[Tomorrow at] LT',
+          lastWeek: '[last] dddd [at] LT',
+          nextWeek: 'dddd [at] LT',
+          sameElse: 'll'
+        }
+      });
+    }
+  ]);

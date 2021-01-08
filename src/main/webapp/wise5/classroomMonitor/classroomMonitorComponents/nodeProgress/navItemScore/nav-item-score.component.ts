@@ -1,6 +1,6 @@
 'use strict';
 
-import { Component, Inject, Input, LOCALE_ID } from "@angular/core";
+import { Component, Inject, Input, LOCALE_ID } from '@angular/core';
 import { formatNumber } from '@angular/common';
 
 @Component({
@@ -8,7 +8,6 @@ import { formatNumber } from '@angular/common';
   templateUrl: 'nav-item-score.component.html'
 })
 export class NavItemScoreComponent {
-
   @Input()
   averageScore: any;
 

@@ -7,7 +7,6 @@ import { ProjectService } from '../../../../wise5/services/projectService';
   providedIn: 'root'
 })
 export class DataService {
-
   currentNode = null;
   previousStep = null;
   private currentNodeChangedSource: Subject<any> = new Subject<any>();
@@ -15,17 +14,11 @@ export class DataService {
   private studentWorkReceivedSource: Subject<any> = new Subject<any>();
   public studentWorkReceived$ = this.studentWorkReceivedSource.asObservable();
 
-  constructor(
-    protected upgrade: UpgradeModule,
-    protected ProjectService: ProjectService) { }
+  constructor(protected upgrade: UpgradeModule, protected ProjectService: ProjectService) {}
 
-  isCompleted(nodeId, componentId) {
+  isCompleted(nodeId, componentId) {}
 
-  }
-
-  endCurrentNodeAndSetCurrentNodeByNodeId(nextNodeId) {
-
-  }
+  endCurrentNodeAndSetCurrentNodeByNodeId(nextNodeId) {}
 
   getCurrentNode() {
     return this.currentNode;
@@ -46,13 +39,9 @@ export class DataService {
     return [];
   }
 
-  evaluateCriterias(criteria) {
+  evaluateCriterias(criteria) {}
 
-  }
-
-  saveVLEEvent(nodeId, componentId, componentType, category, event, eventData) {
-
-  }
+  saveVLEEvent(nodeId, componentId, componentType, category, event, eventData) {}
 
   setCurrentNodeByNodeId(nodeId) {
     this.setCurrentNode(this.ProjectService.getNodeById(nodeId));

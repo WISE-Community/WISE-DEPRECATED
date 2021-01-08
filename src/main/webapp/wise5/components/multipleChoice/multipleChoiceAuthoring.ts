@@ -128,7 +128,6 @@ class MultipleChoiceAuthoringController extends EditComponentController {
       this.componentChanged();
     }
   }
-
 }
 
 const MultipleChoiceAuthoring = {
@@ -139,6 +138,6 @@ const MultipleChoiceAuthoring = {
   controller: MultipleChoiceAuthoringController,
   controllerAs: 'multipleChoiceController',
   templateUrl: 'wise5/components/multipleChoice/authoring.html'
-}
+};
 
 export default MultipleChoiceAuthoring;

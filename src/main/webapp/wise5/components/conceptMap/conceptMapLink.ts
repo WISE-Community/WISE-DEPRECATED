@@ -894,12 +894,12 @@ class ConceptMapLink {
     this.deleteButtonGroup.y(y);
 
     // set the listener for when the mouse is over the group
-    this.deleteButtonGroup.mouseover(event => {
+    this.deleteButtonGroup.mouseover((event) => {
       this.deleteButtonGroupMouseOver(event);
     });
 
     // set the listener for when the mouse moves out of the group
-    this.deleteButtonGroup.mouseout(event => {
+    this.deleteButtonGroup.mouseout((event) => {
       this.deleteButtonGroupMouseOut(event);
     });
 

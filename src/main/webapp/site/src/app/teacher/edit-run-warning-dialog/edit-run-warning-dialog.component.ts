@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ConfigService } from '../../services/config.service';
-import { Run } from "../../domain/run";
+import { Run } from '../../domain/run';
 import { Router } from '@angular/router';
 
 @Component({
@@ -10,14 +10,15 @@ import { Router } from '@angular/router';
   styleUrls: ['./edit-run-warning-dialog.component.scss']
 })
 export class EditRunWarningDialogComponent implements OnInit {
-
   run: Run;
   editLink: string = '';
-  constructor(public dialog: MatDialog,
-              public dialogRef: MatDialogRef<EditRunWarningDialogComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: any,
-              private router: Router,
-              private configService: ConfigService) {
+  constructor(
+    public dialog: MatDialog,
+    public dialogRef: MatDialogRef<EditRunWarningDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private router: Router,
+    private configService: ConfigService
+  ) {
     this.run = data.run;
     this.dialog.closeAll();
   }

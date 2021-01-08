@@ -11,7 +11,7 @@ let tableComponentModule = angular
   .controller('TableController', TableController)
   .config([
     '$translatePartialLoaderProvider',
-    $translatePartialLoaderProvider => {
+    ($translatePartialLoaderProvider) => {
       $translatePartialLoaderProvider.addPart('components/table/i18n');
     }
   ]);

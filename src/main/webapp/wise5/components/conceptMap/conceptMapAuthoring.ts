@@ -182,7 +182,7 @@ class ConceptMapAuthoringController extends EditComponentController {
 
   saveStarterConceptMap(): void {
     if (confirm(this.$translate('conceptMap.areYouSureYouWantToSaveTheStarterConceptMap'))) {
-      this.NodeService.requestStarterState({nodeId: this.nodeId, componentId: this.componentId});
+      this.NodeService.requestStarterState({ nodeId: this.nodeId, componentId: this.componentId });
     }
   }
 
@@ -237,7 +237,6 @@ class ConceptMapAuthoringController extends EditComponentController {
       this.componentChanged();
     }
   }
-
 }
 
 const ConceptMapAuthoring = {
@@ -248,6 +247,6 @@ const ConceptMapAuthoring = {
   controller: ConceptMapAuthoringController,
   controllerAs: 'conceptMapController',
   templateUrl: 'wise5/components/conceptMap/authoring.html'
-}
+};
 
 export default ConceptMapAuthoring;

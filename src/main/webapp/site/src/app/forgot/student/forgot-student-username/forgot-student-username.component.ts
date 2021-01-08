@@ -11,27 +11,26 @@ import { finalize } from 'rxjs/operators';
   styleUrls: ['./forgot-student-username.component.scss']
 })
 export class ForgotStudentUsernameComponent implements OnInit {
-
   months: any[] = [
-    { value: 1, text: $localize`01 (Jan)`},
-    { value: 2, text: $localize`02 (Feb)`},
-    { value: 3, text: $localize`03 (Mar)`},
-    { value: 4, text: $localize`04 (Apr)`},
-    { value: 5, text: $localize`05 (May)`},
-    { value: 6, text: $localize`06 (Jun)`},
-    { value: 7, text: $localize`07 (Jul)`},
-    { value: 8, text: $localize`08 (Aug)`},
-    { value: 9, text: $localize`09 (Sep)`},
-    { value: 10, text: $localize`10 (Oct)`},
-    { value: 11, text: $localize`11 (Nov)`},
-    { value: 12, text: $localize`12 (Dec)`}
+    { value: 1, text: $localize`01 (Jan)` },
+    { value: 2, text: $localize`02 (Feb)` },
+    { value: 3, text: $localize`03 (Mar)` },
+    { value: 4, text: $localize`04 (Apr)` },
+    { value: 5, text: $localize`05 (May)` },
+    { value: 6, text: $localize`06 (Jun)` },
+    { value: 7, text: $localize`07 (Jul)` },
+    { value: 8, text: $localize`08 (Aug)` },
+    { value: 9, text: $localize`09 (Sep)` },
+    { value: 10, text: $localize`10 (Oct)` },
+    { value: 11, text: $localize`11 (Nov)` },
+    { value: 12, text: $localize`12 (Dec)` }
   ];
   days: string[] = [];
   forgotStudentUsernameFormGroup: FormGroup = this.fb.group({
     firstName: new FormControl('', [Validators.required]),
     lastName: new FormControl('', [Validators.required]),
     birthMonth: new FormControl('', [Validators.required]),
-    birthDay: new FormControl({value: '', disabled: true}, [Validators.required])
+    birthDay: new FormControl({ value: '', disabled: true }, [Validators.required])
   });
   foundUsernames: string[] = [];
   message: string;
@@ -39,13 +38,15 @@ export class ForgotStudentUsernameComponent implements OnInit {
   showSearchResults: boolean = false;
   processing: boolean = false;
 
-  constructor(private fb: FormBuilder,
-              private router: Router,
-              private utilService: UtilService,
-              private studentService: StudentService) { }
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private utilService: UtilService,
+    private studentService: StudentService
+  ) {}
 
   ngOnInit() {
-    this.forgotStudentUsernameFormGroup.controls['birthMonth'].valueChanges.subscribe(value => {
+    this.forgotStudentUsernameFormGroup.controls['birthMonth'].valueChanges.subscribe((value) => {
       this.setBirthDayOptions();
     });
   }
@@ -67,7 +68,8 @@ export class ForgotStudentUsernameComponent implements OnInit {
       const lastName = this.getControlFieldValue('lastName');
       const birthMonth = parseInt(this.getControlFieldValue('birthMonth'));
       const birthDay = parseInt(this.getControlFieldValue('birthDay'));
-      this.studentService.getStudentUsernames(firstName, lastName, birthMonth, birthDay)
+      this.studentService
+        .getStudentUsernames(firstName, lastName, birthMonth, birthDay)
         .pipe(
           finalize(() => {
             this.processing = false;
@@ -88,7 +90,7 @@ export class ForgotStudentUsernameComponent implements OnInit {
       this.isErrorMessage = true;
     } else if (foundUsernamesCount === 1) {
       this.setSingleMatchMessage();
-      this.isErrorMessage = false
+      this.isErrorMessage = false;
     } else if (foundUsernamesCount > 1) {
       this.setMultipleMatchMessage();
       this.isErrorMessage = false;

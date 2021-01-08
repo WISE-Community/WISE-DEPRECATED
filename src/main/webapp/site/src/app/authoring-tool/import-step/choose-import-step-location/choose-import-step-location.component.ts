@@ -8,11 +8,13 @@ import { TeacherProjectService } from '../../../../../../wise5/services/teacherP
   templateUrl: 'choose-import-step-location.component.html'
 })
 export class ChooseImportStepLocationComponent {
-
   nodeIds: string[];
 
-  constructor(private upgrade: UpgradeModule, private ConfigService: ConfigService,
-      private ProjectService: TeacherProjectService) {
+  constructor(
+    private upgrade: UpgradeModule,
+    private ConfigService: ConfigService,
+    private ProjectService: TeacherProjectService
+  ) {
     this.nodeIds = Object.keys(this.ProjectService.idToOrder);
     this.nodeIds.shift(); // remove the 'group0' master root node from consideration
   }

@@ -16,13 +16,15 @@ class NotebookWorkgroupGradingController {
 
   static $inject = ['NotebookService', 'ProjectService'];
 
-  constructor(private NotebookService: NotebookService,
-      private ProjectService: TeacherProjectService) {}
+  constructor(
+    private NotebookService: NotebookService,
+    private ProjectService: TeacherProjectService
+  ) {}
 
   $onInit() {
     this.themePath = this.ProjectService.getThemePath();
     if (this.reportEnabled) {
-      const reportId = this.notebookConfig.itemTypes.report.notes[0].reportId
+      const reportId = this.notebookConfig.itemTypes.report.notes[0].reportId;
       this.maxScore = this.NotebookService.getMaxScoreByReportId(reportId);
     }
     this.notebook = this.NotebookService.getNotebookByWorkgroup(this.workgroup.workgroupId);
@@ -38,7 +40,9 @@ class NotebookWorkgroupGradingController {
   }
 
   getNumActiveNotes() {
-    return this.workgroup.notes.filter(note => { return note.serverDeleteTime == null}).length;
+    return this.workgroup.notes.filter((note) => {
+      return note.serverDeleteTime == null;
+    }).length;
   }
 }
 
@@ -52,7 +56,8 @@ const NotebookWorkgroupGrading = {
     reportTitle: '@',
     onUpdateExpand: '&'
   },
-  templateUrl: 'wise5/classroomMonitor/classroomMonitorComponents/notebook/notebookWorkgroupGrading/notebookWorkgroupGrading.html',
+  templateUrl:
+    'wise5/classroomMonitor/classroomMonitorComponents/notebook/notebookWorkgroupGrading/notebookWorkgroupGrading.html',
   controller: NotebookWorkgroupGradingController,
   controllerAs: '$ctrl'
 };

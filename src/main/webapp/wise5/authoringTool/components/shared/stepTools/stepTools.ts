@@ -51,10 +51,11 @@ class StepToolsController {
     this.nodeId = this.TeacherDataService.getCurrentNodeId();
     this.idToOrder = this.ProjectService.idToOrder;
     this.updateModel();
-    this.currentNodeChangedSubscription = this.TeacherDataService.currentNodeChanged$
-        .subscribe(() => {
-      this.updateModel();
-    });
+    this.currentNodeChangedSubscription = this.TeacherDataService.currentNodeChanged$.subscribe(
+      () => {
+        this.updateModel();
+      }
+    );
     this.projectChangedSubscription = this.ProjectService.projectChanged$.subscribe(() => {
       this.projectId = this.ConfigService.getProjectId();
       this.idToOrder = this.ProjectService.idToOrder;
@@ -87,7 +88,7 @@ class StepToolsController {
     } else {
       if (!this.ProjectService.isGroupNode(this.nodeId)) {
         this.prevId = this.NodeService.getPrevNodeId(this.nodeId);
-        this.NodeService.getNextNodeId(this.nodeId).then(currentNodeId => {
+        this.NodeService.getNextNodeId(this.nodeId).then((currentNodeId) => {
           this.nextId = currentNodeId;
         });
       }

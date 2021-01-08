@@ -1,15 +1,14 @@
 import { OnInit, Inject, Directive } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { TeacherService } from "../../../teacher/teacher.service";
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+import { TeacherService } from '../../../teacher/teacher.service';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { map, debounceTime } from 'rxjs/operators';
-import { Project } from "../../../domain/project";
+import { Project } from '../../../domain/project';
 
 @Directive()
 export abstract class ShareItemDialogComponent implements OnInit {
-
   project: Project;
   projectId: number;
   runId: number;
@@ -20,19 +19,21 @@ export abstract class ShareItemDialogComponent implements OnInit {
   sharedOwners: any[] = [];
   private sharedOwners$: BehaviorSubject<any[]> = new BehaviorSubject<any[]>(this.sharedOwners);
 
-  constructor(public dialogRef: MatDialogRef<ShareItemDialogComponent>,
-              @Inject(MAT_DIALOG_DATA) public data: any,
-              public teacherService: TeacherService,
-              public snackBar: MatSnackBar) {
+  constructor(
+    public dialogRef: MatDialogRef<ShareItemDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    public teacherService: TeacherService,
+    public snackBar: MatSnackBar
+  ) {
     this.teacherService.retrieveAllTeacherUsernames().subscribe((teacherUsernames) => {
       this.allTeacherUsernames = teacherUsernames;
-    })
+    });
   }
 
   ngOnInit() {
     this.filteredTeacherUsernames = this.teacherSearchControl.valueChanges.pipe(
       debounceTime(1000),
-      map(value => this._filter(value))
+      map((value) => this._filter(value))
     );
   }
 
@@ -45,7 +46,7 @@ export abstract class ShareItemDialogComponent implements OnInit {
     if (filterValue == '') {
       return [];
     }
-    return this.allTeacherUsernames.filter(option => option.toLowerCase().includes(filterValue));
+    return this.allTeacherUsernames.filter((option) => option.toLowerCase().includes(filterValue));
   }
 
   populateSharedOwners(sharedOwners) {
@@ -89,19 +90,21 @@ export abstract class ShareItemDialogComponent implements OnInit {
 
   projectPermissionChanged(project, sharedOwnerId, permissionId, isAddingPermission) {
     if (isAddingPermission) {
-      this.teacherService.addSharedOwnerProjectPermission(project.id, sharedOwnerId, permissionId)
+      this.teacherService
+        .addSharedOwnerProjectPermission(project.id, sharedOwnerId, permissionId)
         .subscribe((response: any) => {
-          if (response.status == "success") {
+          if (response.status == 'success') {
             this.addProjectPermissionToSharedOwner(sharedOwnerId, permissionId);
           }
-        })
+        });
     } else {
-      this.teacherService.removeSharedOwnerProjectPermission(project.id, sharedOwnerId, permissionId)
+      this.teacherService
+        .removeSharedOwnerProjectPermission(project.id, sharedOwnerId, permissionId)
         .subscribe((response: any) => {
-          if (response.status == "success") {
+          if (response.status == 'success') {
             this.removeProjectPermissionFromSharedOwner(sharedOwnerId, permissionId);
           }
-        })
+        });
     }
   }
 
@@ -119,7 +122,8 @@ export abstract class ShareItemDialogComponent implements OnInit {
 
   notifyRunPermissionChange(sharedOwner) {
     this.snackBar.open(
-        $localize`Sharing permissions updated for ${sharedOwner.firstName}:firstName: ${sharedOwner.lastName}:lastName:.`);
+      $localize`Sharing permissions updated for ${sharedOwner.firstName}:firstName: ${sharedOwner.lastName}:lastName:.`
+    );
   }
 
   isSharedOwner(username) {
@@ -135,7 +139,8 @@ export abstract class ShareItemDialogComponent implements OnInit {
     this.sharedOwners.push(sharedOwner);
     this.sharedOwners$.next(this.sharedOwners);
     this.snackBar.open(
-        $localize`Added shared teacher: ${sharedOwner.firstName}:firstName: ${sharedOwner.lastName}:lastName:.`);
+      $localize`Added shared teacher: ${sharedOwner.firstName}:firstName: ${sharedOwner.lastName}:lastName:.`
+    );
   }
 
   removeSharedOwner(sharedOwner) {
@@ -144,7 +149,8 @@ export abstract class ShareItemDialogComponent implements OnInit {
         this.sharedOwners.splice(i, 1);
         this.sharedOwners$.next(this.sharedOwners);
         this.snackBar.open(
-            $localize`Removed shared teacher: ${sharedOwner.firstName}:firstName: ${sharedOwner.lastName}:lastName:.`);
+          $localize`Removed shared teacher: ${sharedOwner.firstName}:firstName: ${sharedOwner.lastName}:lastName:.`
+        );
         return;
       }
     }

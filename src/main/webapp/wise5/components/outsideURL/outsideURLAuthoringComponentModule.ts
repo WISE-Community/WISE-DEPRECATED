@@ -10,11 +10,13 @@ const outsideURLAuthoringComponentModule = angular
   .module('outsideURLAuthoringComponentModule', [])
   .service('OutsideURLService', downgradeInjectable(OutsideURLService))
   .component('outsideUrlAuthoring', OutsideURLAuthoring)
-  .directive('editOutsideUrlAdvanced', downgradeComponent(
-      { component: EditOutsideUrlAdvancedComponent }) as angular.IDirectiveFactory)
+  .directive(
+    'editOutsideUrlAdvanced',
+    downgradeComponent({ component: EditOutsideUrlAdvancedComponent }) as angular.IDirectiveFactory
+  )
   .config([
     '$translatePartialLoaderProvider',
-    $translatePartialLoaderProvider => {
+    ($translatePartialLoaderProvider) => {
       $translatePartialLoaderProvider.addPart('components/outsideURL/i18n');
     }
   ]);

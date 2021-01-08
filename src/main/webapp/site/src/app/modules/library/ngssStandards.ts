@@ -1,4 +1,4 @@
-import { Standard } from "./standard";
+import { Standard } from './standard';
 
 export class NGSSStandards {
   disciplines: Standard[] = [];

@@ -11,7 +11,7 @@ let labelComponentModule = angular
   .controller('LabelController', LabelController)
   .config([
     '$translatePartialLoaderProvider',
-    $translatePartialLoaderProvider => {
+    ($translatePartialLoaderProvider) => {
       $translatePartialLoaderProvider.addPart('components/label/i18n');
     }
   ]);

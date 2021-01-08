@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import { LibraryGroup } from "../libraryGroup";
+import { LibraryGroup } from '../libraryGroup';
 
 @Component({
   selector: 'app-library-group-thumbs',
@@ -8,7 +8,6 @@ import { LibraryGroup } from "../libraryGroup";
   styleUrls: ['./library-group-thumbs.component.scss']
 })
 export class LibraryGroupThumbsComponent implements OnInit {
-
   @Input()
   group: LibraryGroup = new LibraryGroup();
 

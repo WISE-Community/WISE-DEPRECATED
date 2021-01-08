@@ -11,7 +11,7 @@ let matchComponentModule = angular
   .controller('MatchController', MatchController)
   .config([
     '$translatePartialLoaderProvider',
-    $translatePartialLoaderProvider => {
+    ($translatePartialLoaderProvider) => {
       $translatePartialLoaderProvider.addPart('components/match/i18n');
     }
   ]);

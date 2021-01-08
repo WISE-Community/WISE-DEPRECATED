@@ -63,7 +63,7 @@ export class LibraryProjectMenuComponent {
   }
 
   editProject() {
-    this.teacherService.getProjectLastRun(this.project.id).subscribe(projectRun => {
+    this.teacherService.getProjectLastRun(this.project.id).subscribe((projectRun) => {
       if (projectRun != null) {
         projectRun.project = this.project;
         this.dialog.open(EditRunWarningDialogComponent, {

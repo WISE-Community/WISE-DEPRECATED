@@ -8,8 +8,10 @@ import { downgradeComponent } from '@angular/upgrade/static';
 
 const StudentGrading = angular
   .module('studentGrading', [])
-  .directive('stepInfo',
-      downgradeComponent({ component: StepInfoComponent }) as angular.IDirectiveFactory)
+  .directive(
+    'stepInfo',
+    downgradeComponent({ component: StepInfoComponent }) as angular.IDirectiveFactory
+  )
   .component('stepItem', StepItem)
   .component('studentGradingTools', StudentGradingTools);
 

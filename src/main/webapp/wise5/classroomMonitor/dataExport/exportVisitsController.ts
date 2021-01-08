@@ -1,10 +1,10 @@
 'use strict';
 
-import { TeacherDataService } from "../../services/teacherDataService";
-import ExportController from "./exportController";
-import { ConfigService } from "../../services/configService";
-import { UtilService } from "../../services/utilService";
-import { TeacherProjectService } from "../../services/teacherProjectService";
+import { TeacherDataService } from '../../services/teacherDataService';
+import ExportController from './exportController';
+import { ConfigService } from '../../services/configService';
+import { UtilService } from '../../services/utilService';
+import { TeacherProjectService } from '../../services/teacherProjectService';
 
 class ExportVisitsController extends ExportController {
   project: any;
@@ -70,8 +70,9 @@ class ExportVisitsController extends ExportController {
       const nodeId = node.node.id;
       this.idToNode[nodeId] = node;
       this.idToStepNumber[nodeId] = this.ProjectService.getNodePositionById(nodeId);
-      this.idToStepNumberAndTitle[nodeId] =
-          this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
+      this.idToStepNumberAndTitle[nodeId] = this.ProjectService.getNodePositionAndTitleByNodeId(
+        nodeId
+      );
     }
   }
 
@@ -141,25 +142,32 @@ class ExportVisitsController extends ExportController {
       { name: 'Step Title', explanation: this.$translate('columnExplanationStepTitle') },
       { name: 'Enter Time', explanation: this.$translate('columnExplanationEnterTime') },
       { name: 'Exit Time', explanation: this.$translate('columnExplanationExitTime') },
-      { name: 'Visit Duration (Seconds)',
-          explanation: this.$translate('columnExplanationVisitDurationSeconds') },
+      {
+        name: 'Visit Duration (Seconds)',
+        explanation: this.$translate('columnExplanationVisitDurationSeconds')
+      },
       { name: 'Visit Counter', explanation: this.$translate('columnExplanationVisitCounter') },
       { name: 'Revisit Counter', explanation: this.$translate('columnExplanationRevisitCounter') },
       { name: 'Previous Node ID', explanation: this.$translate('columnExplanationPreviousNodeID') },
-      { name: 'Previous Step Title',
-          explanation: this.$translate('columnExplanationPreviousStepTitle') },
-      { name: 'Node IDs Since Last Visit',
-          explanation: this.$translate('columnExplanationNodeIDsSinceLastVisit') },
-      { name: 'Steps Since Last Visit',
-          explanation: this.$translate('columnExplanationStepsSinceLastVisit') }
+      {
+        name: 'Previous Step Title',
+        explanation: this.$translate('columnExplanationPreviousStepTitle')
+      },
+      {
+        name: 'Node IDs Since Last Visit',
+        explanation: this.$translate('columnExplanationNodeIDsSinceLastVisit')
+      },
+      {
+        name: 'Steps Since Last Visit',
+        explanation: this.$translate('columnExplanationStepsSinceLastVisit')
+      }
     ];
   }
 
   initializeIdToUserInfo() {
     const workgroupIds = this.ConfigService.getClassmateWorkgroupIds();
     for (const workgroupId of workgroupIds) {
-      this.idToUserInfo[workgroupId] =
-          this.ConfigService.getUserInfoByWorkgroupId(workgroupId);
+      this.idToUserInfo[workgroupId] = this.ConfigService.getUserInfoByWorkgroupId(workgroupId);
     }
   }
 
@@ -210,13 +218,16 @@ class ExportVisitsController extends ExportController {
     const includeStudentEvents = true;
     const includeTeacherEvents = false;
     this.TeacherDataService.retrieveEventsExport(
-        includeStudentEvents, includeTeacherEvents, this.includeStudentNames).then((response) => {
+      includeStudentEvents,
+      includeTeacherEvents,
+      this.includeStudentNames
+    ).then((response) => {
       this.handleExportCallback(response);
     });
   }
 
   getCheckedItems() {
-    const checkedItems = []
+    const checkedItems = [];
     for (const node of this.nodes) {
       if (this.idToChecked[node.node.id]) {
         checkedItems.push(node.node.id);
@@ -244,7 +255,7 @@ class ExportVisitsController extends ExportController {
         }
         previousEnteredEvent = null;
       }
-    };
+    }
     if (previousEnteredEvent != null) {
       rows.push(this.createVisit(previousEnteredEvent, null, rows));
     }
@@ -293,18 +304,22 @@ class ExportVisitsController extends ExportController {
   }
 
   isErroneousExitedEvent(event: any, nextEvent: any) {
-    return this.isStepExitedEvent(event) &&
-        this.isStepExitedEvent(nextEvent) &&
-        this.isMatchingNodeId(event, nextEvent);
+    return (
+      this.isStepExitedEvent(event) &&
+      this.isStepExitedEvent(nextEvent) &&
+      this.isMatchingNodeId(event, nextEvent)
+    );
   }
 
   getDeletedSteps(events: any[]) {
     const deletedSteps = {};
     for (const event of events) {
       const nodeId = event.nodeId;
-      if (nodeId != null &&
-          this.ProjectService.getNodeById(nodeId) == null &&
-          nodeId.startsWith('node')) {
+      if (
+        nodeId != null &&
+        this.ProjectService.getNodeById(nodeId) == null &&
+        nodeId.startsWith('node')
+      ) {
         deletedSteps[event.nodeId] = true;
       }
     }
@@ -316,10 +331,12 @@ class ExportVisitsController extends ExportController {
   }
 
   filterRows(rows: any[]) {
-    return rows.filter(row => {
+    return rows.filter((row) => {
       const nodeId = this.getCellInRow(row, 'Node ID');
-      return this.checkedItems.includes(nodeId) ||
-          (this.includeDeletedSteps && this.isDeletedStep(nodeId));
+      return (
+        this.checkedItems.includes(nodeId) ||
+        (this.includeDeletedSteps && this.isDeletedStep(nodeId))
+      );
     });
   }
 
@@ -374,32 +391,49 @@ class ExportVisitsController extends ExportController {
     this.setCellInRow(visit, 'End Date', this.ConfigService.getFormattedEndDate());
     this.setCellInRow(visit, 'Node ID', nodeId);
     this.setCellInRow(visit, 'Step Title', this.getStepNumberAndTitle(nodeId));
-    this.setCellInRow(visit, 'Enter Time',
-        this.UtilService.convertMillisecondsToFormattedDateTime(nodeEnteredEvent.clientSaveTime));
+    this.setCellInRow(
+      visit,
+      'Enter Time',
+      this.UtilService.convertMillisecondsToFormattedDateTime(nodeEnteredEvent.clientSaveTime)
+    );
     if (nodeExitedEvent == null) {
       this.setCellInRow(visit, 'Exit Time', '(Unknown Exit Time)');
       this.setCellInRow(visit, 'Visit Duration (Seconds)', '(Unknown Visit Duration)');
     } else if (nodeExitedEvent != null) {
-      this.setCellInRow(visit, 'Exit Time',
-          this.UtilService.convertMillisecondsToFormattedDateTime(nodeExitedEvent.clientSaveTime));
-      this.setCellInRow(visit, 'Visit Duration (Seconds)',
-          this.getVisitDuration(nodeEnteredEvent, nodeExitedEvent));
+      this.setCellInRow(
+        visit,
+        'Exit Time',
+        this.UtilService.convertMillisecondsToFormattedDateTime(nodeExitedEvent.clientSaveTime)
+      );
+      this.setCellInRow(
+        visit,
+        'Visit Duration (Seconds)',
+        this.getVisitDuration(nodeEnteredEvent, nodeExitedEvent)
+      );
     }
     this.setCellInRow(visit, 'Visit Counter', this.getVisitCounter(workgroupId, nodeId));
     const revisitCounter = this.getRevisitCounter(workgroupId, nodeId);
     this.setCellInRow(visit, 'Revisit Counter', revisitCounter);
     const previousVisit = this.getPreviousVisit(previousVisits, workgroupId);
     if (previousVisit != null) {
+      this.setCellInRow(visit, 'Previous Node ID', this.getCellInRow(previousVisit, 'Node ID'));
       this.setCellInRow(
-          visit, 'Previous Node ID', this.getCellInRow(previousVisit, 'Node ID'));
-      this.setCellInRow(
-          visit, 'Previous Step Title', this.getCellInRow(previousVisit, 'Step Title'));
+        visit,
+        'Previous Step Title',
+        this.getCellInRow(previousVisit, 'Step Title')
+      );
     }
     if (revisitCounter > 0) {
-      this.setCellInRow(visit, 'Node IDs Since Last Visit',
-          this.getNodeIdsBetweenLastVisit(nodeId, previousVisits));
-      this.setCellInRow(visit, 'Steps Since Last Visit',
-          this.getStepNumbersBetweenLastVisit(nodeId, previousVisits));
+      this.setCellInRow(
+        visit,
+        'Node IDs Since Last Visit',
+        this.getNodeIdsBetweenLastVisit(nodeId, previousVisits)
+      );
+      this.setCellInRow(
+        visit,
+        'Steps Since Last Visit',
+        this.getStepNumbersBetweenLastVisit(nodeId, previousVisits)
+      );
     }
     this.incrementRowCounter();
     return visit;
@@ -439,7 +473,6 @@ class ExportVisitsController extends ExportController {
         } else if (output === 'stepNumber') {
           steps.unshift(this.getStepNumber(previousNodeId));
         }
-
       }
     }
     return steps.join(', ');

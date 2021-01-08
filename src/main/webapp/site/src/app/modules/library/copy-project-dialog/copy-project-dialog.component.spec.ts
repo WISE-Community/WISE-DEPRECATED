@@ -1,11 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { CopyProjectDialogComponent } from './copy-project-dialog.component';
-import { LibraryService } from "../../../services/library.service";
+import { LibraryService } from '../../../services/library.service';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Project } from "../../../domain/project";
+import { Project } from '../../../domain/project';
 import { Observable, Subject } from 'rxjs';
-import { NO_ERRORS_SCHEMA } from "@angular/core";
-import { LibraryProject } from "../libraryProject";
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { LibraryProject } from '../libraryProject';
 import { configureTestSuite } from 'ng-bullet';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 
@@ -14,7 +14,7 @@ export class MockLibraryService {
   newProjectSource$ = this.newProjectSource.asObservable();
 
   copyProject() {
-    return Observable.create(observer => {
+    return Observable.create((observer) => {
       const project: Project = new Project();
       observer.next(project);
       observer.complete();
@@ -31,47 +31,46 @@ describe('CopyProjectDialogComponent', () => {
   let fixture: ComponentFixture<CopyProjectDialogComponent>;
   const projectObj = {
     id: 1,
-    name: "Test",
+    name: 'Test',
     owner: {
       id: 123456,
-      displayName: "Spongebob Squarepants"
+      displayName: 'Spongebob Squarepants'
     },
     sharedOwners: []
   };
 
   const getCopyButton = () => {
-    const buttons =  fixture.debugElement.nativeElement.querySelectorAll('button');
+    const buttons = fixture.debugElement.nativeElement.querySelectorAll('button');
     return buttons[1];
   };
 
   configureTestSuite(() => {
     TestBed.configureTestingModule({
-      declarations: [ CopyProjectDialogComponent ],
-      imports: [ MatSnackBarModule ],
+      declarations: [CopyProjectDialogComponent],
+      imports: [MatSnackBarModule],
       providers: [
         { provide: LibraryService, useClass: MockLibraryService },
-        { provide: MatDialog, useValue: {
-            closeAll: () => {
-
-            }
+        {
+          provide: MatDialog,
+          useValue: {
+            closeAll: () => {}
           }
         },
         {
-          provide: MatDialogRef, useValue: {
+          provide: MatDialogRef,
+          useValue: {
             afterClosed: () => {
-              return Observable.create(observer => {
+              return Observable.create((observer) => {
                 observer.next({});
                 observer.complete();
               });
             },
-            close: () => {
-
-            }
+            close: () => {}
           }
         },
         { provide: MAT_DIALOG_DATA, useValue: { project: projectObj } }
       ],
-      schemas: [ NO_ERRORS_SCHEMA ]
+      schemas: [NO_ERRORS_SCHEMA]
     });
   });
 
@@ -87,7 +86,7 @@ describe('CopyProjectDialogComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should close the dialog when copy is successful', async() => {
+  it('should close the dialog when copy is successful', async () => {
     const copyButton = getCopyButton();
     copyButton.click();
     fixture.detectChanges();

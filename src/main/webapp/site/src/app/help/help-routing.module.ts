@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { HelpComponent } from "./help.component";
-import { HelpHomeComponent } from "./help-home/help-home.component";
-import { GettingStartedComponent } from "./getting-started/getting-started.component";
-import { TeacherFaqComponent } from "./teacher-faq/teacher-faq.component";
-import { StudentFaqComponent } from "./student-faq/student-faq.component";
+import { HelpComponent } from './help.component';
+import { HelpHomeComponent } from './help-home/help-home.component';
+import { GettingStartedComponent } from './getting-started/getting-started.component';
+import { TeacherFaqComponent } from './teacher-faq/teacher-faq.component';
+import { StudentFaqComponent } from './student-faq/student-faq.component';
 
 const helpRoutes: Routes = [
   {
@@ -20,11 +20,7 @@ const helpRoutes: Routes = [
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forChild(helpRoutes)
-  ],
-  exports: [
-    RouterModule
-  ]
+  imports: [RouterModule.forChild(helpRoutes)],
+  exports: [RouterModule]
 })
 export class HelpRoutingModule {}

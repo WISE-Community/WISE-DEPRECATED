@@ -1,8 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { LibraryProjectComponent } from './library-project.component';
-import { LibraryProject } from "../libraryProject";
-import { NO_ERRORS_SCHEMA } from "@angular/core";
-import { MatDialogModule } from "@angular/material/dialog";
+import { LibraryProject } from '../libraryProject';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { MatDialogModule } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -14,11 +14,10 @@ describe('LibraryProjectComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ LibraryProjectComponent ],
-      imports: [ BrowserAnimationsModule, RouterTestingModule, OverlayModule, MatDialogModule ],
-      schemas: [ NO_ERRORS_SCHEMA ]
-    })
-    .compileComponents();
+      declarations: [LibraryProjectComponent],
+      imports: [BrowserAnimationsModule, RouterTestingModule, OverlayModule, MatDialogModule],
+      schemas: [NO_ERRORS_SCHEMA]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

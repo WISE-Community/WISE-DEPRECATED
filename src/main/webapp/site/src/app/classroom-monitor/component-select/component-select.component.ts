@@ -1,7 +1,7 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { UpgradeModule } from "@angular/upgrade/static";
-import { TeacherProjectService } from "../../../../../wise5/services/teacherProjectService";
-import { UtilService } from "../../../../../wise5/services/utilService";
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { UpgradeModule } from '@angular/upgrade/static';
+import { TeacherProjectService } from '../../../../../wise5/services/teacherProjectService';
+import { UtilService } from '../../../../../wise5/services/utilService';
 
 @Component({
   selector: 'component-select',
@@ -9,7 +9,6 @@ import { UtilService } from "../../../../../wise5/services/utilService";
   templateUrl: 'component-select.component.html'
 })
 export class ComponentSelectComponent {
-
   components: any[];
 
   @Output()
@@ -20,15 +19,17 @@ export class ComponentSelectComponent {
 
   selectedComponents: any[];
 
-  constructor(private upgrade: UpgradeModule, private ProjectService: TeacherProjectService,
-      private UtilService: UtilService) {
-  }
+  constructor(
+    private upgrade: UpgradeModule,
+    private ProjectService: TeacherProjectService,
+    private UtilService: UtilService
+  ) {}
 
   ngOnInit() {
-    this.components = this.ProjectService.getComponentsByNodeId(this.nodeId).filter(component => {
+    this.components = this.ProjectService.getComponentsByNodeId(this.nodeId).filter((component) => {
       return this.ProjectService.componentHasWork(component);
     });
-    this.selectedComponents = this.components.map(component => {
+    this.selectedComponents = this.components.map((component) => {
       return component.id;
     });
   }

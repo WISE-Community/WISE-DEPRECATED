@@ -108,7 +108,7 @@ class ProjectController {
       this.ProjectService.notifyAuthorProjectBegin(this.projectId);
     });
     this.projectURL = window.location.origin + this.ConfigService.getConfigParam('projectURL');
-    this.$transitions.onSuccess({}, $transition => {
+    this.$transitions.onSuccess({}, ($transition) => {
       const stateName = $transition.$to().name;
       if (stateName === 'root.at.project') {
         this.saveEvent('projectHomeViewOpened', 'Navigation');
@@ -125,10 +125,11 @@ class ProjectController {
       this.refreshProject();
     });
 
-    this.scrollToBottomOfPageSubscription =
-        this.ProjectService.scrollToBottomOfPage$.subscribe(() => {
-      this.scrollToBottomOfPage();
-    });
+    this.scrollToBottomOfPageSubscription = this.ProjectService.scrollToBottomOfPage$.subscribe(
+      () => {
+        this.scrollToBottomOfPage();
+      }
+    );
 
     this.saveEvent('projectOpened', 'Navigation');
 
@@ -143,7 +144,7 @@ class ProjectController {
       this.endProjectAuthoringSession();
     });
 
-    this.$window.onbeforeunload = event => {
+    this.$window.onbeforeunload = (event) => {
       this.endProjectAuthoringSession();
     };
   }
@@ -239,7 +240,10 @@ class ProjectController {
 
   branchIconClicked(nodeId) {
     this.TeacherDataService.endCurrentNodeAndSetCurrentNodeByNodeId(nodeId);
-    this.$state.go('root.at.project.node.advanced.path', { projectId: this.projectId, nodeId: nodeId });
+    this.$state.go('root.at.project.node.advanced.path', {
+      projectId: this.projectId,
+      nodeId: nodeId
+    });
   }
 
   createGroup() {
@@ -537,7 +541,7 @@ class ProjectController {
     const selectedNodeIds = [];
     angular.forEach(
       this.items,
-      function(value, key) {
+      function (value, key) {
         if (value.checked) {
           selectedNodeIds.push(key);
         }
@@ -563,7 +567,7 @@ class ProjectController {
     const selectedItemTypes = [];
     angular.forEach(
       this.items,
-      function(value, key) {
+      function (value, key) {
         if (value.checked) {
           let node = this.ProjectService.getNodeById(key);
           if (node != null) {
@@ -592,13 +596,13 @@ class ProjectController {
   }
 
   unselectAllItems() {
-    angular.forEach(this.items, function(value, key) {
+    angular.forEach(this.items, function (value, key) {
       value.checked = false;
     });
-    angular.forEach(this.inactiveGroupNodes, function(value, key) {
+    angular.forEach(this.inactiveGroupNodes, function (value, key) {
       value.checked = false;
     });
-    angular.forEach(this.inactiveStepNodes, function(value, key) {
+    angular.forEach(this.inactiveStepNodes, function (value, key) {
       value.checked = false;
     });
     this.stepNodeSelected = false;
@@ -936,7 +940,7 @@ class ProjectController {
   }
 
   subscribeToCurrentAuthors(projectId) {
-    return this.$stomp.connect(this.ConfigService.getWebSocketURL()).then(frame => {
+    return this.$stomp.connect(this.ConfigService.getWebSocketURL()).then((frame) => {
       this.$stomp.subscribe(
         `/topic/current-authors/${projectId}`,
         (authors, headers, res) => {

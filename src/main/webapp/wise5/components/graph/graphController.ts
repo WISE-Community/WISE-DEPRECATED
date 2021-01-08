@@ -209,7 +209,7 @@ class GraphController extends ComponentController {
   }
 
   applyHighchartsPlotLinesLabelFix() {
-    Highcharts.wrap(Highcharts.Axis.prototype, 'getPlotLinePath', function(proceed) {
+    Highcharts.wrap(Highcharts.Axis.prototype, 'getPlotLinePath', function (proceed) {
       var path = proceed.apply(this, Array.prototype.slice.call(arguments, 1));
       if (path) {
         path.flat = false;
@@ -250,7 +250,7 @@ class GraphController extends ComponentController {
   isYAxisLocked() {
     if (Array.isArray(this.componentContent.yAxis)) {
       return this.componentContent.yAxis
-        .map(yAxis => yAxis.locked)
+        .map((yAxis) => yAxis.locked)
         .reduce((accumulator, currentValue) => {
           return accumulator && currentValue;
         });
@@ -325,7 +325,7 @@ class GraphController extends ComponentController {
   }
 
   initializeFileUploadChanged() {
-    this.$scope.fileUploadChanged = element => {
+    this.$scope.fileUploadChanged = (element) => {
       const activeSeriesData = this.activeSeries.data;
       let overwrite = true;
       if (activeSeriesData.length > 0) {
@@ -630,19 +630,19 @@ class GraphController extends ComponentController {
        * bind a listener multiple times.
        */
       angular.element(document.querySelector(`#${this.chartId}`)).unbind();
-      angular.element(document.querySelector(`#${this.chartId}`)).bind('mousedown', e => {
+      angular.element(document.querySelector(`#${this.chartId}`)).bind('mousedown', (e) => {
         this.mouseDown = true;
         this.mouseDownEventOccurred(e);
       });
-      angular.element(document.querySelector(`#${this.chartId}`)).bind('mouseup', e => {
+      angular.element(document.querySelector(`#${this.chartId}`)).bind('mouseup', (e) => {
         this.mouseDown = false;
       });
-      angular.element(document.querySelector(`#${this.chartId}`)).bind('mousemove', e => {
+      angular.element(document.querySelector(`#${this.chartId}`)).bind('mousemove', (e) => {
         if (this.mouseDown) {
           this.mouseDownEventOccurred(e);
         }
       });
-      angular.element(document.querySelector(`#${this.chartId}`)).bind('mouseleave', e => {
+      angular.element(document.querySelector(`#${this.chartId}`)).bind('mouseleave', (e) => {
         this.mouseDown = false;
       });
       this.setupMouseMoveListenerDone = true;
@@ -957,7 +957,7 @@ class GraphController extends ComponentController {
     if (this.isSingleYAxis(this.yAxis)) {
       this.yAxis.allowDecimals = false;
     } else {
-      this.yAxis.forEach(yAxis => (yAxis.allowDecimals = false));
+      this.yAxis.forEach((yAxis) => (yAxis.allowDecimals = false));
     }
   }
 
@@ -1088,7 +1088,7 @@ class GraphController extends ComponentController {
           zoomType: zoomType,
           plotBackgroundImage: this.backgroundImage,
           events: {
-            load: function() {
+            load: function () {
               deferred.resolve(this);
             },
             click: this.createGraphClickHandler()
@@ -1136,7 +1136,7 @@ class GraphController extends ComponentController {
 
   createTooltipFormatter() {
     const thisGraphController = this;
-    return function() {
+    return function () {
       let text = '';
       if (thisGraphController.isLimitXAxisType(thisGraphController.xAxis)) {
         text = thisGraphController.getSeriesText(this.series);
@@ -1242,7 +1242,7 @@ class GraphController extends ComponentController {
 
   createGraphClickHandler() {
     const thisGraphController = this;
-    return function(event) {
+    return function (event) {
       if (thisGraphController.graphType === 'line' || thisGraphController.graphType === 'scatter') {
         if (thisGraphController.isIgnoreClickEvent()) {
           return;
@@ -1304,7 +1304,7 @@ class GraphController extends ComponentController {
 
   createLegendItemClickHandler() {
     const thisGraphController = this;
-    return function(event) {
+    return function (event) {
       const canHideSeries =
         thisGraphController.componentContent.canStudentHideSeriesOnLegendClick === true;
       if (canHideSeries) {
@@ -1328,7 +1328,7 @@ class GraphController extends ComponentController {
 
   createPointDragEventHandler() {
     const thisGraphController: any = this;
-    return function(event) {
+    return function (event) {
       if (!thisGraphController.isDisabled) {
         const activeSeries = thisGraphController.activeSeries;
         if (thisGraphController.canEdit(activeSeries)) {
@@ -1340,7 +1340,7 @@ class GraphController extends ComponentController {
 
   createPointDropEventHandler() {
     const thisGraphController: any = this;
-    return function(event) {
+    return function (event) {
       // the student has stopped dragging the point and dropped the point
       if (!thisGraphController.isDisabled && thisGraphController.dragging) {
         const activeSeries = thisGraphController.activeSeries;
@@ -1364,8 +1364,8 @@ class GraphController extends ComponentController {
 
   createGraphCallbackHandler() {
     const thisGraphController = this;
-    return function(chart) {
-      thisGraphController.$timeout(function() {
+    return function (chart) {
+      thisGraphController.$timeout(function () {
         thisGraphController.showXPlotLineIfOn('Drag Me');
         thisGraphController.showYPlotLineIfOn('Drag Me');
         if (
@@ -1675,7 +1675,7 @@ class GraphController extends ComponentController {
      * data has changed.
      */
     const action = 'change';
-    this.createComponentState(action).then(componentState => {
+    this.createComponentState(action).then((componentState) => {
       if (this.addNextComponentStateToUndoStack) {
         if (this.previousComponentState != null) {
           this.undoStack.push(this.previousComponentState);
@@ -1830,12 +1830,12 @@ class GraphController extends ComponentController {
   getTrialsFromClassmates(nodeId, componentId, periodId) {
     const deferred = this.$q.defer();
     this.StudentDataService.getClassmateStudentWork(nodeId, componentId, periodId).then(
-      componentStates => {
+      (componentStates) => {
         const promises = [];
         for (const componentState of componentStates) {
           promises.push(this.getTrialsFromComponentState(nodeId, componentId, componentState));
         }
-        this.$q.all(promises).then(promiseResults => {
+        this.$q.all(promises).then((promiseResults) => {
           const mergedTrials = [];
           for (const trials of promiseResults) {
             for (const trial of trials) {
@@ -1894,8 +1894,8 @@ class GraphController extends ComponentController {
    * @param studentAsset CSV file student asset
    */
   attachStudentAsset(studentAsset) {
-    this.StudentAssetService.copyAssetForReference(studentAsset).then(copiedAsset => {
-      this.StudentAssetService.getAssetContent(copiedAsset).then(assetContent => {
+    this.StudentAssetService.copyAssetForReference(studentAsset).then((copiedAsset) => {
+      this.StudentAssetService.getAssetContent(copiedAsset).then((assetContent) => {
         const rowData = this.UtilService.CSVToArray(assetContent, ',');
         const params = {
           skipFirstRow: true,
@@ -2931,7 +2931,7 @@ class GraphController extends ComponentController {
   }
 
   handleConnectedComponentPromiseResults(connectedComponentBackgroundImage, isReset) {
-    return promiseResults => {
+    return (promiseResults) => {
       /*
        * First we will accumulate all the trials into one new component state and then we will
        * perform connected component processing.
@@ -3005,7 +3005,7 @@ class GraphController extends ComponentController {
    * @return A promise that returns the url of the image that is generated from the component state.
    */
   setComponentStateAsBackgroundImage(componentState) {
-    return this.generateImageFromComponentState(componentState).then(image => {
+    return this.generateImageFromComponentState(componentState).then((image) => {
       return image.url;
     });
   }

@@ -8,10 +8,11 @@ import { UpgradeModule } from '@angular/upgrade/static';
 
 @Injectable()
 export class OpenResponseService extends ComponentService {
-
-  constructor(private upgrade: UpgradeModule,
-      protected StudentDataService: StudentDataService,
-      protected UtilService: UtilService) {
+  constructor(
+    private upgrade: UpgradeModule,
+    protected StudentDataService: StudentDataService,
+    protected UtilService: UtilService
+  ) {
     super(StudentDataService, UtilService);
   }
 
@@ -27,8 +28,13 @@ export class OpenResponseService extends ComponentService {
     return component;
   }
 
-  isCompleted(component: any, componentStates: any[], componentEvents: any[], nodeEvents: any[],
-      node: any) {
+  isCompleted(
+    component: any,
+    componentStates: any[],
+    componentEvents: any[],
+    nodeEvents: any[],
+    node: any
+  ) {
     if (component.completionCriteria != null) {
       return this.StudentDataService.isCompletionCriteriaSatisfied(component.completionCriteria);
     } else if (this.hasComponentState(componentStates)) {
@@ -57,16 +63,20 @@ export class OpenResponseService extends ComponentService {
   }
 
   isDisplayAnnotationForAutoScore(componentContent: any) {
-    if ((componentContent.cRater != null && !componentContent.cRater.showScore) ||
-        componentContent.showAutoScore === false) {
+    if (
+      (componentContent.cRater != null && !componentContent.cRater.showScore) ||
+      componentContent.showAutoScore === false
+    ) {
       return false;
     }
     return true;
   }
 
   isDisplayAnnotationForAutoComment(componentContent: any) {
-    if ((componentContent.cRater != null && !componentContent.cRater.showFeedback) ||
-        componentContent.showAutoFeedback === false) {
+    if (
+      (componentContent.cRater != null && !componentContent.cRater.showFeedback) ||
+      componentContent.showAutoFeedback === false
+    ) {
       return false;
     }
     return true;

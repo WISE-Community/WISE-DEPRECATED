@@ -1,8 +1,6 @@
-
-
 export class RegisterUserFormComponent {
   translateCreateAccountErrorMessageCode(messageCode: string) {
-    switch(messageCode) {
+    switch (messageCode) {
       case 'invalidFirstAndLastName':
         return $localize`Error: First Name and Last Name must only contain characters A-Z`;
       case 'invalidFirstName':

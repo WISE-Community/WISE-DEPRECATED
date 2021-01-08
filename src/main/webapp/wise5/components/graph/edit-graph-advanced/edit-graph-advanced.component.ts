@@ -1,8 +1,15 @@
-import { EditAdvancedComponentAngularJSController } from "../../../../site/src/app/authoring-tool/edit-advanced-component/editAdvancedComponentAngularJSController";
+import { EditAdvancedComponentAngularJSController } from '../../../../site/src/app/authoring-tool/edit-advanced-component/editAdvancedComponentAngularJSController';
 
 class EditGraphAdvancedController extends EditAdvancedComponentAngularJSController {
-  allowedConnectedComponentTypes = ['Animation', 'ConceptMap', 'Draw', 'Embedded', 'Graph', 'Label',
-      'Table'];
+  allowedConnectedComponentTypes = [
+    'Animation',
+    'ConceptMap',
+    'Draw',
+    'Embedded',
+    'Graph',
+    'Label',
+    'Table'
+  ];
 
   addXAxisPlotLine(): void {
     if (this.authoringComponentContent.xAxis.plotLines == null) {
@@ -55,8 +62,10 @@ class EditGraphAdvancedController extends EditAdvancedComponentAngularJSControll
 
   addConnectedComponent() {
     this.addConnectedComponentAndSetComponentIdIfPossible();
-    if (this.authoringComponentContent.connectedComponents.length > 1 ||
-        this.authoringComponentContent.series.length > 0) {
+    if (
+      this.authoringComponentContent.connectedComponents.length > 1 ||
+      this.authoringComponentContent.series.length > 0
+    ) {
       // enable trials so each connected component can put work in a different trial
       this.authoringComponentContent.enableTrials = true;
     }
@@ -124,7 +133,7 @@ class EditGraphAdvancedController extends EditAdvancedComponentAngularJSControll
 
   setImportWorkAsBackgroundIfApplicable(connectedComponent) {
     const componentType = this.getConnectedComponentType(connectedComponent);
-    if (['ConceptMap','Draw','Label'].includes(componentType)) {
+    if (['ConceptMap', 'Draw', 'Label'].includes(componentType)) {
       connectedComponent.importWorkAsBackground = true;
     } else {
       delete connectedComponent.importWorkAsBackground;
@@ -161,4 +170,4 @@ export const EditGraphAdvancedComponent = {
   },
   controller: EditGraphAdvancedController,
   templateUrl: 'wise5/components/graph/edit-graph-advanced/edit-graph-advanced.component.html'
-}
+};

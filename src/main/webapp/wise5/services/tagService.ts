@@ -13,11 +13,10 @@ export class TagService {
   tags: any[] = [];
 
   constructor(
-      protected http: HttpClient,
-      protected ConfigService: ConfigService,
-      protected ProjectService: ProjectService) {
-
-  }
+    protected http: HttpClient,
+    protected ConfigService: ConfigService,
+    protected ProjectService: ProjectService
+  ) {}
 
   setTags(tags: any[]) {
     this.tags = tags;
@@ -38,18 +37,21 @@ export class TagService {
   }
 
   retrieveRunTags() {
-    return this.http.get(`/api/tag/run/${this.ConfigService.getRunId()}`).pipe(map((data: any) => {
-      this.tags = data;
-      return data;
-    }));
+    return this.http.get(`/api/tag/run/${this.ConfigService.getRunId()}`).pipe(
+      map((data: any) => {
+        this.tags = data;
+        return data;
+      })
+    );
   }
 
   retrieveStudentTags() {
-    return this.http.get(`/api/tag/workgroup/${this.ConfigService.getWorkgroupId()}`)
-        .pipe(map((data: any) => {
-      this.tags = data;
-      return data;
-    }));
+    return this.http.get(`/api/tag/workgroup/${this.ConfigService.getWorkgroupId()}`).pipe(
+      map((data: any) => {
+        this.tags = data;
+        return data;
+      })
+    );
   }
 
   getNextAvailableTag() {

@@ -11,9 +11,9 @@ describe('ForgotTeacherUsernameCompleteComponent', () => {
 
   configureTestSuite(() => {
     TestBed.configureTestingModule({
-      declarations: [ ForgotTeacherUsernameCompleteComponent ],
-      imports: [ RouterTestingModule ],
-      schemas: [ NO_ERRORS_SCHEMA ]
+      declarations: [ForgotTeacherUsernameCompleteComponent],
+      imports: [RouterTestingModule],
+      schemas: [NO_ERRORS_SCHEMA]
     });
   });
 
@@ -28,6 +28,8 @@ describe('ForgotTeacherUsernameCompleteComponent', () => {
   });
 
   it('should show the confirmation message', () => {
-    expect(fixture.debugElement.nativeElement.textContent).toContain('Your username has been sent to your email');
+    expect(fixture.debugElement.nativeElement.textContent).toContain(
+      'Your username has been sent to your email'
+    );
   });
 });

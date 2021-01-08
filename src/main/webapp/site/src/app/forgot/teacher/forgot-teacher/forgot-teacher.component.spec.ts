@@ -9,8 +9,8 @@ describe('ForgotTeacherComponent', () => {
 
   configureTestSuite(() => {
     TestBed.configureTestingModule({
-      declarations: [ ForgotTeacherComponent ],
-      schemas: [ NO_ERRORS_SCHEMA ]
+      declarations: [ForgotTeacherComponent],
+      schemas: [NO_ERRORS_SCHEMA]
     });
   });
 

@@ -1,17 +1,15 @@
-import { Injectable } from "@angular/core";
-import { UpgradeModule } from "@angular/upgrade/static";
-import { Observable, Subject } from "rxjs";
+import { Injectable } from '@angular/core';
+import { UpgradeModule } from '@angular/upgrade/static';
+import { Observable, Subject } from 'rxjs';
 
 @Injectable()
 export class AudioRecorderService {
-
   mediaRecorder: MediaRecorder;
   requester: string;
   private audioRecordedSource: Subject<any> = new Subject<any>();
   public audioRecorded$: Observable<any> = this.audioRecordedSource.asObservable();
 
-  constructor(private upgrade: UpgradeModule) {
-  }
+  constructor(private upgrade: UpgradeModule) {}
 
   async init(constraints) {
     try {
@@ -26,7 +24,7 @@ export class AudioRecorderService {
             requester: this.requester,
             audioFile: this.getAudioFile(event.data)
           });
-        }
+        };
         this.mediaRecorder.start();
       } catch (e) {
         console.error('Exception while creating MediaRecorder:', e);
@@ -41,7 +39,7 @@ export class AudioRecorderService {
     const now = new Date().getTime();
     const filename = encodeURIComponent(`audio_${now}.webm`);
     return new File([blob], filename, {
-      lastModified: now,
+      lastModified: now
     });
   }
 
@@ -49,7 +47,7 @@ export class AudioRecorderService {
     this.requester = requester;
     const constraints = {
       audio: {
-        echoCancellation: {exact: true}
+        echoCancellation: { exact: true }
       }
     };
     this.init(constraints);

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ConfigService } from "../../services/config.service";
+import { ConfigService } from '../../services/config.service';
 
 @Component({
   selector: 'app-getting-started',
@@ -7,7 +7,6 @@ import { ConfigService } from "../../services/config.service";
   styleUrls: ['./getting-started.component.scss']
 })
 export class GettingStartedComponent implements OnInit {
-
   contextPath: string;
 
   constructor(private configService: ConfigService) {
@@ -18,9 +17,7 @@ export class GettingStartedComponent implements OnInit {
     });
   }
 
-  ngOnInit() {
-
-  }
+  ngOnInit() {}
 
   ngAfterViewInit() {
     const appHelpElements = document.getElementsByTagName('app-help');
@@ -28,5 +25,4 @@ export class GettingStartedComponent implements OnInit {
       appHelpElements[0].scrollIntoView();
     }
   }
-
 }

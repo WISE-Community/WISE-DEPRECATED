@@ -1,8 +1,7 @@
-import { NodeService } from "../../../../../wise5/services/nodeService";
-import { TeacherProjectService } from "../../../../../wise5/services/teacherProjectService";
+import { NodeService } from '../../../../../wise5/services/nodeService';
+import { TeacherProjectService } from '../../../../../wise5/services/teacherProjectService';
 
 export class EditAdvancedComponentAngularJSController {
-
   authoringComponentContent: any;
   componentId: string;
   nodeId: string;
@@ -11,12 +10,16 @@ export class EditAdvancedComponentAngularJSController {
 
   static $inject = ['NodeService', 'ProjectService'];
 
-  constructor(protected NodeService: NodeService, protected ProjectService: TeacherProjectService) {
-  }
+  constructor(
+    protected NodeService: NodeService,
+    protected ProjectService: TeacherProjectService
+  ) {}
 
   $onInit(): void {
     this.authoringComponentContent = this.ProjectService.getComponentByNodeIdAndComponentId(
-        this.nodeId, this.componentId);
+      this.nodeId,
+      this.componentId
+    );
     this.idToOrder = this.ProjectService.idToOrder;
   }
 
@@ -42,8 +45,10 @@ export class EditAdvancedComponentAngularJSController {
     let numberOfAllowedComponents = 0;
     let allowedComponent = null;
     for (const component of this.ProjectService.getComponentsByNodeId(connectedComponent.nodeId)) {
-      if (this.isConnectedComponentTypeAllowed(component.type) &&
-          component.id != this.componentId) {
+      if (
+        this.isConnectedComponentTypeAllowed(component.type) &&
+        component.id != this.componentId
+      ) {
         numberOfAllowedComponents += 1;
         allowedComponent = component;
       }
@@ -82,8 +87,7 @@ export class EditAdvancedComponentAngularJSController {
     this.automaticallySetConnectedComponentFieldsIfPossible(connectedComponent);
   }
 
-  automaticallySetConnectedComponentFieldsIfPossible(connectedComponent: any): void {
-  }
+  automaticallySetConnectedComponentFieldsIfPossible(connectedComponent: any): void {}
 
   createConnectedComponent(): any {
     return {
@@ -128,14 +132,12 @@ export class EditAdvancedComponentAngularJSController {
       showSubmitButton: show
     });
   }
-  
-  getConnectedComponentType(
-      {nodeId, componentId}: { nodeId: string, componentId: string }) {
+
+  getConnectedComponentType({ nodeId, componentId }: { nodeId: string; componentId: string }) {
     const component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
     if (component != null) {
       return component.type;
     }
     return null;
   }
-
 }

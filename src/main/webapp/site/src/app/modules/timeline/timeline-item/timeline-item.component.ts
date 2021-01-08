@@ -2,13 +2,13 @@ import { Component, Input, OnInit, Directive, ViewEncapsulation } from '@angular
 
 @Directive({
   selector: 'app-timeline-item-label',
-  host: {'class': 'timeline-item__label'}
+  host: { class: 'timeline-item__label' }
 })
 export class TimelineItemLabel {}
 
 @Directive({
   selector: 'app-timeline-item-content',
-  host: {'class': 'timeline-item__content'}
+  host: { class: 'timeline-item__content' }
 })
 export class TimelineItemContent {}
 
@@ -19,12 +19,10 @@ export class TimelineItemContent {}
   encapsulation: ViewEncapsulation.None
 })
 export class TimelineItemComponent implements OnInit {
-
   @Input()
   active: boolean = false;
 
-  constructor() { }
+  constructor() {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 }

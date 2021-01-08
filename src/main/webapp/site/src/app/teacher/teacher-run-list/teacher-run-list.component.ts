@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-teacher-run-list',
   templateUrl: './teacher-run-list.component.html',
-  styleUrls: ['./teacher-run-list.component.scss'],
+  styleUrls: ['./teacher-run-list.component.scss']
 })
 export class TeacherRunListComponent implements OnInit {
   runs: TeacherRun[] = [];
@@ -24,10 +24,12 @@ export class TeacherRunListComponent implements OnInit {
   isSharedRunsRetrieved: boolean = false;
   showAll: boolean = false;
 
-  constructor(private teacherService: TeacherService,
-              private configService: ConfigService,
-              router: Router) {
-    teacherService.newRunSource$.subscribe(run => {
+  constructor(
+    private teacherService: TeacherService,
+    private configService: ConfigService,
+    router: Router
+  ) {
+    teacherService.newRunSource$.subscribe((run) => {
       const teacherRun: TeacherRun = new TeacherRun(run);
       teacherRun.isHighlighted = true;
       this.runs.unshift(teacherRun);
@@ -56,7 +58,7 @@ export class TeacherRunListComponent implements OnInit {
   }
 
   getRuns(): void {
-    this.teacherService.getRuns().subscribe(runs => {
+    this.teacherService.getRuns().subscribe((runs) => {
       this.personalRuns = [];
       for (const personalRun of runs) {
         this.personalRuns.push(new TeacherRun(personalRun));
@@ -76,7 +78,7 @@ export class TeacherRunListComponent implements OnInit {
   }
 
   getSharedRuns(): void {
-    this.teacherService.getSharedRuns().subscribe(runs => {
+    this.teacherService.getSharedRuns().subscribe((runs) => {
       this.sharedRuns = [];
       for (const sharedRun of runs) {
         const teacherRun = new TeacherRun(sharedRun);
@@ -190,9 +192,7 @@ export class TeacherRunListComponent implements OnInit {
   }
 
   performSearchAndFilter(): void {
-    this.filteredRuns = this.searchValue
-      ? this.performSearch(this.searchValue)
-      : this.runs;
+    this.filteredRuns = this.searchValue ? this.performSearch(this.searchValue) : this.runs;
     this.performFilter(this.filterValue);
   }
 
@@ -220,25 +220,16 @@ export class TeacherRunListComponent implements OnInit {
     searchValue = searchValue.toLocaleLowerCase();
     // TODO: extract this for global use?
     return this.runs.filter((run: TeacherRun) =>
-      Object.keys(run).some(prop => {
+      Object.keys(run).some((prop) => {
         const value = run[prop];
         if (typeof value === 'undefined' || value === null) {
           return false;
         } else if (typeof value === 'object') {
-          return (
-            JSON.stringify(value)
-              .toLocaleLowerCase()
-              .indexOf(searchValue) !== -1
-          );
+          return JSON.stringify(value).toLocaleLowerCase().indexOf(searchValue) !== -1;
         } else {
-          return (
-            value
-              .toString()
-              .toLocaleLowerCase()
-              .indexOf(searchValue) !== -1
-          );
+          return value.toString().toLocaleLowerCase().indexOf(searchValue) !== -1;
         }
-      }),
+      })
     );
   }
 

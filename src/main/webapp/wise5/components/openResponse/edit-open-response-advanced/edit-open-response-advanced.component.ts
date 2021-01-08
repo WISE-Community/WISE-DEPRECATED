@@ -1,10 +1,9 @@
-import { EditAdvancedComponentAngularJSController } from "../../../../site/src/app/authoring-tool/edit-advanced-component/editAdvancedComponentAngularJSController";
-import { CRaterService } from "../../../services/cRaterService";
-import { NodeService } from "../../../services/nodeService";
-import { TeacherProjectService } from "../../../services/teacherProjectService";
+import { EditAdvancedComponentAngularJSController } from '../../../../site/src/app/authoring-tool/edit-advanced-component/editAdvancedComponentAngularJSController';
+import { CRaterService } from '../../../services/cRaterService';
+import { NodeService } from '../../../services/nodeService';
+import { TeacherProjectService } from '../../../services/teacherProjectService';
 
 class EditOpenResponseAdvancedController extends EditAdvancedComponentAngularJSController {
-
   allowedConnectedComponentTypes = ['OpenResponse'];
   cRaterItemIdIsValid: boolean = null;
   isVerifyingCRaterItemId: boolean = false;
@@ -112,7 +111,7 @@ class EditOpenResponseAdvancedController extends EditAdvancedComponentAngularJSC
   verifyCRaterItemId(itemId: string): void {
     this.cRaterItemIdIsValid = null;
     this.isVerifyingCRaterItemId = true;
-    this.CRaterService.makeCRaterVerifyRequest(itemId).then(isValid => {
+    this.CRaterService.makeCRaterVerifyRequest(itemId).then((isValid) => {
       this.isVerifyingCRaterItemId = false;
       this.cRaterItemIdIsValid = isValid;
     });
@@ -142,8 +141,7 @@ class EditOpenResponseAdvancedController extends EditAdvancedComponentAngularJSC
           ' {{score}}. ' +
           $localize`Please talk to your teacher` +
           '.',
-        notificationMessageToTeacher:
-          '{{username}} ' + $localize`got a score of` + ' {{score}}.'
+        notificationMessageToTeacher: '{{username}} ' + $localize`got a score of` + ' {{score}}.'
       };
       this.authoringComponentContent.notificationSettings.notifications.push(newNotification);
       this.componentChanged();
@@ -378,7 +376,6 @@ class EditOpenResponseAdvancedController extends EditAdvancedComponentAngularJSC
       this.componentChanged();
     }
   }
-
 }
 
 export const EditOpenResponseAdvancedComponent = {
@@ -387,5 +384,6 @@ export const EditOpenResponseAdvancedComponent = {
     componentId: '@'
   },
   controller: EditOpenResponseAdvancedController,
-  templateUrl: 'wise5/components/openResponse/edit-open-response-advanced/edit-open-response-advanced.component.html'
-}
+  templateUrl:
+    'wise5/components/openResponse/edit-open-response-advanced/edit-open-response-advanced.component.html'
+};

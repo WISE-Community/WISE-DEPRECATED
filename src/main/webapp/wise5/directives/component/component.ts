@@ -1,12 +1,11 @@
-import { ConfigService } from "../../services/configService";
-import { NodeService } from "../../services/nodeService";
-import { NotebookService } from "../../services/notebookService";
-import { ProjectService } from "../../services/projectService";
-import { StudentDataService } from "../../services/studentDataService";
+import { ConfigService } from '../../services/configService';
+import { NodeService } from '../../services/nodeService';
+import { NotebookService } from '../../services/notebookService';
+import { ProjectService } from '../../services/projectService';
+import { StudentDataService } from '../../services/studentDataService';
 import * as angular from 'angular';
 
 class ComponentController {
-
   componentId: string;
   componentState: any;
   mode: string;
@@ -14,13 +13,23 @@ class ComponentController {
   teacherWorkgroupId: number;
   workgroupId: number;
 
-  static $inject = ['$scope', 'ConfigService', 'NodeService', 'NotebookService', 'ProjectService',
-      'StudentDataService'];
+  static $inject = [
+    '$scope',
+    'ConfigService',
+    'NodeService',
+    'NotebookService',
+    'ProjectService',
+    'StudentDataService'
+  ];
 
-  constructor(private $scope: any, private ConfigService: ConfigService,
-      private NodeService: NodeService, private NotebookService: NotebookService,
-      private ProjectService: ProjectService, private StudentDataService: StudentDataService) {
-  }
+  constructor(
+    private $scope: any,
+    private ConfigService: ConfigService,
+    private NodeService: NodeService,
+    private NotebookService: NotebookService,
+    private ProjectService: ProjectService,
+    private StudentDataService: StudentDataService
+  ) {}
 
   $onInit() {
     this.$scope.mode = this.mode;

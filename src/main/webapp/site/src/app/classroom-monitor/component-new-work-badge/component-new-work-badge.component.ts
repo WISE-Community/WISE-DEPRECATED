@@ -8,7 +8,6 @@ import { TeacherDataService } from '../../../../../wise5/services/teacherDataSer
   template: `<span *ngIf="hasNewWork" class="badge badge--info" i18n>New</span>`
 })
 export class ComponentNewWorkBadgeComponent {
-
   annotationSavedToServerSubscription: Subscription;
 
   @Input()
@@ -22,20 +21,22 @@ export class ComponentNewWorkBadgeComponent {
   @Input()
   workgroupId: number;
 
-  constructor(private AnnotationService: AnnotationService,
-      private TeacherDataService: TeacherDataService) {
-  }
+  constructor(
+    private AnnotationService: AnnotationService,
+    private TeacherDataService: TeacherDataService
+  ) {}
 
   ngOnInit() {
     this.checkHasNewWork();
-    this.annotationSavedToServerSubscription =
-        this.AnnotationService.annotationSavedToServer$.subscribe(({ annotation }) => {
-      const annotationNodeId = annotation.nodeId;
-      const annotationComponentId = annotation.componentId;
-      if (this.nodeId === annotationNodeId && this.componentId === annotationComponentId) {
-        this.checkHasNewWork();
+    this.annotationSavedToServerSubscription = this.AnnotationService.annotationSavedToServer$.subscribe(
+      ({ annotation }) => {
+        const annotationNodeId = annotation.nodeId;
+        const annotationComponentId = annotation.componentId;
+        if (this.nodeId === annotationNodeId && this.componentId === annotationComponentId) {
+          this.checkHasNewWork();
+        }
       }
-    });
+    );
   }
 
   ngOnDestroy() {
@@ -47,11 +48,18 @@ export class ComponentNewWorkBadgeComponent {
   }
 
   checkHasNewWork() {
-    const latestComponentState =
-        this.TeacherDataService.getLatestComponentStateByWorkgroupIdNodeIdAndComponentId(
-        this.workgroupId, this.nodeId, this.componentId);
-    const latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(this.nodeId,
-        this.componentId, this.workgroupId, null, 'comment');
+    const latestComponentState = this.TeacherDataService.getLatestComponentStateByWorkgroupIdNodeIdAndComponentId(
+      this.workgroupId,
+      this.nodeId,
+      this.componentId
+    );
+    const latestAnnotations = this.AnnotationService.getLatestComponentAnnotations(
+      this.nodeId,
+      this.componentId,
+      this.workgroupId,
+      null,
+      'comment'
+    );
     if (latestComponentState) {
       let latestTeacherComment = null;
       if (latestAnnotations && latestAnnotations.comment) {

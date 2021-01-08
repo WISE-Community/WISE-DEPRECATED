@@ -15,6 +15,5 @@ export class ChooseBranchPathDialogComponent implements OnInit {
     this.paths = data.paths;
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 }

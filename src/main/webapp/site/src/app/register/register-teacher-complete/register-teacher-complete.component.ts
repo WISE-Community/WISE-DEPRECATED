@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from "@angular/router";
-import { ConfigService } from "../../services/config.service";
+import { ActivatedRoute, Router } from '@angular/router';
+import { ConfigService } from '../../services/config.service';
 
 @Component({
   selector: 'app-register-teacher-complete',
@@ -8,18 +8,20 @@ import { ConfigService } from "../../services/config.service";
   styleUrls: ['./register-teacher-complete.component.scss']
 })
 export class RegisterTeacherCompleteComponent implements OnInit {
-
   username: string;
   isUsingGoogleId: boolean;
   googleLogInURL = `${this.configService.getContextPath()}/google-login`;
 
-  constructor(private router: Router, private route: ActivatedRoute,
-      private configService: ConfigService) { }
+  constructor(
+    private router: Router,
+    private route: ActivatedRoute,
+    private configService: ConfigService
+  ) {}
 
   ngOnInit() {
-    this.route.params.subscribe(params => {
+    this.route.params.subscribe((params) => {
       this.username = params['username'];
-      this.isUsingGoogleId = params['isUsingGoogleId'] == "true";
+      this.isUsingGoogleId = params['isUsingGoogleId'] == 'true';
     });
   }
 
