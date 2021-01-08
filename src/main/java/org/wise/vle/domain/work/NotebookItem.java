@@ -88,7 +88,7 @@ public class NotebookItem extends PersistableDomain {
   @Column(name = "parentNotebookItemId")
   private Integer parentNotebookItemId;
 
-  @Column(name = "groups")
+  @Column(name = "`groups`")
   private String groups;
 
   @Column(name = "type", length = 30, nullable = true)
