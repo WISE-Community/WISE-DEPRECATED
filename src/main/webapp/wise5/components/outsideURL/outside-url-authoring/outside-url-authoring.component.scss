@@ -1,0 +1,78 @@
+label.mat-slide-toggle-label {
+  display: flex;
+}
+
+.show-oer-toggle {
+  margin-bottom: 15px;
+}
+
+.select-oer-container {
+  width: 100%;
+}
+
+p.select-oer-instructions {
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: .01em;
+  line-height: 24px;
+}
+
+.topic-filter-container {
+  max-width: 250px;
+  margin-right: 20px;
+}
+
+.search-container {
+  max-width: 250px;
+  margin-right: 20px;
+}
+
+.clear-button {
+  margin-right: 15px;
+}
+
+.oer-cards-container {
+  height: 600px;
+  overflow-y: auto;
+  padding: 8px;
+  margin-bottom: 16px;
+}
+
+.oer-card {
+  margin: 6px;
+}
+
+.oer-card-title {
+  font-size: 14px;
+}
+
+.oer-card-image {
+  margin-left: -16px;
+  margin-right: -16px;
+  position: relative;
+  padding-top: 60%;
+  background-size: cover;
+  background-position: center;
+}
+
+.oer-card-actions-spacer {
+  flex: 1 1 auto;
+}
+
+.oer-info-link {
+  margin: 0 16px;
+}
+
+.no-results-message-container {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.url-input-container {
+  width: 100%;
+}
+
+.dimension-input-container {
+  margin-right: 20px;
+  width: 150px;
+}
