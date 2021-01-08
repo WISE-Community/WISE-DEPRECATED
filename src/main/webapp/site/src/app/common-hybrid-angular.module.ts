@@ -50,6 +50,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { HelpIconComponent } from '../../../wise5/themes/default/themeComponents/helpIcon/help-icon.component';
 import { NodeStatusIcon } from '../../../wise5/themes/default/themeComponents/nodeStatusIcon/node-status-icon.component';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MomentModule } from 'ngx-moment';
 import { EditorModule, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
 import { WiseTinymceEditorComponent } from '../../../wise5/directives/wise-tinymce-editor/wise-tinymce-editor.component';
@@ -61,8 +62,9 @@ import { NotebookReportComponent } from './notebook/notebook-report/notebook-rep
 import { NotebookReportAnnotationsComponent } from './notebook/notebook-report-annotations/notebook-report-annotations.component';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
-@Component({template: ``})
+@Component({ template: `` })
 export class EmptyComponent {}
 
 @NgModule({
@@ -85,6 +87,7 @@ export class EmptyComponent {}
     EditorModule,
     FlexLayoutModule,
     FormsModule,
+    MatAutocompleteModule,
     MatButtonModule,
     MatCardModule,
     MatCheckboxModule,
@@ -94,15 +97,14 @@ export class EmptyComponent {}
     MatInputModule,
     MatListModule,
     MatProgressBarModule,
+    MatProgressSpinnerModule,
     MatSelectModule,
     MatSidenavModule,
     MatTabsModule,
     MatTooltipModule,
     MomentModule,
     ReactiveFormsModule,
-    RouterModule.forChild([
-      {path: '**', component: EmptyComponent}
-    ])
+    RouterModule.forChild([{ path: '**', component: EmptyComponent }])
   ],
   providers: [
     AchievementService,
@@ -143,6 +145,7 @@ export class EmptyComponent {}
     EditorModule,
     FlexLayoutModule,
     FormsModule,
+    MatAutocompleteModule,
     MatButtonModule,
     MatCardModule,
     MatCheckboxModule,
@@ -152,6 +155,7 @@ export class EmptyComponent {}
     MatInputModule,
     MatListModule,
     MatProgressBarModule,
+    MatProgressSpinnerModule,
     MatSelectModule,
     MatSidenavModule,
     MatTabsModule,

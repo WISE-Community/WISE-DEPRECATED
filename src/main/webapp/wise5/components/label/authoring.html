@@ -10,19 +10,16 @@
   <div class='advancedAuthoringDiv'
        ng-if='labelController.showAdvancedAuthoring'>
     <div>
-      <h6>{{ ::'advancedAuthoringOptions' | translate }}</h6>
-    </div>
-    <div>
       <md-checkbox class='md-primary'
                    ng-model='labelController.authoringComponentContent.showSaveButton'
-                   ng-change='labelController.authoringViewComponentChanged()'>
+                   ng-change='labelController.componentChanged()'>
         {{ ::'SHOW_SAVE_BUTTON' | translate }}
       </md-checkbox>
     </div>
     <div>
       <md-checkbox class='md-primary'
                    ng-model='labelController.authoringComponentContent.showSubmitButton'
-                   ng-change='labelController.authoringViewComponentChanged()'>
+                   ng-change='labelController.componentChanged()'>
         {{ ::'SHOW_SUBMIT_BUTTON' | translate }}
       </md-checkbox>
     </div>
@@ -30,7 +27,7 @@
       <md-checkbox class='md-primary'
                    ng-if='labelController.isNotebookEnabled()'
                    ng-model='labelController.authoringComponentContent.showAddToNotebookButton'
-                   ng-change='labelController.authoringViewComponentChanged()'>
+                   ng-change='labelController.componentChanged()'>
         {{ ::'SHOW_ADD_TO_NOTEBOOK_BUTTON' | translate }}
       </md-checkbox>
     </div>
@@ -41,7 +38,7 @@
         <input type='number'
                ng-model='labelController.authoringComponentContent.maxSubmitCount'
                ng-model-options='{ debounce: 1000 }'
-               ng-change='labelController.authoringViewComponentChanged()'/>
+               ng-change='labelController.componentChanged()'/>
       </md-input-container>
     </div>
     <div layout="column" layout-align="start start">
@@ -133,19 +130,19 @@
               <label>{{ ::'label.charactersPerLine' | translate }}</label>
               <input ng-model='connectedComponent.charactersPerLine'
                      ng-model-options='{ debounce: 1000 }'
-                     ng-change='labelController.authoringViewComponentChanged()'/>
+                     ng-change='labelController.componentChanged()'/>
             </md-input-container>
             <md-input-container style='margin-right: 20px width: 200px; height: 30px;'>
               <label>{{ ::'label.spaceInbetweenLines' | translate }}</label>
               <input ng-model='connectedComponent.spaceInbetweenLines'
                      ng-model-options='{ debounce: 1000 }'
-                     ng-change='labelController.authoringViewComponentChanged()'/>
+                     ng-change='labelController.componentChanged()'/>
             </md-input-container>
             <md-input-container style='margin-right: 20px width: 100px; height: 30px;'>
               <label>{{ ::'label.fontSize' | translate }}</label>
               <input ng-model='connectedComponent.fontSize'
                      ng-model-options='{ debounce: 1000 }'
-                     ng-change='labelController.authoringViewComponentChanged()'/>
+                     ng-change='labelController.componentChanged()'/>
             </md-input-container>
           </div>
         </div>
@@ -170,7 +167,7 @@
         <label>{{ ::'PROMPT' | translate }}</label>
         <textarea rows='1'
                   ng-model='labelController.authoringComponentContent.prompt'
-                  ng-change='labelController.authoringViewComponentChanged()'
+                  ng-change='labelController.componentChanged()'
                   ng-model-options='{ debounce: 1000 }'
                   placeholder='{{ ::"enterPromptHere" | translate }}'>
       </textarea>
@@ -180,7 +177,7 @@
           <label>{{ ::'BACKGROUND_IMAGE' | translate }}</label>
           <input size='100'
                  ng-model='labelController.authoringComponentContent.backgroundImage'
-                 ng-change='labelController.authoringViewComponentChanged()'/>
+                 ng-change='labelController.componentChanged()'/>
         </md-input-container>
         <md-button class='topButton md-raised md-primary'
                    ng-click='labelController.chooseBackgroundImage()'>
@@ -197,14 +194,14 @@
           <input type='number'
                  style='width: 200px'
                  ng-model='labelController.authoringComponentContent.width'
-                 ng-change='labelController.authoringViewComponentChanged()'/>
+                 ng-change='labelController.componentChanged()'/>
         </md-input-container>
         <md-input-container>
           <label>{{ ::'label.canvasHeight' | translate }}</label>
           <input type='number'
                  style='width: 200px'
                  ng-model='labelController.authoringComponentContent.height'
-                 ng-change='labelController.authoringViewComponentChanged()'/>
+                 ng-change='labelController.componentChanged()'/>
         </md-input-container>
       </div>
       <div style='height: 60px;'>
@@ -213,39 +210,39 @@
           <input type='number'
                  style='width: 200px'
                  ng-model='labelController.authoringComponentContent.pointSize'
-                 ng-change='labelController.authoringViewComponentChanged()'/>
+                 ng-change='labelController.componentChanged()'/>
         </md-input-container>
         <md-input-container>
           <label>{{ ::'label.fontSize' | translate }}</label>
           <input type='number'
                  style='width: 200px'
                  ng-model='labelController.authoringComponentContent.fontSize'
-                 ng-change='labelController.authoringViewComponentChanged()'/>
+                 ng-change='labelController.componentChanged()'/>
         </md-input-container>
         <md-input-container>
           <label>{{ ::'label.labelWidth' | translate }}</label>
           <input type='number'
                  style='width: 200px'
                  ng-model='labelController.authoringComponentContent.labelWidth'
-                 ng-change='labelController.authoringViewComponentChanged()'/>
+                 ng-change='labelController.componentChanged()'/>
         </md-input-container>
       </div>
       <div>
         <md-checkbox class='md-primary'
                      ng-model='labelController.authoringComponentContent.canCreateLabels'
-                     ng-change='labelController.authoringViewComponentChanged()'>
+                     ng-change='labelController.componentChanged()'>
           {{ ::'label.canStudentCreateLabels' | translate }}
         </md-checkbox>
         <br/>
         <md-checkbox class='md-primary'
                      ng-model='labelController.authoringComponentContent.enableCircles'
-                     ng-change='labelController.authoringViewComponentChanged()'>
+                     ng-change='labelController.componentChanged()'>
           {{ ::'label.enableDots' | translate }}
         </md-checkbox>
         <br/>
         <md-checkbox class='md-primary'
                      ng-model='labelController.authoringComponentContent.enableStudentUploadBackground'
-                     ng-change='labelController.authoringViewComponentChanged()'>
+                     ng-change='labelController.componentChanged()'>
           {{ ::'label.allowStudentToUploadImageForBackground' | translate }}
         </md-checkbox>
       </div>
@@ -270,7 +267,7 @@
             <md-input-container style='margin-right: 20px;'>
               <label>{{ ::'TEXT' | translate }}</label>
               <input ng-model='label.text'
-                     ng-change='labelController.authoringViewComponentChanged()'
+                     ng-change='labelController.componentChanged()'
                      ng-model-options='{ debounce: 1000 }'
                      size='50'
                      placeholder='{{ ::"label.enterLabelTextHere" | translate }}'/>
@@ -278,7 +275,7 @@
             <md-input-container>
               <label>{{ ::'label.color' | translate }}</label>
               <input ng-model='label.color'
-                     ng-change='labelController.authoringViewComponentChanged()'
+                     ng-change='labelController.componentChanged()'
                      ng-model-options='{ debounce: 1000 }'/>
             </md-input-container>
             <md-button class='topButton md-raised md-primary'
@@ -293,13 +290,13 @@
           <div style='height: 80px; margin-top: 10px;'>
             <md-checkbox class='md-primary'
                          ng-model='label.canEdit'
-                         ng-change='labelController.authoringViewComponentChanged()'>
+                         ng-change='labelController.componentChanged()'>
               {{ ::'label.canStudentEditLabel' | translate }}
             </md-checkbox>
             <br/>
             <md-checkbox class='md-primary'
                          ng-model='label.canDelete'
-                         ng-change='labelController.authoringViewComponentChanged()'>
+                         ng-change='labelController.componentChanged()'>
               {{ ::'label.canStudentDeleteLabel' | translate }}
             </md-checkbox>
           </div>
@@ -312,14 +309,14 @@
               <label>{{ ::'label.x' | translate }}</label>
               <input type='number'
                      ng-model='label.pointX'
-                     ng-change='labelController.authoringViewComponentChanged()'
+                     ng-change='labelController.componentChanged()'
                      ng-model-options='{ debounce: 1000 }'/>
             </md-input-container>
             <md-input-container>
               <label>{{ ::'label.y' | translate }}</label>
               <input type='number'
                      ng-model='label.pointY'
-                     ng-change='labelController.authoringViewComponentChanged()'
+                     ng-change='labelController.componentChanged()'
                      ng-model-options='{ debounce: 1000 }'/>
             </md-input-container>
           </div>
@@ -332,14 +329,14 @@
               <label>{{ ::'label.x' | translate }}</label>
               <input type='number'
                      ng-model='label.textX'
-                     ng-change='labelController.authoringViewComponentChanged()'
+                     ng-change='labelController.componentChanged()'
                      ng-model-options='{ debounce: 1000 }'/>
             </md-input-container>
             <md-input-container>
               <label>{{ ::'label.y' | translate }}</label>
               <input type='number'
                      ng-model='label.textY'
-                     ng-change='labelController.authoringViewComponentChanged()'
+                     ng-change='labelController.componentChanged()'
                      ng-model-options='{ debounce: 1000 }'/>
             </md-input-container>
             <span flex></span>
@@ -373,12 +370,4 @@
       </md-button>
     </div>
   </div>
-  <div ng-style='{"border": "5px solid black"}'>
-    <div ng-style='{"padding-top": "20px", "padding-left": "20px"}'>
-      <h5>{{ ::'studentPreview' | translate }}</h5>
-    </div>
-    <preview-component component-content='labelController.componentContent'
-        node-id='{{labelController.nodeId}}'/>
-  </div>
-</div>
 </div>

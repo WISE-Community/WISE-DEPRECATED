@@ -23,14 +23,14 @@ class NavItemController {
   currentPeriod: any;
   currentWorkgroup: any;
   expanded: boolean = false;
-  hasAlert: boolean;
+  hasAlert: boolean = false;
   hasRubrics: boolean;
   icon: any;
   isCurrentNode: boolean;
   isGroup: boolean;
   item: any;
   maxScore: number;
-  newAlert: any;
+  newAlert: boolean = false;;
   nodeHasWork: boolean;
   nodeId: string;
   nodeTitle: string;
@@ -108,13 +108,8 @@ class NavItemController {
       this.parentGroupId = parentGroup.id;
     }
     this.setWorkgroupsOnNodeData();
-
-    this.hasAlert = false;
-    this.newAlert = false;
     this.alertNotifications = [];
-
     this.getAlertNotifications();
-
     this.hasRubrics = this.ProjectService.getNumberOfRubricsByNodeId(this.nodeId) > 0;
     this.alertIconLabel = this.$translate('HAS_ALERTS_NEW');
     this.alertIconClass = 'warn';
@@ -448,29 +443,23 @@ class NavItemController {
   }
 
   getAlertNotifications() {
-    let periodId = this.currentPeriod.periodId;
-    let workgroupId = this.currentWorkgroup ? this.currentWorkgroup.workgroupId : null;
-    let args = {
+    const args = {
       nodeId: this.nodeId,
-      periodId: periodId,
-      toWorkgroupId: workgroupId
+      periodId: this.currentPeriod.periodId,
+      toWorkgroupId: this.currentWorkgroup ? this.currentWorkgroup.workgroupId : null
     };
     this.alertNotifications = this.NotificationService.getAlertNotifications(args);
     this.hasAlert = this.alertNotifications.length > 0;
     this.newAlert = this.hasNewAlert();
   }
 
-  hasNewAlert() {
-    let result = false;
-    let nAlerts = this.alertNotifications.length;
-    for (let i = 0; i < nAlerts; i++) {
-      let alert = this.alertNotifications[i];
+  hasNewAlert(): boolean {
+    for (const alert of this.alertNotifications) {
       if (!alert.timeDismissed) {
-        result = true;
-        break;
+        return true;
       }
     }
-    return result;
+    return false;
   }
 
   getPeriodLabel() {

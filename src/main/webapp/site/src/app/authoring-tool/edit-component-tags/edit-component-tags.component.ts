@@ -6,7 +6,8 @@ import { TeacherProjectService } from "../../../../../wise5/services/teacherProj
 
 @Component({
   selector: 'edit-component-tags',
-  templateUrl: 'edit-component-tags.component.html'
+  templateUrl: 'edit-component-tags.component.html',
+  styleUrls: ['edit-component-tags.component.scss']
 })
 export class EditComponentTagsComponent {
 
@@ -18,7 +19,7 @@ export class EditComponentTagsComponent {
   constructor(private ProjectService: TeacherProjectService, private upgrade: UpgradeModule) {
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.tagChangedSubscription = this.tagChanged
         .pipe(
           debounceTime(1000),
@@ -30,11 +31,11 @@ export class EditComponentTagsComponent {
         });
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.tagChangedSubscription.unsubscribe();
   }
 
-  addTag() {
+  addTag(): void {
     if (this.authoringComponentContent.tags == null) {
       this.authoringComponentContent.tags = [];
     }
@@ -42,7 +43,7 @@ export class EditComponentTagsComponent {
     this.ProjectService.componentChanged();
   }
 
-  moveTagUp(index: number) {
+  moveTagUp(index: number): void {
     if (index > 0) {
       const tag = this.authoringComponentContent.tags[index];
       this.authoringComponentContent.tags.splice(index, 1);
@@ -51,7 +52,7 @@ export class EditComponentTagsComponent {
     }
   }
 
-  moveTagDown(index: number) {
+  moveTagDown(index: number): void {
     if (index < this.authoringComponentContent.tags.length - 1) {
       const tag = this.authoringComponentContent.tags[index];
       this.authoringComponentContent.tags.splice(index, 1);
@@ -60,7 +61,7 @@ export class EditComponentTagsComponent {
     }
   }
 
-  deleteTag(indexOfTagToDelete: number) {
+  deleteTag(indexOfTagToDelete: number): void {
     if (confirm(
         this.upgrade.$injector.get('$filter')('translate')('areYouSureYouWantToDeleteThisTag'))) {
       this.authoringComponentContent.tags.splice(indexOfTagToDelete, 1);

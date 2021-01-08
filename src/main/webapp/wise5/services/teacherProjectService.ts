@@ -21,9 +21,6 @@ export class TeacherProjectService extends ProjectService {
   public refreshProject$ = this.refreshProjectSource.asObservable();
   private scrollToBottomOfPageSource: Subject<void> = new Subject<void>();
   public scrollToBottomOfPage$ = this.scrollToBottomOfPageSource.asObservable();
-  private showAdvancedComponentViewSource: Subject<any> = new Subject<any>();
-  public showAdvancedComponentView$: Observable<any> =
-      this.showAdvancedComponentViewSource.asObservable();
 
   constructor(
       protected upgrade: UpgradeModule,
@@ -1284,11 +1281,6 @@ export class TeacherProjectService extends ProjectService {
 
   scrollToBottomOfPage() {
     this.scrollToBottomOfPageSource.next();
-  }
-
-  showAdvancedComponentView(componentId: string, isShow: boolean) {
-    this.showAdvancedComponentViewSource
-        .next({componentId: componentId, isShow: isShow});
   }
 
   addTeacherRemovalConstraint(node: any, periodId: number) {

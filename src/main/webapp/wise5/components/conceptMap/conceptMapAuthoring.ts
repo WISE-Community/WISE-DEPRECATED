@@ -5,8 +5,6 @@ import { EditComponentController } from '../../authoringTool/components/editComp
 
 @Directive()
 class ConceptMapAuthoringController extends EditComponentController {
-  allowedConnectedComponentTypes: any[];
-  shouldOptions: any[];
   availableNodes: any[];
   availableLinks: any[];
 
@@ -44,25 +42,6 @@ class ConceptMapAuthoringController extends EditComponentController {
 
   $onInit() {
     super.$onInit();
-    this.allowedConnectedComponentTypes = [
-      { type: 'ConceptMap' },
-      { type: 'Draw' },
-      { type: 'Embedded' },
-      { type: 'Graph' },
-      { type: 'Label' },
-      { type: 'Table' }
-    ];
-
-    this.shouldOptions = [
-      {
-        value: false,
-        label: this.$translate('conceptMap.should')
-      },
-      {
-        value: true,
-        label: this.$translate('conceptMap.shouldNot')
-      }
-    ];
 
     this.availableNodes = this.componentContent.nodes;
     this.availableLinks = this.componentContent.links;
@@ -79,7 +58,7 @@ class ConceptMapAuthoringController extends EditComponentController {
    */
   moveNodeUpButtonClicked(index: number): void {
     this.UtilService.moveObjectUp(this.authoringComponentContent.nodes, index);
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   /**
@@ -88,7 +67,7 @@ class ConceptMapAuthoringController extends EditComponentController {
    */
   moveNodeDownButtonClicked(index: number): void {
     this.UtilService.moveObjectDown(this.authoringComponentContent.nodes, index);
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   /**
@@ -109,7 +88,7 @@ class ConceptMapAuthoringController extends EditComponentController {
       )
     ) {
       nodes.splice(index, 1);
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     }
   }
 
@@ -119,7 +98,7 @@ class ConceptMapAuthoringController extends EditComponentController {
    */
   moveLinkUpButtonClicked(index: number): void {
     this.UtilService.moveObjectUp(this.authoringComponentContent.links, index);
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   /**
@@ -128,7 +107,7 @@ class ConceptMapAuthoringController extends EditComponentController {
    */
   moveLinkDownButtonClicked(index: number): void {
     this.UtilService.moveObjectDown(this.authoringComponentContent.links, index);
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   /**
@@ -145,7 +124,7 @@ class ConceptMapAuthoringController extends EditComponentController {
       )
     ) {
       links.splice(index, 1);
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     }
   }
 
@@ -158,7 +137,7 @@ class ConceptMapAuthoringController extends EditComponentController {
       height: 100
     };
     this.authoringComponentContent.nodes.push(newNode);
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   /**
@@ -182,7 +161,7 @@ class ConceptMapAuthoringController extends EditComponentController {
       color: ''
     };
     this.authoringComponentContent.links.push(newLink);
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   /**
@@ -201,106 +180,6 @@ class ConceptMapAuthoringController extends EditComponentController {
     return this.ConceptMapService.getNextAvailableId(this.authoringComponentContent.links, 'link');
   }
 
-  /**
-   * A "with link" checkbox was checked
-   * @param ruleIndex the index of the rule
-   */
-  ruleLinkCheckboxClicked(ruleIndex: number): void {
-    const rule = this.authoringComponentContent.rules[ruleIndex];
-    if (rule.type === 'node') {
-      /*
-       * the rule has been set to 'node' instead of 'link' so we
-       * will remove the link label and other node label
-       */
-      delete rule.linkLabel;
-      delete rule.otherNodeLabel;
-    }
-    this.authoringViewComponentChanged();
-  }
-
-  addRule(): void {
-    const newRule = {
-      name: '',
-      type: 'node',
-      categories: [],
-      nodeLabel: '',
-      comparison: 'exactly',
-      number: 1,
-      not: false
-    };
-
-    this.authoringComponentContent.rules.push(newRule);
-    let showSubmitButton = false;
-    if (this.authoringComponentContent.rules.length > 0) {
-      showSubmitButton = true;
-    }
-
-    this.setShowSubmitButtonValue(showSubmitButton);
-    this.authoringViewComponentChanged();
-  }
-
-  /**
-   * Move a rule up
-   * @param index the index of the rule
-   */
-  moveRuleUpButtonClicked(index: number): void {
-    this.UtilService.moveObjectUp(this.authoringComponentContent.rules, index);
-    this.authoringViewComponentChanged();
-  }
-
-  /**
-   * Move a rule down
-   * @param index the index of the rule
-   */
-  moveRuleDownButtonClicked(index: number): void {
-    this.UtilService.moveObjectDown(this.authoringComponentContent.rules, index);
-    this.authoringViewComponentChanged();
-  }
-
-  /*
-   * Delete a rule
-   * @param index the index of the rule to delete
-   */
-  ruleDeleteButtonClicked(index: number): void {
-    const rule = this.authoringComponentContent.rules[index];
-    const ruleName = rule.name;
-    if (
-      confirm(
-        this.$translate('conceptMap.areYouSureYouWantToDeleteThisRule', { ruleName: ruleName })
-      )
-    ) {
-      this.authoringComponentContent.rules.splice(index, 1);
-      this.authoringViewComponentChanged();
-    }
-
-    let showSubmitButton = false;
-    if (this.authoringComponentContent.rules.length > 0) {
-      showSubmitButton = true;
-    }
-    this.setShowSubmitButtonValue(showSubmitButton);
-  }
-
-  addCategoryToRule(rule: any): void {
-    rule.categories.push('');
-    this.authoringViewComponentChanged();
-  }
-
-  deleteCategoryFromRule(rule: any, index: number): void {
-    const ruleName = rule.name;
-    const categoryName = rule.categories[index];
-    if (
-      confirm(
-        this.$translate('conceptMap.areYouSureYouWantToDeleteTheCategory', {
-          ruleName: ruleName,
-          categoryName: categoryName
-        })
-      )
-    ) {
-      rule.categories.splice(index, 1);
-      this.authoringViewComponentChanged();
-    }
-  }
-
   saveStarterConceptMap(): void {
     if (confirm(this.$translate('conceptMap.areYouSureYouWantToSaveTheStarterConceptMap'))) {
       this.NodeService.requestStarterState({nodeId: this.nodeId, componentId: this.componentId});
@@ -309,13 +188,13 @@ class ConceptMapAuthoringController extends EditComponentController {
 
   saveStarterState(starterState: any): void {
     this.authoringComponentContent.starterConceptMap = starterState;
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   deleteStarterConceptMap(): void {
     if (confirm(this.$translate('conceptMap.areYouSureYouWantToDeleteTheStarterConceptMap'))) {
       this.authoringComponentContent.starterConceptMap = null;
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     }
   }
 
@@ -351,59 +230,12 @@ class ConceptMapAuthoringController extends EditComponentController {
     const fileName = args.assetItem.fileName;
     if (args.target === 'background') {
       this.authoringComponentContent.background = fileName;
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     } else if (args.target != null && args.target.indexOf('node') == 0) {
       const node = this.getNodeById(args.target);
       node.fileName = fileName;
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     }
-  }
-
-  /**
-   * Automatically set the component id for the connected component if there
-   * is only one viable option.
-   * @param connectedComponent the connected component object we are authoring
-   */
-  automaticallySetConnectedComponentComponentIdIfPossible(connectedComponent: any): void {
-    super.automaticallySetConnectedComponentComponentIdIfPossible(connectedComponent);
-    if (connectedComponent.componentId != null) {
-      this.setImportWorkAsBackgroundIfApplicable(connectedComponent);
-    }
-  }
-
-  /**
-   * The connected component component id has changed
-   * @param connectedComponent the connected component that has changed
-   */
-  connectedComponentComponentIdChanged(connectedComponent: any): void {
-    this.automaticallySetConnectedComponentTypeIfPossible(connectedComponent);
-    this.setImportWorkAsBackgroundIfApplicable(connectedComponent);
-    this.authoringViewComponentChanged();
-  }
-
-  /**
-   * If the component type is a certain type, we will set the importWorkAsBackground
-   * field to true.
-   * @param connectedComponent The connected component object.
-   */
-  setImportWorkAsBackgroundIfApplicable(connectedComponent: any): void {
-    const componentType = this.getConnectedComponentType(connectedComponent);
-    if (['Draw', 'Embedded', 'Graph', 'Label', 'Table'].includes(componentType)) {
-      connectedComponent.importWorkAsBackground = true;
-    } else {
-      delete connectedComponent.importWorkAsBackground;
-    }
-  }
-
-  /**
-   * The "Import Work As Background" checkbox was clicked.
-   * @param connectedComponent The connected component associated with the checkbox.
-   */
-  importWorkAsBackgroundClicked(connectedComponent: any): void {
-    if (!connectedComponent.importWorkAsBackground) {
-      delete connectedComponent.importWorkAsBackground;
-    }
-    this.authoringViewComponentChanged();
   }
 
 }

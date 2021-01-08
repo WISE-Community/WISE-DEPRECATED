@@ -1,2 +1,8 @@
-*.ts
 *.html
+*.js
+*.css
+*.scss
+*.json
+*.md
+src/main/webapp/curriculum
+src/main/webapp/site/dist

@@ -457,8 +457,12 @@ export class StudentDataService extends DataService {
     return true;
   }
 
-  evaluateCriteria(criteria) {
-    return this.criteriaFunctionNameToFunction[criteria.name](criteria);
+  evaluateCriteria(criteria: any): boolean {
+    const criteriaFunction = this.criteriaFunctionNameToFunction[criteria.name];
+    if (criteriaFunction == null) {
+      return true;
+    }
+    return criteriaFunction(criteria);
   }
 
   evaluateIsCompletedCriteria(criteria) {

@@ -5,13 +5,6 @@
   .criteriaContent {
     margin-left: 30px;
   }
-  .advancedAuthoringDiv {
-    border: 2px solid black;
-    padding: 20px;
-  }
-  .advancedAuthoringDiv > div {
-    padding: 5px 20px;
-  }
 </style>
 <div ui-view></div>
 <div ng-if="nodeAuthoringController.$state.current.name == 'root.at.project.node'">
@@ -162,7 +155,7 @@
     <div ng-if='!nodeAuthoringController.insertComponentMode && nodeAuthoringController.showComponentAuthoringViews'>
       <md-input-container style='margin-top: 0; margin-right: 20px; width: 150px; height: 40px;'>
         <md-button class='topButton md-raised md-primary'
-            ng-click='nodeAuthoringController.toggleComponentAdvancedAuthoring(component.id)'>
+            ng-click='nodeAuthoringController.showComponentAdvancedAuthoring(component)'>
           <md-icon>build</md-icon>
           <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'ADVANCED' | translate }}</md-tooltip>
         </md-button>
@@ -195,6 +188,12 @@
       <summary-authoring ng-switch-when="Summary" node-id='{{nodeAuthoringController.nodeId}}' component-id='{{component.id}}'></summary-authoring>
       <table-authoring ng-switch-when="Table" node-id='{{nodeAuthoringController.nodeId}}' component-id='{{component.id}}'></table-authoring>
     </ng-content>
+    <div ng-style='{"border": "5px solid black"}'>
+      <div ng-style='{"padding-top": "20px", "padding-left": "20px"}'>
+        <h5>{{ ::'studentPreview' | translate }}</h5>
+      </div>
+      <preview-component node-id='{{nodeAuthoringController.nodeId}}' component-content='component'/>
+    </div>
     <md-divider ng-if='!$last'></md-divider>
   </div>
 </div>

@@ -1,0 +1,338 @@
+<div class='advancedAuthoringDiv'>
+  <div>
+    <md-input-container style='width: 500px;'>
+      <label>{{ ::'graph.subtitle' | translate }}</label>
+      <input type='text'
+          ng-model='$ctrl.authoringComponentContent.subtitle'
+          ng-model-options='{ debounce: 1000 }'
+          ng-change='$ctrl.componentChanged()'/>
+    </md-input-container>
+  </div>
+  <div>
+    <md-checkbox class='md-primary'
+                 ng-model='$ctrl.authoringComponentContent.showMouseXPlotLine'
+                 ng-change='$ctrl.componentChanged()'>
+      {{ ::'graph.showMouseXPlotLine' | translate }}
+    </md-checkbox>
+  </div>
+  <div>
+    <md-checkbox class='md-primary'
+                 style='left: 40px;'
+                 ng-disabled='!$ctrl.authoringComponentContent.showMouseXPlotLine'
+                 ng-model='$ctrl.authoringComponentContent.highlightXRangeFromZero'
+                 ng-change='$ctrl.componentChanged()'>
+      {{ ::'graph.highlightXRangeFromZero' | translate }}
+    </md-checkbox>
+  </div>
+  <div>
+    <md-checkbox class='md-primary'
+                 ng-model='$ctrl.authoringComponentContent.showMouseYPlotLine'
+                 ng-change='$ctrl.componentChanged()'>
+      {{ ::'graph.showMouseYPlotLine' | translate }}
+    </md-checkbox>
+  </div>
+  <div>
+    <md-checkbox class='md-primary'
+                 ng-model='$ctrl.authoringComponentContent.saveMouseOverPoints'
+                 ng-change='$ctrl.componentChanged()'>
+      {{ ::'graph.saveMouseOverPoints' | translate }}
+    </md-checkbox>
+  </div>
+  <div>
+    <md-checkbox class='md-primary'
+                 ng-model='$ctrl.authoringComponentContent.hideTrialSelect'
+                 ng-change='$ctrl.componentChanged()'>
+      {{ ::'graph.hideTrialSelect' | translate }}
+    </md-checkbox>
+  </div>
+  <div>
+    <md-checkbox class='md-primary'
+                 ng-model='$ctrl.authoringComponentContent.showSaveButton'
+                 ng-change='$ctrl.componentChanged()'>
+      {{ ::'SHOW_SAVE_BUTTON' | translate }}
+    </md-checkbox>
+  </div>
+  <div>
+    <md-checkbox class='md-primary'
+                 ng-model='$ctrl.authoringComponentContent.showSubmitButton'
+                 ng-change='$ctrl.componentChanged()'>
+      {{ ::'SHOW_SUBMIT_BUTTON' | translate }}
+    </md-checkbox>
+  </div>
+  <div>
+    <md-checkbox class='md-primary'
+                 ng-if='$ctrl.isNotebookEnabled()'
+                 ng-model='$ctrl.authoringComponentContent.showAddToNotebookButton'
+                 ng-change='$ctrl.componentChanged()'>
+      {{ ::'SHOW_ADD_TO_NOTEBOOK_BUTTON' | translate }}
+    </md-checkbox>
+  </div>
+  <div>
+    <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'
+                        ng-if='$ctrl.authoringComponentContent.showSubmitButton'>
+      <label>{{ ::'MAX_SUBMIT' | translate }}</label>
+      <input type='number'
+             ng-model='$ctrl.authoringComponentContent.maxSubmitCount'
+             ng-model-options='{ debounce: 1000 }'
+             ng-change='$ctrl.componentChanged()'/>
+    </md-input-container>
+  </div>
+  <div>
+    <md-checkbox class='md-primary'
+                 ng-model='$ctrl.authoringComponentContent.useCustomLegend'
+                 ng-change='$ctrl.componentChanged()'>
+      {{ ::'graph.useCustomLegend' | translate }}
+    </md-checkbox>
+  </div>
+  <div>
+    <md-input-container style='width:100%'
+                        ng-if='$ctrl.authoringComponentContent.useCustomLegend'>
+      <label>{{ ::'graph.customLegend' | translate }}</label>
+      <textarea rows='1'
+                ng-model='$ctrl.authoringComponentContent.customLegend'
+                ng-change='$ctrl.componentChanged()'
+                ng-model-options='{ debounce: 1000 }'>
+      </textarea>
+    </md-input-container>
+  </div>
+  <div>
+    <label class='node__label--vertical-alignment'>{{ 'graph.xAxisPlotLine' | translate }}</label>
+    <md-button class='topButton md-raised md-primary'
+        ng-click='$ctrl.addXAxisPlotLine()'>
+      <md-icon>add</md-icon>
+      <md-tooltip>{{ ::'graph.addXAxisPlotLine' | translate }}</md-tooltip>
+    </md-button>
+  </div>
+  <div ng-repeat='plotLine in $ctrl.authoringComponentContent.xAxis.plotLines track by $index'>
+    <div flex>
+      <md-input-container style='width: 400px;'>
+        <label>{{ ::'graph.text' | translate }}</label>
+        <input type='text'
+            ng-model='plotLine.label.text'
+            ng-model-options='{ debounce: 1000 }'
+            ng-change='$ctrl.componentChanged()'/>
+      </md-input-container>
+      <md-input-container>
+        <label>{{ ::'graph.xValue' | translate }}</label>
+        <input type='text'
+            ng-model='plotLine.value'
+            ng-model-options='{ debounce: 1000 }'
+            ng-change='$ctrl.componentChanged()'/>
+      </md-input-container>
+      <md-input-container>
+        <label>{{ ::'graph.color' | translate }}</label>
+        <input type='text'
+            ng-model='plotLine.color'
+            ng-model-options='{ debounce: 1000 }'
+            ng-change='$ctrl.componentChanged()'/>
+      </md-input-container>
+      <span flex></span>
+      <md-button class='topButton md-raised md-primary'
+                 ng-click='$ctrl.deleteXAxisPlotLine($index)'>
+        <md-icon>delete</md-icon>
+        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'DELETE' | translate }}</md-tooltip>
+      </md-button>
+    </div>
+  </div>
+  <div>
+    <label class='node__label--vertical-alignment'>{{ ::'graph.yAxisPlotLine' | translate }}</label>
+    <md-button class='topButton md-raised md-primary'
+        ng-click='$ctrl.addYAxisPlotLine()'>
+      <md-icon>add</md-icon>
+      <md-tooltip>{{ ::'graph.addYAxisPlotLine' | translate }}</md-tooltip>
+    </md-button>
+  </div>
+  <div ng-repeat='plotLine in $ctrl.authoringComponentContent.yAxis.plotLines track by $index'>
+    <div flex>
+      <md-input-container style='width: 400px;'>
+        <label>{{ ::'graph.text' | translate }}</label>
+        <input type='text'
+            ng-model='plotLine.label.text'
+            ng-model-options='{ debounce: 1000 }'
+            ng-change='$ctrl.componentChanged()'/>
+      </md-input-container>
+      <md-input-container>
+        <label>{{ ::'graph.yValue' | translate }}</label>
+        <input type='text'
+            ng-model='plotLine.value'
+            ng-model-options='{ debounce: 1000 }'
+            ng-change='$ctrl.componentChanged()'/>
+      </md-input-container>
+      <md-input-container>
+        <label>{{ ::'graph.color' | translate }}</label>
+        <input type='text'
+            ng-model='plotLine.color'
+            ng-model-options='{ debounce: 1000 }'
+            ng-change='$ctrl.componentChanged()'/>
+      </md-input-container>
+      <span flex></span>
+      <md-button class='topButton md-raised md-primary'
+                 ng-click='$ctrl.deleteYAxisPlotLine($index)'>
+        <md-icon>delete</md-icon>
+        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'DELETE' | translate }}</md-tooltip>
+      </md-button>
+    </div>
+  </div>
+  <div layout="column" layout-align="start start">
+    <edit-component-max-score [authoring-component-content]="$ctrl.authoringComponentContent"></edit-component-max-score>
+    <edit-component-width [authoring-component-content]="$ctrl.authoringComponentContent"></edit-component-width>
+    <edit-component-rubric [authoring-component-content]="$ctrl.authoringComponentContent"></edit-component-rubric>
+    <edit-component-tags [authoring-component-content]="$ctrl.authoringComponentContent"></edit-component-tags>
+  </div>
+  <div>
+    <div style='height: 50;'>
+      <label class='node__label--vertical-alignment'>
+        {{ ::'CONNECTED_COMPONENTS' | translate }}
+      </label>
+      <md-button class='topButton md-raised md-primary'
+                 ng-click='$ctrl.addConnectedComponent()'>
+        <md-icon>add</md-icon>
+        <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'ADD_CONNECTED_COMPONENT' | translate }}</md-tooltip>
+      </md-button>
+    </div>
+    <div ng-repeat='connectedComponent in $ctrl.authoringComponentContent.connectedComponents track by $index'
+         style='border: 2px solid #dddddd; border-radius: 5px; margin-bottom: 10px; padding: 20px 20px 10px 20px;'>
+      <div flex>
+        <md-input-container style='margin-right: 20px; width: 300px;'>
+          <label>{{ ::'step' | translate }}</label>
+          <md-select ng-model='connectedComponent.nodeId'
+                     ng-change='$ctrl.connectedComponentNodeIdChanged(connectedComponent)'
+                     style='width: 300px'>
+            <md-option ng-repeat='item in $ctrl.idToOrder | toArray | orderBy : "order"'
+                       value='{{item.$key}}'
+                       ng-if='$ctrl.isApplicationNode(item.$key)'>
+              {{$ctrl.getNodePositionAndTitleByNodeId(item.$key)}}
+            </md-option>
+          </md-select>
+        </md-input-container>
+        <md-input-container style='margin-right: 20px; width: 300px;'>
+          <label>{{ ::'component' | translate }}</label>
+          <md-select ng-model='connectedComponent.componentId'
+                     ng-change='$ctrl.connectedComponentComponentIdChanged(connectedComponent)'
+                     style='width: 300px'>
+            <md-option ng-repeat='(componentIndex, component) in $ctrl.getComponentsByNodeId(connectedComponent.nodeId)'
+                       value='{{component.id}}'
+                       ng-disabled='!$ctrl.isConnectedComponentTypeAllowed(component.type) || component.id == $ctrl.componentId'>
+              {{ componentIndex + 1 }}. {{component.type}} <span ng-if='component.id == $ctrl.componentId'>({{ ::'thisComponent' | translate }})</span>
+            </md-option>
+          </md-select>
+        </md-input-container>
+        <md-input-container style='margin-right: 20px; width: 200px;'>
+          <label>{{ ::'type' | translate }}</label>
+          <md-select ng-model='connectedComponent.type'
+                     ng-change='$ctrl.connectedComponentTypeChanged(connectedComponent)'
+                     style='width: 200px'>
+            <md-option value='importWork'>
+              {{ ::'importWork' | translate }}
+            </md-option>
+            <md-option value='showWork'>
+              {{ ::'showWork' | translate }}
+            </md-option>
+            <md-option value='showClassmateWork'
+                       ng-if='$ctrl.getConnectedComponentType(connectedComponent) == "Graph"'>
+              {{ ::'showClassmateWork' | translate }}
+            </md-option>
+          </md-select>
+        </md-input-container>
+        <md-input-container style='margin-right: 20px; width: 270px;'
+                            ng-if='connectedComponent.type == "showClassmateWork" && $ctrl.getConnectedComponentType(connectedComponent) == "Graph"'>
+          <label>{{ ::'showClassmateWorkSource' | translate }}</label>
+          <md-select ng-model='connectedComponent.showClassmateWorkSource'
+                     style='margin-right: 20px;'
+                     ng-change='$ctrl.componentChanged()'>
+            <md-option value='period'>
+              {{ ::'period' | translate }}
+            </md-option>
+            <md-option value='class'>
+              {{ ::'class' | translate }}
+            </md-option>
+          </md-select>
+        </md-input-container>
+        <md-input-container style='margin-right: 20px; width: 270px;'
+                            ng-if='$ctrl.getConnectedComponentType(connectedComponent) === "Graph"'>
+          <md-checkbox class='md-primary'
+                       ng-model='connectedComponent.importGraphSettings'
+                       style='margin-right: 20px;'
+                       ng-change='$ctrl.componentChanged()'>
+            {{ ::'graph.importGraphSettings' | translate }}
+          </md-checkbox>
+        </md-input-container>
+        <span flex></span>
+        <md-button class='topButton md-raised md-primary'
+                   ng-click='$ctrl.deleteConnectedComponent($index)'>
+          <md-icon>delete</md-icon>
+          <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'DELETE' | translate }}</md-tooltip>
+        </md-button>
+      </div>
+      <div ng-if='$ctrl.getConnectedComponentType(connectedComponent) == "Table"' flex>
+        <md-checkbox class='md-primary'
+                     ng-model='connectedComponent.skipFirstRow'
+                     style='margin-right: 20px;'
+                     ng-change='$ctrl.componentChanged()'>
+          {{ ::'graph.skipFirstRow' | translate }}
+        </md-checkbox>
+        <md-input-container style='margin-right: 20px; width: 100px; height: 30px;'>
+          <label>{{ ::'graph.xColumn' | translate }}</label>
+          <input type='number'
+                 ng-model='connectedComponent.xColumn'
+                 ng-model-options='{ debounce: 1000 }'
+                 ng-change='$ctrl.componentChanged()'/>
+        </md-input-container>
+        <md-input-container style='margin-right: 20px; width: 100px; height: 30px;'>
+          <label>{{ ::'graph.yColumn' | translate }}</label>
+          <input type='number'
+                 ng-model='connectedComponent.yColumn'
+                 ng-model-options='{ debounce: 1000 }'
+                 ng-change='$ctrl.componentChanged()'/>
+        </md-input-container>
+      </div>
+      <div ng-if='$ctrl.getConnectedComponentType(connectedComponent) == "Embedded"' flex>
+        <div>
+          <md-checkbox class='md-primary'
+                       ng-model='connectedComponent.showXPlotLineOnLatestPoint'
+                       ng-change='$ctrl.componentChanged()'>
+            {{ ::'graph.showXPlotLineOnLatestPoint' | translate }}
+          </md-checkbox>
+          <br/>
+          <md-checkbox class='md-primary'
+                       ng-model='connectedComponent.highlightLatestPoint'
+                       ng-change='$ctrl.componentChanged()'>
+            {{ ::'graph.highlightLatestPoint' | translate }}
+          </md-checkbox>
+        </div>
+        <div layout='row'>
+          <h6>{{ ::'graph.seriesNumbers' | translate }}</h6>
+          <md-button class='topButton md-raised md-primary'
+                     ng-click='$ctrl.addConnectedComponentSeriesNumber(connectedComponent)'>
+            <md-icon>add</md-icon>
+            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'graph.addSeriesNumber' | translate }}</md-tooltip>
+          </md-button>
+        </div>
+        <div ng-repeat='seriesNumber in connectedComponent.seriesNumbers track by $index'>
+          <md-input-container style='margin-right: 20px; width: 120px; height: 30px;'>
+            <label>{{ ::'graph.seriesNumber' | translate }}</label>
+            <input type='number'
+                   ng-model='seriesNumber'
+                   ng-model-options='{ debounce: 1000 }'
+                   ng-change='$ctrl.connectedComponentSeriesNumberChanged(connectedComponent, $index, seriesNumber)'/>
+          </md-input-container>
+          <md-button class='topButton md-raised md-primary'
+                     ng-click='$ctrl.deleteConnectedComponentSeriesNumber(connectedComponent, $index)'>
+            <md-icon>delete</md-icon>
+            <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'graph.deleteSeriesNumber' | translate }}</md-tooltip>
+          </md-button>
+        </div>
+      </div>
+      <div ng-if='$ctrl.getConnectedComponentType(connectedComponent) == "ConceptMap" || $ctrl.getConnectedComponentType(connectedComponent) == "Draw" || $ctrl.getConnectedComponentType(connectedComponent) == "Label"' flex>
+        <md-input-container style='margin-right: 20px;'>
+          <md-checkbox class='md-primary'
+                       ng-model='connectedComponent.importWorkAsBackground'
+                       ng-change='$ctrl.importWorkAsBackgroundClicked(connectedComponent)'>
+            {{ ::'importWorkAsBackground' | translate }}
+          </md-checkbox>
+        </md-input-container>
+      </div>
+    </div>
+  </div>
+  <edit-component-json [node-id]="$ctrl.nodeId" [component-id]="$ctrl.componentId"></edit-component-json>
+</div>

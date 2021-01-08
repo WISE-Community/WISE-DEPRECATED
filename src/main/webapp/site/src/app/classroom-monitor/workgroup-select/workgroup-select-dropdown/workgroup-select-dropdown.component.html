@@ -1,0 +1,14 @@
+<mat-form-field appearance="fill" class="workgroup-select-dropdown">
+  <mat-select [(ngModel)]="selectedItem" mat-theme="cm" i18n-aria-label aria-label="Select a team"
+              (selectionChange)="selectedItemChange()">
+    <span fxLayout="row" fxLayoutAlign="center center" flex>
+      <input class="workgroup-select-dropdown-search" matInput [(ngModel)]="searchTerm"
+             type="search" i18n-placeholder placeholder="Find a student"
+             (keydown)="$event.stopPropagation()" (ngModelChange)="setWorkgroups()" tabindex="0" />
+    </span>
+    <mat-divider class="workgroup-select-dropdown-divider"></mat-divider>
+    <mat-option *ngFor="let workgroup of workgroups" [value]="workgroup">
+      <span i18n>{{workgroup.displayNames}} (Team {{workgroup.workgroupId}})</span>
+    </mat-option>
+  </mat-select>
+</mat-form-field>

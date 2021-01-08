@@ -1,0 +1,14 @@
+<mat-form-field appearance="fill" class="workgroup-select-autocomplete">
+  <input type="text" i18n-placeholder placeholder="Find a student" matInput
+         [formControl]="myControl" [matAutocomplete]="auto">
+  <button class="workgroup-select-autocomplete-suffix" mat-button *ngIf="myControl.value" matSuffix mat-icon-button i18n-aria-label
+          aria-label="Clear" (click)="itemSelected()">
+    <mat-icon>close</mat-icon>
+  </button>
+  <mat-autocomplete #auto="matAutocomplete" (displayWith)="displayWith($event.option.value)"
+                    (optionSelected)="itemSelected($event.option.value)">
+    <mat-option *ngFor="let workgroup of filteredWorkgroups | async" [value]="workgroup">
+      {{workgroup.displayNames}}
+    </mat-option>
+  </mat-autocomplete>
+</mat-form-field>

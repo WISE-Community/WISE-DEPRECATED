@@ -10,7 +10,7 @@ import { Subscription } from 'rxjs';
 export abstract class EditComponentController {
 
   $translate: any;
-  allowedConnectedComponentTypes: any[];
+  allowedConnectedComponentTypes: string[];
   authoringComponentContent: any;
   componentChangedSubscription: Subscription;
   componentContent: any;
@@ -25,7 +25,6 @@ export abstract class EditComponentController {
   showAdvancedAuthoring: boolean = false;
   submitCounter: number = 0;
   starterStateResponseSubscription: Subscription;
-  showAdvancedAuthoringSubscription: Subscription;
 
   constructor(
       protected $filter: any,
@@ -43,14 +42,7 @@ export abstract class EditComponentController {
     this.idToOrder = this.ProjectService.idToOrder;
     this.$translate = this.$filter('translate');
     this.componentChangedSubscription = this.ProjectService.componentChanged$.subscribe(() => {
-      this.authoringViewComponentChanged();
-    });
-    this.showAdvancedAuthoringSubscription =
-        this.ProjectService.showAdvancedComponentView$.subscribe((event) => {
-      if (event.componentId === this.componentId) {
-        this.showAdvancedAuthoring = event.isShow;
-        this.NotificationService.hideJSONValidMessage();
-      }
+      this.componentChanged();
     });
     this.starterStateResponseSubscription =
         this.NodeService.starterStateResponse$.subscribe((args: any) => {
@@ -63,10 +55,9 @@ export abstract class EditComponentController {
   $onDestroy() {
     this.componentChangedSubscription.unsubscribe();
     this.starterStateResponseSubscription.unsubscribe();
-    this.showAdvancedAuthoringSubscription.unsubscribe();
   }
 
-  authoringViewComponentChanged(): void {
+  componentChanged(): void {
     this.resetUI();
     this.ProjectService.nodeChanged();
   }
@@ -105,89 +96,6 @@ export abstract class EditComponentController {
     });
   }
 
-  connectedComponentTypeChanged(connectedComponent) {
-    this.authoringViewComponentChanged();
-  }
-
-  connectedComponentNodeIdChanged(connectedComponent) {
-    connectedComponent.componentId = null;
-    connectedComponent.type = null;
-    this.automaticallySetConnectedComponentComponentIdIfPossible(connectedComponent);
-    this.authoringViewComponentChanged();
-  }
-
-  connectedComponentComponentIdChanged(connectedComponent) {
-    this.automaticallySetConnectedComponentTypeIfPossible(connectedComponent);
-    this.authoringViewComponentChanged();
-  }
-
-  isConnectedComponentTypeAllowed(componentType) {
-    for (const allowedConnectedComponentType of this.allowedConnectedComponentTypes) {
-      if (allowedConnectedComponentType.type === componentType) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  addConnectedComponent() {
-    this.addConnectedComponentAndSetComponentIdIfPossible();
-    this.authoringViewComponentChanged();
-  }
-
-  addConnectedComponentAndSetComponentIdIfPossible() {
-    const connectedComponent = this.createConnectedComponent();
-    if (this.authoringComponentContent.connectedComponents == null) {
-      this.authoringComponentContent.connectedComponents = [];
-    }
-    this.authoringComponentContent.connectedComponents.push(connectedComponent);
-    this.automaticallySetConnectedComponentComponentIdIfPossible(connectedComponent);
-  }
-
-  automaticallySetConnectedComponentComponentIdIfPossible(connectedComponent) {
-    let numberOfAllowedComponents = 0;
-    let allowedComponent = null;
-    for (const component of this.ProjectService.getComponentsByNodeId(connectedComponent.nodeId)) {
-      if (this.isConnectedComponentTypeAllowed(component.type) &&
-          component.id != this.componentId) {
-        numberOfAllowedComponents += 1;
-        allowedComponent = component;
-      }
-    }
-    if (numberOfAllowedComponents === 1) {
-      connectedComponent.componentId = allowedComponent.id;
-      connectedComponent.type = 'importWork';
-    }
-    this.automaticallySetConnectedComponentTypeIfPossible(connectedComponent);
-  }
-
-  automaticallySetConnectedComponentTypeIfPossible(connectedComponent) {
-    if (connectedComponent.componentId != null) {
-      connectedComponent.type = 'importWork';
-    }
-    this.automaticallySetConnectedComponentFieldsIfPossible(connectedComponent);
-  }
-
-  automaticallySetConnectedComponentFieldsIfPossible(connectedComponent) {
-  }
-
-  createConnectedComponent() {
-    return {
-      nodeId: this.nodeId,
-      componentId: null,
-      type: null
-    };
-  }
-
-  deleteConnectedComponent(index) {
-    if (confirm(this.$translate('areYouSureYouWantToDeleteThisConnectedComponent'))) {
-      if (this.authoringComponentContent.connectedComponents != null) {
-        this.authoringComponentContent.connectedComponents.splice(index, 1);
-      }
-      this.authoringViewComponentChanged();
-    }
-  }
-
   getNodePositionAndTitleByNodeId(nodeId) {
     return this.ProjectService.getNodePositionAndTitleByNodeId(nodeId);
   }
@@ -198,15 +106,6 @@ export abstract class EditComponentController {
 
   getComponentsByNodeId(nodeId) {
     return this.ProjectService.getComponentsByNodeId(nodeId);
-  }
-
-  getConnectedComponentType(
-      {nodeId, componentId}: { nodeId: string, componentId: string }) {
-    const component = this.ProjectService.getComponentByNodeIdAndComponentId(nodeId, componentId);
-    if (component != null) {
-      return component.type;
-    }
-    return null;
   }
 
   isForThisComponent(object) {

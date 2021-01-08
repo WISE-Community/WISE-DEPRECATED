@@ -98,12 +98,9 @@ function createComponent() {
 
 function shouldMoveTheObjectUp() {
   it('should move the object up', () => {
-    const authoringViewComponentChangedSpy = spyOn(
-      conceptMapAuthoringController,
-      'authoringViewComponentChanged'
-    );
+    const componentChangedSpy = spyOn(conceptMapAuthoringController, 'componentChanged');
     conceptMapAuthoringController.moveNodeUpButtonClicked(1);
-    expect(authoringViewComponentChangedSpy).toHaveBeenCalled();
+    expect(componentChangedSpy).toHaveBeenCalled();
     expect(conceptMapAuthoringController.authoringComponentContent.nodes[0].id).toEqual('node2');
     expect(conceptMapAuthoringController.authoringComponentContent.nodes[1].id).toEqual('node1');
     expect(conceptMapAuthoringController.authoringComponentContent.nodes[2].id).toEqual('node3');
@@ -113,12 +110,9 @@ function shouldMoveTheObjectUp() {
 
 function shouldMoveTheObjectDown() {
   it('should move the object down', () => {
-    const authoringViewComponentChangedSpy = spyOn(
-      conceptMapAuthoringController,
-      'authoringViewComponentChanged'
-    );
+    const componentChangedSpy = spyOn(conceptMapAuthoringController, 'componentChanged');
     conceptMapAuthoringController.moveNodeDownButtonClicked(1);
-    expect(authoringViewComponentChangedSpy).toHaveBeenCalled();
+    expect(componentChangedSpy).toHaveBeenCalled();
     expect(conceptMapAuthoringController.authoringComponentContent.nodes[0].id).toEqual('node1');
     expect(conceptMapAuthoringController.authoringComponentContent.nodes[1].id).toEqual('node3');
     expect(conceptMapAuthoringController.authoringComponentContent.nodes[2].id).toEqual('node2');

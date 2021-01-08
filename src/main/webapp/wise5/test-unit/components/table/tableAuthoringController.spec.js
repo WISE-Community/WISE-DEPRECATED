@@ -99,7 +99,7 @@ function createComponent() {
 
 function shouldToggleDataExplorer() {
   it('should toggle data explorer', () => {
-    spyOn(tableAuthoringController, 'authoringViewComponentChanged').and.callFake(() => {});
+    spyOn(tableAuthoringController, 'componentChanged').and.callFake(() => {});
     tableAuthoringController.authoringComponentContent.isDataExplorerEnabled = true;
     tableAuthoringController.authoringComponentContent.dataExplorerGraphTypes = null;
     tableAuthoringController.authoringComponentContent.numDataExplorerSeries = null;
@@ -118,7 +118,7 @@ function shouldToggleDataExplorer() {
 
 function shouldToggleDataExplorerScatterPlot() {
   it('should toggle data explorer scatter plot', () => {
-    spyOn(tableAuthoringController, 'authoringViewComponentChanged').and.callFake(() => {});
+    spyOn(tableAuthoringController, 'componentChanged').and.callFake(() => {});
     const dataExplorerGraphTypes =
       tableAuthoringController.authoringComponentContent.dataExplorerGraphTypes;
     expect(dataExplorerGraphTypes.length).toEqual(2);
@@ -132,7 +132,7 @@ function shouldToggleDataExplorerScatterPlot() {
 
 function shouldToggleDataExplorerLineGraph() {
   it('should toggle data explorer line graph', () => {
-    spyOn(tableAuthoringController, 'authoringViewComponentChanged').and.callFake(() => {});
+    spyOn(tableAuthoringController, 'componentChanged').and.callFake(() => {});
     const dataExplorerGraphTypes =
       tableAuthoringController.authoringComponentContent.dataExplorerGraphTypes;
     expect(dataExplorerGraphTypes.length).toEqual(2);
@@ -146,7 +146,7 @@ function shouldToggleDataExplorerLineGraph() {
 
 function shouldToggleDataExplorerBarGraph() {
   it('should toggle data explorer bar graph', () => {
-    spyOn(tableAuthoringController, 'authoringViewComponentChanged').and.callFake(() => {});
+    spyOn(tableAuthoringController, 'componentChanged').and.callFake(() => {});
     const dataExplorerGraphTypes =
       tableAuthoringController.authoringComponentContent.dataExplorerGraphTypes;
     expect(dataExplorerGraphTypes.length).toEqual(2);
@@ -160,7 +160,7 @@ function shouldToggleDataExplorerBarGraph() {
 
 function shouldToggleDataExplorerGraphType() {
   it('should toggle data explorer graph type', () => {
-    spyOn(tableAuthoringController, 'authoringViewComponentChanged').and.callFake(() => {});
+    spyOn(tableAuthoringController, 'componentChanged').and.callFake(() => {});
     const dataExplorerGraphTypes =
       tableAuthoringController.authoringComponentContent.dataExplorerGraphTypes;
     expect(dataExplorerGraphTypes.length).toEqual(2);
@@ -218,7 +218,7 @@ function shouldHandleNumDataExplorerSeriesChangeIncrease() {
   it('should handle num data explorer series change increase', () => {
     tableAuthoringController.authoringComponentContent.dataExplorerSeriesParams = [{}];
     tableAuthoringController.authoringComponentContent.numDataExplorerSeries = 2;
-    spyOn(tableAuthoringController, 'authoringViewComponentChanged').and.callFake(() => {});
+    spyOn(tableAuthoringController, 'componentChanged').and.callFake(() => {});
     tableAuthoringController.numDataExplorerSeriesChanged();
     expect(
       tableAuthoringController.authoringComponentContent.dataExplorerSeriesParams.length
@@ -230,7 +230,7 @@ function shouldHandleNumDataExplorerSeriesChangeDecrease() {
   it('should handle num data explorer series change decrease', () => {
     tableAuthoringController.authoringComponentContent.dataExplorerSeriesParams = [{}, {}, {}];
     tableAuthoringController.authoringComponentContent.numDataExplorerSeries = 2;
-    spyOn(tableAuthoringController, 'authoringViewComponentChanged').and.callFake(() => {});
+    spyOn(tableAuthoringController, 'componentChanged').and.callFake(() => {});
     tableAuthoringController.numDataExplorerSeriesChanged();
     expect(
       tableAuthoringController.authoringComponentContent.dataExplorerSeriesParams.length

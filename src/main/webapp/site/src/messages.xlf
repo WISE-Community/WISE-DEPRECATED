@@ -224,6 +224,10 @@
           <context context-type="sourcefile">app/teacher/share-run-dialog/share-run-dialog.component.html</context>
           <context context-type="linenumber">34</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/classroom-monitor/workgroup-select/workgroup-select-autocomplete/workgroup-select-autocomplete.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="7f32abe3fc638f65c0d3eb269d478ee49ad41ebe">
         <source>more</source>
@@ -5314,6 +5318,10 @@
           <context context-type="linenumber">1</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">app/classroom-monitor/step-info/step-info.component.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/classroomMonitor/classroomMonitorComponents/nodeGrading/workgroupInfo/workgroup-info.component.html</context>
           <context context-type="linenumber">10</context>
         </context-group>
@@ -5968,6 +5976,24 @@
           <context context-type="linenumber">36</context>
         </context-group>
       </trans-unit>
+      <trans-unit datatype="html" id="92159486420caf44d25e4f85cb0ed4f105d9c854">
+        <source>Assessment items to show</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/classroom-monitor/component-select/component-select.component.html</context>
+          <context context-type="linenumber">8</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/classroom-monitor/component-select/component-select.component.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="6b8ecc745edb25da9e81cee606a8cae77549dde2">
+        <source> 1 assessment item </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/classroom-monitor/component-select/component-select.component.html</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+      </trans-unit>
       <trans-unit datatype="html" id="7affaae0e14529c0192d5a4bfabd6fcb1ea27529">
         <source>Rubric</source>
         <context-group purpose="location">
@@ -6059,6 +6085,27 @@
           <context context-type="linenumber">2</context>
         </context-group>
       </trans-unit>
+      <trans-unit datatype="html" id="e9f75e02d7db72cd425f81c273a721c62a617dc4">
+        <source>~ Report Available ~</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/classroom-monitor/milestones/milestones.component.html</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="6817513ddcee06a7cb2a7b2708e5616b861db81c">
+        <source><x equiv-text="{{nodeCompletion}}" id="INTERPOLATION"/>% completed (All periods)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/classroom-monitor/nav-item-progress/nav-item-progress.component.html</context>
+          <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="988ec0475312fa85da7fa2f0f2e06e56b1e7f429">
+        <source><x equiv-text="{{nodeCompletion}}" id="INTERPOLATION"/>% completed (Period: <x equiv-text="{{period.periodName}}" id="INTERPOLATION_1"/>)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/classroom-monitor/nav-item-progress/nav-item-progress.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit>
       <trans-unit datatype="html" id="bfab7f41cfc32a926c55987d6a9c3349ae417131">
         <source> Show Save Button </source>
         <context-group purpose="location">
@@ -6080,6 +6127,27 @@
           <context context-type="linenumber">2</context>
         </context-group>
       </trans-unit>
+      <trans-unit datatype="html" id="350e893dc35c1ca7a171e2944630e2c8f3f4785a">
+        <source>If you want to use rich visuals (images, videos, links, bullets, etc.) in your prompt, use an HTML component above this</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/openResponse/open-response-authoring/open-response-authoring.component.html</context>
+          <context context-type="linenumber">7</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="6bc7f2c14cb3141e690735b278591defe07c68fb">
+        <source>Prompt</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/openResponse/open-response-authoring/open-response-authoring.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="495b53dee6164e1c3ec7d95ee3527bb23b62a8c2">
+        <source>Enter Prompt Here</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/openResponse/open-response-authoring/open-response-authoring.component.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+      </trans-unit>
       <trans-unit datatype="html" id="92328333ea9c72926ca7c631e9e1c0f081cbf565">
         <source>Edit Unit Rubric</source>
         <context-group purpose="location">
@@ -6092,6 +6160,31 @@
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/classroomMonitor/classroomMonitorComponents/nodeGrading/workgroupInfo/workgroup-info.component.html</context>
           <context context-type="linenumber">4</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="88936072a55699e997d6cc9e47305cdbb26ad42a">
+        <source>Find a student</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/classroom-monitor/workgroup-select/workgroup-select-autocomplete/workgroup-select-autocomplete.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/classroom-monitor/workgroup-select/workgroup-select-dropdown/workgroup-select-dropdown.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="efe5fca15b5face6a63bdc02ac969840b57eafff">
+        <source><x equiv-text="{{workgroup.displayNames}}" id="INTERPOLATION"/> (Team <x equiv-text="{{workgroup.workgroupId}}" id="INTERPOLATION_1"/>)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/classroom-monitor/workgroup-select/workgroup-select-dropdown/workgroup-select-dropdown.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="0d06e94bc2e6a3bfbe619c7bd3b4947e2f931607">
+        <source>Select a team</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">app/classroom-monitor/workgroup-select/workgroup-select-dropdown/workgroup-select-dropdown.component.html</context>
+          <context context-type="linenumber">2</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="2d1bd68dd6cbd034f0b62c1dfabf7e17ee27081c">

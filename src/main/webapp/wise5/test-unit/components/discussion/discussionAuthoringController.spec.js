@@ -51,10 +51,7 @@ function shouldChangeAllDiscussionConnectedComponentTypes() {
       { nodeId: 'node1', componentId: '1111111111', type: 'showWork' },
       { nodeId: 'node2', componentId: '2222222222', type: 'showWork' }
     ];
-    const authoringViewComponentChangedSpy = spyOn(
-      discussionAuthoringController,
-      'authoringViewComponentChanged'
-    );
+    const componentChangedSpy = spyOn(discussionAuthoringController, 'componentChanged');
     const getComponentByNodeIdAndComponentIdSpy = spyOn(
       mockProjectService,
       'getComponentByNodeIdAndComponentId'

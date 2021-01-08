@@ -36,7 +36,6 @@ class NodeAuthoringController {
   projectId: number;
   selectedComponent: any = null;
   showAdvanced: boolean = false;
-  showAdvancedComponentAuthoring: any = {};
   showComponentAuthoringViews: boolean = true;
   showComponents: boolean = true;
   showStepButtons: boolean = true;
@@ -48,6 +47,7 @@ class NodeAuthoringController {
     '$anchorScroll',
     '$filter',
     '$injector',
+    '$mdDialog',
     '$scope',
     '$state',
     '$stateParams',
@@ -64,6 +64,7 @@ class NodeAuthoringController {
     private $anchorScroll: any,
     private $filter: any,
     private $injector: any,
+    private $mdDialog: any,
     private $scope: any,
     private $state: any,
     private $stateParams: any,
@@ -91,24 +92,24 @@ class NodeAuthoringController {
     this.originalNodeCopy = this.UtilService.makeCopyOfJSONObject(this.node);
     this.currentNodeCopy = this.UtilService.makeCopyOfJSONObject(this.node);
 
-    this.componentShowSubmitButtonValueChangedSubscription =
-        this.NodeService.componentShowSubmitButtonValueChanged$
-        .subscribe(({ showSubmitButton }) => {
-      if (showSubmitButton) {
-        this.node.showSaveButton = false;
-        this.node.showSubmitButton = false;
-        this.ProjectService.turnOnSaveButtonForAllComponents(this.node);
-      } else {
-        if (this.ProjectService.doesAnyComponentInNodeShowSubmitButton(this.node.id)) {
+    this.componentShowSubmitButtonValueChangedSubscription = this.NodeService.componentShowSubmitButtonValueChanged$.subscribe(
+      ({ showSubmitButton }) => {
+        if (showSubmitButton) {
+          this.node.showSaveButton = false;
+          this.node.showSubmitButton = false;
           this.ProjectService.turnOnSaveButtonForAllComponents(this.node);
         } else {
-          this.node.showSaveButton = true;
-          this.node.showSubmitButton = false;
-          this.ProjectService.turnOffSaveButtonForAllComponents(this.node);
+          if (this.ProjectService.doesAnyComponentInNodeShowSubmitButton(this.node.id)) {
+            this.ProjectService.turnOnSaveButtonForAllComponents(this.node);
+          } else {
+            this.node.showSaveButton = true;
+            this.node.showSubmitButton = false;
+            this.ProjectService.turnOffSaveButtonForAllComponents(this.node);
+          }
         }
+        this.authoringViewNodeChanged();
       }
-      this.authoringViewNodeChanged();
-    });
+    );
 
     const data = {
       title: this.ProjectService.getNodePositionAndTitleByNodeId(this.nodeId)
@@ -132,7 +133,7 @@ class NodeAuthoringController {
   $onInit() {
     this.nodeChangedSubscription = this.ProjectService.nodeChanged$.subscribe((doParseProject) => {
       this.authoringViewNodeChanged(doParseProject);
-    })
+    });
   }
 
   ngOnDestroy() {
@@ -147,9 +148,7 @@ class NodeAuthoringController {
   previewStepInNewWindow() {
     const data = { constraints: true };
     this.saveEvent('stepPreviewed', 'Navigation', data);
-    window.open(
-      `${this.ConfigService.getConfigParam('previewProjectURL')}/${this.nodeId}`
-    );
+    window.open(`${this.ConfigService.getConfigParam('previewProjectURL')}/${this.nodeId}`);
   }
 
   previewStepWithoutConstraintsInNewWindow() {
@@ -598,11 +597,27 @@ class NodeAuthoringController {
     return componentObjects;
   }
 
-  toggleComponentAdvancedAuthoring(componentId: string) {
-    this.showAdvancedComponentAuthoring[componentId] =
-        !this.showAdvancedComponentAuthoring[componentId];
-    this.ProjectService.showAdvancedComponentView(componentId,
-      this.showAdvancedComponentAuthoring[componentId]);
+  showComponentAdvancedAuthoring(component: any) {
+    this.$mdDialog.show({
+      templateUrl: 'wise5/authoringTool/components/edit-component-advanced.html',
+      controller: [
+        '$scope',
+        '$mdDialog',
+        function ($scope: any, $mdDialog: any) {
+          $scope.close = function () {
+            $mdDialog.hide();
+          };
+        }
+      ],
+      controllerAs: '$ctrl',
+      bindToController: true,
+      locals: {
+        component: component,
+        nodeId: this.nodeId
+      },
+      fullscreen: true,
+      clickOutsideToClose: true
+    });
   }
 }
 

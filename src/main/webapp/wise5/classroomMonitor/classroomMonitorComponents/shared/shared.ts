@@ -1,7 +1,5 @@
 'use strict';
 
-import AlertStatusCorner from './alertStatusCorner/alertStatusCorner';
-import AlertStatusIcon from './alertStatusIcon/alertStatusIcon';
 import ComponentGrading from './componentGrading/componentGrading';
 import { ComponentNewWorkBadgeComponent } from '../../../../site/src/app/classroom-monitor/component-new-work-badge/component-new-work-badge.component';
 import ComponentRevisionsInfo from './componentRevisionsInfo/componentRevisionsInfo';
@@ -15,16 +13,18 @@ import Toolbar from './toolbar/toolbar';
 import TopBar from './topBar/topBar';
 import WorkgroupComponentRevisions from './workgroupComponentRevisions/workgroupComponentRevisions';
 import WorkgroupNodeGrading from './workgroupNodeGrading/workgroupNodeGrading';
-import WorkgroupNodeStatus from './workgroupNodeStatus/workgroupNodeStatus';
-import WorkgroupSelect from './workgroupSelect/workgroupSelect';
+import { WorkgroupNodeStatusComponent } from '../../../../site/src/app/classroom-monitor/workgroup-node-status/workgroup-node-status.component';
+import { WorkgroupSelectAutocompleteComponent } from '../../../../site/src/app/classroom-monitor/workgroup-select/workgroup-select-autocomplete/workgroup-select-autocomplete.component';
+import { WorkgroupSelectDropdownComponent } from '../../../../site/src/app/classroom-monitor/workgroup-select/workgroup-select-dropdown/workgroup-select-dropdown.component';
+import { AlertStatusCornerComponent } from '../../../../site/src/app/classroom-monitor/alert-status-corner/alert-status-corner.component';
 import * as angular from 'angular';
 import { WorkgroupNodeScoreComponent } from './workgroupNodeScore/workgroup-node-score.component';
 import { downgradeComponent } from '@angular/upgrade/static';
 
 const Shared = angular
   .module('cmShared', [])
-  .component('alertStatusCorner', AlertStatusCorner)
-  .component('alertStatusIcon', AlertStatusIcon)
+  .directive('alertStatusCorner',
+      downgradeComponent({ component: AlertStatusCornerComponent }) as angular.IDirectiveFactory)
   .component('componentGrading', ComponentGrading)
   .directive('componentNewWorkBadge',
       downgradeComponent({ component: ComponentNewWorkBadgeComponent }) as angular.IDirectiveFactory)
@@ -41,8 +41,12 @@ const Shared = angular
   .component('workgroupComponentRevisions', WorkgroupComponentRevisions)
   .component('workgroupNodeGrading', WorkgroupNodeGrading)
   .directive('workgroupNodeScore',
-      downgradeComponent({ component: WorkgroupNodeScoreComponent}) as angular.IDirectiveFactory)
-  .component('workgroupNodeStatus', WorkgroupNodeStatus)
-  .component('workgroupSelect', WorkgroupSelect);
+      downgradeComponent({ component: WorkgroupNodeScoreComponent }) as angular.IDirectiveFactory)
+  .directive('workgroupNodeStatus',
+      downgradeComponent({ component: WorkgroupNodeStatusComponent }) as angular.IDirectiveFactory)
+  .directive('workgroupSelectAutocomplete',
+      downgradeComponent({ component: WorkgroupSelectAutocompleteComponent }) as angular.IDirectiveFactory)
+  .directive('workgroupSelectDropdown',
+      downgradeComponent({ component: WorkgroupSelectDropdownComponent }) as angular.IDirectiveFactory)
 
 export default Shared;

@@ -1,0 +1,215 @@
+<div class='advancedAuthoringDiv'>
+  <div>
+    <md-checkbox class='md-primary'
+                 ng-model='$ctrl.authoringComponentContent.showSaveButton'
+                 ng-change='$ctrl.componentChanged()'>
+      {{ ::'SHOW_SAVE_BUTTON' | translate }}
+    </md-checkbox>
+  </div>
+  <div>
+    <md-checkbox class='md-primary'
+                 ng-model='$ctrl.authoringComponentContent.showSubmitButton'
+                 ng-change='$ctrl.componentChanged()'>
+      {{ ::'SHOW_SUBMIT_BUTTON' | translate }}
+    </md-checkbox>
+  </div>
+  <div>
+    <md-checkbox class='md-primary'
+                 ng-if='$ctrl.isNotebookEnabled()'
+                 ng-model='$ctrl.authoringComponentContent.showAddToNotebookButton'
+                 ng-change='$ctrl.componentChanged()'>
+      {{ ::'SHOW_ADD_TO_NOTEBOOK_BUTTON' | translate }}
+    </md-checkbox>
+  </div>
+  <div>
+    <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'
+                        ng-if='$ctrl.authoringComponentContent.showSubmitButton'>
+      <label>{{ ::'MAX_SUBMIT' | translate }}</label>
+      <input type='number'
+             ng-model='$ctrl.authoringComponentContent.maxSubmitCount'
+             ng-model-options='{ debounce: 1000 }'
+             ng-change='$ctrl.componentChanged()'/>
+    </md-input-container>
+  </div>
+  <div style='border: 1px solid black'>
+    <p>{{ ::'table.dataExplorer' | translate }}</p>
+    <div>
+      <md-checkbox class='md-primary'
+          ng-model='$ctrl.authoringComponentContent.isDataExplorerEnabled'
+          ng-change='$ctrl.toggleDataExplorer()'>
+        {{ ::'table.enableDataExplorer' | translate }}
+      </md-checkbox>
+    </div>
+    <div ng-if='$ctrl.authoringComponentContent.isDataExplorerEnabled'>
+      <div>
+        <p>{{ ::'table.allowedGraphTypes' | translate }}</p>
+        <md-checkbox class='md-primary'
+            style='margin-right: 40px;'
+            ng-model='$ctrl.isDataExplorerScatterPlotEnabled'
+            ng-change='$ctrl.dataExplorerToggleScatterPlot()'>
+          {{ ::'table.scatterPlot' | translate }}
+        </md-checkbox>
+        <md-checkbox class='md-primary'
+            style='margin-right: 40px;'
+            ng-model='$ctrl.isDataExplorerLineGraphEnabled'
+            ng-change='$ctrl.dataExplorerToggleLineGraph()'>
+          {{ ::'table.lineGraph' | translate }}
+        </md-checkbox>
+        <md-checkbox class='md-primary'
+            ng-model='$ctrl.isDataExplorerBarGraphEnabled'
+            ng-change='$ctrl.dataExplorerToggleBarGraph()'>
+          {{ ::'table.barGraph' | translate }}
+        </md-checkbox>
+      </div>
+      <div ng-if='$ctrl.isDataExplorerScatterPlotEnabled'>
+        <md-checkbox class='md-primary'
+            ng-model='$ctrl.authoringComponentContent.isDataExplorerScatterPlotRegressionLineEnabled'
+            ng-change='$ctrl.componentChanged()'>
+          {{ ::'table.showScatterPlotRegressionLine' | translate }}
+        </md-checkbox>
+      </div>
+      <div>
+        <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
+          <label>{{ ::'table.numberOfSeries' | translate }}</label>
+          <input type='number'
+              ng-model='$ctrl.authoringComponentContent.numDataExplorerSeries'
+              ng-model-options='{ debounce: 1000 }'
+              ng-change='$ctrl.numDataExplorerSeriesChanged()'/>
+        </md-input-container>
+      </div>
+      <div>
+        <md-input-container style='margin-right: 20px; width: 150px; height: 25px;'>
+          <label>{{ ::'table.numberOfYAxes' | translate }}</label>
+          <input type='number'
+              ng-model='$ctrl.authoringComponentContent.numDataExplorerYAxis'
+              ng-model-options='{ debounce: 1000 }'
+              ng-change='$ctrl.numDataExplorerYAxisChanged()'/>
+        </md-input-container>
+      </div>
+      <div ng-if='$ctrl.authoringComponentContent.numDataExplorerYAxis > 1'>
+        <div ng-repeat='s in [].constructor($ctrl.authoringComponentContent.numDataExplorerSeries) track by $index'>
+          <md-input-container style='margin-right: 20px; width: 300px;'>
+            <label>{{ ::'table.series' | translate }} {{ $index + 1 }}</label>
+            <md-select ng-model='$ctrl.authoringComponentContent.dataExplorerSeriesParams[$index].yAxis'
+                ng-change='$ctrl.componentChanged()'
+                style='width: 300px'>
+              <md-option ng-repeat='y in [].constructor($ctrl.authoringComponentContent.numDataExplorerYAxis) track by $index'
+                  ng-value='$index'>
+                <span>
+                  {{ ::'table.yAxis' | translate }} {{ $index + 1 }}
+                </span>
+              </md-option>
+            </md-select>
+          </md-input-container>
+        </div>
+      </div>
+      <div>
+        <md-checkbox class='md-primary'
+            style='margin-right: 40px;'
+            ng-model='$ctrl.authoringComponentContent.isDataExplorerAxisLabelsEditable'
+            ng-change='$ctrl.componentChanged()'>
+          {{ ::'table.canStudentEditAxisLabels' | translate }}
+        </md-checkbox>
+      </div>
+    </div>
+  </div>
+  <div layout="column" layout-align="start start">
+    <edit-component-max-score [authoring-component-content]="$ctrl.authoringComponentContent"></edit-component-max-score>
+    <edit-component-width [authoring-component-content]="$ctrl.authoringComponentContent"></edit-component-width>
+    <edit-component-rubric [authoring-component-content]="$ctrl.authoringComponentContent"></edit-component-rubric>
+    <edit-component-tags [authoring-component-content]="$ctrl.authoringComponentContent"></edit-component-tags>
+  </div>
+  <div>
+    <div style='height: 50;'>
+      <label class='node__label--vertical-alignment'>
+        {{ ::'CONNECTED_COMPONENTS' | translate }}
+      </label>
+      <md-button class='topButton md-raised md-primary'
+                 ng-click='$ctrl.addConnectedComponent()'>
+        <md-icon>add</md-icon>
+        <md-tooltip md-direction='top'
+                    class='projectButtonTooltip'>
+          {{ ::'ADD_CONNECTED_COMPONENT' | translate }}
+        </md-tooltip>
+      </md-button>
+    </div>
+    <div ng-repeat='connectedComponent in $ctrl.authoringComponentContent.connectedComponents track by $index'
+         style='border: 2px solid #dddddd; border-radius: 5px; margin-bottom: 10px; padding: 20px 20px 10px 20px;'>
+      <div flex>
+        <md-input-container style='margin-right: 20px; width: 300px;'>
+          <label>{{ ::'step' | translate }}</label>
+          <md-select ng-model='connectedComponent.nodeId'
+                     ng-change='$ctrl.connectedComponentNodeIdChanged(connectedComponent)'
+                     style='width: 300px'>
+            <md-option ng-repeat='item in $ctrl.idToOrder | toArray | orderBy : "order"'
+                       value='{{item.$key}}'
+                       ng-if='$ctrl.isApplicationNode(item.$key)'>
+              {{$ctrl.getNodePositionAndTitleByNodeId(item.$key)}}
+            </md-option>
+          </md-select>
+        </md-input-container>
+        <md-input-container style='margin-right: 20px; width: 300px;'>
+          <label>{{ ::'component' | translate }}</label>
+          <md-select ng-model='connectedComponent.componentId'
+                     ng-change='$ctrl.connectedComponentComponentIdChanged(connectedComponent)'
+                     style='width: 300px'>
+            <md-option ng-repeat='(componentIndex, component) in $ctrl.getComponentsByNodeId(connectedComponent.nodeId)'
+                       value='{{component.id}}'
+                       ng-disabled='!$ctrl.isConnectedComponentTypeAllowed(component.type) || component.id == $ctrl.componentId'>
+              {{ componentIndex + 1 }}. {{component.type}}
+              <span ng-if='component.id == $ctrl.componentId'>
+                ({{ ::'thisComponent' | translate }})
+              </span>
+            </md-option>
+          </md-select>
+        </md-input-container>
+        <md-input-container style='margin-right: 20px; width: 200px;'>
+          <label>{{ ::'type' | translate }}</label>
+          <md-select ng-model='connectedComponent.type'
+                     ng-change='$ctrl.connectedComponentTypeChanged(connectedComponent)'
+                     style='width: 200px'>
+            <md-option value='importWork'>
+              {{ ::'importWork' | translate }}
+            </md-option>
+            <md-option value='showWork'>
+              {{ ::'showWork' | translate }}
+            </md-option>
+          </md-select>
+        </md-input-container>
+        <md-input-container style='margin-right: 20px; width: 200px;'
+                            ng-if='connectedComponent.type == "importWork"'>
+          <label>{{ ::'action' | translate }}</label>
+          <md-select ng-model='connectedComponent.action'
+                     ng-change='$ctrl.componentChanged()'
+                     style='width: 200px'>
+            <md-option value='merge'>
+              {{ ::'merge' | translate }}
+            </md-option>
+            <md-option value='append'>
+              {{ ::'append' | translate }}
+            </md-option>
+          </md-select>
+        </md-input-container>
+        <span flex></span>
+        <md-input-container style='margin-left: 20px;'>
+          <md-button class='topButton md-raised md-primary'
+                     ng-click='$ctrl.deleteConnectedComponent($index)'>
+            <md-icon>delete</md-icon>
+            <md-tooltip md-direction='top'
+                        class='projectButtonTooltip'>
+              {{ ::'DELETE' | translate }}
+            </md-tooltip>
+          </md-button>
+        </md-input-container>
+        <md-input-container ng-if='$ctrl.getConnectedComponentType(connectedComponent) == "Graph"'>
+          <md-checkbox class='md-primary'
+                       ng-model='connectedComponent.showDataAtMouseX'
+                       ng-change='$ctrl.componentChanged()'>
+            {{ ::'table.onlyShowDataAtMouseXPosition' | translate }}
+          </md-checkbox>
+        </md-input-container>
+      </div>
+    </div>
+  </div>
+  <edit-component-json [node-id]="$ctrl.nodeId" [component-id]="$ctrl.componentId"></edit-component-json>
+</div>

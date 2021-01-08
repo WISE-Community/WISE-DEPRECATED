@@ -63,7 +63,7 @@ class SummaryAuthoringController extends EditComponentController {
       this.authoringComponentContent.summaryComponentId = allowedComponents[0].id;
     }
     this.performUpdatesIfNecessary();
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   isComponentTypeAllowed(componentType: string) {
@@ -72,13 +72,13 @@ class SummaryAuthoringController extends EditComponentController {
 
   summaryComponentIdChanged() {
     this.performUpdatesIfNecessary();
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   studentDataTypeChanged() {
     this.updateHasCorrectAnswerIfNecessary();
     this.updateChartTypeOptionsIfNecessary();
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   performUpdatesIfNecessary() {
@@ -142,7 +142,7 @@ class SummaryAuthoringController extends EditComponentController {
   }
 
   showPromptFromOtherComponentChanged() {
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   componentHasCorrectAnswer() {
@@ -175,30 +175,30 @@ class SummaryAuthoringController extends EditComponentController {
       this.authoringComponentContent.customLabelColors = [];
     }
     this.authoringComponentContent.customLabelColors.push({ label: '', color: '' });
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   deleteCustomLabelColor(index: number) {
     if (confirm(this.$translate('summary.areYouSureYouWantToDeleteThisCustomLabelColor'))) {
       this.authoringComponentContent.customLabelColors.splice(index, 1);
       this.triggerCustomLabelColorChange();
-      this.authoringViewComponentChanged();
+      this.componentChanged();
     }
   }
 
   customLabelColorChanged() {
     this.triggerCustomLabelColorChange();
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   moveCustomLabelColorUp(index: number) {
     this.UtilService.moveObjectUp(this.authoringComponentContent.customLabelColors, index);
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   moveCustomLabelColorDown(index: number) {
     this.UtilService.moveObjectDown(this.authoringComponentContent.customLabelColors, index);
-    this.authoringViewComponentChanged();
+    this.componentChanged();
   }
 
   triggerCustomLabelColorChange() {
