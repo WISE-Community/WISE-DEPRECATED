@@ -5,8 +5,10 @@ import { ProjectService } from '../../../../wise5/services/projectService';
 import { ConfigService } from '../../../../wise5/services/configService';
 import { UtilService } from '../../../../wise5/services/utilService';
 import demoProjectJSON_import from './sampleData/curriculum/Demo.project.json';
+import oneBranchTwoPathsProjectJSON_import from './sampleData/curriculum/OneBranchTwoPaths.project.json';
 import scootersProjectJSON_import from './sampleData/curriculum/SelfPropelledVehiclesChallenge.project.json';
 import { getAuthServiceConfigs } from '../app.module';
+import twoStepsProjectJSON_import from './sampleData/curriculum/TwoSteps.project.json';
 import { SessionService } from '../../../../wise5/services/sessionService';
 const projectIdDefault = 1;
 const projectBaseURL = 'http://localhost:8080/curriculum/12345/';
@@ -19,7 +21,9 @@ let sessionService: SessionService;
 let utilService: UtilService;
 let http: HttpTestingController;
 let demoProjectJSON: any;
+let oneBranchTwoPathsProjectJSON: any;
 let scootersProjectJSON: any;
+let twoStepsProjectJSON: any;
 
 describe('ProjectService', () => {
   beforeEach(() => {
@@ -34,7 +38,9 @@ describe('ProjectService', () => {
     spyOn(utilService, 'broadcastEventInRootScope').and.callFake(() => {});
     service = TestBed.get(ProjectService);
     demoProjectJSON = JSON.parse(JSON.stringify(demoProjectJSON_import));
+    oneBranchTwoPathsProjectJSON = JSON.parse(JSON.stringify(oneBranchTwoPathsProjectJSON_import));
     scootersProjectJSON = JSON.parse(JSON.stringify(scootersProjectJSON_import));
+    twoStepsProjectJSON = JSON.parse(JSON.stringify(twoStepsProjectJSON_import));
   });
   shouldReplaceAssetPathsInNonHtmlComponentContent();
   shouldReplaceAssetPathsInHtmlComponentContent();
@@ -87,9 +93,10 @@ describe('ProjectService', () => {
   deleteAllStepsInAnActivity();
   getTags();
   addCurrentUserToAuthors_CM_shouldAddUserInfo();
+  getAllPaths();
+  consolidatePaths();
+  getParentGroup();
   // TODO: add test for service.getFlattenedProjectAsNodeIds()
-  // TODO: add test for service.getAllPaths()
-  // TODO: add test for service.consolidatePaths()
   // TODO: add test for service.consumePathsUntilNodeId()
   // TODO: add test for service.getFirstNodeIdInPathAtIndex()
   // TODO: add test for service.removeNodeIdFromPaths()
@@ -1035,5 +1042,58 @@ function addCurrentUserToAuthors_CM_shouldAddUserInfo() {
     const authors = service.addCurrentUserToAuthors([]);
     expect(authors.length).toEqual(1);
     expect(authors[0].id).toEqual(1);
+  });
+}
+
+function getAllPaths() {
+  describe('getAllPaths()', () => {
+    it ('should get all paths in a unit with no branches', () => {
+      service.setProject(twoStepsProjectJSON);
+      const allPaths = service.getAllPaths([], service.getStartNodeId(), true);
+      expect(allPaths.length).toEqual(1);
+      expect(allPaths[0]).toEqual(['group1', 'node1', 'node2']);
+    });
+    it ('should get all paths in a unit with a branch with two paths', () => {
+      service.setProject(oneBranchTwoPathsProjectJSON);
+      const allPaths = service.getAllPaths([], service.getStartNodeId(), true);
+      expect(allPaths.length).toEqual(2);
+      expect(allPaths[0]).toEqual(['group1', 'node1', 'node2', 'node3', 'node4', 'node8']);
+      expect(allPaths[1]).toEqual(['group1', 'node1', 'node2', 'node5', 'node6', 'node7', 'node8']);
+    });
+    it ('should get all paths in a unit starting with a node in a branch path', () => {
+      service.setProject(oneBranchTwoPathsProjectJSON);
+      const allPaths1 = service.getAllPaths(['group1', 'node1', 'node2'], 'node3', true);
+      expect(allPaths1.length).toEqual(1);
+      expect(allPaths1[0]).toEqual(['node3', 'node4', 'node8']);
+      const allPaths2 = service.getAllPaths(['group1', 'node1', 'node2'], 'node5', true);
+      expect(allPaths2.length).toEqual(1);
+      expect(allPaths2[0]).toEqual(['node5', 'node6', 'node7', 'node8']);
+    });
+  });
+}
+
+function consolidatePaths() {
+  describe('consolidatePaths()', () => {
+    it('should consolidate all the paths into a linear list of node ids', () => {
+      service.setProject(oneBranchTwoPathsProjectJSON);
+      const allPaths = service.getAllPaths([], service.getStartNodeId(), true);
+      const consolidatedPaths = service.consolidatePaths(allPaths);
+      expect(consolidatedPaths).toEqual(['group1', 'node1', 'node2', 'node3', 'node4', 'node5',
+        'node6', 'node7', 'node8']);
+    });
+  });
+}
+
+function getParentGroup() {
+  describe('getParentGroup()', () => {
+    beforeEach(() => {
+      service.setProject(twoStepsProjectJSON);
+    });
+    it('should get the parent group of an active node', () => {
+      expect(service.getParentGroup('node1').id).toEqual('group1');
+    });
+    it('should get the parent group of an inactive node', () => {
+      expect(service.getParentGroup('node3').id).toEqual('group2');
+    });
   });
 }

@@ -1,0 +1,429 @@
+{
+  "nodes": [
+      {
+          "id": "group0",
+          "type": "group",
+          "title": "Master",
+          "startId": "group1",
+          "ids": [
+              "group1"
+          ]
+      },
+      {
+          "id": "group1",
+          "type": "group",
+          "title": "First Lesson",
+          "startId": "node1",
+          "ids": [
+              "node1",
+              "node2",
+              "node3",
+              "node4",
+              "node5",
+              "node6",
+              "node7",
+              "node8"
+          ],
+          "icons": {
+              "default": {
+                  "color": "#2196F3",
+                  "type": "font",
+                  "fontSet": "material-icons",
+                  "fontName": "info"
+              }
+          },
+          "transitionLogic": {
+              "transitions": []
+          }
+      },
+      {
+          "id": "node1",
+          "type": "node",
+          "title": "First Step",
+          "components": [],
+          "constraints": [],
+          "showSaveButton": false,
+          "showSubmitButton": false,
+          "transitionLogic": {
+              "transitions": [
+                  {
+                      "to": "node2"
+                  }
+              ]
+          }
+      },
+      {
+          "id": "node2",
+          "title": "Branch point",
+          "type": "node",
+          "constraints": [],
+          "transitionLogic": {
+              "transitions": [
+                  {
+                      "to": "node3"
+                  },
+                  {
+                      "to": "node5"
+                  }
+              ],
+              "howToChooseAmongAvailablePaths": "random",
+              "whenToChoosePath": "enterNode",
+              "canChangePath": false,
+              "maxPathsVisitable": 1
+          },
+          "showSaveButton": false,
+          "showSubmitButton": false,
+          "components": []
+      },
+      {
+          "id": "node3",
+          "title": "Path 1 first step",
+          "type": "node",
+          "constraints": [
+              {
+                  "id": "node3Constraint1",
+                  "action": "makeThisNodeNotVisible",
+                  "targetId": "node3",
+                  "removalConditional": "all",
+                  "removalCriteria": [
+                      {
+                          "name": "branchPathTaken",
+                          "params": {
+                              "fromNodeId": "node2",
+                              "toNodeId": "node3"
+                          }
+                      }
+                  ]
+              },
+              {
+                  "id": "node3Constraint2",
+                  "action": "makeThisNodeNotVisitable",
+                  "targetId": "node3",
+                  "removalConditional": "all",
+                  "removalCriteria": [
+                      {
+                          "name": "branchPathTaken",
+                          "params": {
+                              "fromNodeId": "node2",
+                              "toNodeId": "node3"
+                          }
+                      }
+                  ]
+              }
+          ],
+          "transitionLogic": {
+              "transitions": [
+                  {
+                      "to": "node4"
+                  }
+              ]
+          },
+          "showSaveButton": false,
+          "showSubmitButton": false,
+          "components": []
+      },
+      {
+          "id": "node4",
+          "title": "Path 1 second step",
+          "type": "node",
+          "constraints": [
+              {
+                  "id": "node4Constraint1",
+                  "action": "makeThisNodeNotVisible",
+                  "targetId": "node4",
+                  "removalConditional": "all",
+                  "removalCriteria": [
+                      {
+                          "name": "branchPathTaken",
+                          "params": {
+                              "fromNodeId": "node2",
+                              "toNodeId": "node3"
+                          }
+                      }
+                  ]
+              },
+              {
+                  "id": "node4Constraint2",
+                  "action": "makeThisNodeNotVisitable",
+                  "targetId": "node4",
+                  "removalConditional": "all",
+                  "removalCriteria": [
+                      {
+                          "name": "branchPathTaken",
+                          "params": {
+                              "fromNodeId": "node2",
+                              "toNodeId": "node3"
+                          }
+                      }
+                  ]
+              }
+          ],
+          "transitionLogic": {
+              "transitions": [
+                  {
+                      "to": "node8"
+                  }
+              ]
+          },
+          "showSaveButton": false,
+          "showSubmitButton": false,
+          "components": []
+      },
+      {
+          "id": "node5",
+          "title": "Path 2 first step",
+          "type": "node",
+          "constraints": [
+              {
+                  "id": "node5Constraint1",
+                  "action": "makeThisNodeNotVisible",
+                  "targetId": "node5",
+                  "removalConditional": "all",
+                  "removalCriteria": [
+                      {
+                          "name": "branchPathTaken",
+                          "params": {
+                              "fromNodeId": "node2",
+                              "toNodeId": "node5"
+                          }
+                      }
+                  ]
+              },
+              {
+                  "id": "node5Constraint2",
+                  "action": "makeThisNodeNotVisitable",
+                  "targetId": "node5",
+                  "removalConditional": "all",
+                  "removalCriteria": [
+                      {
+                          "name": "branchPathTaken",
+                          "params": {
+                              "fromNodeId": "node2",
+                              "toNodeId": "node5"
+                          }
+                      }
+                  ]
+              }
+          ],
+          "transitionLogic": {
+              "transitions": [
+                  {
+                      "to": "node6"
+                  }
+              ]
+          },
+          "showSaveButton": false,
+          "showSubmitButton": false,
+          "components": []
+      },
+      {
+          "id": "node6",
+          "title": "Path 2 second step",
+          "type": "node",
+          "constraints": [
+              {
+                  "id": "node6Constraint1",
+                  "action": "makeThisNodeNotVisible",
+                  "targetId": "node6",
+                  "removalConditional": "all",
+                  "removalCriteria": [
+                      {
+                          "name": "branchPathTaken",
+                          "params": {
+                              "fromNodeId": "node2",
+                              "toNodeId": "node5"
+                          }
+                      }
+                  ]
+              },
+              {
+                  "id": "node6Constraint2",
+                  "action": "makeThisNodeNotVisitable",
+                  "targetId": "node6",
+                  "removalConditional": "all",
+                  "removalCriteria": [
+                      {
+                          "name": "branchPathTaken",
+                          "params": {
+                              "fromNodeId": "node2",
+                              "toNodeId": "node5"
+                          }
+                      }
+                  ]
+              }
+          ],
+          "transitionLogic": {
+              "transitions": [
+                  {
+                      "to": "node7"
+                  }
+              ]
+          },
+          "showSaveButton": false,
+          "showSubmitButton": false,
+          "components": []
+      },
+      {
+          "id": "node7",
+          "title": "Path 2 third step",
+          "type": "node",
+          "constraints": [
+              {
+                  "id": "node7Constraint1",
+                  "action": "makeThisNodeNotVisible",
+                  "targetId": "node7",
+                  "removalConditional": "all",
+                  "removalCriteria": [
+                      {
+                          "name": "branchPathTaken",
+                          "params": {
+                              "fromNodeId": "node2",
+                              "toNodeId": "node5"
+                          }
+                      }
+                  ]
+              },
+              {
+                  "id": "node7Constraint2",
+                  "action": "makeThisNodeNotVisitable",
+                  "targetId": "node7",
+                  "removalConditional": "all",
+                  "removalCriteria": [
+                      {
+                          "name": "branchPathTaken",
+                          "params": {
+                              "fromNodeId": "node2",
+                              "toNodeId": "node5"
+                          }
+                      }
+                  ]
+              }
+          ],
+          "transitionLogic": {
+              "transitions": [
+                  {
+                      "to": "node8"
+                  }
+              ]
+          },
+          "showSaveButton": false,
+          "showSubmitButton": false,
+          "components": []
+      },
+      {
+          "id": "node8",
+          "title": "merge step",
+          "type": "node",
+          "constraints": [],
+          "transitionLogic": {
+              "transitions": []
+          },
+          "showSaveButton": false,
+          "showSubmitButton": false,
+          "components": []
+      }
+  ],
+  "constraints": [],
+  "startGroupId": "group0",
+  "startNodeId": "node1",
+  "navigationMode": "guided",
+  "layout": {
+      "template": "starmap|leftNav|rightNav"
+  },
+  "metadata": {
+      "title": "Just one branch project",
+      "authors": [
+          {
+              "firstName": "h",
+              "lastName": "t",
+              "id": 3,
+              "username": "ht"
+          }
+      ]
+  },
+  "notebook": {
+      "enabled": false,
+      "label": "Notebook",
+      "enableAddNew": true,
+      "itemTypes": {
+          "note": {
+              "type": "note",
+              "enabled": true,
+              "enableLink": true,
+              "enableAddNote": true,
+              "enableClipping": true,
+              "enableStudentUploads": true,
+              "requireTextOnEveryNote": false,
+              "label": {
+                  "singular": "note",
+                  "plural": "notes",
+                  "link": "Notes",
+                  "icon": "note",
+                  "color": "#1565C0"
+              }
+          },
+          "report": {
+              "enabled": false,
+              "label": {
+                  "singular": "report",
+                  "plural": "reports",
+                  "link": "Report",
+                  "icon": "assignment",
+                  "color": "#AD1457"
+              },
+              "notes": [
+                  {
+                      "reportId": "finalReport",
+                      "title": "Final Report",
+                      "description": "Final summary report of what you learned in this unit",
+                      "prompt": "Use this space to write your final report using evidence from your notebook.",
+                      "content": "<h3>This is a heading</h3><p>This is a paragraph.</p>"
+                  }
+              ]
+          }
+      }
+  },
+  "teacherNotebook": {
+      "enabled": true,
+      "label": "Teacher Notebook",
+      "enableAddNew": true,
+      "itemTypes": {
+          "note": {
+              "type": "note",
+              "enabled": false,
+              "enableLink": true,
+              "enableAddNote": true,
+              "enableClipping": true,
+              "enableStudentUploads": true,
+              "requireTextOnEveryNote": false,
+              "label": {
+                  "singular": "note",
+                  "plural": "notes",
+                  "link": "Notes",
+                  "icon": "note",
+                  "color": "#1565C0"
+              }
+          },
+          "report": {
+              "enabled": true,
+              "label": {
+                  "singular": "teacher notes",
+                  "plural": "teacher notes",
+                  "link": "Teacher Notes",
+                  "icon": "assignment",
+                  "color": "#AD1457"
+              },
+              "notes": [
+                  {
+                      "reportId": "teacherReport",
+                      "title": "Teacher Notes",
+                      "description": "Notes for the teacher as they're running the WISE unit",
+                      "prompt": "Use this space to take notes for this unit",
+                      "content": "<p>Use this space to take notes for this unit</p>"
+                  }
+              ]
+          }
+      }
+  },
+  "inactiveNodes": []
+}
