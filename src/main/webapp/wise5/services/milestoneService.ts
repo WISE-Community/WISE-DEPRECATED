@@ -19,6 +19,50 @@ export class MilestoneService {
   projectMilestones: any[];
   workgroupIds: any[];
   workgroupsStorage: any[] = [];
+  satisfyCriteriaFuncNameToFunc = {
+    percentOfScoresGreaterThan: (satisfyCriterion: any, aggregateAutoScores: any) => {
+      return this.isPercentOfScoresSatisfiesComparator(
+        satisfyCriterion,
+        aggregateAutoScores,
+        this.UtilService.greaterThan
+      );
+    },
+    percentOfScoresGreaterThanOrEqualTo: (satisfyCriterion: any, aggregateAutoScores: any) => {
+      return this.isPercentOfScoresSatisfiesComparator(
+        satisfyCriterion,
+        aggregateAutoScores,
+        this.UtilService.greaterThanEqualTo
+      );
+    },
+    percentOfScoresLessThan: (satisfyCriterion: any, aggregateAutoScores: any) => {
+      return this.isPercentOfScoresSatisfiesComparator(
+        satisfyCriterion,
+        aggregateAutoScores,
+        this.UtilService.lessThan
+      );
+    },
+    percentOfScoresLessThanOrEqualTo: (satisfyCriterion: any, aggregateAutoScores: any) => {
+      return this.isPercentOfScoresSatisfiesComparator(
+        satisfyCriterion,
+        aggregateAutoScores,
+        this.UtilService.lessThanEqualTo
+      );
+    },
+    percentOfScoresEqualTo: (satisfyCriterion: any, aggregateAutoScores: any) => {
+      return this.isPercentOfScoresSatisfiesComparator(
+        satisfyCriterion,
+        aggregateAutoScores,
+        this.UtilService.equalTo
+      );
+    },
+    percentOfScoresNotEqualTo: (satisfyCriterion: any, aggregateAutoScores: any) => {
+      return this.isPercentOfScoresSatisfiesComparator(
+        satisfyCriterion,
+        aggregateAutoScores,
+        this.UtilService.notEqualTo
+      );
+    }
+  };
 
   constructor(
     private upgrade: UpgradeModule,
@@ -244,123 +288,39 @@ export class MilestoneService {
   }
 
   isTemplateCriterionSatisfied(satisfyCriterion: any, aggregateAutoScores: any) {
-    if (satisfyCriterion.function === 'percentOfScoresGreaterThan') {
-      return this.isPercentOfScoresGreaterThan(satisfyCriterion, aggregateAutoScores);
-    } else if (satisfyCriterion.function === 'percentOfScoresGreaterThanOrEqualTo') {
-      return this.isPercentOfScoresGreaterThanOrEqualTo(satisfyCriterion, aggregateAutoScores);
-    } else if (satisfyCriterion.function === 'percentOfScoresLessThan') {
-      return this.isPercentOfScoresLessThan(satisfyCriterion, aggregateAutoScores);
-    } else if (satisfyCriterion.function === 'percentOfScoresLessThanOrEqualTo') {
-      return this.isPercentOfScoresLessThanOrEqualTo(satisfyCriterion, aggregateAutoScores);
-    } else if (satisfyCriterion.function === 'percentOfScoresEqualTo') {
-      return this.isPercentOfScoresEqualTo(satisfyCriterion, aggregateAutoScores);
-    } else if (satisfyCriterion.function === 'percentOfScoresNotEqualTo') {
-      return this.isPercentOfScoresNotEqualTo(satisfyCriterion, aggregateAutoScores);
-    } else if (satisfyCriterion.function === 'default') {
+    if (satisfyCriterion.function === 'default') {
       return true;
     }
+    return this.satisfyCriteriaFuncNameToFunc[satisfyCriterion.function](
+      satisfyCriterion,
+      aggregateAutoScores
+    );
   }
 
-  isPercentOfScoresGreaterThan(satisfyCriterion: any, aggregateAutoScores: any) {
-    const aggregateData = this.getAggregateData(satisfyCriterion, aggregateAutoScores);
-    const possibleScores = this.getPossibleScores(aggregateData);
-    const sum = this.getGreaterThanSum(satisfyCriterion, aggregateData, possibleScores);
-    return this.isPercentThresholdSatisfied(satisfyCriterion, aggregateData, sum);
-  }
-
-  getGreaterThanSum(satisfyCriterion: any, aggregateData: any, possibleScores: number[]) {
+  getComparatorSum(
+    satisfyCriterion: any,
+    aggregateData: any,
+    possibleScores: number[],
+    comparator: any
+  ): number {
     let sum = 0;
     for (const possibleScore of possibleScores) {
-      if (possibleScore > satisfyCriterion.value) {
+      if (comparator(possibleScore, satisfyCriterion.value)) {
         sum += aggregateData.counts[possibleScore];
       }
     }
     return sum;
   }
 
-  isPercentOfScoresGreaterThanOrEqualTo(satisfyCriterion: any, aggregateAutoScores: any) {
+  isPercentOfScoresSatisfiesComparator(
+    satisfyCriterion: any,
+    aggregateAutoScores: any,
+    comparator: any
+  ) {
     const aggregateData = this.getAggregateData(satisfyCriterion, aggregateAutoScores);
     const possibleScores = this.getPossibleScores(aggregateData);
-    const sum = this.getGreaterThanOrEqualToSum(satisfyCriterion, aggregateData, possibleScores);
+    const sum = this.getComparatorSum(satisfyCriterion, aggregateData, possibleScores, comparator);
     return this.isPercentThresholdSatisfied(satisfyCriterion, aggregateData, sum);
-  }
-
-  getGreaterThanOrEqualToSum(satisfyCriterion: any, aggregateData: any, possibleScores: number[]) {
-    let sum = 0;
-    for (const possibleScore of possibleScores) {
-      if (possibleScore >= satisfyCriterion.value) {
-        sum += aggregateData.counts[possibleScore];
-      }
-    }
-    return sum;
-  }
-
-  isPercentOfScoresLessThan(satisfyCriterion: any, aggregateAutoScores: any) {
-    const aggregateData = this.getAggregateData(satisfyCriterion, aggregateAutoScores);
-    const possibleScores = this.getPossibleScores(aggregateData);
-    const sum = this.getLessThanSum(satisfyCriterion, aggregateData, possibleScores);
-    return this.isPercentThresholdSatisfied(satisfyCriterion, aggregateData, sum);
-  }
-
-  getLessThanSum(satisfyCriterion: any, aggregateData: any, possibleScores: number[]) {
-    let sum = 0;
-    for (const possibleScore of possibleScores) {
-      if (possibleScore < satisfyCriterion.value) {
-        sum += aggregateData.counts[possibleScore];
-      }
-    }
-    return sum;
-  }
-
-  isPercentOfScoresLessThanOrEqualTo(satisfyCriterion: any, aggregateAutoScores: any) {
-    const aggregateData = this.getAggregateData(satisfyCriterion, aggregateAutoScores);
-    const possibleScores = this.getPossibleScores(aggregateData);
-    const sum = this.getLessThanOrEqualToSum(satisfyCriterion, aggregateData, possibleScores);
-    return this.isPercentThresholdSatisfied(satisfyCriterion, aggregateData, sum);
-  }
-
-  getLessThanOrEqualToSum(satisfyCriterion: any, aggregateData: any, possibleScores: number[]) {
-    let sum = 0;
-    for (const possibleScore of possibleScores) {
-      if (possibleScore <= satisfyCriterion.value) {
-        sum += aggregateData.counts[possibleScore];
-      }
-    }
-    return sum;
-  }
-
-  isPercentOfScoresEqualTo(satisfyCriterion: any, aggregateAutoScores: any) {
-    const aggregateData = this.getAggregateData(satisfyCriterion, aggregateAutoScores);
-    const possibleScores = this.getPossibleScores(aggregateData);
-    const sum = this.getEqualToSum(satisfyCriterion, aggregateData, possibleScores);
-    return this.isPercentThresholdSatisfied(satisfyCriterion, aggregateData, sum);
-  }
-
-  getEqualToSum(satisfyCriterion: any, aggregateData: any, possibleScores: number[]) {
-    let sum = 0;
-    for (const possibleScore of possibleScores) {
-      if (possibleScore === satisfyCriterion.value) {
-        sum += aggregateData.counts[possibleScore];
-      }
-    }
-    return sum;
-  }
-
-  isPercentOfScoresNotEqualTo(satisfyCriterion: any, aggregateAutoScores: any) {
-    const aggregateData = this.getAggregateData(satisfyCriterion, aggregateAutoScores);
-    const possibleScores = this.getPossibleScores(aggregateData);
-    const sum = this.getNotEqualToSum(satisfyCriterion, aggregateData, possibleScores);
-    return this.isPercentThresholdSatisfied(satisfyCriterion, aggregateData, sum);
-  }
-
-  getNotEqualToSum(satisfyCriterion: any, aggregateData: any, possibleScores: number[]) {
-    let sum = 0;
-    for (const possibleScore of possibleScores) {
-      if (possibleScore !== satisfyCriterion.value) {
-        sum += aggregateData.counts[possibleScore];
-      }
-    }
-    return sum;
   }
 
   getAggregateData(satisfyCriterion: any, aggregateAutoScores: any) {
@@ -548,46 +508,6 @@ export class MilestoneService {
 
   setReportAvailable(projectAchievement: any, reportAvailable: boolean) {
     projectAchievement.isReportAvailable = reportAvailable;
-  }
-
-  deleteMilestone(milestone: any) {
-    const projectAchievements = this.ProjectService.getAchievementItems();
-    let index = -1;
-    for (let i = 0; i < projectAchievements.length; i++) {
-      if (projectAchievements[i].id === milestone.id) {
-        index = i;
-        break;
-      }
-    }
-
-    if (index > -1) {
-      projectAchievements.splice(index, 1);
-      this.saveProject();
-    }
-  }
-
-  saveProject() {
-    this.clearTempFields();
-    this.ProjectService.saveProject();
-  }
-
-  clearTempFields() {
-    const projectAchievements = this.ProjectService.getAchievementItems();
-    for (const projectAchievement of projectAchievements) {
-      this.workgroupsStorage.push(projectAchievement.workgroups);
-      this.numberOfStudentsCompletedStorage.push(projectAchievement.numberOfStudentsCompleted);
-      this.percentageCompletedStorage.push(projectAchievement.percentageCompleted);
-      delete projectAchievement.items;
-      delete projectAchievement.workgroups;
-      delete projectAchievement.numberOfStudentsCompleted;
-      delete projectAchievement.numberOfStudentsInRun;
-      delete projectAchievement.percentageCompleted;
-      delete projectAchievement.generatedReport;
-      delete projectAchievement.generatedRecommendations;
-      delete projectAchievement.nodeId;
-      delete projectAchievement.componentId;
-      delete projectAchievement.isReportAvailable;
-    }
   }
 
   showMilestoneDetails(milestone: any, $event: any, hideStudentWork: boolean = false) {

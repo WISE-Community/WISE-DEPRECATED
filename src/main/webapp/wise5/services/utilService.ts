@@ -807,6 +807,30 @@ export class UtilService {
     }
     return arrData;
   }
+
+  greaterThanEqualTo(a: number, b: number): boolean {
+    return a >= b;
+  }
+
+  greaterThan(a: number, b: number): boolean {
+    return a > b;
+  }
+
+  lessThanEqualTo(a: number, b: number): boolean {
+    return a <= b;
+  }
+
+  lessThan(a: number, b: number): boolean {
+    return a < b;
+  }
+
+  equalTo(a: number, b: number): boolean {
+    return a === b;
+  }
+
+  notEqualTo(a: number, b: number): boolean {
+    return a !== b;
+  }
 }
 
 declare global {
