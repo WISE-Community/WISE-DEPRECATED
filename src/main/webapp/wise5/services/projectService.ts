@@ -414,7 +414,7 @@ export class ProjectService {
 
   getGroupNodesIdToOrder() {
     const idToOrder = {};
-    const onlyGroupNodes = Object.entries(this.idToOrder).filter(item => {
+    const onlyGroupNodes = Object.entries(this.idToOrder).filter((item) => {
       return this.isGroupNode(item[0]);
     });
     for (const [key, value] of onlyGroupNodes) {
@@ -520,7 +520,7 @@ export class ProjectService {
             '(\'|"|\\\\\'|\\\\")',
           'gi'
         ),
-        matchedString => {
+        (matchedString) => {
           /*
            * once found, we prepend the contentBaseURL + "assets/" to the string within the quotes
            * and keep everything else the same.
@@ -866,7 +866,7 @@ export class ProjectService {
    * the target ids show up in the project.
    */
   constraintsComparatorGenerator(orderedNodeIds) {
-    return function(constraintA, constraintB) {
+    return function (constraintA, constraintB) {
       let constraintAIndex = orderedNodeIds.indexOf(constraintA.targetId);
       let constraintBIndex = orderedNodeIds.indexOf(constraintB.targetId);
       if (constraintAIndex < constraintBIndex) {
@@ -1002,7 +1002,7 @@ export class ProjectService {
    * @returns an array with all the node ids
    */
   getNodeIds() {
-    return this.applicationNodes.map(node => {
+    return this.applicationNodes.map((node) => {
       return node.id;
     });
   }
@@ -1102,7 +1102,7 @@ export class ProjectService {
     return this.http
       .get(projectURL, { headers: headers })
       .toPromise()
-      .then(projectJSON => {
+      .then((projectJSON) => {
         this.setProject(projectJSON);
         return projectJSON;
       });

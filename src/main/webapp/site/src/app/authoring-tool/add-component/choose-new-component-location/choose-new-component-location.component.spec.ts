@@ -68,7 +68,10 @@ describe('ChooseNewComponentLocation', () => {
   });
 
   it('insertComponentAfter() should create a new component and save the project', () => {
-    spyOn(teacherProjectService, 'createComponent').and.returnValue({ id: 'comp3', type: 'Discussion' });
+    spyOn(teacherProjectService, 'createComponent').and.returnValue({
+      id: 'comp3',
+      type: 'Discussion'
+    });
     spyOn(teacherProjectService, 'saveProject').and.returnValue(new Promise(() => {}));
     component.insertComponentAfter('comp2');
     expect(teacherProjectService.createComponent).toHaveBeenCalled();

@@ -106,7 +106,7 @@ describe('TeacherProjectService', () => {
 });
 
 function createNormalSpy() {
-  spyOn(configService, 'getConfigParam').and.callFake(param => {
+  spyOn(configService, 'getConfigParam').and.callFake((param) => {
     if (param === 'projectBaseURL') {
       return projectBaseURL;
     } else if (param === 'projectURL') {
@@ -120,7 +120,7 @@ function createNormalSpy() {
 }
 
 function createConfigServiceGetConfigParamSpy() {
-  spyOn(configService, 'getConfigParam').and.callFake(param => {
+  spyOn(configService, 'getConfigParam').and.callFake((param) => {
     if (param === 'projectBaseURL') {
       return projectBaseURL;
     } else if (param === 'projectURL') {
@@ -147,7 +147,7 @@ function registerNewProject() {
         scootersProjectJSONString
       );
       http.expectOne(registerNewProjectURL).flush(newProjectIdExpected);
-      newProjectIdActual.then(result => {
+      newProjectIdActual.then((result) => {
         expect(result).toEqual(newProjectIdExpected);
       });
     });
@@ -249,7 +249,7 @@ function getLibraryProjects() {
       createConfigServiceGetConfigParamSpy();
       const result = service.getLibraryProjects();
       http.expectOne(getLibraryProjectsURL).flush(libraryProjects);
-      result.then(projects => {
+      result.then((projects) => {
         expect(projects).toEqual(libraryProjects);
       });
     });
@@ -936,9 +936,7 @@ function shouldHandleSaveProjectResponseHelper(
 function shouldNotSaveProjectWhenTheUserDoesNotHavePermissionToEditTheProject() {
   it('should not save project when the user does not have permission to edit the project', () => {
     service.setProject(scootersProjectJSON);
-    spyOn(configService, 'getConfigParam')
-      .withArgs('canEditProject')
-      .and.returnValue(false);
+    spyOn(configService, 'getConfigParam').withArgs('canEditProject').and.returnValue(false);
     expect(service.saveProject()).toEqual(null);
   });
 }

@@ -23,13 +23,9 @@ export class TeacherProjectService extends ProjectService {
   private errorSavingProjectSource: Subject<any> = new Subject<any>();
   public errorSavingProject$: Observable<any> = this.errorSavingProjectSource.asObservable();
   private notAllowedToEditThisProjectSource: Subject<any> = new Subject<any>();
-  public notAllowedToEditThisProject$: Observable<
-    any
-  > = this.notAllowedToEditThisProjectSource.asObservable();
+  public notAllowedToEditThisProject$: Observable<any> = this.notAllowedToEditThisProjectSource.asObservable();
   private notLoggedInProjectNotSavedSource: Subject<any> = new Subject<any>();
-  public notLoggedInProjectNotSaved$: Observable<
-    any
-  > = this.notLoggedInProjectNotSavedSource.asObservable();
+  public notLoggedInProjectNotSaved$: Observable<any> = this.notLoggedInProjectNotSavedSource.asObservable();
   private projectSavedSource: Subject<any> = new Subject<any>();
   public projectSaved$: Observable<any> = this.projectSavedSource.asObservable();
   private savingProjectSource: Subject<any> = new Subject<any>();
@@ -215,7 +211,7 @@ export class TeacherProjectService extends ProjectService {
     return this.http
       .post(`${this.ConfigService.getConfigParam('copyProjectURL')}/${projectId}`, null)
       .toPromise()
-      .then(newProject => {
+      .then((newProject) => {
         return newProject;
       });
   }
@@ -232,7 +228,7 @@ export class TeacherProjectService extends ProjectService {
         projectJSONString: projectJSONString
       })
       .toPromise()
-      .then(newProjectId => {
+      .then((newProjectId) => {
         return newProjectId;
       });
   }
@@ -1220,14 +1216,14 @@ export class TeacherProjectService extends ProjectService {
     return this.http
       .get(this.ConfigService.getConfigParam('getLibraryProjectsURL'))
       .toPromise()
-      .then(projects => {
+      .then((projects) => {
         return projects;
       });
   }
 
   sortAndFilterUniqueLibraryProjects(libraryProjects) {
     const flatProjectList = libraryProjects
-      .map(grade => {
+      .map((grade) => {
         return grade.children;
       })
       .flat();
@@ -1321,7 +1317,7 @@ export class TeacherProjectService extends ProjectService {
   }
 
   removeTeacherRemovalConstraint(node: any, periodId: number) {
-    node.constraints = node.constraints.filter(constraint => {
+    node.constraints = node.constraints.filter((constraint) => {
       return !(
         constraint.action === 'makeThisNodeNotVisitable' &&
         constraint.targetId === node.id &&
@@ -1425,10 +1421,10 @@ export class TeacherProjectService extends ProjectService {
    * objects.
    */
   cleanupBeforeSave() {
-    this.getActiveNodes().forEach(activeNode => {
+    this.getActiveNodes().forEach((activeNode) => {
       this.cleanupNode(activeNode);
     });
-    this.getInactiveNodes().forEach(inactiveNode => {
+    this.getInactiveNodes().forEach((inactiveNode) => {
       this.cleanupNode(inactiveNode);
     });
   }
@@ -1455,7 +1451,7 @@ export class TeacherProjectService extends ProjectService {
 
     if (node.components != null) {
       // activity node does not have components but step node does
-      node.components.forEach(component => {
+      node.components.forEach((component) => {
         this.cleanupComponent(component);
       });
     }
@@ -1877,7 +1873,7 @@ export class TeacherProjectService extends ProjectService {
    * @returns an array with all the inactive node ids
    */
   getInactiveNodeIds() {
-    return this.project.inactiveNodes.map(node => {
+    return this.project.inactiveNodes.map((node) => {
       return node.id;
     });
   }
@@ -3344,7 +3340,7 @@ export class TeacherProjectService extends ProjectService {
    * up in the project.
    */
   nodeIdsComparatorGenerator(orderedNodeIds) {
-    return function(nodeIdA, nodeIdB) {
+    return function (nodeIdA, nodeIdB) {
       let nodeIdAIndex = orderedNodeIds.indexOf(nodeIdA);
       let nodeIdBIndex = orderedNodeIds.indexOf(nodeIdB);
       if (nodeIdAIndex < nodeIdBIndex) {
@@ -3466,7 +3462,7 @@ export class TeacherProjectService extends ProjectService {
     return this.http
       .get(this.ConfigService.getConfigParam('featuredProjectIconsURL'))
       .toPromise()
-      .then(data => {
+      .then((data) => {
         return data;
       });
   }
@@ -3489,7 +3485,7 @@ export class TeacherProjectService extends ProjectService {
         isCustom: isCustom
       })
       .toPromise()
-      .then(result => {
+      .then((result) => {
         return result;
       });
   }

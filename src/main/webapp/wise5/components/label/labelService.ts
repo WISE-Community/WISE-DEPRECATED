@@ -288,7 +288,7 @@ export class LabelService extends ComponentService {
     const image = new Image();
     const thisUtilService = this.UtilService;
     return new Promise((resolve, reject) => {
-      image.onload = event => {
+      image.onload = (event) => {
         const image: any = event.target;
         myCanvas.width = image.width;
         myCanvas.height = image.height;
@@ -297,13 +297,13 @@ export class LabelService extends ComponentService {
         const imageObject = thisUtilService.getImageObjectFromBase64String(base64Image);
 
         // create a student asset image
-        this.StudentAssetService.uploadAsset(imageObject).then(unreferencedAsset => {
+        this.StudentAssetService.uploadAsset(imageObject).then((unreferencedAsset) => {
           /*
            * make a copy of the unreferenced asset so that we
            * get a referenced asset
            */
           this.StudentAssetService.copyAssetForReference(unreferencedAsset).then(
-            referencedAsset => {
+            (referencedAsset) => {
               if (referencedAsset != null) {
                 /*
                  * get the asset url

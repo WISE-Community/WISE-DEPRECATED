@@ -108,7 +108,7 @@ describe('ProjectService', () => {
 });
 
 function createNormalSpy() {
-  spyOn(configService, 'getConfigParam').and.callFake(param => {
+  spyOn(configService, 'getConfigParam').and.callFake((param) => {
     if (param === 'projectBaseURL') {
       return projectBaseURL;
     } else if (param === 'projectURL') {
@@ -162,10 +162,8 @@ function shouldNotReplaceAssetPathsInHtmlComponentContent() {
 
 function shouldRetrieveProjectWhenConfigProjectURLIsValid() {
   it('should retrieve project when Config.projectURL is valid', () => {
-    spyOn(configService, 'getConfigParam')
-      .withArgs('projectURL')
-      .and.returnValue(projectURL);
-    service.retrieveProject().then(response => {
+    spyOn(configService, 'getConfigParam').withArgs('projectURL').and.returnValue(projectURL);
+    service.retrieveProject().then((response) => {
       expect(response).toEqual(scootersProjectJSON);
     });
     http.expectOne(projectURL);
@@ -353,7 +351,7 @@ function shouldIdentifyBranchStartAndMergePoints() {
 }
 
 function expectFunctionCallToReturnValue(func, nodeIdArray, expectedValue) {
-  nodeIdArray.forEach(nodeId => {
+  nodeIdArray.forEach((nodeId) => {
     expect(service[func](nodeId)).toEqual(expectedValue);
   });
 }

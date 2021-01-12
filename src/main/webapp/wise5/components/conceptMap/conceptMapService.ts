@@ -776,7 +776,7 @@ export class ConceptMapService extends ComponentService {
         let svgString = svgElement.innerHTML;
 
         // find all the images in the svg and replace them with Base64 images
-        this.getHrefToBase64ImageReplacements(svgString, true).then(images => {
+        this.getHrefToBase64ImageReplacements(svgString, true).then((images) => {
           /*
            * Loop through all the image objects. Each object contains
            * an image href and a Base64 image.
@@ -826,7 +826,7 @@ export class ConceptMapService extends ComponentService {
           const thisUtilService = this.UtilService;
 
           // the function that is called after the image is fully loaded
-          image.onload = event => {
+          image.onload = (event) => {
             // get the image that was loaded
             const image: any = event.target;
 
@@ -842,13 +842,13 @@ export class ConceptMapService extends ComponentService {
             const imageObject = thisUtilService.getImageObjectFromBase64String(base64Image);
 
             // create a student asset image
-            this.StudentAssetService.uploadAsset(imageObject).then(unreferencedAsset => {
+            this.StudentAssetService.uploadAsset(imageObject).then((unreferencedAsset) => {
               /*
                * make a copy of the unreferenced asset so that we
                * get a referenced asset
                */
               this.StudentAssetService.copyAssetForReference(unreferencedAsset).then(
-                referencedAsset => {
+                (referencedAsset) => {
                   if (referencedAsset != null) {
                     /*
                      * get the asset url
@@ -970,7 +970,7 @@ export class ConceptMapService extends ComponentService {
       const ctx = myCanvas.getContext('2d');
 
       // the function that is called after the image is fully loaded
-      image.onload = function(event) {
+      image.onload = function (event) {
         // get the image that was loaded
         const image: any = event.target;
 
@@ -1147,7 +1147,7 @@ export class ConceptMapService extends ComponentService {
         let svgString = serializer.serializeToString(svgElement);
 
         // find all the images in the svg and replace them with Base64 images
-        this.getHrefToBase64ImageReplacements(svgString).then(images => {
+        this.getHrefToBase64ImageReplacements(svgString).then((images) => {
           /*
            * Loop through all the image objects. Each object contains
            * an image href and a Base64 image.
@@ -1183,7 +1183,7 @@ export class ConceptMapService extends ComponentService {
           const image = new Image();
 
           // the function that is called after the image is fully loaded
-          image.onload = event => {
+          image.onload = (event) => {
             // get the image that was loaded
             let image: any = event.target;
 
@@ -1199,7 +1199,7 @@ export class ConceptMapService extends ComponentService {
             const imageObject = this.UtilService.getImageObjectFromBase64String(base64Image);
 
             // add the image to the student assets
-            this.StudentAssetService.uploadAsset(imageObject).then(asset => {
+            this.StudentAssetService.uploadAsset(imageObject).then((asset) => {
               resolve(asset);
             });
           };

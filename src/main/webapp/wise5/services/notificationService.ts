@@ -18,11 +18,9 @@ export class NotificationService {
   private setIsJSONValidSource: Subject<any> = new Subject<any>();
   public setIsJSONValid$: Observable<any> = this.setIsJSONValidSource.asObservable();
   private serverConnectionStatusSource: Subject<any> = new Subject<any>();
-  public serverConnectionStatus$: Observable<any> =
-      this.serverConnectionStatusSource.asObservable();
+  public serverConnectionStatus$: Observable<any> = this.serverConnectionStatusSource.asObservable();
   private viewCurrentAmbientNotificationSource: Subject<any> = new Subject<any>();
-  public viewCurrentAmbientNotification$: Observable<any> =
-      this.viewCurrentAmbientNotificationSource.asObservable();
+  public viewCurrentAmbientNotification$: Observable<any> = this.viewCurrentAmbientNotificationSource.asObservable();
 
   constructor(
     private upgrade: UpgradeModule,
@@ -138,7 +136,7 @@ export class NotificationService {
           this.ConfigService.getWorkgroupId(),
           notificationData,
           notificationGroupId
-        ).then(notification => {
+        ).then((notification) => {
           this.addNotification(notification);
         });
       }
@@ -228,7 +226,7 @@ export class NotificationService {
     let notifications = this.notifications;
     for (const p in args) {
       if (args.hasOwnProperty(p) && args[p] !== null) {
-        notifications = notifications.filter(notification => {
+        notifications = notifications.filter((notification) => {
           return notification[p] === args[p];
         });
       }
