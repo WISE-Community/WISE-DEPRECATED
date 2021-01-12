@@ -1,7 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { NodeService } from '../../../../../../wise5/services/nodeService';
-import { ProjectService } from '../../../../../../wise5/services/projectService';
 
 @Component({
   selector: 'app-choose-branch-path-dialog',

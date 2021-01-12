@@ -1,9 +1,9 @@
 import { UtilService } from '../../../../../../wise5/services/utilService';
-import { ProjectService } from '../../../../../../wise5/services/projectService';
 import { TeacherDataService } from '../../../../../../wise5/services/teacherDataService';
 import { ConfigService } from '../../../../../../wise5/services/configService';
 import { Component } from '@angular/core';
 import { UpgradeModule } from '@angular/upgrade/static';
+import { TeacherProjectService } from '../../../../../../wise5/services/teacherProjectService';
 
 @Component({
   selector: 'choose-new-component-location',
@@ -16,14 +16,14 @@ export class ChooseNewComponentLocation {
   constructor(
     private upgrade: UpgradeModule,
     private ConfigService: ConfigService,
-    private ProjectService: ProjectService,
+    private TeacherProjectService: TeacherProjectService,
     private TeacherDataService: TeacherDataService,
     private UtilService: UtilService
   ) {}
 
   ngOnInit() {
     this.nodeId = this.TeacherDataService.getCurrentNodeId();
-    this.components = this.ProjectService.getComponentsByNodeId(this.nodeId);
+    this.components = this.TeacherProjectService.getComponentsByNodeId(this.nodeId);
   }
 
   getComponentTypeLabel(componentType) {
@@ -35,20 +35,18 @@ export class ChooseNewComponentLocation {
   }
 
   insertComponentAfter(insertAfterComponentId = null) {
-    const newComponent = this.ProjectService.createComponent(
+    const newComponent = this.TeacherProjectService.createComponent(
       this.nodeId,
       this.upgrade.$injector.get('$stateParams').componentType,
       insertAfterComponentId
     );
-    this.ProjectService.saveProject().then(() => {
+    this.TeacherProjectService.saveProject().then(() => {
       this.saveAddComponentEvent(newComponent);
-      this.upgrade.$injector
-        .get('$state')
-        .go('root.at.project.node', {
-          projectId: this.ConfigService.getProjectId(),
-          nodeId: this.nodeId,
-          newComponents: [newComponent]
-        });
+      this.upgrade.$injector.get('$state').go('root.at.project.node', {
+        projectId: this.ConfigService.getProjectId(),
+        nodeId: this.nodeId,
+        newComponents: [newComponent]
+      });
     });
   }
 
@@ -74,11 +72,9 @@ export class ChooseNewComponentLocation {
   }
 
   cancel() {
-    this.upgrade.$injector
-      .get('$state')
-      .go('root.at.project.node', {
-        projectId: this.ConfigService.getProjectId(),
-        nodeId: this.nodeId
-      });
+    this.upgrade.$injector.get('$state').go('root.at.project.node', {
+      projectId: this.ConfigService.getProjectId(),
+      nodeId: this.nodeId
+    });
   }
 }

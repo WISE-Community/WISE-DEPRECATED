@@ -1,6 +1,7 @@
 'use strict';
 
 import * as angular from 'angular';
+import SVG from 'svg.js';
 import { ComponentService } from '../componentService';
 import { StudentAssetService } from '../../services/studentAssetService';
 import { Injectable } from '@angular/core';
