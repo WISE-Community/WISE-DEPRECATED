@@ -1,7 +1,6 @@
-import { ProjectAssetService } from '../../../../site/src/app/services/projectAssetService';
 import { ConfigService } from '../../../services/configService';
-import { ProjectService } from '../../../services/projectService';
 import { TeacherDataService } from '../../../services/teacherDataService';
+import { TeacherProjectService } from '../../../services/teacherProjectService';
 import { UtilService } from '../../../services/utilService';
 
 class EditRubricComponentController {
@@ -20,22 +19,22 @@ class EditRubricComponentController {
   constructor(
     private $state: any,
     private ConfigService: ConfigService,
-    private ProjectService: ProjectService,
+    private TeacherProjectService: TeacherProjectService,
     private TeacherDataService: TeacherDataService,
     private UtilService: UtilService
   ) {}
 
   $onInit(): void {
     this.nodeId = this.TeacherDataService.getCurrentNodeId();
-    this.node = this.ProjectService.getNodeById(this.nodeId);
-    this.rubric = this.ProjectService.replaceAssetPaths(this.node.rubric);
+    this.node = this.TeacherProjectService.getNodeById(this.nodeId);
+    this.rubric = this.TeacherProjectService.replaceAssetPaths(this.node.rubric);
   }
 
   rubricChanged(): void {
     let html = this.ConfigService.removeAbsoluteAssetPaths(this.rubric);
     html = this.UtilService.insertWISELinks(html);
     this.node.rubric = html;
-    this.ProjectService.saveProject();
+    this.TeacherProjectService.saveProject();
   }
 
   goBack(): void {

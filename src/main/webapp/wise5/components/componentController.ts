@@ -230,12 +230,12 @@ class ComponentController {
   }
 
   initializeScopeGetComponentState(scope, childControllerName) {
-    scope.getComponentState = (isSubmit) => {
+    scope.getComponentState = isSubmit => {
       const deferred = this.$q.defer();
       const childController = scope[childControllerName];
       if (this.hasDirtyWorkToSendToParent(childController, isSubmit)) {
         const action = this.getDirtyWorkToSendToParentAction(childController, isSubmit);
-        childController.createComponentState(action).then((componentState) => {
+        childController.createComponentState(action).then(componentState => {
           deferred.resolve(componentState);
         });
       } else {
@@ -460,7 +460,7 @@ class ComponentController {
    * data has changed.
    */
   createComponentStateAndBroadcast(action) {
-    this.createComponentState(action).then((componentState) => {
+    this.createComponentState(action).then(componentState => {
       this.emitComponentStudentDataChanged(componentState);
     });
   }
@@ -670,7 +670,7 @@ class ComponentController {
   }
 
   importWorkByStudentWorkId(studentWorkId) {
-    this.StudentDataService.getStudentWorkById(studentWorkId).then((componentState) => {
+    this.StudentDataService.getStudentWorkById(studentWorkId).then(componentState => {
       if (componentState != null) {
         this.setStudentWork(componentState);
         this.setParentStudentWorkIdToCurrentStudentWork(studentWorkId);
@@ -751,7 +751,7 @@ class ComponentController {
   }
 
   attachStudentAsset(studentAsset) {
-    return this.StudentAssetService.copyAssetForReference(studentAsset).then((copiedAsset) => {
+    return this.StudentAssetService.copyAssetForReference(studentAsset).then(copiedAsset => {
       const attachment = {
         studentAssetId: copiedAsset.id,
         iconURL: copiedAsset.iconURL,
@@ -829,7 +829,7 @@ class ComponentController {
     this.audioRecordedSubscription = this.AudioRecorderService.audioRecorded$.subscribe(
       ({ requester, audioFile }) => {
         if (requester === `${this.nodeId}-${this.componentId}`) {
-          this.StudentAssetService.uploadAsset(audioFile).then((studentAsset) => {
+          this.StudentAssetService.uploadAsset(audioFile).then(studentAsset => {
             this.attachStudentAsset(studentAsset).then(() => {
               this.StudentAssetService.deleteAsset(studentAsset);
             });
@@ -871,7 +871,7 @@ class ComponentController {
       $scope.nodeId = nodeId;
       $scope.componentId = componentId;
       $scope.componentState = componentState;
-      $scope.closeDialog = function () {
+      $scope.closeDialog = function() {
         $mdDialog.hide();
       };
     }
@@ -882,14 +882,12 @@ class ComponentController {
         if (componentState.nodeId == nodeId && componentState.componentId == componentId) {
           setTimeout(() => {
             const componentService = this.$injector.get(componentState.componentType + 'Service');
-            componentService
-              .generateImageFromRenderedComponentState(componentState)
-              .then((image) => {
-                clearTimeout(destroyDoneRenderingComponentListenerTimeout);
-                doneRenderingComponentSubscription.unsubscribe();
-                deferred.resolve(image);
-                this.$mdDialog.hide();
-              });
+            componentService.generateImageFromRenderedComponentState(componentState).then(image => {
+              clearTimeout(destroyDoneRenderingComponentListenerTimeout);
+              doneRenderingComponentSubscription.unsubscribe();
+              deferred.resolve(image);
+              this.$mdDialog.hide();
+            });
           }, 1000);
         }
       }
