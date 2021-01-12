@@ -55,6 +55,7 @@ import { MomentModule } from 'ngx-moment';
 import { EditorModule, TINYMCE_SCRIPT_SRC } from '@tinymce/tinymce-angular';
 import { WiseTinymceEditorComponent } from '../../../wise5/directives/wise-tinymce-editor/wise-tinymce-editor.component';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 @Component({ template: `` })
 export class EmptyComponent {}
@@ -85,6 +86,7 @@ export class EmptyComponent {}
     MatProgressBarModule,
     MatProgressSpinnerModule,
     MatSelectModule,
+    MatSlideToggleModule,
     MatTooltipModule,
     MomentModule,
     ReactiveFormsModule,
@@ -141,6 +143,7 @@ export class EmptyComponent {}
     MatProgressBarModule,
     MatProgressSpinnerModule,
     MatSelectModule,
+    MatSlideToggleModule,
     MatTooltipModule,
     MomentModule,
     NodeIconComponent,

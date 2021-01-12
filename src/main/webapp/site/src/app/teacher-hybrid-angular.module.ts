@@ -46,6 +46,7 @@ import { EditHTMLAdvancedComponent } from '../../../wise5/components/html/edit-h
 import { EditOutsideUrlAdvancedComponent } from '../../../wise5/components/outsideURL/edit-outside-url-advanced/edit-outside-url-advanced.component';
 import { OpenResponseAuthoring } from '../../../wise5/components/openResponse/open-response-authoring/open-response-authoring.component';
 import { HtmlAuthoring } from '../../../wise5/components/html/html-authoring/html-authoring.component';
+import { OutsideUrlAuthoring } from '../../../wise5/components/outsideURL/outside-url-authoring/outside-url-authoring.component';
 
 @NgModule({
   declarations: [
@@ -72,6 +73,7 @@ import { HtmlAuthoring } from '../../../wise5/components/html/html-authoring/htm
     NodeAdvancedGeneralAuthoringComponent,
     NodeAdvancedJsonAuthoringComponent,
     OpenResponseAuthoring,
+    OutsideUrlAuthoring,
     RubricAuthoringComponent,
     StatusIconComponent,
     StepInfoComponent,

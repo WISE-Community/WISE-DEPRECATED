@@ -1,6 +1,6 @@
 <div class="outside-content" ng-controller="OutsideURLController as outsideURLController">
   <div style="width: {{outsideURLController.width}}; height: {{outsideURLController.height}}">
-    <iframe ng-src="{{outsideURLController.url}}" width="100%"  height="100%" 
+    <iframe id="{{outsideURLController.outsideURLIFrameId}}" ng-src="{{outsideURLController.url}}" width="100%"  height="100%" 
         allowfullscreen></iframe>
   </div>
   <div class="outside-content__source md-caption">
