@@ -18,7 +18,24 @@ export class OutsideUrlAuthoring extends ComponentAuthoring {
   allOpenEducationalResources: any[];
   filteredOpenEducationalResources: any[];
   outsideURLIFrameId: string;
-  subjects: any[];
+  subjects: any[] = [
+    {
+      value: 'Earth and Space Sciences',
+      label: $localize`Earth and Space Sciences`
+    },
+    {
+      value: 'Life Sciences',
+      label: $localize`Life Sciences`
+    },
+    {
+      value: 'Physical Sciences',
+      label: $localize`Physical Sciences`
+    },
+    {
+      value: 'Engineering, Technology, and Applications of Science',
+      label: $localize`Engineering, Technology, and Applications of Science`
+    }
+  ];
   searchText: string;
   selectedSubjects: any[];
   urlChanged: Subject<string> = new Subject<string>();
@@ -41,29 +58,11 @@ export class OutsideUrlAuthoring extends ComponentAuthoring {
     super.ngOnInit();
     this.outsideURLIFrameId = 'outsideResource_' + this.componentId;
     this.isShowOERs = this.componentContent.url === '';
-    this.subjects = [
-      {
-        value: 'Earth and Space Sciences',
-        label: $localize`Earth and Space Sciences`
-      },
-      {
-        value: 'Life Sciences',
-        label: $localize`Life Sciences`
-      },
-      {
-        value: 'Physical Sciences',
-        label: $localize`Physical Sciences`
-      },
-      {
-        value: 'Engineering, Technology, and Applications of Science',
-        label: $localize`Engineering, Technology, and Applications of Science`
-      }
-    ];
     this.searchText = '';
     this.selectedSubjects = [];
     this.OutsideURLService.getOpenEducationalResources().then((openEducationalResources: any) => {
       this.allOpenEducationalResources = openEducationalResources.sort((a, b) =>
-        a.metadata.title > b.metadata.title ? 1 : -1
+        a.metadata.title.localeCompare(b.metadata.title)
       );
       this.filteredOpenEducationalResources = this.allOpenEducationalResources;
     });
@@ -76,12 +75,12 @@ export class OutsideUrlAuthoring extends ComponentAuthoring {
       });
     this.widthChangedSubscription = this.widthChanged
       .pipe(debounceTime(1000), distinctUntilChanged())
-      .subscribe((width: string) => {
+      .subscribe(() => {
         this.componentChanged();
       });
     this.heightChangedSubscription = this.heightChanged
       .pipe(debounceTime(1000), distinctUntilChanged())
-      .subscribe((height: string) => {
+      .subscribe(() => {
         this.componentChanged();
       });
   }
@@ -116,19 +115,18 @@ export class OutsideUrlAuthoring extends ComponentAuthoring {
 
   searchFieldChanged(): void {
     this.filteredOpenEducationalResources = this.allOpenEducationalResources.filter((oer) => {
-      if (!this.isTextMatch(this.searchText, JSON.stringify(oer))) {
-        return false;
-      }
       if (this.isAnySubjectChosen()) {
-        return this.isSubjectMatch(this.selectedSubjects, oer);
-      } else {
-        return true;
+        return (
+          this.isTextMatch(this.searchText, JSON.stringify(oer)) &&
+          this.isSubjectMatch(this.selectedSubjects, oer)
+        );
       }
+      return this.isTextMatch(this.searchText, JSON.stringify(oer));
     });
   }
 
   isTextMatch(searchText: string, testText: string): boolean {
-    return testText.toLowerCase().indexOf(searchText.toLowerCase()) !== -1;
+    return testText.toLowerCase().includes(searchText.toLowerCase());
   }
 
   isAnySubjectChosen(): boolean {
