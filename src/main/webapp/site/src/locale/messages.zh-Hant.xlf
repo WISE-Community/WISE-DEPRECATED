@@ -3292,6 +3292,10 @@
           <context context-type="sourcefile">app/forgot/student/forgot-student-username/forgot-student-username.component.html</context>
           <context context-type="linenumber">58</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/outsideURL/outside-url-authoring/outside-url-authoring.component.html</context>
+          <context context-type="linenumber">29</context>
+        </context-group>
         <target state="translated">搜尋</target>
       </trans-unit>
       <trans-unit datatype="html" id="53a454dd8d85d4a61d248f7452828b57d70e5055">
@@ -6841,6 +6845,138 @@
           <context context-type="linenumber">15</context>
         </context-group>
         <target state="needs-translation">Enter Prompt Here</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="2e0e07912515c250498d28841610709033392606">
+        <source> Show Open Education Resources </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/outsideURL/outside-url-authoring/outside-url-authoring.component.html</context>
+          <context context-type="linenumber">5</context>
+        </context-group>
+        <target state="needs-translation"> Show Open Education Resources </target>
+      </trans-unit>
+      <trans-unit datatype="html" id="c6ba8eeceb929fa55b8beda39cee39c72262065a">
+        <source> Select from our curated library of OERs or enter your own in the 'URL' field below. (Note: Outside resources must start with 'https://' to be displayed.) </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/outsideURL/outside-url-authoring/outside-url-authoring.component.html</context>
+          <context context-type="linenumber">9</context>
+        </context-group>
+        <target state="needs-translation"> Select from our curated library of OERs or enter your own in the 'URL' field below. (Note: Outside resources must start with 'https://' to be displayed.) </target>
+      </trans-unit>
+      <trans-unit datatype="html" id="6cff9c67088cb6a22208f9aba31858f0a443f9cd">
+        <source>Filter by Topic</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/outsideURL/outside-url-authoring/outside-url-authoring.component.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+        <target state="needs-translation">Filter by Topic</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="3c06611b223d841aa472cc47f5bfd477464f515a">
+        <source>
+          <x equiv-text="{{subject.label}}" id="INTERPOLATION"/>
+        </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/outsideURL/outside-url-authoring/outside-url-authoring.component.html</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+        <target state="needs-translation">
+          <x equiv-text="{{subject.label}}" id="INTERPOLATION"/>
+        </target>
+      </trans-unit>
+      <trans-unit datatype="html" id="01e097f8565eff8f1c4a6d55d903b121de22f582">
+        <source>Clear All</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/outsideURL/outside-url-authoring/outside-url-authoring.component.html</context>
+          <context context-type="linenumber">36</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/outsideURL/outside-url-authoring/outside-url-authoring.component.html</context>
+          <context context-type="linenumber">38</context>
+        </context-group>
+        <target state="needs-translation">Clear All</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="67b0bab01dfc2c188b5a35110b1a963bf685055a">
+        <source><x equiv-text="{{filteredOpenEducationalResources.length}}" id="INTERPOLATION"/> Item(s) Found</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/outsideURL/outside-url-authoring/outside-url-authoring.component.html</context>
+          <context context-type="linenumber">43</context>
+        </context-group>
+        <target state="needs-translation"><x equiv-text="{{filteredOpenEducationalResources.length}}" id="INTERPOLATION"/> Item(s) Found</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="f79611b9cc78f612ae8cc2cce08ff9f14581aeb3">
+        <source>Selected</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/outsideURL/outside-url-authoring/outside-url-authoring.component.html</context>
+          <context context-type="linenumber">61</context>
+        </context-group>
+        <target state="needs-translation">Selected</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="ba65c88ed27b83f0ebc4a924bbf41de7fdad9dd0">
+        <source> Info </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/outsideURL/outside-url-authoring/outside-url-authoring.component.html</context>
+          <context context-type="linenumber">70</context>
+        </context-group>
+        <target state="needs-translation"> Info </target>
+      </trans-unit>
+      <trans-unit datatype="html" id="91450c740fcd6a3086aec1629d15354ae17c1a5c">
+        <source> Select </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/outsideURL/outside-url-authoring/outside-url-authoring.component.html</context>
+          <context context-type="linenumber">78</context>
+        </context-group>
+        <target state="needs-translation"> Select </target>
+      </trans-unit>
+      <trans-unit datatype="html" id="f871b41bfbdb193507cce2cd848c2d02bde77a03">
+        <source>No results found</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/outsideURL/outside-url-authoring/outside-url-authoring.component.html</context>
+          <context context-type="linenumber">85</context>
+        </context-group>
+        <target state="needs-translation">No results found</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="801b98c6f02fe3b32f6afa3ee854c99ed83474e6">
+        <source>URL</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/outsideURL/outside-url-authoring/outside-url-authoring.component.html</context>
+          <context context-type="linenumber">91</context>
+        </context-group>
+        <target state="needs-translation">URL</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="7cb9bbacc911e2597f0da86b8b09bfb1b6ab33fb">
+        <source>Enter URL Here</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/outsideURL/outside-url-authoring/outside-url-authoring.component.html</context>
+          <context context-type="linenumber">95</context>
+        </context-group>
+        <target state="needs-translation">Enter URL Here</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="a6b43c2ea6f759a9be7fab85583d99fb03f439ca">
+        <source>Width (px) (optional)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/outsideURL/outside-url-authoring/outside-url-authoring.component.html</context>
+          <context context-type="linenumber">101</context>
+        </context-group>
+        <target state="needs-translation">Width (px) (optional)</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="76c3a64124d99226fd7dead89a4f84638eee1f3e">
+        <source>Height (px)</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/outsideURL/outside-url-authoring/outside-url-authoring.component.html</context>
+          <context context-type="linenumber">108</context>
+        </context-group>
+        <target state="needs-translation">Height (px)</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="75944c5e5644a82cee3eddd89975ca1c3054e2d2">
+        <source>Reload resource</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/outsideURL/outside-url-authoring/outside-url-authoring.component.html</context>
+          <context context-type="linenumber">117</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/outsideURL/outside-url-authoring/outside-url-authoring.component.html</context>
+          <context context-type="linenumber">119</context>
+        </context-group>
+        <target state="needs-translation">Reload resource</target>
       </trans-unit>
       <trans-unit datatype="html" id="92328333ea9c72926ca7c631e9e1c0f081cbf565">
         <source>Edit Unit Rubric</source>
