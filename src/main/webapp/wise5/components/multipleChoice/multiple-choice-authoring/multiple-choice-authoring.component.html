@@ -1,0 +1,119 @@
+<mat-form-field class='prompt-input-container'>
+  <mat-label i18n>Prompt</mat-label>
+  <textarea
+      matInput
+      [ngModel]='authoringComponentContent.prompt'
+      (ngModelChange)='promptChanged($event)'
+      placeholder='Enter Prompt Here'
+      i18n-placeholder
+      cdkTextareaAutosize>
+  </textarea>
+</mat-form-field>
+<p i18n>Selection Type:</p>
+<mat-radio-group
+    class='selection-type-group'
+    [(ngModel)]='authoringComponentContent.choiceType'
+    (ngModelChange)='componentChanged()'>
+  <mat-radio-button class='choice-radio-button' value='radio' i18n>
+    Single Answer
+  </mat-radio-button>
+  <br/>
+  <mat-radio-button class='choice-radio-button' value='checkbox' i18n>
+    Multiple Answer
+  </mat-radio-button>
+</mat-radio-group>
+<button mat-raised-button
+    color='primary'
+    class='add-choice-button'
+    (click)='addChoice()'
+    matTooltip='Add Choice'
+    matTooltipDirection='above'
+    i18nMatTooltip
+    aria-label='Add'
+    i18n-aria-label>
+  <mat-icon>add</mat-icon>
+</button>
+<div *ngIf='authoringComponentContent.choices == null || authoringComponentContent.choices.length === 0'
+    class='no-choices-message-container'
+    i18n>
+  There are no choices. Click the "Add Choice" button to add a choice.
+</div>
+<div *ngFor='let choice of authoringComponentContent.choices; first as isFirst; last as isLast'
+    class='choice-container'>
+  <div fxLayout='row wrap' fxLayoutAlign='start center'>
+    <mat-form-field class='choice-text-input-container'>
+      <mat-label i18n>Choice Text</mat-label>
+      <input matInput
+          [(ngModel)]='choice.text'
+          (ngModelChange)='choiceTextChange.next($event)'
+          placeholder='Type text or choose an image'
+          i18n-placeholder/>
+    </mat-form-field>
+    <button mat-raised-button
+        color='primary'
+        class='choice-authoring-button'
+        (click)='chooseChoiceAsset(choice)'
+        matTooltip='Choose an Image'
+        matTooltipDirection='above'
+        i18n-matTooltip
+        aria-label='Image'
+        i18n-aria-label>
+      <mat-icon>insert_photo</mat-icon>
+    </button>
+    <div>
+      <mat-checkbox
+          [(ngModel)]='choice.isCorrect'
+          (change)='feedbackChanged()'
+          aria-label='Is Correct'
+          i18n-aria-label
+          i18n>
+        Is Correct
+      </mat-checkbox>
+    </div>
+  </div>
+  <div fxLayout='row wrap' fxLayoutAlign='start center'>
+    <mat-form-field class='choice-feedback-input-container'>
+      <mat-label i18n>Feeback</mat-label>
+      <input matInput
+          [(ngModel)]='choice.feedback'
+          (ngModelChange)='feedbackTextChange.next($event)'
+          placeholder='Optional'
+          i18n-placeholder/>
+    </mat-form-field>
+    <button mat-raised-button
+        color='primary'
+        class='choice-authoring-button'
+        [disabled]='isFirst'
+        (click)='moveChoiceUp(choice.id)'
+        matTooltip='Move Up'
+        matTooltipDirection='above'
+        i18n-matTooltip
+        aria-label='Up'
+        i18n-aria-label>
+      <mat-icon>arrow_upward</mat-icon>
+    </button>
+    <button mat-raised-button
+        color='primary'
+        class='choice-authoring-button'
+        [disabled]='isLast'
+        (click)='moveChoiceDown(choice.id)'
+        matTooltip='Move Down'
+        matTooltipDirection='above'
+        i18n-matTooltip
+        aria-label='Down'
+        i18n-aria-label>
+      <mat-icon>arrow_downward</mat-icon>
+    </button>
+    <button mat-raised-button
+        color='primary'
+        class='choice-authoring-button'
+        (click)='deleteChoice(choice.id)'
+        matTooltip='Delete'
+        matTooltipDirection='above'
+        i18n-matTooltip
+        aria-label='Delete'
+        i18n-aria-label>
+      <mat-icon>delete</mat-icon>
+    </button>
+  </div>
+</div>

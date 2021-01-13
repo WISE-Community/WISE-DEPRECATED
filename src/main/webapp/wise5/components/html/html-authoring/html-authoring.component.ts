@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ProjectAssetService } from '../../../../site/src/app/services/projectAssetService';
 import { ComponentAuthoring } from '../../../authoringTool/components/component-authoring.component';
 import { ConfigService } from '../../../services/configService';
 import { NodeService } from '../../../services/nodeService';
@@ -15,10 +16,11 @@ export class HtmlAuthoring extends ComponentAuthoring {
   constructor(
     protected ConfigService: ConfigService,
     protected NodeService: NodeService,
+    protected ProjectAssetService: ProjectAssetService,
     protected ProjectService: TeacherProjectService,
     protected UtilService: UtilService
   ) {
-    super(ConfigService, NodeService, ProjectService);
+    super(ConfigService, NodeService, ProjectAssetService, ProjectService);
   }
 
   ngOnInit() {

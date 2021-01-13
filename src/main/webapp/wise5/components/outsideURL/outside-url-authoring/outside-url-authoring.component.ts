@@ -1,6 +1,7 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { ProjectAssetService } from '../../../../site/src/app/services/projectAssetService';
 import { ComponentAuthoring } from '../../../authoringTool/components/component-authoring.component';
 import { ConfigService } from '../../../services/configService';
 import { NodeService } from '../../../services/nodeService';
@@ -38,9 +39,9 @@ export class OutsideUrlAuthoring extends ComponentAuthoring {
   ];
   searchText: string;
   selectedSubjects: any[];
-  urlChanged: Subject<string> = new Subject<string>();
-  widthChanged: Subject<string> = new Subject<string>();
-  heightChanged: Subject<string> = new Subject<string>();
+  urlChange: Subject<string> = new Subject<string>();
+  widthChange: Subject<string> = new Subject<string>();
+  heightChange: Subject<string> = new Subject<string>();
   urlChangedSubscription: Subscription;
   widthChangedSubscription: Subscription;
   heightChangedSubscription: Subscription;
@@ -49,9 +50,10 @@ export class OutsideUrlAuthoring extends ComponentAuthoring {
     protected ConfigService: ConfigService,
     protected NodeService: NodeService,
     protected OutsideURLService: OutsideURLService,
+    protected ProjectAssetService: ProjectAssetService,
     protected ProjectService: TeacherProjectService
   ) {
-    super(ConfigService, NodeService, ProjectService);
+    super(ConfigService, NodeService, ProjectAssetService, ProjectService);
   }
 
   ngOnInit() {
@@ -66,19 +68,19 @@ export class OutsideUrlAuthoring extends ComponentAuthoring {
       );
       this.filteredOpenEducationalResources = this.allOpenEducationalResources;
     });
-    this.urlChangedSubscription = this.urlChanged
+    this.urlChangedSubscription = this.urlChange
       .pipe(debounceTime(1000), distinctUntilChanged())
       .subscribe((url: string) => {
         this.authoringComponentContent.url = url;
         this.authoringComponentContent.info = null;
         this.componentChanged();
       });
-    this.widthChangedSubscription = this.widthChanged
+    this.widthChangedSubscription = this.widthChange
       .pipe(debounceTime(1000), distinctUntilChanged())
       .subscribe(() => {
         this.componentChanged();
       });
-    this.heightChangedSubscription = this.heightChanged
+    this.heightChangedSubscription = this.heightChange
       .pipe(debounceTime(1000), distinctUntilChanged())
       .subscribe(() => {
         this.componentChanged();

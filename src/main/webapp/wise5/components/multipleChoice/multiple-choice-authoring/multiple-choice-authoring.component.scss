@@ -1,0 +1,53 @@
+.prompt-input-container {
+  width: 100%;
+}
+
+.selection-type-group {
+  display: block !important;
+}
+
+.mat-radio-label {
+  display: inline-flex !important;
+}
+
+.mat-radio-button {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.add-choice-button {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.choice-container {
+  border: 2px solid #dddddd;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  padding: 20px 20px 10px 20px;
+}
+
+.no-choices-message-container {
+  margin-bottom: 20px;
+}
+
+.choice-authoring-button {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.mat-checkbox {
+  margin-left: 5px;
+}
+
+.mat-checkbox-layout {
+  display: inline-flex !important;
+}
+
+.choice-text-input-container {
+  width: 70%;
+}
+
+.choice-feedback-input-container {
+  width: 70%;
+}
