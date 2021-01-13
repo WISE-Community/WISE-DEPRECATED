@@ -1,12 +1,18 @@
 .student-select {
-    padding-top: 0;
-    padding-bottom: 0;
+  padding-top: 0;
+  padding-bottom: 0;
 }
 
 .workgroup-progress {
-    margin-bottom: 8px;
+  margin-bottom: 8px;
 
-    @media (min-width: $layout-breakpoint-sm) {
-        margin-bottom: 0;
-    }
+  @media (min-width: $layout-breakpoint-sm) {
+    margin-bottom: 0;
+  }
+}
+
+alert-status-corner {
+  position: absolute;
+  top: 0;
+  right: 0;
 }

@@ -1,0 +1,34 @@
+@import '~style/abstracts/variables', '~style/themes/default';
+
+$warn: map-get($default-colors, warn);
+$secondary-text: map-get($default-colors, secondary-text);
+  
+.corner {
+  border-top-right-radius: $card-border-radius;
+  overflow: hidden;
+}
+
+.corner-content {
+  width: 0;
+  height: 0;
+  border-top-color: $secondary-text;
+  border-bottom-color: $secondary-text;
+  color: $secondary-text;
+
+  border-top: 36px solid;
+  border-left: 36px solid transparent;
+
+  &:after {
+    content: '!';
+    color: #ffffff;
+    top: 2px;
+    right: 10px;
+    position: absolute;
+    font-weight: 700;
+  }
+}
+
+.corner-warn {
+  border-top-color: $warn;
+  border-bottom-color: $warn;
+}
