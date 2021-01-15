@@ -1,15 +1,18 @@
 'use strict';
 
 import * as angular from 'angular';
-import { downgradeInjectable } from '@angular/upgrade/static';
+import { downgradeComponent, downgradeInjectable } from '@angular/upgrade/static';
 import { ConceptMapService } from './conceptMapService';
-import ConceptMapAuthoring from './conceptMapAuthoring';
 import { EditConceptMapAdvancedComponent } from './edit-concept-map-advanced/edit-concept-map-advanced.component';
+import { ConceptMapAuthoring } from './concept-map-authoring/concept-map-authoring.component';
 
 const conceptMapAuthoringComponentModule = angular
   .module('conceptMapAuthoringComponentModule', ['pascalprecht.translate'])
   .service('ConceptMapService', downgradeInjectable(ConceptMapService))
-  .component('conceptMapAuthoring', ConceptMapAuthoring)
+  .directive(
+    'conceptMapAuthoring',
+    downgradeComponent({ component: ConceptMapAuthoring }) as angular.IDirectiveFactory
+  )
   .component('editConceptMapAdvanced', EditConceptMapAdvancedComponent)
   .config([
     '$translatePartialLoaderProvider',

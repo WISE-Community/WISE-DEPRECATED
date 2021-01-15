@@ -48,6 +48,7 @@ import { OpenResponseAuthoring } from '../../../wise5/components/openResponse/op
 import { HtmlAuthoring } from '../../../wise5/components/html/html-authoring/html-authoring.component';
 import { OutsideUrlAuthoring } from '../../../wise5/components/outsideURL/outside-url-authoring/outside-url-authoring.component';
 import { MultipleChoiceAuthoring } from '../../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component';
+import { ConceptMapAuthoring } from '../../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component';
 
 @NgModule({
   declarations: [
@@ -59,6 +60,7 @@ import { MultipleChoiceAuthoring } from '../../../wise5/components/multipleChoic
     ChooseNewComponentLocation,
     ComponentNewWorkBadgeComponent,
     ComponentSelectComponent,
+    ConceptMapAuthoring,
     EditComponentRubricComponent,
     EditComponentJsonComponent,
     EditComponentMaxScoreComponent,

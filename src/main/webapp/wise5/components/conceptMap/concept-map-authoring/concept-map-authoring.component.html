@@ -1,0 +1,249 @@
+<mat-form-field class="prompt-input-container">
+  <mat-label i18n>Prompt</mat-label>
+  <textarea
+      matInput
+      [ngModel]="authoringComponentContent.prompt"
+      (ngModelChange)="promptChanged($event)"
+      placeholder="Enter Prompt Here"
+      i18n-placeholder
+      cdkTextareaAutosize>
+  </textarea>
+</mat-form-field>
+<div fxLayout="row" fxLayoutAlign="start center">
+  <mat-form-field class="background-input-container">
+    <mat-label i18n>Background Image (Optional)</mat-label>
+    <input matInput
+        [(ngModel)]="authoringComponentContent.background"
+        (ngModelChange)="inputChange.next($event)" />
+  </mat-form-field>
+  <button mat-raised-button
+      color="primary"
+      class="authoring-button"
+      (click)="chooseBackgroundImage()"
+      matTooltip="Choose an Image"
+      matTooltipPosition="above"
+      i18n-matTooltip>
+    <mat-icon>insert_photo</mat-icon>
+  </button>
+</div>
+<div>
+  <mat-checkbox
+      color="primary"
+      [(ngModel)]="authoringComponentContent.stretchBackground"
+      (ngModelChange)="componentChanged()"
+      i18n>
+    Stretch Background
+  </mat-checkbox>
+</div>
+<div>
+  <mat-form-field class="canvas-dimension-input-container">
+    <mat-label i18n>Canvas Width (Optional)</mat-label>
+    <input matInput
+        [(ngModel)]="authoringComponentContent.width"
+        (ngModelChange)="inputChange.next($event)"
+        type="number"/>
+  </mat-form-field>
+  <mat-form-field class="canvas-dimension-input-container">
+    <mat-label i18n>Canvas Height (Optional)</mat-label>
+    <input matInput
+        [(ngModel)]="authoringComponentContent.height"
+        (ngModelChange)="inputChange.next($event)"
+        type="number"/>
+  </mat-form-field>
+</div>
+<div class="show-node-labels-checkbox-container">
+  <mat-checkbox
+      color="primary"
+      [(ngModel)]="authoringComponentContent.showNodeLabels"
+      (ngModelChange)="componentChanged()"
+      i18n>
+    Show Node Labels
+  </mat-checkbox>
+</div>
+<div class="add-nodes-container">
+  <span i18n>Nodes</span>
+  <button mat-raised-button
+      color="primary"
+      class="authoring-button"
+      (click)="addNode()"
+      matTooltip="Add Node"
+      matTooltipPosition="above"
+      i18n-matTooltip
+      aria-label="Add Node"
+      i18n-aria-label>
+    <mat-icon>add</mat-icon>
+  </button>
+</div>
+<div *ngIf="authoringComponentContent.nodes == null || authoringComponentContent.nodes.length == 0">
+  <p i18n>There are no nodes. Click the "Add Node" button to add a node.</p>
+</div>
+<div *ngFor="let node of authoringComponentContent.nodes; index as nodeIndex; first as isFirst; last as isLast"
+    class="node-row"
+    fxLayout="row"
+    fxLayoutAlign="start center">
+  <mat-form-field class="node-label-container">
+    <mat-label i18n>Label</mat-label>
+    <input matInput
+        [(ngModel)]="node.label"
+        (ngModelChange)="inputChange.next($event)"/>
+  </mat-form-field>
+  <mat-form-field class="node-file-name-container">
+    <mat-label i18n>File Name</mat-label>
+    <input matInput
+        [(ngModel)]="node.fileName"
+        (ngModelChange)="inputChange.next($event)"/>
+  </mat-form-field>
+  <button mat-raised-button
+      color="primary"
+      class="authoring-button"
+      (click)="chooseNodeImage(node.id)"
+      matTooltip="Choose an Image"
+      matTooltipPosition="above"
+      i18n-matTooltip
+      aria-label="Choose an Image"
+      i18n-aria-label>
+    <mat-icon>insert_photo</mat-icon>
+  </button>
+  <mat-form-field class="node-dimension-container">
+    <mat-label i18n>Width</mat-label>
+    <input matInput
+        [(ngModel)]="node.width"
+        (ngModelChange)="inputChange.next($event)"
+        type="number"/>
+  </mat-form-field>
+  <mat-form-field class="node-dimension-container">
+    <mat-label i18n>Height</mat-label>
+    <input matInput
+        [(ngModel)]="node.height"
+        (ngModelChange)="inputChange.next($event)"
+        type="number"/>
+  </mat-form-field>
+  <button mat-raised-button
+      color="primary"
+      class="node-authoring-button"
+      [disabled]="isFirst"
+      (click)="moveNodeUpButtonClicked(nodeIndex)"
+      matTooltip="Move Up"
+      matTooltipPosition="above"
+      i18n-matTooltip
+      aria-label="Move Up"
+      i18n-aria-label>
+    <mat-icon>arrow_upward</mat-icon>
+  </button>
+  <button mat-raised-button
+      color="primary"
+      class="node-authoring-button"
+      [disabled]="isLast"
+      (click)="moveNodeDownButtonClicked(nodeIndex)"
+      matTooltip="Move Down"
+      matTooltipPosition="above"
+      i18n-matTooltip
+      aria-label="Move Down"
+      i18n-aria-label>
+    <mat-icon>arrow_downward</mat-icon>
+  </button>
+  <button mat-raised-button
+      color="primary"
+      class="node-authoring-button"
+      (click)="nodeDeleteButtonClicked(nodeIndex)"
+      matTooltip="Delete"
+      matTooltipPosition="above"
+      i18n-matTooltip
+      aria-label="Delete"
+      i18n-aria-label>
+    <mat-icon>delete</mat-icon>
+  </button>
+</div>
+<div class="add-nodes-container">
+  <span i18n>Links</span>
+  <button mat-raised-button
+      color="primary"
+      class="authoring-button"
+      (click)="addLink()"
+      matTooltip="Add Link"
+      matTooltipPosition="above"
+      i18n-matTooltip
+      aria-label="Add Link"
+      i18n-aria-label>
+    <mat-icon>add</mat-icon>
+  </button>
+</div>
+<div *ngIf="authoringComponentContent.links == null || authoringComponentContent.links.length == 0">
+  <p i18n>There are no links. Click the "Add Link" button to add a link.</p>
+</div>
+<div *ngFor="let link of authoringComponentContent.links; index as linkIndex; first as isFirst; last as isLast"
+    class="link-row"
+    fxLayout="row"
+    fxLayoutAlign="start center">
+  <mat-form-field class="link-label-container">
+    <mat-label i18n>Label</mat-label>
+    <input matInput
+        [(ngModel)]="link.label"
+        (ngModelChange)="inputChange.next($event)"/>
+  </mat-form-field>
+  <mat-form-field class="link-color-container">
+    <mat-label i18n>Color</mat-label>
+    <input matInput
+        [(ngModel)]="link.color"
+        (ngModelChange)="inputChange.next($event)"/>
+  </mat-form-field>
+  <button mat-raised-button
+      color="primary"
+      class="authoring-button"
+      [disabled]="isFirst"
+      (click)="moveLinkUpButtonClicked(linkIndex)"
+      matTooltip="Move Up"
+      matTooltipPosition="above"
+      i18n-matTooltip
+      aria-label="Move Up"
+      i18n-aria-label>
+    <mat-icon>arrow_upward</mat-icon>
+  </button>
+  <button mat-raised-button
+      color="primary"
+      class="authoring-button"
+      [disabled]="isLast"
+      (click)="moveLinkDownButtonClicked(linkIndex)"
+      matTooltip="Move Down"
+      matTooltipPosition="above"
+      i18n-matTooltip
+      aria-label="Move Down"
+      i18n-aria-label>
+    <mat-icon>arrow_downward</mat-icon>
+  </button>
+  <button mat-raised-button
+      color="primary"
+      class="authoring-button"
+      (click)="linkDeleteButtonClicked(linkIndex)"
+      matTooltip="Delete"
+      matTooltipPosition="above"
+      i18n-matTooltip
+      aria-label="Delete"
+      i18n-aria-label>
+    <mat-icon>delete</mat-icon>
+  </button>
+</div>
+<div class="starter-concept-map-buttons-container">
+  <button mat-raised-button
+      color="primary"
+      class="authoring-button"
+      (click)="saveStarterConceptMap()"
+      matTooltip="Save Starter Concept Map"
+      matTooltipPosition="above"
+      i18n-matTooltip
+      aria-label="Save Starter Concept Map"
+      i18n-aria-label>
+    <mat-icon>create</mat-icon>
+  </button>
+  <button mat-raised-button
+      color="primary"
+      class="authoring-button"
+      (click)="deleteStarterConceptMap()"
+      matTooltip="Delete Starter Concept Map"
+      matTooltipPosition="above"
+      i18n-matTooltip
+      aria-label="Delete Starter Concept Map"
+      i18n-aria-label>
+    <mat-icon>delete_sweep</mat-icon>
+  </button>
+</div>
