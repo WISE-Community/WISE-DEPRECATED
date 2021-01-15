@@ -1,118 +1,116 @@
-<mat-form-field class='prompt-input-container'>
+<mat-form-field>
   <mat-label i18n>Prompt</mat-label>
-  <textarea
-      matInput
-      [ngModel]='authoringComponentContent.prompt'
-      (ngModelChange)='promptChanged($event)'
-      placeholder='Enter Prompt Here'
+  <textarea matInput
+      [ngModel]="authoringComponentContent.prompt"
+      (ngModelChange)="promptChanged($event)"
+      placeholder="Enter Prompt Here"
       i18n-placeholder
       cdkTextareaAutosize>
   </textarea>
 </mat-form-field>
-<p i18n>Selection Type:</p>
-<mat-radio-group
-    class='selection-type-group'
-    [(ngModel)]='authoringComponentContent.choiceType'
-    (ngModelChange)='componentChanged()'>
-  <mat-radio-button class='choice-radio-button' value='radio' i18n>
-    Single Answer
-  </mat-radio-button>
-  <br/>
-  <mat-radio-button class='choice-radio-button' value='checkbox' i18n>
-    Multiple Answer
-  </mat-radio-button>
-</mat-radio-group>
+<p>
+  <label id="selection-type-label">Selection Type:</label>
+  <mat-radio-group aria-labelledby="selection-type-label"
+      [(ngModel)]="authoringComponentContent.choiceType"
+      (ngModelChange)="componentChanged()">
+    <mat-radio-button class="choice-radio-button" value="radio" i18n>
+      Single Answer
+    </mat-radio-button>
+    <mat-radio-button class="choice-radio-button" value="checkbox" i18n>
+      Multiple Answer
+    </mat-radio-button>
+  </mat-radio-group>
+</p>
 <button mat-raised-button
-    color='primary'
-    class='add-choice-button'
-    (click)='addChoice()'
-    matTooltip='Add Choice'
-    matTooltipDirection='above'
+    color="primary"
+    class="add-choice-button"
+    (click)="addChoice()"
     i18nMatTooltip
-    aria-label='Add'
-    i18n-aria-label>
+    matTooltip="Add Choice"
+    matTooltipDirection="above"
+    i18n-aria-label
+    aria-label="Add">
   <mat-icon>add</mat-icon>
 </button>
-<div *ngIf='authoringComponentContent.choices == null || authoringComponentContent.choices.length === 0'
-    class='no-choices-message-container'
+<div *ngIf="authoringComponentContent.choices == null || authoringComponentContent.choices.length === 0"
+    class="info-block"
     i18n>
   There are no choices. Click the "Add Choice" button to add a choice.
 </div>
-<div *ngFor='let choice of authoringComponentContent.choices; first as isFirst; last as isLast'
-    class='choice-container'>
-  <div fxLayout='row wrap' fxLayoutAlign='start center'>
-    <mat-form-field class='choice-text-input-container'>
+<div *ngFor="let choice of authoringComponentContent.choices; first as isFirst; last as isLast"
+    class="choice-container">
+  <div fxLayout="row wrap" fxLayoutAlign="start center">
+    <mat-form-field class="choice-text-input-container">
       <mat-label i18n>Choice Text</mat-label>
       <input matInput
-          [(ngModel)]='choice.text'
-          (ngModelChange)='choiceTextChange.next($event)'
-          placeholder='Type text or choose an image'
-          i18n-placeholder/>
+          [(ngModel)]="choice.text"
+          (ngModelChange)="choiceTextChange.next($event)"
+          i18n-placeholder
+          placeholder="Type text or choose an image" />
     </mat-form-field>
     <button mat-raised-button
-        color='primary'
-        class='choice-authoring-button'
-        (click)='chooseChoiceAsset(choice)'
-        matTooltip='Choose an Image'
-        matTooltipDirection='above'
+        color="primary"
+        class="choice-authoring-button"
+        (click)="chooseChoiceAsset(choice)"
         i18n-matTooltip
-        aria-label='Image'
-        i18n-aria-label>
+        matTooltip="Choose an Image"
+        matTooltipDirection="above"
+        i18n-aria-label
+        aria-label="Image">
       <mat-icon>insert_photo</mat-icon>
     </button>
     <div>
-      <mat-checkbox
-          [(ngModel)]='choice.isCorrect'
-          (change)='feedbackChanged()'
-          aria-label='Is Correct'
+      <mat-checkbox [(ngModel)]="choice.isCorrect"
+          (change)="feedbackChanged()"
           i18n-aria-label
+          aria-label="Is Correct"
           i18n>
         Is Correct
       </mat-checkbox>
     </div>
   </div>
-  <div fxLayout='row wrap' fxLayoutAlign='start center'>
-    <mat-form-field class='choice-feedback-input-container'>
+  <div fxLayout="row wrap" fxLayoutAlign="start center">
+    <mat-form-field class="choice-feedback-input-container">
       <mat-label i18n>Feeback</mat-label>
       <input matInput
-          [(ngModel)]='choice.feedback'
-          (ngModelChange)='feedbackTextChange.next($event)'
-          placeholder='Optional'
-          i18n-placeholder/>
+          [(ngModel)]="choice.feedback"
+          (ngModelChange)="feedbackTextChange.next($event)"
+          i18n-placeholder
+          placeholder="Optional" />
     </mat-form-field>
     <button mat-raised-button
-        color='primary'
-        class='choice-authoring-button'
-        [disabled]='isFirst'
-        (click)='moveChoiceUp(choice.id)'
-        matTooltip='Move Up'
-        matTooltipDirection='above'
+        color="primary"
+        class="choice-authoring-button"
+        [disabled]="isFirst"
+        (click)="moveChoiceUp(choice.id)"
         i18n-matTooltip
-        aria-label='Up'
-        i18n-aria-label>
+        matTooltip="Move Up"
+        matTooltipDirection="above"
+        i18n-aria-label
+        aria-label="Up">
       <mat-icon>arrow_upward</mat-icon>
     </button>
     <button mat-raised-button
-        color='primary'
-        class='choice-authoring-button'
-        [disabled]='isLast'
-        (click)='moveChoiceDown(choice.id)'
-        matTooltip='Move Down'
-        matTooltipDirection='above'
+        color="primary"
+        class="choice-authoring-button"
+        [disabled]="isLast"
+        (click)="moveChoiceDown(choice.id)"
         i18n-matTooltip
-        aria-label='Down'
-        i18n-aria-label>
+        matTooltip="Move Down"
+        matTooltipDirection="above"
+        i18n-aria-label
+        aria-label="Down">
       <mat-icon>arrow_downward</mat-icon>
     </button>
     <button mat-raised-button
-        color='primary'
-        class='choice-authoring-button'
-        (click)='deleteChoice(choice.id)'
-        matTooltip='Delete'
-        matTooltipDirection='above'
+        color="primary"
+        class="choice-authoring-button"
+        (click)="deleteChoice(choice.id)"
         i18n-matTooltip
-        aria-label='Delete'
-        i18n-aria-label>
+        matTooltip="Delete"
+        matTooltipDirection="above"
+        i18n-aria-label
+        aria-label="Delete">
       <mat-icon>delete</mat-icon>
     </button>
   </div>

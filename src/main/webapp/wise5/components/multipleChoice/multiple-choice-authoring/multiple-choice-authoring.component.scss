@@ -1,18 +1,20 @@
-.prompt-input-container {
+@import '~style/abstracts/variables';
+
+.mat-form-field {
   width: 100%;
 }
 
-.selection-type-group {
-  display: block !important;
+.mat-radio-group {
+  display: block;
 }
 
-.mat-radio-label {
-  display: inline-flex !important;
+label.mat-radio-label {
+  display: inline-flex;
 }
 
-.mat-radio-button {
-  margin-top: 5px;
-  margin-bottom: 5px;
+.mat-radio-button.choice-radio-button {
+  display: block;
+  margin-top: 10px;
 }
 
 .add-choice-button {
@@ -22,13 +24,15 @@
 
 .choice-container {
   border: 2px solid #dddddd;
-  border-radius: 5px;
+  border-radius: $card-border-radius;
   margin-bottom: 20px;
   padding: 20px 20px 10px 20px;
 }
 
-.no-choices-message-container {
+.info-block {
   margin-bottom: 20px;
+  text-align: center;
+  font-weight: 500;
 }
 
 .choice-authoring-button {
@@ -40,14 +44,6 @@
   margin-left: 5px;
 }
 
-.mat-checkbox-layout {
-  display: inline-flex !important;
-}
-
-.choice-text-input-container {
-  width: 70%;
-}
-
-.choice-feedback-input-container {
+.choice-text-input-container, .choice-feedback-input-container {
   width: 70%;
 }
