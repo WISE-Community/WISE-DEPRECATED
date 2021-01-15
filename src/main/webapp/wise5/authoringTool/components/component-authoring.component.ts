@@ -1,6 +1,7 @@
 import { Directive, Input } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { ProjectAssetService } from '../../../site/src/app/services/projectAssetService';
 import { ConfigService } from '../../services/configService';
 import { NodeService } from '../../services/nodeService';
 import { TeacherProjectService } from '../../services/teacherProjectService';
@@ -31,6 +32,7 @@ export abstract class ComponentAuthoring {
   constructor(
     protected ConfigService: ConfigService,
     protected NodeService: NodeService,
+    protected ProjectAssetService: ProjectAssetService,
     protected ProjectService: TeacherProjectService
   ) {
     this.promptChange
@@ -85,4 +87,27 @@ export abstract class ComponentAuthoring {
   }
 
   saveStarterState(starterState: any): void {}
+
+  setShowSubmitButtonValue(show: boolean): void {
+    if (show == null || show == false) {
+      this.authoringComponentContent.showSaveButton = false;
+      this.authoringComponentContent.showSubmitButton = false;
+    } else {
+      this.authoringComponentContent.showSaveButton = true;
+      this.authoringComponentContent.showSubmitButton = true;
+    }
+    this.NodeService.broadcastComponentShowSubmitButtonValueChanged({
+      nodeId: this.nodeId,
+      componentId: this.componentId,
+      showSubmitButton: show
+    });
+  }
+
+  openAssetChooser(params: any): any {
+    return this.ProjectAssetService.openAssetChooser(params).then((data: any) => {
+      return this.assetSelected(data);
+    });
+  }
+
+  assetSelected({ nodeId, componentId, assetItem, target }): void {}
 }

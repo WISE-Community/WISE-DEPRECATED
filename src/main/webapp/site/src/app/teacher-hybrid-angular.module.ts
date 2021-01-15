@@ -47,6 +47,7 @@ import { EditOutsideUrlAdvancedComponent } from '../../../wise5/components/outsi
 import { OpenResponseAuthoring } from '../../../wise5/components/openResponse/open-response-authoring/open-response-authoring.component';
 import { HtmlAuthoring } from '../../../wise5/components/html/html-authoring/html-authoring.component';
 import { OutsideUrlAuthoring } from '../../../wise5/components/outsideURL/outside-url-authoring/outside-url-authoring.component';
+import { MultipleChoiceAuthoring } from '../../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component';
 
 @NgModule({
   declarations: [
@@ -69,6 +70,7 @@ import { OutsideUrlAuthoring } from '../../../wise5/components/outsideURL/outsid
     ManageStudentsComponent,
     MilestonesComponent,
     MilestoneReportDataComponent,
+    MultipleChoiceAuthoring,
     NavItemProgressComponent,
     NodeAdvancedGeneralAuthoringComponent,
     NodeAdvancedJsonAuthoringComponent,

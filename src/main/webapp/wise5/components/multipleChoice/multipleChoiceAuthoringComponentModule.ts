@@ -1,15 +1,18 @@
 'use strict';
 
 import * as angular from 'angular';
-import { downgradeInjectable } from '@angular/upgrade/static';
+import { downgradeComponent, downgradeInjectable } from '@angular/upgrade/static';
 import { MultipleChoiceService } from './multipleChoiceService';
-import MultipleChoiceAuthoring from './multipleChoiceAuthoring';
 import { EditMultipleChoiceAdvancedComponent } from './edit-multiple-choice-advanced/edit-multiple-choice-advanced.component';
+import { MultipleChoiceAuthoring } from './multiple-choice-authoring/multiple-choice-authoring.component';
 
 const multipleChoiceAuthoringComponentModule = angular
   .module('multipleChoiceAuthoringComponentModule', ['pascalprecht.translate'])
   .service('MultipleChoiceService', downgradeInjectable(MultipleChoiceService))
-  .component('multipleChoiceAuthoring', MultipleChoiceAuthoring)
+  .directive(
+    'multipleChoiceAuthoring',
+    downgradeComponent({ component: MultipleChoiceAuthoring }) as angular.IDirectiveFactory
+  )
   .component('editMultipleChoiceAdvanced', EditMultipleChoiceAdvancedComponent)
   .config([
     '$translatePartialLoaderProvider',
