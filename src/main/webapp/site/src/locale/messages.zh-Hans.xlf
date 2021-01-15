@@ -1364,6 +1364,10 @@
           <context context-type="sourcefile">app/student/add-project-dialog/add-project-dialog.component.html</context>
           <context context-type="linenumber">30</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
+          <context context-type="linenumber">32</context>
+        </context-group>
         <target state="translated">添加</target>
       </trans-unit>
       <trans-unit datatype="html" id="c04678929731aad2662284b7ce56c5c75b410df5">
@@ -6748,6 +6752,10 @@
           <context context-type="sourcefile">app/authoring-tool/edit-component-tags/edit-component-tags.component.html</context>
           <context context-type="linenumber">22</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
+          <context context-type="linenumber">87</context>
+        </context-group>
         <target state="needs-translation">Move Up</target>
       </trans-unit>
       <trans-unit datatype="html" id="3a12bd96093f8972cbd9d52a68fb9178aaee4388">
@@ -6756,6 +6764,10 @@
           <context context-type="sourcefile">app/authoring-tool/edit-component-tags/edit-component-tags.component.html</context>
           <context context-type="linenumber">30</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
+          <context context-type="linenumber">99</context>
+        </context-group>
         <target state="needs-translation">Move Down</target>
       </trans-unit>
       <trans-unit datatype="html" id="826b25211922a1b46436589233cb6f1a163d89b7">
@@ -6763,6 +6775,14 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/authoring-tool/edit-component-tags/edit-component-tags.component.html</context>
           <context context-type="linenumber">38</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
+          <context context-type="linenumber">110</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
+          <context context-type="linenumber">113</context>
         </context-group>
         <target state="needs-translation">Delete</target>
       </trans-unit>
@@ -6781,6 +6801,134 @@
           <context context-type="linenumber">20</context>
         </context-group>
         <target state="needs-translation">~ Report Available ~</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="6bc7f2c14cb3141e690735b278591defe07c68fb">
+        <source>Prompt</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/openResponse/open-response-authoring/open-response-authoring.component.html</context>
+          <context context-type="linenumber">11</context>
+        </context-group>
+        <target state="needs-translation">Prompt</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="495b53dee6164e1c3ec7d95ee3527bb23b62a8c2">
+        <source>Enter Prompt Here</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/openResponse/open-response-authoring/open-response-authoring.component.html</context>
+          <context context-type="linenumber">15</context>
+        </context-group>
+        <target state="needs-translation">Enter Prompt Here</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="5ed696b8da9ac51f371a34f2a89a753b9e18e3c0">
+        <source> Single Answer </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
+          <context context-type="linenumber">16</context>
+        </context-group>
+        <target state="needs-translation"> Single Answer </target>
+      </trans-unit>
+      <trans-unit datatype="html" id="89573ba7e055d0f1cf66d9ac94bf5f47a7ada4b2">
+        <source> Multiple Answer </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
+          <context context-type="linenumber">19</context>
+        </context-group>
+        <target state="needs-translation"> Multiple Answer </target>
+      </trans-unit>
+      <trans-unit datatype="html" id="51e09577ccc3a404bf3aa3bf88c6d5398135803b">
+        <source> There are no choices. Click the "Add Choice" button to add a choice. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
+          <context context-type="linenumber">37</context>
+        </context-group>
+        <target state="needs-translation"> There are no choices. Click the "Add Choice" button to add a choice. </target>
+      </trans-unit>
+      <trans-unit datatype="html" id="3f2b2b4a6ec318a31f7f5f9b526480846a27547a">
+        <source>Choice Text</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
+          <context context-type="linenumber">44</context>
+        </context-group>
+        <target state="needs-translation">Choice Text</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="6b4a8fd4b52fd563b4963ab19f34658e069382d7">
+        <source>Type text or choose an image</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
+          <context context-type="linenumber">49</context>
+        </context-group>
+        <target state="needs-translation">Type text or choose an image</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="ac7627de4d6171adbfba4d934025c8c39debc469">
+        <source>Choose an Image</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+        <target state="needs-translation">Choose an Image</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="a5f9ba9bb9faa8284bcadb1cdbc6aaf969e9c4bb">
+        <source>Image</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
+          <context context-type="linenumber">59</context>
+        </context-group>
+        <target state="needs-translation">Image</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="946344604c321ff0c86a78f6e047f9142b309dd1">
+        <source> Is Correct </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
+          <context context-type="linenumber">67</context>
+        </context-group>
+        <target state="needs-translation"> Is Correct </target>
+      </trans-unit>
+      <trans-unit datatype="html" id="4488359b3a14b99b193ac292e1f16ee47766ab8b">
+        <source>Is Correct</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
+          <context context-type="linenumber">66</context>
+        </context-group>
+        <target state="needs-translation">Is Correct</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="e29c5e189e57e8d8dc3f52df4abe7bce4bfca53c">
+        <source>Feeback</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
+          <context context-type="linenumber">74</context>
+        </context-group>
+        <target state="needs-translation">Feeback</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="5317cde482fdb766008de3e1ae09cf0610366abc">
+        <source>Optional</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
+          <context context-type="linenumber">79</context>
+        </context-group>
+        <target state="needs-translation">Optional</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="b7cd4598b947ef99d3603c8a026a57b821786785">
+        <source>Up</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
+          <context context-type="linenumber">90</context>
+        </context-group>
+        <target state="needs-translation">Up</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="c52c8626a9b546aa3859aa0a2e58221e27285cee">
+        <source>Down</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
+          <context context-type="linenumber">102</context>
+        </context-group>
+        <target state="needs-translation">Down</target>
       </trans-unit>
       <trans-unit datatype="html" id="6817513ddcee06a7cb2a7b2708e5616b861db81c">
         <source><x equiv-text="{{nodeCompletion}}" id="INTERPOLATION"/>% completed (All periods)</source>
@@ -6829,22 +6977,6 @@
           <context context-type="linenumber">7</context>
         </context-group>
         <target state="needs-translation">If you want to use rich visuals (images, videos, links, bullets, etc.) in your prompt, use an HTML component above this</target>
-      </trans-unit>
-      <trans-unit datatype="html" id="6bc7f2c14cb3141e690735b278591defe07c68fb">
-        <source>Prompt</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/components/openResponse/open-response-authoring/open-response-authoring.component.html</context>
-          <context context-type="linenumber">11</context>
-        </context-group>
-        <target state="needs-translation">Prompt</target>
-      </trans-unit>
-      <trans-unit datatype="html" id="495b53dee6164e1c3ec7d95ee3527bb23b62a8c2">
-        <source>Enter Prompt Here</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/components/openResponse/open-response-authoring/open-response-authoring.component.html</context>
-          <context context-type="linenumber">15</context>
-        </context-group>
-        <target state="needs-translation">Enter Prompt Here</target>
       </trans-unit>
       <trans-unit datatype="html" id="2e0e07912515c250498d28841610709033392606">
         <source> Show Open Education Resources </source>
