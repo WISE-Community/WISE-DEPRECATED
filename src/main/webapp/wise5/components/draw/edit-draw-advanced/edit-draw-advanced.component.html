@@ -106,11 +106,11 @@
             </md-tooltip>
           </md-button>
         </md-input-container>
-        <div ng-if='$ctrl.getConnectedComponentType(connectedComponent) == "ConceptMap" || $ctrl.getConnectedComponentType(connectedComponent) == "Embedded" || $ctrl.getConnectedComponentType(connectedComponent) == "Graph" || drawController.getConnectedComponentType(connectedComponent) == "Label" || drawController.getConnectedComponentType(connectedComponent) == "Table"' flex>
+        <div ng-if='$ctrl.getConnectedComponentType(connectedComponent) == "ConceptMap" || $ctrl.getConnectedComponentType(connectedComponent) == "Embedded" || $ctrl.getConnectedComponentType(connectedComponent) == "Graph" || $ctrl.getConnectedComponentType(connectedComponent) == "Label" || $ctrl.getConnectedComponentType(connectedComponent) == "Table"' flex>
           <md-input-container style='margin-right: 20;'>
             <md-checkbox class='md-primary'
                          ng-model='connectedComponent.importWorkAsBackground'
-                         ng-change='drawController.importWorkAsBackgroundClicked(connectedComponent)'
+                         ng-change='$ctrl.importWorkAsBackgroundClicked(connectedComponent)'
                          ng-disabled='true'>
               {{ ::'importWorkAsBackground' | translate }}
             </md-checkbox>
@@ -119,5 +119,5 @@
       </div>
     </div>
   </div>
-  <edit-component-json [node-id]="drawController.nodeId" [component-id]="drawController.componentId"></edit-component-json>
+  <edit-component-json [node-id]="$ctrl.nodeId" [component-id]="$ctrl.componentId"></edit-component-json>
 </div>
