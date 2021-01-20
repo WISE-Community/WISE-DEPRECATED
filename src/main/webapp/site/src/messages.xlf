@@ -6006,7 +6006,7 @@
         <source>Prompt</source>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component.html</context>
-          <context context-type="linenumber">2</context>
+          <context context-type="linenumber">3</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
@@ -6021,7 +6021,7 @@
         <source>Enter Prompt Here</source>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component.html</context>
-          <context context-type="linenumber">6</context>
+          <context context-type="linenumber">7</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
@@ -6036,29 +6036,29 @@
         <source>Background Image (Optional)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component.html</context>
-          <context context-type="linenumber">13</context>
+          <context context-type="linenumber">15</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="ac7627de4d6171adbfba4d934025c8c39debc469">
         <source>Choose an Image</source>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component.html</context>
-          <context context-type="linenumber">21</context>
+          <context context-type="linenumber">23</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component.html</context>
-          <context context-type="linenumber">96</context>
+          <context context-type="linenumber">95</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component.html</context>
-          <context context-type="linenumber">99</context>
+          <context context-type="linenumber">98</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
           <context context-type="linenumber">56</context>
         </context-group>
       </trans-unit>
-      <trans-unit datatype="html" id="6e1f7bc27ba16bcfd1aff4344767e48b7ae1ab03">
+      <trans-unit datatype="html" id="d63d6215608fa83637b7cfc6dc6a4d92b6ad11ef">
         <source> Stretch Background </source>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component.html</context>
@@ -6079,87 +6079,80 @@
           <context context-type="linenumber">45</context>
         </context-group>
       </trans-unit>
-      <trans-unit datatype="html" id="377bbe71522993c698127209227d84637bae65e8">
-        <source> Show Node Labels </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component.html</context>
-          <context context-type="linenumber">57</context>
-        </context-group>
-      </trans-unit>
       <trans-unit datatype="html" id="6e2329529b1953198c7dfa0edb260554310bc636">
         <source>Nodes</source>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component.html</context>
-          <context context-type="linenumber">62</context>
+          <context context-type="linenumber">54</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="a2abc798988051264ce46963e3ec75953d4a1216">
         <source>Add Node</source>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component.html</context>
-          <context context-type="linenumber">66</context>
+          <context context-type="linenumber">58</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component.html</context>
-          <context context-type="linenumber">69</context>
+          <context context-type="linenumber">61</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="ae13e4d6aa03b7492e7e3f106053af91587e1594">
         <source>There are no nodes. Click the "Add Node" button to add a node.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component.html</context>
+          <context context-type="linenumber">67</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="0738afe18a258dbcc9031a6ca2bb42747696bd46">
+        <source>Node Label</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component.html</context>
           <context context-type="linenumber">75</context>
         </context-group>
       </trans-unit>
-      <trans-unit datatype="html" id="863226cffd5b66a6fee9810a9282a5006d6ef576">
-        <source>Label</source>
+      <trans-unit datatype="html" id="a5f9ba9bb9faa8284bcadb1cdbc6aaf969e9c4bb">
+        <source>Image</source>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component.html</context>
-          <context context-type="linenumber">82</context>
+          <context context-type="linenumber">87</context>
         </context-group>
         <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component.html</context>
-          <context context-type="linenumber">171</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="8ae7f24cac7975fccced98f430d4e406427999c6">
-        <source>File Name</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component.html</context>
-          <context context-type="linenumber">88</context>
+          <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
+          <context context-type="linenumber">59</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="828bc0d28636c4fda125fbf32af8df99cf1fe83e">
         <source>Width</source>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component.html</context>
-          <context context-type="linenumber">104</context>
+          <context context-type="linenumber">105</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="179eb5c4a21ad324f75f723218a621d120e39d30">
         <source>Height</source>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component.html</context>
-          <context context-type="linenumber">111</context>
+          <context context-type="linenumber">112</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="ab36fe6b1ac84106333447d7c1c4e20fb79c7de3">
         <source>Move Up</source>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component.html</context>
-          <context context-type="linenumber">121</context>
+          <context context-type="linenumber">125</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component.html</context>
-          <context context-type="linenumber">124</context>
+          <context context-type="linenumber">128</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component.html</context>
-          <context context-type="linenumber">186</context>
+          <context context-type="linenumber">206</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component.html</context>
-          <context context-type="linenumber">189</context>
+          <context context-type="linenumber">209</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/authoring-tool/edit-component-tags/edit-component-tags.component.html</context>
@@ -6174,19 +6167,19 @@
         <source>Move Down</source>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component.html</context>
-          <context context-type="linenumber">132</context>
+          <context context-type="linenumber">136</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component.html</context>
-          <context context-type="linenumber">135</context>
+          <context context-type="linenumber">139</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component.html</context>
-          <context context-type="linenumber">197</context>
+          <context context-type="linenumber">217</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component.html</context>
-          <context context-type="linenumber">200</context>
+          <context context-type="linenumber">220</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/authoring-tool/edit-component-tags/edit-component-tags.component.html</context>
@@ -6201,19 +6194,19 @@
         <source>Delete</source>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component.html</context>
-          <context context-type="linenumber">142</context>
+          <context context-type="linenumber">146</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component.html</context>
-          <context context-type="linenumber">145</context>
+          <context context-type="linenumber">149</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component.html</context>
-          <context context-type="linenumber">207</context>
+          <context context-type="linenumber">227</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component.html</context>
-          <context context-type="linenumber">210</context>
+          <context context-type="linenumber">230</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/authoring-tool/edit-component-tags/edit-component-tags.component.html</context>
@@ -6228,58 +6221,79 @@
           <context context-type="linenumber">113</context>
         </context-group>
       </trans-unit>
+      <trans-unit datatype="html" id="e3b469b69eef004764c51b7a8b3efa761501ab73">
+        <source> Show Node Labels </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component.html</context>
+          <context context-type="linenumber">160</context>
+        </context-group>
+      </trans-unit>
       <trans-unit datatype="html" id="dc60677d5a906e69f38a5cf9da7f2eb03931bea0">
         <source>Links</source>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component.html</context>
-          <context context-type="linenumber">151</context>
+          <context context-type="linenumber">167</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="72ea393a8941d9c78b055e5c4597a7f760b713a7">
         <source>Add Link</source>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component.html</context>
-          <context context-type="linenumber">155</context>
+          <context context-type="linenumber">171</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component.html</context>
-          <context context-type="linenumber">158</context>
+          <context context-type="linenumber">174</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="8774f599f2e1ccb18ed0cf4536279ddce1868359">
         <source>There are no links. Click the "Add Link" button to add a link.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component.html</context>
-          <context context-type="linenumber">164</context>
+          <context context-type="linenumber">180</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="704ff937be1fcf12bfd12a1a85844849765d13f5">
+        <source>Link Label</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component.html</context>
+          <context context-type="linenumber">189</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="8fa4d523f7b91df4390120b85ed0406138273e1a">
         <source>Color</source>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component.html</context>
-          <context context-type="linenumber">177</context>
+          <context context-type="linenumber">195</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit datatype="html" id="9fae747b3706d7f4d6b694ae273d7df2799a732c">
+        <source>(Optional) Create a starting state for the concept map by editing the "Student Preview" below and then saving here:</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component.html</context>
+          <context context-type="linenumber">242</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="116d459d032992c6d86e207ff08fab531e990322">
         <source>Save Starter Concept Map</source>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component.html</context>
-          <context context-type="linenumber">219</context>
+          <context context-type="linenumber">246</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component.html</context>
-          <context context-type="linenumber">222</context>
+          <context context-type="linenumber">249</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="aebb147a3be02ea5345152dbf903a6db25c29858">
         <source>Delete Starter Concept Map</source>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component.html</context>
-          <context context-type="linenumber">229</context>
+          <context context-type="linenumber">256</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component.html</context>
-          <context context-type="linenumber">232</context>
+          <context context-type="linenumber">259</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="7affaae0e14529c0192d5a4bfabd6fcb1ea27529">
@@ -6392,13 +6406,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
           <context context-type="linenumber">49</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit datatype="html" id="a5f9ba9bb9faa8284bcadb1cdbc6aaf969e9c4bb">
-        <source>Image</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
-          <context context-type="linenumber">59</context>
         </context-group>
       </trans-unit>
       <trans-unit datatype="html" id="946344604c321ff0c86a78f6e047f9142b309dd1">

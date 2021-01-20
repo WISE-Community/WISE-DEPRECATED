@@ -1,3 +1,7 @@
+@import '~style/abstracts/variables', '~style/themes/default';
+
+$notice-bg: map-get($default-colors, notice-bg);
+
 .prompt {
   width: 100%;
 }
@@ -7,15 +11,14 @@
   width: 360px;
 }
 
-button {
-  margin-left: 10px;
-  margin-right: 10px;
+.canvas-dimension {
+  margin-top: 20px;
 }
 
-.canvas-dimension {
-  width: 20%;
-  margin-top: 20px;
-  margin-right: 20px;
+.add-content {
+  padding: 16px;
+  border: 2px solid #dddddd;
+  border-radius: $card-border-radius;
 }
 
 .node-labels {
@@ -23,44 +26,26 @@ button {
   margin-bottom: 10px;
 }
 
-.add-nodes {
-  margin-top: 20px;
-  margin-bottom: 20px;
+.content-item {
+  border: 1px solid #dddddd;
+  background-color: $notice-bg;
+  border-radius: $card-border-radius;
+  padding: 8px;
+  margin-bottom: 8px;
+
+  &:last-of-type {
+    margin-bottom: 0;
+  }
 }
 
-.node-row {
-  width: 100%;
-}
-
-.node-label {
-  width: 30%;
-  margin-right: 20px;
-}
-
-.node-file-name {
-  width: 30%;
+.content-item-setting {
+  padding: 0 8px;
 }
 
 .node-dimension {
-  width: 6%;
-  margin-left: 10px;
-  margin-right: 10px;
-}
-
-.link-row {
-  width: 100%;
-}
-
-.link-label {
-  width: 30%;
-  margin-right: 20px;
-}
-
-.link-color {
-  width: 30%;
+  max-width: 80px;
 }
 
 .starter-concept-map {
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
