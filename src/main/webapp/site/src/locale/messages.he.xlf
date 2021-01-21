@@ -1365,6 +1365,10 @@
           <context context-type="linenumber">30</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
+          <context context-type="linenumber">204</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
           <context context-type="linenumber">32</context>
         </context-group>
@@ -6681,6 +6685,10 @@
           <context context-type="linenumber">3</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
           <context context-type="linenumber">2</context>
         </context-group>
@@ -6695,6 +6703,10 @@
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component.html</context>
           <context context-type="linenumber">7</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
+          <context context-type="linenumber">6</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
@@ -6712,6 +6724,10 @@
           <context context-type="sourcefile">../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component.html</context>
           <context context-type="linenumber">15</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
+          <context context-type="linenumber">13</context>
+        </context-group>
         <target state="needs-translation">Background Image (Optional)</target>
       </trans-unit>
       <trans-unit datatype="html" id="ac7627de4d6171adbfba4d934025c8c39debc469">
@@ -6727,6 +6743,26 @@
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component.html</context>
           <context context-type="linenumber">98</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
+          <context context-type="linenumber">22</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
+          <context context-type="linenumber">25</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
+          <context context-type="linenumber">218</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
+          <context context-type="linenumber">225</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
+          <context context-type="linenumber">228</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
@@ -6755,6 +6791,10 @@
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component.html</context>
           <context context-type="linenumber">45</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
+          <context context-type="linenumber">39</context>
         </context-group>
         <target state="needs-translation">Canvas Height (Optional)</target>
       </trans-unit>
@@ -6841,6 +6881,10 @@
           <context context-type="linenumber">209</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
+          <context context-type="linenumber">237</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">app/authoring-tool/edit-component-tags/edit-component-tags.component.html</context>
           <context context-type="linenumber">22</context>
         </context-group>
@@ -6895,6 +6939,18 @@
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/conceptMap/concept-map-authoring/concept-map-authoring.component.html</context>
           <context context-type="linenumber">230</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
+          <context context-type="linenumber">260</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
+          <context context-type="linenumber">263</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
+          <context context-type="linenumber">288</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">app/authoring-tool/edit-component-tags/edit-component-tags.component.html</context>
@@ -6993,6 +7049,230 @@
           <context context-type="linenumber">259</context>
         </context-group>
         <target state="needs-translation">Delete Starter Concept Map</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="1ddab39a5de0dc854ff4562b74800e78df85302e">
+        <source>Enable All Tools</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
+          <context context-type="linenumber">50</context>
+        </context-group>
+        <target state="needs-translation">Enable All Tools</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="71d7b83972f4a18be195cfff1aee5cea0d858c56">
+        <source>Enable All</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
+          <context context-type="linenumber">53</context>
+        </context-group>
+        <target state="needs-translation">Enable All</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="c96e813e2e7b96ece5c09e10ee40e813ee95aa89">
+        <source>Disable All Tools</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
+          <context context-type="linenumber">61</context>
+        </context-group>
+        <target state="needs-translation">Disable All Tools</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="b733a7b18590377ccaf24295f95e72b23c4bd64e">
+        <source>Disable All</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
+          <context context-type="linenumber">64</context>
+        </context-group>
+        <target state="needs-translation">Disable All</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="70bf34d6f83d0c224d5bc84afd972e3fd8d7cdb1">
+        <source> Select Tool </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
+          <context context-type="linenumber">74</context>
+        </context-group>
+        <target state="needs-translation"> Select Tool </target>
+      </trans-unit>
+      <trans-unit datatype="html" id="ecbfa99f57ec36ab3262c7bf4bd512864a0a7cbd">
+        <source> Line Tool </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
+          <context context-type="linenumber">82</context>
+        </context-group>
+        <target state="needs-translation"> Line Tool </target>
+      </trans-unit>
+      <trans-unit datatype="html" id="f1680e8c1b6f63a26d157115651a601f56c2e0ba">
+        <source> Shape Tool </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
+          <context context-type="linenumber">90</context>
+        </context-group>
+        <target state="needs-translation"> Shape Tool </target>
+      </trans-unit>
+      <trans-unit datatype="html" id="4df38423916492d5f2b8c8e4061a818388ff3b18">
+        <source> Free Hand Tool </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
+          <context context-type="linenumber">98</context>
+        </context-group>
+        <target state="needs-translation"> Free Hand Tool </target>
+      </trans-unit>
+      <trans-unit datatype="html" id="73e60083837758f3c9cb59dcfcb51a72a4bd4260">
+        <source> Text Tool </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
+          <context context-type="linenumber">107</context>
+        </context-group>
+        <target state="needs-translation"> Text Tool </target>
+      </trans-unit>
+      <trans-unit datatype="html" id="cd3f70f961a94e4b24fa1f506a991ddeef2f233f">
+        <source> Stamp Tool </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
+          <context context-type="linenumber">115</context>
+        </context-group>
+        <target state="needs-translation"> Stamp Tool </target>
+      </trans-unit>
+      <trans-unit datatype="html" id="8f2f25432014af68650224c125f8d82cddbbe6c1">
+        <source> Clone Tool </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
+          <context context-type="linenumber">123</context>
+        </context-group>
+        <target state="needs-translation"> Clone Tool </target>
+      </trans-unit>
+      <trans-unit datatype="html" id="1eb7bac0abf789a73463c5bf6c42337baa2830d4">
+        <source> Stroke Color Tool </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
+          <context context-type="linenumber">131</context>
+        </context-group>
+        <target state="needs-translation"> Stroke Color Tool </target>
+      </trans-unit>
+      <trans-unit datatype="html" id="8309d3262c1d16f588bf524e44fdf2e07caf146c">
+        <source> Fill Color Tool </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
+          <context context-type="linenumber">140</context>
+        </context-group>
+        <target state="needs-translation"> Fill Color Tool </target>
+      </trans-unit>
+      <trans-unit datatype="html" id="8055b62ee939763fcda594e42dcbd478e65d75aa">
+        <source> Stroke Width Tool </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
+          <context context-type="linenumber">148</context>
+        </context-group>
+        <target state="needs-translation"> Stroke Width Tool </target>
+      </trans-unit>
+      <trans-unit datatype="html" id="8a9391aff343ba415337af37a2e42f96f4e5052a">
+        <source> Send Back Tool </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
+          <context context-type="linenumber">156</context>
+        </context-group>
+        <target state="needs-translation"> Send Back Tool </target>
+      </trans-unit>
+      <trans-unit datatype="html" id="c2b3ff652e0bb9c37d89b1b36fbad028d56369fa">
+        <source> Send Forward Tool </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
+          <context context-type="linenumber">164</context>
+        </context-group>
+        <target state="needs-translation"> Send Forward Tool </target>
+      </trans-unit>
+      <trans-unit datatype="html" id="18441b29c4857bbde4a86e25c7ecec2b60816aaf">
+        <source> Undo Tool </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
+          <context context-type="linenumber">173</context>
+        </context-group>
+        <target state="needs-translation"> Undo Tool </target>
+      </trans-unit>
+      <trans-unit datatype="html" id="3a574598a15808caa743ad45e350673c77543fa7">
+        <source> Redo Tool </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
+          <context context-type="linenumber">181</context>
+        </context-group>
+        <target state="needs-translation"> Redo Tool </target>
+      </trans-unit>
+      <trans-unit datatype="html" id="605aa0d5209741a29bae1f8f15b681834e4da1a7">
+        <source> Delete Tool </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
+          <context context-type="linenumber">189</context>
+        </context-group>
+        <target state="needs-translation"> Delete Tool </target>
+      </trans-unit>
+      <trans-unit datatype="html" id="680eaf58a4fc0dd8d3b3478b2b67a7119089318a">
+        <source>Stamps</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
+          <context context-type="linenumber">196</context>
+        </context-group>
+        <target state="needs-translation">Stamps</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="7f93eba96bfe522f5f216b8e4359a83225e928a9">
+        <source>Add Stamp</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
+          <context context-type="linenumber">201</context>
+        </context-group>
+        <target state="needs-translation">Add Stamp</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="b7cd4598b947ef99d3603c8a026a57b821786785">
+        <source>Up</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
+          <context context-type="linenumber">240</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
+          <context context-type="linenumber">90</context>
+        </context-group>
+        <target state="needs-translation">Up</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="029590c3a6ac353df3f0f8a2dfe7272a871656fe">
+        <source>above</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
+          <context context-type="linenumber">250</context>
+        </context-group>
+        <target state="needs-translation">above</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="c52c8626a9b546aa3859aa0a2e58221e27285cee">
+        <source>Down</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
+          <context context-type="linenumber">252</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
+          <context context-type="linenumber">102</context>
+        </context-group>
+        <target state="needs-translation">Down</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="bcfc99153c2c0d547f3af6670ddfaae5e6ffb429">
+        <source>Save Starter Drawing</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
+          <context context-type="linenumber">274</context>
+        </context-group>
+        <target state="needs-translation">Save Starter Drawing</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="52c9a103b812f258bcddc3d90a6e3f46871d25fe">
+        <source>Save</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
+          <context context-type="linenumber">277</context>
+        </context-group>
+        <target state="needs-translation">Save</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="a5a5b66acab96c55cf12967a05d09f0ad6524482">
+        <source>Delete Starter Drawing</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
+          <context context-type="linenumber">285</context>
+        </context-group>
+        <target state="needs-translation">Delete Starter Drawing</target>
       </trans-unit>
       <trans-unit datatype="html" id="7affaae0e14529c0192d5a4bfabd6fcb1ea27529">
         <source>Rubric</source>
@@ -7153,22 +7433,6 @@
           <context context-type="linenumber">79</context>
         </context-group>
         <target state="needs-translation">Optional</target>
-      </trans-unit>
-      <trans-unit datatype="html" id="b7cd4598b947ef99d3603c8a026a57b821786785">
-        <source>Up</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
-          <context context-type="linenumber">90</context>
-        </context-group>
-        <target state="needs-translation">Up</target>
-      </trans-unit>
-      <trans-unit datatype="html" id="c52c8626a9b546aa3859aa0a2e58221e27285cee">
-        <source>Down</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
-          <context context-type="linenumber">102</context>
-        </context-group>
-        <target state="needs-translation">Down</target>
       </trans-unit>
       <trans-unit datatype="html" id="6817513ddcee06a7cb2a7b2708e5616b861db81c">
         <source><x equiv-text="{{nodeCompletion}}" id="INTERPOLATION"/>% completed (All periods)</source>
