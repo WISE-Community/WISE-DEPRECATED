@@ -1,70 +1,51 @@
-.prompt-input-container {
+@import '~style/abstracts/variables', '~style/themes/default';
+
+$notice-bg: map-get($default-colors, notice-bg);
+
+.prompt {
   width: 100%;
 }
 
-.background-input-container {
-  width: 90%;
+.background {
+  max-width: 100%;
+  width: 360px;
 }
 
-.authoring-button {
-  margin-left: 10px;
-  margin-right: 10px;
-}
-
-.canvas-dimension-input-container {
-  width: 20%;
+.canvas-dimension {
   margin-top: 20px;
-  margin-right: 20px;
 }
 
-.show-node-labels-checkbox-container {
+.add-content {
+  padding: 16px;
+  border: 2px solid #dddddd;
+  border-radius: $card-border-radius;
+}
+
+.node-labels {
   margin-top: 10px;
   margin-bottom: 10px;
 }
 
-.add-nodes-container {
-  margin-top: 20px;
-  margin-bottom: 20px;
+.content-item {
+  border: 1px solid #dddddd;
+  background-color: $notice-bg;
+  border-radius: $card-border-radius;
+  padding: 8px;
+  margin-bottom: 8px;
+
+  &:last-of-type {
+    margin-bottom: 0;
+  }
 }
 
-.node-row {
-  width: 100%;
+.content-item-setting {
+  padding: 0 8px;
 }
 
-.node-label-container {
-  width: 30%;
-  margin-right: 20px;
+.node-dimension {
+  max-width: 80px;
 }
 
-.node-file-name-container {
-  width: 30%;
-}
-
-.node-dimension-container {
-  width: 6%;
-  margin-left: 10px;
-  margin-right: 10px;
-}
-
-.node-authoring-button {
-  margin-left: 10px;
-  margin-right: 10px;
-}
-
-.link-row {
-  width: 100%;
-}
-
-.link-label-container {
-  width: 30%;
-  margin-right: 20px;
-}
-
-.link-color-container {
-  width: 30%;
-}
-
-.starter-concept-map-buttons-container {
-  margin-top: 20px;
-  margin-bottom: 20px;
+.starter-concept-map {
+  margin-bottom: 16px;
 }

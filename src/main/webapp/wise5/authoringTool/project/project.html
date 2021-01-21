@@ -1,10 +1,10 @@
 <div id="top" class="view-content view-content--with-sidemenu">
   <div class="l-constrained" layout="column">
     <md-content class="node-content md-whiteframe-1dp"
-        style="border-color: {{::nodeController.nodeStatus.icon.color}}; position: relative;"
+        style="padding: 0 16px; border-color: {{::nodeController.nodeStatus.icon.color}}; position: relative;"
         layout="row" layout-wrap>
-      <div style="padding: 0 16px; margin-top: 1px; margin-bottom: 20px; width: 100%">
-        <div align="right" style='background-color: white; position: sticky; top: 0px; z-index: 2;'>
+      <div style="margin-bottom: 20px; width: 100%">
+        <div style='text-align: right; background-color: white; position: sticky; top: 0px; z-index: 2;'>
           <div style="color:red">{{projectController.currentAuthorsMessage}}</div>
           <div>
             <span>&nbsp</span>
@@ -80,17 +80,11 @@
             height: auto !important;
             white-space: pre-line;
           }
-          .preview-toolbar {
-            float:right;
-          }
-          [dir=rtl] .preview-toolbar {
-            float:left;
-          }
         </style>
         <div ng-if="projectController.$state.current.name != 'root.at.project'" ui-view></div>  <!-- this ui-view shows the node authoring view -->
         <div ng-if="projectController.$state.current.name == 'root.at.project'">  <!-- show this only when we're in the project view -->
           <div style='background-color: white; margin-bottom: 15px; position: sticky; top: 17px; z-index: 2;'>
-            <span>
+            <div layout="row" layout-wrap>
               <md-button id='projectBackButton' class='topButton md-raised md-primary'
                   ng-click='projectController.goBackToProjectList()'
                   ng-disabled='projectController.insertGroupMode || projectController.insertNodeMode'>
@@ -175,17 +169,20 @@
                 <md-icon>build</md-icon>
                 <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'ADVANCED' | translate }}</md-tooltip>
               </md-button>
-            </span>
-            <div class='preview-toolbar'>
-              <md-button id='previewProjectButton' class='topButton md-raised md-primary' ng-click='projectController.previewProject()'
+              <span flex></span>
+              <md-button id='previewProjectButton' class='topButton md-raised md-primary'
+                  ng-click='projectController.previewProject()'
                   ng-disabled='projectController.insertGroupMode || projectController.insertNodeMode'>
                 <md-icon>visibility</md-icon>
-                <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'previewProject' | translate }}</md-tooltip>
+                <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'previewProject' | translate }}
+                </md-tooltip>
               </md-button>
-              <md-button id='previewProjectWithoutConstraintsButton' class='topButton md-raised md-primary' ng-click='projectController.previewProjectWithoutConstraints()'
+              <md-button id='previewProjectWithoutConstraintsButton' class='topButton md-raised md-primary'
+                  ng-click='projectController.previewProjectWithoutConstraints()'
                   ng-disabled='projectController.insertGroupMode || projectController.insertNodeMode'>
                 <md-icon>visibility_off</md-icon>
-                <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'previewProjectWithoutConstraints' | translate }}</md-tooltip>
+                <md-tooltip md-direction='top' class='projectButtonTooltip'>{{
+                  ::'previewProjectWithoutConstraints' | translate }}</md-tooltip>
               </md-button>
             </div>
             <div ng-if='projectController.showCreateGroup' layout='row' style='height:50'>

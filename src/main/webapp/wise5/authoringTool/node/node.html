@@ -9,82 +9,83 @@
 <div ui-view></div>
 <div ng-if="nodeAuthoringController.$state.current.name == 'root.at.project.node'">
 <div style='background-color: white; position: sticky; top: 17px; z-index: 2;'>
-  <md-button id='backToProjectButton' class='topButton md-raised md-primary'
-      ng-click='nodeAuthoringController.close()'
-      ng-disabled='nodeAuthoringController.insertComponentMode'>
-    <md-icon>arrow_back</md-icon>
-    <md-tooltip md-direction='top'
-        class='projectButtonTooltip'
+  <div layout="row" layout-wrap>
+    <md-button id='backToProjectButton' class='topButton md-raised md-primary'
+        ng-click='nodeAuthoringController.close()'
+        ng-disabled='nodeAuthoringController.insertComponentMode'>
+      <md-icon>arrow_back</md-icon>
+      <md-tooltip md-direction='top'
+          class='projectButtonTooltip'
+          ng-if='nodeAuthoringController.showStepButtons'>
+        {{ ::'backToProjectView' | translate }}
+      </md-tooltip>
+      <md-tooltip md-direction='top'
+          class='projectButtonTooltip'
+          ng-if='!nodeAuthoringController.showStepButtons'>
+        {{ ::'backToStepView' | translate }}
+      </md-tooltip>
+    </md-button>
+    <md-button id='addComponentButton'
+        ng-if='nodeAuthoringController.showStepButtons && !projectController.isGroupNode(nodeAuthoringController.node.id)'
+        class='topButton md-raised md-primary'
+        ng-click='nodeAuthoringController.addComponent()'
+        ng-disabled='nodeAuthoringController.getSelectedComponentIds().length != 0 || nodeAuthoringController.insertComponentMode'>
+      <md-icon>add</md-icon>
+      <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'addNewComponent' | translate }}</md-tooltip>
+    </md-button>
+    <md-button id='importComponentButton'
+        ng-if='nodeAuthoringController.showStepButtons && !projectController.isGroupNode(nodeAuthoringController.node.id)'
+        class='topButton md-raised md-primary'
+        ng-click='nodeAuthoringController.importComponent()'
+        ng-disabled='nodeAuthoringController.getSelectedComponentIds().length != 0 || nodeAuthoringController.insertComponentMode'>
+      <md-icon>system_update_alt</md-icon>
+      <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'importComponent' | translate }}</md-tooltip>
+    </md-button>
+    <md-button id='moveComponentButton'
+        ng-if='nodeAuthoringController.showStepButtons && !projectController.isGroupNode(nodeAuthoringController.node.id)'
+        class='topButton md-raised md-primary'
+        ng-click='nodeAuthoringController.moveButtonClicked()'
+        ng-disabled='nodeAuthoringController.insertComponentMode'>
+      <md-icon>redo</md-icon>
+      <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'move' | translate }}</md-tooltip>
+    </md-button>
+    <md-button id='copyComponentButton'
+        ng-if='nodeAuthoringController.showStepButtons && !projectController.isGroupNode(nodeAuthoringController.node.id)'
+        class='topButton md-raised md-primary'
+        ng-click='nodeAuthoringController.copyButtonClicked()'
+        ng-disabled='nodeAuthoringController.insertComponentMode'>
+      <md-icon>content_copy</md-icon>
+      <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'copy' | translate }}</md-tooltip>
+    </md-button>
+    <md-button id='deleteComponentButton'
+        ng-if='nodeAuthoringController.showStepButtons && !projectController.isGroupNode(nodeAuthoringController.node.id)'
+        class='topButton md-raised md-primary'
+        ng-click='nodeAuthoringController.deleteButtonClicked()'
+        ng-disabled='nodeAuthoringController.insertComponentMode'>
+      <md-icon>delete</md-icon>
+      <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'DELETE' | translate }}</md-tooltip>
+    </md-button>
+    <md-button id='editStepRubricButton' class='topButton md-raised md-primary'
+        ng-click='nodeAuthoringController.editRubric()'
+        ng-disabled='nodeAuthoringController.getSelectedComponentIds().length != 0 || nodeAuthoringController.insertComponentMode'
         ng-if='nodeAuthoringController.showStepButtons'>
-      {{ ::'backToProjectView' | translate }}
-    </md-tooltip>
-    <md-tooltip md-direction='top'
-        class='projectButtonTooltip'
-        ng-if='!nodeAuthoringController.showStepButtons'>
-      {{ ::'backToStepView' | translate }}
-    </md-tooltip>
-  </md-button>
-  <md-button id='addComponentButton'
-      ng-if='nodeAuthoringController.showStepButtons && !projectController.isGroupNode(nodeAuthoringController.node.id)'
-      class='topButton md-raised md-primary'
-      ng-click='nodeAuthoringController.addComponent()'
-      ng-disabled='nodeAuthoringController.getSelectedComponentIds().length != 0 || nodeAuthoringController.insertComponentMode'>
-    <md-icon>add</md-icon>
-    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'addNewComponent' | translate }}</md-tooltip>
-  </md-button>
-  <md-button id='importComponentButton'
-      ng-if='nodeAuthoringController.showStepButtons && !projectController.isGroupNode(nodeAuthoringController.node.id)'
-      class='topButton md-raised md-primary'
-      ng-click='nodeAuthoringController.importComponent()'
-      ng-disabled='nodeAuthoringController.getSelectedComponentIds().length != 0 || nodeAuthoringController.insertComponentMode'>
-    <md-icon>system_update_alt</md-icon>
-    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'importComponent' | translate }}</md-tooltip>
-  </md-button>
-  <md-button id='moveComponentButton'
-      ng-if='nodeAuthoringController.showStepButtons && !projectController.isGroupNode(nodeAuthoringController.node.id)'
-      class='topButton md-raised md-primary'
-      ng-click='nodeAuthoringController.moveButtonClicked()'
-      ng-disabled='nodeAuthoringController.insertComponentMode'>
-    <md-icon>redo</md-icon>
-    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'move' | translate }}</md-tooltip>
-  </md-button>
-  <md-button id='copyComponentButton'
-      ng-if='nodeAuthoringController.showStepButtons && !projectController.isGroupNode(nodeAuthoringController.node.id)'
-      class='topButton md-raised md-primary'
-      ng-click='nodeAuthoringController.copyButtonClicked()'
-      ng-disabled='nodeAuthoringController.insertComponentMode'>
-    <md-icon>content_copy</md-icon>
-    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'copy' | translate }}</md-tooltip>
-  </md-button>
-  <md-button id='deleteComponentButton'
-      ng-if='nodeAuthoringController.showStepButtons && !projectController.isGroupNode(nodeAuthoringController.node.id)'
-      class='topButton md-raised md-primary'
-      ng-click='nodeAuthoringController.deleteButtonClicked()'
-      ng-disabled='nodeAuthoringController.insertComponentMode'>
-    <md-icon>delete</md-icon>
-    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'DELETE' | translate }}</md-tooltip>
-  </md-button>
-  <md-button id='editStepRubricButton' class='topButton md-raised md-primary'
-      ng-click='nodeAuthoringController.editRubric()'
-      ng-disabled='nodeAuthoringController.getSelectedComponentIds().length != 0 || nodeAuthoringController.insertComponentMode'
-      ng-if='nodeAuthoringController.showStepButtons'>
-    <md-icon>message</md-icon>
-    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'editStepRubric' | translate }}</md-tooltip>
-  </md-button>
-  <md-button id='stepAdvancedButton' class='topButton md-raised md-primary'
-      ng-click='nodeAuthoringController.showAdvancedView()'
-      ng-disabled='nodeAuthoringController.getSelectedComponentIds().length != 0 || nodeAuthoringController.insertComponentMode'
-      ng-if='nodeAuthoringController.showStepButtons'>
-    <md-icon>build</md-icon>
-    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'ADVANCED' | translate }}</md-tooltip>
-  </md-button>
-  <md-button id='stepUndoButton' class='topButton md-raised md-primary' ng-click='nodeAuthoringController.undo()'
-      ng-if='!projectController.isGroupNode(nodeAuthoringController.node.id) && nodeAuthoringController.showStepButtons'
-      ng-disabled='nodeAuthoringController.getSelectedComponentIds().length != 0 || nodeAuthoringController.undoStack.length == 0 || nodeAuthoringController.insertComponentMode'>
-    <md-icon>undo</md-icon>
-    <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'undo' | translate }}</md-tooltip>
-  </md-button>
-  <div style="float:right">
+      <md-icon>message</md-icon>
+      <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'editStepRubric' | translate }}</md-tooltip>
+    </md-button>
+    <md-button id='stepAdvancedButton' class='topButton md-raised md-primary'
+        ng-click='nodeAuthoringController.showAdvancedView()'
+        ng-disabled='nodeAuthoringController.getSelectedComponentIds().length != 0 || nodeAuthoringController.insertComponentMode'
+        ng-if='nodeAuthoringController.showStepButtons'>
+      <md-icon>build</md-icon>
+      <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'ADVANCED' | translate }}</md-tooltip>
+    </md-button>
+    <md-button id='stepUndoButton' class='topButton md-raised md-primary' ng-click='nodeAuthoringController.undo()'
+        ng-if='!projectController.isGroupNode(nodeAuthoringController.node.id) && nodeAuthoringController.showStepButtons'
+        ng-disabled='nodeAuthoringController.getSelectedComponentIds().length != 0 || nodeAuthoringController.undoStack.length == 0 || nodeAuthoringController.insertComponentMode'>
+      <md-icon>undo</md-icon>
+      <md-tooltip md-direction='top' class='projectButtonTooltip'>{{ ::'undo' | translate }}</md-tooltip>
+    </md-button>
+    <span flex></span>
     <md-button id='stepPreviewButton' class='topButton md-raised md-primary' ng-click='nodeAuthoringController.previewStepInNewWindow()'
         ng-if='!projectController.isGroupNode(nodeAuthoringController.node.id)'
         ng-disabled='nodeAuthoringController.showEditTransitions || nodeAuthoringController.insertComponentMode'>
@@ -142,7 +143,7 @@
 </div>
 <div ng-repeat='(componentIndex, component) in nodeAuthoringController.components'
     class='component md-padding'
-    style='padding: 0; margin-top: 0; margin-left: 16px;'
+    style='padding: 0; margin: 0 16px;'
     ng-if='nodeAuthoringController.showComponents'>
   <div id='{{component.id}}' layout='row'>
     <div style='margin-top: 15px; width: 300px;'>
