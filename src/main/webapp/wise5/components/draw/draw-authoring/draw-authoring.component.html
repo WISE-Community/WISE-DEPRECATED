@@ -46,7 +46,7 @@
 <button mat-raised-button
     color="primary"
     class="enable-all-tools-button"
-    (click)="enableAllToolsButtonClicked()"
+    (click)="enableAllTools(true)"
     matTooltip="Enable All Tools"
     matTooltipPosition="above"
     i18n-matTooltip
@@ -57,7 +57,7 @@
 <button mat-raised-button
     color="primary"
     class="disable-all-tools-button"
-    (click)="disableAllToolsButtonClicked()"
+    (click)="enableAllTools(false)"
     matTooltip="Disable All Tools"
     matTooltipPosition="above"
     i18n-matTooltip
