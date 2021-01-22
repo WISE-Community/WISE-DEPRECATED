@@ -1369,6 +1369,14 @@
           <context context-type="linenumber">204</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/match/match-authoring/match-authoring.component.html</context>
+          <context context-type="linenumber">20</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/match/match-authoring/match-authoring.component.html</context>
+          <context context-type="linenumber">101</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
           <context context-type="linenumber">32</context>
         </context-group>
@@ -6689,6 +6697,10 @@
           <context context-type="linenumber">2</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/match/match-authoring/match-authoring.component.html</context>
+          <context context-type="linenumber">2</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
           <context context-type="linenumber">2</context>
         </context-group>
@@ -6706,6 +6718,10 @@
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
+          <context context-type="linenumber">6</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/match/match-authoring/match-authoring.component.html</context>
           <context context-type="linenumber">6</context>
         </context-group>
         <context-group purpose="location">
@@ -6763,6 +6779,22 @@
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
           <context context-type="linenumber">228</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/match/match-authoring/match-authoring.component.html</context>
+          <context context-type="linenumber">41</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/match/match-authoring/match-authoring.component.html</context>
+          <context context-type="linenumber">44</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/match/match-authoring/match-authoring.component.html</context>
+          <context context-type="linenumber">122</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/match/match-authoring/match-authoring.component.html</context>
+          <context context-type="linenumber">125</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
@@ -6889,6 +6921,14 @@
           <context context-type="linenumber">22</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/match/match-authoring/match-authoring.component.html</context>
+          <context context-type="linenumber">53</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/match/match-authoring/match-authoring.component.html</context>
+          <context context-type="linenumber">134</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
           <context context-type="linenumber">87</context>
         </context-group>
@@ -6915,6 +6955,14 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/authoring-tool/edit-component-tags/edit-component-tags.component.html</context>
           <context context-type="linenumber">30</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/match/match-authoring/match-authoring.component.html</context>
+          <context context-type="linenumber">65</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/match/match-authoring/match-authoring.component.html</context>
+          <context context-type="linenumber">146</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
@@ -6955,6 +7003,14 @@
         <context-group purpose="location">
           <context context-type="sourcefile">app/authoring-tool/edit-component-tags/edit-component-tags.component.html</context>
           <context context-type="linenumber">38</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/match/match-authoring/match-authoring.component.html</context>
+          <context context-type="linenumber">79</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/match/match-authoring/match-authoring.component.html</context>
+          <context context-type="linenumber">160</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
@@ -7225,6 +7281,14 @@
           <context context-type="linenumber">240</context>
         </context-group>
         <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/match/match-authoring/match-authoring.component.html</context>
+          <context context-type="linenumber">56</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/match/match-authoring/match-authoring.component.html</context>
+          <context context-type="linenumber">137</context>
+        </context-group>
+        <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
           <context context-type="linenumber">90</context>
         </context-group>
@@ -7243,6 +7307,14 @@
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/draw/draw-authoring/draw-authoring.component.html</context>
           <context context-type="linenumber">252</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/match/match-authoring/match-authoring.component.html</context>
+          <context context-type="linenumber">68</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/match/match-authoring/match-authoring.component.html</context>
+          <context context-type="linenumber">149</context>
         </context-group>
         <context-group purpose="location">
           <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
@@ -7354,6 +7426,170 @@
         </context-group>
         <target state="needs-translation">Component Width</target>
       </trans-unit>
+      <trans-unit datatype="html" id="e599864c0a890e5dfad60da9e9ed9f53ca9893bb">
+        <source>Choices</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/match/match-authoring/match-authoring.component.html</context>
+          <context context-type="linenumber">12</context>
+        </context-group>
+        <target state="needs-translation">Choices</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="1fc2618c7ca4b3722929d8739dbf6d9ab4f7dacf">
+        <source>Add Choice</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/match/match-authoring/match-authoring.component.html</context>
+          <context context-type="linenumber">17</context>
+        </context-group>
+        <target state="needs-translation">Add Choice</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="aa1d01780e052e3bdf4b75b89f5a805af5b9e100">
+        <source> There are no choices. Click the "Add Choice" button to add a choice. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/match/match-authoring/match-authoring.component.html</context>
+          <context context-type="linenumber">24</context>
+        </context-group>
+        <target state="needs-translation"> There are no choices. Click the "Add Choice" button to add a choice. </target>
+      </trans-unit>
+      <trans-unit datatype="html" id="3e20a6ecefca9c87d5dedc6e425a571629d232c5">
+        <source>Choice Name</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/match/match-authoring/match-authoring.component.html</context>
+          <context context-type="linenumber">30</context>
+        </context-group>
+        <target state="needs-translation">Choice Name</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="6b4a8fd4b52fd563b4963ab19f34658e069382d7">
+        <source>Type text or choose an image</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/match/match-authoring/match-authoring.component.html</context>
+          <context context-type="linenumber">34</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/match/match-authoring/match-authoring.component.html</context>
+          <context context-type="linenumber">115</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
+          <context context-type="linenumber">49</context>
+        </context-group>
+        <target state="needs-translation">Type text or choose an image</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="b75de65916c3254e808d6757d451c2c9abe56d06">
+        <source>Delete Choice</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/match/match-authoring/match-authoring.component.html</context>
+          <context context-type="linenumber">76</context>
+        </context-group>
+        <target state="needs-translation">Delete Choice</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="1bc6e061f99432db1b8eec4ff9950d9a1d4db009">
+        <source>Source Bucket Name</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/match/match-authoring/match-authoring.component.html</context>
+          <context context-type="linenumber">87</context>
+        </context-group>
+        <target state="needs-translation">Source Bucket Name</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="7d67cd1ec9de433aecc989c79d8dbe6e46bed75e">
+        <source>Target Buckets</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/match/match-authoring/match-authoring.component.html</context>
+          <context context-type="linenumber">93</context>
+        </context-group>
+        <target state="needs-translation">Target Buckets</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="bfa7f4834e7d273288f8e9cab9e1417a5ad0659d">
+        <source>Add Target Bucket</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/match/match-authoring/match-authoring.component.html</context>
+          <context context-type="linenumber">98</context>
+        </context-group>
+        <target state="needs-translation">Add Target Bucket</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="f19596381eebb477dab97b17c96d92468fbebced">
+        <source> There are no target buckets. Click the "Add Target Bucket" button to add a bucket. </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/match/match-authoring/match-authoring.component.html</context>
+          <context context-type="linenumber">105</context>
+        </context-group>
+        <target state="needs-translation"> There are no target buckets. Click the "Add Target Bucket" button to add a bucket. </target>
+      </trans-unit>
+      <trans-unit datatype="html" id="e36f8feebf8f84ea6d1a1d5db05acaf38556e1f8">
+        <source>Target Bucket Name</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/match/match-authoring/match-authoring.component.html</context>
+          <context context-type="linenumber">111</context>
+        </context-group>
+        <target state="needs-translation">Target Bucket Name</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="b2f29bd0840c2702dc0fc7fb9c0d90b405b5a21d">
+        <source>Delete Bucket</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/match/match-authoring/match-authoring.component.html</context>
+          <context context-type="linenumber">157</context>
+        </context-group>
+        <target state="needs-translation">Delete Bucket</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="e9b20820eab2b7caad859fd12f5e211cdb4eae88">
+        <source>Feedback</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/match/match-authoring/match-authoring.component.html</context>
+          <context context-type="linenumber">168</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/match/match-authoring/match-authoring.component.html</context>
+          <context context-type="linenumber">189</context>
+        </context-group>
+        <target state="needs-translation">Feedback</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="f3540227c398d8d2a32067863ec5ad68a4bb8274">
+        <source> Choices need to be ordered within buckets </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/match/match-authoring/match-authoring.component.html</context>
+          <context context-type="linenumber">173</context>
+        </context-group>
+        <target state="needs-translation"> Choices need to be ordered within buckets </target>
+      </trans-unit>
+      <trans-unit datatype="html" id="a92d4a3913f167ff197f6a9dacbdc31ffc8c712a">
+        <source> Bucket Name: <x equiv-text="{{getBucketNameById(bucketFeedback.bucketId)}}" id="INTERPOLATION"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/match/match-authoring/match-authoring.component.html</context>
+          <context context-type="linenumber">179</context>
+        </context-group>
+        <target state="needs-translation"> Bucket Name: <x equiv-text="{{getBucketNameById(bucketFeedback.bucketId)}}" id="INTERPOLATION"/></target>
+      </trans-unit>
+      <trans-unit datatype="html" id="be604f7fef68cafd439170a79507494f8f22b25d">
+        <source> Choice: <x equiv-text="{{getChoiceTextById(choiceFeedback.choiceId)}}" id="INTERPOLATION"/></source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/match/match-authoring/match-authoring.component.html</context>
+          <context context-type="linenumber">184</context>
+        </context-group>
+        <target state="needs-translation"> Choice: <x equiv-text="{{getChoiceTextById(choiceFeedback.choiceId)}}" id="INTERPOLATION"/></target>
+      </trans-unit>
+      <trans-unit datatype="html" id="d691ea4cc55c019d5f51686544e8a4976f67e376">
+        <source> Is Correct </source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/match/match-authoring/match-authoring.component.html</context>
+          <context context-type="linenumber">200</context>
+        </context-group>
+        <target state="needs-translation"> Is Correct </target>
+      </trans-unit>
+      <trans-unit datatype="html" id="1ba7568bba29f8d8e352f93e67002d0b548eb838">
+        <source>Position</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/match/match-authoring/match-authoring.component.html</context>
+          <context context-type="linenumber">206</context>
+        </context-group>
+        <target state="needs-translation">Position</target>
+      </trans-unit>
+      <trans-unit datatype="html" id="9f8ca6981e65ef1902817fd074bb92aa4f3cf085">
+        <source>Incorrect Position Feedback</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">../../wise5/components/match/match-authoring/match-authoring.component.html</context>
+          <context context-type="linenumber">213</context>
+        </context-group>
+        <target state="needs-translation">Incorrect Position Feedback</target>
+      </trans-unit>
       <trans-unit datatype="html" id="e9f75e02d7db72cd425f81c273a721c62a617dc4">
         <source>~ Report Available ~</source>
         <context-group purpose="location">
@@ -7393,14 +7629,6 @@
           <context context-type="linenumber">44</context>
         </context-group>
         <target state="needs-translation">Choice Text</target>
-      </trans-unit>
-      <trans-unit datatype="html" id="6b4a8fd4b52fd563b4963ab19f34658e069382d7">
-        <source>Type text or choose an image</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">../../wise5/components/multipleChoice/multiple-choice-authoring/multiple-choice-authoring.component.html</context>
-          <context context-type="linenumber">49</context>
-        </context-group>
-        <target state="needs-translation">Type text or choose an image</target>
       </trans-unit>
       <trans-unit datatype="html" id="946344604c321ff0c86a78f6e047f9142b309dd1">
         <source> Is Correct </source>
